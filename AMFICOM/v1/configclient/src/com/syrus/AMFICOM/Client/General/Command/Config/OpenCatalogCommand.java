@@ -4,18 +4,19 @@ import java.awt.*;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Filter.*;
-import com.syrus.AMFICOM.Client.Configure.*;
 import com.syrus.AMFICOM.Client.Configure.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.Network.*;
 import com.syrus.AMFICOM.Client.Resource.Object.*;
+import com.syrus.AMFICOM.Client.Resource.DataSet;
 import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
+import java.util.*;
 
 public class OpenCatalogCommand extends ViewNavigatorCommand
 {
@@ -24,7 +25,7 @@ public class OpenCatalogCommand extends ViewNavigatorCommand
 	String typ;
 	Class cl;
 	String cmd;
-	
+
 	public OpenCatalogCommand(JDesktopPane desktop, ApplicationContext aContext, String typ, Class cl, String cmd)
 	{
 		super(aContext.getDispatcher(), desktop, "Навигатор объектов");
@@ -102,10 +103,11 @@ public class OpenCatalogCommand extends ViewNavigatorCommand
 			frame2.setSize(dim.width * 7 / 10, dim.height);
 			desktop.add(frame2);
 		}
-		DataSet dSet = new DataSet(Pool.getHash(typ));
+		Map dSet = Pool.getHash(typ);
 		ObjectResourceFilter filter = new ObjectResourceDomainFilter(dataSource.getSession().getDomainId());
 		dSet = filter.filter(dSet);
-		frame2.setContents(dSet);
+
+		frame2.setContents(new DataSet(dSet.values().iterator()));
 		frame2.setDisplayModel(new StubDisplayModel(new String[] { "id", "name" },new String[] { "Идентификатор", "Название" }));
 		frame2.setObjectResourceClass(cl);
 		frame2.panel.setButtonPanelVisible(false);
@@ -118,10 +120,10 @@ public class OpenCatalogCommand extends ViewNavigatorCommand
 				ObjectResourceCatalogActionModel.NO_REMOVE_BUTTON,
 				ObjectResourceCatalogActionModel.NO_PROPS_BUTTON,
 				ObjectResourceCatalogActionModel.NO_CANCEL_BUTTON);
-	
+
 		if(typ.equals(Domain.typ))
 		{
-		  orcam = new ObjectResourceCatalogActionModel(
+			orcam = new ObjectResourceCatalogActionModel(
 					ObjectResourceCatalogActionModel.PANEL,
 					ObjectResourceCatalogActionModel.ADD_BUTTON,
 					ObjectResourceCatalogActionModel.SAVE_BUTTON,
@@ -129,10 +131,10 @@ public class OpenCatalogCommand extends ViewNavigatorCommand
 					ObjectResourceCatalogActionModel.PROPS_BUTTON,
 					ObjectResourceCatalogActionModel.CANCEL_BUTTON);
 		}
-		else 
+		else
 		if(typ.equals(Equipment.typ))
 		{
-		  orcam = new ObjectResourceCatalogActionModel(
+			orcam = new ObjectResourceCatalogActionModel(
 					ObjectResourceCatalogActionModel.PANEL,
 					ObjectResourceCatalogActionModel.NO_ADD_BUTTON,
 					ObjectResourceCatalogActionModel.SAVE_BUTTON,
@@ -140,10 +142,10 @@ public class OpenCatalogCommand extends ViewNavigatorCommand
 					ObjectResourceCatalogActionModel.PROPS_BUTTON,
 					ObjectResourceCatalogActionModel.CANCEL_BUTTON);
 		}
-		else 
+		else
 		if(typ.equals(KIS.typ))
 		{
-		  orcam = new ObjectResourceCatalogActionModel(
+			orcam = new ObjectResourceCatalogActionModel(
 					ObjectResourceCatalogActionModel.PANEL,
 					ObjectResourceCatalogActionModel.NO_ADD_BUTTON,
 					ObjectResourceCatalogActionModel.SAVE_BUTTON,
@@ -153,7 +155,7 @@ public class OpenCatalogCommand extends ViewNavigatorCommand
 		}
 
 		frame2.setActionModel(orcam);
-		
+
 		frame2.show();
 
 		aContext.getDispatcher().notify(new TreeListSelectionEvent(typ, TreeListSelectionEvent.SELECT_EVENT, true, true));

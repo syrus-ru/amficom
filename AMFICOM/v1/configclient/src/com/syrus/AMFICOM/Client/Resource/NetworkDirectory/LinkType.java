@@ -35,26 +35,17 @@
 
 package com.syrus.AMFICOM.Client.Resource.NetworkDirectory;
 
-import java.io.IOException;
-import java.io.Serializable;
-
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
+import java.io.*;
+import java.util.*;
 
 import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
 import com.syrus.AMFICOM.CORBA.NetworkDirectory.LinkType_Transferable;
-
-import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
-
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
 import com.syrus.AMFICOM.Client.Configure.UI.LinkTypePane;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
 
-
-public class LinkType extends ObjectResource implements Serializable
+public class LinkType extends StubResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
 	public static final String typ = "linktype";
@@ -75,10 +66,10 @@ public class LinkType extends ObjectResource implements Serializable
 	public String image_id = "";
 	public long modified;
 
-	public Hashtable characteristics = new Hashtable();
+	public Map characteristics = new HashMap();
 
-	public Vector link_ids = new Vector();
-	public Vector links = new Vector();
+	public Collection link_ids = new ArrayList();
+	public Collection links = new ArrayList();
 
 	public transient boolean is_modified = false;
 
@@ -145,9 +136,9 @@ public class LinkType extends ObjectResource implements Serializable
 		int l = this.characteristics.size();
 		int i = 0;
 		transferable.characteristics = new Characteristic_Transferable[l];
-		for(Enumeration e = characteristics.elements(); e.hasMoreElements();)
+		for(Iterator it = characteristics.values().iterator(); it.hasNext();)
 		{
-			Characteristic ch = (Characteristic )e.nextElement();
+			Characteristic ch = (Characteristic)it.next();
 			ch.setTransferableFromLocal();
 			transferable.characteristics[i++] = ch.transferable;
 		}
@@ -195,20 +186,20 @@ public class LinkType extends ObjectResource implements Serializable
 		return modified;
 	}
 
-  public ObjectResourceModel getModel()
-  {
-    return new LinkTypeModel(this);
-  }
+	public ObjectResourceModel getModel()
+	{
+		return new LinkTypeModel(this);
+	}
 
-  public static ObjectResourceDisplayModel getDefaultDisplayModel()
-  {
-    return new LinkTypeDisplayModel();
-  }
+	public static ObjectResourceDisplayModel getDefaultDisplayModel()
+	{
+		return new LinkTypeDisplayModel();
+	}
 
-  public static PropertiesPanel getPropertyPane()
-  {
-    return new LinkTypePane();
-  }
+	public static PropertiesPanel getPropertyPane()
+	{
+		return new LinkTypePane();
+	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
@@ -240,7 +231,7 @@ public class LinkType extends ObjectResource implements Serializable
 		manufacturer_code = (String )in.readObject();
 		image_id = (String )in.readObject();
 		modified = in.readLong();
-		characteristics = (Hashtable )in.readObject();
+		characteristics = (Map )in.readObject();
 
 		transferable = new LinkType_Transferable();
 	}

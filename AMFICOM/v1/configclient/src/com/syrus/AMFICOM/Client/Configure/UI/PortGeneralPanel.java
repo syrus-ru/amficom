@@ -33,33 +33,33 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 
 public class PortGeneralPanel extends GeneralPanel
 {
-  Port cp;
+	Port cp;
 
-  private GridBagLayout gridBagLayout1 = new GridBagLayout();
+	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
-  JLabel descLabel = new JLabel();
-  private BorderLayout borderLayout1 = new BorderLayout();
-  JScrollPane descriptionScrollPane = new JScrollPane();
-  public JTextPane descTextArea = new JTextPane();
+	JLabel descLabel = new JLabel();
+	private BorderLayout borderLayout1 = new BorderLayout();
+	JScrollPane descriptionScrollPane = new JScrollPane();
+	public JTextPane descTextArea = new JTextPane();
 
-  JLabel idLabel = new JLabel();
-  JTextField idField = new JTextField();
+	JLabel idLabel = new JLabel();
+	JTextField idField = new JTextField();
 
-  JLabel nameLabel = new JLabel();
-  JTextField nameField = new JTextField();
+	JLabel nameLabel = new JLabel();
+	JTextField nameField = new JTextField();
 
-  JLabel typeLabel = new JLabel();
-  ObjectResourceComboBox typeBox = new ObjectResourceComboBox(PortType.typ, true);
+	JLabel typeLabel = new JLabel();
+	ObjectResourceComboBox typeBox = new ObjectResourceComboBox(PortType.typ, true);
 
-  private JLabel equipLabel = new JLabel();
-  private ObjectResourceComboBox equipBox = new ObjectResourceComboBox("kisequipment", true);
+	private JLabel equipLabel = new JLabel();
+	private ObjectResourceComboBox equipBox = new ObjectResourceComboBox("kisequipment", true);
 
-  private JTextField modifyField = new JTextField();
-  private JLabel modifyLabel2 = new JLabel();
-  private JLabel modifyLabel1 = new JLabel();
+	private JTextField modifyField = new JTextField();
+	private JLabel modifyLabel2 = new JLabel();
+	private JLabel modifyLabel1 = new JLabel();
 
-  public PortGeneralPanel()
-  {
+	public PortGeneralPanel()
+	{
 	 super();
 	 try
 	 {
@@ -69,16 +69,16 @@ public class PortGeneralPanel extends GeneralPanel
 	 {
 		e.printStackTrace();
 	 }
-  }
+	}
 
-  public PortGeneralPanel(Port cp)
-  {
+	public PortGeneralPanel(Port cp)
+	{
 	 this();
 	 setObjectResource(cp);
-  }
+	}
 
-  private void jbInit() throws Exception
-  {
+	private void jbInit() throws Exception
+	{
 	 this.setLayout(gridBagLayout1);
 
 	 descLabel.setText(LangModelConfig.getString("label_description"));
@@ -132,62 +132,60 @@ public class PortGeneralPanel extends GeneralPanel
 		 this.add(idField, new GridBagConstraints(1, 7, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 
 //		this.add(saveButton,    new XYConstraints(200, 213, -1, -1));
-  }
+	}
 
-  public ObjectResource getObjectResource()
-  {
+	public ObjectResource getObjectResource()
+	{
 	 return cp;
-  }
+	}
 
-  public boolean setObjectResource(ObjectResource or)
-  {
-	 this.cp = (Port)or;
+	public void setObjectResource(ObjectResource or)
+	{
+		cp = (Port)or;
 
-	 if(cp != null)
-	 {
-		typeBox.setSelected(cp.type_id);
-		idField.setText(cp.getId());
-		nameField.setText(cp.getName());
-		this.descTextArea.setText(cp.description);
-		this.equipBox.setSelected(cp.equipment_id);
-	 }
-	 else
-	 {
-		nameField.setText("");
-		idField.setText("");
-		typeBox.setSelected("");
-		this.descTextArea.setText("");
-		this.equipBox.setSelected("");
-	 }
-	 return true;
-
-  }
-
-  public boolean modify()
-  {
-	 try
-	 {
-		if(MyUtil.validName(nameField.getText()))
-			cp.name = nameField.getText();
+		if(cp != null)
+		{
+			typeBox.setSelected(cp.type_id);
+			idField.setText(cp.getId());
+			nameField.setText(cp.getName());
+			this.descTextArea.setText(cp.description);
+			this.equipBox.setSelected(cp.equipment_id);
+		}
 		else
-		  return false;
-		cp.type_id = (String )typeBox.getSelected();
-		cp.id = idField.getText();
-		cp.description = this.descTextArea.getText();
-		cp.equipment_id = (String )this.equipBox.getSelected();
-	 }
-	 catch(Exception ex)
-	 {
-		return false;
-	 }
-	 return true;
-  }
+		{
+			nameField.setText("");
+			idField.setText("");
+			typeBox.setSelected("");
+			this.descTextArea.setText("");
+			this.equipBox.setSelected("");
+		}
+	}
 
-  void saveButton_actionPerformed(ActionEvent e)
-  {
+	public boolean modify()
+	{
+		try
+		{
+			if(MyUtil.validName(nameField.getText()))
+				cp.name = nameField.getText();
+			else
+				return false;
+			cp.type_id = (String )typeBox.getSelected();
+			cp.id = idField.getText();
+			cp.description = this.descTextArea.getText();
+			cp.equipment_id = (String )this.equipBox.getSelected();
+		}
+		catch(Exception ex)
+		{
+			return false;
+		}
+		return true;
+	}
+
+	void saveButton_actionPerformed(ActionEvent e)
+	{
 	 if(!Checker.checkCommandByUserId(
-		  aContext.getSessionInterface().getUserId(),
-		  Checker.catalogTCediting))
+			aContext.getSessionInterface().getUserId(),
+			Checker.catalogTCediting))
 	 {
 		return;
 	 }
@@ -197,5 +195,5 @@ public class PortGeneralPanel extends GeneralPanel
 		DataSourceInterface dataSource = aContext.getDataSourceInterface();
 		dataSource.SaveCablePort(cp.getId());
 	 }
-  }
+	}
 }

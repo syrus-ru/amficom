@@ -38,9 +38,9 @@ public class AccessPortGeneralPanel extends GeneralPanel
 {
 	AccessPort ap;
 
-  private GridBagLayout gridBagLayout1 = new GridBagLayout();
-  JPanel mainPanel = new JPanel();
-  BorderLayout borderLayout1 = new BorderLayout();
+	private GridBagLayout gridBagLayout1 = new GridBagLayout();
+	JPanel mainPanel = new JPanel();
+	BorderLayout borderLayout1 = new BorderLayout();
 
 	public JButton saveButton = new JButton();
 
@@ -149,7 +149,7 @@ public class AccessPortGeneralPanel extends GeneralPanel
 		return ap;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.ap = (AccessPort)or;
 
@@ -174,8 +174,6 @@ public class AccessPortGeneralPanel extends GeneralPanel
 			typeBox.setSelected("");
 //			imageLabel.setIcon(new ImageIcon());
 		}
-		return true;
-
 	}
 
 	public boolean modify()

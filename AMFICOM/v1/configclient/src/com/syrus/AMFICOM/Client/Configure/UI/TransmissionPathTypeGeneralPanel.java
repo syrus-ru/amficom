@@ -34,33 +34,33 @@ import java.awt.BorderLayout;
 
 public class TransmissionPathTypeGeneralPanel extends GeneralPanel
 {
-  TransmissionPathType tpt;
+	TransmissionPathType tpt;
 
-  SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 
-  private GridBagLayout gridBagLayout1 = new GridBagLayout();
-  private BorderLayout borderLayout1 = new BorderLayout();
+	private GridBagLayout gridBagLayout1 = new GridBagLayout();
+	private BorderLayout borderLayout1 = new BorderLayout();
 
-  public JLabel idLabel = new JLabel();
-  public JTextField idField = new JTextField();
+	public JLabel idLabel = new JLabel();
+	public JTextField idField = new JTextField();
 
-  public JLabel nameLabel = new JLabel();
-  public JTextField nameField = new JTextField();
+	public JLabel nameLabel = new JLabel();
+	public JTextField nameField = new JTextField();
 
-  private JLabel modifyLabel2 = new JLabel();
-  private JLabel modifyLabel1 = new JLabel();
-  private JTextField modifyField = new JTextField();
+	private JLabel modifyLabel2 = new JLabel();
+	private JLabel modifyLabel1 = new JLabel();
+	private JTextField modifyField = new JTextField();
 
-  private JLabel descLabel = new JLabel();
-  private JPanel descriptionPanel = new JPanel();
-  JScrollPane descriptionScrollPane = new JScrollPane();
-  public JTextPane descTextArea = new JTextPane();
+	private JLabel descLabel = new JLabel();
+	private JPanel descriptionPanel = new JPanel();
+	JScrollPane descriptionScrollPane = new JScrollPane();
+	public JTextPane descTextArea = new JTextPane();
 
 
-  public JButton saveButton = new JButton();
+	public JButton saveButton = new JButton();
 
-  public TransmissionPathTypeGeneralPanel()
-  {
+	public TransmissionPathTypeGeneralPanel()
+	{
 	 super();
 	 try
 	 {
@@ -70,22 +70,22 @@ public class TransmissionPathTypeGeneralPanel extends GeneralPanel
 	 {
 		e.printStackTrace();
 	 }
-  }
+	}
 
-  public TransmissionPathTypeGeneralPanel(TransmissionPathType apt)
-  {
+	public TransmissionPathTypeGeneralPanel(TransmissionPathType apt)
+	{
 	 this();
 	 setObjectResource(apt);
-  }
+	}
 
-  private void jbInit() throws Exception
-  {
+	private void jbInit() throws Exception
+	{
 	 this.setLayout(gridBagLayout1);
 
 	 saveButton.setText(LangModelConfig.getString("menuMapSaveText"));
 	 saveButton.addActionListener(new java.awt.event.ActionListener() {
 		public void actionPerformed(ActionEvent e) {
-		  saveButton_actionPerformed(e);
+			saveButton_actionPerformed(e);
 		}
 	 });
 
@@ -131,15 +131,15 @@ public class TransmissionPathTypeGeneralPanel extends GeneralPanel
 
 //		this.add(saveButton,      new XYConstraints(200, 210, -1, -1));
 
-  }
+	}
 
-  public ObjectResource getObjectResource()
-  {
+	public ObjectResource getObjectResource()
+	{
 	 return tpt;
-  }
+	}
 
-  public boolean setObjectResource(ObjectResource or)
-  {
+	public void setObjectResource(ObjectResource or)
+	{
 	 this.tpt = (TransmissionPathType)or;
 
 	 if(tpt != null)
@@ -158,18 +158,16 @@ public class TransmissionPathTypeGeneralPanel extends GeneralPanel
 		this.descTextArea.setText("");
 		this.modifyField.setText("");
 	 }
-	 return true;
+	}
 
-  }
-
-  public boolean modify()
-  {
+	public boolean modify()
+	{
 	 try
 	 {
 		if(MyUtil.validName(nameField.getText()))
-		  tpt.name = nameField.getText();
+			tpt.name = nameField.getText();
 		else
-		  return false;
+			return false;
 
 		tpt.id = idField.getText();
 		tpt.description = this.descTextArea.getText();
@@ -179,13 +177,13 @@ public class TransmissionPathTypeGeneralPanel extends GeneralPanel
 		return false;
 	 }
 	 return true;
-  }
+	}
 
-  void saveButton_actionPerformed(ActionEvent e)
-  {
+	void saveButton_actionPerformed(ActionEvent e)
+	{
 /*		if(!Checker.checkCommandByUserId(
-		  aContext.getSessionInterface().getUserId(),
-		  Checker.catalogCMediting))
+			aContext.getSessionInterface().getUserId(),
+			Checker.catalogCMediting))
 	 {
 		return;
 	 }
@@ -195,5 +193,5 @@ public class TransmissionPathTypeGeneralPanel extends GeneralPanel
 		DataSourceInterface dataSource = aContext.getDataSourceInterface();
 		dataSource.SaveAccessPort(ap.getId());
 	 }*/
-  }
+	}
 }

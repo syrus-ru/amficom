@@ -1,11 +1,11 @@
 package com.syrus.AMFICOM.Client.Resource.Alarm;
 
-import java.util.Vector;
+import java.util.*;
 
 import com.syrus.AMFICOM.CORBA.Alarm.*;
-import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.StubResource;
 
-public class EventSourceType extends ObjectResource
+public class EventSourceType extends StubResource
 {
 	/**
 	 * Value: {@value}.
@@ -79,10 +79,10 @@ public class EventSourceType extends ObjectResource
 
 	EventSourceType_Transferable transferable;
 
-    public String id = "";
-    public String name = "";
+		public String id = "";
+		public String name = "";
 
-	public Vector rules = new Vector();
+	public Collection rules = new ArrayList();
 
 	public static final String typ = "eventsourcetype";
 
@@ -99,10 +99,10 @@ public class EventSourceType extends ObjectResource
 
 	EventSourceType(
 			String id,
-		    String name)
+				String name)
 	{
 		this.id = id;
-	    this.name = name;
+			this.name = name;
 
 		transferable = new EventSourceType_Transferable();
 	}
@@ -110,7 +110,7 @@ public class EventSourceType extends ObjectResource
 	public void setLocalFromTransferable()
 	{
 		this.id = transferable.id;
-	    this.name = transferable.name;
+			this.name = transferable.name;
 
 		for(int i = 0; i < transferable.rules.length; i++)
 			rules.add(new Rule(transferable.rules[i]));
@@ -119,13 +119,14 @@ public class EventSourceType extends ObjectResource
 	public void setTransferableFromLocal()
 	{
 		transferable.id = id;
-	    transferable.name = name;
+			transferable.name = name;
 
 		transferable.rules = new Rule_Transferable[rules.size()];
-		for(int i = 0; i < rules.size(); i++)
+		int counter = 0;
+		for(Iterator it = rules.iterator(); it.hasNext();)
 		{
-			Rule rule = (Rule )rules.get(i);
-			transferable.rules[i] = (Rule_Transferable )rule.getTransferable();
+			Rule rule = (Rule )it.next();
+			transferable.rules[counter++] = (Rule_Transferable )rule.getTransferable();
 		}
 	}
 
@@ -142,12 +143,12 @@ public class EventSourceType extends ObjectResource
 	{
 		return name;
 	}
-	
+
 	public String getTyp()
 	{
 		return typ;
 	}
-	
+
 	public String getDomainId()
 	{
 		return "sysdomain";

@@ -35,17 +35,15 @@
 
 package com.syrus.AMFICOM.Client.Resource.Network;
 
-import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CharacteristicType;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import java.io.*;
 
 import java.awt.Component;
 
-import java.io.IOException;
-import java.io.Serializable;
+import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CharacteristicType;
 
-public class Characteristic extends ObjectResource
+public class Characteristic extends StubResource
 		implements Cloneable, Serializable
 {
 	private static final long serialVersionUID = 01L;
@@ -197,12 +195,12 @@ public class Characteristic extends ObjectResource
 
 
 	public Component getRenderer()
-    {
+		{
 		return null;
 	}
 
 	public Component getEditor()
-    {
+		{
 		return null;
 	}
 

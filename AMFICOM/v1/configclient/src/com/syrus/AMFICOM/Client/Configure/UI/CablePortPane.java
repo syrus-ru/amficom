@@ -1,17 +1,16 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import java.awt.*;
-import java.awt.event.*;
-
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Network.*;
-import oracle.jdeveloper.layout.*;
+import com.syrus.AMFICOM.Client.Resource.Network.CablePort;
+import oracle.jdeveloper.layout.XYConstraints;
 
 public class CablePortPane extends PropertiesPanel
 {
@@ -71,13 +70,12 @@ public class CablePortPane extends PropertiesPanel
 		return port;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.port = (CablePort )or;
 
 		gPanel.setObjectResource(port);
 		chPanel.setObjectResource(port);
-		return true;
 	}
 
 	public void setContext(ApplicationContext aContext)

@@ -52,14 +52,11 @@ public class LinkTypeCharacteristicsPanel extends GeneralPanel
 		return linkType;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.linkType = (LinkType)or;
-		if(linkType == null)
-			return true;
-
-		charPane.setCharHash(linkType);
-		return true;
+		if(linkType != null)
+			charPane.setCharHash(linkType);
 	}
 
 	public boolean modify()

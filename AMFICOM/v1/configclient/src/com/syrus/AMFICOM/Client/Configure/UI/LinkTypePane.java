@@ -2,7 +2,6 @@ package com.syrus.AMFICOM.Client.Configure.UI;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
-
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Checker;
@@ -10,8 +9,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
-import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.LinkType;
 import oracle.jdeveloper.layout.XYConstraints;
 
 public class LinkTypePane extends PropertiesPanel
@@ -72,13 +70,12 @@ public class LinkTypePane extends PropertiesPanel
 		return linkType;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.linkType = (LinkType) or;
 
 		gPanel.setObjectResource(linkType);
 		chPanel.setObjectResource(linkType);
-		return true;
 	}
 
 	public void setContext(ApplicationContext aContext)

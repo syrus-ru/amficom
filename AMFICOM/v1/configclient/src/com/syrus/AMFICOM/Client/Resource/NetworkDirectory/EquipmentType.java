@@ -35,23 +35,17 @@
 
 package com.syrus.AMFICOM.Client.Resource.NetworkDirectory;
 
-
-import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.Configure.UI.EquipmentTypePane;
-
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
-import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
-
-import com.syrus.AMFICOM.CORBA.NetworkDirectory.EquipmentType_Transferable;
-import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
-
-
 import java.io.*;
 import java.util.*;
 
-public class EquipmentType extends ObjectResource implements Serializable
+import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
+import com.syrus.AMFICOM.CORBA.NetworkDirectory.EquipmentType_Transferable;
+import com.syrus.AMFICOM.Client.Configure.UI.EquipmentTypePane;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
+
+public class EquipmentType extends StubResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
 	public static final String typ = "equipmenttype";
@@ -71,7 +65,7 @@ public class EquipmentType extends ObjectResource implements Serializable
 
 	public transient boolean is_modified = false;
 
-	public Hashtable characteristics = new Hashtable();
+	public Map characteristics = new HashMap();
 
 	public EquipmentType()
 	{
@@ -142,9 +136,9 @@ public class EquipmentType extends ObjectResource implements Serializable
 		int l = this.characteristics.size();
 		int i = 0;
 		transferable.characteristics = new Characteristic_Transferable[l];
-		for(Enumeration e = characteristics.elements(); e.hasMoreElements();)
+		for(Iterator it = characteristics.values().iterator(); it.hasNext();)
 		{
-			Characteristic ch = (Characteristic )e.nextElement();
+			Characteristic ch = (Characteristic)it.next();
 			ch.setTransferableFromLocal();
 			transferable.characteristics[i++] = ch.transferable;
 		}
@@ -184,20 +178,20 @@ public class EquipmentType extends ObjectResource implements Serializable
 		return modified;
 	}
 
-  public ObjectResourceModel getModel()
-  {
-    return new EquipmentTypeModel(this);
-  }
+	public ObjectResourceModel getModel()
+	{
+		return new EquipmentTypeModel(this);
+	}
 
-  public static ObjectResourceDisplayModel getDefaultDisplayModel()
-  {
-    return new EquipmentTypeDisplayModel();
-  }
+	public static ObjectResourceDisplayModel getDefaultDisplayModel()
+	{
+		return new EquipmentTypeDisplayModel();
+	}
 
-  public static PropertiesPanel getPropertyPane()
-  {
-    return new EquipmentTypePane();
-  }
+	public static PropertiesPanel getPropertyPane()
+	{
+		return new EquipmentTypePane();
+	}
 
 	public Object clone()
 	{
@@ -248,7 +242,7 @@ public class EquipmentType extends ObjectResource implements Serializable
 		manufacturer_code = (String )in.readObject();
 		image_id = (String )in.readObject();
 		modified = in.readLong();
-		characteristics = (Hashtable )in.readObject();
+		characteristics = (Map )in.readObject();
 
 		transferable = new EquipmentType_Transferable();
 	}

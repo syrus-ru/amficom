@@ -21,9 +21,10 @@ import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.LinkType;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -69,10 +70,10 @@ class EquipmentFeaturesTableModel extends DividableTableModel
 
 	int length = 0;
 
-	Vector objects = new Vector();
+	List objects = new ArrayList();
 
-	Vector firstColumn = new Vector();
-	Vector secondColumn = new Vector();
+	List firstColumn = new ArrayList();
+	List secondColumn = new ArrayList();
 
 	public EquipmentFeaturesTableModel (int divisionsNumber,ObjectsReport report)
 			throws CreateReportException
@@ -87,7 +88,7 @@ class EquipmentFeaturesTableModel extends DividableTableModel
 		String name = "";
 		String visualType = "";
 		String mark = "";
-		Hashtable properties = null;
+		Map properties = null;
 
 		if (type.equals(KIS.typ) || type.equals(Equipment.typ))
 		{
@@ -208,10 +209,10 @@ class EquipmentFeaturesTableModel extends DividableTableModel
 			length += 3;
 		}
 
-		Enumeration propEnum = properties.elements();
-		while (propEnum.hasMoreElements())
+
+		for (Iterator propEnum = properties.values().iterator(); propEnum.hasNext();)
 		{
-			Characteristic curChar = (Characteristic) propEnum.nextElement();
+			Characteristic curChar = (Characteristic) propEnum.next();
 			firstColumn.add(curChar.name);
 			secondColumn.add(curChar.value);
 			length++;

@@ -38,14 +38,14 @@ package com.syrus.AMFICOM.Client.Resource.ISMDirectory;
 import java.io.*;
 import java.util.*;
 
-import com.syrus.AMFICOM.CORBA.ISMDirectory.*;
-import com.syrus.AMFICOM.CORBA.Network.*;
-import com.syrus.AMFICOM.Client.Configure.UI.*;
+import com.syrus.AMFICOM.CORBA.ISMDirectory.AccessPortType_Transferable;
+import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
+import com.syrus.AMFICOM.Client.Configure.UI.AccessPortTypePane;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Network.*;
+import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
 
-public class AccessPortType extends ObjectResource implements Serializable
+public class AccessPortType extends StubResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
 	public static final String typ = "accessporttype";
@@ -58,9 +58,9 @@ public class AccessPortType extends ObjectResource implements Serializable
 	public String access_type = "";
 	public long modified;
 
-	public Vector test_type_ids = new Vector();
+	public Collection test_type_ids = new ArrayList();
 
-	public Hashtable characteristics = new Hashtable();
+	public Map characteristics = new HashMap();
 
 	public AccessPortType()
 	{
@@ -110,7 +110,7 @@ public class AccessPortType extends ObjectResource implements Serializable
 		access_type = transferable.access_type;
 		modified = transferable.modified;
 
-		MyUtil.addToVector(test_type_ids, transferable.test_type_ids);
+		MiscUtil.addToCollection(test_type_ids, transferable.test_type_ids);
 
 //		for(int i = 0; i < transferable.characteristics.length; i++)
 //			characteristics.put(transferable.characteristics[i].id, new Characteristic(transferable.characteristics[i]));
@@ -127,14 +127,14 @@ public class AccessPortType extends ObjectResource implements Serializable
 		transferable.access_type = access_type;
 		transferable.modified = modified;
 
-		test_type_ids.copyInto(transferable.test_type_ids);
+		transferable.test_type_ids = (String[])test_type_ids.toArray(new String[test_type_ids.size()]);
 
 		int l = this.characteristics.size();
 		int i = 0;
 		transferable.characteristics = new Characteristic_Transferable[l];
-		for(Enumeration e = characteristics.elements(); e.hasMoreElements();)
+		for(Iterator it = characteristics.values().iterator(); it.hasNext();)
 		{
-			Characteristic ch = (Characteristic )e.nextElement();
+			Characteristic ch = (Characteristic )it.next();
 			ch.setTransferableFromLocal();
 			transferable.characteristics[i++] = ch.transferable;
 		}
@@ -193,8 +193,8 @@ public class AccessPortType extends ObjectResource implements Serializable
 		description = (String )in.readObject();
 		access_type = (String )in.readObject();
 		modified = in.readLong();
-		test_type_ids = (Vector )in.readObject();
-		characteristics = (Hashtable )in.readObject();
+		test_type_ids = (Collection )in.readObject();
+		characteristics = (Map )in.readObject();
 
 		transferable = new AccessPortType_Transferable();
 	}

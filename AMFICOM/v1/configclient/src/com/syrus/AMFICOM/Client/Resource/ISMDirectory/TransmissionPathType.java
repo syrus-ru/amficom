@@ -35,20 +35,15 @@
 
 package com.syrus.AMFICOM.Client.Resource.ISMDirectory;
 
-import java.io.Serializable;
-import java.io.IOException;
+import java.io.*;
+import java.util.*;
 
-import java.util.Hashtable;
-
-import com.syrus.AMFICOM.Client.Configure.UI.TransmissionPathTypePane;
-import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.CORBA.ISMDirectory.TransmissionPathType_Transferable;
+import com.syrus.AMFICOM.Client.Configure.UI.TransmissionPathTypePane;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
 
-public class TransmissionPathType extends ObjectResource implements Serializable
+public class TransmissionPathType extends StubResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
 	public static final String typ = "pathtype";
@@ -60,7 +55,7 @@ public class TransmissionPathType extends ObjectResource implements Serializable
 	public String description = "";
 	public long modified;
 
-	public Hashtable characteristics = new Hashtable();
+	public Map characteristics = new HashMap();
 
 	public TransmissionPathType()
 	{
@@ -85,20 +80,20 @@ public class TransmissionPathType extends ObjectResource implements Serializable
 		transferable = new TransmissionPathType_Transferable();
 	}
 
-  public ObjectResourceModel getModel()
-  {
-    return new TransmissionPathTypeModel(this);
-  }
+	public ObjectResourceModel getModel()
+	{
+		return new TransmissionPathTypeModel(this);
+	}
 
-  public static ObjectResourceDisplayModel getDefaultDisplayModel()
-  {
-    return new TransmissionPathTypeDisplayModel();
-  }
+	public static ObjectResourceDisplayModel getDefaultDisplayModel()
+	{
+		return new TransmissionPathTypeDisplayModel();
+	}
 
-  public static PropertiesPanel getPropertyPane()
-  {
-    return new TransmissionPathTypePane();
-  }
+	public static PropertiesPanel getPropertyPane()
+	{
+		return new TransmissionPathTypePane();
+	}
 
 	public void setLocalFromTransferable()
 	{
@@ -180,7 +175,6 @@ public class TransmissionPathType extends ObjectResource implements Serializable
 		name = (String )in.readObject();
 		description = (String )in.readObject();
 		modified = in.readLong();
-//		characteristics = (Hashtable )in.readObject();
 
 		transferable = new TransmissionPathType_Transferable();
 	}

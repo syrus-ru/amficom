@@ -35,7 +35,7 @@
 
 package com.syrus.AMFICOM.Client.Resource.ISMDirectory;
 
-import java.util.Hashtable;
+import java.util.Map;
 
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Network.CatalogElementModel;
@@ -58,7 +58,7 @@ public class TransmissionPathTypeModel extends CatalogElementModel
 		return "";
 	}
 
-	public Hashtable getCharacteristics(ObjectResource obj)
+	public Map getCharacteristics(ObjectResource obj)
 	{
 		return pathType.characteristics;
 	}

@@ -46,15 +46,12 @@ public class CableLinkCharacteristicsPanel extends GeneralPanel
 		return link;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.link = (CableLink )or;
 
-		if(link == null)
-			return true;
-
-		charPane.setCharHash(link);
-		return true;
+		if(link != null)
+			charPane.setCharHash(link);
 	}
 
 	public boolean modify()

@@ -37,12 +37,12 @@ package com.syrus.AMFICOM.Client.Resource.NetworkDirectory;
 
 import java.util.*;
 
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Network.*;
-import com.syrus.AMFICOM.CORBA.Network.*;
-import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
+import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
+import com.syrus.AMFICOM.CORBA.NetworkDirectory.TestPortType_Transferable;
+import com.syrus.AMFICOM.Client.Resource.StubResource;
+import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
 
-public class TestPortType extends ObjectResource
+public class TestPortType extends StubResource
 {
 	public static final String typ = "testporttype";
 
@@ -53,7 +53,7 @@ public class TestPortType extends ObjectResource
 	public String description = "";
 	public String port_type_id = "";
 
-	public Hashtable characteristics = new Hashtable();
+	public Map characteristics = new HashMap();
 
 	public TestPortType()
 	{
@@ -104,9 +104,9 @@ public class TestPortType extends ObjectResource
 		int l = this.characteristics.size();
 		int i = 0;
 		transferable.characteristics = new Characteristic_Transferable[l];
-		for(Enumeration e = characteristics.elements(); e.hasMoreElements();)
+		for(Iterator it = characteristics.values().iterator(); it.hasNext();)
 		{
-			Characteristic ch = (Characteristic )e.nextElement();
+			Characteristic ch = (Characteristic)it.next();
 			ch.setTransferableFromLocal();
 			transferable.characteristics[i++] = ch.transferable;
 		}
@@ -116,7 +116,7 @@ public class TestPortType extends ObjectResource
 	{
 		return typ;
 	}
-	
+
 	public String getName()
 	{
 		return name;

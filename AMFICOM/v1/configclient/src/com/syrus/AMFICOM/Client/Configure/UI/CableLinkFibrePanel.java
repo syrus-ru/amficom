@@ -33,8 +33,8 @@ public class CableLinkFibrePanel extends GeneralPanel
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 	CableLink cl;
 
-  private GridBagLayout gridBagLayout1 = new GridBagLayout();
-  private GridBagLayout gridBagLayout2 = new GridBagLayout();
+	private GridBagLayout gridBagLayout1 = new GridBagLayout();
+	private GridBagLayout gridBagLayout2 = new GridBagLayout();
 
 	private JPanel linksPanel = new JPanel();
 	private JLabel linksTypeLabel = new JLabel();
@@ -133,14 +133,14 @@ public class CableLinkFibrePanel extends GeneralPanel
 				,GridBagConstraints.NORTHWEST, GridBagConstraints.VERTICAL, new Insets(0, 0, 0, 0), 0, 0));
 	 this.add(linksPanel,   new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
 				,GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-  }
+	}
 
 	public ObjectResource getObjectResource()
 	{
 		return cl;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.cl = (CableLink )or;
 
@@ -152,14 +152,11 @@ public class CableLinkFibrePanel extends GeneralPanel
 
 		if(cl != null)
 		{
-			DataSet ds = new DataSet(cl.threads.elements());
+			DataSet ds = new DataSet(cl.threads.iterator());
 			ObjectResourceSorter sorter = CableLinkThread.getDefaultSorter();
 			sorter.setDataSet(ds);
-			ds = sorter.default_sort();
-			this.LinksList.setContents(ds.elements());
+			this.LinksList.setContents(sorter.default_sort());
 		}
-		return true;
-
 	}
 
 	public boolean modify()

@@ -35,25 +35,15 @@
 
 package com.syrus.AMFICOM.Client.Resource.Network;
 
-import java.io.Serializable;
-import java.io.IOException;
+import java.io.*;
+import java.util.*;
 
-import java.util.Hashtable;
-import java.util.Enumeration;
-import java.util.Vector;
-
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
-
-import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
+import com.syrus.AMFICOM.CORBA.Network.*;
 import com.syrus.AMFICOM.Client.Configure.UI.CableLinkPane;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
 
-import com.syrus.AMFICOM.CORBA.Network.CableLink_Transferable;
-import com.syrus.AMFICOM.CORBA.Network.CableLinkThread_Transferable;
-import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
-
-public class CableLink extends ObjectResource implements Serializable
+public class CableLink extends StubResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
 	public static final String typ = "cablelink";
@@ -86,9 +76,9 @@ public class CableLink extends ObjectResource implements Serializable
 
 	public long modified;
 
-	public Vector threads = new Vector();
+	public Collection threads = new ArrayList();
 
-	public Hashtable characteristics = new Hashtable();
+	public Map characteristics = new HashMap();
 
 //	public Equipment start_equipment;
 //	public Port start_port;
@@ -245,19 +235,20 @@ public class CableLink extends ObjectResource implements Serializable
 
 		transferable.threads = new CableLinkThread_Transferable[threads.size()];
 
-		for (int i = 0; i < transferable.threads.length; i++)
+		int counter = 0;
+		for (Iterator it = threads.iterator(); it.hasNext();)
 		{
-			CableLinkThread thread = (CableLinkThread )threads.get(i);
+			CableLinkThread thread = (CableLinkThread)it.next();
 			thread.setTransferableFromLocal();
-			transferable.threads[i] = (CableLinkThread_Transferable)thread.getTransferable();
+			transferable.threads[counter++] = (CableLinkThread_Transferable)thread.getTransferable();
 		}
 
 		int l = this.characteristics.size();
 		int i = 0;
 		transferable.characteristics = new Characteristic_Transferable[l];
-		for(Enumeration e = characteristics.elements(); e.hasMoreElements();)
+		for(Iterator it = characteristics.values().iterator(); it.hasNext();)
 		{
-			Characteristic ch = (Characteristic )e.nextElement();
+			Characteristic ch = (Characteristic)it.next();
 			ch.setTransferableFromLocal();
 			transferable.characteristics[i++] = ch.transferable;
 		}
@@ -363,8 +354,8 @@ public class CableLink extends ObjectResource implements Serializable
 		optical_length = in.readDouble();
 		physical_length = in.readDouble();
 		modified = in.readLong();
-		threads = (Vector )in.readObject();
-		characteristics = (Hashtable )in.readObject();
+		threads = (Collection )in.readObject();
+		characteristics = (Map )in.readObject();
 
 		transferable = new CableLink_Transferable();
 		updateLocalFromTransferable();

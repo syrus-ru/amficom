@@ -1,31 +1,28 @@
 package com.syrus.AMFICOM.Client.Resource.NetworkDirectory;
 
 import java.io.*;
-import java.util.*;
 
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.CORBA.Network.*;
-import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
+import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
+import com.syrus.AMFICOM.CORBA.NetworkDirectory.CableTypeThread_Transferable;
+import com.syrus.AMFICOM.Client.Resource.StubResource;
 
-public class CableTypeThread extends ObjectResource implements Serializable
+public class CableTypeThread extends StubResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
 	public static final String typ = "cabletypethread";
 	CableTypeThread_Transferable transferable;
-	
+
 	public String id = "";
 	public String name = "";
 	public String color = "";
 	public String mark = "";
 	public String link_type_id = "";
 
-	public Hashtable characteristics = new Hashtable();
-
 	public CableTypeThread()
 	{
 		transferable = new CableTypeThread_Transferable();
 	}
-	
+
 	public CableTypeThread(CableTypeThread_Transferable tr)
 	{
 		transferable = tr;
@@ -55,7 +52,7 @@ public class CableTypeThread extends ObjectResource implements Serializable
 	{
 		return typ;
 	}
-	
+
 	public String getName()
 	{
 		return name;

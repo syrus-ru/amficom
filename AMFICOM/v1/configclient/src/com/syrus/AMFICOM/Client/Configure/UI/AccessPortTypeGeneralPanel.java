@@ -36,28 +36,28 @@ public class AccessPortTypeGeneralPanel extends GeneralPanel
 {
 	AccessPortType apt;
 
-  SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 
-  private GridBagLayout gridBagLayout1 = new GridBagLayout();
-  private BorderLayout borderLayout1 = new BorderLayout();
+	private GridBagLayout gridBagLayout1 = new GridBagLayout();
+	private BorderLayout borderLayout1 = new BorderLayout();
 
-  public JLabel idLabel = new JLabel();
-  public JTextField idField = new JTextField();
+	public JLabel idLabel = new JLabel();
+	public JTextField idField = new JTextField();
 
-  public JLabel nameLabel = new JLabel();
-  public JTextField nameField = new JTextField();
+	public JLabel nameLabel = new JLabel();
+	public JTextField nameField = new JTextField();
 
 	public JLabel typesLabel = new JLabel();
 	public ObjectResourceListBox typeBox = new ObjectResourceListBox();
 
-  private JLabel modifyLabel2 = new JLabel();
-  private JLabel modifyLabel1 = new JLabel();
-  private JTextField modifyField = new JTextField();
+	private JLabel modifyLabel2 = new JLabel();
+	private JLabel modifyLabel1 = new JLabel();
+	private JTextField modifyField = new JTextField();
 
-  private JLabel descLabel = new JLabel();
-  private JPanel descriptionPanel = new JPanel();
-  JScrollPane descriptionScrollPane = new JScrollPane();
-  public JTextPane descTextArea = new JTextPane();
+	private JLabel descLabel = new JLabel();
+	private JPanel descriptionPanel = new JPanel();
+	JScrollPane descriptionScrollPane = new JScrollPane();
+	public JTextPane descTextArea = new JTextPane();
 
 
 	public JButton saveButton = new JButton();
@@ -149,7 +149,7 @@ public class AccessPortTypeGeneralPanel extends GeneralPanel
 		return apt;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.apt = (AccessPortType)or;
 
@@ -160,23 +160,21 @@ public class AccessPortTypeGeneralPanel extends GeneralPanel
 /*
 		for (int i = 0; i < apt.test_type_ids.size(); i++)
 		{
-		  TestType tt = (TestType)Pool.get(TestType.typ,(String)apt.test_type_ids.get(i));
-		  if (tt != null)
+			TestType tt = (TestType)Pool.get(TestType.typ,(String)apt.test_type_ids.get(i));
+			if (tt != null)
 			 typeBox.add(tt);
 		}
 */
-		this.descTextArea.setText(apt.description);
-		this.modifyField.setText(sdf.format(new Date(apt.modified)));
+			this.descTextArea.setText(apt.description);
+			this.modifyField.setText(sdf.format(new Date(apt.modified)));
 		}
 		else
 		{
-		idField.setText("");
-		nameField.setText("");
-
-		this.descTextArea.setText("");
-		this.modifyField.setText("");
+			idField.setText("");
+			nameField.setText("");
+			descTextArea.setText("");
+			modifyField.setText("");
 		}
-		return true;
 
 	}
 
@@ -187,14 +185,14 @@ public class AccessPortTypeGeneralPanel extends GeneralPanel
 		if(MyUtil.validName(nameField.getText()))
 			apt.name = nameField.getText();
 		else
-		  return false;
+			return false;
 
 		apt.id = idField.getText();
 		apt.description = this.descTextArea.getText();
 /*
 		apt.test_type_ids.removeAllElements();
 		for (int i = 0; i < this.typeBox.getModel().getSize(); i++)
-		  apt.test_type_ids.add(((TestType)this.typeBox.getModel().getElementAt(i)).id);
+			apt.test_type_ids.add(((TestType)this.typeBox.getModel().getElementAt(i)).id);
 */
 	 }
 	 catch(Exception ex)

@@ -58,7 +58,7 @@ public class EquipmentTypePane extends PropertiesPanel
 		return eq;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		if (or instanceof EquipmentType)
 			this.eq = (EquipmentType)or;
@@ -67,7 +67,6 @@ public class EquipmentTypePane extends PropertiesPanel
 
 		gPanel.setObjectResource(eq);
 		chPanel.setObjectResource(eq);
-		return true;
 	}
 
 	public void setContext(ApplicationContext aContext)

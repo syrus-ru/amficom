@@ -35,14 +35,8 @@
 
 package com.syrus.AMFICOM.Client.Resource.ISMDirectory;
 
-import java.util.*;
-
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Network.*;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
-import com.syrus.AMFICOM.CORBA.Network.*;
-import com.syrus.AMFICOM.CORBA.ISMDirectory.*;
-import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
+import com.syrus.AMFICOM.CORBA.NetworkDirectory.EquipmentType_Transferable;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
 
 public class KISType extends EquipmentType
 {
@@ -64,6 +58,6 @@ public class KISType extends EquipmentType
 	{
 		return typ;
 	}
-	
+
 }
 

@@ -35,7 +35,7 @@
 
 package com.syrus.AMFICOM.Client.Resource.NetworkDirectory;
 
-import java.util.Hashtable;
+import java.util.Map;
 
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Network.CatalogElementModel;
@@ -51,17 +51,17 @@ public class EquipmentTypeModel extends CatalogElementModel
 
 	public String getColumnValue(String col_id)
 	{
-    if(col_id.equals("id"))
-      return equipmentType.id;
-    if(col_id.equals("name"))
-      return equipmentType.name;
-    if(col_id.equals("eq_class"))
-      return equipmentType.eq_class;
+		if(col_id.equals("id"))
+			return equipmentType.id;
+		if(col_id.equals("name"))
+			return equipmentType.name;
+		if(col_id.equals("eq_class"))
+			return equipmentType.eq_class;
 
 		return "";
 	}
 
-	public Hashtable getCharacteristics(ObjectResource obj)
+	public Map getCharacteristics(ObjectResource obj)
 	{
 		return equipmentType.characteristics;
 	}

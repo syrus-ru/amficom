@@ -1,31 +1,17 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
+import java.util.*;
+
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-
-import java.util.Enumeration;
-
-import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
-import javax.swing.JButton;
 
-import oracle.jdeveloper.layout.XYConstraints;
-
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
-import com.syrus.AMFICOM.Client.General.UI.MessageBox;
 import com.syrus.AMFICOM.Client.General.Checker;
-
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-
-import com.syrus.AMFICOM.Client.Resource.Network.Equipment;
-import com.syrus.AMFICOM.Client.Resource.Network.Port;
-import com.syrus.AMFICOM.Client.Resource.Network.CablePort;
-import com.syrus.AMFICOM.Client.Resource.ISM.KIS;
-import com.syrus.AMFICOM.Client.Resource.ISM.AccessPort;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.ISM.*;
+import com.syrus.AMFICOM.Client.Resource.Network.*;
 
 
 public class KISPane extends PropertiesPanel
@@ -80,7 +66,7 @@ public class KISPane extends PropertiesPanel
 		return equipment;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.equipment = (KIS )or;
 
@@ -89,7 +75,6 @@ public class KISPane extends PropertiesPanel
 		pPanel.setObjectResource(equipment);
 		cpPanel.setObjectResource(equipment);
 		chPanel.setObjectResource(equipment);
-		return true;
 	}
 
 	public void setContext(ApplicationContext aContext)
@@ -149,27 +134,27 @@ public class KISPane extends PropertiesPanel
 
 		int i = 0;
 		String []sa = new String[equipment.access_ports.size()];
-		for(Enumeration enum1 = equipment.access_ports.elements(); enum1.hasMoreElements();)
+		for(Iterator it = equipment.access_ports.iterator(); it.hasNext();)
 		{
-			AccessPort port = (AccessPort )enum1.nextElement();
+			AccessPort port = (AccessPort)it.next();
 			sa[i++] = port.getId();
 		}
 		aContext.getDataSourceInterface().RemoveAccessPorts(sa);
 
 		i = 0;
 		String []sp = new String[equipment.ports.size()];
-		for(Enumeration enum1 = equipment.ports.elements(); enum1.hasMoreElements();)
+		for(Iterator it = equipment.ports.iterator(); it.hasNext();)
 		{
-			Port port = (Port )enum1.nextElement();
+			Port port = (Port)it.next();
 			sp[i++] = port.getId();
 		}
 		aContext.getDataSourceInterface().RemovePorts(sp);
 
 		i = 0;
 		String []sc = new String[equipment.cports.size()];
-		for(Enumeration enum1 = equipment.cports.elements(); enum1.hasMoreElements();)
+		for(Iterator it = equipment.cports.iterator(); it.hasNext();)
 		{
-			CablePort port = (CablePort )enum1.nextElement();
+			CablePort port = (CablePort)it.next();
 			sc[i++] = port.getId();
 		}
 		aContext.getDataSourceInterface().RemoveCablePorts(sc);

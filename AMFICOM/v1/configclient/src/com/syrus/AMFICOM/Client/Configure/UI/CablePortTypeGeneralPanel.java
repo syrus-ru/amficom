@@ -151,7 +151,7 @@ public class CablePortTypeGeneralPanel extends GeneralPanel
 		return portType;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.portType = (CablePortType)or;
 
@@ -175,8 +175,6 @@ public class CablePortTypeGeneralPanel extends GeneralPanel
 
 			this.ModifyField.setText("");
 		}
-		return true;
-
 	}
 
 	public boolean modify()

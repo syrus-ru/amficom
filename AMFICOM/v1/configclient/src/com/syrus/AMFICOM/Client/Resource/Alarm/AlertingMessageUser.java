@@ -1,17 +1,17 @@
 package com.syrus.AMFICOM.Client.Resource.Alarm;
 
-import com.syrus.AMFICOM.CORBA.Alarm.*;
+import com.syrus.AMFICOM.CORBA.Alarm.AlertingMessageUser_Transferable;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Object.*;
+import com.syrus.AMFICOM.Client.Resource.Object.User;
 
-public class AlertingMessageUser extends ObjectResource
+public class AlertingMessageUser extends StubResource
 {
 	AlertingMessageUser_Transferable transferable;
 
-    public String id = "";
-    public String user_id = "";
-    public String alerting_message_id = "";
-    public String alerting_type_id = "";
+	public String id = "";
+	public String user_id = "";
+	public String alerting_message_id = "";
+	public String alerting_type_id = "";
 
 	public static final String typ = "alertingmessageuser";
 
@@ -34,25 +34,25 @@ public class AlertingMessageUser extends ObjectResource
 	{
 		this.id = id;
 		this.user_id = user_id;
-	    this.alerting_message_id = alerting_message_id;
-	    this.alerting_type_id = alerting_type_id;
+			this.alerting_message_id = alerting_message_id;
+			this.alerting_type_id = alerting_type_id;
 
 		transferable = new AlertingMessageUser_Transferable();
 	}
 	public void setLocalFromTransferable()
 	{
 		this.id = transferable.id;
-	    this.user_id = transferable.user_id;
-	    this.alerting_message_id = transferable.alerting_message_id;
-	    this.alerting_type_id = transferable.alerting_type_id;
+			this.user_id = transferable.user_id;
+			this.alerting_message_id = transferable.alerting_message_id;
+			this.alerting_type_id = transferable.alerting_type_id;
 	}
 
 	public void setTransferableFromLocal()
 	{
 		transferable.id = id;
-	    transferable.user_id = user_id;
-	    transferable.alerting_message_id = alerting_message_id;
-	    transferable.alerting_type_id = alerting_type_id;
+			transferable.user_id = user_id;
+			transferable.alerting_message_id = alerting_message_id;
+			transferable.alerting_type_id = alerting_type_id;
 	}
 
 	public void updateLocalFromTransferable()
@@ -68,12 +68,12 @@ public class AlertingMessageUser extends ObjectResource
 	{
 		return Pool.getName(User.typ, user_id);
 	}
-	
+
 	public String getTyp()
 	{
 		return typ;
 	}
-	
+
 	public String getDomainId()
 	{
 		return "sysdomain";

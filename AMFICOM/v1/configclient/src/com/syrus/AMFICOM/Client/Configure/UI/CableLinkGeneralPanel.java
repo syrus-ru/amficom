@@ -36,14 +36,14 @@ public class CableLinkGeneralPanel extends GeneralPanel
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 	CableLink cl;
 
-  private GridBagLayout gridBagLayout1 = new GridBagLayout();
+	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
 	JLabel typeLabel = new JLabel();
 	ObjectResourceComboBox typeBox = new ObjectResourceComboBox(CableLinkType.typ, true);
 
 	JLabel rnLabel1 = new JLabel();
-  private JLabel rnLabel2 = new JLabel();
-  JTextField rnField = new JTextField();
+	private JLabel rnLabel2 = new JLabel();
+	JTextField rnField = new JTextField();
 
 	JLabel nameLabel = new JLabel();
 	JTextField nameField = new JTextField();
@@ -60,7 +60,7 @@ public class CableLinkGeneralPanel extends GeneralPanel
 	private JTextField supplierCodeField = new JTextField();
 
 	private JLabel start_equipmentLabel = new JLabel();
-  private JLabel start_equipmentPortLabel1 = new JLabel();
+	private JLabel start_equipmentPortLabel1 = new JLabel();
 	private JLabel start_equipmentPortLabel2 = new JLabel();
 	private ObjectResourceComboBox startEquipmentPortBox = new ObjectResourceComboBox(CablePort.typ, true);
 	private ObjectResourceComboBox startEquipmentBox = new ObjectResourceComboBox("kisequipment", true);//Equipment.typ, true);
@@ -250,7 +250,7 @@ public class CableLinkGeneralPanel extends GeneralPanel
 		return cl;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.cl = (CableLink )or;
 
@@ -274,13 +274,13 @@ public class CableLinkGeneralPanel extends GeneralPanel
 			this.startEquipmentBox.setSelected(cl.start_equipment_id);
 			Equipment se = (Equipment )Pool.get("kisequipment", cl.start_equipment_id);
 			if (se != null)
-				this.startEquipmentPortBox.setContents(se.cports.elements(), true);
+				this.startEquipmentPortBox.setContents(se.cports.iterator(), true);
 			this.startEquipmentPortBox.setSelected(cl.start_port_id);
 
 			this.endEquipmentBox.setSelected(cl.end_equipment_id);
 			Equipment ee = (Equipment )Pool.get("kisequipment", cl.end_equipment_id);
 			if (ee != null)
-				this.endEquipmentBox.setContents(ee.cports.elements(), true);
+				this.endEquipmentBox.setContents(ee.cports.iterator(), true);
 			this.endEquipmentPortBox.setSelected(cl.end_port_id);
 			this.modifyField.setText(sdf.format(new Date(cl.modified)));
 /*
@@ -320,8 +320,6 @@ public class CableLinkGeneralPanel extends GeneralPanel
 */
 //			imageLabel.setIcon(new ImageIcon());
 		}
-		return true;
-
 	}
 
 	public boolean modify()

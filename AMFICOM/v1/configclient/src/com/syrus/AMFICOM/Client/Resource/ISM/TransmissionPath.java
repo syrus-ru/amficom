@@ -38,15 +38,14 @@ package com.syrus.AMFICOM.Client.Resource.ISM;
 import java.io.*;
 import java.util.*;
 
+import com.syrus.AMFICOM.CORBA.ISM.*;
+import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
+import com.syrus.AMFICOM.Client.Configure.UI.TransmissionPathPane;
+import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Network.*;
-import com.syrus.AMFICOM.CORBA.Network.*;
-import com.syrus.AMFICOM.CORBA.ISM.*;
 
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Configure.UI.*;
-
-public class TransmissionPath extends ObjectResource implements Serializable
+public class TransmissionPath extends StubResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
 	public static final String typ = "path";
@@ -64,9 +63,9 @@ public class TransmissionPath extends ObjectResource implements Serializable
 
 	public long modified;
 
-	public Vector links = new Vector();
+	public Collection links = new ArrayList();
 
-	public Hashtable characteristics = new Hashtable();
+	public Map characteristics = new HashMap();
 
 	public TransmissionPath()
 	{
@@ -134,18 +133,19 @@ public class TransmissionPath extends ObjectResource implements Serializable
 
 //		link_ids.copyInto(transferable.link_ids);
 		transferable.links = new TransmissionPathElement_Transferable[links.size()];
-		for(int i = 0; i < links.size(); i++)
+		int counter = 0;
+		for(Iterator it = links.iterator(); it.hasNext();)
 		{
-			TransmissionPathElement link = (TransmissionPathElement )links.get(i);
-			transferable.links[i] = (TransmissionPathElement_Transferable )link.getTransferable();
+			TransmissionPathElement link = (TransmissionPathElement)it.next();
+			transferable.links[counter++] = (TransmissionPathElement_Transferable )link.getTransferable();
 		}
 
 		int l = this.characteristics.size();
 		int i = 0;
 		transferable.characteristics = new Characteristic_Transferable[l];
-		for(Enumeration e = characteristics.elements(); e.hasMoreElements();)
+		for(Iterator it = characteristics.values().iterator(); it.hasNext();)
 		{
-			Characteristic ch = (Characteristic )e.nextElement();
+			Characteristic ch = (Characteristic)it.next();
 			ch.setTransferableFromLocal();
 			transferable.characteristics[i++] = ch.transferable;
 		}
@@ -155,7 +155,7 @@ public class TransmissionPath extends ObjectResource implements Serializable
 	{
 		return typ;
 	}
-	
+
 	public String getName()
 	{
 		return name;
@@ -209,10 +209,9 @@ public class TransmissionPath extends ObjectResource implements Serializable
 		return new TransmissionPathPane();
 	}
 
-	public Vector sortPorts()
+	public List sortPorts()
 	{
-		Vector vec;
-		Enumeration e;
+		ArrayList vec = new ArrayList();
 		AccessPort ap;
 		ObjectResource endport;
 		ObjectResource startport;
@@ -221,7 +220,6 @@ public class TransmissionPath extends ObjectResource implements Serializable
 		ObjectResource bufstartport;
 		TransmissionPathElement tpe;
 
-		vec = new Vector();
 
 		ap = (AccessPort )Pool.get(AccessPort.typ, this.access_port_id);
 		cur_eq = (Equipment )Pool.get("kisequipment", ap.KIS_id);
@@ -255,7 +253,7 @@ public class TransmissionPath extends ObjectResource implements Serializable
 					endport = bufstartport;
 				}
 				else
-					return new Vector();
+					return new ArrayList();
 
 				cur_eq = (Equipment )Pool.get("kisequipment", ((Port )endport).equipment_id);
 			}
@@ -277,7 +275,7 @@ public class TransmissionPath extends ObjectResource implements Serializable
 					endport = bufstartport;
 				}
 				else
-					return new Vector();
+					return new ArrayList();
 
 				cur_eq = (Equipment )Pool.get("kisequipment", ((CablePort )endport).equipment_id);
 			}
@@ -314,8 +312,8 @@ public class TransmissionPath extends ObjectResource implements Serializable
 		monitored_element_id = (String )in.readObject();
 		domain_id = (String )in.readObject();
 		modified = in.readLong();
-		links = (Vector )in.readObject();
-		characteristics = (Hashtable )in.readObject();
+		links = (Collection )in.readObject();
+		characteristics = (Map )in.readObject();
 
 		transferable = new TransmissionPath_Transferable();
 		updateLocalFromTransferable();

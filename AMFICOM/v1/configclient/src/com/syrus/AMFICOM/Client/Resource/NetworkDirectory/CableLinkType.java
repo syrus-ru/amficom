@@ -35,26 +35,17 @@
 
 package com.syrus.AMFICOM.Client.Resource.NetworkDirectory;
 
+import java.io.*;
+import java.util.*;
+
 import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
-import com.syrus.AMFICOM.CORBA.NetworkDirectory.CableLinkType_Transferable;
-import com.syrus.AMFICOM.CORBA.NetworkDirectory.CableTypeThread_Transferable;
-import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-
+import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
 import com.syrus.AMFICOM.Client.Configure.UI.CableLinkTypePane;
-import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
-import com.syrus.AMFICOM.Client.Resource.Network.CableLinkDisplayModel;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
 
-import java.io.IOException;
-import java.io.Serializable;
-
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
-
-public class CableLinkType extends ObjectResource implements Serializable
+public class CableLinkType extends StubResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
 	public static final String typ = "cablelinktype";
@@ -77,9 +68,9 @@ public class CableLinkType extends ObjectResource implements Serializable
 	public String image_id = "";
 	public long modified;
 
-	public Hashtable characteristics = new Hashtable();
+	public Map characteristics = new HashMap();
 
-	public Vector cable_threads = new Vector();
+	public List cable_threads = new ArrayList();
 
 	public CableLinkType()
 	{
@@ -143,19 +134,20 @@ public class CableLinkType extends ObjectResource implements Serializable
 
 		transferable.cable_threads = new CableTypeThread_Transferable[cable_threads.size()];
 
-		for (int i = 0; i < transferable.cable_threads.length; i++)
+		int counter = 0;
+		for (Iterator it = cable_threads.iterator(); it.hasNext();)
 		{
-			CableTypeThread thread = (CableTypeThread )cable_threads.get(i);
+			CableTypeThread thread = (CableTypeThread)it.next();
 			thread.setTransferableFromLocal();
-			transferable.cable_threads[i] = (CableTypeThread_Transferable)thread.getTransferable();
+			transferable.cable_threads[counter++] = (CableTypeThread_Transferable)thread.getTransferable();
 		}
 
 		int l = this.characteristics.size();
 		int i = 0;
 		transferable.characteristics = new Characteristic_Transferable[l];
-		for(Enumeration e = characteristics.elements(); e.hasMoreElements();)
+		for(Iterator it = characteristics.values().iterator(); it.hasNext();)
 		{
-			Characteristic ch = (Characteristic )e.nextElement();
+			Characteristic ch = (Characteristic)it.next();
 			ch.setTransferableFromLocal();
 			transferable.characteristics[i++] = ch.transferable;
 		}
@@ -195,21 +187,21 @@ public class CableLinkType extends ObjectResource implements Serializable
 		return modified;
 	}
 
-  public static ObjectResourceDisplayModel getDefaultDisplayModel()
-  {
-    return new CableLinkTypeDisplayModel();
-  }
+	public static ObjectResourceDisplayModel getDefaultDisplayModel()
+	{
+		return new CableLinkTypeDisplayModel();
+	}
 
-  public ObjectResourceModel getModel()
-  {
-    return new CableLinkTypeModel(this);
-  }
+	public ObjectResourceModel getModel()
+	{
+		return new CableLinkTypeModel(this);
+	}
 
-  public static PropertiesPanel getPropertyPane()
-  {
-    return new CableLinkTypePane();
+	public static PropertiesPanel getPropertyPane()
+	{
+		return new CableLinkTypePane();
 //		return new CableLinkGeneralPanel();
-  }
+	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
@@ -237,9 +229,9 @@ public class CableLinkType extends ObjectResource implements Serializable
 		manufacturer_code = (String )in.readObject();
 		image_id = (String )in.readObject();
 		modified = in.readLong();
-		characteristics = (Hashtable )in.readObject();
+		characteristics = (Map )in.readObject();
 
-		cable_threads = (Vector )in.readObject();
+		cable_threads = (List )in.readObject();
 
 		transferable = new CableLinkType_Transferable();
 	}

@@ -1,21 +1,16 @@
 package com.syrus.AMFICOM.Client.Resource.Network;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
-import com.syrus.AMFICOM.Client.General.UI.PropertyEditor;
-import com.syrus.AMFICOM.Client.General.UI.PropertyRenderer;
-import com.syrus.AMFICOM.Client.General.UI.StubDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.TextFieldEditor;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import java.util.Vector;
+import java.util.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
 
 public class CablePortDisplayModel extends StubDisplayModel
 {
 	ApplicationContext aContext = new ApplicationContext();
+	List cols = new ArrayList();
 
 	public CablePortDisplayModel()
 	{
@@ -26,15 +21,14 @@ public class CablePortDisplayModel extends StubDisplayModel
 	{
 		super();
 		this.aContext = aContext;
-	}
 
-	public Vector getColumns()
-	{
-		Vector cols = new Vector();
-//		cols.add("id");
 		cols.add("name");
 		cols.add("type_id");
 		cols.add("equipment_id");
+	}
+
+	public List getColumns()
+	{
 		return cols;
 	}
 
@@ -68,13 +62,13 @@ public class CablePortDisplayModel extends StubDisplayModel
 	{
 		CablePort p = (CablePort )or;
 		if(col_id.equals("id"))
-		  return new TextFieldEditor(p.getId());
+			return new TextFieldEditor(p.getId());
 		if(col_id.equals("name"))
-		  return new TextFieldEditor(p.getName());
+			return new TextFieldEditor(p.getName());
 		if(col_id.equals("type_id"))
-		  return new TextFieldEditor(Pool.getName("cableporttype", p.type_id));
+			return new TextFieldEditor(Pool.getName("cableporttype", p.type_id));
 		if(col_id.equals("equipment_id"))
-		  return new TextFieldEditor(Pool.getName("kisequipment", p.equipment_id));
+			return new TextFieldEditor(Pool.getName("kisequipment", p.equipment_id));
 		return null;
 	}
 

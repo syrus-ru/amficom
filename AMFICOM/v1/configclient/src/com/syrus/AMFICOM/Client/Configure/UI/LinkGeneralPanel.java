@@ -34,67 +34,67 @@ import java.awt.GridBagConstraints;
 
 public class LinkGeneralPanel extends GeneralPanel
 {
-  SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
-  Link cl;
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+	Link cl;
 
-  private GridBagLayout gridBagLayout1 = new GridBagLayout();
+	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
-  JLabel typeLabel = new JLabel();
-  ObjectResourceComboBox typeBox = new ObjectResourceComboBox(CableLinkType.typ, true);
+	JLabel typeLabel = new JLabel();
+	ObjectResourceComboBox typeBox = new ObjectResourceComboBox(CableLinkType.typ, true);
 
-  JLabel rnLabel1 = new JLabel();
-  private JLabel rnLabel2 = new JLabel();
-  JTextField rnField = new JTextField();
+	JLabel rnLabel1 = new JLabel();
+	private JLabel rnLabel2 = new JLabel();
+	JTextField rnField = new JTextField();
 
-  JLabel nameLabel = new JLabel();
-  JTextField nameField = new JTextField();
+	JLabel nameLabel = new JLabel();
+	JTextField nameField = new JTextField();
 
-  private JLabel manufacturerLabel = new JLabel();
-  private JLabel manufacturerCodeLabel = new JLabel();
-  private JTextField manufacturerField = new JTextField();
-  private JTextField manufacturerCodeField = new JTextField();
+	private JLabel manufacturerLabel = new JLabel();
+	private JLabel manufacturerCodeLabel = new JLabel();
+	private JTextField manufacturerField = new JTextField();
+	private JTextField manufacturerCodeField = new JTextField();
 
-  private JLabel supplierLabel = new JLabel();
-  private JLabel supplierCodeLabel = new JLabel();
+	private JLabel supplierLabel = new JLabel();
+	private JLabel supplierCodeLabel = new JLabel();
 
-  private JTextField supplierField = new JTextField();
-  private JTextField supplierCodeField = new JTextField();
+	private JTextField supplierField = new JTextField();
+	private JTextField supplierCodeField = new JTextField();
 
-  private JLabel start_equipmentLabel = new JLabel();
-  private JLabel start_equipmentPortLabel1 = new JLabel();
-  private JLabel start_equipmentPortLabel2 = new JLabel();
-  private ObjectResourceComboBox startEquipmentPortBox = new ObjectResourceComboBox(Port.typ, true);
-  private ObjectResourceComboBox startEquipmentBox = new ObjectResourceComboBox("kisequipment", true);//Equipment.typ, true);
+	private JLabel start_equipmentLabel = new JLabel();
+	private JLabel start_equipmentPortLabel1 = new JLabel();
+	private JLabel start_equipmentPortLabel2 = new JLabel();
+	private ObjectResourceComboBox startEquipmentPortBox = new ObjectResourceComboBox(Port.typ, true);
+	private ObjectResourceComboBox startEquipmentBox = new ObjectResourceComboBox("kisequipment", true);//Equipment.typ, true);
 
-  private JLabel end_equipmentLabel = new JLabel();
-  private JLabel end_equipmentPortLabel2 = new JLabel();
-  private JLabel end_equipmentPortLabel1 = new JLabel();
-  private ObjectResourceComboBox endEquipmentBox = new ObjectResourceComboBox("kisequipment", true);//Equipment.typ, true);
-  private ObjectResourceComboBox endEquipmentPortBox = new ObjectResourceComboBox(Port.typ, true);
+	private JLabel end_equipmentLabel = new JLabel();
+	private JLabel end_equipmentPortLabel2 = new JLabel();
+	private JLabel end_equipmentPortLabel1 = new JLabel();
+	private ObjectResourceComboBox endEquipmentBox = new ObjectResourceComboBox("kisequipment", true);//Equipment.typ, true);
+	private ObjectResourceComboBox endEquipmentPortBox = new ObjectResourceComboBox(Port.typ, true);
 
-  private JLabel modifyLabel2 = new JLabel();
-  private JLabel modifyLabel1 = new JLabel();
-  private JTextField modifyField = new JTextField();
+	private JLabel modifyLabel2 = new JLabel();
+	private JLabel modifyLabel1 = new JLabel();
+	private JTextField modifyField = new JTextField();
 
 	private BorderLayout borderLayout1 = new BorderLayout();
-  private JLabel descLabel = new JLabel();
+	private JLabel descLabel = new JLabel();
 	JPanel descriptionPanel = new JPanel();
-  JScrollPane descriptionScrollPane = new JScrollPane();
-  public JTextPane descTextArea = new JTextPane();
+	JScrollPane descriptionScrollPane = new JScrollPane();
+	public JTextPane descTextArea = new JTextPane();
 
-  private JPanel mainPanel = new JPanel();
-  private BorderLayout borderLayout3 = new BorderLayout();
+	private JPanel mainPanel = new JPanel();
+	private BorderLayout borderLayout3 = new BorderLayout();
 
-  JTextField idField = new JTextField();
-  JLabel idLabel = new JLabel();
+	JTextField idField = new JTextField();
+	JLabel idLabel = new JLabel();
 
-  private JLabel optLabel = new JLabel();
-  private JLabel physLabel = new JLabel();
-  private JTextField optLengthField = new JTextField();
-  private JTextField physLengthField = new JTextField();
+	private JLabel optLabel = new JLabel();
+	private JLabel physLabel = new JLabel();
+	private JTextField optLengthField = new JTextField();
+	private JTextField physLengthField = new JTextField();
 
-  public LinkGeneralPanel()
-  {
+	public LinkGeneralPanel()
+	{
 	 super();
 	 try
 	 {
@@ -104,16 +104,16 @@ public class LinkGeneralPanel extends GeneralPanel
 	 {
 		e.printStackTrace();
 	 }
-  }
+	}
 
-  public LinkGeneralPanel(Link cl)
-  {
+	public LinkGeneralPanel(Link cl)
+	{
 	 this();
 	 setObjectResource(cl);
-  }
+	}
 
-  private void jbInit() throws Exception
-  {
+	private void jbInit() throws Exception
+	{
 	 typeLabel.setText(LangModelConfig.getString("label_type"));
 	 typeLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 	 rnLabel1.setText(LangModelConfig.getString("label_inventory_nr1"));
@@ -230,15 +230,15 @@ public class LinkGeneralPanel extends GeneralPanel
 		 mainPanel.add(idField, new GridBagConstraints(1, 20, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 
 //		this.add(saveButton, BorderLayout.SOUTH);
-  }
+	}
 
-  public ObjectResource getObjectResource()
-  {
+	public ObjectResource getObjectResource()
+	{
 	 return cl;
-  }
+	}
 
-  public boolean setObjectResource(ObjectResource or)
-  {
+	public void setObjectResource(ObjectResource or)
+	{
 	 this.cl = (Link) or;
 
 	 if(cl != null)
@@ -261,13 +261,13 @@ public class LinkGeneralPanel extends GeneralPanel
 		this.startEquipmentBox.setSelected(cl.start_equipment_id);
 		Equipment se = (Equipment )Pool.get("kisequipment", cl.start_equipment_id);
 		if (se != null)
-		  this.startEquipmentPortBox.setContents(se.cports.elements(), true);
+			this.startEquipmentPortBox.setContents(se.cports.iterator(), true);
 		this.startEquipmentPortBox.setSelected(cl.start_port_id);
 
 		this.endEquipmentBox.setSelected(cl.end_equipment_id);
 		Equipment ee = (Equipment )Pool.get("kisequipment", cl.end_equipment_id);
 		if (ee != null)
-		  this.endEquipmentBox.setContents(ee.cports.elements(), true);
+			this.endEquipmentBox.setContents(ee.cports.iterator(), true);
 		this.endEquipmentPortBox.setSelected(cl.end_port_id);
 		this.modifyField.setText(sdf.format(new Date(cl.modified)));
 /*
@@ -307,32 +307,30 @@ public class LinkGeneralPanel extends GeneralPanel
 */
 //			imageLabel.setIcon(new ImageIcon());
 	 }
-	 return true;
+	}
 
-  }
-
-  public boolean modify()
-  {
+	public boolean modify()
+	{
 	 try
 	 {
 		try
 		{
-		  double d1 = Double.parseDouble(physLengthField.getText());
-		  double d2 = Double.parseDouble(optLengthField.getText());
+			double d1 = Double.parseDouble(physLengthField.getText());
+			double d2 = Double.parseDouble(optLengthField.getText());
 
-		  cl.physical_length = d1;
-		  cl.optical_length = d2;
+			cl.physical_length = d1;
+			cl.optical_length = d2;
 		}
 		catch(Exception ex)
 		{
-		  System.out.println("Incorrect length format!");
-		  return false;
+			System.out.println("Incorrect length format!");
+			return false;
 		}
 
 		if(MyUtil.validName(nameField.getText()))
 			cl.name = nameField.getText();
 		else
-		  return false;
+			return false;
 
 		cl.type_id = (String )this.typeBox.getSelected();
 		cl.id = this.idField.getText();
@@ -359,13 +357,13 @@ public class LinkGeneralPanel extends GeneralPanel
 		return false;
 	 }
 	 return true;
-  }
+	}
 
-  void saveButton_actionPerformed(ActionEvent e)
-  {
+	void saveButton_actionPerformed(ActionEvent e)
+	{
 	 if(!Checker.checkCommandByUserId(
-		  aContext.getSessionInterface().getUserId(),
-		  Checker.catalogTCediting))
+			aContext.getSessionInterface().getUserId(),
+			Checker.catalogTCediting))
 	 {
 		return;
 	 }
@@ -375,13 +373,13 @@ public class LinkGeneralPanel extends GeneralPanel
 		DataSourceInterface dataSource = aContext.getDataSourceInterface();
 		dataSource.SaveCableLink(cl.getId());
 	 }
-  }
+	}
 
-  public boolean delete()
-  {
+	public boolean delete()
+	{
 	 if(!Checker.checkCommandByUserId(
-		  aContext.getSessionInterface().getUserId(),
-		  Checker.catalogTCediting))
+			aContext.getSessionInterface().getUserId(),
+			Checker.catalogTCediting))
 		return false;
 
 	 String []s = new String[1];
@@ -390,5 +388,5 @@ public class LinkGeneralPanel extends GeneralPanel
 	 aContext.getDataSourceInterface().RemoveCableLinks(s);
 
 	 return true;
-  }
+	}
 }

@@ -1,60 +1,25 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
+import java.util.*;
+
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import javax.swing.border.EtchedBorder;
+import javax.swing.event.*;
+
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
-import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
-import com.syrus.AMFICOM.Client.Resource.ISM.AccessPort;
-import com.syrus.AMFICOM.Client.Resource.ISM.KIS;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.ISMDirectory.AccessPortType;
-import com.syrus.AMFICOM.Client.Resource.Network.CableLink;
-import com.syrus.AMFICOM.Client.Resource.Network.CablePort;
-import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
-import com.syrus.AMFICOM.Client.Resource.Network.Equipment;
-import com.syrus.AMFICOM.Client.Resource.Network.Link;
-import com.syrus.AMFICOM.Client.Resource.Network.Port;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CableLinkType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CablePortType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CharacteristicType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.LinkType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.PortType;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.Network.*;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.ElementAttribute;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ElementAttributeType;
-
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.SystemColor;
-import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
-
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.border.EtchedBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
-import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;
+import oracle.jdeveloper.layout.*;
 
 public class CharacteristicsPanel extends JPanel
 		implements OperationListener
@@ -72,8 +37,8 @@ public class CharacteristicsPanel extends JPanel
 	String selected_item = "";
 	String selected_type = "";
 
-	private Hashtable char_hash = new Hashtable(1);
-	private Hashtable attr_hash = new Hashtable(1);
+	private Map char_hash = new Hashtable(1);
+	private Map attr_hash = new Hashtable(1);
 
 	ApplicationContext aContext;
 
@@ -246,25 +211,23 @@ public class CharacteristicsPanel extends JPanel
 			tModel.setEditableColumns(new int[0]);
 	}
 
-	void elementSelected(Hashtable t)
+	void elementSelected(Map t)
 	{
 		tModel.clearTable();
 		if (selected_type == null || t == null)
 			return;
 
 		if (selected_type.equals("attribute"))
-			for (Enumeration en = t.keys(); en.hasMoreElements();)
+			for (Iterator it = t.values().iterator(); it.hasNext();)
 			{
-				String key = (String)en.nextElement();
-				ElementAttribute attr = (ElementAttribute)t.get(key);
+				ElementAttribute attr = (ElementAttribute)it.next();
 				ElementAttributeType at = (ElementAttributeType)Pool.get(ElementAttributeType.typ, attr.type_id);
 				tModel.addRow(attr.getName(), new Object[] {attr.value});
 			}
 		else
-			for (Enumeration en = t.keys(); en.hasMoreElements();)
+			for (Iterator it = t.values().iterator(); it.hasNext();)
 			{
-				String key = (String)en.nextElement();
-				Characteristic chr = (Characteristic)t.get(key);
+				Characteristic chr = (Characteristic)it.next();
 				CharacteristicType ch = (CharacteristicType)Pool.get(CharacteristicType.typ, chr.type_id);
 				if (ch.ch_class.equals(selected_type))
 				{
@@ -316,42 +279,39 @@ public class CharacteristicsPanel extends JPanel
 		}
 	}
 
-	void removeCharacterisricFromHash(Hashtable table, String name)
+	void removeCharacterisricFromHash(Map table, String name)
 	{
-		for (Enumeration enum = table.keys(); enum.hasMoreElements(); )
+		for (Iterator it = table.values().iterator(); it.hasNext(); )
 		{
-			String key = (String)enum.nextElement();
-			Characteristic ch = (Characteristic)table.get(key);
+			Characteristic ch = (Characteristic)it.next();
 			CharacteristicType t = (CharacteristicType)Pool.get(CharacteristicType.typ, ch.type_id);
 			if (t.getName().equals(name))
 			{
-				table.remove(key);
+				it.remove();
 				break;
 			}
 		}
 	}
 
-	void removeAttributeFromHash(Hashtable table, String name)
+	void removeAttributeFromHash(Map table, String name)
 	{
-		for (Enumeration enum = table.keys(); enum.hasMoreElements(); )
+		for (Iterator it = table.values().iterator(); it.hasNext(); )
 		{
-			String key = (String)enum.nextElement();
-			ElementAttribute attr = (ElementAttribute)table.get(key);
+			ElementAttribute attr = (ElementAttribute)it.next();
 			ElementAttributeType t = (ElementAttributeType)Pool.get(ElementAttributeType.typ, attr.type_id);
 			if (t.getName().equals(name))
 			{
-				table.remove(key);
+				it.remove();
 				break;
 			}
 		}
 	}
 
-	void setCharacteristicAtHash(Hashtable table, String name, String value)
+	void setCharacteristicAtHash(Map table, String name, String value)
 	{
-		for (Enumeration enum = table.keys(); enum.hasMoreElements(); )
+		for (Iterator it = table.values().iterator(); it.hasNext(); )
 		{
-			String key = (String)enum.nextElement();
-			Characteristic ch = (Characteristic)table.get(key);
+			Characteristic ch = (Characteristic)it.next();
 			CharacteristicType cht = (CharacteristicType)Pool.get(CharacteristicType.typ, ch.type_id);
 			if (cht.getName().equals(name))
 			{
@@ -361,12 +321,11 @@ public class CharacteristicsPanel extends JPanel
 		}
 	}
 
-	void setAttributeAtHash(Hashtable table, String name, String value)
+	void setAttributeAtHash(Map table, String name, String value)
 	{
-		for (Enumeration enum = table.keys(); enum.hasMoreElements(); )
+		for (Iterator it = table.values().iterator(); it.hasNext(); )
 		{
-			String key = (String)enum.nextElement();
-			ElementAttribute attr = (ElementAttribute)table.get(key);
+			ElementAttribute attr = (ElementAttribute)it.next();
 			ElementAttributeType at = (ElementAttributeType)Pool.get(ElementAttributeType.typ, attr.type_id);
 			if (at.getName().equals(name))
 			{

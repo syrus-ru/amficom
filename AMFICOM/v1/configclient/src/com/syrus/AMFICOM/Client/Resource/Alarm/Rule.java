@@ -1,16 +1,16 @@
 package com.syrus.AMFICOM.Client.Resource.Alarm;
 
-import com.syrus.AMFICOM.CORBA.Alarm.*;
-import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.CORBA.Alarm.Rule_Transferable;
+import com.syrus.AMFICOM.Client.Resource.StubResource;
 
-public class Rule extends ObjectResource
+public class Rule extends StubResource
 {
 	Rule_Transferable transferable;
 
-    public String event_type_id = "";
-    public String source_type_id = "";
-    public String logic_text = "";
-    public String source_id = "";
+	public String event_type_id = "";
+	public String source_type_id = "";
+	public String logic_text = "";
+	public String source_id = "";
 	boolean is_generated = true;
 
 	public static final String typ = "eventrule";
@@ -32,8 +32,8 @@ public class Rule extends ObjectResource
 			String logic_text)
 	{
 		this.event_type_id = event_type_id;
-	    this.source_type_id = source_type_id;
-	    this.logic_text = logic_text;
+			this.source_type_id = source_type_id;
+			this.logic_text = logic_text;
 
 		transferable = new Rule_Transferable();
 	}
@@ -41,18 +41,18 @@ public class Rule extends ObjectResource
 	public void setLocalFromTransferable()
 	{
 		this.event_type_id = transferable.event_type_id;
-	    this.source_type_id = transferable.source_type_id;
-	    this.logic_text = transferable.logic_text;
-	    this.source_id = transferable.source_id;
+			this.source_type_id = transferable.source_type_id;
+			this.logic_text = transferable.logic_text;
+			this.source_id = transferable.source_id;
 		this.is_generated = transferable.is_generated;
 	}
 
 	public void setTransferableFromLocal()
 	{
 		transferable.event_type_id = event_type_id;
-	    transferable.source_type_id = source_type_id;
-	    transferable.logic_text = logic_text;
-	    transferable.source_id = source_id;
+			transferable.source_type_id = source_type_id;
+			transferable.logic_text = logic_text;
+			transferable.source_id = source_id;
 		transferable.is_generated = is_generated;
 	}
 
@@ -69,12 +69,12 @@ public class Rule extends ObjectResource
 	{
 		return logic_text;
 	}
-	
+
 	public String getTyp()
 	{
 		return typ;
 	}
-	
+
 	public String getDomainId()
 	{
 		return "sysdomain";
@@ -92,8 +92,8 @@ public class Rule extends ObjectResource
 		if(ind != -1)
 		{
 			String s1 = logic_text.substring(
-					ind + 
-					new String("GENERATE_ALARM").length() + 
+					ind +
+					new String("GENERATE_ALARM").length() +
 					2);
 			int ind2 = s1.indexOf("\"");
 			String s2 = s1.substring(0, ind2);

@@ -209,7 +209,7 @@ public class CableLinkTypeFibrePanel extends GeneralPanel
 		return clt;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.clt = (CableLinkType)or;
 
@@ -222,14 +222,11 @@ public class CableLinkTypeFibrePanel extends GeneralPanel
 
 		if(clt != null)
 		{
-			DataSet ds = new DataSet(clt.cable_threads.elements());
+			DataSet ds = new DataSet(clt.cable_threads.iterator());
 			ObjectResourceSorter sorter = CableTypeThread.getDefaultSorter();
 			sorter.setDataSet(ds);
-			ds = sorter.default_sort();
-			this.LinksList.setContents(ds.elements());
+			LinksList.setContents(sorter.default_sort());
 		}
-		return true;
-
 	}
 
 	public boolean modify()

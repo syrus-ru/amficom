@@ -35,24 +35,16 @@
 
 package com.syrus.AMFICOM.Client.Resource.Network;
 
-import java.io.Serializable;
-import java.io.IOException;
+import java.io.*;
+import java.util.*;
 
-import java.util.Hashtable;
-import java.util.Enumeration;
-
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
+import com.syrus.AMFICOM.CORBA.Network.*;
 import com.syrus.AMFICOM.Client.Configure.UI.LinkPane;
-
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.LinkType;
 
-import com.syrus.AMFICOM.CORBA.Network.Link_Transferable;
-import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
-
-public class Link extends ObjectResource implements Serializable
+public class Link extends StubResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
 	public static final String typ = "link";
@@ -84,7 +76,7 @@ public class Link extends ObjectResource implements Serializable
 	public double optical_length = 0.0;
 	public double physical_length = 0.0;
 
-	public Hashtable characteristics = new Hashtable();
+	public Map characteristics = new HashMap();
 
 //	public Equipment start_equipment;
 //	public Port start_port;
@@ -236,9 +228,9 @@ public class Link extends ObjectResource implements Serializable
 		int l = this.characteristics.size();
 		int i = 0;
 		transferable.characteristics = new Characteristic_Transferable[l];
-		for(Enumeration e = characteristics.elements(); e.hasMoreElements();)
+		for(Iterator it = characteristics.values().iterator(); it.hasNext();)
 		{
-			Characteristic ch = (Characteristic )e.nextElement();
+			Characteristic ch = (Characteristic)it.next();
 			ch.setTransferableFromLocal();
 			transferable.characteristics[i++] = ch.transferable;
 		}
@@ -341,7 +333,7 @@ public class Link extends ObjectResource implements Serializable
 		optical_length = in.readDouble();
 		physical_length = in.readDouble();
 		modified = in.readLong();
-		characteristics = (Hashtable )in.readObject();
+		characteristics = (Map )in.readObject();
 
 		transferable = new Link_Transferable();
 		updateLocalFromTransferable();

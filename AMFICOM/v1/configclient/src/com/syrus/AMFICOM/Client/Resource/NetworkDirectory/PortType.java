@@ -35,24 +35,17 @@
 
 package com.syrus.AMFICOM.Client.Resource.NetworkDirectory;
 
-import java.io.Serializable;
-import java.io.IOException;
-
-import java.util.Hashtable;
-import java.util.Enumeration;
-
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
-import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
-
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
-import com.syrus.AMFICOM.Client.Configure.UI.PortTypePane;
+import java.io.*;
+import java.util.*;
 
 import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
 import com.syrus.AMFICOM.CORBA.NetworkDirectory.PortType_Transferable;
+import com.syrus.AMFICOM.Client.Configure.UI.PortTypePane;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
 
-public class PortType extends ObjectResource implements Serializable
+public class PortType extends StubResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
 	public static final String typ = "porttype";
@@ -72,7 +65,7 @@ public class PortType extends ObjectResource implements Serializable
 
 	public transient boolean is_modified = false;
 
-	public Hashtable characteristics = new Hashtable();
+	public Map characteristics = new HashMap();
 
 	public PortType()
 	{
@@ -143,9 +136,9 @@ public class PortType extends ObjectResource implements Serializable
 		int l = this.characteristics.size();
 		int i = 0;
 		transferable.characteristics = new Characteristic_Transferable[l];
-		for(Enumeration e = characteristics.elements(); e.hasMoreElements();)
+		for(Iterator it = characteristics.values().iterator(); it.hasNext();)
 		{
-			Characteristic ch = (Characteristic )e.nextElement();
+			Characteristic ch = (Characteristic)it.next();
 			ch.setTransferableFromLocal();
 			transferable.characteristics[i++] = ch.transferable;
 		}
@@ -185,20 +178,20 @@ public class PortType extends ObjectResource implements Serializable
 		return modified;
 	}
 
-  public ObjectResourceModel getModel()
-  {
-    return new PortTypeModel(this);
-  }
+	public ObjectResourceModel getModel()
+	{
+		return new PortTypeModel(this);
+	}
 
-  public static ObjectResourceDisplayModel getDefaultDisplayModel()
-  {
-    return new PortTypeDisplayModel();
-  }
+	public static ObjectResourceDisplayModel getDefaultDisplayModel()
+	{
+		return new PortTypeDisplayModel();
+	}
 
-  public static PropertiesPanel getPropertyPane()
-  {
-    return new PortTypePane();
-  }
+	public static PropertiesPanel getPropertyPane()
+	{
+		return new PortTypePane();
+	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
@@ -228,7 +221,7 @@ public class PortType extends ObjectResource implements Serializable
 		interface_id = (String )in.readObject();
 		p_class = (String )in.readObject();
 		modified = in.readLong();
-		characteristics = (Hashtable )in.readObject();
+		characteristics = (Map )in.readObject();
 
 		transferable = new PortType_Transferable();
 	}

@@ -19,9 +19,9 @@ import com.syrus.AMFICOM.Client.Resource.ISMDirectory.*;
 //import com.syrus.AMFICOM.Client.Resource.Object.*;
 import com.syrus.AMFICOM.Client.General.*;
 
-public class RISDConfigDataSource 
+public class RISDConfigDataSource
 		extends RISDDirectoryDataSource
-		implements DataSourceInterface 
+		implements DataSourceInterface
 {
 	protected RISDConfigDataSource()
 	{
@@ -58,27 +58,30 @@ public class RISDConfigDataSource
 		equipment_t[0] = (Equipment_Transferable )equipment.getTransferable();
 
 		Port_Transferable port_t[] = new Port_Transferable[equipment.ports.size()];
-		for(int i = 0; i < equipment.ports.size(); i++)
+		int counter = 0;
+		for(Iterator it = equipment.ports.iterator(); it.hasNext();)
 		{
-			Port port = (Port )equipment.ports.get(i);
+			Port port = (Port)it.next();
 			port.setTransferableFromLocal();
-			port_t[i] = (Port_Transferable )port.getTransferable();
+			port_t[counter++] = (Port_Transferable )port.getTransferable();
 		}
 
+		counter = 0;
 		CablePort_Transferable cport_t[] = new CablePort_Transferable[equipment.cports.size()];
-		for(int i = 0; i < equipment.cports.size(); i++)
+		for(Iterator it = equipment.cports.iterator(); it.hasNext();)
 		{
-			CablePort cport = (CablePort )equipment.cports.get(i);
+			CablePort cport = (CablePort)it.next();
 			cport.setTransferableFromLocal();
-			cport_t[i] = (CablePort_Transferable )cport.getTransferable();
+			cport_t[counter++] = (CablePort_Transferable )cport.getTransferable();
 		}
 
+		counter = 0;
 		TestPort_Transferable testport_t[] = new TestPort_Transferable[equipment.test_ports.size()];
-		for(int i = 0; i < equipment.test_ports.size(); i++)
+		for(Iterator it = equipment.test_ports.iterator(); it.hasNext();)
 		{
-			TestPort testport = (TestPort )equipment.test_ports.get(i);
+			TestPort testport = (TestPort)it.next();
 			testport.setTransferableFromLocal();
-			testport_t[i] = (TestPort_Transferable )testport.getTransferable();
+			testport_t[counter++] = (TestPort_Transferable )testport.getTransferable();
 		}
 
 		try
@@ -121,28 +124,31 @@ public class RISDConfigDataSource
 		Equipment_Transferable kis_t[] = new Equipment_Transferable[1];
 		kis_t[0] = (Equipment_Transferable )kis.getTransferable();
 
+		int counter = 0;
 		Port_Transferable port_t[] = new Port_Transferable[kis.ports.size()];
-		for(int i = 0; i < kis.ports.size(); i++)
+		for(Iterator it = kis.ports.iterator(); it.hasNext();)
 		{
-			Port port = (Port )kis.ports.get(i);
+			Port port = (Port)it.next();
 			port.setTransferableFromLocal();
-			port_t[i] = (Port_Transferable )port.getTransferable();
+			port_t[counter++] = (Port_Transferable )port.getTransferable();
 		}
 
+		counter = 0;
 		CablePort_Transferable cport_t[] = new CablePort_Transferable[kis.cports.size()];
-		for(int i = 0; i < kis.cports.size(); i++)
+		for(Iterator it = kis.cports.iterator(); it.hasNext();)
 		{
-			CablePort cport = (CablePort )kis.cports.get(i);
+			CablePort cport = (CablePort)it.next();
 			cport.setTransferableFromLocal();
-			cport_t[i] = (CablePort_Transferable )cport.getTransferable();
+			cport_t[counter++] = (CablePort_Transferable )cport.getTransferable();
 		}
 
+		counter = 0;
 		AccessPort_Transferable accessport_t[] = new AccessPort_Transferable[kis.access_ports.size()];
-		for(int i = 0; i < kis.access_ports.size(); i++)
+		for(Iterator it = kis.access_ports.iterator(); it.hasNext();)
 		{
-			AccessPort accessport = (AccessPort )kis.access_ports.get(i);
+			AccessPort accessport = (AccessPort)it.next();
 			accessport.setTransferableFromLocal();
-			accessport_t[i] = (AccessPort_Transferable )accessport.getTransferable();
+			accessport_t[counter++] = (AccessPort_Transferable )accessport.getTransferable();
 		}
 
 		try
@@ -729,7 +735,7 @@ public class RISDConfigDataSource
 		for(int i = 0; i < port_ids.length; i++)
 			Pool.remove(Port.typ, port_ids[i]);
 	}
-	
+
 	public void LoadNet()
 	{
 		if(si == null)
@@ -782,67 +788,67 @@ public class RISDConfigDataSource
 		ports = ph.value;
 		count = ports.length;
 		System.out.println("...Done! " + count + " port(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			port = new Port(ports[i]);
 			Pool.put("port", port.getId(), port);
 			loaded_objects.add(port);
-	    }
+			}
 
 		cports = cph.value;
 		count = cports.length;
 		System.out.println("...Done! " + count + " cable port(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			cport = new CablePort(cports[i]);
 			Pool.put("cableport", cport.getId(), cport);
 			loaded_objects.add(cport);
-	    }
+			}
 
 		equipments = eh.value;
 		count = equipments.length;
 		System.out.println("...Done! " + count + " equipment(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			equipment = new Equipment(equipments[i]);
 			Pool.put("equipment", equipment.getId(), equipment);
 			Pool.put("kisequipment", equipment.getId(), equipment);
 			loaded_objects.add(equipment);
-	    }
+			}
 
 		links = lh.value;
 		count = links.length;
 		System.out.println("...Done! " + count + " link(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			link = new Link(links[i]);
 			Pool.put("link", link.getId(), link);
 			loaded_objects.add(link);
-	    }
+			}
 
 		clinks = clh.value;
 		count = clinks.length;
 		System.out.println("...Done! " + count + " cable link(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			clink = new CableLink(clinks[i]);
 			Pool.put("cablelink", clink.getId(), clink);
 			loaded_objects.add(clink);
-	    }
+			}
 
 		testports = tph.value;
 		count = testports.length;
 		System.out.println("...Done! " + count + " testport(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			testport = new TestPort(testports[i]);
 			Pool.put("testport", testport.getId(), testport);
 			loaded_objects.add(testport);
-	    }
+			}
 
 		// update loaded objects
 		count = loaded_objects.size();
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			or = (ObjectResource )loaded_objects.get(i);
 			or.updateLocalFromTransferable();
@@ -907,67 +913,67 @@ public class RISDConfigDataSource
 		ports = ph.value;
 		count = ports.length;
 		System.out.println("...Done! " + count + " port(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			port = new Port(ports[i]);
 			Pool.put("port", port.getId(), port);
 			loaded_objects.add(port);
-	    }
+			}
 
 		kiss = kh.value;
 		count = kiss.length;
 		System.out.println("...Done! " + count + " kis(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			kis = new KIS(kiss[i]);
 			Pool.put("kis", kis.getId(), kis);
 			Pool.put("kisequipment", kis.getId(), kis);
 			loaded_objects.add(kis);
-	    }
+			}
 
 		links = lh.value;
 		count = links.length;
 		System.out.println("...Done! " + count + " link(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			link = new Link(links[i]);
 			Pool.put("link", link.getId(), link);
 			loaded_objects.add(link);
-	    }
+			}
 
 		mes = meh.value;
 		count = mes.length;
 		System.out.println("...Done! " + count + " monitored element(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			me = new MonitoredElement(mes[i]);
 			Pool.put("monitoredelement", me.getId(), me);
 			loaded_objects.add(me);
-	    }
+			}
 
 		paths = tph.value;
 		count = paths.length;
 		System.out.println("...Done! " + count + " path(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			path = new TransmissionPath(paths[i]);
 			Pool.put("path", path.getId(), path);
 			loaded_objects.add(path);
-	    }
+			}
 
 		accessports = aph.value;
 		count = accessports.length;
 		System.out.println("...Done! " + count + " accessport(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			accessport = new AccessPort(accessports[i]);
 			Pool.put("accessport", accessport.getId(), accessport);
 			loaded_objects.add(accessport);
-	    }
+			}
 
 		// update loaded objects
 		count = loaded_objects.size();
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			or = (ObjectResource )loaded_objects.get(i);
 			or.updateLocalFromTransferable();
@@ -975,7 +981,7 @@ public class RISDConfigDataSource
 	}
 
 	public void LoadNet(
-			Vector p_ids, 
+			Vector p_ids,
 			Vector cp_ids,
 			Vector eq_ids,
 			Vector l_ids,
@@ -1084,73 +1090,73 @@ public class RISDConfigDataSource
 		ports = ph.value;
 		count = ports.length;
 		System.out.println("...Done! " + count + " port(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			port = new Port(ports[i]);
 			Pool.put("port", port.getId(), port);
 			loaded_objects.add(port);
-	    }
+			}
 
 		cports = cph.value;
 		count = cports.length;
 		System.out.println("...Done! " + count + " cable port(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			cport = new CablePort(cports[i]);
 			Pool.put("cableport", cport.getId(), cport);
 			loaded_objects.add(cport);
-	    }
+			}
 
 		equipments = eh.value;
 		count = equipments.length;
 		System.out.println("...Done! " + count + " equipment(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			equipment = new Equipment(equipments[i]);
 			Pool.put("equipment", equipment.getId(), equipment);
 			Pool.put("kisequipment", equipment.getId(), equipment);
 			loaded_objects.add(equipment);
-	    }
+			}
 
 		links = lh.value;
 		count = links.length;
 		System.out.println("...Done! " + count + " link(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			link = new Link(links[i]);
 			Pool.put("link", link.getId(), link);
 			loaded_objects.add(link);
-	    }
+			}
 
 		clinks = clh.value;
 		count = clinks.length;
 		System.out.println("...Done! " + count + " cable link(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			clink = new CableLink(clinks[i]);
 			Pool.put("cablelink", clink.getId(), clink);
 			loaded_objects.add(clink);
-	    }
+			}
 
 		testports = tph.value;
 		count = testports.length;
 		System.out.println("...Done! " + count + " testport(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			testport = new TestPort(testports[i]);
 			Pool.put("testport", testport.getId(), testport);
 			loaded_objects.add(testport);
-	    }
+			}
 
 		// update loaded objects
 		count = loaded_objects.size();
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			or = (ObjectResource )loaded_objects.get(i);
 			or.updateLocalFromTransferable();
 		}
 	}
-	
+
 	public void LoadISM(
 		Vector k_ids,
 		Vector ap_ids,
@@ -1209,7 +1215,7 @@ public class RISDConfigDataSource
 		me_ids.copyInto(mid_s);
 		try
 		{
-			ecode = si.ci.server.LoadStatedISM(si.accessIdentity, 
+			ecode = si.ci.server.LoadStatedISM(si.accessIdentity,
 				p_ids,
 				cp_ids,
 				kid_s,
@@ -1220,7 +1226,7 @@ public class RISDConfigDataSource
 				aid_s,
 				ph,
 				cph,
-				kh, 
+				kh,
 				lh,
 				clh,
 				meh,
@@ -1243,67 +1249,67 @@ public class RISDConfigDataSource
 		ports = ph.value;
 		count = ports.length;
 		System.out.println("...Done! " + count + " port(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			port = new Port(ports[i]);
 			Pool.put("port", port.getId(), port);
 			loaded_objects.add(port);
-	    }
+			}
 
 		kiss = kh.value;
 		count = kiss.length;
 		System.out.println("...Done! " + count + " kis(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			kis = new KIS(kiss[i]);
 			Pool.put("kis", kis.getId(), kis);
 			Pool.put("kisequipment", kis.getId(), kis);
 			loaded_objects.add(kis);
-	    }
+			}
 
 		links = lh.value;
 		count = links.length;
 		System.out.println("...Done! " + count + " link(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			link = new Link(links[i]);
 			Pool.put("link", link.getId(), link);
 			loaded_objects.add(link);
-	    }
+			}
 
 		mes = meh.value;
 		count = mes.length;
 		System.out.println("...Done! " + count + " monitored element(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			me = new MonitoredElement(mes[i]);
 			Pool.put("monitoredelement", me.getId(), me);
 			loaded_objects.add(me);
-	    }
+			}
 
 		paths = tph.value;
 		count = paths.length;
 		System.out.println("...Done! " + count + " path(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			path = new TransmissionPath(paths[i]);
 			Pool.put("path", path.getId(), path);
 			loaded_objects.add(path);
-	    }
+			}
 
 		accessports = aph.value;
 		count = accessports.length;
 		System.out.println("...Done! " + count + " accessport(s) fetched");
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			accessport = new AccessPort(accessports[i]);
 			Pool.put("accessport", accessport.getId(), accessport);
 			loaded_objects.add(accessport);
-	    }
+			}
 
 		// update loaded objects
 		count = loaded_objects.size();
-	    for (i = 0; i < count; i++)
+			for (i = 0; i < count; i++)
 		{
 			or = (ObjectResource )loaded_objects.get(i);
 			or.updateLocalFromTransferable();

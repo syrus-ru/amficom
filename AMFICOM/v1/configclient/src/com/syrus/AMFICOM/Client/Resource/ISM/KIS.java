@@ -49,11 +49,7 @@ public class KIS extends Equipment
 {
 	private static final long serialVersionUID = 01L;
 	public static final String typ = "kis";
-
-
-//	public Vector access_port_ids = new Vector();
-
-	public Vector access_ports = new Vector();
+	public Collection access_ports = new ArrayList();
 
 	public KIS()
 	{
@@ -92,9 +88,9 @@ public class KIS extends Equipment
 
 //		remarks = new Vector();
 
-		ports = new Vector();
-		characteristics = new Hashtable();
-		access_ports = new Vector();
+		ports = new ArrayList();
+		characteristics = new HashMap();
+		access_ports = new ArrayList();
 
 		transferable = new Equipment_Transferable();
 	}
@@ -140,21 +136,21 @@ public class KIS extends Equipment
 	{
 		return typ;
 	}
-	
+
 	public void updateLocalFromTransferable()
 	{
 		super.updateLocalFromTransferable();
 		access_ports = new Vector();
 
-		for(int i = 0; i < s_port_ids.size(); i++)
-			this.access_ports.add( Pool.get("accessport", (String)s_port_ids.get(i)) );
+		for(Iterator it = s_port_ids.iterator(); it.hasNext();)
+			access_ports.add(Pool.get(AccessPort.typ, (String)it.next()));
 	}
 /*
 	public ObjectResourceModel getModel()
 	{
 		return new KISModel(this);
 	}
-*/	
+*/
 
 	public static PropertiesPanel getPropertyPane()
 	{

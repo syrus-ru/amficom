@@ -87,17 +87,16 @@ public class KISAccessPortsPanel extends GeneralPanel
 		return equipment;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.equipment = (KIS )or;
 
 		if(equipment != null)
 		{
-			this.portBox.setContents(equipment.access_ports.elements(), false);
+			portBox.setContents(equipment.access_ports.iterator(), false);
 			AccessPort cp = (AccessPort )portBox.getSelectedObjectResource();
 			pgp.setObjectResource(cp);
 		}
-		return true;
 	}
 
 	void portBox_actionPerformed(ActionEvent e)

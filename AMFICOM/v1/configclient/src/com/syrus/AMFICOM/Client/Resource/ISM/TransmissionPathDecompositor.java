@@ -7,15 +7,14 @@ import com.syrus.AMFICOM.Client.Resource.Network.Port;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ISM.LengthContainer;
 
-import java.util.Hashtable;
-import java.util.Vector;
+import java.util.*;
 
 public class TransmissionPathDecompositor
 {
 	LengthContainer []lengthContainer;
 
 	TransmissionPath sp = null;
-	Vector ports = new Vector();
+	List ports = new ArrayList();
 
 	public TransmissionPathDecompositor()
 	{
@@ -152,7 +151,7 @@ public class TransmissionPathDecompositor
 			else
 				return Pool.get("kisequipment", cpright.equipment_id);
 		}
-		else 
+		else
 		if(o instanceof Link)
 		{
 			Link link = (Link)o;
@@ -180,161 +179,161 @@ public class TransmissionPathDecompositor
 
 
 //-----------------------------------------------------------------------------
-  public Object getLinkByOpticalDistance(double opticalDistance)
-  {
-    double dist = 0.;
-    for(int i=0; i<lengthContainer.length; i++)
-    {
-      dist += lengthContainer[i].opticalLength;
-      if(dist>opticalDistance)
-      {
-          return lengthContainer[i].obj;
-      }
-    }
-    return null;
-  }
+	public Object getLinkByOpticalDistance(double opticalDistance)
+	{
+		double dist = 0.;
+		for(int i=0; i<lengthContainer.length; i++)
+		{
+			dist += lengthContainer[i].opticalLength;
+			if(dist>opticalDistance)
+			{
+					return lengthContainer[i].obj;
+			}
+		}
+		return null;
+	}
 
 
 //-----------------------------------------------------------------------------
-  public Object getLinkByPhysicalDistance(double physicalDistance)
-  {
-    double dist = 0.;
-    for(int i=0; i<lengthContainer.length; i++)
-    {
-      dist += lengthContainer[i].physicalLength;
-      if(dist>physicalDistance)
-      {
-          return lengthContainer[i].obj;
-      }
-    }
-    return null;
-  }
+	public Object getLinkByPhysicalDistance(double physicalDistance)
+	{
+		double dist = 0.;
+		for(int i=0; i<lengthContainer.length; i++)
+		{
+			dist += lengthContainer[i].physicalLength;
+			if(dist>physicalDistance)
+			{
+					return lengthContainer[i].obj;
+			}
+		}
+		return null;
+	}
 
 
 //-----------------------------------------------------------------------------
-  public Object getSourcePortByOpticalDistance(double opticalDistance)
-  {
-    Object o = getLinkByOpticalDistance(opticalDistance);
-    if(o instanceof CableLink)
-    {
-      CableLink link = (CableLink)o;
-	  CablePort cp1 = (CablePort )Pool.get(CablePort.typ, link.start_port_id);
-	  CablePort cp2 = (CablePort )Pool.get(CablePort.typ, link.end_port_id);
-      return (ports.indexOf(cp1) < ports.indexOf(cp2)) ? cp1 : cp2;
+	public Object getSourcePortByOpticalDistance(double opticalDistance)
+	{
+		Object o = getLinkByOpticalDistance(opticalDistance);
+		if(o instanceof CableLink)
+		{
+			CableLink link = (CableLink)o;
+		CablePort cp1 = (CablePort )Pool.get(CablePort.typ, link.start_port_id);
+		CablePort cp2 = (CablePort )Pool.get(CablePort.typ, link.end_port_id);
+			return (ports.indexOf(cp1) < ports.indexOf(cp2)) ? cp1 : cp2;
 //    return Pool.get(CablePort.typ, link.start_port_id);
-    }
-    else if(o instanceof Link)
-    {
-      Link link = (Link)o;
-	  Port cp1 = (Port )Pool.get(Port.typ, link.start_port_id);
-	  Port cp2 = (Port )Pool.get(Port.typ, link.end_port_id);
-      return (ports.indexOf(cp1) < ports.indexOf(cp2)) ? cp1 : cp2;
+		}
+		else if(o instanceof Link)
+		{
+			Link link = (Link)o;
+		Port cp1 = (Port )Pool.get(Port.typ, link.start_port_id);
+		Port cp2 = (Port )Pool.get(Port.typ, link.end_port_id);
+			return (ports.indexOf(cp1) < ports.indexOf(cp2)) ? cp1 : cp2;
 //      return Pool.get(Port.typ, link.start_port_id);
-    }
-    return null;
-  }
+		}
+		return null;
+	}
 
 //-----------------------------------------------------------------------------
-  public double getSourcePortDistanceByOpticalDistance(double opticalDistance)
-  {
-    double dist = 0.;
-    for(int i = 0; i < lengthContainer.length; i++)
-    {
-      if(dist + lengthContainer[i].opticalLength > opticalDistance)
-      {
-          return opticalDistance - dist;
-      }
-      dist += lengthContainer[i].opticalLength;
-    }
-    return opticalDistance - dist;
-  }
+	public double getSourcePortDistanceByOpticalDistance(double opticalDistance)
+	{
+		double dist = 0.;
+		for(int i = 0; i < lengthContainer.length; i++)
+		{
+			if(dist + lengthContainer[i].opticalLength > opticalDistance)
+			{
+					return opticalDistance - dist;
+			}
+			dist += lengthContainer[i].opticalLength;
+		}
+		return opticalDistance - dist;
+	}
 
 //-----------------------------------------------------------------------------
-  public double getTargetPortDistanceByOpticalDistance(double opticalDistance)
-  {
-    double dist = 0.;
-    for(int i = 0; i < lengthContainer.length; i++)
-    {
-      dist += lengthContainer[i].opticalLength;
-      if(dist >= opticalDistance)
-      {
-          return dist - opticalDistance;
-      }
-    }
-    return 0.0;
-  }
+	public double getTargetPortDistanceByOpticalDistance(double opticalDistance)
+	{
+		double dist = 0.;
+		for(int i = 0; i < lengthContainer.length; i++)
+		{
+			dist += lengthContainer[i].opticalLength;
+			if(dist >= opticalDistance)
+			{
+					return dist - opticalDistance;
+			}
+		}
+		return 0.0;
+	}
 
 
 //-----------------------------------------------------------------------------
-  public Object getSourcePortByPhysicalDistance(double physicalDistance)
-  {
-    Object o = getLinkByPhysicalDistance(physicalDistance);
-    if(o instanceof CableLink)
-    {
-      CableLink link = (CableLink)o;
-	  CablePort cp1 = (CablePort )Pool.get(CablePort.typ, link.start_port_id);
-	  CablePort cp2 = (CablePort )Pool.get(CablePort.typ, link.end_port_id);
-      return (ports.indexOf(cp1) < ports.indexOf(cp2)) ? cp1 : cp2;
+	public Object getSourcePortByPhysicalDistance(double physicalDistance)
+	{
+		Object o = getLinkByPhysicalDistance(physicalDistance);
+		if(o instanceof CableLink)
+		{
+			CableLink link = (CableLink)o;
+		CablePort cp1 = (CablePort )Pool.get(CablePort.typ, link.start_port_id);
+		CablePort cp2 = (CablePort )Pool.get(CablePort.typ, link.end_port_id);
+			return (ports.indexOf(cp1) < ports.indexOf(cp2)) ? cp1 : cp2;
 //      return Pool.get(CablePort.typ, link.start_port_id);
-    }
-    else if(o instanceof Link)
-    {
-      Link link = (Link)o;
-	  Port cp1 = (Port )Pool.get(Port.typ, link.start_port_id);
-	  Port cp2 = (Port )Pool.get(Port.typ, link.end_port_id);
-      return (ports.indexOf(cp1) < ports.indexOf(cp2)) ? cp1 : cp2;
+		}
+		else if(o instanceof Link)
+		{
+			Link link = (Link)o;
+		Port cp1 = (Port )Pool.get(Port.typ, link.start_port_id);
+		Port cp2 = (Port )Pool.get(Port.typ, link.end_port_id);
+			return (ports.indexOf(cp1) < ports.indexOf(cp2)) ? cp1 : cp2;
 //      return Pool.get(Port.typ, link.start_port_id);
-    }
-    return null;
-  }
+		}
+		return null;
+	}
 
 
 //-----------------------------------------------------------------------------
-  public Object getTargetPortByOpticalDistance(double opticalDistance)
-  {
-    Object o = getLinkByOpticalDistance(opticalDistance);
-    if(o instanceof CableLink)
-    {
-      CableLink link = (CableLink)o;
-	  CablePort cp1 = (CablePort )Pool.get(CablePort.typ, link.start_port_id);
-	  CablePort cp2 = (CablePort )Pool.get(CablePort.typ, link.end_port_id);
-      return (ports.indexOf(cp1) < ports.indexOf(cp2)) ? cp2 : cp1;
+	public Object getTargetPortByOpticalDistance(double opticalDistance)
+	{
+		Object o = getLinkByOpticalDistance(opticalDistance);
+		if(o instanceof CableLink)
+		{
+			CableLink link = (CableLink)o;
+		CablePort cp1 = (CablePort )Pool.get(CablePort.typ, link.start_port_id);
+		CablePort cp2 = (CablePort )Pool.get(CablePort.typ, link.end_port_id);
+			return (ports.indexOf(cp1) < ports.indexOf(cp2)) ? cp2 : cp1;
 //      return Pool.get(CablePort.typ, link.end_port_id);
-    }
-    else if(o instanceof Link)
-    {
-      Link link = (Link)o;
-	  Port cp1 = (Port )Pool.get(Port.typ, link.start_port_id);
-	  Port cp2 = (Port )Pool.get(Port.typ, link.end_port_id);
-      return (ports.indexOf(cp1) < ports.indexOf(cp2)) ? cp2 : cp1;
+		}
+		else if(o instanceof Link)
+		{
+			Link link = (Link)o;
+		Port cp1 = (Port )Pool.get(Port.typ, link.start_port_id);
+		Port cp2 = (Port )Pool.get(Port.typ, link.end_port_id);
+			return (ports.indexOf(cp1) < ports.indexOf(cp2)) ? cp2 : cp1;
 //      return Pool.get(Port.typ, link.end_port_id);
-    }
-    return null;
-  }
+		}
+		return null;
+	}
 
 
 //-----------------------------------------------------------------------------
-  public Object getTargetPortByPhysicalDistance(double physicalDistance)
-  {
-    Object o = getLinkByPhysicalDistance(physicalDistance);
-    if(o instanceof CableLink)
-    {
-      CableLink link = (CableLink)o;
-	  CablePort cp1 = (CablePort )Pool.get(CablePort.typ, link.start_port_id);
-	  CablePort cp2 = (CablePort )Pool.get(CablePort.typ, link.end_port_id);
-      return (ports.indexOf(cp1) < ports.indexOf(cp2)) ? cp2 : cp1;
+	public Object getTargetPortByPhysicalDistance(double physicalDistance)
+	{
+		Object o = getLinkByPhysicalDistance(physicalDistance);
+		if(o instanceof CableLink)
+		{
+			CableLink link = (CableLink)o;
+		CablePort cp1 = (CablePort )Pool.get(CablePort.typ, link.start_port_id);
+		CablePort cp2 = (CablePort )Pool.get(CablePort.typ, link.end_port_id);
+			return (ports.indexOf(cp1) < ports.indexOf(cp2)) ? cp2 : cp1;
 //      return Pool.get(CablePort.typ, link.end_port_id);
-    }
-    else if(o instanceof Link)
-    {
-      Link link = (Link)o;
-	  Port cp1 = (Port )Pool.get(Port.typ, link.start_port_id);
-	  Port cp2 = (Port )Pool.get(Port.typ, link.end_port_id);
-      return (ports.indexOf(cp1) < ports.indexOf(cp2)) ? cp2 : cp1;
+		}
+		else if(o instanceof Link)
+		{
+			Link link = (Link)o;
+		Port cp1 = (Port )Pool.get(Port.typ, link.start_port_id);
+		Port cp2 = (Port )Pool.get(Port.typ, link.end_port_id);
+			return (ports.indexOf(cp1) < ports.indexOf(cp2)) ? cp2 : cp1;
 //      return Pool.get(Port.typ, link.end_port_id);
-    }
-    return null;
-  }
+		}
+		return null;
+	}
 
 
 
@@ -375,7 +374,7 @@ public class TransmissionPathDecompositor
 				LengthContainer lc = new LengthContainer(
 						cableLink,
 						cableLink.physical_length,
-						cableLink.optical_length, 
+						cableLink.optical_length,
 						CableLink.typ);
 
 				vec.add(lc);
@@ -392,7 +391,7 @@ public class TransmissionPathDecompositor
 				LengthContainer lc = new LengthContainer(
 						link,
 						link.physical_length,
-						link.optical_length, 
+						link.optical_length,
 						Link.typ);
 				vec.add(lc);
 			}

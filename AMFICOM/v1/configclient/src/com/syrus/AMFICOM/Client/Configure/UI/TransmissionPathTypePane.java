@@ -54,12 +54,11 @@ public class TransmissionPathTypePane extends PropertiesPanel
 		return pathType;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.pathType = (TransmissionPathType)or;
 
 		gPanel.setObjectResource(pathType);
-		return true;
 	}
 
 	public void setContext(ApplicationContext aContext)

@@ -35,13 +35,12 @@
 
 package com.syrus.AMFICOM.Client.Resource.NetworkDirectory;
 
+import java.io.*;
+
 import com.syrus.AMFICOM.CORBA.NetworkDirectory.CharacteristicType_Transferable;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.Client.Resource.StubResource;
 
-import java.io.IOException;
-import java.io.Serializable;
-
-public class CharacteristicType extends ObjectResource implements Serializable
+public class CharacteristicType extends StubResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
 	public static final String typ = "characteristictype";
@@ -64,7 +63,7 @@ public class CharacteristicType extends ObjectResource implements Serializable
 
 	public CharacteristicType(CharacteristicType_Transferable transferable)
 	{
-		this.transferable = transferable; 
+		this.transferable = transferable;
 		setLocalFromTransferable();
 	}
 
@@ -111,7 +110,7 @@ public class CharacteristicType extends ObjectResource implements Serializable
 	public void updateLocalFromTransferable()
 	{
 	}
-	
+
 	public String getId()
 	{
 		return id;

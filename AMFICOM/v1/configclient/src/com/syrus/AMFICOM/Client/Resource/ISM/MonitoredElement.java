@@ -36,15 +36,13 @@
 package com.syrus.AMFICOM.Client.Resource.ISM;
 
 import java.io.*;
-import java.util.*;
 
+import com.syrus.AMFICOM.CORBA.ISM.MonitoredElement_Transferable;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Network.*;
-import com.syrus.AMFICOM.CORBA.Network.*;
-import com.syrus.AMFICOM.CORBA.ISM.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
 
-public class MonitoredElement extends ObjectResource implements Serializable
+public class MonitoredElement extends StubResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
 	public static final String typ = "monitoredelement";
@@ -102,7 +100,7 @@ public class MonitoredElement extends ObjectResource implements Serializable
 	{
 		return typ;
 	}
-	
+
 	public String getName()
 	{
 		return element_name;

@@ -1,8 +1,8 @@
 package com.syrus.AMFICOM.Client.Resource.ISM;
 
 import java.io.*;
-import com.syrus.AMFICOM.CORBA.Scheme.*;
-import com.syrus.AMFICOM.CORBA.ISM.*;
+
+import com.syrus.AMFICOM.CORBA.ISM.TransmissionPathElement_Transferable;
 import com.syrus.AMFICOM.Client.Resource.*;
 
 public class TransmissionPathElement extends StubResource implements Serializable
@@ -56,7 +56,7 @@ public class TransmissionPathElement extends StubResource implements Serializabl
 class TransmissionPathElementModel extends ObjectResourceModel
 {
 	TransmissionPathElement pe;
-	
+
 	public TransmissionPathElementModel(TransmissionPathElement pe)
 	{
 		this.pe = pe;

@@ -1,21 +1,16 @@
 package com.syrus.AMFICOM.Client.Resource.Network;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
-import com.syrus.AMFICOM.Client.General.UI.PropertyEditor;
-import com.syrus.AMFICOM.Client.General.UI.PropertyRenderer;
-import com.syrus.AMFICOM.Client.General.UI.StubDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.TextFieldEditor;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import java.util.Vector;
+import java.util.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
 
 public class LinkDisplayModel extends StubDisplayModel
 {
 	ApplicationContext aContext = new ApplicationContext();
+	List cols = new ArrayList();
 
 	public LinkDisplayModel()
 	{
@@ -26,16 +21,15 @@ public class LinkDisplayModel extends StubDisplayModel
 	{
 		super();
 		this.aContext = aContext;
-	}
 
-	public Vector getColumns()
-	{
-		Vector cols = new Vector();
-//		cols.add("id");
 		cols.add("name");
 		cols.add("type_id");
 		cols.add("start_equipment_id");
 		cols.add("end_equipment_id");
+	}
+
+	public List getColumns()
+	{
 		return cols;
 	}
 
@@ -73,15 +67,15 @@ public class LinkDisplayModel extends StubDisplayModel
 	{
 		Link l = (Link )or;
 		if(col_id.equals("id"))
-		  return new TextFieldEditor(l.getId());
+			return new TextFieldEditor(l.getId());
 		if(col_id.equals("name"))
-		  return new TextFieldEditor(l.getName());
+			return new TextFieldEditor(l.getName());
 		if(col_id.equals("type_id"))
-		  return new TextFieldEditor(Pool.getName("linktype", l.type_id));
+			return new TextFieldEditor(Pool.getName("linktype", l.type_id));
 		if(col_id.equals("start_equipment_id"))
-		  return new TextFieldEditor(Pool.getName("kisequipment", l.start_equipment_id));
+			return new TextFieldEditor(Pool.getName("kisequipment", l.start_equipment_id));
 		if(col_id.equals("end_equipment_id"))
-		  return new TextFieldEditor(Pool.getName("kisequipment", l.end_equipment_id));
+			return new TextFieldEditor(Pool.getName("kisequipment", l.end_equipment_id));
 		return null;
 	}
 

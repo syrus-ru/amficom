@@ -1,12 +1,11 @@
 package com.syrus.AMFICOM.Client.Resource.Network;
 
-import java.io.Serializable;
-import java.io.IOException;
+import java.io.*;
 
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.CORBA.Network.CableLinkThread_Transferable;
+import com.syrus.AMFICOM.Client.Resource.StubResource;
 
-public class CableLinkThread extends ObjectResource implements Serializable
+public class CableLinkThread extends StubResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
 	public static final String typ = "cablelinkthread";

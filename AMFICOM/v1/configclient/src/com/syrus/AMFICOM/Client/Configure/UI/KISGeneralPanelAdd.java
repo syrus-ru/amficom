@@ -1,82 +1,60 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import java.awt.Insets;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-
-import oracle.jdeveloper.layout.VerticalFlowLayout;
-
-import java.awt.event.ActionEvent;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
-import javax.swing.JTextField;
-
-import java.util.Date;
 import java.text.SimpleDateFormat;
 
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.MyUtil;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-
-import com.syrus.AMFICOM.Client.Resource.Network.Equipment;
-import com.syrus.AMFICOM.Client.Resource.ISM.KIS;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
-import com.syrus.AMFICOM.Client.Resource.Object.Domain;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
+import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.ISM.KIS;
 
 public class KISGeneralPanelAdd extends GeneralPanel
 {
-  KIS equipment;
+	KIS equipment;
 
-  private GridBagLayout gridBagLayout1 = new GridBagLayout();
-  private JPanel mainPanel = new JPanel();
-  private BorderLayout borderLayout1 = new BorderLayout();
+	private GridBagLayout gridBagLayout1 = new GridBagLayout();
+	private JPanel mainPanel = new JPanel();
+	private BorderLayout borderLayout1 = new BorderLayout();
 
-  SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 
-  private JLabel sw_versionLabel1 = new JLabel();
-  private JLabel sw_versionLabel2 = new JLabel();
-  private JTextField sw_versionField = new JTextField();
+	private JLabel sw_versionLabel1 = new JLabel();
+	private JLabel sw_versionLabel2 = new JLabel();
+	private JTextField sw_versionField = new JTextField();
 
-  private JLabel rnLabel1 = new JLabel();
-  private JLabel rnLabel2 = new JLabel();
-  private JTextField rnField = new JTextField();
+	private JLabel rnLabel1 = new JLabel();
+	private JLabel rnLabel2 = new JLabel();
+	private JTextField rnField = new JTextField();
 
-  private JLabel sw_serialLabel1 = new JLabel();
-  private JLabel sw_serialLabel2 = new JLabel();
-  private JTextField sw_serialField = new JTextField();
+	private JLabel sw_serialLabel1 = new JLabel();
+	private JLabel sw_serialLabel2 = new JLabel();
+	private JTextField sw_serialField = new JTextField();
 
-  private JLabel hw_serialLabel1 = new JLabel();
-  private JLabel hw_serialLabel2 = new JLabel();
-  private JTextField hw_serialField = new JTextField();
+	private JLabel hw_serialLabel1 = new JLabel();
+	private JLabel hw_serialLabel2 = new JLabel();
+	private JTextField hw_serialField = new JTextField();
 
-  private JLabel supplierLabel = new JLabel();
-  private JTextField supplierField = new JTextField();
-  private JLabel supplierCodeLabel = new JLabel();
-  private JTextField supplierCodeField = new JTextField();
+	private JLabel supplierLabel = new JLabel();
+	private JTextField supplierField = new JTextField();
+	private JLabel supplierCodeLabel = new JLabel();
+	private JTextField supplierCodeField = new JTextField();
 
-  private JLabel hw_versionLabel1 = new JLabel();
-  private JLabel hw_versionLabel2 = new JLabel();
-  private JTextField hw_versionField = new JTextField();
+	private JLabel hw_versionLabel1 = new JLabel();
+	private JLabel hw_versionLabel2 = new JLabel();
+	private JTextField hw_versionField = new JTextField();
 
-  private JLabel manufacturerCodeLabel = new JLabel();
-  private JTextField manufacturerCodeField = new JTextField();
+	private JLabel manufacturerCodeLabel = new JLabel();
+	private JTextField manufacturerCodeField = new JTextField();
 
-  private JLabel manufacturerLabel = new JLabel();
-  private JTextField manufacturerField = new JTextField();
+	private JLabel manufacturerLabel = new JLabel();
+	private JTextField manufacturerField = new JTextField();
 
-  public KISGeneralPanelAdd()
-  {
+	public KISGeneralPanelAdd()
+	{
 	 super();
 	 try
 	 {
@@ -86,16 +64,16 @@ public class KISGeneralPanelAdd extends GeneralPanel
 	 {
 		e.printStackTrace();
 	 }
-  }
+	}
 
-  public KISGeneralPanelAdd(KIS equipment)
-  {
+	public KISGeneralPanelAdd(KIS equipment)
+	{
 	 this();
 	 setObjectResource(equipment);
-  }
+	}
 
-  private void jbInit() throws Exception
-  {
+	private void jbInit() throws Exception
+	{
 	 setName(LangModelConfig.getString("label_additional"));
 
 	 this.setLayout(borderLayout1);
@@ -179,15 +157,15 @@ public class KISGeneralPanelAdd extends GeneralPanel
 	 mainPanel.add(supplierCodeField, new GridBagConstraints(1, 13, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
 
 	 this.add(mainPanel,BorderLayout.NORTH);
-  }
+	}
 
-  public ObjectResource getObjectResource()
-  {
+	public ObjectResource getObjectResource()
+	{
 	 return equipment;
-  }
+	}
 
-  public boolean setObjectResource(ObjectResource or)
-  {
+	public void setObjectResource(ObjectResource or)
+	{
 	 this.equipment = (KIS)or;
 
 	 if(equipment != null)
@@ -217,12 +195,10 @@ public class KISGeneralPanelAdd extends GeneralPanel
 		this.supplierCodeField.setText("");
 //			imageLabel.setIcon(new ImageIcon());
 	 }
-	 return true;
+	}
 
-  }
-
-  public boolean modify()
-  {
+	public boolean modify()
+	{
 	 try
 	 {
 		equipment.hw_serial = this.hw_serialField.getText();
@@ -240,13 +216,13 @@ public class KISGeneralPanelAdd extends GeneralPanel
 		return false;
 	 }
 	 return true;
-  }
+	}
 
-  void saveButton_actionPerformed(ActionEvent e)
-  {
+	void saveButton_actionPerformed(ActionEvent e)
+	{
 	 if(!Checker.checkCommandByUserId(
-		  aContext.getSessionInterface().getUserId(),
-		  Checker.catalogTCediting))
+			aContext.getSessionInterface().getUserId(),
+			Checker.catalogTCediting))
 	 {
 		return;
 	 }
@@ -256,5 +232,5 @@ public class KISGeneralPanelAdd extends GeneralPanel
 		DataSourceInterface dataSource = aContext.getDataSourceInterface();
 		dataSource.SaveEquipment(equipment.getId());
 	 }
-  }
+	}
 }

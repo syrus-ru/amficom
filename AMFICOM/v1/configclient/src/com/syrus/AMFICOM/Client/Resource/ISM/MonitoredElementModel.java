@@ -35,14 +35,8 @@
 
 package com.syrus.AMFICOM.Client.Resource.ISM;
 
-import java.util.*;
-
-import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.ISM.*;
-import com.syrus.AMFICOM.Client.Resource.Network.*;
-import com.syrus.AMFICOM.CORBA.Network.*;
-import com.syrus.AMFICOM.CORBA.ISM.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 
 public class MonitoredElementModel extends ObjectResourceModel
 {

@@ -61,7 +61,7 @@ public class AccessPortModel extends CatalogElementModel
 		return "";
 	}
 
-	public Hashtable getCharacteristics(ObjectResource obj)
+	public Map getCharacteristics(ObjectResource obj)
 	{
 		return port.characteristics;
 	}

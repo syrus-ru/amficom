@@ -40,7 +40,7 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 {
 	TransmissionPath tp;
 
-  private GridBagLayout gridBagLayout1 = new GridBagLayout();
+	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
 	SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
 
@@ -66,7 +66,7 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 
 	private JLabel descLabel = new JLabel();
 	private JPanel descriptionPanel = new JPanel();
-  JScrollPane descriptionScrollPane = new JScrollPane();
+	JScrollPane descriptionScrollPane = new JScrollPane();
 	public JTextPane descTextArea = new JTextPane();
 	private BorderLayout borderLayout1 = new BorderLayout();
 
@@ -166,7 +166,7 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 		return tp;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.tp = (TransmissionPath )or;
 
@@ -195,8 +195,6 @@ public class TransmissionPathGeneralPanel extends GeneralPanel
 //			LinksTable.setContents(new DataSet());
 //			imageLabel.setIcon(new ImageIcon());
 		}
-		return true;
-
 	}
 
 	public boolean modify()

@@ -35,18 +35,13 @@
 
 package com.syrus.AMFICOM.Client.Resource.Network;
 
-import java.io.Serializable;
-import java.io.IOException;
+import java.io.*;
+import java.util.*;
 
-import java.util.Hashtable;
-import java.util.Enumeration;
+import com.syrus.AMFICOM.CORBA.Network.*;
+import com.syrus.AMFICOM.Client.Resource.StubResource;
 
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-
-import com.syrus.AMFICOM.CORBA.Network.TestPort_Transferable;
-import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
-
-public class TestPort extends ObjectResource implements Serializable
+public class TestPort extends StubResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
 	public static final String typ = "testport";
@@ -59,7 +54,7 @@ public class TestPort extends ObjectResource implements Serializable
 	public String equipment_id = "";
 	public String port_id = "";
 
-	public Hashtable characteristics = new Hashtable();
+	public Map characteristics = new HashMap();
 
 	public TestPort()
 	{
@@ -130,9 +125,9 @@ public class TestPort extends ObjectResource implements Serializable
 		int l = this.characteristics.size();
 		int i = 0;
 		transferable.characteristics = new Characteristic_Transferable[l];
-		for(Enumeration e = characteristics.elements(); e.hasMoreElements();)
+		for(Iterator it = characteristics.values().iterator(); it.hasNext();)
 		{
-			Characteristic ch = (Characteristic )e.nextElement();
+			Characteristic ch = (Characteristic)it.next();
 			ch.setTransferableFromLocal();
 			transferable.characteristics[i++] = ch.transferable;
 		}
@@ -185,7 +180,7 @@ public class TestPort extends ObjectResource implements Serializable
 		type_id = (String )in.readObject();
 		equipment_id = (String )in.readObject();
 		port_id = (String )in.readObject();
-		characteristics = (Hashtable )in.readObject();
+		characteristics = (Map )in.readObject();
 
 		transferable = new TestPort_Transferable();
 		updateLocalFromTransferable();

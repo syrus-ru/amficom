@@ -1,32 +1,18 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import java.awt.Insets;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+import java.util.*;
+
+import java.awt.*;
 import java.awt.event.ActionEvent;
-
-import java.util.Enumeration;
-
-import oracle.jdeveloper.layout.VerticalFlowLayout;
-
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JCheckBox;
-import javax.swing.BorderFactory;
-
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.MyUtil;
-
-import com.syrus.AMFICOM.Client.Resource.Network.Port;
-import com.syrus.AMFICOM.Client.Resource.ISM.KIS;
-import com.syrus.AMFICOM.Client.Resource.ISM.AccessPort;
-
-import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.Client.Resource.ISM.*;
+import com.syrus.AMFICOM.Client.Resource.Network.Port;
+import oracle.jdeveloper.layout.VerticalFlowLayout;
 
 public class KISPortsPanel extends GeneralPanel
 {
@@ -134,22 +120,22 @@ public class KISPortsPanel extends GeneralPanel
 		return equipment;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.equipment = (KIS )or;
 
 		if(equipment != null)
 		{
-			this.portBox.setContents(equipment.ports.elements(), false);
+			portBox.setContents(equipment.ports.iterator(), false);
 			Port prt = (Port )portBox.getSelectedObjectResource();
 			pgp.setObjectResource(prt);
 			accessPortCheckBox.setSelected(false);
 			apgp.setObjectResource(null);
 			set_AP_Selected(false);
 
-			for(Enumeration enum = equipment.access_ports.elements(); enum.hasMoreElements();)
+			for(Iterator it = equipment.access_ports.iterator(); it.hasNext();)
 			{
-				AccessPort ap = (AccessPort )enum.nextElement();
+				AccessPort ap = (AccessPort)it.next();
 				if (ap != null && prt != null)
 				{
 					if(ap.port_id.equals(prt.getId()))
@@ -161,7 +147,6 @@ public class KISPortsPanel extends GeneralPanel
 				}
 			}
 		}
-		return true;
 	}
 
 	public boolean modify()
@@ -185,9 +170,9 @@ public class KISPortsPanel extends GeneralPanel
 		apgp.setObjectResource(null);
 		set_AP_Selected(false);
 
-		for(Enumeration enum = equipment.access_ports.elements(); enum.hasMoreElements();)
+		for(Iterator it = equipment.access_ports.iterator(); it.hasNext();)
 		{
-			AccessPort ap = (AccessPort )enum.nextElement();
+			AccessPort ap = (AccessPort)it.next();
 			if (ap != null && prt != null)
 			{
 				if(ap.port_id.equals(prt.getId()))

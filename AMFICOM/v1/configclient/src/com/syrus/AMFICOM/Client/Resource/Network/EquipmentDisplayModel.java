@@ -1,21 +1,16 @@
 package com.syrus.AMFICOM.Client.Resource.Network;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
-import com.syrus.AMFICOM.Client.General.UI.PropertyEditor;
-import com.syrus.AMFICOM.Client.General.UI.PropertyRenderer;
-import com.syrus.AMFICOM.Client.General.UI.StubDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.TextFieldEditor;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import java.util.Vector;
+import java.util.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
 
 public class EquipmentDisplayModel extends StubDisplayModel
 {
 	ApplicationContext aContext = new ApplicationContext();
+	List cols = new ArrayList();
 
 	public EquipmentDisplayModel()
 	{
@@ -26,16 +21,15 @@ public class EquipmentDisplayModel extends StubDisplayModel
 	{
 		super();
 		this.aContext = aContext;
-	}
 
-	public Vector getColumns()
-	{
-		Vector cols = new Vector();
-//		cols.add("id");
 		cols.add("name");
 		cols.add("type_id");
 		cols.add("longitude");
 		cols.add("latitude");
+	}
+
+	public List getColumns()
+	{
 		return cols;
 	}
 
@@ -73,15 +67,15 @@ public class EquipmentDisplayModel extends StubDisplayModel
 	{
 		Equipment eq = (Equipment )or;
 		if(col_id.equals("id"))
-		  return new TextFieldEditor(eq.getId());
+			return new TextFieldEditor(eq.getId());
 		if(col_id.equals("name"))
-		  return new TextFieldEditor(eq.getName());
+			return new TextFieldEditor(eq.getName());
 		if(col_id.equals("type_id"))
-		  return new TextFieldEditor(Pool.getName("equipmenttype", eq.type_id));
+			return new TextFieldEditor(Pool.getName("equipmenttype", eq.type_id));
 		if(col_id.equals("longitude"))
-		  return new TextFieldEditor( String.valueOf(eq.longitude) );
+			return new TextFieldEditor( String.valueOf(eq.longitude) );
 		if(col_id.equals("latitude"))
-		  return new TextFieldEditor( String.valueOf(eq.latitude) );
+			return new TextFieldEditor( String.valueOf(eq.latitude) );
 		return null;
 	}
 

@@ -53,15 +53,12 @@ public class KISCharacteristicsPanel extends GeneralPanel
 		return equipment;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.equipment = (KIS )or;
 
-		if(equipment == null)
-			return true;
-
-		charPane.setCharHash(equipment);
-		return true;
+		if(equipment != null)
+			charPane.setCharHash(equipment);
 	}
 
 	public boolean modify()

@@ -1,9 +1,9 @@
 package com.syrus.AMFICOM.Client.Resource.Alarm;
 
-import com.syrus.AMFICOM.CORBA.Alarm.*;
-import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.CORBA.Alarm.AlarmType_Transferable;
+import com.syrus.AMFICOM.Client.Resource.StubResource;
 
-public class AlarmType extends ObjectResource
+public class AlarmType extends StubResource
 {
 	public static final String typ = "alarmtype";
 
@@ -22,7 +22,7 @@ public class AlarmType extends ObjectResource
 		this.transferable = transferable;
 		setLocalFromTransferable();
 	}
-	
+
 	public void setLocalFromTransferable()
 	{
 		this.id = transferable.id;
@@ -55,12 +55,12 @@ public class AlarmType extends ObjectResource
 	{
 		return name;
 	}
-	
+
 	public String getTyp()
 	{
 		return typ;
 	}
-	
+
 	public Object getTransferable()
 	{
 		return transferable;

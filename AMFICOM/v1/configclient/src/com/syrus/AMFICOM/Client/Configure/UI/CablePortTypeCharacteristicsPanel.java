@@ -53,15 +53,12 @@ public class CablePortTypeCharacteristicsPanel extends GeneralPanel
 		return portType;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.portType = (CablePortType)or;
 
-		if(portType == null)
-			return true;
-
-		charPane.setCharHash(portType);
-		return true;
+		if(portType != null)
+			charPane.setCharHash(portType);
 	}
 
 	public boolean modify()

@@ -35,25 +35,17 @@
 
 package com.syrus.AMFICOM.Client.Resource.Network;
 
-import java.io.Serializable;
-import java.io.IOException;
+import java.io.*;
+import java.util.*;
 
-import java.util.Hashtable;
-import java.util.Enumeration;
-
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.PortType;
-import com.syrus.AMFICOM.Client.Resource.ISM.KIS;
-
-import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
+import com.syrus.AMFICOM.CORBA.Network.*;
 import com.syrus.AMFICOM.Client.Configure.UI.PortPane;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.ISM.KIS;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.PortType;
 
-import com.syrus.AMFICOM.CORBA.Network.Port_Transferable;
-import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
-
-public class Port extends ObjectResource implements Serializable
+public class Port extends StubResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
 	public static final String typ = "port";
@@ -71,7 +63,7 @@ public class Port extends ObjectResource implements Serializable
 
 	public String domain_id = "";
 
-	public Hashtable characteristics = new Hashtable();
+	public Map characteristics = new HashMap();
 
 	public Port()
 	{
@@ -199,9 +191,9 @@ public class Port extends ObjectResource implements Serializable
 		int l = this.characteristics.size();
 		int i = 0;
 		transferable.characteristics = new Characteristic_Transferable[l];
-		for(Enumeration e = characteristics.elements(); e.hasMoreElements();)
+		for(Iterator it = characteristics.values().iterator(); it.hasNext();)
 		{
-			Characteristic ch = (Characteristic )e.nextElement();
+			Characteristic ch = (Characteristic)it.next();
 			ch.setTransferableFromLocal();
 			transferable.characteristics[i++] = ch.transferable;
 		}
@@ -291,7 +283,7 @@ public class Port extends ObjectResource implements Serializable
 		type_id = (String )in.readObject();
 		equipment_id = (String )in.readObject();
 		domain_id = (String )in.readObject();
-		characteristics = (Hashtable )in.readObject();
+		characteristics = (Map )in.readObject();
 
 		transferable = new Port_Transferable();
 		updateLocalFromTransferable();

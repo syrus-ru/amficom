@@ -1,28 +1,15 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import java.awt.Insets;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-
-import oracle.jdeveloper.layout.VerticalFlowLayout;
-
+import java.awt.*;
 import java.awt.event.ActionEvent;
-
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.BorderFactory;
-
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.MyUtil;
-
-import com.syrus.AMFICOM.Client.Resource.Network.Port;
-import com.syrus.AMFICOM.Client.Resource.Network.Equipment;
-
-import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.Client.Resource.Network.*;
+import oracle.jdeveloper.layout.VerticalFlowLayout;
 
 public class EquipmentPortsPanel extends GeneralPanel
 {
@@ -95,17 +82,16 @@ public class EquipmentPortsPanel extends GeneralPanel
 		return equipment;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.equipment = (Equipment )or;
 
 		if(equipment != null)
 		{
-			this.portBox.setContents(equipment.ports.elements(), false);
+			portBox.setContents(equipment.ports.iterator(), false);
 			Port cp = (Port )portBox.getSelectedObjectResource();
 			pgp.setObjectResource(cp);
 		}
-		return true;
 	}
 
 	public boolean modify()

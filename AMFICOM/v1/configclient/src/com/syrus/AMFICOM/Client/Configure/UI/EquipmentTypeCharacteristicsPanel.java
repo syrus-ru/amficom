@@ -51,15 +51,12 @@ public class EquipmentTypeCharacteristicsPanel extends GeneralPanel
 		return equipmentType;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.equipmentType = (EquipmentType) or;
 
-		if(equipmentType == null)
-			return true;
-
-		charPane.setCharHash(equipmentType);
-		return true;
+		if(equipmentType != null)
+			charPane.setCharHash(equipmentType);
 	}
 
 	public boolean modify()

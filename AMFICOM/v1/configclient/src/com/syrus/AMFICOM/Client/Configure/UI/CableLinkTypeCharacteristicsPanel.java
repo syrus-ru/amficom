@@ -11,11 +11,11 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 
 public class CableLinkTypeCharacteristicsPanel extends GeneralPanel
 {
-  CableLinkType link;
-  CharacteristicsPanel charPane = new CharacteristicsPanel();
+	CableLinkType link;
+	CharacteristicsPanel charPane = new CharacteristicsPanel();
 
-  public CableLinkTypeCharacteristicsPanel()
-  {
+	public CableLinkTypeCharacteristicsPanel()
+	{
 	 super();
 	 try
 	 {
@@ -25,40 +25,37 @@ public class CableLinkTypeCharacteristicsPanel extends GeneralPanel
 	 {
 		e.printStackTrace();
 	 }
-  }
+	}
 
-  public CableLinkTypeCharacteristicsPanel(CableLinkType l)
-  {
+	public CableLinkTypeCharacteristicsPanel(CableLinkType l)
+	{
 	 this();
 	 setObjectResource(l);
-  }
+	}
 
-  private void jbInit() throws Exception
-  {
+	private void jbInit() throws Exception
+	{
 	 setName(LangModelConfig.getString("label_chars"));
 
 	 this.setLayout(new BorderLayout());
 	 this.add(charPane, BorderLayout.CENTER);
-  }
+	}
 
-  public ObjectResource getObjectResource()
-  {
+	public ObjectResource getObjectResource()
+	{
 	 return link;
-  }
+	}
 
-  public boolean setObjectResource(ObjectResource or)
-  {
+	public void setObjectResource(ObjectResource or)
+	{
 	 this.link = (CableLinkType)or;
 
-	 if(link == null)
-		return true;
+	 if(link != null)
+		 charPane.setCharHash(link);
+	}
 
-	 charPane.setCharHash(link);
+	public boolean modify()
+	{
 	 return true;
-  }
-
-  public boolean modify()
-  {
-	 return true;
-  }
+	}
 }

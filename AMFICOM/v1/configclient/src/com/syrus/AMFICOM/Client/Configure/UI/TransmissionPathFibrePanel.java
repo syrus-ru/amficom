@@ -78,8 +78,8 @@ public class TransmissionPathFibrePanel extends GeneralPanel
 		this.add(LinksTable,    new XYConstraints(2, 35, 455, 120));
 		LinksTable.initialize(
 				new StubDisplayModel(
-				  new String[] {"thread", "cable"},
-				  new String[] {"Волокно", "Кабель"}),
+					new String[] {"thread", "cable"},
+					new String[] {"Волокно", "Кабель"}),
 				new DataSet());
 	}
 
@@ -88,20 +88,18 @@ public class TransmissionPathFibrePanel extends GeneralPanel
 		return tp;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.tp = (TransmissionPath )or;
 
 		if(tp != null)
 		{
-			LinksTable.setContents(new DataSet(tp.links));
+			LinksTable.setContents(new DataSet(tp.links.iterator()));
 		}
 		else
 		{
 			LinksTable.setContents(new DataSet());
 		}
-		return true;
-
 	}
 
 	public boolean modify()

@@ -1,13 +1,10 @@
 package com.syrus.AMFICOM.Client.Resource.Network;
 
+import java.util.*;
+
 import java.awt.Component;
 
-import java.util.Hashtable;
-import java.util.Vector;
-import java.util.Enumeration;
-
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.Client.Resource.*;
 
 public abstract class CatalogElementModel extends ObjectResourceModel
 {
@@ -18,7 +15,7 @@ public abstract class CatalogElementModel extends ObjectResourceModel
 		this.obj = obj;
 	}
 
-	public abstract Hashtable getCharacteristics(ObjectResource obj);
+	public abstract Map getCharacteristics(ObjectResource obj);
 
 	public Component getPropertyRenderer(String col_id)
 	{
@@ -36,12 +33,12 @@ public abstract class CatalogElementModel extends ObjectResourceModel
 		return ch.getEditor();
 	}
 
-	public Vector getPropertyColumns()
+	public List getPropertyColumns()
 	{
-		Vector cols = new Vector();
-		for(Enumeration enum = getCharacteristics(obj).elements(); enum.hasMoreElements();)
+		List cols = new ArrayList();
+		for(Iterator it = getCharacteristics(obj).values().iterator(); it.hasNext();)
 		{
-			Characteristic ch = (Characteristic )enum.nextElement();
+			Characteristic ch = (Characteristic )it.next();
 			cols.add(ch.getId());
 		}
 		return cols;

@@ -35,12 +35,12 @@ public class CablePortGeneralPanel extends GeneralPanel
 {
 	CablePort cp;
 
-  private GridBagLayout gridBagLayout1 = new GridBagLayout();
+	private GridBagLayout gridBagLayout1 = new GridBagLayout();
 
 	JLabel descLabel = new JLabel();
-  private BorderLayout borderLayout1 = new BorderLayout();
-  JScrollPane descriptionScrollPane = new JScrollPane();
-  public JTextPane descTextArea = new JTextPane();
+	private BorderLayout borderLayout1 = new BorderLayout();
+	JScrollPane descriptionScrollPane = new JScrollPane();
+	public JTextPane descTextArea = new JTextPane();
 
 	JLabel idLabel = new JLabel();
 	JTextField idField = new JTextField();
@@ -54,9 +54,9 @@ public class CablePortGeneralPanel extends GeneralPanel
 	private JLabel equipLabel = new JLabel();
 	private ObjectResourceComboBox equipBox = new ObjectResourceComboBox("kisequipment", true);
 
-  private JTextField modifyField = new JTextField();
-  private JLabel modifyLabel2 = new JLabel();
-  private JLabel modifyLabel1 = new JLabel();
+	private JTextField modifyField = new JTextField();
+	private JLabel modifyLabel2 = new JLabel();
+	private JLabel modifyLabel1 = new JLabel();
 
 	public CablePortGeneralPanel()
 	{
@@ -139,7 +139,7 @@ public class CablePortGeneralPanel extends GeneralPanel
 		return cp;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.cp = (CablePort )or;
 
@@ -159,7 +159,6 @@ public class CablePortGeneralPanel extends GeneralPanel
 			this.descTextArea.setText("");
 			this.equipBox.setSelected("");
 		}
-		return true;
 
 	}
 

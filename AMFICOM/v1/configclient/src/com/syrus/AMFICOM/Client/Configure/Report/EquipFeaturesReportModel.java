@@ -30,7 +30,7 @@ import javax.swing.JComponent;
 public class EquipFeaturesReportModel extends ReportModel
 {
 	public String getName() {return "equipfeaturesreportmodel";}
-	public String getObjectsName() {return ObjectResource.typ;}
+	public String getObjectsName() {return "";}
 
 	public String getReportsName(ObjectsReport rp)
 	{

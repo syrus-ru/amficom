@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
 
 import java.awt.Color;
 
-import java.util.Enumeration;
+import java.util.*;
 import java.util.Vector;
 
 import javax.swing.ImageIcon;
@@ -281,12 +281,10 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 
 						ObjectResourceSorter sorter = Domain.getDefaultSorter();
 						sorter.setDataSet(dSet);
-						dSet = sorter.default_sort();
 
-						Enumeration enum = dSet.elements();
-						for(; enum.hasMoreElements();)
+						for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 						{
-							Domain d = (Domain )enum.nextElement();
+							Domain d = (Domain )it.next();
 							if(	d.domain_id == null ||
 								d.domain_id.equals(""))
 							{
@@ -304,12 +302,10 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 
 					ObjectResourceSorter sorter = Domain.getDefaultSorter();
 					sorter.setDataSet(dSet);
-					dSet = sorter.default_sort();
 
-					Enumeration enum = dSet.elements();
-					for(; enum.hasMoreElements();)
+					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
-						Domain d2 = (Domain )enum.nextElement();
+						Domain d2 = (Domain )it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(d2, d2.getName(), true);
 						vec.add(n);
 					}
@@ -361,18 +357,16 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 			{
 				if (Pool.getHash(Equipment.typ) != null)
 				{
-					DataSet dSet = new DataSet(Pool.getHash(Equipment.typ));
+					Map dSet = Pool.getHash(Equipment.typ);
 
 					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = Equipment.getDefaultSorter();
 					sorter.setDataSet(dSet);
-					dSet = sorter.default_sort();
 
-					Enumeration enum = dSet.elements();
-					for(; enum.hasMoreElements();)
+					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
-						Equipment eq = (Equipment )enum.nextElement();
+						Equipment eq = (Equipment)it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(eq, eq.getName(), true);
 						vec.add(n);
 					}
@@ -383,18 +377,17 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 			{
 				if (Pool.getHash(Link.typ) != null)
 				{
-					DataSet dSet = new DataSet(Pool.getHash(Link.typ));
+					Map dSet = Pool.getHash(Link.typ);
 
 					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 					dSet = filter.filter(dSet);
+
 					ObjectResourceSorter sorter = Link.getDefaultSorter();
 					sorter.setDataSet(dSet);
-					dSet = sorter.default_sort();
 
-					Enumeration enum = dSet.elements();
-					for(; enum.hasMoreElements();)
+					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
-						Link l = (Link )enum.nextElement();
+						Link l = (Link )it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(l, l.getName(), true, true);
 						vec.add(n);
 					}
@@ -405,18 +398,16 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 			{
 				if (Pool.getHash(CableLink.typ) != null)
 				{
-					DataSet dSet = new DataSet(Pool.getHash(CableLink.typ));
+					Map dSet = Pool.getHash(CableLink.typ);
 
 					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = CableLink.getDefaultSorter();
 					sorter.setDataSet(dSet);
-					dSet = sorter.default_sort();
 
-					Enumeration enum = dSet.elements();
-					for(; enum.hasMoreElements();)
+					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
-						CableLink l = (CableLink )enum.nextElement();
+						CableLink l = (CableLink )it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(l, l.getName(), true, true);
 						vec.add(n);
 					}
@@ -428,16 +419,14 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 				ObjectResourceTreeNode parent = (ObjectResourceTreeNode )node.getParent();
 				Equipment eq = (Equipment )parent.getObject();
 
-				DataSet dSet = new DataSet(eq.ports);
+				DataSet dSet = new DataSet(eq.ports.iterator());
 
 				ObjectResourceSorter sorter = Port.getDefaultSorter();
 				sorter.setDataSet(dSet);
-				dSet = sorter.default_sort();
 
-				Enumeration enum = dSet.elements();
-				for(; enum.hasMoreElements();)
+				for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 				{
-					Port p = (Port )enum.nextElement();
+					Port p = (Port )it.next();
 					ObjectResourceTreeNode n = new ObjectResourceTreeNode(p, p.getName(), true, true);
 					vec.add(n);
 				}
@@ -448,16 +437,14 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 				ObjectResourceTreeNode parent = (ObjectResourceTreeNode )node.getParent();
 				Equipment eq = (Equipment )parent.getObject();
 
-				DataSet dSet = new DataSet(eq.cports);
+				DataSet dSet = new DataSet(eq.cports.iterator());
 
 				ObjectResourceSorter sorter = CablePort.getDefaultSorter();
 				sorter.setDataSet(dSet);
-				dSet = sorter.default_sort();
 
-				Enumeration enum = dSet.elements();
-				for(; enum.hasMoreElements();)
+				for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 				{
-					CablePort p = (CablePort )enum.nextElement();
+					CablePort p = (CablePort )it.next();
 					ObjectResourceTreeNode n = new ObjectResourceTreeNode(p, p.getName(), true, true);
 					vec.add(n);
 				}
@@ -467,18 +454,16 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 			{
 				if (Pool.getHash(KIS.typ) != null)
 				{
-					DataSet dSet = new DataSet(Pool.getHash(KIS.typ));
+					Map dSet = Pool.getHash(KIS.typ);
 
 					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = KIS.getDefaultSorter();
 					sorter.setDataSet(dSet);
-					dSet = sorter.default_sort();
 
-					Enumeration enum = dSet.elements();
-					for(; enum.hasMoreElements();)
+					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
-						KIS k = (KIS )enum.nextElement();
+						KIS k = (KIS )it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(k, k.getName(), true);
 						vec.add(n);
 					}
@@ -489,18 +474,16 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 			{
 				if (Pool.getHash(TransmissionPath.typ) != null)
 				{
-					DataSet dSet = new DataSet(Pool.getHash(TransmissionPath.typ));
+					Map dSet = Pool.getHash(TransmissionPath.typ);
 
 					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = TransmissionPath.getDefaultSorter();
 					sorter.setDataSet(dSet);
-					dSet = sorter.default_sort();
 
-					Enumeration enum = dSet.elements();
-					for(; enum.hasMoreElements();)
+					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
-						TransmissionPath tp = (TransmissionPath )enum.nextElement();
+						TransmissionPath tp = (TransmissionPath )it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(tp, tp.getName(), true, true);
 						vec.add(n);
 					}
@@ -509,180 +492,164 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 		else
 		if(s.equals(EquipmentType.typ))
 		{
-		  if (Pool.getHash(EquipmentType.typ) != null)
-		  {
-			 DataSet dSet = new DataSet(Pool.getHash(EquipmentType.typ));
+			if (Pool.getHash(EquipmentType.typ) != null)
+			{
+			 Map dSet = Pool.getHash(EquipmentType.typ);
 
 			 ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 			 dSet = filter.filter(dSet);
 			 ObjectResourceSorter sorter = EquipmentType.getDefaultSorter();
 			 sorter.setDataSet(dSet);
-			 dSet = sorter.default_sort();
 
-			 Enumeration enum = dSet.elements();
-			 for(; enum.hasMoreElements();)
+			 for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 			 {
-				EquipmentType eq = (EquipmentType)enum.nextElement();
+				EquipmentType eq = (EquipmentType)it.next();
 				ObjectResourceTreeNode n = new ObjectResourceTreeNode(eq, eq.getName(), true);
 				vec.add(n);
 			 }
-		  }
+			}
 		}
 		else
 		if(s.equals(LinkType.typ))
 		{
-		  if (Pool.getHash(LinkType.typ) != null)
-		  {
-			 DataSet dSet = new DataSet(Pool.getHash(LinkType.typ));
+			if (Pool.getHash(LinkType.typ) != null)
+			{
+			 Map dSet = Pool.getHash(LinkType.typ);
 
 			 ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 			 dSet = filter.filter(dSet);
 			 ObjectResourceSorter sorter = LinkType.getDefaultSorter();
 			 sorter.setDataSet(dSet);
-			 dSet = sorter.default_sort();
 
-			 Enumeration enum = dSet.elements();
-			 for(; enum.hasMoreElements();)
+			 for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 			 {
-				LinkType l = (LinkType)enum.nextElement();
+				LinkType l = (LinkType)it.next();
 				ObjectResourceTreeNode n = new ObjectResourceTreeNode(l, l.getName(), true, true);
 				vec.add(n);
 			 }
-		  }
+			}
 		}
 		else
 		if(s.equals(CableLinkType.typ))
 		{
-		  if (Pool.getHash(CableLinkType.typ) != null)
-		  {
-			 DataSet dSet = new DataSet(Pool.getHash(CableLinkType.typ));
+			if (Pool.getHash(CableLinkType.typ) != null)
+			{
+			 Map dSet = Pool.getHash(CableLinkType.typ);
 
 			 ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 			 dSet = filter.filter(dSet);
 			 ObjectResourceSorter sorter = CableLinkType.getDefaultSorter();
 			 sorter.setDataSet(dSet);
-			 dSet = sorter.default_sort();
 
-			 Enumeration enum = dSet.elements();
-			 for(; enum.hasMoreElements();)
+			 for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 			 {
-				CableLinkType l = (CableLinkType)enum.nextElement();
+				CableLinkType l = (CableLinkType)it.next();
 				ObjectResourceTreeNode n = new ObjectResourceTreeNode(l, l.getName(), true, true);
 				vec.add(n);
 			 }
-		  }
+			}
 		}
 		else
 		if(s.equals(PortType.typ))
 		{
-		  if (Pool.getHash(PortType.typ) != null)
-		  {
-			 DataSet dSet = new DataSet(Pool.getHash(PortType.typ));
+			if (Pool.getHash(PortType.typ) != null)
+			{
+			 Map dSet = Pool.getHash(PortType.typ);
 
 			 ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 			 dSet = filter.filter(dSet);
 			 ObjectResourceSorter sorter = PortType.getDefaultSorter();
 			 sorter.setDataSet(dSet);
-			 dSet = sorter.default_sort();
 
-			 Enumeration enum = dSet.elements();
-			 for(; enum.hasMoreElements();)
+			 for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 			 {
-				PortType pt = (PortType)enum.nextElement();
+				PortType pt = (PortType)it.next();
 				ObjectResourceTreeNode n = new ObjectResourceTreeNode(pt, pt.getName(), true, true);
 				vec.add(n);
 			 }
-		  }
+			}
 		}
 		else
 		if(s.equals(CablePortType.typ))
 		{
-		  if (Pool.getHash(CablePortType.typ) != null)
-		  {
-			 DataSet dSet = new DataSet(Pool.getHash(CablePortType.typ));
+			if (Pool.getHash(CablePortType.typ) != null)
+			{
+			 Map dSet = Pool.getHash(CablePortType.typ);
 
 			 ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 			 dSet = filter.filter(dSet);
 			 ObjectResourceSorter sorter = CablePortType.getDefaultSorter();
 			 sorter.setDataSet(dSet);
-			 dSet = sorter.default_sort();
 
-			 Enumeration enum = dSet.elements();
-			 for(; enum.hasMoreElements();)
+			 for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 			 {
-				CablePortType cpT = (CablePortType)enum.nextElement();
+				CablePortType cpT = (CablePortType)it.next();
 				ObjectResourceTreeNode n = new ObjectResourceTreeNode(cpT, cpT.getName(), true, true);
 				vec.add(n);
 			 }
-		  }
+			}
 		}
 		else
 		if(s.equals(KISType.typ))
 		{
-		  if (Pool.getHash(EquipmentType.typ) != null)
-		  {
-			 DataSet dSet = new DataSet(Pool.getHash(EquipmentType.typ));
+			if (Pool.getHash(EquipmentType.typ) != null)
+			{
+			 Map dSet = Pool.getHash(EquipmentType.typ);
 
 			 ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 			 dSet = filter.filter(dSet);
 			 ObjectResourceSorter sorter = KISType.getDefaultSorter();
 			 sorter.setDataSet(dSet);
-			 dSet = sorter.default_sort();
 
-			 Enumeration enum = dSet.elements();
-			 for(; enum.hasMoreElements();)
+			 for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 			 {
-				EquipmentType k = (EquipmentType)enum.nextElement();
+				EquipmentType k = (EquipmentType)it.next();
 				if (!k.eq_class.equals("tester"))
-				  continue;
+					continue;
 				ObjectResourceTreeNode n = new ObjectResourceTreeNode(k, k.getName(), true);
 				vec.add(n);
 			 }
-		  }
+			}
 		}
 		else
 		if(s.equals(TransmissionPathType.typ))
 		{
-		  if (Pool.getHash(TransmissionPathType.typ) != null)
-		  {
-			 DataSet dSet = new DataSet(Pool.getHash(TransmissionPathType.typ));
+			if (Pool.getHash(TransmissionPathType.typ) != null)
+			{
+			 Map dSet = Pool.getHash(TransmissionPathType.typ);
 
 			 ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 			 dSet = filter.filter(dSet);
 			 ObjectResourceSorter sorter = TransmissionPathType.getDefaultSorter();
 			 sorter.setDataSet(dSet);
-			 dSet = sorter.default_sort();
 
-			 Enumeration enum = dSet.elements();
-			 for(; enum.hasMoreElements();)
+			 for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 			 {
-				TransmissionPathType tp = (TransmissionPathType)enum.nextElement();
+				TransmissionPathType tp = (TransmissionPathType)it.next();
 				ObjectResourceTreeNode n = new ObjectResourceTreeNode(tp, tp.getName(), true, true);
 				vec.add(n);
 			 }
-		  }
+			}
 		}
 		else
 		if(s.equals(AccessPortType.typ))
 		{
-		  if (Pool.getHash(AccessPortType.typ) != null)
-		  {
-			 DataSet dSet = new DataSet(Pool.getHash(AccessPortType.typ));
+			if (Pool.getHash(AccessPortType.typ) != null)
+			{
+			 Map dSet = Pool.getHash(AccessPortType.typ);
 
 			 ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 			 dSet = filter.filter(dSet);
 			 ObjectResourceSorter sorter = AccessPortType.getDefaultSorter();
 			 sorter.setDataSet(dSet);
-			 dSet = sorter.default_sort();
 
-			 Enumeration enum = dSet.elements();
-			 for(; enum.hasMoreElements();)
+			 for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 			 {
-				AccessPortType apt = (AccessPortType)enum.nextElement();
+				AccessPortType apt = (AccessPortType)it.next();
 				ObjectResourceTreeNode n = new ObjectResourceTreeNode(apt, apt.getName(), true, true);
 				vec.add(n);
 			 }
-		  }
+			}
 		}
 
 		}
@@ -703,12 +670,10 @@ public class ConfigTreeModel extends ObjectResourceTreeModel
 
 					ObjectResourceSorter sorter = Domain.getDefaultSorter();
 					sorter.setDataSet(dSet);
-					dSet = sorter.default_sort();
 
-					Enumeration enum = dSet.elements();
-					for(; enum.hasMoreElements();)
+					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
-						Domain d2 = (Domain )enum.nextElement();
+						Domain d2 = (Domain )it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(d2, d2.getName(), true);
 						vec.add(n);
 					}

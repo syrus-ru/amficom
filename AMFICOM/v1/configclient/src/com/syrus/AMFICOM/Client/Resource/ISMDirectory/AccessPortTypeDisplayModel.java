@@ -1,22 +1,16 @@
 package com.syrus.AMFICOM.Client.Resource.ISMDirectory;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
-import com.syrus.AMFICOM.Client.General.UI.PropertyEditor;
-import com.syrus.AMFICOM.Client.General.UI.PropertyRenderer;
-import com.syrus.AMFICOM.Client.General.UI.StubDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.TextFieldEditor;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import java.util.Vector;
+import java.util.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 public class AccessPortTypeDisplayModel extends StubDisplayModel
 {
 	ApplicationContext aContext = new ApplicationContext();
+	List cols = new ArrayList();
 
 	public AccessPortTypeDisplayModel()
 	{
@@ -27,12 +21,12 @@ public class AccessPortTypeDisplayModel extends StubDisplayModel
 	{
 		super();
 		this.aContext = aContext;
+
+		cols.add("name");
 	}
 
-	public Vector getColumns()
+	public List getColumns()
 	{
-		Vector cols = new Vector();
-		cols.add("name");
 		return cols;
 	}
 
@@ -58,9 +52,9 @@ public class AccessPortTypeDisplayModel extends StubDisplayModel
 	{
 		AccessPortType p = (AccessPortType)or;
 		if(col_id.equals("id"))
-		  return new TextFieldEditor(p.getId());
+			return new TextFieldEditor(p.getId());
 		if(col_id.equals("name"))
-		  return new TextFieldEditor(p.getName());
+			return new TextFieldEditor(p.getName());
 		return null;
 	}
 

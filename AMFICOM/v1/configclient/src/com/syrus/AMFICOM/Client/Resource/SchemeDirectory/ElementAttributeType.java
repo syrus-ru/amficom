@@ -36,10 +36,11 @@
 package com.syrus.AMFICOM.Client.Resource.SchemeDirectory;
 
 import java.io.*;
-import com.syrus.AMFICOM.CORBA.Scheme.*;
-import com.syrus.AMFICOM.Client.Resource.*;
 
-public class ElementAttributeType extends ObjectResource
+import com.syrus.AMFICOM.CORBA.Scheme.ElementAttributeType_Transferable;
+import com.syrus.AMFICOM.Client.Resource.StubResource;
+
+public class ElementAttributeType extends StubResource
 		implements Serializable
 {
 	private static final long serialVersionUID = 01L;
@@ -105,7 +106,7 @@ public class ElementAttributeType extends ObjectResource
 	public void updateLocalFromTransferable()
 	{
 	}
-	
+
 	public String getId()
 	{
 		return id;

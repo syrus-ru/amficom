@@ -36,13 +36,14 @@
 package com.syrus.AMFICOM.Client.Resource.Scheme;
 
 import java.io.*;
+
 import java.awt.*;
 
-import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.CORBA.Scheme.ElementAttribute_Transferable;
 import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.CORBA.Scheme.*;
+import com.syrus.AMFICOM.Client.Resource.*;
 
-public class ElementAttribute extends ObjectResource
+public class ElementAttribute extends StubResource
 		implements Cloneable, Serializable
 {
 	private static final long serialVersionUID = 01L;
@@ -89,7 +90,7 @@ public class ElementAttribute extends ObjectResource
 				name,
 				value,
 				type_id);
-			
+
 		ea.changed = changed;
 		ea.editable = editable;
 		ea.visible = visible;
@@ -120,7 +121,7 @@ public class ElementAttribute extends ObjectResource
 	public void updateLocalFromTransferable()
 	{
 	}
-	
+
 	public String getName()
 	{
 		return name;
@@ -135,14 +136,14 @@ public class ElementAttribute extends ObjectResource
 	{
 		return "sysdomain";
 	}
-	
+
 	public String getTyp()
 	{
 		return typ;
 	}
 
 	public Component getRenderer()
-    {
+		{
 		if(type_id.equals("thickness"))
 		{
 			LineThickComboBox lineThickComboBox = new LineThickComboBox();
@@ -175,9 +176,9 @@ public class ElementAttribute extends ObjectResource
 		else
 			return null;
 	}
-	
+
 	public Component getEditor()
-    {
+		{
 		if(type_id.equals("thickness"))
 		{
 			LineThickComboBox lineThickComboBox = new LineThickComboBox();
@@ -236,12 +237,12 @@ public class ElementAttribute extends ObjectResource
 		else
 			value = (String )val;
 	}
-	
+
 	public boolean isEditable()
 	{
 		return editable;
 	}
-	
+
 	public Object getTransferable()
 	{
 		return transferable;
@@ -267,7 +268,7 @@ public class ElementAttribute extends ObjectResource
 		}
 //		return new ElementAttribute(id, name, value, type_id);
 	}
-	
+
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
 		out.writeObject(id);

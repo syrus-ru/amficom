@@ -35,22 +35,17 @@
 
 package com.syrus.AMFICOM.Client.Resource.ISM;
 
+import java.io.*;
+import java.util.*;
+
 import com.syrus.AMFICOM.CORBA.ISM.AccessPort_Transferable;
 import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
 import com.syrus.AMFICOM.Client.Configure.UI.AccessPortPane;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 
-import java.io.IOException;
-import java.io.Serializable;
-
-import java.util.Enumeration;
-import java.util.Hashtable;
-
-public class AccessPort extends ObjectResource implements Serializable
+public class AccessPort extends StubResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
 	public static final String typ = "accessport";
@@ -65,7 +60,7 @@ public class AccessPort extends ObjectResource implements Serializable
 	public String local_id = "";
 	public String domain_id = "";
 
-	public Hashtable characteristics = new Hashtable();
+	public Map characteristics = new HashMap();
 
 	public AccessPort()
 	{
@@ -141,9 +136,9 @@ public class AccessPort extends ObjectResource implements Serializable
 		int l = this.characteristics.size();
 		int i = 0;
 		transferable.characteristics = new Characteristic_Transferable[l];
-		for(Enumeration e = characteristics.elements(); e.hasMoreElements();)
+		for(Iterator it = characteristics.values().iterator(); it.hasNext();)
 		{
-			Characteristic ch = (Characteristic )e.nextElement();
+			Characteristic ch = (Characteristic)it.next();
 			ch.setTransferableFromLocal();
 			transferable.characteristics[i++] = ch.transferable;
 		}
@@ -153,7 +148,7 @@ public class AccessPort extends ObjectResource implements Serializable
 	{
 		return typ;
 	}
-	
+
 	public String getName()
 	{
 		return name;
@@ -177,7 +172,7 @@ public class AccessPort extends ObjectResource implements Serializable
 	{
 		return transferable;
 	}
-	
+
 	public ObjectResourceModel getModel()
 	{
 		return new AccessPortModel(this);
@@ -216,7 +211,7 @@ public class AccessPort extends ObjectResource implements Serializable
 		KIS_id = (String )in.readObject();
 		local_id = (String )in.readObject();
 		domain_id = (String )in.readObject();
-		characteristics = (Hashtable )in.readObject();
+		characteristics = (Map)in.readObject();
 
 		transferable = new AccessPort_Transferable();
 		updateLocalFromTransferable();

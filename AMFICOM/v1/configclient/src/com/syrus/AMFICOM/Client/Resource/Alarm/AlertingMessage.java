@@ -1,16 +1,16 @@
 package com.syrus.AMFICOM.Client.Resource.Alarm;
 
-import com.syrus.AMFICOM.CORBA.Alarm.*;
-import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.CORBA.Alarm.AlertingMessage_Transferable;
+import com.syrus.AMFICOM.Client.Resource.StubResource;
 
-public class AlertingMessage extends ObjectResource
+public class AlertingMessage extends StubResource
 {
 	AlertingMessage_Transferable transferable;
 
-    public String id = "";
-    public String text = "";
-    public String message_type_id = "";
-    public String event_type_id = "";
+	public String id = "";
+	public String text = "";
+	public String message_type_id = "";
+	public String event_type_id = "";
 
 	public static final String typ = "alertingmessage";
 
@@ -33,8 +33,8 @@ public class AlertingMessage extends ObjectResource
 	{
 		this.id = id;
 		this.text = text;
-	    this.message_type_id = message_type_id;
-	    this.event_type_id = event_type_id;
+			this.message_type_id = message_type_id;
+			this.event_type_id = event_type_id;
 
 		transferable = new AlertingMessage_Transferable();
 	}
@@ -42,17 +42,17 @@ public class AlertingMessage extends ObjectResource
 	public void setLocalFromTransferable()
 	{
 		this.id = transferable.id;
-	    this.text = transferable.text;
-	    this.message_type_id = transferable.message_type_id;
-	    this.event_type_id = transferable.event_type_id;
+			this.text = transferable.text;
+			this.message_type_id = transferable.message_type_id;
+			this.event_type_id = transferable.event_type_id;
 	}
 
 	public void setTransferableFromLocal()
 	{
 		transferable.id = id;
-	    transferable.text = text;
-	    transferable.message_type_id = message_type_id;
-	    transferable.event_type_id = event_type_id;
+			transferable.text = text;
+			transferable.message_type_id = message_type_id;
+			transferable.event_type_id = event_type_id;
 	}
 
 	public void updateLocalFromTransferable()
@@ -68,12 +68,12 @@ public class AlertingMessage extends ObjectResource
 	{
 		return text;
 	}
-	
+
 	public String getTyp()
 	{
 		return typ;
 	}
-	
+
 	public String getDomainId()
 	{
 		return "sysdomain";

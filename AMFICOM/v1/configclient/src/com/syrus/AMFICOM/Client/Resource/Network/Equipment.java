@@ -35,31 +35,17 @@
 
 package com.syrus.AMFICOM.Client.Resource.Network;
 
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.MyUtil;
+import java.io.*;
+import java.util.*;
 
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
-import com.syrus.AMFICOM.Client.Resource.ISM.KIS;
-import com.syrus.AMFICOM.Client.Resource.ISM.AccessPort;
-
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
-
+import com.syrus.AMFICOM.CORBA.Network.*;
 import com.syrus.AMFICOM.Client.Configure.UI.EquipmentPane;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.ISM.*;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
 
-import com.syrus.AMFICOM.CORBA.Network.Equipment_Transferable;
-import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
-
-import java.io.Serializable;
-import java.io.IOException;
-
-import java.util.Vector;
-import java.util.Hashtable;
-import java.util.Enumeration;
-
-public class Equipment extends ObjectResource implements Serializable
+public class Equipment extends StubResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
 	public static final String typ = "equipment";
@@ -93,19 +79,15 @@ public class Equipment extends ObjectResource implements Serializable
 
 	public long modified;
 
-	public Vector port_ids = new Vector();
-	public Vector cport_ids = new Vector();
-	public Vector s_port_ids = new Vector();
+	public Collection port_ids = new ArrayList();
+	public Collection cport_ids = new ArrayList();
+	public Collection s_port_ids = new ArrayList();
 
-//	public Vector remarks;
-//	public Hashtable slots;
-	public Vector ports = new Vector();
-	public Vector cports = new Vector();
-	public Vector test_ports = new Vector();
-//	public Equipment holder;
-//	public EquipmentHolderSlot holder_slot;
+	public Collection ports = new ArrayList();
+	public Collection cports = new ArrayList();
+	public Collection test_ports = new ArrayList();
 
-	public Hashtable characteristics = new Hashtable();
+	public Map characteristics = new HashMap();
 
 	public Equipment()
 	{
@@ -141,11 +123,11 @@ public class Equipment extends ObjectResource implements Serializable
 
 		image_id = eq_type.image_id;
 
-		ports = new Vector();
-		cports = new Vector();
-		test_ports = new Vector();
+		ports = new ArrayList();
+		cports = new ArrayList();
+		test_ports = new ArrayList();
 
-		characteristics = new Hashtable();
+		characteristics = new HashMap();
 
 		transferable = new Equipment_Transferable();
 	}
@@ -168,19 +150,11 @@ public class Equipment extends ObjectResource implements Serializable
 			String supplier,
 			String supplier_code,
 
-//			Vector remarks,
-
-//			Hashtable ports,
-			Hashtable characteristics,
-//			Hashtable test_ports,
-
+			Map characteristics,
 			boolean is_holder,
-//			Hashtable slots,
 
 			String holder_id,
-//			Equipment holder,
 			String holder_slot_id)
-//			EquipmentHolderSlot holder_slot)
 	{
 		this.id = id;
 		this.name = name;
@@ -239,9 +213,9 @@ public class Equipment extends ObjectResource implements Serializable
 
 		modified = transferable.modified;
 
-		MyUtil.addToVector(port_ids, transferable.port_ids);
-		MyUtil.addToVector(cport_ids, transferable.cport_ids);
-		MyUtil.addToVector(s_port_ids, transferable.s_port_ids);
+		MyUtil.addToCollection(port_ids, transferable.port_ids);
+		MyUtil.addToCollection(cport_ids, transferable.cport_ids);
+		MyUtil.addToCollection(s_port_ids, transferable.s_port_ids);
 
 //		for(int i = 0; i < transferable.characteristics.length; i++)
 //			characteristics.put(transferable.characteristics[i].id, new Characteristic(transferable.characteristics[i]));
@@ -278,21 +252,16 @@ public class Equipment extends ObjectResource implements Serializable
 
 		transferable.modified = modified;
 
-		transferable.port_ids = new String[port_ids.size()];
-		port_ids.copyInto(transferable.port_ids);
-
-		transferable.cport_ids = new String[cport_ids.size()];
-		cport_ids.copyInto(transferable.cport_ids);
-
-		transferable.s_port_ids = new String[s_port_ids.size()];
-		s_port_ids.copyInto(transferable.s_port_ids);
+		transferable.port_ids = (String[])port_ids.toArray(new String[port_ids.size()]);
+		transferable.cport_ids = (String[])cport_ids.toArray(new String[cport_ids.size()]);
+		transferable.s_port_ids = (String[])s_port_ids.toArray(new String[s_port_ids.size()]);
 
 		int l = this.characteristics.size();
 		int i = 0;
 		transferable.characteristics = new Characteristic_Transferable[l];
-		for(Enumeration e = characteristics.elements(); e.hasMoreElements();)
+		for(Iterator it = characteristics.values().iterator(); it.hasNext();)
 		{
-			Characteristic ch = (Characteristic )e.nextElement();
+			Characteristic ch = (Characteristic)it.next();
 			ch.setTransferableFromLocal();
 			transferable.characteristics[i++] = ch.transferable;
 		}
@@ -325,16 +294,16 @@ public class Equipment extends ObjectResource implements Serializable
 
 	public void updateLocalFromTransferable()
 	{
-		ports = new Vector();
-		cports = new Vector();
-		test_ports = new Vector();
+		ports = new ArrayList();
+		cports = new ArrayList();
+		test_ports = new ArrayList();
 
-		for(int i = 0; i < port_ids.size(); i++)
-			this.ports.add( Pool.get("port", (String)port_ids.get(i)) );
-		for(int i = 0; i < cport_ids.size(); i++)
-			this.cports.add( Pool.get("cableport", (String)cport_ids.get(i)) );
-		for(int i = 0; i < s_port_ids.size(); i++)
-			this.test_ports.add( Pool.get("testport", (String)s_port_ids.get(i)) );
+		for(Iterator it = port_ids.iterator(); it.hasNext();)
+			ports.add( Pool.get(Port.typ, (String)it.next()) );
+		for(Iterator it = cport_ids.iterator(); it.hasNext();)
+			cports.add( Pool.get(CablePort.typ, (String)it.next()) );
+		for(Iterator it = s_port_ids.iterator(); it.hasNext();)
+			test_ports.add( Pool.get(TestPort.typ, (String)it.next()) );
 	}
 
 	public Object getTransferable()
@@ -416,39 +385,39 @@ public class Equipment extends ObjectResource implements Serializable
 		domain_id = (String )in.readObject();
 		image_id = (String )in.readObject();
 		modified = in.readLong();
-		port_ids = (Vector )in.readObject();
-		cport_ids = (Vector )in.readObject();
-		s_port_ids = (Vector )in.readObject();
-		ports = (Vector )in.readObject();
-		cports = (Vector )in.readObject();
+		port_ids = (Collection)in.readObject();
+		cport_ids = (Collection)in.readObject();
+		s_port_ids = (Collection)in.readObject();
+		ports = (Collection)in.readObject();
+		cports = (Collection)in.readObject();
 		if(this instanceof KIS)
-			((KIS )this).access_ports = (Vector )in.readObject();
+			((KIS )this).access_ports = (Collection )in.readObject();
 		else
-			test_ports = (Vector )in.readObject();
-		characteristics = (Hashtable )in.readObject();
+			test_ports = (Collection )in.readObject();
+		characteristics = (Map )in.readObject();
 
-		for(int i = 0; i < ports.size(); i++)
+		for(Iterator it = ports.iterator(); it.hasNext();)
 		{
-			Port port = (Port )ports.get(i);
+			Port port = (Port)it.next();
 			Pool.put(Port.typ, port.getId(), port);
 		}
 
-		for(int i = 0; i < cports.size(); i++)
+		for(Iterator it = cports.iterator(); it.hasNext();)
 		{
-			CablePort port = (CablePort )cports.get(i);
+			CablePort port = (CablePort )it.next();
 			Pool.put(CablePort.typ, port.getId(), port);
 		}
 
 		if(this instanceof KIS)
-			for(int i = 0; i < ((KIS )this).access_ports.size(); i++)
+			for(Iterator it = ((KIS )this).access_ports.iterator(); it.hasNext();)
 			{
-				AccessPort port = (AccessPort )((KIS )this).access_ports.get(i);
+				AccessPort port = (AccessPort)it.next();
 				Pool.put(AccessPort.typ, port.getId(), port);
 			}
 		else
-			for(int i = 0; i < test_ports.size(); i++)
+			for(Iterator it = test_ports.iterator(); it.hasNext();)
 			{
-				TestPort port = (TestPort )test_ports.get(i);
+				TestPort port = (TestPort)it.next();
 				Pool.put(TestPort.typ, port.getId(), port);
 			}
 

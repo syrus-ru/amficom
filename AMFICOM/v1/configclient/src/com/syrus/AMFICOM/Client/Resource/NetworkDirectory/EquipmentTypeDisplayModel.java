@@ -1,44 +1,38 @@
 package com.syrus.AMFICOM.Client.Resource.NetworkDirectory;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
-import com.syrus.AMFICOM.Client.General.UI.PropertyEditor;
-import com.syrus.AMFICOM.Client.General.UI.PropertyRenderer;
-import com.syrus.AMFICOM.Client.General.UI.StubDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.TextFieldEditor;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import java.util.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-
-import java.util.Vector;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 public class EquipmentTypeDisplayModel extends StubDisplayModel
 {
-  ApplicationContext aContext = new ApplicationContext();
+	ApplicationContext aContext = new ApplicationContext();
+	List cols = new ArrayList();
 
-  public EquipmentTypeDisplayModel()
-  {
-	 this(new ApplicationContext());
-  }
+	public EquipmentTypeDisplayModel()
+	{
+		this(new ApplicationContext());
+	}
 
-  public EquipmentTypeDisplayModel(ApplicationContext aContext)
-  {
-	 super();
-	 this.aContext = aContext;
-  }
+	public EquipmentTypeDisplayModel(ApplicationContext aContext)
+	{
+		super();
+		this.aContext = aContext;
 
-  public Vector getColumns()
-  {
-	 Vector cols = new Vector();
-//		cols.add("id");
-	 cols.add("name");
-	 cols.add("eq_class_id");
-	 return cols;
-  }
+		cols.add("name");
+		cols.add("eq_class_id");
+	}
 
-  public String getColumnName(String col_id)
-  {
+	public List getColumns()
+	{
+		return cols;
+	}
+
+	public String getColumnName(String col_id)
+	{
 	 if(col_id.equals("id"))
 		return LangModelConfig.getString("label_id");
 	 if(col_id.equals("name"))
@@ -46,10 +40,10 @@ public class EquipmentTypeDisplayModel extends StubDisplayModel
 	 if(col_id.equals("eq_class_id"))
 		return LangModelConfig.getString("port_class");
 	 return "";
-  }
+	}
 
-  public int getColumnSize(String col_id)
-  {
+	public int getColumnSize(String col_id)
+	{
 	 if(col_id.equals("id"))
 		return 100;
 	 if(col_id.equals("name"))
@@ -57,10 +51,10 @@ public class EquipmentTypeDisplayModel extends StubDisplayModel
 	 if(col_id.equals("eq_class_id"))
 		return 100;
 	 return 100;
-  }
+	}
 
-  public PropertyRenderer getColumnRenderer(ObjectResource or, String col_id)
-  {
+	public PropertyRenderer getColumnRenderer(ObjectResource or, String col_id)
+	{
 	 EquipmentType eqType = (EquipmentType)or;
 	 if(col_id.equals("id"))
 		return new TextFieldEditor(eqType.getId());
@@ -69,10 +63,10 @@ public class EquipmentTypeDisplayModel extends StubDisplayModel
 	 if(col_id.equals("eq_class_id"))
 		return new TextFieldEditor(eqType.eq_class);
 	 return null;
-  }
+	}
 
-  public PropertyEditor getColumnEditor(ObjectResource or, String col_id)
-  {
+	public PropertyEditor getColumnEditor(ObjectResource or, String col_id)
+	{
 	 return (PropertyEditor )getColumnRenderer(or, col_id);
-  }
+	}
 }

@@ -9,13 +9,15 @@ import com.syrus.AMFICOM.Client.General.UI.TextFieldEditor;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
-import java.util.Vector;
+import java.util.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 
 public class AccessPortDisplayModel extends StubDisplayModel
 {
 	ApplicationContext aContext = new ApplicationContext();
+
+	static List cols = new ArrayList();
 
 	public AccessPortDisplayModel()
 	{
@@ -26,15 +28,15 @@ public class AccessPortDisplayModel extends StubDisplayModel
 	{
 		super();
 		this.aContext = aContext;
-	}
 
-	public Vector getColumns()
-	{
-		Vector cols = new Vector();
-//		cols.add("id");
+		//		cols.add("id");
 		cols.add("name");
 		cols.add("type_id");
 		cols.add("equipment_id");
+	}
+
+	public List getColumns()
+	{
 		return cols;
 	}
 
@@ -68,13 +70,13 @@ public class AccessPortDisplayModel extends StubDisplayModel
 	{
 		AccessPort p = (AccessPort )or;
 		if(col_id.equals("id"))
-		  return new TextFieldEditor(p.getId());
+			return new TextFieldEditor(p.getId());
 		if(col_id.equals("name"))
-		  return new TextFieldEditor(p.getName());
+			return new TextFieldEditor(p.getName());
 		if(col_id.equals("type_id"))
-		  return new TextFieldEditor(Pool.getName("accessporttype", p.type_id));
+			return new TextFieldEditor(Pool.getName("accessporttype", p.type_id));
 		if(col_id.equals("equipment_id"))
-		  return new TextFieldEditor(Pool.getName("kis", p.KIS_id));
+			return new TextFieldEditor(Pool.getName("kis", p.KIS_id));
 		return null;
 	}
 

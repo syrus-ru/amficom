@@ -2,7 +2,6 @@ package com.syrus.AMFICOM.Client.Configure.UI;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
-
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Checker;
@@ -11,7 +10,6 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISMDirectory.AccessPortType;
-import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
 import oracle.jdeveloper.layout.XYConstraints;
 
 public class AccessPortTypePane extends PropertiesPanel
@@ -72,13 +70,12 @@ public class AccessPortTypePane extends PropertiesPanel
 		return portType;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.portType = (AccessPortType)or;
 
 		gPanel.setObjectResource(portType);
 		chPanel.setObjectResource(portType);
-		return true;
 	}
 
 	public void setContext(ApplicationContext aContext)

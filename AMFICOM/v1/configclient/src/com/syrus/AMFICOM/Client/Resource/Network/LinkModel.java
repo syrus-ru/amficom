@@ -35,7 +35,8 @@
 
 package com.syrus.AMFICOM.Client.Resource.Network;
 
-import java.util.Hashtable;
+import java.util.Map;
+
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 public class LinkModel extends CatalogElementModel
@@ -56,7 +57,7 @@ public class LinkModel extends CatalogElementModel
 		return "";
 	}
 
-	public Hashtable getCharacteristics(ObjectResource obj)
+	public Map getCharacteristics(ObjectResource obj)
 	{
 		return link.characteristics;
 	}

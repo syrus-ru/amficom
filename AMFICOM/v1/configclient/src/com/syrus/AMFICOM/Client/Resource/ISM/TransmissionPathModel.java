@@ -35,13 +35,10 @@
 
 package com.syrus.AMFICOM.Client.Resource.ISM;
 
-import java.util.*;
+import java.util.Map;
 
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.ISM.*;
-import com.syrus.AMFICOM.Client.Resource.Network.*;
-import com.syrus.AMFICOM.CORBA.Network.*;
-import com.syrus.AMFICOM.CORBA.ISM.*;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.Client.Resource.Network.CatalogElementModel;
 
 public class TransmissionPathModel extends CatalogElementModel
 {
@@ -61,7 +58,7 @@ public class TransmissionPathModel extends CatalogElementModel
 		return "";
 	}
 
-	public Hashtable getCharacteristics(ObjectResource obj)
+	public Map getCharacteristics(ObjectResource obj)
 	{
 		return path.characteristics;
 	}

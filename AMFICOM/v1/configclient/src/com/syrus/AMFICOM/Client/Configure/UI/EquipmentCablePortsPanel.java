@@ -1,36 +1,15 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
-import java.awt.Insets;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
 
-import oracle.jdeveloper.layout.VerticalFlowLayout;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
-import javax.swing.JTextField;
-import javax.swing.BorderFactory;
-
-import java.util.Date;
-import java.text.SimpleDateFormat;
-
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.MyUtil;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Network.CablePort;
-import com.syrus.AMFICOM.Client.Resource.Network.Equipment;
-
-import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.Client.Resource.Network.*;
+import oracle.jdeveloper.layout.VerticalFlowLayout;
 
 public class EquipmentCablePortsPanel extends GeneralPanel
 {
@@ -104,17 +83,16 @@ public class EquipmentCablePortsPanel extends GeneralPanel
 		return equipment;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.equipment = (Equipment )or;
 
 		if(equipment != null)
 		{
-			this.cportBox.setContents(equipment.cports.elements(), false);
+			this.cportBox.setContents(equipment.cports.iterator(), false);
 			CablePort cp = (CablePort )cportBox.getSelectedObjectResource();
 			cpgp.setObjectResource(cp);
 		}
-		return true;
 	}
 
 	public boolean modify()
