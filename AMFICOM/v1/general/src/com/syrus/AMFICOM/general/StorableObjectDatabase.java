@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.124 2005/03/15 13:06:23 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.125 2005/03/18 14:24:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.124 $, $Date: 2005/03/15 13:06:23 $
+ * @version $Revision: 1.125 $, $Date: 2005/03/18 14:24:28 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -152,14 +152,26 @@ public abstract class StorableObjectDatabase {
 
 	protected abstract String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException;
 	
-	protected final String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
-		return DatabaseIdentifier.toSQLString(storableObject.getId()) + COMMA
-			+ DatabaseDate.toUpdateSubString(storableObject.getCreated()) + COMMA
-			+ DatabaseDate.toUpdateSubString(storableObject.getModified()) + COMMA
-			+ DatabaseIdentifier.toSQLString(storableObject.getCreatorId()) + COMMA
-			+ DatabaseIdentifier.toSQLString(storableObject.getModifierId()) + COMMA
-			+ Long.toString(storableObject.getVersion()) + COMMA
-			+ this.getUpdateSingleSQLValuesTmpl(storableObject);
+	protected final String getUpdateSingleSQLValues(StorableObject storableObject, int mode) throws IllegalDataException {
+		String modeString;
+		switch (mode) {
+			case MODE_INSERT:
+				modeString = DatabaseIdentifier.toSQLString(storableObject.getId()) + COMMA;
+				break;
+			case MODE_UPDATE:
+				modeString = "";
+				break;
+			default:
+				String msg = this.getEnityName() + "Database.getUpdateSingleSQLValues | Unknown mode: " + mode;
+				throw new IllegalDataException(msg);
+
+		}
+		return modeString + DatabaseDate.toUpdateSubString(storableObject.getCreated()) + COMMA
+				+ DatabaseDate.toUpdateSubString(storableObject.getModified()) + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getCreatorId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getModifierId()) + COMMA
+				+ Long.toString(storableObject.getVersion()) + COMMA
+				+ this.getUpdateSingleSQLValuesTmpl(storableObject);
 	}
 
 	protected String retrieveQuery(final String condition) {
@@ -539,7 +551,7 @@ public abstract class StorableObjectDatabase {
 		String sql = SQL_INSERT_INTO + this.getEnityName() + OPEN_BRACKET
 				+ this.getColumns(MODE_INSERT)
 				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
-				+ this.getUpdateSingleSQLValues(storableObject)
+				+ this.getUpdateSingleSQLValues(storableObject, MODE_INSERT)
 				+ CLOSE_BRACKET;
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
@@ -933,7 +945,7 @@ public abstract class StorableObjectDatabase {
 		String[] cols = this.getColumns(MODE_UPDATE).split(COMMA);
 		String[] values = null;
 		try {
-			values = this.parseInsertStringValues(this.getUpdateSingleSQLValues(storableObject), cols.length);
+			values = this.parseStringValues(this.getUpdateSingleSQLValues(storableObject, MODE_UPDATE), cols.length);
 		}
 		catch (IllegalDataException ide) {
 			storableObject.rollbackUpdate();
@@ -1384,13 +1396,13 @@ public abstract class StorableObjectDatabase {
 		return stringBuffer;
 	}
 
-	private String[] parseInsertStringValues(String insertValues, int columnCount) {
-		int length = insertValues.length();
+	private String[] parseStringValues(String values, int columnCount) {
+		int length = values.length();
 		Pattern pattern = Pattern.compile("(('(''|[^'])*')|([^',]+)|(\\w+\\s*\\([^)]+\\)))\\s*(,|$)");
-		Matcher matcher = pattern.matcher(insertValues);
-		String[] values = new String[columnCount];
+		Matcher matcher = pattern.matcher(values);
+		String[] parsedValues = new String[columnCount];
 		int valueCounter = 0;
-		Log.debugMessage("insertValue:\"" + insertValues + "\"", Log.DEBUGLEVEL08);
+		Log.debugMessage("insertValue:\"" + values + "\"", Log.DEBUGLEVEL08);
 		Log.debugMessage("columnCount:" + columnCount, Log.DEBUGLEVEL08);
 		while (matcher.find()) {			
 			for (int i = 1; i <= matcher.groupCount(); i++) {
@@ -1401,14 +1413,14 @@ public abstract class StorableObjectDatabase {
 					if ((0 <= start) && (start < end) && (end <= length)) {
 						//Log.debugMessage(i + ">\t\"" + insertValues.substring(matcher.start(i), matcher.end(i)) + '"', Log.DEBUGLEVEL08);
 						if ((i == 2) || (i == 4) || (i == 5)) {
-							values[valueCounter++] = insertValues.substring(matcher.start(i), matcher.end(i));
+							parsedValues[valueCounter++] = values.substring(matcher.start(i), matcher.end(i));
 						}
 					}
 				}
 			}			
 		}
 		
-		return values;
+		return parsedValues;
 	}
 
 	private String getConditionQuery(StorableObjectCondition condition) throws IllegalDataException {
