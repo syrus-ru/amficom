@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.Client.General.UI;
 
+import com.syrus.AMFICOM.resource.AbstractImageResource;
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
@@ -11,14 +12,14 @@ import com.syrus.AMFICOM.Client.Resource.*;
 public class ImagesPanelLabel extends JLabel
 		implements MouseListener, OperationListener
 {
-	public ImageResource ir = null;
+	public AbstractImageResource ir = null;
 	Dispatcher disp = null;
 	
 	public ImagesPanelLabel()
 	{
 	}
 
-	public ImagesPanelLabel(Dispatcher disp, ImageIcon myIcon, ImageResource ir)
+	public ImagesPanelLabel(Dispatcher disp, ImageIcon myIcon, AbstractImageResource ir)
 	{
 		this.disp = disp;
 		this.ir = ir;
@@ -82,7 +83,7 @@ public class ImagesPanelLabel extends JLabel
 
 	public String getToolTipText()
 	{
-		return ir.getName();
+		return ir.getId().toString();
 	}
 
 }

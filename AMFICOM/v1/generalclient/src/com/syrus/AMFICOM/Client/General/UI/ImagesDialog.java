@@ -1,5 +1,5 @@
 /*
- * $Id: ImagesDialog.java,v 1.4 2004/09/27 06:20:52 bass Exp $
+ * $Id: ImagesDialog.java,v 1.5 2004/12/22 13:27:22 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,14 +9,14 @@
 package com.syrus.AMFICOM.Client.General.UI;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.ImageResource;
+import com.syrus.AMFICOM.resource.AbstractImageResource;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.JDialog;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2004/09/27 06:20:52 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.5 $, $Date: 2004/12/22 13:27:22 $
  * @module generalclient_v1
  */
 public class ImagesDialog extends JDialog 
@@ -71,12 +71,12 @@ public class ImagesDialog extends JDialog
 			});
 	}
 
-	public ImageResource getImageResource()
+	public AbstractImageResource getImageResource()
 	{
 		return jPanel1.getImageResource();
 	}
 
-	public void setImageResource(ImageResource ir)
+	public void setImageResource(AbstractImageResource ir)
 	{
 		jPanel1.setImageResource(ir);
 	}
