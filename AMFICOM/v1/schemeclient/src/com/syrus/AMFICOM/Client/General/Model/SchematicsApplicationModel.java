@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.General.Model;
 
 import com.syrus.AMFICOM.Client.General.SessionInterface;
+import com.syrus.AMFICOM.Client.Resource.RISDMapDataSource;
 import com.syrus.AMFICOM.Client.Resource.*;
 
 public class SchematicsApplicationModel extends ApplicationModel

@@ -8,7 +8,6 @@ import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
 
-
 public class ProtoElementDisplayModel extends StubDisplayModel
 {
 	static TextFieldEditor r = new TextFieldEditor();
@@ -67,8 +66,8 @@ public class ProtoElementDisplayModel extends StubDisplayModel
 			r.setText(proto.getName());
 		else if(col_id.equals("eq_class_id"))
 		{
-			EquipmentType eqType = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipment_type_id);
-			r.setText(eqType.eq_class);
+			EquipmentType eqType = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipmentTypeId);
+			r.setText(eqType.eqClass);
 		}
 		else
 			return null;

@@ -6,9 +6,11 @@ import java.util.zip.*;
 
 import java.awt.datatransfer.*;
 
+import com.syrus.AMFICOM.CORBA.General.ElementAttribute_Transferable;
 import com.syrus.AMFICOM.CORBA.Scheme.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 
@@ -21,16 +23,16 @@ public class ProtoElement extends StubResource
 
 	public String id = "";
 	public String name = "";
-	public String equipment_type_id = "";
+	public String equipmentTypeId = "";
 	public long modified = 0;
-	public String domain_id = "";
-	public String symbol_id = "";
+	public String domainId = "";
+	public String symbolId = "";
 	public String label = "";
 
 	public Map attributes;
 	public Collection devices;
 	public Collection links;
-	public Collection protoelement_ids;
+	public Collection protoelementIds;
 
 	public Serializable serializable_cell;
 	public byte[] schemecell;
@@ -52,7 +54,7 @@ public class ProtoElement extends StubResource
 
 		devices = new ArrayList();
 		links = new ArrayList();
-		protoelement_ids = new ArrayList();
+		protoelementIds = new ArrayList();
 		attributes = new HashMap();
 	}
 
@@ -79,7 +81,7 @@ public class ProtoElement extends StubResource
 
 	public String getDomainId()
 	{
-		return domain_id;
+		return domainId;
 	}
 
 	public ObjectResourceModel getModel()
@@ -98,27 +100,55 @@ public class ProtoElement extends StubResource
 		return "com.syrus.AMFICOM.Client.Configure.UI.EquipmentTypePane";
 	}
 
+	public Collection getPorts()
+	{
+		if (devices.size() == 1)
+			return ( (SchemeDevice) devices.iterator().next()).ports;
+
+		Collection p = new ArrayList();
+		for (Iterator it = devices.iterator(); it.hasNext(); )
+		{
+			SchemeDevice sd = (SchemeDevice) it.next();
+			p.addAll(sd.ports);
+		}
+		return p;
+	}
+
+	public Collection getCablePorts()
+	{
+		if (devices.size() == 1)
+			return ( (SchemeDevice) devices.iterator().next()).cableports;
+
+		Collection p = new ArrayList();
+		for (Iterator it = devices.iterator(); it.hasNext(); )
+		{
+			SchemeDevice sd = (SchemeDevice) it.next();
+			p.addAll(sd.cableports);
+		}
+		return p;
+	}
+
 	public void setLocalFromTransferable()
 	{
 		id  = transferable.id;
 		name = transferable.name;
-		equipment_type_id = transferable.equipment_type_id;
+		equipmentTypeId = transferable.equipmentTypeId;
 		modified = transferable.modified;
-		domain_id = transferable.domain_id;
-		symbol_id = transferable.symbol_id;
+		domainId = transferable.domainId;
+		symbolId = transferable.symbolId;
 		label = transferable.label;
 
 		devices = new ArrayList(transferable.devices.length);
 		links = new ArrayList(transferable.links.length);
-		protoelement_ids = new ArrayList(transferable.proto_element_ids.length);
+		protoelementIds = new ArrayList(transferable.protoElementIds.length);
 		attributes = new HashMap(transferable.attributes.length);
 
 		for (int i = 0; i < transferable.devices.length; i++)
 			devices.add(new SchemeDevice(transferable.devices[i]));
 		for (int i = 0; i < transferable.links.length; i++)
 			links.add(new SchemeLink(transferable.links[i]));
-		for (int i = 0; i < transferable.proto_element_ids.length; i++)
-			protoelement_ids.add(transferable.proto_element_ids[i]);
+		for (int i = 0; i < transferable.protoElementIds.length; i++)
+			protoelementIds.add(transferable.protoElementIds[i]);
 
 		for(int i = 0; i < transferable.attributes.length; i++)
 			attributes.put(transferable.attributes[i].type_id, new ElementAttribute(transferable.attributes[i]));
@@ -131,15 +161,15 @@ public class ProtoElement extends StubResource
 	{
 		transferable.id  = id;
 		transferable.name = name;
-		transferable.equipment_type_id = equipment_type_id;
+		transferable.equipmentTypeId = equipmentTypeId;
 		transferable.modified = modified;
-		transferable.domain_id = domain_id;
-		transferable.symbol_id = symbol_id;
+		transferable.domainId = domainId;
+		transferable.symbolId = symbolId;
 		transferable.label = label;
 
 		transferable.devices = new SchemeDevice_Transferable[devices.size()];
 		transferable.links = new SchemeLink_Transferable[links.size()];
-		transferable.proto_element_ids = new String[protoelement_ids.size()];
+		transferable.protoElementIds = new String[protoelementIds.size()];
 
 		int counter = 0;
 		for (Iterator it = devices.iterator(); it.hasNext();)
@@ -156,8 +186,8 @@ public class ProtoElement extends StubResource
 			transferable.links[counter++] = (SchemeLink_Transferable)link.getTransferable();
 		}
 		counter = 0;
-		for (Iterator it = protoelement_ids.iterator(); it.hasNext();)
-			transferable.proto_element_ids[counter++] = (String)it.next();
+		for (Iterator it = protoelementIds.iterator(); it.hasNext();)
+			transferable.protoElementIds[counter++] = (String)it.next();
 
 		int l = this.attributes.size();
 		int i = 0;
@@ -252,14 +282,14 @@ public class ProtoElement extends StubResource
 	{
 		out.writeObject(id);
 		out.writeObject(name);
-		out.writeObject(equipment_type_id);
+		out.writeObject(equipmentTypeId);
 		out.writeLong(modified);
-		out.writeObject(symbol_id);
-		out.writeObject(domain_id);
+		out.writeObject(symbolId);
+		out.writeObject(domainId);
 		out.writeObject(label);
 		out.writeObject(devices);
 		out.writeObject(links);
-		out.writeObject(protoelement_ids);
+		out.writeObject(protoelementIds);
 		out.writeObject(attributes);
 
 		Object ob = schemecell;
@@ -273,14 +303,14 @@ public class ProtoElement extends StubResource
 	{
 		id = (String )in.readObject();
 		name = (String )in.readObject();
-		equipment_type_id = (String )in.readObject();
+		equipmentTypeId = (String )in.readObject();
 		modified = in.readLong();
-		symbol_id = (String )in.readObject();
-		domain_id = (String )in.readObject();
+		symbolId = (String )in.readObject();
+		domainId = (String )in.readObject();
 		label = (String )in.readObject();
 		devices = (Collection )in.readObject();
 		links = (Collection )in.readObject();
-		protoelement_ids = (Collection )in.readObject();
+		protoelementIds = (Collection )in.readObject();
 		attributes = (Map)in.readObject();
 
 		Object ob = in.readObject();
@@ -294,17 +324,17 @@ public class ProtoElement extends StubResource
 
 	public Object clone(DataSourceInterface dataSource)
 	{
-		String cloned_id = (String)Pool.get("clonedids", id);
-		if (cloned_id != null)
+		String clonedId = (String)Pool.get("clonedids", id);
+		if (clonedId != null)
 		{
-			ProtoElement cloned = (ProtoElement)Pool.get(ProtoElement.typ, cloned_id);
+			ProtoElement cloned = (ProtoElement)Pool.get(ProtoElement.typ, clonedId);
 			if (cloned == null)
-				System.err.println("ProtoElement.clone() id not found: " + cloned_id);
+				System.err.println("ProtoElement.clone() id not found: " + clonedId);
 			else
 				return cloned;
 		}
 
-		EquipmentType eqt = (EquipmentType)Pool.get(EquipmentType.typ, equipment_type_id);
+		EquipmentType eqt = (EquipmentType)Pool.get(EquipmentType.typ, equipmentTypeId);
 
 //		EquipmentType new_eqt = eqt;
 		EquipmentType new_eqt = (EquipmentType)eqt.clone();
@@ -315,17 +345,17 @@ public class ProtoElement extends StubResource
 		ProtoElement proto = new ProtoElement(dataSource.GetUId(ProtoElement.typ));
 		proto.modified = modified;
 		proto.name = name;
-		proto.equipment_type_id = new_eqt.getId();
+		proto.equipmentTypeId = new_eqt.getId();
 		proto.scheme_proto_group = scheme_proto_group;
 		proto.label = label;
-		proto.symbol_id = symbol_id;
-		proto.domain_id = domain_id;
+		proto.symbolId = symbolId;
+		proto.domainId = domainId;
 
-		for (Iterator it = protoelement_ids.iterator(); it.hasNext();)
+		for (Iterator it = protoelementIds.iterator(); it.hasNext();)
 		{
 			ProtoElement p = ((ProtoElement)Pool.get(ProtoElement.typ, (String)it.next()));
 			ProtoElement p1 = (ProtoElement)p.clone(dataSource);
-			proto.protoelement_ids.add(p1.getId());
+			proto.protoelementIds.add(p1.getId());
 		}
 		for (Iterator it = devices.iterator(); it.hasNext();)
 			proto.devices.add(((SchemeDevice)it.next()).clone(dataSource));
@@ -378,16 +408,16 @@ class ProtoElementModel extends ObjectResourceModel
 		this.proto = proto;
 	}
 
-	public String getColumnValue(String col_id)
+	public String getColumnValue(String colId)
 	{
 		String s = "";
 		try
 		{
-			if(col_id.equals("name"))
+			if(colId.equals("name"))
 			{
 				s = proto.getName();
 			}
-			if(col_id.equals("id"))
+			if(colId.equals("id"))
 			{
 				s = proto.getId();
 			}
@@ -400,7 +430,7 @@ class ProtoElementModel extends ObjectResourceModel
 		return s;
 	}
 
-	public void setColumnValue(String col_id, Object obj)
+	public void setColumnValue(String colId, Object obj)
 	{
 	}
 }
