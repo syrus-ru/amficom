@@ -5,8 +5,9 @@ import java.util.List;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceChooserDialog;
+import com.syrus.AMFICOM.client_.general.ui_.*;
 import com.syrus.AMFICOM.Client.Schematics.UI.SchemeController;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
@@ -28,7 +29,7 @@ public class SchemeOpenCommand extends VoidCommand
 
 	public void execute()
 	{
-		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(SchemeController.getInstance(), "scheme");
+		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(LangModelSchematics.getString("scheme"), SchemeController.getInstance());
 
 		try {
 			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
