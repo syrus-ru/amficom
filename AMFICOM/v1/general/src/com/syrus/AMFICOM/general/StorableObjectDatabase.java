@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.97 2005/02/14 12:57:13 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.98 2005/02/15 09:29:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.97 $, $Date: 2005/02/14 12:57:13 $
+ * @version $Revision: 1.98 $, $Date: 2005/02/15 09:29:03 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -240,17 +240,20 @@ public abstract class StorableObjectDatabase {
 			return Collections.EMPTY_SET;
 
 		Set changedObjectsIds = new HashSet();
-
-		StringBuffer stringBuffer = new StringBuffer(SQL_SELECT
-				+ StorableObjectWrapper.COLUMN_ID
-				+ SQL_FROM + this.getEnityName()
-				+ SQL_WHERE + "1=0");
 		StorableObject storableObject;
 		Identifier id;
+		Map storableObjectsMap = new HashMap();
+
+		StringBuffer stringBuffer = new StringBuffer(SQL_SELECT
+				+ StorableObjectWrapper.COLUMN_ID + COMMA
+				+ StorableObjectWrapper.COLUMN_VERSION
+				+ SQL_FROM + this.getEnityName()
+				+ SQL_WHERE + "1=0");
 		List refreshObjectIds = new LinkedList();
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			storableObject = (StorableObject) it.next();
 			id = storableObject.getId();
+			storableObjectsMap.put(id, storableObject);
 			
 			long deadtime = System.currentTimeMillis() + MAX_LOCK_TIMEOUT;
 			while (lockedObjectIds.contains(id) && System.currentTimeMillis() < deadtime) {
@@ -291,8 +294,15 @@ public abstract class StorableObjectDatabase {
 			statement = connection.createStatement();
 			Log.debugMessage("StorableObjectDatabase.refresh | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
-			while (resultSet.next())
-				changedObjectsIds.add(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID));
+			long dbversion;
+			while (resultSet.next()) {
+				id = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID);
+				storableObject = (StorableObject) storableObjectsMap.get(id);
+				dbversion = resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION);
+				//Refresh only objects with older version, then in DB
+				if (storableObject.hasOlderVersion(dbversion))
+					changedObjectsIds.add(id);
+			}
 		}
 		catch (SQLException sqle) {
 			String mesg = "StorableObjectDatabase.refresh | Cannot execute query " + sqle.getMessage();
