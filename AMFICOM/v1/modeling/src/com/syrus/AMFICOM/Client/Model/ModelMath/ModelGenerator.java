@@ -20,7 +20,7 @@ public class ModelGenerator
 {
 	SchemePath path;
 	ArrayList reflectoElements;
-	DataSet pathelements;
+	List pathelements;
 
 	double defConnectorLoss;
 	double defWeldLoss;
@@ -192,9 +192,9 @@ public class ModelGenerator
 	{
 		ArrayList reflectoElements = new ArrayList();
 
-		for(Enumeration en = pathelements.elements(); en.hasMoreElements();)
+		for(Iterator it = pathelements.iterator(); it.hasNext();)
 		{
-			PathElement pe = (PathElement)en.nextElement();
+			PathElement pe = (PathElement)it.next();
 			if(pe.is_cable) // CABLE LINK
 			{
 				SchemeCableLink scl = (SchemeCableLink)Pool.get(SchemeCableLink.typ, pe.link_id);
@@ -276,7 +276,7 @@ public class ModelGenerator
 
 	private ModelingEvent addCableLink(SchemeCableLink scl, SchemeCableThread thread)
 	{
-		Hashtable ht = null;
+		Map ht = null;
 		Characteristic c;
 		double length;
 		double attenuation;
@@ -324,7 +324,7 @@ public class ModelGenerator
 
 	private ModelingEvent addPort(SchemePort sp)
 	{
-		Hashtable ht;
+		Map ht;
 		Characteristic c;
 		double reflectance;
 		double attenuation;
@@ -386,7 +386,7 @@ public class ModelGenerator
 
 	private ModelingEvent addLink(SchemeLink sl)
 	{
-		Hashtable ht = null;
+		Map ht = null;
 		Characteristic c;
 		double length;
 		double attenuation;

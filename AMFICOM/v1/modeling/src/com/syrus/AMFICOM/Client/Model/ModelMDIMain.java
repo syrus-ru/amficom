@@ -216,7 +216,7 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		aModel.setCommand("menuViewModelLoad", new LoadModelingCommand(internal_dispatcher, aContext));
 		aModel.setCommand("menuViewSchemeOpen", new SchemeOpenCommand(aContext, graph));
 		aModel.setCommand("menuViewSchemeEdit", new OpenSchemeEditorCommand(internal_dispatcher, aContext, new SchematicsApplicationModelFactory()));
-		aModel.setCommand("menuViewSchemeClose", new SchemeCloseCommand(aContext, panel));
+		aModel.setCommand("menuViewSchemeClose", new SchemeCloseCommand(aContext, graph));
 
 		aModel.setCommand("menuFileOpen", new FileOpenCommand(internal_dispatcher, aContext));
 		aModel.setCommand("menuFileOpenAsBellcore", new FileOpenAsBellcoreCommand(internal_dispatcher, aContext));
@@ -689,29 +689,6 @@ public class ModelMDIMain extends JFrame implements OperationListener
 				{
 					aContext.setSessionInterface(ssi);
 					aContext.setDataSourceInterface(aContext.getApplicationModel().getDataSource(aContext.getSessionInterface()));
-					DataSourceInterface dataSource = aContext.getDataSourceInterface();
-
-					new SurveyDataSourceImage(dataSource).LoadParameterTypes();
-					new SurveyDataSourceImage(dataSource).LoadTestTypes();
-					new SurveyDataSourceImage(dataSource).LoadAnalysisTypes();
-					new SurveyDataSourceImage(dataSource).LoadEvaluationTypes();
-					new SurveyDataSourceImage(dataSource).LoadModelingTypes();
-					new SchemeDataSourceImage(dataSource).LoadAttributeTypes();
-
-					new SchemeDataSourceImage(dataSource).LoadNetDirectory();
-					new SchemeDataSourceImage(dataSource).LoadISMDirectory();
-
-
-					new ConfigDataSourceImage(dataSource).LoadISM();
-					//dataSource.LoadISM();
-					new ConfigDataSourceImage(dataSource).LoadNet();
-					//dataSource.LoadNet();
-
-
-					new SchemeDataSourceImage(dataSource).LoadSchemeProto();
-					new SchemeDataSourceImage(dataSource).LoadSchemes();
-					new MapDataSourceImage(dataSource).LoadProtoElements();
-					new MapDataSourceImage(dataSource).LoadMaps();
 
 					setSessionOpened();
 
@@ -867,8 +844,14 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		new SurveyDataSourceImage(dataSource).LoadTestTypes();
 		new SurveyDataSourceImage(dataSource).LoadAnalysisTypes();
 		new SurveyDataSourceImage(dataSource).LoadEvaluationTypes();
-//    dataSource.LoadModelingTypes();
 		new SurveyDataSourceImage(dataSource).LoadModelingTypes();
+		new SchemeDataSourceImage(dataSource).LoadAttributeTypes();
+
+		new SchemeDataSourceImage(dataSource).LoadNetDirectory();
+		new SchemeDataSourceImage(dataSource).LoadISMDirectory();
+
+		new SchemeDataSourceImage(dataSource).LoadSchemeProto();
+		new MapDataSourceImage(dataSource).LoadProtoElements();
 
 		ApplicationModel aModel = aContext.getApplicationModel();
 		aModel.setEnabled("menuSessionDomain", true);
@@ -897,6 +880,7 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		new SchemeDataSourceImage(dataSource).LoadSchemes();
 		new ConfigDataSourceImage(dataSource).LoadNet();
 		new ConfigDataSourceImage(dataSource).LoadISM();
+		new MapDataSourceImage(dataSource).LoadMaps();
 
 		ApplicationModel aModel = aContext.getApplicationModel();
 

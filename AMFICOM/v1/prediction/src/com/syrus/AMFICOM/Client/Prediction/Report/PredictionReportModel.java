@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.Client.Prediction.Report;
 
-import java.util.Vector;
+import java.util.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelPrediction;
@@ -20,9 +20,9 @@ public class PredictionReportModel extends ESAPEReportModel
 	public PredictionReportModel()
 	{
 	}
-	public Vector getAvailableReports()
+	public List getAvailableReports()
 	{
-		Vector result = new Vector();
+		List result = new ArrayList(7);
 
 		result.add(ESAPEReportModel.testParams);
 		result.add(ESAPEReportModel.commonInfo);
