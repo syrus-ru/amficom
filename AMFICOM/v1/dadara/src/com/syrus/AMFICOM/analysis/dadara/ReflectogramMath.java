@@ -4,7 +4,7 @@ import com.syrus.AMFICOM.analysis.dadara.MathRef;
 
 public class ReflectogramMath
 {
-	private ReflectogramMath {
+	private ReflectogramMath() {
 	}
 
 	public static double[] getReflectogrammFromEvents(ReflectogramEvent[] re, int arrayLength)

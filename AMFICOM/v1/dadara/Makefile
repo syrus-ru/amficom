@@ -9,6 +9,15 @@ include ../tools/Makefile.inc
 
 APPCLASSPATH = $(LIBDIR)/util.jar
 
+#JAVAC=javac
+#JAVACFLAGS=-O \
+	-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar \
+	-d $(CLASSDIR) \
+	-deprecation \
+	-encoding $(ENCODING) \
+	-extdirs $(JAVA_HOME)/jre/lib/ext \
+	-g
+
 JAVAH := javah
 JAVAH_FLAGS := \
 	-classpath $(CLASSDIR) \
@@ -37,7 +46,7 @@ $(LIBNAME):	.mach
 	touch $@
 
 .mach:	$(CLASSDIR)
-	$(JAVAC) $(JAVACFLAGS) \
+	$(JAVAC) $(JAVACFLAGS) -nowarn \
 		-classpath $(APPCLASSPATH) \
 		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/analysis/*.java) \
 		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/analysis/dadara/*.java)
