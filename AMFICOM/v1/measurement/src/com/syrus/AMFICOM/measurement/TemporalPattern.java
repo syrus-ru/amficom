@@ -23,7 +23,17 @@ import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
 
 public class TemporalPattern extends StorableObject {
-
+	
+	private static final String I18N_KEY_MIN = "min";
+	private static final String I18N_KEY_HOUR = "hour";
+	private static final String I18N_KEY_DAY_OF_MONTH = "dayOfMonth";
+	private static final String I18N_KEY_DAY_OF_WEEK = "dayOfWeek";
+	private static final String I18N_KEY_MONTH = "month";
+	private static final String I18N_KEY_OF = "of";
+	private static final String I18N_KEY_TO = "to";
+	private static final String I18N_KEY_FROM = "from";
+	private static final String I18N_KEY_EACH = "each";
+	
 	public class TimeLine {
 
 		private static final long	SECOND_LONG	= 1000;
@@ -52,16 +62,16 @@ public class TemporalPattern extends StorableObject {
 
 		public void fillAllData() {
 			if (this.minutes == null)
-				this.minutes = parseExpression(LangModelMeasurement.getString("min"), "*", 0, 59); //$NON-NLS-1$ //$NON-NLS-2$
+				this.minutes = parseExpression(LangModelMeasurement.getString(I18N_KEY_MIN), "*", 0, 59); //$NON-NLS-1$ //$NON-NLS-2$
 			if (this.hours == null)
-				this.hours = parseExpression(LangModelMeasurement.getString("hour"), "*", 0, 23); //$NON-NLS-1$ //$NON-NLS-2$
+				this.hours = parseExpression(LangModelMeasurement.getString(I18N_KEY_HOUR), "*", 0, 23); //$NON-NLS-1$ //$NON-NLS-2$
 			if (this.dayOfMonth == null)
-				this.dayOfMonth = parseExpression(LangModelMeasurement.getString("dayOfMonth"), "*", 1, 31); //$NON-NLS-1$ //$NON-NLS-2$
+				this.dayOfMonth = parseExpression(LangModelMeasurement.getString(I18N_KEY_DAY_OF_MONTH), "*", 1, 31); //$NON-NLS-1$ //$NON-NLS-2$
 			if (this.month == null)
-				this.month = parseExpression(LangModelMeasurement.getString("month"), "*", 0, 11); //$NON-NLS-1$ //$NON-NLS-2$
+				this.month = parseExpression(LangModelMeasurement.getString(I18N_KEY_MONTH), "*", 0, 11); //$NON-NLS-1$ //$NON-NLS-2$
 			this.month.names = MONTH_NAMES;
 			if (this.dayOfWeek == null)
-				this.dayOfWeek = parseExpression(LangModelMeasurement.getString("dayOfWeek"), //$NON-NLS-1$
+				this.dayOfWeek = parseExpression(LangModelMeasurement.getString(I18N_KEY_DAY_OF_WEEK), //$NON-NLS-1$
 													"*", 0, 6); //$NON-NLS-1$ //$NON-NLS-2$
 			this.dayOfWeek.names = DAY_OF_WEEK_NAMES;
 		}
@@ -97,7 +107,7 @@ public class TemporalPattern extends StorableObject {
 				if (this.hours.isAll()) {
 					desc.append(this.minutes.toString());
 					desc.append(" "); //$NON-NLS-1$
-					desc.append(LangModelMeasurement.getString("of")); //$NON-NLS-1$
+					desc.append(LangModelMeasurement.getString(I18N_KEY_OF)); //$NON-NLS-1$
 					desc.append(" "); //$NON-NLS-1$
 					desc.append(this.hours.toString());
 
@@ -205,29 +215,29 @@ public class TemporalPattern extends StorableObject {
 						switch (i) {
 							case 1:
 								//minute
-								this.minutes = parseExpression(LangModelMeasurement.getString("min"), subString, 0, //$NON-NLS-1$
+								this.minutes = parseExpression(LangModelMeasurement.getString(I18N_KEY_MIN), subString, 0, //$NON-NLS-1$
 																59);
 								break;
 							case 2:
 								//hour
-								this.hours = parseExpression(LangModelMeasurement.getString("hour"), //$NON-NLS-1$
+								this.hours = parseExpression(LangModelMeasurement.getString(I18N_KEY_HOUR), //$NON-NLS-1$
 																subString, 0, //$NON-NLS-1$
 																23);
 								break;
 							case 3:
 								//day of month
 								this.dayOfMonth = parseExpression(
-																	LangModelMeasurement.getString("dayOfMonth"), subString, //$NON-NLS-1$
+																	LangModelMeasurement.getString(I18N_KEY_DAY_OF_MONTH), subString, //$NON-NLS-1$
 																	1, 31);
 								break;
 							case 4:
 								//month
-								this.month = parseExpression(LangModelMeasurement.getString("month"), subString, 0, //$NON-NLS-1$
+								this.month = parseExpression(LangModelMeasurement.getString(I18N_KEY_MONTH), subString, 0, //$NON-NLS-1$
 																11);
 								break;
 							case 5:
 								//day of week
-								this.dayOfWeek = parseExpression(LangModelMeasurement.getString("dayOfWeek"), //$NON-NLS-1$
+								this.dayOfWeek = parseExpression(LangModelMeasurement.getString(I18N_KEY_DAY_OF_WEEK), //$NON-NLS-1$
 																	subString, 0, 6);
 								break;
 						}
@@ -540,7 +550,7 @@ public class TemporalPattern extends StorableObject {
 					if (sbuf.length() > 0)
 						sbuf.append(", "); //$NON-NLS-1$
 
-					sbuf.append(LangModelMeasurement.getString("each")); //$NON-NLS-1$
+					sbuf.append(LangModelMeasurement.getString(I18N_KEY_EACH)); //$NON-NLS-1$
 					sbuf.append(" "); //$NON-NLS-1$
 					String str = Integer.toString(this.divisor[i]);
 					if (this.divisor[i] != 1) {
@@ -555,14 +565,14 @@ public class TemporalPattern extends StorableObject {
 					if (this.starts[i] != this.ends[i]) {
 						if (sbuf.length() > 0)
 							sbuf.append(", "); //$NON-NLS-1$
-						sbuf.append(LangModelMeasurement.getString("from")); //$NON-NLS-1$
+						sbuf.append(LangModelMeasurement.getString(I18N_KEY_FROM)); //$NON-NLS-1$
 						sbuf.append(" "); //$NON-NLS-1$
 						if (this.names == null)
 							sbuf.append(Integer.toString(this.starts[i]));
 						else
 							sbuf.append(this.names[this.starts[i]]);
 						sbuf.append(" "); //$NON-NLS-1$
-						sbuf.append(LangModelMeasurement.getString("to")); //$NON-NLS-1$
+						sbuf.append(LangModelMeasurement.getString(I18N_KEY_TO)); //$NON-NLS-1$
 						sbuf.append(" "); //$NON-NLS-1$
 						if (this.names == null)
 							sbuf.append(Integer.toString(this.ends[i]));
