@@ -163,59 +163,6 @@ public class FileOpenCommand extends VoidCommand
 			new InitialAnalysisCommand().execute();
 			//new MinuitAnalyseCommand(dispatcher, "primarytrace", aContext).execute();
 
-/*
-
-			File f = new File("E:\\Incoming\\Arseniy\\20040517 134015-revents");
-			byte[] buf = new byte[(int)f.length()];
-			try
-			{
-				FileInputStream in = new FileInputStream(f);
-				in.read(buf);
-			}
-			catch (IOException ex)
-			{
-				ex.printStackTrace();
-			}
-
-			ReflectogramEvent[] re = ReflectogramEvent.fromByteArray(buf);
-			Pool.put("eventparams", "primarytrace", re);
-
-			f = new File("E:\\Incoming\\Arseniy\\20040517 134015-thresholds");
-			buf = new byte[(int)f.length()];
-			try
-			{
-				FileInputStream in = new FileInputStream(f);
-				in.read(buf);
-			}
-			catch (IOException ex)
-			{
-				ex.printStackTrace();
-			}
-
-			Threshold[] threshs = Threshold.fromByteArray(buf);
-			for (int i = 0; i < re.length; i++)
-				re[i].setThreshold(threshs[i]);
-
-			f = new File("E:\\Incoming\\Arseniy\\20040517 134015-etalon");
-			buf = new byte[(int)f.length()];
-			try
-			{
-				FileInputStream in = new FileInputStream(f);
-				in.read(buf);
-			}
-			catch (IOException ex)
-			{
-				ex.printStackTrace();
-			}
-
-			ReflectogramEvent[] etalon = ReflectogramEvent.fromByteArray(buf);
-			for (int i = 0; i < re.length; i++)
-				etalon[i].setThreshold(threshs[i]);
-			Pool.put("eventparams", "etalon", etalon);
-
-			ReflectogramComparer comp = new ReflectogramComparer(re, etalon, threshs, false);
-			ReflectogramAlarm[] alarms = comp.getAlarms();
-*/
 			dispatcher.notify(new RefChangeEvent("primarytrace",
 											RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
 			dispatcher.notify(new RefUpdateEvent("primarytrace", RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
