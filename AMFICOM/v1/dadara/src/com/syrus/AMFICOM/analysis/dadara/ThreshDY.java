@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDY.java,v 1.2 2005/03/09 10:49:50 saa Exp $
+ * $Id: ThreshDY.java,v 1.3 2005/03/09 11:30:01 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/03/09 10:49:50 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/09 11:30:01 $
  * @module
  */
 public class ThreshDY extends Thresh
@@ -58,6 +58,10 @@ public class ThreshDY extends Thresh
 	{
 		if (VALUE_GRID > 0)
 			val = Math.rint(val / VALUE_GRID) * VALUE_GRID;
+		if (IS_KEY_UPPER[n] && val < 0)
+			val = 0;
+		if (!IS_KEY_UPPER[n] && val > 0)
+			val = 0;
 		values[n] = val;
 	}
 }
