@@ -1,5 +1,5 @@
 /*
- * $Id: JAlertingMessageTableHeaderRenderer.java,v 1.1 2004/05/27 11:24:21 bass Exp $
+ * $Id: JAlertingMessageTableHeaderRenderer.java,v 1.1.1.1 2004/05/27 11:24:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import javax.swing.border.*;
 import javax.swing.table.DefaultTableCellRenderer;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/05/27 11:24:21 $
+ * @version $Revision: 1.1.1.1 $, $Date: 2004/05/27 11:24:21 $
  * @author $Author: bass $
  */
 final class JAlertingMessageTableHeaderRenderer
