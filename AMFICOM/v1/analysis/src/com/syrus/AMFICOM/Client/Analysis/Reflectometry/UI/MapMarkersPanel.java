@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 
 public class MapMarkersPanel extends ThresholdsPanel
 {
+	private final static boolean DEBUG = false;
 	protected String monitored_element_id = null;
 	protected String map_path_id = null;
 
@@ -29,7 +30,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 	public boolean useXORMode = true;
 	protected boolean paintMarkerXOR = false;
 
-	public MapMarkersPanel(MapMarkersLayeredPanel panel, Dispatcher dispatcher, double y[], double delta_x)
+	public MapMarkersPanel(ResizableLayeredPanel panel, Dispatcher dispatcher, double y[], double delta_x)
 	{
 		super (panel, dispatcher, y, delta_x);
 
@@ -67,7 +68,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 		if (coord2index(currpos.x) > y.length)
 			return;
 
-		if (creating_marker)
+		if (creating_marker && parent instanceof MapMarkersLayeredPanel)
 		{
 			Marker m = createMarker ("", "", coord2index(currpos.x) * delta_x);
 			((MapMarkersLayeredPanel)parent).setButtons();
@@ -234,12 +235,29 @@ public class MapMarkersPanel extends ThresholdsPanel
 	protected void paint_marker (Graphics g, Marker m)
 	{
 		int jh =  getHeight();
-
 		g.setColor(m.getColor());
 		((Graphics2D) g).setStroke(MARKER_STROKE);
 		g.drawLine(index2coord(m.pos), 0, index2coord(m.pos), jh);
 		((Graphics2D) g).setStroke(DEFAULT_STROKE);
 		g.drawString(m.name, index2coord(m.pos)+2+(int)marker_w,10);
+
+		if (DEBUG)
+			g.drawString(String.valueOf(m.pos), index2coord(m.pos)+2+(int)marker_w,20);
+	}
+
+	protected void setPaintMode(boolean useXOR)
+{
+	if (useXOR)
+	{
+		paintMarkerXOR = true;
+		parent.repaint();
+	}
+}
+
+protected void removePaintMode(boolean useXOR)
+{
+	paintMarkerXOR = false;
+	parent.repaint();
 	}
 
 	public void removeAllMarkers()
@@ -334,6 +352,22 @@ public class MapMarkersPanel extends ThresholdsPanel
 		int moved = m.pos - st;
 
 		return moved;
+	}
+
+	public void scrollToMarkerVisible(Marker m)
+	{
+		if (m.pos < end && m.pos > start)
+			return;
+
+		int delta = (start - m.pos) + (end - start) / 2;
+		if (end - delta > y.length)
+			delta = end - y.length;
+		if (start - delta < 0)
+			delta = start;
+
+		int st = start - delta;
+		int en = end - delta;
+		((ScalableLayeredPanel)parent).updScale2fit(st, en);
 	}
 
 	public Marker deleteMarker (String id)

@@ -16,14 +16,11 @@ import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 
 import com.syrus.AMFICOM.Client.Analysis.MathRef;
 
-public class AnalysisPanel extends ReflectogramEventsPanel
+public class AnalysisPanel extends MapMarkersPanel
 {
-	private final static boolean DEBUG = false;
-
 	public boolean show_markers = true;
 	public boolean loss_analysis = true;
 	public boolean reflection_analysis = false;
-	public boolean useXORMode = false;
 
 	protected Marker markerA;
 	protected Marker markerB;
@@ -34,7 +31,6 @@ public class AnalysisPanel extends ReflectogramEventsPanel
 
 	private static float marker_w = 1.6f; // width of marker in pixels
 	private static float ana_line_w = 1.6f; // width of analysis lines in pixels
-	public static Stroke MARKER_STROKE = new BasicStroke(marker_w);
 	public static Stroke ANA_LINE_STROKE = new BasicStroke(ana_line_w);
 
 	private int moving_point = 0;
@@ -44,8 +40,6 @@ public class AnalysisPanel extends ReflectogramEventsPanel
 	private int activeEvent = -1;
 
 	protected Color markerColor;
-
-	protected boolean paintMarkerXOR = false;
 
 	public AnalysisPanel(AnalysisLayeredPanel panel, Dispatcher dispatcher, double y[], double delta_x)
 	{
@@ -79,6 +73,8 @@ public class AnalysisPanel extends ReflectogramEventsPanel
 
 	private void jbInit() throws Exception
 	{
+		MARKER_STROKE = new BasicStroke(marker_w);
+		useXORMode = false;
 	}
 
 	public void updEvents(String id)
@@ -410,6 +406,7 @@ public class AnalysisPanel extends ReflectogramEventsPanel
 			activeEvent = event;
 			moveMarker(markerB, (events[event].first_point + events[event].last_point)/2);
 		}
+//		scrollToMarkerVisible(markerB);
 		parent.repaint();
 	}
 
@@ -448,6 +445,8 @@ public class AnalysisPanel extends ReflectogramEventsPanel
 		super.updColorModel();
 
 		markerColor = ColorManager.getColor("analysisMarkerColor");
+		markerA.setColor(markerColor);
+		markerB.setColor(markerColor);
 	}
 
 	public void paint(Graphics g)
@@ -464,21 +463,6 @@ public class AnalysisPanel extends ReflectogramEventsPanel
 		}
 	}
 
-	protected void setPaintMode(boolean useXOR)
-	{
-		if (useXOR)
-		{
-			paintMarkerXOR = true;
-			parent.repaint();
-		}
-	}
-
-	protected void removePaintMode(boolean useXOR)
-	{
-		paintMarkerXOR = false;
-		parent.repaint();
-	}
-
 	protected void paint_analysis_markers (Graphics g)
 	{
 		if (paintMarkerXOR)
@@ -490,19 +474,6 @@ public class AnalysisPanel extends ReflectogramEventsPanel
 			paint_marker(g, markerA);
 		if ( (markerB.pos > start) && (markerB.pos < end))
 			paint_marker(g, markerB);
-	}
-
-	protected void paint_marker (Graphics g, Marker m)
-	{
-		int jh =  getHeight();
-		((Graphics2D) g).setStroke(MARKER_STROKE);
-		g.drawLine(index2coord(m.pos), 0, index2coord(m.pos), jh);
-		((Graphics2D) g).setStroke(DEFAULT_STROKE);
-		g.drawString(m.name, index2coord(m.pos)+2+(int)marker_w,10);
-
-		if (DEBUG)
-			g.drawString(String.valueOf(m.pos), index2coord(m.pos)+2+(int)marker_w,20);
-
 	}
 
 	protected void paint_loss_ana(Graphics g)

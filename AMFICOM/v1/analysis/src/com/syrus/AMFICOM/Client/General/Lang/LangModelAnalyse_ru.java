@@ -113,6 +113,9 @@ public class LangModelAnalyse_ru  extends LangModelAnalyse
 		{ "decreasey", "сжать по вертикали" },
 		{ "fittoscreen", "выровнять по размеру окна" },
 
+		{ "centerA", "на маркер A" },
+		{ "centerB", "на маркер B" },
+
 		{ "encreasetx", "увеличить допустимую протяженность" },
 		{ "decreasetx", "уменьшить допустимую протяженность" },
 		{ "encreasety", "увеличить допустимую амплитуду" },

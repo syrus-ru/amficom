@@ -8,6 +8,7 @@ class Marker
 	String id;
 	String name;
 	SimpleGraphPanel parent;
+	Color color = Color.BLACK;
 
 	public Marker(String name)
 	{
@@ -41,6 +42,11 @@ class Marker
 
 	public Color getColor()
 	{
-		return Color.black;
+		return color;
+	}
+
+	public void setColor(Color color)
+	{
+		this.color = color;
 	}
 }

@@ -96,6 +96,32 @@ public class AnalysisLayeredPanel extends TraceEventsLayeredPanel implements Ope
 		}
 	}
 
+	void centerMarkerA()
+	{
+		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
+		{
+			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+			if (panel instanceof AnalysisPanel)
+			{
+				AnalysisPanel p = (AnalysisPanel)panel;
+				p.scrollToMarkerVisible(p.markerA);
+			}
+		}
+	}
+
+	void centerMarkerB()
+	{
+		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
+		{
+			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+			if (panel instanceof AnalysisPanel)
+			{
+				AnalysisPanel p = (AnalysisPanel)panel;
+				p.scrollToMarkerVisible(p.markerB);
+			}
+		}
+	}
+
 	public void updPaintingMode()
 	{
 		super.updPaintingMode();
@@ -133,14 +159,18 @@ class AnalysisToolBar extends TraceEventsToolBar
 	protected static final String loss = "lossTButton";
 	protected static final String ref = "reflectionTButton";
 	protected static final String noana = "noAnalysisButton";
+	protected static final String cA = "centerA";
+	protected static final String cB = "centerB";
 
 	JToggleButton lossTButton = new JToggleButton();
 	JToggleButton reflectionTButton = new JToggleButton();
 	JToggleButton noAnalysisTButton = new JToggleButton();
+	JButton centerAButton = new JButton();
+	JButton centerBButton = new JButton();
 
 	protected static String[] buttons = new String[]
 	{
-		ex, dx, ey, dy, fit, separator, loss, ref, noana, separator, events, modeled
+		ex, dx, ey, dy, fit, separator, loss, ref, noana, separator, cA, cB, separator, events, modeled
 	};
 
 	public AnalysisToolBar (AnalysisLayeredPanel panel)
@@ -205,6 +235,38 @@ class AnalysisToolBar extends TraceEventsToolBar
 					}
 				},
 				true));
+		buttons.put(
+				cA,
+				createToolButton(
+				centerAButton,
+				btn_size,
+				null,
+				LangModelAnalyse.String("centerA"),
+				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/centera.gif")),
+				new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						centerAButton_actionPerformed(e);
+					}
+				},
+				true));
+		buttons.put(
+				cB,
+				createToolButton(
+				centerBButton,
+				btn_size,
+				null,
+				LangModelAnalyse.String("centerB"),
+				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/centerb.gif")),
+				new ActionListener()
+				{
+					public void actionPerformed(ActionEvent e)
+					{
+						centerBButton_actionPerformed(e);
+					}
+				},
+				true));
 
 		ButtonGroup group = new ButtonGroup();
 		for (Enumeration enum = buttons.elements(); enum.hasMoreElements();)
@@ -255,5 +317,17 @@ class AnalysisToolBar extends TraceEventsToolBar
 		panel.setAnalysisType (AnalysisLayeredPanel.NO_ANALYSIS);
 		lossTButton.setSelected(false);
 		reflectionTButton.setSelected(false);
+	}
+
+	void centerAButton_actionPerformed(ActionEvent e)
+	{
+		AnalysisLayeredPanel panel = (AnalysisLayeredPanel)super.panel;
+		panel.centerMarkerA();
+	}
+
+	void centerBButton_actionPerformed(ActionEvent e)
+	{
+		AnalysisLayeredPanel panel = (AnalysisLayeredPanel)super.panel;
+		panel.centerMarkerB();
 	}
 }
