@@ -1,5 +1,5 @@
 /**
- * $Id: OfxConnection.java,v 1.2 2004/10/19 11:48:27 krupenn Exp $
+ * $Id: OfxConnection.java,v 1.3 2004/11/11 10:42:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,7 @@ import java.util.Vector;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/19 11:48:27 $
+ * @version $Revision: 1.3 $, $Date: 2004/11/11 10:42:10 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -102,6 +102,7 @@ public class OfxConnection extends MapConnection
 		
         SxProperties.singleton().setProperty("ofx.userName", dbUserName);
         SxProperties.singleton().setProperty("ofx.password", dbPassword);
+        SxProperties.singleton().setProperty("ofx.domainDimension", "3");
         com.ofx.query.SxQueryInterface qsi = SxEnvironment.singleton().getQuery();
         Vector theProperties = 
 			SxEnvironment.singleton().getProperties().getQuerySessionOpenProperties();
