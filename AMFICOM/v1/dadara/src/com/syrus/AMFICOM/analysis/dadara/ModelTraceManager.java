@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.34 2005/03/29 16:11:56 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.35 2005/03/30 12:48:34 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.34 $, $Date: 2005/03/29 16:11:56 $
+ * @version $Revision: 1.35 $, $Date: 2005/03/30 12:48:34 $
  * @module
  */
 public class ModelTraceManager
@@ -299,12 +299,12 @@ public class ModelTraceManager
 	{
 		//return re[nEvents].getThreshold();
 
-		ArrayList tlist = getAllThreshByNEvent(nEvent);
+		Thresh[] tlist = getAllThreshByNEvent(nEvent);
 		ArrayList ret = new ArrayList();
 
-		for (int i = 0; i < tlist.size(); i++)
+		for (int i = 0; i < tlist.length; i++)
 		{
-			Thresh th = ((Thresh )tlist.get(i));
+			Thresh th = tlist[i];
 			if (th instanceof ThreshDX)
 			{
 				ret.add(new ThreshEditor(
@@ -639,15 +639,15 @@ public class ModelTraceManager
 		
 	}
 
-	private ArrayList getAllThreshByNEvent(int nEvent)
+	private Thresh[] getAllThreshByNEvent(int nEvent)
 	{
-		ArrayList ret = new ArrayList();
+		ArrayList al = new ArrayList();
 		for (int i = 0; i < this.tL.length; i++)
 		{
 			if (this.tL[i].isRelevantToNEvent(nEvent))
-				ret.add(this.tL[i]);
+				al.add(this.tL[i]);
 		}
-		return ret;
+		return (Thresh[] )al.toArray(new Thresh[al.size()]);
 	}
 
 	/**
