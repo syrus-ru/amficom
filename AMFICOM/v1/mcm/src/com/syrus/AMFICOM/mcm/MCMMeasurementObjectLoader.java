@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.7 2004/09/28 10:31:15 bob Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.8 2004/10/01 11:08:16 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -53,7 +53,7 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/09/28 10:31:15 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/01 11:08:16 $
  * @author $Author: bob $
  * @module mcm_v1
  */
@@ -762,6 +762,73 @@ public final class MCMMeasurementObjectLoader implements MeasurementObjectLoader
 		public void saveTemporalPatterns(List list, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
+		}
+		
+		/* Load Measurement StorableObject but argument ids */
+
+		public List loadParameterTypesButIds(List ids) throws DatabaseException, CommunicationException {
+//			 TODO method isn't complete
+			throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public List loadMeasurementTypesButIds(List ids) throws DatabaseException, CommunicationException {
+//			 TODO method isn't complete
+			throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public List loadAnalysisTypesButIds(List ids) throws DatabaseException, CommunicationException {
+//			 TODO method isn't complete
+			throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public List loadEvaluationTypesButIds(List ids) throws DatabaseException, CommunicationException {
+//			 TODO method isn't complete
+			throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public List loadSetsButIds(List ids) throws DatabaseException, CommunicationException {
+//			 TODO method isn't complete
+			throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public List loadModelingsButIds(List ids) throws DatabaseException, CommunicationException {
+//			 TODO method isn't complete
+			throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public List loadMeasurementSetupsButIds(List ids) throws DatabaseException, CommunicationException {
+//			 TODO method isn't complete
+			throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public List loadMeasurementsButIds(List ids) throws DatabaseException, CommunicationException {
+//			 TODO method isn't complete
+			throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public List loadAnalysesButIds(List ids) throws DatabaseException, CommunicationException {
+//			 TODO method isn't complete
+			throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public List loadEvaluationsButIds(List ids) throws DatabaseException, CommunicationException {
+//			 TODO method isn't complete
+			throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public List loadTestsButIds(List ids) throws DatabaseException, CommunicationException {
+//			 TODO method isn't complete
+			throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public List loadResultsButIds(List ids) throws DatabaseException, CommunicationException {
+//			 TODO method isn't complete
+			throw new UnsupportedOperationException("method isn't complete");
+		}
+
+		public List loadTemporalPatternsButIds(List ids) throws DatabaseException, CommunicationException {
+//			 TODO method isn't complete
+			throw new UnsupportedOperationException("method isn't complete");
 		}
 
 }
