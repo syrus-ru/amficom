@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerTestCase.java,v 1.2 2004/09/21 14:28:04 bob Exp $
+ * $Id: CMServerTestCase.java,v 1.3 2004/09/22 07:20:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,6 +26,8 @@ import org.omg.PortableServer.POAHelper;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.cmserver.corba.CMServerHelper;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.DatabaseConfigurationObjectLoader;
 import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Domain_Transferable;
@@ -33,13 +35,15 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/09/21 14:28:04 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/22 07:20:55 $
  * @author $Author: bob $
  * @module module
  */
@@ -91,6 +95,12 @@ public class CMServerTestCase extends TestCase {
 					.replaceAll("\\.", "_");
 
 			server = CMServerHelper.narrow(rootNamingCtx.resolve_str(hostName + "/CMServer"));
+			
+			
+			// initialize pool
+			MeasurementStorableObjectPool.init(new ClientMeasurementObjectLoader(server), 200);
+			ConfigurationStorableObjectPool.init(new ClientConfigurationObjectLoader(server), 200);
+
 
 			System.out.println("server reference have got : \n" + server.toString());
 
