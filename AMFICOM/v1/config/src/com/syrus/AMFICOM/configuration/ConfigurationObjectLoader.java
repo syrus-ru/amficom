@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationObjectLoader.java,v 1.14 2004/10/22 10:23:41 max Exp $
+ * $Id: ConfigurationObjectLoader.java,v 1.15 2004/10/26 08:24:48 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/10/22 10:23:41 $
+ * @version $Revision: 1.15 $, $Date: 2004/10/26 08:24:48 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -35,6 +35,8 @@ public interface ConfigurationObjectLoader {
 	KISType loadKISType(Identifier id) throws DatabaseException, CommunicationException;
     
     Characteristic loadCharacteristic(Identifier id) throws DatabaseException, CommunicationException;
+    
+    LinkType loadLinkType(Identifier id) throws DatabaseException, CommunicationException;
 
 //	PermissionAttributes loadPermissionAttributes(Identifier id) throws DatabaseException, CommunicationException;
 
@@ -53,6 +55,8 @@ public interface ConfigurationObjectLoader {
 	TransmissionPath loadTransmissionPath(Identifier id) throws DatabaseException, CommunicationException;
 
 	KIS loadKIS(Identifier id) throws DatabaseException, CommunicationException;
+    
+    Link loadLink(Identifier id) throws DatabaseException, CommunicationException;
 
 	MeasurementPort loadMeasurementPort(Identifier id) throws DatabaseException, CommunicationException;
 
@@ -71,6 +75,8 @@ public interface ConfigurationObjectLoader {
     List loadCharacteristics(List ids) throws DatabaseException, CommunicationException;
     
     List loadKISTypes(List ids) throws DatabaseException, CommunicationException;
+    
+    List loadLinkTypes(List ids) throws DatabaseException, CommunicationException;
 
 //  PermissionAttributes loadPermissionAttributes(List ids) throws DatabaseException, CommunicationException;
 
@@ -90,6 +96,8 @@ public interface ConfigurationObjectLoader {
 
     List loadKISs(List ids) throws DatabaseException, CommunicationException;
 
+    List loadLinks(List ids) throws DatabaseException, CommunicationException;
+    
     List loadMeasurementPorts(List ids) throws DatabaseException, CommunicationException;
 
     List loadMonitoredElements(List ids) throws DatabaseException, CommunicationException;
@@ -107,6 +115,8 @@ public interface ConfigurationObjectLoader {
     List loadCharacteristicsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
     
     List loadKISTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
+    
+    List loadLinkTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
 //  PermissionAttributes loadPermissionAttributesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
@@ -126,6 +136,8 @@ public interface ConfigurationObjectLoader {
 
     List loadKISsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
+    List loadLinksButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
+    
     List loadMeasurementPortsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
     List loadMonitoredElementsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
@@ -141,6 +153,8 @@ public interface ConfigurationObjectLoader {
     void saveCharacteristic(Characteristic characteristic, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
     
     void saveKISType(KISType kisType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+    
+    void saveLinkType(LinkType linkType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 //	void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
@@ -159,8 +173,10 @@ public interface ConfigurationObjectLoader {
 	void saveTransmissionPath(TransmissionPath transmissionPath, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 	void saveKIS(KIS kis, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
-
-	void saveMeasurementPort(MeasurementPort measurementPort, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+    
+    void saveLink(Link link, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+    
+    void saveMeasurementPort(MeasurementPort measurementPort, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 	void saveMonitoredElement(MonitoredElement monitoredElement, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
@@ -175,6 +191,8 @@ public interface ConfigurationObjectLoader {
 	void saveCharacteristics(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
     
     void saveKISTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+    
+    void saveLinkTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 //	void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
@@ -185,6 +203,8 @@ public interface ConfigurationObjectLoader {
 	void saveServers(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 	void saveMCMs(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+    
+    void saveLinks(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 	void saveEquipments(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConfigurationObjectLoader.java,v 1.13 2004/10/22 10:23:41 max Exp $
+ * $Id: DatabaseConfigurationObjectLoader.java,v 1.14 2004/10/26 08:24:48 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/10/22 10:23:41 $
+ * @version $Revision: 1.14 $, $Date: 2004/10/26 08:24:48 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -52,6 +52,14 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
         return new KISType(id);
     }
 
+	public Link loadLink(Identifier id) throws DatabaseException {
+		return new Link(id);
+	}
+    
+    public LinkType loadLinkType(Identifier id) throws DatabaseException {
+        return new LinkType(id);
+    }
+    
 //	public PermissionAttributes loadPermissionAttributes(Identifier id) throws DatabaseException {
 //		return new PermissionAttributes(id);
 //	}
@@ -163,11 +171,61 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
         try {
             list = database.retrieveByIds(ids, null);
         } catch (IllegalDataException e) {
-            Log.errorMessage("DatabaseConfigurationObjectLoader.loadKISTypeDatabases | Illegal Storable Object: " + e.getMessage());
+            Log.errorMessage("DatabaseConfigurationObjectLoader.loadKISTypes | Illegal Storable Object: " + e.getMessage());
             throw new DatabaseException("DatabaseConfigurationObjectLoader.loadCharacteristics | Illegal Storable Object: " + e.getMessage());
         }
         return list;
     }
+    
+    public List loadLinks(List ids) throws DatabaseException {
+        LinkDatabase database = (LinkDatabase)ConfigurationDatabaseContext.getLinkDatabase();
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.loadLinks | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.loadLinks | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
+    }
+    
+    public List loadLinksButIds(StorableObjectCondition condition, List ids)
+			throws DatabaseException, CommunicationException {
+        LinkDatabase database = (LinkDatabase)ConfigurationDatabaseContext.getLinkDatabase();
+        List list = null;
+        try {
+            list = database.retrieveByCondition(ids, condition);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.loadLinksButIds | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.loadLinksButIds | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
+	}
+    
+    public List loadLinkTypes(List ids) throws DatabaseException {
+        LinkTypeDatabase database = (LinkTypeDatabase)ConfigurationDatabaseContext.getLinkTypeDatabase();
+        List list = null;
+        try {
+            list = database.retrieveByIds(ids, null);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.loadLinkType | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.loadLinkTypes | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
+    }
+  
+	public List loadLinkTypesButIds(StorableObjectCondition condition, List ids)
+			throws DatabaseException, CommunicationException {
+		LinkTypeDatabase database = (LinkTypeDatabase)ConfigurationDatabaseContext.getLinkTypeDatabase();
+        List list = null;
+        try {
+            list = database.retrieveByCondition(ids, condition);
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.loadLinkType | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.loadLinkTypes | Illegal Storable Object: " + e.getMessage());
+        }
+        return list;
+	}
 
 //  public PermissionAttributes loadPermissionAttributes(Identifier id) throws DatabaseException {
 //      return new PermissionAttributes(id);
@@ -718,6 +776,42 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
+	public void saveLink(Link link, boolean force)
+			throws VersionCollisionException, DatabaseException,
+			CommunicationException {
+		LinkDatabase database = (LinkDatabase)ConfigurationDatabaseContext.getLinkDatabase();
+        try {
+            database.update(link, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+        } catch (UpdateObjectException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveLink | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveLink | UpdateObjectException: " + e.getMessage());
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveLink | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveLink | Illegal Storable Object: " + e.getMessage());
+        } catch (VersionCollisionException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveLink | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveLink | VersionCollisionException: " + e.getMessage());
+        }
+	}
+
+	public void saveLinkType(LinkType linkType, boolean force)
+			throws VersionCollisionException, DatabaseException,
+			CommunicationException {
+		LinkTypeDatabase database = (LinkTypeDatabase)ConfigurationDatabaseContext.getLinkTypeDatabase();
+        try {
+            database.update(linkType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+        } catch (UpdateObjectException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveLinkType | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveLinkType | UpdateObjectException: " + e.getMessage());
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveLinkType | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveLinkType | Illegal Storable Object: " + e.getMessage());
+        } catch (VersionCollisionException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveLinkType | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveLinkType | VersionCollisionException: " + e.getMessage());
+        }
+	}
+
 	public void saveMeasurementPort(MeasurementPort measurementPort, boolean force) throws DatabaseException, CommunicationException{
 		MeasurementPortDatabase database = (MeasurementPortDatabase)ConfigurationDatabaseContext.getMeasurementPortDatabase();
 		try {
@@ -978,6 +1072,42 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveKISs | VersionCollisionException: " + e.getMessage());
             throw new DatabaseException("DatabaseConfigurationObjectLoader.saveKISs | VersionCollisionException: " + e.getMessage());
 		}
+	}
+
+	public void saveLinks(List list, boolean force)
+			throws VersionCollisionException, DatabaseException,
+			CommunicationException {
+		LinkDatabase database = (LinkDatabase)ConfigurationDatabaseContext.getLinkDatabase();
+        try {
+            database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+        } catch (UpdateObjectException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveLinks | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveLinks | UpdateObjectException: " + e.getMessage());
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveLinks | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveLinks | Illegal Storable Object: " + e.getMessage());
+        } catch (VersionCollisionException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveLinks | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveLinks | VersionCollisionException: " + e.getMessage());
+        }
+	}
+
+	public void saveLinkTypes(List list, boolean force)
+			throws VersionCollisionException, DatabaseException,
+			CommunicationException {
+		LinkTypeDatabase database = (LinkTypeDatabase)ConfigurationDatabaseContext.getLinkTypeDatabase();
+        try {
+            database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+        } catch (UpdateObjectException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveLinkTypes | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveLinkTypes | UpdateObjectException: " + e.getMessage());
+        } catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveLinkTypes | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveLinkTypes | Illegal Storable Object: " + e.getMessage());
+        } catch (VersionCollisionException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveLinkTypes | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveLinkTypes | VersionCollisionException: " + e.getMessage());
+        }
 	}
 
 	public void saveMeasurementPorts(List list, boolean force) throws DatabaseException, CommunicationException{
