@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.10 2004/11/10 15:52:36 bob Exp $
+ * $Id: LRUMap.java,v 1.11 2004/11/10 16:19:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/11/10 15:52:36 $
+ * @version $Revision: 1.11 $, $Date: 2004/11/10 16:19:47 $
  * @author $Author: bob $
  * @module util
  */
@@ -70,8 +70,7 @@ public class LRUMap implements Serializable {
 	public synchronized Object put(Object key, Object value) {
 		this.modCount++;
 		this.entityCount += (this.entityCount == this.array.length) ? 0 : 1;
-		if (indexOf(key) >= 0)
-			remove(key);
+		this.remove(key);
 		Entry newEntry = new Entry(key, value);
 		Object ret = null;
 		if (this.array[this.array.length - 1] != null)
@@ -98,14 +97,16 @@ public class LRUMap implements Serializable {
 		this.modCount++;
 		if (key != null) { 
 			Object ret = null;
-			for (int i = 0; i < this.array.length; i++)
-				if (key.equals(this.array[i].key)) {
+			for (int i = 0; i < this.array.length; i++) {
+				Entry entry = this.array[i];
+				if ((entry != null) && (entry.key != null) && (key.equals(entry.key))) {
 					ret = this.array[i].value;					
 					for (int j = i; j < this.array.length - 1; j++)
 						this.array[j] = this.array[j + 1];
 					this.entityCount -= (this.entityCount == 0) ? 0 : 1;
 					break;
-				}				
+				}
+			}				
 			return ret;
 		}
 		throw new IllegalArgumentException("Key is NULL");
