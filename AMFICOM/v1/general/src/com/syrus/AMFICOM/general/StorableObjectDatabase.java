@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.67 2004/12/29 14:14:39 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.68 2005/01/11 16:20:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2004/12/29 14:14:39 $
+ * @version $Revision: 1.68 $, $Date: 2005/01/11 16:20:48 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -79,23 +79,23 @@ public abstract class StorableObjectDatabase {
 	public static final int 	UPDATE_TOTAL 		= -1;
 	public static final int 	UPDATE_FORCE 		= -2;
 	public static final int 	UPDATE_CHECK 		= -3;
-    
-    public static final int MODE_INSERT = -10;
-    public static final int MODE_UPDATE = -11;
-    
-    protected static final int SIZE_CODENAME_COLUMN 	= 32;
-    protected static final int SIZE_NAME_COLUMN			= 64;
-    protected static final int SIZE_DESCRIPTION_COLUMN 	= 256;
-    
+
+  public static final int MODE_INSERT = -10;
+	public static final int MODE_UPDATE = -11;
+
+  protected static final int SIZE_CODENAME_COLUMN 	= 32;
+	protected static final int SIZE_NAME_COLUMN			= 64;
+	protected static final int SIZE_DESCRIPTION_COLUMN 	= 256;
+
 
 	//protected static Connection	connection;
-	
+
 	/**
 	 * @see "ORA-01795"
 	 */
 	protected static final int MAXIMUM_EXPRESSION_NUMBER = 1000;
 
-	
+
 	private static String columns;
 	private static String updateMultiplySQLValues;
 	private String retrieveQuery;

@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAServer.java,v 1.8 2004/12/22 12:17:19 arseniy Exp $
+ * $Id: CORBAServer.java,v 1.9 2005/01/11 16:20:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/12/22 12:17:19 $
+ * @version $Revision: 1.9 $, $Date: 2005/01/11 16:20:48 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -62,6 +62,22 @@ public class CORBAServer /*extends Thread */{
 
 		this.runORB();
 	}
+
+	public CORBAServer(String serverHostName) throws CommunicationException {
+		this.initORB();
+
+		try {
+			this.initPOA();
+		}
+		catch (UserException ue) {
+			throw new CommunicationException("Cannot activate POA", ue);
+		}
+
+		this.initNamingContext(serverHostName);
+
+		this.runORB();
+	}
+
 /*
 	public void activateServant(org.omg.CORBA.Object reference, String name) throws CommunicationException {
 		try {
@@ -154,23 +170,41 @@ public class CORBAServer /*extends Thread */{
 		this.poa.the_POAManager().activate();
 	}
 
-	private void initNamingContext() throws CommunicationException {
+	private void initNamingContext(String serverHostName) throws CommunicationException {
 		try {
-			String localHostName = InetAddress.getLocalHost().getCanonicalHostName().replaceAll("\\.", "_");
+			String contextNameStr = InetAddress.getByName(serverHostName).getCanonicalHostName().replaceAll("\\.", "_");
 
-			NamingContextExt rootNamingContext = NamingContextExtHelper.narrow(this.orb.resolve_initial_references("NameService"));
-
-			NameComponent[] contextName = rootNamingContext.to_name(localHostName);
-			try {
-				Log.debugMessage("Creating naming context: '" + localHostName + "'", Log.DEBUGLEVEL08);
-				this.namingContext = NamingContextExtHelper.narrow(rootNamingContext.bind_new_context(contextName));
-			}
-			catch (org.omg.CosNaming.NamingContextPackage.AlreadyBound ab) {
-				this.namingContext = NamingContextExtHelper.narrow(rootNamingContext.resolve_str(localHostName));
-			}
+			this.bindIfNonExistingNamingContext(contextNameStr);
 		}
 		catch (UnknownHostException uhe) {
 			throw new CommunicationException("Cannot get local host", uhe);
+		}
+	}
+
+	private void initNamingContext() throws CommunicationException {
+		try {
+			String contextNameStr = InetAddress.getLocalHost().getCanonicalHostName().replaceAll("\\.", "_");
+
+			this.bindIfNonExistingNamingContext(contextNameStr);
+		}
+		catch (UnknownHostException uhe) {
+			throw new CommunicationException("Cannot get local host", uhe);
+		}
+	}
+
+	private void bindIfNonExistingNamingContext(String contextNameStr) throws CommunicationException {
+		try {
+			NamingContextExt rootNamingContext = NamingContextExtHelper.narrow(this.orb.resolve_initial_references("NameService"));
+
+			NameComponent[] contextName = rootNamingContext.to_name(contextNameStr);
+			try {
+				Log.debugMessage("Creating naming context: '" + contextNameStr + "'", Log.DEBUGLEVEL08);
+				this.namingContext = NamingContextExtHelper.narrow(rootNamingContext.bind_new_context(contextName));
+			}
+			catch (org.omg.CosNaming.NamingContextPackage.AlreadyBound ab) {
+				Log.debugMessage("Naming context: '" + contextNameStr + "' already bound; trying to resolve", Log.DEBUGLEVEL08);
+				this.namingContext = NamingContextExtHelper.narrow(rootNamingContext.resolve_str(contextNameStr));
+			}
 		}
 		catch (org.omg.CORBA.UserException ue) {
 			throw new CommunicationException("Cannot create context", ue);
