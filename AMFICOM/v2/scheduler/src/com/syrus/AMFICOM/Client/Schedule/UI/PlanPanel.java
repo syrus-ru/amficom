@@ -178,10 +178,10 @@ public class PlanPanel extends JPanel implements OperationListener {
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
-		if (SchedulerModel.DEBUG >= 5)
+		if (SchedulerModel.DEBUG_LEVEL >= 5)
 				System.out.println(getClass().getName() + " commandName: " //$NON-NLS-1$
 						+ commandName);
-		if (commandName.equals(TestUpdateEvent.typ)) {
+		if (commandName.equals(TestUpdateEvent.TYPE)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
 			if (tue.TEST_SELECTED) {
 				Test test = tue.test;
@@ -200,7 +200,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 					found = true;
 				}
 				if (!found) {
-					if (SchedulerModel.DEBUG >= 3)
+					if (SchedulerModel.DEBUG_LEVEL >= 3)
 							System.out.println("new test catched"); //$NON-NLS-1$
 					unsavedTests.add(test);
 					{
@@ -564,7 +564,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 		unsavedTests = new ArrayList();
 		//timer.start();
 		this.dispatcher = dispatcher;
-		this.dispatcher.register(this, TestUpdateEvent.typ);
+		this.dispatcher.register(this, TestUpdateEvent.TYPE);
 	}
 
 	private void jbInit() throws Exception {
@@ -611,7 +611,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 	}
 
 	private void updateTests() {
-		if (SchedulerModel.DEBUG >= 3)
+		if (SchedulerModel.DEBUG_LEVEL >= 3)
 				System.out.println(getClass().getName() + " updateTests"); //$NON-NLS-1$
 		//		this.setCursor(UIStorage.WAIT_CURSOR);
 		aContext.getDispatcher()
@@ -627,7 +627,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 				.getTime());
 
 		SimpleDateFormat lsdf = new SimpleDateFormat("dd.MM.yyyy HH:mm"); //$NON-NLS-1$
-		if (SchedulerModel.DEBUG >= 3)
+		if (SchedulerModel.DEBUG_LEVEL >= 3)
 				System.out.println(ids.length + " test(s) found from " //$NON-NLS-1$
 						+ lsdf.format(scaleStart) + " till " //$NON-NLS-1$
 						+ lsdf.format(scaleEnd));
@@ -635,7 +635,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 		//выбираем необходимые тесты из пула
 		Hashtable hash = new Hashtable();
 		for (int i = 0; i < ids.length; i++) {
-			if (SchedulerModel.DEBUG >= 5)
+			if (SchedulerModel.DEBUG_LEVEL >= 5)
 					System.out.println("get test#" + ids[i]); //$NON-NLS-1$
 			Test test = (Test) Pool.get(Test.typ, ids[i]);
 			//			DataSourceInterface dsi = aContext.getDataSourceInterface();
@@ -652,7 +652,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 			if (test != null) {
 				hash.put(test.getId(), test);
 			} else {
-				if (SchedulerModel.DEBUG >= 3)
+				if (SchedulerModel.DEBUG_LEVEL >= 3)
 						System.err.println("test " + ids[i] + " is null"); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 
@@ -680,7 +680,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 					java.util.List testIds = treq.getTestIds();
 					for (Iterator it2 = testIds.iterator(); it2.hasNext();) {
 						String testId = (String) it2.next();
-						if (SchedulerModel.DEBUG >= 3)
+						if (SchedulerModel.DEBUG_LEVEL >= 3)
 								System.out.println("test_id:" + testId); //$NON-NLS-1$
 						if (tests.get(testId) == null) add_tests.add(testId);
 					}

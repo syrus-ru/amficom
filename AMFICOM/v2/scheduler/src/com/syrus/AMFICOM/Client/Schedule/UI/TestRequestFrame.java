@@ -31,19 +31,19 @@ public class TestRequestFrame extends JInternalFrame implements
 		panel = new TestRequestPanel(aContext);
 		this.getContentPane().add(panel, BorderLayout.CENTER);
 		this.dispatcher = aContext.getDispatcher();
-		this.dispatcher.register(this, TestUpdateEvent.typ);
+		this.dispatcher.register(this, TestUpdateEvent.TYPE);
 
 	}
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
-		if (SchedulerModel.DEBUG >= 5)
+		if (SchedulerModel.DEBUG_LEVEL >= 5)
 				System.out.println(getClass().getName() + " commandName: " //$NON-NLS-1$
 						+ commandName);
 		//		int id = ae.getID();
 		//		Object obj = ae.getSource();
 
-		if (commandName.equals(TestUpdateEvent.typ)) {
+		if (commandName.equals(TestUpdateEvent.TYPE)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
 			receivedTest = tue.test;
 
@@ -105,30 +105,30 @@ public class TestRequestFrame extends JInternalFrame implements
 		//			}
 		//			if (obj instanceof AnalysisType) {
 		//				System.out.println("AnalysisType instanceof have got"); //$NON-NLS-1$
-		//				receiveData.put(AnalysisType.typ, obj);
+		//				receiveData.put(AnalysisType.TYPE, obj);
 		//			} else if (obj instanceof EvaluationType) {
 		//				System.out.println("EvaluationType instanceof have got");
 		// //$NON-NLS-1$
-		//				receiveData.put(EvaluationType.typ, obj);
+		//				receiveData.put(EvaluationType.TYPE, obj);
 		//			} else if (obj instanceof TestArgumentSet) {
 		//				System.out.println("TestArgumentSet instanceof have got");
 		// //$NON-NLS-1$
-		//				receiveData.put(TestArgumentSet.typ, obj);
+		//				receiveData.put(TestArgumentSet.TYPE, obj);
 		//				receiveDataCount += 2;
 		//				//receiveTestArgumentSet = (TestArgumentSet) obj;
 		//			} else if (obj instanceof TestSetup) {
 		//				System.out.println("TestSetup instanceof have got"); //$NON-NLS-1$
 		//				//receiveTestSetup = (TestSetup) obj;
 		//				System.out.println(((TestSetup) obj).getId());
-		//				receiveData.put(TestSetup.typ, obj);
+		//				receiveData.put(TestSetup.TYPE, obj);
 		//			} else if (obj instanceof TimeStamp_dep) {
 		//				System.out.println("timestamp instanceof have got"); //$NON-NLS-1$
 		//				//receiveTimeStamp = (TimeStamp_dep) obj;
-		//				receiveData.put(TimeStamp_dep.typ, obj);
+		//				receiveData.put(TimeStamp_dep.TYPE, obj);
 		//			} else if (obj instanceof TestReturnType) {
 		//				returnType = (TestReturnType) obj;
 		//			} else if (obj instanceof TestRequest) {
-		//				receiveData.put(TestRequest.typ, obj);
+		//				receiveData.put(TestRequest.TYPE, obj);
 		//			}
 		//			System.out.println("receiveDataCount:" + receiveDataCount);
 		// //$NON-NLS-1$
@@ -156,7 +156,7 @@ public class TestRequestFrame extends JInternalFrame implements
 
 //	private void initModule(Dispatcher dispatcher) {
 //		this.dispatcher = dispatcher;
-//		this.dispatcher.register(this, TestUpdateEvent.typ);
+//		this.dispatcher.register(this, TestUpdateEvent.TYPE);
 //	}
 
 }

@@ -118,7 +118,7 @@ public class SaveParametersFrame extends JInternalFrame implements
 
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
-		this.dispatcher.register(this, TestUpdateEvent.typ);
+		this.dispatcher.register(this, TestUpdateEvent.TYPE);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_DATA_REQUEST);
 	}
 
@@ -133,7 +133,7 @@ public class SaveParametersFrame extends JInternalFrame implements
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
-		if (SchedulerModel.DEBUG >= 5)
+		if (SchedulerModel.DEBUG_LEVEL >= 5)
 				System.out.println(getClass().getName() + " commandName: " //$NON-NLS-1$
 						+ commandName);
 		if (commandName.equalsIgnoreCase(SchedulerModel.COMMAND_DATA_REQUEST)) {
@@ -144,7 +144,7 @@ public class SaveParametersFrame extends JInternalFrame implements
 			dispatcher.notify(new OperationEvent(returnType,
 					SchedulerModel.DATA_ID_RETURN_TYPE,
 					SchedulerModel.COMMAND_SEND_DATA));
-		} else if (commandName.equals(TestUpdateEvent.typ)) {
+		} else if (commandName.equals(TestUpdateEvent.TYPE)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
 			if (tue.TEST_SELECTED) {
 				TestReturnType returnType = tue.test.getReturnType();

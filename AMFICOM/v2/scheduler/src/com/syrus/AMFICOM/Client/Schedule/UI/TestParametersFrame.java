@@ -43,7 +43,7 @@ public class TestParametersFrame extends JInternalFrame implements
 
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
-		this.dispatcher.register(this, TestUpdateEvent.typ);
+		this.dispatcher.register(this, TestUpdateEvent.TYPE);
 		this.dispatcher.register(this,
 				TestParametersPanel.COMMAND_CHANGE_PORT_TYPE);
 	}
@@ -54,7 +54,7 @@ public class TestParametersFrame extends JInternalFrame implements
 		System.out.println(getClass().getName() + "\tcommandName:"
 				+ commandName);
 		System.out.println("obj:" + obj.getClass().getName() + "\t" + obj);
-		if (commandName.equals(TestUpdateEvent.typ)) {
+		if (commandName.equals(TestUpdateEvent.TYPE)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
 			Test test = tue.test;
 			if (tue.TEST_SELECTED) {

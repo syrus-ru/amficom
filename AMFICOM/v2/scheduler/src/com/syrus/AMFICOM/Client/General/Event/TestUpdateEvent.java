@@ -12,20 +12,20 @@ public class TestUpdateEvent extends OperationEvent {
 	public static final long TEST_CREATED_EVENT = 0x00000004;
 
 	public long type;
-	public static final String typ = "testupdate";
+	public static final String TYPE = "testupdate";
 	public Test test;
 
 	public TestUpdateEvent(Object source, Test test, long type) {
-		super(source, 0, typ);
+		super(source, 0, TYPE);
 		this.type = type;
 		this.test = test;
 
 		if ((type & TEST_SELECTED_EVENT) != 0)
-			TEST_SELECTED = true;
+			this.TEST_SELECTED = true;
 		if ((type & TEST_DESELECTED_EVENT) != 0)
-			TEST_DESELECTED = true;
+			this.TEST_DESELECTED = true;
 		if ((type & TEST_CREATED_EVENT) != 0)
-			TEST_CREATED = true;
+			this.TEST_CREATED = true;
 
 	}
 }

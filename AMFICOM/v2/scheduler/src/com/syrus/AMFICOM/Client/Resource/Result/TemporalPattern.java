@@ -1,4 +1,5 @@
 package com.syrus.AMFICOM.Client.Resource.Result;
+
 import java.util.*;
 import java.util.regex.*;
 
@@ -54,90 +55,90 @@ public class TemporalPattern {
 		private String				template;
 
 		public void fillAllData() {
-			if (minutes == null)
-					minutes = parseExpression(I18N.getString("min"), "*", 0, 59); //$NON-NLS-1$ //$NON-NLS-2$
-			if (hours == null)
-					hours = parseExpression(I18N.getString("hour"), "*", 0, 23); //$NON-NLS-1$ //$NON-NLS-2$
-			if (dayOfMonth == null)
-					dayOfMonth = parseExpression(
+			if (this.minutes == null)
+				this.minutes = parseExpression(I18N.getString("min"), "*", 0, 59); //$NON-NLS-1$ //$NON-NLS-2$
+			if (this.hours == null)
+				this.hours = parseExpression(I18N.getString("hour"), "*", 0, 23); //$NON-NLS-1$ //$NON-NLS-2$
+			if (this.dayOfMonth == null)
+				this.dayOfMonth = parseExpression(
 							I18N.getString("day_of_month"), "*", 1, 31); //$NON-NLS-1$ //$NON-NLS-2$
-			if (month == null)
-					month = parseExpression(I18N.getString("month"), "*", 0, 11); //$NON-NLS-1$ //$NON-NLS-2$
-			month.names = MONTH_NAMES;
-			if (dayOfWeek == null)
-					dayOfWeek = parseExpression(I18N.getString("day_of_week"),
+			if (this.month == null)
+				this.month = parseExpression(I18N.getString("month"), "*", 0, 11); //$NON-NLS-1$ //$NON-NLS-2$
+			this.month.names = MONTH_NAMES;
+			if (this.dayOfWeek == null)
+				this.dayOfWeek = parseExpression(I18N.getString("day_of_week"), //$NON-NLS-1$
 							"*", 0, 6); //$NON-NLS-1$ //$NON-NLS-2$
-			dayOfWeek.names = DAY_OF_WEEK_NAMES;
+			this.dayOfWeek.names = DAY_OF_WEEK_NAMES;
 		}
 
 		/**
 		 * @return Returns the dateList.
 		 */
 		public List getDateList() {
-			return dateList;
+			return this.dateList;
 		}
 
 		/**
 		 * @return Returns the dayOfMonth.
 		 */
 		public TimeValue getDayOfMonth() {
-			return dayOfMonth;
+			return this.dayOfMonth;
 		}
 
 		/**
 		 * @return Returns the dayOfWeek.
 		 */
 		public TimeValue getDayOfWeek() {
-			return dayOfWeek;
+			return this.dayOfWeek;
 		}
 
 		public String getDescription() {
-			if (description == null) {
-				if (hours == null) parseTemplate();
+			if (this.description == null) {
+				if (this.hours == null) parseTemplate();
 				StringBuffer desc = new StringBuffer();
-				//SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+				//SimpleDateFormat SDF = new SimpleDateFormat("HH:mm");
 				// //$NON-NLS-1$
-				if (hours.isAll()) {
-					desc.append(minutes.toString());					
-					desc.append(" ");
-					desc.append(I18N.getString("of"));
-					desc.append(" ");
-					desc.append(hours.toString());
-					
+				if (this.hours.isAll()) {
+					desc.append(this.minutes.toString());
+					desc.append(" "); //$NON-NLS-1$
+					desc.append(I18N.getString("of")); //$NON-NLS-1$
+					desc.append(" "); //$NON-NLS-1$
+					desc.append(this.hours.toString());
+
 				} else {
 					ArrayList list = new ArrayList();
-					for (int h = 0; h < hours.host.length; h++) {
-						for (int m = 0; m < minutes.host.length; m++) {
-							list.add((hours.host[h] < 10 ? "0" : "")
-									+ Integer.toString(hours.host[h]) + ":"
-									+ (minutes.host[m] < 10 ? "0" : "")
-									+ Integer.toString(minutes.host[m]));
+					for (int h = 0; h < this.hours.host.length; h++) {
+						for (int m = 0; m < this.minutes.host.length; m++) {
+							list.add((this.hours.host[h] < 10 ? "0" : "") //$NON-NLS-1$ //$NON-NLS-2$
+									+ Integer.toString(this.hours.host[h]) + ":" //$NON-NLS-1$
+									+ (this.minutes.host[m] < 10 ? "0" : "") //$NON-NLS-1$ //$NON-NLS-2$
+									+ Integer.toString(this.minutes.host[m]));
 						}
 					}
 					if (list.size() < 10) {
 						Collections.sort(list);
 						for (int i = 0; i < list.size(); i++) {
 							String str = (String) list.get(i);
-							if (desc.length() > 0) desc.append(", ");
+							if (desc.length() > 0) desc.append(", "); //$NON-NLS-1$
 							desc.append(str);
 						}
 					} else {
-						desc.append(hours.toString());
-						desc.append("; ");
-						desc.append(minutes.toString());
+						desc.append(this.hours.toString());
+						desc.append("; "); //$NON-NLS-1$
+						desc.append(this.minutes.toString());
 					}
 				}
-				if (!dayOfWeek.isAll()) {
+				if (!this.dayOfWeek.isAll()) {
 					desc.append("; "); //$NON-NLS-1$
-					desc.append(dayOfWeek.toString());
+					desc.append(this.dayOfWeek.toString());
 				}
-				if (!dayOfMonth.isAll()) {
+				if (!this.dayOfMonth.isAll()) {
 					desc.append("; "); //$NON-NLS-1$
-					desc.append(dayOfMonth.toString());
+					desc.append(this.dayOfMonth.toString());
 				}
-				if (!month.isAll()) {
+				if (!this.month.isAll()) {
 					desc.append("; "); //$NON-NLS-1$
-					desc.append(month.toString());
+					desc.append(this.month.toString());
 				}
 				this.description = desc.toString();
 			}
@@ -149,42 +150,42 @@ public class TemporalPattern {
 		 * @return Returns the endPeriod.
 		 */
 		public long getEndPeriod() {
-			return endPeriod;
+			return this.endPeriod;
 		}
 
 		/**
 		 * @return Returns the hours.
 		 */
 		public TimeValue getHours() {
-			return hours;
+			return this.hours;
 		}
 
 		/**
 		 * @return Returns the minutes.
 		 */
 		public TimeValue getMinutes() {
-			return minutes;
+			return this.minutes;
 		}
 
 		/**
 		 * @return Returns the month.
 		 */
 		public TimeValue getMonth() {
-			return month;
+			return this.month;
 		}
 
 		/**
 		 * @return Returns the startPeriod.
 		 */
 		public long getStartPeriod() {
-			return startPeriod;
+			return this.startPeriod;
 		}
 
 		/**
 		 * @return Returns the template.
 		 */
 		public String getTemplate() {
-			return template;
+			return this.template;
 		}
 
 		public void parseTemplate() {
@@ -193,44 +194,44 @@ public class TemporalPattern {
 			long startTimeCalc = System.currentTimeMillis();
 			Pattern p = Pattern.compile("(.*)\\s+(.*)\\s+(.*)\\s+(.*)\\s+(.*)"); //$NON-NLS-1$
 			//Pattern p = Pattern.compile("(.*)");
-			if (dateList != null) dateList.clear();
-			Matcher matcher = p.matcher(template);
+			if (this.dateList != null) this.dateList.clear();
+			Matcher matcher = p.matcher(this.template);
 			if (matcher.find()) {
 				for (int i = 1; i <= matcher.groupCount(); i++) {
 					int begin = matcher.start(i);
 					int end = matcher.end(i);
-					if ((begin >= 0) && (end <= template.length())) {
-						String subString = template.substring(matcher.start(i),
+					if ((begin >= 0) && (end <= this.template.length())) {
+						String subString = this.template.substring(matcher.start(i),
 								matcher.end(i));
-						if (DEBUG) System.out.println(i + "\t" + subString);
+						if (DEBUG) System.out.println(i + "\t" + subString); //$NON-NLS-1$
 						switch (i) {
 							case 1:
 								//minute
-								minutes = parseExpression(
+								this.minutes = parseExpression(
 										I18N.getString("min"), subString, 0, //$NON-NLS-1$
 										59);
 								break;
 							case 2:
 								//hour
-								hours = parseExpression(I18N.getString("hour"),
+								this.hours = parseExpression(I18N.getString("hour"), //$NON-NLS-1$
 										subString, 0, //$NON-NLS-1$
 										23);
 								break;
 							case 3:
 								//day of month
-								dayOfMonth = parseExpression(I18N
+								this.dayOfMonth = parseExpression(I18N
 										.getString("day_of_month"), subString, //$NON-NLS-1$
 										1, 31);
 								break;
 							case 4:
 								//month
-								month = parseExpression(
+								this.month = parseExpression(
 										I18N.getString("month"), subString, 0, //$NON-NLS-1$
 										11);
 								break;
 							case 5:
 								//day of week
-								dayOfWeek = parseExpression(I18N
+								this.dayOfWeek = parseExpression(I18N
 										.getString("day_of_week"), //$NON-NLS-1$
 										subString, 0, 6);
 								break;
@@ -249,49 +250,49 @@ public class TemporalPattern {
 			long backTime = c.getTimeInMillis();
 			if (DEBUG) {
 				System.out.println("startPeriod:" //$NON-NLS-1$
-						+ new Date(startPeriod).toString());
+						+ new Date(this.startPeriod).toString());
 				System.out.println("endPeriod:" //$NON-NLS-1$
-						+ new Date(endPeriod).toString());
+						+ new Date(this.endPeriod).toString());
 			}
-			for (int m = 0; m < month.host.length; m++) {
+			for (int m = 0; m < this.month.host.length; m++) {
 				c.setTimeInMillis(backTime);
-				c.set(Calendar.MONTH, month.host[m]);
+				c.set(Calendar.MONTH, this.month.host[m]);
 				long mTime = c.getTimeInMillis();
-				if ((startPeriod - MONTH_LONG / 2 <= mTime)
-						&& (mTime <= endPeriod + MONTH_LONG / 2)) {
+				if ((this.startPeriod - MONTH_LONG / 2 <= mTime)
+						&& (mTime <= this.endPeriod + MONTH_LONG / 2)) {
 					if (DEBUG) System.out.println("month\t" //$NON-NLS-1$
 							+ c.getTime().toString());
 					long backMTime = c.getTimeInMillis();
-					for (int dm = 0; dm < dayOfMonth.host.length; dm++) {
+					for (int dm = 0; dm < this.dayOfMonth.host.length; dm++) {
 						c.setTimeInMillis(backMTime);
-						c.set(Calendar.DAY_OF_MONTH, dayOfMonth.host[dm]);
+						c.set(Calendar.DAY_OF_MONTH, this.dayOfMonth.host[dm]);
 						mTime = c.getTimeInMillis();
-						if ((startPeriod - DAY_LONG / 2 <= mTime)
-								&& (mTime <= endPeriod + DAY_LONG / 2)) {
+						if ((this.startPeriod - DAY_LONG / 2 <= mTime)
+								&& (mTime <= this.endPeriod + DAY_LONG / 2)) {
 							if (DEBUG) System.out.println("dayOfMonth\t" //$NON-NLS-1$
 									+ c.getTime().toString());
 							long backDMTime = c.getTimeInMillis();
-							for (int dw = 0; dw < dayOfWeek.host.length; dw++) {
+							for (int dw = 0; dw < this.dayOfWeek.host.length; dw++) {
 								c.setTimeInMillis(backDMTime);
 								c.set(Calendar.DAY_OF_WEEK,
-										weekNumber[dayOfWeek.host[dw]]);
+										weekNumber[this.dayOfWeek.host[dw]]);
 								mTime = c.getTimeInMillis();
-								if ((startPeriod - DAY_LONG / 2 <= mTime)
-										&& (mTime <= endPeriod + DAY_LONG / 2)) {
+								if ((this.startPeriod - DAY_LONG / 2 <= mTime)
+										&& (mTime <= this.endPeriod + DAY_LONG / 2)) {
 									if (DEBUG) System.out.println("dayOfWeek\t" //$NON-NLS-1$
 											+ c.getTime().toString());
 									long backDWTime = c.getTimeInMillis();
-									for (int h = 0; h < hours.host.length; h++) {
+									for (int h = 0; h < this.hours.host.length; h++) {
 										c.setTimeInMillis(backDWTime);
-										//										if (DEBUG)
+										//										if (DEBUG_LEVEL)
 										//												System.out.println(" * hour:"
 										// //$NON-NLS-1$
 										//														+ hours.host[h]);
 										c.set(Calendar.HOUR_OF_DAY,
-												hours.host[h]);
+												this.hours.host[h]);
 										mTime = c.getTimeInMillis();
-										if ((startPeriod - HOUR_LONG / 2 <= mTime)
-												&& (mTime <= endPeriod
+										if ((this.startPeriod - HOUR_LONG / 2 <= mTime)
+												&& (mTime <= this.endPeriod
 														+ HOUR_LONG / 2)) {
 											if (DEBUG)
 													System.out
@@ -301,24 +302,24 @@ public class TemporalPattern {
 																			.toString());
 											long backHTime = c
 													.getTimeInMillis();
-											for (int mm = 0; mm < minutes.host.length; mm++) {
+											for (int mm = 0; mm < this.minutes.host.length; mm++) {
 												//System.out.println("backHTime"+new
 												// Date(backHTime)+"\t"+new
 												// Date(startPeriod)+", "+new
 												// Date(endPeriod));
 												c.setTimeInMillis(backHTime);
 												c.set(Calendar.MINUTE,
-														minutes.host[mm]);
+														this.minutes.host[mm]);
 												mTime = c.getTimeInMillis();
-												if ((startPeriod - MINUTE_LONG
+												if ((this.startPeriod - MINUTE_LONG
 														/ 2 <= mTime)
-														&& (mTime <= endPeriod
+														&& (mTime <= this.endPeriod
 																+ MINUTE_LONG
 																/ 2)) {
 													c.set(Calendar.SECOND, 0);
-													if (dateList == null)
-															dateList = new ArrayList();
-													dateList.add(c.getTime());
+													if (this.dateList == null)
+														this.dateList = new ArrayList();
+													this.dateList.add(c.getTime());
 													if (DEBUG)
 															System.out
 																	.println("minutes\t" //$NON-NLS-1$
@@ -346,11 +347,11 @@ public class TemporalPattern {
 		}
 
 		public void removeAll() {
-			minutes = null;
-			hours = null;
-			dayOfMonth = null;
-			month = null;
-			dayOfWeek = null;
+			this.minutes = null;
+			this.hours = null;
+			this.dayOfMonth = null;
+			this.month = null;
+			this.dayOfWeek = null;
 		}
 
 		/**
@@ -399,18 +400,18 @@ public class TemporalPattern {
 				indices[i] = false;
 			String[] params = exp.split(","); //$NON-NLS-1$
 			int count = 0;
-			if (divisorList == null)
-				divisorList = new ArrayList();
+			if (this.divisorList == null)
+				this.divisorList = new ArrayList();
 			else
-				divisorList.clear();
-			if (startsList == null)
-				startsList = new ArrayList();
+				this.divisorList.clear();
+			if (this.startsList == null)
+				this.startsList = new ArrayList();
 			else
-				startsList.clear();
-			if (endsList == null)
-				endsList = new ArrayList();
+				this.startsList.clear();
+			if (this.endsList == null)
+				this.endsList = new ArrayList();
 			else
-				endsList.clear();
+				this.endsList.clear();
 			for (int j = 0; j < params.length; j++) {
 				int divisor = 0;
 				int lvalue = -1;
@@ -453,7 +454,7 @@ public class TemporalPattern {
 				}
 
 				if ((divisor > 0) && (divisor >= min) && (divisor <= max)) {
-					divisorList.add(new Integer(divisor));
+					this.divisorList.add(new Integer(divisor));
 					for (int i = min; i <= max; i++) {
 						if (i % divisor == 0) {
 							indices[i] = true;
@@ -463,8 +464,8 @@ public class TemporalPattern {
 				}
 				if (lvalue >= 0) {
 					if ((lvalue >= min) && (lvalue <= max)) {
-						startsList.add(new Integer(lvalue));
-						endsList.add(new Integer(rvalue));
+						this.startsList.add(new Integer(lvalue));
+						this.endsList.add(new Integer(rvalue));
 						for (int i = lvalue; i <= rvalue; i++) {
 							indices[i] = true;
 							count++;
@@ -482,19 +483,19 @@ public class TemporalPattern {
 			// build TimeValue
 			timeValue.min = min;
 			timeValue.max = max;
-			timeValue.divisor = new int[divisorList.size()];
+			timeValue.divisor = new int[this.divisorList.size()];
 			for (int i = 0; i < timeValue.divisor.length; i++)
-				timeValue.divisor[i] = ((Integer) divisorList.get(i))
+				timeValue.divisor[i] = ((Integer) this.divisorList.get(i))
 						.intValue();
 
-			timeValue.starts = new int[startsList.size()];
-			timeValue.ends = new int[endsList.size()];
+			timeValue.starts = new int[this.startsList.size()];
+			timeValue.ends = new int[this.endsList.size()];
 			// count of start and end have to be equal !
 			if (timeValue.starts.length == timeValue.ends.length) {
 				for (int i = 0; i < timeValue.starts.length; i++) {
-					timeValue.starts[i] = ((Integer) startsList.get(i))
+					timeValue.starts[i] = ((Integer) this.startsList.get(i))
 							.intValue();
-					timeValue.ends[i] = ((Integer) endsList.get(i)).intValue();
+					timeValue.ends[i] = ((Integer) this.endsList.get(i)).intValue();
 				}
 			}
 
@@ -535,14 +536,14 @@ public class TemporalPattern {
 
 		public boolean isAll() {
 			boolean all = false;
-			if (divisor != null) {
-				for (int i = 0; i < divisor.length; i++) {
-					all = (divisor[i] == 1);
+			if (this.divisor != null) {
+				for (int i = 0; i < this.divisor.length; i++) {
+					all = (this.divisor[i] == 1);
 					if (!all) break;
 				}
 			}
-			if ((starts != null) && (ends != null)) {
-				if (starts.length > 0) all = false;
+			if ((this.starts != null) && (this.ends != null)) {
+				if (this.starts.length > 0) all = false;
 			}
 
 			return all;
@@ -550,48 +551,48 @@ public class TemporalPattern {
 
 		public String toString() {
 			StringBuffer sbuf = new StringBuffer();
-			if (divisor != null) {
-				for (int i = 0; i < divisor.length; i++) {
+			if (this.divisor != null) {
+				for (int i = 0; i < this.divisor.length; i++) {
 					if (sbuf.length() > 0) sbuf.append(", "); //$NON-NLS-1$
 
 					sbuf.append(I18N.getString("each")); //$NON-NLS-1$
 					sbuf.append(" "); //$NON-NLS-1$
-					String str = Integer.toString(divisor[i]);
-					if (divisor[i] != 1) {
+					String str = Integer.toString(this.divisor[i]);
+					if (this.divisor[i] != 1) {
 						sbuf.append(str);
 						sbuf.append(" "); //$NON-NLS-1$
 					}
-					sbuf.append(name);
+					sbuf.append(this.name);
 				}
 			}
-			if ((starts != null) && (ends != null)) {
-				for (int i = 0; i < starts.length; i++) {
-					if (starts[i] != ends[i]) {
+			if ((this.starts != null) && (this.ends != null)) {
+				for (int i = 0; i < this.starts.length; i++) {
+					if (this.starts[i] != this.ends[i]) {
 						if (sbuf.length() > 0) sbuf.append(", "); //$NON-NLS-1$
 						sbuf.append(I18N.getString("from")); //$NON-NLS-1$
 						sbuf.append(" "); //$NON-NLS-1$
-						if (names == null)
-							sbuf.append(Integer.toString(starts[i]));
+						if (this.names == null)
+							sbuf.append(Integer.toString(this.starts[i]));
 						else
-							sbuf.append(names[starts[i]]);
+							sbuf.append(this.names[this.starts[i]]);
 						sbuf.append(" "); //$NON-NLS-1$
 						sbuf.append(I18N.getString("to")); //$NON-NLS-1$
 						sbuf.append(" "); //$NON-NLS-1$
-						if (names == null)
-							sbuf.append(Integer.toString(ends[i]));
+						if (this.names == null)
+							sbuf.append(Integer.toString(this.ends[i]));
 						else
-							sbuf.append(names[ends[i]]);
+							sbuf.append(this.names[this.ends[i]]);
 						sbuf.append(" "); //$NON-NLS-1$
-						if (names == null) sbuf.append(name);
+						if (this.names == null) sbuf.append(this.name);
 					} else {
 						if (sbuf.length() > 0) sbuf.append(", "); //$NON-NLS-1$
-						if (names == null)
-							sbuf.append(Integer.toString(ends[i]));
+						if (this.names == null)
+							sbuf.append(Integer.toString(this.ends[i]));
 						else
-							sbuf.append(names[ends[i]]);
-						if (names == null) {
-							sbuf.append(" ");
-							sbuf.append(name);
+							sbuf.append(this.names[this.ends[i]]);
+						if (this.names == null) {
+							sbuf.append(" "); //$NON-NLS-1$
+							sbuf.append(this.name);
 						}
 					}
 
@@ -600,31 +601,39 @@ public class TemporalPattern {
 			return sbuf.toString();
 		}
 	}
-	public static final String[]	DAY_OF_WEEK_NAMES	= new String[] {
-			I18N.getString("Sunday"), I18N.getString("Monday"),
-			I18N.getString("Tuesday"), I18N.getString("Wednesday"),
-			I18N.getString("Thursday"), I18N.getString("Friday"),
-			I18N.getString("Saturday"),					};
+	public static final String[]	DAY_OF_WEEK_NAMES		= new String[] {
+			I18N.getString("Sunday"), I18N.getString("Monday"), //$NON-NLS-1$ //$NON-NLS-2$
+			I18N.getString("Tuesday"), I18N.getString("Wednesday"), //$NON-NLS-1$ //$NON-NLS-2$
+			I18N.getString("Thursday"), I18N.getString("Friday"), //$NON-NLS-1$ //$NON-NLS-2$
+			I18N.getString("Saturday"),						}; //$NON-NLS-1$
 
-	final static boolean			DEBUG				= false;
+	final static boolean			DEBUG					= false;
 
-	public static final String[]	MONTH_NAMES			= new String[] {
+	public static final String[]	MONTH_NAMES				= new String[] {
 			I18N.getString("January"), I18N.getString("February"), //$NON-NLS-1$ //$NON-NLS-2$
 			I18N.getString("March"), I18N.getString("April"), //$NON-NLS-1$ //$NON-NLS-2$
 			I18N.getString("May"), I18N.getString("June"), //$NON-NLS-1$ //$NON-NLS-2$
 			I18N.getString("July"), I18N.getString("Augest"), //$NON-NLS-1$ //$NON-NLS-2$
 			I18N.getString("September"), I18N.getString("October"), //$NON-NLS-1$ //$NON-NLS-2$
-			I18N.getString("November"), I18N.getString("December")};	//$NON-NLS-1$ //$NON-NLS-2$
+			I18N.getString("November"), I18N.getString("December")};					//$NON-NLS-1$ //$NON-NLS-2$
+	public static final int			TIMESTAMPTYPE_CONTINUOS	= 2;
 
-	public static final int[]		weekNumber			= new int[] {
+	public static final int			TIMESTAMPTYPE_ONETIME	= 1;
+	public static final int			TIMESTAMPTYPE_PERIODIC	= 3;
+
+	public static final String		TYPE					= "TemporalPattern"; //$NON-NLS-1$
+
+	public static final int[]		weekNumber				= new int[] {
 			Calendar.SUNDAY, Calendar.MONDAY, Calendar.TUESDAY,
 			Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY,
-			Calendar.SATURDAY							};
+			Calendar.SATURDAY								};
 	private long					endPeriod;
 
 	private long					startPeriod;
 	private HashMap					templates;
 	private long[]					times;
+
+	private int						type					= TIMESTAMPTYPE_ONETIME;
 
 	public TemporalPattern() {
 		// nothing
@@ -642,34 +651,35 @@ public class TemporalPattern {
 		//ts.addTemplate("12,5-8 * * * *"); //$NON-NLS-1$
 		//ts.addTemplate("*/20 * * 0,4,5 */2,0,6"); //$NON-NLS-1$
 		//ts.addTemplate("*/20 0-9 */2 2,4,5 0,6");
-		ts.addTemplate("20 * * * *");
-		ts.addTemplate("*/3 * * * *");
+		ts.addTemplate("20 * * * *"); //$NON-NLS-1$
+		ts.addTemplate("*/3 * * * *"); //$NON-NLS-1$
 		ts.printTimes();
 
 	}
 
 	public void addTemplate(String template) {
-		times = null;
-		if (templates == null) templates = new HashMap();
+		this.times = null;
+		if (this.templates == null) this.templates = new HashMap();
 		TimeLine timeLine = new TimeLine();
 		timeLine.setTemplate(template);
-		timeLine.setStartPeriod(startPeriod);
-		timeLine.setEndPeriod(endPeriod);
-		templates.put(timeLine, timeLine);
+		timeLine.setStartPeriod(this.startPeriod);
+		timeLine.setEndPeriod(this.endPeriod);
+		this.templates.put(timeLine, timeLine);
+		setType(TIMESTAMPTYPE_PERIODIC);
 	}
 
 	/**
 	 * @return Returns the endPeriod.
 	 */
 	public long getEndPeriod() {
-		return endPeriod;
+		return this.endPeriod;
 	}
 
 	/**
 	 * @return Returns the startPeriod.
 	 */
 	public long getStartPeriod() {
-		return startPeriod;
+		return this.startPeriod;
 	}
 
 	//	public void removeTemplate(String template) {
@@ -681,34 +691,39 @@ public class TemporalPattern {
 
 	public int getTemplateCount() {
 		int size = -1;
-		if (templates != null) size = templates.size();
+		if (this.templates != null) size = this.templates.size();
 		return size;
 	}
 
 	public Collection getTimeLines() {
 		Collection collection = null;
-		if (templates != null) {
-			collection = templates.values();
+		if (this.templates != null) {
+			collection = this.templates.values();
 			//System.out.println("collection.size():" + collection.size());
 		}
 		return collection;
 	}
 
+	public void removeAll() {
+		this.times = null;
+		this.templates.clear();
+	}
+
 	public long[] getTimes() {
-		if (times == null) {
+		if (this.times == null) {
 			//int count = 0;
-			Collection list = templates.values();
+			Collection list = this.templates.values();
 			List timeList = new ArrayList();
 			for (Iterator it = list.iterator(); it.hasNext();) {
 				TimeLine timeLine = (TimeLine) it.next();
 				timeLine.parseTemplate();
 				//				if (timeLine.dateList != null) {
 				//					//count += timeLine.dateList.size();
-				//					//if (DEBUG)
+				//					//if (DEBUG_LEVEL)
 				//					{
 				//						if (timeLine.dateList.size() > 0) {
 				//
-				//							if (DEBUG) {
+				//							if (DEBUG_LEVEL) {
 				//								System.out.println(timeLine.getDescription());
 				//								for (Iterator it2 = timeLine.dateList
 				//										.iterator(); it2.hasNext();) {
@@ -729,26 +744,33 @@ public class TemporalPattern {
 
 			}
 
-			times = new long[timeList.size()];
+			this.times = new long[timeList.size()];
 			int count = 0;
 			for (Iterator it = timeList.iterator(); it.hasNext();) {
-				times[count++] = ((Date) it.next()).getTime();
+				this.times[count++] = ((Date) it.next()).getTime();
 			}
 		}
 
-		return times;
+		return this.times;
+	}
+
+	/**
+	 * @return Returns the type.
+	 */
+	public int getType() {
+		return this.type;
 	}
 
 	public void printTimes() {
 		long[] t = getTimes();
 		System.out.println("printTimes ::"); //$NON-NLS-1$
-		System.out.println("startTime ::" + new Date(getStartPeriod()));
-		System.out.println("endTime ::" + new Date(getEndPeriod()));
-		for (int i = 0; i < times.length; i++) {
+		System.out.println("startTime ::" + new Date(getStartPeriod())); //$NON-NLS-1$
+		System.out.println("endTime ::" + new Date(getEndPeriod())); //$NON-NLS-1$
+		for (int i = 0; i < this.times.length; i++) {
 			System.out.println(new Date(t[i]).toString());
 		}
-		for(Iterator it=templates.values().iterator();it.hasNext();){
-			TimeLine line =(TimeLine)it.next();
+		for (Iterator it = this.templates.values().iterator(); it.hasNext();) {
+			TimeLine line = (TimeLine) it.next();
 			System.out.println(line.getDescription());
 		}
 	}
@@ -758,7 +780,7 @@ public class TemporalPattern {
 	 *            The endPeriod to set.
 	 */
 	public void setEndPeriod(long endPeriod) {
-		times = null;
+		this.times = null;
 		this.endPeriod = endPeriod;
 	}
 
@@ -767,7 +789,15 @@ public class TemporalPattern {
 	 *            The startPeriod to set.
 	 */
 	public void setStartPeriod(long startPeriod) {
-		times = null;
+		this.times = null;
 		this.startPeriod = startPeriod;
+	}
+
+	/**
+	 * @param type
+	 *            The type to set.
+	 */
+	public void setType(int type) {
+		this.type = type;
 	}
 }

@@ -293,7 +293,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		//		updateTestSetupList();
 		//
 		//		boolean selected = false;
-		//		TestSetup testsetup = (TestSetup) Pool.get(TestSetup.typ,
+		//		TestSetup testsetup = (TestSetup) Pool.get(TestSetup.TYPE,
 		//				test.test_setup_id);
 		//		if (testsetup != null) {
 		//			//orList.setSelected(testsetup);
@@ -345,7 +345,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		ApplicationModel aModel = aContext.getApplicationModel();
 		String commandName = ae.getActionCommand();
 		Object obj = ae.getSource();
-		if (SchedulerModel.DEBUG >= 5)
+		if (SchedulerModel.DEBUG_LEVEL >= 5)
 				System.out.println(getClass().getName() + " commandName:" //$NON-NLS-1$
 						+ commandName);
 		if (commandName.equalsIgnoreCase(SchedulerModel.COMMAND_DATA_REQUEST)) {
@@ -395,7 +395,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 			}
 			currentParametersPanelName = name;
 			paramsRadioButton.doClick();
-		} else if (commandName.equals(TestUpdateEvent.typ)) {
+		} else if (commandName.equals(TestUpdateEvent.TYPE)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
 			setTest(tue.test);
 		} else if (commandName.equals(COMMAND_CHANGE_TEST_TYPE)) {

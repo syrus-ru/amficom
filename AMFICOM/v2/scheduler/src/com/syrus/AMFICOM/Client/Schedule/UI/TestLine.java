@@ -211,13 +211,13 @@ public class TestLine extends JLabel implements ActionListener,
 	}
 
 	private void drawTestRect(Graphics g, Test test) {
-		TimeStamp_dep timeStamp = test.getTimeStamp();
+		TemporalPattern timeStamp = test.getTemporalPattern();
 		int x = margin
-				+ (int) (scale * (test.getTimeStamp().getPeriodStart() - start));
+				+ (int) (scale * (timeStamp.getStartPeriod() - start));
 		int en = margin
-				+ (int) (scale * (test.getTimeStamp().getPeriodEnd() - start));
+				+ (int) (scale * (timeStamp.getEndPeriod() - start));
 		int w = en - x + 1;
-		if (timeStamp.getType() == TimeStamp_dep.TIMESTAMPTYPE_CONTINUOS)
+		if (timeStamp.getType() == TemporalPattern.TIMESTAMPTYPE_CONTINUOS)
 			w = (w > MINIMAL_WIDTH) ? w : MINIMAL_WIDTH;
 		else
 			w = MINIMAL_WIDTH;
@@ -225,9 +225,9 @@ public class TestLine extends JLabel implements ActionListener,
 		int h = height - (titleHeight / 2 + 4) - 2;
 		//System.out.println(">>"+timeStamp.getType());
 		switch (timeStamp.getType()) {
-			case TimeStamp_dep.TIMESTAMPTYPE_PERIODIC:
+			case TemporalPattern.TIMESTAMPTYPE_PERIODIC:
 
-				long[] times = timeStamp.getTestTimes();
+				long[] times = timeStamp.getTimes();
 				for (int i = 0; i < times.length; i++) {
 					x = margin + (int) (scale * (times[i] - start));
 					g.fillRect(x + 2, y + 2, w - 3, h - 3);
@@ -287,28 +287,28 @@ public class TestLine extends JLabel implements ActionListener,
 					for (int i = 0; i < allTests.size(); i++) {
 						//	Test test = (Test) it.next();
 						Test test = (Test) allTests.get(i);
-						TimeStamp_dep timeStamp = test.getTimeStamp();
+						TemporalPattern timeStamp = test.getTemporalPattern();
 						int st = margin
-								+ (int) (scale * (test.getTimeStamp()
-										.getPeriodStart() - start)) - 1;
+								+ (int) (scale * (timeStamp
+										.getStartPeriod() - start)) - 1;
 						int en = margin
-								+ (int) (scale * (test.getTimeStamp()
-										.getPeriodEnd() - start)) + 1;
+								+ (int) (scale * (timeStamp
+										.getEndPeriod() - start)) + 1;
 						en = (en - st < MINIMAL_WIDTH) ? st + MINIMAL_WIDTH
 								: en;
 						//					System.out.println("."+((x >= st) && (x <= en) && (y
 						// >=
 						// titleHeight / 2 + 4)));
 						int w = en - st + 1;
-						if (timeStamp.getType() == TimeStamp_dep.TIMESTAMPTYPE_CONTINUOS)
+						if (timeStamp.getType() == TemporalPattern.TIMESTAMPTYPE_CONTINUOS)
 							w = (w > MINIMAL_WIDTH) ? w : MINIMAL_WIDTH;
 						else
 							w = MINIMAL_WIDTH;
 						en = st + w;
 						boolean condition = false;
 						switch (timeStamp.getType()) {
-							case TimeStamp_dep.TIMESTAMPTYPE_PERIODIC:
-								long[] times = timeStamp.getTestTimes();
+							case TemporalPattern.TIMESTAMPTYPE_PERIODIC:
+								long[] times = timeStamp.getTimes();
 								for (int j = 0; j < times.length; j++) {
 									st = margin
 											+ (int) (scale * (times[j] - start));

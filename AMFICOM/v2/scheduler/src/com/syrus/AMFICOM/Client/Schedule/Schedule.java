@@ -15,13 +15,13 @@ public class Schedule {
 	public Schedule(ScheduleApplicationModelFactory factory) {
 		if (Environment.canRun(Environment.MODULE_SCHEDULE)) {
 
-			aContext = new ApplicationContext();
-			aContext.setApplicationModel(factory.create());
+			this.aContext = new ApplicationContext();
+			this.aContext.setApplicationModel(factory.create());
 			//aContext.setDispatcher(new Dispatcher());
 					
-			ScheduleMainFrame frame = new ScheduleMainFrame(aContext);
+			ScheduleMainFrame frame = new ScheduleMainFrame(this.aContext);
 //			SchedulerModel model =	
-			new SchedulerModel(aContext);
+			new SchedulerModel(this.aContext);
 
 			frame.setIconImage(UIStorage.SCHEDULING_ICON_MINI);
 			frame.setVisible(true);

@@ -357,7 +357,7 @@ class PlanToolBar extends JPanel {
 					ObjectResource obj = (ObjectResource) table.get(key);
 					if (obj instanceof TestArgumentSet) {
 						TestArgumentSet tas = (TestArgumentSet) obj;
-						if (SchedulerModel.DEBUG >= 5)
+						if (SchedulerModel.DEBUG_LEVEL >= 5)
 								System.out.println("saveTestArgumentSet("
 										+ tas.getId() + ")");
 						if (CREATE_ALLOW) {
@@ -366,7 +366,7 @@ class PlanToolBar extends JPanel {
 						}
 					} else if (obj instanceof Analysis) {
 						Analysis an = (Analysis) obj;
-						if (SchedulerModel.DEBUG >= 5)
+						if (SchedulerModel.DEBUG_LEVEL >= 5)
 								System.out.println("createAnalysis("
 										+ an.getId() + ");");
 						if (CREATE_ALLOW) {
@@ -375,7 +375,7 @@ class PlanToolBar extends JPanel {
 						}
 					} else if (obj instanceof Evaluation) {
 						Evaluation ev = (Evaluation) obj;
-						if (SchedulerModel.DEBUG >= 5)
+						if (SchedulerModel.DEBUG_LEVEL >= 5)
 								System.out.println("createEvaluation("
 										+ ev.getId() + ")");
 						if (CREATE_ALLOW) {
@@ -396,12 +396,12 @@ class PlanToolBar extends JPanel {
 						//System.out.println("list.size():" + list.size());
 						for (Iterator it2 = list.iterator(); it2.hasNext();) {
 							ids[j++] = (String) it2.next();
-							if (SchedulerModel.DEBUG >= 5)
+							if (SchedulerModel.DEBUG_LEVEL >= 5)
 									System.out.println("ids[" + (j - 1) + "]="
 											+ ids[j - 1]);
 						}
 						//System.out.println("j:" + j);
-						if (SchedulerModel.DEBUG >= 5)
+						if (SchedulerModel.DEBUG_LEVEL >= 5)
 								System.out.println("RequestTest("
 										+ testRequest.getId() + ")");
 						if (CREATE_ALLOW) {
@@ -412,11 +412,11 @@ class PlanToolBar extends JPanel {
 					} else if (obj instanceof Test) {
 						// nothing ???
 						Test test = (Test) obj;
-						if (SchedulerModel.DEBUG >= 5)
+						if (SchedulerModel.DEBUG_LEVEL >= 5)
 								System.out.println("test:" + test.getId());
 						test.setChanged(false);
 					}
-					if (SchedulerModel.DEBUG >= 5)
+					if (SchedulerModel.DEBUG_LEVEL >= 5)
 							System.out.println("#" + i + " " + key + " "
 									+ obj.getClass().getName());
 				}

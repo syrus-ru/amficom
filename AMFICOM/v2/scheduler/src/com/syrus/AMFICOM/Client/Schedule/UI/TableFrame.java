@@ -392,15 +392,15 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 		public void setTest(Test test) {
 			data = null;
 			this.test = test;
-			switch (test.getTimeStamp().getType()) {
-				case TimeStamp_dep.TIMESTAMPTYPE_ONETIME:
+			switch (test.getTemporalPattern().getType()) {
+				case TemporalPattern.TIMESTAMPTYPE_ONETIME:
 					this.temporalType = I18N.getString("Onetime"); //$NON-NLS-1$
 					break;
-				case TimeStamp_dep.TIMESTAMPTYPE_CONTINUOS:
+				case TemporalPattern.TIMESTAMPTYPE_CONTINUOS:
 					this.temporalType = I18N
 							.getString("Continual"); //$NON-NLS-1$
 					break;
-				case TimeStamp_dep.TIMESTAMPTYPE_PERIODIC:
+				case TemporalPattern.TIMESTAMPTYPE_PERIODIC:
 					this.temporalType = I18N
 							.getString("Periodical"); //$NON-NLS-1$
 					break;
@@ -423,8 +423,8 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 			TestType testType = (TestType) Pool.get(TestType.typ, test
 					.getTestTypeId());
 			this.testType = testType.getName();
-			this.time = UIStorage.sdf.format(new Date(test.getTimeStamp()
-					.getPeriodStart()));
+			this.time = UIStorage.SDF.format(new Date(test.getTemporalPattern()
+					.getStartPeriod()));
 
 			//this.id = test.id;
 			//this.kis = test.kis;
@@ -482,10 +482,10 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
-		if (SchedulerModel.DEBUG >= 5)
+		if (SchedulerModel.DEBUG_LEVEL >= 5)
 				System.out.println(getClass().getName() + " commandName: " //$NON-NLS-1$
 						+ commandName);
-		if (commandName.equals(TestUpdateEvent.typ)) {
+		if (commandName.equals(TestUpdateEvent.TYPE)) {
 			if (!skipTestUpdate) {
 				TestUpdateEvent tue = (TestUpdateEvent) ae;
 				Test test = tue.test;
@@ -684,7 +684,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
-		this.dispatcher.register(this, TestUpdateEvent.typ);
+		this.dispatcher.register(this, TestUpdateEvent.TYPE);
 		this.dispatcher.register(this, PlanPanel.COMMAND_NAME_ALL_TESTS);
 	}
 

@@ -276,7 +276,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 
 	public void operationPerformed(OperationEvent oe) {
 		String commandName = oe.getActionCommand();
-		if (SchedulerModel.DEBUG >= 5)
+		if (SchedulerModel.DEBUG_LEVEL >= 5)
 				System.out.println(getClass().getName() + " commandName:" //$NON-NLS-1$
 						+ commandName);
 		if (commandName.equals(TreeDataSelectionEvent.type)) {
@@ -302,13 +302,13 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 						SchedulerModel.DATA_ID_ELEMENTS,
 						SchedulerModel.COMMAND_SEND_DATA));
 			}
-		} else if (commandName.equals(TestUpdateEvent.typ)) {
+		} else if (commandName.equals(TestUpdateEvent.TYPE)) {
 			if (!skipTestUpdate) {
 				TestUpdateEvent tue = (TestUpdateEvent) oe;
 				if (tue.TEST_SELECTED) {
-					if (SchedulerModel.DEBUG >= 5)
+					if (SchedulerModel.DEBUG_LEVEL >= 5)
 							System.out
-									.println("commandName.equals(TestUpdateEvent.typ)"); //$NON-NLS-1$
+									.println("commandName.equals(TestUpdateEvent.TYPE)"); //$NON-NLS-1$
 					Test test = tue.test;
 					TestType testType = (TestType) Pool.get(TestType.typ, test
 							.getTestTypeId());
@@ -421,7 +421,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
 		this.dispatcher.register(this, TreeDataSelectionEvent.type);
-		this.dispatcher.register(this, TestUpdateEvent.typ);
+		this.dispatcher.register(this, TestUpdateEvent.TYPE);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_DATA_REQUEST);
 	}
 

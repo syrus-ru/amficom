@@ -35,18 +35,18 @@ public class TimeParametersFrame extends JInternalFrame implements
 
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
-		this.dispatcher.register(this, TestUpdateEvent.typ);
+		this.dispatcher.register(this, TestUpdateEvent.TYPE);
 	}
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
-		if (SchedulerModel.DEBUG >= 3)
+		if (SchedulerModel.DEBUG_LEVEL >= 3)
 				System.out.println(getClass().getName() + " commandName: " //$NON-NLS-1$
 						+ commandName);
 		//		int id = ae.getID();
 		//		Object obj = ae.getSource();
 
-		if (commandName.equals(TestUpdateEvent.typ)) {
+		if (commandName.equals(TestUpdateEvent.TYPE)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
 			Test test = tue.test;
 			if (tue.TEST_SELECTED) {

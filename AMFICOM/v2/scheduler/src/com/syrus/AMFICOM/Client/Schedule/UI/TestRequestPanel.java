@@ -62,14 +62,14 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 				TestParametersPanel.COMMAND_CHANGE_ME_TYPE);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CREATE_TEST);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_APPLY_TEST);
-		//this.dispatcher.register(this, TestUpdateEvent.typ);
+		//this.dispatcher.register(this, TestUpdateEvent.TYPE);
 
 	}
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
 		//Object obj = ae.getSource();
-		if (SchedulerModel.DEBUG >= 5)
+		if (SchedulerModel.DEBUG_LEVEL >= 5)
 				System.out.println(getClass().getName() + " commandName: " //$NON-NLS-1$
 						+ commandName);
 		if (commandName.equalsIgnoreCase(SchedulerModel.COMMAND_DATA_REQUEST)) {
@@ -93,12 +93,12 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 		} else if (commandName.equals(SchedulerModel.COMMAND_APPLY_TEST)) {
 			//toCreate = false;
 		}
-		//		else if (commandName.equals(TestUpdateEvent.typ)) {
+		//		else if (commandName.equals(TestUpdateEvent.TYPE)) {
 		//			System.out.println(testList.getSelected().getClass().getName());
 		//			TestUpdateEvent tue = (TestUpdateEvent) ae;
 		//			Test test = tue.test;
 		//			MonitoredElement me = (MonitoredElement) Pool.get(
-		//					MonitoredElement.typ, test.monitored_element_id);
+		//					MonitoredElement.TYPE, test.monitored_element_id);
 		//			if (tue.TEST_SELECTED) {
 		//				testList.setSelected(me);
 		//			}
@@ -147,7 +147,7 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 			testRequest = new TestRequest(dsi.GetUId(TestRequest.typ));
 			testRequest.setName(I18N.getString("Test created at")
 					+ " "
-					+ UIStorage.sdf
+					+ UIStorage.SDF
 							.format(new Date(System.currentTimeMillis())));
 			testRequest.setUserId(aContext.getSessionInterface().getUserId());
 			//testRequest = newTestRequest;
@@ -237,12 +237,12 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 		//		for (int i = 0; i < testRequest.unsavedTest.size(); i++) {
 		//			Test tst = (Test) testRequest.unsavedTest.get(i);
 		//			MonitoredElement me = (MonitoredElement) Pool.get(
-		//					MonitoredElement.typ, tst.getMonitoredElementId());
+		//					MonitoredElement.TYPE, tst.getMonitoredElementId());
 		//			System.out.println("me:" + me.getId() + "\t" + me.element_name);
 		// //$NON-NLS-1$ //$NON-NLS-2$
 		//			ht.put(me.getId(), me);
 		//			tests.put(me.getId(), tst);
-		//			type = Pool.getName(TestType.typ, tst.getTestTypeId());
+		//			type = Pool.getName(TestType.TYPE, tst.getTestTypeId());
 		//			System.out.println("type:" + type + "\t" + tst.getTestTypeId());
 		// //$NON-NLS-1$ //$NON-NLS-2$
 		//		}

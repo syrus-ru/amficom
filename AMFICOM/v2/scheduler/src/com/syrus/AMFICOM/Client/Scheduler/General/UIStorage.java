@@ -137,7 +137,9 @@ final public class UIStorage {
 																			"Monospaced", //$NON-NLS-1$
 																			Font.BOLD,
 																			14);
-	public static final SimpleDateFormat	sdf						= ConstStorage.SIMPLE_DATE_FORMAT;
+	public static final SimpleDateFormat	SDF						= ConstStorage.SIMPLE_DATE_FORMAT;
+	public static final SimpleDateFormat	HOUR_MINUTE_DATE_FORMAT	= new SimpleDateFormat(
+																			"HH:mm");
 
 	/**
 	 * create Icon with size 16x16 , and draw String on it

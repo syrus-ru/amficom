@@ -62,7 +62,7 @@ public class Test extends ObjectResource implements Serializable {
 	 */
 	private transient TestTimeStamps			time_stamps;
 
-	private transient TimeStamp_dep				timeStamp;
+	private TemporalPattern						temporalPattern;
 
 	private transient ClientTest_Transferable	transferable;
 	private String								userId					= "";
@@ -75,10 +75,10 @@ public class Test extends ObjectResource implements Serializable {
 	public Test(String id) {
 		this.id = id;
 		this.changed = true;
-		time_stamps = new TestTimeStamps();
-		time_stamps._default();
-		elementaryTestAlarms = new ElementaryTestAlarm[0];
-		transferable = new ClientTest_Transferable();
+		this.time_stamps = new TestTimeStamps();
+		this.time_stamps._default();
+		this.elementaryTestAlarms = new ElementaryTestAlarm[0];
+		this.transferable = new ClientTest_Transferable();
 	}
 
 	public static ObjectResourceDisplayModel getDefaultDisplayModel() {
@@ -282,13 +282,6 @@ public class Test extends ObjectResource implements Serializable {
 	 */
 	public String getTestTypeId() {
 		return testTypeId;
-	}
-
-	/**
-	 * @return Returns the timeStamp.
-	 */
-	public TimeStamp_dep getTimeStamp() {
-		return timeStamp;
 	}
 
 	/**
@@ -591,53 +584,6 @@ public class Test extends ObjectResource implements Serializable {
 	}
 
 	/**
-	 * @param timeStamp
-	 *            The timeStamp to set.
-	 */
-	public void setTimeStamp(TimeStamp_dep timeStamp) {
-		this.changed = true;
-		this.timeStamp = timeStamp;
-
-		if (this.timeStamp.getType() == TimeStamp_dep.TIMESTAMPTYPE_ONETIME) {
-			this.temporal_type = TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME;
-			this.start_time = this.timeStamp.getPeriodStart();
-			//			tempTest.duration = receiveTimeStamp.getPeriodEnd() -
-			// receiveTimeStamp.getPeriodStart();
-			this.duration = 0;
-			timeStamp.setPeriodEnd(timeStamp.getPeriodStart());
-
-		} else if (this.timeStamp.getType() == TimeStamp_dep.TIMESTAMPTYPE_PERIODIC) {
-			this.temporal_type = TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL;
-			this.start_time = this.timeStamp.getPeriodStart();
-			/**
-			 * @TODO periodical time
-			 */
-			Time period = this.timeStamp.getPeriod();
-			long interval = 0;
-			int scale = period.getScale();
-			int value = period.getValue();
-			switch (scale) {
-				case Calendar.MINUTE:
-					interval = 1000 * 60 * value;
-					break;
-				case Calendar.HOUR:
-					interval = 1000 * 60 * 60 * value;
-					break;
-
-			/**
-			 * @todo other period scales
-			 */
-
-			}
-			PeriodicalTestParameters ptp = new PeriodicalTestParameters();
-			ptp.dt = interval;
-			ptp.end_time = this.timeStamp.getPeriodEnd();
-			this.time_stamps.ptpars(ptp);
-		}
-
-	}
-
-	/**
 	 * @param timeStamps
 	 *            The timeStamps to set.
 	 */
@@ -708,11 +654,11 @@ public class Test extends ObjectResource implements Serializable {
 
 	public void updateLocalFromTransferable() {
 		this.analysis = (Analysis) Pool.get(Analysis.typ, this.analysisId);
-		this.evalution = (Evaluation) Pool.get(Evaluation.typ, evaluationId);
+		this.evalution = (Evaluation) Pool.get(Evaluation.typ, this.evaluationId);
 
-		if (timeStamp == null) timeStamp = new TimeStamp_dep();
-		timeStamp.setPeriodStart(this.start_time);
-		timeStamp.setPeriodEnd(this.start_time + this.duration);
+		if (this.temporalPattern == null) this.temporalPattern = new TemporalPattern();
+		this.temporalPattern.setStartPeriod(this.start_time);
+		this.temporalPattern.setEndPeriod(this.start_time + this.duration);
 
 		/**
 		 * todo: this is ONLY for backward compatibility
@@ -721,56 +667,34 @@ public class Test extends ObjectResource implements Serializable {
 
 			if (this.temporal_type
 					.equals(TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME)) {
-				timeStamp.setType(TimeStamp_dep.TIMESTAMPTYPE_ONETIME);
+				this.temporalPattern.setType(TemporalPattern.TIMESTAMPTYPE_ONETIME);
 			} else if (this.temporal_type
 					.equals(TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL)) {
-				timeStamp.setType(TimeStamp_dep.TIMESTAMPTYPE_PERIODIC);
+				this.temporalPattern.setType(TemporalPattern.TIMESTAMPTYPE_PERIODIC);
+				
+//				long start = this.start_time;
+//				long end = this.time_stamps.ptpars().end_time;
+//				long interval = this.time_stamps.ptpars().dt;
+//				long min = interval / (60 * 1000);
+//				long hour = interval / (60 * 60 * 1000);
+//				if ((min > 0) && (min < 60)) {
+//					timeStamp.setPeriodStart(start);
+//					timeStamp.setPeriodEnd(end);
+//					timeStamp.setPeriod(Calendar.MINUTE, (int) min);
+//					timeStamp.addTestDate(Calendar.MINUTE, 0);
+//					timeStamp.addTestTime(0, 0, 0);
+//				}
+//				if ((hour > 0) && (hour < 24)) {
+//					timeStamp.setPeriodStart(start);
+//					timeStamp.setPeriodEnd(end);
+//					timeStamp.setPeriod(Calendar.HOUR, (int) hour);
+//					timeStamp.addTestDate(Calendar.HOUR, 0);
+//					timeStamp.addTestTime(0, 0, 0);
+//				}
 
-				long start = this.start_time;
-				long end = this.time_stamps.ptpars().end_time;
-				long interval = this.time_stamps.ptpars().dt;
-				long min = interval / (60 * 1000);
-				long hour = interval / (60 * 60 * 1000);
-				if ((min > 0) && (min < 60)) {
-					timeStamp.setPeriodStart(start);
-					timeStamp.setPeriodEnd(end);
-					timeStamp.setPeriod(Calendar.MINUTE, (int) min);
-					timeStamp.addTestDate(Calendar.MINUTE, 0);
-					timeStamp.addTestTime(0, 0, 0);
-				}
-				if ((hour > 0) && (hour < 24)) {
-					timeStamp.setPeriodStart(start);
-					timeStamp.setPeriodEnd(end);
-					timeStamp.setPeriod(Calendar.HOUR, (int) hour);
-					timeStamp.addTestDate(Calendar.HOUR, 0);
-					timeStamp.addTestTime(0, 0, 0);
-				}
-				//ElementaryTest et = new ElementaryTest(this, start);
-				//et.count = iii;
-				//iii++;
-				//vec.addElement(et);
-				//				while (start + temp_time <= end) {
-				//					et = new ElementaryTest(this, start + temp_time);
-				//					et.count = iii;
-				//					iii++;
-				//					//vec.addElement(et);
-				//					temp_time += interval;
-				//				}
 			} else if (this.temporal_type
 					.equals(TestTemporalType.TEST_TEMPORAL_TYPE_TIMETABLE)) {
-				//				long start = this.start_time;
-				//				long time_massiv[] = this.time_stamps.ti();
-				//				int iii = 1;
-				//				ElementaryTest et = new ElementaryTest(this, start);
-				//				et.count = iii;
-				//				iii++;
-				//				//vec.addElement(et);
-				//				for (int j = 0; j < time_massiv.length; j++) {
-				//					et = new ElementaryTest(this, time_massiv[j]);
-				//					et.count = iii;
-				//					iii++;
-				//					//vec.addElement(et);
-				//				}
+
 			}
 
 		}
@@ -883,6 +807,18 @@ public class Test extends ObjectResource implements Serializable {
 		}
 
 		out.writeObject(testArgumentSetId);
+	}
+	/**
+	 * @return Returns the temporalPattern.
+	 */
+	public TemporalPattern getTemporalPattern() {
+		return temporalPattern;
+	}
+	/**
+	 * @param temporalPattern The temporalPattern to set.
+	 */
+	public void setTemporalPattern(TemporalPattern temporalPattern) {
+		this.temporalPattern = temporalPattern;
 	}
 }
 

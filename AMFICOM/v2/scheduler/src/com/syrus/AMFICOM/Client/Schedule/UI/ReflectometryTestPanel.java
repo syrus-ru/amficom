@@ -158,8 +158,8 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 		TestArgumentSet tas = null;
 		//if (test_setup_id.equals(""))
 		{
-			//			tas.id = dsi.GetUId(TestArgumentSet.typ);
-			//			Pool.put(TestArgumentSet.typ, as.getId(), as);
+			//			tas.id = dsi.GetUId(TestArgumentSet.TYPE);
+			//			Pool.put(TestArgumentSet.TYPE, as.getId(), as);
 			//			tas.name = tas.id;
 			//			tas.created = 0;
 			//			tas.created_by = "";
@@ -304,10 +304,10 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
 		//Object obj = ae.getSource();
-		if (SchedulerModel.DEBUG >= 5)
+		if (SchedulerModel.DEBUG_LEVEL >= 5)
 				System.out.println(getClass().getName() + " commandName:" //$NON-NLS-1$
 						+ commandName);
-		if (commandName.equals(TestUpdateEvent.typ)) {
+		if (commandName.equals(TestUpdateEvent.TYPE)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
 			if (tue.TEST_SELECTED) {
 				setTest(tue.test);
@@ -506,7 +506,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
-		this.dispatcher.register(this, TestUpdateEvent.typ);
+		this.dispatcher.register(this, TestUpdateEvent.TYPE);
 	}
 
 	private void init() {

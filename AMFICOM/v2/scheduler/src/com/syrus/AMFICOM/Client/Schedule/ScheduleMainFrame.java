@@ -250,7 +250,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
-		if (SchedulerModel.DEBUG >= 5)
+		if (SchedulerModel.DEBUG_LEVEL >= 5)
 				System.out.println(getClass().getName() + " > commandName:"
 						+ commandName + "\t" + ae.getClass().getName());
 		if (commandName.equals(StatusMessageEvent.type)) {
