@@ -16,7 +16,7 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.Resource.Scheme.PathDecompositor;
+import com.syrus.AMFICOM.scheme.PathDecomposer;
 import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
 
@@ -26,7 +26,7 @@ public class PathElementsPanel extends AnalysisPanel
 	private boolean setting_active_pe = false;
 
 	SchemePath path;
-	PathDecompositor decompositor;
+	PathDecomposer decompositor;
 	PathElement startPE;
 	PathElement endPE;
 	PathElement activePE;
@@ -39,7 +39,7 @@ public class PathElementsPanel extends AnalysisPanel
 	public void setPath(SchemePath path)
 	{
 		this.path = path;
-		decompositor = new PathDecompositor(path);
+		decompositor = new PathDecomposer(path);
 //		if (events != null)
 //			decompositor.setTotalOpticalLength(events[events.length - 1].last_point * deltaX);
 //		else if (ep != null)
