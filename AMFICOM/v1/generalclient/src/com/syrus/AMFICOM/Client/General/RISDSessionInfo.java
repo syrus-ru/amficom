@@ -1,5 +1,5 @@
 /*
- * $Id: RISDSessionInfo.java,v 1.15 2004/11/15 13:23:54 bob Exp $
+ * $Id: RISDSessionInfo.java,v 1.16 2004/12/27 16:52:42 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,10 @@ import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.corba.portable.client.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.map.EmptyClientMapObjectLoader;
+import com.syrus.AMFICOM.map.MapStorableObjectPool;
+import com.syrus.AMFICOM.mapview.EmptyClientMapViewObjectLoader;
+import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.io.Rewriter;
 import com.syrus.util.ClientLRUMap;
@@ -29,8 +33,8 @@ import org.omg.PortableServer.*;
 import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.15 $, $Date: 2004/11/15 13:23:54 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.16 $, $Date: 2004/12/27 16:52:42 $
  * @module generalclient_v1
  */
 public final class RISDSessionInfo extends SessionInterface {
@@ -204,6 +208,10 @@ public final class RISDSessionInfo extends SessionInterface {
 
 			ClientMeasurementObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
 			MeasurementStorableObjectPool.init(new ClientMeasurementObjectLoader(cmServer), clazz, size);
+
+			MapStorableObjectPool.init(new EmptyClientMapObjectLoader(), clazz, size);
+
+			MapViewStorableObjectPool.init(new EmptyClientMapViewObjectLoader(), clazz, size);
 
 			IdentifierPool.init(cmServer);
 
