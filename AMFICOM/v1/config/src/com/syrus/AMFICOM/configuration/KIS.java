@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.31 2004/11/15 19:14:36 arseniy Exp $
+ * $Id: KIS.java,v 1.32 2004/11/16 09:53:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/11/15 19:14:36 $
+ * @version $Revision: 1.32 $, $Date: 2004/11/16 09:53:23 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -44,7 +44,7 @@ public class KIS extends DomainMember implements TypedObject {
 	private String name;
 	private String description;
 	private String hostname;
-	private short port;
+	private short tcpPort;
 
 	private List measurementPortIds;	//List <MeasurementPort>
 
@@ -70,7 +70,7 @@ public class KIS extends DomainMember implements TypedObject {
 		this.name = kt.name;
 		this.description = kt.description;
 		this.hostname = kt.hostname;
-		this.port = kt.port;
+		this.tcpPort = kt.tcp_port;
 
 		this.measurementPortIds = new ArrayList(kt.measurement_port_ids.length);
 		for (int i = 0; i < kt.measurement_port_ids.length; i++)
@@ -90,7 +90,7 @@ public class KIS extends DomainMember implements TypedObject {
 								String name,
 								String description,
 								String hostname,
-								short port,
+								short tcpPort,
 								KISType type,
 								Identifier equipmentId,
 								Identifier mcmId) {
@@ -103,7 +103,7 @@ public class KIS extends DomainMember implements TypedObject {
 		this.name = name;
 		this.description = description;
 		this.hostname = hostname;
-		this.port = port;
+		this.tcpPort = tcpPort;
 		this.equipmentId = equipmentId;
 		this.type = type;
 		this.mcmId = mcmId;
@@ -128,7 +128,7 @@ public class KIS extends DomainMember implements TypedObject {
 																	 String name,
 																	 String description,
 																	 String hostname,
-																	 short port,
+																	 short tcpPort,
 																	 KISType type,
 																	 Identifier equipmentId,
 																	 Identifier mcmId) {
@@ -138,7 +138,7 @@ public class KIS extends DomainMember implements TypedObject {
 									 name,
 									 description,
 									 hostname,
-									 port,
+									 tcpPort,
 									 type,
 									 equipmentId,
 									 mcmId);
@@ -171,7 +171,7 @@ public class KIS extends DomainMember implements TypedObject {
 																new String(this.name),
 																new String(this.description),
 																this.hostname,
-																this.port,
+																this.tcpPort,
 																(Identifier_Transferable)this.type.getId().getTransferable(),
 																(Identifier_Transferable)this.equipmentId.getTransferable(),
 																(Identifier_Transferable)this.mcmId.getTransferable(),
@@ -195,8 +195,8 @@ public class KIS extends DomainMember implements TypedObject {
 		return this.hostname;
 	}
 
-	public short getPort(){
-		return this.port;
+	public short getTCPPort(){
+		return this.tcpPort;
 	}
 
 	public StorableObjectType getType() {
@@ -232,7 +232,7 @@ public class KIS extends DomainMember implements TypedObject {
 																						String name,
 																						String description,
 																						String hostname,
-																						short port,
+																						short tcpPort,
 																						KISType type,
 																						Identifier equipmentId,
 																						Identifier mcmId) {
@@ -244,7 +244,7 @@ public class KIS extends DomainMember implements TypedObject {
 		this.name = name;
 		this.description = description;
 		this.hostname = hostname;
-		this.port = port;
+		this.tcpPort = tcpPort;
 		this.type = type;
 		this.equipmentId = equipmentId;
 		this.mcmId = mcmId;

@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.33 2004/11/15 19:08:58 arseniy Exp $
+ * $Id: KISDatabase.java,v 1.34 2004/11/16 09:53:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2004/11/15 19:08:58 $
+ * @version $Revision: 1.34 $, $Date: 2004/11/16 09:53:23 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -51,8 +51,8 @@ public class KISDatabase extends StorableObjectDatabase {
 	public static final String COLUMN_NAME  		= "name";
 	// hostname VARCHAR2(64),
 	public static final String COLUMN_HOSTNAME  	= "hostname";
-	// port NUMBER(5,0),
-	public static final String COLUMN_PORT  		= "port";
+	// tcp_port NUMBER(5,0),
+	public static final String COLUMN_TCP_PORT  		= "tcp_port";
 	// equipment_id Identifier NOT NULL
 	public static final String COLUMN_EQUIPMENT_ID 	= "equipment_id";
 	// mcm_id Identifier NOT NULL
@@ -83,7 +83,7 @@ public class KISDatabase extends StorableObjectDatabase {
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
 				+ COLUMN_HOSTNAME + COMMA
-				+ COLUMN_PORT + COMMA
+				+ COLUMN_TCP_PORT + COMMA
 				+ COLUMN_EQUIPMENT_ID + COMMA
 				+ COLUMN_MCM_ID;
 		}
@@ -114,7 +114,7 @@ public class KISDatabase extends StorableObjectDatabase {
 			+ APOSTOPHE + DatabaseString.toQuerySubString(kis.getName()) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(kis.getDescription()) + APOSTOPHE + COMMA
 			+ APOSTOPHE + kis.getHostName() + APOSTOPHE + COMMA
-			+ kis.getPort() + COMMA
+			+ kis.getTCPPort() + COMMA
 			+ kis.getEquipmentId().toSQLString() + COMMA
 			+ kis.getMCMId().toSQLString();
 		return sql;
@@ -140,7 +140,7 @@ public class KISDatabase extends StorableObjectDatabase {
             preparedStatement.setString( ++i, kis.getName());
             preparedStatement.setString( ++i, kis.getDescription());
             preparedStatement.setString( ++i, kis.getHostName());
-            preparedStatement.setInt( ++i, kis.getPort());
+            preparedStatement.setInt( ++i, kis.getTCPPort());
             preparedStatement.setString( ++i, equipmentId != null ? equipmentId.getCode() : "");
             preparedStatement.setString( ++i, mcmId != null ? mcmId.getCode() : "");            
         } catch (SQLException sqle) {
@@ -192,7 +192,7 @@ public class KISDatabase extends StorableObjectDatabase {
 											DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
 											DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
 											resultSet.getString(COLUMN_HOSTNAME),
-											resultSet.getShort(COLUMN_PORT),
+											resultSet.getShort(COLUMN_TCP_PORT),
 											kisType,
 											/**
 												* @todo when change DB Identifier model ,change getString() to getLong()
