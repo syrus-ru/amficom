@@ -203,15 +203,18 @@ public class ThresholdsSelectionFrame extends ATableFrame
 			}
 			if(rue.eventSelected())
 			{
-				current_ev = Integer.parseInt((String)rue.getSource());
-				if (current_ev < 0 || current_ev >= mtm.getNEvents())
+				if (mtm != null)
 				{
-				    System.out.println("Warning: current_ev out of range");
-				    current_ev = 0;
+					current_ev = Integer.parseInt((String)rue.getSource());
+					if (current_ev < 0 || current_ev >= mtm.getNEvents())
+					{
+					    System.out.println("Warning: current_ev out of range");
+					    current_ev = 0;
+					}
+					selected_there = true;
+					updThresholds();
+					selected_there = false;
 				}
-				selected_there = true;
-				updThresholds();
-				selected_there = false;
 			}
 			if(rue.thresholdChanged())
 			{
