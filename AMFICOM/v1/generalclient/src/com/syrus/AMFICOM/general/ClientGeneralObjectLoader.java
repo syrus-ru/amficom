@@ -1,5 +1,5 @@
 /*
- * $Id: ClientGeneralObjectLoader.java,v 1.8 2005/02/25 09:16:15 bob Exp $
+ * $Id: ClientGeneralObjectLoader.java,v 1.9 2005/04/04 13:33:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,9 @@
 
 package com.syrus.AMFICOM.general;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -24,7 +23,7 @@ import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/25 09:16:15 $
+ * @version $Revision: 1.9 $, $Date: 2005/04/04 13:33:00 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -77,7 +76,7 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 		}
 	}
 
-	public Collection loadParameterTypes(Collection ids) throws DatabaseException, CommunicationException {
+	public Set loadParameterTypes(Set ids) throws DatabaseException, CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -87,17 +86,17 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 			}
 			ParameterType_Transferable[] transferables = this.server.transmitParameterTypes(identifierTransferables,
 				getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new ParameterType(transferables[j]));
+				set.add(new ParameterType(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new CommunicationException(e);
 		}
 	}
 
-	public Collection loadCharacteristics(Collection ids) throws DatabaseException, CommunicationException {
+	public Set loadCharacteristics(Set ids) throws DatabaseException, CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -107,11 +106,11 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 			}
 			Characteristic_Transferable[] transferables = this.server.transmitCharacteristics(identifierTransferables,
 				getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new Characteristic(transferables[j]));
+				set.add(new Characteristic(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (CreateObjectException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
@@ -119,7 +118,7 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 		}
 	}
 
-	public Collection loadCharacteristicTypes(Collection ids) throws DatabaseException, CommunicationException {
+	public Set loadCharacteristicTypes(Set ids) throws DatabaseException, CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -129,17 +128,17 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 			}
 			CharacteristicType_Transferable[] transferables = this.server.transmitCharacteristicTypes(
 				identifierTransferables, getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new CharacteristicType(transferables[j]));
+				set.add(new CharacteristicType(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new CommunicationException(e);
 		}
 	}
 
-	public Collection loadParameterTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
+	public Set loadParameterTypesButIds(StorableObjectCondition condition, Set ids) throws DatabaseException,
 			CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
@@ -151,17 +150,17 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 
 			ParameterType_Transferable[] transferables = this.server.transmitParameterTypesButIdsCondition(
 				identifierTransferables, getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new ParameterType(transferables[j]));
+				set.add(new ParameterType(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new CommunicationException(e);
 		}
 	}
 
-	public Collection loadCharacteristicTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
+	public Set loadCharacteristicTypesButIds(StorableObjectCondition condition, Set ids) throws DatabaseException,
 			CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
@@ -172,7 +171,7 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 			}
 			CharacteristicType_Transferable[] transferables = this.server.transmitCharacteristicTypesButIds(
 				identifierTransferables, getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			Set list = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new CharacteristicType(transferables[j]));
 			}
@@ -182,7 +181,7 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 		}
 	}
 
-	public Collection loadCharacteristicsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
+	public Set loadCharacteristicsButIds(StorableObjectCondition condition, Set ids) throws DatabaseException,
 			CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
@@ -193,7 +192,7 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 			}
 			Characteristic_Transferable[] transferables = this.server.transmitCharacteristicsButIdsCondition(
 				identifierTransferables, getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
-			Collection list = new ArrayList(transferables.length);
+			Set list = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new Characteristic(transferables[j]));
 			}
@@ -205,7 +204,7 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 		}
 	}
 
-	private void updateStorableObjectHeader(Collection storableObjects, StorableObject_Transferable[] transferables) {
+	private void updateStorableObjectHeader(Set storableObjects, StorableObject_Transferable[] transferables) {
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			StorableObject storableObject = (StorableObject) it.next();
 			Identifier_Transferable id = (Identifier_Transferable) storableObject.getId().getTransferable();
@@ -267,7 +266,7 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 		}
 	}
 
-	public void saveParameterTypes(Collection parameterTypes, boolean force) throws DatabaseException,
+	public void saveParameterTypes(Set parameterTypes, boolean force) throws DatabaseException,
 			CommunicationException, VersionCollisionException {
 		ParameterType_Transferable[] transferables = new ParameterType_Transferable[parameterTypes.size()];
 		int i = 0;
@@ -287,7 +286,7 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 		}
 	}
 
-	public void saveCharacteristicTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveCharacteristicTypes(Set list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		CharacteristicType_Transferable[] transferables = new CharacteristicType_Transferable[list.size()];
 		int i = 0;
@@ -307,7 +306,7 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 		}
 	}
 
-	public void saveCharacteristics(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveCharacteristics(Set list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		Characteristic_Transferable[] transferables = new Characteristic_Transferable[list.size()];
 		int i = 0;
@@ -361,7 +360,7 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 		}
 	}
 
-	public void delete(Collection ids) throws IllegalDataException {
+	public void delete(Set ids) throws IllegalDataException {
 		Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
 		int i = 0;
 		for (Iterator it = ids.iterator(); it.hasNext(); i++) {
