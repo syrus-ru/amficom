@@ -1,9 +1,6 @@
 /*
- * $Id: SchemeCablePortImpl.java,v 1.12 2005/03/04 19:25:01 bass Exp $
- *
- * Copyright ¿ 2004 Syrus Systems.
- * Dept. of Science & Technology.
- * Project: AMFICOM.
+ * $Id: SchemeCablePortImpl.java,v 1.13 2005/03/10 06:58:50 bass Exp $ Copyright ¿
+ * 2004 Syrus Systems. Dept. of Science & Technology. Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.scheme.corba;
@@ -16,15 +13,16 @@ import com.syrus.AMFICOM.general.corba.StorableObject;
 import com.syrus.AMFICOM.scheme.CharacteristicSeqContainer;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortPackage.DirectionType;
 import com.syrus.util.logging.ErrorHandler;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/03/04 19:25:01 $
+ * @version $Revision: 1.13 $, $Date: 2005/03/10 06:58:50 $
  * @module scheme_v1
  */
 final class SchemeCablePortImpl extends SchemeCablePort implements Cloneable {
-	private static final ErrorHandler ERROR_HANDLER = ErrorHandler.getInstance();
+	private static final ErrorHandler ERROR_HANDLER = ErrorHandler
+			.getInstance();
 
 	private static final long serialVersionUID = 3257846593180020786L;
 
@@ -61,7 +59,8 @@ final class SchemeCablePortImpl extends SchemeCablePort implements Cloneable {
 	/**
 	 * @see #characteristicsImpl(CharacteristicSeqContainer)
 	 */
-	public void characteristics(final Characteristic_Transferable characteristics[]) {
+	public void characteristics(
+			final Characteristic_Transferable characteristics[]) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -76,7 +75,8 @@ final class SchemeCablePortImpl extends SchemeCablePort implements Cloneable {
 	 * @param characteristics
 	 * @see com.syrus.AMFICOM.scheme.Characterizable#characteristicsImpl(CharacteristicSeqContainer)
 	 */
-	public void characteristicsImpl(final CharacteristicSeqContainer characteristics) {
+	public void characteristicsImpl(
+			final CharacteristicSeqContainer characteristics) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -110,10 +110,9 @@ final class SchemeCablePortImpl extends SchemeCablePort implements Cloneable {
 	}
 
 	/**
-	 * @return
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
 	 */
-	public List getCharacteristics() {
+	public Collection getCharacteristics() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -176,7 +175,8 @@ final class SchemeCablePortImpl extends SchemeCablePort implements Cloneable {
 	 * @param newMeasurementPort
 	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemePort#measurementPort(com.syrus.AMFICOM.configuration.corba.MeasurementPort_Transferable)
 	 */
-	public void measurementPort(MeasurementPort_Transferable newMeasurementPort) {
+	public void measurementPort(
+			MeasurementPort_Transferable newMeasurementPort) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -200,7 +200,8 @@ final class SchemeCablePortImpl extends SchemeCablePort implements Cloneable {
 	 * @param newMeasurementPortType
 	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemePort#measurementPortType(com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable)
 	 */
-	public void measurementPortType(MeasurementPortType_Transferable newMeasurementPortType) {
+	public void measurementPortType(
+			MeasurementPortType_Transferable newMeasurementPortType) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -215,7 +216,8 @@ final class SchemeCablePortImpl extends SchemeCablePort implements Cloneable {
 	 * @param newMeasurementPortTypeImpl
 	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemePort#measurementPortTypeImpl(com.syrus.AMFICOM.configuration.MeasurementPortType)
 	 */
-	public void measurementPortTypeImpl(MeasurementPortType newMeasurementPortTypeImpl) {
+	public void measurementPortTypeImpl(
+			MeasurementPortType newMeasurementPortTypeImpl) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -318,23 +320,41 @@ final class SchemeCablePortImpl extends SchemeCablePort implements Cloneable {
 	 * @param changed
 	 * @see IStorableObject#setChanged(StorableObjectFactory, boolean)
 	 */
-	public void setChanged(final StorableObjectFactory storableObjectFactory, final boolean changed) {
+	public void setChanged(
+			final StorableObjectFactory storableObjectFactory,
+			final boolean changed) {
+		throw new UnsupportedOperationException();
+	}
+
+	protected Object clone() throws CloneNotSupportedException {
+		final SchemeCablePortImpl schemeCablePort = (SchemeCablePortImpl) super
+				.clone();
+		/**
+		 * @todo Update the newly created object.
+		 */
+		return schemeCablePort;
+	}
+
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 */
+	public void setCharacteristics(Collection characteristics) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
+	 */
+	public CharacteristicSort getCharacteristicSort() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.List)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
 	 */
-	public void setCharacteristics(List characteristics) {
+	public void setCharacteristics0(Collection characteristics) {
 		throw new UnsupportedOperationException();
-	}
-
-	protected Object clone() throws CloneNotSupportedException {
-		final SchemeCablePortImpl schemeCablePort = (SchemeCablePortImpl) super.clone();
-		/**
-		 * @todo Update the newly created object.
-		 */
-		return schemeCablePort;
 	}
 }

@@ -1,9 +1,6 @@
 /*
- * $Id: SchemeDeviceImpl.java,v 1.12 2005/03/04 19:25:01 bass Exp $
- *
- * Copyright ¿ 2004 Syrus Systems.
- * Dept. of Science & Technology.
- * Project: AMFICOM.
+ * $Id: SchemeDeviceImpl.java,v 1.13 2005/03/10 06:58:50 bass Exp $ Copyright ¿
+ * 2004 Syrus Systems. Dept. of Science & Technology. Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.scheme.corba;
@@ -13,15 +10,16 @@ import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.general.corba.StorableObject;
 import com.syrus.AMFICOM.scheme.CharacteristicSeqContainer;
 import com.syrus.util.logging.ErrorHandler;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/03/04 19:25:01 $
+ * @version $Revision: 1.13 $, $Date: 2005/03/10 06:58:50 $
  * @module scheme_v1
  */
 final class SchemeDeviceImpl extends SchemeDevice implements Cloneable {
-	private static final ErrorHandler ERROR_HANDLER = ErrorHandler.getInstance();
+	private static final ErrorHandler ERROR_HANDLER = ErrorHandler
+			.getInstance();
 
 	private static final long serialVersionUID = 4050206344789242676L;
 
@@ -40,7 +38,8 @@ final class SchemeDeviceImpl extends SchemeDevice implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public void characteristics(Characteristic_Transferable[] characteristics) {
+	public void characteristics(
+			Characteristic_Transferable[] characteristics) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -55,7 +54,8 @@ final class SchemeDeviceImpl extends SchemeDevice implements Cloneable {
 	 * @param characteristics
 	 * @see com.syrus.AMFICOM.scheme.Characterizable#characteristicsImpl(CharacteristicSeqContainer)
 	 */
-	public void characteristicsImpl(final CharacteristicSeqContainer characteristics) {
+	public void characteristicsImpl(
+			final CharacteristicSeqContainer characteristics) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -77,10 +77,9 @@ final class SchemeDeviceImpl extends SchemeDevice implements Cloneable {
 	}
 
 	/**
-	 * @return
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
 	 */
-	public List getCharacteristics() {
+	public Collection getCharacteristics() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -180,23 +179,41 @@ final class SchemeDeviceImpl extends SchemeDevice implements Cloneable {
 	 * @param changed
 	 * @see IStorableObject#setChanged(StorableObjectFactory, boolean)
 	 */
-	public void setChanged(final StorableObjectFactory storableObjectFactory, final boolean changed) {
+	public void setChanged(
+			final StorableObjectFactory storableObjectFactory,
+			final boolean changed) {
+		throw new UnsupportedOperationException();
+	}
+
+	protected Object clone() throws CloneNotSupportedException {
+		final SchemeDeviceImpl schemeDevice = (SchemeDeviceImpl) super
+				.clone();
+		/**
+		 * @todo Update the newly created object.
+		 */
+		return schemeDevice;
+	}
+
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 */
+	public void setCharacteristics(Collection characteristics) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
+	 */
+	public CharacteristicSort getCharacteristicSort() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.List)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
 	 */
-	public void setCharacteristics(List characteristics) {
+	public void setCharacteristics0(Collection characteristics) {
 		throw new UnsupportedOperationException();
-	}
-
-	protected Object clone() throws CloneNotSupportedException {
-		final SchemeDeviceImpl schemeDevice = (SchemeDeviceImpl) super.clone();
-		/**
-		 * @todo Update the newly created object.
-		 */
-		return schemeDevice;
 	}
 }

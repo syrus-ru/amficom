@@ -1,9 +1,6 @@
 /*
- * $Id: SchemeLinkImpl.java,v 1.13 2005/03/04 19:25:01 bass Exp $
- *
- * Copyright ¿ 2004 Syrus Systems.
- * Dept. of Science & Technology.
- * Project: AMFICOM.
+ * $Id: SchemeLinkImpl.java,v 1.14 2005/03/10 06:58:50 bass Exp $ Copyright ¿
+ * 2004 Syrus Systems. Dept. of Science & Technology. Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.scheme.corba;
@@ -17,21 +14,22 @@ import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
 import com.syrus.AMFICOM.scheme.CharacteristicSeqContainer;
 import com.syrus.util.logging.ErrorHandler;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/03/04 19:25:01 $
+ * @version $Revision: 1.14 $, $Date: 2005/03/10 06:58:50 $
  * @module scheme_v1
  */
 final class SchemeLinkImpl extends SchemeLink implements Cloneable {
-	private static final ErrorHandler ERROR_HANDLER = ErrorHandler.getInstance();
+	private static final ErrorHandler ERROR_HANDLER = ErrorHandler
+			.getInstance();
 
 	private static final long serialVersionUID = 3256722862231728441L;
 
 	SchemeLinkImpl() {
 	}
-	
+
 	public AbstractLinkType_Transferable abstractLinkType() {
 		throw new UnsupportedOperationException();
 	}
@@ -52,7 +50,8 @@ final class SchemeLinkImpl extends SchemeLink implements Cloneable {
 	 * @param newAbstractLinkTypeImpl
 	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemeLink#abstractLinkTypeImpl(com.syrus.AMFICOM.configuration.AbstractLinkType)
 	 */
-	public void abstractLinkTypeImpl(AbstractLinkType newAbstractLinkTypeImpl) {
+	public void abstractLinkTypeImpl(
+			AbstractLinkType newAbstractLinkTypeImpl) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -92,7 +91,8 @@ final class SchemeLinkImpl extends SchemeLink implements Cloneable {
 	 * @param characteristics
 	 * @see com.syrus.AMFICOM.scheme.Characterizable#characteristicsImpl(CharacteristicSeqContainer)
 	 */
-	public void characteristicsImpl(final CharacteristicSeqContainer characteristics) {
+	public void characteristicsImpl(
+			final CharacteristicSeqContainer characteristics) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -114,10 +114,9 @@ final class SchemeLinkImpl extends SchemeLink implements Cloneable {
 	}
 
 	/**
-	 * @return
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
 	 */
-	public List getCharacteristics() {
+	public Collection getCharacteristics() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -267,15 +266,9 @@ final class SchemeLinkImpl extends SchemeLink implements Cloneable {
 	 * @param changed
 	 * @see IStorableObject#setChanged(StorableObjectFactory, boolean)
 	 */
-	public void setChanged(final StorableObjectFactory storableObjectFactory, final boolean changed) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.List)
-	 */
-	public void setCharacteristics(List characteristics) {
+	public void setChanged(
+			final StorableObjectFactory storableObjectFactory,
+			final boolean changed) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -317,7 +310,8 @@ final class SchemeLinkImpl extends SchemeLink implements Cloneable {
 	 * @param newSourceAbstractSchemePort
 	 * @see com.syrus.AMFICOM.scheme.corba.AbstractSchemeLink#sourceAbstractSchemePort(com.syrus.AMFICOM.scheme.corba.AbstractSchemePort)
 	 */
-	public void sourceAbstractSchemePort(AbstractSchemePort newSourceAbstractSchemePort) {
+	public void sourceAbstractSchemePort(
+			AbstractSchemePort newSourceAbstractSchemePort) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -341,7 +335,8 @@ final class SchemeLinkImpl extends SchemeLink implements Cloneable {
 	 * @param newTargetAbstractSchemePort
 	 * @see com.syrus.AMFICOM.scheme.corba.AbstractSchemeLink#targetAbstractSchemePort(com.syrus.AMFICOM.scheme.corba.AbstractSchemePort)
 	 */
-	public void targetAbstractSchemePort(AbstractSchemePort newTargetAbstractSchemePort) {
+	public void targetAbstractSchemePort(
+			AbstractSchemePort newTargetAbstractSchemePort) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -358,10 +353,34 @@ final class SchemeLinkImpl extends SchemeLink implements Cloneable {
 	}
 
 	protected Object clone() throws CloneNotSupportedException {
-		final SchemeLinkImpl schemeLink = (SchemeLinkImpl) super.clone();
+		final SchemeLinkImpl schemeLink = (SchemeLinkImpl) super
+				.clone();
 		/**
 		 * @todo Update the newly created object.
 		 */
 		return schemeLink;
+	}
+
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 */
+	public void setCharacteristics(Collection characteristics) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
+	 */
+	public CharacteristicSort getCharacteristicSort() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
+	 */
+	public void setCharacteristics0(Collection characteristics) {
+		throw new UnsupportedOperationException();
 	}
 }

@@ -1,9 +1,6 @@
 /*
- * $Id: SchemeElementImpl.java,v 1.16 2005/03/04 19:25:01 bass Exp $
- *
- * Copyright ¿ 2004 Syrus Systems.                                              
- * Dept. of Science & Technology.                                               
- * Project: AMFICOM.                                                            
+ * $Id: SchemeElementImpl.java,v 1.17 2005/03/10 06:58:50 bass Exp $ Copyright ¿
+ * 2004 Syrus Systems. Dept. of Science & Technology. Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.scheme.corba;
@@ -19,15 +16,16 @@ import com.syrus.AMFICOM.resource.*;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import com.syrus.AMFICOM.scheme.CharacteristicSeqContainer;
 import com.syrus.util.logging.ErrorHandler;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/03/04 19:25:01 $
+ * @version $Revision: 1.17 $, $Date: 2005/03/10 06:58:50 $
  * @module scheme_v1
  */
 final class SchemeElementImpl extends SchemeElement implements Cloneable {
-	private static final ErrorHandler ERROR_HANDLER = ErrorHandler.getInstance();
+	private static final ErrorHandler ERROR_HANDLER = ErrorHandler
+			.getInstance();
 
 	private static final long serialVersionUID = 3690758397188124983L;
 
@@ -41,7 +39,7 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 	public void addCharacteristic(final Characteristic characteristic) {
 		throw new UnsupportedOperationException();
 	}
-	
+
 	public boolean alarmed() {
 		throw new UnsupportedOperationException();
 	}
@@ -70,7 +68,8 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public void characteristics(Characteristic_Transferable[] characteristics) {
+	public void characteristics(
+			Characteristic_Transferable[] characteristics) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -84,7 +83,8 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 	/**
 	 * @see com.syrus.AMFICOM.scheme.Characterizable#characteristicsImpl(CharacteristicSeqContainer)
 	 */
-	public void characteristicsImpl(final CharacteristicSeqContainer characteristics) {
+	public void characteristicsImpl(
+			final CharacteristicSeqContainer characteristics) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -152,10 +152,9 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 	}
 
 	/**
-	 * @return
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
 	 */
-	public List getCharacteristics() {
+	public Collection getCharacteristics() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -288,7 +287,8 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 	 * @param newSchemeCell
 	 * @see com.syrus.AMFICOM.resource.SchemeCellContainer#schemeCell(com.syrus.AMFICOM.resource.corba.ImageResource_Transferable)
 	 */
-	public void schemeCell(com.syrus.AMFICOM.resource.corba.ImageResource_Transferable newSchemeCell) {
+	public void schemeCell(
+			com.syrus.AMFICOM.resource.corba.ImageResource_Transferable newSchemeCell) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -348,15 +348,9 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 	 * @param changed
 	 * @see IStorableObject#setChanged(StorableObjectFactory, boolean)
 	 */
-	public void setChanged(final StorableObjectFactory storableObjectFactory, final boolean changed) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.List)
-	 */
-	public void setCharacteristics(List characteristics) {
+	public void setChanged(
+			final StorableObjectFactory storableObjectFactory,
+			final boolean changed) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -421,7 +415,8 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 	 * @param newUgoCell
 	 * @see com.syrus.AMFICOM.resource.SchemeCellContainer#ugoCell(com.syrus.AMFICOM.resource.corba.ImageResource_Transferable)
 	 */
-	public void ugoCell(com.syrus.AMFICOM.resource.corba.ImageResource_Transferable newUgoCell) {
+	public void ugoCell(
+			com.syrus.AMFICOM.resource.corba.ImageResource_Transferable newUgoCell) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -441,10 +436,34 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 	}
 
 	protected Object clone() throws CloneNotSupportedException {
-		final SchemeElementImpl schemeElement = (SchemeElementImpl) super.clone();
+		final SchemeElementImpl schemeElement = (SchemeElementImpl) super
+				.clone();
 		/**
 		 * @todo Update the newly created object.
 		 */
 		return schemeElement;
+	}
+
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 */
+	public void setCharacteristics(Collection characteristics) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
+	 */
+	public CharacteristicSort getCharacteristicSort() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
+	 */
+	public void setCharacteristics0(Collection characteristics) {
+		throw new UnsupportedOperationException();
 	}
 }

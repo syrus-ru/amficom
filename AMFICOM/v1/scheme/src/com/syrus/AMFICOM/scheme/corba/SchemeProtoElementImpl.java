@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeProtoElementImpl.java,v 1.14 2005/03/04 19:25:02 bass Exp $
+ * $Id: SchemeProtoElementImpl.java,v 1.15 2005/03/10 06:58:50 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,11 +17,11 @@ import com.syrus.AMFICOM.resource.*;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import com.syrus.AMFICOM.scheme.CharacteristicSeqContainer;
 import com.syrus.util.logging.ErrorHandler;
-import java.util.List;
+import java.util.Collection;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/03/04 19:25:02 $
+ * @version $Revision: 1.15 $, $Date: 2005/03/10 06:58:50 $
  * @module scheme_v1
  */
 final class SchemeProtoElementImpl extends SchemeProtoElement implements Cloneable {
@@ -121,10 +121,16 @@ final class SchemeProtoElementImpl extends SchemeProtoElement implements Cloneab
 	}
 
 	/**
-	 * @return
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
 	 */
-	public List getCharacteristics() {
+	public Collection getCharacteristics() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
+	 */
+	public CharacteristicSort getCharacteristicSort() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -280,9 +286,17 @@ final class SchemeProtoElementImpl extends SchemeProtoElement implements Cloneab
 
 	/**
 	 * @param characteristics
-	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.List)
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
 	 */
-	public void setCharacteristics(List characteristics) {
+	public void setCharacteristics(final Collection characteristics) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
+	 */
+	public void setCharacteristics0(final Collection characteristics) {
 		throw new UnsupportedOperationException();
 	}
 

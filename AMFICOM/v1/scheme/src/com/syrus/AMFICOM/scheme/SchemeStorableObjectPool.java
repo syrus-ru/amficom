@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeStorableObjectPool.java,v 1.6 2005/03/04 19:25:01 bass Exp $
+ * $Id: SchemeStorableObjectPool.java,v 1.7 2005/03/10 06:58:50 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/03/04 19:25:01 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/10 06:58:50 $
  * @todo Move to corba subpackage.
  * @module scheme_v1
  */
@@ -133,7 +133,6 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	/**
 	 * @param entityCode
 	 * @param ids
-	 * @return
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.StorableObjectPool#loadStorableObjects(java.lang.Short, java.util.Collection)
 	 */
@@ -155,7 +154,6 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	/**
 	 * @param condition
 	 * @param ids
-	 * @return
 	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.StorableObjectPool#loadStorableObjectsButIds(com.syrus.AMFICOM.general.StorableObjectCondition, java.util.Collection)
 	 */
@@ -191,7 +189,7 @@ public final class SchemeStorableObjectPool extends StorableObjectPool {
 	 * @throws DatabaseException
 	 * @throws CommunicationException
 	 * @throws IllegalDataException
-	 * @see com.syrus.AMFICOM.general.VtStorableObjectPool#saveStorableObjects(java.util.List, boolean)
+	 * @see com.syrus.AMFICOM.general.StorableObjectPool#saveStorableObjects(short, Collection, boolean)
 	 */
 	protected void saveStorableObjects(List storableObjects, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException {
 		throw new UnsupportedOperationException();
