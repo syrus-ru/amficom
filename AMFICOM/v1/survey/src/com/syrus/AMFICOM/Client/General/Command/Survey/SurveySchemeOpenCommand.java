@@ -88,6 +88,11 @@ public class SurveySchemeOpenCommand extends VoidCommand
 				frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 				desktopPane.add(frame);
 			}
+      
+      aContext.getDispatcher().notify (
+        new OperationEvent (frame,0,SchemeViewerFrame.schemeFrameDisplayed));
+      
+      
 			frame.setLocation(dim.width / 5, dim.height / 4);
 			frame.setSize(dim.width * 4 / 5, dim.height * 3 / 4);
 			frame.show();

@@ -6,6 +6,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 
 import com.syrus.AMFICOM.Client.General.Report.*;
 
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTableModel;
 import com.syrus.AMFICOM.Client.Resource.Alarm.Alarm;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.SurveyDataSourceImage;
@@ -14,6 +15,7 @@ import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
 import com.syrus.AMFICOM.Client.General.Filter.LogicScheme;
 import com.syrus.AMFICOM.Client.Survey.Alarm.Filter.AlarmFilter;
 
+import java.util.Enumeration;
 import javax.swing.JPanel;
 
 import java.util.Vector;
@@ -238,6 +240,22 @@ public class AlarmReportModel extends ObjectResourceReportModel
 
 	public void setData(ReportTemplate rt, AMTReport aReport)
 	{
+    if (!rt.templateType.equals(ReportTemplate.rtt_Observe))
+      return;
+
+    ObjectResourceTableModel tableModel = (ObjectResourceTableModel)
+      aReport.data.get(
+        new ObserveReportModel().getLangForField(ObserveReportModel.alarms_list));
+    
+    if (tableModel == null)
+      return;
+       
+    ObjectResourceReportModel.reportObjects = new Vector();
+    for (int i = 0; i < tableModel.getRowCount(); i++)
+    {
+      Alarm cur_alarm = (Alarm)tableModel.getValueAt(i,0);
+      ObjectResourceReportModel.reportObjects.add(cur_alarm);
+    }
 	}
 
 	public String getReportsName(ObjectsReport rp)

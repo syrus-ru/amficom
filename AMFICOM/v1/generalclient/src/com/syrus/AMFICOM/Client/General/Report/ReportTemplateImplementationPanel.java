@@ -1246,14 +1246,13 @@ public class ReportTemplateImplementationPanel extends JPanel
 								 TextPanel)
               {
 								//Отчёт с текстовым полем
-  							out.write(">".getBytes());
 								JScrollPane sp = (JScrollPane) ro.rendererPanel.
 													  insidePanel;
                             
 								if (sp == null)
 									continue;
 
-								JTextPane textPane = (JTable) sp.getViewport().getView();
+								JTextPane textPane = (JTextPane) sp.getViewport().getView();
 								textPane.setSize(sp.getPreferredSize());
 								this.writeTextPane(textPane,out);
               }
@@ -1633,6 +1632,7 @@ public class ReportTemplateImplementationPanel extends JPanel
 
   private void writeTextPane (JTextPane label,
                              FileOutputStream out)
+    throws java.io.FileNotFoundException, java.io.IOException
   {
     String fontName = label.getFont().getName();
 

@@ -111,7 +111,6 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
   public static final String alarmPopupFrameDisplayed =
     "alarmPopupFrameDisplayed";  
   public static final String resultFrameDisplayed = "resultFrameDisplayed";  
-  public static final String schemeFrameDisplayed = "schemeFrameDisplayed";  
 
 	//	public AlarmChecker alarmChecker = null;
 
@@ -381,6 +380,7 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 		aModel.setCommand("menuWindowList", new WindowListCommand(desktopPane));
 
     csrCommand = new CreateSurveyReportCommand(aContext);
+    csrCommand.setParameter(this);
 		aModel.setCommand("menuTemplateReport", csrCommand);    
 
 		aModel.add("menuHelpAbout", new HelpAboutCommand(this));
@@ -454,7 +454,7 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 		internal_dispatcher.register(this, SurveyMDIMain.alarmFrameDisplayed);
 		internal_dispatcher.register(this, SurveyMDIMain.alarmPopupFrameDisplayed);
 		internal_dispatcher.register(this, SurveyMDIMain.resultFrameDisplayed);
-		internal_dispatcher.register(this, SurveyMDIMain.schemeFrameDisplayed);    
+		internal_dispatcher.register(this, SchemeViewerFrame.schemeFrameDisplayed);    
     
 		Environment.the_dispatcher.register(this, "mapaddschemeevent");
 		Environment.the_dispatcher.register(this, "mapaddschemeelementevent");
@@ -792,7 +792,7 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
     {
       resultFrame = (ResultFrame)ae.getSource();
     }
-    else if (ae.getActionCommand().equals(SurveyMDIMain.schemeFrameDisplayed))
+    else if (ae.getActionCommand().equals(SchemeViewerFrame.schemeFrameDisplayed))
     {
       schemeViewerFrame = (SchemeViewerFrame)ae.getSource();
     }

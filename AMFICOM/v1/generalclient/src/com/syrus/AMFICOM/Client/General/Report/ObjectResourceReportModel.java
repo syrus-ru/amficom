@@ -38,6 +38,8 @@ import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 
 abstract public class ObjectResourceReportModel extends ReportModel
 {
+  public static Vector reportObjects = null;
+
 	public static final String rt_statistics = "rep_stat_po_polju";
 
 	public static final String rt_timefunction = "rep_graphic";
@@ -180,8 +182,10 @@ else
 		ObjectsReport or,
 		DataSourceInterface dsi)
 	{
-		Vector reportObjects = new Vector();
+    if (ObjectResourceReportModel.reportObjects != null)
+      return ObjectResourceReportModel.reportObjects;
 
+    Vector reportObjects = new Vector();
 		if (or.model instanceof ObjectResourceReportModel)
 		{
 			ObjectResourceReportModel orrm = (ObjectResourceReportModel) or.model;

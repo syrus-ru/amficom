@@ -29,7 +29,6 @@ import com.syrus.AMFICOM.Client.Analysis.Report.EvaluationTableReport;
 public class ObserveReportModel extends APOReportModel
 {
   public static String alarms_list = "Alarms_list";
-  public static String alarms_statistics = "Alarms_statistics";
   public static String alarm_info = "Alarm_info";  
   public static String alarm_reflectogramm = "Alarm_reflectogramm";
   public static String alarm_scheme = "Alarm_scheme";
@@ -70,8 +69,6 @@ public class ObserveReportModel extends APOReportModel
 	{
 		Vector result = new Vector();
 
-		result.add(ObserveReportModel.alarms_list);
-		result.add(ObserveReportModel.alarms_statistics);
 		result.add(ObserveReportModel.alarm_info);
 		result.add(ObserveReportModel.alarm_reflectogramm);
 		result.add(ObserveReportModel.alarm_scheme);
