@@ -66,11 +66,7 @@ public class SurveyMenuBar extends JMenuBar
 	JMenuItem menuMaintainEvent = new JMenuItem();
 
 	JMenu menuReport = new JMenu();
-	JMenuItem menuReportTable = new JMenuItem();
-	JMenuItem menuReportHistogramm = new JMenuItem();
-	JMenuItem menuReportGraph = new JMenuItem();
-	JMenuItem menuReportComplex = new JMenuItem();
-	JMenuItem menuReportReport = new JMenuItem();
+	JMenuItem menuTemplateReport = new JMenuItem();
 
 	JMenu menuTools = new JMenu();
 	JMenu menuToolsSort = new JMenu();
@@ -295,12 +291,13 @@ public class SurveyMenuBar extends JMenuBar
 		menuMaintainEvent.setName("menuMaintainEvent");
 		menuMaintainEvent.addActionListener(actionAdapter);
 
-		menuReport.setText(LangModelSurvey.getString("Report"));
+		menuReport.setText(LangModelReport.getString("label_report"));
 		menuReport.setName("menuReport");
-		menuReportTable.setText(LangModelSurvey.getString("Tabulared_form"));
-		menuReportTable.setName("menuReportTable");
-		menuReportTable.addActionListener(actionAdapter);
-		menuReportHistogramm.setText(LangModelSurvey.getString("Histogramm"));
+		menuTemplateReport.setText(LangModelReport.getString("label_reportForTemplate"));
+		menuTemplateReport.setName("menuTemplateReport");
+		menuTemplateReport.addActionListener(actionAdapter);
+    
+/*		menuReportHistogramm.setText(LangModelSurvey.getString("Histogramm"));
 		menuReportHistogramm.setName("menuReportHistogramm");
 		menuReportHistogramm.addActionListener(actionAdapter);
 		menuReportGraph.setText(LangModelSurvey.getString("Graph"));
@@ -311,7 +308,7 @@ public class SurveyMenuBar extends JMenuBar
 		menuReportComplex.addActionListener(actionAdapter);
 		menuReportReport.setText(LangModelSurvey.getString("Reports"));
 		menuReportReport.setName("menuReportReport");
-		menuReportReport.addActionListener(actionAdapter);
+		menuReportReport.addActionListener(actionAdapter);*/
 
 		menuTools.setText(LangModelSurvey.getString("Tools"));
 		menuTools.setName("menuTools");
@@ -536,11 +533,7 @@ public class SurveyMenuBar extends JMenuBar
 		menuMaintain.add(menuMaintainCall);
 		menuMaintain.add(menuMaintainEvent);
 
-		menuReport.add(menuReportTable);
-		menuReport.add(menuReportHistogramm);
-		menuReport.add(menuReportGraph);
-		menuReport.add(menuReportComplex);
-		menuReport.add(menuReportReport);
+		menuReport.add(menuTemplateReport);
 
 		menuTools.add(menuToolsSort);
 		menuTools.add(menuToolsFilter);
@@ -742,7 +735,7 @@ public class SurveyMenuBar extends JMenuBar
 
 		menuReport.setVisible(aModel.isVisible("menuReport"));
 		menuReport.setEnabled(aModel.isEnabled("menuReport"));
-		menuReportTable.setVisible(aModel.isVisible("menuReportTable"));
+/*		menuReportTable.setVisible(aModel.isVisible("menuReportTable"));
 		menuReportTable.setEnabled(aModel.isEnabled("menuReportTable"));
 		menuReportHistogramm.setVisible(aModel.isVisible("menuReportHistogramm"));
 		menuReportHistogramm.setEnabled(aModel.isEnabled("menuReportHistogramm"));
@@ -751,7 +744,7 @@ public class SurveyMenuBar extends JMenuBar
 		menuReportComplex.setVisible(aModel.isVisible("menuReportComplex"));
 		menuReportComplex.setEnabled(aModel.isEnabled("menuReportComplex"));
 		menuReportReport.setVisible(aModel.isVisible("menuReportReport"));
-		menuReportReport.setEnabled(aModel.isEnabled("menuReportReport"));
+		menuReportReport.setEnabled(aModel.isEnabled("menuReportReport"));*/
 
 		menuTools.setVisible(aModel.isVisible("menuTools"));
 		menuTools.setEnabled(aModel.isEnabled("menuTools"));

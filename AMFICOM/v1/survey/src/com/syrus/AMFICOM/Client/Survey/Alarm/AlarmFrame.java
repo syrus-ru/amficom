@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.Network.*;
 import com.syrus.AMFICOM.CORBA.General.*;
 import com.syrus.io.*;
+import javax.swing.table.AbstractTableModel;
 import oracle.jdeveloper.layout.*;
 
 import com.syrus.AMFICOM.Client.Survey.Alarm.UI.*;
@@ -587,5 +588,10 @@ public class AlarmFrame extends JInternalFrame
 			updateContents();
 		}
 	}
+  
+  public AbstractTableModel getTableModel ()
+  {
+    return this.alarmPane.tableModel;
+  }
 }
 

@@ -65,11 +65,7 @@ public class SurveyApplicationModel extends ApplicationModel
 		add("menuMaintainEvent");
 
 		add("menuReport");
-		add("menuReportTable");
-		add("menuReportHistogramm");
-		add("menuReportGraph");
-		add("menuReportComplex");
-		add("menuReportReport");
+		add("menuTemplateReport");
 
 		add("menuWindow");
 		add("menuWindowClose");

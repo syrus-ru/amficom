@@ -30,12 +30,6 @@ public class DefaultSurveyApplicationModelFactory
 		aModel.setUsable("menuMaintainCall", false);
 		aModel.setUsable("menuMaintainEvent", false);
 
-		aModel.setVisible("menuReport", false);
-		aModel.setUsable("menuReportHistogramm", false);
-		aModel.setUsable("menuReportGraph", false);
-		aModel.setUsable("menuReportComplex", false);
-		aModel.setUsable("menuReportReport", false);
-
 		aModel.setInstalled("menuTools", false);
 
 		aModel.setVisible("menuWindow", false);

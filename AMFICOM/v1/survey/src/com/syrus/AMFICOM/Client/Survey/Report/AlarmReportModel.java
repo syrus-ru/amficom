@@ -4,9 +4,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 
-import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
-import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
-import com.syrus.AMFICOM.Client.General.Report.ObjectResourceReportModel;
+import com.syrus.AMFICOM.Client.General.Report.*;
 
 import com.syrus.AMFICOM.Client.Resource.Alarm.Alarm;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
@@ -20,6 +18,7 @@ import javax.swing.JPanel;
 
 import java.util.Vector;
 import java.util.Hashtable;
+import java.util.Iterator;
 
 /**
  * <p>Title: </p>

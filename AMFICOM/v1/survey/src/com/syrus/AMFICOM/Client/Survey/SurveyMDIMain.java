@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.Client.General.Command.Session.SessionConnectionCommand
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionDomainCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionOpenCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionOptionsCommand;
+import com.syrus.AMFICOM.Client.General.Command.Survey.CreateSurveyReportCommand;
 import com.syrus.AMFICOM.Client.General.Command.Survey.MapCloseCommand;
 import com.syrus.AMFICOM.Client.General.Command.Survey.OpenAlarmsCommand;
 import com.syrus.AMFICOM.Client.General.Command.Survey.OpenAnalysisCommand;
@@ -363,6 +364,8 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 		aModel.setCommand("menuWindowRestoreAll", new WindowRestoreAllCommand(
 				desktopPane));
 		aModel.setCommand("menuWindowList", new WindowListCommand(desktopPane));
+    
+		aModel.setCommand("menuTemplateReport", new CreateSurveyReportCommand(aContext));    
 
 		aModel.add("menuHelpAbout", new HelpAboutCommand(this));
 
@@ -774,6 +777,7 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 		aModel.enable("menuSessionOptions");
 		aModel.enable("menuSessionChangePassword");
 		aModel.enable("menuSessionDomain");
+		aModel.setEnabled("menuReport", true);    
 		aModel.fireModelChanged("");
 
 		statusBar.setText("status", LangModel.getString("statusReady"));
@@ -834,6 +838,7 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 		aModel.setEnabled("menuEvaluateArchive", true);
 		aModel.setEnabled("menuEvaluateResult", true);
 		aModel.setEnabled("menuMaintainAlarm", true);
+		aModel.setEnabled("menuReport", true);    
 
 		aModel.enable("menuVisualizeNetGIS");
 		aModel.enable("menuVisualizeNet");
