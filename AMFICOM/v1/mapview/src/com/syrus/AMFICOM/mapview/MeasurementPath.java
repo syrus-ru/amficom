@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPath.java,v 1.7 2005/03/04 14:28:27 krupenn Exp $
+ * $Id: MeasurementPath.java,v 1.8 2005/03/09 14:57:55 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LocalIdentifierGenerator;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
@@ -34,6 +35,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 import com.syrus.AMFICOM.scheme.corba.SchemeLink;
 import com.syrus.AMFICOM.scheme.corba.SchemePath;
 
+import java.util.*;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -43,8 +45,8 @@ import java.util.ListIterator;
 /**
  * Элемент пути.
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/03/04 14:28:27 $
+ * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/03/09 14:57:55 $
  * @module mapviewclient_v1
  */
 public class MeasurementPath implements MapElement
@@ -157,7 +159,7 @@ public class MeasurementPath implements MapElement
 	/**
 	 * {@inheritDoc}
 	 */
-	public List getCharacteristics() 
+	public Collection getCharacteristics() 
 	{
 		return Collections.unmodifiableList(this.schemePath.characteristicsImpl().getValue());
 	}
@@ -618,6 +620,29 @@ public class MeasurementPath implements MapElement
 	 */
 	public java.util.Map getExportMap()
 	{
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 */
+	public void setCharacteristics(Collection characteristics) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
+	 */
+	public CharacteristicSort getCharacteristicSort() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
+	 */
+	public void setCharacteristics0(Collection characteristics) {
 		throw new UnsupportedOperationException();
 	}
 }

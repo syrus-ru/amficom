@@ -1,5 +1,5 @@
 /**
- * $Id: Marker.java,v 1.6 2005/02/28 14:26:24 bass Exp $
+ * $Id: Marker.java,v 1.7 2005/03/09 14:57:55 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LocalIdentifierGenerator;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
@@ -25,6 +26,7 @@ import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.scheme.PathDecomposer;
 
+import java.util.*;
 import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
@@ -50,7 +52,7 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2005/02/28 14:26:24 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/09 14:57:55 $
  * @module mapview_v1
  * @author $Author: bass $
  */
@@ -526,5 +528,26 @@ public class Marker extends AbstractNode
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 */
+	public void setCharacteristics(Collection characteristics) {
+		throw new UnsupportedOperationException();
+	}
 
+	/**
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
+	 */
+	public CharacteristicSort getCharacteristicSort() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
+	 */
+	public void setCharacteristics0(Collection characteristics) {
+		throw new UnsupportedOperationException();
+	}
 }

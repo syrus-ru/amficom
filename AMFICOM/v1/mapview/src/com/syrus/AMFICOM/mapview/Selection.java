@@ -1,5 +1,5 @@
 /**
- * $Id: Selection.java,v 1.4 2005/02/09 15:14:37 krupenn Exp $
+ * $Id: Selection.java,v 1.5 2005/03/09 14:57:55 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ package com.syrus.AMFICOM.mapview;
 
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
@@ -29,8 +30,8 @@ import java.util.List;
 /**
  * Набор выбранных элементов.
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/02/09 15:14:37 $
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/03/09 14:57:55 $
  * @module mapviewclient_v1
  * @todo copy/paste, properties
  */
@@ -292,7 +293,7 @@ public final class Selection
 	 * {@inheritDoc}
 	 * Suppress since this class is transient 
 	 */
-	public List getCharacteristics() 
+	public Collection getCharacteristics() 
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -423,6 +424,29 @@ public final class Selection
 	 */
 	public java.util.Map getExportMap()
 	{
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 */
+	public void setCharacteristics(Collection characteristics) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
+	 */
+	public CharacteristicSort getCharacteristicSort() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
+	 */
+	public void setCharacteristics0(Collection characteristics) {
 		throw new UnsupportedOperationException();
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: CablePath.java,v 1.5 2005/03/04 14:27:51 krupenn Exp $
+ * $Id: CablePath.java,v 1.6 2005/03/09 14:57:55 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LocalIdentifierGenerator;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.IntPoint;
@@ -29,6 +30,7 @@ import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 
+import java.util.*;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -37,8 +39,8 @@ import java.util.ListIterator;
 
 /**
  * Ёлемент кабельного пути. ќписывает прив€зку кабел€ к топологическим лини€м.
- * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/03/04 14:27:51 $
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/03/09 14:57:55 $
  * @module mapviewclient_v1
  */
 public class CablePath implements MapElement
@@ -241,7 +243,7 @@ public class CablePath implements MapElement
 	/**
 	 * {@inheritDoc}
 	 */
-	public List getCharacteristics() 
+	public Collection getCharacteristics() 
 	{
 		return Collections.unmodifiableList(this.schemeCableLink.characteristicsImpl().getValue());
 	}
@@ -902,6 +904,29 @@ public class CablePath implements MapElement
 	 */
 	public java.util.Map getExportMap()
 	{
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
+	 */
+	public void setCharacteristics(Collection characteristics) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
+	 */
+	public CharacteristicSort getCharacteristicSort() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
+	 */
+	public void setCharacteristics0(Collection characteristics) {
 		throw new UnsupportedOperationException();
 	}
 }
