@@ -21,26 +21,26 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 
 public class TestRequestPanel extends JPanel implements OperationListener {
 
-	private TestRequest				treq;
+	private TestRequest		treq;
 
-	private JTextField				nameTextField	= new JTextField();
+	private JTextField		nameTextField	= new JTextField();
 
-	private JTextField				ownerTextField	= new JTextField();
+	private JTextField		ownerTextField	= new JTextField();
 
-	private JTextField				typeTextField	= new JTextField();
+	private JTextField		typeTextField	= new JTextField();
 
-	private ObjectResourceListBox	testList		= new ObjectResourceListBox();
+	ObjectResourceListBox	testList		= new ObjectResourceListBox();
 
-	private Hashtable				tests;
+	Hashtable				tests;
 
-	private ApplicationContext		aContext;
+	//private ApplicationContext aContext;
 
-	private Dispatcher				dispatcher;
+	Dispatcher				dispatcher;
 
-	private boolean					skip			= false;
+	boolean					skip			= false;
 
 	public TestRequestPanel(ApplicationContext aContext) {
-		this.aContext = aContext;
+		//this.aContext = aContext;
 		initModule(aContext.getDispatcher());
 		try {
 			jbInit();
@@ -172,15 +172,13 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 				MonitoredElement me = (MonitoredElement) testList
 						.getSelectedObjectResource();
 				if (me == null) {
-					aContext.getDispatcher().notify(
-							new TestUpdateEvent(this, null,
-									TestUpdateEvent.TEST_DESELECTED_EVENT));
+					dispatcher.notify(new TestUpdateEvent(this, null,
+							TestUpdateEvent.TEST_DESELECTED_EVENT));
 				} else {
 					skip = true;
 					Test test = (Test) tests.get(me.getId());
-					aContext.getDispatcher().notify(
-							new TestUpdateEvent(this, test,
-									TestUpdateEvent.TEST_SELECTED_EVENT));
+					dispatcher.notify(new TestUpdateEvent(this, test,
+							TestUpdateEvent.TEST_SELECTED_EVENT));
 					skip = false;
 				}
 			}
