@@ -1,5 +1,9 @@
 bak
 classes
+docs
+lib
+resources
+test
 scheme.jpx.local
 scheme.jpx.local~
 scheme.jpx~
@@ -14,4 +18,4 @@ oldsrc
 Makefile
 makescheme
 mk.bat
-Application.properties
+*.properties
