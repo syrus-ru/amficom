@@ -1,0 +1,7 @@
+#!/bin/bash
+
+QPLIB=/mnt/e/Java/Nettest/2.0/lib/rtu
+QPCLASSPATH=$QPLIB/QuestFiberServer.jar:$QPLIB/QuestFiberServerClientInterface.jar:$QPLIB/QuestFiberServerRMI.jar:$QPLIB/QuestFiberGUI.jar
+TRANSCEIVER=../transceiver
+
+exec java -Djava.library.path=$TRANSCEIVER  -classpath ./r6.jar:$QPCLASSPATH com.syrus.AMFICOM.kis.r6.R6
