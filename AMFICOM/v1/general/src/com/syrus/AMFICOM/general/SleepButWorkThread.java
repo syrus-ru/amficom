@@ -1,5 +1,5 @@
 /*
- * $Id: SleepButWorkThread.java,v 1.6 2004/08/17 15:06:45 arseniy Exp $
+ * $Id: SleepButWorkThread.java,v 1.7 2004/08/25 11:04:16 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,8 @@ package com.syrus.AMFICOM.general;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/08/17 15:06:45 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2004/08/25 11:04:16 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -41,7 +41,7 @@ public abstract class SleepButWorkThread extends Thread {
 	
 	protected void sleepCauseOfFall() {
 		if (this.fallsCounter < this.maxFalls) {
-			Log.debugMessage("WARNING: the fall N" + this.fallsCounter + " of " + this.maxFalls  + " maximum", Log.DEBUGLEVEL05);
+			Log.debugMessage("WARNING: the fall No." + this.fallsCounter + " of " + this.maxFalls  + " maximum", Log.DEBUGLEVEL05);
 			try {
 				sleep(this.timeToSleep);
 			}
