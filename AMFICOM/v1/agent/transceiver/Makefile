@@ -2,7 +2,7 @@ OUT=libagenttransceiver.so
 CPP=g++#-3.3.1
 CFLAGS=-Wall -W -Wno-unused-parameter -g
 OBJS=agenttransceiver.o
-AKP=../../akp
+AKP=$(HOME)/work/HW/akp
 AKPA=$(AKP)/akp.a
 
 $(OUT):	$(OBJS) $(AKPA)

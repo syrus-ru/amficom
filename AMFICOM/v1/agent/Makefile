@@ -5,7 +5,7 @@ DADARA=./dadara
 LIB=../lib
 
 ORBCLASSPATH=$(ORACLE_HOME)/lib/aurora_client.jar:$(ORACLE_HOME)/lib/vbjorb.jar:$(ORACLE_HOME)/lib/vbjapp.jar
-APPCLASSPATH=$(LIB)/kisserver.jar:$(LIB)/ServerInterface_General.jar:$(LIB)/util.jar:$(LIB)/io.jar:$(LIB)/dadara.jar
+APPCLASSPATH=$(LIB)/kisserver.jar:$(LIB)/ServerInterface_General.jar:$(LIB)/util.jar:$(LIB)/dadara.jar
 
 JAVAC=javac
 JAVAH=javah
