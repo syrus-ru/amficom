@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.16 2004/09/21 14:28:14 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.17 2004/09/23 10:15:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/09/21 14:28:14 $
+ * @version $Revision: 1.17 $, $Date: 2004/09/23 10:15:20 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -266,20 +266,16 @@ public class MeasurementStorableObjectPool {
 									MonitoredElement me = (MonitoredElement) ConfigurationStorableObjectPool
 											.getStorableObject(id, true);
 									if (me.getDomainId().equals(domain.getId())) {
-										// here we can simple add set to list,
-										// but must put element to start of LRU
-										Object obj = objectPool
-												.get(set.getId());
-										list.add(obj);
+//										// here we can simple add set to list,
+//										// but must put element to start of LRU
+//										Object obj = objectPool.get(set.getId());
+										list.add(set);
 										break;
 									}
 								}
 							} else
 								list.add(set);
 						}
-                        /**
-                         * TODO load missing sets from domain from db
-                         */
 						break;
 					case ObjectEntities.MS_ENTITY_CODE:
 						MeasurementSetup measurementSetup = (MeasurementSetup) storableObject;
@@ -293,21 +289,17 @@ public class MeasurementStorableObjectPool {
 									MonitoredElement me = (MonitoredElement) ConfigurationStorableObjectPool
 											.getStorableObject(id, true);
 									if (me.getDomainId().equals(domain.getId())) {
-										// here we can simple add
-										// measurementSetup to list,
-										// but must put element to start of LRU
-										Object obj = objectPool
-												.get(measurementSetup.getId());
-										list.add(obj);
+//										// here we can simple add
+//										// measurementSetup to list,
+//										// but must put element to start of LRU
+//										Object obj = objectPool.get(measurementSetup.getId());
+										list.add(measurementSetup);
 										break;
 									}
 								}
 							} else
 								list.add(measurementSetup);
 						}
-                        /**
-                         * TODO load missing measurement setup from domain from db
-                         */
 						break;
 					case ObjectEntities.ANALYSIS_ENTITY_CODE:
 						Analysis analysis = (Analysis) storableObject;
@@ -316,16 +308,14 @@ public class MeasurementStorableObjectPool {
 									.getStorableObject(analysis
 											.getMonitoredElementId(), true);
 							if (me.getDomainId().equals(domain.getId())) {
-								// here we can simple add analysis to list,
-								// but must put element to start of LRU
-								Object obj = objectPool.get(analysis.getId());
-								list.add(obj);
+//								// here we can simple add analysis to list,
+//								// but must put element to start of LRU
+//								Object obj = objectPool.get(analysis.getId());
+								list.add(analysis);
+								break;
 							}
 						}
-                        /**
-                         * TODO load missing analysis from domain from db
-                         */
-						break;
+                        break;
 					case ObjectEntities.EVALUATION_ENTITY_CODE:
 						Evaluation evaluation = (Evaluation) storableObject;
 						{
@@ -333,15 +323,13 @@ public class MeasurementStorableObjectPool {
 									.getStorableObject(evaluation
 											.getMonitoredElementId(), true);
 							if (me.getDomainId().equals(domain.getId())) {
-								// here we can simple add evaluation to list,
-								// but must put element to start of LRU
-								Object obj = objectPool.get(evaluation.getId());
-								list.add(obj);
+								// // here we can simple add evaluation to list,
+								// // but must put element to start of LRU
+								// Object obj = objectPool.get(evaluation.getId());
+								list.add(evaluation);
+								break;
 							}
-						}
-                        /**
-                         * TODO load missing evaluation from domain from db
-                         */
+						}                        
 						break;
 					case ObjectEntities.MEASUREMENT_ENTITY_CODE:
 						Measurement measurement = (Measurement) storableObject;
@@ -350,32 +338,27 @@ public class MeasurementStorableObjectPool {
 									.getStorableObject(measurement
 											.getMonitoredElementId(), true);
 							if (me.getDomainId().equals(domain.getId())) {
-								// here we can simple add measurement to list,
-								// but must put element to start of LRU
-								Object obj = objectPool
-										.get(measurement.getId());
-								list.add(obj);
+//								// here we can simple add measurement to list,
+//								// but must put element to start of LRU
+//								Object obj = objectPool.get(measurement.getId());
+								list.add(measurement);
+								break;
 							}
 						}
-                        /**
-                         * TODO load missing measurement from domain from db
-                         */
 						break;
 					case ObjectEntities.TEST_ENTITY_CODE:
 						Test test = (Test) storableObject;
 						{
 							MonitoredElement me = test.getMonitoredElement();
 							if (me.getDomainId().equals(domain.getId())) {
-								// here we can simple add test to list,
-								// but must put element to start of LRU
-								Object obj = objectPool.get(test.getId());
-								list.add(obj);
+//								// here we can simple add test to list,
+//								// but must put element to start of LRU
+//								Object obj = objectPool.get(test.getId());
+								list.add(test);
+								break;
 							}
 						}
-                        /**
-                         * TODO load missing test from domain from db
-                         */
-						break;
+                        break;
 					case ObjectEntities.RESULT_ENTITY_CODE:
 						Result result = (Result) storableObject;
 						Measurement measurement2 = result.getMeasurement();
@@ -384,20 +367,15 @@ public class MeasurementStorableObjectPool {
 									.getStorableObject(measurement2
 											.getMonitoredElementId(), true);
 							if (me.getDomainId().equals(domain.getId())) {
-								// here we can simple add result to list,
-								// but must put element to start of LRU
-								Object obj = objectPool.get(result.getId());
-								list.add(obj);
+//								// here we can simple add result to list,
+//								// but must put element to start of LRU
+//								Object obj = objectPool.get(result.getId());
+								list.add(result);
+								break;
 							}
 						}
-                        /**
-                         * TODO load missing result from domain from db
-                         */
-						break;
-					default:
-                        /**
-                         * FIXME load missing storableObject from domain from db
-                         */
+                        break;
+					default:                        
 						list.add(storableObject);
 						break;
 
@@ -407,6 +385,11 @@ public class MeasurementStorableObjectPool {
 					list.add(storableObject);
 				}
 
+			}
+			
+			for (Iterator it = list.iterator(); it.hasNext();) {
+				StorableObject storableObject = (StorableObject) it.next();
+				objectPool.get(storableObject);				
 			}
 		}
 		return list;
