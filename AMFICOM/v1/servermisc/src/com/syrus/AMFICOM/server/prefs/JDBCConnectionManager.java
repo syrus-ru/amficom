@@ -1,5 +1,5 @@
 /*
- * $Id: JDBCConnectionManager.java,v 1.3 2004/06/07 15:36:09 bass Exp $
+ * $Id: JDBCConnectionManager.java,v 1.4 2004/06/16 07:36:19 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import sqlj.runtime.ExecutionContext;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/06/07 15:36:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2004/06/16 07:36:19 $
+ * @author $Author: krupenn $
  * @module servermisc
  */
 public final class JDBCConnectionManager {
@@ -50,7 +50,7 @@ public final class JDBCConnectionManager {
 			Runtime.getRuntime().addShutdownHook(new Thread() {
 				public void run() {
 					try {
-						execCtx.close();
+						execCtx.cancel();
 					} catch (SQLException sqle) {
 						sqle.printStackTrace();
 					}
