@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractMesurementTestCase.java,v 1.2 2005/02/15 07:39:50 bob Exp $
+ * $Id: AbstractMesurementTestCase.java,v 1.3 2005/03/10 21:08:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/15 07:39:50 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/03/10 21:08:50 $
+ * @author $Author: arseniy $
  * @module tools
  */
 public abstract class AbstractMesurementTestCase extends TestCase {
@@ -74,8 +74,8 @@ public abstract class AbstractMesurementTestCase extends TestCase {
 		Collection domainCollection = null;
 
 		try {
-			userCollection = userDatabase.retrieveByIds(null, null);
-			domainCollection = domainDatabase.retrieveByIds(null, null);
+			userCollection = userDatabase.retrieveByIdsByCondition(null, null);
+			domainCollection = domainDatabase.retrieveByIdsByCondition(null, null);
 		} catch (RetrieveObjectException roe) {
 			roe.printStackTrace();
 		} catch (IllegalDataException ide) {

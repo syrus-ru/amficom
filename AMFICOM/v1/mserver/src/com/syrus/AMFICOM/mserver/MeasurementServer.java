@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.21 2005/03/10 19:37:45 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.22 2005/03/10 21:08:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,15 +8,11 @@
 
 package com.syrus.AMFICOM.mserver;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
@@ -29,7 +25,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
@@ -45,7 +40,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/03/10 19:37:45 $
+ * @version $Revision: 1.22 $, $Date: 2005/03/10 21:08:15 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -180,7 +175,7 @@ public class MeasurementServer extends SleepButWorkThread {
 			MCM mcm = (MCM) it.next();
 			Identifier mcmId = mcm.getId();
 
-			mcmTestQueueMap.put(mcmId, new HashSet());
+			mcmTestQueueMap.put(mcmId, new HashMap());
 
 			activateMCMReferenceWithId(mcmId);
 		}
@@ -201,7 +196,7 @@ public class MeasurementServer extends SleepButWorkThread {
 
 	public void run() {
 		Identifier mcmId;
-		Collection testQueue;
+		Map testQueue;
 		Test_Transferable[] testsT;
 		com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
 		while (this.running) {
@@ -217,7 +212,7 @@ public class MeasurementServer extends SleepButWorkThread {
 
 			for (Iterator it = mcmTestQueueMap.keySet().iterator(); it.hasNext();) {
 				mcmId = (Identifier) it.next();
-				testQueue = (Collection) mcmTestQueueMap.get(mcmId);
+				testQueue = (Map) mcmTestQueueMap.get(mcmId);
 				mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM) mcmRefs.get(mcmId);
 				if (mcmRef != null) {
 					testsT = createTransferables(testQueue);
@@ -276,31 +271,44 @@ public class MeasurementServer extends SleepButWorkThread {
 			kis = (KIS) ConfigurationStorableObjectPool.getStorableObject(measurementPort.getKISId(), true);
 			mcmId = kis.getMCMId();
 
-			Collection testQueue = (Collection) mcmTestQueueMap.get(mcmId);
+			Map testQueue = (Map) mcmTestQueueMap.get(mcmId);
 			if (testQueue != null) {
-				Log.debugMessage("Adding test '" + test.getId() + "' for MCM '" + mcmId + "'", Log.DEBUGLEVEL04);
-				testQueue.add(test);
+				Identifier testId = test.getId();
+				if (!testQueue.containsKey(testId)) {
+					Log.debugMessage("Adding test '" + testId + "' for MCM '" + mcmId + "'", Log.DEBUGLEVEL04);
+					testQueue.put(testId, test);
+				}
 			}
 			else
 				Log.errorMessage("Test queue for mcm id '" + mcmId + "' not found");
 		}
 	}
 
-	private static Test_Transferable[] createTransferables(Collection testQueue) {
+	private static Test_Transferable[] createTransferables(Map testQueue) {
 		Test_Transferable[] testsT = null;
 		if (!testQueue.isEmpty()) {
 			testsT = new Test_Transferable[testQueue.size()];
 			int i = 0;
-			for (Iterator it = testQueue.iterator(); it.hasNext();)
-				testsT[i++] = (Test_Transferable) ((Test) it.next()).getTransferable();
+			Identifier testId;
+			Test test;
+			for (Iterator it = testQueue.keySet().iterator(); it.hasNext();) {
+				testId = (Identifier) it.next();
+				test = (Test) testQueue.get(testId);
+				testsT[i++] = (Test_Transferable) test.getTransferable();
+			}
 		}
 		return testsT;
 	}
 
-	private static void updateTestsStatus(Collection tests, TestStatus status) {
+	private static void updateTestsStatus(Map testQueue, TestStatus status) {
 		try {
-			for (Iterator it = tests.iterator(); it.hasNext();)
-				((Test) it.next()).updateStatus(status, iAm.getUserId());
+			Identifier testId;
+			Test test;
+			for (Iterator it = testQueue.keySet().iterator(); it.hasNext();) {
+				testId = (Identifier) it.next();
+				test = (Test) testQueue.get(testId);
+				test.updateStatus(status, iAm.getUserId());
+			}
 		}
 		catch (UpdateObjectException uoe) {
 			Log.errorException(uoe);
@@ -323,15 +331,19 @@ public class MeasurementServer extends SleepButWorkThread {
 	private void abortTests() {
 		if (this.abortTestsMap != null && ! this.abortTestsMap.isEmpty()) {
 			Identifier mcmId;
-			Collection abortTestQueue;
-			Collection testQueue;
+			Map abortTestQueue;
+			Map testQueue;
 			for (Iterator it = this.abortTestsMap.keySet().iterator(); it.hasNext();) {
 				mcmId = (Identifier) it.next();
-				abortTestQueue = (Collection) this.abortTestsMap.get(mcmId);
+				abortTestQueue = (Map) this.abortTestsMap.get(mcmId);
+				testQueue = (Map) mcmTestQueueMap.get(mcmId);
 
+				Identifier testId;
 				Test test;
-				for (Iterator it1 = abortTestQueue.iterator(); it1.hasNext();) {
-					test = (Test) it1.next();
+				for (Iterator it1 = abortTestQueue.keySet().iterator(); it1.hasNext();) {
+					testId = (Identifier) it1.next();
+
+					test = (Test) abortTestQueue.get(testId);
 					try {
 						test.updateStatus(TestStatus.TEST_STATUS_ABORTED, iAm.getUserId());
 					}
@@ -339,10 +351,9 @@ public class MeasurementServer extends SleepButWorkThread {
 						Log.errorException(uoe);
 					}
 					Log.debugMessage("Test '" + test.getId() + "' set ABORTED", Log.DEBUGLEVEL08);
-				}
 
-				testQueue = (Collection) mcmTestQueueMap.get(mcmId);
-				testQueue.removeAll(abortTestQueue);
+					testQueue.remove(testId);
+				}
 			}
 			
 			this.abortTestsMap.clear();
@@ -355,74 +366,5 @@ public class MeasurementServer extends SleepButWorkThread {
 		this.running = false;
 		deactivateCORBAServer();
 		DatabaseConnection.closeConnection();
-	}
-
-	private static class MCMTestQueueMap {
-		private Map queueMap;	//Map <Identifier mcmId, List <Test> >
-
-		MCMTestQueueMap(List mcmIds) {
-			this.queueMap = Collections.synchronizedMap(new HashMap(mcmIds.size()));
-//			synchronized (mcmIds) {
-				for (Iterator iterator = mcmIds.iterator(); iterator.hasNext();)
-					this.queueMap.put((Identifier)iterator.next(), Collections.synchronizedList(new LinkedList()));
-//			}
-		}
-
-		Iterator getMCMIdsIterator() {
-			return this.queueMap.keySet().iterator();
-		}
-
-		List getQueue(Identifier mcmId) {
-			return (List)this.queueMap.get(mcmId);
-		}
-//
-//		List removeQueue(Identifier mcmId) {
-//			return (List)this.queueMap.put(mcmId, Collections.synchronizedList(new LinkedList()));
-//		}
-
-		void createQueue(Identifier mcmId) {
-			List queue = new ArrayList();
-			this.queueMap.put(mcmId, queue);
-		}
-
-		void addTests(Identifier mcmId, Collection tests) {
-			List queue = (List) this.queueMap.get(mcmId);
-			if (queue != null) {
-				Test test;
-				for (Iterator it = tests.iterator(); it.hasNext();) {
-					test = (Test) it.next();
-					if (!queue.contains(test)) {
-						try {
-							MeasurementStorableObjectPool.putStorableObject(test);
-						}
-						catch (IllegalObjectEntityException ioee) {
-							Log.errorException(ioee);
-						}
-						queue.add(test);
-						Log.debugMessage("Added test '" + test.getId() + "' for MCM '" + mcmId + "'", Log.DEBUGLEVEL08);
-					}
-					else
-						Log.debugMessage("Test '" + test.getId() + "'  already in map for MCM '" + mcmId + "'", Log.DEBUGLEVEL08);
-				}
-			}
-			else
-				Log.errorMessage("Test queue for mcm id '" + mcmId + "' not found");
-		}
-
-		void remove(Identifier mcmId, Test test) {
-			List queue = (List)this.queueMap.get(mcmId);
-			if (queue != null)
-				queue.remove(test);
-			else
-				Log.errorMessage("Test queue for mcm id '" + mcmId + "' not found");
-		}
-
-		void remove(Identifier mcmId, List tests) {
-			List queue = (List)this.queueMap.get(mcmId);
-			if (queue != null)
-				queue.removeAll(tests);
-			else
-				Log.errorMessage("Test queue for mcm id '" + mcmId + "' not found");
-		}
 	}
 }

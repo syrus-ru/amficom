@@ -1,5 +1,5 @@
 /*
- * $Id: TestTestCase.java,v 1.4 2005/02/15 07:39:50 bob Exp $
+ * $Id: TestTestCase.java,v 1.5 2005/03/10 21:08:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/15 07:39:50 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/03/10 21:08:50 $
+ * @author $Author: arseniy $
  * @module tools
  */
 public class TestTestCase extends AbstractMesurementTestCase {
@@ -106,10 +106,18 @@ public class TestTestCase extends AbstractMesurementTestCase {
 
 		Date startDate = new Date(System.currentTimeMillis());
 
-		Test test = Test.createInstance(creatorId, startDate,
-			new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24), temporalPettern, temporalType, measurementType,
-			analysisType, evaluationType, me, TestReturnType.TEST_RETURN_TYPE_WHOLE, "cretated by TestTestCase at "
-					+ DatabaseDate.SDF.format(startDate), measurementSetupIds);
+		Test test = Test.createInstance(creatorId,
+				startDate,
+				new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24),
+				temporalPettern.getId(),
+				temporalType,
+				measurementType.getId(),
+				analysisType.getId(),
+				evaluationType.getId(),
+				me,
+				TestReturnType.TEST_RETURN_TYPE_WHOLE,
+				"cretated by TestTestCase at " + DatabaseDate.SDF.format(startDate),
+				measurementSetupIds);
 
 		testDatabase.insert(test);
 
@@ -172,9 +180,18 @@ public class TestTestCase extends AbstractMesurementTestCase {
 		Date startDate = new Date(System.currentTimeMillis());
 		Date endDate = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24);
 
-		Test test = Test.createInstance(creatorId, startDate, endDate, temporalPettern, temporalType, measurementType,
-			analysisType, evaluationType, me, TestReturnType.TEST_RETURN_TYPE_WHOLE, "cretated by TestTestCase at "
-					+ DatabaseDate.SDF.format(startDate), measurementSetupIds);
+		Test test = Test.createInstance(creatorId,
+				startDate,
+				endDate,
+				temporalPettern.getId(),
+				temporalType,
+				measurementType.getId(),
+				analysisType.getId(),
+				evaluationType.getId(),
+				me,
+				TestReturnType.TEST_RETURN_TYPE_WHOLE,
+				"cretated by TestTestCase at " + DatabaseDate.SDF.format(startDate),
+				measurementSetupIds);
 
 		MeasurementStorableObjectPool.putStorableObject(test);
 
@@ -200,62 +217,71 @@ public class TestTestCase extends AbstractMesurementTestCase {
 
 	}
 
-	public void _testCreationSimpleTest() throws CreateObjectException, ObjectNotFoundException,
-			RetrieveObjectException, IllegalDataException {
-		TestDatabase testDatabase = (TestDatabase) MeasurementDatabaseContext.getTestDatabase();
-		MeasurementSetupDatabase measurementSetupDatabase = (MeasurementSetupDatabase) MeasurementDatabaseContext
-				.getMeasurementSetupDatabase();
-		MeasurementTypeDatabase measurementTypeDatabase = (MeasurementTypeDatabase) MeasurementDatabaseContext
-				.getMeasurementTypeDatabase();
-		MonitoredElementDatabase monitoredElementDatabase = (MonitoredElementDatabase) ConfigurationDatabaseContext
-				.getMonitoredElementDatabase();
-
-		TestTemporalType temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME;
-		Collection list = testDatabase.retrieveByIds(null, TestWrapper.COLUMN_TEMPORAL_TYPE
-				+ StorableObjectDatabase.EQUALS + temporalType.value());
-
-		Collection measurementSetupList = measurementSetupDatabase.retrieveAll();
-
-		if (measurementSetupList.isEmpty())
-			fail("must be at less one measurement setup at db");
-
-		List measurementSetupIds = new ArrayList();
-		measurementSetupIds.add(((MeasurementSetup) measurementSetupList.iterator().next()).getId());
-
-		Collection measurementTypeList = measurementTypeDatabase.retrieveAll();
-
-		if (measurementTypeList.isEmpty())
-			fail("must be at less one measurement type at db");
-
-		MeasurementType measurementType = (MeasurementType) measurementTypeList.iterator().next();
-
-		Collection monitoredElementList = monitoredElementDatabase.retrieveAll();
-
-		if (monitoredElementList.isEmpty())
-			fail("must be at less one monitored element at db");
-
-		MonitoredElement me = (MonitoredElement) monitoredElementList.iterator().next();
-
-		AnalysisType analysisType = null;
-
-		EvaluationType evaluationType = null;
-
-		TemporalPattern temporalPettern = null;
-
-		Test test = Test.createInstance(creatorId, new Date(System.currentTimeMillis()), null, temporalPettern,
-			temporalType, measurementType, analysisType, evaluationType, me, TestReturnType.TEST_RETURN_TYPE_WHOLE,
-			"cretated by TestTestCase", measurementSetupIds);
-
-		testDatabase.insert(test);
-
-		Test test3 = new Test(test.getId());
-
-		assertEquals(test, test3);
-
-		if (!list.isEmpty())
-			testDatabase.delete(test);
-
-	}
+//	public void _testCreationSimpleTest() throws CreateObjectException, ObjectNotFoundException,
+//			RetrieveObjectException, IllegalDataException {
+//		TestDatabase testDatabase = (TestDatabase) MeasurementDatabaseContext.getTestDatabase();
+//		MeasurementSetupDatabase measurementSetupDatabase = (MeasurementSetupDatabase) MeasurementDatabaseContext
+//				.getMeasurementSetupDatabase();
+//		MeasurementTypeDatabase measurementTypeDatabase = (MeasurementTypeDatabase) MeasurementDatabaseContext
+//				.getMeasurementTypeDatabase();
+//		MonitoredElementDatabase monitoredElementDatabase = (MonitoredElementDatabase) ConfigurationDatabaseContext
+//				.getMonitoredElementDatabase();
+//
+//		TestTemporalType temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME;
+//		Collection list = testDatabase.retrieveByIdsByCondition(null, TestWrapper.COLUMN_TEMPORAL_TYPE
+//				+ StorableObjectDatabase.EQUALS + temporalType.value());
+//
+//		Collection measurementSetupList = measurementSetupDatabase.retrieveAll();
+//
+//		if (measurementSetupList.isEmpty())
+//			fail("must be at less one measurement setup at db");
+//
+//		List measurementSetupIds = new ArrayList();
+//		measurementSetupIds.add(((MeasurementSetup) measurementSetupList.iterator().next()).getId());
+//
+//		Collection measurementTypeList = measurementTypeDatabase.retrieveAll();
+//
+//		if (measurementTypeList.isEmpty())
+//			fail("must be at less one measurement type at db");
+//
+//		MeasurementType measurementType = (MeasurementType) measurementTypeList.iterator().next();
+//
+//		Collection monitoredElementList = monitoredElementDatabase.retrieveAll();
+//
+//		if (monitoredElementList.isEmpty())
+//			fail("must be at less one monitored element at db");
+//
+//		MonitoredElement me = (MonitoredElement) monitoredElementList.iterator().next();
+//
+//		AnalysisType analysisType = null;
+//
+//		EvaluationType evaluationType = null;
+//
+//		TemporalPattern temporalPettern = null;
+//
+//		Test test = Test.createInstance(creatorId,
+//				new Date(System.currentTimeMillis()),
+//				null,
+//				temporalPettern.getId(),
+//				temporalType,
+//				measurementType.getId(),
+//				analysisType.getId(),
+//				evaluationType.getId(),
+//				me,
+//				TestReturnType.TEST_RETURN_TYPE_WHOLE,
+//				"cretated by TestTestCase",
+//				measurementSetupIds);
+//
+//		testDatabase.insert(test);
+//
+//		Test test3 = new Test(test.getId());
+//
+//		assertEquals(test, test3);
+//
+//		if (!list.isEmpty())
+//			testDatabase.delete(test);
+//
+//	}
 
 	public void _testCreationContinualTest() throws CreateObjectException, ObjectNotFoundException,
 			RetrieveObjectException, IllegalDataException {
@@ -303,10 +329,18 @@ public class TestTestCase extends AbstractMesurementTestCase {
 
 		TemporalPattern temporalPettern = null;
 
-		Test test = Test.createInstance(creatorId, new Date(System.currentTimeMillis()), new Date(System
-				.currentTimeMillis()
-				+ 1000 * 60 * 60 * 14), temporalPettern, temporalType, measurementType, analysisType, evaluationType,
-			me, TestReturnType.TEST_RETURN_TYPE_WHOLE, "cretated by TestTestCase", measurementSetupIds);
+		Test test = Test.createInstance(creatorId,
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 14),
+				temporalPettern.getId(),
+				temporalType,
+				measurementType.getId(),
+				analysisType.getId(),
+				evaluationType.getId(),
+				me,
+				TestReturnType.TEST_RETURN_TYPE_WHOLE,
+				"cretated by TestTestCase",
+				measurementSetupIds);
 
 		testDatabase.insert(test);
 
@@ -329,13 +363,13 @@ public class TestTestCase extends AbstractMesurementTestCase {
 		}
 	}
 
-	public void _testRetriveByCondition() throws RetrieveObjectException, IllegalDataException {
-
-		TestDatabase testDatabase = (TestDatabase) MeasurementDatabaseContext.getTestDatabase();
-
-		TestTemporalType temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL;
-		Collection collection = testDatabase.retrieveByIds(null, TestWrapper.COLUMN_TEMPORAL_TYPE
-				+ StorableObjectDatabase.EQUALS + temporalType.value());
-	}
+//	public void _testRetriveByCondition() throws RetrieveObjectException, IllegalDataException {
+//
+//		TestDatabase testDatabase = (TestDatabase) MeasurementDatabaseContext.getTestDatabase();
+//
+//		TestTemporalType temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL;
+//		Collection collection = testDatabase.retrieveByIds(null, TestWrapper.COLUMN_TEMPORAL_TYPE
+//				+ StorableObjectDatabase.EQUALS + temporalType.value());
+//	}
 
 }

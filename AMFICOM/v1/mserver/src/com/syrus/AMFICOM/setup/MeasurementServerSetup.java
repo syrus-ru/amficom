@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServerSetup.java,v 1.29 2005/03/10 12:52:46 arseniy Exp $
+ * $Id: MeasurementServerSetup.java,v 1.30 2005/03/10 21:08:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -70,7 +70,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/03/10 12:52:46 $
+ * @version $Revision: 1.30 $, $Date: 2005/03/10 21:08:15 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -844,9 +844,9 @@ public final class MeasurementServerSetup {
 					null,
 					null,
 					TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME,
-					measurementType,
-					analysisType,
-					evaluationType,
+					measurementType.getId(),
+					analysisType.getId(),
+					evaluationType.getId(),
 					monitoredElement,
 					TestReturnType.TEST_RETURN_TYPE_WHOLE,
 					"Onetime test",
@@ -880,11 +880,11 @@ public final class MeasurementServerSetup {
 			Test test = Test.createInstance(creatorId,
 					new Date(System.currentTimeMillis()),
 					new Date(System.currentTimeMillis() + 1000 * 60 * 30),
-					temporalPattern,
+					temporalPattern.getId(),
 					TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL,
-					measurementType,
-					analysisType,
-					evaluationType,
+					measurementType.getId(),
+					analysisType.getId(),
+					evaluationType.getId(),
 					monitoredElement,
 					TestReturnType.TEST_RETURN_TYPE_WHOLE,
 					"Onetime test",
