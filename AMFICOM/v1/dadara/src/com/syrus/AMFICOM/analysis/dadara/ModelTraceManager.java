@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.12 2005/02/28 13:02:21 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.13 2005/02/28 15:28:02 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.12 $, $Date: 2005/02/28 13:02:21 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/28 15:28:02 $
  * @module
  */
 public class ModelTraceManager
@@ -628,6 +628,7 @@ public class ModelTraceManager
 		}
 	}
 
+	/*
 	// определяем, к какому DY-порогу лучше относится данная точка
 	// при выборе между A и A граница порога - посередине между порогами,
 	// при выборе между A и L - по уровню Y = (Y_A + Y_L)/2
@@ -668,6 +669,7 @@ public class ModelTraceManager
 		// note: empty tDY would cause return of -1
 		return tDY.length - 1;
 	}
+	*/
 
 	private ArrayList getAllThreshByNEvent(int nEvent)
 	{
@@ -778,7 +780,6 @@ public class ModelTraceManager
 			int thId = mf.findResponsibleThreshDYID(tDX, tDY, bestKey, bestX);
 			if (thId == -1)
 				return null;
-			//int thId = getNearestThreshDYByX(bestKey, bestX);
 			ThresholdHandleDY handle = new ThresholdHandleDY(thId, bestKey, bestX, bestY, 0.001);
 			handle.posY = getThresholdY(bestKey, handle.posX);
 			return handle;
