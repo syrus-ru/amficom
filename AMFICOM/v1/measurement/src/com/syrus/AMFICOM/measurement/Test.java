@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.90 2005/03/25 12:14:37 arseniy Exp $
+ * $Id: Test.java,v 1.91 2005/03/30 08:04:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -48,8 +48,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.90 $, $Date: 2005/03/25 12:14:37 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.91 $, $Date: 2005/03/30 08:04:20 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -274,7 +274,7 @@ public class Test extends StorableObject {
 			}
 		}
 		else
-			throw new CreateObjectException("Cannot find measurement setup for test '" + this.id);
+			throw new CreateObjectException("Cannot find measurement setup for test '" + this.id + '\'');
 
 		this.testDatabase = MeasurementDatabaseContext.testDatabase;
 	}
