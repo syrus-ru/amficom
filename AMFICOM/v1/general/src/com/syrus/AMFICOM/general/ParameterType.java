@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.8 2005/02/10 18:57:34 arseniy Exp $
+ * $Id: ParameterType.java,v 1.9 2005/02/14 09:09:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/10 18:57:34 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/14 09:09:46 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -101,7 +101,7 @@ public class ParameterType extends StorableObjectType {
 					description,
 					name,
 					dataType.value());
-			parameterType.setChanged();
+			parameterType.changed = true;
 			return parameterType;
 		}
 		catch (IllegalObjectEntityException e) {
