@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.20 2004/09/08 10:59:12 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.21 2004/09/09 06:46:36 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/09/08 10:59:12 $
+ * @version $Revision: 1.21 $, $Date: 2004/09/09 06:46:36 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -539,8 +539,12 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		}
 	}	
 	
-	public List retrieveAll() throws IllegalDataException, RetrieveObjectException {
-		return retriveByIdsOneQuery(null, null);
+	public List retrieveAll() throws RetrieveObjectException {
+		try{
+			return retrieveByIds(null, null);
+		}catch(IllegalDataException ide){
+			throw new RetrieveObjectException(ide);
+		}
 	}
 	
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {

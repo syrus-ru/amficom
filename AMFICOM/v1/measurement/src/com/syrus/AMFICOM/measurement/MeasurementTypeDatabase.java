@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.24 2004/09/08 10:59:12 bob Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.25 2004/09/09 06:46:36 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/09/08 10:59:12 $
+ * @version $Revision: 1.25 $, $Date: 2004/09/09 06:46:36 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -397,8 +397,12 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		return (MeasurementType) list.get(0);
 	}
 	
-	public List retrieveAll() throws IllegalDataException, RetrieveObjectException {
-		return retriveByIdsOneQuery(null, null);
+	public List retrieveAll() throws RetrieveObjectException {
+		try{
+			return retrieveByIds(null, null);
+		}catch(IllegalDataException ide){
+			throw new RetrieveObjectException(ide);
+		}
 	}
 	
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
