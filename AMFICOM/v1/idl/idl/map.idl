@@ -1,5 +1,5 @@
 /*
- * $Id: map.idl,v 1.11 2004/11/12 14:39:41 bass Exp $
+ * $Id: map.idl,v 1.12 2004/11/22 12:02:17 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,6 +23,9 @@ module CORBA
 {
 module Map
 {
+	/**
+	 * протоэлемент (тип) сетевого узла
+	 */
 	struct MapNodeProtoElement_Transferable
 	{
 #ifdef SERVER
@@ -45,6 +48,11 @@ module Map
 		wstring name;
 		wstring description;
 
+		/**
+		 * ссылка на изображение. поскольку разные узлы могут иметь
+		 * (и как правило имеют) одинаковый изображения, они ссылаются
+		 * на один экземпляр изображения, который должен подгружаться отдельно
+		 */
 		wstring symbolId;
 
 		long long modified;
@@ -56,6 +64,9 @@ module Map
 	};
 	typedef sequence <MapNodeProtoElement_Transferable> MapNodeProtoElementSeq_Transferable;
 
+	/**
+	 * протоэлемент (тип) тоннеля
+	 */
 	struct MapLinkProtoElement_Transferable
 	{
 #ifdef SERVER
@@ -79,18 +90,35 @@ module Map
 	};
 	typedef sequence <MapLinkProtoElement_Transferable> MapLinkProtoElementSeq_Transferable;
 
+	/**
+	 * сетевой узел
+	 */
 	struct MapSiteElement_Transferable
 	{
 		wstring id;
 		wstring name;
 		wstring description;
-		wstring longitude;		// anchor
-		wstring latitude;		// anchor
+		wstring longitude;
+		wstring latitude;
 
+		/**
+		 * карта (Map_Transferable), на которой лежит сетевой узел. теоретически
+		 * узел может лежать в нескольких картах, в этом случае при подгрузке
+		 * каждой карты экземпляр узла будет иметь ссылки на соотвутствующую
+		 * карту
+		 */
 		wstring mapId;
 
+		/**
+		 * идентификатор изображения узла. поскольку разные узлы могут иметь
+		 * (и как правило имеют) одинаковый изображения, они ссылаются
+		 * на один экземпляр изображения, который должен подгружаться отдельно
+		 */
 		wstring symbolId;
 
+		/**
+		 * ссылка на тип сетевого узла (MapNodeProtoElement_Transferable)
+		 */
 		wstring mapProtoId;
 
 		long long modified;
@@ -156,6 +184,10 @@ module Map
 	typedef sequence<MapElement_Transferable> MapElementSeq_Transferable;
 #endif // SERVER
 
+	/**
+	 * топологический узел (ТУ). ТУ нужен для форматрования изгиба тоннеля,
+	 * поэтому характеризуется принадлежностью к тоннелю
+	 */
 	struct MapPhysicalNodeElement_Transferable
 	{
 #ifdef SERVER
@@ -178,10 +210,24 @@ module Map
 		wstring longitude;
 		wstring latitude;
 
+		/**
+		 * карта (Map_Transferable), на которой лежит ТУ. теоретически
+		 * узел может лежать в нескольких картах, в этом случае при подгрузке
+		 * каждой карты экземпляр узла будет иметь ссылки на соотвутствующую
+		 * карту
+		 */
 		wstring mapId;
 
+		/**
+		 * тоннель, которому принадлежит ТУ
+		 * (MapPhysicalLinkElement_Transferable)
+		 */
 		wstring physicalLinkId;
 
+		/**
+		 * false если ТУ является концевым для тоннеля и true если лежит 
+		 * в серединетоннеля
+		 */
 		boolean active;
 
 		General::ElementAttributeSeq_Transferable attributes;
@@ -189,6 +235,10 @@ module Map
 	};
 	typedef sequence <MapPhysicalNodeElement_Transferable> MapPhysicalNodeElementSeq_Transferable;
 
+	/**
+	 * фрагмент тоннеля. тоннель предстявляет собой набор фрагментов, 
+	 * разделенных ТУ
+	 */
 	struct MapNodeLinkElement_Transferable
 	{
 #ifdef SERVER
@@ -205,10 +255,32 @@ module Map
 		wstring id;
 		wstring name;
 
+		/**
+		 * карта (Map_Transferable), на которой лежит сетевой узел. теоретически
+		 * узел может лежать в нескольких картах, в этом случае при подгрузке
+		 * каждой карты экземпляр узла будет иметь ссылки на соотвутствующую
+		 * карту
+		 */
 		wstring mapId;
 
+		/**
+		 * тоннель, частью которого является фрагмент 
+		 * (MapPhysicalLinkElement_Transferable)
+		 */
 		wstring physicalLinkId;
+		
+		/**
+		 * один концевой узел фрагмента 
+		 * (может быть MapPhysicalNodeElement_Transferable или
+		 * MapSiteElement_Transferable)
+		 */
 		wstring startNodeId;
+
+		/**
+		 * другой концевой узел фрагмента
+		 * (может быть MapPhysicalNodeElement_Transferable или
+		 * MapSiteElement_Transferable)
+		 */
 		wstring endNodeId;
 
 		double length;
@@ -218,6 +290,10 @@ module Map
 	};
 	typedef sequence <MapNodeLinkElement_Transferable> MapNodeLinkElementSeq_Transferable;
 
+	/**
+	 * тоннель. тоннель представляет собой набор фрагментов, разделенных ТУ.
+	 * тоннель соединяет сетевые узлы или неактивные ТУ
+	 */
 	struct MapPhysicalLinkElement_Transferable
 	{
 #ifdef SERVER
@@ -239,11 +315,31 @@ module Map
 		wstring name;
 		wstring description;
 
+		/**
+		 * карта (Map_Transferable), на которой лежит сетевой узел. теоретически
+		 * узел может лежать в нескольких картах, в этом случае при подгрузке
+		 * каждой карты экземпляр узла будет иметь ссылки на соотвутствующую
+		 * карту
+		 */
 		wstring mapId;
 
+		/**
+		 * ссылка на тип сетевого узла (MapLinkProtoElement_Transferable)
+		 */
 		wstring mapProtoId;
 
+		/**
+		 * один концевой узел фрагмента 
+		 * (может быть MapPhysicalNodeElement_Transferable или
+		 * MapSiteElement_Transferable)
+		 */
 		wstring startNodeId;
+
+		/**
+		 * другой концевой узел фрагмента
+		 * (может быть MapPhysicalNodeElement_Transferable или
+		 * MapSiteElement_Transferable)
+		 */
 		wstring endNodeId;
 
 		wstring city;
@@ -255,7 +351,12 @@ module Map
 
 		boolean leftToRight;
 		boolean topToBottom;
+		boolean horizontalVertical;
 
+		/**
+		 * список идентификаторов фрагментов (MapNodeLinkElement_Transferable),
+		 * из которых состоит тоннель
+		 */
 		::CORBA::WStringSeq nodeLinkIds;
 
 		General::ElementAttributeSeq_Transferable attributes;
@@ -265,6 +366,9 @@ module Map
 	typedef MapPhysicalLinkElement_Transferable MapPhysicalLinkElement;
 	typedef sequence<MapPhysicalLinkElement> MapPhysicalLinkElementSeq;
 
+	/**
+	 * метка - точечный объект на тоннеле
+	 */
 	struct MapMarkElement_Transferable
 	{
 #ifdef SERVER
@@ -286,8 +390,18 @@ module Map
 		wstring longitude;
 		wstring latitude;
 
+		/**
+		 * карта (Map_Transferable), на которой лежит сетевой узел. теоретически
+		 * узел может лежать в нескольких картах, в этом случае при подгрузке
+		 * каждой карты экземпляр узла будет иметь ссылки на соотвутствующую
+		 * карту
+		 */
 		wstring mapId;
 
+		/**
+		 * тоннель, на котором находится метка
+		 * (MapPhysicalLinkElement_Transferable)
+		 */
 		wstring physicalLinkId;
 
 		double distance;
@@ -301,16 +415,30 @@ module Map
 	};
 	typedef sequence <MapMarkElement_Transferable> MapMarkElementSeq_Transferable;
 
+	/**
+	 * коллектор. коллектор состоит из тоннелей. каждый тоннель может входить
+	 * только в один коллектор (а может не входить ни в один)
+	 */
 	struct MapPipePathElement_Transferable
 	{
 		wstring id;
 		wstring name;
 		wstring description;
 
+		/**
+		 * карта (Map_Transferable), на которой лежит сетевой узел. теоретически
+		 * узел может лежать в нескольких картах, в этом случае при подгрузке
+		 * каждой карты экземпляр узла будет иметь ссылки на соотвутствующую
+		 * карту
+		 */
 		wstring mapId;
 
 		General::ElementAttributeSeq_Transferable attributes;
 
+		/**
+		 * список идентификаторов тоннелей (MapPhysicalLinkElement_Transferable),
+		 * который входят в коллектор
+		 */
 		::CORBA::WStringSeq physicalLinkIds;
 	};
 	typedef sequence <MapPipePathElement_Transferable> MapPipePathElementSeq_Transferable;
@@ -341,6 +469,12 @@ module Map
 	typedef sequence<MapPathElement_Transferable> MapPathElementSeq_Transferable;
 #endif // SERVER
 
+	/**
+	 * структура канализационной схемы ("карта").
+	 * карта представляет собой набор сетевых узлов, связанных друг с другом
+	 * тоннелями. тонели состоят из фрагментов и топологических узлов и могут
+	 * содержать на себе метки. тоннели могут объединяться в коллекторы
+	 */
 	struct Map_Transferable
 	{
 #ifdef SERVER		
@@ -399,19 +533,29 @@ module Map
 		wstring modifiedBy;
 
 		/**
-		 * Sequence of ids of <code>Node</code> class descendants.
+		 * список идентификаторов сетевых узлов (MapSiteElement_Transferable)
 		 */
 		::CORBA::WStringSeq siteIds;
 		/**
-		 * Sequence of ids of <code>Node</code> class descendants.
+		 * список идентификаторов топологических узлов 
+		 * (MapPhysicalNodeElement_Transferable)
 		 */
 		::CORBA::WStringSeq nodeIds;
 		/**
-		 * Sequence of <code>NodeLink</code> ids.
+		 * список идентификаторов фрагментов (MapNodeLinkElement_Transferable)
 		 */
 		::CORBA::WStringSeq nodeLinkIds;
+		/**
+		 * список идентификаторов тоннелей MapPhysicalLinkElement_Transferable
+		 */
 		::CORBA::WStringSeq physicalLinkIds;
+		/**
+		 * список идентификаторов меток (MapMarkElement_Transferable)
+		 */
 		::CORBA::WStringSeq markIds;
+		/**
+		 * список идентификаторов коллекторов (MapPipePathElement_Transferable
+		 */
 		::CORBA::WStringSeq collectorIds;
 #endif // SERVER
 	};
@@ -419,6 +563,10 @@ module Map
 	typedef Map_Transferable Map;
 	typedef sequence<Map> MapSeq;
 
+	/**
+	 * Вид карты. Включает в себя канализационную схему и список физических
+	 * схем
+	 */
 	struct MapView_Transferable
 	{
 		wstring id;
@@ -437,7 +585,15 @@ module Map
 		double scale;
 		double defaultScale;
 
+		/**
+		 * карта, которую отображает вид
+		 */
 		wstring mapId;
+		
+		/**
+		 * список идентификаторов физических схем, прокладка которых
+		 * отображается в виде
+		 */
 		::CORBA::WStringSeq schemeIds;
 	};
 	typedef sequence <MapView_Transferable> MapViewSeq_Transferable;
