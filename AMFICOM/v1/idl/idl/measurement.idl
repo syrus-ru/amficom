@@ -38,6 +38,8 @@ module corba {
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable in_parameter_type_ids;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable out_parameter_type_ids;
 	};
+	
+	typedef sequence <MeasurementType_Transferable> MeasurementTypeSeq_Transferable;
 
 	struct AnalysisType_Transferable {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
@@ -54,6 +56,8 @@ module corba {
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable etalon_parameter_type_ids;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable out_parameter_type_ids;
 	};
+	
+	typedef sequence <AnalysisType_Transferable> AnalysisTypeSeq_Transferable;
 
 	struct EvaluationType_Transferable {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
@@ -70,6 +74,8 @@ module corba {
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable etalon_parameter_type_ids;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable out_parameter_type_ids;
 	};
+	
+	typedef sequence <EvaluationType_Transferable> EvaluationTypeSeq_Transferable;
 
 /////////////////// Parameter and Set /////////////////////
 
@@ -102,6 +108,8 @@ module corba {
 		ParameterSeq_Transferable parameters;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable monitored_element_ids;
 	};
+	
+	typedef sequence <Set_Transferable> SetSeq_Transferable;
 
 /////////////////// Measurement /////////////////////
 
@@ -120,6 +128,8 @@ module corba {
 		long long measurement_duration;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable monitored_element_ids;
 	};
+	
+	typedef sequence <MeasurementSetup_Transferable> MeasurementSetupSeq_Transferable;
 
 	enum MeasurementStatus {
 		MEASUREMENT_STATUS_SCHEDULED,
