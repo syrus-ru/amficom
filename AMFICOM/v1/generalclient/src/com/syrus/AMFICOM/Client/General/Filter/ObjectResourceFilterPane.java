@@ -124,8 +124,7 @@ public class ObjectResourceFilterPane extends JScrollPane
 
 	GridBagLayout gridBagLayout1 = new GridBagLayout();
 
-	JCheckBox templateCheckBox = new JCheckBox ("задать параметры условия при реализации отчёта");
-
+	private JCheckBox templateCheckBox = new JCheckBox ("задать параметры условия при реализации отчёта");
 
 //	private JButton applyButton = new JButton();
 
@@ -502,10 +501,6 @@ repaint();
 							new GridBagConstraints(4, 6, 1, 1, 0.0, 0.0
 				,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 2), 0, 0));
 
-		mainPanel.add(templateCheckBox,
-							new GridBagConstraints(0, 3, 8, 1, 0.0, 0.0
-				,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 2), 0, 0));
-
 //		jPanel.add(applyButton, new XYConstraints(68, 395, 125, 26));
 
 		this.getViewport().add(mainPanel, null);
@@ -735,6 +730,16 @@ repaint();
 			curComponent.setEnabled(!curState);
 		}
 	}
+  
+  public void setTemplateCBEnabled (boolean state)
+  {
+    if (state)
+      mainPanel.add(templateCheckBox,
+                new GridBagConstraints(0, 3, 8, 1, 0.0, 0.0
+          ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 2), 0, 0));
+    else
+      mainPanel.remove(templateCheckBox);
+  }
 }
 
 class MyCriteriaListRenderer extends DefaultListCellRenderer

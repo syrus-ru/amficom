@@ -414,6 +414,8 @@ public class SelectReportsPanel extends JInternalFrame implements
 			dataset,
 			aContext,
 			this.ownerWindow);
+    
+    ((SetRestrictionsWindow)additionalPanel).orfp.setTemplateCBEnabled (true);
 
 		aContext.getDispatcher().notify(
 			new OperationEvent(additionalPanel, 0,
