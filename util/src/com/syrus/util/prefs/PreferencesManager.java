@@ -1,5 +1,5 @@
 /*
- * $Id: PreferencesManager.java,v 1.4 2004/06/29 08:19:01 bass Exp $
+ * $Id: PreferencesManager.java,v 1.5 2004/07/30 11:03:38 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 /**
  * @todo PREFS LOCATION: local or db
  *
- * @version $Revision: 1.4 $, $Date: 2004/06/29 08:19:01 $
+ * @version $Revision: 1.5 $, $Date: 2004/07/30 11:03:38 $
  * @author $Author: bass $
  * @module util
  */
@@ -77,36 +77,6 @@ public final class PreferencesManager {
 		}			
 	}
 
-	private static String getNodeFQN(Preferences node) {
-		try {
-			return getNodeFQN(node.parent()) + '/' + node.name();
-		} catch (NullPointerException npe) {
-			return node.name();
-		}
-	}
-
-	private static void processNode(Preferences node) {
-		System.out.println(getNodeFQN(node));
-		String keys[];
-		String childrenNames[];
-		try {
-			keys = node.keys();
-		} catch (BackingStoreException bse) {
-			keys = new String[0];
-		}
-		for (int i = 0; i < keys.length; i ++) {
-			String key = keys[i];
-			System.out.println("\t\"" + key + "\" = \"" + node.get(key, "") + '"');
-		}
-		try {
-			childrenNames = node.childrenNames();
-		} catch (BackingStoreException bse) {
-			childrenNames = new String[0];
-		}
-		for (int i = 0; i < childrenNames.length; i ++)
-			processNode(node.node(childrenNames[i]));
-	}
-
 	private static DefaultMutableTreeNode getTreeNode(Preferences node) {
 		DefaultMutableTreeNode defaultMutableTreeNode = new DefaultMutableTreeNode(new PreferencesHolder(node), true);
 		String childrenNames[];
@@ -145,11 +115,11 @@ public final class PreferencesManager {
 		}
 
 		public Preferences getPreferences() {
-			return preferences;
+			return this.preferences;
 		}
 
 		public String toString() {
-			return preferences.name();
+			return this.preferences.name();
 		}
 	}
 }
