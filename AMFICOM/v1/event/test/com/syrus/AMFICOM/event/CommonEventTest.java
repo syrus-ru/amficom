@@ -1,5 +1,5 @@
 /*
- * $Id: CommonEventTest.java,v 1.6 2005/02/28 15:36:27 arseniy Exp $
+ * $Id: CommonEventTest.java,v 1.7 2005/03/01 16:51:36 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/28 15:36:27 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/01 16:51:36 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -140,8 +140,7 @@ public abstract class CommonEventTest extends TestCase {
 				new CableThreadDatabase());
 		EventDatabaseContext.init(new EventTypeDatabase(),
 				new EventDatabase(),
-				new EventSourceDatabase(),
-				new EventParameterDatabase());
+				new EventSourceDatabase());
 	}
 
 	private static void initSessionContext() {
