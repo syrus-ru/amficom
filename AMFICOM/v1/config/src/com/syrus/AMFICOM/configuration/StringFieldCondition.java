@@ -1,5 +1,5 @@
 /*
- * $Id: StringFieldCondition.java,v 1.9 2005/01/14 11:27:48 bass Exp $
+ * $Id: StringFieldCondition.java,v 1.10 2005/01/14 18:07:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,9 +17,9 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/01/14 11:27:48 $
- * @author $Author: bass $
- * @module measurement_v1
+ * @version $Revision: 1.10 $, $Date: 2005/01/14 18:07:08 $
+ * @author $Author: arseniy $
+ * @module config_v1
  */
 public class StringFieldCondition implements StorableObjectCondition {
 
@@ -55,49 +55,15 @@ public class StringFieldCondition implements StorableObjectCondition {
 		this(string, entityCode, StringFieldSort.STRINGSORT_BASE);		
 	}
 
-	
-	/**
-	 * @return <code>true</code>
-	 *         <ul>
-	 * 
-	 * <li>if {@link #entityCode} is {@link User} and sort is STRINGSORT_USERLOGIN for all users for
-	 * login equals string;</li>
-	 * <li>if {@link #entityCode} is {@link User} and sort is STRINGSORT_USERNAME for all users for
-	 * name equals string;</li>
-	 * 
-	 * </ul>
-	 */
+
 	public boolean isConditionTrue(Object object) throws ApplicationException {
 		boolean condition = false;
-		if (object instanceof User){			
-			User user = (User)object;
-			switch(this.sort){
-				case StringFieldSort._STRINGSORT_BASE:
-				case StringFieldSort._STRINGSORT_USERLOGIN:
-					if (user.getLogin().equals(this.string)){
-						condition = true;						
-					}
-					break;
-				case StringFieldSort._STRINGSORT_USERNAME:
-					if (user.getName().equals(this.string)){
-						condition = true;
-					}
-					break;
-			}
-		} else if (object instanceof Domain){
-			Domain domain = (Domain)object;
-			switch(this.sort){
-				case StringFieldSort._STRINGSORT_BASE:
-					if (domain.getName().equals(this.string)){
-						condition = true;						
-					}
-					break;
-			}
-		}
+	/**
+	 * @todo write something expressive
+	 */
 		return condition;
 	}
-	
-	
+
 	public boolean isNeedMore(List list) throws ApplicationException {
 		boolean needMore = true;
 		if(list != null){

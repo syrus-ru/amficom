@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.56 2004/12/27 21:01:43 arseniy Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.57 2005/01/14 18:07:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,9 +27,9 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2004/12/27 21:01:43 $
+ * @version $Revision: 1.57 $, $Date: 2005/01/14 18:07:07 $
  * @author $Author: arseniy $
- * @module configuration_v1
+ * @module config_v1
  */
 
 public final class ConfigurationStorableObjectPool extends StorableObjectPool {
@@ -37,20 +37,13 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 	private static final int			OBJECT_POOL_MAP_SIZE			= 16;		/* Number of entities */
 
 	private static final int			CABLETHREADTYPE_OBJECT_POOL_SIZE	= 4;
-	private static final int			CHARACTERISTICTYPE_OBJECT_POOL_SIZE	= 9;
 	private static final int			EQUIPMENTTYPE_OBJECT_POOL_SIZE		= 1;
 	private static final int			LINKTYPE_OBJECT_POOL_SIZE	= 2;
 	// private static final int			KISTYPE_OBJECT_POOL_SIZE		= 1;
 	private static final int			PORTTYPE_OBJECT_POOL_SIZE		= 1;
 	private static final int			MEASUREMENTPORTTYPE_OBJECT_POOL_SIZE	= 1;
 
-	private static final int			CHARACTERISTIC_OBJECT_POOL_SIZE		= 4;
 	private static final int			LINK_OBJECT_POOL_SIZE	= 2;
-	private static final int			PERMATTR_OBJECT_POOL_SIZE		= 4;
-	private static final int			USER_OBJECT_POOL_SIZE			= 4;
-	private static final int			DOMAIN_OBJECT_POOL_SIZE			= 4;
-	private static final int			SERVER_OBJECT_POOL_SIZE			= 4;
-	private static final int			MCM_OBJECT_POOL_SIZE			= 4;
 	private static final int			EQUIPMENT_OBJECT_POOL_SIZE		= 2;
 	private static final int			PORT_OBJECT_POOL_SIZE			= 2;
 	private static final int			TRANSPATH_OBJECT_POOL_SIZE		= 4;
@@ -64,7 +57,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 	private ConfigurationStorableObjectPool() {
 		// singleton
 	}
-	
+
 	private ConfigurationStorableObjectPool(Class cacheMapClass) {
 		super(cacheMapClass);
 	}
@@ -72,64 +65,50 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 	public static void init(ConfigurationObjectLoader cObjectLoader1, final int size) {
 		if (instance == null)
 			instance = new ConfigurationStorableObjectPool();
-		
+
 		instance.objectPoolMap = Collections.synchronizedMap(new Hashtable(OBJECT_POOL_MAP_SIZE));
-		
+
 		cObjectLoader = cObjectLoader1;
-		
+
 		instance.addObjectPool(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE, size);
 		// instance.addObjectPool(ObjectEntities.KISTYPE_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.LINKTYPE_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.PORTTYPE_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.CHARACTERISTIC_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.PERMATTR_ENTITY_CODE, size);		
 		instance.addObjectPool(ObjectEntities.LINK_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.USER_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.DOMAIN_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.SERVER_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.MCM_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.EQUIPMENT_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.PORT_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.TRANSPATH_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.KIS_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.ME_ENTITY_CODE, size);
-		
+
 		instance.populatePools();		
 	}
 
 	public static void init(ConfigurationObjectLoader cObjectLoader1) {
 		if (instance == null)
 			instance = new ConfigurationStorableObjectPool();
-		
+
 		instance.objectPoolMap = Collections.synchronizedMap(new Hashtable(OBJECT_POOL_MAP_SIZE));
 
 		cObjectLoader = cObjectLoader1;
-		
+
 		instance.addObjectPool(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE, CABLETHREADTYPE_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, CHARACTERISTICTYPE_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE, EQUIPMENTTYPE_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.LINKTYPE_ENTITY_CODE, LINKTYPE_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.PORTTYPE_ENTITY_CODE, PORTTYPE_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE, MEASUREMENTPORTTYPE_OBJECT_POOL_SIZE);
 
-		instance.addObjectPool(ObjectEntities.CHARACTERISTIC_ENTITY_CODE, CHARACTERISTIC_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.PERMATTR_ENTITY_CODE, PERMATTR_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.USER_ENTITY_CODE, USER_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.LINK_ENTITY_CODE, LINK_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.DOMAIN_ENTITY_CODE, DOMAIN_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.SERVER_ENTITY_CODE, SERVER_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.MCM_ENTITY_CODE, MCM_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.EQUIPMENT_ENTITY_CODE, EQUIPMENT_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.PORT_ENTITY_CODE, PORT_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.TRANSPATH_ENTITY_CODE, TRANSPATH_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.KIS_ENTITY_CODE, KIS_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, MEASUREMENTPORT_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.ME_ENTITY_CODE, ME_OBJECT_POOL_SIZE);
-		
+
 		instance.populatePools();
 	}
 
@@ -182,9 +161,6 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 	protected StorableObject loadStorableObject(Identifier objectId) throws DatabaseException, CommunicationException {
 		StorableObject storableObject;
 		switch (objectId.getMajor()) {
-			case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
-				storableObject = cObjectLoader.loadCharacteristicType(objectId);
-				break;
 			case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
 				storableObject = cObjectLoader.loadCableThreadType(objectId);
 				break;
@@ -199,25 +175,6 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 				break;
 			case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
 				storableObject = cObjectLoader.loadMeasurementPortType(objectId);
-				break;
-			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-				storableObject = cObjectLoader.loadCharacteristic(objectId);
-				break;
-			//			case ObjectEntities.PERMATTR_ENTITY_CODE:
-			//				storableObject =
-			// cObjectLoader.loadPermissionAttributes(objectId);
-			//				break;
-			case ObjectEntities.USER_ENTITY_CODE:
-				storableObject = cObjectLoader.loadUser(objectId);
-				break;
-			case ObjectEntities.DOMAIN_ENTITY_CODE:
-				storableObject = cObjectLoader.loadDomain(objectId);
-				break;
-			case ObjectEntities.SERVER_ENTITY_CODE:
-				storableObject = cObjectLoader.loadServer(objectId);
-				break;
-			case ObjectEntities.MCM_ENTITY_CODE:
-				storableObject = cObjectLoader.loadMCM(objectId);
 				break;
 			case ObjectEntities.EQUIPMENT_ENTITY_CODE:
 				storableObject = cObjectLoader.loadEquipment(objectId);
@@ -253,9 +210,6 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 				case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
 					loadedList = cObjectLoader.loadCableThreadTypes(ids);
 					break;
-				case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
-					loadedList = cObjectLoader.loadCharacteristicTypes(ids);
-					break;
 				case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
 					loadedList = cObjectLoader.loadEquipmentTypes(ids);
 					break;
@@ -267,25 +221,6 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 					break;
 				case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
 					loadedList = cObjectLoader.loadMeasurementPortTypes(ids);
-					break;
-				case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-					loadedList = cObjectLoader.loadCharacteristics(ids);
-					break;
-				//			case ObjectEntities.PERMATTR_ENTITY_CODE:
-				//				loadedList =
-				// cObjectLoader.loadPermissionAttributes(ids);
-				//				break;
-				case ObjectEntities.USER_ENTITY_CODE:
-					loadedList = cObjectLoader.loadUsers(ids);
-					break;
-				case ObjectEntities.DOMAIN_ENTITY_CODE:
-					loadedList = cObjectLoader.loadDomains(ids);
-					break;
-				case ObjectEntities.SERVER_ENTITY_CODE:
-					loadedList = cObjectLoader.loadServers(ids);
-					break;
-				case ObjectEntities.MCM_ENTITY_CODE:
-					loadedList = cObjectLoader.loadMCMs(ids);
 					break;
 				case ObjectEntities.EQUIPMENT_ENTITY_CODE:
 					loadedList = cObjectLoader.loadEquipments(ids);
@@ -323,9 +258,6 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 				case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
 					loadedList = cObjectLoader.loadCableThreadTypesButIds(condition, ids);
 					break;
-				case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
-					loadedList = cObjectLoader.loadCharacteristicTypesButIds(condition, ids);
-					break;
 				case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
 					loadedList = cObjectLoader.loadEquipmentTypesButIds(condition, ids);
 					break;
@@ -337,25 +269,6 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 					break;
 				case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
 					loadedList = cObjectLoader.loadMeasurementPortTypesButIds(condition, ids);
-					break;
-				case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-					loadedList = cObjectLoader.loadCharacteristicsButIds(condition, ids);
-					break;
-				//			case ObjectEntities.PERMATTR_ENTITY_CODE:
-				//				loadedList =
-				// cObjectLoader.loadPermissionAttributessButIds(condition, ids);
-				//				break;
-				case ObjectEntities.USER_ENTITY_CODE:
-					loadedList = cObjectLoader.loadUsersButIds(condition, ids);
-					break;
-				case ObjectEntities.DOMAIN_ENTITY_CODE:
-					loadedList = cObjectLoader.loadDomainsButIds(condition, ids);
-					break;
-				case ObjectEntities.SERVER_ENTITY_CODE:
-					loadedList = cObjectLoader.loadServersButIds(condition, ids);
-					break;
-				case ObjectEntities.MCM_ENTITY_CODE:
-					loadedList = cObjectLoader.loadMCMsButIds(condition, ids);
 					break;
 				case ObjectEntities.EQUIPMENT_ENTITY_CODE:
 					loadedList = cObjectLoader.loadEquipmentsButIds(condition, ids);
@@ -397,12 +310,6 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 					else
 						cObjectLoader.saveCableThreadTypes(list, force);
 					break;
-				case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
-					if (alone)
-						cObjectLoader.saveCharacteristicType((CharacteristicType) list.get(0), force);
-					else
-						cObjectLoader.saveCharacteristicTypes(list, force);
-					break;
 				case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
 					if (alone)
 						cObjectLoader.saveEquipmentType((EquipmentType) list.get(0), force);
@@ -426,36 +333,6 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 						cObjectLoader.saveMeasurementPortType((MeasurementPortType) list.get(0), force);
 					else
 						cObjectLoader.saveMeasurementPortTypes(list, force);
-					break;
-				case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-					if (alone)
-						cObjectLoader.saveCharacteristic((Characteristic) list.get(0), force);
-					else
-						cObjectLoader.saveCharacteristics(list, force);
-					break;
-				case ObjectEntities.USER_ENTITY_CODE:
-					if (alone)
-						cObjectLoader.saveUser((User) list.get(0), force);
-					else
-						cObjectLoader.saveUsers(list, force);
-					break;
-				case ObjectEntities.DOMAIN_ENTITY_CODE:
-					if (alone)
-						cObjectLoader.saveDomain((Domain) list.get(0), force);
-					else
-						cObjectLoader.saveDomains(list, force);
-					break;
-				case ObjectEntities.SERVER_ENTITY_CODE:
-					if (alone)
-						cObjectLoader.saveServer((Server) list.get(0), force);
-					else
-						cObjectLoader.saveServers(list, force);
-					break;
-				case ObjectEntities.MCM_ENTITY_CODE:
-					if (alone)
-						cObjectLoader.saveMCM((MCM) list.get(0), force);
-					else
-						cObjectLoader.saveMCMs(list, force);
 					break;
 				case ObjectEntities.EQUIPMENT_ENTITY_CODE:
 					if (alone)
@@ -538,7 +415,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 			throw new CommunicationException("ConfigurationStorableObjectPool.deleteStorableObject", e);
 		}
 	}
-	
+
 	protected void deleteStorableObjects(List ids) throws DatabaseException, CommunicationException {
 		try {
 			cObjectLoader.delete(ids);

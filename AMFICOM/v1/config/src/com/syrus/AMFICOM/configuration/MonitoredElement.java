@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.34 2004/12/28 12:45:28 arseniy Exp $
+ * $Id: MonitoredElement.java,v 1.35 2005/01/14 18:07:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,13 +24,14 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/12/28 12:45:28 $
+ * @version $Revision: 1.35 $, $Date: 2005/01/14 18:07:08 $
  * @author $Author: arseniy $
- * @module configuration_v1
+ * @module config_v1
  */
 
 public class MonitoredElement extends DomainMember {
@@ -131,7 +132,8 @@ public class MonitoredElement extends DomainMember {
 								sort,
 								localAddress,
 								monitoredDomainMemberIds);
-		} catch (IllegalObjectEntityException e) {
+		}
+		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("MonitoredElement.createInstance | cannot generate identifier ", e);
 		}
 	}
@@ -146,28 +148,13 @@ public class MonitoredElement extends DomainMember {
 		}
 	}
 
-//	public static MonitoredElement getInstance(MonitoredElement_Transferable met) throws CreateObjectException {
-//		MonitoredElement me = new MonitoredElement(met);
-//		
-//		me.monitoredElementDatabase = ConfigurationDatabaseContext.monitoredElementDatabase;
-//		try {
-//			if (me.monitoredElementDatabase != null)
-//				me.monitoredElementDatabase.insert(me);
-//		}
-//		catch (IllegalDataException ide) {
-//			throw new CreateObjectException(ide.getMessage(), ide);
-//		}
-//		
-//		return me;
-//	}
-	
 	public Object getTransferable() {
 		Identifier_Transferable[] mdmIds = new Identifier_Transferable[this.monitoredDomainMemberIds.size()];
 		int i = 0;
 		for (Iterator it = this.monitoredDomainMemberIds.iterator(); it.hasNext();)
 			mdmIds[i++] = (Identifier_Transferable)((Identifier)it.next()).getTransferable();
 		return new MonitoredElement_Transferable(super.getHeaderTransferable(),
-												 (Identifier_Transferable)super.domainId.getTransferable(),
+												 (Identifier_Transferable)this.getDomainId().getTransferable(),
 												 this.name,
 												 (Identifier_Transferable)this.measurementPortId.getTransferable(),
 												 MonitoredElementSort.from_int(this.sort),
@@ -218,19 +205,19 @@ public class MonitoredElement extends DomainMember {
 
 	protected synchronized void setMonitoredDomainMemberIds(List monitoredDomainMemberIds) {
 		this.monitoredDomainMemberIds.clear();
-	     if (monitoredDomainMemberIds != null)
-	     	this.monitoredDomainMemberIds.addAll(monitoredDomainMemberIds);
-	     super.currentVersion = super.getNextVersion();
+		if (monitoredDomainMemberIds != null)
+			this.monitoredDomainMemberIds.addAll(monitoredDomainMemberIds);
+		super.currentVersion = super.getNextVersion();
 	}
-	
+
 	public String getName() {
 		return this.name;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public List getDependencies() {
 		List dependencies = new LinkedList();
 		dependencies.addAll(this.monitoredDomainMemberIds);

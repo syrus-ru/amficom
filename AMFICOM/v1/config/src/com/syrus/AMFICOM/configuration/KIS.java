@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.47 2004/12/28 12:45:28 arseniy Exp $
+ * $Id: KIS.java,v 1.48 2005/01/14 18:07:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,14 +24,18 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterized;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.administration.DomainMember;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2004/12/28 12:45:28 $
+ * @version $Revision: 1.48 $, $Date: 2005/01/14 18:07:08 $
  * @author $Author: arseniy $
- * @module configuration_v1
+ * @module config_v1
  */
 
 public class KIS extends DomainMember implements Characterized {
@@ -84,7 +88,7 @@ public class KIS extends DomainMember implements Characterized {
 		try {
 			this.characteristics = new ArrayList(kt.characteristic_ids.length);
 			for (int i = 0; i < kt.characteristic_ids.length; i++)
-				this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(kt.characteristic_ids[i]), true));
+				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(kt.characteristic_ids[i]), true));
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
@@ -132,13 +136,13 @@ public class KIS extends DomainMember implements Characterized {
 	 * @throws CreateObjectException
 	 */
 	public static KIS createInstance(Identifier creatorId,
-									 Identifier domainId,
-									 String name,
-									 String description,
-									 String hostname,
-									 short tcpPort,
-									 Identifier equipmentId,
-									 Identifier mcmId) throws CreateObjectException {
+											 Identifier domainId,
+											 String name,
+											 String description,
+											 String hostname,
+											 short tcpPort,
+											 Identifier equipmentId,
+											 Identifier mcmId) throws CreateObjectException {
 		if (creatorId == null || domainId == null || name == null || 
 				description == null || hostname == null || equipmentId == null || mcmId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
@@ -153,7 +157,8 @@ public class KIS extends DomainMember implements Characterized {
 					tcpPort,
 					equipmentId,
 					mcmId);
-		} catch (IllegalObjectEntityException e) {
+		}
+		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("KIS.createInstance | cannot generate identifier ", e);
 		}
 	}
@@ -168,43 +173,27 @@ public class KIS extends DomainMember implements Characterized {
 		}
 	}
 
-//	public static KIS getInstance(KIS_Transferable kt) throws CreateObjectException{
-//		
-//		KIS kis = new KIS(kt);
-//		
-//		kis.kisDatabase = ConfigurationDatabaseContext.kisDatabase;
-//		try {
-//			if (kis.kisDatabase != null)
-//				kis.kisDatabase.insert(kis);
-//		}
-//		catch (IllegalDataException ide) {
-//			throw new CreateObjectException(ide.getMessage(), ide);
-//		}
-//		
-//		return kis;
-//	}
-
 	public Object getTransferable() {
 		int i = 0;
 		Identifier_Transferable[] mportIds = new Identifier_Transferable[this.measurementPortIds.size()];
 		for (Iterator iterator = this.measurementPortIds.iterator(); iterator.hasNext();)
 			mportIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
-		
-        i = 0;
-        Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
-        for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
-            charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
-        
+
+		i = 0;
+		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
+		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
+			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
+
 		return new KIS_Transferable(super.getHeaderTransferable(),
-																(Identifier_Transferable)super.domainId.getTransferable(),
-																new String(this.name),
-																new String(this.description),
-																this.hostname,
-																this.tcpPort,
-																(Identifier_Transferable)this.equipmentId.getTransferable(),
-																(Identifier_Transferable)this.mcmId.getTransferable(),
-                                                                charIds,
-																mportIds);
+															(Identifier_Transferable)this.getDomainId().getTransferable(),
+															new String(this.name),
+															new String(this.description),
+															this.hostname,
+															this.tcpPort,
+															(Identifier_Transferable)this.equipmentId.getTransferable(),
+															(Identifier_Transferable)this.mcmId.getTransferable(),
+															charIds,
+															mportIds);
 	}
 
 	public String getName() {
@@ -215,16 +204,16 @@ public class KIS extends DomainMember implements Characterized {
 		return this.description;
 	}
 
-	public void setDescription(String description){
+	public void setDescription(String description) {
 		this.description = description;
 		super.currentVersion = super.getNextVersion();
 	}
 
-	public String getHostName(){
+	public String getHostName() {
 		return this.hostname;
 	}
 
-	public short getTCPPort(){
+	public short getTCPPort() {
 		return this.tcpPort;
 	}
 
@@ -235,12 +224,12 @@ public class KIS extends DomainMember implements Characterized {
 	public Identifier getMCMId() {
 		return this.mcmId;
 	}
-	
+
 	public void setMCMId(Identifier mcmId) {
 		this.mcmId = mcmId;
 		super.currentVersion = super.getNextVersion();
 	}
-	
+
 	public List getMeasurementPortIds() {
 		return this.measurementPortIds;
 	}
@@ -255,21 +244,21 @@ public class KIS extends DomainMember implements Characterized {
 	}
 
 	protected synchronized void setAttributes(Date created,
-											  Date modified,
-											  Identifier creatorId,
-											  Identifier modifierId,
-											  Identifier domainId,
-											  String name,
-											  String description,
-											  String hostname,
-											  short tcpPort,
-											  Identifier equipmentId,
-											  Identifier mcmId) {
+													Date modified,
+													Identifier creatorId,
+													Identifier modifierId,
+													Identifier domainId,
+													String name,
+													String description,
+													String hostname,
+													short tcpPort,
+													Identifier equipmentId,
+													Identifier mcmId) {
 		super.setAttributes(created,
-			modified,
-			creatorId,
-			modifierId,
-			domainId);
+							modified,
+							creatorId,
+							modifierId,
+							domainId);
 		this.name = name;
 		this.description = description;
 		this.hostname = hostname;
@@ -280,46 +269,48 @@ public class KIS extends DomainMember implements Characterized {
 
 	protected synchronized void setMeasurementPortIds(List measurementPortIds) {
 		this.measurementPortIds.clear();
-        if (measurementPortIds != null)
-                this.measurementPortIds.addAll(measurementPortIds);
-        super.currentVersion = super.getNextVersion();
+		if (measurementPortIds != null)
+			this.measurementPortIds.addAll(measurementPortIds);
+		super.currentVersion = super.getNextVersion();
 	}
-	
+
 	public List getDependencies() {
 		List dependencies = new LinkedList();
 		dependencies.add(this.equipmentId);
 		dependencies.add(this.mcmId);
 		dependencies.addAll(this.measurementPortIds);
-        dependencies.addAll(this.characteristics);
+		dependencies.addAll(this.characteristics);
 		return dependencies;
 	}
-    
+
 	public void addCharacteristic(Characteristic characteristic) {
-		if (characteristic != null){
+		if (characteristic != null) {
 			this.characteristics.add(characteristic);
 			super.currentVersion = super.getNextVersion();
 		}
 	}
-	
+
 	public void removeCharacteristic(Characteristic characteristic) {
-		if (characteristic != null){
+		if (characteristic != null) {
 			this.characteristics.remove(characteristic);
 			super.currentVersion = super.getNextVersion();
 		}
 	}
 
 	public List getCharacteristics() {
-        return Collections.unmodifiableList(this.characteristics);
-    }
-    
-    protected void setCharacteristics0(final List characteristics) {
-        this.characteristics.clear();
-        if (characteristics != null)
-                this.characteristics.addAll(characteristics);
-    }
-    
-    public void setCharacteristics(final List characteristics) {
-        this.setCharacteristics0(characteristics);
-        super.currentVersion = super.getNextVersion();
-    }
+		return Collections.unmodifiableList(this.characteristics);
+	}
+
+	protected void setCharacteristics0(final List characteristics) {
+		if (characteristics != null)
+			this.characteristics.clear();
+		else
+			this.characteristics = new LinkedList();
+		this.characteristics.addAll(characteristics);
+	}
+
+	public void setCharacteristics(final List characteristics) {
+		this.setCharacteristics0(characteristics);
+		super.currentVersion = super.getNextVersion();
+	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.50 2004/12/29 15:25:46 arseniy Exp $
+ * $Id: KISDatabase.java,v 1.51 2005/01/14 18:07:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,11 +20,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.CharacteristicDatabase;
+import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -34,15 +35,19 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.VersionCollisionException;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.DomainMember;
+import com.syrus.AMFICOM.administration.DomainCondition;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2004/12/29 15:25:46 $
+ * @version $Revision: 1.51 $, $Date: 2005/01/14 18:07:08 $
  * @author $Author: arseniy $
- * @module configuration_v1
+ * @module config_v1
  */
 
 public class KISDatabase extends StorableObjectDatabase {
@@ -91,7 +96,7 @@ public class KISDatabase extends StorableObjectDatabase {
 	}
 
 	protected String getUpdateMultiplySQLValues(int mode) {
-		if (updateMultiplySQLValues == null){
+		if (updateMultiplySQLValues == null) {
 			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -122,8 +127,8 @@ public class KISDatabase extends StorableObjectDatabase {
 		KIS kis = this.fromStorableObject(storableObject);
 		super.retrieveEntity(kis);
 		this.retrieveKISMeasurementPortIds(kis);
-        CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
-        kis.setCharacteristics0(characteristicDatabase.retrieveCharacteristics(kis.getId(), CharacteristicSort.CHARACTERISTIC_SORT_KIS));
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
+		kis.setCharacteristics0(characteristicDatabase.retrieveCharacteristics(kis.getId(), CharacteristicSort.CHARACTERISTIC_SORT_KIS));
 	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
@@ -465,23 +470,25 @@ public class KISDatabase extends StorableObjectDatabase {
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		KIS kis = this.fromStorableObject(storableObject);
 		super.insertEntity(kis);	
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
 		try {
 			characteristicDatabase.updateCharacteristics(kis);
-		} catch (UpdateObjectException e) {
+		}
+		catch (UpdateObjectException e) {
 			throw new CreateObjectException(e);
 		}
 	}
 
 	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
 		try {
 			characteristicDatabase.updateCharacteristics(storableObjects);
-		} catch (UpdateObjectException e) {
+		}
+		catch (UpdateObjectException e) {
 			throw new CreateObjectException(e);
 		}
-	}	
+	}
 
 	public void update(StorableObject storableObject, int updateKind, Object obj)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
@@ -495,7 +502,7 @@ public class KISDatabase extends StorableObjectDatabase {
 				super.checkAndUpdateEntity(kis, false);
 				break;
 		}
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
 		characteristicDatabase.updateCharacteristics(kis);
 	}
 
@@ -510,7 +517,7 @@ public class KISDatabase extends StorableObjectDatabase {
 			super.checkAndUpdateEntities(storableObjects, false);
 			break;
 		}
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
 		characteristicDatabase.updateCharacteristics(storableObjects);
 	}
 
@@ -536,13 +543,13 @@ public class KISDatabase extends StorableObjectDatabase {
 		if (list != null && !list.isEmpty()) {
 			retrieveKISMeasurementPortIdsByOneQuery(list);
 			retrieveMonitoredElementsByOneQuery(list);
-            CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
-            Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_KIS);
-            for (Iterator iter = list.iterator(); iter.hasNext();) {
-                KIS kis = (KIS) iter.next();
-                List characteristics = (List)characteristicMap.get(kis);
-                kis.setCharacteristics0(characteristics);
-            }
+				CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
+				Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_KIS);
+				for (Iterator iter = list.iterator(); iter.hasNext();) {
+					KIS kis = (KIS) iter.next();
+					List characteristics = (List)characteristicMap.get(kis);
+					kis.setCharacteristics0(characteristics);
+				}
 		}
         
 		return list;
@@ -562,7 +569,8 @@ public class KISDatabase extends StorableObjectDatabase {
 		return list;
 	}
 
-	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException, IllegalDataException {
+	public List retrieveByCondition(List ids, StorableObjectCondition condition)
+			throws RetrieveObjectException, IllegalDataException {
 		List list;
 		if (condition instanceof DomainCondition) {
 			DomainCondition domainCondition = (DomainCondition)condition;

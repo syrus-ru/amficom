@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationDatabaseContext.java,v 1.34 2004/12/10 10:08:04 arseniy Exp $
+ * $Id: ConfigurationDatabaseContext.java,v 1.35 2005/01/14 18:07:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,16 +11,15 @@ package com.syrus.AMFICOM.configuration;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/12/10 10:08:04 $
+ * @version $Revision: 1.35 $, $Date: 2005/01/14 18:07:07 $
  * @author $Author: arseniy $
  * @todo Declare all fields private as<ol>
  *       <li>they have public accessors; and</li>
  *       <li>there's {@link #init(StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase)}
  *       method which is supposed to be the only modifier for class' fields.</li></ol>
- * @module configuration_v1
+ * @module config_v1
  */
 public final class ConfigurationDatabaseContext {
-	protected static StorableObjectDatabase characteristicTypeDatabase;
 	protected static StorableObjectDatabase equipmentTypeDatabase;
 	protected static StorableObjectDatabase portTypeDatabase;
 	protected static StorableObjectDatabase measurementPortTypeDatabase;
@@ -28,11 +27,6 @@ public final class ConfigurationDatabaseContext {
 	protected static StorableObjectDatabase cableLinkTypeDatabase;
 	protected static StorableObjectDatabase cableThreadTypeDatabase;
 	protected static StorableObjectDatabase transmissionPathTypeDatabase;
-	protected static StorableObjectDatabase characteristicDatabase;
-	protected static StorableObjectDatabase userDatabase;
-	protected static StorableObjectDatabase domainDatabase;
-	protected static StorableObjectDatabase serverDatabase;
-	protected static StorableObjectDatabase mcmDatabase;
 	protected static StorableObjectDatabase equipmentDatabase;
 	protected static StorableObjectDatabase portDatabase;
 	protected static StorableObjectDatabase measurementPortDatabase;
@@ -46,18 +40,12 @@ public final class ConfigurationDatabaseContext {
 		// private constructor 
 	}
 
-	public static void init(final StorableObjectDatabase characteristicTypeDatabase,
-			final StorableObjectDatabase equipmentTypeDatabase,
+	public static void init(final StorableObjectDatabase equipmentTypeDatabase,
 			final StorableObjectDatabase portTypeDatabase,
 			final StorableObjectDatabase measurementPortTypeDatabase,
 			final StorableObjectDatabase linkTypeDatabase,
 			final StorableObjectDatabase cableLinkTypeDatabase,
 			final StorableObjectDatabase cableThreadTypeDatabase,
-			final StorableObjectDatabase characteristicDatabase,
-			final StorableObjectDatabase userDatabase,
-			final StorableObjectDatabase domainDatabase,
-			final StorableObjectDatabase serverDatabase,
-			final StorableObjectDatabase mcmDatabase,
 			final StorableObjectDatabase equipmentDatabase,
 			final StorableObjectDatabase portDatabase,
 			final StorableObjectDatabase measurementPortDatabase,
@@ -67,18 +55,12 @@ public final class ConfigurationDatabaseContext {
 			final StorableObjectDatabase monitoredElementDatabase,
 			final StorableObjectDatabase linkDatabase,
 			final StorableObjectDatabase cableThreadDatabase) {
-		ConfigurationDatabaseContext.characteristicTypeDatabase = characteristicTypeDatabase;
 		ConfigurationDatabaseContext.equipmentTypeDatabase = equipmentTypeDatabase;
 		ConfigurationDatabaseContext.portTypeDatabase = portTypeDatabase;
 		ConfigurationDatabaseContext.measurementPortTypeDatabase = measurementPortTypeDatabase;
 		ConfigurationDatabaseContext.linkTypeDatabase = linkTypeDatabase;
 		ConfigurationDatabaseContext.cableLinkTypeDatabase = cableLinkTypeDatabase;
 		ConfigurationDatabaseContext.cableThreadTypeDatabase = cableThreadTypeDatabase;
-		ConfigurationDatabaseContext.characteristicDatabase = characteristicDatabase;
-		ConfigurationDatabaseContext.userDatabase = userDatabase;
-		ConfigurationDatabaseContext.domainDatabase = domainDatabase;
-		ConfigurationDatabaseContext.serverDatabase = serverDatabase;
-		ConfigurationDatabaseContext.mcmDatabase = mcmDatabase;
 		ConfigurationDatabaseContext.equipmentDatabase = equipmentDatabase;
 		ConfigurationDatabaseContext.portDatabase = portDatabase;
 		ConfigurationDatabaseContext.measurementPortDatabase = measurementPortDatabase;
@@ -88,18 +70,6 @@ public final class ConfigurationDatabaseContext {
 		ConfigurationDatabaseContext.monitoredElementDatabase = monitoredElementDatabase;
 		ConfigurationDatabaseContext.linkDatabase = linkDatabase;
 		ConfigurationDatabaseContext.cableThreadDatabase = cableThreadDatabase;
-	}
-
-	public static StorableObjectDatabase getCharacteristicDatabase() {
-		return characteristicDatabase;
-	}
-
-	public static StorableObjectDatabase getCharacteristicTypeDatabase() {
-		return characteristicTypeDatabase;
-	}
-
-	public static StorableObjectDatabase getDomainDatabase() {
-		return domainDatabase;
 	}
 
 	public static StorableObjectDatabase getEquipmentDatabase() {
@@ -134,10 +104,6 @@ public final class ConfigurationDatabaseContext {
         return cableLinkTypeDatabase;
     }
 
-	public static StorableObjectDatabase getMCMDatabase() {
-		return mcmDatabase;
-	}
-
 	public static StorableObjectDatabase getMeasurementPortDatabase() {
 		return measurementPortDatabase;
 	}
@@ -158,19 +124,11 @@ public final class ConfigurationDatabaseContext {
 		return portTypeDatabase;
 	}
 
-	public static StorableObjectDatabase getServerDatabase() {
-		return serverDatabase;
-	}
-
 	public static StorableObjectDatabase getTransmissionPathDatabase() {
 		return transmissionPathDatabase;
 	}
 
 	public static StorableObjectDatabase getTransmissionPathTypeDatabase() {
 		return transmissionPathTypeDatabase;
-	}
-
-	public static StorableObjectDatabase getUserDatabase() {
-		return userDatabase;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationObjectLoader.java,v 1.23 2004/11/23 16:20:11 max Exp $
+ * $Id: ConfigurationObjectLoader.java,v 1.24 2005/01/14 18:07:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,16 +18,14 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/11/23 16:20:11 $
- * @author $Author: max $
- * @module configuration_v1
+ * @version $Revision: 1.24 $, $Date: 2005/01/14 18:07:07 $
+ * @author $Author: arseniy $
+ * @module config_v1
  */
 
 public interface ConfigurationObjectLoader {
 
 	CableThreadType loadCableThreadType(Identifier id) throws DatabaseException, CommunicationException;
-
-	CharacteristicType loadCharacteristicType(Identifier id) throws DatabaseException, CommunicationException;
 
 	EquipmentType loadEquipmentType(Identifier id) throws DatabaseException, CommunicationException;
 
@@ -35,21 +33,9 @@ public interface ConfigurationObjectLoader {
 
 	MeasurementPortType loadMeasurementPortType(Identifier id) throws DatabaseException, CommunicationException;
 
-	Characteristic loadCharacteristic(Identifier id) throws DatabaseException, CommunicationException;
-
 	LinkType loadLinkType(Identifier id) throws DatabaseException, CommunicationException;
 
 	TransmissionPathType loadTransmissionPathType(Identifier id) throws DatabaseException, CommunicationException;
-
-//	PermissionAttributes loadPermissionAttributes(Identifier id) throws DatabaseException, CommunicationException;
-
-	User loadUser(Identifier id) throws DatabaseException, CommunicationException;
-
-	Domain loadDomain(Identifier id) throws DatabaseException, CommunicationException;
-
-	Server loadServer(Identifier id) throws DatabaseException, CommunicationException;
-
-	MCM loadMCM(Identifier id) throws DatabaseException, CommunicationException;
 
 	Equipment loadEquipment(Identifier id) throws DatabaseException, CommunicationException;
 
@@ -69,29 +55,15 @@ public interface ConfigurationObjectLoader {
 
 	List loadCableThreadTypes(List ids) throws DatabaseException, CommunicationException;
 
-	List loadCharacteristicTypes(List ids) throws DatabaseException, CommunicationException;
-
 	List loadEquipmentTypes(List ids) throws DatabaseException, CommunicationException;
 
 	List loadPortTypes(List ids) throws DatabaseException, CommunicationException;
 
 	List loadMeasurementPortTypes(List ids) throws DatabaseException, CommunicationException;
 
-	List loadCharacteristics(List ids) throws DatabaseException, CommunicationException;
-
 	List loadLinkTypes(List ids) throws DatabaseException, CommunicationException;
 
 	List loadTransmissionPathTypes(List ids) throws DatabaseException, CommunicationException;
-
-//  PermissionAttributes loadPermissionAttributes(List ids) throws DatabaseException, CommunicationException;
-
-	List loadUsers(List ids) throws DatabaseException, CommunicationException;
-
-	List loadDomains(List ids) throws DatabaseException, CommunicationException;
-
-	List loadServers(List ids) throws DatabaseException, CommunicationException;
-
-	List loadMCMs(List ids) throws DatabaseException, CommunicationException;
 
 	List loadEquipments(List ids) throws DatabaseException, CommunicationException;
 
@@ -111,29 +83,15 @@ public interface ConfigurationObjectLoader {
 
 	List loadCableThreadTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-	List loadCharacteristicTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
-
 	List loadEquipmentTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
 	List loadPortTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
 	List loadMeasurementPortTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-	List loadCharacteristicsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
-
 	List loadLinkTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
 	List loadTransmissionPathTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
-
-//  PermissionAttributes loadPermissionAttributesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
-
-	List loadUsersButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
-
-	List loadDomainsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
-
-	List loadServersButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
-
-	List loadMCMsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
 	List loadEquipmentsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
@@ -151,29 +109,15 @@ public interface ConfigurationObjectLoader {
 
 	void saveCableThreadType(CableThreadType cableThreadType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveCharacteristicType(CharacteristicType characteristicType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
-
 	void saveEquipmentType(EquipmentType equipmentType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 	void savePortType(PortType portType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 	void saveMeasurementPortType(MeasurementPortType measurementPortType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveCharacteristic(Characteristic characteristic, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
-
 	void saveLinkType(LinkType linkType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 	void saveTransmissionPathType(TransmissionPathType transmissionPathType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
-
-//	void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
-
-	void saveUser(User user, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
-
-	void saveDomain(Domain domain, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
-
-	void saveServer(Server server, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
-
-	void saveMCM(MCM mcm, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 	void saveEquipment(Equipment equipment, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
@@ -189,8 +133,6 @@ public interface ConfigurationObjectLoader {
 
 	void saveMonitoredElement(MonitoredElement monitoredElement, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveCharacteristicTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
-
 	void saveEquipmentTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 	void savePortTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
@@ -199,21 +141,9 @@ public interface ConfigurationObjectLoader {
 
 	void saveCableThreadTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveCharacteristics(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
-
 	void saveLinkTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 	void saveTransmissionPathTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
-
-//	void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
-
-	void saveUsers(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
-
-	void saveDomains(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
-
-	void saveServers(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
-
-	void saveMCMs(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 	void saveLinks(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 

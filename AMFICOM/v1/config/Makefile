@@ -5,7 +5,7 @@ ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
 
 IDLDIR=../idl_v1/idl
 
-APPCLASSPATH = $(LIBDIR)/general.jar:$(LIBDIR)/util.jar
+APPCLASSPATH = $(LIBDIR)/administration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
 
 HOST=mongol
 SERVICE_NAME=mongol
@@ -18,6 +18,47 @@ include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 
+
+SOURCES := com/syrus/AMFICOM/configuration/DatabaseConfigurationObjectLoader.java \
+		com/syrus/AMFICOM/configuration/ConfigurationObjectLoader.java \
+		com/syrus/AMFICOM/configuration/ConfigurationStorableObjectPool.java \
+		com/syrus/AMFICOM/configuration/ConfigurationDatabaseContext.java \
+		com/syrus/AMFICOM/configuration/MonitoredDomainMember.java \
+		com/syrus/AMFICOM/configuration/AbstractLinkType.java \
+		com/syrus/AMFICOM/configuration/CableLinkType.java \
+		com/syrus/AMFICOM/configuration/CableLinkTypeDatabase.java \
+		com/syrus/AMFICOM/configuration/CableThread.java \
+		com/syrus/AMFICOM/configuration/CableThreadDatabase.java \
+		com/syrus/AMFICOM/configuration/CableThreadType.java \
+		com/syrus/AMFICOM/configuration/CableThreadTypeDatabase.java \
+		com/syrus/AMFICOM/configuration/Equipment.java \
+		com/syrus/AMFICOM/configuration/EquipmentDatabase.java \
+		com/syrus/AMFICOM/configuration/EquipmentType.java \
+		com/syrus/AMFICOM/configuration/EquipmentTypeDatabase.java \
+		com/syrus/AMFICOM/configuration/KIS.java \
+		com/syrus/AMFICOM/configuration/KISDatabase.java \
+		com/syrus/AMFICOM/configuration/Link.java \
+		com/syrus/AMFICOM/configuration/LinkDatabase.java \
+		com/syrus/AMFICOM/configuration/LinkType.java \
+		com/syrus/AMFICOM/configuration/LinkTypeDatabase.java \
+		com/syrus/AMFICOM/configuration/MeasurementPort.java \
+		com/syrus/AMFICOM/configuration/MeasurementPortDatabase.java \
+		com/syrus/AMFICOM/configuration/MeasurementPortType.java \
+		com/syrus/AMFICOM/configuration/MeasurementPortTypeDatabase.java \
+		com/syrus/AMFICOM/configuration/MonitoredElement.java \
+		com/syrus/AMFICOM/configuration/MonitoredElementDatabase.java \
+		com/syrus/AMFICOM/configuration/Port.java \
+		com/syrus/AMFICOM/configuration/PortDatabase.java \
+		com/syrus/AMFICOM/configuration/PortType.java \
+		com/syrus/AMFICOM/configuration/PortTypeDatabase.java \
+		com/syrus/AMFICOM/configuration/TransmissionPath.java \
+		com/syrus/AMFICOM/configuration/TransmissionPathDatabase.java \
+		com/syrus/AMFICOM/configuration/TransmissionPathType.java \
+		com/syrus/AMFICOM/configuration/TransmissionPathTypeDatabase.java \
+		com/syrus/AMFICOM/configuration/StringFieldCondition.java \
+		com/syrus/AMFICOM/configuration/LinkedIdsConditionImpl.java
+
+
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
@@ -25,59 +66,7 @@ $(LIBNAME): .mach
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/DatabaseConfigurationObjectLoader.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/ConfigurationObjectLoader.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/ConfigurationStorableObjectPool.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/ConfigurationDatabaseContext.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/DomainMember.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredDomainMember.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/Characterized.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/CableLinkType.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/CableLinkTypeDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/CableThread.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/CableThreadDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/CharacteristicType.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/CharacteristicTypeDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/EquipmentType.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/EquipmentTypeDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/PortType.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/PortTypeDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/MeasurementPortType.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/MeasurementPortTypeDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/Characteristic.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/CharacteristicDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/User.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/UserDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/Domain.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/DomainDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/Server.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/ServerDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/MCM.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/MCMDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/Equipment.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/EquipmentDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/Port.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/PortDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/TransmissionPath.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/TransmissionPathDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/TransmissionPathType.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/TransmissionPathTypeDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/KIS.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/KISDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/MeasurementPort.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/MeasurementPortDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredElement.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredElementDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/Link.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/AbstractLinkType.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/LinkType.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/LinkDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/CableThreadType.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/LinkTypeDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/CableThreadTypeDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/StringFieldCondition.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/DomainCondition.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/LinkedIdsCondition.java
+		$(addprefix $(SRCDIR)/,$(SOURCES))
 	touch $@
 
 .corba:	$(CLASSDIR)
@@ -97,7 +86,7 @@ clean:	cleanmach cleancorba
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) $(wildcard $(CLASSDIR)/com/syrus/AMFICOM/configuration/*.class)
+	$(RM) $(addprefix $(CLASSDIR)/,$(subst .java,.class,$(SOURCES)))
 	$(RM) .mach
 
 .PHONY:	cleancorba

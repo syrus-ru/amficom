@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.28 2004/12/28 12:45:28 arseniy Exp $
+ * $Id: PortType.java,v 1.29 2005/01/14 18:07:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,6 +21,9 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterized;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -32,9 +35,9 @@ import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
 import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/12/28 12:45:28 $
+ * @version $Revision: 1.29 $, $Date: 2005/01/14 18:07:08 $
  * @author $Author: arseniy $
- * @module configuration_v1
+ * @module config_v1
  */
 
 public class PortType extends StorableObjectType implements Characterized {
@@ -67,7 +70,7 @@ public class PortType extends StorableObjectType implements Characterized {
 		try {
 			this.characteristics = new ArrayList(ptt.characteristic_ids.length);
 			for (int i = 0; i < ptt.characteristic_ids.length; i++)
-				this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(ptt.characteristic_ids[i]), true));
+				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(ptt.characteristic_ids[i]), true));
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
@@ -81,7 +84,7 @@ public class PortType extends StorableObjectType implements Characterized {
 						 String codename,
 						 String description,
 						 String name,
-                         int sort){
+						 int sort) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -97,8 +100,8 @@ public class PortType extends StorableObjectType implements Characterized {
 
 		this.portTypeDatabase = ConfigurationDatabaseContext.portTypeDatabase;
 	}
-	
-	
+
+
 	/**
 	 * create new instance for client 
 	 * @param creatorId
@@ -121,8 +124,9 @@ public class PortType extends StorableObjectType implements Characterized {
 								codename,
 								description,
 								name,
-			                    sort.value());
-		} catch (IllegalObjectEntityException e) {
+								sort.value());
+		}
+		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("PortType.createInstance | cannot generate identifier ", e);
 		}
 	}
@@ -137,35 +141,20 @@ public class PortType extends StorableObjectType implements Characterized {
 		}
 	}
 
-//	public static PortType getInstance(PortType_Transferable ptt) throws CreateObjectException {
-//		PortType portType = new PortType(ptt);
-//		
-//		portType.portTypeDatabase = ConfigurationDatabaseContext.portTypeDatabase;
-//		try {
-//			if (portType.portTypeDatabase != null)
-//				portType.portTypeDatabase.insert(portType);
-//		}
-//		catch (IllegalDataException ide) {
-//			throw new CreateObjectException(ide.getMessage(), ide);
-//		}
-//		
-//		return portType;
-//	}
-	
 	public Object getTransferable() {
 		int i = 0;
-        Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
-        for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
-            charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
-        
-        return new PortType_Transferable(super.getHeaderTransferable(),
-										 new String(super.codename),
-										 (super.description != null) ? (new String(super.description)) : "",
-										 (this.name != null) ? (new String(this.name)) : "",
-                                         PortTypeSort.from_int(this.sort),
-                                         charIds);
+		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
+		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
+				charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
+
+		return new PortType_Transferable(super.getHeaderTransferable(),
+									 new String(super.codename),
+									 (super.description != null) ? (new String(super.description)) : "",
+									 (this.name != null) ? (new String(this.name)) : "",
+									 PortTypeSort.from_int(this.sort),
+									 charIds);
 	}
-	
+
 	protected synchronized void setAttributes(Date created,
 											  Date modified,
 											  Identifier creatorId,
@@ -183,55 +172,54 @@ public class PortType extends StorableObjectType implements Characterized {
 		this.name = name;
         this.sort = sort;
 	}
-	
-	
+
 	public String getName(){
 		return this.name;
 	}
-    
-    public PortTypeSort getSort() {
-        return PortTypeSort.from_int(this.sort);
-    }
-	
+
+	public PortTypeSort getSort() {
+			return PortTypeSort.from_int(this.sort);
+	}
+
 	public void setSort(PortTypeSort sort) {
 		this.sort = sort.value();
 	}
-    
-	public void setName(String name){
+
+	public void setName(String name) {
 		this.currentVersion = super.getNextVersion();
 		this.name = name;
-	}	
+	}
 
 	public List getDependencies() {		
 		return Collections.unmodifiableList(this.characteristics);
 	}
-    
+
 	public void addCharacteristic(Characteristic characteristic) {
-		if (characteristic != null){
+		if (characteristic != null) {
 			this.characteristics.add(characteristic);
 			super.currentVersion = super.getNextVersion();
 		}
 	}
-	
+
 	public void removeCharacteristic(Characteristic characteristic) {
-		if (characteristic != null){
+		if (characteristic != null) {
 			this.characteristics.remove(characteristic);
 			super.currentVersion = super.getNextVersion();
 		}
 	}
 
 	public List getCharacteristics() {
-        return Collections.unmodifiableList(this.characteristics);
-    }
-    
-    protected void setCharacteristics0(final List characteristics) {
-        this.characteristics.clear();
-        if (characteristics != null)
-                this.characteristics.addAll(characteristics);
-    }
-    
-    public void setCharacteristics(final List characteristics) {
-        this.setCharacteristics0(characteristics);
-        super.currentVersion = super.getNextVersion();
-    }
+		return Collections.unmodifiableList(this.characteristics);
+	}
+
+	protected void setCharacteristics0(final List characteristics) {
+		this.characteristics.clear();
+		if (characteristics != null)
+			this.characteristics.addAll(characteristics);
+	}
+
+	public void setCharacteristics(final List characteristics) {
+		this.setCharacteristics0(characteristics);
+		super.currentVersion = super.getNextVersion();
+	}
 }

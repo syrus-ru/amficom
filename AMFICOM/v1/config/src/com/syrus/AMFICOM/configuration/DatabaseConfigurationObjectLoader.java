@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConfigurationObjectLoader.java,v 1.26 2004/12/02 12:09:47 bob Exp $
+ * $Id: DatabaseConfigurationObjectLoader.java,v 1.27 2005/01/14 18:07:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,9 +26,9 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/12/02 12:09:47 $
- * @author $Author: bob $
- * @module configuration_v1
+ * @version $Revision: 1.27 $, $Date: 2005/01/14 18:07:07 $
+ * @author $Author: arseniy $
+ * @module config_v1
  */
 
 public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoader {
@@ -36,9 +36,6 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	private StorableObjectDatabase getDatabase(short entityCode){
 		StorableObjectDatabase database = null;
 		switch (entityCode) {
-			case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
-				database = ConfigurationDatabaseContext.getCharacteristicTypeDatabase();
-				break;
 			case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
 				database = ConfigurationDatabaseContext.getEquipmentTypeDatabase();
 				break;
@@ -51,27 +48,8 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 			case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
 				database = ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
 				break;
-			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-				database = ConfigurationDatabaseContext.getCharacteristicDatabase();
-				break;
 			case ObjectEntities.TRANSPATHTYPE_ENTITY_CODE:
 				database = ConfigurationDatabaseContext.getTransmissionPathTypeDatabase();
-				break;
-			//          case ObjectEntities.PERMATTR_ENTITY_CODE:
-			//              storableObject =
-			// loadPermissionAttributes(soIds);
-			//              break;
-			case ObjectEntities.USER_ENTITY_CODE:
-				database = ConfigurationDatabaseContext.getUserDatabase();
-				break;
-			case ObjectEntities.DOMAIN_ENTITY_CODE:
-				database = ConfigurationDatabaseContext.getDomainDatabase();
-				break;
-			case ObjectEntities.SERVER_ENTITY_CODE:
-				database = ConfigurationDatabaseContext.getServerDatabase();
-				break;
-			case ObjectEntities.MCM_ENTITY_CODE:
-				database = ConfigurationDatabaseContext.getDomainDatabase();
 				break;
 			case ObjectEntities.EQUIPMENT_ENTITY_CODE:
 				database = ConfigurationDatabaseContext.getEquipmentDatabase();
@@ -99,7 +77,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 		return database;
 	}
-	
+
 	private void delete(Identifier id, List ids) throws DatabaseException {
 		short entityCode = (id != null) ? id.getMajor() : 0;
 		if (id == null) {
@@ -137,10 +115,6 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 			delete(null, ids);
 	}
 
-	public CharacteristicType loadCharacteristicType(Identifier id) throws DatabaseException, CommunicationException {
-		return new CharacteristicType(id);
-	}
-
 	public EquipmentType loadEquipmentType(Identifier id) throws DatabaseException, CommunicationException {
 		return new EquipmentType(id);
 	}
@@ -153,10 +127,6 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return new MeasurementPortType(id);
 	}
 
-	public Characteristic loadCharacteristic(Identifier id) throws DatabaseException, CommunicationException {
-		return new Characteristic(id);
-	}
-
 	public Link loadLink(Identifier id) throws DatabaseException, CommunicationException {
 		return new Link(id);
 	}
@@ -167,26 +137,6 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 
 	public CableThreadType loadCableThreadType(Identifier id) throws DatabaseException, CommunicationException {
 		return new CableThreadType(id);
-	}
-
-//	public PermissionAttributes loadPermissionAttributes(Identifier id) throws DatabaseException, CommunicationException {
-//		return new PermissionAttributes(id);
-//	}
-
-	public User loadUser(Identifier id) throws DatabaseException, CommunicationException {
-		return new User(id);
-	}
-
-	public Domain loadDomain(Identifier id) throws DatabaseException, CommunicationException {
-		return new Domain(id);
-	}
-
-	public Server loadServer(Identifier id) throws DatabaseException, CommunicationException {
-		return new Server(id);
-	}
-
-	public MCM loadMCM(Identifier id) throws DatabaseException, CommunicationException {
-		return new MCM(id);
 	}
 
 	public Equipment loadEquipment(Identifier id) throws DatabaseException, CommunicationException {
@@ -221,19 +171,6 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 
 	public List loadCableThreadTypes(List ids) throws DatabaseException, CommunicationException {
 		CableThreadTypeDatabase database = (CableThreadTypeDatabase) ConfigurationDatabaseContext.getCableThreadTypeDatabase();
-		List list = null;
-		try {
-			list = database.retrieveByIds(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadCharacteristicTypes | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadCharacteristicTypes | Illegal Storable Object: " + e.getMessage());
-		}
-		return list;
-	}
-
-	public List loadCharacteristicTypes(List ids) throws DatabaseException, CommunicationException {
-		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase)ConfigurationDatabaseContext.getCharacteristicTypeDatabase();
 		List list = null;
 		try {
 			list = database.retrieveByIds(ids, null);
@@ -280,19 +217,6 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadMeasurementPortTypes | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadMeasurementPortTypes | Illegal Storable Object: " + e.getMessage());
-		}
-		return list;
-	}
-
-	public List loadCharacteristics(List ids) throws DatabaseException, CommunicationException {
-		CharacteristicDatabase database = (CharacteristicDatabase)ConfigurationDatabaseContext.getCharacteristicDatabase();
-		List list = null;
-		try {
-			list = database.retrieveByIds(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadCharacteristics | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadCharacteristics | Illegal Storable Object: " + e.getMessage());
 		}
 		return list;
 	}
@@ -345,62 +269,6 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadLinkType | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadLinkTypes | Illegal Storable Object: " + e.getMessage());
-		}
-		return list;
-	}
-
-//  public PermissionAttributes loadPermissionAttributes(Identifier id) throws DatabaseException, CommunicationException {
-//      return new PermissionAttributes(id);
-//  }
-
-	public List loadUsers(List ids) throws DatabaseException, CommunicationException {
-		UserDatabase database = (UserDatabase)ConfigurationDatabaseContext.getUserDatabase();
-		List list = null;
-		try {
-			list = database.retrieveByIds(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadUsers | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadUsers | Illegal Storable Object: " + e.getMessage());
-		}
-		return list;
-	}
-
-	public List loadDomains(List ids) throws DatabaseException, CommunicationException {
-		DomainDatabase database = (DomainDatabase)ConfigurationDatabaseContext.getDomainDatabase();
-		List list = null;
-		try {
-			list = database.retrieveByIds(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadDomains | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadDomains | Illegal Storable Object: " + e.getMessage());
-		}
-		return list;
-	}
-
-	public List loadServers(List ids) throws DatabaseException, CommunicationException {
-		ServerDatabase database = (ServerDatabase)ConfigurationDatabaseContext.getServerDatabase();
-		List list = null;
-		try {
-			list = database.retrieveByIds(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadDomains | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadDomains | Illegal Storable Object: " + e.getMessage());
-		}
-		return list;
-	}
-
-	public List loadMCMs(List ids) throws DatabaseException, CommunicationException {
-		MCMDatabase database = (MCMDatabase)ConfigurationDatabaseContext.getMCMDatabase();
-		List list = null;
-		try {
-			list = database.retrieveByIds(ids, null);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadMCMs | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadMCMs | Illegal Storable Object: " + e.getMessage());
 		}
 		return list;
 	}
@@ -523,19 +391,6 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return list;
 	}
 
-	public List loadCharacteristicTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
-		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase)ConfigurationDatabaseContext.getCharacteristicTypeDatabase();
-		List list = null;
-		try {
-			list = database.retrieveByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadCharacteristicTypesButIds | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadCharacteristicTypesButIds | Illegal Storable Object: " + e.getMessage());
-		}
-		return list;
-	}
-
 	public List loadEquipmentTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 		EquipmentTypeDatabase database = (EquipmentTypeDatabase)ConfigurationDatabaseContext.getEquipmentTypeDatabase();
 		List list = null;
@@ -571,75 +426,6 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadMeasurementPortTypesButIds | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadMeasurementPortTypesButIds | Illegal Storable Object: " + e.getMessage());
-		}
-		return list;
-	}
-
-	public List loadCharacteristicsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
-		CharacteristicDatabase database = (CharacteristicDatabase)ConfigurationDatabaseContext.getCharacteristicDatabase();
-		List list = null;
-		try {
-			list = database.retrieveByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadCharacteristicsButIds | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadCharacteristicsButIds | Illegal Storable Object: " + e.getMessage());
-		}
-		return list;
-	}
-
-//  public PermissionAttributes loadPermissionAttributesButIds(Identifier id) throws DatabaseException, CommunicationException {
-//      return new PermissionAttributes(id);
-//  }
-
-	public List loadUsersButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
-		UserDatabase database = (UserDatabase)ConfigurationDatabaseContext.getUserDatabase();
-		List list = null;
-		try {
-			list = database.retrieveByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadUsersButIds | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadUsersButIds | Illegal Storable Object: " + e.getMessage());
-		}
-		return list;
-	}
-
-	public List loadDomainsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
-		DomainDatabase database = (DomainDatabase)ConfigurationDatabaseContext.getDomainDatabase();
-		List list = null;
-		try {
-			list = database.retrieveByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadDomainsButIds | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadDomainsButIds | Illegal Storable Object: " + e.getMessage());
-		}
-		return list;
-	}
-
-	public List loadServersButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
-		ServerDatabase database = (ServerDatabase)ConfigurationDatabaseContext.getServerDatabase();
-		List list = null;
-		try {
-			list = database.retrieveByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadDomainsButIds | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadDomainsButIds | Illegal Storable Object: " + e.getMessage());
-		}
-		return list;
-	}
-
-	public List loadMCMsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
-		MCMDatabase database = (MCMDatabase)ConfigurationDatabaseContext.getMCMDatabase();
-		List list = null;
-		try {
-			list = database.retrieveByCondition(ids, condition);
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.loadMCMsButIds | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadMCMsButIds | Illegal Storable Object: " + e.getMessage());
 		}
 		return list;
 	}
@@ -722,25 +508,6 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		return list;
 	}
 
-	public void saveCharacteristicType(CharacteristicType characteristicType, boolean force) throws DatabaseException, CommunicationException {
-		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase)ConfigurationDatabaseContext.getCharacteristicTypeDatabase();
-		try {
-			database.update(characteristicType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
-		}
-		catch (UpdateObjectException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCharacteristicType | UpdateObjectException: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCharacteristicType | UpdateObjectException: " + e.getMessage());
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCharacteristicType | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCharacteristicType | Illegal Storable Object: " + e.getMessage());
-		}
-		catch (VersionCollisionException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCharacteristicType | VersionCollisionException: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCharacteristicType | VersionCollisionException: " + e.getMessage());
-		}
-	}
-
 	public void saveEquipmentType(EquipmentType equipmentType, boolean force) throws DatabaseException, CommunicationException {
 		EquipmentTypeDatabase database = (EquipmentTypeDatabase)ConfigurationDatabaseContext.getEquipmentTypeDatabase();
 		try {
@@ -797,121 +564,23 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveCableThreadType(CableThreadType cableThreadType,
-			boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException {
+	public void saveCableThreadType(CableThreadType cableThreadType, boolean force)
+			throws VersionCollisionException, DatabaseException, CommunicationException {
 		CableThreadTypeDatabase database = (CableThreadTypeDatabase)ConfigurationDatabaseContext.getCableThreadTypeDatabase();
-        try {
-            database.update(cableThreadType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
-        }
-        catch (UpdateObjectException e) {
-            Log.errorMessage("DatabaseConfigurationObjectLoader.saveCableThreadType | UpdateObjectException: " + e.getMessage());
-            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCableThreadType | UpdateObjectException: " + e.getMessage());
-        }
-        catch (IllegalDataException e) {
-            Log.errorMessage("DatabaseConfigurationObjectLoader.saveCableThreadType | Illegal Storable Object: " + e.getMessage());
-            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCableThreadType | Illegal Storable Object: " + e.getMessage());
-        }
-        catch (VersionCollisionException e) {
-            Log.errorMessage("DatabaseConfigurationObjectLoader.saveCableThreadType | VersionCollisionException: " + e.getMessage());
-            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCableThreadType | VersionCollisionException: " + e.getMessage());
-        }
-	}
-
-	public void saveCharacteristic(Characteristic characteristic, boolean force) throws DatabaseException, CommunicationException {
-		CharacteristicDatabase database = (CharacteristicDatabase)ConfigurationDatabaseContext.getCharacteristicDatabase();
 		try {
-			database.update(characteristic, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(cableThreadType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
 		}
 		catch (UpdateObjectException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCharacteristic | UpdateObjectException: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCharacteristic | UpdateObjectException: " + e.getMessage());
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCableThreadType | UpdateObjectException: " + e.getMessage());
+			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCableThreadType | UpdateObjectException: " + e.getMessage());
 		}
 		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCharacteristic | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCharacteristic | Illegal Storable Object: " + e.getMessage());
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCableThreadType | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCableThreadType | Illegal Storable Object: " + e.getMessage());
 		}
 		catch (VersionCollisionException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCharacteristic | VersionCollisionException: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCharacteristic | VersionCollisionException: " + e.getMessage());
-		}
-	}
-
-//	public void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws DatabaseException ;
-
-	public void saveUser(User user, boolean force) throws DatabaseException, CommunicationException {
-		UserDatabase database = (UserDatabase)ConfigurationDatabaseContext.getUserDatabase();
-		try {
-			database.update(user, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
-		}
-		catch (UpdateObjectException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveUser | UpdateObjectException: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveUser | UpdateObjectException: " + e.getMessage());
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveUser | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveUser | Illegal Storable Object: " + e.getMessage());
-		}
-		catch (VersionCollisionException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveUser | VersionCollisionException: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveUser | VersionCollisionException: " + e.getMessage());
-		}
-	}
-
-	public void saveDomain(Domain domain, boolean force) throws DatabaseException, CommunicationException {
-		DomainDatabase database = (DomainDatabase)ConfigurationDatabaseContext.getDomainDatabase();
-		try {
-			database.update(domain, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
-		}
-		catch (UpdateObjectException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveDomain | UpdateObjectException: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveDomain | UpdateObjectException: " + e.getMessage());
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveDomain | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveDomain | Illegal Storable Object: " + e.getMessage());
-		}
-		catch (VersionCollisionException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveDomain | VersionCollisionException: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveDomain | VersionCollisionException: " + e.getMessage());
-		}
-	}
-
-	public void saveServer(Server server, boolean force) throws DatabaseException, CommunicationException {
-		ServerDatabase database = (ServerDatabase)ConfigurationDatabaseContext.getServerDatabase();
-		try {
-			database.update(server, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
-		}
-		catch (UpdateObjectException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveServer | UpdateObjectException: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveServer | UpdateObjectException: " + e.getMessage());
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveServer | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveServer | Illegal Storable Object: " + e.getMessage());
-		}
-		catch (VersionCollisionException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveServer | VersionCollisionException: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveServer | VersionCollisionException: " + e.getMessage());
-		}
-	}
-
-	public void saveMCM(MCM mcm, boolean force) throws DatabaseException, CommunicationException {
-		MCMDatabase database = (MCMDatabase)ConfigurationDatabaseContext.getMCMDatabase();
-		try {
-			database.update(mcm, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
-		}
-		catch (UpdateObjectException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMCM | UpdateObjectException: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMCM | UpdateObjectException: " + e.getMessage());
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMCM | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMCM | Illegal Storable Object: " + e.getMessage());
-		}
-		catch (VersionCollisionException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMCM | VersionCollisionException: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMCM | VersionCollisionException: " + e.getMessage());
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCableThreadType | VersionCollisionException: " + e.getMessage());
+			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCableThreadType | VersionCollisionException: " + e.getMessage());
 		}
 	}
 
@@ -1105,25 +774,6 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}        
 	}
 
-	public void saveCharacteristicTypes(List list, boolean force) throws DatabaseException, CommunicationException {
-		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase)ConfigurationDatabaseContext.getCharacteristicTypeDatabase();
-		try {
-			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
-		}
-		catch (UpdateObjectException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCharacteristicTypes | UpdateObjectException: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCharacteristicTypes | UpdateObjectException: " + e.getMessage());
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCharacteristicTypes | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCharacteristicTypes | Illegal Storable Object: " + e.getMessage());
-		}
-		catch (VersionCollisionException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCharacteristicTypes | VersionCollisionException: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCharacteristicTypes | VersionCollisionException: " + e.getMessage());
-		}
-	}
-
 	public void saveEquipmentTypes(List list, boolean force) throws DatabaseException, CommunicationException {
 		EquipmentTypeDatabase database = (EquipmentTypeDatabase)ConfigurationDatabaseContext.getEquipmentTypeDatabase();
 		try {
@@ -1178,103 +828,6 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		catch (VersionCollisionException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMeasurementPortTypes | VersionCollisionException: " + e.getMessage());
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMeasurementPortTypes | VersionCollisionException: " + e.getMessage());
-		}
-	}
-
-	public void saveCharacteristics(List list, boolean force) throws DatabaseException, CommunicationException {
-		CharacteristicDatabase database = (CharacteristicDatabase)ConfigurationDatabaseContext.getCharacteristicDatabase();
-		try {
-			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
-		}
-		catch (UpdateObjectException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCharacteristics | UpdateObjectException: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCharacteristics | UpdateObjectException: " + e.getMessage());
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCharacteristics | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCharacteristics | Illegal Storable Object: " + e.getMessage());
-		}
-		catch (VersionCollisionException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCharacteristics | VersionCollisionException: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCharacteristics | VersionCollisionException: " + e.getMessage());
-		}
-	}
-
-//	public void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws DatabaseException ;
-
-	public void saveUsers(List list, boolean force) throws DatabaseException, CommunicationException {
-		UserDatabase database = (UserDatabase)ConfigurationDatabaseContext.getUserDatabase();
-		try {
-			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
-		}
-		catch (UpdateObjectException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveUsers | UpdateObjectException: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveUsers | UpdateObjectException: " + e.getMessage());
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveUsers | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveUsers | Illegal Storable Object: " + e.getMessage());
-		}
-		catch (VersionCollisionException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveUsers | VersionCollisionException: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveUsers | VersionCollisionException: " + e.getMessage());
-		}
-	}
-
-	public void saveDomains(List list, boolean force) throws DatabaseException, CommunicationException {
-		DomainDatabase database = (DomainDatabase)ConfigurationDatabaseContext.getDomainDatabase();
-		try {
-			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
-		}
-		catch (UpdateObjectException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveDomains | UpdateObjectException: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveDomains | UpdateObjectException: " + e.getMessage());
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveDomains | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveDomains | Illegal Storable Object: " + e.getMessage());
-		}
-		catch (VersionCollisionException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveDomains | VersionCollisionException: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveDomains | VersionCollisionException: " + e.getMessage());
-		}
-	}
-
-	public void saveServers(List list, boolean force) throws DatabaseException, CommunicationException {
-		ServerDatabase database = (ServerDatabase)ConfigurationDatabaseContext.getServerDatabase();
-		try {
-			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
-		}
-		catch (UpdateObjectException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveServers | UpdateObjectException: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveServers | UpdateObjectException: " + e.getMessage());
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveServers | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveServers | Illegal Storable Object: " + e.getMessage());
-		}
-		catch (VersionCollisionException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveServers | VersionCollisionException: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveServers | VersionCollisionException: " + e.getMessage());
-		}
-	}
-
-	public void saveMCMs(List list, boolean force) throws DatabaseException, CommunicationException {
-		MCMDatabase database = (MCMDatabase)ConfigurationDatabaseContext.getMCMDatabase();
-		try {
-			database.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
-		}
-		catch (UpdateObjectException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMCMs | UpdateObjectException: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMCMs | UpdateObjectException: " + e.getMessage());
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMCMs | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMCMs | Illegal Storable Object: " + e.getMessage());
-		}
-		catch (VersionCollisionException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMCMs | VersionCollisionException: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMCMs | VersionCollisionException: " + e.getMessage());
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadDatabase.java,v 1.4 2004/12/29 15:25:46 arseniy Exp $
+ * $Id: CableThreadDatabase.java,v 1.5 2005/01/14 18:07:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,12 +24,13 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
+import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/12/29 15:25:46 $
+ * @version $Revision: 1.5 $, $Date: 2005/01/14 18:07:07 $
  * @author $Author: arseniy $
  * @module config_v1
  */

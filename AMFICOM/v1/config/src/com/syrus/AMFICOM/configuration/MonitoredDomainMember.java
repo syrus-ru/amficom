@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredDomainMember.java,v 1.6 2004/12/27 09:56:24 arseniy Exp $
+ * $Id: MonitoredDomainMember.java,v 1.7 2005/01/14 18:07:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,11 +13,12 @@ import java.util.List;
 import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
+import com.syrus.AMFICOM.administration.DomainMember;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/12/27 09:56:24 $
+ * @version $Revision: 1.7 $, $Date: 2005/01/14 18:07:08 $
  * @author $Author: arseniy $
- * @module configuration_v1
+ * @module config_v1
  */
 
 public abstract class MonitoredDomainMember extends DomainMember {

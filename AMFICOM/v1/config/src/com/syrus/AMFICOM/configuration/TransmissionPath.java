@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.35 2004/12/28 12:45:28 arseniy Exp $
+ * $Id: TransmissionPath.java,v 1.36 2005/01/14 18:07:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterized;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -29,18 +32,18 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 /**
- * @version $Revision: 1.35 $, $Date: 2004/12/28 12:45:28 $
+ * @version $Revision: 1.36 $, $Date: 2005/01/14 18:07:09 $
  * @author $Author: arseniy $
- * @module configuration_v1
+ * @module config_v1
  */
 
 public class TransmissionPath extends MonitoredDomainMember implements Characterized, TypedObject {
-	
+
 	private static final long serialVersionUID = 8129503678304843903L;
 
 	protected static final int		UPDATE_ATTACH_ME	= 1;
 	protected static final int		UPDATE_DETACH_ME	= 2;
-	
+
 	private TransmissionPathType type;
 	private List characteristics;
 	private String name;
@@ -52,7 +55,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 
 	public TransmissionPath(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
-		
+
 		this.characteristics = new LinkedList();
 		this.monitoredElementIds = new LinkedList();
 		this.transmissionPathDatabase = ConfigurationDatabaseContext.transmissionPathDatabase;
@@ -79,7 +82,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 		try {
 			this.characteristics = new ArrayList(tpt.characteristic_ids.length);
 			for (int i = 0; i < tpt.characteristic_ids.length; i++)
-				this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(tpt.characteristic_ids[i]), true));
+				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(tpt.characteristic_ids[i]), true));
 
       this.type = (TransmissionPathType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(tpt.type_id), true);
 		}
@@ -95,7 +98,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 								Identifier domainId,
 								String name,
 								String description,
-                                TransmissionPathType type,
+								TransmissionPathType type,
 								Identifier startPortId,
 								Identifier finishPortId){
 		super(id,
@@ -106,7 +109,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 				domainId);
 		this.name = name;
 		this.description = description;
-        this.type = type;
+		this.type = type;
 		this.startPortId = startPortId;
 		this.finishPortId = finishPortId;
 
@@ -117,7 +120,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 
 		this.transmissionPathDatabase = ConfigurationDatabaseContext.transmissionPathDatabase;
 	}
-	
+
 	/**
 	 * create new instance for client 
 	 * @param creatorId
@@ -129,12 +132,12 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 	 * @throws CreateObjectException
 	 */
 	public static TransmissionPath createInstance(Identifier creatorId,
-												  Identifier domainId,
-												  String name,
-												  String description,
-												  TransmissionPathType type,
-												  Identifier startPortId,
-												  Identifier finishPortId) throws CreateObjectException {
+																		Identifier domainId,
+																		String name,
+																		String description,
+																		TransmissionPathType type,
+																		Identifier startPortId,
+																		Identifier finishPortId) throws CreateObjectException {
 		if (creatorId == null || domainId == null || name == null || description == null || 
 				type == null || startPortId == null || finishPortId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
@@ -164,21 +167,6 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 		}
 	}
 
-//	public static TransmissionPath getInstance(TransmissionPath_Transferable tpt) throws CreateObjectException {
-//		TransmissionPath transmissionPath = new TransmissionPath(tpt);
-//		
-//		transmissionPath.transmissionPathDatabase = ConfigurationDatabaseContext.transmissionPathDatabase;
-//		try {
-//			if (transmissionPath.transmissionPathDatabase != null)
-//				transmissionPath.transmissionPathDatabase.insert(transmissionPath);
-//		}
-//		catch (IllegalDataException ide) {
-//			throw new CreateObjectException(ide.getMessage(), ide);
-//		}
-//		
-//		return transmissionPath;
-//	}
-	
 	public Object getTransferable() {
 		int i = 0;
 		
@@ -193,7 +181,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 		
 
 		return new TransmissionPath_Transferable(super.getHeaderTransferable(),
-												 (Identifier_Transferable)super.domainId.getTransferable(),
+												 (Identifier_Transferable)this.getDomainId().getTransferable(),
 												 meIds,
 												 new String(this.name),
 												 new String(this.description),
@@ -206,16 +194,16 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 	public String getName() {
 		return this.name;
 	}
-    
-    public StorableObjectType getType() {       
-        return this.type;
-    }
+
+	public StorableObjectType getType() {
+		return this.type;
+	}
 
 	public String getDescription() {
 		return this.description;
 	}
-	
-	public void setDescription(String description){
+
+	public void setDescription(String description) {
 		this.description = description;
 		super.currentVersion = super.getNextVersion();
 	}
@@ -227,16 +215,46 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 	public Identifier getStartPortId() {
 		return this.startPortId;
 	}
+	
+	protected synchronized void setAttributes(Date created,
+											  Date modified,
+											  Identifier creatorId,
+											  Identifier modifierId,
+											  Identifier domainId,
+											  String name,
+											  String description,
+											  TransmissionPathType type,
+												Identifier startPortId,
+											  Identifier finishPortId) {
+		super.setAttributes(created,
+							modified,
+							creatorId,
+							modifierId,
+							domainId);		
+		this.name = name;
+		this.description = description;
+		this.type = type;
+		this.startPortId = startPortId;
+		this.finishPortId = finishPortId;
+	}
+
+	public List getDependencies() {
+		List dependencies = new LinkedList();
+		dependencies.add(this.startPortId);
+		dependencies.add(this.finishPortId);
+		dependencies.addAll(this.characteristics);			
+		return dependencies;
+	}
 
 	public void addCharacteristic(Characteristic characteristic) {
-		if (characteristic != null){
+		if (characteristic != null) {
 			this.characteristics.add(characteristic);
 			super.currentVersion = super.getNextVersion();
 		}
 	}
-	
+
 	public void removeCharacteristic(Characteristic characteristic) {
-		if (characteristic != null){
+		if (characteristic != null) {
 			this.characteristics.remove(characteristic);
 			super.currentVersion = super.getNextVersion();
 		}
@@ -246,46 +264,16 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 		return Collections.unmodifiableList(this.characteristics);
 	}
 	
-	protected void setCharacteristics0(List characteristics) {
-		this.characteristics.clear();
-	     if (characteristics != null)
-	     	this.characteristics.addAll(characteristics);
+	protected void setCharacteristics0(final List characteristics) {
+		if (characteristics != null)
+			this.characteristics.clear();
+		else
+			this.characteristics = new LinkedList();
+		this.characteristics.addAll(characteristics);
 	}
-	
-	/**
-	 * @param characteristics The characteristicIds to set.
-	 */
-	public void setCharacteristics(List characteristics) {
+
+	public void setCharacteristics(final List characteristics) {
 		this.setCharacteristics0(characteristics);
-	     super.currentVersion = super.getNextVersion();
-	}
-	
-	protected synchronized void setAttributes(Date created,
-											  Date modified,
-											  Identifier creatorId,
-											  Identifier modifierId,
-											  Identifier domainId,
-											  String name,
-											  String description,
-											  TransmissionPathType type,																						Identifier startPortId,
-											  Identifier finishPortId) {
-		super.setAttributes(created,
-				modified,
-				creatorId,
-				modifierId,
-				domainId);		
-		this.name = name;
-		this.description = description;
-        this.type = type;
-		this.startPortId = startPortId;
-		this.finishPortId = finishPortId;
-	}
-	
-	public List getDependencies() {
-		List dependencies = new LinkedList();
-		dependencies.add(this.startPortId);
-		dependencies.add(this.finishPortId);
-		dependencies.addAll(this.characteristics);			
-		return dependencies;
+		super.currentVersion = super.getNextVersion();
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.19 2004/12/28 12:45:28 arseniy Exp $
+ * $Id: TransmissionPathType.java,v 1.20 2005/01/14 18:07:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,9 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterized;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -29,7 +32,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/12/28 12:45:28 $
+ * @version $Revision: 1.20 $, $Date: 2005/01/14 18:07:09 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -62,7 +65,7 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 		try {
 			this.characteristics = new ArrayList(tptt.characteristic_ids.length);
 			for (int i = 0; i < tptt.characteristic_ids.length; i++)
-				this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(tptt.characteristic_ids[i]), true));
+				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(tptt.characteristic_ids[i]), true));
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
@@ -188,15 +191,15 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 	}
 
 	protected void setCharacteristics0(final List characteristics) {
-		this.characteristics.clear();
 		if (characteristics != null)
-			this.characteristics.addAll(characteristics);
+			this.characteristics.clear();
+		else
+			this.characteristics = new LinkedList();
+		this.characteristics.addAll(characteristics);
 	}
 
 	public void setCharacteristics(final List characteristics) {
-		this.characteristics.clear();
-		if (characteristics != null)
-			this.characteristics.addAll(characteristics);
+		this.setCharacteristics0(characteristics);
 		super.currentVersion = super.getNextVersion();
 	}
 }
