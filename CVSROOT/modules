@@ -63,4 +63,4 @@ load	load
 #M	importmif	Patch for SpatialFX libraries which allows for TEXT spatial objects
 importmif	importmif
 #M	general	Client common classes
-general	general
+general_v1	general
