@@ -15,6 +15,14 @@ $(call checkenve,ORACLE_HOME)
 
 APPCLASSPATH := $(LIBDIR)/mcm_interface.jar:$(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/event.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar
 
+
+SOURCES := com/syrus/AMFICOM/mserver/DatabaseContextSetup.java \
+	com/syrus/AMFICOM/mserver/MServerMeasurementObjectLoader.java \
+	com/syrus/AMFICOM/mserver/MeasurementServer.java \
+	com/syrus/AMFICOM/mserver/MServerImplementation.java \
+	com/syrus/AMFICOM/setup/MeasurementServerSetup.java
+
+
 all: $(LIBNAME) $(LIBNAME_INTERFACE)
 
 $(LIBNAME): .mach
@@ -33,11 +41,7 @@ $(LIBNAME_INTERFACE):	.corba
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
-		$(SRCDIR)/com/syrus/AMFICOM/mserver/DatabaseContextSetup.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mserver/MServerMeasurementObjectLoader.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mserver/MeasurementServer.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mserver/MServerImplementation.java \
-		$(SRCDIR)/com/syrus/AMFICOM/setup/MeasurementServerSetup.java
+		$(addprefix $(SRCDIR)/,$(SOURCES))
 	touch $@
 
 .corba:	$(CLASSDIR)
@@ -68,7 +72,7 @@ clean:	cleanmach cleancorba
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) $(wildcard $(CLASSDIR)/com/syrus/AMFICOM/mserver/*.class)
+	$(RM) $(addprefix $(CLASSDIR)/,$(subst .java,.class,$(SOURCES)))
 	$(RM) .mach
 
 .PHONY:	cleancorba
@@ -88,5 +92,5 @@ arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
 		idl/mserver.idl \
-		$(SRCDIR)/com/syrus/AMFICOM/mserver/*.java
+		$(addprefix $(SRCDIR)/,$(SOURCES))
 

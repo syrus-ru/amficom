@@ -24,6 +24,35 @@ JAVAH_FLAGS := \
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 
+
+SOURCES := com/syrus/util/KISConnectionLRUMap.java \
+	com/syrus/AMFICOM/mcm/DatabaseContextSetup.java \
+	com/syrus/AMFICOM/mcm/MCMGeneralObjectLoader.java \
+	com/syrus/AMFICOM/mcm/MCMAdministrationObjectLoader.java \
+	com/syrus/AMFICOM/mcm/MCMConfigurationObjectLoader.java \
+	com/syrus/AMFICOM/mcm/MCMMeasurementObjectLoader.java \
+	com/syrus/AMFICOM/mcm/TestProcessor.java \
+	com/syrus/AMFICOM/mcm/OnetimeTestProcessor.java \
+	com/syrus/AMFICOM/mcm/PeriodicalTestProcessor.java \
+	com/syrus/AMFICOM/mcm/ContinuousTestProcessor.java \
+	com/syrus/AMFICOM/mcm/MeasurementControlModule.java \
+	com/syrus/AMFICOM/mcm/MCMImplementation.java \
+	com/syrus/AMFICOM/mcm/KISReport.java \
+	com/syrus/AMFICOM/mcm/Transceiver.java \
+	com/syrus/AMFICOM/mcm/KISConnection.java \
+	com/syrus/AMFICOM/mcm/KISConnectionManager.java \
+	com/syrus/AMFICOM/mcm/TCPKISConnection.java \
+	com/syrus/AMFICOM/mcm/AnalysisException.java \
+	com/syrus/AMFICOM/mcm/EvaluationException.java \
+	com/syrus/AMFICOM/mcm/MeasurementException.java \
+	com/syrus/AMFICOM/mcm/TestProcessingException.java \
+	com/syrus/AMFICOM/mcm/AnalysisManager.java \
+	com/syrus/AMFICOM/mcm/EvaluationManager.java \
+	com/syrus/AMFICOM/mcm/AnalysisEvaluationProcessor.java
+
+##	com/syrus/AMFICOM/mcm/DadaraAnalysisManager.java
+
+
 all: $(LIBNAME) $(LIBNAME_INTERFACE)
 
 $(LIBNAME):	.mach
@@ -48,33 +77,7 @@ $(LIBNAME_INTERFACE):	.corba
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
-		$(SRCDIR)/com/syrus/util/KISConnectionLRUMap.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/DatabaseContextSetup.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/MCMGeneralObjectLoader.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/MCMAdministrationObjectLoader.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/MCMConfigurationObjectLoader.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/MCMMeasurementObjectLoader.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/TestProcessor.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/OnetimeTestProcessor.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/PeriodicalTestProcessor.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/ContinuousTestProcessor.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/MeasurementControlModule.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/MCMImplementation.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/KISReport.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/Transceiver.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/KISConnection.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/KISConnectionManager.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/TCPKISConnection.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisException.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/EvaluationException.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/MeasurementException.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/TestProcessingException.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisManager.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/EvaluationManager.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisEvaluationProcessor.java
-
-##		$(SRCDIR)/com/syrus/AMFICOM/mcm/DadaraAnalysisManager.java
-
+		$(addprefix $(SRCDIR)/,$(SOURCES))
 	touch $@
 
 .corba:	$(CLASSDIR)
@@ -94,8 +97,7 @@ clean:	cleanmach cleancorba cleanhead
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) $(wildcard $(CLASSDIR)/com/syrus/AMFICOM/mcm/*.class)
-	$(RM) $(wildcard $(CLASSDIR)/com/syrus/util/*.class)
+	$(RM) $(addprefix $(CLASSDIR)/,$(subst .java,.class,$(SOURCES)))
 	$(RM) .mach
 
 .PHONY:	cleanhead
@@ -122,5 +124,5 @@ arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
 		idl/mcm.idl \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/*.java
+		$(addprefix $(SRCDIR)/,$(SOURCES))
 

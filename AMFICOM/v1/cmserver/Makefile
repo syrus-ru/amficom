@@ -17,6 +17,22 @@ APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administratio
 
 all: $(LIBNAME) $(LIBNAME_INTERFACE)
 
+
+SOURCES := com/syrus/AMFICOM/cmserver/CMServerConfigurationObjectLoader.java \
+	com/syrus/AMFICOM/cmserver/CMServerMeasurementObjectLoader.java \
+	com/syrus/AMFICOM/cmserver/DatabaseContextSetup.java \
+	com/syrus/AMFICOM/cmserver/CMGeneralReceive.java \
+	com/syrus/AMFICOM/cmserver/CMAdministrationReceive.java \
+	com/syrus/AMFICOM/cmserver/CMConfigurationReceive.java \
+	com/syrus/AMFICOM/cmserver/CMMeasurementReceive.java \
+	com/syrus/AMFICOM/cmserver/CMGeneralTransmit.java \
+	com/syrus/AMFICOM/cmserver/CMAdministrationTransmit.java \
+	com/syrus/AMFICOM/cmserver/CMConfigurationTransmit.java \
+	com/syrus/AMFICOM/cmserver/CMMeasurementTransmit.java \
+	com/syrus/AMFICOM/cmserver/CMServerImpl.java \
+	com/syrus/AMFICOM/cmserver/ClientMeasurementServer.java
+
+
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
@@ -32,19 +48,7 @@ $(LIBNAME_INTERFACE):	.corba
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
-		$(SRCDIR)/com/syrus/AMFICOM/cmserver/CMServerConfigurationObjectLoader.java \
-		$(SRCDIR)/com/syrus/AMFICOM/cmserver/CMServerMeasurementObjectLoader.java \
-		$(SRCDIR)/com/syrus/AMFICOM/cmserver/DatabaseContextSetup.java \
-		$(SRCDIR)/com/syrus/AMFICOM/cmserver/CMGeneralReceive.java \
-		$(SRCDIR)/com/syrus/AMFICOM/cmserver/CMAdministrationReceive.java \
-		$(SRCDIR)/com/syrus/AMFICOM/cmserver/CMConfigurationReceive.java \
-		$(SRCDIR)/com/syrus/AMFICOM/cmserver/CMMeasurementReceive.java \
-		$(SRCDIR)/com/syrus/AMFICOM/cmserver/CMGeneralTransmit.java \
-		$(SRCDIR)/com/syrus/AMFICOM/cmserver/CMAdministrationTransmit.java \
-		$(SRCDIR)/com/syrus/AMFICOM/cmserver/CMConfigurationTransmit.java \
-		$(SRCDIR)/com/syrus/AMFICOM/cmserver/CMMeasurementTransmit.java \
-		$(SRCDIR)/com/syrus/AMFICOM/cmserver/CMServerImpl.java \
-		$(SRCDIR)/com/syrus/AMFICOM/cmserver/ClientMeasurementServer.java 
+		$(addprefix $(SRCDIR)/,$(SOURCES))
 	touch $@
 
 .corba:	$(CLASSDIR)
@@ -65,7 +69,7 @@ clean:	cleanmach cleancorba
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) $(wildcard $(CLASSDIR)/com/syrus/AMFICOM/cmserver/*.class)
+	$(RM) $(addprefix $(CLASSDIR)/,$(subst .java,.class,$(SOURCES)))
 	$(RM) .mach
 
 .PHONY:	cleancorba
@@ -85,5 +89,5 @@ arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
 		$(IDLDIR)/cmserver.idl \
-		$(SRCDIR)/com/syrus/AMFICOM/cmserver/*.java
+		$(addprefix $(SRCDIR)/,$(SOURCES))
 
