@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.37 2004/12/07 10:59:48 bass Exp $
+ * $Id: MeasurementType.java,v 1.38 2004/12/08 10:24:09 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2004/12/07 10:59:48 $
- * @author $Author: bass $
+ * @version $Revision: 1.38 $, $Date: 2004/12/08 10:24:09 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -140,7 +140,7 @@ public class MeasurementType extends ActionType {
 												 List inParameterTypes,
 												 List outParameterTypes,
 												 List measurementPortTypes) {
-		if (creatorId == null || codename == null || description == null)
+		if (creatorId == null || codename == null || codename.length() == 0  || description == null)
 			throw new IllegalArgumentException("Argument is 'null'");		
 
 		return new MeasurementType(IdentifierPool.generateId(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE),

@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.34 2004/12/07 10:59:48 bass Exp $
+ * $Id: EvaluationType.java,v 1.35 2004/12/08 10:24:09 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/12/07 10:59:48 $
- * @author $Author: bass $
+ * @version $Revision: 1.35 $, $Date: 2004/12/08 10:24:09 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -157,7 +157,7 @@ public class EvaluationType extends ActionType {
 												List thresholdParameterTypes,
 												List etalonParameterTypes,
 												List outParameterTypes) {
-		if (creatorId == null || codename == null || description == null)
+		if (creatorId == null || codename == null || codename.length() == 0 || description == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		return new EvaluationType(IdentifierPool.generateId(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE),

@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.30 2004/12/08 10:09:14 bob Exp $
+ * $Id: ParameterType.java,v 1.31 2004/12/08 10:24:09 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/12/08 10:09:14 $
+ * @version $Revision: 1.31 $, $Date: 2004/12/08 10:24:09 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -97,7 +97,7 @@ public class ParameterType extends StorableObjectType {
 											   String codename,
 											   String description,
 											   String name) {
-		if (creatorId == null || codename == null || description == null || name == null || name.length() != 0)
+		if (creatorId == null || codename == null || codename.length() == 0 || description == null || name == null || name.length() == 0)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		return new ParameterType(IdentifierPool.generateId(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
@@ -121,7 +121,7 @@ public class ParameterType extends StorableObjectType {
 											   String description,
 											   String name,
 											   DataType sort) {
-		if (creatorId == null || codename == null || description == null || name == null || sort == null)
+		if (creatorId == null || codename == null || codename.length() == 0 || description == null || name == null || name.length() == 0 || sort == null)
 			throw new IllegalArgumentException("Argument is 'null'");		
 
 		return new ParameterType(IdentifierPool.generateId(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
