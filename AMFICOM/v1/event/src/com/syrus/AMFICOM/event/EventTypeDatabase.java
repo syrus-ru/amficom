@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.13 2005/02/24 15:00:07 arseniy Exp $
+ * $Id: EventTypeDatabase.java,v 1.14 2005/02/28 11:16:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/02/24 15:00:07 $
+ * @version $Revision: 1.14 $, $Date: 2005/02/28 11:16:19 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -76,9 +76,9 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		return i;
 	}
 
-	protected String getUpdateMultiplySQLValues(int mode) {
+	protected String getUpdateMultiplySQLValues() {
 		if (updateMultiplySQLValues == null) {
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 				+ QUESTION + COMMA 
 				+ QUESTION;
 		}

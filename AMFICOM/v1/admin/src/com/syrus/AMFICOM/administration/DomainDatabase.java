@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.17 2005/02/24 14:59:46 arseniy Exp $
+ * $Id: DomainDatabase.java,v 1.18 2005/02/28 11:13:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/02/24 14:59:46 $
+ * @version $Revision: 1.18 $, $Date: 2005/02/28 11:13:28 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -65,9 +65,9 @@ public class DomainDatabase extends StorableObjectDatabase {
 		return columns;
 	}
 	
-	protected String getUpdateMultiplySQLValues(int mode) {
+	protected String getUpdateMultiplySQLValues() {
 		if (updateMultiplySQLValues == null) {
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION;

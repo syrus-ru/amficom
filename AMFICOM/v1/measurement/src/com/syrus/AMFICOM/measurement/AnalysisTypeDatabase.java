@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.70 2005/02/24 14:59:58 arseniy Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.71 2005/02/28 11:14:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/02/24 14:59:58 $
+ * @version $Revision: 1.71 $, $Date: 2005/02/28 11:14:00 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -68,9 +68,9 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		return columns;
 	}
 
-	protected String getUpdateMultiplySQLValues(int mode) {
+	protected String getUpdateMultiplySQLValues() {
 		if (updateMultiplySQLValues == null) {
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 				+ QUESTION + COMMA 
 				+ QUESTION;
 		}

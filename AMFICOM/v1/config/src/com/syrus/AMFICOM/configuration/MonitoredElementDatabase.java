@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.51 2005/02/24 14:59:53 arseniy Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.52 2005/02/28 11:13:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/02/24 14:59:53 $
+ * @version $Revision: 1.52 $, $Date: 2005/02/28 11:13:42 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -73,9 +73,9 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		return columns;
 	}
 
-	protected String getUpdateMultiplySQLValues(int mode) {
+	protected String getUpdateMultiplySQLValues() {
 		if (updateMultiplySQLValues == null) {
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA + QUESTION + COMMA + QUESTION
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA + QUESTION + COMMA + QUESTION
 					+ COMMA + QUESTION + COMMA + QUESTION + COMMA + QUESTION;
 		}
 		return updateMultiplySQLValues;

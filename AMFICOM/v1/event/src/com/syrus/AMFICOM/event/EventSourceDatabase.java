@@ -1,5 +1,5 @@
 /*
- * $Id: EventSourceDatabase.java,v 1.7 2005/02/24 15:00:07 arseniy Exp $
+ * $Id: EventSourceDatabase.java,v 1.8 2005/02/28 11:16:20 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/24 15:00:07 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/28 11:16:20 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -52,9 +52,9 @@ public class EventSourceDatabase extends StorableObjectDatabase {
 		return columns;
 	}
 
-	protected String getUpdateMultiplySQLValues(int mode) {
+	protected String getUpdateMultiplySQLValues() {
 		if (updateMultiplySQLValues == null) {
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA

@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.70 2005/02/24 14:59:59 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.71 2005/02/28 11:14:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/02/24 14:59:59 $
+ * @version $Revision: 1.71 $, $Date: 2005/02/28 11:14:01 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -73,9 +73,9 @@ public class ResultDatabase extends StorableObjectDatabase {
 		return columns;
 	}
 
-	protected String getUpdateMultiplySQLValues(int mode) {
+	protected String getUpdateMultiplySQLValues() {
 		if (updateMultiplySQLValues == null) {
-			StringBuffer buffer = new StringBuffer(super.getUpdateMultiplySQLValues(mode));
+			StringBuffer buffer = new StringBuffer(super.getUpdateMultiplySQLValues());
 			buffer.append(COMMA);
 			buffer.append(QUESTION);
 			buffer.append(COMMA);

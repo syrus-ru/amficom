@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.68 2005/02/24 14:59:59 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.69 2005/02/28 11:14:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/02/24 14:59:59 $
+ * @version $Revision: 1.69 $, $Date: 2005/02/28 11:14:01 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -53,6 +53,7 @@ public class SetDatabase extends StorableObjectDatabase {
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
 	private static String columns;
+	private static String insertMultiplySQLValues;
 	private static String updateMultiplySQLValues;    
 
 	protected String getEnityName() {
@@ -68,9 +69,9 @@ public class SetDatabase extends StorableObjectDatabase {
 		return columns;
 	}
 
-	protected String getUpdateMultiplySQLValues(int mode) {
+	protected String getUpdateMultiplySQLValues() {
 		if (updateMultiplySQLValues == null) {
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 				+ QUESTION  + COMMA
 				+ QUESTION;
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathTypeDatabase.java,v 1.27 2005/02/24 14:59:53 arseniy Exp $
+ * $Id: TransmissionPathTypeDatabase.java,v 1.28 2005/02/28 11:13:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/02/24 14:59:53 $
+ * @version $Revision: 1.28 $, $Date: 2005/02/28 11:13:42 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -71,9 +71,9 @@ public class TransmissionPathTypeDatabase extends StorableObjectDatabase {
 		return columns;
 	}
 
-	protected String getUpdateMultiplySQLValues(int mode) {
+	protected String getUpdateMultiplySQLValues() {
 		if (updateMultiplySQLValues == null) {
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
+			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;
