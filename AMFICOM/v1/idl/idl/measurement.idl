@@ -271,7 +271,9 @@ module corba {
 
     com::syrus::AMFICOM::general::corba::Identifier_Transferable criteria_set_id;
   };
-
+  
+	typedef sequence <Analysis_Transferable> AnalysisSeq_Transferable;
+	
 //////////////////// Evaluation /////////////////////
 
   struct Evaluation_Transferable {
