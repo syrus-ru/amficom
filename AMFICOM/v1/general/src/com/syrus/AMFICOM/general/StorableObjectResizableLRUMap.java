@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectResizableLRUMap.java,v 1.2 2005/03/18 16:55:57 arseniy Exp $
+ * $Id: StorableObjectResizableLRUMap.java,v 1.3 2005/03/21 16:15:57 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,24 +9,29 @@ package com.syrus.AMFICOM.general;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import com.syrus.util.LRUMap;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/03/18 16:55:57 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/21 16:15:57 $
  * @author $Author: arseniy $
  * @module general_v1
  */
 public class StorableObjectResizableLRUMap extends LRUMap {
 	private static final long serialVersionUID = 5983495252523370955L;
+	
+	private int initialCapacity;
 
 	public StorableObjectResizableLRUMap() {
 		super();
+		this.initialCapacity = SIZE;
 	}
 
-	public StorableObjectResizableLRUMap(int capacity) {
-		super(capacity);
+	public StorableObjectResizableLRUMap(int initialCapacity) {
+		super(initialCapacity);
+		this.initialCapacity = initialCapacity;
 	}
 
 	public synchronized Object put(Object key, Object value) {
@@ -93,6 +98,8 @@ public class StorableObjectResizableLRUMap extends LRUMap {
 	}
 
 	public synchronized void truncate(boolean removeAlsoUnchanged) {
+		super.modCount++;
+
 		ArrayList retainedEntries = new ArrayList(super.array.length);
 
 		Entry entry;
@@ -114,6 +121,13 @@ public class StorableObjectResizableLRUMap extends LRUMap {
 			}
 		}
 
-		super.array = (Entry[]) retainedEntries.toArray(new Entry[retainedEntries.size()]);
+		int size = retainedEntries.size();
+		super.array = new Entry[(size > this.initialCapacity) ? size : this.initialCapacity];
+		int i = 0;
+		for (Iterator it = retainedEntries.iterator(); it.hasNext(); i++) {
+			entry = (Entry) it.next();
+			super.array[i] = entry;
+		}
+		super.entityCount = size;
 	}
 }
