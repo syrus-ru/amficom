@@ -3,8 +3,14 @@
 #include <assert.h>
 #include "prf.h"
 
+#ifdef __unix__
+#define __int64 long long
+#define CLK_TCK CLOCKS_PER_SEC
+#define USE_clock 1
+#else
 #define USE_clock 1
 #define USE_rdtsc 1
+#endif
 
 static int clock_cur;
 static __int64 clock_cur_64;
