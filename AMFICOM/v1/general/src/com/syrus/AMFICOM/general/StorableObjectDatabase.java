@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.123 2005/03/15 12:43:45 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.124 2005/03/15 13:06:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.123 $, $Date: 2005/03/15 12:43:45 $
+ * @version $Revision: 1.124 $, $Date: 2005/03/15 13:06:23 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -1386,7 +1386,7 @@ public abstract class StorableObjectDatabase {
 
 	private String[] parseInsertStringValues(String insertValues, int columnCount) {
 		int length = insertValues.length();
-		Pattern pattern = Pattern.compile("(('(''|[^'])*')|([^',\\s]+)|(\\w+\\([^)]+\\)))\\s*(,|$)");
+		Pattern pattern = Pattern.compile("(('(''|[^'])*')|([^',]+)|(\\w+\\s*\\([^)]+\\)))\\s*(,|$)");
 		Matcher matcher = pattern.matcher(insertValues);
 		String[] values = new String[columnCount];
 		int valueCounter = 0;
@@ -1403,10 +1403,7 @@ public abstract class StorableObjectDatabase {
 						if ((i == 2) || (i == 4) || (i == 5)) {
 							values[valueCounter++] = insertValues.substring(matcher.start(i), matcher.end(i));
 						}
-
 					}
-
-
 				}
 			}			
 		}
