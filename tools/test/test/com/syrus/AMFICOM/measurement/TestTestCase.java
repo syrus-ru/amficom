@@ -1,10 +1,11 @@
 /*
- * $Id: TestTestCase.java,v 1.3 2004/08/17 09:06:26 bob Exp $
+ * $Id: TestTestCase.java,v 1.4 2004/08/25 09:42:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
+
 package test.com.syrus.AMFICOM.measurement;
 
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/08/17 09:06:26 $
+ * @version $Revision: 1.4 $, $Date: 2004/08/25 09:42:39 $
  * @author $Author: bob $
  * @module tools
  */
@@ -86,7 +87,7 @@ public class TestTestCase extends AbstractMesurementTestCase {
 		if (temporalPatternList.isEmpty())
 			fail("must be at less one temporal pattern at db");
 
-		Identifier temporalPetternId = ((TemporalPattern) temporalPatternList.get(0)).getId();
+		TemporalPattern temporalPettern = (TemporalPattern) temporalPatternList.get(0);
 
 		List monitoredElementList = MonitoredElementDatabase.retrieveAll();
 
@@ -102,9 +103,10 @@ public class TestTestCase extends AbstractMesurementTestCase {
 		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.TEST_ENTITY_CODE);
 
 		Test test = Test.createInstance(id, creatorId, new Date(System.currentTimeMillis()), new Date(System
-				.currentTimeMillis() + 1000 * 60 * 30), temporalPetternId, temporalType, measurementType, analysisType,
-										evaluationType, me, TestReturnType.TEST_RETURN_TYPE_WHOLE,
-										"cretated by TestTestCase", measurementSetupIds);
+				.currentTimeMillis() + 1000 * 60 * 30), temporalPettern, temporalType, measurementType,
+						analysisType, evaluationType, me,
+						TestReturnType.TEST_RETURN_TYPE_WHOLE, "cretated by TestTestCase",
+						measurementSetupIds);
 
 		Test test2 = new Test((Test_Transferable) test.getTransferable());
 
@@ -112,12 +114,12 @@ public class TestTestCase extends AbstractMesurementTestCase {
 
 		assertEquals(test2, test3);
 
-		if (!list.isEmpty())
-			TestDatabase.delete(test);
+//		if (!list.isEmpty())
+//			TestDatabase.delete(test);
 
 	}
 
-	public void testCreationSimpleTest() throws IdentifierGenerationException, IllegalObjectEntityException,
+	public void _testCreationSimpleTest() throws IdentifierGenerationException, IllegalObjectEntityException,
 			CreateObjectException, RetrieveObjectException, ObjectNotFoundException {
 
 		TestTemporalType temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME;
@@ -150,14 +152,14 @@ public class TestTestCase extends AbstractMesurementTestCase {
 
 		EvaluationType evaluationType = null;
 
-		Identifier temporalPetternId = null;
+		TemporalPattern temporalPettern = null;
 
 		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.TEST_ENTITY_CODE);
 
-		Test test = Test.createInstance(id, creatorId, new Date(System.currentTimeMillis()), null, temporalPetternId,
-										temporalType, measurementType, analysisType, evaluationType, me,
-										TestReturnType.TEST_RETURN_TYPE_WHOLE, "cretated by TestTestCase",
-										measurementSetupIds);
+		Test test = Test.createInstance(id, creatorId, new Date(System.currentTimeMillis()), null,
+						temporalPettern, temporalType, measurementType, analysisType,
+						evaluationType, me, TestReturnType.TEST_RETURN_TYPE_WHOLE,
+						"cretated by TestTestCase", measurementSetupIds);
 
 		Test test2 = new Test((Test_Transferable) test.getTransferable());
 
@@ -173,7 +175,7 @@ public class TestTestCase extends AbstractMesurementTestCase {
 
 	}
 
-	public void testCreationContinualTest() throws IdentifierGenerationException, IllegalObjectEntityException,
+	public void _testCreationContinualTest() throws IdentifierGenerationException, IllegalObjectEntityException,
 			CreateObjectException, RetrieveObjectException, ObjectNotFoundException {
 
 		TestTemporalType temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_CONTINUOUS;
@@ -206,14 +208,15 @@ public class TestTestCase extends AbstractMesurementTestCase {
 
 		EvaluationType evaluationType = null;
 
-		Identifier temporalPetternId = null;
+		TemporalPattern temporalPettern = null;
 
 		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.TEST_ENTITY_CODE);
 
 		Test test = Test.createInstance(id, creatorId, new Date(System.currentTimeMillis()), new Date(System
-				.currentTimeMillis() + 1000 * 60 * 30), temporalPetternId, temporalType, measurementType, analysisType,
-										evaluationType, me, TestReturnType.TEST_RETURN_TYPE_WHOLE,
-										"cretated by TestTestCase", measurementSetupIds);
+				.currentTimeMillis() + 1000 * 60 * 30), temporalPettern, temporalType, measurementType,
+						analysisType, evaluationType, me,
+						TestReturnType.TEST_RETURN_TYPE_WHOLE, "cretated by TestTestCase",
+						measurementSetupIds);
 
 		Test test2 = new Test((Test_Transferable) test.getTransferable());
 

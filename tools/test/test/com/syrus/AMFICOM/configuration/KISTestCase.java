@@ -1,10 +1,11 @@
 /*
- * $Id: KISTestCase.java,v 1.2 2004/08/16 09:05:09 bob Exp $
+ * $Id: KISTestCase.java,v 1.3 2004/08/25 09:42:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
+
 package test.com.syrus.AMFICOM.configuration;
 
 import java.util.Iterator;
@@ -12,6 +13,8 @@ import java.util.List;
 
 import junit.framework.Test;
 
+import com.syrus.AMFICOM.configuration.Equipment;
+import com.syrus.AMFICOM.configuration.EquipmentDatabase;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 import com.syrus.AMFICOM.configuration.MCM;
@@ -26,7 +29,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/16 09:05:09 $
+ * @version $Revision: 1.3 $, $Date: 2004/08/25 09:42:39 $
  * @author $Author: bob $
  * @module tools
  */
@@ -39,18 +42,25 @@ public class KISTestCase extends ConfigureTestCase {
 	public static void main(java.lang.String[] args) {
 		Class clazz = KISTestCase.class;
 		junit.awtui.TestRunner.run(clazz);
-//		junit.swingui.TestRunner.run(clazz);
-//		junit.textui.TestRunner.run(clazz);
+		//		junit.swingui.TestRunner.run(clazz);
+		//		junit.textui.TestRunner.run(clazz);
 	}
 
 	public void testCreation() throws IdentifierGenerationException, IllegalObjectEntityException,
 			CreateObjectException, RetrieveObjectException, ObjectNotFoundException {
 		List list = KISDatabase.retrieveAll();
+
+		List eqList = EquipmentDatabase.retrieveAll();
+
+		if (eqList.isEmpty())
+			fail("must be at less one equipment at db");
+
 		MCM mcm = new MCM(new Identifier("MCM_2"));
-		
+
 		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.KIS_ENTITY_CODE);
-		KIS kis = KIS.createInstance(id, ConfigureTestCase.creatorId, ConfigureTestCase.domainId, "testCaseKIS",
-										"kis  created by KISTestCase ", mcm.getId());
+		KIS kis = KIS.createInstance(id, ConfigureTestCase.creatorId, ConfigureTestCase.domainId,
+						"testCaseKIS", "kis  created by KISTestCase ", ((Equipment) eqList
+								.get(0)).getId(), mcm.getId());
 
 		KIS kis2 = new KIS((KIS_Transferable) kis.getTransferable());
 

@@ -1,10 +1,11 @@
 /*
- * $Id: EquipmentTestCase.java,v 1.2 2004/08/16 09:05:09 bob Exp $
+ * $Id: EquipmentTestCase.java,v 1.3 2004/08/25 09:42:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
+
 package test.com.syrus.AMFICOM.configuration;
 
 import java.util.Iterator;
@@ -18,7 +19,6 @@ import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.EquipmentTypeDatabase;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.KISDatabase;
-import com.syrus.AMFICOM.configuration.corba.EquipmentSort;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/16 09:05:09 $
+ * @version $Revision: 1.3 $, $Date: 2004/08/25 09:42:39 $
  * @author $Author: bob $
  * @module tools
  */
@@ -43,8 +43,8 @@ public class EquipmentTestCase extends ConfigureTestCase {
 	public static void main(java.lang.String[] args) {
 		Class clazz = EquipmentTestCase.class;
 		junit.awtui.TestRunner.run(clazz);
-//		junit.swingui.TestRunner.run(clazz);
-//		junit.textui.TestRunner.run(clazz);	
+		//		junit.swingui.TestRunner.run(clazz);
+		//		junit.textui.TestRunner.run(clazz);
 	}
 
 	public static Test suite() {
@@ -70,12 +70,11 @@ public class EquipmentTestCase extends ConfigureTestCase {
 
 		KIS kis = (KIS) kislist.get(0);
 
-
 		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.EQUIPMENT_ENTITY_CODE);
-		
+
 		Equipment eq = Equipment.createInstance(id, creatorId, domainId, eqType, "testCaseEquipment",
-												"equipment created by EquipmentTestCase", new Identifier("Image_1"),
-												EquipmentSort._EQUIPMENT_SORT_KIS, kis.getId());
+							"equipment created by EquipmentTestCase",
+							new Identifier("Image_1"));
 
 		Equipment eq2 = new Equipment((Equipment_Transferable) eq.getTransferable());
 

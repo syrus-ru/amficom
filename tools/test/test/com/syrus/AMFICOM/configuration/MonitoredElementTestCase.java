@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementTestCase.java,v 1.1 2004/08/16 09:03:21 bob Exp $
+ * $Id: MonitoredElementTestCase.java,v 1.2 2004/08/25 09:42:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,17 +12,10 @@ import java.util.List;
 
 import junit.framework.Test;
 
-import com.syrus.AMFICOM.configuration.KIS;
-import com.syrus.AMFICOM.configuration.KISDatabase;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
-import com.syrus.AMFICOM.configuration.MeasurementPortType;
-import com.syrus.AMFICOM.configuration.MeasurementPortTypeDatabase;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.MonitoredElementDatabase;
-import com.syrus.AMFICOM.configuration.Port;
-import com.syrus.AMFICOM.configuration.PortDatabase;
-import com.syrus.AMFICOM.configuration.corba.MeasurementPort_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -35,7 +28,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/16 09:03:21 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/25 09:42:39 $
  * @author $Author: bob $
  * @module tools
  */
@@ -81,8 +74,8 @@ public class MonitoredElementTestCase extends ConfigureTestCase {
 
 		assertEquals(me2.getId(), me3.getId());
 
-		if (!list.isEmpty())
-			MonitoredElementDatabase.delete(me);
+//		if (!list.isEmpty())
+//			MonitoredElementDatabase.delete(me);
 
 	}
 
