@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalConditionUI.java,v 1.4 2005/03/10 15:17:48 bob Exp $
+ * $Id: LogicalConditionUI.java,v 1.5 2005/03/10 15:22:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.logic.LogicalSchemeUI;
 import com.syrus.AMFICOM.logic.LogicalTreeUI;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/03/10 15:17:48 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/10 15:22:50 $
  * @author $Author: bob $
  * @module filter_v1
  */
@@ -100,7 +100,7 @@ public class LogicalConditionUI {
 		deleteButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				logicalSchemeUI.deleteSelectedItem();
+				logicalSchemeUI.deleteSelectedItems();
 			}
 		});
 

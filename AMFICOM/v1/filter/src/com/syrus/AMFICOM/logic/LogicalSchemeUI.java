@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalSchemeUI.java,v 1.4 2005/03/10 15:17:48 bob Exp $
+ * $Id: LogicalSchemeUI.java,v 1.5 2005/03/10 15:22:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/03/10 15:17:48 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/10 15:22:50 $
  * @author $Author: bob $
  * @module filter_v1
  */
@@ -516,7 +516,7 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 		}
 	}
 
-	public void deleteSelectedItem() {
+	public void deleteSelectedItems() {
 
 		if (this.selectedItem != null) {
 			List list = new ArrayList(this.selectedItems);
