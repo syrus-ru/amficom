@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierImplTestCase.java,v 1.4 2004/12/21 13:56:56 bass Exp $
+ * $Id: IdentifierImplTestCase.java,v 1.5 2005/02/25 12:56:45 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import junit.framework.TestCase;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2004/12/21 13:56:56 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/25 12:56:45 $
  * @module general_v1
  */
 public class IdentifierImplTestCase extends TestCase {
@@ -85,18 +85,6 @@ public class IdentifierImplTestCase extends TestCase {
 		long minor = 1L;
 		Identifier id = factory.newInstanceFromPrimitive(ObjectEntities.ANALYSIS_ENTITY_CODE, minor);
 		System.err.println(id);
-	}
-
-	/**
-	 * Class under test for Identifier cloneInstance()
-	 */
-	public final void testCloneInstance() {
-		IdentifierDefaultFactory factory = new IdentifierDefaultFactory();
-		long minor = 1L;
-		Identifier id1 = factory.newInstanceFromString(ObjectEntities.ANALYSIS_ENTITY + Identifier.SEPARATOR + minor);
-		Identifier id2 = id1.cloneInstance();
-		assertEquals(id1 == id2, false);
-		assertEquals(id1, id2);
 	}
 
 	public final void testCompareTo() {
