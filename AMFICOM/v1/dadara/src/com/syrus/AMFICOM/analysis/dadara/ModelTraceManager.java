@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.27 2005/03/24 14:46:16 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.28 2005/03/24 15:59:12 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.27 $, $Date: 2005/03/24 14:46:16 $
+ * @version $Revision: 1.28 $, $Date: 2005/03/24 15:59:12 $
  * @module
  */
 public class ModelTraceManager
@@ -473,10 +473,11 @@ public class ModelTraceManager
 
 	public interface ThresholdHandle
 	{
-		public void moveBy(double dx, double dy);
-		public int getX();
-		public double getY();
-		public void release();
+		void moveBy(double dx, double dy);
+		int getX();
+		double getY();
+		void release();
+		boolean isRelevantToNEvent(int nEvent);
 	}
 
 	protected class ThresholdHandleDX
@@ -516,6 +517,10 @@ public class ModelTraceManager
 		{
 			th.arrangeLimits(key);
 			invalidateThMTCache(); // сбрасываем кэш всех кривых
+		}
+		public boolean isRelevantToNEvent(int nEvent)
+		{
+			return th.isRelevantToNEvent(nEvent);
 		}
 	}
 
@@ -601,6 +606,10 @@ public class ModelTraceManager
 			th.arrangeLimits(key);
 			invalidateThMTCache(); // сбрасываем кэш всех кривых
 		}
+		public boolean isRelevantToNEvent(int nEvent)
+		{
+			return th.isRelevantToNEvent(nEvent);
+		}
 	}
 
 	private ArrayList getAllThreshByNEvent(int nEvent)
@@ -608,7 +617,7 @@ public class ModelTraceManager
 		ArrayList ret = new ArrayList();
 		for (int i = 0; i < tL.length; i++)
 		{
-			if (tL[i].eventId0 <= nEvent && tL[i].eventId1 >= nEvent)
+			if (tL[i].isRelevantToNEvent(nEvent))
 				ret.add(tL[i]);
 		}
 		return ret;

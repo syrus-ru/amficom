@@ -1,5 +1,5 @@
 /*
- * $Id: Thresh.java,v 1.8 2005/03/21 18:06:53 saa Exp $
+ * $Id: Thresh.java,v 1.9 2005/03/24 15:59:12 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.8 $, $Date: 2005/03/21 18:06:53 $
+ * @version $Revision: 1.9 $, $Date: 2005/03/24 15:59:12 $
  * @module
  */
 
@@ -110,6 +110,17 @@ public abstract class Thresh
 		{
 			th[i].writeToDOS(dos);
 		}
+	}
+
+	/**
+	 * ќпредел€ет, относитс€ ли данный порог к данному событию.
+	 * ќдин порог может относитьс€ к нескольким событи€м,
+	 * как и несколько порогов - к одному событию.
+	 * @param nEvent номер событи€
+	 */
+	public boolean isRelevantToNEvent(int nEvent)
+	{
+		return eventId0 <= nEvent && eventId1 >= nEvent;
 	}
 
 	// при необходимости упор€дочить все warn/soft параметры, предполага€ что редактировалс€ только key 
