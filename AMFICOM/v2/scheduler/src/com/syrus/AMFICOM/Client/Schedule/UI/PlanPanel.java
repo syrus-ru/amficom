@@ -191,7 +191,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 					testLine.addTest(test);
 					add(testLine);
 					revalidate();
-					parent.repaint();					
+					parent.repaint();
 				}
 
 			}
@@ -252,7 +252,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 
 		scaleStart = cal.getTime();
 		//scroll calendar to end of period
-		cal.add(steps[scale].scale, (int) steps[scale].total);
+		cal.add(steps[scale].scale, steps[scale].total);
 		scaleEnd = cal.getTime();
 		//scroll calendar to start point
 		cal.setTime(startDate);
@@ -289,7 +289,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 		}
 		if (select_by_mouse) {
 			select_by_mouse = false;
-			double k = (double) (parent.getVisibleRect().width - 2 * margin)
+			double k = (parent.getVisibleRect().width - 2 * margin)
 					/ Math.abs((double) (startpos.x - currpos.x));
 			int view_x = Math.min(startpos.x, currpos.x);
 			updScale(k, view_x);
@@ -361,7 +361,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 		double delta = (getWidth() - 2 * margin)
 				/ ((double) (scaleEnd.getTime() - scaleStart.getTime()) / (double) diff);
 
-		double sub_delta = delta / steps[real_scale].subscales;
+		//double sub_delta = delta / steps[real_scale].subscales;
 		if (delta >= 0 && delta < 35 && real_scale < steps.length - 1)
 				real_scale++;
 
@@ -568,7 +568,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 			double sub_delta) //, double sub_sub_delta)
 	{
 		int h = getHeight() - 1;
-		int w = getWidth();
+//		int w = getWidth();
 
 		long _diff = diff;
 		double _delta = delta;
