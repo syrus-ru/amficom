@@ -197,6 +197,7 @@ void InitialAnalysis::SetSpliceParamsBySplash( EventParams& ep, Splash& sp)
     if(ep.end>=lastNonZeroPoint){ep.end = lastNonZeroPoint-1;}
     if(ep.begin<0){ep.begin=0;}
     // ищем площадь
+
     int l = max(sp.begin_thr, sp.begin_thr - wlet_width);
     int r = min(sp.end_thr, sp.end_thr + wlet_width);
 	double alpha = 1./wlet_width;// пока так, потом посчитаем иначе
@@ -281,8 +282,8 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
      		}
         }
 		spl.sign = sign;
-        // считаем площадь
 
+        
         spl.begin_thr--;
         if(spl.begin_thr < spl.end_thr)// begin>end только если образ так и не пересёк ни разу верхний порог
         {   splashes.add(&spl);
