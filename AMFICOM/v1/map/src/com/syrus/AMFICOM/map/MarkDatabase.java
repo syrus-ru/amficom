@@ -1,5 +1,5 @@
 /*
- * $Id: MarkDatabase.java,v 1.11 2005/02/14 10:30:56 bob Exp $
+ * $Id: MarkDatabase.java,v 1.12 2005/02/21 07:45:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/02/14 10:30:56 $
+ * @version $Revision: 1.12 $, $Date: 2005/02/21 07:45:32 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -95,27 +95,22 @@ public class MarkDatabase extends StorableObjectDatabase {
 	
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		Mark mark = fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		try {
-			DatabaseString.setString(preparedStatement, ++i, mark.getName(), SIZE_NAME_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, mark.getDescription(), SIZE_DESCRIPTION_COLUMN);
-			preparedStatement.setDouble(++i, mark.getLocation().getX());
-			preparedStatement.setDouble(++i, mark.getLocation().getY());
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mark.getPhysicalLink().getId());
-			preparedStatement.setDouble(++i, mark.getDistance());
-			DatabaseString.setString(preparedStatement, ++i, mark.getCity(), SIZE_CITY_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, mark.getStreet(), SIZE_STREET_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, mark.getBuilding(), SIZE_BUILDING_COLUMN);
-		} catch (SQLException sqle) {
-			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		DatabaseString.setString(preparedStatement, ++i, mark.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, mark.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		preparedStatement.setDouble(++i, mark.getLocation().getX());
+		preparedStatement.setDouble(++i, mark.getLocation().getY());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mark.getPhysicalLink().getId());
+		preparedStatement.setDouble(++i, mark.getDistance());
+		DatabaseString.setString(preparedStatement, ++i, mark.getCity(), SIZE_CITY_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, mark.getStreet(), SIZE_STREET_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, mark.getBuilding(), SIZE_BUILDING_COLUMN);
 		return i;
 	}
 	
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
-			UpdateObjectException {
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
 		Mark mark = fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(mark.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA

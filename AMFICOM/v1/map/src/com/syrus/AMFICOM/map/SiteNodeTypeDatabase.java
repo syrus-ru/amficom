@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeTypeDatabase.java,v 1.10 2005/02/14 10:30:56 bob Exp $
+ * $Id: SiteNodeTypeDatabase.java,v 1.11 2005/02/21 07:45:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/02/14 10:30:56 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/21 07:45:32 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -82,23 +82,18 @@ public class SiteNodeTypeDatabase extends StorableObjectDatabase {
 	
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		SiteNodeType siteNodeType = fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		try {
-			DatabaseString.setString(preparedStatement, ++i, siteNodeType.getCodename(), SIZE_CODENAME_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, siteNodeType.getName(), SIZE_NAME_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, siteNodeType.getDescription(), SIZE_DESCRIPTION_COLUMN);
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, siteNodeType.getImageId());
-			preparedStatement.setInt(++i, siteNodeType.isTopological() ? 1 : 0);
-		} catch (SQLException sqle) {
-			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		DatabaseString.setString(preparedStatement, ++i, siteNodeType.getCodename(), SIZE_CODENAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, siteNodeType.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, siteNodeType.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, siteNodeType.getImageId());
+		preparedStatement.setInt(++i, siteNodeType.isTopological() ? 1 : 0);
 		return i;
 	}
 	
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
-			UpdateObjectException {
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
 		SiteNodeType siteNodeType = fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(siteNodeType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA

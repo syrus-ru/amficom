@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeDatabase.java,v 1.13 2005/02/14 10:30:56 bob Exp $
+ * $Id: SiteNodeDatabase.java,v 1.14 2005/02/21 07:45:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/02/14 10:30:56 $
+ * @version $Revision: 1.14 $, $Date: 2005/02/21 07:45:32 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -97,28 +97,22 @@ public class SiteNodeDatabase extends StorableObjectDatabase {
 	
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		SiteNode siteNode = fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		try {
-			DatabaseString.setString(preparedStatement, ++i, siteNode.getName(), SIZE_NAME_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, siteNode.getDescription(), SIZE_DESCRIPTION_COLUMN);
-			preparedStatement.setDouble(++i, siteNode.getLocation().getX());
-			preparedStatement.setDouble(++i, siteNode.getLocation().getY());
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, siteNode.getImageId());
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, siteNode.getType().getId());
-			DatabaseString.setString(preparedStatement, ++i, siteNode.getCity(), MarkDatabase.SIZE_CITY_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, siteNode.getStreet(), MarkDatabase.SIZE_STREET_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, siteNode.getBuilding(), MarkDatabase.SIZE_BUILDING_COLUMN);
-			
-		} catch (SQLException sqle) {
-			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		DatabaseString.setString(preparedStatement, ++i, siteNode.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, siteNode.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		preparedStatement.setDouble(++i, siteNode.getLocation().getX());
+		preparedStatement.setDouble(++i, siteNode.getLocation().getY());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, siteNode.getImageId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, siteNode.getType().getId());
+		DatabaseString.setString(preparedStatement, ++i, siteNode.getCity(), MarkDatabase.SIZE_CITY_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, siteNode.getStreet(), MarkDatabase.SIZE_STREET_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, siteNode.getBuilding(), MarkDatabase.SIZE_BUILDING_COLUMN);
 		return i;
 	}
 	
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
-			UpdateObjectException {
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
 		SiteNode siteNode = fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(siteNode.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA

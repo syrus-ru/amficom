@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkDatabase.java,v 1.12 2005/02/14 10:30:56 bob Exp $
+ * $Id: PhysicalLinkDatabase.java,v 1.13 2005/02/21 07:45:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/02/14 10:30:56 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/21 07:45:32 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -97,29 +97,24 @@ public class PhysicalLinkDatabase extends StorableObjectDatabase {
 	
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		PhysicalLink physicalLink = fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		try {
-			DatabaseString.setString(preparedStatement, ++i, physicalLink.getName(), SIZE_NAME_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, physicalLink.getDescription(), SIZE_DESCRIPTION_COLUMN);
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, physicalLink.getType().getId());
-			DatabaseString.setString(preparedStatement, ++i, physicalLink.getCity(), MarkDatabase.SIZE_CITY_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, physicalLink.getStreet(), MarkDatabase.SIZE_STREET_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, physicalLink.getBuilding(), MarkDatabase.SIZE_BUILDING_COLUMN);
-			preparedStatement.setInt(++i, physicalLink.getDimensionX());
-			preparedStatement.setInt(++i, physicalLink.getDimensionY());			
-			preparedStatement.setInt(++i, (physicalLink.isTopToBottom() ? TOP_BOTTOM : 0) | (physicalLink.isLeftToRight() ? LEFT_RIGHT : 0) );
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, physicalLink.getStartNode().getId());
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, physicalLink.getEndNode().getId());
-		} catch (SQLException sqle) {
-			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		DatabaseString.setString(preparedStatement, ++i, physicalLink.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, physicalLink.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, physicalLink.getType().getId());
+		DatabaseString.setString(preparedStatement, ++i, physicalLink.getCity(), MarkDatabase.SIZE_CITY_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, physicalLink.getStreet(), MarkDatabase.SIZE_STREET_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, physicalLink.getBuilding(), MarkDatabase.SIZE_BUILDING_COLUMN);
+		preparedStatement.setInt(++i, physicalLink.getDimensionX());
+		preparedStatement.setInt(++i, physicalLink.getDimensionY());			
+		preparedStatement.setInt(++i, (physicalLink.isTopToBottom() ? TOP_BOTTOM : 0) | (physicalLink.isLeftToRight() ? LEFT_RIGHT : 0) );
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, physicalLink.getStartNode().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, physicalLink.getEndNode().getId());
 		return i;
 	}
 	
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
-			UpdateObjectException {
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
 		PhysicalLink physicalLink = fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(physicalLink.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA

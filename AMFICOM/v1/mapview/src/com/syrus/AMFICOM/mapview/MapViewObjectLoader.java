@@ -1,5 +1,5 @@
 /*
-* $Id: MapViewObjectLoader.java,v 1.2 2005/02/18 14:29:31 bob Exp $
+* $Id: MapViewObjectLoader.java,v 1.3 2005/02/21 07:48:08 bob Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,19 +13,20 @@ import java.util.Collection;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/18 14:29:31 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/21 07:48:08 $
  * @author $Author: bob $
  * @module mapview_v1
  */
 public interface MapViewObjectLoader {
 
-	void delete(Identifier id) throws CommunicationException, DatabaseException;
+	void delete(Identifier id) throws IllegalDataException;
 
-	void delete(Collection ids) throws CommunicationException, DatabaseException;
+	void delete(Collection ids) throws IllegalDataException;
 
 	MapView loadMapView(Identifier id) throws DatabaseException, CommunicationException;
 

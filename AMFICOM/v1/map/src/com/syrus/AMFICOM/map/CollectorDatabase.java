@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorDatabase.java,v 1.15 2005/02/14 10:30:56 bob Exp $
+ * $Id: CollectorDatabase.java,v 1.16 2005/02/21 07:45:31 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/02/14 10:30:56 $
+ * @version $Revision: 1.16 $, $Date: 2005/02/21 07:45:31 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -110,20 +110,15 @@ public class CollectorDatabase extends StorableObjectDatabase {
 	
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		Collector collector = fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		try {
-			DatabaseString.setString(preparedStatement, ++i, collector.getName(), SIZE_NAME_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, collector.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		} catch (SQLException sqle) {
-			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		DatabaseString.setString(preparedStatement, ++i, collector.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, collector.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		return i;
 	}
 	
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
-			UpdateObjectException {
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
 		Collector collector = fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(collector.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA

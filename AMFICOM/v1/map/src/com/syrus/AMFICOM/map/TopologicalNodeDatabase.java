@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNodeDatabase.java,v 1.12 2005/02/14 10:30:56 bob Exp $
+ * $Id: TopologicalNodeDatabase.java,v 1.13 2005/02/21 07:45:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/02/14 10:30:56 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/21 07:45:32 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -264,23 +264,18 @@ public class TopologicalNodeDatabase extends StorableObjectDatabase {
 	
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		TopologicalNode topologicalNode = fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		try {
-			DatabaseString.setString(preparedStatement, ++i, topologicalNode.getName(), SIZE_NAME_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, topologicalNode.getDescription(), SIZE_DESCRIPTION_COLUMN);
-			preparedStatement.setDouble(++i, topologicalNode.getLocation().getX());
-			preparedStatement.setDouble(++i, topologicalNode.getLocation().getY());
-			preparedStatement.setInt(++i, topologicalNode.isActive() ? 1 : 0);
-		} catch (SQLException sqle) {
-			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		DatabaseString.setString(preparedStatement, ++i, topologicalNode.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, topologicalNode.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		preparedStatement.setDouble(++i, topologicalNode.getLocation().getX());
+		preparedStatement.setDouble(++i, topologicalNode.getLocation().getY());
+		preparedStatement.setInt(++i, topologicalNode.isActive() ? 1 : 0);
 		return i;
 	}
 	
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
-			UpdateObjectException {
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
 		TopologicalNode topologicalNode = fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(topologicalNode.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA

@@ -1,5 +1,5 @@
 /*
-* $Id: MapViewDatabase.java,v 1.6 2005/02/18 14:29:11 bob Exp $
+* $Id: MapViewDatabase.java,v 1.7 2005/02/21 07:48:08 bob Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/18 14:29:11 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/21 07:48:08 $
  * @author $Author: bob $
  * @module mapview_v1
  */
@@ -145,26 +145,21 @@ public class MapViewDatabase extends StorableObjectDatabase {
 	
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		MapView mapView = fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		try {
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mapView.getDomainId());
-			DatabaseString.setString(preparedStatement, ++i, mapView.getName(), SIZE_NAME_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, mapView.getDescription(), SIZE_DESCRIPTION_COLUMN);
-			preparedStatement.setDouble(++i, mapView.getLongitude());
-			preparedStatement.setDouble(++i, mapView.getLatitude());
-			preparedStatement.setDouble(++i, mapView.getScale());
-			preparedStatement.setDouble(++i, mapView.getDefaultScale());
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mapView.getMap().getId());					
-		} catch (SQLException sqle) {
-			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mapView.getDomainId());
+		DatabaseString.setString(preparedStatement, ++i, mapView.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, mapView.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		preparedStatement.setDouble(++i, mapView.getLongitude());
+		preparedStatement.setDouble(++i, mapView.getLatitude());
+		preparedStatement.setDouble(++i, mapView.getScale());
+		preparedStatement.setDouble(++i, mapView.getDefaultScale());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mapView.getMap().getId());					
 		return i;
 	}
 	
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
-			UpdateObjectException {
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
 		MapView mapView = fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ DatabaseIdentifier.toSQLString(mapView.getDomainId()) + COMMA

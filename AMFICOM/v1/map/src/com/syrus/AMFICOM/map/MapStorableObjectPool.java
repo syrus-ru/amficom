@@ -1,5 +1,5 @@
 /*
- * $Id: MapStorableObjectPool.java,v 1.6 2005/02/14 10:30:56 bob Exp $
+ * $Id: MapStorableObjectPool.java,v 1.7 2005/02/21 07:45:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -26,7 +27,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/14 10:30:56 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/21 07:45:32 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -54,7 +55,7 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 	private static MapStorableObjectPool	instance;
 
 	private MapStorableObjectPool() {
-		// empty
+		super(ObjectGroupEntities.MAP_GROUP_CODE);
 	}
 
 	private MapStorableObjectPool(Class cacheMapClass) {
@@ -350,19 +351,19 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 		instance.cleanChangedStorableObjectsImpl();
 	}
 
-	protected void deleteStorableObject(Identifier id) throws DatabaseException, CommunicationException {
+	protected void deleteStorableObject(Identifier id) throws IllegalDataException {
 	 	mObjectLoader.delete(id);
 	}
 
-	protected void deleteStorableObjects(Collection ids) throws DatabaseException, CommunicationException {
+	protected void deleteStorableObjects(Collection ids) throws IllegalDataException {
 		mObjectLoader.delete(ids);
 	}
 
-	public static void delete(Identifier id) throws DatabaseException, CommunicationException {
+	public static void delete(Identifier id) {
 		instance.deleteImpl(id);
 	}
 
-	public static void delete(Collection ids) throws DatabaseException, CommunicationException, IllegalDataException {
+	public static void delete(Collection ids) throws IllegalDataException {
 		instance.deleteImpl(ids);
 	}
 
