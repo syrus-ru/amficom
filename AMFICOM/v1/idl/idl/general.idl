@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.46 2005/01/14 18:14:28 arseniy Exp $
+ * $Id: general.idl,v 1.47 2005/01/19 20:38:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -82,6 +82,19 @@ module corba {
 		CompletionStatus completion_status;
 		wstring message;
 	};
+
+////////////////////// ParameterType //////////////////////
+	struct ParameterType_Transferable {
+		StorableObject_Transferable header;
+
+		WString32 codename;
+		WString256 description;
+
+		WString128 name;
+		DataType data_type;
+	};
+
+	typedef sequence <ParameterType_Transferable> ParameterTypeSeq_Transferable;
 
 //////////////////// CharacteristicType ///////////////////
 	enum CharacteristicTypeSort {
@@ -203,7 +216,7 @@ module corba {
 
 	struct LinkedIdsCondition_Transferable {
 		short	entity_code;
-		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable linked_ids;		
+		IdentifierSeq_Transferable linked_ids;		
 	};
 
 };

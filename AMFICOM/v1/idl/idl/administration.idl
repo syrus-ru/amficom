@@ -1,5 +1,5 @@
 /*
- * $Id: administration.idl,v 1.2 2005/01/13 12:16:49 arseniy Exp $
+ * $Id: administration.idl,v 1.3 2005/01/19 20:38:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,26 +27,26 @@ module corba {
 	};
 
 	struct User_Transferable {
-		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject_Transferable header;
 	
-		com::syrus::AMFICOM::general::corba::WString32 login;
+		general::corba::WString32 login;
 		UserSort sort;
-		com::syrus::AMFICOM::general::corba::WString128 name;
-		com::syrus::AMFICOM::general::corba::WString256 description;
+		general::corba::WString128 name;
+		general::corba::WString256 description;
 	};
 	
 	typedef sequence <User_Transferable> UserSeq_Transferable;
 
 /////////////////////////////////// Domain ////////////////////////////////
 	struct Domain_Transferable {
-		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject_Transferable header;
 
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
+		general::corba::Identifier_Transferable domain_id;
 
-		com::syrus::AMFICOM::general::corba::WString128 name;
-		com::syrus::AMFICOM::general::corba::WString256 description;
+		general::corba::WString128 name;
+		general::corba::WString256 description;
 		
-		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
+		general::corba::IdentifierSeq_Transferable characteristic_ids;
 	};
 	
 	typedef sequence <Domain_Transferable> DomainSeq_Transferable;
@@ -55,33 +55,33 @@ module corba {
 
 /////////////////////////////////// Server ////////////////////////////////
 	struct Server_Transferable {
-		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject_Transferable header;
 
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
+		general::corba::Identifier_Transferable domain_id;
 
-		com::syrus::AMFICOM::general::corba::WString128 name;
-		com::syrus::AMFICOM::general::corba::WString256 description;
-		com::syrus::AMFICOM::general::corba::WString64 hostname;
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable user_id;
+		general::corba::WString128 name;
+		general::corba::WString256 description;
+		general::corba::WString64 hostname;
+		general::corba::Identifier_Transferable user_id;
 
-		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
+		general::corba::IdentifierSeq_Transferable characteristic_ids;
 	};
 
 	typedef sequence <Server_Transferable> ServerSeq_Transferable;
 	
 //////////////////////////////////// MCM //////////////////////////////////
 	struct MCM_Transferable {
-		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
+		general::corba::StorableObject_Transferable header;
 
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
+		general::corba::Identifier_Transferable domain_id;
 
-		com::syrus::AMFICOM::general::corba::WString128 name;
-		com::syrus::AMFICOM::general::corba::WString256 description;
-		com::syrus::AMFICOM::general::corba::WString64 hostname;
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable user_id;
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable server_id;
-		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
-		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable kis_ids;
+		general::corba::WString128 name;
+		general::corba::WString256 description;
+		general::corba::WString64 hostname;
+		general::corba::Identifier_Transferable user_id;
+		general::corba::Identifier_Transferable server_id;
+		general::corba::IdentifierSeq_Transferable characteristic_ids;
+		general::corba::IdentifierSeq_Transferable kis_ids;
 	};
 	
 	typedef sequence <MCM_Transferable> MCMSeq_Transferable;
@@ -89,7 +89,7 @@ module corba {
 ///////////////////////////// Conditions ///////////////////////////
 	struct DomainCondition_Transferable {
 		short	entity_code;
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
+		general::corba::Identifier_Transferable domain_id;
 	};
 
 };
