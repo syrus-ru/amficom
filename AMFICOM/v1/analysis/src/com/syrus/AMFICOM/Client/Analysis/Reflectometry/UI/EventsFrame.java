@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.General.UI.ATable;
 import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
@@ -85,19 +86,21 @@ implements OperationListener
 			e.printStackTrace();
 		}
 
-		init_module(dispatcher);
+		this.initModule(dispatcher);
 	}
 
-	void init_module(Dispatcher dispatcher)
+	private void initModule(Dispatcher dispatcher)
 	{
 		this.dispatcher = dispatcher;
 		dispatcher.register(this, RefChangeEvent.typ);
-		dispatcher.register(this, RefUpdateEvent.typ);
+		dispatcher.register(this, AnalyseApplicationModel.SELECT_NEXT_EVENT);
+		dispatcher.register(this, AnalyseApplicationModel.SELECT_PREVIOUS_EVENT);
 	}
 
 	public void operationPerformed(OperationEvent ae)
 	{
-		if(ae.getActionCommand().equals(RefChangeEvent.typ))
+		String actionCommand = ae.getActionCommand();
+		if(actionCommand.equals(RefChangeEvent.typ))
 		{
 			RefChangeEvent rce = (RefChangeEvent)ae;
 			if(rce.OPEN)
@@ -159,8 +162,8 @@ implements OperationListener
 				etalon = null;
 				setNoComparedWithEtalonColor();
 			}
-		}
-		if(ae.getActionCommand().equals(RefUpdateEvent.typ))
+		} else 
+		if(actionCommand.equals(RefUpdateEvent.typ))
 		{
 			RefUpdateEvent rue = (RefUpdateEvent)ae;
 			if (rue.analysisPerformed())
@@ -191,7 +194,25 @@ implements OperationListener
 //				if (jTable.getSelectedRow() != -1)
 //					jTable.removeRowSelectionInterval(jTable.getSelectedRow(), jTable.getSelectedRow());
 //			}
+		} else if (actionCommand.equals(AnalyseApplicationModel.SELECT_PREVIOUS_EVENT)) {
+			int selectedRow = this.jTable.getSelectedRow();
+			if (selectedRow > 0) {
+				selectedRow--;
+			} else selectedRow =  this.jTable.getModel().getRowCount() - 1;				
+			this.selectRow(selectedRow);
+		}else if (actionCommand.equals(AnalyseApplicationModel.SELECT_NEXT_EVENT)) {
+			int selectedRow = this.jTable.getSelectedRow();
+			if (selectedRow < this.jTable.getModel().getRowCount() - 1) {
+				selectedRow++;
+			}
+			else selectedRow = 0;
+			this.selectRow(selectedRow);			
 		}
+	}
+
+	private void selectRow(int row) {
+		this.jTable.setRowSelectionInterval(row, row);
+		this.jTable.scrollRectToVisible(this.jTable.getCellRect(this.jTable.getSelectedRow(), this.jTable.getSelectedColumn(), true));
 	}
 
 	public String getReportTitle()
@@ -222,7 +243,8 @@ implements OperationListener
 		rend.setNewEventsList(newEvents);
 		rend.setAmplitudeChangedEventsList(amplChengedEvents);
 		rend.setLossChangedEventsList(lossChengedEvents);
-		jTable.updateUI();
+		this.jTable.revalidate();
+		this.jTable.repaint();
 	}
 
 	public void setNoComparedWithEtalonColor()
@@ -231,7 +253,8 @@ implements OperationListener
 		rend.setNewEventsList(null);
 		rend.setAmplitudeChangedEventsList(null);
 		rend.setLossChangedEventsList(null);
-		jTable.updateUI();
+		this.jTable.revalidate();
+		this.jTable.repaint();
 	}
 
 	private void jbInit() throws Exception
