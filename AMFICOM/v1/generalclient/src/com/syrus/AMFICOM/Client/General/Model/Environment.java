@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.5 2004/07/16 11:01:37 krupenn Exp $
+ * $Id: Environment.java,v 1.6 2004/07/16 13:52:50 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import java.util.logging.*;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/07/16 11:01:37 $
+ * @version $Revision: 1.6 $, $Date: 2004/07/16 13:52:50 $
  * @author $Author: krupenn $
  * @see
  */
@@ -454,6 +454,7 @@ public class Environment extends Singleton
 		if(windows.isEmpty())
 		{
 			System.out.println("exit process");
+			saveProperties();
 			try
 			{
 				SessionInterface.getActiveSession().CloseSession();
@@ -465,6 +466,21 @@ public class Environment extends Singleton
 			System.exit(0);
 		}
 	}
+	
+	private static void saveProperties()
+	{
+		try 
+		{
+			domain_id = SessionInterface.getActiveSession().getDomainId();
+			iniFile.setValue("domain", domain_id);
+			iniFile.saveKeys();
+		} 
+		catch (Exception ex) 
+		{
+			ex.printStackTrace();
+		} 
+	}
+
 
 	public static void setActiveWindow(JFrame window)
 	{

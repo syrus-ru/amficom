@@ -18,9 +18,11 @@ public class ObjectResourceDomainFilter extends ObjectResourceFilter
 		super();
 		this.domain_id = domain_id;
 		FilterExpression fe = new FilterExpression();
+		fe.setName("Фильтрация по домену");
 		fe.setId("domain_id");
 		fe.getVec().add(domain_id);
 		this.addCriterium(fe);
+		this.logicScheme.organizeStandartScheme();
 	}
 
 	public Vector getFilterColumns()
