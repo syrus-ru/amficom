@@ -1,5 +1,5 @@
 /*
- * $Id: EmptyClientResourceObjectLoader.java,v 1.1 2005/01/11 16:41:16 krupenn Exp $
+ * $Id: EmptyClientResourceObjectLoader.java,v 1.2 2005/01/18 10:26:04 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,34 +8,20 @@
 package com.syrus.AMFICOM.resource;
 
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.DatabaseException;
-import com.syrus.AMFICOM.general.Identified;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
-import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/11 16:41:16 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.2 $, $Date: 2005/01/18 10:26:04 $
+ * @author $Author: bob $
  * @module resource_v1
  */
-public class EmptyClientResourceObjectLoader extends ResourceObjectLoader{
+public class EmptyClientResourceObjectLoader implements ResourceObjectLoader{
 	
 	public StorableObject loadImageResource(Identifier id) throws DatabaseException 
 	{

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseResourceObjectLoader.java,v 1.3 2005/01/18 07:23:22 max Exp $
+ * $Id: DatabaseResourceObjectLoader.java,v 1.4 2005/01/18 10:24:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,11 +31,11 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/01/18 07:23:22 $
- * @author $Author: max $
+ * @version $Revision: 1.4 $, $Date: 2005/01/18 10:24:57 $
+ * @author $Author: bob $
  * @module resource_v1
  */
-public class DatabaseResourceObjectLoader {
+public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
 
 	public StorableObject loadImageResource(Identifier id) throws DatabaseException {
 		StorableObject storableObject;
