@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.56 2004/11/25 10:42:18 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.57 2004/11/25 13:23:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2004/11/25 10:42:18 $
+ * @version $Revision: 1.57 $, $Date: 2004/11/25 13:23:39 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -454,5 +454,9 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
     
     public static void delete(List ids) throws DatabaseException, CommunicationException {
     	instance.deleteImpl(ids);
+    }
+    
+    public static void serializePool(){
+    	instance.serializePoolImpl();
     }
 }

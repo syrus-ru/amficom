@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.47 2004/11/25 10:43:58 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.48 2004/11/25 13:23:26 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2004/11/25 10:43:58 $
+ * @version $Revision: 1.48 $, $Date: 2004/11/25 13:23:26 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -586,6 +586,10 @@ public class ConfigurationStorableObjectPool extends StorableObjectPool {
             throw new CommunicationException("ConfigurationStorableObjectPool.deleteStorableObjects", e);
         }
 	}
+	
+	public static void serializePool(){
+    	instance.serializePoolImpl();
+    }
 
 }
 
