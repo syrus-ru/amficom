@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkElement.java,v 1.6 2004/09/14 14:48:26 krupenn Exp $
+ * $Id: MapNodeLinkElement.java,v 1.7 2004/09/15 08:28:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,12 +43,12 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/09/14 14:48:26 $
+ * @version $Revision: 1.7 $, $Date: 2004/09/15 08:28:52 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
  */
-public class MapNodeLinkElement extends MapLinkElement implements Serializable
+public final class MapNodeLinkElement extends MapLinkElement implements Serializable
 {
 	private static final long serialVersionUID = 02L;
 	public static final String typ = "mapnodelinkelement";

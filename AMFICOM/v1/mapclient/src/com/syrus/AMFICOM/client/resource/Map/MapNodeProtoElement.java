@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeProtoElement.java,v 1.2 2004/09/14 14:48:26 krupenn Exp $
+ * $Id: MapNodeProtoElement.java,v 1.3 2004/09/15 08:28:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,12 +44,12 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/14 14:48:26 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/15 08:28:52 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
-public class MapNodeProtoElement
+public final class MapNodeProtoElement
 		extends MapNodeElement
 		implements Transferable, Serializable
 {

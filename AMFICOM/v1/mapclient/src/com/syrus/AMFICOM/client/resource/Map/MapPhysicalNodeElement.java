@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElement.java,v 1.6 2004/09/14 14:48:26 krupenn Exp $
+ * $Id: MapPhysicalNodeElement.java,v 1.7 2004/09/15 08:28:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,12 +38,12 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/09/14 14:48:26 $
+ * @version $Revision: 1.7 $, $Date: 2004/09/15 08:28:52 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
-public class MapPhysicalNodeElement extends MapNodeElement implements Serializable
+public final class MapPhysicalNodeElement extends MapNodeElement implements Serializable
 {
 	private static final long serialVersionUID = 02L;
 	public static final String typ = "mapnodeelement";

@@ -1,5 +1,5 @@
 /**
- * $Id: VoidMapElement.java,v 1.5 2004/09/14 14:48:26 krupenn Exp $
+ * $Id: VoidMapElement.java,v 1.6 2004/09/15 08:28:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,12 +25,12 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/09/14 14:48:26 $
+ * @version $Revision: 1.6 $, $Date: 2004/09/15 08:28:52 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
-public class VoidMapElement extends StubResource implements MapElement 
+public final class VoidMapElement extends StubResource implements MapElement 
 {
 	protected Map map;
 	

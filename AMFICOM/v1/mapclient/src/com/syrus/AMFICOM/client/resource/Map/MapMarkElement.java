@@ -30,7 +30,7 @@ import java.util.ListIterator;
 
 import javax.swing.ImageIcon;
 
-public class MapMarkElement extends MapNodeElement implements Serializable
+public final class MapMarkElement extends MapNodeElement implements Serializable
 {
 	private static final long serialVersionUID = 02L;
 	public static final String typ = "mapmarkelement";

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.1 2004/09/13 12:02:01 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.2 2004/09/15 08:28:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,12 +36,12 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:02:01 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/15 08:28:52 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
-public class MapPropertiesManager 
+public final class MapPropertiesManager 
 {
 	protected static IniFile iniFile;
 	protected static String iniFileName = "Map.properties";//Фаил откуда загружаются данные

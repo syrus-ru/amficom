@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElementState.java,v 1.1 2004/09/13 12:02:01 krupenn Exp $
+ * $Id: MapPhysicalNodeElementState.java,v 1.2 2004/09/15 08:28:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,12 +16,12 @@ package com.syrus.AMFICOM.Client.Resource.Map;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:02:01 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/15 08:28:52 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
-public class MapPhysicalNodeElementState extends MapNodeElementState
+public final class MapPhysicalNodeElementState extends MapNodeElementState
 {
 	boolean active;
 	String physicalLinkId;

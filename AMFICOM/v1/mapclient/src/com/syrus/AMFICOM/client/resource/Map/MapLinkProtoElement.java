@@ -1,5 +1,5 @@
 /**
- * $Id: MapLinkProtoElement.java,v 1.2 2004/09/14 14:48:26 krupenn Exp $
+ * $Id: MapLinkProtoElement.java,v 1.3 2004/09/15 08:28:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,12 +34,12 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/14 14:48:26 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/15 08:28:52 $
  * @module
  * @author $Author: krupenn $
  * @see
  */	
-public class MapLinkProtoElement 
+public final class MapLinkProtoElement 
 		extends MapLinkElement
 		implements Serializable
 {

@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.1 2004/09/13 12:02:01 krupenn Exp $
+ * $Id: Map.java,v 1.2 2004/09/15 08:28:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,12 +37,12 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:02:01 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/15 08:28:52 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
-public class Map extends StubResource implements Serializable
+public final class Map extends StubResource implements Serializable
 {
 	private static final long serialVersionUID = 02L;
 	protected Map_Transferable transferable;

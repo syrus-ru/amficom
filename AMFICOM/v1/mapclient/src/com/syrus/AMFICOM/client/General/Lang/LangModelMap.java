@@ -1,5 +1,5 @@
 /**
- * $Id: LangModelMap.java,v 1.5 2004/09/13 12:02:00 krupenn Exp $
+ * $Id: LangModelMap.java,v 1.6 2004/09/15 08:28:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,12 +19,12 @@ import java.util.ResourceBundle;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/09/13 12:02:00 $
+ * @version $Revision: 1.6 $, $Date: 2004/09/15 08:28:52 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
  */
-public class LangModelMap
+public final class LangModelMap
 {
 	private static final String BUNDLE_NAME = 
 			"com.syrus.AMFICOM.Client.General.Lang.map";

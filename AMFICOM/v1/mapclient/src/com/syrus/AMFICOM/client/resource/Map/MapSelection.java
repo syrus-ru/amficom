@@ -1,5 +1,5 @@
 /**
- * $Id: MapSelection.java,v 1.1 2004/09/13 12:02:01 krupenn Exp $
+ * $Id: MapSelection.java,v 1.2 2004/09/15 08:28:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,12 +25,12 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:02:01 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/15 08:28:52 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
-public class MapSelection
+public final class MapSelection
     implements MapElement 
 {
 	protected ArrayList elements = new ArrayList();
