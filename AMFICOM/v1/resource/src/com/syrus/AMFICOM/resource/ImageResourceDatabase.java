@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.5 2005/01/24 10:48:46 bob Exp $
+ * $Id: ImageResourceDatabase.java,v 1.6 2005/01/26 09:01:37 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.resource;
 
 import java.sql.Blob;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -38,8 +39,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.5 $, $Date: 2005/01/24 10:48:46 $
+ * @author $Author: max $
+ * @version $Revision: 1.6 $, $Date: 2005/01/26 09:01:37 $
  * @module resource_v1
  */
 
@@ -131,7 +132,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage(getEnityName()
-				+ "Database.checkAndUpdateEntity | Trying: " + sql, //$NON-NLS-1$
+				+ "Database.updateImage | Trying: " + sql, //$NON-NLS-1$
 				Log.DEBUGLEVEL09);
 			statement.executeQuery(sql);
 			connection.commit();
@@ -190,7 +191,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + sort.value() + APOSTOPHE + COMMA;            
+			+ APOSTOPHE + sort.value() + APOSTOPHE;            
 		return sql;
 	}
     
@@ -375,5 +376,34 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 			return schemeImageResource;
 		}
 		throw new RetrieveObjectException(getEnityName() + "Database.updateEntityFromResultSet | wrong sort " + sort);				 //$NON-NLS-1$
+	}
+	
+	protected int setEntityForPreparedStatement(StorableObject storableObject,
+			PreparedStatement preparedStatement, int mode)
+			throws IllegalDataException, UpdateObjectException {
+		AbstractImageResource abstractImageResource = this.fromStorableObject(storableObject);
+		int i = super.setEntityForPreparedStatement(storableObject,	preparedStatement, mode);
+		int sort = abstractImageResource.getSort().value();
+		try {
+			if(sort == ImageResourceSort._BITMAP) {
+				BitmapImageResource bitmapImageResource = (BitmapImageResource) abstractImageResource;
+				DatabaseString.setString(preparedStatement, ++i, bitmapImageResource.getCodename(), SIZE_CODENAME_COLUMN);
+				preparedStatement.setInt(++i, ImageResourceSort._BITMAP);
+			} else if(sort == ImageResourceSort._FILE) {
+				FileImageResource fileImageResource = (FileImageResource) abstractImageResource;
+				DatabaseString.setString(preparedStatement, ++i, fileImageResource.getFileName(), SIZE_CODENAME_COLUMN);
+				preparedStatement.setInt(++i, ImageResourceSort._FILE);
+			} else if(sort == ImageResourceSort._SCHEME) {
+				DatabaseString.setString(preparedStatement, ++i, "", SIZE_CODENAME_COLUMN);
+				preparedStatement.setInt(++i, ImageResourceSort._SCHEME);
+			} else {
+				throw new UpdateObjectException("Unsupported ImageResourse sort =" + sort);
+			}			
+		} catch (SQLException sqle) {
+			throw new UpdateObjectException(getEnityName()
+					+ "Database.setEntityForPreparedStatement | Error "
+					+ sqle.getMessage(), sqle);
+		}
+		return i;
 	}
 }
