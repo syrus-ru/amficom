@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElement.java,v 1.18 2004/12/08 16:20:01 krupenn Exp $
+ * $Id: MapPhysicalNodeElement.java,v 1.19 2004/12/22 16:17:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,40 +11,26 @@
 
 package com.syrus.AMFICOM.Client.Resource.Map;
 
-import com.syrus.AMFICOM.CORBA.General.ElementAttribute_Transferable;
-import com.syrus.AMFICOM.CORBA.Map.MapPhysicalNodeElement_Transferable;
-import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import java.io.IOException;
-import java.io.Serializable;
-
-import java.util.HashMap;
-import java.util.Iterator;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.TopologicalNode;
 
 /**
  * топологический узел 
  * 
  * 
  * 
- * @version $Revision: 1.18 $, $Date: 2004/12/08 16:20:01 $
+ * @version $Revision: 1.19 $, $Date: 2004/12/22 16:17:38 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
-public final class MapPhysicalNodeElement extends MapNodeElement implements Serializable
+public final class MapPhysicalNodeElement extends TopologicalNode
 {
 	private static final long serialVersionUID = 02L;
-
-	/**
-	 * @deprecated
-	 */
-	public static final String typ = "mapnodeelement";
-
-	/**
-	 * @deprecated
-	 */
-	protected MapPhysicalNodeElement_Transferable transferable;
 
 	public static final String COLUMN_ID = "id";
 	public static final String COLUMN_NAME = "name";
@@ -54,75 +40,43 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 	public static final String COLUMN_Y = "y";
 	public static final String COLUMN_ACTIVE = "active";
 
-	/**
-	 * @deprecated
-	 */
-	public static final String CLOSED_NODE = "node";
-	/**
-	 * @deprecated
-	 */
-	public static final String OPEN_NODE = "void";
-
-	/**
-	 * physical node can be bound to site only if it is part of an unbound link
-	 */
-	private boolean canBind = false;
 
 	protected static String[][] exportColumns = null;
 
-	/**
-	 * Флаг показывающий закрыт ли узел
-	 * true значит что из узла выходит две линии, false одна
-	 */
-	protected boolean active = false;
-
-	protected String physicalLinkId = "";
 
 	private static final String PROPERTY_PANE_CLASS_NAME = "";
 
 	public MapPhysicalNodeElement()
+		throws ObjectNotFoundException, RetrieveObjectException
 	{
-		setImageId(CLOSED_NODE);
-		attributes = new HashMap();
+		super(new Identifier("topologicalnode"));
+//		setIconName(CLOSED_NODE);
 
-//		setBounds(bounds);
 		selected = false;
-
-		transferable = new MapPhysicalNodeElement_Transferable();
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public MapPhysicalNodeElement(MapPhysicalNodeElement_Transferable transferable)
-	{
-		this.transferable = transferable;
-		setLocalFromTransferable();
 	}
 
 	public MapPhysicalNodeElement (
-			String id, 
-			String physicalLinkId, 
+			PhysicalLink physicalLink, 
 			DoublePoint location,
             Map map)
+		throws ObjectNotFoundException, RetrieveObjectException
 	{
-		this.map = map;
-		this.setId(id);
-		this.setName(id);
+		super(new Identifier("topologicalnode"));
+		this.setMap(map);
+		this.setName(getId().toString());
 		setLocation(location);
-		this.mapId = map.getId();
-		setImageId(CLOSED_NODE);
-		this.physicalLinkId = physicalLinkId;
-		attributes = new HashMap();
+//		setIconName(CLOSED_NODE);
+		setPhysicalLink(physicalLink);
 
 		selected = false;
 
-		transferable = new MapPhysicalNodeElement_Transferable();
 	}
 
-	/**
-	 * @deprecated
-	 */
+	public static String getPropertyPaneClassName()
+	{
+		return PROPERTY_PANE_CLASS_NAME;
+	}
+	
 /*	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
 	{
@@ -159,125 +113,7 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 		return mpne;
 	}
 */
-	/**
-	 * @deprecated
-	 */
-	public void setLocalFromTransferable()
-	{
-		this.id = transferable.id;
-		this.name = transferable.name;
-		this.description = transferable.description;
-//		this.anchor.x = Double.parseDouble(transferable.longitude);
-//		this.anchor.y = Double.parseDouble(transferable.latitude);
-		this.mapId = transferable.mapId;
-		this.active = transferable.active;
-		this.physicalLinkId = transferable.physicalLinkId;
-		
-		for(int i = 0; i < transferable.attributes.length; i++)
-			attributes.put(transferable.attributes[i].type_id, new ElementAttribute(transferable.attributes[i]));
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public void setTransferableFromLocal()
-	{
-		transferable.id = this.id;
-		transferable.name = this.name;
-		transferable.description = this.description;
-//		transferable.longitude = String.valueOf(this.anchor.x);
-//		transferable.latitude = String.valueOf(this.anchor.y);
-		transferable.mapId = map.id;
-		transferable.physicalLinkId = this.physicalLinkId;
-		transferable.active = this.active;
-
-		int l = this.attributes.size();
-		int i = 0;
-		transferable.attributes = new ElementAttribute_Transferable[l];
-		for(Iterator it = attributes.values().iterator(); it.hasNext();)
-		{
-			ElementAttribute ea = (ElementAttribute )it.next();
-			ea.setTransferableFromLocal();
-			transferable.attributes[i++] = ea.transferable;
-		}
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public String getTyp()
-	{
-		return typ;
-	}
-
-	/**
-	 * Используется для для загрузки класса из базы данных
-	 * @deprecated
-	 */
-	public void updateLocalFromTransferable()
-	{
-		this.map = (Map)Pool.get(Map.typ, this.mapId);
-	}
-
-	/**
-	 * @deprecated
-	 */
-	public Object getTransferable()
-	{
-		return transferable;
-	}
-
-	public static String getPropertyPaneClassName()
-	{
-		return PROPERTY_PANE_CLASS_NAME;
-	}
-	
-	/**
-	 * установить активность топологического узла.
-	 * узел активен, если он находится в середине связи, и не активен, если
-	 * он находится на конце связи. активные и неактивные топологические узлы
-	 * отображаются разными иконками
-	 */
-	public void setActive(boolean active)
-	{
-		if(active)
-			setImageId(CLOSED_NODE);
-		else
-			setImageId(OPEN_NODE);
-//		setScaleCoefficient(this.scaleCoefficient);
-		this.active = active;
-	}
-
-	public boolean isActive()
-	{
-		return active;
-	}
-
-	public String getPhysicalLinkId()
-	{
-		return physicalLinkId;
-	}
-	
-	public void setPhysicalLinkId(String pId)
-	{
-		this.physicalLinkId = pId;
-	}
-
-	public MapElementState getState()
-	{
-		return new MapPhysicalNodeElementState(this);
-	}
-
-	public void revert(MapElementState state)
-	{
-		super.revert(state);
-		
-		MapPhysicalNodeElementState mpnes = (MapPhysicalNodeElementState )state;
-		
-		setActive(mpnes.active);
-		setPhysicalLinkId(mpnes.physicalLinkId);
-	}
-
+/*
 	public String[][] getExportColumns()
 	{
 		if(exportColumns == null)
@@ -291,7 +127,7 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 			exportColumns[5][0] = COLUMN_Y;
 			exportColumns[6][0] = COLUMN_ACTIVE;
 		}
-		exportColumns[0][1] = getId();
+		exportColumns[0][1] = getId().toString();
 		exportColumns[1][1] = getName();
 		exportColumns[2][1] = getDescription();
 		exportColumns[3][1] = physicalLinkId;
@@ -325,50 +161,35 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 		if(field.equals(COLUMN_ACTIVE))
 			setActive(Boolean.valueOf(value).booleanValue());
 	}
-
-	private void writeObject(java.io.ObjectOutputStream out) throws IOException
+*/
+/*
+	public void setIconName(String iconName)
 	{
-		out.writeObject(id);
-		out.writeObject(name);
-		out.writeObject(description);
-		out.writeDouble(location.x);
-		out.writeDouble(location.y);
-		out.writeObject(mapId);
-		out.writeObject(getImageId());
-		out.writeBoolean(active);
+		try 
+		{
+			StringFieldCondition condition = new StringFieldCondition(
+					String.valueOf(ImageResourceSort._BYTES),
+					ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE,
+					StringFieldSort.STRINGSORT_INTEGER);
+			List bitMaps = ResourceStorableObjectPool.getStorableObjectsByCondition(
+					condition, 
+					true);
 
-		out.writeObject(attributes);
+			for (Iterator it = bitMaps.iterator(); it.hasNext(); ) 
+			{
+				BitmapImageResource ir = (BitmapImageResource )it.next();
+				ImageIcon icon = new ImageIcon(ir.getImage().getScaledInstance(
+						30, 
+						30, 
+						Image.SCALE_SMOOTH));
+				ImagesPanelLabel ipl = new ImagesPanelLabel(disp, icon, ir);
+				imagesPanel.add(ipl);
+			}
+		}
+		catch (ApplicationException ex) 
+		{
+			ex.printStackTrace();
+		}
 	}
-
-	private void readObject(java.io.ObjectInputStream in)
-			throws IOException, ClassNotFoundException
-	{
-		id = (String )in.readObject();
-		name = (String )in.readObject();
-		description = (String )in.readObject();
-		location = new DoublePoint( );
-		location.x = in.readDouble();
-		location.y = in.readDouble();
-		mapId = (String )in.readObject();
-		this.setImageId((String )in.readObject());
-		active = in.readBoolean();
-
-		attributes = (HashMap )in.readObject();
-
-		transferable = new MapPhysicalNodeElement_Transferable();
-		Pool.put(getTyp(), getId(), this);
-		Pool.put("serverimage", getId(), this);
-	}
-
-
-	public void setCanBind(boolean canBind)
-	{
-		this.canBind = canBind;
-	}
-
-
-	public boolean isCanBind()
-	{
-		return canBind;
-	}
+*/	
 }
