@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.15 2005/03/31 09:04:27 bob Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.16 2005/03/31 09:53:37 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,11 +17,10 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/03/31 09:04:27 $
- * @author $Author: bob $
+ * @version $Revision: 1.16 $, $Date: 2005/03/31 09:53:37 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -31,11 +30,6 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 	}
 	
 	public String getSQLQuery() throws IllegalDataException {
-//		Log.debugMessage("measurement.DatabaseLinkedIdsConditionImpl.getSQLQuery | entityCode : "
-//				+ ObjectEntities.codeToString(super.condition.getEntityCode().shortValue()) + " "
-//				+ super.condition.getEntityCode().shortValue() + ", super.condition.getLinkedEntityCode: "
-//				+ ObjectEntities.codeToString(super.condition.getLinkedEntityCode()) + " "
-//				+ super.condition.getLinkedEntityCode(), Log.FINEST);
 		String query = null;
 		StringBuffer stringBuffer;
 		switch (super.condition.getEntityCode().shortValue()) {
