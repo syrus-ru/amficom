@@ -1,5 +1,5 @@
 /*
- * $Id: scheme-vt.idl,v 1.7 2004/12/15 12:20:36 bass Exp $
+ * $Id: scheme-vt.idl,v 1.8 2004/12/17 11:26:22 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -378,10 +378,12 @@ module com {
 						private general::corba::Identifier pathId;
 						private general::corba::IdentifierSeq links;
 						private general::corba::IdentifierSeq characteristicIds;
+						private general::corba::Identifier schemeId;
 
 						attribute SchemeElement startDevice;
 						attribute SchemeElement endDevice;
 						attribute PathElementSeq links;
+						attribute Scheme scheme;
 
 						SchemePath cloneInstance();
 
@@ -400,12 +402,12 @@ module com {
 						private wstring thisName;
 						private wstring thisDescription;
 						private general::corba::Identifier equipmentTypeId;
-						private general::corba::Identifier domainId;
 						private general::corba::IdentifierSeq deviceIds;
 						private general::corba::IdentifierSeq linkIds;
 						private general::corba::IdentifierSeq protoElementIds;
 						private general::corba::Identifier symbolId;
-						private wstring thisLabel;
+						private general::corba::Identifier parentId;
+						private general::corba::WString64 thisLabel;
 						/**
 						 * Takes non-null value at pack time.
 						 */
@@ -423,7 +425,8 @@ module com {
 						 * @see #protoElementIds
 						 */
 						attribute SchemeProtoElementSeq protoElements;
-						attribute wstring label;
+						attribute SchemeProtoGroup parent;
+						attribute general::corba::WString64 label;
 
 						SchemeProtoElement cloneInstance();
 
@@ -458,6 +461,7 @@ module com {
 						private general::corba::Identifier schemeCellId;
 						private general::corba::Identifier siteId;
 						private general::corba::Identifier symbolId;
+						private general::corba::WString64 thisLabel;
 
 						attribute SchemeProtoElement schemeProtoElement;
 						attribute SchemeDeviceSeq schemeDevices;
@@ -471,6 +475,7 @@ module com {
 						 */
 						attribute Scheme internalScheme;
 						attribute CORBA::Map::MapSiteElement site;
+						attribute general::corba::WString64 label;
 
 						SchemeElement cloneInstance();
 
@@ -525,17 +530,13 @@ module com {
 						/**
 						 * Value is assigned automatically.
 						 */
-						private general::corba::Identifier ownerId;
-						/**
-						 * Value is assigned automatically.
-						 */
 						private general::corba::Identifier domainId;
 						private general::corba::IdentifierSeq schemeElementIds;
 						private general::corba::IdentifierSeq schemeLinkIds;
 						private general::corba::IdentifierSeq schemeCableLinkIds;
 						private general::corba::Identifier schemeMonitoringSolutionId;
 						private general::corba::Identifier symbolId;
-						private wstring thisLabel;
+						private general::corba::WString64 thisLabel;
 						/**
 						 * Takes non-null value at pack time.
 						 */
@@ -553,7 +554,7 @@ module com {
 						attribute SchemeLinkSeq schemeLinks;
 						attribute SchemeCableLinkSeq schemeCableLinks;
 						attribute SchemeMonitoringSolution schemeMonitoringSolution;
-						attribute wstring label;
+						attribute general::corba::WString64 label;
 						attribute long width;
 						attribute long height;
 						attribute CORBA::Map::Map map;
@@ -574,12 +575,10 @@ module com {
 						private wstring thisDescription;
 						private general::corba::Identifier symbolId;
 						private general::corba::Identifier parentId;
-						private wstring thisSchemeProtoElementClass;
 						private general::corba::IdentifierSeq SchemeProtoGroupIds;
 						private general::corba::IdentifierSeq SchemeProtoElementIds;
 
 						attribute SchemeProtoGroup parent;
-						attribute wstring schemeProtoElementClass;
 						attribute SchemeProtoGroupSeq schemeProtoGroups;
 						attribute SchemeProtoElementSeq schemeProtoElements;
 
