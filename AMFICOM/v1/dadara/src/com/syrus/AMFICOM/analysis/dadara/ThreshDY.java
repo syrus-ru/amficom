@@ -1,5 +1,5 @@
 /*
- * $Id: ThreshDY.java,v 1.8 2005/03/18 13:59:18 saa Exp $
+ * $Id: ThreshDY.java,v 1.9 2005/03/18 14:21:39 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.8 $, $Date: 2005/03/18 13:59:18 $
+ * @version $Revision: 1.9 $, $Date: 2005/03/18 14:21:39 $
  * @module
  */
 public class ThreshDY extends Thresh
@@ -53,20 +53,24 @@ public class ThreshDY extends Thresh
 	{
 		return typeL;
 	}
-	private void correctAndSnap(int key)
+	private void snapAndLimit(int key) // привязать к сетке и скорректировать при неправильном знаке  
 	{
 		if (values[key] * (IS_KEY_UPPER[key] ? 1 : -1) < 0)
 			values[key] = 0;
 		if (VALUE_FRACTION > 0)
 			values[key] = Math.rint(values[key] * VALUE_FRACTION) / VALUE_FRACTION;
 	}
-	protected void setDY(int key, double val)
+	private void interLimit(int key) // наложить ограничение согласно LIMIT_KEY
 	{
-		values[key] = val;
-		correctAndSnap(key);
 		int compareSign = IS_KEY_HARD[key] ^ IS_KEY_UPPER[key] ? -1 : 1;
 		if (values[key] * compareSign < values[LIMIT_KEY[key]] * compareSign)
 			values[key] = values[LIMIT_KEY[key]];
+	}
+	protected void setDY(int key, double val)
+	{
+		values[key] = val;
+		snapAndLimit(key);
+		interLimit(key);
 	}
 	protected void arrangeLimits(int key)
 	{
@@ -74,12 +78,14 @@ public class ThreshDY extends Thresh
 		if (values[key] * compareSign < values[FORCEMOVE_KEY[key]] * compareSign)
 			values[FORCEMOVE_KEY[key]] = values[key];
 	}
-
 	public void changeAllBy(double delta)
 	{
-		for (int k = 0; k < 4; k++)
-			values[k] += (IS_KEY_UPPER[k] ? delta : -delta) * (IS_KEY_HARD[k] ? 2 : 1);
-		for (int k = 0; k < 4; k++)
-			correctAndSnap(k);
+		for (int key = 0; key < 4; key++)
+		{
+			values[key] += (IS_KEY_UPPER[key] ? delta : -delta) * (IS_KEY_HARD[key] ? 2 : 1);
+			snapAndLimit(key);
+		}
+		for (int key = 0; key < 4; key++)
+			interLimit(key);
 	}
 }
