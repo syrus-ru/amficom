@@ -644,19 +644,22 @@ jobjectArray SimpleEvent_C2J_arr(JNIEnv *env, SimpleEvent *se, int number)
 
 	return oa;
 }
+
 /*
- * calcNoise part
+ * various CoreAnalysisManager methods
  */
 
 JNIEXPORT jdouble JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_nCalcNoise3s
   (JNIEnv *env, jclass cls, jdoubleArray arr)
 {
+	prf_b("JNI: nCalcNoise3s");
 	double *yy;
 	int size  = get_arr(env, arr, &yy);
 
 	double ret = findNoise3s(yy, size);
 
 	release_arr(env, arr, yy);
+	prf_e();
 
 	return ret;
 }
@@ -673,6 +676,7 @@ JNIEXPORT jdoubleArray JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManag
 		release_arr(env, inArr, yy);
 		return 0;
 	}
+	prf_b("JNI: nCalcNoiseArray");
 	jdoubleArray outArr = env->NewDoubleArray((jsize )size);
 	assert(outArr);
 	get_arr(env, outArr, &noise);
@@ -686,14 +690,10 @@ JNIEXPORT jdoubleArray JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManag
 	// release arrays
 	release_arr(env, inArr, yy);
 	release_arr(env, outArr, noise);
+	prf_e();
 
 	return outArr;
 }
-
-/*
- * various CoreAnalysisManager methods
- */
-
 
 JNIEXPORT jdoubleArray JNICALL
 Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_gauss(
@@ -704,6 +704,7 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_gauss(
 	 jdouble amplitude,
 	 jdouble sigma)
 {
+	prf_b("JNI: gauss");
 	jdouble* data = (env)->GetDoubleArrayElements(y,NULL);
 	jsize sz = (env)->GetArrayLength(y);
 	int data_l = sz;
@@ -732,6 +733,7 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_gauss(
 
 	(env)->ReleaseDoubleArrayElements(y,data,JNI_ABORT);
 	(env)->SetDoubleArrayRegion(ret,0,3,RET);
+	prf_e();
 
 	return ret;
 }
@@ -748,6 +750,7 @@ JNIEXPORT jdouble JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_nM
 	if (nsam == 0)
 		return 0;
 
+	prf_b("JNI: nMedian");
 	jdouble *gist = new jdouble[nsam];
 	assert(gist);
 
@@ -756,6 +759,7 @@ JNIEXPORT jdouble JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_nM
 	// we assume binary compatibility of double and jdouble
 	double ret = destroyAndGetMedian(gist, nsam, pos);
 	delete[] gist;
+	prf_e();
 
 	return ret;
 }
@@ -768,6 +772,7 @@ JNIEXPORT jdouble JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_nM
 JNIEXPORT jint JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_nCalcTraceLength
   (JNIEnv *env, jclass cls, jdoubleArray y)
 {
+	prf_b("JNI: nCalcTraceLength");
 	// get J array
 	double *yy;
 	int size = get_arr(env, y, &yy);
@@ -777,6 +782,7 @@ JNIEXPORT jint JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_nCalc
 
 	// release J array
 	release_arr(env, y, yy);
+	prf_e();
 
 	return ret;
 }

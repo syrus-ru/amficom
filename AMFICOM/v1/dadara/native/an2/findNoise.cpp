@@ -45,9 +45,11 @@ static int dfcmp(const void *a, const void *b)
 	return *x <= *y ? *x < *y ? -1 : 0 : 1;
 }
 
+const double L10O5 = log(10) / 5;
+
 static double log2add(double v)
 {
-	return pow(10, v / 5);
+	return exp(v * L10O5);
 }
 static double add2log(double v)
 {
@@ -113,14 +115,14 @@ double findNoise3s(double *data, int size)
 	return nlev;
 }
 
-static double dy2dB(double y0, double dy)
+inline double dy2dB(double y0, double dy)
 {
-	return y0 + dy + 5.0 * log10(1.0 - pow(10.0, -dy / 5.0));
+	return y0 + dy + 5.0 * log10(1.0 - exp(-dy * L10O5));
 }
 
-static double dB2dy(double y0, double dB)
+inline double dB2dy(double y0, double dB)
 {
-	double ret = 5.0 * log10(1.0 + pow(10.0, (dB - y0) / 5.0));
+	double ret = 5.0 * log10(1.0 + exp((dB - y0) * L10O5));
 	if (ret > 20.0) // XXX
 		ret = 20.0;
 	return ret;
@@ -253,6 +255,10 @@ void findNoiseArray(double *data, double *outNoise, int size, int len2)
 	if (len2 <= 0)
 		return;
 
+	assert(len2 <= size);
+	//if (len2 > size)
+	//	len2 = size;
+
 	//prf_b("findNoiseArray: enter");
 
 	const int width = NETTESTWIDTH;
@@ -262,8 +268,6 @@ void findNoiseArray(double *data, double *outNoise, int size, int len2)
 	const int nsam = mlen - 2 * width - 1;
 	const int mofs = mlen / 2 - 1;
 	double gist[nsam];
-
-	assert(len2 <= size);
 
 	assert(size > mlen); // XXX
 
@@ -277,31 +281,42 @@ void findNoiseArray(double *data, double *outNoise, int size, int len2)
 	//prf_b("findNoiseArray: log2add");
 
 	int i;
+	const int effSize = size < len2 + mlen - mofs ? size : len2 + mlen - mofs;
+
 	// приводим к линейному масштабу
-	for (i = 0; i < size && i < len2 + mlen - mofs; i++)
-		temp[i] = log2add(data[i]);
+	for (i = 0; i < effSize; i++)
+		out[i] = log2add(data[i]);
 
+	// начальная оценка уровня шума
 	//prf_b("findNoiseArray: first estimation");
+	for (i = 0; i < effSize - mlen + nsam; i++)
+	{
+		// строго говоря, I2+I0-2I1 - это не то совсем что нам нужно,
+		// но при характерных для рефлектометрии степенях затухания
+		// поправка на нелинейность на 3 порядка меньше чем levelPrec0
+		double v0 = out[i];
+		double v1 = out[i + width];
+		double v2 = out[i + width * 2];
+		temp[i] = fabs(v2 + v0 - v1 - v1) + levelPrec0 * v1;
+	}
 
-	// первая оценка уровня шума
+	// усреднение
+	//prf_b("findNoiseArray: averaging");
 	const int step = 4; // коэф-т загрубления - 4 точки - для ускорения расчета
-	for (i = 0; i < size - mlen && i < len2 - mofs; i += step)
+	for (i = 0; i < effSize - mlen; i += step)
 	{
 		int j;
 		// определяем начальный уровень шума
 		for (j = 0; j < nsam; j ++)
 		{
-			double v0 = temp[i + j];
-			double v1 = temp[i + j + width];
-			double v2 = temp[i + j + width * 2];
-			gist[j] = fabs(v2 + v0 - v1 - v1) + levelPrec0 * v1; // XXX
+			gist[j] = temp[i + j];
 		}
 		double dv = destroyAndGetMedian(gist, nsam, nsam / 2);
 		out[i + mofs] = add2log(dv);
 	}
 	//prf_b("findNoiseArray: expand & process");
 	if (step > 1)
-		for (i = 0; i < size - mlen && i < len2 - mofs; i++)
+		for (i = 0; i < effSize - mlen; i++)
 		out[i + mofs] = out[i/step*step + mofs];
 
     // расширяем до краев массива - влево
@@ -310,7 +325,7 @@ void findNoiseArray(double *data, double *outNoise, int size, int len2)
 		out[i] = out[mofs];
 	}
 	// и - если надо - вправо
-	for (i = size - mlen + mofs; i < size && i < len2; i++)
+	for (i = size - mlen + mofs; i < len2; i++)
 	{
 		out[i] = out[size - mlen + mofs - 1];
 	}
