@@ -3,15 +3,18 @@ package com.syrus.AMFICOM.Client.Resource.Scheme;
 import java.io.Serializable;
 import java.util.*;
 
-//import com.syrus.AMFICOM.CORBA.Scheme.PortThreadMap_Transferable;
+import com.syrus.AMFICOM.CORBA.Scheme.PortThreadMap_Transferable;
 
 public class PortThreadMap implements Serializable
 {
-	public static final String typ = "cablechannelingitem";
+	public static final String typ = "portthreadmap";
 	private static final long serialVersionUID = 01L;
 
-	private Map portsMap = new HashMap();
-	private Map threadsMap = new HashMap();
+	private transient boolean changed = false;
+	private Map portsMap;
+	private Map threadsMap;
+
+	public PortThreadMap_Transferable[] transferables;
 
 	private class Mapping
 	{
@@ -24,20 +27,64 @@ public class PortThreadMap implements Serializable
 		}
 	}
 
-//	public PortThreadMap(PortThreadMap_Transferable[] tr)
-//	{
-//		for (int i = 0; i < tr.length; i++)
-//		{
-//			SchemeCableLink cable = (SchemeCableLink)Pool.get(SchemeCableLink.typ, tr[i].cable_link_id);
-//			SchemeCableThread thread = cable.getCableThread(tr[i].thread_id);
-//		}
-//	}
+	public PortThreadMap()
+	{
+		portsMap = new HashMap();
+		threadsMap = new HashMap();
+	}
+
+	public PortThreadMap(PortThreadMap_Transferable[] transferables)
+	{
+		this.transferables = transferables;
+
+		setLocalFromTransferable();
+	}
+
+	public void setTransferableFromLocal()
+	{
+		if (!changed && transferables != null && transferables.length == portsMap.size())
+			return;
+
+		transferables = new PortThreadMap_Transferable[portsMap.size()];
+		Iterator it = portsMap.values().iterator();
+		for (int i = 0; i < transferables.length; i++)
+		{
+			PortThreadMap_Transferable transferable = new PortThreadMap_Transferable();
+			Mapping map = (Mapping) it.next();
+			transferable.cableLinkId = map.thread.cableLinkId;
+//			transferable.de
+			transferable.portId = map.port.getId();
+			transferable.threadId = map.thread.getId();
+		}
+		changed = false;
+	}
+
+	public void setLocalFromTransferable()
+	{
+		portsMap = new HashMap(transferables.length);
+		threadsMap = new HashMap(transferables.length);
+	}
+
+	public PortThreadMap_Transferable[] getTransferable()
+	{
+		return transferables;
+	}
+
+	public void updateLocalFromTransferable()
+	{
+		for (int i = 0; i < transferables.length; i++)
+		{
+//			SchemeCableLink cable = (SchemeCableLink)Pool.get(SchemeCableLink.typ, transferables[i].cableLinkId);
+//			SchemeCableThread thread = cable.getCableThread(transferables[i].threadId);
+		}
+	}
 
 	public void add(SchemePort port, SchemeCableThread thread)
 	{
 		Mapping map = new Mapping(port, thread);
 		portsMap.put(port, map);
 		threadsMap.put(thread, map);
+		changed = true;
 	}
 
 	public SchemeCableThread get(SchemePort port)
@@ -60,6 +107,7 @@ public class PortThreadMap implements Serializable
 			threadsMap.remove(map.thread);
 			portsMap.remove(port);
 		}
+		changed = true;
 	}
 
 	public void remove(SchemeCableThread thread)
@@ -70,12 +118,14 @@ public class PortThreadMap implements Serializable
 			portsMap.remove(map.port);
 			threadsMap.remove(thread);
 		}
+		changed = true;
 	}
 
 	public void clear()
 	{
 		portsMap.clear();
 		threadsMap.clear();
+		changed = true;
 	}
 
 	public boolean isEmpty()
@@ -97,19 +147,4 @@ public class PortThreadMap implements Serializable
 	{
 		return threadsMap.keySet();
 	}
-
-//	public PortThreadMap_Transferable[] getTransferable()
-//	{
-//		PortThreadMap_Transferable[] tr = new PortThreadMap_Transferable[portsMap.size()];
-//		Iterator it = portsMap.values().iterator();
-//		for (int i = 0; i < tr.length; i++)
-//		{
-//			PortThreadMap_Transferable transferable = new PortThreadMap_Transferable();
-//			Mapping map = (Mapping)it.next();
-//			transferable.cable_link_id = map.thread.cable_link_id;
-//			transferable.port_id = map.port.getId();
-//			transferable.thread_id = map.thread.getId();
-//		}
-//		return tr;
-//	}
 }

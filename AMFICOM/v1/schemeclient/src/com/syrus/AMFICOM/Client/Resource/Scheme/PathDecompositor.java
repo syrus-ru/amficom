@@ -140,15 +140,15 @@ public class PathDecompositor
 		ObjectResource port = pe.getSourcePort();
 		if (port instanceof SchemePort)
 		{
-			PortType ptype = (PortType) Pool.get(PortType.typ, ( (SchemePort) port).port_type_id);
-			if (ptype.p_class.equals("optical"))
+			PortType ptype = (PortType) Pool.get(PortType.typ, ((SchemePort)port).portTypeId);
+			if (ptype.pClass.equals("optical"))
 				return true;
 		}
 		port = pe.getTargetPort();
 		if (port instanceof SchemePort)
 		{
-			PortType ptype = (PortType) Pool.get(PortType.typ, ( (SchemePort) port).port_type_id);
-			if (ptype.p_class.equals("optical"))
+			PortType ptype = (PortType) Pool.get(PortType.typ, ((SchemePort)port).portTypeId);
+			if (ptype.pClass.equals("optical"))
 				return true;
 		}
 		return false;
