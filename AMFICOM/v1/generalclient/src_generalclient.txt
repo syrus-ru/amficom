@@ -136,6 +136,7 @@ src\com\syrus\AMFICOM\Client\General\Report\ReportTemplateImplementationPanel.ja
 src\com\syrus\AMFICOM\Client\General\Report\SelectReportsPanel.java
 src\com\syrus\AMFICOM\Client\General\Report\SelectTypeTemplateWindow.java
 src\com\syrus\AMFICOM\Client\General\Report\Statistics.java
+src\com\syrus\AMFICOM\Client\General\Report\TableModelDividerReport.java
 src\com\syrus\AMFICOM\Client\General\Report\TextPanel.java
 src\com\syrus\AMFICOM\Client\General\Report\TitledPanel.java
 src\com\syrus\AMFICOM\Client\General\UI\AboutBoxPanel.java
@@ -182,6 +183,7 @@ src\com\syrus\AMFICOM\Client\General\UI\ObjectResourceTableEditor.java
 src\com\syrus\AMFICOM\Client\General\UI\ObjectResourceTableModel.java
 src\com\syrus\AMFICOM\Client\General\UI\ObjectResourceTablePane.java
 src\com\syrus\AMFICOM\Client\General\UI\ObjectResourceTableRenderer.java
+src\com\syrus\AMFICOM\Client\General\UI\ObjectResourceTreeFilter.java
 src\com\syrus\AMFICOM\Client\General\UI\ObjectResourceTreeModel.java
 src\com\syrus\AMFICOM\Client\General\UI\ObjectResourceTreeNode.java
 src\com\syrus\AMFICOM\Client\General\UI\ObjectResourceTreeRenderer.java
@@ -219,8 +221,8 @@ src\com\syrus\AMFICOM\Client\Resource\DataSourceInterface.java
 src\com\syrus\AMFICOM\Client\Resource\EmptyDataSource.java
 src\com\syrus\AMFICOM\Client\Resource\ImageCatalogue.java
 src\com\syrus\AMFICOM\Client\Resource\ImageResource.java
-src\com\syrus\AMFICOM\Client\Resource\MyDataFlavor.java
 src\com\syrus\AMFICOM\Client\Resource\MiscUtil.java
+src\com\syrus\AMFICOM\Client\Resource\MyDataFlavor.java
 src\com\syrus\AMFICOM\Client\Resource\ObjectResource.java
 src\com\syrus\AMFICOM\Client\Resource\ObjectResourceModel.java
 src\com\syrus\AMFICOM\Client\Resource\ObjectResourceNameSorter.java

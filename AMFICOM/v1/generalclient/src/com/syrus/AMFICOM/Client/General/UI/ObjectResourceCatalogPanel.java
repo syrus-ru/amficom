@@ -694,10 +694,10 @@ public class ObjectResourceCatalogPanel extends JPanel
 
 			TreeDataSelectionEvent tdse = (TreeDataSelectionEvent)oe;
 
-			List data = tdse.getDataSet();
+			List data = tdse.getList();
 			int n = tdse.getSelectionNumber();
 			Class cl = tdse.getDataClass();
-			ObjectResourceCatalogActionModel orcam = (ObjectResourceCatalogActionModel )tdse.param;
+			ObjectResourceCatalogActionModel orcam = (ObjectResourceCatalogActionModel )tdse.getParam();
 
 	/*    if (data.size() == 0)
 				{

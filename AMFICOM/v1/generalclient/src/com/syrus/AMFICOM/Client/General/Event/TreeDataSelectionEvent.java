@@ -11,7 +11,7 @@ public class TreeDataSelectionEvent extends OperationEvent
 	
 	private List list;
 
-//	private Object param = null;
+	private Object param = null;
 	private Object selectedObject = null;
 
 	public static final String type = "treedataselectionevent";
@@ -25,7 +25,18 @@ public class TreeDataSelectionEvent extends OperationEvent
 		this.selectedObject = selectedObject;
 	}
 	
-	public Collection getList(){
+	public void setParam(Object param)
+	{
+		this.param = param;
+	}
+	
+	public Object getParam()
+	{
+		return this.param;
+	}
+	
+	public List getList()
+	{
 		return this.list;
 	}
 

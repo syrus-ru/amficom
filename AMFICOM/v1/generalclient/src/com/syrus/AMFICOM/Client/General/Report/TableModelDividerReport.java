@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Analysis.Report;
+package com.syrus.AMFICOM.Client.General.Report;
 
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;

@@ -442,7 +442,7 @@ public class UniTreePanel extends JPanel
 		}
 
 		TreeDataSelectionEvent event = new TreeDataSelectionEvent(this, res, cl, n, selectedObject);
-		event.param = orcam;
+		event.setParam(orcam);
 
 //				System.out.println("ORTreePanel notify " + dispatcher + " with event " + event);
 		send_event = true;

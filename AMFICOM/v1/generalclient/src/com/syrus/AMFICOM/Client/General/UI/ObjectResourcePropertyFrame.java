@@ -131,7 +131,7 @@ public class ObjectResourcePropertyFrame extends JInternalFrame
 		{
 			TreeDataSelectionEvent tdse = (TreeDataSelectionEvent)oe;
 
-			List data = tdse.getDataSet();
+			List data = tdse.getList();
 			int n = tdse.getSelectionNumber();
 
 			if (n != -1)

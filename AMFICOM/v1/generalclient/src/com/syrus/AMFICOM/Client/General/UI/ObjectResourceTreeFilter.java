@@ -65,6 +65,8 @@ public class ObjectResourceTreeFilter
 
 	public Enumeration getChildTypes()
 	{
+		return null;
+/*	
     if (resource == null)
       return new Vector().elements();
 
@@ -80,13 +82,17 @@ public class ObjectResourceTreeFilter
         filtered_types.add(type);
 		}
 		return filtered_types.elements();
+*/
 	}
 
 	public Enumeration getChildren(String type_id)
 	{
+/*
     if (resource == null)
       return new Vector().elements();
 
     return resource.getChildren(type_id);
+*/
+		return null;
 	}
 }
