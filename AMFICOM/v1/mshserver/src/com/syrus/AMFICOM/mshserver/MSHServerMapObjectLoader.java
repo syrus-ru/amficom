@@ -1,7 +1,7 @@
 /*
-* $Id: MSHDatabaseMapObjectLoader.java,v 1.1 2004/12/09 12:20:41 cvsadmin Exp $
+* $Id: MSHServerMapObjectLoader.java,v 1.1 2005/04/01 15:12:43 bass Exp $
 *
-* Copyright ¿ 2004 Syrus Systems.
+* Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
 * Project: AMFICOM.
 */
@@ -17,11 +17,19 @@ import com.syrus.AMFICOM.map.DatabaseMapObjectLoader;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/12/09 12:20:41 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.1 $, $Date: 2005/04/01 15:12:43 $
+ * @author $Author: bass $
  * @module mshserver_1
  */
-public final class MSHDatabaseMapObjectLoader extends DatabaseMapObjectLoader {
+public final class MSHServerMapObjectLoader extends DatabaseMapObjectLoader {
+	private long refreshTimeout;
+
+	/**
+	 * @param refreshTimeout
+	 */
+	public MSHServerMapObjectLoader(final long refreshTimeout) {
+		this.refreshTimeout = refreshTimeout;
+	}
 
 	public Set refresh(Set storableObjects) throws CommunicationException, DatabaseException {
 		/**
@@ -29,5 +37,4 @@ public final class MSHDatabaseMapObjectLoader extends DatabaseMapObjectLoader {
 		 */
 		return Collections.EMPTY_SET;
 	}
-	
 }
