@@ -1,5 +1,5 @@
 /*
- * $Id: CMAdministrationTransmit.java,v 1.6 2005/02/22 10:49:47 bob Exp $
+ * $Id: CMAdministrationTransmit.java,v 1.7 2005/02/25 08:16:44 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,6 @@ import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
 import com.syrus.AMFICOM.administration.corba.Server_Transferable;
 import com.syrus.AMFICOM.administration.corba.User_Transferable;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -47,7 +46,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/22 10:49:47 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/25 08:16:44 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -355,9 +354,9 @@ public abstract class CMAdministrationTransmit extends CMGeneralTransmit {
 				List idsList = new ArrayList(ids_Transferable.length);
 				for (int i = 0; i < ids_Transferable.length; i++)
 					idsList.add(new Identifier(ids_Transferable[i]));
-				collection = ConfigurationStorableObjectPool.getStorableObjects(idsList, true);
+				collection = AdministrationStorableObjectPool.getStorableObjects(idsList, true);
 			} else
-				collection = ConfigurationStorableObjectPool.getStorableObjectsByCondition(
+				collection = AdministrationStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.SERVER_ENTITY_CODE), true);
 
 			Server_Transferable[] transferables = new Server_Transferable[collection.size()];
