@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.15 2005/04/01 07:57:28 bob Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.16 2005/04/02 17:35:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/04/01 07:57:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.16 $, $Date: 2005/04/02 17:35:47 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCondition {
@@ -54,7 +54,7 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 		return condition;
 	}
 
-	public boolean isConditionTrue(Object object) throws IllegalObjectEntityException {
+	public boolean isConditionTrue(final Object object) throws IllegalObjectEntityException {
 		boolean condition = false;
 		switch (this.entityCode.shortValue()) {
 			case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
@@ -183,7 +183,7 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 		return condition;
 	}
 
-	public void setEntityCode(Short entityCode) throws IllegalObjectEntityException {
+	public void setEntityCode(final Short entityCode) throws IllegalObjectEntityException {
 		switch (entityCode.shortValue()) {
 			case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
 			case ObjectEntities.EQUIPMENT_ENTITY_CODE:
@@ -201,7 +201,7 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 		}
 	}
 
-	public boolean isNeedMore(Set set) {
+	public boolean isNeedMore(final Set set) {
 		return true;
 	}
 }

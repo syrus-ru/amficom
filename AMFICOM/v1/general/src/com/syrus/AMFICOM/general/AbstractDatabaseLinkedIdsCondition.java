@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.13 2005/03/10 11:44:18 arseniy Exp $
+ * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.14 2005/04/02 17:33:48 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.general;
 
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/03/10 11:44:18 $
+ * @version $Revision: 1.14 $, $Date: 2005/04/02 17:33:48 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -26,7 +26,7 @@ public abstract class AbstractDatabaseLinkedIdsCondition implements DatabaseStor
 		return this.condition.getEntityCode();
 	}
 
-	protected String getQuery(String columnName) throws IllegalDataException {
+	protected String getQuery(final String columnName) throws IllegalDataException {
 
 		if (columnName == null)
 			throw new IllegalDataException("AbstractDatabaseLinkedIdsCondition.getQuery | "

@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectCondition.java,v 1.10 2005/04/01 06:34:57 bob Exp $
+ * $Id: StorableObjectCondition.java,v 1.11 2005/04/02 17:33:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,12 +11,13 @@ import java.util.Set;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/04/01 06:34:57 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/04/02 17:33:48 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public interface StorableObjectCondition extends TransferableObject {
-	boolean isConditionTrue(Object object) throws IllegalObjectEntityException;
+
+	boolean isConditionTrue(final Object object) throws IllegalObjectEntityException;
 	
 	/**
 	 * Returns false if all objects that match this condition are already
@@ -27,9 +28,9 @@ public interface StorableObjectCondition extends TransferableObject {
 	 * @return true if certain objects need to be loaded, false otherwise.
 	 * @see StorableObjectPool#getStorableObjectsByConditionButIdsImpl(Set, StorableObjectCondition, boolean)
 	 */
-	boolean isNeedMore(Set objects);
+	boolean isNeedMore(final Set objects);
 
 	Short getEntityCode();
 	
-	void setEntityCode(Short entityCode) throws IllegalObjectEntityException;
+	void setEntityCode(final Short entityCode) throws IllegalObjectEntityException;
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.18 2005/04/01 06:34:57 bob Exp $
+ * $Id: TypicalCondition.java,v 1.19 2005/04/02 17:33:49 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -119,8 +119,8 @@ import com.syrus.util.Log;
  * 
  * </ul>
  * 
- * @version $Revision: 1.18 $, $Date: 2005/04/01 06:34:57 $
- * @author $Author: bob $
+ * @version $Revision: 1.19 $, $Date: 2005/04/02 17:33:49 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public class TypicalCondition implements StorableObjectCondition {
@@ -873,7 +873,7 @@ public class TypicalCondition implements StorableObjectCondition {
 	 * @param set
 	 * @see StorableObjectCondition#isNeedMore(Set)
 	 */
-	public boolean isNeedMore(Set set) {
+	public boolean isNeedMore(final Set set) {
 		return this.delegate.isNeedMore(set);
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalConditionImpl.java,v 1.6 2005/04/02 15:02:46 arseniy Exp $
+ * $Id: TypicalConditionImpl.java,v 1.7 2005/04/02 17:37:01 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.corba.TypicalSort;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/04/02 15:02:46 $
+ * @version $Revision: 1.7 $, $Date: 2005/04/02 17:37:01 $
  * @author $Author: arseniy $
  * @module resource_v1
  */
@@ -93,11 +93,11 @@ public class TypicalConditionImpl extends TypicalCondition {
 		
 	}
 
-	public boolean isNeedMore(Set set) {
+	public boolean isNeedMore(final Set set) {
 		return true;
 	}
 
-	public boolean isConditionTrue(Object object) throws IllegalObjectEntityException {
+	public boolean isConditionTrue(final Object object) throws IllegalObjectEntityException {
 		Wrapper wrapper;
 		if (object instanceof AbstractImageResource)
 			wrapper = ImageResourceWrapper.getInstance();

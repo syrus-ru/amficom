@@ -1,5 +1,5 @@
 /*
- * $Id: CompoundCondition.java,v 1.19 2005/04/01 06:34:57 bob Exp $
+ * $Id: CompoundCondition.java,v 1.20 2005/04/02 17:33:48 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.util.corba.JavaSoftORBUtil;
  * Compound condition such as (A & B & C & ... etc), (A | B | C | ... etc) where A, B, C .. are
  * conditions (they can be also compound condition too)
  * 
- * @version $Revision: 1.19 $, $Date: 2005/04/01 06:34:57 $
- * @author $Author: bob $
+ * @version $Revision: 1.20 $, $Date: 2005/04/02 17:33:48 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public final class CompoundCondition implements StorableObjectCondition {
@@ -114,7 +114,7 @@ public final class CompoundCondition implements StorableObjectCondition {
 			throw new IllegalDataException("Unable to create CompoundCondition unknown entities");
 	}
 
-	public boolean isConditionTrue(Object object) throws IllegalObjectEntityException {
+	public boolean isConditionTrue(final Object object) throws IllegalObjectEntityException {
 		boolean firstItem = true;
 		boolean result = false;
 		for (Iterator it = this.conditions.iterator(); it.hasNext();) {
@@ -131,7 +131,7 @@ public final class CompoundCondition implements StorableObjectCondition {
 		return result;
 	}
 
-	public boolean isNeedMore(Set set) {
+	public boolean isNeedMore(final Set set) {
 		boolean firstItem = true;
 		boolean result = false;
 
@@ -152,7 +152,7 @@ public final class CompoundCondition implements StorableObjectCondition {
 		return this.entityCode;
 	}
 
-	public void setEntityCode(Short entityCode) {
+	public void setEntityCode(final Short entityCode) {
 		throw new UnsupportedOperationException("Cannot set entity code " + entityCode + " for this condition");
 	}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: LinkedIdsConditionImpl.java,v 1.3 2005/04/01 11:11:05 bob Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.4 2005/04/02 17:37:28 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCondition {
@@ -62,7 +62,7 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 		return condition;
 	}
 
-	public boolean isConditionTrue(Object object) throws IllegalObjectEntityException {
+	public boolean isConditionTrue(final Object object) throws IllegalObjectEntityException {
 		boolean condition = false;
 		switch (this.entityCode.shortValue()) {
 			case ObjectEntities.MAP_ENTITY_CODE:
@@ -85,7 +85,7 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 		return condition;
 	}
 
-	public void setEntityCode(Short entityCode) throws IllegalObjectEntityException {
+	public void setEntityCode(final Short entityCode) throws IllegalObjectEntityException {
 		switch (entityCode.shortValue()) {
 			case ObjectEntities.MAP_ENTITY_CODE:
 				this.entityCode = entityCode;
@@ -97,7 +97,7 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 		}
 	}
 
-	public boolean isNeedMore(Set set) {
+	public boolean isNeedMore(final Set set) {
 		return true;
 	}
 }

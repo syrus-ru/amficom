@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.8 2005/04/01 06:34:57 bob Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.9 2005/04/02 17:33:48 arseniy Exp $
  * Copyright © 2004 Syrus Systems. Научно-технический центр. Проект: АМФИКОМ.
  */
 
@@ -8,8 +8,8 @@ package com.syrus.AMFICOM.general;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/04/01 06:34:57 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/04/02 17:33:48 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -30,7 +30,7 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	 *         characteristics in identifier;</li>
 	 *         </ul>
 	 */
-	public boolean isConditionTrue(Object object) throws IllegalObjectEntityException {
+	public boolean isConditionTrue(final Object object) throws IllegalObjectEntityException {
 		boolean condition = false;
 		switch (this.entityCode.shortValue()) {
 			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
@@ -47,7 +47,7 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		return condition;
 	}
 
-	public void setEntityCode(Short entityCode) throws IllegalObjectEntityException {
+	public void setEntityCode(final Short entityCode) throws IllegalObjectEntityException {
 		switch (entityCode.shortValue()) {
 			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
 				this.entityCode = CHARACTERISTIC_SHORT;
@@ -59,7 +59,7 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		}
 	}
 
-	public boolean isNeedMore(Set set) {
+	public boolean isNeedMore(final Set set) {
 		return true;
 	}
 }
