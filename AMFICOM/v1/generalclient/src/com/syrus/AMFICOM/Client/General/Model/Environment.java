@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.2 2004/06/18 12:15:20 krupenn Exp $
+ * $Id: Environment.java,v 1.3 2004/06/21 05:25:26 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,8 +33,8 @@ import java.util.logging.*;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/06/18 12:15:20 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.3 $, $Date: 2004/06/21 05:25:26 $
+ * @author $Author: bob $
  * @see
  */
 public class Environment extends Singleton
@@ -279,6 +279,7 @@ public class Environment extends Singleton
 
 	protected Environment()
 	{
+		// nothing
 	}
 
 	static public void SetDefaults()
@@ -318,9 +319,10 @@ public class Environment extends Singleton
 
 	public static LookAndFeel getLookAndFeel()
 	{
+		LookAndFeel laf = getDefaultLookAndFeel();
 		try
 		{
-			LookAndFeel plaf;
+			LookAndFeel plaf = null;
 			if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_METAL))
 				plaf = (LookAndFeel) (MetalLookAndFeel.class.newInstance());
 			else if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_KUNSTSTOFF)
@@ -333,28 +335,27 @@ public class Environment extends Singleton
 				plaf = (LookAndFeel) (MotifLookAndFeel.class.newInstance());
 //			else if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_GTK))
 //				plaf = (LookAndFeel) (GTKLookAndFeel.class.newInstance());
-			else
-				return getDefaultLookAndFeel();
-			if (plaf.isSupportedLookAndFeel())
-				return plaf;
-			else
-				return getDefaultLookAndFeel();
+			if ((plaf!=null) && (plaf.isSupportedLookAndFeel()))
+				laf = plaf;
+//			else
+//				return getDefaultLookAndFeel();
 		} 
 		catch (NullPointerException npe)
 		{
 			/*
 			 * Thrown if no "lookAndFeel" key in the config file was found.
 			 */
-			return getDefaultLookAndFeel();
+			//return getDefaultLookAndFeel();
 		}
 		catch (IllegalAccessException iae)
 		{
-			return getDefaultLookAndFeel();
+			//return getDefaultLookAndFeel();
 		}
 		catch (InstantiationException ie)
 		{
-			return getDefaultLookAndFeel();
+			//return getDefaultLookAndFeel();
 		}
+		return laf;
 	}
 
 	/**
@@ -369,7 +370,7 @@ public class Environment extends Singleton
 		}
 		catch (Exception e)
 		{
-			return (LookAndFeel) (UIManager.getLookAndFeel());
+			return UIManager.getLookAndFeel();
 		}
 	}
 
@@ -447,7 +448,7 @@ public class Environment extends Singleton
 			System.out.println("exit process");
 			try
 			{
-				RISDSessionInfo.getActiveSession().CloseSession();
+				SessionInterface.getActiveSession().CloseSession();
 			}
 			catch (Exception ex)
 			{
