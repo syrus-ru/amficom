@@ -372,6 +372,8 @@ public class SetDatabase extends StorableObjectDatabase {
 				this.deleteMEAttachment(set, (Identifier)obj);
 				this.setModified(set);
 				break;
+			default:
+				return;
 		}
 	}
 

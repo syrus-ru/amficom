@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 public class MeasurementDatabase extends StorableObjectDatabase {
@@ -299,6 +298,8 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 				case Measurement.UPDATE_STATUS:
 					this.updateStatus(measurement);
 					break;
+				default:
+					return;
 			}
 		}
 		catch (UpdateObjectException e) {

@@ -179,23 +179,25 @@ public class Test extends StorableObject {
 		return this.measurementSetupIds;
 	}
 
-	protected synchronized void setAttributes(	Date created,
-												Date modified,
-												Identifier creatorId,
-												Identifier modifierId,
-												int temporalType,
-												Date startTime,
-												Date endTime,
-												Identifier temporalPatternId,
-												//Date[] ttTimestamps,
-												Identifier measurementTypeId,
-												Identifier analysisTypeId,
-												Identifier evaluationTypeId,
-												int status,
-												MonitoredElement monitoredElement,
-												int returnType,
-												String description) {
-		super.setAttributes(created, modified, creatorId, modifierId);
+	protected synchronized void setAttributes(Date created,
+																						Date modified,
+																						Identifier creatorId,
+																						Identifier modifierId,
+																						int temporalType,
+																						Date startTime,
+																						Date endTime,
+																						Identifier temporalPatternId,
+																						Identifier measurementTypeId,
+																						Identifier analysisTypeId,
+																						Identifier evaluationTypeId,
+																						int status,
+																						MonitoredElement monitoredElement,
+																						int returnType,
+																						String description) {
+		super.setAttributes(created,
+												modified,
+												creatorId,
+												modifierId);
 		this.temporalType = temporalType;
 		this.temporalPatternId = temporalPatternId;
 		this.timeStamps = new TestTimeStamps(temporalType, startTime, endTime, temporalPatternId);

@@ -421,6 +421,8 @@ public class TestDatabase extends StorableObjectDatabase {
 			case Test.UPDATE_MODIFIED:
 				this.updateModified(test);
 				break;
+			default:
+				return;
 		}
 	}
 
