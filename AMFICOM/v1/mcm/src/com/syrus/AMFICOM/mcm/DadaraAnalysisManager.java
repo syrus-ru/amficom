@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.19 2004/12/15 14:09:13 arseniy Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.20 2004/12/17 16:14:58 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,8 @@ package com.syrus.AMFICOM.mcm;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 import java.io.IOException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -17,7 +19,7 @@ import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.Threshold;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
+import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.ParameterType;
@@ -36,24 +38,25 @@ import com.syrus.util.Log;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.io.FileOutputStream;
+import com.syrus.AMFICOM.measurement.ParameterTypeCodenames;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/12/15 14:09:13 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2004/12/17 16:14:58 $
+ * @author $Author: saa $
  * @module mcm_v1
  */
 
 public class DadaraAnalysisManager implements AnalysisManager, EvaluationManager {
 	public static final String CODENAME_REFLECTOGRAMMA = "reflectogramma";
-	public static final String CODENAME_DADARA_TACTIC = "ref_uselinear";
-	public static final String CODENAME_DADARA_EVENT_SIZE = "ref_eventsize";
-	public static final String CODENAME_DADARA_CONN_FALL_PARAMS = "ref_conn_fall_params";
-	public static final String CODENAME_DADARA_MIN_LEVEL = "ref_min_level";
-	public static final String CODENAME_DADARA_MAX_LEVEL_NOISE = "ref_max_level_noise";
-	public static final String CODENAME_DADARA_MIN_LEVEL_TO_FIND_END = "ref_min_level_to_find_end";
-	public static final String CODENAME_DADARA_MIN_WELD = "ref_min_weld";
-	public static final String CODENAME_DADARA_MIN_CONNECTOR = "ref_min_connector";
-	public static final String CODENAME_DADARA_STRATEGY = "ref_strategy";
+//	public static final String CODENAME_DADARA_TACTIC = "ref_uselinear";
+//	public static final String CODENAME_DADARA_EVENT_SIZE = "ref_eventsize";
+//	public static final String CODENAME_DADARA_CONN_FALL_PARAMS = "ref_conn_fall_params";
+//	public static final String CODENAME_DADARA_MIN_LEVEL = "ref_min_level";
+//	public static final String CODENAME_DADARA_MAX_LEVEL_NOISE = "ref_max_level_noise";
+//	public static final String CODENAME_DADARA_MIN_LEVEL_TO_FIND_END = "ref_min_level_to_find_end";
+//	public static final String CODENAME_DADARA_MIN_WELD = "ref_min_weld";
+//	public static final String CODENAME_DADARA_MIN_CONNECTOR = "ref_min_connector";
+//	public static final String CODENAME_DADARA_STRATEGY = "ref_strategy";
 	public static final String CODENAME_DADARA_EVENT_ARRAY = "dadara_event_array";
 	public static final String CODENAME_DADARA_ETALON_EVENT_ARRAY = "dadara_etalon_event_array";
 	public static final String CODENAME_DADARA_THRESHOLDS = "dadara_thresholds";
@@ -62,61 +65,80 @@ public class DadaraAnalysisManager implements AnalysisManager, EvaluationManager
 	private static Map outParameterTypeIds;	//Map <String codename, ParameterType parameterType>
 
 	private Map parameters;	//Map <String codename, SetParameter parameter>
-	private AlarmLevel alarmLevel;
+//	private AlarmLevel alarmLevel;
 
-	static {
-    try {
-      System.loadLibrary("dadara");
-    }
-    catch (UnsatisfiedLinkError ule) {
-      Log.errorMessage(ule.getMessage());
-    }
+	private ReflectogramEvent[] rEvents = null;
+	private ReflectogramAlarm[] rAlarms = null;
 
+	static
+	{
 		outParameterTypeIds = new HashMap();
 		addOutParameterTypeId(CODENAME_DADARA_EVENT_ARRAY);
 		addOutParameterTypeId(CODENAME_DADARA_ALARM_ARRAY);
 	}
 
 	public DadaraAnalysisManager(Result measurementResult,
-															 Analysis analysis,
-															 Evaluation evaluation,
-															 Set etalon) throws AnalysisException {
+			Analysis analysis,
+			Evaluation evaluation,
+			Set etalon) throws AnalysisException
+	{
 		this.parameters = new HashMap(13);
 		this.addSetParameters(measurementResult.getParameters());
 		this.addSetParameters(analysis.getCriteriaSet().getParameters());
 		this.addSetParameters(evaluation.getThresholdSet().getParameters());
 		this.addSetParameters(etalon.getParameters());
-  }
+		
+		analyseAndEvaluate(true, true, true);
+	}
 
-  public DadaraAnalysisManager(Result measurementResult,
-															 Analysis analysis,
-															 Set etalon) throws AnalysisException {
+	public DadaraAnalysisManager(Result measurementResult,
+			Evaluation evaluation,
+			Set etalon) throws AnalysisException
+	{
+		this.parameters = new HashMap(13);
+		this.addSetParameters(measurementResult.getParameters());
+		this.addSetParameters(evaluation.getThresholdSet().getParameters());
+		this.addSetParameters(etalon.getParameters());
+
+		analyseAndEvaluate(false, false, true);
+	}
+
+	public DadaraAnalysisManager(Result measurementResult,
+			Analysis analysis,
+			Set etalon) throws AnalysisException
+	{
 		this.parameters = new HashMap(12);
 		this.addSetParameters(measurementResult.getParameters());
 		this.addSetParameters(analysis.getCriteriaSet().getParameters());
 		this.addSetParameters(etalon.getParameters());
-  }
 
-  public native double[] ana(int dadaraTactic,
-														 double[] reflectogramma,
-														 double dx,
-														 double dadaraConnFallParams,
-														 double dadaraMinLevel,
-														 double dadaraMaxLevelNoise,
-														 double dadaraMinLevelToFindEnd,
-														 double dadaraMinWeld,
-														 double dadaraMinConnector,
-														 int dadaraStrategy,
-														 int reflectiveSize,
-														 int nonReflectiveSize);       
+		analyseAndEvaluate(true, false, false);
+	}
 
-	public SetParameter[] analyse() throws AnalysisException {
+	public SetParameter[] analyse()
+		throws AnalysisException
+	{
+		return getAnalysisResult();
+	}
+
+	public SetParameter[] evaluate()
+		throws EvaluationException
+	{
+		return getEvaluationResults();
+	}
+
+	private ByteArray getParBA(String codename)
+	{
+		return new ByteArray((byte[] )parameters.get(codename));
+	}
+	
+	private BellcoreStructure obtainReflectogram()
+		throws AnalysisException
+	{
 		byte[] rawData = (byte[])this.parameters.get(CODENAME_REFLECTOGRAMMA);
 		if (rawData == null) 
 			throw new AnalysisException("Cannot get parameter of codename: '" + CODENAME_REFLECTOGRAMMA + "'  from map");
 		BellcoreStructure bs = (new BellcoreReader()).getData(rawData);
-		double[] reflectogramma = bs.getTraceData();
-		double dx = bs.getResolution();
 //----------------
 try {
 	FileOutputStream fos;
@@ -131,167 +153,263 @@ catch (IOException ioe) {
 	ioe.printStackTrace();
 }
 //----------------
-		int dadaraTactic;
-		int dadaraEventSize;
-		double dadaraConnFallParams;
-		double dadaraMinLevel;
-		double dadaraMaxLevelNoise;
-		double dadaraMinLevelToFindEnd;
-		double dadaraMinWeld;
-		double dadaraMinConnector;
-		int dadaraStrategy;
+		return bs;
+	}
+
+	private ReflectogramEvent[] obtainEtalon()
+		throws AnalysisException
+	{
+		// read etalon r/g and its thresholds
+		byte[] etalonData = (byte[] )parameters.get(CODENAME_DADARA_ETALON_EVENT_ARRAY);
+		if (etalonData == null)
+			throw new AnalysisException("Cannot get etalonData");
+		return
+			ReflectogramEvent.fromByteArray(etalonData);
+	}
+
+	private Threshold[] obtainThresholds()
+		throws AnalysisException
+	{
+		byte[] thresholdData = (byte[] )parameters.get(CODENAME_DADARA_THRESHOLDS);
+		if (thresholdData == null)
+			throw new AnalysisException("Cannot get thresholdData");
+		return
+			Threshold.fromByteArray(thresholdData);
+	}
+
+	private SetParameter[] getAnalysisResult()
+		throws AnalysisException 
+	{
+		ParameterType parTypEventArray = null;
 		try {
-			dadaraTactic = (new ByteArray((byte[])this.parameters.get(CODENAME_DADARA_TACTIC))).toInt();
-			dadaraEventSize = (new ByteArray((byte[])this.parameters.get(CODENAME_DADARA_EVENT_SIZE))).toInt();
-			dadaraConnFallParams = (new ByteArray((byte[])this.parameters.get(CODENAME_DADARA_CONN_FALL_PARAMS))).toDouble();
-			dadaraMinLevel = (new ByteArray((byte[])this.parameters.get(CODENAME_DADARA_MIN_LEVEL))).toDouble();
-			dadaraMaxLevelNoise = (new ByteArray((byte[])this.parameters.get(CODENAME_DADARA_MAX_LEVEL_NOISE))).toDouble();
-			dadaraMinLevelToFindEnd = (new ByteArray((byte[])this.parameters.get(CODENAME_DADARA_MIN_LEVEL_TO_FIND_END))).toDouble();
-			dadaraMinWeld = (new ByteArray((byte[])this.parameters.get(CODENAME_DADARA_MIN_WELD))).toDouble();
-			dadaraMinConnector = (new ByteArray((byte[])this.parameters.get(CODENAME_DADARA_MIN_CONNECTOR))).toDouble();
-			dadaraStrategy = (new ByteArray((byte[])this.parameters.get(CODENAME_DADARA_STRATEGY))).toInt();
+			parTypEventArray = (ParameterType)MeasurementStorableObjectPool
+			.getStorableObject((Identifier)outParameterTypeIds.get(CODENAME_DADARA_EVENT_ARRAY), true);
 		}
-		catch(IOException ioe) {
-			Log.errorException(ioe);
-			throw new AnalysisException("Cannot get some of analysis criteria", ioe);
+		catch (ApplicationException ae) {
+			throw new AnalysisException("Cannot find parameter type of codename: '"
+				+ CODENAME_DADARA_EVENT_ARRAY + "' -- " + ae.getMessage(), ae);
+		}
+		SetParameter[] arParameters = new SetParameter[1];
+		try {
+			arParameters[0] = SetParameter.createInstance(parTypEventArray,
+				ReflectogramEvent.toByteArray(rEvents != null ? rEvents : new ReflectogramEvent[0]));
+		}
+		catch (Exception e) {
+			throw new AnalysisException("Cannot create parameter -- " + e.getMessage(), e);
+		}
+		return arParameters;
+		//this.addSetParameters(arParameters);
+	}
+
+	private void analyseAndEvaluate(
+			boolean analysisResultsRequired,
+			boolean eventListChangeAlarmsRequired,
+			boolean modelFunctionsRangeBeyondThresholdsAlarmsRequired
+			)
+		throws AnalysisException//, EvaluationException
+	{
+		// make flags what we need to do
+		boolean needToAnalyse = analysisResultsRequired | eventListChangeAlarmsRequired;
+		boolean needsAnything = modelFunctionsRangeBeyondThresholdsAlarmsRequired | needToAnalyse;
+
+		if (!needsAnything)
+			return; // nothing to do!
+
+		// get reflectogram
+		BellcoreStructure bs = obtainReflectogram();
+
+		if (needToAnalyse)
+			makeAnalysis(bs);
+		// else, rEvents stays null
+
+		List alarmList = new ArrayList();
+
+		ReflectogramEvent[] etEvents = obtainEtalon();
+
+		if (eventListChangeAlarmsRequired)
+			addEventListChangeAlarms(alarmList, etEvents);
+
+		if (modelFunctionsRangeBeyondThresholdsAlarmsRequired)
+			addModelFunctionRangeBeyondThresholdsAlarms(alarmList, bs, etEvents, obtainThresholds());
+
+		rAlarms = (ReflectogramAlarm[] )alarmList.toArray(); 
+	}
+
+	private void makeAnalysis(BellcoreStructure bs)
+	throws AnalysisException
+	{
+		int strategy;
+		double[] pars;
+		try
+		{
+			strategy = getParBA(ParameterTypeCodenames.STRATEGY).toInt();
+			pars = new double[] {
+					getParBA(ParameterTypeCodenames.MIN_EVENT_LEVEL).toDouble(),
+					getParBA(ParameterTypeCodenames.MIN_SPLICE).toDouble(),
+					getParBA(ParameterTypeCodenames.MIN_CONNECTOR).toDouble(),
+					getParBA(ParameterTypeCodenames.MIN_END_LEVEL).toDouble(),
+					getParBA(ParameterTypeCodenames.MAX_NOISE_LEVEL).toDouble(),
+					0.0, // connector fall parameter: unused
+					strategy,
+					getParBA(ParameterTypeCodenames.WAVELET_TYPE).toInt()
+			};
+		}
+		catch(IOException e)
+		{
+			throw new AnalysisException("Error converting analysis parameters");
 		}
 
-		int reflSize = ReflectogramMath.getReflectiveEventSize(reflectogramma, 0.5);
-		int nReflSize = ReflectogramMath.getNonReflectiveEventSize(reflectogramma,
-																															 1000,
-																															 bs.getIOR(),
-																															 dx);
-		if (nReflSize > 3 * reflSize / 5)
-			nReflSize = 3 * reflSize / 5;
-//-------------------------------------------------------------
-Log.debugMessage("$$$$$$$$$ DadaraAnalysisManager.analyse:", Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ Number of points: " + reflectogramma.length, Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ dx == " + dx, Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ dadaraTactic == " + dadaraTactic, Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ dadaraEventSize == " + dadaraEventSize, Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ dadaraConnFallParams == " + dadaraConnFallParams, Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ dadaraMinLevel == " + dadaraMinLevel, Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ dadaraMaxLevelNoise == " + dadaraMaxLevelNoise, Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ dadaraMinLevelToFindEnd == " + dadaraMinLevelToFindEnd, Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ dadaraMinWeld == " + dadaraMinWeld, Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ dadaraMinConnector == " + dadaraMinConnector, Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ dadaraStrategy == " + dadaraStrategy, Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ reflSize == " + reflSize, Log.DEBUGLEVEL05);
-Log.debugMessage("$$$$$$$$$ nReflSize == " + nReflSize, Log.DEBUGLEVEL05);
-//-------------------------------------------------------------
-		double[] tmp = ana(dadaraTactic,
-											 reflectogramma,
-											 dx,
-											 dadaraConnFallParams,
-											 dadaraMinLevel,
-											 dadaraMaxLevelNoise,
-											 dadaraMinLevelToFindEnd,
-											 dadaraMinWeld,
-											 dadaraMinConnector,
-											 dadaraStrategy,
-											 reflSize,
-											 nReflSize);
-		int nEvents = tmp.length / ReflectogramEvent.NUMBER_OF_PARAMETERS;
-		ReflectogramEvent[] revents = new ReflectogramEvent[nEvents];
-		for(int i = 0; i < nEvents; i++) {
-			revents[i] = new ReflectogramEvent();
-			revents[i].setParams(tmp, i * ReflectogramEvent.NUMBER_OF_PARAMETERS);
-			revents[i].setDeltaX(dx);
+		ReflectogramEvent[] ret = CoreAnalysisManager.makeAnalysis(strategy, bs, pars, null);
+
+//			----------
+		Log.debugMessage("$$$$$$$$$ Number of events == " + ret.length, Log.DEBUGLEVEL05);
+//			----------
+
+		rEvents = correct_analyse_events(ret);
+	}
+
+	// TODO: rewrite!
+	private void addEventListChangeAlarms(
+			List alarmList,
+			ReflectogramEvent[] etEvents)
+	{
+			ReflectogramComparer comparer = new ReflectogramComparer(
+				null,
+				rEvents,
+				etEvents,
+				null);
+
+//			try
+//			{
+				final int LEVEL_HARD = ReflectogramAlarm.LEVEL_HARD;
+				final int LEVEL_SOFT = ReflectogramAlarm.LEVEL_SOFT;
+				for (int i = 0; i < etEvents.length; i++)
+				{
+					ReflectogramEvent et = etEvents[i];
+					if (comparer.isEtalonEventLost(i))
+					{
+						alarmList.add(new ReflectogramAlarm(et.getBegin(), LEVEL_HARD));
+					}
+					else if (comparer.isEtalonEventChanged(i, ReflectogramComparer.CHANGETYPE_TYPE, 0.0))
+					{
+						alarmList.add(new ReflectogramAlarm(et.getBegin(), LEVEL_HARD));
+					}
+					else if(comparer.isEtalonEventChanged(i, ReflectogramComparer.CHANGETYPE_AMPL, 2.0) //TODO
+							|| comparer.isEtalonEventChanged(i, ReflectogramComparer.CHANGETYPE_LOSS, 0.5)) //TODO
+					{
+						alarmList.add(new ReflectogramAlarm(et.getBegin(), LEVEL_SOFT));
+					}
+					// TODO: add comparison of beginning of events
+				}
+				for (int i = 0; i < rEvents.length; i++)
+				{
+					ReflectogramEvent pr = rEvents[i];
+					if (comparer.isProbeEventNew(i))
+					{
+						alarmList.add(new ReflectogramAlarm(pr.getBegin(), LEVEL_HARD));
+					}
+				}
+//			}
+//			catch ()
+//			{
+//			}			
+	}
+	
+	private void addModelFunctionRangeBeyondThresholdsAlarms(
+			List alarmList,
+			BellcoreStructure bs,
+			ReflectogramEvent[] etEvents,
+			Threshold[] etThresholds)
+	{
+		// make a working copy of etalon events.
+
+		// we must be sure that etEvents.length == etThresholds.length
+		ReflectogramEvent[] etalon = ReflectogramEvent.copyArray(etEvents);
+		int length = Math.min(etEvents.length, etThresholds.length);
+		for (int i = 0; i < length; i++)
+			etalon[i].setThreshold(etThresholds[i]);
+
+		//perform comparison
+		double[] y = bs.getTraceData();
+		for (int i = 0; i < length; i++)
+		{
+			ReflectogramEvent probe = etalon[i].createLinearlyFitted(y);
+			// check for hard alarms
+			int rc = etalon[i].isThatWithinMyThresholds(probe, false);
+			if (rc >= 0)
+			{
+				alarmList.add(new ReflectogramAlarm(i, ReflectogramAlarm.LEVEL_HARD));
+				continue;
+			}
+			// check for soft alarms
+			rc = etalon[i].isThatWithinMyThresholds(probe, true);
+			if (rc >= 0)
+			{
+				alarmList.add(new ReflectogramAlarm(i, ReflectogramAlarm.LEVEL_SOFT));
+				continue;
+			}
 		}
-//----------
-Log.debugMessage("$$$$$$$$$ Number of events == " + revents.length + "; tmp.length == " + tmp.length + ", N of pars == " + ReflectogramEvent.NUMBER_OF_PARAMETERS, Log.DEBUGLEVEL05);
-//----------
-//******************
+	}
+
+	private ReflectogramEvent[] correct_analyse_events(ReflectogramEvent[] rev)
+	{
+		// FIXME: now it is just a copy-pase + adaptation of old code
+
 		//Here we get etalon parameters
 		byte[] etalonData = (byte[])this.parameters.get(CODENAME_DADARA_ETALON_EVENT_ARRAY);
 		ReflectogramEvent[] etalon = ReflectogramEvent.fromByteArray(etalonData);
 
 		//correct end of trace
 		int delta = 5;
-		if (revents.length > etalon.length)	{
+		if (rev.length > etalon.length)	{
 			ReflectogramEvent endEvent = etalon[etalon.length - 1];
-			for (int i = revents.length - 1; i >= 0; i--)	{
-				if (revents[i].getType() == ReflectogramEvent.CONNECTOR &&
-						Math.abs(revents[i].begin - endEvent.begin) < delta &&
-						Math.abs(revents[i].end - endEvent.end) < delta) {
-						ReflectogramEvent[] newRevents = new ReflectogramEvent[i+1];
-						for (int j = 0; j < i + 1; j++)
-							newRevents[j] = revents[j];
-						revents = newRevents;
-						break;
-					}
+			for (int i = rev.length - 1; i >= 0; i--) {
+				if (rev[i].getEventType() == ReflectogramEvent.CONNECTOR &&
+				        Math.abs(rev[i].getBegin() - endEvent.getBegin()) < delta &&
+				        Math.abs(rev[i].getEnd() - endEvent.getEnd()) < delta) {
+				    ReflectogramEvent[] newRevents = new ReflectogramEvent[i+1];
+				    for (int j = 0; j < i + 1; j++)
+				        newRevents[j] = rev[j];
+				    rev = newRevents; // substitute new array
+				    break;
+				}
 			}
 		}
 
 		//correct event types
-		if (revents.length == etalon.length) {
+		if (rev.length == etalon.length) {
 			for (int i = 0; i < etalon.length; i++)	{
-				if (Math.abs(revents[i].begin - etalon[i].begin) < delta &&
-						Math.abs(revents[i].end - etalon[i].end) < delta)	{
-					revents[i].setType(etalon[i].getType());
+				if (Math.abs(rev[i].getBegin() - etalon[i].getBegin()) < delta &&
+						Math.abs(rev[i].getEnd() - etalon[i].getEnd()) < delta) {
+					rev[i].setEventType(etalon[i].getEventType());
 				}
 			}
 		}
-//******************
 
-		ParameterType parTypEventArray = null;
-		try {
-			parTypEventArray = (ParameterType)MeasurementStorableObjectPool.getStorableObject((Identifier)outParameterTypeIds.get(CODENAME_DADARA_EVENT_ARRAY), true);
-		}
-		catch (ApplicationException ae) {
-			throw new AnalysisException("Cannot find parameter type of codename: '" + CODENAME_DADARA_EVENT_ARRAY + "' -- " + ae.getMessage(), ae);
-		}
-		SetParameter[] arParameters = new SetParameter[1];
-		try {
-			arParameters[0] = SetParameter.createInstance(parTypEventArray, ReflectogramEvent.toByteArray(revents));
-		}
-		catch (Exception e) {
-			throw new AnalysisException("Cannot create parametrer -- " + e.getMessage(), e);
-		}
-		this.addSetParameters(arParameters);
-
-		return arParameters;
+		return rev;
 	}
 
-	public SetParameter[] evaluate() throws EvaluationException {
-		byte[] etalonData = (byte[])this.parameters.get(CODENAME_DADARA_ETALON_EVENT_ARRAY);
-		ReflectogramEvent[] etalon = ReflectogramEvent.fromByteArray(etalonData);
-		byte[] thresholdData = (byte[])this.parameters.get(CODENAME_DADARA_THRESHOLDS);
-		Threshold[] ts = Threshold.fromByteArray(thresholdData);
-
-		ReflectogramComparer reflComparer;
-		byte[] reventsData = (byte[])this.parameters.get(CODENAME_DADARA_EVENT_ARRAY);
-		if (reventsData != null) {
-			ReflectogramEvent[] revents = ReflectogramEvent.fromByteArray(reventsData);
-			reflComparer = new ReflectogramComparer(revents,
-																							etalon,
-																							ts,
-																							false);
+	public AlarmLevel getAlarmLevel()
+	{
+		boolean have_soft_alarms = false;
+		for (int i = 0; i < rAlarms.length; i++)
+		{
+			if (rAlarms[i].level == ReflectogramAlarm.LEVEL_HARD)
+				return AlarmLevel.ALARM_LEVEL_HARD;
+			if (rAlarms[i].level == ReflectogramAlarm.LEVEL_SOFT)
+				have_soft_alarms = true;
 		}
-		else {
-			Log.debugMessage("No analysis result, evaluating reflectogramma itself", Log.DEBUGLEVEL05);
-			byte[] rawData = (byte[])this.parameters.get(CODENAME_REFLECTOGRAMMA);
-			if (rawData == null) 
-				throw new EvaluationException("Cannot get parameter of codename: '" + CODENAME_REFLECTOGRAMMA + "'  from map");
-			BellcoreStructure bs = (new BellcoreReader()).getData(rawData);
-			double[] reflectogramma = bs.getTraceData();
-			reflComparer = new ReflectogramComparer(reflectogramma,
-																							etalon,
-																							ts,
-																							false);
-		}
+		if (have_soft_alarms)
+			return AlarmLevel.ALARM_LEVEL_SOFT;
+		return AlarmLevel.ALARM_LEVEL_NONE;
+	}
 
-		ReflectogramAlarm[] ralarms = reflComparer.getAlarms();
-
+	public SetParameter[] getEvaluationResults()
+		throws EvaluationException
+	{
 		SetParameter[] erParameters;
-		if (ralarms.length > 0) {
-			this.alarmLevel = AlarmLevel.ALARM_LEVEL_SOFT;
-			for (int i = 0; i < ralarms.length; i++)
-				if (ralarms[i].level == ReflectogramAlarm.LEVEL_HARD) {
-					this.alarmLevel = AlarmLevel.ALARM_LEVEL_HARD;
-					break;
-				}
-
+		if (rAlarms.length > 0)
+		{
 			ParameterType parTypAlarmArray = null;
 			try {
 				parTypAlarmArray = (ParameterType)MeasurementStorableObjectPool.getStorableObject((Identifier)outParameterTypeIds.get(CODENAME_DADARA_ALARM_ARRAY), true);
@@ -301,22 +419,17 @@ Log.debugMessage("$$$$$$$$$ Number of events == " + revents.length + "; tmp.leng
 			}
 			erParameters = new SetParameter[1];
 			try {
-				erParameters[0] = SetParameter.createInstance(parTypAlarmArray, ReflectogramAlarm.toByteArray(ralarms));
+				erParameters[0] = SetParameter.createInstance(parTypAlarmArray, ReflectogramAlarm.toByteArray(rAlarms));
 			}
 			catch (Exception e) {
 				throw new EvaluationException("Cannot create parametrer -- " + e.getMessage(), e);
 			}
 		}
 		else {
-			this.alarmLevel = AlarmLevel.ALARM_LEVEL_NONE;
 			erParameters = new SetParameter[0];
 		}
 
 		return erParameters;
-	}
-
-	public AlarmLevel getAlarmLevel() {
-		return this.alarmLevel;
 	}
 
 	private void addSetParameters(SetParameter[] setParameters) throws AnalysisException {

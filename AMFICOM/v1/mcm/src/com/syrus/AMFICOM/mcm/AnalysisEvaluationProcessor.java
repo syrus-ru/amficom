@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.13 2004/12/15 14:09:13 arseniy Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.14 2004/12/17 16:14:58 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/12/15 14:09:13 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2004/12/17 16:14:58 $
+ * @author $Author: saa $
  * @module mcm_v1
  */
 
@@ -114,9 +114,11 @@ public abstract class AnalysisEvaluationProcessor {
 	}
 
 	private static Result[] analyseAndEvaluate(Result measurementResult,
-																						 Analysis analysis,
-																						 Evaluation evaluation,
-																						 Set etalon) throws AnalysisException, EvaluationException {
+			Analysis analysis,
+			Evaluation evaluation,
+			Set etalon)
+		throws AnalysisException, EvaluationException
+	{
 		AnalysisManager analysisManager;
 		EvaluationManager evaluationManager;
 
