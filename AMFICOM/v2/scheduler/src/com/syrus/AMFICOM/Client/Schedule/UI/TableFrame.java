@@ -11,7 +11,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import javax.swing.JInternalFrame;
 import javax.swing.JMenuItem;
@@ -300,11 +302,6 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 	java.util.List		rowToRemove;
 	private Command		command;
 
-	//ArrayList savedTests;
-	//boolean skipTestUpdate = false;
-
-	//private ArrayList unsavedTests;
-
 	public TableFrame(ApplicationContext aContext) {
 		this.aContext = aContext;
 		if (aContext != null)
@@ -342,10 +339,6 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 		} else if (commandName.equals(SchedulerModel.COMMAND_NAME_ALL_TESTS)) {
 			setSavedTests();
 		} else if (commandName.equals(SchedulerModel.COMMAND_CLEAN)) {
-			//			if (this.savedTests != null)
-			//				this.savedTests.clear();
-			//			if (this.unsavedTests != null)
-			//				this.unsavedTests.clear();
 			ObjectResourceTableModel model = (ObjectResourceTableModel) this.listTable.getModel();
 			model.clear();
 			this.listTable.removeAll();
@@ -395,7 +388,8 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 		if (this.panel == null) {
 			this.panel = new JPanel(new BorderLayout());
 
-			this.listTable = new ObjectResourceTable(TestController.getInstance(), null);
+			this.listTable = new ObjectResourceTable(TestController.getInstance());
+			this.listTable.setDefaultTableCellRenderer();
 			ListSelectionModel rowSM = this.listTable.getSelectionModel();
 			rowSM.addListSelectionListener(new ListSelectionListener() {
 

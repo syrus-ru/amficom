@@ -295,7 +295,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 
 	}
 
-	public static final String	ACCESSPORT_NAME_REFLECTOMETER	= "reflectometeringnt"; //$NON-NLS-1$
+	public static final String	ACCESSPORT_NAME_REFLECTOMETER	= "MeasurementPortTypeReflectometry"; //$NON-NLS-1$
 
 	private static final String	ROOT_NODE_NAME					= "root";
 

@@ -1,5 +1,5 @@
 /*
- * $Id: TestController.java,v 1.1.2.2 2004/10/19 10:12:49 bob Exp $
+ * $Id: TestController.java,v 1.1.2.3 2004/11/03 16:49:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/10/19 10:12:49 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/11/03 16:49:59 $
  * @author $Author: bob $
  * @module module
  */
@@ -57,16 +57,16 @@ public class TestController implements ObjectResourceController {
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 
 		this.statusMap = new HashMap();
-		this.statusMap.put("Aborded", TestStatus.TEST_STATUS_ABORTED);
-		this.statusMap.put("Completed", TestStatus.TEST_STATUS_COMPLETED);
-		this.statusMap.put("New", TestStatus.TEST_STATUS_NEW);
-		this.statusMap.put("Processing", TestStatus.TEST_STATUS_PROCESSING);
-		this.statusMap.put("Scheduled", TestStatus.TEST_STATUS_SCHEDULED);
+		this.statusMap.put(LangModelSchedule.getString("Aborted"), TestStatus.TEST_STATUS_ABORTED);
+		this.statusMap.put(LangModelSchedule.getString("Completed"), TestStatus.TEST_STATUS_COMPLETED);
+		this.statusMap.put(LangModelSchedule.getString("New"), TestStatus.TEST_STATUS_NEW);
+		this.statusMap.put(LangModelSchedule.getString("Processing"), TestStatus.TEST_STATUS_PROCESSING);
+		this.statusMap.put(LangModelSchedule.getString("Scheduled"), TestStatus.TEST_STATUS_SCHEDULED);
 
 		this.temporalTypeMap = new HashMap();
-		this.temporalTypeMap.put("OneTime", TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME);
-		this.temporalTypeMap.put("Periodical", TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL);
-		this.temporalTypeMap.put("Continuos", TestTemporalType.TEST_TEMPORAL_TYPE_CONTINUOUS);
+		this.temporalTypeMap.put(LangModelSchedule.getString("Onetime"), TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME);
+		this.temporalTypeMap.put(LangModelSchedule.getString("Periodical"), TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL);
+		this.temporalTypeMap.put(LangModelSchedule.getString("Continual"), TestTemporalType.TEST_TEMPORAL_TYPE_CONTINUOUS);
 	}
 
 	public static TestController getInstance() {
@@ -123,7 +123,6 @@ public class TestController implements ObjectResourceController {
 			value = this.temporalTypeMap;
 		else if (key.equals(KEY_STATUS))
 			value = this.statusMap;
-
 		return value;
 	}
 
@@ -137,7 +136,7 @@ public class TestController implements ObjectResourceController {
 		if (object instanceof Test) {
 			Test test = (Test) object;
 			if (key.equals(KEY_TEMPORAL_TYPE))
-				value = this.temporalTypeMap.get(test.getTemporalType()); //$NON-NLS-1$
+				value = test.getTemporalType(); //$NON-NLS-1$
 			else if (key.equals(KEY_KIS))
 				try {
 					MeasurementPort mp = (MeasurementPort)ConfigurationStorableObjectPool.getStorableObject(test.getMonitoredElement().getMeasurementPortId(), true);
@@ -155,7 +154,7 @@ public class TestController implements ObjectResourceController {
 				value = test.getMonitoredElement().getName();
 			else if (key.equals(KEY_TEST_OBJECT)){
 				try {
-					MeasurementPort mp = (MeasurementPort)MeasurementStorableObjectPool.getStorableObject(test.getMonitoredElement().getMeasurementPortId(), true);
+					MeasurementPort mp = (MeasurementPort)ConfigurationStorableObjectPool.getStorableObject(test.getMonitoredElement().getMeasurementPortId(), true);
 					value = mp.getName();
 				} catch (DatabaseException e) {
 					// TODO Auto-generated catch block
@@ -168,16 +167,15 @@ public class TestController implements ObjectResourceController {
 			else if (key.equals(KEY_MEASUREMENT_TYPE))
 				value = test.getMeasurementType().getDescription();
 			else if (key.equals(KEY_START_TIME))
-				value = test.getStartTime(); //$NON-NLS-1$
+				value = SIMPLE_DATE_FORMAT.format(test.getStartTime()); //$NON-NLS-1$
 			else if (key.equals(KEY_STATUS))
-				value = this.statusMap.get(test.getStatus()); //$NON-NLS-1$
+				value = test.getStatus(); //$NON-NLS-1$
 		}
 		return value;
 	}
 
 	public boolean isEditable(String key) {
-		boolean editable = false;
-		return editable;
+		return false;
 	}
 
 	public void setValue(Object object, String key, Object value) {

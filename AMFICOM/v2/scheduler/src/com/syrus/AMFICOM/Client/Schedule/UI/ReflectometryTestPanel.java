@@ -16,6 +16,7 @@ import java.util.regex.Pattern;
 
 import javax.swing.*;
 
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.*;
@@ -25,6 +26,7 @@ import com.syrus.AMFICOM.Client.Scheduler.General.*;
 import com.syrus.AMFICOM.configuration.Characteristic;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
+import com.syrus.AMFICOM.configuration.corba.StringFieldSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -42,6 +44,7 @@ import com.syrus.AMFICOM.measurement.StringFieldCondition;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.SetSort;
 import com.syrus.util.ByteArray;
+import com.syrus.util.Log;
 
 /**
  * @author Vladimir Dolzhenko
@@ -97,7 +100,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	public static final String		DEFAULT_RESOLUTION			= "8";
 	public static final String		DEFAULT_WAVELENGTH			= "1625";
 
-	public static final String		TEST_TYPE					= "trace_and_analyse";
+	public static final String		TEST_TYPE					= "reflectometry";
 
 	public static final String		CHARACTER_MAX_REFRACTION	= "Max_Coef_Preloml";
 	public static final String		CHARACTER_MIN_REFRACTION	= "Min_Coef_Preloml";
@@ -123,8 +126,8 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 	ListNumberComparator			comparator					= new ListNumberComparator();
 	AComboBox						maxDistanceComboBox			= new AComboBox();
-	double							maxIndexOfRefraction		= 0.0;
-	double							minIndexOfRefraction		= 0.0;
+	double							maxIndexOfRefraction		= 1.46820;
+	double							minIndexOfRefraction		= 1.46820;
 	AComboBox						pulseWidthComboBox			= new AComboBox();
 	HashMap							pulseWidthMap;
 	AComboBox						resolutionComboBox			= new AComboBox();
@@ -170,9 +173,10 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			if (this.test == null) {
 				StringFieldCondition stringFieldCondition = StringFieldCondition.getInstance();
 				stringFieldCondition.setEntityCode(new Short(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE));
+				stringFieldCondition.setSort(StringFieldSort.STRINGSORT_BASE);
 				stringFieldCondition.setString(TEST_TYPE);
-				measurementType = (MeasurementType) MeasurementStorableObjectPool
-						.getStorableObjectsByCondition(stringFieldCondition, true);
+				measurementType = (MeasurementType) (MeasurementStorableObjectPool
+						.getStorableObjectsByCondition(stringFieldCondition, true).get(0));
 			} else {
 				measurementType = this.test.getMeasurementType();
 			}
@@ -282,9 +286,11 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					paramId = IdentifierPool.generateId(ObjectEntities.SETPARAMETER_ENTITY_CODE);
 					params[5] = new SetParameter(paramId, scansParam, byteArray.getBytes());
 
+					RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
 					Identifier id = IdentifierPool.generateId(ObjectEntities.SET_ENTITY_CODE);
-					set = Set.createInstance(id, null, SetSort.SET_SORT_MEASUREMENT_PARAMETERS,
+					set = Set.createInstance(id, sessionInterface.getUserIdentifier(), SetSort.SET_SORT_MEASUREMENT_PARAMETERS,
 												"Set created by Scheduler", params, null);
+					MeasurementStorableObjectPool.putStorableObject(set);
 
 				} catch (IOException ioe) {
 					ioe.printStackTrace();

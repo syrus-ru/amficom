@@ -322,9 +322,9 @@ class PlanToolBar extends JPanel {
 			legendPanel.add(flashLabel);
 			legendPanel.add(new JLabel(LangModelSchedule.getString("Scheduled"), PlanToolBar
 					.getColorIcon(TestLine.COLOR_SCHEDULED), SwingConstants.LEFT));
-			legendPanel.add(new JLabel(LangModelSchedule.getString("Done"), PlanToolBar
+			legendPanel.add(new JLabel(LangModelSchedule.getString("Completed"), PlanToolBar
 					.getColorIcon(TestLine.COLOR_COMPLETED), SwingConstants.LEFT));
-			legendPanel.add(new JLabel(LangModelSchedule.getString("Running"), PlanToolBar
+			legendPanel.add(new JLabel(LangModelSchedule.getString("Processing"), PlanToolBar
 					.getColorIcon(TestLine.COLOR_PROCCESSING), SwingConstants.LEFT));
 			legendPanel.add(new JLabel(LangModelSchedule.getString("Aborted"), PlanToolBar
 					.getColorIcon(TestLine.COLOR_ABORDED), SwingConstants.LEFT));

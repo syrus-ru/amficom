@@ -8,6 +8,7 @@ package com.syrus.AMFICOM.Client.Schedule;
 
 import java.awt.Component;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -42,6 +43,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.DomainCondition;
@@ -49,9 +51,11 @@ import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
+import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.TemporalCondition;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.measurement.TestTemporalStamps;
 import com.syrus.AMFICOM.measurement.corba.TestReturnType;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.util.Log;
@@ -110,7 +114,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	private Test					receivedTest;
 	private HashMap					receiveTreeElements;
 	private TestReturnType			returnType;
-	private Test.TestTimeStamps		receiveTestTimeStamps;
+	private TestTemporalStamps		receiveTestTimeStamps;
 
 	private List					tests;
 	private List					allTests;
@@ -120,7 +124,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	private List					allUnsavedTests;
 
 	private DomainCondition			domainCondition;
-	
+
 	private DataSourceInterface		dataSourceInterface;
 
 	public SchedulerModel(ApplicationContext aContext) {
@@ -190,7 +194,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		//		else if (connection.equals("Empty"))
 		//			return new EmptySurveyDataSource(si);
 		if (this.dataSourceInterface == null)
-			this.dataSourceInterface = new RISDSurveyDataSource(si); 
+			this.dataSourceInterface = new RISDSurveyDataSource(si);
 		return this.dataSourceInterface;
 	}
 
@@ -321,18 +325,21 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				//System.out.println("timestamp id have hot");
 				// //$NON-NLS-1$
 			} else if (id == DATA_ID_PARAMETERS_ANALYSIS) {
-				//this.receiveData.put(ObjectEntities.ANALYSIS_ENTITY,
-				// obj);
+				this.receiveData.put(ObjectEntities.SET_ENTITY, obj);
 			} else if (id == DATA_ID_PARAMETERS_EVALUATION) {
 				//this.receiveData.put(ObjectEntities.EVALUATION_ENTITY,
 				// obj);
 			}
+
 			if (obj instanceof AnalysisType) {
 				System.out.println("AnalysisType instanceof have got"); //$NON-NLS-1$
 				this.receiveData.put(ObjectEntities.ANALYSISTYPE_ENTITY, obj);
 			} else if (obj instanceof EvaluationType) {
 				System.out.println("EvaluationType instanceof have got"); //$NON-NLS-1$
 				this.receiveData.put(ObjectEntities.EVALUATIONTYPE_ENTITY, obj);
+			} else if (obj instanceof Set) {
+				System.out.println("Set instanceof have got"); //$NON-NLS-1$
+				this.receiveData.put(ObjectEntities.SET_ENTITY, obj);
 			} else if (obj instanceof List) {
 				System.out.println("MeasurementSetup instanceof have got"); //$NON-NLS-1$				
 				boolean isOnlySetups = true;
@@ -356,19 +363,19 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 					}
 					this.receiveData.put(ObjectEntities.MS_ENTITY, measurementSetupIds);
 				}
-			} else if (obj instanceof TemporalPattern) {
-				System.out.println("temporalPattern instanceof have got"); //$NON-NLS-1$
-				//receiveTimeStamp = (TimeStamp) obj;
+			} else if (obj instanceof TestTemporalStamps) {
+				System.out.println("TestTemporalStamps instanceof have got"); //$NON-NLS-1$
+				this.receiveTestTimeStamps = (TestTemporalStamps) obj;
 				this.receiveData.put(ObjectEntities.TEMPORALPATTERN_ENTITY, obj);
-			} else if (obj instanceof Test.TestTimeStamps) {
-				System.out.println("TestReturnType instanceof have got");
-				this.receiveTestTimeStamps = (Test.TestTimeStamps) obj;
+			} else if (obj instanceof TestReturnType){
+				this.returnType = (TestReturnType)obj;
 			}
-
+			
 			if ((this.returnType != null)
-					&& (((this.receiveData.get(ObjectEntities.MS_ENTITY) != null)
+					&& ((this.receiveData.get(ObjectEntities.SET_ENTITY) != null) || (((this.receiveData
+							.get(ObjectEntities.MS_ENTITY) != null)
 							&& (this.receiveData.get(ObjectEntities.ANALYSISTYPE_ENTITY) != null) && (this.receiveData
-							.get(ObjectEntities.EVALUATIONTYPE_ENTITY) != null))
+							.get(ObjectEntities.EVALUATIONTYPE_ENTITY) != null)))
 
 					) && (this.receiveTreeElements != null)
 					&& (this.receiveData.get(ObjectEntities.TEMPORALPATTERN_ENTITY) != null)) {
@@ -520,11 +527,6 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	private void createTest() {
 		Test test = this.receivedTest;
 
-		System.out.println("createTest():" + test.getId());
-
-		//TestType testType = (TestType)
-		// this.receiveTreeElements.get(TestType.typ);
-
 		MeasurementType measurementType = (MeasurementType) this.receiveTreeElements
 				.get(ObjectEntities.MEASUREMENTTYPE_ENTITY);
 
@@ -533,10 +535,24 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		EvaluationType evaluationType = (EvaluationType) this.receiveData.get(ObjectEntities.EVALUATIONTYPE_ENTITY);
 		AnalysisType analysisType = (AnalysisType) this.receiveData.get(ObjectEntities.ANALYSISTYPE_ENTITY);
 		List measurementSetupIds = (List) this.receiveData.get(ObjectEntities.MS_ENTITY);
+		if (measurementSetupIds == null) {
+			Set set = (Set) this.receiveData.get(ObjectEntities.SET_ENTITY);
+			RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
+			MeasurementSetup mSetup = MeasurementSetup.createInstance(IdentifierPool
+					.generateId(ObjectEntities.MS_ENTITY_CODE), sessionInterface.getUserIdentifier(), set, null, null,
+																		null, "created by Scheduler", 1000 * 60 * 10,
+																		Collections.singletonList(me.getId()));
+			measurementSetupIds = Collections.singletonList(mSetup.getId());
+			try {
+				MeasurementStorableObjectPool.putStorableObject(mSetup);
+			} catch (IllegalObjectEntityException e) {
+				Log.debugException(e, Log.DEBUGLEVEL05);
+			}
+		}
 
 		//		test.setChanged(true);
 
-		Identifier modifierId = ((RISDSessionInfo)this.aContext.getSessionInterface()).getUserIdentifier();
+		Identifier modifierId = ((RISDSessionInfo) this.aContext.getSessionInterface()).getUserIdentifier();
 
 		Date startTime = this.receiveTestTimeStamps.getStartTime();
 		Date endTime = this.receiveTestTimeStamps.getEndTime();
@@ -563,6 +579,24 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		}
 
 		//testRequest.setName(test.getName());
+		try {
+			MeasurementStorableObjectPool.putStorableObject(test);
+		} catch (IllegalObjectEntityException e) {
+			Log.debugException(e, Log.DEBUGLEVEL05);
+		}
+		
+		try {
+			StorableObject storableObject = MeasurementStorableObjectPool.getStorableObject(test.getId(), false);
+			System.out.println(storableObject);
+			System.out.println(storableObject.getId());
+		} catch (DatabaseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (CommunicationException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
 		this.dispatcher.notify(new TestUpdateEvent(this, test, TestUpdateEvent.TEST_SELECTED_EVENT));
 	}
 
@@ -577,6 +611,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	//}
 	/**
 	 * TODO remove when will enable again
+	 * 
 	 * @throws CommunicationException
 	 * @throws DatabaseException
 	 */
@@ -656,7 +691,8 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	//	}
 	public DomainCondition getDomainCondition(short entityCode) throws DatabaseException, CommunicationException {
 		RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
-		Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(sessionInterface.getDomainIdentifier(), true);
+		Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(sessionInterface
+				.getDomainIdentifier(), true);
 		if (this.domainCondition == null)
 			this.domainCondition = new DomainCondition(domain, entityCode);
 		else {

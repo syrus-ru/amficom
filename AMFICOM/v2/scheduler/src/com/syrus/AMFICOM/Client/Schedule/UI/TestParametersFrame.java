@@ -56,9 +56,9 @@ public class TestParametersFrame extends JInternalFrame implements OperationList
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
 		Object obj = ae.getSource();
-		//		System.out.println(getClass().getName() + "\tcommandName:"
-		//				+ commandName);
-		//		System.out.println("obj:" + obj.getClass().getName() + "\t" + obj);
+				System.out.println(getClass().getName() + "\tcommandName:"
+						+ commandName);
+				System.out.println("obj:" + obj.getClass().getName() + "\t" + obj);
 		if (commandName.equals(TestUpdateEvent.TYPE)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
 			Test test = tue.test;
