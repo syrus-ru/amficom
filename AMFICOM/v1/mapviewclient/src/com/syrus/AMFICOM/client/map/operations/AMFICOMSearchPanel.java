@@ -1,5 +1,5 @@
 /*
- * Название: $Id: AMFICOMSearchPanel.java,v 1.3 2005/03/09 09:15:01 peskovsky Exp $
+ * Название: $Id: AMFICOMSearchPanel.java,v 1.4 2005/03/17 12:29:50 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,6 +29,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.table.JTableHeader;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
+import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.Command.Navigate.CenterSelectionCommand;
@@ -45,7 +46,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * Панель поиска элементов карты АМФИКОМ
- * @version $Revision: 1.3 $, $Date: 2005/03/09 09:15:01 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/17 12:29:50 $
  * @author $Author: peskovsky $
  * @module mapviewclient_v1
  */
@@ -222,6 +223,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 	 */	
 	public void search()
 	{
+		String loweredSearchText = this.searchText.toLowerCase();
 		this.searchButton.setEnabled(false);
 		List vec = new LinkedList();
 		
@@ -233,14 +235,14 @@ import com.syrus.AMFICOM.mapview.MapView;
 			{
 				MapElement me = (MapElement )it.next();
 				
-				if(me.getName().indexOf(this.searchText) != -1)
+				if(me.getName().toLowerCase().indexOf(loweredSearchText) != -1)
 					vec.add(me);
 				else if(me instanceof SiteNode)
 				{
 					SiteNode site = (SiteNode )me;
-					if(site.getCity().indexOf(this.searchText) != -1
-						|| site.getStreet().indexOf(this.searchText) != -1
-						|| site.getBuilding().indexOf(this.searchText) != -1)
+					if(site.getCity().toLowerCase().indexOf(loweredSearchText) != -1
+						|| site.getStreet().toLowerCase().indexOf(loweredSearchText) != -1
+						|| site.getBuilding().toLowerCase().indexOf(loweredSearchText) != -1)
 							vec.add(me);
 				}
 			}
@@ -248,10 +250,10 @@ import com.syrus.AMFICOM.mapview.MapView;
 			for(it = map.getAllPhysicalLinks().iterator(); it.hasNext();)
 			{
 				PhysicalLink link = (PhysicalLink )it.next();
-				if(link.getName().indexOf(this.searchText) != -1
-					|| link.getCity().indexOf(this.searchText) != -1
-					|| link.getStreet().indexOf(this.searchText) != -1
-					|| link.getBuilding().indexOf(this.searchText) != -1)
+				if(link.getName().toLowerCase().indexOf(loweredSearchText) != -1
+					|| link.getCity().toLowerCase().indexOf(loweredSearchText) != -1
+					|| link.getStreet().toLowerCase().indexOf(loweredSearchText) != -1
+					|| link.getBuilding().toLowerCase().indexOf(loweredSearchText) != -1)
 						vec.add(link);
 			}
 		}
@@ -271,19 +273,24 @@ import com.syrus.AMFICOM.mapview.MapView;
 	 */
 	void doCenter()
 	{
-		this.mapFrame.getMapViewer().getLogicalNetLayer().getMapView().deselectAll();
-
 		int[] selection = this.table.getSelectedRows();
+		if (selection.length == 0)
+			return;
+		
+		this.mapFrame.getMapViewer().getLogicalNetLayer().deselectAll();
+
 		for (int i = 0; i < selection.length; i++)
 		{
 			MapElement mapE = (MapElement)this.model.getObject(selection[(i)]);
 			mapE.setSelected(true);
-		}
 
-		Command com = new CenterSelectionCommand(this.mapFrame.getMapViewer().getLogicalNetLayer());
-		com.setParameter("applicationModel", this.mapFrame.getContext().getApplicationModel());
-		com.setParameter("logicalNetLayer", this.mapFrame.getMapViewer().getLogicalNetLayer());
-		com.execute();
+			this.mapFrame.getContext().getDispatcher().notify(
+					new MapNavigateEvent(mapE, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));		
+		}
 		
+		Command centerCommand = new CenterSelectionCommand(this.mapFrame.getMapViewer().getLogicalNetLayer());
+		centerCommand.setParameter("applicationModel", this.mapFrame.getContext().getApplicationModel());
+		centerCommand.setParameter("logicalNetLayer", this.mapFrame.getMapViewer().getLogicalNetLayer());
+		centerCommand.execute();
 	}
 }

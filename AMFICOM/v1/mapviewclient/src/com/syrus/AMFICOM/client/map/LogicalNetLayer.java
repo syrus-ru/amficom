@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.52 2005/03/16 12:54:57 bass Exp $
+ * $Id: LogicalNetLayer.java,v 1.53 2005/03/17 12:29:50 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -77,8 +77,8 @@ import com.syrus.AMFICOM.scheme.PathDecomposer;
  * 
  * 
  * 
- * @author $Author: bass $
- * @version $Revision: 1.52 $, $Date: 2005/03/16 12:54:57 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.53 $, $Date: 2005/03/17 12:29:50 $
  * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter
@@ -1564,6 +1564,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		{
 			MapElement mapElement = (MapElement)e.next();
 			mapElement.setSelected(false);
+			
+			sendMapEvent(new MapNavigateEvent(mapElement, MapNavigateEvent.MAP_ELEMENT_DESELECTED_EVENT));			
 		}
 		getMapView().getMap().clearSelection();
 	}

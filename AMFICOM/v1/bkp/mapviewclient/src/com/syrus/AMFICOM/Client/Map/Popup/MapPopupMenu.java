@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.30 2005/03/04 14:39:08 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.31 2005/03/17 12:29:50 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -61,8 +61,8 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 
 /**
  * Контекстное меню элемента карты
- * @author $Author: krupenn $
- * @version $Revision: 1.30 $, $Date: 2005/03/04 14:39:08 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.31 $, $Date: 2005/03/17 12:29:50 $
  * @module mapviewclient_v1
  */
 public abstract class MapPopupMenu extends JPopupMenu
@@ -167,6 +167,10 @@ public abstract class MapPopupMenu extends JPopupMenu
 		Collection list = NodeTypeController.getTopologicalProtos(this.logicalNetLayer.getContext());
 
 		ObjectResourceSelectionDialog dialog = new ObjectResourceSelectionDialog(list);
+		
+		Iterator listIt = list.iterator();
+		if (listIt.hasNext())
+			dialog.setSelected(listIt.next());
 			
 		dialog.setModal(true);
 

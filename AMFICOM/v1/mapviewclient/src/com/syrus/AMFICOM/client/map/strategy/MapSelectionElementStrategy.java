@@ -1,5 +1,5 @@
 /**
- * $Id: MapSelectionElementStrategy.java,v 1.16 2005/03/02 12:35:40 krupenn Exp $
+ * $Id: MapSelectionElementStrategy.java,v 1.17 2005/03/17 12:29:50 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,7 @@
 package com.syrus.AMFICOM.Client.Map.Strategy;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
+import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
@@ -25,8 +26,8 @@ import java.awt.Point;
 
 /**
  * Стратегия управления выделенными объектами.
- * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/03/02 12:35:40 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.17 $, $Date: 2005/03/17 12:29:50 $
  * @module mapviewclient_v1
  */
 public final class MapSelectionElementStrategy extends AbstractMapStrategy 
@@ -81,17 +82,15 @@ public final class MapSelectionElementStrategy extends AbstractMapStrategy
 		MapElement mel = super.logicalNetLayer.getMapElementAtPoint(point);
 		if ((actionMode == MapState.SELECT_ACTION_MODE))
 		{
-			if (mel instanceof VoidElement)
-			{
-				super.logicalNetLayer.deselectAll();
-				super.logicalNetLayer.setCurrentMapElement(mel);
-			}//mel instanceof VoidElement
-			else
+			if (!(mel instanceof VoidElement))
 			{
 				if (mel.isSelected())
 				{
 					mel.setSelected(false);
 					this.selection.remove(mel);
+					
+					super.logicalNetLayer.sendMapEvent(new MapNavigateEvent(mel, MapNavigateEvent.MAP_ELEMENT_DESELECTED_EVENT));
+					
 					if (this.selection.getElements().size() == 0)
 					{
 						super.logicalNetLayer.setCurrentMapElement(com.syrus.AMFICOM.mapview.VoidElement.getInstance(super.logicalNetLayer.getMapView()));
@@ -105,6 +104,8 @@ public final class MapSelectionElementStrategy extends AbstractMapStrategy
 				{
 					mel.setSelected(true);
 					this.selection.add(mel);
+					
+					super.logicalNetLayer.sendMapEvent(new MapNavigateEvent(mel, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
 				}// ! mel.isSelected()
 			}// ! mel instanceof VoidElement
 		}//MapState.SELECT_ACTION_MODE

@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.27 2005/03/16 13:48:18 bass Exp $
+ * $Id: MapEditorMainFrame.java,v 1.28 2005/03/17 12:29:50 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -95,9 +95,9 @@ import com.syrus.AMFICOM.mapview.MapView;
  * 
  * 
  * 
- * @version $Revision: 1.27 $, $Date: 2005/03/16 13:48:18 $
+ * @version $Revision: 1.28 $, $Date: 2005/03/17 12:29:50 $
  * @module mapviewclient_v1
- * @author $Author: bass $
+ * @author $Author: peskovsky $
  */
 public class MapEditorMainFrame extends JFrame 
 	implements OperationListener, Module
@@ -126,7 +126,7 @@ public class MapEditorMainFrame extends JFrame
 
 	protected MapFrame mapFrame = null;
 	
-	private MapEditorWindowArranger arranger = null;
+	private MapEditorWindowArranger arranger = new MapEditorWindowArranger(this.desktopPane);
 
 	public MapFrame getMapFrame()
 	{
@@ -475,6 +475,7 @@ public class MapEditorMainFrame extends JFrame
 				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_FRAME_SHOWN);
 				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_VIEW_SELECTED);
 				this.aContext.getDispatcher().unregister(this, MapEvent.MAP_VIEW_CLOSED);
+				this.aContext.getDispatcher().unregister(this.arranger,MapEditorWindowArranger.EVENT_ARRANGE);				
 				this.statusBar.removeDispatcher(this.aContext.getDispatcher());
 			}
 
@@ -489,10 +490,9 @@ public class MapEditorMainFrame extends JFrame
 			aContext.getDispatcher().register(this, MapEvent.MAP_FRAME_SHOWN);
 			aContext.getDispatcher().register(this, MapEvent.MAP_VIEW_SELECTED);
 			aContext.getDispatcher().register(this, MapEvent.MAP_VIEW_CLOSED);
+			aContext.getDispatcher().register(this.arranger,MapEditorWindowArranger.EVENT_ARRANGE);			
 			this.statusBar.addDispatcher(this.aContext.getDispatcher());
 		}
-		
-		this.arranger = new MapEditorWindowArranger(this.desktopPane,this.aContext);
 	}
 
 	public ApplicationContext getContext()

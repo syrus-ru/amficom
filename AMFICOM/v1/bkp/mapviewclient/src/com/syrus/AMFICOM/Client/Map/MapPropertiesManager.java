@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.11 2005/03/05 16:00:06 peskovsky Exp $
+ * $Id: MapPropertiesManager.java,v 1.12 2005/03/17 12:29:50 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
  * <li>zoom
  * 
  * @author $Author: peskovsky $
- * @version $Revision: 1.11 $, $Date: 2005/03/05 16:00:06 $
+ * @version $Revision: 1.12 $, $Date: 2005/03/17 12:29:50 $
  * @module mapviewclient_v1
  */
 public final class MapPropertiesManager 
@@ -242,7 +242,7 @@ public final class MapPropertiesManager
 		scaleFormat.setMinimumIntegerDigits(1);
 		scaleFormat.setMinimumFractionDigits(1);
 		scaleFormat.setGroupingUsed(false);
-		scaleFormat.setMaximumFractionDigits(340);
+		scaleFormat.setMaximumFractionDigits(4);
 		dfs = scaleFormat.getDecimalFormatSymbols();
 		dfs.setDecimalSeparator('.');
 		scaleFormat.setDecimalFormatSymbols(dfs);

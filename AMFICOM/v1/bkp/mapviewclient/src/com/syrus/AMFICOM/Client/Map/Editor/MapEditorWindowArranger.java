@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorWindowArranger.java,v 1.3 2005/03/16 13:48:18 bass Exp $
+ * $Id: MapEditorWindowArranger.java,v 1.4 2005/03/17 12:29:50 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.Client.Map.UI.MapPropertyFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapSchemeTreeFrame;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/03/16 13:48:18 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.4 $, $Date: 2005/03/17 12:29:50 $
  * @module mapviewclient_v1
  */
 
@@ -35,13 +35,10 @@ public class MapEditorWindowArranger extends WindowArranger
 	private JDesktopPane desktop = null;
 
 	public MapEditorWindowArranger(
-			JDesktopPane desktop,
-			ApplicationContext aContext)
+			JDesktopPane desktop)
 	{
 		super(null);
 		this.desktop = desktop;
-		aContext.getDispatcher().register(
-				this,MapEditorWindowArranger.EVENT_ARRANGE);
 	}
 
 	public void arrange()

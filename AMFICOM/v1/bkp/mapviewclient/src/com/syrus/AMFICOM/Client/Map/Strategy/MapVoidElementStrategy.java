@@ -1,5 +1,5 @@
 /**
- * $Id: MapVoidElementStrategy.java,v 1.22 2005/03/04 14:39:08 krupenn Exp $
+ * $Id: MapVoidElementStrategy.java,v 1.23 2005/03/17 12:29:50 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,7 @@
 
 package com.syrus.AMFICOM.Client.Map.Strategy;
 
+import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.Map.MapConnectionException;
 import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapState;
@@ -31,8 +32,8 @@ import java.util.Set;
 
 /**
  * Стратегия управления элементами, когда нет выбранных элементов.
- * @author $Author: krupenn $
- * @version $Revision: 1.22 $, $Date: 2005/03/04 14:39:08 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.23 $, $Date: 2005/03/17 12:29:50 $
  * @module mapviewclient_v1
  */
 public final class MapVoidElementStrategy extends AbstractMapStrategy 
@@ -148,17 +149,16 @@ public final class MapVoidElementStrategy extends AbstractMapStrategy
 		while (e.hasNext())
 		{
 			AbstractNode node = (AbstractNode)e.next();
+			Point p = super.logicalNetLayer.convertMapToScreen(node.getLocation());
+
+			if (selectionRect.contains(p))
 			{
-				Point p = super.logicalNetLayer.convertMapToScreen(node.getLocation());
-	
-				if (selectionRect.contains(p))
-				{
-					node.setSelected(true);
-				}
-				else
-				{
-					node.setSelected(false);
-				}
+				node.setSelected(true);
+				super.logicalNetLayer.sendMapEvent(new MapNavigateEvent(node, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
+			}
+			else
+			{
+				node.setSelected(false);
 			}
 		}
 
@@ -179,6 +179,7 @@ public final class MapVoidElementStrategy extends AbstractMapStrategy
 							nodeLink.getEndNode().getLocation())))
 				{
 					nodeLink.setSelected(true);
+					super.logicalNetLayer.sendMapEvent(new MapNavigateEvent(nodeLink, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));					
 				}
 				else
 				{
@@ -208,6 +209,8 @@ public final class MapVoidElementStrategy extends AbstractMapStrategy
 					}
 				}
 				link.setSelected(select);
+				if (select)
+					super.logicalNetLayer.sendMapEvent(new MapNavigateEvent(link, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));				
 			}
 		}
 		
