@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceStorableObjectPool.java,v 1.6 2005/01/20 13:30:44 max Exp $
+ * $Id: ResourceStorableObjectPool.java,v 1.7 2005/02/08 10:23:10 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @author $Author: max $
- * @version $Revision: 1.6 $, $Date: 2005/01/20 13:30:44 $
+ * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/02/08 10:23:10 $
  * @module resource_v1
  */
 public final class ResourceStorableObjectPool extends StorableObjectPool {
@@ -200,7 +200,7 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		instance.deleteImpl(id);
 	}
 
-	public static void delete(List ids) throws DatabaseException, CommunicationException {
+	public static void delete(List ids) throws DatabaseException, CommunicationException, IllegalDataException {
 		instance.deleteImpl(ids);
 	}
 
