@@ -19,7 +19,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * по ReflectogramEvent[] - MaxDeviation и пр.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.8 $, $Date: 2004/12/13 18:12:41 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/14 09:07:51 $
  * @module analysis_v1
  */
 public class ReflectogramComparer
@@ -75,6 +75,16 @@ public class ReflectogramComparer
 			removeNonPaired(probe2etalon, etalon2probe);
 			removeNonPaired(etalon2probe, probe2etalon);
 		}
+	}
+	
+	public int getEtalonIdByProbeId(int probeId)
+	{
+	    return probe2etalon[probeId];
+	}
+	
+	public int getProbeIdByEtalonId(int etalonId)
+	{
+	    return etalon2probe[etalonId];
 	}
 
 	public boolean isProbeEventNew(int probeId)

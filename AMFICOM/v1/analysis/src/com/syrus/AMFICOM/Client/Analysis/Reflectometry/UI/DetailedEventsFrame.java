@@ -14,10 +14,6 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.*;
 import com.syrus.io.BellcoreStructure;
 
-/*
- * TODO: отучить его от сравнени€ событий с одинаковыми номерами.
- * ѕриучить к сравнению с помощью нового ReflectogramComparer'а
- */
 public class DetailedEventsFrame extends JInternalFrame
 	implements OperationListener
 {
@@ -277,7 +273,7 @@ public class DetailedEventsFrame extends JInternalFrame
 						"",
 						LangModelAnalyse.getString("eventLength"), // прот€женность
 						LangModelAnalyse.getString("eventStartLevel"),
-						LangModelAnalyse.getString("eventReflectionLevel"),
+						LangModelAnalyse.getString("eventReflectionLevel")
 						//LangModelAnalyse.getString("eventFormFactor") // removed by saa
 				},
 				null);
@@ -347,71 +343,90 @@ public class DetailedEventsFrame extends JInternalFrame
 			return;
 		}
 		double delta_x = data_[0].getDeltaX();
+		
+		// ищем парное событие
+		ReflectogramComparer rComp = new ReflectogramComparer(null, data_, etalon, null);
+		int nEtalon = rComp.getEtalonIdByProbeId(nEvent); // может быть -1
+		ReflectogramEvent dataEvent = data_[nEvent];
+		ReflectogramEvent etalonEvent = nEtalon != -1
+				? etalon[nEtalon]
+				: null;
+		int dataType = dataEvent.getEventType();
+		int etalonType = etalonEvent != null
+			        ? etalonEvent.getEventType()
+					: ReflectogramEvent.RESERVED_VALUE;
 
-		if(data_[nEvent].getEventType() == etalon[nEvent].getEventType())
-			((CompareTableRenderer)jTableComp
-			        .getDefaultRenderer(Object.class)).setSameType(true);
-		else
-			((CompareTableRenderer)jTableComp
-			        .getDefaultRenderer(Object.class)).setSameType(false);
+		((CompareTableRenderer)jTableComp.getDefaultRenderer(Object.class))
+			.setSameType(dataType == etalonType);
 
-		String dataT = LangModelAnalyse.getString("eventTypeUnk");
-		String etalonT = LangModelAnalyse.getString("eventTypeUnk");
-		if(data_[nEvent].getEventType() == ReflectogramEvent.CONNECTOR)
+		String dataT;
+		switch(dataType)
 		{
-			dataT = LangModelAnalyse.getString("eventType4");
-		}
-		else if(data_[nEvent].getEventType() == ReflectogramEvent.WELD)
-		{
-			dataT = LangModelAnalyse.getString("eventType3");
-		}
-		else if(data_[nEvent].getEventType() == ReflectogramEvent.LINEAR)
-		{
-			dataT = LangModelAnalyse.getString("eventType0");
+		case ReflectogramEvent.CONNECTOR:
+		    dataT = LangModelAnalyse.getString("eventType4");
+			break;
+		case ReflectogramEvent.WELD:
+		    dataT = LangModelAnalyse.getString("eventType3");
+			break;
+		case ReflectogramEvent.LINEAR:
+		    dataT = LangModelAnalyse.getString("eventType0");
+			break;
+		default:
+		    dataT = LangModelAnalyse.getString("eventTypeUnk");
 		}
 
-		if(etalon[nEvent].getEventType() == ReflectogramEvent.CONNECTOR)
+		String etalonT;
+		switch(etalonType)
 		{
-			etalonT = LangModelAnalyse.getString("eventType4");
+		case ReflectogramEvent.CONNECTOR:
+		    etalonT = LangModelAnalyse.getString("eventType4");
+			break;
+		case ReflectogramEvent.WELD:
+		    etalonT = LangModelAnalyse.getString("eventType3");
+			break;
+		case ReflectogramEvent.LINEAR:
+		    etalonT = LangModelAnalyse.getString("eventType0");
+			break;
+		default:
+		    etalonT = LangModelAnalyse.getString("eventTypeUnk");
 		}
-		else if(etalon[nEvent].getEventType() == ReflectogramEvent.WELD)
-		{
-			etalonT = LangModelAnalyse.getString("eventType3");
-		}
-		else if(etalon[nEvent].getEventType() == ReflectogramEvent.LINEAR)
-		{
-			etalonT = LangModelAnalyse.getString("eventType0");
-		}
+
 		ctModel.setValueAt(dataT, 0, 1);
 		ctModel.setValueAt(etalonT, 1, 1);
 
-		double difference = ReflectogramComparer.getDeviation(etalon, data_, nEvent);
+		// сравнение по модельной кривой
+		double difference    = ReflectogramComparer.getDeviation(etalon, data_, nEvent);
 		double meanDeviation = ReflectogramComparer.getMeanDeviation(data_, etalon, nEvent);
-		double loss = ReflectogramComparer.getLossChange(etalon, data_, nEvent);
-		double locationDiff = ReflectogramComparer.getLocationDifference(etalon, data_, nEvent)*delta_x;
-		double widthDiff = ReflectogramComparer.getWidthDifference(etalon, data_, nEvent)*delta_x;
 
-		difference = ((int)(difference*1000.))/1000.;
-		loss = ((int)(loss*1000.))/1000.;
-		locationDiff = ((int)(locationDiff*1000.))/1000.;
-		widthDiff = ((int)(widthDiff*1000.))/1000.;
-		meanDeviation = ((int)(meanDeviation*1000.))/1000.;
+		difference           = ((int)(difference*1000.))/1000.; // точность 0.001 дЅ
+		meanDeviation        = ((int)(meanDeviation*1000.))/1000.;
 
 		ctModel.setValueAt(String.valueOf(difference)+" дЅ", 2, 1);
 		ctModel.setValueAt(String.valueOf(meanDeviation)+" дЅ", 3, 1);
-		ctModel.setValueAt(String.valueOf(locationDiff)+" м", 6, 1);
 
-
-		if(etalon[nEvent].getEventType() == data_[nEvent].getEventType())
+		// сравнение с эталонным событием
+		if(etalonEvent != null) // из равенства следует, что эталонное событие найдено
 		{
-			ctModel.setValueAt(String.valueOf(loss)+" дЅ", 4, 1);
+			double lossDiff  = dataEvent.getMLoss() - etalonEvent.getMLoss();
+			double widthDiff = dataEvent.getWidth0() - etalonEvent.getWidth0();
+			double locationDiff = (dataEvent.getBegin() - etalonEvent.getBegin()) * delta_x; // изменено с середины событи€ на начало
+
+			lossDiff        = ((int)(lossDiff*1000.))/1000.;
+			widthDiff       = ((int)(widthDiff*1.))/1.;	// точность 1 м
+			locationDiff    = ((int)(locationDiff*1.))/1.;
+
+			ctModel.setValueAt(String.valueOf(lossDiff)+" дЅ", 4, 1);
 			ctModel.setValueAt(String.valueOf(widthDiff)+" м", 5, 1);
+			ctModel.setValueAt(String.valueOf(locationDiff)+" м", 6, 1);
 		}
 		else
 		{
 			ctModel.setValueAt("--", 4, 1);
 			ctModel.setValueAt("--", 5, 1);
+			ctModel.setValueAt("--", 6, 1);
 		}
+		
+		updColorModel(); // XXX: так ли надо перерисовывать всю таблицу?
 	}
 
 	private void updColorModel()
@@ -635,7 +650,9 @@ class CompareTableRenderer extends DefaultTableCellRenderer
 		else
 			c.setForeground(Color.black);*/
 		
-		c.setForeground(sameType ? Color.black : Color.red);
+		c.setForeground(sameType || row > 1
+		    		? Color.black
+		            : Color.red);
 
 		return c;
 	}
