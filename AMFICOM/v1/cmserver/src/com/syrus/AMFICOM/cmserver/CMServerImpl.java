@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.60 2004/10/25 13:26:03 max Exp $
+ * $Id: CMServerImpl.java,v 1.61 2004/10/27 12:16:20 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -51,6 +51,8 @@ import com.syrus.AMFICOM.configuration.Server;
 import com.syrus.AMFICOM.configuration.ServerDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.configuration.TransmissionPathDatabase;
+import com.syrus.AMFICOM.configuration.TransmissionPathType;
+import com.syrus.AMFICOM.configuration.TransmissionPathTypeDatabase;
 import com.syrus.AMFICOM.configuration.User;
 import com.syrus.AMFICOM.configuration.UserDatabase;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
@@ -73,6 +75,7 @@ import com.syrus.AMFICOM.configuration.corba.Port_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Server_Transferable;
 import com.syrus.AMFICOM.configuration.corba.StringFieldCondition_Transferable;
 import com.syrus.AMFICOM.configuration.corba.StringFieldSort;
+import com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 import com.syrus.AMFICOM.configuration.corba.User_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -152,7 +155,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2004/10/25 13:26:03 $
+ * @version $Revision: 1.61 $, $Date: 2004/10/27 12:16:20 $
  * @author $Author: max $
  * @module cmserver_v1
  */
@@ -2735,6 +2738,45 @@ public class CMServerImpl implements CMServerOperations {
         }
     }
 
+	public void receiveTransmissionPathType(
+			TransmissionPathType_Transferable transmissionPathType_Transferable,
+			boolean force, AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		Log.debugMessage("CMServerImpl.receiveTransmissionPathType | Received " + " transmissionPathType", Log.DEBUGLEVEL07);
+        try {
+
+            TransmissionPathType transmissionPathType = new TransmissionPathType(transmissionPathType_Transferable);
+            ConfigurationStorableObjectPool.putStorableObject(transmissionPathType);
+            TransmissionPathTypeDatabase transmissionPathTypeDatabase = (TransmissionPathTypeDatabase) ConfigurationDatabaseContext
+                    .getTransmissionPathDatabase();
+            transmissionPathTypeDatabase.update(transmissionPathType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+
+        } catch (UpdateObjectException e) {
+        Log.errorException(e);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
+                .getMessage());
+        } catch (IllegalDataException e) {
+        Log.errorException(e);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
+                            CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (IllegalObjectEntityException e) {
+        Log.errorException(e);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
+                            CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (VersionCollisionException e){
+        Log.errorException(e);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION,
+                                            CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (CreateObjectException e) {
+        Log.errorException(e);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
+                .getMessage());
+        } catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
+	}
+
     public void receiveTransmissionPaths(TransmissionPath_Transferable[] transmissionPath_Transferables, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         Log.debugMessage("CMServerImpl.receiveTransmissionPaths | Received " + transmissionPath_Transferables.length
                 + " transmissionPaths", Log.DEBUGLEVEL07);
@@ -2776,6 +2818,51 @@ public class CMServerImpl implements CMServerOperations {
             throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
         }
     }
+
+	public void receiveTransmissionPathTypes(
+			TransmissionPathType_Transferable[] transmissionPathType_Transferables,
+			boolean force, AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		Log.debugMessage("CMServerImpl.receiveTransmissionPathTypes | Received " + transmissionPathType_Transferables.length
+                + " transmissionPathTypes", Log.DEBUGLEVEL07);
+        List transmissionPathTypeList = new ArrayList(transmissionPathType_Transferables.length);
+        try {
+
+            for (int i = 0; i < transmissionPathType_Transferables.length; i++) {
+                TransmissionPathType transmissionPathType = new TransmissionPathType(transmissionPathType_Transferables[i]);
+                ConfigurationStorableObjectPool.putStorableObject(transmissionPathType);
+                transmissionPathTypeList.add(transmissionPathType);
+            }
+
+            TransmissionPathTypeDatabase transmissionPathTypeDatabase = (TransmissionPathTypeDatabase) ConfigurationDatabaseContext
+                    .getTransmissionPathDatabase();
+            transmissionPathTypeDatabase.update(transmissionPathTypeList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+
+        } catch (UpdateObjectException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
+                    .getMessage());
+        } catch (IllegalDataException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
+                                CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (IllegalObjectEntityException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
+                                CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (VersionCollisionException e){
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION,
+                                                CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (CreateObjectException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
+                    .getMessage());
+        } catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
+	}
 
     public void receiveUser(User_Transferable user_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         Log.debugMessage("CMServerImpl.receiveUser | Received " + " user", Log.DEBUGLEVEL07);
@@ -3356,6 +3443,37 @@ public class CMServerImpl implements CMServerOperations {
             throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
         }
 	}
+    
+    public TransmissionPathType_Transferable transmitTransmissionPathType(  Identifier_Transferable identifier_Transferable,
+            AccessIdentifier_Transferable accessIdentifier)
+        throws AMFICOMRemoteException {
+        Identifier id = new Identifier(identifier_Transferable);
+        Log.debugMessage("CMServerImpl.transmitTransmissionPathType | require " + id.toString(), Log.DEBUGLEVEL07);
+        try {
+            TransmissionPathType transmissionPathType = (TransmissionPathType) ConfigurationStorableObjectPool
+                    .getStorableObject(id, true);
+        return (TransmissionPathType_Transferable) transmissionPathType.getTransferable();
+        } catch (ObjectNotFoundException onfe) {
+        Log.errorException(onfe);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES,
+                onfe.getMessage());
+        } catch (RetrieveObjectException roe) {
+        Log.errorException(roe);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+        .getMessage());
+        } catch (CommunicationException ce) {
+        Log.errorException(ce);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce
+        .getMessage());
+        } catch (DatabaseException de) {
+        Log.errorException(de);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
+        .getMessage());
+        } catch (Throwable t) {
+        Log.errorException(t);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
+    }
 
     public Characteristic_Transferable[] transmitCharacteristics(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         try {
@@ -5263,6 +5381,52 @@ public class CMServerImpl implements CMServerOperations {
             throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
         }
     }
+    
+    public TransmissionPathType_Transferable[] transmitTransmissionPathTypesButIds(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        try {
+            Identifier domainId = new Identifier(accessIdentifier.domain_id);
+            Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(domainId, true);
+            Log.debugMessage("CMServerImpl.transmitTransmissionPathTypesButIds | requiere "
+                    + (ids_Transferable.length == 0 ? "all" : Integer
+                            .toString(ids_Transferable.length))
+                    + " item(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
+            List list;
+            if (ids_Transferable.length > 0) {
+                List idsList = new ArrayList(ids_Transferable.length);
+                for (int i = 0; i < ids_Transferable.length; i++)
+                    idsList.add(new Identifier(ids_Transferable[i]));
+                list = ConfigurationStorableObjectPool.getStorableObjects(idsList, true);
+            } else
+                list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.TRANSPATHTYPE_ENTITY_CODE), true);
+
+            TransmissionPathType_Transferable[] transferables = new TransmissionPathType_Transferable[list.size()];
+            int i = 0;
+            for (Iterator it = list.iterator(); it.hasNext(); i++) {
+                TransmissionPathType transmissionPathType = (TransmissionPathType) it.next();
+                transferables[i] = (TransmissionPathType_Transferable) transmissionPathType.getTransferable();
+            }
+            return transferables;
+
+        } catch (RetrieveObjectException roe) {
+            Log.errorException(roe);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+                    .getMessage());
+        } catch (IllegalDataException ide) {
+            Log.errorException(ide);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide
+                    .getMessage());
+        } catch (IllegalObjectEntityException ioee) {
+            Log.errorException(ioee);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee
+                    .getMessage());
+        } catch (ApplicationException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
+    }
 
     public TransmissionPath_Transferable[] transmitTransmissionPathsButIdsCondition(Identifier_Transferable[] ids_Transferable, AccessIdentifier_Transferable accessIdentifier, DomainCondition_Transferable domainCondition_Transferable) throws AMFICOMRemoteException {
         Log.debugMessage("CMServerImpl.transmitTransmissionPathsButIdsCondition | requiere "
@@ -6162,6 +6326,72 @@ public class CMServerImpl implements CMServerOperations {
             throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
         }
 	}
+    
+    public TransmissionPathType_Transferable[] transmitTransmissionPathTypes(   Identifier_Transferable[] identifier_Transferables,
+            AccessIdentifier_Transferable accessIdentifier)
+            throws AMFICOMRemoteException {
+        try {
+            Identifier domainId = new Identifier(accessIdentifier.domain_id);
+            Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(domainId, true);
+            
+            Log.debugMessage("CMServerImpl.transmitTransmissionPathTypes | requiere "
+            + (identifier_Transferables.length == 0 ? "all" : Integer
+            .toString(identifier_Transferables.length)) + " item(s)",
+            Log.DEBUGLEVEL07);
+            
+            List list = null;
+            if (identifier_Transferables.length > 0) {
+                List idsList = new ArrayList(identifier_Transferables.length);
+                for (int i = 0; i < identifier_Transferables.length; i++)
+                	idsList.add(new Identifier(identifier_Transferables[i]));
+                
+                list = ConfigurationStorableObjectPool.getStorableObjects(idsList, true);
+            } else
+            	list = list = ConfigurationStorableObjectPool
+				    .getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.TRANSPATHTYPE_ENTITY_CODE), true);
+            
+            TransmissionPathType_Transferable[] transferables = new TransmissionPathType_Transferable[list.size()];
+            
+            int i = 0;
+            for (Iterator it = list.iterator(); it.hasNext(); i++) {
+                TransmissionPathType transmissionPathType = (TransmissionPathType) it.next();
+                transferables[i] = (TransmissionPathType_Transferable) transmissionPathType.getTransferable();
+            }
+            
+            return transferables;
+            
+        } catch (ObjectNotFoundException onfe) {
+        Log.errorException(onfe);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES,
+            onfe.getMessage());
+        } catch (RetrieveObjectException roe) {
+        Log.errorException(roe);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
+        .getMessage());
+        } catch (CommunicationException ce) {
+        Log.errorException(ce);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce
+        .getMessage());
+        } catch (DatabaseException de) {
+        Log.errorException(de);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
+        .getMessage());
+        } catch (IllegalDataException ide) {
+        Log.errorException(ide);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide
+        .getMessage());
+        } catch (IllegalObjectEntityException ioee) {
+        Log.errorException(ioee);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee
+        .getMessage());
+        } catch (ApplicationException e) {
+        Log.errorException(e);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (Throwable t) {
+        Log.errorException(t);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
+    }
 
 	public AnalysisType_Transferable[] transmitAnalysisTypes(	Identifier_Transferable[] identifier_Transferables,
 									AccessIdentifier_Transferable accessIdentifier)
