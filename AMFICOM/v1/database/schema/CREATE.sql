@@ -1,13 +1,16 @@
+REM general
+
+@@./general/CREATE.sql
 
 REM administration
 
-@@./administration/CREATE
+@@./administration/CREATE.sql
 
 REM configuration
 
-@@./configuration/CREATE
+@@./configuration/CREATE.sql
 
 REM measurement
 
-@@./measurement/CREATE
+@@./measurement/CREATE.sql
 

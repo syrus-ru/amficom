@@ -1,2 +1,4 @@
-@@./administration/DROP
-
+@@./measurement/DROP.sql
+@@./configuration/DROP.sql
+@@./administration/DROP.sql
+@@./general/DROP.sql
