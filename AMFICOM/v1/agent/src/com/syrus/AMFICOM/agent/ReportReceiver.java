@@ -1,5 +1,5 @@
 /*
- * $Id: ReportReceiver.java,v 1.4 2004/07/21 08:18:10 arseniy Exp $
+ * $Id: ReportReceiver.java,v 1.5 2004/08/22 18:39:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.server.measurement.Result;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/07/21 08:18:10 $
+ * @version $Revision: 1.5 $, $Date: 2004/08/22 18:39:04 $
  * @author $Author: arseniy $
  * @module agent_v1
  */
@@ -27,7 +27,7 @@ public class ReportReceiver extends Agent {
 	public ReportReceiver(String kisId) {
 		this.reportFileHandle = 0;
 		this.reportFileConnected = false;
-		this.reportFileName = "reportChannel" + kisId;
+		this.reportFileName = "report" + kisId;
 	}
 
   public void run() {

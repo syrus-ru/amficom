@@ -1,5 +1,5 @@
 /*
- * $Id: TestContainer.java,v 1.5 2004/07/21 08:18:10 arseniy Exp $
+ * $Id: TestContainer.java,v 1.6 2004/08/22 18:39:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.util.Log;
 //sortArguments
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/07/21 08:18:10 $
+ * @version $Revision: 1.6 $, $Date: 2004/08/22 18:39:04 $
  * @author $Author: arseniy $
  * @module agent_v1
  */
@@ -37,7 +37,7 @@ public class TestContainer extends Agent {
 
   public TestContainer(Test_Transferable tt, String kis_id) {
     this.tt = tt;
-    this.taskFileName = /*"\\\\.\\pipe\\" + */"taskChannel" + kis_id;
+    this.taskFileName = /*"\\\\.\\pipe\\" + */"task" + kis_id;
     this.taskFileHandle = 0;
     this.taskFileConnected = false;
 		this.resultQueue = Collections.synchronizedList(new LinkedList());
