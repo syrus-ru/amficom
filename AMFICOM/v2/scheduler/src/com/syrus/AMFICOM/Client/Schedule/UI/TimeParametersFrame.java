@@ -42,6 +42,7 @@ import javax.swing.JSplitPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
@@ -79,7 +80,7 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 
 		private static final long	serialVersionUID	= -7975294015403739057L;
 
-		private ApplicationContext	aContext;
+		ApplicationContext	aContext;
 
 		Dispatcher					dispatcher;
 
@@ -316,7 +317,8 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 						 * FIXME !!! create id and so on
 						 */
 						try {
-							TemporalPattern temporalPattern = TemporalPattern.createInstance(null, null,
+							RISDSessionInfo sessionInterface = (RISDSessionInfo) TimeParametersPanel.this.aContext.getSessionInterface();							
+							TemporalPattern temporalPattern = TemporalPattern.createInstance(sessionInterface.getUserIdentifier(), null,
 																								new LinkedList());
 							temporalPattern.addTemplate(template);
 							TimeParametersPanel.this.temporalPatterns.add(temporalPattern);

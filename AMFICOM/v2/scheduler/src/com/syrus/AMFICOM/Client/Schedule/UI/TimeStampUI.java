@@ -100,23 +100,16 @@ public class TimeStampUI {
 		checkButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
+				String description;
+				int type = JOptionPane.INFORMATION_MESSAGE;
 				try {
-					TemporalPattern pattern = TemporalPattern.createInstance(null, null, new String[] { getTemplate()});
-					String description;
-					int type = JOptionPane.INFORMATION_MESSAGE;
-					try {
-						description = pattern.toString();
-					} catch (IllegalArgumentException iae) {
-						description = LangModelSchedule.getString("Some paremeters are not set.");
-						type = JOptionPane.ERROR_MESSAGE;
-					}
-
-					pattern = null;
-					JOptionPane.showMessageDialog(duringDayPanel, description, null, type);
-
-				} catch (CreateObjectException e1) {
-					e1.printStackTrace();
+					description = TemporalPattern.getCronStringsDescription(new String[] { getTemplate()});
+				} catch (IllegalArgumentException iae) {
+					description = LangModelSchedule.getString("Some paremeters are not set.");
+					type = JOptionPane.ERROR_MESSAGE;
 				}
+
+				JOptionPane.showMessageDialog(duringDayPanel, description, null, type);
 			}
 		});
 		gbc.gridwidth = GridBagConstraints.REMAINDER;

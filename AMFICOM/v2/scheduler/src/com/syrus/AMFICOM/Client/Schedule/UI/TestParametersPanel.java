@@ -37,6 +37,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
+import com.syrus.AMFICOM.client_.general.ui_.ColumnSorter;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.client_.general.ui_.ObjList;
 import com.syrus.AMFICOM.client_.general.ui_.ObjListModel;
@@ -59,6 +60,10 @@ import com.syrus.AMFICOM.measurement.Test;
 
 public class TestParametersPanel extends JPanel implements OperationListener {
 
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long	serialVersionUID		= 3258416114433209908L;
 	public static final String	PARAMETER_PARAMETER		= "Parameter";											//$NON-NLS-1$
 	public static final String	PARAMETERS_PANEL_PREFIX	= "PARAMETERS_PANEL";									//$NON-NLS-1$
 
@@ -80,7 +85,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 	final JPanel				switchPanel				= new JPanel(new CardLayout());
 
 	ObjList						testSetups;
-	HashMap				testMap;
+	HashMap						testMap;
 
 	private static final String	PATTERN_PANEL_NAME		= "PATTERN_PANEL";										//$NON-NLS-1$
 
@@ -142,20 +147,12 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		patternPanel.setBorder(BorderFactory.createEtchedBorder());
 
 		this.usePatternsWithAnalysisBox = new JCheckBox(LangModelSchedule.getString("UsePatternsWithAnalisys"), true); //$NON-NLS-1$
-		this.usePatternsWithAnalysisBox.addActionListener(new ActionListener(){
-			
+		this.usePatternsWithAnalysisBox.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent e) {
-				JCheckBox checkBox = (JCheckBox)e.getSource();
-				TestParametersPanel.this.testSetups.removeAll();
-				for (Iterator it = TestParametersPanel.this.testMap.values().iterator(); it.hasNext();) {
-					MeasurementSetup measurementSetup = (MeasurementSetup) it.next();
-					if (!checkBox.isSelected() || measurementSetup.getCriteriaSet() != null
-							|| measurementSetup.getThresholdSet() != null || measurementSetup.getEtalon() != null)
-						((ObjListModel) TestParametersPanel.this.testSetups.getModel()).addElement(measurementSetup);
-				}
+				updateTestSetupList();
 			}
-		}
-			);
+		});
 		patternPanel.add(this.usePatternsWithAnalysisBox, gbc);
 
 		this.useAnalysisBox = new JCheckBox(LangModelSchedule.getString("PerformAnalisys"), true); //$NON-NLS-1$
@@ -448,7 +445,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		aModel.fireModelChanged(""); //$NON-NLS-1$
 	}
 
-	private void updateTestSetupList() {
+	void updateTestSetupList() {
 		try {
 
 			this.testSetups.removeAll();
@@ -496,7 +493,11 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 				}
 
 			}
-			for (Iterator it = this.testMap.values().iterator(); it.hasNext();) {
+
+			List msList = new ArrayList(this.testMap.values());
+			Collections.sort(msList, new ColumnSorter(MeasurementSetupController.getInstance(),
+														MeasurementSetupController.KEY_NAME, true));
+			for (Iterator it = msList.iterator(); it.hasNext();) {
 				MeasurementSetup measurementSetup = (MeasurementSetup) it.next();
 				if (!this.usePatternsWithAnalysisBox.isSelected() || measurementSetup.getCriteriaSet() != null
 						|| measurementSetup.getThresholdSet() != null || measurementSetup.getEtalon() != null)

@@ -106,19 +106,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 		setPreferredSize(new Dimension(600, 20));
 		//		setCursor(UIStorage.DEFAULT_CURSOR);
 
-		this.addMouseListener(new MouseListener() {
-
-			public void mouseClicked(MouseEvent e) {
-				// nothing
-			}
-
-			public void mouseEntered(MouseEvent e) {
-				// nothing
-			}
-
-			public void mouseExited(MouseEvent e) {
-				// nothing
-			}
+		this.addMouseListener(new MouseAdapter() {
 
 			public void mousePressed(MouseEvent e) {
 				PlanPanel.this.startpos = e.getPoint();
@@ -130,7 +118,8 @@ public class PlanPanel extends JPanel implements OperationListener {
 			}
 
 			public void mouseReleased(MouseEvent e) {
-				if (e.getClickCount() > 0) {
+				//if (e.getClickCount() > 0) 
+				{
 					setCursor(UIStorage.DEFAULT_CURSOR);
 
 					if (PlanPanel.this.currpos.x == PlanPanel.this.startpos.x) {
