@@ -6,7 +6,6 @@ import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
-import com.syrus.AMFICOM.general.StorableObject_DatabaseContext;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
@@ -21,7 +20,7 @@ public class MeasurementType extends ActionType {
 	public MeasurementType(Identifier id) throws RetrieveObjectException {
 		super(id);
 
-		this.measurementTypeDatabase = StorableObject_DatabaseContext.measurementTypeDatabase;
+		this.measurementTypeDatabase = MeasurementDatabaseContext.measurementTypeDatabase;
 		try {
 			this.measurementTypeDatabase.retrieve(this);
 		}
@@ -47,7 +46,7 @@ public class MeasurementType extends ActionType {
 		for (int i = 0; i < mtt.out_parameter_types.length; i++)
 			this.out_parameter_types.add(new Identifier(mtt.out_parameter_types[i]));
 
-		this.measurementTypeDatabase = StorableObject_DatabaseContext.measurementTypeDatabase;
+		this.measurementTypeDatabase = MeasurementDatabaseContext.measurementTypeDatabase;
 		try {
 			this.measurementTypeDatabase.insert(this);
 		}

@@ -6,7 +6,6 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
-import com.syrus.AMFICOM.general.StorableObject_DatabaseContext;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
@@ -20,7 +19,7 @@ public class Analysis extends Action {
 	public Analysis(Identifier id) throws RetrieveObjectException {
 		super(id);
 
-		this.analysisDatabase = StorableObject_DatabaseContext.analysisDatabase;
+		this.analysisDatabase = MeasurementDatabaseContext.analysisDatabase;
 		try {
 			this.analysisDatabase.retrieve(this);
 		}
@@ -39,7 +38,7 @@ public class Analysis extends Action {
 					new Identifier(at.monitored_element_id));
 		this.criteria_set = new Set(new Identifier(at.criteria_set_id));
 
-		this.analysisDatabase = StorableObject_DatabaseContext.analysisDatabase;
+		this.analysisDatabase = MeasurementDatabaseContext.analysisDatabase;
 		try {
 			this.analysisDatabase.insert(this);
 		}
@@ -62,7 +61,7 @@ public class Analysis extends Action {
 					monitored_element_id);
 		this.criteria_set = criteria_set;
 
-		this.analysisDatabase = StorableObject_DatabaseContext.analysisDatabase;
+		this.analysisDatabase = MeasurementDatabaseContext.analysisDatabase;
 		try {
 			this.analysisDatabase.insert(this);
 		}

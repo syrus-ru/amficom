@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
-import com.syrus.AMFICOM.general.StorableObject_DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -22,7 +21,7 @@ public class AnalysisType extends ActionType {
 	public AnalysisType(Identifier id) throws RetrieveObjectException {
 		super(id);
 
-		this.analysisTypeDatabase = StorableObject_DatabaseContext.analysisTypeDatabase;
+		this.analysisTypeDatabase = MeasurementDatabaseContext.analysisTypeDatabase;
 		try {
 			this.analysisTypeDatabase.retrieve(this);
 		}
@@ -52,7 +51,7 @@ public class AnalysisType extends ActionType {
 		for (int i = 0; i < att.out_parameter_types.length; i++)
 			this.out_parameter_types.add(new Identifier(att.out_parameter_types[i]));
 
-		this.analysisTypeDatabase = StorableObject_DatabaseContext.analysisTypeDatabase;
+		this.analysisTypeDatabase = MeasurementDatabaseContext.analysisTypeDatabase;
 		try {
 			this.analysisTypeDatabase.insert(this);
 		}

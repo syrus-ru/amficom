@@ -3,7 +3,6 @@ package com.syrus.AMFICOM.measurement;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
-import com.syrus.AMFICOM.general.StorableObject_DatabaseContext;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
@@ -19,7 +18,7 @@ public class ParameterType extends StorableObject {
 	public ParameterType(Identifier id) throws RetrieveObjectException {
 		super(id);
 
-		this.parameterTypeDatabase = StorableObject_DatabaseContext.parameterTypeDatabase;
+		this.parameterTypeDatabase = MeasurementDatabaseContext.parameterTypeDatabase;
 		try {
 			this.parameterTypeDatabase.retrieve(this);
 		}
@@ -34,7 +33,7 @@ public class ParameterType extends StorableObject {
 		this.name = new String(ptt.name);
 		this.description = new String(ptt.description);
 
-		this.parameterTypeDatabase = StorableObject_DatabaseContext.parameterTypeDatabase;
+		this.parameterTypeDatabase = MeasurementDatabaseContext.parameterTypeDatabase;
 		try {
 			this.parameterTypeDatabase.insert(this);
 		}
@@ -52,7 +51,7 @@ public class ParameterType extends StorableObject {
 		this.name = name;
 		this.description = description;
 
-		this.parameterTypeDatabase = StorableObject_DatabaseContext.parameterTypeDatabase;
+		this.parameterTypeDatabase = MeasurementDatabaseContext.parameterTypeDatabase;
 		try {
 			this.parameterTypeDatabase.insert(this);
 		}

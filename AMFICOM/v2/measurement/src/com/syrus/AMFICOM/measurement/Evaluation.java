@@ -6,7 +6,6 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
-import com.syrus.AMFICOM.general.StorableObject_DatabaseContext;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
@@ -21,7 +20,7 @@ public class Evaluation extends Action {
 	public Evaluation(Identifier id) throws RetrieveObjectException {
 		super(id);
 
-		this.evaluationDatabase = StorableObject_DatabaseContext.evaluationDatabase;
+		this.evaluationDatabase = MeasurementDatabaseContext.evaluationDatabase;
 		try {
 			this.evaluationDatabase.retrieve(this);
 		}
@@ -46,7 +45,7 @@ public class Evaluation extends Action {
 			throw new CreateObjectException(roe.getMessage(), roe);
 		}
 
-		this.evaluationDatabase = StorableObject_DatabaseContext.evaluationDatabase;
+		this.evaluationDatabase = MeasurementDatabaseContext.evaluationDatabase;
 		try {
 			this.evaluationDatabase.insert(this);
 		}
@@ -71,7 +70,7 @@ public class Evaluation extends Action {
 		this.threshold_set = threshold_set;
 		this.etalon = etalon;
 
-		this.evaluationDatabase = StorableObject_DatabaseContext.evaluationDatabase;
+		this.evaluationDatabase = MeasurementDatabaseContext.evaluationDatabase;
 		try {
 			this.evaluationDatabase.insert(this);
 		}

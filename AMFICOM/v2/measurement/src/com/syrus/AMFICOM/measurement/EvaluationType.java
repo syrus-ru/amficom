@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
-import com.syrus.AMFICOM.general.StorableObject_DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -23,7 +22,7 @@ public class EvaluationType extends ActionType {
 	public EvaluationType(Identifier id) throws RetrieveObjectException {
 		super(id);
 
-		this.evaluationTypeDatabase = StorableObject_DatabaseContext.evaluationTypeDatabase;
+		this.evaluationTypeDatabase = MeasurementDatabaseContext.evaluationTypeDatabase;
 		try {
 			this.evaluationTypeDatabase.retrieve(this);
 		}
@@ -57,7 +56,7 @@ public class EvaluationType extends ActionType {
 		for (int i = 0; i < ett.out_parameter_types.length; i++)
 			this.out_parameter_types.add(new Identifier(ett.out_parameter_types[i]));
 
-		this.evaluationTypeDatabase = StorableObject_DatabaseContext.evaluationTypeDatabase;
+		this.evaluationTypeDatabase = MeasurementDatabaseContext.evaluationTypeDatabase;
 		try {
 			this.evaluationTypeDatabase.insert(this);
 		}

@@ -7,7 +7,6 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
-import com.syrus.AMFICOM.general.StorableObject_DatabaseContext;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
@@ -26,7 +25,7 @@ public class Result extends StorableObject {
 	public Result(Identifier id) throws RetrieveObjectException {
 		super(id);
 
-		this.resultDatabase = StorableObject_DatabaseContext.resultDatabase;
+		this.resultDatabase = MeasurementDatabaseContext.resultDatabase;
 		try {
 			this.resultDatabase.retrieve(this);
 		}
@@ -60,7 +59,7 @@ public class Result extends StorableObject {
 		for (int i = 0; i < this.parameters.length; i++)
 			this.parameters[i] = new SetParameter(rt.parameters[i]);
 
-		this.resultDatabase = StorableObject_DatabaseContext.resultDatabase;
+		this.resultDatabase = MeasurementDatabaseContext.resultDatabase;
 		try {
 			this.resultDatabase.insert(this);
 		}
@@ -94,7 +93,7 @@ public class Result extends StorableObject {
 																						parameter_type_ids[i],
 																						parameter_values[i]);
 
-		this.resultDatabase = StorableObject_DatabaseContext.resultDatabase;
+		this.resultDatabase = MeasurementDatabaseContext.resultDatabase;
 		try {
 			this.resultDatabase.insert(this);
 		}

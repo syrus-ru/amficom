@@ -9,7 +9,6 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
-import com.syrus.AMFICOM.general.StorableObject_DatabaseContext;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
@@ -30,7 +29,7 @@ public class MeasurementSetup extends StorableObject {
 	public MeasurementSetup(Identifier id) throws RetrieveObjectException {
 		super(id);
 
-		this.measurementSetupDatabase = StorableObject_DatabaseContext.measurementSetupDatabase;
+		this.measurementSetupDatabase = MeasurementDatabaseContext.measurementSetupDatabase;
 		try {
 			this.measurementSetupDatabase.retrieve(this);
 		}
@@ -60,7 +59,7 @@ public class MeasurementSetup extends StorableObject {
 		for (int i = 0; i < mst.monitored_element_ids.length; i++)
 			this.monitored_element_ids.add(new Identifier(mst.monitored_element_ids[i]));
 
-		this.measurementSetupDatabase = StorableObject_DatabaseContext.measurementSetupDatabase;
+		this.measurementSetupDatabase = MeasurementDatabaseContext.measurementSetupDatabase;
 		try {
 			this.measurementSetupDatabase.insert(this);
 		}

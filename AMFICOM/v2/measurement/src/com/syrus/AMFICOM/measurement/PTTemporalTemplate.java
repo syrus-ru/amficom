@@ -10,7 +10,6 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
-import com.syrus.AMFICOM.general.StorableObject_DatabaseContext;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.PTTemporalTemplate_Transferable;
 import com.syrus.AMFICOM.measurement.corba.temporal_template.TimeQuantum_Transferable;
@@ -27,7 +26,7 @@ public class PTTemporalTemplate extends StorableObject {
 	public PTTemporalTemplate(Identifier id) throws RetrieveObjectException {
 		super(id);
 
-		this.ptTemporalTemplateDatabase = StorableObject_DatabaseContext.ptTemporalTemplateDatabase;
+		this.ptTemporalTemplateDatabase = MeasurementDatabaseContext.ptTemporalTemplateDatabase;
 		try {
 			this.ptTemporalTemplateDatabase.retrieve(this);
 		}
@@ -51,7 +50,7 @@ public class PTTemporalTemplate extends StorableObject {
 		for (int i = 0; i < pttt_t.dates.length; i++)
 			this.dates.add(new TimeQuantum(pttt_t.dates[i].scale, pttt_t.dates[i].value));
 
-		this.ptTemporalTemplateDatabase = StorableObject_DatabaseContext.ptTemporalTemplateDatabase;
+		this.ptTemporalTemplateDatabase = MeasurementDatabaseContext.ptTemporalTemplateDatabase;
 		try {
 			this.ptTemporalTemplateDatabase.insert(this);
 		}

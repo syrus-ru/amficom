@@ -10,7 +10,6 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
-import com.syrus.AMFICOM.general.StorableObject_DatabaseContext;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
@@ -46,7 +45,7 @@ public class Test extends StorableObject {
 	public Test(Identifier id) throws RetrieveObjectException {
 		super(id);
 
-		this.testDatabase = StorableObject_DatabaseContext.testDatabase;
+		this.testDatabase = MeasurementDatabaseContext.testDatabase;
 		try {
 			this.testDatabase.retrieve(this);
 		}
@@ -87,7 +86,7 @@ public class Test extends StorableObject {
 			throw new CreateObjectException(roe.getMessage(), roe);
 		}
 
-		this.testDatabase = StorableObject_DatabaseContext.testDatabase;
+		this.testDatabase = MeasurementDatabaseContext.testDatabase;
 		try {
 			this.testDatabase.insert(this);
 		}

@@ -37,7 +37,6 @@ $(LIBNAME):	mach
 
 mach:	corba custom
 	$(JAVAC) $(JAVAC_CUSTOM_OPTIONS) $(JAVAC_OPTIONS) -classpath $(CLASSES):$(ORACLECLASSPATH):$(APPCLASSPATH) \
-		$(SRC)/com/syrus/AMFICOM/general/DatabaseSetup.java \
 		$(SRC)/com/syrus/AMFICOM/measurement/SetParameter.java \
 		$(SRC)/com/syrus/AMFICOM/measurement/Action.java \
 		$(SRC)/com/syrus/AMFICOM/measurement/PTTemporalTemplate.java \
@@ -108,5 +107,4 @@ arch:
 		Makefile \
 		$(IDL)/measurement.idl \
 		database \
-		$(SRC)/com/syrus/AMFICOM/general/DatabaseSetup.java \
 		$(SRC)/com/syrus/AMFICOM/measurement/*.java

@@ -8,7 +8,6 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
-import com.syrus.AMFICOM.general.StorableObject_DatabaseContext;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
@@ -31,7 +30,7 @@ public class Measurement extends Action {
 	public Measurement(Identifier id) throws RetrieveObjectException {
 		super(id);
 
-		this.measurementDatabase = StorableObject_DatabaseContext.measurementDatabase;
+		this.measurementDatabase = MeasurementDatabaseContext.measurementDatabase;
 		try {
 			this.measurementDatabase.retrieve(this);
 		}
@@ -60,7 +59,7 @@ public class Measurement extends Action {
 		this.local_address = new String(mt.local_address);
 		this.test_id = new Identifier(mt.test_id);
 
-		this.measurementDatabase = StorableObject_DatabaseContext.measurementDatabase;
+		this.measurementDatabase = MeasurementDatabaseContext.measurementDatabase;
 		try {
 			this.measurementDatabase.insert(this);
 		}
@@ -91,7 +90,7 @@ public class Measurement extends Action {
 		this.local_address = local_address;
 		this.test_id = test_id;
 
-		this.measurementDatabase = StorableObject_DatabaseContext.measurementDatabase;
+		this.measurementDatabase = MeasurementDatabaseContext.measurementDatabase;
 		try {
 			this.measurementDatabase.insert(this);
 		}
