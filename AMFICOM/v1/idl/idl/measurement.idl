@@ -1,5 +1,5 @@
 /*
- * $Id: measurement.idl,v 1.29 2004/10/12 08:01:43 bob Exp $
+ * $Id: measurement.idl,v 1.30 2004/10/13 06:16:29 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -103,7 +103,9 @@ module corba {
 		SET_SORT_MEASUREMENT_PARAMETERS,
 		SET_SORT_ANALYSIS_CRITERIA,
 		SET_SORT_EVALUATION_THRESHOLDS,
-		SET_SORT_ETALON
+		SET_SORT_ETALON,
+		SET_SORT_MODELING_PARAMETERS,
+		SET_SORT_PREDICTION_PARAMETERS
 	};
 
 	struct Set_Transferable {
