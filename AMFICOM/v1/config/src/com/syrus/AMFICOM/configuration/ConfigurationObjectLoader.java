@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationObjectLoader.java,v 1.22 2004/11/23 15:24:41 bob Exp $
+ * $Id: ConfigurationObjectLoader.java,v 1.23 2004/11/23 16:20:11 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/11/23 15:24:41 $
- * @author $Author: bob $
+ * @version $Revision: 1.23 $, $Date: 2004/11/23 16:20:11 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -149,7 +149,7 @@ public interface ConfigurationObjectLoader {
 
 	List loadMonitoredElementsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-	void saveCableThreadType(CharacteristicType characteristicType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveCableThreadType(CableThreadType cableThreadType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 	void saveCharacteristicType(CharacteristicType characteristicType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
