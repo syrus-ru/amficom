@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.35 2004/10/19 07:22:32 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.36 2004/11/01 13:39:46 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -24,7 +25,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2004/10/19 07:22:32 $
+ * @version $Revision: 1.36 $, $Date: 2004/11/01 13:39:46 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -73,6 +74,12 @@ public abstract class StorableObjectDatabase {
 	public static final int 	UPDATE_CHECK 		= -3;
 
 	//protected static Connection	connection;
+	
+	/**
+	 * @see "ORA-01795"
+	 */
+	protected static final int MAXIMUM_EXPRESSION_NUMBER = 1000;
+
 	
 	private String updateColumnsString;
 	private String updateMultiplySQLValuesString;
@@ -283,6 +290,8 @@ public abstract class StorableObjectDatabase {
 				throw new ObjectNotFoundException("No such " + getEnityName() + ": "
 						+ strorableObjectTypeIdStr);
 		} catch (SQLException sqle) {
+			sqle.printStackTrace();
+			Log.errorException(sqle);
 			String mesg = this.getEnityName() + "Database.retrieveEntity | Cannot retrieve "
 					+ getEnityName() + " '" + strorableObjectTypeIdStr + "' -- "
 					+ sqle.getMessage();
@@ -533,8 +542,9 @@ public abstract class StorableObjectDatabase {
 					buffer.append(NOT);
 					buffer.append(SQL_IN);
 					buffer.append(OPEN_BRACKET);
-	
-					for (Iterator it = ids.iterator(); it.hasNext();) {
+					
+					int i = 1;
+					for (Iterator it = ids.iterator(); it.hasNext();i++) {
 						Object object = it.next();
 						Identifier id = null;
 						if (object instanceof Identifier)
@@ -547,8 +557,18 @@ public abstract class StorableObjectDatabase {
 	
 						if (id != null){
 							buffer.append(id.toSQLString());
-							if (it.hasNext())
-								buffer.append(COMMA);
+							if (it.hasNext()) {
+								if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+									buffer.append(COMMA);
+								else {
+									buffer.append(CLOSE_BRACKET);
+									buffer.append(SQL_AND);
+									buffer.append(COLUMN_ID);				
+									buffer.append(NOT);
+									buffer.append(SQL_IN);
+									buffer.append(OPEN_BRACKET);
+								}
+							}
 						}
 					}
 					buffer.append(CLOSE_BRACKET);
@@ -582,8 +602,9 @@ public abstract class StorableObjectDatabase {
 		String sql;
 		{
 			StringBuffer buffer = new StringBuffer("1=1");
-			if (ids != null) {
+			if ( (ids != null) && (!ids.isEmpty())) {
 				buffer.append(SQL_AND);
+				buffer.append(OPEN_BRACKET);
 				buffer.append(COLUMN_ID);
 				int idsLength = ids.size();
 				if (idsLength == 1) {
@@ -601,8 +622,9 @@ public abstract class StorableObjectDatabase {
 				} else {
 					buffer.append(SQL_IN);
 					buffer.append(OPEN_BRACKET);
-
-					for (Iterator it = ids.iterator(); it.hasNext();) {						
+					
+					int i = 1;
+					for (Iterator it = ids.iterator(); it.hasNext();i++) {						
 						Object object = it.next();
 						Identifier id = null;
 						if (object instanceof Identifier)
@@ -613,12 +635,22 @@ public abstract class StorableObjectDatabase {
 															object.getClass().getName() 
 															+ " isn't Identifier or Identified");
 						buffer.append(id.toSQLString());
-						if (it.hasNext())
-							buffer.append(COMMA);
+						if (it.hasNext()) {
+							if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+								buffer.append(COMMA);
+							else {
+								buffer.append(CLOSE_BRACKET);
+								buffer.append(SQL_OR);
+								buffer.append(COLUMN_ID);
+								buffer.append(SQL_IN);
+								buffer.append(OPEN_BRACKET);
+							}
+						}
 					}
 
 					buffer.append(CLOSE_BRACKET);
-				}
+					}
+				buffer.append(CLOSE_BRACKET);
 			}
 			if ((condition != null) && (condition.length() > 0)) {
 				buffer.append(SQL_AND);
