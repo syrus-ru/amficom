@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.37 2004/11/04 13:16:56 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.38 2004/11/10 10:11:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,18 +14,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.util.Collection;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2004/11/04 13:16:56 $
+ * @version $Revision: 1.38 $, $Date: 2004/11/10 10:11:58 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -770,7 +771,7 @@ public abstract class StorableObjectDatabase {
 		String storableObjectIdStr = storableObject.getId().toSQLString();
 		
 		String[] columns = this.getUpdateColumns().split(COMMA);
-		String[] values = this.getUpdateSingleSQLValues(storableObject).split(COMMA);
+		String[] values = this.parseInsertStringValues(this.getUpdateSingleSQLValues(storableObject), columns.length);
 		if (columns.length != values.length)
 			throw new UpdateObjectException(this.getEnityName() + "Database.updateEntities | Count of columns ('"+columns.length+"') is not equals count of values ('"+values.length+"')");
 		String sql = null;
@@ -829,7 +830,7 @@ public abstract class StorableObjectDatabase {
 		}
 
 		String[] columns = this.getUpdateColumns().split(COMMA);
-		String[] values = this.getUpdateMultiplySQLValues().split(COMMA);
+		String[] values = this.parseInsertStringValues(this.getUpdateMultiplySQLValues(), columns.length);
 		if (columns.length != values.length)
 			throw new UpdateObjectException(this.getEnityName() + "Database.updateEntities | Count of columns ('"+columns.length+"') is not equals count of values ('"+values.length+"')");
 		String sql = null;
@@ -887,6 +888,28 @@ public abstract class StorableObjectDatabase {
 				DatabaseConnection.closeConnection(connection);
 			}
 		}
+	}
+	
+	private String[] parseInsertStringValues(String insertValues, int columnCount){
+		int length = insertValues.length();
+		Pattern pattern = Pattern.compile("(('(''|[^'])+')|(\\s*([^',\\s]+)\\s*)),?");
+		Matcher matcher = pattern.matcher(insertValues);
+		String[] values = new String[columnCount];
+		int valueCounter = 0;
+		while (matcher.find()) {			
+			for (int i = 1; i <= matcher.groupCount(); i++) {
+				int start = matcher.start(i);
+				int end = matcher.end(i);				
+				if ((0 <= start) && (start < end) && (end <= length)) {					
+					if ((i == 2) || (i == 5)) {
+						values[valueCounter++] = insertValues.substring(matcher.start(i), matcher.end(i));
+					}
+
+				}
+			}			
+		}
+		
+		return values;
 	}
 
 }
