@@ -1,5 +1,5 @@
 /*
- * $Id: HashCodeGenerator.java,v 1.4 2004/08/17 15:03:17 bob Exp $
+ * $Id: HashCodeGenerator.java,v 1.5 2004/10/08 10:35:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import java.util.Date;
  * HashCodeGenerator methods have got from Effective Java: Programming Language
  * Guide by Joshua Bloch
  * 
- * @version $Revision: 1.4 $, $Date: 2004/08/17 15:03:17 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/08 10:35:13 $
  * @author $Author: bob $
  * @module util
  */
@@ -49,68 +49,75 @@ public class HashCodeGenerator {
 	/**
 	 * If the field is an object reference and this class's equals method
 	 * compares the field by recursively invoking equals, recursively invoke
-	 * hashCode on the field. If a more complex comparison is required, compute
-	 * a "canonical representation" for this field and invoke
+	 * hashCode on the field. If a more complex comparison is required,
+	 * compute a "canonical representation" for this field and invoke
 	 */
 	public void addObject(Object value) {
 		addInt(value == null ? 0 : value.hashCode());
 	}
 
 	public void addByteArray(byte[] array) {
-		for (int i = 0; i < array.length; i++)
-			addInt(array[i]);
+		if (array != null)
+			for (int i = 0; i < array.length; i++)
+				addInt(array[i]);
 	}
 
 	public void addShortArray(short[] array) {
-		for (int i = 0; i < array.length; i++)
-			addInt(array[i]);
+		if (array != null)
+			for (int i = 0; i < array.length; i++)
+				addInt(array[i]);
 	}
-	
+
 	public void addIntArray(int[] array) {
-		for (int i = 0; i < array.length; i++)
-			addInt(array[i]);
+		if (array != null)
+			for (int i = 0; i < array.length; i++)
+				addInt(array[i]);
 	}
 
 	public void addBooleanArray(boolean[] array) {
-		for (int i = 0; i < array.length; i++)
-			addBoolean(array[i]);
+		if (array != null)
+			for (int i = 0; i < array.length; i++)
+				addBoolean(array[i]);
 	}
 
 	public void addLongArray(long[] array) {
-		for (int i = 0; i < array.length; i++)
-			addLong(array[i]);
+		if (array != null)
+			for (int i = 0; i < array.length; i++)
+				addLong(array[i]);
 	}
 
 	public void addFloatArray(float[] array) {
-		for (int i = 0; i < array.length; i++)
-			addFloat(array[i]);
+		if (array != null)
+			for (int i = 0; i < array.length; i++)
+				addFloat(array[i]);
 	}
 
 	public void addDoubleArray(double[] array) {
-		for (int i = 0; i < array.length; i++)
-			addDouble(array[i]);
+		if (array != null)
+			for (int i = 0; i < array.length; i++)
+				addDouble(array[i]);
 	}
 
 	public void addObjectArray(Object[] array) {
-		for (int i = 0; i < array.length; i++)
-			addObject(array[i]);
+		if (array != null)
+			for (int i = 0; i < array.length; i++)
+				addObject(array[i]);
 	}
 
 	public int getResult() {
 		return this.result;
 	}
 
-	
-	public static boolean equalsDate(final Date date1, final Date date2){
-		return equalsDate(date1,date2, 1000);
+	public static boolean equalsDate(final Date date1, final Date date2) {
+		return equalsDate(date1, date2, 1000);
 	}
-	
-	public static boolean equalsDate(final Date date1, final Date date2, long tolerance){
-		if (date1==date2)
+
+	public static boolean equalsDate(final Date date1, final Date date2, long tolerance) {
+		if (date1 == date2)
 			return true;
-		return (Math.abs(date1.getTime()-date2.getTime())<tolerance);
+		return (Math.abs(date1.getTime() - date2.getTime()) < tolerance);
 	}
-	
+
 	public static boolean equalsArray(final Object[] array1, final Object[] array2) {
 		if (array1 == array2)
 			return true;
@@ -149,7 +156,7 @@ public class HashCodeGenerator {
 		}
 		return false;
 	}
-	
+
 	public static boolean equalsArray(final int[] array1, final int[] array2) {
 		if (array1 == array2)
 			return true;
