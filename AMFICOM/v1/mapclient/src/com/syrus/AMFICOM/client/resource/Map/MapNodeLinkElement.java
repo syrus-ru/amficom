@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkElement.java,v 1.13 2004/09/28 07:58:37 krupenn Exp $
+ * $Id: MapNodeLinkElement.java,v 1.14 2004/09/29 15:03:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,8 +29,8 @@ import java.awt.Polygon;
 import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.geom.Point2D;
-
 import java.awt.geom.Rectangle2D;
+
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -42,7 +42,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2004/09/28 07:58:37 $
+ * @version $Revision: 1.14 $, $Date: 2004/09/29 15:03:34 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see

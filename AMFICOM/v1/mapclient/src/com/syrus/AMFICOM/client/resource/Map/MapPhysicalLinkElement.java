@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalLinkElement.java,v 1.15 2004/09/28 07:58:37 krupenn Exp $
+ * $Id: MapPhysicalLinkElement.java,v 1.16 2004/09/29 15:03:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,20 +17,22 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
+import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-
 import com.syrus.AMFICOM.Client.Resource.ResourceUtil;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.geom.Point2D;
-
 import java.awt.geom.Rectangle2D;
+
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -45,7 +47,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.15 $, $Date: 2004/09/28 07:58:37 $
+ * @version $Revision: 1.16 $, $Date: 2004/09/29 15:03:34 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -395,13 +397,57 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	{
 		if(!isVisible(visibleBounds))
 			return;
+			
+		boolean showName = false;
+		if(MapPropertiesManager.isShowPhysicalNodes())
+		{
+			showName = true;
+		}
 
 		this.selectionVisible = selectionVisible;
 		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
 		{
 			MapNodeLinkElement nodelink = (MapNodeLinkElement )it.next();
 			nodelink.paint(g, visibleBounds, stroke, color);
+			
+			if(showName)
+			{
+				MapCoordinatesConverter converter = getMap().getConverter();
+				Point from = converter.convertMapToScreen(nodelink.getStartNode().getAnchor());
+				Point to = converter.convertMapToScreen(nodelink.getEndNode().getAnchor());
+
+				g.setColor(MapPropertiesManager.getBorderColor());
+				g.setFont(MapPropertiesManager.getFont());
+	
+				int fontHeight = g.getFontMetrics().getHeight();
+				String text = getName();
+				int textWidth = g.getFontMetrics().stringWidth(text);
+				int centerX = (from.x + to.x) / 2;
+				int centerY = (from.y + to.y) / 2;
+
+				g.drawRect(
+						centerX,
+						centerY - fontHeight + 2,
+						textWidth,
+						fontHeight);
+	
+				g.setColor(MapPropertiesManager.getTextBackground());
+				g.fillRect(
+						centerX,
+						centerY - fontHeight + 2,
+						textWidth,
+						fontHeight);
+	
+				g.setColor(MapPropertiesManager.getTextColor());
+				g.drawString(
+						text,
+						centerX,
+						centerY);
+
+				showName = false;
+			}
 		}
+
 	}
 
 	public void paint(Graphics g, Rectangle2D.Double visibleBounds)

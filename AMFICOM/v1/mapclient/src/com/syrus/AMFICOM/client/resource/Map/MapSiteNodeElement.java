@@ -1,5 +1,5 @@
 /**
- * $Id: MapSiteNodeElement.java,v 1.8 2004/09/28 07:58:37 krupenn Exp $
+ * $Id: MapSiteNodeElement.java,v 1.9 2004/09/29 15:03:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,13 +15,19 @@ import com.syrus.AMFICOM.CORBA.General.ElementAttribute_Transferable;
 import com.syrus.AMFICOM.CORBA.Map.MapSiteElement_Transferable;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
+import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.General.ElementAttribute;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -34,7 +40,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/09/28 07:58:37 $
+ * @version $Revision: 1.9 $, $Date: 2004/09/29 15:03:34 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -219,6 +225,52 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 	public Object getTransferable()
 	{
 		return transferable;
+	}
+
+	public void paint (Graphics g, Rectangle2D.Double visibleBounds)
+	{
+		if(!isVisible(visibleBounds))
+			return;
+
+		super.paint(g, visibleBounds);
+		
+		if(MapPropertiesManager.isShowNodesNames())
+		{
+			MapCoordinatesConverter converter = getMap().getConverter();
+			
+			Point p = converter.convertMapToScreen(getAnchor());
+	
+			int width = getBounds().width;
+			int height = getBounds().height;
+
+			g.setColor(MapPropertiesManager.getBorderColor());
+			g.setFont(MapPropertiesManager.getFont());
+
+			int fontHeight = g.getFontMetrics().getHeight();
+			String text = getName();
+			int textWidth = g.getFontMetrics().stringWidth(text);
+			int centerX = p.x + width / 2;
+			int centerY = p.y + height;
+
+			g.drawRect(
+					centerX,
+					centerY - fontHeight + 2,
+					textWidth,
+					fontHeight);
+
+			g.setColor(MapPropertiesManager.getTextBackground());
+			g.fillRect(
+					centerX,
+					centerY - fontHeight + 2,
+					textWidth,
+					fontHeight);
+
+			g.setColor(MapPropertiesManager.getTextColor());
+			g.drawString(
+					text,
+					centerX,
+					centerY);
+		}
 	}
 
 	public ObjectResourceModel getModel()

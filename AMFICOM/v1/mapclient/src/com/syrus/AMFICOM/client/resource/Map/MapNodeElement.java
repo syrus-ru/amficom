@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeElement.java,v 1.10 2004/09/28 07:58:36 krupenn Exp $
+ * $Id: MapNodeElement.java,v 1.11 2004/09/29 15:03:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,34 +15,28 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Resource.ImageCatalogue;
-import com.syrus.AMFICOM.Client.Resource.ImageResource;
 import com.syrus.AMFICOM.Client.Resource.StubResource;
 
 import java.awt.BasicStroke;
-import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.MediaTracker;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
-
 import java.awt.geom.Rectangle2D;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-
-import javax.swing.ImageIcon;
 
 /**
  * элемент карты - узел 
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/09/28 07:58:36 $
+ * @version $Revision: 1.11 $, $Date: 2004/09/29 15:03:34 $
  * @module
  * @author $Author: krupenn $
  * @see
