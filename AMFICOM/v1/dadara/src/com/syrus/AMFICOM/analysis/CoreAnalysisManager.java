@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.26 2005/03/24 14:41:17 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.27 2005/03/25 08:56:06 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.26 $, $Date: 2005/03/24 14:41:17 $
+ * @version $Revision: 1.27 $, $Date: 2005/03/25 08:56:06 $
  * @module
  */
 
@@ -296,9 +296,10 @@ public class CoreAnalysisManager
 
 		ModelTraceManager mtm = new ModelTraceManager(se, mf, deltaX);
 
-		// теперь формируем пороги
+		// теперь формируем пороги, если только это нужно
 		// FIXME: testing...
-		updateMTMThresholdsByBSMap(mtm, bellcoreTraces);
+		if (bellcoreTraces != null)
+			updateMTMThresholdsByBSMap(mtm, bellcoreTraces);
 		// @todo: добавить запас к порогам - и по DX, и по DY
 
 		long t5 = System.currentTimeMillis();
