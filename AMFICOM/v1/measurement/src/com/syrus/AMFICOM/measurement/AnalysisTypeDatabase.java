@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.55 2005/01/28 07:40:36 arseniy Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.56 2005/01/31 11:28:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,8 +42,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/01/28 07:40:36 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.56 $, $Date: 2005/01/31 11:28:12 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -555,7 +555,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 					else {
 						criteriaSetIdNames.append(CLOSE_BRACKET);
 						criteriaSetIdNames.append(SQL_OR);
-						criteriaSetIdNames.append(SetDatabase.LINK_COLUMN_SET_ID);
+						criteriaSetIdNames.append(SetWrapper.LINK_COLUMN_SET_ID);
 						criteriaSetIdNames.append(SQL_IN);
 						criteriaSetIdNames.append(OPEN_BRACKET);
 					}
@@ -563,8 +563,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			}
 
 	    condition = PARAMETER_TYPE_ID + SQL_IN + OPEN_BRACKET
-					+ SQL_SELECT + SetDatabase.LINK_COLUMN_TYPE_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
-					+ SQL_WHERE + SetDatabase.LINK_COLUMN_SET_ID + SQL_IN + OPEN_BRACKET + criteriaSetIdNames
+					+ SQL_SELECT + SetWrapper.LINK_COLUMN_TYPE_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
+					+ SQL_WHERE + SetWrapper.LINK_COLUMN_SET_ID + SQL_IN + OPEN_BRACKET + criteriaSetIdNames
 					+ CLOSE_BRACKET
 					+ CLOSE_BRACKET
 					+ SQL_AND + PARAMETER_MODE + EQUALS + APOSTOPHE + AnalysisTypeWrapper.MODE_CRITERION + APOSTOPHE;

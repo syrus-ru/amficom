@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.50 2005/01/28 07:40:36 arseniy Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.51 2005/01/31 11:28:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,8 +42,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/01/28 07:40:36 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.51 $, $Date: 2005/01/31 11:28:12 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -565,7 +565,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 					else {
 						thresholds.append(CLOSE_BRACKET);
 						thresholds.append(SQL_OR);
-						thresholds.append(SetDatabase.LINK_COLUMN_SET_ID);
+						thresholds.append(SetWrapper.LINK_COLUMN_SET_ID);
 						thresholds.append(SQL_IN);
 						thresholds.append(OPEN_BRACKET);
 					}
@@ -574,8 +574,8 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 
 	    condition = PARAMETER_TYPE_ID + SQL_IN
 						+ OPEN_BRACKET
-						+ SQL_SELECT + SetDatabase.LINK_COLUMN_TYPE_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
-						+ SQL_WHERE + SetDatabase.LINK_COLUMN_SET_ID + SQL_IN + OPEN_BRACKET + thresholds
+						+ SQL_SELECT + SetWrapper.LINK_COLUMN_TYPE_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
+						+ SQL_WHERE + SetWrapper.LINK_COLUMN_SET_ID + SQL_IN + OPEN_BRACKET + thresholds
 						+ CLOSE_BRACKET
 					+ CLOSE_BRACKET
 					+ SQL_AND + PARAMETER_MODE + EQUALS + APOSTOPHE + EvaluationTypeWrapper.MODE_THRESHOLD + APOSTOPHE;

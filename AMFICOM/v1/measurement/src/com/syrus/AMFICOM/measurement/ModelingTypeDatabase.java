@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.8 2005/01/28 09:40:27 bob Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.9 2005/01/31 11:28:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/01/28 09:40:27 $
+ * @version $Revision: 1.9 $, $Date: 2005/01/31 11:28:12 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -505,7 +505,7 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 					else {
 						argumentIds.append(CLOSE_BRACKET);
 						argumentIds.append(SQL_OR);
-						argumentIds.append(SetDatabase.LINK_COLUMN_SET_ID);
+						argumentIds.append(SetWrapper.LINK_COLUMN_SET_ID);
 						argumentIds.append(SQL_IN);
 						argumentIds.append(OPEN_BRACKET);
 					}
@@ -514,8 +514,8 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 
 			condition = ModelingTypeWrapper.PARAMETER_TYPE_ID + SQL_IN
 						+ OPEN_BRACKET
-						+ SQL_SELECT + SetDatabase.LINK_COLUMN_TYPE_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
-						+ SQL_WHERE + SetDatabase.LINK_COLUMN_SET_ID + SQL_IN 
+						+ SQL_SELECT + SetWrapper.LINK_COLUMN_TYPE_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
+						+ SQL_WHERE + SetWrapper.LINK_COLUMN_SET_ID + SQL_IN 
 							+ OPEN_BRACKET
 							+ argumentIds
 							+ CLOSE_BRACKET
