@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkType.java,v 1.18 2005/02/11 15:14:51 bob Exp $
+ * $Id: PhysicalLinkType.java,v 1.19 2005/03/04 08:08:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,8 +38,8 @@ import java.util.List;
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #TUNNEL}, {@link #COLLECTOR}, {@link #INDOOR}, 
  * {@link #SUBMARINE}, {@link #OVERHEAD}, {@link #UNBOUND}
- * @author $Author: bob $
- * @version $Revision: 1.18 $, $Date: 2005/02/11 15:14:51 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.19 $, $Date: 2005/03/04 08:08:42 $
  * @module map_v1
  */
 public class PhysicalLinkType extends StorableObjectType implements Characterized {
@@ -120,7 +120,12 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 			codename,
 			description);
 		this.name = name;
-		this.bindingDimension = new IntDimension(bindingDimension.getWidth(), bindingDimension.getHeight());
+		if(bindingDimension == null)
+			this.bindingDimension = new IntDimension(0, 0);
+		else
+			this.bindingDimension = new IntDimension(
+				bindingDimension.getWidth(), 
+				bindingDimension.getHeight());
 
 		this.characteristics = new LinkedList();
 
