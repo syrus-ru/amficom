@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeImageResource.java,v 1.4 2004/12/15 14:44:39 bass Exp $
+ * $Id: SchemeImageResource.java,v 1.5 2004/12/16 15:40:27 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import java.util.*;
 import java.util.zip.*;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2004/12/15 14:44:39 $
+ * @author $Author: max $
+ * @version $Revision: 1.5 $, $Date: 2004/12/16 15:40:27 $
  * @module resource_v1
  */
 public final class SchemeImageResource extends AbstractImageResource {
@@ -182,4 +182,9 @@ public final class SchemeImageResource extends AbstractImageResource {
 				in.close();
 		}
 	}
+    
+    public byte[] getImage() {
+    	return this.pack(this.getData());
+    }
+        
 }
