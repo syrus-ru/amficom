@@ -1,12 +1,10 @@
 package com.syrus.AMFICOM.client_.general.ui_;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
 import java.lang.reflect.InvocationTargetException;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceCatalogController;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
-import com.syrus.AMFICOM.Client.General.UI.GeneralPanel;
 
-public class DefaultCatalogController implements ObjectResourceCatalogController 
+import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+
+public class DefaultCatalogController implements ObjectResourceCatalogController
 {
 	public DefaultCatalogController()
 	{

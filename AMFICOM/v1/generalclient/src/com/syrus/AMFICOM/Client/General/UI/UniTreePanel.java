@@ -1,5 +1,5 @@
 /*
- * $Id: UniTreePanel.java,v 1.9 2004/09/27 06:07:12 bass Exp $
+ * $Id: UniTreePanel.java,v 1.10 2004/10/26 08:18:33 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.Client.General.UI;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.client_.general.ui_.*;
 import java.awt.*;
 import java.awt.dnd.*;
 import java.util.*;
@@ -30,12 +31,12 @@ registerSearchableNode(String criteria, ObjectResourceTreeNode tn).
 
 Например, при добавлении в дерево группы этот метод будет вызываться так:
 
-		  ortn = new ObjectResourceTreeNode(
-										  OperatorGroup.typ,
-										  "Группы",
-										  true);
-		  vec.add(ortn);
-		  registerSearchableNode(OperatorGroup.typ, ortn);
+			ortn = new ObjectResourceTreeNode(
+											OperatorGroup.typ,
+											"Группы",
+											true);
+			vec.add(ortn);
+			registerSearchableNode(OperatorGroup.typ, ortn);
 
 
 Если группа добавляется в дочернюю ветвь (например, список групп в
@@ -44,8 +45,8 @@ registerSearchableNode(String criteria, ObjectResourceTreeNode tn).
 Таким образом, послав в дерево ListSelectionEvent с указанием OperatorGroup.typ
 зарегистрированная ветвь станет выделенной.
  *
- * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2004/09/27 06:07:12 $
+ * @author $Author: stas $
+ * @version $Revision: 1.10 $, $Date: 2004/10/26 08:18:33 $
  * @module generalclient_v1
  */
 public class UniTreePanel extends JPanel
@@ -140,11 +141,11 @@ public class UniTreePanel extends JPanel
 		List vec1 = otm.getChildNodes(root);
 		this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		root.removeAllChildren();
-    
-    ListIterator lIt = vec1.listIterator();
-    for (; lIt.hasNext();)
-    {
-      ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) lIt.next();
+
+		ListIterator lIt = vec1.listIterator();
+		for (; lIt.hasNext();)
+		{
+			ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) lIt.next();
 			root.add(tn);
 			if(!tn.isFinal())
 				tn.add(new ObjectResourceTreeNode("", "", true));
@@ -185,8 +186,8 @@ public class UniTreePanel extends JPanel
 					{
 						orte.isFinal = true;
 					}
-          
-          ListIterator lIt = vec.listIterator();
+
+					ListIterator lIt = vec.listIterator();
 					for (; lIt.hasNext();)
 					{
 						ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) lIt.next();
@@ -262,7 +263,7 @@ public class UniTreePanel extends JPanel
 				{
 					List vec = otm.getSearchableNodes(o);
 
-          ListIterator lIt = vec.listIterator();
+					ListIterator lIt = vec.listIterator();
 					for (; lIt.hasNext();)
 					{
 						ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) lIt.next();
@@ -305,10 +306,10 @@ public class UniTreePanel extends JPanel
 							orte.isFinal = false;
 						}
 
-            ListIterator lIt = vec.listIterator();
-            for (; lIt.hasNext();)
-            {
-              ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) lIt.next();
+						ListIterator lIt = vec.listIterator();
+						for (; lIt.hasNext();)
+						{
+							ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) lIt.next();
 							orte.add(tn);
 							if (tn.getObject().equals(o))
 							{
@@ -375,11 +376,11 @@ public class UniTreePanel extends JPanel
 							node.isFinal = true;
 						}
 
-            ListIterator lIt = vec.listIterator();
-            for (; lIt.hasNext();)
-            {
-              ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) lIt.next();
-            
+						ListIterator lIt = vec.listIterator();
+						for (; lIt.hasNext();)
+						{
+							ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) lIt.next();
+
 							node.add(tn);
 							if(!tn.isFinal())
 								tn.add(new ObjectResourceTreeNode("", "", true));
@@ -443,7 +444,8 @@ public class UniTreePanel extends JPanel
 			n =	res.indexOf(selectedObject);
 		}
 
-		TreeDataSelectionEvent event = new TreeDataSelectionEvent(this, res, cl, n, selectedObject);
+	ObjectResourceCatalogController orcc = otm.getCatalogController();
+		TreeDataSelectionEvent event = new TreeDataSelectionEvent(this, res, cl, n, selectedObject, orcc);
 		event.setParam(orcam);
 
 //				System.out.println("ORTreePanel notify " + dispatcher + " with event " + event);
@@ -472,10 +474,10 @@ public class UniTreePanel extends JPanel
 					orte.isFinal = true;
 				}
 
-        ListIterator lIt = vec.listIterator();
-        for (; lIt.hasNext();)
-        {
-          ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) lIt.next();
+				ListIterator lIt = vec.listIterator();
+				for (; lIt.hasNext();)
+				{
+					ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) lIt.next();
 					orte.add(tn);
 					if(!tn.isFinal())
 						tn.add(new ObjectResourceTreeNode("", "", true));
@@ -508,11 +510,11 @@ public class UniTreePanel extends JPanel
 			{
 				tn.isFinal = true;
 			}
-      
-      ListIterator lIt = vec.listIterator();
-      for (; lIt.hasNext();)
-      {
-        ObjectResourceTreeNode tnn = (ObjectResourceTreeNode ) lIt.next();
+
+			ListIterator lIt = vec.listIterator();
+			for (; lIt.hasNext();)
+			{
+				ObjectResourceTreeNode tnn = (ObjectResourceTreeNode ) lIt.next();
 				tn.add(tnn);
 				if(!tnn.isFinal())
 					tnn.add(new ObjectResourceTreeNode("", "", true));

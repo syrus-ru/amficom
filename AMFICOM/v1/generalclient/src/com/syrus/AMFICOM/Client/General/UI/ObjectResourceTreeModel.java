@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import java.awt.*;
-import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceCatalogController;
+import com.syrus.AMFICOM.client_.general.ui_.*;
 
 public abstract class ObjectResourceTreeModel
 {
@@ -46,9 +46,9 @@ public abstract class ObjectResourceTreeModel
 		List vec = (List) ht.get(criteria);
 		if(vec == null)
 			vec = new ArrayList();
-      
+
 		vec.add(tn);
-    
+
 		ht.put(criteria, vec);
 	}
 
@@ -57,7 +57,7 @@ public abstract class ObjectResourceTreeModel
 		List vec = (List) ht.get(criteria);
 		if(vec == null)
 			vec = new ArrayList();
-      
+
 		return vec;
 	}
 }
