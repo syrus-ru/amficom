@@ -104,6 +104,7 @@ public class MapEquipmentNodeElementModel extends MapNodeElementModel
 			if(node.type_id.equals("map_scheme_proto"))
 			{
 				ObjectResourceComboBox orcb = new ObjectResourceComboBox(MapProtoElement.typ);
+				orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
 				Hashtable h = new Hashtable();
 				MapProtoElement mpe = (MapProtoElement )Pool.get(MapProtoElement.typ, node.type_id);
 				h.put((String )mpe.getId(), mpe);
@@ -112,6 +113,7 @@ public class MapEquipmentNodeElementModel extends MapNodeElementModel
 				return orcb;
 			}
 			ObjectResourceComboBox orcb = new ObjectResourceComboBox(ProtoElement.typ);
+			orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
 			Hashtable h = new Hashtable();
 			MapProtoElement mpe = (MapProtoElement )Pool.get(MapProtoElement.typ, node.type_id);
 			for(int i = 0; i < mpe.pe_ids.size(); i++)
@@ -132,6 +134,7 @@ public class MapEquipmentNodeElementModel extends MapNodeElementModel
 			{
 				Scheme scheme = (Scheme )Pool.get(Scheme.typ, node.getMapContext().scheme_id);
 				ObjectResourceComboBox orcb =  new ObjectResourceComboBox(SchemeElement.typ, node.element_id);
+				orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
 				Hashtable ht = Pool.getHash(SchemeElement.typ);
 				Hashtable ht2 = new Hashtable();
 				for(Enumeration enum = ht.elements(); enum.hasMoreElements();)
@@ -146,6 +149,7 @@ public class MapEquipmentNodeElementModel extends MapNodeElementModel
 			}
 			Scheme scheme = (Scheme )Pool.get(Scheme.typ, node.getMapContext().scheme_id);
 			ObjectResourceComboBox orcb =  new ObjectResourceComboBox(SchemeElement.typ, node.element_id);
+			orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
 			Hashtable ht = Pool.getHash(SchemeElement.typ);
 			Hashtable ht2 = new Hashtable();
 			for(Enumeration enum = ht.elements(); enum.hasMoreElements();)

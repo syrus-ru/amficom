@@ -94,7 +94,11 @@ public class MapNodeLinkElementModel extends MapLinkElementModel
 	//		if(col_id.equals("codename"))
 	//			return new JTextField(codename);
 		if(col_id.equals("owner_id"))
-			return new ObjectResourceComboBox("user", nl.owner_id);
+		{
+			ObjectResourceComboBox orcb = new ObjectResourceComboBox("user", nl.owner_id);
+			orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
+			return orcb;
+		}
 		if(col_id.equals("length"))
 			return new TextFieldEditor(nl.getSize());
 		if(col_id.equals("physical_link_id"))

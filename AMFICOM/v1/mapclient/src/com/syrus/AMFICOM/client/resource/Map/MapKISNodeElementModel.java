@@ -85,9 +85,17 @@ public class MapKISNodeElementModel extends MapNodeElementModel
 		if(col_id.equals("owner_id"))
 			return new ObjectResourceComboBox("user", node.owner_id);
 		if(col_id.equals("type_id"))
-			return new ObjectResourceComboBox("mapkisproto", node.type_id);
+		{
+			ObjectResourceComboBox orcb = new ObjectResourceComboBox("mapkisproto", node.type_id);
+			orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
+			return orcb;
+		}
 		if(col_id.equals("kis_id"))
-			return new ObjectResourceComboBox("kis", node.element_id);
+		{
+			ObjectResourceComboBox orcb = new ObjectResourceComboBox("kis", node.element_id);
+			orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
+			return orcb;
+		}
 		if(col_id.equals("longitude"))
 			return new TextFieldEditor( String.valueOf(MyUtil.fourdigits(node.getAnchor().x)) );
 		if(col_id.equals("latitude"))

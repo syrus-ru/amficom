@@ -8,6 +8,7 @@ import com.syrus.AMFICOM.Client.General.Event.CatalogNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
 import com.syrus.AMFICOM.Client.Resource.ISM.TransmissionPath;
@@ -101,6 +102,7 @@ public class MapContext extends ObjectResource implements Serializable
 
 	public MapContext(LogicalNetLayer logical)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "constructor call", getClass().getName(), "MapContext(" + logical + ")");
 		setLogicalNetLayer(logical);
 		showPhysicalNodeElement = true;
 		created = System.currentTimeMillis();
@@ -110,6 +112,7 @@ public class MapContext extends ObjectResource implements Serializable
 
 	public MapContext()
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "constructor call", getClass().getName(), "MapContext()");
 		setLogicalNetLayer(null);
 		showPhysicalNodeElement = true;
 		created = System.currentTimeMillis();
@@ -120,12 +123,14 @@ public class MapContext extends ObjectResource implements Serializable
 //Испольуется для создания элимента при визове из базы данных
 	public MapContext(MapContext_Transferable transferable)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "constructor call", getClass().getName(), "MapContext(" + transferable + ")");
 		this.transferable = transferable;
 		setLocalFromTransferable();
 	}
 
 	public Object clone(DataSourceInterface dataSource)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "clone(" + dataSource + ")");
 		String cloned_id = (String)Pool.get("mapclonedids", id);
 		if (cloned_id != null)
 			return Pool.get(MapContext.typ, cloned_id);
@@ -207,6 +212,7 @@ public class MapContext extends ObjectResource implements Serializable
 //Устанавливаем переменные класса из базы данных
 	public void setLocalFromTransferable()
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setLocalFromTransferable()");
 		int l;
 		int i;
 		int count;
@@ -272,6 +278,8 @@ public class MapContext extends ObjectResource implements Serializable
 //Передаём переменные в transferable которая используется для передачи их в базу данных
 	public void setTransferableFromLocal()
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setTransferableFromLocal()");
+		
 		int l;
 		int i;
 		int count;
@@ -386,6 +394,8 @@ public class MapContext extends ObjectResource implements Serializable
 //при востановлении класса из базы данных
 	public void updateLocalFromTransferable()
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "updateLocalFromTransferable()");
+		
 		int l;
 		int i;
 
@@ -424,6 +434,8 @@ public class MapContext extends ObjectResource implements Serializable
 
 	public void updateFromPool()
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "updateFromPool()");
+		
 		int i;
 		
 		for(i = 0; i < nodes.size(); i++)
@@ -470,11 +482,15 @@ public class MapContext extends ObjectResource implements Serializable
 
 	public boolean isOpened()
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "isOpened()");
+		
 		return (logicalNetLayer != null);
 	}
 
 	public void setLogicalNetLayer(LogicalNetLayer logical)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setLogicalNetLayer(" + logical + ")");
+		
 		logicalNetLayer = logical;
 		curMapElement = new VoidMapElement(getLogicalNetLayer());//Поумолчанию текущий элемент Void
 
@@ -493,6 +509,8 @@ public class MapContext extends ObjectResource implements Serializable
 //Установить флаг видимости PhysicalNodeElement
 	public void setPhysicalNodeElementVisibility(boolean visibility)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setPhysicalNodeElementVisibility(" + visibility + ")");
+		
 		showPhysicalNodeElement = visibility;
 	}
 
@@ -511,18 +529,23 @@ public class MapContext extends ObjectResource implements Serializable
 //Установить вектор элементов наследников класса Node
 	public void setNodes (Vector myNodes)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setNodes(" + myNodes + ")");
 		nodes = myNodes;
 	}
 
 //Добавить MapNodeElement
 	public void addNode(MapNodeElement ob)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "addNode(" + ob + ")");
+		
 		nodes.add( ob);
 	}
 
 //Удалить MapNodeElement
 	public void removeNode(MapNodeElement ob)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "removeNode(" + ob + ")");
+		
 		nodes.removeElement( ob);
 //		deleted_nodes_ids.add(ob.getId());
 		removedElements.add(ob);
@@ -537,6 +560,8 @@ public class MapContext extends ObjectResource implements Serializable
 //Получение MapNodeLinkElement по его ID
 	public MapNodeLinkElement getNodeLink(String mapNodeLinkElementID)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getNodeLink(" + mapNodeLinkElementID + ")");
+		
 		Enumeration e = getNodeLinks().elements();
 
 		while (e.hasMoreElements())
@@ -553,6 +578,8 @@ public class MapContext extends ObjectResource implements Serializable
 //Получение MapPhysicalLinkElement по его ID
 	public MapPhysicalLinkElement getPhysicalLink(String mapPhysicalLinkElementID)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getPhysicalLink(" + mapPhysicalLinkElementID + ")");
+		
 		Enumeration e = this.getPhysicalLinks().elements();
 
 		while (e.hasMoreElements())
@@ -569,18 +596,24 @@ public class MapContext extends ObjectResource implements Serializable
 //Установить вектор элементов типа NodeLinks
 	public void setNodeLinks (Vector myNodeLinks)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setNodeLinks(" + myNodeLinks + ")");
+		
 		nodeLinks = myNodeLinks;
 	}
 
 //добавить MapNodeLinkElement
 	public void addNodeLink(MapNodeLinkElement ob)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "addNodeLink(" + ob + ")");
+		
 		nodeLinks.add( ob);
 	}
 
 //Удалить MapNodeLinkElement
 	public void removeNodeLink(MapNodeLinkElement ob)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "removeNodeLink(" + ob + ")");
+		
 		nodeLinks.removeElement( ob);
 //		deleted_nodeLinks_ids.add(ob.getId());
 		removedElements.add(ob);
@@ -589,6 +622,8 @@ public class MapContext extends ObjectResource implements Serializable
 //Проверка того, что хотя бы один элемент выбран
 	public boolean isSelectionEmpty()
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "isSelectionEmpty()");
+		
 		Enumeration e = this.getAllElements().elements();
 
 		while (e.hasMoreElements())
@@ -606,6 +641,8 @@ public class MapContext extends ObjectResource implements Serializable
 //Установить текущий элемент по коордитате на карте
 	public void setCurrentMapElement (Point myPoint)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setCurrentMapElement(" + myPoint + ")");
+		
 		//Здесь пробегаемся по всем элементам и если на каком-нибудь из них курсор
 		//то устанавливаем его текущим элементом
 		for (int i = 0;i < markers.size(); i++)
@@ -684,7 +721,8 @@ public class MapContext extends ObjectResource implements Serializable
 //Установить текущий элемент по коордитате на карте
 	public MapNodeLinkElement getEditedNodeLink(Point myPoint)
 	{
-
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getEditedNodeLink(" + myPoint + ")");
+		
 		Enumeration e = this.nodeLinks.elements();
 		while (e.hasMoreElements())
 		{
@@ -699,6 +737,8 @@ public class MapContext extends ObjectResource implements Serializable
 
 	public void notifySchemeEvent(MapElement mapElement)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "notifySchemeEvent(" + mapElement + ")");
+		
 		SchemeNavigateEvent sne;
 		Dispatcher dispatcher = logicalNetLayer.mapMainFrame.aContext.getDispatcher();
 		try 
@@ -761,6 +801,8 @@ public class MapContext extends ObjectResource implements Serializable
 
 	public void notifyCatalogueEvent(MapElement mapElement)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "notifyCatalogueEvent(" + mapElement + ")");
+		
 		CatalogNavigateEvent cne;
 		Dispatcher dispatcher = logicalNetLayer.mapMainFrame.aContext.getDispatcher();
 		try 
@@ -837,12 +879,16 @@ public class MapContext extends ObjectResource implements Serializable
 
 	public void setCurrent(MapElement curMapElement)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setCurrent(" + curMapElement + ")");
+		
 		this.curMapElement = curMapElement;
 	}
 
 //Получить текущий элемент по коордитате на карте
 	public MapElement getCurrentMapElement(Point myPoint)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getCurrentMapElement(" + myPoint + ")");
+		
 		MapElement curME = new VoidMapElement(this.getLogicalNetLayer());
 		Enumeration e = getAllElements().elements();
 		while (e.hasMoreElements())
@@ -888,6 +934,8 @@ public class MapContext extends ObjectResource implements Serializable
 //Получить NodeLinks содержащие заданный Node
 	public Vector getNodeLinksContainingNode(MapNodeElement myNode)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getNodeLinksContainingNode(" + myNode + ")");
+		
 		Vector returnNodeLink = new Vector();
 		Enumeration e = nodeLinks.elements();
 
@@ -908,6 +956,8 @@ public class MapContext extends ObjectResource implements Serializable
 //Получить PhysicalLink содержащие заданный Node
 	public Vector getPhysicalLinksContainingNode(MapNodeElement myNode)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getPhysicalLinksContainingNode(" + myNode + ")");
+		
 		Vector returnPhysicalLink = new Vector();
 		Enumeration e = this.physicalLinks.elements();
 
@@ -928,6 +978,8 @@ public class MapContext extends ObjectResource implements Serializable
 //Получить NodeLinks содержащиеся в PhysicalLink по physicalLinkID
 	public Vector getNodeLinksInPhysicalLink(String physicalLinkID)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getNodeLinksInPhysicalLink(" + physicalLinkID + ")");
+		
 		Vector returnNodeLink = new Vector();
 
 		Enumeration e = physicalLinks.elements();
@@ -955,6 +1007,8 @@ public class MapContext extends ObjectResource implements Serializable
 //Получить NodeLinks содержащиеся в TransmissionPath по pathID
 	public Vector getNodeLinksInTransmissionPath(String pathID)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getNodeLinksInTransmissionPath(" + pathID + ")");
+		
 		Vector returnNodeLink = new Vector();
 		MapTransmissionPathElement transmissionPath = getMapTransmissionPathElement(pathID);
 
@@ -971,6 +1025,8 @@ public class MapContext extends ObjectResource implements Serializable
 //Получить вектор Node противоположных у элемета NodeLink по заданному Node
 	public Vector getOtherNodeOfNodeLinksContainingNode(MapNodeElement myNode)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getOtherNodeOfNodeLinksContainingNode(" + myNode + ")");
+		
 		Enumeration e = getNodeLinksContainingNode(myNode).elements();
 		Vector returnNodeLink = new Vector();
 
@@ -994,6 +1050,8 @@ public class MapContext extends ObjectResource implements Serializable
 //Получить другой конец NodeLink по заданному NodeElement
 	public MapNodeElement getOtherNodeOfNodeLink(MapNodeLinkElement myNodeLink, MapNodeElement myNode)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getOtherNodeOfNodeLink(" + myNodeLink + ", " + myNode + ")");
+		
 
 		if ( myNodeLink.endNode == myNode )
 		{
@@ -1009,6 +1067,8 @@ public class MapContext extends ObjectResource implements Serializable
 //Получить другой конец PhysicalLink по заданному NodeElement
 	public MapNodeElement getOtherNodeOfPhysicalLink(MapPhysicalLinkElement myPhysicalLink, MapNodeElement myNode)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getOtherNodeOfPhysicalLink(" + myPhysicalLink + ", " + myNode + ")");
+		
 
 		if ( myPhysicalLink.endNode == myNode )
 		{
@@ -1025,6 +1085,8 @@ public class MapContext extends ObjectResource implements Serializable
 //Отменитьe выбор всем элементам
 	public void deselectAll()
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "deselectAll()");
+		
 		Enumeration e = getAllElements().elements();
 		while ( e.hasMoreElements())
 		{
@@ -1036,6 +1098,8 @@ public class MapContext extends ObjectResource implements Serializable
 //Выбрать всё
 	public void selectAll()
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "selectAll()");
+		
 		Enumeration e = this.getAllElements().elements();
 
 		while(e.hasMoreElements())
@@ -1051,6 +1115,8 @@ public class MapContext extends ObjectResource implements Serializable
 
 	public void setPhysicalLinks(Vector vec)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setPhysicalLinks(" + vec + ")");
+		
 		physicalLinks = vec;
 	}
 
@@ -1061,11 +1127,15 @@ public class MapContext extends ObjectResource implements Serializable
 
 	public void addPhysicalLink(MapPhysicalLinkElement ob)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "addPhysicalLink(" + ob + ")");
+		
 		physicalLinks.add( ob);
 	}
 
 	public void removePhysicalLink(MapPhysicalLinkElement ob)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "removePhysicalLink(" + ob + ")");
+		
 		physicalLinks.removeElement( ob);
 //		deleted_physicalLinks_ids.add( ob.getId());
 		removedElements.add(ob);
@@ -1073,6 +1143,8 @@ public class MapContext extends ObjectResource implements Serializable
 
 	public void setTransmissionPath(Vector vec)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setTransmissionPath(" + vec + ")");
+		
 		transmissionPath = vec;
 	}
 
@@ -1083,11 +1155,15 @@ public class MapContext extends ObjectResource implements Serializable
 
 	public void addTransmissionPath(MapTransmissionPathElement ob)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "addTransmissionPath(" + ob + ")");
+		
 		transmissionPath.add( ob);
 	}
 
 	public void removeTransmissionPath(MapTransmissionPathElement ob)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "removeTransmissionPath(" + ob + ")");
+		
 		transmissionPath.removeElement( ob);
 //		deleted_transmissionPath_ids.add( ob.getId());
 		removedElements.add(ob);
@@ -1096,6 +1172,8 @@ public class MapContext extends ObjectResource implements Serializable
 //Получить MapPhysicalLinkElement по NodeLink который он содержит
 	public MapPhysicalLinkElement getPhysicalLinkbyNodeLink(String nodeLinkElementID)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getPhysicalLinkbyNodeLink(" + nodeLinkElementID + ")");
+		
 		Enumeration e = getPhysicalLinks().elements();
 		while (e.hasMoreElements())
 		{
@@ -1111,6 +1189,8 @@ public class MapContext extends ObjectResource implements Serializable
 //Получить вектор TransmissionPath элементов, которые содержат MapPhysicalLinkElement, по physicalLinkID
 	public Vector getTransmissionPathByPhysicalLink(String physicalLinkID)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getTransmissionPathByPhysicalLink(" + physicalLinkID + ")");
+		
 		Vector returnVector = new Vector();;
 		Enumeration e = getTransmissionPath().elements();
 		while (e.hasMoreElements())
@@ -1128,12 +1208,16 @@ public class MapContext extends ObjectResource implements Serializable
 
 	public Vector getTransmissionPathByNodeLink(String nodeLinkID)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getTransmissionPathByNodeLink(" + nodeLinkID + ")");
+		
 		return getTransmissionPathByPhysicalLink(
 				getPhysicalLinkbyNodeLink(nodeLinkID).getId());
 	}
 
 	public void setLongLat( double longit, double latit)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setLongLat(" + longit + ", " + latit + ")");
+		
 		longitude = longit;
 		latitude = latit;
 	}
@@ -1141,7 +1225,8 @@ public class MapContext extends ObjectResource implements Serializable
 //A0A
 	public void deleteTranmissionPath( String physicalLinkID)
 	{
-
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "deleteTranmissionPath(" + physicalLinkID + ")");
+		
 		Enumeration e = getTransmissionPath().elements();
 		while (e.hasMoreElements())
 		{
@@ -1162,6 +1247,8 @@ public class MapContext extends ObjectResource implements Serializable
 //"Это функция используется для востанивления класса из базы данных
 	public void createFromPool( LogicalNetLayer logical)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "createFromPool(" + logical + ")");
+		
 		logicalNetLayer = logical;
 		curMapElement = new VoidMapElement(getLogicalNetLayer());
 		showPhysicalNodeElement = true;
@@ -1176,6 +1263,8 @@ public class MapContext extends ObjectResource implements Serializable
 //A0A
 	public Vector getMapKISNodeElements()
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getMapKISNodeElements()");
+		
 		Vector returnVector = new Vector();
 
 		Enumeration e = nodes.elements();
@@ -1192,6 +1281,8 @@ public class MapContext extends ObjectResource implements Serializable
 
 	public Vector getMapPhysicalNodeElements()
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getMapPhysicalNodeElements()");
+		
 		Vector returnVector = new Vector();
 
 		Enumeration e = nodes.elements();
@@ -1209,6 +1300,8 @@ public class MapContext extends ObjectResource implements Serializable
 //A0A
 	public MapKISNodeElement getMapKISNodeElement(String myID)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getMapKISNodeElement(" + myID + ")");
+		
 		Enumeration e = getMapKISNodeElements().elements();
 		while (e.hasMoreElements())
 		{
@@ -1225,7 +1318,8 @@ public class MapContext extends ObjectResource implements Serializable
 //A0A
 	public MapTransmissionPathElement getMapTransmissionPathElement(String myID)
 	{
-
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getMapTransmissionPathElement(" + myID + ")");
+		
 		Enumeration e = getTransmissionPath().elements();
 		while (e.hasMoreElements())
 		{
@@ -1242,6 +1336,8 @@ public class MapContext extends ObjectResource implements Serializable
 //A0A
 	public Vector getMapEquipmentNodeElements()
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getMapEquipmentNodeElements()");
+		
 		Vector returnVector = new Vector();
 
 		Enumeration e = nodes.elements();
@@ -1258,6 +1354,8 @@ public class MapContext extends ObjectResource implements Serializable
 
 	public Vector getMapMarkElements()
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getMapMarkElements()");
+		
 		Vector returnVector = new Vector();
 
 		Enumeration e = nodes.elements();
@@ -1275,7 +1373,8 @@ public class MapContext extends ObjectResource implements Serializable
 //A0A
 	public MapEquipmentNodeElement getMapEquipmentNodeElement(String myID)
 	{
-
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getMapEquipmentNodeElement(" + myID + ")");
+		
 		Enumeration e = getMapEquipmentNodeElements().elements();
 		while (e.hasMoreElements())
 		{
@@ -1292,6 +1391,8 @@ public class MapContext extends ObjectResource implements Serializable
 //A0A
 	public Vector getAllElements()
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getAllElements()");
+		
 		Vector returnVector = new Vector();
 
 		Enumeration e = nodes.elements();
@@ -1334,6 +1435,8 @@ public class MapContext extends ObjectResource implements Serializable
 //A0A
 	public MapMarker getMarker(String markerID)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getMarker(" + markerID + ")");
+		
 		Enumeration e = markers.elements();
 		while( e.hasMoreElements())
 		{
@@ -1347,6 +1450,8 @@ public class MapContext extends ObjectResource implements Serializable
 
 	public void removeMarkers()
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "removeMarkers()");
+		
 		markers.removeAllElements();
 	}
 
@@ -1358,6 +1463,8 @@ public class MapContext extends ObjectResource implements Serializable
 
 	public void zoomIn()
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "zoomIn()");
+		
 //		System.out.println("--- " + getLogicalNetLayer().getMapViewer().getScale());
 
 		getLogicalNetLayer().viewer.zoomIn();
@@ -1368,6 +1475,8 @@ public class MapContext extends ObjectResource implements Serializable
 
 	public void updateZoom()
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "updateZoom()");
+		
 		double sF = defaultScale / currentScale;
 
 		Enumeration en =  getNodes().elements();
@@ -1382,6 +1491,8 @@ public class MapContext extends ObjectResource implements Serializable
 //A0A
 	public void zoom(double scale)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "zoom(" + scale + ")");
+		
 //		getLogicalNetLayer().getMapViewer().zoomIn(scale);
 		currentScale = scale;
 
@@ -1391,6 +1502,8 @@ public class MapContext extends ObjectResource implements Serializable
 //A0A
 	public void zoomOut()
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "zoomOut()");
+		
 //		System.out.println("--- " + getLogicalNetLayer().getMapViewer().getScale());
 
 		getLogicalNetLayer().viewer.zoomOut();
@@ -1401,6 +1514,8 @@ public class MapContext extends ObjectResource implements Serializable
 
 	public Vector getPhysicalLinksInTransmissiionPath(String pathID)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getPhysicalLinksInTransmissiionPath(" + pathID + ")");
+		
 		Vector returnLinkVector = new Vector();
 		MapTransmissionPathElement transmissionPath = getMapTransmissionPathElement(pathID);
 		Enumeration e = transmissionPath.physicalLink_ids.elements();
@@ -1417,6 +1532,8 @@ public class MapContext extends ObjectResource implements Serializable
 //Возвращает упорядоченный набор PhysicalLink в TransmissionPath начиная с начала
 	public Vector getPhysicalLinksInTransmissiionPath1(String pathID)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getPhysicalLinksInTransmissiionPath1(" + pathID + ")");
+		
 		Vector returnLinkVector = new Vector();
 
 		MapTransmissionPathElement transPath = getMapTransmissionPathElement(pathID);
@@ -1450,6 +1567,8 @@ public class MapContext extends ObjectResource implements Serializable
 
 	public Vector getEquipKISElemenetsInTansPath(String pathID)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getEquipKISElemenetsInTansPath(" + pathID + ")");
+		
 		Vector returnNodeVector = new Vector();
 
 		MapTransmissionPathElement transmissionPath = getMapTransmissionPathElement(pathID);
@@ -1507,6 +1626,8 @@ public class MapContext extends ObjectResource implements Serializable
 //A0A
 	public MapNodeElement getNode(String nodeID)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getNode(" + nodeID + ")");
+		
 		for (int i = 0; i < getNodes().size();i++)
 		{
 			MapNodeElement node = (MapNodeElement)getNodes().get(i);
@@ -1519,6 +1640,8 @@ public class MapContext extends ObjectResource implements Serializable
 //A0A
 	public MapNodeLinkElement getNodeLink(MapNodeElement start_node, MapNodeElement end_node)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getNodeLink(" + start_node + ", " + end_node + ")");
+		
 		for(int i = 0;i < getNodeLinks().size();i++)
 		{
 			MapNodeLinkElement link = (MapNodeLinkElement)getNodeLinks().get(i);
@@ -1534,6 +1657,8 @@ public class MapContext extends ObjectResource implements Serializable
 //A0A
 	public MapPhysicalLinkElement getPhysicalLink(MapNodeElement start_node, MapNodeElement end_node)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getPhysicalLink(" + start_node + ", " + end_node + ")");
+		
 		for(int i = 0;i < getNodeLinks().size();i++)
 		{
 			MapPhysicalLinkElement link = (MapPhysicalLinkElement)getPhysicalLinks().get(i);
@@ -1548,6 +1673,8 @@ public class MapContext extends ObjectResource implements Serializable
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "writeObject(out)");
+		
 		out.writeObject(id);
 		out.writeObject(name);
 		out.writeObject(description);
@@ -1576,6 +1703,8 @@ public class MapContext extends ObjectResource implements Serializable
 	private void readObject(java.io.ObjectInputStream in)
 			throws IOException, ClassNotFoundException
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "readObject(in)");
+		
 		id = (String )in.readObject();
 		name = (String )in.readObject();
 		description = (String )in.readObject();

@@ -88,9 +88,17 @@ public class MapPhysicalLinkElementModel extends MapLinkElementModel
 	//		if(col_id.equals("codename"))
 	//			return new JTextField(codename);
 		if(col_id.equals("owner_id"))
-			return new ObjectResourceComboBox("user", link.owner_id);
+		{
+			ObjectResourceComboBox orcb = new ObjectResourceComboBox("user", link.owner_id);
+			orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
+			return orcb;
+		}
 		if(col_id.equals("type_id"))
-			return new ObjectResourceComboBox("maplinkproto", link.type_id);
+		{
+			ObjectResourceComboBox orcb = new ObjectResourceComboBox("maplinkproto", link.type_id);
+			orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
+			return orcb;
+		}
 		if(col_id.equals("link_id"))
 		{
 			MapPhysicalLinkProtoElement mplpe =
@@ -102,6 +110,7 @@ public class MapPhysicalLinkElementModel extends MapLinkElementModel
 
 			Scheme scheme = (Scheme )Pool.get(Scheme.typ, link.getMapContext().scheme_id);
 			ObjectResourceComboBox orcb =  new ObjectResourceComboBox(SchemeCableLink.typ, link.LINK_ID);
+			orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
 			Hashtable ht = Pool.getHash(SchemeCableLink.typ);
 			Hashtable ht2 = new Hashtable();
 			for(Enumeration enum = ht.elements(); enum.hasMoreElements();)

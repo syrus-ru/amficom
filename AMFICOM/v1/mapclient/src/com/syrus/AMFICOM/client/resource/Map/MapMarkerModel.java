@@ -163,11 +163,19 @@ public class MapMarkerModel extends ObjectResourceModel
 		if(col_id.equals("name"))
 			return new TextFieldEditor(marker.name);
 		if(col_id.equals("owner_id"))
-			return new ObjectResourceComboBox("user", marker.owner_id);
+		{
+			ObjectResourceComboBox orcb = new ObjectResourceComboBox("user", marker.owner_id);
+			orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
+			return orcb;
+		}
 		if(col_id.equals("typ"))
 			return new TextFieldEditor( marker.getTyp() );
 		if(col_id.equals("path_id"))
-			return new ObjectResourceComboBox(MapTransmissionPathElement.typ, marker.path_id);
+		{
+			ObjectResourceComboBox orcb = new ObjectResourceComboBox(MapTransmissionPathElement.typ, marker.path_id);
+			orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
+			return orcb;
+		}
 		if(col_id.equals("longitude"))
 			return new TextFieldEditor( String.valueOf(MyUtil.fourdigits(marker.getAnchor().x)) );
 		if(col_id.equals("latitude"))

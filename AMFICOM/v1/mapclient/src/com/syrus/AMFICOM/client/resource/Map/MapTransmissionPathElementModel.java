@@ -96,7 +96,11 @@ public class MapTransmissionPathElementModel extends MapLinkElementModel
 		if(col_id.equals("name"))
 			return new TextFieldEditor(path.name);
 		if(col_id.equals("type_id"))
-			return new ObjectResourceComboBox("mappathproto", path.type_id);
+		{
+			ObjectResourceComboBox orcb = new ObjectResourceComboBox("mappathproto", path.type_id);
+			orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
+			return orcb;
+		}
 		if(col_id.equals("path_id"))
 		{
 			MapTransmissionPathProtoElement mtppe =
@@ -108,6 +112,7 @@ public class MapTransmissionPathElementModel extends MapLinkElementModel
 
 			Scheme scheme = (Scheme )Pool.get(Scheme.typ, path.getMapContext().scheme_id);
 			ObjectResourceComboBox orcb =  new ObjectResourceComboBox(SchemePath.typ, path.PATH_ID);
+			orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
 			Hashtable ht = Pool.getHash(SchemePath.typ);
 			Hashtable ht2 = new Hashtable();
 			for(Enumeration enum = ht.elements(); enum.hasMoreElements();)
@@ -124,7 +129,11 @@ public class MapTransmissionPathElementModel extends MapLinkElementModel
 		}
 //			return new TextFieldEditor(path.PATH_ID);
 		if(col_id.equals("owner_id"))
-			return new ObjectResourceComboBox("user", path.owner_id);
+		{
+			ObjectResourceComboBox orcb = new ObjectResourceComboBox("user", path.owner_id);
+			orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
+			return orcb;
+		}
 		if(col_id.equals("length"))
 			return new TextFieldEditor(String.valueOf( MyUtil.fourdigits(path.getSizeInDoubleLt())));
 		if(col_id.equals("startnode"))
@@ -137,6 +146,7 @@ public class MapTransmissionPathElementModel extends MapLinkElementModel
 				ht2.put(or.getId(), or);
 			}
 			ObjectResourceComboBox orcb =  new ObjectResourceComboBox(ht2, path.startNode_id);
+			orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
 //			orcb.setContents(ht2, true);
 //			orcb.setSelected(path.startNode);
 			return orcb;
@@ -151,6 +161,7 @@ public class MapTransmissionPathElementModel extends MapLinkElementModel
 				ht2.put(or.getId(), or);
 			}
 			ObjectResourceComboBox orcb =  new ObjectResourceComboBox(ht2, path.endNode_id);
+			orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
 //			orcb.setContents(ht2, true);
 //			orcb.setSelected(path.endNode);
 			return orcb;

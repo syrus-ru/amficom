@@ -79,7 +79,11 @@ public class MapPhysicalNodeElementModel extends MapNodeElementModel
 		if(col_id.equals("name"))
 			return new TextFieldEditor(node.name);
 		if(col_id.equals("owner_id"))
-			return new ObjectResourceComboBox("user", node.owner_id);
+		{
+			ObjectResourceComboBox orcb = new ObjectResourceComboBox("user", node.owner_id);
+			orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
+			return orcb;
+		}
 		if(col_id.equals("typ"))
 			return new TextFieldEditor( node.getTyp() );
 		if(col_id.equals("longitude"))
