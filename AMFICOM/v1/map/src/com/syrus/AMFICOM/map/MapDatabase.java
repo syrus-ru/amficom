@@ -1,5 +1,5 @@
 /*
- * $Id: MapDatabase.java,v 1.22 2005/03/11 10:48:11 bob Exp $
+ * $Id: MapDatabase.java,v 1.23 2005/03/31 09:23:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/03/11 10:48:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.23 $, $Date: 2005/03/31 09:23:39 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public class MapDatabase extends CharacterizableDatabase {
@@ -273,16 +273,18 @@ public class MapDatabase extends CharacterizableDatabase {
 		return map;
 	}
 
-	
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-//		Map map = this.fromStorableObject(storableObject);
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
+			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+		Map map = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName()
+						+ " '" + map.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}
 
-	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
+	public void insert(StorableObject storableObject) throws CreateObjectException, IllegalDataException {
 		Map map = this.fromStorableObject(storableObject);
 		super.insertEntity(map);
 		Collection maps = Collections.singletonList(map);
@@ -293,12 +295,12 @@ public class MapDatabase extends CharacterizableDatabase {
 			this.updateLinkedObjectIds(maps, _MAP_PHYSICAL_LINK);
 			this.updateLinkedObjectIds(maps, _MAP_SITE_NODE);
 			this.updateLinkedObjectIds(maps, _MAP_TOPOLOGICAL_NODE);
-		} catch (UpdateObjectException e) {
+		}
+		catch (UpdateObjectException e) {
 			throw new CreateObjectException(e);
 		}
 	}
-	
-	
+
 	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		try {
@@ -308,17 +310,19 @@ public class MapDatabase extends CharacterizableDatabase {
 			this.updateLinkedObjectIds(storableObjects, _MAP_PHYSICAL_LINK);
 			this.updateLinkedObjectIds(storableObjects, _MAP_SITE_NODE);
 			this.updateLinkedObjectIds(storableObjects, _MAP_TOPOLOGICAL_NODE);
-		} catch (UpdateObjectException e) {
+		}
+		catch (UpdateObjectException e) {
 			throw new CreateObjectException(e);
 		}
 	}
 
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
+			throws VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntity(storableObject, modifierId, false);
 				break;
-			case UPDATE_FORCE:					
+			case UPDATE_FORCE:
 			default:
 				super.checkAndUpdateEntity(storableObject, modifierId, true);
 				return;
@@ -331,16 +335,16 @@ public class MapDatabase extends CharacterizableDatabase {
 		this.updateLinkedObjectIds(maps, _MAP_SITE_NODE);
 		this.updateLinkedObjectIds(maps, _MAP_TOPOLOGICAL_NODE);
 	}
-	
-	
-	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
+
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
+			throws VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntities(storableObjects, modifierId, false);
 				break;
-			case UPDATE_FORCE:					
+			case UPDATE_FORCE:
 			default:
-				super.checkAndUpdateEntities(storableObjects, modifierId, true);		
+				super.checkAndUpdateEntities(storableObjects, modifierId, true);
 				return;
 		}
 		this.updateLinkedObjectIds(storableObjects, _MAP_COLLECTOR);
@@ -350,7 +354,7 @@ public class MapDatabase extends CharacterizableDatabase {
 		this.updateLinkedObjectIds(storableObjects, _MAP_SITE_NODE);
 		this.updateLinkedObjectIds(storableObjects, _MAP_TOPOLOGICAL_NODE);
 	}	
-	
+
 	private void updateLinkedObjectIds(Collection maps, int linkedTable) throws UpdateObjectException {
 		if (maps == null || maps.isEmpty())
 			return;
@@ -358,23 +362,25 @@ public class MapDatabase extends CharacterizableDatabase {
 		String tableName;
 		try {
 			tableName = getLinkedTableName(linkedTable);
-		} catch (IllegalDataException e) {
+		}
+		catch (IllegalDataException e) {
 			throw new UpdateObjectException(e);
 		}
 		String columnName = (String) dbTableColumnName.get(tableName);
-		
+
 		java.util.Map mapIdLinkedObjectIds = new HashMap();
-		
+
 		for (Iterator colIter = maps.iterator(); colIter.hasNext();) {
 			StorableObject storableObject = (StorableObject) colIter.next();
-	        Map map;
+			Map map;
 			try {
 				map = fromStorableObject(storableObject);
-			} catch (IllegalDataException e) {
+			}
+			catch (IllegalDataException e) {
 				throw new UpdateObjectException(e);
 			}
-	        Collection linkedObjectList ;
-	        switch(linkedTable){
+			Collection linkedObjectList;
+			switch (linkedTable) {
 				case _MAP_COLLECTOR:
 					linkedObjectList = map.getCollectors();
 					break;
@@ -394,49 +400,51 @@ public class MapDatabase extends CharacterizableDatabase {
 					linkedObjectList = map.getTopologicalNodes();
 					break;
 				default:
-					throw new UpdateObjectException(this.getEnityName() + "Database.updateLinkedObjectIds | unknown linked table code:" + linkedTable);
+					throw new UpdateObjectException(this.getEnityName()
+							+ "Database.updateLinkedObjectIds | unknown linked table code:" + linkedTable);
 			}
-	
-	        Collection linkedObjectIds = new ArrayList(linkedObjectList.size());
-	        for (Iterator it = linkedObjectList.iterator(); it.hasNext();) {
-	        	StorableObject storableObject2 = (StorableObject) it.next();
-	            linkedObjectIds.add(storableObject2.getId());
+
+			Collection linkedObjectIds = new ArrayList(linkedObjectList.size());
+			for (Iterator it = linkedObjectList.iterator(); it.hasNext();) {
+				StorableObject storableObject2 = (StorableObject) it.next();
+				linkedObjectIds.add(storableObject2.getId());
 			}
-	        
-	        mapIdLinkedObjectIds.put(map.getId(), linkedObjectIds);
+
+			mapIdLinkedObjectIds.put(map.getId(), linkedObjectIds);
 		}
-		
-		super.updateLinkedEntities(mapIdLinkedObjectIds, tableName, MapWrapper.LINK_COLUMN_MAP_ID, columnName);
+
+		super.updateLinkedEntityIds(mapIdLinkedObjectIds, tableName, MapWrapper.LINK_COLUMN_MAP_ID, columnName);
 	}
-	
+
 	public void delete(Identifier id) throws IllegalDataException {
 		this.delete(Collections.singletonList(id));
 	}
-	
+
 	public void delete(Collection ids) {
 		super.delete(ids);
-		
+
 		java.util.Map linkedObjectIds = new HashMap();
-		
+
 		java.util.Map mapIds = new HashMap();
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier mapId = (Identifier) it.next();
-			try{
-				Map map = (Map)MapStorableObjectPool.getStorableObject(mapId, true);
+			try {
+				Map map = (Map) MapStorableObjectPool.getStorableObject(mapId, true);
 				mapIds.put(mapId, map);
-			}catch(ApplicationException ae){
-				Log.errorMessage(this.getEnityName()+"Database.delete | Couldn't found map for " + mapId);
-			} 
+			}
+			catch (ApplicationException ae) {
+				Log.errorMessage(this.getEnityName() + "Database.delete | Couldn't found map for " + mapId);
+			}
 		}
-		
+
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier mapId = (Identifier) it.next();
 			Map map = (Map) mapIds.get(mapId);
 			linkedObjectIds.put(map, map.getCollectors());
 		}
-		
+
 		this.deleteLinkedObjectIds(linkedObjectIds, _MAP_COLLECTOR);
-		
+
 		linkedObjectIds.clear();
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier mapId = (Identifier) it.next();
@@ -444,37 +452,37 @@ public class MapDatabase extends CharacterizableDatabase {
 			linkedObjectIds.put(map, map.getMarks());
 		}
 		this.deleteLinkedObjectIds(linkedObjectIds, _MAP_MARK);
-		
+
 		linkedObjectIds.clear();
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier mapId = (Identifier) it.next();
 			Map map = (Map) mapIds.get(mapId);
 			linkedObjectIds.put(map, map.getNodeLinks());
-		}		
+		}
 		this.deleteLinkedObjectIds(linkedObjectIds, _MAP_NODE_LINK);
-		
+
 		linkedObjectIds.clear();
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier mapId = (Identifier) it.next();
 			Map map = (Map) mapIds.get(mapId);
 			linkedObjectIds.put(map, map.getPhysicalLinks());
-		}			
+		}
 		this.deleteLinkedObjectIds(linkedObjectIds, _MAP_PHYSICAL_LINK);
-		
+
 		linkedObjectIds.clear();
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier mapId = (Identifier) it.next();
 			Map map = (Map) mapIds.get(mapId);
 			linkedObjectIds.put(map, map.getSiteNodes());
-		}		
+		}
 		this.deleteLinkedObjectIds(linkedObjectIds, _MAP_SITE_NODE);
-		
+
 		linkedObjectIds.clear();
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier mapId = (Identifier) it.next();
 			Map map = (Map) mapIds.get(mapId);
 			linkedObjectIds.put(map, map.getTopologicalNodes());
-		}		
+		}
 		this.deleteLinkedObjectIds(linkedObjectIds, _MAP_TOPOLOGICAL_NODE);
 	}	
 
@@ -482,66 +490,48 @@ public class MapDatabase extends CharacterizableDatabase {
 		Map map = fromStorableObject(storableObject);
 		this.delete(Collections.singletonList(map.getId()));
 	}
-	
+
 	private void deleteLinkedObjectIds(java.util.Map linkedObjectIds, int linkedTable) {
-		
+
 		String tableName;
 		try {
 			tableName = this.getLinkedTableName(linkedTable);
-		} catch (IllegalDataException e) {
-			Log.errorMessage(getEnityName() + "Database.deleteLinkedObjectIds | illegal linked database table id " + linkedTable + " -- " + e.getMessage());
+		}
+		catch (IllegalDataException e) {
+			Log.errorMessage(getEnityName() + "Database.deleteLinkedObjectIds | illegal linked database table id "
+					+ linkedTable + " -- " + e.getMessage());
 			return;
 		}
-		String columnName = (String)dbTableColumnName.get(tableName);
+		String columnName = (String) dbTableColumnName.get(tableName);
 
-		StringBuffer linkBuffer = new StringBuffer(columnName);
-		
-		linkBuffer.append(SQL_IN);
-		linkBuffer.append(OPEN_BRACKET);
-		
-		int i = 0;
-		for (Iterator colIter = linkedObjectIds.keySet().iterator(); colIter.hasNext();) {
-			Identifier collectorId = (Identifier) colIter.next();
-			Collection physicalLinkIds = (Collection)linkedObjectIds.get(collectorId);
-			for (Iterator it = physicalLinkIds.iterator(); it.hasNext(); i++) {
-				Identifier id = (Identifier) it.next();
-	
-				linkBuffer.append(DatabaseIdentifier.toSQLString(id));
-				if (it.hasNext()) {
-					if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0)){
-						linkBuffer.append(COMMA);
-					}
-					else {
-						linkBuffer.append(CLOSE_BRACKET);
-						linkBuffer.append(SQL_AND);
-						linkBuffer.append(columnName);				
-						linkBuffer.append(SQL_IN);
-						linkBuffer.append(OPEN_BRACKET);
-					}
-				}
-			
-			}
+		StringBuffer linkBuffer = new StringBuffer(SQL_DELETE_FROM + tableName + SQL_WHERE);
+		try {
+			linkBuffer.append(idsEnumerationString(linkedObjectIds.keySet(), columnName, true));
 		}
-		
-		linkBuffer.append(CLOSE_BRACKET);
-		
+		catch (IllegalDataException ide) {
+			Log.errorException(ide);
+		}
+
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
-			statement.executeUpdate(SQL_DELETE_FROM + tableName + SQL_WHERE
-					+ linkBuffer.toString());
+			statement.executeUpdate(linkBuffer.toString());
 			connection.commit();
-		} catch (SQLException sqle1) {
+		}
+		catch (SQLException sqle1) {
 			Log.errorException(sqle1);
-		} finally {
+		}
+		finally {
 			try {
 				if (statement != null)
 					statement.close();
 				statement = null;
-			} catch (SQLException sqle1) {
+			}
+			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
+			}
+			finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}

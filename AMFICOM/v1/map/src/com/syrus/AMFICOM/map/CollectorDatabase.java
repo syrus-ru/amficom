@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorDatabase.java,v 1.23 2005/03/11 10:48:11 bob Exp $
+ * $Id: CollectorDatabase.java,v 1.24 2005/03/31 09:23:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,155 +38,164 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/03/11 10:48:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.24 $, $Date: 2005/03/31 09:23:39 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public class CollectorDatabase extends CharacterizableDatabase {
-	 private static String columns;
-	
+	private static String columns;
+
 	private static String updateMultipleSQLValues;
-	
+
 	private static final String COLLECTOR_PHYSICAL_LINK = "CollPhLink";
-	
+
 	 private Collector fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Collector)
 			return (Collector) storableObject;
-		throw new IllegalDataException(this.getEnityName() + "Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+		throw new IllegalDataException(this.getEnityName() + "Database.fromStorableObject | Illegal Storable Object: "
+				+ storableObject.getClass().getName());
 	}
 
-	
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public void retrieve(StorableObject storableObject)
+			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Collector collector = this.fromStorableObject(storableObject);
 		super.retrieveEntity(collector);
 		this.retrievePhysicalLinks(Collections.singletonList(collector));
 	}
-	
-	private void retrievePhysicalLinks(Collection collectors) throws RetrieveObjectException, IllegalDataException{
+
+	private void retrievePhysicalLinks(Collection collectors) throws RetrieveObjectException, IllegalDataException {
 		if (collectors == null || collectors.isEmpty())
 			return;
-		java.util.Map map = super.retrieveLinkedEntityIds(collectors, COLLECTOR_PHYSICAL_LINK, CollectorWrapper.LINK_COLUMN_COLLECTOR_ID, CollectorWrapper.LINK_COLUMN_PHYSICAL_LINK_ID);
+		java.util.Map map = super.retrieveLinkedEntityIds(collectors,
+				COLLECTOR_PHYSICAL_LINK,
+				CollectorWrapper.LINK_COLUMN_COLLECTOR_ID,
+				CollectorWrapper.LINK_COLUMN_PHYSICAL_LINK_ID);
 		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
 			Collector collector = (Collector) it.next();
-			Collection physicalLinkIds = (Collection)map.get(collector);
+			Collection physicalLinkIds = (Collection) map.get(collector);
 			try {
 				collector.setPhysicalLinks0(MapStorableObjectPool.getStorableObjects(physicalLinkIds, true));
-			} catch (ApplicationException e) {
+			}
+			catch (ApplicationException e) {
 				throw new RetrieveObjectException(e);
-			} 
+			}
 		}
 	}
-	
-	protected String getEnityName() {		
+
+	protected String getEnityName() {
 		return ObjectEntities.COLLECTOR_ENTITY;
-	}	
-	
+	}
+
 	protected String getColumnsTmpl() {
-		if (columns == null){
-			columns = StorableObjectWrapper.COLUMN_NAME + COMMA
-				+ StorableObjectWrapper.COLUMN_DESCRIPTION;
+		if (columns == null) {
+			columns = StorableObjectWrapper.COLUMN_NAME + COMMA + StorableObjectWrapper.COLUMN_DESCRIPTION;
 		}
 		return columns;
-	}	
-	
+	}
+
 	protected String getUpdateMultipleSQLValuesTmpl() {
-		if (updateMultipleSQLValues == null){
-			updateMultipleSQLValues = QUESTION + COMMA
-				+ QUESTION;
+		if (updateMultipleSQLValues == null) {
+			updateMultipleSQLValues = QUESTION + COMMA + QUESTION;
 		}
 		return updateMultipleSQLValues;
 	}
-	
-	
-	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject, PreparedStatement preparedStatement, int startParameterNumber)
-			throws IllegalDataException, SQLException {
+
+	protected int setEntityForPreparedStatementTmpl(StorableObject storableObject,
+			PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
 		Collector collector = fromStorableObject(storableObject);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, collector.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, collector.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		return startParameterNumber;
 	}
-	
+
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
 		Collector collector = fromStorableObject(storableObject);
 		String values = APOSTOPHE + DatabaseString.toQuerySubString(collector.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(collector.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
+				+ APOSTOPHE + DatabaseString.toQuerySubString(collector.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
 		return values;
 	}
-	
+
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
-	throws IllegalDataException, RetrieveObjectException, SQLException {
-		Collector collector = (storableObject == null) ? 
-				new Collector(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null) : 
-					fromStorableObject(storableObject);				
-		
+			throws IllegalDataException,
+				RetrieveObjectException,
+				SQLException {
+		Collector collector = (storableObject == null) ? new Collector(DatabaseIdentifier.getIdentifier(resultSet,
+				StorableObjectWrapper.COLUMN_ID), null, 0L, null, null) : fromStorableObject(storableObject);
+
 		collector.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-							   DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-							   DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-							   resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
-							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
-							   DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));		
+				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));
 		return collector;
 	}
 
-	
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-//		Collector collector = this.fromStorableObject(storableObject);
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
+			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+		Collector collector = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName()
+						+ " '" + collector.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}
 
-	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
+	public void insert(StorableObject storableObject) throws CreateObjectException, IllegalDataException {
 		Collector collector = this.fromStorableObject(storableObject);
 		super.insertEntity(collector);
 		try {
 			this.updatePhysicalLinks(Collections.singletonList(storableObject));
-		} catch (UpdateObjectException e) {
+		}
+		catch (UpdateObjectException e) {
 			throw new CreateObjectException(e);
 		}
-		
+
 	}
-	
-	
+
 	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		try {
 			this.updatePhysicalLinks(storableObjects);
-		} catch (UpdateObjectException e) {
+		}
+		catch (UpdateObjectException e) {
 			throw new CreateObjectException(e);
 		}
 	}
 
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
+			throws VersionCollisionException,
+				UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntity(storableObject, modifierId, false);
 				break;
-			case UPDATE_FORCE:					
+			case UPDATE_FORCE:
 			default:
 				super.checkAndUpdateEntity(storableObject, modifierId, true);
 				return;
 		}
 		this.updatePhysicalLinks(Collections.singletonList(storableObject));
 	}
-	
-	
-	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws 
-		VersionCollisionException, UpdateObjectException {
+
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
+			throws VersionCollisionException,
+				UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntities(storableObjects, modifierId, false);
 				break;
-			case UPDATE_FORCE:					
+			case UPDATE_FORCE:
 			default:
-				super.checkAndUpdateEntities(storableObjects, modifierId, true);		
+				super.checkAndUpdateEntities(storableObjects, modifierId, true);
 				return;
 		}
 		this.updatePhysicalLinks(storableObjects);
 	}	
-	
+
 	private void updatePhysicalLinks(Collection collectors) throws UpdateObjectException {
 		if (collectors == null || collectors.isEmpty())
 			return;
@@ -194,8 +203,9 @@ public class CollectorDatabase extends CharacterizableDatabase {
 		for (Iterator it = collectors.iterator(); it.hasNext();) {
 			Collector collector;
 			try {
-				collector = this.fromStorableObject((StorableObject)it.next());
-			} catch (IllegalDataException e) {
+				collector = this.fromStorableObject((StorableObject) it.next());
+			}
+			catch (IllegalDataException e) {
 				throw new UpdateObjectException("CollectorDatabase.updatePhysicalLinks | cannot get collector ", e);
 			}
 			Collection physicalLinks = collector.getPhysicalLinks();
@@ -205,79 +215,52 @@ public class CollectorDatabase extends CharacterizableDatabase {
 				physicalLinkIds.add(physicalLink.getId());
 			}
 			collectorIdPhysicalLinkIdsMap.put(collector.getId(), physicalLinkIds);
-		}		
-		
-		super.updateLinkedEntities(collectorIdPhysicalLinkIdsMap, COLLECTOR_PHYSICAL_LINK, CollectorWrapper.LINK_COLUMN_COLLECTOR_ID, CollectorWrapper.LINK_COLUMN_PHYSICAL_LINK_ID);
-	}	
-	
+		}
+
+		super.updateLinkedEntityIds(collectorIdPhysicalLinkIdsMap,
+				COLLECTOR_PHYSICAL_LINK,
+				CollectorWrapper.LINK_COLUMN_COLLECTOR_ID,
+				CollectorWrapper.LINK_COLUMN_PHYSICAL_LINK_ID);
+	}
+
 	public void delete(Identifier id) throws IllegalDataException {
 		this.delete(Collections.singletonList(id));
 	}
-	
-	public void delete(Collection ids) {	
-		StringBuffer linkBuffer = new StringBuffer(CollectorWrapper.LINK_COLUMN_COLLECTOR_ID);
-		StringBuffer buffer = new StringBuffer(StorableObjectWrapper.COLUMN_ID);
-		
-		linkBuffer.append(SQL_IN);
-		linkBuffer.append(OPEN_BRACKET);
-		
-		buffer.append(SQL_IN);
-		buffer.append(OPEN_BRACKET);
-		
-		int i = 0;
-		for (Iterator it = ids.iterator(); it.hasNext(); i++) {
-			Identifier id = (Identifier) it.next();
 
-			linkBuffer.append(DatabaseIdentifier.toSQLString(id));
-			buffer.append(DatabaseIdentifier.toSQLString(id));
-			if (it.hasNext()) {
-				if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0)){
-					linkBuffer.append(COMMA);
-					buffer.append(COMMA);
-				}
-				else {
-					linkBuffer.append(CLOSE_BRACKET);
-					linkBuffer.append(SQL_AND);
-					linkBuffer.append(CollectorWrapper.LINK_COLUMN_COLLECTOR_ID);				
-					linkBuffer.append(SQL_IN);
-					linkBuffer.append(OPEN_BRACKET);
-					
-					buffer.append(CLOSE_BRACKET);
-					buffer.append(SQL_AND);
-					buffer.append(StorableObjectWrapper.COLUMN_ID);				
-					buffer.append(SQL_IN);
-					buffer.append(OPEN_BRACKET);
-				}
-			}
-		
+	public void delete(Collection ids) {
+		StringBuffer stringBuffer = new StringBuffer(SQL_DELETE_FROM + COLLECTOR_PHYSICAL_LINK + SQL_WHERE);
+		try {
+			stringBuffer.append(idsEnumerationString(ids, CollectorWrapper.LINK_COLUMN_COLLECTOR_ID, true));
 		}
-		
-		linkBuffer.append(CLOSE_BRACKET);
-		buffer.append(CLOSE_BRACKET);
-		
+		catch (IllegalDataException ide) {
+			Log.errorException(ide);
+		}
+
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
-			statement.executeUpdate(SQL_DELETE_FROM + COLLECTOR_PHYSICAL_LINK + SQL_WHERE
-					+ linkBuffer.toString());
-			statement.executeUpdate(SQL_DELETE_FROM + this.getEnityName() + SQL_WHERE + StorableObjectWrapper.COLUMN_ID
-					+ buffer.toString());
+			Log.debugMessage("CollectorDatabase.delete(Collection) | Trying: " + stringBuffer, Log.DEBUGLEVEL09);
+			statement.executeUpdate(stringBuffer.toString());
 			connection.commit();
-		} catch (SQLException sqle1) {
-			Log.errorException(sqle1);
-		} finally {
+		}
+		catch (SQLException sqle) {
+			Log.errorException(sqle);
+		}
+		finally {
 			try {
 				if (statement != null)
 					statement.close();
 				statement = null;
-			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			} finally {
+			}
+			catch (SQLException sqle) {
+				Log.errorException(sqle);
+			}
+			finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
-		
+
 		super.delete(ids);
 	}	
 
