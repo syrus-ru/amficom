@@ -1,5 +1,5 @@
 /*
- * $Id: CMConfigurationReceive.java,v 1.2 2004/11/19 11:19:15 bob Exp $
+ * $Id: CMConfigurationReceive.java,v 1.3 2004/11/23 17:42:26 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.List;
 import com.syrus.AMFICOM.cmserver.corba.CMServerOperations;
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
+import com.syrus.AMFICOM.configuration.CableThreadTypeDatabase;
 import com.syrus.AMFICOM.configuration.Characteristic;
 import com.syrus.AMFICOM.configuration.CharacteristicDatabase;
 import com.syrus.AMFICOM.configuration.CharacteristicType;
@@ -56,6 +57,7 @@ import com.syrus.AMFICOM.configuration.UserDatabase;
 import com.syrus.AMFICOM.configuration.corba.AbstractLinkTypeSort;
 import com.syrus.AMFICOM.configuration.corba.AbstractLinkType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.configuration.corba.CableThreadType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Domain_Transferable;
@@ -88,13 +90,89 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/11/19 11:19:15 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2004/11/23 17:42:26 $
+ * @author $Author: max $
  * @module module
  */
 public abstract class CMConfigurationReceive implements CMServerOperations {
     //////////////////////////////Configuration Recieve///////////////////////////////////
 
+	public void receiveCableThreadType(
+			CableThreadType_Transferable cableThreadType_Transferable,
+			boolean force, AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		Log.debugMessage("CMServerImpl.receiveCableThreadType | Received " + " cableThreadType", Log.DEBUGLEVEL07);
+        try {
+
+            CableThreadType cableThreadType = new CableThreadType(cableThreadType_Transferable);
+            ConfigurationStorableObjectPool.putStorableObject(cableThreadType);
+            CableThreadTypeDatabase database = (CableThreadTypeDatabase) ConfigurationDatabaseContext
+                    .getCableThreadTypeDatabase();
+            database.update(cableThreadType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+
+        } catch (UpdateObjectException e) {
+        Log.errorException(e);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
+                .getMessage());
+        } catch (IllegalDataException e) {
+        Log.errorException(e);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
+                            CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (IllegalObjectEntityException e) {
+        Log.errorException(e);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
+                            CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (VersionCollisionException e){
+        Log.errorException(e);
+        throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION,
+                            CompletionStatus.COMPLETED_NO, e.getMessage());        
+        } catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
+	}
+
+	public void receiveCableThreadTypes(
+			CableThreadType_Transferable[] cableThreadType_Transferables,
+			boolean force, AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		Log.debugMessage("CMServerImpl.receiveCableThreadTypes | Received " + cableThreadType_Transferables.length
+                + " cableThreadTypes", Log.DEBUGLEVEL07);
+        List cableThreadTypeList = new ArrayList(cableThreadType_Transferables.length);
+        try {
+
+            for (int i = 0; i < cableThreadType_Transferables.length; i++) {
+                CableThreadType cableThreadType = new CableThreadType(cableThreadType_Transferables[i]);
+                ConfigurationStorableObjectPool.putStorableObject(cableThreadType);
+                cableThreadTypeList.add(cableThreadType);
+            }
+
+            CableThreadTypeDatabase database = (CableThreadTypeDatabase) ConfigurationDatabaseContext
+                    .getCharacteristicDatabase();
+            database.update(cableThreadTypeList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+
+        } catch (UpdateObjectException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
+                    .getMessage());
+        } catch (IllegalDataException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
+                                CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (IllegalObjectEntityException e) {
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
+                                CompletionStatus.COMPLETED_NO, e.getMessage());
+        } catch (VersionCollisionException e){
+            Log.errorException(e);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_VERSION_COLLISION,
+                                                CompletionStatus.COMPLETED_NO, e.getMessage());       
+        } catch (Throwable t) {
+            Log.errorException(t);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+        }
+	}
+    
     public void receiveCharacteristic(Characteristic_Transferable characteristic_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
         Log.debugMessage("CMServerImpl.receiveCharacteristic | Received " + " characteristic", Log.DEBUGLEVEL07);
         try {
