@@ -3,15 +3,14 @@ package com.syrus.AMFICOM.mcm;
 import java.util.Hashtable;
 import java.util.Enumeration;
 import java.util.LinkedList;
-import com.syrus.AMFICOM.util.Identifier;
 import com.syrus.AMFICOM.analysis.dadara.DadaraEvaluationManager;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.AMFICOM.measurement.SetParameter;
-import com.syrus.AMFICOM.mcm.MeasurementControlModule;
 import com.syrus.util.Log;
 
 

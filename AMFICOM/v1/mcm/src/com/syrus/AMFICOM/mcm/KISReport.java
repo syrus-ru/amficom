@@ -1,10 +1,10 @@
 package com.syrus.AMFICOM.mcm;
 
-import com.syrus.AMFICOM.util.Identifier;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.measurement.Measurement;
+import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
-import com.syrus.AMFICOM.measurement.Result;
-import com.syrus.AMFICOM.measurement.Measurement;
 
 public class KISReport {
 	private Identifier measurement_id;

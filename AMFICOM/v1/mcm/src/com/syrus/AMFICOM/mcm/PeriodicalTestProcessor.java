@@ -2,10 +2,10 @@ package com.syrus.AMFICOM.mcm;
 
 import java.util.Date;
 import java.util.ArrayList;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.PTTemporalTemplate;
-import com.syrus.AMFICOM.util.RetrieveObjectException;
+import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.util.Log;
 
 public class PeriodicalTestProcessor extends TestProcessor {

@@ -2,7 +2,7 @@ package com.syrus.AMFICOM.analysis.dadara;
 
 import java.util.Hashtable;
 import java.io.IOException;
-import com.syrus.AMFICOM.util.Identifier;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.mcm.AnalysisManager;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.io.BellcoreReader;

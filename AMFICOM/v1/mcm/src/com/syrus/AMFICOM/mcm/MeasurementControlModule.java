@@ -6,14 +6,9 @@ import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Enumeration;
 import java.util.Iterator;
-import com.syrus.util.Application;
-import com.syrus.util.ApplicationProperties;
-import com.syrus.util.Log;
-import com.syrus.util.corba.CORBAServer;
-import com.syrus.util.database.DatabaseConnection;
-import com.syrus.AMFICOM.util.Identifier;
-import com.syrus.AMFICOM.util.DatabaseSetup;
-import com.syrus.AMFICOM.util.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.Identifier;
+//import com.syrus.AMFICOM.util.DatabaseSetup;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.configuration.MCM;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.measurement.Test;
@@ -22,9 +17,14 @@ import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
-import com.syrus.AMFICOM.server.ResourcedbInterface;
-import com.syrus.AMFICOM.server.corba.MeasurementServer;
-import com.syrus.AMFICOM.server.corba.MeasurementServerHelper;
+//import com.syrus.AMFICOM.server.ResourcedbInterface;
+//import com.syrus.AMFICOM.server.corba.MeasurementServer;
+//import com.syrus.AMFICOM.server.corba.MeasurementServerHelper;
+import com.syrus.util.Application;
+import com.syrus.util.ApplicationProperties;
+import com.syrus.util.Log;
+import com.syrus.util.corba.CORBAServer;
+import com.syrus.util.database.DatabaseConnection;
 
 public class MeasurementControlModule extends Thread {
 	public static final String ID = "mcm1";
@@ -190,8 +190,8 @@ public class MeasurementControlModule extends Thread {
 			case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
 				testProcessor = new PeriodicalTestProcessor(test);
 				break;
-			case TestTemporalType._TEST_TEMPORAL_TYPE_TIMETABLE:
-				testProcessor = new TimetableTestProcessor(test);
+			case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
+				testProcessor = new ContinuousTestProcessor(test);
 				break;
 			default:
 				Log.errorMessage("Incorrect temporal type " + test.getTemporalType().value() + " of test '" + test.getId().toString() + "'");

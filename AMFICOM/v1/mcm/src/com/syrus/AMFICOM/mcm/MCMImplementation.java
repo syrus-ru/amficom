@@ -1,9 +1,9 @@
 package com.syrus.AMFICOM.mcm;
 
-import com.syrus.AMFICOM.util.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.mcm.corba.MCMPOA;
-import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 
 public class MCMImplementation extends MCMPOA {
 

@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.analysis.dadara;
 
 import java.util.Hashtable;
-import com.syrus.AMFICOM.util.Identifier;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.mcm.EvaluationManager;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 import com.syrus.util.Log;

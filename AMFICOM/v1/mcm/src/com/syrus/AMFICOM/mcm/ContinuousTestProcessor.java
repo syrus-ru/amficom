@@ -5,7 +5,7 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.util.Log;
 
-public class TimetableTestProcessor extends TestProcessor {
+public class ContinuousTestProcessor extends TestProcessor {
 	private static final int STATUS_NEW_MEASUREMENT = 0;
 	private static final int STATUS_MEASUREMENT_IS_WAITING = 1;
 	private static final int STATUS_LAST_MEASUREMENT_GONE = 3;
@@ -13,7 +13,7 @@ public class TimetableTestProcessor extends TestProcessor {
 	private long[] ti;
 	private int status;
 
-	public TimetableTestProcessor(Test test) {
+	public ContinuousTestProcessor(Test test) {
 		super(test);
 		Date[] dti = super.test.getTTTimestamps();
 		this.ti = new long[dti.length];

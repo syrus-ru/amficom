@@ -1,7 +1,7 @@
 OUT=libmcmtransceiver.so
-CPP=g++-3.3.1
+CPP=g++#-3.3.1
 CFLAGS=-Wall -W
-AKP=../../akp
+AKP=../../../HW/akp
 AKPA=$(AKP)/akp.a
 OBJS=mcmtransceiver.o
 

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Enumeration;
 import java.util.Collections;
-import com.syrus.AMFICOM.util.Identifier;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Result;
