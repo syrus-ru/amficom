@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.31 2005/03/28 12:47:50 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.32 2005/03/28 13:50:14 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.31 $, $Date: 2005/03/28 12:47:50 $
+ * @version $Revision: 1.32 $, $Date: 2005/03/28 13:50:14 $
  * @module
  */
 public class ModelTraceManager
@@ -130,6 +130,14 @@ public class ModelTraceManager
 		tDY = (ThreshDY[] )thresholds.toArray(new ThreshDY[thresholds.size()]);
 	}
 
+	/**
+	 * —оздает MTM на основе модельной кривой mf и списка событий se.
+	 * Ќе измен€ет полученные mf, se; также предполагает что они
+	 * не будут измен€тьс€ извне.
+	 * @param se список событий
+	 * @param mf модельна€ крива€
+	 * @param deltaX разрешение (метры на отсчет)
+	 */
 	public ModelTraceManager(SimpleReflectogramEventImpl[] se, ModelFunction mf, double deltaX)
 	{
 		this.se = se;
