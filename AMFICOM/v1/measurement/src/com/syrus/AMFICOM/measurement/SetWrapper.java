@@ -1,5 +1,5 @@
 /*
- * $Id: SetWrapper.java,v 1.5 2005/02/03 15:01:00 arseniy Exp $
+ * $Id: SetWrapper.java,v 1.6 2005/02/03 15:31:50 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,9 +18,10 @@ import java.util.Map;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.measurement.corba.SetSort;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/03 15:01:00 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/03 15:31:50 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -32,7 +33,6 @@ public class SetWrapper implements StorableObjectWrapper {
 	public static final String	LINK_COLUMN_ME_ID				= "monitored_element_id";
 
 	public static final String	LINK_FIELD_SET_PARAMETERS		= "set_parameters";
-	public static final String	LINK_FIELD_SET_PARAMETER_ID	= "set_parameter_id";
 	public static final String	LINK_COLUMN_PARAMETER_VALUE		= "value";
 
 	private static SetWrapper	instance;
@@ -75,7 +75,7 @@ public class SetWrapper implements StorableObjectWrapper {
 				SetParameter[] parameters = set.getParameters();
 				Map values = new HashMap(parameters.length * 3);
 				for (int i = 0; i < parameters.length; i++) {
-					values.put(LINK_FIELD_SET_PARAMETER_ID + i, parameters[i].getId());
+					values.put(COLUMN_ID + i, parameters[i].getId());
 					values.put(COLUMN_TYPE_ID + i, parameters[i].getType());
 					values.put(LINK_COLUMN_PARAMETER_VALUE + i, parameters[i].getValue());
 				}
@@ -93,7 +93,7 @@ public class SetWrapper implements StorableObjectWrapper {
 		if (object instanceof Set) {
 			Set set = (Set) object;
 			if (key.equals(COLUMN_SORT))
-				set.setSort(((Integer) value).intValue());
+				set.setSort(SetSort.from_int(((Integer) value).intValue()));
 			else
 				if (key.equals(COLUMN_DESCRIPTION))
 					set.setDescription((String) value);
@@ -107,9 +107,10 @@ public class SetWrapper implements StorableObjectWrapper {
 							/* there are 3*N keys for N SetParameter */
 							SetParameter[] setParameters = new SetParameter[setParameterMap.size() / 3];
 							for (int i = 0; i < setParameters.length; i++) {
-								Identifier parameterId = (Identifier) setParameterMap.get(LINK_FIELD_SET_PARAMETER_ID + i);
+								Identifier parameterId = (Identifier) setParameterMap.get(COLUMN_ID + i);
 								ParameterType parameterType = (ParameterType) setParameterMap.get(COLUMN_TYPE_ID + i);
 								byte[] setParameterValue = (byte[]) setParameterMap.get(LINK_COLUMN_PARAMETER_VALUE + i);
+
 								setParameters[i] = new SetParameter(parameterId, parameterType, setParameterValue);
 
 							}
