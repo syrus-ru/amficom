@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.19 2004/11/25 10:44:55 max Exp $
+ * $Id: PortTypeDatabase.java,v 1.20 2004/11/26 16:05:13 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/11/25 10:44:55 $
+ * @version $Revision: 1.20 $, $Date: 2004/11/26 16:05:13 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -40,7 +40,8 @@ import com.syrus.util.database.DatabaseString;
 public class PortTypeDatabase extends StorableObjectDatabase {
 	public static final String COLUMN_CODENAME				= "codename";
 	public static final String COLUMN_DESCRIPTION			= "description";
-	public static final String COLUMN_NAME = "name";
+	public static final String COLUMN_NAME                  = "name";
+    public static final String COLUMN_SORT  = "sort";
 
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 	
@@ -63,7 +64,8 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 			columns = super.getColumns() + COMMA
 				+ COLUMN_CODENAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
-				+ COLUMN_NAME;		
+				+ COLUMN_NAME + COMMA
+                + COLUMN_SORT;
 		}
 		return columns;
 	}	
@@ -73,6 +75,7 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
+                + QUESTION + COMMA
 				+ QUESTION;		
 		}
 		return updateMultiplySQLValues;
@@ -86,7 +89,8 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 		return super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(portType.getCodename()) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(portType.getDescription()) + APOSTOPHE + COMMA
-			+ APOSTOPHE + (name != null ? name : "") + APOSTOPHE;
+			+ APOSTOPHE + (name != null ? name : "") + APOSTOPHE
+            + portType.getSort().value() + COMMA;
 	}
 	
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
@@ -99,7 +103,7 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		PortType portType = (storableObject==null)?
-				new PortType(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null):
+				new PortType(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null, 0):
 					fromStorableObject(storableObject);
 		portType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 								DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
@@ -107,7 +111,8 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 								DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 								DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
 								DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
-								DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)));
+								DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
+                                resultSet.getInt(COLUMN_SORT));
 		return portType;
 	}	
 
@@ -194,6 +199,7 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 			preparedStatement.setString(++i, portType.getCodename());
 			preparedStatement.setString(++i, portType.getDescription());
 			preparedStatement.setString(++i, portType.getName());
+            preparedStatement.setInt( ++i, portType.getSort().value());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}

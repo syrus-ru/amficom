@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.15 2004/11/25 15:59:50 max Exp $
+ * $Id: PortType.java,v 1.16 2004/11/26 16:05:13 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,10 +23,12 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+
+import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
 import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/11/25 15:59:50 $
+ * @version $Revision: 1.16 $, $Date: 2004/11/26 16:05:13 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -37,7 +39,8 @@ public class PortType extends StorableObjectType implements Characterized {
 	private String name;
 	private List characteristics;
 	private StorableObjectDatabase portTypeDatabase;
-
+	private int sort;
+    
 	public PortType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 		
@@ -56,6 +59,7 @@ public class PortType extends StorableObjectType implements Characterized {
 			  new String(ptt.codename),
 			  new String(ptt.description));
 		this.name = ptt.name;
+        this.sort = ptt.sort.value();
         try {
             this.characteristics = new ArrayList(ptt.characteristic_ids.length);
             for (int i = 0; i < ptt.characteristic_ids.length; i++)
@@ -70,7 +74,8 @@ public class PortType extends StorableObjectType implements Characterized {
 						 Identifier creatorId,
 						 String codename,
 						 String description,
-						 String name){
+						 String name,
+                         int sort){
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -79,6 +84,7 @@ public class PortType extends StorableObjectType implements Characterized {
 				codename,
 				description);
 		this.name = name;
+        this.sort = sort;
 		this.characteristics = new LinkedList();
 		this.portTypeDatabase = ConfigurationDatabaseContext.portTypeDatabase;
 	}
@@ -96,12 +102,14 @@ public class PortType extends StorableObjectType implements Characterized {
 											 Identifier creatorId,
 											 String codename,
 											 String description,
-											 String name){
+											 String name,
+                                             PortTypeSort sort){
 		return new PortType(id,
 							creatorId,
 							codename,
 							description,
-							name);
+							name,
+                            sort.value());
 	}
 	
 	public static PortType getInstance(PortType_Transferable ptt) throws CreateObjectException {
@@ -129,6 +137,7 @@ public class PortType extends StorableObjectType implements Characterized {
 										 new String(super.codename),
 										 (super.description != null) ? (new String(super.description)) : "",
 										 (this.name != null) ? (new String(this.name)) : "",
+                                         PortTypeSort.from_int(this.sort),
                                          charIds);
 	}
 	
@@ -138,7 +147,8 @@ public class PortType extends StorableObjectType implements Characterized {
 																						Identifier modifierId,
 																						String codename,
 																						String description,
-																						String name) {
+																						String name,
+                                                                                        int sort) {
 		super.setAttributes(created,
 												modified,
 												creatorId,
@@ -146,12 +156,17 @@ public class PortType extends StorableObjectType implements Characterized {
 												codename,
 												description);
 		this.name = name;
+        this.sort = sort;
 	}
 	
 	
 	public String getName(){
 		return this.name;
 	}
+    
+    public PortTypeSort getSort() {
+        return PortTypeSort.from_int(this.sort);
+    }
 	
 	public void setName(String name){
 		this.currentVersion = super.getNextVersion();
