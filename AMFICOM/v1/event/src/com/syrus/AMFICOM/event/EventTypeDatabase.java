@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.2 2005/01/21 16:24:48 arseniy Exp $
+ * $Id: EventTypeDatabase.java,v 1.3 2005/01/28 14:02:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseString;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/21 16:24:48 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/28 14:02:09 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -133,7 +133,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 			Identifier parameterTypeId;
 			while (resultSet.next()) {
 				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
-				parTyps.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
+				parTyps.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 			}
 		}
 		catch (SQLException sqle) {
@@ -213,7 +213,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 					parameterTypes = new ArrayList();
 					parameterTypesMap.put(eventTypeId, parameterTypes);
 				}
-				parameterTypes.add((ParameterType) GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
+				parameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 			}
 
 			EventType eventType;
