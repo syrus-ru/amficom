@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.54 2004/11/23 16:11:08 max Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.55 2004/11/25 10:39:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,40 +8,30 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 import java.util.Hashtable;
+import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.DatabaseException;
-import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.VersionCollisionException;
-import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
-import com.syrus.io.LRUMapSaver;
-import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2004/11/23 16:11:08 $
- * @author $Author: max $
+ * @version $Revision: 1.55 $, $Date: 2004/11/25 10:39:20 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
-public class MeasurementStorableObjectPool {
+public class MeasurementStorableObjectPool extends StorableObjectPool {
 
 	private static final int		OBJECT_POOL_MAP_SIZE			= 14;		/* Number of entities  */
 
@@ -75,15 +65,15 @@ public class MeasurementStorableObjectPool {
 
 	private static final int		TEMPORALPATTERN_OBJECT_POOL_SIZE	= 2;
 
-	/*
-	 *  Map <Short objectEntity, LRUMap objectPool>
-	 */
-	private static Map			objectPoolMap;						
 	private static MeasurementObjectLoader	mObjectLoader;
-	private static Class			cacheMapClass				= LRUMap.class;
+	private static MeasurementStorableObjectPool instance;
 
 	private MeasurementStorableObjectPool() {
 		// empty
+	}
+	
+	private MeasurementStorableObjectPool(Class cacheMapClass){
+		super(cacheMapClass);
 	}
 
 	/**
@@ -94,60 +84,68 @@ public class MeasurementStorableObjectPool {
 	 * @param size
 	 */
 	public static void init(MeasurementObjectLoader mObjectLoader1, Class cacheClass, final int size) {
+		Class clazz = null;
 		try {
-			Class clazz = Class.forName(cacheClass.getName());
-			cacheMapClass = clazz;
+			clazz = Class.forName(cacheClass.getName());
+			instance = new MeasurementStorableObjectPool(clazz);
+		} catch (ClassNotFoundException e) {
+			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default '" 
+							 + ((clazz == null) ? "null" : clazz.getName()) + "'");
 		}
-		catch (ClassNotFoundException e) {
-			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default '" + cacheMapClass.getName() + "'");
-		}
-
 		init(mObjectLoader1, size);
 	}
 
 	public static void init(MeasurementObjectLoader mObjectLoader1, final int size) {
-		objectPoolMap = Collections.synchronizedMap(new Hashtable(size));
+		if (instance == null)
+			instance = new MeasurementStorableObjectPool();
+		instance.objectPoolMap = Collections.synchronizedMap(new Hashtable(size));
 
 		mObjectLoader = mObjectLoader1;
 
-		addObjectPool(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, size);
-		addObjectPool(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE, size);
-		addObjectPool(ObjectEntities.ANALYSISTYPE_ENTITY_CODE, size);
-		addObjectPool(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.ANALYSISTYPE_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, size);
 
-		addObjectPool(ObjectEntities.SET_ENTITY_CODE, size);
-		addObjectPool(ObjectEntities.MODELING_ENTITY_CODE, size);
-		addObjectPool(ObjectEntities.MS_ENTITY_CODE, size);
-		addObjectPool(ObjectEntities.MEASUREMENT_ENTITY_CODE, size);
-		addObjectPool(ObjectEntities.ANALYSIS_ENTITY_CODE, size);
-		addObjectPool(ObjectEntities.EVALUATION_ENTITY_CODE, size);		
-		addObjectPool(ObjectEntities.TEST_ENTITY_CODE, size);
-		addObjectPool(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE, size);
-		addObjectPool(ObjectEntities.RESULT_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.SET_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.MODELING_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.MS_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.MEASUREMENT_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.ANALYSIS_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.EVALUATION_ENTITY_CODE, size);		
+		instance.addObjectPool(ObjectEntities.TEST_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.RESULT_ENTITY_CODE, size);
 		
-		polulatePools();
+		instance.polulatePools();
 	}
 
 	public static void init(MeasurementObjectLoader mObjectLoader1) {
-		objectPoolMap = Collections.synchronizedMap(new Hashtable(OBJECT_POOL_MAP_SIZE));
+		if (instance == null)
+			instance = new MeasurementStorableObjectPool();
+		
+		instance.objectPoolMap = Collections.synchronizedMap(new Hashtable(OBJECT_POOL_MAP_SIZE));
 
 		mObjectLoader = mObjectLoader1;
 
-		addObjectPool(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, PARAMETERTYPE_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE, MEASUREMENTTYPE_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.ANALYSISTYPE_ENTITY_CODE, ANALYSISTYPE_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, EVALUATIONTYPE_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, PARAMETERTYPE_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE, MEASUREMENTTYPE_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.ANALYSISTYPE_ENTITY_CODE, ANALYSISTYPE_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, EVALUATIONTYPE_OBJECT_POOL_SIZE);
 
-		addObjectPool(ObjectEntities.SET_ENTITY_CODE, SET_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.MODELING_ENTITY_CODE, MODELING_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.MS_ENTITY_CODE, MS_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.MEASUREMENT_ENTITY_CODE, MEASUREMENT_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.ANALYSIS_ENTITY_CODE, ANALYSIS_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.EVALUATION_ENTITY_CODE, EVALUATION_OBJECT_POOL_SIZE);		
-		addObjectPool(ObjectEntities.TEST_ENTITY_CODE, TEST_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE, TEMPORALPATTERN_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.RESULT_ENTITY_CODE, RESULT_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.SET_ENTITY_CODE, SET_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.MODELING_ENTITY_CODE, MODELING_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.MS_ENTITY_CODE, MS_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.MEASUREMENT_ENTITY_CODE, MEASUREMENT_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.ANALYSIS_ENTITY_CODE, ANALYSIS_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.EVALUATION_ENTITY_CODE, EVALUATION_OBJECT_POOL_SIZE);		
+		instance.addObjectPool(ObjectEntities.TEST_ENTITY_CODE, TEST_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE, TEMPORALPATTERN_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.RESULT_ENTITY_CODE, RESULT_OBJECT_POOL_SIZE);
 		
+<<<<<<< MeasurementStorableObjectPool.java
+		instance.polulatePools();
+=======
 		polulatePools();
 	}
 
@@ -190,222 +188,36 @@ public class MeasurementStorableObjectPool {
 			throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName()
 					+ " InvocationTargetException " + e.getMessage());
 		}
+>>>>>>> 1.54
 	}
 	
-	private static void polulatePools(){
-		try{
-			for (Iterator it = objectPoolMap.keySet().iterator(); it.hasNext();) {
-				short objectEntityCode = ((Short) it.next()).shortValue();
-				List keys = LRUMapSaver.load(ObjectEntities.codeToString(objectEntityCode));
-		        if (keys != null)
-		        	getStorableObjects(keys, true);				
-			}
-		} catch (CommunicationException e) {
-            Log.errorException(e);
-            Log.errorMessage("MeasurementStorableObjectPool.polulatePools | Error: " + e.getMessage());
-        } catch (DatabaseException e) {
-            Log.errorException(e);
-            Log.errorMessage("MeasurementStorableObjectPool.polulatePools | Error: " + e.getMessage());
-        }
-	}
-    
     public static void refresh() throws DatabaseException, CommunicationException {        
-        try {  
-        	Log.debugMessage("MeasurementStorableObjectPool.refresh | trying to refresh Pool...", Log.DEBUGLEVEL05);
-            java.util.Set storableObjects = new HashSet();
-            java.util.Set returnedStorableObjectsIds = new HashSet();
-            java.util.Set entityCodes = objectPoolMap.keySet();
-            
-            for (Iterator it = entityCodes.iterator(); it.hasNext();) {
-                Short entityCode = (Short) it.next();
-                LRUMap lruMap = (LRUMap) objectPoolMap.get(entityCode);
-                
-                for (Iterator it2 = lruMap.iterator(); it2.hasNext();) {
-                    storableObjects.add(it2.next());                
-                }
-                if (storableObjects == null || storableObjects.isEmpty()) {
-                	Log.debugMessage("MeasurementStorableObjectPool.refresh | LRUMap for '" + ObjectEntities.codeToString(entityCode.shortValue())+ "' entity has no elements",Log.DEBUGLEVEL08);
-                    continue;
-                }  
-                Log.debugMessage("MeasurementStorableObjectPool.refresh | try refresh LRUMap for '" + ObjectEntities.codeToString(entityCode.shortValue())+ "' entity",Log.DEBUGLEVEL08);
-                returnedStorableObjectsIds = mObjectLoader.refresh(storableObjects);
-                
-                getStorableObjects(new ArrayList(returnedStorableObjectsIds), true);        
-            }
-        } catch (DatabaseException e) {
-            Log.errorMessage("MeasurementStorableObjectPool.refresh | DatabaseException: " + e.getMessage());
-            throw new DatabaseException("MeasurementStorableObjectPool.refresh", e);
-        } catch (CommunicationException e) {
-            Log.errorMessage("MeasurementStorableObjectPool.refresh | CommunicationException: " + e.getMessage());
-            throw new CommunicationException("MeasurementStorableObjectPool.refresh", e);
-        }
+    	instance.refreshImpl();
+    }
+    
+    protected java.util.Set refreshStorableObjects(java.util.Set storableObjects) throws CommunicationException, DatabaseException{
+    	return mObjectLoader.refresh(storableObjects);
     }
 
 	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader)
 			throws DatabaseException, CommunicationException {
-		if (objectId != null) {
-			short objectEntityCode = objectId.getMajor();
-			LRUMap objectPool = (LRUMap) objectPoolMap.get(new Short(objectEntityCode));
-			if (objectPool != null) {
-				StorableObject storableObject = (StorableObject) objectPool.get(objectId);
-				if (storableObject != null)
-					return storableObject;
-				else {
-					if (useLoader) {
-						storableObject = loadStorableObject(objectId);
-						if (storableObject != null)
-							try {
-								putStorableObject(storableObject);
-							}
-							catch (IllegalObjectEntityException ioee) {
-								Log.errorMessage("MeasurementStorableObjectPool.getStorableObject | Cannot load '" + objectId.getIdentifierString() + "'");
-								Log.errorException(ioee);
-							}
-					}
-					return storableObject;
-				}
-			}
-			else {
-				Log.errorMessage("MeasurementStorableObjectPool.getStorableObject | Cannot find object pool for objectId: '"
-								+ objectId.toString()
-								+ "' entity code: '"
-								+ ObjectEntities.codeToString(objectEntityCode) + "'");
-				return null;
-			}
-		}
-		else {
-			Log.errorMessage("MeasurementStorableObjectPool.getStorableObject | NULL identifier supplied");
-			return null;
-		}
+		return instance.getStorableObjectImpl(objectId, useLoader);
 	}
 
 	public static List getStorableObjects(List objectIds, boolean useLoader)
 			throws DatabaseException, CommunicationException {
-		List list = null;
-		Map objectQueueMap = null;
-		if (objectIds != null) {
-			for (Iterator it = objectIds.iterator(); it.hasNext();) {
-				Identifier objectId = (Identifier) it.next();
-				short objectEntityCode = objectId.getMajor();
-				Short entityCode = new Short(objectEntityCode);
-				LRUMap objectPool = (LRUMap) objectPoolMap.get(entityCode);
-				StorableObject storableObject = null;
-				if (objectPool != null) {
-					storableObject = (StorableObject) objectPool.get(objectId);
-					if (storableObject != null) {
-						if (list == null)
-							list = new LinkedList();
-						list.add(storableObject);
-					}				
-					if (storableObject == null && useLoader) {
-						if (objectQueueMap == null)
-							objectQueueMap = new HashMap();
-						List objectQueue = (List) objectQueueMap.get(entityCode);
-						if (objectQueue == null) {
-							objectQueue = new LinkedList();
-							objectQueueMap.put(entityCode, objectQueue);
-						}
-						objectQueue.add(objectId);						
-					}
-				} else {
-					Log.errorMessage("MeasurementStorableObjectPool.getStorableObjects | Cannot find object pool for objectId: '"
-							+ objectId.toString()
-							+ "' entity code: '"
-							+ ObjectEntities.codeToString(objectEntityCode)
-							+ "'");
-				}
-			}
-
-		} else {
-			Log.errorMessage("MeasurementStorableObjectPool.getStorableObjects | NULL list of identifiers supplied");
-		}
-
-		if (objectQueueMap != null) {
-			if (list == null)
-				list = new LinkedList();
-			for (Iterator it = objectQueueMap.keySet().iterator(); it.hasNext();) {
-				Short entityCode = (Short) it.next();
-				List objectQueue = (List) objectQueueMap.get(entityCode);
-				List storableObjects = loadStorableObjects(entityCode, objectQueue);
-				if (storableObjects != null) {
-					try {
-						for (Iterator iter = storableObjects.iterator(); iter.hasNext();) {
-							StorableObject storableObject = (StorableObject) iter.next();
-							putStorableObject(storableObject);
-							list.add(storableObject);
-						}
-					}
-					catch (IllegalObjectEntityException ioee) {
-						Log.errorException(ioee);
-					}
-				}
-			}
-		}
-
-		if (list == null)
-			list = Collections.EMPTY_LIST;
-
-		return list;
+		return instance.getStorableObjectsImpl(objectIds, useLoader);
 	}
 
 	public static List getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
-		return getStorableObjectsByConditionButIds(null, condition, useLoader);
+		return instance.getStorableObjectsByConditionImpl(condition, useLoader);
 	}
 
 	public static List getStorableObjectsByConditionButIds(List ids, StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
-		List list = null;
-		LRUMap objectPool = (LRUMap) objectPoolMap.get(condition.getEntityCode());
-		if (objectPool != null) {
-			list = new LinkedList();
-			for (Iterator it = objectPool.iterator(); it.hasNext();) {
-				StorableObject storableObject = (StorableObject) it.next();
-				if (( ids == null || !ids.contains(storableObject.getId())) && (condition.isConditionTrue(storableObject)))
-					list.add(storableObject);
-			}
-
-			List loadedList = null;
-
-			if (useLoader) {
-				if (condition.isNeedMore(list)) {
-					List idsList = new ArrayList(list.size());
-					for (Iterator iter = list.iterator(); iter.hasNext();) {
-						StorableObject storableObject = (StorableObject) iter.next();
-						idsList.add(storableObject.getId());					
-					}
-
-					if (ids != null) {
-						for (Iterator iter = ids.iterator(); iter.hasNext();) {
-							Identifier id = (Identifier) iter.next();
-							idsList.add(id);					
-						}
-					}
-
-					loadedList = loadStorableObjectsButIds(condition, idsList);
-				}
-			}
-
-			for (Iterator it = list.iterator(); it.hasNext();) {
-				StorableObject storableObject = (StorableObject) it.next();
-				objectPool.get(storableObject);				
-			}
-
-			if (loadedList!=null) {
-				for (Iterator it = loadedList.iterator(); it.hasNext();) {
-					StorableObject storableObject = (StorableObject) it.next();
-					objectPool.put(storableObject.getId(), storableObject);
-					list.add(storableObject);
-				}
-			}
-
-		}
-
-		if (list == null)
-			list = Collections.EMPTY_LIST;
-
-		return list;
+		return instance.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
 	}
 
-	private static StorableObject loadStorableObject(Identifier objectId)
+	protected StorableObject loadStorableObject(Identifier objectId)
 			throws DatabaseException, CommunicationException {
 		StorableObject storableObject;
 		switch (objectId.getMajor()) {
@@ -455,7 +267,7 @@ public class MeasurementStorableObjectPool {
 		return storableObject;
 	}
 
-	private static List loadStorableObjects(Short entityCode, List ids)
+	protected List loadStorableObjects(Short entityCode, List ids)
 			throws DatabaseException, CommunicationException {
 		List storableObjects;
 		switch (entityCode.shortValue()) {
@@ -505,7 +317,7 @@ public class MeasurementStorableObjectPool {
 		return storableObjects;
 	}
 
-	private static List loadStorableObjectsButIds(StorableObjectCondition condition, List ids)
+	protected List loadStorableObjectsButIds(StorableObjectCondition condition, List ids)
 			throws DatabaseException, CommunicationException {
 		List loadedList = null;
 		short entityCode = condition.getEntityCode().shortValue();
@@ -556,60 +368,9 @@ public class MeasurementStorableObjectPool {
 		return loadedList;
 	}
 
-	private static void saveStorableObjects(short code, List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException{
+	protected void saveStorableObjects(short code, List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException{
 		if (!list.isEmpty()) {
-			boolean alone = (list.size()==1);
-
-			// calculate dependencies to save
-			Map dependenciesMap = new HashMap();
-			for (Iterator it = list.iterator(); it.hasNext();) {
-				StorableObject storableObject = (StorableObject) it.next();
-				Log.debugMessage("MeasurementStorableObjectPool.saveStorableObjects | calculate dependencies for '" + storableObject.getId() + "'", Log.DEBUGLEVEL08);
-				List dependencies = storableObject.getDependencies();
-				for (Iterator depIt = dependencies.iterator(); depIt.hasNext();) {
-					Object depItObj = depIt.next();
-					Identifier id;
-					StorableObject stObj;
-					if (depItObj instanceof StorableObject) {
-						stObj = (StorableObject)depItObj;
-						id = stObj.getId();
-					}
-					else
-						if (depItObj instanceof Identifier) {
-							id = (Identifier) depItObj;
-							stObj = getStorableObject(id, true);
-						}
-						else {
-							throw new IllegalDataException("MeasurementStorableObjectPool.saveStorableObjects | Illegal dependencies Object: " + depItObj.getClass().getName());
-						}
-
-					Short major = new Short(id.getMajor());
-					List depList = (List)dependenciesMap.get(major);
-					if (depList == null){
-						depList = new LinkedList();
-						dependenciesMap.put(major, depList);
-					}
-
-					if (stObj != null && stObj.isChanged() && !depList.contains(stObj))
-						depList.add(stObj);
-				}
-			}
-
-			// recursieve save dependencies
-			for (Iterator it = dependenciesMap.keySet().iterator(); it.hasNext();) {
-				Short major = (Short) it.next();
-				List depList = (List)dependenciesMap.get(major);
-				if (depList != null && !depList.isEmpty()){
-					Log.debugMessage("MeasurementStorableObjectPool.saveStorableObjects | recursieve save '" 
-									 + ObjectEntities.codeToString(major.shortValue()) + "'", Log.DEBUGLEVEL08);
-					saveStorableObjects(major.shortValue(), depList, force);
-				}
-			}
-
-			for (Iterator it = list.iterator(); it.hasNext();) {
-				StorableObject storableObject = (StorableObject) it.next();
-				Log.debugMessage("MeasurementStorableObjectPool.saveStorableObjects | save '" + storableObject.getId() + "'", Log.DEBUGLEVEL08);
-			}
+			boolean alone = (list.size()==1);			
 
 			switch (code) {
 				case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
@@ -693,97 +454,43 @@ public class MeasurementStorableObjectPool {
 
 	public static StorableObject putStorableObject(StorableObject storableObject)
 			throws IllegalObjectEntityException {
-		StorableObject object = null;
-		boolean cache = true;
-		Identifier objectId = storableObject.getId();
-		short entityCode = objectId.getMajor();
-
-		// some entities such as processing and scheduled test cannot be
-		// cached
-		switch (entityCode) {
-			case ObjectEntities.TEST_ENTITY_CODE:
-				{
-				/**
-				 * FIXME how to cache ?
-				 */
-//					Test test = (Test) storableObject;
-//					TestStatus status = test.getStatus();
-//					cache = (status.value() == TestStatus._TEST_STATUS_ABORTED)
-//							|| (status.value() == TestStatus._TEST_STATUS_ABORTED);
-				}
-				break;
-			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
-				{
-					Measurement measurement = (Measurement)storableObject;
-					MeasurementStatus status = measurement.getStatus();
-					cache = ((status.value() == MeasurementStatus._MEASUREMENT_STATUS_ABORTED) ||  
-							(status.value() == MeasurementStatus._MEASUREMENT_STATUS_COMPLETED));
-				}
-				break;
-			default:
-				cache = true;
-				break;
-		}
-		if (cache) {
-			LRUMap objectPool = (LRUMap) objectPoolMap.get(new Short(objectId.getMajor()));
-			if (objectPool != null) {
-				object = (StorableObject) objectPool.put(objectId, storableObject);
-			}
-			else {
-				throw new IllegalObjectEntityException(
-									"MeasurementStorableObjectPool.putStorableObject | Illegal object entity: '"
-											+ ObjectEntities.codeToString(objectId.getMajor())
-											+ "'",
-									IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
-			}
-		}
-		return object;
+		return instance.putStorableObjectImpl(storableObject);
 	}
 
 	public static void flush(boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException{		 
-		List list = new LinkedList();
-		for (Iterator it = objectPoolMap.keySet().iterator(); it.hasNext();) {
-			Short entityCode = (Short) it.next();
-			LRUMap objectPool = (LRUMap) objectPoolMap.get(entityCode);
-			if (objectPool != null){
-				list.clear();
-				for(Iterator poolIt = objectPool.iterator();poolIt.hasNext();) {
-					StorableObject storableObject = (StorableObject)poolIt.next();
-					if (storableObject.isChanged()) {
-						if (!list.contains(storableObject)) {
-							list.add(storableObject);
-							Log.debugMessage("'" + storableObject.getId() + "' is changed", Log.DEBUGLEVEL10);
-						}
-					}
-				} 
-				short code = entityCode.shortValue();
-				saveStorableObjects(code, list, force);
-
-			}
-			else {
-				Log.errorMessage("MeasurementStorableObjectPool.flush | Cannot find object pool for entity code: '"
-						+ ObjectEntities.codeToString(entityCode.shortValue())
-						+ "'");
-			}
-		}
+		instance.flushImpl(force);
 	}
 
 	public static void cleanChangedStorableObject(Short entityCode) {
-		LRUMap objectPool = (LRUMap) objectPoolMap.get(entityCode);
-		if (objectPool != null) {
-			for(Iterator poolIt = objectPool.iterator();poolIt.hasNext();) {
-				StorableObject storableObject = (StorableObject)poolIt.next();
-				if (storableObject.isChanged())
-					poolIt.remove();				
-			}
-		}
+		instance.cleanChangedStorableObjectImpl(entityCode);
 	}
 
 	public static void cleanChangedStorableObjects() {
-		for (Iterator it = objectPoolMap.keySet().iterator(); it.hasNext();) {
-			Short entityCode = (Short) it.next();
-			cleanChangedStorableObject(entityCode);
-		}
+		instance.cleanChangedStorableObjectsImpl();
+	}
+	
+	protected void deleteStorableObject(Identifier id) throws DatabaseException, CommunicationException {
+		try {
+            mObjectLoader.delete(id);
+        } catch (DatabaseException e) {
+            Log.errorMessage("MeasurementStorableObjectPool.deleteStorableObject | DatabaseException: " + e.getMessage());
+            throw new DatabaseException("MeasurementStorableObjectPool.deleteStorableObject", e);
+        } catch (CommunicationException e) {
+            Log.errorMessage("MeasurementStorableObjectPool.deleteStorableObject | CommunicationException: " + e.getMessage());
+            throw new CommunicationException("MeasurementStorableObjectPool.deleteStorableObject", e);
+        }
+	}
+	
+	protected void deleteStorableObjects(List ids) throws DatabaseException, CommunicationException {
+		try {
+			mObjectLoader.delete(ids);
+        } catch (DatabaseException e) {
+            Log.errorMessage("MeasurementStorableObjectPool.deleteStorableObjects | DatabaseException: " + e.getMessage());
+            throw new DatabaseException("MeasurementStorableObjectPool.deleteStorableObjects", e);
+        } catch (CommunicationException e) {
+            Log.errorMessage("MeasurementStorableObjectPool.deleteStorableObjects | CommunicationException: " + e.getMessage());
+            throw new CommunicationException("MeasurementStorableObjectPool.deleteStorableObjects", e);
+        }
 	}
 	
 	public static void delete(Identifier id) throws DatabaseException, CommunicationException {
