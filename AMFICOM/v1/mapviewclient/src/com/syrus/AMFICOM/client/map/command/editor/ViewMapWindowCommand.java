@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapWindowCommand.java,v 1.7 2004/12/28 17:35:12 krupenn Exp $
+ * $Id: ViewMapWindowCommand.java,v 1.8 2004/12/29 19:05:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/12/28 17:35:12 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/29 19:05:20 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -143,7 +143,7 @@ public class ViewMapWindowCommand extends VoidCommand
 		else
 			return;
 
-		MapViewNewCommand mvnc = new MapViewNewCommand(null, aContext);
+		MapViewNewCommand mvnc = new MapViewNewCommand(map, aContext);
 		mvnc.execute();
 		if(mvnc.getResult() == Command.RESULT_OK)
 		{

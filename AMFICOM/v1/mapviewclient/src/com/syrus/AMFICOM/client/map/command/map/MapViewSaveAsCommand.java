@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewSaveAsCommand.java,v 1.8 2004/12/28 17:35:12 krupenn Exp $
+ * $Id: MapViewSaveAsCommand.java,v 1.9 2004/12/29 19:05:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,9 +24,11 @@ import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
+import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
@@ -41,7 +43,7 @@ import java.awt.Toolkit;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/12/28 17:35:12 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/29 19:05:20 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -70,9 +72,14 @@ public class MapViewSaveAsCommand extends VoidCommand
 		if(dataSource == null)
 			return;
 			
+		AccessIdentifier_Transferable ait = 
+			aContext.getSessionInterface().getAccessIdentifier();
+		Identifier creatorId = new Identifier(ait.user_id);
+		Identifier domainId = new Identifier(ait.domain_id);
+
 		try
 		{
-			newMapView = new MapView(null, mapView.getMap());
+			newMapView = new MapView(creatorId, domainId, mapView.getMap());
 
 			MapViewStorableObjectPool.putStorableObject(newMapView.getMapViewStorable());
 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapView.java,v 1.28 2004/12/28 17:35:13 krupenn Exp $
+ * $Id: MapView.java,v 1.29 2004/12/29 19:05:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -60,7 +60,7 @@ import com.syrus.AMFICOM.Client.Map.mapview.UnboundNode;
  * 
  * 
  * 
- * @version $Revision: 1.28 $, $Date: 2004/12/28 17:35:13 $
+ * @version $Revision: 1.29 $, $Date: 2004/12/29 19:05:20 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -85,19 +85,14 @@ public final class MapView
 	 * 
 	 * @param logical comments
 	 */
-	public MapView(LogicalNetLayer logical, Map map)
+	public MapView(Identifier creatorId, Identifier domainId, Map map)
 		throws CreateObjectException
 	{
 		Environment.log(
 				Environment.LOG_LEVEL_FINER, 
 				"constructor call", 
 				getClass().getName(), 
-				"MapView(" + logical + ")");
-
-		AccessIdentifier_Transferable ait = 
-			logical.getContext().getSessionInterface().getAccessIdentifier();
-		Identifier creatorId = new Identifier(ait.user_id);
-		Identifier domainId =  new Identifier(ait.domain_id);
+				"MapView(" + creatorId + ", " + domainId + ", " + map + ")");
 
 		mapViewStorable = com.syrus.AMFICOM.mapview.MapView.createInstance(
 			creatorId,
@@ -110,7 +105,7 @@ public final class MapView
 			1.0D,
 			map);
 
-		setLogicalNetLayer(logical);
+		setLogicalNetLayer(null);
 	}
 
 	/**

@@ -64,7 +64,7 @@ public class MapApplicationModel extends ApplicationModel
 		super.add(OPERATION_MOVE_FIXED);
 
 	}
-
+/*
 	private static DataSourceInterface dataSource = null;
 	
 	public DataSourceInterface getDataSource(final SessionInterface session) 
@@ -85,4 +85,5 @@ public class MapApplicationModel extends ApplicationModel
 			}
         return this.dataSource;
 	}
+*/
 }

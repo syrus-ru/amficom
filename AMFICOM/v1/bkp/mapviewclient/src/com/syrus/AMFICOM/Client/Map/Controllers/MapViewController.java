@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.1 2004/12/24 15:42:12 krupenn Exp $
+ * $Id: MapViewController.java,v 1.2 2004/12/29 19:05:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,8 +14,6 @@ import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
-
-import com.syrus.AMFICOM.Client.Resource.Map.*;
 
 import java.util.HashMap;
 import com.syrus.AMFICOM.map.TopologicalNode;
@@ -45,7 +43,7 @@ import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/12/24 15:42:12 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/29 19:05:20 $
  * @module
  * @author $Author: krupenn $
  * @see

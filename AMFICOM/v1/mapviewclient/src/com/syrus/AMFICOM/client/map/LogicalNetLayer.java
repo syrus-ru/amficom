@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.30 2004/12/28 17:35:12 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.31 2004/12/29 19:05:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -102,7 +102,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.30 $, $Date: 2004/12/28 17:35:12 $
+ * @version $Revision: 1.31 $, $Date: 2004/12/29 19:05:20 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -1712,7 +1712,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			return SiteNodeType.createInstance(
 				this.getMapView().getMap().getCreatorId(),
 				codename,
-				LangModelMap.getString(codename + "Type"),
+				LangModelMap.getString(codename),
 				"",
 				getImageId(codename, com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController.getImageFileName(codename)),
 				true);
@@ -1756,7 +1756,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			PhysicalLinkType pType = PhysicalLinkType.createInstance(
 				this.getMapView().getMap().getCreatorId(),
 				codename,
-				LangModelMap.getString(codename + "Type"),
+				LangModelMap.getString(codename),
 				"",
 				com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController.getBindDimension(codename));
 

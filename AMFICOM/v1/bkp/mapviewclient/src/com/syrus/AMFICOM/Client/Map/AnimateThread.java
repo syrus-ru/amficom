@@ -1,5 +1,5 @@
 /**
- * $Id: AnimateThread.java,v 1.2 2004/11/01 15:40:10 krupenn Exp $
+ * $Id: AnimateThread.java,v 1.3 2004/12/29 19:05:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,8 +9,6 @@
 */
 
 package com.syrus.AMFICOM.Client.Map;
-
-import com.syrus.AMFICOM.Client.Resource.Map.*;
 
 import java.util.*;
 
@@ -23,7 +21,7 @@ import java.util.*;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/11/01 15:40:10 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/29 19:05:20 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
