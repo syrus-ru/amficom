@@ -1,5 +1,5 @@
 /*
- * $Id: ServerMain.java,v 1.1.2.1 2004/10/12 13:12:59 bass Exp $
+ * $Id: ServerMain.java,v 1.1.2.2 2004/10/20 10:51:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,9 @@ import com.syrus.AMFICOM.corba.portable.reflect.*;
 import com.syrus.AMFICOM.server.measurement.AmficomRtuImpl;
 import com.syrus.AMFICOM.server.object.AmficomImpl;
 import com.syrus.util.corba.JavaSoftORBUtil;
-import java.io.IOException;
+import java.io.*;
 import java.net.InetAddress;
+import java.util.Properties;
 import org.omg.CORBA.*;
 import org.omg.CosNaming.*;
 import org.omg.CosNaming.NamingContextPackage.AlreadyBound;
@@ -22,14 +23,14 @@ import org.omg.PortableServer.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.1.2.1 $, $Date: 2004/10/12 13:12:59 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/10/20 10:51:42 $
  * @module corbaportable_v1
  */
 final class ServerMain {
 	private ServerMain() {
 	}
 
-	public static void main(String[] args) throws IOException, UserException {
+	public static void main(String args[]) throws IOException, UserException {
 		ORB orb = JavaSoftORBUtil.getInstance().getORB();
 
 		POA rootPOA = POAHelper.narrow(
@@ -38,7 +39,16 @@ final class ServerMain {
 		NamingContextExt rootNamingCtx = NamingContextExtHelper.
 			narrow(orb.resolve_initial_references("NameService"));
 			
-		final String hostName = InetAddress.getLocalHost().getCanonicalHostName().replaceAll("\\.", "_");
+		Properties properties = new Properties();
+		try {
+			properties.load(new FileInputStream("server.properties"));
+		} catch (FileNotFoundException fnfe) {
+			;
+		}
+		final String hostName = properties.getProperty(
+			"hostName",
+			InetAddress.getLocalHost().getCanonicalHostName())
+			.replaceAll("\\.", "_");
 		
 		NameComponent childPath[] = rootNamingCtx.to_name(hostName);
 		
@@ -149,6 +159,10 @@ final class ServerMain {
 		childNamingCtx.unbind(amficomPath);
 		childNamingCtx.unbind(amficomRtuPath);
 
-		rootNamingCtx.unbind(childPath);
+		/*
+		 * Do not unbind as this path may be shared with other servers
+		 * (say, CmServer).
+		 */
+//		rootNamingCtx.unbind(childPath);
 	}
 }
