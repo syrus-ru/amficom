@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerTestCase.java,v 1.4 2004/09/22 08:05:29 max Exp $
+ * $Id: CMServerTestCase.java,v 1.5 2004/09/22 08:08:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,8 +43,8 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/09/22 08:05:29 $
- * @author $Author: max $
+ * @version $Revision: 1.5 $, $Date: 2004/09/22 08:08:06 $
+ * @author $Author: bob $
  * @module module
  */
 public class CMServerTestCase extends TestCase {
@@ -117,6 +117,8 @@ public class CMServerTestCase extends TestCase {
 			accessIdentifier_Transferable.domain_id = (Identifier_Transferable) domainId.getTransferable();
 			accessIdentifier_Transferable.user_id = (Identifier_Transferable) id.getTransferable();
 			accessIdentifier_Transferable.session_id = (Identifier_Transferable) id.getTransferable();
+			
+			ClientMeasurementObjectLoader.setAccessIdentifierTransferable(accessIdentifier_Transferable);
 
 		} catch (UserException ue) {
 			ue.printStackTrace();
@@ -160,11 +162,8 @@ public class CMServerTestCase extends TestCase {
 		long time5 = System.currentTimeMillis();
 		System.out.println("transmit " + domain_Transferables3.length + " domain(s) by ids for "
 				+ (time5 - time4) + " ms");
-	}
-    
-    public testTransmitDomains() {
-    	
-    }
+	}  
+
 
 	public void _testTransmitMeasurementSetup() throws AMFICOMRemoteException {
 		long time0 = System.currentTimeMillis();
