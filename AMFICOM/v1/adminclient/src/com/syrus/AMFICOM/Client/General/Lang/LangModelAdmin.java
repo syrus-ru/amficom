@@ -10,13 +10,12 @@ public class LangModelAdmin {
 																	.getBundle(BUNDLE_NAME);
 
 
-	public LangModelAdmin() {
-		//symbols = new DateFormatSymbols(locale);
+	protected LangModelAdmin() 
+	{
 	}
 
 	public static String getString(String keyName)
 	{
-		//System.out.println("keyName:" + keyName);
 		keyName = keyName.replaceAll(" ", "_");
 		String string = null;
 		try
@@ -33,10 +32,7 @@ public class LangModelAdmin {
 			{
 				try
 				{
-					throw new Exception("key '"
-											  + keyName + "Text"
-											  + "' "
-											  + "not found");
+					throw new Exception("key '" + keyName + "' not found");
 				}
 				catch (Exception exc)
 				{
