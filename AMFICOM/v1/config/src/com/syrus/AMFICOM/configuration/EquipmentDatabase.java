@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.17 2004/08/11 12:37:30 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.18 2004/08/11 16:45:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/08/11 12:37:30 $
- * @author $Author: bob $
+ * @version $Revision: 1.18 $, $Date: 2004/08/11 16:45:02 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -135,9 +135,9 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 									*/
 								  new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),
 								  
-								  (equipmentTypeIdCode != null)?((EquipmentType)ConfigurationObjectTypePool.getObjectType(new Identifier(equipmentTypeIdCode))):null,
-								  (name != null)?name:"",
-								  (description != null)?description:"",
+								  (equipmentTypeIdCode != null) ? (EquipmentType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(equipmentTypeIdCode), true) : null,
+								  (name != null) ? name : "",
+								  (description != null) ? description : "",
 								  /**
 									* @todo when change DB Identifier model ,change getString() to getLong()
 									*/

@@ -1,12 +1,12 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.1 2004/08/11 15:08:30 arseniy Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.2 2004/08/11 16:45:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 
-package com.syrus.AMFICOM.measurement;
+package com.syrus.AMFICOM.configuration;
 
 import java.util.Collections;
 import java.util.Map;
@@ -21,53 +21,60 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/11 15:08:30 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/11 16:45:02 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
 
-public class MeasurementStorableObjectPool {
-	private static final int OBJECT_POOL_MAP_SIZE = 14;	/*	Number of entities*/
+public class ConfigurationStorableObjectPool {
+	private static final int OBJECT_POOL_MAP_SIZE = 16;	/*	Number of entities*/
 
-	private static final int SET_OBJECT_POOL_SIZE = 4;
-	private static final int SETPARAMETER_OBJECT_POOL_SIZE = 4;
-	private static final int MS_OBJECT_POOL_SIZE = 4;
-	private static final int MEASUREMENT_OBJECT_POOL_SIZE = 4;
-	private static final int ANALYSIS_OBJECT_POOL_SIZE = 4;
-	private static final int EVALUATION_OBJECT_POOL_SIZE = 4;
-	private static final int TEST_OBJECT_POOL_SIZE = 2;
-	private static final int RESULT_OBJECT_POOL_SIZE = 4;
-	private static final int RESULTPARAMETER_OBJECT_POOL_SIZE = 4;
-	private static final int TEMPORALPATTERN_OBJECT_POOL_SIZE = 2;
-	private static final int PARAMETERTYPE_OBJECT_POOL_SIZE = 9;
-	private static final int MEASUREMENTTYPE_OBJECT_POOL_SIZE = 1;
-	private static final int ANALYSISTYPE_OBJECT_POOL_SIZE = 1;
-	private static final int EVALUATIONTYPE_OBJECT_POOL_SIZE = 1;
+	private static final int CHARACTERISTICTYPE_OBJECT_POOL_SIZE = 9;
+	private static final int EQUIPMENTTYPE_OBJECT_POOL_SIZE = 1;
+	private static final int PORTTYPE_OBJECT_POOL_SIZE = 1;
+	private static final int MEASUREMENTPORTTYPE_OBJECT_POOL_SIZE = 1;
+
+	private static final int CHARACTERISTIC_OBJECT_POOL_SIZE = 4;
+	private static final int PERMATTR_OBJECT_POOL_SIZE = 4;
+	private static final int USER_OBJECT_POOL_SIZE = 4;
+	private static final int DOMAIN_OBJECT_POOL_SIZE = 4;
+	private static final int SERVER_OBJECT_POOL_SIZE = 4;
+	private static final int MCM_OBJECT_POOL_SIZE = 4;
+	private static final int EQUIPMENT_OBJECT_POOL_SIZE = 2;
+	private static final int PORT_OBJECT_POOL_SIZE = 2;
+	private static final int TRANSPATH_OBJECT_POOL_SIZE = 4;
+	private static final int KIS_OBJECT_POOL_SIZE = 1;
+	private static final int MEASUREMENTPORT_OBJECT_POOL_SIZE = 2;
+	private static final int ME_OBJECT_POOL_SIZE = 2;
 
 	private static Map objectPoolMap; /*	Map <String objectEntity, LRUMap objectPool>	*/
-	private static MeasurementObjectLoader mObjectLoader;
+	private static ConfigurationObjectLoader cObjectLoader;
 
-	private MeasurementStorableObjectPool() {
+	private ConfigurationStorableObjectPool() {
 	}
 
-	public static void init(MeasurementObjectLoader mObjectLoader1) {
+	public static void init(ConfigurationObjectLoader cObjectLoader1) {
 		objectPoolMap = Collections.synchronizedMap(new Hashtable(OBJECT_POOL_MAP_SIZE));
 
-		addObjectPool(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, PARAMETERTYPE_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE, MEASUREMENTTYPE_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.ANALYSISTYPE_ENTITY_CODE, ANALYSISTYPE_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, EVALUATIONTYPE_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, CHARACTERISTICTYPE_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE, EQUIPMENTTYPE_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.PORTTYPE_ENTITY_CODE, PORTTYPE_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE, MEASUREMENTPORTTYPE_OBJECT_POOL_SIZE);
 
-		addObjectPool(ObjectEntities.SET_ENTITY_CODE, SET_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.MS_ENTITY_CODE, MS_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.MEASUREMENT_ENTITY_CODE, MEASUREMENT_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.ANALYSIS_ENTITY_CODE, ANALYSIS_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.EVALUATION_ENTITY_CODE, EVALUATION_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.TEST_ENTITY_CODE, TEST_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.RESULT_ENTITY_CODE, RESULT_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE, TEMPORALPATTERN_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.CHARACTERISTIC_ENTITY_CODE, CHARACTERISTIC_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.PERMATTR_ENTITY_CODE, PERMATTR_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.USER_ENTITY_CODE, USER_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.DOMAIN_ENTITY_CODE, DOMAIN_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.SERVER_ENTITY_CODE, SERVER_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.MCM_ENTITY_CODE, MCM_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.EQUIPMENT_ENTITY_CODE, EQUIPMENT_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.PORT_ENTITY_CODE, PORT_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.TRANSPATH_ENTITY_CODE, TRANSPATH_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.KIS_ENTITY_CODE, KIS_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, MEASUREMENTPORT_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.ME_ENTITY_CODE, ME_OBJECT_POOL_SIZE);
 
-		mObjectLoader = mObjectLoader1;
+		cObjectLoader = cObjectLoader1;
 	}
 
 	private static void addObjectPool(short objectEntityCode, int poolSize) {
@@ -104,41 +111,53 @@ public class MeasurementStorableObjectPool {
 	private static StorableObject loadStorableObject(Identifier objectId) throws DatabaseException, CommunicationException {
 		StorableObject storableObject;
 		switch (objectId.getMajor()) {
-			case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-				storableObject = mObjectLoader.loadParameterType(objectId);
+			case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
+				storableObject = cObjectLoader.loadCharacteristicType(objectId);
 				break;
-			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
-				storableObject = mObjectLoader.loadMeasurementType(objectId);
+			case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
+				storableObject = cObjectLoader.loadEquipmentType(objectId);
 				break;
-			case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
-				storableObject = mObjectLoader.loadAnalysisType(objectId);
+			case ObjectEntities.PORTTYPE_ENTITY_CODE:
+				storableObject = cObjectLoader.loadPortType(objectId);
 				break;
-			case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
-				storableObject = mObjectLoader.loadEvaluationType(objectId);
+//			case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
+//				storableObject = cObjectLoader.loadMeasurementPortType(objectId);
+//				break;
+			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
+				storableObject = cObjectLoader.loadCharacteristic(objectId);
 				break;
-			case ObjectEntities.SET_ENTITY_CODE:
-				storableObject = mObjectLoader.loadSet(objectId);
+//			case ObjectEntities.PERMATTR_ENTITY_CODE:
+//				storableObject = cObjectLoader.loadPermissionAttributes(objectId);
+//				break;
+			case ObjectEntities.USER_ENTITY_CODE:
+				storableObject = cObjectLoader.loadUser(objectId);
 				break;
-			case ObjectEntities.MS_ENTITY_CODE:
-				storableObject = mObjectLoader.loadMeasurementSetup(objectId);
+			case ObjectEntities.DOMAIN_ENTITY_CODE:
+				storableObject = cObjectLoader.loadDomain(objectId);
 				break;
-			case ObjectEntities.ANALYSIS_ENTITY_CODE:
-				storableObject = mObjectLoader.loadAnalysis(objectId);
+			case ObjectEntities.SERVER_ENTITY_CODE:
+				storableObject = cObjectLoader.loadServer(objectId);
 				break;
-			case ObjectEntities.EVALUATION_ENTITY_CODE:
-				storableObject = mObjectLoader.loadEvaluation(objectId);
+			case ObjectEntities.MCM_ENTITY_CODE:
+				storableObject = cObjectLoader.loadMCM(objectId);
 				break;
-			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
-				storableObject = mObjectLoader.loadMeasurement(objectId);
+			case ObjectEntities.EQUIPMENT_ENTITY_CODE:
+				storableObject = cObjectLoader.loadEquipment(objectId);
 				break;
-			case ObjectEntities.TEST_ENTITY_CODE:
-				storableObject = mObjectLoader.loadTest(objectId);
+			case ObjectEntities.PORT_ENTITY_CODE:
+				storableObject = cObjectLoader.loadPort(objectId);
 				break;
-			case ObjectEntities.RESULT_ENTITY_CODE:
-				storableObject = mObjectLoader.loadResult(objectId);
+			case ObjectEntities.TRANSPATH_ENTITY_CODE:
+				storableObject = cObjectLoader.loadTransmissionPath(objectId);
 				break;
-			case ObjectEntities.TEMPORALPATTERN_ENTITY_CODE:
-				storableObject = mObjectLoader.loadTemporalPattern(objectId);
+			case ObjectEntities.KIS_ENTITY_CODE:
+				storableObject = cObjectLoader.loadKIS(objectId);
+				break;
+//			case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
+//				storableObject = cObjectLoader.loadMeasurementPort(objectId);
+//				break;
+			case ObjectEntities.ME_ENTITY_CODE:
+				storableObject = cObjectLoader.loadMonitoredElement(objectId);
 				break;
 			default:
 				Log.errorMessage("Unknown entity: " + objectId.getObjectEntity());

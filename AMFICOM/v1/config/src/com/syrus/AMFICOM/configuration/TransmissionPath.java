@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.6 2004/08/11 14:19:43 bob Exp $
+ * $Id: TransmissionPath.java,v 1.7 2004/08/11 16:45:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 /**
- * @version $Revision: 1.6 $, $Date: 2004/08/11 14:19:43 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2004/08/11 16:45:02 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -34,7 +34,6 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 	private List characteristicIds;
 	private String name;
 	private String description;	
-
 	private Identifier startPortId;
 	private Identifier finishPortId;
 
@@ -65,6 +64,8 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 
 		this.name = new String(tpt.name);
 		this.description = new String(tpt.description);
+		this.startPortId = new Identifier(tpt.start_port_id);
+		this.finishPortId = new Identifier(tpt.finish_port_id);
 
 		this.transmissionPathDatabase = ConfigurationDatabaseContext.transmissionPathDatabase;
 		try {
@@ -89,15 +90,17 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 		
 
 		return new TransmissionPath_Transferable((Identifier_Transferable)super.id.getTransferable(),
-																			super.created.getTime(),
-																			super.modified.getTime(),
-																			(Identifier_Transferable)super.creatorId.getTransferable(),
-																			(Identifier_Transferable)super.modifierId.getTransferable(),
-																			(Identifier_Transferable)super.domainId.getTransferable(),																			
-																			meIds,
-																			new String(this.name),
-																			new String(this.description),
-																			charIds);
+																						 super.created.getTime(),
+																						 super.modified.getTime(),
+																						 (Identifier_Transferable)super.creatorId.getTransferable(),
+																						 (Identifier_Transferable)super.modifierId.getTransferable(),
+																						 (Identifier_Transferable)super.domainId.getTransferable(),
+																						 meIds,
+																						 new String(this.name),
+																						 new String(this.description),
+																						 (Identifier_Transferable)this.startPortId.getTransferable(),
+																						 (Identifier_Transferable)this.finishPortId.getTransferable(),
+																						 charIds);
 	}
 
 	public String getName() {
@@ -128,23 +131,22 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 	}
 	
 	protected synchronized void setAttributes(Date created,
-												Date modified,
-												Identifier creatorId,
-												Identifier modifierId,
-												Identifier domainId,												
-												String name,
-												String description,
-												Identifier startPortId,
-												Identifier finishPortId) {
+																						Date modified,
+																						Identifier creatorId,
+																						Identifier modifierId,
+																						Identifier domainId,
+																						String name,
+																						String description,
+																						Identifier startPortId,
+																						Identifier finishPortId) {
 		super.setAttributes(created,
-							modified,
-							creatorId,
-							modifierId,
-							domainId);		
+												modified,
+												creatorId,
+												modifierId,
+												domainId);		
 		this.name = name;
 		this.description = description;
 		this.startPortId = startPortId;
 		this.finishPortId = finishPortId;
 	}
-	
 }

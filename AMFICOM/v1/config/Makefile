@@ -35,25 +35,31 @@ $(LIBNAME): .mach
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/ConfigurationObjectTypePool.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/DatabaseConfigurationObjectLoader.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/ConfigurationObjectLoader.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/ConfigurationStorableObjectPool.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/ConfigurationDatabaseContext.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/DomainMember.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredDomainMember.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/Characterized.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/CharacteristicType.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/CharacteristicTypeDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/EquipmentType.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/EquipmentTypeDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/PortType.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/PortTypeDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/DomainMember.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredDomainMember.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/Characterized.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/MeasurementPortType.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/MeasurementPortTypeDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/Characteristic.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/CharacteristicDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/User.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/UserDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/Domain.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/DomainDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/Characteristic.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/CharacteristicDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/Server.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/ServerDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/MCM.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/MCMDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/Equipment.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/EquipmentDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/Port.java \
@@ -62,8 +68,8 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/TransmissionPathDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/KIS.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/KISDatabase.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/MCM.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/MCMDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/MeasurementPort.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/MeasurementPortDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredElement.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredElementDatabase.java
 	touch $@

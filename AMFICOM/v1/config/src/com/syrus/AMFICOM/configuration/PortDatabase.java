@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.4 2004/08/11 13:05:51 bob Exp $
+ * $Id: PortDatabase.java,v 1.5 2004/08/11 16:45:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/08/11 13:05:51 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2004/08/11 16:45:02 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 public class PortDatabase extends StorableObjectDatabase {
@@ -109,8 +109,8 @@ public class PortDatabase extends StorableObjectDatabase {
 									*/
 								  new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
 								  
-								  (portTypeIdCode != null)?((PortType)ConfigurationObjectTypePool.getObjectType(new Identifier(portTypeIdCode))):null,								  
-								  (description != null)?description:"",
+								  (portTypeIdCode != null) ? (PortType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(portTypeIdCode), true) : null,								  
+								  (description != null) ? description : "",
 								  /**
 									* @todo when change DB Identifier model ,change getString() to getLong()
 									*/

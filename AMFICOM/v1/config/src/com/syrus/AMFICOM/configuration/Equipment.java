@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.17 2004/08/10 19:01:08 arseniy Exp $
+ * $Id: Equipment.java,v 1.18 2004/08/11 16:45:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentSort;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/08/10 19:01:08 $
+ * @version $Revision: 1.18 $, $Date: 2004/08/11 16:45:02 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -73,7 +73,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		for (int i = 0; i < et.monitored_element_ids.length; i++)
 			super.monitoredElementIds.add(new Identifier(et.monitored_element_ids[i]));
 
-		this.type = (EquipmentType)ConfigurationObjectTypePool.getObjectType(new Identifier(et.type_id));
+		this.type = (EquipmentType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
 		this.name = new String(et.name);
 		this.description = new String(et.description);
 		this.imageId = new Identifier(et.image_id);
@@ -150,7 +150,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 																			cportIds,
 																			sportIds,
 																			EquipmentSort.from_int(this.sort),
-																			(this.sort == EquipmentSort._EQUIPMENT_SORT_KIS) ? (Identifier_Transferable)this.kisId.getTransferable() : (new Identifier_Transferable()));
+																			(this.sort == EquipmentSort._EQUIPMENT_SORT_KIS) ? (Identifier_Transferable)this.kisId.getTransferable() : (new Identifier_Transferable("")));
 	}
 
 	public StorableObjectType getType() {

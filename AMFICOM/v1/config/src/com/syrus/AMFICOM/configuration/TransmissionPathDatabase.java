@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.7 2004/08/11 14:19:43 bob Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.8 2004/08/11 16:45:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/08/11 14:19:43 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2004/08/11 16:45:02 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -121,8 +121,8 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 									*/
 								  new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),								  
 
-								  (name != null)?name:"",
-								  (description != null)?description:"",
+								  (name != null) ? name : "",
+								  (description != null) ? description : "",
 								  /**
 									* @todo when change DB Identifier model ,change getString() to getLong()
 									*/

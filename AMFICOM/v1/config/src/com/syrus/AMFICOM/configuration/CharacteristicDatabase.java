@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.8 2004/08/11 08:21:04 bob Exp $
+ * $Id: CharacteristicDatabase.java,v 1.9 2004/08/11 16:45:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/08/11 08:21:04 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2004/08/11 16:45:01 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -137,7 +137,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 						characterizedId = null;
 						Log.errorMessage("Unknown sort: " + sort + " for characteristic: " + cIdStr);
 				}
-				CharacteristicType characteristicType = (CharacteristicType)ConfigurationObjectTypePool.getObjectType(new Identifier(resultSet.getString(COLUMN_TYPE_ID)));
+				CharacteristicType characteristicType = (CharacteristicType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
 				characteristic.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 																		 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 																		 /**
