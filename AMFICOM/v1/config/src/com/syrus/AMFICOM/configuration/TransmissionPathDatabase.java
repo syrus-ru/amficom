@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.16 2004/08/31 15:33:22 bob Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.17 2004/09/08 12:16:26 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,10 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -26,12 +24,13 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/08/31 15:33:22 $
+ * @version $Revision: 1.17 $, $Date: 2004/09/08 12:16:26 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -55,49 +54,89 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
     public static final String LINK_COLUMN_TRANSMISSION_PATH_ID  = "transmission_path_id";    
     
     public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
+    
+    private String updateColumns;
+    private String updateMultiplySQLValues;
 
 	private TransmissionPath fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof TransmissionPath)
 			return (TransmissionPath)storableObject;
 		throw new IllegalDataException("TransmissionPathDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+	}	
+	
+	protected String getEnityName() {		
+		return "TransmissionPath";
+	}	
+	
+	protected String getTableName() {		
+		return ObjectEntities.TRANSPATH_ENTITY;
+	}	
+	
+	protected String getUpdateColumns() {		
+		if (this.updateColumns == null){
+			this.updateColumns = super.getUpdateColumns() + COMMA
+				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
+				+ COLUMN_NAME + COMMA
+				+ COLUMN_DESCRIPTION + COMMA
+				+ COLUMN_START_PORT_ID + COMMA
+				+ COLUMN_FINISH_PORT_ID;		
+		}
+		return this.updateColumns;
+	}	
+	
+	protected String getUpdateMultiplySQLValues() {
+		if (this.updateMultiplySQLValues == null){
+			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION;		
+		}
+		return this.updateMultiplySQLValues;
+	}	
+	
+	
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
+			UpdateObjectException {
+		TransmissionPath transmissionPath = fromStorableObject(storableObject);
+		return super.getUpdateSingleSQLValues(storableObject) + COMMA
+			+ transmissionPath.getDomainId().toSQLString() + COMMA
+			+ APOSTOPHE + transmissionPath.getName() + APOSTOPHE + COMMA
+			+ APOSTOPHE + transmissionPath.getDescription() + APOSTOPHE + COMMA
+			+ transmissionPath.getStartPortId().toSQLString() + COMMA
+			+ transmissionPath.getFinishPortId().toSQLString();
 	}
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
 		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
-		this.retrieveTransmissionPath(transmissionPath);
+		this.retrieveEntity(transmissionPath);
 		this.retrieveTransmissionPathMELink(transmissionPath);
 		transmissionPath.setCharacteristics(characteristicDatabase.retrieveCharacteristics(transmissionPath.getId(), CharacteristicSort.CHARACTERISTIC_SORT_TRANSMISSIONPATH));
 	}
 	
-	private String retrieveTransmissionPathQuery(String condition){
-		return SQL_SELECT
-		+ COLUMN_ID + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-		+ COLUMN_CREATOR_ID + COMMA
-		+ COLUMN_MODIFIER_ID + COMMA
-		+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-		+ COLUMN_NAME + COMMA
-		+ COLUMN_DESCRIPTION + COMMA
-		+ COLUMN_START_PORT_ID + COMMA
-		+ COLUMN_FINISH_PORT_ID
-		+ SQL_FROM + ObjectEntities.TRANSPATH_ENTITY
-		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
-
+	protected String retrieveQuery(String condition){
+		return super.retrieveQuery(condition) + COMMA
+			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
+			+ COLUMN_NAME + COMMA
+			+ COLUMN_DESCRIPTION + COMMA
+			+ COLUMN_START_PORT_ID + COMMA
+			+ COLUMN_FINISH_PORT_ID
+			+ SQL_FROM + ObjectEntities.TRANSPATH_ENTITY
+			+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
 	}
 	
-	private TransmissionPath updateTransmissionPathFromResultSet(TransmissionPath transmissionPath, ResultSet resultSet) throws SQLException{
-		TransmissionPath transmissionPath1 = transmissionPath;
-		if (transmissionPath1 == null){
-			/**
-			 * @todo when change DB Identifier model ,change getString() to getLong()
-			 */
-			transmissionPath1 = new TransmissionPath(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, null, null);			
-		}
+	
+	
+	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+			throws IllegalDataException, RetrieveObjectException, SQLException {
+		TransmissionPath transmissionPath = (storableObject == null) ?
+				new TransmissionPath(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, null, null) :
+					fromStorableObject(storableObject);
 		String name = resultSet.getString(COLUMN_NAME);
 		String description = resultSet.getString(COLUMN_DESCRIPTION);
-		transmissionPath1.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+		transmissionPath.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 						  DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),								  
 						  
 						  /**
@@ -120,44 +159,9 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 							*/
 						  new Identifier(resultSet.getString(COLUMN_START_PORT_ID)),
 						  new Identifier(resultSet.getString(COLUMN_FINISH_PORT_ID)));
-		return transmissionPath1;
+		return transmissionPath;
 	}
 
-
-	private void retrieveTransmissionPath(TransmissionPath transmissionPath) throws ObjectNotFoundException, RetrieveObjectException {
-		String tpIdStr = transmissionPath.getId().toSQLString();
-		String sql = retrieveTransmissionPathQuery(COLUMN_ID + EQUALS + tpIdStr);
-
-		Statement statement = null;
-		ResultSet resultSet = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("TransmissionPathDatabase.retrieveTransmissionPath | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			if (resultSet.next()) 
-				updateTransmissionPathFromResultSet(transmissionPath, resultSet);
-			else
-				throw new ObjectNotFoundException("No such transmission path: " + tpIdStr);
-		}
-		catch (SQLException sqle) {
-			String mesg = "TransmissionPathDatabase.retrieveTransmissionPath | Cannot retrieve transmission path " + tpIdStr;
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-	}
-	
 	private void retrieveTransmissionPathMELink(TransmissionPath transmissionPath) throws RetrieveObjectException{
 		String tpIdStr = transmissionPath.getId().toSQLString();
 		String sql = SQL_SELECT
@@ -212,7 +216,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
 		try {
-			this.insertTransmissionPath(transmissionPath);
+			this.insertEntity(transmissionPath);
 		}
 		catch (CreateObjectException coe) {
 			try {
@@ -232,128 +236,38 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 			Log.errorException(sqle);
 		}
 	}
-
-	private void insertTransmissionPath(TransmissionPath transmissionPath) throws CreateObjectException {
-		String tpIdStr = transmissionPath.getId().toSQLString();
-
-		String sql = SQL_INSERT_INTO
-			+ ObjectEntities.TRANSPATH_ENTITY
-			+ OPEN_BRACKET
-			+ COLUMN_ID + COMMA
-			+ COLUMN_CREATED + COMMA
-			+ COLUMN_MODIFIED + COMMA
-			+ COLUMN_CREATOR_ID + COMMA
-			+ COLUMN_MODIFIER_ID + COMMA
-			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-			+ COLUMN_NAME + COMMA
-			+ COLUMN_DESCRIPTION + COMMA
-			+ COLUMN_START_PORT_ID + COMMA
-			+ COLUMN_FINISH_PORT_ID 
-			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
-			+ tpIdStr + COMMA
-			+ DatabaseDate.toUpdateSubString(transmissionPath.getCreated()) + COMMA
-			+ DatabaseDate.toUpdateSubString(transmissionPath.getModified()) + COMMA
-			+ transmissionPath.getCreatorId().toSQLString() + COMMA
-			+ transmissionPath.getModifierId().toSQLString() + COMMA
-			+ transmissionPath.getDomainId().toSQLString() + COMMA
-			+ APOSTOPHE + transmissionPath.getName() + APOSTOPHE + COMMA
-			+ APOSTOPHE + transmissionPath.getDescription() + APOSTOPHE + COMMA
-			+ transmissionPath.getStartPortId().toSQLString() + COMMA
-			+ transmissionPath.getFinishPortId().toSQLString()
-			+ CLOSE_BRACKET;
-		
-		Statement statement = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("TransmissionPathDatabase.insertTransmissionPath | Trying: " + sql, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql);
-		}
-		catch (SQLException sqle) {
-			String mesg = "TransmissionPathDatabase.insertTransmissionPath | Cannot insert transmission path " + tpIdStr;
-			throw new CreateObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				statement = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
+	
+	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
+		insertEntities(storableObjects);
 	}
-//
-//	private void insertTransmissionPathMELinks(TransmissionPath transmissionPath)	throws CreateObjectException {
-//		/**
-//		 * @todo when change DB Identifier model ,change String to long
-//		 */
-//		String tpIdCode = transmissionPath.getId().getCode();
-//		List meIds = transmissionPath.getMonitoredElementIds();
-//		String sql = SQL_INSERT_INTO 
-//					+ ObjectEntities.TRANSPATHMELINK_ENTITY
-//					+ OPEN_BRACKET
-//					+ LINK_COLUMN_TRANSMISSION_PATH_ID 
-//					+ COMMA 
-//					+ LINK_COLUMN_MONITORED_ELEMENT_ID
-//					+ CLOSE_BRACKET
-//					+ SQL_VALUES
-//					+ OPEN_BRACKET
-//					+ QUESTION
-//					+ COMMA
-//					+ QUESTION
-//					+ CLOSE_BRACKET;
-//
-//		PreparedStatement preparedStatement = null;
-//		/**
-//		 * @todo when change DB Identifier model ,change String to long
-//		 */
-//		String meIdCode = null;
-//		try {
-//			preparedStatement = connection.prepareStatement(sql);
-//			for (Iterator iterator = meIds.iterator(); iterator.hasNext();) {
-//				/**
-//				 * @todo when change DB Identifier model ,change setString() to
-//				 *       setLong()
-//				 */
-//				preparedStatement.setString(1, tpIdCode);
-//				meIdCode = ((Identifier) iterator.next()).getCode();
-//				/**
-//				 * @todo when change DB Identifier model ,change setString() to
-//				 *       setLong()
-//				 */
-//				preparedStatement.setString(2, meIdCode);
-//				Log.debugMessage("TransmissionPathDatabase.insertTransmissionPathMELinks | Inserting link for transmission path '"
-//								+ tpIdCode
-//								+ "' and monitored element '"
-//								+ meIdCode + "'", Log.DEBUGLEVEL09);
-//				preparedStatement.executeUpdate();
-//			}
-//		}
-//		catch (SQLException sqle) {
-//			String mesg = "TransmissionPathDatabase.insertTransmissionPathMELinks | Cannot insert link for monitored element '"
-//							+ meIdCode + "' and transmission path '" + tpIdCode + "'";
-//			throw new CreateObjectException(mesg, sqle);
-//		}
-//		finally {
-//			try {
-//				if (preparedStatement != null)
-//					preparedStatement.close();
-//				preparedStatement = null;
-//			}
-//			catch (SQLException sqle1) {
-//				Log.errorException(sqle1);
-//			}
-//		}
-//	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, UpdateObjectException {
+	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, 
+			VersionCollisionException, UpdateObjectException {
 		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
 		switch (updateKind) {
+			case UPDATE_CHECK:
+				super.checkAndUpdateEntity(storableObject, false);
+				break;
+			case UPDATE_FORCE:					
 			default:
+				super.checkAndUpdateEntity(storableObject, true);		
 				return;
 		}
 	}
+	
+	public void update(List storableObjects, int updateKind, Object arg) throws IllegalDataException,
+		VersionCollisionException, UpdateObjectException {
+		switch (updateKind) {	
+			case UPDATE_CHECK:
+				super.checkAndUpdateEntities(storableObjects, false);
+				break;
+			case UPDATE_FORCE:					
+			default:
+				super.checkAndUpdateEntities(storableObjects, true);		
+				return;
+		}
+		
+	}	
 
 	private void setModified(TransmissionPath transmissionPath) throws UpdateObjectException {		
 		String tpIdStr = transmissionPath.getId().toSQLString();
@@ -388,191 +302,29 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 	}
 	
 	public List retrieveAll() throws RetrieveObjectException {
-		List transPaths = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
-		String sql = SQL_SELECT
-				+ COLUMN_ID
-				+ SQL_FROM + ObjectEntities.TRANSPATH_ENTITY;
-
-		Statement statement = null;
-		ResultSet resultSet = null;
+		List list = null;
 		try {
-			statement = connection.createStatement();
-			Log.debugMessage("TransmissionPathDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			while (resultSet.next())
-				transPaths.add(new TransmissionPath(new Identifier(resultSet.getString(COLUMN_ID))));			
+			list = retrieveByIds(null, null);
+		}  catch (IllegalDataException ide) {			
+			throw new RetrieveObjectException(ide);
 		}
-		catch (ObjectNotFoundException onfe) {
-			Log.errorException(onfe);
-		}
-		catch (SQLException sqle) {
-			String mesg = "TransmissionPathDatabase.retrieveAll | Cannot retrieve transmission path";
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-		return transPaths;
+		return list;
 	}
 
-	public void delete(TransmissionPath transmissionPath) {
-		String tpIdStr = transmissionPath.getId().toSQLString();
-		Statement statement = null;
-		try {
-			statement = connection.createStatement();
-			String sql = SQL_DELETE_FROM
-				+ ObjectEntities.TRANSPATH_ENTITY
-				+ SQL_WHERE + COLUMN_ID + EQUALS + tpIdStr;
-			Log.debugMessage("TransmissionPathDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql);
-			connection.commit();
-		}
-		catch (SQLException sqle1) {
-			Log.errorException(sqle1);
-		}
-		finally {
-			try {
-				if(statement != null)
-					statement.close();
-				statement = null;
-			}
-			catch(SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-	}
-	
-	public List retrieveByIds(List ids) throws RetrieveObjectException {
+	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
+		List list = null;
 		if ((ids == null) || (ids.isEmpty()))
-			return retriveByIdsOneQuery(null);
-		return retriveByIdsOneQuery(ids);	
-		//return retriveByIdsPreparedStatement(ids);
-	}
-	
-	private List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
-		List result = new LinkedList();
-		String sql;
-		{
-			String condition = null;
-			if (ids!=null){
-				StringBuffer buffer = new StringBuffer(COLUMN_ID);
-				int idsLength = ids.size();
-				if (idsLength == 1){
-					buffer.append(EQUALS);
-					buffer.append(((Identifier)ids.iterator().next()).toSQLString());
-				} else{
-					buffer.append(SQL_IN);
-					buffer.append(OPEN_BRACKET);
-					
-					int i = 1;
-					for(Iterator it=ids.iterator();it.hasNext();i++){
-						Identifier id = (Identifier)it.next();
-						buffer.append(id.toSQLString());
-						if (i < idsLength)
-							buffer.append(COMMA);
-					}
-					
-					buffer.append(CLOSE_BRACKET);
-					condition = buffer.toString();
-				}
-			}
-			sql = retrieveTransmissionPathQuery(condition);
-		}
-		
-		Statement statement = null;
-		ResultSet resultSet = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("TransmissionPathDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			while (resultSet.next()){
-				result.add(updateTransmissionPathFromResultSet(null, resultSet));
+			list = retriveByIdsOneQuery(null, condition);
+		else list = retriveByIdsOneQuery(ids, condition);
+		if (list != null){
+			for (Iterator it = list.iterator(); it.hasNext();) {
+				TransmissionPath transmissionPath = (TransmissionPath) it.next();
+				CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+				this.retrieveTransmissionPathMELink(transmissionPath);
+				transmissionPath.setCharacteristics(characteristicDatabase.retrieveCharacteristics(transmissionPath.getId(), CharacteristicSort.CHARACTERISTIC_SORT_TRANSMISSIONPATH));				
 			}
 		}
-		catch (SQLException sqle) {
-			String mesg = "TransmissionPathDatabase.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-		return result;
-	}
-	
-	private List retriveByIdsPreparedStatement(List ids) throws RetrieveObjectException {
-		List result = new LinkedList();
-		String sql;
-		{
-			
-			int idsLength = ids.size();
-			if (idsLength == 1){
-				return retriveByIdsOneQuery(ids);
-			}
-			StringBuffer buffer = new StringBuffer(COLUMN_ID);
-			buffer.append(EQUALS);							
-			buffer.append(QUESTION);
-			
-			sql = retrieveTransmissionPathQuery(buffer.toString());
-		}
-			
-		PreparedStatement stmt = null;
-		ResultSet resultSet = null;
-		try {
-			stmt = connection.prepareStatement(sql.toString());
-			for(Iterator it = ids.iterator();it.hasNext();){
-				Identifier id = (Identifier)it.next(); 
-				/**
-				 * @todo when change DB Identifier model ,change setString() to setLong()
-				 */
-				String idStr = id.getIdentifierString();
-				stmt.setString(1, idStr);
-				resultSet = stmt.executeQuery();
-				if (resultSet.next()){
-					result.add(updateTransmissionPathFromResultSet(null, resultSet));
-				} else{
-					Log.errorMessage("TransmissionPathDatabase.retriveByIdsPreparedStatement | No such transmission path: " + idStr);									
-				}
-				
-			}
-		}catch (SQLException sqle) {
-			String mesg = "TransmissionPathDatabase.retriveByIdsPreparedStatement | Cannot retrieve transmission path " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (stmt != null)
-					stmt.close();
-				if (stmt != null)
-					stmt.close();
-				stmt = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}			
-		
-		return result;
+		return list;
 	}
 
 }
