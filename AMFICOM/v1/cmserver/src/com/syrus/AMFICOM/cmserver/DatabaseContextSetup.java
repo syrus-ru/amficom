@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.3 2004/09/27 07:05:43 bob Exp $
+ * $Id: DatabaseContextSetup.java,v 1.4 2004/10/25 13:24:35 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,9 @@ import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
 import com.syrus.AMFICOM.configuration.CharacteristicTypeDatabase;
 import com.syrus.AMFICOM.configuration.EquipmentTypeDatabase;
+import com.syrus.AMFICOM.configuration.KISTypeDatabase;
+import com.syrus.AMFICOM.configuration.LinkDatabase;
+import com.syrus.AMFICOM.configuration.LinkTypeDatabase;
 import com.syrus.AMFICOM.configuration.PortTypeDatabase;
 import com.syrus.AMFICOM.configuration.MeasurementPortTypeDatabase;
 import com.syrus.AMFICOM.configuration.CharacteristicDatabase;
@@ -45,8 +48,8 @@ import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/09/27 07:05:43 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2004/10/25 13:24:35 $
+ * @author $Author: max $
  * @module mserver_v1
  */
 
@@ -61,17 +64,20 @@ public abstract class DatabaseContextSetup {
 																			new EquipmentTypeDatabase(),
 																			new PortTypeDatabase(),
 																			new MeasurementPortTypeDatabase(),
+                                                                            new LinkTypeDatabase(),
+                                                                            new KISTypeDatabase(),
 																			new CharacteristicDatabase(),
 																			new UserDatabase(),
 																			new DomainDatabase(),
-																			new ServerDatabase(),
+																			new ServerDatabase(), 
 																			new MCMDatabase(),
 																			new EquipmentDatabase(),
 																			new PortDatabase(),
 																			new MeasurementPortDatabase(),
 																			new TransmissionPathDatabase(),
 																			new KISDatabase(),
-																			new MonitoredElementDatabase());
+																			new MonitoredElementDatabase(),
+                                                                            new LinkDatabase());
 		MeasurementDatabaseContext.init(new ParameterTypeDatabase(),
 																		new MeasurementTypeDatabase(),
 																		new AnalysisTypeDatabase(),
