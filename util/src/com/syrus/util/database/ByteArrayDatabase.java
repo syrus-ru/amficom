@@ -1,5 +1,5 @@
 /*
- * $Id: ByteArrayDatabase.java,v 1.12 2004/12/17 12:52:08 arseniy Exp $
+ * $Id: ByteArrayDatabase.java,v 1.13 2005/01/28 13:06:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import com.syrus.util.*;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.12 $, $Date: 2004/12/17 12:52:08 $
+ * @version $Revision: 1.13 $, $Date: 2005/01/28 13:06:12 $
  * @module util
  */
 public class ByteArrayDatabase {
@@ -77,11 +77,13 @@ public class ByteArrayDatabase {
 			try {
 				if (statement != null)
 					statement.close();
-			} finally {
+			}
+			finally {
 				try {
 					if (ors != null)
 						ors.close();
-				} finally {
+				}
+				finally {
 					if (oldAutoCommit)
 						conn.setAutoCommit(true);
 				}
