@@ -410,6 +410,13 @@ module corba {
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
 
+
+		// Reftresh Storable objects in Pool
+		general::corba::IdentifierSeq_Transferable transmitRefreshedGeneralObjects(
+						in general::corba::StorableObjectSeq_Transferable StorableObjects_Transferable,
+						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (general::corba::AMFICOMRemoteException);
+
 ///////////////////////////////////////// Administration Transmit //////////////////////////////////////////////
 
 		administration::corba::User_Transferable transmitUser(
@@ -494,13 +501,13 @@ module corba {
 			raises (general::corba::AMFICOMRemoteException);
 
 
-///////////////////////////////////////// Configuration Transmit ///////////////////////////////////////////////
-
 		// Reftresh Storable objects in Pool
-		general::corba::IdentifierSeq_Transferable transmitRefreshedConfigurationObjects(
+		general::corba::IdentifierSeq_Transferable transmitRefreshedAdministrationObjects(
 						in general::corba::StorableObjectSeq_Transferable StorableObjects_Transferable,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (general::corba::AMFICOMRemoteException);
+
+///////////////////////////////////////// Configuration Transmit ///////////////////////////////////////////////
 
 		configuration::corba::CableThreadType_Transferable transmitCableThreadType(
 						in general::corba::Identifier_Transferable id_Transferable,
@@ -737,12 +744,13 @@ module corba {
 			raises (general::corba::AMFICOMRemoteException);
 
 
-///////////////////////////////////////// Measurement Transmit ///////////////////////////////////////////////
 		// Reftresh Storable objects in Pool
-		general::corba::IdentifierSeq_Transferable transmitRefreshedMeasurementObjects(
+		general::corba::IdentifierSeq_Transferable transmitRefreshedConfigurationObjects(
 						in general::corba::StorableObjectSeq_Transferable StorableObjects_Transferable,
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
-			raises (general::corba::AMFICOMRemoteException); 
+			raises (general::corba::AMFICOMRemoteException);
+
+///////////////////////////////////////// Measurement Transmit ///////////////////////////////////////////////
 
 					// Transmit one object
 		measurement::corba::AnalysisType_Transferable transmitAnalysisType(
@@ -1023,6 +1031,13 @@ module corba {
 						in configuration::corba::AccessIdentifier_Transferable accessIdentifier,
 						in measurement::corba::TemporalCondition_Transferable temporalCondition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);	
+
+
+		// Reftresh Storable objects in Pool
+		general::corba::IdentifierSeq_Transferable transmitRefreshedMeasurementObjects(
+						in general::corba::StorableObjectSeq_Transferable StorableObjects_Transferable,
+						in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (general::corba::AMFICOMRemoteException); 
 
 	};
 };
