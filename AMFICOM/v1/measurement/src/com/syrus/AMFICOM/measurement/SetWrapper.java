@@ -1,5 +1,5 @@
 /*
- * $Id: SetWrapper.java,v 1.7 2005/04/01 08:43:32 bob Exp $
+ * $Id: SetWrapper.java,v 1.8 2005/04/05 15:58:10 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.SetSort;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/01 08:43:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/04/05 15:58:10 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class SetWrapper implements StorableObjectWrapper {
@@ -29,7 +29,7 @@ public class SetWrapper implements StorableObjectWrapper {
 	public static final String	COLUMN_SORT						= "sort";
 
 	public static final String	LINK_COLUMN_SET_ID				= "set_id";
-	public static final String	LINK_COLUMN_ME_ID				= "monitored_element_id";
+	public static final String	LINK_COLUMN_MONITORED_ELEMENT_ID				= "monitored_element_id";
 
 	public static final String	LINK_FIELD_SET_PARAMETERS		= "set_parameters";
 	public static final String	LINK_COLUMN_PARAMETER_VALUE		= "value";
@@ -40,7 +40,7 @@ public class SetWrapper implements StorableObjectWrapper {
 
 	private SetWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_SORT, COLUMN_DESCRIPTION, LINK_COLUMN_ME_ID,
+		String[] keysArray = new String[] { COLUMN_SORT, COLUMN_DESCRIPTION, LINK_COLUMN_MONITORED_ELEMENT_ID,
 				LINK_FIELD_SET_PARAMETERS};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
@@ -68,7 +68,7 @@ public class SetWrapper implements StorableObjectWrapper {
 				return new Integer(set.getSort().value());
 			if (key.equals(COLUMN_DESCRIPTION))
 				return set.getDescription();
-			if (key.equals(LINK_COLUMN_ME_ID))
+			if (key.equals(LINK_COLUMN_MONITORED_ELEMENT_ID))
 				return set.getMonitoredElementIds();
 			if (key.equals(LINK_FIELD_SET_PARAMETERS)) {
 				SetParameter[] parameters = set.getParameters();
@@ -97,7 +97,7 @@ public class SetWrapper implements StorableObjectWrapper {
 				if (key.equals(COLUMN_DESCRIPTION))
 					set.setDescription((String) value);
 				else
-					if (key.equals(LINK_COLUMN_ME_ID)) {
+					if (key.equals(LINK_COLUMN_MONITORED_ELEMENT_ID)) {
 						set.setMonitoredElementIds((java.util.Set) value);
 					}
 					else
@@ -134,7 +134,7 @@ public class SetWrapper implements StorableObjectWrapper {
 	public Class getPropertyClass(String key) {
 		if (key.equals(COLUMN_SORT))
 			return Integer.class;
-		if (key.equals(LINK_COLUMN_ME_ID))
+		if (key.equals(LINK_COLUMN_MONITORED_ELEMENT_ID))
 			return java.util.Set.class;
 		if (key.equals(LINK_FIELD_SET_PARAMETERS))
 			return Map.class;
