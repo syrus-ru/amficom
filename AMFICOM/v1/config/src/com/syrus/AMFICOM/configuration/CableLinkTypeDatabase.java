@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeDatabase.java,v 1.25 2005/03/11 10:17:12 bob Exp $
+ * $Id: CableLinkTypeDatabase.java,v 1.26 2005/03/29 11:31:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/03/11 10:17:12 $
+ * @version $Revision: 1.26 $, $Date: 2005/03/29 11:31:20 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -64,6 +64,10 @@ public class CableLinkTypeDatabase extends CharacterizableDatabase {
 				+ CableLinkTypeWrapper.COLUMN_IMAGE_ID;
 		}
 		return columns;
+	}
+	
+	protected boolean checkEntity(short conditionCode) {
+		return ObjectEntities.CABLELINKTYPE_ENTITY_CODE == conditionCode;		
 	}
 
 	protected String getUpdateSingleSQLValuesTmpl(StorableObject storableObject) throws IllegalDataException {
