@@ -1,5 +1,5 @@
 /*
- * $Id: Map.java,v 1.7 2004/12/20 12:36:01 krupenn Exp $
+ * $Id: Map.java,v 1.8 2004/12/22 09:02:21 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/12/20 12:36:01 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/22 09:02:21 $
  * @author $Author: krupenn $
  * @module map_v1
  */
@@ -82,57 +82,69 @@ public class Map extends StorableObject {
 			this.domainId = new Identifier(mt.domain_id); 
 				
 			this.siteNodes = new ArrayList(mt.siteNodeIds.length);
+			ArrayList siteNodeIds = new ArrayList(mt.siteNodeIds.length);
 			for (int i = 0; i < mt.siteNodeIds.length; i++)
+				siteNodeIds.add(new Identifier(mt.siteNodeIds[i]));
+			this.siteNodes.addAll(MapStorableObjectPool.getStorableObjects(siteNodeIds, true));
+			
+			for(Iterator it = this.siteNodes.iterator(); it.hasNext();)
 			{
-				Identifier ide = new Identifier(mt.siteNodeIds[i]);
-				SiteNode sn = (SiteNode )MapStorableObjectPool.getStorableObject(ide, true);
-				sn.setMap(this);
-				this.siteNodes.add(sn);
+				((SiteNode )it.next()).setMap(this);
 			}
 			
 			this.topologicalNodes = new ArrayList(mt.topologicalNodeIds.length);
+			ArrayList topologicalNodeIds = new ArrayList(mt.topologicalNodeIds.length);
 			for (int i = 0; i < mt.topologicalNodeIds.length; i++)
+				topologicalNodeIds.add(new Identifier(mt.topologicalNodeIds[i]));
+			this.topologicalNodes.addAll(MapStorableObjectPool.getStorableObjects(topologicalNodeIds, true));
+
+			for(Iterator it = this.topologicalNodes.iterator(); it.hasNext();)
 			{
-				Identifier ide = new Identifier(mt.topologicalNodeIds[i]);
-				TopologicalNode tn = (TopologicalNode )MapStorableObjectPool.getStorableObject(ide, true);
-				tn.setMap(this);
-				this.topologicalNodes.add(tn);
+				((TopologicalNode )it.next()).setMap(this);
 			}
 
 			this.nodeLinks = new ArrayList(mt.nodeLinkIds.length);
+			ArrayList nodeLinkIds = new ArrayList(mt.nodeLinkIds.length);
 			for (int i = 0; i < mt.nodeLinkIds.length; i++)
+				nodeLinkIds.add(new Identifier(mt.nodeLinkIds[i]));
+			this.nodeLinks.addAll(MapStorableObjectPool.getStorableObjects(nodeLinkIds, true));
+
+			for(Iterator it = this.nodeLinks.iterator(); it.hasNext();)
 			{
-				Identifier ide = new Identifier(mt.nodeLinkIds[i]);
-				NodeLink nl = (NodeLink )MapStorableObjectPool.getStorableObject(ide, true);
-				nl.setMap(this);
-				this.nodeLinks.add(nl);
+				((NodeLink )it.next()).setMap(this);
 			}
 
 			this.physicalLinks = new ArrayList(mt.physicalLinkIds.length);
+			ArrayList physicalNodeLinkIds = new ArrayList(mt.physicalLinkIds.length);
 			for (int i = 0; i < mt.physicalLinkIds.length; i++)
-			{
-				Identifier ide = new Identifier(mt.physicalLinkIds[i]);
-				PhysicalLink pl = (PhysicalLink )MapStorableObjectPool.getStorableObject(ide, true);
-				pl.setMap(this);
-				this.physicalLinks.add(pl);
-			}
+				physicalNodeLinkIds.add(new Identifier(mt.physicalLinkIds[i]));
+			this.physicalLinks.addAll(MapStorableObjectPool.getStorableObjects(physicalNodeLinkIds, true));
 			
+			for(Iterator it = this.physicalLinks.iterator(); it.hasNext();)
+			{
+				((PhysicalLink )it.next()).setMap(this);
+			}
+
 			this.marks = new ArrayList(mt.markIds.length);
+			ArrayList markIds = new ArrayList(mt.markIds.length);
 			for (int i = 0; i < mt.markIds.length; i++)
-			{
-				Identifier ide = new Identifier(mt.markIds[i]);
-				Mark mark = (Mark )MapStorableObjectPool.getStorableObject(ide, true);
-				mark.setMap(this);
-				this.marks.add(mark);
-			}
+				markIds.add(new Identifier(mt.markIds[i]));
+			this.marks.addAll(MapStorableObjectPool.getStorableObjects(markIds, true));
 			
-			this.collectors = new ArrayList(mt.collectorIds.length);
-			for (int i = 0; i < mt.collectorIds.length; i++)
+			for(Iterator it = this.marks.iterator(); it.hasNext();)
 			{
-				Identifier ide = new Identifier(mt.markIds[i]);
-				Collector col = (Collector )MapStorableObjectPool.getStorableObject(ide, true);
-				col.setMap(this);
-				this.collectors.add(col);
+				((Mark )it.next()).setMap(this);
+			}
+
+			this.collectors = new ArrayList(mt.collectorIds.length);
+			ArrayList collectorIds = new ArrayList(mt.collectorIds.length);
+			for (int i = 0; i < mt.collectorIds.length; i++)
+				collectorIds.add(new Identifier(mt.collectorIds[i]));
+			this.collectors.addAll(MapStorableObjectPool.getStorableObjects(collectorIds, true));
+
+			for(Iterator it = this.collectors.iterator(); it.hasNext();)
+			{
+				((Collector )it.next()).setMap(this);
 			}
 
 		} catch (ApplicationException ae) {
@@ -182,6 +194,9 @@ public class Map extends StorableObject {
 			String description) 
 		throws CreateObjectException 
 	{
+		if (name == null || description == null || creatorId == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+
 		try 
 		{
 			return new Map(
