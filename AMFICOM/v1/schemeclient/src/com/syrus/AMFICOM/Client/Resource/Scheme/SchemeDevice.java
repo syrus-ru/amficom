@@ -54,7 +54,9 @@ public class SchemeDevice extends StubResource implements Serializable
 
 	public boolean isCrossRouteValid()
 	{
-		if (ports.isEmpty() || cableports.isEmpty())
+		if (ports.isEmpty() || !hasCablesConnected())
+			return crossroute.isEmpty() ? true : false;
+		else if (crossroute == null || crossroute.isEmpty())
 			return false;
 
 		//check ports
@@ -94,7 +96,7 @@ public class SchemeDevice extends StubResource implements Serializable
 	public void createDefaultCrossRoute()
 	{
 		crossroute = new HashMap();
-		if (ports.isEmpty() || cableports.isEmpty())
+		if (ports.isEmpty() || !hasCablesConnected())
 			return;
 
 		List inputCables = new LinkedList();
@@ -116,6 +118,19 @@ public class SchemeDevice extends StubResource implements Serializable
 			findCrossRoute(inputCables, "out", crossroute);
 		if (!outputCables.isEmpty())
 			findCrossRoute(outputCables, "in", crossroute);
+	}
+
+	private boolean hasCablesConnected()
+	{
+		if (cableports.isEmpty())
+			return false;
+		for (Iterator it = cableports.iterator(); it.hasNext();)
+		{
+			SchemeCablePort p = (SchemeCablePort)it.next();
+			if (p.cable_link_id.length() != 0)
+				return true;
+		}
+		return false;
 	}
 
 	private static int parseNumber(String str)

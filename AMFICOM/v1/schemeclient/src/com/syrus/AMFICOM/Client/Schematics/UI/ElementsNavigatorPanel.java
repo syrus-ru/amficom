@@ -236,7 +236,7 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 				aContext.getDataSourceInterface().RemoveSchemeProtos(new String[] {proto_id});
 
 				Map hash = Pool.getMap(MapProtoElement.typ);
-				for (Iterator it = hash.keySet().iterator(); it.hasNext();)
+				for (Iterator it = hash.values().iterator(); it.hasNext();)
 				{
 					MapProtoElement map_proto = (MapProtoElement)it.next();
 					if (map_proto.pe_ids.contains(proto_id))

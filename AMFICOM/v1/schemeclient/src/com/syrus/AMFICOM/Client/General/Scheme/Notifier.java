@@ -137,10 +137,8 @@ public class Notifier
 					if (dev != null)
 					{
 						devices.add(dev);
-						dev.createDefaultCrossRoute();
 					}
 				}
-//         obj_res.add(((DeviceCell)cells[i]).getSchemeDevice());
 				else if (obj instanceof DefaultLink)
 				{
 				//;	if (mode.equals(Constants.linkMode))
@@ -198,8 +196,6 @@ public class Notifier
 				}
 				else if (obj instanceof CablePortCell)
 				{
-					//if (((CablePortCell)obj).getSchemeCablePortId().equals("schcprt1012"))
-				//				((CablePortCell)obj).setSchemeCablePortId("schcprt1005");
 					SchemeCablePort port = ((CablePortCell)obj).getSchemeCablePort();
 					scheme_cports.add(port);
 					if (!port.cable_port_id.equals(""))
@@ -524,26 +520,5 @@ public class Notifier
 			}
 		}
 	}
-/*
- static boolean hasIdenticalPathId(Object[] cells, String id)
- {
-	for (int i = 0; i < cells.length; i++)
-	{
-	 if (cells[i] instanceof DefaultLink)
-	 {
-		isEditable = isEditable && !GraphActions.hasGroupedParent(cells[i]);
-		if (!((DefaultLink)cells[i]).getSchemePathId().equals(id))
-		 return false;
-	 }
-	 else if (cells[i] instanceof DefaultCableLink)
-	 {
-		isEditable = isEditable && !GraphActions.hasGroupedParent(cells[i]);
-		if (!((DefaultCableLink)cells[i]).getSchemePathId().equals(id))
-		 return false;
-	 }
-	 else return false;
-	}
-	return true;
- }*/
 }
 

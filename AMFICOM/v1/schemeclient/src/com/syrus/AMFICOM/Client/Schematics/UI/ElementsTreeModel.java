@@ -322,7 +322,7 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			{
 				Map map_groups = Pool.getMap(MapProtoGroup.typ);
 				if (map_groups != null)
-					for (Iterator it = map_groups.keySet().iterator(); it.hasNext();)
+					for (Iterator it = map_groups.values().iterator(); it.hasNext();)
 					{
 						MapProtoGroup map_group = (MapProtoGroup)it.next();
 						if (map_group.parent_id == null || map_group.parent_id.equals(""))
