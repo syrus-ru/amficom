@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.19 2005/03/10 21:06:25 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.20 2005/03/14 13:51:32 bob Exp $
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/03/10 21:06:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/03/14 13:51:32 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -121,6 +121,7 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				MeasurementSetup measurementSetup = (MeasurementSetup) object;
 				params.addAll(measurementSetup.getMonitoredElementIds());
 				condition = super.conditionTest(params);
+				break;
 			case ObjectEntities.RESULT_ENTITY_CODE:
 				Identifier actionId = ((Result) object).getAction().getId();
 				condition = super.conditionTest(actionId);
