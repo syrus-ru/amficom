@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeMonitoringSolutionImpl.java,v 1.2 2004/11/24 14:16:19 bass Exp $
+ * $Id: SchemeMonitoringSolutionImpl.java,v 1.3 2004/11/30 07:54:42 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,22 +8,19 @@
 
 package com.syrus.AMFICOM.scheme.corba;
 
-import com.syrus.AMFICOM.general.corba.Identifier;
+import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.util.logging.ErrorHandler;
+import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/11/24 14:16:19 $
+ * @version $Revision: 1.3 $, $Date: 2004/11/30 07:54:42 $
  * @module schemecommon_v1
  */
 final class SchemeMonitoringSolutionImpl extends SchemeMonitoringSolution implements Cloneable {
 	private static final ErrorHandler ERROR_HANDLER = ErrorHandler.getInstance();
 
 	SchemeMonitoringSolutionImpl() {
-	}
-
-	SchemeMonitoringSolutionImpl(final Identifier id) {
-		this.thisId = id;
 	}
 
 	public SchemeMonitoringSolution cloneInstance() {
@@ -47,7 +44,71 @@ final class SchemeMonitoringSolutionImpl extends SchemeMonitoringSolution implem
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @return
+	 * @see java.util.JavaUtilIStorableObject#getCreated()
+	 */
+	public Date getCreated() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.general.ComSyrusAmficomGeneralIStorableObject#getCreatorId()
+	 */
+	public com.syrus.AMFICOM.general.Identifier getCreatorId() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see java.util.JavaUtilIStorableObject#getDependencies()
+	 */
+	public List getDependencies() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.general.corba.IStorableObject#getHeaderTransferable()
+	 */
+	public StorableObject_Transferable getHeaderTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.general.ComSyrusAmficomGeneralIStorableObject#getId()
+	 */
+	public com.syrus.AMFICOM.general.Identifier getId() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see java.util.JavaUtilIStorableObject#getModified()
+	 */
+	public Date getModified() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.general.ComSyrusAmficomGeneralIStorableObject#getModifierId()
+	 */
+	public com.syrus.AMFICOM.general.Identifier getModifierId() {
+		throw new UnsupportedOperationException();
+	}
+
 	public Identifier id() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.general.corba.IStorableObject#isChanged()
+	 */
+	public boolean isChanged() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -67,11 +128,35 @@ final class SchemeMonitoringSolutionImpl extends SchemeMonitoringSolution implem
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @param newPrice
+	 * @see com.syrus.AMFICOM.scheme.corba.SchemeMonitoringSolution#price(double)
+	 */
+	public void price(double newPrice) {
+		throw new UnsupportedOperationException();
+	}
+
 	public Scheme scheme() {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @param newScheme
+	 * @see com.syrus.AMFICOM.scheme.corba.SchemeMonitoringSolution#scheme(com.syrus.AMFICOM.scheme.corba.Scheme)
+	 */
+	public void scheme(Scheme newScheme) {
+		throw new UnsupportedOperationException();
+	}
+
 	public SchemePath[] schemePaths() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newSchemePaths
+	 * @see com.syrus.AMFICOM.scheme.corba.SchemeMonitoringSolution#schemePaths(com.syrus.AMFICOM.scheme.corba.SchemePath[])
+	 */
+	public void schemePaths(SchemePath[] newSchemePaths) {
 		throw new UnsupportedOperationException();
 	}
 

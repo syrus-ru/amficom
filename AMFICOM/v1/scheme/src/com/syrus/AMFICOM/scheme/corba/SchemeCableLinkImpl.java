@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeCableLinkImpl.java,v 1.3 2004/11/24 13:05:02 bass Exp $
+ * $Id: SchemeCableLinkImpl.java,v 1.4 2004/11/30 07:54:42 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,24 +8,21 @@
 
 package com.syrus.AMFICOM.scheme.corba;
 
-import com.syrus.AMFICOM.configuration.corba.*;
 import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.general.corba.Identifier;
+import com.syrus.AMFICOM.configuration.corba.*;
+import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.util.logging.ErrorHandler;
+import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2004/11/24 13:05:02 $
+ * @version $Revision: 1.4 $, $Date: 2004/11/30 07:54:42 $
  * @module schemecommon_v1
  */
 public final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
 	private static final ErrorHandler ERROR_HANDLER = ErrorHandler.getInstance();
 
 	SchemeCableLinkImpl() {
-	}
-
-	SchemeCableLinkImpl(final Identifier id) {
-		this.thisId = id;
 	}
 
 	/**
@@ -69,6 +66,14 @@ public final class SchemeCableLinkImpl extends SchemeCableLink implements Clonea
 	}
 
 	/**
+	 * @param newCableChannelingItems
+	 * @see com.syrus.AMFICOM.scheme.corba.SchemeCableLink#cableChannelingItems(com.syrus.AMFICOM.scheme.corba.CableChannelingItem[])
+	 */
+	public void cableChannelingItems(CableChannelingItem[] newCableChannelingItems) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * @see #cableLinkTypeImpl()
 	 */
 	public LinkType_Transferable cableLinkType() {
@@ -104,23 +109,25 @@ public final class SchemeCableLinkImpl extends SchemeCableLink implements Clonea
 	}
 
 	/**
-	 * @see #characteristicsImpl(Characteristic[])
+	 * @see #characteristicsImpl(List)
 	 */
 	public void characteristics(final Characteristic_Transferable characteristics[]) {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see #characteristics()
+	 * @return
+	 * @see java.util.JavaUtilCharacterizable#characteristicsImpl()
 	 */
-	public Characteristic[] characteristicsImpl() {
+	public List characteristicsImpl() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see #characteristics(Characteristic_Transferable[])
+	 * @param newCharacteristicsImpl
+	 * @see java.util.JavaUtilCharacterizable#characteristicsImpl(java.util.List)
 	 */
-	public void characteristicsImpl(final Characteristic characteristics[]) {
+	public void characteristicsImpl(List newCharacteristicsImpl) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -145,7 +152,71 @@ public final class SchemeCableLinkImpl extends SchemeCableLink implements Clonea
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @return
+	 * @see java.util.JavaUtilIStorableObject#getCreated()
+	 */
+	public Date getCreated() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.general.ComSyrusAmficomGeneralIStorableObject#getCreatorId()
+	 */
+	public com.syrus.AMFICOM.general.Identifier getCreatorId() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see java.util.JavaUtilIStorableObject#getDependencies()
+	 */
+	public List getDependencies() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.general.corba.IStorableObject#getHeaderTransferable()
+	 */
+	public StorableObject_Transferable getHeaderTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.general.ComSyrusAmficomGeneralIStorableObject#getId()
+	 */
+	public com.syrus.AMFICOM.general.Identifier getId() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see java.util.JavaUtilIStorableObject#getModified()
+	 */
+	public Date getModified() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.general.ComSyrusAmficomGeneralIStorableObject#getModifierId()
+	 */
+	public com.syrus.AMFICOM.general.Identifier getModifierId() {
+		throw new UnsupportedOperationException();
+	}
+
 	public Identifier id() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.general.corba.IStorableObject#isChanged()
+	 */
+	public boolean isChanged() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -157,9 +228,25 @@ public final class SchemeCableLinkImpl extends SchemeCableLink implements Clonea
 	}
 
 	/**
+	 * @param newLink
+	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemeLink#link(com.syrus.AMFICOM.configuration.corba.Link_Transferable)
+	 */
+	public void link(Link_Transferable newLink) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * @see #link()
 	 */
 	public Link linkImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newLinkImpl
+	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemeLink#linkImpl(com.syrus.AMFICOM.configuration.Link)
+	 */
+	public void linkImpl(Link newLinkImpl) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -203,7 +290,23 @@ public final class SchemeCableLinkImpl extends SchemeCableLink implements Clonea
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @param newSchemeCableThreads
+	 * @see com.syrus.AMFICOM.scheme.corba.SchemeCableLink#schemeCableThreads(com.syrus.AMFICOM.scheme.corba.SchemeCableThread[])
+	 */
+	public void schemeCableThreads(SchemeCableThread[] newSchemeCableThreads) {
+		throw new UnsupportedOperationException();
+	}
+
 	public AbstractSchemePort sourceAbstractSchemePort() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newSourceAbstractSchemePort
+	 * @see com.syrus.AMFICOM.scheme.corba.AbstractSchemeLink#sourceAbstractSchemePort(com.syrus.AMFICOM.scheme.corba.AbstractSchemePort)
+	 */
+	public void sourceAbstractSchemePort(AbstractSchemePort newSourceAbstractSchemePort) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -211,11 +314,35 @@ public final class SchemeCableLinkImpl extends SchemeCableLink implements Clonea
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @param newSourceSchemeCablePort
+	 * @see com.syrus.AMFICOM.scheme.corba.SchemeCableLink#sourceSchemeCablePort(com.syrus.AMFICOM.scheme.corba.SchemeCablePort)
+	 */
+	public void sourceSchemeCablePort(SchemeCablePort newSourceSchemeCablePort) {
+		throw new UnsupportedOperationException();
+	}
+
 	public AbstractSchemePort targetAbstractSchemePort() {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @param newTargetAbstractSchemePort
+	 * @see com.syrus.AMFICOM.scheme.corba.AbstractSchemeLink#targetAbstractSchemePort(com.syrus.AMFICOM.scheme.corba.AbstractSchemePort)
+	 */
+	public void targetAbstractSchemePort(AbstractSchemePort newTargetAbstractSchemePort) {
+		throw new UnsupportedOperationException();
+	}
+
 	public SchemeCablePort targetSchemeCablePort() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newTargetSchemeCablePort
+	 * @see com.syrus.AMFICOM.scheme.corba.SchemeCableLink#targetSchemeCablePort(com.syrus.AMFICOM.scheme.corba.SchemeCablePort)
+	 */
+	public void targetSchemeCablePort(SchemeCablePort newTargetSchemeCablePort) {
 		throw new UnsupportedOperationException();
 	}
 

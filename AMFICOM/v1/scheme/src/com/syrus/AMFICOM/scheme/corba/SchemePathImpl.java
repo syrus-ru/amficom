@@ -1,5 +1,5 @@
 /*
- * $Id: SchemePathImpl.java,v 1.2 2004/11/24 14:16:19 bass Exp $
+ * $Id: SchemePathImpl.java,v 1.3 2004/11/30 07:54:42 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,15 @@
 
 package com.syrus.AMFICOM.scheme.corba;
 
+import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.*;
-import com.syrus.AMFICOM.general.corba.Identifier;
+import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.util.logging.ErrorHandler;
+import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/11/24 14:16:19 $
+ * @version $Revision: 1.3 $, $Date: 2004/11/30 07:54:42 $
  * @module schemecommon_v1
  */
 final class SchemePathImpl extends SchemePath implements Cloneable {
@@ -23,16 +25,28 @@ final class SchemePathImpl extends SchemePath implements Cloneable {
 	SchemePathImpl() {
 	}
 
-	SchemePathImpl(final Identifier id) {
-		this.thisId = id;
-	}
-
 	public Characteristic_Transferable[] characteristics() {
 		throw new UnsupportedOperationException();
 	}
 
 	public void characteristics(
 			Characteristic_Transferable[] characteristics) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see java.util.JavaUtilCharacterizable#characteristicsImpl()
+	 */
+	public List characteristicsImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newCharacteristicsImpl
+	 * @see java.util.JavaUtilCharacterizable#characteristicsImpl(java.util.List)
+	 */
+	public void characteristicsImpl(List newCharacteristicsImpl) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -61,11 +75,91 @@ final class SchemePathImpl extends SchemePath implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @param newEndDevice
+	 * @see com.syrus.AMFICOM.scheme.corba.SchemePath#endDevice(com.syrus.AMFICOM.scheme.corba.SchemeElement)
+	 */
+	public void endDevice(SchemeElement newEndDevice) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see java.util.JavaUtilIStorableObject#getCreated()
+	 */
+	public Date getCreated() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.general.ComSyrusAmficomGeneralIStorableObject#getCreatorId()
+	 */
+	public com.syrus.AMFICOM.general.Identifier getCreatorId() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see java.util.JavaUtilIStorableObject#getDependencies()
+	 */
+	public List getDependencies() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.general.corba.IStorableObject#getHeaderTransferable()
+	 */
+	public StorableObject_Transferable getHeaderTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.general.ComSyrusAmficomGeneralIStorableObject#getId()
+	 */
+	public com.syrus.AMFICOM.general.Identifier getId() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see java.util.JavaUtilIStorableObject#getModified()
+	 */
+	public Date getModified() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.general.ComSyrusAmficomGeneralIStorableObject#getModifierId()
+	 */
+	public com.syrus.AMFICOM.general.Identifier getModifierId() {
+		throw new UnsupportedOperationException();
+	}
+
 	public Identifier id() {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.general.corba.IStorableObject#isChanged()
+	 */
+	public boolean isChanged() {
+		throw new UnsupportedOperationException();
+	}
+
 	public PathElement[] links() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newLinks
+	 * @see com.syrus.AMFICOM.scheme.corba.SchemePath#links(com.syrus.AMFICOM.scheme.corba.PathElement[])
+	 */
+	public void links(PathElement[] newLinks) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -85,11 +179,67 @@ final class SchemePathImpl extends SchemePath implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @param newPath
+	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemePath#path(com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable)
+	 */
+	public void path(TransmissionPath_Transferable newPath) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemePath#pathImpl()
+	 */
+	public TransmissionPath pathImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newPathImpl
+	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemePath#pathImpl(com.syrus.AMFICOM.configuration.TransmissionPath)
+	 */
+	public void pathImpl(TransmissionPath newPathImpl) {
+		throw new UnsupportedOperationException();
+	}
+
 	public SchemeElement startDevice() {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @param newStartDevice
+	 * @see com.syrus.AMFICOM.scheme.corba.SchemePath#startDevice(com.syrus.AMFICOM.scheme.corba.SchemeElement)
+	 */
+	public void startDevice(SchemeElement newStartDevice) {
+		throw new UnsupportedOperationException();
+	}
+
 	public TransmissionPathType_Transferable type() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newType
+	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemePath#type(com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable)
+	 */
+	public void type(TransmissionPathType_Transferable newType) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemePath#typeImpl()
+	 */
+	public TransmissionPathType typeImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newTypeImpl
+	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemePath#typeImpl(com.syrus.AMFICOM.configuration.TransmissionPathType)
+	 */
+	public void typeImpl(TransmissionPathType newTypeImpl) {
 		throw new UnsupportedOperationException();
 	}
 

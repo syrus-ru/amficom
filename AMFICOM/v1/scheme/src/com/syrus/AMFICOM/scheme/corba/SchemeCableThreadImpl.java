@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeCableThreadImpl.java,v 1.2 2004/11/24 14:16:19 bass Exp $
+ * $Id: SchemeCableThreadImpl.java,v 1.3 2004/11/30 07:54:42 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,15 @@
 
 package com.syrus.AMFICOM.scheme.corba;
 
+import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.*;
-import com.syrus.AMFICOM.general.corba.Identifier;
+import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.util.logging.ErrorHandler;
+import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/11/24 14:16:19 $
+ * @version $Revision: 1.3 $, $Date: 2004/11/30 07:54:42 $
  * @module schemecommon_v1
  */
 final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable {
@@ -23,11 +25,31 @@ final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable
 	SchemeCableThreadImpl() {
 	}
 
-	SchemeCableThreadImpl(final Identifier id) {
-		this.thisId = id;
+	public CableThreadType_Transferable cableThreadType() {
+		throw new UnsupportedOperationException();
 	}
 
-	public CableThreadType_Transferable cableThreadType() {
+	/**
+	 * @param newCableThreadType
+	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeCableThread#cableThreadType(com.syrus.AMFICOM.configuration.corba.CableThreadType_Transferable)
+	 */
+	public void cableThreadType(CableThreadType_Transferable newCableThreadType) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeCableThread#cableThreadTypeImpl()
+	 */
+	public CableThreadType cableThreadTypeImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newCableThreadTypeImpl
+	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeCableThread#cableThreadTypeImpl(com.syrus.AMFICOM.configuration.CableThreadType)
+	 */
+	public void cableThreadTypeImpl(CableThreadType newCableThreadTypeImpl) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -36,6 +58,22 @@ final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable
 	}
 
 	public void characteristics(Characteristic_Transferable[] characteristics) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see java.util.JavaUtilCharacterizable#characteristicsImpl()
+	 */
+	public List characteristicsImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newCharacteristicsImpl
+	 * @see java.util.JavaUtilCharacterizable#characteristicsImpl(java.util.List)
+	 */
+	public void characteristicsImpl(List newCharacteristicsImpl) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -60,7 +98,71 @@ final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @return
+	 * @see java.util.JavaUtilIStorableObject#getCreated()
+	 */
+	public Date getCreated() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.general.ComSyrusAmficomGeneralIStorableObject#getCreatorId()
+	 */
+	public com.syrus.AMFICOM.general.Identifier getCreatorId() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see java.util.JavaUtilIStorableObject#getDependencies()
+	 */
+	public List getDependencies() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.general.corba.IStorableObject#getHeaderTransferable()
+	 */
+	public StorableObject_Transferable getHeaderTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.general.ComSyrusAmficomGeneralIStorableObject#getId()
+	 */
+	public com.syrus.AMFICOM.general.Identifier getId() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see java.util.JavaUtilIStorableObject#getModified()
+	 */
+	public Date getModified() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.general.ComSyrusAmficomGeneralIStorableObject#getModifierId()
+	 */
+	public com.syrus.AMFICOM.general.Identifier getModifierId() {
+		throw new UnsupportedOperationException();
+	}
+
 	public Identifier id() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.general.corba.IStorableObject#isChanged()
+	 */
+	public boolean isChanged() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -80,11 +182,51 @@ final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @param newSchemeCablelink
+	 * @see com.syrus.AMFICOM.scheme.corba.SchemeCableThread#schemeCablelink(com.syrus.AMFICOM.scheme.corba.SchemeCableLink)
+	 */
+	public void schemeCablelink(SchemeCableLink newSchemeCablelink) {
+		throw new UnsupportedOperationException();
+	}
+
 	public SchemePort schemePort() {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @param newSchemePort
+	 * @see com.syrus.AMFICOM.scheme.corba.SchemeCableThread#schemePort(com.syrus.AMFICOM.scheme.corba.SchemePort)
+	 */
+	public void schemePort(SchemePort newSchemePort) {
+		throw new UnsupportedOperationException();
+	}
+
 	public Link_Transferable thread() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newThread
+	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeCableThread#thread(com.syrus.AMFICOM.configuration.corba.Link_Transferable)
+	 */
+	public void thread(Link_Transferable newThread) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeCableThread#threadImpl()
+	 */
+	public Link threadImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newThreadImpl
+	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeCableThread#threadImpl(com.syrus.AMFICOM.configuration.Link)
+	 */
+	public void threadImpl(Link newThreadImpl) {
 		throw new UnsupportedOperationException();
 	}
 

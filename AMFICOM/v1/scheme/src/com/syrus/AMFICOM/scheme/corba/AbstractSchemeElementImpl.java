@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElementImpl.java,v 1.3 2004/11/24 12:40:57 bass Exp $
+ * $Id: AbstractSchemeElementImpl.java,v 1.4 2004/11/30 07:54:42 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,8 @@
 package com.syrus.AMFICOM.scheme.corba;
 
 import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
-import com.syrus.AMFICOM.general.corba.Identifier;
+import com.syrus.AMFICOM.general.corba.*;
+import java.util.*;
 
 /**
  * This class is never used directly, it was provided just in order for source
@@ -17,7 +18,7 @@ import com.syrus.AMFICOM.general.corba.Identifier;
  * {@link AbstractSchemeElement} instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2004/11/24 12:40:57 $
+ * @version $Revision: 1.4 $, $Date: 2004/11/30 07:54:42 $
  * @module schemecommon_v1
  */
 final class AbstractSchemeElementImpl extends AbstractSchemeElement {
@@ -35,7 +36,15 @@ final class AbstractSchemeElementImpl extends AbstractSchemeElement {
 		throw new UnsupportedOperationException();
 	}
 
-	public void characteristics(Characteristic_Transferable[] characteristics) {
+	public void characteristics(Characteristic_Transferable characteristics[]) {
+		throw new UnsupportedOperationException();
+	}
+
+	public List characteristicsImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	public void characteristicsImpl(List characteristics) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -51,7 +60,39 @@ final class AbstractSchemeElementImpl extends AbstractSchemeElement {
 		throw new UnsupportedOperationException();
 	}
 
+	public Date getCreated() {
+		throw new UnsupportedOperationException();
+	}
+
+	public com.syrus.AMFICOM.general.Identifier getCreatorId() {
+		throw new UnsupportedOperationException();
+	}
+
+	public List getDependencies() {
+		throw new UnsupportedOperationException();
+	}
+
+	public StorableObject_Transferable getHeaderTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
+	public com.syrus.AMFICOM.general.Identifier getId() {
+		throw new UnsupportedOperationException();
+	}
+
+	public Date getModified() {
+		throw new UnsupportedOperationException();
+	}
+
+	public com.syrus.AMFICOM.general.Identifier getModifierId() {
+		throw new UnsupportedOperationException();
+	}
+
 	public Identifier id() {
+		throw new UnsupportedOperationException();
+	}
+
+	public boolean isChanged() {
 		throw new UnsupportedOperationException();
 	}
 

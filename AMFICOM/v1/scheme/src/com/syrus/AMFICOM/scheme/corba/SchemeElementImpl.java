@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeElementImpl.java,v 1.3 2004/11/24 14:16:19 bass Exp $
+ * $Id: SchemeElementImpl.java,v 1.4 2004/11/30 07:54:42 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.                                              
  * Dept. of Science & Technology.                                               
@@ -9,14 +9,18 @@
 package com.syrus.AMFICOM.scheme.corba;
 
 import com.syrus.AMFICOM.CORBA.Map.MapSiteElement_Transferable;
-import com.syrus.AMFICOM.CORBA.Resource.ImageResource_Transferable;
+import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.*;
-import com.syrus.AMFICOM.general.corba.Identifier;
+import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.resource.ImageResource;
+import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import com.syrus.util.logging.ErrorHandler;
+
+import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2004/11/24 14:16:19 $
+ * @version $Revision: 1.4 $, $Date: 2004/11/30 07:54:42 $
  * @module schemecommon_v1
  */
 public final class SchemeElementImpl extends SchemeElement implements Cloneable {
@@ -25,16 +29,6 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 	SchemeElementImpl() {
 	}
 	
-	SchemeElementImpl(final Identifier id,
-			final SchemeProtoElement schemeProtoElement,
-			final Scheme internalScheme,
-			final Scheme scheme) {
-		this.thisId = id;
-		this.schemeProtoElementId = schemeProtoElement.id();
-		this.internalSchemeId = internalScheme.id();
-		this.schemeId = scheme.id();
-	}
-
 	public boolean alarmed() {
 		throw new UnsupportedOperationException();
 	}
@@ -67,6 +61,22 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @return
+	 * @see java.util.JavaUtilCharacterizable#characteristicsImpl()
+	 */
+	public List characteristicsImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newCharacteristicsImpl
+	 * @see java.util.JavaUtilCharacterizable#characteristicsImpl(java.util.List)
+	 */
+	public void characteristicsImpl(List newCharacteristicsImpl) {
+		throw new UnsupportedOperationException();
+	}
+
 	public SchemeElement cloneInstance() {
 		try {
 			return (SchemeElement) this.clone();
@@ -96,11 +106,99 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeElement#equipmentImpl()
+	 */
+	public Equipment equipmentImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newEquipmentImpl
+	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeElement#equipmentImpl(com.syrus.AMFICOM.configuration.Equipment)
+	 */
+	public void equipmentImpl(Equipment newEquipmentImpl) {
+		throw new UnsupportedOperationException();
+	}
+
 	public EquipmentType_Transferable equipmentType() {
 		throw new UnsupportedOperationException();
 	}
 
 	public void equipmentType(EquipmentType_Transferable equipmentType) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeElement#equipmentTypeImpl()
+	 */
+	public EquipmentType equipmentTypeImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newEquipmentTypeImpl
+	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeElement#equipmentTypeImpl(com.syrus.AMFICOM.configuration.EquipmentType)
+	 */
+	public void equipmentTypeImpl(EquipmentType newEquipmentTypeImpl) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see java.util.JavaUtilIStorableObject#getCreated()
+	 */
+	public Date getCreated() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.general.ComSyrusAmficomGeneralIStorableObject#getCreatorId()
+	 */
+	public com.syrus.AMFICOM.general.Identifier getCreatorId() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see java.util.JavaUtilIStorableObject#getDependencies()
+	 */
+	public List getDependencies() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.general.corba.IStorableObject#getHeaderTransferable()
+	 */
+	public StorableObject_Transferable getHeaderTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.general.ComSyrusAmficomGeneralIStorableObject#getId()
+	 */
+	public com.syrus.AMFICOM.general.Identifier getId() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see java.util.JavaUtilIStorableObject#getModified()
+	 */
+	public Date getModified() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.general.ComSyrusAmficomGeneralIStorableObject#getModifierId()
+	 */
+	public com.syrus.AMFICOM.general.Identifier getModifierId() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -113,6 +211,14 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 	}
 
 	public void internalScheme(Scheme internalScheme) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.general.corba.IStorableObject#isChanged()
+	 */
+	public boolean isChanged() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -136,6 +242,22 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeElement#rtuImpl()
+	 */
+	public KIS rtuImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newRtuImpl
+	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationSchemeElement#rtuImpl(com.syrus.AMFICOM.configuration.KIS)
+	 */
+	public void rtuImpl(KIS newRtuImpl) {
+		throw new UnsupportedOperationException();
+	}
+
 	public Scheme scheme() {
 		throw new UnsupportedOperationException();
 	}
@@ -145,6 +267,30 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 	}
 
 	public ImageResource_Transferable schemeCell() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newSchemeCell
+	 * @see com.syrus.AMFICOM.resource.SchemeCellContainer#schemeCell(com.syrus.AMFICOM.resource.corba.ImageResource_Transferable)
+	 */
+	public void schemeCell(com.syrus.AMFICOM.resource.corba.ImageResource_Transferable newSchemeCell) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.resource.SchemeCellContainer#schemeCellImpl()
+	 */
+	public ImageResource schemeCellImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newSchemeCellImpl
+	 * @see com.syrus.AMFICOM.resource.SchemeCellContainer#schemeCellImpl(com.syrus.AMFICOM.resource.ImageResource)
+	 */
+	public void schemeCellImpl(ImageResource newSchemeCellImpl) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -176,6 +322,14 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @param newSchemeProtoElement
+	 * @see com.syrus.AMFICOM.scheme.corba.SchemeElement#schemeProtoElement(com.syrus.AMFICOM.scheme.corba.SchemeProtoElement)
+	 */
+	public void schemeProtoElement(SchemeProtoElement newSchemeProtoElement) {
+		throw new UnsupportedOperationException();
+	}
+
 	public MapSiteElement_Transferable site() {
 		throw new UnsupportedOperationException();
 	}
@@ -192,7 +346,47 @@ public final class SchemeElementImpl extends SchemeElement implements Cloneable 
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.resource.SchemeSymbolContainer#symbolImpl()
+	 */
+	public ImageResource symbolImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newSymbolImpl
+	 * @see com.syrus.AMFICOM.resource.SchemeSymbolContainer#symbolImpl(com.syrus.AMFICOM.resource.ImageResource)
+	 */
+	public void symbolImpl(ImageResource newSymbolImpl) {
+		throw new UnsupportedOperationException();
+	}
+
 	public ImageResource_Transferable ugoCell() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newUgoCell
+	 * @see com.syrus.AMFICOM.resource.SchemeCellContainer#ugoCell(com.syrus.AMFICOM.resource.corba.ImageResource_Transferable)
+	 */
+	public void ugoCell(com.syrus.AMFICOM.resource.corba.ImageResource_Transferable newUgoCell) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @return
+	 * @see com.syrus.AMFICOM.resource.SchemeCellContainer#ugoCellImpl()
+	 */
+	public ImageResource ugoCellImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newUgoCellImpl
+	 * @see com.syrus.AMFICOM.resource.SchemeCellContainer#ugoCellImpl(com.syrus.AMFICOM.resource.ImageResource)
+	 */
+	public void ugoCellImpl(ImageResource newUgoCellImpl) {
 		throw new UnsupportedOperationException();
 	}
 

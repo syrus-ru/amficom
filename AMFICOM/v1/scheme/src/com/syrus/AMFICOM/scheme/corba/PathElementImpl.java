@@ -1,5 +1,5 @@
 /*
- * $Id: PathElementImpl.java,v 1.3 2004/11/24 10:03:58 bass Exp $
+ * $Id: PathElementImpl.java,v 1.4 2004/11/30 07:54:42 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.                                              
  * Dept. of Science & Technology.                                               
@@ -8,14 +8,15 @@
 
 package com.syrus.AMFICOM.scheme.corba;
 
-import com.syrus.AMFICOM.general.corba.Identifier;
-import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
+import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
 import com.syrus.util.logging.ErrorHandler;
+import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2004/11/24 10:03:58 $
+ * @version $Revision: 1.4 $, $Date: 2004/11/30 07:54:42 $
  * @module schemecommon_v1
  */
 final class PathElementImpl extends PathElement implements Cloneable {
@@ -26,10 +27,9 @@ final class PathElementImpl extends PathElement implements Cloneable {
 	PathElementImpl() {
 	}
 
-	PathElementImpl(final Identifier id) {
-		this.thisId = id;
-	}
-
+	/**
+	 * @see PathElement#abstractSchemeElement()
+	 */
 	public AbstractSchemeElement abstractSchemeElement() {
 		try {
 			if (this.abstractSchemeElement == null)
@@ -40,6 +40,16 @@ final class PathElementImpl extends PathElement implements Cloneable {
 		return this.abstractSchemeElement;
 	}
 
+	/**
+	 * @see PathElement#abstractSchemeElement(AbstractSchemeElement)
+	 */
+	public void abstractSchemeElement(AbstractSchemeElement abstractSchemeElement) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see PathElement#cloneInstance()
+	 */
 	public PathElement cloneInstance() {
 		try {
 			return (PathElement) this.clone();
@@ -49,32 +59,113 @@ final class PathElementImpl extends PathElement implements Cloneable {
 		}
 	}
 
+	/**
+	 * @see StorableObject#created()
+	 */
 	public long created() {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @see Describable#description()
+	 */
 	public String description() {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @see Describable#description(java.lang.String)
+	 */
 	public void description(String description) {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @see PathElement#endAbstractSchemePort()
+	 */
 	public AbstractSchemePort endAbstractSchemePort() {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @see PathElement#endAbstractSchemePort(AbstractSchemePort)
+	 */
+	public void endAbstractSchemePort(AbstractSchemePort endAbstractSchemePort) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see JavaUtilIStorableObject#getCreated()
+	 */
+	public Date getCreated() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.ComSyrusAmficomGeneralIStorableObject#getCreatorId()
+	 */
+	public com.syrus.AMFICOM.general.Identifier getCreatorId() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see JavaUtilIStorableObject#getDependencies()
+	 */
+	public List getDependencies() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see IStorableObject#getHeaderTransferable()
+	 */
+	public StorableObject_Transferable getHeaderTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.ComSyrusAmficomGeneralIStorableObject#getId()
+	 */
+	public com.syrus.AMFICOM.general.Identifier getId() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see JavaUtilIStorableObject#getModified()
+	 */
+	public Date getModified() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.ComSyrusAmficomGeneralIStorableObject#getModifierId()
+	 */
+	public com.syrus.AMFICOM.general.Identifier getModifierId() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see Identifiable#id()
+	 */
 	public Identifier id() {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @see IStorableObject#isChanged()
+	 */
+	public boolean isChanged() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see StorableObject#modified()
+	 */
 	public long modified() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.corba.Namable#name()
+	 * @see Namable#name()
 	 * @todo Maybe, use own private property. However, there's a problem
 	 *       with versioning.
 	 */
@@ -82,30 +173,86 @@ final class PathElementImpl extends PathElement implements Cloneable {
 		return this.abstractSchemeElement().name();
 	}
 
+	/**
+	 * @see Namable#name(java.lang.String)
+	 */
 	public void name(String name) {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @see PathElement#scheme()
+	 */
 	public Scheme scheme() {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @see PathElement#scheme(Scheme)
+	 */
+	public void scheme(Scheme scheme) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see PathElement#schemeCableThread()
+	 */
 	public SchemeCableThread schemeCableThread() {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @see PathElement#schemeCableThread(SchemeCableThread)
+	 */
+	public void schemeCableThread(SchemeCableThread schemeCableThread) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see PathElement#sequentialNumber()
+	 */
 	public int sequentialNumber() {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @see PathElement#sequentialNumber(int)
+	 */
+	public void sequentialNumber(int sequentialNumber) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see PathElement#startAbstractSchemePort()
+	 */
 	public AbstractSchemePort startAbstractSchemePort() {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @see PathElement#startAbstractSchemePort(AbstractSchemePort)
+	 */
+	public void startAbstractSchemePort(AbstractSchemePort startAbstractSchemePort) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see PathElement#type()
+	 */
 	public Type type() {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @see PathElement#type(Type)
+	 */
+	public void type(Type type) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see StorableObject#version()
+	 */
 	public long version() {
 		throw new UnsupportedOperationException();
 	}
