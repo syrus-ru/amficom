@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.15 2004/09/27 07:05:01 bob Exp $
+ * $Id: KISReport.java,v 1.16 2004/10/05 12:16:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.ParameterType;
+import com.syrus.AMFICOM.measurement.ParameterTypeCodenames;
 import com.syrus.AMFICOM.measurement.ParameterTypeDatabase;
 import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.AMFICOM.measurement.Measurement;
@@ -27,13 +28,12 @@ import com.syrus.AMFICOM.event.corba.AlarmLevel;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/09/27 07:05:01 $
+ * @version $Revision: 1.16 $, $Date: 2004/10/05 12:16:17 $
  * @author $Author: bob $
  * @module mcm_v1
  */
 
-public class KISReport {
-	public static final String CODENAME_REFLECTOGRAMMA = "reflectogramma";
+public class KISReport implements ParameterTypeCodenames {
 	private static Map outParameterTypeIds;	//Map <String parameterTypeCodename, Identifier parameterId>
 
 	private Identifier measurementId;
