@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.24 2004/11/17 11:17:40 max Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.25 2004/11/18 12:25:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -26,8 +27,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/11/17 11:17:40 $
- * @author $Author: max $
+ * @version $Revision: 1.25 $, $Date: 2004/11/18 12:25:00 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -422,66 +423,67 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 	}
     
     public java.util.Set refresh(java.util.Set storableObjects) throws CommunicationException, DatabaseException {
-        List soIds = new ArrayList();
-        short entityCode = 0;
-        for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-            StorableObject so = (StorableObject) it.next();
-            soIds.add(so.getId());      
-        }
-        for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-            StorableObject so = (StorableObject) it.next();            
-            so.getId().getMajor();
-        }
-        List loadedSo = null;
+    	if (storableObjects.isEmpty())
+			return Collections.EMPTY_SET;
+		
+		if (storableObjects.isEmpty())
+			return Collections.EMPTY_SET;
+		
+        short entityCode = ((StorableObject) storableObjects.iterator().next()).getId().getMajor();
+        
+        StorableObjectDatabase database = null;
         try {
         	switch (entityCode) {
                 case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-                    loadedSo = loadParameterTypes(soIds);
+                    database = MeasurementDatabaseContext.getParameterTypeDatabase();
                     break;
                 case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
-                    loadedSo = loadMeasurementTypes(soIds);
+                	database = MeasurementDatabaseContext.getMeasurementTypeDatabase();
                     break;
                 case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
-                    loadedSo = loadAnalysisTypes(soIds);
+                	database = MeasurementDatabaseContext.getAnalysisTypeDatabase();
                     break;
                 case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
-                    loadedSo = loadEvaluationTypes(soIds);
+                	database = MeasurementDatabaseContext.getEvaluationTypeDatabase();
                     break;
                 case ObjectEntities.SET_ENTITY_CODE:
-                    loadedSo = loadSets(soIds);
+                	database = MeasurementDatabaseContext.getSetDatabase();
                     break;
                 case ObjectEntities.MODELING_ENTITY_CODE:
-                    loadedSo = loadModelings(soIds);
+                	database = MeasurementDatabaseContext.getModelingDatabase();
                     break;
                 case ObjectEntities.MS_ENTITY_CODE:
-                    loadedSo = loadMeasurementSetups(soIds);
+                	database = MeasurementDatabaseContext.getMeasurementSetupDatabase();
                     break;
                 case ObjectEntities.ANALYSIS_ENTITY_CODE:
-                    loadedSo = loadAnalyses(soIds);
+                	database = MeasurementDatabaseContext.getAnalysisDatabase();
                     break;
                 case ObjectEntities.EVALUATION_ENTITY_CODE:
-                    loadedSo = loadEvaluations(soIds);
+                	database = MeasurementDatabaseContext.getEvaluationDatabase();
                     break;
                 case ObjectEntities.MEASUREMENT_ENTITY_CODE:
-                    loadedSo = loadMeasurements(soIds);
+                	database = MeasurementDatabaseContext.getMeasurementDatabase();
                     break;
                 case ObjectEntities.TEST_ENTITY_CODE:
-                    loadedSo = loadTests(soIds);
+                	database = MeasurementDatabaseContext.getTestDatabase();
                     break;
                 case ObjectEntities.RESULT_ENTITY_CODE:
-                    loadedSo = loadResults(soIds);
+                	database = MeasurementDatabaseContext.getResultDatabase();
                     break;
                 case ObjectEntities.TEMPORALPATTERN_ENTITY_CODE:
-                    loadedSo = loadTemporalPatterns(soIds);
+                	database = MeasurementDatabaseContext.getTemporalPatternDatabase();
                     break;
                 default:
-                    Log.errorMessage("DatabaseConfigurationObjectLoader.refresh | Unknown entity: "
+                    Log.errorMessage("DatabaseMeasumentObjectLoader.refresh | Unknown entity: "
                             + entityCode);                
             }
-            return new HashSet(loadedSo);
+        	if (database != null)
+            	return database.refresh(storableObjects);
+            
+            return Collections.EMPTY_SET;
         } catch (DatabaseException e) {
-            Log.errorMessage("DatabaseConfigurationObjectLoader.refresh | DatabaseException: " + e.getMessage());
-            throw new DatabaseException("DatabaseConfigurationObjectLoader.refresh | DatabaseException: " + e.getMessage());
+            Log.errorMessage("DatabaseMeasumentObjectLoader.refresh | DatabaseException: " + e.getMessage());
+            throw new DatabaseException("DatabaseMeasumentObjectLoader.refresh | DatabaseException: " + e.getMessage());
         }
     }
 

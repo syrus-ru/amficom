@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.66 2004/11/17 09:43:55 max Exp $
+ * $Id: CMServerImpl.java,v 1.67 2004/11/18 12:25:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -120,12 +120,17 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2004/11/17 09:43:55 $
- * @author $Author: max $
+ * @version $Revision: 1.67 $, $Date: 2004/11/18 12:25:17 $
+ * @author $Author: bob $
  * @module cmserver_v1
  */
 
 public class CMServerImpl extends CMConfigurationMeasurementReceive {
+
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long	serialVersionUID	= 4048793468187259186L;
 
 	private DomainCondition domainCondition;
 
@@ -191,7 +196,9 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
             throws AMFICOMRemoteException {
         try {
         List list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(new StringFieldCondition(domainName, ObjectEntities.DOMAIN_ENTITY_CODE), true);
-        Identifier  id = ( (Domain)list.get(0) ).getId();
+        if (list.isEmpty())
+        	throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, "list is empty");
+        Identifier id = ( (Domain)list.get(0) ).getId();
         return (Identifier_Transferable)id.getTransferable();
         } catch (RetrieveObjectException roe) {
             Log.errorException(roe);
@@ -5805,15 +5812,15 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
     			storableObjectMap.put(new Identifier(storableObjects_Transferables[i].id), storableObjects_Transferables[i]);           
     		}
             ConfigurationStorableObjectPool.refresh();
-            List storableObjects  = ConfigurationStorableObjectPool.getStorableObjects((List) storableObjectMap.values(), true);
+            List storableObjects  = ConfigurationStorableObjectPool.getStorableObjects(new ArrayList(storableObjectMap.keySet()), true);
             for (Iterator it = storableObjects.iterator(); it.hasNext();) {
     			StorableObject so = (StorableObject) it.next();            
     			StorableObject_Transferable sot = (StorableObject_Transferable) storableObjectMap.get(so.getId());
-                //  Checking for confomity
+                //  Checking for conformity
                 Identifier sotCreatorId = new Identifier(sot.creator_id);
                 Identifier sotModifierId = new Identifier(sot.modifier_id);
-                if (!(sot.created == so.getCreated().getTime())
-                        && !(sot.modified == so.getModified().getTime()) 
+                if ((Math.abs(sot.created - so.getCreated().getTime()) < 1000)
+                        && (Math.abs(sot.modified - so.getModified().getTime()) < 1000) 
                         && !sotCreatorId.equals(so.getCreatorId())
                         && !sotModifierId.equals(so.getModifierId())) {
                     it.remove();
@@ -5825,6 +5832,8 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
     			StorableObject so = (StorableObject) it.next();
                 identifier_Transferables[i] = (Identifier_Transferable) so.getId().getTransferable(); 
     		}        
+            Log.debugMessage("CMServer.transmitRefreshedConfigurationObjects | return " + identifier_Transferables.length
+							 + " item(s)", Log.DEBUGLEVEL05);
             return identifier_Transferables;
         } catch (CommunicationException ce) {
             Log.errorException(ce);
@@ -5833,6 +5842,10 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         } catch (DatabaseException de) {
             Log.errorException(de);
             throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
+            		.getMessage());
+        } catch (Throwable th){
+        	Log.errorException(th);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, th
             		.getMessage());
         }
     }
@@ -5844,19 +5857,19 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 storableObjectMap.put(new Identifier(storableObjects_Transferables[i].id), storableObjects_Transferables[i]);           
             }
             MeasurementStorableObjectPool.refresh();
-            List storableObjects  = MeasurementStorableObjectPool.getStorableObjects((List) storableObjectMap.values(), true);
+            List storableObjects  = MeasurementStorableObjectPool.getStorableObjects(new ArrayList(storableObjectMap.keySet()), true);
             for (Iterator it = storableObjects.iterator(); it.hasNext();) {
                 StorableObject so = (StorableObject) it.next();            
                 StorableObject_Transferable sot = (StorableObject_Transferable) storableObjectMap.get(so.getId());
                 //  Checking for confomity
                 Identifier sotCreatorId = new Identifier(sot.creator_id);
                 Identifier sotModifierId = new Identifier(sot.modifier_id);
-                if (!(sot.created == so.getCreated().getTime())
-                        && !(sot.modified == so.getModified().getTime()) 
+                if ((Math.abs(sot.created - so.getCreated().getTime()) < 1000)
+                        && (Math.abs(sot.modified - so.getModified().getTime()) < 1000) 
                         && !sotCreatorId.equals(so.getCreatorId())
                         && !sotModifierId.equals(so.getModifierId())) {
                     it.remove();
-                }           
+                }              
             }
             int i=0;
             Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[storableObjects.size()];
@@ -5873,6 +5886,10 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
             Log.errorException(de);
             throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
                     .getMessage());
+        } catch (Throwable e){
+        	Log.errorException(e);
+        	throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e
+							                    .getMessage());
         }
     }
 

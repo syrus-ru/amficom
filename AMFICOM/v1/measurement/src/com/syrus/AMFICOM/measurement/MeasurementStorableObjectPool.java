@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.51 2004/11/18 09:48:42 arseniy Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.52 2004/11/18 12:25:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2004/11/18 09:48:42 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.52 $, $Date: 2004/11/18 12:25:00 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -176,60 +176,58 @@ public class MeasurementStorableObjectPool {
 		catch (CommunicationException e) {
 			Log.errorException(e);
 			Log.errorMessage("MeasurementStorableObjectPool.addObjectPool | Error: " + e.getMessage());
-		}
-		catch (DatabaseException e) {
-			Log.errorException(e);
-			Log.errorMessage("MeasurementStorableObjectPool.addObjectPool | Error: " + e.getMessage());
-		}
-		catch (IllegalArgumentException e) {
-			throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName() + " IllegalArgumentException " + e.getMessage());
-		}
-		catch (NoSuchMethodException e) {
-			throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName() + " NoSuchMethodException " + e.getMessage());
-		}
-		catch (InstantiationException e) {
-			throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName() + " InstantiationException " + e.getMessage());
-		}
-		catch (IllegalAccessException e) {
-			throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName() + " IllegalAccessException " + e.getMessage());
-		}
-		catch (InvocationTargetException e) {
-			throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName() + " InvocationTargetException " + e.getMessage());
-		}
-	}
-
-	public static void refresh() throws DatabaseException, CommunicationException {
-		try {
-			Log.debugMessage("MeasurementStorableObjectPool.refresh | trying to refresh Pool...", Log.DEBUGLEVEL03);
-			java.util.Set storableObjects = new HashSet();
-			java.util.Set returnedStorableObjectsIds = new HashSet();
-			java.util.Set entityCodes = objectPoolMap.keySet();
-
-			for (Iterator it = entityCodes.iterator(); it.hasNext();) {
-				Short entityCode = (Short) it.next();
-				LRUMap lruMap = (LRUMap) objectPoolMap.get(entityCode);
-
-				for (Iterator it2 = lruMap.iterator(); it2.hasNext();) {
-					storableObjects.add(it2.next());                
-				}
-				if (storableObjects == null || storableObjects.isEmpty()) {
-					Log.debugMessage("MeasurementStorableObjectPool.refresh | LruMap has no elements",Log.DEBUGLEVEL08);
-					continue;
-				}
-				returnedStorableObjectsIds = mObjectLoader.refresh(storableObjects);
-
-        getStorableObjects(new ArrayList(returnedStorableObjectsIds), true);        
-			}
-		}
-		catch (DatabaseException e) {
-			Log.errorMessage("MeasurementStorableObjectPool.refresh | DatabaseException: " + e.getMessage());
-			throw new DatabaseException("MeasurementStorableObjectPool.refresh", e);
-		}
-		catch (CommunicationException e) {
-			Log.errorMessage("MeasurementStorableObjectPool.refresh | CommunicationException: " + e.getMessage());
-			throw new CommunicationException("MeasurementStorableObjectPool.refresh", e);
+        } catch (DatabaseException e) {
+            Log.errorException(e);
+            Log.errorMessage("MeasurementStorableObjectPool.addObjectPool | Error: " + e.getMessage());
+		} catch (IllegalArgumentException e) {
+			throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName()
+					+ " IllegalArgumentException " + e.getMessage());
+		} catch (NoSuchMethodException e) {
+			throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName()
+					+ " NoSuchMethodException " + e.getMessage());
+		} catch (InstantiationException e) {
+			throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName()
+					+ " InstantiationException " + e.getMessage());
+		} catch (IllegalAccessException e) {
+			throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName()
+					+ " IllegalAccessException " + e.getMessage());
+		} catch (InvocationTargetException e) {
+			throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName()
+					+ " InvocationTargetException " + e.getMessage());
 		}
 	}
+    
+    public static void refresh() throws DatabaseException, CommunicationException {        
+        try {  
+        	Log.debugMessage("MeasurementStorableObjectPool.refresh | trying to refresh Pool...", Log.DEBUGLEVEL05);
+            java.util.Set storableObjects = new HashSet();
+            java.util.Set returnedStorableObjectsIds = new HashSet();
+            java.util.Set entityCodes = objectPoolMap.keySet();
+            
+            for (Iterator it = entityCodes.iterator(); it.hasNext();) {
+                Short entityCode = (Short) it.next();
+                LRUMap lruMap = (LRUMap) objectPoolMap.get(entityCode);
+                
+                for (Iterator it2 = lruMap.iterator(); it2.hasNext();) {
+                    storableObjects.add(it2.next());                
+                }
+                if (storableObjects == null || storableObjects.isEmpty()) {
+                	Log.debugMessage("MeasurementStorableObjectPool.refresh | LRUMap for '" + ObjectEntities.codeToString(entityCode.shortValue())+ "' entity has no elements",Log.DEBUGLEVEL08);
+                    continue;
+                }  
+                Log.debugMessage("MeasurementStorableObjectPool.refresh | try refresh LRUMap for '" + ObjectEntities.codeToString(entityCode.shortValue())+ "' entity",Log.DEBUGLEVEL08);
+                returnedStorableObjectsIds = mObjectLoader.refresh(storableObjects);
+                
+                getStorableObjects(new ArrayList(returnedStorableObjectsIds), true);        
+            }
+        } catch (DatabaseException e) {
+            Log.errorMessage("MeasurementStorableObjectPool.refresh | DatabaseException: " + e.getMessage());
+            throw new DatabaseException("MeasurementStorableObjectPool.refresh", e);
+        } catch (CommunicationException e) {
+            Log.errorMessage("MeasurementStorableObjectPool.refresh | CommunicationException: " + e.getMessage());
+            throw new CommunicationException("MeasurementStorableObjectPool.refresh", e);
+        }
+    }
 
 	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader)
 			throws DatabaseException, CommunicationException {

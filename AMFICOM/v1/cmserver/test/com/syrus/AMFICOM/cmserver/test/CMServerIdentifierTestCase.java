@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerIdentifierTestCase.java,v 1.2 2004/10/19 15:12:26 bass Exp $
+ * $Id: CMServerIdentifierTestCase.java,v 1.3 2004/11/18 12:25:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,6 +25,7 @@ import org.omg.PortableServer.POAHelper;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.cmserver.corba.CMServerHelper;
+import com.syrus.AMFICOM.configuration.ClientConfigurationObjectLoader;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -36,8 +37,8 @@ import com.syrus.util.ClientLRUMap;
 import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/10/19 15:12:26 $
- * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2004/11/18 12:25:17 $
+ * @author $Author: bob $
  * @module module
  */
 public class CMServerIdentifierTestCase extends TestCase {

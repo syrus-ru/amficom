@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementServer.java,v 1.16 2004/11/12 12:21:04 bob Exp $
+ * $Id: ClientMeasurementServer.java,v 1.17 2004/11/18 12:25:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.corba.JavaSoftORBUtil;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/11/12 12:21:04 $
+ * @version $Revision: 1.17 $, $Date: 2004/11/18 12:25:17 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -114,6 +114,7 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 		DatabaseContextSetup.initObjectPools();
 		/* Start main loop */
 		final ClientMeasurementServer clientMeasurementServer = new ClientMeasurementServer();
+		Log.debugMessage("ClientMeasurementServer.startup | Ready.", Log.DEBUGLEVEL03);
 		clientMeasurementServer.start();
 
 		/* Add shutdown hook */

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.6 2004/11/01 15:26:04 bob Exp $
+ * $Id: DatabaseContextSetup.java,v 1.7 2004/11/18 12:25:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -50,7 +50,7 @@ import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/11/01 15:26:04 $
+ * @version $Revision: 1.7 $, $Date: 2004/11/18 12:25:17 $
  * @author $Author: bob $
  * @module mserver_v1
  */
@@ -100,7 +100,7 @@ public abstract class DatabaseContextSetup {
 	}
 
 	public static void initObjectPools() {
-		MeasurementStorableObjectPool.init(new DatabaseMeasurementObjectLoader(), ApplicationProperties.getInt(MEASUREMENT_POOL_SIZE_KEY, 1000));
 		ConfigurationStorableObjectPool.init(new DatabaseConfigurationObjectLoader(), ApplicationProperties.getInt(CONFIGURATION_POOL_SIZE_KEY, 1000));
+		MeasurementStorableObjectPool.init(new DatabaseMeasurementObjectLoader(), ApplicationProperties.getInt(MEASUREMENT_POOL_SIZE_KEY, 1000));		
 	}
 }
