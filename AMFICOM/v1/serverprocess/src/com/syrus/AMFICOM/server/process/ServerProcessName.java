@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcessName.java,v 1.1 2004/06/22 09:57:10 bass Exp $
+ * $Id: ServerProcessName.java,v 1.2 2004/12/23 11:48:29 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.server.process;
 import java.util.*;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/06/22 09:57:10 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/23 11:48:29 $
  * @module serverprocess
  */
 public final class ServerProcessName 
@@ -21,7 +21,6 @@ public final class ServerProcessName
 	}
 
 	public static final String ID_KISTRACER = "kistracer";
-	public static final String ID_EVENTTRACER = "eventtracer";
 	public static final String ID_REPORTER = "reporter";
 	public static final String ID_ALERTER = "alerter";
 	public static final String ID_USERTRACER = "usertracer";
@@ -31,7 +30,6 @@ public final class ServerProcessName
 	private static final String[] PRIVATE_PROCESS_NAMES =
 	{
 		ID_KISTRACER,
-		ID_EVENTTRACER,
 		ID_REPORTER,
 		ID_ALERTER,
 		ID_USERTRACER,

@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcessMessageFrame.java,v 1.1 2004/06/22 09:57:10 bass Exp $
+ * $Id: ServerProcessMessageFrame.java,v 1.2 2004/12/23 11:48:29 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import javax.swing.*;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/06/22 09:57:10 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/23 11:48:29 $
  * @module serverprocess
  */
 public final class ServerProcessMessageFrame extends JFrame implements LogWriter
@@ -40,11 +40,6 @@ public final class ServerProcessMessageFrame extends JFrame implements LogWriter
 	 * @serial include
 	 */
 	KISTracer kisTracer;
-
-	/**
-	 * @serial include
-	 */
-	EventTracer eventTracer;
 
 	/**
 	 * @serial include
@@ -153,13 +148,6 @@ public final class ServerProcessMessageFrame extends JFrame implements LogWriter
 				kisTracer.start();
 			}
 
-			if (selectedProcessNames.contains(ServerProcessName.ID_EVENTTRACER))
-			{
-				tabbedPane.addTab(eventTracePanel.getName(), eventTracePanel);
-				eventTracer = new EventTracer();
-				eventTracer.start();
-			}
-
 			if (selectedProcessNames.contains(ServerProcessName.ID_ALERTER))
 			{
 				tabbedPane.addTab(alertPanel.getName(), alertPanel);
@@ -210,12 +198,6 @@ public final class ServerProcessMessageFrame extends JFrame implements LogWriter
 		{
 			kisTracer.stopRunning();
 			kisTracePanel.closeLog();
-		}
-
-		if (selectedProcessNames.contains(ServerProcessName.ID_EVENTTRACER))
-		{
-			eventTracer.stopRunning();
-			eventTracePanel.closeLog();
 		}
 
 		if (selectedProcessNames.contains(ServerProcessName.ID_ALERTER))
