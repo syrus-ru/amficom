@@ -1,5 +1,5 @@
 /**
- * $Id: MapSchemeTreeModel.java,v 1.4 2004/10/19 11:48:28 krupenn Exp $
+ * $Id: MapSchemeTreeModel.java,v 1.5 2004/11/02 17:01:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -83,7 +83,7 @@ import javax.swing.ImageIcon;
  *             		|____ (*) "path1"
  *             		|____ (*) "path2"
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/19 11:48:28 $
+ * @version $Revision: 1.5 $, $Date: 2004/11/02 17:01:24 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -165,7 +165,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 		MapSchemeTreeNode nod = null;
 		MapSchemeTreeNode parent = (MapSchemeTreeNode )node.getParent();
 		
-		List vec = new ArrayList();
+		List vec = new LinkedList();
 		if(node.getObject() instanceof String)
 		{
 			String s = (String )node.getObject();
@@ -173,7 +173,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 			if (s.equals(Scheme.typ))
 			{
 				Scheme parsc = (Scheme )parent.getObject();
-				ArrayList ds = new ArrayList();
+				List ds = new LinkedList();
 				for (Iterator it = parsc.elements.iterator(); it.hasNext();)
 				{
 					SchemeElement el = (SchemeElement)it.next();
@@ -256,7 +256,7 @@ public class MapSchemeTreeModel extends ObjectResourceTreeModel
 			if (s.equals(SchemeElement.typ))
 			{
 				Object par = parent.getObject();
-				ArrayList ds = new ArrayList();
+				List ds = new LinkedList();
 				if (par instanceof Scheme
 					|| (par instanceof SchemeElement
 						&& ((SchemeElement )par).getInternalSchemeId().length() != 0)

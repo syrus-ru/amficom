@@ -293,13 +293,9 @@ public class RISDMapViewDataSource
 		int i;
 		int ecode = 0;
 
-//		ArrayList pathVec = new ArrayList();
-
 		MapView_Transferable maps[];
-//		MapPathElement_Transferable paths[];
 
 		MapView mv;
-//		MapPathElement path;
 
 		maps = new MapView_Transferable[mvIds.length];
 		for(i = 0; i < mvIds.length; i++)
@@ -307,19 +303,8 @@ public class RISDMapViewDataSource
 			mv = (MapView )Pool.get(MapView.typ, mvIds[i]);
 			mv.setTransferableFromLocal();
 			maps[i] = (MapView_Transferable )mv.getTransferable();
-
-//			for(Iterator it = mv.getPaths().iterator(); it.hasNext();)
-//			{
-//				os = (ObjectResource )it.next();
-//				os.setTransferableFromLocal();
-//				pathVec.add(os.getTransferable());
-//			}
-
 		}
 
-//		paths = (MapPathElement_Transferable [])
-//			nodeVec.toArray(new MapPathElement_Transferable[0]);
-	
 		try
 		{
 			ecode = ((RISDSessionInfo )getSession()).ci.getServer().SaveMapViews(
@@ -355,7 +340,6 @@ public class RISDMapViewDataSource
 
 		String[] maps = new String[1];
 		maps[0] = mv.getId();
-//		String[] leer = new String[0];
 
 		try
 		{
@@ -376,62 +360,5 @@ public class RISDMapViewDataSource
 			return;
 		}
 	}
-/*
-	public void RemoveFromMapView(String mv_id)
-	{
-		MapView mv = (MapView )Pool.get(MapView.typ, mv_id);
-
-		if(getSession() == null)
-			return;
-		if(!getSession().isOpened())
-			return;
-
-		System.out.println("RemoveFromMapView:");
-	
-		int i;
-		int ecode = 0;
-		int count;
-		ObjectResource os;
-
-		ArrayList pathVec = new ArrayList();
-		List vec;
-
-		String[] maps = new String[0];
-		String[] paths;
-
-		MapPathElement path;
-
-//		vec = mv.getRemovedElements();
-//		count = vec.size();
-//		for(i = 0; i < count; i++)
-//		{
-//			os = (ObjectResource )vec.get(i);
-//			if(os.getTyp().equals(MapPathElement.typ))
-//				pathVec.add(os.getId());
-//		}
-
-		paths = pathVec.copyInto(new String[pathVec.size()]);
-
-		try
-		{
-			ecode = si.ci.getServer().RemoveMapViews(
-					si.accessIdentity,
-					maps,
-					paths);
-		}
-		catch (Exception ex)
-		{
-			System.err.print("Error removing from map: " + ex.getMessage());
-			ex.printStackTrace();
-			return;
-		}
-
-		if (ecode != Constants.ERROR_NO_ERROR)
-		{
-			System.out.println ("Failed RemoveFromMap! status = " + ecode);
-			return;
-		}
-	}
-*/
 
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: MapMeasurementPathElement.java,v 1.11 2004/11/01 15:40:10 krupenn Exp $
+ * $Id: MapMeasurementPathElement.java,v 1.12 2004/11/02 17:01:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,7 +43,6 @@ import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.Serializable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -55,7 +54,7 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/11/01 15:40:10 $
+ * @version $Revision: 1.12 $, $Date: 2004/11/02 17:01:24 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -65,13 +64,6 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 	private static final long serialVersionUID = 02L;
 	public static final String typ = "mapmeasurementpathelement";
 
-//	protected ArrayList sortedNodes = new ArrayList();
-//	protected ArrayList sortedNodeLinks = new ArrayList();
-//	protected boolean nodeLinksSorted = false;
-
-//	protected ArrayList cablePaths = new ArrayList();
-//	protected boolean cablePathsSorted = false;
-	
 	protected SchemePath schemePath;
 	protected Scheme scheme;
 
@@ -512,24 +504,5 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 		else
 			return (MapNodeLinkElement )getSortedNodeLinks().get(index - 1);
 	}
-
-
-//	public MapCablePathElement nextCablePath(MapCablePathElement cablePath)
-//	{
-//		int index = getCablePaths().indexOf(cablePath);
-//		if(index == getCablePaths().size() - 1)
-//			return cablePath;
-//		else
-//			return (MapCablePathElement )getCablePaths().get(index + 1);
-//	}
-//
-//	public MapCablePathElement previousCablePath(MapCablePathElement cpath)
-//	{
-//		int index = getCablePaths().indexOf(cpath);
-//		if(index == 0)
-//			return cpath;
-//		else
-//			return (MapCablePathElement )getCablePaths().get(index - 1);
-//	}
 
 }

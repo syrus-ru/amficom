@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.14 2004/10/26 13:32:01 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.15 2004/11/02 17:01:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -47,7 +47,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Toolkit;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -60,7 +60,7 @@ import javax.swing.JPopupMenu;
  * 
  * 
  * 
- * @version $Revision: 1.14 $, $Date: 2004/10/26 13:32:01 $
+ * @version $Revision: 1.15 $, $Date: 2004/11/02 17:01:24 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -189,7 +189,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 	{
 		MapSiteNodeElement site = null;
 
-		List list = new ArrayList();
+		List list = new LinkedList();
 		for(Iterator it = getLogicalNetLayer().getMapView().getMap().getMapSiteNodeElements().iterator(); it.hasNext();)
 		{
 			MapSiteNodeElement s = (MapSiteNodeElement )it.next();
