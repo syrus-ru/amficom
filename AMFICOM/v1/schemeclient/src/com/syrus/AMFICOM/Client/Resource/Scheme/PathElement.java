@@ -1,18 +1,10 @@
 package com.syrus.AMFICOM.Client.Resource.Scheme;
 
-import java.io.IOException;
-import java.io.Serializable;
-
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceSorter;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.StubResource;
-import com.syrus.AMFICOM.Client.Resource.Network.CableLink;
-import com.syrus.AMFICOM.Client.Resource.Network.Link;
+import java.io.*;
 
 import com.syrus.AMFICOM.CORBA.Scheme.PathElement_Transferable;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Network.*;
 
 public class PathElement extends StubResource implements Serializable
 {
@@ -21,6 +13,9 @@ public class PathElement extends StubResource implements Serializable
 	public boolean is_cable;
 	public String link_id;
 	public String thread_id;
+	public String scheme_element_id;
+
+	public String scheme_id;
 
 	public PathElement()
 	{
@@ -40,6 +35,8 @@ public class PathElement extends StubResource implements Serializable
 		pe.n = n;
 		pe.is_cable = is_cable;
 		pe.link_id = (String)Pool.get("clonedids", link_id);
+		pe.scheme_id = (String)Pool.get("clonedids", scheme_id);
+		pe.scheme_element_id = (String)Pool.get("clonedids", scheme_element_id);
 		if (pe.link_id == null)
 			pe.link_id = link_id;
 		if (is_cable)
@@ -61,7 +58,15 @@ public class PathElement extends StubResource implements Serializable
 
 	public String getName()
 	{
-		if (is_cable)
+		if (link_id.length() == 0)
+		{
+			SchemeElement se = (SchemeElement)Pool.get(SchemeElement.typ, scheme_element_id);
+			if (Pool.get(Equipment.typ, se.equipment_id) == null)
+				return se.getName();
+			else
+				return ((Equipment)Pool.get(Equipment.typ, se.equipment_id)).getName();
+		}
+		else if (is_cable)
 		{
 			SchemeCableLink scl = (SchemeCableLink)Pool.get(SchemeCableLink.typ, link_id);
 			if (Pool.get(CableLink.typ, scl.cable_link_id) == null)//(scl.cable_link_id.equals(""))
@@ -95,6 +100,8 @@ public class PathElement extends StubResource implements Serializable
 		out.writeBoolean(is_cable);
 		out.writeObject(link_id);
 		out.writeObject(thread_id);
+		out.writeObject(scheme_element_id);
+		out.writeObject(scheme_id);
 	}
 
 	private void readObject(java.io.ObjectInputStream in)
@@ -104,6 +111,8 @@ public class PathElement extends StubResource implements Serializable
 		is_cable = in.readBoolean();
 		link_id = (String )in.readObject();
 		thread_id = (String )in.readObject();
+		scheme_element_id = (String )in.readObject();
+		scheme_id = (String )in.readObject();
 	}
 }
 
