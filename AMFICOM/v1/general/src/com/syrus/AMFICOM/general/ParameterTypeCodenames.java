@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeCodenames.java,v 1.3 2005/02/08 10:47:09 arseniy Exp $
+ * $Id: ParameterTypeCodenames.java,v 1.4 2005/02/15 15:15:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/08 10:47:09 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/15 15:15:19 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -40,6 +40,7 @@ public class ParameterTypeCodenames {
 
 	// analysis params
 	public static final String	WAVELET_TYPE				= "ref_uselinear";
+	public static final String	EVENT_SIZE = "ref_eventsize";
 	public static final String	STRATEGY					= "ref_strategy";
 	public static final String	CONNECTOR_FORM_FACTOR		= "ref_conn_fall_params";
 	public static final String	MIN_EVENT_LEVEL				= "ref_min_level";
