@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeDatabase.java,v 1.20 2004/12/03 18:53:12 bob Exp $
+ * $Id: EquipmentTypeDatabase.java,v 1.21 2004/12/03 19:13:29 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,9 @@ package com.syrus.AMFICOM.configuration;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -30,7 +32,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/12/03 18:53:12 $
+ * @version $Revision: 1.21 $, $Date: 2004/12/03 19:13:29 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -130,7 +132,7 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 	}
 	
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-//		EquipmentType equipmentType = this.fromStorableObject(storableObject);
+		EquipmentType equipmentType = this.fromStorableObject(storableObject);
 		switch (retrieve_kind) {
 			default:
 				return null;
@@ -193,7 +195,12 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
         list = super.retrieveByIdsOneQuery(ids, condition);	
         if (list != null) {
             CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
-            characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENTTYPE);
+            Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENTTYPE);
+            for (Iterator iter = list.iterator(); iter.hasNext();) {
+                EquipmentType equipmentType = (EquipmentType) iter.next();
+                List characteristics = (List)characteristicMap.get(equipmentType);
+                equipmentType.setCharacteristics(characteristics);
+            }
         }
         return list;
 	}

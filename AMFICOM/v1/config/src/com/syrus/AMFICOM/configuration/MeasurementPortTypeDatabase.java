@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeDatabase.java,v 1.16 2004/12/03 18:53:12 bob Exp $
+ * $Id: MeasurementPortTypeDatabase.java,v 1.17 2004/12/03 19:13:29 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,9 @@ package com.syrus.AMFICOM.configuration;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -30,7 +32,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/12/03 18:53:12 $
+ * @version $Revision: 1.17 $, $Date: 2004/12/03 19:13:29 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -192,7 +194,12 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
         
         if (list != null) {
             CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
-            characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE);            
+            Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE);
+            for (Iterator iter = list.iterator(); iter.hasNext();) {
+                MeasurementPortType measurementPortType = (MeasurementPortType) iter.next();
+                List characteristics = (List)characteristicMap.get(measurementPortType);
+                measurementPortType.setCharacteristics(characteristics);
+            }
         }
         return list;
 	}

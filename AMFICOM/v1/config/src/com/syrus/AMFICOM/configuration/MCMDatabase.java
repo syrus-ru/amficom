@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.34 2004/12/03 18:53:12 bob Exp $
+ * $Id: MCMDatabase.java,v 1.35 2004/12/03 19:13:29 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/12/03 18:53:12 $
+ * @version $Revision: 1.35 $, $Date: 2004/12/03 19:13:29 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -365,7 +365,12 @@ public class MCMDatabase extends StorableObjectDatabase {
             retrieveKISIdsByOneQuery(list);
             
             CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
-            characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_MCM);            
+            Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_MCM);
+            for (Iterator iter = list.iterator(); iter.hasNext();) {
+                TransmissionPath transmissionPath = (TransmissionPath) iter.next();
+                List characteristics = (List)characteristicMap.get(transmissionPath);
+                transmissionPath.setCharacteristics(characteristics);
+            }
         }
 		return list;	
 		//return retriveByIdsPreparedStatement(ids);

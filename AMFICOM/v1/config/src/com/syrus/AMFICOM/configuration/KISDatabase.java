@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.43 2004/12/03 18:53:12 bob Exp $
+ * $Id: KISDatabase.java,v 1.44 2004/12/03 19:13:29 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2004/12/03 18:53:12 $
+ * @version $Revision: 1.44 $, $Date: 2004/12/03 19:13:29 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -519,7 +519,12 @@ public class KISDatabase extends StorableObjectDatabase {
 			retrieveKISMeasurementPortIdsByOneQuery(list);
 			retrieveMonitoredElementsByOneQuery(list);
             CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
-            characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_KIS);
+            Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_KIS);
+            for (Iterator iter = list.iterator(); iter.hasNext();) {
+                KIS kis = (KIS) iter.next();
+                List characteristics = (List)characteristicMap.get(kis);
+                kis.setCharacteristics(characteristics);
+            }
 		}
         
 		return list;
