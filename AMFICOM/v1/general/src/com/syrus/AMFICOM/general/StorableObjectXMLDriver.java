@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.7 2005/01/31 15:10:03 bob Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.8 2005/02/01 06:02:16 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 /**
  * XML Driver for storable object package, one per package.
  * 
- * @version $Revision: 1.7 $, $Date: 2005/01/31 15:10:03 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/01 06:02:16 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -142,7 +142,6 @@ public class StorableObjectXMLDriver {
 		} catch (InvocationTargetException e) {
 			throw new IllegalDataException("StorableObjectXMLDriver.reflectStorableObject | Caught " + e.getMessage());
 		}
-		System.out.println("storableObject " + storableObject.getId() + "\t" + storableObject.getClass().getName());
 		return storableObject;
 	}
 
@@ -172,7 +171,6 @@ public class StorableObjectXMLDriver {
 				NodeList childNodes = node.getChildNodes();
 				if (childNodes.getLength() != 1)
 					Log.errorMessage("StorableObjectXMLDriver.parse | more that one child for : " + node.getNodeName());
-				// System.out.println("name:" + node.getNodeName());
 				object = this.getObject(childNodes.item(0).getNodeValue(), className);
 			}
 		} else
@@ -181,7 +179,6 @@ public class StorableObjectXMLDriver {
 	}
 
 	private Object getObject(String value, String className) throws IllegalDataException {
-		System.out.println("\tValue:" + value + "\tclassName:" + className);
 		Object object = null;
 		if (className.equals(StorableObject.class.getName())) {
 			Identifier identifier = new Identifier(value);
