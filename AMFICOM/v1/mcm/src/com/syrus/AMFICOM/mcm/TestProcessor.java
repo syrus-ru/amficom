@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.42 2005/03/25 22:21:10 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.43 2005/03/30 15:46:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/03/25 22:21:10 $
+ * @version $Revision: 1.43 $, $Date: 2005/03/30 15:46:54 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -297,6 +297,10 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		this.measurementResultList.clear();
 		MeasurementControlModule.testProcessors.remove(this.test.getId());
 		this.test = null;
+	}
+
+	public Identifier getTestId() {
+		return this.test.getId();
 	}
 
 
