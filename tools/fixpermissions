@@ -1,47 +1,249 @@
 #!/bin/bash
+#
+# $Author: cvsadmin $
+# $Revision: 1.2 $, $Date: 2004/12/27 11:52:53 $
+#
 
 . `dirname $0`/cvsenv
 
+DEFAULT_REPOSITORY=`echo ${REPOSITORY} | sed -r "s|${CVSROOTDIR}||g"`
+MODULES=""
+REPOSITORY=""
 
+ERR_MSG_MISSING_ARGUMENTS="missing arguments"
+ERR_MSG_HELP_EXPECTED_ONLY_ARGUMENT="-h|--help is expected to be the only argument"
+ERR_MSG_REPOSITORY_EXPECTED_ONCE="-r|--repository can be specified only once"
 
-if [ ! $# -eq 1 ];
-then
-	echo "Usage: `basename $0` <module_name>"
-	exit
-fi
+function usage() {
+	cat <<EOF
+Usage: `basename $0` [FLAGS] [MODULE(S)]
+Fix permissions on MODULE(S).
 
-MODULE_NAME=$1
-MODULE_DIR=$REPOSITORY/$MODULE_NAME
-if [ ! -d $MODULE_DIR ];
-then
-	echo "ERROR: Directory $MODULE_DIR does not exists - cannot find module \"$MODULE_NAME\""
-	exit;
-fi
+FLAGS recognized:
+  -r, --repository=REPOSITORY	look for MODULE(S) located in
+				REPOSITORY (one of "/", "/hw",
+				"/AMFICOM/v1", "/AMFICOM/v2"; the
+				default is "${DEFAULT_REPOSITORY}")
+  -h, --help			display this help and exit
+EOF
+}
 
-echo "module:	$MODULE_NAME; directory: $MODULE_DIR"
-
-echo "Checking permissions on module $MODULE_NAME..."
-OUTPUT=(`getfacl --tabular --access --omit-header --no-effective --absolute-names $MODULE_DIR | grep user | awk {'print($2);print($3)'}`)
-echo "Known permissions:  ${OUTPUT[@]}"
-
-echo
-
-echo "Setting default permissions on module $MODULE_NAME..."
-. `dirname $0`/permitdefault $MODULE_NAME
-echo "...done"
-
-echo
-
-echo "Setting per-user permissions..."
-for ((i = 0; i < ${#OUTPUT[@]}; i += 2))
-do
-	USER=${OUTPUT[$i]}
-	if [ ${OUTPUT[$i + 1]} = $MODE_RW ];
+function die() {
+	if [ $# -eq 1 ]
 	then
-		USERMODE=$RW
-	else
-		USERMODE=$RO
+		echo "`basename $0`: $1"
+		echo "Try \``basename $0` --help' for more information."
 	fi
-	. `dirname $0`/permituser $MODULE_NAME $USER $USERMODE
+	exit 1
+}
+
+function check_valid_repository() {
+	if [ $# -ne 1 ]
+	then
+		die
+	else
+		for rep_name in "/" "/hw" "/AMFICOM/v1" "/AMFICOM/v2"
+		do
+			if [ "$1" = "${rep_name}" ]
+			then
+				return 0
+			fi
+		done
+		die "$1: invalid repository name"
+	fi
+}
+
+function set_module_path() {
+	if [ $# -ne 1 ]
+	then
+		die
+	else
+		module_path="${CVSROOTDIR}`echo \"${REPOSITORY}\" | sed -r 's/\/$//g'`/$1"
+	fi
+}
+
+function check_valid_module() {
+	if [ $# -ne 1 ]
+	then
+		die
+	else
+		set_module_path "$1"
+		if [ ! -d "${module_path}" ]
+		then
+			die "java.io.FileNotFoundException: ${module_path}"
+		fi
+	fi
+}
+
+function check_valid_modules() {
+	if [ -z "${MODULES}" ]
+	then
+		die "no modules specified"
+	else
+		for module in ${MODULES}
+		do
+			check_valid_module "${module}"
+		done
+	fi
+}
+
+#
+# Arguments:
+#	module_path
+#
+function permitdefault() {
+	if [ $# -ne 1 ]
+	then
+		die
+	else
+		module_path="$1"
+
+		echo "module:	`basename "${module_path}"`"
+
+		setfacl -R -b "${module_path}"
+		chown -R ${OWNER_USER}:${OWNER_GROUP} "${module_path}"
+		chmod -R 700 "${module_path}"
+		find "${module_path}" -type d -exec chmod +s \{\} \;
+		find "${module_path}" -type f -exec chmod 400 \{\} \;
+		find "${module_path}" -type d -exec setfacl -m d:u::rwx,d:g::---,d:o::-- \{\} \;
+	fi
+}
+
+#
+# Arguments:
+#	module_path
+#	USER_NAME
+#	MODE
+#
+function permituser() {
+	if [ $# -ne 3 ]
+	then
+		die
+	else
+		module_path="$1"
+		USER_NAME="$2"
+		if [ "$3" = "${RO}" ];
+		then
+			MODE="${MODE_RO}"
+		elif [ "$3" = "${RW}" ]
+		then
+			MODE="${MODE_RW}"
+		fi
+
+		echo "module:	`basename ${module_path}`"
+		echo "user:	${USER_NAME}"
+		echo "mode:	${MODE}"
+
+		setfacl -m u:${USER_NAME}:${MODE} "${module_path}" && \
+		find "${module_path}" -type d -exec setfacl -m u:${USER_NAME}:${MODE} \{\} \; && \
+		find "${module_path}" -type f -exec setfacl -m u:${USER_NAME}:r-- \{\} \;
+	fi
+}
+
+function fix_module_permissions() {
+	if [ $# -ne 1 ]
+	then
+		die
+	else
+		MODULE_NAME="$1"
+		set_module_path "${MODULE_NAME}"
+
+		echo "module:	${MODULE_NAME}"
+
+		echo "Checking permissions on module ${MODULE_NAME}..."
+		OUTPUT=(`getfacl --tabular --access --omit-header --no-effective --absolute-names "${module_path}" | grep user | awk {'print($2);print($3)'}`)
+		echo "Known permissions:  ${OUTPUT[@]}"
+
+		echo
+
+		echo "Setting default permissions on module ${MODULE_NAME}..."
+		permitdefault "${module_path}"
+		echo "...done"
+
+		echo
+
+		echo "Setting per-user permissions..."
+		for ((i = 0; i < ${#OUTPUT[@]}; i += 2))
+		do
+			USER="${OUTPUT[$i]}"
+			if [ "${OUTPUT[$i + 1]}" = "${MODE_RW}" ]
+			then
+				USERMODE="${RW}"
+			else
+				USERMODE="${RO}"
+			fi
+			permituser "${module_path}" "${USER}" "${USERMODE}"
+		done
+		echo "...done"
+	fi
+}
+
+if [ $# -eq 0 ]
+then
+	die "${ERR_MSG_MISSING_ARGUMENTS}"
+fi
+
+while [ $# -ne 0 ]
+do
+	case "$1" in
+		-h|--help)
+			if [ $# -eq 1 -a -z "${REPOSITORY}${MODULES}" ]
+			then
+				usage
+				exit 0
+			else
+				die "${ERR_MSG_HELP_EXPECTED_ONLY_ARGUMENT}"
+			fi
+			;;
+		-r)
+			if [ -z "${REPOSITORY}" ]
+			then
+				if [ $# -lt 2 ]
+				then
+					die "-r|--repository expects an argument"
+				else
+					check_valid_repository "$2"
+					REPOSITORY="$2"
+					shift
+				fi
+			else
+				die "${ERR_MSG_REPOSITORY_EXPECTED_ONCE}"
+			fi
+			;;
+		--repository=*)
+			if [ -z "${REPOSITORY}" ]
+			then
+				repository=`echo "$1" | sed 's/\-\-repository=//g'`
+				check_valid_repository "${repository}"
+				REPOSITORY="${repository}"
+			else
+				die "${ERR_MSG_REPOSITORY_EXPECTED_ONCE}"
+			fi
+			;;
+		-*)
+			die "$1: invalid argument"
+			;;
+		*)
+			if [ -z "${MODULES}" ]
+			then
+				MODULES="$1"
+			else
+				MODULES="${MODULES} $1"
+			fi
+			;;
+	esac
+	shift
 done
-echo "...done"
+
+if [ -z "${REPOSITORY}" ]
+then
+	check_valid_repository "${DEFAULT_REPOSITORY}"
+	REPOSITORY="${DEFAULT_REPOSITORY}"
+fi
+
+check_valid_modules
+
+for module in ${MODULES}
+do
+	fix_module_permissions "${module}"
+done
