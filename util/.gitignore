@@ -1,8 +1,10 @@
 classes
 docs
 lib
+*.deploy
 *.jar
 *.jpr
+*.jpx
 *.trc
 *.swp
 *.tar
