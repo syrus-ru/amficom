@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.13 2004/08/04 12:59:53 arseniy Exp $
+# $Id: Makefile,v 1.14 2004/08/12 05:46:11 bob Exp $
 #
 # vim:set ft=make:
 #
@@ -98,3 +98,6 @@ arch:
 		Makefile \
 		$(IDLDIR)/general.idl \
 		$(SRCDIR)/com/syrus/AMFICOM/general/*.java
+
+lib: $(LIBNAME)
+	$(CP) $(LIBNAME) $(LIBDIR)	
