@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.20 2005/03/22 18:11:24 arseniy Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.21 2005/03/23 12:39:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,10 @@
 
 package com.syrus.AMFICOM.mcm;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import com.syrus.AMFICOM.configuration.CableLinkType;
@@ -19,6 +22,7 @@ import com.syrus.AMFICOM.configuration.DatabaseConfigurationObjectLoader;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.KIS;
+import com.syrus.AMFICOM.configuration.KISDatabase;
 import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
@@ -47,14 +51,17 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectConditionBuilder;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/03/22 18:11:24 $
+ * @version $Revision: 1.21 $, $Date: 2005/03/23 12:39:42 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -556,6 +563,79 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 
 
 
+
+	public Collection loadKISsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+		KISDatabase database = (KISDatabase) ConfigurationDatabaseContext.getKISDatabase();
+		Collection objects;
+		try {
+			objects = database.retrieveButIdsByCondition(ids, condition);
+		}
+		catch (IllegalDataException ide) {
+			Log.errorException(ide);
+			String mesg = "MCMConfigurationObjectLoader.loadKISsButIds | Cannot load objects from database: " + ide.getMessage();
+			throw new RetrieveObjectException(mesg, ide);
+		}
+
+		Identifier id;
+		Collection loadButIds = new HashSet(ids);
+		for (Iterator it = objects.iterator(); it.hasNext();) {
+			id = ((StorableObject) it.next()).getId();
+			loadButIds.add(id);
+		}
+
+		Identifier_Transferable[] loadButIdsT = new Identifier_Transferable[loadButIds.size()];
+		int i = 0;
+		for (Iterator it = loadButIds.iterator(); it.hasNext(); i++) {
+			id = (Identifier) it.next();
+			loadButIdsT[i] = (Identifier_Transferable) id.getTransferable();
+		}
+
+		com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
+		if (mServerRef != null) {
+			StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
+			Collection loadedObjects = null;
+			try {
+				KIS_Transferable[] transferables = mServerRef.transmitKISsButIdsByCondition(loadButIdsT, conditionT);
+				loadedObjects = new ArrayList(transferables.length);
+				for (i = 0; i < transferables.length; i++)
+					loadedObjects.add(new KIS(transferables[i]));
+			}
+			catch (org.omg.CORBA.SystemException se) {
+				Log.errorException(se);
+				MeasurementControlModule.activateMServerReference();
+				throw new CommunicationException("System exception -- " + se.getMessage(), se);
+			}
+			catch (AMFICOMRemoteException are) {
+				Log.errorMessage("Cannot retrieve measurements from MServer database -- " + are.message);
+			}
+			catch (CreateObjectException coe) {
+				Log.errorException(coe);
+			}
+
+			if (loadedObjects != null && !loadedObjects.isEmpty()) {
+				objects.addAll(loadedObjects);
+
+				try {
+					database.insert(loadedObjects);
+				}
+				catch (ApplicationException ae) {
+					Log.errorException(ae);
+				}
+			}
+
+		}
+		else {
+			Log.errorMessage("Remote reference for server is null; will try to reactivate it");
+			MeasurementControlModule.activateMServerReference();
+		}
+
+		return objects;
+	}
+
+
+
+
+
 	/*
 	 * MCM do not need in all below methods
 	 * */
@@ -642,10 +722,6 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 
 	public Collection loadKISs(Collection ids) throws ApplicationException {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
-	}
-
-	public Collection loadKISsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
-		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
 	public Collection loadLinks(Collection ids) throws ApplicationException {
