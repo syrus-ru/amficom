@@ -1,5 +1,5 @@
 /*
- * $Id: JAlertingMessageTableModel.java,v 1.1 2004/05/27 11:24:21 bass Exp $
+ * $Id: JAlertingMessageTableModel.java,v 1.2 2004/06/18 07:47:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import javax.swing.event.*;
 import javax.swing.table.TableModel;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/05/27 11:24:21 $
+ * @version $Revision: 1.2 $, $Date: 2004/06/18 07:47:21 $
  * @author $Author: bass $
  */
 final class JAlertingMessageTableModel implements TableModel, List {
@@ -27,14 +27,8 @@ final class JAlertingMessageTableModel implements TableModel, List {
 	private static final ResourceBundle MESSAGE_MODEL_RESOURCE_BUNDLE
 		= ResourceBundle.getBundle("com.syrus.AMFICOM.Client.Resource.Alarm.util.MessageModelPropertyResourceBundle");
 
-	private static final String ALERTING_ID_TITLE
-		= MESSAGE_MODEL_RESOURCE_BUNDLE.getString("Alerting_Id");
-
 	private static final String MESSAGE_TYPE_TITLE
 		= MESSAGE_MODEL_RESOURCE_BUNDLE.getString("Message_Type");
-
-	private static final String EVENT_ID_TITLE
-		= MESSAGE_MODEL_RESOURCE_BUNDLE.getString("Event_Id");
 
 	private static final String EVENT_DATE_TITLE
 		= MESSAGE_MODEL_RESOURCE_BUNDLE.getString("Event_Date");
@@ -80,17 +74,17 @@ final class JAlertingMessageTableModel implements TableModel, List {
 	public Class getColumnClass(int columnIndex) {
 		switch (columnIndex) {
 			case 0:
-				/*
-				 * Fall through.
-				 */
-			case 1:
-				/*
-				 * Fall through.
-				 */
-			case 2:
 				return Identifier.class;
-			case 3:
+			case 1:
 				return Date.class;
+			case 2:
+				/*
+				 * Fall through.
+				 */
+			case 3:
+				/*
+				 * Fall through.
+				 */
 			case 4:
 				/*
 				 * Fall through.
@@ -100,14 +94,6 @@ final class JAlertingMessageTableModel implements TableModel, List {
 				 * Fall through.
 				 */
 			case 6:
-				/*
-				 * Fall through.
-				 */
-			case 7:
-				/*
-				 * Fall through.
-				 */
-			case 8:
 				return String.class;
 			default:
 				throw new IllegalArgumentException();
@@ -118,28 +104,24 @@ final class JAlertingMessageTableModel implements TableModel, List {
 		/*
 		 * Just the number of fields in Message.
 		 */
-		return 9;
+		return 7;
 	}
 
 	public String getColumnName(int columnIndex) {
 		switch (columnIndex) {
 			case 0:
-				return ALERTING_ID_TITLE;
-			case 1:
 				return MESSAGE_TYPE_TITLE;
-			case 2:
-				return EVENT_ID_TITLE;
-			case 3:
+			case 1:
 				return EVENT_DATE_TITLE;
-			case 4:
+			case 2:
 				return EVENT_SOURCE_NAME_TITLE;
-			case 5:
+			case 3:
 				return EVENT_SOURCE_DESCRIPTION_TITLE;
-			case 6:
+			case 4:
 				return TRANSMISSION_PATH_NAME_TITLE;
-			case 7:
+			case 5:
 				return TRANSMISSION_PATH_DESCRIPTION_TITLE;
-			case 8:
+			case 6:
 				return TEXT_TITLE;
 			default:
 				throw new IllegalArgumentException();
@@ -154,22 +136,18 @@ final class JAlertingMessageTableModel implements TableModel, List {
 		Message message = (Message) get(rowIndex);
 		switch (columnIndex) {
 			case 0:
-				return message.getAlertingId();
-			case 1:
 				return message.getMessageTypeId();
-			case 2:
-				return message.getEventId();
-			case 3:
+			case 1:
 				return new Date(message.getEventDate());
-			case 4:
+			case 2:
 				return message.getEventSourceName();
-			case 5:
+			case 3:
 				return message.getEventSourceDescription();
-			case 6:
+			case 4:
 				return message.getTransmissionPathName();
-			case 7:
+			case 5:
 				return message.getTransmissionPathDescription();
-			case 8:
+			case 6:
 				return message.getText();
 			default:
 				throw new IllegalArgumentException();

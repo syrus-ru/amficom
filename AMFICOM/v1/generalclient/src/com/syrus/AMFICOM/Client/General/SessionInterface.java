@@ -38,11 +38,6 @@ package com.syrus.AMFICOM.Client.General;
 
 import java.util.Vector;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-
-import oracle.aurora.jndi.sess_iiop.ServiceCtx;
-
 public abstract class SessionInterface
 {
 
@@ -79,7 +74,7 @@ public abstract class SessionInterface
 
 	abstract public void setDomainId(String domain_id);
 	abstract public String getDomainId();
-	
+
 	static public void CloseSession(SessionInterface si)
 	{
 		if(si == null)
@@ -103,22 +98,22 @@ public abstract class SessionInterface
 	{
 		sessions.add(si);
 	}
-	
+
 	static public void remove(SessionInterface si)
 	{
 		sessions.remove(si);
 	}
-	
+
 	static public boolean contains(SessionInterface si)
 	{
 		return sessions.contains(si);
 	}
-	
+
 	static public boolean isEmpty()
 	{
 		return sessions.isEmpty();
 	}
-	
+
 	static public void Log(String s)
 	{
 		System.out.println (s);
@@ -129,4 +124,3 @@ public abstract class SessionInterface
 		System.out.println (s.toString());
 	}
 }
-

@@ -46,11 +46,10 @@ import oracle.aurora.client.*;
 import oracle.aurora.jndi.sess_iiop.*;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/05/27 11:24:20 $
+ * @version $Revision: 1.2 $, $Date: 2004/06/18 07:47:21 $
  * @author $Author: bass $
  */
-public class RISDConnectionInfo extends ConnectionInterface
-{
+public class RISDConnectionInfo extends ConnectionInterface {
 	public static final boolean DEBUG = true;
 
 	/**
@@ -63,9 +62,9 @@ public class RISDConnectionInfo extends ConnectionInterface
 	 */
 	private static final String iniFileName = "Connection.properties";
 
-//  /*
-//   * значения необходимых для соединения с сервером переменных по умолчанию
-//   */
+	/*
+	 * значения необходимых для соединения с сервером переменных по умолчанию
+	 */
 	public static final String DEFAULT_objectName = "/AMFICOM/AMFICOM";
 	public static final String DEFAULT_user = "AMFICOM";
 	public static final String DEFAULT_password = "amficom";
@@ -83,9 +82,9 @@ public class RISDConnectionInfo extends ConnectionInterface
 
 	protected ServiceURL serviceURL = null;
 
-//  /*
-//   * переменные соединения с сервером
-//   */
+	/*
+	 * переменные соединения с сервером
+	 */
 	/**
 	 * Имя серверного объекта.
 	 *
@@ -136,8 +135,9 @@ public class RISDConnectionInfo extends ConnectionInterface
 	 * Уникальный идентификатор сессии.
 	 *
 	 * @see #getSubcontextName()
+	 * @bug All access attempts to this field must be synchronized.
 	 */
-	protected volatile String subcontextName = DEFAULT_SUBCONTEXT_NAME;
+	protected String subcontextName = DEFAULT_SUBCONTEXT_NAME;
 
 	/**
 	 * Session timeout in seconds.
@@ -152,18 +152,14 @@ public class RISDConnectionInfo extends ConnectionInterface
 	 * Static initializer. Since iniFile is a static field, no need to recreate
 	 * it when any new instance is created.
 	 */
-	static
-	{
+	static {
 		if (DEBUG)
 			System.out.print("Reading .ini file " + iniFileName + "... ");
-		try
-		{
+		try {
 			iniFile = new IniFile(iniFileName);
 			if (DEBUG)
 				System.out.println("success.");
-		}
-		catch(IOException ioe)
-		{
+		} catch (IOException ioe) {
 			iniFile = null;
 			if (DEBUG)
 				System.out.println("failed.");
@@ -173,13 +169,12 @@ public class RISDConnectionInfo extends ConnectionInterface
 	/**
 	 * Базовый конструктор без параметров.
 	 */
-	public RISDConnectionInfo()
-	{
+	public RISDConnectionInfo() {
 		handler = new ConsoleHandler();
 		handler.setLevel(Level.CONFIG);
-//      /*
-//       * установить начальные значения параметров соединения
-//       */
+		/*
+		 * установить начальные значения параметров соединения
+		 */
 		initialize();
 	}
 
@@ -187,22 +182,20 @@ public class RISDConnectionInfo extends ConnectionInterface
 	 * Инициализация параметров соединения.
 	 * Параметры берутся из файла настроек или по умолчанию.
 	 */
-	public void initialize()
-	{
-//      /*
-//       * загрузить параметры из файла настроек
-//       */
+	public void initialize() {
+		/*
+		 * загрузить параметры из файла настроек
+		 */
 		if (iniFile == null)
-//          /*
-//           * если ошибка открытия файла настроек, то установить значения
-//           * по умолчанию
-//           */
+			/*
+			 * если ошибка открытия файла настроек, то установить значения
+			 * по умолчанию
+			 */
 			SetDefaults();
-		else
-		{
-//          /*
-//           * если файл настроек открыт, то вынуть из него значения параметров
-//           */
+		else {
+			/*
+			 * если файл настроек открыт, то вынуть из него значения параметров
+			 */
 			serviceURL = new ServiceURL(iniFile.getValue("serviceURL"));
 			objectName = iniFile.getValue("objectName");
 			user = iniFile.getValue("user");
@@ -214,32 +207,30 @@ public class RISDConnectionInfo extends ConnectionInterface
 	 * @bug <code>server</code>, <code>handler</code>, <code>ic</code> and
 	 *      <code>sessionCtx</code> are shared references.
 	 */
-	protected Object clone() throws CloneNotSupportedException
-	{
+	protected Object clone() throws CloneNotSupportedException {
 		LogRecord logRecord;
-		  logRecord = new LogRecord(Level.FINEST, "Method entry");
-		  logRecord.setSourceClassName(getClass().getName());
-		  logRecord.setSourceMethodName("clone()");
-		  handler.publish(logRecord);
+		logRecord = new LogRecord(Level.FINEST, "Method entry");
+		logRecord.setSourceClassName(getClass().getName());
+		logRecord.setSourceMethodName("clone()");
+		handler.publish(logRecord);
 
 		RISDConnectionInfo connectionInfo = null;
-		  try
-		{
+		try {
 			connectionInfo = (RISDConnectionInfo) (super.clone());
-//          /*
-//           * Primitive types are copied by value.
-//           */
+			/*
+			 * Primitive types are copied by value.
+			 */
 			connectionInfo.connection_state = connection_state;
 			connectionInfo.sessionTimeout = sessionTimeout;
 			connectionInfo.sessions = sessions;
 			connectionInfo.ConnectTime = ConnectTime;
-//          /*
-//           * ServiceURL implements Cloneable
-//           */
+			/*
+			 * ServiceURL implements Cloneable
+			 */
 			connectionInfo.serviceURL = (ServiceURL) (serviceURL.clone());
-//          /*
-//           * This is the way strings are duplicated.
-//           */
+			/*
+			 * This is the way strings are duplicated.
+			 */
 			connectionInfo.objectName = new String(objectName);
 			connectionInfo.password = new String(password);
 			connectionInfo.subcontextName = new String(subcontextName);
@@ -249,9 +240,7 @@ public class RISDConnectionInfo extends ConnectionInterface
 			connectionInfo.handler = handler;
 			connectionInfo.ic = ic;
 			connectionInfo.sessionCtx = sessionCtx;
-		}
-		catch(CloneNotSupportedException cnse)
-		{
+		} catch (CloneNotSupportedException cnse) {
 			cnse.printStackTrace();
 		}
 
@@ -266,8 +255,7 @@ public class RISDConnectionInfo extends ConnectionInterface
 	/**
 	 * Установить значения параметров по умолчанию.
 	 */
-	public void SetDefaults()
-	{
+	public void SetDefaults() {
 		objectName = DEFAULT_objectName;
 		serviceURL = new ServiceURL();
 		user = DEFAULT_user;
@@ -277,8 +265,7 @@ public class RISDConnectionInfo extends ConnectionInterface
 	/**
 	 * Установление соединения с явным указанием параметров соединения.
 	 */
-	public static ConnectionInterface Connect(String objectName, String serviceURL, String user, String password)
-	{
+	public static ConnectionInterface Connect(String objectName, String serviceURL, String user, String password) {
 		RISDConnectionInfo ci = new RISDConnectionInfo();
 		ci.serviceURL = new ServiceURL(serviceURL);
 		ci.objectName = new String(objectName);
@@ -287,8 +274,7 @@ public class RISDConnectionInfo extends ConnectionInterface
 		return ci.Connect();
 	}
 
-	public ConnectionInterface Connect()
-	{
+	public ConnectionInterface Connect() {
 		LogRecord logRecord;
 		logRecord = new LogRecord(Level.FINEST, "Method entry");
 		logRecord.setSourceClassName(getClass().getName());
@@ -296,82 +282,77 @@ public class RISDConnectionInfo extends ConnectionInterface
 		handler.publish(logRecord);
 
 		if (!isConnected())
-			try
-		{
-			Hashtable env = new Hashtable();
-			env.put(Context.URL_PKG_PREFIXES, "oracle.aurora.jndi");
+			try {
+				Hashtable env = new Hashtable();
+				env.put(Context.URL_PKG_PREFIXES, "oracle.aurora.jndi");
 
-			ic = new InitialContext(env);
+				ic = new InitialContext(env);
 
-//              /*
-//               * Get a SessionCtx that represents a database instance
-//               */
-			ServiceCtx serviceCtx = (ServiceCtx) ic.lookup(serviceURL.toString());
+				/*
+				 * Get a SessionCtx that represents a database instance
+				 */
+				ServiceCtx serviceCtx = (ServiceCtx) ic.lookup(serviceURL.toString());
 
-//              /*
-//               * Create and authenticate a named session in the instance.
-//               * If we log in and out too often (say, once a second) with the
-//               * same session id, the old session is not yet destroyed.
-//               * 
-//               * However, instead of org,omg.CORBA.NO_PERMISSION, we
-//               * receive org.omg.CORBA.COMM_FAILURE or org.omg.CORBA.NO_IMPLEMENT.
-//               *
-//               * The correct choice is to generate a unique session id for
-//               * every login process. A combination of host name and/or user name
-//               * and local system time seems a reasonable one.
-//               */
-			fillSubcontextName(this);
-			sessionCtx = (SessionCtx) serviceCtx.createSubcontext(subcontextName);
-			logRecord = new LogRecord(Level.CONFIG, "Created subcontext: " + subcontextName);
-			logRecord.setSourceClassName(getClass().getName());
-			logRecord.setSourceMethodName("Connect()");
-			handler.publish(logRecord);
+				/*
+				 * Create and authenticate a named session in the instance.
+				 * If we log in and out too often (say, once a second) with the
+				 * same session id, the old session is not yet destroyed.
+				 * 
+				 * However, instead of org,omg.CORBA.NO_PERMISSION, we
+				 * receive org.omg.CORBA.COMM_FAILURE or org.omg.CORBA.NO_IMPLEMENT.
+				 *
+				 * The correct choice is to generate a unique session id for
+				 * every login process. A combination of host name and/or user name
+				 * and local system time seems a reasonable one.
+				 */
+				fillSubcontextName(this);
+				sessionCtx = (SessionCtx) serviceCtx.createSubcontext(subcontextName);
+				logRecord = new LogRecord(Level.CONFIG, "Created subcontext: " + subcontextName);
+				logRecord.setSourceClassName(getClass().getName());
+				logRecord.setSourceMethodName("Connect()");
+				handler.publish(logRecord);
 
-			LoginServer loginServer = (LoginServer) sessionCtx.activate("/etc/login");
-			Login login = new Login(loginServer);
-			login.authenticate(user, password, null);
-			logRecord = new LogRecord(Level.CONFIG, "Authenticated user: " + user + " with password: <hidden>");
-			logRecord.setSourceClassName(getClass().getName());
-			logRecord.setSourceMethodName("Connect()");
-			handler.publish(logRecord);
+				LoginServer loginServer = (LoginServer) sessionCtx.activate("/etc/login");
+				Login login = new Login(loginServer);
+				login.authenticate(user, password, null);
+				logRecord = new LogRecord(Level.CONFIG, "Authenticated user: " + user + " with password: <hidden>");
+				logRecord.setSourceClassName(getClass().getName());
+				logRecord.setSourceMethodName("Connect()");
+				handler.publish(logRecord);
 
-//              /* 
-//               * Activate the server object in the current session.
-//               */
-			server = (AMFICOM) sessionCtx.activate(objectName);
+				/* 
+				 * Activate the server object in the current session.
+				 */
+				server = (AMFICOM) sessionCtx.activate(objectName);
 
-//              /*
-//               * если соединение установлено (не произошло исключения)
-//               * то инициализируем переменную состояние как "есть соединение",
-//               * запоминаем время соединения, обнуляем количество сессий для данного
-//               * соединения
-//               */
-			connection_state = CONNECTION_OPENED;
-			ConnectTime = System.currentTimeMillis();
-			sessions = 0;
-			add(this);
+				/*
+				 * если соединение установлено (не произошло исключения)
+				 * то инициализируем переменную состояние как "есть соединение",
+				 * запоминаем время соединения, обнуляем количество сессий для данного
+				 * соединения
+				 */
+				connection_state = CONNECTION_OPENED;
+				ConnectTime = System.currentTimeMillis();
+				sessions = 0;
+				add(this);
 
-//              /*
-//               * соединение становится активным соединением
-//               */
-			setActiveConnection(this);
-		}
-		catch(NamingException ne)
-		{
-			logRecord = new LogRecord(Level.SEVERE, ne.toString(true));
-			logRecord.setSourceClassName(getClass().getName());
-			logRecord.setSourceMethodName("Connect()");
-			logRecord.setThrown(ne);
-			handler.publish(logRecord);
-		}
-		catch(Exception e)
-		{
-			logRecord = new LogRecord(Level.SEVERE, e.toString());
-			logRecord.setSourceClassName(getClass().getName());
-			logRecord.setSourceMethodName("Connect()");
-			logRecord.setThrown(e);
-			handler.publish(logRecord);
-		}
+				/*
+				 * соединение становится активным соединением
+				 */
+				setActiveConnection(this);
+			} catch (NamingException ne) {
+				logRecord = new LogRecord(Level.SEVERE, ne.toString(true));
+				logRecord.setSourceClassName(getClass().getName());
+				logRecord.setSourceMethodName("Connect()");
+				logRecord.setThrown(ne);
+				handler.publish(logRecord);
+			} catch (Exception e) {
+				logRecord = new LogRecord(Level.SEVERE, e.toString());
+				logRecord.setSourceClassName(getClass().getName());
+				logRecord.setSourceMethodName("Connect()");
+				logRecord.setThrown(e);
+				handler.publish(logRecord);
+			}
 
 		logRecord = new LogRecord(Level.FINEST, "Method exit");
 		logRecord.setSourceClassName(getClass().getName());
@@ -386,20 +367,18 @@ public class RISDConnectionInfo extends ConnectionInterface
 	/**
 	 * Разорвать соединение с сервером.
 	 */
-	public void Disconnect()
-	{
+	public void Disconnect() {
 		LogRecord logRecord;
 		logRecord = new LogRecord(Level.FINEST, "Method exit");
 		logRecord.setSourceClassName(getClass().getName());
 		logRecord.setSourceMethodName("Disconnect()");
 		handler.publish(logRecord);
 
-//      /*
-//       * прежде чем закрыть соединение, должны быть закрыты все сессии по
-//       * данному соединению
-//       */
-		if ((!isConnected()) || (sessions > 0))
-		{
+		/*
+		 * прежде чем закрыть соединение, должны быть закрыты все сессии по
+		 * данному соединению
+		 */
+		if ((!isConnected()) || (sessions > 0)) {
 			logRecord = new LogRecord(Level.FINEST, "Method exit");
 			logRecord.setSourceClassName(getClass().getName());
 			logRecord.setSourceMethodName("Disconnect()");
@@ -407,28 +386,22 @@ public class RISDConnectionInfo extends ConnectionInterface
 			return;
 		}
 
-//      /*
-//       * соединение определяется контекстом
-//       */
-		if (contains(this))
-		{
+		/*
+		 * соединение определяется контекстом
+		 */
+		if (contains(this)) {
 			server._release();
-//          ic.unbind(name);
-			try
-			{
+//			ic.unbind(name);
+			try {
 				LogoutServer logoutServer = (LogoutServer) sessionCtx.activate("/etc/logout");
 				logoutServer.logout();
-			}
-			catch(NamingException ne)
-			{
+			} catch (NamingException ne) {
 				logRecord = new LogRecord(Level.SEVERE, ne.toString(true));
 				logRecord.setSourceClassName(getClass().getName());
 				logRecord.setSourceMethodName("Disconnect()");
 				logRecord.setThrown(ne);
 				handler.publish(logRecord);
-			}
-			catch(Exception e)
-			{
+			} catch (Exception e) {
 				logRecord = new LogRecord(Level.SEVERE, e.toString());
 				logRecord.setSourceClassName(getClass().getName());
 				logRecord.setSourceMethodName("Disconnect()");
@@ -437,9 +410,9 @@ public class RISDConnectionInfo extends ConnectionInterface
 			}
 		}
 
-//      /*
-//       * изменить состояние соединения
-//       */
+		/*
+		 * изменить состояние соединения
+		 */
 		connection_state = CONNECTION_CLOSED;
 		subcontextName = DEFAULT_SUBCONTEXT_NAME;
 		remove(this);
@@ -459,8 +432,7 @@ public class RISDConnectionInfo extends ConnectionInterface
 	 *        which a session identifier should be generated.
 	 * @todo incorporate java.util.Random and/or hostname, host address and user name.
 	 */
-	private static synchronized void fillSubcontextName(RISDConnectionInfo connectionInfo)
-	{
+	private static synchronized void fillSubcontextName(RISDConnectionInfo connectionInfo) {
 		connectionInfo.subcontextName = ':' + String.valueOf(System.currentTimeMillis());
 	}
 
@@ -471,8 +443,7 @@ public class RISDConnectionInfo extends ConnectionInterface
 	 * @return the session identifier.
 	 * @see #subcontextName
 	 */
-	public String getSubcontextName()
-	{
+	public String getSubcontextName() {
 		return subcontextName;
 	}
 
@@ -484,8 +455,7 @@ public class RISDConnectionInfo extends ConnectionInterface
 	 * @see #sessionTimeout
 	 * @see #setSessionTimeout(int)
 	 */
-	public int getSessionTimeout()
-	{
+	public int getSessionTimeout() {
 		return sessionTimeout;
 	}
 
@@ -497,147 +467,121 @@ public class RISDConnectionInfo extends ConnectionInterface
 	 * @see #sessionTimeout
 	 * @see #getSessionTimeout()
 	 */
-	public void setSessionTimeout(int sessionTimeout)
-	{
+	public void setSessionTimeout(int sessionTimeout) {
 		if (this.sessionTimeout == sessionTimeout)
 			return;
-		try
-		{
-//          if (DEBUG)
-//              System.out.print("Setting session timeout to " + sessionTimeout + "... ");
+		try {
+//			if (DEBUG)
+//				System.out.print("Setting session timeout to " + sessionTimeout + "... ");
 			Timeout timeout = (Timeout) ic.lookup(serviceURL.toString() + "/etc/timeout");
 			timeout.setTimeout(sessionTimeout);
 			this.sessionTimeout = sessionTimeout;
-//          if (DEBUG)
-//              System.out.println("success.");
-		}
-		catch(NamingException ne)
-		{
-//          if (DEBUG) {
-//              System.out.println("failed.");
-//              System.out.println("Error setting session timeout due to NamingException: " + ne.toString(true));
-//              ne.printStackTrace(System.out);
-//          }
-		}
-		catch(Exception e)
-		{
-//          if (DEBUG) {
-//              System.out.println("failed.");
-//              System.out.println("Error setting session timeout due to " + e.getClass().getName() + ": " + e.getLocalizedMessage());
-//              e.printStackTrace(System.out);
-//          }
+//			if (DEBUG)
+//				System.out.println("success.");
+		} catch (NamingException ne) {
+//			if (DEBUG) {
+//				System.out.println("failed.");
+//				System.out.println("Error setting session timeout due to NamingException: " + ne.toString(true));
+//				ne.printStackTrace(System.out);
+//			}
+		} catch (Exception e) {
+//			if (DEBUG) {
+//				System.out.println("failed.");
+//				System.out.println("Error setting session timeout due to " + e.getClass().getName() + ": " + e.getLocalizedMessage());
+//				e.printStackTrace(System.out);
+//			}
 		}
 	}
 
-	public String getServicePrefix()
-	{
+	public String getServicePrefix() {
 		return serviceURL.getProtocol();
 	}
 
-	public void setServicePrefix(String servicePrefix)
-	{
+	public void setServicePrefix(String servicePrefix) {
 		serviceURL.setProtocol(servicePrefix);
 	}
 
-	public String getServerIP()
-	{
+	public String getServerIP() {
 		return serviceURL.getHost();
 	}
 
-	public void setServerIP(String serverIP)
-	{
+	public void setServerIP(String serverIP) {
 		serviceURL.setHost(serverIP);
 	}
 
-	public String getTCPport()
-	{
+	public String getTCPport() {
 		return serviceURL.getPort();
 	}
 
-	public void setTCPport(String TCPport)
-	{
+	public void setTCPport(String TCPport) {
 		serviceURL.setPort(TCPport);
 	}
 
-	public String getSID()
-	{
+	public String getSID() {
 		return serviceURL.getSid();
 	}
 
-	public void setSID(String SID)
-	{
+	public void setSID(String SID) {
 		serviceURL.setSid(SID);
 	}
 
-	public String getServiceURL()
-	{
+	public String getServiceURL() {
 		return serviceURL.toString();
 	}
 
-	public void setServiceURL(String serviceURL)
-	{
+	public void setServiceURL(String serviceURL) {
 		this.serviceURL = new ServiceURL(serviceURL);
 	}
 
-	public void setObjectName(String objectName)
-	{
+	public void setObjectName(String objectName) {
 		this.objectName = objectName;
 	}
 
-	public String getObjectName()
-	{
+	public String getObjectName() {
 		return objectName;
 	}
 
-	public void setUser(String user)
-	{
+	public void setUser(String user) {
 		this.user = user;
 	}
 
-	public String getUser()
-	{
+	public String getUser() {
 		return user;
 	}
 
-	public void setPassword(String password)
-	{
+	public void setPassword(String password) {
 		this.password = password;
 	}
 
-	public String getPassword()
-	{
+	public String getPassword() {
 		return password;
 	}
 
 	/**
 	 * Есть ли соединение с сервером.
 	 */
-	public boolean isConnected()
-	{
+	public boolean isConnected() {
 		return (connection_state == CONNECTION_OPENED);
 	}
 
-	public void setConnected(boolean connected)
-	{
+	public void setConnected(boolean connected) {
 		if (isConnected() && (!connected))
 			Disconnect();
 		else if ((!isConnected()) && connected)
 			Connect();
 	}
 
-	public String toString()
-	{
+	public String toString() {
 		return "RISDConnectionInfo service " + getServiceURL() + " server object " + objectName + " user " + getUser() + " connected " + isConnected();
 	}
 
-	public static class ServiceURL implements Cloneable
-	{
+	public static class ServiceURL implements Cloneable {
 		public static final String DEFAULT_PROTOCOL = "sess_iiop";
-//      public static final String DEFAULT_HOST = "amficom";
-		public static final String DEFAULT_HOST = "localhost";
+//		public static final String DEFAULT_HOST = "amficom";
+		public static final String DEFAULT_HOST = "research";
 		public static final String DEFAULT_PORT = "2481";
-//      public static final String DEFAULT_SID = "demo2";
-		public static final String DEFAULT_SID = "AMFICOM";
+//		public static final String DEFAULT_SID = "demo2";
+		public static final String DEFAULT_SID = "research";
 		public static final String DEFAULT_SERVICE_URL = DEFAULT_PROTOCOL + "://" + DEFAULT_HOST + ':' + DEFAULT_PORT + ':' + DEFAULT_SID;
 
 		/** 
@@ -660,18 +604,15 @@ public class RISDConnectionInfo extends ConnectionInterface
 		 */
 		protected String sid;
 
-		public ServiceURL()
-		{
+		public ServiceURL() {
 			this(DEFAULT_PROTOCOL, DEFAULT_HOST, DEFAULT_PORT, DEFAULT_SID);
 		}
 
-		public ServiceURL(String host, String port, String sid)
-		{
+		public ServiceURL(String host, String port, String sid) {
 			this(DEFAULT_PROTOCOL, host, port, sid);
 		}
 
-		public ServiceURL(String protocol, String host, String port, String sid)
-		{
+		public ServiceURL(String protocol, String host, String port, String sid) {
 			this.protocol = protocol;
 			this.host = host;
 			this.port = port;
@@ -681,13 +622,12 @@ public class RISDConnectionInfo extends ConnectionInterface
 		/**
 		 * @todo Add error-handling while parsing the string.
 		 */
-		public ServiceURL(String str)
-		{
+		public ServiceURL(String str) {
 			int i = str.indexOf(':');
 			protocol = str.substring(0, i);
-//          /*
-//           * A colon and a double slash.
-//           */
+			/*
+			 * A colon and a double slash.
+			 */
 			str = str.substring(i + 3);
 
 			i = str.indexOf(':');
@@ -703,8 +643,7 @@ public class RISDConnectionInfo extends ConnectionInterface
 		 * Getter for property protocol.
 		 * @return Value of property protocol.
 		 */
-		public String getProtocol()
-		{
+		public String getProtocol() {
 			return protocol;
 		}
 
@@ -712,8 +651,7 @@ public class RISDConnectionInfo extends ConnectionInterface
 		 * Setter for property protocol.
 		 * @param protocol New value of property protocol.
 		 */
-		public void setProtocol(String protocol)
-		{
+		public void setProtocol(String protocol) {
 			this.protocol = protocol;
 		}
 
@@ -721,8 +659,7 @@ public class RISDConnectionInfo extends ConnectionInterface
 		 * Getter for property host.
 		 * @return Value of property host.
 		 */
-		public String getHost()
-		{
+		public String getHost() {
 			return host;
 		}
 
@@ -730,8 +667,7 @@ public class RISDConnectionInfo extends ConnectionInterface
 		 * Setter for property host.
 		 * @param host New value of property host.
 		 */
-		public void setHost(String host)
-		{
+		public void setHost(String host) {
 			this.host = host;
 		}
 
@@ -739,8 +675,7 @@ public class RISDConnectionInfo extends ConnectionInterface
 		 * Getter for property port.
 		 * @return Value of property port.
 		 */
-		public String getPort()
-		{
+		public String getPort() {
 			return port;
 		}
 
@@ -748,8 +683,7 @@ public class RISDConnectionInfo extends ConnectionInterface
 		 * Setter for property port.
 		 * @param port New value of property port.
 		 */
-		public void setPort(String port)
-		{
+		public void setPort(String port) {
 			this.port = port;
 		}
 
@@ -757,8 +691,7 @@ public class RISDConnectionInfo extends ConnectionInterface
 		 * Getter for property sid.
 		 * @return Value of property sid.
 		 */
-		public String getSid()
-		{
+		public String getSid() {
 			return sid;
 		}
 
@@ -766,30 +699,25 @@ public class RISDConnectionInfo extends ConnectionInterface
 		 * Setter for property sid.
 		 * @param sid New value of property sid.
 		 */
-		public void setSid(String sid)
-		{
+		public void setSid(String sid) {
 			this.sid = sid;
 		}
 
-		protected Object clone() throws CloneNotSupportedException
-		{
+		protected Object clone() throws CloneNotSupportedException {
 			ServiceURL serviceURL = null;
-			  try
-			{
+			try {
 				serviceURL = (ServiceURL) (super.clone());
 				serviceURL.host = new String(host);
 				serviceURL.port = new String(port);
 				serviceURL.protocol = new String(protocol);
 				serviceURL.sid = new String(sid);
-			} catch(CloneNotSupportedException cnse)
-			{
+			} catch (CloneNotSupportedException cnse) {
 				cnse.printStackTrace();
 			}
 			return serviceURL;
 		}
 
-		public String toString()
-		{
+		public String toString() {
 			return (protocol + "://" + host + ':' + port + ':' + sid);
 		}
 	}

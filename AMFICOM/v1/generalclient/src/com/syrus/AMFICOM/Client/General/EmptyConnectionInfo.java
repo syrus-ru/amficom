@@ -35,10 +35,6 @@
 
 package com.syrus.AMFICOM.Client.General;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
-
 public class EmptyConnectionInfo extends ConnectionInterface
 {
 	// значения необходимых для соединения с сервером переменных по умолчанию
@@ -92,7 +88,7 @@ public class EmptyConnectionInfo extends ConnectionInterface
 		}
 		return emptyConnectionInfo;
 	}
-	
+
 	// установить значения параметров по умолчанию
 	public void SetDefaults()
 	{
@@ -137,64 +133,64 @@ public class EmptyConnectionInfo extends ConnectionInterface
 	{
 		objectName = on;
 	}
-	
+
 	public String getObjectName()
 	{
 		return objectName;
 	}
-	
+
 	public void setServiceURL(String su)
 	{
 		serviceURL = su;
 	}
-	
+
 	public String getServiceURL()
 	{
 		return serviceURL;
 	}
-	
+
 	public void setServerIP(String sip)
 	{
 	}
-	
+
 	public String getServerIP()
 	{
 		return serviceURL;
 	}
-	
+
 	public void setTCPport(String p)
 	{
 	}
-	
+
 	public String getTCPport()
 	{
 		return serviceURL;
 	}
-	
+
 	public void setSID(String sid)
 	{
 	}
-	
+
 	public String getSID()
 	{
 		return serviceURL;
 	}
-	
+
 	public void setUser(String u)
 	{
 		user = u;
 	}
-	
+
 	public String getUser()
 	{
 		return user;
 	}
-	
+
 	public void setPassword(String p)
 	{
 		password = p;
 	}
-	
+
 	public String getPassword()
 	{
 		return password;
@@ -211,4 +207,3 @@ public class EmptyConnectionInfo extends ConnectionInterface
 		return "EmptyConnectionInfo service " + this.getServiceURL() + " server object " + this.objectName + " user " + this.getUser() + " connected " + this.isConnected();
 	}
 }
-

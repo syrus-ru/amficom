@@ -36,8 +36,6 @@
 
 package com.syrus.AMFICOM.Client.General;
 
-import java.util.Vector;
-
 public class EmptySessionInfo extends SessionInterface
 {
 	// переменные для организации сессии
@@ -134,47 +132,47 @@ public class EmptySessionInfo extends SessionInterface
 	{
 		ISMuser = u;
 	}
-	
+
 	public String getUser()
 	{
 		return ISMuser;
 	}
-	
+
 	public void setPassword(String p)
 	{
 		ISMpassword = p;
 	}
-	
+
 	public String getPassword()
 	{
 		return ISMpassword;
 	}
-	
+
 	public void setLogonTime(long t)
 	{
 		LogonTime = t;
 	}
-	
+
 	public long getLogonTime()
 	{
 		return LogonTime;
 	}
-	
+
 	public ConnectionInterface getConnectionInterface()
 	{
 		return ci;
 	}
-	
+
 	public String getUserId()
 	{
 		return getUser();
 	}
-	
+
 	public void setDomainId(String domain_id)
 	{
 		this.domain_id = domain_id;
 	}
-	
+
 	public String getDomainId()
 	{
 		return domain_id;
@@ -185,4 +183,3 @@ public class EmptySessionInfo extends SessionInterface
 		return "EmptySessionInfo for user " + this.getUser() + " opened " + this.isOpened();
 	}
 }
-

@@ -35,9 +35,7 @@
 
 package com.syrus.AMFICOM.Client.General;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
+import java.util.*;
 
 public abstract class ConnectionInterface implements Cloneable
 {
@@ -127,22 +125,22 @@ public abstract class ConnectionInterface implements Cloneable
 	{
 		return active_connection;
 	}
-	
+
 	static public void add(ConnectionInterface ci)
 	{
 		connections.add(ci);
 	}
-	
+
 	static public void remove(ConnectionInterface ci)
 	{
 		connections.remove(ci);
 	}
-	
+
 	static public boolean contains(ConnectionInterface ci)
 	{
 		return connections.contains(ci);
 	}
-	
+
 	// вывести диагностическое сообщение
 	static public void Log(String s)
 	{
@@ -153,5 +151,4 @@ public abstract class ConnectionInterface implements Cloneable
 	{
 		System.out.println (s.toString());
 	}
-
 }

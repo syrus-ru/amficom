@@ -1,5 +1,5 @@
 /*
- * $Id: JAlertingMessageTableCellRenderer.java,v 1.1 2004/05/27 11:24:21 bass Exp $
+ * $Id: JAlertingMessageTableCellRenderer.java,v 1.2 2004/06/18 07:47:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/05/27 11:24:21 $
+ * @version $Revision: 1.2 $, $Date: 2004/06/18 07:47:21 $
  * @author $Author: bass $
  *
  * @bug In Motif L&F, both icon and selection colors are black.
@@ -58,7 +58,7 @@ final class JAlertingMessageTableCellRenderer extends DefaultTableCellRenderer {
 		 *       MessageType itself. Then, we'll be able to re-enable table
 		 *       column reordering and add icons based on message type.
 		 */
-		if (column == 1) {
+		if (column == 0) {
 			setHorizontalAlignment(CENTER);
 			setIcon(UIManager.getIcon("OptionPane.informationIcon"));
 			setText(null);

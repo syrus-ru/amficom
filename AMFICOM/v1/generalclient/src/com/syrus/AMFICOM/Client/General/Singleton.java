@@ -2,11 +2,11 @@ package com.syrus.AMFICOM.Client.General;
 
 import com.syrus.AMFICOM.Client.General.Log.LogInterface;
 
-public class Singleton 
+public class Singleton
 {
 	protected static Singleton singleton;
 
-	static 
+	static
 	{
 		if(singleton == null)
 			singleton = new Singleton();
