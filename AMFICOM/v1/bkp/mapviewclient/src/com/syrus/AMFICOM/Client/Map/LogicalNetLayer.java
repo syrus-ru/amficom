@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.49 2005/02/28 14:35:57 bass Exp $
+ * $Id: LogicalNetLayer.java,v 1.50 2005/03/04 14:39:08 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -79,8 +79,8 @@ import com.syrus.AMFICOM.scheme.corba.SchemePath;
  * 
  * 
  * 
- * @author $Author: bass $
- * @version $Revision: 1.49 $, $Date: 2005/02/28 14:35:57 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.50 $, $Date: 2005/03/04 14:39:08 $
  * @module mapviewclient_v2
  */
 public abstract class LogicalNetLayer implements MapCoordinatesConverter
@@ -333,7 +333,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		Map map = getMapView().getMap();
 		if(map != null)
 		{
-			Iterator en =  getMapView().getMap().getNodes().iterator();
+			Iterator en =  map.getNodes().iterator();
 			while (en.hasNext())
 			{
 				AbstractNode curNode = (AbstractNode)en.next();
@@ -425,12 +425,12 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			setScale(this.mapView.getScale());
 			setCenter(this.mapView.getCenter());
 
-			Iterator e = this.mapView.getAllElements().iterator();
-			while (e.hasNext())
-			{
-				MapElement mapElement = (MapElement )e.next();
-				mapElement.setMap(this.mapView.getMap());
-			}
+//			Iterator e = this.mapView.getAllElements().iterator();
+//			while (e.hasNext())
+//			{
+//				MapElement mapElement = (MapElement )e.next();
+//				mapElement.setMap(this.mapView.getMap());
+//			}
 
 			if(this.aContext != null)
 				if(this.aContext.getApplicationModel() != null)
@@ -681,7 +681,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 
 		if (getMapState().getShowMode() == MapState.SHOW_MEASUREMENT_PATH)
 		{
-			this.elementsToDisplay.addAll(getMapView().getMap().getPhysicalLinks());
+			this.elementsToDisplay.addAll(getMapView().getMap().getAllPhysicalLinks());
 			for(Iterator it = this.mapView.getMeasurementPaths().iterator(); it.hasNext();)
 			{
 				MeasurementPath mpath = 
@@ -708,7 +708,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		else
 		if (getMapState().getShowMode() == MapState.SHOW_CABLE_PATH)
 		{
-			this.elementsToDisplay.addAll(getMapView().getMap().getPhysicalLinks());
+			this.elementsToDisplay.addAll(getMapView().getMap().getAllPhysicalLinks());
 			for(Iterator it = this.mapView.getCablePaths().iterator(); it.hasNext();)
 			{
 				CablePath cpath = 
@@ -726,7 +726,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		else
 		if (getMapState().getShowMode() == MapState.SHOW_PHYSICAL_LINK)
 		{
-			e = getMapView().getMap().getPhysicalLinks().iterator();
+			e = getMapView().getMap().getAllPhysicalLinks().iterator();
 			while (e.hasNext())
 			{
 				PhysicalLink mple = 
@@ -737,7 +737,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		else
 		if (getMapState().getShowMode() == MapState.SHOW_NODE_LINK)
 		{
-			e = getMapView().getMap().getNodeLinks().iterator();
+			e = getMapView().getMap().getAllNodeLinks().iterator();
 			while (e.hasNext())
 			{
 				NodeLink curNodeLink = (NodeLink)e.next();

@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsPanel.java,v 1.18 2005/02/28 16:17:21 krupenn Exp $
+ * $Id: MapElementsPanel.java,v 1.19 2005/03/04 14:39:08 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -53,7 +53,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * видов элементов и талица элементов с полями "Идентификатор" и "Название"
  * 
  * 
- * @version $Revision: 1.18 $, $Date: 2005/02/28 16:17:21 $
+ * @version $Revision: 1.19 $, $Date: 2005/03/04 14:39:08 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -260,7 +260,7 @@ public final class MapElementsPanel extends JPanel
 
 			if(selection.equals(MapViewController.ELEMENT_SITENODE))
 			{
-				for(Iterator it = this.map.getSiteNodes().iterator(); it.hasNext();)
+				for(Iterator it = this.map.getAllSiteNodes().iterator(); it.hasNext();)
 				{
 					SiteNode site = (SiteNode)it.next();
 					if(		!site.getType().equals(well)
@@ -271,7 +271,7 @@ public final class MapElementsPanel extends JPanel
 			else
 			if(selection.equals(MapViewController.ELEMENT_WELL))
 			{
-				for(Iterator it = this.map.getSiteNodes().iterator(); it.hasNext();)
+				for(Iterator it = this.map.getAllSiteNodes().iterator(); it.hasNext();)
 				{
 					SiteNode site = (SiteNode)it.next();
 					if(site.getType().equals(well))
@@ -281,7 +281,7 @@ public final class MapElementsPanel extends JPanel
 			else
 			if(selection.equals(MapViewController.ELEMENT_PIQUET))
 			{
-				for(Iterator it = this.map.getSiteNodes().iterator(); it.hasNext();)
+				for(Iterator it = this.map.getAllSiteNodes().iterator(); it.hasNext();)
 				{
 					SiteNode site = (SiteNode)it.next();
 					if(site.getType().equals(piquet))
@@ -290,22 +290,22 @@ public final class MapElementsPanel extends JPanel
 			}
 			else
 			if(selection.equals(MapViewController.ELEMENT_PHYSICALLINK))
-				elements = this.map.getPhysicalLinks();
+				elements = this.map.getAllPhysicalLinks();
 			else
 			if(selection.equals(MapViewController.ELEMENT_MEASUREMENTPATH))
 				elements = this.logicalNetLayer.getMapView().getMeasurementPaths();
 			else
 			if(selection.equals(MapViewController.ELEMENT_TOPOLOGICALNODE))
-				elements = this.map.getTopologicalNodes();
+				elements = this.map.getAllTopologicalNodes();
 			else
 			if(selection.equals(MapViewController.ELEMENT_MARK))
-				elements = this.map.getMarks();
+				elements = this.map.getAllMarks();
 			else
 			if(selection.equals(MapViewController.ELEMENT_MARKER))
 				elements = this.logicalNetLayer.getMapView().getMarkers();
 			else
 			if(selection.equals(MapViewController.ELEMENT_COLLECTOR))
-				elements = this.map.getCollectors();
+				elements = this.map.getAllCollectors();
 			else
 			if(selection.equals(MapViewController.ELEMENT_CABLEPATH))
 				elements = this.logicalNetLayer.getMapView().getCablePaths();

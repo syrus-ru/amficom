@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundNodeElementStrategy.java,v 1.17 2005/03/02 12:35:40 krupenn Exp $
+ * $Id: MapUnboundNodeElementStrategy.java,v 1.18 2005/03/04 14:39:08 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import java.util.Iterator;
 /**
  * Стратегия управления непривязанным узлом.
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/03/02 12:35:40 $
+ * @version $Revision: 1.18 $, $Date: 2005/03/04 14:39:08 $
  * @module mapviewclient_v1
  */
 public final class MapUnboundNodeElementStrategy extends AbstractMapStrategy 
@@ -126,7 +126,7 @@ public final class MapUnboundNodeElementStrategy extends AbstractMapStrategy
 		}//MapState.MOVE_ACTION_MODE
 
 		this.unbound.setCanBind(false);
-		for (Iterator it = super.logicalNetLayer.getMapView().getMap().getSiteNodes().iterator();it.hasNext();)
+		for (Iterator it = super.logicalNetLayer.getMapView().getMap().getAllSiteNodes().iterator();it.hasNext();)
 		{
 			SiteNode sit = (SiteNode)it.next();
 			SiteNodeController snc = (SiteNodeController)super.logicalNetLayer.getMapViewController().getController(sit);
@@ -157,7 +157,7 @@ public final class MapUnboundNodeElementStrategy extends AbstractMapStrategy
 			}
 			if (this.unbound.getCanBind())
 			{
-				for (Iterator it = super.logicalNetLayer.getMapView().getMap().getSiteNodes().iterator();it.hasNext();)
+				for (Iterator it = super.logicalNetLayer.getMapView().getMap().getAllSiteNodes().iterator();it.hasNext();)
 				{
 					SiteNode site = (SiteNode)it.next();
 					SiteNodeController snc = (SiteNodeController)super.logicalNetLayer.getMapViewController().getController(site);

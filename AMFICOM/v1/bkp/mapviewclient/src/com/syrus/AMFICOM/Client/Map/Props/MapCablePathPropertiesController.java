@@ -216,7 +216,7 @@ public final class MapCablePathPropertiesController
 		{
 			this.nodes.clear();
 			CablePath cpath = (CablePath)object;
-			for(Iterator it = cpath.getMap().getSiteNodes().iterator(); it.hasNext();)
+			for(Iterator it = cpath.getMap().getAllSiteNodes().iterator(); it.hasNext();)
 			{
 				AbstractNode node = (AbstractNode)it.next();
 				this.nodes.put(new ObjectResourceLabel(node, node.getName()), node);

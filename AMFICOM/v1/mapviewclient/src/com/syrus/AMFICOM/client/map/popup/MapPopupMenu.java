@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.29 2005/02/22 11:00:15 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.30 2005/03/04 14:39:08 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -62,7 +62,7 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 /**
  * Контекстное меню элемента карты
  * @author $Author: krupenn $
- * @version $Revision: 1.29 $, $Date: 2005/02/22 11:00:15 $
+ * @version $Revision: 1.30 $, $Date: 2005/03/04 14:39:08 $
  * @module mapviewclient_v1
  */
 public abstract class MapPopupMenu extends JPopupMenu
@@ -138,7 +138,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 	{
 		Collector collector = null;
 
-		Collection list = this.logicalNetLayer.getMapView().getMap().getCollectors();
+		Collection list = this.logicalNetLayer.getMapView().getMap().getAllCollectors();
 		
 		ObjectResourceSelectionDialog dialog = new ObjectResourceSelectionDialog(list);
 			
@@ -191,7 +191,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 		SiteNode site = null;
 
 		List list = new LinkedList();
-		for(Iterator it = getLogicalNetLayer().getMapView().getMap().getSiteNodes().iterator(); it.hasNext();)
+		for(Iterator it = getLogicalNetLayer().getMapView().getMap().getAllSiteNodes().iterator(); it.hasNext();)
 		{
 			SiteNode s = (SiteNode)it.next();
 			if(!( s instanceof UnboundNode))

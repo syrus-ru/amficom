@@ -1,5 +1,5 @@
 /**
- * $Id: MapVoidElementStrategy.java,v 1.21 2005/03/02 12:35:40 krupenn Exp $
+ * $Id: MapVoidElementStrategy.java,v 1.22 2005/03/04 14:39:08 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import java.util.Set;
 /**
  * Стратегия управления элементами, когда нет выбранных элементов.
  * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/03/02 12:35:40 $
+ * @version $Revision: 1.22 $, $Date: 2005/03/04 14:39:08 $
  * @module mapviewclient_v1
  */
 public final class MapVoidElementStrategy extends AbstractMapStrategy 
@@ -162,7 +162,7 @@ public final class MapVoidElementStrategy extends AbstractMapStrategy
 			}
 		}
 
-		e = this.map.getNodeLinks().iterator();
+		e = this.map.getAllNodeLinks().iterator();
 
 		if(super.logicalNetLayer.getMapState().getShowMode() == MapState.SHOW_NODE_LINK)
 		{
@@ -189,7 +189,7 @@ public final class MapVoidElementStrategy extends AbstractMapStrategy
 		else
 		if(super.logicalNetLayer.getMapState().getShowMode() == MapState.SHOW_PHYSICAL_LINK)
 		{
-			for(Iterator it = this.map.getPhysicalLinks().iterator(); it.hasNext();)
+			for(Iterator it = this.map.getAllPhysicalLinks().iterator(); it.hasNext();)
 			{
 				PhysicalLink link = (PhysicalLink)it.next();
 				boolean select = true;

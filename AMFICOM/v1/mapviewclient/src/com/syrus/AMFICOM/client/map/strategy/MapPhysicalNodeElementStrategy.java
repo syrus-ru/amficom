@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElementStrategy.java,v 1.18 2005/03/02 12:35:40 krupenn Exp $
+ * $Id: MapPhysicalNodeElementStrategy.java,v 1.19 2005/03/04 14:39:08 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import java.util.Iterator;
 /**
  * Стратегия управления топологическим узлом.
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/03/02 12:35:40 $
+ * @version $Revision: 1.19 $, $Date: 2005/03/04 14:39:08 $
  * @module mapviewclient_v1
  */
 public final class MapPhysicalNodeElementStrategy extends AbstractMapStrategy 
@@ -143,7 +143,7 @@ public final class MapPhysicalNodeElementStrategy extends AbstractMapStrategy
 				this.command.setParameter(com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle.END_POINT, point);
 			}
 			this.node.setCanBind(false);
-			for (Iterator it = this.node.getMap().getSiteNodes().iterator();it.hasNext();)
+			for (Iterator it = this.node.getMap().getAllSiteNodes().iterator();it.hasNext();)
 			{
 				SiteNode sit = (SiteNode)it.next();
 				SiteNodeController snc = (SiteNodeController)super.logicalNetLayer.getMapViewController().getController(sit);
@@ -189,7 +189,7 @@ public final class MapPhysicalNodeElementStrategy extends AbstractMapStrategy
 			{
 				if (this.node.isCanBind())
 				{
-					for (Iterator it = this.node.getMap().getSiteNodes().iterator();it.hasNext();)
+					for (Iterator it = this.node.getMap().getAllSiteNodes().iterator();it.hasNext();)
 					{
 						SiteNode site = (SiteNode)it.next();
 						SiteNodeController snc = (SiteNodeController)super.logicalNetLayer.getMapViewController().getController(site);

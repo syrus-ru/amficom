@@ -1,5 +1,5 @@
 /*
- * Название: $Id: AMFICOMSearchPanel.java,v 1.1 2005/03/02 12:30:40 krupenn Exp $
+ * Название: $Id: AMFICOMSearchPanel.java,v 1.2 2005/03/04 14:39:08 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * Панель поиска элементов карты АМФИКОМ
- * @version $Revision: 1.1 $, $Date: 2005/03/02 12:30:40 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/04 14:39:08 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -237,7 +237,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 				}
 			}
 			
-			for(it = map.getPhysicalLinks().iterator(); it.hasNext();)
+			for(it = map.getAllPhysicalLinks().iterator(); it.hasNext();)
 			{
 				PhysicalLink link = (PhysicalLink )it.next();
 				if(link.getName().indexOf(this.searchText) != -1
