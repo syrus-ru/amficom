@@ -1,5 +1,5 @@
 /*
- * $Id: RISDSessionInfo.java,v 1.11 2004/10/20 11:54:19 bass Exp $
+ * $Id: RISDSessionInfo.java,v 1.12 2004/10/20 12:03:37 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2004/10/20 11:54:19 $
+ * @version $Revision: 1.12 $, $Date: 2004/10/20 12:03:37 $
  * @module generalclient_v1
  */
 public final class RISDSessionInfo extends SessionInterface {
@@ -191,16 +191,18 @@ public final class RISDSessionInfo extends SessionInterface {
 			final Class clazz = ClientLRUMap.class;
 			final int size = 200;
 
-			final ClientMeasurementObjectLoader clientMeasurementObjectLoader = new ClientMeasurementObjectLoader(cmServer);
-			clientMeasurementObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
-			MeasurementStorableObjectPool.init(clientMeasurementObjectLoader, clazz, size);
+			ClientMeasurementObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
+			MeasurementStorableObjectPool.init(new ClientMeasurementObjectLoader(cmServer), clazz, size);
 
-			final ClientConfigurationObjectLoader clientConfigurationObjectLoader = new ClientConfigurationObjectLoader(cmServer);
-			clientConfigurationObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
-			ConfigurationStorableObjectPool.init(clientConfigurationObjectLoader, clazz, size);
+			ClientConfigurationObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
+			ConfigurationStorableObjectPool.init(new ClientConfigurationObjectLoader(cmServer), clazz, size);
 
 			IdentifierPool.init(cmServer);
 
+			System.err.println("domainId: " + this.accessIdentifier.domain_id.identifier_string);
+			System.err.println("sessionId: " + this.accessIdentifier.session_id.identifier_string);
+			System.err.println("started: " + new java.util.Date(this.accessIdentifier.started));
+			System.err.println("userId: " + this.accessIdentifier.user_id.identifier_string);
 
 			add(this);
 			setActiveSession(this);
