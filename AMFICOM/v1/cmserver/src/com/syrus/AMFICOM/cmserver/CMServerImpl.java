@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.51 2004/10/19 13:53:10 bob Exp $
+ * $Id: CMServerImpl.java,v 1.52 2004/10/19 14:29:50 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -138,7 +138,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2004/10/19 13:53:10 $
+ * @version $Revision: 1.52 $, $Date: 2004/10/19 14:29:50 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -230,7 +230,10 @@ public class CMServerImpl implements CMServerOperations {
     public Identifier_Transferable reverseLookupUserName(String userName)
             throws AMFICOMRemoteException {
         try {
-            List list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(new StringFieldCondition(userName, ObjectEntities.USER_ENTITY_CODE), true);
+        	StringFieldCondition stringFieldCondition = StringFieldCondition.getInstance();
+        	stringFieldCondition.setEntityCode(ObjectEntities.USER_ENTITY_CODE);
+        	stringFieldCondition.setString(userName);
+            List list = ConfigurationStorableObjectPool.getStorableObjectsByCondition(stringFieldCondition, true);
             Identifier  id = ( (User)list.get(0) ).getId();
             return (Identifier_Transferable)id.getTransferable();
         } catch (RetrieveObjectException roe) {
