@@ -83,8 +83,7 @@ public class SaveTestSetupAsCommand extends VoidCommand
 		MeasurementSetup newms = command.measurementSetup;
 		newms.setCriteriaSet(AnalysisUtil.createCriteriaSetFromParams(
 				userId,
-				newms.
-				getMonitoredElementIds()));
+				newms.getMonitoredElementIds()));
 		newms.setEtalon(AnalysisUtil.createEtalon(
 				userId,
 				newms.getMonitoredElementIds(),

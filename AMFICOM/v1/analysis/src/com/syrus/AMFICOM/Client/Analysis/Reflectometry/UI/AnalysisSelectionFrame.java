@@ -9,6 +9,7 @@ import com.syrus.AMFICOM.Client.General.Command.Analysis.MinuitAnalyseCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.general.*;
@@ -73,19 +74,20 @@ public class AnalysisSelectionFrame extends ATableFrame
 						setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " (шаблона нет)");
 					else
 					{
-						try
-						{
-							Measurement m = (Measurement)MeasurementStorableObjectPool.getStorableObject(
-												 new Identifier(bs.measurementId), true);
+//						try
+//						{
+//							Measurement m = (Measurement)MeasurementStorableObjectPool.getStorableObject(
+//												 new Identifier(bs.measurementId), true);
+							MeasurementSetup ms = (MeasurementSetup)Pool.get(AnalysisUtil.CONTEXT, "MeasurementSetup");
 							setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " (шаблон: " +
-										 (m.getSetup().getDescription().equals("") ? "(нет)" : m.getSetup().getDescription()) + ")");
-						}
-						catch(ApplicationException ex)
-						{
-							System.err.println("Exception retrieving measurenent with " + bs.measurementId);
-							ex.printStackTrace();
-							return;
-						}
+									(ms == null ? "(нет)" : ms.getDescription()) + ")");
+//						}
+//						catch(ApplicationException ex)
+//						{
+//							System.err.println("Exception retrieving measurenent with " + bs.measurementId);
+//							ex.printStackTrace();
+//							return;
+//						}
 					}
 
 					double[] minuitParams = (double[])Pool.get("analysisparameters", "minuitanalysis");
@@ -102,27 +104,28 @@ public class AnalysisSelectionFrame extends ATableFrame
 					setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " (шаблона нет)");
 				else
 				{
-					try
-					{
-						Measurement m = (Measurement)MeasurementStorableObjectPool.getStorableObject(
-											new Identifier(bs.measurementId), true);
+//					try
+//					{
+//						Measurement m = (Measurement)MeasurementStorableObjectPool.getStorableObject(
+//											new Identifier(bs.measurementId), true);
 
-						MeasurementSetup ms = m.getSetup();
+//						MeasurementSetup ms = m.getSetup();
+						MeasurementSetup ms = (MeasurementSetup)Pool.get(AnalysisUtil.CONTEXT, "MeasurementSetup");
 						setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " (шаблон: " +
-									 (ms.getDescription().equals("") ? ms.getId().getIdentifierString() : ms.getDescription()) + ")");
+									 (ms == null ? "нет" : ms.getDescription()) + ")");
 
 						if (ms.getCriteriaSet() != null)
 						{
 							double[] minuitParams = (double[])Pool.get("analysisparameters", "minuitanalysis");
 							setDefaults(minuitParams);
 						}
-					}
-					catch(ApplicationException ex)
-					{
-						System.err.println("Measurement not found. id = " + bs.measurementId);
-						ex.printStackTrace();
-						return;
-					}
+//					}
+//					catch(ApplicationException ex)
+//					{
+//						System.err.println("Measurement not found. id = " + bs.measurementId);
+//						ex.printStackTrace();
+//						return;
+//					}
 				}
 			}
 			if(rce.CLOSE)

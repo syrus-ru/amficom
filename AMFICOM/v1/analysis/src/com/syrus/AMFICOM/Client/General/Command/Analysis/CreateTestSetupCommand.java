@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import javax.swing.JOptionPane;
 
+import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
@@ -49,19 +50,20 @@ public class CreateTestSetupCommand extends VoidCommand
 			return;
 		}
 
-		Measurement m = null;
-		try
-		{
-			m = (Measurement)MeasurementStorableObjectPool.getStorableObject(
-						 new Identifier(bs.measurementId), true);
-		}
-		catch(ApplicationException ex)
-		{
-			System.err.println("Exception retrieving measurenent with " + bs.measurementId);
-			ex.printStackTrace();
-			return;
-		}
-		MeasurementSetup ms = m.getSetup();
+//		Measurement m = null;
+//		try
+//		{
+//			m = (Measurement)MeasurementStorableObjectPool.getStorableObject(
+//						 new Identifier(bs.measurementId), true);
+//		}
+//		catch(ApplicationException ex)
+//		{
+//			System.err.println("Exception retrieving measurenent with " + bs.measurementId);
+//			ex.printStackTrace();
+//			return;
+//		}
+//		MeasurementSetup ms = m.getSetup();
+		MeasurementSetup ms = (MeasurementSetup)Pool.get(AnalysisUtil.CONTEXT, "MeasurementSetup");
 
 		String name = JOptionPane.showInputDialog(
 				Environment.getActiveWindow(),
@@ -73,23 +75,24 @@ public class CreateTestSetupCommand extends VoidCommand
 
 		try
 		{
-		    measurementSetup = MeasurementSetup.createInstance(
-				((RISDSessionInfo)aContext.getSessionInterface()).getUserIdentifier(),
-				ms.getParameterSet(),
-				ms.getThresholdSet(),
-				ms.getEtalon(),
-				ms.getThresholdSet(),
-				name,
-				ms.getMeasurementDuration(),
-				ms.getMonitoredElementIds());
-		}
-	    catch (CreateObjectException e)
-	    {
-		    // FIXME
-		    System.err.println("CreateTestSetupCommand: CreateObjectException.");
+				measurementSetup = MeasurementSetup.createInstance(
+						((RISDSessionInfo)aContext.getSessionInterface()).getUserIdentifier(),
+						ms.getParameterSet(),
+						ms.getThresholdSet(),
+						ms.getEtalon(),
+						ms.getThresholdSet(),
+						name,
+						ms.getMeasurementDuration(),
+						ms.getMonitoredElementIds());
+				Pool.put(AnalysisUtil.CONTEXT, "MeasurementSetup", measurementSetup);
+			}
+			catch (CreateObjectException e)
+			{
+				// FIXME
+				System.err.println("CreateTestSetupCommand: CreateObjectException.");
 			e.printStackTrace();
 			return;
-	    }
+			}
 
 		try
 		{

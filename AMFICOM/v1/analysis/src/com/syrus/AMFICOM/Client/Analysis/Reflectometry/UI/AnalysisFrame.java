@@ -182,20 +182,21 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 			int n = 0;
 			double delta_x = 0;
 
-			Measurement m = null;
-			try
-			{
-				m = (Measurement)MeasurementStorableObjectPool.getStorableObject(
-								new Identifier(bs.measurementId), true);
-			}
-			catch(ApplicationException ex)
-			{
-				System.err.println("Exception retrieving measurenent with " + bs.measurementId);
-				ex.printStackTrace();
-				return;
-			}
+//			Measurement m = null;
+//			try
+//			{
+//				m = (Measurement)MeasurementStorableObjectPool.getStorableObject(
+//								new Identifier(bs.measurementId), true);
+//			}
+//			catch(ApplicationException ex)
+//			{
+//				System.err.println("Exception retrieving measurenent with " + bs.measurementId);
+//				ex.printStackTrace();
+//				return;
+//			}
 
-			SetParameter[] params = m.getSetup().getParameterSet().getParameters();
+			MeasurementSetup ms = (MeasurementSetup)Pool.get(AnalysisUtil.CONTEXT, "MeasurementSetup");
+			SetParameter[] params = ms.getParameterSet().getParameters();
 			double len = 0;
 			try
 			{

@@ -51,8 +51,9 @@ public class LoadTestSetupCommand extends VoidCommand
 			return;
 
 		MeasurementSetup ms = (MeasurementSetup)dialog.resource;
-		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
+		Pool.put(AnalysisUtil.CONTEXT, "MeasurementSetup", ms);
 
+		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
 //		bs.test_setup_id = ts.getId();
 
 		if (Pool.get("eventparams", AnalysisUtil.ETALON) != null)
@@ -73,11 +74,11 @@ public class LoadTestSetupCommand extends VoidCommand
 				RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
 		aContext.getDispatcher().notify(new RefChangeEvent("primarytrace",
 				RefChangeEvent.THRESHOLDS_CALC_EVENT));
-/*		aContext.getDispatcher().notify(new RefChangeEvent("primarytrace",
+		aContext.getDispatcher().notify(new RefChangeEvent("primarytrace",
 				RefChangeEvent.CLOSE_EVENT));
 		aContext.getDispatcher().notify(new RefChangeEvent("primarytrace",
 				RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
 		aContext.getDispatcher().notify(new RefUpdateEvent("primarytrace",
-				RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));*/
+				RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
 	}
 }

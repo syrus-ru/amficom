@@ -130,8 +130,8 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 			else*/
 
 		bs.measurementId = m.getId().getIdentifierString();
-		Pool.put("testsetup", m.getId().getIdentifierString(), m);
 		MeasurementSetup ms = res.getMeasurement().getSetup();
+		Pool.put(AnalysisUtil.CONTEXT, "MeasurementSetup", ms);
 
 		AnalysisUtil.load_CriteriaSet(userId, ms);
 

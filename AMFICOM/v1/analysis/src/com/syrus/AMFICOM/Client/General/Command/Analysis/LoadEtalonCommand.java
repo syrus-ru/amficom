@@ -50,20 +50,22 @@ public class LoadEtalonCommand extends VoidCommand
 			return;
 		}
 
-		Measurement m = null;
-		try
-		{
-			m = (Measurement)MeasurementStorableObjectPool.getStorableObject(
-						 new Identifier(bs.measurementId), true);
-		}
-		catch(ApplicationException ex)
-		{
-			System.err.println("Exception retrieving measurenent with " + bs.measurementId);
-			ex.printStackTrace();
-			return;
-		}
+//		Measurement m = null;
+//		try
+//		{
+//			m = (Measurement)MeasurementStorableObjectPool.getStorableObject(
+//						 new Identifier(bs.measurementId), true);
+//		}
+//		catch(ApplicationException ex)
+//		{
+//			System.err.println("Exception retrieving measurenent with " + bs.measurementId);
+//			ex.printStackTrace();
+//			return;
+//		}
 
-		if (m.getSetup().getEtalon() == null)
+		MeasurementSetup ms = (MeasurementSetup)Pool.get(AnalysisUtil.CONTEXT, "MeasurementSetup");
+		if (ms != null)
+		if (ms.getEtalon() == null)
 		{
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),

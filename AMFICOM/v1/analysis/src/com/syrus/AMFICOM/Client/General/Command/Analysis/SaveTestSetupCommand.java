@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import javax.swing.JOptionPane;
 
+import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
@@ -65,20 +66,22 @@ public class SaveTestSetupCommand extends VoidCommand
 			return;
 		}
 
-		Measurement m = null;
-		try
-		{
-			m = (Measurement)MeasurementStorableObjectPool.getStorableObject(
-						 new Identifier(bs.measurementId), true);
-		}
-		catch(ApplicationException ex)
-		{
-			System.err.println("Exception retrieving measurenent with " + bs.measurementId);
-			ex.printStackTrace();
-			return;
-		}
+//		Measurement m = null;
+//		try
+//		{
+//			m = (Measurement)MeasurementStorableObjectPool.getStorableObject(
+//						 new Identifier(bs.measurementId), true);
+//		}
+//		catch(ApplicationException ex)
+//		{
+//			System.err.println("Exception retrieving measurenent with " + bs.measurementId);
+//			ex.printStackTrace();
+//			return;
+//		}
+//
+//		MeasurementSetup ms = m.getSetup();
 
-		MeasurementSetup ms = m.getSetup();
+		MeasurementSetup ms = (MeasurementSetup)Pool.get(AnalysisUtil.CONTEXT, "MeasurementSetup");
 		if (ms.getParameterSet() == null)
 		{
 			JOptionPane.showMessageDialog(
@@ -87,6 +90,9 @@ public class SaveTestSetupCommand extends VoidCommand
 					LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
 			return;
 		}
+
+		Identifier user_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
+		ms.setCriteriaSet(AnalysisUtil.createCriteriaSetFromParams(user_id, ms.getMonitoredElementIds()));
 
 		ReflectogramEvent[] ep = null;
 		if ((type & ETALON) != 0 || (type & THRESHOLDS) != 0)
@@ -100,6 +106,10 @@ public class SaveTestSetupCommand extends VoidCommand
 						LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
 				return;
 			}
+			if ((type & ETALON) != 0)
+				ms.setEtalon(AnalysisUtil.createEtalon(user_id, ms.getMonitoredElementIds(), ep));
+			if ((type & THRESHOLDS) != 0)
+				ms.setThresholdSet(AnalysisUtil.createThresholdSet(user_id, ms.getMonitoredElementIds(), ep));
 		}
 
 		if (ms.getDescription().equals(""))

@@ -28,6 +28,7 @@ import com.syrus.util.ByteArray;
 public class AnalysisUtil
 {
 	public static final String ETALON = "etalon";
+	public static final String CONTEXT = "analysiscontext";
 
 	private AnalysisUtil()
 	{
@@ -42,7 +43,7 @@ public class AnalysisUtil
 		ParameterType parameterType = null;
 		try	{
 				try{
-			List pTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+			List pTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
 			for (Iterator it = pTypes.iterator(); it.hasNext();){
 				ParameterType type = (ParameterType)it.next();
 				if (type.getCodename().equals(codename)){
@@ -62,7 +63,7 @@ public class AnalysisUtil
 					codename,
 					codename + "_Description",
 					codename + "_Name"); // by saa after a talk with bob
-					ConfigurationStorableObjectPool.putStorableObject(parameterType);
+					MeasurementStorableObjectPool.putStorableObject(parameterType);
 			}
 		}
 		catch(ApplicationException ex)
