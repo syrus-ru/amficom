@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationDatabase.java,v 1.13 2004/08/23 20:47:37 arseniy Exp $
+ * $Id: EvaluationDatabase.java,v 1.14 2004/08/27 12:14:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,9 +8,14 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.AMFICOM.general.Identifier;
@@ -25,8 +30,8 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/08/23 20:47:37 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2004/08/27 12:14:57 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -46,54 +51,74 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 		Evaluation evaluation = this.fromStorableObject(storableObject);
 		this.retrieveEvaluation(evaluation);
 	}
+	
+	private String retrieveEvaluationQuery(String condition){
+		return SQL_SELECT
+		+ COLUMN_ID + COMMA
+		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
+		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
+		+ COLUMN_CREATOR_ID + COMMA
+		+ COLUMN_MODIFIER_ID + COMMA
+		+ COLUMN_TYPE_ID + COMMA
+		+ COLUMN_MONITORED_ELEMENT_ID + COMMA
+		+ COLUMN_THRESHOLD_SET_ID
+		+ SQL_FROM + ObjectEntities.EVALUATION_ENTITY
+		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
+
+	}
+	
+	private Evaluation updateEvaluationFromResultSet(Evaluation evaluation, ResultSet resultSet) throws RetrieveObjectException, SQLException{
+		Evaluation evaluation1 = evaluation;
+		if (evaluation == null){
+			/**
+			 * @todo when change DB Identifier model ,change getString() to getLong()
+			 */
+			evaluation1 = new Evaluation(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null);			
+		}
+		EvaluationType evaluationType;
+		Set thresholdSet;
+		try {
+			/**
+			 * @todo when change DB Identifier model ,change getString() to getLong()
+			 */
+			evaluationType = (EvaluationType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
+			/**
+			 * @todo when change DB Identifier model ,change getString() to
+			 *       getLong()
+			 */
+			thresholdSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_THRESHOLD_SET_ID)), true);
+		}
+		catch (ApplicationException ae) {
+			throw new RetrieveObjectException(ae);
+		}
+		/**
+		 * @todo when change DB Identifier model ,change getString() to
+		 *       getLong()
+		 */
+		evaluation1.setAttributes(DatabaseDate.fromQuerySubString(resultSet,COLUMN_CREATED),
+														 DatabaseDate.fromQuerySubString(resultSet,COLUMN_MODIFIED),
+														 new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+														 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+														 evaluationType,
+														 new Identifier(resultSet.getString(COLUMN_MONITORED_ELEMENT_ID)),
+														 thresholdSet);
+
+
+		return evaluation1;
+	}
+
 
 	private void retrieveEvaluation(Evaluation evaluation) throws ObjectNotFoundException, RetrieveObjectException {
 		String evaluationIdStr = evaluation.getId().toSQLString();
-		String sql = SQL_SELECT
-			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
-			+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-			+ COLUMN_CREATOR_ID + COMMA
-			+ COLUMN_MODIFIER_ID + COMMA
-			+ COLUMN_TYPE_ID + COMMA
-			+ COLUMN_MONITORED_ELEMENT_ID + COMMA
-			+ COLUMN_THRESHOLD_SET_ID
-			+ SQL_FROM + ObjectEntities.EVALUATION_ENTITY
-			+ SQL_WHERE + COLUMN_ID + EQUALS + evaluationIdStr;
+		String sql = retrieveEvaluationQuery(COLUMN_ID + EQUALS + evaluationIdStr);
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("EvaluationDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
-			if (resultSet.next()) {
-				EvaluationType evaluationType;
-				Set thresholdSet;
-				try {
-					/**
-					 * @todo when change DB Identifier model ,change getString() to getLong()
-					 */
-					evaluationType = (EvaluationType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
-					/**
-					 * @todo when change DB Identifier model ,change getString() to
-					 *       getLong()
-					 */
-					thresholdSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_THRESHOLD_SET_ID)), true);
-				}
-				catch (ApplicationException ae) {
-					throw new RetrieveObjectException(ae);
-				}
-				/**
-				 * @todo when change DB Identifier model ,change getString() to
-				 *       getLong()
-				 */
-				evaluation.setAttributes(DatabaseDate.fromQuerySubString(resultSet,COLUMN_CREATED),
-																 DatabaseDate.fromQuerySubString(resultSet,COLUMN_MODIFIED),
-																 new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-																 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-																 evaluationType,
-																 new Identifier(resultSet.getString(COLUMN_MONITORED_ELEMENT_ID)),
-																 thresholdSet);
-			}
+			if (resultSet.next()) 
+				updateEvaluationFromResultSet(evaluation, resultSet);
 			else
 				throw new ObjectNotFoundException("No such evaluation: " + evaluationIdStr);
 		}
@@ -202,4 +227,124 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 				return;
 		}
 	}
+	
+	public List retrieveByIds(List ids) throws RetrieveObjectException {
+		if ((ids == null) || (ids.isEmpty()))
+			return new LinkedList();
+		return retriveByIdsOneQuery(ids);	
+		//return retriveByIdsPreparedStatement(ids);
+	}
+	
+	private List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
+		List result = new LinkedList();
+		String sql;
+		{
+			StringBuffer buffer = new StringBuffer(COLUMN_ID);
+			int idsLength = ids.size();
+			if (idsLength == 1){
+				buffer.append(EQUALS);
+				buffer.append(((Identifier)ids.iterator().next()).toSQLString());
+			} else{
+				buffer.append(SQL_IN);
+				buffer.append(OPEN_BRACKET);
+				
+				int i = 1;
+				for(Iterator it=ids.iterator();it.hasNext();i++){
+					Identifier id = (Identifier)it.next();
+					buffer.append(id.toSQLString());
+					if (i < idsLength)
+						buffer.append(COMMA);
+				}
+				
+				buffer.append(CLOSE_BRACKET);
+			}
+			sql = retrieveEvaluationQuery(buffer.toString());
+		}
+		
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("EvaluationDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next()){
+				result.add(updateEvaluationFromResultSet(null, resultSet));
+			}
+		}
+		catch (SQLException sqle) {
+			String mesg = "EvaluationDatabase.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return result;
+	}
+	
+	private List retriveByIdsPreparedStatement(List ids) throws RetrieveObjectException {
+		List result = new LinkedList();
+		String sql;
+		{
+			
+			int idsLength = ids.size();
+			if (idsLength == 1){
+				return retriveByIdsOneQuery(ids);
+			}
+			StringBuffer buffer = new StringBuffer(COLUMN_ID);
+			buffer.append(EQUALS);							
+			buffer.append(QUESTION);
+			
+			sql = retrieveEvaluationQuery(buffer.toString());
+		}
+			
+		PreparedStatement stmt = null;
+		ResultSet resultSet = null;
+		try {
+			stmt = connection.prepareStatement(sql.toString());
+			for(Iterator it = ids.iterator();it.hasNext();){
+				Identifier id = (Identifier)it.next(); 
+				/**
+				 * @todo when change DB Identifier model ,change setString() to setLong()
+				 */
+				String idStr = id.getIdentifierString();
+				stmt.setString(1, idStr);
+				resultSet = stmt.executeQuery();
+				if (resultSet.next()){
+					result.add(updateEvaluationFromResultSet(null, resultSet));
+				} else{
+					Log.errorMessage("EvaluationDatabase.retriveByIdsPreparedStatement | No such evalution: " + idStr);									
+				}
+				
+			}
+		}catch (SQLException sqle) {
+			String mesg = "EvaluationDatabase.retriveByIdsPreparedStatement | Cannot retrieve evalution " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				if (stmt != null)
+					stmt.close();
+				stmt = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}			
+		
+		return result;
+	}
+
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.19 2004/08/26 14:59:38 bob Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.20 2004/08/27 12:14:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/08/26 14:59:38 $
+ * @version $Revision: 1.20 $, $Date: 2004/08/27 12:14:57 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -58,7 +58,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		this.retrieveParameterTypes(measurementType);
 	}
 
-	private static String retrieveMeasurementTypeQuery(String condition){
+	private String retrieveMeasurementTypeQuery(String condition){
 		return SQL_SELECT
 		+ COLUMN_ID + COMMA
 		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA
@@ -72,7 +72,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 
 	}
 	
-	private static MeasurementType updateMeasurementTypeFromResultSet(MeasurementType measurementType, ResultSet resultSet) throws SQLException{
+	private MeasurementType updateMeasurementTypeFromResultSet(MeasurementType measurementType, ResultSet resultSet) throws SQLException{
 		MeasurementType measurementType1 = measurementType;
 		if (measurementType == null){
 			/**
@@ -355,7 +355,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		}
 	}
 
-	public static void delete(MeasurementType measurementType) {
+	public void delete(MeasurementType measurementType) {
 		String measurementTypeIdStr = measurementType.getId().toSQLString();
 		Statement statement = null;
 		try {
@@ -383,7 +383,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		}
 	}
 
-	public static MeasurementType retrieveForCodename(String codename) throws ObjectNotFoundException , RetrieveObjectException {
+	public MeasurementType retrieveForCodename(String codename) throws ObjectNotFoundException , RetrieveObjectException {
 		String sql = SQL_SELECT
 			+ COLUMN_ID
 			+ SQL_FROM + ObjectEntities.MEASUREMENTTYPE_ENTITY
@@ -422,7 +422,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		}
 	}
 	
-	public static List retrieveAll() throws RetrieveObjectException {
+	public List retrieveAll() throws RetrieveObjectException {
 		List measurementTypes = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
 		String sql = SQL_SELECT
 				+ COLUMN_ID
@@ -459,14 +459,14 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		return measurementTypes;
 	}
 	
-	public static List retrieveByIds(List ids) throws RetrieveObjectException {
+	public List retrieveByIds(List ids) throws RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
 			return new LinkedList();
 		return retriveByIdsOneQuery(ids);	
 		//return retriveByIdsPreparedStatement(ids);
 	}
 	
-	private static List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
+	private List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
 		List result = new LinkedList();
 		String sql;
 		{
@@ -522,7 +522,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		return result;
 	}
 	
-	private static List retriveByIdsPreparedStatement(List ids) throws RetrieveObjectException {
+	private List retriveByIdsPreparedStatement(List ids) throws RetrieveObjectException {
 		List result = new LinkedList();
 		String sql;
 		{

@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.13 2004/08/23 20:47:37 arseniy Exp $
+ * $Id: Result.java,v 1.14 2004/08/27 12:14:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/08/23 20:47:37 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2004/08/27 12:14:57 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -108,13 +108,13 @@ public class Result extends StorableObject {
 		}
 	}
 
-	private Result(Identifier id,
+	protected Result(Identifier id,
 								 Identifier creatorId,
 								 Measurement measurement,
 								 Action action,
-								 ResultSort sort,
-								 AlarmLevel alarmLevel,
-								 SetParameter[] parameters) throws CreateObjectException {
+								 int sort,
+								 int alarmLevel,
+								 SetParameter[] parameters) {
 		super(id);
 		long time = System.currentTimeMillis();
 		super.created = new Date(time);
@@ -123,19 +123,19 @@ public class Result extends StorableObject {
 		super.modifierId = creatorId;
 		this.measurement = measurement;
 		this.action = action;
-		this.sort = sort.value();
-		this.alarmLevel = alarmLevel.value();
+		this.sort = sort;
+		this.alarmLevel = alarmLevel;
 		this.parameters = parameters;
 
 		super.currentVersion = super.getNextVersion();
 
-		this.resultDatabase = MeasurementDatabaseContext.resultDatabase;
-		try {
-			this.resultDatabase.insert(this);
-		}
-		catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
-		}
+//		this.resultDatabase = MeasurementDatabaseContext.resultDatabase;
+//		try {
+//			this.resultDatabase.insert(this);
+//		}
+//		catch (IllegalDataException e) {
+//			throw new CreateObjectException(e.getMessage(), e);
+//		}
 	}
 
 	public Object getTransferable() {
@@ -208,8 +208,8 @@ public class Result extends StorableObject {
 											creatorId,
 											measurement,
 											action,
-											sort,
-											alarmLevel,
+											sort.value(),
+											alarmLevel.value(),
 											parameters);
 	}
 }

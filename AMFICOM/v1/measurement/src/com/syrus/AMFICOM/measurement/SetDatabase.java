@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.21 2004/08/27 07:44:24 bob Exp $
+ * $Id: SetDatabase.java,v 1.22 2004/08/27 12:14:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.database.ByteArrayDatabase;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/08/27 07:44:24 $
+ * @version $Revision: 1.22 $, $Date: 2004/08/27 12:14:57 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -72,7 +72,6 @@ public class SetDatabase extends StorableObjectDatabase {
 		+ COLUMN_DESCRIPTION 
 		+ SQL_FROM 
 		+ ObjectEntities.SET_ENTITY
-		+ SQL_WHERE
 		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
 
 	}
@@ -656,14 +655,14 @@ public class SetDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("MeasurementSetupDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("SetDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()){
 				result.add(updateSetFromResultSet(null, resultSet));
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementSetupDatabase.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
+			String mesg = "SetDatabase.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -713,12 +712,12 @@ public class SetDatabase extends StorableObjectDatabase {
 				if (resultSet.next()){
 					result.add(updateSetFromResultSet(null, resultSet));
 				} else{
-					Log.errorMessage("MeasurementSetupDatabase.retriveByIdsPreparedStatement | No such measurement setup: " + idStr);									
+					Log.errorMessage("SetDatabase.retriveByIdsPreparedStatement | No such set: " + idStr);									
 				}
 				
 			}
 		}catch (SQLException sqle) {
-			String mesg = "MeasurementSetupDatabase.retriveByIdsPreparedStatement | Cannot retrieve measurement setup " + sqle.getMessage();
+			String mesg = "SetDatabase.retriveByIdsPreparedStatement | Cannot retrieve set " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {

@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.21 2004/08/23 20:47:37 arseniy Exp $
+ * $Id: Measurement.java,v 1.22 2004/08/27 12:14:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/08/23 20:47:37 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.22 $, $Date: 2004/08/27 12:14:57 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -86,14 +86,14 @@ public class Measurement extends Action {
 		}
 	}
 
-	private Measurement(Identifier id,
+	protected Measurement(Identifier id,
 											Identifier creatorId,
 											MeasurementType type,
 											Identifier monitoredElementId,
 											MeasurementSetup setup,
 											Date startTime,
 											String localAddress,
-											Identifier testId) throws CreateObjectException {
+											Identifier testId) {
 		super(id);
 		long time = System.currentTimeMillis();
 		super.created = new Date(time);
@@ -105,20 +105,14 @@ public class Measurement extends Action {
 
 		this.setup = setup;
 		this.startTime = startTime;
-		this.duration = this.setup.getMeasurementDuration();
+		if (this.setup != null)
+			this.duration = this.setup.getMeasurementDuration();
 		this.status = MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED;
 		this.localAddress = localAddress;
 		this.testId = testId;
 
 		super.currentVersion = super.getNextVersion();
 
-		this.measurementDatabase = MeasurementDatabaseContext.measurementDatabase;
-		try {
-			this.measurementDatabase.insert(this);
-		}
-		catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
-		}
 	}
 
 	public Object getTransferable() {

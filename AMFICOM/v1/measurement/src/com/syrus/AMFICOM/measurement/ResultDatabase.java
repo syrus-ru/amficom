@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.15 2004/08/23 20:47:37 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.16 2004/08/27 12:14:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,8 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import java.sql.Statement;
@@ -31,8 +33,8 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/08/23 20:47:37 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2004/08/27 12:14:57 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -65,22 +67,95 @@ public class ResultDatabase extends StorableObjectDatabase {
 		this.retrieveResultParameters(result);
 	}
 
+	private String retrieveSetQuery(String condition){
+		return SQL_SELECT
+		+ COLUMN_ID + COMMA
+		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
+		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
+		+ COLUMN_CREATOR_ID + COMMA
+		+ COLUMN_MODIFIER_ID + COMMA
+		+ COLUMN_MEASUREMENT_ID + COMMA
+		+ COLUMN_ANALYSIS_ID + COMMA
+		+ COLUMN_EVALUATION_ID + COMMA
+		+ COLUMN_SORT + COMMA
+		+ COLUMN_ALARM_LEVEL
+		+ SQL_FROM + ObjectEntities.RESULT_ENTITY
+		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
+
+	}
+	
+	private Result updateSetFromResultSet(Result result, ResultSet resultSet) throws RetrieveObjectException, SQLException{
+		Result result1 = result;
+		if (result == null){
+			/**
+			 * @todo when change DB Identifier model ,change getString() to getLong()
+			 */
+			result1 = new Result(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, 0, 0, null);
+		}
+		/**
+		 * @todo when change DB Identifier model ,change getString() to getLong()
+		 */
+		Measurement measurement = null;
+		try {
+			measurement = (Measurement)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_MEASUREMENT_ID)), true);
+		}
+		catch (ApplicationException ae) {
+			throw new RetrieveObjectException(ae);
+		}
+		int resultSort = resultSet.getInt(COLUMN_SORT);
+		Action action = null;
+		switch (resultSort) {
+			case ResultSort._RESULT_SORT_MEASUREMENT:
+				action = measurement;
+				break;
+			case ResultSort._RESULT_SORT_ANALYSIS:
+				/**
+				 * @todo when change DB Identifier model ,change getString() to getLong()
+				 */
+				try {
+					action = (Analysis)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_ANALYSIS_ID)), true);
+				}
+				catch (Exception e) {
+					throw new RetrieveObjectException(e);
+				}
+				break;
+			case ResultSort._RESULT_SORT_EVALUATION:
+				/**
+				 * @todo when change DB Identifier model ,change getString() to getLong()
+				 */
+				try {
+					action = (Evaluation)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_EVALUATION_ID)), true);
+				}
+				catch (Exception e) {
+					throw new RetrieveObjectException(e);
+				}
+				break;
+			default:
+				Log.errorMessage("Unkown sort: " + resultSort + " of result " + result1.getId().getCode());
+		}
+		result1.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+												 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+												 /**
+												  * @todo when change DB Identifier model ,change getString() to getLong()
+												  */
+												 new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+												 /**
+												  * @todo when change DB Identifier model ,change getString() to getLong()
+												  */
+												 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+												 measurement,
+												 action,
+												 resultSort,
+												 resultSet.getInt(COLUMN_ALARM_LEVEL));
+
+
+		return result1;
+	}
+
+	
 	private void retrieveResult(Result result) throws ObjectNotFoundException, RetrieveObjectException {
 		String resultIdStr = result.getId().toSQLString();
-		String sql = SQL_SELECT
-			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
-			+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-			+ COLUMN_CREATOR_ID + COMMA
-			+ COLUMN_MODIFIER_ID + COMMA
-			+ COLUMN_MEASUREMENT_ID + COMMA
-			+ COLUMN_ANALYSIS_ID + COMMA
-			+ COLUMN_EVALUATION_ID + COMMA
-			+ COLUMN_SORT + COMMA
-			+ COLUMN_ALARM_LEVEL
-			+ SQL_FROM + ObjectEntities.RESULT_ENTITY
-			+ SQL_WHERE 
-			+ COLUMN_ID + EQUALS
-			+ resultIdStr;
+		String sql = retrieveSetQuery(COLUMN_ID + EQUALS + resultIdStr);
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -88,61 +163,6 @@ public class ResultDatabase extends StorableObjectDatabase {
 			Log.debugMessage("ResultDatabase.retrieveResult | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
-				/**
-				 * @todo when change DB Identifier model ,change getString() to getLong()
-				 */
-				Measurement measurement = null;
-				try {
-					measurement = (Measurement)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_MEASUREMENT_ID)), true);
-				}
-				catch (ApplicationException ae) {
-					throw new RetrieveObjectException(ae);
-				}
-				int resultSort = resultSet.getInt(COLUMN_SORT);
-				Action action = null;
-				switch (resultSort) {
-					case ResultSort._RESULT_SORT_MEASUREMENT:
-						action = measurement;
-						break;
-					case ResultSort._RESULT_SORT_ANALYSIS:
-						/**
-						 * @todo when change DB Identifier model ,change getString() to getLong()
-						 */
-						try {
-							action = (Analysis)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_ANALYSIS_ID)), true);
-						}
-						catch (Exception e) {
-							throw new RetrieveObjectException(e);
-						}
-						break;
-					case ResultSort._RESULT_SORT_EVALUATION:
-						/**
-						 * @todo when change DB Identifier model ,change getString() to getLong()
-						 */
-						try {
-							action = (Evaluation)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_EVALUATION_ID)), true);
-						}
-						catch (Exception e) {
-							throw new RetrieveObjectException(e);
-						}
-						break;
-					default:
-						Log.errorMessage("Unkown sort: " + resultSort + " of result " + resultIdStr);
-				}
-				result.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-														 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-														 /**
-														  * @todo when change DB Identifier model ,change getString() to getLong()
-														  */
-														 new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-														 /**
-														  * @todo when change DB Identifier model ,change getString() to getLong()
-														  */
-														 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-														 measurement,
-														 action,
-														 resultSort,
-														 resultSet.getInt(COLUMN_ALARM_LEVEL));
 			}
 			else
 				throw new ObjectNotFoundException("No such result: " + resultIdStr);
@@ -450,5 +470,124 @@ public class ResultDatabase extends StorableObjectDatabase {
 				Log.errorException(sqle1);
 			}
 		}
+	}
+	
+	public List retrieveByIds(List ids) throws RetrieveObjectException {
+		if ((ids == null) || (ids.isEmpty()))
+			return new LinkedList();
+		return retriveByIdsOneQuery(ids);	
+		//return retriveByIdsPreparedStatement(ids);
+	}
+	
+	private List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
+		List result = new LinkedList();
+		String sql;
+		{
+			StringBuffer buffer = new StringBuffer(COLUMN_ID);
+			int idsLength = ids.size();
+			if (idsLength == 1){
+				buffer.append(EQUALS);
+				buffer.append(((Identifier)ids.iterator().next()).toSQLString());
+			} else{
+				buffer.append(SQL_IN);
+				buffer.append(OPEN_BRACKET);
+				
+				int i = 1;
+				for(Iterator it=ids.iterator();it.hasNext();i++){
+					Identifier id = (Identifier)it.next();
+					buffer.append(id.toSQLString());
+					if (i < idsLength)
+						buffer.append(COMMA);
+				}
+				
+				buffer.append(CLOSE_BRACKET);
+			}
+			sql = retrieveSetQuery(buffer.toString());
+		}
+		
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("ResultDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next()){
+				result.add(updateSetFromResultSet(null, resultSet));
+			}
+		}
+		catch (SQLException sqle) {
+			String mesg = "ResultDatabase.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return result;
+	}
+	
+	private List retriveByIdsPreparedStatement(List ids) throws RetrieveObjectException {
+		List result = new LinkedList();
+		String sql;
+		{
+			
+			int idsLength = ids.size();
+			if (idsLength == 1){
+				return retriveByIdsOneQuery(ids);
+			}
+			StringBuffer buffer = new StringBuffer(COLUMN_ID);
+			buffer.append(EQUALS);							
+			buffer.append(QUESTION);
+			
+			sql =retrieveSetQuery(buffer.toString());
+		}
+			
+		PreparedStatement stmt = null;
+		ResultSet resultSet = null;
+		try {
+			stmt = connection.prepareStatement(sql.toString());
+			for(Iterator it = ids.iterator();it.hasNext();){
+				Identifier id = (Identifier)it.next(); 
+				/**
+				 * @todo when change DB Identifier model ,change setString() to setLong()
+				 */
+				String idStr = id.getIdentifierString();
+				stmt.setString(1, idStr);
+				resultSet = stmt.executeQuery();
+				if (resultSet.next()){
+					result.add(updateSetFromResultSet(null, resultSet));
+				} else{
+					Log.errorMessage("ResultDatabase.retriveByIdsPreparedStatement | No such result: " + idStr);									
+				}
+				
+			}
+		}catch (SQLException sqle) {
+			String mesg = "ResultDatabase.retriveByIdsPreparedStatement | Cannot retrieve result " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				if (stmt != null)
+					stmt.close();
+				stmt = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}			
+		
+		return result;
 	}
 }

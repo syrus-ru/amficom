@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.20 2004/08/23 20:47:37 arseniy Exp $
+ * $Id: Evaluation.java,v 1.21 2004/08/27 12:14:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/08/23 20:47:37 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.21 $, $Date: 2004/08/27 12:14:57 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -71,11 +71,11 @@ public class Evaluation extends Action {
 		}
 	}
 
-	private Evaluation(Identifier id,
+	protected Evaluation(Identifier id,
 										 Identifier creatorId,
 										 EvaluationType type,
 										 Identifier monitoredElementId,
-										 Set thresholdSet) throws CreateObjectException {
+										 Set thresholdSet) {
 		super(id);
 		long time = System.currentTimeMillis();
 		super.created = new Date(time);
@@ -89,13 +89,6 @@ public class Evaluation extends Action {
 
 		super.currentVersion = super.getNextVersion();
 
-		this.evaluationDatabase = MeasurementDatabaseContext.evaluationDatabase;
-		try {
-			this.evaluationDatabase.insert(this);
-		}
-		catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
-		}
 	}
 
 	public Object getTransferable() {

@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.11 2004/08/22 18:45:56 arseniy Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.12 2004/08/27 12:14:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import oracle.jdbc.driver.OracleResultSet;
@@ -32,8 +34,8 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.measurement.ora.CronStringArray;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/08/22 18:45:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2004/08/27 12:14:57 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -54,32 +56,52 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		this.retrieveTemporalPattern(temporalPattern);
 	}
 
+	private String retrieveTemporalPatternQuery(String condition){
+		return SQL_SELECT
+		+ COLUMN_ID + COMMA
+		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
+		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
+		+ COLUMN_CREATOR_ID + COMMA
+		+ COLUMN_MODIFIER_ID + COMMA
+		+ COLUMN_DESCRIPTION + COMMA
+		+ COLUMN_VALUE
+		+ SQL_FROM + ObjectEntities.TEMPORALPATTERN_ENTITY
+		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
+
+	}
+	
+	private TemporalPattern updateTemporalPatternFromResultSet(TemporalPattern temporalPattern, ResultSet resultSet) throws SQLException{
+		TemporalPattern temporalPattern1 = temporalPattern;
+		if (temporalPattern == null){
+			/**
+			 * @todo when change DB Identifier model ,change getString() to getLong()
+			 */
+			temporalPattern1 = new TemporalPattern(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null);
+		}
+		String[] cronStrings = ((CronStringArray)(((OracleResultSet)resultSet).getORAData(COLUMN_VALUE, CronStringArray.getORADataFactory()))).getArray();
+		temporalPattern1.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+																	DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+																	new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+																	new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+																	resultSet.getString(COLUMN_DESCRIPTION),
+																	cronStrings);
+
+
+		return temporalPattern1;
+	}
+
+	
 	private void retrieveTemporalPattern(TemporalPattern temporalPattern) throws ObjectNotFoundException, RetrieveObjectException {
 		String tpIdStr = temporalPattern.getId().toSQLString();
-		String sql = SQL_SELECT
-			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
-			+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-			+ COLUMN_CREATOR_ID + COMMA
-			+ COLUMN_MODIFIER_ID + COMMA
-			+ COLUMN_DESCRIPTION + COMMA
-			+ COLUMN_VALUE
-			+ SQL_FROM + ObjectEntities.TEMPORALPATTERN_ENTITY
-			+ SQL_WHERE + COLUMN_ID + EQUALS + tpIdStr;
+		String sql = retrieveTemporalPatternQuery(COLUMN_ID + EQUALS + tpIdStr);
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("TemporalPatternDatabase.retrieveTemporalPattern | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
-			if (resultSet.next()) {
-				String[] cronStrings = ((CronStringArray)(((OracleResultSet)resultSet).getORAData(COLUMN_VALUE, CronStringArray.getORADataFactory()))).getArray();
-				temporalPattern.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-																			DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-																			new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-																			new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-																			resultSet.getString(COLUMN_DESCRIPTION),
-																			cronStrings);
-			}
+			if (resultSet.next()) 
+				updateTemporalPatternFromResultSet(temporalPattern, resultSet);
 			else
 				throw new ObjectNotFoundException("No such temporal pattern: " + tpIdStr);
 		}
@@ -190,7 +212,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		}
 	}
 	
-	public static List retrieveAll() throws RetrieveObjectException {
+	public List retrieveAll() throws RetrieveObjectException {
 		List temporalPatterns = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
 		String sql = SQL_SELECT
 				+ COLUMN_ID
@@ -227,7 +249,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		return temporalPatterns;
 	}
 
-	public static void delete(TemporalPattern temporalPattern) {
+	public void delete(TemporalPattern temporalPattern) {
 		String tpIdStr = temporalPattern.getId().toSQLString();
 		Statement statement = null;
 		try {
@@ -256,4 +278,123 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		}
 	}
 
+	public List retrieveByIds(List ids) throws RetrieveObjectException {
+		if ((ids == null) || (ids.isEmpty()))
+			return new LinkedList();
+		return retriveByIdsOneQuery(ids);	
+		//return retriveByIdsPreparedStatement(ids);
+	}
+	
+	private List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
+		List result = new LinkedList();
+		String sql;
+		{
+			StringBuffer buffer = new StringBuffer(COLUMN_ID);
+			int idsLength = ids.size();
+			if (idsLength == 1){
+				buffer.append(EQUALS);
+				buffer.append(((Identifier)ids.iterator().next()).toSQLString());
+			} else{
+				buffer.append(SQL_IN);
+				buffer.append(OPEN_BRACKET);
+				
+				int i = 1;
+				for(Iterator it=ids.iterator();it.hasNext();i++){
+					Identifier id = (Identifier)it.next();
+					buffer.append(id.toSQLString());
+					if (i < idsLength)
+						buffer.append(COMMA);
+				}
+				
+				buffer.append(CLOSE_BRACKET);
+			}
+			sql = retrieveTemporalPatternQuery(buffer.toString());
+		}
+		
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("TemporalPatternDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next()){
+				result.add(updateTemporalPatternFromResultSet(null, resultSet));
+			}
+		}
+		catch (SQLException sqle) {
+			String mesg = "TemporalPatternDatabase.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return result;
+	}
+	
+	private List retriveByIdsPreparedStatement(List ids) throws RetrieveObjectException {
+		List result = new LinkedList();
+		String sql;
+		{
+			
+			int idsLength = ids.size();
+			if (idsLength == 1){
+				return retriveByIdsOneQuery(ids);
+			}
+			StringBuffer buffer = new StringBuffer(COLUMN_ID);
+			buffer.append(EQUALS);							
+			buffer.append(QUESTION);
+			
+			sql =retrieveTemporalPatternQuery(buffer.toString());
+		}
+			
+		PreparedStatement stmt = null;
+		ResultSet resultSet = null;
+		try {
+			stmt = connection.prepareStatement(sql.toString());
+			for(Iterator it = ids.iterator();it.hasNext();){
+				Identifier id = (Identifier)it.next(); 
+				/**
+				 * @todo when change DB Identifier model ,change setString() to setLong()
+				 */
+				String idStr = id.getIdentifierString();
+				stmt.setString(1, idStr);
+				resultSet = stmt.executeQuery();
+				if (resultSet.next()){
+					result.add(updateTemporalPatternFromResultSet(null, resultSet));
+				} else{
+					Log.errorMessage("TemporalPatternDatabase.retriveByIdsPreparedStatement | No such temporal pattern: " + idStr);									
+				}
+				
+			}
+		}catch (SQLException sqle) {
+			String mesg = "TemporalPatternDatabase.retriveByIdsPreparedStatement | Cannot retrieve temporal pattern " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				if (stmt != null)
+					stmt.close();
+				stmt = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}			
+		
+		return result;
+	}
+	
 }

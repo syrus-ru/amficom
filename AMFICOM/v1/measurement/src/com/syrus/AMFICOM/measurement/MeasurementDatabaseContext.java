@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabaseContext.java,v 1.12 2004/08/09 14:21:33 arseniy Exp $
+ * $Id: MeasurementDatabaseContext.java,v 1.13 2004/08/27 12:14:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,8 @@ package com.syrus.AMFICOM.measurement;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/08/09 14:21:33 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2004/08/27 12:14:57 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -60,5 +60,41 @@ public class MeasurementDatabaseContext {
 		resultDatabase = resultDatabase1;
 		temporalPatternDatabase = temporalPatternDatabase1;
 		
+	}
+	public static StorableObjectDatabase getAnalysisDatabase() {
+		return analysisDatabase;
+	}
+	public static StorableObjectDatabase getAnalysisTypeDatabase() {
+		return analysisTypeDatabase;
+	}
+	public static StorableObjectDatabase getEvaluationDatabase() {
+		return evaluationDatabase;
+	}
+	public static StorableObjectDatabase getEvaluationTypeDatabase() {
+		return evaluationTypeDatabase;
+	}
+	public static StorableObjectDatabase getMeasurementDatabase() {
+		return measurementDatabase;
+	}
+	public static StorableObjectDatabase getMeasurementSetupDatabase() {
+		return measurementSetupDatabase;
+	}
+	public static StorableObjectDatabase getMeasurementTypeDatabase() {
+		return measurementTypeDatabase;
+	}
+	public static StorableObjectDatabase getParameterTypeDatabase() {
+		return parameterTypeDatabase;
+	}
+	public static StorableObjectDatabase getResultDatabase() {
+		return resultDatabase;
+	}
+	public static StorableObjectDatabase getSetDatabase() {
+		return setDatabase;
+	}
+	public static StorableObjectDatabase getTemporalPatternDatabase() {
+		return temporalPatternDatabase;
+	}
+	public static StorableObjectDatabase getTestDatabase() {
+		return testDatabase;
 	}
 }

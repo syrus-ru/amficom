@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.20 2004/08/23 20:47:33 arseniy Exp $
+ * $Id: Analysis.java,v 1.21 2004/08/27 12:14:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/08/23 20:47:33 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.21 $, $Date: 2004/08/27 12:14:57 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -70,11 +70,11 @@ public class Analysis extends Action {
 		}
 	}
 
-	private Analysis(Identifier id,
+	protected Analysis(Identifier id,
 									 Identifier creatorId,
 									 AnalysisType type,
 									 Identifier monitoredElementId,
-									 Set criteriaSet) throws CreateObjectException {
+									 Set criteriaSet) {
 		super(id);
 		long time = System.currentTimeMillis();
 		super.created = new Date(time);
@@ -88,13 +88,6 @@ public class Analysis extends Action {
 
 		super.currentVersion = super.getNextVersion();
 
-		this.analysisDatabase = MeasurementDatabaseContext.analysisDatabase;
-		try {
-			this.analysisDatabase.insert(this);
-		}
-		catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
-		}
 	}
 
 	public Object getTransferable() {

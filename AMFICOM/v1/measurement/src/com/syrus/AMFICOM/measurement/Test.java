@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.42 2004/08/23 20:47:37 arseniy Exp $
+ * $Id: Test.java,v 1.43 2004/08/27 12:14:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,6 +27,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
@@ -38,8 +39,8 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2004/08/23 20:47:37 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.43 $, $Date: 2004/08/27 12:14:57 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -141,14 +142,15 @@ public class Test extends StorableObject {
 	public Measurement createMeasurement(Identifier measurementId,
 																			 Identifier creatorId,
 																			 Date startTime) throws CreateObjectException {
-		Measurement measurement = Measurement.createInstance(measurementId,
-																												 creatorId,
-																												 this.measurementType,
-																												 this.monitoredElement.getId(),
-																												 this.mainMeasurementSetup,
-																												 startTime,
-																												 this.monitoredElement.getLocalAddress(),
-																												 this.id);
+		Measurement measurement1 = Measurement.createInstance(measurementId,
+															 creatorId,
+															 this.measurementType,
+															 this.monitoredElement.getId(),
+															 this.mainMeasurementSetup,
+															 startTime,
+															 this.monitoredElement.getLocalAddress(),
+															 this.id);
+		Measurement measurement = new Measurement((Measurement_Transferable)measurement1.getTransferable());
 		super.modified = new Date(System.currentTimeMillis());
 		super.modifierId = (Identifier) creatorId.clone();
 		try {
@@ -160,17 +162,17 @@ public class Test extends StorableObject {
 		return measurement;
 	}	
 	
-	private Test(Identifier id,
+	protected Test(Identifier id,
 							 Identifier creatorId,
 							 Date startTime,
 							 Date endTime,
 							 TemporalPattern temporalPattern,
-							 TestTemporalType temporalType,
+							 int temporalType,
 							 MeasurementType measurementType,
 							 AnalysisType analysisType,
 							 EvaluationType evaluationType,
 							 MonitoredElement monitoredElement,
-							 TestReturnType returnType,
+							 int returnType,
 							 String description,
 							 List measurementSetupIds){
 		super(id);
@@ -179,16 +181,17 @@ public class Test extends StorableObject {
 		super.modified = new Date(time);
 		super.creatorId = creatorId;
 		super.modifierId = creatorId;
-		this.temporalType = temporalType.value();
-		this.timeStamps = new TestTimeStamps(this.temporalType,
-																				 startTime,
-																				 endTime,
-																				 temporalPattern);
+		this.temporalType = temporalType;
+		if ((temporalPattern != null) && (startTime != null) && (endTime != null))
+				this.timeStamps = new TestTimeStamps(this.temporalType,
+													 startTime,
+													 endTime,
+													 temporalPattern);
 		this.measurementType = measurementType;
 		this.analysisType = analysisType;
 		this.evaluationType = evaluationType;
 		this.monitoredElement = monitoredElement;
-		this.returnType = returnType.value();
+		this.returnType = returnType;
 		this.description = description;
 		this.measurementSetupIds = measurementSetupIds;
 
@@ -233,12 +236,12 @@ public class Test extends StorableObject {
 										startTime,
 										endTime,
 										temporalPattern,
-										temporalType,
+										temporalType.value(),
 										measurementType,
 										analysisType,
 										evaluationType,
 										monitoredElement,
-										returnType,
+										returnType.value(),
 										description,
 										measurementSetupIds);
 		

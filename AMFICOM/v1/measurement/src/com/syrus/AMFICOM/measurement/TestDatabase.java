@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.26 2004/08/23 20:47:37 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.27 2004/08/27 12:14:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,7 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
@@ -39,8 +40,8 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/08/23 20:47:37 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.27 $, $Date: 2004/08/27 12:14:57 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -73,94 +74,114 @@ public class TestDatabase extends StorableObjectDatabase {
 		this.retrieveTest(test);
 		this.retrieveMeasurementSetupTestLinks(test);
 	}
+	
+	private String retrieveTestQuery(String condition){
+		return SQL_SELECT
+		+ COLUMN_ID + COMMA
+		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
+		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
+		+ COLUMN_CREATOR_ID + COMMA
+		+ COLUMN_MODIFIER_ID + COMMA
+		+ COLUMN_TEMPORAL_TYPE + COMMA
+		+ DatabaseDate.toQuerySubString(COLUMN_START_TIME) + COMMA
+		+ DatabaseDate.toQuerySubString(COLUMN_END_TIME) + COMMA
+		+ COLUMN_TEMPORAL_PATTERN_ID + COMMA
+		+ COLUMN_MEASUREMENT_TYPE_ID + COMMA			
+		+ COLUMN_ANALYSIS_TYPE_ID + COMMA
+		+ COLUMN_EVALUATION_TYPE_ID + COMMA
+		+ COLUMN_STATUS + COMMA
+		+ COLUMN_MONITORED_ELEMENT_ID + COMMA
+		+ COLUMN_RETURN_TYPE + COMMA
+		+ COLUMN_DESCRIPTION
+		+ SQL_FROM + ObjectEntities.TEST_ENTITY
+		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
+
+	}
+	
+	private Test updateTestFromResultSet(Test test, ResultSet resultSet) throws RetrieveObjectException, SQLException{
+		Test test1 = test;
+		if (test == null){
+			/**
+			 * @todo when change DB Identifier model ,change getString() to getLong()
+			 */
+			test1 = new Test(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, 0, 
+							 null, null, null, null, 0, null, null);
+		}
+		TemporalPattern temporalPattern;
+		MeasurementType measurementType;
+		AnalysisType analysisType;
+		EvaluationType evaluationType;
+		MonitoredElement monitoredElement;
+		try {
+			/**
+			 * @todo when change DB Identifier model ,change String to long
+			 */
+			String temportalPatternIdCode = resultSet.getString(COLUMN_TEMPORAL_PATTERN_ID);
+			temporalPattern = (temportalPatternIdCode != null) ? (TemporalPattern)MeasurementStorableObjectPool.getStorableObject(new Identifier(temportalPatternIdCode), true) : null;
+			
+			measurementType = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_MEASUREMENT_TYPE_ID)), true);
+
+			/**
+			 * @todo when change DB Identifier model ,change String to long
+			 */
+			String analysisTypeIdCode = resultSet.getString(COLUMN_ANALYSIS_TYPE_ID);
+			analysisType = (analysisTypeIdCode != null) ? (AnalysisType)MeasurementStorableObjectPool.getStorableObject(new Identifier(analysisTypeIdCode), true) : null;
+			/**
+			 * @todo when change DB Identifier model ,change String to long
+			 */
+			String evaluationTypeIdCode = resultSet.getString(COLUMN_EVALUATION_TYPE_ID);
+			evaluationType = (evaluationTypeIdCode != null) ? (EvaluationType)MeasurementStorableObjectPool.getStorableObject(new Identifier(evaluationTypeIdCode), true) : null;
+
+			/**
+			 * @todo when change DB Identifier model ,change String to long
+			 */
+			String monitoredElementIdCode = resultSet.getString(COLUMN_MONITORED_ELEMENT_ID);
+			monitoredElement = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(new Identifier(monitoredElementIdCode), true);
+		}
+		catch (ApplicationException ae) {
+			throw new RetrieveObjectException(ae);
+		}
+		String description = resultSet.getString(COLUMN_DESCRIPTION);
+		test1.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+											 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+											 /**
+												 * @todo when change DB Identifier model ,change getString() to getLong()
+												 */
+											 new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+											 /**
+												 * @todo when change DB Identifier model ,change getString() to getLong()
+												 */
+											 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+											 resultSet.getInt(COLUMN_TEMPORAL_TYPE),
+											 DatabaseDate.fromQuerySubString(resultSet, COLUMN_START_TIME),
+											 DatabaseDate.fromQuerySubString(resultSet, COLUMN_END_TIME),
+											 temporalPattern,													 
+											 /**
+												 * @todo when change DB Identifier model ,change getString() to getLong()
+												 */
+											 measurementType,
+											 analysisType,
+											 evaluationType,
+											 resultSet.getInt(COLUMN_STATUS),
+											 monitoredElement,
+											 resultSet.getInt(COLUMN_RETURN_TYPE),
+											 (description != null) ? description: "");
+
+		return test1;
+	}
+
 
 	private void retrieveTest(Test test) throws ObjectNotFoundException, RetrieveObjectException {
 		String testIdStr = test.getId().toSQLString();
-		String sql = SQL_SELECT
-			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
-			+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-			+ COLUMN_CREATOR_ID + COMMA
-			+ COLUMN_MODIFIER_ID + COMMA
-			+ COLUMN_TEMPORAL_TYPE + COMMA
-			+ DatabaseDate.toQuerySubString(COLUMN_START_TIME) + COMMA
-			+ DatabaseDate.toQuerySubString(COLUMN_END_TIME) + COMMA
-			+ COLUMN_TEMPORAL_PATTERN_ID + COMMA
-			+ COLUMN_MEASUREMENT_TYPE_ID + COMMA			
-			+ COLUMN_ANALYSIS_TYPE_ID + COMMA
-			+ COLUMN_EVALUATION_TYPE_ID + COMMA
-			+ COLUMN_STATUS + COMMA
-			+ COLUMN_MONITORED_ELEMENT_ID + COMMA
-			+ COLUMN_RETURN_TYPE + COMMA
-			+ COLUMN_DESCRIPTION
-			+ SQL_FROM + ObjectEntities.TEST_ENTITY
-			+ SQL_WHERE + COLUMN_ID + EQUALS + testIdStr;
+		String sql = retrieveTestQuery(SQL_WHERE + COLUMN_ID + EQUALS + testIdStr);
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("TestDatabase.retrieveTest | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
-			if (resultSet.next()) {
-				TemporalPattern temporalPattern;
-				MeasurementType measurementType;
-				AnalysisType analysisType;
-				EvaluationType evaluationType;
-				MonitoredElement monitoredElement;
-				try {
-					/**
-					 * @todo when change DB Identifier model ,change String to long
-					 */
-					String temportalPatternIdCode = resultSet.getString(COLUMN_TEMPORAL_PATTERN_ID);
-					temporalPattern = (temportalPatternIdCode != null) ? (TemporalPattern)MeasurementStorableObjectPool.getStorableObject(new Identifier(temportalPatternIdCode), true) : null;
-					
-					measurementType = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_MEASUREMENT_TYPE_ID)), true);
-
-					/**
-					 * @todo when change DB Identifier model ,change String to long
-					 */
-					String analysisTypeIdCode = resultSet.getString(COLUMN_ANALYSIS_TYPE_ID);
-					analysisType = (analysisTypeIdCode != null) ? (AnalysisType)MeasurementStorableObjectPool.getStorableObject(new Identifier(analysisTypeIdCode), true) : null;
-					/**
-					 * @todo when change DB Identifier model ,change String to long
-					 */
-					String evaluationTypeIdCode = resultSet.getString(COLUMN_EVALUATION_TYPE_ID);
-					evaluationType = (evaluationTypeIdCode != null) ? (EvaluationType)MeasurementStorableObjectPool.getStorableObject(new Identifier(evaluationTypeIdCode), true) : null;
-
-					/**
-					 * @todo when change DB Identifier model ,change String to long
-					 */
-					String monitoredElementIdCode = resultSet.getString(COLUMN_MONITORED_ELEMENT_ID);
-					monitoredElement = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(new Identifier(monitoredElementIdCode), true);
-				}
-				catch (ApplicationException ae) {
-					throw new RetrieveObjectException(ae);
-				}
-				String description = resultSet.getString(COLUMN_DESCRIPTION);
-				test.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-													 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-													 /**
-														 * @todo when change DB Identifier model ,change getString() to getLong()
-														 */
-													 new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-													 /**
-														 * @todo when change DB Identifier model ,change getString() to getLong()
-														 */
-													 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-													 resultSet.getInt(COLUMN_TEMPORAL_TYPE),
-													 DatabaseDate.fromQuerySubString(resultSet, COLUMN_START_TIME),
-													 DatabaseDate.fromQuerySubString(resultSet, COLUMN_END_TIME),
-													 temporalPattern,													 
-													 /**
-														 * @todo when change DB Identifier model ,change getString() to getLong()
-														 */
-													 measurementType,
-													 analysisType,
-													 evaluationType,
-													 resultSet.getInt(COLUMN_STATUS),
-													 monitoredElement,
-													 resultSet.getInt(COLUMN_RETURN_TYPE),
-													 (description != null) ? description: "");
-			}
+			if (resultSet.next()) 
+				updateTestFromResultSet(test, resultSet);			
 			else
 				throw new ObjectNotFoundException("No such test: " + testIdStr);
 		}
@@ -786,11 +807,11 @@ public class TestDatabase extends StorableObjectDatabase {
 		return tests;
 	}
 	
-	public static List retrieveAll() throws RetrieveObjectException {
+	public List retrieveAll() throws RetrieveObjectException {
 		return retrieveAll(null);
 	}
 	
-	public static List retrieveAll(String condition) throws RetrieveObjectException {
+	public List retrieveAll(String condition) throws RetrieveObjectException {
 		List tests = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
 		String sql;
 		{
@@ -836,7 +857,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		return tests;
 	}
 
-	public static void delete(Test test) {
+	public void delete(Test test) {
 		String testIdStr = test.getId().toSQLString();
 		Statement statement = null;
 		try {
@@ -865,5 +886,123 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 	}
 
+	public List retrieveByIds(List ids) throws RetrieveObjectException {
+		if ((ids == null) || (ids.isEmpty()))
+			return new LinkedList();
+		return retriveByIdsOneQuery(ids);	
+		//return retriveByIdsPreparedStatement(ids);
+	}
+	
+	private List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
+		List result = new LinkedList();
+		String sql;
+		{
+			StringBuffer buffer = new StringBuffer(COLUMN_ID);
+			int idsLength = ids.size();
+			if (idsLength == 1){
+				buffer.append(EQUALS);
+				buffer.append(((Identifier)ids.iterator().next()).toSQLString());
+			} else{
+				buffer.append(SQL_IN);
+				buffer.append(OPEN_BRACKET);
+				
+				int i = 1;
+				for(Iterator it=ids.iterator();it.hasNext();i++){
+					Identifier id = (Identifier)it.next();
+					buffer.append(id.toSQLString());
+					if (i < idsLength)
+						buffer.append(COMMA);
+				}
+				
+				buffer.append(CLOSE_BRACKET);
+			}
+			sql = retrieveTestQuery(buffer.toString());
+		}
+		
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("TestDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next()){
+				result.add(updateTestFromResultSet(null, resultSet));
+			}
+		}
+		catch (SQLException sqle) {
+			String mesg = "TestDatabase.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return result;
+	}
+	
+	private List retriveByIdsPreparedStatement(List ids) throws RetrieveObjectException {
+		List result = new LinkedList();
+		String sql;
+		{
+			
+			int idsLength = ids.size();
+			if (idsLength == 1){
+				return retriveByIdsOneQuery(ids);
+			}
+			StringBuffer buffer = new StringBuffer(COLUMN_ID);
+			buffer.append(EQUALS);							
+			buffer.append(QUESTION);
+			
+			sql =retrieveTestQuery(buffer.toString());
+		}
+			
+		PreparedStatement stmt = null;
+		ResultSet resultSet = null;
+		try {
+			stmt = connection.prepareStatement(sql.toString());
+			for(Iterator it = ids.iterator();it.hasNext();){
+				Identifier id = (Identifier)it.next(); 
+				/**
+				 * @todo when change DB Identifier model ,change setString() to setLong()
+				 */
+				String idStr = id.getIdentifierString();
+				stmt.setString(1, idStr);
+				resultSet = stmt.executeQuery();
+				if (resultSet.next()){
+					result.add(updateTestFromResultSet(null, resultSet));
+				} else{
+					Log.errorMessage("TestDatabase.retriveByIdsPreparedStatement | No such test: " + idStr);									
+				}
+				
+			}
+		}catch (SQLException sqle) {
+			String mesg = "TestDatabase.retriveByIdsPreparedStatement | Cannot retrieve test " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				if (stmt != null)
+					stmt.close();
+				stmt = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}			
+		
+		return result;
+	}
 
 }

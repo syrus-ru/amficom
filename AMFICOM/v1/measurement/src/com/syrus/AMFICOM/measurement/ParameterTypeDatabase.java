@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.17 2004/08/27 07:44:24 bob Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.18 2004/08/27 12:14:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/08/27 07:44:24 $
+ * @version $Revision: 1.18 $, $Date: 2004/08/27 12:14:57 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -372,14 +372,14 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("MeasurementTypeDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("ParameterTypeDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()){
 				result.add(updateParameterTypeFromResultSet(null, resultSet));
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementTypeDatabase.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
+			String mesg = "ParameterTypeDatabase.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -429,12 +429,12 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 				if (resultSet.next()){
 					result.add(updateParameterTypeFromResultSet(null, resultSet));
 				} else{
-					Log.errorMessage("MeasurementTypeDatabase.retriveByIdsPreparedStatement | No such measurement type: " + idStr);									
+					Log.errorMessage("ParameterTypeDatabase.retriveByIdsPreparedStatement | No such parameter type: " + idStr);									
 				}
 				
 			}
 		}catch (SQLException sqle) {
-			String mesg = "MeasurementTypeDatabase.retriveByIdsPreparedStatement | Cannot retrieve measurement type " + sqle.getMessage();
+			String mesg = "ParameterTypeDatabase.retriveByIdsPreparedStatement | Cannot retrieve parameter type " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {

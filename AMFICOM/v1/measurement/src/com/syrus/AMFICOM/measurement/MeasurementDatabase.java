@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.16 2004/08/23 20:47:37 arseniy Exp $
+ * $Id: MeasurementDatabase.java,v 1.17 2004/08/27 12:14:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,9 +8,14 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.AMFICOM.general.Identifier;
@@ -26,8 +31,8 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/08/23 20:47:37 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2004/08/27 12:14:57 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -54,71 +59,90 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		Measurement measurement = this.fromStorableObject(storableObject);
 		this.retrieveMeasurement(measurement);
 	}
+	
+	private String retrieveMeasurementQuery(String condition){
+		return SQL_SELECT
+		+ COLUMN_ID + COMMA
+		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
+		+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
+		+ COLUMN_CREATOR_ID + COMMA
+		+ COLUMN_MODIFIER_ID + COMMA
+		+ COLUMN_TYPE_ID + COMMA
+		+ COLUMN_MONITORED_ELEMENT_ID + COMMA
+		+ COLUMN_SETUP_ID + COMMA
+		+ DatabaseDate.toQuerySubString(COLUMN_START_TIME) + COMMA
+		+ COLUMN_DURATION + COMMA
+		+ COLUMN_STATUS + COMMA
+		+ COLUMN_LOCAL_ADDRESS + COMMA
+		+ COLUMN_TEST_ID
+		+ SQL_FROM + ObjectEntities.MEASUREMENT_ENTITY
+		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
+
+	}
+	
+	private Measurement updateMeasurementFromResultSet(Measurement measurement, ResultSet resultSet) throws RetrieveObjectException, SQLException{
+		Measurement measurement1 = measurement;
+		if (measurement == null){
+			/**
+			 * @todo when change DB Identifier model ,change getString() to getLong()
+			 */
+			measurement1 = new Measurement(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, 
+										   null, null, null, null);			
+		}
+		MeasurementType measurementType;
+		MeasurementSetup measurementSetup;
+		try {
+			/**
+			 * @todo when change DB Identifier model ,change getString() to getLong()
+			 */
+			measurementType = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
+			/**
+			 * @todo when change DB Identifier model ,change getString() to getLong()
+			 */
+			measurementSetup = (MeasurementSetup)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_SETUP_ID)), true);
+		}
+		catch (ApplicationException ae) {
+			throw new RetrieveObjectException(ae);
+		}
+		measurement1.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+									DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+									/**
+									 * @todo when change DB Identifier model ,change getString() to getLong()
+									 */											
+									new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+									/**
+									 * @todo when change DB Identifier model ,change getString() to getLong()
+									 */
+									new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+									measurementType,
+									/**
+									 * @todo when change DB Identifier model ,change getString() to getLong()
+									 */
+									new Identifier(resultSet.getString(COLUMN_MONITORED_ELEMENT_ID)),
+									measurementSetup,
+									DatabaseDate.fromQuerySubString(resultSet, COLUMN_START_TIME),
+									resultSet.getLong(COLUMN_DURATION),
+									resultSet.getInt(COLUMN_STATUS),
+									resultSet.getString(COLUMN_LOCAL_ADDRESS),
+									/**
+									 * @todo when change DB Identifier model ,change getString() to getLong()
+									 */
+									new Identifier(resultSet.getString(COLUMN_TEST_ID)));
+		return measurement1;
+	}
+
 
 	private void retrieveMeasurement(Measurement measurement) throws RetrieveObjectException, ObjectNotFoundException {
 		String measurementIdStr = measurement.getId().toSQLString();
-		String sql = SQL_SELECT
-			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
-			+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
-			+ COLUMN_CREATOR_ID + COMMA
-			+ COLUMN_MODIFIER_ID + COMMA
-			+ COLUMN_TYPE_ID + COMMA
-			+ COLUMN_MONITORED_ELEMENT_ID + COMMA
-			+ COLUMN_SETUP_ID + COMMA
-			+ DatabaseDate.toQuerySubString(COLUMN_START_TIME) + COMMA
-			+ COLUMN_DURATION + COMMA
-			+ COLUMN_STATUS + COMMA
-			+ COLUMN_LOCAL_ADDRESS + COMMA
-			+ COLUMN_TEST_ID
-			+ SQL_FROM + ObjectEntities.MEASUREMENT_ENTITY
-			+ SQL_WHERE + COLUMN_ID + EQUALS + measurementIdStr;
+		String sql = retrieveMeasurementQuery(COLUMN_ID + EQUALS + measurementIdStr);
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("MeasurementDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
-			if (resultSet.next()) {
-				MeasurementType measurementType;
-				MeasurementSetup measurementSetup;
-				try {
-					/**
-					 * @todo when change DB Identifier model ,change getString() to getLong()
-					 */
-					measurementType = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
-					/**
-					 * @todo when change DB Identifier model ,change getString() to getLong()
-					 */
-					measurementSetup = (MeasurementSetup)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_SETUP_ID)), true);
-				}
-				catch (ApplicationException ae) {
-					throw new RetrieveObjectException(ae);
-				}
-				measurement.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-											DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-											/**
-											 * @todo when change DB Identifier model ,change getString() to getLong()
-											 */											
-											new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-											/**
-											 * @todo when change DB Identifier model ,change getString() to getLong()
-											 */
-											new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-											measurementType,
-											/**
-											 * @todo when change DB Identifier model ,change getString() to getLong()
-											 */
-											new Identifier(resultSet.getString(COLUMN_MONITORED_ELEMENT_ID)),
-											measurementSetup,
-											DatabaseDate.fromQuerySubString(resultSet, COLUMN_START_TIME),
-											resultSet.getLong(COLUMN_DURATION),
-											resultSet.getInt(COLUMN_STATUS),
-											resultSet.getString(COLUMN_LOCAL_ADDRESS),
-											/**
-											 * @todo when change DB Identifier model ,change getString() to getLong()
-											 */
-											new Identifier(resultSet.getString(COLUMN_TEST_ID)));
-			}
+			if (resultSet.next()) 
+				updateMeasurementFromResultSet(measurement, resultSet);
 			else
 				throw new ObjectNotFoundException("No such measurement: " + measurementIdStr);
 		}
@@ -335,4 +359,124 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 			}
 		}
 	}
+	
+	public List retrieveByIds(List ids) throws RetrieveObjectException {
+		if ((ids == null) || (ids.isEmpty()))
+			return new LinkedList();
+		return retriveByIdsOneQuery(ids);	
+		//return retriveByIdsPreparedStatement(ids);
+	}
+	
+	private List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
+		List result = new LinkedList();
+		String sql;
+		{
+			StringBuffer buffer = new StringBuffer(COLUMN_ID);
+			int idsLength = ids.size();
+			if (idsLength == 1){
+				buffer.append(EQUALS);
+				buffer.append(((Identifier)ids.iterator().next()).toSQLString());
+			} else{
+				buffer.append(SQL_IN);
+				buffer.append(OPEN_BRACKET);
+				
+				int i = 1;
+				for(Iterator it=ids.iterator();it.hasNext();i++){
+					Identifier id = (Identifier)it.next();
+					buffer.append(id.toSQLString());
+					if (i < idsLength)
+						buffer.append(COMMA);
+				}
+				
+				buffer.append(CLOSE_BRACKET);
+			}
+			sql = retrieveMeasurementQuery(buffer.toString());
+		}
+		
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("MeasurementDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next()){
+				result.add(updateMeasurementFromResultSet(null, resultSet));
+			}
+		}
+		catch (SQLException sqle) {
+			String mesg = "MeasurementDatabase.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return result;
+	}
+	
+	private List retriveByIdsPreparedStatement(List ids) throws RetrieveObjectException {
+		List result = new LinkedList();
+		String sql;
+		{
+			
+			int idsLength = ids.size();
+			if (idsLength == 1){
+				return retriveByIdsOneQuery(ids);
+			}
+			StringBuffer buffer = new StringBuffer(COLUMN_ID);
+			buffer.append(EQUALS);							
+			buffer.append(QUESTION);
+			
+			sql = retrieveMeasurementQuery(buffer.toString());
+		}
+			
+		PreparedStatement stmt = null;
+		ResultSet resultSet = null;
+		try {
+			stmt = connection.prepareStatement(sql.toString());
+			for(Iterator it = ids.iterator();it.hasNext();){
+				Identifier id = (Identifier)it.next(); 
+				/**
+				 * @todo when change DB Identifier model ,change setString() to setLong()
+				 */
+				String idStr = id.getIdentifierString();
+				stmt.setString(1, idStr);
+				resultSet = stmt.executeQuery();
+				if (resultSet.next()){
+					result.add(updateMeasurementFromResultSet(null, resultSet));
+				} else{
+					Log.errorMessage("MeasurementDatabase.retriveByIdsPreparedStatement | No such measurement: " + idStr);									
+				}
+				
+			}
+		}catch (SQLException sqle) {
+			String mesg = "MeasurementDatabase.retriveByIdsPreparedStatement | Cannot retrieve measurement " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (stmt != null)
+					stmt.close();
+				if (stmt != null)
+					stmt.close();
+				stmt = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}			
+		
+		return result;
+	}
+
 }
