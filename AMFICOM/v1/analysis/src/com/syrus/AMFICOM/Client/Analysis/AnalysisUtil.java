@@ -5,7 +5,7 @@ import java.util.*;
 
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.*;
-import com.syrus.AMFICOM.configuration.CharacteristicType;
+import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.DataType;
@@ -41,34 +41,34 @@ public class AnalysisUtil
 
 		ParameterType parameterType = null;
 		try	{
-		    try{
-			List pTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+				try{
+			List pTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
 			for (Iterator it = pTypes.iterator(); it.hasNext();){
 				ParameterType type = (ParameterType)it.next();
 				if (type.getCodename().equals(codename)){
-				    parameterType = type;
-				    break;
+						parameterType = type;
+						break;
 				}
 			}
-		    }catch(ApplicationException roe){
+				}catch(ApplicationException roe){
 				// ...
-			    System.err.println("Exception searching ParameterType. Creating new one.");
+					System.err.println("Exception searching ParameterType. Creating new one.");
 				roe.printStackTrace();
-		    }        
+				}
 
 			if (parameterType == null){
-			    parameterType = ParameterType.createInstance(
+					parameterType = ParameterType.createInstance(
 					userId,
 					codename,
 					codename + "_Description",
 					codename + "_Name"); // by saa after a talk with bob
-			    MeasurementStorableObjectPool.putStorableObject(parameterType);
+					ConfigurationStorableObjectPool.putStorableObject(parameterType);
 			}
 		}
 		catch(ApplicationException ex)
 		{
 			// ...
-		    System.err.println("Exception handling ParameterType. Giving up.");
+				System.err.println("Exception handling ParameterType. Giving up.");
 			ex.printStackTrace();
 		}
 		return parameterType;
@@ -83,7 +83,7 @@ public class AnalysisUtil
 
 		try
 		{
-			List pTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+			List pTypes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
 			for (Iterator it = pTypes.iterator(); it.hasNext();)
 			{
 				CharacteristicType type = (CharacteristicType)it.next();
@@ -96,10 +96,10 @@ public class AnalysisUtil
 			System.err.println("Exception searching ParameterType. Creating new one.");
 			ex.printStackTrace();
 		}
-		
+
 		try
 		{
-		    return CharacteristicType.createInstance(
+				return CharacteristicType.createInstance(
 				userId,
 				codename,
 				"",
@@ -108,10 +108,10 @@ public class AnalysisUtil
 		}
 		catch(CreateObjectException e)
 		{
-		    // FIXME
-		    System.err.println("AnalysisUtil.getCharacteristicType: Exception in createInstance. Wanna die.");
-		    e.printStackTrace();
-		    return null;
+				// FIXME
+				System.err.println("AnalysisUtil.getCharacteristicType: Exception in createInstance. Wanna die.");
+				e.printStackTrace();
+				return null;
 		}
 	}
 
@@ -149,7 +149,7 @@ public class AnalysisUtil
 
 		try
 		{
-		    return AnalysisType.createInstance(
+				return AnalysisType.createInstance(
 				userId,
 				codename,
 				"",
@@ -160,10 +160,10 @@ public class AnalysisUtil
 		}
 		catch(CreateObjectException e)
 		{
-		    // FIXME
-		    System.err.println("AnalysisUtil.getAnalysisType: Exception in createInstance. Wanna die.");
-		    e.printStackTrace();
-		    return null;
+				// FIXME
+				System.err.println("AnalysisUtil.getAnalysisType: Exception in createInstance. Wanna die.");
+				e.printStackTrace();
+				return null;
 		}
 	}
 
@@ -327,14 +327,14 @@ public class AnalysisUtil
 		}
 		catch (CreateObjectException e)
 		{
-		    // FIXME
-		    System.err.println("AnalysisUtil.createCriteriaSetFromParams: CreateObjectException...");
+				// FIXME
+				System.err.println("AnalysisUtil.createCriteriaSetFromParams: CreateObjectException...");
 			e.printStackTrace();
 		}
 
 		try
 		{
-		    Set criteriaSet = Set.createInstance(
+				Set criteriaSet = Set.createInstance(
 				userId,
 				SetSort.SET_SORT_ANALYSIS_CRITERIA,
 				"",
@@ -345,8 +345,8 @@ public class AnalysisUtil
 		}
 		catch (CreateObjectException e)
 		{
-		    // FIXME
-		    System.err.println("AnalysisUtil.createCriteriaSetFromParams: CreateObjectException -- wanna die.");
+				// FIXME
+				System.err.println("AnalysisUtil.createCriteriaSetFromParams: CreateObjectException -- wanna die.");
 			e.printStackTrace();
 			return null;
 		}
@@ -355,20 +355,20 @@ public class AnalysisUtil
 
 	public static Set createEtalon(Identifier userId, List meIds, ReflectogramEvent[] ep)
 	{
-	    try
-	    {
+			try
+			{
 			SetParameter[] params = new SetParameter[2];
-	
+
 			ParameterType ptype = getParameterType(userId, ParameterTypeCodenames.DADARA_ETALON_EVENTS);
 			params[0] = SetParameter.createInstance(ptype,
 					ReflectogramEvent.toByteArray(ep));
-	
+
 			BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", "primarytrace");
-	
+
 			ptype = getParameterType(userId, ParameterTypeCodenames.REFLECTOGRAMMA);
 			params[1] = SetParameter.createInstance(ptype,
 					new BellcoreWriter().write(bs));
-	
+
 			Set etalon = Set.createInstance(
 					userId,
 					SetSort.SET_SORT_ETALON,
@@ -376,14 +376,14 @@ public class AnalysisUtil
 					params,
 					meIds);
 			return etalon;
-	    }
-	    catch (CreateObjectException e)
-	    {
-		    // FIXME
-		    System.err.println("AnalysisUtil.createEtalon: CreateObjectException -- wanna die.");
+			}
+			catch (CreateObjectException e)
+			{
+				// FIXME
+				System.err.println("AnalysisUtil.createEtalon: CreateObjectException -- wanna die.");
 			e.printStackTrace();
 			return null;
-	    }
+			}
 	}
 
 	public static Set createThresholdSet(Identifier userId, List meIds, ReflectogramEvent[] ep)
@@ -401,13 +401,13 @@ public class AnalysisUtil
 				ep[i].setThreshold(threshs[i]);
 			}
 		}
-		
+
 		try
 		{
 			ParameterType ptype = getParameterType(userId, ParameterTypeCodenames.DADARA_THRESHOLDS);
 			params[0] = SetParameter.createInstance(ptype,
 					Threshold.toByteArray(threshs));
-	
+
 			byte[] minLevel;
 			try
 			{
@@ -418,27 +418,27 @@ public class AnalysisUtil
 			{
 				minLevel = new byte[0];
 			}
-	
+
 			ptype = getParameterType(userId, ParameterTypeCodenames.DADARA_MIN_TRACE_LEVEL);
 			params[1] = SetParameter.createInstance(ptype,
 					minLevel);
-	
+
 			Set thresholdSet = Set.createInstance(
 					userId,
 					SetSort.SET_SORT_EVALUATION_THRESHOLDS,
 					"",
 					params,
 					meIds);
-	
+
 			return thresholdSet;
 		}
-	    catch (CreateObjectException e)
-	    {
-		    // FIXME
-		    System.err.println("AnalysisUtil.createThresholdSet: CreateObjectException -- wanna die.");
+			catch (CreateObjectException e)
+			{
+				// FIXME
+				System.err.println("AnalysisUtil.createThresholdSet: CreateObjectException -- wanna die.");
 			e.printStackTrace();
 			return null;
-	    }
+			}
 }
 
 	public static void setParamsFromThresholdsSet(Set thresholdSet, ReflectogramEvent[] ep)
