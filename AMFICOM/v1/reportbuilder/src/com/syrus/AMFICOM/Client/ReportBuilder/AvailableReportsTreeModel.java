@@ -101,7 +101,8 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 			ObjectResourceTreeNode lastElem =
 				(ObjectResourceTreeNode) treePath.getLastPathComponent();
 
-			if (lastElem.getObject() instanceof OptimizationReportModel)
+			if ((lastElem.getObject() instanceof OptimizationReportModel)
+          && toAskObjects(lastElem))
 			{
 				SelectSolutionFrame ssFrame = new SelectSolutionFrame (this.aContext);
 			}
@@ -269,6 +270,15 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 				ortn = new ObjectResourceTreeNode(
 					mapModel,
 					mapModel.getObjectsName(),
+					true);
+
+				vec.add(ortn);
+				registerSearchableNode("", ortn);
+
+				OptimizationReportModel optModel = new OptimizationReportModel();
+				ortn = new ObjectResourceTreeNode(
+					optModel,
+					optModel.getObjectsName(),
 					true);
 
 				vec.add(ortn);
