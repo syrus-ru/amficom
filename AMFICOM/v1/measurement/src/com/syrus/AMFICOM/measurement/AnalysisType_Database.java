@@ -41,11 +41,30 @@ public class AnalysisType_Database extends StorableObject_Database {
 	}
 
 	private void retrieveAnalysisType(AnalysisType analysisType) throws Exception {
-		String analysis_type_id_str = analysisType.getId().toString();
-		String sql = "SELECT " + DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA
-				+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA + COLUMN_CREATOR_ID + COMMA
-				+ COLUMN_MODIFIER_ID + COMMA + COLUMN_CODENAME + COMMA + COLUMN_DESCRIPTION + " FROM "
-				+ ObjectEntities.ANALYSISTYPE_ENTITY + " WHERE " + COLUMN_ID + " = " + analysis_type_id_str;
+		String analysis_type_id_str = analysisType.getId().toSQLString();
+		String sql;
+		{
+			StringBuffer buffer = new StringBuffer();
+			buffer.append(SQL_SELECT );
+			buffer.append(DatabaseDate.toQuerySubString(COLUMN_CREATED));
+			buffer.append(COMMA);
+			buffer.append(DatabaseDate.toQuerySubString(COLUMN_MODIFIED));
+			buffer.append(COMMA);
+			buffer.append(COLUMN_CREATOR_ID);
+			buffer.append(COMMA);
+			buffer.append(COLUMN_MODIFIER_ID);
+			buffer.append(COMMA);
+			buffer.append(COLUMN_CODENAME);
+			buffer.append(COMMA);
+			buffer.append(COLUMN_DESCRIPTION);
+			buffer.append(SQL_FROM);
+			buffer.append(ObjectEntities.ANALYSISTYPE_ENTITY);
+			buffer.append(SQL_WHERE);
+			buffer.append(COLUMN_ID);
+			buffer.append(EQUALS);
+			buffer.append(analysis_type_id_str);
+			sql = buffer.toString();
+		}
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -53,6 +72,9 @@ public class AnalysisType_Database extends StorableObject_Database {
 			Log.debugMessage("AnalysisType_Database.retrieveAnalysisType | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
+				/**
+				 * @todo when change DB Identifier model ,change getString() to getLong()
+				 */
 				analysisType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED), DatabaseDate
 						.fromQuerySubString(resultSet, COLUMN_MODIFIED), new Identifier(resultSet
 						.getString(COLUMN_CREATOR_ID)), new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
@@ -86,8 +108,20 @@ public class AnalysisType_Database extends StorableObject_Database {
 		else this.out_par_typs.clear();
 		
 		String analysis_type_id_str = analysisType.getId().toSQLString();
-		String sql = "SELECT " + "parameter_type_id, " + "parameter_mode" + " FROM "
-				+ ObjectEntities.ANATYPPARTYPLINK_ENTITY + " WHERE analysis_type_id = " + analysis_type_id_str;
+		String sql;
+		{
+			StringBuffer buffer = new StringBuffer(SQL_SELECT);
+			buffer.append("parameter_type_id");
+			buffer.append(COMMA);
+			buffer.append("parameter_mode");
+			buffer.append(SQL_FROM);
+			buffer.append(ObjectEntities.ANATYPPARTYPLINK_ENTITY);
+			buffer.append(SQL_WHERE);
+			buffer.append("analysis_type_id");
+			buffer.append(EQUALS);
+			buffer.append( analysis_type_id_str);
+			sql = buffer.toString();
+		}
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -97,6 +131,9 @@ public class AnalysisType_Database extends StorableObject_Database {
 			String parameter_mode;
 			String parameter_type_id_code;
 			while (resultSet.next()) {
+				/**
+				 * @todo when change DB Identifier model ,change getString() to getLong()
+				 */
 				parameter_mode = resultSet.getString("parameter_mode");
 				parameter_type_id_code = resultSet.getString("parameter_type_id");
 				if (parameter_mode.equals(MODE_IN))
@@ -203,6 +240,9 @@ public class AnalysisType_Database extends StorableObject_Database {
 		String sql = "INSERT INTO " + ObjectEntities.ANATYPPARTYPLINK_ENTITY
 				+ " (analysis_type_id, parameter_type_id, parameter_mode)" + " VALUES (?, ?, ?)";
 		PreparedStatement preparedStatement = null;
+		/**
+		 * @todo when change DB Identifier model ,change String to long
+		 */		
 		String parameter_type_id_code = null;
 		String parameter_mode = null;
 		try {
@@ -210,6 +250,9 @@ public class AnalysisType_Database extends StorableObject_Database {
 			for (Iterator iterator = in_par_typs.iterator(); iterator.hasNext();) {
 				preparedStatement.setString(1, analysis_type_id_code);
 				parameter_type_id_code = ((Identifier) iterator.next()).getCode();
+				/**
+				 * @todo when change DB Identifier model ,change setString() to setLong()
+				 */
 				preparedStatement.setString(2, parameter_type_id_code);
 				parameter_mode = MODE_IN;
 				preparedStatement.setString(3, parameter_mode);
@@ -221,6 +264,9 @@ public class AnalysisType_Database extends StorableObject_Database {
 			for (Iterator iterator = criteria_par_typs.iterator(); iterator.hasNext();) {
 				preparedStatement.setString(1, analysis_type_id_code);
 				parameter_type_id_code = ((Identifier) iterator.next()).getCode();
+				/**
+				 * @todo when change DB Identifier model ,change setString() to setLong()
+				 */
 				preparedStatement.setString(2, parameter_type_id_code);
 				parameter_mode = MODE_CRITERION;
 				preparedStatement.setString(3, parameter_mode);
@@ -232,6 +278,9 @@ public class AnalysisType_Database extends StorableObject_Database {
 			for (Iterator iterator = out_par_typs.iterator(); iterator.hasNext();) {
 				preparedStatement.setString(1, analysis_type_id_code);
 				parameter_type_id_code = ((Identifier) iterator.next()).getCode();
+				/**
+				 * @todo when change DB Identifier model ,change setString() to setLong()
+				 */
 				preparedStatement.setString(2, parameter_type_id_code);
 				parameter_mode = MODE_OUT;
 				preparedStatement.setString(3, parameter_mode);
@@ -284,7 +333,7 @@ public class AnalysisType_Database extends StorableObject_Database {
 	}
 
 	public static AnalysisType retrieveForCodename(String codename) throws Exception {
-		String sql = "SELECT " + COLUMN_ID + " FROM " + ObjectEntities.ANALYSISTYPE_ENTITY + " WHERE "
+		String sql = SQL_SELECT + COLUMN_ID + SQL_FROM + ObjectEntities.ANALYSISTYPE_ENTITY + SQL_WHERE
 				+ COLUMN_CODENAME + " = '" + codename + "'";
 		Statement statement = null;
 		ResultSet resultSet = null;

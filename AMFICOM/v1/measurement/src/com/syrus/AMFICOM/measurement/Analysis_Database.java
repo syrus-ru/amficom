@@ -68,16 +68,31 @@ public class Analysis_Database extends StorableObject_Database {
 					Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
+				/**
+				 * @todo when change DB Identifier model ,change getString() to getLong()
+				 */
 				Set criteria_set = new Set(new Identifier(resultSet
-						.getLong(COLUMN_CRITERIA_SET_ID)));
+						.getString(COLUMN_CRITERIA_SET_ID)));
 				analysis.setAttributes(DatabaseDate.fromQuerySubString(
 						resultSet, COLUMN_CREATED), DatabaseDate
 						.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-						new Identifier(resultSet.getLong(COLUMN_CREATOR_ID)),
-						new Identifier(resultSet.getLong(COLUMN_MODIFIER_ID)),
-						new Identifier(resultSet.getLong(COLUMN_TYPE_ID)),
+						/**
+						 * @todo when change DB Identifier model ,change getString() to getLong()
+						 */
+						new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+						/**
+						 * @todo when change DB Identifier model ,change getString() to getLong()
+						 */
+						new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+						/**
+						 * @todo when change DB Identifier model ,change getString() to getLong()
+						 */
+						new Identifier(resultSet.getString(COLUMN_TYPE_ID)),
+						/**
+						 * @todo when change DB Identifier model ,change getString() to getLong()
+						 */
 						new Identifier(resultSet
-								.getLong(COLUMN_MONITORED_ELEMENT_ID)),
+								.getString(COLUMN_MONITORED_ELEMENT_ID)),
 						criteria_set);
 			} else
 				throw new Exception("No such analysis: " + analysis_id_str);
@@ -158,15 +173,15 @@ public class Analysis_Database extends StorableObject_Database {
 			buffer.append(COMMA);
 			buffer.append(DatabaseDate.toUpdateSubString(analysis.getModified()));
 			buffer.append(COMMA);
-			buffer.append(analysis.getCreatorId().toString());
+			buffer.append(analysis.getCreatorId().toSQLString());
 			buffer.append(COMMA);
-			buffer.append(analysis.getModifierId().toString());
+			buffer.append(analysis.getModifierId().toSQLString());
 			buffer.append(COMMA);
-			buffer.append(analysis.getTypeId().toString());
+			buffer.append(analysis.getTypeId().toSQLString());
 			buffer.append(COMMA);
-			buffer.append(analysis.getMonitoredElementId().toString());
+			buffer.append(analysis.getMonitoredElementId().toSQLString());
 			buffer.append(COMMA);
-			buffer.append(analysis.getCriteriaSet().getId().toString());
+			buffer.append(analysis.getCriteriaSet().getId().toSQLString());
 			buffer.append(CLOSE_BRACKET);
 			sql = buffer.toString();
 		}
