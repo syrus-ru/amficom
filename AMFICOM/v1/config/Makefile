@@ -56,6 +56,8 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/PortDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/TransmissionPath.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/TransmissionPathDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/TransmissionPathType.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/TransmissionPathTypeDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/KIS.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/KISDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/KISType.java \
