@@ -23,4 +23,10 @@ typedef long long long64;
 
 
 
+typedef union {
+	char bytes[sizeof(uint32_t)];
+	uint32_t value;
+} uint_frame;
+
 #endif //AKP_CROSSPLATF_H
+
