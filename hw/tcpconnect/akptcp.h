@@ -5,9 +5,23 @@
 #include "Segment.h"
 #include "tcpconnect.h"
 
-int receive_segment(SOCKET sockfd, const int timeout, Segment*& segment);
+enum ReadSegmentStatus {
+	RSS_OK,
+	RSS_INVALID_SOCKET,
+	RSS_CANNOT_READ_HEADER,
+	RSS_ILLEGAL_HEADER,
+	RSS_CANNOT_READ_DATA
+};
 
-int transmit_segment(SOCKET sockfd, Segment* segment);
+ReadSegmentStatus receive_segment(SOCKET sockfd, const unsigned int timewait, Segment*& segment);
+
+enum WriteSegmentStatus {
+	WSS_OK,
+	WSS_INVALID_SOCKET,
+	WSS_CANNOT_WRITE_DATA
+};
+
+WriteSegmentStatus transmit_segment(SOCKET sockfd, const unsigned int timewait, Segment* segment);
 
 
 #endif

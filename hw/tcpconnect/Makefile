@@ -1,29 +1,41 @@
-OUT=tcpconnect.a
-OUTSO=libtcpconnect.so
-AKP=../akp
-AKPA=$(AKP)/akp.a
-CPP=g++#-3.4.1
-CFLAGS=-O -Wall -W
+OUT := tcpconnect.a
+OUTSO := libtcpconnect.so
+AKP := ../akp
+AKPA := $(AKP)/akp.a
 
-AR=ar
-ARFLAGS=rcsv
+CXX := g++#-3.4.1
+CXXFLAGS := -O3 -Wall -W
 
-OBJS=tcpconnect.o connectX.o connectWin.o akptcp.o
-ARCHFILE=tcpconnect.tar.gz
+CPPFLAGS := -I$(AKP)
+
+AR := ar
+ARFLAGS := rcsv
+
+#OBJS := tcpconnect.o \
+	connectX.o \
+	connectWin.o \
+	akptcp.o \
+	SocketReader.o \
+	SocketWriter.o \
+	SocketConnectionAcceptor.o
+OBJS := $(patsubst %.cpp,%.o,$(wildcard *.cpp))
+
+ARCHFILE := tcpconnect.tar.gz
+
 
 .PHONY:	clean arch
 
 $(OUT):	$(OBJS) $(AKPA)
-	$(AR) $(ARFLAGS) $(OUT) $(OBJS)
+	$(AR) $(ARFLAGS) $@ $(OBJS)
 
 $(OUTSO):	$(OBJS) $(AKPA)
-	$(CPP) -o $(OUTSO) -shared $(OBJS) $(AKPA)
+	$(CXX) -o $(OUTSO) -shared $(OBJS) $(AKPA)
 
-.cpp.o:
-	$(CPP) -c -I$(AKP) $(CFLAGS) -o $@ $<
+#%.o:	%.cpp
+#	$(CXX) -c -I$(AKP) $(CXXFLAGS) -o $@ $<
 
 clean:
-	rm -f $(OUT) $(OUTSO) $(OBJS)
+	$(RM) $(OUT) $(OUTSO) $(OBJS)
 
 arch:
 	tar -czvf $(ARCHFILE) *.cpp *.h Makefile

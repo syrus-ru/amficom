@@ -3,8 +3,8 @@
 #include "crossplatf.h"
 #include <stdio.h>
 
-void close_socket_platf(const SOCKET connected_socket) {
-  if (closesocket(connected_socket) == SOCKET_ERROR)
+void close_socket_platf(const SOCKET socket) {
+  if (closesocket(socket) == SOCKET_ERROR)
     show_error("(tcpconnect) closesocket");
 }
 
@@ -22,6 +22,10 @@ void show_error(const char* mesg) {
 			NULL);
 	printf((LPCTSTR)lpMsgBuf);
 	LocalFree(lpMsgBuf);
+}
+
+void sleep_sec(const unsigned int n_sec) {
+	Sleep(n_sec * 1000);
 }
 
 #endif
