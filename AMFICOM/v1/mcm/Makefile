@@ -13,7 +13,7 @@ DADARA_DIR=./dadara
 
 APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/dadara.jar
 
-IDL2JAVAFLAGS = -I$(INCIDLDIR)
+IDL2JAVAFLAGS = -strict -I$(INCIDLDIR)
 
 JAVAH=javah
 JAVAH_FLAGS = \
@@ -42,14 +42,30 @@ $(LIBNAME): .mach
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/DatabaseContextSetup.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/TestProcessor.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/PeriodicalTestProcessor.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/MeasurementControlModule.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/KISReport.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/Transceiver.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/SleepButWorkThread.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisException.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/EvaluationException.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/MeasurementException.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/TestProcessingException.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisManager.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/EvaluationManager.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/DadaraAnalysisManager.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisEvaluationProcessor.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisException.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/EvaluationException.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/MeasurementControlModule.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/DatabaseSetup.java #\
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisEvaluationProcessor.java
+
+#		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisManager.java \
+#		$(SRCDIR)/com/syrus/AMFICOM/mcm/EvaluationManager.java \
+#		$(SRCDIR)/com/syrus/AMFICOM/mcm/DadaraAnalysisManager.java \
+#		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisEvaluationProcessor.java \
+#		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisException.java \
+#		$(SRCDIR)/com/syrus/AMFICOM/mcm/EvaluationException.java \
+#		$(SRCDIR)/com/syrus/AMFICOM/mcm/MeasurementControlModule.java \
+#		$(SRCDIR)/com/syrus/AMFICOM/mcm/DatabaseSetup.java #\
 #		$(SRCDIR)/com/syrus/AMFICOM/mcm/Transceiver.java \
 #		$(SRCDIR)/com/syrus/AMFICOM/mcm/KISReport.java \
 #		$(SRCDIR)/com/syrus/AMFICOM/mcm/MCMImplementation.java \

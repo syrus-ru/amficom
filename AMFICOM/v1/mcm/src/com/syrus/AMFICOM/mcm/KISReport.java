@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.7 2004/07/21 18:43:32 arseniy Exp $
+ * $Id: KISReport.java,v 1.8 2004/07/28 16:02:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,16 +13,15 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.NewIdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.measurement.MeasurementObjectTypePool;
 import com.syrus.AMFICOM.measurement.ParameterType;
-import com.syrus.AMFICOM.measurement.ParameterTypeDatabase;
 import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Result;
-import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/07/21 18:43:32 $
+ * @version $Revision: 1.8 $, $Date: 2004/07/28 16:02:00 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -46,9 +45,11 @@ public class KISReport {
 
 		try {
 			SetParameter[] parameters = new SetParameter[this.parameterCodenames.length];
+			ParameterType parameterType;
 			for (int i = 0; i < parameters.length; i++) {
+				parameterType = (ParameterType)MeasurementObjectTypePool.getObjectType(this.parameterCodenames[i]);
 				parameters[i] = new SetParameter(NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULTPARAMETER_ENTITY, 20),
-																				 this.parameterCodenames[i],
+																				 parameterType,
 																				 this.parameterValues[i]);
 			}
 
@@ -72,9 +73,11 @@ public class KISReport {
 			Measurement measurement = new Measurement(this.measurementId);
 
 			SetParameter[] parameters = new SetParameter[this.parameterCodenames.length];
+			ParameterType parameterType;
 			for (int i = 0; i < parameters.length; i++) {
+				parameterType = (ParameterType)MeasurementObjectTypePool.getObjectType(this.parameterCodenames[i]);
 				parameters[i] = new SetParameter(NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULTPARAMETER_ENTITY, 20),
-																				 this.parameterCodenames[i],
+																				 parameterType,
 																				 this.parameterValues[i]);
 			}
 

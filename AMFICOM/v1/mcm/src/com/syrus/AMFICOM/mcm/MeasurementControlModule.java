@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.11 2004/07/21 18:43:32 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.12 2004/07/28 16:02:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,17 +13,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Hashtable;
-import java.util.Enumeration;
 import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+//import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.configuration.MCM;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.Result;
-import com.syrus.AMFICOM.measurement.corba.TestStatus;
+//import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
-import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 //import com.syrus.AMFICOM.server.corba.MeasurementServer;
 //import com.syrus.AMFICOM.server.corba.MeasurementServerHelper;
@@ -34,7 +32,7 @@ import com.syrus.util.corba.CORBAServer;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/07/21 18:43:32 $
+ * @version $Revision: 1.12 $, $Date: 2004/07/28 16:02:00 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -73,7 +71,7 @@ public class MeasurementControlModule extends Thread {
 	private boolean running;
 
 	public MeasurementControlModule() {
-		this.tickTime = ApplicationProperties.getInt("TickTime", TICK_TIME)*1000;
+		this.tickTime = ApplicationProperties.getInt("TickTime", TICK_TIME) * 1000;
 		this.forwardProcessing = ApplicationProperties.getInt("ForwardProcessing", FORWARD_PROCESSING)*1000;
 		this.resultTransferDelayMultiplier = ApplicationProperties.getInt("ResultTransferDelayMultiplier", RESULT_TRANSFER_DELAY_MULTIPLIER);
 		this.running = true;
@@ -87,7 +85,10 @@ public class MeasurementControlModule extends Thread {
 
 		/*	Initialize object drivers
 		 * 	for work with database*/
-		DatabaseSetup.initDatabaseContext();
+		DatabaseContextSetup.initDatabaseContext();
+		
+		/*	Load object types*/
+		DatabaseContextSetup.loadObjectTypes();
 
 		/*	Create map of test processors*/
 		testProcessors = new Hashtable(Collections.synchronizedMap(new Hashtable()));
@@ -160,22 +161,22 @@ public class MeasurementControlModule extends Thread {
 	}
 
 	private static void startTestProcessor(Test test) {
-//		TestProcessor testProcessor = null;
-//		switch (test.getTemporalType().value()) {
-//			case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
+		TestProcessor testProcessor = null;
+		switch (test.getTemporalType().value()) {
+			case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
 //				testProcessor = new OnetimeTestProcessor(test);
-//				break;
-//			case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
-//				testProcessor = new PeriodicalTestProcessor(test);
-//				break;
-//			case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
+				break;
+			case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
+				testProcessor = new PeriodicalTestProcessor(test);
+				break;
+			case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
 //				testProcessor = new ContinuousTestProcessor(test);
-//				break;
-//			default:
-//				Log.errorMessage("Incorrect temporal type " + test.getTemporalType().value() + " of test '" + test.getId().toString() + "'");
-//		}
-//		testProcessors.put(test.getId(), testProcessor);
-//		testProcessor.start();
+				break;
+			default:
+				Log.errorMessage("Incorrect temporal type " + test.getTemporalType().value() + " of test '" + test.getId().toString() + "'");
+		}
+		testProcessors.put(test.getId(), testProcessor);
+		testProcessor.start();
 	}
 
 	protected static Identifier getNewIdentifier(String entity) {
@@ -222,24 +223,26 @@ public class MeasurementControlModule extends Thread {
 	}
 
 	private static void activateKISTransceivers() {
-//		List kiss = iAm.getKISs();
-//		transceivers = new Hashtable(kiss.size());
-//		Identifier kisId;
-//		Transceiver transceiver;
-//		for (Iterator it = kiss.iterator(); it.hasNext();) {
-//			kisId = ((KIS)it.next()).getId();
-//			transceiver = new Transceiver(kisId.toString());
-//			transceiver.start();
-//			transceivers.put(kisId, transceiver);
-//			Log.debugMessage("Started transceiver for kis '" + kisId.toString() + "'", Log.DEBUGLEVEL03);
-//		}
+		List kiss = iAm.getKISs();
+		transceivers = new Hashtable(kiss.size());
+		Identifier kisId;
+		Transceiver transceiver;
+		for (Iterator it = kiss.iterator(); it.hasNext();) {
+			kisId = ((KIS)it.next()).getId();
+			transceiver = new Transceiver(kisId);
+			transceiver.start();
+			transceivers.put(kisId, transceiver);
+			Log.debugMessage("Started transceiver for kis '" + kisId.toString() + "'", Log.DEBUGLEVEL03);
+		}
 	}
 
 	private static void prepareTestList() {
 		testList = Collections.synchronizedList(new ArrayList());
-
+		
+/*	Below - load tests for iAm
+ * 	It's ness to fix database schema before completing this part of code*/
 //		try {
-//			testList.addAll(i_am.retrieveTestsOrderByStartTime(TestStatus.TEST_STATUS_SCHEDULED));
+//			testList.addAll(iAm.retrieveTestsOrderByStartTime(TestStatus.TEST_STATUS_SCHEDULED));
 //		}
 //		catch (Exception e) {
 //			Log.errorException(e);
@@ -247,7 +250,7 @@ public class MeasurementControlModule extends Thread {
 //
 //		/*	Processing tests - process right NOW! */
 //		try {
-//			List tests = i_am.retrieveTestsOrderByStartTime(TestStatus.TEST_STATUS_PROCESSING);
+//			List tests = iAm.retrieveTestsOrderByStartTime(TestStatus.TEST_STATUS_PROCESSING);
 //			for (Iterator it = tests.iterator(); it.hasNext();)
 //				startTestProcessor((Test)it.next());
 //		}

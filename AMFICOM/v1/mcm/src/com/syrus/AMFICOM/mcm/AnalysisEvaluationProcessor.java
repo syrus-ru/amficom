@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.5 2004/07/27 15:43:58 arseniy Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.6 2004/07/28 16:02:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,19 +8,10 @@
 
 package com.syrus.AMFICOM.mcm;
 
-import java.util.Map;
-import java.util.Hashtable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.NewIdentifierPool;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
-import com.syrus.AMFICOM.measurement.AnalysisType;
-import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
-import com.syrus.AMFICOM.measurement.EvaluationType;
-import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.Evaluation;
@@ -29,7 +20,7 @@ import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/07/27 15:43:58 $
+ * @version $Revision: 1.6 $, $Date: 2004/07/28 16:02:00 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -45,8 +36,8 @@ public abstract class AnalysisEvaluationProcessor {
 		AnalysisManager analysisManager;
 		EvaluationManager evaluationManager;
 
-		String analysisCodename = analysis.getCodename();
-		String evaluationCodename = evaluation.getCodename();
+		String analysisCodename = analysis.getType().getCodename();
+		String evaluationCodename = evaluation.getType().getCodename();
 		
 		if (analysisCodename.equals(CODENAME_ANALYSIS_TYPE_DADARA)) {
 			analysisManager = new DadaraAnalysisManager(measurementResult,

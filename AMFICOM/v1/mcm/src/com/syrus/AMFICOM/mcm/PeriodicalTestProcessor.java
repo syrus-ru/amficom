@@ -1,5 +1,5 @@
 /*
- * $Id: PeriodicalTestProcessor.java,v 1.8 2004/07/21 18:43:32 arseniy Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.9 2004/07/28 16:02:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,73 +9,166 @@
 package com.syrus.AMFICOM.mcm;
 
 import java.util.Date;
+import java.util.List;
 import java.util.ArrayList;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
+import java.util.Collections;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.NewIdentifierPool;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
+import com.syrus.AMFICOM.measurement.corba.TestStatus;
+import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/07/21 18:43:32 $
+ * @version $Revision: 1.9 $, $Date: 2004/07/28 16:02:00 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
 
 public class PeriodicalTestProcessor extends TestProcessor {
 	private static final long FRAME = 24*60*60*1000;//ms
-	private static final int STATUS_NEW_MEASUREMENT = 0;
-	private static final int STATUS_MEASUREMENT_IS_WAITING = 1;
-	private static final int STATUS_NEW_FRAME = 2;
-	private static final int STATUS_LAST_MEASUREMENT_GONE = 3;
 
 	private TemporalPattern temporalPattern;
-	private int status;
+	private List timeStampsList;//List <Date>
 
 	public PeriodicalTestProcessor(Test test) {
 		super(test);
+
+		int testStatus = test.getStatus().value();
+		switch (testStatus) {
+			case TestStatus._TEST_STATUS_SCHEDULED:
+				//Normal
+				break;
+			case TestStatus._TEST_STATUS_PROCESSING:
+				try {
+					this.completeLastMeasurement();
+				}
+				catch (TestProcessingException tpe) {
+					super.shutdown();
+				}
+				break;
+			default:
+				Log.errorMessage("Inappropriate status: " + testStatus + " of test: '" + test.getId().toString() + "'");
+				super.shutdown();
+		}
+
 		try {
 			this.temporalPattern = new TemporalPattern(test.getTemporalPatternId());
 		}
-		catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			super.abort();
+		catch (Exception e) {
+			Log.errorException(e);
+			super.shutdown();
+		}
+		
+		this.timeStampsList = Collections.synchronizedList(new ArrayList(0));
+	}
+	
+	private void completeLastMeasurement() throws TestProcessingException {
+		Measurement measurement;
+		try {
+			measurement = super.test.retrieveLastMeasurement();
 		}
 		catch (ObjectNotFoundException onfe) {
 			Log.errorException(onfe);
-			super.abort();
+			return;
 		}
-		this.status = STATUS_NEW_FRAME;
+		catch (Exception e) {
+			Log.errorException(e);
+			throw new TestProcessingException("Cannot retrieve last measurement for test '" + super.test.getId().toString() + "'", e);
+		}
+
+		int measurementStatus = measurement.getStatus().value();
+		switch (measurementStatus) {
+			case MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED:
+			case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRING:
+				//process measurement
+				break;
+			case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRED:
+				//analyse and/or evaluate
+				break;
+			case MeasurementStatus._MEASUREMENT_STATUS_ANALYZED_OR_EVALUATED:
+				//all results of the measurement must go to server
+				break;
+			case MeasurementStatus._MEASUREMENT_STATUS_COMPLETED:
+				//do next
+				break;
+			case MeasurementStatus._MEASUREMENT_STATUS_ABORTED:
+				//do next (?)
+				break;
+		}
 	}
 
 	public void run() {
+		Date nextTimeStamp = null;
+		Identifier measurementId = null;
 		Measurement measurement = null;
 		while (super.running) {
+			if (nextTimeStamp != null) {
+				if (nextTimeStamp.getTime() <= System.currentTimeMillis()) {
+					try {
+						measurementId = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_ENTITY, 10);
+						super.clearFalls();
+					}
+					catch (IllegalObjectEntityException ioee) {
+						Log.errorException(ioee);
+						Log.errorMessage("Aborted test '" + super.test.getId().toString() + "' because cannot create identifier for measurement");
+						super.shutdown();
+						continue;
+					}
+					catch (AMFICOMRemoteException are) {
+						Log.errorException(are);
+						super.sleepCauseOfFall();
+						continue;
+					}
+					try {
+						measurement = super.test.createMeasurement(measurementId,
+																											 MeasurementControlModule.iAm.getUserId(),
+																											 nextTimeStamp);
+						super.clearFalls();
+					}
+					catch (CreateObjectException coe) {
+						Log.errorException(coe);
+						super.sleepCauseOfFall();
+						continue;
+					}
+					
+				}
+				
+
+				//after all
+				measurement = null;
+				nextTimeStamp = null;
+			}
+			else {
+				if (! this.timeStampsList.isEmpty())
+					nextTimeStamp = (Date)this.timeStampsList.remove(0);
+				else
+					this.fillTimeStampsList();
+			}
+
 			try {
 				sleep(super.tickTime);
 			}
 			catch (InterruptedException ie) {
 				Log.errorException(ie);
 			}
+		}	//while
+	}
 
-			switch (this.status) {
-				case STATUS_NEW_FRAME:
-					break;
-				case STATUS_NEW_MEASUREMENT:
-					break;
-				case STATUS_MEASUREMENT_IS_WAITING:
-					break;
-				case STATUS_LAST_MEASUREMENT_GONE:
-					break;
-			}//switch
-
-			if (this.status != STATUS_LAST_MEASUREMENT_GONE || super.nMeasurements < super.nReports)
-				super.checkMeasurementResults();
-			else
-				break;
-		}//while
-
+	private void fillTimeStampsList() {
+		long start = System.currentTimeMillis();
+		this.timeStampsList.addAll(this.temporalPattern.getTimes(start, start + FRAME));
+	}
+	
+	protected void cleanup() {
 		super.cleanup();
-	}//run
+		this.timeStampsList.clear();
+	}
 }
