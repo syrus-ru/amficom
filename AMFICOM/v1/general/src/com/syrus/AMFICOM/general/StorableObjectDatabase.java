@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.78 2005/02/04 10:36:23 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.79 2005/02/04 12:48:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.78 $, $Date: 2005/02/04 10:36:23 $
- * @author $Author: bob $
+ * @version $Revision: 1.79 $, $Date: 2005/02/04 12:48:10 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -681,30 +681,27 @@ public abstract class StorableObjectDatabase {
 			buffer.append(SQL_FROM);
 			buffer.append(this.getEnityName());
 			buffer.append(SQL_WHERE);
-			buffer.append("1=1");
+			buffer.append(" 1=0 ");
 			for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 				StorableObject storableObject = (StorableObject) it.next();
-				buffer.append(SQL_AND);
+				buffer.append(SQL_OR);
 				buffer.append(OPEN_BRACKET);
 				buffer.append(StorableObjectWrapper.COLUMN_ID);
 				buffer.append(EQUALS);
 				buffer.append(DatabaseIdentifier.toSQLString(storableObject.getId()));
 				buffer.append(SQL_AND);
-				buffer.append(NOT);
-				buffer.append(OPEN_BRACKET);
 				buffer.append(StorableObjectWrapper.COLUMN_MODIFIED);
-				buffer.append(EQUALS);
+				buffer.append(StorableObjectDatabase.NOT_EQUALS);
 				buffer.append(DatabaseDate.toUpdateSubString(storableObject.getModified()));
 //				buffer.append(SQL_AND);
 //				buffer.append(COLUMN_MODIFIER_ID);
 //				buffer.append(EQUALS);
 //				buffer.append(DatabaseIdentifier.toSQLString(storableObject.getModifierId()));
 				buffer.append(CLOSE_BRACKET);
-				buffer.append(CLOSE_BRACKET);
 			}
 			sql = buffer.toString();
 		}
-		
+
 		Set ids = new HashSet();
 		Statement statement = null;
 		ResultSet resultSet = null;
