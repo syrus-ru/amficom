@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.2 2004/08/09 08:39:03 bob Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.3 2004/08/09 08:48:38 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/09 08:39:03 $
+ * @version $Revision: 1.3 $, $Date: 2004/08/09 08:48:38 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -455,35 +455,5 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 			}
 		}
 	}
-
-	public void delete(TransmissionPath transmissionPath) {
-		/**
-		 * FIXME delete cascade from TRANSPATHMELINK_ENTITY too
-		 */
-		String tpIdStr = transmissionPath.getId().toSQLString();
-		Statement statement = null;
-		try {
-			statement = connection.createStatement();								
-			statement.executeUpdate(SQL_DELETE_FROM 
-									+ ObjectEntities.TRANSPATH_ENTITY
-									+ SQL_WHERE
-									+ COLUMN_ID + EQUALS
-									+ tpIdStr);
-			connection.commit();
-		}
-		catch (SQLException sqle1) {
-			Log.errorException(sqle1);
-		}
-		finally {
-			try {
-				if(statement != null)
-					statement.close();
-				statement = null;
-			}
-			catch(SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-	}
-
+	
 }

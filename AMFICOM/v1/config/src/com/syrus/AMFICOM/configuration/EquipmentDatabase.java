@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.12 2004/08/09 08:39:10 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.13 2004/08/09 08:48:38 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/08/09 08:39:10 $
+ * @version $Revision: 1.13 $, $Date: 2004/08/09 08:48:38 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -582,36 +582,5 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 			}
 		}
 	}
-
-	public void delete(Equipment equipment) {
-		/**
-		 * FIXME delete cascade from EQUIPMENTMELINK_ENTITY too
-		 */
-		String eqIdStr = equipment.getId().toSQLString();
-		Statement statement = null;
-		try {
-			statement = connection.createStatement();								
-			statement.executeUpdate(SQL_DELETE_FROM 
-									+ ObjectEntities.EQUIPMENT_ENTITY
-									+ SQL_WHERE
-									+ COLUMN_ID + EQUALS
-									+ eqIdStr);
-			connection.commit();
-		}
-		catch (SQLException sqle1) {
-			Log.errorException(sqle1);
-		}
-		finally {
-			try {
-				if(statement != null)
-					statement.close();
-				statement = null;
-			}
-			catch(SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-	}
-
 
 }
