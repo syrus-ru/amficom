@@ -57,7 +57,7 @@ public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel implements O
 					{
 						SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
 						if (panel instanceof ThresholdsPanel)
-							((ThresholdsPanel)panel).et_ep = null;
+							((ThresholdsPanel)panel).mtm = null;
 					}
 				}
 			}
@@ -76,12 +76,25 @@ public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel implements O
 						String id = (String)(rue.getSource());
 						//if (id.equals("primarytrace"))
 						{
-							ReflectogramEvent[] ep = ((ReflectogramEvent[])Pool.get("eventparams", id));
+							ModelTraceManager mtm = ((ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, id));
 							((ThresholdsPanel)panel).updEvents(id);
-							((ThresholdsPanel)panel).updateEvents(ep);
+							((ThresholdsPanel)panel).updateTrace(mtm);
 							updScale2fitCurrentEv(.2, 1.);
 							jLayeredPane.repaint();
 						}
+					}
+					if(rue.thresholdsUpdated())
+					{
+						String id = (String)(rue.getSource());
+
+						//ReflectogramEvent[] ep = ((ReflectogramEvent[])Pool.get("eventparams", id));
+						//((ThresholdsPanel)panel).updateThresholds(ep);
+
+						ModelTraceManager mtm = ((ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, id));
+						((ThresholdsPanel)panel).updateThresholds(mtm);
+
+						updScale2fitCurrentEv(.2, 1.);
+						jLayeredPane.repaint();
 					}
 					if(rue.eventSelected())
 					{
@@ -96,14 +109,6 @@ public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel implements O
 					if (rue.modelFunctionChanged())
 					{
 					    jLayeredPane.repaint();
-					}
-					if(rue.thresholdsUpdated())
-					{
-						String id = (String)(rue.getSource());
-						ReflectogramEvent[] ep = ((ReflectogramEvent[])Pool.get("eventparams", id));
-						((ThresholdsPanel)panel).updateThresholds(ep);
-						updScale2fitCurrentEv(.2, 1.);
-						jLayeredPane.repaint();
 					}
 				}
 			}
@@ -120,10 +125,10 @@ public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel implements O
 			if (panel instanceof ThresholdsPanel)
 			{
 				ThresholdsPanel tp = (ThresholdsPanel)panel;
-				if (tp.et_ep != null)
+				if (tp.mtm != null)
 				{
-					ReflectogramEvent ep = tp.et_ep[tp.c_event];
-					ep.getThreshold().changeThresholdBy(da, dc, dx, dl, ep, key);
+					//ReflectogramEvent ep = tp.et_ep[tp.c_event];
+					tp.mtm.changeThresholdBy(tp.c_event, key, da, dc, dx, dl);
 					jLayeredPane.repaint();
 					return;
 				}

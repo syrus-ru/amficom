@@ -17,9 +17,13 @@ import com.syrus.io.BellcoreStructure;
 public class DetailedEventsFrame extends JInternalFrame
 	implements OperationListener
 {
-	private ReflectogramEvent []data;
-	private ReflectogramEvent []data_;
-	private ReflectogramEvent []etalon;
+//	private ReflectogramEvent []data;
+//	private ReflectogramEvent []data_;
+//	private ReflectogramEvent []etalon;
+
+	private ModelTraceManager etalonMTM;
+	private ModelTraceManager dataMTM;
+	private ModelTrace alignedDataMT;
 
 	private Dispatcher dispatcher;
 	private Map tModels = new HashMap(6);
@@ -86,6 +90,15 @@ public class DetailedEventsFrame extends JInternalFrame
 		dispatcher.register(this, RefUpdateEvent.typ);
 	}
 
+	private void makeAlignedDataMT()
+	{
+		if (etalonMTM == null || dataMTM == null)
+			return;
+		alignedDataMT = ReflectogramMath.createAlignedArrayModelTrace(
+			dataMTM.getModelTrace(),
+			etalonMTM.getModelTrace());
+	}
+
 	public void operationPerformed(OperationEvent ae)
 	{
 		if(ae.getActionCommand().equals(RefChangeEvent.typ))
@@ -96,7 +109,7 @@ public class DetailedEventsFrame extends JInternalFrame
 				String id = (String)(rce.getSource());
 				if (id.equals("primarytrace"))
 				{
-					data_ = null;
+					alignedDataMT = null;
 //					ctModel.clearTable();
 					tabbedPane.setSelectedIndex(0);
 					tabbedPane.setEnabledAt(0, true);
@@ -109,7 +122,7 @@ public class DetailedEventsFrame extends JInternalFrame
 				String id = (String)(rce.getSource());
 				if (id.equals("all"))
 				{
-					data_ = null;
+					alignedDataMT = null;
 //					tModel.clearTable();
 					ctModel.clearTable();
 					tabbedPane.setSelectedIndex(0);
@@ -120,7 +133,7 @@ public class DetailedEventsFrame extends JInternalFrame
 				}
 				else if(id.equals(AnalysisUtil.ETALON))
 				{
-					data_ = null;
+					alignedDataMT = null;
 					ctModel.clearTable();
 					tabbedPane.setEnabledAt(0, true);
 					tabbedPane.setSelectedIndex(0);
@@ -130,11 +143,12 @@ public class DetailedEventsFrame extends JInternalFrame
 			}
 			if(rce.OPEN_ETALON)
 			{
-				this.etalon = (ReflectogramEvent[])Pool.get("eventparams", AnalysisUtil.ETALON);
-				if(data !=null)
-					this.data_ = ReflectogramMath.alignClone(data, etalon);
+				etalonMTM = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, AnalysisUtil.ETALON);
+				ModelTrace etalonMT = etalonMTM.getModelTrace();
+				if(dataMTM != null)
+					makeAlignedDataMT();
 				else
-					data_ = null;
+					alignedDataMT = null;
 				ctModel.clearTable();
 				tabbedPane.setEnabledAt(0, true);
 				tabbedPane.setSelectedIndex(0);
@@ -144,14 +158,13 @@ public class DetailedEventsFrame extends JInternalFrame
 			}
 			if(rce.CLOSE_ETALON)
 			{
-				data_ = null;
+				alignedDataMT = null;
 				ctModel.clearTable();
 				tabbedPane.setEnabledAt(0, true);
 				tabbedPane.setSelectedIndex(0);
 				etalon_loaded = false;
 				tabbedPane.setEnabledAt(1, false);
 			}
-
 		}
 		if(ae.getActionCommand().equals(RefUpdateEvent.typ))
 		{
@@ -166,9 +179,10 @@ public class DetailedEventsFrame extends JInternalFrame
 						a = (RefAnalysis)Pool.get("refanalysis", id);
 						bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
 						res_km = bs.getResolution() / 1000.0;
-						this.data =  (ReflectogramEvent [])Pool.get("eventparams", "primarytrace");
-						if(data != null && etalon != null)
-							this.data_ = ReflectogramMath.alignClone(data, etalon);
+						dataMTM = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, "primarytrace");
+						if(dataMTM != null && etalonMTM != null)
+							makeAlignedDataMT();
+						else alignedDataMT = null;
 						if (selected >= a.events.length)
 							selected = a.events.length - 1;
 						updTableModel (selected);
@@ -332,29 +346,33 @@ public class DetailedEventsFrame extends JInternalFrame
 
 	private void setData(int nEvent)
 	{
-		if(etalon == null || data_ == null)
+		if(etalonMTM == null || alignedDataMT == null)
 		{
 			tabbedPane.setSelectedIndex(0);
 			tabbedPane.setEnabledAt(1, false);
 			return;
 		}
-		if(nEvent >= data_.length || nEvent < 0)
+		if(nEvent >= dataMTM.getNEvents() || nEvent < 0)
 		{
 			return;
 		}
-		double deltaX = data_[0].getDeltaX();
-		
+		double deltaX = dataMTM.getDeltaX();
+
 		// ищем парное событие
-		ReflectogramComparer rComp = new ReflectogramComparer(null, data_, etalon, null);
+		ComplexReflectogramEvent[] dataCRE = dataMTM.getComplexEvents();
+		ComplexReflectogramEvent[] etalonCRE = etalonMTM.getComplexEvents(); 
+		ReflectogramComparer rComp = new ReflectogramComparer(
+			dataCRE,
+			etalonCRE);
 		int nEtalon = rComp.getEtalonIdByProbeId(nEvent); // может быть -1
-		ReflectogramEvent dataEvent = data_[nEvent];
-		ReflectogramEvent etalonEvent = nEtalon != -1
-				? etalon[nEtalon]
+		ComplexReflectogramEvent dataEvent = dataCRE[nEvent];
+		ComplexReflectogramEvent etalonEvent = nEtalon != -1
+				? etalonCRE[nEtalon]
 				: null;
 		int dataType = dataEvent.getEventType();
 		int etalonType = etalonEvent != null
 			        ? etalonEvent.getEventType()
-					: ReflectogramEvent.RESERVED_VALUE;
+					: SimpleReflectogramEvent.RESERVED;
 
 		((CompareTableRenderer)jTableComp.getDefaultRenderer(Object.class))
 			.setSameType(dataType == etalonType);
@@ -362,13 +380,13 @@ public class DetailedEventsFrame extends JInternalFrame
 		String dataT;
 		switch(dataType)
 		{
-		case ReflectogramEvent.CONNECTOR:
+		case SimpleReflectogramEvent.CONNECTOR:
 		    dataT = LangModelAnalyse.getString("eventType4");
 			break;
-		case ReflectogramEvent.WELD:
+		case SimpleReflectogramEvent.SPLICE:
 		    dataT = LangModelAnalyse.getString("eventType3");
 			break;
-		case ReflectogramEvent.LINEAR:
+		case SimpleReflectogramEvent.LINEAR:
 		    dataT = LangModelAnalyse.getString("eventType0");
 			break;
 		default:
@@ -378,13 +396,13 @@ public class DetailedEventsFrame extends JInternalFrame
 		String etalonT;
 		switch(etalonType)
 		{
-		case ReflectogramEvent.CONNECTOR:
+		case SimpleReflectogramEvent.CONNECTOR:
 		    etalonT = LangModelAnalyse.getString("eventType4");
 			break;
-		case ReflectogramEvent.WELD:
+		case SimpleReflectogramEvent.SPLICE:
 		    etalonT = LangModelAnalyse.getString("eventType3");
 			break;
-		case ReflectogramEvent.LINEAR:
+		case SimpleReflectogramEvent.LINEAR:
 		    etalonT = LangModelAnalyse.getString("eventType0");
 			break;
 		default:
@@ -395,8 +413,9 @@ public class DetailedEventsFrame extends JInternalFrame
 		ctModel.setValueAt(etalonT, 1, 1);
 
 		// сравнение по модельной кривой
-		double difference    = ReflectogramComparer.getDeviation(etalon, data_, nEvent);
-		double meanDeviation = ReflectogramComparer.getMeanDeviation(data_, etalon, nEvent);
+		ModelTrace etalonMT = etalonMTM.getModelTrace();
+		double difference    = ReflectogramComparer.getMaxDeviation(dataMTM, etalonMT, nEvent);
+		double meanDeviation = ReflectogramComparer.getMeanDeviation(dataMTM, etalonMT, nEvent);
 
 		difference           = ((int)(difference*1000.))/1000.; // точность 0.001 дБ
 		meanDeviation        = ((int)(meanDeviation*1000.))/1000.;

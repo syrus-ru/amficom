@@ -212,43 +212,12 @@ public class AnalysisUtil
 	{
 		Set thresholdSet = ms.getThresholdSet();
 
-		ReflectogramEvent[] ep = (ReflectogramEvent[])Pool.get("eventparams", AnalysisUtil.ETALON);
-		if (ep == null)
+		ModelTraceManager mtm = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, AnalysisUtil.ETALON);
+		if (mtm == null)
 			return;
 
 		if (thresholdSet != null)
-			setParamsFromThresholdsSet(thresholdSet, ep);
-//		else
-//			thresholdSet = createThresholdSet(userId, ms.getMonitoredElementIds(), ep);
-
-//		try
-//		{
-//			ReflectogramEvent[] ep = (ReflectogramEvent[])Pool.get("eventparams", AnalysisUtil.ETALON);
-//			if (ep == null)
-//			{
-//				Pool.remove("eventparams", AnalysisUtil.ETALON);
-//				return;
-//			}
-//
-//			ThresholdSet thrs;
-//
-//			if (ts.getThresholdSetId().length() == 0)
-//			{
-//				thrs = createDefaultThresholdSet(dataSource, ep);
-//				ts.setThresholdSetId(thrs.getId());
-//			}
-//			else
-//			{
-//				dataSource.LoadThresholdSets(new String[] {ts.getThresholdSetId()});
-//				thrs = (ThresholdSet)Pool.get(ThresholdSet.TYPE, ts.getThresholdSetId());
-//				setParamsFromThresholdsSet(thrs, ep);
-//			}
-//		}
-//		catch (Exception ex)
-//		{
-//			System.out.println("Error loading ThresholdSet. ME not set");
-//			ex.printStackTrace();
-//		}
+			setParamsFromThresholdsSet(thresholdSet,  mtm);
 	}
 
 	/**
@@ -262,7 +231,7 @@ public class AnalysisUtil
 		Set etalon = ms.getEtalon();
 		Set metas = ms.getParameterSet();
 
-		ReflectogramEvent[] events=null;
+		ModelTraceManager mtm = null;
 		BellcoreStructure bsEt=null;
 
 		SetParameter[] params = etalon.getParameters();
@@ -271,8 +240,8 @@ public class AnalysisUtil
 			ParameterType type = (ParameterType)params[i].getType();
 			if (type.getCodename().equals(ParameterTypeCodenames.DADARA_ETALON_EVENTS))
 			{
-				events = ReflectogramEvent.fromByteArray(params[i].getValue());
-				Pool.put("eventparams", ETALON, events);
+				mtm = ModelTraceManager.fromEventsByteArray(params[i].getValue());
+				Pool.put(ModelTraceManager.CODENAME, ETALON, mtm);
 				Pool.put("etalon", ETALON, metas);
 			}
 			else if (type.getCodename().equals(ParameterTypeCodenames.REFLECTOGRAMMA))
@@ -284,11 +253,10 @@ public class AnalysisUtil
 			}
 		}
 
-		if(bsEt!=null && events!=null)
+		if(bsEt!=null && mtm!=null)
 		{
 			double deltaX = bsEt.getResolution();
-			for(int i=0; i<events.length; i++)
-				events[i].setDeltaX(deltaX);
+			mtm.setDeltaX(deltaX);
 		}
 	}
 
@@ -359,15 +327,15 @@ public class AnalysisUtil
 
 	}
 
-	public static Set createEtalon(Identifier userId, List meIds, ReflectogramEvent[] ep)
+	public static Set createEtalon(Identifier userId, List meIds, ModelTraceManager mtm)
 	{
-			try
-			{
+		try
+		{
 			SetParameter[] params = new SetParameter[2];
 
 			ParameterType ptype = getParameterType(userId, ParameterTypeCodenames.DADARA_ETALON_EVENTS);
 			params[0] = SetParameter.createInstance(ptype,
-					ReflectogramEvent.toByteArray(ep));
+					mtm.toEventsByteArray());
 
 			BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", "primarytrace");
 
@@ -382,37 +350,25 @@ public class AnalysisUtil
 					params,
 					meIds);
 			return etalon;
-			}
-			catch (CreateObjectException e)
-			{
-				// FIXME
-				System.err.println("AnalysisUtil.createEtalon: CreateObjectException -- wanna die.");
-			e.printStackTrace();
-			return null;
-			}
+		}
+		catch (CreateObjectException e)
+		{
+			// FIXME
+			System.err.println("AnalysisUtil.createEtalon: CreateObjectException -- wanna die.");
+		e.printStackTrace();
+		return null;
+		}
 	}
 
-	public static Set createThresholdSet(Identifier userId, List meIds, ReflectogramEvent[] ep)
+	public static Set createThresholdSet(Identifier userId, List meIds, ModelTraceManager mtm)
 	{
 		SetParameter[] params = new SetParameter[2];
-
-		Threshold[] threshs = new Threshold[ep.length];
-		for (int i = 0; i < ep.length; i++)
-		{
-			if (ep[i].getThreshold() != null)
-				threshs[i] = ep[i].getThreshold();
-			else
-			{
-				threshs[i] = new Threshold();
-				ep[i].setThreshold(threshs[i]);
-			}
-		}
 
 		try
 		{
 			ParameterType ptype = getParameterType(userId, ParameterTypeCodenames.DADARA_THRESHOLDS);
 			params[0] = SetParameter.createInstance(ptype,
-					Threshold.toByteArray(threshs));
+					mtm.toThresholdsByteArray());
 
 			byte[] minLevel;
 			try
@@ -438,16 +394,16 @@ public class AnalysisUtil
 
 			return thresholdSet;
 		}
-			catch (CreateObjectException e)
-			{
-				// FIXME
-				System.err.println("AnalysisUtil.createThresholdSet: CreateObjectException -- wanna die.");
+		catch (CreateObjectException e)
+		{
+			// FIXME
+			System.err.println("AnalysisUtil.createThresholdSet: CreateObjectException -- wanna die.");
 			e.printStackTrace();
 			return null;
-			}
+		}
 }
 
-	public static void setParamsFromThresholdsSet(Set thresholdSet, ReflectogramEvent[] ep)
+	public static void setParamsFromThresholdsSet(Set thresholdSet, ModelTraceManager mtm)
 	{
 		SetParameter[] params = thresholdSet.getParameters();
 
@@ -467,11 +423,7 @@ public class AnalysisUtil
 			}
 			else if (type.getCodename().equals(ParameterTypeCodenames.DADARA_THRESHOLDS))
 			{
-				Threshold[] threshs = Threshold.fromByteArray(params[i].getValue());
-				for (int j = 0; j < Math.min(threshs.length, ep.length); j++)
-				{
-					ep[j].setThreshold(threshs[j]);
-				}
+				mtm.setThresholdsFromByteArray(params[i].getValue());
 			}
 		}
 	}

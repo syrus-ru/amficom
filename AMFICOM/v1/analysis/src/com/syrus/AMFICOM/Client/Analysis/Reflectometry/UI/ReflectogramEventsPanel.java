@@ -16,14 +16,15 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 	public boolean draw_min_trace_level = false;
 	public boolean draw_noise_level = false;
 
-	protected ReflectogramEvent[] ep;
+	//protected ReflectogramEvent[] ep;
+	protected ModelTraceManager mtm; // используется только в методах, вызываемых из paint()
 	protected ReflectogramAlarm[] alarms;
 
 	protected Double min_trace_level;
 	protected double noise_level = 28; // ???!
 	protected boolean moving_level = false;
 
-	protected double[] modeled_y;
+	//protected double[] modeled_y;
 
 	protected Color modeledColor;
 	protected Color minLevelColor;
@@ -39,20 +40,9 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		this.dispatcher = dispatcher;
 	}
 
-	public void updateEvents (ReflectogramEvent[] ep)
+	public void updateTrace (ModelTraceManager mtm) // was: updateEvents
 	{
-		this.ep = ep;
-
-		if (ep != null)
-		{
-			int n = ep[ep.length-1].getEnd()+2;
-			modeled_y = new double[n];
-			for (int i = 0; i < ep.length; i++)
-			{
-				for (int j = ep[i].getBegin(); j <= ep[i].getEnd() && j < n; j++)
-					modeled_y[j] = ep[i].refAmplitude(j);
-			}
-		}
+		this.mtm = mtm;
 	}
 
 	public void updateAlarms (ReflectogramAlarm[] alarms)
@@ -216,12 +206,15 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		}
 	}
 
-	protected void draw_one_model_curve(Graphics g, ReflectogramEvent re)
+	// sre == null => draws whole curve
+	protected void draw_one_model_curve(Graphics g, ModelTrace mt, SimpleReflectogramEvent sre)
 	{
-		if ((re.getBegin() <= end) && (re.getEnd() >= start))
+		int n1 = sre == null ? 0 : sre.getBegin();
+		int n2 = sre == null ? mt.getLength() - 1 : sre.getEnd();
+		if ((n1 <= end) && (n2 >= start))
 		{
-		    int i_from = Math.max(0, re.getBegin() - start);
-		    int i_to = Math.min (end, re.getEnd()) - start;
+		    int i_from = Math.max(0, n1 - start);
+		    int i_to = Math.min(end, n2) - start;
 		    int len = i_to - i_from + 1;
 		    if (len >= 1)
 		    {
@@ -230,22 +223,15 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		        for (int i = i_from; i <= i_to; i++)
 		        {
 		            xArr[i - i_from] = (int)(i * scaleX + 1);
-		            yArr[i - i_from] = (int)((maxY - re.refAmplitude(i + start) - top) * scaleY);
+		            yArr[i - i_from] = (int)((maxY - mt.getY(i + start) - top) * scaleY);
+		            // FIXME: ^^^ потеря эффективности: мы уже знаем, к какому событию относится
+		            // точка, но заставляем mtm заново определять это событие... и это для КАЖДОЙ точки р/г!
 		        }
 		        g.drawPolyline(xArr, yArr, len);
 		    }
-		    /*
-		    int i_from = Math.max(0, re.getBegin() - start);
-		    int i_to = Math.min (end, re.getEnd() - 1) - start;
-			for (int i = i_from; i <= i_to; i++)
-			{
-				g.drawLine((int)(i*scaleX+1), (int)((maxY - re.refAmplitude(i+start) - top) * scaleY),
-						   (int)((i+1)*scaleX+1), (int)((maxY - re.refAmplitude(i+start+1) - top) * scaleY));
-			}
-			*/
 		}
 	}
-	
+	/*
 	protected void draw_joint_of_two_model_curves(Graphics g, ReflectogramEvent reL, ReflectogramEvent reR)
 	{
 		int i = reR.getBegin() - start;
@@ -256,24 +242,23 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 					(int )(i*scaleX+1), (int )((maxY - reR.refAmplitude(i+start) - top)*scaleY));
 		}
 	}
-
+	*/
 	protected void paint_modeled_trace(Graphics g)
 	{
-		if (modeled_y == null)
+		if (mtm == null)
 			return;
-
 		g.setColor(modeledColor);
-		for(int j=0; j<ep.length; j++)
-			draw_one_model_curve(g, ep[j]);
+		draw_one_model_curve(g, mtm.getModelTrace(), null);
 	}
 
 	protected void paint_reflectogram_events(Graphics g)
 	{
-		if (ep == null)
+		if (mtm == null)
 		{
-			paint_events(g);
+			paint_events(g); // метод суперкласса....
 			return;
 		}
+		SimpleReflectogramEvent []ep = mtm.getComplexEvents();
 		for(int j=0; j<ep.length; j++)
 		{
 			if ((ep[j].getBegin() < end) && (ep[j].getEnd() > start))

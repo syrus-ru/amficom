@@ -9,7 +9,7 @@ import javax.swing.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 
 public class AnalysisLayeredPanel extends TraceEventsLayeredPanel implements OperationListener
 {
@@ -45,8 +45,10 @@ public class AnalysisLayeredPanel extends TraceEventsLayeredPanel implements Ope
 						{
 							((AnalysisPanel)panel).updEvents(id);
 
-							ReflectogramEvent[] ep = ((ReflectogramEvent[])Pool.get("eventparams", id));
-							((AnalysisPanel)panel).updateEvents(ep);
+							//ReflectogramEvent[] ep = ((ReflectogramEvent[])Pool.get("eventparams", id));
+							//((AnalysisPanel)panel).updateEvents(ep);
+							ModelTraceManager mtm = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, id);
+							((AnalysisPanel)panel).updateTrace(mtm); // FIXME: нужно UpdateMTM или UpdateTrace?
 							((AnalysisPanel)panel).updMarkers();
 							jLayeredPane.repaint();
 						}

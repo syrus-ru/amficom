@@ -9,7 +9,7 @@ import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.io.BellcoreStructure;
@@ -81,20 +81,21 @@ public class SaveTestSetupAsCommand extends VoidCommand
 
 		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
 		MeasurementSetup newms = command.measurementSetup;
+		ModelTraceManager mtm = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, traceid);
 		newms.setCriteriaSet(AnalysisUtil.createCriteriaSetFromParams(
 				userId,
 				newms.getMonitoredElementIds()));
 		newms.setEtalon(AnalysisUtil.createEtalon(
 				userId,
 				newms.getMonitoredElementIds(),
-				(ReflectogramEvent[])Pool.get("eventparams", traceid)));
+				mtm));
 
 		if ((type & SaveTestSetupCommand.THRESHOLDS) != 0)
 		{
 			newms.setThresholdSet(AnalysisUtil.createThresholdSet(
 					userId,
 					newms.getMonitoredElementIds(),
-					(ReflectogramEvent[])Pool.get("eventparams", traceid)));
+					mtm));
 		}
 
 		new SaveTestSetupCommand(aContext, traceid, type).execute();

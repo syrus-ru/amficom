@@ -41,9 +41,9 @@ public class HistogrammPanel extends ScaledGraphPanel
 
 		init();
 
-		ReflectogramEvent[] ep = (ReflectogramEvent[])Pool.get("eventparams", "primarytrace");
-		if (ep != null)
-			updateHistogrammData(0, ep[ep.length-1].getEnd());
+		ModelTraceManager mtm = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, "primarytrace");
+		if (mtm != null)
+			updateHistogrammData(0, mtm.getTraceLength() - 1);
 		else
 			updateHistogrammData(0, y.length / 2);
 	}

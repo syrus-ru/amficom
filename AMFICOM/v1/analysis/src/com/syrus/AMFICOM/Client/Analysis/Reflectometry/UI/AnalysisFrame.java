@@ -9,7 +9,7 @@ import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
@@ -224,15 +224,11 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 					traces.remove(id);
 				}
 
-				ReflectogramEvent[] ep = (ReflectogramEvent[])Pool.get("eventparams", id);
-				if (ep != null)
+				ModelTraceManager mtm = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, id);
+				if (mtm != null)
 				{
 					double[] y = new double[n];
-					for (int i = 0; i < ep.length; i++)
-					{
-						for (int j = ep[i].getBegin(); j <= ep[i].getEnd() && j < n; j++)
-							y[j] = ep[i].refAmplitude(j);
-					}
+					y = mtm.getYArray(0, n);
 					SimpleGraphPanel epPanel = new SimpleGraphPanel(y, deltaX);
 					epPanel.setColorModel(AnalysisUtil.ETALON);
 					((ScalableLayeredPanel)panel).addGraphPanel(epPanel);

@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.io.*;
@@ -108,26 +108,10 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 		}
 		Pool.put("bellcorestructure", "primarytrace", bs);
 
-//		res.getMeasurement().getT
-//		Test test = (Test)Pool.get(Test.TYPE, res.getActionId());
-
 		Measurement m = res.getMeasurement();
 		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
 		bs.title = m.getName();
 		bs.monitoredElementId = m.getMonitoredElementId().getIdentifierString();
-
-			//Если нет тестсетапа создаем его
-			/*if (test.getTestSetupId().equals(""))
-			{
-				ts = new TestSetup();
-				ts.settestTypeId(test.getTestTypeId());
-				ts.setId(dataSource.GetUId(TestSetup.TYPE));
-				ts.setTestArgumentSetId(test.getTestArgumentSetId());
-
-				bs.test_setup_id = ts.getId();
-				Pool.put(TestSetup.TYPE, ts.getId(), ts);
-			}
-			else*/
 
 		bs.measurementId = m.getId().getIdentifierString();
 		MeasurementSetup ms = res.getMeasurement().getSetup();
@@ -143,66 +127,30 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 		AnalysisUtil.load_Thresholds(userId, ms);
 
 		new InitialAnalysisCommand().execute();
-		//new MinuitAnalyseCommand(aContext.getDispatcher(), "primarytrace", aContext).execute();
 
-		ReflectogramEvent[] etalon = (ReflectogramEvent[])Pool.get("eventparams", AnalysisUtil.ETALON);
-		ReflectogramEvent[] revents = (ReflectogramEvent[])Pool.get("eventparams", "primarytrace");
+		ModelTraceManager mtmEtalon = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, AnalysisUtil.ETALON);
+		ModelTraceManager mtmEvents = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, "primarytrace");
 
-/*
-			Threshold[] thresholds = new Threshold[etalon.length];
-			for (int i = 0; i < thresholds.length; i++)
-				thresholds[i] = etalon[i].getThreshold();
+		if (mtmEtalon != null && mtmEvents != null)
+		{
+			int delta = 5;
+			// correct end of trace
+			// XXX: removed by saa because had no effect due to mistake
 
-			ReflectogramComparer comp = new ReflectogramComparer(revents, etalon, thresholds, false);
-			ReflectogramAlarm[] alarms = comp.getAlarms();
-*/
+			// correct event types
+			// XXX: (is necessary??)
+			mtmEvents.fixEventTypes(mtmEtalon, delta);
+		}
 
-	 if(etalon != null && revents != null)
-	 {
-		 int delta = 5;
-		 //correct end of trace
-		 if(revents.length > etalon.length)
-		 {
-			 ReflectogramEvent endEvent = etalon[etalon.length - 1];
-			 for(int i = revents.length - 1; i >= 0; i--)
-			 {
-				 if(revents[i].getEventType() == ReflectogramEvent.CONNECTOR &&
-						 Math.abs(revents[i].getBegin() - endEvent.getBegin()) < delta &&
-						 Math.abs(revents[i].getEnd() - endEvent.getEnd()) < delta)
-				 {
-					 ReflectogramEvent[] new_revents = new ReflectogramEvent[i + 1];
-					 for(int j = 0; j < i + 1; j++)
-						 new_revents[j] = revents[j];
-					 revents = new_revents;
-					 break;
-				 }
-			 }
-		 }
-
-		 //correct event types
-		 // XXX: rude alg.: probable errors when end - begin < delta
-		 if(revents.length == etalon.length)
-		 {
-			 for(int i = 0; i < etalon.length; i++)
-			 {
-				 if(Math.abs(revents[i].getBegin() - etalon[i].getBegin()) < delta &&
-						 Math.abs(revents[i].getEnd() - etalon[i].getEnd()) < delta)
-				 {
-					 revents[i].setEventType(etalon[i].getEventType());
-				 }
-			 }
-		 }
-	 }
-
-	 dispatcher.notify(new RefChangeEvent("primarytrace",
-			 RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
-
-	 dispatcher.notify(new RefUpdateEvent("primarytrace",
-			 RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
-
-	 dispatcher.notify(new RefUpdateEvent(AnalysisUtil.ETALON,
-			 RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
-
-	 Environment.getActiveWindow().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
- }
+		dispatcher.notify(new RefChangeEvent("primarytrace",
+			RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
+		
+		dispatcher.notify(new RefUpdateEvent("primarytrace",
+			RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
+		
+		dispatcher.notify(new RefUpdateEvent(AnalysisUtil.ETALON,
+			RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
+		
+		Environment.getActiveWindow().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+	}
 }

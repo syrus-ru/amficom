@@ -30,11 +30,11 @@ public class AlarmMessage
 		this.deltaX = deltaX;
 
 		dE = (int)(ra.refAmplChangeValue*1000)/1000.;
-		if(ra.getEventType() == ReflectogramEvent.WELD)
+		if(ra.getEventType() == SimpleReflectogramEvent.SPLICE)
 			referenceEventType = "неотражательное";
-		else if(ra.getEventType() == ReflectogramEvent.CONNECTOR)
+		else if(ra.getEventType() == SimpleReflectogramEvent.CONNECTOR)
 			referenceEventType = "отражательное";
-		else if(ra.getEventType() == ReflectogramEvent.LINEAR)
+		else if(ra.getEventType() == SimpleReflectogramEvent.LINEAR)
 			referenceEventType = "линейный участок";
 		else
 			referenceEventType = "информации нет";
@@ -120,7 +120,7 @@ public class AlarmMessage
 		s = s+"Координата несоответствия: "+ (int)(ra.alarmPointCoord*deltaX)/1000. + " км. \n";
 		s = s+"Отклонение от эталона: "+ dE +" дБ. \n";
 		s = s+"Тип события: " + referenceEventType + "\n";
-		if(ra.getEventType() != ReflectogramEvent.CONNECTOR)
+		if(ra.getEventType() != SimpleReflectogramEvent.CONNECTOR)
 		{
 			s = s+"Координаты ближайших отражательных событий: " + ra.leftReflectoEventCoord * deltaX / 1000. +
 					" км; " + ra.rightReflectoEventCoord * deltaX / 1000. + " км \n";
@@ -140,7 +140,7 @@ public class AlarmMessage
 		s = s+"Координата повреждения: "+(int)(ra.alarmPointCoord*deltaX)/1000. + " км. \n";
 		s = s+"Отклонение от эталона: " + dE + " дБ. \n";
 		s = s+"Тип события: " + referenceEventType + "\n";
-		if(ra.getEventType() != ReflectogramEvent.CONNECTOR)
+		if(ra.getEventType() != SimpleReflectogramEvent.CONNECTOR)
 		{
 			s = s+"Координаты ближайших отражательных событий: " + ra.leftReflectoEventCoord * deltaX / 1000. +
 					" км; " + ra.rightReflectoEventCoord * deltaX / 1000. + " км \n";
@@ -161,7 +161,7 @@ public class AlarmMessage
 		s = s+"Координата несоответствия: "+(int)(ra.alarmPointCoord*deltaX)/1000. + " км. \n";
 		s = s+"Отклонение от эталона: "+ dE + " дБ.\n";
 		s = s+"Тип события: " + referenceEventType + "\n";
-		if(ra.getEventType() != ReflectogramEvent.CONNECTOR)
+		if(ra.getEventType() != SimpleReflectogramEvent.CONNECTOR)
 		{
 			s = s+"Координаты ближайших отражательных событий: " + ra.leftReflectoEventCoord * deltaX / 1000. +
 					" км; " + ra.rightReflectoEventCoord * deltaX / 1000. + " км \n";
@@ -180,7 +180,7 @@ public class AlarmMessage
 		s = s+"Координата повреждения: "+(int)(ra.alarmPointCoord*deltaX)/1000. + " км. \n";
 		s = s+"Отклонение от эталона: " + dE + " дБ.\n";
 		s = s+"Тип события: " + referenceEventType + "\n";
-		if(ra.getEventType() != ReflectogramEvent.CONNECTOR)
+		if(ra.getEventType() != SimpleReflectogramEvent.CONNECTOR)
 		{
 			s = s+"Координаты ближайших отражательных событий: " + ra.leftReflectoEventCoord * deltaX / 1000. +
 					" км; " + ra.rightReflectoEventCoord * deltaX / 1000. + " км \n";
@@ -199,7 +199,7 @@ public class AlarmMessage
 		s = s+"Координата несоответствия: " +(int)(ra.alarmPointCoord*deltaX)/1000. + " км. \n";
 		s = s+"Отклонение от эталона: " + dE + " дБ. \n";
 		s = s+"Тип события: " + referenceEventType + "\n";
-		if(ra.getEventType() != ReflectogramEvent.CONNECTOR)
+		if(ra.getEventType() != SimpleReflectogramEvent.CONNECTOR)
 		{
 			s = s+"Координаты ближайших отражательных событий: " + ra.leftReflectoEventCoord * deltaX / 1000. +
 					" км; " + ra.rightReflectoEventCoord * deltaX / 1000. + " км \n";

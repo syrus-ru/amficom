@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.analysis.dadara.*;
 import com.syrus.io.BellcoreStructure;
 
 public class OverallStatsFrame extends ATableFrame
-																		implements OperationListener
+implements OperationListener
 {
 	private static StringBuffer km = new StringBuffer(" ").append(LangModelAnalyse.getString("km"));
 	private static StringBuffer db = new StringBuffer(" ").append(LangModelAnalyse.getString("dB"));
@@ -224,36 +224,32 @@ public class OverallStatsFrame extends ATableFrame
 		updColorModel();
 	}
 
-
 	private void setWholeData()
 	{
-		ReflectogramEvent []data =  (ReflectogramEvent [])Pool.get("eventparams", "primarytrace");
-		ReflectogramEvent []etalon = (ReflectogramEvent[])Pool.get("eventparams", AnalysisUtil.ETALON);
-		if(etalon == null || data == null)
+		ModelTraceManager etalonMTM = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, AnalysisUtil.ETALON);
+		ModelTraceManager dataMTM = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, "primarytrace");
+		if(etalonMTM == null || dataMTM == null || dataMTM.getNEvents() == 0)
 		{
 			tabbedPane.setSelectedIndex(0);
 			tabbedPane.setEnabledAt(1, false);
 			return;
 		}
-		if(data.length==0)
-		{
-			tabbedPane.setSelectedIndex(0);
-			tabbedPane.setEnabledAt(1, false);
-			return;
-		}
-		double deltaX = data[0].getDeltaX()/1000.;
+		double deltaX = dataMTM.getDeltaX()/1000.;
 
-		ReflectogramEvent []data_ = ReflectogramMath.alignClone(data, etalon);
-
-		double maximalDeviation = ReflectogramComparer.getMaximalDeviation(etalon, data_);
-		double meanDeviation = ReflectogramComparer.getMeanDeviation(etalon, data_);
-		double etalonLength = ReflectogramMath.getLastSplash(etalon)*deltaX;
-		double dataLength = ReflectogramMath.getLastSplash(data_)*deltaX;
-		double lossDifference = ReflectogramComparer.getLossDifference(etalon, data_);
+		ModelTrace etalonMTrace = etalonMTM.getModelTrace();
+		ModelTrace dataMTrace = dataMTM.getModelTrace();
+		ComplexReflectogramEvent []etalonCRE = etalonMTM.getComplexEvents();
+		ComplexReflectogramEvent []dataCRE = dataMTM.getComplexEvents();
+	
+		double maxDeviation = ReflectogramComparer.getMaxDeviation(etalonMTrace, dataMTrace);
+		double meanDeviation = ReflectogramComparer.getMeanDeviation(etalonMTrace, dataMTrace);
+		double etalonLength = ReflectogramMath.getLastConnectorBegin(etalonCRE) * deltaX;
+		double dataLength = ReflectogramMath.getLastConnectorBegin(dataCRE) * deltaX;
+		double lossDifference = ReflectogramComparer.getLossDifference(etalonMTM, dataMTM);
 
 		wctModel.setValueAt(String.valueOf(MathRef.round_3(dataLength))+ " " + LangModelAnalyse.getString("km"), 0, 1);
 		wctModel.setValueAt(String.valueOf(MathRef.round_3(etalonLength)) + " " + LangModelAnalyse.getString("km"), 1, 1);
-		wctModel.setValueAt(String.valueOf(MathRef.round_4(maximalDeviation)) + " " + LangModelAnalyse.getString("dB"), 2, 1);
+		wctModel.setValueAt(String.valueOf(MathRef.round_4(maxDeviation)) + " " + LangModelAnalyse.getString("dB"), 2, 1);
 		wctModel.setValueAt(String.valueOf(MathRef.round_4(meanDeviation)) + " " + LangModelAnalyse.getString("dB"), 3, 1);
 		wctModel.setValueAt(String.valueOf(MathRef.round_4(lossDifference)) + " " + LangModelAnalyse.getString("dB"), 4, 1);
 	}

@@ -4,6 +4,7 @@ import java.util.Map;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
+import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.*;
 import com.syrus.io.BellcoreStructure;
 
@@ -40,7 +41,7 @@ public class InitialAnalysisCommand extends VoidCommand {
 			if (pars[6] > 1) //убрать фитировку
 				pars[6] = 1;
 
-			ReflectogramEvent[] ep = ClientAnalysisManager.makeAnalysis(
+			ModelTraceManager mtm = CoreAnalysisManager.makeAnalysis(
 					0, bs, pars, tracesMap);
 
 			// фитировка нужна для определения вспомогательных парметров
@@ -48,13 +49,11 @@ public class InitialAnalysisCommand extends VoidCommand {
 //	            y, deltaX, ep, (int)params[6], meanAttenuation[0]);
 
 	        RefAnalysis a = new RefAnalysis();
-			a.decode(y, ep);
+			a.decode(y, mtm);
 
 			Pool.put("refanalysis", "primarytrace", a);
 			//Pool.remove("eventparams", "primarytrace");
-			Pool.put("eventparams", "primarytrace", ep);
+			Pool.put(ModelTraceManager.CODENAME, "primarytrace", mtm);
 		}
 	}
-
 }
-

@@ -24,9 +24,9 @@ public class EventsFrame extends ATableFrame
 	private static String noid = LangModelAnalyse.getString("eventType" + String.valueOf(TraceEvent.NON_IDENTIFIED));
 	private static String dash = "-----";
 
-	private ReflectogramEvent []data_;
-	private ReflectogramEvent []data;
-	private ReflectogramEvent []etalon;
+	private ComplexReflectogramEvent []data;
+	//private ComplexReflectogramEvent []data_; -- не требуется, т.к. сравниваются только относительные параметры 
+	private ComplexReflectogramEvent []etalon;
 
 	protected Dispatcher dispatcher;
 	private FixedSizeEditableTableModel tModel;
@@ -77,9 +77,8 @@ public class EventsFrame extends ATableFrame
 				String id = (String)(rce.getSource());
 				if (id.equals("primarytrace"))
 				{
-					this.data = (ReflectogramEvent [])Pool.get("eventparams", "primarytrace");
+					this.data = ((ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, "primarytrace")).getComplexEvents();
 					etalon = null;
-					data_ = null;
 					setNoComparedWithEtalonColor();
 					if ((RefAnalysis)Pool.get("refanalysis", id) != null)
 					{
@@ -97,13 +96,13 @@ public class EventsFrame extends ATableFrame
 				if(id.equals(AnalysisUtil.ETALON))
 				{
 					etalon = null;
-					data_ = null;
+					data = null;
 					setNoComparedWithEtalonColor();
 				}
 				if (id.equals("all"))
 				{
 					etalon = null;
-					data_ = null;
+					data = null;
 					tModel.clearTable();
 					setNoComparedWithEtalonColor();
 					setVisible(false);
@@ -113,20 +112,21 @@ public class EventsFrame extends ATableFrame
 			{
 				String etId = (String)rce.getSource();
 				if(etId != null)
-					etalon = (ReflectogramEvent [])Pool.get("eventparams", etId);
+					etalon = ((ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, etId)).getComplexEvents();
 				else
 					etalon = null;
 
-				if(etalon != null && data!= null)
-					data_ = ReflectogramMath.alignClone(data, etalon);
-				else
-					data_ = null;
+// выравнивание не требуется, т.к. сравниваются только относительные параметры
+//				if(etalon != null && data!= null)
+//					data_ = ReflectogramMath.alignClone(data, etalon); 
+//				else
+//					data_ = null;
 
 				setComparedWithEtalonEventsColor();
 			}
 			if(rce.CLOSE_ETALON)
 			{
-				data_ = null;
+				data = null;
 				etalon = null;
 				setNoComparedWithEtalonColor();
 			}
@@ -179,15 +179,15 @@ public class EventsFrame extends ATableFrame
 	public void setComparedWithEtalonEventsColor()
 	{
 
-		if(etalon == null || data_ == null)
+		if(etalon == null || data == null)
 		{
 			setNoComparedWithEtalonColor();
 			return;
 		}
 
-		int []newEvents = ReflectogramComparer.getNewEventsList(data_, etalon);
-		int []amplChengedEvents = ReflectogramComparer.getChangedAmplitudeEventsList(data_, etalon, .5);
-		int []lossChengedEvents = ReflectogramComparer.getChangedLossEventsList(data_, etalon, .5);
+		int []newEvents = ReflectogramComparer.getNewEventsList(data, etalon);
+		int []amplChengedEvents = ReflectogramComparer.getChangedAmplitudeEventsList(data, etalon, .5);
+		int []lossChengedEvents = ReflectogramComparer.getChangedLossEventsList(data, etalon, .5);
 
 		EventTableRenderer rend = (EventTableRenderer)jTable.getDefaultRenderer(Object.class);
 		rend.setNewEventsList(newEvents);

@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.analysis.dadara;
 
+
 public class RefAnalysis
 {
 	public TraceEvent[] events;
@@ -12,8 +13,9 @@ public class RefAnalysis
 	{
 	}
 
-	public void decode (double[] y, ReflectogramEvent[] re)
+	public void decode (double[] y, ModelTraceManager mtm)
 	{
+		ComplexReflectogramEvent[] re = mtm.getComplexEvents();
 		events = new TraceEvent[re.length];
 
 		if(re.length == 0)
@@ -31,7 +33,10 @@ public class RefAnalysis
 		double top = maxY - minY;
 
 		int type;
-		int lastPoint = re[re.length-1].getBegin(); // getBegin: changed acc. to Stas-2004-10 (was: getEnd)
+		int lastPoint = re.length > 0
+			? re[re.length - 1].getBegin() // getBegin: changed acc. to Stas-2004-10 (was: getEnd)
+			: 0;
+
 		double Po = 0;
 
 		for (int i = 0; i < re.length; i++)
@@ -40,51 +45,23 @@ public class RefAnalysis
 				type = TraceEvent.INITIATE;
 			else if (i == re.length - 1)
 				type = TraceEvent.TERMINATE;
-			else if (re[i].getEventType() == ReflectogramEvent.LINEAR)
+			else switch (re[i].getEventType())
+			{
+			case SimpleReflectogramEvent.LINEAR:
 				type = TraceEvent.LINEAR;
-			else if (re[i].getEventType() == ReflectogramEvent.CONNECTOR)
+				break;
+			case SimpleReflectogramEvent.CONNECTOR:
 				type = TraceEvent.CONNECTOR;
-			else if (re[i].getEventType() == ReflectogramEvent.WELD)
+				break;
+			case SimpleReflectogramEvent.SPLICE:
 				type = TraceEvent.WELD;
-			else
+				break;
+			default:
 				type = TraceEvent.NON_IDENTIFIED;
+			}
 
 			events[i] = new TraceEvent(type, re[i].getBegin(), re[i].getEnd());
 
-			/* -- removed --
-	if (type == TraceEvent.LINEAR)
-			{
-				events[i].data = new double[5];
-				events[i].data[0] = top - re[i].refAmplitude(re[i].getBegin());
-				events[i].data[1] = top - re[i].refAmplitude(re[i].getEnd());
-				events[i].data[2] = -re[i].b_linear;
-				events[i].data[3] = re[i].a_linearError; // ср кв отклонение
-				events[i].data[4] = re[i].a_linearError * (re[i].chi2Linear + 3.); // макс откл
-			}
-			else if (type == TraceEvent.CONNECTOR)
-			{
-				events[i].data = new double[4];
-				events[i].data[0] = top - re[i].a1_connector;
-				events[i].data[1] = top - re[i].a2_connector;
-				events[i].data[2] = top - re[i].a1_connector - re[i].aLet_connector;
-				events[i].data[3] = re[i].k_connector;
-			}
-			else if (type == TraceEvent.WELD)
-			{
-				events[i].data = new double[3];
-				events[i].data[0] = top - re[i].refAmplitude(re[i].getBegin());
-				events[i].data[1] = top - re[i].refAmplitude(re[i].getEnd());
-				events[i].data[2] = events[i].data[1] - events[i].data[0];
-			}
-			else if (type == TraceEvent.TERMINATE)
-			{
-				events[i].data = new double[3];
-				events[i].data[0] = top - re[i].a1_connector;
-				events[i].data[1] = top - re[i].a1_connector - re[i].aLet_connector;
-				events[i].data[2] = re[i].k_connector;
-			}
-			*/
-			
 			// определяем "асимптотические" значения слева и справа
 
 			double asympB = re[i].getAsympY0();
@@ -98,8 +75,9 @@ public class RefAnalysis
 				events[i].data[1] = top - asympE;
 				events[i].data[2] = -(asympE - asympB)
 						/ (re[i].getEnd() - re[i].getBegin());
-				events[i].data[3] = re[i].getRMSDeviation(y);
-				events[i].data[4] = re[i].getMaxDeviation(y);
+				ModelTrace yMT = new ArrayModelTrace(y); 
+				events[i].data[3] = ReflectogramComparer.getRMSDeviation(mtm.getModelTrace(), yMT, re[i]);
+				events[i].data[4] = ReflectogramComparer.getMaxDeviation(mtm.getModelTrace(), yMT, re[i]);
 			} else if (type == TraceEvent.CONNECTOR) {
 				events[i].data = new double[4];
 				events[i].data[0] = top - asympB;
@@ -121,8 +99,19 @@ public class RefAnalysis
 			} else if (type == TraceEvent.INITIATE) {
 				// extrapolate first linear event to x = 0
 				for (int j = 1; j < re.length; j++)
-					if (re[j].getEventType() == ReflectogramEvent.LINEAR) {
-						Po = re[j].refAmplitude(0);
+					if (re[j].getEventType() == SimpleReflectogramEvent.LINEAR) {
+						int x1 = re[j].getBegin() + 1;
+						int x2 = re[j].getEnd() - 1;
+						if (x1 >= x2)
+						{
+							Po = mtm.getY(x1);
+						}
+						else
+						{
+							double y1 = mtm.getY(x1);
+							double y2 = mtm.getY(x2);
+							Po = (x1 * y2 - x2 * y1) / (x1 - x2);
+						}
 						break;
 					}
 
@@ -131,16 +120,16 @@ public class RefAnalysis
 				// find max
 				double vmax = Po;
 				for (int k = re[i].getBegin(); k < re[i].getEnd(); k++) {
-					if (re[i].refAmplitude(k) > vmax)
-						vmax = re[i].refAmplitude(k);
+					if (vmax < mtm.getY(k))
+						vmax = mtm.getY(k);
 				}
 				// find width // NOTE: changed a little by saa, 2004-07
 				for (int k = re[i].getBegin(); k < re[i].getEnd(); k++) {
 					//if(re[i].refAmplitude(k) > re[i].aLet_connector +
 					// re[i].a1_connector - 1.5) -- OLD
-					if (re[i].refAmplitude(k) > vmax - 1.5)
+					if (mtm.getY(k) > vmax - 1.5)
 						edz++;
-					if (re[i].refAmplitude(k) > Po + .5)
+					if (mtm.getY(k) > Po + .5)
 						adz++;
 				}
 
@@ -201,7 +190,7 @@ public class RefAnalysis
 			{
 				if(j < lastPoint) // XXX: saa: I think there should be '<='
 				{
-					filtered[j] = Math.max(0, re[i].refAmplitude(j));
+					filtered[j] = Math.max(0, mtm.getY(j));
 					noise[j] = Math.abs(y[j] - filtered[j]);
 					if (noise[j] > maxNoise)
 						maxNoise = noise[j];

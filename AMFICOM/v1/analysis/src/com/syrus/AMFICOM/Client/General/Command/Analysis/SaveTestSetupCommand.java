@@ -8,7 +8,7 @@ import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.io.BellcoreStructure;
@@ -94,11 +94,10 @@ public class SaveTestSetupCommand extends VoidCommand
 		Identifier user_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
 		ms.setCriteriaSet(AnalysisUtil.createCriteriaSetFromParams(user_id, ms.getMonitoredElementIds()));
 
-		ReflectogramEvent[] ep = null;
 		if ((type & ETALON) != 0 || (type & THRESHOLDS) != 0)
 		{
-			ep = (ReflectogramEvent[])Pool.get("eventparams", traceid);
-			if (ep == null)
+			ModelTraceManager mtm = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, traceid);
+			if (mtm == null)
 			{
 				JOptionPane.showMessageDialog(
 						Environment.getActiveWindow(),
@@ -107,9 +106,9 @@ public class SaveTestSetupCommand extends VoidCommand
 				return;
 			}
 			if ((type & ETALON) != 0)
-				ms.setEtalon(AnalysisUtil.createEtalon(user_id, ms.getMonitoredElementIds(), ep));
+				ms.setEtalon(AnalysisUtil.createEtalon(user_id, ms.getMonitoredElementIds(), mtm));
 			if ((type & THRESHOLDS) != 0)
-				ms.setThresholdSet(AnalysisUtil.createThresholdSet(user_id, ms.getMonitoredElementIds(), ep));
+				ms.setThresholdSet(AnalysisUtil.createThresholdSet(user_id, ms.getMonitoredElementIds(), mtm));
 		}
 
 		if (ms.getDescription().equals(""))

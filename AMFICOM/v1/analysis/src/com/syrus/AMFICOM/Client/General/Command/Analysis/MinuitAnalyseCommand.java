@@ -9,7 +9,8 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
+import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
 import com.syrus.io.BellcoreStructure;
 
@@ -72,7 +73,7 @@ public class MinuitAnalyseCommand extends VoidCommand
 
 			Map tracesMap = (Map )Pool.get("bellcoremap", "current");
 
-	  ReflectogramEvent[] ep = ClientAnalysisManager.makeAnalysis(
+	  ModelTraceManager mtm = CoreAnalysisManager.makeAnalysis(
 		  (int)params[6], bs, params, tracesMap);
 
 	  //for (int i = 0; i < 2; i++) // FIXIT
@@ -83,23 +84,12 @@ public class MinuitAnalyseCommand extends VoidCommand
 
 			RefAnalysis a = new RefAnalysis();
 	  //System.out.println("MinuitAnalysis.execute(): new RefAnalysis complete at dt/ms " + (System.currentTimeMillis()-t0));
-			a.decode(y, ep);
+			a.decode(y, mtm);
 	  //System.out.println("MinuitAnalysis.execute(): decode complete at dt/ms " + (System.currentTimeMillis()-t0));
 
-//			EventReader reader = new EventReader();
-			//reader.decode(result);
-
-
-//			a.events = reader.readEvents();
-//			a.noise = reader.readNoise();
-//			a.filtered = reader.readFiltered();
-//			a.normalyzed = reader.readNormalyzed();
-//			a.overallStats = reader.readOverallStats();
-//			a.concavities = reader.readConcavities();
 			Pool.put("refanalysis", id, a);
 
-			//ReflectogramEvent[] ep = anaresult.ep;
-			Pool.put("eventparams", id, ep);
+			Pool.put(ModelTraceManager.CODENAME, id, mtm);
 
 			Environment.getActiveWindow().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 	  //System.out.println("MinuitAnalysis.execute(): pool & Cursor complete at dt/ms " + (System.currentTimeMillis()-t0));

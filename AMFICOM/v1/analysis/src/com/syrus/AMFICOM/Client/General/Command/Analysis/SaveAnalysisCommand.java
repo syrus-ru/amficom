@@ -58,7 +58,7 @@ public class SaveAnalysisCommand extends VoidCommand
 		}
 
 		RefAnalysis refanalysis = (RefAnalysis)Pool.get("refanalysis", traceid);
-		ReflectogramEvent[] ep = (ReflectogramEvent[])Pool.get("eventparams", traceid);
+		ModelTraceManager mtm = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, traceid);
 
 		Measurement m = null;
 		try
@@ -118,7 +118,7 @@ public class SaveAnalysisCommand extends VoidCommand
 	
 			ptype = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.DADARA_EVENTS);
 			params[2] = SetParameter.createInstance(ptype,
-					ReflectogramEvent.toByteArray(ep));
+				mtm.toEventsByteArray());
 		}
 	    catch (CreateObjectException e)
 	    {

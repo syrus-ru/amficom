@@ -34,11 +34,11 @@ public class OpticalAlarmDescriptorEvent extends AlarmDescriptorEvent
 		this.deltaX = deltaX;
 
 		dE = (int )(ra.refAmplChangeValue * 1000) / 1000.;
-		if(ra.getEventType() == ReflectogramEvent.WELD)
+		if(ra.getEventType() == SimpleReflectogramEvent.SPLICE)
 			referenceEventType = "неотражательное";
-		else if(ra.getEventType() == ReflectogramEvent.CONNECTOR)
+		else if(ra.getEventType() == SimpleReflectogramEvent.CONNECTOR)
 			referenceEventType = "отражательное";
-		else if(ra.getEventType() == ReflectogramEvent.LINEAR)
+		else if(ra.getEventType() == SimpleReflectogramEvent.LINEAR)
 			referenceEventType = "линейный участок";
 		else
 			referenceEventType = "информации нет";
@@ -311,7 +311,7 @@ public class OpticalAlarmDescriptorEvent extends AlarmDescriptorEvent
 		s.append(referenceEventType);
 		s.append("\n");
 		s.append(getDistanceDescription());
-		if(ra.getEventType() != ReflectogramEvent.CONNECTOR)
+		if(ra.getEventType() != SimpleReflectogramEvent.CONNECTOR)
 			s.append(getEventsDescription());
 
 		s.append("’арактер несоответстви€: локальные потери.\n");
@@ -332,7 +332,7 @@ public class OpticalAlarmDescriptorEvent extends AlarmDescriptorEvent
 		s.append(referenceEventType);
 		s.append("\n");
 		s.append(getDistanceDescription());
-		if(ra.getEventType() != ReflectogramEvent.CONNECTOR)
+		if(ra.getEventType() != SimpleReflectogramEvent.CONNECTOR)
 			s.append(getEventsDescription());
 
 		s.append("’арактер повреждни€: обрыв или значительные локальные потери.\n");
@@ -354,7 +354,7 @@ public class OpticalAlarmDescriptorEvent extends AlarmDescriptorEvent
 		s.append(referenceEventType);
 		s.append("\n");
 		s.append(getDistanceDescription());
-		if(ra.getEventType() != ReflectogramEvent.CONNECTOR)
+		if(ra.getEventType() != SimpleReflectogramEvent.CONNECTOR)
 			s.append(getEventsDescription());
 
 		s.append("’арактер несоответстви€: локальное усиление.\n");
@@ -374,7 +374,7 @@ public class OpticalAlarmDescriptorEvent extends AlarmDescriptorEvent
 		s.append(referenceEventType);
 		s.append("\n");
 		s.append(getDistanceDescription());
-		if(ra.getEventType() != ReflectogramEvent.CONNECTOR)
+		if(ra.getEventType() != SimpleReflectogramEvent.CONNECTOR)
 			s.append(getEventsDescription());
 
 		s.append("’арактер повреждени€: значительное локальное усиление \n");
@@ -394,7 +394,7 @@ public class OpticalAlarmDescriptorEvent extends AlarmDescriptorEvent
 		s.append(referenceEventType);
 		s.append("\n");
 		s.append(getDistanceDescription());
-		if(ra.getEventType() != ReflectogramEvent.CONNECTOR)
+		if(ra.getEventType() != SimpleReflectogramEvent.CONNECTOR)
 			s.append(getEventsDescription());
 
 		s.append("’арактер возможного повреждени€: неизвестен.\n");
