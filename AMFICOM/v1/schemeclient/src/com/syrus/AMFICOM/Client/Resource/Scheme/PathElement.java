@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.Client.Resource.Scheme;
 
+import java.util.*;
 import java.io.*;
 
 import com.syrus.AMFICOM.CORBA.Scheme.PathElement_Transferable;
@@ -135,9 +136,9 @@ class PathElementModel extends ObjectResourceModel
 			if(pe.is_cable)
 			{
 				SchemeCableLink sc = (SchemeCableLink)Pool.get(SchemeCableLink.typ, pe.link_id);
-				for (int i = 0; i < sc.cable_threads.size(); i++)
+				for(Iterator it = sc.cable_threads.iterator(); it.hasNext();)
 				{
-					SchemeCableThread sct = (SchemeCableThread)sc.cable_threads.get(i);
+					SchemeCableThread sct = (SchemeCableThread)it.next();
 					if (sct.getId().equals(pe.thread_id))
 						return sct.getName();
 				}

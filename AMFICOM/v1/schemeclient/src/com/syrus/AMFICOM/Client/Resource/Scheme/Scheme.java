@@ -61,7 +61,7 @@ public class Scheme extends ObjectResource implements Serializable
 
 	public String id = "";
 	public String name = "";
-	public String scheme_type = "network";
+	public String scheme_type = Scheme.NETWORK;
 
 	public Vector elements_to_register = new Vector();
 	public Vector elements = new Vector();
@@ -149,14 +149,14 @@ public class Scheme extends ObjectResource implements Serializable
 		scheme.scheme_type = scheme_type;
 
 		scheme.elements = new Vector(elements.size());
-		for (int i = 0; i < elements.size(); i++)
-			scheme.elements.add(((SchemeElement)elements.get(i)).clone(dataSource));
+		for (Iterator it = elements.iterator(); it.hasNext();)
+			scheme.elements.add(((SchemeElement)it.next()).clone(dataSource));
 		scheme.cablelinks = new Vector(cablelinks.size());
-		for (int i = 0; i < cablelinks.size(); i++)
-			scheme.cablelinks.add(((SchemeCableLink)cablelinks.get(i)).clone(dataSource));
+		for (Iterator it = cablelinks.iterator(); it.hasNext();)
+			scheme.cablelinks.add(((SchemeCableLink)it.next()).clone(dataSource));
 		scheme.links = new Vector(links.size());
-		for (int i = 0; i < links.size(); i++)
-			scheme.links.add(((SchemeLink)links.get(i)).clone(dataSource));
+		for (Iterator it = links.iterator(); it.hasNext();)
+			scheme.links.add(((SchemeLink)it.next()).clone(dataSource));
 
 		scheme.paths = new Vector();
 		//scheme.paths = new Vector(paths.size());
@@ -177,14 +177,12 @@ public class Scheme extends ObjectResource implements Serializable
 		if (schemecell != null)
 		{
 			scheme.schemecell = new byte[schemecell.length];
-			for (int i = 0; i < schemecell.length; i++)
-				scheme.schemecell[i] = schemecell[i];
+			System.arraycopy(schemecell, 0, scheme.schemecell, 0, schemecell.length);
 		}
 		if (ugo != null)
 		{
 			scheme.ugo = new byte[ugo.length];
-			for (int i = 0; i < ugo.length; i++)
-				scheme.ugo[i] = ugo[i];
+			System.arraycopy(ugo, 0, scheme.ugo, 0, ugo.length);
 		}
 
 		scheme.unpack();
@@ -337,45 +335,51 @@ public class Scheme extends ObjectResource implements Serializable
 		transferable.label = label;
 		transferable.description = description;
 
-		Vector all_elements = new Vector();
-		for (int i = 0; i < elements.size(); i++)
+		HashSet all_elements = new HashSet();
+		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
-			all_elements.addAll(getChildElements((SchemeElement)elements.get(i)));
-			all_elements.add(elements.get(i));
+			SchemeElement se = (SchemeElement)it.next();
+			all_elements.add(se);
+			for (Iterator it2 = se.getChildElements(); it2.hasNext();)
+				all_elements.add(it2.next());
 		}
 
 		transferable.elements = new SchemeElement_Transferable[all_elements.size()];
-
-		for (int i=0; i<transferable.elements.length; i++)
+		int counter = 0;
+		for(Iterator it = all_elements.iterator(); it.hasNext();)
 		{
-			SchemeElement element = (SchemeElement)all_elements.get(i);
+			SchemeElement element = (SchemeElement)it.next();
 			element.setTransferableFromLocal();
-			transferable.elements[i] = (SchemeElement_Transferable)element.getTransferable();
+			transferable.elements[counter++] = (SchemeElement_Transferable)element.getTransferable();
 		}
+		counter = 0;
 		transferable.element_ids = new String[elements.size()];
-		for (int i=0; i<transferable.element_ids.length; i++)
-			transferable.element_ids[i] = ((SchemeElement)elements.get(i)).getId();
+		for (Iterator it = elements.iterator(); it.hasNext();)
+			transferable.element_ids[counter++] = ((SchemeElement)it.next()).getId();
 
 		transferable.cable_links = new SchemeCableLink_Transferable[cablelinks.size()];
 		transferable.links = new SchemeLink_Transferable[links.size()];
 		transferable.paths = new SchemePath_Transferable[paths.size()];
-		for (int i=0; i<transferable.cable_links.length; i++)
+		counter = 0;
+		for (Iterator it = cablelinks.iterator(); it.hasNext();)
 		{
-			SchemeCableLink cablelink = (SchemeCableLink)cablelinks.get(i);
+			SchemeCableLink cablelink = (SchemeCableLink)it.next();
 			cablelink.setTransferableFromLocal();
-			transferable.cable_links[i] = (SchemeCableLink_Transferable)cablelink.getTransferable();
+			transferable.cable_links[counter++] = (SchemeCableLink_Transferable)cablelink.getTransferable();
 		}
-		for (int i=0; i<transferable.links.length; i++)
+		counter = 0;
+		for (Iterator it = links.iterator(); it.hasNext();)
 		{
-			SchemeLink link = (SchemeLink)links.get(i);
+			SchemeLink link = (SchemeLink)it.next();
 			link.setTransferableFromLocal();
-			transferable.links[i] = (SchemeLink_Transferable)link.getTransferable();
+			transferable.links[counter++] = (SchemeLink_Transferable)link.getTransferable();
 		}
-		for (int i=0; i<transferable.paths.length; i++)
+		counter = 0;
+		for (Iterator it = paths.iterator(); it.hasNext();)
 		{
-			SchemePath path = (SchemePath)paths.get(i);
+			SchemePath path = (SchemePath)it.next();
 			path.setTransferableFromLocal();
-			transferable.paths[i] = (SchemePath_Transferable)path.getTransferable();
+			transferable.paths[counter++] = (SchemePath_Transferable)path.getTransferable();
 		}
 
 		transferable.width = width;
@@ -406,33 +410,33 @@ public class Scheme extends ObjectResource implements Serializable
 			all_elements.addAll(getChildElements((SchemeElement)elements.get(i)));
 			all_elements.add(elements.get(i));
 		}*/
-		for (int i = 0; i < elements_to_register.size(); i++)
+		for(Iterator it = elements_to_register.iterator(); it.hasNext();)
 		{
-			SchemeElement el = (SchemeElement)elements_to_register.get(i);
+			SchemeElement el = (SchemeElement)it.next();
 			Pool.put(SchemeElement.typ, el.getId(), el);
 			el.updateLocalFromTransferable();
 		}
-		for (int i = 0; i < elements.size(); i++)
+		for(Iterator it = elements.iterator(); it.hasNext();)
 		{
-			SchemeElement el = (SchemeElement)elements.get(i);
+			SchemeElement el = (SchemeElement)it.next();
 			Pool.put(SchemeElement.typ, el.getId(), el);
 			el.updateLocalFromTransferable();
 		}
-		for (int i = 0; i < cablelinks.size(); i++)
+		for(Iterator it = cablelinks.iterator(); it.hasNext();)
 		{
-			SchemeCableLink link = (SchemeCableLink)cablelinks.get(i);
+			SchemeCableLink link = (SchemeCableLink)it.next();
 			Pool.put(SchemeCableLink.typ, link.getId(), link);
 			link.updateLocalFromTransferable();
 		}
-		for (int i = 0; i < links.size(); i++)
+		for(Iterator it = links.iterator(); it.hasNext();)
 		{
-			SchemeLink link = (SchemeLink)links.get(i);
+			SchemeLink link = (SchemeLink)it.next();
 			Pool.put(SchemeLink.typ, link.getId(), link);
 			link.updateLocalFromTransferable();
 		}
-		for (int i = 0; i < paths.size(); i++)
+		for(Iterator it = paths.iterator(); it.hasNext();)
 		{
-			SchemePath path = (SchemePath)paths.get(i);
+			SchemePath path = (SchemePath)it.next();
 			Pool.put(SchemePath.typ, path.getId(), path);
 			path.updateLocalFromTransferable();
 		}
@@ -503,58 +507,6 @@ public class Scheme extends ObjectResource implements Serializable
 			return null;
 		}
 	}
-/*
-	private byte[] packNew(Serializable cell)
-	{
-		if (cell == null)
-			return null;
-		try
-		{
-//			System.out.println("new creating baos...");
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			GZIPOutputStream zos = new GZIPOutputStream(baos);
-			ObjectOutputStream oos = new ObjectOutputStream(zos);
-
-			Vector v = (Vector)cell;
-			Object[] obj = (Object[])v.get(0);
-
-//			System.out.println("writing size...");
-			oos.writeInt(obj.length);
-
-//			System.out.println("writing objects...");
-			for (int i = 0; i < obj.length; i++)
-			{
-//				System.out.println(i + ": " + obj[i] + ";");
-				oos.writeObject(obj[i]);
-			}
-//			System.out.println();
-//			System.out.println("writing object (1)...");
-			oos.writeObject(v.get(1));
-//			System.out.println("writing object (2)...");
-			oos.writeObject(v.get(2));
-
-			oos.flush();
-			zos.flush();
-			baos.flush();
-
-			oos.close();
-			zos.close();
-			baos.close();
-			byte[] b = baos.toByteArray();
-			return b;
-		}
-		catch (Exception e)
-		{
-			System.err.println("Error packing sheme: " + e.toString());
-			return null;
-		}
-		catch (StackOverflowError e)
-		{
-			System.err.println("Error packing sheme: " + e.toString());
-			//e.printStackTrace();
-			return null;
-		}
-	}*/
 
 	public synchronized void unpack()
 	{
@@ -593,46 +545,6 @@ public class Scheme extends ObjectResource implements Serializable
 			return null;
 		}
 	}
-/*
-	private Serializable unpackNew(byte[] b)
-	{
-		if (b == null)
-			return null;
-		try
-		{
-			ByteArrayInputStream bais = new ByteArrayInputStream(b);
-			GZIPInputStream zis = new GZIPInputStream(bais);
-			ObjectInputStream in = new ObjectInputStream(zis);
-
-			Vector v = new Vector();
-			int length = in.readInt();
-			Object[] obj = new Object[length];
-			for (int i = 0; i < length; i++)
-				obj[i] = in.readObject();
-			v.add(obj);
-			v.add(in.readObject());
-			v.add(in.readObject());
-			Serializable serializable = (Serializable)v;
-
-
-			in.close();
-			zis.close();
-			bais.close();
-
-			return serializable;
-		}
-		catch (Exception e)
-		{
-			System.err.println("Exception unpacking sheme: " + e.toString());
-			return null;
-		}
-		catch (StackOverflowError e)
-		{
-			System.err.println("Error unpacking sheme: " + e.toString());
-			//e.printStackTrace();
-			return null;
-		}
-	}*/
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
@@ -696,16 +608,17 @@ public class Scheme extends ObjectResource implements Serializable
 		updateLocalFromTransferable();
 	}
 
-	Vector getChildElements(SchemeElement element)
+	Iterator getChildElements(SchemeElement element)
 	{
-		Vector v = new Vector();
-		for (int i = 0; i < element.element_ids.size(); i++)
+		HashSet v = new HashSet();
+		for(Iterator it = element.element_ids.iterator(); it.hasNext();)
 		{
-			SchemeElement child = (SchemeElement)Pool.get(SchemeElement.typ, (String)element.element_ids.get(i));
-			v.addAll(getChildElements(child));
+			SchemeElement child = (SchemeElement)Pool.get(SchemeElement.typ, (String)it.next());
+			for(Iterator it2 = getChildElements(child); it2.hasNext();)
+				v.add(it2.next());
 			v.add(child);
 		}
-		return v;
+		return v.iterator();
 	}
 
 	public ObjectResourceModel getModel()
@@ -718,129 +631,125 @@ public class Scheme extends ObjectResource implements Serializable
 		return new SchemeDisplayModel();
 	}
 
-/*
-	public Hashtable getTopLevelElements()
-	{
-		Hashtable ht = new Hashtable();
-		Vector ids = new Vector();
-
-		for (int i = 0; i < elements.size(); i++)
-		{
-			SchemeElement element = (SchemeElement)elements.get(i);
-			for (int j = 0; j < element.element_ids.size(); j++)
-				ids.add((String )element.element_ids.get(j));
-			ht.put(element.getId(), element);
-		}
-
-		for (int i = 0; i < elements.size(); i++)
-		{
-			SchemeElement element = (SchemeElement)elements.get(i);
-			if(ids.contains(element.getId()))
-				ht.remove(element.getId());
-		}
-		return ht;
-	}
-*/
-
 	// return all links at scheme including inner schemes
-	public Enumeration getAllSchemeLinks()
+	public Iterator getAllSchemeLinks()
 	{
-		Hashtable ht = new Hashtable();
-		for (int i = 0; i < links.size(); i++)
-		{
-			SchemeLink l = (SchemeLink)links.get(i);
-			ht.put(l.getId(), l);
-		}
+		HashSet ht = new HashSet();
+		for (Iterator it = links.iterator(); it.hasNext();)
+			ht.add(it.next());
 
-		for (int i = 0; i < elements.size(); i++)
+		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
-			SchemeElement el = (SchemeElement)elements.get(i);
+			SchemeElement el = (SchemeElement)it.next();
 			if (!el.scheme_id.equals(""))
 			{
 				Scheme scheme = (Scheme)Pool.get(Scheme.typ, el.scheme_id);
-				for (Enumeration inner = scheme.getAllLinks(); inner.hasMoreElements();)
+				for (Iterator inner = scheme.getAllLinks(); inner.hasNext();)
+					ht.add(inner.next());
+			}
+		}
+		return ht.iterator();
+	}
+
+	public Scheme getSchemeByLink(String link_id)
+	{
+		for (Iterator it = links.iterator(); it.hasNext();)
+		{
+			SchemeLink l = (SchemeLink)it.next();
+			if (l.getId().equals(link_id))
+				return this;
+		}
+
+		for (Iterator it = elements.iterator(); it.hasNext();)
+		{
+			SchemeElement el = (SchemeElement)it.next();
+			if (el.scheme_id.equals(""))
+			{
+				for (Iterator it2 = el.links.iterator(); it2.hasNext();)
 				{
-					SchemeLink l = (SchemeLink)inner.nextElement();
-					ht.put(l.getId(), l);
+					SchemeLink l = (SchemeLink)it2.next();
+					if (l.getId().equals(link_id))
+						return this;
 				}
 			}
 		}
-		return ht.elements();
+
+		for (Iterator it = elements.iterator(); it.hasNext();)
+		{
+			SchemeElement el = (SchemeElement)it.next();
+			if (!el.scheme_id.equals(""))
+			{
+				Scheme sch = (Scheme)Pool.get(Scheme.typ, el.scheme_id);
+				Scheme found = sch.getSchemeByLink (link_id);
+				if (found != null)
+					return found;
+			}
+		}
+		return null;
 	}
 
 	// return all links at scheme including inner schemes and links in elements
-	public Enumeration getAllLinks ()
+	public Iterator getAllLinks()
 	{
-		Hashtable ht = new Hashtable();
-		for (int i = 0; i < links.size(); i++)
-		{
-			SchemeLink l = (SchemeLink)links.get(i);
-			ht.put(l.getId(), l);
-		}
+		HashSet ht = new HashSet();
+		for (Iterator it = links.iterator(); it.hasNext();)
+			ht.add(it.next());
 
-		for (int i = 0; i < elements.size(); i++)
+		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
-			SchemeElement el = (SchemeElement)elements.get(i);
+			SchemeElement el = (SchemeElement)it.next();
 			if (el.scheme_id.equals(""))
 			{
-				for (Enumeration e = el.getAllElementsLinks(); e.hasMoreElements();)
-				{
-					SchemeLink l = (SchemeLink)e.nextElement();
-					ht.put(l.getId(), l);
-				}
+				for (Iterator it2 = el.getAllElementsLinks(); it2.hasNext();)
+					ht.add(it2.next());
 			}
 			else
 			{
 				Scheme scheme = (Scheme)Pool.get(Scheme.typ, el.scheme_id);
-				for (Enumeration inner = scheme.getAllLinks(); inner.hasMoreElements();)
-				{
-					SchemeLink l = (SchemeLink)inner.nextElement();
-					ht.put(l.getId(), l);
-				}
+				for (Iterator inner = scheme.getAllLinks(); inner.hasNext();)
+					ht.add(inner.next());
+
 			}
 		}
-		return ht.elements();
+		return ht.iterator();
 	}
 
 	// return all cablelinks at scheme including inner schemes
-	public Enumeration getAllCableLinks ()
+	public Iterator getAllCableLinks()
 	{
-		Hashtable ht = new Hashtable();
-		for (int i = 0; i < cablelinks.size(); i++)
-		{
-			SchemeCableLink l = (SchemeCableLink)cablelinks.get(i);
-			ht.put(l.getId(), l);
-		}
+		HashSet ht = new HashSet();
+		for (Iterator it = cablelinks.iterator(); it.hasNext();)
+			ht.add(it.next());
 
-		for (int i = 0; i < elements.size(); i++)
+		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
-			SchemeElement el = (SchemeElement)elements.get(i);
+			SchemeElement el = (SchemeElement)it.next();
 			if (!el.scheme_id.equals(""))
 			{
 				Scheme scheme = (Scheme)Pool.get(Scheme.typ, el.scheme_id);
-				for (Enumeration inner = scheme.getAllCableLinks(); inner.hasMoreElements();)
+				for (Iterator inner = scheme.getAllCableLinks(); inner.hasNext();)
 				{
-					SchemeCableLink l = (SchemeCableLink)inner.nextElement();
-					ht.put(l.getId(), l);
+					SchemeCableLink l = (SchemeCableLink)inner.next();
+					ht.add(l);
 				}
 			}
 		}
-		return ht.elements();
+		return ht.iterator();
 	}
 
-	public Enumeration getTopLevelElements()
+	public Iterator getTopLevelElements()
 	{
-		return elements.elements();
+		return elements.iterator();
 	}
 
-	public Enumeration getTopLevelCableLinks()
+	public Iterator getTopLevelCableLinks()
 	{
-		return cablelinks.elements();
+		return cablelinks.iterator();
 	}
 
-	public Enumeration getTopLevelPaths()
+	public Iterator getTopLevelPaths()
 	{
-		return paths.elements();
+		return paths.iterator();
 	}
 
 	public Vector getTopologicalElements1()
@@ -862,9 +771,9 @@ public class Scheme extends ObjectResource implements Serializable
 	public Vector getTopologicalElements()
 	{
 		Vector ht = new Vector();
-		for (int i = 0; i < elements.size(); i++)
+		for(Iterator it = elements.iterator(); it.hasNext();)
 		{
-			SchemeElement el = (SchemeElement)elements.get(i);
+			SchemeElement el = (SchemeElement)it.next();
 			if (el.scheme_id.equals(""))
 				ht.add(el);
 			else
@@ -872,11 +781,8 @@ public class Scheme extends ObjectResource implements Serializable
 				Scheme scheme = (Scheme)Pool.get(Scheme.typ, el.scheme_id);
 				if(scheme.scheme_type.equals(Scheme.CABLESUBNETWORK))
 				{
-					for (Enumeration inner = scheme.getTopologicalElements().elements(); inner.hasMoreElements();)
-					{
-						SchemeElement se = (SchemeElement)inner.nextElement();
-						ht.add(se);
-					}
+					for (Iterator inner = scheme.getTopologicalElements().iterator(); inner.hasNext();)
+						ht.add(inner.next());
 				}
 				else
 					ht.add(el);
@@ -941,56 +847,48 @@ public class Scheme extends ObjectResource implements Serializable
 	}
 
 	// return all top level elements at scheme and at inner schemes
-	public Enumeration getAllTopElements()
+	public Iterator getAllTopElements()
 	{
-		Hashtable ht = new Hashtable();
-		for (int i = 0; i < elements.size(); i++)
+		HashSet ht = new HashSet();
+		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
-			SchemeElement el = (SchemeElement)elements.get(i);
+			SchemeElement el = (SchemeElement)it.next();
 			if (el.scheme_id.equals(""))
-				ht.put(el.getId(), el);
+				ht.add(el);
 			else
 			{
 				Scheme scheme = (Scheme)Pool.get(Scheme.typ, el.scheme_id);
-				for (Enumeration inner = scheme.getTopLevelElements(); inner.hasMoreElements();)
-				{
-					SchemeElement se = (SchemeElement)inner.nextElement();
-					ht.put(se.getId(), se);
-				}
+				for (Iterator inner = scheme.getTopLevelElements(); inner.hasNext();)
+					ht.add(inner.next());
 			}
 		}
-		return ht.elements();
+		return ht.iterator();
 	}
 
 	public SchemeElement getSchemeElement(String element_id)
 	{
-		return getSchemeElement(this, element_id);
-	}
-
-	protected SchemeElement getSchemeElement(Scheme scheme, String element_id)
-	{
-		for (int i = 0; i < scheme.elements.size(); i++)
+		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
-			SchemeElement element = (SchemeElement)scheme.elements.get(i);
+			SchemeElement element = (SchemeElement)it.next();
 			if (element.getId().equals(element_id))
 				return element;
 		}
 
-		for (int i = 0; i < scheme.elements.size(); i++)
+		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
-			SchemeElement element = (SchemeElement)scheme.elements.get(i);
-			if (!element.scheme_id.equals(""))
+			SchemeElement element = (SchemeElement)it.next();
+			if (element.scheme_id.length() != 0)
 			{
 				Scheme inner_scheme = (Scheme)Pool.get(Scheme.typ, element.scheme_id);
-				SchemeElement el = getSchemeElement(inner_scheme, element_id);
+				SchemeElement el = inner_scheme.getSchemeElement(element_id);
 				if (el != null)
 					return el;
 			}
 			else
 			{
-				for (Enumeration e = element.getAllChilds(); e.hasMoreElements();)
+				for (Iterator it2 = element.getAllChilds(); it2.hasNext();)
 				{
-					SchemeElement se = (SchemeElement)e.nextElement();
+					SchemeElement se = (SchemeElement)it2.next();
 					if (se.getId().equals(element_id))
 						return se;
 				}
@@ -1001,213 +899,88 @@ public class Scheme extends ObjectResource implements Serializable
 
 	public SchemeElement getSchemeElementByCablePort(String port_id)
 	{
-		return getSchemeElementByCablePort(this, port_id);
-	}
-
-	protected SchemeElement getSchemeElementByCablePort(Scheme scheme, String port_id)
-	{
-		for (int i = 0; i < scheme.elements.size(); i++)
+		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
-			SchemeElement element = getSchemeElementByCablePort((SchemeElement)scheme.elements.get(i), port_id);
-			if (element != null)
-				return element;
-		}
-		return null;
-	}
-
-	protected SchemeElement getSchemeElementByCablePort(SchemeElement element, String port_id)
-	{
-		for(int j = 0; j < element.devices.size(); j++)
-		{
-			SchemeDevice sd = (SchemeDevice )element.devices.get(j);
-			for(int k = 0; k < sd.cableports.size(); k++)
-				if(((SchemeCablePort )sd.cableports.get(k)).getId().equals(port_id))
-					return element;
-		}
-
-		for(int j = 0; j < element.element_ids.size(); j++)			// Search inner elements
-		{
-			SchemeElement child_element = (SchemeElement)Pool.get(SchemeElement.typ, (String)element.element_ids.get(j));
-			SchemeElement el = getSchemeElementByCablePort(child_element, port_id);
+			SchemeElement el = (SchemeElement)it.next();
+			el = el.getSchemeElementByCablePort(port_id);
 			if (el != null)
 				return el;
 		}
-
-		if (!element.scheme_id.equals(""))// Search inner schemes
-		{
-			Scheme child_scheme = (Scheme)Pool.get(Scheme.typ, element.scheme_id);
-			SchemeElement el = getSchemeElementByCablePort(child_scheme, port_id);
-			if (el != null)
-				return el;
-		}
-
 		return null;
 	}
 
 	public SchemeElement getSchemeElementByPort(String port_id)
 	{
-		return getSchemeElementByPort(this, port_id);
-	}
-
-	protected SchemeElement getSchemeElementByPort(Scheme scheme, String port_id)
-	{
-		for (int i = 0; i < scheme.elements.size(); i++)
+		for(Iterator it = elements.iterator(); it.hasNext();)
 		{
-			SchemeElement element = getSchemeElementByPort((SchemeElement)scheme.elements.get(i), port_id);
-			if (element != null)
-				return element;
-		}
-		return null;
-	}
-
-	protected SchemeElement getSchemeElementByPort(SchemeElement element, String port_id)
-	{
-		for(Iterator it = element.devices.iterator(); it.hasNext();)
-		{
-			SchemeDevice sd = (SchemeDevice)it.next();
-			for(Iterator it2 = sd.ports.iterator(); it2.hasNext();)
-			{
-				SchemePort port = (SchemePort)it2.next();
-				if(port.getId().equals(port_id))
-					return element;
-			}
-		}
-
-		for(Iterator it = element.element_ids.iterator(); it.hasNext();)			// Search inner elements
-		{
-			SchemeElement child_element = (SchemeElement)Pool.get(SchemeElement.typ, (String)it.next());
-			SchemeElement el = getSchemeElementByPort(child_element, port_id);
+			SchemeElement el = (SchemeElement)it.next();
+			el = el.getSchemeElementByPort(port_id);
 			if (el != null)
 				return el;
 		}
-
-		if (!element.scheme_id.equals(""))     // Search inner schemes
-		{
-			Scheme child_scheme = (Scheme)Pool.get(Scheme.typ, element.scheme_id);
-			SchemeElement el = getSchemeElementByPort(child_scheme, port_id);
-			if (el != null)
-				return el;
-		}
-
 		return null;
 	}
 
 	public boolean isSchemeContainsLink(String link_id)
 	{
-		return isSchemeContainsLink(this, link_id);
-	}
-
-	protected boolean isSchemeContainsLink(Scheme scheme, String link_id)
-	{
-		for (int i = 0; i < scheme.links.size(); i++)
+		for (Iterator it = links.iterator(); it.hasNext();)
 		{
-			SchemeLink sl = (SchemeLink)scheme.links.get(i);
+			SchemeLink sl = (SchemeLink)it.next();
 			if (sl.link_id.equals(link_id))
 				return true;
 		}
 
-		for (int i = 0; i < scheme.elements.size(); i++)
+		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
-			SchemeElement element = (SchemeElement)scheme.elements.get(i);
+			SchemeElement element = (SchemeElement)it.next();
 			if (element.scheme_id.equals(""))
 			{
-				for (Enumeration en = element.getAllElementsLinks(); en.hasMoreElements();)
+				for (Iterator it2 = element.getAllElementsLinks(); it2.hasNext();)
 				{
-					SchemeLink sl = (SchemeLink)en.nextElement();
+					SchemeLink sl = (SchemeLink)it2.next();
 					if (sl.link_id.equals(link_id))
 						return true;
 				}
 			}
 			else
-				return isSchemeContainsLink((Scheme)Pool.get(Scheme.typ, element.scheme_id), link_id);
+			{
+				Scheme inner = (Scheme)Pool.get(Scheme.typ, element.scheme_id);
+				return inner.isSchemeContainsLink(link_id);
+			}
 		}
 		return false;
 	}
 
 	public boolean isSchemeContainsCableLink(String cable_link_id)
 	{
-		return isSchemeContainsCableLink(this, cable_link_id);
-	}
-
-	protected boolean isSchemeContainsCableLink(Scheme scheme, String cable_link_id)
-	{
-		for (int i = 0; i < scheme.cablelinks.size(); i++)
+		for (Iterator it = cablelinks.iterator(); it.hasNext();)
 		{
-			SchemeCableLink sl = (SchemeCableLink)scheme.cablelinks.get(i);
+			SchemeCableLink sl = (SchemeCableLink)it.next();
 			if (sl.cable_link_id.equals(cable_link_id))
 				return true;
 		}
 
-		for (int i = 0; i < scheme.elements.size(); i++)
+		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
-			SchemeElement element = (SchemeElement)scheme.elements.get(i);
+			SchemeElement element = (SchemeElement)it.next();
 			if (!element.scheme_id.equals(""))
-				return isSchemeContainsLink((Scheme)Pool.get(Scheme.typ, element.scheme_id), cable_link_id);
+			{
+				Scheme inner = (Scheme)Pool.get(Scheme.typ, element.scheme_id);
+				return inner.isSchemeContainsCableLink(cable_link_id);
+			}
 		}
 		return false;
 	}
 
-
-
-/*
-	public SchemeElement getSchemeElementByPort(String port_id)
-	{
-		for (int i = 0; i < elements.size(); i++)
-		{
-			SchemeElement element = (SchemeElement)elements.get(i);
-			for(int j = 0; j < element.devices.size(); j++)
-			{
-				SchemeDevice sd = (SchemeDevice )element.devices.get(j);
-				for(int k = 0; k < sd.ports.size(); k++)
-					if(((SchemePort )sd.ports.get(k)).getId().equals(port_id))
-						return element;
-			}
-		}
-		return null;
-	}*/
-
 	public SchemeElement getSchemeElementByDevice(String device_id)
 	{
-		return getSchemeElementByDevice(this, device_id);
-	}
-
-	protected SchemeElement getSchemeElementByDevice(Scheme scheme, String device_id)
-	{
-		for (int i = 0; i < scheme.elements.size(); i++)
+		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
-			SchemeElement element = getSchemeElementByDevice((SchemeElement)scheme.elements.get(i), device_id);
-			if (element != null)
-				return element;
-		}
-		return null;
-	}
-
-	protected SchemeElement getSchemeElementByDevice(SchemeElement element, String device_id)
-	{
-		for(int j = 0; j < element.devices.size(); j++)
-		{
-			SchemeDevice sd = (SchemeDevice )element.devices.get(j);
-			if(sd.getId().equals(device_id))
-				return element;
-		}
-
-		for(int j = 0; j < element.element_ids.size(); j++)
-		{
-			SchemeElement child_element = (SchemeElement)Pool.get(SchemeElement.typ, (String)element.element_ids.get(j));
-			// Search inner elements
-			SchemeElement el = getSchemeElementByDevice(child_element, device_id);
+			SchemeElement el = (SchemeElement)it.next();
+			el = el.getSchemeElementByDevice(device_id);
 			if (el != null)
 				return el;
 		}
-
-		if (!element.scheme_id.equals(""))// Search inner schemes
-		{
-			Scheme child_scheme = (Scheme)Pool.get(Scheme.typ, element.scheme_id);
-			SchemeElement el = getSchemeElementByDevice(child_scheme, device_id);
-			if (el != null)
-				return el;
-		}
-
 		return null;
 	}
 
@@ -1221,7 +994,7 @@ public class Scheme extends ObjectResource implements Serializable
 	public SchemeElement getTopLevelNonSchemeElement(SchemeElement se)
 	{
 		SchemeElement element = getTopLevelElement(se);
-		if (!element.scheme_id.equals(""))
+		if (element.scheme_id.length() != 0)
 		{
 			Scheme inner = (Scheme)Pool.get(Scheme.typ, element.scheme_id);
 			return inner.getTopLevelNonSchemeElement(se);
@@ -1230,35 +1003,34 @@ public class Scheme extends ObjectResource implements Serializable
 			return element;
 	}
 
-
 	//find top level topological element at this scheme for element se
 	public SchemeElement getTopologicalElement(SchemeElement se)
 	{
-		for (int i = 0; i < elements.size(); i++) // Search top elements
+		for(Iterator it = elements.iterator(); it.hasNext();) // Search top elements
 		{
-			SchemeElement element = (SchemeElement)elements.get(i);
+			SchemeElement element = (SchemeElement)it.next();
 			if (element.getId().equals(se.getId()))
 				return se;
 		}
 
-		for (int i = 0; i < elements.size(); i++) // Search inner elements
+		for(Iterator it = elements.iterator(); it.hasNext();) // Search inner elements
 		{
-			SchemeElement element = (SchemeElement)elements.get(i);
-			if (element.scheme_id.equals(""))
+			SchemeElement element = (SchemeElement)it.next();
+			if (element.scheme_id.length() == 0)
 			{
-				for (Enumeration e = element.getAllChilds(); e.hasMoreElements();)
+				for (Iterator it2 = element.getAllChilds(); it2.hasNext();)
 				{
-					SchemeElement inner_se = (SchemeElement)e.nextElement();
+					SchemeElement inner_se = (SchemeElement)it2.next();
 					if (inner_se.getId().equals(se.getId()))
 						return element;
 				}
 			}
 		}
 
-		for (int i = 0; i < elements.size(); i++)  // Search inner schemes
+		for (Iterator it = elements.iterator(); it.hasNext();)  // Search inner schemes
 		{
-			SchemeElement element = (SchemeElement)elements.get(i);
-			if (!element.scheme_id.equals(""))
+			SchemeElement element = (SchemeElement)it.next();
+			if (element.scheme_id.length() != 0)
 			{
 				Scheme inner = (Scheme)Pool.get(Scheme.typ, element.scheme_id);
 				SchemeElement inner_se = inner.getTopLevelElement(se);
@@ -1271,38 +1043,37 @@ public class Scheme extends ObjectResource implements Serializable
 				}
 			}
 		}
-
 		return null;
 	}
 
 	//find top level element at this scheme for element se
 	public SchemeElement getTopLevelElement(SchemeElement se)
 	{
-		for (int i = 0; i < elements.size(); i++) // Search top elements
+		for (Iterator it = elements.iterator(); it.hasNext();) // Search top elements
 		{
-			SchemeElement element = (SchemeElement)elements.get(i);
+			SchemeElement element = (SchemeElement)it.next();
 			if (element.getId().equals(se.getId()))
 				return se;
 		}
 
-		for (int i = 0; i < elements.size(); i++) // Search inner elements
+		for (Iterator it = elements.iterator(); it.hasNext();) // Search inner elements
 		{
-			SchemeElement element = (SchemeElement)elements.get(i);
-			if (element.scheme_id.equals(""))
+			SchemeElement element = (SchemeElement)it.next();
+			if (element.scheme_id.length() == 0)
 			{
-				for (Enumeration e = element.getAllChilds(); e.hasMoreElements();)
+				for (Iterator it2 = element.getAllChilds(); it2.hasNext();)
 				{
-					SchemeElement inner_se = (SchemeElement)e.nextElement();
+					SchemeElement inner_se = (SchemeElement)it2.next();
 					if (inner_se.getId().equals(se.getId()))
 						return element;
 				}
 			}
 		}
 
-		for (int i = 0; i < elements.size(); i++)  // Search inner schemes
+		for (Iterator it = elements.iterator(); it.hasNext();)  // Search inner schemes
 		{
-			SchemeElement element = (SchemeElement)elements.get(i);
-			if (!element.scheme_id.equals(""))
+			SchemeElement element = (SchemeElement)it.next();
+			if (element.scheme_id.length() != 0)
 			{
 				Scheme inner = (Scheme)Pool.get(Scheme.typ, element.scheme_id);
 				SchemeElement inner_se = inner.getTopLevelElement(se);
@@ -1310,7 +1081,6 @@ public class Scheme extends ObjectResource implements Serializable
 					return element;
 			}
 		}
-
 		return null;
 	}
 

@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
-import com.syrus.AMFICOM.Client.Schematics.UI.*;
+import com.syrus.AMFICOM.Client.Schematics.UI.SchemeElementPane;
 
 public class SchemeElement extends ObjectResource
 		implements Transferable, Serializable
@@ -77,31 +77,29 @@ public class SchemeElement extends ObjectResource
 			description = "";
 
 		devices = new Vector();
-		for (int i = 0; i < proto.devices.size(); i++)
-			devices.add(((SchemeDevice)proto.devices.get(i)).clone(dataSource));
+		for(Iterator it = proto.devices.iterator(); it.hasNext();)
+			devices.add(((SchemeDevice)it.next()).clone(dataSource));
 
 		element_ids = new Vector();
-		for (int i = 0; i < proto.protoelement_ids.size(); i++)
+		for(Iterator it = proto.protoelement_ids.iterator(); it.hasNext();)
 		{
-			ProtoElement inner_proto = (ProtoElement)Pool.get(ProtoElement.typ, (String)proto.protoelement_ids.get(i));
+			ProtoElement inner_proto = (ProtoElement)Pool.get(ProtoElement.typ, (String)it.next());
 			SchemeElement inner = new SchemeElement(inner_proto, dataSource);
 			element_ids.add(inner.getId());
 			Pool.put("proto2schemeids", inner_proto.getId(), inner.getId());
 		}
 
 		links = new Vector();
-		for (int i = 0; i < proto.links.size(); i++)
-			links.add(((SchemeLink)proto.links.get(i)).clone(dataSource));
+		for(Iterator it = proto.links.iterator(); it.hasNext();)
+			links.add(((SchemeLink)it.next()).clone(dataSource));
 
 		transferable = new SchemeElement_Transferable();
 		attributes = ResourceUtil.copyAttributes(dataSource, proto.attributes);
 
 		schemecell = new byte[proto.schemecell.length];
-		for (int i = 0; i < schemecell.length; i++)
-			schemecell[i] = proto.schemecell[i];
+		System.arraycopy(proto.schemecell, 0, schemecell, 0, schemecell.length);
 		ugo = new byte[proto.ugo.length];
-		for (int i = 0; i < ugo.length; i++)
-			ugo[i] = proto.ugo[i];
+		System.arraycopy(proto.ugo, 0, ugo, 0, ugo.length);
 
 //    Pool.put(ProtoElement.typ, proto.getId(), proto);
 //		Pool.put("clonedids", proto.getId(), id);
@@ -135,28 +133,26 @@ public class SchemeElement extends ObjectResource
 		}*/
 
 		element.element_ids = new Vector(element_ids.size());
-		for (int i = 0; i < element_ids.size(); i++)
+		for(Iterator it = element_ids.iterator(); it.hasNext();)
 		{
-			SchemeElement el = ((SchemeElement)Pool.get(SchemeElement.typ, (String)element_ids.get(i)));
+			SchemeElement el = ((SchemeElement)Pool.get(SchemeElement.typ, (String)it.next()));
 			SchemeElement cel = (SchemeElement)el.clone(dataSource);
 			element.element_ids.add(cel.getId());
 		}
 		element.devices = new Vector(devices.size());
-		for (int i = 0; i < devices.size(); i++)
-			element.devices.add(((SchemeDevice)devices.get(i)).clone(dataSource));
+		for(Iterator it = devices.iterator(); it.hasNext();)
+			element.devices.add(((SchemeDevice)it.next()).clone(dataSource));
 
 		element.links = new Vector(links.size());
-		for (int i = 0; i < links.size(); i++)
-			element.links.add(((SchemeLink)links.get(i)).clone(dataSource));
+		for(Iterator it = links.iterator(); it.hasNext();)
+			element.links.add(((SchemeLink)it.next()).clone(dataSource));
 
 		element.attributes = ResourceUtil.copyAttributes(dataSource, attributes);
 
 		element.schemecell = new byte[schemecell.length];
-		for (int i = 0; i < schemecell.length; i++)
-			element.schemecell[i] = schemecell[i];
+		System.arraycopy(schemecell, 0, element.schemecell, 0, schemecell.length);
 		element.ugo = new byte[ugo.length];
-		for (int i = 0; i < ugo.length; i++)
-			element.ugo[i] = ugo[i];
+		System.arraycopy(ugo, 0, element.ugo, 0, ugo.length);
 		element.unpack();
 
 		element.mpe = mpe;
@@ -198,14 +194,14 @@ public class SchemeElement extends ObjectResource
 		return new SchemeElementPane();
 	}
 
-	public Enumeration getChildElements()
+	public Iterator getChildElements()
 	{
 		if (scheme_id.equals(""))
 		{
-			Vector v = new Vector();
-			for (Enumeration en = element_ids.elements(); en.hasMoreElements();)
-				v.add(Pool.get(SchemeElement.typ, (String)en.nextElement()));
-			return v.elements();
+			HashSet v = new HashSet();
+			for (Iterator it = element_ids.iterator(); it.hasNext();)
+				v.add(Pool.get(SchemeElement.typ, (String)it.next()));
+			return v.iterator();
 		}
 		else
 		{
@@ -214,19 +210,19 @@ public class SchemeElement extends ObjectResource
 		}
 	}
 
-	public Enumeration getAllChilds()
+	public Iterator getAllChilds()
 	{
 		if (scheme_id.equals(""))
 		{
-			Vector v = new Vector();
-			for (Enumeration en = element_ids.elements(); en.hasMoreElements();)
+			HashSet v = new HashSet();
+			for (Iterator it = element_ids.iterator(); it.hasNext();)
 			{
-				SchemeElement inner_se = (SchemeElement)Pool.get(SchemeElement.typ, (String)en.nextElement());
+				SchemeElement inner_se = (SchemeElement)Pool.get(SchemeElement.typ, (String)it.next());
 				v.add(inner_se);
-				for (Enumeration e = inner_se.getAllChilds(); e.hasMoreElements(); )
-					v.add(e.nextElement());
+				for (Iterator it2 = inner_se.getAllChilds(); it2.hasNext(); )
+					v.add(it2.next());
 			}
-			return v.elements();
+			return v.iterator();
 		}
 		else
 		{
@@ -274,8 +270,8 @@ public class SchemeElement extends ObjectResource
 		else if(key.equals("elements"))
 		{
 			Vector elements = new Vector();
-			for (int i = 0; i < element_ids.size(); i++)
-				elements.add(Pool.get(SchemeElement.typ, (String)element_ids.get(i)));
+			for (Iterator it = element_ids.iterator(); it.hasNext();)
+				elements.add(Pool.get(SchemeElement.typ, (String)it.next()));
 			return elements.elements();
 		}
 		return new Vector().elements();
@@ -326,29 +322,31 @@ public class SchemeElement extends ObjectResource
 		transferable.links = new SchemeLink_Transferable[links.size()];
 		transferable.element_ids = new String[element_ids.size()];
 
-		for (int i=0; i<transferable.devices.length; i++)
+		int counter = 0;
+		for(Iterator it = devices.iterator(); it.hasNext();)
 		{
-			SchemeDevice device = (SchemeDevice)devices.get(i);
+			SchemeDevice device = (SchemeDevice)it.next();
 			device.setTransferableFromLocal();
-			transferable.devices[i] = (SchemeDevice_Transferable)device.getTransferable();
+			transferable.devices[counter++] = (SchemeDevice_Transferable)device.getTransferable();
 		}
-		for (int i=0; i<transferable.links.length; i++)
+		counter = 0;
+		for(Iterator it = links.iterator(); it.hasNext();)
 		{
-			SchemeLink link = (SchemeLink)links.get(i);
+			SchemeLink link = (SchemeLink)it.next();
 			link.setTransferableFromLocal();
-			transferable.links[i] = (SchemeLink_Transferable)link.getTransferable();
+			transferable.links[counter++] = (SchemeLink_Transferable)link.getTransferable();
 		}
-		for (int i=0; i<transferable.element_ids.length; i++)
-			transferable.element_ids[i] = (String)element_ids.get(i);
+		counter = 0;
+		for(Iterator it = element_ids.iterator(); it.hasNext();)
+			transferable.element_ids[counter++] = (String)it.next();
 
-		int l = this.attributes.size();
-		int i = 0;
-		transferable.attributes = new ElementAttribute_Transferable[l];
+		counter = 0;
+		transferable.attributes = new ElementAttribute_Transferable[attributes.size()];
 		for(Enumeration e = attributes.elements(); e.hasMoreElements();)
 		{
 			ElementAttribute ea = (ElementAttribute)e.nextElement();
 			ea.setTransferableFromLocal();
-			transferable.attributes[i++] = ea.transferable;
+			transferable.attributes[counter++] = ea.transferable;
 		}
 
 		transferable.schemecell = schemecell;
@@ -357,15 +355,15 @@ public class SchemeElement extends ObjectResource
 
 	public void updateLocalFromTransferable()
 	{
-		for (int i = 0; i < devices.size(); i++)
+		for(Iterator it = devices.iterator(); it.hasNext();)
 		{
-			SchemeDevice dev = (SchemeDevice)devices.get(i);
+			SchemeDevice dev = (SchemeDevice)it.next();
 			Pool.put(SchemeDevice.typ, dev.getId(), dev);
 			dev.updateLocalFromTransferable();
 		}
-		for (int i = 0; i < links.size(); i++)
+		for(Iterator it = links.iterator(); it.hasNext();)
 		{
-			SchemeLink link = (SchemeLink)links.get(i);
+			SchemeLink link = (SchemeLink)it.next();
 			Pool.put(SchemeLink.typ, link.getId(), link);
 			link.updateLocalFromTransferable();
 		}
@@ -415,66 +413,144 @@ public class SchemeElement extends ObjectResource
 		return null;
 	}
 
-	public Enumeration getAllElementsLinks()
+	public Iterator getAllElementsLinks()
 	{
-		Hashtable ht = new Hashtable();
-		for (int i = 0; i < links.size(); i++)
-		{
-			SchemeLink l = (SchemeLink)links.get(i);
-			ht.put(l.getId(), l);
-		}
+		HashSet ht = new HashSet();
+		for(Iterator it = links.iterator(); it.hasNext();)
+			ht.add(it.next());
 
-		for(int i = element_ids.size() - 1; i >= 0; i--)
+		for(Iterator it = element_ids.iterator(); it.hasNext();)
 		{
-			SchemeElement se = (SchemeElement )Pool.get(SchemeElement.typ, (String )element_ids.get(i));
-			if (se.scheme_id.equals(""))
+			SchemeElement se = (SchemeElement)Pool.get(SchemeElement.typ, (String)it.next());
+			if (se.scheme_id.length() == 0)
 			{
-				for (Enumeration e = se.getAllElementsLinks(); e.hasMoreElements();)
-				{
-					SchemeLink l = (SchemeLink)e.nextElement();
-					ht.put(l.getId(), l);
-				}
+				for (Iterator it2 = se.getAllElementsLinks(); it2.hasNext();)
+					ht.add(it2.next());
 			}
 		}
-		return ht.elements();
+		return ht.iterator();
 	}
 
-	public Enumeration getAllSchemesLinks()
+	public Iterator getAllSchemesLinks()
 	{
-		Hashtable ht = new Hashtable();
+		HashSet ht = new HashSet();
 
-		for (Enumeration e = getAllElementsLinks(); e.hasMoreElements();)
+		for (Iterator it = getAllElementsLinks(); it.hasNext();)
 		{
-			SchemeLink l = (SchemeLink)e.nextElement();
-			ht.put(l.getId(), l);
+			SchemeLink l = (SchemeLink)it.next();
+			ht.add(l);
 		}
-
 
 		if (!scheme_id.equals(""))
 		{
 			Scheme scheme = (Scheme)Pool.get(Scheme.typ, scheme_id);
-			for (Enumeration e = scheme.getAllLinks(); e.hasMoreElements();)
+			for (Iterator it = scheme.getAllLinks(); it.hasNext();)
+				ht.add(it.next());
+		}
+
+		for(Iterator it = element_ids.iterator(); it.hasNext();)
+		{
+			SchemeElement se = (SchemeElement )Pool.get(SchemeElement.typ, (String)it.next());
+			if (se.scheme_id.length() != 0)
 			{
-				SchemeLink l = (SchemeLink)e.nextElement();
-				ht.put(l.getId(), l);
+				Scheme inner_scheme = (Scheme)Pool.get(Scheme.typ, se.scheme_id);
+				for (Iterator it2 = inner_scheme.getAllLinks(); it2.hasNext();)
+					ht.add(it2.next());
+			}
+		}
+		return ht.iterator();
+	}
+
+	public SchemeElement getSchemeElementByCablePort(String port_id)
+	{
+		for(Iterator it = devices.iterator(); it.hasNext();)
+		{
+			SchemeDevice sd = (SchemeDevice)it.next();
+			for(Iterator it2 = sd.cableports.iterator(); it2.hasNext();)
+			{
+				SchemeCablePort scp = (SchemeCablePort)it2.next();
+				if(scp.getId().equals(port_id))
+					return this;
 			}
 		}
 
-		for(int i = element_ids.size() - 1; i >= 0; i--)
+		for(Iterator it = element_ids.iterator(); it.hasNext();)			// Search inner elements
 		{
-			SchemeElement se = (SchemeElement )Pool.get(SchemeElement.typ, (String )element_ids.get(i));
-			if (!se.scheme_id.equals(""))
+			SchemeElement se = (SchemeElement)Pool.get(SchemeElement.typ, (String)it.next());
+			se = se.getSchemeElementByCablePort(port_id);
+			if (se != null)
+				return se;
+		}
+
+		if (scheme_id.length() != 0)// Search inner schemes
+		{
+			Scheme child_scheme = (Scheme)Pool.get(Scheme.typ, scheme_id);
+			SchemeElement el = child_scheme.getSchemeElementByCablePort(port_id);
+			if (el != null)
+				return el;
+		}
+
+		return null;
+	}
+
+	public SchemeElement getSchemeElementByPort(String port_id)
+	{
+		for(Iterator it = devices.iterator(); it.hasNext();)
+		{
+			SchemeDevice sd = (SchemeDevice)it.next();
+			for(Iterator it2 = sd.ports.iterator(); it2.hasNext();)
 			{
-				Scheme inner_scheme = (Scheme)Pool.get(Scheme.typ, se.scheme_id);
-				for (Enumeration e = inner_scheme.getAllLinks(); e.hasMoreElements();)
-				{
-					SchemeLink l = (SchemeLink)e.nextElement();
-					ht.put(l.getId(), l);
-				}
+				SchemePort sp = (SchemePort)it2.next();
+				if(sp.getId().equals(port_id))
+					return this;
 			}
 		}
-		return ht.elements();
+
+		for(Iterator it = element_ids.iterator(); it.hasNext();)			// Search inner elements
+		{
+			SchemeElement se = (SchemeElement)Pool.get(SchemeElement.typ, (String)it.next());
+			se = se.getSchemeElementByPort(port_id);
+			if (se != null)
+				return se;
+		}
+
+		if (scheme_id.length() != 0)// Search inner schemes
+		{
+			Scheme child_scheme = (Scheme)Pool.get(Scheme.typ, scheme_id);
+			SchemeElement el = child_scheme.getSchemeElementByPort(port_id);
+			if (el != null)
+				return el;
+		}
+
+		return null;
 	}
+
+	protected SchemeElement getSchemeElementByDevice(String device_id)
+	{
+		for(Iterator it = devices.iterator(); it.hasNext();)
+		{
+			SchemeDevice sd = (SchemeDevice)it.next();
+			if(sd.getId().equals(device_id))
+				return this;
+		}
+		for(Iterator it = element_ids.iterator(); it.hasNext();)
+		{
+			SchemeElement child_element = (SchemeElement)Pool.get(SchemeElement.typ, (String)it.next());
+			// Search inner elements
+			SchemeElement el = child_element.getSchemeElementByDevice(device_id);
+			if (el != null)
+				return el;
+		}
+		if (scheme_id.length() != 0)// Search inner schemes
+		{
+			Scheme child_scheme = (Scheme)Pool.get(Scheme.typ, scheme_id);
+			SchemeElement el = child_scheme.getSchemeElementByDevice(device_id);
+			if (el != null)
+				return el;
+		}
+		return null;
+	}
+
 
 	public double getLong()
 	{

@@ -54,8 +54,8 @@ public class SchemePath extends ObjectResource
 		type_id = path.type_id;
 		path_id = path.path_id;
 
-		for(Enumeration en = path.links.elements(); en.hasMoreElements();)
-			links.add(en.nextElement());
+		for(Iterator it = path.links.iterator(); it.hasNext();)
+			links.add(it.next());
 
 		for(Enumeration e = path.attributes.keys(); e.hasMoreElements();)
 		{
@@ -93,8 +93,8 @@ public class SchemePath extends ObjectResource
 		path.attributes = ResourceUtil.copyAttributes(dataSource, attributes);
 
 		path.links = new Vector(links.size());
-		for (Enumeration en = links.elements(); en.hasMoreElements();)
-			path.links.add(((PathElement)en.nextElement()).clone(dataSource));
+		for (Iterator it = links.iterator(); it.hasNext();)
+			path.links.add(((PathElement)it.next()).clone(dataSource));
 
 		path.mtppe = mtppe;
 
@@ -147,9 +147,9 @@ public class SchemePath extends ObjectResource
 	public double getPhysicalLength()
 	{
 		double length = 0;
-		for (Enumeration en = links.elements(); en.hasMoreElements();)
+		for (Iterator it = links.iterator(); it.hasNext();)
 		{
-			PathElement pe = (PathElement)en.nextElement();
+			PathElement pe = (PathElement)it.next();
 			if (pe.is_cable)
 			{
 				SchemeCableLink link = (SchemeCableLink)Pool.get(SchemeCableLink.typ, pe.link_id);
@@ -167,9 +167,9 @@ public class SchemePath extends ObjectResource
 	public double getOpticalLength()
 	{
 		double length = 0;
-		for (Enumeration en = links.elements(); en.hasMoreElements();)
+		for (Iterator it = links.iterator(); it.hasNext();)
 		{
-			PathElement pe = (PathElement)en.nextElement();
+			PathElement pe = (PathElement)it.next();
 			if (pe.is_cable)
 			{
 				SchemeCableLink link = (SchemeCableLink)Pool.get(SchemeCableLink.typ, pe.link_id);
@@ -312,8 +312,9 @@ public class SchemePath extends ObjectResource
 
 		transferable.links = new PathElement_Transferable[links.size()];
 
-		for (int i=0; i<transferable.links.length; i++)
-			transferable.links[i] = (PathElement_Transferable)((PathElement)links.get(i)).getTransferable();
+		int counter = 0;
+		for (Iterator it = links.iterator(); it.hasNext();)
+			transferable.links[counter++] = (PathElement_Transferable)((PathElement)it.next()).getTransferable();
 
 		int l = this.attributes.size();
 		int i = 0;

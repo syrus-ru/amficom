@@ -13,6 +13,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -1123,8 +1124,8 @@ public class DirectoryToFile
 					pw.println ("@end of devices");
 					pw.println ("@elements ");
 					//for (Enumeration e = el.element_ids.elements(); e.hasMoreElements();)
-					for (Enumeration e = el.getChildElements(); e.hasMoreElements();)
-						pw.println (((SchemeElement)e.nextElement()).getId());
+					for (Iterator it = el.getChildElements(); it.hasNext();)
+						pw.println (((SchemeElement)it.next()).getId());
 					pw.println ("@end of elements");
 					pw.println ("@links ");
 					for (Enumeration e = el.links.elements(); e.hasMoreElements();)

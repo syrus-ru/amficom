@@ -193,14 +193,14 @@ public class InsertToCatalogCommand extends VoidCommand
 				порты и соответственно глючат пасы и линки
 				*/
 
-				for (Enumeration e = element.getAllChilds(); e.hasMoreElements();)
+				for (Iterator it = element.getAllChilds(); it.hasNext();)
 				{
-					SchemeElement se = (SchemeElement)e.nextElement();
+					SchemeElement se = (SchemeElement)it.next();
 					elements_to_save.put(se.getId(), se);
 				}
-				for (Enumeration e = element.getAllElementsLinks(); e.hasMoreElements();)
+				for (Iterator it = element.getAllElementsLinks(); it.hasNext();)
 				{
-					SchemeLink sl = (SchemeLink)e.nextElement();
+					SchemeLink sl = (SchemeLink)it.next();
 					links_to_save.put(sl.getId(), sl);
 				}
 				/**/
@@ -629,9 +629,9 @@ public class InsertToCatalogCommand extends VoidCommand
 				saveLink(dataSource, link, link.getName());
 		}
 		//for (int i = 0; i < element.element_ids.size(); i++)
-		for (Enumeration en = element.getChildElements(); en.hasMoreElements();)
+		for (Iterator it = element.getChildElements(); it.hasNext();)
 		{
-			SchemeElement el = (SchemeElement)en.nextElement();
+			SchemeElement el = (SchemeElement)it.next();
 		//{
 		//	String id = (String)element.element_ids.get(i);
 		//	SchemeElement el = (SchemeElement)Pool.get(SchemeElement.typ, id);
@@ -755,9 +755,9 @@ public class InsertToCatalogCommand extends VoidCommand
 		//for (int i = 0; i < element.element_ids.size(); i++)
 		//{
 			//SchemeElement el = (SchemeElement)Pool.get(SchemeElement.typ, (String)element.element_ids.get(i));
-		for (Enumeration en = element.getChildElements(); en.hasMoreElements();)
+		for (Iterator it = element.getChildElements(); it.hasNext();)
 		{
-			SchemeElement el = (SchemeElement)en.nextElement();
+			SchemeElement el = (SchemeElement)it.next();
 			if (getElementByPortId(el, port_id) != null)
 				return el;
 		}

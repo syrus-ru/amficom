@@ -533,9 +533,9 @@ public class SchemePanel extends ElementsPanel
 						schemeelements_to_save.put(se.getId(), se);
 				}
 
-				for (Enumeration e = se.getAllChilds(); e.hasMoreElements();)
+				for (Iterator it = se.getAllChilds(); it.hasNext();)
 				{
-					SchemeElement child = (SchemeElement)e.nextElement();
+					SchemeElement child = (SchemeElement)it.next();
 					for (int j = 0; j < child.links.size(); j++)
 					{
 						String p_id = (String)lp.get(((SchemeLink)child.links.get(j)).getId());

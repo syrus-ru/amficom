@@ -136,11 +136,12 @@ public class SchemeCableLink extends ObjectResource
 		transferable.physical_length = String.valueOf(physical_length);
 
 		transferable.cable_threads = new SchemeCableThread_Transferable[cable_threads.size()];
-		for (int i=0; i<transferable.cable_threads.length; i++)
+		int counter = 0;
+		for (Iterator it = cable_threads.iterator(); it.hasNext();)
 		{
-			SchemeCableThread cable_thread = (SchemeCableThread)cable_threads.get(i);
+			SchemeCableThread cable_thread = (SchemeCableThread)it.next();
 			cable_thread.setTransferableFromLocal();
-			transferable.cable_threads[i] = (SchemeCableThread_Transferable)cable_thread.getTransferable();
+			transferable.cable_threads[counter++] = (SchemeCableThread_Transferable)cable_thread.getTransferable();
 		}
 
 		int l = this.attributes.size();
@@ -197,8 +198,8 @@ public class SchemeCableLink extends ObjectResource
 		}
 
 		link.cable_threads = new Vector(cable_threads.size());
-		for (int i = 0;  i < cable_threads.size(); i++)
-			link.cable_threads.add(((SchemeCableThread)cable_threads.get(i)).clone(dataSource));
+		for (Iterator it = cable_threads.iterator(); it.hasNext();)
+			link.cable_threads.add(((SchemeCableThread)it.next()).clone(dataSource));
 
 		link.attributes = ResourceUtil.copyAttributes(dataSource, attributes);
 

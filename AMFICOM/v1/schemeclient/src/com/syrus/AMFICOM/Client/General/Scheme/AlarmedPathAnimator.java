@@ -1,8 +1,7 @@
 package com.syrus.AMFICOM.Client.General.Scheme;
 
 import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Enumeration;
+import java.util.*;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.Pool;
@@ -173,9 +172,9 @@ public class AlarmedPathAnimator// extends Thread implements Runnable
 					SchemeElement se = ((DeviceGroup)cells[i]).getSchemeElement();
 					if (se.scheme_id.equals(""))
 					{
-						for (Enumeration en = se.getAllElementsLinks(); en.hasMoreElements();)
+						for (Iterator it = se.getAllElementsLinks(); it.hasNext();)
 						{
-							SchemeLink sl = (SchemeLink)en.nextElement();
+							SchemeLink sl = (SchemeLink)it.next();
 							if (sl.link_id.equals(alarmed_link_id))
 							{
 								for (Enumeration e = ((DeviceGroup)cells[i]).children(); e.hasMoreElements();)

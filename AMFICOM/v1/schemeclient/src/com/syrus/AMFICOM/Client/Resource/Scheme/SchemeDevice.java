@@ -1,20 +1,10 @@
 package com.syrus.AMFICOM.Client.Resource.Scheme;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
+import java.io.*;
+import java.util.*;
 
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.ResourceUtil;
-
-import com.syrus.AMFICOM.CORBA.Scheme.ElementAttribute_Transferable;
-import com.syrus.AMFICOM.CORBA.Scheme.SchemeCablePort_Transferable;
-import com.syrus.AMFICOM.CORBA.Scheme.SchemeDevice_Transferable;
-import com.syrus.AMFICOM.CORBA.Scheme.SchemePort_Transferable;
+import com.syrus.AMFICOM.CORBA.Scheme.*;
+import com.syrus.AMFICOM.Client.Resource.*;
 
 public class SchemeDevice extends ObjectResource implements Serializable
 {
@@ -115,7 +105,6 @@ public class SchemeDevice extends ObjectResource implements Serializable
 			ports.add(new SchemePort(transferable.ports[i]));
 		for (int i = 0; i < transferable.cableports.length; i++)
 			cableports.add(new SchemeCablePort(transferable.cableports[i]));
-
 		for(int i = 0; i < transferable.attributes.length; i++)
 			attributes.put(transferable.attributes[i].type_id, new ElementAttribute(transferable.attributes[i]));
 	}
@@ -128,17 +117,19 @@ public class SchemeDevice extends ObjectResource implements Serializable
 		transferable.ports = new SchemePort_Transferable[ports.size()];
 		transferable.cableports = new SchemeCablePort_Transferable[cableports.size()];
 
-		for (int i=0; i<transferable.ports.length; i++)
+		int counter = 0;
+		for (Iterator it = ports.iterator(); it.hasNext();)
 		{
-			SchemePort port = (SchemePort)ports.get(i);
+			SchemePort port = (SchemePort)it.next();
 			port.setTransferableFromLocal();
-			transferable.ports[i] = (SchemePort_Transferable)port.getTransferable();
+			transferable.ports[counter++] = (SchemePort_Transferable)port.getTransferable();
 		}
-		for (int i=0; i<transferable.cableports.length; i++)
+		counter = 0;
+		for (Iterator it = cableports.iterator(); it.hasNext();)
 		{
-			SchemeCablePort cableport = (SchemeCablePort)cableports.get(i);
+			SchemeCablePort cableport = (SchemeCablePort)it.next();
 			cableport.setTransferableFromLocal();
-			transferable.cableports[i] = (SchemeCablePort_Transferable)cableport.getTransferable();
+			transferable.cableports[counter++] = (SchemeCablePort_Transferable)cableport.getTransferable();
 		}
 
 		int l = this.attributes.size();
@@ -154,15 +145,15 @@ public class SchemeDevice extends ObjectResource implements Serializable
 
 	public void updateLocalFromTransferable()
 	{
-		for (int i = 0; i < ports.size(); i++)
+		for (Iterator it = ports.iterator(); it.hasNext();)
 		{
-			SchemePort port = (SchemePort)ports.get(i);
+			SchemePort port = (SchemePort)it.next();
 			Pool.put(SchemePort.typ, port.getId(), port);
 			port.updateLocalFromTransferable();
 		}
-		for (int i = 0; i < cableports.size(); i++)
+		for (Iterator it = cableports.iterator(); it.hasNext();)
 		{
-			SchemeCablePort port = (SchemeCablePort)cableports.get(i);
+			SchemeCablePort port = (SchemeCablePort)it.next();
 			Pool.put(SchemeCablePort.typ, port.getId(), port);
 			port.updateLocalFromTransferable();
 		}
@@ -184,17 +175,17 @@ public class SchemeDevice extends ObjectResource implements Serializable
 		dev.name = name;
 
 		dev.ports = new Vector(ports.size());
-		for (int i = 0; i < ports.size(); i++)
+		for (Iterator it = ports.iterator(); it.hasNext();)
 		{
-			SchemePort new_port = (SchemePort)((SchemePort)ports.get(i)).clone(dataSource);
+			SchemePort new_port = (SchemePort)((SchemePort)it.next()).clone(dataSource);
 			new_port.device_id = dev.getId();
 			dev.ports.add(new_port);
 		}
 
 		dev.cableports = new Vector(cableports.size());
-		for (int i = 0; i < cableports.size(); i++)
+		for (Iterator it = cableports.iterator(); it.hasNext();)
 		{
-			SchemeCablePort new_port = (SchemeCablePort)((SchemeCablePort)cableports.get(i)).clone(dataSource);
+			SchemeCablePort new_port = (SchemeCablePort)((SchemeCablePort)it.next()).clone(dataSource);
 			new_port.device_id = dev.getId();
 			dev.cableports.add(new_port);
 		}

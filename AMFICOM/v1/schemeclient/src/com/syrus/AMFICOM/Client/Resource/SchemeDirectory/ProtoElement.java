@@ -151,20 +151,23 @@ public class ProtoElement extends ObjectResource
 		transferable.links = new SchemeLink_Transferable[links.size()];
 		transferable.proto_element_ids = new String[protoelement_ids.size()];
 
-		for (int i=0; i<transferable.devices.length; i++)
+		int counter = 0;
+		for (Iterator it = devices.iterator(); it.hasNext();)
 		{
-			SchemeDevice device = (SchemeDevice)devices.get(i);
+			SchemeDevice device = (SchemeDevice)it.next();
 			device.setTransferableFromLocal();
-			transferable.devices[i] = (SchemeDevice_Transferable)device.getTransferable();
+			transferable.devices[counter++] = (SchemeDevice_Transferable)device.getTransferable();
 		}
-		for (int i=0; i<transferable.links.length; i++)
+		counter = 0;
+		for (Iterator it = links.iterator(); it.hasNext();)
 		{
-			SchemeLink link = (SchemeLink)links.get(i);
+			SchemeLink link = (SchemeLink)it.next();
 			link.setTransferableFromLocal();
-			transferable.links[i] = (SchemeLink_Transferable)link.getTransferable();
+			transferable.links[counter++] = (SchemeLink_Transferable)link.getTransferable();
 		}
-		for (int i=0; i<transferable.proto_element_ids.length; i++)
-			transferable.proto_element_ids[i] = (String)protoelement_ids.get(i);
+		counter = 0;
+		for (Iterator it = protoelement_ids.iterator(); it.hasNext();)
+			transferable.proto_element_ids[counter++] = (String)it.next();
 
 		int l = this.attributes.size();
 		int i = 0;
@@ -182,15 +185,15 @@ public class ProtoElement extends ObjectResource
 
 	public void updateLocalFromTransferable()
 	{
-		for (int i = 0; i < devices.size(); i++)
+		for (Iterator it = devices.iterator(); it.hasNext();)
 		{
-			SchemeDevice dev = (SchemeDevice)devices.get(i);
+			SchemeDevice dev = (SchemeDevice)it.next();
 			dev.updateLocalFromTransferable();
 			Pool.put(SchemeDevice.typ, dev.getId(), dev);
 		}
-		for (int i = 0; i < links.size(); i++)
+		for (Iterator it = links.iterator(); it.hasNext();)
 		{
-			SchemeLink link = (SchemeLink)links.get(i);
+			SchemeLink link = (SchemeLink)it.next();
 			link.updateLocalFromTransferable();
 			Pool.put(SchemeLink.typ, link.getId(), link);
 		}
@@ -329,27 +332,25 @@ public class ProtoElement extends ObjectResource
 		proto.domain_id = domain_id;
 
 		proto.protoelement_ids = new Vector(protoelement_ids.size());
-		for (int i = 0; i < protoelement_ids.size(); i++)
+		for (Iterator it = protoelement_ids.iterator(); it.hasNext();)
 		{
-			ProtoElement p = ((ProtoElement)Pool.get(ProtoElement.typ, (String)protoelement_ids.get(i)));
+			ProtoElement p = ((ProtoElement)Pool.get(ProtoElement.typ, (String)it.next()));
 			ProtoElement p1 = (ProtoElement)p.clone(dataSource);
 			proto.protoelement_ids.add(p1.getId());
 		}
 
 		proto.devices = new Vector(devices.size());
-		for (int i = 0; i < devices.size(); i++)
-			proto.devices.add(((SchemeDevice)devices.get(i)).clone(dataSource));
+		for (Iterator it = devices.iterator(); it.hasNext();)
+			proto.devices.add(((SchemeDevice)it.next()).clone(dataSource));
 
 		proto.links = new Vector(links.size());
-		for (int i = 0; i < links.size(); i++)
-			proto.links.add(((SchemeLink)links.get(i)).clone(dataSource));
+		for (Iterator it = links.iterator(); it.hasNext();)
+			proto.links.add(((SchemeLink)it.next()).clone(dataSource));
 
 		proto.schemecell = new byte[schemecell.length];
-		for (int i = 0; i < schemecell.length; i++)
-			proto.schemecell[i] = schemecell[i];
+		System.arraycopy(schemecell, 0, proto.schemecell, 0, schemecell.length);
 		proto.ugo = new byte[ugo.length];
-		for (int i = 0; i < ugo.length; i++)
-			proto.ugo[i] = ugo[i];
+		System.arraycopy(ugo, 0, proto.ugo, 0, ugo.length);
 
 		proto.unpack();
 
