@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.1 2005/01/20 15:08:28 bob Exp $
+ * $Id: TypicalCondition.java,v 1.2 2005/01/21 10:30:58 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,94 @@ import com.syrus.AMFICOM.general.corba.TypicalSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/20 15:08:28 $
+ * If one needs to write a implementation for <code>TypicalCondition</code>
+ * for a certain module (administration, configuration, etc.), the resulting
+ * class must meet the following conditions:
+ * <ul>
+ * <li>It must be a &lt;default&gt; (i. e. package visible) final class, named
+ * <code>TypicalConditionImpl</code> and residing in the appropriate package (e.
+ * g.: <code>com.syrus.AMFICOM.administration</code> for administration
+ * module). Note that package/module name must be in sync with the appropriate
+ * group name from {@link ObjectGroupEntities}, i. e. if group name is
+ * &quot;AdministrationGroup&quot;, package name can&apos;t be
+ * <code>com.syrus.AMFICOM.administrate</code> or
+ * <code>com.syrus.AMFICOM.admin</code>.</li>
+ * <li>It must inherit from this class (i. e.
+ * {@link TypicalCondition TypicalCondition})
+ * </li>
+ * <li>It must declare <em>the only</em> <code>private</code> constructor
+ * with the following code:
+ * 
+ * <pre>
+ * 
+ * private TypicalConditionImpl(final int firstInt, final int secondInt, 
+ *	                        final OperationSort operation, final Short entityCode, final String key) {
+ * 		super(); // First line must invoke superconstructor w/o parameters.
+ * 		this.firstInt = firstInt;
+ * 		this.secondInt = secondInt;
+ * 		this.type = TypicalSort._TYPE_NUMBER_INT;
+ * 		this.operation = operation.value();
+ * 		this.entityCode = entityCode;
+ * 		this.key = key;
+ * } 
+ * 
+ * private TypicalConditionImpl(final long firstLong, final long secondLong,
+ * 	                        final OperationSort operation, final Short entityCode, final String key) {
+ * 		super(); // First line must invoke superconstructor w/o parameters.
+ * 		this.firstLong = firstLong;
+ * 		this.secondLong = secondLong;
+ * 		this.type = TypicalSort._TYPE_NUMBER_LONG;
+ * 		this.operation = operation.value();
+ * 		this.entityCode = entityCode;
+ * 		this.key = key;
+ * }
+ * 
+ * private TypicalConditionImpl(final double firstDouble, final double secondDouble,
+ * 	                        final OperationSort operation, final Short entityCode, final String key) {
+ * 		super(); // First line must invoke superconstructor w/o parameters.
+ * 		this.firstDouble = firstDouble;
+ * 		this.secondDouble = secondDouble;
+ * 		this.type = TypicalSort._TYPE_NUMBER_DOUBLE;
+ * 		this.operation = operation.value();
+ * 		this.entityCode = entityCode;
+ * 		this.key = key;
+ * }
+ *  
+ * private TypicalConditionImpl(final String value, 
+	                        final OperationSort operation, final Short entityCode, final String key) {
+ * 		super(); // First line must invoke superconstructor w/o parameters.
+ * 		this.value = value;
+ * 		this.type = TypicalSort._TYPE_STRING;
+ * 		this.operation = operation.value();
+ * 		this.entityCode = entityCode;
+ * 		this.key = key;
+ * }
+ * 
+ * private TypicalCondition(final Date firstDate, final Date secondDate, 
+ * 	                        final OperationSort operation, final Short entityCode, final String key) {
+ * 		super(); // First line must invoke superconstructor w/o parameters.
+ * 		this.value = firstDate;
+ * 		this.otherValue = secondDate;
+ * 		this.type = TypicalSort._TYPE_DATE;
+ * 		this.operation = operation.value();
+ * 		this.entityCode = entityCode;
+ * 		this.key = key;
+ * }
+ * 
+ * </pre>
+ * 
+ * </li>
+ * 
+ * <li>It must override 
+ * {@link #isConditionTrue(Object)},
+ * {@link #isNeedMore(List)}.</li>
+ * 
+ * <li>Overrided method {@link #isConditionTrue(Object)} get correspond value of object using 
+ * controller (wrapper) and key, and return result calculated at {@link #parseCondition(Object)}</li>
+ * 
+ * </ul>
+ * 
+ * @version $Revision: 1.2 $, $Date: 2005/01/21 10:30:58 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -94,14 +181,22 @@ public class TypicalCondition implements StorableObjectCondition {
 		// Empty constructor used by descendants only.
 	}
 
-	public TypicalCondition(final int firstInt, final int secondInt, final int operation, final Short entityCode) {
-		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(entityCode.shortValue()).toLowerCase().replaceAll("group$", "") + ".TypicalCondition"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	/**
+	 * @param firstInt left edge of range or value searching for
+	 * @param secondInt right edge of range
+	 * @param operation one of {@link OperationSort.OPERATION_EQUALS}, {@link OperationSort.OPERATION_GREAT}, {@link OperationSort.OPERATION_LESS}, {@link OperationSort.OPERATION_GREAT_EQUALS} or {@link OperationSort.OPERATION_LESS_EQUALS}
+	 * @param entityCode code of searching entity
+	 * @param key key for controller (wrapper)	 
+	 */
+	public TypicalCondition(final int firstInt, final int secondInt, 
+	                        final OperationSort operation, final Short entityCode, final String key) {
+		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(entityCode.shortValue()).toLowerCase().replaceAll("group$", "") + ".TypicalConditionImpl"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		try {
 			Constructor ctor = Class.forName(className).getDeclaredConstructor(
-				new Class[] { int.class, int.class, int.class, Short.class});
+				new Class[] { int.class, int.class, OperationSort.class, Short.class, String.class});
 			ctor.setAccessible(true);
 			this.delegate = (TypicalCondition) ctor.newInstance(new Object[] { new Integer(firstInt),
-					new Integer(secondInt), new Integer(operation), entityCode});
+					new Integer(secondInt), operation, entityCode, key});
 		} catch (ClassNotFoundException cnfe) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Class " + className //$NON-NLS-1$
 					+ " not found on the classpath" //$NON-NLS-1$
@@ -158,19 +253,27 @@ public class TypicalCondition implements StorableObjectCondition {
 				this.delegate.type = TypicalSort._TYPE_NUMBER_INT;
 				this.delegate.firstInt = firstInt;
 				this.delegate.secondInt = secondInt;
-				this.delegate.operation = operation;
+				this.delegate.operation = operation.value();
 			}
 		}
 	}
 
-	public TypicalCondition(long firstLong, long secondLong, int operation, Short entityCode) {
-		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(entityCode.shortValue()).toLowerCase().replaceAll("group$", "") + ".TypicalCondition"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	/**
+	 * @param firstLong left edge of range or value searching for
+	 * @param secondLong right edge of range
+	 * @param operation one of {@link OperationSort.OPERATION_EQUALS}, {@link OperationSort.OPERATION_GREAT}, {@link OperationSort.OPERATION_LESS}, {@link OperationSort.OPERATION_GREAT_EQUALS} or {@link OperationSort.OPERATION_LESS_EQUALS}
+	 * @param entityCode code of searching entity
+	 * @param key key for controller (wrapper)	 
+	 */
+	public TypicalCondition(final long firstLong, final long secondLong, 
+	                        final OperationSort operation, final Short entityCode, final String key) {
+		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(entityCode.shortValue()).toLowerCase().replaceAll("group$", "") + ".TypicalConditionImpl"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		try {
 			Constructor ctor = Class.forName(className).getDeclaredConstructor(
-				new Class[] { long.class, long.class, int.class, Short.class});
+				new Class[] { long.class, long.class, OperationSort.class, Short.class, String.class});
 			ctor.setAccessible(true);
 			this.delegate = (TypicalCondition) ctor.newInstance(new Object[] { new Long(firstLong),
-					new Long(secondLong), new Integer(operation), entityCode});
+					new Long(secondLong), operation, entityCode, key});
 		} catch (ClassNotFoundException cnfe) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Class " + className //$NON-NLS-1$
 					+ " not found on the classpath" //$NON-NLS-1$
@@ -227,19 +330,27 @@ public class TypicalCondition implements StorableObjectCondition {
 				this.delegate.type = TypicalSort._TYPE_NUMBER_LONG;
 				this.delegate.firstLong = firstLong;
 				this.delegate.secondLong = secondLong;
-				this.delegate.operation = operation;
+				this.delegate.operation = operation.value();
 			}
 		}
 	}
 
-	public TypicalCondition(double firstDouble, double secondDouble, int operation, Short entityCode) {
-		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(entityCode.shortValue()).toLowerCase().replaceAll("group$", "") + ".TypicalCondition"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	/**
+	 * @param firstDouble left edge of range or value searching for
+	 * @param secondDouble right edge of range
+	 * @param operation one of {@link OperationSort.OPERATION_EQUALS}, {@link OperationSort.OPERATION_GREAT}, {@link OperationSort.OPERATION_LESS}, {@link OperationSort.OPERATION_GREAT_EQUALS} or {@link OperationSort.OPERATION_LESS_EQUALS}
+	 * @param entityCode code of searching entity
+	 * @param key key for controller (wrapper)	 
+	 */
+	public TypicalCondition(final double firstDouble, final double secondDouble, 
+	                        final OperationSort operation, final Short entityCode, final String key) {
+		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(entityCode.shortValue()).toLowerCase().replaceAll("group$", "") + ".TypicalConditionImpl"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		try {
 			Constructor ctor = Class.forName(className).getDeclaredConstructor(
-				new Class[] { double.class, double.class, int.class, Short.class});
+				new Class[] { double.class, double.class, OperationSort.class, Short.class, String.class});
 			ctor.setAccessible(true);
 			this.delegate = (TypicalCondition) ctor.newInstance(new Object[] { new Double(firstDouble),
-					new Double(secondDouble), new Integer(operation), entityCode});
+					new Double(secondDouble), operation, entityCode, key});
 		} catch (ClassNotFoundException cnfe) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Class " + className //$NON-NLS-1$
 					+ " not found on the classpath" //$NON-NLS-1$
@@ -296,19 +407,26 @@ public class TypicalCondition implements StorableObjectCondition {
 				this.delegate.type = TypicalSort._TYPE_NUMBER_DOUBLE;
 				this.delegate.firstDouble = firstDouble;
 				this.delegate.secondDouble = secondDouble;
-				this.delegate.operation = operation;
+				this.delegate.operation = operation.value();
 			}
 		}
 	}
 
-	public TypicalCondition(String value, int operation, Short entityCode) {
-		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(entityCode.shortValue()).toLowerCase().replaceAll("group$", "") + ".TypicalCondition"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	/**
+	 * @param value value such as substring, regexp 
+	 * @param operation one of {@link OperationSort.OPERATION_EQUALS}, {@link OperationSort.OPERATION_REGEXP} or {@link OperationSort.OPERATION_CI_REGEXP}
+	 * @param entityCode code of searching entity
+	 * @param key key for controller (wrapper)
+	 */
+	public TypicalCondition(final String value, 
+	                        final OperationSort operation, final Short entityCode, final String key) {
+		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(entityCode.shortValue()).toLowerCase().replaceAll("group$", "") + ".TypicalConditionImpl"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		try {
 			Constructor ctor = Class.forName(className).getDeclaredConstructor(
-				new Class[] { String.class, int.class, Short.class});
+				new Class[] { String.class, OperationSort.class, Short.class, String.class});
 			ctor.setAccessible(true);
-			this.delegate = (TypicalCondition) ctor.newInstance(new Object[] { value, new Integer(operation),
-					entityCode});
+			this.delegate = (TypicalCondition) ctor.newInstance(new Object[] { value, operation,
+					entityCode, key});
 		} catch (ClassNotFoundException cnfe) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Class " + className //$NON-NLS-1$
 					+ " not found on the classpath" //$NON-NLS-1$
@@ -364,20 +482,29 @@ public class TypicalCondition implements StorableObjectCondition {
 				this.delegate.entityCode = entityCode;
 				this.delegate.type = TypicalSort._TYPE_STRING;
 				this.delegate.value = value;
-				this.delegate.operation = operation;
+				this.delegate.otherValue = "";
+				this.delegate.operation = operation.value();
 
 			}
 		}
 	}
 
-	public TypicalCondition(Date firstDate, Date secondDate, int operation, Short entityCode) {
-		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(entityCode.shortValue()).toLowerCase().replaceAll("group$", "") + ".TypicalCondition"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+	/**
+	 * @param firstDate start date range
+	 * @param secondDate end date range or the same object as firstDate if not need (is not NULL)
+	 * @param operation one of {@link OperationSort.OPERATION_EQUALS} or {@link OperationSort.OPERATION_IN_RANGE}
+	 * @param entityCode code of searching entity
+	 * @param key key for controller (wrapper)
+	 */
+	public TypicalCondition(final Date firstDate, final Date secondDate, 
+	                        final OperationSort operation, final Short entityCode, final String key) {
+		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(entityCode.shortValue()).toLowerCase().replaceAll("group$", "") + ".TypicalConditionImpl"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		try {
 			Constructor ctor = Class.forName(className).getDeclaredConstructor(
-				new Class[] { Date.class, Date.class, int.class, Short.class});
+				new Class[] { Date.class, Date.class, OperationSort.class, Short.class, String.class});
 			ctor.setAccessible(true);
 			this.delegate = (TypicalCondition) ctor.newInstance(new Object[] { firstDate, secondDate,
-					new Integer(operation), entityCode});
+					operation, entityCode, key});
 		} catch (ClassNotFoundException cnfe) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Class " + className //$NON-NLS-1$
 					+ " not found on the classpath" //$NON-NLS-1$
@@ -434,55 +561,55 @@ public class TypicalCondition implements StorableObjectCondition {
 				this.delegate.type = TypicalSort._TYPE_DATE;
 				this.delegate.value = firstDate;
 				this.delegate.otherValue = secondDate;
-				this.delegate.operation = operation;
+				this.delegate.operation = operation.value();
 
 			}
 		}
 	}
 
 	public TypicalCondition(TypicalCondition_Transferable transferable) {
-		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(transferable.entity_code).toLowerCase().replaceAll("group$", "") + ".TypicalCondition"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(transferable.entity_code).toLowerCase().replaceAll("group$", "") + ".TypicalConditionImpl"; //$NON-NLS-1$//$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		try {
 			Constructor ctor; 
 			switch(transferable.type.value()) {
 				case TypicalSort._TYPE_NUMBER_INT:
 					ctor = Class.forName(className).getDeclaredConstructor(
-						new Class[] { int.class, int.class, int.class, Short.class});
+						new Class[] { int.class, int.class, OperationSort.class, Short.class, String.class});
 					ctor.setAccessible(true);
 					this.delegate = (TypicalCondition) ctor.newInstance(new Object[] { new Integer(transferable.value), new Integer(transferable.otherValue),
-							new Integer(transferable.operation.value()), new Short(transferable.entity_code)});
+							transferable.operation, new Short(transferable.entity_code), transferable.key});
 					
 					break;
 				case TypicalSort._TYPE_NUMBER_LONG:
 					ctor = Class.forName(className).getDeclaredConstructor(
-						new Class[] { long.class, long.class, int.class, Short.class});
+						new Class[] { long.class, long.class, OperationSort.class, Short.class, String.class});
 					ctor.setAccessible(true);
 					this.delegate = (TypicalCondition) ctor.newInstance(new Object[] { new Long(transferable.value), new Long(transferable.otherValue),
-							new Integer(transferable.operation.value()), new Short(transferable.entity_code)});
+							new Integer(transferable.operation.value()), new Short(transferable.entity_code), transferable.key});
 	
 					break;
 				case TypicalSort._TYPE_NUMBER_DOUBLE:
 					ctor = Class.forName(className).getDeclaredConstructor(
-						new Class[] { double.class, double.class, int.class, Short.class});
+						new Class[] { double.class, double.class, OperationSort.class, Short.class, String.class});
 					ctor.setAccessible(true);
 					this.delegate = (TypicalCondition) ctor.newInstance(new Object[] { new Double(transferable.value), new Double(transferable.otherValue),
-							new Integer(transferable.operation.value()), new Short(transferable.entity_code)});
+							new Integer(transferable.operation.value()), new Short(transferable.entity_code), transferable.key});
 	
 					break;
 				case TypicalSort._TYPE_STRING:
 					ctor = Class.forName(className).getDeclaredConstructor(
-						new Class[] { String.class, int.class, Short.class});
+						new Class[] { String.class, OperationSort.class, Short.class, String.class});
 					ctor.setAccessible(true);
 					this.delegate = (TypicalCondition) ctor.newInstance(new Object[] { transferable.value, 
-							new Integer(transferable.operation.value()), new Short(transferable.entity_code)});
+							new Integer(transferable.operation.value()), new Short(transferable.entity_code), transferable.key});
 	
 					break;
 				case TypicalSort._TYPE_DATE:
 					ctor = Class.forName(className).getDeclaredConstructor(
-						new Class[] { Date.class, Date.class, int.class, Short.class});
+						new Class[] { Date.class, Date.class, OperationSort.class, Short.class, String.class});
 					ctor.setAccessible(true);
 					this.delegate = (TypicalCondition) ctor.newInstance(new Object[] { new Date(Long.parseLong(transferable.value)), new Date(Long.parseLong(transferable.otherValue)),
-							new Integer(transferable.operation.value()), new Short(transferable.entity_code)});
+							transferable.operation, new Short(transferable.entity_code), transferable.key});
 	
 					break;
 				default:
