@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.119 2005/03/10 12:51:46 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.120 2005/03/10 15:14:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.119 $, $Date: 2005/03/10 12:51:46 $
+ * @version $Revision: 1.120 $, $Date: 2005/03/10 15:14:43 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -169,10 +169,12 @@ public abstract class StorableObjectDatabase {
 		}
 		else
 			buffer = new StringBuffer(this.retrieveQuery);
+
 		if (condition != null && condition.trim().length() > 0) {
 			buffer.append(SQL_WHERE);
 			buffer.append(condition);
 		}
+
 		return buffer.toString();
 	}
 
@@ -323,7 +325,7 @@ public abstract class StorableObjectDatabase {
 
 	public abstract void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException;
 
-	public abstract Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException;
+//	public abstract Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException;
 
 	public abstract Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException;
@@ -369,86 +371,20 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	/**
-	 * retrive storable objects by identifiers not in ids
-	 * @param ids List&lt;{@link Identifier}&gt; or List&lt;{@link Identifiable}&gt;
-	 * @throws IllegalDataException
-	 * @throws RetrieveObjectException
-	 */
-	public Collection retrieveButIds(Collection ids) throws IllegalDataException, RetrieveObjectException {
-		return this.retrieveButIds(ids, null);
+	public Collection retrieveByCondition(StorableObjectCondition condition) throws RetrieveObjectException, IllegalDataException {
+		return this.retrieveByCondition(this.getConditionQuery(condition));
 	}
 
-	/**
-	 * retrive storable objects by additional condition and identifiers not in ids   
-	 * @param ids List&lt;{@link Identifier}&gt; or List&lt;{@link Identifiable}&gt;
-	 * @param condition
-	 * @throws IllegalDataException
-	 * @throws RetrieveObjectException
-	 */
-	protected Collection retrieveButIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
-		if (ids == null || ids.isEmpty())
-			return this.retrieveByIds(null, condition);
+	protected Collection retrieveByCondition(String conditionQuery) throws RetrieveObjectException, IllegalDataException {
+		Collection storableObjects = new LinkedList();
 
-		StringBuffer stringBuffer = idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, false);
-		if ((condition != null) && (condition.length() > 0)) {
-			if (stringBuffer.length() != 0)
-				stringBuffer.append(SQL_AND);
-			stringBuffer.append(condition);
-		}
-		return this.retrieveByIds(null, stringBuffer.toString());
-	}
-
-	public final Collection retrieveButIdsByCondition(Collection ids, StorableObjectCondition condition)
-			throws RetrieveObjectException, IllegalDataException {
-
-		DatabaseStorableObjectCondition databaseStorableObjectCondition = this.reflectDatabaseCondition(condition);
-		short conditionCode = databaseStorableObjectCondition.getEntityCode().shortValue();
-		String enityName = this.getEnityName();
-		enityName = enityName.replaceAll("\"", "");
-		if (ObjectEntities.stringToCode(enityName) != conditionCode)
-			throw new IllegalDataException(enityName + "Database.retrieveByCondition | Uncompatible condition ("
-					+ ObjectEntities.codeToString(conditionCode) + ") and database (" + this.getEnityName() + ") classes");
-		String conditionQuery = databaseStorableObjectCondition.getSQLQuery();
-		Collection collection = this.retrieveButIds(ids, conditionQuery);
-		return collection;
-	}
-
-	public Collection retrieveAll() throws RetrieveObjectException {
-		Collection objects = null;
-		try {
-			objects = this.retrieveByIds(null, null);
-		}
-		catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide);
-		}
-		return objects;
-	}
-
-	/**
-	 * retrive storable objects by identifiers and additional condition
-	 * @param ids List&lt;{@link Identifier}&gt; or List&lt;{@link Identifiable}&gt;
-	 * @param condition
-	 * @throws IllegalDataException
-	 * @throws RetrieveObjectException
-	 */
-	protected Collection retrieveByIdsOneQuery(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
-		List storableObjects = new LinkedList();
-
-		StringBuffer stringBuffer = idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, true);
-
-		if ((condition != null) && (condition.length() > 0)) {
-			stringBuffer.append(SQL_AND);
-			stringBuffer.append(condition);
-		}
-
-		String sql = retrieveQuery(stringBuffer.toString());
+		String sql = this.retrieveQuery(conditionQuery);
 		Statement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage(this.getEnityName() + "Database.retrieveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage(this.getEnityName() + "Database.retrieveByCondition | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
 				StorableObject storableObject = this.updateEntityFromResultSet(null, resultSet);
@@ -456,7 +392,7 @@ public abstract class StorableObjectDatabase {
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = this.getEnityName() + "Database.retrieveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
+			String mesg = this.getEnityName() + "Database.retrieveByCondition | Cannot execute query " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -466,17 +402,52 @@ public abstract class StorableObjectDatabase {
 				if (resultSet != null)
 					resultSet.close();
 				statement = null;
-				resultSet = null;				
+				resultSet = null;
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			}
-			finally{
+			finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 
 		return storableObjects;
+	}
+
+	public final Collection retrieveButIdsByCondition(Collection ids, StorableObjectCondition condition)
+			throws RetrieveObjectException, IllegalDataException {
+		StringBuffer stringBuffer = idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, false);
+
+		if (condition != null) {
+			stringBuffer.append(SQL_AND);
+			stringBuffer.append(this.getConditionQuery(condition));
+		}
+
+		return this.retrieveByCondition(stringBuffer.toString());
+	}
+
+	public Collection retrieveAll() throws RetrieveObjectException {
+		Collection objects = null;
+		try {
+			objects = this.retrieveByCondition((String) null);
+		}
+		catch (IllegalDataException ide) {
+			throw new RetrieveObjectException(ide);
+		}
+		return objects;
+	}
+
+	public Collection retrieveByIdsByCondition(Collection ids, StorableObjectCondition condition)
+			throws RetrieveObjectException, IllegalDataException {
+		StringBuffer stringBuffer = idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, true);
+
+		if (condition != null) {
+			stringBuffer.append(SQL_AND);
+			stringBuffer.append(this.getConditionQuery(condition));
+		}
+
+		return this.retrieveByCondition(stringBuffer.toString());
 	}
 
 	/**
@@ -861,7 +832,7 @@ public abstract class StorableObjectDatabase {
 
 		Collection dbstorableObjects = null;
 		try {
-			dbstorableObjects = this.retrieveByIds(storableObjectIds, null);
+			dbstorableObjects = this.retrieveByIdsByCondition(storableObjectIds, null);
 		}
 		catch (ApplicationException e) {
 			throw new UpdateObjectException(e);
@@ -1432,6 +1403,18 @@ public abstract class StorableObjectDatabase {
 		}
 		
 		return values;
+	}
+
+	private String getConditionQuery(StorableObjectCondition condition) throws IllegalDataException {
+		DatabaseStorableObjectCondition databaseStorableObjectCondition = this.reflectDatabaseCondition(condition);
+		short conditionCode = databaseStorableObjectCondition.getEntityCode().shortValue();
+		String enityName = this.getEnityName();
+		enityName = enityName.replaceAll("\"", "");
+		if (ObjectEntities.stringToCode(enityName) != conditionCode)
+			throw new IllegalDataException(enityName + "Database.retrieveByCondition | Uncompatible condition ("
+					+ ObjectEntities.codeToString(conditionCode) + ") and database (" + this.getEnityName() + ") classes");
+		String conditionQuery = databaseStorableObjectCondition.getSQLQuery();
+		return conditionQuery;
 	}
 
 	private DatabaseStorableObjectCondition reflectDatabaseCondition(StorableObjectCondition condition) throws IllegalDataException {
