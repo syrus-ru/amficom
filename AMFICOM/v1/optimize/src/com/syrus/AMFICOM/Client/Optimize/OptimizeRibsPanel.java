@@ -1,17 +1,25 @@
 package com.syrus.AMFICOM.Client.Optimize;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.util.Iterator;
+import java.util.Vector;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import java.util.*;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Optimize.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import com.syrus.AMFICOM.Client.General.Command.Optimize.*;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTablePane;
+import com.syrus.AMFICOM.Client.Optimize.UI.OptimizeRibsDisplayModel;
+import com.syrus.AMFICOM.Client.Resource.DataSet;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeLink;
 
 // Данный класс изображает панель на которой находится jComboBox1 со списком
 // видов элементов(рёбер) и таблица элементов с полями "Идентификатор", "Название" и "активность"
@@ -123,11 +131,12 @@ public class OptimizeRibsPanel extends JPanel implements OperationListener
 		mouseSelect = false;
 		//Здесь очищаем выбранные элементы у таблицы
 		myTable.clearSelection();
-		DataSet dataSet = tablePane.getContents();
-		for(int i = 0; i < dataSet.size(); i++)
-		{	SchemeElement se = (SchemeElement )dataSet.get(i);
+		java.util.List list = tablePane.getContents();
+		int i_cou=0;
+		for(Iterator i = list.iterator(); i.hasNext();i_cou++)
+		{	SchemeElement se = (SchemeElement )i.next();
 			//if(se.isSelected())
-			{	myTable.getSelectionModel().addSelectionInterval(i, i);
+			{	myTable.getSelectionModel().addSelectionInterval( i_cou, i_cou);
 			}
 		}
 		mouseSelect = true;

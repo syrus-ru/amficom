@@ -3,7 +3,7 @@ package com.syrus.AMFICOM.Client.Optimize.UI;
 import java.text.*;
 import java.util.*;
 
-import java.awt.*;
+//import java.awt.*;
 
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
@@ -72,8 +72,8 @@ public class SolutionCompactDisplayModel extends StubDisplayModel
     return false;
   }
   //-----------------------------------------------------------------------------
-  public Vector getColumns()
-  { Vector cols = new Vector();
+  public List getColumns()
+  { ArrayList cols = new ArrayList();
     //cols.add("id");
     cols.add("name");
     cols.add("created");

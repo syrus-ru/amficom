@@ -122,9 +122,9 @@ public class OptimizeElementPanel extends JPanel implements OperationListener
     mouseSelect = false;
     //Здесь очищаем выбранные элементы у таблицы
     myTable.clearSelection();
-    DataSet dataSet = tablePane.getContents();
-    for(int i = 0; i < dataSet.size(); i++)
-    {	SchemeElement se = (SchemeElement )dataSet.get(i);
+   java.util.List list = tablePane.getContents();
+    for( Iterator  i = list.iterator() ; ; i++)
+    {	SchemeElement se = (SchemeElement )list.get(i);
       //if(se.isSelected())
       {	myTable.getSelectionModel().addSelectionInterval(i, i);
       }

@@ -43,11 +43,11 @@ public class ViewSchemeFrame extends JInternalFrame implements OperationListener
 	}
 	//-------------------------------------------------------------------------------------------------------------
 	// обновить картинку (ТОЛЬКО КАРТИНКУ ) набором путей тестирования paths
-	public void update(Vector paths)
-	{ //было graph.updatePathsAtScheme(paths); // ф-я обновляет пути ТОЛЬКO на картинке, в схеме надо обновлять отдельно
-    schemePanel.updatePathsAtScheme(paths);
-	  //было graph.scheme.paths = paths;
-    schemePanel.scheme.paths = paths;
+	public void update(Collection paths)
+	{  //было graph.updatePathsAtScheme(paths); // ф-я обновляет пути ТОЛЬКO на картинке, в схеме надо обновлять отдельно
+		schemePanel.updatePathsAtScheme(paths);
+	    //было graph.scheme.paths = paths;
+		schemePanel.scheme.paths = paths;
 	}
 	//-------------------------------------------------------------------------------------------------------------
 	// обновить окно новой схемой

@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Optimize.*;
 import com.syrus.AMFICOM.Client.Schematics.Elements.*;
 
-// команда "сохранить решение отдельан от схемы под своим именем" . Сохраняется только список путей. Схема не сохраняется.
+// команда "сохранить решение отдельно от схемы под своим именем" . Сохраняется только список путей. Схема не сохраняется.
 public class SaveSolutionAsCommand extends VoidCommand
 { OptimizeMDIMain    mdiMain;
   ApplicationContext aContext;
@@ -68,7 +68,8 @@ public class SaveSolutionAsCommand extends VoidCommand
     System.out.println("saving additional info about scheme-decision: done");
 
     dispatcher.notify(new OperationEvent(this, 0, "scheme_saved_event"));
-    System.out.println("SaveSolutionAsCommand.execute() - done");
+    mdiMain.latestSavedSolutionId = slc.id;
+    System.out.println("SaveSolutionAsCommand.execute(): done");
   }
   //--------------------------------------------------------------------------
 }

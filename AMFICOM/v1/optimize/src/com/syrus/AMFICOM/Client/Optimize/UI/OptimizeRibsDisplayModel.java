@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.Client.Optimize.UI;
 
-import java.awt.*;
+//import java.awt.*;
 import java.util.*;
 
 import com.syrus.AMFICOM.Client.General.UI.*;
@@ -15,7 +15,8 @@ import com.syrus.AMFICOM.Client.General.Command.Optimize.*;
 //модель таблицы для окна, в котором отображаются оптимизационные атрибуты линоков (рёбер) : active
 //================================================================================================================
 public class OptimizeRibsDisplayModel extends StubDisplayModel
-  {private OptimizeMDIMain mdiMain;
+{  private OptimizeMDIMain mdiMain;
+	private List listColumns;
     //------------------------------------------------------------------------------------
     public OptimizeRibsDisplayModel(OptimizeMDIMain mdiMain)
     { super();
@@ -27,12 +28,13 @@ public class OptimizeRibsDisplayModel extends StubDisplayModel
     }
     //------------------------------------------------------------------------------------
     //Далее функции иcполузуются для отображения свойств класса в таблице
-    public Vector getColumns()
-    { Vector cols = new Vector();
-      cols.add("optimizerRibAttribute");
-      //cols.add("id");
-      cols.add("name");
-      return cols;
+    public List getColumns()
+    {  if(this.listColumns==null)
+    	{ listColumnsl = new ArrayList();
+        { cols.add("optimizerRibAttribute");
+          cols.add("name");
+        }   
+      return this.listColumns;
     }
     //------------------------------------------------------------------------------------
     public String getColumnName(String col_id)

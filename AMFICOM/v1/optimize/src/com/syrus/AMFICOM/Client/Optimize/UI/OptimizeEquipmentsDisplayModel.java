@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.Client.Optimize.UI;
 
-import java.awt.*;
+//import java.awt.*;
 import java.util.*;
 
 import com.syrus.AMFICOM.Client.General.UI.*;
@@ -27,8 +27,8 @@ public class OptimizeEquipmentsDisplayModel extends StubDisplayModel
   }
   //------------------------------------------------------------------------------------
   //Далее функции иcполузуются для отображения свойств класса в таблице
-  public Vector getColumns()
-  {	Vector cols = new Vector();
+  public List getColumns()
+  {	List cols = new ArrayList();
     cols.add("optimizerNodeAttribute");
     //cols.add("id");
     cols.add("name");

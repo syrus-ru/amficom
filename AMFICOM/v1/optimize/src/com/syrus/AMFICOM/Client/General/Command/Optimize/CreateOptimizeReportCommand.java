@@ -1,9 +1,7 @@
 package com.syrus.AMFICOM.Client.General.Command.Optimize;
 
-import com.syrus.AMFICOM.Client.Map.Report.MapReportModel;
 import com.syrus.AMFICOM.Client.Optimize.Report.OptimizationReportModel;
 import com.syrus.AMFICOM.Client.Schematics.Report.SchemeReportModel;
-import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.Client.General.Command.OpenTypedTemplateCommand;

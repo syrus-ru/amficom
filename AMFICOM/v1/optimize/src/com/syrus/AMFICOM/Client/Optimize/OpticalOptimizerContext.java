@@ -265,7 +265,7 @@ public class OpticalOptimizerContext
              "¬ кабеле "+scl.getName()+" не заданы волокна", "ошибка считывани€ параметров сети", javax.swing.JOptionPane.OK_OPTION);
     return -1;
        }
-       SchemeCableThread thr = (SchemeCableThread)scl.cable_threads.get(0);
+       SchemeCableThread thr = (SchemeCableThread)scl.cable_threads.iterator().next();
        LinkType cl_type = (LinkType)Pool.get(LinkType.typ, thr.link_type_id);
        if(cl_type!=null)
        { attenuation = Double.parseDouble( ( (Characteristic)cl_type.characteristics.get(atten_str)).value);
@@ -457,8 +457,8 @@ public class OpticalOptimizerContext
   return res;
     for( Iterator paths = original_paths.iterator(); paths.hasNext();) // по всем пут€м
     { SchemePath sp = (SchemePath)paths.next();
-      for(Enumeration links = sp.links.elements(); links.hasMoreElements();)
-      { PathElement link = (PathElement)links.nextElement();
+      for(Iterator links = sp.links.iterator(); links.hasNext();)
+      { PathElement link = (PathElement)links.next();
         if(link.link_id.equals(link_id))
         {  res = true;
       break;

@@ -1,6 +1,5 @@
 package com.syrus.AMFICOM.Client.Optimize.Report;
 
-
 //import javax.swing.JInternalFrame;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
@@ -41,7 +40,7 @@ import java.awt.event.*;
  * @author Песковский Пётр
  * @version 1.0
  */
-
+//========================================================
 public class SelectSolutionFrame extends JDialog
 {
 	static public Scheme selectedScheme = null;
@@ -68,21 +67,18 @@ public class SelectSolutionFrame extends JDialog
 	JScrollPane solutionListScrollPane = new JScrollPane();
 	ObjectResourceListBox solutionList = new ObjectResourceListBox();
 
-
+	//----------------------------------------------------------------------------
 	public SelectSolutionFrame(ApplicationContext aC)
-	{
-    super (Environment.getActiveWindow());
-    
-		aContext = aC;
+	{  super (Environment.getActiveWindow());
+    	aContext = aC;
 		try
-		{
-			jbInit();
+		{	jbInit();
 		}
 		catch(Exception e)
-		{
-			e.printStackTrace();
+		{	e.printStackTrace();
 		}
 	}
+	//----------------------------------------------------------------------------
 	private void jbInit() throws Exception
 	{
 		border2 = new EtchedBorder(EtchedBorder.RAISED,Color.white,new Color(148, 145, 140));
@@ -120,76 +116,51 @@ public class SelectSolutionFrame extends JDialog
 		this.getContentPane().add(buttonPanel,     new GridBagConstraints(0, 2, 1, 1, 1.0, 0.0
 				,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 		buttonPanel.add(applyButton, null);
-
 		this.setEnabled(true);
 		this.setSize(400,400);
 		this.setResizable(true);
-
 		Dimension scrSize = Toolkit.getDefaultToolkit().getScreenSize();
-		this.setLocation ((int)(scrSize.getWidth() - this.getWidth()) / 2,
-								(int)(scrSize.getHeight() - this.getHeight()) / 2);
+		this.setLocation ((int)(scrSize.getWidth() - this.getWidth()) / 2,		(int)(scrSize.getHeight() - this.getHeight()) / 2);
 		this.setModal(true);
 		setSchemeListData();
 
 		this.setVisible(true);
 	}
-
+	//----------------------------------------------------------------------------
 	private void setSchemeListData()
-	{
-		System.out.println(new Date(System.currentTimeMillis()).toString() +
-								 " " + "Getting data from server...");
-		new SchemeDataSourceImage(aContext.getDataSourceInterface()).
-			LoadSchemes();
+	{	System.out.println(new Date(System.currentTimeMillis()).toString() + " " + "Getting data from server...");
+		new SchemeDataSourceImage(aContext.getDataSourceInterface()).LoadSchemes();
 		aContext.getDataSourceInterface().LoadSchemeMonitoringSolutions();
 		new MapDataSourceImage(aContext.getDataSourceInterface()).LoadMaps();
-
-		System.out.println(new Date(System.currentTimeMillis()).toString() +
-								 " " + "...done!");
+		System.out.println(new Date(System.currentTimeMillis()).toString() + " " + "...done!");
 
 		Hashtable selectValuesHash = Pool.getHash(Scheme.typ);
-
 		if (selectValuesHash == null)
-		{
-			dispose();
+		{	dispose();
 			return;
 		}
-
 		Enumeration svEnum = selectValuesHash.elements();
-
 		while (svEnum.hasMoreElements())
-		{
-			Scheme curScheme = (Scheme) svEnum.nextElement();
+		{	Scheme curScheme = (Scheme) svEnum.nextElement();
 			schemeList.add(curScheme);
 		}
-
 		try
-		{
-			if (selectedScheme != null)
-			{
-				for (int i = 0; i < schemeList.getModel().getSize(); i++)
-				{
-					String cur_id =
-									 ((Scheme)schemeList.getModel().getElementAt(i)).id;
+		{	if (selectedScheme != null)
+			{	for (int i = 0; i < schemeList.getModel().getSize(); i++)
+				{	String cur_id = ((Scheme)schemeList.getModel().getElementAt(i)).id;
 					if (cur_id.equals(selectedScheme.id))
-					{
-						schemeList.setSelectedIndex(i);
+					{	schemeList.setSelectedIndex(i);
 						schemeList.scrollRectToVisible(schemeList.getCellBounds(i,i));
 						break;
 					}
 				}
-
 				schemeList_valueChanged();
 
 				if (selectedMap != null)
-				{
-					for (int i = 0; i < topologyList.getModel().getSize(); i++)
-					{
-						String cur_id =
-											((MapContext)topologyList.getModel().getElementAt(i)).id;
-
+				{	for (int i = 0; i < topologyList.getModel().getSize(); i++)
+					{	String cur_id =	((MapContext)topologyList.getModel().getElementAt(i)).id;
 						if (cur_id.equals(selectedMap.id))
-						{
-							topologyList.setSelectedIndex(i);
+						{	topologyList.setSelectedIndex(i);
 							topologyList.scrollRectToVisible(topologyList.getCellBounds(i,i));
 							break;
 						}
@@ -197,16 +168,12 @@ public class SelectSolutionFrame extends JDialog
 				}
 
 				if (selectedSolution != null)
-				{
-					for (int i = 0; i < solutionList.getModel().getSize(); i++)
-					{
-						String cur_id =
+				{	for (int i = 0; i < solutionList.getModel().getSize(); i++)
+					{   	String cur_id =
 							((SolutionCompact) solutionList.getModel().getElementAt(i)).
 							id;
-
 						if (cur_id.equals(selectedSolution.id))
-						{
-							solutionList.setSelectedIndex(i);
+						{	solutionList.setSelectedIndex(i);
 							solutionList.scrollRectToVisible(solutionList.getCellBounds(i,i));
 							break;
 						}
@@ -215,65 +182,51 @@ public class SelectSolutionFrame extends JDialog
 			}
 		}
 		catch (Exception exc)
-		{
-			System.out.println("Can't set current template settings in list!");
+		{	System.out.println("Can't set current template settings in list!");
 		}
 	}
-
+	//----------------------------------------------------------------------------
 	void schemeList_valueChanged()
-	{
-
-		topologyList.removeAll();
+	{	topologyList.removeAll();
 		solutionList.removeAll();
-
 		Scheme selScheme = (Scheme) schemeList.getSelectedObjectResource();
 
 		//Загружаем в список доступные для схемы топологии
-
 		Hashtable selectValuesHash = Pool.getHash(MapContext.typ);
 
 		if (selectValuesHash != null)
-		{
-			Enumeration svEnum = selectValuesHash.elements();
+		{	Enumeration svEnum = selectValuesHash.elements();
 			while (svEnum.hasMoreElements())
-			{
-				MapContext curMap = (MapContext) svEnum.nextElement();
+			{  MapContext curMap = (MapContext) svEnum.nextElement();
 				if (curMap.scheme_id.equals(selScheme.id))
 					topologyList.add(curMap);
 			}
 		}
 		else
-		{
-			topologyList.add(
-						new JLabel(LangModelReport.getString("label_noTopologiesForScheme")));
+		{	topologyList.add(new JLabel(LangModelReport.getString("label_noTopologiesForScheme")));
 			topologyList.setEnabled(false);
 			selectedMap = null;
 		}
 
 		//Загружаем в список доступные для схемы решения по оптимизации
-
 		selectValuesHash = Pool.getHash(SolutionCompact.typ);
 		if (selectValuesHash != null)
-		{
-			Enumeration svEnum = selectValuesHash.elements();
+		{	Enumeration svEnum = selectValuesHash.elements();
 			Vector infoNames = new Vector();
 			while (svEnum.hasMoreElements())
-			{
-				SolutionCompact curSC = (SolutionCompact) svEnum.
-												nextElement();
+			{	SolutionCompact curSC = (SolutionCompact) svEnum.nextElement();
 				if (curSC.scheme_id.equals(selScheme.id))
-					solutionList.add(curSC);
+				{	solutionList.add(curSC);			
+				}
 			}
 		}
 		else
-		{
-			solutionList.add(
-						new JLabel(LangModelReport.getString("label_noSolutions")));
+		{	solutionList.add(	new JLabel(LangModelReport.getString("label_noSolutions")));
 			solutionList.setEnabled(false);
 			selectedSolution = null;
 		}
 	}
-
+	//----------------------------------------------------------------------------
 	void applyButton_actionPerformed(ActionEvent e)
 	{
 		if (schemeList.getSelectedIndex() != -1)

@@ -101,9 +101,9 @@ public class KISselectionFrame extends JInternalFrame
        { sn = kistype.name; //getting of name
          //System.out.print(sn);
          sID = kistype.id; // getting of ID
-         Hashtable ht2 = kistype.characteristics;
-         for(Enumeration enum2 = ht2.elements(); enum2.hasMoreElements(); )
-         { Characteristic ch = (Characteristic)enum2.nextElement();
+         Map  map2 = kistype.characteristics;        
+         for(Iterator iter2 = map2.keySet().iterator(); iter2.hasNext(); )
+         { Characteristic ch = (Characteristic)map2.get(iter2.next());
            if(ch.type_id.equals("Channel_number"))
            { spn = (ch.value); //getting of port number
            }
@@ -114,11 +114,11 @@ public class KISselectionFrame extends JInternalFrame
       { rn = kistype.name; //getting its name
         //System.out.print(rn);
         rID = kistype.id;  //getting its ID
-        Hashtable ht2 = kistype.characteristics;
+        Map map2 = kistype.characteristics;
         rdd = new Vector();//в clear() вера подорвана ...
         rwl = new Vector();
-		    for(Enumeration enum2 = ht2.elements(); enum2.hasMoreElements(); )
-		    { Characteristic ch = (Characteristic )enum2.nextElement();
+		    for(Iterator iter2 = map2.keySet().iterator(); iter2.hasNext(); )
+		    { Characteristic ch = (Characteristic )map2.get(iter2.next());
 		      if( ch.type_id.equals("Diapazon_850") )
 		      { // rdd - reflectometer dynamic diapazon, rwl - refl wavelength
             rdd.add((ch.value)); // adding the dynamical area to the list
@@ -342,11 +342,11 @@ public class KISselectionFrame extends JInternalFrame
 			{  if(kistype.eq_class.equals("tester")) // checker, if KIS type is REFL.
 				 {   rn = kistype.name; //getting its name
 						 rID = kistype.id;  //getting its ID
-						 Hashtable ht2 = kistype.characteristics;
+						Map map2 = kistype.characteristics;
 						 String full_key = "Diapazon_"+key;
 
-						 for(Enumeration enum2 = ht2.elements(); enum2.hasMoreElements();)//по всем характеристикам
-						 {  Characteristic ch = (Characteristic) enum2.nextElement();
+						 for(Iterator  iter2 = map2.keySet().iterator(); iter2.hasNext();)//по всем характеристикам
+						 {  Characteristic ch = (Characteristic)map2.get(iter2.next());
 								if( ch.type_id.equals(full_key) || ( key.equals("все") && ch.type_id.startsWith("Diapazon_") ))// если выбрано "все" , то все и выводим вне зависимости от длины волны
 								{ rdd = (ch.value); //  если не указана длина волны, то показываем первый попавшийся динамич диапазон
 									if( !rn.equals("") )
