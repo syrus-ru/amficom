@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.12 2005/03/24 12:40:00 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.13 2005/03/24 12:52:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,12 +9,16 @@
 package com.syrus.AMFICOM.administration;
 
 import java.util.Collection;
+import java.util.Iterator;
 
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/03/24 12:40:00 $
+ * @version $Revision: 1.13 $, $Date: 2005/03/24 12:52:40 $
  * @author $Author: arseniy $
  * @module admin_v1
  */
@@ -24,6 +28,27 @@ final class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCo
 		this.linkedIds = linkedIds;
 		this.linkedEntityCode = linkedEntityCode.shortValue();
 		this.entityCode = entityCode;
+	}
+
+	private boolean checkDomain(DomainMember domainMember) {
+		boolean condition = false;
+		try {
+			Domain dmDomain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
+			Identifier id;
+			Domain domain;
+			for (Iterator it = this.linkedIds.iterator(); it.hasNext() && !condition;) {
+				id = (Identifier) it.next();
+				if (id.getMajor() == ObjectEntities.DOMAIN_ENTITY_CODE) {
+					domain = (Domain) AdministrationStorableObjectPool.getStorableObject(id, true);
+					if (dmDomain.isChild(domain))
+						condition = true;
+				}
+			}
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+		}
+		return condition;
 	}
 
 	public boolean isConditionTrue(Object object) throws IllegalObjectEntityException {
