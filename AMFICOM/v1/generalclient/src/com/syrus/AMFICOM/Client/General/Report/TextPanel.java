@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.Client.General.Report;
 import java.awt.Dimension;
 import java.awt.BorderLayout;
 
+import java.awt.Graphics;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 
@@ -38,8 +39,15 @@ public class TextPanel extends JScrollPane
 	private void jbInit() throws Exception
 	{
 		this.setPreferredSize(dataPane.getPreferredSize());
-    this.getViewport().add(dataPane);    
+//    this.getViewport().add(dataPane);    
 
 		this.setVisible(true);
 	}
+  
+  public void paint(Graphics g)
+  {
+    super.paint(g);
+    
+    this.dataPane.paint(g);
+  }
 }
