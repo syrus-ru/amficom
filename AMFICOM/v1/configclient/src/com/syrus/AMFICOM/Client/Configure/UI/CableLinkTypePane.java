@@ -19,6 +19,7 @@ public class CableLinkTypePane extends PropertiesPanel
 	public ApplicationContext aContext;
 
 	CableLinkTypeGeneralPanel gPanel = new CableLinkTypeGeneralPanel();
+	CableLinkTypeFibrePanel fPanel = new CableLinkTypeFibrePanel();
 	CableLinkTypeCharacteristicsPanel chPanel = new CableLinkTypeCharacteristicsPanel();
 
 	CableLinkType linkType;
@@ -55,6 +56,7 @@ public class CableLinkTypePane extends PropertiesPanel
 		tabbedPane.setTabPlacement(JTabbedPane.TOP);
 
 		tabbedPane.add(gPanel.getName(), gPanel);
+		tabbedPane.add(fPanel.getName(), fPanel);
 		tabbedPane.add(chPanel.getName(), chPanel);
 
 		saveButton.setText(LangModelConfig.getString("menuMapSaveText"));
@@ -77,6 +79,7 @@ public class CableLinkTypePane extends PropertiesPanel
 		this.linkType = (CableLinkType)or;
 
 		gPanel.setObjectResource(linkType);
+		fPanel.setObjectResource(linkType);
 		chPanel.setObjectResource(linkType);
 		return true;
 	}
@@ -85,12 +88,14 @@ public class CableLinkTypePane extends PropertiesPanel
 	{
 		this.aContext = aContext;
 		gPanel.setContext(aContext);
+		fPanel.setContext(aContext);
 		chPanel.setContext(aContext);
 	}
 
 	public boolean modify()
 	{
 		if (gPanel.modify() &&
+				fPanel.modify() &&
 				chPanel.modify())
 			return true;
 		return false;

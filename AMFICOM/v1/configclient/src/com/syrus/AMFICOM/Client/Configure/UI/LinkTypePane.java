@@ -108,7 +108,7 @@ public class LinkTypePane extends PropertiesPanel
 		if(modify())
 		{
 			DataSourceInterface dataSource = aContext.getDataSourceInterface();
-			dataSource.SaveLink(linkType.getId());
+			dataSource.SaveLinkTypes(new String[] {linkType.getId()});
 				return true;
 		}
 		else
