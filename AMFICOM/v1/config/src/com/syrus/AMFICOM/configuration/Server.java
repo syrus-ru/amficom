@@ -1,12 +1,12 @@
 /*
- * $Id: Server.java,v 1.4 2004/08/09 11:47:39 arseniy Exp $
+ * $Id: Server.java,v 1.5 2004/08/09 11:54:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 
-package com.syrus.AMFICOM.general;
+package com.syrus.AMFICOM.configuration;
 
 import java.util.Date;
 import java.util.Iterator;
@@ -19,10 +19,10 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.general.corba.Server_Transferable;
+import com.syrus.AMFICOM.configuration.corba.Server_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/08/09 11:47:39 $
+ * @version $Revision: 1.5 $, $Date: 2004/08/09 11:54:14 $
  * @author $Author: arseniy $
  * @module general_v1
  */
