@@ -41,7 +41,7 @@ $(call checkenve,JAVA_HOME)
 .PHONY:	clean cleanmach cleanhead arch install
 
 
-$(LIBNAME):	.mach
+$(LIBNAME):	.head .mach 
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
 
@@ -54,7 +54,11 @@ $(LIBNAME):	.mach
 		com.syrus.AMFICOM.analysis.dadara.ModelFunction
 	$(JAVAH) $(JAVAH_FLAGS) \
 		-d $(NATIVE_DIR) \
-		com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent
+		com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent
+	$(JAVAH) $(JAVAH_FLAGS) \
+		-d $(NATIVE_DIR) \
+		com.syrus.AMFICOM.analysis.dadara.ComplexReflectogramEvent
+
 	touch $@
 
 .mach:	$(CLASSDIR)
@@ -81,7 +85,8 @@ cleanhead:
 	$(RM) \
 		$(NATIVE_DIR)/com_syrus_AMFICOM_analysis_CoreAnalysisManager.h \
 		$(NATIVE_DIR)/com_syrus_AMFICOM_analysis_dadara_ModelFunction.h \
-		$(NATIVE_DIR)/com_syrus_AMFICOM_analysis_dadara_ReflectogramEvent.h
+		$(NATIVE_DIR)/com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent.h \
+		$(NATIVE_DIR)/com_syrus_AMFICOM_analysis_dadara_ComplexReflectogramEvent.h 
 	$(RM) .head
 
 #### Install ####
