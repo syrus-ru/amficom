@@ -11,6 +11,7 @@ CREATE TABLE MCM (
 --
  name VARCHAR2(64) NOT NULL,
  description VARCHAR2(256),
+ tcp_port NUMBER(5,0),
  user_id VARCHAR2(32) NOT NULL,
  server_id VARCHAR2(32) NOT NULL,
 --
