@@ -2,12 +2,12 @@ package com.syrus.AMFICOM.Client.General.Event;
 
 public class RefUpdateEvent extends OperationEvent
 {
-    private long flags = 0;
-    
-    /*
-     * EVENT_SELECTED_EVENT:  
-     *  source = Int(#события), может быть -1 (это неправильно, но может случаться)
-     */
+	private long flags = 0;
+	
+	/*
+	 * EVENT_SELECTED_EVENT:  
+	 *  source = Int(#события), может быть -1 (это неправильно, но может случаться)
+	 */
 	
 	public boolean markerMoved()
 	    { return (flags & MARKER_MOVED_EVENT) != 0; }
@@ -24,7 +24,7 @@ public class RefUpdateEvent extends OperationEvent
 	public boolean minTraceLevelChanged()
 	    { return (flags & MIN_TRACE_LEVEL_CHANGED_EVENT) != 0; }
 	public boolean modelFunctionChanged()
-    { return (flags & MODEL_CHANGED_EVENT) != 0; }
+	{ return (flags & MODEL_CHANGED_EVENT) != 0; }
 
 	public static final long MARKER_MOVED_EVENT 			= 0x00000001;
 	public static final long COLORS_CHANGED_EVENT 			= 0x00000010;

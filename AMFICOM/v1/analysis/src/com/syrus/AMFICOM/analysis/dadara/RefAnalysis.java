@@ -55,7 +55,7 @@ public class RefAnalysis
 			events[i] = new TraceEvent(type, re[i].getBegin(), re[i].getEnd());
 
 			/* -- removed --
-    if (type == TraceEvent.LINEAR)
+	if (type == TraceEvent.LINEAR)
 			{
 				events[i].data = new double[5];
 				events[i].data[0] = top - re[i].refAmplitude(re[i].getBegin());
@@ -198,9 +198,9 @@ public class RefAnalysis
   for(int i = 0; i < re.length; i++)
 		{
 			// for(int j = re[i].getBegin(); j < y.length; j++) -- changed just because was too slow -- saa
-    int pos_from = re[i].getBegin();
-    int pos_to = re[i].getEnd();
-    for(int j = pos_from; j < pos_to; j++)
+	int pos_from = re[i].getBegin();
+	int pos_to = re[i].getEnd();
+	for(int j = pos_from; j < pos_to; j++)
 			{
 				if(j < last_point) // XXX: saa: I think there should be '<='
 				{

@@ -99,11 +99,11 @@ public class SimpleGraphPanel extends JPanel
 	    double a = weight;
 	    double b = 255 * (1.0 - weight);
 	    return weakColor ?
-            new Color(
-                (int )(color.getRed() * a + b),
-                (int )(color.getGreen() * a + b),
-                (int )(color.getBlue() * a + b))
-    		: color;
+			new Color(
+				(int )(color.getRed() * a + b),
+				(int )(color.getGreen() * a + b),
+				(int )(color.getBlue() * a + b))
+			: color;
 	    /*
 	    return weakColor ?
 	            new Color(

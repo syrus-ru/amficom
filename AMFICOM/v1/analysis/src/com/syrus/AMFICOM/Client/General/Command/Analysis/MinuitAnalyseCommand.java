@@ -52,7 +52,7 @@ public class MinuitAnalyseCommand extends VoidCommand
 	public void execute()
 	{
 		long t0 = System.currentTimeMillis();
-    bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
+	bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
 		if (bs != null)
 		{
 			Environment.getActiveWindow().setCursor(new Cursor(Cursor.WAIT_CURSOR));
@@ -63,9 +63,9 @@ public class MinuitAnalyseCommand extends VoidCommand
 			double[] params = (double[])Pool.get("analysisparameters", "minuitanalysis");
 			if (params == null)
 			{
-        System.out.println("MinuitAnalysis.execute(): create AnalysisManager at dt/ms " + (System.currentTimeMillis()-t0));
+		System.out.println("MinuitAnalysis.execute(): create AnalysisManager at dt/ms " + (System.currentTimeMillis()-t0));
 				new AnalysisManager();
-        System.out.println("MinuitAnalysis.execute(): AnalysisManager created at dt/ms " + (System.currentTimeMillis()-t0));
+		System.out.println("MinuitAnalysis.execute(): AnalysisManager created at dt/ms " + (System.currentTimeMillis()-t0));
 				params = (double[])Pool.get("analysisparameters", "minuitanalysis");
 			}
 			
@@ -80,24 +80,24 @@ public class MinuitAnalyseCommand extends VoidCommand
 			if (nReflSize > 3 * reflSize / 5)
 				nReflSize = 3 * reflSize / 5;
 
-      //System.out.println("MinuitAnalysis.execute(): starting analyseTrace+fitTrace at dt/ms " + (System.currentTimeMillis()-t0));
+	  //System.out.println("MinuitAnalysis.execute(): starting analyseTrace+fitTrace at dt/ms " + (System.currentTimeMillis()-t0));
 
-      double[] meanAttenuation = { 0 };
+	  double[] meanAttenuation = { 0 };
 
-      ReflectogramEvent[] ep = AnalysisManager.makeAnalysis(
-          (int)params[6], bs, params, meanAttenuation, reflSize, nReflSize,
-          tracesMap);
+	  ReflectogramEvent[] ep = AnalysisManager.makeAnalysis(
+		  (int)params[6], bs, params, meanAttenuation, reflSize, nReflSize,
+		  tracesMap);
 
-      //for (int i = 0; i < 2; i++) // FIXIT
-      //ep = AnalysisManager.fitTrace(
-      //   y, delta_x, ep, (int)params[6], meanAttenuation[0]);
+	  //for (int i = 0; i < 2; i++) // FIXIT
+	  //ep = AnalysisManager.fitTrace(
+	  //   y, delta_x, ep, (int)params[6], meanAttenuation[0]);
 
-      //System.out.println("MinuitAnalysis.execute(): completed analyseTrace+fitTrace at dt/ms " + (System.currentTimeMillis()-t0));
+	  //System.out.println("MinuitAnalysis.execute(): completed analyseTrace+fitTrace at dt/ms " + (System.currentTimeMillis()-t0));
 
 			RefAnalysis a = new RefAnalysis();
-      //System.out.println("MinuitAnalysis.execute(): new RefAnalysis complete at dt/ms " + (System.currentTimeMillis()-t0));
+	  //System.out.println("MinuitAnalysis.execute(): new RefAnalysis complete at dt/ms " + (System.currentTimeMillis()-t0));
 			a.decode(y, ep);
-      //System.out.println("MinuitAnalysis.execute(): decode complete at dt/ms " + (System.currentTimeMillis()-t0));
+	  //System.out.println("MinuitAnalysis.execute(): decode complete at dt/ms " + (System.currentTimeMillis()-t0));
 
 //			EventReader reader = new EventReader();
 			//reader.decode(result);
@@ -115,7 +115,7 @@ public class MinuitAnalyseCommand extends VoidCommand
 			Pool.put("eventparams", id, ep);
 
 			Environment.getActiveWindow().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-      //System.out.println("MinuitAnalysis.execute(): pool & Cursor complete at dt/ms " + (System.currentTimeMillis()-t0));
+	  //System.out.println("MinuitAnalysis.execute(): pool & Cursor complete at dt/ms " + (System.currentTimeMillis()-t0));
 		}
 	}
 }

@@ -77,7 +77,7 @@ public class ReflectogramMath
 			for(int i = 0; i < y.length; i++)
 			{
 				y[i].shiftY(dA);
-        /*a1_connector += dA;
+		/*a1_connector += dA;
 				y[i].a2_connector += dA;
 				y[i].a_linear += dA;
 				y[i].a_weld += dA;*/

@@ -26,7 +26,7 @@ import com.syrus.io.BellcoreStructure;
 public class AnalyseMainFrameSimplified extends JFrame
 	implements OperationListener
 {
-    public static final boolean DEBUG = System.getProperty("amficom.debug.nonstrict", "false").equals("true");
+	public static final boolean DEBUG = System.getProperty("amficom.debug.nonstrict", "false").equals("true");
 
 	public ApplicationContext aContext;
 	static SimpleDateFormat sdf =
