@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.27 2005/03/10 12:52:25 arseniy Exp $
+ * $Id: KISReport.java,v 1.28 2005/04/01 21:51:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
@@ -31,7 +32,7 @@ import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/03/10 12:52:25 $
+ * @version $Revision: 1.28 $, $Date: 2005/04/01 21:51:49 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -67,7 +68,7 @@ public class KISReport {
 				parameters[i] = SetParameter.createInstance(parameterType, this.parameterValues[i]);
 			}
 
-			Result result = measurement.createResult(MeasurementControlModule.iAm.getUserId(), parameters);
+			Result result = measurement.createResult(SessionContext.getAccessIdentity().getUserId(), parameters);
 			MeasurementDatabaseContext.getResultDatabase().insert(result);
 			return result;
 		}
@@ -83,7 +84,7 @@ public class KISReport {
 	}
 
 	private static void addOutParameterTypeId(String codename) {
-		ParameterTypeDatabase parameterTypeDatabase = ((ParameterTypeDatabase) GeneralDatabaseContext.getParameterTypeDatabase());
+		ParameterTypeDatabase parameterTypeDatabase = GeneralDatabaseContext.getParameterTypeDatabase();
 		try {
 			TypicalCondition tc = new TypicalCondition(codename,
 					OperationSort.OPERATION_EQUALS,

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.19 2005/03/10 21:17:33 arseniy Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.20 2005/04/01 21:50:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.lang.reflect.InvocationTargetException;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.Evaluation;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/03/10 21:17:33 $
+ * @version $Revision: 1.20 $, $Date: 2005/04/01 21:50:35 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -40,6 +41,8 @@ public class AnalysisEvaluationProcessor {
 
 	private static final String CLASS_NAME_ANALYSIS_MANAGER_DADARA = "DadaraAnalysisManager";
 	private static final String CLASS_NAME_EVALUATION_MANAGER_DADARA = "DadaraEvaluationManager";
+
+	private static final String ANALYSIS_NAME = "Analysis of measurement";
 
 	private static AnalysisManager analysisManager;
 	private static EvaluationManager evaluationManager;
@@ -107,10 +110,11 @@ public class AnalysisEvaluationProcessor {
 			throw new AnalysisException("Criteria set is NULL");
 
 		try {
-			Analysis analysis = Analysis.createInstance(MeasurementControlModule.iAm.getUserId(),
+			Analysis analysis = Analysis.createInstance(SessionContext.getAccessIdentity().getUserId(),
 					analysisType,
 					monitoredElementId,
 					measurement,
+					ANALYSIS_NAME + " '" + measurement.getId() + "'",
 					criteriaSet);
 			MeasurementDatabaseContext.getAnalysisDatabase().insert(analysis);
 			return analysis;
@@ -128,7 +132,7 @@ public class AnalysisEvaluationProcessor {
 			throw new EvaluationException("Threshold set is NULL");
 
 		try {
-			Evaluation evaluation = Evaluation.createInstance(MeasurementControlModule.iAm.getUserId(),
+			Evaluation evaluation = Evaluation.createInstance(SessionContext.getAccessIdentity().getUserId(),
 					evaluationType,
 					monitoredElementId,
 					measurement,
@@ -201,7 +205,7 @@ public class AnalysisEvaluationProcessor {
 		SetParameter[] arParameters = analysisManager.analyse();
 		Result analysisResult;
 		try {
-			analysisResult = analysis.createResult(MeasurementControlModule.iAm.getUserId(), arParameters);
+			analysisResult = analysis.createResult(SessionContext.getAccessIdentity().getUserId(), arParameters);
 		}
 		catch (CreateObjectException coe) {
 			Log.errorException(coe);
@@ -211,7 +215,7 @@ public class AnalysisEvaluationProcessor {
 		SetParameter[] erParameters = evaluationManager.evaluate();
 		Result evaluationResult;
 		try {
-			evaluationResult = evaluation.createResult(MeasurementControlModule.iAm.getUserId(), erParameters);
+			evaluationResult = evaluation.createResult(SessionContext.getAccessIdentity().getUserId(), erParameters);
 		}
 		catch (CreateObjectException coe) {
 			Log.errorException(coe);
