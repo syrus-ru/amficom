@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.10 2005/01/26 15:09:21 bob Exp $
+ * $Id: CableThread.java,v 1.11 2005/02/03 20:08:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.administration.DomainMember;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/01/26 15:09:21 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/02/03 20:08:15 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public class CableThread extends DomainMember implements TypedObject {
@@ -100,7 +100,7 @@ public class CableThread extends DomainMember implements TypedObject {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			return new CableThread(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLE_THREAD_ENTITY_CODE),
+			return new CableThread(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLETHREAD_ENTITY_CODE),
 											creatorId,
 											domainId,
 											name,
