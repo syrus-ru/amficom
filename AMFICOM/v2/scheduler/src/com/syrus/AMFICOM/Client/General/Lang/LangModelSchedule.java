@@ -2,7 +2,7 @@ package com.syrus.AMFICOM.Client.General.Lang;
 
 import java.util.*;
 
-public class LangModelScheduler {
+public class LangModelSchedule {
 
 	private static final String			BUNDLE_NAME		= "com.syrus.AMFICOM.Client.General.Lang.scheduler";
 
