@@ -1,5 +1,5 @@
 /*
- * $Id: ByteArray.java,v 1.6 2005/03/15 13:00:43 saa Exp $
+ * $Id: ByteArray.java,v 1.7 2005/03/16 10:10:57 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -154,27 +154,33 @@ public class ByteArray {
     return new ByteArray(bar1);
   }
 
-  public static byte[] toByteArray(int a) {
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    DataOutputStream dos = new DataOutputStream(baos);
-    try {
-    	dos.writeInt(a);
-    } catch (IOException e) {
-    	// IOExceptions are never thrown in ByteArrayOutputStream.write()
-    }
-    return baos.toByteArray();
-  }
-
-  public static byte[] toByteArray(long l) {
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    DataOutputStream dos = new DataOutputStream(baos);
-    try {
-    	dos.writeLong(l);
-    } catch (IOException e) {
-		// IOExceptions are never thrown in ByteArrayOutputStream.write()
+	public static byte[] toByteArray(int a) {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		DataOutputStream dos = new DataOutputStream(baos);
+		try {
+			dos.writeInt(a);
+		}
+		catch (IOException ioe) {
+			// IOExceptions are never thrown in ByteArrayOutputStream.write()
+			System.out.println("Exception in writing int -- " + ioe.getMessage());
+			ioe.printStackTrace();
+		}
+		return baos.toByteArray();
 	}
-    return baos.toByteArray();
-  }
+
+	public static byte[] toByteArray(long l) {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		DataOutputStream dos = new DataOutputStream(baos);
+		try {
+			dos.writeLong(l);
+		}
+		catch (IOException ioe) {
+			// IOExceptions are never thrown in ByteArrayOutputStream.write()
+			System.out.println("Exception in writing long -- " + ioe.getMessage());
+			ioe.printStackTrace();
+		}
+		return baos.toByteArray();
+	}
 
   public static byte[] toByteArray(double d) {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();

@@ -1,5 +1,5 @@
 /*
- * $Id: DataReader.java,v 1.5 2005/03/04 08:05:49 bass Exp $
+ * $Id: DataReader.java,v 1.6 2005/03/16 10:10:57 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,8 @@ package com.syrus.io;
 import java.io.*;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/03/04 08:05:49 $
- * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/03/16 10:10:57 $
+ * @author $Author: arseniy $
  * @module util
  */
 public abstract class DataReader extends BellcoreStructure
@@ -34,7 +34,8 @@ public abstract class DataReader extends BellcoreStructure
 		}
 		catch (IOException ex)
 		{
-			// empty
+			System.out.println("Exception -- " + ex.getMessage());
+			ex.printStackTrace();
 		}
 		return data;
 	}
