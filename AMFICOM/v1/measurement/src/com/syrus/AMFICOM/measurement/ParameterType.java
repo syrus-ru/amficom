@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.14 2004/08/17 14:35:48 bob Exp $
+ * $Id: ParameterType.java,v 1.15 2004/08/18 18:09:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/08/17 14:35:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2004/08/18 18:09:24 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -110,7 +110,7 @@ public class ParameterType extends StorableObjectType {
 																					(Identifier_Transferable)super.creatorId.getTransferable(),
 																					(Identifier_Transferable)super.modifierId.getTransferable(),
 																					new String(super.codename),
-																					new String(super.description),
+																					(super.description != null) ? (new String(super.description)) : "",
 																					new String(this.name));
 	}
 	
