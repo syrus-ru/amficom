@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.11 2005/02/15 08:41:26 bob Exp $
+ * $Id: ImageResourceDatabase.java,v 1.12 2005/02/21 07:38:33 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.11 $, $Date: 2005/02/15 08:41:26 $
+ * @author $Author: max $
+ * @version $Revision: 1.12 $, $Date: 2005/02/21 07:38:33 $
  * @module resource_v1
  */
 
@@ -152,7 +152,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 	}
 
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException {
 		AbstractImageResource abstractImageResource = fromStorableObject(storableObject);
 		ImageResourceSort sort = abstractImageResource.getSort();
 		String codename = null;
@@ -342,7 +342,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject,
 			PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		AbstractImageResource abstractImageResource = this.fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject,	preparedStatement, mode);
 		int sort = abstractImageResource.getSort().value();
@@ -359,10 +359,10 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 				DatabaseString.setString(preparedStatement, ++i, "", SIZE_CODENAME_COLUMN);
 				preparedStatement.setInt(++i, ImageResourceSort._SCHEME);
 			} else {
-				throw new UpdateObjectException("Unsupported ImageResourse sort =" + sort);
+				throw new IllegalDataException("Unsupported ImageResourse sort =" + sort);
 			}			
 		} catch (SQLException sqle) {
-			throw new UpdateObjectException(getEnityName()
+			throw new IllegalDataException(getEnityName()
 					+ "Database.setEntityForPreparedStatement | Error "
 					+ sqle.getMessage(), sqle);
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceStorableObjectPool.java,v 1.8 2005/02/15 08:50:51 max Exp $
+ * $Id: ResourceStorableObjectPool.java,v 1.9 2005/02/21 07:38:33 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import java.util.Set;
 
 /**
  * @author $Author: max $
- * @version $Revision: 1.8 $, $Date: 2005/02/15 08:50:51 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/21 07:38:33 $
  * @module resource_v1
  */
 public final class ResourceStorableObjectPool extends StorableObjectPool {
@@ -31,7 +31,7 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 	private static ResourceStorableObjectPool instance;
 	
 	private ResourceStorableObjectPool() {
-		//empty
+		super(ObjectGroupEntities.RESOURCE_GROUP_CODE);
 	}
 	
 	private ResourceStorableObjectPool(Class cacheMapClass){
@@ -178,21 +178,28 @@ public final class ResourceStorableObjectPool extends StorableObjectPool {
 		instance.cleanChangedStorableObjectsImpl();
 	}
 	
-	protected void deleteStorableObject(Identifier id) throws DatabaseException, CommunicationException {
+	protected void deleteStorableObject(Identifier id) throws IllegalDataException {
 		try {
 			rObjectLoader.delete(id);
 		} catch (DatabaseException e) {
 			Log.errorMessage("ResourceStorableObjectPool.deleteStorableObject | DatabaseException: " + e.getMessage()); //$NON-NLS-1$
-			throw new DatabaseException("ResourceStorableObjectPool.deleteStorableObject", e); //$NON-NLS-1$
+			throw new IllegalDataException("ResourceStorableObjectPool.deleteStorableObject", e); //$NON-NLS-1$
+		} catch (CommunicationException e) {
+			Log.errorMessage("ResourceStorableObjectPool.deleteStorableObject | CommunicationException: " + e.getMessage()); //$NON-NLS-1$
+			throw new IllegalDataException("ResourceStorableObjectPool.deleteStorableObject", e); //$NON-NLS-1$
 		}
+		
 	}
 	
-	protected void deleteStorableObjects(Collection ids) throws DatabaseException, CommunicationException {
+	protected void deleteStorableObjects(Collection ids) throws IllegalDataException {
 		try {
 			rObjectLoader.delete(ids);
 		} catch (DatabaseException e) {
 			Log.errorMessage("ResourceStorableObjectPool.deleteStorableObjects | DatabaseException: " + e.getMessage()); //$NON-NLS-1$
-			throw new DatabaseException("ResourceStorableObjectPool.deleteStorableObjects", e); //$NON-NLS-1$
+			throw new IllegalDataException("ResourceStorableObjectPool.deleteStorableObjects", e); //$NON-NLS-1$
+		} catch (CommunicationException e) {
+			Log.errorMessage("ResourceStorableObjectPool.deleteStorableObjects | CommunicationException: " + e.getMessage()); //$NON-NLS-1$
+			throw new IllegalDataException("ResourceStorableObjectPool.deleteStorableObjects", e); //$NON-NLS-1$
 		}
 	}
 
