@@ -35,26 +35,15 @@
 
 package com.syrus.AMFICOM.Client.Resource.ISMDirectory;
 
-import java.io.IOException;
-import java.io.Serializable;
+import java.io.*;
+import java.util.*;
 
-import java.util.Hashtable;
-import java.util.Vector;
-import java.util.Enumeration;
-
-import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-
-import com.syrus.AMFICOM.Client.Configure.UI.AccessPortTypePane;
-
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
-import com.syrus.AMFICOM.Client.Resource.MyUtil;
-import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
-
-import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
-import com.syrus.AMFICOM.CORBA.ISMDirectory.AccessPortType_Transferable;
-
+import com.syrus.AMFICOM.CORBA.ISMDirectory.*;
+import com.syrus.AMFICOM.CORBA.Network.*;
+import com.syrus.AMFICOM.Client.Configure.UI.*;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Network.*;
 
 public class AccessPortType extends ObjectResource implements Serializable
 {
@@ -98,20 +87,20 @@ public class AccessPortType extends ObjectResource implements Serializable
 		transferable = new AccessPortType_Transferable();
 	}
 
-  public ObjectResourceModel getModel()
-  {
-    return new AccessPortTypeModel(this);
-  }
+	public ObjectResourceModel getModel()
+	{
+		return new AccessPortTypeModel(this);
+	}
 
-  public static ObjectResourceDisplayModel getDefaultDisplayModel()
-  {
-    return new AccessPortTypeDisplayModel();
-  }
+	public static ObjectResourceDisplayModel getDefaultDisplayModel()
+	{
+		return new AccessPortTypeDisplayModel();
+	}
 
-  public static PropertiesPanel getPropertyPane()
-  {
-    return new AccessPortTypePane();
-  }
+	public static PropertiesPanel getPropertyPane()
+	{
+		return new AccessPortTypePane();
+	}
 
 	public void setLocalFromTransferable()
 	{

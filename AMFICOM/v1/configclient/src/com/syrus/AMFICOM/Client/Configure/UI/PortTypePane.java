@@ -161,7 +161,7 @@ public class PortTypePane extends PropertiesPanel
 			PortType new_type = new PortType();
 			new_type.is_modified = true;
 			new_type.name = name;
-			//new_type.link_class = "cable";
+			new_type.p_class = "optical";
 			new_type.modified = System.currentTimeMillis();
 			new_type.id = aContext.getDataSourceInterface().GetUId(PortType.typ);
 

@@ -141,6 +141,33 @@ public class CablePortTypePane extends PropertiesPanel
 
 	public boolean create()
 	{
+		DataSourceInterface dataSource = aContext.getDataSourceInterface();
+		if (dataSource == null)
+			return false;
+
+		PopupNameFrame dialog = new PopupNameFrame(Environment.getActiveWindow(), "Новый тип");
+		dialog.setSize(dialog.preferredSize);
+
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		dialog.setLocation((screenSize.width - dialog.getPreferredSize().width) / 2,
+											 (screenSize.height - dialog.getPreferredSize().height) / 2);
+		dialog.setVisible(true);
+
+		if (dialog.getStatus() == dialog.OK && !dialog.getName().equals(""))
+		{
+			String name = dialog.getName();
+			CablePortType new_type = new CablePortType();
+			new_type.is_modified = true;
+			new_type.name = name;
+			new_type.p_class = "optical";
+			new_type.modified = System.currentTimeMillis();
+			new_type.id = aContext.getDataSourceInterface().GetUId(CablePortType.typ);
+
+			setObjectResource(new_type);
+
+			Pool.put(CablePortType.typ, new_type.getId(), new_type);
+			return true;
+		}
 		return false;
 	}
 
