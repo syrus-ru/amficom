@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.inc,v 1.19 2005/01/20 10:15:51 bass Exp $
+# $Id: Makefile.inc,v 1.20 2005/03/17 11:30:37 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -107,7 +107,7 @@ jdevrt = $(wildcard $(ORACLE_HOME)/jdev/lib/jdev-rt.zip)
 endif
 DEPRECATEDCLASSPATH = $(jdevrt)
 
-ENCODING = windows-1251
+ENCODING ?= windows-1251
 JAVAC_WARNOFF_FLAG = -nowarn
 # User may specify either -source 1.3 or -source 1.4 as an initial value
 # of JAVACFLAGS
