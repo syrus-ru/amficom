@@ -1,5 +1,5 @@
 /*
- * $Id: AMFICOMImpl.java,v 1.1.2.2 2004/08/27 10:14:37 bass Exp $
+ * $Id: AMFICOMImpl.java,v 1.1.2.3 2004/08/27 10:52:13 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,11 +34,11 @@ import org.omg.CORBA.StringHolder;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.2 $, $Date: 2004/08/27 10:14:37 $
+ * @version $Revision: 1.1.2.3 $, $Date: 2004/08/27 10:52:13 $
  * @author $Author: bass $
  * @module server_v1
  */
-final class AMFICOMImpl extends _AMFICOMImplBase {
+public final class AMFICOMImpl extends _AMFICOMImplBase {
 	private static final Connection CONN = DefaultContext.getDefaultContext().getConnection();
 
 	static {
