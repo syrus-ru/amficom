@@ -1,7 +1,8 @@
 package com.syrus.AMFICOM.Client.Optimize.UI;
 
 //import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;

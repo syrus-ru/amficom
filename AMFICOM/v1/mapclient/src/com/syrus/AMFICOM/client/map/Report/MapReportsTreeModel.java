@@ -193,7 +193,7 @@ public class MapReportsTreeModel extends ObjectResourceTreeModel
         
 				for (ListIterator it = mc.getNodes().listIterator(); it.hasNext();)
 				{
-					ObjectResource os = (ObjectResource) it.hasNext();
+					ObjectResource os = (ObjectResource) it.next();
 					if (os instanceof MapPhysicalNodeElement)
 						dSet.add(os);
 				}

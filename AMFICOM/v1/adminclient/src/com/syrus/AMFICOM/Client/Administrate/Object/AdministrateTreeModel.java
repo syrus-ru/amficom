@@ -16,11 +16,6 @@ import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Object.*;
 import com.syrus.AMFICOM.Client.Resource.System.*;
 
-
-
-
-
-
 public class AdministrateTreeModel extends ObjectResourceTreeModel
 {
   DataSourceInterface dsi;
@@ -72,8 +67,6 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
     {
       return null;
     }
-
-
   }
 
 //--------------------------------------------------------
@@ -87,7 +80,6 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
   public void nodeAfterSelected(ObjectResourceTreeNode node)
   {
   }
-
 
 //--------------------------------------------------------
   public void nodeBeforeExpanded(ObjectResourceTreeNode node)
@@ -316,8 +308,6 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
     return null;
   }
 
-
-
 //--------------------------------------------------------
   public List getChildNodes(ObjectResourceTreeNode node)
   {
@@ -524,12 +514,13 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
         ortn = (ObjectResourceTreeNode )node.getParent();
         if(ortn!=null && ortn.getObject().equals(permission_to_obj))
         {
-          if (Pool.getHash(Domain.typ) != null)
+          Map dSet = Pool.getMap(Domain.typ);
+          if (dSet != null)
           {
             ImageIcon ii = getIcon(Domain.typ);
-            for(Enumeration enum = Pool.getHash(Domain.typ).elements(); enum.hasMoreElements();)
+            for(Iterator it = dSet.values().iterator(); it.hasNext();)
             {
-              Domain dom = (Domain)enum.nextElement();
+              Domain dom = (Domain)it.next();
               if(dom.domain_id == null ||
                  dom.domain_id.equals(""))
                 vec.add(new ObjectResourceTreeNode(dom, dom.getName(), true, ii));
@@ -670,9 +661,6 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
       }
     }
   }
-
-
-
 
   private void setCommandVectorFromPool(List vec, String filterGroup)
   {

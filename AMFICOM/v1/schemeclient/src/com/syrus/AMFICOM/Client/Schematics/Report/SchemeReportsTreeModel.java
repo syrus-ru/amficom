@@ -4,6 +4,7 @@ import java.util.*;
 import java.util.List;
 
 import java.awt.*;
+import java.util.List;
 import javax.swing.ImageIcon;
 
 import com.syrus.AMFICOM.Client.Configure.Report.EquipFeaturesReportModel;

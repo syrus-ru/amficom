@@ -4,7 +4,7 @@ import java.awt.Toolkit;
 import java.awt.Color;
 import java.awt.Image;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -109,7 +109,7 @@ public class OptimizeReportsTreeModel extends ObjectResourceTreeModel
 
 	public List getChildNodes(ObjectResourceTreeNode node)
 	{
-		List vec = new LinkedList();
+		List vec = new ArrayList();
 
 		//для строки - общая часть для дерева отчётов + деревья топологоии и схемы
 		if (node.getObject() instanceof String)

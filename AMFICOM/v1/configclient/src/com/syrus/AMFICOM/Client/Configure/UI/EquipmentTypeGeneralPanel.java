@@ -1,10 +1,14 @@
 package com.syrus.AMFICOM.Client.Configure.UI;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Collection;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.Map;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Checker;
@@ -188,9 +192,9 @@ public class EquipmentTypeGeneralPanel extends GeneralPanel
 				EquipmentType itsEqType = (EquipmentType) Pool.get(EquipmentType.typ,curProto.equipment_type_id);
 				if (itsEqType == this.equipmentType)
 				{
-					for (int i = 0; i < curProto.devices.size(); i++)
+					for (Iterator it1 = curProto.devices.iterator(); it1.hasNext();)
 					{
-						SchemeDevice curSD = (SchemeDevice)curProto.devices.get(i);
+						SchemeDevice curSD = (SchemeDevice)it1.next();
 						portsNumber += curSD.ports.size();
 						cablePortsNumber += curSD.cableports.size();
 					}
