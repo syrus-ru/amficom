@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.64 2005/02/19 20:33:58 arseniy Exp $
+ * $Id: MeasurementDatabase.java,v 1.65 2005/02/24 14:59:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,12 +15,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Collection;
-import java.util.Iterator;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -28,8 +26,6 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
@@ -37,7 +33,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/02/19 20:33:58 $
+ * @version $Revision: 1.65 $, $Date: 2005/02/24 14:59:59 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -244,80 +240,41 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		this.insertEntities(storableObjects);
 	}
 
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws  IllegalDataException, VersionCollisionException, UpdateObjectException {
-		Measurement measurement = this.fromStorableObject(storableObject);
-		switch (updateKind) {
-			case Measurement.UPDATE_STATUS:
-				this.updateStatus(measurement);
-				break;
-			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(storableObject, modifierId, false);
-				break;
-			case UPDATE_FORCE:					
-			default:
-				super.checkAndUpdateEntity(storableObject, modifierId, true);					
-				return;
-		}
-	}	
-
-	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
-			VersionCollisionException, UpdateObjectException {
-		switch (updateKind) {
-			case Measurement.UPDATE_STATUS:
-				for(Iterator it=storableObjects.iterator();it.hasNext();){
-					/**
-					 * FIXME recast using one step
-					 */
-					Measurement measurement = (Measurement)it.next();
-					this.updateStatus(measurement);
-				}				
-				break;
-			case UPDATE_CHECK:
-				super.checkAndUpdateEntities(storableObjects, modifierId, false);
-				break;
-			case UPDATE_FORCE:					
-			default:
-				super.checkAndUpdateEntities(storableObjects, modifierId, true);					
-				return;
-		}
-
-	}
-
-	private void updateStatus(Measurement measurement) throws UpdateObjectException {
-		String measurementIdStr = DatabaseIdentifier.toSQLString(measurement.getId());
-		String sql = SQL_UPDATE
-			+ ObjectEntities.MEASUREMENT_ENTITY
-			+ SQL_SET
-			+ MeasurementWrapper.COLUMN_STATUS + EQUALS + Integer.toString(measurement.getStatus().value()) + COMMA
-			+ StorableObjectWrapper.COLUMN_MODIFIED + EQUALS + DatabaseDate.toUpdateSubString(measurement.getModified()) + COMMA
-			+ StorableObjectWrapper.COLUMN_MODIFIER_ID + EQUALS + DatabaseIdentifier.toSQLString(measurement.getModifierId())
-			+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + measurementIdStr;
-		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("MeasurementDatabase.updateStatus | Trying: " + sql, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql);
-			connection.commit();
-		}
-		catch (SQLException sqle) {
-			String mesg = "MeasurementDatabase.updateStatus | Cannot update status of measurement '" + measurementIdStr + "' -- " + sqle.getMessage();
-			throw new UpdateObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				statement = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-			finally {
-				DatabaseConnection.releaseConnection(connection);
-			}
-		}
-	}	
+//	private void updateStatus(Measurement measurement) throws UpdateObjectException {
+//		String measurementIdStr = DatabaseIdentifier.toSQLString(measurement.getId());
+//		String sql = SQL_UPDATE
+//			+ ObjectEntities.MEASUREMENT_ENTITY
+//			+ SQL_SET
+//			+ MeasurementWrapper.COLUMN_STATUS + EQUALS + Integer.toString(measurement.getStatus().value()) + COMMA
+//			+ StorableObjectWrapper.COLUMN_MODIFIED + EQUALS + DatabaseDate.toUpdateSubString(measurement.getModified()) + COMMA
+//			+ StorableObjectWrapper.COLUMN_MODIFIER_ID + EQUALS + DatabaseIdentifier.toSQLString(measurement.getModifierId())
+//			+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + measurementIdStr;
+//		Statement statement = null;
+//		Connection connection = DatabaseConnection.getConnection();
+//		try {
+//			statement = connection.createStatement();
+//			Log.debugMessage("MeasurementDatabase.updateStatus | Trying: " + sql, Log.DEBUGLEVEL09);
+//			statement.executeUpdate(sql);
+//			connection.commit();
+//		}
+//		catch (SQLException sqle) {
+//			String mesg = "MeasurementDatabase.updateStatus | Cannot update status of measurement '" + measurementIdStr + "' -- " + sqle.getMessage();
+//			throw new UpdateObjectException(mesg, sqle);
+//		}
+//		finally {
+//			try {
+//				if (statement != null)
+//					statement.close();
+//				statement = null;
+//			}
+//			catch (SQLException sqle1) {
+//				Log.errorException(sqle1);
+//			}
+//			finally {
+//				DatabaseConnection.releaseConnection(connection);
+//			}
+//		}
+//	}	
 
 	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))

@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.107 2005/02/22 17:01:25 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.108 2005/02/24 14:59:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.107 $, $Date: 2005/02/22 17:01:25 $
+ * @version $Revision: 1.108 $, $Date: 2005/02/24 14:59:36 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -736,14 +736,38 @@ public abstract class StorableObjectDatabase {
 
 ////////////////////// update /////////////////////////
 
-	public abstract void update(StorableObject storableObject, Identifier modifierId, int updateKind)
-			throws IllegalDataException, VersionCollisionException, UpdateObjectException;
+//	public abstract void update(StorableObject storableObject, Identifier modifierId, int updateKind)
+//			throws VersionCollisionException, UpdateObjectException;
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
+			throws VersionCollisionException, UpdateObjectException {
+		switch (updateKind) {
+			case UPDATE_CHECK:
+				this.checkAndUpdateEntity(storableObject, modifierId, false);
+				break;
+			case UPDATE_FORCE:
+			default:
+				this.checkAndUpdateEntity(storableObject, modifierId, true);
+				return;
+		}
+	}
 
-	public abstract void update(Collection storableObjects, Identifier modifierId, int updateKind)
-			throws IllegalDataException, VersionCollisionException, UpdateObjectException;
+//	public abstract void update(Collection storableObjects, Identifier modifierId, int updateKind)
+//			throws VersionCollisionException, UpdateObjectException;
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
+			throws VersionCollisionException, UpdateObjectException {
+		switch (updateKind) {
+			case UPDATE_CHECK:
+				this.checkAndUpdateEntities(storableObjects, modifierId, false);
+				break;
+			case UPDATE_FORCE:
+			default:
+				this.checkAndUpdateEntities(storableObjects, modifierId, true);
+				return;
+		}
+	}
 
 	protected void checkAndUpdateEntity(StorableObject storableObject, Identifier modifierId, final boolean force)
-			throws UpdateObjectException, VersionCollisionException, IllegalDataException {
+			throws UpdateObjectException, VersionCollisionException {
 		Identifier id = storableObject.getId();
 		String idStr = DatabaseIdentifier.toSQLString(storableObject.getId());
 
@@ -764,6 +788,10 @@ public abstract class StorableObjectDatabase {
 					String mesg = "Cannot retrieve corresponding object from datebase for updating object '" + this.getEnityName() + "', id: " + idStr;
 					throw new UpdateObjectException(mesg, roe);
 				}
+				catch (IllegalDataException ide) {
+					String mesg = "Cannot update entity from result set -- " + ide.getMessage();
+					throw new UpdateObjectException(mesg, ide);
+				}
 			}
 			else {
 				String mesg = this.getEnityName() + "Database.checkAndUpdateEntity | No such object '" + id + "'; will try to insert";
@@ -774,6 +802,9 @@ public abstract class StorableObjectDatabase {
 				}
 				catch (CreateObjectException coe) {
 					throw new UpdateObjectException("Cannot insert object " + idStr, coe);
+				}
+				catch (IllegalDataException ide) {
+					throw new UpdateObjectException("Cannot insert object " + idStr, ide);
 				}
 			}
 		}
@@ -829,7 +860,7 @@ public abstract class StorableObjectDatabase {
 	}
 
 	protected void checkAndUpdateEntities(Collection storableObjects, Identifier modifierId, final boolean force)
-			throws UpdateObjectException, VersionCollisionException, IllegalDataException {
+			throws UpdateObjectException, VersionCollisionException {
 		if (storableObjects == null || storableObjects.isEmpty())
 			return;
 
@@ -847,7 +878,7 @@ public abstract class StorableObjectDatabase {
 		try {
 			dbstorableObjects = this.retrieveByIds(storableObjectIds, null);
 		}
-		catch (RetrieveObjectException e) {
+		catch (ApplicationException e) {
 			throw new UpdateObjectException(e);
 		}
 		Map dbstorableObjectsMap = new HashMap();
@@ -923,14 +954,14 @@ public abstract class StorableObjectDatabase {
 			try {
 				this.insertEntities(insertObjects);
 			}
-			catch (CreateObjectException coe) {
-				throw new UpdateObjectException(coe);
+			catch (ApplicationException ae) {
+				throw new UpdateObjectException(ae);
 			}
 		}
 
 	}
 
-	protected void updateEntity(StorableObject storableObject, Identifier modifierId) throws IllegalDataException, UpdateObjectException {
+	protected void updateEntity(StorableObject storableObject, Identifier modifierId) throws UpdateObjectException {
 		storableObject.setUpdated(modifierId);
 
 		String[] cols = this.getColumns(MODE_UPDATE).split(COMMA);
@@ -940,7 +971,7 @@ public abstract class StorableObjectDatabase {
 		}
 		catch (IllegalDataException ide) {
 			storableObject.rollbackUpdate();
-			throw ide;
+			throw new UpdateObjectException("Cannot parce insert string values for storable object '" + storableObject.getId() + "'", ide);
 		}
 		if (cols.length != values.length) {
 			storableObject.rollbackUpdate();
@@ -999,7 +1030,7 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	protected void updateEntities(Collection storableObjects, Identifier modifierId) throws IllegalDataException, UpdateObjectException {
+	protected void updateEntities(Collection storableObjects, Identifier modifierId) throws UpdateObjectException {
 		if ((storableObjects == null) || (storableObjects.size() == 0))
 			return;
 
@@ -1059,7 +1090,7 @@ public abstract class StorableObjectDatabase {
 					catch (SQLException sqle1) {
 						Log.errorException(sqle1);
 					}
-					throw ide;
+					throw new UpdateObjectException("Cannot set entity for prepared statement -- " + ide.getMessage(), ide);
 				}
 
 				Log.debugMessage(this.getEnityName() + "Database.updateEntities | Updating " + this.getEnityName() + " " + storableObjectIdCode,

@@ -1,5 +1,5 @@
 /*
- * $Id: SetParameter.java,v 1.19 2005/01/28 14:29:23 arseniy Exp $
+ * $Id: SetParameter.java,v 1.20 2005/02/24 14:59:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,25 +9,24 @@
 package com.syrus.AMFICOM.measurement;
 
 
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identified;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.TypedObject;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.StorableObjectType;
-import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.DatabaseException;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/01/28 14:29:23 $
+ * @version $Revision: 1.20 $, $Date: 2005/02/24 14:59:59 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -39,7 +38,7 @@ public class SetParameter implements TransferableObject, TypedObject, Identified
 	
 	public static final String ID_TYPE = "type";
 
-	public SetParameter(Parameter_Transferable pt) throws DatabaseException, CommunicationException {
+	public SetParameter(Parameter_Transferable pt) throws ApplicationException {
 		this.id = new Identifier(pt.id);
 		this.type = (ParameterType) GeneralStorableObjectPool.getStorableObject(new Identifier(pt.type_id), true);
 		this.value = new byte[pt.value.length];

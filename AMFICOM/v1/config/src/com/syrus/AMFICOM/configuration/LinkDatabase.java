@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.30 2005/02/19 20:34:06 arseniy Exp $
+ * $Id: LinkDatabase.java,v 1.31 2005/02/24 14:59:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/02/19 20:34:06 $
+ * @version $Revision: 1.31 $, $Date: 2005/02/24 14:59:53 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -220,41 +220,31 @@ public class LinkDatabase extends StorableObjectDatabase {
 	}
 
 	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
-			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
+			throws VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_FORCE:
 				super.checkAndUpdateEntity(storableObject, modifierId, true);
-				characteristicDatabase.updateCharacteristics(storableObject);
 				break;
 			case UPDATE_CHECK:
 			default:
 				super.checkAndUpdateEntity(storableObject, modifierId, false);
-				characteristicDatabase.updateCharacteristics(storableObject);
-				break;
 		}
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) (GeneralDatabaseContext.getCharacteristicDatabase());
+		characteristicDatabase.updateCharacteristics(storableObject);
 	}
 
 	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
-		throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
+			throws VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_FORCE:
 				super.checkAndUpdateEntities(storableObjects, modifierId, true);
-				for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-					StorableObject storableObject = (StorableObject) it.next();
-					characteristicDatabase.updateCharacteristics(storableObject);
-				}
 				break;
 			case UPDATE_CHECK:
 			default:
 				super.checkAndUpdateEntities(storableObjects, modifierId, false);
-				for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-					StorableObject storableObject = (StorableObject) it.next();
-					characteristicDatabase.updateCharacteristics(storableObject);
-				}
-				break;
 		}
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) (GeneralDatabaseContext.getCharacteristicDatabase());
+		characteristicDatabase.updateCharacteristics(storableObjects);
 	}
 
 	public Collection retrieveAll() throws RetrieveObjectException {

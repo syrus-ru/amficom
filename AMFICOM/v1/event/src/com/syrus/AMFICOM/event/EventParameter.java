@@ -1,5 +1,5 @@
 /*
- * $Id: EventParameter.java,v 1.4 2005/02/02 15:09:47 arseniy Exp $
+ * $Id: EventParameter.java,v 1.5 2005/02/24 15:00:07 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,9 +10,8 @@ package com.syrus.AMFICOM.event;
 import com.syrus.AMFICOM.event.corba.EventParameter_Transferable;
 import com.syrus.AMFICOM.event.corba.EventParameter_TransferablePackage.EventParameterSort;
 import com.syrus.AMFICOM.event.corba.EventParameter_TransferablePackage.EventParameterValue;
-import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identified;
 import com.syrus.AMFICOM.general.Identifier;
@@ -27,7 +26,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/02 15:09:47 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/24 15:00:07 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -39,7 +38,7 @@ public class EventParameter implements TransferableObject, TypedObject, Identifi
 	private String valueString;
 	private byte[] valueRaw;
 
-	public EventParameter(EventParameter_Transferable ept) throws DatabaseException, CommunicationException {
+	public EventParameter(EventParameter_Transferable ept) throws ApplicationException {
 		this.id = new Identifier(ept.id);
 		this.type = (ParameterType) GeneralStorableObjectPool.getStorableObject(new Identifier(ept.type_id), true);
 		this.sort = ept.sort.value();

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseGeneralObjectLoader.java,v 1.11 2005/02/18 17:55:07 arseniy Exp $
+ * $Id: DatabaseGeneralObjectLoader.java,v 1.12 2005/02/24 14:59:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,22 +19,22 @@ import java.util.Set;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/02/18 17:55:07 $
+ * @version $Revision: 1.12 $, $Date: 2005/02/24 14:59:36 $
  * @author $Author: arseniy $
  * @module general_v1
  */
 
 public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 
-	public ParameterType loadParameterType(Identifier id) throws DatabaseException, CommunicationException {
+	public ParameterType loadParameterType(Identifier id) throws DatabaseException {
 		return new ParameterType(id);
 	}
 
-	public CharacteristicType loadCharacteristicType(Identifier id) throws DatabaseException, CommunicationException {
+	public CharacteristicType loadCharacteristicType(Identifier id) throws DatabaseException {
 		return new CharacteristicType(id);
 	}
 
-	public Characteristic loadCharacteristic(Identifier id) throws DatabaseException, CommunicationException {
+	public Characteristic loadCharacteristic(Identifier id) throws DatabaseException {
 		return new Characteristic(id);
 	}
 
@@ -44,7 +44,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 
 	// for multiple objects
 
-	public Collection loadParameterTypes(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadParameterTypes(Collection ids) throws DatabaseException {
 		ParameterTypeDatabase database = (ParameterTypeDatabase) GeneralDatabaseContext.parameterTypeDatabase;
 		Collection collection = null;
 		try {
@@ -57,7 +57,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		return collection;
 	}
 
-	public Collection loadCharacteristicTypes(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadCharacteristicTypes(Collection ids) throws DatabaseException {
 		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) GeneralDatabaseContext.getCharacteristicTypeDatabase();
 		Collection collection = null;
 		try {
@@ -71,7 +71,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		return collection;
 	}
 
-	public Collection loadCharacteristics(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadCharacteristics(Collection ids) throws DatabaseException {
 		CharacteristicDatabase database = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
 		Collection collection = null;
 		try {
@@ -89,8 +89,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 
 
 	public Collection loadParameterTypesButIds(StorableObjectCondition condition, Collection ids)
-			throws DatabaseException,
-				CommunicationException {
+			throws DatabaseException {
 		ParameterTypeDatabase database = (ParameterTypeDatabase) GeneralDatabaseContext.parameterTypeDatabase;
 		Collection collection = null;
 		try {
@@ -105,8 +104,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 	}
 
 	public Collection loadCharacteristicTypesButIds(StorableObjectCondition condition, Collection ids)
-			throws DatabaseException,
-				CommunicationException {
+			throws DatabaseException {
 		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) GeneralDatabaseContext.getCharacteristicTypeDatabase();
 		Collection collection = null;
 		try {
@@ -121,8 +119,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 	}
 
 	public Collection loadCharacteristicsButIds(StorableObjectCondition condition, Collection ids)
-			throws DatabaseException,
-				CommunicationException {
+			throws DatabaseException {
 		CharacteristicDatabase database = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
 		Collection collection = null;
 		try {
@@ -140,154 +137,58 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 
 
 
-	public void saveParameterType(ParameterType parameterType, boolean force) throws DatabaseException, CommunicationException {
+	public void saveParameterType(ParameterType parameterType, boolean force) throws DatabaseException, VersionCollisionException {
 		ParameterTypeDatabase database = (ParameterTypeDatabase) GeneralDatabaseContext.getParameterTypeDatabase();
-		try {
-			database.update(parameterType, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-		}
-		catch (UpdateObjectException e) {
-			Log.errorMessage("DatabaseGeneralObjectLoader.saveParameterType | UpdateObjectException: " + e.getMessage());
-			throw new DatabaseException("DatabaseGeneralObjectLoader.saveParameterType | UpdateObjectException: " + e.getMessage());
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseGeneralObjectLoader.saveParameterType | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseGeneralObjectLoader.saveParameterType | Illegal Storable Object: " + e.getMessage());
-		}
-		catch (VersionCollisionException e) {
-			Log.errorMessage("DatabaseGeneralObjectLoader.saveParameterType | VersionCollisionException: " + e.getMessage());
-			throw new DatabaseException("DatabaseGeneralObjectLoader.saveParameterType | VersionCollisionException: " + e.getMessage());
-		}
+		database.update(parameterType, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveCharacteristicType(CharacteristicType characteristicType, boolean force)
-			throws DatabaseException,
-				CommunicationException {
+			throws DatabaseException, VersionCollisionException {
 		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) GeneralDatabaseContext.getCharacteristicTypeDatabase();
-		try {
-			database.update(characteristicType, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-		}
-		catch (UpdateObjectException e) {
-			Log.errorMessage("DatabaseGeneralObjectLoader.saveCharacteristicType | UpdateObjectException: " + e.getMessage());
-			throw new DatabaseException("DatabaseGeneralObjectLoader.saveCharacteristicType | UpdateObjectException: " + e.getMessage());
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseGeneralObjectLoader.saveCharacteristicType | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseGeneralObjectLoader.saveCharacteristicType | Illegal Storable Object: "
-					+ e.getMessage());
-		}
-		catch (VersionCollisionException e) {
-			Log.errorMessage("DatabaseGeneralObjectLoader.saveCharacteristicType | VersionCollisionException: " + e.getMessage());
-			throw new DatabaseException("DatabaseGeneralObjectLoader.saveCharacteristicType | VersionCollisionException: "
-					+ e.getMessage());
-		}
+		database.update(characteristicType, SessionContext.getAccessIdentity().getUserId(), force
+				? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveCharacteristic(Characteristic characteristic, boolean force) throws DatabaseException, CommunicationException {
+	public void saveCharacteristic(Characteristic characteristic, boolean force) throws DatabaseException, VersionCollisionException {
 		CharacteristicDatabase database = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
-		try {
-			database.update(characteristic, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-		}
-		catch (UpdateObjectException e) {
-			Log.errorMessage("DatabaseGeneralObjectLoader.saveCharacteristic | UpdateObjectException: " + e.getMessage());
-			throw new DatabaseException("DatabaseGeneralObjectLoader.saveCharacteristic | UpdateObjectException: " + e.getMessage());
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseGeneralObjectLoader.saveCharacteristic | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseGeneralObjectLoader.saveCharacteristic | Illegal Storable Object: " + e.getMessage());
-		}
-		catch (VersionCollisionException e) {
-			Log.errorMessage("DatabaseGeneralObjectLoader.saveCharacteristic | VersionCollisionException: " + e.getMessage());
-			throw new DatabaseException("DatabaseGeneralObjectLoader.saveCharacteristic | VersionCollisionException: " + e.getMessage());
-		}
+		database.update(characteristic, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 
 
 
 
-	public void saveParameterTypes(Collection objects, boolean force) throws DatabaseException, CommunicationException {
+	public void saveParameterTypes(Collection objects, boolean force) throws DatabaseException, VersionCollisionException {
 		ParameterTypeDatabase database = (ParameterTypeDatabase) GeneralDatabaseContext.getParameterTypeDatabase();
-		try {
-			database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-		}
-		catch (UpdateObjectException e) {
-			Log.errorMessage("DatabaseGeneralObjectLoader.saveParameterTypes | UpdateObjectException: " + e.getMessage());
-			throw new DatabaseException("DatabaseGeneralObjectLoader.saveParameterTypes | UpdateObjectException: " + e.getMessage());
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseGeneralObjectLoader.saveParameterTypes | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseGeneralObjectLoader.saveParameterTypes | Illegal Storable Object: " + e.getMessage());
-		}
-		catch (VersionCollisionException e) {
-			Log.errorMessage("DatabaseGeneralObjectLoader.saveParameterTypes | VersionCollisionException: " + e.getMessage());
-			throw new DatabaseException("DatabaseGeneralObjectLoader.saveParameterTypes | VersionCollisionException: " + e.getMessage());
-		}
+		database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveCharacteristicTypes(Collection objects, boolean force) throws DatabaseException, CommunicationException {
+	public void saveCharacteristicTypes(Collection objects, boolean force) throws DatabaseException, VersionCollisionException {
 		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) GeneralDatabaseContext.getCharacteristicTypeDatabase();
-		try {
-			database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-		}
-		catch (UpdateObjectException e) {
-			Log.errorMessage("DatabaseGeneralObjectLoader.saveCharacteristicTypes | UpdateObjectException: " + e.getMessage());
-			throw new DatabaseException("DatabaseGeneralObjectLoader.saveCharacteristicTypes | UpdateObjectException: "
-					+ e.getMessage());
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseGeneralObjectLoader.saveCharacteristicTypes | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseGeneralObjectLoader.saveCharacteristicTypes | Illegal Storable Object: "
-					+ e.getMessage());
-		}
-		catch (VersionCollisionException e) {
-			Log.errorMessage("DatabaseGeneralObjectLoader.saveCharacteristicTypes | VersionCollisionException: " + e.getMessage());
-			throw new DatabaseException("DatabaseGeneralObjectLoader.saveCharacteristicTypes | VersionCollisionException: "
-					+ e.getMessage());
-		}
+		database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveCharacteristics(Collection objects, boolean force) throws DatabaseException, CommunicationException {
+	public void saveCharacteristics(Collection objects, boolean force) throws DatabaseException, VersionCollisionException {
 		CharacteristicDatabase database = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
-		try {
-			database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-		}
-		catch (UpdateObjectException e) {
-			Log.errorMessage("DatabaseGeneralObjectLoader.saveCharacteristics | UpdateObjectException: " + e.getMessage());
-			throw new DatabaseException("DatabaseGeneralObjectLoader.saveCharacteristics | UpdateObjectException: " + e.getMessage());
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseGeneralObjectLoader.saveCharacteristics | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseGeneralObjectLoader.saveCharacteristics | Illegal Storable Object: " + e.getMessage());
-		}
-		catch (VersionCollisionException e) {
-			Log.errorMessage("DatabaseGeneralObjectLoader.saveCharacteristics | VersionCollisionException: " + e.getMessage());
-			throw new DatabaseException("DatabaseGeneralObjectLoader.saveCharacteristics | VersionCollisionException: "
-					+ e.getMessage());
-		}
+		database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 
 
 
 
-	public Set refresh(Set storableObjects) throws CommunicationException, DatabaseException {
+	public Set refresh(Set storableObjects) throws DatabaseException {
 		if (storableObjects.isEmpty())
 			return Collections.EMPTY_SET;
 
 		short entityCode = ((StorableObject) storableObjects.iterator().next()).getId().getMajor();
 
-		try {
-			StorableObjectDatabase database = GeneralDatabaseContext.getDatabase(entityCode);
+		StorableObjectDatabase database = GeneralDatabaseContext.getDatabase(entityCode);
 
-			if (database != null)
-				return database.refresh(storableObjects);
+		if (database != null)
+			return database.refresh(storableObjects);
 
-			return Collections.EMPTY_SET;
-		}
-		catch (DatabaseException e) {
-			Log.errorMessage("DatabaseGeneralObjectLoader.refresh | DatabaseException: " + e.getMessage());
-			throw new DatabaseException("DatabaseGeneralObjectLoader.refresh | DatabaseException: " + e.getMessage());
-		}
+		return Collections.EMPTY_SET;
 	}
 
 

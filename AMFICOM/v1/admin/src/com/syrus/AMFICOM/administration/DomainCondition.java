@@ -1,5 +1,5 @@
 /*
- * $Id: DomainCondition.java,v 1.4 2005/02/11 16:30:29 arseniy Exp $
+ * $Id: DomainCondition.java,v 1.5 2005/02/24 14:59:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,8 +12,6 @@ import java.util.Collection;
 
 import com.syrus.AMFICOM.administration.corba.DomainCondition_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -22,7 +20,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
  * @deprecated use {@link com.syrus.AMFICOM.general.LinkedIdsCondition}
- * @version $Revision: 1.4 $, $Date: 2005/02/11 16:30:29 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/24 14:59:46 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -30,7 +28,7 @@ public class DomainCondition implements StorableObjectCondition {
 	private Domain domain;
 	private Short entityCode;
 
-	public DomainCondition(DomainCondition_Transferable dct) throws DatabaseException, CommunicationException {
+	public DomainCondition(DomainCondition_Transferable dct) throws ApplicationException {
 		this.domain = (Domain) AdministrationStorableObjectPool.getStorableObject(new Identifier(dct.domain_id), true);
 		this.entityCode = new Short(dct.entity_code);
 	}

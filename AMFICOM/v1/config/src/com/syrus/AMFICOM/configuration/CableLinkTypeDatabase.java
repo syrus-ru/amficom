@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeDatabase.java,v 1.18 2005/02/19 20:34:06 arseniy Exp $
+ * $Id: CableLinkTypeDatabase.java,v 1.19 2005/02/24 14:59:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,10 +18,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
-import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
@@ -40,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/02/19 20:34:06 $
+ * @version $Revision: 1.19 $, $Date: 2005/02/24 14:59:52 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -122,16 +121,13 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
 			try {
 				cableLinkType.setCableThreadTypes0(ConfigurationStorableObjectPool.getStorableObjects(cableThreadTypeIds, true));
 			}
-			catch (DatabaseException e) {
-				throw new RetrieveObjectException("Cannot get cable thread types from pool -- " + e.getMessage(), e);
-			}
-			catch (CommunicationException e) {
+			catch (ApplicationException e) {
 				throw new RetrieveObjectException("Cannot get cable thread types from pool -- " + e.getMessage(), e);
 			}
 		}
 	}
 
-	private void updateCableThreadTypes(Collection cableLinkTypes) throws UpdateObjectException, IllegalDataException {
+	private void updateCableThreadTypes(Collection cableLinkTypes) throws UpdateObjectException {
 		if (cableLinkTypes == null || cableLinkTypes.isEmpty())
 			return;
 
@@ -149,10 +145,15 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
 			cableThreadTypeIdsMap.put(cableLinkType.getId(), cableThreadTypeIds);
 		}
 
-		super.updateLinkedEntities(cableThreadTypeIdsMap,
-				ObjectEntities.CABLETHREADTYPE_ENTITY,
-				LINK_COLUMN_LINK_TYPE_ID,
-				StorableObjectWrapper.COLUMN_ID);
+		try {
+			super.updateLinkedEntities(cableThreadTypeIdsMap,
+					ObjectEntities.CABLETHREADTYPE_ENTITY,
+					LINK_COLUMN_LINK_TYPE_ID,
+					StorableObjectWrapper.COLUMN_ID);
+		}
+		catch (IllegalDataException e) {
+			throw new UpdateObjectException("Cannot update cable thread types -- " + e.getMessage(), e);
+		}
 	}
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
@@ -243,8 +244,7 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
 	}
 
 	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
-			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
+			throws VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_FORCE:
 				super.checkAndUpdateEntity(storableObject, modifierId, true);
@@ -252,15 +252,14 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
 			case UPDATE_CHECK:
 			default:
 				super.checkAndUpdateEntity(storableObject, modifierId, false);
-				break;
 		}
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		characteristicDatabase.updateCharacteristics(storableObject);
 		this.updateCableThreadTypes(Collections.singletonList(storableObject));
 	}
 
 	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
-			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
+			throws VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_FORCE:
 				super.checkAndUpdateEntities(storableObjects, modifierId, true);            
@@ -268,8 +267,8 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
 			case UPDATE_CHECK:
 			default:
 				super.checkAndUpdateEntities(storableObjects, modifierId, false);
-				break;
 		}
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
 		characteristicDatabase.updateCharacteristics(storableObjects);
 		this.updateCableThreadTypes(storableObjects);
 	}

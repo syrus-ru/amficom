@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeDatabase.java,v 1.25 2005/02/19 20:34:06 arseniy Exp $
+ * $Id: LinkTypeDatabase.java,v 1.26 2005/02/24 14:59:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,6 @@ import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.GeneralDatabaseContext;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -29,14 +28,13 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/02/19 20:34:06 $
+ * @version $Revision: 1.26 $, $Date: 2005/02/24 14:59:53 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -182,32 +180,6 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 		}
 		catch (UpdateObjectException e) {
 			throw new CreateObjectException("LinkTypeDatabase.insert | UpdateObjectException " + e);
-		}
-	}
-
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
-			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		switch (updateKind) {
-			case UPDATE_FORCE:
-				super.checkAndUpdateEntity(storableObject, modifierId, true);
-				break;
-			case UPDATE_CHECK:
-			default:
-				super.checkAndUpdateEntity(storableObject, modifierId, false);
-				break;
-		}
-	}
-
-	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
-			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		switch (updateKind) {
-			case UPDATE_FORCE:
-				super.checkAndUpdateEntities(storableObjects, modifierId, true);
-				break;
-			case UPDATE_CHECK:
-			default:
-				super.checkAndUpdateEntities(storableObjects, modifierId, false);
-				break;
 		}
 	}
 	

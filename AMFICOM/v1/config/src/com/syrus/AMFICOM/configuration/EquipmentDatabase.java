@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.72 2005/02/24 09:27:50 arseniy Exp $
+ * $Id: EquipmentDatabase.java,v 1.73 2005/02/24 14:59:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2005/02/24 09:27:50 $
+ * @version $Revision: 1.73 $, $Date: 2005/02/24 14:59:53 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -352,49 +352,54 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void updateEquipmentMELinks(Collection equipments) throws IllegalDataException, UpdateObjectException {
+	private void updateEquipmentMELinks(Collection equipments) throws UpdateObjectException {
 		if (equipments == null || equipments.isEmpty())
 			return;
-		Map monitoredElementIdsMap = new HashMap();
-		for (Iterator it = equipments.iterator(); it.hasNext();) {
-			Equipment equipment = this.fromStorableObject((StorableObject)it.next());
-			List monitoredElementIds = equipment.getMonitoredElementIds();
-			monitoredElementIdsMap.put(equipment.getId(), monitoredElementIds);
-		}		
-		super.updateLinkedEntities(monitoredElementIdsMap, ObjectEntities.EQUIPMENTMELINK_ENTITY, LINK_COLUMN_EQUIPMENT_ID, LINK_COLUMN_MONITORED_ELEMENT_ID);
+		try {
+			Map monitoredElementIdsMap = new HashMap();
+			for (Iterator it = equipments.iterator(); it.hasNext();) {
+				Equipment equipment = this.fromStorableObject((StorableObject) it.next());
+				List monitoredElementIds = equipment.getMonitoredElementIds();
+				monitoredElementIdsMap.put(equipment.getId(), monitoredElementIds);
+			}
+			super.updateLinkedEntities(monitoredElementIdsMap,
+					ObjectEntities.EQUIPMENTMELINK_ENTITY,
+					LINK_COLUMN_EQUIPMENT_ID,
+					LINK_COLUMN_MONITORED_ELEMENT_ID);
+		}
+		catch (IllegalDataException ide) {
+			throw new UpdateObjectException("Cannot update equipment - monitoredelement links -- " + ide.getMessage(), ide);
+		}
 	}
 
 	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
-			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		Equipment equipment = this.fromStorableObject(storableObject);
+			throws VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
-		case UPDATE_FORCE:
-			super.checkAndUpdateEntity(equipment, modifierId, true);
-			break;
-		case UPDATE_CHECK: 					
-		default:
-			super.checkAndUpdateEntity(equipment, modifierId, false);
-			break;
+			case UPDATE_FORCE:
+				super.checkAndUpdateEntity(storableObject, modifierId, true);
+				break;
+			case UPDATE_CHECK:
+			default:
+				super.checkAndUpdateEntity(storableObject, modifierId, false);
 		}
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
-		characteristicDatabase.updateCharacteristics(equipment);
-		this.updateEquipmentMELinks(Collections.singletonList(equipment));
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) (GeneralDatabaseContext.getCharacteristicDatabase());
+		characteristicDatabase.updateCharacteristics(storableObject);
+		this.updateEquipmentMELinks(Collections.singletonList(storableObject));
 	}
 
 	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
-		throws IllegalDataException, VersionCollisionException, UpdateObjectException {
+			throws VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
-		case UPDATE_FORCE:
-			super.checkAndUpdateEntities(storableObjects, modifierId, true);
-			break;
-		case UPDATE_CHECK: 					
-		default:
-			super.checkAndUpdateEntities(storableObjects, modifierId, false);
-			break;
-		}		
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
-		this.updateEquipmentMELinks(storableObjects);
+			case UPDATE_FORCE:
+				super.checkAndUpdateEntities(storableObjects, modifierId, true);
+				break;
+			case UPDATE_CHECK:
+			default:
+				super.checkAndUpdateEntities(storableObjects, modifierId, false);
+		}
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
 		characteristicDatabase.updateCharacteristics(storableObjects);
+		this.updateEquipmentMELinks(storableObjects);
 	}
 /*
 	private void setModified(Equipment equipment) throws UpdateObjectException {

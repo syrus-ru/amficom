@@ -1,5 +1,5 @@
 /*
- * $Id: EventObjectLoader.java,v 1.6 2005/02/18 17:54:15 arseniy Exp $
+ * $Id: EventObjectLoader.java,v 1.7 2005/02/24 15:00:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,77 +10,75 @@ package com.syrus.AMFICOM.event;
 
 import java.util.Collection;
 
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/18 17:54:15 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/24 15:00:07 $
  * @author $Author: arseniy $
  * @module event_v1
  */
 
 public interface EventObjectLoader {
 
-	EventType loadEventType(Identifier id) throws DatabaseException, CommunicationException;
+	EventType loadEventType(Identifier id) throws ApplicationException;
 
-//	AlarmType loadAlarmType(Identifier id) throws DatabaseException, CommunicationException;
+//	AlarmType loadAlarmType(Identifier id) throws ApplicationException;
 
-	Event loadEvent(Identifier id) throws DatabaseException, CommunicationException;
+	Event loadEvent(Identifier id) throws ApplicationException;
 
-	EventSource loadEventSource(Identifier id) throws DatabaseException, CommunicationException;
+	EventSource loadEventSource(Identifier id) throws ApplicationException;
 
-//	Alarm loadAlarm(Identifier id) throws DatabaseException, CommunicationException;
-
-
-	Collection loadEventTypes(Collection ids) throws DatabaseException, CommunicationException;
-
-//	Collection loadAlarmTypes(Collection ids) throws DatabaseException, CommunicationException;
-
-	Collection loadEvents(Collection ids) throws DatabaseException, CommunicationException;
-
-	Collection loadEventSources(Collection ids) throws DatabaseException, CommunicationException;
-
-//	Collection loadAlarms(Collection ids) throws DatabaseException, CommunicationException;
+//	Alarm loadAlarm(Identifier id) throws ApplicationException;
 
 
-	Collection loadEventTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadEventTypes(Collection ids) throws ApplicationException;
 
-//	Collection loadAlarmTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
+//	Collection loadAlarmTypes(Collection ids) throws ApplicationException;
 
-	Collection loadEventsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadEvents(Collection ids) throws ApplicationException;
 
-	Collection loadEventSourcesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadEventSources(Collection ids) throws ApplicationException;
 
-//	Collection loadAlarmsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
-
-
-	void saveEventType(EventType eventType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
-
-//	void saveAlarmType(AlarmType alarmType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
-
-	void saveEvent(Event event, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
-
-	void saveEventSource(EventSource eventSource, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
-
-//	void saveAlarm(Alarm alarm, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+//	Collection loadAlarms(Collection ids) throws ApplicationException;
 
 
-	void saveEventTypes(Collection collection, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	Collection loadEventTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
 
-//	void saveAlarmTypes(Collection collection, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+//	Collection loadAlarmTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
 
-	void saveEvents(Collection collection, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	Collection loadEventsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
 
-	void saveEventSources(Collection collection, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	Collection loadEventSourcesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
 
-//	void saveAlarms(Collection collection, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+//	Collection loadAlarmsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
 
 
-	java.util.Set refresh(java.util.Set storableObjects) throws CommunicationException, DatabaseException;
+	void saveEventType(EventType eventType, boolean force) throws ApplicationException;
+
+//	void saveAlarmType(AlarmType alarmType, boolean force) throws ApplicationException;
+
+	void saveEvent(Event event, boolean force) throws ApplicationException;
+
+	void saveEventSource(EventSource eventSource, boolean force) throws ApplicationException;
+
+//	void saveAlarm(Alarm alarm, boolean force) throws ApplicationException;
+
+
+	void saveEventTypes(Collection collection, boolean force) throws ApplicationException;
+
+//	void saveAlarmTypes(Collection collection, boolean force) throws ApplicationException;
+
+	void saveEvents(Collection collection, boolean force) throws ApplicationException;
+
+	void saveEventSources(Collection collection, boolean force) throws ApplicationException;
+
+//	void saveAlarms(Collection collection, boolean force) throws ApplicationException;
+
+
+	java.util.Set refresh(java.util.Set storableObjects) throws ApplicationException;
 
 
 	void delete(Identifier id) throws IllegalDataException;

@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.16 2005/02/19 20:34:13 arseniy Exp $
+ * $Id: DomainDatabase.java,v 1.17 2005/02/24 14:59:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/02/19 20:34:13 $
+ * @version $Revision: 1.17 $, $Date: 2005/02/24 14:59:46 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -162,37 +162,32 @@ public class DomainDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) 
-			throws IllegalDataException, VersionCollisionException, 
-			UpdateObjectException {
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
+			throws VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_FORCE:
 				super.checkAndUpdateEntity(storableObject, modifierId, true);
-				characteristicDatabase.updateCharacteristics(storableObject);
 				break;
 			case UPDATE_CHECK:
 			default:
 				super.checkAndUpdateEntity(storableObject, modifierId, false);
-				characteristicDatabase.updateCharacteristics(storableObject);
-			break;
 		}
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
+		characteristicDatabase.updateCharacteristics(storableObject);
 	}
 
 	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
-			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
+			throws VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_FORCE:
 				super.checkAndUpdateEntities(storableObjects, modifierId, true);
-				characteristicDatabase.updateCharacteristics(storableObjects);
 				break;
 			case UPDATE_CHECK:
 			default:
 				super.checkAndUpdateEntities(storableObjects, modifierId, false);
-				characteristicDatabase.updateCharacteristics(storableObjects);
-			break;
 		}
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
+		characteristicDatabase.updateCharacteristics(storableObjects);
 	}
 
 	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {

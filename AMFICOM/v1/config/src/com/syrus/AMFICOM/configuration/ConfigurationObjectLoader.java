@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationObjectLoader.java,v 1.31 2005/02/18 17:53:23 arseniy Exp $
+ * $Id: ConfigurationObjectLoader.java,v 1.32 2005/02/24 14:59:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,215 +11,177 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Collection;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/02/18 17:53:23 $
+ * @version $Revision: 1.32 $, $Date: 2005/02/24 14:59:52 $
  * @author $Author: arseniy $
  * @module config_v1
  */
 
 public interface ConfigurationObjectLoader {
 
-	CableLinkType loadCableLinkType(Identifier id) throws DatabaseException, CommunicationException;
+	CableLinkType loadCableLinkType(Identifier id) throws ApplicationException;
 
-	Collection loadCableLinkTypes(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadCableLinkTypes(Collection ids) throws ApplicationException;
 
-	Collection loadCableLinkTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException;
+	Collection loadCableLinkTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
 
-	CableThread loadCableThread(Identifier id) throws DatabaseException, CommunicationException;
+	CableThread loadCableThread(Identifier id) throws ApplicationException;
 
-	Collection loadCableThreads(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadCableThreads(Collection ids) throws ApplicationException;
 
-	Collection loadCableThreadsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException;
+	Collection loadCableThreadsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
 
-	CableThreadType loadCableThreadType(Identifier id) throws DatabaseException, CommunicationException;
+	CableThreadType loadCableThreadType(Identifier id) throws ApplicationException;
 
 	// this block for multiple objects
 
-	Collection loadCableThreadTypes(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadCableThreadTypes(Collection ids) throws ApplicationException;
 
 	/* Load Configuration StorableObject but argument ids */
 
-	Collection loadCableThreadTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException;
+	Collection loadCableThreadTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
 
-	Equipment loadEquipment(Identifier id) throws DatabaseException, CommunicationException;
+	Equipment loadEquipment(Identifier id) throws ApplicationException;
 
-	Collection loadEquipments(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadEquipments(Collection ids) throws ApplicationException;
 
-	Collection loadEquipmentsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException;
+	Collection loadEquipmentsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
 
-	EquipmentType loadEquipmentType(Identifier id) throws DatabaseException, CommunicationException;
+	EquipmentType loadEquipmentType(Identifier id) throws ApplicationException;
 
-	Collection loadEquipmentTypes(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadEquipmentTypes(Collection ids) throws ApplicationException;
 
-	Collection loadEquipmentTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException;
+	Collection loadEquipmentTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
 
-	KIS loadKIS(Identifier id) throws DatabaseException, CommunicationException;
+	KIS loadKIS(Identifier id) throws ApplicationException;
 
-	Collection loadKISs(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadKISs(Collection ids) throws ApplicationException;
 
-	Collection loadKISsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadKISsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
 
-	Link loadLink(Identifier id) throws DatabaseException, CommunicationException;
+	Link loadLink(Identifier id) throws ApplicationException;
 
-	Collection loadLinks(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadLinks(Collection ids) throws ApplicationException;
 
-	Collection loadLinksButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadLinksButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
 
-	LinkType loadLinkType(Identifier id) throws DatabaseException, CommunicationException;
+	LinkType loadLinkType(Identifier id) throws ApplicationException;
 
-	Collection loadLinkTypes(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadLinkTypes(Collection ids) throws ApplicationException;
 
-	Collection loadLinkTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException;
+	Collection loadLinkTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
 
-	MeasurementPort loadMeasurementPort(Identifier id) throws DatabaseException, CommunicationException;
+	MeasurementPort loadMeasurementPort(Identifier id) throws ApplicationException;
 
-	Collection loadMeasurementPorts(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadMeasurementPorts(Collection ids) throws ApplicationException;
 
-	Collection loadMeasurementPortsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException;
+	Collection loadMeasurementPortsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
 
-	MeasurementPortType loadMeasurementPortType(Identifier id) throws DatabaseException, CommunicationException;
+	MeasurementPortType loadMeasurementPortType(Identifier id) throws ApplicationException;
 
-	Collection loadMeasurementPortTypes(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadMeasurementPortTypes(Collection ids) throws ApplicationException;
 
-	Collection loadMeasurementPortTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException;
+	Collection loadMeasurementPortTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
 
-	MonitoredElement loadMonitoredElement(Identifier id) throws DatabaseException, CommunicationException;
+	MonitoredElement loadMonitoredElement(Identifier id) throws ApplicationException;
 
-	Collection loadMonitoredElements(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadMonitoredElements(Collection ids) throws ApplicationException;
 
-	Collection loadMonitoredElementsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException;
+	Collection loadMonitoredElementsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
 
-	Port loadPort(Identifier id) throws DatabaseException, CommunicationException;
+	Port loadPort(Identifier id) throws ApplicationException;
 
-	Collection loadPorts(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadPorts(Collection ids) throws ApplicationException;
 
-	Collection loadPortsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadPortsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
 
-	PortType loadPortType(Identifier id) throws DatabaseException, CommunicationException;
+	PortType loadPortType(Identifier id) throws ApplicationException;
 
-	Collection loadPortTypes(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadPortTypes(Collection ids) throws ApplicationException;
 
-	Collection loadPortTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException;
+	Collection loadPortTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
 
-	TransmissionPath loadTransmissionPath(Identifier id) throws DatabaseException, CommunicationException;
+	TransmissionPath loadTransmissionPath(Identifier id) throws ApplicationException;
 
-	Collection loadTransmissionPaths(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadTransmissionPaths(Collection ids) throws ApplicationException;
 
-	Collection loadTransmissionPathsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException;
+	Collection loadTransmissionPathsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
 
-	TransmissionPathType loadTransmissionPathType(Identifier id) throws DatabaseException, CommunicationException;
+	TransmissionPathType loadTransmissionPathType(Identifier id) throws ApplicationException;
 
-	Collection loadTransmissionPathTypes(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadTransmissionPathTypes(Collection ids) throws ApplicationException;
 
-	Collection loadTransmissionPathTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException;
+	Collection loadTransmissionPathTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException;
 
-	Set refresh(Set storableObjects) throws CommunicationException, DatabaseException;
 
-	void saveCableLinkType(CableLinkType cableLinkType, boolean force) throws VersionCollisionException,
-			DatabaseException, CommunicationException;
 
-	void saveCableLinkTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException;
+	void saveCableLinkType(CableLinkType cableLinkType, boolean force) throws ApplicationException;
 
-	void saveCableThread(CableThread cableThread, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException;
+	void saveCableLinkTypes(Collection list, boolean force) throws ApplicationException;
 
-	void saveCableThreads(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException;
+	void saveCableThread(CableThread cableThread, boolean force) throws ApplicationException;
 
-	void saveCableThreadType(CableThreadType cableThreadType, boolean force) throws VersionCollisionException,
-			DatabaseException, CommunicationException;
+	void saveCableThreads(Collection list, boolean force) throws ApplicationException;
 
-	void saveCableThreadTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException;
+	void saveCableThreadType(CableThreadType cableThreadType, boolean force) throws ApplicationException;
 
-	void saveEquipment(Equipment equipment, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException;
+	void saveCableThreadTypes(Collection list, boolean force) throws ApplicationException;
 
-	void saveEquipments(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException;
+	void saveEquipment(Equipment equipment, boolean force) throws ApplicationException;
 
-	void saveEquipmentType(EquipmentType equipmentType, boolean force) throws VersionCollisionException,
-			DatabaseException, CommunicationException;
+	void saveEquipments(Collection list, boolean force) throws ApplicationException;
 
-	void saveEquipmentTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException;
+	void saveEquipmentType(EquipmentType equipmentType, boolean force) throws ApplicationException;
 
-	void saveKIS(KIS kis, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveEquipmentTypes(Collection list, boolean force) throws ApplicationException;
 
-	void saveKISs(Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveKIS(KIS kis, boolean force) throws ApplicationException;
 
-	void saveLink(Link link, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveKISs(Collection list, boolean force) throws ApplicationException;
 
-	void saveLinks(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException;
+	void saveLink(Link link, boolean force) throws ApplicationException;
 
-	void saveLinkType(LinkType linkType, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException;
+	void saveLinks(Collection list, boolean force) throws ApplicationException;
 
-	void saveLinkTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException;
+	void saveLinkType(LinkType linkType, boolean force) throws ApplicationException;
 
-	void saveMeasurementPort(MeasurementPort measurementPort, boolean force) throws VersionCollisionException,
-			DatabaseException, CommunicationException;
+	void saveLinkTypes(Collection list, boolean force) throws ApplicationException;
 
-	void saveMeasurementPorts(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException;
+	void saveMeasurementPort(MeasurementPort measurementPort, boolean force) throws ApplicationException;
 
-	void saveMeasurementPortType(MeasurementPortType measurementPortType, boolean force)
-			throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveMeasurementPorts(Collection list, boolean force) throws ApplicationException;
 
-	void saveMeasurementPortTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException;
+	void saveMeasurementPortType(MeasurementPortType measurementPortType, boolean force) throws ApplicationException;
 
-	void saveMonitoredElement(MonitoredElement monitoredElement, boolean force) throws VersionCollisionException,
-			DatabaseException, CommunicationException;
+	void saveMeasurementPortTypes(Collection list, boolean force) throws ApplicationException;
 
-	void saveMonitoredElements(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException;
+	void saveMonitoredElement(MonitoredElement monitoredElement, boolean force) throws ApplicationException;
 
-	void savePort(Port port, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveMonitoredElements(Collection list, boolean force) throws ApplicationException;
 
-	void savePorts(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException;
+	void savePort(Port port, boolean force) throws ApplicationException;
 
-	void savePortType(PortType portType, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException;
+	void savePorts(Collection list, boolean force) throws ApplicationException;
 
-	void savePortTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException;
+	void savePortType(PortType portType, boolean force) throws ApplicationException;
 
-	void saveTransmissionPath(TransmissionPath transmissionPath, boolean force) throws VersionCollisionException,
-			DatabaseException, CommunicationException;
+	void savePortTypes(Collection list, boolean force) throws ApplicationException;
 
-	void saveTransmissionPaths(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException;
+	void saveTransmissionPath(TransmissionPath transmissionPath, boolean force) throws ApplicationException;
 
-	void saveTransmissionPathType(TransmissionPathType transmissionPathType, boolean force)
-			throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveTransmissionPaths(Collection list, boolean force) throws ApplicationException;
 
-	void saveTransmissionPathTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException;
+	void saveTransmissionPathType(TransmissionPathType transmissionPathType, boolean force) throws ApplicationException;
 
+	void saveTransmissionPathTypes(Collection list, boolean force) throws ApplicationException;
+
+
+	Set refresh(Set storableObjects) throws ApplicationException;
 
 
 	void delete(Identifier id) throws IllegalDataException;

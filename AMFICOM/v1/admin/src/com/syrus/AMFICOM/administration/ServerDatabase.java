@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.13 2005/02/19 20:34:13 arseniy Exp $
+ * $Id: ServerDatabase.java,v 1.14 2005/02/24 14:59:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/02/19 20:34:13 $
+ * @version $Revision: 1.14 $, $Date: 2005/02/24 14:59:46 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -217,33 +217,30 @@ public class ServerDatabase extends StorableObjectDatabase {
 	}
 
 	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
-			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		Server server = this.fromStorableObject(storableObject);
+			throws VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(server, modifierId, false);
+				super.checkAndUpdateEntity(storableObject, modifierId, false);
 				break;
-			case UPDATE_FORCE:					
+			case UPDATE_FORCE:
 			default:
-				super.checkAndUpdateEntity(server, modifierId, true);		
-				return;
+				super.checkAndUpdateEntity(storableObject, modifierId, true);
 		}
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
-		characteristicDatabase.updateCharacteristics(server);
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
+		characteristicDatabase.updateCharacteristics(storableObject);
 	}
 
 	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
-			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		switch (updateKind) {	
+			throws VersionCollisionException, UpdateObjectException {
+		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntities(storableObjects, modifierId, false);
 				break;
-			case UPDATE_FORCE:					
+			case UPDATE_FORCE:
 			default:
-				super.checkAndUpdateEntities(storableObjects, modifierId, true);		
-				return;
+				super.checkAndUpdateEntities(storableObjects, modifierId, true);
 		}
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
 		characteristicDatabase.updateCharacteristics(storableObjects);
 	}	
 

@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.13 2005/02/19 20:34:13 arseniy Exp $
+ * $Id: UserDatabase.java,v 1.14 2005/02/24 14:59:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,6 @@ import java.util.Collection;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -23,13 +22,11 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/02/19 20:34:13 $
+ * @version $Revision: 1.14 $, $Date: 2005/02/24 14:59:46 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -131,34 +128,6 @@ public class UserDatabase extends StorableObjectDatabase {
 	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		insertEntities(storableObjects);
 	}
-
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws IllegalDataException,
-			VersionCollisionException, UpdateObjectException {
-		User user = this.fromStorableObject(storableObject);
-		switch (updateKind) {
-			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(user, modifierId, false);
-				break;
-			case UPDATE_FORCE:					
-			default:
-				super.checkAndUpdateEntity(user, modifierId, true);		
-				return;
-		}
-	}
-	
-	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
-		VersionCollisionException, UpdateObjectException {
-		switch (updateKind) {	
-			case UPDATE_CHECK:
-				super.checkAndUpdateEntities(storableObjects, modifierId, false);
-				break;
-			case UPDATE_FORCE:					
-			default:
-				super.checkAndUpdateEntities(storableObjects, modifierId, true);		
-				return;
-		}
-		
-	}	
 
 	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))

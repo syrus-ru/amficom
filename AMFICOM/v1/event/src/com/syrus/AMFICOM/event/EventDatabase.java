@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.12 2005/02/19 20:33:52 arseniy Exp $
+ * $Id: EventDatabase.java,v 1.13 2005/02/24 15:00:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,6 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.ByteArrayDatabase;
 import com.syrus.util.database.DatabaseConnection;
@@ -46,7 +45,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/02/19 20:33:52 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/24 15:00:07 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -409,32 +408,6 @@ public class EventDatabase extends StorableObjectDatabase {
 				ObjectEntities.EVENTSOURCE_LINK_ENTITY,
 				EventWrapper.LINK_COLUMN_EVENT_ID,
 				EventWrapper.LINK_COLUMN_SOURCE_ID);
-	}
-
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		Event event = this.fromStorableObject(storableObject);
-		switch (updateKind) {
-			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(storableObject, modifierId, false);
-				break;
-			case UPDATE_FORCE:					
-			default:
-				super.checkAndUpdateEntity(storableObject, modifierId, true);		
-				return;
-		}
-	}
-
-	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
-			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		switch (updateKind) {
-			case UPDATE_CHECK:
-				super.checkAndUpdateEntities(storableObjects, modifierId, false);
-				break;
-			case UPDATE_FORCE:					
-			default:
-				super.checkAndUpdateEntities(storableObjects, modifierId, true);		
-				return;
-		}
 	}
 
 	public Collection retrieveByIds(Collection ids, String conditions) throws IllegalDataException, RetrieveObjectException {

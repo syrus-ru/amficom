@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseAdministrationObjectLoader.java,v 1.13 2005/02/18 17:55:50 arseniy Exp $
+ * $Id: DatabaseAdministrationObjectLoader.java,v 1.14 2005/02/24 14:59:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,6 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identified;
 import com.syrus.AMFICOM.general.Identifier;
@@ -25,35 +24,34 @@ import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/02/18 17:55:50 $
+ * @version $Revision: 1.14 $, $Date: 2005/02/24 14:59:46 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
 
 public class DatabaseAdministrationObjectLoader implements AdministrationObjectLoader {
 
-	public User loadUser(Identifier id) throws DatabaseException, CommunicationException {
+	public User loadUser(Identifier id) throws DatabaseException {
 		return new User(id);
 	}
 
-	public Domain loadDomain(Identifier id) throws DatabaseException, CommunicationException {
+	public Domain loadDomain(Identifier id) throws DatabaseException {
 		return new Domain(id);
 	}
 
-	public Server loadServer(Identifier id) throws DatabaseException, CommunicationException {
+	public Server loadServer(Identifier id) throws DatabaseException {
 		return new Server(id);
 	}
 
-	public MCM loadMCM(Identifier id) throws DatabaseException, CommunicationException {
+	public MCM loadMCM(Identifier id) throws DatabaseException {
 		return new MCM(id);
 	}
 
-	//	public PermissionAttributes loadPermissionAttributes(Identifier id) throws DatabaseException, CommunicationException {
+	//	public PermissionAttributes loadPermissionAttributes(Identifier id) throws DatabaseException {
 	//		return new PermissionAttributes(id);
 	//	}
 
@@ -62,7 +60,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 
 	// for multiple objects
 
-	public Collection loadUsers(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadUsers(Collection ids) throws DatabaseException {
 		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.userDatabase;
 		Collection collection = null;
 		try {
@@ -76,7 +74,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		return collection;
 	}
 
-	public Collection loadDomains(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadDomains(Collection ids) throws DatabaseException {
 		DomainDatabase database = (DomainDatabase) AdministrationDatabaseContext.domainDatabase;
 		Collection collection = null;
 		try {
@@ -90,7 +88,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		return collection;
 	}
 
-	public Collection loadServers(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadServers(Collection ids) throws DatabaseException {
 		ServerDatabase database = (ServerDatabase) AdministrationDatabaseContext.serverDatabase;
 		Collection collection = null;
 		try {
@@ -104,7 +102,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		return collection;
 	}
 
-	public Collection loadMCMs(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadMCMs(Collection ids) throws DatabaseException {
 		MCMDatabase database = (MCMDatabase) AdministrationDatabaseContext.mcmDatabase;
 		Collection collection = null;
 		try {
@@ -118,7 +116,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		return collection;
 	}
 
-	//  public PermissionAttributes loadPermissionAttributes(Identifier id) throws DatabaseException, CommunicationException {
+	//  public PermissionAttributes loadPermissionAttributes(Identifier id) throws DatabaseException {
 	//      return new PermissionAttributes(id);
 	//  }
 
@@ -128,7 +126,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 
 
 
-	public Collection loadUsersButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadUsersButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException {
 		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.userDatabase;
 		Collection collection = null;
 		try {
@@ -142,7 +140,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		return collection;
 	}
 
-	public Collection loadDomainsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadDomainsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException {
 		DomainDatabase database = (DomainDatabase) AdministrationDatabaseContext.domainDatabase;
 		Collection collection = null;
 		try {
@@ -156,7 +154,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		return collection;
 	}
 
-	public Collection loadServersButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadServersButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException {
 		ServerDatabase database = (ServerDatabase) AdministrationDatabaseContext.serverDatabase;
 		Collection collection = null;
 		try {
@@ -170,7 +168,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		return collection;
 	}
 
-	public Collection loadMCMsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadMCMsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException {
 		MCMDatabase database = (MCMDatabase) AdministrationDatabaseContext.mcmDatabase;
 		Collection collection = null;
 		try {
@@ -184,99 +182,31 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		return collection;
 	}
 
-	//  public PermissionAttributes loadPermissionAttributesButIds(Identifier id) throws DatabaseException, CommunicationException {
+	//  public PermissionAttributes loadPermissionAttributesButIds(Identifier id) throws DatabaseException {
 	//      return new PermissionAttributes(id);
 	//  }
 
 
 
 
-	public void saveUser(User user, boolean force) throws DatabaseException, CommunicationException {
+	public void saveUser(User user, boolean force) throws DatabaseException, VersionCollisionException {
 		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.userDatabase;
-		try {
-			database.update(user, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-		}
-		catch (UpdateObjectException e) {
-			String mesg = "DatabaseAdministrationObjectLoader.saveUser | UpdateObjectException: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
-		}
-		catch (IllegalDataException e) {
-			String mesg = "DatabaseAdministrationObjectLoader.saveUser | Illegal Storable Object: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
-		}
-		catch (VersionCollisionException e) {
-			String mesg = "DatabaseAdministrationObjectLoader.saveUser | VersionCollisionException: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
-		}
+		database.update(user, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveDomain(Domain domain, boolean force) throws DatabaseException, CommunicationException {
+	public void saveDomain(Domain domain, boolean force) throws DatabaseException, VersionCollisionException {
 		DomainDatabase database = (DomainDatabase) AdministrationDatabaseContext.domainDatabase;
-		try {
-			database.update(domain, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-		}
-		catch (UpdateObjectException e) {
-			String mesg = "DatabaseAdministrationObjectLoader.saveDomain | UpdateObjectException: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
-		}
-		catch (IllegalDataException e) {
-			String mesg = "DatabaseAdministrationObjectLoader.saveDomain | Illegal Storable Object: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
-		}
-		catch (VersionCollisionException e) {
-			String mesg = "DatabaseAdministrationObjectLoader.saveDomain | VersionCollisionException: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
-		}
+		database.update(domain, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveServer(Server server, boolean force) throws DatabaseException, CommunicationException {
+	public void saveServer(Server server, boolean force) throws DatabaseException, VersionCollisionException {
 		ServerDatabase database = (ServerDatabase) AdministrationDatabaseContext.serverDatabase;
-		try {
-			database.update(server, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-		}
-		catch (UpdateObjectException e) {
-			String mesg = "DatabaseAdministrationObjectLoader.saveServer | UpdateObjectException: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
-		}
-		catch (IllegalDataException e) {
-			String mesg = "DatabaseAdministrationObjectLoader.saveServer | Illegal Storable Object: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
-		}
-		catch (VersionCollisionException e) {
-			String mesg = "DatabaseAdministrationObjectLoader.saveServer | VersionCollisionException: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
-		}
+		database.update(server, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveMCM(MCM mcm, boolean force) throws DatabaseException, CommunicationException {
+	public void saveMCM(MCM mcm, boolean force) throws DatabaseException, VersionCollisionException {
 		MCMDatabase database = (MCMDatabase) AdministrationDatabaseContext.mcmDatabase;
-		try {
-			database.update(mcm, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-		}
-		catch (UpdateObjectException e) {
-			String mesg = "DatabaseAdministrationObjectLoader.saveMCM | UpdateObjectException: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
-		}
-		catch (IllegalDataException e) {
-			String mesg = "DatabaseAdministrationObjectLoader.saveMCM | Illegal Storable Object: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
-		}
-		catch (VersionCollisionException e) {
-			String mesg = "DatabaseAdministrationObjectLoader.saveMCM | VersionCollisionException: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
-		}
+		database.update(mcm, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	//	public void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws DatabaseException ;
@@ -285,92 +215,24 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 
 
 
-	public void saveUsers(Collection collection, boolean force) throws DatabaseException, CommunicationException {
+	public void saveUsers(Collection collection, boolean force) throws DatabaseException, VersionCollisionException {
 		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.userDatabase;
-		try {
-			database.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-		}
-		catch (UpdateObjectException e) {
-			String mesg = "DatabaseAdministrationObjectLoader.saveUsers | UpdateObjectException: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
-		}
-		catch (IllegalDataException e) {
-			String mesg = "DatabaseAdministrationObjectLoader.saveUsers | Illegal Storable Object: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
-		}
-		catch (VersionCollisionException e) {
-			String mesg = "DatabaseAdministrationObjectLoader.saveUsers | VersionCollisionException: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
-		}
+		database.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveDomains(Collection collection, boolean force) throws DatabaseException, CommunicationException {
+	public void saveDomains(Collection collection, boolean force) throws DatabaseException, VersionCollisionException {
 		DomainDatabase database = (DomainDatabase) AdministrationDatabaseContext.domainDatabase;
-		try {
-			database.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-		}
-		catch (UpdateObjectException e) {
-			String mesg = "DatabaseAdministrationObjectLoader.saveDomains | UpdateObjectException: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
-		}
-		catch (IllegalDataException e) {
-			String mesg = "DatabaseAdministrationObjectLoader.saveDomains | Illegal Storable Object: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
-		}
-		catch (VersionCollisionException e) {
-			String mesg = "DatabaseAdministrationObjectLoader.saveDomains | VersionCollisionException: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
-		}
+		database.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveServers(Collection collection, boolean force) throws DatabaseException, CommunicationException {
+	public void saveServers(Collection collection, boolean force) throws DatabaseException, VersionCollisionException {
 		ServerDatabase database = (ServerDatabase) AdministrationDatabaseContext.serverDatabase;
-		try {
-			database.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-		}
-		catch (UpdateObjectException e) {
-			String mesg = "DatabaseAdministrationObjectLoader.saveServers | UpdateObjectException: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
-		}
-		catch (IllegalDataException e) {
-			String mesg = "DatabaseAdministrationObjectLoader.saveServers | Illegal Storable Object: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
-		}
-		catch (VersionCollisionException e) {
-			String mesg = "DatabaseAdministrationObjectLoader.saveServers | VersionCollisionException: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
-		}
+		database.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
-	public void saveMCMs(Collection collection, boolean force) throws DatabaseException, CommunicationException {
+	public void saveMCMs(Collection collection, boolean force) throws DatabaseException, VersionCollisionException {
 		MCMDatabase database = (MCMDatabase) AdministrationDatabaseContext.mcmDatabase;
-		try {
-			database.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
-		}
-		catch (UpdateObjectException e) {
-			String mesg = "DatabaseAdministrationObjectLoader.saveMCMs | UpdateObjectException: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
-		}
-		catch (IllegalDataException e) {
-			String mesg = "DatabaseAdministrationObjectLoader.saveMCMs | Illegal Storable Object: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
-		}
-		catch (VersionCollisionException e) {
-			String mesg = "DatabaseAdministrationObjectLoader.saveMCMs | VersionCollisionException: " + e.getMessage();
-			Log.errorMessage(mesg);
-			throw new DatabaseException(mesg, e);
-		}
+		database.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	//	public void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws DatabaseException ;
@@ -378,24 +240,18 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 
 
 
-	public Set refresh(Set storableObjects) throws CommunicationException, DatabaseException {
+	public Set refresh(Set storableObjects) throws DatabaseException {
 		if (storableObjects.isEmpty())
 			return Collections.EMPTY_SET;
 
 		short entityCode = ((StorableObject) storableObjects.iterator().next()).getId().getMajor();
 
-		try {
-			StorableObjectDatabase database = AdministrationDatabaseContext.getDatabase(entityCode);
+		StorableObjectDatabase database = AdministrationDatabaseContext.getDatabase(entityCode);
 
-			if (database != null)
-				return database.refresh(storableObjects);
+		if (database != null)
+			return database.refresh(storableObjects);
 
-			return Collections.EMPTY_SET;
-		}
-		catch (DatabaseException e) {
-			Log.errorMessage("DatabaseAdministrationObjectLoader.refresh | DatabaseException: " + e.getMessage());
-			throw new DatabaseException("DatabaseAdministrationObjectLoader.refresh | DatabaseException: " + e.getMessage());
-		}
+		return Collections.EMPTY_SET;
 	}
 
 

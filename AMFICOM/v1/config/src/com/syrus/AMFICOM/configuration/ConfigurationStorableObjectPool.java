@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.65 2005/02/22 11:20:06 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.66 2005/02/24 14:59:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,8 +14,6 @@ import java.util.Hashtable;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -24,12 +22,11 @@ import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/02/22 11:20:06 $
- * @author $Author: bob $
+ * @version $Revision: 1.66 $, $Date: 2005/02/24 14:59:52 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -139,19 +136,19 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		init(cObjectLoader1, size);
 	}
 
-	public static void refresh() throws DatabaseException, CommunicationException {
+	public static void refresh() throws ApplicationException {
 		instance.refreshImpl();
 	}
 
-  protected Set refreshStorableObjects(Set storableObjects) throws CommunicationException, DatabaseException{
+  protected Set refreshStorableObjects(Set storableObjects) throws ApplicationException{
 		return cObjectLoader.refresh(storableObjects);
 	}
 
-	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader) throws DatabaseException, CommunicationException {
+	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectImpl(objectId, useLoader);
 	}
 
-	public static Collection getStorableObjects(Collection objectIds, boolean useLoader) throws DatabaseException, CommunicationException {
+	public static Collection getStorableObjects(Collection objectIds, boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectsImpl(objectIds, useLoader);
 	}
 
@@ -166,7 +163,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		return instance.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
 	}
 
-	protected StorableObject loadStorableObject(Identifier objectId) throws DatabaseException, CommunicationException {
+	protected StorableObject loadStorableObject(Identifier objectId) throws ApplicationException {
 		StorableObject storableObject;
 		switch (objectId.getMajor()) {
 			case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
@@ -218,7 +215,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		return storableObject;
 	}
 
-	protected Collection loadStorableObjects(Short entityCode, Collection ids) throws DatabaseException, CommunicationException {
+	protected Collection loadStorableObjects(Short entityCode, Collection ids) throws ApplicationException {
 		Collection loadedList = null;
 		switch (entityCode.shortValue()) {
 				case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
@@ -270,8 +267,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		return loadedList;
 	}
 
-	protected Collection loadStorableObjectsButIds(StorableObjectCondition condition, Collection ids)
-			throws DatabaseException, CommunicationException {
+	protected Collection loadStorableObjectsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
 		Collection loadedCollection = null;
 		short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
@@ -326,7 +322,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 
 	//public static void save()
 
-	protected void saveStorableObjects(short code, Collection collection, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException {
+	protected void saveStorableObjects(short code, Collection collection, boolean force) throws ApplicationException {
 		if (!collection.isEmpty()) {
 			boolean alone = (collection.size() == 1);
 			switch (code) {
@@ -426,7 +422,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		return instance.putStorableObjectImpl(storableObject);
 	}
 
-	public static void flush(boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException{		 
+	public static void flush(boolean force) throws ApplicationException {		 
 		instance.flushImpl(force);
 	}
 

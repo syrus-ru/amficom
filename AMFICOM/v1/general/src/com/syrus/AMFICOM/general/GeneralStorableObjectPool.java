@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralStorableObjectPool.java,v 1.10 2005/02/22 11:12:11 bob Exp $
+ * $Id: GeneralStorableObjectPool.java,v 1.11 2005/02/24 14:59:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import java.util.Set;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/02/22 11:12:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/02/24 14:59:36 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -92,19 +92,19 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		init(gObjectLoader1, size);
 	}
 
-	public static void refresh() throws DatabaseException, CommunicationException {
+	public static void refresh() throws ApplicationException {
 		instance.refreshImpl();
 	}
 
-  protected Set refreshStorableObjects(Set storableObjects) throws CommunicationException, DatabaseException{
+  protected Set refreshStorableObjects(Set storableObjects) throws ApplicationException {
 		return gObjectLoader.refresh(storableObjects);
 	}
 
-	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader) throws DatabaseException, CommunicationException {
+	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectImpl(objectId, useLoader);
 	}
 
-	public static Collection getStorableObjects(Collection objectIds, boolean useLoader) throws DatabaseException, CommunicationException {
+	public static Collection getStorableObjects(Collection objectIds, boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectsImpl(objectIds, useLoader);
 	}
 
@@ -119,7 +119,7 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		return instance.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
 	}
 
-	protected StorableObject loadStorableObject(Identifier objectId) throws DatabaseException, CommunicationException {
+	protected StorableObject loadStorableObject(Identifier objectId) throws ApplicationException {
 		StorableObject storableObject;
 		switch (objectId.getMajor()) {
 			case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
@@ -138,7 +138,7 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		return storableObject;
 	}
 
-	protected Collection loadStorableObjects(Short entityCode, Collection ids) throws DatabaseException, CommunicationException {
+	protected Collection loadStorableObjects(Short entityCode, Collection ids) throws ApplicationException {
 		Collection loadedObjects = null;
 		switch (entityCode.shortValue()) {
 			case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
@@ -157,8 +157,7 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		return loadedObjects;
 	}
 
-	protected Collection loadStorableObjectsButIds(StorableObjectCondition condition, Collection ids)
-			throws DatabaseException, CommunicationException {
+	protected Collection loadStorableObjectsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
 		Collection loadedObjects = null;
 		short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
@@ -180,7 +179,7 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 
 	//public static void save()
 
-	protected void saveStorableObjects(short code, Collection objects, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException {
+	protected void saveStorableObjects(short code, Collection objects, boolean force) throws ApplicationException {
 		if (!objects.isEmpty()) {
 			boolean alone = (objects.size() == 1);
 			switch (code) {
@@ -213,7 +212,7 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		return instance.putStorableObjectImpl(storableObject);
 	}
 
-	public static void flush(boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException{		 
+	public static void flush(boolean force) throws ApplicationException {		 
 		instance.flushImpl(force);
 	}
 

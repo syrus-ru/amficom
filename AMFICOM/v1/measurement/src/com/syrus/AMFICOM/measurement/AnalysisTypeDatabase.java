@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.69 2005/02/19 20:33:58 arseniy Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.70 2005/02/24 14:59:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,15 +33,13 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/02/19 20:33:58 $
+ * @version $Revision: 1.70 $, $Date: 2005/02/24 14:59:58 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -411,32 +409,6 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			}
-		}
-	}
-
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-//		AnalysisType analysisType = this.fromStorableObject(storableObject);
-		switch (updateKind) {
-			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(storableObject, modifierId, false);
-				break;
-			case UPDATE_FORCE:					
-			default:
-				super.checkAndUpdateEntity(storableObject, modifierId, true);		
-				return;
-		}
-	}
-
-	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
-			throws IllegalDataException, VersionCollisionException, UpdateObjectException {		
-		switch (updateKind) {
-			case UPDATE_CHECK:
-				super.checkAndUpdateEntities(storableObjects, modifierId, false);
-				break;
-			case UPDATE_FORCE:					
-			default:
-				super.checkAndUpdateEntities(storableObjects, modifierId, true);		
-				return;
 		}
 	}
 

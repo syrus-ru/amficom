@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.71 2005/02/24 10:25:14 arseniy Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.72 2005/02/24 14:59:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,14 +31,13 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2005/02/24 10:25:14 $
+ * @version $Revision: 1.72 $, $Date: 2005/02/24 14:59:59 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -91,57 +90,6 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		}
 
 	}
-
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		MeasurementSetup measurementSetup = this.fromStorableObject(storableObject);
-			switch (updateKind) {
-//				case MeasurementSetup.UPDATE_ATTACH_ME:
-//					this.createMEAttachment(measurementSetup, (Identifier) obj);
-//					this.setModified(measurementSetup);
-//					break;
-//				case MeasurementSetup.UPDATE_DETACH_ME:
-//					this.deleteMEAttachment(measurementSetup, (Identifier) obj);
-//					this.setModified(measurementSetup);
-//					break;
-				case UPDATE_CHECK:
-					super.checkAndUpdateEntity(storableObject, modifierId, false);
-					break;
-				case UPDATE_FORCE:					
-				default:
-					super.checkAndUpdateEntity(storableObject, modifierId, true);					
-					return;
-			}		
-	}	
-	
-	
-	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
-			VersionCollisionException, UpdateObjectException {
-		switch (updateKind) {
-//			case MeasurementSetup.UPDATE_ATTACH_ME:
-//				for (Iterator iter = storableObjects.iterator(); iter.hasNext();) {
-//					MeasurementSetup measurementSetup = (MeasurementSetup) iter.next();
-//					this.createMEAttachment(measurementSetup, (Identifier) obj);
-//					this.setModified(measurementSetup);					
-//				}
-//				break;
-//			case MeasurementSetup.UPDATE_DETACH_ME:
-//				for (Iterator iter = storableObjects.iterator(); iter.hasNext();) {
-//					MeasurementSetup measurementSetup = (MeasurementSetup) iter.next();
-//					this.deleteMEAttachment(measurementSetup, (Identifier) obj);
-//					this.setModified(measurementSetup);
-//				}
-//				break;
-			case UPDATE_CHECK:
-				super.checkAndUpdateEntities(storableObjects, modifierId, false);
-				break;
-			case UPDATE_FORCE:					
-			default:
-				super.checkAndUpdateEntities(storableObjects, modifierId, true);					
-				return;
-		}
-
-	}
-	
 
 	private void createMEAttachment(MeasurementSetup measurementSetup, Identifier monitoredElementId) throws UpdateObjectException {
 		String msIdStr = DatabaseIdentifier.toSQLString(measurementSetup.getId());

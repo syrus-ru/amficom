@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.12 2005/02/19 20:33:52 arseniy Exp $
+ * $Id: EventTypeDatabase.java,v 1.13 2005/02/24 15:00:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -33,15 +32,13 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/02/19 20:33:52 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/24 15:00:07 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -174,73 +171,30 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		if ((eventTypes == null) || (eventTypes.isEmpty()))
 			return;
 
-		StringBuffer sql = new StringBuffer(SQL_SELECT
-				+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
-				+ EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID
-				+ SQL_FROM + ObjectEntities.EVENTTYPPARTYPLINK_ENTITY
-				+ SQL_WHERE);
+		Map eventParamaterTypeIdsMap = null;
 		try {
-			sql.append(this.idsEnumerationString(eventTypes, EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID, true));
+			eventParamaterTypeIdsMap = this.retrieveLinkedEntityIds(eventTypes,
+					ObjectEntities.EVENTTYPPARTYPLINK_ENTITY,
+					EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID,
+					StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e);
 		}
 
-		Statement statement = null;
-		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("EventTypeDatabase.retrieveParameterTypesByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql.toString());
+		EventType eventType;
+		Identifier eventTypeId;
+		Collection paramaterTypeIds;
+		for (Iterator it = eventTypes.iterator(); it.hasNext();) {
+			eventType = (EventType) it.next();
+			eventTypeId = eventType.getId();
+			paramaterTypeIds = (Collection) eventParamaterTypeIdsMap.get(eventTypeId);
 
-			Map parameterTypesMap = new HashMap();
-			Identifier parameterTypeId;
-			Identifier eventTypeId;
-			List parameterTypes;
-			while (resultSet.next()) {
-				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
-				eventTypeId = DatabaseIdentifier.getIdentifier(resultSet, EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID);
-
-				parameterTypes = (List)parameterTypesMap.get(eventTypeId);
-				if (parameterTypes == null) {
-					parameterTypes = new ArrayList();
-					parameterTypesMap.put(eventTypeId, parameterTypes);
-				}
-				parameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
-			}
-
-			EventType eventType;
-			for (Iterator it = eventTypes.iterator(); it.hasNext();) {
-				eventType = (EventType)it.next();
-				eventTypeId = eventType.getId();
-				parameterTypes = (List)parameterTypesMap.get(eventTypeId);
-
-				eventType.setParameterTypes0(parameterTypes);
-			}
-
-		}
-		catch (SQLException sqle) {
-			String mesg = "EventTypeDatabase.retrieveParameterTypesByOneQuery | Cannot retrieve parameter type ids for analysis types -- " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		catch (ApplicationException ae) {
-			throw new RetrieveObjectException(ae);
-		}
-		finally {
 			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
+				eventType.setParameterTypes0(GeneralStorableObjectPool.getStorableObjects(paramaterTypeIds, true));
 			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-			finally {
-				DatabaseConnection.releaseConnection(connection);
+			catch (ApplicationException ce) {
+				throw new RetrieveObjectException(ce);
 			}
 		}
 	}
@@ -321,32 +275,6 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
 			}
-		}
-	}
-
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-//		EventType eventType = this.fromStorableObject(storableObject);
-		switch (updateKind) {
-			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(storableObject, modifierId, false);
-				break;
-			case UPDATE_FORCE:					
-			default:
-				super.checkAndUpdateEntity(storableObject, modifierId, true);		
-				return;
-		}
-	}
-
-	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
-			throws IllegalDataException, VersionCollisionException, UpdateObjectException {		
-		switch (updateKind) {
-			case UPDATE_CHECK:
-				super.checkAndUpdateEntities(storableObjects, modifierId, false);
-				break;
-			case UPDATE_FORCE:					
-			default:
-				super.checkAndUpdateEntities(storableObjects, modifierId, true);		
-				return;
 		}
 	}
 

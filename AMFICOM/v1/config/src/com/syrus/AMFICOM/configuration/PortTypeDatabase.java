@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.39 2005/02/19 20:34:06 arseniy Exp $
+ * $Id: PortTypeDatabase.java,v 1.40 2005/02/24 14:59:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/02/19 20:34:06 $
+ * @version $Revision: 1.40 $, $Date: 2005/02/24 14:59:53 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -150,33 +150,29 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 	}
 
 	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
-			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		PortType portType = this.fromStorableObject(storableObject);
+			throws VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(portType, modifierId, false);
+				super.checkAndUpdateEntity(storableObject, modifierId, false);
 				break;
-			case UPDATE_FORCE:					
+			case UPDATE_FORCE:
 			default:
-				super.checkAndUpdateEntity(portType, modifierId, true);		
-				return;
+				super.checkAndUpdateEntity(storableObject, modifierId, true);
 		}
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
-		characteristicDatabase.updateCharacteristics(portType);
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
+		characteristicDatabase.updateCharacteristics(storableObject);
 	}
 
-	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
-		VersionCollisionException, UpdateObjectException {
-		switch (updateKind) {	
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws VersionCollisionException, UpdateObjectException {
+		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntities(storableObjects, modifierId, false);
 				break;
-			case UPDATE_FORCE:					
+			case UPDATE_FORCE:
 			default:
-				super.checkAndUpdateEntities(storableObjects, modifierId, true);		
-				return;
+				super.checkAndUpdateEntities(storableObjects, modifierId, true);
 		}
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
 		characteristicDatabase.updateCharacteristics(storableObjects);
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.50 2005/02/24 09:26:30 arseniy Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.51 2005/02/24 14:59:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,15 +32,13 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/02/24 09:26:30 $
+ * @version $Revision: 1.51 $, $Date: 2005/02/24 14:59:53 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -386,34 +384,6 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
-		}
-	}
-
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws IllegalDataException,
-			VersionCollisionException, UpdateObjectException {
-		switch (updateKind) {
-			case UPDATE_FORCE:
-				super.checkAndUpdateEntity(storableObject, modifierId, true);
-				//super.checkAndUpdateEntities(Collections.singleton(storableObject), modifierId, true);
-				break;
-			case UPDATE_CHECK:
-			default:
-				super.checkAndUpdateEntity(storableObject, modifierId, false);
-				//super.checkAndUpdateEntities(Collections.singleton(storableObject), modifierId, false);
-				break;
-		}
-	}
-
-	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
-			VersionCollisionException, UpdateObjectException {
-		switch (updateKind) {
-			case UPDATE_FORCE:
-				super.checkAndUpdateEntities(storableObjects, modifierId, true);
-				break;
-			case UPDATE_CHECK:
-			default:
-				super.checkAndUpdateEntities(storableObjects, modifierId, false);
-				break;
 		}
 	}
 

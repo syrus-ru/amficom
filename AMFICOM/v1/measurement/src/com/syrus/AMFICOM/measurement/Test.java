@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.82 2005/02/24 10:01:14 arseniy Exp $
+ * $Id: Test.java,v 1.83 2005/02/24 14:59:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.82 $, $Date: 2005/02/24 10:01:14 $
+ * @version $Revision: 1.83 $, $Date: 2005/02/24 14:59:59 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -454,9 +454,6 @@ public class Test extends StorableObject {
 		try {
 			this.testDatabase = MeasurementDatabaseContext.testDatabase;
 			this.testDatabase.update(this, modifierId1, StorableObjectDatabase.UPDATE_FORCE);
-		}
-		catch (IllegalDataException e) {
-			throw new UpdateObjectException(e.getMessage(), e);
 		}
 		catch (VersionCollisionException vce){
 			throw new UpdateObjectException(vce.getMessage(), vce);

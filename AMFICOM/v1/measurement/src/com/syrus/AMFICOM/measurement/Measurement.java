@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.51 2005/02/14 10:58:51 arseniy Exp $
+ * $Id: Measurement.java,v 1.52 2005/02/24 14:59:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/02/14 10:58:51 $
+ * @version $Revision: 1.52 $, $Date: 2005/02/24 14:59:58 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -178,9 +178,6 @@ public class Measurement extends Action {
 		super.modifierId = (Identifier) modifierId1.clone();
 		try {
 			this.measurementDatabase.update(this, modifierId1, UPDATE_STATUS);
-		}
-		catch (IllegalDataException e) {
-			throw new UpdateObjectException(e.getMessage(), e);
 		}
 		catch (VersionCollisionException vce) {
 			throw new UpdateObjectException(vce.getMessage(), vce);

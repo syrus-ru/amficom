@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.47 2005/02/24 12:30:31 arseniy Exp $
+ * $Id: Set.java,v 1.48 2005/02/24 14:59:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/02/24 12:30:31 $
+ * @version $Revision: 1.48 $, $Date: 2005/02/24 14:59:59 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -167,9 +167,6 @@ public class Set extends StorableObject {
 		try {
 			this.setDatabase.update(this, modifierId1, StorableObjectDatabase.UPDATE_FORCE);
 		}
-		catch (IllegalDataException e) {
-			throw new UpdateObjectException("MeasurementSetup.attachToMonitoredElement | Cannot attach measurement setup '" + this.id + "' to monitored element '" + monitoredElementId + "' -- " + e.getMessage(), e);
-		}
 		catch (VersionCollisionException vce){
 			throw new UpdateObjectException(vce.getMessage(), vce);
 		}
@@ -185,10 +182,7 @@ public class Set extends StorableObject {
 		try {
 	    this.setDatabase.update(this, modifierId1, StorableObjectDatabase.UPDATE_FORCE);
 		}
-		catch (IllegalDataException e) {
-			throw new UpdateObjectException("MeasurementSetup.detachFromMonitoredElement | Cannot dettach measurement setup '" + this.id + "' from monitored element '" + monitoredElementId + "' -- " + e.getMessage(), e);
-		}
-		catch (VersionCollisionException vce){
+		catch (VersionCollisionException vce) {
 			throw new UpdateObjectException(vce.getMessage(), vce);
 		}
 		this.monitoredElementIds.remove(monitoredElementId);

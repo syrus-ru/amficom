@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.13 2005/02/19 20:34:37 arseniy Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.14 2005/02/24 14:59:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/02/19 20:34:37 $
+ * @version $Revision: 1.14 $, $Date: 2005/02/24 14:59:36 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -115,51 +115,6 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 	}	
-
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-//		ParameterType parameterType = this.fromStorableObject(storableObject);
-		switch (updateKind) {
-			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(storableObject, modifierId, false);
-				break;
-			case UPDATE_FORCE:
-			default:
-				super.checkAndUpdateEntity(storableObject, modifierId, true);
-				return;
-		}
-	}
-
-	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
-			VersionCollisionException, UpdateObjectException {
-		switch (updateKind) {
-			case UPDATE_CHECK:
-				super.checkAndUpdateEntities(storableObjects, modifierId, false);
-				break;
-			case UPDATE_FORCE:
-			default:
-				super.checkAndUpdateEntities(storableObjects, modifierId, true);
-				return;
-		}
-	}
-//
-//	/**
-//	 * @deprecated use {@link StorableObjectDatabase.retrieveByCondion} and {@link TypicalCondition}
-//	 */
-//	public ParameterType retrieveForCodename(String codename) throws ObjectNotFoundException , RetrieveObjectException {		
-//		Collection collection = null;
-//		
-//		try {
-//			collection = this.retrieveByIds( null , StorableObjectWrapper.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
-//		}
-//		catch (IllegalDataException ide) {				
-//			throw new RetrieveObjectException(ide);
-//		}
-//		
-//		if ((collection == null) || (collection.isEmpty()))
-//				throw new ObjectNotFoundException("No parameter type with codename: '" + codename + "'");
-//		
-//		return (ParameterType) collection.iterator().next();
-//	}
 	
 	public Collection retrieveAll() throws RetrieveObjectException {
 		try{

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.11 2005/02/19 20:34:37 arseniy Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.12 2005/02/24 14:59:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/02/19 20:34:37 $
+ * @version $Revision: 1.12 $, $Date: 2005/02/24 14:59:36 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -132,33 +132,6 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 
 	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
-	}
-
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) 
-			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		switch (updateKind) {
-			case UPDATE_FORCE:
-				super.checkAndUpdateEntity(storableObject, modifierId, true);
-				break;
-			case UPDATE_CHECK: 					
-			default:
-				super.checkAndUpdateEntity(storableObject, modifierId, false);
-				break;
-		}
-	}
-
-	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
-			throws IllegalDataException, VersionCollisionException,
-			UpdateObjectException {
-		switch (updateKind) {
-		case UPDATE_FORCE:
-			super.checkAndUpdateEntities(storableObjects, modifierId, true);
-			break;
-		case UPDATE_CHECK: 					
-		default:
-			super.checkAndUpdateEntities(storableObjects, modifierId, false);
-			break;
-		}
 	}
 
 	public Collection retrieveAll() throws RetrieveObjectException {
