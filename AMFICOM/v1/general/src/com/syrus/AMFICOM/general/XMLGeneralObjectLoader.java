@@ -1,5 +1,5 @@
 /*
- * $Id: XMLGeneralObjectLoader.java,v 1.4 2005/01/27 13:21:32 bob Exp $
+ * $Id: XMLGeneralObjectLoader.java,v 1.5 2005/02/01 13:52:07 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,12 +10,13 @@ package com.syrus.AMFICOM.general;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/01/27 13:21:32 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/01 13:52:07 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -170,7 +171,7 @@ public final class XMLGeneralObjectLoader implements GeneralObjectLoader {
 
 	public Set refresh(Set storableObjects) throws CommunicationException, DatabaseException {
 		// TODO Auto-generated method stub
-		return null;
+		return Collections.EMPTY_SET;
 	}
 
 	public void delete(Identifier id) throws CommunicationException, DatabaseException {
