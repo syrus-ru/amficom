@@ -194,6 +194,7 @@ public class SchemeElement extends ObjectResource
 
 	public static PropertiesPanel getPropertyPane()
 	{
+		System.out.println("Getting SchemeElement property pane");
 		return new SchemeElementPane();
 	}
 

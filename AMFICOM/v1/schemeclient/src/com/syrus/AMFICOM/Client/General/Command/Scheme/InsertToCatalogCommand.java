@@ -1,54 +1,20 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
+import java.util.*;
 
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.Scheme.DefaultCableLink;
-import com.syrus.AMFICOM.Client.General.Scheme.DefaultLink;
-import com.syrus.AMFICOM.Client.General.Scheme.DeviceGroup;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemePanel;
-import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
-import com.syrus.AMFICOM.Client.Resource.DataSet;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.ResourceUtil;
-import com.syrus.AMFICOM.Client.Resource.ISM.AccessPort;
-import com.syrus.AMFICOM.Client.Resource.ISM.KIS;
-import com.syrus.AMFICOM.Client.Resource.ISM.TransmissionPath;
-import com.syrus.AMFICOM.Client.Resource.ISM.TransmissionPathElement;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Scheme.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.ISMDirectory.AccessPortType;
-import com.syrus.AMFICOM.Client.Resource.Network.CableLink;
-import com.syrus.AMFICOM.Client.Resource.Network.CableLinkThread;
-import com.syrus.AMFICOM.Client.Resource.Network.CablePort;
-import com.syrus.AMFICOM.Client.Resource.Network.Equipment;
-import com.syrus.AMFICOM.Client.Resource.Network.Link;
-import com.syrus.AMFICOM.Client.Resource.Network.Port;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CableLinkType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CablePortType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.LinkType;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.PortType;
-import com.syrus.AMFICOM.Client.Resource.Scheme.PathElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCablePort;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableThread;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeDevice;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePort;
+import com.syrus.AMFICOM.Client.Resource.Network.*;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
-
 import com.syrus.AMFICOM.Client.Schematics.Elements.CatalogElementsDialog;
-
 
 public class InsertToCatalogCommand extends VoidCommand
 {
@@ -131,7 +97,7 @@ public class InsertToCatalogCommand extends VoidCommand
 						 Hashtable cable_links_to_save,
 						 Hashtable paths_to_save)
 	{
-		CatalogElementsDialog dialog = new CatalogElementsDialog();
+		CatalogElementsDialog dialog = new CatalogElementsDialog(aContext);
 
 			DataSet d = new DataSet(elements_to_save);
 			d.add(new DataSet(links_to_save));
@@ -467,10 +433,7 @@ public class InsertToCatalogCommand extends VoidCommand
 	{
 		if (element.devices.size() == 1)
 		{
-			Equipment eq = null;
-			KIS kis = null;
-			/*
-					(Equipment)Pool.get(Equipment.typ, element.equipment_id);
+			Equipment eq = (Equipment)Pool.get(Equipment.typ, element.equipment_id);
 			KIS kis = null;
 			if (eq == null)
 			{
@@ -482,7 +445,7 @@ public class InsertToCatalogCommand extends VoidCommand
 						kis = (KIS)eq;
 				}
 			}
-*/
+
 			ProtoElement proto = (ProtoElement)Pool.get(ProtoElement.typ, element.proto_element_id);
 			EquipmentType eqt = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipment_type_id);
 

@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.DataSet;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 
 public class CatalogElementsDialog extends JDialog
 {
@@ -25,9 +26,13 @@ public class CatalogElementsDialog extends JDialog
 	public static final int CANCEL = 0;
 	int status = CANCEL;
 
-	public CatalogElementsDialog()
+	ApplicationContext aContext;
+
+	public CatalogElementsDialog(ApplicationContext aContext)
 	{
 		super(Environment.getActiveWindow());
+		this.aContext = aContext;
+
 		try
 		{
 			jbInit();
@@ -50,7 +55,7 @@ public class CatalogElementsDialog extends JDialog
 		setLocation(w, h / 2);
 		setModal(true);
 
-		panel = new CatalogElementsPanel();
+		panel = new CatalogElementsPanel(aContext);
 		getContentPane().add(panel, BorderLayout.CENTER);
 
 		okButton.setText("OK");

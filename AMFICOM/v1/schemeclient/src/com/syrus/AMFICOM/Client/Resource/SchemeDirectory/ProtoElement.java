@@ -105,6 +105,7 @@ public class ProtoElement extends ObjectResource
 
 	public static PropertiesPanel getPropertyPane()
 	{
+		System.out.println("Getting ProtoElement property pane");
 		return new EquipmentTypePane();
 	}
 

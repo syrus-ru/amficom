@@ -13,9 +13,13 @@ public class PathElement extends StubResource implements Serializable
 	public boolean is_cable;
 	public String link_id;
 	public String thread_id;
+
+	public String start_port_id;
+	public String end_port_id;
+
 	public String scheme_element_id = "";
 
-	public String scheme_id= "";
+	public String scheme_id = "";
 
 	public PathElement()
 	{

@@ -69,10 +69,8 @@ public class SchemeElementPane extends PropertiesPanel
 
 	public void setContext(ApplicationContext aContext)
 	{
-		if (is_kis)
-			kisPane.setContext(aContext);
-		else
-		 eqPane.setContext(aContext);
+		kisPane.setContext(aContext);
+		eqPane.setContext(aContext);
 	}
 
 	public boolean modify()

@@ -75,6 +75,7 @@ public class SchemeCableLink extends ObjectResource
 
 	public static PropertiesPanel getPropertyPane()
 	{
+		System.out.println("Getting CableLink property pane");
 		return new SchemeCableLinkPane();
 	}
 

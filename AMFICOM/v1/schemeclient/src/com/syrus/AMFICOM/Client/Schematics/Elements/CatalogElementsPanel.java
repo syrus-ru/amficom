@@ -1,35 +1,19 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.*;
 
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
+import javax.swing.*;
+import javax.swing.event.*;
 
+import com.syrus.AMFICOM.Client.General.Filter.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceListBox;
-import com.syrus.AMFICOM.Client.Resource.DataSet;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceNameSorter;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceSorter;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISM.TransmissionPath;
-import com.syrus.AMFICOM.Client.Resource.Network.CableLink;
-import com.syrus.AMFICOM.Client.Resource.Network.Link;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
+import com.syrus.AMFICOM.Client.Resource.Network.*;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 
 public class CatalogElementsPanel extends JPanel
 {
@@ -41,9 +25,11 @@ public class CatalogElementsPanel extends JPanel
 	ObjectResource schemeElement_selected;
 	Hashtable selected_ors = new Hashtable();
 	private boolean skip = false;
+	ApplicationContext aContext;
 
-	public CatalogElementsPanel()
+	public CatalogElementsPanel(ApplicationContext aContext)
 	{
+		this.aContext = aContext;
 		try
 		{
 			jbInit();
@@ -196,20 +182,24 @@ public class CatalogElementsPanel extends JPanel
 		if (schemeElement_selected == null || !schemeElement_selected.getTyp().equals(elementsList.getSelectedObjectResource().getTyp()))
 		{
 			schemeElement_selected = elementsList.getSelectedObjectResource();
-			ObjectResourceSorter sorter = new ObjectResourceNameSorter();
 			DataSet ds = new DataSet();
 			catalogElementNameField.setText("");
 
 			if (schemeElement_selected instanceof SchemeElement)
-				sorter.setDataSet(new DataSet(Pool.getHash("kisequipment")));
-			if (schemeElement_selected instanceof SchemeLink)
-				sorter.setDataSet(new DataSet(Pool.getHash(Link.typ)));
-			if (schemeElement_selected instanceof SchemeCableLink)
-				sorter.setDataSet(new DataSet(Pool.getHash(CableLink.typ)));
-			if (schemeElement_selected instanceof SchemePath)
-				sorter.setDataSet(new DataSet(Pool.getHash(TransmissionPath.typ)));
+				ds = new DataSet(Pool.getHash("kisequipment"));
+			else if (schemeElement_selected instanceof SchemeLink)
+				ds = new DataSet(Pool.getHash(Link.typ));
+			else if (schemeElement_selected instanceof SchemeCableLink)
+				ds = new DataSet(Pool.getHash(CableLink.typ));
+			else if (schemeElement_selected instanceof SchemePath)
+				ds = new DataSet(Pool.getHash(TransmissionPath.typ));
 
+			ObjectResourceFilter filter = new ObjectResourceDomainFilter(aContext.getSessionInterface().getDomainId());
+			ds = filter.filter(ds);
+			ObjectResourceSorter sorter = new ObjectResourceNameSorter();
+			sorter.setDataSet(ds);
 			ds = sorter.sort("name", ObjectResourceSorter.SORT_ASCENDING);
+
 			skip = true;
 			catalogList.setContents(ds.elements());
 			skip = false;
@@ -222,11 +212,9 @@ public class CatalogElementsPanel extends JPanel
 		else if (c_el instanceof String)
 		{
 			if (c_el.equals(""))
-				//catalogElementNameField.setBackground(Color.lightGray);
-		 componentNameLabel.setText("Название элемента в каталоге:");
+				componentNameLabel.setText("Название элемента в каталоге:");
 			else
-				//catalogElementNameField.setBackground(SystemColor.window);
-		 componentNameLabel.setText("Название элемента в каталоге: (новый)");
+				componentNameLabel.setText("Название элемента в каталоге: (новый)");
 			catalogElementNameField.setText((String)c_el);
 			catalogElementNameField.setCaretPosition(0);
 			skip = true;

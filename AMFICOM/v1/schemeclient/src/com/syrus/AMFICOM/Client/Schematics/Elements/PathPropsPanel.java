@@ -5,15 +5,17 @@ import java.awt.event.*;
 import java.util.*;
 
 import javax.swing.*;
+import javax.swing.event.*;
 
+import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISMDirectory.TransmissionPathType;
-import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Network.Equipment;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
+import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
 
 public class PathPropsPanel extends JPanel
 {
@@ -22,10 +24,8 @@ public class PathPropsPanel extends JPanel
 	private JTextField compNameTextField = new JTextField();
 	private JTextField startDevTextField = new JTextField();
 	private JTextField endDevTextField = new JTextField();
-	//ObjectResourceTablePane table = new ObjectResourceTablePane();
+	ObjectResourceTablePane table = new ObjectResourceTablePane();
 	//JTable table = new JTable();
-	ObjectResourceTreeModel model;
-	UniTreePanel utp;
 
 	private String undoCompName;
 	private String undoEndDevId;
@@ -89,9 +89,8 @@ public class PathPropsPanel extends JPanel
 		manLabelPanel.setPreferredSize(new Dimension (60, 10));
 		manLabelPanel.add(new JLabel("Кон. устр."));
 
-		utp = new UniTreePanel(aContext.getDispatcher(), aContext, model);
 
-/*		table.initialize(
+		table.initialize(
 				new PathDisplayModel(),
 				new DataSet());
 		table.setSorter(PathElement.getSorter());
@@ -106,9 +105,9 @@ public class PathPropsPanel extends JPanel
 						table_updated();
 					}
 				}
-		});/
+		});*/
 
-		table.getViewport().setBackground(SystemColor.window);*/
+		table.getViewport().setBackground(SystemColor.window);
 
 		cl1Panel.add(clLabelPanel, BorderLayout.WEST);
 		cl2Panel.add(linksLabelPanel, BorderLayout.WEST);
@@ -116,8 +115,7 @@ public class PathPropsPanel extends JPanel
 		co2Panel.add(descrLabelPanel, BorderLayout.WEST);
 		co3Panel.add(manLabelPanel, BorderLayout.WEST);
 		cl1Panel.add(typeComboBox, BorderLayout.CENTER);
-		//cl2Panel.add(table, BorderLayout.CENTER);
-		cl2Panel.add(utp, BorderLayout.CENTER);
+		cl2Panel.add(table, BorderLayout.CENTER);
 		co1Panel.add(compNameTextField, BorderLayout.CENTER);
 		co2Panel.add(startDevTextField, BorderLayout.CENTER);
 		co3Panel.add(endDevTextField, BorderLayout.CENTER);
@@ -161,7 +159,7 @@ public class PathPropsPanel extends JPanel
 
 //		linksList.setPreferredSize(new Dimension (300, 80));
 //		table.setBorder(BorderFactory.createLoweredBevelBorder());
-		//table.setAutoscrolls(true);
+		table.setAutoscrolls(true);
 	}
 
 	private void setDefaults()
@@ -179,7 +177,7 @@ public class PathPropsPanel extends JPanel
 		}
 	}
 
-/*	class MySelectionListener implements ListSelectionListener
+	class MySelectionListener implements ListSelectionListener
 	{
 		public void valueChanged(ListSelectionEvent e) {
 			//Ignore extra messages.
@@ -198,7 +196,7 @@ public class PathPropsPanel extends JPanel
 						CreatePathEvent.PE_SELECTED_EVENT));
 			}
 		}
-	}*/
+	}
 
 	public void setEditable(boolean b)
 	{
@@ -207,7 +205,7 @@ public class PathPropsPanel extends JPanel
 		compNameTextField.setEnabled(b);
 		endDevTextField.setEnabled(b);
 		startDevTextField.setEnabled(b);
-		//table.getTable().setEnabled(b);
+		table.getTable().setEnabled(b);
 	}
 
 	public void init(SchemePath path, DataSourceInterface dataSource)
@@ -245,10 +243,8 @@ public class PathPropsPanel extends JPanel
 
 		typeComboBox.setSelected(Pool.get(TransmissionPathType.typ, path.type_id));
 
-		model = new PathTreeModel(aContext.getDataSourceInterface(), path);
-		utp.setModel(model);
-
-		//table.setContents(ds);
+		DataSet ds = new DataSet(path.links);
+		table.setContents(ds);
 
 		undoCompName = path.getName();
 		undoEndDevId = path.end_device_id;
@@ -279,7 +275,7 @@ public class PathPropsPanel extends JPanel
 
 	public void updateLink()
 	{
-	/*	PathElement pe = (PathElement)table.getSelectedObject();
+		PathElement pe = (PathElement)table.getSelectedObject();
 		if (pe != null)
 		{
 			if (!links_to_add.isEmpty())
@@ -309,12 +305,12 @@ public class PathPropsPanel extends JPanel
 
 				links_to_add = new ArrayList();
 			}
-		}*/
+		}
 	}
 
 	public void removeLink()
 	{
-		/*PathElement pe = (PathElement)table.getSelectedObject();
+		PathElement pe = (PathElement)table.getSelectedObject();
 		if (pe != null)
 		{
 			path.links.remove(pe);
@@ -322,6 +318,21 @@ public class PathPropsPanel extends JPanel
 
 			table.setContents(ds);
 			table.updateUI();
+		}
+
+/*
+		for (int i = 0; i < path.links.size(); i++)
+		{
+			PathElement pe = (PathElement)path.links.get(i);
+			if (pe.link_id.equals(link_id))
+			{
+				path.links.remove(pe);
+				DataSet ds = new DataSet(path.links);
+
+				table.setContents(ds);
+				table.updateUI();
+				break;
+			}
 		}*/
 	}
 
@@ -332,7 +343,7 @@ public class PathPropsPanel extends JPanel
 			PathElement pe = (PathElement)path.links.get(i);
 			if (pe.link_id.equals(link_id))
 			{
-				//table.setSelected(pe);
+				table.setSelected(pe);
 				break;
 			}
 		}
@@ -366,8 +377,8 @@ public class PathPropsPanel extends JPanel
 			}
 		}
 		DataSet ds = new DataSet(path.links);
-		//table.setContents(ds);
-		//table.updateUI();
+		table.setContents(ds);
+		table.updateUI();
 
 		links_to_add = new ArrayList();
 	}
@@ -584,118 +595,5 @@ class PathDisplayModel extends StubDisplayModel
 		if (col_id.equals("num"))
 			return true;
 		return false;
-	}
-}
-
-
-class PathTreeModel extends ObjectResourceTreeModel
-{
-	DataSourceInterface dsi;
-	SchemePath path;
-
-	public PathTreeModel(DataSourceInterface dsi, SchemePath path)
-	{
-		this.dsi = dsi;
-		this.path = path;
-	}
-
-	public ObjectResourceTreeNode getRoot()
-	{
-		return new ObjectResourceTreeNode (path, path.getName(), true,
-																			 new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif")));
-	}
-
-	public ImageIcon getNodeIcon(ObjectResourceTreeNode node)
-	{
-		return null;
-	}
-
-	public Color getNodeTextColor(ObjectResourceTreeNode node)
-	{
-		return null;
-	}
-
-	public void nodeAfterSelected(ObjectResourceTreeNode node)
-	{
-	}
-
-	public void nodeBeforeExpanded(ObjectResourceTreeNode node)
-	{
-	}
-
-	public Class getNodeChildClass(ObjectResourceTreeNode node)
-	{
-		if(node.getObject() instanceof String)
-		{
-			String s = (String )node.getObject();
-			if(s.equals(MapProtoGroup.typ))
-				return MapProtoGroup.class;
-		}
-		else if (node.getObject() instanceof MapProtoElement)
-			return ProtoElement.class;
-		return null;
-	}
-
-	public Vector getChildNodes(ObjectResourceTreeNode node)
-	{
-		Vector vec = new Vector();
-		if(node.getObject() instanceof SchemePath)
-		{
-			HashSet hs = new HashSet();
-			for (Enumeration enum = path.links.elements(); enum.hasMoreElements();)
-			{
-				PathElement pe = (PathElement)enum.nextElement();
-				if (pe.scheme_id != null && pe.scheme_id.length() != 0)
-					hs.add(pe.scheme_id);
-			}
-
-			for (Iterator it = hs.iterator(); it.hasNext();)
-			{
-				Scheme scheme = (Scheme)Pool.get(Scheme.typ, (String)it.next());
-				vec.add(new ObjectResourceTreeNode(scheme, scheme.getName(), true, false));
-			}
-		}
-		else if(node.getObject() instanceof Scheme)
-		{
-			Scheme scheme = (Scheme)node.getObject();
-			Vector v = new Vector();
-			for (Enumeration enum = path.links.elements(); enum.hasMoreElements();)
-			{
-				PathElement pe = (PathElement)enum.nextElement();
-				if (pe.scheme_id.equals(scheme.getId()))
-					v.add(pe);
-			}
-			DataSet ds = new DataSet(v);
-			ObjectResourceSorter sorter = PathElement.getDefaultSorter();
-			sorter.setDataSet(ds);
-			ds = sorter.default_sort();
-			for (Enumeration enum = ds.elements(); enum.hasMoreElements();)
-			{
-				PathElement pe = (PathElement)enum.nextElement();
-				vec.add(new ObjectResourceTreeNode(pe, pe.getName(), true, false));
-			}
-		}
-		else if(node.getObject() instanceof PathElement)
-		{
-			PathElement pe = (PathElement)node.getObject();
-			if (pe.link_id.length() == 0)
-			{
-				SchemeElement se = (SchemeElement)Pool.get(SchemeElement.typ, pe.scheme_element_id);
-				//ports
-				vec.add(new ObjectResourceTreeNode(se, se.getName(), true, false));
-			}
-			else if (pe.is_cable)
-			{
-				SchemeCableLink sl = (SchemeCableLink)Pool.get(SchemeCableLink.typ, pe.link_id);
-				vec.add(new ObjectResourceTreeNode(sl, sl.getName(), true, false));
-			}
-			else
-			{
-				SchemeLink sl = (SchemeLink)Pool.get(SchemeLink.typ, pe.link_id);
-				vec.add(new ObjectResourceTreeNode(sl, sl.getName(), true, false));
-			}
-		}
-
-		return vec;
 	}
 }

@@ -6,6 +6,7 @@ import java.util.*;
 
 import com.syrus.AMFICOM.CORBA.Scheme.*;
 import com.syrus.AMFICOM.Client.Configure.UI.TransmissionPathPane;
+import com.syrus.AMFICOM.Client.Schematics.UI.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
@@ -134,7 +135,8 @@ public class SchemePath extends ObjectResource
 
 	public static PropertiesPanel getPropertyPane()
 	{
-		return new TransmissionPathPane();
+		System.out.println("Getting SchemePath property pane");
+		return new SchemePathPane();
 	}
 
 	public ObjectResourceModel getModel()

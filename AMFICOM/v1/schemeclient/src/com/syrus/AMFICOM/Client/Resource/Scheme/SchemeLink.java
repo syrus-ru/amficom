@@ -59,6 +59,7 @@ public class SchemeLink extends ObjectResource implements Serializable
 
 	public static PropertiesPanel getPropertyPane()
 	{
+		System.out.println("Getting Link property pane");
 		return new SchemeLinkPane();
 	}
 
