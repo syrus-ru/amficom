@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeDatabase.java,v 1.10 2004/12/07 15:32:33 max Exp $
+ * $Id: LinkTypeDatabase.java,v 1.11 2004/12/10 16:49:34 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/12/07 15:32:33 $
+ * @version $Revision: 1.11 $, $Date: 2004/12/10 16:49:34 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -167,12 +167,24 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		LinkType linkType = this.fromStorableObject(storableObject);
-		super.insertEntity(linkType);		
+		super.insertEntity(linkType);
+        CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)ConfigurationDatabaseContext.getCharacteristicDatabase();
+        try {
+            characteristicDatabase.updateCharacteristics(storableObject);
+        } catch (UpdateObjectException e) {
+            throw new CreateObjectException("LinkTypeDatabase.insert | UpdateObjectException " + e);
+        }
 	}
 
 	public void insert(List storableObjects) throws IllegalDataException,
 			CreateObjectException {
 		super.insertEntities(storableObjects);
+        CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)ConfigurationDatabaseContext.getCharacteristicDatabase();
+        try {
+            characteristicDatabase.updateCharacteristics(storableObjects);
+        } catch (UpdateObjectException e) {
+            throw new CreateObjectException("LinkTypeDatabase.insert | UpdateObjectException " + e);
+        }
 	}
 	
 	public void update(StorableObject storableObject, int updateKind, Object obj)
