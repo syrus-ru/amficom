@@ -25,3 +25,5 @@ temp
 .idl
 .settings
 .sqlj
+.classpath
+.project
