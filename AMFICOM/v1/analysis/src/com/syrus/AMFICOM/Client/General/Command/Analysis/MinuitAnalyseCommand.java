@@ -82,8 +82,8 @@ public class MinuitAnalyseCommand extends VoidCommand
 	  //System.out.println("MinuitAnalysis.execute(): decode complete at dt/ms " + (System.currentTimeMillis()-t0));
 
 			Heap.setRefAnalysisByKey(Heap.PRIMARY_TRACE_KEY, a);
-
-			Heap.setMTMByKey(Heap.PRIMARY_TRACE_KEY, mtm);
+			Heap.setMTMPrimary(mtm);
+			Heap.setMTMEtalon(mtm);
 
 			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	  //System.out.println("MinuitAnalysis.execute(): pool & Cursor complete at dt/ms " + (System.currentTimeMillis()-t0));
