@@ -67,7 +67,8 @@ AMFICOM_v1	&idl_v1\
 		&corbaportable_v1\
 		&importmif_v1\
 		&tools\
-		&mapview_v1
+		&mapview_v1\
+		&dbscheme_v1
 
 #M	idl_v1		Client-side AMFICOM CORBA object & interface
 idl_v1		AMFICOM/v1/idl
@@ -133,8 +134,10 @@ mserver_v1	AMFICOM/v1/mserver
 cmserver_v1	AMFICOM/v1/cmserver
 #M	mapview_v1	Map View Module
 mapview_v1	AMFICOM/v1/mapview
-#M	database_v1	Database Module
+#M	database_v1	Database Scheme (new)
 database_v1	AMFICOM/v1/database
+#M	dbscheme_v1	Database Scheme (old)
+dbscheme_v1	AMFICOM/v1/dbscheme
 
 akp		hw/akp
 trc		hw/trc
