@@ -1,5 +1,5 @@
 /*
- * $Id: MapContext.java,v 1.4 2004/06/28 11:47:51 krupenn Exp $
+ * $Id: MapContext.java,v 1.5 2004/06/29 11:21:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,37 +10,25 @@
 
 package com.syrus.AMFICOM.Client.Resource.Map;
 
-import com.syrus.AMFICOM.CORBA.Map.MapContext_Transferable;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.UI.Display.MapContextDisplayModel;
-import com.syrus.AMFICOM.Client.Map.UI.MapContextPane;
-import com.syrus.AMFICOM.Client.General.Event.CatalogNavigateEvent;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
-import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
-import com.syrus.AMFICOM.Client.Resource.ISM.TransmissionPath;
-import com.syrus.AMFICOM.Client.Resource.Network.CableLink;
-import com.syrus.AMFICOM.Client.Resource.Network.Equipment;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
+import com.syrus.AMFICOM.CORBA.Map.*;
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Map.*;
+import com.syrus.AMFICOM.Client.Map.UI.*;
+import com.syrus.AMFICOM.Client.Map.UI.Display.*;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.ISM.*;
+import com.syrus.AMFICOM.Client.Resource.Network.*;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 
-import java.awt.Point;
+import java.awt.*;
 
-import java.io.IOException;
-import java.io.Serializable;
+import java.io.*;
 
-import java.util.Enumeration;
 import java.util.*;
 
-import javax.swing.JTable;
+import javax.swing.*;
 
 /**
  * Класс $RCSfile: MapContext.java,v $ используется для описания контекста карты (её элементов и свойств)
@@ -49,7 +37,7 @@ import javax.swing.JTable;
  * топологической схемы сети (MapScheme)
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/06/28 11:47:51 $
+ * @version $Revision: 1.5 $, $Date: 2004/06/29 11:21:11 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -244,7 +232,6 @@ public class MapContext extends ObjectResource implements Serializable
 	public void setLocalFromTransferable()
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setLocalFromTransferable()");
-		int l;
 		int i;
 		int count;
 
@@ -273,7 +260,7 @@ public class MapContext extends ObjectResource implements Serializable
 		count = transferable.node_ids.length;
 		node_ids = new ArrayList(count);
 		for(i = 0; i < count; i++)
-		node_ids.add(transferable.node_ids[i]);
+			node_ids.add(transferable.node_ids[i]);
 
 		count = transferable.equipment_ids.length;
 		equipment_ids = new ArrayList(count);
@@ -309,7 +296,6 @@ public class MapContext extends ObjectResource implements Serializable
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setTransferableFromLocal()");
 		
-		int l;
 		int i;
 		int count;
 		ObjectResource os;
