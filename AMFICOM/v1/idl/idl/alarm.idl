@@ -1,5 +1,5 @@
 /*
- * $Id: alarm.idl,v 1.7 2005/03/02 08:44:51 arseniy Exp $
+ * $Id: alarm.idl,v 1.8 2005/03/02 08:47:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,6 +23,11 @@ module corba {
 		ALARM_STATUS_ASSIGNED,
 		ALARM_STATUS_FIXED,
 		ALARM_STATUS_DELETED
+	};
+
+	enum EventStatus {
+		EVENT_STATUS_GENERATED,
+		EVENT_STATUS_PROCESSED
 	};
 
 };
@@ -83,7 +88,7 @@ module Alarm {
 		wstring source_id;
 		wstring type_id;
 		wstring descriptor;
-//		event::corba::EventStatus status;
+		event::corba::EventStatus status;
 		long long created;
 	};
 	typedef sequence <Event_Transferable> EventSeq_Transferable;
