@@ -1,5 +1,5 @@
 /*
- * $Id: RISDSessionInfo.java,v 1.12 2004/10/20 12:03:37 bass Exp $
+ * $Id: RISDSessionInfo.java,v 1.13 2004/10/25 08:19:31 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import org.omg.PortableServer.*;
 import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2004/10/20 12:03:37 $
+ * @author $Author: stas $
+ * @version $Revision: 1.13 $, $Date: 2004/10/25 08:19:31 $
  * @module generalclient_v1
  */
 public final class RISDSessionInfo extends SessionInterface {
@@ -191,11 +191,11 @@ public final class RISDSessionInfo extends SessionInterface {
 			final Class clazz = ClientLRUMap.class;
 			final int size = 200;
 
-			ClientMeasurementObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
-			MeasurementStorableObjectPool.init(new ClientMeasurementObjectLoader(cmServer), clazz, size);
-
 			ClientConfigurationObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
 			ConfigurationStorableObjectPool.init(new ClientConfigurationObjectLoader(cmServer), clazz, size);
+
+			ClientMeasurementObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
+			MeasurementStorableObjectPool.init(new ClientMeasurementObjectLoader(cmServer), clazz, size);
 
 			IdentifierPool.init(cmServer);
 
@@ -252,7 +252,7 @@ public final class RISDSessionInfo extends SessionInterface {
 				ci.getServer().Logoff(accessIdentity);
 			} catch (Exception e) {
 				e.printStackTrace();
-			} 
+			}
 			try {
 				clientShutdown();
 			} catch (UserException ue) {
@@ -358,7 +358,7 @@ public final class RISDSessionInfo extends SessionInterface {
 		return this.accessIdentifier;
 	}
 
-	/** 
+	/**
 	 * Есть ли открытая сессия.
 	 */
 	public boolean isOpened() {
