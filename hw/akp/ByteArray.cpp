@@ -2,6 +2,7 @@
 //
 //////////////////////////////////////////////////////////////////////
 
+#include "crossplatf.h"
 #include "akpdefs.h"
 #include "ByteArray.h"
 
@@ -14,13 +15,22 @@ ByteArray::ByteArray(unsigned int length, char* data) {
 	this->data = data;
 }
 
+ByteArray::ByteArray(char* ndata) {
+	uint32_t nlength = *(uint32_t*) ndata;
+	this->length = htonl(nlength);
+	this->data = new char[this->length + 1];
+	for (unsigned int i = 0; i < this->length; i++)
+		this->data[i] = ndata[INTSIZE + i];
+	this->data[this->length] = 0;
+}
+
 ByteArray::ByteArray(unsigned int length) {
 	this->length = length;
 	this->data = new char[length];
 }
 
 ByteArray::~ByteArray() {
-	delete[] this->data;	//added 14.08.2003
+	delete[] this->data;
 }
 
 unsigned int ByteArray::getLength() const {
@@ -29,9 +39,10 @@ unsigned int ByteArray::getLength() const {
 
 char* ByteArray::getSegment() const {
 	char* segment = new char[INTSIZE + this->length];
+	uint32_t nlength = htonl(this->length);
 	unsigned int i;
 	for (i = 0; i < INTSIZE; i++)
-		segment[i] = ((char*)&this->length)[i];
+		segment[i] = ((char*) &nlength)[i];
 	for (i = 0; i < this->length; i++)
 		segment[INTSIZE + i] = this->data[i];
 	return segment;
@@ -82,3 +93,4 @@ int operator != (const ByteArray& ba1, const ByteArray& ba2) {
 			return 1;
 	return 0;
 }
+
