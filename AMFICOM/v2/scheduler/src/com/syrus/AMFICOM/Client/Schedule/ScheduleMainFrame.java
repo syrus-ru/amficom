@@ -18,66 +18,75 @@ import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Schedule.UI.*;
 import com.syrus.io.*;
 
-public class ScheduleMainFrame extends JFrame
-		implements OperationListener
-{
-	public ApplicationContext aContext;
-	static SimpleDateFormat sdf =
-			new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-	private Dispatcher internal_dispatcher = new Dispatcher();
+public class ScheduleMainFrame extends JFrame implements OperationListener {
+
+	public static final boolean		DEBUG			= true;
+
+	public ApplicationContext		aContext;
+
+	private static SimpleDateFormat	sdf				= new java.text.SimpleDateFormat(
+															"dd.MM.yyyy HH:mm:ss");
+
+	private Dispatcher				dispatcher		= new Dispatcher();
+
 	//Checker checker;
 
-//  ColorManager cManager = new ColorManager();
-	JPanel mainPanel = new JPanel();
-	ScheduleMainToolBar toolBar = new ScheduleMainToolBar();
-	JScrollPane scrollPane = new JScrollPane();
-	JViewport viewport = new JViewport();
-	JDesktopPane desktopPane = new JDesktopPane();
-	JPanel statusBarPanel = new JPanel();
-	StatusBarModel statusBar = new StatusBarModel(0);
-	ScheduleMainMenuBar menuBar = new ScheduleMainMenuBar();
+	//  ColorManager cManager = new ColorManager();
+	JPanel							mainPanel		= new JPanel();
 
-	PlanFrame planFrame;
-	TestParametersFrame paramsFrame;
-	TestRequestFrame propsFrame;
-	TimeParametersFrame timeFrame;
-	ElementsTreeFrame treeFrame;
+	ScheduleMainToolBar				toolBar			= new ScheduleMainToolBar();
 
-	public ScheduleMainFrame(ApplicationContext aContext)
-	{
+	JScrollPane						scrollPane		= new JScrollPane();
+
+	JViewport						viewport		= new JViewport();
+
+	JDesktopPane					desktopPane		= new JDesktopPane();
+
+	JPanel							statusBarPanel	= new JPanel();
+
+	StatusBarModel					statusBar		= new StatusBarModel(0);
+
+	ScheduleMainMenuBar				menuBar			= new ScheduleMainMenuBar();
+
+	PlanFrame						planFrame;
+
+	TestParametersFrame				paramsFrame;
+
+	TestRequestFrame				propsFrame;
+
+	TimeParametersFrame				timeFrame;
+
+	ElementsTreeFrame				treeFrame;
+
+	public ScheduleMainFrame(ApplicationContext aContext) {
 		super();
 		setContext(aContext);
 
-		try
-		{
+		try {
 			jbInit();
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		Environment.addWindow(this);
 	}
 
-	public ScheduleMainFrame()
-	{
+	public ScheduleMainFrame() {
 		this(new ApplicationContext());
 	}
 
-	private void jbInit() throws Exception
-	{
-		this.addComponentListener(new ScheduleMainFrame_this_componentAdapter(this));
-		this.addWindowListener(new java.awt.event.WindowAdapter()
-		{
-			public void windowClosing(WindowEvent e)
-			{
-				this_windowClosing(e);
+	private void jbInit() throws Exception {
+		this.addComponentListener(new ScheduleMainFrame_this_componentAdapter(
+				this));
+		this.addWindowListener(new java.awt.event.WindowAdapter() {
+
+			public void windowClosing(WindowEvent e) {
+				this_windowClosing();
 			}
 		});
 
 		setContentPane(mainPanel);
 		setResizable(true);
-		setTitle(LangModelSchedule.String("AppTitle"));
+		setTitle(LangModelSchedule.getString("AppTitle"));
 		setJMenuBar(menuBar);
 
 		mainPanel.setLayout(new BorderLayout());
@@ -102,7 +111,7 @@ public class ScheduleMainFrame extends JFrame
 		mainPanel.add(statusBarPanel, BorderLayout.SOUTH);
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
 
-//		PlanLayeredPanel panel = new PlanLayeredPanel();
+		//		PlanLayeredPanel panel = new PlanLayeredPanel();
 		planFrame = new PlanFrame(aContext);
 
 		desktopPane.add(planFrame);
@@ -120,7 +129,8 @@ public class ScheduleMainFrame extends JFrame
 		desktopPane.add(treeFrame);
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize = new Dimension (screenSize.width, screenSize.height - 24);
+		Dimension frameSize = new Dimension(screenSize.width,
+				screenSize.height - 24);
 
 		setSize(frameSize);
 		setLocation(0, 0);
@@ -129,15 +139,20 @@ public class ScheduleMainFrame extends JFrame
 		Pool.put("inifile", "schedule", ini);
 	}
 
-	public void init_module()
-	{
+	private void initModule() {
 		ApplicationModel aModel = aContext.getApplicationModel();
 
 		statusBar.distribute();
-		statusBar.setWidth("status", 100);
+//		statusBar.setWidth("status", 100);
+//		statusBar.setWidth("server", 250);
+//		statusBar.setWidth("session", 200);
+//		statusBar.setWidth("user", 100);
+//		statusBar.setWidth("time", 50);		
+		statusBar.setWidth("status", 300);
 		statusBar.setWidth("server", 250);
 		statusBar.setWidth("session", 200);
 		statusBar.setWidth("user", 100);
+		//statusBar.setWidth("domain", 150);
 		statusBar.setWidth("time", 50);
 
 		statusBar.setText("status", LangModel.String("statusReady"));
@@ -148,79 +163,85 @@ public class ScheduleMainFrame extends JFrame
 		statusBar.setText("time", " ");
 		statusBar.organize();
 
-		aContext.setDispatcher(internal_dispatcher);
-		internal_dispatcher.register(this, RefChangeEvent.typ);
-		internal_dispatcher.register(this, RefUpdateEvent.typ);
-		internal_dispatcher.register(this, "contextchange");
+		aContext.setDispatcher(dispatcher);
+		dispatcher.register(this, StatusMessageEvent.type);
+		dispatcher.register(this, RefChangeEvent.typ);
+		dispatcher.register(this, RefUpdateEvent.typ);
+
+		dispatcher.register(this, "contextchange");
 		Environment.the_dispatcher.register(this, "contextchange");
 
-		aModel.setCommand("menuSessionNew", new SessionOpenCommand(Environment.the_dispatcher, aContext));
-		aModel.setCommand("menuSessionClose", new SessionCloseCommand(Environment.the_dispatcher, aContext));
-		aModel.setCommand("menuSessionOptions", new SessionOptionsCommand(aContext));
-		aModel.setCommand("menuSessionConnection", new SessionConnectionCommand(Environment.the_dispatcher, aContext));
-		aModel.setCommand("menuSessionChangePassword", new SessionChangePasswordCommand(Environment.the_dispatcher, aContext));
-		aModel.setCommand("menuSessionDomain", new SessionDomainCommand(Environment.the_dispatcher, aContext));
+		aModel.setCommand("menuSessionNew", new SessionOpenCommand(
+				Environment.the_dispatcher, aContext));
+		aModel.setCommand("menuSessionClose", new SessionCloseCommand(
+				Environment.the_dispatcher, aContext));
+		aModel.setCommand("menuSessionOptions", new SessionOptionsCommand(
+				aContext));
+		aModel.setCommand("menuSessionConnection",
+				new SessionConnectionCommand(Environment.the_dispatcher,
+						aContext));
+		aModel.setCommand("menuSessionChangePassword",
+				new SessionChangePasswordCommand(Environment.the_dispatcher,
+						aContext));
+		aModel.setCommand("menuSessionDomain", new SessionDomainCommand(
+				Environment.the_dispatcher, aContext));
 		aModel.setCommand("menuExit", new ExitCommand(this));
-
 
 		setDefaultModel(aModel);
 
 		aModel.fireModelChanged("");
 
-		if(ConnectionInterface.getActiveConnection() != null)
-		{
-			aContext.setConnectionInterface(ConnectionInterface.getActiveConnection());
-			if(aContext.getConnectionInterface().isConnected())
-				internal_dispatcher.notify(new ContextChangeEvent(
-						aContext.getConnectionInterface(),
-						ContextChangeEvent.CONNECTION_OPENED_EVENT));
+		if (ConnectionInterface.getActiveConnection() != null) {
+			aContext.setConnectionInterface(ConnectionInterface
+					.getActiveConnection());
+			if (aContext.getConnectionInterface().isConnected())
+					dispatcher.notify(new ContextChangeEvent(aContext
+							.getConnectionInterface(),
+							ContextChangeEvent.CONNECTION_OPENED_EVENT));
+		} else {
+			aContext.setConnectionInterface(Environment
+					.getDefaultConnectionInterface());
+			ConnectionInterface.setActiveConnection(aContext
+					.getConnectionInterface());
+			//			new CheckConnectionCommand(internal_dispatcher,
+			// aContext).execute();
 		}
-		else
-		{
-			aContext.setConnectionInterface(Environment.getDefaultConnectionInterface());
-			ConnectionInterface.setActiveConnection(aContext.getConnectionInterface());
-//			new CheckConnectionCommand(internal_dispatcher, aContext).execute();
-		}
-		if(SessionInterface.getActiveSession() != null)
-		{
+		if (SessionInterface.getActiveSession() != null) {
 			aContext.setSessionInterface(SessionInterface.getActiveSession());
-			aContext.setConnectionInterface(aContext.getSessionInterface().getConnectionInterface());
-			if(aContext.getSessionInterface().isOpened())
-				internal_dispatcher.notify(new ContextChangeEvent(
-						aContext.getSessionInterface(),
-						ContextChangeEvent.SESSION_OPENED_EVENT));
-		}
-		else
-		{
-			aContext.setSessionInterface(Environment.getDefaultSessionInterface(aContext.getConnectionInterface()));
+			aContext.setConnectionInterface(aContext.getSessionInterface()
+					.getConnectionInterface());
+			if (aContext.getSessionInterface().isOpened())
+					dispatcher.notify(new ContextChangeEvent(aContext
+							.getSessionInterface(),
+							ContextChangeEvent.SESSION_OPENED_EVENT));
+		} else {
+			aContext.setSessionInterface(Environment
+					.getDefaultSessionInterface(aContext
+							.getConnectionInterface()));
 			SessionInterface.setActiveSession(aContext.getSessionInterface());
 		}
 	}
 
-	void setDefaultModel (ApplicationModel aModel)
-	{
+	void setDefaultModel(ApplicationModel aModel) {
 		aModel.setAllItemsEnabled(false);
 		aModel.setEnabled("menuSession", true);
 		aModel.setEnabled("menuSessionNew", true);
 		aModel.setEnabled("menuSessionConnection", true);
 	}
 
-	public void setContext(ApplicationContext aContext)
-	{
+	public void setContext(ApplicationContext aContext) {
 		this.aContext = aContext;
-		aContext.setDispatcher(internal_dispatcher);
-		if(aContext.getApplicationModel() == null)
-			aContext.setApplicationModel(new ApplicationModel());
+		aContext.setDispatcher(dispatcher);
+		if (aContext.getApplicationModel() == null)
+				aContext.setApplicationModel(new ApplicationModel());
 		setModel(aContext.getApplicationModel());
 	}
 
-	public ApplicationContext getContext()
-	{
+	public ApplicationContext getContext() {
 		return aContext;
 	}
 
-	public void setModel(ApplicationModel aModel)
-	{
+	public void setModel(ApplicationModel aModel) {
 		toolBar.setModel(aModel);
 		menuBar.setModel(aModel);
 		aModel.addListener(menuBar);
@@ -228,98 +249,106 @@ public class ScheduleMainFrame extends JFrame
 		aModel.fireModelChanged("");
 	}
 
-	public ApplicationModel getModel()
-	{
+	public ApplicationModel getModel() {
 		return aContext.getApplicationModel();
 	}
 
-	public Dispatcher getInternalDispatcher()
-	{
-		return internal_dispatcher;
+	public Dispatcher getInternalDispatcher() {
+		return dispatcher;
 	}
 
-	public void operationPerformed(OperationEvent ae)
-	{
-		if(ae.getActionCommand().equals("contextchange"))
-		{
-			ContextChangeEvent cce = (ContextChangeEvent)ae;
-			System.out.println("perform context change \"" + Long.toHexString(cce.change_type) + "\" at " + this.getTitle());
+	public void operationPerformed(OperationEvent ae) {
+		String commandName = ae.getActionCommand();
+		if (DEBUG)
+				System.out.println(getClass().getName() + " > commandName:"
+						+ commandName + "\t" + ae.getClass().getName());
+		if (commandName.equals(StatusMessageEvent.type)) {
+			StatusMessageEvent sme = (StatusMessageEvent) ae;
+			statusBar.setText("status", sme.getText());
+		} else if (commandName.equals("contextchange")) {
+			ContextChangeEvent cce = (ContextChangeEvent) ae;
+			System.out.println("perform context change \""
+					+ Long.toHexString(cce.change_type) + "\" at "
+					+ this.getTitle());
 			// ApplicationModel aModel = aContext.getApplicationModel();
-			if(cce.SESSION_OPENED)
-			{
-				SessionInterface ssi = (SessionInterface)cce.getSource();
-				if(aContext.getSessionInterface().equals(ssi))
-				{
-					aContext.setDataSourceInterface(aContext.getApplicationModel().getDataSource(aContext.getSessionInterface()));
+			if (cce.SESSION_OPENED) {
+				SessionInterface ssi = (SessionInterface) cce.getSource();
+				if (aContext.getSessionInterface().equals(ssi)) {
+					aContext.setDataSourceInterface(aContext
+							.getApplicationModel().getDataSource(
+									aContext.getSessionInterface()));
 
 					setSessionOpened();
 
-					statusBar.setText("status", LangModel.String("statusReady"));
-					statusBar.setText("session", sdf.format(new Date(aContext.getSessionInterface().getLogonTime())));
-					statusBar.setText("user", aContext.getSessionInterface().getUser());
+					statusBar
+							.setText("status", LangModel.String("statusReady"));
+					statusBar.setText("session", sdf.format(new Date(aContext
+							.getSessionInterface().getLogonTime())));
+					statusBar.setText("user", aContext.getSessionInterface()
+							.getUser());
 				}
 			}
-			if(cce.SESSION_CLOSED)
-			{
-				SessionInterface ssi = (SessionInterface)cce.getSource();
-				if(aContext.getSessionInterface().equals(ssi))
-				{
+			if (cce.SESSION_CLOSED) {
+				SessionInterface ssi = (SessionInterface) cce.getSource();
+				if (aContext.getSessionInterface().equals(ssi)) {
 					aContext.setDataSourceInterface(null);
 
 					setSessionClosed();
 
-					statusBar.setText("status", LangModel.String("statusReady"));
-					statusBar.setText("session", LangModel.String("statusNoSession"));
+					statusBar
+							.setText("status", LangModel.String("statusReady"));
+					statusBar.setText("session", LangModel
+							.String("statusNoSession"));
 					statusBar.setText("user", LangModel.String("statusNoUser"));
 				}
 			}
-			if(cce.CONNECTION_OPENED)
-			{
-				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
-				if(aContext.getConnectionInterface().equals(cci))
-				{
+			if (cce.CONNECTION_OPENED) {
+				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
+				if (aContext.getConnectionInterface().equals(cci)) {
 					setConnectionOpened();
 
-					statusBar.setText("status", LangModel.String("statusReady"));
-					statusBar.setText("server", aContext.getConnectionInterface().getServiceURL());
+					statusBar
+							.setText("status", LangModel.String("statusReady"));
+					statusBar.setText("server", aContext
+							.getConnectionInterface().getServiceURL());
 				}
 			}
-			if(cce.CONNECTION_CLOSED)
-			{
-				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
-				if(aContext.getConnectionInterface().equals(cci))
-				{
-					statusBar.setText("status", LangModel.String("statusError"));
-					statusBar.setText("server", LangModel.String("statusConnectionError"));
+			if (cce.CONNECTION_CLOSED) {
+				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
+				if (aContext.getConnectionInterface().equals(cci)) {
+					statusBar
+							.setText("status", LangModel.String("statusError"));
+					statusBar.setText("server", LangModel
+							.String("statusConnectionError"));
 
-					statusBar.setText("status", LangModel.String("statusDisconnected"));
-					statusBar.setText("server", LangModel.String("statusNoConnection"));
+					statusBar.setText("status", LangModel
+							.String("statusDisconnected"));
+					statusBar.setText("server", LangModel
+							.String("statusNoConnection"));
 
 					setConnectionClosed();
 
 				}
 			}
-			if(cce.CONNECTION_FAILED)
-			{
-				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
-				if(aContext.getConnectionInterface().equals(cci))
-				{
-					statusBar.setText("status", LangModel.String("statusError"));
-					statusBar.setText("server", LangModel.String("statusConnectionError"));
+			if (cce.CONNECTION_FAILED) {
+				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
+				if (aContext.getConnectionInterface().equals(cci)) {
+					statusBar
+							.setText("status", LangModel.String("statusError"));
+					statusBar.setText("server", LangModel
+							.String("statusConnectionError"));
 
 					setConnectionFailed();
 				}
 			}
-			if(cce.DOMAIN_SELECTED)
-			{
+			if (cce.DOMAIN_SELECTED) {
 				setDomainSelected();
 			}
 		}
 
 	}
 
-	public void setConnectionOpened()
-	{
+	public void setConnectionOpened() {
 		ApplicationModel aModel = aContext.getApplicationModel();
 		aModel.setEnabled("menuSessionNew", true);
 		aModel.setEnabled("menuSessionClose", false);
@@ -328,8 +357,7 @@ public class ScheduleMainFrame extends JFrame
 		aModel.fireModelChanged("");
 	}
 
-	public void setConnectionClosed()
-	{
+	public void setConnectionClosed() {
 		ApplicationModel aModel = aContext.getApplicationModel();
 		aModel.setEnabled("menuSessionNew", true);
 		aModel.setEnabled("menuSessionClose", false);
@@ -338,8 +366,7 @@ public class ScheduleMainFrame extends JFrame
 		aModel.fireModelChanged("");
 	}
 
-	public void setConnectionFailed()
-	{
+	public void setConnectionFailed() {
 		ApplicationModel aModel = aContext.getApplicationModel();
 		aModel.setEnabled("menuSessionNew", false);
 		aModel.setEnabled("menuSessionClose", false);
@@ -348,8 +375,7 @@ public class ScheduleMainFrame extends JFrame
 		aModel.fireModelChanged("");
 	}
 
-	public void setDomainSelected()
-	{
+	public void setDomainSelected() {
 		ApplicationModel aModel = aContext.getApplicationModel();
 		aModel.enable("menuSessionClose");
 		aModel.enable("menuSessionOptions");
@@ -367,25 +393,27 @@ public class ScheduleMainFrame extends JFrame
 		planFrame.setVisible(true);
 	}
 
-	public void setSessionOpened()
-	{
+	public void setSessionOpened() {
 		//this.checker = new Checker(aContext.getDataSourceInterface());
 
 		DataSourceInterface dataSource = aContext.getDataSourceInterface();
 
-		aContext.getDispatcher().notify(new StatusMessageEvent(LangModelSchedule.String("statusBD")));
-//		new SurveyDataSourceImage(dataSource).LoadParameterTypes();
-//		new SurveyDataSourceImage(dataSource).LoadTestTypes();
-//		new SurveyDataSourceImage(dataSource).LoadAnalysisTypes();
-//		new SurveyDataSourceImage(dataSource).LoadEvaluationTypes();
-//		new SurveyDataSourceImage(dataSource).LoadModelingTypes();
-//		new SchemeDataSourceImage(dataSource).LoadAttributeTypes();
+		aContext.getDispatcher().notify(
+				new StatusMessageEvent(LangModelSchedule.getString("statusBD")));
+		//		new SurveyDataSourceImage(dataSource).LoadParameterTypes();
+		//		new SurveyDataSourceImage(dataSource).LoadTestTypes();
+		//		new SurveyDataSourceImage(dataSource).LoadAnalysisTypes();
+		//		new SurveyDataSourceImage(dataSource).LoadEvaluationTypes();
+		//		new SurveyDataSourceImage(dataSource).LoadModelingTypes();
+		//		new SchemeDataSourceImage(dataSource).LoadAttributeTypes();
 
 		new ConfigDataSourceImage(dataSource).LoadISM();
 		new SchemeDataSourceImage(dataSource).LoadISMDirectory();
 		new SurveyDataSourceImage(dataSource).LoadTestTypes();
 
-		aContext.getDispatcher().notify(new StatusMessageEvent(LangModelSchedule.String("statusBDFinish")));
+		aContext.getDispatcher().notify(
+				new StatusMessageEvent(LangModelSchedule
+						.getString("statusBDFinish")));
 
 		treeFrame.init();
 
@@ -395,11 +423,11 @@ public class ScheduleMainFrame extends JFrame
 		aModel.fireModelChanged("");
 		String domain_id = aContext.getSessionInterface().getDomainId();
 		if (domain_id != null && !domain_id.equals(""))
-			internal_dispatcher.notify(new ContextChangeEvent(domain_id, ContextChangeEvent.DOMAIN_SELECTED_EVENT));
+				dispatcher.notify(new ContextChangeEvent(domain_id,
+						ContextChangeEvent.DOMAIN_SELECTED_EVENT));
 	}
 
-	public void setSessionClosed()
-	{
+	public void setSessionClosed() {
 		ApplicationModel aModel = aContext.getApplicationModel();
 		aModel.setEnabled("menuSessionClose", false);
 		aModel.setEnabled("menuSessionOptions", false);
@@ -412,32 +440,26 @@ public class ScheduleMainFrame extends JFrame
 		statusBar.setText("domain", LangModel.String("statusNoDomain"));
 	}
 
-	void this_componentShown(ComponentEvent e)
-	{
-		init_module();
-
+	protected void componentShown() {
+		initModule();
 		desktopPane.setPreferredSize(desktopPane.getSize());
 		new ScheduleWindowArranger(this).arrange();
 	}
 
-	void this_windowClosing(WindowEvent e)
-	{
-		internal_dispatcher.unregister(this, "contextchange");
+	protected void this_windowClosing() {
+		dispatcher.unregister(this, "contextchange");
 		Environment.the_dispatcher.unregister(this, "contextchange");
 		aContext.getApplicationModel().getCommand("menuExit").execute();
 	}
 
-	protected void processWindowEvent(WindowEvent e)
-	{
-		if (e.getID() == WindowEvent.WINDOW_ACTIVATED)
-		{
+	protected void processWindowEvent(WindowEvent e) {
+		if (e.getID() == WindowEvent.WINDOW_ACTIVATED) {
 			Environment.setActiveWindow(this);
 		}
-		if (e.getID() == WindowEvent.WINDOW_CLOSING)
-		{
-			((IniFile)Pool.get("inifile", "schedule")).saveKeys();
+		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
+			((IniFile) Pool.get("inifile", "schedule")).saveKeys();
 			//cManager.saveIni();
-			internal_dispatcher.unregister(this, "contextchange");
+			dispatcher.unregister(this, "contextchange");
 			Environment.the_dispatcher.unregister(this, "contextchange");
 			aContext.getApplicationModel().getCommand("menuExit").execute();
 			return;
@@ -446,16 +468,14 @@ public class ScheduleMainFrame extends JFrame
 	}
 }
 
-class ScheduleWindowArranger extends WindowArranger
-{
-	public ScheduleWindowArranger(ScheduleMainFrame mainframe)
-	{
+class ScheduleWindowArranger extends WindowArranger {
+
+	public ScheduleWindowArranger(ScheduleMainFrame mainframe) {
 		super(mainframe);
 	}
 
-	public void arrange()
-	{
-		ScheduleMainFrame f = (ScheduleMainFrame)mainframe;
+	public void arrange() {
+		ScheduleMainFrame f = (ScheduleMainFrame) mainframe;
 
 		int w = f.desktopPane.getSize().width;
 		int h = f.desktopPane.getSize().height;
@@ -483,18 +503,16 @@ class ScheduleWindowArranger extends WindowArranger
 	}
 }
 
-class ScheduleMainFrame_this_componentAdapter extends java.awt.event.ComponentAdapter
-{
-	ScheduleMainFrame adaptee;
+class ScheduleMainFrame_this_componentAdapter extends
+		java.awt.event.ComponentAdapter {
 
-	ScheduleMainFrame_this_componentAdapter(ScheduleMainFrame adaptee)
-	{
+	ScheduleMainFrame	adaptee;
+
+	ScheduleMainFrame_this_componentAdapter(ScheduleMainFrame adaptee) {
 		this.adaptee = adaptee;
 	}
 
-	public void componentShown(ComponentEvent e)
-	{
-		adaptee.this_componentShown(e);
+	public void componentShown(ComponentEvent e) {
+		adaptee.componentShown();
 	}
 }
-
