@@ -4,7 +4,7 @@ CREATE TABLE Test (
  modified DATE NOT NULL,
  creator_id NUMBER(20, 0) NOT NULL,
  modifier_id NUMBER(20, 0) NOT NULL,
-
+--
  temporal_type NUMBER(2, 0) NOT NULL,
  start_time DATE,
  end_time DATE,
@@ -17,13 +17,13 @@ CREATE TABLE Test (
  monitored_element_id NUMBER(20, 0) NOT NULL,
  return_type NUMBER(2, 0) NOT NULL,
  description VARCHAR2(256),
-
+--
  CONSTRAINT test_pk PRIMARY KEY (id) ENABLE,
  CONSTRAINT test_creator_fk FOREIGN KEY (creator_id)
   REFERENCES Users (id) ON DELETE CASCADE ENABLE,
  CONSTRAINT test_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES Users (id) ON DELETE CASCADE ENABLE,
-
+--
  CONSTRAINT test_ttt_fk FOREIGN KEY (temporal_type)
   REFERENCES TestTemporalType (id) ON DELETE CASCADE ENABLE,
  CONSTRAINT test_pttt_fk FOREIGN KEY (pt_template_id)

@@ -4,9 +4,9 @@ CREATE TABLE Equipment (
  modified DATE NOT NULL,
  creator_id NUMBER(20, 0) NOT NULL,
  modifier_id NUMBER(20, 0) NOT NULL,
-
+--
  domain_id NUMBER(20, 0),
-
+--
  type_id NUMBER(20, 0) NOT NULL,
  name VARCHAR2(64) NOT NULL,
  description VARCHAR2(256),
@@ -22,23 +22,23 @@ CREATE TABLE Equipment (
  supplier VARCHAR2(64),
  supplier_code VARCHAR2(64),
  image_id NUMBER(20, 0),
-
+--
  mcm_id NUMBER(20) NOT NULL,
- 
+--
  CONSTRAINT eqp_pk PRIMARY KEY (id) ENABLE,
  CONSTRAINT eqp_creator_fk FOREIGN KEY (creator_id)
   REFERENCES Users (id) ON DELETE CASCADE ENABLE,
  CONSTRAINT eqp_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES Users (id) ON DELETE CASCADE ENABLE,
-
+--
  CONSTRAINT eqp_domain_fk FOREIGN KEY (domain_id)
   REFERENCES Domain (id) ON DELETE CASCADE ENABLE,
-
+--
  CONSTRAINT eqp_epqtype_fk FOREIGN KEY (type_id)
   REFERENCES EquipmentType (id) ON DELETE CASCADE ENABLE,
-
+--
  CONSTRAINT eqp_mcm_fk FOREIGN KEY (mcm_id)
-  REFERENCES Mcm (id) ON DELETE CASCADE ENABLE,
+  REFERENCES Mcm (id) ON DELETE CASCADE ENABLE
 );
 
 CREATE SEQUENCE equipment_seq ORDER;

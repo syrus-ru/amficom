@@ -4,10 +4,10 @@ CREATE TABLE MeasurementType (
  modified DATE NOT NULL,
  creator_id NUMBER(20, 0) NOT NULL,
  modifier_id NUMBER(20, 0) NOT NULL,
-
+--
  codename VARCHAR2(32) NOT NULL,
  description VARCHAR2(256),
-
+--
  CONSTRAINT mnttype_pk PRIMARY KEY (id) ENABLE,
  CONSTRAINT mnttype_uniq UNIQUE (codename) ENABLE,
  CONSTRAINT mnttype_creator_fk FOREIGN KEY (creator_id)
