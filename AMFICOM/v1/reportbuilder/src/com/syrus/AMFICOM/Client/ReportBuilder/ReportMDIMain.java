@@ -324,7 +324,7 @@ public class ReportMDIMain extends JFrame implements OperationListener
 					setSessionOpened();
 				}
 			}
-			if(cce.SESSION_CLOSED)
+			else if(cce.SESSION_CLOSED)
 			{
 				// Closing of the existing windows
 				//---------------------------------------------------------------
@@ -336,7 +336,7 @@ public class ReportMDIMain extends JFrame implements OperationListener
 					setSessionClosed();
 				}
 			}
-			if(cce.CONNECTION_OPENED)
+			else if(cce.CONNECTION_OPENED)
 			{
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
 				if(aContext.getConnectionInterface().equals(cci))
@@ -347,7 +347,7 @@ public class ReportMDIMain extends JFrame implements OperationListener
 					statusBar.setText(StatusBarModel.field_server, aContext.getConnectionInterface().getServiceURL());
 				}
 			}
-			if(cce.CONNECTION_CLOSED)
+			else if(cce.CONNECTION_CLOSED)
 			{
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
 				if(aContext.getConnectionInterface().equals(cci))
@@ -359,7 +359,7 @@ public class ReportMDIMain extends JFrame implements OperationListener
 
 				}
 			}
-			if(cce.CONNECTION_FAILED)
+			else if(cce.CONNECTION_FAILED)
 			{
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
 				if(aContext.getConnectionInterface().equals(cci))
@@ -369,6 +369,10 @@ public class ReportMDIMain extends JFrame implements OperationListener
 
 					setConnectionFailed();
 				}
+			}
+			else if(cce.DOMAIN_SELECTED)
+			{
+				setSessionOpened();
 			}
 		}
 
@@ -464,7 +468,7 @@ public class ReportMDIMain extends JFrame implements OperationListener
 			public void run() {
 				ApplicationModel aModel = aContext.getApplicationModel();
 
-				aModel.disable("menuSessionOpen");
+				aModel.disable("menuSessionNew");
 				aModel.enable("menuSessionClose");
 				aModel.enable("menuSessionOptions");
 				aModel.enable("menuSessionChangePassword");
@@ -592,7 +596,7 @@ public class ReportMDIMain extends JFrame implements OperationListener
 	{
 		ApplicationModel aModel = aContext.getApplicationModel();
 
-		aModel.enable("menuSessionOpen");
+		aModel.enable("menuSessionNew");
 		aModel.disable("menuSessionClose");
 		aModel.disable("menuSessionOptions");
 		aModel.disable("menuSessionChangePassword");
