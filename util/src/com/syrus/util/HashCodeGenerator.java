@@ -1,16 +1,28 @@
 /*
- * HashCodeGenerator.java
- * Created on 16.08.2004 19:24:03
- * 
+ * $Id: HashCodeGenerator.java,v 1.2 2004/08/17 05:24:16 bob Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
  */
+
 package com.syrus.util;
 
 /**
- * @author Vladimir Dolzhenko
+ * HashCodeGenerator methods have got from 
+ * Effective Java: Programming Language Guide by Joshua Bloch
+ * 
+ * @version $Revision: 1.2 $, $Date: 2004/08/17 05:24:16 $
+ * @author $Author: bob $
+ * @module util
  */
 public class HashCodeGenerator {
 
 	private int	result	= 17;
+	
+	public void clear(){
+		this.result = 17;
+	}
 
 	public void addInt(int value) {
 		this.result = 37 * this.result + value;
