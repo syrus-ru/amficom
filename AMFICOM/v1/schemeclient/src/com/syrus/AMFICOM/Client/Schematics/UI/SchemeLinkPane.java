@@ -25,15 +25,11 @@ public class SchemeLinkPane extends LinkPane
 		return sl;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.sl = (SchemeLink )or;
 		Link link = (Link)Pool.get(Link.typ, sl.link_id);
 		super.setObjectResource(link);
-
-		if(link != null)
-			return true;
-		return false;
 	}
 
 /*  public boolean modify()

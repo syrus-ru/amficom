@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
 
 import com.syrus.AMFICOM.Client.Schematics.UI.*;
 
-public class ProtoElement extends ObjectResource
+public class ProtoElement extends StubResource
 		implements Transferable, Serializable
 {
 	public static final String typ = "proto";
@@ -40,7 +40,7 @@ public class ProtoElement extends ObjectResource
 	public String symbol_id = "";
 	public String label = "";
 
-	public Hashtable attributes = new Hashtable();
+	public Map attributes = new HashMap();
 	public Vector devices = new Vector();
 	public Vector links = new Vector();
 	public Vector protoelement_ids = new Vector();
@@ -50,9 +50,7 @@ public class ProtoElement extends ObjectResource
 	public Serializable serializable_ugo;
 	public byte[] ugo;
 
-//	public transient boolean isKis = false;
 	public transient MapProtoElement map_proto;
-	//public transient boolean extended_state = true;
 
 	public ProtoElement(SchemeProtoElement_Transferable transferable)
 	{
@@ -172,9 +170,9 @@ public class ProtoElement extends ObjectResource
 		int l = this.attributes.size();
 		int i = 0;
 		transferable.attributes = new ElementAttribute_Transferable[l];
-		for(Enumeration e = attributes.elements(); e.hasMoreElements();)
+		for(Iterator it = attributes.values().iterator(); it.hasNext();)
 		{
-			ElementAttribute ea = (ElementAttribute)e.nextElement();
+			ElementAttribute ea = (ElementAttribute)it.next();
 			ea.setTransferableFromLocal();
 			transferable.attributes[i++] = ea.transferable;
 		}

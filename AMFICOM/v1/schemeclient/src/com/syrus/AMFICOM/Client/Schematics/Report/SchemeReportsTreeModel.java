@@ -344,10 +344,9 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 			 Scheme scheme = (Scheme) node.getObject();*/
 
 			//Элементы
-			for (Enumeration enum = scheme.elements.elements();
-				enum.hasMoreElements(); )
+			for (Iterator it = scheme.elements.iterator(); it.hasNext(); )
 			{
-				SchemeElement element = (SchemeElement) enum.nextElement();
+				SchemeElement element = (SchemeElement)it.next();
 				if (element.scheme_id.equals(""))
 				{
 					ObjectsReport rep = new ObjectsReport(new
@@ -415,9 +414,9 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 			}
 
 			//Линки
-			for (int i = 0; i < scheme.links.size(); i++)
+			for (Iterator it = scheme.links.iterator(); it.hasNext();)
 			{
-				SchemeLink link = (SchemeLink) scheme.links.get(i);
+				SchemeLink link = (SchemeLink)it.next();
 				ObjectsReport rep = new ObjectsReport(new EquipFeaturesReportModel(),
 					"",
 					ObjectResourceReportModel.rt_objProperies,
@@ -455,9 +454,9 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 			}
 
 			//Кабельные линки
-			for (int i = 0; i < scheme.cablelinks.size(); i++)
+			for (Iterator it = scheme.cablelinks.iterator(); it.hasNext();)
 			{
-				SchemeCableLink link = (SchemeCableLink) scheme.cablelinks.get(i);
+				SchemeCableLink link = (SchemeCableLink)it.next();
 				ObjectsReport rep = new ObjectsReport(new EquipFeaturesReportModel(),
 					"",
 					ObjectResourceReportModel.rt_objProperies,
@@ -502,10 +501,9 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 			if (!schel.scheme_id.equals(""))
 			{
 				Scheme scheme = (Scheme) Pool.get(Scheme.typ, schel.scheme_id);
-				for (Enumeration enum = scheme.elements.elements();
-					enum.hasMoreElements(); )
+				for (Iterator it = scheme.elements.iterator(); it.hasNext(); )
 				{
-					SchemeElement element = (SchemeElement) enum.nextElement();
+					SchemeElement element = (SchemeElement)it.next();
 
 					if (element.scheme_id.equals(""))
 					{

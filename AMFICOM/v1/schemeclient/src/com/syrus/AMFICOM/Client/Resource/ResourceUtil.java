@@ -3,22 +3,23 @@ package com.syrus.AMFICOM.Client.Resource;
 import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
 import com.syrus.AMFICOM.Client.Resource.Scheme.ElementAttribute;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.HashMap;
 
-public class ResourceUtil 
+public class ResourceUtil
 {
 	public ResourceUtil()
 	{
 	}
 
-	public static Hashtable copyAttributes(DataSourceInterface dataSource, Hashtable attr)
+	public static Map copyAttributes(DataSourceInterface dataSource, Map attr)
 	{
-		Hashtable ht = new Hashtable();
+		Map ht = new HashMap();
 
-		for(Enumeration enum = attr.elements(); enum.hasMoreElements();)
+		for(Iterator it = attr.values().iterator(); it.hasNext();)
 		{
-			ElementAttribute ea = (ElementAttribute )enum.nextElement();
+			ElementAttribute ea = (ElementAttribute )it.next();
 			ElementAttribute ea2 = (ElementAttribute )ea.clone();
 //			ea2.id = dataSource.GetUId("attribute");
 			ht.put(ea2.getId(), ea2);
@@ -26,14 +27,14 @@ public class ResourceUtil
 		return ht;
 
 	}
-	
-	public static Hashtable copyCharacteristics(DataSourceInterface dataSource, Hashtable attr)
-	{
-		Hashtable ht = new Hashtable();
 
-		for(Enumeration enum = attr.elements(); enum.hasMoreElements();)
+	public static Map copyCharacteristics(DataSourceInterface dataSource, Map attr)
+	{
+		Map ht = new HashMap();
+
+		for(Iterator it = attr.values().iterator(); it.hasNext();)
 		{
-			Characteristic ch = (Characteristic )enum.nextElement();
+			Characteristic ch = (Characteristic )it.next();
 			Characteristic ch2 = (Characteristic )ch.clone();
 //			ch2.id = dataSource.GetUId("characteristic");
 			ht.put(ch2.getId(), ch2);
@@ -41,6 +42,6 @@ public class ResourceUtil
 		return ht;
 
 	}
-	
+
 }
 

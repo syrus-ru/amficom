@@ -253,9 +253,9 @@ public class PathPropsPanel extends JPanel
 
 		undoPathLinks = new Vector();
 		undoPeOrder = new Hashtable();
-		for (Enumeration en = path.links.elements(); en.hasMoreElements(); )
+		for (Iterator it = path.links.iterator(); it.hasNext(); )
 		{
-			PathElement pe = (PathElement)en.nextElement();
+			PathElement pe = (PathElement)it.next();
 			undoPeOrder.put(pe.link_id, new Integer(pe.n));
 			undoPathLinks.add(pe);
 		}
@@ -365,7 +365,7 @@ public class PathPropsPanel extends JPanel
 				if (links_to_add.size() > 1)
 				{
 					if (link.cable_threads.size() > 0)
-						thread = (SchemeCableThread)link.cable_threads.get(0);
+						thread = (SchemeCableThread)link.cable_threads.iterator().next();
 				}
 				else
 				{
@@ -569,7 +569,7 @@ class PathDisplayModel extends StubDisplayModel
 		return 100;
 	}
 
-	public Vector getColumns()
+	public java.util.List getColumns()
 	{
 		Vector cols = new Vector();
 

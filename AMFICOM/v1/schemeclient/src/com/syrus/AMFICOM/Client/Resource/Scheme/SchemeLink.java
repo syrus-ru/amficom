@@ -4,13 +4,13 @@ import java.io.*;
 import java.util.*;
 
 import com.syrus.AMFICOM.CORBA.Scheme.*;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
+import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Network.Link;
-import com.syrus.AMFICOM.Client.Schematics.UI.SchemeLinkPane;
+import com.syrus.AMFICOM.Client.Resource.Network.*;
+import com.syrus.AMFICOM.Client.Schematics.UI.*;
 
-public class SchemeLink extends ObjectResource implements Serializable
+public class SchemeLink extends StubResource implements Serializable
 {
 	public static final String typ = "schemelink";
 	private static final long serialVersionUID = 01L;
@@ -26,7 +26,7 @@ public class SchemeLink extends ObjectResource implements Serializable
 	public double optical_length = 0;
 	public double physical_length = 0;
 
-	public Hashtable attributes = new Hashtable();
+	public Map attributes = new HashMap();
 
 	public boolean alarmed = false;
 
@@ -128,9 +128,9 @@ public class SchemeLink extends ObjectResource implements Serializable
 		int l = this.attributes.size();
 		int i = 0;
 		transferable.attributes = new ElementAttribute_Transferable[l];
-		for(Enumeration e = attributes.elements(); e.hasMoreElements();)
+		for(Iterator it = attributes.values().iterator(); it.hasNext();)
 		{
-			ElementAttribute ea = (ElementAttribute)e.nextElement();
+			ElementAttribute ea = (ElementAttribute)it.next();
 			ea.setTransferableFromLocal();
 			transferable.attributes[i++] = ea.transferable;
 		}

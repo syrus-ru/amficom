@@ -462,7 +462,7 @@ public class UgoPanel extends JPanel
 			CreatePathEvent cpe = (CreatePathEvent)ae;
 			if (cpe.SAVE_PATH)
 			{
-				SchemePath[] paths = (SchemePath[])cpe.cells;
+	/*			SchemePath[] paths = (SchemePath[])cpe.cells;
 				Hashtable lp = new Hashtable();
 				for (int i = 0; i < paths.length; i++)
 				{
@@ -490,7 +490,7 @@ public class UgoPanel extends JPanel
 						if (p_id != null)
 							link.setSchemePathId(p_id);
 					}
-				}
+				}*/
 			}
 		}
 	}
@@ -660,7 +660,7 @@ public class UgoPanel extends JPanel
 				if (new_id != null)
 					((DefaultCableLink)cloned_cell).setSchemeCableLinkId(new_id);
 
-				((DefaultCableLink)cloned_cell).setSchemePathId("");
+//				((DefaultCableLink)cloned_cell).setSchemePathId("");
 //				String path_id = ((DefaultCableLink)cloned_cell).getSchemePathId();
 //				String new_path_id = (String)Pool.get("clonedids", id);
 //				if (new_path_id != null)
@@ -673,7 +673,7 @@ public class UgoPanel extends JPanel
 				if (new_id != null)
 					((DefaultLink)cloned_cell).setSchemeLinkId(new_id);
 
-				((DefaultLink)cloned_cell).setSchemePathId("");
+//				((DefaultLink)cloned_cell).setSchemePathId("");
 //				String path_id = ((DefaultLink)cloned_cell).getSchemePathId();
 //				String new_path_id = (String)Pool.get("clonedids", id);
 //				if (new_path_id != null)

@@ -1,19 +1,12 @@
 package com.syrus.AMFICOM.Client.Resource.Scheme;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.io.*;
+import java.util.*;
 
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.ResourceUtil;
+import com.syrus.AMFICOM.CORBA.Scheme.*;
+import com.syrus.AMFICOM.Client.Resource.*;
 
-import com.syrus.AMFICOM.CORBA.Scheme.ElementAttribute_Transferable;
-import com.syrus.AMFICOM.CORBA.Scheme.SchemeCableThread_Transferable;
-
-public class SchemeCableThread extends ObjectResource implements Serializable
+public class SchemeCableThread extends StubResource implements Serializable
 {
 	public static final String typ = "schemecablethread";
 	private static final long serialVersionUID = 01L;
@@ -24,7 +17,7 @@ public class SchemeCableThread extends ObjectResource implements Serializable
 	public String link_type_id = "";
 	public String thread_id = "";
 
-	public Hashtable attributes = new Hashtable();
+	public Map attributes = new HashMap();
 
 	public SchemeCableThread(SchemeCableThread_Transferable transferable)
 	{
@@ -84,9 +77,9 @@ public class SchemeCableThread extends ObjectResource implements Serializable
 		int l = this.attributes.size();
 		int i = 0;
 		transferable.attributes = new ElementAttribute_Transferable[l];
-		for(Enumeration e = attributes.elements(); e.hasMoreElements();)
+		for(Iterator it = attributes.values().iterator(); it.hasNext();)
 		{
-			ElementAttribute ea = (ElementAttribute)e.nextElement();
+			ElementAttribute ea = (ElementAttribute)it.next();
 			ea.setTransferableFromLocal();
 			transferable.attributes[i++] = ea.transferable;
 		}

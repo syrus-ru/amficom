@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.CORBA.Scheme.*;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Resource.*;
 
-public class Scheme extends ObjectResource implements Serializable
+public class Scheme extends StubResource implements Serializable
 {
 	public static final String typ = "scheme";
 	private static final long serialVersionUID = 01L;
@@ -63,11 +63,11 @@ public class Scheme extends ObjectResource implements Serializable
 	public String name = "";
 	public String scheme_type = Scheme.NETWORK;
 
-	public Vector elements_to_register = new Vector();
-	public Vector elements = new Vector();
-	public Vector cablelinks = new Vector();
-	public Vector links = new Vector();
-	public Vector paths = new Vector();
+	public Collection elements_to_register = new ArrayList();
+	public Collection elements = new ArrayList();
+	public Collection cablelinks = new ArrayList();
+	public Collection links = new ArrayList();
+	public Collection paths = new ArrayList();
 
 	public long created = 0;
 	public long modified = 0;
@@ -148,17 +148,17 @@ public class Scheme extends ObjectResource implements Serializable
 		scheme.name = name;
 		scheme.scheme_type = scheme_type;
 
-		scheme.elements = new Vector(elements.size());
+		scheme.elements = new ArrayList(elements.size());
 		for (Iterator it = elements.iterator(); it.hasNext();)
 			scheme.elements.add(((SchemeElement)it.next()).clone(dataSource));
-		scheme.cablelinks = new Vector(cablelinks.size());
+		scheme.cablelinks = new ArrayList(cablelinks.size());
 		for (Iterator it = cablelinks.iterator(); it.hasNext();)
 			scheme.cablelinks.add(((SchemeCableLink)it.next()).clone(dataSource));
-		scheme.links = new Vector(links.size());
+		scheme.links = new ArrayList(links.size());
 		for (Iterator it = links.iterator(); it.hasNext();)
 			scheme.links.add(((SchemeLink)it.next()).clone(dataSource));
 
-		scheme.paths = new Vector();
+		scheme.paths = new ArrayList();
 		//scheme.paths = new Vector(paths.size());
 		//	for (int i = 0; i < paths.size(); i++)
 		//		scheme.paths.add(((SchemePath)paths.get(i)).clone(dataSource));
@@ -225,11 +225,11 @@ public class Scheme extends ObjectResource implements Serializable
 
 	public Enumeration getChildTypes()
 	{
-		Vector vec = new Vector();
+		ArrayList vec = new ArrayList();
 		vec.add("elements");
 		vec.add("cablelinks");
 		vec.add("paths");
-		return vec.elements();
+		return Collections.enumeration(vec);
 	}
 
 	public Class getChildClass(String key)
@@ -253,17 +253,17 @@ public class Scheme extends ObjectResource implements Serializable
 	{
 		if(key.equals("elements"))
 		{
-			return elements.elements();
+			return Collections.enumeration(elements);
 		}
 		else if(key.equals("cablelinks"))
 		{
-			return cablelinks.elements();
+			return Collections.enumeration(cablelinks);
 		}
 		else if(key.equals("paths"))
 		{
-			return paths.elements();
+			return Collections.enumeration(paths);
 		}
-		return new Vector().elements();
+		return Collections.enumeration(new ArrayList(0));
 	}
 
 	public void setLocalFromTransferable()
@@ -282,13 +282,13 @@ public class Scheme extends ObjectResource implements Serializable
 		label = transferable.label;
 		description = transferable.description;
 
-		elements = new Vector();
-		cablelinks = new Vector();
-		links = new Vector();
-		paths = new Vector();
+		elements = new ArrayList();
+		cablelinks = new ArrayList();
+		links = new ArrayList();
+		paths = new ArrayList();
 
-		elements_to_register = new Vector();
-		Vector transferable_element_ids = new Vector();
+		elements_to_register = new ArrayList();
+		ArrayList transferable_element_ids = new ArrayList();
 		for (int i = 0; i < transferable.element_ids.length; i++)
 			transferable_element_ids.add(transferable.element_ids[i]);
 		for (int i = 0; i < transferable.elements.length; i++)
@@ -604,11 +604,11 @@ public class Scheme extends ObjectResource implements Serializable
 		symbol_id = (String )in.readObject();
 		label = (String )in.readObject();
 
-		elements = (Vector )in.readObject();
-		elements_to_register = (Vector )in.readObject();
-		cablelinks = (Vector )in.readObject();
-		links = (Vector )in.readObject();
-		paths = (Vector )in.readObject();
+		elements = (Collection )in.readObject();
+		elements_to_register = (Collection )in.readObject();
+		cablelinks = (Collection )in.readObject();
+		links = (Collection )in.readObject();
+		paths = (Collection )in.readObject();
 
 		width = in.readInt();
 		height = in.readInt();
@@ -867,24 +867,18 @@ public class Scheme extends ObjectResource implements Serializable
 	public Collection getTopologicalCableLinks()
 	{
 		HashSet ht = new HashSet();
-		for (int i = 0; i < cablelinks.size(); i++)
+		ht.addAll(cablelinks);
+
+		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
-			SchemeCableLink scl = (SchemeCableLink )cablelinks.get(i);
-			ht.add(scl);
-		}
-		for (int i = 0; i < elements.size(); i++)
-		{
-			SchemeElement el = (SchemeElement)elements.get(i);
+			SchemeElement el = (SchemeElement)it.next();
 			if (el.scheme_id != null && !el.scheme_id.equals(""))
 			{
 				Scheme scheme = (Scheme)Pool.get(Scheme.typ, el.scheme_id);
 				if(scheme.scheme_type.equals(Scheme.CABLESUBNETWORK))
 				{
 					for (Iterator inner = scheme.getTopologicalCableLinks().iterator(); inner.hasNext();)
-					{
-						SchemeCableLink scl = (SchemeCableLink)inner.next();
-						ht.add(scl);
-					}
+						ht.add(inner.next());
 				}
 			}
 		}
@@ -894,24 +888,18 @@ public class Scheme extends ObjectResource implements Serializable
 	public Collection getTopologicalPaths()
 	{
 		HashSet ht = new HashSet();
-		for (int i = 0; i < paths.size(); i++)
+		ht.addAll(paths);
+
+		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
-			SchemePath sp = (SchemePath)paths.get(i);
-			ht.add(sp);
-		}
-		for (int i = 0; i < elements.size(); i++)
-		{
-			SchemeElement el = (SchemeElement)elements.get(i);
+			SchemeElement el = (SchemeElement)it.next();
 			if (el.scheme_id != null && !el.scheme_id.equals(""))
 			{
 				Scheme scheme = (Scheme)Pool.get(Scheme.typ, el.scheme_id);
 				if(scheme.scheme_type.equals(Scheme.CABLESUBNETWORK))
 				{
 					for (Iterator inner = scheme.getTopologicalPaths().iterator(); inner.hasNext();)
-					{
-						SchemePath sp = (SchemePath)inner.next();
-						ht.add(sp);
-					}
+						ht.add(inner.next());
 				}
 			}
 		}

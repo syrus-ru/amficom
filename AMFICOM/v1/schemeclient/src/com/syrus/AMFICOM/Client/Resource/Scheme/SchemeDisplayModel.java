@@ -76,7 +76,7 @@ public class SchemeDisplayModel extends StubDisplayModel
 		return false;
 	}
 
-	public Vector getColumns()
+	public java.util.List getColumns()
 	{
 		Vector cols = new Vector();
 		//cols.add("id");

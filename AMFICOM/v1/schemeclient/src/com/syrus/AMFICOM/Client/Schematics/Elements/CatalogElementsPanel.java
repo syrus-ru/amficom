@@ -137,12 +137,12 @@ public class CatalogElementsPanel extends JPanel
 	{
 		ObjectResourceSorter sorter = new ObjectResourceTypSorter();
 		sorter.setDataSet(data);
-		DataSet ds = sorter.sort("typ", ObjectResourceSorter.SORT_ASCENDING);
-		elementsList.setContents(ds.elements());
+		java.util.List ds = sorter.sort("typ", ObjectResourceSorter.SORT_ASCENDING);
+		elementsList.setContents(ds);
 
-		for (Enumeration en = ds.elements(); en.hasMoreElements(); )
+		for (Iterator it = ds.iterator(); it.hasNext(); )
 		{
-			ObjectResource obj = (ObjectResource)en.nextElement();
+			ObjectResource obj = (ObjectResource)it.next();
 			Object setting_obj = "";
 
 			if (obj instanceof SchemeElement)
@@ -182,26 +182,24 @@ public class CatalogElementsPanel extends JPanel
 		if (schemeElement_selected == null || !schemeElement_selected.getTyp().equals(elementsList.getSelectedObjectResource().getTyp()))
 		{
 			schemeElement_selected = elementsList.getSelectedObjectResource();
-			DataSet ds = new DataSet();
+			Map ds = new HashMap();
 			catalogElementNameField.setText("");
 
 			if (schemeElement_selected instanceof SchemeElement)
-				ds = new DataSet(Pool.getHash("kisequipment"));
+				ds = Pool.getHash("kisequipment");
 			else if (schemeElement_selected instanceof SchemeLink)
-				ds = new DataSet(Pool.getHash(Link.typ));
+				ds = Pool.getHash(Link.typ);
 			else if (schemeElement_selected instanceof SchemeCableLink)
-				ds = new DataSet(Pool.getHash(CableLink.typ));
+				ds = Pool.getHash(CableLink.typ);
 			else if (schemeElement_selected instanceof SchemePath)
-				ds = new DataSet(Pool.getHash(TransmissionPath.typ));
+				ds = Pool.getHash(TransmissionPath.typ);
 
 			ObjectResourceFilter filter = new ObjectResourceDomainFilter(aContext.getSessionInterface().getDomainId());
-			ds = filter.filter(ds);
 			ObjectResourceSorter sorter = new ObjectResourceNameSorter();
-			sorter.setDataSet(ds);
-			ds = sorter.sort("name", ObjectResourceSorter.SORT_ASCENDING);
+			sorter.setDataSet(filter.filter(ds));
 
 			skip = true;
-			catalogList.setContents(ds.elements());
+			catalogList.setContents(sorter.sort("name", ObjectResourceSorter.SORT_ASCENDING));
 			skip = false;
 		}
 		schemeElement_selected = elementsList.getSelectedObjectResource();

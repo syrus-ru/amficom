@@ -1,18 +1,19 @@
 package com.syrus.AMFICOM.Client.Resource.Scheme;
 
-import java.awt.datatransfer.*;
 import java.io.*;
 import java.util.*;
 
+import java.awt.datatransfer.*;
+
 import com.syrus.AMFICOM.CORBA.Scheme.*;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
+import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkProtoElement;
-import com.syrus.AMFICOM.Client.Resource.Network.CableLink;
+import com.syrus.AMFICOM.Client.Resource.Map.*;
+import com.syrus.AMFICOM.Client.Resource.Network.*;
 import com.syrus.AMFICOM.Client.Schematics.UI.*;
 
-public class SchemeCableLink extends ObjectResource
+public class SchemeCableLink extends StubResource
 		implements Transferable, Serializable
 {
 	public static final String typ = "schemecablelink";
@@ -29,8 +30,8 @@ public class SchemeCableLink extends ObjectResource
 	public double optical_length = 0;
 	public double physical_length = 0;
 
-	public Vector cable_threads = new Vector();
-	public Hashtable attributes = new Hashtable();
+	public Collection cable_threads = new ArrayList();
+	public Map attributes = new HashMap();
 
 	public MapPhysicalLinkProtoElement mplpe = null;
 
@@ -61,6 +62,17 @@ public class SchemeCableLink extends ObjectResource
 	public String getId()
 	{
 		return id;
+	}
+
+	public SchemeCableThread getCableThread(String thread_id)
+	{
+		for (Iterator it = cable_threads.iterator(); it.hasNext();)
+		{
+			SchemeCableThread thread = (SchemeCableThread)it.next();
+			if (thread.getId().equals(thread_id))
+				return thread;
+		}
+		return null;
 	}
 
 	public ObjectResourceModel getModel()
@@ -115,7 +127,7 @@ public class SchemeCableLink extends ObjectResource
 			physical_length = 0;
 		}
 
-		cable_threads = new Vector();
+		cable_threads = new ArrayList();
 		for (int i = 0; i < transferable.cable_threads.length; i++)
 			cable_threads.add(new SchemeCableThread(transferable.cable_threads[i]));
 
@@ -147,9 +159,9 @@ public class SchemeCableLink extends ObjectResource
 		int l = this.attributes.size();
 		int i = 0;
 		transferable.attributes = new ElementAttribute_Transferable[l];
-		for(Enumeration e = attributes.elements(); e.hasMoreElements();)
+		for(Iterator it = attributes.values().iterator(); it.hasNext();)
 		{
-			ElementAttribute ea = (ElementAttribute)e.nextElement();
+			ElementAttribute ea = (ElementAttribute)it.next();
 			ea.setTransferableFromLocal();
 			transferable.attributes[i++] = ea.transferable;
 		}
@@ -197,7 +209,7 @@ public class SchemeCableLink extends ObjectResource
 			target_port.cable_link_id = link.getId();
 		}
 
-		link.cable_threads = new Vector(cable_threads.size());
+		link.cable_threads = new ArrayList(cable_threads.size());
 		for (Iterator it = cable_threads.iterator(); it.hasNext();)
 			link.cable_threads.add(((SchemeCableThread)it.next()).clone(dataSource));
 
@@ -231,10 +243,10 @@ public class SchemeCableLink extends ObjectResource
 		target_port_id = (String )in.readObject();
 		cable_link_id = (String )in.readObject();
 		cable_link_type_id = (String )in.readObject();
-		cable_threads = (Vector )in.readObject();
+		cable_threads = (Collection )in.readObject();
 		optical_length = in.readDouble();
 		physical_length = in.readDouble();
-		attributes = (Hashtable )in.readObject();
+		attributes = (Map )in.readObject();
 
 		transferable = new SchemeCableLink_Transferable();
 	}

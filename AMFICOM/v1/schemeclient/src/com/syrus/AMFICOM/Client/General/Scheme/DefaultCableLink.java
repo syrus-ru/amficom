@@ -97,8 +97,8 @@ public class DefaultCableLink extends DefaultEdge
 
 			if (!getSchemeCableLinkId().equals(cell.getSchemeCableLinkId()))
 				setSchemeCableLinkId(cell.getSchemeCableLinkId());
-			if (!getSchemePathId().equals(cell.getSchemePathId()))
-				setSchemePathId(cell.getSchemePathId());
+//			if (!getSchemePathId().equals(cell.getSchemePathId()))
+//				setSchemePathId(cell.getSchemePathId());
 
 			if (cell.source != cell._source)
 			{
@@ -224,19 +224,19 @@ public class DefaultCableLink extends DefaultEdge
 		scheme_cablelink_id = id;
 	}
 
-	public SchemePath getSchemePath()
-	{
-		return (SchemePath)Pool.get(SchemePath.typ, scheme_path_id);
-	}
+//	public SchemePath getSchemePath()
+//	{
+//		return (SchemePath)Pool.get(SchemePath.typ, scheme_path_id);
+//	}
 
-	public String getSchemePathId()
-	{
-		return scheme_path_id;
-	}
+//	public String getSchemePathId()
+//	{
+//		return scheme_path_id;
+//	}
 
-	public void setSchemePathId(String id)
-	{
-		scheme_path_id = id;
-	}
+//	public void setSchemePathId(String id)
+//	{
+//		scheme_path_id = id;
+//	}
 }
 

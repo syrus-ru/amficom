@@ -128,11 +128,17 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 			{
 				if (mode == CREATING_PATH)
 				{
-					if (!pathpanel.links_to_add.isEmpty())
-						pathpanel.addSelectedLinks();
+//					if (!pathpanel.links_to_add.isEmpty())
+//						pathpanel.addSelectedLinks();
 
-//					 Scheme scheme = (Scheme)Pool.get("currentscheme", "currentscheme");
-//						PathBuilder.explore(scheme, pathpanel.path);
+		 Scheme scheme = (Scheme)Pool.get("currentscheme", "currentscheme");
+		 PathBuilder.addLink(pathpanel.path.links, (SchemeLink)pathpanel.links_to_add.get(0));
+			boolean res = PathBuilder.explore(scheme, pathpanel.path);
+			System.out.println("RES after add = " + res);
+
+			dispatcher.notify(new SchemeNavigateEvent(
+					new SchemePath[] {pathpanel.path},
+					SchemeNavigateEvent.SCHEME_PATH_SELECTED_EVENT));
 
 //          else if (pathpanel.setting_obj instanceof Scheme)
 //					{
@@ -163,10 +169,16 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 				if (mode == CREATING_PATH)
 				{
 					if (pathpanel.device_to_add != null)
-						pathpanel.setStartDevice(pathpanel.device_to_add.getId());
+					{
+						String id = pathpanel.device_to_add.getId();
+						pathpanel.setStartDevice(id);
 
-//					Scheme scheme = (Scheme)Pool.get("currentscheme", "currentscheme");
-//					PathBuilder.explore(scheme, pathpanel.path);
+					Scheme scheme = (Scheme)Pool.get("currentscheme", "currentscheme");
+						boolean res = PathBuilder.explore(scheme, pathpanel.path);
+//					PathBuilder.addSchemeElement(pathpanel.path.links,
+//																			 (SchemeElement)Pool.get(SchemeElement.typ, id));
+						System.out.println(res);
+					}
 				}
 			}
 			if (ev.SET_END)
@@ -453,7 +465,7 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 				return;
 			}
 		}
-		else if (objs[0] instanceof DefaultLink || objs[0] instanceof DefaultCableLink)
+	/*	else if (objs[0] instanceof DefaultLink || objs[0] instanceof DefaultCableLink)
 		{
 			SchemePath path = new SchemePath("");
 			int counter = 0;
@@ -484,7 +496,7 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 				showPathCharacteristics(path, isEditable);
 				return;
 			}
-		}
+		}*/
 		if (objs[0] instanceof DefaultLink)
 		{
 			SchemeLink[] links = new SchemeLink[objs.length];

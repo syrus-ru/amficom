@@ -97,8 +97,8 @@ public class DefaultLink extends DefaultEdge
 
 			if (!getSchemeLinkId().equals(cell.getSchemeLinkId()))
 				setSchemeLinkId(cell.getSchemeLinkId());
-			if (!getSchemePathId().equals(cell.getSchemePathId()))
-				setSchemePathId(cell.getSchemePathId());
+//			if (!getSchemePathId().equals(cell.getSchemePathId()))
+//				setSchemePathId(cell.getSchemePathId());
 
 			if (cell.source != cell._source)
 			{
@@ -245,19 +245,19 @@ public class DefaultLink extends DefaultEdge
 		scheme_link_id = id;
 	}
 
-	public SchemePath getSchemePath()
-	{
-		return (SchemePath)Pool.get(SchemePath.typ, scheme_path_id);
-	}
+//	public SchemePath getSchemePath()
+//	{
+//		return (SchemePath)Pool.get(SchemePath.typ, scheme_path_id);
+//	}
 
-	public String getSchemePathId()
-	{
-		return scheme_path_id;
-	}
+//	public String getSchemePathId()
+//	{
+//		return scheme_path_id;
+//	}
 
-	public void setSchemePathId(String id)
-	{
-		scheme_path_id = id;
-	}
+//	public void setSchemePathId(String id)
+//	{
+//		scheme_path_id = id;
+//	}
 }
 

@@ -156,14 +156,14 @@ public class Notifier
 //         obj_res.add(((DeviceCell)cells[i]).getSchemeDevice());
 				else if (obj instanceof DefaultLink)
 				{
-					if (mode.equals(Constants.linkMode))
+				//;	if (mode.equals(Constants.linkMode))
 					{
 						SchemeLink link = ((DefaultLink)obj).getSchemeLink();
 						scheme_links.add(link);
 						if (!link.link_id.equals(""))
 							links.add(Pool.get(Link.typ, link.link_id));
 					}
-					else if (mode.equals(Constants.pathMode))
+			/*		else if (mode.equals(Constants.pathMode))
 					{
 						if (((DefaultLink)obj).scheme_path_id.length() != 0)
 						{
@@ -175,18 +175,18 @@ public class Notifier
 									paths.add(Pool.get(TransmissionPath.typ, path.path_id));
 							}
 						}
-					}
+					}*/
 				}
 				else if (obj instanceof DefaultCableLink)
 				{
-					if (mode.equals(Constants.linkMode))
+					//if (mode.equals(Constants.linkMode))
 					{
 						SchemeCableLink link = ((DefaultCableLink)obj).getSchemeCableLink();
 						scheme_clinks.add(link);
 						if (!link.cable_link_id.equals(""))
 							clinks.add(Pool.get(CableLink.typ, link.cable_link_id));
 					}
-					else if (mode.equals(Constants.pathMode))
+					/*else if (mode.equals(Constants.pathMode))
 					{
 						if (((DefaultCableLink)obj).scheme_path_id.length() != 0)
 						{
@@ -198,7 +198,7 @@ public class Notifier
 									paths.add(Pool.get(TransmissionPath.typ, path.path_id));
 							}
 						}
-					}
+					}*/
 				}
 				else if (obj instanceof PortCell)
 				{

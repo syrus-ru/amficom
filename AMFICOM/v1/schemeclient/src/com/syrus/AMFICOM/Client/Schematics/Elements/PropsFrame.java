@@ -40,8 +40,8 @@ public class PropsFrame extends JInternalFrame
 
 	ApplicationContext aContext;
 
-	private Hashtable char_hash = new Hashtable(1);
-	private Hashtable attr_hash = new Hashtable(1);
+	private Map char_hash = new HashMap(1);
+	private Map attr_hash = new HashMap(1);
 
 	public PropsFrame(ApplicationContext aContext, boolean can_be_editable)
 	{
@@ -415,7 +415,7 @@ public class PropsFrame extends JInternalFrame
 			tModel.setEditableColumns(new int[0]);
 	}
 
-	void elementSelected(Hashtable t)
+	void elementSelected(Map t)
 	{
 		if (jTable.getEditingRow() != -1)
 			jTable.getCellEditor(jTable.getEditingRow(), jTable.getEditingColumn()).cancelCellEditing();
@@ -425,10 +425,9 @@ public class PropsFrame extends JInternalFrame
 			return;
 
 		if (selected_type.equals("attribute"))
-			for (Enumeration en = t.keys(); en.hasMoreElements();)
+			for (Iterator it = t.values().iterator(); it.hasNext();)
 			{
-				String key = (String)en.nextElement();
-				ElementAttribute attr = (ElementAttribute)t.get(key);
+				ElementAttribute attr = (ElementAttribute)it.next();
 				ElementAttributeType at = (ElementAttributeType)Pool.get(ElementAttributeType.typ, attr.type_id);
 				if (at == null)
 				{
@@ -440,10 +439,9 @@ public class PropsFrame extends JInternalFrame
 				}
 			}
 		else
-			for (Enumeration en = t.keys(); en.hasMoreElements();)
+			for (Iterator it = t.values().iterator(); it.hasNext();)
 			{
-				String key = (String)en.nextElement();
-				Characteristic chr = (Characteristic)t.get(key);
+				Characteristic chr = (Characteristic)it.next();
 				CharacteristicType ch = (CharacteristicType)Pool.get(CharacteristicType.typ, chr.type_id);
 				if (ch == null)
 				{
@@ -498,43 +496,40 @@ public class PropsFrame extends JInternalFrame
 		}
 	}
 
-	void removeCharacterisricFromHash(Hashtable table, String name)
+	void removeCharacterisricFromHash(Map table, String name)
 	{
-		for (Enumeration enum = table.keys(); enum.hasMoreElements(); )
+		for (Iterator it = table.values().iterator(); it.hasNext();)
 		{
-			String key = (String)enum.nextElement();
-			Characteristic ch = (Characteristic)table.get(key);
+			Characteristic ch = (Characteristic)it.next();
 			CharacteristicType t = (CharacteristicType)Pool.get(CharacteristicType.typ, ch.type_id);
 			if (t.getName().equals(name))
 			{
-				table.remove(key);
+				it.remove();
 				break;
 			}
 		}
 	}
 
-	void removeAttributeFromHash(Hashtable table, String name)
+	void removeAttributeFromHash(Map table, String name)
 	{
-		for (Enumeration enum = table.keys(); enum.hasMoreElements(); )
+		for (Iterator it = table.values().iterator(); it.hasNext();)
 		{
-			String key = (String)enum.nextElement();
-			ElementAttribute attr = (ElementAttribute)table.get(key);
+			ElementAttribute attr = (ElementAttribute)it.next();
 			ElementAttributeType t = (ElementAttributeType)Pool.get(ElementAttributeType.typ, attr.type_id);
 			if (t.getName().equals(name))
 			{
-				table.remove(key);
+				it.remove();
 				break;
 			}
 		}
 	}
 
 
-	void setCharacteristicAtHash(Hashtable table, String name, String value)
+	void setCharacteristicAtHash(Map table, String name, String value)
 	{
-		for (Enumeration enum = table.keys(); enum.hasMoreElements(); )
+		for (Iterator it = table.values().iterator(); it.hasNext();)
 		{
-			String key = (String)enum.nextElement();
-			Characteristic ch = (Characteristic)table.get(key);
+			Characteristic ch = (Characteristic)it.next();
 			CharacteristicType cht = (CharacteristicType)Pool.get(CharacteristicType.typ, ch.type_id);
 			if (cht.getName().equals(name))
 			{
@@ -544,12 +539,11 @@ public class PropsFrame extends JInternalFrame
 		}
 	}
 
-	void setAttributeAtHash(Hashtable table, String name, String value)
+	void setAttributeAtHash(Map table, String name, String value)
 	{
-		for (Enumeration enum = table.keys(); enum.hasMoreElements(); )
+		for (Iterator it = table.values().iterator(); it.hasNext();)
 		{
-			String key = (String)enum.nextElement();
-			ElementAttribute attr = (ElementAttribute)table.get(key);
+			ElementAttribute attr = (ElementAttribute)it.next();
 			ElementAttributeType at = (ElementAttributeType)Pool.get(ElementAttributeType.typ, attr.type_id);
 			if (at.getName().equals(name))
 			{

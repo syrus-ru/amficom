@@ -17,19 +17,16 @@ public class SchemePathPane extends TransmissionPathPane
 		setObjectResource(path);
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		if (or instanceof TransmissionPath)
 			super.setObjectResource(or);
 		else if (or instanceof SchemePath)
 		{
 			SchemePath sp = (SchemePath)or;
-			if (sp.path_id.length() == 0)
-				return false;
-			else
+			if (sp.path_id.length() != 0)
 				super.setObjectResource ((TransmissionPath)Pool.get(TransmissionPath.typ, sp.path_id));
 		}
-		return true;
 	}
 }
 

@@ -228,18 +228,18 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 				Hashtable ht = new Hashtable();
 				if (Pool.getHash(Scheme.typ) != null)
 				{
-					DataSet dSet = new DataSet(Pool.getHash(Scheme.typ));
+					Map dSet = Pool.getHash(Scheme.typ);
 					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 					dSet = filter.filter(dSet);
 
-					for (Enumeration en = dSet.elements(); en.hasMoreElements();)
+					for (Iterator it = dSet.values().iterator(); it.hasNext();)
 					{
-						Scheme sch = (Scheme)en.nextElement();
+						Scheme sch = (Scheme)it.next();
 						ht.put(sch.scheme_type, sch.scheme_type);
 					}
-					for (Enumeration en = ht.elements(); en.hasMoreElements();)
+					for (Iterator it = ht.keySet().iterator(); it.hasNext();)
 					{
-						String type = (String)en.nextElement();
+						String type = (String)it.next();
 						vec.add(new ObjectResourceTreeNode (type, LangModelSchematics.getString(type), true,
 								new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
 					}
@@ -256,18 +256,16 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 			{
 				if (Pool.getHash(Scheme.typ) != null)
 				{
-					DataSet dSet = new DataSet(Pool.getHash(Scheme.typ));
+					Map dSet = Pool.getHash(Scheme.typ);
 
 					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = Scheme.getSorter();
 					sorter.setDataSet(dSet);
-					dSet = sorter.default_sort();
 
-					Enumeration enum = dSet.elements();
-					for(; enum.hasMoreElements();)
+					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
-						Scheme sc = (Scheme )enum.nextElement();
+						Scheme sc = (Scheme )it.next();
 						if (sc.scheme_type.equals(s))
 						{
 							vec.add(new ObjectResourceTreeNode(sc, sc.getName(), true,
@@ -301,18 +299,16 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 			{
 				if (Pool.getHash(LinkType.typ) != null)
 				{
-					DataSet dSet = new DataSet(Pool.getHash(LinkType.typ));
+					Map dSet = Pool.getHash(LinkType.typ);
 
 					//ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 					//dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = LinkType.getDefaultSorter();
 					sorter.setDataSet(dSet);
-					dSet = sorter.default_sort();
 
-					Enumeration enum = dSet.elements();
-					for(; enum.hasMoreElements();)
+					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
-						LinkType l = (LinkType)enum.nextElement();
+						LinkType l = (LinkType)it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(l, l.getName(), true, true);
 						vec.add(n);
 					}
@@ -328,12 +324,10 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 //					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = CableLinkType.getDefaultSorter();
 					sorter.setDataSet(dSet);
-					dSet = sorter.default_sort();
 
-					Enumeration enum = dSet.elements();
-					for(; enum.hasMoreElements();)
+					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
-						CableLinkType l = (CableLinkType)enum.nextElement();
+						CableLinkType l = (CableLinkType)it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(l, l.getName(), true, true);
 						vec.add(n);
 					}
@@ -349,12 +343,10 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 //					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = PortType.getDefaultSorter();
 					sorter.setDataSet(dSet);
-					dSet = sorter.default_sort();
 
-					Enumeration enum = dSet.elements();
-					for(; enum.hasMoreElements();)
+					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
-						PortType pt = (PortType)enum.nextElement();
+						PortType pt = (PortType)it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(pt, pt.getName(), true, true);
 						vec.add(n);
 					}
@@ -370,12 +362,10 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 //					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = CablePortType.getDefaultSorter();
 					sorter.setDataSet(dSet);
-					dSet = sorter.default_sort();
 
-					Enumeration enum = dSet.elements();
-					for(; enum.hasMoreElements();)
+					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
-						CablePortType cpT = (CablePortType)enum.nextElement();
+						CablePortType cpT = (CablePortType)it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(cpT, cpT.getName(), true, true);
 						vec.add(n);
 					}
@@ -414,12 +404,10 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 //					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = TransmissionPathType.getDefaultSorter();
 					sorter.setDataSet(dSet);
-					dSet = sorter.default_sort();
 
-					Enumeration enum = dSet.elements();
-					for(; enum.hasMoreElements();)
+					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
-						TransmissionPathType tp = (TransmissionPathType)enum.nextElement();
+						TransmissionPathType tp = (TransmissionPathType)it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(tp, tp.getName(), true, true);
 						vec.add(n);
 					}
@@ -435,12 +423,10 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 //					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = AccessPortType.getDefaultSorter();
 					sorter.setDataSet(dSet);
-					dSet = sorter.default_sort();
 
-					Enumeration enum = dSet.elements();
-					for(; enum.hasMoreElements();)
+					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
-						AccessPortType apt = (AccessPortType)enum.nextElement();
+						AccessPortType apt = (AccessPortType)it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(apt, apt.getName(), true, true);
 						vec.add(n);
 					}
@@ -463,9 +449,9 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 			{
 				Scheme parent = (Scheme)((ObjectResourceTreeNode)node.getParent()).getObject();
 				DataSet ds = new DataSet();
-				for (Enumeration enum = parent.elements.elements(); enum.hasMoreElements();)
+				for (Iterator it = parent.elements.iterator(); it.hasNext();)
 				{
-					SchemeElement el = (SchemeElement)enum.nextElement();
+					SchemeElement el = (SchemeElement)it.next();
 					if (!el.scheme_id.equals(""))
 					{
 						Scheme sc = (Scheme)Pool.get(Scheme.typ, el.scheme_id);
@@ -477,10 +463,9 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 				{
 					ObjectResourceSorter sorter = Scheme.getSorter();
 					sorter.setDataSet(ds);
-					ds = sorter.default_sort();
-					for (Enumeration en = ds.elements(); en.hasMoreElements();)
+					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
-						Scheme sch = (Scheme)en.nextElement();
+						Scheme sch = (Scheme)it.next();
 						vec.add(new ObjectResourceTreeNode(sch, sch.getName(), true,
 							new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/scheme.gif")), false));
 					}
@@ -493,9 +478,9 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 				if (parent instanceof Scheme)
 				{
 					Scheme scheme = (Scheme)parent;
-					for (Enumeration enum = scheme.elements.elements(); enum.hasMoreElements();)
+					for (Iterator it = scheme.elements.iterator(); it.hasNext();)
 					{
-						SchemeElement element = (SchemeElement)enum.nextElement();
+						SchemeElement element = (SchemeElement)it.next();
 						if (element.scheme_id.equals(""))
 							ds.add(element);
 					}
@@ -514,10 +499,9 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 				{
 					ObjectResourceSorter sorter = SchemeElement.getSorter();
 					sorter.setDataSet(ds);
-					ds = sorter.default_sort();
-					for (Enumeration en = ds.elements(); en.hasMoreElements();)
+					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
-						SchemeElement element = (SchemeElement)en.nextElement();
+						SchemeElement element = (SchemeElement)it.next();
 						if (!element.links.isEmpty() || !element.element_ids.isEmpty())
 							vec.add(new ObjectResourceTreeNode(element, element.getName(), true, false));
 						else
@@ -531,13 +515,12 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 				if (parent instanceof Scheme)
 				{
 					Scheme scheme = (Scheme)parent;
-					DataSet ds = new DataSet(scheme.links);
+					DataSet ds = new DataSet(scheme.links.iterator());
 					ObjectResourceSorter sorter = SchemeLink.getSorter();
 					sorter.setDataSet(ds);
-					ds = sorter.default_sort();
-					for (Enumeration enum = ds.elements(); enum.hasMoreElements();)
+					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
-						SchemeLink link = (SchemeLink)enum.nextElement();
+						SchemeLink link = (SchemeLink)it.next();
 						vec.add(new ObjectResourceTreeNode(link, link.getName(), true, true));
 					}
 				}
@@ -547,10 +530,9 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 					DataSet ds = new DataSet(el.links);
 					ObjectResourceSorter sorter = SchemeLink.getSorter();
 					sorter.setDataSet(ds);
-					ds = sorter.default_sort();
-					for (Enumeration enum = ds.elements(); enum.hasMoreElements();)
+					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
-						SchemeLink link = (SchemeLink)enum.nextElement();
+						SchemeLink link = (SchemeLink)it.next();
 						vec.add(new ObjectResourceTreeNode(link, link.getName(), true, true));
 					}
 				}
@@ -558,26 +540,24 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 			else if (s.equals(SchemeCableLink.typ))
 			{
 				Scheme parent = (Scheme)((ObjectResourceTreeNode)node.getParent()).getObject();
-				DataSet ds = new DataSet(parent.cablelinks);
+				DataSet ds = new DataSet(parent.cablelinks.iterator());
 				ObjectResourceSorter sorter = SchemeCableLink.getSorter();
 				sorter.setDataSet(ds);
-				ds = sorter.default_sort();
-				for (Enumeration enum = ds.elements(); enum.hasMoreElements();)
+				for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 				{
-					SchemeCableLink link = (SchemeCableLink)enum.nextElement();
+					SchemeCableLink link = (SchemeCableLink)it.next();
 					vec.add(new ObjectResourceTreeNode(link, link.getName(), true, true));
 				}
 			}
 			else if (s.equals(SchemePath.typ))
 			{
 				Scheme parent = (Scheme)((ObjectResourceTreeNode)node.getParent()).getObject();
-				DataSet ds = new DataSet(parent.paths);
+				DataSet ds = new DataSet(parent.paths.iterator());
 				ObjectResourceSorter sorter = SchemePath.getSorter();
 				sorter.setDataSet(ds);
-				ds = sorter.default_sort();
-				for (Enumeration enum = ds.elements(); enum.hasMoreElements();)
+				for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 				{
-					SchemePath path = (SchemePath)enum.nextElement();
+					SchemePath path = (SchemePath)it.next();
 					vec.add(new ObjectResourceTreeNode(path, path.getName(), true, true));
 				}
 			}
@@ -627,18 +607,18 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 				{
 					boolean has_schemes = false;
 					boolean has_elements = false;
-					for (Enumeration en = s.elements.elements(); en.hasMoreElements();)
+					for (Iterator it = s.elements.iterator(); it.hasNext();)
 					{
-						SchemeElement el = (SchemeElement)en.nextElement();
+						SchemeElement el = (SchemeElement)it.next();
 						if (el.scheme_id.length() == 0)
 						{
 							has_elements = true;
 							break;
 						}
 					}
-					for (Enumeration en = s.elements.elements(); en.hasMoreElements();)
+					for (Iterator it = s.elements.iterator(); it.hasNext();)
 					{
-						SchemeElement el = (SchemeElement)en.nextElement();
+						SchemeElement el = (SchemeElement)it.next();
 						if (el.scheme_id.length() != 0)
 						{
 							has_schemes = true;
@@ -663,9 +643,9 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 				if (!schel.scheme_id.equals(""))
 				{
 					Scheme scheme = (Scheme)Pool.get(Scheme.typ, schel.scheme_id);
-					for (Enumeration enum = scheme.elements.elements(); enum.hasMoreElements();)
+					for (Iterator it = scheme.elements.iterator(); it.hasNext();)
 					{
-						SchemeElement element = (SchemeElement)enum.nextElement();
+						SchemeElement element = (SchemeElement)it.next();
 						if (element.scheme_id.equals(""))
 							vec.add(new ObjectResourceTreeNode(element, element.getName(), true, true));
 						else

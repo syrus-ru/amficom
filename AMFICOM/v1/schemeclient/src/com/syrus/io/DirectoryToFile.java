@@ -223,9 +223,9 @@ public class DirectoryToFile
 							pw.println ("@manufacturer " + eqt.manufacturer);
 							pw.println ("@manufacturer_code " + eqt.manufacturer_code);
 							pw.println ("@characteristics ");
-							for (Enumeration e = eqt.characteristics.elements(); e.hasMoreElements();)
+							for (Iterator it = eqt.characteristics.values().iterator(); it.hasNext();)
 							{
-								Characteristic ch = (Characteristic)e.nextElement();
+								Characteristic ch = (Characteristic)it.next();
 								pw.println(ch.type_id + " " + ch.value);
 							}
 							pw.println ("@end of characteristics");
@@ -277,9 +277,9 @@ public class DirectoryToFile
 					pw.println ("@interface_id " + pt.interface_id);
 					pw.println ("@standard " + pt.standard);
 					pw.println ("@characteristics ");
-					for (Enumeration e = pt.characteristics.elements(); e.hasMoreElements();)
+					for (Iterator it = pt.characteristics.values().iterator(); it.hasNext();)
 					{
-						Characteristic ch = (Characteristic)e.nextElement();
+						Characteristic ch = (Characteristic)it.next();
 						pw.println(ch.type_id + " " + ch.value);
 					}
 					pw.println ("@end of characteristics");
@@ -324,9 +324,9 @@ public class DirectoryToFile
 					pw.println ("@description " + tpt.description);
 					pw.println ("@port_type_id " + tpt.port_type_id);
 					pw.println ("@characteristics ");
-					for (Enumeration e = tpt.characteristics.elements(); e.hasMoreElements();)
+					for (Iterator it = tpt.characteristics.values().iterator(); it.hasNext();)
 					{
-						Characteristic ch = (Characteristic)e.nextElement();
+						Characteristic ch = (Characteristic)it.next();
 						pw.println(ch.type_id + " " + ch.value);
 					}
 					pw.println ("@end of characteristics");
@@ -372,15 +372,15 @@ public class DirectoryToFile
 					pw.println ("@description " + apt.description);
 					pw.println ("@access_type " + apt.access_type);
 					pw.println ("@characteristics ");
-					for (Enumeration e = apt.characteristics.elements(); e.hasMoreElements();)
+					for (Iterator it = apt.characteristics.values().iterator(); it.hasNext();)
 					{
-						Characteristic ch = (Characteristic)e.nextElement();
+						Characteristic ch = (Characteristic)it.next();
 						pw.println(ch.type_id + " " + ch.value);
 					}
 					pw.println ("@end of characteristics");
 					pw.println ("@test_type_ids = ");
-					for (Enumeration e = apt.test_type_ids.elements(); e.hasMoreElements();)
-						pw.println((String)e.nextElement());
+					for (Iterator it = apt.test_type_ids.iterator(); it.hasNext();)
+						pw.println((String)it.next());
 					pw.println ("@end of test_type_ids");
 					pw.println();
 					counter++;
@@ -430,9 +430,9 @@ public class DirectoryToFile
 					pw.println ("@standard " + lt.standard);
 					pw.println ("@year " + lt.year);
 					pw.println ("@characteristics ");
-					for (Enumeration e = lt.characteristics.elements(); e.hasMoreElements();)
+					for (Iterator it = lt.characteristics.values().iterator(); it.hasNext();)
 					{
-						Characteristic ch = (Characteristic)e.nextElement();
+						Characteristic ch = (Characteristic)it.next();
 						pw.println(ch.type_id + " " + ch.value);
 					}
 					pw.println ("@end of characteristics");
@@ -485,9 +485,9 @@ public class DirectoryToFile
 					pw.println ("@standard " + lt.standard);
 					pw.println ("@year " + lt.year);
 					pw.println ("@characteristics ");
-					for (Enumeration e = lt.characteristics.elements(); e.hasMoreElements();)
+					for (Iterator it = lt.characteristics.values().iterator(); it.hasNext();)
 					{
-						Characteristic ch = (Characteristic)e.nextElement();
+						Characteristic ch = (Characteristic)it.next();
 						pw.println(ch.type_id + " " + ch.value);
 					}
 					pw.println ("@end of characteristics");
@@ -806,9 +806,9 @@ public class DirectoryToFile
 					pw.println ("@optical_length " + String.valueOf(link.optical_length));
 					pw.println ("@physical_length " + String.valueOf(link.physical_length));
 					pw.println ("@cable_threads ");
-					for (Enumeration e = link.cable_threads.elements(); e.hasMoreElements();)
+					for (Iterator it = link.cable_threads.iterator(); it.hasNext();)
 					{
-						SchemeCableThread thread = (SchemeCableThread)e.nextElement();
+						SchemeCableThread thread = (SchemeCableThread)it.next();
 						pw.println (thread.getId());
 						pw.println (thread.getName());
 						pw.println (thread.link_type_id);
@@ -1068,20 +1068,20 @@ public class DirectoryToFile
 					pw.println ("@domain_id " + scheme.domain_id);
 					pw.println ("@owner_id " + scheme.owner_id);
 					pw.println ("@cablelinks ");
-					for (Enumeration e = scheme.cablelinks.elements(); e.hasMoreElements();)
-						pw.println (((SchemeCableLink)e.nextElement()).getId());
+					for (Iterator it = scheme.cablelinks.iterator(); it.hasNext();)
+						pw.println (((SchemeCableLink)it.next()).getId());
 					pw.println ("@end of cablelinks");
 					pw.println ("@links ");
-					for (Enumeration e = scheme.links.elements(); e.hasMoreElements();)
-						pw.println (((SchemeLink)e.nextElement()).getId());
+					for (Iterator it = scheme.links.iterator(); it.hasNext();)
+						pw.println (((SchemeLink)it.next()).getId());
 					pw.println ("@end of links");
 					pw.println ("@elements ");
-					for (Enumeration e = scheme.elements.elements(); e.hasMoreElements();)
-						pw.println (((SchemeElement)e.nextElement()).getId());
+					for (Iterator it = scheme.elements.iterator(); it.hasNext();)
+						pw.println (((SchemeElement)it.next()).getId());
 					pw.println ("@end of elements");
 					pw.println ("@paths ");
-					for (Enumeration e = scheme.paths.elements(); e.hasMoreElements();)
-						pw.println (((SchemePath)e.nextElement()).getId());
+					for (Iterator it = scheme.paths.iterator(); it.hasNext();)
+						pw.println (((SchemePath)it.next()).getId());
 					pw.println ("@end of paths");
 					pw.println ("@clones ");
 					for (Enumeration e = scheme.clones.keys(); e.hasMoreElements();)
@@ -1219,9 +1219,9 @@ public class DirectoryToFile
 					pw.println ("@end_device_id " + path.end_device_id);
 					pw.println ("@type_id " + path.type_id);
 					pw.println ("@pathelements ");
-					for (Enumeration e = path.links.elements(); e.hasMoreElements();)
+					for (Iterator it = path.links.iterator(); it.hasNext();)
 					{
-						PathElement pe = (PathElement)e.nextElement();
+						PathElement pe = (PathElement)it.next();
 						pw.println (String.valueOf(pe.n));
 						pw.println (String.valueOf(pe.is_cable));
 						pw.println (pe.link_id);

@@ -326,6 +326,7 @@ public class SchemeGraph extends GPGraph
 		return new_cells.toArray();
 	}
 
+/*
 	public void setSelectionPath(Object cell)
 	{
 		if (cell instanceof DefaultLink)
@@ -351,7 +352,7 @@ public class SchemeGraph extends GPGraph
 			}
 		}
 	}
-
+*/
 	public Serializable getArchiveableState()
 	{
 		return getArchiveableState(getRoots());
@@ -782,7 +783,7 @@ public class SchemeGraph extends GPGraph
 							if(pop.getSubElements().length != 0)
 								pop.show(SchemeGraph.this, event.getX(), event.getY());
 						}
-						if (cell instanceof DefaultLink)
+					/*	if (cell instanceof DefaultLink)
 						{
 							JPopupMenu pop = SchemeActions.createLinkPopup(aContext, SchemeGraph.this, (DefaultLink)cell);
 							if(pop.getSubElements().length != 0)
@@ -793,7 +794,7 @@ public class SchemeGraph extends GPGraph
 							JPopupMenu pop = SchemeActions.createCableLinkPopup(aContext, SchemeGraph.this, (DefaultCableLink)cell);
 							if(pop.getSubElements().length != 0)
 								pop.show(SchemeGraph.this, event.getX(), event.getY());
-						}
+						}*/
 					}
 					repaint();
 			}

@@ -25,16 +25,11 @@ public class SchemeCableLinkPane extends CableLinkPane
 		return scl;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.scl = (SchemeCableLink )or;
 		CableLink link = (CableLink)Pool.get(CableLink.typ, scl.cable_link_id);
 		super.setObjectResource(link);
-
-		if(link != null)
-			return true;
-		return false;
-
 	}
 
 /*

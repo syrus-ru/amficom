@@ -234,7 +234,7 @@ public class InsertToCatalogCommand extends VoidCommand
 			SchemeLink scheme_link = link.getSchemeLink();
 			//saveLink (dataSource, scheme_link);
 			links_to_save.put(scheme_link.getId(), scheme_link);
-			String path_id = link.getSchemePathId();
+			/*String path_id = link.getSchemePathId();
 			if (include_paths && !path_id.equals("") && !paths_to_save.containsKey(path_id))
 			{
 				SchemePath path = link.getSchemePath();
@@ -253,7 +253,7 @@ public class InsertToCatalogCommand extends VoidCommand
 						links_to_save.put(l.getId(), l);
 					}
 				}
-			}
+			}*/
 		}
 		if (cells[i] instanceof DefaultCableLink)
 		{
@@ -261,7 +261,7 @@ public class InsertToCatalogCommand extends VoidCommand
 			SchemeCableLink scheme_link = link.getSchemeCableLink();
 			//saveCableLink(dataSource, scheme_link);
 			cable_links_to_save.put(scheme_link.getId(), scheme_link);
-			String path_id = link.getSchemePathId();
+			/*String path_id = link.getSchemePathId();
 			if (include_paths && !path_id.equals("") && !paths_to_save.containsKey(path_id))
 			{
 				SchemePath path = link.getSchemePath();
@@ -280,7 +280,7 @@ public class InsertToCatalogCommand extends VoidCommand
 						links_to_save.put(l.getId(), l);
 					}
 				}
-			}
+			}*/
 		}
 		}
 	}
@@ -310,9 +310,9 @@ public class InsertToCatalogCommand extends VoidCommand
 			}
 
 			String access_port_id = "";
-			for (int i = 0; i < scheme_path.links.size(); i++)
+			for (Iterator it = scheme_path.links.iterator(); it.hasNext();)
 			{
-				PathElement pel = (PathElement)scheme_path.links.get(i);
+				PathElement pel = (PathElement)it.next();
 
 				if (pel.is_cable)
 				{
@@ -362,10 +362,10 @@ public class InsertToCatalogCommand extends VoidCommand
 
 			path.links = new Vector();
 
-			for (int i = 0; i < scheme_path.links.size(); i++)
+			for (Iterator it = scheme_path.links.iterator(); it.hasNext();)
 			{
 				TransmissionPathElement tpe = new TransmissionPathElement();
-				PathElement pe = (PathElement)scheme_path.links.get(i);
+				PathElement pe = (PathElement)it.next();
 				tpe.n = pe.n;
 				tpe.is_cable = pe.is_cable;
 				tpe.link_id = (String)Pool.get("clonedids", pe.link_id);
@@ -536,9 +536,9 @@ public class InsertToCatalogCommand extends VoidCommand
 					Port port = null;
 					SchemePort scheme_port = (SchemePort)dev.ports.get(i);
 
-					for (int j = 0; j < eq.ports.size(); j++)
+					for (Iterator it = eq.ports.iterator(); it.hasNext();)
 					{
-						Port p = (Port)eq.ports.get(j);
+						Port p = (Port)it.next();
 						if (p.getId().equals(scheme_port.port_id))
 						{
 							port = p;
@@ -573,9 +573,9 @@ public class InsertToCatalogCommand extends VoidCommand
 						AccessPortType aport_type = (AccessPortType)Pool.get(AccessPortType.typ, scheme_port.access_port_type_id);
 						AccessPort aport = null;
 
-						for (int j = 0; j < kis.access_ports.size(); j++)
+						for (Iterator it = kis.access_ports.iterator(); it.hasNext();)
 						{
-							AccessPort a = (AccessPort)kis.access_ports.get(j);
+							AccessPort a = (AccessPort)it.next();
 							if (a.getId().equals(scheme_port.access_port_id))
 							{
 								aport = a;
@@ -607,9 +607,9 @@ public class InsertToCatalogCommand extends VoidCommand
 					CablePort port = null;
 					SchemeCablePort scheme_port = (SchemeCablePort)dev.cableports.get(i);
 
-					for (int j = 0; j < eq.cports.size(); j++)
+					for (Iterator it = eq.cports.iterator(); it.hasNext();)
 					{
-						CablePort p = (CablePort)eq.cports.get(j);
+						CablePort p = (CablePort)it.next();
 						if (p.getId().equals(scheme_port.cable_port_id))
 						{
 							port = p;
@@ -736,13 +736,13 @@ public class InsertToCatalogCommand extends VoidCommand
 			//		link.end_equipment_id = "";
 			//		link.end_port_id = "";
 
-			for (int j = 0; j < scheme_link.cable_threads.size(); j++)
+			for (Iterator it = scheme_link.cable_threads.iterator(); it.hasNext();)
 			{
 				CableLinkThread thread = null;
-				SchemeCableThread scheme_thread = (SchemeCableThread)scheme_link.cable_threads.get(j);
-				for (int k = 0; k < link.threads.size(); k++)
+				SchemeCableThread scheme_thread = (SchemeCableThread)it.next();
+				for (Iterator it2 = link.threads.iterator(); it2.hasNext();)
 				{
-					CableLinkThread t = (CableLinkThread)link.threads.get(k);
+					CableLinkThread t = (CableLinkThread)it2.next();
 					if (t.getId().equals(scheme_thread.thread_id))
 					{
 						thread = t;

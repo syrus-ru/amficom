@@ -240,7 +240,7 @@ public class ElementsPanel extends UgoPanel
 			CreatePathEvent cpe = (CreatePathEvent)ae;
 			if (cpe.DELETE_PATH)
 			{
-				SchemePath[] paths = (SchemePath[])cpe.cells;
+/*				SchemePath[] paths = (SchemePath[])cpe.cells;
 				Object[] cells = graph.getAll();
 				for (int i = 0; i < cells.length; i++)
 				{
@@ -262,7 +262,7 @@ public class ElementsPanel extends UgoPanel
 							link.setSchemePathId("");
 					}
 				}
-				}
+				}*/
 			}
 			if (cpe.EDIT_PATH)
 			{
@@ -420,9 +420,9 @@ public class ElementsPanel extends UgoPanel
 								if (ret == JOptionPane.YES_OPTION)
 								{
 									Scheme scheme = ((SchemePanel)this).scheme;
-									for (Enumeration en = scheme.links.elements(); en.hasMoreElements();)
+									for (Iterator it = scheme.links.iterator(); it.hasNext();)
 									{
-										SchemeLink sl = (SchemeLink)en.nextElement();
+										SchemeLink sl = (SchemeLink)it.next();
 										if (sl.getId().equals(((DefaultLink)cells[0]).getSchemeLinkId()))
 										{
 											scheme.links.remove(sl);
@@ -430,9 +430,9 @@ public class ElementsPanel extends UgoPanel
 										}
 									}
 									boolean contains_new = false;
-									for (Enumeration en = scheme.links.elements(); en.hasMoreElements();)
+									for (Iterator it = scheme.links.iterator(); it.hasNext();)
 									{
-										SchemeLink sl = (SchemeLink)en.nextElement();
+										SchemeLink sl = (SchemeLink)it.next();
 										if (sl.getId().equals(id))
 										{
 											contains_new = true;
@@ -451,10 +451,10 @@ public class ElementsPanel extends UgoPanel
 							}
 							((DefaultLink)cells[0]).setSchemeLinkId(id);
 						}
-						id = JOptionPane.showInputDialog("Новый идентификатор пути:",
+						/*id = JOptionPane.showInputDialog("Новый идентификатор пути:",
 								((DefaultLink)cells[0]).getSchemePathId());
 						if (id != null && !id.equals(""))
-							((DefaultLink)cells[0]).setSchemePathId(id);
+							((DefaultLink)cells[0]).setSchemePathId(id);*/
 					}
 					if (cells[0] instanceof DefaultCableLink)
 					{
@@ -468,9 +468,9 @@ public class ElementsPanel extends UgoPanel
 								if (ret == JOptionPane.YES_OPTION)
 								{
 									Scheme scheme = ((SchemePanel)this).scheme;
-									for (Enumeration en = scheme.cablelinks.elements(); en.hasMoreElements();)
+									for (Iterator it = scheme.cablelinks.iterator(); it.hasNext();)
 									{
-										SchemeCableLink sl = (SchemeCableLink)en.nextElement();
+										SchemeCableLink sl = (SchemeCableLink)it.next();
 										if (sl.getId().equals(((DefaultCableLink)cells[0]).getSchemeCableLinkId()))
 										{
 											scheme.cablelinks.remove(sl);
@@ -478,9 +478,9 @@ public class ElementsPanel extends UgoPanel
 										}
 									}
 									boolean contains_new = false;
-									for (Enumeration en = scheme.cablelinks.elements(); en.hasMoreElements();)
+									for (Iterator it = scheme.cablelinks.iterator(); it.hasNext();)
 									{
-										SchemeCableLink sl = (SchemeCableLink)en.nextElement();
+										SchemeCableLink sl = (SchemeCableLink)it.next();
 										if (sl.getId().equals(id))
 										{
 											contains_new = true;
@@ -499,10 +499,10 @@ public class ElementsPanel extends UgoPanel
 							}
 							((DefaultCableLink)cells[0]).setSchemeCableLinkId(id);
 						}
-						id = JOptionPane.showInputDialog("Новый идентификатор пути:",
+						/*id = JOptionPane.showInputDialog("Новый идентификатор пути:",
 								((DefaultCableLink)cells[0]).getSchemePathId());
 						if (id != null && !id.equals(""))
-							((DefaultCableLink)cells[0]).setSchemePathId(id);
+							((DefaultCableLink)cells[0]).setSchemePathId(id);*/
 					}
 					if (cells[0] instanceof DeviceGroup)
 					{
@@ -516,9 +516,9 @@ public class ElementsPanel extends UgoPanel
 								if (ret == JOptionPane.YES_OPTION)
 								{
 									Scheme scheme = ((SchemePanel)this).scheme;
-									for (Enumeration en = scheme.elements.elements(); en.hasMoreElements();)
+									for (Iterator it = scheme.elements.iterator(); it.hasNext();)
 									{
-										SchemeElement se = (SchemeElement)en.nextElement();
+										SchemeElement se = (SchemeElement)it.next();
 										if (se.getId().equals(((DeviceGroup)cells[0]).getSchemeElementId()))
 										{
 											scheme.elements.remove(se);
@@ -526,9 +526,9 @@ public class ElementsPanel extends UgoPanel
 										}
 									}
 									boolean contains_new = false;
-									for (Enumeration en = scheme.elements.elements(); en.hasMoreElements();)
+									for (Iterator it = scheme.elements.iterator(); it.hasNext();)
 									{
-										SchemeElement se = (SchemeElement)en.nextElement();
+										SchemeElement se = (SchemeElement)it.next();
 										if (se.getId().equals(id))
 										{
 											contains_new = true;

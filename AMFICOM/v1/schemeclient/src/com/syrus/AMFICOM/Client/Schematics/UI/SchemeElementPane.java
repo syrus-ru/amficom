@@ -43,13 +43,13 @@ public class SchemeElementPane extends PropertiesPanel
 		return se;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.se = (SchemeElement )or;
 
 		Equipment eq = (Equipment)Pool.get("kisequipment", se.equipment_id);
 		if (eq == null)
-			return false;
+			return;
 		is_kis = eq.is_kis;
 
 		if (is_kis)
@@ -64,7 +64,6 @@ public class SchemeElementPane extends PropertiesPanel
 			add(eqPane, BorderLayout.CENTER);
 			eqPane.setObjectResource(eq);
 		}
-		return true;
 	}
 
 	public void setContext(ApplicationContext aContext)

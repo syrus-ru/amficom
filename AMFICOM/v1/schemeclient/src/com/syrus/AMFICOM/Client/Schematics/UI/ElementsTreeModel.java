@@ -185,18 +185,16 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			{
 				if (Pool.getHash(LinkType.typ) != null)
 				{
-					DataSet dSet = new DataSet(Pool.getHash(LinkType.typ));
+					Map dSet = Pool.getHash(LinkType.typ);
 
 //					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
 //					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = LinkType.getDefaultSorter();
 					sorter.setDataSet(dSet);
-					dSet = sorter.default_sort();
 
-					Enumeration enum = dSet.elements();
-					for(; enum.hasMoreElements();)
+					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
-						LinkType l = (LinkType)enum.nextElement();
+						LinkType l = (LinkType)it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(l, l.getName(), true, true);
 						vec.add(n);
 					}
@@ -212,12 +210,10 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 //					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = CableLinkType.getDefaultSorter();
 					sorter.setDataSet(dSet);
-					dSet = sorter.default_sort();
 
-					Enumeration enum = dSet.elements();
-					for(; enum.hasMoreElements();)
+					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
-						CableLinkType l = (CableLinkType)enum.nextElement();
+						CableLinkType l = (CableLinkType)it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(l, l.getName(), true, true);
 						vec.add(n);
 					}
@@ -233,12 +229,10 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 //					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = PortType.getDefaultSorter();
 					sorter.setDataSet(dSet);
-					dSet = sorter.default_sort();
 
-					Enumeration enum = dSet.elements();
-					for(; enum.hasMoreElements();)
+					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
-						PortType pt = (PortType)enum.nextElement();
+						PortType pt = (PortType)it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(pt, pt.getName(), true, true);
 						vec.add(n);
 					}
@@ -254,12 +248,10 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 //					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = CablePortType.getDefaultSorter();
 					sorter.setDataSet(dSet);
-					dSet = sorter.default_sort();
 
-					Enumeration enum = dSet.elements();
-					for(; enum.hasMoreElements();)
+					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
-						CablePortType cpT = (CablePortType)enum.nextElement();
+						CablePortType cpT = (CablePortType)it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(cpT, cpT.getName(), true, true);
 						vec.add(n);
 					}
@@ -298,12 +290,10 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 //					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = TransmissionPathType.getDefaultSorter();
 					sorter.setDataSet(dSet);
-					dSet = sorter.default_sort();
 
-					Enumeration enum = dSet.elements();
-					for(; enum.hasMoreElements();)
+					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
-						TransmissionPathType tp = (TransmissionPathType)enum.nextElement();
+						TransmissionPathType tp = (TransmissionPathType)it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(tp, tp.getName(), true, true);
 						vec.add(n);
 					}
@@ -319,12 +309,10 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 //					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = AccessPortType.getDefaultSorter();
 					sorter.setDataSet(dSet);
-					dSet = sorter.default_sort();
 
-					Enumeration enum = dSet.elements();
-					for(; enum.hasMoreElements();)
+					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
 					{
-						AccessPortType apt = (AccessPortType)enum.nextElement();
+						AccessPortType apt = (AccessPortType)it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(apt, apt.getName(), true, true);
 						vec.add(n);
 					}

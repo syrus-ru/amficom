@@ -1004,7 +1004,7 @@ public class GraphActions
 			}
 			return pop;
 		}
-
+/*
 	static JPopupMenu createLinkPopup(final ApplicationContext aContext, final SchemeGraph graph, DefaultLink link)
 	{
 		JPopupMenu pop = new JPopupMenu();
@@ -1106,7 +1106,7 @@ public class GraphActions
 		}
 		return pop;
 	}
-
+*/
 	static DeviceGroup findSchemeElementById(SchemeGraph graph, String scheme_element_id)
 	{
 		Object[] cells = graph.getAll();

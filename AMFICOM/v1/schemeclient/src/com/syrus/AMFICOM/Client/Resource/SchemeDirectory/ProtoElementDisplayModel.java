@@ -24,7 +24,7 @@ public class ProtoElementDisplayModel extends StubDisplayModel
 	 this.aContext = aContext;
 	}
 
-	public Vector getColumns()
+	public java.util.List getColumns()
 	{
 	 Vector cols = new Vector();
 //		cols.add("id");

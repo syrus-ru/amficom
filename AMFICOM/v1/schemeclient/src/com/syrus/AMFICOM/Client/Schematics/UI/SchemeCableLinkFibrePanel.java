@@ -116,7 +116,7 @@ public class SchemeCableLinkFibrePanel extends GeneralPanel
 		return cl;
 	}
 
-	public boolean setObjectResource(ObjectResource or)
+	public void setObjectResource(ObjectResource or)
 	{
 		this.cl = (SchemeCableLink )or;
 
@@ -127,14 +127,10 @@ public class SchemeCableLinkFibrePanel extends GeneralPanel
 
 		if(cl != null)
 		{
-			DataSet ds = new DataSet(cl.cable_threads.elements());
 			ObjectResourceSorter sorter = SchemeCableThread.getDefaultSorter();
-			sorter.setDataSet(ds);
-			ds = sorter.default_sort();
-			this.LinksList.setContents(ds.elements());
+			sorter.setDataSet(cl.cable_threads);
+			LinksList.setContents(sorter.default_sort());
 		}
-		return true;
-
 	}
 
 	public void setEditable(boolean b)

@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
 import com.syrus.AMFICOM.Client.Schematics.UI.SchemeElementPane;
 
-public class SchemeElement extends ObjectResource
+public class SchemeElement extends StubResource
 		implements Transferable, Serializable
 {
 	public static final String typ = "schemeelement";
@@ -32,7 +32,7 @@ public class SchemeElement extends ObjectResource
 	public Vector links = new Vector();
 	public Vector element_ids = new Vector();
 
-	public Hashtable attributes = new Hashtable();
+	public Map attributes = new HashMap();
 
 	public Serializable serializable_cell;
 	public Serializable serializable_ugo;
@@ -342,9 +342,9 @@ public class SchemeElement extends ObjectResource
 
 		counter = 0;
 		transferable.attributes = new ElementAttribute_Transferable[attributes.size()];
-		for(Enumeration e = attributes.elements(); e.hasMoreElements();)
+		for(Iterator it = attributes.values().iterator(); it.hasNext();)
 		{
-			ElementAttribute ea = (ElementAttribute)e.nextElement();
+			ElementAttribute ea = (ElementAttribute)it.next();
 			ea.setTransferableFromLocal();
 			transferable.attributes[counter++] = ea.transferable;
 		}

@@ -104,13 +104,13 @@ public class SchemePanel extends ElementsPanel
 		{
 			TreeDataSelectionEvent ev = (TreeDataSelectionEvent)ae;
 			Class cl = ev.getDataClass();
-			DataSet ds = ev.getDataSet();
+			java.util.List ds = ev.getDataSet();
 			if (ev.getSelectionNumber() != -1)
 			{
 				if (cl.equals(SchemePath.class))
 				{
 					SchemePath path = (SchemePath)ds.get(ev.getSelectionNumber());
-					if (scheme.paths.contains(path))
+//					if (scheme.paths.contains(path))
 					{
 						Object[] cells = graph.getPathElements(path);
 						graph.skip_notify = true;
@@ -378,7 +378,7 @@ public class SchemePanel extends ElementsPanel
 	{
 		scheme.paths.remove(path);
 
-		Iterator s_to_save;
+/*		Iterator s_to_save;
 		Iterator se_to_save;
 
 		Hashtable lp = new Hashtable();
@@ -409,10 +409,10 @@ public class SchemePanel extends ElementsPanel
 		{
 			Scheme s = (Scheme)it.next();
 			schemes_to_save.add(s);
-		}
+		}*/
 		return true;
 	}
-
+/*
 	protected void insertPathToSchemeElement(SchemeElement se, Hashtable lp)
 	{
 		ApplicationContext ac = new ApplicationContext();
@@ -443,7 +443,8 @@ public class SchemePanel extends ElementsPanel
 
 		virtual_panel.updateSchemeElement();
 	}
-
+*/
+	/*
 	protected boolean insertPathToScheme(Scheme sc, Hashtable lp)
 	{
 		ApplicationContext ac = new ApplicationContext();
@@ -484,7 +485,7 @@ public class SchemePanel extends ElementsPanel
 			return false;
 
 		return true;
-	}
+	}*/
 
 	public boolean insertPathToScheme(SchemePath path)
 	{
@@ -497,7 +498,7 @@ public class SchemePanel extends ElementsPanel
 		if (!scheme.paths.contains(path))
 			scheme.paths.add(path);
 
-		Hashtable lp = new Hashtable();
+	/*	Hashtable lp = new Hashtable();
 		for (Iterator it = path.links.iterator(); it.hasNext();)
 		{
 			PathElement pe = (PathElement)it.next();
@@ -520,10 +521,10 @@ public class SchemePanel extends ElementsPanel
 				return false;
 //			aContext.getDataSourceInterface().SaveScheme(s.getId());
 			schemes_to_save.add(s);
-		}
+		}*/
 		return true;
 	}
-
+/*
 	protected Collection findSchemeToInsertPath (Scheme sc, Hashtable lp)
 	{
 		HashSet schemes_to_save = new HashSet();
@@ -555,8 +556,8 @@ public class SchemePanel extends ElementsPanel
 		}
 		return schemes_to_save;
 	}
-
-	protected Collection findSchemeElementsToInsertPath (Scheme sc, Hashtable lp)
+*/
+/*	protected Collection findSchemeElementsToInsertPath (Scheme sc, Hashtable lp)
 	{
 		HashSet schemeelements_to_save = new HashSet();
 
@@ -594,7 +595,7 @@ public class SchemePanel extends ElementsPanel
 			}
 		}
 		return schemeelements_to_save;
-	}
+	}*/
 
 	public SchemePath getCurrentPath()
 	{

@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Map.MapTransmissionPathProtoElement;
 
-public class SchemePath extends ObjectResource
+public class SchemePath extends StubResource
 		implements Transferable, Serializable
 {
 	SchemePath_Transferable transferable;
@@ -26,10 +26,8 @@ public class SchemePath extends ObjectResource
 	public String start_device_id = "";
 	public String end_device_id = "";
 
-	public Hashtable attributes = new Hashtable();
-
-	public Vector links = new Vector();
-	//public Hashtable links = new Hashtable();
+	public Map attributes = new HashMap();
+	public List links = new ArrayList();
 
 	public MapTransmissionPathProtoElement mtppe = null;
 
@@ -57,9 +55,9 @@ public class SchemePath extends ObjectResource
 		for(Iterator it = path.links.iterator(); it.hasNext();)
 			links.add(it.next());
 
-		for(Enumeration e = path.attributes.keys(); e.hasMoreElements();)
+		for(Iterator it = path.attributes.keySet().iterator(); it.hasNext();)
 		{
-			Object key = e.nextElement();
+			Object key = it.next();
 			attributes.put(key, path.attributes.get(key));
 		}
 
@@ -303,9 +301,9 @@ public class SchemePath extends ObjectResource
 			links.add(new PathElement(transferable.links[i]));
 
 		ObjectResourceSorter sorter = getSorter();
-		DataSet ds = new DataSet(links);
-		sorter.setDataSet(ds);
-		ds = sorter.sort("num", ObjectResourceSorter.SORT_ASCENDING);
+
+		sorter.setDataSet(links);
+		List ds = sorter.sort("num", ObjectResourceSorter.SORT_ASCENDING);
 		links = new Vector();
 		for (Iterator it = ds.iterator(); it.hasNext();)
 			links.add(it.next());
@@ -332,9 +330,9 @@ public class SchemePath extends ObjectResource
 		int l = this.attributes.size();
 		int i = 0;
 		transferable.attributes = new ElementAttribute_Transferable[l];
-		for(Enumeration e = attributes.elements(); e.hasMoreElements();)
+		for(Iterator it = attributes.values().iterator(); it.hasNext();)
 		{
-			ElementAttribute ea = (ElementAttribute)e.nextElement();
+			ElementAttribute ea = (ElementAttribute)it.next();
 			ea.setTransferableFromLocal();
 			transferable.attributes[i++] = ea.transferable;
 		}

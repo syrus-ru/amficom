@@ -42,7 +42,7 @@ public class SchemeOpenCommand extends VoidCommand
 		ObjectResourceDisplayModel odm = new SchemeDisplayModel();
 		ObjectResourceSorter sorter = Scheme.getDefaultSorter();
 		sorter.setDataSet(dataSet);
-		mcd.setContents(odm, sorter.default_sort());
+		mcd.setContents(odm, new DataSet(sorter.default_sort()));
 
 		// отфильтровываем по домену
 		ObjectResourceTableModel ortm = (ObjectResourceTableModel )mcd.listPane.getTable().getModel();

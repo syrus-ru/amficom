@@ -6,7 +6,7 @@ import java.util.*;
 import com.syrus.AMFICOM.CORBA.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 
-public class SchemeDevice extends ObjectResource implements Serializable
+public class SchemeDevice extends StubResource implements Serializable
 {
 	public static final String typ = "schemedevice";
 	private static final long serialVersionUID = 01L;
@@ -18,7 +18,7 @@ public class SchemeDevice extends ObjectResource implements Serializable
 	public Vector ports = new Vector();
 	public Vector cableports = new Vector();
 
-	public Hashtable attributes = new Hashtable();
+	public Map attributes = new HashMap();
 
 	public SchemeDevice(SchemeDevice_Transferable transferable)
 	{
@@ -135,9 +135,9 @@ public class SchemeDevice extends ObjectResource implements Serializable
 		int l = this.attributes.size();
 		int i = 0;
 		transferable.attributes = new ElementAttribute_Transferable[l];
-		for(Enumeration e = attributes.elements(); e.hasMoreElements();)
+		for(Iterator it = attributes.values().iterator(); it.hasNext();)
 		{
-			ElementAttribute ea = (ElementAttribute)e.nextElement();
+			ElementAttribute ea = (ElementAttribute)it.next();
 			ea.setTransferableFromLocal();
 			transferable.attributes[i++] = ea.transferable;
 		}
