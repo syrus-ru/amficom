@@ -1,8 +1,12 @@
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
 import java.awt.*;
-import java.util.*;
 import java.text.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.awt.event.*;
 
 import javax.swing.*;
@@ -20,79 +24,79 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 	//public TestRequest treq;
 	//	private TestRequest treq;
-	private static final boolean		FULL_BUTTON_SET		= false;
+	private static final boolean	FULL_BUTTON_SET		= false;
 
-	private Test						test				= null;
+	private Test					test				= null;
 
 	//	private ApplicationContext aContext;
 
-	Dispatcher							dispatcher;
+	Dispatcher						dispatcher;
 
-	private static final String			PARAM_PANEL_NAME	= "PARAM_PANEL";
+	private static final String		PARAM_PANEL_NAME	= "PARAM_PANEL";
 
-	private static final String			PATTERN_PANEL_NAME	= "PATTERN_PANEL";
+	private static final String		PATTERN_PANEL_NAME	= "PATTERN_PANEL";
 
-	private static final String			PERIODIC_NULL_NAME	= "PERIODIC_NULL";
+	private static final String		PERIODIC_NULL_NAME	= "PERIODIC_NULL";
 
-	private static final String			PERIODIC_MIN_NAME	= "PERIODIC_MIN";
+	private static final String		PERIODIC_MIN_NAME	= "PERIODIC_MIN";
 
-	private static final String			PERIODIC_HOUR_NAME	= "PERIODIC_HOUR";
+	private static final String		PERIODIC_HOUR_NAME	= "PERIODIC_HOUR";
 
-	private static final String			PERIODIC_DAY_NAME	= "PERIODIC_DAY";
+	private static final String		PERIODIC_DAY_NAME	= "PERIODIC_DAY";
 
-	private static final String			PERIODIC_WEEK_NAME	= "PERIODIC_WEEK";
+	private static final String		PERIODIC_WEEK_NAME	= "PERIODIC_WEEK";
 
-	private static final String			PERIODIC_MONTH_NAME	= "PERIODIC_MONTH";
+	private static final String		PERIODIC_MONTH_NAME	= "PERIODIC_MONTH";
 
-	private TimeSpinner					startTimeSpinner;
+	private TimeSpinner				startTimeSpinner;
 
-	private DateSpinner					startDateSpinner;
+	private DateSpinner				startDateSpinner;
 
-	TimeSpinner							endTimeSpinner;
+	TimeSpinner						endTimeSpinner;
 
-	DateSpinner							endDateSpinner;
+	DateSpinner						endDateSpinner;
 
-	private JRadioButton				patternRadioButton;
+	private JRadioButton			patternRadioButton;
 
-	private JList						timeStamps;
+	private JList					timeStamps;
 
-	private JRadioButton				paramsRadioButton;
+	private JRadioButton			paramsRadioButton;
 
-	JRadioButton						oneRadioButton;
+	JRadioButton					oneRadioButton;
 
-	private JRadioButton				continuosRadioButton;
+	private JRadioButton			continuosRadioButton;
 
-	private JRadioButton				periodicalRadioButton;
+	private JRadioButton			periodicalRadioButton;
 
-	JRadioButton						hourRadioButton;
+	JRadioButton					hourRadioButton;
 
-	JRadioButton						minuteRadioButton;
+	JRadioButton					minuteRadioButton;
 
-	JRadioButton						dayRadioButton;
+	JRadioButton					dayRadioButton;
 
-	JRadioButton						weekRadioButton;
+	JRadioButton					weekRadioButton;
 
-	JRadioButton						monthRadioButton;
+	JRadioButton					monthRadioButton;
 
-	private JRadioButton				synchroRadioButton;
+	private JRadioButton			synchroRadioButton;
 
-	private JRadioButton				alternateRadioButton;
+	private JRadioButton			alternateRadioButton;
 
-	JButton								createButton;
+	JButton							createButton;
 
-	JButton								applyButton;
+	JButton							applyButton;
 
-	MinutePanel							minPanel;
+	MinutePanel						minPanel;
 
-	HourPanel							hourPanel;
+	HourPanel						hourPanel;
 
-	DayPanel							dayPanel;
+	DayPanel						dayPanel;
 
-	WeekPanel							weekPanel;
+	WeekPanel						weekPanel;
 
-	MonthPanel							monthPanel;
+	MonthPanel						monthPanel;
 
-	TimeStampFiller						tempPanel;
+	TimeStampFiller					tempPanel;
 
 	public TimeParametersPanel() {
 		init();
@@ -836,7 +840,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 		JList				list;
 
-		Vector				time		= new Vector();
+		java.util.List				time		= new ArrayList();
 
 		protected HourPanel() {
 			super();
@@ -857,7 +861,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			addHorizontalSeparator();
 
 			list = new JList();
-			list.setListData(time);
+			list.setListData(time.toArray());
 			JScrollPane scroll = new JScrollPane(list);
 			scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 			scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -877,7 +881,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 					if (res == JOptionPane.OK_OPTION) {
 						Date date = (Date) hs.getModel().getValue();
 						time.add(new SimpleDateFormat("mm:ss").format(date));
-						list.setListData(time);
+						list.setListData(time.toArray());
 					}
 				}
 			});
@@ -886,7 +890,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 				public void actionPerformed(ActionEvent e) {
 					time.remove(list.getSelectedIndex());
-					list.setListData(time);
+					list.setListData(time.toArray());
 				}
 			});
 			list.addListSelectionListener(new ListSelectionListener() {
@@ -958,7 +962,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 						cal.set(Calendar.SECOND, dayTime.getSecond());
 						this.time.add(new SimpleDateFormat("mm:ss").format(cal.getTime()));
 					}
-					this.list.setListData(time);
+					this.list.setListData(time.toArray());
 					break;
 
 				default:
@@ -990,7 +994,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 		private JSpinner			daySpin			= new JSpinner(new SpinnerNumberModel(1, 1, 30, 1));
 
-		Vector						time			= new Vector();
+		java.util.List						time			= new ArrayList();
 
 		JList						list;
 
@@ -1008,7 +1012,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		protected DayPanel() {
 			super();
 			list = new JList();
-			list.setListData(time);
+			list.setListData(time.toArray());
 			JScrollPane scroll = new JScrollPane(list);
 			scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 			scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -1027,7 +1031,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 					if (res == JOptionPane.OK_OPTION) {
 						Date date = (Date) ts.getModel().getValue();
 						time.add(new SimpleDateFormat("HH:mm").format(date));
-						list.setListData(time);
+						list.setListData(time.toArray());
 					}
 				}
 			});
@@ -1036,7 +1040,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 				public void actionPerformed(ActionEvent e) {
 					time.remove(list.getSelectedIndex());
-					list.setListData(time);
+					list.setListData(time.toArray());
 				}
 			});
 
@@ -1178,7 +1182,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 						cal.set(Calendar.HOUR, dayTime.getHour());
 						time.add(new SimpleDateFormat("HH:mm").format(cal.getTime()));
 					}
-					this.list.setListData(time);
+					this.list.setListData(time.toArray());
 
 					list = ts.getDateList();
 					/*
@@ -1240,7 +1244,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 		private JSpinner			weekSpin	= new JSpinner(new SpinnerNumberModel(1, 1, 4, 1));
 
-		Vector						time		= new Vector();
+		java.util.List						time		= new ArrayList();
 
 		private JCheckBox[]			days;
 
@@ -1268,7 +1272,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			gbc.gridy++;
 			addHorizontalSeparator();
 			list = new JList();
-			list.setListData(time);
+			list.setListData(time.toArray());
 			JScrollPane scroll = new JScrollPane(list);
 			scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 			scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -1288,7 +1292,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 					if (res == JOptionPane.OK_OPTION) {
 						Date date = (Date) ts.getModel().getValue();
 						time.add(new SimpleDateFormat("HH:mm").format(date));
-						list.setListData(time);
+						list.setListData(time.toArray());
 					}
 				}
 			});
@@ -1297,7 +1301,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 				public void actionPerformed(ActionEvent e) {
 					time.remove(list.getSelectedIndex());
-					list.setListData(time);
+					list.setListData(time.toArray());
 				}
 			});
 
@@ -1418,7 +1422,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 						cal.set(Calendar.HOUR, dayTime.getHour());
 						time.add(new SimpleDateFormat("HH:mm").format(cal.getTime()));
 					}
-					this.list.setListData(time);
+					this.list.setListData(time.toArray());
 
 					for (int i = 0; i < this.days.length; i++)
 						this.days[i].setSelected(false);
@@ -1451,9 +1455,9 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 		private JSpinner	monthSpin	= new JSpinner(new SpinnerNumberModel(1, 1, 30, 1));
 
-		Vector				time		= new Vector();
+		java.util.List				time		= new ArrayList();
 
-		Vector				days		= new Vector();
+		java.util.List				days		= new ArrayList();
 
 		JList				list;
 
@@ -1482,7 +1486,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			addHorizontalSeparator();
 
 			list = new JList();
-			list.setListData(time);
+			list.setListData(time.toArray());
 			JScrollPane scroll = new JScrollPane(list);
 			scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 			scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -1502,7 +1506,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 					if (res == JOptionPane.OK_OPTION) {
 						Date date = (Date) ts.getModel().getValue();
 						time.add(new SimpleDateFormat("HH:mm").format(date));
-						list.setListData(time);
+						list.setListData(time.toArray());
 					}
 				}
 			});
@@ -1511,7 +1515,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 				public void actionPerformed(ActionEvent e) {
 					time.remove(list.getSelectedIndex());
-					list.setListData(time);
+					list.setListData(time.toArray());
 				}
 			});
 
@@ -1566,7 +1570,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			}
 
 			dayList = new JList();
-			dayList.setListData(days);
+			dayList.setListData(days.toArray());
 			JScrollPane dayscroll = new JScrollPane(dayList);
 			dayscroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 			dayscroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -1584,7 +1588,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 					if (res == JOptionPane.OK_OPTION) {
 						Integer num = (Integer) ts.getModel().getValue();
 						days.add(num.toString());
-						dayList.setListData(days);
+						dayList.setListData(days.toArray());
 					}
 				}
 			});
@@ -1594,7 +1598,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 				public void actionPerformed(ActionEvent e) {
 					if (dayList.getSelectedIndex() != -1) {
 						days.remove(dayList.getSelectedIndex());
-						dayList.setListData(days);
+						dayList.setListData(days.toArray());
 					}
 				}
 			});
@@ -1674,39 +1678,35 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 		public void setTimeStamp(TimeStamp ts) {
 			Time period = ts.getPeriod();
-			switch (period.getScale()) {
-				case Calendar.MONTH:
-					hourRadioButton.doClick();
-					monthSpin.setValue(new Integer(period.getValue()));
+			if (period.getScale() == Calendar.MONTH) {
+				hourRadioButton.doClick();
+				monthSpin.setValue(new Integer(period.getValue()));
 
-					LinkedList list = ts.getTimeList();
-					time.clear();
-					Calendar cal = Calendar.getInstance();
-					for (Iterator it = list.iterator(); it.hasNext();) {
-						DayTime dayTime = (DayTime) it.next();
-						cal.set(Calendar.MINUTE, dayTime.getMinute());
-						cal.set(Calendar.HOUR, dayTime.getHour());
-						time.add(new SimpleDateFormat("HH:mm").format(cal.getTime()));
+				LinkedList list = ts.getTimeList();
+				time.clear();
+				Calendar cal = Calendar.getInstance();
+				for (Iterator it = list.iterator(); it.hasNext();) {
+					DayTime dayTime = (DayTime) it.next();
+					cal.set(Calendar.MINUTE, dayTime.getMinute());
+					cal.set(Calendar.HOUR, dayTime.getHour());
+					time.add(new SimpleDateFormat("HH:mm").format(cal.getTime()));
+				}
+
+				days.clear();
+				list = ts.getDateList();
+				for (Iterator it = list.iterator(); it.hasNext();) {
+					Time time = (Time) it.next();
+					if (time.getScale() == Calendar.DAY_OF_MONTH) {
+						days.add(Integer.toString(time.getValue()));
 					}
+				}
 
-					days.clear();
-					list = ts.getDateList();
-					for (Iterator it = list.iterator(); it.hasNext();) {
-						Time time = (Time) it.next();
-						if (time.getScale() == Calendar.DAY_OF_MONTH) {
-							days.add(Integer.toString(time.getValue()));
-						}
-					}
-
-					this.list.setListData(time);
-					this.dayList.setListData(days);
-					break;
-
-				default:
-					monthSpin.setValue(new Integer(0));
-					this.list.removeAll();
-					this.dayList.removeAll();
-					break;
+				this.list.setListData(time.toArray());
+				this.dayList.setListData(days.toArray());
+			} else {
+				monthSpin.setValue(new Integer(0));
+				this.list.removeAll();
+				this.dayList.removeAll();
 			}
 
 		}

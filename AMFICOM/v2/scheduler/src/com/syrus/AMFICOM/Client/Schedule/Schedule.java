@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.Client.Schedule;
 
 import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.DefaultScheduleApplicationModelFactory;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
@@ -17,11 +18,11 @@ public class Schedule {
 
 			this.aContext = new ApplicationContext();
 			this.aContext.setApplicationModel(factory.create());
-			//aContext.setDispatcher(new Dispatcher());
-					
+			aContext.setDispatcher(new Dispatcher());			
+			new SchedulerModel(this.aContext);
 			ScheduleMainFrame frame = new ScheduleMainFrame(this.aContext);
 //			SchedulerModel model =	
-			new SchedulerModel(this.aContext);
+			
 
 			frame.setIconImage(UIStorage.SCHEDULING_ICON_MINI);
 			frame.setVisible(true);

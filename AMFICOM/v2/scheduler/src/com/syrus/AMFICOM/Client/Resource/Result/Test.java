@@ -69,7 +69,7 @@ public class Test extends ObjectResource implements Serializable {
 
 	public Test(ClientTest_Transferable transferable) {
 		this.transferable = transferable;
-		setLocalFromTransferable();
+		this.setLocalFromTransferable();
 	}
 
 	public Test(String id) {
@@ -112,22 +112,22 @@ public class Test extends ObjectResource implements Serializable {
 	}
 
 	public Class getChildClass(String key) {
-		if (key.equals("elementaryresult")) return Result.class;
+		if (key.equals(ElementaryTest.typ)) return Result.class;
 		return ObjectResource.class;
 	}
 
 	public Enumeration getChildren(String key) {
 		Vector vec = new Vector();
-		if (key.equals("elementaryresult")) {
+		if (key.equals(ElementaryTest.typ)) {
 			for (int i = 0; i < resultIds.length; i++)
-				vec.add(Pool.get("result", resultIds[i]));
+				vec.add(Pool.get(Result.typ, resultIds[i]));
 		}
 		return vec.elements();
 	}
 
 	public Enumeration getChildTypes() {
 		Vector vec = new Vector();
-		vec.add("elementaryresult");
+		vec.add(ElementaryTest.typ);
 		return vec.elements();
 	}
 
@@ -756,22 +756,7 @@ public class Test extends ObjectResource implements Serializable {
 				//					//vec.addElement(et);
 				//					temp_time += interval;
 				//				}
-			} else if (this.temporalType
-					.equals(TestTemporalType.TEST_TEMPORAL_TYPE_TIMETABLE)) {
-				//				long start = this.startTime;
-				//				long time_massiv[] = this.oldTimeStamps.ti();
-				//				int iii = 1;
-				//				ElementaryTest et = new ElementaryTest(this, start);
-				//				et.count = iii;
-				//				iii++;
-				//				//vec.addElement(et);
-				//				for (int j = 0; j < time_massiv.length; j++) {
-				//					et = new ElementaryTest(this, time_massiv[j]);
-				//					et.count = iii;
-				//					iii++;
-				//					//vec.addElement(et);
-				//				}
-			}
+			} 
 
 		}
 

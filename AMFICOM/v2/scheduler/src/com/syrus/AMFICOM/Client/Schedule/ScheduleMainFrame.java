@@ -52,9 +52,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 	SaveParametersFrame			saveFrame;
 	TableFrame					tableFrame;
 
-	public ScheduleMainFrame(ApplicationContext aContext) {		
-		initModule();
-		setContext(aContext);		
+	public ScheduleMainFrame(ApplicationContext aContext) {
+		this.aContext = aContext;		
 		this.addComponentListener(new ComponentAdapter(){
 			
 			public void componentShown(ComponentEvent e) {
@@ -137,6 +136,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		}
 
 		Environment.addWindow(this);
+		initModule();
+		setContext(aContext);
 	}
 
 	public ScheduleMainFrame() {
@@ -144,7 +145,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 	}
 
 	void initModule() {
-		ApplicationModel aModel = aContext.getApplicationModel();
+		ApplicationModel aModel = this.aContext.getApplicationModel();
 
 		statusBar.distribute();
 		//		statusBar.setWidth("status", 100);

@@ -28,9 +28,6 @@ public class TimeStamp {
 	// Time
 	private long[]				testTimes;
 
-	public TimeStamp() {
-		// nothing
-	}
 
 	/** 
 	 * @todo only for testing mode
