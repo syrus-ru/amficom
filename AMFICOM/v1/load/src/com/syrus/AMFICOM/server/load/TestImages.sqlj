@@ -5,12 +5,14 @@ import com.syrus.AMFICOM.CORBA.General.octetSeqHolder;
 import com.syrus.AMFICOM.CORBA.Resource.*;
 import com.syrus.AMFICOM.server.*;
 import java.io.*;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Vector;
-import oracle.sql.BLOB;
+import sqlj.runtime.ref.DefaultContext;
 
 public class TestImages
 {
+	private static final Connection CONN = DefaultContext.getDefaultContext().getConnection(); 
+
 	LogWriter frame;
 	ConnectionManager connectionManager;
 
@@ -29,7 +31,7 @@ public class TestImages
 		frame.log("Loading images:");
 		try
 		{
-			ImageResource_Transferable img = ResourcedbInterface.loadImage("resources/proto/scheme/protoelement1049452634040");
+			ImageResource_Transferable img = ResourcedbInterface.getImage(CONN, "resources/proto/scheme/protoelement1049452634040");
 
 				File file = new File("./dbim.bin");
 //				file.mkdirs();
@@ -71,7 +73,7 @@ public class TestImages
 		String codename;
 		String filename;
 		String source_string;
-		BLOB blob;
+		Blob blob;
 		octetSeqHolder osh;
 		len = image_ids.size();
 		for(i = 0; i < len; i++)
@@ -111,7 +113,7 @@ public class TestImages
 		return Constants.ERROR_NO_ERROR;
 	}
 
-	static public int GetImage(BLOB blob, octetSeqHolder octseqh)
+	static public int GetImage(Blob blob, octetSeqHolder octseqh)
 //			throws SQLError
 	{
 	try

@@ -3,11 +3,14 @@ package com.syrus.AMFICOM.server.load;
 import com.syrus.AMFICOM.server.*;
 import com.syrus.io.*;
 import java.io.File;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
+import sqlj.runtime.ref.DefaultContext;
 
 public class LoadProtoElementsNew
 {
+	private static final Connection CONN = DefaultContext.getDefaultContext().getConnection(); 
+
 	LogWriter frame;
 	ConnectionManager connectionManager;
 
@@ -1303,7 +1306,7 @@ public class LoadProtoElementsNew
 						:thread_type_id)
 			};
 
-			String at_s = ResourcedbInterface.getUId("ctlnk");
+			String at_s = ResourcedbInterface.getUid(CONN, "ctlnk");
 			#sql {
 				insert into AMFICOM.SCHEMECABLELINKTHREADS(
 						ID,
