@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.16 2004/08/30 14:41:50 bob Exp $
+ * $Id: MeasurementServer.java,v 1.17 2004/12/22 12:22:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/08/30 14:41:50 $
- * @author $Author: bob $
+ * @version $Revision: 1.17 $, $Date: 2004/12/22 12:22:44 $
+ * @author $Author: arseniy $
  * @module mserver_v1
  */
 
@@ -140,6 +140,17 @@ public class MeasurementServer extends SleepButWorkThread {
 		}
 		catch (Exception e) {
 			Log.errorException(e);
+		}
+	}
+
+	private static void deactivateCORBAServer() {
+		try {
+			corbaServer.deactivateServant(iAm.getId().toString());
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			System.err.println(e);
+			System.exit(-1);
 		}
 	}
 	
@@ -316,6 +327,7 @@ public class MeasurementServer extends SleepButWorkThread {
 
 	protected void shutdown() {
 		this.running = false;
+		deactivateCORBAServer();
 		DatabaseConnection.closeConnection();
 	}
 
