@@ -2,21 +2,29 @@
 #include "etcp.h"
 
 JNIEXPORT jint JNICALL Java_com_syrus_AMFICOM_mcm_TCPServer_getListeningSocket
-  (JNIEnv * env, jobject obj, jcharArray serviceName)
+  (JNIEnv * env, jobject obj,jbyteArray hostName, jbyteArray serviceName)
 {
 	init();
 
-	unsigned short * localServiceChars = env->GetCharArrayElements(serviceName,NULL);
+	jbyte * localServiceChars = env->GetByteArrayElements(serviceName,NULL);
 	jsize l = env->GetArrayLength(serviceName);
 	char * localService = new char[l];
 
 	memcpy(localService, localServiceChars,l);
 
-	env->ReleaseCharArrayElements(serviceName, localServiceChars,0);
+	env->ReleaseByteArrayElements(serviceName, localServiceChars,0);
 
-	SOCKET listened_socket = tcp_server("127.0.0.1",localService);
+	jbyte * localHostChars = env->GetByteArrayElements(hostName,NULL);
+	l = env->GetArrayLength(hostName);
+	char * localHost = new char[l];
 
-	cout << "Listening socket " << listened_socket << " for port " << localService << "\n";
+	memcpy(localHost, localHostChars,l);
+
+	env->ReleaseByteArrayElements(hostName, localHostChars,0);
+
+	SOCKET listened_socket = tcp_server(localHost,localService);
+
+	cout << "***Listening " << localHost << ":" << localService << " for connections with KISs.*** \n";
 	
 	return listened_socket;
 }
@@ -25,7 +33,7 @@ JNIEXPORT jint JNICALL Java_com_syrus_AMFICOM_mcm_TCPServer_getConnectedSocket(
 	JNIEnv * env,
 	jobject obj,
 	jint listening_socket,
-	jcharArray socket_kis_id)
+	jbyteArray socket_kis_id)
 {
 	sockaddr_in peer;
 	socklen_t peerlen = sizeof(peer);
@@ -35,18 +43,35 @@ JNIEXPORT jint JNICALL Java_com_syrus_AMFICOM_mcm_TCPServer_getConnectedSocket(
 
 	cout << "Connection established at socket " << accepted_socket << "\n";
 
-	unsigned short * kis_id = env->GetCharArrayElements(socket_kis_id,NULL);
-	jsize l = env->GetArrayLength(socket_kis_id);
 
-	bzero(kis_id,l);
+	int kis_id_size;
+	int recvResult = recv (accepted_socket,(char *)&kis_id_size,sizeof(int),0);
+	if (recvResult < 0)
+		cout << "Connection failed while reading KIS_ID_SIZE from socket "
+			 << accepted_socket << "\n";
+	else
+		cout << "Ready to read " << kis_id_size <<" bytes from socket "
+			 << accepted_socket << "\n";
+		
+	jbyte * kis_id = new jbyte[kis_id_size];
+	bzero(kis_id,kis_id_size);
 
-	int recvResult = recv (accepted_socket,(char *)kis_id,l,0);
+	
+	recvResult = recv (accepted_socket,(char *)kis_id,kis_id_size,0);
 	if (recvResult < 0)
 		cout << "Connection failed while reading KIS_ID from socket "
 			 << accepted_socket << "\n";
-
-	env->ReleaseCharArrayElements(socket_kis_id, kis_id,0);		
-
+	else
+		cout << "for KIS, id = \"" << (char *)kis_id << "\"\n";	
+	
+	env->SetByteArrayRegion(socket_kis_id,0,kis_id_size,kis_id);
+	
+	
+/*	cout << "Successfully set data to jcharArray\n";
+	jchar * charrr = (char *)env->GetCharArrayElements(socket_kis_id,NULL);
+	cout << "Checking: "<< (char *) charrr << "\n";
+	
+	env->ReleaseCharArrayElements(socket_kis_id,charrr,0);*/
 
 	return accepted_socket;
 }

@@ -9,7 +9,9 @@ void set_address (char * hostName, char * serviceName,
                   sockaddr_in * sap, char * protocol)
 {
   bzero(sap,sizeof(*sap)); //Обнуляем структуру
+  
   sap->sin_family = AF_INET; //Адресное пространство - Internet
+
   if (hostName != NULL)
   {
     if (inet_aton(hostName,&sap->sin_addr))
@@ -25,13 +27,14 @@ void set_address (char * hostName, char * serviceName,
     }
   }
   else
-	//Работа с любым сетевым интерфейсом
+  	//Работа с любым сетевым интерфейсом
 	sap->sin_addr.s_addr = htonl(INADDR_ANY);
 
   //Получаем с помощью strtol(...) числовое значение порта
   //(должно заканчиваться на '\0')
-  char * endptr;
+  char * endptr;  
   short port = strtol (serviceName,&endptr,0);
+
   if (*endptr == '\0')
     sap->sin_port = htons(port);//Преобразуем в big-endian порядок
   else

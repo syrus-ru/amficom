@@ -21,7 +21,7 @@ public class TCPServer implements Runnable
 	  {
 	    while(true)
 	    {
-	      char[] kisIDChars = new char[TCPServer.MAX_KIS_ID_LENGTH];
+	      byte[] kisIDChars = new byte[MAX_KIS_ID_LENGTH];
 	      int connectedSocket = this.tcpServer.getConnectedSocket(
 	        this.tcpServer.listeningSocket,
 	        kisIDChars);
@@ -31,6 +31,15 @@ public class TCPServer implements Runnable
 	        Log.errorMessage("Can't establish connection!");
 	        continue;
 	      }
+	      
+	      if (kisIDChars == null)
+	      {
+		Log.errorMessage("Failed to get KIS_ID kis!");
+	      	continue;		
+		}
+	
+	      String gotString =  new String(kisIDChars);
+	      System.out.println ("Java got the string: " + gotString + ", length = " + Integer.toString(gotString.length()));
 	      Identifier kisID = new Identifier(new String(kisIDChars));
 	      
 	      TCPServer.kissockets.put(kisID,new Integer(connectedSocket));
@@ -44,10 +53,10 @@ public class TCPServer implements Runnable
 	}
 	
   public static final int MAX_KIS_ID_LENGTH = 32;
-  public native int getListeningSocket(byte[] serviceName);
+  public native int getListeningSocket(byte[] hostName,byte[] serviceName);
   public native int getConnectedSocket(
     int listeningSocket,
-    char[] kis_id);
+    byte[] kis_id);
     
   public native void shutdownServer(int[] serverSockets);  
 
@@ -58,7 +67,7 @@ public class TCPServer implements Runnable
   private Thread acceptingThread = null;
   private boolean active = true;
   
-  public TCPServer(String serviceName,Map transceivers)
+  public TCPServer(String hostName,String serviceName,Map transceivers)
     throws Exception
   {
     this.transceivers = transceivers;
@@ -66,7 +75,9 @@ public class TCPServer implements Runnable
     Collections.synchronizedMap(transceivers);    
   
     byte[] serviceNameChars = serviceName.getBytes();
-    this.listeningSocket = this.getListeningSocket(serviceNameChars);
+    byte[] hostNameChars = hostName.getBytes();
+    
+    this.listeningSocket = this.getListeningSocket(hostNameChars,serviceNameChars);
     if (this.listeningSocket <= 0)
     {
         Log.errorMessage("Can't create listening socket for service (port) " +

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.31 2004/09/23 10:27:09 peskovsky Exp $
+ * $Id: MeasurementControlModule.java,v 1.32 2004/09/29 09:13:26 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/09/23 10:27:09 $
+ * @version $Revision: 1.32 $, $Date: 2004/09/29 09:13:26 $
  * @author $Author: peskovsky $
  * @module mcm_v1
  */
@@ -164,6 +164,16 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		});
 	}
 
+
+	static 
+	{
+		try {
+			System.loadLibrary("mcmtransceiver");
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+	}
+
 	private static void establishDatabaseConnection() {
 		String dbHostName = ApplicationProperties.getString(KEY_DB_HOST_NAME, Application.getInternetAddress());
 		String dbSid = ApplicationProperties.getString(KEY_DB_SID, DB_SID);
@@ -178,28 +188,37 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		}
 	}
 
-	private static void activateKISTransceivers() {
-		transceivers = new Hashtable();
-    String serviceName = "7500";
+	private static void activateKISTransceivers()
+	{
+	  transceivers = new Hashtable();
+	  String serviceName = "7500" + '\0';
+	  String hostName = "bass" + '\0';
 
+/*
     try
     {
+      System.out.println("Loading mcmtransceiver library...");
+      
       System.loadLibrary("mcmtransceiver");
+      
+      System.out.println("Succesfully loaded mcmtransceiver library");
+
     }
-    catch (Exception exc)
+    catch (Throwable exc)
     {
-      Log.errorMessage("Failed to find mcmtransceiver library at " +
+	 Log.errorMessage("Failed to find mcmtransceiver library at " +
                        System.getProperty("java.library.path"));
     }
-
+ */   
     try
     {
-      TCPServer tcpServer = new TCPServer(serviceName,transceivers);  
+	TCPServer tcpServer = new TCPServer(hostName,serviceName,transceivers);  
     }
     catch (Exception exc)
     {
-      Log.errorMessage("Failed creating TCPServer at service " + serviceName);
+        Log.errorMessage("Failed creating TCPServer at service " + serviceName);
     }
+
  
 //		List kisIds = iAm.getKISIds();
 //		transceivers = new Hashtable(kisIds.size());

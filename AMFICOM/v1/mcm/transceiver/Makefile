@@ -1,8 +1,10 @@
+#LDLIBS=/usr/lib/libc.a
 OUT=libmcmtransceiver.so
-CPP=g++#-3.3.1
-CFLAGS=-Wall -W
+#CPP=g++#-3.3.1
+CFLAGS=-O0 -g -w -I$(AKP) -I$(TCPCONNECT) -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux
+CXXFLAGS=-O0 -g -w -I$(AKP) -I$(TCPCONNECT) -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux
 
-AKP=akp
+AKP=../../akp
 AKPA=$(AKP)/akp.a
 
 TCPCONNECT=tcpconnect
@@ -11,19 +13,16 @@ TCPCONNECTA=$(TCPCONNECT)/tcpconnect.a
 OBJS=mcmtransceiver.o tcpserver.o
 
 $(OUT):	$(OBJS) $(AKPA) $(TCPCONNECTA)
-	$(CPP) $(CFLAGS) -shared -o $(OUT) $(OBJS) $(AKPA) $(TCPCONNECTA)
-
-.cpp.o:
-	$(CPP) -c -I$(AKP) -I$(TCPCONNECT) -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux $(CFLAGS) -o $@ $<
+	$(CXX) $(LDFLAGS) -shared -o $(OUT) $(OBJS) $(AKPA) $(TCPCONNECTA) $(LDLIBS)
 
 $(AKPA):
-	make -C $(AKP)
+	$(MAKE) -C $(AKP)
 
 $(TCPCONNECTA):
-	make -C $(TCPCONNECT)
+	$(MAKE) -C $(TCPCONNECT)
 
 .PHONY:	clean
 
 clean:
-	rm -f $(OBJS) $(OUT)
-
+	$(RM) $(OBJS) $(OUT)
+	$(MAKE) -C $(TCPCONNECT) $@
