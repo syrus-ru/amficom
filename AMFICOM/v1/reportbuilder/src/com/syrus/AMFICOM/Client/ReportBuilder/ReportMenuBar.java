@@ -341,9 +341,8 @@ public class ReportMenuBar extends JMenuBar
 			return;
 		AbstractButton jb = (AbstractButton )e.getSource();
 		String s = jb.getName();
-		Command command = aModel.getCommand(s);
-		command = (Command )command.clone();
-		command.execute();
+    
+    aModel.getCommand(s).execute();    
 	}
 }
 
