@@ -9,6 +9,9 @@ import javax.swing.UIManager;
 
 public class AnalyseApplicationModel extends ApplicationModel {
 
+	public static final String SELECT_PREVIOUS_EVENT = "SelectPreviousEvent";
+	public static final String SELECT_NEXT_EVENT = "SelectNextEvent";
+	
 	public AnalyseApplicationModel() {
 		add("menuSession");
 		add("menuSessionNew");
