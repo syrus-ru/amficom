@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.9 2004/08/09 13:20:38 bob Exp $
+ * $Id: KISDatabase.java,v 1.10 2004/08/09 14:13:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/08/09 13:20:38 $
+ * @version $Revision: 1.10 $, $Date: 2004/08/09 14:13:54 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -72,7 +72,7 @@ public class KISDatabase extends StorableObjectDatabase {
 		buffer.append(COLUMN_NAME);
 		buffer.append(StorableObjectDatabase.COMMA);
 		buffer.append(COLUMN_DESCRIPTION);
-		buffer.append(StorableObjectDatabase.SQL_SELECT);
+		buffer.append(StorableObjectDatabase.COMMA);
 		buffer.append(COLUMN_MCM_ID);
 		buffer.append(StorableObjectDatabase.SQL_FROM);
 		buffer.append(ObjectEntities.KIS_ENTITY);
