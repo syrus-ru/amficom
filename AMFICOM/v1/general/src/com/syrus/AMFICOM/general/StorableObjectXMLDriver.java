@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.15 2005/02/07 14:41:31 bob Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.16 2005/02/15 07:11:18 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.util.Log;
 /**
  * XML Driver for storable object package, one per package.
  * 
- * @version $Revision: 1.15 $, $Date: 2005/02/07 14:41:31 $
+ * @version $Revision: 1.16 $, $Date: 2005/02/15 07:11:18 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -78,8 +78,7 @@ public class StorableObjectXMLDriver {
 		this.parseXmlFile(false);
 	}
 
-	public void putObjectMap(final Identifier identifier, final Map objects) throws IllegalDataException {
-		this.deleteObject(identifier);
+	public void putObjectMap(final Identifier identifier, final Map objects) {		
 		Element element = this.doc.createElement(identifier.getIdentifierString());
 		for (Iterator it = objects.keySet().iterator(); it.hasNext();) {
 			String key = (String) it.next();
