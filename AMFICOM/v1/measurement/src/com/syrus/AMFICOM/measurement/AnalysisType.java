@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.19 2004/07/27 15:52:25 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.20 2004/08/11 10:59:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,17 +22,17 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/07/27 15:52:25 $
+ * @version $Revision: 1.20 $, $Date: 2004/08/11 10:59:55 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public class AnalysisType extends ActionType {
 
-	private List inParameterTypes;
-	private List criteriaParameterTypes;
-	private List etalonParameterTypes;
-	private List outParameterTypes;
+	private List inParameterTypeIds;
+	private List criteriaParameterTypeIds;
+	private List etalonParameterTypeIds;
+	private List outParameterTypeIds;
 
 	private StorableObjectDatabase	analysisTypeDatabase;
 
@@ -57,21 +57,21 @@ public class AnalysisType extends ActionType {
 					new String(att.codename),
 					new String(att.description));
 
-		this.inParameterTypes = new ArrayList(att.in_parameter_types.length);
-		for (int i = 0; i < att.in_parameter_types.length; i++)
-			this.inParameterTypes.add(new Identifier(att.in_parameter_types[i]));
+		this.inParameterTypeIds = new ArrayList(att.in_parameter_type_ids.length);
+		for (int i = 0; i < att.in_parameter_type_ids.length; i++)
+			this.inParameterTypeIds.add(new Identifier(att.in_parameter_type_ids[i]));
 
-		this.criteriaParameterTypes = new ArrayList(att.criteria_parameter_types.length);
-		for (int i = 0; i < att.criteria_parameter_types.length; i++)
-			this.criteriaParameterTypes.add(new Identifier(att.criteria_parameter_types[i]));
+		this.criteriaParameterTypeIds = new ArrayList(att.criteria_parameter_type_ids.length);
+		for (int i = 0; i < att.criteria_parameter_type_ids.length; i++)
+			this.criteriaParameterTypeIds.add(new Identifier(att.criteria_parameter_type_ids[i]));
 
-		this.etalonParameterTypes = new ArrayList(att.etalon_parameter_types.length);
-		for (int i = 0; i < att.etalon_parameter_types.length; i++)
-			this.etalonParameterTypes.add(new Identifier(att.etalon_parameter_types[i]));
+		this.etalonParameterTypeIds = new ArrayList(att.etalon_parameter_type_ids.length);
+		for (int i = 0; i < att.etalon_parameter_type_ids.length; i++)
+			this.etalonParameterTypeIds.add(new Identifier(att.etalon_parameter_type_ids[i]));
 
-		this.outParameterTypes = new ArrayList(att.out_parameter_types.length);
-		for (int i = 0; i < att.out_parameter_types.length; i++)
-			this.outParameterTypes.add(new Identifier(att.out_parameter_types[i]));
+		this.outParameterTypeIds = new ArrayList(att.out_parameter_type_ids.length);
+		for (int i = 0; i < att.out_parameter_type_ids.length; i++)
+			this.outParameterTypeIds.add(new Identifier(att.out_parameter_type_ids[i]));
 
 		this.analysisTypeDatabase = MeasurementDatabaseContext.analysisTypeDatabase;
 		try {
@@ -86,10 +86,10 @@ public class AnalysisType extends ActionType {
 											 Identifier creatorId,
 											 String codename,
 											 String description,
-											 List inParameterTypes,
-											 List criteriaParameterTypes,
-											 List etalonParameterTypes,
-											 List outParameterTypes) {
+											 List inParameterTypeIds,
+											 List criteriaParameterTypeIds,
+											 List etalonParameterTypeIds,
+											 List outParameterTypeIds) {
 		super(id);
 		long time = System.currentTimeMillis();
 		super.created = new Date(time);
@@ -98,10 +98,10 @@ public class AnalysisType extends ActionType {
 		super.modifierId = creatorId;
 		super.codename = codename;
 		super.description = description;
-		this.inParameterTypes = inParameterTypes;
-		this.criteriaParameterTypes = criteriaParameterTypes;
-		this.etalonParameterTypes = etalonParameterTypes;
-		this.outParameterTypes = outParameterTypes;
+		this.inParameterTypeIds = inParameterTypeIds;
+		this.criteriaParameterTypeIds = criteriaParameterTypeIds;
+		this.etalonParameterTypeIds = etalonParameterTypeIds;
+		this.outParameterTypeIds = outParameterTypeIds;
 
 		super.currentVersion = super.getNextVersion();
 	}
@@ -112,50 +112,50 @@ public class AnalysisType extends ActionType {
 	 * @param creatorId
 	 * @param codename
 	 * @param description
-	 * @param inParameterTypes
-	 * @param criteriaParameterTypes
-	 * @param etalonParameterTypes
-	 * @param outParameterTypes
+	 * @param inParameterTypeIds
+	 * @param criteriaParameterTypeIds
+	 * @param etalonParameterTypeIds
+	 * @param outParameterTypeIds
 	 * @return
 	 */
 	public static AnalysisType createInstance(Identifier id,
 																						Identifier creatorId,
 																						String codename,
 																						String description,
-																						List inParameterTypes,
-																						List criteriaParameterTypes,
-																						List etalonParameterTypes,
-																						List outParameterTypes){
+																						List inParameterTypeIds,
+																						List criteriaParameterTypeIds,
+																						List etalonParameterTypeIds,
+																						List outParameterTypeIds){
 		return new AnalysisType(id,
 														creatorId,
 														codename,
 														description,
-														inParameterTypes,
-														criteriaParameterTypes,
-														etalonParameterTypes,
-														outParameterTypes);
+														inParameterTypeIds,
+														criteriaParameterTypeIds,
+														etalonParameterTypeIds,
+														outParameterTypeIds);
 	}
 	
 	public Object getTransferable() {
-		Identifier_Transferable[] inParTypes = new Identifier_Transferable[this.inParameterTypes.size()];
+		Identifier_Transferable[] inParTypeIds = new Identifier_Transferable[this.inParameterTypeIds.size()];
 		int i = 0;
-		for (Iterator iterator = this.inParameterTypes.iterator(); iterator.hasNext();)
-			inParTypes[i++] = (Identifier_Transferable) ((Identifier) iterator.next()).getTransferable();
+		for (Iterator iterator = this.inParameterTypeIds.iterator(); iterator.hasNext();)
+			inParTypeIds[i++] = (Identifier_Transferable) ((Identifier) iterator.next()).getTransferable();
 
-		Identifier_Transferable[] criteriaParTypes = new Identifier_Transferable[this.criteriaParameterTypes.size()];
+		Identifier_Transferable[] criteriaParTypeIds = new Identifier_Transferable[this.criteriaParameterTypeIds.size()];
 		i = 0;
-		for (Iterator iterator = this.criteriaParameterTypes.iterator(); iterator.hasNext();)
-			criteriaParTypes[i++] = (Identifier_Transferable) ((Identifier) iterator.next()).getTransferable();
+		for (Iterator iterator = this.criteriaParameterTypeIds.iterator(); iterator.hasNext();)
+			criteriaParTypeIds[i++] = (Identifier_Transferable) ((Identifier) iterator.next()).getTransferable();
 
-		Identifier_Transferable[] etalonParTypes = new Identifier_Transferable[this.etalonParameterTypes.size()];
+		Identifier_Transferable[] etalonParTypeIds = new Identifier_Transferable[this.etalonParameterTypeIds.size()];
 		i = 0;
-		for (Iterator iterator = this.etalonParameterTypes.iterator(); iterator.hasNext();)
-			etalonParTypes[i++] = (Identifier_Transferable) ((Identifier) iterator.next()).getTransferable();
+		for (Iterator iterator = this.etalonParameterTypeIds.iterator(); iterator.hasNext();)
+			etalonParTypeIds[i++] = (Identifier_Transferable) ((Identifier) iterator.next()).getTransferable();
 
-		Identifier_Transferable[] outParTypes = new Identifier_Transferable[this.outParameterTypes.size()];
+		Identifier_Transferable[] outParTypeIds = new Identifier_Transferable[this.outParameterTypeIds.size()];
 		i = 0;
-		for (Iterator iterator = this.inParameterTypes.iterator(); iterator.hasNext();)
-			inParTypes[i++] = (Identifier_Transferable) ((Identifier) iterator.next()).getTransferable();
+		for (Iterator iterator = this.inParameterTypeIds.iterator(); iterator.hasNext();)
+			outParTypeIds[i++] = (Identifier_Transferable) ((Identifier) iterator.next()).getTransferable();
 
 		return new AnalysisType_Transferable((Identifier_Transferable)super.id.getTransferable(),
 																				 super.created.getTime(),
@@ -164,26 +164,26 @@ public class AnalysisType extends ActionType {
 																				 (Identifier_Transferable)super.modifierId.getTransferable(),
 																				 new String(super.codename),
 																				 new String(super.description),
-																				 inParTypes,
-																				 criteriaParTypes,
-																				 etalonParTypes,
-																				 outParTypes);
+																				 inParTypeIds,
+																				 criteriaParTypeIds,
+																				 etalonParTypeIds,
+																				 outParTypeIds);
 	}
 
-	public List getInParameterTypes() {
-		return this.inParameterTypes;
+	public List getInParameterTypeIds() {
+		return this.inParameterTypeIds;
 	}
 
-	public List getCriteriaParameterTypes() {
-		return this.criteriaParameterTypes;
+	public List getCriteriaParameterTypeIds() {
+		return this.criteriaParameterTypeIds;
 	}
 
-	public List getEtalonParameterTypes() {
-		return this.etalonParameterTypes;
+	public List getEtalonParameterTypeIds() {
+		return this.etalonParameterTypeIds;
 	}
 
-	public List getOutParameterTypes() {
-		return this.outParameterTypes;
+	public List getOutParameterTypeIds() {
+		return this.outParameterTypeIds;
 	}
 
 	protected synchronized void setAttributes(Date created,
@@ -200,57 +200,57 @@ public class AnalysisType extends ActionType {
 												description);
 	}
 
-	protected synchronized void setParameterTypes(List inParameterTypes,
-																								List criteriaParameterTypes,
-																								List etalonParameterTypes,
-																								List outParameterTypes) {
-		this.inParameterTypes = inParameterTypes;
-		this.criteriaParameterTypes = criteriaParameterTypes;
-		this.etalonParameterTypes = etalonParameterTypes;
-		this.outParameterTypes = outParameterTypes;
+	protected synchronized void setParameterTypeIds(List inParameterTypeIds,
+																									List criteriaParameterTypeIds,
+																									List etalonParameterTypeIds,
+																									List outParameterTypeIds) {
+		this.inParameterTypeIds = inParameterTypeIds;
+		this.criteriaParameterTypeIds = criteriaParameterTypeIds;
+		this.etalonParameterTypeIds = etalonParameterTypeIds;
+		this.outParameterTypeIds = outParameterTypeIds;
 	}
 
 	/**
-	 * client setter for inParameterTypes
+	 * client setter for inParameterTypeIds
 	 * 
-	 * @param inParameterTypes
-	 *            The inParameterTypes to set.
+	 * @param inParameterTypeIds
+	 *            The inParameterTypeIds to set.
 	 */
-	public void setInParameterTypes(List inParameterTypes) {
+	public void setInParameterTypeIds(List inParameterTypeIds) {
 		super.currentVersion = super.getNextVersion();
-		this.inParameterTypes = inParameterTypes;
+		this.inParameterTypeIds = inParameterTypeIds;
 	}
 
 	/**
-	 * client setter for criteriaParameterTypes
+	 * client setter for criteriaParameterTypeIds
 	 * 
-	 * @param criteriaParameterTypes
-	 *            The criteriaParameterTypes to set.
+	 * @param criteriaParameterTypeIds
+	 *            The criteriaParameterTypeIds to set.
 	 */
-	public void setCriteriaParameterTypes(List criteriaParameterTypes) {
+	public void setCriteriaParameterTypeIds(List criteriaParameterTypeIds) {
 		super.currentVersion = super.getNextVersion();
-		this.criteriaParameterTypes = criteriaParameterTypes;
+		this.criteriaParameterTypeIds = criteriaParameterTypeIds;
 	}
 
 	/**
-	 * client setter for etalonParameterTypes
+	 * client setter for etalonParameterTypeIds
 	 * 
-	 * @param etalonParameterTypes
-	 *            The etalonParameterTypes to set.
+	 * @param etalonParameterTypeIds
+	 *            The etalonParameterTypeIds to set.
 	 */
-	public void setEtalonParameterTypes(List etalonParameterTypes) {
+	public void setEtalonParameterTypeIds(List etalonParameterTypeIds) {
 		super.currentVersion = super.getNextVersion();
-		this.etalonParameterTypes = etalonParameterTypes;
+		this.etalonParameterTypeIds = etalonParameterTypeIds;
 	}
 
 	/**
-	 * client setter for outParameterTypes
+	 * client setter for outParameterTypeIds
 	 * 
-	 * @param outParameterTypes
-	 *            The outParameterTypes to set.
+	 * @param outParameterTypeIds
+	 *            The outParameterTypeIds to set.
 	 */
-	public void setOutParameterTypes(List outParameterTypes) {
+	public void setOutParameterTypeIds(List outParameterTypeIds) {
 		super.currentVersion = super.getNextVersion();
-		this.outParameterTypes = outParameterTypes;
+		this.outParameterTypeIds = outParameterTypeIds;
 	}
 }

@@ -35,8 +35,8 @@ module corba {
 		wstring codename;
 		wstring description;
 
-		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable in_parameter_types;
-		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable out_parameter_types;
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable in_parameter_type_ids;
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable out_parameter_type_ids;
 	};
 
 	struct AnalysisType_Transferable {
@@ -49,10 +49,10 @@ module corba {
 		wstring codename;
 		wstring description;
 
-		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable in_parameter_types;
-		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable criteria_parameter_types;
-		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable etalon_parameter_types;
-		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable out_parameter_types;
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable in_parameter_type_ids;
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable criteria_parameter_type_ids;
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable etalon_parameter_type_ids;
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable out_parameter_type_ids;
 	};
 
 	struct EvaluationType_Transferable {
@@ -65,10 +65,10 @@ module corba {
 		wstring codename;
 		wstring description;
 
-		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable in_parameter_types;
-		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable threshold_parameter_types;
-		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable etalon_parameter_types;
-		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable out_parameter_types;
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable in_parameter_type_ids;
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable threshold_parameter_type_ids;
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable etalon_parameter_type_ids;
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable out_parameter_type_ids;
 	};
 
 /////////////////// Parameter and Set /////////////////////
