@@ -44,6 +44,7 @@ public class SchedulerModel implements OperationListener {
 	public static final String	COMMAND_TEST_SAVED_OK			= "TestSavedOk";	//$NON-NLS-1$
 	public static final String	COMMAND_CLEAN					= "Clean";
 	public static final String	COMMAND_AVAILABLE_ME			= "AvailableMe";
+	public static final String	COMMAND_REMOVE_TEST				= "RemoveTest";
 	public static final String	COMMAND_CHANGE_STATUSBAR_STATE  = "ChangeStatusBarState";
 	
 

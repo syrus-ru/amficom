@@ -286,9 +286,20 @@ public class PlanPanel extends JPanel implements OperationListener {
 			}
 			revalidate();
 			this.parent.repaint();
-		} else if (commandName.equals(SchedulerModel.COMMAND_CLEAN)){
+		} else if (commandName.equals(SchedulerModel.COMMAND_CLEAN)) {
 			this.testLines.clear();
 			removeAll();
+			revalidate();
+			this.parent.repaint();
+		} else if (commandName.equals(SchedulerModel.COMMAND_REMOVE_TEST)) {
+			for (Iterator it = this.testLines.keySet().iterator(); it.hasNext();) {
+				Test test = (Test) ae.getSource();
+				Object key = it.next();
+				TestLine line = (TestLine) this.testLines.get(key);
+				line.removeTest(test);
+				if (line.isEmpty())
+					remove(line);
+			}
 			revalidate();
 			this.parent.repaint();
 		}
@@ -550,6 +561,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 		this.dispatcher = dispatcher;
 		this.dispatcher.register(this, TestUpdateEvent.TYPE);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_REMOVE_TEST);
 	}
 
 	private void updateTests() {

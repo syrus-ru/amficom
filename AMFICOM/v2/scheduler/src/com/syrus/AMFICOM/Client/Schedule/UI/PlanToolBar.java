@@ -7,6 +7,7 @@ import java.util.*;
 
 import javax.swing.*;
 
+import com.syrus.AMFICOM.CORBA.General.TestStatus;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.*;
@@ -314,6 +315,29 @@ class PlanToolBar extends JPanel {
 		Hashtable unsavedTestRequest = Pool.getChangedHash(TestRequest.TYP);
 		Hashtable unsavedTest = Pool.getChangedHash(Test.TYPE);
 
+		// remove tests
+		if (unsavedTest != null) {
+			java.util.List deleteTests = new ArrayList();
+			for (Iterator it = unsavedTest.keySet().iterator(); it.hasNext();) {
+				Object key = it.next();
+				Test test = (Test) unsavedTest.get(key);
+				if (test.getDeleted() != 0) {
+					String testId = test.getId();
+					if (test.getStatus().value() != TestStatus._TEST_STATUS_SCHEDULED)
+						deleteTests.add(testId);
+					TestRequest treq = (TestRequest) Pool.get(TestRequest.TYP, test.getRequestId());
+					//System.out.println("removing test:" + testId + " from testRequest:" + treq.getId());
+					treq.removeTest(test);
+					Pool.remove(Test.TYPE, testId);
+					unsavedTest.remove(key);
+				}
+
+			}
+			String[] deleteTestIds = (String[]) deleteTests.toArray(new String[deleteTests.size()]);
+			dataSource.RemoveTests(deleteTestIds);
+
+		}
+
 		for (int i = 0; i < 5; i++) {
 			Hashtable table;
 			switch (i) {
@@ -395,7 +419,7 @@ class PlanToolBar extends JPanel {
 				}
 			}
 		}
-		aContext.getDispatcher().notify(new OperationEvent("", 0, SchedulerModel.COMMAND_TEST_SAVED_OK));
+		this.aContext.getDispatcher().notify(new OperationEvent("", 0, SchedulerModel.COMMAND_TEST_SAVED_OK));
 	}
 
 }

@@ -32,7 +32,7 @@ public class TestRequest extends ObjectResource {
 	}
 
 	public void addTest(Test test) {
-		System.out.println(getClass().getName()+"\taddTest:"+test.getId());
+		System.out.println(getClass().getName() + "\taddTest:" + test.getId());
 		this.testIds.add(test.getId());
 	}
 
@@ -103,6 +103,12 @@ public class TestRequest extends ObjectResource {
 	 */
 	public String getUserId() {
 		return userId;
+	}
+
+	public void removeTest(Test test) {
+		this.testIds.remove(test.getId());
+		if (this.testIds.isEmpty())
+			this.changed = false;
 	}
 
 	/**

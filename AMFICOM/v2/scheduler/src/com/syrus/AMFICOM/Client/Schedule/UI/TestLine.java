@@ -29,7 +29,6 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 	Test						currentTest;
 
 	Dispatcher					dispatcher;
-	private long				end;
 
 	boolean						flash				= false;
 	int							height;
@@ -38,16 +37,17 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 	boolean						skipTestUpdate		= false;
 	long						start;
 
+	int							titleHeight;
+
+	int							width;
+	private long				end;
+
 	private HashMap				tests				= new HashMap();
 	private javax.swing.Timer	timer;											//		=
 	//private ApplicationContext aContext;
 	private String				title;
 
-	int							titleHeight;
-
 	private HashMap				unsavedTests;
-
-	int							width;
 
 	// new
 	// javax.swing.Timer(
@@ -134,8 +134,9 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 							//System.out.println("test:" + test.id);
 							//							System.out.println("test.status.value():"
 							//									+ test.status.value());
-							System.out.println("TestLine>onClick: test==null : " //$NON-NLS-1$
-									+ (test.isChanged()));
+							//							System.out.println("TestLine>onClick: test==null
+							// : " //$NON-NLS-1$
+							//									+ (test.isChanged()));
 							TestLine.this.skipTestUpdate = true;
 							TestLine.this.dispatcher.notify(new TestUpdateEvent(this, test,
 																				TestUpdateEvent.TEST_SELECTED_EVENT));
@@ -169,30 +170,6 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 			}
 		});
 
-	}
-
-	public void operationPerformed(OperationEvent e) {
-		String commandName = e.getActionCommand();
-		System.out.println(getClass().getName() + " commandName: " //$NON-NLS-1$
-				+ commandName);
-		if (commandName.equals(SchedulerModel.COMMAND_TEST_SAVED_OK)) {
-			if (this.unsavedTests != null) {
-				for (Iterator it = this.unsavedTests.keySet().iterator(); it.hasNext();) {
-					Object key = it.next();
-					Test test = (Test) this.unsavedTests.get(key);
-					if (!test.isChanged()) {
-						System.out.println("remove " + key);
-						this.unsavedTests.remove(key);
-						this.tests.put(test.getId(), test);
-					}
-				}
-			}
-		} else if (commandName.equals(SchedulerModel.COMMAND_CLEAN)) {
-			if (this.unsavedTests != null)
-				this.unsavedTests.clear();
-			if (this.tests != null)
-				this.tests.clear();
-		}
 	}
 
 	public void actionPerformed(ActionEvent e) {
@@ -245,6 +222,10 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 
 	}
 
+	public boolean isEmpty() {
+		return this.allTests.isEmpty();
+	}
+
 	//	public Collection getTests() {
 	//		return tests.values();
 	//	}
@@ -255,6 +236,29 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 
 	public Test getTest(String id) {
 		return (Test) tests.get(id);
+	}
+
+	public void operationPerformed(OperationEvent e) {
+		String commandName = e.getActionCommand();
+		Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" + commandName, getClass().getName());
+		if (commandName.equals(SchedulerModel.COMMAND_TEST_SAVED_OK)) {
+			if (this.unsavedTests != null) {
+				for (Iterator it = this.unsavedTests.keySet().iterator(); it.hasNext();) {
+					Object key = it.next();
+					Test test = (Test) this.unsavedTests.get(key);
+					if (!test.isChanged()) {
+						System.out.println("remove " + key);
+						this.unsavedTests.remove(key);
+						this.tests.put(test.getId(), test);
+					}
+				}
+			}
+		} else if (commandName.equals(SchedulerModel.COMMAND_CLEAN)) {
+			if (this.unsavedTests != null)
+				this.unsavedTests.clear();
+			if (this.tests != null)
+				this.tests.clear();
+		}
 	}
 
 	public void paintComponent(Graphics g) {
@@ -302,16 +306,19 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 	}
 
 	public void removeAllTests() {
-		tests.clear();
-		allTests.clear();
-		unsavedTests.clear();
+		this.tests.clear();
+		this.allTests.clear();
+		this.unsavedTests.clear();
 	}
 
-	public void removeTest(String id) {
-		Test test = (Test) tests.get(id);
-		if (allTests != null)
-			allTests.remove(test);
-		tests.remove(id);
+	public void removeTest(Test test) {
+		//Test test = (Test) this.tests.get(id);
+		String testId = test.getId();
+		if (this.unsavedTests != null)
+			this.unsavedTests.remove(test.getId());
+		if (this.allTests != null)
+			this.allTests.remove(test);
+		this.tests.remove(testId);
 	}
 
 	private void drawTestRect(Graphics g, Test test) {

@@ -105,8 +105,9 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 					return;
 				MonitoredElement me = (MonitoredElement) TestRequestPanel.this.testList.getSelectedObjectResource();
 				if (me == null) {
-//					TestRequestPanel.this.dispatcher.notify(new TestUpdateEvent(this, null,
-//																				TestUpdateEvent.TEST_DESELECTED_EVENT));
+					//					TestRequestPanel.this.dispatcher.notify(new
+					// TestUpdateEvent(this, null,
+					//																				TestUpdateEvent.TEST_DESELECTED_EVENT));
 					//System.out.println("me == null");
 				} else {
 					TestRequestPanel.this.skip = true;
@@ -125,13 +126,17 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
 		this.dispatcher.register(this, SchedulerModel.COMMAND_DATA_REQUEST);
-		this.dispatcher.register(this, TestParametersPanel.COMMAND_CHANGE_KIS);
-		this.dispatcher.register(this, TestParametersPanel.COMMAND_CHANGE_ME_TYPE);
-		this.dispatcher.register(this, TestParametersPanel.COMMAND_CHANGE_TEST_TYPE);
+		//		this.dispatcher.register(this,
+		// TestParametersPanel.COMMAND_CHANGE_KIS);
+		//		this.dispatcher.register(this,
+		// TestParametersPanel.COMMAND_CHANGE_ME_TYPE);
+		//		this.dispatcher.register(this,
+		// TestParametersPanel.COMMAND_CHANGE_TEST_TYPE);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CREATE_TEST);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_APPLY_TEST);
 		this.dispatcher.register(this, TestUpdateEvent.TYPE);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_REMOVE_TEST);
 
 	}
 
@@ -164,9 +169,9 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 			//toCreate = false;
 		} else if (commandName.equals(TestUpdateEvent.TYPE)) {
 			//System.out.println(testList.getSelected().getClass().getName());
-			TestUpdateEvent tue = (TestUpdateEvent) ae;
-			Test test = tue.test;
-			setTest(test);
+//			TestUpdateEvent tue = (TestUpdateEvent) ae;
+//			Test test = tue.test;
+//			setTest(test);
 		} else if (commandName.equals(TestParametersPanel.COMMAND_CHANGE_TEST_TYPE)) {
 			//			String testTypeId = (String) obj;
 			//			TestType testType = (TestType) Pool.get(TestType.typ,
@@ -174,14 +179,26 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 			//			this.typeTextField.setText(testType.getName());
 			//			this.typeTextField.setCaretPosition(0);
 		} else if (commandName.equals(SchedulerModel.COMMAND_CLEAN)) {
-			this.nameTextField.setText("");
-			this.typeTextField.setText("");
-			this.ownerTextField.setText("");
-			if (this.tests != null)
-				this.tests.clear();
-			this.testRequest = null;
-			this.testList.removeAll();
+			cleanAllFields();
+		} else if (commandName.equals(SchedulerModel.COMMAND_REMOVE_TEST)) {
+			Test test = (Test) ae.getSource();
+			MonitoredElement me = (MonitoredElement) Pool.get(MonitoredElement.typ, test.getMonitoredElementId());
+			this.testList.remove(me);
+			if (this.testList.getModel().getSize() == 0)
+				cleanAllFields();
+
 		}
+
+	}
+
+	private void cleanAllFields() {
+		this.nameTextField.setText("");
+		this.typeTextField.setText("");
+		this.ownerTextField.setText("");
+		if (this.tests != null)
+			this.tests.clear();
+		this.testRequest = null;
+		this.testList.removeAll();
 	}
 
 	public TestRequest getParameters() {
@@ -287,7 +304,7 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 	public void setTestRequest(TestRequest testRequest) {
 		if (this.skip)
 			return;
-		System.out.println("setTestRequest");
+		//System.out.println("setTestRequest");
 		this.skip = true;
 		this.testRequest = testRequest;
 		this.testList.removeAll();
@@ -302,10 +319,10 @@ public class TestRequestPanel extends JPanel implements OperationListener {
 		//for (Enumeration enum = treq.test_ids.elements();
 		// enum.hasMoreElements();)
 		java.util.List list = testRequest.getTestIds();
-		System.out.println("list.size():" + list.size());
+		//System.out.println("list.size():" + list.size());
 		for (Iterator it = list.iterator(); it.hasNext();) {
 			String testId = (String) it.next();
-			System.out.println("testId:" + testId);
+			//System.out.println("testId:" + testId);
 			Test tst = (Test) Pool.get(Test.TYPE, testId);
 			//if (!tst.isChanged()) {
 			//System.out.println("test:" + tst.getId() + "\t" + tst.getName());

@@ -123,7 +123,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 				for (int i = 0; i < testAlarms.length; i++) {
 					Alarm alarm = (Alarm) Pool.get(Alarm.typ, testAlarms[i].alarm_id);
 					if (alarm != null) {
-						System.out.println("alarm.type_id:"+alarm.type_id);
+						System.out.println("alarm.type_id:" + alarm.type_id);
 						if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_ALARM)) {
 							color = Color.RED;
 						} else if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_WARNING))
@@ -140,8 +140,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 						statusIndex = i;
 						break;
 					}
-			}		
-			
+			}
 
 			if (vColIndex == table.convertColumnIndexToView(statusIndex)) {
 				if (test.getStatus().equals(TestStatus.TEST_STATUS_COMPLETED)) {
@@ -584,14 +583,14 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 	}
 
 	private JPanel getPanel() {
-		if (panel == null) {
-			panel = new JPanel(new BorderLayout());
+		if (this.panel == null) {
+			this.panel = new JPanel(new BorderLayout());
 
 			TestTableModel tableModel = new TestTableModel();
-			listTable = new JTable(tableModel);
-			listTable.setColumnSelectionAllowed(false);
-			listTable.setRowSelectionAllowed(true);
-			listTable.addMouseListener(new MouseAdapter() {
+			this.listTable = new JTable(tableModel);
+			this.listTable.setColumnSelectionAllowed(false);
+			this.listTable.setRowSelectionAllowed(true);
+			this.listTable.addMouseListener(new MouseAdapter() {
 
 				public void mouseClicked(MouseEvent evt) {
 					final JTable table = ((JTable) evt.getSource());
@@ -602,10 +601,11 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 						if (model != null) {
 							//System.out.println("test:" + line.getTest());
 							Test test = line.getTest();
-							skipTestUpdate = true;
-							dispatcher.notify(new TestUpdateEvent(this, test, TestUpdateEvent.TEST_SELECTED_EVENT));
+							TableFrame.this.skipTestUpdate = true;
+							TableFrame.this.dispatcher
+									.notify(new TestUpdateEvent(this, test, TestUpdateEvent.TEST_SELECTED_EVENT));
 							//System.out.println("send test:"+test.getId());
-							skipTestUpdate = false;
+							TableFrame.this.skipTestUpdate = false;
 						}
 					} else if (SwingUtilities.isRightMouseButton(evt)) {
 						final int[] rowIndices = table.getSelectedRows();
@@ -617,12 +617,11 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 								public void actionPerformed(ActionEvent e) {
 									for (int i = 0; i < rowIndices.length; i++) {
 										TestTableRow line = (TestTableRow) model.getRow(rowIndices[i]);
+										Test test = line.getTest();
+										test.setDeleted(System.currentTimeMillis());
+										TableFrame.this.dispatcher
+												.notify(new OperationEvent(test, 0, SchedulerModel.COMMAND_REMOVE_TEST));
 										model.remove(rowIndices[i]);
-										/**
-										 * @TODO send message to remove test !
-										 */
-										System.out.println("test:" //$NON-NLS-1$
-												+ line.getTest().getId());
 									}
 									table.revalidate();
 									table.repaint();
@@ -632,9 +631,9 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 							 * @TODO remove comments when test will be correct
 							 *       remove from other panels
 							 */
-							//							JPopupMenu popup = new JPopupMenu();
-							//							popup.add(deleteTestMenuItem);
-							//							popup.show(table, evt.getX(), evt.getY());
+							JPopupMenu popup = new JPopupMenu();
+							popup.add(deleteTestMenuItem);
+							popup.show(table, evt.getX(), evt.getY());
 						}
 					}
 
@@ -643,11 +642,11 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 			{
 				//int vColIndex = 0;
 				for (int vColIndex = 0; vColIndex < tableModel.getColumnCount(); vColIndex++) {
-					TableColumn col = listTable.getColumnModel().getColumn(vColIndex);
+					TableColumn col = this.listTable.getColumnModel().getColumn(vColIndex);
 					col.setCellRenderer(new TestTableCellRenderer());
 				}
 			}
-			JTableHeader header = listTable.getTableHeader();
+			JTableHeader header = this.listTable.getTableHeader();
 			header.addMouseListener(new MouseAdapter() {
 
 				public void mouseClicked(MouseEvent evt) {
