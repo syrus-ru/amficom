@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.9 2005/02/01 11:07:02 bob Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.10 2005/02/02 06:14:04 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 /**
  * XML Driver for storable object package, one per package.
  * 
- * @version $Revision: 1.9 $, $Date: 2005/02/01 11:07:02 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/02 06:14:04 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -167,22 +167,21 @@ public class StorableObjectXMLDriver {
 				}
 				object = map;
 			} else {
-				/* just simple objects */
-				NodeList childNodes = node.getChildNodes();
-				if (childNodes.getLength() > 1)
-					Log.errorMessage("StorableObjectXMLDriver.parse | more that one child for : " + node.getNodeName());
-//				System.out.println("name: " + node.getNodeName() + "\tclassName:" + className);
-				if (childNodes.getLength() == 1)
-					object = this.getObject(childNodes.item(0).getNodeValue(), className);
-				else
-					object = null;
+				object = this.getObject(node.getChildNodes(), className);
 			}
 		} else
 			Log.errorMessage("StorableObjectXMLDriver.parse | there is no attributes for : " + node.getNodeName());
 		return object;
 	}
 
-	private Object getObject(String value, String className) throws IllegalDataException {
+	private Object getObject(NodeList childNodes, String className) throws IllegalDataException {
+		String value = null;
+		/* just simple objects */
+		if (childNodes.getLength() > 1)
+			throw new IllegalDataException("StorableObjectXMLDriver.getObject | more that one child for : "
+					+ childNodes.item(0).getParentNode().getNodeName());
+		if (childNodes.getLength() == 1)
+			childNodes.item(0).getNodeValue();
 		Object object = null;
 		if (className.equals(StorableObject.class.getName())) {
 			Identifier identifier = new Identifier(value);
@@ -207,12 +206,19 @@ public class StorableObjectXMLDriver {
 			Double double1 = Double.valueOf(value);
 			object = double1;
 		} else if (className.equals(String.class.getName())) {
-			object = value;
+			if (value != null)
+				object = value;
+			else
+				object = "";
 		} else if (className.equals(byte[].class.getName())) {
-			byte[] bs = new byte[value.length() / 2];
-			for (int j = 0; j < bs.length; j++)
-				bs[j] = (byte) ((char) Integer.parseInt(value.substring(2 * j, 2 * (j + 1)), 16));
-			object = bs;
+			/* if value is null, array is empty */
+			if (value != null) {
+				byte[] bs = new byte[value.length() / 2];
+				for (int j = 0; j < bs.length; j++)
+					bs[j] = (byte) ((char) Integer.parseInt(value.substring(2 * j, 2 * (j + 1)), 16));
+				object = bs;
+			} else
+				object = new byte[0];
 		} else
 			object = value;
 		return object;
