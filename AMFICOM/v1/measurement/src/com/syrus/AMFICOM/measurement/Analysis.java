@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.35 2004/12/09 12:47:20 bob Exp $
+ * $Id: Analysis.java,v 1.36 2004/12/09 15:52:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2004/12/09 12:47:20 $
- * @author $Author: bob $
+ * @version $Revision: 1.36 $, $Date: 2004/12/09 15:52:53 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -160,20 +160,30 @@ public class Analysis extends Action {
 			throw new CreateObjectException("Analysis.createInstance | cannot generate identifier ", e);
 		}
 	}
-	
-	public static Analysis getInstance(Analysis_Transferable at) throws CreateObjectException {
-		Analysis analysis = new Analysis(at);
-		
-		analysis.analysisDatabase = MeasurementDatabaseContext.analysisDatabase;
+
+	public void insert() throws CreateObjectException {
 		try {
-			if (analysis.analysisDatabase != null)
-				analysis.analysisDatabase.insert(analysis);
+			if (this.analysisDatabase != null)
+				this.analysisDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
 		}
-		catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
 		}
-		return analysis;
-	}	
+	}
+
+//	public static Analysis getInstance(Analysis_Transferable at) throws CreateObjectException {
+//		Analysis analysis = new Analysis(at);
+//		
+//		analysis.analysisDatabase = MeasurementDatabaseContext.analysisDatabase;
+//		try {
+//			if (analysis.analysisDatabase != null)
+//				analysis.analysisDatabase.insert(analysis);
+//		}
+//		catch (IllegalDataException e) {
+//			throw new CreateObjectException(e.getMessage(), e);
+//		}
+//		return analysis;
+//	}	
 	
 	public List getDependencies() {		
 		return Collections.singletonList(this.criteriaSet);

@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.39 2004/12/09 13:25:10 arseniy Exp $
+ * $Id: Measurement.java,v 1.40 2004/12/09 15:52:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2004/12/09 13:25:10 $
+ * @version $Revision: 1.40 $, $Date: 2004/12/09 15:52:53 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -119,21 +119,31 @@ public class Measurement extends Action {
 		
 		this.measurementDatabase = MeasurementDatabaseContext.measurementDatabase;
 	}
-	
-	public static Measurement getInstance(Measurement_Transferable mt) throws CreateObjectException{
-		Measurement measurement = new Measurement(mt);
 
-		measurement.measurementDatabase = MeasurementDatabaseContext.measurementDatabase;
+	public void insert() throws CreateObjectException {
 		try {
-			if (measurement.measurementDatabase != null)
-				measurement.measurementDatabase.insert(measurement);
+			if (this.measurementDatabase != null)
+				this.measurementDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
 		}
-		catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
 		}
-		
-		return measurement;
 	}
+
+//	public static Measurement getInstance(Measurement_Transferable mt) throws CreateObjectException{
+//		Measurement measurement = new Measurement(mt);
+//
+//		measurement.measurementDatabase = MeasurementDatabaseContext.measurementDatabase;
+//		try {
+//			if (measurement.measurementDatabase != null)
+//				measurement.measurementDatabase.insert(measurement);
+//		}
+//		catch (IllegalDataException e) {
+//			throw new CreateObjectException(e.getMessage(), e);
+//		}
+//		
+//		return measurement;
+//	}
 
 	public Object getTransferable() {
 		return new Measurement_Transferable(super.getHeaderTransferable(),

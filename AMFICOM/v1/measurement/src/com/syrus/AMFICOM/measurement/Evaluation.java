@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.35 2004/12/09 12:47:20 bob Exp $
+ * $Id: Evaluation.java,v 1.36 2004/12/09 15:52:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2004/12/09 12:47:20 $
- * @author $Author: bob $
+ * @version $Revision: 1.36 $, $Date: 2004/12/09 15:52:53 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -91,21 +91,31 @@ public class Evaluation extends Action {
 		
 		this.evaluationDatabase = MeasurementDatabaseContext.evaluationDatabase;
 	}
-	
-	public static Evaluation getInstance(Evaluation_Transferable et) throws CreateObjectException {
-		Evaluation evaluation = new Evaluation(et);
-		
-		evaluation.evaluationDatabase = MeasurementDatabaseContext.evaluationDatabase;
+
+	public void insert() throws CreateObjectException {
 		try {
-			if (evaluation.evaluationDatabase != null)
-				evaluation.evaluationDatabase.insert(evaluation);
+			if (this.evaluationDatabase != null)
+				this.evaluationDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
 		}
-		catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
 		}
-		
-		return evaluation;
 	}
+
+//	public static Evaluation getInstance(Evaluation_Transferable et) throws CreateObjectException {
+//		Evaluation evaluation = new Evaluation(et);
+//		
+//		evaluation.evaluationDatabase = MeasurementDatabaseContext.evaluationDatabase;
+//		try {
+//			if (evaluation.evaluationDatabase != null)
+//				evaluation.evaluationDatabase.insert(evaluation);
+//		}
+//		catch (IllegalDataException e) {
+//			throw new CreateObjectException(e.getMessage(), e);
+//		}
+//		
+//		return evaluation;
+//	}
 
 	public Object getTransferable() {
 		return new Evaluation_Transferable(super.getHeaderTransferable(),

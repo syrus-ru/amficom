@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.19 2004/12/09 12:47:20 bob Exp $
+ * $Id: Modeling.java,v 1.20 2004/12/09 15:52:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/12/09 12:47:20 $
- * @author $Author: bob $
+ * @version $Revision: 1.20 $, $Date: 2004/12/09 15:52:53 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -142,21 +142,31 @@ public class Modeling extends Action {
 			throw new CreateObjectException(ae);
 		}	
 	}
-	
-	public static Modeling getInstance(Modeling_Transferable mt) throws CreateObjectException {
-		Modeling test = new Modeling(mt);
-		
-		test.modelingDatabase = MeasurementDatabaseContext.testDatabase;		
+
+	public void insert() throws CreateObjectException {
 		try {
-			if (test.modelingDatabase != null)
-				test.modelingDatabase.insert(test);
+			if (this.modelingDatabase != null)
+				this.modelingDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
 		}
-		catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
 		}
-		
-		return test;
 	}
+
+//	public static Modeling getInstance(Modeling_Transferable mt) throws CreateObjectException {
+//		Modeling test = new Modeling(mt);
+//		
+//		test.modelingDatabase = MeasurementDatabaseContext.testDatabase;		
+//		try {
+//			if (test.modelingDatabase != null)
+//				test.modelingDatabase.insert(test);
+//		}
+//		catch (IllegalDataException e) {
+//			throw new CreateObjectException(e.getMessage(), e);
+//		}
+//		
+//		return test;
+//	}
 	
 	/** 
 	 * @deprecated as unsupport method
@@ -171,9 +181,11 @@ public class Modeling extends Action {
 	public Result createResult(Identifier creatorId,		
 							   SetParameter[] parameters) throws CreateObjectException {
 		return Result.createInstance(creatorId,
-			this,
-			ResultSort.RESULT_SORT_MODELING,
-			parameters);
+											null,
+											this,
+											ResultSort.RESULT_SORT_MODELING,
+											AlarmLevel.ALARM_LEVEL_NONE,
+											parameters);
 	}
 
 	public MeasurementType getMeasurementType() {

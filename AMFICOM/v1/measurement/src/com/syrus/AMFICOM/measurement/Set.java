@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.36 2004/12/09 12:47:20 bob Exp $
+ * $Id: Set.java,v 1.37 2004/12/09 15:52:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2004/12/09 12:47:20 $
- * @author $Author: bob $
+ * @version $Revision: 1.37 $, $Date: 2004/12/09 15:52:53 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -143,21 +143,31 @@ public class Set extends StorableObject {
 			throw new CreateObjectException("Set.createInstance | cannot generate identifier ", e);
 		}
 	}
-	
-	public static Set getInstance(Set_Transferable st) throws CreateObjectException {
-		Set set = new Set(st);
-		
-		set.setDatabase = MeasurementDatabaseContext.setDatabase;
+
+	public void insert() throws CreateObjectException {
 		try {
-			if (set.setDatabase != null)
-				set.setDatabase.insert(set);
+			if (this.setDatabase != null)
+				this.setDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
 		}
-		catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
 		}
-		
-		return set;
 	}
+
+//	public static Set getInstance(Set_Transferable st) throws CreateObjectException {
+//		Set set = new Set(st);
+//		
+//		set.setDatabase = MeasurementDatabaseContext.setDatabase;
+//		try {
+//			if (set.setDatabase != null)
+//				set.setDatabase.insert(set);
+//		}
+//		catch (IllegalDataException e) {
+//			throw new CreateObjectException(e.getMessage(), e);
+//		}
+//		
+//		return set;
+//	}
 
 	public boolean isAttachedToMonitoredElement(Identifier monitoredElementId) {
 		return this.monitoredElementIds.contains(monitoredElementId);

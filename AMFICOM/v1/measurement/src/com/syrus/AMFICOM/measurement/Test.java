@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.71 2004/12/09 13:25:10 arseniy Exp $
+ * $Id: Test.java,v 1.72 2004/12/09 15:52:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,6 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
@@ -46,7 +45,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2004/12/09 13:25:10 $
+ * @version $Revision: 1.72 $, $Date: 2004/12/09 15:52:53 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -91,7 +90,7 @@ public class Test extends StorableObject {
 	}
 
 	public Measurement createMeasurement(Identifier creatorId, Date startTime) throws CreateObjectException {
-			Measurement measurement1 = Measurement.createInstance(creatorId,
+			Measurement measurement = Measurement.createInstance(creatorId,
 																								this.measurementType,
 																								"created by Test:'"
 																									+ this.getDescription()
@@ -102,14 +101,14 @@ public class Test extends StorableObject {
 																								startTime,
 																								this.monitoredElement.getLocalAddress(),
 																								this.id);
-		Measurement measurement = Measurement.getInstance((Measurement_Transferable)measurement1.getTransferable());
+		measurement.insert();
 		super.modified = new Date(System.currentTimeMillis());
 		super.modifierId = (Identifier) creatorId.clone();
 		try {
 			this.testDatabase.update(this, UPDATE_MODIFIED, null);
 		}
-		catch (Exception e) {
-			throw new CreateObjectException(e.getMessage(), e);
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
 		}
 		return measurement;
 	}	
@@ -258,21 +257,31 @@ public class Test extends StorableObject {
 		}
 	
 	}
-	
-	public static Test getInstance(Test_Transferable tt) throws CreateObjectException {
-		Test test = new Test(tt);
-		
-		test.testDatabase = MeasurementDatabaseContext.testDatabase;		
+
+	public void insert() throws CreateObjectException {
 		try {
-			if (test.testDatabase != null)
-				test.testDatabase.insert(test);
+			if (this.testDatabase != null)
+				this.testDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
 		}
-		catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
 		}
-		
-		return test;
 	}
+
+//	public static Test getInstance(Test_Transferable tt) throws CreateObjectException {
+//		Test test = new Test(tt);
+//		
+//		test.testDatabase = MeasurementDatabaseContext.testDatabase;		
+//		try {
+//			if (test.testDatabase != null)
+//				test.testDatabase.insert(test);
+//		}
+//		catch (IllegalDataException e) {
+//			throw new CreateObjectException(e.getMessage(), e);
+//		}
+//		
+//		return test;
+//	}
 
 	
 	public short getEntityCode() {

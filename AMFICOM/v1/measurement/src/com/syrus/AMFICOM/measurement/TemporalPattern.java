@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.55 2004/12/09 12:47:20 bob Exp $
+ * $Id: TemporalPattern.java,v 1.56 2004/12/09 15:52:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
@@ -33,8 +34,8 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2004/12/09 12:47:20 $
- * @author $Author: bob $
+ * @version $Revision: 1.56 $, $Date: 2004/12/09 15:52:53 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -814,12 +815,6 @@ public class TemporalPattern extends StorableObject {
 		this.currentVersion = ver;
 
 		this.temporalPatternDatabase = MeasurementDatabaseContext.temporalPatternDatabase;
-		try {
-			if (this.temporalPatternDatabase != null)
-				this.temporalPatternDatabase.insert(this);
-		} catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
-		}
 	}
 
 	protected TemporalPattern(Identifier id, Identifier creatorId, String description, String[] cronStrings) {
@@ -893,6 +888,16 @@ public class TemporalPattern extends StorableObject {
 			return new TemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE), creatorId, description, cronStrings);
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("TemporalPattern.createInstance | cannot generate identifier ", e);
+		}
+	}
+
+	public void insert() throws CreateObjectException {
+		try {
+			if (this.temporalPatternDatabase != null)
+				this.temporalPatternDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
 		}
 	}
 

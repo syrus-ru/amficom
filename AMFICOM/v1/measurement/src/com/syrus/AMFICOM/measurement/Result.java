@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.29 2004/12/09 12:47:20 bob Exp $
+ * $Id: Result.java,v 1.30 2004/12/09 15:52:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/12/09 12:47:20 $
- * @author $Author: bob $
+ * @version $Revision: 1.30 $, $Date: 2004/12/09 15:52:53 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -141,21 +141,31 @@ public class Result extends StorableObject {
 
 		this.resultDatabase = MeasurementDatabaseContext.resultDatabase;
 	}
-	
-	public static Result getInstance(Result_Transferable rt) throws CreateObjectException {
-		Result result = new Result(rt);
-		
-		result.resultDatabase = MeasurementDatabaseContext.resultDatabase;
+
+	public void insert() throws CreateObjectException {
 		try {
-			if (result.resultDatabase != null)
-				result.resultDatabase.insert(result);
+			if (this.resultDatabase != null)
+				this.resultDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
 		}
-		catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
 		}
-		
-		return result;
 	}
+
+//	public static Result getInstance(Result_Transferable rt) throws CreateObjectException {
+//		Result result = new Result(rt);
+//		
+//		result.resultDatabase = MeasurementDatabaseContext.resultDatabase;
+//		try {
+//			if (result.resultDatabase != null)
+//				result.resultDatabase.insert(result);
+//		}
+//		catch (IllegalDataException e) {
+//			throw new CreateObjectException(e.getMessage(), e);
+//		}
+//		
+//		return result;
+//	}
 
 	public Object getTransferable() {
 		Parameter_Transferable[] pts = new Parameter_Transferable[this.parameters.length];
@@ -239,27 +249,27 @@ public class Result extends StorableObject {
 			throw new CreateObjectException("Result.createInstance | cannot generate identifier ", e);
 		}
 	}
-	
-	protected static Result createInstance(Identifier creatorId,
-										   Modeling modeling,
-										   ResultSort sort,					
-										   SetParameter[] parameters) throws CreateObjectException {
-		if (creatorId == null || modeling == null || sort == null ||
-				parameters == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-		
-		try {
-			return new Result(IdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_ENTITY_CODE),
-					creatorId,
-					null,
-					modeling,
-					sort.value(),
-					AlarmLevel._ALARM_LEVEL_NONE,
-					parameters);
-		} catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("Result.createInstance | cannot generate identifier ", e);
-		}
-	}
+//
+//	protected static Result createInstance(Identifier creatorId,
+//										   Modeling modeling,
+//										   ResultSort sort,					
+//										   SetParameter[] parameters) throws CreateObjectException {
+//		if (creatorId == null || modeling == null || sort == null ||
+//				parameters == null)
+//			throw new IllegalArgumentException("Argument is 'null'");
+//		
+//		try {
+//			return new Result(IdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_ENTITY_CODE),
+//					creatorId,
+//					null,
+//					modeling,
+//					sort.value(),
+//					AlarmLevel._ALARM_LEVEL_NONE,
+//					parameters);
+//		} catch (IllegalObjectEntityException e) {
+//			throw new CreateObjectException("Result.createInstance | cannot generate identifier ", e);
+//		}
+//	}
 	
 	public List getDependencies() {		
 		return Collections.singletonList(this.measurement);

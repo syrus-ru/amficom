@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.33 2004/12/09 12:47:20 bob Exp $
+ * $Id: ParameterType.java,v 1.34 2004/12/09 15:52:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
@@ -28,8 +29,8 @@ import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2004/12/09 12:47:20 $
- * @author $Author: bob $
+ * @version $Revision: 1.34 $, $Date: 2004/12/09 15:52:53 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -143,20 +144,29 @@ public class ParameterType extends StorableObjectType {
 		}
 	}
 
-	
-	public static ParameterType getInstance(ParameterType_Transferable ptt) throws CreateObjectException {
-		ParameterType parameterType = new ParameterType(ptt);
-		
-		parameterType.parameterTypeDatabase = MeasurementDatabaseContext.parameterTypeDatabase;
+	public void insert() throws CreateObjectException {
 		try {
-			parameterType.parameterTypeDatabase.insert(parameterType);
+			if (this.parameterTypeDatabase != null)
+				this.parameterTypeDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
 		}
-		catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
 		}
-		
-		return parameterType;
 	}
+
+//	public static ParameterType getInstance(ParameterType_Transferable ptt) throws CreateObjectException {
+//		ParameterType parameterType = new ParameterType(ptt);
+//		
+//		parameterType.parameterTypeDatabase = MeasurementDatabaseContext.parameterTypeDatabase;
+//		try {
+//			parameterType.parameterTypeDatabase.insert(parameterType);
+//		}
+//		catch (IllegalDataException e) {
+//			throw new CreateObjectException(e.getMessage(), e);
+//		}
+//		
+//		return parameterType;
+//	}
 
     public short getEntityCode() {
         return ObjectEntities.PARAMETERTYPE_ENTITY_CODE;

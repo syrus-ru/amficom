@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.40 2004/12/09 12:47:20 bob Exp $
+ * $Id: MeasurementSetup.java,v 1.41 2004/12/09 15:52:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2004/12/09 12:47:20 $
- * @author $Author: bob $
+ * @version $Revision: 1.41 $, $Date: 2004/12/09 15:52:53 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -167,21 +167,31 @@ public class MeasurementSetup extends StorableObject {
 			throw new CreateObjectException("MeasurementSetup.createInstance | cannot generate identifier ", e);
 		}
 	}
-	
-	public static MeasurementSetup getInstance(MeasurementSetup_Transferable mst) throws CreateObjectException {
-		MeasurementSetup measurementSetup = new MeasurementSetup(mst);
-		
-		measurementSetup.measurementSetupDatabase = MeasurementDatabaseContext.measurementSetupDatabase;
+
+	public void insert() throws CreateObjectException {
 		try {
-			if (measurementSetup.measurementSetupDatabase != null)
-				measurementSetup.measurementSetupDatabase.insert(measurementSetup);
+			if (this.measurementSetupDatabase != null)
+				this.measurementSetupDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
 		}
-		catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
 		}
-		
-		return measurementSetup;
 	}
+
+//	public static MeasurementSetup getInstance(MeasurementSetup_Transferable mst) throws CreateObjectException {
+//		MeasurementSetup measurementSetup = new MeasurementSetup(mst);
+//		
+//		measurementSetup.measurementSetupDatabase = MeasurementDatabaseContext.measurementSetupDatabase;
+//		try {
+//			if (measurementSetup.measurementSetupDatabase != null)
+//				measurementSetup.measurementSetupDatabase.insert(measurementSetup);
+//		}
+//		catch (IllegalDataException e) {
+//			throw new CreateObjectException(e.getMessage(), e);
+//		}
+//		
+//		return measurementSetup;
+//	}
 
 	public boolean isAttachedToMonitoredElement(Identifier monitoredElementId) {
 		return this.monitoredElementIds.contains(monitoredElementId);

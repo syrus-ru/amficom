@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.40 2004/12/09 12:47:20 bob Exp $
+ * $Id: MeasurementType.java,v 1.41 2004/12/09 15:52:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2004/12/09 12:47:20 $
- * @author $Author: bob $
+ * @version $Revision: 1.41 $, $Date: 2004/12/09 15:52:53 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -156,22 +156,32 @@ public class MeasurementType extends ActionType {
 			throw new CreateObjectException("MeasurementType.createInstance | cannot generate identifier ", e);
 		}
 	}
-	
-	public static MeasurementType getInstance(MeasurementType_Transferable mtt) throws CreateObjectException {
-		
-		MeasurementType measurementType = new MeasurementType(mtt);
-		
-		measurementType.measurementTypeDatabase = MeasurementDatabaseContext.measurementTypeDatabase;
+
+	public void insert() throws CreateObjectException {
 		try {
-			if (measurementType.measurementTypeDatabase != null)
-				measurementType.measurementTypeDatabase.insert(measurementType);
+			if (this.measurementTypeDatabase != null)
+				this.measurementTypeDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
 		}
-		catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
 		}
-		
-		return measurementType;
 	}
+
+//	public static MeasurementType getInstance(MeasurementType_Transferable mtt) throws CreateObjectException {
+//		
+//		MeasurementType measurementType = new MeasurementType(mtt);
+//		
+//		measurementType.measurementTypeDatabase = MeasurementDatabaseContext.measurementTypeDatabase;
+//		try {
+//			if (measurementType.measurementTypeDatabase != null)
+//				measurementType.measurementTypeDatabase.insert(measurementType);
+//		}
+//		catch (IllegalDataException e) {
+//			throw new CreateObjectException(e.getMessage(), e);
+//		}
+//		
+//		return measurementType;
+//	}
 
 	public Object getTransferable() {
 		int i;

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.41 2004/12/09 12:47:20 bob Exp $
+ * $Id: AnalysisType.java,v 1.42 2004/12/09 15:52:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2004/12/09 12:47:20 $
- * @author $Author: bob $
+ * @version $Revision: 1.42 $, $Date: 2004/12/09 15:52:53 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -176,21 +176,31 @@ public class AnalysisType extends ActionType {
 			throw new CreateObjectException("AnalysisType.createInstance | cannot generate identifier ", e);
 		}
 	}
-	
-	public static AnalysisType getInstance(AnalysisType_Transferable att) throws CreateObjectException{
-		AnalysisType analysisType = new AnalysisType(att);
 
-		analysisType.analysisTypeDatabase = MeasurementDatabaseContext.analysisTypeDatabase;
+	public void insert() throws CreateObjectException {
 		try {
-			if (analysisType.analysisTypeDatabase != null)
-				analysisType.analysisTypeDatabase.insert(analysisType);
+			if (this.analysisTypeDatabase != null)
+				this.analysisTypeDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
 		}
-		catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
 		}
-
-		return analysisType;
 	}
+
+//	public static AnalysisType getInstance(AnalysisType_Transferable att) throws CreateObjectException{
+//		AnalysisType analysisType = new AnalysisType(att);
+//
+//		analysisType.analysisTypeDatabase = MeasurementDatabaseContext.analysisTypeDatabase;
+//		try {
+//			if (analysisType.analysisTypeDatabase != null)
+//				analysisType.analysisTypeDatabase.insert(analysisType);
+//		}
+//		catch (IllegalDataException e) {
+//			throw new CreateObjectException(e.getMessage(), e);
+//		}
+//
+//		return analysisType;
+//	}
 	
 	public Object getTransferable() {
 		int i;

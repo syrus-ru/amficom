@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.37 2004/12/09 12:47:20 bob Exp $
+ * $Id: EvaluationType.java,v 1.38 2004/12/09 15:52:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2004/12/09 12:47:20 $
- * @author $Author: bob $
+ * @version $Revision: 1.38 $, $Date: 2004/12/09 15:52:53 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -174,21 +174,31 @@ public class EvaluationType extends ActionType {
 			throw new CreateObjectException("EvaluationType.createInstance | cannot generate identifier ", e);
 		}
 	}
-	
-	public static EvaluationType getInstance(EvaluationType_Transferable ett) throws CreateObjectException {
-		EvaluationType evaluationType = new EvaluationType(ett);
-		
-		evaluationType.evaluationTypeDatabase = MeasurementDatabaseContext.evaluationTypeDatabase;
+
+	public void insert() throws CreateObjectException {
 		try {
-			if (evaluationType.evaluationTypeDatabase != null)
-				evaluationType.evaluationTypeDatabase.insert(evaluationType);
+			if (this.evaluationTypeDatabase != null)
+				this.evaluationTypeDatabase.update(this, StorableObjectDatabase.UPDATE_FORCE, null);
 		}
-		catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae.getMessage(), ae);
 		}
-		
-		return evaluationType;
 	}
+
+//	public static EvaluationType getInstance(EvaluationType_Transferable ett) throws CreateObjectException {
+//		EvaluationType evaluationType = new EvaluationType(ett);
+//		
+//		evaluationType.evaluationTypeDatabase = MeasurementDatabaseContext.evaluationTypeDatabase;
+//		try {
+//			if (evaluationType.evaluationTypeDatabase != null)
+//				evaluationType.evaluationTypeDatabase.insert(evaluationType);
+//		}
+//		catch (IllegalDataException e) {
+//			throw new CreateObjectException(e.getMessage(), e);
+//		}
+//		
+//		return evaluationType;
+//	}
 
 	public Object getTransferable() {
 		int i;
