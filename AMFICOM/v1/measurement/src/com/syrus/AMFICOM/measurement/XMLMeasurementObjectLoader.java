@@ -1,5 +1,5 @@
 /*
- * $Id: XMLMeasurementObjectLoader.java,v 1.1 2005/02/01 14:38:11 bob Exp $
+ * $Id: XMLMeasurementObjectLoader.java,v 1.2 2005/02/02 06:15:26 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,22 +29,22 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/01 14:38:11 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/02 06:15:26 $
  * @author $Author: bob $
  * @module measurement_v1
  */
 public class XMLMeasurementObjectLoader implements MeasurementObjectLoader {
 
-	private StorableObjectXML	generalXML;
+	private StorableObjectXML	measurementXML;
 
 	public XMLMeasurementObjectLoader(final File path) {
 		StorableObjectXMLDriver driver = new StorableObjectXMLDriver(path, "measurement");
-		this.generalXML = new StorableObjectXML(driver);
+		this.measurementXML = new StorableObjectXML(driver);
 	}
 
 	private StorableObject loadStorableObject(Identifier id) throws CommunicationException {
 		try {
-			return this.generalXML.retrieve(id);
+			return this.measurementXML.retrieve(id);
 		} catch (ObjectNotFoundException e) {
 			throw new CommunicationException("XMLMeasurementObjectLoader.load"
 					+ ObjectEntities.codeToString(id.getMajor()) + " | caught " + e.getMessage(), e);
@@ -164,7 +164,7 @@ public class XMLMeasurementObjectLoader implements MeasurementObjectLoader {
 
 	private List loadStorableObjectButIds(StorableObjectCondition condition, List ids) throws CommunicationException {
 		try {
-			return this.generalXML.retrieveByCondition(ids, condition);
+			return this.measurementXML.retrieveByCondition(ids, condition);
 		} catch (RetrieveObjectException e) {
 			throw new CommunicationException("XMLMeasurementObjectLoader.loadParameterTypesButIds | caught "
 					+ e.getMessage(), e);
@@ -178,7 +178,7 @@ public class XMLMeasurementObjectLoader implements MeasurementObjectLoader {
 	private void saveStorableObject(StorableObject storableObject) throws CommunicationException {
 		Identifier id = storableObject.getId();
 		try {
-			this.generalXML.updateObject(storableObject);
+			this.measurementXML.updateObject(storableObject);
 		} catch (UpdateObjectException e) {
 			throw new CommunicationException("XMLMeasurementObjectLoader.save"
 					+ ObjectEntities.codeToString(id.getMajor()) + " | caught " + e.getMessage(), e);
@@ -255,77 +255,77 @@ public class XMLMeasurementObjectLoader implements MeasurementObjectLoader {
 	public void saveMeasurementType(MeasurementType measurementType, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
 		this.saveStorableObject(measurementType);
-		this.generalXML.flush();
+		this.measurementXML.flush();
 	}
 
 	public void saveAnalysisType(AnalysisType analysisType, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
 		this.saveStorableObject(analysisType);
-		this.generalXML.flush();
+		this.measurementXML.flush();
 	}
 
 	public void saveEvaluationType(EvaluationType evaluationType, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
 		this.saveStorableObject(evaluationType);
-		this.generalXML.flush();
+		this.measurementXML.flush();
 
 	}
 
 	public void saveSet(Set set, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		this.saveStorableObject(set);
-		this.generalXML.flush();
+		this.measurementXML.flush();
 	}
 
 	public void saveMeasurementSetup(MeasurementSetup measurementSetup, boolean force)
 			throws VersionCollisionException, DatabaseException, CommunicationException {
 		this.saveStorableObject(measurementSetup);
-		this.generalXML.flush();
+		this.measurementXML.flush();
 
 	}
 
 	public void saveModeling(Modeling modeling, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		this.saveStorableObject(modeling);
-		this.generalXML.flush();
+		this.measurementXML.flush();
 	}
 
 	public void saveMeasurement(Measurement measurement, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
 		this.saveStorableObject(measurement);
-		this.generalXML.flush();
+		this.measurementXML.flush();
 	}
 
 	public void saveAnalysis(Analysis analysis, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		this.saveStorableObject(analysis);
-		this.generalXML.flush();
+		this.measurementXML.flush();
 	}
 
 	public void saveEvaluation(Evaluation evaluation, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
 		this.saveStorableObject(evaluation);
-		this.generalXML.flush();
+		this.measurementXML.flush();
 	}
 
 	public void saveTest(Test test, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		this.saveStorableObject(test);
-		this.generalXML.flush();
+		this.measurementXML.flush();
 
 	}
 
 	public void saveResult(Result result, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		this.saveStorableObject(result);
-		this.generalXML.flush();
+		this.measurementXML.flush();
 
 	}
 
 	public void saveTemporalPattern(TemporalPattern temporalPattern, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
 		this.saveStorableObject(temporalPattern);
-		this.generalXML.flush();
+		this.measurementXML.flush();
 
 	}
 
@@ -334,7 +334,7 @@ public class XMLMeasurementObjectLoader implements MeasurementObjectLoader {
 			StorableObject storableObject = (StorableObject) it.next();
 			this.saveStorableObject(storableObject);
 		}
-		this.generalXML.flush();
+		this.measurementXML.flush();
 	}
 
 	public void saveMeasurementTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
@@ -411,22 +411,22 @@ public class XMLMeasurementObjectLoader implements MeasurementObjectLoader {
 
 	public void delete(Identifier id) throws CommunicationException, DatabaseException {
 		try {
-			this.generalXML.delete(id);
+			this.measurementXML.delete(id);
 		} catch (IllegalDataException e) {
 			throw new CommunicationException("XMLMeasurementObjectLoader.delete | caught " + e.getMessage(), e);
 		}
-		this.generalXML.flush();
+		this.measurementXML.flush();
 	}
 
 	public void delete(List ids) throws CommunicationException, DatabaseException {
 		try {
 			for (Iterator it = ids.iterator(); it.hasNext();) {
 				Identifier id = (Identifier) it.next();
-				this.generalXML.delete(id);
+				this.measurementXML.delete(id);
 			}
 		} catch (IllegalDataException e) {
 			throw new CommunicationException("XMLMeasurementObjectLoader.delete | caught " + e.getMessage(), e);
 		}
-		this.generalXML.flush();
+		this.measurementXML.flush();
 	}
 }
