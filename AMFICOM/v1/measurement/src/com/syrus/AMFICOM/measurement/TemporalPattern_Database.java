@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.measurement.ora.CronStringArray;
 
 public class TemporalPattern_Database extends StorableObject_Database {
-	public static final String COLUMN_DESCRIPTION = "description";
-	public static final String COLUMN_VALUE = "value";
+	public static final String COLUMN_DESCRIPTION 	= "description";
+	public static final String COLUMN_VALUE 		= "value";
 
 	private TemporalPattern fromStorableObject(StorableObject storableObject) throws Exception {
 		if (storableObject instanceof TemporalPattern)
@@ -32,15 +32,15 @@ public class TemporalPattern_Database extends StorableObject_Database {
 
 	private void retrieveTemporalPattern(TemporalPattern temporalPattern) throws Exception {
 		String tp_id_str = temporalPattern.getId().toSQLString();
-		String sql = "SELECT "
+		String sql = SQL_SELECT
 			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
 			+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
 			+ COLUMN_CREATOR_ID + COMMA
 			+ COLUMN_MODIFIER_ID + COMMA
 			+ COLUMN_DESCRIPTION + COMMA
 			+ COLUMN_VALUE
-			+ " FROM " + ObjectEntities.TEMPORALPATTERN_ENTITY
-			+ " WHERE " + COLUMN_ID + " = " + tp_id_str;
+			+ SQL_FROM + ObjectEntities.TEMPORALPATTERN_ENTITY
+			+ SQL_WHERE + COLUMN_ID + EQUALS + tp_id_str;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -49,12 +49,12 @@ public class TemporalPattern_Database extends StorableObject_Database {
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
 				String[] cronStrings = ((CronStringArray)(((OracleResultSet)resultSet).getORAData(COLUMN_VALUE, CronStringArray.getORADataFactory()))).getArray();
-				temporalPattern.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-																			DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-																			new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-																			new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-																			resultSet.getString(COLUMN_DESCRIPTION),
-																			cronStrings);
+				temporalPattern.setAttributes(	DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+												DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+												new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+												new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+												resultSet.getString(COLUMN_DESCRIPTION),
+												cronStrings);
 			}
 			else
 				throw new Exception("No such temporal pattern: " + tp_id_str);
@@ -110,7 +110,7 @@ public class TemporalPattern_Database extends StorableObject_Database {
 
 	private void insertTemporalPattern(TemporalPattern temporalPattern) throws Exception {
 		String tp_id_code = temporalPattern.getId().getCode();
-		String sql = "INSERT INTO " + ObjectEntities.TEMPORALPATTERN_ENTITY + " ("
+		String sql = SQL_INSERT_INTO + ObjectEntities.TEMPORALPATTERN_ENTITY + CLOSE_BRACKET
 			+ COLUMN_ID + COMMA
 			+ COLUMN_CREATED + COMMA
 			+ COLUMN_MODIFIED + COMMA
@@ -118,8 +118,16 @@ public class TemporalPattern_Database extends StorableObject_Database {
 			+ COLUMN_MODIFIER_ID + COMMA
 			+ COLUMN_DESCRIPTION + COMMA
 			+ COLUMN_VALUE
-			+ ") VALUES "
-			+ "(?, ?, ?, ?, ?, ?, ?)";
+			+ CLOSE_BRACKET
+			+ SQL_VALUES
+			+ OPEN_BRACKET
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA
+			+ QUESTION + CLOSE_BRACKET;
 		PreparedStatement preparedStatement = null;
 		try {
 			preparedStatement = connection.prepareStatement(sql);
