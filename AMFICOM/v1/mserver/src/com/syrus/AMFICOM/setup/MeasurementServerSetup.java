@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServerSetup.java,v 1.15 2004/10/27 08:25:51 max Exp $
+ * $Id: MeasurementServerSetup.java,v 1.16 2004/10/27 09:54:21 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/10/27 08:25:51 $
+ * @version $Revision: 1.16 $, $Date: 2004/10/27 09:54:21 $
  * @author $Author: max $
  * @module mserver_v1
  */
@@ -81,6 +81,8 @@ public class MeasurementServerSetup {
 		MeasurementPortType mPortType = createMeasurementPortType(sysAdminId);
 
 		KISType kisType = createKISType(sysAdminId);
+        
+        TransmissionPathType transmissionPathType = createTransmissionPathType(sysAdminId);
 		
         Identifier domainId = createDomain(sysAdminId);
 
@@ -108,7 +110,7 @@ public class MeasurementServerSetup {
 		Identifier portId1 = createPort(sysAdminId, portType, equipmentId);
 		Identifier portId2 = createPort(sysAdminId, portType, equipmentId);
 
-		Identifier tpId = createTransmissionPath(sysAdminId, domainId, portId1, portId2);
+		Identifier tpId = createTransmissionPath(sysAdminId, domainId, portId1, portId2, transmissionPathType);
 
 
 		Identifier kisId = createKIS(sysAdminId, domainId, equipmentId, mcmId, kisType);
@@ -162,14 +164,30 @@ public class MeasurementServerSetup {
 		}
 	}
     
+    private static TransmissionPathType createTransmissionPathType(Identifier creatorId) {
+        try {
+            Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE);
+            TransmissionPathType transmissionPathType = TransmissionPathType.createInstance(id,
+            		creatorId,
+					"Type of TransmissionPath",
+                    "",
+					"");            
+            return TransmissionPathType.getInstance((TransmissionPathType_Transferable)transmissionPathType.getTransferable());
+        }
+        catch (Exception e) {
+            Log.errorException(e);
+            return null;
+        }
+    }
+    
     private static KISType createKISType(Identifier creatorId) {
         try {
             Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.KISTYPE_ENTITY_CODE);
             KISType kisType = KISType.createInstance(id,
-            		creatorId,
-					"Type of KIS",
+                    creatorId,
+                    "Type of KIS",
                     "",
-					"");            
+                    "");            
             return KISType.getInstance((KISType_Transferable)kisType.getTransferable());
         }
         catch (Exception e) {
@@ -339,7 +357,8 @@ public class MeasurementServerSetup {
 	private static Identifier createTransmissionPath(Identifier creatorId,
 																									 Identifier domainId,
 																									 Identifier startPortId,
-																									 Identifier finishPortId) {
+																									 Identifier finishPortId,
+                                                                                                     TransmissionPathType type) {
 		try {
 			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.TRANSPATH_ENTITY_CODE);
 			TransmissionPath tp = TransmissionPath.createInstance(id,
@@ -347,6 +366,7 @@ public class MeasurementServerSetup {
 																														domainId,
 																														"TransmissionPath",
 																														"TransmissionPath",
+                                                                                                                        type,
 																														startPortId,
 																														finishPortId);
 			TransmissionPath tp1 = TransmissionPath.getInstance((TransmissionPath_Transferable)tp.getTransferable());
