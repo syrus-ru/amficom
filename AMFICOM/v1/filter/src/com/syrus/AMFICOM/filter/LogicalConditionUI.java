@@ -1,10 +1,10 @@
 /*
-* $Id: LogicalConditionUI.java,v 1.3 2005/02/28 16:06:46 bob Exp $
-*
-* Copyright © 2004 Syrus Systems.
-* Dept. of Science & Technology.
-* Project: AMFICOM.
-*/
+ * $Id: LogicalConditionUI.java,v 1.4 2005/03/10 15:17:48 bob Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
 package com.syrus.AMFICOM.filter;
 
@@ -22,86 +22,63 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
 import javax.swing.ScrollPaneConstants;
 
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.logic.LogicalItem;
 import com.syrus.AMFICOM.logic.LogicalSchemeUI;
+import com.syrus.AMFICOM.logic.LogicalTreeUI;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/28 16:06:46 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/10 15:17:48 $
  * @author $Author: bob $
  * @module filter_v1
  */
-public class LogicalConditionUI extends JPanel {
+public class LogicalConditionUI {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long	serialVersionUID	= 3760566377651844662L;
 
-	public LogicalConditionUI() {
-		List items = new LinkedList();
-		LogicalItem result = new LogicalItem(LogicalItem.ROOT);
-		
-		LogicalItem andOperator1 = new LogicalItem(LogicalItem.AND);
-		LogicalItem andOperator2 = new LogicalItem(LogicalItem.AND);
-		
-		andOperator1.addChild(andOperator2);
-		LogicalItem andOperator3 = new LogicalItem(LogicalItem.AND);
-		LogicalItem andOperator4 = new LogicalItem(LogicalItem.AND);
-		andOperator2.addChild(andOperator3);
-		andOperator2.addChild(andOperator4);
-		LogicalItem condition1 = new LogicalItem(new EquivalentCondition(ObjectEntities.TEST_ENTITY_CODE));
-		LogicalItem condition2 = new LogicalItem(new EquivalentCondition(ObjectEntities.TEST_ENTITY_CODE));
-		andOperator1.addChild(condition1);
-		andOperator1.addChild(condition2);
-		result.addChild(andOperator1);
-		items.add(result);
-		items.add(andOperator1);
-		items.add(andOperator2);
-		items.add(andOperator3);
-		items.add(andOperator4);
-		items.add(condition1);
-		items.add(condition2);
-		
-//		LogicalItem result2 = new LogicalItem(LogicalItem.ROOT);
-//		
-//		LogicalItem andOperator21 = new LogicalItem(LogicalItem.AND);
-//		
-//		result2.addChild(andOperator21);
-//		items.add(result2);
-//		items.add(andOperator21);
+	private List				items;
 
-		
-//		LogicalItem result = new LogicalItem(LogicalItem.ROOT);
-//		LogicalItem andOperator1 = new LogicalItem(LogicalItem.AND);
-//		LogicalItem andOperator2 = new LogicalItem(LogicalItem.AND);
-//		result.addChild(andOperator1);
-//		andOperator1.addChild(andOperator2);
-//		
-////		ViewItem result = new ViewItem(1, 0, "Result", "Result", 0, 0);
-////		ViewItem andOperator1 = new ViewItem(Integer.MAX_VALUE, 1, "AND", "AND", 0, 0);
-////		result.addChild(andOperator1);
-//
-//		items.add(result);
-//		items.add(andOperator1);
-//		items.add(andOperator2);
+	private List				rootItems;
+
+	private LogicalSchemeUI		logicalSchemeUI;
+
+	public LogicalConditionUI() {
+		// nothing
+	}
+
+	public static void main(String[] args) {
+		JFrame frame = new JFrame("Filter");
+		LogicalConditionUI logicalSchemeUI = new LogicalConditionUI();
+		frame.getContentPane().add(logicalSchemeUI.getSplitPane());
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.pack();
+		frame.setVisible(false);
+		frame.setVisible(true);
+
+	}
+
+	public JPanel getPanel() {
+		JPanel panel = new JPanel(new GridBagLayout());
 
 		Dimension dimension = new Dimension(600, 400);
-		this.setMinimumSize(dimension);
-		this.setPreferredSize(dimension);
-		
-		final LogicalSchemeUI logicalSchemeUI = new LogicalSchemeUI(items);	
+		panel.setMinimumSize(dimension);
+		panel.setPreferredSize(dimension);
 
-		this.setLayout(new GridBagLayout());
+		this.logicalSchemeUI = new LogicalSchemeUI(this.getItems());
 
-		final JScrollPane jScrollPane = new JScrollPane();
-		jScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-		jScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		final LogicalSchemeUI logicalSchemeUI = this.logicalSchemeUI;
+
+		final JScrollPane jScrollPane = new JScrollPane(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+														ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		jScrollPane.setAutoscrolls(true);
-		jScrollPane.getViewport().add(logicalSchemeUI);
+		jScrollPane.getViewport().add(this.logicalSchemeUI);
 
 		JButton andButton = new JButton("AND");
 		andButton.addActionListener(new ActionListener() {
@@ -141,39 +118,98 @@ public class LogicalConditionUI extends JPanel {
 		// TODO add listener
 		JButton cancelButton = new JButton("Cancel");
 
-		Box box = new Box(BoxLayout.X_AXIS);
-		box.add(andButton);
-		box.add(orButton);
-		box.add(Box.createHorizontalStrut(andButton.getWidth()));
-		box.add(deleteButton);
-		box.add(Box.createGlue());
-		box.add(arrangeButton);
-		box.add(Box.createGlue());
-		box.add(okButton);
-		box.add(cancelButton);
+		Box box1 = new Box(BoxLayout.X_AXIS);
+		box1.add(andButton);
+		box1.add(orButton);
+		box1.add(Box.createGlue());
+
+		Box box2 = new Box(BoxLayout.X_AXIS);
+		box2.add(deleteButton);
+		box2.add(Box.createGlue());
+		box2.add(arrangeButton);
+		box2.add(Box.createGlue());
+		box2.add(cancelButton);
+		box2.add(okButton);
 
 		GridBagConstraints gbc = new GridBagConstraints();
-		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		gbc.gridheight = GridBagConstraints.RELATIVE;
+
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.weightx = 1.0;
+		gbc.weighty = 0.0;
+		gbc.gridwidth = GridBagConstraints.RELATIVE;
+
+		// this.add(this.getTree(), gbc);
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+
+		panel.add(box1, gbc);
 		gbc.weighty = 1.0;
-		this.add(jScrollPane, gbc);
-		// this.add(this.objectPanel, BorderLayout.NORTH);
-		// gbc.weightx = 0.0;
+		gbc.gridheight = GridBagConstraints.RELATIVE;
+		panel.add(jScrollPane, gbc);
 		gbc.weighty = 0.0;
 		gbc.gridheight = GridBagConstraints.REMAINDER;
-		this.add(box, gbc);		
+		panel.add(box2, gbc);
+
+		return panel;
 	}
 
-	public static void main(String[] args) {
-		JFrame frame = new JFrame("Filter");
-		LogicalConditionUI logicalSchemeUI = new LogicalConditionUI();
-		frame.getContentPane().add(logicalSchemeUI);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.pack();
-		frame.setVisible(false);
-		frame.setVisible(true);
-
+	public JSplitPane getSplitPane() {
+		JPanel panel = this.getPanel();
+		LogicalTreeUI logicalTreeUI = new LogicalTreeUI(this.rootItems);
+		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, logicalTreeUI.getPanel(), panel);
+		if (this.logicalSchemeUI != null) {
+			logicalTreeUI.addSelectionListener(this.logicalSchemeUI);
+			this.logicalSchemeUI.addSelectionListener(logicalTreeUI);
+			this.logicalSchemeUI.addAddDeleteItemListener(logicalTreeUI);
+		}
+		splitPane.setOneTouchExpandable(false);
+		splitPane.setResizeWeight(0.2);
+		return splitPane;
 	}
+
+	private List getItems() {
+		if (this.items == null) {
+			this.items = new LinkedList();
+			LogicalItem result = new LogicalItem(LogicalItem.ROOT);
+			if (this.rootItems == null)
+				this.rootItems = new LinkedList();
+			this.rootItems.add(result);
+
+			LogicalItem andOperator0 = new LogicalItem(LogicalItem.AND);
+			
+			LogicalItem andOperator1 = new LogicalItem(LogicalItem.AND);
+			andOperator0.addChild(andOperator1);
+			LogicalItem andOperator2 = new LogicalItem(LogicalItem.AND);
+			LogicalItem andOperator3 = new LogicalItem(LogicalItem.AND);
+			andOperator1.addChild(andOperator2);
+			andOperator1.addChild(andOperator3);
+			LogicalItem condition1 = new LogicalItem(new EquivalentCondition(ObjectEntities.TEST_ENTITY_CODE));
+			LogicalItem condition2 = new LogicalItem(new EquivalentCondition(ObjectEntities.TEST_ENTITY_CODE));
+			andOperator0.addChild(condition1);
+			andOperator0.addChild(condition2);
+			result.addChild(andOperator0);
+			
+			LogicalItem andOperator4 = new LogicalItem(LogicalItem.AND);
+			andOperator0.addChild(andOperator4);
+			LogicalItem andOperator5 = new LogicalItem(LogicalItem.AND);
+			LogicalItem andOperator6 = new LogicalItem(LogicalItem.AND);
+			LogicalItem andOperator7 = new LogicalItem(LogicalItem.AND);
+			andOperator4.addChild(andOperator5);
+			andOperator4.addChild(andOperator6);
+			andOperator4.addChild(andOperator7);
+			
+			this.items.add(result);
+			this.items.add(andOperator0);
+			this.items.add(andOperator1);
+			this.items.add(andOperator2);
+			this.items.add(andOperator3);
+			this.items.add(andOperator4);
+			this.items.add(andOperator5);
+			this.items.add(andOperator6);
+			this.items.add(andOperator7);
+			this.items.add(condition1);
+			this.items.add(condition2);
+		}
+		return this.items;
+	}
+
 }

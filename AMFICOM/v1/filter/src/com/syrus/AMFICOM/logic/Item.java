@@ -1,5 +1,5 @@
 /*
-* $Id: Item.java,v 1.1 2005/02/22 09:02:39 bob Exp $
+* $Id: Item.java,v 1.2 2005/03/10 15:17:48 bob Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,11 +8,11 @@
 
 package com.syrus.AMFICOM.logic;
 
-import java.util.Collection;
+import java.util.List;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/22 09:02:39 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/10 15:17:48 $
  * @author $Author: bob $
  * @module filter_v1
  */
@@ -22,13 +22,23 @@ public interface Item {
 	
 	int getMaxParentCount();
 	
-	public Collection getChildren();
+	String getName();
 	
-	public void addChild(Item childItem);
+	Object getObject();
 	
-	public void removeChild(Item childItem);
+	List getChildren();
 	
-	public String getName();
+	void addChild(Item childItem);
 	
-	public Object getObject();
+	void removeChild(Item childItem);
+	
+	List getParents();
+	
+	void addParent(Item parent);
+	
+	void removeParent(Item parent);
+	
+	void addChangeListener(ItemListener itemListener);
+	
+	void removeChangeListener(ItemListener itemListener);
 }
