@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.32 2004/11/22 13:49:24 bob Exp $
+ * $Id: MCMDatabase.java,v 1.33 2004/11/23 14:40:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2004/11/22 13:49:24 $
+ * @version $Revision: 1.33 $, $Date: 2004/11/23 14:40:57 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -51,7 +51,6 @@ public class MCMDatabase extends StorableObjectDatabase {
 
 	public static final String COLUMN_NAME = "name";
 	public static final String COLUMN_DESCRIPTION = "description";
-	public static final String COLUMN_TYPE_ID = "type_id";
 	public static final String COLUMN_USER_ID = "user_id";
 	public static final String COLUMN_SERVER_ID = "server_id";
 	// tcp_port NUMBER(5,0),
