@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.60 2005/02/24 15:21:52 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.61 2005/03/05 21:37:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -25,26 +26,15 @@ import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
 import com.syrus.AMFICOM.administration.corba.Server_Transferable;
-import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.KIS;
-import com.syrus.AMFICOM.configuration.MeasurementPort;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.AMFICOM.configuration.Port;
-import com.syrus.AMFICOM.configuration.TransmissionPath;
-import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
-import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
-import com.syrus.AMFICOM.configuration.corba.MeasurementPort_Transferable;
-import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
-import com.syrus.AMFICOM.configuration.corba.Port_Transferable;
-import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -64,7 +54,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/02/24 15:21:52 $
+ * @version $Revision: 1.61 $, $Date: 2005/03/05 21:37:45 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -108,6 +98,9 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 
 	/*	Information about myself*/
 	protected static MCM iAm;
+
+	/*	Identifiers of KISs, attached to me*/
+	protected static Collection kisIds;	//Collection <Identifier kisId>
 
 	/*	Scheduled tests transferred from server	*/
 	protected static List testList;	//List <Test>
@@ -167,6 +160,16 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		/*	Retrieve information abot myself*/
 		try {
 			iAm = new MCM(new Identifier(ApplicationProperties.getString(KEY_ID, ID)));
+
+			LinkedIdsCondition lic = new LinkedIdsCondition(iAm.getId(), ObjectEntities.KIS_ENTITY_CODE);
+			Collection kiss = ConfigurationStorableObjectPool.getStorableObjectsByCondition(lic, true);
+			kisIds = new HashSet(kiss.size());
+			Identifier id;
+			for (Iterator it = kiss.iterator(); it.hasNext();) {
+				id = ((KIS) it.next()).getId();
+				Log.debugMessage("Retrieved KIS '" + id + "'", Log.DEBUGLEVEL08);
+				kisIds.add(id);
+			}
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -300,19 +303,19 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	}
 
 	private static void activateKISTransceivers() {
-		Collection kisIds = iAm.getKISIds();
 		transceivers = Collections.synchronizedMap(new HashMap(kisIds.size()));
 		Identifier kisId;
 		Transceiver transceiver;
 		synchronized (kisIds) {
 			for (Iterator it = kisIds.iterator(); it.hasNext();) {
-				kisId = (Identifier)it.next();
+				kisId = (Identifier) it.next();
 				try {
 					transceiver = new Transceiver((KIS)ConfigurationStorableObjectPool.getStorableObject(kisId, true));
 					transceiver.start();
 					transceivers.put(kisId, transceiver);
 					Log.debugMessage("Started transceiver for KIS '" + kisId + "'", Log.DEBUGLEVEL07);
-				} catch (ApplicationException e) {
+				}
+				catch (ApplicationException e) {
 					Log.errorException(e);
 				}
 			}
@@ -598,80 +601,6 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			Log.errorException(ae);
 			System.exit(-1);
 		}
-
-
-		for (int i = 0; i < mcmT.kis_ids.length; i++) {
-			try {
-				KIS_Transferable kisT = mServerRef.transmitKIS(mcmT.kis_ids[i]);
-
-				Equipment_Transferable eqT = mServerRef.transmitEquipment(kisT.equipment_id);
-				try {
-					ConfigurationDatabaseContext.getEquipmentDatabase().insert(new Equipment(eqT));
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
-				Port_Transferable portT;
-				for (int j = 0; j < eqT.port_ids.length; j++) {
-					portT = mServerRef.transmitPort(eqT.port_ids[j]);
-					try {
-						ConfigurationDatabaseContext.getPortDatabase().insert(new Port(portT));
-					}
-					catch (CreateObjectException coe) {
-						Log.errorException(coe);
-					}
-				}
-				/*	If Equipment is monitored (i. e. - has monitored elements),
-				 *	we also must retrieve it's monitored elements, it's KIS
-				 *  and subsequent information. Disregard now	*/
-
-				try {
-					ConfigurationDatabaseContext.getKISDatabase().insert(new KIS(kisT));
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
-
-				MeasurementPort_Transferable mportT;
-				for (int j = 0; j < kisT.measurement_port_ids.length; j++) {
-					mportT = mServerRef.transmitMeasurementPort(kisT.measurement_port_ids[j]);
-					try {
-						ConfigurationDatabaseContext.getMeasurementPortDatabase().insert(new MeasurementPort(mportT));
-					}
-					catch (CreateObjectException coe) {
-						Log.errorException(coe);
-					}
-				}
-
-				/*	Now load only transmission paths.
-				 *	Other sorts of monitored element - disregard	*/
-				MonitoredElement_Transferable[] mesT = mServerRef.transmitKISMonitoredElements(kisT.header.id);
-				TransmissionPath_Transferable tpT;
-				for (int j = 0; j < mesT.length; j++) {
-					for (int k = 0; k < mesT[j].monitored_domain_member_ids.length; k++) {
-						tpT = mServerRef.transmitTransmissionPath(mesT[j].monitored_domain_member_ids[k]);
-						try {
-							ConfigurationDatabaseContext.getTransmissionPathDatabase().insert(new TransmissionPath(tpT));
-						}
-						catch (CreateObjectException coe) {
-							Log.errorException(coe);
-						}
-					}
-					try {
-						ConfigurationDatabaseContext.getMonitoredElementDatabase().insert(new MonitoredElement(mesT[j]));
-					}
-					catch (CreateObjectException coe) {
-						Log.errorException(coe);
-					}
-				}
-			}
-			catch (Exception e) {
-				Log.errorException(e);
-				DatabaseConnection.closeConnection();
-				System.exit(-1);
-			}
-		}
-
 
 		/*	Close database connection*/
 		DatabaseConnection.closeConnection();

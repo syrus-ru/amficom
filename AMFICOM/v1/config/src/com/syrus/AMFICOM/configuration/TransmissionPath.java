@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.50 2005/03/04 13:32:12 bass Exp $
+ * $Id: TransmissionPath.java,v 1.51 2005/03/05 21:37:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,10 +33,11 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 /**
- * @version $Revision: 1.50 $, $Date: 2005/03/04 13:32:12 $
- * @author $Author: bass $
+ * @version $Revision: 1.51 $, $Date: 2005/03/05 21:37:24 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -50,7 +51,7 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 	private Identifier startPortId;
 	private Identifier finishPortId;
 
-	private List characteristics;
+	private Collection characteristics;
 
 	private StorableObjectDatabase transmissionPathDatabase;
 
@@ -238,17 +239,17 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 		}
 	}
 
-	public List getCharacteristics() {
-		return Collections.unmodifiableList(this.characteristics);
+	public Collection getCharacteristics() {
+		return Collections.unmodifiableCollection(this.characteristics);
 	}
 
-	protected void setCharacteristics0(final List characteristics) {
+	public void setCharacteristics0(final Collection characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 
-	public void setCharacteristics(final List characteristics) {
+	public void setCharacteristics(final Collection characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.changed = true;
 	}	
@@ -288,5 +289,9 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 	public Collection getMonitoredElementIds() {
 		//TODO Implement
 		throw new UnsupportedOperationException("Not implemented yet");
+	}
+
+	public CharacteristicSort getCharacteristicSort() {
+		return CharacteristicSort.CHARACTERISTIC_SORT_TRANSMISSIONPATH;
 	}
 }

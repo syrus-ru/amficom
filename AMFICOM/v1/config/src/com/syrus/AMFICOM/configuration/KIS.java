@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.62 2005/03/04 13:32:12 bass Exp $
+ * $Id: KIS.java,v 1.63 2005/03/05 21:37:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,31 +12,31 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.Characterizable;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.administration.DomainMember;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/03/04 13:32:12 $
- * @author $Author: bass $
+ * @version $Revision: 1.63 $, $Date: 2005/03/05 21:37:24 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -54,15 +54,13 @@ public class KIS extends DomainMember implements Characterizable {
 	private String hostname;
 	private short tcpPort;
 
-	private Collection measurementPortIds;	//List <Identifier>
+	private Collection characteristics;
 
-	private List characteristics;
 	private StorableObjectDatabase kisDatabase;
 
 	public KIS(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		this.measurementPortIds = new HashSet();
 		this.characteristics = new ArrayList();
 		this.kisDatabase = ConfigurationDatabaseContext.kisDatabase;
 		try {
@@ -82,10 +80,6 @@ public class KIS extends DomainMember implements Characterizable {
 		this.description = kt.description;
 		this.hostname = kt.hostname;
 		this.tcpPort = kt.tcp_port;
-
-		this.measurementPortIds = new HashSet(kt.measurement_port_ids.length);
-		for (int i = 0; i < kt.measurement_port_ids.length; i++)
-			this.measurementPortIds.add(new Identifier(kt.measurement_port_ids[i]));
 
 		try {
 			this.characteristics = new ArrayList(kt.characteristic_ids.length);
@@ -122,7 +116,7 @@ public class KIS extends DomainMember implements Characterizable {
 		this.tcpPort = tcpPort;
 		this.equipmentId = equipmentId;
 		this.mcmId = mcmId;
-		this.measurementPortIds = new HashSet();
+
 		this.characteristics = new ArrayList();
 
 		this.kisDatabase = ConfigurationDatabaseContext.kisDatabase;
@@ -170,11 +164,6 @@ public class KIS extends DomainMember implements Characterizable {
 
 	public Object getTransferable() {
 		int i = 0;
-		Identifier_Transferable[] mportIds = new Identifier_Transferable[this.measurementPortIds.size()];
-		for (Iterator iterator = this.measurementPortIds.iterator(); iterator.hasNext();)
-			mportIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
-
-		i = 0;
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
 		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
 			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
@@ -187,8 +176,7 @@ public class KIS extends DomainMember implements Characterizable {
 															this.tcpPort,
 															(Identifier_Transferable)this.equipmentId.getTransferable(),
 															(Identifier_Transferable)this.mcmId.getTransferable(),
-															charIds,
-															mportIds);
+															charIds);
 	}
 
 	public String getName() {
@@ -199,7 +187,7 @@ public class KIS extends DomainMember implements Characterizable {
 		return this.description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.description = description;
 		super.changed = true;
 	}
@@ -220,22 +208,9 @@ public class KIS extends DomainMember implements Characterizable {
 		return this.mcmId;
 	}
 
-	public void setMCMId(Identifier mcmId) {
+	public void setMCMId(final Identifier mcmId) {
 		this.mcmId = mcmId;
 		super.changed = true;
-	}
-
-	public Collection getMeasurementPortIds() {
-		return Collections.unmodifiableCollection(this.measurementPortIds);
-	}
-
-	public List retrieveMonitoredElements() throws RetrieveObjectException, ObjectNotFoundException {
-		try {
-			return (List)this.kisDatabase.retrieveObject(this, KISDatabase.RETRIEVE_MONITORED_ELEMENTS, null);
-		}
-		catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e.getMessage(), e);
-		}
 	}
 
 	protected synchronized void setAttributes(Date created,
@@ -264,22 +239,10 @@ public class KIS extends DomainMember implements Characterizable {
 		this.mcmId = mcmId;
 	}
 
-	protected synchronized void setMeasurementPortIds0(Collection measurementPortIds) {
-		this.measurementPortIds.clear();
-		if (measurementPortIds != null)
-			this.measurementPortIds.addAll(measurementPortIds);
-	}
-
-	public void setMeasurementPortIds(Collection measurementPortIds) {
-		this.setMeasurementPortIds0(measurementPortIds);
-		super.changed = true;
-	}
-
 	public List getDependencies() {
 		List dependencies = new LinkedList();
 		dependencies.add(this.equipmentId);
 		dependencies.add(this.mcmId);
-		dependencies.addAll(this.measurementPortIds);
 		return dependencies;
 	}
 
@@ -297,45 +260,50 @@ public class KIS extends DomainMember implements Characterizable {
 		}
 	}
 
-	public List getCharacteristics() {
-		return Collections.unmodifiableList(this.characteristics);
+	public Collection getCharacteristics() {
+		return Collections.unmodifiableCollection(this.characteristics);
 	}
 
-	protected void setCharacteristics0(final List characteristics) {
+	public void setCharacteristics0(final Collection characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 
-	public void setCharacteristics(final List characteristics) {
+	public void setCharacteristics(final Collection characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.changed = true;
-	}	
+	}
+
+	public CharacteristicSort getCharacteristicSort() {
+		return CharacteristicSort.CHARACTERISTIC_SORT_KIS;
+	}
+
 	/**
 	 * @param name The name to set.
 	 */
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 		super.changed = true;
 	}
 	/**
 	 * @param equipmentId The equipmentId to set.
 	 */
-	public void setEquipmentId(Identifier equipmentId) {
+	public void setEquipmentId(final Identifier equipmentId) {
 		this.equipmentId = equipmentId;
 		super.changed = true;
 	}
 	/**
 	 * @param hostname The hostname to set.
 	 */
-	public void setHostName(String hostname) {
+	public void setHostName(final String hostname) {
 		this.hostname = hostname;
 		super.changed = true;
 	}
 	/**
 	 * @param tcpPort The tcpPort to set.
 	 */
-	public void setTCPPort(short tcpPort) {
+	public void setTCPPort(final short tcpPort) {
 		this.tcpPort = tcpPort;
 		super.changed = true;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.75 2005/03/05 09:58:23 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.76 2005/03/05 21:37:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2005/03/05 09:58:23 $
+ * @version $Revision: 1.76 $, $Date: 2005/03/05 21:37:32 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -190,7 +190,7 @@ public class SetDatabase extends StorableObjectDatabase {
 				+ SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
 				+ SQL_WHERE);
 		try {
-			sql.append(this.idsEnumerationString(sets, SetWrapper.LINK_COLUMN_SET_ID, true));
+			sql.append(idsEnumerationString(sets, SetWrapper.LINK_COLUMN_SET_ID, true));
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e);

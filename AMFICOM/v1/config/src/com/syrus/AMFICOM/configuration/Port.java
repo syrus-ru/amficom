@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.45 2005/03/04 13:32:12 bass Exp $
+ * $Id: Port.java,v 1.46 2005/03/05 21:37:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -33,11 +34,12 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/03/04 13:32:12 $
- * @author $Author: bass $
+ * @version $Revision: 1.46 $, $Date: 2005/03/05 21:37:24 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public class Port extends StorableObject implements Characterizable, TypedObject {
@@ -48,7 +50,7 @@ public class Port extends StorableObject implements Characterizable, TypedObject
 	private Identifier equipmentId;
 	private int sort;
 
-	private List characteristics;
+	private Collection characteristics;
 
 	private StorableObjectDatabase portDatabase;
 
@@ -205,19 +207,23 @@ public class Port extends StorableObject implements Characterizable, TypedObject
 		}
 	}
 
-	public List getCharacteristics() {
-		return Collections.unmodifiableList(this.characteristics);
+	public Collection getCharacteristics() {
+		return Collections.unmodifiableCollection(this.characteristics);
 	}
 
-	protected void setCharacteristics0(final List characteristics) {
+	public void setCharacteristics0(final Collection characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 
-	public void setCharacteristics(final List characteristics) {
+	public void setCharacteristics(final Collection characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.changed = true;
+	}
+
+	public CharacteristicSort getCharacteristicSort() {
+		return CharacteristicSort.CHARACTERISTIC_SORT_PORT;
 	}
 
 	protected synchronized void setAttributes(Date created,

@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.22 2005/03/04 13:32:12 bass Exp $
+ * $Id: CableLinkType.java,v 1.23 2005/03/05 21:37:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,11 +29,12 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/03/04 13:32:12 $
- * @author $Author: bass $
+ * @version $Revision: 1.23 $, $Date: 2005/03/05 21:37:24 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public class CableLinkType extends AbstractLinkType implements Characterizable {
@@ -46,9 +47,7 @@ public class CableLinkType extends AbstractLinkType implements Characterizable {
 	private String manufacturerCode;
 	private Identifier imageId;
 
-	private List cableThreadTypes;
-
-	private List characteristics;
+	private Collection characteristics;
 
 	private StorableObjectDatabase cableLinkTypeDatabase;
 
@@ -56,7 +55,6 @@ public class CableLinkType extends AbstractLinkType implements Characterizable {
 		super(id);
 
 		this.characteristics = new ArrayList();
-		this.cableThreadTypes = new ArrayList();
 
 		this.cableLinkTypeDatabase = ConfigurationDatabaseContext.cableLinkTypeDatabase;
 		try {
@@ -80,12 +78,6 @@ public class CableLinkType extends AbstractLinkType implements Characterizable {
 			for (int i = 0; i < cltt.characteristic_ids.length; i++)
 				characteristicIds.add(new Identifier(cltt.characteristic_ids[i]));
 			this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
-
-			this.cableThreadTypes = new ArrayList(cltt.cableThreadTypeIds.length);
-			List cableThreadTypeIds = new ArrayList(cltt.cableThreadTypeIds.length);
-			for (int i = 0; i < cltt.cableThreadTypeIds.length; i++)
-				cableThreadTypeIds.add(new Identifier(cltt.cableThreadTypeIds[i]));
-			this.cableThreadTypes.addAll(ConfigurationStorableObjectPool.getStorableObjects(cableThreadTypeIds, true));
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
@@ -117,8 +109,8 @@ public class CableLinkType extends AbstractLinkType implements Characterizable {
 		this.manufacturer = manufacturer;
 		this.manufacturerCode = manufacturerCode;
 		this.imageId = imageId;
+
 		this.characteristics = new ArrayList();
-		this.cableThreadTypes = new ArrayList();
 
 		this.cableLinkTypeDatabase = ConfigurationDatabaseContext.cableLinkTypeDatabase;
 	}
@@ -169,19 +161,16 @@ public class CableLinkType extends AbstractLinkType implements Characterizable {
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
 		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
 			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
-		i = 0;
-		Identifier_Transferable[] cableThreadTypeIds = new Identifier_Transferable[this.cableThreadTypes.size()];
-		for (Iterator iterator = this.cableThreadTypes.iterator(); iterator.hasNext();)
-			cableThreadTypeIds[i++] = (Identifier_Transferable)((CableThreadType)iterator.next()).getId().getTransferable();
 
 		return new CableLinkType_Transferable(super.getHeaderTransferable(),
 																		 new String(super.codename),
 																		 (super.description != null) ? (new String(super.description)) : "",
 																		 (this.name != null) ? (new String(this.name)) : "",
-																		 LinkTypeSort.from_int(this.sort), this.manufacturer, this.manufacturerCode,
+																		 LinkTypeSort.from_int(this.sort),
+																		 new String(this.manufacturer),
+																		 new String(this.manufacturerCode),
 																		 (Identifier_Transferable) this.imageId.getTransferable(),
-																		 charIds,
-																		 cableThreadTypeIds);
+																		 charIds);
 	}
 
 	protected synchronized void setAttributes(Date created,
@@ -245,28 +234,13 @@ public class CableLinkType extends AbstractLinkType implements Characterizable {
 		return this.name;
 	}
 
-	public void setName(String name){
+	public void setName(String name) {
 		super.changed = true;
 		this.name = name;
 	}
 
 	public List getDependencies() {
 		return Collections.EMPTY_LIST;
-	}
-
-	public List getCableThreadTypes() {
-		return Collections.unmodifiableList(this.cableThreadTypes);
-	}
-
-	protected void setCableThreadTypes0(final Collection cableThreadTypes) {
-		this.cableThreadTypes.clear();
-		if (cableThreadTypes != null)
-			this.cableThreadTypes.addAll(cableThreadTypes);
-	}
-
-	public void setCableThreadTypes(Collection cableThreadTypes) {
-		this.setCableThreadTypes0(cableThreadTypes);
-		super.changed = true;
 	}
 
 	public void addCharacteristic(Characteristic characteristic) {
@@ -283,19 +257,22 @@ public class CableLinkType extends AbstractLinkType implements Characterizable {
 		}
 	}
 
-	public List getCharacteristics() {
-		return Collections.unmodifiableList(this.characteristics);
+	public Collection getCharacteristics() {
+		return Collections.unmodifiableCollection(this.characteristics);
 	}
 
-	protected void setCharacteristics0(final List characteristics) {
+	public void setCharacteristics0(final Collection characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 
-	public void setCharacteristics(final List characteristics) {
+	public void setCharacteristics(final Collection characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.changed = true;
 	}
-	
+
+	public CharacteristicSort getCharacteristicSort() {
+		return CharacteristicSort.CHARACTERISTIC_SORT_CABLELINKTYPE;
+	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.16 2005/02/24 14:53:45 bob Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.17 2005/03/05 21:37:32 arseniy Exp $
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -8,7 +8,6 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -17,8 +16,8 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/02/24 14:53:45 $
- * @author $Author: bob $
+ * @version $Revision: 1.17 $, $Date: 2005/03/05 21:37:32 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -32,15 +31,16 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	protected static final Short	MEASUREMENTTYPE_SHORT	= new Short(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
 	protected static final Short	MS_SHORT				= new Short(ObjectEntities.MS_ENTITY_CODE);
 
-	private LinkedIdsConditionImpl(Collection linkedIds, Short entityCode) {
+	private LinkedIdsConditionImpl(Collection linkedIds, Short linkedEntityCode, Short entityCode) {
 		this.linkedIds = linkedIds;
+		this.linkedEntityCode = linkedEntityCode.shortValue();
 		this.entityCode = entityCode;
 	}
-
-	private LinkedIdsConditionImpl(Identifier identifier, Short entityCode) {
-		this.linkedIds = Collections.singletonList(identifier);
-		this.entityCode = entityCode;
-	}
+//
+//	private LinkedIdsConditionImpl(Identifier identifier, Short entityCode) {
+//		this.linkedIds = Collections.singletonList(identifier);
+//		this.entityCode = entityCode;
+//	}
 
 	/**
 	 * @return <code>true</code>

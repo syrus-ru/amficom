@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.16 2005/02/15 15:12:21 arseniy Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.17 2005/03/05 21:37:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.mcm;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -44,7 +43,7 @@ import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/02/15 15:12:21 $
+ * @version $Revision: 1.17 $, $Date: 2005/03/05 21:37:45 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -254,8 +253,8 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	public Collection loadAnalysisTypes(Collection ids) throws DatabaseException, CommunicationException {
 		AnalysisTypeDatabase database = (AnalysisTypeDatabase) MeasurementDatabaseContext.getAnalysisTypeDatabase();
 		Collection collection;
-		List copyOfList;
-		List loadedObjects = new LinkedList();
+		Collection copyOfList;
+		Collection loadedObjects = new LinkedList();
 		AnalysisType analysisType;
 		try {
 			collection = database.retrieveByIds(ids, null);
@@ -306,8 +305,8 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	public Collection loadEvaluationTypes(Collection ids) throws DatabaseException, CommunicationException {
 		EvaluationTypeDatabase database = (EvaluationTypeDatabase) MeasurementDatabaseContext.getEvaluationTypeDatabase();
 		Collection collection;
-		List copyOfList;
-		List loadedObjects = new LinkedList();
+		Collection copyOfList;
+		Collection loadedObjects = new LinkedList();
 		EvaluationType evaluationType;
 		try {
 			collection = database.retrieveByIds(ids, null);
@@ -362,8 +361,8 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	public Collection loadMeasurementSetups(Collection ids) throws DatabaseException, CommunicationException {
 		MeasurementSetupDatabase database = (MeasurementSetupDatabase) MeasurementDatabaseContext.getMeasurementSetupDatabase();
 		Collection collection;
-		List copyOfList;
-		List loadedObjects = new LinkedList();
+		Collection copyOfList;
+		Collection loadedObjects = new LinkedList();
 		MeasurementSetup measurementSetup;
 		try {
 			collection = database.retrieveByIds(ids, null);
@@ -414,8 +413,8 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	public Collection loadMeasurementTypes(Collection ids) throws DatabaseException, CommunicationException {
 		MeasurementTypeDatabase database = (MeasurementTypeDatabase) MeasurementDatabaseContext.getMeasurementTypeDatabase();
 		Collection collection;
-		List copyOfList;
-		List loadedObjects = new LinkedList();
+		Collection copyOfList;
+		Collection loadedObjects = new LinkedList();
 		MeasurementType measurementType;
 		try {
 			collection = database.retrieveByIds(ids, null);
@@ -466,8 +465,8 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	public Collection loadSets(Collection ids) throws DatabaseException, CommunicationException {
 		SetDatabase database = (SetDatabase) MeasurementDatabaseContext.getSetDatabase();
 		Collection collection;
-		List copyOfList;
-		List loadedObjects = new LinkedList();
+		Collection copyOfList;
+		Collection loadedObjects = new LinkedList();
 		Set set;
 		try {
 			collection = database.retrieveByIds(ids, null);
@@ -518,8 +517,8 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 	public Collection loadTemporalPatterns(Collection ids) throws DatabaseException, CommunicationException {
 		TemporalPatternDatabase database = (TemporalPatternDatabase) MeasurementDatabaseContext.getTemporalPatternDatabase();
 		Collection collection;
-		List copyOfList;
-		List loadedObjects = new LinkedList();
+		Collection copyOfList;
+		Collection loadedObjects = new LinkedList();
 		TemporalPattern temporalPattern;
 		try {
 			collection = database.retrieveByIds(ids, null);

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.74 2005/03/05 09:58:22 arseniy Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.75 2005/03/05 21:37:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2005/03/05 09:58:22 $
+ * @version $Revision: 1.75 $, $Date: 2005/03/05 21:37:32 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -191,7 +191,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				+ SQL_FROM + ObjectEntities.ANATYPPARTYPLINK_ENTITY
 				+ SQL_WHERE);
     try {
-			sql.append(this.idsEnumerationString(analysisTypes, AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID, true));
+			sql.append(idsEnumerationString(analysisTypes, AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID, true));
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e);

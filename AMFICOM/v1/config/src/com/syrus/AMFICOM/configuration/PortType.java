@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.40 2005/03/04 13:32:12 bass Exp $
+ * $Id: PortType.java,v 1.41 2005/03/05 21:37:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -31,11 +32,12 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/03/04 13:32:12 $
- * @author $Author: bass $
+ * @version $Revision: 1.41 $, $Date: 2005/03/05 21:37:24 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -43,9 +45,11 @@ public class PortType extends StorableObjectType implements Characterizable {
 	private static final long serialVersionUID = -115251480084275101L;
 
 	private String name;
-	private List characteristics;
-	private StorableObjectDatabase portTypeDatabase;
 	private int sort;
+
+	private Collection characteristics;
+
+	private StorableObjectDatabase portTypeDatabase;
 
 	public PortType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
@@ -202,18 +206,22 @@ public class PortType extends StorableObjectType implements Characterizable {
 		}
 	}
 
-	public List getCharacteristics() {
-		return Collections.unmodifiableList(this.characteristics);
+	public Collection getCharacteristics() {
+		return Collections.unmodifiableCollection(this.characteristics);
 	}
 
-	protected void setCharacteristics0(final List characteristics) {
+	public void setCharacteristics0(final Collection characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 
-	public void setCharacteristics(final List characteristics) {
+	public void setCharacteristics(final Collection characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.changed = true;
-	}	
+	}
+
+	public CharacteristicSort getCharacteristicSort() {
+		return CharacteristicSort.CHARACTERISTIC_SORT_PORTTYPE;
+	}
 }

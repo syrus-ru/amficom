@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.18 2005/03/04 19:50:00 bass Exp $
+ * $Id: EventDatabase.java,v 1.19 2005/03/05 21:37:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/03/04 19:50:00 $
- * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2005/03/05 21:37:36 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 
@@ -142,7 +142,7 @@ public class EventDatabase extends StorableObjectDatabase {
 				+ SQL_FROM + ObjectEntities.EVENTPARAMETER_ENTITY
 				+ SQL_WHERE);
     try {
-			stringBuffer.append(this.idsEnumerationString(events, EventWrapper.LINK_COLUMN_EVENT_ID, true));
+			stringBuffer.append(idsEnumerationString(events, EventWrapper.LINK_COLUMN_EVENT_ID, true));
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide);
@@ -235,6 +235,7 @@ public class EventDatabase extends StorableObjectDatabase {
 		Event event = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  event.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}

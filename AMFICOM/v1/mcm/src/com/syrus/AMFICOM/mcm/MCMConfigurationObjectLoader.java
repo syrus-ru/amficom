@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.17 2005/02/15 15:12:21 arseniy Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.18 2005/03/05 21:37:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.mcm;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 
 import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
 import com.syrus.AMFICOM.configuration.DatabaseConfigurationObjectLoader;
@@ -53,7 +52,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/02/15 15:12:21 $
+ * @version $Revision: 1.18 $, $Date: 2005/03/05 21:37:44 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -355,8 +354,8 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 	public Collection loadEquipments(Collection ids) throws DatabaseException, CommunicationException {
 		EquipmentDatabase database = (EquipmentDatabase)ConfigurationDatabaseContext.getEquipmentDatabase();
 		Collection collection;
-		List copyOfList;
-		List loadedObjects = new LinkedList();
+		Collection copyOfList;
+		Collection loadedObjects = new LinkedList();
 		Equipment equipment;
 		try {
 			collection = database.retrieveByIds(ids, null);
@@ -407,8 +406,8 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 	public Collection loadEquipmentTypes(Collection ids) throws DatabaseException, CommunicationException {
 		EquipmentTypeDatabase database = (EquipmentTypeDatabase)ConfigurationDatabaseContext.getEquipmentTypeDatabase();
 		Collection collection;
-		List copyOfList;
-		List loadedObjects = new LinkedList();
+		Collection copyOfList;
+		Collection loadedObjects = new LinkedList();
 		EquipmentType equipmentType;
 		try {
 			collection = database.retrieveByIds(ids, null);
@@ -459,8 +458,8 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 	public Collection loadKISs(Collection ids) throws DatabaseException, CommunicationException {
 		KISDatabase database = (KISDatabase)ConfigurationDatabaseContext.getKISDatabase();
 		Collection collection;
-		List copyOfList;
-		List loadedObjects = new LinkedList();
+		Collection copyOfList;
+		Collection loadedObjects = new LinkedList();
 		KIS kis;
 		try {
 			collection = database.retrieveByIds(ids, null);
@@ -511,8 +510,8 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 	public Collection loadMeasurementPorts(Collection ids) throws DatabaseException, CommunicationException {
 		MeasurementPortDatabase database = (MeasurementPortDatabase)ConfigurationDatabaseContext.getMeasurementPortDatabase();
 		Collection collection;
-		List copyOfList;
-		List loadedObjects = new LinkedList();
+		Collection copyOfList;
+		Collection loadedObjects = new LinkedList();
 		MeasurementPort measurementPort;
 		try {
 			collection = database.retrieveByIds(ids, null);
@@ -563,8 +562,8 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 	public Collection loadMeasurementPortTypes(Collection ids) throws DatabaseException, CommunicationException {
 		MeasurementPortTypeDatabase database = (MeasurementPortTypeDatabase)ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
 		Collection collection;
-		List copyOfList;
-		List loadedObjects = new LinkedList();
+		Collection copyOfList;
+		Collection loadedObjects = new LinkedList();
 		MeasurementPortType measurementPortType;
 		try {
 			collection = database.retrieveByIds(ids, null);
@@ -615,8 +614,8 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 	public Collection loadMonitoredElements(Collection ids) throws DatabaseException, CommunicationException {
 		MonitoredElementDatabase database = (MonitoredElementDatabase)ConfigurationDatabaseContext.getMonitoredElementDatabase();
 		Collection list;
-		List copyOfList;
-		List loadedObjects = new LinkedList();
+		Collection copyOfList;
+		Collection loadedObjects = new LinkedList();
 		MonitoredElement monitoredElement;
 		try {
 			list = database.retrieveByIds(ids, null);
@@ -666,8 +665,8 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 	public Collection loadPorts(Collection ids) throws DatabaseException, CommunicationException {
 		PortDatabase database = (PortDatabase)ConfigurationDatabaseContext.getPortDatabase();
 		Collection collection;
-		List copyOfList;
-		List loadedObjects = new LinkedList();
+		Collection copyOfList;
+		Collection loadedObjects = new LinkedList();
 		Port port;
 		try {
 			collection = database.retrieveByIds(ids, null);
@@ -717,8 +716,8 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 	public Collection loadPortTypes(Collection ids) throws DatabaseException, CommunicationException {
 		PortTypeDatabase database = (PortTypeDatabase)ConfigurationDatabaseContext.getPortTypeDatabase();
 		Collection collection;
-		List copyOfList;
-		List loadedObjects = new LinkedList();
+		Collection copyOfList;
+		Collection loadedObjects = new LinkedList();
 		PortType portType;
 		try {
 			collection = database.retrieveByIds(ids, null);
@@ -768,8 +767,8 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 	public Collection loadTransmissionPaths(Collection ids) throws DatabaseException, CommunicationException {
 		TransmissionPathDatabase database = (TransmissionPathDatabase)ConfigurationDatabaseContext.getTransmissionPathDatabase();
 		Collection collection;
-		List copyOfList;
-		List loadedObjects = new LinkedList();
+		Collection copyOfList;
+		Collection loadedObjects = new LinkedList();
 		TransmissionPath transmissionPath;
 		try {
 			collection = database.retrieveByIds(ids, null);
@@ -821,6 +820,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 //       TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
 	}	
+
 
 	public void saveEquipmentType(EquipmentType equipmentType, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
@@ -879,22 +879,24 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		throw new UnsupportedOperationException("method isn't complete");
 	}
 
-	public void saveEquipmentTypes(List list, boolean force) throws DatabaseException, CommunicationException {
+
+
+	public void saveEquipmentTypes(Collection collection, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
 	}
 
-	public void savePortTypes(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void savePortTypes(Collection collection, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
 	}
 
-	public void saveMeasurementPortTypes(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveMeasurementPortTypes(Collection collection, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
 	}
 
-	public void saveTransmissionPathTypes(List list, boolean force)
+	public void saveTransmissionPathTypes(Collection collection, boolean force)
 			throws VersionCollisionException, DatabaseException, CommunicationException {
 			// TODO Auto-generated method stub
 
@@ -905,105 +907,105 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 //		throw new UnsupportedOperationException("method isn't complete");
 //		}
 
-	public void saveEquipments(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveEquipments(Collection collection, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
 	}
 
-	public void savePorts(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void savePorts(Collection collection, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
 	}
 
-	public void saveTransmissionPaths(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveTransmissionPaths(Collection collection, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
 	}
 
-	public void saveKISs(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveKISs(Collection collection, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
 	}
 
-	public void saveMeasurementPorts(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveMeasurementPorts(Collection collection, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
 	}
 
-	public void saveMonitoredElements(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveMonitoredElements(Collection collection, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
 	}
 
-	public List loadEquipmentTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public Collection loadEquipmentTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
 	}
 		
 		
-	public List loadPortTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public Collection loadPortTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
 	}
 
-	public List loadMeasurementPortTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public Collection loadMeasurementPortTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
 	}		
 
 
 
-//			  PermissionAttributes loadPermissionAttributesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+//			  PermissionAttributes loadPermissionAttributesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
 //			throw new UnsupportedOperationException("method isn't complete");
 //			}
 
-	public List loadEquipmentsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public Collection loadEquipmentsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
 	}
 
-	public List loadPortsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public Collection loadPortsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
 	}
 
-	public List loadTransmissionPathsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public Collection loadTransmissionPathsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
 	}
 
-	public List loadKISsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public Collection loadKISsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
 	}
 
-	public List loadMeasurementPortsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public Collection loadMeasurementPortsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
 	}
 
-	public List loadMonitoredElementsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public Collection loadMonitoredElementsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
 	}
 
-	public List loadLinkTypes(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadLinkTypes(Collection ids) throws DatabaseException, CommunicationException {
 //           TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
 	}
 
-	public List loadLinks(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadLinks(Collection ids) throws DatabaseException, CommunicationException {
 //           TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
 	}
 
-	public List loadLinkTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public Collection loadLinkTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 //           TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
 	}
 
-	public List loadLinksButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public Collection loadLinksButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 //           TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
 	}
@@ -1018,22 +1020,24 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		throw new UnsupportedOperationException("method isn't complete");
 	}
 
-	public void saveLinkTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
+	public void saveLinkTypes(Collection collection, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
 //           TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
 	}
 
-	public void saveLinks(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
+	public void saveLinks(Collection collection, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
 //           TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
 	}
 
-	public List loadTransmissionPathTypes(List ids) throws DatabaseException, CommunicationException {
+
+
+	public Collection loadTransmissionPathTypes(Collection ids) throws DatabaseException, CommunicationException {
 //           TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
 	}
 
-	public List loadTransmissionPathTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public Collection loadTransmissionPathTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 //           TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.17 2005/03/04 19:50:00 bass Exp $
+ * $Id: EventTypeDatabase.java,v 1.18 2005/03/05 21:37:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/03/04 19:50:00 $
- * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/03/05 21:37:36 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 
@@ -200,9 +200,10 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-//		EventType eventType = this.fromStorableObject(storableObject);
+		EventType eventType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  eventType.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}
@@ -314,15 +315,21 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void delete(Collection objects) throws IllegalDataException {
+	public void delete(Collection objects) {
 		StringBuffer sql1 = new StringBuffer(SQL_DELETE_FROM
 				+ ObjectEntities.EVENTTYPPARTYPLINK_ENTITY
 				+ SQL_WHERE);
-		sql1.append(this.idsEnumerationString(objects, EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID, true));
 		StringBuffer sql2 = new StringBuffer(SQL_DELETE_FROM
 				+ ObjectEntities.EVENTTYPE_ENTITY
 				+ SQL_WHERE);
-		sql2.append(this.idsEnumerationString(objects, StorableObjectWrapper.COLUMN_ID, true));
+		try {
+			sql1.append(idsEnumerationString(objects, EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID, true));
+			sql2.append(idsEnumerationString(objects, StorableObjectWrapper.COLUMN_ID, true));
+		}
+		catch (IllegalDataException ide) {
+			Log.errorException(ide);
+			return;
+		}
 
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();

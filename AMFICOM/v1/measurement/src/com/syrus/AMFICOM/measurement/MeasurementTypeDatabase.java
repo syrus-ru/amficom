@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.78 2005/03/05 09:58:23 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.79 2005/03/05 21:37:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.78 $, $Date: 2005/03/05 09:58:23 $
+ * @version $Revision: 1.79 $, $Date: 2005/03/05 21:37:32 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -189,7 +189,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 				+ SQL_FROM + ObjectEntities.MNTTYPPARTYPLINK_ENTITY
 				+ SQL_WHERE);
 		try {
-			sql.append(this.idsEnumerationString(measurementTypes, MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID, true));
+			sql.append(idsEnumerationString(measurementTypes, MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID, true));
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e);

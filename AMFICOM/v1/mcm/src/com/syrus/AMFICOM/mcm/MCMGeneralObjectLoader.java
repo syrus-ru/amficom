@@ -1,5 +1,5 @@
 /*
-* $Id: MCMGeneralObjectLoader.java,v 1.3 2005/02/15 15:12:21 arseniy Exp $
+* $Id: MCMGeneralObjectLoader.java,v 1.4 2005/03/05 21:37:45 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.mcm;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -38,7 +37,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/15 15:12:21 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/05 21:37:45 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -146,8 +145,8 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 	public Collection loadParameterTypes(Collection ids) throws DatabaseException, CommunicationException {
 		ParameterTypeDatabase database = (ParameterTypeDatabase) GeneralDatabaseContext.getParameterTypeDatabase();
 		Collection collection;
-		List copyOfList;
-		List loadedObjects = new LinkedList();
+		Collection copyOfList;
+		Collection loadedObjects = new LinkedList();
 		ParameterType parameterType;
 		try {
 			collection = database.retrieveByIds(ids, null);
@@ -198,8 +197,8 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 	public Collection loadCharacteristics(Collection ids) throws DatabaseException, CommunicationException {
 		CharacteristicDatabase database = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
 		Collection collection;
-		List copyOfList;
-		List loadedObjects = new LinkedList();
+		Collection copyOfList;
+		Collection loadedObjects = new LinkedList();
 		Characteristic characteristic;
 		try {
 			collection = database.retrieveByIds(ids, null);
@@ -251,8 +250,8 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 	public Collection loadCharacteristicTypes(Collection ids) throws DatabaseException, CommunicationException {
 		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) GeneralDatabaseContext.getCharacteristicTypeDatabase();
 		Collection collection;
-		List copyOfList;
-		List loadedObjects = new LinkedList();
+		Collection copyOfList;
+		Collection loadedObjects = new LinkedList();
 		CharacteristicType characteristicType;
 		try {
 			collection = database.retrieveByIds(ids, null);

@@ -75,8 +75,8 @@ module corba {
 			raises (general::corba::AMFICOMRemoteException);
 
 
-		configuration::corba::MonitoredElementSeq_Transferable transmitKISMonitoredElements(in general::corba::Identifier_Transferable kis_id)
-			raises (general::corba::AMFICOMRemoteException);
+//		configuration::corba::MonitoredElementSeq_Transferable transmitKISMonitoredElements(in general::corba::Identifier_Transferable kis_id)
+//			raises (general::corba::AMFICOMRemoteException);
 
 
 /////////////////////////////////////////	Measurement //////////////////////////////////////////////////

@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentWrapper.java,v 1.7 2005/03/04 13:11:58 arseniy Exp $
+ * $Id: EquipmentWrapper.java,v 1.8 2005/03/05 21:37:24 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/03/04 13:11:58 $
+ * @version $Revision: 1.8 $, $Date: 2005/03/05 21:37:24 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -60,7 +60,7 @@ public final class EquipmentWrapper implements StorableObjectWrapper {
 		String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_TYPE_ID,
 				COLUMN_IMAGE_ID, COLUMN_LONGITUDE, COLUMN_LATITUDE, COLUMN_SUPPLIER, COLUMN_SUPPLIER_CODE,
 				COLUMN_HW_SERIAL, COLUMN_HW_VERSION, COLUMN_SW_SERIAL, COLUMN_SW_VERSION, COLUMN_INVENTORY_NUMBER,
-				COLUMN_PORT_IDS, COLUMN_CHARACTERISTICS, ObjectEntities.EQUIPMENTMELINK_ENTITY};
+				COLUMN_CHARACTERISTICS, ObjectEntities.EQUIPMENTMELINK_ENTITY};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
@@ -109,8 +109,6 @@ public final class EquipmentWrapper implements StorableObjectWrapper {
 				return equipment.getSwVersion();
 			if (key.equals(COLUMN_INVENTORY_NUMBER))
 				return equipment.getInventoryNumber();
-			if (key.equals(COLUMN_PORT_IDS))
-				return equipment.getCharacteristics();
 			if (key.equals(COLUMN_CHARACTERISTICS))
 				return equipment.getCharacteristics();
 			if (key.equals(ObjectEntities.EQUIPMENTMELINK_ENTITY))
@@ -152,8 +150,6 @@ public final class EquipmentWrapper implements StorableObjectWrapper {
 				equipment.setSwVersion((String) value);
 			else if (key.equals(COLUMN_INVENTORY_NUMBER))
 				equipment.setInventoryNumber((String) value);
-			else if (key.equals(COLUMN_PORT_IDS)) 
-				equipment.setPortIds((List)value);
 			else if (key.equals(COLUMN_CHARACTERISTICS))
 				equipment.setCharacteristics((List)value);
 		}
@@ -173,7 +169,7 @@ public final class EquipmentWrapper implements StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		if (key.equals(COLUMN_PORT_IDS) || key.equals(COLUMN_CHARACTERISTICS) || key.equals(ObjectEntities.EQUIPMENTMELINK_ENTITY))
+		if (key.equals(COLUMN_CHARACTERISTICS) || key.equals(ObjectEntities.EQUIPMENTMELINK_ENTITY))
 			return List.class;
 		return String.class;
 	}

@@ -1,5 +1,5 @@
 /*
-* $Id: MCMAdministrationObjectLoader.java,v 1.3 2005/02/15 15:12:20 arseniy Exp $
+* $Id: MCMAdministrationObjectLoader.java,v 1.4 2005/03/05 21:37:44 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.mcm;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 
 import com.syrus.AMFICOM.administration.AdministrationDatabaseContext;
 import com.syrus.AMFICOM.administration.DatabaseAdministrationObjectLoader;
@@ -40,7 +39,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/15 15:12:20 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/05 21:37:44 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -181,8 +180,8 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 	public Collection loadUsers(Collection ids) throws DatabaseException, CommunicationException {
 		UserDatabase database = (UserDatabase)AdministrationDatabaseContext.getUserDatabase();
 		Collection collection;
-		List copyOfList;
-		List loadedObjects = new LinkedList();
+		Collection copyOfList;
+		Collection loadedObjects = new LinkedList();
 		User user;
 		try {
 			collection = database.retrieveByIds(ids, null);
@@ -233,8 +232,8 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 	public Collection loadDomains(Collection ids) throws DatabaseException, CommunicationException {
 		DomainDatabase database = (DomainDatabase) AdministrationDatabaseContext.getDomainDatabase();
 		Collection collection;
-		List copyOfList;
-		List loadedObjects = new LinkedList();
+		Collection copyOfList;
+		Collection loadedObjects = new LinkedList();
 		Domain domain;
 		try {
 			collection = database.retrieveByIds(ids, null);
@@ -285,8 +284,8 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 	public Collection loadServers(Collection ids) throws DatabaseException, CommunicationException {
 		ServerDatabase database = (ServerDatabase) AdministrationDatabaseContext.getServerDatabase();
 		Collection collection;
-		List copyOfList;
-		List loadedObjects = new LinkedList();
+		Collection copyOfList;
+		Collection loadedObjects = new LinkedList();
 		Server server;
 		try {
 			collection = database.retrieveByIds(ids, null);
@@ -337,8 +336,8 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 	public Collection loadMCMs(Collection ids) throws DatabaseException, CommunicationException {
 		MCMDatabase database = (MCMDatabase) AdministrationDatabaseContext.getMCMDatabase();
 		Collection collection;
-		List copyOfList;
-		List loadedObjects = new LinkedList();
+		Collection copyOfList;
+		Collection loadedObjects = new LinkedList();
 		MCM mcm;
 		try {
 			collection = database.retrieveByIds(ids, null);

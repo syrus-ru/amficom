@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.36 2005/02/15 08:34:20 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.37 2005/03/05 21:37:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/02/15 08:34:20 $
+ * @version $Revision: 1.37 $, $Date: 2005/03/05 21:37:45 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -74,8 +74,8 @@ public abstract class TestProcessor extends SleepButWorkThread {
 				Log.errorMessage("TestProcessor<init> | Cannot find transceiver for kis '" + kisId + "'");
 				this.stopInit();
 			}
-
-			if (! MeasurementControlModule.iAm.getKISIds().contains(kisId)) {
+			
+			if (! MeasurementControlModule.kisIds.contains(kisId)) {
 				Log.errorMessage("TestProcessor<init> | Invalid kis: '" + kisId + "'");
 				this.stopInit();
 			}

@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.77 2005/03/05 09:58:23 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.78 2005/03/05 21:37:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2005/03/05 09:58:23 $
+ * @version $Revision: 1.78 $, $Date: 2005/03/05 21:37:32 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -322,7 +322,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 				+ SQL_FROM + ObjectEntities.RESULTPARAMETER_ENTITY
 				+ SQL_WHERE);
 		try {
-			sql.append(this.idsEnumerationString(results, ResultWrapper.LINK_COLUMN_RESULT_ID, true));
+			sql.append(idsEnumerationString(results, ResultWrapper.LINK_COLUMN_RESULT_ID, true));
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e);

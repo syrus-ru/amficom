@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.27 2005/02/15 12:36:13 arseniy Exp $
+ * $Id: MServerImplementation.java,v 1.28 2005/03/05 21:38:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -91,7 +91,7 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/02/15 12:36:13 $
+ * @version $Revision: 1.28 $, $Date: 2005/03/05 21:38:01 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -498,29 +498,29 @@ public class MServerImplementation extends MServerPOA {
 	}
 
 
-	public MonitoredElement_Transferable[] transmitKISMonitoredElements(Identifier_Transferable kisId) throws AMFICOMRemoteException {
-		Identifier id = new Identifier(kisId);
-		try {
-			KIS kis = new KIS(id);
-			List monitoredElements = kis.retrieveMonitoredElements();
-			MonitoredElement_Transferable[] mesT = new MonitoredElement_Transferable[monitoredElements.size()];
-			int i = 0;
-			for (Iterator it = monitoredElements.iterator(); it.hasNext();)
-				mesT[i++] = (MonitoredElement_Transferable)((MonitoredElement)it.next()).getTransferable();
-			return mesT;
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.errorException(onfe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe.getMessage());
-		}
-		catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
-	}
+//	public MonitoredElement_Transferable[] transmitKISMonitoredElements(Identifier_Transferable kisId) throws AMFICOMRemoteException {
+//		Identifier id = new Identifier(kisId);
+//		try {
+//			KIS kis = new KIS(id);
+//			List monitoredElements = kis.retrieveMonitoredElements();
+//			MonitoredElement_Transferable[] mesT = new MonitoredElement_Transferable[monitoredElements.size()];
+//			int i = 0;
+//			for (Iterator it = monitoredElements.iterator(); it.hasNext();)
+//				mesT[i++] = (MonitoredElement_Transferable)((MonitoredElement)it.next()).getTransferable();
+//			return mesT;
+//		}
+//		catch (ObjectNotFoundException onfe) {
+//			Log.errorException(onfe);
+//			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, onfe.getMessage());
+//		}
+//		catch (RetrieveObjectException roe) {
+//			Log.errorException(roe);
+//			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
+//		} catch (Throwable t) {
+//            Log.errorException(t);
+//            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+//        }
+//	}
 
 
 

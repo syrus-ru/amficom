@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.2 2005/03/04 15:07:39 bob Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.3 2005/03/05 21:37:24 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/03/04 15:07:39 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/03/05 21:37:24 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -30,16 +30,34 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 		String query = null;
 		switch (super.condition.getEntityCode().shortValue()) {
 			case ObjectEntities.EQUIPMENT_ENTITY_CODE:
+				query = super.getQuery(DomainMember.COLUMN_DOMAIN_ID);
+				break;
 			case ObjectEntities.TRANSPATH_ENTITY_CODE:
+				query = super.getQuery(DomainMember.COLUMN_DOMAIN_ID);
+				break;
 			case ObjectEntities.KIS_ENTITY_CODE:
+				switch (super.condition.getLinkedEntityCode()) {
+					case ObjectEntities.MCM_ENTITY_CODE:
+						query = super.getQuery(KISWrapper.COLUMN_MCM_ID);
+System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$ query: " + query);
+						break;
+					default:
+						query = super.getQuery(DomainMember.COLUMN_DOMAIN_ID);
+				}
 			case ObjectEntities.ME_ENTITY_CODE:
 				query = super.getQuery(DomainMember.COLUMN_DOMAIN_ID);
-				break;				
+				break;
 			case ObjectEntities.PORT_ENTITY_CODE:
-				/* TODO add query to retrieve ports by equipment id */
-				query = super.getLinkedQuery(PortWrapper.COLUMN_EQUIPMENT_ID, 
-					StorableObjectWrapper.COLUMN_ID, DomainMember.COLUMN_DOMAIN_ID,
-					ObjectEntities.EQUIPMENT_ENTITY);
+				switch (super.condition.getLinkedEntityCode()) {
+					case ObjectEntities.EQUIPMENT_ENTITY_CODE:
+						query = super.getQuery(PortWrapper.COLUMN_EQUIPMENT_ID);
+						break;
+					default:
+						query = super.getLinkedQuery(PortWrapper.COLUMN_EQUIPMENT_ID, 
+								StorableObjectWrapper.COLUMN_ID, DomainMember.COLUMN_DOMAIN_ID,
+								ObjectEntities.EQUIPMENT_ENTITY);
+				}
 				break;
 			case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
 				query = super.getLinkedQuery(MeasurementPortWrapper.COLUMN_KIS_ID, 

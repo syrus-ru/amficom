@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.66 2005/02/24 14:59:52 arseniy Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.67 2005/03/05 21:37:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/02/24 14:59:52 $
+ * @version $Revision: 1.67 $, $Date: 2005/03/05 21:37:24 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -302,6 +302,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 					loadedCollection = cObjectLoader.loadTransmissionPathsButIds(condition, ids);
 					break;
 				case ObjectEntities.KIS_ENTITY_CODE:
+					System.out.println("########################################### class: " + cObjectLoader.getClass().getName());
 					loadedCollection = cObjectLoader.loadKISsButIds(condition, ids);
 					break;
 				case ObjectEntities.LINK_ENTITY_CODE:

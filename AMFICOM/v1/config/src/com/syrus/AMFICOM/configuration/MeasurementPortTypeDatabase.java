@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeDatabase.java,v 1.39 2005/03/05 09:57:16 arseniy Exp $
+ * $Id: MeasurementPortTypeDatabase.java,v 1.40 2005/03/05 21:37:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,37 +11,26 @@ package com.syrus.AMFICOM.configuration;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
-import com.syrus.AMFICOM.general.CharacteristicDatabase;
-import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.GeneralDatabaseContext;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/03/05 09:57:16 $
+ * @version $Revision: 1.40 $, $Date: 2005/03/05 21:37:24 $
  * @author $Author: arseniy $
  * @module config_v1
  */
 
-public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
+public class MeasurementPortTypeDatabase extends CharacterizableDatabase {
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
 	private static String columns;
@@ -97,32 +86,25 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 		return i;
 	}
 
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		MeasurementPortType measurementPortType = this.fromStorableObject(storableObject);
-		super.retrieveEntity(measurementPortType);
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
-		measurementPortType.setCharacteristics0(characteristicDatabase.retrieveCharacteristics(measurementPortType.getId(), CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE));
-	}
-
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		MeasurementPortType measurementPortType = storableObject == null ? null : this.fromStorableObject(storableObject);
 		if (measurementPortType == null) {
 			measurementPortType = new MeasurementPortType(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-																		null,
-																		0L,
-																		null,
-																		null,
-																		null);			
+					null,
+					0L,
+					null,
+					null,
+					null);
 		}
 		measurementPortType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
-														DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
-														DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
-														DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-														resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
-														DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
-														DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
-														DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)));
+				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
+				resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
+				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)));
 		return measurementPortType;
 	}
 
@@ -135,87 +117,4 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
-		MeasurementPortType measurementPortType = this.fromStorableObject(storableObject);
-		super.insertEntity(measurementPortType);	
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
-		try {
-			characteristicDatabase.updateCharacteristics(measurementPortType);
-		}
-		catch (UpdateObjectException e) {
-			throw new CreateObjectException(e);
-		}
-	}
-
-	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
-		super.insertEntities(storableObjects);
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
-		try {
-			characteristicDatabase.updateCharacteristics(storableObjects);
-		}
-		catch (UpdateObjectException e) {
-			throw new CreateObjectException(e);
-		}
-	}
-
-	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
-			throws VersionCollisionException, UpdateObjectException {
-		switch (updateKind) {
-			case UPDATE_FORCE:
-				super.checkAndUpdateEntity(storableObject, modifierId, true);
-				break;
-			case UPDATE_CHECK:
-			default:
-				super.checkAndUpdateEntity(storableObject, modifierId, false);
-		}
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
-		characteristicDatabase.updateCharacteristics(storableObject);
-	}
-
-	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
-			throws VersionCollisionException, UpdateObjectException {
-		switch (updateKind) {
-			case UPDATE_FORCE:
-				super.checkAndUpdateEntities(storableObjects, modifierId, true);
-				break;
-			case UPDATE_CHECK:
-			default:
-				super.checkAndUpdateEntities(storableObjects, modifierId, false);
-		}
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
-		characteristicDatabase.updateCharacteristics(storableObjects);
-	}
-
-	public Collection retrieveAll() throws RetrieveObjectException {
-		Collection objects = null;
-		try {
-			objects = this.retrieveByIds(null, null);
-		}
-		catch (IllegalDataException ide) {           
-			Log.debugMessage("MeasurementPortTypeDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
-			throw new RetrieveObjectException(ide);
-		}
-		return objects;
-	}
-
-	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
-		Collection objects = null;
-		if ((ids == null) || (ids.isEmpty()))
-			objects = this.retrieveByIdsOneQuery(null, condition);
-		else
-			objects = this.retrieveByIdsOneQuery(ids, condition);
-
-    if (objects != null) {
-			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
-			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(objects,
-					CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE);
-			if (characteristicMap != null)
-				for (Iterator iter = objects.iterator(); iter.hasNext();) {
-					MeasurementPortType measurementPortType = (MeasurementPortType) iter.next();
-					List characteristics = (List) characteristicMap.get(measurementPortType.getId());
-					measurementPortType.setCharacteristics0(characteristics);
-				}
-		}
-		return objects;
-	}
 }

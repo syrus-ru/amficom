@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.7 2005/03/04 15:07:39 bob Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.8 2005/03/05 21:37:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
@@ -20,21 +19,23 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/03/04 15:07:39 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/03/05 21:37:24 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCondition {
 
-	private LinkedIdsConditionImpl(Collection linkedIds, Short entityCode) {
+	private LinkedIdsConditionImpl(Collection linkedIds, Short linkedEntityCode, Short entityCode) {
 		this.linkedIds = linkedIds;
+		this.linkedEntityCode = linkedEntityCode.shortValue();
 		this.entityCode = entityCode;
 	}
 
-	private LinkedIdsConditionImpl(Identifier identifier, Short entityCode) {
-		this.linkedIds = Collections.singletonList(identifier);
-		this.entityCode = entityCode;
-	}
+//
+//	private LinkedIdsConditionImpl(Identifier identifier, Short entityCode) {
+//		this.linkedIds = Collections.singletonList(identifier);
+//		this.entityCode = entityCode;
+//	}
 
 	private boolean checkDomain(DomainMember domainMember) throws ApplicationException {
 		Domain dmDomain = (Domain) AdministrationStorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
@@ -64,23 +65,31 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 				domainMember = (TransmissionPath) object;
 				break;
 			case ObjectEntities.KIS_ENTITY_CODE:
-				domainMember = (KIS) object;
+				KIS kis = (KIS) object;
+				switch (this.linkedEntityCode) {
+					case ObjectEntities.MCM_ENTITY_CODE:
+						condition = super.conditionTest(kis.getMCMId());
+						break;
+					default:
+						domainMember = kis;
+				}
 				break;
 			case ObjectEntities.ME_ENTITY_CODE:
 				domainMember = (MonitoredElement) object;
 				break;
 			case ObjectEntities.PORT_ENTITY_CODE:
 				Port port = (Port) object;
-				Equipment equipment = (Equipment) ConfigurationStorableObjectPool.getStorableObject(port.getEquipmentId(),
-					true);
-				condition = super.conditionTest(Collections.singleton(equipment.getId()));
-				if (!condition)
-					domainMember = equipment;
+				switch (this.linkedEntityCode) {
+					case ObjectEntities.EQUIPMENT_ENTITY_CODE:
+						condition = super.conditionTest(port.getEquipmentId());
+						break;
+					default:
+						domainMember = (DomainMember) ConfigurationStorableObjectPool.getStorableObject(port.getEquipmentId(), true);
+				}
 				break;
 			case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
 				MeasurementPort measurementPort = (MeasurementPort) object;
-				domainMember = (KIS) ConfigurationStorableObjectPool
-						.getStorableObject(measurementPort.getKISId(), true);
+				domainMember = (KIS) ConfigurationStorableObjectPool.getStorableObject(measurementPort.getKISId(), true);
 				break;
 			default:
 				throw new UnsupportedOperationException("LinkedIdsConditionImpl.isConditionTrue | entityCode "

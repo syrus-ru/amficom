@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeDatabase.java,v 1.30 2005/03/05 09:57:16 arseniy Exp $
+ * $Id: LinkTypeDatabase.java,v 1.31 2005/03/05 21:37:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,35 +11,26 @@ package com.syrus.AMFICOM.configuration;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
-import com.syrus.AMFICOM.general.CharacteristicDatabase;
-import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/03/05 09:57:16 $
+ * @version $Revision: 1.31 $, $Date: 2005/03/05 21:37:24 $
  * @author $Author: arseniy $
  * @module config_v1
  */
 
-public class LinkTypeDatabase extends StorableObjectDatabase {
+public class LinkTypeDatabase extends CharacterizableDatabase {
 	private static final int SIZE_MANUFACTURER_COLUMN = 64;
 
 	private static final int SIZE_MANUFACTURER_CODE_COLUMN = 64;
@@ -98,13 +89,6 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 		throw new IllegalDataException("LinkTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		LinkType linkType = this.fromStorableObject(storableObject);
-		super.retrieveEntity(linkType);
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
-		linkType.setCharacteristics(characteristicDatabase.retrieveCharacteristics(linkType.getId(), CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE));
-	}
-
 	protected int setEntityForPreparedStatement(StorableObject storableObject,
 			PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, SQLException {
@@ -152,67 +136,13 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 		return linkType;
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		LinkType linkType = this.fromStorableObject(storableObject);
-		switch (retrieve_kind) {
+		switch (retrieveKind) {
 			default:
 				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  linkType.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}
 
-	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
-		LinkType linkType = this.fromStorableObject(storableObject);
-		super.insertEntity(linkType);
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
-		try {
-			characteristicDatabase.updateCharacteristics(storableObject);
-		}
-		catch (UpdateObjectException e) {
-			throw new CreateObjectException("LinkTypeDatabase.insert | UpdateObjectException " + e);
-		}
-	}
-
-	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
-		super.insertEntities(storableObjects);
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)GeneralDatabaseContext.getCharacteristicDatabase();
-		try {
-			characteristicDatabase.updateCharacteristics(storableObjects);
-		}
-		catch (UpdateObjectException e) {
-			throw new CreateObjectException("LinkTypeDatabase.insert | UpdateObjectException " + e);
-		}
-	}
-	
-	public Collection retrieveAll() throws RetrieveObjectException {
-		Collection objects = null;
-		try {
-			objects = this.retrieveByIds(null, null);
-		}
-		catch (IllegalDataException ide) {
-			Log.debugMessage("LinkTypeDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
-			throw new RetrieveObjectException(ide);
-		}
-		return objects;
-	}
-
-	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
-		Collection objects = null;
-		if ((ids == null) || (ids.isEmpty()))
-			objects = this.retrieveByIdsOneQuery(null, condition);
-		else
-			objects = this.retrieveByIdsOneQuery(ids, condition);
-
-		if (objects != null) {
-			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
-			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(objects, CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE);
-			if (characteristicMap != null)
-				for (Iterator iter = objects.iterator(); iter.hasNext();) {
-					LinkType linkType = (LinkType) iter.next();
-					List characteristics = (List) characteristicMap.get(linkType.getId());
-					linkType.setCharacteristics0(characteristics);
-				}
-		}
-		return objects;
-	}
 }

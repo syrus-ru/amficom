@@ -1,5 +1,5 @@
 /*
- * $Id: KISWrapper.java,v 1.5 2005/02/03 08:37:00 bob Exp $
+ * $Id: KISWrapper.java,v 1.6 2005/03/05 21:37:24 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/03 08:37:00 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/03/05 21:37:24 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 public final class KISWrapper implements StorableObjectWrapper {
@@ -44,8 +44,7 @@ public final class KISWrapper implements StorableObjectWrapper {
 	private KISWrapper() {
 		// empty private constructor
 		String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_NAME,
-				COLUMN_EQUIPMENT_ID, COLUMN_MCM_ID, COLUMN_HOSTNAME, COLUMN_TCP_PORT, COLUMN_MEASUREMENT_PORT_IDS,
-				COLUMN_CHARACTERISTICS};
+				COLUMN_EQUIPMENT_ID, COLUMN_MCM_ID, COLUMN_HOSTNAME, COLUMN_TCP_PORT, COLUMN_CHARACTERISTICS};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
@@ -80,8 +79,6 @@ public final class KISWrapper implements StorableObjectWrapper {
 				return kis.getHostName();
 			if (key.equals(COLUMN_TCP_PORT))
 				return new Short(kis.getTCPPort());
-			if (key.equals(COLUMN_MEASUREMENT_PORT_IDS))
-				return kis.getMeasurementPortIds();
 			if (key.equals(COLUMN_CHARACTERISTICS))
 				return kis.getCharacteristics();
 		}
@@ -107,8 +104,6 @@ public final class KISWrapper implements StorableObjectWrapper {
 				kis.setHostName((String) value);
 			else if (key.equals(COLUMN_TCP_PORT))
 				kis.setTCPPort(((Short)value).shortValue());
-			else if (key.equals(COLUMN_MEASUREMENT_PORT_IDS)) 
-				kis.setMeasurementPortIds((List) value);
 			else if (key.equals(COLUMN_CHARACTERISTICS))
 				kis.setCharacteristics((List) value);
 		}
@@ -128,7 +123,7 @@ public final class KISWrapper implements StorableObjectWrapper {
 	}
 
 	public Class getPropertyClass(String key) {
-		if (key.equals(COLUMN_MEASUREMENT_PORT_IDS) || key.equals(COLUMN_CHARACTERISTICS))
+		if (key.equals(COLUMN_CHARACTERISTICS))
 			return List.class;
 		return String.class;
 	}
