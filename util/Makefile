@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.14 2004/08/05 11:35:18 bass Exp $
+# $Id: Makefile,v 1.15 2004/08/24 07:16:07 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -65,12 +65,6 @@ sqlj: .sqlj
 
 .sqlj: $(CLASSDIR)
 	echo "sqlj.compiler-executable=$(JAVAC) $(JAVACFLAGS) -sourcepath $(SRCDIR)" > sqlj.properties
-	$(SQLJ) \
-		$(SQLJFLAGS) \
-		-classpath $(AMFICOMCLASSPATH)$(JDBCCLASSPATH):$(SQLJCLASSPATH):$(CLASSDIR) \
-		$(SRCDIR)/com/syrus/util/database/ServerProperties.sqlj \
-		$(SRCDIR)/com/syrus/util/Log.java \
-		$(SRCDIR)/com/syrus/util/Logger.java
 	$(RM) \
 		$(filter $(foreach source, $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj')), $(foreach src_suffix, $(SRC_SUFFIXES), $(source)$(src_suffix))), $(shell find $(SRCDIR) -name '*\.java')) \
 		$(foreach file, $(filter-out $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)')
