@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/11/16 08:06:30 $
- * @author $Author: stas $
+ * @version $Revision: 1.7 $, $Date: 2005/01/11 16:40:32 $
+ * @author $Author: krupenn $
  * @module generalclient_v1
  */
 public class ObjListModel extends AbstractListModel implements MutableComboBoxModel, Serializable {
@@ -153,6 +153,8 @@ public class ObjListModel extends AbstractListModel implements MutableComboBoxMo
 	}
 
 	public void addElements(Collection objects) {
+		if(objects.size() == 0)
+			return;
 		this.objects.addAll(objects);
 		fireIntervalAdded(this, this.objects.size() - objects.size(), this.objects.size() - 1);
 	}
