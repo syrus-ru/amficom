@@ -9,6 +9,33 @@
 #include "../An2/findLength.h"
 #include "../An2/findNoise.h"
 
+#include "../common/prf.h"
+
+/*
+
+
+  TODO (from saa to Vit, 2005-03-03)
+
+95% времени анализа занимает centerWletImage, выполняемый в цикле по масштабам в correctAllSpliceCoords
+Неплохо бы это как-то исправить. На мой взгляд, есть 2 варианта:
+  а) рассчитать f_wlet_avrg для всех используемых масштабов один раз,
+     а не по разу на каждую сварку;
+  б) Рассчитывать f_wlet_avrg для каждого масштаба на основе начального f_wlet_avrg.
+     (для этого достаточно просто рассчитать соотв. нормы вейвлета)
+
+-----   -----   -----   ------  ----
+count   ticks   %tick   %rdtsc  name
+-----   -----   -----   ------  ----
+   12       0    0.0%    0.00%   correctSpliceCoords: enter
+  240       0    0.0%    0.13%   correctSpliceCoords: getWLetNorma
+  240       0    0.0%    0.47%   correctSpliceCoords: performTransformation
+  240      15    3.0%    9.01%   correctSpliceCoords: centerWletImage
+  240       0    0.0%    0.06%   correctSpliceCoords: processing
+   12       0    0.0%    0.00%   correctSpliceCoords: scales done
+   12       0    0.0%    0.00%   correctSpliceCoords: return
+
+*/
+
 // Коэффициент запаса: эта величина умножается на оценку 3 сигма шума, и используется как добавка к порогам обнаружения.
 // Предполагаемое теоретическое значение 1; Практически понадобилось 1 - 4.
 // бОльшие значения коэффициента соответствуют меньшей чувствительности.
@@ -27,7 +54,9 @@ InitialAnalysis::InitialAnalysis(
 	int waveletType,			//номер используемого вейвлета
 	double formFactor,			//формфактор отражательного события
 	int reflectiveSize,			//характерная длина отражательного события
-	int nonReflectiveSize)		//характерная длина неотражательного события
+	int nonReflectiveSize,		//характерная длина неотражательного события
+	int lengthTillZero,			//вычисленная заранее длина ( ==0 -> найти самим)
+	double *externalNoise)		//вычисленный заранее шум ( ==0 -> ищем сами)
 {
 #ifdef debug_lines
     cou = 0;
@@ -48,35 +77,55 @@ InitialAnalysis::InitialAnalysis(
 
     events = new ArrList();
 
+	if (lengthTillZero <= 0)
+		lastNonZeroPoint = getLastPoint();
+	else
+		lastNonZeroPoint = lengthTillZero - 1;
+
+	f_wlet	= new double[lastNonZeroPoint];
+#ifdef debug_VCL
+	f_tmp   = new double[lastNonZeroPoint];
+#endif
+	noise	= new double[lastNonZeroPoint];
+	type	= new double[data_length];
+
+	// если массив с уровнем шума не задан извне,
+	// либо пользователь IA не указал его размер,
+	// считаем шум сами
+	if (externalNoise == 0 || lengthTillZero <= 0)
+	{
+		prf_b("IA: noise");
+		// вычисляем уровень шума
+		{ const int sz = lastNonZeroPoint;
+		  const int width = wlet_width;
+		  fillNoiseArray(data, data_length, sz, 1 + width/20, noise);
+		}
+	}
+	else
+	{
+		int i;
+		for (i = 0; i < lastNonZeroPoint; i++)
+			noise[i] = externalNoise[i];
+	}
+
+	prf_b("IA: analyse");
 	performAnalysis();
+	prf_b("IA: done");
 }
 //------------------------------------------------------------------------------------------------------------
 InitialAnalysis::~InitialAnalysis()
 {	delete[] type;
 	delete[] noise;
-
     delete[] f_wlet;
+
     events->disposeAll();
 
     delete events;
 }
 //------------------------------------------------------------------------------------------------------------
 void InitialAnalysis::performAnalysis()
-{	lastNonZeroPoint = getLastPoint();
-    f_wlet	= new double[lastNonZeroPoint];
-#ifdef debug_VCL
-    f_tmp = new double[lastNonZeroPoint];
-#endif
-	noise	= new double[lastNonZeroPoint];
-    type	= new double[data_length];
-
+{
     wn = getWLetNorma(wlet_width, waveletType);
-
-    // вычисляем уровень шума по saa и поправку к чувствительности на его основе
-    { const int sz = lastNonZeroPoint;
-      const int width = wlet_width;
-      fillNoiseArray(data, sz, 1 + width/20, noise);
-    }
 
 	// выполняем вейвлет-преобразование
 	// f_wlet - вейвлет-образ функции, wlet_width - ширина вейвлета, wn - норма вейвлета
@@ -194,10 +243,10 @@ void InitialAnalysis::centerWletImage(double* fw)
     }
 }
 // -------------------------------------------------------------------------------------------------
-void InitialAnalysis::fillNoiseArray(double *y, int N, double Neff, double *outNoise)
-{	findNoiseArray(y, outNoise, N); // external function from findNoise.cpp
+void InitialAnalysis::fillNoiseArray(double *y, int data_length, int N, double Neff, double *outNoise)
+{	findNoiseArray(y, outNoise, data_length, N); // external function from findNoise.cpp
 	int i;
-	if (true || Neff < 1)
+	if (true || Neff < 1) // кажется, без true никак
 	{	Neff = 1;
 	}
 	for (i = 0; i < N; i++)
@@ -324,6 +373,7 @@ void InitialAnalysis::correctSpliceCoords(int n)
 	// если это не сварка, то выход
     if(ev.type != EventParams::SPLICE)
 return;
+	//prf_b("correctSpliceCoords: enter");
 	const double noise_factor = 0;  // 0 , если мы не учитываем шум в пределах событий
     const double angle_factor = 1.5; // расширения светового конуса для защиты от низкочастотных помех на больших масштабах
 	const double factor = 1.1; // множитель геометрической прогрессии
@@ -341,9 +391,13 @@ return;
     {   width = (int )(wlet_width/pow(factor,step));// чтобы не накапливать ошибки
     	if(width<=1)
     break;
+		//prf_b("correctSpliceCoords: getWLetNorma");
 	    wn = getWLetNorma(width, waveletType);
+		//prf_b("correctSpliceCoords: performTransformation");
 	   	performTransformation(data, w_l, w_r+1, f_wlet, width, wn);
+		//prf_b("correctSpliceCoords: centerWletImage");
         centerWletImage(f_wlet);
+		//prf_b("correctSpliceCoords: processing");
 		// считаем добавку к шуму ( степень немонотонности от пересечения порога до максимума )
 		// сначала ищём положение экстремума при данном масштабе
         int i_max = w_l;
@@ -393,6 +447,7 @@ return;
         }
 #endif
     }
+	//prf_b("correctSpliceCoords: scales done");
 	if( (ev.begin!=w_l || ev.end!=w_r) && (w_l<w_r))
     { 	ev.begin = w_l;
     	ev.end = w_r;
@@ -411,6 +466,7 @@ return;
   	performTransformation(data, 0, lastNonZeroPoint, f_wlet, wlet_width, wn);
     centerWletImage(f_wlet);
 #endif
+	//prf_b("correctSpliceCoords: return");
 }
 //------------------------------------------------------------------------------------------------------------
 void InitialAnalysis::excludeShortLinesBetweenConnectors(double* arr, int szc)

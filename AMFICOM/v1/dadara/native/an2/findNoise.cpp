@@ -132,13 +132,10 @@ static double dB2dy(double y0, double dB)
  * с учетом возможности уменьшения уровня шума на
  * р/г
  * вых. значение - в отн. дБ, по ур. ~1(?) сигма
+ * len2 - интересующий пользователя интервал шума, д б <= size (д включать м.з.)
  */
-void findNoiseArray(double *data, double *out, int size)
+void findNoiseArray(double *data, double *outNoise, int size, int len2)
 {
-	assert(size > 0);
-	double *temp = new double[size]; // здесь временно будет сглаженная р/г
-	assert(temp);
-
 	//prf_b("findNoiseArray: enter");
 
 	const int width = NETTESTWIDTH;
@@ -146,17 +143,28 @@ void findNoiseArray(double *data, double *out, int size)
 	const int mlen = width * 10;
 	// -1 здесь для выравнивания x-коорд.
 	const int nsam = mlen - 2 * width - 1;
-	int mofs = mlen / 2 - 1;
+	const int mofs = mlen / 2 - 1;
 	double gist[nsam];
+
+	if (len2 <= 0)
+		return;
+	assert(len2 <= size);
+
+	assert(size > mlen); // XXX
+
+	double *temp = new double[size]; // здесь временно будет сглаженная р/г
+	assert(temp);
+	double *out = new double[size]; // здесь - шум
+	assert(out);
 
 	//prf_b("findNoiseArray: #1");
 
-	assert(size > mlen); // XXX
+	const int step = 4; // коэф-т загрубления - 4 точки - для ускорения расчета
 	int i;
-	for (i = 0; i < size - mlen; i++)
+	for (i = 0; i < size - mlen && i < len2 - mofs; i += step)
 	{
 		int j;
-		// определяем уровень шума
+		// определяем начальный уровень шума
 		for (j = 0; j < nsam; j ++)
 		{
 			double v0 = data[i + j];
@@ -177,14 +185,22 @@ void findNoiseArray(double *data, double *out, int size)
 		out[i + mofs] = dy2dB(y0, dv);
 	}
 	//prf_b("findNoiseArray: #2");
+	if (step > 1)
+		for (i = 0; i < size - mlen && i < len2 - mofs; i++)
+	{
+		temp[i + mofs] = temp[i/step*step + mofs];
+		out[i + mofs] = out[i/step*step + mofs];
+	}
+	//prf_b("findNoiseArray: #3");
 
-    // расширяем до краев массива
+    // расширяем до краев массива - влево
 	for (i = 0; i < mofs; i++)
 	{
 		out[i] = out[mofs];
 		temp[i] = temp[mofs];
 	}
-	for (i = size - mlen + mofs; i < size; i++)
+	// и - если надо - вправо
+	for (i = size - mlen + mofs; i < size && i < len2; i++)
 	{
 		out[i] = out[size - mlen + mofs - 1];
 		temp[i] = temp[size - mlen + mofs - 1];
@@ -194,7 +210,7 @@ void findNoiseArray(double *data, double *out, int size)
     {
 		// ищем абс. макс. усредненной р/г
         double vMax = temp[0];
-        for (i = 0; i < size; i++)
+        for (i = 0; i < len2; i++)
         {
         	if (vMax < temp[i])
             	vMax = temp[i];
@@ -204,17 +220,20 @@ void findNoiseArray(double *data, double *out, int size)
         	out[0] = vMax + MAX_VALUE_TO_INITIAL_DB_NOISE;
     }
 
+	//FILE *f = fopen("noise.tmp", "w"); assert(f);
+
 	// строим кривую кумулятивного минимума
-	for (i = 1; i < size; i++)
+	for (i = 1; i < len2; i++)
 	{
+		//fprintf(f,"%d %g\n", i, out[i]);
 		if (out[i] > out[i - 1])
 			out[i] = out[i - 1];
-		//fprintf(stdout,"%d %g\n", i, ya[i] - out[i]);
-		//fprintf(stdout,"%d %g\n", i, out[i]);
 	}
 
+	//fclose(f);
+
 	// формируем выходной массив
-	for (i = 0; i < size; i++)
+	for (i = 0; i < len2; i++)
 	{
 		out[i] = dB2dy(temp[i], out[i]);
 		//fprintf(stdout,"%d %g\n", i, out[i]);
@@ -230,6 +249,12 @@ void findNoiseArray(double *data, double *out, int size)
 	fclose(f);
 	*/
 
+	// сохраняем в пользовательский массив
+	for (i = 0; i < len2; i++)
+		outNoise[i] = out[i];
+
 	delete[] temp;
+	delete[] out;
+
 	//prf_b("findNoiseArray: exiting");
 }

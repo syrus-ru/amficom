@@ -47,11 +47,12 @@ double findNoise3s(double *data, int size);
  * на выходе - крива€ отн. уровен€ шума (дЅ) по уровню 1 сигма,
  * варьирующа€с€ в диапазоне от около 0.001 дЅ до 20 дЅ.
  *
- * size должен быть >= 1
+ * size должен быть достаточно большим.... -- FIXME
  * data - входной массив[size]
- * out - массив[size] дл€ записи вых. значени€ шума
+ * len2 - длина до опознанного конца р/г
+ * out - массив[len22] дл€ записи вых. значени€ шума
  */
-void findNoiseArray(double *data, double *out, int size);
+void findNoiseArray(double *data, double *out, int size, int len2);
 
 #endif
 

@@ -1,6 +1,6 @@
 #include "findLength.h"
 
-const int TREAT_ONLY_DUPLICATE_ZEROES = 1;
+const int TREAT_ONLY_DUPLICATE_ZEROES = 0;
 
 // определяет длину рефлектограммы до начала шума (т.е. до конца р/граммы)
 // если ничего не может сделать, должно вернуть data_length

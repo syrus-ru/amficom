@@ -677,7 +677,7 @@ JNIEXPORT jdoubleArray JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManag
 	get_arr(env, outArr, &noise);
 
 	// process
-	findNoiseArray(yy, noise, size);
+	findNoiseArray(yy, noise, size, size);
 
 	// release arrays
 	release_arr(env, inArr, yy);
