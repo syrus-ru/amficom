@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.8 2004/11/25 15:59:50 max Exp $
+ * $Id: TransmissionPathType.java,v 1.9 2004/11/30 14:44:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,9 @@ import com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -25,8 +27,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/11/25 15:59:50 $
- * @author $Author: max $
+ * @version $Revision: 1.9 $, $Date: 2004/11/30 14:44:05 $
+ * @author $Author: bob $
  * @module module_name
  */
 
@@ -81,18 +83,16 @@ public class TransmissionPathType extends StorableObjectType implements Characte
     }
     /**
      * create new instance for client 
-     * @param id
      * @param creatorId
      * @param codename
      * @param description
      * @return
      */
-    public static TransmissionPathType createInstance(Identifier id,
-            Identifier creatorId,
+    public static TransmissionPathType createInstance(Identifier creatorId,
             String codename,
             String description,
             String name){
-        return new TransmissionPathType(id,
+        return new TransmissionPathType(IdentifierPool.generateId(ObjectEntities.TRANSPATHTYPE_ENTITY_CODE),
                 creatorId,
                 codename,
                 description,

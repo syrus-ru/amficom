@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.14 2004/11/15 15:30:54 bob Exp $
+ * $Id: User.java,v 1.15 2004/11/30 14:44:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -23,7 +25,7 @@ import com.syrus.AMFICOM.configuration.corba.User_Transferable;
 import com.syrus.AMFICOM.configuration.corba.UserSort;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/11/15 15:30:54 $
+ * @version $Revision: 1.15 $, $Date: 2004/11/30 14:44:05 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -50,7 +52,7 @@ public class User extends StorableObject {
 		}
 	}
 
-	public User(User_Transferable ut) throws CreateObjectException {
+	public User(User_Transferable ut) {
 		super(ut.header);
 		this.login = ut.login;
 		this.sort = ut.sort.value();
@@ -121,18 +123,26 @@ public class User extends StorableObject {
 		super.currentVersion = super.getNextVersion();
 	}
 
-	public static User createInstance(Identifier id,
-																		Identifier creatorId,
-																		String login,
-																		UserSort sort,
-																		String name,
-																		String description) {
-		return new User(id,
-										creatorId,
-										login,
-										sort.value(),
-										name,
-										description);
+	/**
+	 * client constructor
+	 * @param creatorId
+	 * @param login
+	 * @param sort
+	 * @param name
+	 * @param description
+	 * @return
+	 */
+	public static User createInstance(Identifier creatorId,
+									  String login,
+									  UserSort sort,
+									  String name,
+									  String description) {
+		return new User(IdentifierPool.generateId(ObjectEntities.USER_ENTITY_CODE),
+							creatorId,
+							login,
+							sort.value(),
+							name,
+							description);
 	}
 
 	protected synchronized void setAttributes(Date created,

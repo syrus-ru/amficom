@@ -1,5 +1,5 @@
 /*
- * $Id: Link.java,v 1.12 2004/11/25 15:41:11 bob Exp $
+ * $Id: Link.java,v 1.13 2004/11/30 14:44:04 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,9 @@ import com.syrus.AMFICOM.configuration.corba.Link_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -28,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/11/25 15:41:11 $
+ * @version $Revision: 1.13 $, $Date: 2004/11/30 14:44:04 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -142,32 +144,31 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 	 * create new instance for client
 	 */ 
 
-	public static Link createInstance(Identifier id,
-																	 Identifier creatorId,
-																	 Identifier domainId,
-																	 String name,
-																	 String description,
-																	 AbstractLinkType type,
-																	 String inventoryNo,
-																	 String supplier,
-																	 String supplierCode,
-																	 LinkSort sort,
-																	 Identifier linkId,
-																	 String color,
-																	 String mark){
-		return new Link(id,
-									 creatorId,
-									 domainId,
-									 name,
-									 description,
-									 type,
-									 inventoryNo,
-									 supplier,
-									 supplierCode,
-									 sort.value(),
-									 linkId,
-									 color,
-									 mark);
+	public static Link createInstance(Identifier creatorId,
+									  Identifier domainId,
+									  String name,
+									  String description,
+									  AbstractLinkType type,
+									  String inventoryNo,
+									  String supplier,
+									  String supplierCode,
+									  LinkSort sort,
+									  Identifier linkId,
+									  String color,
+									  String mark){
+		return new Link(IdentifierPool.generateId(ObjectEntities.LINK_ENTITY_CODE),
+				creatorId,
+				domainId,
+				name,
+				description,
+				type,
+				inventoryNo,
+				supplier,
+				supplierCode,
+				sort.value(),
+				linkId,
+				color,
+				mark);
 	}
 	
 	public static Link getInstance(Link_Transferable lt) throws CreateObjectException{

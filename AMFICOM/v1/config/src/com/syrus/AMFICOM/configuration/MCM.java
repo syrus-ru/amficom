@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.28 2004/11/25 15:41:11 bob Exp $
+ * $Id: MCM.java,v 1.29 2004/11/30 14:44:04 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -24,7 +26,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/11/25 15:41:11 $
+ * @version $Revision: 1.29 $, $Date: 2004/11/30 14:44:04 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -188,22 +190,21 @@ public class MCM extends DomainMember implements Characterized {
 		return this.kiss;
 	}
 
-	public static MCM createInstance(Identifier id,
-																	 Identifier creatorId,
-																	 Identifier domainId,
-																	 String name,
-																	 String description,
-																	 Identifier userId,
-																	 Identifier serverId,
-																	 short tcpPort) {
-		return new MCM(id,
-									 creatorId,
-									 domainId,
-									 name,
-									 description,
-									 userId,
-									 serverId,
-									 tcpPort);
+	public static MCM createInstance(Identifier creatorId,
+									 Identifier domainId,
+									 String name,
+									 String description,
+									 Identifier userId,
+									 Identifier serverId,
+									 short tcpPort) {
+		return new MCM(IdentifierPool.generateId(ObjectEntities.MCM_ENTITY_CODE),
+							creatorId,
+							domainId,
+							name,
+							description,
+							userId,
+							serverId,
+							tcpPort);
 	}
 
 	protected synchronized void setAttributes(Date created,

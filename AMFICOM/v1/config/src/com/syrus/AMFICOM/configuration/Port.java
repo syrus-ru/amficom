@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.19 2004/11/25 15:41:11 bob Exp $
+ * $Id: Port.java,v 1.20 2004/11/30 14:44:04 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,9 @@ import com.syrus.AMFICOM.configuration.corba.Port_Transferable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -29,7 +31,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/11/25 15:41:11 $
+ * @version $Revision: 1.20 $, $Date: 2004/11/30 14:44:04 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -106,7 +108,6 @@ public class Port extends StorableObject implements Characterized, TypedObject {
 	
 	/**
 	 * create new instance for client 
-	 * @param id
 	 * @param creatorId
 	 * @param type
 	 * @param description
@@ -114,18 +115,17 @@ public class Port extends StorableObject implements Characterized, TypedObject {
 	 * @param sort
 	 * @return
 	 */
-	public static Port createInstance(Identifier id,
-																		Identifier creatorId,
-																		PortType type,
-																		String description,
-																		Identifier equipmentId,
-																		PortSort sort) {
-		return new Port(id,
-										creatorId,
-										type,
-										description,
-										equipmentId,
-										sort.value());
+	public static Port createInstance(Identifier creatorId,
+									  PortType type,
+									  String description,
+									  Identifier equipmentId,
+									  PortSort sort) {
+		return new Port(IdentifierPool.generateId(ObjectEntities.PORT_ENTITY_CODE),
+					creatorId,
+					type,
+					description,
+					equipmentId,
+					sort.value());
 	}
 	
 	public static Port getInstance(Port_Transferable pt) throws CreateObjectException {

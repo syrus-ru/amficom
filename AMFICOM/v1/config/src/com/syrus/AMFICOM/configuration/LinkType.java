@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.10 2004/11/25 15:59:50 max Exp $
+ * $Id: LinkType.java,v 1.11 2004/11/30 14:44:04 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,15 +19,17 @@ import com.syrus.AMFICOM.configuration.corba.LinkType_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/11/25 15:59:50 $
- * @author $Author: max $
+ * @version $Revision: 1.11 $, $Date: 2004/11/30 14:44:04 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -98,8 +100,7 @@ public class LinkType extends AbstractLinkType implements Characterized {
 	/**
 	 * create new instance for client
 	 */
-	public static LinkType createInstance(	Identifier id,
-											Identifier creatorId,
+	public static LinkType createInstance(	Identifier creatorId,
 											String codename,
 											String description,
 											String name,
@@ -107,7 +108,7 @@ public class LinkType extends AbstractLinkType implements Characterized {
 											String manufacturer,
 											String manufacturerCode,
 											Identifier imageId) {
-		return new LinkType(id, creatorId, codename, description, name, sort.value(), manufacturer, manufacturerCode, imageId);
+		return new LinkType(IdentifierPool.generateId(ObjectEntities.LINKTYPE_ENTITY_CODE), creatorId, codename, description, name, sort.value(), manufacturer, manufacturerCode, imageId);
 	}
 
 	public static LinkType getInstance(LinkType_Transferable ltt) throws CreateObjectException {

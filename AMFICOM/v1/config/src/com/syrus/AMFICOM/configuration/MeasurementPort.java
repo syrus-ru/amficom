@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.20 2004/11/25 15:59:50 max Exp $
+ * $Id: MeasurementPort.java,v 1.21 2004/11/30 14:44:04 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,10 +15,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.configuration.corba.MeasurementPort_Transferable;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -26,11 +28,10 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/11/25 15:59:50 $
- * @author $Author: max $
+ * @version $Revision: 1.21 $, $Date: 2004/11/30 14:44:04 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 public class MeasurementPort extends StorableObject implements Characterized, TypedObject{
@@ -107,7 +108,6 @@ public class MeasurementPort extends StorableObject implements Characterized, Ty
 	
 	/**
 	 * create new instance for client 
-	 * @param id
 	 * @param creatorId
 	 * @param type
 	 * @param name
@@ -116,14 +116,13 @@ public class MeasurementPort extends StorableObject implements Characterized, Ty
 	 * @param portId
 	 * @return
 	 */
-	public static MeasurementPort createInstance(Identifier id,
-													Identifier creatorId,
+	public static MeasurementPort createInstance(	Identifier creatorId,
 													MeasurementPortType type,
 													String name,
 													String description,	
 													Identifier kisId,
 													Identifier portId){
-		return new MeasurementPort(id,
+		return new MeasurementPort(IdentifierPool.generateId(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE),
 								   creatorId,
 								   type,
 								   name,

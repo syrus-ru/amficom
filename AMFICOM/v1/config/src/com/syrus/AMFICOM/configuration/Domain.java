@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.18 2004/11/25 15:41:11 bob Exp $
+ * $Id: Domain.java,v 1.19 2004/11/30 14:44:04 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.configuration;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/11/25 15:41:11 $
+ * @version $Revision: 1.19 $, $Date: 2004/11/30 14:44:04 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -134,16 +136,15 @@ public class Domain extends DomainMember implements Characterized {
 	 * @param description
 	 * @return
 	 */
-	public static Domain createInstance(Identifier id,
-																			Identifier creatorId,
-																			Identifier domainId,
-																			String name,
-																			String description) {
-		return new Domain(id,
-											creatorId,
-											domainId,
-											name,
-											description);
+	public static Domain createInstance(Identifier creatorId,
+										Identifier domainId,
+										String name,
+										String description) {
+		return new Domain(IdentifierPool.generateId(ObjectEntities.DOMAIN_ENTITY_CODE),
+					creatorId,
+					domainId,
+					name,
+					description);
 	}
 	
 	public static Domain getInstance(Domain_Transferable dt) throws CreateObjectException {

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.24 2004/11/25 15:41:11 bob Exp $
+ * $Id: TransmissionPath.java,v 1.25 2004/11/30 14:44:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -25,7 +27,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 /**
- * @version $Revision: 1.24 $, $Date: 2004/11/25 15:41:11 $
+ * @version $Revision: 1.25 $, $Date: 2004/11/30 14:44:05 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -88,7 +90,6 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 	
 	/**
 	 * create new instance for client 
-	 * @param id
 	 * @param creatorId
 	 * @param domainId
 	 * @param name
@@ -97,15 +98,14 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 	 * @param finishPortId
 	 * @return
 	 */
-	public static TransmissionPath createInstance(Identifier id,
-													Identifier creatorId,
-													Identifier domainId,
-													String name,
-													String description,
-                                                    TransmissionPathType type,
-													Identifier startPortId,
-													Identifier finishPortId) {
-				return new TransmissionPath(id,
+	public static TransmissionPath createInstance(Identifier creatorId,
+												  Identifier domainId,
+												  String name,
+												  String description,
+												  TransmissionPathType type,
+												  Identifier startPortId,
+												  Identifier finishPortId) {
+				return new TransmissionPath(IdentifierPool.generateId(ObjectEntities.TRANSPATH_ENTITY_CODE),
 					 creatorId,					 
 					 domainId,
 					 name,

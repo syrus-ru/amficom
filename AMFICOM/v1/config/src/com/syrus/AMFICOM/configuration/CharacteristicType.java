@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.19 2004/11/15 13:50:27 bob Exp $
+ * $Id: CharacteristicType.java,v 1.20 2004/11/30 14:44:04 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,9 @@ import com.syrus.AMFICOM.configuration.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -24,7 +26,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.DataType;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/11/15 13:50:27 $
+ * @version $Revision: 1.20 $, $Date: 2004/11/30 14:44:04 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -49,7 +51,7 @@ public class CharacteristicType extends StorableObjectType {
 		}
 	}
 
-	public CharacteristicType(CharacteristicType_Transferable ctt) throws CreateObjectException {
+	public CharacteristicType(CharacteristicType_Transferable ctt) {
 		super(ctt.header,
 			  new String(ctt.codename),
 			  new String(ctt.description));
@@ -78,7 +80,6 @@ public class CharacteristicType extends StorableObjectType {
 	
 	/**
 	 * create new instance for client 
-	 * @param id
 	 * @param creatorId
 	 * @param codename
 	 * @param description
@@ -87,19 +88,17 @@ public class CharacteristicType extends StorableObjectType {
 	 * @param visible
 	 * @return
 	 */
-	public static CharacteristicType createInstance(Identifier id,
-							Identifier creatorId,
+	public static CharacteristicType createInstance(Identifier creatorId,
 							String codename,
 							String description,
 							int dataType,
 							CharacteristicTypeSort sort){
-		return new CharacteristicType(id,
+		return new CharacteristicType(IdentifierPool.generateId(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE),
 									  creatorId,
 									  codename,
 									  description,
 									  dataType,									  
-									  sort.value());
-	
+									  sort.value());	
 	}
 	
 	

@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.36 2004/11/25 15:59:50 max Exp $
+ * $Id: KIS.java,v 1.37 2004/11/30 14:44:04 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,15 +18,17 @@ import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2004/11/25 15:59:50 $
- * @author $Author: max $
+ * @version $Revision: 1.37 $, $Date: 2004/11/30 14:44:04 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -116,7 +118,6 @@ public class KIS extends DomainMember implements Characterized {
 
 	/**
 	 * create new instance for client 
-	 * @param id
 	 * @param creatorId
 	 * @param domainId
 	 * @param name
@@ -124,24 +125,23 @@ public class KIS extends DomainMember implements Characterized {
 	 * @param mcmId
 	 * @return
 	 */
-	public static KIS createInstance(Identifier id,
-																	 Identifier creatorId,
-																	 Identifier domainId,
-																	 String name,
-																	 String description,
-																	 String hostname,
-																	 short tcpPort,
-																	 Identifier equipmentId,
-																	 Identifier mcmId) {
-		return new KIS(id,
-									 creatorId,
-									 domainId,
-									 name,
-									 description,
-									 hostname,
-									 tcpPort,
-									 equipmentId,
-									 mcmId);
+	public static KIS createInstance(Identifier creatorId,
+									 Identifier domainId,
+									 String name,
+									 String description,
+									 String hostname,
+									 short tcpPort,
+									 Identifier equipmentId,
+									 Identifier mcmId) {
+		return new KIS(IdentifierPool.generateId(ObjectEntities.KIS_ENTITY_CODE),
+				creatorId,
+				domainId,
+				name,
+				description,
+				hostname,
+				tcpPort,
+				equipmentId,
+				mcmId);
 	}
 
 	public static KIS getInstance(KIS_Transferable kt) throws CreateObjectException{

@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.16 2004/11/26 16:05:13 max Exp $
+ * $Id: PortType.java,v 1.17 2004/11/30 14:44:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,8 @@ import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -28,8 +30,8 @@ import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
 import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/11/26 16:05:13 $
- * @author $Author: max $
+ * @version $Revision: 1.17 $, $Date: 2004/11/30 14:44:05 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -92,19 +94,17 @@ public class PortType extends StorableObjectType implements Characterized {
 	
 	/**
 	 * create new instance for client 
-	 * @param id
 	 * @param creatorId
 	 * @param codename
 	 * @param description
 	 * @return
 	 */
-	public static PortType createInstance(Identifier id,
-											 Identifier creatorId,
-											 String codename,
-											 String description,
-											 String name,
-                                             PortTypeSort sort){
-		return new PortType(id,
+	public static PortType createInstance(Identifier creatorId,
+										  String codename,
+										  String description,
+										  String name,
+										  PortTypeSort sort){
+		return new PortType(IdentifierPool.generateId(ObjectEntities.PORTTYPE_ENTITY_CODE),
 							creatorId,
 							codename,
 							description,

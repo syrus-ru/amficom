@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.28 2004/11/25 15:59:50 max Exp $
+ * $Id: Characteristic.java,v 1.29 2004/11/30 14:44:04 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectType;
@@ -28,8 +29,8 @@ import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/11/25 15:59:50 $
- * @author $Author: max $
+ * @version $Revision: 1.29 $, $Date: 2004/11/30 14:44:04 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -108,7 +109,6 @@ public class Characteristic extends StorableObject implements TypedObject {
 	
 	/**
 	 * create new instance for client 
-	 * @param id
 	 * @param creatorId
 	 * @param type see {@link CharacteristicType}
 	 * @param name
@@ -118,17 +118,16 @@ public class Characteristic extends StorableObject implements TypedObject {
 	 * @param characterizedId
 	 * @return
 	 */
-	public static Characteristic  createInstance(Identifier id,
-													Identifier creatorId,
-													CharacteristicType type,
-													String name,
-													String description,
-													int sort,
-													String value,
-													Identifier characterizedId,
-													boolean editable,
-													boolean visible){
-		return new Characteristic(id,
+	public static Characteristic  createInstance(Identifier creatorId,
+												 CharacteristicType type,
+												 String name,
+												 String description,
+												 int sort,
+												 String value,
+												 Identifier characterizedId,
+												 boolean editable,
+												 boolean visible){
+		return new Characteristic(IdentifierPool.generateId(ObjectEntities.CHARACTERISTIC_ENTITY_CODE),
 								  creatorId,
 								  type,
 								  name,

@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.2 2004/11/23 09:45:59 bob Exp $
+ * $Id: CableThreadType.java,v 1.3 2004/11/30 14:44:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,14 +15,16 @@ import java.util.List;
 import com.syrus.AMFICOM.configuration.corba.CableThreadType_Transferable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/11/23 09:45:59 $
+ * @version $Revision: 1.3 $, $Date: 2004/11/30 14:44:00 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -77,14 +79,13 @@ public class CableThreadType extends AbstractLinkType {
 	/**
 	 * create new instance for client
 	 */
-	public static CableThreadType createInstance(	Identifier id,
-													Identifier creatorId,
+	public static CableThreadType createInstance(	Identifier creatorId,
 													String codename,
 													String description,
 													String mark,
 													String color,			
 													Identifier linkTypeId) {
-		return new CableThreadType(id, creatorId, codename, description, mark, color, linkTypeId);
+		return new CableThreadType(IdentifierPool.generateId(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE), creatorId, codename, description, mark, color, linkTypeId);
 	}
 
 	public static CableThreadType getInstance(CableThreadType_Transferable ctt) throws CreateObjectException {

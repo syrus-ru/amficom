@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.26 2004/11/25 15:41:11 bob Exp $
+ * $Id: MonitoredElement.java,v 1.27 2004/11/30 14:44:04 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -24,7 +26,7 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/11/25 15:41:11 $
+ * @version $Revision: 1.27 $, $Date: 2004/11/30 14:44:04 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -54,7 +56,7 @@ public class MonitoredElement extends DomainMember {
 		}
 	}
 
-	public MonitoredElement(MonitoredElement_Transferable met) throws CreateObjectException {
+	public MonitoredElement(MonitoredElement_Transferable met) {
 		super(met.header,
 			  new Identifier(met.domain_id));
 		this.measurementPortId = new Identifier(met.measurement_port_id);
@@ -95,7 +97,6 @@ public class MonitoredElement extends DomainMember {
 	
 	/**
 	 * create new instance for client
-	 * @param id
 	 * @param creatorId
 	 * @param domainId
 	 * @param measurementPortId
@@ -103,22 +104,21 @@ public class MonitoredElement extends DomainMember {
 	 * @param localAddress
 	 * @return
 	 */
-	public static MonitoredElement createInstance(Identifier id,
-																								Identifier creatorId,
-																								Identifier domainId,
-																								String name,
-																								Identifier measurementPortId,
-																								int sort,
-																								String localAddress,
-																								List monitoredDomainMemberIds) {
-		return new MonitoredElement(id,
-																creatorId,
-																domainId,
-																name,
-																measurementPortId,
-																sort,
-																localAddress,
-																monitoredDomainMemberIds);
+	public static MonitoredElement createInstance(Identifier creatorId,
+												  Identifier domainId,
+												  String name,
+												  Identifier measurementPortId,
+												  int sort,
+												  String localAddress,
+												  List monitoredDomainMemberIds) {
+		return new MonitoredElement(IdentifierPool.generateId(ObjectEntities.ME_ENTITY_CODE),
+							creatorId,
+							domainId,
+							name,
+							measurementPortId,
+							sort,
+							localAddress,
+							monitoredDomainMemberIds);
 	}
 
 	public static MonitoredElement getInstance(MonitoredElement_Transferable met) throws CreateObjectException {

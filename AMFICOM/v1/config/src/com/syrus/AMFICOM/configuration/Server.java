@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.22 2004/11/25 15:41:11 bob Exp $
+ * $Id: Server.java,v 1.23 2004/11/30 14:44:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -24,7 +26,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Server_Transferable;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/11/25 15:41:11 $
+ * @version $Revision: 1.23 $, $Date: 2004/11/30 14:44:05 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -158,33 +160,32 @@ public class Server extends DomainMember implements Characterized {
 	     super.currentVersion = super.getNextVersion();
 	}
 	
-	public static Server createInstance(Identifier id,
-																			Identifier creatorId,
-																			Identifier domainId,
-																			String name,
-																			String description,
-																			Identifier userId) {
-		return new Server(id,
-											creatorId,
-											domainId,
-											name,
-											description,
-											userId);
+	public static Server createInstance(Identifier creatorId,
+										Identifier domainId,
+										String name,
+										String description,
+										Identifier userId) {
+		return new Server(IdentifierPool.generateId(ObjectEntities.SERVER_ENTITY_CODE),
+					creatorId,
+					domainId,
+					name,
+					description,
+					userId);
 	}
 
 	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creatorId,
-																						Identifier modifierId,
-																						Identifier domainId,
-																						String name,
-																						String description,
-																						Identifier userId) {
+											  Date modified,
+											  Identifier creatorId,
+											  Identifier modifierId,
+											  Identifier domainId,
+											  String name,
+											  String description,
+											  Identifier userId) {
 		super.setAttributes(created,
-												modified,
-												creatorId,
-												modifierId,
-												domainId);
+					modified,
+					creatorId,
+					modifierId,
+					domainId);
 		this.name = name;
 		this.description = description;
 		this.userId = userId;

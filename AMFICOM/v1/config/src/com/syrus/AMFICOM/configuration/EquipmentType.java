@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.19 2004/11/25 15:59:50 max Exp $
+ * $Id: EquipmentType.java,v 1.20 2004/11/30 14:44:04 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,8 @@ import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -26,8 +28,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/11/25 15:59:50 $
- * @author $Author: max $
+ * @version $Revision: 1.20 $, $Date: 2004/11/30 14:44:04 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -88,18 +90,16 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 
 	/**
 	 * create new instance for client 
-	 * @param id
 	 * @param creatorId
 	 * @param codename
 	 * @param description
 	 * @return
 	 */
-	public static EquipmentType createInstance(Identifier id,
-											 Identifier creatorId,
+	public static EquipmentType createInstance(Identifier creatorId,
 											 String codename,
 											 String description,
 											 String name){
-		return new EquipmentType(id,
+		return new EquipmentType(IdentifierPool.generateId(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE),
 							creatorId,
 							codename,
 							description,

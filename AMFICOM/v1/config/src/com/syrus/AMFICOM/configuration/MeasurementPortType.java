@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.15 2004/11/25 15:59:50 max Exp $
+ * $Id: MeasurementPortType.java,v 1.16 2004/11/30 14:44:04 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,8 @@ import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -26,8 +28,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/11/25 15:59:50 $
- * @author $Author: max $
+ * @version $Revision: 1.16 $, $Date: 2004/11/30 14:44:04 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -85,18 +87,16 @@ public class MeasurementPortType extends StorableObjectType implements Character
 	
 	/**
 	 * create new instance for client 
-	 * @param id
 	 * @param creatorId
 	 * @param codename
 	 * @param description
 	 * @return
 	 */
-	public static MeasurementPortType createInstance(Identifier id,
-													 Identifier creatorId,
+	public static MeasurementPortType createInstance(Identifier creatorId,
 													 String codename,
 													 String description,
 													 String name){
-		return new MeasurementPortType(id,
+		return new MeasurementPortType(IdentifierPool.generateId(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE),
 									   creatorId,
 									   codename,
 									   description,
