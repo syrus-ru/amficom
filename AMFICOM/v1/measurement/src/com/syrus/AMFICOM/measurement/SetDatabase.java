@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.51 2005/02/01 15:09:21 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.52 2005/02/02 14:58:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,7 +47,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/02/01 15:09:21 $
+ * @version $Revision: 1.52 $, $Date: 2005/02/02 14:58:42 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -687,7 +687,8 @@ public class SetDatabase extends StorableObjectDatabase {
 			}
 			catch(SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally{
+			}
+			finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
