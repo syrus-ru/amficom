@@ -342,7 +342,7 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
         }
         else if(ortn != null && ortn.getObject() instanceof ObjectResource)
         {
-          setVectorFromObjectResource((ObjectResource)ortn.getObject(), User.typ, vec);
+          setVectorFromObjectResource((AdminObjectResource)ortn.getObject(), User.typ, vec);
         }
       }
       else if(s.equals(OperatorProfile.typ)) // case of the Profile is selected
@@ -354,7 +354,7 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
         }
         else if(ortn != null && ortn.getObject() instanceof ObjectResource)
         {
-          setVectorFromObjectResource((ObjectResource)ortn.getObject(),
+          setVectorFromObjectResource((AdminObjectResource)ortn.getObject(),
                                       OperatorProfile.typ, vec);
         }
       }
@@ -367,7 +367,7 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
         }
         else if(ortn != null && ortn.getObject() instanceof ObjectResource)
         {
-          setVectorFromObjectResource((ObjectResource)ortn.getObject(),
+          setVectorFromObjectResource((AdminObjectResource)ortn.getObject(),
                                       OperatorCategory.typ, vec);
         }
       }
@@ -380,7 +380,7 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
         }
         else if(ortn != null && ortn.getObject() instanceof ObjectResource)
         {
-          setVectorFromObjectResource((ObjectResource)ortn.getObject(),
+          setVectorFromObjectResource((AdminObjectResource)ortn.getObject(),
                                       OperatorGroup.typ, vec);
         }
       }
@@ -427,7 +427,7 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
         ortn = (ObjectResourceTreeNode )node.getParent();
         if(ortn != null && ortn.getObject() instanceof ObjectResource)
         {
-          setVectorFromObjectResource((ObjectResource)ortn.getObject(),
+          setVectorFromObjectResource((AdminObjectResource)ortn.getObject(),
                                       CommandPermissionAttributes.typ, vec);
         }
       }
@@ -532,7 +532,7 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
         }
         else if(ortn != null && ortn.getObject() instanceof ObjectResource)
         {
-          setVectorFromObjectResource((ObjectResource)ortn.getObject(),
+          setVectorFromObjectResource((AdminObjectResource)ortn.getObject(),
                                       Domain.typ, vec);
         }
       }
@@ -545,7 +545,7 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
         }
         else if(ortn != null && ortn.getObject() instanceof ObjectResource)
         {
-          setVectorFromObjectResource((ObjectResource)ortn.getObject(),
+          setVectorFromObjectResource((AdminObjectResource)ortn.getObject(),
                                       Agent.typ, vec);
         }
       }
@@ -558,7 +558,7 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
         }
         else if(ortn != null && ortn.getObject() instanceof ObjectResource)
         {
-          setVectorFromObjectResource((ObjectResource)ortn.getObject(),
+          setVectorFromObjectResource((AdminObjectResource)ortn.getObject(),
                                       Client.typ, vec);
         }
       }
@@ -571,7 +571,7 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
         }
         else if(ortn != null && ortn.getObject() instanceof ObjectResource)
         {
-          setVectorFromObjectResource((ObjectResource)ortn.getObject(),
+          setVectorFromObjectResource((AdminObjectResource)ortn.getObject(),
                                       Server.typ, vec);
         }
       }
@@ -579,7 +579,7 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
     else if(node.getObject() instanceof ObjectResource)
     {
 
-      ObjectResource or = (ObjectResource )node.getObject();
+      AdminObjectResource or = (AdminObjectResource )node.getObject();
       {
         Enumeration enum = or.getChildTypes();
         for(; enum.hasMoreElements(); )
@@ -692,7 +692,7 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
 
 
 
-  private void setVectorFromObjectResource(ObjectResource or, String typ, Vector vec)
+  private void setVectorFromObjectResource(AdminObjectResource or, String typ, Vector vec)
   {
     or.updateLocalFromTransferable();
     ImageIcon ii = getIcon(typ);
