@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLink.java,v 1.10 2004/12/20 12:36:01 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.11 2004/12/20 15:17:39 bob Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ.
@@ -37,8 +37,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/12/20 12:36:01 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.11 $, $Date: 2004/12/20 15:17:39 $
+ * @author $Author: bob $
  * @module map_v1
  */
 public class PhysicalLink extends StorableObject implements Characterized, TypedObject, MapElement {
@@ -59,8 +59,8 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	private String					street;
 	private String					building;
 
-	private long					dimensionX;
-	private long					dimensionY;
+	private int						dimensionX;
+	private int						dimensionY;
 
 	private boolean					leftToRight;
 	private boolean					topToBottom;
@@ -132,9 +132,9 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 			throw new CreateObjectException(ae);
 		}
 
-		selected = false;
+		this.selected = false;
 		
-		binding = new PhysicalLinkBinding(new IntDimension((int )this.dimensionX, (int )this.dimensionY));
+		this.binding = new PhysicalLinkBinding(new IntDimension(this.dimensionX, this.dimensionY));
 	}
 
 	protected PhysicalLink(final Identifier id,
@@ -147,8 +147,8 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 						   final String city, 
 						   final String street, 
 						   final String building,
-						   final long dimensionX,
-						   final long dimensionY,
+						   final int dimensionX,
+						   final int dimensionY,
 						   final boolean leftToRight,
 						   final boolean topToBottom) {
 		super(id);
@@ -177,9 +177,9 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 
 		this.physicalLinkDatabase = MapDatabaseContext.getPhysicalLinkDatabase();
 
-		selected = false;
+		this.selected = false;
 		
-		binding = new PhysicalLinkBinding(physicalLinkType.getBindingDimension());
+		this.binding = new PhysicalLinkBinding(physicalLinkType.getBindingDimension());
 	}
 
 	public void insert() throws CreateObjectException {
@@ -216,8 +216,8 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 				"",
 				"",
 				"",
-				type.getBindingDimension().width,
-				type.getBindingDimension().height,
+				type.getBindingDimension().getWidth(),
+				type.getBindingDimension().getHeight(),
 				true,
 				true);
 		} catch (IllegalObjectEntityException e) {
@@ -323,20 +323,20 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		super.currentVersion = super.getNextVersion();
 	}
 	
-	public long getDimensionX() {
+	public int getDimensionX() {
 		return this.dimensionX;
 	}
 	
-	public void setDimensionX(long dimensionX) {
+	public void setDimensionX(int dimensionX) {
 		this.dimensionX = dimensionX;
 		super.currentVersion = super.getNextVersion();
 	}
 	
-	public long getDimensionY() {
+	public int getDimensionY() {
 		return this.dimensionY;
 	}
 	
-	public void setDimensionY(long dimensionY) {
+	public void setDimensionY(int dimensionY) {
 		this.dimensionY = dimensionY;
 		super.currentVersion = super.getNextVersion();
 	}
@@ -347,7 +347,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	
 	public void setEndNode(AbstractNode endNode) {
 		this.endNode = endNode;
-		nodeLinksSorted = false;
+		this.nodeLinksSorted = false;
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -377,7 +377,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		this.nodeLinks.clear();
 		if (nodeLinks != null)
 			this.nodeLinks.addAll(nodeLinks);
-		nodeLinksSorted = false;
+		this.nodeLinksSorted = false;
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -387,7 +387,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	
 	public void setStartNode(AbstractNode startNode) {
 		this.startNode = startNode;
-		nodeLinksSorted = false;
+		this.nodeLinksSorted = false;
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -419,8 +419,8 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 											  String city,
 											  String street,
 											  String building,											  
-											  long dimensionX,
-											  long dimensionY,
+											  int dimensionX,
+											  int dimensionY,
 											  boolean leftToRight,
 											  boolean topToBottom,
 											  AbstractNode startNode,
@@ -445,7 +445,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 
 	public PhysicalLinkBinding getBinding()
 	{
-		return binding;
+		return this.binding;
 	}
 
 	/**
@@ -467,8 +467,8 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	 */
 	public void removeNodeLink(NodeLink nodeLink)
 	{
-		nodeLinks.remove(nodeLink);
-		nodeLinksSorted = false;
+		this.nodeLinks.remove(nodeLink);
+		this.nodeLinksSorted = false;
 		super.currentVersion = super.getNextVersion();
 	}
 
@@ -477,16 +477,16 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	 */
 	public void addNodeLink(NodeLink addNodeLink)
 	{
-		nodeLinks.add(addNodeLink);
-		nodeLinksSorted = false;
+		this.nodeLinks.add(addNodeLink);
+		this.nodeLinksSorted = false;
 		super.currentVersion = super.getNextVersion();
 	}
 
 
 	public void clearNodeLinks()
 	{	
-		nodeLinks.clear();
-		nodeLinksSorted = false;
+		this.nodeLinks.clear();
+		this.nodeLinksSorted = false;
 		super.currentVersion = super.getNextVersion();
 	}
 
@@ -528,20 +528,20 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		sortNodeLinks();
 	}
 	
-	public java.util.List getSortedNodes()
+	public List getSortedNodes()
 	{
-		if(!nodeLinksSorted)
+		if(!this.nodeLinksSorted)
 			return null;
-		return sortedNodes;
+		return this.sortedNodes;
 	}
 
 	public void sortNodeLinks()
 	{
-		if(!nodeLinksSorted)
+		if(!this.nodeLinksSorted)
 		{
 			AbstractNode smne = this.getStartNode();
 			NodeLink nl = null;
-			LinkedList vec = new LinkedList();
+			LinkedList list = new LinkedList();
 			List nodevec = new LinkedList();
 			int count = getNodeLinks().size();
 			for (int i = 0; i < count; i++) 
@@ -556,7 +556,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 					{
 						if(nodeLink.getStartNode().equals(smne))
 						{
-							vec.add(nodeLink);
+							list.add(nodeLink);
 							it.remove();
 							smne = nodeLink.getEndNode();
 							nl = nodeLink;
@@ -565,7 +565,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 						else
 						if(nodeLink.getEndNode().equals(smne))
 						{
-							vec.add(nodeLink);
+							list.add(nodeLink);
 							it.remove();
 							smne = nodeLink.getStartNode();
 							nl = nodeLink;
@@ -575,8 +575,8 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 				}
 			}
 			nodevec.add(this.getEndNode());
-			this.nodeLinks = vec;
-			nodeLinksSorted = true;
+			this.nodeLinks = list;
+			this.nodeLinksSorted = true;
 			this.sortedNodes = nodevec;
 		}
 	}
@@ -587,8 +587,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		int index = getNodeLinks().indexOf(nl);
 		if(index == getNodeLinks().size() - 1)
 			return null;
-		else
-			return (NodeLink )getNodeLinks().get(index + 1);
+		return (NodeLink )getNodeLinks().get(index + 1);
 	}
 
 	public NodeLink previousNodeLink(NodeLink nl)
@@ -597,24 +596,16 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		int index = getNodeLinks().indexOf(nl);
 		if(index == 0)
 			return null;
-		else
-			return (NodeLink )getNodeLinks().get(index - 1);
+		return (NodeLink )getNodeLinks().get(index - 1);
 	}
 
-	/**
-	 * Установить наличие сигнала тревоги
-	 */
-	public void setAlarmState(boolean i)
-	{
-		this.alarmState = alarmState;
-	}
 
 	/**
 	 * получить наличие сигнала тревоги
 	 */
 	public boolean getAlarmState()
 	{
-		return alarmState;
+		return this.alarmState;
 	}
 
 	/**
@@ -622,7 +613,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	 */
 	public boolean isRemoved()
 	{
-		return removed;
+		return this.removed;
 	}
 	
 	/**
@@ -635,7 +626,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 
 	public boolean isSelected()
 	{
-		return selected;
+		return this.selected;
 	}
 
 	public void setSelected(boolean selected)
@@ -646,7 +637,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 
 	public Map getMap()
 	{
-		return map;
+		return this.map;
 	}
 
 	public void setMap(Map map)
@@ -716,6 +707,13 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 			e.printStackTrace();
 		}
 		
-		nodeLinksSorted = false;
+		this.nodeLinksSorted = false;
+	}
+	
+	/**
+	 * Установить наличие сигнала тревоги
+	 */
+	public void setAlarmState(boolean alarmState) {
+		this.alarmState = alarmState;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkTypeDatabase.java,v 1.3 2004/12/16 11:50:40 bob Exp $
+ * $Id: PhysicalLinkTypeDatabase.java,v 1.4 2004/12/20 15:17:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,19 +31,22 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/12/16 11:50:40 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/20 15:17:39 $
  * @author $Author: bob $
  * @module map_v1
  */
 public class PhysicalLinkTypeDatabase extends StorableObjectDatabase {
 	//	 codename VARCHAR2(32) NOT NULL,
     public static final String COLUMN_CODENAME      = "codename";
-    // domain_id VARCHAR2(32) NOT NULL,
-    public static final String COLUMN_DOMAIN_ID     = "domain_id";
     // name VARCHAR2(128),
     public static final String COLUMN_NAME  = "name";
     // description VARCHAR2(256),
     public static final String COLUMN_DESCRIPTION   = "description";
+    // dimension_x NUMBER(12),
+    public static final String COLUMN_DIMENSION_X   = "dimension_x";
+    // dimension_y NUMBER(12),
+    public static final String COLUMN_DIMENSION_Y   = "dimension_y";
+
     
 	private static String columns;
 	
@@ -69,9 +72,10 @@ public class PhysicalLinkTypeDatabase extends StorableObjectDatabase {
 		if (columns == null){
 			columns = super.getColumns(mode) + COMMA
 				+ COLUMN_CODENAME + COMMA
-				+ COLUMN_DOMAIN_ID + COMMA				
 				+ COLUMN_NAME + COMMA
-				+ COLUMN_DESCRIPTION;
+				+ COLUMN_DESCRIPTION + COMMA
+				+ COLUMN_DIMENSION_X + COMMA
+				+ COLUMN_DIMENSION_Y;
 		}
 		return columns;
 	}	
@@ -79,6 +83,7 @@ public class PhysicalLinkTypeDatabase extends StorableObjectDatabase {
 	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null){
 			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
+				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA				
@@ -94,9 +99,11 @@ public class PhysicalLinkTypeDatabase extends StorableObjectDatabase {
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
 			DatabaseString.setString(preparedStatement, ++i, physicalLinkType.getCodename(), SIZE_CODENAME_COLUMN);
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, physicalLinkType.getDomainId());
 			DatabaseString.setString(preparedStatement, ++i, physicalLinkType.getName(), SIZE_NAME_COLUMN);
 			DatabaseString.setString(preparedStatement, ++i, physicalLinkType.getDescription(), SIZE_DESCRIPTION_COLUMN);
+			preparedStatement.setInt(++i, physicalLinkType.getBindingDimension().getWidth());
+			preparedStatement.setInt(++i, physicalLinkType.getBindingDimension().getHeight());		
+
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
@@ -108,9 +115,10 @@ public class PhysicalLinkTypeDatabase extends StorableObjectDatabase {
 		PhysicalLinkType physicalLinkType = fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(physicalLinkType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
-			+ DatabaseIdentifier.toSQLString(physicalLinkType.getDomainId()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(physicalLinkType.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(physicalLinkType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
+			+ APOSTOPHE + DatabaseString.toQuerySubString(physicalLinkType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+			+ physicalLinkType.getBindingDimension().getWidth() + COMMA
+			+ physicalLinkType.getBindingDimension().getHeight();
 		return values;
 	}
 	
@@ -124,9 +132,10 @@ public class PhysicalLinkTypeDatabase extends StorableObjectDatabase {
 							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
-							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_DOMAIN_ID),
 							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
-							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)));		
+							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
+							   resultSet.getInt(COLUMN_DIMENSION_X),
+							   resultSet.getInt(COLUMN_DIMENSION_Y));		
 		return physicalLinkType;
 	}
 

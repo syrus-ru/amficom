@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkDatabase.java,v 1.4 2004/12/16 11:50:40 bob Exp $
+ * $Id: PhysicalLinkDatabase.java,v 1.5 2004/12/20 15:17:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/12/16 11:50:40 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/20 15:17:39 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -130,8 +130,8 @@ public class PhysicalLinkDatabase extends StorableObjectDatabase {
 			DatabaseString.setString(preparedStatement, ++i, physicalLink.getCity(), MarkDatabase.SIZE_CITY_COLUMN);
 			DatabaseString.setString(preparedStatement, ++i, physicalLink.getStreet(), MarkDatabase.SIZE_STREET_COLUMN);
 			DatabaseString.setString(preparedStatement, ++i, physicalLink.getBuilding(), MarkDatabase.SIZE_BUILDING_COLUMN);
-			preparedStatement.setDouble(++i, physicalLink.getDimensionX());
-			preparedStatement.setDouble(++i, physicalLink.getDimensionY());			
+			preparedStatement.setInt(++i, physicalLink.getDimensionX());
+			preparedStatement.setInt(++i, physicalLink.getDimensionY());			
 			preparedStatement.setInt(++i, (physicalLink.isTopToBottom() ? TOP_BOTTOM : 0) | (physicalLink.isLeftToRight() ? LEFT_RIGHT : 0) );
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, physicalLink.getStartNode().getId());
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, physicalLink.getEndNode().getId());
@@ -163,7 +163,7 @@ public class PhysicalLinkDatabase extends StorableObjectDatabase {
 	throws IllegalDataException, RetrieveObjectException, SQLException {
 		PhysicalLink physicalLink = (storableObject == null) ? 
 				new PhysicalLink(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null, null, null, 
-						null, null, null, 0L, 0L, false, false) : 
+						null, null, null, 0, 0, false, false) : 
 					fromStorableObject(storableObject);
 				
 		PhysicalLinkType type;
@@ -191,8 +191,8 @@ public class PhysicalLinkDatabase extends StorableObjectDatabase {
 							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CITY)),
 							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_STREET)),
 							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_BUILDING)),
-							   resultSet.getLong(COLUMN_DIMENSION_X),
-							   resultSet.getLong(COLUMN_DIMENSION_Y),
+							   resultSet.getInt(COLUMN_DIMENSION_X),
+							   resultSet.getInt(COLUMN_DIMENSION_Y),
 							   (topLeft & LEFT_RIGHT) == 1,
 							   (topLeft & TOP_BOTTOM) == 1,
 							   startNode,

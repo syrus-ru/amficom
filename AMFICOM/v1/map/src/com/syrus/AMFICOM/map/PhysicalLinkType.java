@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkType.java,v 1.10 2004/12/20 12:36:01 krupenn Exp $
+ * $Id: PhysicalLinkType.java,v 1.11 2004/12/20 15:17:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/12/20 12:36:01 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.11 $, $Date: 2004/12/20 15:17:39 $
+ * @author $Author: bob $
  * @module map_v1
  */
 public class PhysicalLinkType extends StorableObjectType implements Characterized {
@@ -49,11 +49,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 	private static final long	serialVersionUID	= 3690191057812271924L;
 
 	private List					characteristics;
-
-	/**
-	 * @deprecated does not belong to any domain
-	 */
-	private Identifier				domainId;
+	
 
 	private String					name;
 
@@ -81,7 +77,6 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 	public PhysicalLinkType(PhysicalLinkType_Transferable pltt) throws CreateObjectException {
 		super(pltt.header, pltt.codename, pltt.description);
 		this.name = pltt.name;
-		this.domainId = new Identifier(pltt.domain_id);
 
 		try {
 			this.characteristics = new ArrayList(pltt.characteristicIds.length);
@@ -110,8 +105,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 		super.codename = codename;
 		this.name = name;
 		this.description = description;
-		this.domainId = null;
-		this.bindingDimension = new IntDimension(bindingDimension.width, bindingDimension.height);
+		this.bindingDimension = new IntDimension(bindingDimension.getWidth(), bindingDimension.getHeight());
 
 		this.characteristics = new LinkedList();
 
@@ -156,9 +150,8 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 		return  Collections.unmodifiableList(this.characteristics);
 	}
 	
-	public void addCharacteristic(Characteristic ch)
-	{
-		this.characteristics.add(ch);
+	public void addCharacteristic(Characteristic characteristic){
+		this.characteristics.add(characteristic);
 		super.currentVersion = super.getNextVersion();
 	}
 
@@ -169,18 +162,11 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 	}
 
 	public List getDependencies() {
-		List dependencies = new LinkedList();
-		dependencies.add(this.domainId);
-		dependencies.addAll(this.characteristics);
-		return dependencies;
+		return Collections.unmodifiableList(this.characteristics);
 	}
 
 	public String getDescription() {
 		return this.description;
-	}
-
-	public Identifier getDomainId() {
-		return this.domainId;
 	}
 
 	public String getName() {
@@ -194,10 +180,11 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
 		
 		return new PhysicalLinkType_Transferable(super.getHeaderTransferable(), 
-				(Identifier_Transferable)this.domainId.getTransferable(),
 				this.codename,
 				this.name,
 				this.description,
+				this.bindingDimension.getWidth(),
+				this.bindingDimension.getHeight(),
 				charIds);
 	}
 
@@ -217,11 +204,6 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 		super.currentVersion = super.getNextVersion();
 	}
 
-	public void setDomainId(final Identifier domainId) {
-		this.domainId = domainId;
-		super.currentVersion = super.getNextVersion();
-	}
-
 	public void setName(final String name) {
 		this.name = name;
 		super.currentVersion = super.getNextVersion();
@@ -232,31 +214,30 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 											  Identifier creatorId,
 											  Identifier modifierId,
 											  String codename,
-											  Identifier domainId,
 											  String name,
-											  String description) {
+											  String description,
+											  int width,
+											  int height) {
 			super.setAttributes(created,
 					modified,
 					creatorId,
 					modifierId,
 					codename,
 					description);
+			this.bindingDimension = new IntDimension(width, height);
 			this.name = name;
-			this.domainId = domainId;
 		}
 
-	public void setBindingDimension(IntDimension bindingDimension)
-	{
+	public void setBindingDimension(IntDimension bindingDimension){
 		this.bindingDimension = new IntDimension(
-				bindingDimension.width, 
-				bindingDimension.height);
+				bindingDimension.getWidth(), 
+				bindingDimension.getHeight());
 		super.currentVersion = super.getNextVersion();
 	}
 
 
-	public IntDimension getBindingDimension()
-	{
-		return new IntDimension(bindingDimension);
+	public IntDimension getBindingDimension(){
+		return new IntDimension(this.bindingDimension);
 	}
 
 }
