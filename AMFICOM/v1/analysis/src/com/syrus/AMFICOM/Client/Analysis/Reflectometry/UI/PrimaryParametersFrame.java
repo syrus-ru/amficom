@@ -101,7 +101,7 @@ public class PrimaryParametersFrame extends ATableFrame
 
 	public String getReportTitle()
 	{
-		return LangModelAnalyse.String("parametersTitle");
+		return LangModelAnalyse.getString("parametersTitle");
 	}
 
 	public TableModel getTableModel()
@@ -114,8 +114,8 @@ public class PrimaryParametersFrame extends ATableFrame
 		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
 		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
 		tModel = new GeneralTableModel(
-					new String[] {LangModelAnalyse.String("parametersKey"),
-												LangModelAnalyse.String("parametersValue")},
+					new String[] {LangModelAnalyse.getString("parametersKey"),
+												LangModelAnalyse.getString("parametersValue")},
 					new String[] {"1", "2"},
 					0);
 		jTable = new ATable(tModel);
@@ -127,7 +127,7 @@ public class PrimaryParametersFrame extends ATableFrame
 		this.setClosable(true);
 		this.setIconifiable(true);
 		//this.setMaximizable(true);
-		this.setTitle(LangModelAnalyse.String("parametersTitle"));
+		this.setTitle(LangModelAnalyse.getString("parametersTitle"));
 
 		mainPanel.setLayout(new BorderLayout());
 		mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
@@ -158,25 +158,25 @@ public class PrimaryParametersFrame extends ATableFrame
 		if (bs == null)
 			return;
 		tModel.setValueAt(bs.supParams.OMID, 0, 1);
-		tModel.setValueAt(String.valueOf(bs.fxdParams.AW / 10)  + " " + LangModelAnalyse.String("nm"), 1, 1);
-		tModel.setValueAt(String.valueOf(bs.fxdParams.PWU[0]) + " " + LangModelAnalyse.String("ns"), 2, 1);
+		tModel.setValueAt(String.valueOf(bs.fxdParams.AW / 10)  + " " + LangModelAnalyse.getString("nm"), 1, 1);
+		tModel.setValueAt(String.valueOf(bs.fxdParams.PWU[0]) + " " + LangModelAnalyse.getString("ns"), 2, 1);
 		tModel.setValueAt(String.valueOf((double)bs.fxdParams.GI / 100000d), 3, 1);
 		tModel.setValueAt(String.valueOf(bs.fxdParams.NAV), 4, 1);
 
 		double tmp = (double)bs.fxdParams.DS[0] * .3d / (double)bs.fxdParams.GI;
 		if (bs.fxdParams.UD.equals("km")) tmp*=1000d;
-		tModel.setValueAt(String.valueOf(Math.round(tmp)) + " " + LangModelAnalyse.String("mt"), 5, 1);
+		tModel.setValueAt(String.valueOf(Math.round(tmp)) + " " + LangModelAnalyse.getString("mt"), 5, 1);
 
 		tmp = (double)bs.fxdParams.AR * 3d / (double)bs.fxdParams.GI * 1000;
 		if (bs.fxdParams.UD.equals("mt")) tmp/=1000d;
-		tModel.setValueAt(String.valueOf(Math.round(tmp)) + " " + LangModelAnalyse.String("km"), 6, 1);
+		tModel.setValueAt(String.valueOf(Math.round(tmp)) + " " + LangModelAnalyse.getString("km"), 6, 1);
 
 		String str = sdf.format(new Date(bs.fxdParams.DTS * 1000));
 		tModel.setValueAt(str.substring(0, 9), 7, 1);
 		tModel.setValueAt(str.substring(9), 8, 1);
 
 		str = String.valueOf(bs.fxdParams.BC);
-		tModel.setValueAt(String.valueOf(- (double)bs.fxdParams.BC / 10. + " " + LangModelAnalyse.String("dB")), 9, 1);
+		tModel.setValueAt(String.valueOf(- (double)bs.fxdParams.BC / 10. + " " + LangModelAnalyse.getString("dB")), 9, 1);
 
 		jTable.updateUI();
 	}
@@ -186,51 +186,51 @@ public class PrimaryParametersFrame extends ATableFrame
 		tModel.clearTable();
 
 		Vector omid = new Vector(2);
-		omid.add(LangModelAnalyse.String("module id"));
+		omid.add(LangModelAnalyse.getString("module id"));
 		omid.add("");
 		tModel.insertRow(omid);
 
 		Vector aw = new Vector(2);
-		aw.add(LangModelAnalyse.String("wavelength"));
+		aw.add(LangModelAnalyse.getString("wavelength"));
 		aw.add("");
 		tModel.insertRow(aw);
 
 		Vector pwu = new Vector(2);
-		pwu.add(LangModelAnalyse.String("pulsewidth"));
+		pwu.add(LangModelAnalyse.getString("pulsewidth"));
 		pwu.add("");
 		tModel.insertRow(pwu);
 
 		Vector gi  = new Vector(2);
-		gi.add(LangModelAnalyse.String("groupindex"));
+		gi.add(LangModelAnalyse.getString("groupindex"));
 		gi.add("");
 		tModel.insertRow(gi);
 
 		Vector nav = new Vector(2);
-		nav.add(LangModelAnalyse.String("averages"));
+		nav.add(LangModelAnalyse.getString("averages"));
 		nav.add("");
 		tModel.insertRow(nav);
 
 		Vector res = new Vector(2);
-		res.add(LangModelAnalyse.String("resolution"));
+		res.add(LangModelAnalyse.getString("resolution"));
 		res.add("");
 		tModel.insertRow(res);
 
 		Vector range  = new Vector(2);
-		range.add(LangModelAnalyse.String("range"));
+		range.add(LangModelAnalyse.getString("range"));
 		range.add("");
 		tModel.insertRow(range);
 
 		Vector date = new Vector(2);
-		date.add(LangModelAnalyse.String("date"));
+		date.add(LangModelAnalyse.getString("date"));
 		date.add("");
 		tModel.insertRow(date);
 		Vector time = new Vector(2);
-		time.add(LangModelAnalyse.String("time"));
+		time.add(LangModelAnalyse.getString("time"));
 		time.add("");
 		tModel.insertRow(time);
 
 		Vector bc = new Vector(2);
-		bc.add(LangModelAnalyse.String("backscatter"));
+		bc.add(LangModelAnalyse.getString("backscatter"));
 		bc.add("");
 		tModel.insertRow(bc);
 	}

@@ -195,8 +195,8 @@ public class DetailedEventsFrame extends JInternalFrame
 		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
 		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
 		tModel = new GeneralTableModel(
-					new String[] {LangModelAnalyse.String("eventDetailedParam"),
-												LangModelAnalyse.String("eventDetailedValue")},
+					new String[] {LangModelAnalyse.getString("eventDetailedParam"),
+												LangModelAnalyse.getString("eventDetailedValue")},
 					new Object[] {"", ""},
 					0);
 
@@ -212,7 +212,7 @@ public class DetailedEventsFrame extends JInternalFrame
 		this.setClosable(true);
 		this.setIconifiable(true);
 		//this.setMaximizable(true);
-		this.setTitle(LangModelAnalyse.String("eventDetailedTableTitle"));
+		this.setTitle(LangModelAnalyse.getString("eventDetailedTableTitle"));
 
 		tabbedPane.add("Основные", mainPanel);
 
@@ -277,32 +277,32 @@ public class DetailedEventsFrame extends JInternalFrame
 		else
 			((CompareTableRenderer)jTableComp.getDefaultRenderer(Object.class)).setSameType(false);
 
-		String dataT = LangModelAnalyse.String("eventTypeUnk");
-		String etalonT = LangModelAnalyse.String("eventTypeUnk");
+		String dataT = LangModelAnalyse.getString("eventTypeUnk");
+		String etalonT = LangModelAnalyse.getString("eventTypeUnk");
 		if(data_[nEvent].getType() == ReflectogramEvent.CONNECTOR)
 		{
-			dataT = LangModelAnalyse.String("eventType4");
+			dataT = LangModelAnalyse.getString("eventType4");
 		}
 		else if(data_[nEvent].getType() == ReflectogramEvent.WELD)
 		{
-			dataT = LangModelAnalyse.String("eventType3");
+			dataT = LangModelAnalyse.getString("eventType3");
 		}
 		else if(data_[nEvent].getType() == ReflectogramEvent.LINEAR)
 		{
-			dataT = LangModelAnalyse.String("eventType0");
+			dataT = LangModelAnalyse.getString("eventType0");
 		}
 
 		if(etalon[nEvent].getType() == ReflectogramEvent.CONNECTOR)
 		{
-			etalonT = LangModelAnalyse.String("eventType4");
+			etalonT = LangModelAnalyse.getString("eventType4");
 		}
 		else if(etalon[nEvent].getType() == ReflectogramEvent.WELD)
 		{
-			etalonT = LangModelAnalyse.String("eventType3");
+			etalonT = LangModelAnalyse.getString("eventType3");
 		}
 		else if(etalon[nEvent].getType() == ReflectogramEvent.LINEAR)
 		{
-			etalonT = LangModelAnalyse.String("eventType0");
+			etalonT = LangModelAnalyse.getString("eventType0");
 		}
 		ctModel.setValueAt(dataT, 0, 1);
 		ctModel.setValueAt(etalonT, 1, 1);
@@ -358,126 +358,126 @@ public class DetailedEventsFrame extends JInternalFrame
 		tModel.clearTable();
 
 		row = new Vector(2);
-		row.add(LangModelAnalyse.String("eventType" + String.valueOf(ev.getType()))); // тип
+		row.add(LangModelAnalyse.getString("eventType" + String.valueOf(ev.getType()))); // тип
 		row.add(String.valueOf(num+1));
 		tModel.insertRow(row);
 
 		row = new Vector(2);
-		row.add(LangModelAnalyse.String("eventLength")); // протяженность
-		row.add(String.valueOf(MathRef.round_3((ev.last_point - ev.first_point)*res) + " " + LangModelAnalyse.String("km")));
+		row.add(LangModelAnalyse.getString("eventLength")); // протяженность
+		row.add(String.valueOf(MathRef.round_3((ev.last_point - ev.first_point)*res) + " " + LangModelAnalyse.getString("km")));
 		tModel.insertRow(row);
 
 		switch (ev.getType())
 			{
 				case TraceEvent.LINEAR:
 							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventStartLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[0]) + " " + LangModelAnalyse.String("dB")));
+							 row.add(LangModelAnalyse.getString("eventStartLevel"));
+							 row.add(String.valueOf(MathRef.round_4(ev.data[0]) + " " + LangModelAnalyse.getString("dB")));
 							 tModel.insertRow(row);
 							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventEndLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[1]) + " " + LangModelAnalyse.String("dB")));
+							 row.add(LangModelAnalyse.getString("eventEndLevel"));
+							 row.add(String.valueOf(MathRef.round_4(ev.data[1]) + " " + LangModelAnalyse.getString("dB")));
 							 tModel.insertRow(row);
 //							 row = new Vector(2);
-//							 row.add(LangModelAnalyse.String("eventFade"));
-//							 row.add(String.valueOf(MathRef.round_4(ev.data[2] * 1000d / res) + " " + LangModelAnalyse.String("dB/km")));
+//							 row.add(LangModelAnalyse.getString("eventFade"));
+//							 row.add(String.valueOf(MathRef.round_4(ev.data[2] * 1000d / res) + " " + LangModelAnalyse.getString("dB/km")));
 //							 tModel.insertRow(row);
 							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventRMSDeviation"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[3]) + " " + LangModelAnalyse.String("dB")));
+							 row.add(LangModelAnalyse.getString("eventRMSDeviation"));
+							 row.add(String.valueOf(MathRef.round_4(ev.data[3]) + " " + LangModelAnalyse.getString("dB")));
 							 tModel.insertRow(row);
 							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventMaxDeviation"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[4]) + " " + LangModelAnalyse.String("dB")));
+							 row.add(LangModelAnalyse.getString("eventMaxDeviation"));
+							 row.add(String.valueOf(MathRef.round_4(ev.data[4]) + " " + LangModelAnalyse.getString("dB")));
 							 tModel.insertRow(row);
 							 break;
 				case TraceEvent.INITIATE:
 							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventAmplitude"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[0]) + " " + LangModelAnalyse.String("dB")));
+							 row.add(LangModelAnalyse.getString("eventAmplitude"));
+							 row.add(String.valueOf(MathRef.round_4(ev.data[0]) + " " + LangModelAnalyse.getString("dB")));
 							 tModel.insertRow(row);
 							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventPoLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[1]) + " " + LangModelAnalyse.String("dB")));
+							 row.add(LangModelAnalyse.getString("eventPoLevel"));
+							 row.add(String.valueOf(MathRef.round_4(ev.data[1]) + " " + LangModelAnalyse.getString("dB")));
 							 tModel.insertRow(row);
 							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventEDZ"));
-							 row.add(String.valueOf(Math.round(ev.data[2] * res * 1000d) + " " + LangModelAnalyse.String("mt")));
+							 row.add(LangModelAnalyse.getString("eventEDZ"));
+							 row.add(String.valueOf(Math.round(ev.data[2] * res * 1000d) + " " + LangModelAnalyse.getString("mt")));
 							 tModel.insertRow(row);
 							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventADZ"));
-							 row.add(String.valueOf(Math.round(ev.data[3] * res * 1000d) + " " + LangModelAnalyse.String("mt")));
+							 row.add(LangModelAnalyse.getString("eventADZ"));
+							 row.add(String.valueOf(Math.round(ev.data[3] * res * 1000d) + " " + LangModelAnalyse.getString("mt")));
 							 tModel.insertRow(row);
 						 break;
 				case TraceEvent.NON_IDENTIFIED:
 							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventMaxLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[0]) + " " + LangModelAnalyse.String("dB")));
+							 row.add(LangModelAnalyse.getString("eventMaxLevel"));
+							 row.add(String.valueOf(MathRef.round_4(ev.data[0]) + " " + LangModelAnalyse.getString("dB")));
 							 tModel.insertRow(row);
 							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventMinLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[1]) + " " + LangModelAnalyse.String("dB")));
+							 row.add(LangModelAnalyse.getString("eventMinLevel"));
+							 row.add(String.valueOf(MathRef.round_4(ev.data[1]) + " " + LangModelAnalyse.getString("dB")));
 							 tModel.insertRow(row);
 							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventMaxDeviation"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[2]) + " " + LangModelAnalyse.String("dB")));
+							 row.add(LangModelAnalyse.getString("eventMaxDeviation"));
+							 row.add(String.valueOf(MathRef.round_4(ev.data[2]) + " " + LangModelAnalyse.getString("dB")));
 							 tModel.insertRow(row);
 						 break;
 				case TraceEvent.CONNECTOR:
 							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventStartLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[0]) + " " + LangModelAnalyse.String("dB")));
+							 row.add(LangModelAnalyse.getString("eventStartLevel"));
+							 row.add(String.valueOf(MathRef.round_4(ev.data[0]) + " " + LangModelAnalyse.getString("dB")));
 							 tModel.insertRow(row);
 							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventEndLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[1]) + " " + LangModelAnalyse.String("dB")));
+							 row.add(LangModelAnalyse.getString("eventEndLevel"));
+							 row.add(String.valueOf(MathRef.round_4(ev.data[1]) + " " + LangModelAnalyse.getString("dB")));
 							 tModel.insertRow(row);
 							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventReflectionLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[2]) + " " + LangModelAnalyse.String("dB")));
+							 row.add(LangModelAnalyse.getString("eventReflectionLevel"));
+							 row.add(String.valueOf(MathRef.round_4(ev.data[2]) + " " + LangModelAnalyse.getString("dB")));
 							 tModel.insertRow(row);
 //							 row = new Vector(2);
-//							 row.add(LangModelAnalyse.String("eventLoss"));
-//							 row.add(String.valueOf(MathRef.round_4(ev.data[1] - ev.data[2]) + " " + LangModelAnalyse.String("dB")));
+//							 row.add(LangModelAnalyse.getString("eventLoss"));
+//							 row.add(String.valueOf(MathRef.round_4(ev.data[1] - ev.data[2]) + " " + LangModelAnalyse.getString("dB")));
 //							 tModel.insertRow(row);
 //							 row = new Vector(2);
-//							 row.add(LangModelAnalyse.String("eventAmplitude"));
-//							 row.add(String.valueOf(MathRef.round_4(ev.data[0] - ev.data[1]) + " " + LangModelAnalyse.String("dB")));
+//							 row.add(LangModelAnalyse.getString("eventAmplitude"));
+//							 row.add(String.valueOf(MathRef.round_4(ev.data[0] - ev.data[1]) + " " + LangModelAnalyse.getString("dB")));
 //							 tModel.insertRow(row);
 							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventFormFactor"));
+							 row.add(LangModelAnalyse.getString("eventFormFactor"));
 							 row.add(String.valueOf(MathRef.round_4(ev.data[3])));
 							 tModel.insertRow(row);
 						 break;
 				case TraceEvent.WELD:
 							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventStartLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[0]) + " " + LangModelAnalyse.String("dB")));
+							 row.add(LangModelAnalyse.getString("eventStartLevel"));
+							 row.add(String.valueOf(MathRef.round_4(ev.data[0]) + " " + LangModelAnalyse.getString("dB")));
 							 tModel.insertRow(row);
 							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventEndLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[1]) + " " + LangModelAnalyse.String("dB")));
+							 row.add(LangModelAnalyse.getString("eventEndLevel"));
+							 row.add(String.valueOf(MathRef.round_4(ev.data[1]) + " " + LangModelAnalyse.getString("dB")));
 							 tModel.insertRow(row);
 //							 row = new Vector(2);
-//							 row.add(LangModelAnalyse.String("eventLoss"));
-//							 row.add(String.valueOf(MathRef.round_4(ev.data[2]) + " " + LangModelAnalyse.String("dB")));
+//							 row.add(LangModelAnalyse.getString("eventLoss"));
+//							 row.add(String.valueOf(MathRef.round_4(ev.data[2]) + " " + LangModelAnalyse.getString("dB")));
 //							 tModel.insertRow(row);
 						 break;
 				case TraceEvent.TERMINATE:
 							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventStartLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[0]) + " " + LangModelAnalyse.String("dB")));
+							 row.add(LangModelAnalyse.getString("eventStartLevel"));
+							 row.add(String.valueOf(MathRef.round_4(ev.data[0]) + " " + LangModelAnalyse.getString("dB")));
 							 tModel.insertRow(row);
 							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventReflectionLevel"));
-							 row.add(String.valueOf(MathRef.round_4(ev.data[1]) + " " + LangModelAnalyse.String("dB")));
+							 row.add(LangModelAnalyse.getString("eventReflectionLevel"));
+							 row.add(String.valueOf(MathRef.round_4(ev.data[1]) + " " + LangModelAnalyse.getString("dB")));
 							 tModel.insertRow(row);
 //							 row = new Vector(2);
-//							 row.add(LangModelAnalyse.String("eventAmplitude"));
-//							 row.add(String.valueOf(MathRef.round_4(ev.data[0] - ev.data[1]) + " " + LangModelAnalyse.String("dB")));
+//							 row.add(LangModelAnalyse.getString("eventAmplitude"));
+//							 row.add(String.valueOf(MathRef.round_4(ev.data[0] - ev.data[1]) + " " + LangModelAnalyse.getString("dB")));
 //							 tModel.insertRow(row);
 							 row = new Vector(2);
-							 row.add(LangModelAnalyse.String("eventFormFactor"));
+							 row.add(LangModelAnalyse.getString("eventFormFactor"));
 							 row.add(String.valueOf(MathRef.round_4(ev.data[2])));
 							 tModel.insertRow(row);
 						 break;
@@ -494,7 +494,7 @@ public class DetailedEventsFrame extends JInternalFrame
 		tModel.clearTable();
 
 		row = new Vector(2);
-		row.add(LangModelAnalyse.String("eventType" + String.valueOf(ev.getType()))); // тип
+		row.add(LangModelAnalyse.getString("eventType" + String.valueOf(ev.getType()))); // тип
 		if ((int)(ev.data[ev.data.length - 2]) == (int)(ev.data[ev.data.length - 1]))
 				row.add( String.valueOf ((int)(ev.data[ev.data.length - 2]) + 1));
 			else
@@ -502,24 +502,24 @@ public class DetailedEventsFrame extends JInternalFrame
 								 + "-" + String.valueOf ((int)(ev.data[ev.data.length - 1]) + 1) ); // номер
 		tModel.insertRow(row);
 		row = new Vector(2);
-		row.add(LangModelAnalyse.String("eventLength")); // протяженность
-		row.add(String.valueOf(MathRef.round_3((ev.last_point - ev.first_point)*res) + " " + LangModelAnalyse.String("km")));
+		row.add(LangModelAnalyse.getString("eventLength")); // протяженность
+		row.add(String.valueOf(MathRef.round_3((ev.last_point - ev.first_point)*res) + " " + LangModelAnalyse.getString("km")));
 		tModel.insertRow(row);
 		row = new Vector(2);
-		row.add(LangModelAnalyse.String("eventStartLevel"));
-		row.add(String.valueOf(MathRef.round_4(ev.data[0]) + " " + LangModelAnalyse.String("dB")));
+		row.add(LangModelAnalyse.getString("eventStartLevel"));
+		row.add(String.valueOf(MathRef.round_4(ev.data[0]) + " " + LangModelAnalyse.getString("dB")));
 		tModel.insertRow(row);
 		row = new Vector(2);
-		row.add(LangModelAnalyse.String("eventEndLevel"));
-		row.add(String.valueOf(MathRef.round_4(ev.data[1]) + " " + LangModelAnalyse.String("dB")));
+		row.add(LangModelAnalyse.getString("eventEndLevel"));
+		row.add(String.valueOf(MathRef.round_4(ev.data[1]) + " " + LangModelAnalyse.getString("dB")));
 		tModel.insertRow(row);
 		row = new Vector(2);
-		row.add(LangModelAnalyse.String("eventMaxDeviation"));
-		row.add(String.valueOf(MathRef.round_4(ev.data[2]) + " " + LangModelAnalyse.String("dB")));
+		row.add(LangModelAnalyse.getString("eventMaxDeviation"));
+		row.add(String.valueOf(MathRef.round_4(ev.data[2]) + " " + LangModelAnalyse.getString("dB")));
 		tModel.insertRow(row);
 
 		row = new Vector(2);
-		row.add(LangModelAnalyse.String("eventCurveFactor"));
+		row.add(LangModelAnalyse.getString("eventCurveFactor"));
 		row.add(String.valueOf(MathRef.round_4(ev.data[3])));
 		tModel.insertRow(row);
 
@@ -539,13 +539,13 @@ class CompareTableModel extends AbstractTableModel
 		null};
 
 	Object[][] data = {
-		{LangModelAnalyse.String("eventType"), "--"},
-		{LangModelAnalyse.String("etEventType"), "--"},
-		{LangModelAnalyse.String("maxDeviation"), "--"},
-		{LangModelAnalyse.String("meanDeviation"), "--"},
-		{LangModelAnalyse.String("delta"), "--"},
-		{LangModelAnalyse.String("dWidth"), "--"},
-		{LangModelAnalyse.String("dLocation"), "--"}
+		{LangModelAnalyse.getString("eventType"), "--"},
+		{LangModelAnalyse.getString("etEventType"), "--"},
+		{LangModelAnalyse.getString("maxDeviation"), "--"},
+		{LangModelAnalyse.getString("meanDeviation"), "--"},
+		{LangModelAnalyse.getString("delta"), "--"},
+		{LangModelAnalyse.getString("dWidth"), "--"},
+		{LangModelAnalyse.getString("dLocation"), "--"}
 	};
 
 	CompareTableModel()

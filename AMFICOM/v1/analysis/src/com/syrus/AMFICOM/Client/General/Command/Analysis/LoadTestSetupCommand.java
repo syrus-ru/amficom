@@ -39,8 +39,8 @@ public class LoadTestSetupCommand extends VoidCommand
 		{
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					LangModelAnalyse.String("noMonitoredElementError"),
-					LangModelAnalyse.String("error"), JOptionPane.OK_OPTION);
+					LangModelAnalyse.getString("noMonitoredElementError"),
+					LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
 			return;
 		}
 

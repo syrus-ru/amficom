@@ -82,7 +82,7 @@ public class FileAddCommand extends VoidCommand
 						JOptionPane cDialog = new JOptionPane();
 						int ret = cDialog.showConfirmDialog (
 								null,
-								LangModelAnalyse.String("messageFileAlreadyLoaded"),
+								LangModelAnalyse.getString("messageFileAlreadyLoaded"),
 								"",
 								JOptionPane.YES_NO_OPTION);
 						if (ret == cDialog.NO_OPTION)
@@ -100,8 +100,8 @@ public class FileAddCommand extends VoidCommand
 				if (bs == null)
 				{
 					JOptionPane.showMessageDialog (Environment.getActiveWindow(),
-							LangModelAnalyse.String("messageReadError") + ":\n" + chooser.getSelectedFile().getAbsolutePath(),
-							LangModelAnalyse.String("messageError"),
+							LangModelAnalyse.getString("messageReadError") + ":\n" + chooser.getSelectedFile().getAbsolutePath(),
+							LangModelAnalyse.getString("messageError"),
 							JOptionPane.OK_OPTION);
 					return;
 				}

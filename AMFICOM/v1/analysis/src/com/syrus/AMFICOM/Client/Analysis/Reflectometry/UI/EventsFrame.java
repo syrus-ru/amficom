@@ -162,7 +162,7 @@ public class EventsFrame extends ATableFrame
 
 	public String getReportTitle()
 	{
-		return LangModelAnalyse.String("eventTableTitle");
+		return LangModelAnalyse.getString("eventTableTitle");
 	}
 
 	public TableModel getTableModel()
@@ -206,13 +206,13 @@ public class EventsFrame extends ATableFrame
 		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
 
 		tModel = new GeneralTableModel(
-					new String[] {LangModelAnalyse.String("eventNum"),
-												LangModelAnalyse.String("eventType"),
-												LangModelAnalyse.String("eventStartLocationKM"),
-												LangModelAnalyse.String("eventLengthKM"),
-												LangModelAnalyse.String("eventReflectanceDB"),
-												LangModelAnalyse.String("eventLossDB"),
-												LangModelAnalyse.String("eventLeadAttenuationDBKM")},
+					new String[] {LangModelAnalyse.getString("eventNum"),
+												LangModelAnalyse.getString("eventType"),
+												LangModelAnalyse.getString("eventStartLocationKM"),
+												LangModelAnalyse.getString("eventLengthKM"),
+												LangModelAnalyse.getString("eventReflectanceDB"),
+												LangModelAnalyse.getString("eventLossDB"),
+												LangModelAnalyse.getString("eventLeadAttenuationDBKM")},
 					new Object[] {"", "", "", "", "", "", "", ""},
 					0);
 
@@ -233,7 +233,7 @@ public class EventsFrame extends ATableFrame
 		this.setClosable(true);
 		this.setIconifiable(true);
 		//this.setMaximizable(true);
-		this.setTitle(LangModelAnalyse.String("eventTableTitle"));
+		this.setTitle(LangModelAnalyse.getString("eventTableTitle"));
 
 		mainPanel.setLayout(new BorderLayout());
 		mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
@@ -313,7 +313,7 @@ public class EventsFrame extends ATableFrame
 			{
 				case TraceEvent.INITIATE:
 						 row.add(Integer.toString(i+1)); // номер
-						 row.add(LangModelAnalyse.String("eventType" + String.valueOf(events[i].getType()))); // тип
+						 row.add(LangModelAnalyse.getString("eventType" + String.valueOf(events[i].getType()))); // тип
 						 row.add(Double.toString( MathRef.round_3 (res * (double)events[i].first_point))); //начало
 						 row.add(Double.toString( MathRef.round_3 (res * (events[i].last_point - events[i].first_point)))); //протяженность
 						 row.add("-----"); // отраж
@@ -323,7 +323,7 @@ public class EventsFrame extends ATableFrame
 						 break;
 				case TraceEvent.LINEAR:
 						 row.add(Integer.toString(i+1)); // номер
-						 row.add(LangModelAnalyse.String("eventType" + String.valueOf(events[i].getType()))); // тип
+						 row.add(LangModelAnalyse.getString("eventType" + String.valueOf(events[i].getType()))); // тип
 						 row.add(Double.toString( MathRef.round_3 (res * (double)events[i].first_point))); //начало
 						 row.add(Double.toString( MathRef.round_3 (res * (events[i].last_point - events[i].first_point)))); //протяженность
 						 row.add("-----"); // отраж
@@ -333,7 +333,7 @@ public class EventsFrame extends ATableFrame
 						 break;
 				case TraceEvent.NON_IDENTIFIED:
 						 row.add(Integer.toString(i+1)); // номер
-						 row.add(LangModelAnalyse.String("eventType" + String.valueOf(events[i].getType()))); // тип
+						 row.add(LangModelAnalyse.getString("eventType" + String.valueOf(events[i].getType()))); // тип
 						 row.add(Double.toString( MathRef.round_3 (res * (double)events[i].first_point))); //начало
 						 row.add(Double.toString( MathRef.round_3 (res * (events[i].last_point - events[i].first_point)))); //протяженность
 						 row.add("-----"); // отраж
@@ -343,7 +343,7 @@ public class EventsFrame extends ATableFrame
 						 break;
 				case TraceEvent.CONNECTOR:
 						 row.add(Integer.toString(i+1)); // номер
-						 row.add(LangModelAnalyse.String("eventType" + String.valueOf(events[i].getType()))); // тип
+						 row.add(LangModelAnalyse.getString("eventType" + String.valueOf(events[i].getType()))); // тип
 						 row.add(Double.toString( MathRef.round_3 (res * (double)events[i].first_point))); //начало
 						 row.add(Double.toString( MathRef.round_3 (res * (events[i].last_point - events[i].first_point)))); //протяженность
 						 row.add(Double.toString( MathRef.round_4 (MathRef.calcReflectance(sigma, Math.abs(events[i].data[0] - events[i].data[2]))))); // отраж
@@ -353,7 +353,7 @@ public class EventsFrame extends ATableFrame
 						 break;
 				case TraceEvent.WELD:
 						 row.add(Integer.toString(i+1)); // номер
-						 row.add(LangModelAnalyse.String("eventType" + String.valueOf(events[i].getType()))); // тип
+						 row.add(LangModelAnalyse.getString("eventType" + String.valueOf(events[i].getType()))); // тип
 						 row.add(Double.toString( MathRef.round_3 (res * (double)events[i].first_point))); //начало
 						 row.add(Double.toString( MathRef.round_3 (res * (events[i].last_point - events[i].first_point)))); //протяженность
 						 row.add("-----"); // отраж
@@ -363,7 +363,7 @@ public class EventsFrame extends ATableFrame
 						 break;
 				case TraceEvent.TERMINATE:
 						 row.add(Integer.toString(i+1)); // номер
-						 row.add(LangModelAnalyse.String("eventType" + String.valueOf(events[i].getType()))); // тип
+						 row.add(LangModelAnalyse.getString("eventType" + String.valueOf(events[i].getType()))); // тип
 						 row.add(Double.toString( MathRef.round_3 (res * (double)events[i].first_point))); //начало
 						 row.add(Double.toString( MathRef.round_3 (res * (events[i].last_point - events[i].first_point)))); //протяженность
 						 row.add(Double.toString( MathRef.round_4 (MathRef.calcReflectance(sigma, Math.abs(events[i].data[0]-events[i].data[1]))))); // отраж

@@ -99,8 +99,8 @@ public class FileOpenCommand extends VoidCommand
 				if (bs == null)
 				{
 					JOptionPane.showMessageDialog (Environment.getActiveWindow(),
-							LangModelAnalyse.String("messageReadError") + ":\n" + chooser.getSelectedFile().getAbsolutePath(),
-							LangModelAnalyse.String("messageError"),
+							LangModelAnalyse.getString("messageReadError") + ":\n" + chooser.getSelectedFile().getAbsolutePath(),
+							LangModelAnalyse.getString("messageError"),
 							JOptionPane.OK_OPTION);
 					Environment.getActiveWindow().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 					return;

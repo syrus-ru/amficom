@@ -53,16 +53,16 @@ public class SaveAnalysisCommand extends VoidCommand
 		{
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					LangModelAnalyse.String("noMonitoredElementError"),
-					LangModelAnalyse.String("error"), JOptionPane.OK_OPTION);
+					LangModelAnalyse.getString("noMonitoredElementError"),
+					LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
 			return;
 		}
 		if (bs.test_setup_id.equals(""))
 		{
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					LangModelAnalyse.String("noTestSetupError"),
-					LangModelAnalyse.String("error"), JOptionPane.OK_OPTION);
+					LangModelAnalyse.getString("noTestSetupError"),
+					LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
 			return;
 		}
 
@@ -72,8 +72,8 @@ public class SaveAnalysisCommand extends VoidCommand
 
 		String s = JOptionPane.showInputDialog(
 				Environment.getActiveWindow(),
-				LangModelAnalyse.String("newname"),
-				LangModelAnalyse.String("analysis"),
+				LangModelAnalyse.getString("newname"),
+				LangModelAnalyse.getString("analysis"),
 				JOptionPane.OK_CANCEL_OPTION);
 		if (s == null || s.equals(""))
 			return;

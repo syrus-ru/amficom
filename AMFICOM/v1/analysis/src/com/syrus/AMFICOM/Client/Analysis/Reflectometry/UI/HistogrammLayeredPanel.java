@@ -118,7 +118,7 @@ class HistogrammToolBar extends ScalableToolBar
 				markersTButton,
 				btn_size,
 				null,
-				LangModelAnalyse.String("bindToMarker"),
+				LangModelAnalyse.getString("bindToMarker"),
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/marker.gif")),
 				new ActionListener()
 				{

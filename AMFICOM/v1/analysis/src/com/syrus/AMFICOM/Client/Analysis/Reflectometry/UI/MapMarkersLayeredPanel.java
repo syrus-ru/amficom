@@ -205,7 +205,7 @@ class MapMarkersToolBar extends TraceEventsToolBar
 				createMarkerTButton,
 				btn_size,
 				null,
-				LangModelAnalyse.String("addmarker"),
+				LangModelAnalyse.getString("addmarker"),
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/marker.gif")),
 				new ActionListener()
 				{
@@ -221,7 +221,7 @@ class MapMarkersToolBar extends TraceEventsToolBar
 				deleteMarkerButton,
 				btn_size,
 				null,
-				LangModelAnalyse.String("removemarker"),
+				LangModelAnalyse.getString("removemarker"),
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/marker_delete.gif")),
 				new ActionListener()
 				{

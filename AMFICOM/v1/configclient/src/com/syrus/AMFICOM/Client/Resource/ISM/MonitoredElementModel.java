@@ -60,7 +60,7 @@ public class MonitoredElementModel extends ObjectResourceModel
 		if(col_id.equals("name"))
 			return me.getName();
 		if(col_id.equals("type_id"))
-			return LangModel.String("node" + me.element_type);
+			return LangModel.getString("node" + me.element_type);
 		return "";
 	}
 }

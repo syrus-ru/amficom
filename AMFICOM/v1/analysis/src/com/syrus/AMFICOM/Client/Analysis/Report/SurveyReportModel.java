@@ -26,12 +26,12 @@ public class SurveyReportModel extends ESAPEReportModel
 
 	public String getObjectsName()
 	{
-		return LangModelReport.String("label_repSurveyResults");
+		return LangModelReport.getString("label_repSurveyResults");
 	}
 
 	public String getLangForField(String field)
 	{
-		return LangModelAnalyse.String(field);
+		return LangModelAnalyse.getString(field);
 	}
 
 	public Vector getAvailableReports()

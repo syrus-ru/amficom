@@ -100,11 +100,11 @@ public class AnalysisSelectionFrame extends ATableFrame
 				{
 					BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
 					if (bs.test_setup_id.equals(""))
-						setTitle(LangModelAnalyse.String("analysisSelectionTitle") + " (шаблона нет)");
+						setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " (шаблона нет)");
 					else
 					{
 						TestSetup ts = (TestSetup)Pool.get(TestSetup.typ, bs.test_setup_id);
-						setTitle(LangModelAnalyse.String("analysisSelectionTitle") + " (шаблон: " +
+						setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " (шаблон: " +
 										 (ts.getName().equals("") ? "(без имени)" : ts.getName()) + ")");
 					}
 
@@ -119,11 +119,11 @@ public class AnalysisSelectionFrame extends ATableFrame
 
 				BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
 				if (bs.test_setup_id.equals(""))
-					setTitle(LangModelAnalyse.String("analysisSelectionTitle") + " (шаблона нет)");
+					setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " (шаблона нет)");
 				else
 				{
 					TestSetup ts = (TestSetup)Pool.get(TestSetup.typ, bs.test_setup_id);
-					setTitle(LangModelAnalyse.String("analysisSelectionTitle") + " (шаблон: " +
+					setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " (шаблон: " +
 									 (ts.getName().equals("") ? ts.getId() : ts.getName()) + ")");
 
 					if (ts.getCriteriaSetId().length() != 0)
@@ -151,7 +151,7 @@ public class AnalysisSelectionFrame extends ATableFrame
 
 	public String getReportTitle()
 	{
-		return LangModelAnalyse.String("analysisSelectionTitle");
+		return LangModelAnalyse.getString("analysisSelectionTitle");
 	}
 
 	public TableModel getTableModel()
@@ -202,21 +202,21 @@ public class AnalysisSelectionFrame extends ATableFrame
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setIconifiable(true);
-		this.setTitle(LangModelAnalyse.String("analysisSelectionTitle"));
+		this.setTitle(LangModelAnalyse.getString("analysisSelectionTitle"));
 
 		tModelMinuit = new ParamTableModel();
 		/*tModelMinuit = new FixedSizeEditableTableModel (
-				new String[] { LangModelAnalyse.String("analysisSelectionKey"),
-											 LangModelAnalyse.String("analysisSelectionValue")},
+				new String[] { LangModelAnalyse.getString("analysisSelectionKey"),
+											 LangModelAnalyse.getString("analysisSelectionValue")},
 				new Double[] { new Double(1), new Double(1) },
-				new String[] { LangModelAnalyse.String("analysisMinConnector"),
-											 LangModelAnalyse.String("analysisMinWeld"),
-											 LangModelAnalyse.String("analysisMinEnd"),
-											 LangModelAnalyse.String("analysisMinEvent"),
-											 LangModelAnalyse.String("analysisNSigma"),
-											 LangModelAnalyse.String("analysisFormFactor"),
-											 LangModelAnalyse.String("analysisStrategy"),
-											 LangModelAnalyse.String("analysisWavelet")},
+				new String[] { LangModelAnalyse.getString("analysisMinConnector"),
+											 LangModelAnalyse.getString("analysisMinWeld"),
+											 LangModelAnalyse.getString("analysisMinEnd"),
+											 LangModelAnalyse.getString("analysisMinEvent"),
+											 LangModelAnalyse.getString("analysisNSigma"),
+											 LangModelAnalyse.getString("analysisFormFactor"),
+											 LangModelAnalyse.getString("analysisStrategy"),
+											 LangModelAnalyse.getString("analysisWavelet")},
 				new int[] { 1 });
 */
 		jTable = new ATable (tModelMinuit);
@@ -226,7 +226,7 @@ public class AnalysisSelectionFrame extends ATableFrame
 		jButton1.setMaximumSize(btn_size);
 		jButton1.setMinimumSize(btn_size);
 		jButton1.setPreferredSize(btn_size);
-		jButton1.setToolTipText(LangModelAnalyse.String("analysisStart"));
+		jButton1.setToolTipText(LangModelAnalyse.getString("analysisStart"));
 		jButton1.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/perform_analysis.gif")));
 		jButton1.addActionListener(new java.awt.event.ActionListener()
 		{
@@ -239,7 +239,7 @@ public class AnalysisSelectionFrame extends ATableFrame
 		jButton2.setMaximumSize(btn_size);
 		jButton2.setMinimumSize(btn_size);
 		jButton2.setPreferredSize(btn_size);
-		jButton2.setToolTipText(LangModelAnalyse.String("analysisInitial"));
+		jButton2.setToolTipText(LangModelAnalyse.getString("analysisInitial"));
 		jButton2.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/cs_initial.gif")));
 		jButton2.addActionListener(new java.awt.event.ActionListener()
 		{
@@ -253,7 +253,7 @@ public class AnalysisSelectionFrame extends ATableFrame
 		jButton3.setMaximumSize(btn_size);
 		jButton3.setMinimumSize(btn_size);
 		jButton3.setPreferredSize(btn_size);
-		jButton3.setToolTipText(LangModelAnalyse.String("analysisDefaults"));
+		jButton3.setToolTipText(LangModelAnalyse.getString("analysisDefaults"));
 		jButton3.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/cs_default.gif")));
 		jButton3.addActionListener(new java.awt.event.ActionListener()
 		{
@@ -347,12 +347,12 @@ class ParamTableModel extends AbstractTableModel
 
 	 public static final String[] strategy =
 	 {
-		 LangModelAnalyse.String("strategy-1"),
-		 LangModelAnalyse.String("strategy0"),
-		 LangModelAnalyse.String("strategy1"),
-		 LangModelAnalyse.String("strategy2"),
-		 LangModelAnalyse.String("strategy3"),
-		 LangModelAnalyse.String("strategy4")
+		 LangModelAnalyse.getString("strategy-1"),
+		 LangModelAnalyse.getString("strategy0"),
+		 LangModelAnalyse.getString("strategy1"),
+		 LangModelAnalyse.getString("strategy2"),
+		 LangModelAnalyse.getString("strategy3"),
+		 LangModelAnalyse.getString("strategy4")
 	 };
 
 	 public static final Integer[] tactics =
@@ -369,14 +369,14 @@ class ParamTableModel extends AbstractTableModel
 
 	 Object[][] data =
 	 {
-		 { LangModelAnalyse.String("analysisMinConnector"), new Double(0) },
-		 { LangModelAnalyse.String("analysisMinWeld"), new Double(0) },
-		 { LangModelAnalyse.String("analysisMinEnd"), new Double(0) },
-		 { LangModelAnalyse.String("analysisMinEvent"), new Double(0) },
-		 { LangModelAnalyse.String("analysisNSigma"), new Double(0) },
-		 { LangModelAnalyse.String("analysisFormFactor"), ffComboBox },
-		 { LangModelAnalyse.String("analysisStrategy"), strComboBox },
-		 { LangModelAnalyse.String("analysisWavelet"), tactComboBox }
+		 { LangModelAnalyse.getString("analysisMinConnector"), new Double(0) },
+		 { LangModelAnalyse.getString("analysisMinWeld"), new Double(0) },
+		 { LangModelAnalyse.getString("analysisMinEnd"), new Double(0) },
+		 { LangModelAnalyse.getString("analysisMinEvent"), new Double(0) },
+		 { LangModelAnalyse.getString("analysisNSigma"), new Double(0) },
+		 { LangModelAnalyse.getString("analysisFormFactor"), ffComboBox },
+		 { LangModelAnalyse.getString("analysisStrategy"), strComboBox },
+		 { LangModelAnalyse.getString("analysisWavelet"), tactComboBox }
 	 };
 
 	 ParamTableModel()

@@ -77,7 +77,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 
 	public String getReportTitle()
 	{
-		return LangModelAnalyse.String("thresholdsTableTitle");
+		return LangModelAnalyse.getString("thresholdsTableTitle");
 	}
 
 	public TableModel getTableModel()
@@ -92,30 +92,30 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setIconifiable(true);
-		this.setTitle(LangModelAnalyse.String("thresholdsTableTitle"));
+		this.setTitle(LangModelAnalyse.getString("thresholdsTableTitle"));
 
 		tModelLinear = new EventTableModel(
-				new String[] {LangModelAnalyse.String("thresholdsKey"),
-											LangModelAnalyse.String("thresholdsAmplitude")},
+				new String[] {LangModelAnalyse.getString("thresholdsKey"),
+											LangModelAnalyse.getString("thresholdsAmplitude")},
 				new Object[] {new Double(1), new Double(1) },
-				new String[] {LangModelAnalyse.String("thresholdsUpWarning"),
-											LangModelAnalyse.String("thresholdsUpAlarm"),
-											LangModelAnalyse.String("thresholdsDownWarning"),
-											LangModelAnalyse.String("thresholdsDownAlarm")},
+				new String[] {LangModelAnalyse.getString("thresholdsUpWarning"),
+											LangModelAnalyse.getString("thresholdsUpAlarm"),
+											LangModelAnalyse.getString("thresholdsDownWarning"),
+											LangModelAnalyse.getString("thresholdsDownAlarm")},
 				new int[]    { 1 }
 		);
 
 		tModelConnector = new EventTableModel(
-				new String[] {LangModelAnalyse.String("thresholdsKey"),
-											LangModelAnalyse.String("thresholdsAmplitude"),
-											LangModelAnalyse.String("thresholdsCenter"),
-											LangModelAnalyse.String("thresholdsWidth"),
-											LangModelAnalyse.String("thresholdsHeight")},
+				new String[] {LangModelAnalyse.getString("thresholdsKey"),
+											LangModelAnalyse.getString("thresholdsAmplitude"),
+											LangModelAnalyse.getString("thresholdsCenter"),
+											LangModelAnalyse.getString("thresholdsWidth"),
+											LangModelAnalyse.getString("thresholdsHeight")},
 				new Object[] {new Double(1), new Double(1), new Double(1), new Double(1), new Double(1)},
-				new String[] {LangModelAnalyse.String("thresholdsUpWarning"),
-										 LangModelAnalyse.String("thresholdsUpAlarm"),
-										 LangModelAnalyse.String("thresholdsDownWarning"),
-										 LangModelAnalyse.String("thresholdsDownAlarm")},
+				new String[] {LangModelAnalyse.getString("thresholdsUpWarning"),
+										 LangModelAnalyse.getString("thresholdsUpAlarm"),
+										 LangModelAnalyse.getString("thresholdsDownWarning"),
+										 LangModelAnalyse.getString("thresholdsDownAlarm")},
 				new int[]    { 1, 2, 3, 4 }
 		);
 
@@ -124,7 +124,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		jButton1.setMaximumSize(btn_size);
 		jButton1.setMinimumSize(btn_size);
 		jButton1.setPreferredSize(btn_size);
-		jButton1.setToolTipText(LangModelAnalyse.String("analysisInitial"));
+		jButton1.setToolTipText(LangModelAnalyse.getString("analysisInitial"));
 		jButton1.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/th_initial.gif")));
 		jButton1.addActionListener(new java.awt.event.ActionListener()
 		{
@@ -137,7 +137,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		jButton3.setMaximumSize(btn_size);
 		jButton3.setMinimumSize(btn_size);
 		jButton3.setPreferredSize(btn_size);
-		jButton3.setToolTipText(LangModelAnalyse.String("analysisDefaults"));
+		jButton3.setToolTipText(LangModelAnalyse.getString("analysisDefaults"));
 		jButton3.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/th_default.gif")));
 		jButton3.addActionListener(new java.awt.event.ActionListener()
 		{
@@ -156,9 +156,9 @@ public class ThresholdsSelectionFrame extends ATableFrame
 				jComboBox1_itemStateChanged(e);
 			}
 		});
-		jComboBox1.addItem(LangModelAnalyse.String("thresholdsConnector"));
-		jComboBox1.addItem(LangModelAnalyse.String("thresholdsWeld"));
-		jComboBox1.addItem(LangModelAnalyse.String("thresholdsLinear"));
+		jComboBox1.addItem(LangModelAnalyse.getString("thresholdsConnector"));
+		jComboBox1.addItem(LangModelAnalyse.getString("thresholdsWeld"));
+		jComboBox1.addItem(LangModelAnalyse.getString("thresholdsLinear"));
 
 		//jToolBar1.setBorderPainted(true);
 		jToolBar1.setFloatable(false);
@@ -306,19 +306,19 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		if (e.getStateChange() == ItemEvent.SELECTED)
 		{
 			String type = (String)e.getItem();
-			if (type.equals(LangModelAnalyse.String("thresholdsConnector")))
+			if (type.equals(LangModelAnalyse.getString("thresholdsConnector")))
 			{
 				ep[current_ev].setType(ReflectogramEvent.CONNECTOR);
 				updThresholds();
 				dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
 			}
-			else if (type.equals(LangModelAnalyse.String("thresholdsWeld")))
+			else if (type.equals(LangModelAnalyse.getString("thresholdsWeld")))
 			{
 				ep[current_ev].setType(ReflectogramEvent.WELD);
 				updThresholds();
 				dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
 			}
-			else if (type.equals(LangModelAnalyse.String("thresholdsLinear")))
+			else if (type.equals(LangModelAnalyse.getString("thresholdsLinear")))
 			{
 				ep[current_ev].setType(ReflectogramEvent.LINEAR);
 				updThresholds();
@@ -350,7 +350,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 
 			if (_type != ReflectogramEvent.CONNECTOR)
 			{
-				jComboBox1.setSelectedItem(LangModelAnalyse.String("thresholdsConnector"));
+				jComboBox1.setSelectedItem(LangModelAnalyse.getString("thresholdsConnector"));
 				_type = ReflectogramEvent.CONNECTOR;
 				jTable.setModel(tModelConnector);
 				jTable.getColumnModel().getColumn(0).setPreferredWidth(150);
@@ -372,7 +372,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 
 			if (_type != ReflectogramEvent.WELD)
 			{
-				jComboBox1.setSelectedItem(LangModelAnalyse.String("thresholdsWeld"));
+				jComboBox1.setSelectedItem(LangModelAnalyse.getString("thresholdsWeld"));
 				_type = ReflectogramEvent.WELD;
 				jTable.setModel(tModelLinear);
 				jTable.getColumnModel().getColumn(0).setPreferredWidth(250);
@@ -390,7 +390,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 
 			if (_type != ReflectogramEvent.LINEAR)
 			{
-				jComboBox1.setSelectedItem(LangModelAnalyse.String("thresholdsLinear"));
+				jComboBox1.setSelectedItem(LangModelAnalyse.getString("thresholdsLinear"));
 				_type = ReflectogramEvent.LINEAR;
 				jTable.setModel(tModelLinear);
 				jTable.getColumnModel().getColumn(0).setPreferredWidth(250);

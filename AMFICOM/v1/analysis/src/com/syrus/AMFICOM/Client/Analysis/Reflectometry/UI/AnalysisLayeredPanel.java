@@ -193,7 +193,7 @@ class AnalysisToolBar extends TraceEventsToolBar
 				lossTButton,
 				btn_size,
 				null,
-				LangModelAnalyse.String("lossanalyse"),
+				LangModelAnalyse.getString("lossanalyse"),
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/loss.gif")),
 				new ActionListener()
 				{
@@ -209,7 +209,7 @@ class AnalysisToolBar extends TraceEventsToolBar
 				reflectionTButton,
 				btn_size,
 				null,
-				LangModelAnalyse.String("reflectionanalyse"),
+				LangModelAnalyse.getString("reflectionanalyse"),
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/reflect.gif")),
 				new ActionListener()
 				{
@@ -225,7 +225,7 @@ class AnalysisToolBar extends TraceEventsToolBar
 				noAnalysisTButton,
 				btn_size,
 				null,
-				LangModelAnalyse.String("noanalyse"),
+				LangModelAnalyse.getString("noanalyse"),
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/noanalyse.gif")),
 				new ActionListener()
 				{
@@ -241,7 +241,7 @@ class AnalysisToolBar extends TraceEventsToolBar
 				centerAButton,
 				btn_size,
 				null,
-				LangModelAnalyse.String("centerA"),
+				LangModelAnalyse.getString("centerA"),
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/centera.gif")),
 				new ActionListener()
 				{
@@ -257,7 +257,7 @@ class AnalysisToolBar extends TraceEventsToolBar
 				centerBButton,
 				btn_size,
 				null,
-				LangModelAnalyse.String("centerB"),
+				LangModelAnalyse.getString("centerB"),
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/centerb.gif")),
 				new ActionListener()
 				{

@@ -146,7 +146,7 @@ public class AnalyseMainFrame extends JFrame
 
 		setContentPane(mainPanel);
 		setResizable(true);
-		setTitle(LangModelAnalyse.String("AnalyseExtTitle"));
+		setTitle(LangModelAnalyse.getString("AnalyseExtTitle"));
 		setJMenuBar(menuBar);
 
 		mainPanel.setLayout(new BorderLayout());
@@ -183,12 +183,12 @@ public class AnalyseMainFrame extends JFrame
 		tables.add(statsFrame);
 
 		noiseFrame = new ScalableFrame(new ScalableLayeredPanel());
-		noiseFrame.setTitle(LangModelAnalyse.String("noiseTitle"));
+		noiseFrame.setTitle(LangModelAnalyse.getString("noiseTitle"));
 		desktopPane.add(noiseFrame);
 		graphs.add(noiseFrame);
 
 		filteredFrame = new ScalableFrame(new ScalableLayeredPanel());
-		filteredFrame.setTitle(LangModelAnalyse.String("filteredTitle"));
+		filteredFrame.setTitle(LangModelAnalyse.getString("filteredTitle"));
 		desktopPane.add(filteredFrame);
 		graphs.add(filteredFrame);
 
@@ -240,11 +240,11 @@ public class AnalyseMainFrame extends JFrame
 		statusBar.setWidth("user", 100);
 		statusBar.setWidth("time", 50);
 
-		statusBar.setText("status", LangModel.String("statusReady"));
-		statusBar.setText("server", LangModel.String("statusNoConnection"));
-		statusBar.setText("session", LangModel.String("statusNoSession"));
-		statusBar.setText("user", LangModel.String("statusNoUser"));
-		statusBar.setText("domain", LangModel.String("statusNoDomain"));
+		statusBar.setText("status", LangModel.getString("statusReady"));
+		statusBar.setText("server", LangModel.getString("statusNoConnection"));
+		statusBar.setText("session", LangModel.getString("statusNoSession"));
+		statusBar.setText("user", LangModel.getString("statusNoUser"));
+		statusBar.setText("domain", LangModel.getString("statusNoDomain"));
 		statusBar.setText("time", " ");
 		statusBar.organize();
 
@@ -423,7 +423,7 @@ public class AnalyseMainFrame extends JFrame
 
 					setSessionOpened();
 
-					statusBar.setText("status", LangModel.String("statusReady"));
+					statusBar.setText("status", LangModel.getString("statusReady"));
 					statusBar.setText("session", sdf.format(new Date(aContext.getSessionInterface().getLogonTime())));
 					statusBar.setText("user", aContext.getSessionInterface().getUser());
 				}
@@ -437,9 +437,9 @@ public class AnalyseMainFrame extends JFrame
 
 					setSessionClosed();
 
-					statusBar.setText("status", LangModel.String("statusReady"));
-					statusBar.setText("session", LangModel.String("statusNoSession"));
-					statusBar.setText("user", LangModel.String("statusNoUser"));
+					statusBar.setText("status", LangModel.getString("statusReady"));
+					statusBar.setText("session", LangModel.getString("statusNoSession"));
+					statusBar.setText("user", LangModel.getString("statusNoUser"));
 				}
 			}
 			if(cce.CONNECTION_OPENED)
@@ -449,7 +449,7 @@ public class AnalyseMainFrame extends JFrame
 				{
 					setConnectionOpened();
 
-					statusBar.setText("status", LangModel.String("statusReady"));
+					statusBar.setText("status", LangModel.getString("statusReady"));
 					statusBar.setText("server", aContext.getConnectionInterface().getServiceURL());
 				}
 			}
@@ -458,11 +458,11 @@ public class AnalyseMainFrame extends JFrame
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
 				if(aContext.getConnectionInterface().equals(cci))
 				{
-					statusBar.setText("status", LangModel.String("statusError"));
-					statusBar.setText("server", LangModel.String("statusConnectionError"));
+					statusBar.setText("status", LangModel.getString("statusError"));
+					statusBar.setText("server", LangModel.getString("statusConnectionError"));
 
-					statusBar.setText("status", LangModel.String("statusDisconnected"));
-					statusBar.setText("server", LangModel.String("statusNoConnection"));
+					statusBar.setText("status", LangModel.getString("statusDisconnected"));
+					statusBar.setText("server", LangModel.getString("statusNoConnection"));
 
 					setConnectionClosed();
 
@@ -473,8 +473,8 @@ public class AnalyseMainFrame extends JFrame
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
 				if(aContext.getConnectionInterface().equals(cci))
 				{
-					statusBar.setText("status", LangModel.String("statusError"));
-					statusBar.setText("server", LangModel.String("statusConnectionError"));
+					statusBar.setText("status", LangModel.getString("statusError"));
+					statusBar.setText("server", LangModel.getString("statusConnectionError"));
 
 					setConnectionFailed();
 				}
@@ -534,7 +534,7 @@ public class AnalyseMainFrame extends JFrame
 					aModel.fireModelChanged("");
 
 					String name = ((BellcoreStructure)Pool.get("bellcorestructure", "primarytrace")).title;
-					setTitle(LangModelAnalyse.String("AnalyseExtTitle") + ": " + name);
+					setTitle(LangModelAnalyse.getString("AnalyseExtTitle") + ": " + name);
 
 					updFrames(id);
 				}
@@ -607,7 +607,7 @@ public class AnalyseMainFrame extends JFrame
 					noiseFrame.setVisible(false);
 					filteredFrame.setVisible(false);
 
-					setTitle(LangModelAnalyse.String("AnalyseExtTitle"));
+					setTitle(LangModelAnalyse.getString("AnalyseExtTitle"));
 				}
 				else
 				{
@@ -771,7 +771,7 @@ public class AnalyseMainFrame extends JFrame
 		aModel.setEnabled("menuHelpAbout", false);
 		aModel.fireModelChanged("");
 
-		statusBar.setText("domain", LangModel.String("statusNoDomain"));
+		statusBar.setText("domain", LangModel.getString("statusNoDomain"));
 	}
 
 	void updFrames(String id)

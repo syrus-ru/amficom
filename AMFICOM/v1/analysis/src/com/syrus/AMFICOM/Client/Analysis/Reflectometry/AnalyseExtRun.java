@@ -12,8 +12,8 @@ public class AnalyseExtRun
 	public static void main(String[] args)
 	{
 		Environment.initialize();
-		LangModelAnalyse.initialize();
-		LangModelReport.initialize();
+//		LangModelAnalyse.initialize();
+//		LangModelReport.initialize();
 
 		try {
 			//JFrame.setDefaultLookAndFeelDecorated(true);

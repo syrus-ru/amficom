@@ -43,8 +43,8 @@ public class CreateTestSetupCommand extends VoidCommand
 		{
 			JOptionPane.showMessageDialog (
 					Environment.getActiveWindow(),
-					LangModelAnalyse.String("noMonitoredElementError"),
-					LangModelAnalyse.String("error"),
+					LangModelAnalyse.getString("noMonitoredElementError"),
+					LangModelAnalyse.getString("error"),
 					JOptionPane.OK_OPTION);
 			return;
 		}
@@ -54,16 +54,16 @@ public class CreateTestSetupCommand extends VoidCommand
 		{
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					LangModelAnalyse.String("unkError"),
-					LangModelAnalyse.String("error"),
+					LangModelAnalyse.getString("unkError"),
+					LangModelAnalyse.getString("error"),
 					JOptionPane.OK_OPTION);
 			return;
 		}
 
 		String ret = JOptionPane.showInputDialog(
 				Environment.getActiveWindow(),
-				LangModelAnalyse.String("newname"),
-				LangModelAnalyse.String("testsetup"),
+				LangModelAnalyse.getString("newname"),
+				LangModelAnalyse.getString("testsetup"),
 				JOptionPane.QUESTION_MESSAGE);
 		if (ret == null || ret.equals(""))
 			return;

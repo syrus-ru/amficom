@@ -140,7 +140,7 @@ public class ThresholdsMainFrame extends JFrame
 
 		setContentPane(mainPanel);
 		setResizable(true);
-		setTitle(LangModelAnalyse.String("ThresholdsTitle"));
+		setTitle(LangModelAnalyse.getString("ThresholdsTitle"));
 		setJMenuBar(menuBar);
 
 		mainPanel.setLayout(new BorderLayout());
@@ -222,11 +222,11 @@ public class ThresholdsMainFrame extends JFrame
 		statusBar.setWidth("user", 100);
 		statusBar.setWidth("time", 50);
 
-		statusBar.setText("status", LangModel.String("statusReady"));
-		statusBar.setText("server", LangModel.String("statusNoConnection"));
-		statusBar.setText("session", LangModel.String("statusNoSession"));
-		statusBar.setText("user", LangModel.String("statusNoUser"));
-		statusBar.setText("domain", LangModel.String("statusNoDomain"));
+		statusBar.setText("status", LangModel.getString("statusReady"));
+		statusBar.setText("server", LangModel.getString("statusNoConnection"));
+		statusBar.setText("session", LangModel.getString("statusNoSession"));
+		statusBar.setText("user", LangModel.getString("statusNoUser"));
+		statusBar.setText("domain", LangModel.getString("statusNoDomain"));
 		statusBar.setText("time", " ");
 		statusBar.organize();
 
@@ -394,7 +394,7 @@ public class ThresholdsMainFrame extends JFrame
 				{
 					aContext.setDataSourceInterface(aContext.getApplicationModel().getDataSource(aContext.getSessionInterface()));
 					setSessionOpened();
-					statusBar.setText("status", LangModel.String("statusReady"));
+					statusBar.setText("status", LangModel.getString("statusReady"));
 					statusBar.setText("session", sdf.format(new Date(aContext.getSessionInterface().getLogonTime())));
 					statusBar.setText("user", aContext.getSessionInterface().getUser());
 				}
@@ -406,9 +406,9 @@ public class ThresholdsMainFrame extends JFrame
 				{
 					aContext.setDataSourceInterface(null);
 					setSessionClosed();
-					statusBar.setText("status", LangModel.String("statusReady"));
-					statusBar.setText("session", LangModel.String("statusNoSession"));
-					statusBar.setText("user", LangModel.String("statusNoUser"));
+					statusBar.setText("status", LangModel.getString("statusReady"));
+					statusBar.setText("session", LangModel.getString("statusNoSession"));
+					statusBar.setText("user", LangModel.getString("statusNoUser"));
 				}
 			}
 			if(cce.CONNECTION_OPENED)
@@ -417,7 +417,7 @@ public class ThresholdsMainFrame extends JFrame
 				if(aContext.getConnectionInterface().equals(cci))
 				{
 					setConnectionOpened();
-					statusBar.setText("status", LangModel.String("statusReady"));
+					statusBar.setText("status", LangModel.getString("statusReady"));
 					statusBar.setText("server", aContext.getConnectionInterface().getServiceURL());
 				}
 			}
@@ -426,8 +426,8 @@ public class ThresholdsMainFrame extends JFrame
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
 				if(aContext.getConnectionInterface().equals(cci))
 				{
-					statusBar.setText("status", LangModel.String("statusDisconnected"));
-					statusBar.setText("server", LangModel.String("statusNoConnection"));
+					statusBar.setText("status", LangModel.getString("statusDisconnected"));
+					statusBar.setText("server", LangModel.getString("statusNoConnection"));
 					setConnectionClosed();
 				}
 			}
@@ -436,8 +436,8 @@ public class ThresholdsMainFrame extends JFrame
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
 				if(aContext.getConnectionInterface().equals(cci))
 				{
-					statusBar.setText("status", LangModel.String("statusError"));
-					statusBar.setText("server", LangModel.String("statusConnectionError"));
+					statusBar.setText("status", LangModel.getString("statusError"));
+					statusBar.setText("server", LangModel.getString("statusConnectionError"));
 					setConnectionFailed();
 				}
 			}
@@ -495,7 +495,7 @@ public class ThresholdsMainFrame extends JFrame
 					aModel.fireModelChanged("");
 
 					String name = ((BellcoreStructure)Pool.get("bellcorestructure", "primarytrace")).title;
-					setTitle(LangModelAnalyse.String("ThresholdsTitle") + ": " + name);
+					setTitle(LangModelAnalyse.getString("ThresholdsTitle") + ": " + name);
 
 					thresholdsSelectionFrame.setVisible(true);
 					addPrimaryTrace(id);
@@ -567,7 +567,7 @@ public class ThresholdsMainFrame extends JFrame
 
 
 					aModel.fireModelChanged("");
-					setTitle(LangModelAnalyse.String("ThresholdsTitle"));
+					setTitle(LangModelAnalyse.getString("ThresholdsTitle"));
 					//			thresholdsFrame.setVisible(false);
 					thresholdsSelectionFrame.setVisible(false);
 				}
@@ -657,8 +657,8 @@ public class ThresholdsMainFrame extends JFrame
 		{
 			JOptionPane.showMessageDialog(
 					this,
-		 LangModelAnalyse.String("noAccessToThresholds"),
-		 LangModelAnalyse.String("error"),
+		 LangModelAnalyse.getString("noAccessToThresholds"),
+		 LangModelAnalyse.getString("error"),
 		 JOptionPane.OK_OPTION);
 			return;
 		}
@@ -727,7 +727,7 @@ public class ThresholdsMainFrame extends JFrame
 
 		aModel.fireModelChanged("");
 
-		statusBar.setText("domain", LangModel.String("statusNoDomain"));
+		statusBar.setText("domain", LangModel.getString("statusNoDomain"));
 	}
 
 	void addPrimaryTrace(String id)

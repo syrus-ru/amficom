@@ -157,7 +157,7 @@ class TraceEventsToolBar extends ScalableToolBar
 				eventsTButton,
 				btn_size,
 				null,
-				LangModelAnalyse.String("showevents"),
+				LangModelAnalyse.getString("showevents"),
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/events.gif")),
 				new ActionListener()
 				{
@@ -173,7 +173,7 @@ class TraceEventsToolBar extends ScalableToolBar
 				modeledTButton,
 				btn_size,
 				null,
-				LangModelAnalyse.String("showmodel"),
+				LangModelAnalyse.getString("showmodel"),
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/modeled.gif")),
 				new ActionListener()
 				{

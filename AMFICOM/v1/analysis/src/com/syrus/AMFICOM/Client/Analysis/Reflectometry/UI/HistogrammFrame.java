@@ -29,7 +29,7 @@ public class HistogrammFrame extends ScalableFrame implements OperationListener
 
 	private void jbInit() throws Exception
 	{
-		setTitle(LangModelAnalyse.String("histogrammTitle"));
+		setTitle(LangModelAnalyse.getString("histogrammTitle"));
 	}
 
 	public Dispatcher getInternalDispatcher ()

@@ -314,7 +314,7 @@ class ScalableToolBar extends ToolBarPanel
 				exButton,
 				btn_size,
 				null,
-				LangModelAnalyse.String("encreasex"),
+				LangModelAnalyse.getString("encreasex"),
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/enlargex.gif")),
 				new ActionListener()
 				{
@@ -330,7 +330,7 @@ class ScalableToolBar extends ToolBarPanel
 				eyButton,
 				btn_size,
 				null,
-				LangModelAnalyse.String("encreasey"),
+				LangModelAnalyse.getString("encreasey"),
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/enlargey.gif")),
 				new ActionListener()
 				{
@@ -346,7 +346,7 @@ class ScalableToolBar extends ToolBarPanel
 				dxButton,
 				btn_size,
 				null,
-				LangModelAnalyse.String("decreasex"),
+				LangModelAnalyse.getString("decreasex"),
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/reducex.gif")),
 				new ActionListener()
 				{
@@ -362,7 +362,7 @@ class ScalableToolBar extends ToolBarPanel
 				dyButton,
 				btn_size,
 				null,
-				LangModelAnalyse.String("decreasey"),
+				LangModelAnalyse.getString("decreasey"),
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/reducey.gif")),
 				new ActionListener()
 				{
@@ -378,7 +378,7 @@ class ScalableToolBar extends ToolBarPanel
 				fitButton,
 				btn_size,
 				null,
-				LangModelAnalyse.String("fittoscreen"),
+				LangModelAnalyse.getString("fittoscreen"),
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/fit.gif")),
 				new ActionListener()
 				{

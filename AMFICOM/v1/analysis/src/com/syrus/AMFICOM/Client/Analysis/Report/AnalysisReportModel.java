@@ -26,12 +26,12 @@ public class AnalysisReportModel extends ESAPEReportModel
 
 	public String getObjectsName()
 	{
-		return LangModelReport.String("label_repAnalysisResults");
+		return LangModelReport.getString("label_repAnalysisResults");
 	}
 
 	public String getLangForField(String field)
 	{
-		return LangModelAnalyse.String(field);
+		return LangModelAnalyse.getString(field);
 	}
 
 	public Vector getAvailableReports()

@@ -35,7 +35,7 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 
 	private void jbInit() throws Exception
 	{
-		setTitle(LangModelAnalyse.String("thresholdsTitle"));
+		setTitle(LangModelAnalyse.getString("thresholdsTitle"));
 	}
 
 	public Dispatcher getInternalDispatcher ()

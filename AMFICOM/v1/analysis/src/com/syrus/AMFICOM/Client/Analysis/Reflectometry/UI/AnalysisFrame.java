@@ -41,7 +41,7 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 
 	private void jbInit() throws Exception
 	{
-		setTitle(LangModelAnalyse.String("analysisTitle"));
+		setTitle(LangModelAnalyse.getString("analysisTitle"));
 		addComponentListener(new java.awt.event.ComponentAdapter()
 		{
 			public void componentShown(ComponentEvent e)
@@ -53,7 +53,7 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 
 	public String getReportTitle()
 	{
-		return LangModelAnalyse.String("analysisTitle");
+		return LangModelAnalyse.getString("analysisTitle");
 	}
 
 	public Dispatcher getInternalDispatcher ()
@@ -120,7 +120,7 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 			if (!bs.monitored_element_id.equals(""))
 				setTitle(Pool.getName(MonitoredElement.typ, bs.monitored_element_id));
 			else
-				setTitle(LangModelAnalyse.String("analysisTitle"));
+				setTitle(LangModelAnalyse.getString("analysisTitle"));
 
 			p = new AnalysisPanel((AnalysisLayeredPanel)panel, dispatcher, y, delta_x);
 			((AnalysisPanel)p).updEvents(id);

@@ -130,8 +130,8 @@ public class TraceSelectorFrame extends JInternalFrame
 		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
 		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
 		tModel = new GeneralTableModel(
-					new String[] {LangModelAnalyse.String("selectorKey"),
-												LangModelAnalyse.String("selectorValue")},
+					new String[] {LangModelAnalyse.getString("selectorKey"),
+												LangModelAnalyse.getString("selectorValue")},
 					new Object[] {"Syrus systems", Color.black},
 					0);
 
@@ -146,7 +146,7 @@ public class TraceSelectorFrame extends JInternalFrame
 		this.setClosable(true);
 		this.setIconifiable(true);
 		//this.setMaximizable(true);
-		this.setTitle(LangModelAnalyse.String("selectorTitle"));
+		this.setTitle(LangModelAnalyse.getString("selectorTitle"));
 
 		mainPanel.setLayout(new BorderLayout());
 		mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());

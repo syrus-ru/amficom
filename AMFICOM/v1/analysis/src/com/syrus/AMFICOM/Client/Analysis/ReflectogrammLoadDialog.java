@@ -93,7 +93,7 @@ public class ReflectogrammLoadDialog extends JDialog implements OperationListene
 		{
 			setModal(true);
 
-			setTitle(LangModelAnalyse.String("trace"));
+			setTitle(LangModelAnalyse.getString("trace"));
 			setDomainIntoTitle();
 			Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 			Dimension frameSize = new Dimension (350, 600);
@@ -120,7 +120,7 @@ public class ReflectogrammLoadDialog extends JDialog implements OperationListene
 			ocPanel.setLayout(new FlowLayout());
 
 			okButton = new JButton();
-			okButton.setText(LangModelAnalyse.String("okButton"));
+			okButton.setText(LangModelAnalyse.getString("okButton"));
 			okButton.setEnabled(false);
 			okButton.setMaximumSize(new Dimension(91, 27));
 			okButton.setMinimumSize(new Dimension(91, 27));
@@ -133,7 +133,7 @@ public class ReflectogrammLoadDialog extends JDialog implements OperationListene
 				}
 			});
 			cancelButton = new JButton();
-			cancelButton.setText(LangModelAnalyse.String("cancelButton"));
+			cancelButton.setText(LangModelAnalyse.getString("cancelButton"));
 			cancelButton.addActionListener(new java.awt.event.ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -151,7 +151,7 @@ public class ReflectogrammLoadDialog extends JDialog implements OperationListene
 			updateButton1.setMinimumSize(new Dimension(91, 27));
 			updateButton1.setPreferredSize(new Dimension(91, 27));
 
-			updateButton1.setText(LangModelAnalyse.String("refreshButton"));
+			updateButton1.setText(LangModelAnalyse.getString("refreshButton"));
 			updateButton1.addActionListener(new java.awt.event.ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					updateButton1_actionPerformed(e);

@@ -197,7 +197,7 @@ class ThresholdsToolBar extends TraceEventsToolBar
 				eXButton,
 				btn_size,
 				null,
-				LangModelAnalyse.String("encreasetx"),
+				LangModelAnalyse.getString("encreasetx"),
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/enlargetx.gif")),
 				new ActionListener()
 				{
@@ -213,7 +213,7 @@ class ThresholdsToolBar extends TraceEventsToolBar
 				eAButton,
 				btn_size,
 				null,
-				LangModelAnalyse.String("encreasety"),
+				LangModelAnalyse.getString("encreasety"),
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/enlargety.gif")),
 				new ActionListener()
 				{
@@ -229,7 +229,7 @@ class ThresholdsToolBar extends TraceEventsToolBar
 				dXButton,
 				btn_size,
 				null,
-				LangModelAnalyse.String("decreasetx"),
+				LangModelAnalyse.getString("decreasetx"),
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/reducetx.gif")),
 				new ActionListener()
 				{
@@ -245,7 +245,7 @@ class ThresholdsToolBar extends TraceEventsToolBar
 				dAButton,
 				btn_size,
 				null,
-				LangModelAnalyse.String("decreasety"),
+				LangModelAnalyse.getString("decreasety"),
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/reducety.gif")),
 				new ActionListener()
 				{
@@ -261,7 +261,7 @@ class ThresholdsToolBar extends TraceEventsToolBar
 				fitEvButton,
 				btn_size,
 				null,
-				LangModelAnalyse.String("fittoevent"),
+				LangModelAnalyse.getString("fittoevent"),
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/zoom_box.gif")),
 				new ActionListener()
 				{
@@ -277,7 +277,7 @@ class ThresholdsToolBar extends TraceEventsToolBar
 				showThresholdButton,
 				btn_size,
 				null,
-				LangModelAnalyse.String("allThresholds"),
+				LangModelAnalyse.getString("allThresholds"),
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/threshold.gif")),
 				new ActionListener()
 				{

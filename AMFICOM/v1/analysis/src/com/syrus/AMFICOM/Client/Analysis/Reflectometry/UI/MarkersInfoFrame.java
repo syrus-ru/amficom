@@ -115,8 +115,8 @@ public class MarkersInfoFrame extends JInternalFrame
 		//setFocusCycleRoot(false);
 		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
 		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
-		String markerInfoKey = LangModelAnalyse.String("markerInfoKey");
-		String markerInfoValue = LangModelAnalyse.String("markerInfoValue");
+		String markerInfoKey = LangModelAnalyse.getString("markerInfoKey");
+		String markerInfoValue = LangModelAnalyse.getString("markerInfoValue");
 		tModel = new GeneralTableModel(
 					new String[] {markerInfoKey, markerInfoValue},
 					new String[] {"1", "2"},
@@ -134,7 +134,7 @@ public class MarkersInfoFrame extends JInternalFrame
 		this.setClosable(true);
 		this.setIconifiable(true);
 		//this.setMaximizable(true);
-		this.setTitle(LangModelAnalyse.String("markerInfoTitle"));
+		this.setTitle(LangModelAnalyse.getString("markerInfoTitle"));
 
 		mainPanel.setLayout(new BorderLayout());
 		mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
@@ -162,17 +162,17 @@ public class MarkersInfoFrame extends JInternalFrame
 	void updTableModel(MarkersInfo mInfo)
 	{
 		// положение курсора А
-		tModel.setValueAt(String.valueOf(Math.round(mInfo.a_pos_m))+ " " + LangModelAnalyse.String("mt"), 0, 1);
+		tModel.setValueAt(String.valueOf(Math.round(mInfo.a_pos_m))+ " " + LangModelAnalyse.getString("mt"), 0, 1);
 		if (mInfo.a_type == MarkersInfo.NONREFLECTIVE)
 		{// потери в А
-			tModel.setValueAt(LangModelAnalyse.String("markerALoss"), 1, 0);
-			tModel.setValueAt(String.valueOf(MathRef.round_4(mInfo.a_loss))+ " " + LangModelAnalyse.String("dB"), 1, 1);
+			tModel.setValueAt(LangModelAnalyse.getString("markerALoss"), 1, 0);
+			tModel.setValueAt(String.valueOf(MathRef.round_4(mInfo.a_loss))+ " " + LangModelAnalyse.getString("dB"), 1, 1);
 		}
 		if (mInfo.a_type == MarkersInfo.REFLECTIVE)
 		{// отражение в А
-			tModel.setValueAt(LangModelAnalyse.String("markerAReflection"), 1, 0);
+			tModel.setValueAt(LangModelAnalyse.getString("markerAReflection"), 1, 0);
 			if (mInfo.a_reflectance > 0)
-				tModel.setValueAt(Double.toString( MathRef.round_4 (MathRef.calcReflectance(sigma, mInfo.a_reflectance)))+ " " + LangModelAnalyse.String("dB"), 1, 1);
+				tModel.setValueAt(Double.toString( MathRef.round_4 (MathRef.calcReflectance(sigma, mInfo.a_reflectance)))+ " " + LangModelAnalyse.getString("dB"), 1, 1);
 			else
 				tModel.setValueAt("-----", 1, 1);
 		}
@@ -184,27 +184,27 @@ public class MarkersInfoFrame extends JInternalFrame
 		}
 		else
 		{ // затухание в А
-			tModel.setValueAt(String.valueOf(MathRef.round_4(mInfo.a_attfactor))+ " " + LangModelAnalyse.String("dB")+ "/" + LangModelAnalyse.String("km"), 2, 1);
+			tModel.setValueAt(String.valueOf(MathRef.round_4(mInfo.a_attfactor))+ " " + LangModelAnalyse.getString("dB")+ "/" + LangModelAnalyse.getString("km"), 2, 1);
 		// накапливаемые потери в А
-			 tModel.setValueAt(String.valueOf(MathRef.round_4(mInfo.a_cumulative_loss))+ " " + LangModelAnalyse.String("dB"), 3, 1);
+			 tModel.setValueAt(String.valueOf(MathRef.round_4(mInfo.a_cumulative_loss))+ " " + LangModelAnalyse.getString("dB"), 3, 1);
 		}
 		// положение курсора В
-		tModel.setValueAt(String.valueOf(Math.round(mInfo.b_pos_m))+ " " + LangModelAnalyse.String("mt"), 4, 1);
+		tModel.setValueAt(String.valueOf(Math.round(mInfo.b_pos_m))+ " " + LangModelAnalyse.getString("mt"), 4, 1);
 		// расстояние А-В
 		if (mInfo.a_pos < mInfo.b_pos)
-			tModel.setValueAt(LangModelAnalyse.String("markerBAdist"), 5, 0);
+			tModel.setValueAt(LangModelAnalyse.getString("markerBAdist"), 5, 0);
 		else
-			tModel.setValueAt(LangModelAnalyse.String("markerABdist"), 5, 0);
-		tModel.setValueAt(String.valueOf(Math.round(mInfo.a_b_distance_m))+ " " + LangModelAnalyse.String("mt"), 5, 1);
+			tModel.setValueAt(LangModelAnalyse.getString("markerABdist"), 5, 0);
+		tModel.setValueAt(String.valueOf(Math.round(mInfo.a_b_distance_m))+ " " + LangModelAnalyse.getString("mt"), 5, 1);
 			// 2pt. loss
-			tModel.setValueAt(String.valueOf(MathRef.round_4(mInfo.a_b_loss))+ " " + LangModelAnalyse.String("dB"), 6, 1);
+			tModel.setValueAt(String.valueOf(MathRef.round_4(mInfo.a_b_loss))+ " " + LangModelAnalyse.getString("dB"), 6, 1);
 			// 2pt. Att
-			tModel.setValueAt(String.valueOf(MathRef.round_4(mInfo.a_b_attenuation))+ " " + LangModelAnalyse.String("dB") + "/" + LangModelAnalyse.String("km"), 7, 1);
+			tModel.setValueAt(String.valueOf(MathRef.round_4(mInfo.a_b_attenuation))+ " " + LangModelAnalyse.getString("dB") + "/" + LangModelAnalyse.getString("km"), 7, 1);
 			// LSA Att
-			tModel.setValueAt(String.valueOf(MathRef.round_4(mInfo.lsa_attenuation))+ " " + LangModelAnalyse.String("dB") + "/" + LangModelAnalyse.String("km"), 8, 1);
+			tModel.setValueAt(String.valueOf(MathRef.round_4(mInfo.lsa_attenuation))+ " " + LangModelAnalyse.getString("dB") + "/" + LangModelAnalyse.getString("km"), 8, 1);
 			// 2pt. ORL
 			if (mInfo.a_b_orl > 0)
-				tModel.setValueAt(String.valueOf(MathRef.round_4(mInfo.a_b_orl))+ " " + LangModelAnalyse.String("dB"), 9, 1);
+				tModel.setValueAt(String.valueOf(MathRef.round_4(mInfo.a_b_orl))+ " " + LangModelAnalyse.getString("dB"), 9, 1);
 			else
 				tModel.setValueAt("-----", 9, 1);
 		jTable.updateUI();
@@ -215,52 +215,52 @@ public class MarkersInfoFrame extends JInternalFrame
 		tModel.clearTable();
 
 		Vector apos = new Vector(2);
-		apos.add(LangModelAnalyse.String("markerAPos"));
+		apos.add(LangModelAnalyse.getString("markerAPos"));
 		apos.add("");
 		tModel.insertRow(apos);
 
 		Vector lost = new Vector(2);
-		lost.add(LangModelAnalyse.String("markerALoss"));
+		lost.add(LangModelAnalyse.getString("markerALoss"));
 		lost.add("");
 		tModel.insertRow(lost);
 
 		Vector att = new Vector(2);
-		att.add(LangModelAnalyse.String("markerAAttenuation"));
+		att.add(LangModelAnalyse.getString("markerAAttenuation"));
 		att.add("");
 		tModel.insertRow(att);
 
 		Vector cumloss = new Vector(2);
-		cumloss.add(LangModelAnalyse.String("markerACumloss"));
+		cumloss.add(LangModelAnalyse.getString("markerACumloss"));
 		cumloss.add("");
 		tModel.insertRow(cumloss);
 
 		Vector bpos = new Vector(2);
-		bpos.add(LangModelAnalyse.String("markerBPos"));
+		bpos.add(LangModelAnalyse.getString("markerBPos"));
 		bpos.add("");
 		tModel.insertRow(bpos);
 
 		Vector abdist = new Vector(2);
-		abdist.add(LangModelAnalyse.String("markerBAdist"));
+		abdist.add(LangModelAnalyse.getString("markerBAdist"));
 		abdist.add("");
 		tModel.insertRow(abdist);
 
 		Vector loss_2pt = new Vector(2);
-		loss_2pt.add(LangModelAnalyse.String("markerABloss"));
+		loss_2pt.add(LangModelAnalyse.getString("markerABloss"));
 		loss_2pt.add("");
 		tModel.insertRow(loss_2pt);
 
 		Vector att_2pt = new Vector(2);
-		att_2pt.add(LangModelAnalyse.String("markerABatt"));
+		att_2pt.add(LangModelAnalyse.getString("markerABatt"));
 		att_2pt.add("");
 		tModel.insertRow(att_2pt);
 
 		Vector att_lsa = new Vector(2);
-		att_lsa.add(LangModelAnalyse.String("markerABlsaatt"));
+		att_lsa.add(LangModelAnalyse.getString("markerABlsaatt"));
 		att_lsa.add("");
 		tModel.insertRow(att_lsa);
 
 		Vector orl_2pt = new Vector(2);
-		orl_2pt.add(LangModelAnalyse.String("markerABorl"));
+		orl_2pt.add(LangModelAnalyse.getString("markerABorl"));
 		orl_2pt.add("");
 		tModel.insertRow(orl_2pt);
 	}

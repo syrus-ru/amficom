@@ -45,8 +45,8 @@ public class LoadEtalonCommand extends VoidCommand
 		{
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					LangModelAnalyse.String("noTestSetupError"),
-					LangModelAnalyse.String("error"),
+					LangModelAnalyse.getString("noTestSetupError"),
+					LangModelAnalyse.getString("error"),
 					JOptionPane.OK_OPTION);
 			return;
 		}
@@ -55,8 +55,8 @@ public class LoadEtalonCommand extends VoidCommand
 		{
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					LangModelAnalyse.String("noEtalonError"),
-					LangModelAnalyse.String("error"),
+					LangModelAnalyse.getString("noEtalonError"),
+					LangModelAnalyse.getString("error"),
 					JOptionPane.OK_OPTION);
 			return;
 		}

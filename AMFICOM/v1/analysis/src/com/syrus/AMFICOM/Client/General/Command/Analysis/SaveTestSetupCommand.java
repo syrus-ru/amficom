@@ -45,8 +45,8 @@ public class SaveTestSetupCommand extends VoidCommand
 		{
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					LangModelAnalyse.String("noSessionError"),
-					LangModelAnalyse.String("error"), JOptionPane.OK_OPTION);
+					LangModelAnalyse.getString("noSessionError"),
+					LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
 			return;
 		}
 
@@ -55,8 +55,8 @@ public class SaveTestSetupCommand extends VoidCommand
 		{
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					LangModelAnalyse.String("unkError"),
-					LangModelAnalyse.String("error"), JOptionPane.OK_OPTION);
+					LangModelAnalyse.getString("unkError"),
+					LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
 			return;
 		}
 
@@ -64,8 +64,8 @@ public class SaveTestSetupCommand extends VoidCommand
 		{
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					LangModelAnalyse.String("noMonitoredElementError"),
-					LangModelAnalyse.String("error"), JOptionPane.OK_OPTION);
+					LangModelAnalyse.getString("noMonitoredElementError"),
+					LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
 			return;
 		}
 
@@ -73,8 +73,8 @@ public class SaveTestSetupCommand extends VoidCommand
 		{
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					LangModelAnalyse.String("noTestSetupError"),
-					LangModelAnalyse.String("error"), JOptionPane.OK_OPTION);
+					LangModelAnalyse.getString("noTestSetupError"),
+					LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
 			return;
 		}
 
@@ -83,8 +83,8 @@ public class SaveTestSetupCommand extends VoidCommand
 		{
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					LangModelAnalyse.String("noTestArgumentsError"),
-					LangModelAnalyse.String("error"), JOptionPane.OK_OPTION);
+					LangModelAnalyse.getString("noTestArgumentsError"),
+					LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
 			return;
 		}
 
@@ -96,8 +96,8 @@ public class SaveTestSetupCommand extends VoidCommand
 			{
 				JOptionPane.showMessageDialog(
 						Environment.getActiveWindow(),
-						LangModelAnalyse.String("noAnalysisError"),
-						LangModelAnalyse.String("error"), JOptionPane.OK_OPTION);
+						LangModelAnalyse.getString("noAnalysisError"),
+						LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
 				return;
 			}
 		}
@@ -106,8 +106,8 @@ public class SaveTestSetupCommand extends VoidCommand
 		{
 			String s = JOptionPane.showInputDialog(
 					Environment.getActiveWindow(),
-					LangModelAnalyse.String("testsetup"),
-					LangModelAnalyse.String("newname"), JOptionPane.OK_CANCEL_OPTION);
+					LangModelAnalyse.getString("testsetup"),
+					LangModelAnalyse.getString("newname"), JOptionPane.OK_CANCEL_OPTION);
 			if (s == null || s.equals(""))
 				return;
 			ts.setName(s);

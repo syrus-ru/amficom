@@ -12,8 +12,8 @@ public class EvaluationRun
 	public static void main(String[] args)
 	{
 		Environment.initialize();
-		LangModelAnalyse.initialize();
-		LangModelReport.initialize();
+//		LangModelAnalyse.initialize();
+//		LangModelReport.initialize();
 
 		try {
 			UIManager.setLookAndFeel(Environment.getLookAndFeel());

@@ -150,7 +150,7 @@ public class OverallStatsFrame extends ATableFrame
 
 	public String getReportTitle()
 	{
-		return LangModelAnalyse.String("overallTitle");
+		return LangModelAnalyse.getString("overallTitle");
 	}
 
 	public TableModel getTableModel()
@@ -163,8 +163,8 @@ public class OverallStatsFrame extends ATableFrame
 		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
 		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
 		tModel = new GeneralTableModel(
-					new String[] {LangModelAnalyse.String("overallKey"),
-												LangModelAnalyse.String("overallValue")},
+					new String[] {LangModelAnalyse.getString("overallKey"),
+												LangModelAnalyse.getString("overallValue")},
 					new String[] {"1", "2"},
 					0);
 		jTable = new ATable(tModel);
@@ -176,7 +176,7 @@ public class OverallStatsFrame extends ATableFrame
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setIconifiable(true);
-		this.setTitle(LangModelAnalyse.String("overallTitle"));
+		this.setTitle(LangModelAnalyse.getString("overallTitle"));
 
 		mainPanel.setLayout(new BorderLayout());
 		mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
@@ -241,11 +241,11 @@ public class OverallStatsFrame extends ATableFrame
 		double dataLength = ReflectogramMath.getLastSplash(data_)*delta_x;
 		double lossDifference = ReflectogramComparer.getLossDifference(etalon, data_);
 
-		wctModel.setValueAt(String.valueOf(MathRef.round_3(dataLength))+ " " + LangModelAnalyse.String("km"), 0, 1);
-		wctModel.setValueAt(String.valueOf(MathRef.round_3(etalonLength)) + " " + LangModelAnalyse.String("km"), 1, 1);
-		wctModel.setValueAt(String.valueOf(MathRef.round_4(maximalDeviation)) + " " + LangModelAnalyse.String("dB"), 2, 1);
-		wctModel.setValueAt(String.valueOf(MathRef.round_4(meanDeviation)) + " " + LangModelAnalyse.String("dB"), 3, 1);
-		wctModel.setValueAt(String.valueOf(MathRef.round_4(lossDifference)) + " " + LangModelAnalyse.String("dB"), 4, 1);
+		wctModel.setValueAt(String.valueOf(MathRef.round_3(dataLength))+ " " + LangModelAnalyse.getString("km"), 0, 1);
+		wctModel.setValueAt(String.valueOf(MathRef.round_3(etalonLength)) + " " + LangModelAnalyse.getString("km"), 1, 1);
+		wctModel.setValueAt(String.valueOf(MathRef.round_4(maximalDeviation)) + " " + LangModelAnalyse.getString("dB"), 2, 1);
+		wctModel.setValueAt(String.valueOf(MathRef.round_4(meanDeviation)) + " " + LangModelAnalyse.getString("dB"), 3, 1);
+		wctModel.setValueAt(String.valueOf(MathRef.round_4(lossDifference)) + " " + LangModelAnalyse.getString("dB"), 4, 1);
 	}
 
 	private void updColorModel()
@@ -279,17 +279,17 @@ public class OverallStatsFrame extends ATableFrame
 			return;
 
 		double range = (ev.last_point) * (double)(3 * bs.fxdParams.DS[0]) / (double)(bs.fxdParams.GI * 10000);
-		tModel.setValueAt(String.valueOf(MathRef.round_3(range)) + " " + LangModelAnalyse.String("km"), 0, 1);
+		tModel.setValueAt(String.valueOf(MathRef.round_3(range)) + " " + LangModelAnalyse.getString("km"), 0, 1);
 		double loss = Math.abs(ev.data[0] -  ev.data[1]);
-		tModel.setValueAt(String.valueOf(MathRef.round_2(loss))+ " " + LangModelAnalyse.String("dB"), 1, 1);
+		tModel.setValueAt(String.valueOf(MathRef.round_2(loss))+ " " + LangModelAnalyse.getString("dB"), 1, 1);
 		double attenuation = loss / range;
-		tModel.setValueAt(String.valueOf(MathRef.round_4(attenuation))+ " " + LangModelAnalyse.String("dB")+ "/" + LangModelAnalyse.String("km"), 2, 1);
+		tModel.setValueAt(String.valueOf(MathRef.round_4(attenuation))+ " " + LangModelAnalyse.getString("dB")+ "/" + LangModelAnalyse.getString("km"), 2, 1);
 		double orl = MathRef.ORL(ev.data[0], ev.data[1]);
-		tModel.setValueAt(String.valueOf(MathRef.round_2(orl)) + " " + LangModelAnalyse.String("dB"), 3, 1);
+		tModel.setValueAt(String.valueOf(MathRef.round_2(orl)) + " " + LangModelAnalyse.getString("dB"), 3, 1);
 		double noise = ev.data[2];
-		tModel.setValueAt(String.valueOf(MathRef.round_2(noise)) + " " + LangModelAnalyse.String("dB"), 4, 1);
+		tModel.setValueAt(String.valueOf(MathRef.round_2(noise)) + " " + LangModelAnalyse.getString("dB"), 4, 1);
 		double DD = ev.data[2] - ev.data[3];
-		tModel.setValueAt(String.valueOf(MathRef.round_2(DD)) + " " + LangModelAnalyse.String("dB"), 5, 1);
+		tModel.setValueAt(String.valueOf(MathRef.round_2(DD)) + " " + LangModelAnalyse.getString("dB"), 5, 1);
 		int evNum = (int)ev.data[4];
 		tModel.setValueAt(String.valueOf(evNum), 6, 1);
 		jTable.updateUI();
@@ -300,37 +300,37 @@ public class OverallStatsFrame extends ATableFrame
 		tModel.clearTable();
 
 		Vector length = new Vector(2);
-		length.add(LangModelAnalyse.String("totalLength"));
+		length.add(LangModelAnalyse.getString("totalLength"));
 		length.add("");
 		tModel.insertRow(length);
 
 		Vector loss = new Vector(2);
-		loss.add(LangModelAnalyse.String("totalLoss"));
+		loss.add(LangModelAnalyse.getString("totalLoss"));
 		loss.add("");
 		tModel.insertRow(loss);
 
 		Vector attenuation = new Vector(2);
-		attenuation.add(LangModelAnalyse.String("totalAttenuation"));
+		attenuation.add(LangModelAnalyse.getString("totalAttenuation"));
 		attenuation.add("");
 		tModel.insertRow(attenuation);
 
 		Vector orl = new Vector(2);
-		orl.add(LangModelAnalyse.String("totalReturnLoss"));
+		orl.add(LangModelAnalyse.getString("totalReturnLoss"));
 		orl.add("");
 		tModel.insertRow(orl);
 
 		Vector noise = new Vector(2);
-		noise.add(LangModelAnalyse.String("totalNoiseLevel"));
+		noise.add(LangModelAnalyse.getString("totalNoiseLevel"));
 		noise.add("");
 		tModel.insertRow(noise);
 
 		Vector dd = new Vector(2);
-		dd.add(LangModelAnalyse.String("totalNoiseDD"));
+		dd.add(LangModelAnalyse.getString("totalNoiseDD"));
 		dd.add("");
 		tModel.insertRow(dd);
 
 		Vector evNum = new Vector(2);
-		evNum.add(LangModelAnalyse.String("totalEvents"));
+		evNum.add(LangModelAnalyse.getString("totalEvents"));
 		evNum.add("");
 		tModel.insertRow(evNum);
 	}
@@ -348,11 +348,11 @@ class WholeCompareTableModel extends AbstractTableModel
 		null};
 
 	Object[][] data = {
-		{LangModelAnalyse.String("traceLength"), "--"},
-		{LangModelAnalyse.String("etLength"), "--"},
-		{LangModelAnalyse.String("maxDeviation"), "--"},
-		{LangModelAnalyse.String("meanDeviation"), "--"},
-		{LangModelAnalyse.String("delta"), "--"},
+		{LangModelAnalyse.getString("traceLength"), "--"},
+		{LangModelAnalyse.getString("etLength"), "--"},
+		{LangModelAnalyse.getString("maxDeviation"), "--"},
+		{LangModelAnalyse.getString("meanDeviation"), "--"},
+		{LangModelAnalyse.getString("delta"), "--"},
 	};
 
 	WholeCompareTableModel()
