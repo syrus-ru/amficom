@@ -20,8 +20,6 @@ public class MCM extends StorableObject {
 	private String location;
 	private String contact;
 	private String hostname;
-	private Date created;
-	private Date modified;
 
 	private ArrayList kiss;
 
@@ -40,15 +38,17 @@ public class MCM extends StorableObject {
 	}
 
 	public MCM(MCM_Transferable mt) throws CreateObjectException {
-		super(new Identifier(mt.id));
+		super(new Identifier(mt.id),
+					new Date(mt.created),
+					new Date(mt.modified),
+					new Identifier(mt.creator_id),
+					new Identifier(mt.modifier_id));
 		this.server_id = new Identifier(mt.server_id);
 		this.name = new String(mt.name);
 		this.description = new String(mt.description);
 		this.location = new String(mt.location);
 		this.contact = new String(mt.contact);
 		this.hostname = new String(mt.hostname);
-		this.created = new Date(mt.created);
-		this.modified = new Date(mt.modified);
 
 		this.kiss = new ArrayList(mt.kis_ids.length);
 		for (int i = 0; i < mt.kis_ids.length; i++)
@@ -75,14 +75,16 @@ public class MCM extends StorableObject {
 			kis_ids[i++] = (Identifier_Transferable)((KIS)iterator.next()).getId().getTransferable();
 
 		return new MCM_Transferable((Identifier_Transferable)super.getId().getTransferable(),
+																super.created.getTime(),
+																super.modified.getTime(),
+																(Identifier_Transferable)super.creator_id.getTransferable(),
+																(Identifier_Transferable)super.modifier_id.getTransferable(),
 																(Identifier_Transferable)this.server_id.getTransferable(),
 																new String(this.name),
 																new String(this.description),
 																new String(this.location),
 																new String(this.contact),
 																new String(this.hostname),
-																this.created.getTime(),
-																this.modified.getTime(),
 																kis_ids);
 	}
 
@@ -110,34 +112,30 @@ public class MCM extends StorableObject {
 		return this.hostname;
 	}
 
-	public Date getCreated() {
-		return this.created;
-	}
-
-	public Date getModified() {
-		return this.modified;
-	}
-
 	public ArrayList getKISs() {
 		return this.kiss;
 	}
 
-	protected synchronized void setAttributes(Identifier server_id,
+	protected synchronized void setAttributes(Date created,
+																						Date modified,
+																						Identifier creator_id,
+																						Identifier modifier_id,
+																						Identifier server_id,
 																						String name,
 																						String description,
 																						String location,
 																						String contact,
-																						String hostname,
-																						Date created,
-																						Date modified) {
+																						String hostname) {
+		super.setAttributes(created,
+												modified,
+												creator_id,
+												modifier_id);
 		this.server_id = server_id;
 		this.name = name;
 		this.description = description;
 		this.location = location;
 		this.contact = contact;
 		this.hostname = hostname;
-		this.created = created;
-		this.modified = modified;
 	}
 
 	protected synchronized void setKISs(ArrayList arraylist) {

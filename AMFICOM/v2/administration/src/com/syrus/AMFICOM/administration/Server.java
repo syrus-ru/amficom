@@ -18,8 +18,6 @@ public class Server extends StorableObject {
 	private String location;
 	private String contact;
 	private String hostname;
-	private Date created;
-	private Date modified;
 	private int sessions;
 
 	private ArrayList mcms;
@@ -39,14 +37,16 @@ public class Server extends StorableObject {
 	}
 
 	public Server(Server_Transferable st) throws CreateObjectException {
-		super(new Identifier(st.id));
+		super(new Identifier(st.id),
+					new Date(st.created),
+					new Date(st.modified),
+					new Identifier(st.creator_id),
+					new Identifier(st.modifier_id));
 		this.name = new String(st.name);
 		this.description = new String(st.description);
 		this.location = new String(st.location);
 		this.contact = new String(st.contact);
 		this.hostname = new String(st.hostname);
-		this.created = new Date(st.created);
-		this.modified = new Date(st.modified);
 		this.sessions = st.sessions;
 
 		this.mcms = new ArrayList(st.mcm_ids.length);
@@ -74,13 +74,15 @@ public class Server extends StorableObject {
 			mcm_ids[i++] = (Identifier_Transferable)((MCM)iterator.next()).getId().getTransferable();
 
 		return new Server_Transferable((Identifier_Transferable)super.getId().getTransferable(),
+																	 super.created.getTime(),
+																	 super.modified.getTime(),
+																	 (Identifier_Transferable)super.creator_id.getTransferable(),
+																	 (Identifier_Transferable)super.modifier_id.getTransferable(),
 																	 new String(this.name),
 																	 new String(this.description),
 																	 new String(this.location),
 																	 new String(this.contact),
 																	 new String(this.hostname),
-																	 this.created.getTime(),
-																	 this.modified.getTime(),
 																	 this.sessions,
 																	 mcm_ids);
 	}
@@ -105,14 +107,6 @@ public class Server extends StorableObject {
 		return this.hostname;
 	}
 
-	public Date getCreated() {
-		return this.created;
-	}
-
-	public Date getModified() {
-		return this.modified;
-	}
-
 	public int getSessions() {
 		return this.sessions;
 	}
@@ -121,21 +115,25 @@ public class Server extends StorableObject {
 		return this.mcms;
 	}
 
-	protected synchronized void setAttributes(String name,
+	protected synchronized void setAttributes(Date created,
+																						Date modified,
+																						Identifier creator_id,
+																						Identifier modifier_id,
+																						String name,
 																						String description,
 																						String location,
 																						String contact,
 																						String hostname,
-																						Date created,
-																						Date modified,
 																						int sessions) {
+		super.setAttributes(created,
+												modified,
+												creator_id,
+												modifier_id);
 		this.name = name;
 		this.description = description;
 		this.location = location;
 		this.contact = contact;
 		this.hostname = hostname;
-		this.created = created;
-		this.modified = modified;
 		this.sessions = sessions;
 	}
 

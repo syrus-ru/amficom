@@ -38,7 +38,11 @@ public class User extends StorableObject {
 	}
 
 	public User(User_Transferable ut) throws CreateObjectException {
-		super(new Identifier(ut.id));
+		super(new Identifier(ut.id),
+					new Date(ut.created),
+					new Date(ut.modified),
+					new Identifier(ut.creator_id),
+					new Identifier(ut.modifier_id));
 		this.login = new String(ut.login);
 		this.type = new String(ut.type);
 		this.last_logged = new Date(ut.last_login);
@@ -74,6 +78,10 @@ public class User extends StorableObject {
 			gr_ids[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 
 		return new User_Transferable((Identifier_Transferable)this.id.getTransferable(),
+																 super.created.getTime(),
+																 super.modified.getTime(),
+																 (Identifier_Transferable)super.creator_id.getTransferable(),
+																 (Identifier_Transferable)super.modifier_id.getTransferable(),
 																 new String(this.login),
 																 new String(this.type),
 																 this.last_logged.getTime(),
@@ -111,11 +119,19 @@ public class User extends StorableObject {
 		return this.group_ids;
 	}
 
-	protected void setAttributes(String login,
-															 String type,
-															 Date last_logged,
-															 Date logged,
-															 int sessions) {
+	protected synchronized void setAttributes(Date created,
+																						Date modified,
+																						Identifier creator_id,
+																						Identifier modifier_id,
+																						String login,
+																						String type,
+																						Date last_logged,
+																						Date logged,
+																						int sessions) {
+		super.setAttributes(created,
+												modified,
+												creator_id,
+												modifier_id);
 		this.login = login;
 		this.type = type;
 		this.last_logged = last_logged;

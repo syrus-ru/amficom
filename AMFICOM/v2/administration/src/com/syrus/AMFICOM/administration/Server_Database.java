@@ -28,7 +28,19 @@ public class Server_Database extends StorableObject_Database {
 
 	private void retrieveServer(Server server) throws Exception {
 		String server_id_str = server.getId().toString();
-		String sql = "SELECT name, description, location, contact, hostname, " + DatabaseDate.toQuerySubString("created") + ", " + DatabaseDate.toQuerySubString("modified") + ", sessions FROM " + ObjectEntities.SERVER_ENTITY + " WHERE id = " + server_id_str;
+		String sql = "SELECT "
+			+ DatabaseDate.toQuerySubString("created") + ", " 
+			+ DatabaseDate.toQuerySubString("modified") + ", "
+			+ "creator_id, "
+			+ "modifier_id, "
+			+ "name, "
+			+ "description, "
+			+ "location, "
+			+ "contact, "
+			+ "hostname, "
+			+ "sessions"
+			+ " FROM " + ObjectEntities.SERVER_ENTITY
+			+ " WHERE id = " + server_id_str;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -36,13 +48,15 @@ public class Server_Database extends StorableObject_Database {
 			Log.debugMessage("Server_Database.retrieveServer | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
-				server.setAttributes(resultSet.getString("name"),
+				server.setAttributes(DatabaseDate.fromQuerySubString(resultSet, "created"),
+														 DatabaseDate.fromQuerySubString(resultSet, "modified"),
+														 new Identifier(resultSet.getLong("creator_id")),
+														 new Identifier(resultSet.getLong("modifier_id")),
+														 resultSet.getString("name"),
 														 resultSet.getString("description"),
 														 resultSet.getString("location"),
 														 resultSet.getString("contact"),
 														 resultSet.getString("hostname"),
-														 DatabaseDate.fromQuerySubString(resultSet, "created"),
-														 DatabaseDate.fromQuerySubString(resultSet, "modified"),
 														 resultSet.getInt("sessions"));
 			else
 				throw new Exception("No such server: " + server_id_str);
@@ -111,8 +125,21 @@ public class Server_Database extends StorableObject_Database {
 
 	public void insertServer(Server server) throws Exception {
 		String server_id_str = server.getId().toString();
-		String sql = "INSERT INTO " + ObjectEntities.SERVER_ENTITY + " (id, name, description, location, contact, hostname, created, modified, sessions) VALUES ("
-				+ server_id_str + ", '" + server.getName() + "', '" + server.getDescription() + "', '" + server.getLocation() + "', '" + server.getContact() + "', '" + server.getHostname() + "', " + DatabaseDate.toUpdateSubString(server.getCreated()) + ", " + DatabaseDate.toUpdateSubString(server.getModified()) + ", " + Integer.toString(server.getSessions()) + ")";
+		String sql = "INSERT INTO " + ObjectEntities.SERVER_ENTITY
+			+ " (id, created, modified, creator_id, modifier_id, name, description, location, contact, hostname, created, modified, sessions)"
+			+ " VALUES ("
+			+ server_id_str + ", '"
+			+ DatabaseDate.toUpdateSubString(server.getCreated()) + ", "
+			+ DatabaseDate.toUpdateSubString(server.getModified()) + ", "
+			+ server.getCreatorId().toString() + ", "
+			+ server.getModifierId().toString() + ", '"
+			+ server.getName() + "', '"
+			+ server.getDescription() + "', '"
+			+ server.getLocation() + "', '"
+			+ server.getContact() + "', '"
+			+ server.getHostname() + "', "
+			+ Integer.toString(server.getSessions())
+			+ ")";
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();

@@ -31,7 +31,18 @@ public class User_Database extends StorableObject_Database {
 
 	private void retrieveUser(User user) throws Exception {
 		String user_id_str = user.getId().toString();
-		String sql = "SELECT login, type, " + DatabaseDate.toQuerySubString("last_logged") + ", " + DatabaseDate.toQuerySubString("logged") + ", sessions FROM " + ObjectEntities.USER_ENTITY + " WHERE id = " + user_id_str;
+		String sql = "SELECT "
+			+ DatabaseDate.toQuerySubString("created") + ", " 
+			+ DatabaseDate.toQuerySubString("modified") + ", "
+			+ "creator_id, "
+			+ "modifier_id, "
+			+ "login, "
+			+ "type, "
+			+ DatabaseDate.toQuerySubString("last_logged") + ", "
+			+ DatabaseDate.toQuerySubString("logged") + ", "
+			+ "sessions"
+			+ " FROM " + ObjectEntities.USER_ENTITY
+			+ " WHERE id = " + user_id_str;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -39,7 +50,11 @@ public class User_Database extends StorableObject_Database {
 			Log.debugMessage("User_Database.retrieveUser | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
-				user.setAttributes(resultSet.getString("login"),
+				user.setAttributes(DatabaseDate.fromQuerySubString(resultSet, "created"),
+													 DatabaseDate.fromQuerySubString(resultSet, "modified"),
+													 new Identifier(resultSet.getLong("creator_id")),
+													 new Identifier(resultSet.getLong("modifier_id")),
+													 resultSet.getString("login"),
 													 resultSet.getString("type"),
 													 DatabaseDate.fromQuerySubString(resultSet, "last_logged"),
 													 DatabaseDate.fromQuerySubString(resultSet, "logged"),
@@ -66,12 +81,12 @@ public class User_Database extends StorableObject_Database {
 
 	private void retrieveCategoryIds(User user) throws Exception {
 		String user_id_str = user.getId().toString();
-		
+		/*Dodelat'!!*/
 	}
 
 	private void retrieveGroupIds(User user) throws Exception {
 		String user_id_str = user.getId().toString();
-		
+		/*Dodelat'!!*/
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws Exception {
@@ -85,6 +100,43 @@ public class User_Database extends StorableObject_Database {
 	public void insert(StorableObject storableObject) throws Exception {
 		User user = this.fromStorableObject(storableObject);
 		
+	}
+
+	private void insertUser(User user) throws Exception {
+		String user_id_str = user.getId().toString();
+		String sql = "INSERT INTO " + ObjectEntities.USER_ENTITY
+			+ " (id, created, modified, creator_id, modifier_id, login, type, last_logged, logged, sessions)"
+			+ " VALUES ("
+			+ user_id_str + ", "
+			+ DatabaseDate.toUpdateSubString(user.getCreated()) + ", "
+			+ DatabaseDate.toUpdateSubString(user.getModified()) + ", "
+			+ user.getCreatorId().toString() + ", "
+			+ user.getModifierId().toString() + ", '"
+			+ user.getLogin() + "', '"
+			+ user.getType() + "', "
+			+ DatabaseDate.toUpdateSubString(user.getLastLogged()) + ", "
+			+ DatabaseDate.toUpdateSubString(user.getLogged()) + ", "
+			+ Integer.toString(user.getSessions())
+			+ ")";
+		Statement statement = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("User_Database.insertUser | Trying: " + sql, Log.DEBUGLEVEL05);
+			statement.executeUpdate(sql);
+			connection.commit();
+		}
+		catch (SQLException sqle) {
+			String mesg = "User_Database.insertUser | Cannot insert user " + user_id_str;
+			throw new Exception(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				statement = null;
+			}
+			catch (SQLException sqle1) {}
+		}
 	}
 
 	public void update(StorableObject storableObject, int update_kind, Object obj) throws Exception {
