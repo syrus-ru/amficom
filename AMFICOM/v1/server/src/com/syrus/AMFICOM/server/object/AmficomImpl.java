@@ -1,5 +1,5 @@
 /*
- * $Id: AmficomImpl.java,v 1.1.2.1 2004/09/14 12:41:46 bass Exp $
+ * $Id: AmficomImpl.java,v 1.1.2.2 2004/09/23 15:10:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import javax.sql.DataSource;
 import org.omg.CORBA.*;
 
 /**
- * @version $Revision: 1.1.2.1 $, $Date: 2004/09/14 12:41:46 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/09/23 15:10:00 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -92,9 +92,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -122,9 +122,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -149,9 +149,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -177,9 +177,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -216,9 +216,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -250,9 +250,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -281,9 +281,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -308,9 +308,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -347,9 +347,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -384,9 +384,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -415,9 +415,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -449,9 +449,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -480,9 +480,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -511,9 +511,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -556,9 +556,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -600,9 +600,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -659,9 +659,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -717,9 +717,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -737,9 +737,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -757,9 +757,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -777,9 +777,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -797,9 +797,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -817,9 +817,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -837,9 +837,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -857,9 +857,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -877,9 +877,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -897,9 +897,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -917,9 +917,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -937,9 +937,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -957,9 +957,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -977,9 +977,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -997,9 +997,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1017,9 +1017,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1037,9 +1037,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1057,9 +1057,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1077,9 +1077,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1097,9 +1097,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1117,9 +1117,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1131,9 +1131,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 				at_t[i] = ats[i].getTransferable();
 			alarmTypeSeq.value = at_t;
 			return Constants.ERROR_NO_ERROR;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1151,9 +1151,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1171,9 +1171,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1191,9 +1191,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1211,9 +1211,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1231,9 +1231,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1251,9 +1251,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1271,9 +1271,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1291,9 +1291,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1311,9 +1311,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1331,9 +1331,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1351,9 +1351,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1372,9 +1372,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_UID, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_UID, t.toString());
 		}
 	}
 
@@ -1391,10 +1391,11 @@ public final class AmficomImpl implements AMFICOMOperations {
 					conn.close();
 			}
 		} catch (AMFICOMRemoteException are) {
+			are.printStackTrace();
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1412,9 +1413,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1432,9 +1433,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1452,9 +1453,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1472,9 +1473,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1494,9 +1495,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1514,9 +1515,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1534,9 +1535,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1554,9 +1555,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1574,9 +1575,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1594,9 +1595,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1614,9 +1615,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1634,9 +1635,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1654,9 +1655,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1674,9 +1675,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1694,9 +1695,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1714,9 +1715,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1734,9 +1735,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1754,9 +1755,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1774,9 +1775,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1794,9 +1795,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1814,9 +1815,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1834,9 +1835,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1854,9 +1855,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1874,9 +1875,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1894,9 +1895,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1914,9 +1915,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1934,9 +1935,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1954,9 +1955,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1974,9 +1975,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -1994,9 +1995,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2014,9 +2015,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2034,9 +2035,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2054,9 +2055,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2074,9 +2075,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2094,9 +2095,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2114,9 +2115,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2134,9 +2135,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2154,9 +2155,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2174,9 +2175,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2194,9 +2195,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2214,9 +2215,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2234,9 +2235,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2254,9 +2255,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2273,9 +2274,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2292,9 +2293,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2312,9 +2313,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2332,9 +2333,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2352,9 +2353,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2372,9 +2373,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2392,9 +2393,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2412,9 +2413,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2432,9 +2433,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2452,9 +2453,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2472,9 +2473,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2492,9 +2493,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2512,9 +2513,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2532,9 +2533,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2552,9 +2553,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2572,9 +2573,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2592,9 +2593,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2612,9 +2613,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2632,9 +2633,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2652,9 +2653,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2672,9 +2673,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2692,9 +2693,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2712,9 +2713,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2732,9 +2733,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2752,9 +2753,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2772,9 +2773,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2792,9 +2793,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2818,9 +2819,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			return Constants.ERROR_NO_ERROR;
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2872,18 +2873,18 @@ public final class AmficomImpl implements AMFICOMOperations {
 	public String createAnalysisType(AccessIdentity_Transferable accessIdentity, AnalysisType_Transferable analysis_type_t) throws AMFICOMRemoteException {
 		try {
 			return (new AnalysisType(analysis_type_t)).getTransferable().id;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
 	public ClientTest_Transferable getTestByAnalysis(AccessIdentity_Transferable accessIdentity, String analysis_id) throws AMFICOMRemoteException {
 		try {
 			return (new Analysis(analysis_id)).getTest().getClientTransferable();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2891,18 +2892,18 @@ public final class AmficomImpl implements AMFICOMOperations {
 		try {
 			ClientTest_Transferable test_t = (new Analysis(analysis_id)).getTest().getClientTransferable();
 			return new ResourceDescriptor_Transferable(test_t.id, test_t.modified);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
 	public ClientTest_Transferable getTestByEvaluation(AccessIdentity_Transferable accessIdentity, String evaluation_id) throws AMFICOMRemoteException {
 		try {
 			return (new Evaluation(evaluation_id)).getTest().getClientTransferable();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2912,9 +2913,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			return new ResourceDescriptor_Transferable(test_t.id, test_t.modified);
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2923,18 +2924,18 @@ public final class AmficomImpl implements AMFICOMOperations {
 			return (new Analysis(analysis_t)).getId();
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
 	public ClientAnalysis_Transferable getAnalysisById(AccessIdentity_Transferable accessIdentity, String id) throws AMFICOMRemoteException {
 		try {
 			return (new Analysis(id)).getClientTransferable();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2945,18 +2946,18 @@ public final class AmficomImpl implements AMFICOMOperations {
 				  clientAnalyses.add((new Analysis(ids[i])).getClientTransferable());
 			clientAnalysisSeq.value = (ClientAnalysis_Transferable[]) (clientAnalyses.toArray(new ClientAnalysis_Transferable[clientAnalyses.size()]));
 			return Constants.ERROR_NO_ERROR;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
 	public ClientAnalysis_Transferable getAnalysisByTest(AccessIdentity_Transferable accessIdentity, String test_id) throws AMFICOMRemoteException {
 		try {
 			return Analysis.retrieveAnalysis(test_id).getClientTransferable();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2964,9 +2965,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 		try {
 			ClientAnalysis_Transferable analysis_t = Analysis.retrieveAnalysis(test_id).getClientTransferable();
 			return new ResourceDescriptor_Transferable(analysis_t.id, analysis_t.modified);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2975,18 +2976,18 @@ public final class AmficomImpl implements AMFICOMOperations {
 			return (new Evaluation(evaluation_t)).getId();
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
 	public ClientEvaluation_Transferable getEvaluationById(AccessIdentity_Transferable accessIdentity, String id) throws AMFICOMRemoteException {
 		try {
 			return (new Evaluation(id)).getClientTransferable();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -2997,18 +2998,18 @@ public final class AmficomImpl implements AMFICOMOperations {
 				clientEvaluations.add((new Evaluation(ids[i])).getClientTransferable());
 			clientEvaluationSeq.value = (ClientEvaluation_Transferable[]) (clientEvaluations.toArray(new ClientEvaluation_Transferable[clientEvaluations.size()]));
 			return Constants.ERROR_NO_ERROR;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
 	public ClientEvaluation_Transferable getEvaluationByTest(AccessIdentity_Transferable accessIdentity, String test_id) throws AMFICOMRemoteException {
 		try {
 			return Evaluation.retrieveEvaluation(test_id).getClientTransferable();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -3016,18 +3017,18 @@ public final class AmficomImpl implements AMFICOMOperations {
 		try {
 			ClientEvaluation_Transferable evaluation_t = Evaluation.retrieveEvaluation(test_id).getClientTransferable();
 			return new ResourceDescriptor_Transferable(evaluation_t.id, evaluation_t.modified);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
 	public ClientModeling_Transferable getModelingById(AccessIdentity_Transferable accessIdentity, String id) throws AMFICOMRemoteException {
 		try {
 			return (new Modeling(id)).getClientTransferable();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -3038,9 +3039,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 				clientModelings.add((new Modeling(ids[i])).getClientTransferable());
 			clientModelingSeq.value = (ClientModeling_Transferable[]) (clientModelings.toArray(new ClientModeling_Transferable[clientModelings.size()]));
 			return Constants.ERROR_NO_ERROR;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -3057,36 +3058,36 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
 	public void attachTestSetupToME(AccessIdentity_Transferable accessIdentity, String test_setup_id, String monitored_element_id) throws AMFICOMRemoteException {
 		try {
 			(new TestSetup(test_setup_id)).attachToMonitoredElement(monitored_element_id);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
 	public void detachTestSetupFromME(AccessIdentity_Transferable accessIdentity, String test_setup_id, String monitored_element_id) throws AMFICOMRemoteException {
 		try {
 			(new TestSetup(test_setup_id)).detachFromMonitoredElement(monitored_element_id);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
 	public TestSetup_Transferable getTestSetup(AccessIdentity_Transferable accessIdentity, String id) throws AMFICOMRemoteException {
 		try {
 			return (new TestSetup(id)).getTransferable();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -3097,9 +3098,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			for (int i = 0; i < ts.length; i++)
 				test_setups_t[i] = ts[i].getTransferable();
 			return test_setups_t;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -3110,9 +3111,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			for (int i = 0; i < ts.length; i++)
 				test_setups_t[i] = ts[i].getTransferable();
 			return test_setups_t;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -3123,9 +3124,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			for (int i = 0; i < ts.length; i++)
 				test_setup_ids[i] = ts[i].getId();
 			return test_setup_ids;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -3136,9 +3137,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			for (int i = 0; i < ts.length; i++)
 				test_setup_ids[i] = ts[i].getId();
 			return test_setup_ids;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -3149,9 +3150,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			for (int i = 0; i < ts.length; i++)
 				test_setups_t[i] = ts[i].getTransferable();
 			return test_setups_t;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -3168,27 +3169,27 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
 	public void attachTestArgumentSetToME(AccessIdentity_Transferable accessIdentity, String arg_set_id, String monitored_element_id) throws AMFICOMRemoteException {
 		try {
 			(new TestArgumentSet(arg_set_id)).attachToMonitoredElement(monitored_element_id);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
 	public ClientTestArgumentSet_Transferable getTestArgumentSet(AccessIdentity_Transferable accessIdentity, String id) throws AMFICOMRemoteException {
 		try {
 			return (new TestArgumentSet(id)).getTransferable();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -3199,9 +3200,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			for (int i = 0; i < css.length; i++)
 				arg_sets_t[i] = css[i].getTransferable();
 			return arg_sets_t;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -3218,27 +3219,27 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
 	public void attachCriteriaSetToME(AccessIdentity_Transferable accessIdentity, String criteria_set_id, String monitored_element_id) throws AMFICOMRemoteException {
 		try {
 			(new CriteriaSet(criteria_set_id)).attachToMonitoredElement(monitored_element_id);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
 	public ClientCriteriaSet_Transferable getCriteriaSet(AccessIdentity_Transferable accessIdentity, String id) throws AMFICOMRemoteException {
 		try {
 			return (new CriteriaSet(id)).getTransferable();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -3249,9 +3250,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			for (int i = 0; i < css.length; i++)
 				criteria_sets_t[i] = css[i].getTransferable();
 			return criteria_sets_t;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -3262,9 +3263,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			for (int i = 0; i < css.length; i++)
 				criteria_sets_t[i] = css[i].getTransferable();
 			return criteria_sets_t;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -3281,27 +3282,27 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
 	public void attachThresholdSetToME(AccessIdentity_Transferable accessIdentity, String th_set_id, String monitored_element_id) throws AMFICOMRemoteException {
 		try {
 			  (new ThresholdSet(th_set_id)).attachToMonitoredElement(monitored_element_id);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 	
 	public ClientThresholdSet_Transferable getThresholdSet(AccessIdentity_Transferable accessIdentity, String id) throws AMFICOMRemoteException {
 		try {
 			return (new ThresholdSet(id)).getTransferable();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -3312,9 +3313,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			for (int i = 0; i < css.length; i++)
 				th_sets_t[i] = css[i].getTransferable();
 			return th_sets_t;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -3325,9 +3326,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			for (int i = 0; i < css.length; i++)
 				th_sets_t[i] = css[i].getTransferable();
 			return th_sets_t;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -3344,27 +3345,27 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
 	public void attachEtalonToME(AccessIdentity_Transferable accessIdentity, String e_id, String monitored_element_id) throws AMFICOMRemoteException {
 		try {
 			(new Etalon(e_id)).attachToMonitoredElement(monitored_element_id);
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
 	public ClientEtalon_Transferable getEtalon(AccessIdentity_Transferable accessIdentity, String id) throws AMFICOMRemoteException {
 		try {
 			return (new Etalon(id)).getClientTransferable();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -3375,9 +3376,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			for (int i = 0; i < es.length; i++)
 				es_t[i] = es[i].getClientTransferable();
 			return es_t;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -3396,9 +3397,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			return es[index].getClientTransferable();
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -3416,9 +3417,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -3435,9 +3436,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -3454,9 +3455,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -3474,9 +3475,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -3493,9 +3494,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -3512,9 +3513,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -3532,9 +3533,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -3551,9 +3552,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -3572,9 +3573,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 			}
 		} catch (AMFICOMRemoteException are) {
 			throw are;
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, t.toString());
 		}
 	}
 
@@ -3598,9 +3599,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 		} catch (NullPointerException npe) {
 			npe.printStackTrace();
 			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, npe.toString());
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_UPDATING, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_UPDATING, t.toString());
 		}
 	}
 
@@ -3620,9 +3621,9 @@ public final class AmficomImpl implements AMFICOMOperations {
 		} catch (NullPointerException npe) {
 			npe.printStackTrace();
 			throw new AMFICOMRemoteException(Constants.ERROR_RISD_ERROR, npe.toString());
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new AMFICOMRemoteException(Constants.ERROR_UPDATING, e.toString());
+		} catch (Throwable t) {
+			t.printStackTrace();
+			throw new AMFICOMRemoteException(Constants.ERROR_UPDATING, t.toString());
 		}
 	}
 }
