@@ -1,5 +1,5 @@
 /*
- * $Id: XMLMapObjectLoader.java,v 1.7 2005/04/01 11:11:05 bob Exp $
+ * $Id: XMLMapObjectLoader.java,v 1.8 2005/04/01 11:27:33 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.map;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -23,8 +24,8 @@ import com.syrus.AMFICOM.general.StorableObjectXML;
 import com.syrus.AMFICOM.general.StorableObjectXMLDriver;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/01 11:11:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/04/01 11:27:33 $
+ * @author $Author: bass $
  * @module configuration_v1
  */
 
@@ -51,8 +52,7 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 	}
 
 	public Set refresh(Set storableObjects) throws ApplicationException {
-		// TODO Auto-generated method stub
-		return null;
+		return Collections.EMPTY_SET;
 	}
 
 	private StorableObject loadStorableObject(Identifier id) throws ApplicationException {
