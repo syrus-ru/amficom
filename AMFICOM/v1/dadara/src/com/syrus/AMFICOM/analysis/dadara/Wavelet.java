@@ -1,5 +1,5 @@
 /*-
- * $Id: Wavelet.java,v 1.1 2005/03/25 17:31:18 saa Exp $
+ * $Id: Wavelet.java,v 1.2 2005/03/28 08:55:11 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,11 +13,19 @@ package com.syrus.AMFICOM.analysis.dadara;
  * которые нужны в GUI анализа. ¬веден дл€ того, чтобы можно было заменить
  * медленный Java-код на native-вызов.
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/03/25 17:31:18 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/28 08:55:11 $
  * @module
  */
 public class Wavelet
 {
+	// native declarations
+
+	private static native double[] nMakeTransform(int type, int scale, double[] input, int iFrom, int iTo, double norm);
+	private static native double nGetNormStep(int type, int scale);
+	private static native double nGetNormMx(int type, int scale);
+
+	// export declarations
+
 	public static final int TYPE_SINX = 0;
 	public static final int TYPE_ABSXSINX = 1;
 	public static double getNormStep(int type, int scale)
@@ -26,12 +34,20 @@ public class Wavelet
 	}
 	public static double getNormMx(int type, int scale)
 	{
-		return getWLetNormMx(scale, type);
+		//return getWLetNormMx(scale, type);
+		return nGetNormMx(type, scale);
 	}
 	public static double[] makeTransform(int type, int scale, double[] input, int iFrom, int iTo, double norm)
 	{
-		return waveletTransform(input, scale, norm, type, iFrom, iTo + 1);
+		return nMakeTransform(type, scale, input, iFrom, iTo, norm);
+		//return waveletTransform(input, scale, norm, type, iFrom, iTo + 1);
 	}
+
+	private Wavelet()
+	{ // empty
+	}
+
+	// the code that should be removed
 
 	private static double[] waveletTransform(double[] y, int freq, double norma, int wLet, int start, int end)
 	{

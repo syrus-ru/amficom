@@ -4,6 +4,7 @@
 #include "../common/com_syrus_AMFICOM_analysis_dadara_ModelFunction.h"
 #include "../common/com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent.h"
 #include "../common/com_syrus_AMFICOM_analysis_CoreAnalysisManager.h"
+#include "../common/com_syrus_AMFICOM_analysis_dadara_Wavelet.h"
 
 #include "Java-bridge.h"
 
@@ -28,6 +29,9 @@
 
 #include "../thresh/thresh.h"
 #include "../thresh/makeThresh.h"
+
+#include "../common/MathRef.h"
+#include "../wavelet/wavelet.h"
 
 inline int imax(int a, int b) { return a > b ? a : b; }
 inline int imin(int a, int b) { return a < b ? a : b; }
@@ -883,4 +887,90 @@ JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_nExte
 	release_arr(env, jdayCover, yCover);
 
 	prf_e();
+}
+
+static Wavelet *createWavelet(int type)
+{
+	switch(type)
+	{
+	case com_syrus_AMFICOM_analysis_dadara_Wavelet_TYPE_SINX:
+		return new SineWavelet();
+	case com_syrus_AMFICOM_analysis_dadara_Wavelet_TYPE_ABSXSINX:
+		return new UserWavelet(2, wLet_SINXABSX);
+	default:
+		assert(0);
+		return new HaarWavelet(); // as default, use HaarWavelet
+	}
+}
+
+/*
+ * Class:     com_syrus_AMFICOM_analysis_dadara_Wavelet
+ * Method:    nMakeTransform
+ * Signature: (II[DIID)[D
+ */
+JNIEXPORT jdoubleArray JNICALL Java_com_syrus_AMFICOM_analysis_dadara_Wavelet_nMakeTransform
+  (JNIEnv *env, jclass cls, jint type, jint scale, jdoubleArray input, jint iFrom, jint iTo, jdouble norm)
+{
+	prf_b("nMakeTransform");
+
+	int len = iTo - iFrom + 1;
+
+	double *yIn;
+	int inSize = get_arr(env, input, &yIn);
+
+	jdoubleArray output = (env)->NewDoubleArray(len);
+	assert(output);
+	double *wOut;
+	get_arr(env, output, &wOut);
+
+	Wavelet *wavelet = createWavelet(type);
+	wavelet->transform(scale, yIn, inSize, iFrom, iTo, wOut);
+	delete wavelet;
+
+	int i;
+	double rnorm = 1.0 / norm;
+	for (i = 0; i < len; i++)
+		wOut[i] *= rnorm;
+
+	release_arr(env, input, yIn);
+	release_arr(env, output, wOut);
+
+	prf_e();
+	return output;
+}
+
+/*
+ * Class:     com_syrus_AMFICOM_analysis_dadara_Wavelet
+ * Method:    nGetNormStep
+ * Signature: (II)D
+ */
+JNIEXPORT jdouble JNICALL Java_com_syrus_AMFICOM_analysis_dadara_Wavelet_nGetNormStep
+  (JNIEnv *env, jclass cls, jint type, jint scale)
+{
+	prf_b("nGetNormStep");
+	Wavelet *wavelet = createWavelet(type);
+	double ret = wavelet->normStep(scale);
+	delete wavelet;
+	prf_e();
+	fprintf(stderr, "nGetNormStep: type %d scale %d ret %g\n", (int )type, (int )scale, ret);
+	fflush(stderr);
+	return ret;
+}
+
+/*
+ * Class:     com_syrus_AMFICOM_analysis_dadara_Wavelet
+ * Method:    nGetNormMx
+ * Signature: (II)D
+ */
+JNIEXPORT jdouble JNICALL Java_com_syrus_AMFICOM_analysis_dadara_Wavelet_nGetNormMx
+  (JNIEnv *env, jclass cls, jint type, jint scale)
+{
+	prf_b("nGetNormMx");
+	Wavelet *wavelet = createWavelet(type);
+	double ret = wavelet->normMx(scale);
+	delete wavelet;
+	prf_e();
+	fprintf(stderr, "nGetNormMx: type %d scale %d ret %g\n", (int )type, (int )scale, ret);
+	fflush(stderr);
+	return ret;
 }
