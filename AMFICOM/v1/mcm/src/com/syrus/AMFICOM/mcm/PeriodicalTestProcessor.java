@@ -1,5 +1,5 @@
 /*
- * $Id: PeriodicalTestProcessor.java,v 1.17 2004/08/24 10:06:59 bob Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.18 2004/08/24 14:54:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/08/24 10:06:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.18 $, $Date: 2004/08/24 14:54:28 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -67,10 +67,13 @@ public class PeriodicalTestProcessor extends TestProcessor {
 				long start = System.currentTimeMillis();
 				if (start <= this.endTime) {
 					List times = this.temporalPattern.getTimes(start, Math.min(start + FRAME, this.endTime));
+<<<<<<< PeriodicalTestProcessor.java
+=======
 					System.out.println("From " + (new Date(start)) + " to " 
 									   + (new Date(Math.min(start + FRAME, this.endTime))));
 					for (Iterator it = times.iterator(); it.hasNext();)
 						System.out.println("time: " + it.next());
+>>>>>>> 1.17
 					this.timeStampsList.addAll(times);
 					if (! this.timeStampsList.isEmpty())
 						timeStamp = (Date)this.timeStampsList.remove(0);
@@ -113,7 +116,7 @@ public class PeriodicalTestProcessor extends TestProcessor {
 								super.sleepCauseOfFall();
 							}
 						}	//catch
-	
+
 						if (measurementId != null) {
 							try {
 								measurement = super.test.createMeasurement(measurementId,
@@ -130,7 +133,7 @@ public class PeriodicalTestProcessor extends TestProcessor {
 								Log.errorException(ioee);
 							}
 						}	//if (measurementId != null)
-	
+
 						if (measurement != null) {
 							super.transceiver.addMeasurement(measurement, this);
 							super.numberOfScheduledMeasurements ++;
@@ -142,9 +145,7 @@ public class PeriodicalTestProcessor extends TestProcessor {
 			}	//if (! super.lastMeasurementAcquisition)
 
 			super.processMeasurementResult();
-			System.out.println("numberOfReceivedMResults: " + super.numberOfReceivedMResults 
-							   + ", numberOfScheduledMeasurements: " + super.numberOfScheduledMeasurements 
-							   + ", lastMeasurementAcquisition: " + this.lastMeasurementAcquisition);
+			Log.debugMessage("numberOfReceivedMResults: " + super.numberOfReceivedMResults + ", numberOfScheduledMeasurements: " + super.numberOfScheduledMeasurements + ", lastMeasurementAcquisition: " + super.lastMeasurementAcquisition, Log.DEBUGLEVEL07);
 			if (super.numberOfReceivedMResults == super.numberOfScheduledMeasurements && super.lastMeasurementAcquisition)
 				super.complete();
 
