@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.19 2005/03/10 15:23:06 arseniy Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.20 2005/03/22 18:11:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,369 +9,80 @@
 package com.syrus.AMFICOM.mcm;
 
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.Set;
 
+import com.syrus.AMFICOM.configuration.CableLinkType;
+import com.syrus.AMFICOM.configuration.CableThread;
+import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
 import com.syrus.AMFICOM.configuration.DatabaseConfigurationObjectLoader;
 import com.syrus.AMFICOM.configuration.Equipment;
-import com.syrus.AMFICOM.configuration.EquipmentDatabase;
 import com.syrus.AMFICOM.configuration.EquipmentType;
-import com.syrus.AMFICOM.configuration.EquipmentTypeDatabase;
 import com.syrus.AMFICOM.configuration.KIS;
-import com.syrus.AMFICOM.configuration.KISDatabase;
 import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
-import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
-import com.syrus.AMFICOM.configuration.MeasurementPortTypeDatabase;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.AMFICOM.configuration.MonitoredElementDatabase;
 import com.syrus.AMFICOM.configuration.Port;
-import com.syrus.AMFICOM.configuration.PortDatabase;
 import com.syrus.AMFICOM.configuration.PortType;
-import com.syrus.AMFICOM.configuration.PortTypeDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
-import com.syrus.AMFICOM.configuration.TransmissionPathDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathType;
+import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
+import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
+import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
+import com.syrus.AMFICOM.configuration.corba.LinkType_Transferable;
+import com.syrus.AMFICOM.configuration.corba.Link_Transferable;
+import com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable;
+import com.syrus.AMFICOM.configuration.corba.MeasurementPort_Transferable;
+import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
+import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
+import com.syrus.AMFICOM.configuration.corba.Port_Transferable;
+import com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable;
+import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/03/10 15:23:06 $
+ * @version $Revision: 1.20 $, $Date: 2005/03/22 18:11:24 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
 
 final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoader {
 
-	public EquipmentType loadEquipmentType(Identifier id) throws RetrieveObjectException, CommunicationException {
-		EquipmentType equipmentType = null;
+	public EquipmentType loadEquipmentType(Identifier id)
+			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
 		try {
-			equipmentType = new EquipmentType(id);
+			return new EquipmentType(id);
 		}
 		catch (ObjectNotFoundException onfe) {
-			Log.debugMessage("Equipment type '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-			try {
-				equipmentType = new EquipmentType(MeasurementControlModule.mServerRef.transmitEquipmentType((Identifier_Transferable) id.getTransferable()));
-				ConfigurationDatabaseContext.getEquipmentTypeDatabase().update(equipmentType, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (org.omg.CORBA.SystemException se) {
-				Log.errorException(se);
-				MeasurementControlModule.activateMServerReference();
-				throw new CommunicationException("System exception -- " + se.getMessage(), se);
-			}
-			catch (AMFICOMRemoteException are) {
-				String mesg = null;
-				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					mesg = "Equipment type '" + id + "' not found on server database";
-				else
-					mesg = "Cannot retrieve equipment type '" + id + "' from server database -- " + are.message;
-				Log.errorMessage(mesg);
-				throw new RetrieveObjectException(mesg);
-			}
-			catch (ApplicationException ae) {
-				throw new RetrieveObjectException(ae);
-			}
-		}
-		return equipmentType;
-	}
+			Log.debugMessage("EquipmentType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
+			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
+			if (mServerRef != null) {
 
-	public PortType loadPortType(Identifier id) throws RetrieveObjectException, CommunicationException {
-		PortType portType = null;
-		try {
-			portType = new PortType(id);
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.debugMessage("Port type '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-			try {
-				portType = new PortType(MeasurementControlModule.mServerRef.transmitPortType((Identifier_Transferable) id.getTransferable()));
-				ConfigurationDatabaseContext.getPortTypeDatabase().update(portType, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (org.omg.CORBA.SystemException se) {
-				Log.errorException(se);
-				MeasurementControlModule.activateMServerReference();
-				throw new CommunicationException("System exception -- " + se.getMessage(), se);
-			}
-			catch (AMFICOMRemoteException are) {
-				String mesg = null;
-				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					mesg = "Port type '" + id + "' not found on server database";
-				else
-					mesg = "Cannot retrieve port type '" + id + "' from server database -- " + are.message;
-				Log.errorMessage(mesg);
-				throw new RetrieveObjectException(mesg);
-			}
-			catch (ApplicationException ae) {
-				throw new RetrieveObjectException(ae);
-			}
-		}
-		return portType;
-	}
-
-	public MeasurementPortType loadMeasurementPortType(Identifier id) throws RetrieveObjectException, CommunicationException {
-		MeasurementPortType measurementPortType = null;
-		try {
-			measurementPortType = new MeasurementPortType(id);
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.debugMessage("Measurement port type '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-			try {
-				measurementPortType = new MeasurementPortType(MeasurementControlModule.mServerRef.transmitMeasurementPortType((Identifier_Transferable) id.getTransferable()));
-				ConfigurationDatabaseContext.getMeasurementPortTypeDatabase().update(measurementPortType, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (org.omg.CORBA.SystemException se) {
-				Log.errorException(se);
-				MeasurementControlModule.activateMServerReference();
-				throw new CommunicationException("System exception -- " + se.getMessage(), se);
-			}
-			catch (AMFICOMRemoteException are) {
-				String mesg = null;
-				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					mesg = "Measurement port type '" + id + "' not found on server database";
-				else
-					mesg = "Cannot retrieve measurement port type '" + id + "' from server database -- " + are.message;
-				Log.errorMessage(mesg);
-				throw new RetrieveObjectException(mesg);
-			}
-			catch (ApplicationException ae) {
-				throw new RetrieveObjectException(ae);
-			}
-		}
-		return measurementPortType;
-	}
-
-	public Equipment loadEquipment(Identifier id) throws RetrieveObjectException, CommunicationException {
-		Equipment equipment = null;
-		try {
-			equipment = new Equipment(id);
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.debugMessage("Equipment '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-			try {
-				equipment = new Equipment(MeasurementControlModule.mServerRef.transmitEquipment((Identifier_Transferable) id.getTransferable()));
-				ConfigurationDatabaseContext.getEquipmentDatabase().update(equipment, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (org.omg.CORBA.SystemException se) {
-				Log.errorException(se);
-				MeasurementControlModule.activateMServerReference();
-				throw new CommunicationException("System exception -- " + se.getMessage(), se);
-			}
-			catch (AMFICOMRemoteException are) {
-				String mesg = null;
-				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					mesg = "Equipment '" + id + "' not found on server database";
-				else
-					mesg = "Cannot retrieve equipment '" + id + "' from server database -- " + are.message;
-				Log.errorMessage(mesg);
-				throw new RetrieveObjectException(mesg);
-			}
-			catch (ApplicationException ae) {
-				throw new RetrieveObjectException(ae);
-			}
-		}
-		return equipment;
-	}
-
-	public Port loadPort(Identifier id) throws RetrieveObjectException, CommunicationException {
-		Port port = null;
-		try {
-			port = new Port(id);
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.debugMessage("Port '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-			try {
-				port = new Port(MeasurementControlModule.mServerRef.transmitPort((Identifier_Transferable) id.getTransferable()));
-				ConfigurationDatabaseContext.getPortDatabase().update(port, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (org.omg.CORBA.SystemException se) {
-				Log.errorException(se);
-				MeasurementControlModule.activateMServerReference();
-				throw new CommunicationException("System exception -- " + se.getMessage(), se);
-			}
-			catch (AMFICOMRemoteException are) {
-				String mesg = null;
-				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					mesg = "Port '" + id + "' not found on server database";
-				else
-					mesg = "Cannot retrieve port '" + id + "' from server database -- " + are.message;
-				Log.errorMessage(mesg);
-				throw new RetrieveObjectException(mesg);
-			}
-			catch (ApplicationException ae) {
-				throw new RetrieveObjectException(ae);
-			}
-		}
-		return port;
-	}
-
-	public TransmissionPath loadTransmissionPath(Identifier id) throws RetrieveObjectException, CommunicationException {
-		TransmissionPath transmissionPath = null;
-		try {
-			transmissionPath = new TransmissionPath(id);
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.debugMessage("Transmission path '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-			try {
-				transmissionPath = new TransmissionPath(MeasurementControlModule.mServerRef.transmitTransmissionPath((Identifier_Transferable) id.getTransferable()));
-				ConfigurationDatabaseContext.getTransmissionPathDatabase().update(transmissionPath, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (org.omg.CORBA.SystemException se) {
-				Log.errorException(se);
-				MeasurementControlModule.activateMServerReference();
-				throw new CommunicationException("System exception -- " + se.getMessage(), se);
-			}
-			catch (AMFICOMRemoteException are) {
-				String mesg = null;
-				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					mesg = "Transmission path '" + id + "' not found on server database";
-				else
-					mesg = "Cannot retrieve transmission path '" + id + "' from server database -- " + are.message;
-				Log.errorMessage(mesg);
-				throw new RetrieveObjectException(mesg);
-			}
-			catch (ApplicationException ae) {
-				throw new RetrieveObjectException(ae);
-			}
-		}
-		return transmissionPath;
-	}
-
-	public KIS loadKIS(Identifier id) throws RetrieveObjectException, CommunicationException {
-		KIS kis = null;
-		try {
-			kis = new KIS(id);
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.debugMessage("KIS '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-			try {
-				kis = new KIS(MeasurementControlModule.mServerRef.transmitKIS((Identifier_Transferable) id.getTransferable()));
-				ConfigurationDatabaseContext.getKISDatabase().update(kis, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (org.omg.CORBA.SystemException se) {
-				Log.errorException(se);
-				MeasurementControlModule.activateMServerReference();
-				throw new CommunicationException("System exception -- " + se.getMessage(), se);
-			}
-			catch (AMFICOMRemoteException are) {
-				String mesg = null;
-				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					mesg = "KIS '" + id + "' not found on server database";
-				else
-					mesg = "Cannot retrieve KIS '" + id + "' from server database -- " + are.message;
-				Log.errorMessage(mesg);
-				throw new RetrieveObjectException(mesg);
-			}
-			catch (ApplicationException ae) {
-				throw new RetrieveObjectException(ae);
-			}
-		}
-		return kis;
-	}
-
-	public MeasurementPort loadMeasurementPort(Identifier id) throws RetrieveObjectException, CommunicationException {
-		MeasurementPort measurementPort = null;
-		try {
-			measurementPort = new MeasurementPort(id);
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.debugMessage("Measurement port '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-			try {
-				measurementPort = new MeasurementPort(MeasurementControlModule.mServerRef.transmitMeasurementPort((Identifier_Transferable) id.getTransferable()));
-				ConfigurationDatabaseContext.getMeasurementPortDatabase().update(measurementPort, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (org.omg.CORBA.SystemException se) {
-				Log.errorException(se);
-				MeasurementControlModule.activateMServerReference();
-				throw new CommunicationException("System exception -- " + se.getMessage(), se);
-			}
-			catch (AMFICOMRemoteException are) {
-				String mesg = null;
-				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					mesg = "Measurement port '" + id + "' not found on server database";
-				else
-					mesg = "Cannot retrieve measurement port '" + id + "' from server database -- " + are.message;
-				Log.errorMessage(mesg);
-				throw new RetrieveObjectException(mesg);
-			}
-			catch (ApplicationException ae) {
-				throw new RetrieveObjectException(ae);
-			}
-		}
-		return measurementPort;
-	}
-
-	public MonitoredElement loadMonitoredElement(Identifier id) throws RetrieveObjectException, CommunicationException {
-		MonitoredElement monitoredElement = null;
-		try {
-			monitoredElement = new MonitoredElement(id);
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.debugMessage("Monitored element '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-			try {
-				monitoredElement = new MonitoredElement(MeasurementControlModule.mServerRef.transmitMonitoredElement((Identifier_Transferable) id.getTransferable()));
-				ConfigurationDatabaseContext.getMonitoredElementDatabase().update(monitoredElement, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (org.omg.CORBA.SystemException se) {
-				Log.errorException(se);
-				MeasurementControlModule.activateMServerReference();
-				throw new CommunicationException("System exception -- " + se.getMessage(), se);
-			}
-			catch (AMFICOMRemoteException are) {
-				String mesg = null;
-				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					mesg = "Monitored element '" + id + "' not found on server database";
-				else
-					mesg = "Cannot retrieve monitored element '" + id + "' from server database -- " + are.message;
-				Log.errorMessage(mesg);
-				throw new RetrieveObjectException(mesg);
-			}
-			catch (ApplicationException ae) {
-				throw new RetrieveObjectException(ae);
-			}
-		}
-		return monitoredElement;
-	}	
-
-
-
-
-
-	public Collection loadEquipments(Collection ids) throws DatabaseException, CommunicationException {
-		EquipmentDatabase database = (EquipmentDatabase)ConfigurationDatabaseContext.getEquipmentDatabase();
-		Collection collection;
-		Collection copyOfList;
-		Collection loadedObjects = new LinkedList();
-		Equipment equipment;
-		try {
-			collection = database.retrieveByIdsByCondition(ids, null);
-			copyOfList = new LinkedList(collection);
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				if(ids.contains(id))
-					it.remove();
-			}
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				Log.debugMessage("Equipment '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 				try {
-					equipment = new Equipment(MeasurementControlModule.mServerRef.transmitEquipment((Identifier_Transferable)id.getTransferable()));
-					collection.add(equipment);
-					loadedObjects.add(equipment);
+					EquipmentType_Transferable transferable = mServerRef.transmitEquipmentType((Identifier_Transferable) id.getTransferable());
+					EquipmentType equipmentType = new EquipmentType(transferable);
+
+					try {
+						ConfigurationDatabaseContext.getEquipmentTypeDatabase().insert(equipmentType);
+					}
+					catch (ApplicationException ae) {
+						Log.errorException(ae);
+					}
+
+					return equipmentType;
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -379,51 +90,40 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 				catch (AMFICOMRemoteException are) {
-					String mesg = null;
-					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						mesg = "Equipment '" + id + "' not found on server database";
-					else
-						mesg = "Cannot retrieve equipment '" + id + "' from server database -- " + are.message;
-					Log.errorMessage(mesg);
-					throw new RetrieveObjectException(mesg);
+					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+						throw new ObjectNotFoundException("EquipmentType '" + id + "' not found in MServer database");
+					throw new RetrieveObjectException("Cannot retrieve EquipmentType '" + id + "' from MServer database -- " + are.message);
 				}
 			}
-			try {
-				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (VersionCollisionException vce) {
-				//This never be caught
-				Log.errorException(vce);
-			}
+			String mesg = "Remote reference for server is null; will try to reactivate it";
+			Log.errorMessage(mesg);
+			MeasurementControlModule.activateMServerReference();
+			throw new CommunicationException(mesg);
 		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("MCMConfigurationObjectLoader.loadEquipments | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MCMConfigurationObjectLoader.loadEquipments | Illegal Storable Object: " + e.getMessage());
-		}
-		return collection;
 	}
 
-	public Collection loadEquipmentTypes(Collection ids) throws DatabaseException, CommunicationException {
-		EquipmentTypeDatabase database = (EquipmentTypeDatabase)ConfigurationDatabaseContext.getEquipmentTypeDatabase();
-		Collection collection;
-		Collection copyOfList;
-		Collection loadedObjects = new LinkedList();
-		EquipmentType equipmentType;
+	public TransmissionPathType loadTransmissionPathType(Identifier id)
+			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
 		try {
-			collection = database.retrieveByIdsByCondition(ids, null);
-			copyOfList = new LinkedList(collection);
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				if(ids.contains(id))
-					it.remove();
-			}
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				Log.debugMessage("Equipment type '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
+			return new TransmissionPathType(id);
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.debugMessage("TransmissionPathType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
+			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
+			if (mServerRef != null) {
+
 				try {
-					equipmentType = new EquipmentType(MeasurementControlModule.mServerRef.transmitEquipmentType((Identifier_Transferable)id.getTransferable()));
-					collection.add(equipmentType);
-					loadedObjects.add(equipmentType);
+					TransmissionPathType_Transferable transferable = mServerRef.transmitTransmissionPathType((Identifier_Transferable) id.getTransferable());
+					TransmissionPathType transmissionPathType = new TransmissionPathType(transferable);
+
+					try {
+						ConfigurationDatabaseContext.getTransmissionPathTypeDatabase().insert(transmissionPathType);
+					}
+					catch (ApplicationException ae) {
+						Log.errorException(ae);
+					}
+
+					return transmissionPathType;
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -431,103 +131,40 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 				catch (AMFICOMRemoteException are) {
-					String mesg = null;
-					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						mesg = "Equipment type '" + id + "' not found on server database";
-					else
-						mesg = "Cannot retrieve equipment type '" + id + "' from server database -- " + are.message;
-					Log.errorMessage(mesg);
-					throw new RetrieveObjectException(mesg);
+					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+						throw new ObjectNotFoundException("TransmissionPathType '" + id + "' not found in MServer database");
+					throw new RetrieveObjectException("Cannot retrieve TransmissionPathType '" + id + "' from MServer database -- " + are.message);
 				}
 			}
-			try {
-				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (VersionCollisionException vce) {
-				//This never be caught
-				Log.errorException(vce);
-			}
+			String mesg = "Remote reference for server is null; will try to reactivate it";
+			Log.errorMessage(mesg);
+			MeasurementControlModule.activateMServerReference();
+			throw new CommunicationException(mesg);
 		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("MCMConfigurationObjectLoader.loadEquipmentTypes | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MCMConfigurationObjectLoader.loadEquipmentTypes | Illegal Storable Object: " + e.getMessage());
-		}
-		return collection;
 	}
 
-	public Collection loadKISs(Collection ids) throws DatabaseException, CommunicationException {
-		KISDatabase database = (KISDatabase)ConfigurationDatabaseContext.getKISDatabase();
-		Collection collection;
-		Collection copyOfList;
-		Collection loadedObjects = new LinkedList();
-		KIS kis;
+	public LinkType loadLinkType(Identifier id)
+			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
 		try {
-			collection = database.retrieveByIdsByCondition(ids, null);
-			copyOfList = new LinkedList(collection);
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				if(ids.contains(id))
-					it.remove();
-			}
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				Log.debugMessage("KIS '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-				try {
-					kis = new KIS(MeasurementControlModule.mServerRef.transmitKIS((Identifier_Transferable)id.getTransferable()));
-					collection.add(kis);
-					loadedObjects.add(kis);
-				}
-				catch (org.omg.CORBA.SystemException se) {
-					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
-					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
-				catch (AMFICOMRemoteException are) {
-					String mesg = null;
-					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						mesg = "KIS '" + id + "' not found on server database";
-					else
-						mesg = "Cannot retrieve KIS '" + id + "' from server database -- " + are.message;
-					Log.errorMessage(mesg);
-					throw new RetrieveObjectException(mesg);
-				}
-			}
-			try {
-				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (VersionCollisionException vce) {
-				//This never be caught
-				Log.errorException(vce);
-			}
+			return new LinkType(id);
 		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("MCMConfigurationObjectLoader.loadKISs | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MCMConfigurationObjectLoader.loadKISs | Illegal Storable Object: " + e.getMessage());
-		}
-		return collection;
-	}	
+		catch (ObjectNotFoundException onfe) {
+			Log.debugMessage("LinkType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
+			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
+			if (mServerRef != null) {
 
-	public Collection loadMeasurementPorts(Collection ids) throws DatabaseException, CommunicationException {
-		MeasurementPortDatabase database = (MeasurementPortDatabase)ConfigurationDatabaseContext.getMeasurementPortDatabase();
-		Collection collection;
-		Collection copyOfList;
-		Collection loadedObjects = new LinkedList();
-		MeasurementPort measurementPort;
-		try {
-			collection = database.retrieveByIdsByCondition(ids, null);
-			copyOfList = new LinkedList(collection);
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				if(ids.contains(id))
-					it.remove();
-			}
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				Log.debugMessage("Measurement port '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
 				try {
-					measurementPort = new MeasurementPort(MeasurementControlModule.mServerRef.transmitMeasurementPort((Identifier_Transferable)id.getTransferable()));
-					collection.add(measurementPort);
-					loadedObjects.add(measurementPort);
+					LinkType_Transferable transferable = mServerRef.transmitLinkType((Identifier_Transferable) id.getTransferable());
+					LinkType linkType = new LinkType(transferable);
+
+					try {
+						ConfigurationDatabaseContext.getLinkTypeDatabase().insert(linkType);
+					}
+					catch (ApplicationException ae) {
+						Log.errorException(ae);
+					}
+
+					return linkType;
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -535,51 +172,40 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 				catch (AMFICOMRemoteException are) {
-					String mesg = null;
-					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						mesg = "Measurement port '" + id + "' not found on server database";
-					else
-						mesg = "Cannot retrieve measurement port '" + id + "' from server database -- " + are.message;
-					Log.errorMessage(mesg);
-					throw new RetrieveObjectException(mesg);
+					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+						throw new ObjectNotFoundException("LinkType '" + id + "' not found in MServer database");
+					throw new RetrieveObjectException("Cannot retrieve LinkType '" + id + "' from MServer database -- " + are.message);
 				}
 			}
-			try {
-				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (VersionCollisionException vce) {
-				//This never be caught
-				Log.errorException(vce);
-			}
+			String mesg = "Remote reference for server is null; will try to reactivate it";
+			Log.errorMessage(mesg);
+			MeasurementControlModule.activateMServerReference();
+			throw new CommunicationException(mesg);
 		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("MCMConfigurationObjectLoader.loadMeasurementPorts | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MCMConfigurationObjectLoader.loadMeasurementPorts | Illegal Storable Object: " + e.getMessage());
-		}
-		return collection;
 	}
 
-	public Collection loadMeasurementPortTypes(Collection ids) throws DatabaseException, CommunicationException {
-		MeasurementPortTypeDatabase database = (MeasurementPortTypeDatabase)ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
-		Collection collection;
-		Collection copyOfList;
-		Collection loadedObjects = new LinkedList();
-		MeasurementPortType measurementPortType;
+	public PortType loadPortType(Identifier id)
+			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
 		try {
-			collection = database.retrieveByIdsByCondition(ids, null);
-			copyOfList = new LinkedList(collection);
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				if(ids.contains(id))
-					it.remove();
-			}
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				Log.debugMessage("Measurement port type '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
+			return new PortType(id);
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.debugMessage("PortType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
+			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
+			if (mServerRef != null) {
+
 				try {
-					measurementPortType = new MeasurementPortType(MeasurementControlModule.mServerRef.transmitMeasurementPortType((Identifier_Transferable)id.getTransferable()));
-					collection.add(measurementPortType);
-					loadedObjects.add(measurementPortType);					
+					PortType_Transferable transferable = mServerRef.transmitPortType((Identifier_Transferable) id.getTransferable());
+					PortType portType = new PortType(transferable);
+
+					try {
+						ConfigurationDatabaseContext.getPortTypeDatabase().insert(portType);
+					}
+					catch (ApplicationException ae) {
+						Log.errorException(ae);
+					}
+
+					return portType;
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -587,51 +213,40 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 				catch (AMFICOMRemoteException are) {
-					String mesg = null;
-					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						mesg = "Measurement port type '" + id + "' not found on server database";
-					else
-						mesg = "Cannot retrieve measurement port type '" + id + "' from server database -- " + are.message;
-					Log.errorMessage(mesg);
-					throw new RetrieveObjectException(mesg);
+					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+						throw new ObjectNotFoundException("PortType '" + id + "' not found in MServer database");
+					throw new RetrieveObjectException("Cannot retrieve PortType '" + id + "' from MServer database -- " + are.message);
 				}
 			}
-			try {
-				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (VersionCollisionException vce) {
-				//This never be caught
-				Log.errorException(vce);
-			}
+			String mesg = "Remote reference for server is null; will try to reactivate it";
+			Log.errorMessage(mesg);
+			MeasurementControlModule.activateMServerReference();
+			throw new CommunicationException(mesg);
 		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("MCMConfigurationObjectLoader.loadMeasurementPortTypes | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MCMConfigurationObjectLoader.loadMeasurementPortTypes | Illegal Storable Object: " + e.getMessage());
-		}
-		return collection;
 	}
 
-	public Collection loadMonitoredElements(Collection ids) throws DatabaseException, CommunicationException {
-		MonitoredElementDatabase database = (MonitoredElementDatabase)ConfigurationDatabaseContext.getMonitoredElementDatabase();
-		Collection list;
-		Collection copyOfList;
-		Collection loadedObjects = new LinkedList();
-		MonitoredElement monitoredElement;
+	public MeasurementPortType loadMeasurementPortType(Identifier id)
+			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
 		try {
-			list = database.retrieveByIdsByCondition(ids, null);
-			copyOfList = new LinkedList(list);
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				if(ids.contains(id))
-					it.remove();
-			}
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				Log.debugMessage("Monitored element '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
+			return new MeasurementPortType(id);
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.debugMessage("MeasurementPortType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
+			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
+			if (mServerRef != null) {
+
 				try {
-					monitoredElement = new MonitoredElement(MeasurementControlModule.mServerRef.transmitMonitoredElement((Identifier_Transferable)id.getTransferable()));
-					list.add(monitoredElement);
-					loadedObjects.add(monitoredElement);
+					MeasurementPortType_Transferable transferable = mServerRef.transmitMeasurementPortType((Identifier_Transferable) id.getTransferable());
+					MeasurementPortType measurementPortType = new MeasurementPortType(transferable);
+
+					try {
+						ConfigurationDatabaseContext.getMeasurementPortTypeDatabase().insert(measurementPortType);
+					}
+					catch (ApplicationException ae) {
+						Log.errorException(ae);
+					}
+
+					return measurementPortType;
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -639,50 +254,40 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 				catch (AMFICOMRemoteException are) {
-					String mesg = null;
-					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						mesg = "Monitored element '" + id + "' not found on server database";
-					else
-						mesg = "Cannot retrieve monitored element '" + id + "' from server database -- " + are.message;
-					Log.errorMessage(mesg);
-					throw new RetrieveObjectException(mesg);
+					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+						throw new ObjectNotFoundException("MeasurementPortType '" + id + "' not found in MServer database");
+					throw new RetrieveObjectException("Cannot retrieve MeasurementPortType '" + id + "' from MServer database -- " + are.message);
 				}
 			}
-			try {
-				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (VersionCollisionException vce) {
-				Log.errorException(vce);
-			}
+			String mesg = "Remote reference for server is null; will try to reactivate it";
+			Log.errorMessage(mesg);
+			MeasurementControlModule.activateMServerReference();
+			throw new CommunicationException(mesg);
 		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("MCMConfigurationObjectLoader.loadMonitoredElements | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MCMConfigurationObjectLoader.loadMonitoredElements | Illegal Storable Object: " + e.getMessage());
-		}
-		return list;
 	}
 
-	public Collection loadPorts(Collection ids) throws DatabaseException, CommunicationException {
-		PortDatabase database = (PortDatabase)ConfigurationDatabaseContext.getPortDatabase();
-		Collection collection;
-		Collection copyOfList;
-		Collection loadedObjects = new LinkedList();
-		Port port;
+	public Equipment loadEquipment(Identifier id)
+			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
 		try {
-			collection = database.retrieveByIdsByCondition(ids, null);
-			copyOfList = new LinkedList(collection);
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				if(ids.contains(id))
-					it.remove();
-			}
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				Log.debugMessage("Port '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
+			return new Equipment(id);
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.debugMessage("Equipment '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
+			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
+			if (mServerRef != null) {
+
 				try {
-					port = new Port(MeasurementControlModule.mServerRef.transmitPort((Identifier_Transferable)id.getTransferable()));
-					collection.add(port);
-					loadedObjects.add(port);
+					Equipment_Transferable transferable = mServerRef.transmitEquipment((Identifier_Transferable) id.getTransferable());
+					Equipment equipment = new Equipment(transferable);
+
+					try {
+						ConfigurationDatabaseContext.getEquipmentDatabase().insert(equipment);
+					}
+					catch (ApplicationException ae) {
+						Log.errorException(ae);
+					}
+
+					return equipment;
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -690,50 +295,40 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 				catch (AMFICOMRemoteException are) {
-					String mesg = null;
-					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						mesg = "Port '" + id + "' not found on server database";
-					else
-						mesg = "Cannot retrieve port '" + id + "' from server database -- " + are.message;
-					Log.errorMessage(mesg);
-					throw new RetrieveObjectException(mesg);
+					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+						throw new ObjectNotFoundException("Equipment '" + id + "' not found in MServer database");
+					throw new RetrieveObjectException("Cannot retrieve Equipment '" + id + "' from MServer database -- " + are.message);
 				}
 			}
-			try {
-				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (VersionCollisionException vce) {
-				Log.errorException(vce);
-			}
+			String mesg = "Remote reference for server is null; will try to reactivate it";
+			Log.errorMessage(mesg);
+			MeasurementControlModule.activateMServerReference();
+			throw new CommunicationException(mesg);
 		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("MCMConfigurationObjectLoader.loadPorts | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MCMConfigurationObjectLoader.loadPorts | Illegal Storable Object: " + e.getMessage());
-		}
-		return collection;
 	}
 
-	public Collection loadPortTypes(Collection ids) throws DatabaseException, CommunicationException {
-		PortTypeDatabase database = (PortTypeDatabase)ConfigurationDatabaseContext.getPortTypeDatabase();
-		Collection collection;
-		Collection copyOfList;
-		Collection loadedObjects = new LinkedList();
-		PortType portType;
+	public Port loadPort(Identifier id)
+			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
 		try {
-			collection = database.retrieveByIdsByCondition(ids, null);
-			copyOfList = new LinkedList(collection);
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				if(ids.contains(id))
-					it.remove();
-			}
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				Log.debugMessage("Port type '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
+			return new Port(id);
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.debugMessage("Port '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
+			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
+			if (mServerRef != null) {
+
 				try {
-					portType = new PortType(MeasurementControlModule.mServerRef.transmitPortType((Identifier_Transferable)id.getTransferable()));
-					collection.add(portType);
-					loadedObjects.add(portType);
+					Port_Transferable transferable = mServerRef.transmitPort((Identifier_Transferable) id.getTransferable());
+					Port port = new Port(transferable);
+
+					try {
+						ConfigurationDatabaseContext.getPortDatabase().insert(port);
+					}
+					catch (ApplicationException ae) {
+						Log.errorException(ae);
+					}
+
+					return port;
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -741,320 +336,509 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 				catch (AMFICOMRemoteException are) {
-					String mesg = null;
-					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						mesg = "Port type '" + id + "' not found on server database";
-					else
-						mesg = "Cannot retrieve port type '" + id + "' from server database -- " + are.message;
-					Log.errorMessage(mesg);
-					throw new RetrieveObjectException(mesg);
+					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+						throw new ObjectNotFoundException("Port '" + id + "' not found in MServer database");
+					throw new RetrieveObjectException("Cannot retrieve Port '" + id + "' from MServer database -- " + are.message);
 				}
 			}
-			try {
-				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (VersionCollisionException vce) {
-				Log.errorException(vce);
-			}
+			String mesg = "Remote reference for server is null; will try to reactivate it";
+			Log.errorMessage(mesg);
+			MeasurementControlModule.activateMServerReference();
+			throw new CommunicationException(mesg);
 		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("MCMConfigurationObjectLoader.loadPortTypes | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MCMConfigurationObjectLoader.loadPortTypes | Illegal Storable Object: " + e.getMessage());
+	}
+
+	public Link loadLink(Identifier id)
+			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
+		try {
+			return new Link(id);
 		}
-		return collection;
+		catch (ObjectNotFoundException onfe) {
+			Log.debugMessage("Link '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
+			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
+			if (mServerRef != null) {
+
+				try {
+					Link_Transferable transferable = mServerRef.transmitLink((Identifier_Transferable) id.getTransferable());
+					Link link = new Link(transferable);
+
+					try {
+						ConfigurationDatabaseContext.getLinkDatabase().insert(link);
+					}
+					catch (ApplicationException ae) {
+						Log.errorException(ae);
+					}
+
+					return link;
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
+				}
+				catch (AMFICOMRemoteException are) {
+					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+						throw new ObjectNotFoundException("Link '" + id + "' not found in MServer database");
+					throw new RetrieveObjectException("Cannot retrieve Link '" + id + "' from MServer database -- " + are.message);
+				}
+			}
+			String mesg = "Remote reference for server is null; will try to reactivate it";
+			Log.errorMessage(mesg);
+			MeasurementControlModule.activateMServerReference();
+			throw new CommunicationException(mesg);
+		}
+	}
+
+	public TransmissionPath loadTransmissionPath(Identifier id)
+			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
+		try {
+			return new TransmissionPath(id);
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.debugMessage("TransmissionPath '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
+			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
+			if (mServerRef != null) {
+
+				try {
+					TransmissionPath_Transferable transferable = mServerRef.transmitTransmissionPath((Identifier_Transferable) id.getTransferable());
+					TransmissionPath transmissionPath = new TransmissionPath(transferable);
+
+					try {
+						ConfigurationDatabaseContext.getTransmissionPathDatabase().insert(transmissionPath);
+					}
+					catch (ApplicationException ae) {
+						Log.errorException(ae);
+					}
+
+					return transmissionPath;
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
+				}
+				catch (AMFICOMRemoteException are) {
+					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+						throw new ObjectNotFoundException("TransmissionPath '" + id + "' not found in MServer database");
+					throw new RetrieveObjectException("Cannot retrieve TransmissionPath '" + id + "' from MServer database -- " + are.message);
+				}
+			}
+			String mesg = "Remote reference for server is null; will try to reactivate it";
+			Log.errorMessage(mesg);
+			MeasurementControlModule.activateMServerReference();
+			throw new CommunicationException(mesg);
+		}
+	}
+
+	public KIS loadKIS(Identifier id)
+			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
+		try {
+			return new KIS(id);
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.debugMessage("KIS '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
+			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
+			if (mServerRef != null) {
+
+				try {
+					KIS_Transferable transferable = mServerRef.transmitKIS((Identifier_Transferable) id.getTransferable());
+					KIS kis = new KIS(transferable);
+
+					try {
+						ConfigurationDatabaseContext.getKISDatabase().insert(kis);
+					}
+					catch (ApplicationException ae) {
+						Log.errorException(ae);
+					}
+
+					return kis;
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
+				}
+				catch (AMFICOMRemoteException are) {
+					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+						throw new ObjectNotFoundException("KIS '" + id + "' not found in MServer database");
+					throw new RetrieveObjectException("Cannot retrieve KIS '" + id + "' from MServer database -- " + are.message);
+				}
+			}
+			String mesg = "Remote reference for server is null; will try to reactivate it";
+			Log.errorMessage(mesg);
+			MeasurementControlModule.activateMServerReference();
+			throw new CommunicationException(mesg);
+		}
+	}
+
+	public MeasurementPort loadMeasurementPort(Identifier id)
+			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
+		try {
+			return new MeasurementPort(id);
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.debugMessage("MeasurementPort '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
+			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
+			if (mServerRef != null) {
+
+				try {
+					MeasurementPort_Transferable transferable = mServerRef.transmitMeasurementPort((Identifier_Transferable) id.getTransferable());
+					MeasurementPort measurementPort = new MeasurementPort(transferable);
+
+					try {
+						ConfigurationDatabaseContext.getMeasurementPortDatabase().insert(measurementPort);
+					}
+					catch (ApplicationException ae) {
+						Log.errorException(ae);
+					}
+
+					return measurementPort;
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
+				}
+				catch (AMFICOMRemoteException are) {
+					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+						throw new ObjectNotFoundException("MeasurementPort '" + id + "' not found in MServer database");
+					throw new RetrieveObjectException("Cannot retrieve MeasurementPort '" + id + "' from MServer database -- " + are.message);
+				}
+			}
+			String mesg = "Remote reference for server is null; will try to reactivate it";
+			Log.errorMessage(mesg);
+			MeasurementControlModule.activateMServerReference();
+			throw new CommunicationException(mesg);
+		}
+	}
+
+	public MonitoredElement loadMonitoredElement(Identifier id)
+			throws RetrieveObjectException, CommunicationException, ObjectNotFoundException, CreateObjectException {
+		try {
+			return new MonitoredElement(id);
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.debugMessage("MonitoredElement '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
+			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
+			if (mServerRef != null) {
+
+				try {
+					MonitoredElement_Transferable transferable = mServerRef.transmitMonitoredElement((Identifier_Transferable) id.getTransferable());
+					MonitoredElement monitoredElement = new MonitoredElement(transferable);
+
+					try {
+						ConfigurationDatabaseContext.getMonitoredElementDatabase().insert(monitoredElement);
+					}
+					catch (ApplicationException ae) {
+						Log.errorException(ae);
+					}
+
+					return monitoredElement;
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
+				}
+				catch (AMFICOMRemoteException are) {
+					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+						throw new ObjectNotFoundException("MonitoredElement '" + id + "' not found in MServer database");
+					throw new RetrieveObjectException("Cannot retrieve MonitoredElement '" + id + "' from MServer database -- " + are.message);
+				}
+			}
+			String mesg = "Remote reference for server is null; will try to reactivate it";
+			Log.errorMessage(mesg);
+			MeasurementControlModule.activateMServerReference();
+			throw new CommunicationException(mesg);
+		}
+	}
+
+
+
+
+	/*
+	 * MCM do not need in all below methods
+	 * */
+
+	public CableLinkType loadCableLinkType(Identifier id) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, id: " + id);
+	}
+
+	public CableThreadType loadCableThreadType(Identifier id) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, id: " + id);
+	}
+
+	public CableThread loadCableThread(Identifier id) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, id: " + id);
+	}
+
+
+
+
+
+	public Collection loadCableLinkTypes(Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
+	}
+
+	public Collection loadCableLinkTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
+	}
+
+	public Collection loadCableThreadTypes(Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
+	}
+
+	public Collection loadCableThreadTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
+	}
+
+	public Collection loadEquipmentTypes(Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
+	}
+
+	public Collection loadEquipmentTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
+	}
+
+	public Collection loadTransmissionPathTypes(Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
+	}
+
+	public Collection loadTransmissionPathTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
+	}
+
+	public Collection loadPortTypes(Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
+	}
+
+	public Collection loadLinkTypes(Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
+	}
+
+	public Collection loadLinkTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
+	}
+
+	public Collection loadPortTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
+	}
+
+	public Collection loadCableThreads(Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
+	}
+
+	public Collection loadCableThreadsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
+	}
+
+	public Collection loadEquipments(Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
+	}
+
+	public Collection loadEquipmentsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
+	}
+
+	public Collection loadKISs(Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
+	}
+
+	public Collection loadKISsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
+	}
+
+	public Collection loadLinks(Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
+	}
+
+	public Collection loadLinksButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
+	}
+
+	public Collection loadMeasurementPorts(Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
+	}
+
+	public Collection loadMeasurementPortsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
+	}
+
+	public Collection loadMeasurementPortTypes(Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
+	}
+
+	public Collection loadMeasurementPortTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
+	}
+
+	public Collection loadMonitoredElements(Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
+	}
+
+	public Collection loadMonitoredElementsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
+	}
+
+	public Collection loadPorts(Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
+	}
+
+	public Collection loadPortsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
+	}
+
+	public Collection loadTransmissionPaths(Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
+	}
+
+	public Collection loadTransmissionPathsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
+	}
+
+
+
+
+
+	public void saveCableLinkType(CableLinkType cableLinkType, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, cableLinkType: " + cableLinkType.getId() + ", force: " + force);
+	}
+
+	public void saveCableThreadType(CableThreadType cableThreadType, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, cableThreadType: " + cableThreadType.getId() + ", force: " + force);
+	}
+
+	public void saveTransmissionPathType(TransmissionPathType transmissionPathType, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, transmissionPathType: " + transmissionPathType.getId() + ", force: " + force);
+	}
+
+	public void saveEquipmentType(EquipmentType equipmentType, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, equipmentType: " + equipmentType.getId() + ", force: " + force);
+	}
+
+	public void saveLinkType(LinkType linkType, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, linkType: " + linkType.getId() + ", force: " + force);
+	}
+
+	public void savePortType(PortType portType, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, portType: " + portType.getId() + ", force: " + force);
+	}
+
+	public void saveMeasurementPortType(MeasurementPortType measurementPortType, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, measurementPortType: " + measurementPortType.getId() + ", force: " + force);
+	}
+
+	public void saveCableThread(CableThread cableThread, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, cableThread: " + cableThread.getId() + ", force: " + force);
+	}
+
+	public void saveEquipment(Equipment equipment, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, equipment: " + equipment.getId() + ", force: " + force);
+	}
+
+	public void saveTransmissionPath(TransmissionPath transmissionPath, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, transmissionPath: " + transmissionPath.getId() + ", force: " + force);
+	}
+
+	public void saveKIS(KIS kis, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, kis: " + kis.getId() + ", force: " + force);
+	}
+
+	public void saveLink(Link link, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, link: " + link.getId() + ", force: " + force);
+	}
+
+	public void savePort(Port port, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, port: " + port.getId() + ", force: " + force);
+	}
+
+	public void saveMeasurementPort(MeasurementPort measurementPort, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, measurementPort: " + measurementPort.getId() + ", force: " + force);
+	}
+
+	public void saveMonitoredElement(MonitoredElement monitoredElement, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, monitoredElement: " + monitoredElement.getId() + ", force: " + force);
 	}
 	
-	public Collection loadTransmissionPaths(Collection ids) throws DatabaseException, CommunicationException {
-		TransmissionPathDatabase database = (TransmissionPathDatabase)ConfigurationDatabaseContext.getTransmissionPathDatabase();
-		Collection collection;
-		Collection copyOfList;
-		Collection loadedObjects = new LinkedList();
-		TransmissionPath transmissionPath;
-		try {
-			collection = database.retrieveByIdsByCondition(ids, null);
-			copyOfList = new LinkedList(collection);
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				if(ids.contains(id))
-					it.remove();
-			}
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				Log.debugMessage("Transmission path '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL07);
-				try {
-					transmissionPath = new TransmissionPath(MeasurementControlModule.mServerRef.transmitTransmissionPath((Identifier_Transferable)id.getTransferable()));
-					collection.add(transmissionPath);
-					loadedObjects.add(transmissionPath);
-				}
-				catch (org.omg.CORBA.SystemException se) {
-					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
-					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
-				catch (AMFICOMRemoteException are) {
-					String mesg = null;
-					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						mesg = "Transmission path '" + id + "' not found on server database";
-					else
-						mesg = "Cannot retrieve transmission path '" + id + "' from server database -- " + are.message;
-					Log.errorMessage(mesg);
-					throw new RetrieveObjectException(mesg);
-				}
-			}
-			try {
-				database.update(loadedObjects, null, StorableObjectDatabase.UPDATE_FORCE);
-			}
-			catch (VersionCollisionException vce) {
-				Log.errorException(vce);
-			}
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("MCMConfigurationObjectLoader.loadTransmissionPaths | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MCMConfigurationObjectLoader.loadTransmissionPaths | Illegal Storable Object: " + e.getMessage());
-		}
-		return collection;
+
+
+	public void saveCableLinkTypes(Collection objects, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 
-
-	public java.util.Set refresh(java.util.Set s) {
-//       TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}	
-
-
-	public void saveEquipmentType(EquipmentType equipmentType, boolean force) throws DatabaseException, CommunicationException {
-//		 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
+	public void saveCableThreads(Collection objects, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 
-	public void savePortType(PortType portType, boolean force) throws DatabaseException, CommunicationException {
-//		 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
+	public void saveCableThreadTypes(Collection objects, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 
-	public void saveMeasurementPortType(MeasurementPortType measurementPortType, boolean force) throws DatabaseException, CommunicationException {
-//		 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
+	public void saveEquipments(Collection objects, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
-
-	public void saveTransmissionPathType(TransmissionPathType transmissionPathType, boolean force)
-			throws VersionCollisionException, DatabaseException, CommunicationException {
-			// TODO Auto-generated method stub
-
+	
+	public void saveEquipmentTypes(Collection objects, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
-
-//			public void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws DatabaseException, CommunicationException {
-//		 TODO method isn't complete
-//		throw new UnsupportedOperationException("method isn't complete");
-//		}
-
-
-	public void saveEquipment(Equipment equipment, boolean force) throws DatabaseException, CommunicationException {
-//		 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
+	
+	public void saveKISs(Collection objects, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
-
-	public void savePort(Port port, boolean force) throws DatabaseException, CommunicationException {
-//		 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
+	
+	public void saveLinks(Collection objects, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
-
-	public void saveTransmissionPath(TransmissionPath transmissionPath, boolean force) throws DatabaseException, CommunicationException {
-//		 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
+	
+	public void saveLinkTypes(Collection objects, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
-
-	public void saveKIS(KIS kis, boolean force) throws DatabaseException, CommunicationException {
-//		 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
+	
+	public void saveMeasurementPorts(Collection objects, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
-
-	public void saveMeasurementPort(MeasurementPort measurementPort, boolean force) throws DatabaseException, CommunicationException {
-//		 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
+	
+	public void saveMeasurementPortTypes(Collection objects, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
-
-	public void saveMonitoredElement(MonitoredElement monitoredElement, boolean force) throws DatabaseException, CommunicationException {
-//		 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
+	
+	public void saveMonitoredElements(Collection objects, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
+	}
+	
+	public void savePorts(Collection objects, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
+	}
+	
+	public void savePortTypes(Collection objects, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
+	}
+	
+	public void saveTransmissionPaths(Collection objects, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
+	}
+	public void saveTransmissionPathTypes(Collection objects, boolean force) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 
 
 
-	public void saveEquipmentTypes(Collection collection, boolean force) throws DatabaseException, CommunicationException {
-//		 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void savePortTypes(Collection collection, boolean force) throws DatabaseException, CommunicationException {
-//		 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveMeasurementPortTypes(Collection collection, boolean force) throws DatabaseException, CommunicationException {
-//		 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveTransmissionPathTypes(Collection collection, boolean force)
-			throws VersionCollisionException, DatabaseException, CommunicationException {
-			// TODO Auto-generated method stub
-
-	}
-
-//			public void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws DatabaseException, CommunicationException {
-//		 TODO method isn't complete
-//		throw new UnsupportedOperationException("method isn't complete");
-//		}
-
-	public void saveEquipments(Collection collection, boolean force) throws DatabaseException, CommunicationException {
-//		 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void savePorts(Collection collection, boolean force) throws DatabaseException, CommunicationException {
-//		 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveTransmissionPaths(Collection collection, boolean force) throws DatabaseException, CommunicationException {
-//		 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveKISs(Collection collection, boolean force) throws DatabaseException, CommunicationException {
-//		 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveMeasurementPorts(Collection collection, boolean force) throws DatabaseException, CommunicationException {
-//		 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveMonitoredElements(Collection collection, boolean force) throws DatabaseException, CommunicationException {
-//		 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public Collection loadEquipmentTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
-//			 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-		
-		
-	public Collection loadPortTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
-//			 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public Collection loadMeasurementPortTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
-//			 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}		
 
 
-
-//			  PermissionAttributes loadPermissionAttributesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
-//			 TODO method isn't complete
-//			throw new UnsupportedOperationException("method isn't complete");
-//			}
-
-	public Collection loadEquipmentsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
-//			 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public Collection loadPortsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
-//			 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public Collection loadTransmissionPathsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
-//			 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public Collection loadKISsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
-//			 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public Collection loadMeasurementPortsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
-//			 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public Collection loadMonitoredElementsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
-//			 TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public Collection loadLinkTypes(Collection ids) throws DatabaseException, CommunicationException {
-//           TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public Collection loadLinks(Collection ids) throws DatabaseException, CommunicationException {
-//           TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public Collection loadLinkTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
-//           TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public Collection loadLinksButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
-//           TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveLinkType(LinkType linkType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
-//           TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveLink(Link link, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
-//           TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveLinkTypes(Collection collection, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
-//           TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveLinks(Collection collection, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
-//           TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
+	public Set refresh(Set storableObjects) throws ApplicationException {
+		throw new UnsupportedOperationException("Method not implemented, objects: " + storableObjects);
 	}
 
 
 
-	public Collection loadTransmissionPathTypes(Collection ids) throws DatabaseException, CommunicationException {
-//           TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
+
+
+	public void delete(Collection objects) throws IllegalDataException {
+		throw new UnsupportedOperationException("Method not implemented, objects: " + objects);
 	}
 
-	public Collection loadTransmissionPathTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
-//           TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public LinkType loadLinkType(Identifier id) throws DatabaseException, CommunicationException {
-//           TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public TransmissionPathType loadTransmissionPathType(Identifier id) throws DatabaseException, CommunicationException {
-//           TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public Link loadLink(Identifier id) throws DatabaseException, CommunicationException {
-//           TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
+	public void delete(Identifier id) throws IllegalDataException {
+		throw new UnsupportedOperationException("Method not implemented, id: " + id);
 	}
 
 }
