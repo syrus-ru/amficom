@@ -71,6 +71,14 @@ com/syrus/AMFICOM/Client/Schedule/Sorter/TestSorter.class
 
 com/syrus/AMFICOM/Client/General/Lang/LangModelSurvey.class                                       
 com/syrus/AMFICOM/Client/General/Lang/LangModelSchedule.class                                       
+com/syrus/AMFICOM/Client/General/Lang/oldschedulerkey.properties
+com/syrus/AMFICOM/Client/General/Lang/oldsurveykey.properties
+com/syrus/AMFICOM/Client/General/Lang/scheduler.properties
+com/syrus/AMFICOM/Client/General/Lang/scheduler_ru.properties
+com/syrus/AMFICOM/Client/General/Lang/survey.properties
+com/syrus/AMFICOM/Client/General/Lang/survey_ru.properties
 
 com/syrus/AMFICOM/Client/Survey/Alarm/AlarmDescriptor.class                                          
 com/syrus/AMFICOM/Client/Survey/Alarm/AlarmDescriptorEvent.class                                          
+
+com/syrus/AMFICOM/Client/Survey/General/ConstStorage.class                                          
