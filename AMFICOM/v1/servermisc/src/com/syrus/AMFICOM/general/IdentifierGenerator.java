@@ -63,7 +63,7 @@ public class IdentifierGenerator {
 		}
 		catch (SQLException sqle) {
 			Log.errorException(sqle);
-			throw new IdentifierGenerationException("Cannot generate minor for entity: '" + entity + "' - " + sqle.getMessage(), sqle);
+			throw new IdentifierGenerationException("Cannot generate minor for entity: '" + entity + "' -- " + sqle.getMessage(), sqle);
 		}
 		finally {
 			try {
