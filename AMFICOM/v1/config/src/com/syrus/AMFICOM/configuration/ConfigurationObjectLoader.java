@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationObjectLoader.java,v 1.25 2005/02/02 08:05:05 bob Exp $
+ * $Id: ConfigurationObjectLoader.java,v 1.26 2005/02/08 09:26:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,12 +14,13 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/02/02 08:05:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.26 $, $Date: 2005/02/08 09:26:57 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -27,7 +28,7 @@ public interface ConfigurationObjectLoader {
 
 	void delete(Identifier id) throws CommunicationException, DatabaseException;
 
-	void delete(List ids) throws CommunicationException, DatabaseException;
+	void delete(List objects) throws CommunicationException, DatabaseException, IllegalDataException;
 
 	CableLinkType loadCableLinkType(Identifier id) throws DatabaseException, CommunicationException;
 
