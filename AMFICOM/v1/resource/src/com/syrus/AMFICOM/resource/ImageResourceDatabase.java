@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.15 2005/02/28 14:13:24 bob Exp $
+ * $Id: ImageResourceDatabase.java,v 1.16 2005/02/28 15:54:47 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.15 $, $Date: 2005/02/28 14:13:24 $
+ * @author $Author: max $
+ * @version $Revision: 1.16 $, $Date: 2005/02/28 15:54:47 $
  * @module resource_v1
  */
 
@@ -102,7 +102,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
     
 	private void updateImage(AbstractImageResource abstractImageResource) throws UpdateObjectException {
 		String absIdStr = DatabaseIdentifier.toSQLString(abstractImageResource.getId());
-		String sql = SQL_UPDATE + getEnityName() + SQL_SET + COLUMN_IMAGE + EQUALS + SQL_EMPTY_BLOB + SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + absIdStr;
+		String sql = SQL_UPDATE + getEnityName() + SQL_SET + COLUMN_IMAGE + EQUALS + SQL_FUNCTION_EMPTY_BLOB + SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + absIdStr;
 		Connection connection = DatabaseConnection.getConnection();
 		Statement statement = null;		
 		byte[] image = abstractImageResource.getImage();
