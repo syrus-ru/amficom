@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.24 2004/09/06 06:58:02 bob Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.25 2004/09/06 14:33:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,11 +27,12 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/09/06 06:58:02 $
+ * @version $Revision: 1.25 $, $Date: 2004/09/06 14:33:11 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -375,22 +376,33 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, UpdateObjectException {
+	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		AnalysisType analysisType = this.fromStorableObject(storableObject);
 		switch (updateKind) {
+			case UPDATE_CHECK:
+				super.checkAndUpdateEntity(storableObject, false);
+				break;
+			case UPDATE_FORCE:					
 			default:
-				updateEntity(analysisType);
+				super.checkAndUpdateEntity(storableObject, true);		
 				return;
 		}
 	}
 	
 	
 	public void update(List storableObjects, int updateKind, Object arg) throws IllegalDataException,
-			UpdateObjectException {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException();
+		VersionCollisionException, UpdateObjectException {		
+		switch (updateKind) {
+			case UPDATE_CHECK:
+				super.checkAndUpdateEntities(storableObjects, false);
+				break;
+			case UPDATE_FORCE:					
+			default:
+				super.checkAndUpdateEntities(storableObjects, true);		
+				return;
+		}
 	}
-
+	
 	public void delete(AnalysisType analysisType) {
 		String analysisTypeIdStr = analysisType.getId().toSQLString();
 		Statement statement = null;
@@ -444,11 +456,11 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 	
-	public List retrieveByIds(List ids, String conditions) throws IllegalDataException, RetrieveObjectException {
+	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null; 
 		if ((ids == null) || (ids.isEmpty()))
-			list = retriveByIdsOneQuery(null, conditions);
-		else list = retriveByIdsOneQuery(ids, conditions);
+			list = retriveByIdsOneQuery(null, condition);
+		else list = retriveByIdsOneQuery(ids, condition);
 		
 		for(Iterator it=list.iterator();it.hasNext();){
 			AnalysisType analysisType = (AnalysisType)it.next();
@@ -463,13 +475,25 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, UpdateObjectException {
 		AnalysisType analysisType = fromStorableObject(storableObject);
 		try {
+			/**
+			 * @todo when change DB Identifier model ,change setString() to setLong()
+			 */
 			preparedStatement.setString(1, analysisType.getId().getCode());
 			preparedStatement.setTimestamp(2, new Timestamp(analysisType.getCreated().getTime()));
 			preparedStatement.setTimestamp(3, new Timestamp(analysisType.getModified().getTime()));
+			/**
+			 * @todo when change DB Identifier model ,change setString() to setLong()
+			 */
 			preparedStatement.setString(4, analysisType.getCreatorId().getCode());
+			/**
+			 * @todo when change DB Identifier model ,change setString() to setLong()
+			 */
 			preparedStatement.setString(5, analysisType.getModifierId().getCode());
 			preparedStatement.setString(6, analysisType.getCodename());
 			preparedStatement.setString(7, analysisType.getDescription());
+			/**
+			 * @todo when change DB Identifier model ,change setString() to setLong()
+			 */
 			preparedStatement.setString(8, analysisType.getId().getCode());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);

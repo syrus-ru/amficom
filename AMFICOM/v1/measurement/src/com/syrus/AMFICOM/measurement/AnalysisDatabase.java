@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.18 2004/09/06 06:58:02 bob Exp $
+ * $Id: AnalysisDatabase.java,v 1.19 2004/09/06 14:33:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,9 +29,10 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/09/06 06:58:02 $
+ * @version $Revision: 1.19 $, $Date: 2004/09/06 14:33:11 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -121,7 +122,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 			/**
 			 * @todo when change DB Identifier model ,change setString() to setLong()
 			 */
-			preparedStatement.setString(1, analysis.getId().getCode());
+			preparedStatement.setString(9, analysis.getId().getCode());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
@@ -236,18 +237,31 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 		insertEntities(storableObjects);
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, UpdateObjectException {
+	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		Analysis analysis = this.fromStorableObject(storableObject);
 		switch (updateKind) {
+			case UPDATE_CHECK:
+				super.checkAndUpdateEntity(storableObject, false);
+				break;
+			case UPDATE_FORCE:					
 			default:
+				super.checkAndUpdateEntity(storableObject, true);		
 				return;
 		}
 	}
 	
 	
 	public void update(List storableObjects, int updateKind, Object arg) throws IllegalDataException,
-			UpdateObjectException {
-		// TODO Auto-generated method stub
+		VersionCollisionException, UpdateObjectException {
+		switch (updateKind) {
+			case UPDATE_CHECK:
+				super.checkAndUpdateEntities(storableObjects, false);
+				break;
+			case UPDATE_FORCE:					
+			default:
+				super.checkAndUpdateEntities(storableObjects, true);		
+				return;
+		}
 
 	}
 	

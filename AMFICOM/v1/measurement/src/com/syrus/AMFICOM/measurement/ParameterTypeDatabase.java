@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.19 2004/08/29 11:47:05 bob Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.20 2004/09/06 14:33:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,13 +8,13 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -24,11 +24,12 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/08/29 11:47:05 $
+ * @version $Revision: 1.20 $, $Date: 2004/09/06 14:33:12 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -40,6 +41,59 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	public static final String COLUMN_NAME = "name";	
 	
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 15;
+	
+	private String updateColumns;
+	private String updateMultiplySQLValues;
+	
+	
+	protected String getEnityName() {		
+		return "ParameterType";
+	}
+	
+	protected String getTableName() {
+		return ObjectEntities.PARAMETERTYPE_ENTITY;
+	}
+	
+	protected String getUpdateColumns() {
+		if (this.updateColumns == null){
+			this.updateColumns = COLUMN_ID + COMMA
+			+ COLUMN_CREATED + COMMA
+			+ COLUMN_MODIFIED + COMMA
+			+ COLUMN_CREATOR_ID + COMMA
+			+ COLUMN_MODIFIER_ID + COMMA
+			+ COLUMN_CODENAME + COMMA
+			+ COLUMN_DESCRIPTION + COMMA
+			+ COLUMN_NAME;
+		}
+		return this.updateColumns;
+	}	
+	
+	protected String getUpdateMultiplySQLValues() {
+		if (this.updateMultiplySQLValues == null){
+			this.updateMultiplySQLValues = QUESTION + COMMA
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA
+			+ QUESTION;
+		}
+		return this.updateMultiplySQLValues;
+	}
+	
+	
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
+			UpdateObjectException {
+		ParameterType parameterType = fromStorableObject(storableObject);
+		return DatabaseDate.toUpdateSubString(parameterType.getCreated()) + COMMA
+		+ DatabaseDate.toUpdateSubString(parameterType.getModified()) + COMMA
+		+ parameterType.getCreatorId().toSQLString() + COMMA
+		+ parameterType.getModifierId().toSQLString() + COMMA
+		+ APOSTOPHE + parameterType.getCodename() + APOSTOPHE + COMMA
+		+ APOSTOPHE + parameterType.getDescription() + APOSTOPHE + COMMA
+		+ APOSTOPHE + parameterType.getName() + APOSTOPHE;
+	}	
 
 	private ParameterType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof ParameterType)
@@ -49,10 +103,10 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		ParameterType parameterType = this.fromStorableObject(storableObject);
-		this.retrieveParameterType(parameterType);
+		this.retrieveEntity(parameterType);
 	}
 
-	private String retrievePararameterTypeQuery(String condition){
+	protected String retrieveQuery(String condition){
 		return SQL_SELECT
 		+ COLUMN_ID + COMMA
 		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA
@@ -65,20 +119,21 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 		+ SQL_FROM + ObjectEntities.PARAMETERTYPE_ENTITY
 		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
 
-	}
+	}	
 	
-	private ParameterType updateParameterTypeFromResultSet(ParameterType parameterType, ResultSet resultSet) throws SQLException{
-		ParameterType parameterType1 = parameterType;
+	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+		throws IllegalDataException, RetrieveObjectException, SQLException {
+		ParameterType parameterType = fromStorableObject(storableObject);
 		if (parameterType == null){
 			/**
 			 * @todo when change DB Identifier model ,change getString() to getLong()
 			 */
-			parameterType1 = new ParameterType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null);
+			parameterType = new ParameterType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null);
 		}
 		/**
 		 * @todo when change DB Identifier model ,change getString() to getLong()
 		 */
-		parameterType1.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+		parameterType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 												DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 												/**
 												 * @todo when change DB Identifier model ,change getString() to
@@ -93,58 +148,10 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 												 resultSet.getString(COLUMN_CODENAME),
 												 resultSet.getString(COLUMN_DESCRIPTION),
 												 resultSet.getString(COLUMN_NAME));
-		return parameterType1;
+		return parameterType;
 	}
 
 	
-	private void retrieveParameterType(ParameterType parameterType) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		String parameterTypeIdStr = parameterType.getId().toSQLString();
-		String sql = retrievePararameterTypeQuery(COLUMN_ID + EQUALS + parameterTypeIdStr);
-		Statement statement = null;
-		ResultSet resultSet = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("ParameterTypeDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			if (resultSet.next()){
-				parameterType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-																		DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-																		/**
-																		 * @todo when change DB Identifier model ,change getString() to
-																		 *       getLong()
-																		 */																			
-																		new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-																		/**
-																		 * @todo when change DB Identifier model ,change getString() to
-																		 *       getLong()
-																		 */
-																		new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-																		resultSet.getString(COLUMN_CODENAME),
-																		resultSet.getString(COLUMN_DESCRIPTION),
-																		resultSet.getString(COLUMN_NAME));
-			}
-			else
-				throw new ObjectNotFoundException("No such parameter type: " + parameterTypeIdStr);
-		}
-		catch (SQLException sqle) {
-			String mesg = "ParameterTypeDatabase.retrieve | Cannot retrieve parameter type '" + parameterTypeIdStr + "' -- " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-	}
-
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		ParameterType parameterType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
@@ -156,7 +163,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		ParameterType parameterType = this.fromStorableObject(storableObject);
 		try {
-			this.insertParameterType(parameterType);
+			this.insertEntity(parameterType);
 		}
 		catch (CreateObjectException e) {
 			try {
@@ -175,56 +182,37 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 			Log.errorMessage("Exception in commiting");
 			Log.errorException(sqle);
 		}
-	}
+	}	
+	
+	
+	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
+		super.insertEntities(storableObjects);
 
-	private void insertParameterType(ParameterType parameterType) throws IllegalDataException, CreateObjectException {
-		String parameterTypeIdStr = parameterType.getId().toSQLString();
-		String sql = SQL_INSERT_INTO
-			+ ObjectEntities.PARAMETERTYPE_ENTITY + OPEN_BRACKET
-			+ COLUMN_ID + COMMA
-			+ COLUMN_CREATED + COMMA
-			+ COLUMN_MODIFIED + COMMA
-			+ COLUMN_CREATOR_ID + COMMA
-			+ COLUMN_MODIFIER_ID + COMMA
-			+ COLUMN_CODENAME + COMMA
-			+ COLUMN_DESCRIPTION + COMMA
-			+ COLUMN_NAME
-			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
-			+ parameterTypeIdStr + COMMA
-			+ DatabaseDate.toUpdateSubString(parameterType.getCreated()) + COMMA
-			+ DatabaseDate.toUpdateSubString(parameterType.getModified()) + COMMA
-			+ parameterType.getCreatorId().toSQLString() + COMMA
-			+ parameterType.getModifierId().toSQLString() + COMMA
-			+ APOSTOPHE + parameterType.getCodename() + APOSTOPHE + COMMA
-			+ APOSTOPHE + parameterType.getDescription() + APOSTOPHE + COMMA
-			+ APOSTOPHE + parameterType.getName() + APOSTOPHE
-			+ CLOSE_BRACKET;
-		Statement statement = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("ParameterTypeDatabase.insert | Trying: " + sql, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql);
-		}
-		catch (SQLException sqle) {
-			String mesg = "ParameterTypeDatabase.insert | Cannot insert parameter type '" + parameterTypeIdStr + "' -- " + sqle.getMessage();
-			throw new CreateObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				statement = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-	}
+	}	
 
-	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, UpdateObjectException {
+	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		ParameterType parameterType = this.fromStorableObject(storableObject);
 		switch (updateKind) {
+			case UPDATE_CHECK:
+				super.checkAndUpdateEntity(storableObject, false);
+				break;
+			case UPDATE_FORCE:					
 			default:
+				super.checkAndUpdateEntity(storableObject, true);		
+				return;
+		}
+	}
+	
+	
+	public void update(List storableObjects, int updateKind, Object arg) throws IllegalDataException,
+			VersionCollisionException, UpdateObjectException {
+		switch (updateKind) {
+			case UPDATE_CHECK:
+				super.checkAndUpdateEntities(storableObjects, false);
+				break;
+			case UPDATE_FORCE:					
+			default:
+				super.checkAndUpdateEntities(storableObjects, true);		
 				return;
 		}
 	}
@@ -267,155 +255,45 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 		}
 	}
 	
-	public List retrieveAll() throws RetrieveObjectException {
-		return retriveByIdsOneQuery(null);
-	}
-	
-	public void delete(MeasurementType measurementType) {
-		String parameterTypeIdStr = measurementType.getId().toSQLString();
-		Statement statement = null;
-		try {
-			statement = connection.createStatement();
-			statement.executeUpdate(SQL_DELETE_FROM
-					+ ObjectEntities.PARAMETERTYPE_ENTITY 
-					+ SQL_WHERE + COLUMN_ID + EQUALS + parameterTypeIdStr);
-			connection.commit();
-		}
-		catch (SQLException sqle1) {
-			Log.errorException(sqle1);
-		}
-		finally {
-			try {
-				if(statement != null)
-					statement.close();
-				statement = null;
-			}
-			catch(SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-	}
-	
-	public List retrieveByIds(List ids) throws RetrieveObjectException {
+	public List retrieveAll() throws IllegalDataException, RetrieveObjectException {
+		return retriveByIdsOneQuery(null, null);
+	}	
+
+	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
-			return retriveByIdsOneQuery(null);
-		return retriveByIdsOneQuery(ids);	
-		//return retriveByIdsPreparedStatement(ids);
+			return retriveByIdsOneQuery(null, condition);
+		return retriveByIdsOneQuery(ids, condition);
 	}
 	
-	private List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
-		List result = new LinkedList();
-		String sql;
-		{
-			String condition = null;
-			if (ids!=null){
-				StringBuffer buffer = new StringBuffer(COLUMN_ID);
-				int idsLength = ids.size();
-				if (idsLength == 1){
-					buffer.append(EQUALS);
-					buffer.append(((Identifier)ids.iterator().next()).toSQLString());
-				} else{
-					buffer.append(SQL_IN);
-					buffer.append(OPEN_BRACKET);
-					
-					int i = 1;
-					for(Iterator it=ids.iterator();it.hasNext();i++){
-						Identifier id = (Identifier)it.next();
-						buffer.append(id.toSQLString());
-						if (i < idsLength)
-							buffer.append(COMMA);
-					}
-					
-					buffer.append(CLOSE_BRACKET);
-					condition = buffer.toString();
-				}
-			}
-			sql = retrievePararameterTypeQuery(condition);
-		}
-		
-		Statement statement = null;
-		ResultSet resultSet = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("ParameterTypeDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			while (resultSet.next()){
-				result.add(updateParameterTypeFromResultSet(null, resultSet));
-			}
-		}
-		catch (SQLException sqle) {
-			String mesg = "ParameterTypeDatabase.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-		return result;
-	}
 	
-	private List retriveByIdsPreparedStatement(List ids) throws RetrieveObjectException {
-		List result = new LinkedList();
-		String sql;
-		{
-			
-			int idsLength = ids.size();
-			if (idsLength == 1){
-				return retriveByIdsOneQuery(ids);
-			}
-			StringBuffer buffer = new StringBuffer(COLUMN_ID);
-			buffer.append(EQUALS);							
-			buffer.append(QUESTION);
-			
-			sql =retrievePararameterTypeQuery(buffer.toString());
-		}
-			
-		PreparedStatement stmt = null;
-		ResultSet resultSet = null;
+	protected void setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+			throws IllegalDataException, UpdateObjectException {
+		ParameterType parameterType = fromStorableObject(storableObject);
 		try {
-			stmt = connection.prepareStatement(sql.toString());
-			for(Iterator it = ids.iterator();it.hasNext();){
-				Identifier id = (Identifier)it.next(); 
-				/**
-				 * @todo when change DB Identifier model ,change setString() to setLong()
-				 */
-				String idStr = id.getIdentifierString();
-				stmt.setString(1, idStr);
-				resultSet = stmt.executeQuery();
-				if (resultSet.next()){
-					result.add(updateParameterTypeFromResultSet(null, resultSet));
-				} else{
-					Log.errorMessage("ParameterTypeDatabase.retriveByIdsPreparedStatement | No such parameter type: " + idStr);									
-				}
-				
-			}
-		}catch (SQLException sqle) {
-			String mesg = "ParameterTypeDatabase.retriveByIdsPreparedStatement | Cannot retrieve parameter type " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
+			/**
+			 * @todo when change DB Identifier model ,change setString() to setLong()
+			 */
+			preparedStatement.setString(1, parameterType.getId().getCode());
+			preparedStatement.setTimestamp(2, new Timestamp(parameterType.getCreated().getTime()));
+			preparedStatement.setTimestamp(3, new Timestamp(parameterType.getModified().getTime()));
+			/**
+			 * @todo when change DB Identifier model ,change setString() to setLong()
+			 */
+			preparedStatement.setString(4, parameterType.getCreatorId().getCode());
+			/**
+			 * @todo when change DB Identifier model ,change setString() to setLong()
+			 */
+			preparedStatement.setString(5, parameterType.getModifierId().getCode());
+			preparedStatement.setString(6, parameterType.getCodename());
+			preparedStatement.setString(7, parameterType.getDescription());
+			preparedStatement.setString(8, parameterType.getName());
+			/**
+			 * @todo when change DB Identifier model ,change setString() to setLong()
+			 */
+			preparedStatement.setString(9, parameterType.getId().getCode());
+		} catch (SQLException sqle) {
+			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
-		finally {
-			try {
-				if (stmt != null)
-					stmt.close();
-				if (stmt != null)
-					stmt.close();
-				stmt = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}			
-		
-		return result;
+
 	}
 }

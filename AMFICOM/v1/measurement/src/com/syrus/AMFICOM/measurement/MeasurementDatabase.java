@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.18 2004/08/29 11:47:05 bob Exp $
+ * $Id: MeasurementDatabase.java,v 1.19 2004/09/06 14:33:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,8 +12,8 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.util.Log;
@@ -28,10 +28,11 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/08/29 11:47:05 $
+ * @version $Revision: 1.19 $, $Date: 2004/09/06 14:33:12 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -48,19 +49,138 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	
 	public static final String LINK_COLUMN_MEASUREMENT_ID = "measurement_id";
 	public static final String LINK_SORT = "sort";
+	
+	private String updateColumns;	
+	private String updateMultiplySQLValues;	
+	
+	protected String getEnityName() {		
+		return "Measurement";
+	}
+	
+	
+	protected String getTableName() {
+		return ObjectEntities.MEASUREMENT_ENTITY;
+	}	
 
 	private Measurement fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Measurement)
 			return (Measurement)storableObject;
 		throw new IllegalDataException("MeasurementDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
+	
+	
+	protected String getUpdateColumns() {
+		if (this.updateColumns == null){
+			this.updateColumns = COLUMN_ID + COMMA
+			+ COLUMN_CREATED + COMMA
+			+ COLUMN_MODIFIED + COMMA
+			+ COLUMN_CREATOR_ID + COMMA
+			+ COLUMN_MODIFIER_ID + COMMA
+			+ COLUMN_TYPE_ID + COMMA
+			+ COLUMN_MONITORED_ELEMENT_ID + COMMA
+			+ COLUMN_SETUP_ID + COMMA
+			+ COLUMN_START_TIME + COMMA
+			+ COLUMN_DURATION + COMMA
+			+ COLUMN_STATUS + COMMA
+			+ COLUMN_LOCAL_ADDRESS + COMMA
+			+ COLUMN_TEST_ID;
+		}
+		return this.updateColumns;
+	}	
+	
+	protected String getUpdateMultiplySQLValues() {
+		if (this.updateMultiplySQLValues == null){
+			this.updateMultiplySQLValues = QUESTION + COMMA
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA
+			+ QUESTION + COMMA
+			+ QUESTION;
+		}
+		return this.updateMultiplySQLValues;
+	}
+	
+	
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
+			UpdateObjectException {
+		Measurement measurement = fromStorableObject(storableObject);
+		String values = DatabaseDate.toUpdateSubString(measurement.getCreated()) + COMMA
+		+ DatabaseDate.toUpdateSubString(measurement.getModified()) + COMMA
+		+ measurement.getCreatorId().toSQLString() + COMMA
+		+ measurement.getModifierId().toSQLString() + COMMA
+		+ measurement.getType().getId().toSQLString() + COMMA
+		+ measurement.getMonitoredElementId().toSQLString() + COMMA
+		+ measurement.getSetup().getId().toSQLString() + COMMA
+		+ DatabaseDate.toUpdateSubString(measurement.getStartTime()) + COMMA
+		+ Long.toString(measurement.getDuration()) + COMMA
+		+ Integer.toString(measurement.getStatus().value()) + COMMA
+		+ APOSTOPHE + measurement.getLocalAddress() + APOSTOPHE + COMMA
+		+ measurement.getTestId().toSQLString();
+		return values;
+	}
+	
+	
+	protected void setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+			throws IllegalDataException, UpdateObjectException {
+		Measurement measurement = fromStorableObject(storableObject);
+		try {
+			/**
+			 * @todo when change DB Identifier model ,change setString() to setLong()
+			 */
+			preparedStatement.setString(1, measurement.getId().getCode());
+			preparedStatement.setTimestamp(2, new Timestamp(measurement.getCreated().getTime()));
+			preparedStatement.setTimestamp(3, new Timestamp(measurement.getModified().getTime()));
+			/**
+			 * @todo when change DB Identifier model ,change setString() to setLong()
+			 */
+			preparedStatement.setString(4, measurement.getCreatorId().getCode());
+			/**
+			 * @todo when change DB Identifier model ,change setString() to setLong()
+			 */
+			preparedStatement.setString(5, measurement.getModifierId().getCode());
+			/**
+			 * @todo when change DB Identifier model ,change setString() to setLong()
+			 */
+			preparedStatement.setString(6, measurement.getType().getId().getCode()); 
+			/**
+			 * @todo when change DB Identifier model ,change setString() to setLong()
+			 */
+			preparedStatement.setString(7, measurement.getMonitoredElementId().getCode()); 
+			/**
+			 * @todo when change DB Identifier model ,change setString() to setLong()
+			 */
+			preparedStatement.setString(8, measurement.getSetup().getId().getCode());
+			preparedStatement.setTimestamp(9, new Timestamp(measurement.getStartTime().getTime()));
+			preparedStatement.setLong(10, measurement.getDuration());
+			preparedStatement.setInt(11, measurement.getStatus().value());
+			preparedStatement.setString(12, measurement.getLocalAddress());
+			/**
+			 * @todo when change DB Identifier model ,change setString() to setLong()
+			 */
+			preparedStatement.setString(13, measurement.getTestId().getCode());
+			/**
+			 * @todo when change DB Identifier model ,change setString() to setLong()
+			 */
+			preparedStatement.setString(14, measurement.getId().getCode());
+		} catch (SQLException sqle) {
+			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
+		}
+
+	}
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Measurement measurement = this.fromStorableObject(storableObject);
-		this.retrieveMeasurement(measurement);
+		this.retrieveEntity(measurement);
 	}
 	
-	private String retrieveMeasurementQuery(String condition){
+	protected String retrieveQuery(String condition){
 		return SQL_SELECT
 		+ COLUMN_ID + COMMA
 		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
@@ -78,15 +198,16 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		+ SQL_FROM + ObjectEntities.MEASUREMENT_ENTITY
 		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
 
-	}
+	}	
 	
-	private Measurement updateMeasurementFromResultSet(Measurement measurement, ResultSet resultSet) throws RetrieveObjectException, SQLException{
-		Measurement measurement1 = measurement;
+	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+		throws IllegalDataException, RetrieveObjectException, SQLException {
+		Measurement measurement = fromStorableObject(storableObject);
 		if (measurement == null){
 			/**
 			 * @todo when change DB Identifier model ,change getString() to getLong()
 			 */
-			measurement1 = new Measurement(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, 
+			measurement = new Measurement(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, 
 										   null, null, null, null);			
 		}
 		MeasurementType measurementType;
@@ -104,7 +225,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
-		measurement1.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+		measurement.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 									DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 									/**
 									 * @todo when change DB Identifier model ,change getString() to getLong()
@@ -128,41 +249,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 									 * @todo when change DB Identifier model ,change getString() to getLong()
 									 */
 									new Identifier(resultSet.getString(COLUMN_TEST_ID)));
-		return measurement1;
-	}
-
-
-	private void retrieveMeasurement(Measurement measurement) throws RetrieveObjectException, ObjectNotFoundException {
-		String measurementIdStr = measurement.getId().toSQLString();
-		String sql = retrieveMeasurementQuery(COLUMN_ID + EQUALS + measurementIdStr);
-		Statement statement = null;
-		ResultSet resultSet = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("MeasurementDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			if (resultSet.next()) 
-				updateMeasurementFromResultSet(measurement, resultSet);
-			else
-				throw new ObjectNotFoundException("No such measurement: " + measurementIdStr);
-		}
-		catch (SQLException sqle) {
-			String mesg = "MeasurementDatabase.retrieve | Cannot retrieve measurement '" + measurementIdStr + "' -- " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
+		return measurement;
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
@@ -224,7 +311,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
 		Measurement measurement = this.fromStorableObject(storableObject);
 		try {
-			this.insertMeasurement(measurement);
+			this.insertEntity(measurement);
 		}
 		catch (CreateObjectException e) {
 			try {
@@ -244,69 +331,25 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 			Log.errorException(sqle);
 		}
 	}
-
-	private void insertMeasurement(Measurement measurement) throws CreateObjectException {
-		String measurementIdStr = measurement.getId().toSQLString();
-		String sql = SQL_INSERT_INTO 
-			+ ObjectEntities.MEASUREMENT_ENTITY + OPEN_BRACKET
-			+ COLUMN_ID + COMMA
-			+ COLUMN_CREATED + COMMA
-			+ COLUMN_MODIFIED + COMMA
-			+ COLUMN_CREATOR_ID + COMMA
-			+ COLUMN_MODIFIER_ID + COMMA
-			+ COLUMN_TYPE_ID + COMMA
-			+ COLUMN_MONITORED_ELEMENT_ID + COMMA
-			+ COLUMN_SETUP_ID + COMMA
-			+ COLUMN_START_TIME + COMMA
-			+ COLUMN_DURATION + COMMA
-			+ COLUMN_STATUS + COMMA
-			+ COLUMN_LOCAL_ADDRESS + COMMA
-			+ COLUMN_TEST_ID
-			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
-			+ measurementIdStr + COMMA
-			+ DatabaseDate.toUpdateSubString(measurement.getCreated()) + COMMA
-			+ DatabaseDate.toUpdateSubString(measurement.getModified()) + COMMA
-			+ measurement.getCreatorId().toSQLString() + COMMA
-			+ measurement.getModifierId().toSQLString() + COMMA
-			+ measurement.getType().getId().toSQLString() + COMMA
-			+ measurement.getMonitoredElementId().toSQLString() + COMMA
-			+ measurement.getSetup().getId().toSQLString() + COMMA
-			+ DatabaseDate.toUpdateSubString(measurement.getStartTime()) + COMMA
-			+ Long.toString(measurement.getDuration()) + COMMA
-			+ Integer.toString(measurement.getStatus().value()) + COMMA
-			+ APOSTOPHE + measurement.getLocalAddress() + APOSTOPHE + COMMA
-			+ measurement.getTestId().toSQLString()
-			+ CLOSE_BRACKET;
-		Statement statement = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("MeasurementDatabase.insert | Trying: " + sql, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql);
-		}
-		catch (SQLException sqle) {
-			String mesg = "MeasurementDatabase.insert | Cannot insert measurement '" + measurementIdStr + "' -- " + sqle.getMessage();
-			throw new CreateObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				statement = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
+	
+	
+	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
+		insertEntities(storableObjects);
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj) throws  IllegalDataException, UpdateObjectException {
+	public void update(StorableObject storableObject, int updateKind, Object obj) throws  IllegalDataException, VersionCollisionException, UpdateObjectException {
 		Measurement measurement = this.fromStorableObject(storableObject);
 		try {
 			switch (updateKind) {
 				case Measurement.UPDATE_STATUS:
 					this.updateStatus(measurement);
 					break;
+				case UPDATE_CHECK:
+					super.checkAndUpdateEntity(storableObject, false);
+					break;
+				case UPDATE_FORCE:					
 				default:
+					super.checkAndUpdateEntity(storableObject, true);					
 					return;
 			}
 		}
@@ -327,6 +370,30 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 			Log.errorMessage("Exception in commiting");
 			Log.errorException(sqle);
 		}
+	}	
+	
+	
+	public void update(List storableObjects, int updateKind, Object arg) throws IllegalDataException,
+			VersionCollisionException, UpdateObjectException {
+		switch (updateKind) {
+			case Measurement.UPDATE_STATUS:
+				for(Iterator it=storableObjects.iterator();it.hasNext();){
+					/**
+					 * FIXME recast using one step
+					 */
+					Measurement measurement = (Measurement)it.next();
+					this.updateStatus(measurement);
+				}				
+				break;
+			case UPDATE_CHECK:
+				super.checkAndUpdateEntities(storableObjects, false);
+				break;
+			case UPDATE_FORCE:					
+			default:
+				super.checkAndUpdateEntities(storableObjects, true);					
+				return;
+		}
+
 	}
 
 	private void updateStatus(Measurement measurement) throws UpdateObjectException {
@@ -358,129 +425,13 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 				Log.errorException(sqle1);
 			}
 		}
-	}
+	}	
 	
-	public List retrieveByIds(List ids) throws RetrieveObjectException {
+	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
-			return retriveByIdsOneQuery(null);
-		return retriveByIdsOneQuery(ids);	
-		//return retriveByIdsPreparedStatement(ids);
-	}
+			return retriveByIdsOneQuery(null, condition);
+		return retriveByIdsOneQuery(ids, condition);	
+		//return retriveByIdsPreparedStatement(ids, condition);
+	}	
 	
-	private List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
-		List result = new LinkedList();
-		String sql;
-		{
-			String condition = null;
-			if (ids!=null){
-				StringBuffer buffer = new StringBuffer(COLUMN_ID);
-				int idsLength = ids.size();
-				if (idsLength == 1){
-					buffer.append(EQUALS);
-					buffer.append(((Identifier)ids.iterator().next()).toSQLString());
-				} else{
-					buffer.append(SQL_IN);
-					buffer.append(OPEN_BRACKET);
-					
-					int i = 1;
-					for(Iterator it=ids.iterator();it.hasNext();i++){
-						Identifier id = (Identifier)it.next();
-						buffer.append(id.toSQLString());
-						if (i < idsLength)
-							buffer.append(COMMA);
-					}
-					
-					buffer.append(CLOSE_BRACKET);
-					condition = buffer.toString();
-				}
-			}
-			sql = retrieveMeasurementQuery(condition);
-		}
-		
-		Statement statement = null;
-		ResultSet resultSet = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("MeasurementDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			while (resultSet.next()){
-				result.add(updateMeasurementFromResultSet(null, resultSet));
-			}
-		}
-		catch (SQLException sqle) {
-			String mesg = "MeasurementDatabase.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-		return result;
-	}
-	
-	private List retriveByIdsPreparedStatement(List ids) throws RetrieveObjectException {
-		List result = new LinkedList();
-		String sql;
-		{
-			
-			int idsLength = ids.size();
-			if (idsLength == 1){
-				return retriveByIdsOneQuery(ids);
-			}
-			StringBuffer buffer = new StringBuffer(COLUMN_ID);
-			buffer.append(EQUALS);							
-			buffer.append(QUESTION);
-			
-			sql = retrieveMeasurementQuery(buffer.toString());
-		}
-			
-		PreparedStatement stmt = null;
-		ResultSet resultSet = null;
-		try {
-			stmt = connection.prepareStatement(sql.toString());
-			for(Iterator it = ids.iterator();it.hasNext();){
-				Identifier id = (Identifier)it.next(); 
-				/**
-				 * @todo when change DB Identifier model ,change setString() to setLong()
-				 */
-				String idStr = id.getIdentifierString();
-				stmt.setString(1, idStr);
-				resultSet = stmt.executeQuery();
-				if (resultSet.next()){
-					result.add(updateMeasurementFromResultSet(null, resultSet));
-				} else{
-					Log.errorMessage("MeasurementDatabase.retriveByIdsPreparedStatement | No such measurement: " + idStr);									
-				}
-				
-			}
-		}catch (SQLException sqle) {
-			String mesg = "MeasurementDatabase.retriveByIdsPreparedStatement | Cannot retrieve measurement " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (stmt != null)
-					stmt.close();
-				if (stmt != null)
-					stmt.close();
-				stmt = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}			
-		
-		return result;
-	}
-
 }

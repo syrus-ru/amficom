@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.17 2004/08/29 11:47:05 bob Exp $
+ * $Id: ResultDatabase.java,v 1.18 2004/09/06 14:33:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,13 +9,14 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+
 import oracle.sql.BLOB;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
@@ -30,10 +31,11 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/08/29 11:47:05 $
+ * @version $Revision: 1.18 $, $Date: 2004/09/06 14:33:12 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -54,6 +56,184 @@ public class ResultDatabase extends StorableObjectDatabase {
 	public static final String LINK_COLUMN_TYPE_ID			=	"type_id";
 	public static final String LINK_COLUMN_RESULT_ID		=	"result_id";
 	public static final String LINK_COLUMN_VALUE			=	"value";
+	
+	private String updateColumns;
+	private String updateMultiplySQLValues;
+	
+	protected String getEnityName() {
+		return "Result";
+	}
+	
+	protected String getTableName() {		
+		return ObjectEntities.RESULT_ENTITY;
+	}
+	
+	protected String getUpdateColumns() {
+		if (this.updateColumns == null){
+			StringBuffer buffer = new StringBuffer(COLUMN_ID);
+			buffer.append(COMMA);
+			buffer.append(COLUMN_CREATED);
+			buffer.append(COMMA);
+			buffer.append(COLUMN_MODIFIED);
+			buffer.append(COMMA);
+			buffer.append(COLUMN_CREATOR_ID);
+			buffer.append(COMMA);
+			buffer.append(COLUMN_MODIFIER_ID);
+			buffer.append(COMMA);
+			buffer.append(COLUMN_MEASUREMENT_ID);
+			buffer.append(COMMA);
+			buffer.append(COLUMN_ANALYSIS_ID);
+			buffer.append(COMMA);
+			buffer.append(COLUMN_EVALUATION_ID);
+			buffer.append(COMMA);
+			buffer.append(COLUMN_SORT);
+			buffer.append(COMMA);
+			buffer.append(COLUMN_ALARM_LEVEL);
+			this.updateColumns = buffer.toString();
+		}
+		return this.updateColumns;
+	}	
+
+	protected String getUpdateMultiplySQLValues() {
+		if (this.updateMultiplySQLValues == null){
+			StringBuffer buffer = new StringBuffer(QUESTION);
+			buffer.append(COMMA);
+			buffer.append(QUESTION);
+			buffer.append(COMMA);
+			buffer.append(QUESTION);
+			buffer.append(COMMA);
+			buffer.append(QUESTION);
+			buffer.append(COMMA);
+			buffer.append(QUESTION);
+			buffer.append(COMMA);
+			buffer.append(QUESTION);
+			buffer.append(COMMA);
+			buffer.append(QUESTION);
+			buffer.append(COMMA);
+			buffer.append(QUESTION);
+			buffer.append(COMMA);
+			buffer.append(QUESTION);
+			buffer.append(COMMA);
+			buffer.append(QUESTION);
+			this.updateMultiplySQLValues = buffer.toString();
+		}
+		return this.updateMultiplySQLValues;
+	}
+	
+	
+	
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
+			UpdateObjectException {
+			Result result = fromStorableObject(storableObject);
+			StringBuffer buffer = new StringBuffer();
+			buffer.append(DatabaseDate.toUpdateSubString(result.getCreated()));
+			buffer.append(COMMA);
+			buffer.append(DatabaseDate.toUpdateSubString(result.getModified()));
+			buffer.append(COMMA);
+			buffer.append(result.getCreatorId().toSQLString());
+			buffer.append(COMMA);
+			buffer.append(result.getModifierId().toSQLString());
+			buffer.append(COMMA);
+			buffer.append(result.getMeasurement().getId().toSQLString());
+			buffer.append(COMMA);
+			int resultSort = result.getSort().value();
+			switch (resultSort) {
+				case ResultSort._RESULT_SORT_MEASUREMENT:				
+					buffer.append(Identifier.getNullSQLString());
+					buffer.append(COMMA);				
+					buffer.append(Identifier.getNullSQLString());
+					buffer.append(COMMA);
+					break;
+				case ResultSort._RESULT_SORT_ANALYSIS:
+					buffer.append(result.getAction().getId().toSQLString());
+					buffer.append(COMMA);				
+					buffer.append(Identifier.getNullSQLString());
+					buffer.append(COMMA);
+					break;
+				case ResultSort._RESULT_SORT_EVALUATION:				
+					buffer.append(Identifier.getNullSQLString());
+					buffer.append(COMMA);
+					buffer.append(result.getAction().getId().toSQLString());
+					buffer.append(COMMA);
+					break;
+				default:
+					Log.errorMessage("ResultDatabase.insertResult | Illegal sort: " + resultSort + " of result '" + result.getId().getCode() + "'");
+			}
+			buffer.append(Integer.toString(resultSort));
+			buffer.append(COMMA);
+			buffer.append(Integer.toString(result.getAlarmLevel().value()));
+			return buffer.toString();
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#setEntityForPreparedStatement(com.syrus.AMFICOM.general.StorableObject, java.sql.PreparedStatement)
+	 */
+	protected void setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+			throws IllegalDataException, UpdateObjectException {
+		Result result = fromStorableObject(storableObject);
+		try {
+			/**
+			 * @todo when change DB Identifier model ,change setString() to setLong()
+			 */
+			preparedStatement.setString(1, result.getId().getCode());
+			preparedStatement.setTimestamp(2, new Timestamp(result.getCreated().getTime()));
+			preparedStatement.setTimestamp(3, new Timestamp(result.getModified().getTime()));
+			/**
+			 * @todo when change DB Identifier model ,change setString() to setLong()
+			 */
+			preparedStatement.setString(4, result.getCreatorId().getCode());
+			/**
+			 * @todo when change DB Identifier model ,change setString() to setLong()
+			 */
+			preparedStatement.setString(5, result.getModifierId().getCode());
+
+			/**
+			 * @todo when change DB Identifier model ,change setString() to setLong()
+			 */
+			preparedStatement.setString(6, result.getMeasurement().getId().getCode());
+			int resultSort = result.getSort().value();
+			switch (resultSort) {
+				case ResultSort._RESULT_SORT_MEASUREMENT:	
+					/**
+					 * @todo when change DB Identifier model ,change setString() to setLong()
+					 */
+					preparedStatement.setString(7, "");
+					/**
+					 * @todo when change DB Identifier model ,change setString() to setLong()
+					 */
+					preparedStatement.setString(8, "");
+					break;
+				case ResultSort._RESULT_SORT_ANALYSIS:
+					/**
+					 * @todo when change DB Identifier model ,change setString() to setLong()
+					 */
+					preparedStatement.setString(7, result.getAction().getId().getCode());
+					/**
+					 * @todo when change DB Identifier model ,change setString() to setLong()
+					 */
+					preparedStatement.setString(8, "");
+					break;
+				case ResultSort._RESULT_SORT_EVALUATION:				
+					/**
+					 * @todo when change DB Identifier model ,change setString() to setLong()
+					 */				
+					preparedStatement.setString(7, "");
+					/**
+					 * @todo when change DB Identifier model ,change setString() to setLong()
+					 */
+					preparedStatement.setString(8, result.getAction().getId().getCode());
+					break;
+				default:
+					Log.errorMessage("ResultDatabase.insertResult | Illegal sort: " + resultSort + " of result '" + result.getId().getCode() + "'");
+			}
+			preparedStatement.setInt(9, result.getSort().value());
+			preparedStatement.setInt(10, result.getAlarmLevel().value());
+			preparedStatement.setString(11, result.getId().getCode());
+		} catch (SQLException sqle) {
+			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
+		}
+	}
 
 	private Result fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Result)
@@ -67,7 +247,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 		this.retrieveResultParameters(result);
 	}
 
-	private String retrieveResultQuery(String condition){
+	protected String retrieveQuery(String condition){
 		return SQL_SELECT
 		+ COLUMN_ID + COMMA
 		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
@@ -82,15 +262,16 @@ public class ResultDatabase extends StorableObjectDatabase {
 		+ SQL_FROM + ObjectEntities.RESULT_ENTITY
 		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
 
-	}
+	}	
 	
-	private Result updateResultFromResultSet(Result result, ResultSet resultSet) throws RetrieveObjectException, SQLException{
-		Result result1 = result;
+	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+			throws IllegalDataException, RetrieveObjectException, SQLException {
+		Result result = fromStorableObject(storableObject);
 		if (result == null){
 			/**
 			 * @todo when change DB Identifier model ,change getString() to getLong()
 			 */
-			result1 = new Result(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, 0, 0, null);
+			result = new Result(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, 0, 0, null);
 		}
 		/**
 		 * @todo when change DB Identifier model ,change getString() to getLong()
@@ -131,9 +312,9 @@ public class ResultDatabase extends StorableObjectDatabase {
 				}
 				break;
 			default:
-				Log.errorMessage("Unkown sort: " + resultSort + " of result " + result1.getId().getCode());
+				Log.errorMessage("Unkown sort: " + resultSort + " of result " + result.getId().getCode());
 		}
-		result1.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+		result.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 												 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 												 /**
 												  * @todo when change DB Identifier model ,change getString() to getLong()
@@ -149,13 +330,13 @@ public class ResultDatabase extends StorableObjectDatabase {
 												 resultSet.getInt(COLUMN_ALARM_LEVEL));
 
 
-		return result1;
+		return result;
 	}
 
 	
 	private void retrieveResult(Result result) throws ObjectNotFoundException, RetrieveObjectException {
 		String resultIdStr = result.getId().toSQLString();
-		String sql = retrieveResultQuery(COLUMN_ID + EQUALS + resultIdStr);
+		String sql = retrieveQuery(COLUMN_ID + EQUALS + resultIdStr);
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -267,6 +448,17 @@ public class ResultDatabase extends StorableObjectDatabase {
 			this.delete(result);
 			throw e;
 		}
+	}
+	
+	
+	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
+		insertEntities(storableObjects);
+		
+		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
+			Result result = (Result) it.next();
+			this.insertResultParameters(result);			
+		}
+
 	}
 
 	private void insertResult(Result result) throws CreateObjectException {
@@ -430,11 +622,29 @@ public class ResultDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, UpdateObjectException {
+	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		Result result = this.fromStorableObject(storableObject);
 		switch (updateKind) {
+			case UPDATE_CHECK:
+				super.checkAndUpdateEntity(storableObject, false);
+				break;
+			case UPDATE_FORCE:					
 			default:
+				super.checkAndUpdateEntity(storableObject, true);		
 				return;
+		}
+	}
+	
+	public void update(List storableObjects, int updateKind, Object arg) throws IllegalDataException,
+		VersionCollisionException, UpdateObjectException {
+		switch (updateKind) {
+			case UPDATE_CHECK:
+				super.checkAndUpdateEntities(storableObjects, false);
+				break;
+			case UPDATE_FORCE:					
+			default:
+				super.checkAndUpdateEntities(storableObjects, true);		
+			return;
 		}
 	}
 
@@ -472,126 +682,19 @@ public class ResultDatabase extends StorableObjectDatabase {
 		}
 	}
 	
-	public List retrieveByIds(List ids) throws RetrieveObjectException {
+	
+	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
+		List list = null; 
 		if ((ids == null) || (ids.isEmpty()))
-			return retriveByIdsOneQuery(null);
-		return retriveByIdsOneQuery(ids);	
-		//return retriveByIdsPreparedStatement(ids);
-	}
-	
-	private List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
-		List result = new LinkedList();
-		String sql;
-		{
-			String condition = null;
-			if (ids!=null){
-				StringBuffer buffer = new StringBuffer(COLUMN_ID);
-				int idsLength = ids.size();
-				if (idsLength == 1){
-					buffer.append(EQUALS);
-					buffer.append(((Identifier)ids.iterator().next()).toSQLString());
-				} else{
-					buffer.append(SQL_IN);
-					buffer.append(OPEN_BRACKET);
-					
-					int i = 1;
-					for(Iterator it=ids.iterator();it.hasNext();i++){
-						Identifier id = (Identifier)it.next();
-						buffer.append(id.toSQLString());
-						if (i < idsLength)
-							buffer.append(COMMA);
-					}
-					
-					buffer.append(CLOSE_BRACKET);
-					condition = buffer.toString();
-				}
-			}
-			sql = retrieveResultQuery(condition);
+			list = retriveByIdsOneQuery(null, condition);
+		else list = retriveByIdsOneQuery(ids, condition);
+		
+		for(Iterator it=list.iterator();it.hasNext();){
+			Result result = (Result)it.next();
+			retrieveResultParameters(result);
 		}
 		
-		Statement statement = null;
-		ResultSet resultSet = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("ResultDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			while (resultSet.next()){
-				result.add(updateResultFromResultSet(null, resultSet));
-			}
-		}
-		catch (SQLException sqle) {
-			String mesg = "ResultDatabase.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-		return result;
+		return list;
 	}
 	
-	private List retriveByIdsPreparedStatement(List ids) throws RetrieveObjectException {
-		List result = new LinkedList();
-		String sql;
-		{
-			
-			int idsLength = ids.size();
-			if (idsLength == 1){
-				return retriveByIdsOneQuery(ids);
-			}
-			StringBuffer buffer = new StringBuffer(COLUMN_ID);
-			buffer.append(EQUALS);							
-			buffer.append(QUESTION);
-			
-			sql =retrieveResultQuery(buffer.toString());
-		}
-			
-		PreparedStatement stmt = null;
-		ResultSet resultSet = null;
-		try {
-			stmt = connection.prepareStatement(sql.toString());
-			for(Iterator it = ids.iterator();it.hasNext();){
-				Identifier id = (Identifier)it.next(); 
-				/**
-				 * @todo when change DB Identifier model ,change setString() to setLong()
-				 */
-				String idStr = id.getIdentifierString();
-				stmt.setString(1, idStr);
-				resultSet = stmt.executeQuery();
-				if (resultSet.next()){
-					result.add(updateResultFromResultSet(null, resultSet));
-				} else{
-					Log.errorMessage("ResultDatabase.retriveByIdsPreparedStatement | No such result: " + idStr);									
-				}
-				
-			}
-		}catch (SQLException sqle) {
-			String mesg = "ResultDatabase.retriveByIdsPreparedStatement | Cannot retrieve result " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (stmt != null)
-					stmt.close();
-				if (stmt != null)
-					stmt.close();
-				stmt = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}			
-		
-		return result;
-	}
 }
