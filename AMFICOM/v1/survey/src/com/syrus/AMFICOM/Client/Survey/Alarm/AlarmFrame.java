@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.Client.Survey.Alarm;
 
+import com.syrus.AMFICOM.Client.Survey.SurveyMDIMain;
 import java.util.*;
 import java.awt.*;
 import javax.swing.*;
@@ -448,6 +449,10 @@ public class AlarmFrame extends JInternalFrame
 						sdf.format(new Date(ad.getAlarmTime())),
 					alarm,
 					aContext);
+          
+      aContext.getDispatcher().notify (
+        new OperationEvent (f,0,SurveyMDIMain.alarmPopupFrameDisplayed));
+          
 			Container desktop = this.getParent();
 			f.setLocation(this.getLocation());
 			f.setSize(this.getSize());

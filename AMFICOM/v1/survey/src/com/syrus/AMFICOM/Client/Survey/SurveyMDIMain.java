@@ -77,6 +77,9 @@ import com.syrus.AMFICOM.Client.Resource.SurveyDataSourceImage;
 import com.syrus.AMFICOM.Client.Schematics.Elements.ElementsListFrame;
 import com.syrus.AMFICOM.Client.Schematics.Elements.PropsFrame;
 import com.syrus.AMFICOM.Client.Schematics.Scheme.SchemeViewerFrame;
+import com.syrus.AMFICOM.Client.Survey.Alarm.AlarmFrame;
+import com.syrus.AMFICOM.Client.Survey.Alarm.AlarmPopupFrame;
+import com.syrus.AMFICOM.Client.Survey.Result.ResultFrame;
 import com.syrus.AMFICOM.Client.Survey.UI.ReloadAttributes;
 import com.syrus.io.IniFile;
 
@@ -105,6 +108,10 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 	public String				domain_id;
   
   public static final String alarmFrameDisplayed = "alarmFrameDisplayed";
+  public static final String alarmPopupFrameDisplayed =
+    "alarmPopupFrameDisplayed";  
+  public static final String resultFrameDisplayed = "resultFrameDisplayed";  
+  public static final String schemeFrameDisplayed = "schemeFrameDisplayed";  
 
 	//	public AlarmChecker alarmChecker = null;
 
@@ -130,6 +137,11 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 	ReloadAttributes			myalarmTread		= null;
 
   private CreateSurveyReportCommand csrCommand = null;
+  public AlarmFrame alarmsFrame = null;
+  public AlarmPopupFrame alarmPopupFrame = null;
+  public ResultFrame resultFrame = null;//נופכוךעמדנאללא
+  public SchemeViewerFrame schemeViewerFrame = null;//נופכוךעמדנאללא  
+  
 	//	SchemeAlarmUpdater schemeAlarmUpdater = null;
 
 	public SurveyMDIMain(ApplicationContext aContext) {
@@ -438,7 +450,12 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 		internal_dispatcher.register(this, SchemeElementsEvent.type);
 		internal_dispatcher.register(this, "addschemeelementevent");
 		internal_dispatcher.register(this, "addschemeevent");
-		internal_dispatcher.register(this, SurveyMDIMain.alarmFrameDisplayed);    
+    
+		internal_dispatcher.register(this, SurveyMDIMain.alarmFrameDisplayed);
+		internal_dispatcher.register(this, SurveyMDIMain.alarmPopupFrameDisplayed);
+		internal_dispatcher.register(this, SurveyMDIMain.resultFrameDisplayed);
+		internal_dispatcher.register(this, SurveyMDIMain.schemeFrameDisplayed);    
+    
 		Environment.the_dispatcher.register(this, "mapaddschemeevent");
 		Environment.the_dispatcher.register(this, "mapaddschemeelementevent");
     
@@ -765,7 +782,19 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 		}
     else if (ae.getActionCommand().equals(SurveyMDIMain.alarmFrameDisplayed))
     {
-      csrCommand.setParameter(ae.getSource());
+      alarmsFrame = (AlarmFrame)ae.getSource();
+    }
+    else if (ae.getActionCommand().equals(SurveyMDIMain.alarmPopupFrameDisplayed))
+    {
+      alarmPopupFrame = (AlarmPopupFrame)ae.getSource();
+    }
+    else if (ae.getActionCommand().equals(SurveyMDIMain.resultFrameDisplayed))
+    {
+      resultFrame = (ResultFrame)ae.getSource();
+    }
+    else if (ae.getActionCommand().equals(SurveyMDIMain.schemeFrameDisplayed))
+    {
+      schemeViewerFrame = (SchemeViewerFrame)ae.getSource();
     }
 	}
 

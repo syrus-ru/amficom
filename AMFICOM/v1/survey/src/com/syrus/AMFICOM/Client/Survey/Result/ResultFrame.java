@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.Client.Resource.Result.Test;
 import com.syrus.AMFICOM.Client.Resource.Result.TestArgumentSet;
 import com.syrus.AMFICOM.Client.Resource.Result.TestSetup;
 import com.syrus.AMFICOM.Client.Resource.SurveyDataSourceImage;
+import com.syrus.AMFICOM.Client.Survey.SurveyMDIMain;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
@@ -113,6 +114,9 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 
 		tracePanel = new MapMarkersLayeredPanel(internal_dispatcher);
 		getActiveContext();
+    
+    aContext.getDispatcher().notify (
+      new OperationEvent (this,0,SurveyMDIMain.resultFrameDisplayed));
 	}
 
 	public ResultFrame()
@@ -916,6 +920,11 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 		if (tracePanel != null)
 			tracePanel.resize();
 	}
+  
+  public MapMarkersPanel getReflectPicture()
+  {
+    return map_markers_panel;
+  }
 }
 
 class ValueTableRenderer extends DefaultTableCellRenderer

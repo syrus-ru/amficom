@@ -210,6 +210,10 @@ public class AlarmPopupFrame extends JInternalFrame
 			if(mne != null)
 				aContext.getDispatcher().notify(mne);
 	}
-
+  
+  public String getDescriptionText()
+  {
+    return this.textPane.getText();
+  }
 }
 

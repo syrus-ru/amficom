@@ -107,19 +107,21 @@ public class ObserveReportModel extends APOReportModel
 				CreateReportException.cantImplement);
 
 		JComponent returnValue = null;
-		if (rp.field.equals(ObserveReportModel.alarms_list))
-		{
-			AlarmsList er = new AlarmsList(rp, divisionsNumber);
-			returnValue = new ReportResultsTablePanel(
-				er.columnModel,
-				er.tableModel,
-				rt.findROforReport(rp));
-		}
     
-/*		else
-		{
-			returnValue = new EvaluationGraphPanel(rt.findROforReport(rp));
-		}*/
+    ReportData rd = null;
+		if (rp.field.equals(ObserveReportModel.alarms_list))
+			rd = new AlarmsList(rp, divisionsNumber);
+    else if (rp.field.equals(ObserveReportModel.alarm_info))
+			rd = new AlarmsList(rp, divisionsNumber);    
+    else if (rp.field.equals(ObserveReportModel.alarm_reflectogramm))
+			rd = new AlarmsList(rp, divisionsNumber);    
+    else if (rp.field.equals(ObserveReportModel.alarm_scheme))
+			rd = new AlarmsList(rp, divisionsNumber);    
+    
+    returnValue = new ReportResultsTablePanel(
+      rd.columnModel,
+      rd.tableModel,
+      rt.findROforReport(rp));
 		return returnValue;
 	}
 
