@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.7 2005/01/28 07:40:36 arseniy Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.8 2005/01/28 09:40:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,24 +42,17 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/01/28 07:40:36 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/01/28 09:40:27 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
 public class ModelingTypeDatabase extends StorableObjectDatabase {
-	public static final String MODE_IN = "IN";
-	public static final String MODE_OUT = "OUT";
-
-	public static final String COLUMN_CODENAME = "codename";
-	public static final String COLUMN_DESCRIPTION = "description";
-
 	public static final String LINK_COLUMN_MODELING_TYPE_ID = "modeling_type_id";
 
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
-  public static final String PARAMETER_TYPE_ID = "parameter_type_id";
-	public static final String PARAMETER_MODE = "parameter_mode";
+  public static final String PARAMETER_MODE = "parameter_mode";
 
 	private static String columns;
 	private static String updateMultiplySQLValues;
@@ -77,8 +70,8 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
-				+ COLUMN_CODENAME + COMMA
-				+ COLUMN_DESCRIPTION;
+				+ ModelingTypeWrapper.COLUMN_CODENAME + COMMA
+				+ ModelingTypeWrapper.COLUMN_DESCRIPTION;
 		}
 
 		return columns;
@@ -135,8 +128,8 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 									 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 									 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 									 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-									 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
-									 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)));
+									 DatabaseString.fromQuerySubString(resultSet.getString(ModelingTypeWrapper.COLUMN_CODENAME)),
+									 DatabaseString.fromQuerySubString(resultSet.getString(ModelingTypeWrapper.COLUMN_DESCRIPTION)));
 		return modelingType;
 	}
 
@@ -162,10 +155,10 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 			while (resultSet.next()) {
 				parameterMode = resultSet.getString(LINK_COLUMN_PARAMETER_MODE);
 				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
-				if (parameterMode.equals(MODE_IN))
+				if (parameterMode.equals(ModelingTypeWrapper.MODE_IN))
 					inParTyps.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 				else
-					if (parameterMode.equals(MODE_OUT))
+					if (parameterMode.equals(ModelingTypeWrapper.MODE_OUT))
 						outParTyps.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 					else
 						Log.errorMessage("ModelingTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode '" + parameterMode + "' for parameterTypeId " + parameterTypeId);
@@ -251,7 +244,7 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 				parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_PARAMETER_TYPE_ID);
 				modelingTypeId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_MODELING_TYPE_ID);
 
-				if (parameterMode.equals(MODE_IN)) {
+				if (parameterMode.equals(ModelingTypeWrapper.MODE_IN)) {
 					inParameterTypes = (List)inParameterTypesMap.get(modelingTypeId);
 					if (inParameterTypes == null) {
 						inParameterTypes = new ArrayList();
@@ -260,7 +253,7 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 					inParameterTypes.add(GeneralStorableObjectPool.getStorableObject(parameterTypeId, true));
 				}
 				else
-					if (parameterMode.equals(MODE_OUT)) {
+					if (parameterMode.equals(ModelingTypeWrapper.MODE_OUT)) {
 						outParameterTypes = (List)outParameterTypesMap.get(modelingTypeId);
 						if (outParameterTypes == null) {
 							outParameterTypes = new ArrayList();
@@ -355,7 +348,7 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 				parameterTypeId = ((ParameterType) iterator.next()).getId();
 				DatabaseIdentifier.setIdentifier(preparedStatement, 1, modelingTypeId);				
 				DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);
-				parameterMode = MODE_IN;
+				parameterMode = ModelingTypeWrapper.MODE_IN;
 				preparedStatement.setString(3, parameterMode);
 				Log.debugMessage("ModelingTypeDatabase.insertParameterTypes | Inserting parameter type "
 								+ parameterTypeId
@@ -368,7 +361,7 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 				parameterTypeId = ((ParameterType) iterator.next()).getId();
 				DatabaseIdentifier.setIdentifier(preparedStatement, 1, modelingTypeId);				
 				DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);
-				parameterMode = MODE_OUT;
+				parameterMode = ModelingTypeWrapper.MODE_OUT;
 				preparedStatement.setString(3, parameterMode);
 				Log.debugMessage("ModelingTypeDatabase.insertParameterTypes | Inserting parameter type "
 								+ parameterTypeId
@@ -465,7 +458,7 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 	public ModelingType retrieveForCodename(String codename) throws ObjectNotFoundException, RetrieveObjectException {
 		List list = null;
 		try {
-			list = this.retrieveByIds( null , COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
+			list = this.retrieveByIds( null , ModelingTypeWrapper.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
 		}
 		catch (IllegalDataException ide) {				
 			throw new RetrieveObjectException(ide);
@@ -519,7 +512,7 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 				}
 			}
 
-			condition = PARAMETER_TYPE_ID + SQL_IN
+			condition = ModelingTypeWrapper.PARAMETER_TYPE_ID + SQL_IN
 						+ OPEN_BRACKET
 						+ SQL_SELECT + SetDatabase.LINK_COLUMN_TYPE_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
 						+ SQL_WHERE + SetDatabase.LINK_COLUMN_SET_ID + SQL_IN 
@@ -527,7 +520,7 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 							+ argumentIds
 							+ CLOSE_BRACKET
 					+ CLOSE_BRACKET
-					+ SQL_AND + PARAMETER_MODE + EQUALS + APOSTOPHE + MODE_IN + APOSTOPHE;
+					+ SQL_AND + PARAMETER_MODE + EQUALS + APOSTOPHE + ModelingTypeWrapper.MODE_IN + APOSTOPHE;
 			return retrieveButIds(ids, condition);
 		}
 		return Collections.EMPTY_LIST;
