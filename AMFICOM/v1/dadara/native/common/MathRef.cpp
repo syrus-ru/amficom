@@ -28,29 +28,6 @@ void linearize2point (double* y, int begin, int end, double *res)
 	res[1] = y[begin] - res[0] * (double)begin;
 }
 //------------------------------------------------------------------------------------------------------------
-double getWLetNorma(int freq)
-{	double n = 0;
-	for(int i = -freq; i <= freq; i++)
-    {	n = n + fabs(wLet1(i, freq, 1.));
-    }
-	n /= 2.;
-	return n;
-}
-//------------------------------------------------------------------------------------------------------------
-double getWLetNorma2(int freq)
-{	double s = 0;
-	for(int i = -freq; i <= freq; i++)
-    {	s = s + wLet1(i, freq, 1.) * i;
-    }
-	s /= 2.;
-	return s;
-}
-//------------------------------------------------------------------------------------------------------------
-// waveletType ÏÅÐÅÏÈÑÒÜ êàê function* !!!
-double wLet(int arg, int width, double norma)
-{	return  wLet1(arg, width, norma);//!!! îò waveletType ÍÈ×ÅÃÎ ÍÅ ÇÀÂÈÑÈÒ 
-}
-//------------------------------------------------------------------------------------------------------------
 inline double wLet1(int arg, int width, double norma)
 {	return (sin(arg*M_PI/width))/norma;
 }
@@ -95,3 +72,36 @@ inline double wLet10(int arg, int freq, double norma)
 {	return (sin(arg*M_PI/freq/2.) - ((double)arg)/freq/2.)/norma;
 }
 //------------------------------------------------------------------------------------------------------------
+double getWLetNorma(int freq)
+{	double n = 0;
+	for(int i = -freq; i <= freq; i++)
+    {	n = n + fabs(wLet1(i, freq, 1.));
+    }
+	n /= 2.;
+	return n;
+}
+//------------------------------------------------------------------------------------------------------------
+double getWLetNorma2(int freq)
+{	double s = 0;
+	for(int i = -freq; i <= freq; i++)
+    {	s = s + wLet1(i, freq, 1.) * i;
+    }
+	s /= 2.;
+	return s;
+}
+//------------------------------------------------------------------------------------------------------------
+// waveletType ÏÅÐÅÏÈÑÒÜ êàê function* !!!
+double wLet(int arg, int width, double norma)
+{	return  wLet1(arg, width, norma);//!!! îò waveletType ÍÈ×ÅÃÎ ÍÅ ÇÀÂÈÑÈÒ 
+}
+//------------------------------------------------------------------------------------------------------------
+
+////////////
+
+double wLet_SINX(int scale, int x)
+{	return sin(x * M_PI / scale);
+}
+
+double wLet_SINXABSX(int scale, int x)
+{	return sin(x * M_PI / scale) * fabs(x);
+}
