@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.8 2004/06/01 14:20:39 bass Exp $
+# $Id: Makefile,v 1.9 2004/06/03 14:16:30 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -11,6 +11,34 @@ USER = AMFICOM
 PASSWORD = amficom
 HOST = RESEARCH
 SERVICE_NAME = SHAITAN
+
+CLIENT_EXCLUDED_CLASSES = \
+	com.syrus.util.ServerLogger \
+	com.syrus.util.database.ByteArrayDatabase \
+	com.syrus.util.database.Server \
+	com.syrus.util.database.ServerProperties
+
+SERVER_INCLUDED_CLASSES = \
+	$(CLIENT_EXCLUDED_CLASSES) \
+	com.syrus.io.Rewriter \
+	com.syrus.util.ByteArray \
+	com.syrus.util.Log \
+	com.syrus.util.Logger \
+	com.syrus.util.StolenLogger \
+	com.syrus.util.corba.ORBUtil \
+	com.syrus.util.corba.VisiBrokerORBUtil \
+	com.syrus.util.corba.AuroraORBUtil \
+	com.syrus.util.database.DatabaseConnection
+
+SRC_SUFFIXES = \
+	.java \
+	.generated.java
+
+CLASS_SUFFIXES = \
+	.class \
+	$$%.class \
+	_SJProfile0.class \
+	_SJProfileKeys.class
 
 SRCDIR = src
 CLASSDIR = classes
@@ -50,17 +78,25 @@ $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 $(call checkenve,IDL2JAVA)
 
+.PHONY: export
+export: $(MODULE_NAME).jar $(MODULE_NAME)client.jar $(MODULE_NAME)server.jar
+
 .PHONY: all
-all: sqlj sqljclean
+all: .all
+
+.all: .sqlj
 	$(JAVAC) \
 		$(JAVACFLAGS) \
 		-classpath $(AURORACLASSPATH):$(VBJCLASSPATH):$(JDBCCLASSPATH):$(SQLJCLASSPATH):$(CLASSDIR) \
 		-d $(CLASSDIR) \
 		-encoding $(ENCODING) \
 	 	$(shell find $(SRCDIR) -name '*.java')
+	touch $@
 
 .PHONY: sqlj
-sqlj: $(CLASSDIR)
+sqlj: .sqlj
+
+.sqlj: $(CLASSDIR)
 	echo "sqlj.compiler-executable=$(JAVAC) $(JAVACFLAGS)" > sqlj.properties
 	$(SQLJ) \
 		$(SQLJFLAGS) \
@@ -70,44 +106,37 @@ sqlj: $(CLASSDIR)
 		$(SRCDIR)/com/syrus/util/database/ServerProperties.sqlj \
 		$(SRCDIR)/com/syrus/util/Log.java \
 		$(SRCDIR)/com/syrus/util/Logger.java
+	$(RM) \
+		$(filter $(foreach source, $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj')), $(foreach src_suffix, $(SRC_SUFFIXES), $(source)$(src_suffix))), $(shell find $(SRCDIR) -name '*\.java')) \
+		$(foreach file, $(filter-out $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)')
+	touch $@
 
 .PHONY: sqljclean
 sqljclean:
 	$(RM) \
-		sqlj.properties \
-		$(SRCDIR)/com/syrus/util/database/ServerProperties.java \
-		$(SRCDIR)/com/syrus/util/database/ServerProperties.generated.java
+		$(foreach file, $(filter $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)') \
+		.sqlj
 
 $(CLASSDIR):
 	mkdir -p $@
 
 .PHONY: clean
 clean: sqljclean
+	$(RM) \
+		$(foreach file, $(filter-out $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)') \
+		.all
 
-.PHONY: export
-export: $(MODULE_NAME).jar $(MODULE_NAME)server.jar
-
-$(MODULE_NAME).jar: all
+$(MODULE_NAME).jar: .all
 	$(JAR) cf $@ \
 		-C $(CLASSDIR) com
 
-$(MODULE_NAME)server.jar: all
-	-$(JAR) cf $@ \
-        -C $(CLASSDIR) com/syrus/io/Rewriter.class \
-        -C $(CLASSDIR) com/syrus/util/ByteArray.class \
-        -C $(CLASSDIR) com/syrus/util/Log.class \
-        -C $(CLASSDIR) com/syrus/util/Logger.class \
-        -C $(CLASSDIR) com/syrus/util/ServerLogger.class \
-        -C $(CLASSDIR) com/syrus/util/StolenLogger.class \
-        -C $(CLASSDIR) com/syrus/util/corba/ORBUtil.class \
-        -C $(CLASSDIR) com/syrus/util/corba/VisiBrokerORBUtil.class \
-        -C $(CLASSDIR) com/syrus/util/corba/AuroraORBUtil.class \
-        -C $(CLASSDIR) com/syrus/util/database/ByteArrayDatabase.class \
-        -C $(CLASSDIR) com/syrus/util/database/DatabaseConnection.class \
-        -C $(CLASSDIR) com/syrus/util/database/Server.class \
-        -C $(CLASSDIR) com/syrus/util/database/ServerProperties.class \
-        -C $(CLASSDIR) com/syrus/util/database/ServerProperties_SJProfile0.class \
-        -C $(CLASSDIR) com/syrus/util/database/ServerProperties_SJProfileKeys.class
+$(MODULE_NAME)client.jar: .all
+	$(JAR) cf $@ \
+		$(foreach file, $(filter-out $(foreach class, $(subst .,/, $(CLIENT_EXCLUDED_CLASSES)), $(foreach suffix, $(CLASS_SUFFIXES), $(class)$(suffix))), $(foreach classfile, $(shell find $(CLASSDIR) -name '*\.class'), $(subst $(CLASSDIR)/,,$(classfile)))), -C $(CLASSDIR) '$(file)')
+
+$(MODULE_NAME)server.jar: .all
+	$(JAR) cf $@ \
+		$(foreach file, $(filter $(foreach class, $(subst .,/, $(SERVER_INCLUDED_CLASSES)), $(foreach suffix, $(CLASS_SUFFIXES), $(class)$(suffix))), $(foreach classfile, $(shell find $(CLASSDIR) -name '*\.class'), $(subst $(CLASSDIR)/,,$(classfile)))), -C $(CLASSDIR) '$(file)')
 
 .PHONY: dist
 dist: distclean
@@ -120,4 +149,5 @@ distclean: clean
 	$(RM) -r \
 		$(CLASSDIR) \
 		SQLChecker.cache \
+		sqlj.properties \
 		*.jar
