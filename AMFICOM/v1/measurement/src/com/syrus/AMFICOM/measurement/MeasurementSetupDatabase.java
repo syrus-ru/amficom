@@ -24,7 +24,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 
 	public static final String	COLUMN_CRITERIA_SET_ID				= "criteria_set_id";
 	public static final String	COLUMN_DESCRIPTION					= "description";
-	public static final String	COLUMN_ETHALON_ID					= "etalon_id";
+	public static final String	COLUMN_ETALON_ID					= "etalon_id";
 	public static final String	COLUMN_MEASUREMENT_DURAION			= "measurement_duration";
 	public static final String	COLUMN_PARAMETER_SET_ID				= "parameter_set_id";
 	public static final String	COLUMN_THRESHOLD_SET_ID				= "threshold_set_id";
@@ -222,7 +222,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			buffer.append(COMMA);
 			buffer.append(COLUMN_THRESHOLD_SET_ID);
 			buffer.append(COMMA);
-			buffer.append(COLUMN_ETHALON_ID);
+			buffer.append(COLUMN_ETALON_ID);
 			buffer.append(COMMA);
 			buffer.append(COLUMN_DESCRIPTION);
 			buffer.append(COMMA);
@@ -369,7 +369,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			buffer.append(COMMA);
 			buffer.append(COLUMN_THRESHOLD_SET_ID);
 			buffer.append(COMMA);
-			buffer.append(COLUMN_ETHALON_ID);
+			buffer.append(COLUMN_ETALON_ID);
 			buffer.append(COMMA);
 			buffer.append(COLUMN_DESCRIPTION);
 			buffer.append(COMMA);
@@ -418,7 +418,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 				 * @todo when change DB Identifier model ,change getString() to
 				 *       getLong()
 				 */
-				idCode = resultSet.getString(COLUMN_ETHALON_ID);
+				idCode = resultSet.getString(COLUMN_ETALON_ID);
 				Set etalon = (idCode != null) ? (new Set(new Identifier(
 						idCode))) : null;
 				String description = resultSet.getString(COLUMN_DESCRIPTION);

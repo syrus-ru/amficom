@@ -20,7 +20,7 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 	public static final String	COLUMN_TYPE_ID				= "type_id";
 	public static final String	COLUMN_MONITORED_ELEMENT_ID	= "monitored_element_id";
 	public static final String	COLUMN_THRESHOLD_SET_ID		= "threshold_set_id";
-	public static final String	COLUMN_ETHALON_ID			= "etalon_id";
+	public static final String	COLUMN_ETALON_ID			= "etalon_id";
 
 	private Evaluation fromStorableObject(StorableObject storableObject)
 			throws IllegalDataException {
@@ -55,7 +55,7 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 			buffer.append(COMMA);
 			buffer.append(COLUMN_THRESHOLD_SET_ID);
 			buffer.append(COMMA);
-			buffer.append(COLUMN_ETHALON_ID);
+			buffer.append(COLUMN_ETALON_ID);
 			buffer.append(COMMA);
 			buffer.append(SQL_FROM);
 			buffer.append(ObjectEntities.EVALUATION_ENTITY);
@@ -84,7 +84,7 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 				 *       getLong()
 				 */
 				Set etalon = new Set(new Identifier(resultSet
-						.getString(COLUMN_ETHALON_ID)));
+						.getString(COLUMN_ETALON_ID)));
 				/**
 				 * @todo when change DB Identifier model ,change getString() to
 				 *       getLong()
@@ -177,7 +177,7 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 			buffer.append(COMMA);
 			buffer.append(COLUMN_THRESHOLD_SET_ID);
 			buffer.append(COMMA);
-			buffer.append(COLUMN_ETHALON_ID);
+			buffer.append(COLUMN_ETALON_ID);
 			buffer.append(CLOSE_BRACKET);
 			buffer.append(SQL_VALUES);
 			buffer.append(OPEN_BRACKET);
