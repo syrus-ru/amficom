@@ -1,14 +1,5 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-/**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2004</p>
- * <p>Company: </p>
- * @author not attributable
- * @version 1.0
- */
-
 import java.util.*;
 import java.util.List;
 
@@ -20,13 +11,13 @@ import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.PathDecomposer;
 import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
 
-public class PathElementsPanel extends AnalysisPanel
+public final class PathElementsPanel extends AnalysisPanel
 {
 	protected boolean paint_path_elements = false;
 	private boolean setting_active_pe = false;
 
 	SchemePath path;
-	PathDecomposer decompositor;
+	private PathDecomposer decomposer;
 	PathElement startPE;
 	PathElement endPE;
 	PathElement activePE;
@@ -39,7 +30,7 @@ public class PathElementsPanel extends AnalysisPanel
 	public void setPath(SchemePath path)
 	{
 		this.path = path;
-		decompositor = new PathDecomposer(path);
+		decomposer = new PathDecomposer(path);
 //		if (events != null)
 //			decompositor.setTotalOpticalLength(events[events.length - 1].last_point * deltaX);
 //		else if (ep != null)
@@ -52,12 +43,12 @@ public class PathElementsPanel extends AnalysisPanel
 
 		if (path != null)
 		{
-			startPE = decompositor.getPathElementByOpticalDistance(start * deltaX);
-			if (decompositor.hasPreviousPathElement(startPE))
-				startPE = decompositor.getPreviousPathElement(startPE);
-			endPE = decompositor.getPathElementByOpticalDistance(end * deltaX);
-			if (decompositor.hasNextPathElement(endPE))
-				endPE = decompositor.getNextPathElement(endPE);
+			startPE = decomposer.getPathElementByOpticalDistance(start * deltaX);
+			if (decomposer.hasPreviousPathElement(startPE))
+				startPE = decomposer.getPreviousPathElement(startPE);
+			endPE = decomposer.getPathElementByOpticalDistance(end * deltaX);
+			if (decomposer.hasNextPathElement(endPE))
+				endPE = decomposer.getNextPathElement(endPE);
 		}
 	}
 
@@ -72,7 +63,7 @@ public class PathElementsPanel extends AnalysisPanel
 			{
 				setting_active_pe = true;
 				double optd = deltaX * coord2index(currpos.x);
-				activePE = decompositor.getPathElementByOpticalDistance(optd);
+				activePE = decomposer.getPathElementByOpticalDistance(optd);
 				return;
 			}
 		}
@@ -121,12 +112,14 @@ public class PathElementsPanel extends AnalysisPanel
 				else
 					g.setColor(Color.BLUE);
 
-				double[] d = decompositor.getOpticalDistanceFromStart(pe);
-				int st = index2coord((int)Math.round(d[0] / deltaX));
-				int en = index2coord((int)Math.round(d[1] / deltaX));
-				g.drawLine(st, 3, st, 5);
-				g.drawLine(st, 5, en, 5);
-				g.drawLine(en, 5, en, 3);
+				double[] d = this.decomposer.getOpticalDistanceFromStart(pe);
+				if (d.length != 2)
+					continue;
+				final int start1 = index2coord((int)Math.round(d[0] / this.deltaX));
+				final int end1 = index2coord((int)Math.round(d[1] / this.deltaX));
+				g.drawLine(start1, 3, start1, 5);
+				g.drawLine(start1, 5, end1, 5);
+				g.drawLine(end1, 5, end1, 3);
 			}
 		}
 	}
