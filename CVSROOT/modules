@@ -142,6 +142,8 @@ mcm_v1		AMFICOM/v1/mcm
 mserver_v1	AMFICOM/v1/mserver
 #M	cmserver_v1	Client Measurement Server
 cmserver_v1	AMFICOM/v1/cmserver
+#M	mshserver_v1	Map und Scheme Server
+mshserver_v1	AMFICOM/v1/mshserver
 #M	mapview_v1	Map View Module
 mapview_v1	AMFICOM/v1/mapview
 #M	database_v1	Database Scheme (new)
