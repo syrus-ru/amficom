@@ -107,13 +107,13 @@ public final class SchemeElementController implements ObjectResourceController
 			else if (key.equals(COLUMN_SCHEME_ID))
 				result = element.getParentScheme().getId().getIdentifierString();
 			else if (key.equals(COLUMN_INTERNAL_SCHEME_ID))
-				result = element.internalScheme().getId().getIdentifierString();
+				result = element.getInnerScheme().getId().getIdentifierString();
 			else if (key.equals(COLUMN_KIS_ID))
 				result = element.getKis().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SITE_NODE_ID))
 				result = element.getSiteNode().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SCHEME_DEVICE_IDS)) {
-				SchemeDevice[] devices = element.schemeDevices();
+				SchemeDevice[] devices = element.getSchemeDevicesAsArray();
 				List res = new ArrayList(devices.length);
 				for (int i = 0; i < devices.length; i++) {
 					res.add(devices[i].getId().getIdentifierString());
@@ -121,7 +121,7 @@ public final class SchemeElementController implements ObjectResourceController
 				result = res;
 			}
 			else if (key.equals(COLUMN_SCHEME_ELEMENT_IDS)) {
-				SchemeElement[] elements = element.schemeElements();
+				SchemeElement[] elements = element.getSchemeElementsAsArray();
 				List res = new ArrayList(elements.length);
 				for (int i = 0; i < elements.length; i++) {
 					res.add(elements[i].getId().getIdentifierString());
@@ -129,7 +129,7 @@ public final class SchemeElementController implements ObjectResourceController
 				result = res;
 			}
 			else if (key.equals(COLUMN_SCHEME_LINK_IDS)) {
-				SchemeLink[] links = element.schemeLinks();
+				SchemeLink[] links = element.getSchemeLinksAsArray();
 				List res = new ArrayList(links.length);
 				for (int i = 0; i < links.length; i++) {
 					res.add(links[i].getId().getIdentifierString());
