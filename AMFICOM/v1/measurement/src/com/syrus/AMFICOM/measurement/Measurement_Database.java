@@ -13,6 +13,25 @@ import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 public class Measurement_Database extends StorableObject_Database {
+//   type_id VARCHAR2(32) NOT NULL,
+	public static final String COLUMN_TYPE_ID				=	"type_id";
+//	 monitored_element_id VARCHAR2(32) NOT NULL,
+	public static final String COLUMN_MONITORED_ELEMENT_ID	=	"monitored_element_id";
+//	 setup_id VARCHAR2(32) NOT NULL,
+	public static final String COLUMN_SETUP_ID				= 	"setup_id";
+//	 start_time DATE NOT NULL,
+	public static final String COLUMN_START_TIME			= 	"start_time";
+//	 duration NUMBER(20) NOT NULL,
+	public static final String COLUMN_DURATION				=	"duration";
+//	 status NUMBER(2, 0) NOT NULL,
+	public static final String COLUMN_STATUS				=	"status";
+//	 local_address VARCHAR2(64) NOT NULL,
+	public static final String COLUMN_LOCAL_ADDRESS			=	"local_address";
+//	 test_id VARCHAR2(32) NOT NULL,
+	public static final String COLUMN_TEST_ID				=	"test_id";
+	
+	public static final String LINK_COLUMN_MEASUREMENT_ID	=	"measurement_id";
+	public static final String LINK_SORT					=	"sort";
 
 	private Measurement fromStorableObject(StorableObject storableObject) throws Exception {
 		if (storableObject instanceof Measurement)
@@ -27,22 +46,37 @@ public class Measurement_Database extends StorableObject_Database {
 	}
 
 	private void retrieveMeasurement(Measurement measurement) throws Exception {
-		String measurement_id_str = measurement.getId().toString();
-		String sql = "SELECT "
-			+ DatabaseDate.toQuerySubString("created") + ", " 
-			+ DatabaseDate.toQuerySubString("modified") + ", "
-			+ "creator_id, "
-			+ "modifier_id, "
-			+ "type_id, "
-			+ "monitored_element_id, "
-			+ "setup_id, "
-			+ DatabaseDate.toQuerySubString("start_time") + ", "
-			+ "duration, "
-			+ "status, "
-			+ "local_address, "
-			+ "test_id"
-			+ " FROM " + ObjectEntities.MEASUREMENT_ENTITY
-			+ " WHERE id = " + measurement_id_str;
+		String measurement_id_str = measurement.getId().toSQLString();
+		String sql = SQL_SELECT
+			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) 
+			+ COMMA 
+			+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) 
+			+ COMMA
+			+ COLUMN_CREATOR_ID
+			+ COMMA
+			+ COLUMN_MODIFIER_ID
+			+ COMMA
+			+ COLUMN_TYPE_ID
+			+ COMMA
+			+ COLUMN_MONITORED_ELEMENT_ID
+			+ COMMA
+			+ COLUMN_SETUP_ID
+			+ COMMA
+			+ DatabaseDate.toQuerySubString(COLUMN_START_TIME)
+			+ COMMA
+			+ COLUMN_DURATION
+			+ COMMA
+			+ COLUMN_STATUS
+			+ COMMA
+			+ COLUMN_LOCAL_ADDRESS
+			+ COMMA
+			+ COLUMN_TEST_ID
+			+ SQL_WHERE
+			+ ObjectEntities.MEASUREMENT_ENTITY
+			+ SQL_WHERE
+			+ COLUMN_ID
+			+ EQUALS
+			+ measurement_id_str;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -50,19 +84,37 @@ public class Measurement_Database extends StorableObject_Database {
 			Log.debugMessage("Measurement_Database.retrieve | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
-				MeasurementSetup measurementSetup = new MeasurementSetup(new Identifier(resultSet.getLong("setup_id")));
-				measurement.setAttributes(DatabaseDate.fromQuerySubString(resultSet, "created"),
-																	DatabaseDate.fromQuerySubString(resultSet, "modified"),
-																	new Identifier(resultSet.getLong("creator_id")),
-																	new Identifier(resultSet.getLong("modifier_id")),
-																	new Identifier(resultSet.getLong("type_id")),
-																	new Identifier(resultSet.getLong("monitored_element_id")),
-																	measurementSetup,
-																	DatabaseDate.fromQuerySubString(resultSet, "start_time"),
-																	resultSet.getLong("duration"),
-																	resultSet.getInt("status"),
-																	resultSet.getString("local_address"),
-																	new Identifier(resultSet.getLong("test_id")));
+				/**
+				 * @todo when change DB Identifier model ,change getString() to getLong()
+				 */				
+				MeasurementSetup measurementSetup = new MeasurementSetup(new Identifier(resultSet.getString(COLUMN_SETUP_ID)));
+				measurement.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+											DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+											/**
+											 * @todo when change DB Identifier model ,change getString() to getLong()
+											 */											
+											new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+											/**
+											 * @todo when change DB Identifier model ,change getString() to getLong()
+											 */
+											new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+											/**
+											 * @todo when change DB Identifier model ,change getString() to getLong()
+											 */
+											new Identifier(resultSet.getString(COLUMN_TYPE_ID)),
+											/**
+											 * @todo when change DB Identifier model ,change getString() to getLong()
+											 */
+											new Identifier(resultSet.getString(COLUMN_MONITORED_ELEMENT_ID)),
+											measurementSetup,
+											DatabaseDate.fromQuerySubString(resultSet, COLUMN_START_TIME),
+											resultSet.getLong(COLUMN_DURATION),
+											resultSet.getInt(COLUMN_STATUS),
+											resultSet.getString(COLUMN_LOCAL_ADDRESS),
+											/**
+											 * @todo when change DB Identifier model ,change getString() to getLong()
+											 */
+											new Identifier(resultSet.getString(COLUMN_TEST_ID)));
 			}
 			else
 				throw new Exception("No such measurement: " + measurement_id_str);
@@ -95,21 +147,32 @@ public class Measurement_Database extends StorableObject_Database {
 	}
 
 	private Result retrieveResult(Measurement measurement, ResultSort result_sort) throws Exception {
-		String measurement_id_str = measurement.getId().toString();
+		String measurement_id_str = measurement.getId().toSQLString();
 		int result_sort_num = result_sort.value();
-		String sql = "SELECT "
-			+ "id"
-			+ " FROM " + ObjectEntities.RESULT_ENTITY
-			+ " WHERE measurement_id = " + measurement_id_str
-				+ " AND sort = " + Integer.toString(result_sort_num);
+		String sql = SQL_SELECT
+			+ COLUMN_ID
+			+ SQL_FROM
+			+ ObjectEntities.RESULT_ENTITY
+			+ SQL_WHERE		
+			+ LINK_COLUMN_MEASUREMENT_ID
+			+ EQUALS
+			+ measurement_id_str
+			+ SQL_AND
+			+ LINK_SORT
+			+ EQUALS
+			+ Integer.toString(result_sort_num);
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("Measurement_Database.retrieveResult | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
-			if (resultSet.next())
-				return new Result(new Identifier(resultSet.getLong("id")));
+			if (resultSet.next()){
+				/**
+				 * @todo when change DB Identifier model ,change getString() to getLong()
+				 */
+				return new Result(new Identifier(resultSet.getString(COLUMN_ID)));
+			}
 			else	
 				throw new Exception("No result of sort: " + result_sort_num + " for measurement " + measurement_id_str);
 		}
@@ -155,24 +218,67 @@ public class Measurement_Database extends StorableObject_Database {
 	}
 
 	private void insertMeasurement(Measurement measurement) throws Exception {
-		String measurement_id_str = measurement.getId().toString();
-		String sql = "INSERT INTO " + ObjectEntities.MEASUREMENT_ENTITY
-			+ " (id, created, modified, creator_id, modifier_id, type_id, monitored_element_id, setup_id, start_time, duration, status, local_address, test_id)"
-			+ " VALUES ("
-			+ measurement_id_str + ", "
-			+ DatabaseDate.toUpdateSubString(measurement.getCreated()) + ", "
-			+ DatabaseDate.toUpdateSubString(measurement.getModified()) + ", "
-			+ measurement.getCreatorId().toString() + ", "
-			+ measurement.getModifierId().toString() + ", "
-			+ measurement.getTypeId().toString() + ", "
-			+ measurement.getMonitoredElementId().toString() + ", "
-			+ measurement.getSetup().getId().toString() + ", "
-			+ DatabaseDate.toUpdateSubString(measurement.getStartTime()) + ", "
-			+ Long.toString(measurement.getDuration()) + ", "
-			+ Integer.toString(measurement.getStatus().value()) + ", '"
-			+ measurement.getLocalAddress() + "', "
-			+ measurement.getTestId().toString()
-			+ ")";
+		String measurement_id_str = measurement.getId().toSQLString();
+		String sql = SQL_INSERT_INTO 
+			+ ObjectEntities.MEASUREMENT_ENTITY
+			+ OPEN_BRACKET
+			+ COLUMN_ID
+			+ COMMA
+			+ COLUMN_CREATED
+			+ COMMA
+			+ COLUMN_MODIFIED
+			+ COMMA
+			+ COLUMN_CREATOR_ID
+			+ COMMA
+			+ COLUMN_MODIFIER_ID
+			+ COMMA
+			+ COLUMN_TYPE_ID
+			+ COMMA
+			+ COLUMN_MONITORED_ELEMENT_ID
+			+ COMMA
+			+ COLUMN_SETUP_ID
+			+ COMMA
+			+ COLUMN_START_TIME
+			+ COMMA
+			+ COLUMN_DURATION
+			+ COMMA
+			+ COLUMN_STATUS
+			+ COMMA
+			+ COLUMN_LOCAL_ADDRESS
+			+ COMMA
+			+ COLUMN_TEST_ID
+			+ COMMA
+			+ CLOSE_BRACKET		
+			+ SQL_VALUES
+			+ OPEN_BRACKET
+			+ measurement_id_str 
+			+ COMMA
+			+ DatabaseDate.toUpdateSubString(measurement.getCreated()) 
+			+ COMMA
+			+ DatabaseDate.toUpdateSubString(measurement.getModified()) 
+			+ COMMA
+			+ measurement.getCreatorId().toSQLString() 
+			+ COMMA
+			+ measurement.getModifierId().toSQLString() 
+			+ COMMA
+			+ measurement.getTypeId().toSQLString() 
+			+ COMMA
+			+ measurement.getMonitoredElementId().toSQLString() 
+			+ COMMA
+			+ measurement.getSetup().getId().toSQLString() 
+			+ COMMA
+			+ DatabaseDate.toUpdateSubString(measurement.getStartTime()) 
+			+ COMMA
+			+ Long.toString(measurement.getDuration()) 
+			+ COMMA
+			+ Integer.toString(measurement.getStatus().value())
+			+ COMMA
+			+ APOSTOPHE			
+			+ measurement.getLocalAddress()
+			+ APOSTOPHE
+			+ COMMA
+			+ measurement.getTestId().toSQLString()
+			+ CLOSE_BRACKET;
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
@@ -222,13 +328,21 @@ public class Measurement_Database extends StorableObject_Database {
 	}
 
 	private void updateStatus(Measurement measurement) throws Exception {
-		String measurement_id_str = measurement.getId().toString();
-		String sql = "UPDATE " + ObjectEntities.MEASUREMENT_ENTITY
-			+ " SET "
-			+ "status = " + Integer.toString(measurement.getStatus().value()) + ", "
-			+ "modified = " + DatabaseDate.toUpdateSubString(measurement.getModified()) + ", "
-			+ "modifier_id = " + measurement.getModifierId().toString()
-			+ " WHERE id = " + measurement_id_str;
+		String measurement_id_str = measurement.getId().toSQLString();
+		String sql = SQL_UPDATE
+			+ ObjectEntities.MEASUREMENT_ENTITY
+			+ SQL_SET
+			+ COLUMN_STATUS
+			+ EQUALS
+			+ Integer.toString(measurement.getStatus().value()) + COMMA
+			+ COLUMN_MODIFIED 
+			+ EQUALS
+			+ DatabaseDate.toUpdateSubString(measurement.getModified()) + COMMA
+			+ COLUMN_MODIFIER_ID			
+			+ measurement.getModifierId().toSQLString()
+			+ SQL_WHERE
+			+ COLUMN_ID + EQUALS			
+			+ measurement_id_str;
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
