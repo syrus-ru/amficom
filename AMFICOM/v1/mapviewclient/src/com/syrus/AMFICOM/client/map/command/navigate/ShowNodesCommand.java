@@ -1,5 +1,5 @@
 /**
- * $Id: ShowNodesCommand.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: ShowNodesCommand.java,v 1.2 2004/10/01 16:36:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,7 +26,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/01 16:36:26 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -61,22 +61,21 @@ public class ShowNodesCommand extends VoidCommand
 
 	public void execute()
 	{
-		if(aModel.isSelected("mapModeViewNodes"))
+		if(MapPropertiesManager.isShowPhysicalNodes())
 		{
 			button.setIcon(new ImageIcon("images/nodes_invisible.gif"));
-			aModel.setSelected("mapModeViewNodes", false);
-			aModel.fireModelChanged("");
+			MapPropertiesManager.setShowPhysicalNodes(false);
 		}
 		else
 		if(!aModel.isSelected("mapModeViewNodes"))
 		{
 			button.setIcon(new ImageIcon("images/nodes_visible.gif"));
-			aModel.setSelected("mapModeViewNodes", true);
-			aModel.fireModelChanged("");
+			MapPropertiesManager.setShowPhysicalNodes(true);
 		}
 
-		MapPropertiesManager.setShowPhysicalNodes(
-				aModel.isSelected("mapModeViewNodes"));
+		aModel.setSelected("mapModeViewNodes", 
+				MapPropertiesManager.isShowPhysicalNodes());
+		aModel.fireModelChanged("");
 		logicalNetLayer.repaint();
 	}
 }
