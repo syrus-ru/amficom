@@ -35,7 +35,6 @@
 
 package com.syrus.AMFICOM.Client.General.Filter;
 
-
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
@@ -45,15 +44,6 @@ import com.syrus.AMFICOM.Client.General.UI.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-
 import java.util.Vector;
 
 import oracle.jdeveloper.layout.XYConstraints;
@@ -61,40 +51,27 @@ import oracle.jdeveloper.layout.XYLayout;
 import oracle.jdeveloper.layout.VerticalFlowLayout;
 
 import javax.swing.border.EtchedBorder;
-import javax.swing.JScrollPane;
-import javax.swing.JInternalFrame;
-import javax.swing.JPanel;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JRadioButton;
-import javax.swing.JComboBox;
-import javax.swing.ImageIcon;
-import javax.swing.JMenuItem;
-import javax.swing.JPopupMenu;
-import javax.swing.ButtonGroup;
-import javax.swing.JTextField;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JList;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JOptionPane;
-import javax.swing.JComponent;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Filter.*;
 import java.awt.*;
 import java.awt.GridBagConstraints;
 import java.awt.Dimension;
 import java.awt.Insets;
+import java.awt.event.*;
 
 public class ObjectResourceFilterPane extends JScrollPane
 {
 	public static String state_filterChanged = "filterChanged";
+
 	public static String state_filterClosed = "filterClosed";
 
 	ApplicationContext aContext = null;
+
 	ObjectResourceFilter filter = null;
+
 	DataSet dataSet = new DataSet();
+
 	private JInternalFrame ownerWindow = null;
 
 	JPanel mainPanel = new JPanel();
@@ -102,34 +79,53 @@ public class ObjectResourceFilterPane extends JScrollPane
 	FilterPanel fp = null;
 
 	JLabel jLabel1 = new JLabel();
-	JComboBox columnComboBox = new AComboBox();
+
+	AComboBox columnComboBox = new AComboBox();
+
 	FilterExpression criteriaListEditObject = null;
 
 	JPanel typePanel = new JPanel();
+
 	JRadioButton eqRadioButton = new JRadioButton();
+
 	JRadioButton rangeRadioButton = new JRadioButton();
+
 	JRadioButton timeRadioButton = new JRadioButton();
+
 	JRadioButton subRadioButton = new JRadioButton();
+
 	JRadioButton listRadioButton = new JRadioButton();
+
 	JRadioButton emptyRadioButton = new JRadioButton();
 
 	ButtonGroup radio;
+
 	MouseListener ml;
+
 	JScrollPane filterPanel = new JScrollPane();
 
 	JButton addButton = new JButton();
+
 	JButton changeButton = new JButton();
 
 	VerticalFlowLayout verticalFlowLayout1 = new VerticalFlowLayout();
+
 	private JScrollPane criteriaListPanel = new JScrollPane();
+
 	private ObjectResourceListBox criteriaList = new ObjectResourceListBox();
 
 	private JLabel jLabel2 = new JLabel();
+
 	public JTextField generalExpressionTextField = new JTextField();
 
 	public LogicSchemeWindow logicSchemeWindow = null;
+
 	private JButton editLogicTreeButton = new JButton();
-	 GridBagLayout gridBagLayout1 = new GridBagLayout();
+
+	GridBagLayout gridBagLayout1 = new GridBagLayout();
+
+	JCheckBox templateCheckBox = new JCheckBox ("задать параметры условия при реализации отчёта");
+
 
 //	private JButton applyButton = new JButton();
 
@@ -170,26 +166,15 @@ public class ObjectResourceFilterPane extends JScrollPane
 	}
 
 	public ObjectResourceFilterPane(
-			ObjectResourceFilter filter,
-			DataSet dataSet,
-			JInternalFrame oW,
-			ApplicationContext aC)
+		ObjectResourceFilter filter,
+		DataSet dataSet,
+		JInternalFrame oW,
+		ApplicationContext aC)
 	{
 		this(filter);
 		this.dataSet = dataSet;
 		this.ownerWindow = oW;
 		this.aContext = aC;
-/*
-		int maxID = 0;
-		for (int i = 0; i < filter.getCriteria().size(); i++)
-		{
-			int curID = ((FilterExpression )filter.getCriteria().get(i)).listID;
-			if (curID > maxID)
-				maxID = curID;
-			}
-
-		FilterExpression.lastListID = maxID + 1;
-*/
 	}
 
 	public ObjectResourceFilter getFilter()
@@ -202,16 +187,17 @@ public class ObjectResourceFilterPane extends JScrollPane
 		this.aContext = aContext;
 	}
 
-	void this_mousePressed (MouseEvent e)
+	void this_mousePressed(MouseEvent e)
 	{
-		criteriaListEditObject = (FilterExpression )criteriaList.getSelectedObjectResource();
+		criteriaListEditObject = (FilterExpression) criteriaList.
+										 getSelectedObjectResource();
 
 		if (criteriaListEditObject == null)
 			return;
 
 		columnComboBox.setSelectedItem(criteriaListEditObject.getId());
 		Vector vec = criteriaListEditObject.getVec();
-		String type = (String )vec.elementAt(0);
+		String type = (String) vec.elementAt(0);
 
 		if (type.equals("numeric"))
 		{
@@ -243,11 +229,14 @@ public class ObjectResourceFilterPane extends JScrollPane
 		if (SwingUtilities.isRightMouseButton(e))
 		{
 			JPopupMenu popup = new JPopupMenu();
-			JMenuItem delete = new JMenuItem(LangModel.String("label_deleteCriteria"));
-			delete.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(ActionEvent e) {
+			JMenuItem delete = new JMenuItem(LangModel.String(
+				"label_deleteCriteria"));
+			delete.addActionListener(new java.awt.event.ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
 					delete_actionPerformed(e);
-					repaint();
+repaint();
 				}
 			});
 			popup.add(delete);
@@ -257,7 +246,8 @@ public class ObjectResourceFilterPane extends JScrollPane
 
 	void delete_actionPerformed(ActionEvent e)
 	{
-		FilterExpression fe = (FilterExpression) criteriaList.getSelectedObjectResource();
+		FilterExpression fe = (FilterExpression) criteriaList.
+									 getSelectedObjectResource();
 
 		if (fe == null)
 			return;
@@ -282,7 +272,7 @@ public class ObjectResourceFilterPane extends JScrollPane
 		Vector schemeEls = this.filter.logicScheme.schemeElements;
 		for (int i = 0; i < schemeEls.size(); i++)
 		{
-			LogicSchemeElement se = (LogicSchemeElement )schemeEls.get(i);
+			LogicSchemeElement se = (LogicSchemeElement) schemeEls.get(i);
 			if (se.type.equals(LogicSchemeElement.t_condition))
 			{
 				int thisID = Integer.parseInt(se.operandType);
@@ -298,9 +288,11 @@ public class ObjectResourceFilterPane extends JScrollPane
 	private void jbInit() throws Exception
 	{
 		setName(LangModel.String("labelTabbedFilter"));
-		ml = new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-			this_mousePressed (e);
+		ml = new MouseAdapter()
+		{
+			public void mousePressed(MouseEvent e)
+			{
+				this_mousePressed(e);
 			}
 		};
 		this.setSize(new Dimension(443, 462));
@@ -314,7 +306,9 @@ public class ObjectResourceFilterPane extends JScrollPane
 			}
 		});
 
-		eqRadioButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/filter_equal.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		eqRadioButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+			"images/filter_equal.gif").getScaledInstance(16, 16,
+			Image.SCALE_SMOOTH)));
 		eqRadioButton.setToolTipText(LangModel.String("label_equality"));
 		eqRadioButton.addActionListener(new java.awt.event.ActionListener()
 		{
@@ -324,7 +318,10 @@ public class ObjectResourceFilterPane extends JScrollPane
 			}
 		});
 
-		rangeRadioButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/filter_diapazon.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		rangeRadioButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().
+															getImage(
+			"images/filter_diapazon.gif").getScaledInstance(16, 16,
+			Image.SCALE_SMOOTH)));
 		rangeRadioButton.setToolTipText(LangModel.String("label_diapason"));
 		rangeRadioButton.addActionListener(new java.awt.event.ActionListener()
 		{
@@ -334,7 +331,10 @@ public class ObjectResourceFilterPane extends JScrollPane
 			}
 		});
 
-		timeRadioButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/filter_time.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		timeRadioButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().
+														  getImage("images/filter_time.gif").
+														  getScaledInstance(16, 16,
+			Image.SCALE_SMOOTH)));
 		timeRadioButton.setToolTipText(LangModel.String("label_time"));
 		timeRadioButton.addActionListener(new java.awt.event.ActionListener()
 		{
@@ -344,7 +344,9 @@ public class ObjectResourceFilterPane extends JScrollPane
 			}
 		});
 
-		subRadioButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/filter_substring.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		subRadioButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+			"images/filter_substring.gif").getScaledInstance(16, 16,
+			Image.SCALE_SMOOTH)));
 		subRadioButton.setToolTipText(LangModel.String("label_substring"));
 		subRadioButton.addActionListener(new java.awt.event.ActionListener()
 		{
@@ -354,7 +356,10 @@ public class ObjectResourceFilterPane extends JScrollPane
 			}
 		});
 
-		listRadioButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/filter_list.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		listRadioButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().
+														  getImage("images/filter_list.gif").
+														  getScaledInstance(16, 16,
+			Image.SCALE_SMOOTH)));
 		listRadioButton.setToolTipText(LangModel.String("label_list"));
 		listRadioButton.addActionListener(new java.awt.event.ActionListener()
 		{
@@ -370,13 +375,14 @@ public class ObjectResourceFilterPane extends JScrollPane
 		changeButton.setEnabled(false);
 		changeButton.setText(LangModel.String("label_change"));
 		changeButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
 			{
-				public void actionPerformed(ActionEvent e)
-				{
-					changeButton_actionPerformed(e);
-				}
-			});
-		criteriaList.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+				changeButton_actionPerformed(e);
+			}
+		});
+		criteriaList.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.
+			RAISED));
 		criteriaListPanel.setBorder(null);
 		editLogicTreeButton.setPreferredSize(new Dimension(27, 24));
 		editLogicTreeButton.setMargin(new Insets(2, 2, 2, 2));
@@ -389,14 +395,14 @@ public class ObjectResourceFilterPane extends JScrollPane
 			}
 		});
 		jLabel2.setText(LangModel.String("label_summaryExpression"));
-/*		applyButton.setText(LangModel.String("label_apply"));
-		applyButton.addActionListener(new java.awt.event.ActionListener()
-		{
+		/*		applyButton.setText(LangModel.String("label_apply"));
+		  applyButton.addActionListener(new java.awt.event.ActionListener()
+		  {
 			public void actionPerformed(ActionEvent e)
 			{
-				applyButton_actionPerformed(e);
+			 applyButton_actionPerformed(e);
 			}
-		});*/
+		  });*/
 		typePanel.add(eqRadioButton, null);
 		typePanel.add(rangeRadioButton, null);
 		typePanel.add(timeRadioButton, null);
@@ -404,48 +410,48 @@ public class ObjectResourceFilterPane extends JScrollPane
 		typePanel.add(listRadioButton, null);
 		criteriaListPanel.getViewport().add(criteriaList, null);
 		listRadioButton.addItemListener(new ItemListener()
+		{
+			public void itemStateChanged(ItemEvent e)
 			{
-				public void itemStateChanged(ItemEvent e)
-				{
-					filterRadioButton_itemStateChanged(e);
-				}
-			});
+				filterRadioButton_itemStateChanged(e);
+			}
+		});
 		subRadioButton.addItemListener(new ItemListener()
+		{
+			public void itemStateChanged(ItemEvent e)
 			{
-				public void itemStateChanged(ItemEvent e)
-				{
-					filterRadioButton_itemStateChanged(e);
-				}
-			});
+				filterRadioButton_itemStateChanged(e);
+			}
+		});
 		rangeRadioButton.addItemListener(new ItemListener()
+		{
+			public void itemStateChanged(ItemEvent e)
 			{
-				public void itemStateChanged(ItemEvent e)
-				{
-					filterRadioButton_itemStateChanged(e);
-				}
-			});
+				filterRadioButton_itemStateChanged(e);
+			}
+		});
 		timeRadioButton.addItemListener(new ItemListener()
+		{
+			public void itemStateChanged(ItemEvent e)
 			{
-				public void itemStateChanged(ItemEvent e)
-				{
-					filterRadioButton_itemStateChanged(e);
-				}
-			});
+				filterRadioButton_itemStateChanged(e);
+			}
+		});
 		eqRadioButton.addItemListener(new ItemListener()
+		{
+			public void itemStateChanged(ItemEvent e)
 			{
-				public void itemStateChanged(ItemEvent e)
-				{
-					filterRadioButton_itemStateChanged(e);
-				}
-			});
+				filterRadioButton_itemStateChanged(e);
+			}
+		});
 		radio = new ButtonGroup();
 		addButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
 			{
-				public void actionPerformed(ActionEvent e)
-				{
-					addButton_actionPerformed(e);
-				}
-			});
+				addButton_actionPerformed();
+			}
+		});
 		radio.add(eqRadioButton);
 		radio.add(rangeRadioButton);
 		radio.add(timeRadioButton);
@@ -453,20 +459,46 @@ public class ObjectResourceFilterPane extends JScrollPane
 		radio.add(listRadioButton);
 		radio.add(emptyRadioButton);
 
-		filterPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+		filterPanel.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.
+			RAISED));
 
 		addButton.setText(LangModel.String("label_add"));
 
-		mainPanel.add(jLabel1, new GridBagConstraints(0, 0, 2, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5, 2, 0, 0), 0, 0));
-		mainPanel.add(jLabel2, new GridBagConstraints(0, 4, 6, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 20, 0, 0), 0, 0));
-		mainPanel.add(columnComboBox, new GridBagConstraints(2, 0, 5, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 0, 2), 0, 0));
-		mainPanel.add(generalExpressionTextField, new GridBagConstraints(0, 5, 5, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 2, 0, 0), 0, 0));
-		mainPanel.add(typePanel, new GridBagConstraints(0, 1, 1, 1, 0.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(14, 2, 0, 0), 0, 0));
-		mainPanel.add(filterPanel, new GridBagConstraints(1, 1, 6, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(14, 0, 0, 1), 0, 0));
-		mainPanel.add(addButton, new GridBagConstraints(0, 2, 3, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 20, 0, 0), 0, 0));
-		mainPanel.add(changeButton, new GridBagConstraints(4, 2, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 20, 0, 0), 0, 0));
-		mainPanel.add(criteriaListPanel, new GridBagConstraints(0, 3, 7, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 2, 0, 2), 0, 0));
-		mainPanel.add(editLogicTreeButton, new GridBagConstraints(5, 5, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 2), 0, 0));
+		mainPanel.add(jLabel1,
+							new GridBagConstraints(0, 0, 2, 1, 0.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5, 2, 0, 0), 0, 0));
+		mainPanel.add(jLabel2,
+							new GridBagConstraints(0, 5, 5, 1, 0.0, 0.0
+				,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 20, 0, 0), 0, 0));
+		mainPanel.add(columnComboBox,
+							new GridBagConstraints(2, 0, 4, 1, 1.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(5, 5, 0, 2), 0, 0));
+		mainPanel.add(generalExpressionTextField,
+							new GridBagConstraints(0, 6, 4, 1, 1.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 2, 0, 0), 0, 0));
+		mainPanel.add(typePanel,
+							new GridBagConstraints(0, 1, 1, 1, 0.0, 1.0
+				,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(14, 2, 0, 0), 0, 0));
+		mainPanel.add(filterPanel,
+							new GridBagConstraints(1, 1, 5, 1, 1.0, 1.0
+				,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(14, 0, 0, 1), 0, 0));
+		mainPanel.add(addButton,
+							 new GridBagConstraints(0, 2, 3, 1, 1.0, 0.0
+				,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5, 20, 0, 0), 0, 0));
+		mainPanel.add(changeButton,
+							 new GridBagConstraints(3, 2, 1, 1, 1.0, 0.0
+				,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(5, 20, 0, 0), 0, 0));
+		mainPanel.add(criteriaListPanel,
+							new GridBagConstraints(0, 4, 6, 1, 1.0, 1.0
+				,GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(2, 2, 0, 2), 0, 0));
+		mainPanel.add(editLogicTreeButton,
+							new GridBagConstraints(4, 6, 1, 1, 0.0, 0.0
+				,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 2), 0, 0));
+
+		mainPanel.add(templateCheckBox,
+							new GridBagConstraints(0, 3, 8, 1, 0.0, 0.0
+				,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 2), 0, 0));
+
 //		jPanel.add(applyButton, new XYConstraints(68, 395, 125, 26));
 
 		this.getViewport().add(mainPanel, null);
@@ -492,14 +524,14 @@ public class ObjectResourceFilterPane extends JScrollPane
 
 		columnComboBox.setModel(new DefaultComboBoxModel(new Vector()));
 
-		if(filter != null)
+		if (filter != null)
 		{
 			criteriaList.setContents(filter.getCriteria().elements());
 
 			columnComboBox.setRenderer(new MyCriteriaListRenderer(filter));
 			Vector vec = filter.getFilterColumns();
 			columnComboBox.setModel(new DefaultComboBoxModel(vec));
-			String col_id = (String )columnComboBox.getSelectedItem();
+			String col_id = (String) columnComboBox.getSelectedItem();
 			String types[] = filter.getColumnFilterTypes(col_id);
 			vec = new Vector();
 			MyUtil.addToVector(vec, types);
@@ -517,12 +549,12 @@ public class ObjectResourceFilterPane extends JScrollPane
 	void columnComboBox_actionPerformed(ActionEvent e)
 	{
 		changeButton.setEnabled(false);
-		String col_id = (String )columnComboBox.getSelectedItem();
+		String col_id = (String) columnComboBox.getSelectedItem();
 		filterPanel.getViewport().removeAll();
 		filterPanel.repaint();
 		addButton.setEnabled(false);
 
-		if(filter == null)
+		if (filter == null)
 		{
 			eqRadioButton.setEnabled(false);
 			subRadioButton.setEnabled(false);
@@ -553,45 +585,47 @@ public class ObjectResourceFilterPane extends JScrollPane
 
 	public void setFilterPanel()
 	{
-		String col_id = (String )columnComboBox.getSelectedItem();
+		String col_id = (String) columnComboBox.getSelectedItem();
 		filterPanel.getViewport().removeAll();
 		addButton.setEnabled(false);
 
-		if(filter == null)
+		if (filter == null)
 			return;
 
 		String type = "";
 
-		if(eqRadioButton.isSelected())
+		if (eqRadioButton.isSelected())
 			type = "numeric";
 		else
-		if(subRadioButton.isSelected())
+		if (subRadioButton.isSelected())
 			type = "string";
 		else
-		if(timeRadioButton.isSelected())
+		if (timeRadioButton.isSelected())
 			type = "time";
 		else
-		if(rangeRadioButton.isSelected())
+		if (rangeRadioButton.isSelected())
 			type = "range";
 		else
-		if(listRadioButton.isSelected())
+		if (listRadioButton.isSelected())
 			type = "list";
 
 		fp = filter.getColumnFilterPanel(col_id, type);
 
-		if(fp != null)
+		if (fp != null)
 		{
 			fp.setContext(this.aContext);
-			filterPanel.getViewport().add((JComponent)fp);
+			filterPanel.getViewport().add((JComponent) fp);
 			addButton.setEnabled(true);
 		}
 	}
 
-	void addButton_actionPerformed(ActionEvent e)
+	void addButton_actionPerformed()
 	{
-		String col_id = (String )columnComboBox.getSelectedItem();
+		String col_id = (String) columnComboBox.getSelectedItem();
 		String col_name = filter.getFilterColumnName(col_id);
+
 		FilterExpression expr = fp.getExpression(col_id, col_name);
+		expr.setTemplate(templateCheckBox.isSelected());
 		filter.addCriterium(expr);
 		criteriaList.add(expr);
 
@@ -629,11 +663,12 @@ public class ObjectResourceFilterPane extends JScrollPane
 	{
 		changeButton.setEnabled(false);
 	}
+
 	void changeButton_actionPerformed(ActionEvent e)
 	{
 		criteriaList.remove(criteriaListEditObject);
 //		filter.removeCriterium(criteriaListEditObject);
-		String col_id = (String )columnComboBox.getSelectedItem();
+		String col_id = (String) columnComboBox.getSelectedItem();
 		String col_name = filter.getFilterColumnName(col_id);
 		FilterExpression expr = fp.getExpression(col_id, col_name);
 		filter.replaceCriterium(criteriaListEditObject, expr);
@@ -655,13 +690,13 @@ public class ObjectResourceFilterPane extends JScrollPane
 			return;
 		}
 
-		if(aContext != null)
-			if(aContext.getDispatcher() != null)
+		if (aContext != null)
+			if (aContext.getDispatcher() != null)
 				aContext.getDispatcher().notify(
 					new OperationEvent(
-							this.logicSchemeWindow,
-							0,
-							SetRestrictionsWindow.ev_lsWindowCreated));
+					this.logicSchemeWindow,
+					0,
+					SetRestrictionsWindow.ev_lsWindowCreated));
 
 		this.logicSchemeWindow.setModal(true);
 		this.logicSchemeWindow.setVisible(true);
@@ -670,13 +705,13 @@ public class ObjectResourceFilterPane extends JScrollPane
 
 	void tryToSaveChanges()
 	{
-		if(aContext != null)
-			if(aContext.getDispatcher() != null)
+		if (aContext != null)
+			if (aContext.getDispatcher() != null)
 				aContext.getDispatcher().notify(
 					new OperationEvent(
-							filter,
-							0,
-							ObjectResourceFilterPane.state_filterChanged));
+					filter,
+					0,
+					ObjectResourceFilterPane.state_filterChanged));
 
 //    applyButton.setEnabled(false);
 	}
@@ -692,14 +727,14 @@ class MyCriteriaListRenderer extends DefaultListCellRenderer
 	}
 
 	public Component getListCellRendererComponent(
-			JList list,
-			Object value,
-			int index,
-			boolean isSelected,
-			boolean cellHasFocus)
+		JList list,
+		Object value,
+		int index,
+		boolean isSelected,
+		boolean cellHasFocus)
 	{
-		String text = filter.getFilterColumnName((String )value);
-		return super.getListCellRendererComponent(list, text, index, isSelected, cellHasFocus);
+		String text = filter.getFilterColumnName((String) value);
+		return super.getListCellRendererComponent(list, text, index, isSelected,
+																cellHasFocus);
 	}
 }
-

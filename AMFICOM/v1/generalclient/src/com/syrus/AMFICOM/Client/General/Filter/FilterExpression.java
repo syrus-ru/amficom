@@ -49,6 +49,11 @@ public class FilterExpression extends StubResource implements FilterExpressionIn
 		return fe.getListID();
 	}
 
+	public boolean isTemplate()
+	{
+		return fe.isTemplate();
+	}
+
 	public void setName(String n)
 	{
 		fe.setName(n);
@@ -67,6 +72,11 @@ public class FilterExpression extends StubResource implements FilterExpressionIn
 	public void setListID(int l)
 	{
 		fe.setListID(l);
+	}
+
+	public void setTemplate(boolean ifT)
+	{
+		fe.setTemplate(ifT);
 	}
 
 	public Object clone()

@@ -52,7 +52,7 @@ public abstract class ObjectResourceFilter implements Filter
 		boolean res = false;
 		if(text.indexOf(substring) >= 0)
 			return true;
-/*			
+/*
 		if (substring.length() <= text.length())
 		{
 			for (int i = 0; i <= text.length() - substring.length(); i++)
@@ -85,7 +85,7 @@ public abstract class ObjectResourceFilter implements Filter
 	{
 		logicScheme.replaceFilterExpression(fe_old, fe_new);
 	}
-	
+
 	public void clearCriteria()
 	{
 		lastListID = 1;
@@ -107,7 +107,7 @@ public abstract class ObjectResourceFilter implements Filter
 			ObjectResource or = (ObjectResource )e.nextElement();
 			if (logicScheme.passesAllConstraints(or) == false)
 				ds.remove(or);
-/*				
+/*
 			for(Enumeration e2 = criteria.elements(); e2.hasMoreElements();)
 			{
 				FilterExpression expr = (FilterExpression)e2.nextElement();

@@ -2,11 +2,14 @@ package com.syrus.AMFICOM.Client.General.Filter;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Toolkit;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JInternalFrame;
 import javax.swing.JFrame;
 import javax.swing.JDesktopPane;
+import javax.swing.ImageIcon;
 import javax.swing.event.InternalFrameEvent;
 
 import oracle.jdeveloper.layout.XYConstraints;
@@ -60,8 +63,9 @@ public class SetRestrictionsWindow extends JInternalFrame
   }
   private void jbInit() throws Exception
   {
-	 //this.setSize(new Dimension(280, 452));
-		this.setSize(new Dimension(275, 400));
+	 this.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+		 "images/general.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+
 	 this.addInternalFrameListener(new javax.swing.event.InternalFrameAdapter()
 	 {
 		public void internalFrameClosing(InternalFrameEvent e)
