@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.25 2004/07/28 08:29:49 arseniy Exp $
+ * $Id: TemporalPattern.java,v 1.26 2004/08/16 14:22:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,23 +30,23 @@ import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/07/28 08:29:49 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2004/08/16 14:22:05 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
 public class TemporalPattern extends StorableObject {
-	
-	private static final String I18N_KEY_MIN = "min";
-	private static final String I18N_KEY_HOUR = "hour";
-	private static final String I18N_KEY_DAY_OF_MONTH = "dayOfMonth";
-	private static final String I18N_KEY_DAY_OF_WEEK = "dayOfWeek";
-	private static final String I18N_KEY_MONTH = "month";
-	private static final String I18N_KEY_OF = "of";
-	private static final String I18N_KEY_TO = "to";
-	private static final String I18N_KEY_FROM = "from";
-	private static final String I18N_KEY_EACH = "each";
-	
+
+	private static final String	I18N_KEY_MIN			= "min";
+	private static final String	I18N_KEY_HOUR			= "hour";
+	private static final String	I18N_KEY_DAY_OF_MONTH	= "dayOfMonth";
+	private static final String	I18N_KEY_DAY_OF_WEEK	= "dayOfWeek";
+	private static final String	I18N_KEY_MONTH			= "month";
+	private static final String	I18N_KEY_OF				= "of";
+	private static final String	I18N_KEY_TO				= "to";
+	private static final String	I18N_KEY_FROM			= "from";
+	private static final String	I18N_KEY_EACH			= "each";
+
 	public class TimeLine {
 
 		private static final long	SECOND_LONG	= 1000;
@@ -228,7 +228,8 @@ public class TemporalPattern extends StorableObject {
 						switch (i) {
 							case 1:
 								//minute
-								this.minutes = parseExpression(LangModelMeasurement.getString(I18N_KEY_MIN), subString, 0, //$NON-NLS-1$
+								this.minutes = parseExpression(LangModelMeasurement.getString(I18N_KEY_MIN), subString,
+																0, //$NON-NLS-1$
 																59);
 								break;
 							case 2:
@@ -240,12 +241,15 @@ public class TemporalPattern extends StorableObject {
 							case 3:
 								//day of month
 								this.dayOfMonth = parseExpression(
-																	LangModelMeasurement.getString(I18N_KEY_DAY_OF_MONTH), subString, //$NON-NLS-1$
+																	LangModelMeasurement
+																			.getString(I18N_KEY_DAY_OF_MONTH),
+																	subString, //$NON-NLS-1$
 																	1, 31);
 								break;
 							case 4:
 								//month
-								this.month = parseExpression(LangModelMeasurement.getString(I18N_KEY_MONTH), subString, 0, //$NON-NLS-1$
+								this.month = parseExpression(LangModelMeasurement.getString(I18N_KEY_MONTH), subString,
+																0, //$NON-NLS-1$
 																11);
 								break;
 							case 5:
@@ -613,13 +617,13 @@ public class TemporalPattern extends StorableObject {
 		}
 	}
 
-	static final String[]	DAY_OF_WEEK_NAMES	= new String[] {
+	static final String[]			DAY_OF_WEEK_NAMES	= new String[] {
 			LangModelMeasurement.getString("Sunday"), LangModelMeasurement.getString("Monday"), //$NON-NLS-1$ //$NON-NLS-2$
 			LangModelMeasurement.getString("Tuesday"), LangModelMeasurement.getString("Wednesday"), //$NON-NLS-1$ //$NON-NLS-2$
 			LangModelMeasurement.getString("Thursday"), LangModelMeasurement.getString("Friday"), //$NON-NLS-1$ //$NON-NLS-2$
 			LangModelMeasurement.getString("Saturday"),	};													//$NON-NLS-1$
 
-	static final String[]	MONTH_NAMES			= new String[] {
+	static final String[]			MONTH_NAMES			= new String[] {
 			LangModelMeasurement.getString("January"), LangModelMeasurement.getString("February"), //$NON-NLS-1$ //$NON-NLS-2$
 			LangModelMeasurement.getString("March"), LangModelMeasurement.getString("April"), //$NON-NLS-1$ //$NON-NLS-2$
 			LangModelMeasurement.getString("May"), LangModelMeasurement.getString("June"), //$NON-NLS-1$ //$NON-NLS-2$
@@ -627,7 +631,7 @@ public class TemporalPattern extends StorableObject {
 			LangModelMeasurement.getString("September"), LangModelMeasurement.getString("October"), //$NON-NLS-1$ //$NON-NLS-2$
 			LangModelMeasurement.getString("November"), LangModelMeasurement.getString("December")};		//$NON-NLS-1$ //$NON-NLS-2$
 
-	static final int[]		WEEK_NUMBER			= new int[] { Calendar.SUNDAY, Calendar.MONDAY,
+	static final int[]				WEEK_NUMBER			= new int[] { Calendar.SUNDAY, Calendar.MONDAY,
 			Calendar.TUESDAY, Calendar.WEDNESDAY, Calendar.THURSDAY, Calendar.FRIDAY, Calendar.SATURDAY};
 
 	static final boolean			DEBUG				= false;
@@ -637,29 +641,25 @@ public class TemporalPattern extends StorableObject {
 	private StorableObjectDatabase	temporalPatternDatabase;
 
 	private HashMap					templates;
-	private List					times;	
-	
-	private long					startTime = 0;
-	private long					endTime = 0;
+	private List					times;
+
+	private long					startTime			= 0;
+	private long					endTime				= 0;
 
 	public TemporalPattern(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 		this.temporalPatternDatabase = MeasurementDatabaseContext.temporalPatternDatabase;
-		try{
+		try {
 			this.temporalPatternDatabase.retrieve(this);
-		}
-		catch (IllegalDataException ide){
+		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
-		
+
 	}
 
 	public TemporalPattern(TemporalPattern_Transferable tpt) throws CreateObjectException {
-		super(new Identifier(tpt.id),
-					new Date(tpt.created),
-					new Date(tpt.modified),
-					new Identifier(tpt.creator_id),
-					new Identifier(tpt.modifier_id));
+		super(new Identifier(tpt.id), new Date(tpt.created), new Date(tpt.modified), new Identifier(tpt.creator_id),
+				new Identifier(tpt.modifier_id));
 		this.description = new String(tpt.description);
 		//this.cronStrings = new String[tpt.cronStrings.length];
 		removeAll();
@@ -671,16 +671,12 @@ public class TemporalPattern extends StorableObject {
 		this.temporalPatternDatabase = MeasurementDatabaseContext.temporalPatternDatabase;
 		try {
 			this.temporalPatternDatabase.insert(this);
-		}
-		catch (IllegalDataException e) {
+		} catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
 	}
 
-	private TemporalPattern(Identifier id,
-													Identifier creatorId,
-													String description,
-													String[] cronStrings) {
+	private TemporalPattern(Identifier id, Identifier creatorId, String description, String[] cronStrings) {
 		super(id);
 		long time = System.currentTimeMillis();
 		super.created = new Date(time);
@@ -697,11 +693,8 @@ public class TemporalPattern extends StorableObject {
 
 		super.currentVersion = super.getNextVersion();
 	}
-	
-	private TemporalPattern(Identifier id,
-													Identifier creatorId,
-													String description,
-													List cronString) {
+
+	private TemporalPattern(Identifier id, Identifier creatorId, String description, List cronString) {
 		super(id);
 		long time = System.currentTimeMillis();
 		super.created = new Date(time);
@@ -709,39 +702,31 @@ public class TemporalPattern extends StorableObject {
 		super.creatorId = creatorId;
 		super.modifierId = creatorId;
 		this.description = description;
-		for(Iterator it=cronString.iterator();it.hasNext();){
-			String str = (String)it.next();
+		for (Iterator it = cronString.iterator(); it.hasNext();) {
+			String str = (String) it.next();
 			addTemplate(str);
 		}
 
 		super.currentVersion = super.getNextVersion();
 	}
-	
+
 	/**
 	 * create new instance for client
+	 * 
 	 * @param id
 	 * @param description
 	 * @param cronString
 	 * @return
 	 */
-	public static TemporalPattern createInstance(Identifier id,
-																							 Identifier creatorId,
-																							 String description,
-																							 List cronString) {
-		return new TemporalPattern(id,
-															 creatorId,
-															 description,
-															 cronString);
+	public static TemporalPattern createInstance(	Identifier id,
+													Identifier creatorId,
+													String description,
+													List cronString) {
+		return new TemporalPattern(id, creatorId, description, cronString);
 	}
 
-	public static TemporalPattern create(Identifier id,
-																			 Identifier creatorId,
-																			 String description,
-																			 String[] cronStrings) {
-		return new TemporalPattern(id,
-															 creatorId,
-															 description,
-															 cronStrings);
+	public static TemporalPattern create(Identifier id, Identifier creatorId, String description, String[] cronStrings) {
+		return new TemporalPattern(id, creatorId, description, cronStrings);
 	}
 
 	public String[] getCronStrings() {
@@ -762,25 +747,19 @@ public class TemporalPattern extends StorableObject {
 	}
 
 	public Object getTransferable() {
-		return new TemporalPattern_Transferable((Identifier_Transferable)this.id.getTransferable(),
-																						this.created.getTime(),
-																						this.modified.getTime(),
-																						(Identifier_Transferable)this.creatorId.getTransferable(),
-																						(Identifier_Transferable)this.modifierId.getTransferable(),
-																						new String(this.description),
-																						getCronStrings());
+		return new TemporalPattern_Transferable((Identifier_Transferable) this.id.getTransferable(), this.created
+				.getTime(), this.modified.getTime(), (Identifier_Transferable) this.creatorId.getTransferable(),
+												(Identifier_Transferable) this.modifierId.getTransferable(),
+												new String(this.description), getCronStrings());
 	}
 
-	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creatorId,
-																						Identifier modifierId,
-																						String description,
-																						String[] cronStrings) {
-		super.setAttributes(created,
-												modified,
-												creatorId,
-												modifierId);
+	protected synchronized void setAttributes(	Date created,
+												Date modified,
+												Identifier creatorId,
+												Identifier modifierId,
+												String description,
+												String[] cronStrings) {
+		super.setAttributes(created, modified, creatorId, modifierId);
 		this.description = description;
 		this.cronStrings = cronStrings;
 		removeAll();
@@ -809,68 +788,72 @@ public class TemporalPattern extends StorableObject {
 	 * get times in ms that describes by temporal patterns and between start and
 	 * end
 	 * 
-	 * @param Date start
-	 * @param Date end
-	 * @return List of java.util.Data 
+	 * @param Date
+	 *            start
+	 * @param Date
+	 *            end
+	 * @return List of java.util.Data
 	 */
 	public List getTimes(Date start, Date end) {
 		return this.getTimes(start.getTime(), end.getTime());
-//		if (this.times == null)
-//			this.times = new ArrayList();
-//		if (this.startTime==null)
-//			this.times.clear();
-//		else if (!this.startTime.equals(start))
-//			this.times.clear();
-//		this.startTime = start;
-//
-//		if (this.endTime==null)
-//			this.times.clear();
-//		else if (!this.endTime.equals(end))
-//			this.times.clear();
-//		this.endTime = end;
-//
-//		if (this.times.isEmpty()){
-//			//int count = 0;
-//			Collection list = this.templates.values();
-//			for (Iterator it = list.iterator(); it.hasNext();) {
-//				TimeLine timeLine = (TimeLine) it.next();
-//				timeLine.setStartPeriod(start.getTime());
-//				timeLine.setEndPeriod(end.getTime());
-//				timeLine.parseTemplate();
-//				if (timeLine.dateList != null) {
-//					for (Iterator it2 = timeLine.dateList.iterator(); it2.hasNext();) {
-//						Object obj = it2.next();
-//						if (!this.times.contains(obj))
-//							this.times.add(obj);
-//					}
-//
-//				}
-//
-//			}			
-//		}
-//
-//		return this.times;
+		//		if (this.times == null)
+		//			this.times = new ArrayList();
+		//		if (this.startTime==null)
+		//			this.times.clear();
+		//		else if (!this.startTime.equals(start))
+		//			this.times.clear();
+		//		this.startTime = start;
+		//
+		//		if (this.endTime==null)
+		//			this.times.clear();
+		//		else if (!this.endTime.equals(end))
+		//			this.times.clear();
+		//		this.endTime = end;
+		//
+		//		if (this.times.isEmpty()){
+		//			//int count = 0;
+		//			Collection list = this.templates.values();
+		//			for (Iterator it = list.iterator(); it.hasNext();) {
+		//				TimeLine timeLine = (TimeLine) it.next();
+		//				timeLine.setStartPeriod(start.getTime());
+		//				timeLine.setEndPeriod(end.getTime());
+		//				timeLine.parseTemplate();
+		//				if (timeLine.dateList != null) {
+		//					for (Iterator it2 = timeLine.dateList.iterator(); it2.hasNext();) {
+		//						Object obj = it2.next();
+		//						if (!this.times.contains(obj))
+		//							this.times.add(obj);
+		//					}
+		//
+		//				}
+		//
+		//			}
+		//		}
+		//
+		//		return this.times;
 	}
 
 	/**
 	 * get times in ms that describes by temporal patterns and between start and
 	 * end
 	 * 
-	 * @param long start
-	 * @param long end
-	 * @return List of java.util.Data 
+	 * @param long
+	 *            start
+	 * @param long
+	 *            end
+	 * @return List of java.util.Data
 	 */
-	public List getTimes(long start, long end) {			
+	public List getTimes(long start, long end) {
 		if (this.times == null)
 			this.times = new ArrayList();
-		if (this.startTime!=start)
-				this.times.clear();
+		if (this.startTime != start)
+			this.times.clear();
 		this.startTime = start;
-		if (this.endTime!=end)
-				this.times.clear();
+		if (this.endTime != end)
+			this.times.clear();
 		this.endTime = end;
 
-		if (this.times.isEmpty()){
+		if (this.times.isEmpty()) {
 			//int count = 0;
 			Collection list = this.templates.values();
 			for (Iterator it = list.iterator(); it.hasNext();) {
@@ -887,7 +870,7 @@ public class TemporalPattern extends StorableObject {
 
 				}
 
-			}			
+			}
 		}
 
 		return this.times;
@@ -895,13 +878,18 @@ public class TemporalPattern extends StorableObject {
 
 	public void removeAll() {
 		this.currentVersion = super.getNextVersion();
-		this.times.clear();
-		this.templates.clear();
+		if (this.times != null)
+			this.times.clear();
+		if (this.templates != null)
+			this.templates.clear();
 	}
 
 	public void addTemplate(String template) {
 		this.currentVersion = super.getNextVersion();
-		this.times.clear();
+		if (this.times == null)
+			this.times = new ArrayList();
+		else
+			this.times.clear();
 		if (this.templates == null)
 			this.templates = new HashMap();
 		TimeLine timeLine = new TimeLine();
@@ -909,8 +897,10 @@ public class TemporalPattern extends StorableObject {
 		this.templates.put(timeLine, timeLine);
 		//setType(TIMESTAMPTYPE_PERIODIC);
 	}
+
 	/**
-	 * @param description The description to set.
+	 * @param description
+	 *            The description to set.
 	 */
 	public void setDescription(String description) {
 		this.currentVersion = super.getNextVersion();

@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.27 2004/08/14 19:40:41 arseniy Exp $
+ * $Id: Test.java,v 1.28 2004/08/16 14:22:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/08/14 19:40:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.28 $, $Date: 2004/08/16 14:22:05 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -514,5 +514,26 @@ public class Test extends StorableObject {
 		this.measurementSetupIds = measurementSetupIds;
 
 		this.mainMeasurementSetup = (MeasurementSetup)MeasurementStorableObjectPool.getStorableObject((Identifier)this.measurementSetupIds.get(0), true);
+	}
+	
+	
+	public boolean equals(Object obj) {
+		boolean equals = false;
+		if (obj instanceof Test){
+			Test test = (Test)obj;
+			/**
+			 * FIXME compare all elements 
+			 */
+			if ((test.getId().equals(getId())) &&
+					(test.getStartTime().equals(getStartTime())) &&
+					(test.getEndTime().equals(getEndTime())) &&
+					(test.getTemporalType().equals(getTemporalType())) &&
+					( (test.getTemporalPatternId()==null)&&(getTemporalPatternId()==null) 
+							|| (test.getTemporalPatternId().equals(getTemporalPatternId())))
+							// &&
+					)
+					equals = true;
+		}
+		return equals;
 	}
 }

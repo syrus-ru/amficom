@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.7 2004/08/06 16:07:07 arseniy Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.8 2004/08/16 14:22:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,9 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 import oracle.jdbc.driver.OracleResultSet;
 import oracle.jdbc.driver.OraclePreparedStatement;
 import com.syrus.util.Log;
@@ -28,14 +31,16 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.measurement.ora.CronStringArray;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/08/06 16:07:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2004/08/16 14:22:05 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
 public class TemporalPatternDatabase extends StorableObjectDatabase {
 	public static final String COLUMN_DESCRIPTION 	= "description";
 	public static final String COLUMN_VALUE 		= "value";
+		
+	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
 	private TemporalPattern fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof TemporalPattern)
@@ -130,7 +135,8 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 
 	private void insertTemporalPattern(TemporalPattern temporalPattern) throws CreateObjectException {
 		String tpIdCode = temporalPattern.getId().getCode();
-		String sql = SQL_INSERT_INTO + ObjectEntities.TEMPORALPATTERN_ENTITY + CLOSE_BRACKET
+		String sql = SQL_INSERT_INTO + ObjectEntities.TEMPORALPATTERN_ENTITY 
+			+ OPEN_BRACKET
 			+ COLUMN_ID + COMMA
 			+ COLUMN_CREATED + COMMA
 			+ COLUMN_MODIFIED + COMMA
@@ -149,7 +155,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 			+ QUESTION + COMMA
 			+ QUESTION + CLOSE_BRACKET;
 		PreparedStatement preparedStatement = null;
-		try {
+		try {			
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, tpIdCode);
 			preparedStatement.setDate(2, new java.sql.Date(temporalPattern.getCreated().getTime()));
@@ -184,4 +190,71 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 				break;
 		}
 	}
+	
+	public static List retrieveAll() throws RetrieveObjectException {
+		List temporalPatterns = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
+		String sql = SQL_SELECT
+				+ COLUMN_ID
+				+ SQL_FROM + ObjectEntities.TEMPORALPATTERN_ENTITY;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("TemporalPatternDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL05);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next())
+				temporalPatterns.add(new TemporalPattern(new Identifier(resultSet.getString(COLUMN_ID))));			
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.errorException(onfe);
+		}
+		catch (SQLException sqle) {
+			String mesg = "TemporalPatternDatabase.retrieveAll | Cannot retrieve temporal pattern ";
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return temporalPatterns;
+	}
+
+	public static void delete(TemporalPattern temporalPattern) {
+		String tpIdStr = temporalPattern.getId().toSQLString();
+		Statement statement = null;
+		try {
+			statement = connection.createStatement();
+			String sql = SQL_DELETE_FROM
+						+ ObjectEntities.TEMPORALPATTERN_ENTITY
+						+ SQL_WHERE
+						+ COLUMN_ID + EQUALS
+						+ tpIdStr;
+			Log.debugMessage("TemporalPatternDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL05);
+			statement.executeUpdate(sql);
+			connection.commit();
+		}
+		catch (SQLException sqle1) {
+			Log.errorException(sqle1);
+		}
+		finally {
+			try {
+				if(statement != null)
+					statement.close();
+				statement = null;
+			}
+			catch(SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+	}
+
 }

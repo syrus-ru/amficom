@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.18 2004/08/13 13:56:07 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.19 2004/08/16 14:22:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/08/13 13:56:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.19 $, $Date: 2004/08/16 14:22:05 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -56,6 +56,8 @@ public class TestDatabase extends StorableObjectDatabase {
 	
 	public static final String LINK_COLMN_MEASUREMENT_SETUP_ID = "measurement_setup_id";
 	public static final String LINK_COLMN_TEST_ID = "test_id";
+	
+    public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 	
 	private Test fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Test)
@@ -335,8 +337,9 @@ public class TestDatabase extends StorableObjectDatabase {
 		Date startTime = test.getStartTime();
 		Date endTime = test.getEndTime();
 		Identifier temporalPatternId = test.getTemporalPatternId();		
-		Identifier analysisId = test.getAnalysisType().getId();
-		Identifier evaluationId = test.getEvaluationType().getId();
+		AnalysisType analysisType = test.getAnalysisType();
+		EvaluationType evaluationType = test.getEvaluationType();
+		
 		String sql = SQL_INSERT_INTO + ObjectEntities.TEST_ENTITY
 			+ OPEN_BRACKET 
 			+ COLUMN_ID + COMMA 
@@ -395,7 +398,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			/**
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */
-			preparedStatement.setString(9, (temporalPatternId != null)?temporalPatternId.getCode():Identifier.getNullSQLString());
+			preparedStatement.setString(9, (temporalPatternId != null)?temporalPatternId.getCode():"");
 			/**
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */
@@ -403,11 +406,11 @@ public class TestDatabase extends StorableObjectDatabase {
 			/**
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */
-			preparedStatement.setString(11, (analysisId != null)?analysisId.getCode():Identifier.getNullSQLString());
+			preparedStatement.setString(11, (analysisType != null)?analysisType.getId().getCode():"");
 			/**
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */
-			preparedStatement.setString(12, (evaluationId != null)?evaluationId.getCode():Identifier.getNullSQLString());
+			preparedStatement.setString(12, (evaluationType != null)?evaluationType.getId().getCode():"");
 			preparedStatement.setInt(13, test.getStatus().value());
 			/**
 			  * @todo when change DB Identifier model ,change setString() to setLong()
@@ -671,4 +674,72 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 		return tests;
 	}
+	
+	public static List retrieveAll() throws RetrieveObjectException {
+		List tests = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
+		String sql = SQL_SELECT
+				+ COLUMN_ID
+				+ SQL_FROM + ObjectEntities.TEST_ENTITY;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("TestDatabase.retrieveAll | Trying: " + sql, Log.DEBUGLEVEL05);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next())
+				tests.add(new Test(new Identifier(resultSet.getString(COLUMN_ID))));			
+		}
+		catch (ObjectNotFoundException onfe) {
+			Log.errorException(onfe);
+		}
+		catch (SQLException sqle) {
+			String mesg = "TestDatabase.retrieveAll | Cannot retrieve test ";
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return tests;
+	}
+
+	public static void delete(Test test) {
+		String testIdStr = test.getId().toSQLString();
+		Statement statement = null;
+		try {
+			statement = connection.createStatement();
+			String sql = SQL_DELETE_FROM
+						+ ObjectEntities.TEST_ENTITY
+						+ SQL_WHERE
+						+ COLUMN_ID + EQUALS
+						+ testIdStr;
+			Log.debugMessage("TestDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL05);
+			statement.executeUpdate(sql);
+			connection.commit();
+		}
+		catch (SQLException sqle1) {
+			Log.errorException(sqle1);
+		}
+		finally {
+			try {
+				if(statement != null)
+					statement.close();
+				statement = null;
+			}
+			catch(SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+	}
+
+
 }
