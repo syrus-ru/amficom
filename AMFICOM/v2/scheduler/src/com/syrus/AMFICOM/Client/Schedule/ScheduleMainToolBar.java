@@ -1,6 +1,5 @@
 package com.syrus.AMFICOM.Client.Schedule;
 
-import java.awt.*;
 import java.awt.event.*;
 
 import javax.swing.*;
@@ -14,18 +13,17 @@ public class ScheduleMainToolBar extends JToolBar implements ApplicationModelLis
 
 	ApplicationModel	aModel;
 
-	JButton						sessionOpen	= new JButton();
+	private JButton		sessionOpen;
 
-	public static final int		IMAGE_SIZE	= 16;
+	//public static final int IMAGE_SIZE = 16;
 
 	public ScheduleMainToolBar() {
-
-		sessionOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/open_session.gif")
-				.getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
-		UIStorage.setRigidSize(sessionOpen,UIStorage.BUTTON_SIZE);
-		sessionOpen.setToolTipText(LangModel.getString("menuSessionNew"));
-		sessionOpen.setName("menuSessionNew");
-		sessionOpen.addActionListener(new ActionListener() {
+		this.sessionOpen = new JButton();
+		this.sessionOpen.setIcon(UIStorage.SESSION_OPEN_ICON);
+		UIStorage.setRigidSize(this.sessionOpen, UIStorage.BUTTON_SIZE);
+		this.sessionOpen.setToolTipText(LangModel.getString("menuSessionNew"));
+		this.sessionOpen.setName(ScheduleMainMenuBar.MENU_SESSION_NEW);
+		this.sessionOpen.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				if (ScheduleMainToolBar.this.aModel == null)
@@ -38,7 +36,7 @@ public class ScheduleMainToolBar extends JToolBar implements ApplicationModelLis
 			}
 		});
 
-		add(sessionOpen);
+		add(this.sessionOpen);
 		addSeparator();
 	}
 
@@ -47,12 +45,12 @@ public class ScheduleMainToolBar extends JToolBar implements ApplicationModelLis
 	}
 
 	public ApplicationModel getModel() {
-		return aModel;
+		return this.aModel;
 	}
 
 	public void modelChanged(String e[]) {
-		sessionOpen.setVisible(aModel.isVisible("menuSessionNew"));
-		sessionOpen.setEnabled(aModel.isEnabled("menuSessionNew"));
+		this.sessionOpen.setVisible(this.aModel.isVisible(ScheduleMainMenuBar.MENU_SESSION_NEW));
+		this.sessionOpen.setEnabled(this.aModel.isEnabled(ScheduleMainMenuBar.MENU_SESSION_NEW));
 	}
 
 }

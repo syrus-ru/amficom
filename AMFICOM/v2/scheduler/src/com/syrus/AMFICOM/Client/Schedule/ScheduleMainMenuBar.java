@@ -12,29 +12,31 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 
 public class ScheduleMainMenuBar extends JMenuBar {
 
-	public static final String			MENU_VIEW					= "menuView";
-	public static final String			MENU_VIEW_PLAN				= "menuViewPlan";
-	public static final String			MENU_VIEW_TIME				= "menuViewTime";
-	public static final String			MENU_VIEW_TREE				= "menuViewTree";
-	public static final String			MENU_VIEW_PARAMETERS		= "menuViewParameters";
-	public static final String			MENU_VIEW_PROPERTIES		= "menuViewProperties";
-	public static final String			MENU_VIEW_TABLE				= "menuViewTable";
-	public static final String			MENU_VIEW_SAVE_PARAMETERS	= "menuViewSaveParameters";
+	public static final String			MENU_SESSION					= "menuSession";
+	public static final String			MENU_SESSION_NEW				= "menuSessionNew";
+	public static final String			MENU_SESSION_CLOSE				= "menuSessionClose";
+	public static final String			MENU_SESSION_OPTIONS			= "menuSessionOptions";
+	public static final String			MENU_SESSION_CONNECTION			= "menuSessionConnection";
+	public static final String			MENU_SESSION_CHANGE_PASSWORD	= "menuSessionChangePassword";
+	public static final String			MENU_SESSION_DOMAIN				= "menuSessionDomain";
 	
-	public static final String			MENU_HELP					= "menuHelp";
-	public static final String			MENU_HELP_ABOUT				= "menuHelpAbout";
+	public static final String			MENU_EXIT						= "menuExit";
+
+	public static final String			MENU_VIEW						= "menuView";
+	public static final String			MENU_VIEW_PLAN					= "menuViewPlan";
+	public static final String			MENU_VIEW_TIME					= "menuViewTime";
+	public static final String			MENU_VIEW_TREE					= "menuViewTree";
+	public static final String			MENU_VIEW_PARAMETERS			= "menuViewParameters";
+	public static final String			MENU_VIEW_PROPERTIES			= "menuViewProperties";
+	public static final String			MENU_VIEW_TABLE					= "menuViewTable";
+	public static final String			MENU_VIEW_SAVE_PARAMETERS		= "menuViewSaveParameters";
+
+	public static final String			MENU_HELP						= "menuHelp";
+	public static final String			MENU_HELP_ABOUT					= "menuHelpAbout";
 
 	ApplicationModel					aModel;
 
-	JMenu								menuSession					= new JMenu();
-	JMenuItem							menuSessionNew				= new JMenuItem();
-	JMenuItem							menuSessionClose			= new JMenuItem();
-	JMenuItem							menuSessionOptions			= new JMenuItem();
-	JMenuItem							menuSessionConnection		= new JMenuItem();
-	JMenuItem							menuSessionChangePassword	= new JMenuItem();
-	JMenuItem							menuSessionDomain			= new JMenuItem();
-	JMenuItem							menuExit					= new JMenuItem();
-
+	JMenu								menuSession						= new JMenu();
 	private JMenu						menuView;
 	private JMenu						menuHelp;
 
@@ -56,28 +58,42 @@ public class ScheduleMainMenuBar extends JMenuBar {
 		};
 
 		this.menuSession.setText(LangModel.getString("menuSession"));
-		this.menuSession.setName("menuSession");
-		this.menuSessionNew.setText(LangModel.getString("menuSessionNew"));
-		this.menuSessionNew.setName("menuSessionNew");
-		this.menuSessionNew.addActionListener(actionAdapter);
-		this.menuSessionClose.setText(LangModel.getString("menuSessionClose"));
-		this.menuSessionClose.setName("menuSessionClose");
-		this.menuSessionClose.addActionListener(actionAdapter);
-		this.menuSessionOptions.setText(LangModel.getString("menuSessionOptions"));
-		this.menuSessionOptions.setName("menuSessionOptions");
-		this.menuSessionOptions.addActionListener(actionAdapter);
-		this.menuSessionConnection.setText(LangModel.getString("menuSessionConnection"));
-		this.menuSessionConnection.setName("menuSessionConnection");
-		this.menuSessionConnection.addActionListener(actionAdapter);
-		this.menuSessionChangePassword.setText(LangModel.getString("menuSessionChangePassword"));
-		this.menuSessionChangePassword.setName("menuSessionChangePassword");
-		this.menuSessionChangePassword.addActionListener(actionAdapter);
-		this.menuSessionDomain.setText(LangModel.getString("menuSessionDomain"));
-		this.menuSessionDomain.setName("menuSessionDomain");
-		this.menuSessionDomain.addActionListener(actionAdapter);
-		this.menuExit.setText(LangModel.getString("menuExit"));
-		this.menuExit.setName("menuExit");
-		this.menuExit.addActionListener(actionAdapter);
+		this.menuSession.setName(MENU_SESSION);
+
+		final JMenuItem menuSessionNew = new JMenuItem();
+		menuSessionNew.setText(LangModel.getString("menuSessionNew"));
+		menuSessionNew.setName(MENU_SESSION_NEW);
+		menuSessionNew.addActionListener(actionAdapter);
+
+		final JMenuItem menuSessionClose = new JMenuItem();
+		menuSessionClose.setText(LangModel.getString("menuSessionClose"));
+		menuSessionClose.setName(MENU_SESSION_CLOSE);
+		menuSessionClose.addActionListener(actionAdapter);
+
+		final JMenuItem menuSessionOptions = new JMenuItem();
+		menuSessionOptions.setText(LangModel.getString("menuSessionOptions"));
+		menuSessionOptions.setName(MENU_SESSION_OPTIONS);
+		menuSessionOptions.addActionListener(actionAdapter);
+
+		final JMenuItem menuSessionConnection = new JMenuItem();
+		menuSessionConnection.setText(LangModel.getString("menuSessionConnection"));
+		menuSessionConnection.setName(MENU_SESSION_CONNECTION);
+		menuSessionConnection.addActionListener(actionAdapter);
+
+		final JMenuItem menuSessionChangePassword = new JMenuItem();
+		menuSessionChangePassword.setText(LangModel.getString("menuSessionChangePassword"));
+		menuSessionChangePassword.setName(MENU_SESSION_CHANGE_PASSWORD);
+		menuSessionChangePassword.addActionListener(actionAdapter);
+
+		final JMenuItem menuSessionDomain = new JMenuItem();
+		menuSessionDomain.setText(LangModel.getString("menuSessionDomain"));
+		menuSessionDomain.setName(MENU_SESSION_DOMAIN);
+		menuSessionDomain.addActionListener(actionAdapter);
+
+		JMenuItem menuExit = new JMenuItem();
+		menuExit.setText(LangModel.getString("menuExit"));
+		menuExit.setName(MENU_EXIT);
+		menuExit.addActionListener(actionAdapter);
 
 		this.menuView = new JMenu(LangModelSchedule.getString("View"));
 		this.menuView.setName(MENU_VIEW);
@@ -116,25 +132,24 @@ public class ScheduleMainMenuBar extends JMenuBar {
 		menuViewSaveParametersItem.setName(MENU_VIEW_SAVE_PARAMETERS);
 		menuViewSaveParametersItem.addActionListener(actionAdapter);
 		this.menuView.add(menuViewSaveParametersItem);
-		
+
 		this.menuHelp = new JMenu(LangModelSchedule.getString("Help"));
 		this.menuHelp.setName(MENU_HELP);
-		
+
 		final JMenuItem menuHelpAboutItem = new JMenuItem(LangModelSchedule.getString("About_program"));
 		menuHelpAboutItem.setName(MENU_HELP_ABOUT);
 		this.menuHelp.add(menuHelpAboutItem);
-		
 
-		this.menuSession.add(this.menuSessionNew);
-		this.menuSession.add(this.menuSessionClose);
-		this.menuSession.add(this.menuSessionOptions);
-		this.menuSession.add(this.menuSessionChangePassword);
+		this.menuSession.add(menuSessionNew);
+		this.menuSession.add(menuSessionClose);
+		this.menuSession.add(menuSessionOptions);
+		this.menuSession.add(menuSessionChangePassword);
 		this.menuSession.addSeparator();
-		this.menuSession.add(this.menuSessionConnection);
+		this.menuSession.add(menuSessionConnection);
 		this.menuSession.addSeparator();
-		this.menuSession.add(this.menuSessionDomain);
+		this.menuSession.add(menuSessionDomain);
 		this.menuSession.addSeparator();
-		this.menuSession.add(this.menuExit);
+		this.menuSession.add(menuExit);
 
 		this.add(this.menuSession);
 		this.add(this.menuView);
@@ -143,34 +158,24 @@ public class ScheduleMainMenuBar extends JMenuBar {
 		this.applicationModelListener = new ApplicationModelListener() {
 
 			public void modelChanged(String e[]) {
-				ScheduleMainMenuBar.this.menuSession.setVisible(ScheduleMainMenuBar.this.aModel
-						.isVisible("menuSession"));
-				ScheduleMainMenuBar.this.menuSession.setEnabled(ScheduleMainMenuBar.this.aModel
-						.isEnabled("menuSession"));
-				ScheduleMainMenuBar.this.menuSessionNew.setVisible(ScheduleMainMenuBar.this.aModel
-						.isVisible("menuSessionNew"));
-				ScheduleMainMenuBar.this.menuSessionNew.setEnabled(ScheduleMainMenuBar.this.aModel
-						.isEnabled("menuSessionNew"));
-				ScheduleMainMenuBar.this.menuSessionClose.setVisible(ScheduleMainMenuBar.this.aModel
-						.isVisible("menuSessionClose"));
-				ScheduleMainMenuBar.this.menuSessionClose.setEnabled(ScheduleMainMenuBar.this.aModel
-						.isEnabled("menuSessionClose"));
-				ScheduleMainMenuBar.this.menuSessionOptions.setVisible(ScheduleMainMenuBar.this.aModel
-						.isVisible("menuSessionOptions"));
-				ScheduleMainMenuBar.this.menuSessionOptions.setEnabled(ScheduleMainMenuBar.this.aModel
-						.isEnabled("menuSessionOptions"));
-				ScheduleMainMenuBar.this.menuSessionConnection.setVisible(ScheduleMainMenuBar.this.aModel
-						.isVisible("menuSessionConnection"));
-				ScheduleMainMenuBar.this.menuSessionConnection.setEnabled(ScheduleMainMenuBar.this.aModel
-						.isEnabled("menuSessionConnection"));
-				ScheduleMainMenuBar.this.menuSessionChangePassword.setVisible(ScheduleMainMenuBar.this.aModel
-						.isVisible("menuSessionChangePassword"));
-				ScheduleMainMenuBar.this.menuSessionChangePassword.setEnabled(ScheduleMainMenuBar.this.aModel
-						.isEnabled("menuSessionChangePassword"));
-				ScheduleMainMenuBar.this.menuSessionDomain.setVisible(ScheduleMainMenuBar.this.aModel
-						.isVisible("menuSessionDomain"));
-				ScheduleMainMenuBar.this.menuSessionDomain.setEnabled(ScheduleMainMenuBar.this.aModel
-						.isEnabled("menuSessionDomain"));
+				ScheduleMainMenuBar.this.menuSession
+						.setVisible(ScheduleMainMenuBar.this.aModel.isVisible(MENU_SESSION));
+				ScheduleMainMenuBar.this.menuSession
+						.setEnabled(ScheduleMainMenuBar.this.aModel.isEnabled(MENU_SESSION));
+				menuSessionNew.setVisible(ScheduleMainMenuBar.this.aModel.isVisible(MENU_SESSION_NEW));
+				menuSessionNew.setEnabled(ScheduleMainMenuBar.this.aModel.isEnabled(MENU_SESSION_NEW));
+				menuSessionClose.setVisible(ScheduleMainMenuBar.this.aModel.isVisible(MENU_SESSION_CLOSE));
+				menuSessionClose.setEnabled(ScheduleMainMenuBar.this.aModel.isEnabled(MENU_SESSION_CLOSE));
+				menuSessionOptions.setVisible(ScheduleMainMenuBar.this.aModel.isVisible(MENU_SESSION_OPTIONS));
+				menuSessionOptions.setEnabled(ScheduleMainMenuBar.this.aModel.isEnabled(MENU_SESSION_OPTIONS));
+				menuSessionConnection.setVisible(ScheduleMainMenuBar.this.aModel.isVisible(MENU_SESSION_CONNECTION));
+				menuSessionConnection.setEnabled(ScheduleMainMenuBar.this.aModel.isEnabled(MENU_SESSION_CONNECTION));
+				menuSessionChangePassword.setVisible(ScheduleMainMenuBar.this.aModel
+						.isVisible(MENU_SESSION_CHANGE_PASSWORD));
+				menuSessionChangePassword.setEnabled(ScheduleMainMenuBar.this.aModel
+						.isEnabled(MENU_SESSION_CHANGE_PASSWORD));
+				menuSessionDomain.setVisible(ScheduleMainMenuBar.this.aModel.isVisible(MENU_SESSION_DOMAIN));
+				menuSessionDomain.setEnabled(ScheduleMainMenuBar.this.aModel.isEnabled(MENU_SESSION_DOMAIN));
 
 				menuViewPlanItem.setVisible(ScheduleMainMenuBar.this.aModel.isVisible(MENU_VIEW_PLAN));
 				menuViewPlanItem.setEnabled(ScheduleMainMenuBar.this.aModel.isEnabled(MENU_VIEW_PLAN));
