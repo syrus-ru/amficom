@@ -57,12 +57,10 @@ JPUB_FLAGS = \
 JAR=jar-3.3.1
 
 
-$(LIBNAME): mach
+$(LIBNAME): .mach
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
 
-.PHONY:	mach
-mach:	.mach
 .mach:	.corba .ora $(CLASSDIR)
 	$(JAVAC) $(JAVAC_FLAGS) \
 		-classpath $(APPCLASSPATH):$(ORACLECLASSPATH):$(CLASSDIR) \
@@ -71,8 +69,6 @@ mach:	.mach
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/TemporalPattern_Database.java
 	touch $@
 
-.PHONY:	ora
-ora:	.ora
 .ora:	$(CLASSDIR)
 	$(JPUB) $(JPUB_FLAGS) \
 		-sql=CRONSTRINGARRAY:CronStringArray
@@ -83,8 +79,6 @@ ora:	.ora
 	touch $@
 	
 
-.PHONY:	corba
-corba:	.corba
 .corba:	$(CLASSDIR)
 	$(IDL2JAVA) $(IDL2JAVA_FLAGS) \
 		$(IDLDIR)/event.idl \
