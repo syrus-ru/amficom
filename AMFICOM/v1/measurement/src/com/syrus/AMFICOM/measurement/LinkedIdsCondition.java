@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.1 2004/10/05 12:45:26 bob Exp $
+ * $Id: LinkedIdsCondition.java,v 1.2 2004/10/05 12:55:29 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.measurement.corba.LinkedIdsConditionSort;
 import com.syrus.AMFICOM.measurement.corba.LinkedIdsCondition_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/10/05 12:45:26 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/05 12:55:29 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -72,16 +72,36 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 
 	public boolean isConditionTrue(Object object) throws ApplicationException {
 		boolean condition = false;
-		if (object instanceof Measurement) {
-			Measurement measurement = (Measurement)object;
-			for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
-				Identifier testId = (Identifier) it.next();
-				if (measurement.getTestId().equals(testId)){
-					condition = true;
-					break;
-				}				
-			}
+		switch(this.entityCode.shortValue()){
+			case ObjectEntities.MEASUREMENT_ENTITY_CODE :
+				if (object instanceof Measurement) {
+					Measurement measurement = (Measurement)object;
+					for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
+						Identifier testId = (Identifier) it.next();
+						if (measurement.getTestId().equals(testId)){
+							condition = true;
+							break;
+						}				
+					}
+				}
+				break;
+			case ObjectEntities.RESULT_ENTITY_CODE :
+				if (object instanceof Result) {
+					Result result = (Result)object;
+					for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
+						Identifier measurementId = (Identifier) it.next();
+						if (result.getMeasurement().getId().equals(measurementId)){
+							condition = true;
+							break;
+						}				
+					}
+				}
+
+				break;
+			default:
+				throw new UnsupportedOperationException("entityCode is unknown for this condition");
 		}
+
 		return condition;
 	}
 
@@ -90,7 +110,15 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	}
 
 	public void setEntityCode(Short entityCode) {
-		this.entityCode = entityCode;
+		switch(this.entityCode.shortValue()){
+			case ObjectEntities.MEASUREMENT_ENTITY_CODE :
+			case ObjectEntities.RESULT_ENTITY_CODE : 
+				this.entityCode = entityCode;
+				break;
+			default:
+				throw new UnsupportedOperationException("entityCode is unknown for this condition");
+		}
+		
 	}
 	
 	
