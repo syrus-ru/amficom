@@ -63,11 +63,13 @@ public class AnalysisSelectionFrame extends ATableFrame
 	JScrollPane scrollPane = new JScrollPane();
 	JViewport viewport = new JViewport();
 	JToolBar jToolBar1 = new JToolBar();
-	JButton jButton1 = new JButton();
-	JButton jButton2 = new JButton();
-	JButton jButton3 = new JButton();
+	JButton analysisStartButton = new JButton();
+	JButton analysisInitialButton = new JButton();
+	JButton analysisDefaultsButton = new JButton();
 	ApplicationContext aContext;
-
+	
+	private Object selectedEventId;
+	
 	public AnalysisSelectionFrame(ApplicationContext aContext)
 	{
 		super();
@@ -89,11 +91,13 @@ public class AnalysisSelectionFrame extends ATableFrame
 	{
 		this.dispatcher = dispatcher;
 		dispatcher.register(this, RefChangeEvent.typ);
+		dispatcher.register(this, RefUpdateEvent.typ);
 	}
 
 	public void operationPerformed(OperationEvent ae)
 	{
-		if(ae.getActionCommand().equals(RefChangeEvent.typ))
+		String actionCommand = ae.getActionCommand();
+		if(actionCommand.equals(RefChangeEvent.typ))
 		{
 			RefChangeEvent rce = (RefChangeEvent)ae;
 			if(rce.OPEN)
@@ -175,6 +179,13 @@ public class AnalysisSelectionFrame extends ATableFrame
 					setVisible(false);
 				}
 			}
+		} else if (actionCommand.equals(RefUpdateEvent.typ)) {
+			RefUpdateEvent refUpdateEvent = (RefUpdateEvent)ae;
+			System.out.println("RefUpdateEvent");
+			if (refUpdateEvent.eventSelected()) {
+				this.selectedEventId = refUpdateEvent.getSource();
+				System.out.println("RefUpdateEvent.eventSelected " + selectedEventId);
+			}
 		}
 	}
 
@@ -252,43 +263,43 @@ public class AnalysisSelectionFrame extends ATableFrame
 		jTable.setDefaultRenderer(Object.class, new ModelParamsTableRenderer(tModelMinuit));
 		jTable.setDefaultEditor(Object.class, new ModelParamsTableEditor(tModelMinuit));
 
-		jButton1.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-		jButton1.setMinimumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-		jButton1.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-		jButton1.setToolTipText(LangModelAnalyse.getString("analysisStart"));
-		jButton1.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_PERFORM_ANALYSIS));
-		jButton1.addActionListener(new ActionListener()
+		analysisStartButton.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+		analysisStartButton.setMinimumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+		analysisStartButton.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+		analysisStartButton.setToolTipText(LangModelAnalyse.getString("analysisStart"));
+		analysisStartButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_PERFORM_ANALYSIS));
+		analysisStartButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				jButton1_actionPerformed(e);
+				analysisStartButton_actionPerformed(e);
 			}
 		});
 
-		jButton2.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-		jButton2.setMinimumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-		jButton2.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-		jButton2.setToolTipText(LangModelAnalyse.getString("analysisInitial"));
-		jButton2.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_INITIAL_ANALYSIS));
-		jButton2.addActionListener(new ActionListener()
+		analysisInitialButton.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+		analysisInitialButton.setMinimumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+		analysisInitialButton.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+		analysisInitialButton.setToolTipText(LangModelAnalyse.getString("analysisInitial"));
+		analysisInitialButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_INITIAL_ANALYSIS));
+		analysisInitialButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				jButton2_actionPerformed(e);
+				analysisInitialButton_actionPerformed(e);
 			}
 		});
 
 
-		jButton3.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-		jButton3.setMinimumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-		jButton3.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
-		jButton3.setToolTipText(LangModelAnalyse.getString("analysisDefaults"));
-		jButton3.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DEFAULT_ANALYSIS));
-		jButton3.addActionListener(new ActionListener()
+		analysisDefaultsButton.setMaximumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+		analysisDefaultsButton.setMinimumSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+		analysisDefaultsButton.setPreferredSize(UIManager.getDimension(ResourceKeys.SIZE_BUTTON));
+		analysisDefaultsButton.setToolTipText(LangModelAnalyse.getString("analysisDefaults"));
+		analysisDefaultsButton.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DEFAULT_ANALYSIS));
+		analysisDefaultsButton.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
 			{
-				jButton3_actionPerformed(e);
+				analysisDefaultsButton_actionPerformed(e);
 			}
 		});
 
@@ -297,10 +308,10 @@ public class AnalysisSelectionFrame extends ATableFrame
 //		jToolBar1.setBorderPainted(true);
 		jToolBar1.setFloatable(false);
 		jToolBar1.setLayout(new BoxLayout(this.jToolBar1, BoxLayout.X_AXIS));
-		jToolBar1.add(jButton1);
+		jToolBar1.add(analysisStartButton);
 		jToolBar1.add(Box.createRigidArea(UIManager.getDimension(ResourceKeys.SIZE_BUTTON)));
-		jToolBar1.add(jButton2);
-		jToolBar1.add(jButton3);
+		jToolBar1.add(analysisInitialButton);
+		jToolBar1.add(analysisDefaultsButton);
 
 		jTable.getColumnModel().getColumn(0).setPreferredWidth(250);
 		jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
@@ -331,7 +342,7 @@ public class AnalysisSelectionFrame extends ATableFrame
 		return ((JComboBox)obj).getSelectedItem();*/
 	 }
 
-	void jButton1_actionPerformed(ActionEvent e)
+	void analysisStartButton_actionPerformed(ActionEvent e)
 	{
 		setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		double[] minuitParams = new double[8];
@@ -348,16 +359,20 @@ public class AnalysisSelectionFrame extends ATableFrame
 		new MinuitAnalyseCommand(dispatcher, "primarytrace", aContext).execute();
 		dispatcher.notify(new RefUpdateEvent("primarytrace", RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
 		dispatcher.notify(new RefUpdateEvent("primarytrace", RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
+		if (this.selectedEventId != null) {
+			dispatcher.notify(new RefUpdateEvent(this.selectedEventId, RefUpdateEvent.EVENT_SELECTED_EVENT));
+		}
+
 		setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 	}
 
-	void jButton2_actionPerformed(ActionEvent e)
+	void analysisInitialButton_actionPerformed(ActionEvent e)
 	{
 		double[] defaults = (double[])Pool.get(OT_analysisparameters, OID_minuitinitials);
 		setDefaults(defaults);
 	}
 
-	void jButton3_actionPerformed(ActionEvent e)
+	void analysisDefaultsButton_actionPerformed(ActionEvent e)
 	{
 		double[] defaults = (double[])Pool.get(OT_analysisparameters, OID_minuitdefaults);
 		setDefaults(defaults);
