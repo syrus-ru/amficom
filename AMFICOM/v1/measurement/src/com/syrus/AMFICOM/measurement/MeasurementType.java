@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.35 2004/12/06 13:21:04 bob Exp $
+ * $Id: MeasurementType.java,v 1.36 2004/12/07 10:13:01 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2004/12/06 13:21:04 $
+ * @version $Revision: 1.36 $, $Date: 2004/12/07 10:13:01 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -185,8 +185,11 @@ public class MeasurementType extends ActionType {
 		
 		Identifier_Transferable[] measurementPortTypeIds = new Identifier_Transferable[this.measurementPortTypes.size()];
 		i = 0;
-		for (Iterator iterator = this.measurementPortTypes.iterator(); iterator.hasNext();)
-			measurementPortTypeIds[i++] = (Identifier_Transferable) ((MeasurementPortType) iterator.next()).getId().getTransferable();
+		for (Iterator iterator = this.measurementPortTypes.iterator(); iterator.hasNext();){
+			MeasurementPortType measurementPortType = (MeasurementPortType) iterator.next();
+			if (measurementPortType != null)
+				measurementPortTypeIds[i++] = (Identifier_Transferable) measurementPortType.getId().getTransferable();
+		}
 
 
 		return new MeasurementType_Transferable(super.getHeaderTransferable(),
