@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.39 2004/11/22 13:49:36 bob Exp $
+ * $Id: SetDatabase.java,v 1.40 2004/12/01 10:09:58 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,8 +45,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2004/11/22 13:49:36 $
- * @author $Author: bob $
+ * @version $Revision: 1.40 $, $Date: 2004/12/01 10:09:58 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -217,7 +217,7 @@ public class SetDatabase extends StorableObjectDatabase {
                 else {
                     sql.append(CLOSE_BRACKET);
                     sql.append(SQL_OR);
-                    sql.append(COLUMN_ID);
+                    sql.append(LINK_COLUMN_SET_ID);
                     sql.append(SQL_IN);
                     sql.append(OPEN_BRACKET);
                 }                   
@@ -312,7 +312,7 @@ public class SetDatabase extends StorableObjectDatabase {
                 else {
                     sql.append(CLOSE_BRACKET);
                     sql.append(SQL_OR);
-                    sql.append(COLUMN_ID);
+                    sql.append(LINK_COLUMN_SET_ID);
                     sql.append(SQL_IN);
                     sql.append(OPEN_BRACKET);
                 }                   

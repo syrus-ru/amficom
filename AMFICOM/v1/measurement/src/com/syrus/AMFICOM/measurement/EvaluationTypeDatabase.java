@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.37 2004/11/22 13:49:36 bob Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.38 2004/12/01 10:10:43 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2004/11/22 13:49:36 $
- * @author $Author: bob $
+ * @version $Revision: 1.38 $, $Date: 2004/12/01 10:10:43 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -230,7 +230,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
                 else {
                     sql.append(CLOSE_BRACKET);
                     sql.append(SQL_OR);
-                    sql.append(COLUMN_ID);
+                    sql.append(LINK_COLUMN_EVALUATION_TYPE_ID);
                     sql.append(SQL_IN);
                     sql.append(OPEN_BRACKET);
                 }                   
@@ -572,7 +572,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 	                else {
 	                    tresholds.append(CLOSE_BRACKET);
 	                    tresholds.append(SQL_OR);
-	                    tresholds.append(COLUMN_ID);
+	                    tresholds.append(SetDatabase.LINK_COLUMN_SET_ID);
 	                    tresholds.append(SQL_IN);
 	                    tresholds.append(OPEN_BRACKET);
 	                }                   

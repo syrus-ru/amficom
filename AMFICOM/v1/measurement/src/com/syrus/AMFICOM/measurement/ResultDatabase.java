@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.42 2004/11/22 13:49:36 bob Exp $
+ * $Id: ResultDatabase.java,v 1.43 2004/12/01 10:09:58 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,8 +44,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2004/11/22 13:49:36 $
- * @author $Author: bob $
+ * @version $Revision: 1.43 $, $Date: 2004/12/01 10:09:58 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -370,7 +370,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 				else {
 					sql.append(CLOSE_BRACKET);
 					sql.append(SQL_OR);
-					sql.append(COLUMN_ID);
+					sql.append(LINK_COLUMN_RESULT_ID);
 					sql.append(SQL_IN);
 					sql.append(OPEN_BRACKET);
 				}					

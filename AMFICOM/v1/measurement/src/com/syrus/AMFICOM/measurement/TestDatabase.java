@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.49 2004/11/22 13:49:36 bob Exp $
+ * $Id: TestDatabase.java,v 1.50 2004/12/01 10:09:58 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -52,8 +52,8 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2004/11/22 13:49:36 $
- * @author $Author: bob $
+ * @version $Revision: 1.50 $, $Date: 2004/12/01 10:09:58 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -298,7 +298,7 @@ public class TestDatabase extends StorableObjectDatabase {
                 else {
                     sql.append(CLOSE_BRACKET);
                     sql.append(SQL_OR);
-                    sql.append(COLUMN_ID);
+                    sql.append(LINK_COLMN_TEST_ID);
                     sql.append(SQL_IN);
                     sql.append(OPEN_BRACKET);
                 }                   

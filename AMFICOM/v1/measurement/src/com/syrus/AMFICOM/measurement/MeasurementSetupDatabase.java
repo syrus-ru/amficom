@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.44 2004/11/22 13:49:36 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.45 2004/12/01 10:09:58 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,8 +43,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2004/11/22 13:49:36 $
- * @author $Author: bob $
+ * @version $Revision: 1.45 $, $Date: 2004/12/01 10:09:58 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -438,7 +438,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
                 else {
                     sql.append(CLOSE_BRACKET);
                     sql.append(SQL_OR);
-                    sql.append(COLUMN_ID);
+                    sql.append(LINK_COLUMN_MEASUREMENT_SETUP_ID);
                     sql.append(SQL_IN);
                     sql.append(OPEN_BRACKET);
                 }                   
@@ -630,8 +630,10 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		       		 	measurementIdsStr.append(COMMA);
 		       		 else {
 		                measurementIdsStr.append(CLOSE_BRACKET);
-		                measurementIdsStr.append(SQL_OR);
-		                measurementIdsStr.append(COLUMN_ID);
+		                measurementIdsStr.append(SQL_AND);
+                        measurementIdsStr.append(NOT);
+                        measurementIdsStr.append(SQL_IN);
+		                measurementIdsStr.append(LINK_COLUMN_ME_ID);
 		                measurementIdsStr.append(SQL_IN);
 		                measurementIdsStr.append(OPEN_BRACKET);
 		       		 }  
