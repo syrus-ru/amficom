@@ -188,7 +188,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 							 jw, (int)((min_trace_level.doubleValue() - top) * scaleY - 1));
 		((Graphics2D) g).setStroke(DEFAULT_STROKE);
 	}
-	
+
 	protected void paint_alarms(Graphics g)
 	{
 		if (alarms == null)
@@ -197,8 +197,8 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		g.setColor(Color.red);
 		for (int j = 0; j < alarms.length; j++)
 		{
-			if ((alarms[j].alarmPointCoord < end) && (alarms[j].alarmEndPointCoord > start))
-				for (int i = Math.max(0, alarms[j].alarmPointCoord - start); i < Math.min (end, alarms[j].alarmEndPointCoord) - start; i++)
+			if ((alarms[j].pointCoord <= end) && (alarms[j].pointCoord >= start))
+				for (int i = Math.max(0, alarms[j].pointCoord - start); i < Math.min (end, alarms[j].endPointCoord) - start; i++)
 				{
 					g.drawLine((int)(i*scaleX+1), (int)((maxY - y[i+start] - top) * scaleY - 1),
 					(int)((i+1)*scaleX+1), (int)((maxY - y[i+start+1] - top) * scaleY - 1));
