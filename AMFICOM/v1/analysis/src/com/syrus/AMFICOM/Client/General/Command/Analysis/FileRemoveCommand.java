@@ -59,6 +59,6 @@ public class FileRemoveCommand extends VoidCommand
 		if (!activeRefId.equals(AnalysisUtil.ETALON))
 			Heap.removeAnyBSByName(activeRefId); // XXX: was Pool.remove(bs);
 		Heap.traceClosed(activeRefId);
-		dispatcher.notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE, RefChangeEvent.SELECT_EVENT)); // XXX - PRIMARY TRACE уже может не существовать! разве так можно?
+		Heap.setCurrentTracePrimary();
 	}
 }

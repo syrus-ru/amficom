@@ -87,7 +87,7 @@ public class FileSaveCommand extends VoidCommand
 				if (!chooser.getSelectedFile().getAbsolutePath().equals(bs.title))
 				{
 					bs.title = chooser.getSelectedFile().getAbsolutePath().toLowerCase();
-					dispatcher.notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE, RefChangeEvent.SELECT_EVENT));
+					Heap.setCurrentTracePrimary();
 				}
 
 				try

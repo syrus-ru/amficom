@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.5 2005/03/31 17:33:52 saa Exp $
+ * $Id: Heap.java,v 1.6 2005/03/31 18:41:17 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.Map;
 
 import com.syrus.AMFICOM.Client.Analysis.UI.ReflectogrammLoadDialog;
+import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener;
@@ -31,7 +32,7 @@ import com.syrus.io.BellcoreStructure;
  * использование остальных методов работы с BS
  * 
  * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2005/03/31 17:33:52 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/31 18:41:17 $
  * @module
  */
 public class Heap
@@ -51,7 +52,7 @@ public class Heap
 	private static Double minTraceLevel;			// "min_trace_level", PRIMARY_TRACE_KEY
 	private static HashMap dialogHash = new HashMap();	// "dialog", "*"
 
-	private static String currentlySelectedTrace = ""; // XXX: initialize to avoid crushes
+	private static String currentTrace = ""; // XXX: initialize to avoid crushes
 
 	public static ReflectogrammLoadDialog getRLDialogByKey(String key)
 	{
@@ -213,7 +214,8 @@ public class Heap
 	private static LinkedList primaryTraceListeners = new LinkedList();
 	private static LinkedList primaryMTMListeners = new LinkedList();
 	private static LinkedList etalonMTMListeners = new LinkedList();
-
+	private static LinkedList CurrentTraceChangeListeners = new LinkedList();
+	
 	// XXX: change each notify method to private as soon as bsHash will become private
 
 	// NB: if the primary trace is opened, then there are
@@ -275,6 +277,11 @@ public class Heap
 		for (Iterator it = primaryMTMListeners.iterator(); it.hasNext(); )
 				((EtalonMTMListener)it.next()).etalonMTMRemoved();
 	}
+	private static void notifyCurrentTraceChanged()
+	{
+		for (Iterator it = CurrentTraceChangeListeners.iterator(); it.hasNext(); )
+			((CurrentTraceChangeListener)it.next()).currentTraceChanged(currentTrace);
+	}
 
 	private static void addListener(Collection c, Object listener)
 	{
@@ -319,6 +326,14 @@ public class Heap
 	{
 		removeListener(etalonMTMListeners, listener);
 	}
+	public static void addCurrentTraceChangeListener(CurrentTraceChangeListener listener)
+	{
+		addListener(CurrentTraceChangeListeners, listener);
+	}
+	public static void removeCurrentTraceChangeListener(CurrentTraceChangeListener listener)
+	{
+		removeListener(CurrentTraceChangeListeners, listener);
+	}
 
 	public static void primaryTraceOpened(BellcoreStructure bs)
 	{
@@ -349,5 +364,14 @@ public class Heap
 	{
 		notifyEtalonMTMCUpdated();
 	}
-
+	public static void setCurrentTrace(String id)
+	{
+		currentTrace = id;
+		notifyCurrentTraceChanged();
+	}
+	public static void setCurrentTracePrimary()
+	{
+		currentTrace = PRIMARY_TRACE_KEY;
+		notifyCurrentTraceChanged();
+	}
 }

@@ -32,7 +32,6 @@ import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.PrimaryMTMListener;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
@@ -105,7 +104,6 @@ implements OperationListener, bsHashChangeListener, PrimaryMTMListener
 	void init_module(Dispatcher dispatcher)
 	{
 		this.dispatcher = dispatcher;
-		dispatcher.register(this, RefChangeEvent.typ);
 		dispatcher.register(this, RefUpdateEvent.typ);
 		Heap.addBsHashListener(this);
 		Heap.addPrimaryMTMListener(this);

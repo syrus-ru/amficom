@@ -56,11 +56,11 @@ import com.syrus.AMFICOM.Client.General.Command.Session.SessionDomainCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionOpenCommand;
 import com.syrus.AMFICOM.Client.General.Command.Session.SessionOptionsCommand;
 import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
+import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
@@ -80,7 +80,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.io.BellcoreStructure;
 
 public class ThresholdsMainFrame extends JFrame
-implements OperationListener, bsHashChangeListener, EtalonMTMListener
+implements OperationListener, bsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
 {
 	public ApplicationContext aContext;
 	private Dispatcher internal_dispatcher = new Dispatcher();
@@ -231,10 +231,10 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 		statusBar.organize();
 
 		aContext.setDispatcher(internal_dispatcher);
-		internal_dispatcher.register(this, RefChangeEvent.typ);
 		internal_dispatcher.register(this, "contextchange");
 		Heap.addBsHashListener(this);
 		Heap.addEtalonMTMListener(this);
+		Heap.addCurrentTraceChangeListener(this);
 		Environment.getDispatcher().register(this, "contextchange");
 
 		aModel.setCommand("menuSessionNew", new SessionOpenCommand(Environment.getDispatcher(), aContext));
@@ -439,29 +439,6 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 			if(cce.DOMAIN_SELECTED)
 			{
 				setDomainSelected();
-			}
-		}
-		if(ae.getActionCommand().equals(RefChangeEvent.typ))
-		{
-			ApplicationModel aModel = aContext.getApplicationModel();
-			RefChangeEvent rce = (RefChangeEvent)ae;
-
-			if(rce.isEventSelect())
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
-				{
-					aModel.setEnabled("menuFileRemoveCompare", false);
-					aModel.setEnabled("menuTraceRemoveCompare", false);
-					aModel.fireModelChanged(new String [] {"menuFileRemoveCompare", "menuTraceRemoveCompare"});
-				}
-				else
-				{
-					aModel.setEnabled("menuFileRemoveCompare", true);
-					aModel.setEnabled("menuTraceRemoveCompare", true);
-					aModel.fireModelChanged(new String [] {"menuFileRemoveCompare", "menuTraceRemoveCompare"});
-					setActiveRefId(id);
-				}
 			}
 		}
 	}
@@ -714,7 +691,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 			else
 				nextId = (String)it.next();
 		}
-		internal_dispatcher.notify(new RefChangeEvent(nextId, RefChangeEvent.SELECT_EVENT));
+		Heap.setCurrentTrace(nextId);
 	}
 
 	public void bsHashRemovedAll()
@@ -780,6 +757,25 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 		ApplicationModel aModel = aContext.getApplicationModel();
 		aModel.setEnabled("menuTraceCloseEtalon", false);
 		aModel.fireModelChanged(new String [] {"menuTraceCloseEtalon"});
+	}
+
+	public void currentTraceChanged(String id)
+	{
+		ApplicationModel aModel = aContext.getApplicationModel();
+
+		if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
+		{
+			aModel.setEnabled("menuFileRemoveCompare", false);
+			aModel.setEnabled("menuTraceRemoveCompare", false);
+			aModel.fireModelChanged(new String [] {"menuFileRemoveCompare", "menuTraceRemoveCompare"});
+		}
+		else
+		{
+			aModel.setEnabled("menuFileRemoveCompare", true);
+			aModel.setEnabled("menuTraceRemoveCompare", true);
+			aModel.fireModelChanged(new String [] {"menuFileRemoveCompare", "menuTraceRemoveCompare"});
+			setActiveRefId(id);
+		}
 	}
 }
 

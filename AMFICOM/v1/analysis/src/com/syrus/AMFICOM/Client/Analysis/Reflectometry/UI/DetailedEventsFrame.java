@@ -79,7 +79,6 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 
 	void init_module(Dispatcher dispatcher)
 	{
-		dispatcher.register(this, RefChangeEvent.typ);
 		dispatcher.register(this, RefUpdateEvent.typ);
 		Heap.addBsHashListener(this);
 		Heap.addEtalonMTMListener(this);
@@ -96,10 +95,6 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 
 	public void operationPerformed(OperationEvent ae)
 	{
-		if(ae.getActionCommand().equals(RefChangeEvent.typ))
-		{
-			RefChangeEvent rce = (RefChangeEvent)ae;
-		}
 		if(ae.getActionCommand().equals(RefUpdateEvent.typ))
 		{
 			RefUpdateEvent rue = (RefUpdateEvent)ae;

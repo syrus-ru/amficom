@@ -16,10 +16,9 @@ import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
 
 public class TraceSelectorFrame extends JInternalFrame
-implements OperationListener, bsHashChangeListener, EtalonMTMListener
+implements bsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener
 {
 	protected static List traces = new ArrayList();
-	protected Dispatcher dispatcher;
 	private FixedSizeEditableTableModel tModel; //DefaultTableModel
 	private ColorChooserTable jTable;
 
@@ -52,28 +51,9 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 
 	void init_module(Dispatcher dispatcher)
 	{
-		this.dispatcher = dispatcher;
-		dispatcher.register(this, RefChangeEvent.typ);
 		Heap.addBsHashListener(this);
 		Heap.addEtalonMTMListener(this);
-	}
-
-	public void operationPerformed(OperationEvent ae)
-	{
-		if(ae.getActionCommand().equals(RefChangeEvent.typ))
-		{
-			RefChangeEvent rce = (RefChangeEvent)ae;
-
-			if(rce.isEventSelect())
-			{
-				here = true;
-				String id = (String)(rce.getSource());
-				int selected = traces.indexOf(id);
-				if (selected != -1)
-					jTable.setRowSelectionInterval(selected, selected);
-				here = false;
-			}
-		}
+		Heap.addCurrentTraceChangeListener(this);
 	}
 
 	private void jbInit() throws Exception
@@ -128,8 +108,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 				{
 					int selectedRow = lsm.getMinSelectionIndex();
 					//selectedRow is selected
-					RefChangeEvent event = new RefChangeEvent(traces.get(selectedRow), RefChangeEvent.SELECT_EVENT);
-					dispatcher.notify(event);
+					Heap.setCurrentTrace((String)traces.get(selectedRow));
 				}
 			}
 		}
@@ -245,5 +224,14 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 
 	public void etalonMTMRemoved()
 	{
+	}
+
+	public void currentTraceChanged(String id)
+	{
+		here = true;
+		int selected = traces.indexOf(id);
+		if (selected != -1)
+			jTable.setRowSelectionInterval(selected, selected);
+		here = false;
 	}
 }

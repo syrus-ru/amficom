@@ -7,8 +7,6 @@ import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 
 public class TraceEventsLayeredPanel extends ScalableLayeredPanel implements OperationListener
 {
-	Dispatcher dispatcher;
-
 	public TraceEventsLayeredPanel(Dispatcher dispatcher)
 	{
 		super();
@@ -26,7 +24,6 @@ public class TraceEventsLayeredPanel extends ScalableLayeredPanel implements Ope
 
 	void init_module(Dispatcher dispatcher)
 	{
-		this.dispatcher = dispatcher;
 		dispatcher.register(this, RefUpdateEvent.typ);
 	}
 

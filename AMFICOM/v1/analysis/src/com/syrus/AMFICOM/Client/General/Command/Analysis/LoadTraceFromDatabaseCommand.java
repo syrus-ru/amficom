@@ -144,8 +144,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 			}
 
 			Heap.primaryTraceOpened(bs);
-			dispatcher.notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE,
-				RefChangeEvent.SELECT_EVENT));
+			Heap.setCurrentTracePrimary();
 
 			dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE,
 				RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));

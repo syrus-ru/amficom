@@ -54,7 +54,6 @@ public class TraceMakeCurrentCommand extends VoidCommand
 		new InitialAnalysisCommand().execute();
 		
 		Heap.primaryTraceOpened(bs);
-
-		dispatcher.notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE, RefChangeEvent.SELECT_EVENT));
+		Heap.setCurrentTracePrimary();
 	}
 }

@@ -57,7 +57,7 @@ public class LoadTestSetupCommand extends VoidCommand
 		if (Heap.hasEventParamsForEtalonTrace()) // если эталон есть (уже открыт) - то закрыть
 		{
 			Heap.notifyBsHashRemove(Heap.ETALON_TRACE_KEY); // XXX: вызывается как раз в том случае, когда эталон не удален
-			aContext.getDispatcher().notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE, RefChangeEvent.SELECT_EVENT));
+			Heap.setCurrentTracePrimary();
 		}
 
 		AnalysisUtil.load_CriteriaSet(userId, ms);
@@ -73,8 +73,7 @@ public class LoadTestSetupCommand extends VoidCommand
 		Heap.notifyEtalonMTMCUpdated();
 		Heap.notifyPrimaryTraceClosed();
 		Heap.notifyPrimaryTraceOpened();
-		aContext.getDispatcher().notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE,
-				RefChangeEvent.SELECT_EVENT));
+		Heap.setCurrentTracePrimary();
 		aContext.getDispatcher().notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE,
 				RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
 	}

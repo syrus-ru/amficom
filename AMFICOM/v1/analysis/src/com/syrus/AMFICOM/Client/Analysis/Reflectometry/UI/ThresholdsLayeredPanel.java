@@ -12,7 +12,6 @@ import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
@@ -51,16 +50,12 @@ implements OperationListener, bsHashChangeListener
 	void init_module(Dispatcher dispatcher)
 	{
 		super.init_module(dispatcher);
-		dispatcher.register(this, RefChangeEvent.typ);
+		// на RefUpdateEvent подписывается суперкласс - нам подписываться не надо
 		Heap.addBsHashListener(this);
 	}
 
 	public void operationPerformed(OperationEvent ae)
 	{
-		if(ae.getActionCommand().equals(RefChangeEvent.typ))
-		{
-			RefChangeEvent rce = (RefChangeEvent)ae;
-		}
 		if(ae.getActionCommand().equals(RefUpdateEvent.typ))
 		{
 			RefUpdateEvent rue = (RefUpdateEvent)ae;

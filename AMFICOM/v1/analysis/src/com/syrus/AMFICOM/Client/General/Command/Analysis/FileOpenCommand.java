@@ -161,7 +161,7 @@ public class FileOpenCommand extends VoidCommand
 			//new MinuitAnalyseCommand(dispatcher, RefUpdateEvent.PRIMARY_TRACE, aContext).execute();
 			Heap.primaryTraceOpened(bs);
 
-			dispatcher.notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE, RefChangeEvent.SELECT_EVENT));
+			Heap.setCurrentTracePrimary();
 			dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE, RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
 			try
 			{

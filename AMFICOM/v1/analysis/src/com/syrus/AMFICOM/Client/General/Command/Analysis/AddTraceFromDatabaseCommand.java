@@ -103,7 +103,6 @@ public class AddTraceFromDatabaseCommand extends VoidCommand
 			bs.title = ((Measurement)res.getAction()).getName();
 		Heap.putSecondaryTraceByKey(bs.title, bs);
 		Heap.secondaryTraceOpened(bs.title, bs);
-		dispatcher.notify(new RefChangeEvent(bs.title,
-			RefChangeEvent.SELECT_EVENT));
+		Heap.setCurrentTrace(bs.title);
 	}
 }

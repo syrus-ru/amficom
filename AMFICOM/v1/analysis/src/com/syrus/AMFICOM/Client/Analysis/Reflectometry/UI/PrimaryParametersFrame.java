@@ -15,10 +15,8 @@ import javax.swing.WindowConstants;
 import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.General.Event.CurrentTraceChangeListener;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
@@ -29,7 +27,7 @@ import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
 
 public class PrimaryParametersFrame extends ATableFrame
-implements OperationListener, bsHashChangeListener
+implements bsHashChangeListener, CurrentTraceChangeListener
 {
 
 	private FixedSizeEditableTableModel tModel;
@@ -63,21 +61,8 @@ implements OperationListener, bsHashChangeListener
 
 	void init_module(Dispatcher dispatcher)
 	{
-		dispatcher.register(this, RefChangeEvent.typ);
 		Heap.addBsHashListener(this);
-	}
-
-	public void operationPerformed(OperationEvent ae)
-	{
-		if(ae.getActionCommand().equals(RefChangeEvent.typ))
-		{
-			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.isEventSelect())
-			{
-				String id = (String)(rce.getSource());
-				updTableModel (id);
-			}
-		}
+		Heap.addCurrentTraceChangeListener(this);
 	}
 
 	public String getReportTitle()
@@ -187,5 +172,10 @@ implements OperationListener, bsHashChangeListener
 	public void bsHashRemovedAll()
 	{
 		setVisible(false);
+	}
+
+	public void currentTraceChanged(String id)
+	{
+		updTableModel (id);
 	}
 }

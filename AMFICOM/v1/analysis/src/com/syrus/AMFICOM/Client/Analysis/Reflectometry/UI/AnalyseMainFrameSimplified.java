@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.*;
 import com.syrus.io.BellcoreStructure;
 
 public class AnalyseMainFrameSimplified extends JFrame
-implements bsHashChangeListener, OperationListener, EtalonMTMListener
+implements bsHashChangeListener, OperationListener, EtalonMTMListener, CurrentTraceChangeListener
 {
 	public static final boolean DEBUG = System.getProperty("amficom.debug.nonstrict", "false").equals("true");
 
@@ -164,10 +164,10 @@ implements bsHashChangeListener, OperationListener, EtalonMTMListener
 		statusBar.organize();
 
 		aContext.setDispatcher(internal_dispatcher);
-		internal_dispatcher.register(this, RefChangeEvent.typ);
 		internal_dispatcher.register(this, "contextchange");
 		Heap.addBsHashListener(this);
 		Heap.addEtalonMTMListener(this);
+		Heap.addCurrentTraceChangeListener(this);
 		Environment.getDispatcher().register(this, "contextchange");
 
 		aModel.setCommand("menuSessionNew", new SessionOpenCommand(Environment.getDispatcher(), aContext));
@@ -359,29 +359,6 @@ implements bsHashChangeListener, OperationListener, EtalonMTMListener
 			if(cce.DOMAIN_SELECTED)
 			{
 				setDomainSelected();
-			}
-		}
-
-		if(ae.getActionCommand().equals(RefChangeEvent.typ))
-		{
-			ApplicationModel aModel = aContext.getApplicationModel();
-			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.isEventSelect())
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
-				{
-					aModel.setEnabled("menuFileRemoveCompare", false);
-					aModel.setEnabled("menuTraceRemoveCompare", false);
-					aModel.fireModelChanged(new String [] {"menuFileRemoveCompare", "menuTraceRemoveCompare"});
-				}
-				else
-				{
-					aModel.setEnabled("menuFileRemoveCompare", true);
-					aModel.setEnabled("menuTraceRemoveCompare", true);
-					aModel.fireModelChanged(new String [] {"menuFileRemoveCompare", "menuTraceRemoveCompare"});
-					setActiveRefId(id);
-				}
 			}
 		}
 	}
@@ -621,7 +598,7 @@ implements bsHashChangeListener, OperationListener, EtalonMTMListener
 			else
 				nextId = (String)it.next();
 		}
-		internal_dispatcher.notify(new RefChangeEvent(nextId, RefChangeEvent.SELECT_EVENT));
+		Heap.setCurrentTrace(nextId);
 	}
 
 	public void bsHashRemovedAll()
@@ -674,6 +651,24 @@ implements bsHashChangeListener, OperationListener, EtalonMTMListener
 		ApplicationModel aModel = aContext.getApplicationModel();
 		aModel.setEnabled("menuTraceCloseEtalon", false);
 		aModel.fireModelChanged(new String [] {"menuTraceCloseEtalon"});
+	}
+
+	public void currentTraceChanged(String id)
+	{
+		ApplicationModel aModel = aContext.getApplicationModel();
+		if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
+		{
+			aModel.setEnabled("menuFileRemoveCompare", false);
+			aModel.setEnabled("menuTraceRemoveCompare", false);
+			aModel.fireModelChanged(new String [] {"menuFileRemoveCompare", "menuTraceRemoveCompare"});
+		}
+		else
+		{
+			aModel.setEnabled("menuFileRemoveCompare", true);
+			aModel.setEnabled("menuTraceRemoveCompare", true);
+			aModel.fireModelChanged(new String [] {"menuFileRemoveCompare", "menuTraceRemoveCompare"});
+			setActiveRefId(id);
+		}
 	}
 }
 

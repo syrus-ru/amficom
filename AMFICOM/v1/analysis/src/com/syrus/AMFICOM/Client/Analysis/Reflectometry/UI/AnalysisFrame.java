@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.measurement.*;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.util.ByteArray;
 
-public class AnalysisFrame extends ScalableFrame implements OperationListener, bsHashChangeListener, EtalonMTMListener
+public class AnalysisFrame extends ScalableFrame implements bsHashChangeListener, EtalonMTMListener
 {
 	Dispatcher dispatcher;
 	public HashMap traces = new HashMap();
@@ -66,17 +66,8 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener, b
 	void init_module(Dispatcher dispatcher)
 	{
 		this.dispatcher = dispatcher;
-		dispatcher.register(this, RefChangeEvent.typ);
 		Heap.addBsHashListener(this);
 		Heap.addEtalonMTMListener(this);
-	}
-
-	public void operationPerformed(OperationEvent ae)
-	{
-		if(ae.getActionCommand().equals(RefChangeEvent.typ))
-		{
-			RefChangeEvent rce = (RefChangeEvent)ae;
-		}
 	}
 
 	void this_componentShown(ComponentEvent e)

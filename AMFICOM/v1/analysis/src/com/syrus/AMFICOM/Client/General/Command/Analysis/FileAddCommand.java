@@ -119,8 +119,7 @@ public class FileAddCommand extends VoidCommand
 			bs.title = chooser.getSelectedFile().getName();
 			Heap.putSecondaryTraceByKey(id, bs);
 			Heap.secondaryTraceOpened(id, bs);
-			dispatcher.notify(new RefChangeEvent(id, RefChangeEvent.SELECT_EVENT));
-
+			Heap.setCurrentTrace(id);
 			try
 			{
 				properties.setProperty("lastdir", chooser.getSelectedFile().getParent().toLowerCase());

@@ -25,40 +25,60 @@ import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.io.BellcoreStructure;
 
-public class AnalyseMainFrame extends JFrame
-implements bsHashChangeListener, PrimaryTraceListener, PrimaryMTMListener,
-	OperationListener, EtalonMTMListener
+public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
+		PrimaryTraceListener, PrimaryMTMListener, OperationListener,
+		EtalonMTMListener, CurrentTraceChangeListener
 {
 	public ApplicationContext aContext;
+
 	private Dispatcher internal_dispatcher = new Dispatcher();
 
 	ClientAnalysisManager aManager = new ClientAnalysisManager();
+
 	JPanel mainPanel = new JPanel();
+
 	AnalyseMainToolBar toolBar = new AnalyseMainToolBar();
+
 	JScrollPane scrollPane = new JScrollPane();
+
 	JViewport viewport = new JViewport();
+
 	JDesktopPane desktopPane = new JDesktopPane();
+
 	JPanel statusBarPanel = new JPanel();
+
 	StatusBarModel statusBar = new StatusBarModel(0);
+
 	AnalyseMainMenuBar menuBar = new AnalyseMainMenuBar();
 
 	ScalableFrame noiseFrame;
+
 	ScalableFrame filteredFrame;
 
 	TraceSelectorFrame selectFrame;
+
 	PrimaryParametersFrame paramFrame;
+
 	OverallStatsFrame statsFrame;
+
 	EventsFrame eventsFrame;
+
 	MarkersInfoFrame mInfoFrame;
+
 	PathElementsFrame analysisFrame;
+
 	AnalysisSelectionFrame anaSelectFrame;
+
 	DetailedEventsFrame detailedEvFrame;
+
 	HistogrammFrame dhf;
 
 	ArrayList tables = new ArrayList();
+
 	ArrayList graphs = new ArrayList();
 
-	public AnalyseMainFrame(ApplicationContext aContext)//ApplicationModel aModel)
+	public AnalyseMainFrame(ApplicationContext aContext)// ApplicationModel
+														// aModel)
 	{
 		super();
 		setContext(aContext);
@@ -66,8 +86,7 @@ implements bsHashChangeListener, PrimaryTraceListener, PrimaryMTMListener,
 		try
 		{
 			jbInit();
-		}
-		catch (Exception e)
+		} catch (Exception e)
 		{
 			e.printStackTrace();
 		}
@@ -81,7 +100,8 @@ implements bsHashChangeListener, PrimaryTraceListener, PrimaryMTMListener,
 
 	private void jbInit() throws Exception
 	{
-		this.addComponentListener(new AnalyseMainFrame_this_componentAdapter(this));
+		this.addComponentListener(new AnalyseMainFrame_this_componentAdapter(
+				this));
 		this.addWindowListener(new java.awt.event.WindowAdapter()
 		{
 			public void windowClosing(WindowEvent e)
@@ -138,8 +158,9 @@ implements bsHashChangeListener, PrimaryTraceListener, PrimaryMTMListener,
 		desktopPane.add(filteredFrame);
 		graphs.add(filteredFrame);
 
-//		ConcavitiesFrame concFrame = new ConcavitiesFrame(internal_dispatcher);
-//		desktopPane.add(concFrame);
+		// ConcavitiesFrame concFrame = new
+		// ConcavitiesFrame(internal_dispatcher);
+		// desktopPane.add(concFrame);
 
 		eventsFrame = new EventsFrame(internal_dispatcher);
 		desktopPane.add(eventsFrame);
@@ -159,13 +180,14 @@ implements bsHashChangeListener, PrimaryTraceListener, PrimaryMTMListener,
 		desktopPane.add(anaSelectFrame);
 		tables.add(anaSelectFrame);
 
-		//dhf = new DerivHistoFrame(internal_dispatcher);
+		// dhf = new DerivHistoFrame(internal_dispatcher);
 		dhf = new HistogrammFrame(internal_dispatcher);
 		desktopPane.add(dhf);
 		graphs.add(dhf);
 
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize = new Dimension (screenSize.width, screenSize.height - 24);
+		Dimension frameSize = new Dimension(screenSize.width,
+				screenSize.height - 24);
 
 		setSize(frameSize);
 		setLocation(0, 0);
@@ -191,99 +213,141 @@ implements bsHashChangeListener, PrimaryTraceListener, PrimaryMTMListener,
 		statusBar.organize();
 
 		aContext.setDispatcher(internal_dispatcher);
-		internal_dispatcher.register(this, RefChangeEvent.typ);
 		internal_dispatcher.register(this, RefUpdateEvent.typ);
 		internal_dispatcher.register(this, "contextchange");
 		Heap.addBsHashListener(this);
 		Heap.addPrimaryMTMListener(this);
 		Heap.addPrimaryTraceListener(this);
 		Heap.addEtalonMTMListener(this);
+		Heap.addCurrentTraceChangeListener(this);
 		Environment.getDispatcher().register(this, "contextchange");
 
-		aModel.setCommand("menuSessionNew", new SessionOpenCommand(Environment.getDispatcher(), aContext));
-		aModel.setCommand("menuSessionClose", new SessionCloseCommand(Environment.getDispatcher(), aContext));
-		aModel.setCommand("menuSessionOptions", new SessionOptionsCommand(aContext));
-		aModel.setCommand("menuSessionConnection", new SessionConnectionCommand(Environment.getDispatcher(), aContext));
-		aModel.setCommand("menuSessionChangePassword", new SessionChangePasswordCommand(Environment.getDispatcher(), aContext));
-		aModel.setCommand("menuSessionDomain", new SessionDomainCommand(Environment.getDispatcher(), aContext));
+		aModel.setCommand("menuSessionNew", new SessionOpenCommand(
+				Environment.getDispatcher(), aContext));
+		aModel.setCommand("menuSessionClose", new SessionCloseCommand(
+				Environment.getDispatcher(), aContext));
+		aModel.setCommand("menuSessionOptions", new SessionOptionsCommand(
+				aContext));
+		aModel.setCommand("menuSessionConnection",
+			new SessionConnectionCommand(Environment.getDispatcher(), aContext));
+		aModel.setCommand("menuSessionChangePassword",
+			new SessionChangePasswordCommand(Environment.getDispatcher(),
+					aContext));
+		aModel.setCommand("menuSessionDomain", new SessionDomainCommand(
+				Environment.getDispatcher(), aContext));
 		aModel.setCommand("menuExit", new ExitCommand(this));
 
-		aModel.setCommand("menuFileOpen", new FileOpenCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuFileOpenAsBellcore", new FileOpenAsBellcoreCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuFileOpenAsWavetek", new FileOpenAsWavetekCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuFileSave", new FileSaveCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuFileSaveAsText", new FileSaveAsTextCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuFileClose", new FileCloseCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuFileAddCompare",new FileAddCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuFileRemoveCompare", new FileRemoveCommand(internal_dispatcher, null, aContext));
+		aModel.setCommand("menuFileOpen", new FileOpenCommand(
+				internal_dispatcher, aContext));
+		aModel.setCommand("menuFileOpenAsBellcore",
+			new FileOpenAsBellcoreCommand(internal_dispatcher, aContext));
+		aModel.setCommand("menuFileOpenAsWavetek",
+			new FileOpenAsWavetekCommand(internal_dispatcher, aContext));
+		aModel.setCommand("menuFileSave", new FileSaveCommand(
+				internal_dispatcher, aContext));
+		aModel.setCommand("menuFileSaveAsText", new FileSaveAsTextCommand(
+				internal_dispatcher, aContext));
+		aModel.setCommand("menuFileClose", new FileCloseCommand(
+				internal_dispatcher, aContext));
+		aModel.setCommand("menuFileAddCompare", new FileAddCommand(
+				internal_dispatcher, aContext));
+		aModel.setCommand("menuFileRemoveCompare", new FileRemoveCommand(
+				internal_dispatcher, null, aContext));
 
-		aModel.setCommand("menuAnalyseUpload", new SaveAnalysisCommand(aContext));
-		aModel.setCommand("menuCreateTestSetup", new CreateTestSetupCommand(aContext));
-		aModel.setCommand("menuLoadTestSetup", new LoadTestSetupCommand(aContext));
-		aModel.setCommand("menuSaveTestSetup", new SaveTestSetupCommand(aContext,
-				SaveTestSetupCommand.ETALON + SaveTestSetupCommand.CRITERIA));
-		aModel.setCommand("menuSaveTestSetupAs", new SaveTestSetupAsCommand(aContext,
-			SaveTestSetupCommand.ETALON + SaveTestSetupCommand.CRITERIA));
+		aModel.setCommand("menuAnalyseUpload",
+			new SaveAnalysisCommand(aContext));
+		aModel.setCommand("menuCreateTestSetup", new CreateTestSetupCommand(
+				aContext));
+		aModel.setCommand("menuLoadTestSetup", new LoadTestSetupCommand(
+				aContext));
+		aModel.setCommand("menuSaveTestSetup", new SaveTestSetupCommand(
+				aContext, SaveTestSetupCommand.ETALON
+						+ SaveTestSetupCommand.CRITERIA));
+		aModel.setCommand("menuSaveTestSetupAs", new SaveTestSetupAsCommand(
+				aContext, SaveTestSetupCommand.ETALON
+						+ SaveTestSetupCommand.CRITERIA));
 		aModel.setCommand("menuNetStudy", new NetStudyCommand());
 
-		aModel.setCommand("menuTraceDownload", new LoadTraceFromDatabaseCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuTraceDownloadEtalon", new LoadEtalonCommand(aContext));
-		aModel.setCommand("menuTraceAddCompare", new AddTraceFromDatabaseCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuTraceRemoveCompare", new FileRemoveCommand(internal_dispatcher, null, aContext));
-		aModel.setCommand("menuTraceClose", new FileCloseCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuTraceCloseEtalon", new RemoveEtalonCommand(aContext));
-		aModel.setCommand("menuTraceReferenceSet", new TraceOpenReferenceCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuTraceReferenceMakeCurrent", new TraceMakeCurrentCommand(internal_dispatcher, aContext));
-		aModel.setCommand("menuOptionsColor", new OptionsSetColorsCommand(internal_dispatcher, aContext));
+		aModel.setCommand("menuTraceDownload",
+			new LoadTraceFromDatabaseCommand(internal_dispatcher, aContext));
+		aModel.setCommand("menuTraceDownloadEtalon", new LoadEtalonCommand(
+				aContext));
+		aModel.setCommand("menuTraceAddCompare",
+			new AddTraceFromDatabaseCommand(internal_dispatcher, aContext));
+		aModel.setCommand("menuTraceRemoveCompare", new FileRemoveCommand(
+				internal_dispatcher, null, aContext));
+		aModel.setCommand("menuTraceClose", new FileCloseCommand(
+				internal_dispatcher, aContext));
+		aModel.setCommand("menuTraceCloseEtalon", new RemoveEtalonCommand(
+				aContext));
+		aModel.setCommand("menuTraceReferenceSet",
+			new TraceOpenReferenceCommand(internal_dispatcher, aContext));
+		aModel.setCommand("menuTraceReferenceMakeCurrent",
+			new TraceMakeCurrentCommand(internal_dispatcher, aContext));
+		aModel.setCommand("menuOptionsColor", new OptionsSetColorsCommand(
+				internal_dispatcher, aContext));
 
-		CreateAnalysisReportCommand rc = new CreateAnalysisReportCommand(aContext);
+		CreateAnalysisReportCommand rc = new CreateAnalysisReportCommand(
+				aContext);
 		for (Iterator it = tables.iterator(); it.hasNext();)
 			rc.setParameter(CreateAnalysisReportCommand.TABLE, it.next());
 		for (Iterator it = graphs.iterator(); it.hasNext();)
 			rc.setParameter(CreateAnalysisReportCommand.PANEL, it.next());
-		rc.setParameter(CreateAnalysisReportCommand.TYPE, ReportTemplate.rtt_Survey);
+		rc.setParameter(CreateAnalysisReportCommand.TYPE,
+			ReportTemplate.rtt_Survey);
 		aModel.setCommand("menuReportCreate", rc);
 
-		aModel.setCommand("menuWindowArrange", new ArrangeWindowCommand(new AnalysisExtWindowArranger(this)));
-		aModel.setCommand("menuWindowTraceSelector", new ShowFrameCommand(desktopPane, selectFrame));
-		aModel.setCommand("menuWindowPrimaryParameters", new ShowFrameCommand(desktopPane, paramFrame));
-		aModel.setCommand("menuWindowOverallStats", new ShowFrameCommand(desktopPane, statsFrame));
-		aModel.setCommand("menuWindowNoiseFrame", new ShowFrameCommand(desktopPane, noiseFrame));
-		aModel.setCommand("menuWindowFilteredFrame", new ShowFrameCommand(desktopPane, filteredFrame));
-		aModel.setCommand("menuWindowEvents", new ShowFrameCommand(desktopPane, eventsFrame));
-		aModel.setCommand("menuWindowDetailedEvents", new ShowFrameCommand(desktopPane, detailedEvFrame));
-		aModel.setCommand("menuWindowAnalysis", new ShowFrameCommand(desktopPane, analysisFrame));
-		aModel.setCommand("menuWindowMarkersInfo", new ShowFrameCommand(desktopPane, mInfoFrame));
-		aModel.setCommand("menuWindowAnalysisSelection", new ShowFrameCommand(desktopPane, anaSelectFrame));
-		aModel.setCommand("menuWindowDerivHistoFrame", new ShowFrameCommand(desktopPane, dhf));
+		aModel.setCommand("menuWindowArrange", new ArrangeWindowCommand(
+				new AnalysisExtWindowArranger(this)));
+		aModel.setCommand("menuWindowTraceSelector", new ShowFrameCommand(
+				desktopPane, selectFrame));
+		aModel.setCommand("menuWindowPrimaryParameters", new ShowFrameCommand(
+				desktopPane, paramFrame));
+		aModel.setCommand("menuWindowOverallStats", new ShowFrameCommand(
+				desktopPane, statsFrame));
+		aModel.setCommand("menuWindowNoiseFrame", new ShowFrameCommand(
+				desktopPane, noiseFrame));
+		aModel.setCommand("menuWindowFilteredFrame", new ShowFrameCommand(
+				desktopPane, filteredFrame));
+		aModel.setCommand("menuWindowEvents", new ShowFrameCommand(desktopPane,
+				eventsFrame));
+		aModel.setCommand("menuWindowDetailedEvents", new ShowFrameCommand(
+				desktopPane, detailedEvFrame));
+		aModel.setCommand("menuWindowAnalysis", new ShowFrameCommand(
+				desktopPane, analysisFrame));
+		aModel.setCommand("menuWindowMarkersInfo", new ShowFrameCommand(
+				desktopPane, mInfoFrame));
+		aModel.setCommand("menuWindowAnalysisSelection", new ShowFrameCommand(
+				desktopPane, anaSelectFrame));
+		aModel.setCommand("menuWindowDerivHistoFrame", new ShowFrameCommand(
+				desktopPane, dhf));
 
 		setDefaultModel(aModel);
 
 		aModel.fireModelChanged("");
 
-		if(ConnectionInterface.getInstance() != null)
+		if (ConnectionInterface.getInstance() != null)
 		{
-			if(ConnectionInterface.getInstance().isConnected())
+			if (ConnectionInterface.getInstance().isConnected())
 				internal_dispatcher.notify(new ContextChangeEvent(
 						ConnectionInterface.getInstance(),
 						ContextChangeEvent.CONNECTION_OPENED_EVENT));
 		}
-		if(SessionInterface.getActiveSession() != null)
+		if (SessionInterface.getActiveSession() != null)
 		{
 			aContext.setSessionInterface(SessionInterface.getActiveSession());
-			if(aContext.getSessionInterface().isOpened())
+			if (aContext.getSessionInterface().isOpened())
 				internal_dispatcher.notify(new ContextChangeEvent(
 						aContext.getSessionInterface(),
 						ContextChangeEvent.SESSION_OPENED_EVENT));
-		}
-		else
+		} else
 		{
 			aContext.setSessionInterface(Environment.getDefaultSessionInterface(ConnectionInterface.getInstance()));
 			SessionInterface.setActiveSession(aContext.getSessionInterface());
 		}
 	}
 
-	void setDefaultModel (ApplicationModel aModel)
+	void setDefaultModel(ApplicationModel aModel)
 	{
 		aModel.setAllItemsEnabled(false);
 		aModel.setEnabled("menuSession", true);
@@ -296,7 +360,10 @@ implements bsHashChangeListener, PrimaryTraceListener, PrimaryMTMListener,
 		aModel.setEnabled("menuReport", true);
 		aModel.setEnabled("menuWindow", true);
 
-		aModel.setEnabled("menuFileOpen", AnalyseMainFrameSimplified.DEBUG); // XXX: saa: security bypass
+		aModel.setEnabled("menuFileOpen", AnalyseMainFrameSimplified.DEBUG); // XXX:
+																				// saa:
+																				// security
+																				// bypass
 
 		aModel.setVisible("menuAnalyseSaveCriteria", false);
 		aModel.setVisible("menuSaveEtalon", false);
@@ -309,7 +376,7 @@ implements bsHashChangeListener, PrimaryTraceListener, PrimaryMTMListener,
 	{
 		this.aContext = aContext;
 		aContext.setDispatcher(internal_dispatcher);
-		if(aContext.getApplicationModel() == null)
+		if (aContext.getApplicationModel() == null)
 			aContext.setApplicationModel(ApplicationModel.getInstance());
 		setModel(aContext.getApplicationModel());
 	}
@@ -337,120 +404,112 @@ implements bsHashChangeListener, PrimaryTraceListener, PrimaryMTMListener,
 	{
 		return internal_dispatcher;
 	}
-/*
-	public void modelChanged(String[] params)
-	{
-		menuBar.setVisible(aModel.isVisible("menuBar"));
-		toolBar.setVisible(aModel.isVisible("toolBar"));
-		statusBar.setVisible(aModel.isVisible("statusBar"));
-	}
-*/
+
+	/*
+	 * public void modelChanged(String[] params) {
+	 * menuBar.setVisible(aModel.isVisible("menuBar"));
+	 * toolBar.setVisible(aModel.isVisible("toolBar"));
+	 * statusBar.setVisible(aModel.isVisible("statusBar")); }
+	 */
 	public void operationPerformed(OperationEvent ae)
 	{
-		if(ae.getActionCommand().equals("contextchange"))
+		if (ae.getActionCommand().equals("contextchange"))
 		{
-			ContextChangeEvent cce = (ContextChangeEvent)ae;
-			System.out.println("perform context change \"" + Long.toHexString(cce.change_type) + "\" at " + this.getTitle());
-			if(cce.SESSION_OPENED)
+			ContextChangeEvent cce = (ContextChangeEvent )ae;
+			System.out.println("perform context change \""
+					+ Long.toHexString(cce.change_type) + "\" at "
+					+ this.getTitle());
+			if (cce.SESSION_OPENED)
 			{
-				SessionInterface ssi = (SessionInterface)cce.getSource();
-				if(aContext.getSessionInterface().equals(ssi))
+				SessionInterface ssi = (SessionInterface )cce.getSource();
+				if (aContext.getSessionInterface().equals(ssi))
 				{
-//					aContext.setSessionInterface(ssi);
-//					aContext.setDataSourceInterface(Environment.getDefaultDataSourceInterface(aContext.getSessionInterface()));
+					// aContext.setSessionInterface(ssi);
+					// aContext.setDataSourceInterface(Environment.getDefaultDataSourceInterface(aContext.getSessionInterface()));
 
 					setSessionOpened();
 
-					statusBar.setText("status", LangModel.getString("statusReady"));
-					SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-					statusBar.setText("session", sdf.format(new Date(aContext.getSessionInterface().getLogonTime())));
-					statusBar.setText("user", aContext.getSessionInterface().getUser());
+					statusBar.setText("status",
+						LangModel.getString("statusReady"));
+					SimpleDateFormat sdf = (SimpleDateFormat )UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+					statusBar.setText("session", sdf.format(new Date(
+							aContext.getSessionInterface().getLogonTime())));
+					statusBar.setText("user",
+						aContext.getSessionInterface().getUser());
 				}
 			}
-			if(cce.SESSION_CLOSED)
+			if (cce.SESSION_CLOSED)
 			{
-				SessionInterface ssi = (SessionInterface)cce.getSource();
-				if(aContext.getSessionInterface().equals(ssi))
+				SessionInterface ssi = (SessionInterface )cce.getSource();
+				if (aContext.getSessionInterface().equals(ssi))
 				{
 					setSessionClosed();
 
-					statusBar.setText("status", LangModel.getString("statusReady"));
-					statusBar.setText("session", LangModel.getString("statusNoSession"));
-					statusBar.setText("user", LangModel.getString("statusNoUser"));
+					statusBar.setText("status",
+						LangModel.getString("statusReady"));
+					statusBar.setText("session",
+						LangModel.getString("statusNoSession"));
+					statusBar.setText("user",
+						LangModel.getString("statusNoUser"));
 				}
 			}
-			if(cce.CONNECTION_OPENED)
+			if (cce.CONNECTION_OPENED)
 			{
-				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
-				if(ConnectionInterface.getInstance().equals(cci))
+				ConnectionInterface cci = (ConnectionInterface )cce.getSource();
+				if (ConnectionInterface.getInstance().equals(cci))
 				{
 					setConnectionOpened();
 
-					statusBar.setText("status", LangModel.getString("statusReady"));
-					statusBar.setText("server", ConnectionInterface.getInstance().getServerName());
+					statusBar.setText("status",
+						LangModel.getString("statusReady"));
+					statusBar.setText("server",
+						ConnectionInterface.getInstance().getServerName());
 				}
 			}
-			if(cce.CONNECTION_CLOSED)
+			if (cce.CONNECTION_CLOSED)
 			{
-				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
-				if(ConnectionInterface.getInstance().equals(cci))
+				ConnectionInterface cci = (ConnectionInterface )cce.getSource();
+				if (ConnectionInterface.getInstance().equals(cci))
 				{
-					statusBar.setText("status", LangModel.getString("statusError"));
-					statusBar.setText("server", LangModel.getString("statusConnectionError"));
+					statusBar.setText("status",
+						LangModel.getString("statusError"));
+					statusBar.setText("server",
+						LangModel.getString("statusConnectionError"));
 
-					statusBar.setText("status", LangModel.getString("statusDisconnected"));
-					statusBar.setText("server", LangModel.getString("statusNoConnection"));
+					statusBar.setText("status",
+						LangModel.getString("statusDisconnected"));
+					statusBar.setText("server",
+						LangModel.getString("statusNoConnection"));
 
 					setConnectionClosed();
 				}
 			}
-			if(cce.CONNECTION_FAILED)
+			if (cce.CONNECTION_FAILED)
 			{
-				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
+				ConnectionInterface cci = (ConnectionInterface )cce.getSource();
 				if (ConnectionInterface.getInstance().equals(cci))
 				{
-					statusBar.setText("status", LangModel.getString("statusError"));
-					statusBar.setText("server", LangModel.getString("statusConnectionError"));
+					statusBar.setText("status",
+						LangModel.getString("statusError"));
+					statusBar.setText("server",
+						LangModel.getString("statusConnectionError"));
 
 					setConnectionFailed();
 				}
 			}
-			if(cce.DOMAIN_SELECTED)
+			if (cce.DOMAIN_SELECTED)
 			{
 				setDomainSelected();
 			}
 		}
 
-		if(ae.getActionCommand().equals(RefChangeEvent.typ))
+		if (ae.getActionCommand().equals(RefUpdateEvent.typ))
 		{
-			ApplicationModel aModel = aContext.getApplicationModel();
-			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.isEventSelect())
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
-				{
-					aModel.setEnabled("menuFileRemoveCompare", false);
-					aModel.setEnabled("menuTraceRemoveCompare", false);
-					aModel.fireModelChanged(new String [] {"menuFileRemoveCompare", "menuTraceRemoveCompare"});
-				}
-				else
-				{
-					aModel.setEnabled("menuFileRemoveCompare", true);
-					aModel.setEnabled("menuTraceRemoveCompare", true);
-					aModel.fireModelChanged(new String [] {"menuFileRemoveCompare", "menuTraceRemoveCompare"});
-					setActiveRefId(id);
-				}
-			}
-		}
+			RefUpdateEvent rue = (RefUpdateEvent )ae;
 
-		if(ae.getActionCommand().equals(RefUpdateEvent.typ))
-		{
-			RefUpdateEvent rue = (RefUpdateEvent)ae;
-
-			if(rue.analysisPerformed())
+			if (rue.analysisPerformed())
 			{
-				String id = (String)(rue.getSource());
+				String id = (String )(rue.getSource());
 				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
 					updFrames(id);
 			}
@@ -489,9 +548,9 @@ implements bsHashChangeListener, PrimaryTraceListener, PrimaryMTMListener,
 
 	public void setDomainSelected()
 	{
-//		new SchemeDataSourceImage(aContext.getDataSource()).LoadSchemes();
-//		new ConfigDataSourceImage(aContext.getDataSource()).LoadNet();
-//		new ConfigDataSourceImage(aContext.getDataSource()).LoadISM();
+		// new SchemeDataSourceImage(aContext.getDataSource()).LoadSchemes();
+		// new ConfigDataSourceImage(aContext.getDataSource()).LoadNet();
+		// new ConfigDataSourceImage(aContext.getDataSource()).LoadISM();
 
 		ApplicationModel aModel = aContext.getApplicationModel();
 		aModel.setEnabled("menuSessionClose", true);
@@ -509,12 +568,12 @@ implements bsHashChangeListener, PrimaryTraceListener, PrimaryMTMListener,
 
 		try
 		{
-			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
-			Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(
-					domain_id, true);
+			Identifier domain_id = new Identifier(
+					((RISDSessionInfo )aContext.getSessionInterface()).getAccessIdentifier().domain_id);
+			Domain domain = (Domain )AdministrationStorableObjectPool.getStorableObject(
+				domain_id, true);
 			statusBar.setText("domain", domain.getName());
-		}
-		catch(ApplicationException ex)
+		} catch (ApplicationException ex)
 		{
 			ex.printStackTrace();
 		}
@@ -523,24 +582,28 @@ implements bsHashChangeListener, PrimaryTraceListener, PrimaryMTMListener,
 	public void setSessionOpened()
 	{
 		Checker checker = new Checker(aContext.getDataSource());
-		if(!checker.checkCommand(Checker.enterExtendedAnalysisModul))
+		if (!checker.checkCommand(Checker.enterExtendedAnalysisModul))
 		{
-			JOptionPane.showMessageDialog(this, "Недостаточно прав для работы с модулем исследования.", "Ошибка", JOptionPane.OK_OPTION);
+			JOptionPane.showMessageDialog(this,
+				"Недостаточно прав для работы с модулем исследования.",
+				"Ошибка", JOptionPane.OK_OPTION);
 			return;
 		}
-//		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-//		new SurveyDataSourceImage(dataSource).LoadParameterTypes();
-//		new SurveyDataSourceImage(dataSource).LoadTestTypes();
-//		new SurveyDataSourceImage(dataSource).LoadAnalysisTypes();
-//		new SurveyDataSourceImage(dataSource).LoadEvaluationTypes();
-//		new SurveyDataSourceImage(dataSource).LoadModelingTypes();
+		// DataSourceInterface dataSource = aContext.getDataSourceInterface();
+		// new SurveyDataSourceImage(dataSource).LoadParameterTypes();
+		// new SurveyDataSourceImage(dataSource).LoadTestTypes();
+		// new SurveyDataSourceImage(dataSource).LoadAnalysisTypes();
+		// new SurveyDataSourceImage(dataSource).LoadEvaluationTypes();
+		// new SurveyDataSourceImage(dataSource).LoadModelingTypes();
 
 		ApplicationModel aModel = aContext.getApplicationModel();
 		aModel.setEnabled("menuSessionDomain", true);
 		aModel.setEnabled("menuSessionNew", false);
 		aModel.fireModelChanged("");
-		Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
-		internal_dispatcher.notify(new ContextChangeEvent(domain_id, ContextChangeEvent.DOMAIN_SELECTED_EVENT));
+		Identifier domain_id = new Identifier(
+				((RISDSessionInfo )aContext.getSessionInterface()).getAccessIdentifier().domain_id);
+		internal_dispatcher.notify(new ContextChangeEvent(domain_id,
+				ContextChangeEvent.DOMAIN_SELECTED_EVENT));
 	}
 
 	public void setSessionClosed()
@@ -576,7 +639,7 @@ implements bsHashChangeListener, PrimaryTraceListener, PrimaryMTMListener,
 
 	void updFrames(String id)
 	{
-		BellcoreStructure bs = Heap.getAnyBSTraceByKey(id); 
+		BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
 		double deltaX = bs.getResolution();
 
 		double[] filtered = Heap.getRefAnalysisByKey(id).filtered;
@@ -599,11 +662,13 @@ implements bsHashChangeListener, PrimaryTraceListener, PrimaryMTMListener,
 		analysisFrame.grabFocus();
 	}
 
-	void setActiveRefId (String id)
+	void setActiveRefId(String id)
 	{
 		ApplicationModel aModel = aContext.getApplicationModel();
-		aModel.getCommand("menuFileRemoveCompare").setParameter("activeRefId", id);
-		aModel.getCommand("menuTraceRemoveCompare").setParameter("activeRefId", id);
+		aModel.getCommand("menuFileRemoveCompare").setParameter("activeRefId",
+			id);
+		aModel.getCommand("menuTraceRemoveCompare").setParameter("activeRefId",
+			id);
 	}
 
 	void this_windowClosing(WindowEvent e)
@@ -618,8 +683,8 @@ implements bsHashChangeListener, PrimaryTraceListener, PrimaryMTMListener,
 		if (e.getID() == WindowEvent.WINDOW_ACTIVATED)
 		{
 			Environment.setActiveWindow(this);
-			//ConnectionInterface.setActiveConnection(aContext.getConnectionInterface());
-			//SessionInterface.setActiveSession(aContext.getSessionInterface());
+			// ConnectionInterface.setActiveConnection(aContext.getConnectionInterface());
+			// SessionInterface.setActiveSession(aContext.getSessionInterface());
 		}
 		if (e.getID() == WindowEvent.WINDOW_CLOSING)
 		{
@@ -639,14 +704,13 @@ implements bsHashChangeListener, PrimaryTraceListener, PrimaryMTMListener,
 		String id = key;
 		if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
 		{
-			// do nothing special here: special code is performed in primaryTraceCUpdated()
-		}
-		else if (id.equals(Heap.REFERENCE_TRACE_KEY))
+			// do nothing special here: special code is performed in
+			// primaryTraceCUpdated()
+		} else if (id.equals(Heap.REFERENCE_TRACE_KEY))
 		{
 			aModel.setEnabled("menuTraceReferenceMakeCurrent", true);
-			aModel.fireModelChanged(new String [] {"menuTraceReferenceMakeCurrent"});
-		}
-		else
+			aModel.fireModelChanged(new String[] { "menuTraceReferenceMakeCurrent" });
+		} else
 		{
 			aModel.setEnabled("menuTraceRemoveCompare", true);
 			aModel.setEnabled("menuFileRemoveCompare", true);
@@ -654,7 +718,9 @@ implements bsHashChangeListener, PrimaryTraceListener, PrimaryMTMListener,
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener#bsHashRemoved(java.lang.String)
 	 */
 	public void bsHashRemoved(String key)
@@ -664,22 +730,21 @@ implements bsHashChangeListener, PrimaryTraceListener, PrimaryMTMListener,
 		if (id.equals(Heap.REFERENCE_TRACE_KEY))
 		{
 			aModel.setEnabled("menuTraceReferenceMakeCurrent", false);
-			aModel.fireModelChanged(new String [] {"menuTraceReferenceMakeCurrent"});
+			aModel.fireModelChanged(new String[] { "menuTraceReferenceMakeCurrent" });
 		}
 		Iterator it = Heap.getAllBSMap().keySet().iterator();
-		String nextId = (String)it.next();
+		String nextId = (String )it.next();
 		if (nextId.equals(RefUpdateEvent.PRIMARY_TRACE))
 		{
 			if (!it.hasNext())
 			{
 				aModel.setEnabled("menuFileRemoveCompare", false);
 				aModel.setEnabled("menuTraceRemoveCompare", false);
-				aModel.fireModelChanged(new String [] {"menuTraceRemoveCompare"});
-			}
-			else
-				nextId = (String)it.next();
+				aModel.fireModelChanged(new String[] { "menuTraceRemoveCompare" });
+			} else
+				nextId = (String )it.next();
 		}
-		internal_dispatcher.notify(new RefChangeEvent(nextId, RefChangeEvent.SELECT_EVENT));
+		Heap.setCurrentTrace(nextId);
 	}
 
 	public void bsHashRemovedAll()
@@ -735,7 +800,9 @@ implements bsHashChangeListener, PrimaryTraceListener, PrimaryMTMListener,
 		setTitle(LangModelAnalyse.getString("AnalyseExtTitle"));
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.syrus.AMFICOM.Client.General.Event.PrimaryTraceListener#primaryTraceCUpdated()
 	 */
 	public void primaryTraceCUpdated()
@@ -749,7 +816,7 @@ implements bsHashChangeListener, PrimaryTraceListener, PrimaryMTMListener,
 			aModel.setEnabled("menuFileSaveAsText", true);
 			aModel.setEnabled("menuFileClose", true);
 			aModel.setEnabled("menuFileAddCompare", true);
-	
+
 			aModel.setEnabled("menuTraceDownloadEtalon", true);
 			aModel.setEnabled("menuTraceUpload", true);
 			aModel.setEnabled("menuTraceClose", true);
@@ -758,15 +825,15 @@ implements bsHashChangeListener, PrimaryTraceListener, PrimaryMTMListener,
 			aModel.setEnabled("menuTraceCurrent", true);
 			aModel.setEnabled("menuTraceAddCompare", true);
 			aModel.setEnabled("menuAnalyseUpload", true);
-	
+
 			aModel.setEnabled("menuCreateTestSetup", true);
 			aModel.setEnabled("menuSaveTestSetup", true);
 			aModel.setEnabled("menuSaveTestSetupAs", true);
 			aModel.setEnabled("menuLoadTestSetup", true);
 			aModel.setEnabled("menuAnalyseSaveCriteria", true);
-	
+
 			aModel.setEnabled("menuReportCreate", true);
-	
+
 			aModel.setEnabled("menuWindowArrange", true);
 			aModel.setEnabled("menuWindowTraceSelector", true);
 			aModel.setEnabled("menuWindowPrimaryParameters", true);
@@ -793,22 +860,26 @@ implements bsHashChangeListener, PrimaryTraceListener, PrimaryMTMListener,
 	{
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.syrus.AMFICOM.Client.General.Event.PrimaryMTMListener#primaryMTMCUpdated()
 	 */
 	public void primaryMTMCUpdated()
 	{
 		// @todo Auto-generated method stub
-		
+
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.syrus.AMFICOM.Client.General.Event.PrimaryMTMListener#primaryMTMRemoved()
 	 */
 	public void primaryMTMRemoved()
 	{
 		// @todo Auto-generated method stub
-		
+
 	}
 
 	public void etalonMTMCUpdated()
@@ -822,7 +893,26 @@ implements bsHashChangeListener, PrimaryTraceListener, PrimaryMTMListener,
 	{
 		ApplicationModel aModel = aContext.getApplicationModel();
 		aModel.setEnabled("menuTraceCloseEtalon", false);
-		aModel.fireModelChanged(new String [] {"menuTraceCloseEtalon"});
+		aModel.fireModelChanged(new String[] { "menuTraceCloseEtalon" });
+	}
+
+	public void currentTraceChanged(String id)
+	{
+		ApplicationModel aModel = aContext.getApplicationModel();
+		if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
+		{
+			aModel.setEnabled("menuFileRemoveCompare", false);
+			aModel.setEnabled("menuTraceRemoveCompare", false);
+			aModel.fireModelChanged(new String[] { "menuFileRemoveCompare",
+					"menuTraceRemoveCompare" });
+		} else
+		{
+			aModel.setEnabled("menuFileRemoveCompare", true);
+			aModel.setEnabled("menuTraceRemoveCompare", true);
+			aModel.fireModelChanged(new String[] { "menuFileRemoveCompare",
+					"menuTraceRemoveCompare" });
+			setActiveRefId(id);
+		}
 	}
 }
 
@@ -835,7 +925,7 @@ class AnalysisExtWindowArranger extends WindowArranger
 
 	public void arrange()
 	{
-		AnalyseMainFrame f = (AnalyseMainFrame)mainframe;
+		AnalyseMainFrame f = (AnalyseMainFrame )mainframe;
 
 		int w = f.desktopPane.getSize().width;
 		int h = f.desktopPane.getSize().height;
@@ -853,33 +943,37 @@ class AnalysisExtWindowArranger extends WindowArranger
 		normalize(f.noiseFrame);
 		normalize(f.filteredFrame);
 
-		f.paramFrame.setSize(w/6, minh);
-		f.selectFrame.setSize(w/6, minh);
-		f.statsFrame.setSize(w/6, minh);
-		f.mInfoFrame.setSize(w/6, minh);
-		f.analysisFrame.setSize(2*w/3, h - 2 * minh);
-		f.eventsFrame.setSize(w/2, minh);
-		f.detailedEvFrame.setSize(w/6, minh);
-		f.anaSelectFrame.setSize(w/3, minh);
-		f.dhf.setSize(w/3, minh);
-		f.noiseFrame.setSize(w/3, (h - 2 * minh)/2);
-		f.filteredFrame.setSize(w/3, (h - 2 * minh)/2);
+		f.paramFrame.setSize(w / 6, minh);
+		f.selectFrame.setSize(w / 6, minh);
+		f.statsFrame.setSize(w / 6, minh);
+		f.mInfoFrame.setSize(w / 6, minh);
+		f.analysisFrame.setSize(2 * w / 3, h - 2 * minh);
+		f.eventsFrame.setSize(w / 2, minh);
+		f.detailedEvFrame.setSize(w / 6, minh);
+		f.anaSelectFrame.setSize(w / 3, minh);
+		f.dhf.setSize(w / 3, minh);
+		f.noiseFrame.setSize(w / 3, (h - 2 * minh) / 2);
+		f.filteredFrame.setSize(w / 3, (h - 2 * minh) / 2);
 
-		f.paramFrame.setLocation(w/6, 0);
+		f.paramFrame.setLocation(w / 6, 0);
 		f.selectFrame.setLocation(0, 0);
-		f.statsFrame.setLocation(w/3, 0);
-		f.mInfoFrame.setLocation(w/2, 0);
+		f.statsFrame.setLocation(w / 3, 0);
+		f.mInfoFrame.setLocation(w / 2, 0);
 		f.analysisFrame.setLocation(0, minh);
-		f.anaSelectFrame.setLocation(2*w/3, 0);
-		f.filteredFrame.setLocation(2*w/3, minh);
-		f.noiseFrame.setLocation(2*w/3, minh + f.filteredFrame.getHeight());
+		f.anaSelectFrame.setLocation(2 * w / 3, 0);
+		f.filteredFrame.setLocation(2 * w / 3, minh);
+		f.noiseFrame.setLocation(2 * w / 3, minh + f.filteredFrame.getHeight());
 		f.eventsFrame.setLocation(0, minh + f.analysisFrame.getHeight());
-		f.detailedEvFrame.setLocation(f.eventsFrame.getWidth(), minh + f.analysisFrame.getHeight());
-		f.dhf.setLocation(f.eventsFrame.getWidth()+f.detailedEvFrame.getWidth(), minh + f.analysisFrame.getHeight());
+		f.detailedEvFrame.setLocation(f.eventsFrame.getWidth(), minh
+				+ f.analysisFrame.getHeight());
+		f.dhf.setLocation(f.eventsFrame.getWidth()
+				+ f.detailedEvFrame.getWidth(), minh
+				+ f.analysisFrame.getHeight());
 	}
 }
 
-class AnalyseMainFrame_this_componentAdapter extends java.awt.event.ComponentAdapter
+class AnalyseMainFrame_this_componentAdapter extends
+		java.awt.event.ComponentAdapter
 {
 	AnalyseMainFrame adaptee;
 
