@@ -33,7 +33,7 @@ SOURCES := com/syrus/AMFICOM/administration/DatabaseAdministrationObjectLoader.j
 		com/syrus/AMFICOM/administration/ServerDatabase.java \
 		com/syrus/AMFICOM/administration/MCM.java \
 		com/syrus/AMFICOM/administration/MCMDatabase.java \
-		com/syrus/AMFICOM/administration/StringFieldCondition.java \
+		com/syrus/AMFICOM/administration/StringFieldConditionImpl.java \
 		com/syrus/AMFICOM/administration/LinkedIdsConditionImpl.java \
 		com/syrus/AMFICOM/administration/DomainCondition.java
 

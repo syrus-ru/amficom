@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.1 2005/01/14 18:05:13 arseniy Exp $
+ * $Id: UserDatabase.java,v 1.2 2005/01/24 10:43:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StringFieldCondition;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -30,8 +31,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/14 18:05:13 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/01/24 10:43:40 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
