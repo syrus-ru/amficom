@@ -1,5 +1,5 @@
 /*
- * $Id: scheme-configuration.idl,v 1.2 2004/12/15 12:20:36 bass Exp $
+ * $Id: scheme-configuration.idl,v 1.3 2004/12/15 12:28:52 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ module com {
 		module AMFICOM {
 			module configuration {
 				native AbstractLinkType;
+				native CableLinkType;
 				native CableThreadType;
 				native Domain;
 				native Equipment;
