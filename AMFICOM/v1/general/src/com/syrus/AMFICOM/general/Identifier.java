@@ -1,5 +1,5 @@
 /*
- * $Id: Identifier.java,v 1.11 2004/11/15 12:43:41 arseniy Exp $
+ * $Id: Identifier.java,v 1.12 2004/11/16 10:33:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,8 @@ import java.io.Serializable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/11/15 12:43:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2004/11/16 10:33:32 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -140,6 +140,10 @@ public class Identifier implements Comparable, Cloneable, TransferableObject, Se
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @deprecated use {@link com.syrus.AMFICOM.general.DatabaseIdentifier#toSQLString(Identifier)} 
+	 * @return
+	 */
 	public String toSQLString() {
 		return "'" + this.identifierString + "'";
 	}
@@ -148,6 +152,10 @@ public class Identifier implements Comparable, Cloneable, TransferableObject, Se
 		return this.identifierString;
 	}
 
+	/**
+	 * @deprecated use {@link com.syrus.AMFICOM.general.DatabaseIdentifier#getNullSQLString()} 
+	 * @return
+	 */
 	public static String getNullSQLString() {
 		return "''";
 	}

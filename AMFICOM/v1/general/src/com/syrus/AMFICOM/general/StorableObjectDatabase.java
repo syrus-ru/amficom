@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.47 2004/11/16 10:29:38 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.48 2004/11/16 10:33:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,12 +23,11 @@ import java.util.regex.Pattern;
 
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
-import com.syrus.util.database.DatabaseDate;
-import com.syrus.util.database.DatabaseIdentifier;
+import com.syrus.util.database.DatabaseDaier;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2004/11/16 10:29:38 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.48 $, $Date: 2004/11/16 10:33:32 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
