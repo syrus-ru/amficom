@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.21 2004/09/28 13:13:11 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.22 2004/09/29 06:14:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,12 +28,13 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/09/28 13:13:11 $
+ * @version $Revision: 1.22 $, $Date: 2004/09/29 06:14:05 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -640,7 +641,7 @@ public static List getStorableObjectsByDomain(short entityCode,
 		return object;
 	}
 	
-	public static void flush() throws DatabaseException, CommunicationException{		 
+	public static void flush(boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{		 
 		List list = new LinkedList();
 		for (Iterator it = objectPoolMap.keySet().iterator(); it.hasNext();) {
 			Short entityCode = (Short) it.next();
@@ -658,112 +659,76 @@ public static List getStorableObjectsByDomain(short entityCode,
 					boolean alone = (list.size()==1);
 					switch (code) {
 						case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-							/**
-							 * FIXME check for version collision
-							 */
 							if (alone)
-								mObjectLoader.saveParameterType((ParameterType)list.get(0), true);
+								mObjectLoader.saveParameterType((ParameterType)list.get(0), force);
 							else 
-								mObjectLoader.saveParameterTypes(list, true);
+								mObjectLoader.saveParameterTypes(list, force);
 							break;
 						case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
-							/**
-							 * FIXME check for version collision
-							 */
 							if (alone)
-								mObjectLoader.saveMeasurementType((MeasurementType)list.get(0), true);
+								mObjectLoader.saveMeasurementType((MeasurementType)list.get(0), force);
 							else 
-								mObjectLoader.saveMeasurementTypes(list, true);
+								mObjectLoader.saveMeasurementTypes(list, force);
 							break;
 						case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
-							/**
-							 * FIXME check for version collision
-							 */
 							if (alone)
-								mObjectLoader.saveAnalysisType((AnalysisType)list.get(0), true);
+								mObjectLoader.saveAnalysisType((AnalysisType)list.get(0), force);
 							else 
-								mObjectLoader.saveAnalysisTypes(list, true);
+								mObjectLoader.saveAnalysisTypes(list, force);
 							break;
 						case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
-							/**
-							 * FIXME check for version collision
-							 */
 							if (alone)
-								mObjectLoader.saveEvaluationType((EvaluationType)list.get(0), true);
+								mObjectLoader.saveEvaluationType((EvaluationType)list.get(0), force);
 							else 
-								mObjectLoader.saveEvaluationTypes(list, true);
+								mObjectLoader.saveEvaluationTypes(list, force);
 							break;
 						case ObjectEntities.SET_ENTITY_CODE:
-							/**
-							 * FIXME check for version collision
-							 */
 							if (alone)
-								mObjectLoader.saveSet((Set)list.get(0), true);
+								mObjectLoader.saveSet((Set)list.get(0), force);
 							else 
-								mObjectLoader.saveSets(list, true);
+								mObjectLoader.saveSets(list, force);
 							break;
 						case ObjectEntities.MS_ENTITY_CODE:
-							/**
-							 * FIXME check for version collision
-							 */
 							if (alone)
-								mObjectLoader.saveMeasurementSetup((MeasurementSetup)list.get(0), true);
+								mObjectLoader.saveMeasurementSetup((MeasurementSetup)list.get(0), force);
 							else 
-								mObjectLoader.saveMeasurementSetups(list, true);
+								mObjectLoader.saveMeasurementSetups(list, force);
 							break;
 						case ObjectEntities.ANALYSIS_ENTITY_CODE:
-							/**
-							 * FIXME check for version collision
-							 */
 							if (alone)
-								mObjectLoader.saveAnalysis((Analysis)list.get(0), true);
+								mObjectLoader.saveAnalysis((Analysis)list.get(0), force);
 							else 
-								mObjectLoader.saveAnalyses(list, true);
+								mObjectLoader.saveAnalyses(list, force);
 							break;
 						case ObjectEntities.EVALUATION_ENTITY_CODE:
-							/**
-							 * FIXME check for version collision
-							 */
 							if (alone)
-								mObjectLoader.saveEvaluation((Evaluation)list.get(0), true);
+								mObjectLoader.saveEvaluation((Evaluation)list.get(0), force);
 							else 
-								mObjectLoader.saveEvaluations(list, true);
+								mObjectLoader.saveEvaluations(list, force);
 							break;
 						case ObjectEntities.MEASUREMENT_ENTITY_CODE:
-							/**
-							 * FIXME check for version collision
-							 */
 							if (alone)
-								mObjectLoader.saveMeasurement((Measurement)list.get(0), true);
+								mObjectLoader.saveMeasurement((Measurement)list.get(0), force);
 							else 
-								mObjectLoader.saveMeasurements(list, true);
+								mObjectLoader.saveMeasurements(list, force);
 							break;
 						case ObjectEntities.TEST_ENTITY_CODE:
-							/**
-							 * FIXME check for version collision
-							 */
 							if (alone)
-								mObjectLoader.saveTest((Test)list.get(0), true);
+								mObjectLoader.saveTest((Test)list.get(0), force);
 							else 
-								mObjectLoader.saveTests(list, true);
+								mObjectLoader.saveTests(list, force);
 							break;
 						case ObjectEntities.RESULT_ENTITY_CODE:
-							/**
-							 * FIXME check for version collision
-							 */
 							if (alone)
-								mObjectLoader.saveResult((Result)list.get(0), true);
+								mObjectLoader.saveResult((Result)list.get(0), force);
 							else 
-								mObjectLoader.saveResults(list, true);
+								mObjectLoader.saveResults(list, force);
 							break;
 						case ObjectEntities.TEMPORALPATTERN_ENTITY_CODE:
-							/**
-							 * FIXME check for version collision
-							 */
 							if (alone)
-								mObjectLoader.saveTemporalPattern((TemporalPattern)list.get(0), true);
+								mObjectLoader.saveTemporalPattern((TemporalPattern)list.get(0), force);
 							else 
-								mObjectLoader.saveTemporalPatterns(list, true);
+								mObjectLoader.saveTemporalPatterns(list, force);
 							break;
 						default:
 							Log

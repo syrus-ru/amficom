@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.11 2004/09/28 13:13:21 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.12 2004/09/29 06:14:24 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,11 +23,12 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/09/28 13:13:21 $
+ * @version $Revision: 1.12 $, $Date: 2004/09/29 06:14:24 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -512,7 +513,7 @@ public class ConfigurationStorableObjectPool {
 		throw new IllegalObjectEntityException("ConfigurationStorableObjectPool.putStorableObject | Illegal object entity: '" + objectId.getObjectEntity() + "'", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
 	
-	public static void flush() throws DatabaseException, CommunicationException{		 
+	public static void flush(boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{		 
 		List list = new LinkedList();
 		for (Iterator it = objectPoolMap.keySet().iterator(); it.hasNext();) {
 			Short entityCode = (Short) it.next();
@@ -530,130 +531,88 @@ public class ConfigurationStorableObjectPool {
 					boolean alone = (list.size()==1);
 					switch (code) {
 			            case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
-			            	/**
-							 * FIXME check for version collision
-							 */
 			            	if (alone)
-			            		cObjectLoader.saveCharacteristicType((CharacteristicType)list.get(0), true);
+			            		cObjectLoader.saveCharacteristicType((CharacteristicType)list.get(0), force);
 			            	else 
-			            		cObjectLoader.saveCharacteristicTypes(list, true);
+			            		cObjectLoader.saveCharacteristicTypes(list, force);
 			                break;
 			            case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
-			            	/**
-							 * FIXME check for version collision
-							 */
 			            	if (alone)
-			            		cObjectLoader.saveEquipmentType((EquipmentType)list.get(0), true);
+			            		cObjectLoader.saveEquipmentType((EquipmentType)list.get(0), force);
 			            	else 
-			            		cObjectLoader.saveEquipmentTypes(list, true);
+			            		cObjectLoader.saveEquipmentTypes(list, force);
 			                break;
 			            case ObjectEntities.PORTTYPE_ENTITY_CODE:
-			            	/**
-							 * FIXME check for version collision
-							 */
 			            	if (alone)
-			            		cObjectLoader.savePortType((PortType)list.get(0), true);
+			            		cObjectLoader.savePortType((PortType)list.get(0), force);
 			            	else 
-			            		cObjectLoader.savePortTypes(list, true);
+			            		cObjectLoader.savePortTypes(list, force);
 			                break;
 			            case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
-			            	/**
-							 * FIXME check for version collision
-							 */
 			            	if (alone)
-			            		cObjectLoader.saveMeasurementPortType((MeasurementPortType)list.get(0), true);
+			            		cObjectLoader.saveMeasurementPortType((MeasurementPortType)list.get(0), force);
 			            	else 
-			            		cObjectLoader.saveMeasurementPortTypes(list, true);
+			            		cObjectLoader.saveMeasurementPortTypes(list, force);
 			                break;
 			            case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-			            	/**
-							 * FIXME check for version collision
-							 */
 			            	if (alone)
-			            		cObjectLoader.saveCharacteristic((Characteristic)list.get(0), true);
+			            		cObjectLoader.saveCharacteristic((Characteristic)list.get(0), force);
 			            	else 
-			            		cObjectLoader.saveCharacteristics(list, true);
+			            		cObjectLoader.saveCharacteristics(list, force);
 			                break;
 			            case ObjectEntities.USER_ENTITY_CODE:
-			            	/**
-							 * FIXME check for version collision
-							 */
 			            	if (alone)
-			            		cObjectLoader.saveUser((User)list.get(0), true);
+			            		cObjectLoader.saveUser((User)list.get(0), force);
 			            	else 
-			            		cObjectLoader.saveUsers(list, true);
+			            		cObjectLoader.saveUsers(list, force);
 			                break;
 			            case ObjectEntities.DOMAIN_ENTITY_CODE:
-			            	/**
-							 * FIXME check for version collision
-							 */
 			            	if (alone)
-			            		cObjectLoader.saveDomain((Domain)list.get(0), true);
+			            		cObjectLoader.saveDomain((Domain)list.get(0), force);
 			            	else 
-			            		cObjectLoader.saveDomains(list, true);
+			            		cObjectLoader.saveDomains(list, force);
 			                break;
 			            case ObjectEntities.SERVER_ENTITY_CODE:
-			            	/**
-							 * FIXME check for version collision
-							 */
 			            	if (alone)
-			            		cObjectLoader.saveServer((Server)list.get(0), true);
+			            		cObjectLoader.saveServer((Server)list.get(0), force);
 			            	else 
-			            		cObjectLoader.saveServers(list, true);
+			            		cObjectLoader.saveServers(list, force);
 			                break;
 			            case ObjectEntities.MCM_ENTITY_CODE:
-			            	/**
-							 * FIXME check for version collision
-							 */
 			            	if (alone)
-			            		cObjectLoader.saveMCM((MCM)list.get(0), true);
+			            		cObjectLoader.saveMCM((MCM)list.get(0), force);
 			            	else 
-			            		cObjectLoader.saveMCMs(list, true);
+			            		cObjectLoader.saveMCMs(list, force);
 			                break;
 			            case ObjectEntities.EQUIPMENT_ENTITY_CODE:
-			            	/**
-							 * FIXME check for version collision
-							 */
 			            	if (alone)
-			            		cObjectLoader.saveEquipment((Equipment)list.get(0), true);
+			            		cObjectLoader.saveEquipment((Equipment)list.get(0), force);
 			            	else 
-			            		cObjectLoader.saveEquipments(list, true);
+			            		cObjectLoader.saveEquipments(list, force);
 			                break;
 			            case ObjectEntities.PORT_ENTITY_CODE:
-			            	/**
-							 * FIXME check for version collision
-							 */
 			            	if (alone)
-			            		cObjectLoader.savePort((Port)list.get(0), true);
+			            		cObjectLoader.savePort((Port)list.get(0), force);
 			            	else 
-			            		cObjectLoader.savePorts(list, true);
+			            		cObjectLoader.savePorts(list, force);
 			                break;
 			            case ObjectEntities.KIS_ENTITY_CODE:
-			            	/**
-							 * FIXME check for version collision
-							 */
 			            	if (alone)
-			            		cObjectLoader.saveKIS((KIS)list.get(0), true);
+			            		cObjectLoader.saveKIS((KIS)list.get(0), force);
 			            	else 
-			            		cObjectLoader.saveKISs(list, true);
+			            		cObjectLoader.saveKISs(list, force);
 			                break;
 			            case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
-			            	/**
-							 * FIXME check for version collision
-							 */
 			            	if (alone)
-			            		cObjectLoader.saveMeasurementPort((MeasurementPort)list.get(0), true);
+			            		cObjectLoader.saveMeasurementPort((MeasurementPort)list.get(0), force);
 			            	else 
-			            		cObjectLoader.saveMeasurementPorts(list, true);
+			            		cObjectLoader.saveMeasurementPorts(list, force);
 			                break;
 			            case ObjectEntities.ME_ENTITY_CODE:
-			            	/**
-							 * FIXME check for version collision
-							 */
 			            	if (alone)
-			            		cObjectLoader.saveMonitoredElement((MonitoredElement)list.get(0), true);
+			            		cObjectLoader.saveMonitoredElement((MonitoredElement)list.get(0), force);
 			            	else 
-			            		cObjectLoader.saveMonitoredElements(list, true);
+			            		cObjectLoader.saveMonitoredElements(list, force);
 			                break;
 
 						default:
