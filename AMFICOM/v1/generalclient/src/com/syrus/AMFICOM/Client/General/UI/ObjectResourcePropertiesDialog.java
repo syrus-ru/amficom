@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourcePropertiesDialog.java,v 1.8 2004/10/18 11:01:56 krupenn Exp $
+ * $Id: ObjectResourcePropertiesDialog.java,v 1.9 2004/11/12 15:39:41 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import javax.swing.*;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2004/10/18 11:01:56 $
+ * @version $Revision: 1.9 $, $Date: 2004/11/12 15:39:41 $
  * @module generalclient_v1
  */
 public class ObjectResourcePropertiesDialog extends JDialog
@@ -62,9 +62,9 @@ public class ObjectResourcePropertiesDialog extends JDialog
 	void jbInit() throws Exception
 	{
 		this.setResizable(false);
-		this.setSize(new Dimension(590, 300));
+		this.setSize(new Dimension(590, 400));
 		if(mainPane != null)
-			((JComponent )mainPane).setPreferredSize(new Dimension(590, 300));
+			((JComponent )mainPane).setPreferredSize(new Dimension(590, 400));
 		buttonPanel.setBorder(BorderFactory.createEtchedBorder());
 		this.getContentPane().setLayout(borderLayout1);
 		buttonPanel.setLayout(flowLayout1);
