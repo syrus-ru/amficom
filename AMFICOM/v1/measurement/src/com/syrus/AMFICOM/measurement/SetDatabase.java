@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.80 2005/04/01 08:43:32 bob Exp $
+ * $Id: SetDatabase.java,v 1.81 2005/04/05 16:01:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,6 +32,8 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.ByteArrayDatabase;
 import com.syrus.util.database.DatabaseConnection;
@@ -39,8 +41,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.80 $, $Date: 2005/04/01 08:43:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.81 $, $Date: 2005/04/05 16:01:28 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -269,7 +271,7 @@ public class SetDatabase extends StorableObjectDatabase {
 			meIdsMap = this.retrieveLinkedEntityIds(sets,
 					ObjectEntities.SETMELINK_ENTITY,
 					SetWrapper.LINK_COLUMN_SET_ID,
-					SetWrapper.LINK_COLUMN_ME_ID);
+					SetWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e);
@@ -301,22 +303,30 @@ public class SetDatabase extends StorableObjectDatabase {
 		try {
 			this.insertEntity(set);
 			this.insertSetParameters(set);
-			this.insertSetMELinks(set);
+			this.updateSetMELinks(Collections.singleton(set));
 		}
 		catch (CreateObjectException coe) {
 			this.delete(set);
 			throw coe;
 		}
+		catch (UpdateObjectException uoe) {
+			this.delete(set);
+			throw new CreateObjectException(uoe);
+		}
 	}
-	
+
 	public void insert(java.util.Set storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			Set set = this.fromStorableObject((StorableObject) it.next());
 			this.insertSetParameters(set);
-			this.insertSetMELinks(set);			
 		}
-
+		try {
+			this.updateSetMELinks(storableObjects);
+		}
+		catch (UpdateObjectException uoe) {
+			throw new CreateObjectException(uoe);
+		}
 	}
 
 	private void insertSetParameters(Set set) throws CreateObjectException {
@@ -379,165 +389,47 @@ public class SetDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void insertSetMELinks(Set set) throws CreateObjectException {
-		Identifier setId = set.getId();
-		java.util.Set meIds = set.getMonitoredElementIds();
-		String sql = SQL_INSERT_INTO 
-			+ ObjectEntities.SETMELINK_ENTITY
-			+ OPEN_BRACKET
-			+ SetWrapper.LINK_COLUMN_SET_ID + COMMA 
-			+ SetWrapper.LINK_COLUMN_ME_ID 
-			+ CLOSE_BRACKET
-			+ SQL_VALUES + OPEN_BRACKET
-			+ QUESTION + COMMA
-			+ QUESTION 
-			+ CLOSE_BRACKET;
-		PreparedStatement preparedStatement = null;
-		Identifier meId = null;
-		Connection connection = DatabaseConnection.getConnection();
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
+			throws VersionCollisionException, UpdateObjectException {
+		super.update(storableObject, modifierId, updateKind);
 		try {
-			preparedStatement = connection.prepareStatement(sql);
-			for (Iterator iterator = meIds.iterator(); iterator.hasNext();) {
-				meId = ((Identifier)iterator.next());
-				DatabaseIdentifier.setIdentifier(preparedStatement, 1, setId);
-				DatabaseIdentifier.setIdentifier(preparedStatement, 2, meId);
-				Log.debugMessage("SetDatabase.insertSetMELinks | Inserting link for set " + setId + " and monitored element " + meId, Log.DEBUGLEVEL09);
-				preparedStatement.executeUpdate();
-			}
-			connection.commit();
+			this.updateSetMELinks(Collections.singleton(storableObject));
 		}
-		catch (SQLException sqle) {
-			String mesg = "SetDatabase.insertSetMELinks | Cannot insert link for monitored element '" + meId + "' and set '" + setId + "' -- " + sqle.getMessage();
-			throw new CreateObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-				preparedStatement = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}  finally{
-				DatabaseConnection.releaseConnection(connection);
-			}
+		catch (IllegalDataException ide) {
+			Log.errorException(ide);
 		}
 	}
 
-/*
-	private void createMEAttachment(Set set, Identifier monitoredElementId) throws UpdateObjectException {
-		String setIdStr = DatabaseIdentifier.toSQLString(set.getId());
-		String meIdStr = DatabaseIdentifier.toSQLString(monitoredElementId);
-		String sql = SQL_INSERT_INTO 
-			+ ObjectEntities.SETMELINK_ENTITY
-			+ OPEN_BRACKET
-			+ SetWrapper.LINK_COLUMN_SET_ID + COMMA
-			+ SetWrapper.LINK_COLUMN_ME_ID
-			+ CLOSE_BRACKET
-			+ SQL_VALUES
-			+ OPEN_BRACKET			
-			+ setIdStr + COMMA
-			+ meIdStr
-			+ CLOSE_BRACKET;
-		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
+	public void update(java.util.Set storableObjects, Identifier modifierId, int updateKind)
+			throws VersionCollisionException, UpdateObjectException {
+		super.update(storableObjects, modifierId, updateKind);
 		try {
-			statement = connection.createStatement();
-			Log.debugMessage("Set.createMEAttachment | Trying: " + sql, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql);
-			connection.commit();
+			this.updateSetMELinks(storableObjects);
 		}
-		catch (SQLException sqle) {
-			String mesg = "Set.createMEAttachment | Cannot attach set '" + setIdStr + "' to monitored element '" + meIdStr + "' -- " + sqle.getMessage();
-			throw new UpdateObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				statement = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			} finally{
-				DatabaseConnection.releaseConnection(connection);
-			}
+		catch (IllegalDataException ide) {
+			Log.errorException(ide);
 		}
 	}
 
-	private void deleteMEAttachment(Set set, Identifier monitoredElementId) throws UpdateObjectException {
-		String setIdStr = DatabaseIdentifier.toSQLString(set.getId());
-		String meIdStr = DatabaseIdentifier.toSQLString(monitoredElementId);
-		String sql = SQL_DELETE_FROM 
-					+ ObjectEntities.SETMELINK_ENTITY
-					+ SQL_WHERE 
-					+ SetWrapper.LINK_COLUMN_SET_ID + EQUALS
-					+ setIdStr
-					+ SQL_AND
-					+ SetWrapper.LINK_COLUMN_ME_ID + EQUALS
-					+ meIdStr;
-		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("SetDatabase.deleteMEAttachment | Trying: " + sql, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql);
-			connection.commit();
+	private void updateSetMELinks(java.util.Set sets) throws IllegalDataException, UpdateObjectException {
+		if (sets == null || sets.isEmpty())
+			return;
+
+		Map meIdsMap = new HashMap();
+		Set set;
+		java.util.Set meIds;
+		for (Iterator it = sets.iterator(); it.hasNext();) {
+			set = this.fromStorableObject((StorableObject) it.next());
+			meIds = set.getMonitoredElementIds();
+			meIdsMap.put(set.getId(), meIds);
 		}
-		catch (SQLException sqle) {
-			String mesg = "SetDatabase.deleteMEAttachment | Cannot detach set '" + setIdStr + "' from monitored element '" + meIdStr + "' -- " + sqle.getMessage();
-			throw new UpdateObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				statement = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			} finally{
-				DatabaseConnection.releaseConnection(connection);
-			}
-		}
+
+		this.updateLinkedEntityIds(meIdsMap,
+				ObjectEntities.SETMELINK_ENTITY,
+				SetWrapper.LINK_COLUMN_SET_ID,
+				SetWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
 	}
-*/
-/*
-	private void setModified(Set set) throws UpdateObjectException {
-		String setIdStr = DatabaseIdentifier.toSQLString(set.getId());
-		String sql = SQL_UPDATE
-					+ ObjectEntities.SET_ENTITY
-					+ SQL_SET
-					+ StorableObjectWrapper.COLUMN_MODIFIED + EQUALS
-					+ DatabaseDate.toUpdateSubString(set.getModified()) + COMMA
-					+ StorableObjectWrapper.COLUMN_MODIFIER_ID + EQUALS + DatabaseIdentifier.toSQLString(set.getModifierId())
-					+ SQL_WHERE + EQUALS + setIdStr;
-		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("SetDatabase.setModified | Trying: " + sql, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql);
-			connection.commit();
-		}
-		catch (SQLException sqle) {
-			String mesg = "SetDatabase.setModified | Cannot set modified for set '" + setIdStr + "' -- " + sqle.getMessage();
-			throw new UpdateObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				statement = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			} finally{
-				DatabaseConnection.releaseConnection(connection);
-			}
-		}
-	}
-*/
+
 	public void delete(Identifier id) throws IllegalDataException {
 		if (id.getMajor() != ObjectEntities.SET_ENTITY_CODE)
 			throw new IllegalDataException("SetDatabase.delete | Cannot delete object of code "
