@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.67 2005/02/16 19:05:11 arseniy Exp $
+ * $Id: Equipment.java,v 1.68 2005/02/24 09:25:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
@@ -34,7 +35,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/02/16 19:05:11 $
+ * @version $Revision: 1.68 $, $Date: 2005/02/24 09:25:40 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -57,7 +58,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 	private String                 swVersion;
 	private String                 inventoryNumber;
 
-	private List portIds;
+	private Collection portIds;
 	private List characteristics;
 
 	private StorableObjectDatabase equipmentDatabase;
@@ -65,7 +66,7 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 	public Equipment(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.portIds = new LinkedList();
+		this.portIds = new ArrayList();
 		super.monitoredElementIds = new ArrayList();
 		this.characteristics = new ArrayList();
 		this.equipmentDatabase = ConfigurationDatabaseContext.equipmentDatabase;
@@ -162,9 +163,9 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 				this.swVersion = swVersion;
 				this.inventoryNumber = inventoryNumber;
 
-				this.portIds = new LinkedList();
+				this.portIds = new ArrayList();
 
-				this.characteristics = new LinkedList();
+				this.characteristics = new ArrayList();
 
 				this.equipmentDatabase = ConfigurationDatabaseContext.equipmentDatabase;
 	}
@@ -283,8 +284,8 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		return this.imageId;
 	}
 
-	public List getPortIds() {
-		return Collections.unmodifiableList(this.portIds);
+	public Collection getPortIds() {
+		return Collections.unmodifiableCollection(this.portIds);
 	}
 
 	public void addCharacteristic(Characteristic characteristic) {
@@ -356,13 +357,13 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		this.inventoryNumber = inventoryNumber;
 	}
 
-	protected synchronized void setPortIds0(final List portIds) {
+	protected synchronized void setPortIds0(final Collection portIds) {
 		this.portIds.clear();
 		if (portIds != null)
 			this.portIds.addAll(portIds);
 	}
 	
-	public void setPortIds(final List portIds) {
+	public void setPortIds(final Collection portIds) {
 		this.setPortIds0(portIds);
 		super.changed = true;
 	}
