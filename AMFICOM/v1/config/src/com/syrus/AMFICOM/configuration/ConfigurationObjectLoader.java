@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationObjectLoader.java,v 1.2 2004/08/16 08:17:26 arseniy Exp $
+ * $Id: ConfigurationObjectLoader.java,v 1.3 2004/08/17 18:24:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.CommunicationException;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/16 08:17:26 $
+ * @version $Revision: 1.3 $, $Date: 2004/08/17 18:24:06 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -48,7 +48,7 @@ public interface ConfigurationObjectLoader {
 
 	KIS loadKIS(Identifier id) throws DatabaseException, CommunicationException;
 
-//	MeasurementPort loadMeasurementPort(Identifier id) throws DatabaseException, CommunicationException;
+	MeasurementPort loadMeasurementPort(Identifier id) throws DatabaseException, CommunicationException;
 
 	MonitoredElement loadMonitoredElement(Identifier id) throws DatabaseException, CommunicationException;
 }
