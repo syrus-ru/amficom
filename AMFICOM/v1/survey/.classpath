@@ -5,38 +5,9 @@
 	<classpathentry kind="src" path="/filter_v1"/>
 	<classpathentry kind="src" path="/generalclient_v1"/>
 	<classpathentry kind="src" path="/idl_v1"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/analysis.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/configureclient.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/corba.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/corbaportable-common.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/dadara.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/filter.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/kisserver.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/main.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/map.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/model.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/optimize.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/optimizereport.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/prognosis.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/reportBuilder.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/scheme.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/syruspatch.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/util.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/utilclient.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/activation.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/aurora_client_orbdep.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/aurora_client_orbindep.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/jfreechartK.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/jgraphpad.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/junit.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/kunststoff.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/layout.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/mail.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/ofx.spatialfx.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/vbjapp.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/vbjorb.jar"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/administrate.jar"/>
 	<classpathentry kind="src" path="/Scheduler"/>
 	<classpathentry kind="src" path="/surveyresource_v1"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/AMFICOM library"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Extended library"/>
+	<classpathentry kind="output" path="classes"/>
 </classpath>
