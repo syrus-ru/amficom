@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.35 2005/01/28 11:32:24 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.36 2005/02/15 08:34:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.mcm;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -37,12 +38,12 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/01/28 11:32:24 $
+ * @version $Revision: 1.36 $, $Date: 2005/02/15 08:34:20 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
 
-public abstract class TestProcessor extends SleepButWorkThread {	
+public abstract class TestProcessor extends SleepButWorkThread {
 	private static final String KEY_FORGET_FRAME = "ForgetFrame";
 
 	private static final int FORGET_FRAME = 24 * 60 * 60;
@@ -177,7 +178,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 						Result analysisResult = null;
 						Result evaluationResult = null;
 						ActionCondition actionCondition = new ActionCondition(ObjectEntities.RESULT_ENTITY_CODE, lastMeasurement.getId());
-						List results = null;
+						Collection results = null;
 						try {
 							results = MeasurementStorableObjectPool.getStorableObjectsByCondition(actionCondition, true);
 						}
@@ -220,8 +221,8 @@ public abstract class TestProcessor extends SleepButWorkThread {
 
 	private static Result findMeasurementResult(Measurement measurement) throws ApplicationException {
 		LinkedIdsCondition condition = new LinkedIdsCondition(measurement.getId(), ObjectEntities.RESULT_ENTITY_CODE);
-		List measurementResults = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
-		return (measurementResults != null && measurementResults.size() > 0) ? (Result) measurementResults.get(0) : null;
+		Collection measurementResults = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+		return (measurementResults != null && measurementResults.size() > 0) ? (Result) measurementResults.iterator().next() : null;
 	}
 
 	protected final void addMeasurementResult(Result result) {
