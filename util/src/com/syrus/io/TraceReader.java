@@ -1,5 +1,5 @@
 /*
- * $Id: TraceReader.java,v 1.4 2004/11/22 14:03:44 stas Exp $
+ * $Id: TraceReader.java,v 1.5 2004/12/08 12:50:23 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,9 +13,9 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/11/22 14:03:44 $
- * @author $Author: stas $
- * @module general_v1
+ * @version $Revision: 1.5 $, $Date: 2004/12/08 12:50:23 $
+ * @author $Author: bass $
+ * @module util
  */
 public class TraceReader extends DataReader
 {
@@ -125,7 +125,7 @@ public class TraceReader extends DataReader
 		bs.fxdParams.PWU = new short[1];
 		bs.fxdParams.DS = new int [1];
 		bs.fxdParams.NPPW = new int [1];
-		bs.fxdParams.PWU[0] = (short)pulsewidth;
+		bs.fxdParams.PWU[0] = pulsewidth;
 		bs.fxdParams.DS[0] = (int)(resolution * groupindex / 3d * 100d * 10000d/*pionts*/ * 1000d/*meters*/);
 		bs.fxdParams.NPPW[0] = size;
 		bs.fxdParams.GI = (int)(groupindex * 100000);
@@ -193,13 +193,13 @@ public class TraceReader extends DataReader
 		}
 
 		int delta = max - min;
-		double d2 = 40000d / (double)delta;
+		double d2 = 40000d / delta;
 		if ((filetype == LP) && (delta < 40000))
 		{
 			for (int i=0; i<arr.length; i++)
-				arr[i] = (int)((double)arr[i] * d2);
-			max = (int)((double)max * d2);
-			min = (int)((double)min * d2);
+				arr[i] = (int)(arr[i] * d2);
+			max = (int)(max * d2);
+			min = (int)(min * d2);
 		}
 		for (int i=0; i<arr.length; i++)
 			arr[i] = max - arr[i];
