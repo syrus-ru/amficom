@@ -1,5 +1,5 @@
 /*
- * $Id: li'lmapletty.idl,v 1.7 2004/11/26 09:16:52 bob Exp $
+ * $Id: li'lmapletty.idl,v 1.8 2004/11/28 14:34:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -228,13 +228,13 @@ module com {
 							wstring name;
 							wstring description;
 
-							general::corba::IdentifierSeq_Transferable siteIds;
+							general::corba::IdentifierSeq_Transferable siteNodeIds;
 							//SiteNodeSeq siteNodes;
 							general::corba::IdentifierSeq_Transferable topologicalNodeIds;
 							//TopologicalNodeSeq topologicalNodes;
 							general::corba::IdentifierSeq_Transferable nodeLinkIds;
 							//NodeLinkSeq nodeLinks;
-							general::corba::IdentifierSeq_Transferable physicalNodeLinkIds;
+							general::corba::IdentifierSeq_Transferable physicalLinkIds;
 							//PhysicalLinkSeq physicalLinks;
 							general::corba::IdentifierSeq_Transferable markIds;
 							//MarkSeq marks;
