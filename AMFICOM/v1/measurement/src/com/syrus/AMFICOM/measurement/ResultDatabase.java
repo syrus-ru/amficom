@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.28 2004/10/19 07:48:21 bob Exp $
+ * $Id: ResultDatabase.java,v 1.29 2004/10/21 07:26:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/10/19 07:48:21 $
+ * @version $Revision: 1.29 $, $Date: 2004/10/21 07:26:23 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -657,13 +657,11 @@ public class ResultDatabase extends StorableObjectDatabase {
 		List list = null;
 
 		StringBuffer buffer = new StringBuffer();
-		int idsLength = measurementIds.size();
-		if ((measurementIds != null) && (idsLength > 0)) {
+		if ((measurementIds != null) && (!measurementIds.isEmpty())) {
 			buffer.append(COLUMN_MEASUREMENT_ID);
 			buffer.append(SQL_IN);
 			buffer.append(OPEN_BRACKET);
-			int i = 1;
-			for (Iterator it = measurementIds.iterator(); it.hasNext(); i++) {
+			for (Iterator it = measurementIds.iterator(); it.hasNext();) {
 				Object object = it.next();
 				Identifier id = null;
 				if (object instanceof Identifier)
@@ -680,7 +678,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 
 				if (id != null) {
 					buffer.append(id.toSQLString());
-					if (i < idsLength)
+					if (it.hasNext())
 						buffer.append(COMMA);
 				}
 			}
