@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.26 2004/11/15 13:50:27 bob Exp $
+ * $Id: Characteristic.java,v 1.27 2004/11/15 15:30:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/11/15 13:50:27 $
+ * @version $Revision: 1.27 $, $Date: 2004/11/15 15:30:53 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -186,6 +186,11 @@ public class Characteristic extends StorableObject implements TypedObject {
 
 	public String getDescription() {
 		return this.description;
+	}
+	
+	public void setDescription(String description){
+		this.description = description;
+		super.currentVersion = super.getNextVersion();
 	}
 
 	public CharacteristicSort getSort() {
