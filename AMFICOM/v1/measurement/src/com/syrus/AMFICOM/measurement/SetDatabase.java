@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.17 2004/08/17 14:58:58 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.18 2004/08/19 12:21:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.database.ByteArrayDatabase;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/08/17 14:58:58 $
+ * @version $Revision: 1.18 $, $Date: 2004/08/19 12:21:44 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -236,9 +236,9 @@ public class SetDatabase extends StorableObjectDatabase {
 			this.insertSetParameters(set);
 			this.insertSetMELinks(set);
 		}
-		catch (CreateObjectException e) {
-			SetDatabase.delete(set);
-			throw e;
+		catch (CreateObjectException coe) {
+			this.delete(set);
+			throw coe;
 		}
 	}
 
@@ -524,7 +524,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public static void delete(Set set) {
+	public void delete(Set set) {
 		String setIdStr = set.getId().toSQLString();
 		Statement statement = null;
 		try {
