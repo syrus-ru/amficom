@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.93 2005/03/30 15:34:02 arseniy Exp $
+ * $Id: Test.java,v 1.94 2005/03/30 15:36:18 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.93 $, $Date: 2005/03/30 15:34:02 $
+ * @version $Revision: 1.94 $, $Date: 2005/03/30 15:36:18 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -260,9 +260,7 @@ public class Test extends StorableObject {
 		this.returnType = tt.return_type.value();
 		this.description = new String(tt.description);
 
-		this.measurementSetupIds = new HashSet(tt.measurement_setup_ids.length);
-		for (int i = 0; i < tt.measurement_setup_ids.length; i++)
-			this.measurementSetupIds.add(new Identifier(tt.measurement_setup_ids[i]));
+		this.measurementSetupIds = Identifier.fromTransferables(tt.measurement_setup_ids);
 		if (!this.measurementSetupIds.isEmpty()) {
 			Identifier msId = (Identifier) this.measurementSetupIds.iterator().next();
 			try {
