@@ -54,7 +54,7 @@ public class ProgressBar extends JPanel
 		thread.stop();
 	}
 
-	public void refresh_coords()
+	void refreshCoords()
 	{
 		if (movingTo)
 			state++;
@@ -168,7 +168,7 @@ class BarRepaintThread extends Thread
 		{
 			try
 			{
-				bar.refresh_coords();
+				bar.refreshCoords();
 				bar.repaint();
 				sleep(30);
 			}

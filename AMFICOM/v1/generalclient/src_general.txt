@@ -135,6 +135,9 @@ src/com/syrus/AMFICOM/Client/Resource/ObjectResourceNameSorter.java
 src/com/syrus/AMFICOM/Client/Resource/ObjectResourceSorter.java
 src/com/syrus/AMFICOM/Client/Resource/Pool.java
 src/com/syrus/AMFICOM/Client/Resource/RISDDataSource.java
+src/com/syrus/AMFICOM/Client/Resource/RISDReportDataSource.java
+src/com/syrus/AMFICOM/Client/Resource/ReportDataSourceImage.java
+src/com/syrus/AMFICOM/Client/Resource/RISDDataSource.java
 src/com/syrus/AMFICOM/Client/Resource/StubResource.java
 src/com/syrus/AMFICOM/Client/Resource/Trash.java
 src/com/syrus/AMFICOM/Client/General/UI/ColorComboBox.java
