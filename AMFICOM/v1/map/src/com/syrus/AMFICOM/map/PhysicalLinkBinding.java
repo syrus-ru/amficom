@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkBinding.java,v 1.5 2005/01/27 14:43:37 krupenn Exp $
+ * $Id: PhysicalLinkBinding.java,v 1.6 2005/02/09 15:12:53 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -21,7 +21,7 @@ import java.util.List;
  * и матрицу пролегани€ кабелей по трубам тоннел€.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/01/27 14:43:37 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/09 15:12:53 $
  * @module map_v1
  */
 public final class PhysicalLinkBinding 
@@ -56,7 +56,7 @@ public final class PhysicalLinkBinding
 	
 	/**
 	 * ƒобавить кабель в тоннель.
-	 * @param object кабель ({@link com.syrus.AMFICOM.scheme.corba.SchemeCableLink})
+	 * @param object кабель (com.syrus.AMFICOM.scheme.corba.SchemeCableLink)
 	 */
 	public void add(Object object)
 	{
@@ -67,7 +67,7 @@ public final class PhysicalLinkBinding
 	
 	/**
 	 * ”далить кабель из тоннел€.
-	 * @param object кабель ({@link com.syrus.AMFICOM.scheme.corba.SchemeCableLink})
+	 * @param object кабель (com.syrus.AMFICOM.scheme.corba.SchemeCableLink)
 	 */
 	public void remove(Object object)
 	{

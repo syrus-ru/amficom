@@ -1,5 +1,5 @@
 /**
- * $Id: MapElement.java,v 1.7 2005/01/27 14:43:37 krupenn Exp $
+ * $Id: MapElement.java,v 1.8 2005/02/09 15:12:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,7 +23,7 @@ import java.util.List;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/01/27 14:43:37 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/09 15:12:53 $
  * @module map_v1
  */
 public interface MapElement 
@@ -103,15 +103,13 @@ public interface MapElement
 	
 	/**
 	 * флаг того, что элемент удален.
-	 * @return 1
-	 * @deprecated 1
+	 * @return флаг удаления элемента
 	 */
 	boolean isRemoved();
 	
 	/**
 	 * Установить флаг удаления элемента.
-	 * @param removed 1
-	 * @deprecated 1
+	 * @param removed флаг удаления элемента
 	 */
 	void setRemoved(boolean removed);
 

@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLink.java,v 1.26 2005/02/09 12:50:11 bob Exp $
+ * $Id: PhysicalLink.java,v 1.27 2005/02/09 15:12:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -51,8 +51,8 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * Предуствновленными являются  два типа - 
  * тоннель (<code>{@link PhysicalLinkType#TUNNEL}</code>) 
  * и коллектор (<code>{@link PhysicalLinkType#COLLECTOR}</code>).
- * @author $Author: bob $
- * @version $Revision: 1.26 $, $Date: 2005/02/09 12:50:11 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.27 $, $Date: 2005/02/09 15:12:53 $
  * @module map_v1
  */
 public class PhysicalLink extends StorableObject implements Characterized, TypedObject, MapElement {
@@ -548,7 +548,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	}
 
 	/**
-	 * Получить объект, описывающий привязку кабелей ({@link SchemeCableLink})
+	 * Получить объект, описывающий привязку кабелей (com.syrus.AMFICOM.scheme.corba.SchemeCableLink)
 	 * к линии.
 	 * @return привязка
 	 */
