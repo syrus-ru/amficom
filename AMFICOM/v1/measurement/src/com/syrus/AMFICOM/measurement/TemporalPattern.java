@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.40 2004/10/06 15:45:16 max Exp $
+ * $Id: TemporalPattern.java,v 1.41 2004/10/08 12:17:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2004/10/06 15:45:16 $
- * @author $Author: max $
+ * @version $Revision: 1.41 $, $Date: 2004/10/08 12:17:06 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -588,6 +588,10 @@ public class TemporalPattern extends StorableObject {
 				System.out.println();
 			return timeValue;
 		}
+		
+		public String toString() {
+			return this.getDescription();
+		}
 
 		public boolean equals(Object obj) {
 			boolean equals = (obj == this);
@@ -1048,6 +1052,17 @@ public class TemporalPattern extends StorableObject {
 		timeLine.setTemplate(template);
 		this.templates.put(timeLine, timeLine);
 		//setType(TIMESTAMPTYPE_PERIODIC);
+	}
+	
+	public void removeTemplate(String template){
+		for (Iterator it = this.templates.keySet().iterator(); it.hasNext();) {
+			TimeLine timeLine = (TimeLine) it.next();
+			if (timeLine.getTemplate().equals(template)){
+				it.remove();
+				break;
+			}
+			
+		}
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.15 2004/10/07 09:46:25 max Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.16 2004/10/08 12:17:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,12 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -23,8 +27,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/10/07 09:46:25 $
- * @author $Author: max $
+ * @version $Revision: 1.16 $, $Date: 2004/10/08 12:17:06 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -384,7 +388,19 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		MeasurementTypeDatabase database = (MeasurementTypeDatabase)MeasurementDatabaseContext.getMeasurementTypeDatabase();
 		List list = null;
 		try {
-		    list = database.retrieveButIds(ids);
+			if (condition instanceof LinkedIdsCondition){
+				LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
+				List measurementPortTypeIds = linkedIdsCondition.getMeasurementPortTypeIds();
+				list = new LinkedList();
+				for (Iterator it = measurementPortTypeIds.iterator(); it.hasNext();) {
+					Identifier id = (Identifier) it.next();
+					MeasurementPortType measurementPortType = (MeasurementPortType)ConfigurationStorableObjectPool.getStorableObject(id, true);  
+					list.addAll(database.retrieveButIdsByMeasurementPortType(ids, measurementPortType));
+				}
+			} else{
+				Log.errorMessage("DatabaseMeasumentObjectLoader.loadMeasurementTypesButIds | Unknown condition class: " + condition);
+				list = database.retrieveButIds(ids);
+			}
 		} catch (IllegalDataException e) {
 		    Log.errorMessage("DatabaseMeasumentObjectLoader.loadMeasurementTypesButIds | Illegal Storable Object: " + e.getMessage());
 		    throw new DatabaseException("DatabaseMeasumentObjectLoader.loadMeasurementTypesButIds | Illegal Storable Object: " + e.getMessage());

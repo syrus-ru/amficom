@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.29 2004/10/07 13:55:54 bob Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.30 2004/10/08 12:17:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -34,7 +35,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/10/07 13:55:54 $
+ * @version $Revision: 1.30 $, $Date: 2004/10/08 12:17:06 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -561,4 +562,22 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			}
 		return i;
 		}
+	
+	public List retrieveButIdsByMeasurementPortType(List ids, MeasurementPortType measurementPortType) throws RetrieveObjectException {
+		List list = null;
+		
+		String condition = COLUMN_ID + SQL_IN + OPEN_BRACKET
+					+ SQL_SELECT + LINK_COLUMN_MEASUREMENT_TYPE_ID + ObjectEntities.MNTTYMEASPORTTYPELINK_ENTITY
+					+ SQL_WHERE + LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID + EQUALS + measurementPortType.getId().toSQLString()
+				+ CLOSE_BRACKET;		
+		
+		try {
+			list = retrieveButIds(ids, condition);
+		}  catch (IllegalDataException ide) {			
+			Log.debugMessage(getEnityName() + "Database.retrieveButIdsByMeasurementPortType | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
+		}
+		
+		return list;
+	}
+
 }
