@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeDatabase.java,v 1.21 2005/02/28 14:12:14 bob Exp $
+ * $Id: CableLinkTypeDatabase.java,v 1.22 2005/03/04 19:50:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/02/28 14:12:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.22 $, $Date: 2005/03/04 19:50:00 $
+ * @author $Author: bass $
  * @module config_v1
  */
 public class CableLinkTypeDatabase extends StorableObjectDatabase {
@@ -51,15 +51,15 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
 	private static final String LINK_COLUMN_LINK_TYPE_ID = "link_type_id";
 
 	private static String columns;
-	private static String updateMultiplySQLValues;
+	private static String updateMultipleSQLValues;
 
 	protected String getEnityName() {
 		return ObjectEntities.LINKTYPE_ENTITY;
 	}
 
-	protected String getUpdateMultiplySQLValues() {
-		if (updateMultiplySQLValues == null) {
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+	protected String getUpdateMultipleSQLValues() {
+		if (updateMultipleSQLValues == null) {
+			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -68,7 +68,7 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
 				+ QUESTION + COMMA
 				+ QUESTION;
 		}
-		return updateMultiplySQLValues;
+		return updateMultipleSQLValues;
 	}
 
 	protected String getColumns(int mode) {

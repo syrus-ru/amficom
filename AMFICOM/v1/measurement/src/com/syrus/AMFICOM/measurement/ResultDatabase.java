@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.75 2005/03/04 13:34:22 bass Exp $
+ * $Id: ResultDatabase.java,v 1.76 2005/03/04 19:50:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2005/03/04 13:34:22 $
+ * @version $Revision: 1.76 $, $Date: 2005/03/04 19:50:01 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -48,7 +48,7 @@ import com.syrus.util.database.DatabaseDate;
 public class ResultDatabase extends StorableObjectDatabase {
 
 	private static String			columns;
-	private static String			updateMultiplySQLValues;
+	private static String			updateMultipleSQLValues;
 
 	protected String getEnityName() {
 		return ObjectEntities.RESULT_ENTITY;
@@ -71,9 +71,9 @@ public class ResultDatabase extends StorableObjectDatabase {
 		return super.getColumns(mode) + columns;
 	}
 
-	protected String getUpdateMultiplySQLValues() {
-		if (updateMultiplySQLValues == null) {
-			StringBuffer buffer = new StringBuffer(super.getUpdateMultiplySQLValues());
+	protected String getUpdateMultipleSQLValues() {
+		if (updateMultipleSQLValues == null) {
+			StringBuffer buffer = new StringBuffer(super.getUpdateMultipleSQLValues());
 			buffer.append(COMMA);
 			buffer.append(QUESTION);
 			buffer.append(COMMA);
@@ -84,9 +84,9 @@ public class ResultDatabase extends StorableObjectDatabase {
 			buffer.append(QUESTION);
 			buffer.append(COMMA);
 			buffer.append(QUESTION);
-			updateMultiplySQLValues = buffer.toString();
+			updateMultipleSQLValues = buffer.toString();
 		}
-		return updateMultiplySQLValues;
+		return updateMultipleSQLValues;
 	}
 
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {

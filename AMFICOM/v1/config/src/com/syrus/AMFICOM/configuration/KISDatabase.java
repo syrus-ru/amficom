@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.65 2005/02/28 14:12:14 bob Exp $
+ * $Id: KISDatabase.java,v 1.66 2005/03/04 19:50:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,8 +44,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/02/28 14:12:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.66 $, $Date: 2005/03/04 19:50:00 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -56,7 +56,7 @@ public class KISDatabase extends StorableObjectDatabase {
 
 	private static final int SIZE_HOSTNAME_COLUMN = 256;
 	private static String columns;
-	private static String updateMultiplySQLValues;
+	private static String updateMultipleSQLValues;
 
 	private KIS fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof KIS)
@@ -82,9 +82,9 @@ public class KISDatabase extends StorableObjectDatabase {
 		return super.getColumns(mode) + columns;
 	}
 
-	protected String getUpdateMultiplySQLValues() {
-		if (updateMultiplySQLValues == null) {
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+	protected String getUpdateMultipleSQLValues() {
+		if (updateMultipleSQLValues == null) {
+			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -93,7 +93,7 @@ public class KISDatabase extends StorableObjectDatabase {
 				+ QUESTION + COMMA
 				+ QUESTION;
 		}
-		return updateMultiplySQLValues;
+		return updateMultipleSQLValues;
 	}
 
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {

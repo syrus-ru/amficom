@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.44 2005/02/28 14:12:18 bob Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.45 2005/03/04 19:50:02 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/02/28 14:12:18 $
- * @author $Author: bob $
+ * @version $Revision: 1.45 $, $Date: 2005/03/04 19:50:02 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -48,7 +48,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 	}
 	
 	private static String columns;
-	private static String updateMultiplySQLValues;	
+	private static String updateMultipleSQLValues;	
 	
 	protected String getEnityName() {		
 		return ObjectEntities.TEMPORALPATTERN_ENTITY;
@@ -63,13 +63,13 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		return super.getColumns(mode) + columns;
 	}	
 
-	protected String getUpdateMultiplySQLValues() {
-		if (updateMultiplySQLValues == null) {	
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+	protected String getUpdateMultipleSQLValues() {
+		if (updateMultipleSQLValues == null) {	
+			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;
 		}
-		return updateMultiplySQLValues;
+		return updateMultipleSQLValues;
 	}
 	
 	
@@ -125,7 +125,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 			+ OPEN_BRACKET
 			+ this.getColumns(MODE_INSERT)
 			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
-			+ this.getInsertMultiplySQLValues()
+			+ this.getInsertMultipleSQLValues()
 			+ CLOSE_BRACKET;
 			preparedStatement = connection.prepareStatement(sql);
 		}

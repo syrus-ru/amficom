@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.73 2005/03/01 15:15:30 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.74 2005/03/04 19:50:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.73 $, $Date: 2005/03/01 15:15:30 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.74 $, $Date: 2005/03/04 19:50:01 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -50,7 +50,7 @@ public class SetDatabase extends StorableObjectDatabase {
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
 	private static String columns;
-	private static String updateMultiplySQLValues;    
+	private static String updateMultipleSQLValues;    
 
 	protected String getEnityName() {
 		return '"' + ObjectEntities.SET_ENTITY + '"';
@@ -65,13 +65,13 @@ public class SetDatabase extends StorableObjectDatabase {
 		return super.getColumns(mode) + columns;
 	}
 
-	protected String getUpdateMultiplySQLValues() {
-		if (updateMultiplySQLValues == null) {
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+	protected String getUpdateMultipleSQLValues() {
+		if (updateMultipleSQLValues == null) {
+			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;
 		}
-		return updateMultiplySQLValues;
+		return updateMultipleSQLValues;
 	}	
 
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {

@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeTypeDatabase.java,v 1.13 2005/02/28 14:12:22 bob Exp $
+ * $Id: SiteNodeTypeDatabase.java,v 1.14 2005/03/04 19:50:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,14 +31,14 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/02/28 14:12:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.14 $, $Date: 2005/03/04 19:50:01 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public class SiteNodeTypeDatabase extends StorableObjectDatabase {
 	 private static String columns;
 	
-	private static String updateMultiplySQLValues;
+	private static String updateMultipleSQLValues;
 
 	private SiteNodeType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof SiteNodeType)
@@ -68,16 +68,16 @@ public class SiteNodeTypeDatabase extends StorableObjectDatabase {
 		return super.getColumns(mode) + columns;
 	}	
 	
-	protected String getUpdateMultiplySQLValues() {
-		if (updateMultiplySQLValues == null){
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+	protected String getUpdateMultipleSQLValues() {
+		if (updateMultipleSQLValues == null){
+			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;
 		}
-		return updateMultiplySQLValues;
+		return updateMultipleSQLValues;
 	}
 	
 	

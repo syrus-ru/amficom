@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadDatabase.java,v 1.18 2005/02/28 14:12:14 bob Exp $
+ * $Id: CableThreadDatabase.java,v 1.19 2005/03/04 19:50:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,14 +28,14 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/02/28 14:12:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.19 $, $Date: 2005/03/04 19:50:00 $
+ * @author $Author: bass $
  * @module config_v1
  */
 public class CableThreadDatabase extends StorableObjectDatabase  {
     
 	private static String columns;
-	private static String updateMultiplySQLValues;
+	private static String updateMultipleSQLValues;
 
 	private CableThread fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof CableThread)
@@ -62,9 +62,9 @@ public class CableThreadDatabase extends StorableObjectDatabase  {
 		return super.getColumns(mode) + columns;
 	}
 
-	protected String getUpdateMultiplySQLValues() {
-		if (updateMultiplySQLValues == null) {
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues()
+	protected String getUpdateMultipleSQLValues() {
+		if (updateMultipleSQLValues == null) {
+			updateMultipleSQLValues = super.getUpdateMultipleSQLValues()
 					+ COMMA
 					+ QUESTION
 					+ COMMA
@@ -74,7 +74,7 @@ public class CableThreadDatabase extends StorableObjectDatabase  {
 					+ COMMA
 					+ QUESTION;
 		}
-		return updateMultiplySQLValues;
+		return updateMultipleSQLValues;
 	}
 
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {

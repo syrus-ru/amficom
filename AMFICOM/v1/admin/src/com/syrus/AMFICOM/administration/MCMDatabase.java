@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.20 2005/02/28 14:11:59 bob Exp $
+ * $Id: MCMDatabase.java,v 1.21 2005/03/04 19:50:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/02/28 14:11:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.21 $, $Date: 2005/03/04 19:50:00 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -50,7 +50,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 	protected static final int SIZE_HOSTNAME_COLUMN = 64;
 
 	private static String columns;
-	private static String updateMultiplySQLValues;
+	private static String updateMultipleSQLValues;
 
 	private MCM fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MCM)
@@ -75,9 +75,9 @@ public class MCMDatabase extends StorableObjectDatabase {
 		return super.getColumns(mode) + columns;
 	}
 
-	protected String getUpdateMultiplySQLValues() {
-    	if (updateMultiplySQLValues == null) {
-    		updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+	protected String getUpdateMultipleSQLValues() {
+    	if (updateMultipleSQLValues == null) {
+    		updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
@@ -85,7 +85,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 					+ QUESTION + COMMA
 					+ QUESTION;
     	}
-		return updateMultiplySQLValues;
+		return updateMultipleSQLValues;
 	}
 
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {

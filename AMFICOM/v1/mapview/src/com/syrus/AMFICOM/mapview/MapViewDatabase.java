@@ -1,5 +1,5 @@
 /*
-* $Id: MapViewDatabase.java,v 1.11 2005/03/04 19:17:32 bass Exp $
+* $Id: MapViewDatabase.java,v 1.12 2005/03/04 19:50:01 bass Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/03/04 19:17:32 $
+ * @version $Revision: 1.12 $, $Date: 2005/03/04 19:50:01 $
  * @author $Author: bass $
  * @module mapview_v1
  */
@@ -78,7 +78,7 @@ public class MapViewDatabase extends StorableObjectDatabase {
 
 	private static String columns;
 	
-	private static String updateMultiplySQLValues;	
+	private static String updateMultipleSQLValues;	
 
 
 	private MapView fromStorableObject(StorableObject storableObject) throws IllegalDataException {
@@ -128,9 +128,9 @@ public class MapViewDatabase extends StorableObjectDatabase {
 		return super.getColumns(mode) + columns;
 	}	
 	
-	protected String getUpdateMultiplySQLValues() {
-		if (updateMultiplySQLValues == null){
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+	protected String getUpdateMultipleSQLValues() {
+		if (updateMultipleSQLValues == null){
+			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -140,7 +140,7 @@ public class MapViewDatabase extends StorableObjectDatabase {
 				+ QUESTION + COMMA
 				+ QUESTION;
 		}
-		return updateMultiplySQLValues;
+		return updateMultipleSQLValues;
 	}
 	
 	

@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.19 2005/02/28 14:11:59 bob Exp $
+ * $Id: DomainDatabase.java,v 1.20 2005/03/04 19:50:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,14 +36,14 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/02/28 14:11:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.20 $, $Date: 2005/03/04 19:50:00 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
 public class DomainDatabase extends StorableObjectDatabase {
 	private static String columns;
-	private static String updateMultiplySQLValues;
+	private static String updateMultipleSQLValues;
 	
 	private Domain fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Domain)
@@ -65,14 +65,14 @@ public class DomainDatabase extends StorableObjectDatabase {
 		return super.getColumns(mode) + columns;
 	}
 	
-	protected String getUpdateMultiplySQLValues() {
-		if (updateMultiplySQLValues == null) {
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+	protected String getUpdateMultipleSQLValues() {
+		if (updateMultipleSQLValues == null) {
+			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION;
 		}
-		return updateMultiplySQLValues;
+		return updateMultipleSQLValues;
 	}
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {

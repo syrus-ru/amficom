@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.32 2005/02/28 14:12:18 bob Exp $
+ * $Id: ModelingDatabase.java,v 1.33 2005/03/04 19:50:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/02/28 14:12:18 $
- * @author $Author: bob $
+ * @version $Revision: 1.33 $, $Date: 2005/03/04 19:50:01 $
+ * @author $Author: bass $
  * @module module_name
  */
 
@@ -36,7 +36,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
 
 	private static String columns;
 
-	private static String updateMultiplySQLValues;
+	private static String updateMultipleSQLValues;
 
 	private Modeling fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Modeling)
@@ -64,15 +64,15 @@ public class ModelingDatabase extends StorableObjectDatabase {
 		return super.getColumns(mode) + columns;
 	}
 
-	protected String getUpdateMultiplySQLValues() {
-		if (updateMultiplySQLValues == null) {
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+	protected String getUpdateMultipleSQLValues() {
+		if (updateMultipleSQLValues == null) {
+			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;
 		}
-		return updateMultiplySQLValues;
+		return updateMultipleSQLValues;
 	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)

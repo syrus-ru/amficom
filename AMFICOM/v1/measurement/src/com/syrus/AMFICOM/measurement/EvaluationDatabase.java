@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationDatabase.java,v 1.44 2005/02/28 14:12:18 bob Exp $
+ * $Id: EvaluationDatabase.java,v 1.45 2005/03/04 19:50:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,15 +27,15 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/02/28 14:12:18 $
- * @author $Author: bob $
+ * @version $Revision: 1.45 $, $Date: 2005/03/04 19:50:01 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
 public class EvaluationDatabase extends StorableObjectDatabase {
 
 	private static String columns;	
-	private static String updateMultiplySQLValues;
+	private static String updateMultipleSQLValues;
 
 	private Evaluation fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Evaluation)
@@ -63,15 +63,15 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 		return super.getColumns(mode) + columns;
 	}
 
-	protected String getUpdateMultiplySQLValues() {
-		if (updateMultiplySQLValues == null) {
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+	protected String getUpdateMultipleSQLValues() {
+		if (updateMultipleSQLValues == null) {
+			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;
 		}
-		return updateMultiplySQLValues;
+		return updateMultipleSQLValues;
 	}
 
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {

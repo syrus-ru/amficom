@@ -1,5 +1,5 @@
 /*
- * $Id: EventSourceDatabase.java,v 1.9 2005/02/28 14:12:41 bob Exp $
+ * $Id: EventSourceDatabase.java,v 1.10 2005/03/04 19:50:00 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,15 +25,15 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/02/28 14:12:41 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/03/04 19:50:00 $
+ * @author $Author: bass $
  * @module event_v1
  */
 public class EventSourceDatabase extends StorableObjectDatabase {
 
 	private static String columns;
 
-	private static String updateMultiplySQLValues;
+	private static String updateMultipleSQLValues;
 
 	protected String getEnityName() {		
 		return ObjectEntities.EVENTSOURCE_ENTITY;
@@ -52,9 +52,9 @@ public class EventSourceDatabase extends StorableObjectDatabase {
 		return super.getColumns(mode) + columns;
 	}
 
-	protected String getUpdateMultiplySQLValues() {
-		if (updateMultiplySQLValues == null) {
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+	protected String getUpdateMultipleSQLValues() {
+		if (updateMultipleSQLValues == null) {
+			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -62,7 +62,7 @@ public class EventSourceDatabase extends StorableObjectDatabase {
 				+ QUESTION + COMMA
 				+ QUESTION;
 		}
-		return updateMultiplySQLValues;
+		return updateMultipleSQLValues;
 	}
 
 	private EventSource fromStorableObject(StorableObject storableObject) throws IllegalDataException {

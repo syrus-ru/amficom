@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.16 2005/02/28 14:11:56 bob Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.17 2005/03/04 19:50:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,15 +18,15 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/02/28 14:11:56 $
- * @author $Author: bob $
+ * @version $Revision: 1.17 $, $Date: 2005/03/04 19:50:01 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
 public class ParameterTypeDatabase extends StorableObjectDatabase  {
 
 	private static String columns;
-	private static String updateMultiplySQLValues;
+	private static String updateMultipleSQLValues;
 
 	protected String getEnityName() {
 		return ObjectEntities.PARAMETERTYPE_ENTITY;
@@ -43,15 +43,15 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 		return super.getColumns(mode) + columns;
 	}	
 	
-	protected String getUpdateMultiplySQLValues() {
-		if (updateMultiplySQLValues == null){
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+	protected String getUpdateMultipleSQLValues() {
+		if (updateMultipleSQLValues == null){
+			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;
 		}
-		return updateMultiplySQLValues;
+		return updateMultipleSQLValues;
 	}
 	
 	

@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeDatabase.java,v 1.28 2005/02/28 14:12:14 bob Exp $
+ * $Id: LinkTypeDatabase.java,v 1.29 2005/03/04 19:50:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/02/28 14:12:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.29 $, $Date: 2005/03/04 19:50:00 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -45,15 +45,15 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 	private static final int SIZE_MANUFACTURER_CODE_COLUMN = 64;
 
 	private static String columns;
-	private static String updateMultiplySQLValues;
+	private static String updateMultipleSQLValues;
 
 	protected String getEnityName() {
 		return ObjectEntities.LINKTYPE_ENTITY;
 	}
 
-	protected String getUpdateMultiplySQLValues() {
-		if (updateMultiplySQLValues == null) {
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+	protected String getUpdateMultipleSQLValues() {
+		if (updateMultipleSQLValues == null) {
+			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
@@ -62,7 +62,7 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 			+ QUESTION + COMMA
 			+ QUESTION;
 		}
-		return updateMultiplySQLValues;
+		return updateMultipleSQLValues;
 	}
 
 	protected String getColumns(int mode) {

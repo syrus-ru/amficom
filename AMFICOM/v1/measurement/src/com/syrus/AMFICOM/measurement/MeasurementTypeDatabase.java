@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.76 2005/03/04 13:34:22 bass Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.77 2005/03/04 19:50:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.76 $, $Date: 2005/03/04 13:34:22 $
+ * @version $Revision: 1.77 $, $Date: 2005/03/04 19:50:01 $
  * @author $Author: bass $
  * @module measurement_v1
  */
@@ -49,7 +49,7 @@ import com.syrus.util.database.DatabaseString;
 public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 
 	private static String columns;
-	private static String updateMultiplySQLValues;
+	private static String updateMultipleSQLValues;
 	private static String measurementPortTypesByOneQuery;
 
 	private MeasurementType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
@@ -71,13 +71,13 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		return super.getColumns(mode) + columns;
 	}
 
-	protected String getUpdateMultiplySQLValues() {
-		if (updateMultiplySQLValues == null) {
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+	protected String getUpdateMultipleSQLValues() {
+		if (updateMultipleSQLValues == null) {
+			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
 				+ QUESTION + COMMA 
 				+ QUESTION;
 		}
-		return updateMultiplySQLValues;
+		return updateMultipleSQLValues;
 	}
 
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.54 2005/03/04 13:11:58 arseniy Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.55 2005/03/04 19:50:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/03/04 13:11:58 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.55 $, $Date: 2005/03/04 19:50:00 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -52,7 +52,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 //	public static final String	LINK_COLUMN_TRANSMISSION_PATH_ID	= "transmission_path_id";
 
 	private static String		columns;
-	private static String		updateMultiplySQLValues;
+	private static String		updateMultipleSQLValues;
 
 	private TransmissionPath fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof TransmissionPath)
@@ -77,9 +77,9 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		return super.getColumns(mode) + columns;
 	}
 
-	protected String getUpdateMultiplySQLValues() {
-		if (updateMultiplySQLValues == null) {
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+	protected String getUpdateMultipleSQLValues() {
+		if (updateMultipleSQLValues == null) {
+			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
@@ -87,7 +87,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 					+ QUESTION + COMMA
 					+ QUESTION;
 		}
-		return updateMultiplySQLValues;
+		return updateMultipleSQLValues;
 	}
 
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {

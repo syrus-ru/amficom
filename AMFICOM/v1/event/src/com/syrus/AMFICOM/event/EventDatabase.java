@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.17 2005/03/01 16:50:26 arseniy Exp $
+ * $Id: EventDatabase.java,v 1.18 2005/03/04 19:50:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/03/01 16:50:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/03/04 19:50:00 $
+ * @author $Author: bass $
  * @module event_v1
  */
 
@@ -49,7 +49,7 @@ public class EventDatabase extends StorableObjectDatabase {
 	protected static final int SIZE_PARAMETER_VALUE_COLUMN = 256;
 
 	private static String columns;
-	private static String updateMultiplySQLValues;
+	private static String updateMultipleSQLValues;
 
 	private Event fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Event)
@@ -77,13 +77,13 @@ public class EventDatabase extends StorableObjectDatabase {
 		return super.getColumns(mode) + columns;
 	}
 
-	protected String getUpdateMultiplySQLValues() {
-		if (updateMultiplySQLValues == null) {
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+	protected String getUpdateMultipleSQLValues() {
+		if (updateMultipleSQLValues == null) {
+			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;
 		}
-		return updateMultiplySQLValues;
+		return updateMultipleSQLValues;
 	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)

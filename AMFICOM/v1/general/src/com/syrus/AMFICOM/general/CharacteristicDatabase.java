@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.23 2005/03/04 13:29:36 bass Exp $
+ * $Id: CharacteristicDatabase.java,v 1.24 2005/03/04 19:50:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/03/04 13:29:36 $
+ * @version $Revision: 1.24 $, $Date: 2005/03/04 19:50:01 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -38,7 +38,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 	private static final int SIZE_VALUE_COLUMN = 256;
 
 	private static String columns;
-	private static String updateMultiplySQLValues;
+	private static String updateMultipleSQLValues;
 
 	protected String getEnityName() {
 		return ObjectEntities.CHARACTERISTIC_ENTITY;
@@ -59,9 +59,9 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		return super.getColumns(mode) + columns;
 	}
 
-	protected String getUpdateMultiplySQLValues() {
-		if (updateMultiplySQLValues == null) {
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA 
+	protected String getUpdateMultipleSQLValues() {
+		if (updateMultipleSQLValues == null) {
+			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA 
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
@@ -71,7 +71,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			+ QUESTION + COMMA
 			+ QUESTION;
 		}
-		return updateMultiplySQLValues;
+		return updateMultipleSQLValues;
 	}
 
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {

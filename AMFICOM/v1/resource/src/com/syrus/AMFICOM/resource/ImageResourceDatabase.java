@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.16 2005/02/28 15:54:47 max Exp $
+ * $Id: ImageResourceDatabase.java,v 1.17 2005/03/04 19:50:02 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @author $Author: max $
- * @version $Revision: 1.16 $, $Date: 2005/02/28 15:54:47 $
+ * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2005/03/04 19:50:02 $
  * @module resource_v1
  */
 
@@ -66,7 +66,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 
 
 	private static String columns;
-	private static String updateMultiplySQLValues;
+	private static String updateMultipleSQLValues;
     
 	private byte[] retrieveImage(AbstractImageResource abstractImageResource) throws RetrieveObjectException {
 		String absIdStr = DatabaseIdentifier.toSQLString(abstractImageResource.getId());
@@ -142,13 +142,13 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 		return super.getColumns(mode) + columns;
 	}
 
-	protected String getUpdateMultiplySQLValues() {
-		if (updateMultiplySQLValues == null){
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+	protected String getUpdateMultipleSQLValues() {
+		if (updateMultipleSQLValues == null){
+			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION;
 		}
-		return updateMultiplySQLValues;
+		return updateMultipleSQLValues;
 	}
 
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)

@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.113 2005/03/04 13:29:36 bass Exp $
+ * $Id: StorableObjectDatabase.java,v 1.114 2005/03/04 19:50:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.113 $, $Date: 2005/03/04 13:29:36 $
+ * @version $Revision: 1.114 $, $Date: 2005/03/04 19:50:01 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -93,7 +93,7 @@ public abstract class StorableObjectDatabase {
 
 
 	private static String columns;
-	private static String updateMultiplySQLValues;
+	private static String updateMultipleSQLValues;
 	private String retrieveQuery;
 
 	private static List lockedObjectIds; //List <Identifier>
@@ -131,19 +131,19 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	protected String getInsertMultiplySQLValues() {
-		return QUESTION + COMMA + this.getUpdateMultiplySQLValues();
+	protected String getInsertMultipleSQLValues() {
+		return QUESTION + COMMA + this.getUpdateMultipleSQLValues();
 	}
 
-	protected String getUpdateMultiplySQLValues() {
-		if (updateMultiplySQLValues == null) {
-			updateMultiplySQLValues = QUESTION + COMMA
+	protected String getUpdateMultipleSQLValues() {
+		if (updateMultipleSQLValues == null) {
+			updateMultipleSQLValues = QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION;
 		}
-		return updateMultiplySQLValues;
+		return updateMultipleSQLValues;
 	}
 
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
@@ -619,7 +619,7 @@ public abstract class StorableObjectDatabase {
 		String sql = SQL_INSERT_INTO + this.getEnityName() + OPEN_BRACKET
 			+ this.getColumns(MODE_INSERT)
 			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
-			+ this.getInsertMultiplySQLValues()
+			+ this.getInsertMultipleSQLValues()
 			+ CLOSE_BRACKET;
 
 		PreparedStatement preparedStatement = null;
@@ -1026,9 +1026,9 @@ public abstract class StorableObjectDatabase {
 //		}
 
 		String[] cols = this.getColumns(MODE_UPDATE).split(COMMA);
-		// String[] values = this.parseInsertStringValues(this.getUpdateMultiplySQLValues(), cols.length);		
+		// String[] values = this.parseInsertStringValues(this.getUpdateMultipleSQLValues(), cols.length);		
 		// here we can split multyply sql values by COMMA because of it is only QUESTIONS separeted by COMMA
-		String[] values = this.getUpdateMultiplySQLValues().split(COMMA);
+		String[] values = this.getUpdateMultipleSQLValues().split(COMMA);
 		if (cols.length != values.length)
 			throw new UpdateObjectException(this.getEnityName() + "Database.updateEntities | Count of columns ('"+cols.length+"') is not equals count of values ('"+values.length+"')");
 

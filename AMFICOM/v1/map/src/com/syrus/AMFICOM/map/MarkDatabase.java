@@ -1,5 +1,5 @@
 /*
- * $Id: MarkDatabase.java,v 1.14 2005/02/28 14:12:22 bob Exp $
+ * $Id: MarkDatabase.java,v 1.15 2005/03/04 19:50:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/02/28 14:12:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2005/03/04 19:50:01 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public class MarkDatabase extends StorableObjectDatabase {
@@ -43,7 +43,7 @@ public class MarkDatabase extends StorableObjectDatabase {
 
 	private static String columns;
 	
-	private static String updateMultiplySQLValues;
+	private static String updateMultipleSQLValues;
 
 	private Mark fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Mark)
@@ -77,9 +77,9 @@ public class MarkDatabase extends StorableObjectDatabase {
 		return super.getColumns(mode) + columns;
 	}	
 	
-	protected String getUpdateMultiplySQLValues() {
-		if (updateMultiplySQLValues == null){
-			updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
+	protected String getUpdateMultipleSQLValues() {
+		if (updateMultipleSQLValues == null){
+			updateMultipleSQLValues = super.getUpdateMultipleSQLValues() + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -90,7 +90,7 @@ public class MarkDatabase extends StorableObjectDatabase {
 				+ QUESTION
 				+ QUESTION;
 		}
-		return updateMultiplySQLValues;
+		return updateMultipleSQLValues;
 	}
 	
 	
