@@ -272,13 +272,13 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 
 	protected int coord2index(int coord)
 	{
-		return (int)(((double)(coord))/scaleX+.5) + start;
+		return (int)(coord / scaleX + .5) + start;
 	}
 	
 	// бывает также надо знать неокругленное значение координаты
 	protected double coord2indexF(int coord)
 	{
-		return ((double)(coord))/scaleX + start;
+		return coord / scaleX + start;
 	}
 
 	protected int index2coord(int index)
@@ -286,18 +286,17 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 		// FIXME - выяснить, нужен ли (+1) здесь и в value2coord
 		// если нужен - привести в соответствие index2coord и coord2index
 		//return (int)(((double)(index - start))*scaleX+.5)+1;
-		return (int)(((double)(index - start))*scaleX+.5);
+		return (int)((index - start) * scaleX + .5);
 	}
 
 	protected int value2coord(double value)
 	{
 		//return (int)((maxY - value - minY - top)*scaleY+.5)-1;
-		return (int)((maxY - value - minY - top)*scaleY+.5);
+		return (int)((maxY - value - minY - top) * scaleY + .5);
 	}
 
 	protected double coord2value(int coord)
 	{
-		return maxY - minY - top - (double)(coord) / scaleY;
+		return maxY - minY - top - coord / scaleY;
 	}
-
 }
