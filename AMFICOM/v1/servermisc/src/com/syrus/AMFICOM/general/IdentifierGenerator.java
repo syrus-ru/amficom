@@ -54,7 +54,7 @@ public class IdentifierGenerator {
 		ResultSet resultSet = null;
 		try {
 			statement = DatabaseConnection.getConnection().createStatement();
-			Log.debugMessage("IdentifierGenerator.generateMinor | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("IdentifierGenerator.generateMinor | Trying: " + sql, Log.DEBUGLEVEL08);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
 				minor = resultSet.getLong(1);
