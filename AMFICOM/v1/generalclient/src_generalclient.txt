@@ -53,6 +53,7 @@ src/com/syrus/AMFICOM/Client/General/Model/ApplicationModelFactory.java
 src/com/syrus/AMFICOM/Client/General/Model/ApplicationModelListener.java
 src/com/syrus/AMFICOM/Client/General/Model/ApplicationModelListenerList.java
 src/com/syrus/AMFICOM/Client/General/Model/Environment.java
+src/com/syrus/AMFICOM/Client/General/Model/Module.java
 src/com/syrus/AMFICOM/Client/General/Model/Patch.java
 src/com/syrus/AMFICOM/Client/General/Model/Version.java
 src/com/syrus/AMFICOM/Client/General/RISDConnectionInfo.java
