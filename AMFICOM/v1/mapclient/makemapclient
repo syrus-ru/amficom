@@ -3,14 +3,12 @@ HOME=.
 include ..\make.inc
 
 TARGET=$(LIB)\mapclient.jar
-TARGET_CLASS_LIST=src_mapclient.txt
 TARGET_SRC=$(LIBSRC)\mapclientsource.zip
 TARGET_DOC=$(LIBDOC)\mapclientdoc.zip
 
-SERVERCP=$(LIB)\corba.jar;$(LIB)\corbaportable.jar
-CLIENTCP=$(LIB)\util.jar;$(LIB)\generalclient.jar;$(LIB)\general.jar;$(LIB)\administrate.jar;$(LIB)\configuration.jar;$(LIB)\configureclient.jar;$(LIB)\filter.jar;$(LIB)\map.jar
+CLIENTCP=$(LIB)\generalclient.jar;$(LIB)\general.jar
 
-CLASSPATH=$(SERVERCP);$(CLIENTCP);$(LAYOUTCP);$(REPORTCP)
+CLASSPATH=$(CLIENTCP)
 
 .PHONY:	$(TARGET)
 
@@ -26,11 +24,13 @@ impl:
 		-d $(CLASSES) \
 		-classpath $(CLASSPATH) \
 		-sourcepath $(SRC) \
-		@$(TARGET_CLASS_LIST)
+		$(SRC)\com\syrus\AMFICOM\Client\General\Event\MapEvent.java \
+		$(SRC)\com\syrus\AMFICOM\Client\General\Event\MapNavigateEvent.java \
+		$(SRC)\com\syrus\AMFICOM\Client\General\Lang\LangModelMap.java
 
 loc:
 	copy /y \
-		src\com\syrus\AMFICOM\Client\General\Lang\map_ru.properties \
+		$(SRC)\com\syrus\AMFICOM\Client\General\Lang\map_ru.properties \
 		$(CLASSES)\com\syrus\AMFICOM\Client\General\Lang
 
 javadoc:
