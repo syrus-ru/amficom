@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.inc,v 1.9 2004/07/09 14:15:08 bob Exp $
+# $Id: Makefile.inc,v 1.10 2004/07/14 17:57:00 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -181,8 +181,10 @@ SUNJAVACFLAGS +=
 JIKESFLAGS += \
 	+E \
 	+P \
-	+Pall \
-	+Pno-switchcheck \
+	+Pmodifier-order \
+	+Predundant-modifiers \
+	+Pswitchcheck \
+	+Pnaming-convention \
 	+T=2
 JAVAC = $(call pathsearch,jikes$(exesuffix))
 ifeq ($(JAVAC),)
