@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.5 2004/09/17 07:36:42 max Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.6 2004/09/27 12:24:25 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
+import com.syrus.AMFICOM.measurement.Modeling;
 import com.syrus.AMFICOM.measurement.ParameterType;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.AnalysisType;
@@ -52,15 +53,12 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/09/17 07:36:42 $
- * @author $Author: max $
+ * @version $Revision: 1.6 $, $Date: 2004/09/27 12:24:25 $
+ * @author $Author: bob $
  * @module mcm_v1
  */
 
 public final class MCMMeasurementObjectLoader implements MeasurementObjectLoader {
-
-	public MCMMeasurementObjectLoader() {
-	}
 
 	public ParameterType loadParameterType(Identifier id) throws RetrieveObjectException, CommunicationException {
 		ParameterType parameterType = null;
@@ -201,7 +199,12 @@ public final class MCMMeasurementObjectLoader implements MeasurementObjectLoader
 		}
 		return set;
 	}
-
+	
+	
+	public Modeling loadModeling(Identifier id) throws DatabaseException, CommunicationException {
+		throw new UnsupportedOperationException("MCMMeasurementObjectLoader.loadModeling | mcm doesn't need in modeling");		
+	}
+	
 	public MeasurementSetup loadMeasurementSetup(Identifier id) throws RetrieveObjectException, CommunicationException {
 		MeasurementSetup measurementSetup = null;
 		try {
@@ -384,6 +387,10 @@ public final class MCMMeasurementObjectLoader implements MeasurementObjectLoader
         return list;
 	}
     
+	public List loadModelings(List ids) throws DatabaseException, CommunicationException {
+		throw new UnsupportedOperationException("MCMMeasurementObjectLoader.loadModelings | mcm doesn't need in modeling");
+	}
+	
 	public List loadMeasurements(List ids) throws DatabaseException,
 			CommunicationException {
 		MeasurementDatabase database = (MeasurementDatabase)MeasurementDatabaseContext.getMeasurementDatabase();

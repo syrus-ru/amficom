@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementObjectLoader.java,v 1.3 2004/09/15 14:34:00 max Exp $
+ * $Id: MServerMeasurementObjectLoader.java,v 1.4 2004/09/27 12:24:36 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
+import com.syrus.AMFICOM.measurement.Modeling;
 import com.syrus.AMFICOM.measurement.ParameterType;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.AnalysisType;
@@ -52,8 +53,8 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/09/15 14:34:00 $
- * @author $Author: max $
+ * @version $Revision: 1.4 $, $Date: 2004/09/27 12:24:36 $
+ * @author $Author: bob $
  * @module mserver_v1
  */
 
@@ -88,6 +89,10 @@ public class MServerMeasurementObjectLoader implements MeasurementObjectLoader {
 		return new Set(id);
 	}
 
+	public Modeling loadModeling(Identifier id) throws DatabaseException, CommunicationException {
+		throw new UnsupportedOperationException("MServerMeasurementObjectLoader.loadModeling | mserver doesn't need in modeling");		
+	}
+	
 	public MeasurementSetup loadMeasurementSetup(Identifier id) throws DatabaseException {
 		return new MeasurementSetup(id);
 	}
@@ -332,6 +337,11 @@ public class MServerMeasurementObjectLoader implements MeasurementObjectLoader {
         }
         return list;
     }
+    
+    
+	public List loadModelings(List ids) throws DatabaseException, CommunicationException {
+		throw new UnsupportedOperationException("MServerMeasurementObjectLoader.loadModelings | mserver doesn't need in modeling");
+	}
     
     public List loadMeasurements(List ids) throws DatabaseException,
             CommunicationException {
