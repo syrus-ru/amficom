@@ -1,4 +1,17 @@
--- $Id: DROP.sql,v 1.4 2005/02/10 08:47:55 bass Exp $
+-- $Id: DROP.sql,v 1.5 2005/02/18 16:45:56 bass Exp $
+
+-- 11. SchemeCableLink
+PROMPT 11. Dropping table "SchemeCableLink"...;
+DROP TRIGGER "LinkTypeNatureUpdateCheck";
+DROP TRIGGER "SchemeCableLinkUpdateCheck";
+DROP TABLE "SchemeCableLink";
+DROP SEQUENCE "SchemeCableLink_Seq";
+
+-- 10. SchemeLink
+PROMPT 10. Dropping table "SchemeLink"...;
+DROP TRIGGER "SchemeLinkUpdateCheck";
+DROP TABLE "SchemeLink";
+DROP SEQUENCE "SchemeLink_Seq";
 
 -- 09. SchemeCablePort
 PROMPT 09. Dropping table "SchemeCablePort"...;

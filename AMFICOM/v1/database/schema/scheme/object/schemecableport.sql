@@ -1,4 +1,4 @@
--- $Id: schemecableport.sql,v 1.1 2005/02/10 08:47:55 bass Exp $
+-- $Id: schemecableport.sql,v 1.2 2005/02/18 16:45:56 bass Exp $
 
 CREATE TABLE "SchemeCablePort" (
 	id VARCHAR2(32 CHAR) NOT NULL,
@@ -7,6 +7,7 @@ CREATE TABLE "SchemeCablePort" (
 	modified TIMESTAMP NOT NULL,
 	creator_id VARCHAR2(32 CHAR) NOT NULL,
 	modifier_id VARCHAR2(32 CHAR) NOT NULL,
+	version NUMBER(19) NOT NULL,
 --
 	name VARCHAR2(32 CHAR) NOT NULL,
 	description VARCHAR2(256 CHAR),
