@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElementStrategy.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: MapPhysicalNodeElementStrategy.java,v 1.2 2004/10/01 16:36:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 
+import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 
@@ -34,7 +35,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/01 16:36:55 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -83,14 +84,31 @@ public final class MapPhysicalNodeElementStrategy implements  MapStrategy
 
 		if(SwingUtilities.isLeftMouseButton(me))
 		{
-			if ((actionMode != MapState.SELECT_ACTION_MODE) &&
-				(actionMode != MapState.MOVE_ACTION_MODE) )
+			if(mouseMode == MapState.MOUSE_PRESSED)
 			{
-				logicalNetLayer.getMapView().deselectAll();
-//				map.deselectAll();
+				if ((actionMode == MapState.SELECT_ACTION_MODE))
+				{
+					MapElement mel = logicalNetLayer.getCurrentMapElement();
+					if(mel instanceof MapSelection)
+					{
+						MapSelection sel = (MapSelection )mel;
+						sel.add(node);
+					}
+					else
+					{
+						MapSelection sel = new MapSelection(logicalNetLayer);
+						sel.addAll(logicalNetLayer.getSelectedElements());
+						logicalNetLayer.setCurrentMapElement(sel);
+					}
+				}
+				if ((actionMode != MapState.SELECT_ACTION_MODE) &&
+					(actionMode != MapState.MOVE_ACTION_MODE) )
+				{
+					logicalNetLayer.deselectAll();
+				}
+				node.setSelected(true);
 			}
-			node.setSelected(true);
-
+			else
 			if(mouseMode == MapState.MOUSE_DRAGGED)
 			{
 				if (actionMode == MapState.MOVE_ACTION_MODE)
@@ -109,8 +127,7 @@ public final class MapPhysicalNodeElementStrategy implements  MapStrategy
 				else
 				if(actionMode == MapState.FIXDIST_ACTION_MODE)
 				{
-					logicalNetLayer.getMapView().deselectAll();
-//					map.deselectAll();
+					logicalNetLayer.deselectAll();
 					node.setSelected(true);
 
 					if(command == null)

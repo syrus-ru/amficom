@@ -6,13 +6,13 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapAlarmMarker;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapEventMarker;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
 
 import java.util.HashMap;
 
@@ -50,6 +50,8 @@ public final class MapStrategyManager
 			MapUnboundNodeElementStrategy.getInstance());
 		strategyMap.put(VoidMapElement.class,
 			MapVoidElementStrategy.getInstance());
+		strategyMap.put(MapSelection.class,
+			MapSelectionElementStrategy.getInstance());
 	}
 	
 	public static MapStrategy getStrategy(MapElement me)
@@ -59,46 +61,4 @@ public final class MapStrategyManager
 			strategy.setMapElement(me);
 		return strategy;
 	}
-	/*
-		if(me.getClass().equals(MapAlarmMarker.class))
-			return MapAlarmMarkerStrategy.getInstance();
-		else
-		if(me.getClass().equals(MapCablePathElement.class))
-			return MapCablePathElementStrategy.getInstance();
-		else
-		if(me.getClass().equals(MapEventMarker.class))
-			return MapEventMarkerStrategy.getInstance();
-		else
-		if(me.getClass().equals(MapMarkElement.class))
-			return MapMarkElementStrategy.getInstance();
-		else
-		if(me.getClass().equals(MapNodeLinkElement.class))
-			return MapNodeLinkElementStrategy.getInstance();
-		else
-		if(me.getClass().equals(MapMarker.class))
-			return MapMarkerStrategy.getInstance();
-		else
-		if(me.getClass().equals(MapPathElement.class))
-			return MapPathElementStrategy.getInstance();
-		else
-		if(me.getClass().equals(MapPhysicalLinkElement.class))
-			return MapPhysicalLinkElementStrategy.getInstance();
-		else
-		if(me.getClass().equals(MapPhysicalNodeElement.class))
-			return MapPhysicalNodeElementStrategy.getInstance();
-		else
-		if(me.getClass().equals(MapSiteNodeElement.class))
-			return MapSiteNodeElementStrategy.getInstance();
-		else
-		if(me.getClass().equals(MapUnboundNodeElement.class))
-			return MapUnboundNodeElementStrategy.getInstance();
-		else
-		if(me.getClass().equals(VoidMapElement.class))
-			return MapVoidElementStrategy.getInstance();
-//		else
-//		if(me.getClass().equals(.class))
-//			return .getInstance();
-		
-	*/
-	
 }

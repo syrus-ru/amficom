@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.6 2004/09/30 13:38:11 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.7 2004/10/01 16:36:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -65,7 +65,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/09/30 13:38:11 $
+ * @version $Revision: 1.7 $, $Date: 2004/10/01 16:36:55 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -1517,22 +1517,10 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setCurrentMapElement(" + curMapElement + ")");
 		
 		this.currentMapElement = curMapElement;
-	}
 
-	/**
-	 * Определить текущий элемент по координате на карте и установить во 
-	 * внутреннюю переменную класса
-	 */
-	public void updateCurrentMapElement(Point point)
-	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "updateCurrentMapElement(" + point + ")");
-		
-		currentMapElement = getMapElementAtPoint(point);
-
-		if(currentMapElement instanceof VoidMapElement)
+		if(curMapElement instanceof VoidMapElement)
 			return;
-		currentMapElement.setSelected(true);
-
+		curMapElement.setSelected(true);
 		notifyMapEvent(currentMapElement);
 		notifySchemeEvent(currentMapElement);
 		notifyCatalogueEvent(currentMapElement);

@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.6 2004/09/21 14:59:20 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.7 2004/10/01 16:36:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,8 +11,6 @@
 
 package com.syrus.AMFICOM.Client.Map.UI;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
@@ -21,16 +19,15 @@ import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.Client.Map.Popup.MapPopupMenu;
 import com.syrus.AMFICOM.Client.Map.Popup.MapPopupMenuManager;
-import com.syrus.AMFICOM.Client.Map.Popup.SelectionPopupMenu;
 import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategy;
 import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategyManager;
 import com.syrus.AMFICOM.Client.Map.UI.MapNodeLinkSizeField;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
-
 import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
+
 import java.awt.Cursor;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
@@ -51,7 +48,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/09/21 14:59:20 $
+ * @version $Revision: 1.7 $, $Date: 2004/10/01 16:36:55 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -145,10 +142,18 @@ public final class MapMouseListener implements MouseListener
 								return;
 							}
 						}
-					
-					logicalNetLayer.updateCurrentMapElement(me.getPoint());//Устанавливаем текущий объект
-					MapElement mapElement = logicalNetLayer.getCurrentMapElement();
-	
+
+					MapElement mapElement = logicalNetLayer.getMapElementAtPoint(me.getPoint());
+					MapElement curElement = logicalNetLayer.getCurrentMapElement();
+					if(curElement instanceof MapSelection)
+					{
+						mapElement = curElement;
+					}
+					else
+					{
+						logicalNetLayer.setCurrentMapElement(mapElement);
+					}
+
 					if (SwingUtilities.isLeftMouseButton(me))
 					{
 						MapStrategy strategy = MapStrategyManager.getStrategy(mapElement);
@@ -167,11 +172,6 @@ public final class MapMouseListener implements MouseListener
 					{
 						MapPopupMenu contextMenu;
 						
-						List selection = logicalNetLayer.getSelectedElements();
-						//Выводим контекстное меню
-						if(selection.size() > 1)
-							mapElement = new MapSelection(logicalNetLayer);
-
 						contextMenu = MapPopupMenuManager.getPopupMenu(mapElement);
 						if(contextMenu != null)
 						{

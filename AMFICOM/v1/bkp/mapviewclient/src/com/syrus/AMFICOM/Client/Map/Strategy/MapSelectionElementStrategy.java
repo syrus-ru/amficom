@@ -1,5 +1,5 @@
 /**
- * $Id: MapSiteNodeElementStrategy.java,v 1.2 2004/10/01 16:36:55 krupenn Exp $
+ * $Id: MapSelectionElementStrategy.java,v 1.1 2004/10/01 16:36:55 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -14,53 +14,50 @@ package com.syrus.AMFICOM.Client.Map.Strategy;
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-
-import com.syrus.AMFICOM.Client.Map.Command.Action.CreateNodeLinkCommandBundle;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.*;
 
-import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 
 import javax.swing.SwingUtilities;
 
 /**
- * —тратеги€ управлени€ узлом
+ * —тратеги€ управлени€ топологическим узлом
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/01 16:36:55 $
+ * @version $Revision: 1.1 $, $Date: 2004/10/01 16:36:55 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
  */
-public final class MapSiteNodeElementStrategy implements  MapStrategy 
+public final class MapSelectionElementStrategy implements  MapStrategy 
 {
 	LogicalNetLayer logicalNetLayer;
 	ApplicationContext aContext;
 
-	MapSiteNodeElement site;
+	MapSelection sel;
 	Command command;
 
-	private static MapSiteNodeElementStrategy instance = new MapSiteNodeElementStrategy();
+	private static MapSelectionElementStrategy instance = new MapSelectionElementStrategy();
 
-	private MapSiteNodeElementStrategy()
+	private MapSelectionElementStrategy()
 	{
 	}
 
-	public static MapSiteNodeElementStrategy getInstance()
+	public static MapSelectionElementStrategy getInstance()
 	{
 		return instance;
 	}
 	
 	public void setMapElement(MapElement me)
 	{
-		this.site = (MapSiteNodeElement )me;
+		this.sel = (MapSelection )me;
 	}
 
 	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
@@ -74,7 +71,6 @@ public final class MapSiteNodeElementStrategy implements  MapStrategy
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "doContextChanges()");
 		
 		MapState mapState = logicalNetLayer.getMapState();
-		Map map = site.getMap();
 
 		int mouseMode = mapState.getMouseMode();
 		int actionMode = mapState.getActionMode();
@@ -83,29 +79,60 @@ public final class MapSiteNodeElementStrategy implements  MapStrategy
 
 		if(SwingUtilities.isLeftMouseButton(me))
 		{
+			MapElement mel = logicalNetLayer.getMapElementAtPoint(point);
+
 			if(mouseMode == MapState.MOUSE_PRESSED)
 			{
 				if ((actionMode == MapState.SELECT_ACTION_MODE))
 				{
-					MapElement mel = logicalNetLayer.getCurrentMapElement();
-					if(mel instanceof MapSelection)
+					if(mel instanceof VoidMapElement)
 					{
-						MapSelection sel = (MapSelection )mel;
-						sel.add(site);
+						logicalNetLayer.deselectAll();
+						logicalNetLayer.setCurrentMapElement(mel);
 					}
 					else
 					{
-						MapSelection sel = new MapSelection(logicalNetLayer);
-						sel.addAll(logicalNetLayer.getSelectedElements());
-						logicalNetLayer.setCurrentMapElement(sel);
+						if(mel.isSelected())
+						{
+							mel.setSelected(false);
+							sel.remove(mel);
+							if(sel.getElements().size() == 0)
+							{
+								logicalNetLayer.setCurrentMapElement(
+										VoidMapElement.getInstance(
+												logicalNetLayer.getMapView()));
+							}
+							else
+							if(sel.getElements().size() == 1)
+							{
+								logicalNetLayer.setCurrentMapElement(
+									(MapElement )sel.getElements().get(0));
+							}
+						}//if(mel.isSelected()
+						else
+						{
+							mel.setSelected(true);
+							sel.add(mel);
+						}
 					}
 				}
-				if ((actionMode != MapState.SELECT_ACTION_MODE) &&
-					(actionMode != MapState.MOVE_ACTION_MODE) )
+				else
 				{
-					logicalNetLayer.deselectAll();
+					if(mel instanceof VoidMapElement)
+					{
+						logicalNetLayer.deselectAll();
+						logicalNetLayer.setCurrentMapElement(mel);
+					}
+					else
+					{
+						if(!sel.getElements().contains(mel))
+						{
+							logicalNetLayer.deselectAll();
+							logicalNetLayer.setCurrentMapElement(mel);
+							mel.setSelected(true);
+						}
+					}
 				}
-				site.setSelected(true);
 			}
 			else
 			if(mouseMode == MapState.MOUSE_DRAGGED)
@@ -123,12 +150,6 @@ public final class MapSiteNodeElementStrategy implements  MapStrategy
 						command.setParameter(com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle.END_POINT, point);
 					}
 				}//if (actionMode == MapState.MOVE_ACTION_MODE)
-				else
-				if (actionMode == MapState.NULL_ACTION_MODE)
-				{
-					//Ёто используетс€ дл€ рисовани€ линии (NodeLink)
-					mapState.setActionMode(MapState.DRAW_LINES_ACTION_MODE) ;
-				}
 			}//if(mouseMode == MapState.MOUSE_DRAGGED)
 			else
 			if(mouseMode == MapState.MOUSE_RELEASED)
@@ -139,23 +160,8 @@ public final class MapSiteNodeElementStrategy implements  MapStrategy
 					logicalNetLayer.getCommandList().execute();
 					command = null;
 				}//if (actionMode == MapState.MOVE_ACTION_MODE)
-				else
-				if (actionMode == MapState.DRAW_LINES_ACTION_MODE)
-				{
-					mapState.setActionMode(MapState.NULL_ACTION_MODE);
-					if(command == null)
-					{
-						command = new CreateNodeLinkCommandBundle(site);
-						((CreateNodeLinkCommandBundle )command).setLogicalNetLayer(logicalNetLayer);
-					}
-					command.setParameter(CreateNodeLinkCommandBundle.END_POINT, point);
-					logicalNetLayer.getCommandList().add(command);
-					logicalNetLayer.getCommandList().execute();
-					command = null;
-				}//if (actionMode == MapState.DRAW_LINES_ACTION_MODE)
-				mapState.setActionMode(MapState.NULL_ACTION_MODE);
+//				mapState.setActionMode(MapState.NULL_ACTION_MODE);
 			}//if(mouseMode == MapState.MOUSE_RELEASED)
-		}//SwingUtilities.isLeftMouseButton(me)
+		}//if(SwingUtilities.isLeftMouseButton(me))
 	}
 }
-

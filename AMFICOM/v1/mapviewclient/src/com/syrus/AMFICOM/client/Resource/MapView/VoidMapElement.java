@@ -1,5 +1,5 @@
 /**
- * $Id: VoidMapElement.java,v 1.1 2004/09/30 13:38:11 krupenn Exp $
+ * $Id: VoidMapElement.java,v 1.2 2004/10/01 16:36:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/30 13:38:11 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/01 16:36:55 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -88,7 +88,7 @@ public final class VoidMapElement extends StubResource implements MapElement
 
 	public boolean isSelected()
 	{
-		throw new UnsupportedOperationException();
+		return true;
 	}
 
 	public void setSelected(boolean selected)

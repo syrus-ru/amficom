@@ -1,5 +1,5 @@
 /**
- * $Id: MapSelection.java,v 1.4 2004/09/29 15:21:21 krupenn Exp $
+ * $Id: MapSelection.java,v 1.5 2004/10/01 16:36:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,11 +16,13 @@ import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 
 import com.syrus.AMFICOM.Client.Resource.Map.*;
 
+import com.syrus.AMFICOM.Client.Resource.StubResource;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 
 import java.awt.geom.Rectangle2D;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -30,12 +32,13 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/09/29 15:21:21 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/01 16:36:55 $
  * @module
  * @author $Author: krupenn $
  * @see
+ * @todo copy/paste, properties
  */
-public final class MapSelection
+public final class MapSelection extends StubResource
     implements MapElement 
 {
 	protected List elements = new LinkedList();
@@ -65,16 +68,6 @@ public final class MapSelection
 	{
 		this.lnl = lnl;
 		this.map = lnl.getMapView().getMap();
-
-		for(Iterator it = lnl.getSelectedElements().iterator(); it.hasNext();)
-		{
-			MapElement me = (MapElement )it.next();
-			if(me.isSelected())
-				elements.add(me);
-		}
-
-		recalcAnchor();
-		recalcType();
 	}
 
 	public boolean isRemoved()
@@ -92,7 +85,14 @@ public final class MapSelection
 		recalcAnchor();
 		recalcType();
 	}
-	
+
+	public void addAll(Collection coll)
+	{
+		elements.addAll(coll);
+		recalcAnchor();
+		recalcType();
+	}
+
 	public void remove(MapElement me)
 	{
 		elements.remove(me);
