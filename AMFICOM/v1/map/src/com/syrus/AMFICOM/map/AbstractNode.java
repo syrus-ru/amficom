@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractNode.java,v 1.6 2005/01/18 15:42:25 bass Exp $
+ * $Id: AbstractNode.java,v 1.7 2005/01/25 13:13:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/01/18 15:42:25 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/01/25 13:13:51 $
+ * @author $Author: bob $
  * @module map_v1
  */
 public abstract class AbstractNode 
@@ -135,10 +135,6 @@ public abstract class AbstractNode
 		super.currentVersion = super.getNextVersion();
 	}
 
-	public String getDescription() {
-		return this.description;
-	}
-
 	/**
 	 * @deprecated use {@link #location location}.{@link DoublePoint#getY() getY()}
 	 */
@@ -152,9 +148,40 @@ public abstract class AbstractNode
 	public double getLongitude() {
 		return this.location.getX();
 	}
+	
+	protected void setLongitude0(double longitude) {
+		this.location.setLocation(longitude, this.location.getY());
+	}
 
+	protected void setLatitude0(double longitude) {
+		this.location.setLocation(longitude, this.location.getY());
+	}
+
+
+	public String getDescription() {
+		return this.description;
+	}
+	
+	protected void setDescription0(String description) {
+		this.description = description;
+	}
+	
+	public void setDescription(String description) {
+		this.setDescription0(description);
+		super.currentVersion = super.getNextVersion();
+	}
+	
 	public String getName() {
 		return this.name;
+	}
+	
+	protected void setName0(String name) {
+		this.name = name;
+	}
+	
+	public void setName(String name) {
+		this.setName0(name);
+		super.currentVersion = super.getNextVersion();
 	}
 
 	protected void setCharacteristics0(final List characteristics) {
@@ -165,16 +192,6 @@ public abstract class AbstractNode
 	
 	public void setCharacteristics(final List characteristics) {
 		this.setCharacteristics0(characteristics);
-		super.currentVersion = super.getNextVersion();
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-		super.currentVersion = super.getNextVersion();
-	}	
-
-	public void setName(String name) {
-		this.name = name;
 		super.currentVersion = super.getNextVersion();
 	}
 

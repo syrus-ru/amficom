@@ -1,5 +1,5 @@
 /*
- * $Id: MarkDatabase.java,v 1.5 2005/01/17 10:54:59 bob Exp $
+ * $Id: MarkDatabase.java,v 1.6 2005/01/25 13:13:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,31 +32,12 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/01/17 10:54:59 $
+ * @version $Revision: 1.6 $, $Date: 2005/01/25 13:13:51 $
  * @author $Author: bob $
  * @module map_v1
  */
 public class MarkDatabase extends StorableObjectDatabase {
-	 // name VARCHAR2(128),
-    public static final String COLUMN_NAME  = "name";
-    // description VARCHAR2(256),
-    public static final String COLUMN_DESCRIPTION   = "description";
-	// longitude NUMBER(12,6),
-    public static final String COLUMN_LONGITUDE     = "longitude";
-    // latiude NUMBER(12,6),
-    public static final String COLUMN_LATIUDE       = "latiude";
-    // physical_link_id VARCHAR2(32) NOT NULL,
-    public static final String COLUMN_PHYSICAL_LINK_ID      = "physical_link_id";
-    // distance NUMBER(12,6),
-    public static final String COLUMN_DISTANCE      = "distance";
-    // city VARCHAR2(128),
-    public static final String COLUMN_CITY  = "city";
-    // street VARCHAR2(128),
-    public static final String COLUMN_STREET        = "street";
-    // building VARCHAR2(128),
-    public static final String COLUMN_BUILDING      = "building";
-    
-    public static final int SIZE_CITY_COLUMN = 128;
+	 public static final int SIZE_CITY_COLUMN = 128;
     public static final int SIZE_STREET_COLUMN = 128;
     public static final int SIZE_BUILDING_COLUMN = 128;
 
@@ -83,15 +64,15 @@ public class MarkDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null){
 			columns = super.getColumns(mode) + COMMA
-				+ COLUMN_NAME + COMMA
-				+ COLUMN_DESCRIPTION + COMMA
-				+ COLUMN_LONGITUDE + COMMA
-				+ COLUMN_LATIUDE + COMMA
-				+ COLUMN_PHYSICAL_LINK_ID + COMMA
-				+ COLUMN_DISTANCE + COMMA 
-				+ COLUMN_CITY  + COMMA
-				+ COLUMN_STREET + COMMA
-				+ COLUMN_BUILDING;
+				+ MarkWrapper.COLUMN_NAME + COMMA
+				+ MarkWrapper.COLUMN_DESCRIPTION + COMMA
+				+ MarkWrapper.COLUMN_LONGITUDE + COMMA
+				+ MarkWrapper.COLUMN_LATIUDE + COMMA
+				+ MarkWrapper.COLUMN_PHYSICAL_LINK_ID + COMMA
+				+ MarkWrapper.COLUMN_DISTANCE + COMMA 
+				+ MarkWrapper.COLUMN_CITY  + COMMA
+				+ MarkWrapper.COLUMN_STREET + COMMA
+				+ MarkWrapper.COLUMN_BUILDING;
 		}
 		return columns;
 	}	
@@ -157,7 +138,7 @@ public class MarkDatabase extends StorableObjectDatabase {
 				
 		PhysicalLink physicalLink;
 		try {
-			physicalLink = (PhysicalLink) MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PHYSICAL_LINK_ID), true);
+			physicalLink = (PhysicalLink) MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, MarkWrapper.COLUMN_PHYSICAL_LINK_ID), true);
 		} catch (ApplicationException ae) {
 			String msg = this.getEnityName() + "Database.updateEntityFromResultSet | Error " + ae.getMessage();
 			throw new RetrieveObjectException(msg, ae);
@@ -169,15 +150,15 @@ public class MarkDatabase extends StorableObjectDatabase {
 							   DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
-							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
-							   resultSet.getDouble(COLUMN_LONGITUDE),
-							   resultSet.getDouble(COLUMN_LATIUDE),
+							   DatabaseString.fromQuerySubString(resultSet.getString(MarkWrapper.COLUMN_NAME)),
+							   DatabaseString.fromQuerySubString(resultSet.getString(MarkWrapper.COLUMN_DESCRIPTION)),
+							   resultSet.getDouble(MarkWrapper.COLUMN_LONGITUDE),
+							   resultSet.getDouble(MarkWrapper.COLUMN_LATIUDE),
 							   physicalLink,
-							   resultSet.getDouble(COLUMN_DISTANCE),
-							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CITY)),
-							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_STREET)),
-							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_BUILDING)));		
+							   resultSet.getDouble(MarkWrapper.COLUMN_DISTANCE),
+							   DatabaseString.fromQuerySubString(resultSet.getString(MarkWrapper.COLUMN_CITY)),
+							   DatabaseString.fromQuerySubString(resultSet.getString(MarkWrapper.COLUMN_STREET)),
+							   DatabaseString.fromQuerySubString(resultSet.getString(MarkWrapper.COLUMN_BUILDING)));		
 		return mark;
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: Mark.java,v 1.14 2005/01/20 14:44:30 krupenn Exp $
+ * $Id: Mark.java,v 1.15 2005/01/25 13:13:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/01/20 14:44:30 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.15 $, $Date: 2005/01/25 13:13:51 $
+ * @author $Author: bob $
  * @module map_v1
  */
 public class Mark extends AbstractNode implements Characterized {
@@ -245,8 +245,12 @@ public class Mark extends AbstractNode implements Characterized {
 		return this.building;
 	}
 	
-	public void setBuilding(String building) {
+	protected void setBuilding0(String building) {
 		this.building = building;
+	}
+	
+	public void setBuilding(String building) {
+		this.setBuilding0(building);
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -254,8 +258,12 @@ public class Mark extends AbstractNode implements Characterized {
 		return this.city;
 	}
 	
-	public void setCity(String city) {
+	protected void setCity0(String city) {
 		this.city = city;
+	}
+	
+	public void setCity(String city) {
+		this.setCity0(city);
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -263,8 +271,12 @@ public class Mark extends AbstractNode implements Characterized {
 		return this.distance;
 	}
 	
-	public void setDistance(double distance) {
+	protected void setDistance0(double distance) {
 		this.distance = distance;
+	}
+	
+	public void setDistance(double distance) {
+		this.setDistance0(distance);
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -272,17 +284,25 @@ public class Mark extends AbstractNode implements Characterized {
 		return this.physicalLink;
 	}
 	
-	public void setPhysicalLink(PhysicalLink physicalLink) {
+	protected void setPhysicalLink0(PhysicalLink physicalLink) {
 		this.physicalLink = physicalLink;
+	}
+	
+	public void setPhysicalLink(PhysicalLink physicalLink) {
+		this.setPhysicalLink0(physicalLink);
 		super.currentVersion = super.getNextVersion();
 	}
 	
 	public String getStreet() {
 		return this.street;
+	}	
+	
+	protected void setStreet0(String street) {
+		this.street = street;
 	}
 	
 	public void setStreet(String street) {
-		this.street = street;
+		this.setStreet0(street);
 		super.currentVersion = super.getNextVersion();
 	}
 	
