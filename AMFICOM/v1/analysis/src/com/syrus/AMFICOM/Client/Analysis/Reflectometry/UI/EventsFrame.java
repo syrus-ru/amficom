@@ -91,6 +91,7 @@ implements OperationListener
 	{
 		this.dispatcher = dispatcher;
 		dispatcher.register(this, RefChangeEvent.typ);
+		dispatcher.register(this, RefUpdateEvent.typ);
 		dispatcher.register(this, AnalyseApplicationModel.SELECT_NEXT_EVENT);
 		dispatcher.register(this, AnalyseApplicationModel.SELECT_PREVIOUS_EVENT);
 	}
@@ -104,9 +105,9 @@ implements OperationListener
 			if(rce.OPEN)
 			{
 				String id = (String)(rce.getSource());
-				if (id.equals("primarytrace"))
+				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
 				{
-					this.data = ((ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, "primarytrace")).getComplexEvents();
+					this.data = ((ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, RefUpdateEvent.PRIMARY_TRACE)).getComplexEvents();
 					etalon = null;
 					setNoComparedWithEtalonColor();
 					if ((RefAnalysis)Pool.get("refanalysis", id) != null)
@@ -122,6 +123,7 @@ implements OperationListener
 			if(rce.CLOSE)
 			{
 				String id = (String)(rce.getSource());
+
 				if(id.equals(AnalysisUtil.ETALON))
 				{
 					etalon = null;
@@ -140,6 +142,7 @@ implements OperationListener
 			if(rce.OPEN_ETALON)
 			{
 				String etId = (String)rce.getSource();
+
 				if(etId != null)
 					etalon = ((ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, etId)).getComplexEvents();
 				else
@@ -166,7 +169,7 @@ implements OperationListener
 			if (rue.analysisPerformed())
 			{
 				String id = (String)(rue.getSource());
-				if (id.equals("primarytrace"))
+				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
 				{
 					if ((RefAnalysis)Pool.get("refanalysis", id) != null)
 					{
