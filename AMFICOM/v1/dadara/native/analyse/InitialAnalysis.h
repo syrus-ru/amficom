@@ -8,7 +8,7 @@
 //#define USE_NEURAL_NETWORK
 
 #include <stdio.h>
-#include <list>
+//#include <list>
 #include <algorithm>
 
 #include "../Common/EventParams.h"
@@ -16,13 +16,17 @@
 #include "debug.h"
 
 #include "EPList2.h"
-
 //typedef std::list<EventParams> EPLIST;
 
+//#define debug_lines // отрисока вспомогательных линий 
+//---------------------------------------------------------------------------------------------------------------
 class InitialAnalysis  
 {
 public:
-	
+#ifdef debug_lines
+	static const int sz = 1000;
+	int cou; double a[sz], b[sz], xs[sz], xe[sz], col[sz]; //!!! использовалось для отладки при рисованити прямых
+#endif
 	InitialAnalysis(
 		double *data, int data_length,
 		double delta_x,
@@ -35,25 +39,24 @@ public:
 		double formFactor,
 		int reflectiveSize,
 		int nonReflectiveSize);
-	virtual ~InitialAnalysis();
-
-public:
+	~InitialAnalysis();
 	int getEventSize();
 	EventParams **getEventParams();
 	int getEventsCount();
 	double getMeanAttenuation();
 
-private:
+// !!! private:
 	double *data;
 	int     data_length;
 	double  delta_x;
 
 	double *transC;
 	double *transW;
+    double* type; // массив в котором прописаны типы уже распознанных точек 
 	double *noise;
+    double *rnoise; // real noise  в отличие от не пойми-какого noise
 	double *data_woc;
 	EventParams **eps;
-
 //Parameters of the analysis (criteria);
 	double minimalThreshold;
 	double minimalWeld;
@@ -62,32 +65,36 @@ private:
 	double maximalNoise;
 	int	   waveletType;
 	double formFactor;
-
 //Internal parameters;
 	int evSizeC; // характерная ширина отражательного события
 	int evSizeW; // характерная ширина неотражательного события
 	int lastNonZeroPoint;
 	double meanAttenuation; // среднее затухание рефлектограммы
 	EPLIST epVector;
-
 //Analysis functions;
-private:
 	void performAnalysis();
 
 	void correctDataArray();
 	int getLastPoint();
 
+	// вычислить коэфф "a" и "b" прямой y=ax+b, минимизирующей RMS
+    void calc_rms_line(double *arr, int beg, int end, double& a, double& b);// (c) Vit 
+
+	// заполнить массив шума (шум не постоянен, поэтому используем массив для описания значеня шума в каждой точке)
+    void fillNoiseArray(const double *y, int N, int width, double Neff, double noiseLevel, double *outNoise);
 	void getNoise(double *noise, int freq);
 
 	void performTransformation(double *y, int start, int end, double *trans, int freq, double norma);
 	double shiftToZeroAttenuation(double *trans);
 	void setNonZeroTransformation(double *trans, double threshold, int start, int end);
 
+    void setNonZeroTransformation_(double *trans, double threshold, int start, int end);
+
 	void findConnectors(double *transC,	double *transW, int start, int end, EPLIST &vector);
-	void excludeConnectors(EPLIST &vector, double *data, double *data_woc);
+	void excludeAllEvents(EPLIST &vector, double *data, double *data_woc);
 
 	void findWelds(double *trans, EPLIST &vector);
-	void siewLinearParts();
+	void sewLinearParts();
 	void correctWeldCoords();
 
 	void excludeShortEvents(int linearLength, int weldLength, int connectorLength);
@@ -97,6 +104,8 @@ private:
 
 	//void calcEventSize(double level); // unused?
 	void correctConnectorCoords(); // unused?
+    void correctAllConnectorsFronts(double *arr, EPLIST &evnts);// (c) Vit
+    void excludeShortLinesBetweenConnectors(double* data, EPLIST &epVector, int evSizeC);// (c) Vit
 	void excludeNonRecognizedEvents(); // unused -- NN
 
 //Wavelet constants;
@@ -125,4 +134,3 @@ private:
 };
 
 #endif // !defined(AFX_INITIALANALYSIS_H__017F9246_0344_404F_8231_CC3B33AB54DA__INCLUDED_)
-
