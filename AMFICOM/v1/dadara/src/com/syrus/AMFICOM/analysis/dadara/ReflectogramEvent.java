@@ -1,8 +1,8 @@
 /**
  * ReflectogramEvent.java
  * 
- * @version $Revision: 1.2 $, $Date: 2004/12/17 18:16:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2004/12/20 13:54:50 $
+ * @author $Author: saa $
  * @module general_v1
  */
 
@@ -28,7 +28,7 @@ import java.io.IOException;
 public class ReflectogramEvent
 {
     //private static final long serialVersionUID = 8468909716459300200L;
-    private static final long signature = 8468920041210182200L;
+    private static final long SIGNATURE = 8468920041210182200L;
     
     // event types
 	public static final int RESERVED_VALUE = -1; // заведомо не использующеес€ значение
@@ -39,30 +39,30 @@ public class ReflectogramEvent
 
 	// store flags for int vars
 	private static final int STORE_MASK_INT		= 0xff;
-	private static final int STORE_linkFlags	= 0x01;
+	private static final int STORE_LINK_FLAGS	= 0x01;
 
 	// store flags for long vars
 	private static final int STORE_MASK_LONG	= 0xff00;
 
 	// store flags for double vars
 	private static final int STORE_MASK_DOUBLE	= 0xff0000;
-	private static final int STORE_yB			= 0x010000;
-	private static final int STORE_yE			= 0x020000;
-	private static final int STORE_aLet			= 0x040000;
-	private static final int STORE_asympY0		= 0x080000;
-	private static final int STORE_asympY1		= 0x100000;
-	private static final int STORE_mloss		= 0x200000;
+	private static final int STORE_YB			= 0x010000;
+	private static final int STORE_YE			= 0x020000;
+	private static final int STORE_A_LET		= 0x040000;
+	private static final int STORE_ASYMP_Y0		= 0x080000;
+	private static final int STORE_ASYMP_Y1		= 0x100000;
+	private static final int STORE_MLOSS		= 0x200000;
 
 	private static final int STORE_FLAGS
-		= STORE_yB
-		| STORE_yE
-		| STORE_aLet
-		| STORE_asympY0
-		| STORE_asympY1
-		| STORE_mloss
-		| STORE_linkFlags;
+		= STORE_YB
+		| STORE_YE
+		| STORE_A_LET
+		| STORE_ASYMP_Y0
+		| STORE_ASYMP_Y1
+		| STORE_MLOSS
+		| STORE_LINK_FLAGS;
 
-	private static int LINK_FIXLEFT = ModelFunction.LINK_FIXLEFT;
+	private static final int LINK_FIXLEFT = ModelFunction.LINK_FIXLEFT;
 
 	private int begin; // начальна€ точка
 	private int end; // последн€€ точка включительно: длина = end - begin + 1
@@ -70,7 +70,7 @@ public class ReflectogramEvent
 	private int thresholdType; // тип дл€ маски (как задано)
 	private ModelFunction mf;
 	private int linkFlags;
-	private double delta_x = 1.; // XXX
+	private double deltaX = 1.; // XXX
 
 	private FittingParameters fittingParameters;
 
@@ -121,8 +121,8 @@ public class ReflectogramEvent
 		ModelFunction ret;
 		if (thresholdType == ReflectogramEvent.LINEAR && false) // true приведет к тому, что пороги окажутс€ вне мф
 		{
-			ret = ModelFunction.CreateLinear();
-			ret.SetAsLinear(begin, yB, end, yE); // NB: needs yB, yE
+			ret = ModelFunction.createLinear();
+			ret.setAsLinear(begin, yB, end, yE); // NB: needs yB, yE
 		}
 		else
 			ret = mf.copy();
@@ -201,13 +201,13 @@ public class ReflectogramEvent
 
 	public void setDeltaX(double delta_x)
 	{
-		this.delta_x = delta_x;
+		this.deltaX = delta_x;
 		updated();
 	}
 
 	public double getDeltaX()
 	{
-		return this.delta_x;
+		return this.deltaX;
 	}
 
 	// можно вызывать только после doFit()
@@ -233,7 +233,7 @@ public class ReflectogramEvent
 
 	public double getWidth0()
 	{
-		return (end - begin) * delta_x;
+		return (end - begin) * deltaX;
 	}
 
 	/*
@@ -401,7 +401,7 @@ public class ReflectogramEvent
 			//System.out.println("lin fit");
 			// лин. аппроксимаци€ дл€ лин. событий
 			// (this.mf не об€зательно линейна, это м б ломана€)
-			ModelFunction lin = ModelFunction.CreateLinear();
+			ModelFunction lin = ModelFunction.createLinear();
 			lin.fit(fP.y, begin, end, 0, 0.0);
 			yB = lin.fun(begin);
 			yE = lin.fun(end);
@@ -453,7 +453,7 @@ public class ReflectogramEvent
 		ret.begin = begin;
 		ret.end = end;
 		ret.mf = null;
-		ret.delta_x = delta_x;
+		ret.deltaX = deltaX;
 		ret.mloss = mloss;
 		ret.aLet = aLet;
 		ret.asympY0 = asympY0;
@@ -501,12 +501,12 @@ public class ReflectogramEvent
 	// byte array presentation functions are untested
 	public void writeToDOS(DataOutputStream dos) throws IOException
 	{
-	    dos.writeLong(signature);
+	    dos.writeLong(SIGNATURE);
 		dos.writeInt(begin);
 		dos.writeInt(end);
 		dos.writeInt(eventType);
 		dos.writeInt(thresholdType);
-		dos.writeDouble(delta_x);
+		dos.writeDouble(deltaX);
 		mf.writeToDOS(dos);
 		dos.writeInt(STORE_FLAGS);
 		int i;
@@ -517,25 +517,25 @@ public class ReflectogramEvent
 
 			switch (i)
 			{
-			case STORE_yB:
+			case STORE_YB:
 			    dos.writeDouble(yB);
 				break;
-			case STORE_yE:
+			case STORE_YE:
 			    dos.writeDouble(yE);
 				break;
-			case STORE_aLet:
+			case STORE_A_LET:
 			    dos.writeDouble(aLet);
 				break;
-			case STORE_mloss:
+			case STORE_MLOSS:
 			    dos.writeDouble(mloss);
 				break;
-			case STORE_asympY0:
+			case STORE_ASYMP_Y0:
 			    dos.writeDouble(asympY0);
 				break;
-			case STORE_asympY1:
+			case STORE_ASYMP_Y1:
 			    dos.writeDouble(asympY1);
 				break;
-			case STORE_linkFlags:
+			case STORE_LINK_FLAGS:
 			    dos.writeInt(linkFlags);
 				break;
 			}
@@ -554,7 +554,7 @@ public class ReflectogramEvent
 	private void readFromDIS(DataInputStream dis) throws IOException, SignatureMismatchException
 	{
 	    long tsig = dis.readLong();
-	    if (tsig != signature)
+	    if (tsig != SIGNATURE)
 	    {
 	        throw new SignatureMismatchException();
 	    }
@@ -562,7 +562,7 @@ public class ReflectogramEvent
 		end = dis.readInt();
 		eventType = dis.readInt();
 		thresholdType = dis.readInt();
-		delta_x = dis.readDouble();
+		deltaX = dis.readDouble();
 		mf = ModelFunction.createFromDIS(dis);
 		int flags = dis.readInt();
 		int i;
@@ -581,25 +581,25 @@ public class ReflectogramEvent
 			        td = dis.readDouble();
 				switch (i)
 				{
-				case STORE_yB:
+				case STORE_YB:
 					yB = td;
 					break;
-				case STORE_yE:
+				case STORE_YE:
 					yE = td;
 					break;
-				case STORE_aLet:
+				case STORE_A_LET:
 					aLet = td;
 					break;
-				case STORE_mloss:
+				case STORE_MLOSS:
 					mloss = td;
 					break;
-				case STORE_asympY0:
+				case STORE_ASYMP_Y0:
 					asympY0 = td;
 					break;
-				case STORE_asympY1:
+				case STORE_ASYMP_Y1:
 					asympY1 = td;
 					break;
-				case STORE_linkFlags:
+				case STORE_LINK_FLAGS:
 					linkFlags = ti;
 				}
 			}
@@ -712,25 +712,6 @@ public class ReflectogramEvent
 		if (y != null)
 			setDefaultThreshold(y);
 		cacheThresholdInvalidate();
-	}
-
-	// выставл€ет порог, рекомендуемый дл€ рефлектограммы
-	public void setDefaultThreshold_old2(double[] y)
-	{
-		// составл€юща€, соответствующа€ оценке шума
-		// основана на разнице модельной функции событи€ и р/г
-		double noiseDev = Math.max(getMaxDeviation(y) * 0.5,
-				getRMSDeviation(y) * 3.0); // XXX
-
-		// составл€юща€, соответствующа€ разнице базовой мф порога
-		// и р/г
-		ModelFunction base = getThresholdBaseMF();
-		double[] dif = ReflectogramMath.getMaxDifPM(y, base, begin, end);
-		threshold.initFromDY(
-				dif[0] - noiseDev * 2,
-				dif[0] - noiseDev,
-				dif[1] + noiseDev,
-				dif[1] + noiseDev * 2);
 	}
 
 	private int activeLinkFlags()

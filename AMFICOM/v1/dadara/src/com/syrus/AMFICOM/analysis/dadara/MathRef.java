@@ -46,7 +46,7 @@ public class MathRef
 
 	public static double getLinearStartPoint (double[] y)
 	{
-		double[] res = LSA (y, 0, y.length - 1);
+		double[] res = calcLSA (y, 0, y.length - 1);
 		return res[1];
 	}
 
@@ -160,12 +160,12 @@ public class MathRef
 	}
 	*/
 
-	public static double[] LSA(double[] y, int begin, int end)
+	public static double[] calcLSA(double[] y, int begin, int end)
 	{
-		return LSA(y, begin, end, 0);
+		return calcLSA(y, begin, end, 0);
 	}
 
-	public static double[] LSA(double[] y, int begin, int end, int shift)
+	public static double[] calcLSA(double[] y, int begin, int end, int shift)
 	{
 		double alfa=0d;
 		double beta=0d;
@@ -195,18 +195,18 @@ public class MathRef
 		return res;
 	}
 
-	public static double ORL (double[] y, int begin, int end)
+	public static double calcORL (double[] y, int begin, int end)
 	{
-		return ORL (y[begin], y[end]);
+		return calcORL (y[begin], y[end]);
 	}
 
-	public static double ORL (double y1, double y2)
+	public static double calcORL (double y1, double y2)
 	{
 		if (y1 == y2)
 			return 0;
-		double S = 0.001;
+		double s = 0.001;
 		double loss = y1 - y2;
-		return (-10*Math.log(S/2d *(1d - Math.exp(-2d*0.23*Math.abs(loss))))/Math.log(10));
+		return (-10*Math.log(s/2d *(1d - Math.exp(-2d*0.23*Math.abs(loss))))/Math.log(10));
 	}
 
 	// вычислить сигму для отражения
@@ -218,7 +218,7 @@ public class MathRef
 		
 		// XXX: приблизительные расчет, предполагающий стандартное волокно
 		double sigma0;
-		double Vg = 3e8 / 1.47 * 1e-9; // м/нс
+		double vG = 3e8 / 1.47 * 1e-9; // м/нс
 		switch (wavelength)
 		{
 			//case 1310: sigma = 49d; break;
@@ -235,7 +235,7 @@ public class MathRef
 		if (pulsewidth == 0)
 			pulsewidth = 1000; // XXX
 		//return sigma + Math.log(1000d/(double)pulsewidth) / Math.log(10d);
-		return sigma0 + Math.log(Vg / (double)pulsewidth) / Math.log(10d);
+		return sigma0 + Math.log(vG / (double)pulsewidth) / Math.log(10d);
 	}
 
 	// вычислить отражение

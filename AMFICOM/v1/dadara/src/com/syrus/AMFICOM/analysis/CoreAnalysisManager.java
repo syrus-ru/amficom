@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.2 2004/12/17 18:16:20 arseniy Exp $
+ * $Id: CoreAnalysisManager.java,v 1.3 2004/12/20 13:54:50 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,8 @@
 package com.syrus.AMFICOM.analysis;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.2 $, $Date: 2004/12/17 18:16:20 $
+ * @author $Author: saa $
+ * @version $Revision: 1.3 $, $Date: 2004/12/20 13:54:50 $
  * @module
  */
 
@@ -87,26 +87,26 @@ public class CoreAnalysisManager
 		}
 	}
 
-	public static double[] calcGaussian(double[] y, int max_index) {
+	public static double[] calcGaussian(double[] y, int maxIndex) {
 		double[] gauss = new double[y.length];
 		int width = 0;
 
-		double max_value = y[max_index];
+		double maxValue = y[maxIndex];
 
-		max_value *= .2;
+		maxValue *= .2;
 		for (int i = 0; i < y.length; i++)
-			if (y[i] > max_value)
+			if (y[i] > maxValue)
 				width++;
-		max_value /= .2;
+		maxValue /= .2;
 
-		double[] d = gauss(y, max_index, max_value, width);
+		double[] d = gauss(y, maxIndex, maxValue, width);
 		double center = d[0];
-		max_value = d[1];
-		double sigma_squared = d[2] * d[2];
+		maxValue = d[1];
+		double sigmaSquared = d[2] * d[2];
 
 		for (int i = 0; i < gauss.length; i++)
-			gauss[i] = max_value
-					* Math.exp(-(i - center) * (i - center) / sigma_squared);
+			gauss[i] = maxValue
+					* Math.exp(-(i - center) * (i - center) / sigmaSquared);
 
 		return gauss;
 	}
@@ -149,20 +149,20 @@ public class CoreAnalysisManager
 	{
 	    // достаем данные
 	    double y[] = bs.getTraceData();
-	    double delta_x = bs.getResolution(); // метры
+	    double deltaX = bs.getResolution(); // метры
 
 		int reflSize = ReflectogramMath.getReflectiveEventSize(y, 0.5);
 		int nReflSize = ReflectogramMath.getNonReflectiveEventSize(
 				y,
 				1000,
 				bs.getIOR(),
-				delta_x);
+				deltaX);
 		if (nReflSize > 3 * reflSize / 5)
 			nReflSize = 3 * reflSize / 5;
 
 		// формирование событий
 		double[] meanAttenuation = { 0 }; // storage for meanAttenuation -- unused: XXX
-		ReflectogramEvent[] ep = analyse2((int) pars[7], y, delta_x, pars[5],
+		ReflectogramEvent[] ep = analyse2((int) pars[7], y, deltaX, pars[5],
 				pars[0], pars[4], pars[3], pars[1], pars[2], meanAttenuation,
 				reflSize, nReflSize);
 
@@ -171,7 +171,7 @@ public class CoreAnalysisManager
 
 		// установка параметров фитировки и фитировка
 		// (с определением параметров нужных для расчета потерь и отражения)
-		fitTrace(y, delta_x, ep, strategy, meanAttenuation[0], noiseLevel);
+		fitTrace(y, deltaX, ep, strategy, meanAttenuation[0], noiseLevel);
 
 		// определение параметров потерь и отражения (по смежным событиям)
 		ReflectogramEvent.calcMutualParameters(ep, y);

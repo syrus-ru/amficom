@@ -18,6 +18,18 @@ APPCLASSPATH = $(LIBDIR)/util.jar
 	-extdirs $(JAVA_HOME)/jre/lib/ext \
 	-g
 
+JAVAC=jikes
+JAVACFLAGS := -O \
+	+E \
+	+P \
+	+Pno-switchcheck \
+	+T=2 \
+	-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar \
+	-d $(CLASSDIR) \
+	-deprecation \
+	-extdirs $(JAVA_HOME)/jre/lib/ext \
+	-g
+
 JAVAH := javah
 JAVAH_FLAGS := \
 	-classpath $(CLASSDIR) \
@@ -53,7 +65,7 @@ $(LIBNAME):	.mach
 	touch $@
 
 $(CLASSDIR):
-	mkdir -p $@
+	mkdir $@
 
 
 clean:	cleanmach cleanhead
