@@ -4,6 +4,8 @@
 
 #include "EventParams.h"
 
+//#define DEBUG_EPCF
+
 #include <stdio.h>
 
 //////////////////////////////////////////////////////////////////////
@@ -64,7 +66,7 @@ EventParams::EventParams() {
 }
 
 EventParams::~EventParams() {
-	printf("deleting for n == %d\n", this->n);
+//	printf("deleting for n == %d\n", this->n);
 }
 
 void EventParams::operator = (const EventParams& ep) {
@@ -117,6 +119,14 @@ int EventParams::operator < (const EventParams& ep) {
 		return 1;
 	else
 		return 0;
+}
+
+int EventParams::operator == (const EventParams* ep) {
+	if (this->n == ep->n)
+		return 1;
+	else
+		return 0;
+	
 }
 
 int EventParams::operator == (const EventParams& ep) {
@@ -291,8 +301,16 @@ double EventParams::connectorFunction(double A1_,
       			}
       			else
 	    			ret = 0.;
-
-     return ret;
+#ifdef DEBUG_EPCF
+	{
+		static FILE *epcf;
+		if (!epcf) epcf=fopen("c:\\epcf.log","a");
+		fprintf(epcf,"DBG_CF: %g %g\n", (double)x, (double)ret);
+		fflush (epcf);
+		// fclose(epcf) will not be made
+	}
+#endif
+	return ret;
 }
 
 
@@ -328,3 +346,4 @@ double EventParams::linearFunction(double A_base_, double k_, int x_) {
 	ret = A_base_ + k_*arg;
 	return ret;
 }
+

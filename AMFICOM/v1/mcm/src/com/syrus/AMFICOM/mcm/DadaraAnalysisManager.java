@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.9 2004/07/28 16:02:00 arseniy Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.10 2004/07/28 16:19:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.Threshold;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.measurement.MeasurementObjectTypePool;
 import com.syrus.AMFICOM.measurement.ParameterType;
 import com.syrus.AMFICOM.measurement.SetParameter;
@@ -36,7 +37,7 @@ import java.text.SimpleDateFormat;
 import java.io.FileOutputStream;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/07/28 16:02:00 $
+ * @version $Revision: 1.10 $, $Date: 2004/07/28 16:19:14 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -98,7 +99,9 @@ public class DadaraAnalysisManager implements AnalysisManager, EvaluationManager
 														 double dadaraMinLevelToFindEnd,
 														 double dadaraMinWeld,
 														 double dadaraMinConnector,
-														 int dadaraStrategy);       
+														 int dadaraStrategy,
+														 int reflectiveSize,
+														 int nonReflectiveSize);       
 
 	public SetParameter[] analyse() throws AnalysisException {
 		byte[] rawData = (byte[])this.parameters.get(CODENAME_REFLECTOGRAMMA);
@@ -147,6 +150,14 @@ catch (IOException ioe) {
 			Log.errorException(ioe);
 			throw new AnalysisException("Cannot get some of analysis criteria", ioe);
 		}
+
+		int reflSize = ReflectogramMath.getReflectiveEventSize(reflectogramma, 0.5);
+		int nReflSize = ReflectogramMath.getNonReflectiveEventSize(reflectogramma,
+																															 1000,
+																															 ((double)bs.fxdParams.GI) / 100000d,
+																															 dx);
+		if (nReflSize > 3 * reflSize / 5)
+			nReflSize = 3 * reflSize / 5;
 //-------------------------------------------------------------
 Log.debugMessage("$$$$$$$$$ DadaraAnalysisManager.analyse:", Log.DEBUGLEVEL05);
 Log.debugMessage("$$$$$$$$$ Number of points: " + reflectogramma.length, Log.DEBUGLEVEL05);
@@ -160,6 +171,8 @@ Log.debugMessage("$$$$$$$$$ dadaraMinLevelToFindEnd == " + dadaraMinLevelToFindE
 Log.debugMessage("$$$$$$$$$ dadaraMinWeld == " + dadaraMinWeld, Log.DEBUGLEVEL05);
 Log.debugMessage("$$$$$$$$$ dadaraMinConnector == " + dadaraMinConnector, Log.DEBUGLEVEL05);
 Log.debugMessage("$$$$$$$$$ dadaraStrategy == " + dadaraStrategy, Log.DEBUGLEVEL05);
+Log.debugMessage("$$$$$$$$$ reflSize == " + reflSize, Log.DEBUGLEVEL05);
+Log.debugMessage("$$$$$$$$$ nReflSize == " + nReflSize, Log.DEBUGLEVEL05);
 //-------------------------------------------------------------
 		double[] tmp = ana(dadaraTactic,
 											 reflectogramma,
@@ -170,7 +183,9 @@ Log.debugMessage("$$$$$$$$$ dadaraStrategy == " + dadaraStrategy, Log.DEBUGLEVEL
 											 dadaraMinLevelToFindEnd,
 											 dadaraMinWeld,
 											 dadaraMinConnector,
-											 dadaraStrategy);
+											 dadaraStrategy,
+											 reflSize,
+											 nReflSize);
 		int nEvents = tmp.length / ReflectogramEvent.NUMBER_OF_PARAMETERS;
 		ReflectogramEvent[] revents = new ReflectogramEvent[nEvents];
 		for(int i = 0; i < nEvents; i++) {

@@ -64,3 +64,4 @@ double Histogramm::getMaximumValue()
 	int max_index = getMaximumIndex();
 	return down_limit + (max_index + .5) * deriv_delta;
 }
+
