@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.16 2005/03/21 17:05:38 bob Exp $
+ * $Id: Environment.java,v 1.17 2005/03/22 10:43:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,13 +25,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.logging.*;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.metal.*;
 
 /**
  * Класс Environment используется для хранения общей для приложения информации.
  * 
  * @author $Author: bob $
- * @version $Revision: 1.16 $, $Date: 2005/03/21 17:05:38 $
+ * @version $Revision: 1.17 $, $Date: 2005/03/22 10:43:14 $
  * @module generalclient_v1
  */
 public final class Environment
@@ -214,6 +215,8 @@ public final class Environment
 		
 		
 		UIManager.put(ResourceKeys.INSETS_NULL, new Insets(0, 0, 0, 0));
+		
+		UIManager.put(ResourceKeys.TABLE_NO_FOCUS_BORDER, new EmptyBorder(1, 2, 1, 2));
 	}
 
 	public static String getDomainId()
