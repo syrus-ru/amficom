@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.21 2004/12/21 17:12:58 arseniy Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.22 2005/01/19 20:56:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,16 +14,17 @@ import java.util.List;
 import java.util.ArrayList;
 import java.io.IOException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.GeneralDatabaseContext;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.ParameterTypeDatabase;
+import com.syrus.AMFICOM.general.ParameterTypeCodenames;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.Threshold;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
-import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
-import com.syrus.AMFICOM.measurement.ParameterType;
-import com.syrus.AMFICOM.measurement.ParameterTypeDatabase;
 import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.Analysis;
@@ -38,15 +39,17 @@ import com.syrus.util.Log;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.io.FileOutputStream;
-import com.syrus.AMFICOM.measurement.ParameterTypeCodenames;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/12/21 17:12:58 $
+ * @version $Revision: 1.22 $, $Date: 2005/01/19 20:56:53 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
 
 public class DadaraAnalysisManager implements AnalysisManager, EvaluationManager {
+/**
+ * @todo Use ParameterTypeCodenames
+ */
 	public static final String CODENAME_REFLECTOGRAMMA = "reflectogramma";
 //	public static final String CODENAME_DADARA_TACTIC = "ref_uselinear";
 //	public static final String CODENAME_DADARA_EVENT_SIZE = "ref_eventsize";
@@ -182,8 +185,7 @@ catch (IOException ioe) {
 	{
 		ParameterType parTypEventArray = null;
 		try {
-			parTypEventArray = (ParameterType)MeasurementStorableObjectPool
-			.getStorableObject((Identifier)outParameterTypeIds.get(CODENAME_DADARA_EVENT_ARRAY), true);
+			parTypEventArray = (ParameterType)GeneralStorableObjectPool.getStorableObject((Identifier)outParameterTypeIds.get(CODENAME_DADARA_EVENT_ARRAY), true);
 		}
 		catch (ApplicationException ae) {
 			throw new AnalysisException("Cannot find parameter type of codename: '"
@@ -412,7 +414,7 @@ catch (IOException ioe) {
 		{
 			ParameterType parTypAlarmArray = null;
 			try {
-				parTypAlarmArray = (ParameterType)MeasurementStorableObjectPool.getStorableObject((Identifier)outParameterTypeIds.get(CODENAME_DADARA_ALARM_ARRAY), true);
+				parTypAlarmArray = (ParameterType)GeneralStorableObjectPool.getStorableObject((Identifier)outParameterTypeIds.get(CODENAME_DADARA_ALARM_ARRAY), true);
 			}
 			catch (ApplicationException ae) {
 				throw new EvaluationException("Cannot find parameter type of codename: '" + CODENAME_DADARA_ALARM_ARRAY + "' -- " + ae.getMessage(), ae);
@@ -449,13 +451,13 @@ catch (IOException ioe) {
 	}
 
 	private static void addOutParameterTypeId(String codename) {
-		ParameterTypeDatabase parameterTypeDatabase = ((ParameterTypeDatabase)MeasurementDatabaseContext.getParameterTypeDatabase());
+		ParameterTypeDatabase parameterTypeDatabase = ((ParameterTypeDatabase)GeneralDatabaseContext.getParameterTypeDatabase());
 		try {
 			ParameterType parameterType = parameterTypeDatabase.retrieveForCodename(codename);
 			Identifier id = parameterType.getId();
 			if (! outParameterTypeIds.containsKey(codename)) {
 				outParameterTypeIds.put(codename, id);
-				MeasurementStorableObjectPool.putStorableObject(parameterType);
+				GeneralStorableObjectPool.putStorableObject(parameterType);
 			}
 			else
 				Log.errorMessage("Out parameter type of codename '" + codename + "' already added to map; id: '" + parameterType.getId() + "'");

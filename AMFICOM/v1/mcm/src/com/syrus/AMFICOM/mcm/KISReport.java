@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.23 2005/01/12 13:34:57 arseniy Exp $
+ * $Id: KISReport.java,v 1.24 2005/01/19 20:56:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,25 +11,26 @@ package com.syrus.AMFICOM.mcm;
 import java.util.Map;
 import java.util.HashMap;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.ParameterTypeCodenames;
+import com.syrus.AMFICOM.general.ParameterTypeDatabase;
+import com.syrus.AMFICOM.general.GeneralDatabaseContext;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
-import com.syrus.AMFICOM.measurement.ParameterType;
-import com.syrus.AMFICOM.measurement.ParameterTypeCodenames;
-import com.syrus.AMFICOM.measurement.ParameterTypeDatabase;
 import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/01/12 13:34:57 $
+ * @version $Revision: 1.24 $, $Date: 2005/01/19 20:56:53 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
 
-public class KISReport implements ParameterTypeCodenames {
+public class KISReport {
 	private static Map outParameterTypeIds;	//Map <String parameterTypeCodename, Identifier parameterId>
 
 	private Identifier measurementId;
@@ -56,7 +57,7 @@ public class KISReport implements ParameterTypeCodenames {
 			SetParameter[] parameters = new SetParameter[this.parameterCodenames.length];
 			ParameterType parameterType;
 			for (int i = 0; i < parameters.length; i++) {
-				parameterType = (ParameterType)MeasurementStorableObjectPool.getStorableObject((Identifier)outParameterTypeIds.get(this.parameterCodenames[i]), true);
+				parameterType = (ParameterType)GeneralStorableObjectPool.getStorableObject((Identifier)outParameterTypeIds.get(this.parameterCodenames[i]), true);
 				parameters[i] = SetParameter.createInstance(parameterType, this.parameterValues[i]);
 			}
 
@@ -78,13 +79,13 @@ public class KISReport implements ParameterTypeCodenames {
 	}
 
 	private static void addOutParameterTypeId(String codename) {
-		ParameterTypeDatabase parameterTypeDatabase = ((ParameterTypeDatabase)MeasurementDatabaseContext.getParameterTypeDatabase());
+		ParameterTypeDatabase parameterTypeDatabase = ((ParameterTypeDatabase)GeneralDatabaseContext.getParameterTypeDatabase());
 		try {
 			ParameterType parameterType = parameterTypeDatabase.retrieveForCodename(codename);
 			Identifier id = parameterType.getId();
 			if (! outParameterTypeIds.containsKey(codename)) {
 				outParameterTypeIds.put(codename, id);
-				MeasurementStorableObjectPool.putStorableObject(parameterType);
+				GeneralStorableObjectPool.putStorableObject(parameterType);
 			}
 			else
 				Log.errorMessage("Out parameter type of codename '" + codename + "' already added to map; id: '" + parameterType.getId() + "'");

@@ -1,5 +1,5 @@
 /*
-* $Id: MCMAdministrationObjectLoader.java,v 1.1 2005/01/17 09:02:19 bob Exp $
+* $Id: MCMAdministrationObjectLoader.java,v 1.2 2005/01/19 20:56:53 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -11,10 +11,9 @@ package com.syrus.AMFICOM.mcm;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import com.syrus.AMFICOM.administration.AdministrationDatabaseContext;
-import com.syrus.AMFICOM.administration.AdministrationObjectLoader;
+import com.syrus.AMFICOM.administration.DatabaseAdministrationObjectLoader;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.DomainDatabase;
 import com.syrus.AMFICOM.administration.MCM;
@@ -31,7 +30,6 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
@@ -39,11 +37,11 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/17 09:02:19 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/01/19 20:56:53 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
-final class MCMAdministrationObjectLoader implements AdministrationObjectLoader {
+final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLoader {
 
 	public User loadUser(Identifier id) throws RetrieveObjectException, CommunicationException {
 		User user = null;
@@ -337,85 +335,6 @@ final class MCMAdministrationObjectLoader implements AdministrationObjectLoader 
 			throw new DatabaseException("MCMConfigurationObjectLoader.loadKISs | Illegal Storable Object: " + e.getMessage());
 		}
 		return list;
-	}
-
-	public List loadUsersButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
-			CommunicationException {
-		// TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public List loadDomainsButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
-			CommunicationException {
-		// TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public List loadServersButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
-			CommunicationException {
-		// TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public List loadMCMsButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
-			CommunicationException {
-		// TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveUser(User user, boolean force) throws DatabaseException, CommunicationException {
-		// TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveDomain(Domain domain, boolean force) throws DatabaseException, CommunicationException {
-		// TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveServer(Server server, boolean force) throws DatabaseException, CommunicationException {
-		// TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveMCM(MCM mcm, boolean force) throws DatabaseException, CommunicationException {
-		// TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveUsers(List list, boolean force) throws DatabaseException, CommunicationException {
-		// TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveDomains(List list, boolean force) throws DatabaseException, CommunicationException {
-		// TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveServers(List list, boolean force) throws DatabaseException, CommunicationException {
-		// TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void saveMCMs(List list, boolean force) throws DatabaseException, CommunicationException {
-		// TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public Set refresh(Set storableObjects) throws CommunicationException, DatabaseException {
-		// TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void delete(Identifier id) throws CommunicationException, DatabaseException {
-		// TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
-	}
-
-	public void delete(List ids) throws CommunicationException, DatabaseException {
-		// TODO method isn't complete
-		throw new UnsupportedOperationException("method isn't complete");
 	}
 
 }

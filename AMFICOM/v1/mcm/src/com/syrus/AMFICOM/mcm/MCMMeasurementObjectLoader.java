@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.14 2005/01/17 09:03:33 bob Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.15 2005/01/19 20:56:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,11 +30,9 @@ import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
 import com.syrus.AMFICOM.measurement.Modeling;
-import com.syrus.AMFICOM.measurement.ParameterType;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.EvaluationType;
-import com.syrus.AMFICOM.measurement.ParameterTypeDatabase;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.SetDatabase;
@@ -43,41 +41,12 @@ import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/01/17 09:03:33 $
- * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2005/01/19 20:56:53 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
 final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
-
-	public ParameterType loadParameterType(Identifier id) throws RetrieveObjectException, CommunicationException {
-		ParameterType parameterType = null;
-		try {
-			parameterType = new ParameterType(id);
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.debugMessage("ParameterType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
-			try {
-				parameterType = new ParameterType(MeasurementControlModule.mServerRef.transmitParameterType((Identifier_Transferable)id.getTransferable()));
-				parameterType.insert();
-			}
-			catch (org.omg.CORBA.SystemException se) {
-				Log.errorException(se);
-				MeasurementControlModule.activateMServerReference();
-				throw new CommunicationException("System exception -- " + se.getMessage(), se);
-			}
-			catch (AMFICOMRemoteException are) {
-				if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-					Log.errorMessage("Parameter type '" + id + "' not found on server database");
-				else
-					Log.errorMessage("Cannot retrieve parameter type '" + id + "' from server database -- " + are.message);
-			}
-			catch (CreateObjectException coe) {
-				Log.errorException(coe);
-			}
-		}
-		return parameterType;
-	}
 
 	public MeasurementType loadMeasurementType(Identifier id) throws RetrieveObjectException, CommunicationException {
 		MeasurementType measurementType = null;
@@ -295,8 +264,8 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 			}
 		}
 		catch (IllegalDataException e) {
-			Log.errorMessage("MCMMeasumentObjectLoader.loadEvaluations | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MCMMeasumentObjectLoader.loadEvaluations | Illegal Storable Object: " + e.getMessage());
+			Log.errorMessage("MCMMeasurementObjectLoader.loadEvaluations | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("MCMMeasurementObjectLoader.loadEvaluations | Illegal Storable Object: " + e.getMessage());
 		}
 		return list;
 	}
@@ -339,8 +308,8 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 			}
 		}
 		catch (IllegalDataException e) {
-			Log.errorMessage("MCMMeasumentObjectLoader.loadEvaluationType | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MCMMeasumentObjectLoader.loadEvaluationType | Illegal Storable Object: " + e.getMessage());
+			Log.errorMessage("MCMMeasurementObjectLoader.loadEvaluationType | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("MCMMeasurementObjectLoader.loadEvaluationType | Illegal Storable Object: " + e.getMessage());
 		}
 		return list;
 	}
@@ -387,8 +356,8 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 			}
 		}
 		catch (IllegalDataException e) {
-			Log.errorMessage("MCMMeasumentObjectLoader.loadMeasurementSetups | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MCMMeasumentObjectLoader.loadMeasurementSetups | Illegal Storable Object: " + e.getMessage());
+			Log.errorMessage("MCMMeasurementObjectLoader.loadMeasurementSetups | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("MCMMeasurementObjectLoader.loadMeasurementSetups | Illegal Storable Object: " + e.getMessage());
 		}
 		return list;
 	}
@@ -431,52 +400,8 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 			}
 		}
 		catch (IllegalDataException e) {
-			Log.errorMessage("MCMMeasumentObjectLoader.loadMeasurementTypes | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MCMMeasumentObjectLoader.loadMeasurementTypes | Illegal Storable Object: " + e.getMessage());
-		}
-		return list;
-	}
-
-	public List loadParameterTypes(List ids) throws DatabaseException, CommunicationException {
-		ParameterTypeDatabase database = (ParameterTypeDatabase)MeasurementDatabaseContext.getParameterTypeDatabase();
-		List list;
-		List copyOfList;
-		ParameterType parameterType;
-		try {
-			list = database.retrieveByIds(ids, null);
-			copyOfList = new LinkedList(list);
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				if(ids.contains(id))
-					it.remove();
-			}
-			for (Iterator it = copyOfList.iterator(); it.hasNext();) {
-				Identifier id = ((StorableObject) it.next()).getId();
-				Log.debugMessage("ParameterType '" + id + "' not found in database; trying to load from server", Log.DEBUGLEVEL08);
-				try {
-					parameterType = new ParameterType(MeasurementControlModule.mServerRef.transmitParameterType((Identifier_Transferable)id.getTransferable()));
-					parameterType.insert();
-					list.add(parameterType);
-				}
-				catch (org.omg.CORBA.SystemException se) {
-					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
-					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
-				catch (AMFICOMRemoteException are) {
-					if (are.error_code.equals(ErrorCode.ERROR_NOT_FOUND))
-						Log.errorMessage("Parameter type '" + id + "' not found on server database");
-					else
-						Log.errorMessage("Cannot retrieve parameter type '" + id + "' from server database -- " + are.message);
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
-			}
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("MCMMeasumentObjectLoader.loadParameterTypes | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MCMMeasumentObjectLoader.loadParameterTypes | Illegal Storable Object: " + e.getMessage());
+			Log.errorMessage("MCMMeasurementObjectLoader.loadMeasurementTypes | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("MCMMeasurementObjectLoader.loadMeasurementTypes | Illegal Storable Object: " + e.getMessage());
 		}
 		return list;
 	}
@@ -519,8 +444,8 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 			}
 		}
 		catch (IllegalDataException e) {
-			Log.errorMessage("MCMMeasumentObjectLoader.loadSets | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MCMMeasumentObjectLoader.loadSets | Illegal Storable Object: " + e.getMessage());
+			Log.errorMessage("MCMMeasurementObjectLoader.loadSets | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("MCMMeasurementObjectLoader.loadSets | Illegal Storable Object: " + e.getMessage());
 		}
 		return list;
 	}
@@ -563,8 +488,8 @@ final class MCMMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
 			}
 		}
 		catch (IllegalDataException e) {
-			Log.errorMessage("MCMMeasumentObjectLoader.loadTemporalPatterns | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("MCMMeasumentObjectLoader.loadTemporalPatterns | Illegal Storable Object: " + e.getMessage());
+			Log.errorMessage("MCMMeasurementObjectLoader.loadTemporalPatterns | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("MCMMeasurementObjectLoader.loadTemporalPatterns | Illegal Storable Object: " + e.getMessage());
 		}
 		return list;
 	}
