@@ -74,7 +74,7 @@ public class MapAlarmMarker extends MapMarker
 		if ( MapPropertiesManager.isShowAlarmState() )
 		{
 			pg.drawImage(
-					icon,
+					getImage(),
 					p.x - width / 2,
 					p.y - height / 2,
 					null);
