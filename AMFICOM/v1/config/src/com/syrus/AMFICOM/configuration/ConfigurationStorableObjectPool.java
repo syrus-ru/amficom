@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.7 2004/09/14 15:49:09 max Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.8 2004/09/21 10:59:49 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Hashtable;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -26,8 +25,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/09/14 15:49:09 $
- * @author $Author: max $
+ * @version $Revision: 1.8 $, $Date: 2004/09/21 10:59:49 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -58,6 +57,30 @@ public class ConfigurationStorableObjectPool {
 	private ConfigurationStorableObjectPool() {
 	}
 
+	public static void init(ConfigurationObjectLoader cObjectLoader1, final int size) {
+		objectPoolMap = Collections.synchronizedMap(new Hashtable(OBJECT_POOL_MAP_SIZE));
+
+		addObjectPool(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.PORTTYPE_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.CHARACTERISTIC_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.PERMATTR_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.USER_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.DOMAIN_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.SERVER_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.MCM_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.EQUIPMENT_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.PORT_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.TRANSPATH_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.KIS_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.ME_ENTITY_CODE, size);
+
+		cObjectLoader = cObjectLoader1;
+	}
+
+	
 	public static void init(ConfigurationObjectLoader cObjectLoader1) {
 		objectPoolMap = Collections.synchronizedMap(new Hashtable(OBJECT_POOL_MAP_SIZE));
 
@@ -118,8 +141,8 @@ public class ConfigurationStorableObjectPool {
 			Log.errorMessage("ConfigurationStorableObjectPool.getStorableObject | NULL identifier supplied");
 			return null;
 		}
-	}
-
+	}	
+	
 	public static List getStorableObjects(List objectIds, boolean useLoader) throws DatabaseException, CommunicationException {
         List list = null;
         Map objectQueueMap = null;
@@ -128,7 +151,7 @@ public class ConfigurationStorableObjectPool {
                 Identifier objectId = (Identifier) it.next();
                 short objectEntityCode = objectId.getMajor();
                 Short entityCode = new Short(objectEntityCode);
-                LRUMap objectPool = (LRUMap)objectPoolMap.get(objectId);
+                LRUMap objectPool = (LRUMap)objectPoolMap.get(entityCode);
                 StorableObject storableObject = null;
                 if (objectPool != null) {
                     storableObject = (StorableObject)objectPool.get(objectId);
@@ -159,6 +182,8 @@ public class ConfigurationStorableObjectPool {
         }
 
         if (objectQueueMap != null){
+        	  if (list == null)
+                list = new LinkedList();
             for (Iterator it = objectQueueMap.keySet().iterator(); it.hasNext();) {
                 Short entityCode = (Short) it.next();
                 List objectQueue = (List)objectQueueMap.get(entityCode);
@@ -181,6 +206,70 @@ public class ConfigurationStorableObjectPool {
         return list;
     }
     
+	public static List getStorableObjectsByDomain(short entityCode, Domain domain) throws DatabaseException,
+			CommunicationException {
+		List list = null;
+		LRUMap objectPool = (LRUMap) objectPoolMap.get(new Short(entityCode));
+		if (objectPool != null) {
+			list = new LinkedList();
+			for (Iterator it = objectPool.iterator(); it.hasNext();) {
+				StorableObject storableObject = (StorableObject) it.next();
+				if (domain != null) {
+					/**
+					 * TODO check for entites
+					 */
+					switch (entityCode) {
+						case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
+							break;
+						case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:							
+							break;
+						case ObjectEntities.PORTTYPE_ENTITY_CODE:							
+							break;
+						case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:							
+							break;
+						case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:							
+							break;
+//						case ObjectEntities.PERMATTR_ENTITY_CODE:
+//							storableObject = cObjectLoader.loadPermissionAttributes(objectId);
+//							break;
+						case ObjectEntities.USER_ENTITY_CODE:							
+							break;
+						case ObjectEntities.DOMAIN_ENTITY_CODE:
+							/**
+							 * TODO get all domain children
+							 */
+							break;
+						case ObjectEntities.SERVER_ENTITY_CODE:							
+							break;
+						case ObjectEntities.MCM_ENTITY_CODE:							
+							break;
+						case ObjectEntities.EQUIPMENT_ENTITY_CODE:							
+							break;
+						case ObjectEntities.PORT_ENTITY_CODE:							
+							break;
+						case ObjectEntities.TRANSPATH_ENTITY_CODE:							
+							break;
+						case ObjectEntities.KIS_ENTITY_CODE:							
+							break;
+						case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:							
+							break;
+						case ObjectEntities.ME_ENTITY_CODE:							
+							break;
+						default:
+							list.add(storableObject);
+							break;
+		
+					}
+		
+				} else {
+					list.add(storableObject);
+				}
+		
+			}
+		}
+		return list;
+		}
+	
     private static StorableObject loadStorableObject(Identifier objectId) throws DatabaseException, CommunicationException {
 		StorableObject storableObject;
 		switch (objectId.getMajor()) {
@@ -291,7 +380,7 @@ public class ConfigurationStorableObjectPool {
         return storableObjects;
     }
     
-	public static StorableObject putStorableObject(StorableObject storableObject) throws IllegalObjectEntityException {
+	public static StorableObject putStorableObject(StorableObject storableObject) throws IllegalObjectEntityException {		
 		Identifier objectId = storableObject.getId();
 		LRUMap objectPool = (LRUMap)objectPoolMap.get(new Short(objectId.getMajor()));
 		if (objectPool != null) {
