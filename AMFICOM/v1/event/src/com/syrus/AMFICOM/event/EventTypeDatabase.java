@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.6 2005/02/07 11:56:16 arseniy Exp $
+ * $Id: EventTypeDatabase.java,v 1.7 2005/02/07 14:20:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,6 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -41,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/07 11:56:16 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/07 14:20:20 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -166,29 +165,17 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		if ((eventTypes == null) || (eventTypes.isEmpty()))
 			return;
 
-    StringBuffer sql = new StringBuffer(SQL_SELECT
+		StringBuffer sql = new StringBuffer(SQL_SELECT
 				+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID + COMMA
 				+ LINK_COLUMN_EVENT_TYPE_ID
 				+ SQL_FROM + ObjectEntities.EVENTTYPPARTYPLINK_ENTITY
-				+ SQL_WHERE + LINK_COLUMN_EVENT_TYPE_ID + SQL_IN + OPEN_BRACKET);
-
-		int i = 1;
-		for (Iterator it = eventTypes.iterator(); it.hasNext(); i++) {
-			EventType eventType = (EventType)it.next();
-			sql.append(DatabaseIdentifier.toSQLString(eventType.getId()));
-			if (it.hasNext()) {
-				if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-					sql.append(COMMA);
-				else {
-					sql.append(CLOSE_BRACKET);
-					sql.append(SQL_OR);
-					sql.append(LINK_COLUMN_EVENT_TYPE_ID);
-					sql.append(SQL_IN);
-					sql.append(OPEN_BRACKET);
-				}
-			}
+				+ SQL_WHERE);
+		try {
+			sql.append(this.idsInListString(eventTypes, LINK_COLUMN_EVENT_TYPE_ID));
 		}
-		sql.append(CLOSE_BRACKET);
+		catch (IllegalDataException e) {
+			throw new RetrieveObjectException(e);
+		}
 
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -354,19 +341,25 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void delete(StorableObject storableObject) throws IllegalDataException {		
+	public void delete(StorableObject storableObject) throws IllegalDataException {
 		EventType eventType = this.fromStorableObject(storableObject);
-		String eventTypeIdStr = DatabaseIdentifier.toSQLString(eventType.getId());
+		this.delete(eventType.getId());
+	}
+
+	public void delete(Identifier id) throws IllegalDataException {
+		if (id.getMajor() != ObjectEntities.EVENTTYPE_ENTITY_CODE)
+			throw new IllegalDataException("EventTypeDatabase.delete | Cannot delete object of code " + id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'");
+
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM
-					+ ObjectEntities.MNTTYPPARTYPLINK_ENTITY
-					+ SQL_WHERE + LINK_COLUMN_EVENT_TYPE_ID + EQUALS + eventTypeIdStr);
+					+ ObjectEntities.EVENTTYPPARTYPLINK_ENTITY
+					+ SQL_WHERE + LINK_COLUMN_EVENT_TYPE_ID + EQUALS + id);
 			statement.executeUpdate(SQL_DELETE_FROM
 					+ ObjectEntities.EVENTTYPE_ENTITY 
-					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + eventTypeIdStr);
+					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + id);
 
 			connection.commit();
 		}
@@ -388,6 +381,55 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
+	public void delete(List objects) throws IllegalDataException {
+		StringBuffer sql1 = new StringBuffer(SQL_DELETE_FROM
+				+ ObjectEntities.EVENTTYPPARTYPLINK_ENTITY
+				+ SQL_WHERE);
+		sql1.append(this.idsInListString(objects, LINK_COLUMN_EVENT_TYPE_ID));
+		StringBuffer sql2 = new StringBuffer(SQL_DELETE_FROM
+				+ ObjectEntities.EVENTTYPE_ENTITY
+				+ SQL_WHERE);
+		sql2.append(this.idsInListString(objects, StorableObjectWrapper.COLUMN_ID));
+
+		Statement statement = null;
+		Connection connection = DatabaseConnection.getConnection();
+		String sql;
+		try {
+			statement = connection.createStatement();
+
+			sql = sql1.toString();
+			Log.debugMessage("EventTypeDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
+			statement.executeUpdate(sql);
+
+			sql = sql2.toString();
+			Log.debugMessage("EventTypeDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
+			statement.executeUpdate(sql);
+		}
+		catch (SQLException sqle1) {
+			Log.errorException(sqle1);
+		}
+		finally {
+			try {
+				if(statement != null)
+					statement.close();
+				statement = null;
+			}
+			catch(SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+			finally {
+				DatabaseConnection.releaseConnection(connection);
+			}
+		}
+	}
+
+	/**
+	 * @deprecated use {@link StorableObjectDatabase.retrieveByCondion} and {@link TypicalCondition}
+	 * @param codename
+	 * @return
+	 * @throws ObjectNotFoundException
+	 * @throws RetrieveObjectException
+	 */
 	public EventType retrieveForCodename(String codename) throws ObjectNotFoundException, RetrieveObjectException {
 		List list = null;
 		try {
@@ -436,9 +478,5 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 			throw new UpdateObjectException(this.getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
 		return i;
-	}
-
-	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException, IllegalDataException {
-		throw new UnsupportedOperationException("Not implemented");
 	}
 }
