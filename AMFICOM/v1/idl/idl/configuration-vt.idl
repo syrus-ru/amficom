@@ -1,0 +1,30 @@
+/*
+ * $Id: configuration-vt.idl,v 1.1 2004/11/24 08:43:47 bob Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
+#ifndef CONFIGURATION_VT_IDL
+#define CONFIGURATION_VT_IDL
+
+#include "general-vt.idl"
+
+module com {
+	module syrus {
+		module AMFICOM {
+			module configuration {
+				module corba {
+
+				abstract valuetype DomainMember {
+					attribute general::corba::Identifier domaiId;
+				};
+	
+				};
+			};
+		};
+	};
+};
+#endif // CONFIGURATION_VT_IDL
+	

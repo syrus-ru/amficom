@@ -1,0 +1,294 @@
+/*
+ * $Id: li'lmapletty-vt.idl,v 1.1 2004/11/24 08:43:47 bob Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ *
+ * Describe a geak li'l mapletty 
+ * 
+ * Defines that can be specified at compile time:
+ *
+ * NUMERIC_IDENTIFIER (off by default, implies MAP_COMMON) -- Identifier will
+ *  hold primitive major and minor fields rather than a string;
+ *
+ * REDUNDANT_DEPS (off by default, implies MAP_COMMON) -- StorableObject will
+ *  depend on User.
+ */
+
+#ifndef MAP_VT_IDL
+#define MAP_VT_IDL
+
+#include <streams.idl>
+
+#include "general-vt.idl"
+
+#include "configuration-vt.idl"
+
+#include "resource.idl"
+
+module com {
+	module syrus {
+		module AMFICOM {
+			module map {
+				module corba {
+				
+					valuetype PhysicalLink;
+					
+					// was MapNodeProtoElement
+					// MapNodeProtoElement is node type
+					
+					valuetype SiteNodeType :
+							general::corba::StorableObject,
+							general::corba::Namable,
+							general::corba::Describable {
+							
+							private wstring thisName;
+							private wstring thisDescription;
+							
+							private general::corba::Identifier imageId;
+							private	boolean topological;
+							private general::corba::ElementAttributeSeq attributes;
+					};
+				
+					// was MapLinkProtoElement
+					// MapLinkProtoElement is physical line type such as tunnel, subway
+					valuetype PhysicalLinkType :
+							general::corba::StorableObject,
+							configuration::corba::DomainMember,
+							general::corba::Namable,
+							general::corba::Describable {
+							
+							private wstring thisName;
+							private wstring thisDescription;
+							private general::corba::ElementAttributeSeq attributes;
+					};
+					
+					
+					
+					
+					valuetype Node :
+							general::corba::StorableObject,
+							general::corba::Namable,
+							general::corba::Describable {
+
+							private wstring thisName;
+							private wstring thisDescription;
+							
+							// was wstring
+							private double  longitude;		// anchor
+							// was wstring
+							private double latitude;		// anchor					
+					};										
+				
+					
+					// was MapSiteElement
+					// MapSiteElement is node
+					valuetype SiteNode : Node {
+							
+							private general::corba::Identifier imageId;
+							private general::corba::Identifier siteNodeTypeId;			
+							//private SiteNodeType siteNodeType;
+							
+							private wstring city;
+							private wstring street;
+							private wstring building;
+
+							private general::corba::ElementAttributeSeq attributes;				
+
+							readonly attribute SiteNodeType siteNodeType;
+
+					};
+					
+					typedef sequence<SiteNode> SiteNodeSeq;
+					
+					// was MapPhysicalNodeElement
+					// MapPhysicalNodeElement is topological node
+					valuetype TopologicalNode : Node {
+
+							private general::corba::Identifier physicalLinkId;
+							//private PhysicalLink physicalLink;
+
+							private	boolean active;
+
+							private general::corba::ElementAttributeSeq attributes;
+
+							readonly attribute PhysicalLink physicalLink;
+					};
+					
+					typedef sequence<TopologicalNode> TopologicalNodeSeq;
+					
+					// was MapNodeLinkElement
+					// MapNodeLinkElement is map item, line fragment
+					
+					valuetype NodeLink :
+							general::corba::StorableObject,
+							general::corba::Namable {
+
+							private wstring thisName;
+
+							private general::corba::Identifier physicalLinkId;
+							//private PhysicalLink physicalLink;
+
+							private general::corba::Identifier startNodeId;
+							//private Node startNode;
+							private general::corba::Identifier endNodeId;
+							//private Node endNode;							
+
+							private double length;
+							
+							private general::corba::ElementAttributeSeq attributes;
+							
+							readonly attribute PhysicalLink physicalLink;
+							readonly attribute Node startNode;
+							readonly attribute Node endNode;
+					};
+					
+					typedef sequence<NodeLink> NodeLinkSeq;
+					
+					// was MapMarkElement
+					// MapMarkElement is mark, have coordinates and bound to subway (MapLink) by distance
+					valuetype Mark :
+							general::corba::StorableObject,
+							general::corba::Namable,
+							general::corba::Describable {
+
+							private wstring thisName;
+							private wstring thisDescription;
+							// was wstring
+							private double  longitude;		// anchor
+							// was wstring
+							private double latitude;		// anchor
+							
+							private general::corba::Identifier physicalLinkId;
+							//private PhysicalLink physicalLink;
+
+							private	double distance;
+
+							private wstring city;
+							private wstring street;
+							private wstring building;
+							
+							private general::corba::ElementAttributeSeq attributes;
+
+							readonly attribute PhysicalLink physicalLink;
+					};
+					typedef sequence<Mark> MarkSeq;
+					
+						// was MapPhysicalLinkElement
+					// MapPhysicalLinkElement is line item
+					valuetype PhysicalLink :
+							general::corba::StorableObject,
+							general::corba::Namable,
+							general::corba::Describable {
+
+							private wstring thisName;
+							private wstring thisDescription;
+							
+							private general::corba::Identifier physicalLinkTypeId;
+							//private PhysicalLineType physicalLinkType;
+
+							private general::corba::Identifier startNodeId;
+							//private Node startNode;
+							private general::corba::Identifier endNodeId;
+							//private Node endNode;
+
+							private wstring city;
+							private wstring street;
+							private wstring building;
+
+							private long long dimensionX;
+							private long long dimensionY;
+							
+							private boolean leftToRight;
+							private boolean topToBottom;
+
+							private general::corba::IdentifierSeq nodeLinkIds;
+							//private NodeLinkSeq nodeLinks;
+
+							private general::corba::ElementAttributeSeq attributes;
+
+							readonly attribute PhysicalLinkType physicalLinkType;
+							readonly attribute Node startNode;
+							readonly attribute Node endNode;
+							readonly attribute NodeLinkSeq nodeLinks;
+					};					
+					
+					typedef sequence<PhysicalLink> PhysicalLinkSeq;
+					
+					// was MapPipePathElement
+					// MapPipePathElement is collector
+					valuetype Collector :
+							general::corba::StorableObject,
+							general::corba::Namable,
+							general::corba::Describable {
+
+							private wstring thisName;
+							private wstring thisDescription;							
+							
+							private general::corba::IdentifierSeq physicalLinkIds;
+							//private PhysicalLinkSeq physicalLinks;
+							
+							private general::corba::ElementAttributeSeq attributes;
+
+							readonly attribute PhysicalLinkSeq physicalLinks;
+					};
+					
+					typedef sequence<Collector> CollectorSeq;
+
+					valuetype Map :
+							general::corba::StorableObject,
+							general::corba::Namable,
+							general::corba::Describable,
+							configuration::corba::DomainMember {
+
+
+							private general::corba::IdentifierSeq siteIds;
+							//private SiteNodeSeq siteNodes;
+							private general::corba::IdentifierSeq topologicalNodeIds;
+							//private TopologicalNodeSeq topologicalNodes;
+							private general::corba::IdentifierSeq nodeLinkIds;
+							//private NodeLinkSeq nodeLinks;
+							private general::corba::IdentifierSeq physicalNodeLinkIds;
+							//private PhysicalLinkSeq physicalLinks;
+							private general::corba::IdentifierSeq markIds;
+							//private MarkSeq marks;
+							private general::corba::IdentifierSeq collectorIds;
+							//private CollectorSeq collectors;
+							
+							private wstring thisName;
+							private wstring thisDescription;
+
+							readonly attribute SiteNodeSeq siteNodes;
+							readonly attribute TopologicalNodeSeq topologicalNodes;
+							readonly attribute NodeLinkSeq nodeLinks;
+							readonly attribute PhysicalLinkSeq physicalLinks;
+							readonly attribute MarkSeq marks;
+							readonly attribute CollectorSeq collectors;
+							
+					};
+
+					valuetype MapView :
+							general::corba::StorableObject,
+							general::corba::Namable,
+							general::corba::Describable,
+							configuration::corba::DomainMember {
+
+							private wstring thisName;
+							private wstring thisDescription;
+
+							private double longitude;
+							private double latitude;
+							private double scale;
+							private double defaultScale;
+
+							private general::corba::Identifier mapId;
+							private general::corba::IdentifierSeq schemeIds;
+					};
+					
+			};
+		};
+		};
+	};
+};
+#endif // MAP_VT_IDL
