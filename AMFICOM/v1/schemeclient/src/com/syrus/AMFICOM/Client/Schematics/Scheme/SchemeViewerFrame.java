@@ -51,10 +51,13 @@ public class SchemeViewerFrame extends JInternalFrame implements OperationListen
 			SchemeElementsEvent see = (SchemeElementsEvent)ae;
 			if (see.CLOSE_SCHEME)
 			{
-				Scheme sch = (Scheme)see.obj;
-				if (panel.removeScheme(sch))
+				if (see.obj instanceof Scheme)
 				{
-					closeFrame();
+					Scheme sch = (Scheme)see.obj;
+					if (panel.removeScheme(sch))
+					{
+						closeFrame();
+					}
 				}
 			}
 		}

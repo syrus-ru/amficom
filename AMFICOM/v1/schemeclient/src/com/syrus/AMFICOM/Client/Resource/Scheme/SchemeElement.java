@@ -654,7 +654,7 @@ public class SchemeElement extends ObjectResource
 		ugo = (byte[] )in.readObject();
 
 		transferable = new SchemeElement_Transferable();
-		updateLocalFromTransferable();
+	//	updateLocalFromTransferable();
 	}
 
 	public void set_attribute(String a_id, String a_val)

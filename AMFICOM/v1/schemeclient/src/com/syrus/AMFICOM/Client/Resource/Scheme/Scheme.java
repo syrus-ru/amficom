@@ -664,6 +664,43 @@ public class Scheme extends ObjectResource implements Serializable
 		return ht;
 	}
 
+	public Scheme getSchemeBySchemeElement(String scheme_element_id)
+	{
+		for (Iterator it = elements.iterator(); it.hasNext();)
+		{
+			SchemeElement el = (SchemeElement)it.next();
+			if (el.getId().equals(scheme_element_id))
+				return this;
+		}
+
+		for (Iterator it = elements.iterator(); it.hasNext();)
+		{
+			SchemeElement el = (SchemeElement)it.next();
+			if (el.scheme_id.equals(""))
+			{
+				for (Iterator it2 = el.getChildElements().iterator(); it2.hasNext();)
+				{
+					SchemeElement el2 = (SchemeElement)it2.next();
+					if (el2.getId().equals(scheme_element_id))
+						return this;
+				}
+			}
+		}
+
+		for (Iterator it = elements.iterator(); it.hasNext();)
+		{
+			SchemeElement el = (SchemeElement)it.next();
+			if (!el.scheme_id.equals(""))
+			{
+				Scheme sch = (Scheme)Pool.get(Scheme.typ, el.scheme_id);
+				Scheme found = sch.getSchemeBySchemeElement(scheme_element_id);
+				if (found != null)
+					return found;
+			}
+		}
+		return null;
+	}
+
 	public Scheme getSchemeByLink(String link_id)
 	{
 		for (Iterator it = links.iterator(); it.hasNext();)
@@ -678,7 +715,7 @@ public class Scheme extends ObjectResource implements Serializable
 			SchemeElement el = (SchemeElement)it.next();
 			if (el.scheme_id.equals(""))
 			{
-				for (Iterator it2 = el.links.iterator(); it2.hasNext();)
+				for (Iterator it2 = el.getAllElementsLinks().iterator(); it2.hasNext();)
 				{
 					SchemeLink l = (SchemeLink)it2.next();
 					if (l.getId().equals(link_id))

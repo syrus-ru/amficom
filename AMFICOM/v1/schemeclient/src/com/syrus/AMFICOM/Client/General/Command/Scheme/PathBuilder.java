@@ -86,6 +86,99 @@ public class PathBuilder
 		return path;
 	}
 
+	static ArrayList findPorts(SchemeElement se, String direction)
+	{
+		ArrayList ports = new ArrayList();
+		for (Iterator it = se.devices.iterator(); it.hasNext();)
+		{
+			SchemeDevice sd = (SchemeDevice)it.next();
+			for (Iterator it2 = sd.ports.iterator(); it2.hasNext();)
+			{
+				SchemePort port = (SchemePort)it2.next();
+				if (port.direction_type.equals(direction))
+					ports.add(port);
+			}
+		}
+		return ports;
+	}
+
+	static ArrayList findCablePorts(SchemeElement se, String direction)
+	{
+		ArrayList ports = new ArrayList();
+		for (Iterator it = se.devices.iterator(); it.hasNext();)
+		{
+			SchemeDevice sd = (SchemeDevice)it.next();
+			for (Iterator it2 = sd.cableports.iterator(); it2.hasNext();)
+			{
+				SchemeCablePort port = (SchemeCablePort)it2.next();
+				if (port.direction_type.equals(direction))
+					ports.add(port);
+			}
+		}
+		return ports;
+	}
+/*
+	public static boolean explore2(Scheme scheme, SchemePath path, String end_device_id)
+	{
+		if (path.start_device_id.length() == 0)
+			return false;
+
+		if (path.links.isEmpty())
+		{
+			// Create the first PE
+			PathElement pe = new PathElement();
+			pe.setType(PathElement.SCHEME_ELEMENT);
+			pe.scheme_element_id = path.start_device_id;
+			pe.n = 1;
+			pe.scheme_id = scheme.getSchemeBySchemeElement(path.start_device_id).getId();
+
+			// searching for the only output port
+			ArrayList outPorts = findPorts((SchemeElement)Pool.get(SchemeElement.typ, path.start_device_id), "out");
+			ArrayList outCablePorts = findCablePorts((SchemeElement)Pool.get(SchemeElement.typ, path.start_device_id), "out");
+			// if one connect (cable)link to it
+			if (outPorts.size() + outCablePorts.size() == 1)
+			{
+				if (!outPorts.isEmpty())
+					pe.end_port_id = ((SchemePort)outPorts.get(0)).getId();
+				else
+					pe.end_port_id = ((SchemeCablePort)outCablePorts.get(0)).getId();
+				// continue making path
+				explore2(scheme, path, end_device_id);
+			}
+			else // if more cannot continue without operator point
+				return false;
+		}
+		else // already has pathelements
+		{
+			PathElement last_pe = (PathElement)path.links.lastElement();
+			Scheme sch = (Scheme)Pool.get(Scheme.typ, last_pe.scheme_id);
+
+			if (last_pe.getType() == PathElement.SCHEME_ELEMENT)
+			{
+				//add Link or Cable
+			}
+			else
+			{
+				// add SE
+				SchemeElement se;
+				if (last_pe.getType() == PathElement.CABLE_LINK)
+					se = sch.getSchemeElementByCablePort(last_pe.end_port_id);
+				else
+					se = sch.getSchemeElementByPort(last_pe.end_port_id);
+
+				if (se.getId().equals(end_device_id))
+					return true;
+
+				PathElement pe = new PathElement();
+				pe.start_port_id = last_pe.end_port_id;
+				pe.setType(PathElement.SCHEME_ELEMENT);
+				pe.scheme_element_id = se.getId();
+				pe.n = last_pe.n + 1;
+				pe.scheme_id = scheme.getSchemeBySchemeElement(se.getId()).getId();
+			}
+		}
+	}
+*/
 	public static SchemePath explore(Scheme scheme, SchemePath path)
 	{
 		if (path.start_device_id.length() == 0)

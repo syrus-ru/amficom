@@ -19,6 +19,9 @@ import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.General.Report.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import com.syrus.AMFICOM.Client.Resource.ISM.*;
+import com.syrus.AMFICOM.Client.Resource.Network.*;
+import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.*;
 import com.syrus.AMFICOM.Client.Schematics.Elements.*;
 import com.syrus.AMFICOM.Client.Schematics.UI.*;
 
@@ -305,8 +308,8 @@ public class SchemeEditorMainFrame extends JFrame
 		aModel.setEnabled("menuReport", true);
 		aModel.setEnabled("menuWindow", true);
 
-		aModel.setVisible("menuSchemeExport", false);
-		aModel.setVisible("menuSchemeImport", false);
+//		aModel.setVisible("menuSchemeExport", false);
+//		aModel.setVisible("menuSchemeImport", false);
 
 		statusBar.setText("domain", LangModel.getString("statusNoDomain"));
 	}
@@ -569,7 +572,7 @@ public class SchemeEditorMainFrame extends JFrame
 		new MapDataSourceImage(dataSource).LoadProtoElements();
 
 		ApplicationModel aModel = aContext.getApplicationModel();
-		aModel.enable("menuSessionDomain");
+		aModel.setEnabled("menuSessionDomain", true);
 		aModel.setEnabled("menuSessionNew", false);
 		aModel.setEnabled("menuSchemeExport", true);
 		aModel.setEnabled("menuSchemeImport", true);
@@ -606,26 +609,35 @@ public class SchemeEditorMainFrame extends JFrame
 	{
 //		new ImportSchemeCommand(internal_dispatcher, aContext).execute();
 //		new ExportSchemeCommand(internal_dispatcher, aContext).execute();
+		Pool.removeHash(Scheme.typ);
+		Pool.removeHash(SchemeElement.typ);
+//		Pool.removeHash(SchemeLink.typ);
+		Pool.removeHash(SchemeCableLink.typ);
+		Pool.removeHash(KIS.typ);
+		Pool.removeHash(Equipment.typ);
+		Pool.removeHash(Link.typ);
+		Pool.removeHash(CableLink.typ);
+
 		DataSourceInterface dataSource = aContext.getDataSourceInterface();
 		new SchemeDataSourceImage(dataSource).LoadSchemes();
 		new ConfigDataSourceImage(dataSource).LoadNet();
 		new ConfigDataSourceImage(dataSource).LoadISM();
 
 		ApplicationModel aModel = aContext.getApplicationModel();
-		aModel.enable("menuSessionClose");
-		aModel.enable("menuSessionOptions");
-		aModel.enable("menuSessionChangePassword");
-		aModel.enable("menuSessionClose");
-		aModel.enable("menuSessionOptions");
-		aModel.enable("menuSessionChangePassword");
+		aModel.setEnabled("menuSessionClose", true);
+		aModel.setEnabled("menuSessionOptions", true);
+		aModel.setEnabled("menuSessionChangePassword", true);
+		aModel.setEnabled("menuSessionClose", true);
+		aModel.setEnabled("menuSessionOptions", true);
+		aModel.setEnabled("menuSessionChangePassword", true);
 
-		aModel.enable("menuSchemeNew");
-		aModel.enable("menuSchemeLoad");
-		aModel.enable("menuSchemeSave");
-		aModel.enable("menuSchemeSaveAs");
-		aModel.enable("menuInsertToCatalog");
-		aModel.enable("menuPathNew");
-		aModel.enable("menuReportCreate");
+		aModel.setEnabled("menuSchemeNew", true);
+		aModel.setEnabled("menuSchemeLoad", true);
+		aModel.setEnabled("menuSchemeSave", true);
+		aModel.setEnabled("menuSchemeSaveAs", true);
+		aModel.setEnabled("menuInsertToCatalog", true);
+		aModel.setEnabled("menuPathNew", true);
+		aModel.setEnabled("menuReportCreate", true);
 
 		aModel.fireModelChanged("");
 

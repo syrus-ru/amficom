@@ -197,6 +197,7 @@ public class ProtoElement extends ObjectResource
 			link.updateLocalFromTransferable();
 			Pool.put(SchemeLink.typ, link.getId(), link);
 		}
+
 	}
 
 	public long getModified()

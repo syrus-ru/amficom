@@ -7,7 +7,7 @@ import java.util.*;
 import javax.swing.*;
 
 import com.jgraph.graph.DefaultGraphModel;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.*;
@@ -90,27 +90,72 @@ public class SchemePanel extends ElementsPanel
 	public void init_module()
 	{
 		super.init_module();
+		dispatcher.register(this, TreeDataSelectionEvent.type);
 	}
 
 	public String getReportTitle()
 	{
 		return LangModelSchematics.getString("schemeMainTitle");
 	}
-/*
+
 	public void operationPerformed(OperationEvent ae)
 	{
-		if (ae.getActionCommand().equals(CreatePathEvent.typ))
+		if (ae.getActionCommand().equals(TreeDataSelectionEvent.type))
 		{
-			CreatePathEvent cpe = (CreatePathEvent)ae;
-			if (cpe.DELETE_PATH)
+			TreeDataSelectionEvent ev = (TreeDataSelectionEvent)ae;
+			Class cl = ev.getDataClass();
+			DataSet ds = ev.getDataSet();
+			if (ev.getSelectionNumber() != -1)
 			{
-				SchemePath[] paths = (SchemePath[])cpe.cells;
-				for (int j = 0; j < paths.length; j++)
-					scheme.paths.remove(paths[j]);
+				if (cl.equals(SchemePath.class))
+				{
+					SchemePath path = (SchemePath)ds.get(ev.getSelectionNumber());
+					if (scheme.paths.contains(path))
+					{
+						Object[] cells = graph.getPathElements(path);
+						graph.skip_notify = true;
+						graph.setSelectionCells(cells);
+						graph.skip_notify = false;
+					}
+				}
+				else if (cl.equals(SchemeElement.class))
+				{
+					SchemeElement se = (SchemeElement)ds.get(ev.getSelectionNumber());
+					if (scheme.elements.contains(se))
+					{
+						Object cell = SchemeActions.findSchemeElementById(graph, se.getId());
+						graph.skip_notify = true;
+						graph.setSelectionCell(cell);
+						graph.skip_notify = false;
+					}
+				}
+				else if (cl.equals(SchemeLink.class))
+				{
+					SchemeLink l = (SchemeLink)ds.get(ev.getSelectionNumber());
+					if (scheme.links.contains(l))
+					{
+						Object cell = SchemeActions.findSchemeLinkById(graph, l.getId());
+						graph.skip_notify = true;
+						graph.setSelectionCell(cell);
+						graph.skip_notify = false;
+					}
+				}
+				else if (cl.equals(SchemeCableLink.class))
+				{
+					SchemeCableLink l = (SchemeCableLink)ds.get(ev.getSelectionNumber());
+					if (scheme.cablelinks.contains(l))
+					{
+						Object cell = SchemeActions.findSchemeCableLinkById(graph, l.getId());
+						graph.skip_notify = true;
+						graph.setSelectionCell(cell);
+						graph.skip_notify = false;
+					}
+				}
+
 			}
 		}
 		super.operationPerformed(ae);
-	}*/
+	}
 
 	public void openScheme(Scheme sch)
 	{
@@ -125,7 +170,7 @@ public class SchemePanel extends ElementsPanel
 
 	public boolean removeScheme(Scheme sch)
 	{
-		if (scheme != null && sch.getId().equals(scheme.getId()))
+		if (scheme != null && sch != null && sch.getId().equals(scheme.getId()))
 		{
 			GraphActions.clearGraph(graph);
 			return true;

@@ -390,7 +390,7 @@ public class ElementsEditorMainFrame extends JFrame
 //		new ConfigDataSourceImage(dataSource).LoadISM();
 
 		ApplicationModel aModel = aContext.getApplicationModel();
-		aModel.enable("menuSessionDomain");
+		aModel.setEnabled("menuSessionDomain", true);
 		aModel.setEnabled("menuSessionNew", false);
 		aModel.setEnabled("menuWindowArrange", true);
 		aModel.setEnabled("menuWindowTree", true);
@@ -424,13 +424,13 @@ public class ElementsEditorMainFrame extends JFrame
 	public void setDomainSelected()
 	{
 		ApplicationModel aModel = aContext.getApplicationModel();
-		aModel.enable("menuSessionClose");
-		aModel.enable("menuSessionOptions");
-		aModel.enable("menuSessionClose");
-		aModel.enable("menuSessionOptions");
-		aModel.enable("menuSessionChangePassword");
-		aModel.enable("menuComponentNew");
-		aModel.enable("menuComponentSave");
+		aModel.setEnabled("menuSessionClose", true);
+		aModel.setEnabled("menuSessionOptions", true);
+		aModel.setEnabled("menuSessionClose", true);
+		aModel.setEnabled("menuSessionOptions", true);
+		aModel.setEnabled("menuSessionChangePassword", true);
+		aModel.setEnabled("menuComponentNew", true);
+		aModel.setEnabled("menuComponentSave", true);
 		aModel.fireModelChanged("");
 
 		String domain_id = aContext.getSessionInterface().getDomainId();

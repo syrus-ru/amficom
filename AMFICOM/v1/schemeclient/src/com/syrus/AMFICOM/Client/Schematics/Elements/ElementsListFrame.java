@@ -131,8 +131,8 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 					if (!pathpanel.links_to_add.isEmpty())
 						pathpanel.addSelectedLinks();
 
-					 Scheme scheme = (Scheme)Pool.get("currentscheme", "currentscheme");
-						PathBuilder.explore(scheme, pathpanel.path);
+//					 Scheme scheme = (Scheme)Pool.get("currentscheme", "currentscheme");
+//						PathBuilder.explore(scheme, pathpanel.path);
 
 //          else if (pathpanel.setting_obj instanceof Scheme)
 //					{
@@ -165,8 +165,8 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 					if (pathpanel.device_to_add != null)
 						pathpanel.setStartDevice(pathpanel.device_to_add.getId());
 
-					Scheme scheme = (Scheme)Pool.get("currentscheme", "currentscheme");
-					PathBuilder.explore(scheme, pathpanel.path);
+//					Scheme scheme = (Scheme)Pool.get("currentscheme", "currentscheme");
+//					PathBuilder.explore(scheme, pathpanel.path);
 				}
 			}
 			if (ev.SET_END)
@@ -176,8 +176,8 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 					if (pathpanel.device_to_add != null)
 						pathpanel.setEndDevice(pathpanel.device_to_add.getId());
 
-					Scheme scheme = (Scheme)Pool.get("currentscheme", "currentscheme");
-					PathBuilder.explore(scheme, pathpanel.path);
+//					Scheme scheme = (Scheme)Pool.get("currentscheme", "currentscheme");
+//					PathBuilder.explore(scheme, pathpanel.path);
 				}
 			}
 			if (ev.DELETE_PATH)

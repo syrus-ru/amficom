@@ -518,7 +518,10 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 					for (Enumeration en = ds.elements(); en.hasMoreElements();)
 					{
 						SchemeElement element = (SchemeElement)en.nextElement();
-						vec.add(new ObjectResourceTreeNode(element, element.getName(), true, false));
+						if (!element.links.isEmpty() || !element.element_ids.isEmpty())
+							vec.add(new ObjectResourceTreeNode(element, element.getName(), true, false));
+						else
+							vec.add(new ObjectResourceTreeNode(element, element.getName(), true, true));
 					}
 				}
 			}

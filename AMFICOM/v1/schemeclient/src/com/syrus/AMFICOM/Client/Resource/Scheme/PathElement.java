@@ -13,7 +13,7 @@ public class PathElement extends StubResource implements Serializable
 	public static final int CABLE_LINK = 1;
 	public static final int LINK = 2;
 
-	int type;
+	protected int type;
 
 	private static final long serialVersionUID = 01L;
 	public int n;
@@ -26,8 +26,8 @@ public class PathElement extends StubResource implements Serializable
 	public String link_id;
 	public String thread_id;
 
-	public String start_port_id;
-	public String end_port_id;
+	public String start_port_id = "";
+	public String end_port_id = "";
 
 	public String scheme_element_id = "";
 	public String scheme_id = "";
@@ -69,6 +69,16 @@ public class PathElement extends StubResource implements Serializable
 	static public ObjectResourceSorter getSorter()
 	{
 		return new ObjectResourcePathSorter();
+	}
+
+	public int getType()
+	{
+		return type;
+	}
+
+	public void setType(int type)
+	{
+		this.type = type;
 	}
 
 	public String getName()

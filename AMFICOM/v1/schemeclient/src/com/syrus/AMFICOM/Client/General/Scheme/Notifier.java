@@ -251,28 +251,9 @@ public class Notifier
 								links.add(Pool.get(Link.typ, link.link_id));
 						}
 					}
-
-
-					/*
-					DefaultLink link = (DefaultLink)cells[0];
-					if (!link.getSchemePathId().equals(""))
-					{
-//					if (hasIdenticalPathId(cells, link.getSchemePathId()))
-					{
-						SchemePath path = link.getSchemePath();
-						//if (path.links.size() == cells.length)
-						{
-							scheme_paths.add(path);
-							if (!path.path_id.equals(""))
-								paths.add(Pool.get(TransmissionPath.typ, path.path_id));
-						}
-					}
-					}*/
 				}
 				else if (cells[0] instanceof DefaultCableLink)
 				{
-					if (cells[0] instanceof DefaultCableLink)
-					{
 						int counter = 0;
 						for (int i = 0; i < cells.length; i++)
 							if (cells[i] instanceof DefaultCableLink)
@@ -289,22 +270,6 @@ public class Notifier
 									clinks.add(Pool.get(CableLink.typ, link.cable_link_id));
 							}
 						}
-					}
-					/*
-					DefaultCableLink link = (DefaultCableLink)cells[0];
-					if (!link.getSchemePathId().equals(""))
-					{
-//					if (hasIdenticalPathId(cells, link.getSchemePathId()))
-					{
-						SchemePath path = link.getSchemePath();
-						//if (path.links.size() == cells.length)
-						{
-							scheme_paths.add(path);
-							if (!path.path_id.equals(""))
-								paths.add(Pool.get(TransmissionPath.typ, path.path_id));
-						}
-					}
-					}*/
 				}
 				else if (cells[0] instanceof PortCell)
 				{

@@ -111,6 +111,35 @@ public class DirectoryToFile
 
 	public static void writeAll()
 	{
+		/* кажися это лишнее
+		Hashtable schemes = Pool.getHash(Scheme.typ);
+		for (Enumeration en = schemes.elements(); en.hasMoreElements();)
+		{
+			Scheme scheme = (Scheme)en.nextElement();
+			for (Iterator it = scheme.getAllLinks().iterator(); it.hasNext();)
+			{
+				SchemeLink link = (SchemeLink)it.next();
+				Pool.put(SchemeLink.typ, link.getId(), link);
+			}
+			for (Iterator it = scheme.getAllCableLinks().iterator(); it.hasNext();)
+			{
+				SchemeCableLink link = (SchemeCableLink)it.next();
+				Pool.put(SchemeCableLink.typ, link.getId(), link);
+			}
+			for (Iterator it = scheme.elements.iterator(); it.hasNext();)
+			{
+				SchemeElement se = (SchemeElement)it.next();
+				if (se.scheme_id.equals("") && !se.element_ids.isEmpty())
+				{
+					for (Iterator it2 = se.getAllChilds().iterator(); it2.hasNext();)
+					{
+						SchemeElement sel = (SchemeElement)it2.next();
+						Pool.put(SchemeElement.typ, sel.getId(), sel);
+					}
+				}
+			}
+		}
+*/
 		System.out.println("Writing types...");
 		writeTypes();
 		System.out.println("Writing devices...");
@@ -1042,6 +1071,10 @@ public class DirectoryToFile
 					for (Enumeration e = scheme.cablelinks.elements(); e.hasMoreElements();)
 						pw.println (((SchemeCableLink)e.nextElement()).getId());
 					pw.println ("@end of cablelinks");
+					pw.println ("@links ");
+					for (Enumeration e = scheme.links.elements(); e.hasMoreElements();)
+						pw.println (((SchemeLink)e.nextElement()).getId());
+					pw.println ("@end of links");
 					pw.println ("@elements ");
 					for (Enumeration e = scheme.elements.elements(); e.hasMoreElements();)
 						pw.println (((SchemeElement)e.nextElement()).getId());
@@ -1193,6 +1226,8 @@ public class DirectoryToFile
 						pw.println (String.valueOf(pe.is_cable));
 						pw.println (pe.link_id);
 						pw.println (pe.thread_id);
+						pw.println (pe.start_port_id);
+						pw.println (pe.end_port_id);
 					}
 					pw.println ("@end of pathelements");
 					pw.println ();
@@ -2490,6 +2525,20 @@ public class DirectoryToFile
 								s = analyseString(isr.readASCIIString());
 							}
 						}
+						else if (s[0].equals("@links"))
+						{
+							scheme.links = new Vector();
+							s = analyseString(isr.readASCIIString());
+							while (!s[0].startsWith("@end"))
+							{
+								SchemeLink link = (SchemeLink)Pool.get(SchemeLink.typ, s[0]);
+								if (link == null)
+									System.out.println("Error while reading scheme " + scheme.getId() + ". Link " + s[0]+ " not found ");
+								else
+									scheme.links.add(link);
+								s = analyseString(isr.readASCIIString());
+							}
+						}
 						else if (s[0].equals("@elements"))
 						{
 							scheme.elements = new Vector();
@@ -2697,7 +2746,7 @@ public class DirectoryToFile
 							path.end_device_id = s[1];
 						else if (s[0].equals("@type_id"))
 							path.type_id = s[1];
-						else if (s[0].equals("@links"))
+						else if (s[0].equals("@pathelements"))
 						{
 							path.links = new Vector();
 							s = analyseString(isr.readASCIIString());
@@ -2711,6 +2760,10 @@ public class DirectoryToFile
 								pe.link_id = s[0];
 								s = analyseString(isr.readASCIIString());
 								pe.thread_id = s[0];
+								s = analyseString(isr.readASCIIString());
+//								pe.start_port_id = s[0];
+								s = analyseString(isr.readASCIIString());
+//								pe.end_port_id = s[0];
 								path.links.add(pe);
 								s = analyseString(isr.readASCIIString());
 							}
