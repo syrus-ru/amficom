@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.62 2004/12/17 16:01:45 max Exp $
+ * $Id: StorableObjectDatabase.java,v 1.63 2004/12/21 13:56:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2004/12/17 16:01:45 $
- * @author $Author: max $
+ * @version $Revision: 1.63 $, $Date: 2004/12/21 13:56:56 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -1142,7 +1142,6 @@ public abstract class StorableObjectDatabase {
 	 * @param tableName
 	 * @param idColumnName
 	 * @param linkedIdColumnName
-	 * @return
 	 * @throws RetrieveObjectException
 	 * @throws IllegalDataException
 	 */

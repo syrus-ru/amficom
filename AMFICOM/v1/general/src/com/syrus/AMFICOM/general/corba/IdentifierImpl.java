@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierImpl.java,v 1.4 2004/12/08 16:35:03 bass Exp $
+ * $Id: IdentifierImpl.java,v 1.5 2004/12/21 13:56:56 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.io.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2004/12/08 16:35:03 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/21 13:56:56 $
  * @module general_v1
  */
 final class IdentifierImpl extends Identifier implements Cloneable, Comparable {
@@ -96,53 +96,19 @@ final class IdentifierImpl extends Identifier implements Cloneable, Comparable {
 		return false;
 	}
 
-	/**
-	 * Getter method whose only purpose is to pacify Vladimir Alexandrovich.
-	 *
-	 * @see #identifierString()
-	 * @see IIdentifier#getIdentifierString()
-	 */
-	public String getIdentifierString() {
-		return identifierString();
-	}
-
-	/**
-	 * Getter method whose only purpose is to pacify Vladimir Alexandrovich.
-	 * 
-	 * @see #major()
-	 * @see IIdentifier#getMajor() 
-	 */
-	public short getMajor() {
-		return major();
-	}
-
-	/**
-	 * Getter method whose only purpose is to pacify Vladimir Alexandrovich.
-	 * 
-	 * @see #minor()
-	 * @see IIdentifier#getMinor()
-	 */
-	public long getMinor() {
-		return minor();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.corba.Identifier#getTransferable()
-	 */
-	public Identifier_Transferable getTransferable() {
-/*/		// #ifdef NUMERIC_IDENTIFIER
-		return new Identifier_Transferable(this.major(), this.minor());
-/*/		// #else // NUMERIC_IDENTIFIER
-		return new Identifier_Transferable(this.identifierString());
-//*/		// #endif // NUMERIC_IDENTIFIER
-	}
-
 	public int hashCode() {
 		final HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
 		hashCodeGenerator.addInt(this.major());
 		hashCodeGenerator.addLong(this.minor());
 		hashCodeGenerator.addObject(this.identifierString());
 		return hashCodeGenerator.getResult();
+	}
+
+	/**
+	 * @see Identifier#hexString()
+	 */
+	public String hexString() {
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -166,15 +132,19 @@ final class IdentifierImpl extends Identifier implements Cloneable, Comparable {
 		return this.thisMinor;
 	}
 
-	/**
-	 * @see IIdentifier#toHexString()
-	 */
-	public String toHexString() {
-		throw new UnsupportedOperationException();
-	}
-
 	public String toString() {
 		return this.identifierString();
+	}
+
+	/**
+	 * @see Identifier#transferable()
+	 */
+	public Identifier_Transferable transferable() {
+/*/		// #ifdef NUMERIC_IDENTIFIER
+		return new Identifier_Transferable(this.major(), this.minor());
+/*/		// #else // NUMERIC_IDENTIFIER
+		return new Identifier_Transferable(this.identifierString());
+//*/		// #endif // NUMERIC_IDENTIFIER
 	}
 
 	protected Object clone() throws CloneNotSupportedException {

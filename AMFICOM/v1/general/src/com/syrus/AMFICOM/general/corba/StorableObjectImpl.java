@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectImpl.java,v 1.6 2004/12/17 15:39:32 bass Exp $
+ * $Id: StorableObjectImpl.java,v 1.7 2004/12/21 13:56:56 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,31 +8,29 @@
 
 package com.syrus.AMFICOM.general.corba;
 
-import java.util.*;
-
 /**
  * This class is never used directly, it was provided just in order for source
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link StorableObject} instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2004/12/17 15:39:32 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/21 13:56:56 $
  * @module general_v1
  */
 final class StorableObjectImpl extends StorableObject {
 	private static final long serialVersionUID = 3675974125608086175L;
 
 	/**
-	 * @see JavaUtilIStorableObject#created()
+	 * @see StorableObject#changed()
 	 */
-	public long created() {
+	public boolean changed() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see JavaUtilIStorableObject#createdImpl()
+	 * @see StorableObject#created()
 	 */
-	public Date createdImpl() {
+	public long created() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -44,31 +42,17 @@ final class StorableObjectImpl extends StorableObject {
 	}
 
 	/**
-	 * @see JavaUtilIStorableObject#getCreated()
+	 * @see StorableObject#dependencies()
 	 */
-	public Date getCreated() {
-		return createdImpl();
-	}
-
-	/**
-	 * @see JavaUtilIStorableObject#getDependencies()
-	 */
-	public List getDependencies() {
+	public StorableObject[] dependencies() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see IStorableObject#getHeaderTransferable()
+	 * @see StorableObject#headerTransferable()
 	 */
-	public StorableObject_Transferable getHeaderTransferable() {
+	public StorableObject_Transferable headerTransferable() {
 		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see JavaUtilIStorableObject#getModified()
-	 */
-	public Date getModified() {
-		return modifiedImpl();
 	}
 
 	/**
@@ -79,23 +63,9 @@ final class StorableObjectImpl extends StorableObject {
 	}
 
 	/**
-	 * @see IStorableObject#isChanged()
-	 */
-	public boolean isChanged() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see JavaUtilIStorableObject#modified()
+	 * @see StorableObject#modified()
 	 */
 	public long modified() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see JavaUtilIStorableObject#modifiedImpl()
-	 */
-	public Date modifiedImpl() {
 		throw new UnsupportedOperationException();
 	}
 

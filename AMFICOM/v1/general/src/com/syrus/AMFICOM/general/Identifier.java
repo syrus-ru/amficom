@@ -1,5 +1,5 @@
 /*
- * $Id: Identifier.java,v 1.18 2004/12/08 16:34:14 bass Exp $
+ * $Id: Identifier.java,v 1.19 2004/12/21 13:56:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import java.io.Serializable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/12/08 16:34:14 $
+ * @version $Revision: 1.19 $, $Date: 2004/12/21 13:56:56 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -23,7 +23,7 @@ public class Identifier implements
 		TransferableObject,
 		Serializable {
 	/**
-	 * @see com.syrus.AMFICOM.general.corba.IIdentifier#SEPARATOR
+	 * @see com.syrus.AMFICOM.general.corba.Identifier#SEPARATOR
 	 */
 	public static final char SEPARATOR = '_';
 
@@ -77,7 +77,7 @@ public class Identifier implements
 
 	/**
 	 * @param o
-	 * @see java.lang.Comparable#compareTo(Object)
+	 * @see Comparable#compareTo(Object)
 	 */
 	public int compareTo(final Object o) {
 		return compareTo((Identifier) o);
@@ -93,21 +93,21 @@ public class Identifier implements
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.corba.IIdentifier#getIdentifierString()
+	 * @see com.syrus.AMFICOM.general.corba.Identifier#identifierString()
 	 */
 	public String getIdentifierString() {
 		return this.identifierString; 
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.corba.IIdentifier#getMajor()
+	 * @see com.syrus.AMFICOM.general.corba.Identifier#major()
 	 */
 	public short getMajor() {
 		return this.major;
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.corba.IIdentifier#getMinor()
+	 * @see com.syrus.AMFICOM.general.corba.Identifier#minor()
 	 */
 	public long getMinor() {
 		return this.minor;
@@ -126,7 +126,7 @@ public class Identifier implements
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.corba.IIdentifier#toHexString()
+	 * @see com.syrus.AMFICOM.general.corba.Identifier#hexString()
 	 */
 	public String toHexString() {
 		throw new UnsupportedOperationException();

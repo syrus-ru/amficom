@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierImplTestCase.java,v 1.3 2004/12/08 16:43:57 bass Exp $
+ * $Id: IdentifierImplTestCase.java,v 1.4 2004/12/21 13:56:56 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import junit.framework.TestCase;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2004/12/08 16:43:57 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/21 13:56:56 $
  * @module general_v1
  */
 public class IdentifierImplTestCase extends TestCase {
@@ -24,7 +24,7 @@ public class IdentifierImplTestCase extends TestCase {
 	public final void testHashCode() {
 		IdentifierDefaultFactory factory = new IdentifierDefaultFactory();
 		long minor = 1L;
-		Identifier id1 = factory.newInstanceFromString(ObjectEntities.ANALYSIS_ENTITY + IIdentifier.SEPARATOR + minor);
+		Identifier id1 = factory.newInstanceFromString(ObjectEntities.ANALYSIS_ENTITY + Identifier.SEPARATOR + minor);
 		Identifier id2 = factory.newInstanceFromPrimitive(ObjectEntities.ANALYSIS_ENTITY_CODE, minor);
 		int hashCode1 = id1.hashCode();
 		int hashCode2 = id2.hashCode();
@@ -36,7 +36,7 @@ public class IdentifierImplTestCase extends TestCase {
 	public final void testMajor() {
 		IdentifierDefaultFactory factory = new IdentifierDefaultFactory();
 		long minor = 1L;
-		Identifier id1 = factory.newInstanceFromString(ObjectEntities.ANALYSIS_ENTITY + IIdentifier.SEPARATOR + minor);
+		Identifier id1 = factory.newInstanceFromString(ObjectEntities.ANALYSIS_ENTITY + Identifier.SEPARATOR + minor);
 		Identifier id2 = factory.newInstanceFromPrimitive(ObjectEntities.ANALYSIS_ENTITY_CODE, minor);
 		short id1Major = id1.major();
 		short id2Major = id2.major();
@@ -48,7 +48,7 @@ public class IdentifierImplTestCase extends TestCase {
 	public final void testMinor() {
 		IdentifierDefaultFactory factory = new IdentifierDefaultFactory();
 		long minor = 1L;
-		Identifier id1 = factory.newInstanceFromString(ObjectEntities.ANALYSIS_ENTITY + IIdentifier.SEPARATOR + minor);
+		Identifier id1 = factory.newInstanceFromString(ObjectEntities.ANALYSIS_ENTITY + Identifier.SEPARATOR + minor);
 		Identifier id2 = factory.newInstanceFromPrimitive(ObjectEntities.ANALYSIS_ENTITY_CODE, minor);
 		long id1Minor = id1.minor();
 		long id2Minor = id2.minor();
@@ -60,7 +60,7 @@ public class IdentifierImplTestCase extends TestCase {
 	public final void testIdentifierString() {
 		IdentifierDefaultFactory factory = new IdentifierDefaultFactory();
 		long minor = 1L;
-		Identifier id1 = factory.newInstanceFromString(ObjectEntities.ANALYSIS_ENTITY + IIdentifier.SEPARATOR + minor);
+		Identifier id1 = factory.newInstanceFromString(ObjectEntities.ANALYSIS_ENTITY + Identifier.SEPARATOR + minor);
 		Identifier id2 = factory.newInstanceFromPrimitive(ObjectEntities.ANALYSIS_ENTITY_CODE, minor);
 		String id1IdentifierString = id1.identifierString();
 		String id2IdentifierString = id2.identifierString();
@@ -73,7 +73,7 @@ public class IdentifierImplTestCase extends TestCase {
 	public final void testIdentifierImplString() {
 		IdentifierDefaultFactory factory = new IdentifierDefaultFactory();
 		long minor = 1L;
-		Identifier id = factory.newInstanceFromString(ObjectEntities.ANALYSIS_ENTITY + IIdentifier.SEPARATOR + minor);
+		Identifier id = factory.newInstanceFromString(ObjectEntities.ANALYSIS_ENTITY + Identifier.SEPARATOR + minor);
 		System.err.println(id);
 	}
 
@@ -93,7 +93,7 @@ public class IdentifierImplTestCase extends TestCase {
 	public final void testCloneInstance() {
 		IdentifierDefaultFactory factory = new IdentifierDefaultFactory();
 		long minor = 1L;
-		Identifier id1 = factory.newInstanceFromString(ObjectEntities.ANALYSIS_ENTITY + IIdentifier.SEPARATOR + minor);
+		Identifier id1 = factory.newInstanceFromString(ObjectEntities.ANALYSIS_ENTITY + Identifier.SEPARATOR + minor);
 		Identifier id2 = id1.cloneInstance();
 		assertEquals(id1 == id2, false);
 		assertEquals(id1, id2);
@@ -122,7 +122,7 @@ public class IdentifierImplTestCase extends TestCase {
 	public final void testEqualsObject() {
 		IdentifierDefaultFactory factory = new IdentifierDefaultFactory();
 		long minor = 1L;
-		Identifier id1 = factory.newInstanceFromString(ObjectEntities.ANALYSIS_ENTITY + IIdentifier.SEPARATOR + minor);
+		Identifier id1 = factory.newInstanceFromString(ObjectEntities.ANALYSIS_ENTITY + Identifier.SEPARATOR + minor);
 		Identifier id2 = factory.newInstanceFromPrimitive(ObjectEntities.ANALYSIS_ENTITY_CODE, minor);
 		assertEquals(id1, id1);
 		assertEquals(id1, id2);
@@ -136,7 +136,7 @@ public class IdentifierImplTestCase extends TestCase {
 	public final void testToString() {
 		IdentifierDefaultFactory factory = new IdentifierDefaultFactory();
 		long minor = 1L;
-		Identifier id1 = factory.newInstanceFromString(ObjectEntities.ANALYSIS_ENTITY + IIdentifier.SEPARATOR + minor);
+		Identifier id1 = factory.newInstanceFromString(ObjectEntities.ANALYSIS_ENTITY + Identifier.SEPARATOR + minor);
 		Identifier id2 = factory.newInstanceFromPrimitive(ObjectEntities.ANALYSIS_ENTITY_CODE, minor);
 		System.err.println(id1);
 		System.err.println(id2);
@@ -145,7 +145,7 @@ public class IdentifierImplTestCase extends TestCase {
 	public final void testSerializable() throws ClassNotFoundException, IOException {
 		IdentifierDefaultFactory factory = new IdentifierDefaultFactory();
 		long minor = 1L;
-		Identifier id1 = factory.newInstanceFromString(ObjectEntities.ANALYSIS_ENTITY + IIdentifier.SEPARATOR + minor);
+		Identifier id1 = factory.newInstanceFromString(ObjectEntities.ANALYSIS_ENTITY + Identifier.SEPARATOR + minor);
 		Identifier id2 = factory.newInstanceFromPrimitive(ObjectEntities.ANALYSIS_ENTITY_CODE, ++minor);
 
 		File f = File.createTempFile("idImpl", null);

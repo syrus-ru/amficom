@@ -1,5 +1,5 @@
 /*
- * $Id: scheme-vt.idl,v 1.11 2004/12/20 10:19:36 bass Exp $
+ * $Id: scheme-vt.idl,v 1.12 2004/12/21 13:55:38 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,9 +14,9 @@
 #ifndef SCHEME_VT_IDL
 #define SCHEME_VT_IDL
 
+#include "general-vt.idl"
 #include "map.idl"
 #include "scheme-configuration.idl"
-#include "scheme-java.idl"
 #include "scheme-map.idl"
 #include "scheme-resource.idl"
 
@@ -24,6 +24,16 @@ module com {
 	module syrus {
 		module AMFICOM {
 			module scheme {
+				native CharacteristicSeqContainer;
+
+				abstract valuetype Characterizable {
+					attribute configuration::corba::CharacteristicSeq characteristics;
+					/**
+					 * Accessor pair for <code>sequence&lt;{@link com.syrus.AMFICOM.configuration.Characteristic}&gt;</code>.
+					 */
+					attribute CharacteristicSeqContainer characteristicsImpl;
+				};
+
 				module corba {
 					valuetype AbstractSchemeLink;
 					valuetype Scheme;
@@ -43,7 +53,7 @@ module com {
 							general::corba::StorableObject,
 							general::corba::Namable,
 							general::corba::Describable,
-							::java::util::JavaUtilCharacterizable,
+							scheme::Characterizable,
 							configuration::ComSyrusAmficomConfigurationAbstractSchemePort {
 						enum DirectionType {
 							_IN,
@@ -122,7 +132,7 @@ module com {
 							general::corba::StorableObject,
 							general::corba::Namable,
 							general::corba::Describable,
-							::java::util::JavaUtilCharacterizable {
+							scheme::Characterizable {
 						private wstring thisName;
 						private wstring thisDescription;
 						private general::corba::IdentifierSeq schemePortIds;
@@ -143,7 +153,7 @@ module com {
 							general::corba::StorableObject,
 							general::corba::Namable,
 							general::corba::Describable,
-							::java::util::JavaUtilCharacterizable {
+							scheme::Characterizable {
 						private wstring thisName;
 						private wstring thisDescription;
 						private general::corba::Identifier schemeId;
@@ -233,7 +243,7 @@ module com {
 							general::corba::StorableObject,
 							general::corba::Namable,
 							general::corba::Describable,
-							::java::util::JavaUtilCharacterizable,
+							scheme::Characterizable,
 							configuration::ComSyrusAmficomConfigurationSchemeCableThread {
 						private wstring thisName;
 						private wstring thisDescription;
@@ -380,7 +390,7 @@ module com {
 							general::corba::StorableObject,
 							general::corba::Namable,
 							general::corba::Describable,
-							::java::util::JavaUtilCharacterizable,
+							scheme::Characterizable,
 							configuration::ComSyrusAmficomConfigurationSchemePath {
 						private wstring thisName;
 						private wstring thisDescription;
@@ -409,7 +419,7 @@ module com {
 							general::corba::Namable,
 							general::corba::Describable,
 							resource::SchemeCellContainer,
-							::java::util::JavaUtilCharacterizable,
+							scheme::Characterizable,
 							configuration::ComSyrusAmficomConfigurationSchemeProtoElement {
 						private wstring thisName;
 						private wstring thisDescription;

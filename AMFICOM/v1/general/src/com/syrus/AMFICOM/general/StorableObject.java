@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.18 2004/12/09 16:30:50 arseniy Exp $
+ * $Id: StorableObject.java,v 1.19 2004/12/21 13:56:56 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,20 +16,15 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/12/09 16:30:50 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.19 $, $Date: 2004/12/21 13:56:56 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public abstract class StorableObject implements
-//		com.syrus.AMFICOM.general.corba.IStorableObject,
 		Identified,
 		TransferableObject,
 		Serializable {
 	private static final long serialVersionUID = -1720579921164397193L;
-
-//	private static final String[] TRUNCATABLE_IDS = {
-//		"IDL:com/syrus/AMFICOM/general/StorableObject:1.0"
-//	};
 
 	protected Date created;
 	protected Identifier creatorId;
@@ -64,15 +59,8 @@ public abstract class StorableObject implements
 
 	public abstract void insert() throws CreateObjectException;
 
-//	/**
-//	 * @see org.omg.CORBA.portable.ValueBase#_truncatable_ids()
-//	 */
-//	public String[] _truncatable_ids() {
-//		return TRUNCATABLE_IDS;
-//	}
-
 	/**
-	 * @see java.util.JavaUtilIStorableObject#getCreated()
+	 * @see com.syrus.AMFICOM.general.corba.StorableObject#created()
 	 */
 	public Date getCreated() {
 		return this.created;
@@ -83,12 +71,12 @@ public abstract class StorableObject implements
 	}
 
 	/**
-	 * @see java.util.JavaUtilIStorableObject#getDependencies()
+	 * @see com.syrus.AMFICOM.general.corba.StorableObject#dependencies()
 	 */
 	public abstract List getDependencies();
 
 	/**
-	 * @see com.syrus.AMFICOM.general.corba.IStorableObject#getHeaderTransferable()
+	 * @see com.syrus.AMFICOM.general.corba.StorableObject#headerTransferable()
 	 */
 	public StorableObject_Transferable getHeaderTransferable() {
 		return new StorableObject_Transferable((Identifier_Transferable)this.id.getTransferable(),
@@ -104,7 +92,7 @@ public abstract class StorableObject implements
 	}
 
 	/**
-	 * @see java.util.JavaUtilIStorableObject#getModified()
+	 * @see com.syrus.AMFICOM.general.corba.StorableObject#modified()
 	 */
 	public Date getModified() {
 		return this.modified;
@@ -115,7 +103,7 @@ public abstract class StorableObject implements
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.corba.IStorableObject#isChanged()
+	 * @see com.syrus.AMFICOM.general.corba.StorableObject#changed()
 	 */
 	public boolean isChanged() {
 		/**

@@ -1,5 +1,5 @@
 /*
- * $Id: general-vt.idl,v 1.7 2004/12/17 15:58:23 bass Exp $
+ * $Id: general-vt.idl,v 1.8 2004/12/21 13:55:38 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,60 +17,17 @@
 
 #include "general.idl"
 
-module java {
-	module util {
-		native Date;
-
-		native List;
-
-		abstract valuetype JavaUtilIStorableObject {
-			Date getCreated();
-			Date getModified();
-			List getDependencies();
-
-			readonly attribute long long created;
-			readonly attribute Date createdImpl;
-			readonly attribute long long modified;
-			readonly attribute Date modifiedImpl;
-		};
-	};
-};
-
 module com {
 	module syrus {
 		module AMFICOM {
 			module general {
 				module corba {
-					/**
-					 * Common superinterface for both "valuetyped" and "native java"
-					 * identifiers.
-					 *
-					 * @see com.syrus.AMFICOM.general.Identifier
-					 * @see Identifier
-					 * @see IdentifierImpl
-					 */
-					abstract valuetype IIdentifier {
+					valuetype StorableObject;
+
+					typedef sequence<StorableObject> StorableObjectSeq;
+
+					valuetype Identifier {
 						const char SEPARATOR = '_';
-						string getIdentifierString();
-						short getMajor();
-						long long getMinor();
-						string toHexString();
-					};
-
-					/**
-					 * Common superinterface for both "valuetyped" and "native java"
-					 * storable objects.
-					 *
-					 * @see com.syrus.AMFICOM.general.StorableObject
-					 * @see StorableObject
-					 * @see StorableObjectImpl
-					 */
-					abstract valuetype IStorableObject: ::java::util::JavaUtilIStorableObject {
-						boolean isChanged();
-						StorableObject_Transferable getHeaderTransferable();
-					};
-
-					valuetype Identifier: IIdentifier {
 #ifdef NUMERIC_IDENTIFIER
 						const string IDENTIFIER_STRING_UNINITIALIZED = "";
 #else // NUMERIC_IDENTIFIER
@@ -94,10 +51,15 @@ module com {
 						/**
 						 * Utility method introduced to provide interoperability with native Java Identifier.
 						 */						
-						Identifier_Transferable getTransferable();
+						readonly attribute Identifier_Transferable transferable;
+						/**
+						 * Utility method introduced to provide interoperability with native Java Identifier.
+						 */						
+						readonly attribute string hexString;
 
 						factory newInstanceFromString(in string identifierString);
 						factory newInstanceFromPrimitive(in short major, in long long minor);
+						factory newInstanceFromTransferable(in Identifier_Transferable identifier);
 					};
 
 					typedef sequence<Identifier> IdentifierSeq;
@@ -114,7 +76,7 @@ module com {
 						attribute wstring description;
 					};
 
-					valuetype StorableObject: IStorableObject, Identifiable {
+					valuetype StorableObject: Identifiable {
 						private Identifier thisId;
 						private long long thisCreated;
 						private long long thisModified;
@@ -122,9 +84,15 @@ module com {
 						private Identifier thisModifierId;
 						private long long thisVersion;
 
+						readonly attribute long long created;
 						readonly attribute Identifier creatorId;
+						readonly attribute long long modified;
 						readonly attribute Identifier modifierId;
 						readonly attribute long long version;
+
+						readonly attribute boolean changed;
+						readonly attribute StorableObject_Transferable headerTransferable;
+						readonly attribute StorableObjectSeq dependencies;
 					};
 				};
 			};
