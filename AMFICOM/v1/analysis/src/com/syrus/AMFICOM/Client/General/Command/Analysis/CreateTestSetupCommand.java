@@ -60,9 +60,9 @@ public class CreateTestSetupCommand extends VoidCommand
 			measurementSetup = MeasurementSetup.createInstance(
 					((RISDSessionInfo)aContext.getSessionInterface()).getUserIdentifier(),
 					ms.getParameterSet(),
+					ms.getCriteriaSet(),
 					ms.getThresholdSet(),
 					ms.getEtalon(),
-					ms.getThresholdSet(),
 					name,
 					ms.getMeasurementDuration(),
 					ms.getMonitoredElementIds());
