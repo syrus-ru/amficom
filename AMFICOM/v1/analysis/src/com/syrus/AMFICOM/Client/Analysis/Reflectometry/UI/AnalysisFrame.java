@@ -11,7 +11,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.util.ByteArray;
