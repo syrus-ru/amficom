@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.6 2004/10/26 13:32:01 krupenn Exp $
+ * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.7 2004/10/27 15:46:23 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/10/26 13:32:01 $
+ * @version $Revision: 1.7 $, $Date: 2004/10/27 15:46:23 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -80,9 +80,9 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 		for(Iterator it = cablePaths.iterator(); it.hasNext();)
 		{
 			MapCablePathElement cp = (MapCablePathElement )it.next();
-			if(cp.getEndNode() == unbound)
+			if(cp.getEndNode().equals(unbound))
 				cp.setEndNode(site);
-			if(cp.getStartNode() == unbound)
+			if(cp.getStartNode().equals(unbound))
 				cp.setStartNode(site);
 		}
 
@@ -105,18 +105,18 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 
 			MapElementState pls = nodeLink.getState();
 					
-			if(nodeLink.getEndNode() == unbound)
+			if(nodeLink.getEndNode().equals(unbound))
 				nodeLink.setEndNode(site);
-			if(nodeLink.getStartNode() == unbound)
+			if(nodeLink.getStartNode().equals(unbound))
 				nodeLink.setStartNode(site);
 
 			super.registerStateChange(nodeLink, pls, nodeLink.getState());
 				
 			MapElementState pls2 = physicalLink.getState();
 
-			if(physicalLink.getEndNode() == unbound)
+			if(physicalLink.getEndNode().equals(unbound))
 				physicalLink.setEndNode(site);
-			if(physicalLink.getStartNode() == unbound)
+			if(physicalLink.getStartNode().equals(unbound))
 				physicalLink.setStartNode(site);
 
 			super.registerStateChange(physicalLink, pls2, physicalLink.getState());

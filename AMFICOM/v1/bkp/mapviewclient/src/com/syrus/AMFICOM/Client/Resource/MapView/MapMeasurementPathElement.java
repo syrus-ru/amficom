@@ -1,5 +1,5 @@
 /**
- * $Id: MapMeasurementPathElement.java,v 1.9 2004/10/26 13:32:01 krupenn Exp $
+ * $Id: MapMeasurementPathElement.java,v 1.10 2004/10/27 15:46:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -55,7 +55,7 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/10/26 13:32:01 $
+ * @version $Revision: 1.10 $, $Date: 2004/10/27 15:46:24 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -441,10 +441,10 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 					sortedNodes.add(lit.previous());
 				}
 			}
+			node = cpath.getOtherNode(node);
+
 			// to avoid duplicate entry
 			sortedNodes.remove(node);
-
-			node = cpath.getOtherNode(node);
 		}
 		sortedNodes.add(node);
 	}

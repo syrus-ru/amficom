@@ -63,7 +63,7 @@ public class EmptyMapViewDataSource
 		SchemeElement el5;
 		SchemeLink link;
 		SchemePort port11;
-		SchemePort port21;
+		SchemePort port12;
 		SchemeCablePort cport11;
 		SchemeCablePort cport21;
 		SchemeCablePort cport22;
@@ -100,12 +100,12 @@ public class EmptyMapViewDataSource
 		port11.linkId = "link";
 		Pool.put(SchemePort.typ, port11.getId(), port11);
 
-		port21 = new SchemePort("port21");
-		port21.deviceId = "dev2";
-		port21.directionType = "in";
-		port21.name = "Порт два";
-		port21.linkId = "link";
-		Pool.put(SchemePort.typ, port21.getId(), port21);
+		port12 = new SchemePort("port12");
+		port12.deviceId = "dev1";
+		port12.directionType = "in";
+		port12.name = "Порт два";
+		port12.linkId = "link";
+		Pool.put(SchemePort.typ, port12.getId(), port12);
 
 		cport11 = new SchemeCablePort("cport11");
 		cport11.cableLinkId = "clink1";
@@ -181,13 +181,13 @@ public class EmptyMapViewDataSource
 		dev1.cableports.add(cport11);
 		dev1.name = "Девайс1";
 		dev1.ports.add(port11);
+		dev1.ports.add(port12);
 		Pool.put(SchemeDevice.typ, dev1.getId(), dev1);
 
 		dev2 = new SchemeDevice("dev2");
 		dev2.cableports.add(cport21);
 		dev2.cableports.add(cport22);
 		dev2.name = "Девайс2";
-		dev2.ports.add(port21);
 		Pool.put(SchemeDevice.typ, dev2.getId(), dev2);
 		
 		dev3 = new SchemeDevice("dev3");
@@ -248,7 +248,7 @@ public class EmptyMapViewDataSource
 		link.name = "Патчкорд";
 		link.opticalLength = 3.0D;
 		link.physicalLength = 3.0D;
-		link.sourcePortId = "port21";
+		link.sourcePortId = "port12";
 		link.targetPortId = "port11";
 		link.setSchemeId("scheme1");
 		Pool.put(SchemeLink.typ, link.getId(), link);
@@ -299,7 +299,7 @@ public class EmptyMapViewDataSource
 		Pool.put(SchemeCableLink.typ, clink5.getId(), clink5);
 
 		pel1 = new PathElement();
-		pel1.startPortId = "port21";
+		pel1.startPortId = "port12";
 		pel1.endPortId = "port11";
 		pel1.n = 0;
 		pel1.schemeId = "scheme1";
@@ -363,7 +363,7 @@ public class EmptyMapViewDataSource
 		pel7.setType(PathElement.CABLE_LINK);
 		
 		path = new SchemePath("path");
-		path.startDeviceId = "dev2";
+		path.startDeviceId = "dev1";
 		path.endDeviceId = "dev4";
 		path.links.add(pel1);
 		path.links.add(pel2);
@@ -610,6 +610,7 @@ public class EmptyMapViewDataSource
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
 					"Ошибка записи");
+			return;
 		}
 		try
 		{

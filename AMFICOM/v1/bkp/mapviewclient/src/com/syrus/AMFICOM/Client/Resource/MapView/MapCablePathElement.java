@@ -1,5 +1,5 @@
 /**
- * $Id: MapCablePathElement.java,v 1.16 2004/10/26 13:32:01 krupenn Exp $
+ * $Id: MapCablePathElement.java,v 1.17 2004/10/27 15:46:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -46,7 +46,7 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.16 $, $Date: 2004/10/26 13:32:01 $
+ * @version $Revision: 1.17 $, $Date: 2004/10/27 15:46:24 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -231,6 +231,18 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 	public SchemeCableLink getSchemeCableLink()
 	{
 		return schemeCableLink;
+	}
+
+	public void setStartNode(MapNodeElement startNode)
+	{
+		super.setStartNode(startNode);
+		nodeLinksSorted = false;
+	}
+	
+	public void setEndNode(MapNodeElement endNode)
+	{
+		super.setEndNode(endNode);
+		nodeLinksSorted = false;
 	}
 
 	public boolean isSelectionVisible()
@@ -556,7 +568,7 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 
 	public void sortNodeLinks()
 	{
-//		sortLinks();
+		sortLinks();
 //		if(!nodeLinksSorted)
 		{
 			java.util.List pl = getLinks();
@@ -564,23 +576,43 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 			List vec = new LinkedList();
 			List nodevec = new LinkedList();
 
+			MapNodeElement node = getStartNode();
+
 			for(Iterator it = pl.iterator(); it.hasNext();)
 			{
 				MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
 				
 				link.sortNodeLinks();
 				
-				vec.addAll(link.getNodeLinks());
-				
-				for(Iterator it2 = link.getSortedNodes().iterator(); it2.hasNext();)
+				if(link.getStartNode().equals(node))
 				{
-					MapNodeElement mne = (MapNodeElement )it2.next();
-
-					// avoid duplicate nodes - do not add last node in list
-					if(it2.hasNext())
-						nodevec.add(mne);
+					vec.addAll(link.getNodeLinks());
+					nodevec.addAll(link.getSortedNodes());
 				}
+				else
+				{
+					for(ListIterator lit = link.getNodeLinks().listIterator(link.getNodeLinks().size()); lit.hasPrevious();)
+					{
+						vec.add(lit.previous());
+					}
+					for(ListIterator lit = link.getSortedNodes().listIterator(link.getSortedNodes().size()); lit.hasPrevious();)
+					{
+						nodevec.add(lit.previous());
+					}
+				}
+				node = link.getOtherNode(node);
+
+				// to avoid duplicate entry
+				nodevec.remove(node);
 			}
+//				for(Iterator it2 = link.getSortedNodes().iterator(); it2.hasNext();)
+//				{
+//					MapNodeElement mne = (MapNodeElement )it2.next();
+//
+//					// avoid duplicate nodes - do not add last node in list
+//					if(it2.hasNext())
+//						nodevec.add(mne);
+//				}
 			
 			// add last node
 			nodevec.add(getEndNode());

@@ -163,16 +163,40 @@ public final class SelectionPopupMenu extends MapPopupMenu
 
 	private void generateCabling()
 	{
+		MapNodeProtoElement proto = super.selectNodeProto();
+
+		List nodesToBind = new LinkedList();
+		for(Iterator it = selection.getElements().iterator(); it.hasNext();)
+		{
+			MapElement me = (MapElement )it.next();
+			if(me instanceof MapUnboundNodeElement)
+			{
+				nodesToBind.add(me);
+				it.remove();
+			}
+		}
+
+		if(!nodesToBind.isEmpty())
+		{
+			for(Iterator it = nodesToBind.iterator(); it.hasNext();)
+			{
+				MapUnboundNodeElement un = (MapUnboundNodeElement )it.next();
+				super.convertUnboundNodeToSite(un, proto);
+			}
+		}
+
 		List alreadyBound = new LinkedList();
-		MapNodeProtoElement proto = null;
-		if(proto == null)
-			proto = super.selectNodeProto();
 		for(Iterator it = selection.getElements().iterator(); it.hasNext();)
 		{
 			MapElement me = (MapElement )it.next();
 			if(me instanceof MapCablePathElement)
 			{
-				super.generatePathCabling((MapCablePathElement )me, proto);
+				MapCablePathElement path = (MapCablePathElement )me;
+				if(!alreadyBound.contains(path))
+				{
+					super.generatePathCabling(path, proto);
+					alreadyBound.add(path);
+				}
 			}
 			else
 			if(me instanceof MapUnboundLinkElement)
@@ -184,11 +208,11 @@ public final class SelectionPopupMenu extends MapPopupMenu
 					alreadyBound.add(path);
 				}
 			}
-			else
-			if(me instanceof MapUnboundNodeElement)
-			{
-				super.convertUnboundNodeToSite((MapUnboundNodeElement )me, proto);
-			}
+//			else
+//			if(me instanceof MapUnboundNodeElement)
+//			{
+//				super.convertUnboundNodeToSite((MapUnboundNodeElement )me, proto);
+//			}
 		}
 	}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalLinkElement.java,v 1.25 2004/10/20 10:13:59 krupenn Exp $
+ * $Id: MapPhysicalLinkElement.java,v 1.26 2004/10/27 15:45:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -46,7 +46,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.25 $, $Date: 2004/10/20 10:13:59 $
+ * @version $Revision: 1.26 $, $Date: 2004/10/27 15:45:58 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -318,6 +318,18 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 				e);
 		}
 		return s1 + s2 + s3;
+	}
+
+	public void setStartNode(MapNodeElement startNode)
+	{
+		super.setStartNode(startNode);
+		nodeLinksSorted = false;
+	}
+	
+	public void setEndNode(MapNodeElement endNode)
+	{
+		super.setEndNode(endNode);
+		nodeLinksSorted = false;
 	}
 
 	protected boolean selectionVisible = false;

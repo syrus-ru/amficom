@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeElement.java,v 1.16 2004/10/26 13:25:36 krupenn Exp $
+ * $Id: MapNodeElement.java,v 1.17 2004/10/27 15:45:58 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -36,7 +36,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.16 $, $Date: 2004/10/26 13:25:36 $
+ * @version $Revision: 1.17 $, $Date: 2004/10/27 15:45:58 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -376,7 +376,7 @@ public abstract class MapNodeElement extends StubResource
 			MapNodeLinkElement nodeLink = (MapNodeLinkElement )it.next();
 			
 			//≈сли один из концов €вл€етс€ данным node то добавл€ем его в вектор
-			if ( (nodeLink.endNode == this) || (nodeLink.startNode == this))
+			if ( (nodeLink.getEndNode().equals(this)) || (nodeLink.getStartNode().equals(this)))
 			{
 				returnList.add(nodeLink);
 			}

@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateCablePathCablingCommandBundle.java,v 1.7 2004/10/26 13:32:01 krupenn Exp $
+ * $Id: GenerateCablePathCablingCommandBundle.java,v 1.8 2004/10/27 15:46:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,7 +35,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/10/26 13:32:01 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/27 15:46:24 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -124,9 +124,9 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 				}
 				path.addLink(link);
 				link.getBinding().add(path);
-
-				startsite = endsite;
 			}
+
+			startsite = endsite;
 		}
 
 		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));

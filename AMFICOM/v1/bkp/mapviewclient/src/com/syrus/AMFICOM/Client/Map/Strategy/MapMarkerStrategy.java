@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkerStrategy.java,v 1.4 2004/10/26 13:32:01 krupenn Exp $
+ * $Id: MapMarkerStrategy.java,v 1.5 2004/10/27 15:46:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/26 13:32:01 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/27 15:46:24 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -128,46 +128,55 @@ public final class MapMarkerStrategy implements  MapStrategy
 					double lengthFromStartNode = marker.startToThis();
 					
 					double nodeLinkLength =  nodeLink.getLengthLt();
-					nodeLink.calcScreenSlope();
-					double cos_b = nodeLink.getScreenCos();
-					double sin_b = nodeLink.getScreenSin();
 
 					double lengthThisToMousePoint = Math.sqrt( 
 							(point.x - anchorPoint.x) * (point.x - anchorPoint.x) +
 							(point.y - anchorPoint.y) * (point.y - anchorPoint.y) );
 
-					double cos_a = 
-						( 	(end.x - start.x) * (point.x - anchorPoint.y)
+//					double gamma = Math.atan2((point.x - anchorPoint.x), (point.y - anchorPoint.y));
+//					double betta = Math.atan2((end.x - start.x), (end.y - start.y));
+//					double cos_a = Math.cos(gamma - betta);
+
+					double cos_a = 	( 	(end.x - start.x) * (point.x - anchorPoint.x)
 							+ (end.y - start.y) * (point.y - anchorPoint.y) ) 
-						/ nodeLinkLength 
-						* lengthThisToMousePoint;
+						/ (nodeLinkLength * lengthThisToMousePoint);
 
 					lengthFromStartNode = lengthFromStartNode + cos_a * lengthThisToMousePoint;
 
 					if ( lengthFromStartNode > nodeLinkLength )
 					{
 						nodeLink = marker.nextNodeLink();
-						sn = en;
-						en = nodeLink.getOtherNode(sn);
-
-						marker.setNodeLink(nodeLink);
-						marker.setStartNode(en);
-						marker.setEndNode(sn);
-
-						lengthFromStartNode -= nodeLinkLength;
+						if(nodeLink == null)
+							lengthFromStartNode = nodeLinkLength;
+						else
+						{
+							sn = en;
+							en = nodeLink.getOtherNode(sn);
+	
+							marker.setNodeLink(nodeLink);
+							marker.setStartNode(sn);
+							marker.setEndNode(en);
+	
+							lengthFromStartNode -= nodeLinkLength;
+						}
 					}
 					else
 					if ( lengthFromStartNode < 0 )
 					{
 						nodeLink = marker.previousNodeLink();
-						en = sn;
-						sn = nodeLink.getOtherNode(en);
-
-						marker.setNodeLink(nodeLink);
-						marker.setStartNode(en);
-						marker.setEndNode(sn);
-
-						lengthFromStartNode += nodeLink.getLengthLt();
+						if(nodeLink == null)
+							lengthFromStartNode = 0;
+						else
+						{
+							en = sn;
+							sn = nodeLink.getOtherNode(en);
+	
+							marker.setNodeLink(nodeLink);
+							marker.setStartNode(sn);
+							marker.setEndNode(en);
+	
+							lengthFromStartNode += nodeLink.getLengthLt();
+						}
 					}
 
 					marker.adjustPosition(lengthFromStartNode);

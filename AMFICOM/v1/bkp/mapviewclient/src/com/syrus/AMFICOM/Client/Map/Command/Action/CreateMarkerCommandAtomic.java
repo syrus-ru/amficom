@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkerCommandAtomic.java,v 1.1 2004/10/26 13:32:01 krupenn Exp $
+ * $Id: CreateMarkerCommandAtomic.java,v 1.2 2004/10/27 15:46:24 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -34,7 +34,7 @@ import java.util.List;
 /**
  *  оманда создани€ метки на линии
  * 
- * @version $Revision: 1.1 $, $Date: 2004/10/26 13:32:01 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/27 15:46:24 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -120,10 +120,7 @@ public class CreateMarkerCommandAtomic extends MapActionCommand
 				mnle.updateLengthLt();
 			}
 
-			if(mnle.getStartNode().equals(node))
-				node = mnle.getEndNode();
-			else
-				node = mnle.getStartNode();
+			node = mnle.getOtherNode(node);
 		}
 
 		// операци€ закончена - оповестить слушателей
