@@ -35,16 +35,11 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 	//	public static final String COMMAND_REMOVE_PARAM_FRAME =
 	// "RemoveParamFrame";
 	//	public static final String COMMAND_REMOVE_3A_FRAME = "Remove3aFrame";
-	public static final boolean	DEBUG						= true;
-	public static final String	COMMAND_CHANGE_PARAM_PANEL	= "ChangeParamPanel";									//$NON-NLS-1$
-	public static final String	COMMAND_ADD_PARAM_PANEL		= "AddParamPanel";										//$NON-NLS-1$
-	public static final String	COMMAND_CHANGE_PORT_TYPE	= "ChangePortType";									//$NON-NLS-1$
-	public static final String	COMMAND_CHANGE_TEST_TYPE	= "ChangeTestType";									//$NON-NLS-1$
-	public static final String	COMMAND_CHANGE_ME_TYPE		= "ChangeMEType";										//$NON-NLS-1$
-	public static final String	COMMAND_CHANGE_KIS			= "ChangeKIS";											//$NON-NLS-1$
+	//public static final boolean	DEBUG						= true;
+	
 	//public static final String COMMAND_ADD_PARAM_PANEL = "ParamPanel";
-	public static final String	TEST_TYPE_TRACE_AND_ANALYSE	= "trace_and_analyse";									//$NON-NLS-1$
-	public static final String	TEST_TYPE_VOICE_ANALYSE		= "voice_analyse";										//$NON-NLS-1$
+	//public static final String	TEST_TYPE_TRACE_AND_ANALYSE	= "trace_and_analyse";									//$NON-NLS-1$
+	//public static final String	TEST_TYPE_VOICE_ANALYSE		= "voice_analyse";										//$NON-NLS-1$
 	public static final String	PARAMETER_PARAMETER			= "Parameter";											//$NON-NLS-1$
 	public static final String	PARAMETERS_PANEL_PREFIX		= "PARAMETERS_PANEL";									//$NON-NLS-1$
 
@@ -228,10 +223,10 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		//		this.dispatcher.register(this, COMMAND_EXT_AFTER_USUAL_ROOT_FRAME);
 		////
 		this.dispatcher.register(this, SchedulerModel.COMMAND_DATA_REQUEST);
-		this.dispatcher.register(this, COMMAND_CHANGE_PARAM_PANEL);
-		this.dispatcher.register(this, COMMAND_ADD_PARAM_PANEL);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_CHANGE_PARAM_PANEL);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_ADD_PARAM_PANEL);
 		//		this.dispatcher.register(this, COMMAND_CHANGE_TEST_TYPE);
-		this.dispatcher.register(this, COMMAND_CHANGE_ME_TYPE);
+		this.dispatcher.register(this, SchedulerModel.COMMAND_CHANGE_ME_TYPE);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_AVAILABLE_ME);
 	}
@@ -307,10 +302,10 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 				}
 			}
 
-		} else if (commandName.equals(COMMAND_CHANGE_PARAM_PANEL)) {
+		} else if (commandName.equals(SchedulerModel.COMMAND_CHANGE_PARAM_PANEL)) {
 			this.currentParametersPanelName = obj.toString();
 			this.paramsRadioButton.doClick();
-		} else if (commandName.equals(COMMAND_ADD_PARAM_PANEL)) {
+		} else if (commandName.equals(SchedulerModel.COMMAND_ADD_PARAM_PANEL)) {
 			ParametersTestPanel panel = (ParametersTestPanel) obj;
 			String name = panel.getPanelName();
 			//System.out.println("name : "+name);
@@ -333,7 +328,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		} else if (commandName.equals(SchedulerModel.COMMAND_AVAILABLE_ME)) {
 			//this.meList = (java.util.List) obj;
 			//updateTestSetupList();
-		} else if (commandName.equals(COMMAND_CHANGE_ME_TYPE)) {
+		} else if (commandName.equals(SchedulerModel.COMMAND_CHANGE_ME_TYPE)) {
 			String meId = (String) obj;
 			if (this.meList == null)
 				this.meList = new ArrayList();

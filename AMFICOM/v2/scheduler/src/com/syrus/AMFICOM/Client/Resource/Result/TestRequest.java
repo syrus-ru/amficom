@@ -9,7 +9,7 @@ import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
 
 public class TestRequest extends ObjectResource {
 
-	public static final String				TYP				= "testrequest";
+	public static final String				TYPE				= "testrequest";
 	private long							completionTime	= 0;
 	private long							created			= 0;
 	private long							deleted			= 0;
@@ -32,7 +32,7 @@ public class TestRequest extends ObjectResource {
 	}
 
 	public void addTest(Test test) {
-		System.out.println(getClass().getName() + "\taddTest:" + test.getId());
+		// System.out.println(getClass().getName() + "\taddTest:" + test.getId());
 		this.testIds.add(test.getId());
 	}
 
@@ -95,7 +95,7 @@ public class TestRequest extends ObjectResource {
 	}
 
 	public String getTyp() {
-		return TYP;
+		return TYPE;
 	}
 
 	/**

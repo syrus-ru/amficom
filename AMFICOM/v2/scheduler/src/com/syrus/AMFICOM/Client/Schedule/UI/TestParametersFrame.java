@@ -11,6 +11,7 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
+import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
 public class TestParametersFrame extends JInternalFrame implements
@@ -37,7 +38,7 @@ public class TestParametersFrame extends JInternalFrame implements
 		this.dispatcher = dispatcher;
 		this.dispatcher.register(this, TestUpdateEvent.TYPE);
 		this.dispatcher.register(this,
-				TestParametersPanel.COMMAND_CHANGE_PORT_TYPE);
+								 SchedulerModel.COMMAND_CHANGE_PORT_TYPE);
 	}
 
 	public void operationPerformed(OperationEvent ae) {
@@ -64,7 +65,7 @@ public class TestParametersFrame extends JInternalFrame implements
 											new ReflectometryTestPanel(
 													aContext, port, test),
 											0,
-											TestParametersPanel.COMMAND_ADD_PARAM_PANEL));
+											SchedulerModel.COMMAND_ADD_PARAM_PANEL));
 						}
 					}
 				}
@@ -74,7 +75,7 @@ public class TestParametersFrame extends JInternalFrame implements
 //				nothing
 			}
 		} else if (commandName
-				.equals(TestParametersPanel.COMMAND_CHANGE_PORT_TYPE)) {
+				.equals(SchedulerModel.COMMAND_CHANGE_PORT_TYPE)) {
 			AccessPort port = (AccessPort) obj;
 			if (port.type_id
 					.equals(ElementsTreePanel.ACCESSPORT_NAME_REFLECTOMETER)) {
@@ -82,7 +83,7 @@ public class TestParametersFrame extends JInternalFrame implements
 						.isParameterPanelExists(ReflectometryTestPanel.PANEL_NAME)) {
 					dispatcher.notify(new OperationEvent(
 							new ReflectometryTestPanel(aContext, port), 0,
-							TestParametersPanel.COMMAND_ADD_PARAM_PANEL));
+							SchedulerModel.COMMAND_ADD_PARAM_PANEL));
 				}
 			}
 

@@ -567,7 +567,9 @@ public class PlanPanel extends JPanel implements OperationListener {
 	private void updateTests() {
 		Environment.log(Environment.LOG_LEVEL_INFO, "updateTests", getClass().getName()); //$NON-NLS-1$
 		//		this.setCursor(UIStorage.WAIT_CURSOR);
-		aContext.getDispatcher().notify(new StatusMessageEvent(LangModelSchedule.getString("Updating_tests_from_BD"))); //$NON-NLS-1$
+		aContext.getDispatcher().notify(
+										new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
+												.getString("Updating_tests_from_BD"))); //$NON-NLS-1$
 		DataSourceInterface dsi = aContext.getDataSourceInterface();
 		if (dsi == null)
 			return;
@@ -625,7 +627,7 @@ public class PlanPanel extends JPanel implements OperationListener {
 		dsi.GetRequests();
 		HashSet loadTests = new HashSet();
 		for (Iterator it = treqs.iterator(); it.hasNext();) {
-			TestRequest treq = (TestRequest) Pool.get(TestRequest.TYP, (String) it.next());
+			TestRequest treq = (TestRequest) Pool.get(TestRequest.TYPE, (String) it.next());
 			if (treq != null) {
 				//				for (Enumeration en = treq.test_ids.elements();
 				//					en.hasMoreElements();
@@ -679,7 +681,8 @@ public class PlanPanel extends JPanel implements OperationListener {
 		setPreferredSize(new Dimension(getPreferredSize().width, 30 + 25 * testLines.values().size()));
 		parent.repaint();
 		//		this.setCursor(UIStorage.DEFAULT_CURSOR);
-		dispatcher.notify(new StatusMessageEvent(LangModelSchedule.getString("Updating_tests_from_BD_finished"))); //$NON-NLS-1$
+		dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
+				.getString("Updating_tests_from_BD_finished"))); //$NON-NLS-1$
 		dispatcher.notify(new OperationEvent(tests, 0, COMMAND_NAME_ALL_TESTS));
 	}
 }

@@ -30,7 +30,6 @@ public class Schedule {
 	}
 
 	public static void main(String[] args) {
-		Environment.initialize();
 		try {
 			UIManager.setLookAndFeel(Environment.getLookAndFeel());
 		} catch (Exception e) {

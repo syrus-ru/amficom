@@ -498,7 +498,7 @@ public class FiltrationFrame extends JInternalFrame
 		if(fp != null)
 		{
 			fp.setContext(aContext);
-			filterPanel.getViewport().add((JComponent)fp);
+			filterPanel.getViewport().add(fp);
 			addButton.setEnabled(true);
 		}
 	}

@@ -14,13 +14,13 @@ import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 public class TestRequestFrame extends JInternalFrame implements
 		OperationListener {
 
-		private ApplicationContext aContext;
+		//private ApplicationContext aContext;
 	private Dispatcher			dispatcher;
 	private Test				receivedTest;
 	private TestRequestPanel	panel;
 
 	public TestRequestFrame(ApplicationContext aContext) {
-		this.aContext = aContext;
+		//this.aContext = aContext;
 		setTitle(LangModelSchedule.getString("TestOptions")); //$NON-NLS-1$
 		setFrameIcon(UIStorage.GENERAL_ICON);
 		setResizable(true);
@@ -47,7 +47,7 @@ public class TestRequestFrame extends JInternalFrame implements
 
 			if (tue.testSelected) {
 				
-				TestRequest treq = (TestRequest) Pool.get(TestRequest.TYP,
+				TestRequest treq = (TestRequest) Pool.get(TestRequest.TYPE,
 						this.receivedTest.getRequestId());
 				if (treq == null)
 					System.out

@@ -36,27 +36,27 @@ public class ScheduleMainMenuBar extends JMenuBar implements ApplicationModelLis
 			}
 		};
 
-		this.menuSession.setText(LangModel.Text("menuSession"));
+		this.menuSession.setText(LangModel.getString("menuSession"));
 		this.menuSession.setName("menuSession");
-		this.menuSessionNew.setText(LangModel.Text("menuSessionNew"));
+		this.menuSessionNew.setText(LangModel.getString("menuSessionNew"));
 		this.menuSessionNew.setName("menuSessionNew");
 		this.menuSessionNew.addActionListener(actionAdapter);
-		this.menuSessionClose.setText(LangModel.Text("menuSessionClose"));
+		this.menuSessionClose.setText(LangModel.getString("menuSessionClose"));
 		this.menuSessionClose.setName("menuSessionClose");
 		this.menuSessionClose.addActionListener(actionAdapter);
-		this.menuSessionOptions.setText(LangModel.Text("menuSessionOptions"));
+		this.menuSessionOptions.setText(LangModel.getString("menuSessionOptions"));
 		this.menuSessionOptions.setName("menuSessionOptions");
 		this.menuSessionOptions.addActionListener(actionAdapter);
-		this.menuSessionConnection.setText(LangModel.Text("menuSessionConnection"));
+		this.menuSessionConnection.setText(LangModel.getString("menuSessionConnection"));
 		this.menuSessionConnection.setName("menuSessionConnection");
 		this.menuSessionConnection.addActionListener(actionAdapter);
-		this.menuSessionChangePassword.setText(LangModel.Text("menuSessionChangePassword"));
+		this.menuSessionChangePassword.setText(LangModel.getString("menuSessionChangePassword"));
 		this.menuSessionChangePassword.setName("menuSessionChangePassword");
 		this.menuSessionChangePassword.addActionListener(actionAdapter);
-		this.menuSessionDomain.setText(LangModel.Text("menuSessionDomain"));
+		this.menuSessionDomain.setText(LangModel.getString("menuSessionDomain"));
 		this.menuSessionDomain.setName("menuSessionDomain");
 		this.menuSessionDomain.addActionListener(actionAdapter);
-		this.menuExit.setText(LangModel.Text("menuExit"));
+		this.menuExit.setText(LangModel.getString("menuExit"));
 		this.menuExit.setName("menuExit");
 		this.menuExit.addActionListener(actionAdapter);
 

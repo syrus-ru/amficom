@@ -78,6 +78,8 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	public static final String		DEFAULT_PULSEWIDTH			= "5000";
 	public static final String		DEFAULT_RESOLUTION			= "8";
 	public static final String		DEFAULT_WAVELENGTH			= "1625";
+	
+	public static final String	TEST_TYPE	= "trace_and_analyse";
 
 	public static final String		CHARACTER_MAX_REFRACTION	= "Max_Coef_Preloml";
 	public static final String		CHARACTER_MIN_REFRACTION	= "Min_Coef_Preloml";
@@ -153,7 +155,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		String testTypeId;
 		if (this.test == null) {
 			testSetupId = ""; //$NON-NLS-1$
-			testTypeId = TestParametersPanel.TEST_TYPE_TRACE_AND_ANALYSE;
+			testTypeId = TEST_TYPE;
 		} else {
 			testSetupId = this.test.getTestSetupId();
 			testTypeId = this.test.getTestTypeId();

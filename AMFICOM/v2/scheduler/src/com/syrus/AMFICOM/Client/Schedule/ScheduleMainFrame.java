@@ -175,7 +175,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		this.statusBar.organize();
 
 		this.aContext.setDispatcher(this.dispatcher);
-		this.dispatcher.register(this, StatusMessageEvent.type);
+		this.dispatcher.register(this, StatusMessageEvent.STATUS_MESSAGE);
 		this.dispatcher.register(this, RefChangeEvent.typ);
 		this.dispatcher.register(this, RefUpdateEvent.typ);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE);
@@ -262,9 +262,9 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		if (commandName.equals(SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE)) {
 			boolean value = ((Boolean) obj).booleanValue();
 			Environment.log(Environment.LOG_LEVEL_INFO, "progressBar:" + value);
-			this.statusBar.enableProgressBar(value);
+			this.statusBar.setProgressBarEnable(value);
 		}
-		if (commandName.equals(StatusMessageEvent.type)) {
+		if (commandName.equals(StatusMessageEvent.STATUS_MESSAGE)) {
 			StatusMessageEvent sme = (StatusMessageEvent) ae;
 			statusBar.setText("status", sme.getText());
 		} else if (commandName.equals("contextchange")) {
@@ -280,7 +280,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 					setSessionOpened();
 
-					statusBar.setText("status", LangModel.String("statusReady"));
+					statusBar.setText("status", LangModel.getString("statusReady"));
 					statusBar.setText("session", ConstStorage.SIMPLE_DATE_FORMAT.format(new Date(aContext
 							.getSessionInterface().getLogonTime())));
 					statusBar.setText("user", aContext.getSessionInterface().getUser());
@@ -293,9 +293,9 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 					setSessionClosed();
 
-					statusBar.setText("status", LangModel.String("statusReady"));
-					statusBar.setText("session", LangModel.String("statusNoSession"));
-					statusBar.setText("user", LangModel.String("statusNoUser"));
+					statusBar.setText("status", LangModel.getString("statusReady"));
+					statusBar.setText("session", LangModel.getString("statusNoSession"));
+					statusBar.setText("user", LangModel.getString("statusNoUser"));
 				}
 			}
 			if (cce.CONNECTION_OPENED) {
@@ -303,18 +303,18 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 				if (aContext.getConnectionInterface().equals(cci)) {
 					setConnectionOpened();
 
-					statusBar.setText("status", LangModel.String("statusReady"));
+					statusBar.setText("status", LangModel.getString("statusReady"));
 					statusBar.setText("server", aContext.getConnectionInterface().getServiceURL());
 				}
 			}
 			if (cce.CONNECTION_CLOSED) {
 				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
 				if (aContext.getConnectionInterface().equals(cci)) {
-					statusBar.setText("status", LangModel.String("statusError"));
-					statusBar.setText("server", LangModel.String("statusConnectionError"));
+					statusBar.setText("status", LangModel.getString("statusError"));
+					statusBar.setText("server", LangModel.getString("statusConnectionError"));
 
-					statusBar.setText("status", LangModel.String("statusDisconnected"));
-					statusBar.setText("server", LangModel.String("statusNoConnection"));
+					statusBar.setText("status", LangModel.getString("statusDisconnected"));
+					statusBar.setText("server", LangModel.getString("statusNoConnection"));
 
 					setConnectionClosed();
 
@@ -323,8 +323,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 			if (cce.CONNECTION_FAILED) {
 				ConnectionInterface cci = (ConnectionInterface) cce.getSource();
 				if (aContext.getConnectionInterface().equals(cci)) {
-					statusBar.setText("status", LangModel.String("statusError"));
-					statusBar.setText("server", LangModel.String("statusConnectionError"));
+					statusBar.setText("status", LangModel.getString("statusError"));
+					statusBar.setText("server", LangModel.getString("statusConnectionError"));
 
 					setConnectionFailed();
 				}
@@ -368,9 +368,9 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		new ConfigDataSourceImage(dataSource).LoadISM();
 
 		ApplicationModel aModel = aContext.getApplicationModel();
-		aModel.enable("menuSessionClose");
-		aModel.enable("menuSessionOptions");
-		aModel.enable("menuSessionChangePassword");
+		aModel.setEnabled("menuSessionClose", true);
+		aModel.setEnabled("menuSessionOptions", true);
+		aModel.setEnabled("menuSessionChangePassword", true);
 
 		aModel.fireModelChanged("");
 
@@ -381,7 +381,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		Hashtable unsavedTestArgumentSet = Pool.getChangedHash(TestArgumentSet.typ);
 		Hashtable unsavedAnalysis = Pool.getChangedHash(Analysis.typ);
 		Hashtable unsavedEvaluation = Pool.getChangedHash(Evaluation.typ);
-		Hashtable unsavedTestRequest = Pool.getChangedHash(TestRequest.TYP);
+		Hashtable unsavedTestRequest = Pool.getChangedHash(TestRequest.TYPE);
 		Hashtable unsavedTest = Pool.getChangedHash(Test.TYPE);
 
 		for (int i = 0; i < 5; i++) {
@@ -432,7 +432,9 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 		DataSourceInterface dataSource = aContext.getDataSourceInterface();
 
-		aContext.getDispatcher().notify(new StatusMessageEvent(LangModelSchedule.getString("Loading_BD")));
+		aContext.getDispatcher().notify(
+										new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
+												.getString("Loading_BD")));
 		//		new SurveyDataSourceImage(dataSource).LoadParameterTypes();
 		//		new SurveyDataSourceImage(dataSource).LoadTestTypes();
 		//		new SurveyDataSourceImage(dataSource).LoadAnalysisTypes();
@@ -446,10 +448,12 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		sdsi.LoadAnalysisTypes();
 		sdsi.LoadEvaluationTypes();
 
-		aContext.getDispatcher().notify(new StatusMessageEvent(LangModelSchedule.getString("Loding_BD_finished")));
+		aContext.getDispatcher().notify(
+										new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, LangModelSchedule
+												.getString("Loding_BD_finished")));
 
 		ApplicationModel aModel = aContext.getApplicationModel();
-		aModel.enable("menuSessionDomain");
+		aModel.setEnabled("menuSessionDomain", true);
 		aModel.setEnabled("menuSessionNew", false);
 		aModel.fireModelChanged("");
 		String domainId = aContext.getSessionInterface().getDomainId();
@@ -467,7 +471,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 		aModel.fireModelChanged("");
 
-		statusBar.setText("domain", LangModel.String("statusNoDomain"));
+		statusBar.setText("domain", LangModel.getString("statusNoDomain"));
 	}
 
 	protected void processWindowEvent(WindowEvent e) {

@@ -35,17 +35,22 @@ import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
  * @author Vladimir Dolzhenko
  */
 public class SchedulerModel implements OperationListener {
-
+	public static final String	COMMAND_ADD_PARAM_PANEL		= "AddParamPanel";									//$NON-NLS-1$
 	public static final String	COMMAND_APPLY_TEST				= "ApplyTest";		//$NON-NLS-1$
-
+	public static final String	COMMAND_AVAILABLE_ME			= "AvailableMe";
+	public static final String	COMMAND_CHANGE_KIS			= "ChangeKIS";											//$NON-NLS-1$
+	public static final String	COMMAND_CHANGE_ME_TYPE		= "ChangeMEType";										//$NON-NLS-1$
+	public static final String	COMMAND_CHANGE_PARAM_PANEL	= "ChangeParamPanel";									//$NON-NLS-1$
+	public static final String	COMMAND_CHANGE_PORT_TYPE	= "ChangePortType";									//$NON-NLS-1$
+	public static final String	COMMAND_CHANGE_STATUSBAR_STATE  = "ChangeStatusBarState";
+	public static final String	COMMAND_CHANGE_TEST_TYPE	= "ChangeTestType";									//$NON-NLS-1$
+	public static final String	COMMAND_CLEAN					= "Clean";
 	public static final String	COMMAND_CREATE_TEST				= "CreateTest";	//$NON-NLS-1$
 	public static final String	COMMAND_DATA_REQUEST			= "DataRequest";	//$NON-NLS-1$
+	public static final String	COMMAND_REMOVE_TEST				= "RemoveTest";
 	public static final String	COMMAND_SEND_DATA				= "SendData";		//$NON-NLS-1$
 	public static final String	COMMAND_TEST_SAVED_OK			= "TestSavedOk";	//$NON-NLS-1$
-	public static final String	COMMAND_CLEAN					= "Clean";
-	public static final String	COMMAND_AVAILABLE_ME			= "AvailableMe";
-	public static final String	COMMAND_REMOVE_TEST				= "RemoveTest";
-	public static final String	COMMAND_CHANGE_STATUSBAR_STATE  = "ChangeStatusBarState";
+
 	
 
 	public static final int		DATA_ID_ELEMENTS				= 5;
@@ -61,6 +66,10 @@ public class SchedulerModel implements OperationListener {
 
 	private static final int	FLAG_APPLY						= 1 << 1;
 	private static final int	FLAG_CREATE						= 1 << 0;
+	// new
+	// Dispatcher();
+	private ApplicationContext	aContext;
+	private Dispatcher			dispatcher;										//						=
 	private int					flag							= 0;
 	private HashMap				receiveData;
 
@@ -68,10 +77,6 @@ public class SchedulerModel implements OperationListener {
 	private Test				receivedTest;
 	private HashMap				receiveTreeElements;
 	private TestReturnType		returnType;
-	private Dispatcher			dispatcher;										//						=
-	// new
-	// Dispatcher();
-	private ApplicationContext	aContext;
 
 	public SchedulerModel(ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -97,7 +102,7 @@ public class SchedulerModel implements OperationListener {
 				//this.getContentPane().add(panel, BorderLayout.CENTER);
 				//updateUI();
 
-				TestRequest treq = (TestRequest) Pool.get(TestRequest.TYP,
+				TestRequest treq = (TestRequest) Pool.get(TestRequest.TYPE,
 						receivedTest.getRequestId());
 				if (treq == null)
 					System.out
@@ -171,7 +176,7 @@ public class SchedulerModel implements OperationListener {
 			} else if (obj instanceof TestReturnType) {
 				returnType = (TestReturnType) obj;
 			} else if (obj instanceof TestRequest) {
-				receiveData.put(TestRequest.TYP, obj);
+				receiveData.put(TestRequest.TYPE, obj);
 			}
 			System.out.println("receiveDataCount:" + receiveDataCount); //$NON-NLS-1$
 			if (7 == receiveDataCount) {
@@ -273,7 +278,7 @@ public class SchedulerModel implements OperationListener {
 
 		}
 		TestRequest testRequest = (TestRequest) this.receiveData
-				.get(TestRequest.TYP);
+				.get(TestRequest.TYPE);
 
 		testRequest.addTest(test);
 		test.setRequestId(testRequest.getId());

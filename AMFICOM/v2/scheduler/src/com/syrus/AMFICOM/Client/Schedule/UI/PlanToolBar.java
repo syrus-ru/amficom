@@ -312,7 +312,7 @@ class PlanToolBar extends JPanel {
 		Hashtable unsavedTestArgumentSet = Pool.getChangedHash(TestArgumentSet.typ);
 		Hashtable unsavedAnalysis = Pool.getChangedHash(Analysis.typ);
 		Hashtable unsavedEvaluation = Pool.getChangedHash(Evaluation.typ);
-		Hashtable unsavedTestRequest = Pool.getChangedHash(TestRequest.TYP);
+		Hashtable unsavedTestRequest = Pool.getChangedHash(TestRequest.TYPE);
 		Hashtable unsavedTest = Pool.getChangedHash(Test.TYPE);
 
 		// remove tests
@@ -325,7 +325,7 @@ class PlanToolBar extends JPanel {
 					String testId = test.getId();
 					if (test.getStatus().value() != TestStatus._TEST_STATUS_SCHEDULED)
 						deleteTests.add(testId);
-					TestRequest treq = (TestRequest) Pool.get(TestRequest.TYP, test.getRequestId());
+					TestRequest treq = (TestRequest) Pool.get(TestRequest.TYPE, test.getRequestId());
 					//System.out.println("removing test:" + testId + " from testRequest:" + treq.getId());
 					treq.removeTest(test);
 					Pool.remove(Test.TYPE, testId);
