@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.7 2005/02/08 14:25:25 bob Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.8 2005/02/08 14:42:51 bob Exp $
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -7,6 +7,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -17,10 +18,9 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ParameterType;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/08 14:25:25 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/08 14:42:51 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -105,41 +105,14 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 					if (condition)
 						return condition;
 
-					for (Iterator iter = ids.iterator(); iter.hasNext();) {
+					for (Iterator iter = ids.iterator(); iter.hasNext() && !condition;) {
 						Identifier id = (Identifier) iter.next();
 						MeasurementType measurementType = (MeasurementType) MeasurementStorableObjectPool
 								.getStorableObject(id, true);
 						SetParameter[] setParameters = measurementSetup.getParameterSet().getParameters();
-						for (int i = 0; (i < setParameters.length) && (!condition); i++) {
-							ParameterType parameterType = (ParameterType) setParameters[i].getType();
-							List inParameterTypes = measurementType.getInParameterTypes();
-							for (Iterator it = inParameterTypes.iterator(); it.hasNext();) {
-								Object element = it.next();
-								if (element instanceof ParameterType) {
-									ParameterType parameterType2 = (ParameterType) element;
-									if (parameterType.getId().equals(parameterType2.getId())) {
-										condition = true;
-										break;
-									}
-								}
-							}
-
-							if (!condition) {
-								List outParameterTypes = measurementType.getOutParameterTypes();
-								for (Iterator it = outParameterTypes.iterator(); it.hasNext();) {
-									Object element = it.next();
-									if (element instanceof ParameterType) {
-										ParameterType parameterType2 = (ParameterType) element;
-										if (parameterType.getId().equals(parameterType2.getId())) {
-											condition = true;
-											break;
-										}
-									}
-
-								}
-							}
-
-						}
+						params.addAll(measurementType.getInParameterTypes());
+						params.addAll(measurementType.getOutParameterTypes());						
+						condition = super.conditionTest(Arrays.asList(setParameters), params);
 					}
 				}
 
