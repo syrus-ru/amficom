@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.measurement.DomainCondition;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.SchemePath;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /*
 |- Архив
@@ -89,6 +90,11 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 
 	public void nodeBeforeExpanded(ObjectResourceTreeNode node)
 	{
+	}
+
+	public ObjectResourceController getNodeChildController(ObjectResourceTreeNode node)
+	{
+		return null;
 	}
 
 	public Class getNodeChildClass(ObjectResourceTreeNode node)
