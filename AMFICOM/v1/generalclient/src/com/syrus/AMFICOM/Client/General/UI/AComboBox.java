@@ -67,7 +67,6 @@ public class AComboBox extends JComboBox {
 	public AComboBox(int fontsize) {
 		super();
 		setFontSize(fontsize);
-		actualResize();
 	}
 
 	public AComboBox(final Object items[]) {
