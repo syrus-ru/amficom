@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeCodenames.java,v 1.4 2004/10/18 09:44:16 bob Exp $
+ * $Id: ParameterTypeCodenames.java,v 1.5 2004/11/02 10:44:44 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.measurement;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/10/18 09:44:16 $
+ * @version $Revision: 1.5 $, $Date: 2004/11/02 10:44:44 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -17,6 +17,7 @@ public interface ParameterTypeCodenames {
 
 	String	REFLECTOGRAMMA				= "reflectogramma";
 
+	String 	TRACE_FLAGS 				= "ref_flags";
 	String	TRACE_WAVELENGTH			= "ref_wvlen";
 	String	TRACE_LENGTH				= "ref_trclen";
 	String	TRACE_RESOLUTION			= "ref_res";
