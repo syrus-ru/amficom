@@ -8,6 +8,7 @@ import com.syrus.AMFICOM.Client.General.Report.*;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 abstract public class ESAPEReportModel extends APOReportModel
 {
@@ -75,8 +76,8 @@ abstract public class ESAPEReportModel extends APOReportModel
 					new Identifier(result_id),
 					true);
 
-			if (result != null)
-				return ":" + result.getMeasurement().getName();
+			if (result != null && result.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT))
+				return ":" + ((Measurement)result.getAction()).getName();
 		}
 		catch(ApplicationException ex)
 		{

@@ -12,7 +12,6 @@ import com.syrus.AMFICOM.client_.general.ui_.tree.*;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
-import com.syrus.AMFICOM.measurement.DomainCondition;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.SchemePath;
@@ -148,9 +147,9 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 			}
 			else if(s.equals("measurements") || s.equals("predicted"))
 			{
-				StorableObjectCondition condition = new DomainCondition(domain, ObjectEntities.ME_ENTITY_CODE);
+				LinkedIdsCondition condition = new LinkedIdsCondition(this.domain.getId(), ObjectEntities.ME_ENTITY_CODE);
 				try {
-					List mes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					Collection mes = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 					for (Iterator it = mes.iterator(); it.hasNext(); ) {
 						MonitoredElement me = (MonitoredElement)it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(
@@ -173,7 +172,7 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 			}
 			else if(s.equals("calculated"))
 			{
-				DomainCondition condition = new DomainCondition(domain,
+				LinkedIdsCondition condition = new LinkedIdsCondition(this.domain.getId(), 
 						ObjectEntities.SCHEME_PATH_ENTITY_CODE);
 				try {
 					List paths = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
@@ -198,7 +197,7 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 				MonitoredElement me = (MonitoredElement)parent.getObject();
 				LinkedIdsCondition condition = new LinkedIdsCondition(me.getId(), ObjectEntities.MS_ENTITY_CODE);
 				try {
-					List mSetups = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					Collection mSetups = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 					for (Iterator it = mSetups.iterator(); it.hasNext(); ) {
 						MeasurementSetup ms = (MeasurementSetup)it.next();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(
@@ -279,7 +278,7 @@ condition.setDomain(domain);
 			LinkedIdsCondition condition = new LinkedIdsCondition(setup.getId(), ObjectEntities.TEST_ENTITY_CODE);
 			condition.setEntityCode(ObjectEntities.TEST_ENTITY_CODE);
 			try {
-				List tests = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				Collection tests = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 				for (Iterator it = tests.iterator(); it.hasNext(); ) {
 					Test test = (Test)it.next();
 					vec.add(new ObjectResourceTreeNode(test, test.getDescription(), true));
@@ -294,7 +293,7 @@ condition.setDomain(domain);
 			LinkedIdsCondition condition = new LinkedIdsCondition(test.getId(), ObjectEntities.MEASUREMENT_ENTITY_CODE);
 			try
 			{
-				List measurements = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				Collection measurements = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 				condition.setEntityCode(ObjectEntities.RESULT_ENTITY_CODE);
 				List measurementIds = new LinkedList();
 				for (Iterator it = measurements.iterator(); it.hasNext(); ) {
@@ -322,7 +321,7 @@ condition.setDomain(domain);
 																	 getScaledInstance(15, 15, Image.SCALE_SMOOTH));
 
 						}
-						vec.add(new ObjectResourceTreeNode(r, r.getMeasurement().getName(), true, icon, true));
+						vec.add(new ObjectResourceTreeNode(r, ((Measurement)r.getAction()).getName(), true, icon, true));
 					}
 				}
 			}
@@ -342,7 +341,7 @@ condition.setDomain(domain);
 			{
 				StorableObjectCondition condition = new TemporalCondition(domain, startDate, endDate);
 				try {
-					List tests = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					Collection tests = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 					for (Iterator it = tests.iterator(); it.hasNext(); ) {
 						Test test = (Test)it.next();
 						vec.add(new ObjectResourceTreeNode(test, test.getDescription(), true));

@@ -11,73 +11,73 @@ import com.syrus.AMFICOM.measurement.*;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.io.*;
 
-public class OpticalAlarmDescriptor extends AlarmDescriptor
-{
+public class OpticalAlarmDescriptor extends AlarmDescriptor {
 	ReflectogramAlarm []ra;
 	private double deltaX;
 
-	public OpticalAlarmDescriptor(Alarm alarm)
-	{
+	public OpticalAlarmDescriptor(Alarm alarm) {
 		super(alarm);
 
 		if(	alarm.type_id.equals("rtutestalarm") ||
 			alarm.type_id.equals("rtutestwarning"))
 		{
+			BellcoreStructure bs = null;
 			try
 			{
 				Result res = (Result)MeasurementStorableObjectPool.getStorableObject(new Identifier(event.descriptor), true);
-				Test test = (Test)MeasurementStorableObjectPool.getStorableObject(res.getMeasurement().getTestId(), true);
+				if (res.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
+					Measurement m = (Measurement) res.getAction();
+					Test test = (Test) MeasurementStorableObjectPool.getStorableObject(m.getTestId(), true);
 
-				MonitoredElement me = test.getMonitoredElement();
-				if(!me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH))
-					return;
+					MonitoredElement me = test.getMonitoredElement();
+					if (!me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH))
+						return;
 
-				ResultSortCondition condition = new ResultSortCondition(res.getMeasurement(), ResultSort.RESULT_SORT_ANALYSIS);
-				List resIds = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					LinkedIdsCondition condition = new LinkedIdsCondition(m.getId(), ObjectEntities.ANALYSIS_ENTITY_CODE);
+					Collection analysiss = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					List analysisIds = new ArrayList(analysiss.size());
+					for (Iterator it = analysiss.iterator(); it.hasNext();)
+						analysisIds.add(((Analysis)it.next()).getId());
+					condition = new LinkedIdsCondition(analysisIds, ObjectEntities.RESULT_ENTITY_CODE);
+					Collection results = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-				BellcoreStructure bs = null;
-				for(Iterator it = resIds.iterator(); it.hasNext(); )
-				{
-					Result tres = (Result)it.next();
-					SetParameter[] parameters = tres.getParameters();
-					for(int i = 0; i < parameters.length; i++)
-					{
+					for (Iterator it = results.iterator(); it.hasNext();) {
+						Result tres = (Result)it.next();
+						SetParameter[] parameters = tres.getParameters();
+						for (int i = 0; i < parameters.length; i++) {
+							SetParameter param = parameters[i];
+							ParameterType type = (ParameterType) param.getType();
+							if (type.getCodename().equals(
+									ParameterTypeCodenames.REFLECTOGRAMMA)) {
+								bs = new BellcoreReader().getData(param.getValue());
+								break;
+							}
+						}
+					}
+					if (bs == null) {
+						return;
+					}
+
+					deltaX = bs.getResolution();
+
+					SetParameter[] parameters = res.getParameters();
+					for (int i = 0; i < parameters.length; i++) {
 						SetParameter param = parameters[i];
-						ParameterType type = (ParameterType)param.getType();
-						if(type.getCodename().equals(ParameterTypeCodenames.REFLECTOGRAMMA))
-						{
-							bs = new BellcoreReader().getData(param.getValue());
+						ParameterType type = (ParameterType) param.getType();
+						if (type.getCodename().equals(ParameterTypeCodenames.DADARA_ALARMS)) {
+							ra = ReflectogramAlarm.fromByteArray(param.getValue());
+							for (int j = 0; j < ra.length; j++) {
+								add(new OpticalAlarmDescriptorEvent(test.getMonitoredElement()
+										.getId(), deltaX, ra[i]));
+							}
 							break;
 						}
 					}
 				}
-				if(bs == null)
-				{
-					return;
-				}
-
-				deltaX = bs.getResolution();
-
-				SetParameter[] parameters = res.getParameters();
-				for(int i = 0; i < parameters.length; i++)
-				{
-					SetParameter param = parameters[i];
-					ParameterType type = (ParameterType)param.getType();
-					if(type.getCodename().equals(ParameterTypeCodenames.DADARA_ALARMS))
-					{
-						ra = ReflectogramAlarm.fromByteArray(param.getValue());
-						for(int j = 0; j < ra.length; j++)
-						{
-							add(new OpticalAlarmDescriptorEvent(test.getMonitoredElement().getId(), deltaX, ra[i]));
-						}
-						break;
-					}
-				}
-			}
-			catch(ApplicationException ex)
-			{
+			} catch (ApplicationException ex) {
 				ex.printStackTrace();
 			}
+			
 
 
 //			new SurveyDataSourceImage(dataSource).GetResult(event.descriptor);// подгрузили резулт

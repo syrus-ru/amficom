@@ -10,8 +10,8 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.*;
-import com.syrus.AMFICOM.event.corba.AlarmLevel;
 import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.io.*;
 
@@ -91,6 +91,7 @@ public class SaveAnalysisCommand extends VoidCommand
 					userId,
 					type,
 					new Identifier(bs.monitoredElementId),
+					m,
 					m.getSetup().getCriteriaSet());
 		}
 		catch(CreateObjectException ex)
@@ -102,31 +103,31 @@ public class SaveAnalysisCommand extends VoidCommand
 		SetParameter[] params = new SetParameter[3];
 		try
 		{
-			ParameterType ptype = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.REFLECTOGRAMMA);
+			ParameterType ptype = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.REFLECTOGRAMMA, DataType.DATA_TYPE_RAW);
 			params[0] = SetParameter.createInstance(ptype,
 					new BellcoreWriter().write(bs));
-	
+
 			ByteArrayCollector bac = new ByteArrayCollector();
 			for(int i = 0; i < refanalysis.events.length; i++)
 			{
 				byte[] b = refanalysis.events[i].toByteArray();
 				bac.add(b);
 			}
-			ptype = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.TRACE_EVENTS);
+			ptype = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.TRACE_EVENTS, DataType.DATA_TYPE_RAW);
 			params[1] = SetParameter.createInstance(ptype,
 					bac.encode());
-	
-			ptype = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.DADARA_EVENTS);
+
+			ptype = AnalysisUtil.getParameterType(userId, ParameterTypeCodenames.DADARA_EVENTS, DataType.DATA_TYPE_RAW);
 			params[2] = SetParameter.createInstance(ptype,
 				mtm.eventsAndTraceToByteArray());
 		}
-	    catch (CreateObjectException e)
-	    {
-		    // FIXME
-		    System.err.println("SaveAnalysisCommand: CreateObjectException.");
+			catch (CreateObjectException e)
+			{
+				// FIXME
+				System.err.println("SaveAnalysisCommand: CreateObjectException.");
 			e.printStackTrace();
 			return;
-	    }
+			}
 
 // FIXME: should be uncommented and fixed; hidden by saa because of modified module measurement_v1
 //		try

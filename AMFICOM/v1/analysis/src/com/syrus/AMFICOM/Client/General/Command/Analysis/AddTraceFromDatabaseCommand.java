@@ -10,6 +10,7 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.io.*;
 
 public class AddTraceFromDatabaseCommand extends VoidCommand
@@ -98,7 +99,8 @@ public class AddTraceFromDatabaseCommand extends VoidCommand
 		if (bs == null)
 			return;
 
-		bs.title = res.getMeasurement().getName();
+		if (res.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT))
+			bs.title = ((Measurement)res.getAction()).getName();
 		Pool.put("bellcorestructure", bs.title, bs);
 
 		dispatcher.notify(new RefChangeEvent(bs.title,

@@ -6,6 +6,7 @@ import java.util.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.*;
 import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.StringFieldSort;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.AMFICOM.measurement.Set;
@@ -35,7 +36,7 @@ public class AnalysisUtil
 	{
 	}
 
-	public static ParameterType getParameterType(Identifier userId, String codename){
+	public static ParameterType getParameterType(Identifier userId, String codename, DataType dataType){
 		StorableObjectCondition pTypeCondition = new StringFieldCondition(
 				codename,
 				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
@@ -44,7 +45,7 @@ public class AnalysisUtil
 		ParameterType parameterType = null;
 		try	{
 				try{
-			List pTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+			Collection pTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
 			for (Iterator it = pTypes.iterator(); it.hasNext();){
 				ParameterType type = (ParameterType)it.next();
 				if (type.getCodename().equals(codename)){
@@ -63,7 +64,8 @@ public class AnalysisUtil
 					userId,
 					codename,
 					codename + "_Description",
-					codename + "_Name"); // by saa after a talk with bob
+					codename + "_Name", // by saa after a talk with bob
+					dataType); 
 					MeasurementStorableObjectPool.putStorableObject(parameterType);
 			}
 		}
@@ -128,7 +130,7 @@ public class AnalysisUtil
 
 		try
 		{
-			List aTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(aTypeCondition, true);
+			Collection aTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(aTypeCondition, true);
 			for (Iterator it = aTypes.iterator(); it.hasNext();)
 			{
 				AnalysisType type = (AnalysisType)it.next();
@@ -143,11 +145,11 @@ public class AnalysisUtil
 		}
 
 		List inParameterTypes = new ArrayList();
-		ParameterType ptype = getParameterType(userId, ParameterTypeCodenames.REFLECTOGRAMMA);
+		ParameterType ptype = getParameterType(userId, ParameterTypeCodenames.REFLECTOGRAMMA, DataType.DATA_TYPE_RAW);
 		inParameterTypes.add(ptype);
 
 		List outParameterTypes = new ArrayList();
-		ptype = getParameterType(userId, ParameterTypeCodenames.TRACE_EVENTS);
+		ptype = getParameterType(userId, ParameterTypeCodenames.TRACE_EVENTS, DataType.DATA_TYPE_RAW);
 		outParameterTypes.add(ptype);
 
 		try
@@ -280,13 +282,13 @@ public class AnalysisUtil
 		{
 			for (int i = 0; i < 6; i++)
 			{
-				ParameterType ptype = getParameterType(userId, parameterCodenames[i]);
+				ParameterType ptype = getParameterType(userId, parameterCodenames[i], DataType.DATA_TYPE_DOUBLE);
 				params[i] = SetParameter.createInstance(ptype,
 						ByteArray.toByteArray(defaultMinuitParams[i]));
 			}
 			for (int i = 6; i < 8; i++)
 			{
-				ParameterType ptype = getParameterType(userId, parameterCodenames[i]);
+				ParameterType ptype = getParameterType(userId, parameterCodenames[i], DataType.DATA_TYPE_INTEGER);
 				params[i] = SetParameter.createInstance(ptype,
 						ByteArray.toByteArray((int)defaultMinuitParams[i]));
 			}
@@ -329,13 +331,13 @@ public class AnalysisUtil
 		{
 			SetParameter[] params = new SetParameter[2];
 
-			ParameterType ptype = getParameterType(userId, ParameterTypeCodenames.DADARA_ETALON_EVENTS);
+			ParameterType ptype = getParameterType(userId, ParameterTypeCodenames.DADARA_ETALON_EVENTS, DataType.DATA_TYPE_RAW);
 			params[0] = SetParameter.createInstance(ptype,
 					mtm.eventsAndTraceToByteArray());
 
 			BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", "primarytrace");
 
-			ptype = getParameterType(userId, ParameterTypeCodenames.REFLECTOGRAMMA);
+			ptype = getParameterType(userId, ParameterTypeCodenames.REFLECTOGRAMMA, DataType.DATA_TYPE_RAW);
 			params[1] = SetParameter.createInstance(ptype,
 					new BellcoreWriter().write(bs));
 
@@ -362,7 +364,7 @@ public class AnalysisUtil
 
 		try
 		{
-			ParameterType ptype = getParameterType(userId, ParameterTypeCodenames.DADARA_THRESHOLDS);
+			ParameterType ptype = getParameterType(userId, ParameterTypeCodenames.DADARA_THRESHOLDS, DataType.DATA_TYPE_RAW);
 			params[0] = SetParameter.createInstance(ptype,
 					mtm.toThresholdsByteArray());
 
@@ -377,7 +379,7 @@ public class AnalysisUtil
 				minLevel = new byte[0];
 			}
 
-			ptype = getParameterType(userId, ParameterTypeCodenames.DADARA_MIN_TRACE_LEVEL);
+			ptype = getParameterType(userId, ParameterTypeCodenames.DADARA_MIN_TRACE_LEVEL, DataType.DATA_TYPE_DOUBLE);
 			params[1] = SetParameter.createInstance(ptype,
 					minLevel);
 

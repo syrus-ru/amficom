@@ -13,6 +13,7 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.io.*;
 
 public class LoadTraceFromDatabaseCommand extends VoidCommand
@@ -108,49 +109,50 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 		}
 		Pool.put("bellcorestructure", "primarytrace", bs);
 
-		Measurement m = res.getMeasurement();
-		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
-		bs.title = m.getName();
-		bs.monitoredElementId = m.getMonitoredElementId().getIdentifierString();
-
-		bs.measurementId = m.getId().getIdentifierString();
-		MeasurementSetup ms = res.getMeasurement().getSetup();
-		Pool.put(AnalysisUtil.CONTEXT, "MeasurementSetup", ms);
-
-		AnalysisUtil.load_CriteriaSet(userId, ms);
-
-		if (ms.getEtalon() != null)
-			AnalysisUtil.load_Etalon(ms);
-		else
-			Pool.remove("bellcorestructure", AnalysisUtil.ETALON);
-
-		AnalysisUtil.load_Thresholds(userId, ms);
-
-		new InitialAnalysisCommand().execute();
-
-		ModelTraceManager mtmEtalon = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, AnalysisUtil.ETALON);
-		ModelTraceManager mtmEvents = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, "primarytrace");
-
-		if (mtmEtalon != null && mtmEvents != null)
-		{
-			int delta = 5;
-			// correct end of trace
-			// XXX: removed by saa because had no effect due to mistake
-
-			// correct event types
-			// FIXME: (is necessary??)
-			//mtmEvents.fixEventTypes(mtmEtalon, delta);
+		if (res.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
+			Measurement m = (Measurement)res.getAction();
+			Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
+			bs.title = m.getName();
+			bs.monitoredElementId = m.getMonitoredElementId().getIdentifierString();
+	
+			bs.measurementId = m.getId().getIdentifierString();
+			MeasurementSetup ms = m.getSetup();
+			Pool.put(AnalysisUtil.CONTEXT, "MeasurementSetup", ms);
+	
+			AnalysisUtil.load_CriteriaSet(userId, ms);
+	
+			if (ms.getEtalon() != null)
+				AnalysisUtil.load_Etalon(ms);
+			else
+				Pool.remove("bellcorestructure", AnalysisUtil.ETALON);
+	
+			AnalysisUtil.load_Thresholds(userId, ms);
+	
+			new InitialAnalysisCommand().execute();
+	
+			ModelTraceManager mtmEtalon = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, AnalysisUtil.ETALON);
+			ModelTraceManager mtmEvents = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, "primarytrace");
+	
+			if (mtmEtalon != null && mtmEvents != null)
+			{
+				int delta = 5;
+				// correct end of trace
+				// XXX: removed by saa because had no effect due to mistake
+	
+				// correct event types
+				// FIXME: (is necessary??)
+				//mtmEvents.fixEventTypes(mtmEtalon, delta);
+			}
+	
+			dispatcher.notify(new RefChangeEvent("primarytrace",
+				RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
+			
+			dispatcher.notify(new RefUpdateEvent("primarytrace",
+				RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
+			
+			dispatcher.notify(new RefUpdateEvent(AnalysisUtil.ETALON,
+				RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
 		}
-
-		dispatcher.notify(new RefChangeEvent("primarytrace",
-			RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
-		
-		dispatcher.notify(new RefUpdateEvent("primarytrace",
-			RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
-		
-		dispatcher.notify(new RefUpdateEvent(AnalysisUtil.ETALON,
-			RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
-		
 		Environment.getActiveWindow().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 	}
 }

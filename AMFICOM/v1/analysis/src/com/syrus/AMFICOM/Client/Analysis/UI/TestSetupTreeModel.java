@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.Client.Analysis.UI;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -14,6 +15,7 @@ import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 
 import com.syrus.AMFICOM.client_.general.ui_.tree.ObjectResourceTreeModel;
 import com.syrus.AMFICOM.client_.general.ui_.tree.ObjectResourceTreeNode;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
@@ -21,9 +23,9 @@ import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.measurement.DomainCondition;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.io.BellcoreStructure;
@@ -71,21 +73,26 @@ class TestSetupTreeModel extends ObjectResourceTreeModel
 	{
 	}
 
-	private Class getNodeClass(ObjectResourceTreeNode node)
-	{
-		if(node.getObject() instanceof MeasurementSetup)
-		{
-			return MeasurementSetup.class;
-		}
-		else
-			return null;
-	}
+//	private Class getNodeClass(ObjectResourceTreeNode node)
+//	{
+//		if(node.getObject() instanceof MeasurementSetup)
+//		{
+//			return MeasurementSetup.class;
+//		}
+//		else
+//			return null;
+//	}
 
 	public Class getNodeChildClass(ObjectResourceTreeNode node)
 	{
 		return MeasurementSetup.class;
 	}
 
+	public ObjectResourceController getNodeChildController(ObjectResourceTreeNode node)
+	{
+		return null;
+	}
+	
 	public List getChildNodes(ObjectResourceTreeNode node)
 	{
 		List vec = new ArrayList();
@@ -105,9 +112,8 @@ class TestSetupTreeModel extends ObjectResourceTreeModel
 					try
 					{
 						Domain domain = (Domain)AdministrationStorableObjectPool.getStorableObject(domainId, true);
-
-						StorableObjectCondition mSetupCondition = new DomainCondition(domain, ObjectEntities.MS_ENTITY_CODE);
-						List mSetups = MeasurementStorableObjectPool.getStorableObjectsByCondition(mSetupCondition, true);
+						LinkedIdsCondition condition = new LinkedIdsCondition(domain.getId(), ObjectEntities.MS_ENTITY_CODE);
+						Collection mSetups = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 						java.util.Set testsHt = new HashSet();
 						for(Iterator it = mSetups.iterator(); it.hasNext(); )

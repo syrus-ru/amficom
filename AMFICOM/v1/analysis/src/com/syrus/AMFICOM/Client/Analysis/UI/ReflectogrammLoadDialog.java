@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.client_.general.ui_.tree.UniTreePanel;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.io.*;
 
 public class ReflectogrammLoadDialog extends JDialog implements OperationListener
@@ -248,12 +249,16 @@ public class ReflectogrammLoadDialog extends JDialog implements OperationListene
 				bs = new BellcoreReader().getData(param.getValue());
 		}
 
-		Measurement measurement = res.getMeasurement();
-		try
-		{
-			Test test = (Test)MeasurementStorableObjectPool.getStorableObject(measurement.getTestId(), true);
-			bs.monitoredElementId = test.getMonitoredElement().getId().getIdentifierString();
-			bs.title = test.getDescription();
+		
+		try {
+			if (res.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT)) {
+				Measurement measurement = (Measurement) res.getAction();
+				Test test = (Test) MeasurementStorableObjectPool.getStorableObject(
+						measurement.getTestId(), true);
+				bs.monitoredElementId = test.getMonitoredElement().getId()
+						.getIdentifierString();
+				bs.title = test.getDescription();
+			}
 		}
 		catch(ApplicationException ex)
 		{

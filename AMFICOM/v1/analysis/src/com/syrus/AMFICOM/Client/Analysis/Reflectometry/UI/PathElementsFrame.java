@@ -68,7 +68,7 @@ public class PathElementsFrame extends AnalysisFrame
 							ObjectEntities.SCHEME_PATH_ENTITY_CODE);
 					List paths = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-					List tpathIds = me.getMonitoredDomainMemberIds();
+					Collection tpathIds = me.getMonitoredDomainMemberIds();
 					for (Iterator it = paths.iterator(); it.hasNext(); ) {
 						SchemePath sp = (SchemePath)it.next();
 						/**
