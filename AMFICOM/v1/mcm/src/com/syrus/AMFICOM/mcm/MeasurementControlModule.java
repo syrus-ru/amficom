@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.37 2004/10/27 09:53:13 bob Exp $
+ * $Id: MeasurementControlModule.java,v 1.38 2004/11/04 13:15:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2004/10/27 09:53:13 $
+ * @version $Revision: 1.38 $, $Date: 2004/11/04 13:15:37 $
  * @author $Author: bob $
  * @module mcm_v1
  */
@@ -141,6 +141,10 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			System.exit(-1);
 		}
 
+		/*	Create and fill lists: testList - sheduled tests ordered by start_time;	*/
+		prepareTestList();
+		prepareResultList();
+		
 		/*	Create CORBA server with servant(s)	*/
 		activateCORBAServer();
 
@@ -154,11 +158,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		testProcessors = new Hashtable(Collections.synchronizedMap(new Hashtable()));
 
 		/*	Create and start transceiver for every KIS*/
-		activateKISTransceivers();
-
-		/*	Create and fill lists: testList - sheduled tests ordered by start_time;	*/
-		prepareTestList();
-		prepareResultList();
+		activateKISTransceivers();		
 
 		/*	Start main loop	*/
 		final MeasurementControlModule measurementControlModule = new MeasurementControlModule();
