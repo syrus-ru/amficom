@@ -1,5 +1,5 @@
 /*
- * $Id: Collector.java,v 1.17 2005/01/24 16:48:55 krupenn Exp $
+ * $Id: Collector.java,v 1.18 2005/01/25 11:11:49 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/01/24 16:48:55 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.18 $, $Date: 2005/01/25 11:11:49 $
+ * @author $Author: bob $
  * @module map_v1
  */
 public class Collector 
@@ -218,8 +218,12 @@ public class Collector
 		return this.description;
 	}
 	
-	public void setDescription(String description) {
+	protected void setDescription0(String description) {
 		this.description = description;
+	}
+	
+	public void setDescription(String description) {
+		this.setDescription0(description);
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -227,8 +231,12 @@ public class Collector
 		return this.name;
 	}
 	
-	public void setName(String name) {
+	protected void setName0(String name) {
 		this.name = name;
+	}
+	
+	public void setName(String name) {
+		this.setName0(name);
 		super.currentVersion = super.getNextVersion();
 	}
 	

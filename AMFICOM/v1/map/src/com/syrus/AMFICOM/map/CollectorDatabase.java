@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorDatabase.java,v 1.9 2005/01/17 10:54:58 bob Exp $
+ * $Id: CollectorDatabase.java,v 1.10 2005/01/25 11:10:33 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,29 +43,18 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/01/17 10:54:58 $
+ * @version $Revision: 1.10 $, $Date: 2005/01/25 11:10:33 $
  * @author $Author: bob $
  * @module map_v1
  */
 public class CollectorDatabase extends StorableObjectDatabase {
-	 // name VARCHAR2(128),
-    public static final String COLUMN_NAME  = "name";
-    // description VARCHAR2(256),
-    public static final String COLUMN_DESCRIPTION   = "description";
-
-	private static String columns;
+	 private static String columns;
 	
 	private static String updateMultiplySQLValues;
 	
 	private static final String COLLECTOR_PHYSICAL_LINK = "CollPhLink";
 	
-	 // collector_id VARCHAR2(32),
-    private static final String LINK_COLUMN_COLLECTOR_ID  = "collector_id";
-    // physical_link_id VARCHAR2(32),
-    private static final String LINK_COLUMN_PHYSICAL_LINK_ID      = "physical_link_id";
-
-
-	private Collector fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+	 private Collector fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Collector)
 			return (Collector) storableObject;
 		throw new IllegalDataException(this.getEnityName() + "Database.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
@@ -83,7 +72,7 @@ public class CollectorDatabase extends StorableObjectDatabase {
 	private void retrievePhysicalLinks(List collectors) throws RetrieveObjectException, IllegalDataException{
 		if (collectors == null || collectors.isEmpty())
 			return;
-		java.util.Map map = super.retrieveLinkedEntities(collectors, COLLECTOR_PHYSICAL_LINK, LINK_COLUMN_COLLECTOR_ID, LINK_COLUMN_PHYSICAL_LINK_ID);
+		java.util.Map map = super.retrieveLinkedEntities(collectors, COLLECTOR_PHYSICAL_LINK, CollectorWrapper.LINK_COLUMN_COLLECTOR_ID, CollectorWrapper.LINK_COLUMN_PHYSICAL_LINK_ID);
 		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
 			Collector collector = (Collector) it.next();
 			List physicalLinkIds = (List)map.get(collector);
@@ -104,8 +93,8 @@ public class CollectorDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null){
 			columns = super.getColumns(mode) + COMMA
-				+ COLUMN_NAME + COMMA
-				+ COLUMN_DESCRIPTION;
+				+ CollectorWrapper.COLUMN_NAME + COMMA
+				+ CollectorWrapper.COLUMN_DESCRIPTION;
 		}
 		return columns;
 	}	
@@ -152,8 +141,8 @@ public class CollectorDatabase extends StorableObjectDatabase {
 							   DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
-							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)));		
+							   DatabaseString.fromQuerySubString(resultSet.getString(CollectorWrapper.COLUMN_NAME)),
+							   DatabaseString.fromQuerySubString(resultSet.getString(CollectorWrapper.COLUMN_DESCRIPTION)));		
 		return collector;
 	}
 
@@ -240,7 +229,7 @@ public class CollectorDatabase extends StorableObjectDatabase {
 			}
 			collectorIdPhysicalLinkIdsMap.put(collector.getId(), physicalLinkIds);
 		}		
-		super.updateLinkedEntities(collectorIdPhysicalLinkIdsMap, COLLECTOR_PHYSICAL_LINK, LINK_COLUMN_COLLECTOR_ID, LINK_COLUMN_PHYSICAL_LINK_ID);
+		super.updateLinkedEntities(collectorIdPhysicalLinkIdsMap, COLLECTOR_PHYSICAL_LINK, CollectorWrapper.LINK_COLUMN_COLLECTOR_ID, CollectorWrapper.LINK_COLUMN_PHYSICAL_LINK_ID);
 	}	
 	
 	public void delete(Identifier id) throws IllegalDataException {
@@ -248,7 +237,7 @@ public class CollectorDatabase extends StorableObjectDatabase {
 	}
 	
 	public void delete(List ids) throws IllegalDataException {	
-		StringBuffer linkBuffer = new StringBuffer(LINK_COLUMN_COLLECTOR_ID);
+		StringBuffer linkBuffer = new StringBuffer(CollectorWrapper.LINK_COLUMN_COLLECTOR_ID);
 		StringBuffer buffer = new StringBuffer(COLUMN_ID);
 		
 		linkBuffer.append(SQL_IN);
@@ -271,7 +260,7 @@ public class CollectorDatabase extends StorableObjectDatabase {
 				else {
 					linkBuffer.append(CLOSE_BRACKET);
 					linkBuffer.append(SQL_AND);
-					linkBuffer.append(LINK_COLUMN_COLLECTOR_ID);				
+					linkBuffer.append(CollectorWrapper.LINK_COLUMN_COLLECTOR_ID);				
 					linkBuffer.append(SQL_IN);
 					linkBuffer.append(OPEN_BRACKET);
 					
