@@ -14,10 +14,6 @@ import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 public class Evaluation extends Action {
 	private Set thresholdSet;
-	/**
-	 * @deprecated This field will be removed. Method {@link #getEtalon()} will be removed also
-	 */
-	private Set etalon;
 
 	private StorableObjectDatabase evaluationDatabase;
 
@@ -43,10 +39,6 @@ public class Evaluation extends Action {
 					new Identifier(et.monitored_element_id));
 		try {
 			this.thresholdSet = new Set(new Identifier(et.threshold_set_id));
-			/**
-			 * @deprecated This field will be removed.
-			 */
-			this.etalon = new Set(new Identifier(et.etalon_id));
 		}
 		catch (RetrieveObjectException roe) {
 			throw new CreateObjectException(roe.getMessage(), roe);
@@ -68,23 +60,18 @@ public class Evaluation extends Action {
 										 Identifier creatorId,
 										 Identifier typeId,
 										 Identifier monitoredElementId,
-										 Set thresholdSet,
-										 /**
-											* @deprecated This field will be removed.
-											*/
-										 Set etalon) throws CreateObjectException {
-		super(id,
-					new Date(System.currentTimeMillis()),
-					new Date(System.currentTimeMillis()),
-					creatorId,
-					creatorId,
-					typeId,
-					monitoredElementId);
+										 Set thresholdSet) throws CreateObjectException {
+		super(id);
+		long time = System.currentTimeMillis();
+		super.created = new Date(time);
+		super.modified = new Date(time);
+		super.creatorId = creatorId;
+		super.modifierId = creatorId;
+		super.typeId = typeId;
+		super.monitoredElementId = monitoredElementId;
 		this.thresholdSet = thresholdSet;
-		/**
-		 * @deprecated This field will be removed.
-		 */
-		this.etalon = etalon;
+
+		super.currentVersion = super.getNextVersion();
 
 		this.evaluationDatabase = MeasurementDatabaseContext.evaluationDatabase;
 		try {
@@ -103,22 +90,11 @@ public class Evaluation extends Action {
 																			 (Identifier_Transferable)super.modifierId.getTransferable(),
 																			 (Identifier_Transferable)super.typeId.getTransferable(),
 																			 (Identifier_Transferable)super.monitoredElementId.getTransferable(),
-																			 (Identifier_Transferable)this.thresholdSet.getId().getTransferable(),
-																			 /**
-																				* @deprecated This field will be removed.
-																				*/
-																			 (Identifier_Transferable)this.etalon.getId().getTransferable());
+																			 (Identifier_Transferable)this.thresholdSet.getId().getTransferable());
 	}
 
 	public Set getThresholdSet() {
 		return this.thresholdSet;
-	}
-
-	/**
-	 * @deprecated This method will be removed.
-	 * */
-	public Set getEtalon() {
-		return this.etalon;
 	}
 
 	protected synchronized void setAttributes(Date created,
@@ -127,11 +103,7 @@ public class Evaluation extends Action {
 																						Identifier modifierId,
 																						Identifier typeId,
 																						Identifier monitoredElementId,
-																						Set thresholdSet,
-																						/**
-																						 * @deprecated This field will be removed.
-																						 * */
-																						Set etalon) {
+																						Set thresholdSet) {
 		super.setAttributes(created,
 												modified,
 												creatorId,
@@ -139,10 +111,6 @@ public class Evaluation extends Action {
 												typeId,
 												monitoredElementId);
 		this.thresholdSet = thresholdSet;
-		/**
-		 * @deprecated This field will be removed.
-		 */
-		this.etalon = etalon;
 	}
 
 	public Result createResult(Identifier id,
@@ -159,23 +127,15 @@ public class Evaluation extends Action {
 												 parameters);
 	}
 
-	public static Evaluation create(Identifier id,
-																	Identifier creatorId,
-																	Identifier typeId,
-																	Identifier monitoredElementId,
-																	Set thresholdSet,
-																	/**
-																	 * @deprecated This field will be removed.
-																	 */
-																	Set etalon) throws CreateObjectException {
+	public static Evaluation createInstance(Identifier id,
+																					Identifier creatorId,
+																					Identifier typeId,
+																					Identifier monitoredElementId,
+																					Set thresholdSet) throws CreateObjectException {
 		return new Evaluation(id,
 													creatorId,
 													typeId,
 													monitoredElementId,
-													thresholdSet,
-													/**
-													 * @deprecated This field will be removed.
-													 */
-													etalon);
+													thresholdSet);
 	}
 }

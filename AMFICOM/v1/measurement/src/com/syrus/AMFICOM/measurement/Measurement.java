@@ -80,19 +80,22 @@ public class Measurement extends Action {
 											Date startTime,
 											String localAddress,
 											Identifier testId) throws CreateObjectException {
-		super(id,
-					new Date(System.currentTimeMillis()),
-					new Date(System.currentTimeMillis()),
-					creatorId,
-					creatorId,
-					typeId,
-					monitoredElementId);
+		super(id);
+		long time = System.currentTimeMillis();
+		super.created = new Date(time);
+		super.modified = new Date(time);
+		super.creatorId = creatorId;
+		super.modifierId = creatorId;
+		super.typeId = typeId;
+		super.monitoredElementId = monitoredElementId;
 		this.setup = setup;
 		this.startTime = startTime;
 		this.duration = this.setup.getMeasurementDuration();
 		this.status = MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED;
 		this.localAddress = localAddress;
 		this.testId = testId;
+
+		super.currentVersion = super.getNextVersion();
 
 		this.measurementDatabase = MeasurementDatabaseContext.measurementDatabase;
 		try {
@@ -181,14 +184,14 @@ public class Measurement extends Action {
 		this.testId = testId;
 	}
 
-	protected static Measurement create(Identifier id,
-																			Identifier creatorId,
-																			Identifier typeId,
-																			Identifier monitoredElementId,
-																			MeasurementSetup setup,
-																			Date startTime,
-																			String localAddress,
-																			Identifier testId) throws CreateObjectException {
+	protected static Measurement createInstance(Identifier id,
+																							Identifier creatorId,
+																							Identifier typeId,
+																							Identifier monitoredElementId,
+																							MeasurementSetup setup,
+																							Date startTime,
+																							String localAddress,
+																							Identifier testId) throws CreateObjectException {
 		return new Measurement(id,
 													 creatorId,
 													 typeId,

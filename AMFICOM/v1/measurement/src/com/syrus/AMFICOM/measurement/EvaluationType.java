@@ -89,6 +89,7 @@ public class EvaluationType extends ActionType {
 		this.thresholdParameterTypes = thresholdParameterTypes;
 		this.etalonParameterTypes = etalonParameterTypes;
 		this.outParameterTypes = outParameterTypes;
+
 		super.currentVersion = super.getNextVersion();
 	}
 	

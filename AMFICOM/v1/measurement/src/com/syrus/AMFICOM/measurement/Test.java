@@ -190,14 +190,14 @@ public class Test extends StorableObject {
 	public Measurement createMeasurement(Identifier measurementId,
 																			 Identifier creatorId,
 																			 Date startTime) throws CreateObjectException {
-		Measurement measurement = Measurement.create(measurementId,
-																								 creatorId,
-																								 this.measurementTypeId,
-																								 this.monitoredElement.getId(),
-																								 this.mainMeasurementSetup,
-																								 startTime,
-																								 this.monitoredElement.getLocalAddress(),
-																								 this.id);
+		Measurement measurement = Measurement.createInstance(measurementId,
+																												 creatorId,
+																												 this.measurementTypeId,
+																												 this.monitoredElement.getId(),
+																												 this.mainMeasurementSetup,
+																												 startTime,
+																												 this.monitoredElement.getLocalAddress(),
+																												 this.id);
 		super.modified = new Date(System.currentTimeMillis());
 		super.modifierId = (Identifier) creatorId.clone();
 		try {
@@ -210,18 +210,24 @@ public class Test extends StorableObject {
 	}	
 	
 	private Test(Identifier id,
-							Date startTime,
-							Date endTime,
-							Identifier temporalPatternId,
-							TestTemporalType temporalType,
-							Identifier measurementTypeId,
-							Identifier analysisTypeId,
-							Identifier evaluationTypeId,
-							MonitoredElement monitoredElement,
-							TestReturnType returnType,
-							String description,
-							List measurementSetupIds){
+							 Identifier creatorId,
+							 Date startTime,
+							 Date endTime,
+							 Identifier temporalPatternId,
+							 TestTemporalType temporalType,
+							 Identifier measurementTypeId,
+							 Identifier analysisTypeId,
+							 Identifier evaluationTypeId,
+							 MonitoredElement monitoredElement,
+							 TestReturnType returnType,
+							 String description,
+							 List measurementSetupIds){
 		super(id);
+		long time = System.currentTimeMillis();
+		super.created = new Date(time);
+		super.modified = new Date(time);
+		super.creatorId = creatorId;
+		super.modifierId = creatorId;
 		this.temporalType = temporalType.value();
 		this.timeStamps = new TestTimeStamps(this.temporalType,
 																				 startTime,
@@ -236,11 +242,14 @@ public class Test extends StorableObject {
 		this.measurementSetupIds = measurementSetupIds;
 
 		this.status = TestStatus._TEST_STATUS_SCHEDULED;
+
+		super.currentVersion = super.getNextVersion();
 	}
 	
 	/**
 	 * create new instance for client
 	 * @param id
+	 * @param creatorId
 	 * @param startTime
 	 * @param endTime
 	 * @param temporalPatternId
@@ -254,30 +263,33 @@ public class Test extends StorableObject {
 	 * @param measurementSetupIds
 	 * @return
 	 */
+
 	public static Test createInstance(Identifier id,
-							Date startTime,
-							Date endTime,
-							Identifier temporalPatternId,
-							TestTemporalType temporalType,
-							Identifier measurementTypeId,
-							Identifier analysisTypeId,
-							Identifier evaluationTypeId,
-							MonitoredElement monitoredElement,
-							TestReturnType returnType,
-							String description,
-							List measurementSetupIds){
+																		Identifier creatorId,
+																		Date startTime,
+																		Date endTime,
+																		Identifier temporalPatternId,
+																		TestTemporalType temporalType,
+																		Identifier measurementTypeId,
+																		Identifier analysisTypeId,
+																		Identifier evaluationTypeId,
+																		MonitoredElement monitoredElement,
+																		TestReturnType returnType,
+																		String description,
+																		List measurementSetupIds){
 		return new Test(id,
-						startTime,
-						endTime,
-						temporalPatternId,
-						temporalType,
-						measurementTypeId,
-						analysisTypeId,
-						evaluationTypeId,
-						monitoredElement,
-						returnType,
-						description,
-						measurementSetupIds);
+										creatorId,
+										startTime,
+										endTime,
+										temporalPatternId,
+										temporalType,
+										measurementTypeId,
+										analysisTypeId,
+										evaluationTypeId,
+										monitoredElement,
+										returnType,
+										description,
+										measurementSetupIds);
 		
 	}
 

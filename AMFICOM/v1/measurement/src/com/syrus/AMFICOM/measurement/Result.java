@@ -100,16 +100,19 @@ public class Result extends StorableObject {
 								 ResultSort sort,
 								 AlarmLevel alarmLevel,
 								 SetParameter[] parameters) throws CreateObjectException {
-		super(id,
-					new Date(System.currentTimeMillis()),
-					new Date(System.currentTimeMillis()),
-					creatorId,
-					creatorId);
+		super(id);
+		long time = System.currentTimeMillis();
+		super.created = new Date(time);
+		super.modified = new Date(time);
+		super.creatorId = creatorId;
+		super.modifierId = creatorId;
 		this.measurement = measurement;
 		this.action = action;
 		this.sort = sort.value();
 		this.alarmLevel = alarmLevel.value();
 		this.parameters = parameters;
+
+		super.currentVersion = super.getNextVersion();
 
 		this.resultDatabase = MeasurementDatabaseContext.resultDatabase;
 		try {

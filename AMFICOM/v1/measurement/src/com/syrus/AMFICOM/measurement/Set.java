@@ -68,38 +68,47 @@ public class Set extends StorableObject {
 	}	
 	
 	private Set(Identifier id,
-				String description,
-				List monitoredElementIds,				
-				List parameters,
-				int sort){
-		//super(PoolId.getId(ObjectEntities.SET_ENTITY));
+							Identifier creatorId,
+							SetSort sort,
+							String description,
+							SetParameter[] parameters,
+							List monitoredElementIds) {
 		super(id);
-		setSort(sort);
+		long time = System.currentTimeMillis();
+		super.created = new Date(time);
+		super.modified = new Date(time);
+		super.creatorId = creatorId;
+		super.modifierId = creatorId;
+		this.sort = sort.value();
 		this.description = description;
-		this.parameters = (SetParameter[])parameters.toArray();
+		this.parameters = parameters;
 		this.monitoredElementIds = monitoredElementIds;
-		
+
+		super.currentVersion = super.getNextVersion();
 	}
 	
 	/**
 	 * create new instance for client
 	 * @param id
-	 * @param description
-	 * @param monitoredElementIds
-	 * @param parameters
+	 * @param creatorId
 	 * @param sort
+	 * @param description
+	 * @param parameters
+	 * @param monitoredElementIds
 	 * @return
 	 */
 	public static Set createInstance(Identifier id,
-									 String description,
-									 List monitoredElementIds,				
-									 List parameters,
-									 int sort){
+																	 Identifier creatorId,
+																	 SetSort sort,
+																	 String description,
+																	 SetParameter[] parameters,
+																	 List monitoredElementIds) {
 		return new Set(id,
-					   description,
-					   monitoredElementIds,
-					   parameters,
-					   sort);
+									 creatorId,
+									 sort,
+									 description,
+									 parameters,
+									 monitoredElementIds);
 	}
 
 	public boolean isAttachedToMonitoredElement(Identifier monitoredElementId) {

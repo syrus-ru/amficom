@@ -11,7 +11,13 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
@@ -657,17 +663,15 @@ public class TemporalPattern extends StorableObject {
 	}
 
 	private TemporalPattern(Identifier id,
-													Date created,
-													Date modified,
 													Identifier creatorId,
-													Identifier modifierId,
 													String description,
 													String[] cronStrings) {
-		super(id,
-					created,
-					modified,
-					creatorId,
-					modifierId);
+		super(id);
+		long time = System.currentTimeMillis();
+		super.created = new Date(time);
+		super.modified = new Date(time);
+		super.creatorId = creatorId;
+		super.modifierId = creatorId;
 		this.description = description;
 		this.cronStrings = cronStrings;
 		if (cronStrings != null) {
@@ -675,19 +679,27 @@ public class TemporalPattern extends StorableObject {
 			for (int i = 0; i < cronStrings.length; i++)
 				addTemplate(cronStrings[i]);
 		}
+
+		super.currentVersion = super.getNextVersion();
 	}
 	
 	private TemporalPattern(Identifier id,
-						   String description,
-						   List cronString){		
-		//super(PoolId.getId(ObjectEntities.TEMPORALPATTERN_ENTITY));
+													Identifier creatorId,
+													String description,
+													List cronString) {
 		super(id);
-		setDescription(description);
+		long time = System.currentTimeMillis();
+		super.created = new Date(time);
+		super.modified = new Date(time);
+		super.creatorId = creatorId;
+		super.modifierId = creatorId;
+		this.description = description;
 		for(Iterator it=cronString.iterator();it.hasNext();){
 			String str = (String)it.next();
 			addTemplate(str);
 		}
-			
+
+		super.currentVersion = super.getNextVersion();
 	}
 	
 	/**
@@ -698,21 +710,23 @@ public class TemporalPattern extends StorableObject {
 	 * @return
 	 */
 	public static TemporalPattern createInstance(Identifier id,
-						   String description,
-						   List cronString){
+																							 Identifier creatorId,
+																							 String description,
+																							 List cronString) {
 		return new TemporalPattern(id,
-								   description,
-								   cronString);
+															 creatorId,
+															 description,
+															 cronString);
 	}
 
-	public static TemporalPattern create(	Identifier id,
-											Date created,
-											Date modified,
-											Identifier creatorId,
-											Identifier modifierId,
-											String description,
-											String[] cronStrings) {
-		return new TemporalPattern(id, created, modified, creatorId, modifierId, description, cronStrings);
+	public static TemporalPattern create(Identifier id,
+																			 Identifier creatorId,
+																			 String description,
+																			 String[] cronStrings) {
+		return new TemporalPattern(id,
+															 creatorId,
+															 description,
+															 cronStrings);
 	}
 
 	public String[] getCronStrings() {

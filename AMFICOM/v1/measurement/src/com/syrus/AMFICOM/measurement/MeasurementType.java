@@ -73,6 +73,7 @@ public class MeasurementType extends ActionType {
 		super.description = description;
 		this.inParameterTypes = inParameterTypes;
 		this.outParameterTypes = outParameterTypes;
+
 		super.currentVersion = super.getNextVersion();
 	}
 	

@@ -17,17 +17,17 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 public class MeasurementDatabase extends StorableObjectDatabase {
-	public static final String COLUMN_TYPE_ID				=	"type_id";
-	public static final String COLUMN_MONITORED_ELEMENT_ID	=	"monitored_element_id";
-	public static final String COLUMN_SETUP_ID				= 	"setup_id";
-	public static final String COLUMN_START_TIME			= 	"start_time";
-	public static final String COLUMN_DURATION				=	"duration";
-	public static final String COLUMN_STATUS				=	"status";
-	public static final String COLUMN_LOCAL_ADDRESS			=	"local_address";
-	public static final String COLUMN_TEST_ID				=	"test_id";
+	public static final String COLUMN_TYPE_ID = "type_id";
+	public static final String COLUMN_MONITORED_ELEMENT_ID = "monitored_element_id";
+	public static final String COLUMN_SETUP_ID = "setup_id";
+	public static final String COLUMN_START_TIME = "start_time";
+	public static final String COLUMN_DURATION = "duration";
+	public static final String COLUMN_STATUS = "status";
+	public static final String COLUMN_LOCAL_ADDRESS = "local_address";
+	public static final String COLUMN_TEST_ID = "test_id";
 	
-	public static final String LINK_COLUMN_MEASUREMENT_ID	=	"measurement_id";
-	public static final String LINK_SORT					=	"sort";
+	public static final String LINK_COLUMN_MEASUREMENT_ID = "measurement_id";
+	public static final String LINK_SORT = "sort";
 
 	private Measurement fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Measurement)
@@ -43,35 +43,20 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	private void retrieveMeasurement(Measurement measurement) throws RetrieveObjectException, ObjectNotFoundException {
 		String measurementIdStr = measurement.getId().toSQLString();
 		String sql = SQL_SELECT
-			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) 
-			+ COMMA 
-			+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) 
-			+ COMMA
-			+ COLUMN_CREATOR_ID
-			+ COMMA
-			+ COLUMN_MODIFIER_ID
-			+ COMMA
-			+ COLUMN_TYPE_ID
-			+ COMMA
-			+ COLUMN_MONITORED_ELEMENT_ID
-			+ COMMA
-			+ COLUMN_SETUP_ID
-			+ COMMA
-			+ DatabaseDate.toQuerySubString(COLUMN_START_TIME)
-			+ COMMA
-			+ COLUMN_DURATION
-			+ COMMA
-			+ COLUMN_STATUS
-			+ COMMA
-			+ COLUMN_LOCAL_ADDRESS
-			+ COMMA
+			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
+			+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
+			+ COLUMN_CREATOR_ID + COMMA
+			+ COLUMN_MODIFIER_ID + COMMA
+			+ COLUMN_TYPE_ID + COMMA
+			+ COLUMN_MONITORED_ELEMENT_ID + COMMA
+			+ COLUMN_SETUP_ID + COMMA
+			+ DatabaseDate.toQuerySubString(COLUMN_START_TIME) + COMMA
+			+ COLUMN_DURATION + COMMA
+			+ COLUMN_STATUS + COMMA
+			+ COLUMN_LOCAL_ADDRESS + COMMA
 			+ COLUMN_TEST_ID
-			+ SQL_WHERE
-			+ ObjectEntities.MEASUREMENT_ENTITY
-			+ SQL_WHERE
-			+ COLUMN_ID
-			+ EQUALS
-			+ measurementIdStr;
+			+ SQL_FROM + ObjectEntities.MEASUREMENT_ENTITY
+			+ SQL_WHERE + COLUMN_ID + EQUALS + measurementIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -148,16 +133,9 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		int resultSortNum = resultSort.value();
 		String sql = SQL_SELECT
 			+ COLUMN_ID
-			+ SQL_FROM
-			+ ObjectEntities.RESULT_ENTITY
-			+ SQL_WHERE		
-			+ LINK_COLUMN_MEASUREMENT_ID
-			+ EQUALS
-			+ measurementIdStr
-			+ SQL_AND
-			+ LINK_SORT
-			+ EQUALS
-			+ Integer.toString(resultSortNum);
+			+ SQL_FROM + ObjectEntities.RESULT_ENTITY
+			+ SQL_WHERE + LINK_COLUMN_MEASUREMENT_ID + EQUALS + measurementIdStr
+			+ SQL_AND + LINK_SORT + EQUALS + Integer.toString(resultSortNum);
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -174,7 +152,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		}
 		catch (SQLException sqle) {
 			String mesg = "MeasurementDatabase.retrieveResult | Cannot retrieve result of sort " + resultSortNum + " for measurement " + measurementIdStr;
-			throw new RetrieveObjectException(mesg , sqle);
+			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -218,63 +196,33 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	private void insertMeasurement(Measurement measurement) throws CreateObjectException {
 		String measurementIdStr = measurement.getId().toSQLString();
 		String sql = SQL_INSERT_INTO 
-			+ ObjectEntities.MEASUREMENT_ENTITY
-			+ OPEN_BRACKET
-			+ COLUMN_ID
-			+ COMMA
-			+ COLUMN_CREATED
-			+ COMMA
-			+ COLUMN_MODIFIED
-			+ COMMA
-			+ COLUMN_CREATOR_ID
-			+ COMMA
-			+ COLUMN_MODIFIER_ID
-			+ COMMA
-			+ COLUMN_TYPE_ID
-			+ COMMA
-			+ COLUMN_MONITORED_ELEMENT_ID
-			+ COMMA
-			+ COLUMN_SETUP_ID
-			+ COMMA
-			+ COLUMN_START_TIME
-			+ COMMA
-			+ COLUMN_DURATION
-			+ COMMA
-			+ COLUMN_STATUS
-			+ COMMA
-			+ COLUMN_LOCAL_ADDRESS
-			+ COMMA
-			+ COLUMN_TEST_ID
-			+ COMMA
-			+ CLOSE_BRACKET		
-			+ SQL_VALUES
-			+ OPEN_BRACKET
-			+ measurementIdStr 
-			+ COMMA
-			+ DatabaseDate.toUpdateSubString(measurement.getCreated()) 
-			+ COMMA
-			+ DatabaseDate.toUpdateSubString(measurement.getModified()) 
-			+ COMMA
-			+ measurement.getCreatorId().toSQLString() 
-			+ COMMA
-			+ measurement.getModifierId().toSQLString() 
-			+ COMMA
-			+ measurement.getTypeId().toSQLString() 
-			+ COMMA
-			+ measurement.getMonitoredElementId().toSQLString() 
-			+ COMMA
-			+ measurement.getSetup().getId().toSQLString() 
-			+ COMMA
-			+ DatabaseDate.toUpdateSubString(measurement.getStartTime()) 
-			+ COMMA
-			+ Long.toString(measurement.getDuration()) 
-			+ COMMA
-			+ Integer.toString(measurement.getStatus().value())
-			+ COMMA
-			+ APOSTOPHE			
-			+ measurement.getLocalAddress()
-			+ APOSTOPHE
-			+ COMMA
+			+ ObjectEntities.MEASUREMENT_ENTITY + OPEN_BRACKET
+			+ COLUMN_ID + COMMA
+			+ COLUMN_CREATED + COMMA
+			+ COLUMN_MODIFIED + COMMA
+			+ COLUMN_CREATOR_ID + COMMA
+			+ COLUMN_MODIFIER_ID + COMMA
+			+ COLUMN_TYPE_ID + COMMA
+			+ COLUMN_MONITORED_ELEMENT_ID + COMMA
+			+ COLUMN_SETUP_ID + COMMA
+			+ COLUMN_START_TIME + COMMA
+			+ COLUMN_DURATION + COMMA
+			+ COLUMN_STATUS + COMMA
+			+ COLUMN_LOCAL_ADDRESS + COMMA
+			+ COLUMN_TEST_ID + COMMA
+			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
+			+ measurementIdStr + COMMA
+			+ DatabaseDate.toUpdateSubString(measurement.getCreated()) + COMMA
+			+ DatabaseDate.toUpdateSubString(measurement.getModified()) + COMMA
+			+ measurement.getCreatorId().toSQLString() + COMMA
+			+ measurement.getModifierId().toSQLString() + COMMA
+			+ measurement.getTypeId().toSQLString() + COMMA
+			+ measurement.getMonitoredElementId().toSQLString() + COMMA
+			+ measurement.getSetup().getId().toSQLString() + COMMA
+			+ DatabaseDate.toUpdateSubString(measurement.getStartTime()) + COMMA
+			+ Long.toString(measurement.getDuration()) + COMMA
+			+ Integer.toString(measurement.getStatus().value()) + COMMA
+			+ APOSTOPHE + measurement.getLocalAddress() + APOSTOPHE + COMMA
 			+ measurement.getTestId().toSQLString()
 			+ CLOSE_BRACKET;
 		Statement statement = null;
@@ -334,17 +282,10 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		String sql = SQL_UPDATE
 			+ ObjectEntities.MEASUREMENT_ENTITY
 			+ SQL_SET
-			+ COLUMN_STATUS
-			+ EQUALS
-			+ Integer.toString(measurement.getStatus().value()) + COMMA
-			+ COLUMN_MODIFIED 
-			+ EQUALS
-			+ DatabaseDate.toUpdateSubString(measurement.getModified()) + COMMA
-			+ COLUMN_MODIFIER_ID			
-			+ measurement.getModifierId().toSQLString()
-			+ SQL_WHERE
-			+ COLUMN_ID + EQUALS			
-			+ measurementIdStr;
+			+ COLUMN_STATUS + EQUALS + Integer.toString(measurement.getStatus().value()) + COMMA
+			+ COLUMN_MODIFIED + EQUALS + DatabaseDate.toUpdateSubString(measurement.getModified()) + COMMA
+			+ COLUMN_MODIFIER_ID + EQUALS + measurement.getModifierId().toSQLString()
+			+ SQL_WHERE + COLUMN_ID + EQUALS + measurementIdStr;
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();

@@ -61,14 +61,17 @@ public class Analysis extends Action {
 									 Identifier typeId,
 									 Identifier monitoredElementId,
 									 Set criteriaSet) throws CreateObjectException {
-		super(id,
-					new Date(System.currentTimeMillis()),
-					new Date(System.currentTimeMillis()),
-					creatorId,
-					creatorId,
-					typeId,
-					monitoredElementId);
+		super(id);
+		long time = System.currentTimeMillis();
+		super.created = new Date(time);
+		super.modified = new Date(time);
+		super.creatorId = creatorId;
+		super.modifierId = creatorId;
+		super.typeId = typeId;
+		super.monitoredElementId = monitoredElementId;
 		this.criteriaSet = criteriaSet;
+
+		super.currentVersion = super.getNextVersion();
 
 		this.analysisDatabase = MeasurementDatabaseContext.analysisDatabase;
 		try {
@@ -124,12 +127,12 @@ public class Analysis extends Action {
 												 parameters);
 	}
 
-	public static Analysis create(Identifier id,
-																Identifier creatorId,
-																Identifier typeId,
-																Identifier monitoredElementId,
-																Set criteriaSet) throws CreateObjectException {
-		return new Analysis(id,
+	public static Analysis createInstance(Identifier id,
+																				Identifier creatorId,
+																				Identifier typeId,
+																				Identifier monitoredElementId,
+																				Set criteriaSet) throws CreateObjectException {
+																				return new Analysis(id,
 												creatorId,
 												typeId,
 												monitoredElementId,

@@ -20,15 +20,15 @@ public class MeasurementSetup extends StorableObject {
 	protected static final int		UPDATE_ATTACH_ME	= 1;
 	protected static final int		UPDATE_DETACH_ME	= 2;
 
-	private Set						parameterSet;
-	private Set						criteriaSet;
-	private Set						thresholdSet;
-	private Set						etalon;
-	private String					description;
-	private long					measurementDuration;
-	private List					monitoredElementIds;
+	private Set parameterSet;
+	private Set criteriaSet;
+	private Set thresholdSet;
+	private Set etalon;
+	private String description;
+	private long measurementDuration;
+	private List monitoredElementIds;
 
-	private StorableObjectDatabase	measurementSetupDatabase;
+	private StorableObjectDatabase measurementSetupDatabase;
 
 	public MeasurementSetup(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -36,14 +36,18 @@ public class MeasurementSetup extends StorableObject {
 		this.measurementSetupDatabase = MeasurementDatabaseContext.measurementSetupDatabase;
 		try {
 			this.measurementSetupDatabase.retrieve(this);
-		} catch (IllegalDataException e) {
+		}
+		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 	}
 
 	public MeasurementSetup(MeasurementSetup_Transferable mst) throws CreateObjectException {
-		super(new Identifier(mst.id), new Date(mst.created), new Date(mst.modified), new Identifier(mst.creator_id),
-				new Identifier(mst.modifier_id));
+		super(new Identifier(mst.id),
+					new Date(mst.created),
+					new Date(mst.modified),
+					new Identifier(mst.creator_id),
+					new Identifier(mst.modifier_id));
 		try {
 			this.parameterSet = new Set(new Identifier(mst.parameter_set_id));
 			/**
@@ -63,9 +67,11 @@ public class MeasurementSetup extends StorableObject {
 			 *       to identifier_code
 			 */
 			this.etalon = (mst.etalon_id.identifier_string != null) ? (new Set(new Identifier(mst.etalon_id))) : null;
-		} catch (RetrieveObjectException roe) {
+		}
+		catch (RetrieveObjectException roe) {
 			throw new CreateObjectException(roe.getMessage(), roe);
-		} catch (ObjectNotFoundException e) {
+		}
+		catch (ObjectNotFoundException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
 		this.description = new String(mst.description);
@@ -77,58 +83,69 @@ public class MeasurementSetup extends StorableObject {
 		this.measurementSetupDatabase = MeasurementDatabaseContext.measurementSetupDatabase;
 		try {
 			this.measurementSetupDatabase.insert(this);
-		} catch (IllegalDataException e) {
+		}
+		catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
 	}
 
 	private MeasurementSetup(Identifier id,
-							long measurementDuration,
-							String description,
-							Set criteriaSet,
-							Set etalon,
-							Set parameterSet,			
-							Set thresholdSet,	
-							List monitoredElementIds) {
-		//super(PoolId.getId(ObjectEntities.MS_ENTITY));
+													 Identifier creatorId,
+													 Set parameterSet,
+													 Set criteriaSet,
+													 Set thresholdSet,
+													 Set etalon,
+													 String description,
+													 long measurementDuration,
+													 List monitoredElementIds) {
 		super(id);
-		setParameterSet(parameterSet);
+		long time = System.currentTimeMillis();
+		super.created = new Date(time);
+		super.modified = new Date(time);
+		super.creatorId = creatorId;
+		super.modifierId = creatorId;
+		this.parameterSet = parameterSet;
 		this.criteriaSet = criteriaSet;
 		this.thresholdSet = thresholdSet;
 		this.etalon = etalon;
 		this.description = description;
 		this.measurementDuration = measurementDuration;
 		this.monitoredElementIds = monitoredElementIds;
+
+		super.currentVersion = super.getNextVersion();
 	}
 	
 	/**
 	 * create new instance for client
 	 * @param id
-	 * @param measurementDuration
-	 * @param description
-	 * @param criteriaSet
-	 * @param etalon
+	 * @param creatorId
 	 * @param parameterSet
+	 * @param criteriaSet
 	 * @param thresholdSet
+	 * @param etalon
+	 * @param description
+	 * @param measurementDuration
 	 * @param monitoredElementIds
 	 * @return
 	 */
 	public static MeasurementSetup createInstance(Identifier id,
-							long measurementDuration,
-							String description,
-							Set criteriaSet,
-							Set etalon,
-							Set parameterSet,			
-							Set thresholdSet,	
-							List monitoredElementIds){
+																								Identifier creatorId,
+																								Set parameterSet,
+																								Set criteriaSet,
+																								Set thresholdSet,
+																								Set etalon,
+																								String description,
+																								long measurementDuration,
+																								List monitoredElementIds){
 		return new MeasurementSetup(id,
-									measurementDuration,
-									description,
-									criteriaSet,
-									etalon,
-									parameterSet,
-									thresholdSet,
-									monitoredElementIds);
+																creatorId,
+																parameterSet,
+																criteriaSet,
+																thresholdSet,
+																etalon,
+																description,
+																measurementDuration,
+																monitoredElementIds);
 	}
 
 	public boolean isAttachedToMonitoredElement(Identifier monitoredElementId) {

@@ -88,6 +88,7 @@ public class AnalysisType extends ActionType {
 		this.criteriaParameterTypes = criteriaParameterTypes;
 		this.etalonParameterTypes = etalonParameterTypes;
 		this.outParameterTypes = outParameterTypes;
+
 		super.currentVersion = super.getNextVersion();
 	}
 	
