@@ -54,10 +54,6 @@ public class TraceEventsLayeredPanel extends ScalableLayeredPanel implements Ope
 					}
 				}
 			}
-			if (rue.modelFunctionChanged())
-			{
-			    jLayeredPane.repaint();
-			}
 			if (rue.analysisPerformed())
 			{
 			    updPaintingMode();

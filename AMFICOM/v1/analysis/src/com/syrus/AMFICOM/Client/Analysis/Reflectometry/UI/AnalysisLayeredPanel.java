@@ -48,16 +48,12 @@ public class AnalysisLayeredPanel extends TraceEventsLayeredPanel implements Ope
 				{
 					if(rue.analysisPerformed())
 					{
-						String id = (String)(rue.getSource());
-						if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
-						{
-							((AnalysisPanel)panel).updEvents(id);
+						((AnalysisPanel)panel).updEvents(RefUpdateEvent.PRIMARY_TRACE);
 
-							ModelTraceManager mtm = Heap.getMTMPrimary();
-							((AnalysisPanel)panel).updateTrace(mtm); // FIXME: нужно UpdateMTM или UpdateTrace?
-							((AnalysisPanel)panel).updMarkers();
-							jLayeredPane.repaint();
-						}
+						ModelTraceManager mtm = Heap.getMTMPrimary();
+						((AnalysisPanel)panel).updateTrace(mtm); // FIXME: нужно UpdateMTM или UpdateTrace?
+						((AnalysisPanel)panel).updMarkers();
+						jLayeredPane.repaint();
 					}
 					if(rue.eventSelected())
 					{

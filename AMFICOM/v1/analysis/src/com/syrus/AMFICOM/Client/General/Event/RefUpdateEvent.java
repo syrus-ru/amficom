@@ -27,7 +27,7 @@ public class RefUpdateEvent extends OperationEvent
 	{ return (flags & MODEL_CHANGED_EVENT) != 0; }
 
 	public static final long MARKER_MOVED_EVENT 			= 0x00000001;
-	public static final long ANALYSIS_PERFORMED_EVENT 		= 0x00000100;
+	public static final long ANALYSIS_PERFORMED_EVENT 		= 0x00000100; // source is always and is always assumed to be Heap.PRIMARY_TRACE
 	public static final long EVENT_SELECTED_EVENT 			= 0x00001000;
 	public static final long THRESHOLD_CHANGED_EVENT 		= 0x00100000;
 	public static final long THRESHOLDS_UPDATED_EVENT 		= 0x00200000; // source doesn't matter

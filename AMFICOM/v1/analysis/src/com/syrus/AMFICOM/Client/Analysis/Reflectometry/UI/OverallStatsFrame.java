@@ -97,9 +97,7 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 			RefUpdateEvent rue = (RefUpdateEvent)ae;
 			if(rue.analysisPerformed())
 			{
-				String id = (String)(rue.getSource());
-				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
-					updTableModel(id);
+				updTableModel(Heap.PRIMARY_TRACE_KEY);
 
 				if (Heap.hasEventParamsForPrimaryTrace())
 					analysis_performed = true;

@@ -509,9 +509,7 @@ public class AnalyseMainFrame extends JFrame implements bsHashChangeListener,
 
 			if (rue.analysisPerformed())
 			{
-				String id = (String )(rue.getSource());
-				if (id.equals(Heap.PRIMARY_TRACE_KEY))
-					updFrames(Heap.PRIMARY_TRACE_KEY);
+				updFrames(Heap.PRIMARY_TRACE_KEY);
 			}
 		}
 	}

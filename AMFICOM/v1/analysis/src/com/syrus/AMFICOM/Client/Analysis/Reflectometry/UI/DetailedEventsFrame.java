@@ -100,22 +100,18 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 			RefUpdateEvent rue = (RefUpdateEvent)ae;
 			if (rue.analysisPerformed())
 			{
-				String id = (String)(rue.getSource());
-				if (id.equals(Heap.PRIMARY_TRACE_KEY))
+				if (Heap.getRefAnalysisByKey(Heap.PRIMARY_TRACE_KEY) != null)
 				{
-					if (Heap.getRefAnalysisByKey(id) != null)
-					{
-						a = Heap.getRefAnalysisByKey(id);
-						bs = Heap.getAnyBSTraceByKey(id);
-						res_km = bs.getResolution() / 1000.0;
-						dataMTM = Heap.getMTMPrimary();
-						if(dataMTM != null && etalonMTM != null)
-							makeAlignedDataMT();
-						else alignedDataMT = null;
-						if (selected >= a.events.length)
-							selected = a.events.length - 1;
-						updateTableModel (selected);
-					}
+					a = Heap.getRefAnalysisByKey(Heap.PRIMARY_TRACE_KEY);
+					bs = Heap.getBSPrimaryTrace();
+					res_km = bs.getResolution() / 1000.0;
+					dataMTM = Heap.getMTMPrimary();
+					if(dataMTM != null && etalonMTM != null)
+						makeAlignedDataMT();
+					else alignedDataMT = null;
+					if (selected >= a.events.length)
+						selected = a.events.length - 1;
+					updateTableModel (selected);
 				}
 				if (Heap.hasEventParamsForPrimaryTrace())
 					analysis_performed = true;

@@ -322,13 +322,9 @@ implements OperationListener, bsHashChangeListener
 				}
 			}
 			if (rue.analysisPerformed()) {
-				//String id = (String) (rue.getSource());
-				// if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
-				{
-					//mtm = Heap.getMTMByKey(id); // FIXME: what is MTM here?  
-					//bs = Heap.getAnyBSTraceByKey(id); // bs was never read locally
-					updateThresholds();
-				}
+				//mtm = Heap.getMTMByKey(id); // FIXME: what is MTM here?  
+				//bs = Heap.getAnyBSTraceByKey(id); // bs was never read locally
+				updateThresholds();
 			}
 			if (rue.eventSelected()) {
 				if (et_mtm != null) {

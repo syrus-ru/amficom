@@ -106,20 +106,16 @@ implements OperationListener, bsHashChangeListener, EtalonMTMListener
 			RefUpdateEvent rue = (RefUpdateEvent)ae;
 			if (rue.analysisPerformed())
 			{
-				String id = (String)(rue.getSource());
-				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
+				if (Heap.getRefAnalysisByKey(Heap.PRIMARY_TRACE_KEY) != null)
 				{
-					if (Heap.getRefAnalysisByKey(id) != null)
-					{
-						RefAnalysis a = Heap.getRefAnalysisByKey(id);
-						BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
-						setTableModel(bs, a.events);
-						if (selected >= a.events.length)
-							selected = a.events.length-1;
-						updateTableModel (selected);
-					}
-					setVisible(true);
+					RefAnalysis a = Heap.getRefAnalysisByKey(Heap.PRIMARY_TRACE_KEY);
+					BellcoreStructure bs = Heap.getAnyBSTraceByKey(Heap.PRIMARY_TRACE_KEY);
+					setTableModel(bs, a.events);
+					if (selected >= a.events.length)
+						selected = a.events.length-1;
+					updateTableModel (selected);
 				}
+				setVisible(true);
 			}
 
 			if (rue.eventSelected())

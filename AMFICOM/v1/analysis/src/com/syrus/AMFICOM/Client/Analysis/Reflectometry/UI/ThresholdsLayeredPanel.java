@@ -67,15 +67,11 @@ implements OperationListener, bsHashChangeListener
 				{
 					if(rue.analysisPerformed())
 					{
-						String id = (String)(rue.getSource());
-						//if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
-						{
-							ModelTraceManager mtm = Heap.getMTMByKey(id);
-							((ThresholdsPanel)panel).updEvents(id);
-							((ThresholdsPanel)panel).updateTrace(mtm);
-							updScale2fitCurrentEv(.2, 1.);
-							jLayeredPane.repaint();
-						}
+						ModelTraceManager mtm = Heap.getMTMByKey(Heap.PRIMARY_TRACE_KEY);
+						((ThresholdsPanel)panel).updEvents(Heap.PRIMARY_TRACE_KEY);
+						((ThresholdsPanel)panel).updateTrace(mtm);
+						updScale2fitCurrentEv(.2, 1.);
+						jLayeredPane.repaint();
 					}
 					if(rue.thresholdsUpdated())
 					{
@@ -93,10 +89,6 @@ implements OperationListener, bsHashChangeListener
 					if(rue.thresholdChanged())
 					{
 						jLayeredPane.repaint();
-					}
-					if (rue.modelFunctionChanged())
-					{
-					    jLayeredPane.repaint();
 					}
 				}
 			}
