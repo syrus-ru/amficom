@@ -11,7 +11,6 @@ import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.client_.general.ui_.tree.UniTreePanel;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
@@ -21,7 +20,6 @@ public class ReflectogrammLoadDialog extends JDialog implements OperationListene
 {
 	public int ret_code = 0;
 	private Object resource;
-	private ReflectogramEvent[] etalon;
 	private String testId = null;
 
 	private Dispatcher dispatcher = new Dispatcher();
@@ -260,10 +258,5 @@ public class ReflectogrammLoadDialog extends JDialog implements OperationListene
 		{
 		}
 		return bs;
-	}
-
-	public ReflectogramEvent[] getEtalon()
-	{
-		return etalon;
 	}
 }
