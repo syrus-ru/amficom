@@ -1,0 +1,94 @@
+/*
+ * $Id: LRUMap.java,v 1.1 2004/08/06 09:24:44 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
+package com.syrus.util;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Hashtable;
+import java.util.Collections;
+
+/**
+ * @version $Revision: 1.1 $, $Date: 2004/08/06 09:24:44 $
+ * @author $Author: arseniy $
+ * @module util
+ */
+
+public class LRUMap implements Serializable {
+//	private static final long serialVersionUID = -2241622428099411636L;
+	public static final int SIZE = 10;
+
+	private Entry[] array;
+
+	public LRUMap() {
+		this (SIZE);
+	}
+
+	public LRUMap(int capasity) {
+		if (capasity > 0) {
+			this.array = new Entry[capasity];
+		}
+		else
+			throw new IllegalArgumentException("Illegal capasity: " + capasity);
+	}
+
+	public Object put(Object key, Object value) {
+		Entry newEntry = new Entry(key, value);
+		Object ret = this.array[this.array.length - 1].value;
+		for (int i = this.array.length - 1; i > 0; i--)
+			this.array[i] = this.array[i - 1];
+		this.array[0] = newEntry;
+	}
+
+	public Object get(Object key) {
+		if (key != null) { 
+			Object ret = null;
+			for (int i = 0; i < this.array.length; i++)
+				if (key.equals(this.array[i].key))
+					ret = this.array[i].value;
+			return ret;
+		}
+		throw new IllegalArgumentException("Key is NULL");
+	}
+
+	public Object remove(Object key) {
+		if (key != null) { 
+			Object ret = null;
+			int n;
+			for (int i = 0; i < this.array.length; i++)
+				if (key.equals(this.array[i].key)) {
+					ret = this.array[n].value;
+					for (int j = i; j < this.array.length - 1; j++)
+						this.array[j] = this.array[j + 1];
+					break;
+				}				
+			return ret;
+		}
+		throw new IllegalArgumentException("Key is NULL");
+	}
+
+	private static class Entry {
+		private Object key;
+		private Object value;
+
+		Entry(Object key, Object value) {
+			if (key != null) {
+				if (value != null) {
+					this.key = key;
+					this.value = value;
+				}
+				else
+					throw new IllegalArgumentException("Value is NULL");
+			}
+			else
+				throw new IllegalArgumentException("Key is NULL");
+		}
+	}
+}

@@ -1,6 +1,7 @@
 classes
 docs
 lib
+temp
 *.deploy
 *.jar
 *.jpr
