@@ -1,5 +1,5 @@
 /*
-* $Id: CompoundCondition.java,v 1.10 2005/02/04 07:11:53 max Exp $
+* $Id: CompoundCondition.java,v 1.11 2005/02/04 14:11:37 bob Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.general.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StringFieldCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
+import com.syrus.util.Log;
 import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
@@ -28,8 +29,8 @@ import com.syrus.util.corba.JavaSoftORBUtil;
  * Compound condition such as (A & B), (A | B) , (A ^ B)
  * where A and B is conditions (they can be also compound condition too)
  *  
- * @version $Revision: 1.10 $, $Date: 2005/02/04 07:11:53 $
- * @author $Author: max $
+ * @version $Revision: 1.11 $, $Date: 2005/02/04 14:11:37 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public class CompoundCondition implements StorableObjectCondition {
@@ -103,8 +104,12 @@ public class CompoundCondition implements StorableObjectCondition {
 	
 	public boolean isConditionTrue(Object object) throws ApplicationException {
 		boolean firstResult = this.firstCondition.isConditionTrue(object);
+		Log.debugMessage("CompoundCondition.isConditionTrue | firstCondition is " + firstResult, Log.INFO);
 		boolean secondResult = this.secondCondition.isConditionTrue(object);
-		return doCompare(firstResult, secondResult);		
+		Log.debugMessage("CompoundCondition.isConditionTrue | secondCondition is " + secondResult, Log.INFO);
+		boolean result = doCompare(firstResult, secondResult);
+		Log.debugMessage("CompoundCondition.isConditionTrue | result is " + result, Log.INFO);
+		return result;
 	}
 
 	public boolean isNeedMore(List list) throws ApplicationException {
