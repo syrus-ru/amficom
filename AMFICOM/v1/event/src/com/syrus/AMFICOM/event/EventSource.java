@@ -1,5 +1,5 @@
 /*
- * $Id: EventSource.java,v 1.3 2005/02/02 15:09:47 arseniy Exp $
+ * $Id: EventSource.java,v 1.4 2005/02/03 14:48:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,34 +15,34 @@ import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/02 15:09:47 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/03 14:48:31 $
  * @author $Author: arseniy $
  * @module event_v1
  */
 public class EventSource implements TransferableObject, Identified {
 	private Identifier id;
-	private Identifier sourceId;
+	private Identifier entityId;
 
 	public EventSource(EventSource_Transferable est) {
 		this.id = new Identifier(est.id);
-		this.sourceId = new Identifier(est.source_id);
+		this.entityId = new Identifier(est.entity_id);
 	}
 
-	protected EventSource (Identifier id, Identifier sourceId) {
+	protected EventSource (Identifier id, Identifier entityId) {
 		this.id = id;
-		this.sourceId = sourceId;
+		this.entityId = entityId;
 	}
 
 	public Object getTransferable() {
 		return new EventSource_Transferable((Identifier_Transferable) this.id.getTransferable(),
-				(Identifier_Transferable) this.sourceId.getTransferable());
+				(Identifier_Transferable) this.entityId.getTransferable());
 	}
 
 	public Identifier getId() {
 		return this.id;
 	}
 
-	public Identifier getSourceId() {
-		return this.sourceId;
+	public Identifier getEntityId() {
+		return this.entityId;
 	}
 }
