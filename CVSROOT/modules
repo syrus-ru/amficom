@@ -54,3 +54,5 @@ util		util
 idls	idls
 #M	serveradd	Additional files for server-side modules
 serveradd	serveradd
+#M	filter	Files common for client-side and server-side filtering
+filter	filter
