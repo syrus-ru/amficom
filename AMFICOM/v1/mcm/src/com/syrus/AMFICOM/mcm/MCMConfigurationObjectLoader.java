@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.22 2005/03/30 12:57:47 arseniy Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.23 2005/03/30 15:46:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -61,7 +61,7 @@ import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/03/30 12:57:47 $
+ * @version $Revision: 1.23 $, $Date: 2005/03/30 15:46:34 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -91,15 +91,15 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 
 					return equipmentType;
 				}
-				catch (org.omg.CORBA.SystemException se) {
-					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
-					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
 				catch (AMFICOMRemoteException are) {
 					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
 						throw new ObjectNotFoundException("EquipmentType '" + id + "' not found in MServer database");
 					throw new RetrieveObjectException("Cannot retrieve EquipmentType '" + id + "' from MServer database -- " + are.message);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 			}
 			String mesg = "Remote reference for server is null; will try to reactivate it";
@@ -132,15 +132,15 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 
 					return transmissionPathType;
 				}
-				catch (org.omg.CORBA.SystemException se) {
-					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
-					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
 				catch (AMFICOMRemoteException are) {
 					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
 						throw new ObjectNotFoundException("TransmissionPathType '" + id + "' not found in MServer database");
 					throw new RetrieveObjectException("Cannot retrieve TransmissionPathType '" + id + "' from MServer database -- " + are.message);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 			}
 			String mesg = "Remote reference for server is null; will try to reactivate it";
@@ -173,15 +173,15 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 
 					return linkType;
 				}
-				catch (org.omg.CORBA.SystemException se) {
-					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
-					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
 				catch (AMFICOMRemoteException are) {
 					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
 						throw new ObjectNotFoundException("LinkType '" + id + "' not found in MServer database");
 					throw new RetrieveObjectException("Cannot retrieve LinkType '" + id + "' from MServer database -- " + are.message);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 			}
 			String mesg = "Remote reference for server is null; will try to reactivate it";
@@ -214,15 +214,15 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 
 					return portType;
 				}
-				catch (org.omg.CORBA.SystemException se) {
-					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
-					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
 				catch (AMFICOMRemoteException are) {
 					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
 						throw new ObjectNotFoundException("PortType '" + id + "' not found in MServer database");
 					throw new RetrieveObjectException("Cannot retrieve PortType '" + id + "' from MServer database -- " + are.message);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 			}
 			String mesg = "Remote reference for server is null; will try to reactivate it";
@@ -255,15 +255,15 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 
 					return measurementPortType;
 				}
-				catch (org.omg.CORBA.SystemException se) {
-					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
-					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
 				catch (AMFICOMRemoteException are) {
 					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
 						throw new ObjectNotFoundException("MeasurementPortType '" + id + "' not found in MServer database");
 					throw new RetrieveObjectException("Cannot retrieve MeasurementPortType '" + id + "' from MServer database -- " + are.message);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 			}
 			String mesg = "Remote reference for server is null; will try to reactivate it";
@@ -296,15 +296,15 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 
 					return equipment;
 				}
-				catch (org.omg.CORBA.SystemException se) {
-					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
-					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
 				catch (AMFICOMRemoteException are) {
 					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
 						throw new ObjectNotFoundException("Equipment '" + id + "' not found in MServer database");
 					throw new RetrieveObjectException("Cannot retrieve Equipment '" + id + "' from MServer database -- " + are.message);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 			}
 			String mesg = "Remote reference for server is null; will try to reactivate it";
@@ -337,15 +337,15 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 
 					return port;
 				}
-				catch (org.omg.CORBA.SystemException se) {
-					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
-					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
 				catch (AMFICOMRemoteException are) {
 					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
 						throw new ObjectNotFoundException("Port '" + id + "' not found in MServer database");
 					throw new RetrieveObjectException("Cannot retrieve Port '" + id + "' from MServer database -- " + are.message);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 			}
 			String mesg = "Remote reference for server is null; will try to reactivate it";
@@ -378,15 +378,15 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 
 					return link;
 				}
-				catch (org.omg.CORBA.SystemException se) {
-					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
-					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
 				catch (AMFICOMRemoteException are) {
 					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
 						throw new ObjectNotFoundException("Link '" + id + "' not found in MServer database");
 					throw new RetrieveObjectException("Cannot retrieve Link '" + id + "' from MServer database -- " + are.message);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 			}
 			String mesg = "Remote reference for server is null; will try to reactivate it";
@@ -419,15 +419,15 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 
 					return transmissionPath;
 				}
-				catch (org.omg.CORBA.SystemException se) {
-					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
-					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
 				catch (AMFICOMRemoteException are) {
 					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
 						throw new ObjectNotFoundException("TransmissionPath '" + id + "' not found in MServer database");
 					throw new RetrieveObjectException("Cannot retrieve TransmissionPath '" + id + "' from MServer database -- " + are.message);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 			}
 			String mesg = "Remote reference for server is null; will try to reactivate it";
@@ -460,15 +460,15 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 
 					return kis;
 				}
-				catch (org.omg.CORBA.SystemException se) {
-					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
-					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
 				catch (AMFICOMRemoteException are) {
 					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
 						throw new ObjectNotFoundException("KIS '" + id + "' not found in MServer database");
 					throw new RetrieveObjectException("Cannot retrieve KIS '" + id + "' from MServer database -- " + are.message);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 			}
 			String mesg = "Remote reference for server is null; will try to reactivate it";
@@ -501,15 +501,15 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 
 					return measurementPort;
 				}
-				catch (org.omg.CORBA.SystemException se) {
-					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
-					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
 				catch (AMFICOMRemoteException are) {
 					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
 						throw new ObjectNotFoundException("MeasurementPort '" + id + "' not found in MServer database");
 					throw new RetrieveObjectException("Cannot retrieve MeasurementPort '" + id + "' from MServer database -- " + are.message);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 			}
 			String mesg = "Remote reference for server is null; will try to reactivate it";
@@ -542,15 +542,15 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 
 					return monitoredElement;
 				}
-				catch (org.omg.CORBA.SystemException se) {
-					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
-					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
 				catch (AMFICOMRemoteException are) {
 					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
 						throw new ObjectNotFoundException("MonitoredElement '" + id + "' not found in MServer database");
 					throw new RetrieveObjectException("Cannot retrieve MonitoredElement '" + id + "' from MServer database -- " + are.message);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 			}
 			String mesg = "Remote reference for server is null; will try to reactivate it";
@@ -595,16 +595,16 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				for (int i = 0; i < transferables.length; i++)
 					loadedObjects.add(new KIS(transferables[i]));
 			}
-			catch (org.omg.CORBA.SystemException se) {
-				Log.errorException(se);
-				MeasurementControlModule.activateMServerReference();
-				throw new CommunicationException("System exception -- " + se.getMessage(), se);
-			}
 			catch (AMFICOMRemoteException are) {
 				Log.errorMessage("Cannot retrieve measurements from MServer database -- " + are.message);
 			}
 			catch (CreateObjectException coe) {
 				Log.errorException(coe);
+			}
+			catch (org.omg.CORBA.SystemException se) {
+				Log.errorException(se);
+				MeasurementControlModule.activateMServerReference();
+				throw new CommunicationException("System exception -- " + se.getMessage(), se);
 			}
 
 			if (loadedObjects != null && !loadedObjects.isEmpty()) {

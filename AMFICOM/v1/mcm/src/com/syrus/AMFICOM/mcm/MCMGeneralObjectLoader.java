@@ -1,5 +1,5 @@
 /*
-* $Id: MCMGeneralObjectLoader.java,v 1.7 2005/03/30 12:57:47 arseniy Exp $
+* $Id: MCMGeneralObjectLoader.java,v 1.8 2005/03/30 15:46:34 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/03/30 12:57:47 $
+ * @version $Revision: 1.8 $, $Date: 2005/03/30 15:46:34 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -70,15 +70,15 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 
 					return parameterType;
 				}
-				catch (org.omg.CORBA.SystemException se) {
-					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
-					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
 				catch (AMFICOMRemoteException are) {
 					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
 						throw new ObjectNotFoundException("ParameterType '" + id + "' not found in MServer database");
 					throw new RetrieveObjectException("Cannot retrieve ParameterType '" + id + "' from MServer database -- " + are.message);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 			}
 			String mesg = "Remote reference for server is null; will try to reactivate it";
@@ -111,15 +111,15 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 
 					return characteristicType;
 				}
-				catch (org.omg.CORBA.SystemException se) {
-					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
-					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
 				catch (AMFICOMRemoteException are) {
 					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
 						throw new ObjectNotFoundException("CharacteristicType '" + id + "' not found in MServer database");
 					throw new RetrieveObjectException("Cannot retrieve CharacteristicType '" + id + "' from MServer database -- " + are.message);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 			}
 			String mesg = "Remote reference for server is null; will try to reactivate it";
@@ -152,15 +152,15 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 
 					return characteristic;
 				}
-				catch (org.omg.CORBA.SystemException se) {
-					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
-					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
 				catch (AMFICOMRemoteException are) {
 					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
 						throw new ObjectNotFoundException("Characteristic '" + id + "' not found in MServer database");
 					throw new RetrieveObjectException("Cannot retrieve Characteristic '" + id + "' from MServer database -- " + are.message);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 			}
 			String mesg = "Remote reference for server is null; will try to reactivate it";
@@ -205,13 +205,13 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 					for (int i = 0; i < transferables.length; i++)
 						loadedObjects.add(new ParameterType(transferables[i]));
 				}
+				catch (AMFICOMRemoteException are) {
+					Log.errorMessage("Cannot retrieve parameter types from MServer database -- " + are.message);
+				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
 					MeasurementControlModule.activateMServerReference();
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
-				catch (AMFICOMRemoteException are) {
-					Log.errorMessage("Cannot retrieve parameter types from MServer database -- " + are.message);
 				}
 
 				if (loadedObjects != null && !loadedObjects.isEmpty()) {
@@ -265,13 +265,13 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 					for (int i = 0; i < transferables.length; i++)
 						loadedObjects.add(new CharacteristicType(transferables[i]));
 				}
+				catch (AMFICOMRemoteException are) {
+					Log.errorMessage("Cannot retrieve characteristic types from MServer database -- " + are.message);
+				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
 					MeasurementControlModule.activateMServerReference();
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
-				catch (AMFICOMRemoteException are) {
-					Log.errorMessage("Cannot retrieve characteristic types from MServer database -- " + are.message);
 				}
 
 				if (loadedObjects != null && !loadedObjects.isEmpty()) {
@@ -325,16 +325,16 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 					for (int i = 0; i < transferables.length; i++)
 						loadedObjects.add(new Characteristic(transferables[i]));
 				}
-				catch (org.omg.CORBA.SystemException se) {
-					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
-					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
 				catch (AMFICOMRemoteException are) {
 					Log.errorMessage("Cannot retrieve characteristics from MServer database -- " + are.message);
 				}
 				catch (CreateObjectException coe) {
 					Log.errorException(coe);
+				}
+				catch (org.omg.CORBA.SystemException se) {
+					Log.errorException(se);
+					MeasurementControlModule.activateMServerReference();
+					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 
 				if (loadedObjects != null && !loadedObjects.isEmpty()) {

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.26 2005/03/23 18:31:43 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.27 2005/03/30 15:49:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/03/23 18:31:43 $
+ * @version $Revision: 1.27 $, $Date: 2005/03/30 15:49:05 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -242,17 +242,17 @@ public class MeasurementServer extends SleepButWorkThread {
 									testQueue.clear();
 									super.clearFalls();
 								}
+								catch (AMFICOMRemoteException are) {
+									Log.errorMessage("Cannot transmit tests: " + are.message + "; sleeping cause of fall");
+									super.fallCode = FALL_CODE_RECEIVE_TESTS;
+									mcmIdsToAbortTests.add(mcmId);
+									super.sleepCauseOfFall();
+								}
 								catch (org.omg.CORBA.SystemException se) {
 									Log.errorException(se);
 									super.fallCode = FALL_CODE_RECEIVE_TESTS;
 									mcmIdsToAbortTests.add(mcmId);
 									activateMCMReferenceWithId(mcmId);
-									super.sleepCauseOfFall();
-								}
-								catch (AMFICOMRemoteException are) {
-									Log.errorMessage("Cannot transmit tests: " + are.message + "; sleeping cause of fall");
-									super.fallCode = FALL_CODE_RECEIVE_TESTS;
-									mcmIdsToAbortTests.add(mcmId);
 									super.sleepCauseOfFall();
 								}
 							}

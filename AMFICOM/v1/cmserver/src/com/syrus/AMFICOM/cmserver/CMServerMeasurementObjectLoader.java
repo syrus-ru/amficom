@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.34 2005/03/30 12:49:44 arseniy Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.35 2005/03/30 15:49:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/03/30 12:49:44 $
+ * @version $Revision: 1.35 $, $Date: 2005/03/30 15:49:55 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -121,17 +121,17 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 						Log.debugMessage("Measurement '" + id + "' loaded from MCM '" + mcmId + "' database", Log.DEBUGLEVEL07);
 						return measurement;						
 					}
-					catch (org.omg.CORBA.SystemException se) {
-						Log.errorException(se);
-						ClientMeasurementServer.activateMCMReferenceWithId(mcmId);
-						throw new CommunicationException("System exception -- " + se.getMessage(), se);
-					}
 					catch (AMFICOMRemoteException are) {
 						if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
 							Log.debugMessage("Measurement '" + id + "' not found in MCM '" + mcmId + "' database", Log.DEBUGLEVEL08);
 						else
 							throw new RetrieveObjectException("Cannot load measurement '" + id + "' from MCM '"
 									+ mcmId + "' database -- " + are.message);
+					}
+					catch (org.omg.CORBA.SystemException se) {
+						Log.errorException(se);
+						ClientMeasurementServer.activateMCMReferenceWithId(mcmId);
+						throw new CommunicationException("System exception -- " + se.getMessage(), se);
 					}
 				}
 				else {
@@ -177,17 +177,17 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 						Log.debugMessage("Analysis '" + id + "' loaded from MCM '" + mcmId + "' database", Log.DEBUGLEVEL07);
 						return analysis;						
 					}
-					catch (org.omg.CORBA.SystemException se) {
-						Log.errorException(se);
-						ClientMeasurementServer.activateMCMReferenceWithId(mcmId);
-						throw new CommunicationException("System exception -- " + se.getMessage(), se);
-					}
 					catch (AMFICOMRemoteException are) {
 						if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
 							Log.debugMessage("Analysis '" + id + "' not found in MCM '" + mcmId + "' database", Log.DEBUGLEVEL08);
 						else
 							throw new RetrieveObjectException("Cannot load analysis '" + id + "' from MCM '"
 									+ mcmId + "' database -- " + are.message);
+					}
+					catch (org.omg.CORBA.SystemException se) {
+						Log.errorException(se);
+						ClientMeasurementServer.activateMCMReferenceWithId(mcmId);
+						throw new CommunicationException("System exception -- " + se.getMessage(), se);
 					}
 				}
 				else {
@@ -233,17 +233,17 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 						Log.debugMessage("Evaluation '" + id + "' loaded from MCM '" + mcmId + "' database", Log.DEBUGLEVEL07);
 						return evaluation;						
 					}
-					catch (org.omg.CORBA.SystemException se) {
-						Log.errorException(se);
-						ClientMeasurementServer.activateMCMReferenceWithId(mcmId);
-						throw new CommunicationException("System exception -- " + se.getMessage(), se);
-					}
 					catch (AMFICOMRemoteException are) {
 						if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
 							Log.debugMessage("Evaluation '" + id + "' not found in MCM '" + mcmId + "' database", Log.DEBUGLEVEL08);
 						else
 							throw new RetrieveObjectException("Cannot load evaluation '" + id + "' from MCM '"
 									+ mcmId + "' database -- " + are.message);
+					}
+					catch (org.omg.CORBA.SystemException se) {
+						Log.errorException(se);
+						ClientMeasurementServer.activateMCMReferenceWithId(mcmId);
+						throw new CommunicationException("System exception -- " + se.getMessage(), se);
 					}
 				}
 				else {
@@ -313,14 +313,14 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 					if (!loadIds.isEmpty())
 						loadIdsT = Identifier.createTransferables(loadIds);
 				}
+				catch (AMFICOMRemoteException are) {
+					Log.errorMessage("CMServerMeasurementObjectLoader.loadAnalyses | Cannot load objects from MCM + '"
+							+ mcmId + "' database -- " + are.message);
+				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
 					ClientMeasurementServer.activateMCMReferenceWithId(mcmId);
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
-				catch (AMFICOMRemoteException are) {
-					Log.errorMessage("CMServerMeasurementObjectLoader.loadAnalyses | Cannot load objects from MCM + '"
-							+ mcmId + "' database -- " + are.message);
 				}
 
 				if (mcmLoadedObjects != null && !mcmLoadedObjects.isEmpty()) {
@@ -401,14 +401,14 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 					if (!loadIds.isEmpty())
 						loadIdsT = Identifier.createTransferables(loadIds);
 				}
+				catch (AMFICOMRemoteException are) {
+					Log.errorMessage("CMServerMeasurementObjectLoader.loadEvaluations | Cannot load objects from MCM + '"
+							+ mcmId + "' database -- " + are.message);
+				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
 					ClientMeasurementServer.activateMCMReferenceWithId(mcmId);
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
-				catch (AMFICOMRemoteException are) {
-					Log.errorMessage("CMServerMeasurementObjectLoader.loadEvaluations | Cannot load objects from MCM + '"
-							+ mcmId + "' database -- " + are.message);
 				}
 
 				if (mcmLoadedObjects != null && !mcmLoadedObjects.isEmpty()) {
@@ -489,14 +489,14 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 					if (!loadIds.isEmpty())
 						loadIdsT = Identifier.createTransferables(loadIds);
 				}
+				catch (AMFICOMRemoteException are) {
+					Log.errorMessage("CMServerMeasurementObjectLoader.loadMeasurements | Cannot load objects from MCM + '"
+							+ mcmId + "' database -- " + are.message);
+				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
 					ClientMeasurementServer.activateMCMReferenceWithId(mcmId);
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
-				catch (AMFICOMRemoteException are) {
-					Log.errorMessage("CMServerMeasurementObjectLoader.loadMeasurements | Cannot load objects from MCM + '"
-							+ mcmId + "' database -- " + are.message);
 				}
 
 				if (mcmLoadedObjects != null && !mcmLoadedObjects.isEmpty()) {
@@ -577,14 +577,14 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 						}
 					}
 				}
+				catch (AMFICOMRemoteException are) {
+					Log.errorMessage("CMServerMeasurementObjectLoader.loadAnalysesButIds | Cannot retrieve objects from MCM '"
+							+ mcmId + "' database -- " + are.message);
+				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
 					ClientMeasurementServer.activateMCMReferenceWithId(mcmId);
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
-				catch (AMFICOMRemoteException are) {
-					Log.errorMessage("CMServerMeasurementObjectLoader.loadAnalysesButIds | Cannot retrieve objects from MCM '"
-							+ mcmId + "' database -- " + are.message);
 				}
 
 				if (mcmLoadedObjects != null && !mcmLoadedObjects.isEmpty()) {
@@ -661,14 +661,14 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 						}
 					}
 				}
+				catch (AMFICOMRemoteException are) {
+					Log.errorMessage("CMServerMeasurementObjectLoader.loadEvaluationsButIds | Cannot retrieve objects from MCM '"
+							+ mcmId + "' database -- " + are.message);
+				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
 					ClientMeasurementServer.activateMCMReferenceWithId(mcmId);
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
-				catch (AMFICOMRemoteException are) {
-					Log.errorMessage("CMServerMeasurementObjectLoader.loadEvaluationsButIds | Cannot retrieve objects from MCM '"
-							+ mcmId + "' database -- " + are.message);
 				}
 
 				if (mcmLoadedObjects != null && !mcmLoadedObjects.isEmpty()) {
@@ -745,14 +745,14 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 						}
 					}
 				}
+				catch (AMFICOMRemoteException are) {
+					Log.errorMessage("CMServerMeasurementObjectLoader.loadMeasurementsButIds | Cannot retrieve objects from MCM '"
+							+ mcmId + "' database -- " + are.message);
+				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
 					ClientMeasurementServer.activateMCMReferenceWithId(mcmId);
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
-				catch (AMFICOMRemoteException are) {
-					Log.errorMessage("CMServerMeasurementObjectLoader.loadMeasurementsButIds | Cannot retrieve objects from MCM '"
-							+ mcmId + "' database -- " + are.message);
 				}
 
 				if (mcmLoadedObjects != null && !mcmLoadedObjects.isEmpty()) {
