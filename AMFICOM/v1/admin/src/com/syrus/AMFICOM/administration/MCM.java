@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.7 2005/02/14 11:18:19 arseniy Exp $
+ * $Id: MCM.java,v 1.8 2005/02/24 09:06:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,30 +8,32 @@
 
 package com.syrus.AMFICOM.administration;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ArrayList;
+
+import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterized;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.Characterized;
-import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/14 11:18:19 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/24 09:06:38 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -45,7 +47,7 @@ public class MCM extends DomainMember implements Characterized {
 	private Identifier userId;
 	private Identifier serverId;
 
-	private List kisIds;
+	private Collection kisIds;
 
 	private List characteristics;
 
@@ -54,7 +56,7 @@ public class MCM extends DomainMember implements Characterized {
 	public MCM(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		this.kisIds = new LinkedList();
+		this.kisIds = new ArrayList();
 		this.characteristics = new ArrayList();
 		this.mcmDatabase = AdministrationDatabaseContext.mcmDatabase;
 		try {
@@ -114,7 +116,7 @@ public class MCM extends DomainMember implements Characterized {
 
 		this.characteristics = new ArrayList();
 
-		this.kisIds = new LinkedList();
+		this.kisIds = new ArrayList();
 
 		this.mcmDatabase = AdministrationDatabaseContext.mcmDatabase;
 	}
@@ -196,9 +198,9 @@ public class MCM extends DomainMember implements Characterized {
 	}
 
 	protected void setCharacteristics0(final List characteristics) {
-			this.characteristics.clear();
-			if (characteristics != null)
-				this.characteristics.addAll(characteristics);
+		this.characteristics.clear();
+		if (characteristics != null)
+			this.characteristics.addAll(characteristics);
 	}
 
 	public void setCharacteristics(final List characteristics) {
@@ -206,8 +208,8 @@ public class MCM extends DomainMember implements Characterized {
 		super.changed = true;
 	}
 
-	public List getKISIds() {
-		return Collections.unmodifiableList(this.kisIds);
+	public Collection getKISIds() {
+		return Collections.unmodifiableCollection(this.kisIds);
 	}	
 
 	public static MCM createInstance(Identifier creatorId,
@@ -263,7 +265,7 @@ public class MCM extends DomainMember implements Characterized {
 		this.serverId = serverId;
 	}
 
-	protected synchronized void setKISIds0(List kisIds) {
+	protected synchronized void setKISIds0(Collection kisIds) {
 		this.kisIds.clear();
 		if (kisIds != null)
 			this.kisIds.addAll(kisIds);		
