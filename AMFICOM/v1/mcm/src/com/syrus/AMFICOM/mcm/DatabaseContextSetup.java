@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.5 2004/08/17 18:20:39 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.6 2004/08/29 10:55:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,8 +43,8 @@ import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/08/17 18:20:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2004/08/29 10:55:53 $
+ * @author $Author: bob $
  * @module mcm_v1
  */
 
@@ -58,7 +58,7 @@ public abstract class DatabaseContextSetup {
 																			new EquipmentTypeDatabase(),
 																			new PortTypeDatabase(),
 																			new MeasurementPortTypeDatabase(),
-																			new CharacteristicDatabase(),
+																			CharacteristicDatabase.getInstance(),
 																			new UserDatabase(),
 																			new DomainDatabase(),
 																			new ServerDatabase(),
