@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorDatabase.java,v 1.7 2004/12/08 13:21:01 bob Exp $
+ * $Id: CollectorDatabase.java,v 1.8 2004/12/16 11:50:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/12/08 13:21:01 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/16 11:50:40 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -125,8 +125,8 @@ public class CollectorDatabase extends StorableObjectDatabase {
 		Collector collector = fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
-			preparedStatement.setString(++i, DatabaseString.toQuerySubString(collector.getName()));
-			preparedStatement.setString(++i, DatabaseString.toQuerySubString(collector.getDescription()));
+			DatabaseString.setString(preparedStatement, ++i, collector.getName(), SIZE_NAME_COLUMN);
+			DatabaseString.setString(preparedStatement, ++i, collector.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
@@ -137,8 +137,8 @@ public class CollectorDatabase extends StorableObjectDatabase {
 			UpdateObjectException {
 		Collector collector = fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(collector.getName()) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(collector.getDescription()) + APOSTOPHE;
+			+ APOSTOPHE + DatabaseString.toQuerySubString(collector.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(collector.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
 		return values;
 	}
 	

@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLinkDatabase.java,v 1.3 2004/12/08 09:51:26 bob Exp $
+ * $Id: NodeLinkDatabase.java,v 1.4 2004/12/16 11:50:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/12/08 09:51:26 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/16 11:50:40 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -98,7 +98,7 @@ public class NodeLinkDatabase extends StorableObjectDatabase {
 		NodeLink nodeLink = fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
-			preparedStatement.setString(++i, DatabaseString.toQuerySubString(nodeLink.getName()));
+			DatabaseString.setString(preparedStatement, ++i, nodeLink.getName(), SIZE_NAME_COLUMN);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, nodeLink.getPhysicalLink().getId());
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, nodeLink.getStartNode().getId());
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, nodeLink.getEndNode().getId());
@@ -113,7 +113,7 @@ public class NodeLinkDatabase extends StorableObjectDatabase {
 			UpdateObjectException {
 		NodeLink nodeLink = fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(nodeLink.getName()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(nodeLink.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(nodeLink.getPhysicalLink().getId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(nodeLink.getStartNode().getId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(nodeLink.getEndNode().getId()) + COMMA

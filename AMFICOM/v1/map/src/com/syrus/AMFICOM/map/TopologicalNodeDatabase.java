@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNodeDatabase.java,v 1.3 2004/12/08 09:51:26 bob Exp $
+ * $Id: TopologicalNodeDatabase.java,v 1.4 2004/12/16 11:50:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/12/08 09:51:26 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/16 11:50:40 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -280,8 +280,8 @@ public class TopologicalNodeDatabase extends StorableObjectDatabase {
 		TopologicalNode topologicalNode = fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
-			preparedStatement.setString(++i, DatabaseString.toQuerySubString(topologicalNode.getName()));
-			preparedStatement.setString(++i, DatabaseString.toQuerySubString(topologicalNode.getDescription()));
+			DatabaseString.setString(preparedStatement, ++i, topologicalNode.getName(), SIZE_NAME_COLUMN);
+			DatabaseString.setString(preparedStatement, ++i, topologicalNode.getDescription(), SIZE_DESCRIPTION_COLUMN);
 			preparedStatement.setDouble(++i, topologicalNode.getLongitude());
 			preparedStatement.setDouble(++i, topologicalNode.getLatitude());
 			preparedStatement.setInt(++i, topologicalNode.isActive() ? 1 : 0);
@@ -295,8 +295,8 @@ public class TopologicalNodeDatabase extends StorableObjectDatabase {
 			UpdateObjectException {
 		TopologicalNode topologicalNode = fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(topologicalNode.getName()) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(topologicalNode.getDescription()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(topologicalNode.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(topologicalNode.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 			+ topologicalNode.getLongitude() + COMMA
 			+ topologicalNode.getLatitude() + COMMA
 			+ (topologicalNode.isActive() ? 1 : 0);

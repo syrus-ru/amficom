@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkDatabase.java,v 1.3 2004/12/08 09:51:26 bob Exp $
+ * $Id: PhysicalLinkDatabase.java,v 1.4 2004/12/16 11:50:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/12/08 09:51:26 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/16 11:50:40 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -65,7 +65,7 @@ public class PhysicalLinkDatabase extends StorableObjectDatabase {
 	private static String columns;
 	
 	private static String updateMultiplySQLValues;
-
+	
 	private PhysicalLink fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof PhysicalLink)
 			return (PhysicalLink) storableObject;
@@ -124,12 +124,12 @@ public class PhysicalLinkDatabase extends StorableObjectDatabase {
 		PhysicalLink physicalLink = fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
-			preparedStatement.setString(++i, DatabaseString.toQuerySubString(physicalLink.getName()));
-			preparedStatement.setString(++i, DatabaseString.toQuerySubString(physicalLink.getDescription()));
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, physicalLink.getType().getId());			
-			preparedStatement.setString(++i, DatabaseString.toQuerySubString(physicalLink.getCity()));
-			preparedStatement.setString(++i, DatabaseString.toQuerySubString(physicalLink.getStreet()));
-			preparedStatement.setString(++i, DatabaseString.toQuerySubString(physicalLink.getBuilding()));
+			DatabaseString.setString(preparedStatement, ++i, physicalLink.getName(), SIZE_NAME_COLUMN);
+			DatabaseString.setString(preparedStatement, ++i, physicalLink.getDescription(), SIZE_DESCRIPTION_COLUMN);
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, physicalLink.getType().getId());
+			DatabaseString.setString(preparedStatement, ++i, physicalLink.getCity(), MarkDatabase.SIZE_CITY_COLUMN);
+			DatabaseString.setString(preparedStatement, ++i, physicalLink.getStreet(), MarkDatabase.SIZE_STREET_COLUMN);
+			DatabaseString.setString(preparedStatement, ++i, physicalLink.getBuilding(), MarkDatabase.SIZE_BUILDING_COLUMN);
 			preparedStatement.setDouble(++i, physicalLink.getDimensionX());
 			preparedStatement.setDouble(++i, physicalLink.getDimensionY());			
 			preparedStatement.setInt(++i, (physicalLink.isTopToBottom() ? TOP_BOTTOM : 0) | (physicalLink.isLeftToRight() ? LEFT_RIGHT : 0) );
@@ -145,12 +145,12 @@ public class PhysicalLinkDatabase extends StorableObjectDatabase {
 			UpdateObjectException {
 		PhysicalLink physicalLink = fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(physicalLink.getName()) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(physicalLink.getDescription()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(physicalLink.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(physicalLink.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(physicalLink.getType().getId()) + COMMA
-			+ DatabaseString.toQuerySubString(physicalLink.getCity()) + COMMA
-			+ DatabaseString.toQuerySubString(physicalLink.getStreet()) + COMMA
-			+ DatabaseString.toQuerySubString(physicalLink.getBuilding()) + COMMA
+			+ DatabaseString.toQuerySubString(physicalLink.getCity(), MarkDatabase.SIZE_CITY_COLUMN) + COMMA
+			+ DatabaseString.toQuerySubString(physicalLink.getStreet(), MarkDatabase.SIZE_STREET_COLUMN) + COMMA
+			+ DatabaseString.toQuerySubString(physicalLink.getBuilding(), MarkDatabase.SIZE_BUILDING_COLUMN) + COMMA
 			+ physicalLink.getDimensionX() + COMMA
 			+ physicalLink.getDimensionY() + COMMA
 			+ ((physicalLink.isTopToBottom() ? TOP_BOTTOM : 0) | (physicalLink.isLeftToRight() ? LEFT_RIGHT : 0)) + COMMA

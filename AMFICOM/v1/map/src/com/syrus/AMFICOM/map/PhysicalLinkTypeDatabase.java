@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkTypeDatabase.java,v 1.2 2004/12/08 09:51:26 bob Exp $
+ * $Id: PhysicalLinkTypeDatabase.java,v 1.3 2004/12/16 11:50:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/12/08 09:51:26 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/16 11:50:40 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -93,10 +93,10 @@ public class PhysicalLinkTypeDatabase extends StorableObjectDatabase {
 		PhysicalLinkType physicalLinkType = fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
-			preparedStatement.setString(++i, DatabaseString.toQuerySubString(physicalLinkType.getCodename()));
+			DatabaseString.setString(preparedStatement, ++i, physicalLinkType.getCodename(), SIZE_CODENAME_COLUMN);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, physicalLinkType.getDomainId());
-			preparedStatement.setString(++i, DatabaseString.toQuerySubString(physicalLinkType.getName()));
-			preparedStatement.setString(++i, DatabaseString.toQuerySubString(physicalLinkType.getDescription()));
+			DatabaseString.setString(preparedStatement, ++i, physicalLinkType.getName(), SIZE_NAME_COLUMN);
+			DatabaseString.setString(preparedStatement, ++i, physicalLinkType.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
@@ -107,10 +107,10 @@ public class PhysicalLinkTypeDatabase extends StorableObjectDatabase {
 			UpdateObjectException {
 		PhysicalLinkType physicalLinkType = fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(physicalLinkType.getCodename()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(physicalLinkType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(physicalLinkType.getDomainId()) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(physicalLinkType.getName()) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(physicalLinkType.getDescription()) + APOSTOPHE;
+			+ APOSTOPHE + DatabaseString.toQuerySubString(physicalLinkType.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(physicalLinkType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
 		return values;
 	}
 	

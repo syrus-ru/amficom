@@ -1,5 +1,5 @@
 /*
- * $Id: MapDatabase.java,v 1.5 2004/12/08 13:21:01 bob Exp $
+ * $Id: MapDatabase.java,v 1.6 2004/12/16 11:50:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/12/08 13:21:01 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/16 11:50:40 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -285,8 +285,8 @@ public class MapDatabase extends StorableObjectDatabase {
 		Map map = fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
-			preparedStatement.setString(++i, DatabaseString.toQuerySubString(map.getName()));
-			preparedStatement.setString(++i, DatabaseString.toQuerySubString(map.getDescription()));
+			DatabaseString.setString(preparedStatement, ++i, map.getName(), SIZE_NAME_COLUMN);
+			DatabaseString.setString(preparedStatement, ++i, map.getDescription(), SIZE_DESCRIPTION_COLUMN);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, map.getDomainId());		
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
@@ -298,8 +298,8 @@ public class MapDatabase extends StorableObjectDatabase {
 			UpdateObjectException {
 		Map map = fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(map.getName()) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(map.getDescription()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(map.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(map.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(map.getDomainId());
 		return values;
 	}

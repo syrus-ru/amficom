@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeDatabase.java,v 1.4 2004/12/08 09:51:26 bob Exp $
+ * $Id: SiteNodeDatabase.java,v 1.5 2004/12/16 11:50:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/12/08 09:51:26 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/16 11:50:40 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -120,15 +120,16 @@ public class SiteNodeDatabase extends StorableObjectDatabase {
 		SiteNode siteNode = fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
-			preparedStatement.setString(++i, DatabaseString.toQuerySubString(siteNode.getName()));
-			preparedStatement.setString(++i, DatabaseString.toQuerySubString(siteNode.getDescription()));
+			DatabaseString.setString(preparedStatement, ++i, siteNode.getName(), SIZE_NAME_COLUMN);
+			DatabaseString.setString(preparedStatement, ++i, siteNode.getDescription(), SIZE_DESCRIPTION_COLUMN);
 			preparedStatement.setDouble(++i, siteNode.getLongitude());
 			preparedStatement.setDouble(++i, siteNode.getLatitude());
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, siteNode.getImageId());
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, siteNode.getType().getId());
-			preparedStatement.setString(++i, DatabaseString.toQuerySubString(siteNode.getCity()));
-			preparedStatement.setString(++i, DatabaseString.toQuerySubString(siteNode.getStreet()));
-			preparedStatement.setString(++i, DatabaseString.toQuerySubString(siteNode.getBuilding()));
+			DatabaseString.setString(preparedStatement, ++i, siteNode.getCity(), MarkDatabase.SIZE_CITY_COLUMN);
+			DatabaseString.setString(preparedStatement, ++i, siteNode.getStreet(), MarkDatabase.SIZE_STREET_COLUMN);
+			DatabaseString.setString(preparedStatement, ++i, siteNode.getBuilding(), MarkDatabase.SIZE_BUILDING_COLUMN);
+			
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
@@ -139,15 +140,15 @@ public class SiteNodeDatabase extends StorableObjectDatabase {
 			UpdateObjectException {
 		SiteNode siteNode = fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(siteNode.getName()) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(siteNode.getDescription()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(siteNode.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(siteNode.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 			+ siteNode.getLongitude() + COMMA
 			+ siteNode.getLatitude() + COMMA
 			+ DatabaseIdentifier.toSQLString(siteNode.getImageId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(siteNode.getType().getId()) + COMMA
-			+ DatabaseString.toQuerySubString(siteNode.getCity()) + COMMA
-			+ DatabaseString.toQuerySubString(siteNode.getStreet()) + COMMA
-			+ DatabaseString.toQuerySubString(siteNode.getBuilding());
+			+ DatabaseString.toQuerySubString(siteNode.getCity(), MarkDatabase.SIZE_CITY_COLUMN) + COMMA
+			+ DatabaseString.toQuerySubString(siteNode.getStreet(), MarkDatabase.SIZE_STREET_COLUMN) + COMMA
+			+ DatabaseString.toQuerySubString(siteNode.getBuilding(), MarkDatabase.SIZE_BUILDING_COLUMN);
 		return values;
 	}
 	

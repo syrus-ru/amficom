@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeTypeDatabase.java,v 1.2 2004/12/08 09:51:26 bob Exp $
+ * $Id: SiteNodeTypeDatabase.java,v 1.3 2004/12/16 11:50:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/12/08 09:51:26 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/16 11:50:40 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -97,9 +97,9 @@ public class SiteNodeTypeDatabase extends StorableObjectDatabase {
 		SiteNodeType siteNodeType = fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
-			preparedStatement.setString(++i, DatabaseString.toQuerySubString(siteNodeType.getCodename()));
-			preparedStatement.setString(++i, DatabaseString.toQuerySubString(siteNodeType.getName()));
-			preparedStatement.setString(++i, DatabaseString.toQuerySubString(siteNodeType.getDescription()));
+			DatabaseString.setString(preparedStatement, ++i, siteNodeType.getCodename(), SIZE_CODENAME_COLUMN);
+			DatabaseString.setString(preparedStatement, ++i, siteNodeType.getName(), SIZE_NAME_COLUMN);
+			DatabaseString.setString(preparedStatement, ++i, siteNodeType.getDescription(), SIZE_DESCRIPTION_COLUMN);
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, siteNodeType.getImageId());
 			preparedStatement.setInt(++i, siteNodeType.isTopological() ? 1 : 0);
 		} catch (SQLException sqle) {
@@ -112,9 +112,9 @@ public class SiteNodeTypeDatabase extends StorableObjectDatabase {
 			UpdateObjectException {
 		SiteNodeType siteNodeType = fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(siteNodeType.getCodename()) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(siteNodeType.getName()) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(siteNodeType.getDescription()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(siteNodeType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(siteNodeType.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(siteNodeType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(siteNodeType.getImageId()) + COMMA
 			+ (siteNodeType.isTopological() ? 1 : 0);
 		return values;
