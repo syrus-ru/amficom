@@ -1,0 +1,9 @@
+resources
+lang
+lang_ru.pl
+language.properties_
+sort.pl
+Configure.properties
+images
+*.jar
+.settings
