@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.2 2005/01/17 08:26:35 bob Exp $
+ * $Id: CharacteristicDatabase.java,v 1.3 2005/01/21 08:05:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,35 +27,34 @@ import com.syrus.util.database.DatabaseString;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/17 08:26:35 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/01/21 08:05:29 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
 public class CharacteristicDatabase extends StorableObjectDatabase {
 	// table :: Characteristic
-    // type_id VARCHAR2(32) NOT NULL,
-    public static final String COLUMN_TYPE_ID       	= "type_id";
-    // name VARCHAR2(64) NOT NULL,
-    public static final String COLUMN_NAME 				 = "name";
+	// type_id VARCHAR2(32) NOT NULL,
+	public static final String COLUMN_TYPE_ID = "type_id";
+	// name VARCHAR2(64) NOT NULL,
+	public static final String COLUMN_NAME = "name";
 	// description VARCHAR2(256),
-    public static final String COLUMN_DESCRIPTION		= "description";
-    // value VARCHAR2(256),
-    public static final String COLUMN_VALUE 			= "value";
-    public static final String COLUMN_IS_EDITABLE		= "is_editable";
-	public static final String COLUMN_IS_VISIBLE		= "is_visible";
-    // sort NUMBER(2) NOT NULL,
-    public static final String COLUMN_SORT  			= "sort";
-    //  characterized_id VARCHAR2(32),
-    public static final String COLUMN_CHARACTERIZED_ID	= "characterized_id";
-    
-    
-    private static final int SIZE_VALUE_COLUMN 			= 256;
-    
-    private static String columns;
-    private static String updateMultiplySQLValues;
-    
-    protected String getEnityName() {
+	public static final String COLUMN_DESCRIPTION = "description";
+	// sort NUMBER(2) NOT NULL,
+	public static final String COLUMN_SORT = "sort";
+	// value VARCHAR2(256),
+	public static final String COLUMN_VALUE = "value";
+	//  characterized_id VARCHAR2(32),
+	public static final String COLUMN_CHARACTERIZED_ID = "characterized_id";
+	public static final String COLUMN_EDITABLE = "editable";
+	public static final String COLUMN_VISIBLE = "visible";
+
+	private static final int SIZE_VALUE_COLUMN = 256;
+
+	private static String columns;
+	private static String updateMultiplySQLValues;
+
+  protected String getEnityName() {
 		return ObjectEntities.CHARACTERISTIC_ENTITY;
 	}
 
@@ -66,8 +65,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			+ COLUMN_NAME + COMMA
 			+ COLUMN_DESCRIPTION + COMMA
 			+ COLUMN_VALUE + COMMA
-			+ COLUMN_IS_EDITABLE + COMMA
-			+ COLUMN_IS_VISIBLE + COMMA
+			+ COLUMN_EDITABLE + COMMA
+			+ COLUMN_VISIBLE + COMMA
 			+ COLUMN_SORT +	COMMA
 			+ COLUMN_CHARACTERIZED_ID;
 		}
@@ -175,8 +174,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 									 sort,
 									 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_VALUE)),
 									 characterizedId,
-									 (resultSet.getInt(COLUMN_IS_EDITABLE) == 0) ? false : true,
-									 (resultSet.getInt(COLUMN_IS_VISIBLE) == 0) ? false : true);
+									 (resultSet.getInt(COLUMN_EDITABLE) == 0) ? false : true,
+									 (resultSet.getInt(COLUMN_VISIBLE) == 0) ? false : true);
 		return characteristic;
 	}
 

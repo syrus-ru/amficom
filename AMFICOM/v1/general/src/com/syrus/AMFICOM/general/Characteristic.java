@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.6 2005/01/20 13:34:04 arseniy Exp $
+ * $Id: Characteristic.java,v 1.7 2005/01/21 08:05:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/01/20 13:34:04 $
+ * @version $Revision: 1.7 $, $Date: 2005/01/21 08:05:29 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -26,12 +26,12 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 public class Characteristic extends StorableObject implements TypedObject {
 	private static final long serialVersionUID = -2746555753961778403L;
 
-	public static final String COLUMN_CHARACTERISTIC_TYPE_ID = "type";
+	public static final String COLUMN_TYPE_ID = "type_id";
 	public static final String COLUMN_NAME = "name";
 	public static final String COLUMN_DESCRIPTION = "description";
 	public static final String COLUMN_SORT = "sort";
 	public static final String COLUMN_VALUE = "value";
-	public static final String COLUMN_CHARACTERIZED_ID = "characterizedId";
+	public static final String COLUMN_CHARACTERIZED_ID = "characterized_id";
 	public static final String COLUMN_EDITABLE = "editable";
 	public static final String COLUMN_VISIBLE = "visible";
 
@@ -305,7 +305,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 	public Characteristic (Map exportedColumns) throws CreateObjectException {
 		super(exportedColumns);
 
-		Identifier typeId = new Identifier((String)exportedColumns.get(COLUMN_CHARACTERISTIC_TYPE_ID));
+		Identifier typeId = new Identifier((String)exportedColumns.get(COLUMN_TYPE_ID));
 		try {
 			this.type = (CharacteristicType)GeneralStorableObjectPool.getStorableObject(typeId, false);
 		}
@@ -324,7 +324,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 
 	public synchronized void exportColumns() {
 		super.exportColumns();
-		this.exportedColumns.put(COLUMN_CHARACTERISTIC_TYPE_ID, this.type.toString());
+		this.exportedColumns.put(COLUMN_TYPE_ID, this.type.getId().toString());
 		this.exportedColumns.put(COLUMN_NAME, this.name);
 		this.exportedColumns.put(COLUMN_DESCRIPTION, this.description);
 		this.exportedColumns.put(COLUMN_SORT, Integer.toString(this.sort));
