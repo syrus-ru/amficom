@@ -5,6 +5,8 @@ import java.awt.*;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.Scheduler.General.I18N;
+import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
 public class PlanFrame extends JInternalFrame
 {
@@ -29,8 +31,8 @@ public class PlanFrame extends JInternalFrame
 	
 	private void jbInit() throws Exception
 	{
-		setTitle("План-график");
-		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
+		setTitle(I18N.getString("Plan.Title")); //$NON-NLS-1$
+		setFrameIcon(UIStorage.GENERAL_ICON);
 		setResizable(true);
 		setClosable(true);
 		setMaximizable(true);

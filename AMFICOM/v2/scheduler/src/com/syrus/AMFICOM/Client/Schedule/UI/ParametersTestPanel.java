@@ -10,6 +10,7 @@ import javax.swing.*;
 /**
  * @author Vladimir Dolzhenko
  */
-public abstract class ParametersTestPanel
-	extends JPanel
-	implements ParametersTest {}
+public abstract class ParametersTestPanel extends JPanel implements
+		ParametersTest {
+	//nothing
+}

@@ -8,18 +8,18 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
-import com.syrus.AMFICOM.CORBA.General.TestStatus;
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Schedule.ScheduleMainFrame;
+import com.syrus.AMFICOM.Client.Scheduler.General.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 
 public class TimeParametersPanel extends JPanel implements OperationListener {
 
 	//public TestRequest treq;
 	//	private TestRequest treq;
+	private final static boolean		FULL_BUTTON_SET		= false;
 
 	private Test						test				= null;
 
@@ -155,7 +155,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		gbc.weighty = 1.0;
 		gbc.ipadx = 0;
 		gbc.ipady = 0;
-		gbc.insets = UIUtil.INSET_NULL;
+		gbc.insets = UIStorage.INSET_NULL;
 		Insets gbcInsetsDefault = gbc.insets;
 		gbc.fill = GridBagConstraints.BOTH;
 		this.setLayout(new GridBagLayout());
@@ -169,13 +169,12 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 		startTimeSpinner = new TimeSpinner();
 		startDateSpinner = new DateSpinner();
-		final JButton startDateButton = new JButton(UIUtil.CALENDAR_ICON);
-		startDateButton.setMargin(UIUtil.INSET_NULL);
+		final JButton startDateButton = new JButton(UIStorage.CALENDAR_ICON);
+		startDateButton.setMargin(UIStorage.INSET_NULL);
 		startDateButton.setDefaultCapable(false);
 
 		startDateButton.setFocusable(false);
-		startDateButton.setToolTipText(LangModelSchedule
-				.getComponentToolTip("CalendarButton"));
+		startDateButton.setToolTipText(I18N.getString("Calendar"));
 		startDateButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -201,13 +200,12 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		gbc.gridy++;
 		endTimeSpinner = new TimeSpinner();
 		endDateSpinner = new DateSpinner();
-		final JButton endDateButton = new JButton(UIUtil.CALENDAR_ICON);
-		endDateButton.setMargin(UIUtil.INSET_NULL);
+		final JButton endDateButton = new JButton(UIStorage.CALENDAR_ICON);
+		endDateButton.setMargin(UIStorage.INSET_NULL);
 		endDateButton.setDefaultCapable(false);
 
 		endDateButton.setFocusable(false);
-		endDateButton.setToolTipText(LangModelSchedule
-				.getComponentToolTip("CalendarButton"));
+		endDateButton.setToolTipText(I18N.getString("Calendar"));
 		endDateButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
@@ -225,7 +223,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		}
 
 		JSeparator jsep1 = new JSeparator();
-		gbc.insets = UIUtil.INSETS1010;
+		gbc.insets = UIStorage.INSETS1010;
 		jsep1.setBorder(BorderFactory.createEtchedBorder());
 		gbc.gridx = 1;
 		gbc.gridy = 5;
@@ -233,8 +231,8 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		add(jsep1, gbc);
 		gbc.insets = gbcInsetsDefault;
 
-		patternRadioButton = UIUtil.createRadioButton(LangModelSchedule
-				.getString("labelUsePattern"), new AbstractAction() {
+		patternRadioButton = UIStorage.createRadioButton(I18N
+				.getString("UsePattern"), new AbstractAction() {
 
 			public void actionPerformed(ActionEvent e) {
 				CardLayout cl = (CardLayout) (paramPatternPanel.getLayout());
@@ -245,7 +243,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 				revalidate();
 			}
 		});
-		minuteRadioButton = UIUtil.createRadioButton("минута",
+		minuteRadioButton = UIStorage.createRadioButton("минута",
 				new AbstractAction() {
 
 					public void actionPerformed(ActionEvent e) {
@@ -261,36 +259,40 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 						revalidate();
 					}
 				});
-		hourRadioButton = UIUtil.createRadioButton("час", new AbstractAction() {
+		hourRadioButton = UIStorage.createRadioButton("час",
+				new AbstractAction() {
 
-			public void actionPerformed(ActionEvent e) {
-				if (!periodicElementInit[2]) {
-					hourPanel = new HourPanel();
-					extraParamPanel.add(hourPanel, PERIODIC_HOUR_NAME);
-					periodicElementInit[2] = true;
-				}
-				CardLayout cl = (CardLayout) (extraParamPanel.getLayout());
-				cl.show(extraParamPanel, PERIODIC_HOUR_NAME);
-				tempPanel = hourPanel;
-				revalidate();
-			}
-		});
-		dayRadioButton = UIUtil.createRadioButton("день", new AbstractAction() {
+					public void actionPerformed(ActionEvent e) {
+						if (!periodicElementInit[2]) {
+							hourPanel = new HourPanel();
+							extraParamPanel.add(hourPanel, PERIODIC_HOUR_NAME);
+							periodicElementInit[2] = true;
+						}
+						CardLayout cl = (CardLayout) (extraParamPanel
+								.getLayout());
+						cl.show(extraParamPanel, PERIODIC_HOUR_NAME);
+						tempPanel = hourPanel;
+						revalidate();
+					}
+				});
+		dayRadioButton = UIStorage.createRadioButton("день",
+				new AbstractAction() {
 
-			public void actionPerformed(ActionEvent e) {
-				if (!periodicElementInit[3]) {
-					dayPanel = new DayPanel();
-					extraParamPanel.add(dayPanel, PERIODIC_DAY_NAME);
-					periodicElementInit[3] = true;
-				}
-				CardLayout cl = (CardLayout) (extraParamPanel.getLayout());
-				cl.show(extraParamPanel, PERIODIC_DAY_NAME);
-				tempPanel = dayPanel;
-				revalidate();
-			}
+					public void actionPerformed(ActionEvent e) {
+						if (!periodicElementInit[3]) {
+							dayPanel = new DayPanel();
+							extraParamPanel.add(dayPanel, PERIODIC_DAY_NAME);
+							periodicElementInit[3] = true;
+						}
+						CardLayout cl = (CardLayout) (extraParamPanel
+								.getLayout());
+						cl.show(extraParamPanel, PERIODIC_DAY_NAME);
+						tempPanel = dayPanel;
+						revalidate();
+					}
 
-		});
-		weekRadioButton = UIUtil.createRadioButton("недел€",
+				});
+		weekRadioButton = UIStorage.createRadioButton("недел€",
 				new AbstractAction() {
 
 					public void actionPerformed(ActionEvent e) {
@@ -307,7 +309,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 					}
 
 				});
-		monthRadioButton = UIUtil.createRadioButton("мес€ц",
+		monthRadioButton = UIStorage.createRadioButton("мес€ц",
 				new AbstractAction() {
 
 					public void actionPerformed(ActionEvent e) {
@@ -325,27 +327,26 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 					}
 
 				});
+		oneRadioButton = UIStorage.createRadioButton(I18N.getString("Onetime"),
+				new AbstractAction() {
 
-		oneRadioButton = UIUtil.createRadioButton(LangModelSchedule
-				.getString("labelOnetime"), new AbstractAction() {
+					public void actionPerformed(ActionEvent e) {
+						endTimeSpinner.setEnabled(false);
+						endDateSpinner.setEnabled(false);
+						endDateButton.setEnabled(false);
 
-			public void actionPerformed(ActionEvent e) {
-				endTimeSpinner.setEnabled(false);
-				endDateSpinner.setEnabled(false);
-				endDateButton.setEnabled(false);
+						minuteRadioButton.setEnabled(false);
+						hourRadioButton.setEnabled(false);
+						dayRadioButton.setEnabled(false);
+						weekRadioButton.setEnabled(false);
+						monthRadioButton.setEnabled(false);
+						extraParamPanel.setVisible(false);
+						revalidate();
+					}
+				});
 
-				minuteRadioButton.setEnabled(false);
-				hourRadioButton.setEnabled(false);
-				dayRadioButton.setEnabled(false);
-				weekRadioButton.setEnabled(false);
-				monthRadioButton.setEnabled(false);
-				extraParamPanel.setVisible(false);
-				revalidate();
-			}
-		});
-
-		paramsRadioButton = UIUtil.createRadioButton(LangModelSchedule
-				.getString("labelUseParameters"), new AbstractAction() {
+		paramsRadioButton = UIStorage.createRadioButton(I18N
+				.getString("UseParameters"), new AbstractAction() {
 
 			public void actionPerformed(ActionEvent e) {
 				CardLayout cl = (CardLayout) (paramPatternPanel.getLayout());
@@ -371,14 +372,13 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		add(paramsRadioButton, gbc);
 
 		JSeparator jsep2 = new JSeparator();
-		gbc.insets = UIUtil.INSETS1010;
+		gbc.insets = UIStorage.INSETS1010;
 		gbc.gridy = 8;
 		jsep2.setBorder(BorderFactory.createEtchedBorder());
 		add(jsep2, gbc);
 		gbc.insets = gbcInsetsDefault;
 
-		continuosRadioButton = new JRadioButton(LangModelSchedule
-				.getString("labelContinual"));
+		continuosRadioButton = new JRadioButton(I18N.getString("Continual"));
 		continuosRadioButton.addItemListener(new ItemListener() {
 
 			public void itemStateChanged(ItemEvent e) {
@@ -398,8 +398,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			}
 		});
 
-		periodicalRadioButton = new JRadioButton(LangModelSchedule
-				.getString("labelPeriod"));
+		periodicalRadioButton = new JRadioButton(I18N.getString("Periodical"));
 		periodicalRadioButton.addItemListener(new ItemListener() {
 
 			public void itemStateChanged(ItemEvent e) {
@@ -410,9 +409,11 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 					minuteRadioButton.setEnabled(true);
 					hourRadioButton.setEnabled(true);
-					dayRadioButton.setEnabled(true);
-					weekRadioButton.setEnabled(true);
-					monthRadioButton.setEnabled(true);
+					if (FULL_BUTTON_SET) {
+						dayRadioButton.setEnabled(true);
+						weekRadioButton.setEnabled(true);
+						monthRadioButton.setEnabled(true);
+					}
 					extraParamPanel.setVisible(true);
 					revalidate();
 				}
@@ -459,14 +460,13 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			JScrollPane timeStampPanel = new JScrollPane(timeStamps);
 			timeStampPanel.setBorder(BorderFactory.createEtchedBorder());
 
-			/*
-			 * JSplitPane paramPanel = new JSplitPane(
-			 * JSplitPane.HORIZONTAL_SPLIT, pOptPanel, extraParamPanel);*
-			 * paramPanel.setResizeWeight(0.5);
-			 * paramPanel.setOneTouchExpandable(true);
-			 * paramPanel.setContinuousLayout(true);
-			 * paramPanel.setBorder(BorderFactory.createEtchedBorder());
-			 */
+			//			  JSplitPane paramPanel = new JSplitPane(
+			//			  JSplitPane.HORIZONTAL_SPLIT, pOptPanel, extraParamPanel);*
+			//			  paramPanel.setResizeWeight(0.5);
+			//			  paramPanel.setOneTouchExpandable(true);
+			//			  paramPanel.setContinuousLayout(true);
+			//			  paramPanel.setBorder(BorderFactory.createEtchedBorder());
+			//			 
 			paramPatternPanel.add(pOptPanel, PARAM_PANEL_NAME);
 			paramPatternPanel.add(timeStampPanel, PATTERN_PANEL_NAME);
 
@@ -477,16 +477,16 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		}
 
 		JSeparator jsep3 = new JSeparator();
-		gbc.insets = UIUtil.INSETS1010;
+		gbc.insets = UIStorage.INSETS1010;
 		jsep3.setBorder(BorderFactory.createEtchedBorder());
 		gbc.gridy++;
 		add(jsep3, gbc);
 		gbc.insets = gbcInsetsDefault;
 
-		synchroRadioButton = new JRadioButton(LangModelSchedule
-				.getString("labelTogether"));
-		alternateRadioButton = new JRadioButton(LangModelSchedule
-				.getString("labelInTurn"));
+		synchroRadioButton = new JRadioButton(I18N.getString("Together"));
+		alternateRadioButton = new JRadioButton(I18N.getString("InTurn"));
+		synchroRadioButton.setEnabled(false);
+		alternateRadioButton.setEnabled(false);
 		ButtonGroup group3 = new ButtonGroup();
 		group3.add(synchroRadioButton);
 		group3.add(alternateRadioButton);
@@ -496,7 +496,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		add(alternateRadioButton, gbc);
 
 		JSeparator jsep4 = new JSeparator();
-		gbc.insets = UIUtil.INSETS1010;
+		gbc.insets = UIStorage.INSETS1010;
 		gbc.gridheight = GridBagConstraints.RELATIVE;
 		jsep4.setBorder(BorderFactory.createEtchedBorder());
 		gbc.gridy++;
@@ -504,16 +504,16 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		gbc.insets = gbcInsetsDefault;
 
 		{
-			applyButton = new JButton(LangModelSchedule.getString("labelApply"));
-			createButton = new JButton(LangModelSchedule
-					.getString("labelCreate"));
+			applyButton = new JButton(I18N.getString("Apply"));
+			createButton = new JButton(I18N.getString("Create"));
 
 			applyButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
 					createButton.setEnabled(false);
 					applyButton.setEnabled(false);
-					apply();
+					dispatcher.notify(new OperationEvent("", 0,
+							TestRequestFrame.COMMAND_APPLY_TEST));
 					/**
 					 * @todo does we need enable create button always ?
 					 */
@@ -575,30 +575,31 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
-		if (ScheduleMainFrame.DEBUG)
+		if (ScheduleMainFrame.DEBUG >= 5)
 				System.out.println(getClass().getName() + " commandName: "
 						+ commandName);
 		if (commandName.equalsIgnoreCase(TestRequestFrame.COMMAND_DATA_REQUEST)) {
 			/**
 			 * @todo must send data edit in this form 
 			 */
-			TimeStamp timeStamp = this.getTimeStamp();
-			dispatcher.notify(new OperationEvent(timeStamp,
-					TestRequestFrame.DATA_ID_TIMESTAMP,
-					TestRequestFrame.COMMAND_SEND_DATA));
+			TimeStamp_dep timeStamp = this.getTimeStamp();
+			if (timeStamp != null)
+					dispatcher.notify(new OperationEvent(timeStamp,
+							TestRequestFrame.DATA_ID_TIMESTAMP,
+							TestRequestFrame.COMMAND_SEND_DATA));
 		} else if (commandName.equals(TestUpdateEvent.typ)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
 			this.test = tue.test;
-
+			enableTestStatus();
 			/**
-			 * todo set TimeStamp from Test
+			 * todo set TimeStamp_dep from Test
 			 */
 			if (tue.TEST_SELECTED) {
 				/**
 				 * todo this is ONLY for backward compatibility
 				 */
-				setAllRadioButtonEnabled(true);
-				TimeStamp timeStamp = test.timeStamp;
+				//setAllRadioButtonEnabled(true);
+				TimeStamp_dep timeStamp = test.getTimeStamp();
 				{
 					long start = timeStamp.getPeriodStart();
 					long end = timeStamp.getPeriodEnd();
@@ -611,15 +612,20 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 				}
 
 				switch (timeStamp.getType()) {
-					case TimeStamp.TIMESTAMPTYPE_ONETIME:
+					case TimeStamp_dep.TIMESTAMPTYPE_ONETIME:
 						oneRadioButton.doClick();
 						break;
-					case TimeStamp.TIMESTAMPTYPE_CONTINUOS:
+					case TimeStamp_dep.TIMESTAMPTYPE_CONTINUOS:
 						continuosRadioButton.doClick();
 						break;
-					case TimeStamp.TIMESTAMPTYPE_PERIODIC:
+					case TimeStamp_dep.TIMESTAMPTYPE_PERIODIC:
 						periodicalRadioButton.doClick();
 						//Time period =timeStamp.getPeriod();
+						if (hourPanel == null) hourRadioButton.doClick();
+						if (dayPanel == null) dayRadioButton.doClick();
+						if (weekPanel == null) weekRadioButton.doClick();
+						if (monthPanel == null) monthRadioButton.doClick();
+						if (minPanel == null) minuteRadioButton.doClick();
 						if (minPanel != null) minPanel.setTimeStamp(timeStamp);
 						if (hourPanel != null)
 								hourPanel.setTimeStamp(timeStamp);
@@ -631,43 +637,27 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 						break;
 
 				}
-				enableTestStatus();
 			}
 		}
 	}
 
-	private void setAllRadioButtonEnabled(boolean value) {
-		//		paramsRadioButton.setEnabled(value);
-		//		patternRadioButton.setEnabled(value);
-		//		oneRadioButton.setEnabled(value);
-		//		continuosRadioButton.setEnabled(value);
-		//		periodicalRadioButton.setEnabled(value);
-		//		alternateRadioButton.setEnabled(value);
-		//		synchroRadioButton.setEnabled(value);
-		//		hourRadioButton.setEnabled(value);
-		//		minuteRadioButton.setEnabled(value);
-		//		dayRadioButton.setEnabled(value);
-		//		weekRadioButton.setEnabled(value);
-		//		monthRadioButton.setEnabled(value);
-		//		minPanel.setEnabled(value);
-
-		applyButton.setEnabled(value);
-	}
-
 	private void enableTestStatus() {
-		TestStatus status = test.status;
-		switch (status.value()) {
-			case TestStatus._TEST_STATUS_SCHEDULED:
-				setAllRadioButtonEnabled(true);
-				break;
-			default:
-				setAllRadioButtonEnabled(false);
-				break;
-		}
+		//setAllRadioButtonEnabled(test.isChanged());
+		System.out.println("test.isChanged():" + test.isChanged());
+		applyButton.setEnabled(test.isChanged());
+		//		TestStatus status = test.getStatus();
+		//		switch (status.value()) {
+		//			case TestStatus._TEST_STATUS_SCHEDULED:
+		//				setAllRadioButtonEnabled(true);
+		//				break;
+		//			default:
+		//				setAllRadioButtonEnabled(false);
+		//				break;
+		//		}
 	}
 
-	private TimeStamp getTimeStamp() {
-		TimeStamp ts = new TimeStamp();
+	private TimeStamp_dep getTimeStamp() {
+		TimeStamp_dep ts = new TimeStamp_dep();
 
 		Calendar dateCal = Calendar.getInstance();
 		Calendar timeCal = Calendar.getInstance();
@@ -687,6 +677,12 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		dateCal.set(Calendar.SECOND, 0);
 		dateCal.set(Calendar.MILLISECOND, 0);
 		long end = dateCal.getTimeInMillis();
+		if (oneRadioButton.isSelected()) {
+			end = start;
+			Date date = new Date(start);
+			endDateSpinner.getModel().setValue(date);
+			endTimeSpinner.getModel().setValue(date);
+		}
 
 		if (end < start) {
 			JOptionPane.showMessageDialog(this,
@@ -700,12 +696,12 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		//if (tempPanel != null)
 		//	tempPanel.fillTimeStamp(ts);
 		if (periodicalRadioButton.isSelected()) {
-			ts.setType(TimeStamp.TIMESTAMPTYPE_PERIODIC);
+			ts.setType(TimeStamp_dep.TIMESTAMPTYPE_PERIODIC);
 			tempPanel.fillTimeStamp(ts);
 		} else if (continuosRadioButton.isSelected()) {
-			ts.setType(TimeStamp.TIMESTAMPTYPE_CONTINUOS);
+			ts.setType(TimeStamp_dep.TIMESTAMPTYPE_CONTINUOS);
 		} else if (oneRadioButton.isSelected()) {
-			ts.setType(TimeStamp.TIMESTAMPTYPE_ONETIME);
+			ts.setType(TimeStamp_dep.TIMESTAMPTYPE_ONETIME);
 		}
 
 		return ts;
@@ -728,30 +724,14 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 				endDateSpinner.getModel().setValue(cal.getTime());
 	}
 
-	void apply() {
-		//TimeStamp ts = this.getTimeStamp();
-		//		long[] times = ts.getTestTimes();
-		//		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm dd.MM.yyyy");
-		//		for (int i = 0; i < times.length; i++)
-		//			System.out.println(
-		//				"test #"
-		//					+ i
-		//					+ ": "
-		//					+ sdf.format(new Date(times[i]))
-		//					+ " = "
-		//					+ times[i]);
-		/**
-		 * @todo apply test ? 
-		 */
-		dispatcher.notify(new OperationEvent("", 0,
-				TestRequestFrame.COMMAND_APPLY_TEST));
-	}
+	//void apply() {
+	//}
 
 	private interface TimeStampFiller {
 
-		void fillTimeStamp(TimeStamp ts);
+		void fillTimeStamp(TimeStamp_dep ts);
 
-		void setTimeStamp(TimeStamp ts);
+		void setTimeStamp(TimeStamp_dep ts);
 	}
 
 	private class TimePanelExt extends JPanel {
@@ -766,9 +746,9 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 		protected JButton addPlusButton() {
 			//JButton button = new JButton("+");
-			JButton button = new JButton(UIUtil.PLUS_ICON);
+			JButton button = new JButton(UIStorage.PLUS_ICON);
 			button.setFocusable(false);
-			button.setMargin(UIUtil.INSET_NULL);
+			button.setMargin(UIStorage.INSET_NULL);
 			button.setEnabled(true);
 			button.setDefaultCapable(false);
 			return button;
@@ -776,9 +756,9 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 		protected JButton addMinusButton() {
 			//JButton button = new JButton("-");
-			JButton button = new JButton(UIUtil.MINUS_ICON);
+			JButton button = new JButton(UIStorage.MINUS_ICON);
 			button.setFocusable(false);
-			button.setMargin(UIUtil.INSET_NULL);
+			button.setMargin(UIStorage.INSET_NULL);
 			button.setEnabled(false);
 			button.setDefaultCapable(false);
 			return button;
@@ -849,7 +829,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			addGlueLabel();
 		}
 
-		public void setTimeStamp(TimeStamp ts) {
+		public void setTimeStamp(TimeStamp_dep ts) {
 			Time period = ts.getPeriod();
 			switch (period.getScale()) {
 				case Calendar.MINUTE:
@@ -868,12 +848,13 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			minSpin.setEnabled(value);
 		}
 
-		public void fillTimeStamp(TimeStamp ts) {
+		public void fillTimeStamp(TimeStamp_dep ts) {
 			ts.setPeriod(Calendar.MINUTE, ((Number) minSpin.getValue())
 					.intValue());
 			ts.addTestDate(Calendar.MINUTE, 0);
 			ts.addTestTime(0, 0, 0);
 			//return ts;
+			ts.printTimes();
 		}
 	}
 
@@ -978,7 +959,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 				gbc.gridy++;
 				gbc.ipadx = 0;
 				gbc.weightx = 1.0;
-				panel.add(new JLabel("чч:мм"), gbc);
+				panel.add(new JLabel("мм:сс"), gbc);
 				gbc.gridwidth = GridBagConstraints.REMAINDER;
 				gbc.gridx += 2;
 				gbc.weightx = 0.0;
@@ -992,7 +973,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			addGlueLabel();
 		}
 
-		public void setTimeStamp(TimeStamp ts) {
+		public void setTimeStamp(TimeStamp_dep ts) {
 			Time period = ts.getPeriod();
 			switch (period.getScale()) {
 				case Calendar.HOUR:
@@ -1020,7 +1001,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 		}
 
-		public void fillTimeStamp(TimeStamp ts) {
+		public void fillTimeStamp(TimeStamp_dep ts) {
 			ts.setPeriod(Calendar.HOUR_OF_DAY, ((Number) hourSpin.getValue())
 					.intValue());
 
@@ -1031,7 +1012,8 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 				int s = Integer.parseInt(str.substring(3, 5));
 				ts.addTestTime(0, m, s);
 			}
-
+			if (time.size() == 0) ts.addTestTime(0, 0, 0);
+			ts.printTimes();
 			//return ts;
 		}
 	}
@@ -1175,7 +1157,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			addGlueLabel();
 		}
 
-		public void fillTimeStamp(TimeStamp ts) {
+		public void fillTimeStamp(TimeStamp_dep ts) {
 			ts.setPeriod(Calendar.DAY_OF_MONTH, ((Number) daySpin.getValue())
 					.intValue());
 
@@ -1186,35 +1168,40 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 				int m = Integer.parseInt(str.substring(3, 5));
 				ts.addTestTime(h, m, 0);
 			}
-
+			if (time.size() == 0) ts.addTestTime(0, 0, 0);
+			System.out.println("dayType.getSelectedIndex():"
+					+ dayType.getSelectedIndex());
 			switch (dayType.getSelectedIndex()) {
 				case DAYTYPE_WORK:
-					ts.addTestDate(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-					ts.addTestDate(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
-					ts.addTestDate(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
-					ts.addTestDate(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
-					ts.addTestDate(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
+					//					ts.addTestDate(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+					//					ts.addTestDate(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
+					//					ts.addTestDate(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
+					//					ts.addTestDate(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
+					//					ts.addTestDate(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
+					ts.setWeekDayTime(TimeStamp_dep.WEEKDAY_TYPE_WORK);
 					break;
 				case DAYTYPE_REST:
-					ts.addTestDate(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
-					ts.addTestDate(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+					//ts.addTestDate(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+					//ts.addTestDate(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+					ts.setWeekDayTime(TimeStamp_dep.WEEKDAY_TYPE_REST);
 					break;
 				case DAYTYPE_ANY:
 				default:
-					ts.addTestDate(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-					ts.addTestDate(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
-					ts.addTestDate(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
-					ts.addTestDate(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
-					ts.addTestDate(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
-					ts.addTestDate(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
-					ts.addTestDate(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+					//					ts.addTestDate(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+					//					ts.addTestDate(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);
+					//					ts.addTestDate(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);
+					//					ts.addTestDate(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);
+					//					ts.addTestDate(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);
+					//					ts.addTestDate(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
+					//					ts.addTestDate(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+					ts.setWeekDayTime(TimeStamp_dep.WEEKDAY_TYPE_ANY);
 					break;
 			}
-
+			ts.printTimes();
 			//return ts;
 		}
 
-		public void setTimeStamp(TimeStamp ts) {
+		public void setTimeStamp(TimeStamp_dep ts) {
 			Time period = ts.getPeriod();
 			switch (period.getScale()) {
 				case Calendar.DAY_OF_MONTH:
@@ -1252,27 +1239,26 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 					 * ts.addTestDate(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
 					 * ts.addTestDate(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
 					 */
-					int workDayCount = 0;
-					int restDayCount = 0;
-					for (Iterator it = list.iterator(); it.hasNext();) {
-						Time dt = (Time) it.next();
-						if (dt.getScale() == Calendar.DAY_OF_WEEK) {
-							int value = dt.getValue();
-							switch (value) {
-								case Calendar.SATURDAY:
-								case Calendar.SUNDAY:
-									restDayCount++;
-									break;
-								default:
-									workDayCount++;
-									break;
-							}
-						}
-					}
-
-					if ((workDayCount > 0) && (restDayCount == 0)) {
+					//					int workDayCount = 0;
+					//					int restDayCount = 0;
+					//					for (Iterator it = list.iterator(); it.hasNext();) {
+					//						Time dt = (Time) it.next();
+					//						if (dt.getScale() == Calendar.DAY_OF_WEEK) {
+					//							int value = dt.getValue();
+					//							switch (value) {
+					//								case Calendar.SATURDAY:
+					//								case Calendar.SUNDAY:
+					//									restDayCount++;
+					//									break;
+					//								default:
+					//									workDayCount++;
+					//									break;
+					//							}
+					//						}
+					//					}
+					if (ts.getWeekDayTime() == TimeStamp_dep.WEEKDAY_TYPE_WORK) {
 						dayType.setSelectedIndex(DAYTYPE_WORK);
-					} else if ((workDayCount == 0) && (restDayCount > 0)) {
+					} else if (ts.getWeekDayTime() == TimeStamp_dep.WEEKDAY_TYPE_REST) {
 						dayType.setSelectedIndex(DAYTYPE_REST);
 					} else {
 						dayType.setSelectedIndex(DAYTYPE_ANY);
@@ -1439,7 +1425,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			addGlueLabel();
 		}
 
-		public void fillTimeStamp(TimeStamp ts) {
+		public void fillTimeStamp(TimeStamp_dep ts) {
 			ts.setPeriod(Calendar.WEEK_OF_YEAR, ((Number) weekSpin.getValue())
 					.intValue());
 
@@ -1455,10 +1441,12 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 				int m = Integer.parseInt(str.substring(3, 5));
 				ts.addTestTime(h, m, 0);
 			}
+			if (time.size() == 0) ts.addTestTime(0, 0, 0);
+			ts.printTimes();
 			//return ts;
 		}
 
-		public void setTimeStamp(TimeStamp ts) {
+		public void setTimeStamp(TimeStamp_dep ts) {
 			Time period = ts.getPeriod();
 			switch (period.getScale()) {
 				case Calendar.WEEK_OF_YEAR:
@@ -1712,7 +1700,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			addGlueLabel();
 		}
 
-		public void fillTimeStamp(TimeStamp ts) {
+		public void fillTimeStamp(TimeStamp_dep ts) {
 			ts.setPeriod(Calendar.MONTH, ((Number) monthSpin.getValue())
 					.intValue());
 
@@ -1721,6 +1709,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 				int d = Integer.parseInt(str);
 				ts.addTestDate(Calendar.DAY_OF_MONTH, d);
 			}
+			if (days.size() == 0) ts.addTestDate(Calendar.DAY_OF_MONTH, 1);
 
 			for (Iterator it = time.iterator(); it.hasNext();) {
 				String str = (String) it.next();
@@ -1728,11 +1717,12 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 				int m = Integer.parseInt(str.substring(3, 5));
 				ts.addTestTime(h, m, 0);
 			}
-
+			if (time.size() == 0) ts.addTestTime(0, 0, 0);
+			ts.printTimes();
 			//return ts;
 		}
 
-		public void setTimeStamp(TimeStamp ts) {
+		public void setTimeStamp(TimeStamp_dep ts) {
 			Time period = ts.getPeriod();
 			switch (period.getScale()) {
 				case Calendar.MONTH:

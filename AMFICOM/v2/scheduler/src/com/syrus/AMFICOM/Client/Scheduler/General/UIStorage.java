@@ -30,37 +30,37 @@ final public class UIStorage {
 																		Toolkit
 																				.getDefaultToolkit()
 																				.getImage(
-																						"images/general.gif")); //$NON-NLS-1$
+																						"images/general.gif"));	//$NON-NLS-1$
 
 	public static final Icon				PLUS_ICON			= UIStorage
-																		.getStringIcon("+"); //$NON-NLS-1$
+																		.getStringIcon("+");						//$NON-NLS-1$
 
 	public static final Icon				MINUS_ICON			= UIStorage
-																		.getStringIcon("-"); //$NON-NLS-1$
+																		.getStringIcon("-");						//$NON-NLS-1$
 
 	public static final Icon				CALENDAR_ICON		= UIStorage
-																		.getStringIcon("^"); //$NON-NLS-1$
+																		.getStringIcon("^");						//$NON-NLS-1$
 
 	public static final Icon				TIME_ICON			= UIStorage
-																		.getStringIcon("t"); //$NON-NLS-1$
+																		.getStringIcon("t");						//$NON-NLS-1$
 
 	public static final Icon				OPEN_FILE_ICON		= new ImageIcon(
 																		Toolkit
 																				.getDefaultToolkit()
 																				.getImage(
-																						"images/openfile.gif")); //$NON-NLS-1$
+																						"images/openfile.gif"));	//$NON-NLS-1$
 
 	public static final Icon				DELETE_ICON			= new ImageIcon(
 																		Toolkit
 																				.getDefaultToolkit()
 																				.getImage(
-																						"images/delete.gif")); //$NON-NLS-1$
+																						"images/delete.gif"));		//$NON-NLS-1$
 
 	public static final Icon				FOLDER_ICON			= new ImageIcon(
 																		Toolkit
 																				.getDefaultToolkit()
 																				.getImage(
-																						"images/folder.gif")); //$NON-NLS-1$
+																						"images/folder.gif"));		//$NON-NLS-1$
 
 	public static final Icon				TESTING_ICON		= new ImageIcon(
 																		(Toolkit
@@ -76,28 +76,34 @@ final public class UIStorage {
 																		Toolkit
 																				.getDefaultToolkit()
 																				.getImage(
-																						"images/port.gif")); //$NON-NLS-1$
+																						"images/port.gif"));		//$NON-NLS-1$
 
 	public static final Icon				PATHMODE_ICON		= new ImageIcon(
 																		Toolkit
 																				.getDefaultToolkit()
 																				.getImage(
-																						"images/pathmode.gif")); //$NON-NLS-1$
+																						"images/pathmode.gif"));	//$NON-NLS-1$
 	public static final Icon				REFRESH_ICON		= new ImageIcon(
 																		Toolkit
 																				.getDefaultToolkit()
 																				.getImage(
-																						"images/refresh.gif")); //$NON-NLS-1$
+																						"images/refresh.gif"));	//$NON-NLS-1$
+	public static final Icon				SAVE_ICON			= new ImageIcon(
+																		Toolkit
+																				.getDefaultToolkit()
+																				.getImage(
+																						"images/save.gif"));		//$NON-NLS-1$
+
 	public static final Icon				ZOOMIN_ICON			= new ImageIcon(
 																		Toolkit
 																				.getDefaultToolkit()
 																				.getImage(
-																						"images/zoom_in.gif")); //$NON-NLS-1$
+																						"images/zoom_in.gif"));	//$NON-NLS-1$
 	public static final Icon				ZOOMOUT_ICON		= new ImageIcon(
 																		Toolkit
 																				.getDefaultToolkit()
 																				.getImage(
-																						"images/zoom_out.gif")); //$NON-NLS-1$
+																						"images/zoom_out.gif"));	//$NON-NLS-1$
 	public static final Icon				NOZOOM_ICON			= new ImageIcon(
 																		Toolkit
 																				.getDefaultToolkit()

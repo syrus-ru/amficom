@@ -10,6 +10,8 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
+import com.syrus.AMFICOM.Client.Scheduler.General.I18N;
+import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 
 public class TestParametersFrame extends JInternalFrame implements
 		OperationListener {
@@ -29,8 +31,8 @@ public class TestParametersFrame extends JInternalFrame implements
 	}
 
 	private void jbInit() throws Exception {
-		setTitle("Измерительные параметры");
-		setFrameIcon(UIUtil.GENERAL_ICON);
+		setTitle(I18N.getString("Measurement_options")); //$NON-NLS-1$
+		setFrameIcon(UIStorage.GENERAL_ICON);
 		setResizable(true);
 		setClosable(true);
 		setIconifiable(true);
@@ -49,11 +51,14 @@ public class TestParametersFrame extends JInternalFrame implements
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
 		Object obj = ae.getSource();
+		System.out.println(getClass().getName() + "\tcommandName:"
+				+ commandName);
+		System.out.println("obj:" + obj.getClass().getName() + "\t" + obj);
 		if (commandName.equals(TestUpdateEvent.typ)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
 			Test test = tue.test;
 			if (tue.TEST_SELECTED) {
-				KIS kis = (KIS) Pool.get(KIS.typ, test.kis_id);
+				KIS kis = (KIS) Pool.get(KIS.typ, test.getKisId());
 				Vector ports = kis.access_ports;
 				for (Enumeration e = ports.elements(); e.hasMoreElements();) {
 					AccessPort port = (AccessPort) e.nextElement();
@@ -65,7 +70,7 @@ public class TestParametersFrame extends JInternalFrame implements
 							dispatcher
 									.notify(new OperationEvent(
 											new ReflectometryTestPanel(
-													aContext, test),
+													aContext, port, test),
 											0,
 											TestParametersPanel.COMMAND_ADD_PARAM_PANEL));
 						}
@@ -74,16 +79,17 @@ public class TestParametersFrame extends JInternalFrame implements
 
 				panel.setTest(test);
 			} else {
+//				nothing
 			}
 		} else if (commandName
 				.equals(TestParametersPanel.COMMAND_CHANGE_PORT_TYPE)) {
-			String portTypeId = (String) obj;
-			if (portTypeId
+			AccessPort port = (AccessPort) obj;
+			if (port.type_id
 					.equals(ElementsTreePanel.ACCESSPORT_NAME_REFLECTOMETER)) {
 				if (!panel
 						.isParameterPanelExists(ReflectometryTestPanel.PANEL_NAME)) {
 					dispatcher.notify(new OperationEvent(
-							new ReflectometryTestPanel(aContext), 0,
+							new ReflectometryTestPanel(aContext, port), 0,
 							TestParametersPanel.COMMAND_ADD_PARAM_PANEL));
 				}
 			}

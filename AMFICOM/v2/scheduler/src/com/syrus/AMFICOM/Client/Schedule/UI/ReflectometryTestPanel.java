@@ -8,17 +8,21 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.ISM.*;
+import com.syrus.AMFICOM.Client.Resource.Network.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Resource.Test.TestType;
 import com.syrus.AMFICOM.Client.Schedule.ScheduleMainFrame;
+import com.syrus.AMFICOM.Client.Scheduler.General.*;
 import com.syrus.util.ByteArray;
 
 /**
@@ -27,102 +31,433 @@ import com.syrus.util.ByteArray;
 public class ReflectometryTestPanel extends ParametersTestPanel implements
 		ParametersTest, OperationListener {
 
-	public static final String		PANEL_NAME					= TestParametersPanel.PARAMETERS_PANEL_PREFIX
-																		+ "Reflectometry";
+	private class ListNumberComparator implements java.util.Comparator {
 
-	public static final String		PARAMETER_REFLECTION		= "ref_ior";
+		private int	direction	= 1;
 
-	public static final String		PARAMETER_WAVELENGHT		= "ref_wvlen";
+		public ListNumberComparator() {
+			direction = 1;
+		}
 
-	public static final String		PARAMETER_AVERAGEOUT_COUNT	= "ref_scans";
+		public ListNumberComparator(int direction) {
+			this.direction = direction;
+		}
 
-	public static final String		PARAMETER_PULSE_WIDTH		= "ref_pulswd";
+		public int compare(Object o1, Object o2) {
+			String s1 = o1.toString();
+			String s2 = o2.toString();
+			double d1 = 0;
+			double d2 = 0;
+			boolean isDoubleNumber = false;
+			int result = 0;
 
-	public static final String		PARAMETER_RESOLUTION		= "ref_res";
+			try {
+				d1 = Double.parseDouble(s1);
+				d2 = Double.parseDouble(s2);
+				isDoubleNumber = true;
+			} catch (NumberFormatException nfe) {
+				isDoubleNumber = false;
+			}
 
-	public static final String		PARAMETER_MAX_DISTANCE		= "ref_trclen";
+			if (isDoubleNumber) {
+				if (d1 < d2)
+					result = -direction;
+				else if (d1 == d2)
+					result = 0;
+				else
+					result = direction;
+			} else {
+				result = direction * s1.compareTo(s2);
+			}
+
+			return result;
+		}
+	}
+	public static final String		CHARACTER_MAX_REFRACTION	= "Max_Coef_Preloml";
+	public static final String		CHARACTER_MIN_REFRACTION	= "Min_Coef_Preloml";
+
+	public static final String		CHARACTER_WAVE_LENGTH		= "Work_Wave_Length";
 
 	private static final boolean	DEBUG						= false;
+	public static final String		MAX_DISTANCE				= "trclen";					//$NON-NLS-1$
+
+	public static final String		PANEL_NAME					= TestParametersPanel.PARAMETERS_PANEL_PREFIX
+																		+ "Reflectometry";		//$NON-NLS-1$
+	public static final String		PARAMETER_PREFIX			= "ref_";
+	public static final String		PULSE_WIDTH					= "pulswd";					//$NON-NLS-1$
+	public static final String		RESOLUTION					= "res";						//$NON-NLS-1$
+
+	public static final String		PARAMETER_AVERAGE_QUANTITY	= "ref_scans";					//$NON-NLS-1$
+	public static final String		PARAMETER_MAX_DISTANCE		= PARAMETER_PREFIX
+																		+ MAX_DISTANCE;		//$NON-NLS-1$	
+	public static final String		PARAMETER_PULSE_WIDTH		= PARAMETER_PREFIX
+																		+ PULSE_WIDTH;			//$NON-NLS-1$
+	public static final String		PARAMETER_REFRACTION		= "ref_ior";					//$NON-NLS-1$
+	public static final String		PARAMETER_RESOLUTION		= PARAMETER_PREFIX
+																		+ RESOLUTION;			//$NON-NLS-1$
+	public static final String		PARAMETER_WAVELENGHT		= "ref_wvlen";					//$NON-NLS-1$
 
 	//public static final String PARAMETER_CHAR_IDENTITY =
 	// "ref_characterizationidentity";
 
 	private ApplicationContext		aContext;
 
-	private Test					test;
+	private AComboBox				averageQuantityComboBox		= new AComboBox();
 
-	String[]						averageOutCount				= { "4000",
-			"8000", "16000", "32000", "64000", "128000", "256000"};
-
-	String[]						waveLength					= { "1310",
-			"1550", "1625"										};
-
-	String[][]						resolution					= {
-			{ "0.25", "0.5", "1", "2", "4", "8", "16"},
-			{ "0.5", "1", "2", "4", "8", "16"}, { "1", "2", "4", "8", "16"},
-			{ "2", "4", "8", "16"}, { "4", "8", "16"}, { "8", "16"}, { "16"}};
-
-	String[][]						pulseWidth					= {
-			{ "100", "200", "500"}, { "100", "200", "500", "1000"},
-			{ "100", "200", "500", "1000"},
-			{ "100", "200", "500", "1000", "5000"},
-			{ "100", "200", "500", "1000", "5000", "10000"},
-			{ "100", "200", "500", "1000", "5000", "10000"},
-			{ "100", "200", "500", "1000", "5000", "10000", "20000"}};
-
-	String[]						maxDistance					= { "4.096",
-			"8.192", "16.384", "32.768", "65.536", "131.072", "262.144"};
-
-	private JTextField				reflectTextField			= new JTextField();
-	private AComboBox				waveLengthComboBox			= new AComboBox(
-																		waveLength);
-	// was jComboBox1
-	private AComboBox				averageOutCountComboBox		= new AComboBox(
-																		averageOutCount);
-	// was jComboBox2
-	AComboBox						resolutionComboBox			= new AComboBox(
-																		resolution[0]);
-	// was jComboBox4
-	AComboBox						maxDistanceComboBox			= new AComboBox(
-																		maxDistance);
-	// was jComboBox3
-	AComboBox						pulseWidthComboBox			= new AComboBox(
-																		pulseWidth[0]);
-	// was jComboBox5
-
+	ListNumberComparator			comparator					= new ListNumberComparator();
 	private Dispatcher				dispatcher;
+	AComboBox						maxDistanceComboBox			= new AComboBox();
+	double							maxIndexOfRefraction		= 0.0;
+	double							minIndexOfRefraction		= 0.0;
+	AComboBox						pulseWidthComboBox			= new AComboBox();
+	HashMap							pulseWidthMap;
+
+	private JTextField				refractTextField			= new JTextField();
+	AComboBox						resolutionComboBox			= new AComboBox();
+	HashMap							resolutionMap;
+
+	private Test					test;
+	private AComboBox				waveLengthComboBox			= new AComboBox();
 
 	public ReflectometryTestPanel() {
-		try {
-			jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
+		init();
+	}
+
+	public ReflectometryTestPanel(ApplicationContext aContext, AccessPort port) {
+		this.aContext = aContext;
+		initModule(aContext.getDispatcher());
+		init();
+		setPort(port);
+	}
+
+	public ReflectometryTestPanel(ApplicationContext aContext, AccessPort port,
+			Test test) {
+		this.aContext = aContext;
+		initModule(aContext.getDispatcher());
+		init();
+		setPort(port);
+		setTest(test);
+	}
+
+	public String getPanelName() {
+		return PANEL_NAME;
+	}
+
+	public TestArgumentSet getParameters() {
+
+		DataSourceInterface dsi = aContext.getDataSourceInterface();
+		String test_setup_id;
+		String test_type_id;
+		if (test == null) {
+			test_setup_id = ""; //$NON-NLS-1$
+			test_type_id = TestParametersPanel.TEST_TYPE_TRACE_AND_ANALYSE;
+		} else {
+			test_setup_id = test.getTestSetupId();
+			test_type_id = test.getTestTypeId();
+		}
+		TestArgumentSet tas = null;
+		//if (test_setup_id.equals(""))
+		{
+			//			tas.id = dsi.GetUId(TestArgumentSet.typ);
+			//			Pool.put(TestArgumentSet.typ, as.getId(), as);
+			//			tas.name = tas.id;
+			//			tas.created = 0;
+			//			tas.created_by = "";
+			//			tas.test_type_id = test_type_id;
+			/**
+			 * @TODO recast to static final fields 
+			 */
+			//System.out.println("test_setup_id:" + test_setup_id);
+			TestSetup ts = (TestSetup) Pool.get(TestSetup.typ, test_setup_id);
+			if (ts == null) {
+				ts = new TestSetup();
+				//System.out.println("new TestSetup()");
+			}
+			//System.out.println("ts:" + ts.id);
+			tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ,
+					ts.getTestArgumentSetId());
+			if (tas == null) {
+				tas = new TestArgumentSet();
+				//System.out.println("new TestArgumentSet()");
+			}
+			//System.out.println("tas:" + tas.id);
+			ActionParameterType apt;
+
+			TestType testType = (TestType) Pool.get(TestType.typ, test_type_id);
+			apt = (ActionParameterType) testType.getSortedArguments()
+					.get(PARAMETER_REFRACTION);
+			try {
+				ByteArray byteArray;
+
+				byteArray = new ByteArray(Double.parseDouble(refractTextField
+						.getText()));
+				// dsi.GetUId("testargument")
+				Parameter reflectParam = new Parameter(dsi
+						.GetUId(PARAMETER_ID_NAME), apt.getId(), byteArray
+						.getBytes(), PARAMETER_REFRACTION, "double"); //$NON-NLS-1$
+				if (reflectParam == null)
+						System.out.println("reflectParam is null"); //$NON-NLS-1$
+				tas.addArgument(reflectParam);
+
+				apt = (ActionParameterType) testType.getSortedArguments()
+						.get(PARAMETER_WAVELENGHT);
+
+				byteArray = new ByteArray(Integer.parseInt(waveLengthComboBox
+						.getSelectedItem().toString()));
+				//			 dsi.GetUId("testargument")
+				Parameter waveLengthParam = new Parameter(dsi
+						.GetUId(PARAMETER_ID_NAME), apt.getId(), byteArray
+						.getBytes(), PARAMETER_WAVELENGHT, "int"); //$NON-NLS-1$
+				tas.addArgument(waveLengthParam);
+
+				apt = (ActionParameterType) testType.getSortedArguments()
+						.get(PARAMETER_AVERAGE_QUANTITY);
+				byteArray = new ByteArray(Double
+						.parseDouble(averageQuantityComboBox.getSelectedItem()
+								.toString()));
+				// dsi.GetUId("testargument")
+				Parameter averageOutCountParam = new Parameter(dsi
+						.GetUId(PARAMETER_ID_NAME), apt.getId(), byteArray
+						.getBytes(), PARAMETER_AVERAGE_QUANTITY, "double"); //$NON-NLS-1$
+				tas.addArgument(averageOutCountParam);
+
+				apt = (ActionParameterType) testType.getSortedArguments()
+						.get(PARAMETER_PULSE_WIDTH);
+				byteArray = new ByteArray(Double.parseDouble(pulseWidthComboBox
+						.getSelectedItem().toString()));
+				// dsi.GetUId("testargument")
+				Parameter pulseWidthParam = new Parameter(dsi
+						.GetUId(PARAMETER_ID_NAME), apt.getId(), byteArray
+						.getBytes(), PARAMETER_PULSE_WIDTH, "double"); //$NON-NLS-1$
+				tas.addArgument(pulseWidthParam);
+
+				apt = (ActionParameterType) testType.getSortedArguments()
+						.get(PARAMETER_RESOLUTION);
+				byteArray = new ByteArray(Double.parseDouble(resolutionComboBox
+						.getSelectedItem().toString()));
+				// dsi.GetUId("testargument")
+				Parameter resolutionParam = new Parameter(dsi
+						.GetUId(PARAMETER_ID_NAME), apt.getId(), byteArray
+						.getBytes(), PARAMETER_RESOLUTION, "double"); //$NON-NLS-1$
+				tas.addArgument(resolutionParam);
+
+				apt = (ActionParameterType) testType.getSortedArguments()
+						.get(PARAMETER_MAX_DISTANCE);
+				byteArray = new ByteArray(Double
+						.parseDouble(maxDistanceComboBox.getSelectedItem()
+								.toString()));
+				Parameter maxDistanceParam = new Parameter(dsi
+						.GetUId(PARAMETER_ID_NAME), apt.getId(), byteArray
+						.getBytes(), PARAMETER_MAX_DISTANCE, "double"); //$NON-NLS-1$
+				tas.addArgument(maxDistanceParam);
+			} catch (IOException ioe) {
+				ioe.printStackTrace();
+			}
+		}
+		return tas;
+	}
+
+	public void operationPerformed(OperationEvent ae) {
+		String commandName = ae.getActionCommand();
+		//Object obj = ae.getSource();
+		if (ScheduleMainFrame.DEBUG >= 5)
+				System.out.println(getClass().getName() + " commandName:" //$NON-NLS-1$
+						+ commandName);
+		if (commandName.equals(TestUpdateEvent.typ)) {
+			TestUpdateEvent tue = (TestUpdateEvent) ae;
+			if (tue.TEST_SELECTED) {
+				setTest(tue.test);
+			}
+		}
+	}
+
+	public void setPort(AccessPort port) {
+		Hashtable table = port.characteristics;
+		if (this.resolutionMap == null)
+			this.resolutionMap = new HashMap();
+		else
+			this.resolutionMap.clear();
+		if (this.pulseWidthMap == null)
+			this.pulseWidthMap = new HashMap();
+		else
+			this.pulseWidthMap.clear();
+		Pattern pattern = Pattern.compile(MAX_DISTANCE + "_(\\d+)_("
+				+ PULSE_WIDTH + "|" + RESOLUTION + ")");
+		for (Iterator it = table.keySet().iterator(); it.hasNext();) {
+			String key = (String) it.next();
+			Characteristic character = (Characteristic) table.get(key);
+			//			System.out.println(key + "\t" + character.id + "\t"
+			//					+ character.value);
+			if (key.equals(PARAMETER_AVERAGE_QUANTITY)) {
+				String[] values = character.value.split("\\s+");
+				Arrays.sort(values, comparator);
+				averageQuantityComboBox.removeAllItems();
+				for (int i = 0; i < values.length; i++)
+					averageQuantityComboBox.addItem(values[i]);
+
+			} else if (key.equals(CHARACTER_WAVE_LENGTH)) {
+				String[] values = character.value.split("\\s+");
+				Arrays.sort(values, comparator);
+				waveLengthComboBox.removeAllItems();
+				for (int i = 0; i < values.length; i++)
+					waveLengthComboBox.addItem(values[i]);
+
+			} else if (key.equals(CHARACTER_MAX_REFRACTION)) {
+				try {
+					maxIndexOfRefraction = Double.parseDouble(character.value);
+				} catch (NumberFormatException nfe) {
+					// nothing to do
+				}
+
+			} else if (key.equals(CHARACTER_MIN_REFRACTION)) {
+				try {
+					minIndexOfRefraction = Double.parseDouble(character.value);
+				} catch (NumberFormatException nfe) {
+					//					 nothing to do
+				}
+			} else {
+				Matcher matcher = pattern.matcher(key);
+				if (matcher.find()) {
+					String maxLength = null;
+					String suffix = null;
+					for (int j = 0; j <= matcher.groupCount(); j++) {
+						//System.out.println("j:"+j+"\t"+);
+						String substring = key.substring(matcher.start(j),
+								matcher.end(j));
+						switch (j) {
+							case 1:
+								maxLength = substring;
+								break;
+							case 2:
+								suffix = substring;
+								break;
+						}
+					}
+					if ((maxLength != null) && (suffix != null)) {
+						HashMap map = null;
+						if (suffix.equals(RESOLUTION))
+							map = this.resolutionMap;
+						else if (suffix.equals(PULSE_WIDTH)) {
+							map = this.pulseWidthMap;
+						}
+
+						if (map != null) {
+							map.put(maxLength, character.value);
+						}
+					}
+				}
+			}
+		}
+		if (waveLengthComboBox.getItemCount() == 0)
+				waveLengthComboBox.addItem("1625");
+		if (averageQuantityComboBox.getItemCount() == 0)
+				averageQuantityComboBox.addItem("4000");
+		refractTextField.setText(Double.toString(minIndexOfRefraction));
+		String defaultMaxDistance = "131072";
+		if (this.resolutionMap.keySet().size() == this.pulseWidthMap.keySet()
+				.size()) {
+
+			Set set = this.resolutionMap.keySet();
+			Object[] values = set.toArray();
+			Arrays.sort(values, comparator);
+			if (this.resolutionMap.keySet().size() == 0) {
+				resolutionMap.put(defaultMaxDistance, "8");
+				pulseWidthMap.put(defaultMaxDistance, "5000");
+			}
+			if (values.length == 0)
+					values = new String[] { defaultMaxDistance};
+			maxDistanceComboBox.removeAllItems();
+			for (int i = 0; i < values.length; i++)
+				maxDistanceComboBox.addItem(values[i].toString());
+			maxDistanceComboBox.setSelectedIndex(0);
 		}
 
 	}
 
-	public ReflectometryTestPanel(ApplicationContext aContext) {
-		this.aContext = aContext;
-		initModule(aContext.getDispatcher());
-		try {
-			jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	public ReflectometryTestPanel(ApplicationContext aContext, Test test) {
-		this.aContext = aContext;
-		initModule(aContext.getDispatcher());
+	public void setTest(Test test) {
 		this.test = test;
-		try {
-			jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
+		TestArgumentSet tas = null;
+		if (test.getTestArgumentSet() != null)
+			tas = test.getTestArgumentSet();
+		else {
+			TestSetup testSetup = null;
+			if ((test.getTestSetupId() != null)
+					|| (test.getTestSetupId().length() > 0))
+					testSetup = (TestSetup) Pool.get(TestSetup.typ, test
+							.getTestSetupId());
+			if (testSetup == null) testSetup = test.getTestSetup();
+			if (testSetup == null) {
+				if (test.getTestArgumentSetId() != null)
+						tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ,
+								test.getTestArgumentSetId());
+				if (tas == null) {
+					aContext.getDataSourceInterface().LoadTestArgumentSets(
+							new String[] { test.getTestArgumentSetId()});
+					tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ, test
+							.getTestArgumentSetId());
+				}
+			} else {
+				DataSourceInterface dsi = aContext.getDataSourceInterface();
+
+				tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ, testSetup
+						.getTestArgumentSetId());
+				if (tas == null) {
+					dsi.LoadTestArgumentSets(new String[] { testSetup
+							.getTestArgumentSetId()});
+					tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ,
+							testSetup.getTestArgumentSetId());
+				}
+				/**
+				 * @todo get Analysis , Evaluation from TestSetup
+				 */
+			}
 		}
 
-		//init(test);
+		if (tas == null) {
+			System.err.println("TestArgumentSet not found " //$NON-NLS-1$
+					+ test.getTestArgumentSetId());
+			return;
+		}
+
+		try {
+			java.util.List arguments = tas.getArgumentList();
+			for (int i=0;i<arguments.size();i++) {
+				Parameter p = (Parameter) arguments.get(i);
+				String codeName = p.getCodename();
+				byte[] value = p.getValue();
+				if (codeName.equals(PARAMETER_REFRACTION)) {
+					double refraction = new ByteArray(value).toDouble();
+					if (DEBUG) System.out.println("reflection:" + refraction); //$NON-NLS-1$
+					refractTextField.setText(new Double(refraction).toString());
+				} else if (codeName.equals(PARAMETER_WAVELENGHT)) {
+					int wavelength = new ByteArray(value).toInt();
+					if (DEBUG) System.out.println("wavelength:" + wavelength); //$NON-NLS-1$
+					selectCBValue(waveLengthComboBox, wavelength);
+				} else if (codeName.equals(PARAMETER_AVERAGE_QUANTITY)) {
+					double averages = (int) new ByteArray(value).toDouble();
+					if (DEBUG) System.out.println("averages:" + averages); //$NON-NLS-1$
+					selectCBValue(averageQuantityComboBox, averages);
+				} else if (codeName.equals(PARAMETER_MAX_DISTANCE)) {
+					double length = new ByteArray(value).toDouble();
+					if (DEBUG) System.out.println("length:" + length); //$NON-NLS-1$
+					selectCBValue(maxDistanceComboBox, length);
+				} else if (codeName.equals(PARAMETER_RESOLUTION)) {
+					double resolution = new ByteArray(value).toDouble();
+					if (DEBUG) System.out.println("resolution:" + resolution); //$NON-NLS-1$
+					selectCBValue(resolutionComboBox, resolution);
+				} else if (codeName.equals(PARAMETER_PULSE_WIDTH)) {
+					//double pulsewidth = new ByteArray(p.value).toDouble();
+					long pulsewidth = new ByteArray(value).toLong();
+					if (DEBUG) System.out.println("pulsewidth:" + pulsewidth); //$NON-NLS-1$
+					selectCBValue(pulseWidthComboBox, pulsewidth);
+				}
+			}
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+
+		//cb.addItem(String.valueOf(ior));
+
 	}
 
 	private void initModule(Dispatcher dispatcher) {
@@ -130,49 +465,92 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 		this.dispatcher.register(this, TestUpdateEvent.typ);
 	}
 
-	private void jbInit() throws Exception {
+	private void init() {
 		setBorder(BorderFactory.createEtchedBorder());
 		setLayout(new GridBagLayout());
-		reflectTextField.setText("1.467");
+		//refractTextField.setText("1.467"); //$NON-NLS-1$
+		//maxDistanceComboBox
 		{
 			Dimension d = new Dimension(75, 20);
-			UIUtil.setRigidSize(reflectTextField, d);
-			UIUtil.setRigidSize(waveLengthComboBox, d);
-			UIUtil.setRigidSize(averageOutCountComboBox, d);
-			UIUtil.setRigidSize(pulseWidthComboBox, d);
-			UIUtil.setRigidSize(resolutionComboBox, d);
-			UIUtil.setRigidSize(maxDistanceComboBox, d);
+			UIStorage.setRigidSize(refractTextField, d);
+			UIStorage.setRigidSize(waveLengthComboBox, d);
+			UIStorage.setRigidSize(averageQuantityComboBox, d);
+			UIStorage.setRigidSize(pulseWidthComboBox, d);
+			UIStorage.setRigidSize(resolutionComboBox, d);
+			UIStorage.setRigidSize(maxDistanceComboBox, d);
 
 		}
+
+		refractTextField.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				JTextField textField = (JTextField) e.getSource();
+				String value = textField.getText();
+				double refract = 0.0;
+				boolean isDouble = false;
+				try {
+					refract = Double.parseDouble(value);
+					isDouble = true;
+				} catch (NumberFormatException nfe) {
+					isDouble = false;
+				}
+
+				if (!isDouble) {
+					textField.setText(Double.toString(minIndexOfRefraction));
+				} else {
+					if (refract < minIndexOfRefraction) {
+						textField
+								.setText(Double.toString(minIndexOfRefraction));
+					} else {
+						if (refract > maxIndexOfRefraction) {
+							textField.setText(Double
+									.toString(maxIndexOfRefraction));
+						}
+					}
+				}
+
+			}
+		});
 
 		maxDistanceComboBox.addItemListener(new ItemListener() {
 
 			public void itemStateChanged(ItemEvent e) {
 				if (e.getStateChange() == ItemEvent.SELECTED) {
-					int index = maxDistanceComboBox.getSelectedIndex();
+					AComboBox comboBox = (AComboBox) e.getSource();
+					String maxLength = (String) comboBox.getSelectedItem();
+					for (int index = 0; index <= 1; index++) {
+						HashMap map;
+						AComboBox aComboBox;
+						if (index == 0) {
+							map = pulseWidthMap;
+							aComboBox = pulseWidthComboBox;
+						} else {
+							map = resolutionMap;
+							aComboBox = resolutionComboBox;
+						}
+						String value = (String) map.get(maxLength);
+						String[] values = value.split("\\s+");
+						Arrays.sort(values, comparator);
+						aComboBox.removeAllItems();
+						for (int i = 0; i < values.length; i++)
+							aComboBox.addItem(values[i]);
+					}
 
-					pulseWidthComboBox.removeAllItems();
-					resolutionComboBox.removeAllItems();
-
-					for (int j = 0; j < pulseWidth[index].length; j++)
-						pulseWidthComboBox.addItem(pulseWidth[index][j]);
-					for (int j = 0; j < resolution[index].length; j++)
-						resolutionComboBox.addItem(resolution[index][j]);
 				}
 			}
 		});
-		JLabel reflectLabel = new JLabel(LangModelSchedule
-				.getString("labelReflect"));
-		JLabel waveLengthLabel = new JLabel(LangModelSchedule
-				.getString("labelWaveLength"));
-		JLabel countOfAverageOutLabel = new JLabel(LangModelSchedule
-				.getString("labelAverCount"));
-		JLabel pulseWidthLabel = new JLabel(LangModelSchedule
-				.getString("labelImpuls"));
-		JLabel resolutionLabel = new JLabel(LangModelSchedule
-				.getString("labelDetalM"));
-		JLabel maxDistanceLabel = new JLabel(LangModelSchedule
-				.getString("labelMaxDistance"));
+		JLabel refractLabel = new JLabel(I18N
+				.getString("Index_Of_Refraction")); //$NON-NLS-1$
+		JLabel waveLengthLabel = new JLabel(I18N
+				.getString("WaveLength")); //$NON-NLS-1$
+		JLabel countOfAverageOutLabel = new JLabel(I18N
+				.getString("AverageQuantity")); //$NON-NLS-1$
+		JLabel pulseWidthLabel = new JLabel(I18N
+				.getString("PulseWidth")); //$NON-NLS-1$
+		JLabel resolutionLabel = new JLabel(I18N
+				.getString("Resolution")); //$NON-NLS-1$
+		JLabel maxDistanceLabel = new JLabel(I18N
+				.getString("Distance")); //$NON-NLS-1$
 
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -180,9 +558,9 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 		gbc.weightx = 1.0;
 		gbc.weighty = 0.0;
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
-		add(reflectLabel, gbc);
+		add(refractLabel, gbc);
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		add(reflectTextField, gbc);
+		add(refractTextField, gbc);
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
 		add(waveLengthLabel, gbc);
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
@@ -190,7 +568,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
 		add(countOfAverageOutLabel, gbc);
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		add(averageOutCountComboBox, gbc);
+		add(averageQuantityComboBox, gbc);
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
 		add(pulseWidthLabel, gbc);
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
@@ -209,111 +587,29 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 
 	}
 
-	public void setTest(Test test) {
-		this.test = test;
-		TestArgumentSet tas = null;
-		if (test.testArgumentSet != null)
-			tas = test.testArgumentSet;
-		else {
-			TestSetup testSetup = null;
-			if ((test.test_setup_id != null)
-					|| (test.test_setup_id.length() > 0))
-					testSetup = (TestSetup) Pool.get(TestSetup.typ,
-							test.test_setup_id);
-			if (testSetup == null) testSetup = test.testSetup;
-			if (testSetup == null) {
-				if (test.test_argument_set_id != null)
-						tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ,
-								test.test_argument_set_id);
-				if (tas == null) {
-					aContext.getDataSourceInterface().LoadTestArgumentSets(
-							new String[] { test.test_argument_set_id});
-					tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ,
-							test.test_argument_set_id);
-				}
-			} else {
-				DataSourceInterface dsi = aContext.getDataSourceInterface();
-
-				tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ,
-						testSetup.test_argument_set_id);
-				if (tas == null) {
-					dsi
-							.LoadTestArgumentSets(new String[] { testSetup.test_argument_set_id});
-					tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ,
-							testSetup.test_argument_set_id);
-				}
-				/**
-				 * @todo get Analysis , Evaluation from TestSetup
-				 */
-			}
-		}
-
-		if (tas == null) {
-			System.err.println("TestArgumentSet not found "
-					+ test.test_argument_set_id);
-			return;
-		}
-
-		try {
-			for (Enumeration en = tas.arguments.elements(); en
-					.hasMoreElements();) {
-				Parameter p = (Parameter) en.nextElement();
-				if (p.codename.equals(PARAMETER_REFLECTION)) {
-					double reflection = new ByteArray(p.value).toDouble();
-					if (DEBUG) System.out.println("reflection:" + reflection);
-					reflectTextField.setText(new Double(reflection).toString());
-				} else if (p.codename.equals(PARAMETER_WAVELENGHT)) {
-					int wavelength = new ByteArray(p.value).toInt();
-					if (DEBUG) System.out.println("wavelength:" + wavelength);
-					selectCBValue(waveLengthComboBox, wavelength);
-				} else if (p.codename.equals(PARAMETER_AVERAGEOUT_COUNT)) {
-					double averages = (int) new ByteArray(p.value).toDouble();
-					if (DEBUG) System.out.println("averages:" + averages);
-					selectCBValue(averageOutCountComboBox, averages);
-				} else if (p.codename.equals(PARAMETER_MAX_DISTANCE)) {
-					double length = new ByteArray(p.value).toDouble();
-					if (DEBUG) System.out.println("length:" + length);
-					selectCBValue(maxDistanceComboBox, length);
-				} else if (p.codename.equals(PARAMETER_RESOLUTION)) {
-					double resolution = new ByteArray(p.value).toDouble();
-					if (DEBUG) System.out.println("resolution:" + resolution);
-					selectCBValue(resolutionComboBox, resolution);
-				} else if (p.codename.equals(PARAMETER_PULSE_WIDTH)) {
-					//double pulsewidth = new ByteArray(p.value).toDouble();
-					long pulsewidth = new ByteArray(p.value).toLong();
-					if (DEBUG) System.out.println("pulsewidth:" + pulsewidth);
-					selectCBValue(pulseWidthComboBox, pulsewidth);
-				}
-			}
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-
-		//cb.addItem(String.valueOf(ior));
-
-	}
-
-	private void selectCBValue(AComboBox cb, int value) {
+	private void selectCBValue(AComboBox cb, double value) {
 		for (int i = 0; i < cb.getItemCount(); i++) {
-			String item = cb.getItemAt(i).toString();
-			int v = Integer.parseInt(item);
-			if (DEBUG) System.out.println("item:" + v);
+			Object obj = cb.getItemAt(i);
+			String item = obj.toString();
+			double v = Double.parseDouble(item);
+			if (DEBUG) System.out.println("item:" + v); //$NON-NLS-1$
 			if (v == value) {
-				cb.setSelectedIndex(i);
-				if (DEBUG) System.out.println("selected");
+				cb.setSelectedItem(obj);
+				if (DEBUG) System.out.println("selected"); //$NON-NLS-1$
 				break;
 			}
 		}
 	}
 
-	private void selectCBValue(AComboBox cb, double value) {
+	private void selectCBValue(AComboBox cb, int value) {
 		for (int i = 0; i < cb.getItemCount(); i++) {
-			String item = cb.getItemAt(i).toString();
-			double v = Double.parseDouble(item);
-			if (DEBUG) System.out.println("item:" + v);
+			Object obj = cb.getItemAt(i);
+			String item = obj.toString();
+			int v = Integer.parseInt(item);
+			if (DEBUG) System.out.println("item:" + v); //$NON-NLS-1$
 			if (v == value) {
-				cb.setSelectedIndex(i);
-				if (DEBUG) System.out.println("selected");
+				cb.setSelectedItem(obj);
+				if (DEBUG) System.out.println("selected"); //$NON-NLS-1$
 				break;
 			}
 		}
@@ -321,145 +617,16 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements
 
 	private void selectCBValue(AComboBox cb, long value) {
 		for (int i = 0; i < cb.getItemCount(); i++) {
-			String item = cb.getItemAt(i).toString();
+			Object obj = cb.getItemAt(i);
+			String item = obj.toString();
 			//item = item.replaceAll(".", "");
 			long v = Long.parseLong(item);
-			if (DEBUG) System.out.println("item:" + v);
+			if (DEBUG) System.out.println("item:" + v); //$NON-NLS-1$
 			if (v == value) {
-				cb.setSelectedIndex(i);
-				if (DEBUG) System.out.println("selected");
+				cb.setSelectedItem(obj);
+				if (DEBUG) System.out.println("selected"); //$NON-NLS-1$
 				break;
 			}
-		}
-	}
-
-	public TestArgumentSet getParameters() {
-
-		DataSourceInterface dsi = aContext.getDataSourceInterface();
-		String test_setup_id;
-		String test_type_id;
-		if (test == null) {
-			test_setup_id = "";
-			test_type_id = TestParametersPanel.TEST_TYPE_TRACE_AND_ANALYSE;
-		} else {
-			test_setup_id = test.test_setup_id;
-			test_type_id = test.test_type_id;
-		}
-		TestArgumentSet tas = null;
-		//if (test_setup_id.equals(""))
-		{
-			//			tas.id = dsi.GetUId(TestArgumentSet.typ);
-			//			Pool.put(TestArgumentSet.typ, as.getId(), as);
-			//			tas.name = tas.id;
-			//			tas.created = 0;
-			//			tas.created_by = "";
-			//			tas.test_type_id = test_type_id;
-			/**
-			 * @TODO recast to static final fields 
-			 */
-			System.out.println("test_setup_id:" + test_setup_id);
-			TestSetup ts = (TestSetup) Pool.get(TestSetup.typ, test_setup_id);
-			if (ts == null) {
-				ts = new TestSetup();
-				System.out.println("new TestSetup()");
-			}
-			System.out.println("ts:" + ts.id);
-			tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ,
-					ts.test_argument_set_id);
-			if (tas == null) {
-				tas = new TestArgumentSet();
-				System.out.println("new TestArgumentSet()");
-			}
-			System.out.println("tas:" + tas.id);
-			ActionParameterType apt;
-
-			TestType testType = (TestType) Pool.get(TestType.typ, test_type_id);
-			apt = (ActionParameterType) testType.sorted_arguments
-					.get(PARAMETER_REFLECTION);
-			try {
-				ByteArray byteArray;
-
-				byteArray = new ByteArray(Double.parseDouble(reflectTextField
-						.getText()));
-				// dsi.GetUId("testargument")
-				Parameter reflectParam = new Parameter(dsi
-						.GetUId(PARAMETER_ID_NAME), apt.getId(), byteArray
-						.getBytes(), PARAMETER_REFLECTION, "double");
-				if (reflectParam == null)
-						System.out.println("reflectParam is null");
-				tas.addArgument(reflectParam);
-
-				apt = (ActionParameterType) testType.sorted_arguments
-						.get(PARAMETER_WAVELENGHT);
-
-				byteArray = new ByteArray(Integer.parseInt(waveLengthComboBox
-						.getSelectedItem().toString()));
-				//			 dsi.GetUId("testargument")
-				Parameter waveLengthParam = new Parameter(dsi
-						.GetUId(PARAMETER_ID_NAME), apt.getId(), byteArray
-						.getBytes(), PARAMETER_WAVELENGHT, "int");
-				tas.addArgument(waveLengthParam);
-
-				apt = (ActionParameterType) testType.sorted_arguments
-						.get(PARAMETER_AVERAGEOUT_COUNT);
-				byteArray = new ByteArray(Double
-						.parseDouble(averageOutCountComboBox.getSelectedItem()
-								.toString()));
-				// dsi.GetUId("testargument")
-				Parameter averageOutCountParam = new Parameter(dsi
-						.GetUId(PARAMETER_ID_NAME), apt.getId(), byteArray
-						.getBytes(), PARAMETER_AVERAGEOUT_COUNT, "double");
-				tas.addArgument(averageOutCountParam);
-
-				apt = (ActionParameterType) testType.sorted_arguments
-						.get(PARAMETER_PULSE_WIDTH);
-				byteArray = new ByteArray(Double.parseDouble(pulseWidthComboBox
-						.getSelectedItem().toString()));
-				// dsi.GetUId("testargument")
-				Parameter pulseWidthParam = new Parameter(dsi
-						.GetUId(PARAMETER_ID_NAME), apt.getId(), byteArray
-						.getBytes(), PARAMETER_PULSE_WIDTH, "double");
-				tas.addArgument(pulseWidthParam);
-
-				apt = (ActionParameterType) testType.sorted_arguments
-						.get(PARAMETER_RESOLUTION);
-				byteArray = new ByteArray(Double.parseDouble(resolutionComboBox
-						.getSelectedItem().toString()));
-				// dsi.GetUId("testargument")
-				Parameter resolutionParam = new Parameter(dsi
-						.GetUId(PARAMETER_ID_NAME), apt.getId(), byteArray
-						.getBytes(), PARAMETER_RESOLUTION, "double");
-				tas.addArgument(resolutionParam);
-
-				apt = (ActionParameterType) testType.sorted_arguments
-						.get(PARAMETER_MAX_DISTANCE);
-				byteArray = new ByteArray(Double
-						.parseDouble(maxDistanceComboBox.getSelectedItem()
-								.toString()));
-				Parameter maxDistanceParam = new Parameter(dsi
-						.GetUId(PARAMETER_ID_NAME), apt.getId(), byteArray
-						.getBytes(), PARAMETER_MAX_DISTANCE, "double");
-				tas.addArgument(maxDistanceParam);
-			} catch (IOException ioe) {
-				ioe.printStackTrace();
-			}
-		}
-		return tas;
-	}
-
-	public String getPanelName() {
-		return PANEL_NAME;
-	}
-
-	public void operationPerformed(OperationEvent ae) {
-		String commandName = ae.getActionCommand();
-		//Object obj = ae.getSource();
-		if (ScheduleMainFrame.DEBUG)
-				System.out.println(getClass().getName() + " commandName:"
-						+ commandName);
-		if (commandName.equals(TestUpdateEvent.typ)) {
-			TestUpdateEvent tue = (TestUpdateEvent) ae;
-			setTest(tue.test);
 		}
 	}
 

@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.Client.Resource.Result.*;
  */
 public interface ParametersTest {
 	//String COMMAND_SEND_TEST = "SendTest";
-	String PARAMETER_ID_NAME = "testargument";
+	String PARAMETER_ID_NAME = "testargument"; //$NON-NLS-1$
 	public TestArgumentSet getParameters();	
 	public String getPanelName();
 	public void setTest(Test test);
