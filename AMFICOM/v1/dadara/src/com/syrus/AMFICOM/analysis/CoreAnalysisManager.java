@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.15 2005/03/03 10:45:21 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.16 2005/03/03 14:15:24 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.15 $, $Date: 2005/03/03 10:45:21 $
+ * @version $Revision: 1.16 $, $Date: 2005/03/03 14:15:24 $
  * @module
  */
 
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
+import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventImpl;
 
 public class CoreAnalysisManager
 {
@@ -48,6 +49,7 @@ public class CoreAnalysisManager
 	 * @param reflectiveSize хар. размер отраж. события (в точках?)
 	 * @param nonReflectiveSize хар. размер неотраж. события (в точках?)
 	 * @return массив событий
+	 * @deprecated устарел, используйте {@link #analyse3}
 	 */
 	private static native ReflectogramEvent[] analyse2(int waveletType,
 			double[] y, //the refl. itself
@@ -60,7 +62,30 @@ public class CoreAnalysisManager
 			double min_connector, // 6. минимальный коннектор
 			double[] out_meanAttenuation, // для возврата значения среднего затухания
 			int reflectiveSize, int nonReflectiveSize);
-	
+
+	/**
+	 * @param y рефлектограмма, поступившая с рефлектометра
+	 * @param dX шаг дискретизации в метрах по DX (не используется?)
+	 * @param minLevel уровень чувствительности для определения границ события
+	 * @param minWeld минимальное отраж. событие
+	 * @param minConnector минимальное неотр. событие
+	 * @param minEnd мин. уровень конца (пока не используется?)
+	 * @param reflSize хар. размер отраж. события (в точках) - определяе
+	 * @param nReflSize хар. размер неотраж. события (в точках)
+	 * @param noiseDB уровень шума по 1 сигма, в абс. дБ; может быть null - тогда будет найден автоматически
+	 * @return массив событий
+	 */
+	private static native SimpleReflectogramEventImpl[] analyse3(
+			double[] y,
+			double dX, 
+			double minLevel,
+			double minWeld,
+			double minConnector, 
+			double minEnd,
+			int reflSize,
+			int nReflSize,
+			double[] noiseDB);
+
 	/**
 	 * Метод вычисляет уровень шума на рефлектограмме по уровню 3 sigma,
 	 * предполагая природу шума, независимую от величины измеряемого сигнала.
@@ -189,6 +214,7 @@ public class CoreAnalysisManager
 			nReflSize = 3 * reflSize / 5;
 
 		System.out.println("reflSize="+reflSize+"; nReflSize="+nReflSize);
+		/*
 		long t1 = System.currentTimeMillis();
 		// формирование событий
 		double[] meanAttenuation = { 0 }; // storage for meanAttenuation -- unused: XXX
@@ -204,13 +230,17 @@ public class CoreAnalysisManager
 		// установка параметров фитировки и фитировка
 		// (с определением параметров нужных для расчета потерь и отражения)
 		fitTrace(y, deltaX, ep, strategy, meanAttenuation[0], noiseArray); // -- ныне используется только для формирования параметров yB, yE
-		
+
 		long t3 = System.currentTimeMillis();
-		//фитируем ОДНОЙ кривой
-		ReflectogramEvent ev0 = ep[0].copy();
-		ev0.setEnd(ep[ep.length - 1].getEnd());
-		ReflectogramEvent[] el0 = new ReflectogramEvent[] { ev0 };
-		fitTrace(y, deltaX, el0, strategy, meanAttenuation[0], noiseArray);
+		ModelFunction mf;
+		{
+			//фитируем ОДНОЙ кривой
+			ReflectogramEvent ev0 = ep[0].copy();
+			ev0.setEnd(ep[ep.length - 1].getEnd());
+			ReflectogramEvent[] el0 = new ReflectogramEvent[] { ev0 };
+			fitTrace(y, deltaX, el0, strategy, meanAttenuation[0], noiseArray);
+			mf = el0[0].getMFClone();
+		}
 
 		long t4 = System.currentTimeMillis();
 		// определение параметров потерь и отражения (по смежным событиям)
@@ -222,9 +252,42 @@ public class CoreAnalysisManager
 
 		long t5 = System.currentTimeMillis();
 		System.out.println("makeAnalysis: getData: " + (t1-t0) + "; IA: " + (t2-t1) + "; noiseArray:" + (t3-t2) + "; fit: " + (t4-t3) + "; postProcess: " + (t5-t4));
-		return new ModelTraceManager(ep, el0[0].getMFClone());
-	}
+		
+		return new ModelTraceManager(ep, mf);
+		*/
 
+		long t1 = System.currentTimeMillis();
+		// определяем уровень шума для фитировки
+		// @todo: ни для анализа, ни для фитировки не нужен ур. шума на
+		// всей длине р/г, поэтому, для ускорения работы,
+		// к этому моменту уже надо бы знать длину до конца волокна
+		double[] noiseArray = calcNoiseArray(y, null);
+
+		long t2 = System.currentTimeMillis();
+		// формирование событий
+		SimpleReflectogramEventImpl[] se = analyse3(y, deltaX,
+				pars[0], pars[1], pars[2], pars[3],
+				reflSize, nReflSize, noiseArray);
+
+		int traceLength = se.length > 0
+			? se[se.length - 1].getEnd() + 1
+			: 0;
+
+		long t3 = System.currentTimeMillis();
+		ModelFunction mf = ModelFunction.CreateFitedAsBreakL(y, 0, traceLength, noiseArray);
+
+		long t4 = System.currentTimeMillis();
+
+		// теперь еще и формируем пороги -- FIXME - сделать
+//		for (int i = 0; i < ep.length; i++)
+//			ep[i].setDefaultThreshold(bs, bellcoreTraces);
+
+		long t5 = System.currentTimeMillis();
+		System.out.println("makeAnalysis: getData: " + (t1-t0) + "; noiseArray:" + (t2-t1) + "; IA: " + (t3-t2) + "; fit: " + (t4-t3) + "; postProcess: " + (t5-t4));
+
+		return new ModelTraceManager(se, mf, deltaX);
+	}
+/*
 	private static ReflectogramEvent[] fitTrace(double[] y, double deltaX,
 			ReflectogramEvent[] events, int strategy, double meanAttenuation, double[] noiseArray) {
 		long t0 = System.currentTimeMillis();
@@ -232,25 +295,8 @@ public class CoreAnalysisManager
 		System.out.println("fitTrace: strategy = " + strategy);
 
 		ReflectogramEvent.FittingParameters fPars =
-//		    new ReflectogramEvent.FittingParameters(
-//				y,
-//				0.01 + 0.001, // XXX: 0.01: user-set; 0.001: rg precision
-//				-99);
 			new ReflectogramEvent.FittingParameters(
 				y, noiseArray);
-
-		/*try
-		{
-			FileOutputStream fos = new FileOutputStream(new File("tr_er.dat"));
-			for (int i = 0; i < y.length; i++)
-			{
-				fos.write(("" + i + " " + y[i] + " " + noiseArray[i] + "\n").getBytes());
-			}
-		}
-		catch(IOException e)
-		{
-			System.err.println("CoreAnalysismanager: debug output failed");
-		}*/
 
 		for (int i = 0; i < events.length; i++)
 		    events[i].setFittingParameters(fPars);
@@ -265,7 +311,8 @@ public class CoreAnalysisManager
 
 		return events;
 	}
-	
+*/
+
 	// Определяет уровень шума в р/г -- старый метод
 	public static double calcNoise3s(double[] y)
 	{

@@ -7,6 +7,7 @@
 
 #include "../common/ModelF.h"
 #include "../common/EventP.h"
+#include "../common/SimpleEvent.h"
 
 #include "../common/prf.h"
 
@@ -21,7 +22,7 @@
 #include "../An2/findNoise.h"
 
 #include "../common/com_syrus_AMFICOM_analysis_dadara_ModelFunction.h"
-#include "../common/com_syrus_AMFICOM_analysis_dadara_ReflectogramEvent.h"
+#include "../common/com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent.h"
 #include "../common/com_syrus_AMFICOM_analysis_CoreAnalysisManager.h"
 
 /*
@@ -599,6 +600,49 @@ EventP *EventP_J2Cnew_arr(JNIEnv *env, jobjectArray array)
 }
 */
 
+/*
+ * SimpleEvent part
+ */
+jobject SimpleEvent_C2J(JNIEnv *env, SimpleEvent &se)
+{
+	// create SimpleReflectogramEventImpl object
+	jclass clazz = env->FindClass(CL_se);
+	assert (clazz);
+	jmethodID initID = env->GetMethodID(clazz, "<init>", "()V");
+	assert (initID);
+	jobject obj = env->NewObject(clazz, initID);
+	assert (obj);
+
+	// fill fields
+	env->SetIntField(obj, env->GetFieldID(clazz, N_SE_type, S_SE_type), se.type);
+	env->SetIntField(obj, env->GetFieldID(clazz, N_SE_begin, S_SE_begin), se.begin);
+	env->SetIntField(obj, env->GetFieldID(clazz, N_SE_end, S_SE_end), se.end);
+
+	// return resulting SimpleReflectogramEventImpl object
+	return obj;
+}
+
+jobjectArray SimpleEvent_C2J_arr(JNIEnv *env, SimpleEvent *se, int number)
+{
+	assert(number >= 0);
+
+	// create template SimpleEvent object
+	jclass clazz = env->FindClass(CL_se);
+	assert(clazz);
+	jobjectArray oa = env->NewObjectArray(number, clazz, 0);
+	assert (oa);
+
+	// set objects
+	int i;
+	for (i = 0; i < number; i++)
+	{
+		jobject obj = SimpleEvent_C2J(env, se[i]);
+		assert (obj);
+		env->SetObjectArrayElement(oa, i, obj);
+	}
+
+	return oa;
+}
 /*
  * calcNoise part
  */

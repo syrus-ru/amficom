@@ -10,6 +10,8 @@ extern const char *S_pars;
 extern const char *N_pars;
 extern const char *CL_ep;
 extern const char *S_ep;
+extern const char *CL_se;
+extern const char *S_se;
 extern const char *CL_Thresh;
 extern const char *CL_ThreshDX;
 extern const char *CL_ThreshDY;
@@ -29,5 +31,11 @@ extern const char *N_ThreshDX_dX;
 extern const char *S_ThreshDX_dX;
 extern const char *N_ThreshDX_isRise;
 extern const char *S_ThreshDX_isRise;
+extern const char *N_SE_begin;
+extern const char *S_SE_begin;
+extern const char *N_SE_end;
+extern const char *S_SE_end;
+extern const char *N_SE_type;
+extern const char *S_SE_type;
 
 #endif

@@ -34,7 +34,7 @@ public class ReflectogramMath
 	{
 		return yArr[getArrayMinIndex(yArr, 0, yArr.length - 1)];
 	}
-
+/*
 	public static double[] getReflectogrammFromEvents(ReflectogramEvent[] re, int arrayLength)
 	{
 		correctEvents(re);
@@ -72,7 +72,7 @@ public class ReflectogramMath
 					ret = re[i].refAmplitude(j);
 		return ret;
 	}
-	
+*/
 	public static double[] getMaxDifPM(double[] y, ModelFunction mf, int begin, int end)
 	{
 	    double[] ret = new double[2];
@@ -88,7 +88,7 @@ public class ReflectogramMath
 	    }
 	    return ret;
 	}
-
+/*
   // ?: the same thing is made inside ReflectogramComparer.doIt()... //saa
 	public static void align(ReflectogramEvent[] y, ReflectogramEvent[] etalon)
 	{
@@ -132,7 +132,7 @@ public class ReflectogramMath
 				etalon[i].shiftY(dA);
 		}
 	}
-
+*/
 	public static void alignArrayToEtalon(double[] y, final ModelTrace etalon)
 	{
 		int len = Math.min(y.length, etalon.getLength());
@@ -158,7 +158,7 @@ public class ReflectogramMath
 		alignArrayToEtalon(y, etalon);
 		return new ArrayModelTrace(y);
 	}
-
+/*
 	public static ReflectogramEvent[] alignClone(ReflectogramEvent[] y, ReflectogramEvent[] etalon)
 	{
 		ReflectogramEvent[] ret = new ReflectogramEvent[y.length];
@@ -198,7 +198,7 @@ public class ReflectogramMath
 		}
 		return null;
 	}
-
+*/
 	public static SimpleReflectogramEvent getEvent(int coord, SimpleReflectogramEvent[] re)
 	{
 		if(re == null)
@@ -212,7 +212,7 @@ public class ReflectogramMath
 		}
 		return null;
 	}
-
+/*
 	// takes amplitude with protection against for NullPointer //saa, 2004-10
 	public static double getEventAmplitudeAt(int coord, ReflectogramEvent[] re)
 	{
@@ -242,11 +242,11 @@ public class ReflectogramMath
 		}
 		return -1;
 	}
-
+*/
 	public static int getLastConnectorBegin(SimpleReflectogramEvent[] re)
 	{
 		for(int i = re.length - 1; i >= 0; i--)
-			if(re[i].getEventType() == ReflectogramEvent.CONNECTOR)
+			if(re[i].getEventType() == SimpleReflectogramEvent.REFLECTIVE)
 				return re[i].getBegin();
 		return 0;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleReflectogramEventImpl.java,v 1.2 2005/02/21 15:19:57 saa Exp $
+ * $Id: SimpleReflectogramEventImpl.java,v 1.3 2005/03/03 14:15:25 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,9 +7,16 @@
  */
 package com.syrus.AMFICOM.analysis.dadara;
 
+import java.awt.Event;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
+import org.w3c.dom.events.EventTarget;
+
 /**
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/02/21 15:19:57 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/03 14:15:25 $
  * @module
  */
 public class SimpleReflectogramEventImpl implements SimpleReflectogramEvent
@@ -17,6 +24,10 @@ public class SimpleReflectogramEventImpl implements SimpleReflectogramEvent
 	private int begin;
 	private int end;
 	private int eventType;
+
+	private SimpleReflectogramEventImpl()
+	{ // empty and very private
+	}
 
 	public SimpleReflectogramEventImpl(int begin, int end, int eventType)
 	{
@@ -38,6 +49,24 @@ public class SimpleReflectogramEventImpl implements SimpleReflectogramEvent
 	public int getEventType()
 	{
 		return eventType;
+	}
+
+	public void writeToDOS(DataOutputStream dos)
+	throws IOException
+	{
+		dos.writeInt(begin);
+		dos.writeInt(end);
+		dos.writeInt(eventType);
+	}
+
+	public static SimpleReflectogramEventImpl createFromDIS(DataInputStream dis)
+	throws IOException
+	{
+		SimpleReflectogramEventImpl ret = new SimpleReflectogramEventImpl();
+		ret.begin = dis.readInt();
+		ret.end = dis.readInt();
+		ret.eventType = dis.readInt();
+		return ret;
 	}
 
 }

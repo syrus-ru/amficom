@@ -20,7 +20,7 @@ import java.io.*;
  * <p>Should be constructed as one of three AMFICOM-specific simple functions.
  * The modelling function will probably change when fit() will be called.</p>
  *
- * @version $Revision: 1.10 $, $Date: 2005/02/28 13:02:21 $
+ * @version $Revision: 1.11 $, $Date: 2005/03/03 14:15:24 $
  * @author $Author: saa $
  * @module analysis_v1
  */
@@ -354,6 +354,14 @@ public class ModelFunction {
 	    //System.out.println("fit-3: linkFlags " + linkFlags);
 		nFit3(y, begin, end, FITMODE_VARY_ALL, linkFlags, linkData0,
 			noise);
+	}
+	
+	public static ModelFunction CreateFitedAsBreakL(double[] y, int begin, int end, double[] noise)
+	{
+		ModelFunction mf = createLinear();
+		mf.nFit3(y, begin, end, FITMODE_SET_BREAKL, 0, 0,
+			noise);
+		return mf;
 	}
 
 	/**

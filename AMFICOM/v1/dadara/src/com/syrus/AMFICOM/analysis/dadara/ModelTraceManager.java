@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.14 2005/03/02 10:48:33 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.15 2005/03/03 14:15:24 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,19 +19,23 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.14 $, $Date: 2005/03/02 10:48:33 $
+ * @version $Revision: 1.15 $, $Date: 2005/03/03 14:15:24 $
  * @module
  */
 public class ModelTraceManager
 {
-	private static final long SIGNATURE_EVENTS = 3353520050119193101L;
-	private static final long SIGNATURE_THRESH = 3353620050119193101L;
+	private static final long SIGNATURE_EVENTS = 3353520050119193102L;
+	private static final long SIGNATURE_THRESH = 3353620050119193102L;
+	public static final String CODENAME = "ModelTraceManager";
 
-	private ReflectogramEvent[] re; // not null
-	private SimpleReflectogramEvent[] se; // not null; must be kept in sync with re
+	//private ReflectogramEvent[] re; // not null
+	private SimpleReflectogramEventImpl[] se; // not null //; was must be kept in sync with re
 	private ModelFunction mf;
 	private int traceLength;
 	private ModelTrace[] thMTCache = null;
+	private double deltaX = 1; // XXX
+
+	private ModelTrace mt; // will just contain mt
 
 	protected void invalidateThMTCache()
 	{
@@ -53,13 +57,15 @@ public class ModelTraceManager
 		return thMTCache != null && thMTCache[key] != null;
 	}
 
-	private void createSEandTH()
+//	private void createSEByRE(ReflectogramEvent[] re)
+//	{
+//		se = new SimpleReflectogramEventImpl[re.length];
+//		for (int i = 0; i < re.length; i++)
+//			se[i] = new SimpleReflectogramEventImpl(re[i].getBegin(), re[i].getEnd(), re[i].getEventType());
+//	}
+//
+	private void createTH()
 	{
-		SimpleReflectogramEventImpl[] srei = new SimpleReflectogramEventImpl[re.length];
-		for (int i = 0; i < re.length; i++)
-			srei[i] = new SimpleReflectogramEventImpl(re[i].getBegin(), re[i].getEnd(), re[i].getEventType());
-		this.se = srei;
-
 		LinkedList thresholds = new LinkedList();
 		Thresh last; // далее будет всегда указывать на текущий порог "линейного" типа
 		thresholds.add(last = new ThreshDY(-1, false, 0, 0)); // "C" coding style
@@ -125,39 +131,26 @@ public class ModelTraceManager
 		tDY = (ThreshDY[] )thresholds.toArray(new ThreshDY[thresholds.size()]);
 	}
 
-	private ModelTrace reMT;
-
-	public static final String CODENAME = "ModelTraceManager";
-
-	public ModelTraceManager(ReflectogramEvent[] re, ModelFunction mf)
+//	public ModelTraceManager(ReflectogramEvent[] re, ModelFunction mf)
+//	{
+//		createSEByRE(re);
+//		this.mf = mf;
+//		this.deltaX = re.length > 0
+//		? re[0].getDeltaX()
+//		: 1.0; // XXX
+//		this.traceLength = calcTraceLength();
+//		this.mt = new ModelTraceImplMF(this.mf, this.traceLength);
+//		createTH();
+//	}
+//
+	public ModelTraceManager(SimpleReflectogramEventImpl[] se, ModelFunction mf, double deltaX)
 	{
-		this.re = re;
+		this.se = se;
 		this.mf = mf;
-		createSEandTH();
+		this.deltaX = deltaX;
 		this.traceLength = calcTraceLength();
-		this.reMT = new ModelTraceImplMF(this.mf, this.traceLength);
-		
-		// @todo: remove this profiler code
-//		long dt1 = 0;
-//		long dt2 = 0;
-//		long dt3 = 0;
-//		for (int j = 0; j < 10; j++)
-//		{
-//			long t0 = System.currentTimeMillis();
-//			for (int i = 0; i < traceLength; i++)
-//				reMT.getY(i);
-//			long t1 = System.currentTimeMillis();
-//			for (int i = 0; i < 100; i++)
-//				reMT.getYArrayZeroPad(0, traceLength);
-//			long t2 = System.currentTimeMillis();
-//			for (int i = 0; i < 5000; i++)
-//				reMT.getYArrayZeroPad(0, traceLength / 50);
-//			long t3 = System.currentTimeMillis();
-//			dt1 += t1 - t0;
-//			dt2 += t2 - t1;
-//			dt3 += t3 - t2;
-//		}
-//		System.err.println("MTM: profiler: dt1 = " + dt1 + "; dt2 = " + (dt2 / 100.0) + "; dt3 = " + (dt3 / 100.0));
+		this.mt = new ModelTraceImplMF(this.mf, this.traceLength);
+		createTH();
 	}
 
 	private int calcTraceLength()
@@ -170,7 +163,7 @@ public class ModelTraceManager
 
 	public ModelTrace getModelTrace()
 	{
-		return reMT;
+		return mt;
 	}
 
 	public int getNEvents()
@@ -192,29 +185,26 @@ public class ModelTraceManager
 
 	public ComplexReflectogramEvent getComplexEvent(int nEvent)
 	{
-		return new ComplexReflectogramEvent(re[nEvent]);
+		//return new ComplexReflectogramEvent(re[nEvent]);
+		return new ComplexReflectogramEvent(se[nEvent], mt);
 	}
 
 	public ComplexReflectogramEvent[] getComplexEvents()
 	{
-		ComplexReflectogramEvent[] ret = new ComplexReflectogramEvent[re.length];
+		ComplexReflectogramEvent[] ret = new ComplexReflectogramEvent[se.length];
 		for (int i = 0; i < ret.length; i++)
-			ret[i] = new ComplexReflectogramEvent(re[i]);
+			ret[i] = getComplexEvent(i);
 		return ret;
 	}
 
 	public void setDeltaX(double deltaX)
 	{
-		for(int i=0; i<re.length; i++)
-			re[i].setDeltaX(deltaX);
+		this.deltaX = deltaX;
 	}
 
 	public double getDeltaX()
 	{
-		if (re.length > 0)
-			return re[0].getDeltaX();
-		else
-			return 1.0; // FIXME
+		return deltaX;
 	}
 
 	/**
@@ -403,9 +393,10 @@ public class ModelTraceManager
 		{
 			dos.writeLong(SIGNATURE_EVENTS);
 			mf.writeToDOS(dos);
-			dos.writeInt(re.length);
-			for (int i = 0; i < re.length; i++)
-				re[i].writeToDOS(dos);
+			dos.writeDouble(deltaX);
+			dos.writeInt(se.length);
+			for (int i = 0; i < se.length; i++)
+				se[i].writeToDOS(dos);
 			return baos.toByteArray();
 		} catch (IOException e)
 		{
@@ -427,12 +418,12 @@ public class ModelTraceManager
 			if (signature != SIGNATURE_EVENTS)
 				throw new SignatureMismatchException();
 			ModelFunction mf = ModelFunction.createFromDIS(dis);
+			double deltaX = dis.readDouble();
 			int len = dis.readInt();
-			ReflectogramEvent[] re = new ReflectogramEvent[len];
+			SimpleReflectogramEventImpl[] se = new SimpleReflectogramEventImpl[len];
 			for (int i = 0; i < len; i++)
-				re[i] = ReflectogramEvent.readFromDIS2(dis);
-			ReflectogramEvent.createLeftRightLinks(re);
-			return new ModelTraceManager(re, mf);
+				se[i] = SimpleReflectogramEventImpl.createFromDIS(dis);
+			return new ModelTraceManager(se, mf, deltaX);
 		}
 		catch (IOException e)
 		{

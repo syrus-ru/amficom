@@ -6,8 +6,11 @@
 
 #include "EventParams.h"
 #include "EventP.h"
+#include "SimpleEvent.h"
 
 void EPold2EPnew(EventParams* epo, EventP &epn, double delta_x);
+
+void EPold2SE(EventParams* epo, SimpleEvent &epn);
 
 #endif
 

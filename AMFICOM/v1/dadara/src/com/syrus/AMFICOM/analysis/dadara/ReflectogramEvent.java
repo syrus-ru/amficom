@@ -1,7 +1,7 @@
 /**
  * ReflectogramEvent.java
  * 
- * @version $Revision: 1.7 $, $Date: 2005/02/21 15:19:57 $
+ * @version $Revision: 1.8 $, $Date: 2005/03/03 14:15:24 $
  * @author $Author: saa $
  * @module general_v1
  */
@@ -303,11 +303,11 @@ public class ReflectogramEvent
 			double asympB = re[i].getAsympYB();
 			double asympE = re[i].getAsympYE();
 			if (re[i].getEventType() != ReflectogramEvent.LINEAR)
-			if (i > 0 && re[i - 1].getEventType() == ReflectogramEvent.LINEAR)
-				asympB = re[i - 1].getAsympYE();
-			if (i < re.length - 1
-					&& re[i + 1].getEventType() == ReflectogramEvent.LINEAR)
-				asympE = re[i + 1].getAsympYB();
+				if (i > 0 && re[i - 1].getEventType() == ReflectogramEvent.LINEAR)
+					asympB = re[i - 1].getAsympYE();
+				if (i < re.length - 1
+						&& re[i + 1].getEventType() == ReflectogramEvent.LINEAR)
+					asympE = re[i + 1].getAsympYB();
 
 			re[i].mloss = asympE - asympB;
 
