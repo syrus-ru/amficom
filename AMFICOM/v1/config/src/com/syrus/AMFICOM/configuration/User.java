@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.3 2004/08/09 12:06:23 arseniy Exp $
+ * $Id: User.java,v 1.4 2004/08/10 09:22:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.configuration.corba.User_Transferable;
 import com.syrus.AMFICOM.configuration.corba.UserSort;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/08/09 12:06:23 $
+ * @version $Revision: 1.4 $, $Date: 2004/08/10 09:22:31 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -66,6 +66,23 @@ public class User extends StorableObject {
 		}
 	}
 
+	private User(Identifier id,
+							 Identifier creatorId,
+							 String login,
+							 UserSort sort,
+							 String name,
+							 String description) {
+		super(id,
+					new Date(System.currentTimeMillis()),
+					new Date(System.currentTimeMillis()),
+					creatorId,
+					creatorId);
+		this.login = login;
+		this.sort = sort.value();
+		this.name = name;
+		this.description = description;
+	}
+
 	public Object getTransferable() {
 		return new User_Transferable((Identifier_Transferable)super.getId().getTransferable(),
 																 super.created.getTime(),
@@ -92,6 +109,20 @@ public class User extends StorableObject {
 
 	public String getDescription() {
 		return this.description;
+	}
+
+	public static User createInstance(Identifier id,
+																		Identifier creatorId,
+																		String login,
+																		UserSort sort,
+																		String name,
+																		String description) {
+		return new User(id,
+										creatorId,
+										login,
+										sort,
+										name,
+										description);
 	}
 
 	protected synchronized void setAttributes(Date created,

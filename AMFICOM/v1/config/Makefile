@@ -45,6 +45,7 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredDomainMember.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/Characterized.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/User.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/UserDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/Characteristic.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/CharacteristicDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/Server.java \
@@ -60,7 +61,6 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredElement.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredElementDatabase.java
 	touch $@
-#		$(SRCDIR)/com/syrus/AMFICOM/configuration/UserDatabase.java \
 
 .corba:	$(CLASSDIR)
 	$(IDL2JAVA) $(IDL2JAVAFLAGS) \
