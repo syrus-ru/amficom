@@ -84,6 +84,42 @@ module corba {
 		COMPLETED_PARTIALLY
 	};
 
+	enum UserSort {
+		USER_SORT_REGULAR,
+		USER_SORT_SERVER,
+		USER_SORT_MCM
+	};
+
+	struct User_Transferable {
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
+	  long long created;
+	  long long modified;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+	
+		wstring login;
+		UserSort sort;
+		wstring name;
+		wstring description;
+	};
+
+	struct Server_Transferable {
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
+	  long long created;
+	  long long modified;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
+
+		wstring name;
+		wstring description;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable user_id;
+
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable mcm_ids;
+	};
+
 	exception AMFICOMRemoteException {
 		ErrorCode error_code;
 		CompletionStatus completion_status;
