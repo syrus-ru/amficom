@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeDatabase.java,v 1.1 2004/11/30 14:26:55 bob Exp $
+ * $Id: SiteNodeDatabase.java,v 1.2 2004/12/01 16:16:03 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/11/30 14:26:55 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/01 16:16:03 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -85,8 +85,8 @@ public class SiteNodeDatabase extends StorableObjectDatabase {
 				+ COLUMN_LATIUDE + COMMA 
 				+ COLUMN_IMAGE_ID + COMMA
 				+ COLUMN_SITE_NODE_TYPE_ID + COMMA
-				+ COLUMN_CITY 
-				+ COLUMN_STREET
+				+ COLUMN_CITY + COMMA
+				+ COLUMN_STREET + COMMA
 				+ COLUMN_BUILDING;
 		}
 		return columns;

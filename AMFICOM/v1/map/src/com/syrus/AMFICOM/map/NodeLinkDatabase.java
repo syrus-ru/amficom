@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLinkDatabase.java,v 1.1 2004/11/30 14:26:55 bob Exp $
+ * $Id: NodeLinkDatabase.java,v 1.2 2004/12/01 16:16:03 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/11/30 14:26:55 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/01 16:16:03 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -128,13 +128,13 @@ public class NodeLinkDatabase extends StorableObjectDatabase {
 					fromStorableObject(storableObject);
 
 		PhysicalLink physicalLink;
-		Node startNode;
-		Node endNode;
+		AbstractNode startNode;
+		AbstractNode endNode;
 		
 		try{
 			physicalLink = (PhysicalLink)MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PHYSICAL_LINK_ID), true);
-			startNode = (Node)MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_START_NODE_ID), true); 
-			endNode = (Node)MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_END_NODE_ID), true);
+			startNode = (AbstractNode)MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_START_NODE_ID), true); 
+			endNode = (AbstractNode)MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_END_NODE_ID), true);
 		} catch (ApplicationException ae) {
 			String msg = this.getEnityName() + "Database.updateEntityFromResultSet | Error " + ae.getMessage();
 			throw new RetrieveObjectException(msg, ae);
@@ -158,11 +158,11 @@ public class NodeLinkDatabase extends StorableObjectDatabase {
 	
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 //		NodeLink nodeLink = this.fromStorableObject(storableObject);
-		switch (retrieveKind) {
+		switch (retrieveKind) {			
 			default:
 				return null;
 		}
-	}
+	}	
 
 	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
 		NodeLink nodeLink = this.fromStorableObject(storableObject);

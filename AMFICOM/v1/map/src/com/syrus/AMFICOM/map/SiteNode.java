@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNode.java,v 1.3 2004/11/30 14:27:08 bob Exp $
+ * $Id: SiteNode.java,v 1.4 2004/12/01 16:16:03 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,11 +29,11 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/11/30 14:27:08 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/01 16:16:03 $
  * @author $Author: bob $
  * @module map_v1
  */
-public class SiteNode extends Node implements TypedObject {
+public class SiteNode extends AbstractNode implements TypedObject {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -51,7 +51,7 @@ public class SiteNode extends Node implements TypedObject {
 	public SiteNode(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.siteNodeDatabase = MapDatabaseContext.siteNodeDatabase;
+		this.siteNodeDatabase = MapDatabaseContext.getSiteNodeDatabase();
 		try {
 			this.siteNodeDatabase.retrieve(this);
 		} catch (IllegalDataException e) {
@@ -115,13 +115,13 @@ public class SiteNode extends Node implements TypedObject {
 
 		super.currentVersion = super.getNextVersion();
 
-		this.siteNodeDatabase = MapDatabaseContext.siteNodeDatabase;
+		this.siteNodeDatabase = MapDatabaseContext.getSiteNodeDatabase();
 	}
 
 	public static SiteNode getInstance(SiteNode_Transferable sntt) throws CreateObjectException {
 		SiteNode siteNode = new SiteNode(sntt);
 
-		siteNode.siteNodeDatabase = MapDatabaseContext.siteNodeDatabase;
+		siteNode.siteNodeDatabase = MapDatabaseContext.getSiteNodeDatabase();
 		try {
 			if (siteNode.siteNodeDatabase != null)
 				siteNode.siteNodeDatabase.insert(siteNode);

@@ -1,5 +1,5 @@
 /*
- * $Id: Map.java,v 1.2 2004/11/28 14:34:48 bob Exp $
+ * $Id: Map.java,v 1.3 2004/12/01 16:16:03 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Map_Transferable;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/11/28 14:34:48 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/01 16:16:03 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -54,7 +54,7 @@ public class Map extends StorableObject {
 	public Map(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.mapDatabase = MapDatabaseContext.mapDatabase;
+		this.mapDatabase = MapDatabaseContext.getMapDatabase();
 		try {
 			this.mapDatabase.retrieve(this);
 		} catch (IllegalDataException e) {
@@ -133,13 +133,13 @@ public class Map extends StorableObject {
 
 		super.currentVersion = super.getNextVersion();
 
-		this.mapDatabase = MapDatabaseContext.mapDatabase;
+		this.mapDatabase = MapDatabaseContext.getMapDatabase();
 	}
 
 	public static Map getInstance(Map_Transferable mt) throws CreateObjectException {
 		Map map = new Map(mt);
 
-		map.mapDatabase = MapDatabaseContext.mapDatabase;
+		map.mapDatabase = MapDatabaseContext.getMapDatabase();
 		try {
 			if (map.mapDatabase != null)
 				map.mapDatabase.insert(map);
@@ -295,5 +295,21 @@ public class Map extends StorableObject {
 		if (topologicalNodes != null)
 			this.topologicalNodes.addAll(topologicalNodes);
 		super.currentVersion = super.getNextVersion();
+	}
+	
+	protected synchronized void setAttributes(Date created,
+											  Date modified,
+											  Identifier creatorId,
+											  Identifier modifierId,											  
+											  String name,
+											  String description,
+											  Identifier domainId) {
+			super.setAttributes(created,
+					modified,
+					creatorId,
+					modifierId);
+			this.name = name;
+			this.description = description;
+			this.domainId = domainId;
 	}
 }

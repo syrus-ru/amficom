@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLink.java,v 1.2 2004/11/28 14:34:48 bob Exp $
+ * $Id: PhysicalLink.java,v 1.3 2004/12/01 16:16:03 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/11/28 14:34:48 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/01 16:16:03 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -47,8 +47,8 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 
 	private PhysicalLinkType		physicalLinkType;
 
-	private Node					startNode;
-	private Node					endNode;
+	private AbstractNode					startNode;
+	private AbstractNode					endNode;
 	private String					city;
 	private String					street;
 	private String					building;
@@ -68,7 +68,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	public PhysicalLink(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.physicalLinkDatabase = MapDatabaseContext.physicalLinkDatabase;
+		this.physicalLinkDatabase = MapDatabaseContext.getPhysicalLinkDatabase();
 		try {
 			this.physicalLinkDatabase.retrieve(this);
 		} catch (IllegalDataException e) {
@@ -93,8 +93,8 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 			this.physicalLinkType = (PhysicalLinkType) MapStorableObjectPool.getStorableObject(
 				new Identifier(plt.physicalLinkTypeId), true);
 
-			this.startNode = (Node) MapStorableObjectPool.getStorableObject(new Identifier(plt.startNodeId), true);
-			this.endNode = (Node) MapStorableObjectPool.getStorableObject(new Identifier(plt.endNodeId), true);
+			this.startNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(plt.startNodeId), true);
+			this.endNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(plt.endNodeId), true);
 
 			this.nodeLinks = new ArrayList(plt.nodeLinkIds.length);
 			ArrayList nodeLinksIds = new ArrayList(plt.nodeLinkIds.length);
@@ -117,8 +117,8 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 						   final String name, 
 						   final String description,
 						   final PhysicalLinkType physicalLinkType,
-						   final Node startNode, 
-						   final Node endNode, 
+						   final AbstractNode startNode, 
+						   final AbstractNode endNode, 
 						   final String city, 
 						   final String street, 
 						   final String building,
@@ -150,13 +150,13 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 
 		super.currentVersion = super.getNextVersion();
 
-		this.physicalLinkDatabase = MapDatabaseContext.physicalLinkDatabase;
+		this.physicalLinkDatabase = MapDatabaseContext.getPhysicalLinkDatabase();
 	}
 
 	public static PhysicalLink getInstance(PhysicalLink_Transferable plt) throws CreateObjectException {
 		PhysicalLink physicalLink = new PhysicalLink(plt);
 
-		physicalLink.physicalLinkDatabase = MapDatabaseContext.physicalLinkDatabase;
+		physicalLink.physicalLinkDatabase = MapDatabaseContext.getPhysicalLinkDatabase();
 		try {
 			if (physicalLink.physicalLinkDatabase != null)
 				physicalLink.physicalLinkDatabase.insert(physicalLink);
@@ -170,10 +170,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	public List getDependencies() {
 		List dependencies = new LinkedList();
 		dependencies.add(this.physicalLinkType);
-		dependencies.add(this.startNode);
-		dependencies.add(this.endNode);
 		dependencies.addAll(this.characteristics);
-		dependencies.addAll(this.nodeLinks);
 		return dependencies;
 	}
 	
@@ -265,11 +262,11 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		super.currentVersion = super.getNextVersion();
 	}
 	
-	public Node getEndNode() {
+	public AbstractNode getEndNode() {
 		return this.endNode;
 	}
 	
-	public void setEndNode(Node endNode) {
+	public void setEndNode(AbstractNode endNode) {
 		this.endNode = endNode;
 		super.currentVersion = super.getNextVersion();
 	}
@@ -303,11 +300,11 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		super.currentVersion = super.getNextVersion();
 	}
 	
-	public Node getStartNode() {
+	public AbstractNode getStartNode() {
 		return this.startNode;
 	}
 	
-	public void setStartNode(Node startNode) {
+	public void setStartNode(AbstractNode startNode) {
 		this.startNode = startNode;
 		super.currentVersion = super.getNextVersion();
 	}
@@ -328,5 +325,35 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	public void setTopToBottom(boolean topToBottom) {
 		this.topToBottom = topToBottom;
 		super.currentVersion = super.getNextVersion();
+	}
+	
+	protected synchronized void setAttributes(Date created,
+											  Date modified,
+											  Identifier creatorId,
+											  Identifier modifierId,											  
+											  String name,
+											  String description,
+											  PhysicalLinkType physicalLinkType,
+											  String city,
+											  String street,
+											  String building,											  
+											  long dimensionX,
+											  long dimensionY,
+											  boolean leftToRight,
+											  boolean topToBottom) {
+			super.setAttributes(created,
+					modified,
+					creatorId,
+					modifierId);
+			this.name = name;
+			this.description = description;
+			this.physicalLinkType = physicalLinkType;
+			this.city = city;
+			this.street = street;
+			this.building = building;				
+			this.dimensionX = dimensionX;
+			this.dimensionY = dimensionY;
+			this.leftToRight = leftToRight;
+			this.topToBottom = topToBottom;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: Collector.java,v 1.3 2004/11/30 14:27:08 bob Exp $
+ * $Id: Collector.java,v 1.4 2004/12/01 16:16:03 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Collector_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/11/30 14:27:08 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/01 16:16:03 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -51,7 +51,7 @@ public class Collector extends StorableObject implements Characterized {
 	public Collector(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.collectorDatabase = MapDatabaseContext.collectorDatabase;
+		this.collectorDatabase = MapDatabaseContext.getCollectorDatabase();
 		try {
 			this.collectorDatabase.retrieve(this);
 		} catch (IllegalDataException e) {
@@ -99,13 +99,13 @@ public class Collector extends StorableObject implements Characterized {
 
 		super.currentVersion = super.getNextVersion();
 
-		this.collectorDatabase = MapDatabaseContext.collectorDatabase;
+		this.collectorDatabase = MapDatabaseContext.getCollectorDatabase();
 	}
 
 	public static Collector getInstance(Collector_Transferable plt) throws CreateObjectException {
 		Collector collector = new Collector(plt);
 
-		collector.collectorDatabase = MapDatabaseContext.collectorDatabase;
+		collector.collectorDatabase = MapDatabaseContext.getCollectorDatabase();
 		try {
 			if (collector.collectorDatabase != null)
 				collector.collectorDatabase.insert(collector);
@@ -180,5 +180,19 @@ public class Collector extends StorableObject implements Characterized {
 		if (physicalLinks != null)
 			this.physicalLinks.addAll(physicalLinks);
 		super.currentVersion = super.getNextVersion();		
+	}
+	
+	protected synchronized void setAttributes(Date created,
+											  Date modified,
+											  Identifier creatorId,
+											  Identifier modifierId,											  
+											  String name,
+											  String description) {
+			super.setAttributes(created,
+					modified,
+					creatorId,
+					modifierId);
+			this.name = name;
+			this.description = description;					
 	}
 }

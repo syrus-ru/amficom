@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNode.java,v 1.3 2004/11/30 14:27:08 bob Exp $
+ * $Id: TopologicalNode.java,v 1.4 2004/12/01 16:16:03 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,11 +27,11 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/11/30 14:27:08 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/01 16:16:03 $
  * @author $Author: bob $
  * @module map_v1
  */
-public class TopologicalNode extends Node {
+public class TopologicalNode extends AbstractNode {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -45,7 +45,7 @@ public class TopologicalNode extends Node {
 	public TopologicalNode(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.topologicalNodeDatabase = MapDatabaseContext.topologicalNodeDatabase;
+		this.topologicalNodeDatabase = MapDatabaseContext.getTopologicalNodeDatabase();
 		try {
 			this.topologicalNodeDatabase.retrieve(this);
 		} catch (IllegalDataException e) {
@@ -99,13 +99,13 @@ public class TopologicalNode extends Node {
 
 		super.currentVersion = super.getNextVersion();
 
-		this.topologicalNodeDatabase = MapDatabaseContext.topologicalNodeDatabase;
+		this.topologicalNodeDatabase = MapDatabaseContext.getTopologicalNodeDatabase();
 	}
 
 	public static TopologicalNode getInstance(TopologicalNode_Transferable sntt) throws CreateObjectException {
 		TopologicalNode topologicalNode = new TopologicalNode(sntt);
 
-		topologicalNode.topologicalNodeDatabase = MapDatabaseContext.topologicalNodeDatabase;
+		topologicalNode.topologicalNodeDatabase = MapDatabaseContext.getTopologicalNodeDatabase();
 		try {
 			if (topologicalNode.topologicalNodeDatabase != null)
 				topologicalNode.topologicalNodeDatabase.insert(topologicalNode);
@@ -142,6 +142,11 @@ public class TopologicalNode extends Node {
 
 	public PhysicalLink getPhysicalLink() {
 		return this.physicalLink;
+	}
+	
+	public void setPhysicalLink(PhysicalLink physicalLink) {
+		this.physicalLink = physicalLink;
+		// do not change version due to physical link is not dependence object
 	}
 	
 	protected synchronized void setAttributes(Date created,

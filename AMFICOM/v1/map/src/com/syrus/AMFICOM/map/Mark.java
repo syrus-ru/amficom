@@ -1,5 +1,5 @@
 /*
- * $Id: Mark.java,v 1.2 2004/11/28 14:34:48 bob Exp $
+ * $Id: Mark.java,v 1.3 2004/12/01 16:16:03 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Mark_Transferable;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/11/28 14:34:48 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/01 16:16:03 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -59,7 +59,7 @@ public class Mark extends StorableObject implements Characterized {
 	public Mark(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.markDatabase = MapDatabaseContext.markDatabase;
+		this.markDatabase = MapDatabaseContext.getMarkDatabase();
 		try {
 			this.markDatabase.retrieve(this);
 		} catch (IllegalDataException e) {
@@ -126,21 +126,21 @@ public class Mark extends StorableObject implements Characterized {
 
 		super.currentVersion = super.getNextVersion();
 
-		this.markDatabase = MapDatabaseContext.markDatabase;
+		this.markDatabase = MapDatabaseContext.getMarkDatabase();
 	}
 
 	public static Mark getInstance(Mark_Transferable plt) throws CreateObjectException {
-		Mark physicalLink = new Mark(plt);
+		Mark mark = new Mark(plt);
 
-		physicalLink.markDatabase = MapDatabaseContext.markDatabase;
+		mark.markDatabase = MapDatabaseContext.getMarkDatabase();
 		try {
-			if (physicalLink.markDatabase != null)
-				physicalLink.markDatabase.insert(physicalLink);
+			if (mark.markDatabase != null)
+				mark.markDatabase.insert(mark);
 		} catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
 
-		return physicalLink;
+		return mark;
 	}
 
 	public List getDependencies() {
@@ -260,5 +260,33 @@ public class Mark extends StorableObject implements Characterized {
 	public void setStreet(String street) {
 		this.street = street;
 		super.currentVersion = super.getNextVersion();
+	}
+	
+	protected synchronized void setAttributes(Date created,
+											  Date modified,
+											  Identifier creatorId,
+											  Identifier modifierId,											  
+											  String name,
+											  String description,
+											  double longitude,
+											  double latitude,
+											  PhysicalLink physicalLink,
+											  double distance,
+											  String city,
+											  String street,
+											  String building) {
+			super.setAttributes(created,
+					modified,
+					creatorId,
+					modifierId);
+			this.name = name;
+			this.description = description;
+			this.longitude = longitude;
+			this.latitude = latitude;
+			this.physicalLink = physicalLink;
+			this.distance = distance;
+			this.city = city;
+			this.street = street;
+			this.building = building;					
 	}
 }

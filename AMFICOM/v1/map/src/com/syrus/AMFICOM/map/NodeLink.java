@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLink.java,v 1.3 2004/11/30 14:27:08 bob Exp $
+ * $Id: NodeLink.java,v 1.4 2004/12/01 16:16:03 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/11/30 14:27:08 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/01 16:16:03 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -44,8 +44,8 @@ public class NodeLink extends StorableObject implements Characterized {
 
 	private PhysicalLink			physicalLink;
 
-	private Node					startNode;
-	private Node					endNode;
+	private AbstractNode					startNode;
+	private AbstractNode					endNode;
 
 	private double					length;
 
@@ -56,7 +56,7 @@ public class NodeLink extends StorableObject implements Characterized {
 	public NodeLink(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.nodeLinkDatabase = MapDatabaseContext.nodeLinkDatabase;
+		this.nodeLinkDatabase = MapDatabaseContext.getNodeLinkDatabase();
 		try {
 			this.nodeLinkDatabase.retrieve(this);
 		} catch (IllegalDataException e) {
@@ -73,8 +73,8 @@ public class NodeLink extends StorableObject implements Characterized {
 			this.physicalLink = (PhysicalLink) MapStorableObjectPool.getStorableObject(
 				new Identifier(nlt.physicalLinkId), true);
 
-			this.startNode = (Node) MapStorableObjectPool.getStorableObject(new Identifier(nlt.startNodeId), true);
-			this.endNode = (Node) MapStorableObjectPool.getStorableObject(new Identifier(nlt.endNodeId), true);
+			this.startNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(nlt.startNodeId), true);
+			this.endNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(nlt.endNodeId), true);
 
 			this.characteristics = new ArrayList(nlt.characteristicIds.length);
 			ArrayList characteristicIds = new ArrayList(nlt.characteristicIds.length);
@@ -90,8 +90,8 @@ public class NodeLink extends StorableObject implements Characterized {
 			final Identifier creatorId,
 			final String name,
 			final PhysicalLink physicalLink,
-			final Node startNode,
-			final Node endNode,
+			final AbstractNode startNode,
+			final AbstractNode endNode,
 			final double length) {
 		super(id);
 		long time = System.currentTimeMillis();
@@ -109,13 +109,13 @@ public class NodeLink extends StorableObject implements Characterized {
 
 		super.currentVersion = super.getNextVersion();
 
-		this.nodeLinkDatabase = MapDatabaseContext.nodeLinkDatabase;
+		this.nodeLinkDatabase = MapDatabaseContext.getNodeLinkDatabase();
 	}
 
 	public static NodeLink getInstance(NodeLink_Transferable nlt) throws CreateObjectException {
 		NodeLink nodeLink = new NodeLink(nlt);
 
-		nodeLink.nodeLinkDatabase = MapDatabaseContext.nodeLinkDatabase;
+		nodeLink.nodeLinkDatabase = MapDatabaseContext.getNodeLinkDatabase();
 		try {
 			if (nodeLink.nodeLinkDatabase != null)
 				nodeLink.nodeLinkDatabase.insert(nodeLink);
@@ -162,11 +162,11 @@ public class NodeLink extends StorableObject implements Characterized {
 		super.currentVersion = super.getNextVersion();
 	}
 
-	public Node getEndNode() {
+	public AbstractNode getEndNode() {
 		return this.endNode;
 	}
 	
-	public void setEndNode(Node endNode) {
+	public void setEndNode(AbstractNode endNode) {
 		this.endNode = endNode;
 		super.currentVersion = super.getNextVersion();
 	}
@@ -198,11 +198,11 @@ public class NodeLink extends StorableObject implements Characterized {
 		super.currentVersion = super.getNextVersion();
 	}
 	
-	public Node getStartNode() {
+	public AbstractNode getStartNode() {
 		return this.startNode;
 	}
 	
-	public void setStartNode(Node startNode) {
+	public void setStartNode(AbstractNode startNode) {
 		this.startNode = startNode;
 		super.currentVersion = super.getNextVersion();
 	}
@@ -213,8 +213,8 @@ public class NodeLink extends StorableObject implements Characterized {
 											  Identifier modifierId,											  
 											  String name,
 											  PhysicalLink physicalLink,
-											  Node startNode,
-											  Node endNode,
+											  AbstractNode startNode,
+											  AbstractNode endNode,
 											  double length) {
 			super.setAttributes(created,
 					modified,

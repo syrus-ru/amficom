@@ -41,15 +41,24 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/map/MapObjectLoader.java \
 		$(SRCDIR)/com/syrus/AMFICOM/map/MapDatabaseContext.java \
 		$(SRCDIR)/com/syrus/AMFICOM/map/SiteNodeType.java \
+		$(SRCDIR)/com/syrus/AMFICOM/map/SiteNodeTypeDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/map/SiteNode.java \
+		$(SRCDIR)/com/syrus/AMFICOM/map/SiteNodeDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/map/PhysicalLinkType.java \
+		$(SRCDIR)/com/syrus/AMFICOM/map/PhysicalLinkTypeDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/map/TopologicalNode.java \
+		$(SRCDIR)/com/syrus/AMFICOM/map/TopologicalNodeDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/map/NodeLink.java \
+		$(SRCDIR)/com/syrus/AMFICOM/map/NodeLinkDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/map/Mark.java \
+		$(SRCDIR)/com/syrus/AMFICOM/map/MarkDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/map/PhysicalLink.java \
+		$(SRCDIR)/com/syrus/AMFICOM/map/PhysicalLinkDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/map/Collector.java \
+		$(SRCDIR)/com/syrus/AMFICOM/map/CollectorDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/map/Map.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/Node.java
+		$(SRCDIR)/com/syrus/AMFICOM/map/MapDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/map/AbstractNode.java
 	touch $@
 
 .corba:	$(CLASSDIR)
