@@ -104,26 +104,29 @@ public class LangModel {
 	/**
 	 * @deprecated
 	 */
+/*	 
 	public static void initialize() {
 		//initialize("com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey");
 	}
-
+*/
 	/**
 	 * @deprecated
 	 */
+/*	 
 	public static void initialize(String rb) {
 		//System.out.println("initialize lang - " + rb);
 		//resourceBundle = new String(rb);
 		//setLangModel("ru", "");
 	}
-
+*/
 	/**
 	 * @deprecated
 	 */
+/*
 	public static boolean setLangModel(String l, String c) {
 		return true;
 	}
-
+*/
 	/**
 	 * @deprecated use getString()
 	 */
