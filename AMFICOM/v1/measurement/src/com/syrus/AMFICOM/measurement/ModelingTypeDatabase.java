@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.16 2005/02/14 11:16:17 arseniy Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.17 2005/02/16 13:18:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/02/14 11:16:17 $
+ * @version $Revision: 1.17 $, $Date: 2005/02/16 13:18:28 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -438,21 +438,21 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 			}
 		}
 	}
-
-	public ModelingType retrieveForCodename(String codename) throws ObjectNotFoundException, RetrieveObjectException {
-		Collection objects = null;
-		try {
-			objects = this.retrieveByIds( null , StorableObjectWrapper.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
-		}
-		catch (IllegalDataException ide) {				
-			throw new RetrieveObjectException(ide);
-		}
-
-		if ((objects == null) || (objects.isEmpty()))
-			throw new ObjectNotFoundException("No modeling type with codename: '" + codename + "'");
-
-		return (ModelingType) objects.iterator().next();
-	}
+//
+//	public ModelingType retrieveForCodename(String codename) throws ObjectNotFoundException, RetrieveObjectException {
+//		Collection objects = null;
+//		try {
+//			objects = this.retrieveByIds( null , StorableObjectWrapper.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
+//		}
+//		catch (IllegalDataException ide) {				
+//			throw new RetrieveObjectException(ide);
+//		}
+//
+//		if ((objects == null) || (objects.isEmpty()))
+//			throw new ObjectNotFoundException("No modeling type with codename: '" + codename + "'");
+//
+//		return (ModelingType) objects.iterator().next();
+//	}
 
 	public Collection retrieveAll() throws RetrieveObjectException {
 		try {
