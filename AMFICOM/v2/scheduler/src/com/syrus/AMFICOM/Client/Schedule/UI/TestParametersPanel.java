@@ -11,8 +11,6 @@ import com.syrus.AMFICOM.Client.Schedule.ScheduleMainFrame;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.util.*;
-import java.io.*;
 
 public class TestParametersPanel extends JPanel implements OperationListener {
 
@@ -46,7 +44,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 	private JRadioButton			patternRadioButton;
 	private JRadioButton			paramsRadioButton;
 
-	private final JPanel			switchPanel					= new JPanel(
+	final JPanel					switchPanel					= new JPanel(
 																		new CardLayout());
 
 	//	private HashMap objMap = new HashMap();
@@ -58,11 +56,11 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 
 	private HashMap					testPanels					= new HashMap();
 
-	private Test					test;
+//	private Test					test;
 
 	private SurveyDataSourceImage	surveyDsi;
 
-	private String					currentParametersPanelName;
+	String							currentParametersPanelName;
 
 	/**
 	 * @todo only for testing mode 
@@ -181,7 +179,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 	}
 
 	public void setTest(Test test) {
-		this.test = test;
+//		this.test = test;
 		testSetups.removeAll();
 		DataSourceInterface dsi = aContext.getDataSourceInterface();
 		String meid = test.monitored_element_id;
