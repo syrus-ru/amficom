@@ -1,5 +1,5 @@
 /*
- * $Id: EventSource.java,v 1.8 2005/04/01 11:08:47 bass Exp $
+ * $Id: EventSource.java,v 1.9 2005/04/01 15:20:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,8 @@ package com.syrus.AMFICOM.event;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.event.corba.EventSource_Transferable;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -26,8 +28,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/04/01 11:08:47 $
- * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/04/01 15:20:22 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 public class EventSource extends StorableObject {
@@ -49,12 +51,9 @@ public class EventSource extends StorableObject {
 		}
 	}
 
-	public EventSource(EventSource_Transferable est) {
-		super(est.header);
-
-		this.sourceEntityId = new Identifier(est.source_entity_id);
-
+	public EventSource(EventSource_Transferable est) throws CreateObjectException {
 		this.eventSourceDatabase = EventDatabaseContext.getEventSourceDatabase();
+		this.fromTransferable(est);
 	}
 
 	protected EventSource(Identifier id,
@@ -88,6 +87,12 @@ public class EventSource extends StorableObject {
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("EventSource.createInstance | cannot generate identifier ", e);
 		}
+	}
+
+	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+		EventSource_Transferable est = (EventSource_Transferable) transferable;
+		super.fromTransferable(est);
+		this.sourceEntityId = new Identifier(est.source_entity_id);
 	}
 
 	public Object getTransferable() {

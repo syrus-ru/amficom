@@ -1,5 +1,5 @@
 /*
- * $Id: CommonEventTest.java,v 1.7 2005/03/01 16:51:36 arseniy Exp $
+ * $Id: CommonEventTest.java,v 1.8 2005/04/01 15:20:22 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/03/01 16:51:36 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/01 15:20:22 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -69,6 +69,7 @@ public abstract class CommonEventTest extends TestCase {
 	public static final String DB_SID = "amficom";
 	public static final int DB_CONNECTION_TIMEOUT = 120;
 	public static final String DB_LOGIN_NAME = "amficom";
+	public static final String SERVER_HOST_NAME = "aldan";
 
 	public CommonEventTest(String name) {
 		super(name);
@@ -147,7 +148,7 @@ public abstract class CommonEventTest extends TestCase {
 		SessionContext.init(new AccessIdentity(new Date(System.currentTimeMillis()),
 				new Identifier("Domain_2464"),
 				new Identifier("Users_58"),
-				new Identifier("sessiya_1")));
+				new Identifier("sessiya_1")), SERVER_HOST_NAME);
 	}
 
 	private static void initStorableObjectPools() {

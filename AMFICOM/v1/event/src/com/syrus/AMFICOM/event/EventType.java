@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.9 2005/04/01 11:08:47 bass Exp $
+ * $Id: EventType.java,v 1.10 2005/04/01 15:20:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Collections;
 import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
@@ -33,8 +35,8 @@ import com.syrus.AMFICOM.event.corba.EventType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/01 11:08:47 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/04/01 15:20:22 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 
@@ -70,22 +72,8 @@ public class EventType extends StorableObjectType {
 	}
 
 	public EventType(EventType_Transferable ett) throws CreateObjectException {
-		super(ett.header,
-					new String(ett.codename),
-					new String(ett.description));
-
-		try {
-			Set parTypeIds = new HashSet(ett.parameter_type_ids.length);
-			for (int i = 0; i < ett.parameter_type_ids.length; i++)
-				parTypeIds.add(new Identifier(ett.parameter_type_ids[i]));
-
-			this.parameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypeIds, true);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-
 		this.eventTypeDatabase = EventDatabaseContext.getEventTypeDatabase();
+		this.fromTransferable(ett);
 	}
 
 	protected EventType(Identifier id,
@@ -137,6 +125,23 @@ public class EventType extends StorableObjectType {
 		}
 		catch (IllegalObjectEntityException ioee) {
 			throw new CreateObjectException("EventType.createInstance | cannot generate identifier ", ioee);
+		}
+	}
+
+	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+		EventType_Transferable ett = (EventType_Transferable) transferable;
+
+		super.fromTransferable(ett.header, new String(ett.codename), new String(ett.description));
+
+		try {
+			Set parTypeIds = new HashSet(ett.parameter_type_ids.length);
+			for (int i = 0; i < ett.parameter_type_ids.length; i++)
+				parTypeIds.add(new Identifier(ett.parameter_type_ids[i]));
+
+			this.parameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypeIds, true);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: Event.java,v 1.12 2005/04/01 11:08:47 bass Exp $
+ * $Id: Event.java,v 1.13 2005/04/01 15:20:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.event.corba.EventParameter_Transferable;
 import com.syrus.AMFICOM.event.corba.Event_Transferable;
@@ -32,8 +34,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/04/01 11:08:47 $
- * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/04/01 15:20:21 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 
@@ -65,31 +67,8 @@ public class Event extends StorableObject implements TypedObject {
 	}
 
 	public Event(Event_Transferable et) throws CreateObjectException {
-		super(et.header);
-
-		try {
-			this.type = (EventType) EventStorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-
-		this.description = new String(et.description);
-
-		this.eventParameters = new HashSet(et.parameters.length);
-		try {
-			for (int i = 0; i < et.parameters.length; i++)
-				this.eventParameters.add(new EventParameter(et.parameters[i]));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-
-		this.eventSourceIds = new HashSet(et.event_source_ids.length);
-		for (int i = 0; i < et.event_source_ids.length; i++)
-			this.eventSourceIds.add(new Identifier(et.event_source_ids[i]));
-
 		this.eventDatabase = EventDatabaseContext.getEventDatabase();
+		this.fromTransferable(et);
 	}
 
 	protected Event(Identifier id,
@@ -148,6 +127,34 @@ public class Event extends StorableObject implements TypedObject {
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Event.createInstance | cannot generate identifier ", e);
 		}
+	}
+
+	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+		Event_Transferable et = (Event_Transferable) transferable;
+
+		super.fromTransferable(et.header);
+
+		try {
+			this.type = (EventType) EventStorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+
+		this.description = new String(et.description);
+
+		this.eventParameters = new HashSet(et.parameters.length);
+		try {
+			for (int i = 0; i < et.parameters.length; i++)
+				this.eventParameters.add(new EventParameter(et.parameters[i]));
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+
+		this.eventSourceIds = new HashSet(et.event_source_ids.length);
+		for (int i = 0; i < et.event_source_ids.length; i++)
+			this.eventSourceIds.add(new Identifier(et.event_source_ids[i]));
 	}
 
 	public Object getTransferable() {

@@ -1,5 +1,5 @@
 /*
- * $Id: TestEvent.java,v 1.3 2005/03/01 16:51:36 arseniy Exp $
+ * $Id: TestEvent.java,v 1.4 2005/04/01 15:20:22 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,9 +7,9 @@
  */
 package com.syrus.AMFICOM.event;
 
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import junit.framework.Test;
 
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/03/01 16:51:36 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/01 15:20:22 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -48,7 +48,7 @@ public class TestEvent extends CommonEventTest {
 				OperationSort.OPERATION_EQUALS,
 				new Short(ObjectEntities.EVENTTYPE_ENTITY_CODE),
 				StorableObjectWrapper.COLUMN_CODENAME);
-		Collection eventTypes = EventStorableObjectPool.getStorableObjectsByCondition(tc, true);
+		Set eventTypes = EventStorableObjectPool.getStorableObjectsByCondition(tc, true);
 		System.out.println("###################### Retrieved: " + eventTypes.size() + " event types");
 		EventType eventType = (EventType) eventTypes.iterator().next();
 
@@ -63,7 +63,7 @@ public class TestEvent extends CommonEventTest {
 				new Short(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
 				StorableObjectWrapper.COLUMN_CODENAME);
 		CompoundCondition cc = new CompoundCondition(tc1, CompoundConditionSort.OR, tc2);
-		Collection parameterTypes = GeneralStorableObjectPool.getStorableObjectsByCondition(cc, true);
+		Set parameterTypes = GeneralStorableObjectPool.getStorableObjectsByCondition(cc, true);
 		System.out.println("###################### Retrieved: " + parameterTypes.size() + " parameter types");
 		ParameterType pt, pt1 = null, pt2 = null;
 		for (Iterator it = parameterTypes.iterator(); it.hasNext();) {
@@ -80,15 +80,15 @@ public class TestEvent extends CommonEventTest {
 			fail("Cannot find parameter type for codename '" + ParameterTypeCodenames.ALARM_STATUS + "'");
 		if (pt2 == null)
 			fail("Cannot find parameter type for codename '" + ParameterTypeCodenames.HZ_CHO + "'");
-		Collection eventParameters = new HashSet(2);
+		Set eventParameters = new HashSet(2);
 		eventParameters.add(EventParameter.createInstance(pt1, Integer.toString(0)));
 		eventParameters.add(EventParameter.createInstance(pt2, "1, 2, 3, 4, 5, 6, 7, 8"));
 
 		//LinkedIdsCondition lic = new LinkedIdsCondition()
 		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.EVENTSOURCE_ENTITY_CODE);
-		Collection eventSources = EventStorableObjectPool.getStorableObjectsByCondition(ec, true);
+		Set eventSources = EventStorableObjectPool.getStorableObjectsByCondition(ec, true);
 		System.out.println("###################### Retrieved: " + eventSources.size() + " event sources");
-		Collection eventSourceIds = new HashSet(eventSources.size());
+		Set eventSourceIds = new HashSet(eventSources.size());
 		for (Iterator it = eventSources.iterator(); it.hasNext();)
 			eventSourceIds.add(((EventSource) it.next()).getId()); 
 
