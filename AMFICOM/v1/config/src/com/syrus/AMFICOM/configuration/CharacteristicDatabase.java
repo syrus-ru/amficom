@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.9 2004/08/11 16:45:01 arseniy Exp $
+ * $Id: CharacteristicDatabase.java,v 1.10 2004/08/18 08:46:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,8 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.util.List;
+import java.util.ArrayList;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,7 +27,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/08/11 16:45:01 $
+ * @version $Revision: 1.10 $, $Date: 2004/08/18 08:46:04 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -88,7 +90,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("Characteristic_Database.retrieve | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("Characteristic_Database.retrieveCharacteristic | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
 				
@@ -135,7 +137,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 						break;
 					default:
 						characterizedId = null;
-						Log.errorMessage("Unknown sort: " + sort + " for characteristic: " + cIdStr);
+						Log.errorMessage("Characteristic_Database.retrieveCharacteristic | Unknown sort: " + sort + " for characteristic: " + cIdStr);
 				}
 				CharacteristicType characteristicType = (CharacteristicType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
 				characteristic.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
@@ -162,10 +164,10 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 																		 characterizedId);
 			}
 			else
-				throw new ObjectNotFoundException("No such characteristic: " + cIdStr);
+				throw new ObjectNotFoundException("Characteristic_Database.retrieveCharacteristic | No such characteristic: " + cIdStr);
 		}
 		catch (SQLException sqle) {
-			String mesg = "Characteristic_Database.retrieve | Cannot retrieve characteristic " + cIdStr;
+			String mesg = "Characteristic_Database.retrieveCharacteristic | Cannot retrieve characteristic '" + cIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -346,11 +348,11 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("Characteristic_Database.insert | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("Characteristic_Database.insertCharacteristic | Trying: " + sql, Log.DEBUGLEVEL05);
 			statement.executeUpdate(sql);
 		}
 		catch (SQLException sqle) {
-			String mesg = "Characteristic_Database.insert | Cannot insert characteristic " + cIdStr;
+			String mesg = "Characteristic_Database.insertCharacteristic | Cannot insert characteristic " + cIdStr;
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -371,5 +373,77 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			default:
 				return;
 		}
+	}
+
+	public static List retrieveCharacteristics(Identifier characterizedId, CharacteristicSort sort) throws RetrieveObjectException {
+		List characteristics = new ArrayList();
+
+		String cdIdStr = characterizedId.toSQLString();
+		int sortValue = sort.value();
+		String sql;
+		{
+			StringBuffer buffer = new StringBuffer(SQL_SELECT);
+			buffer.append(COLUMN_ID);
+			buffer.append(SQL_FROM);
+			buffer.append(ObjectEntities.CHARACTERISTIC_ENTITY);
+			buffer.append(SQL_WHERE);
+			buffer.append(COLUMN_SORT);
+			buffer.append(EQUALS);
+			buffer.append(sortValue);
+			buffer.append(SQL_AND);
+			switch (sortValue) {
+				case CharacteristicSort._CHARACTERISTIC_SORT_SERVER:
+					buffer.append(COLUMN_SERVER_ID);
+					break;
+				case CharacteristicSort._CHARACTERISTIC_SORT_MCM:
+					buffer.append(COLUMN_MCM_ID);
+					break;
+				case CharacteristicSort._CHARACTERISTIC_SORT_EQUIPMENT:
+					buffer.append(COLUMN_EQUIPMENT_ID);
+					break;
+				case CharacteristicSort._CHARACTERISTIC_SORT_TRANSMISSIONPATH:
+					buffer.append(COLUMN_TRANSMISSION_PATH_ID);
+					break;
+				case CharacteristicSort._CHARACTERISTIC_SORT_PORT:
+					buffer.append(COLUMN_PORT_ID);
+					break;
+			}
+			buffer.append(EQUALS);
+			buffer.append(cdIdStr);
+			sql = buffer.toString();
+		}
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("Characteristic_Database.retrieveCharacteristics | Trying: " + sql, Log.DEBUGLEVEL05);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+				try {
+					characteristics.add(new Characteristic(new Identifier(resultSet.getString(COLUMN_ID))));
+				}
+				catch (ObjectNotFoundException onfe) {
+					Log.errorException(onfe);
+				}
+			}
+		}
+		catch (SQLException sqle) {
+			String mesg = "Characteristic_Database.retrieveCharacteristics | Cannot retrieve characteristics for '" + cdIdStr + "' -- " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return characteristics;
 	}
 }

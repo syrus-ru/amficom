@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.10 2004/08/17 09:04:11 bob Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.11 2004/08/18 08:46:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,12 +26,13 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/08/17 09:04:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2004/08/18 08:46:04 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -65,6 +66,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
 		this.retrieveTransmissionPath(transmissionPath);
 		this.retrieveTransmissionPathMELink(transmissionPath);
+		transmissionPath.setCharacteristics(CharacteristicDatabase.retrieveCharacteristics(transmissionPath.getId(), CharacteristicSort.CHARACTERISTIC_SORT_TRANSMISSIONPATH));
 	}
 
 	private void retrieveTransmissionPath(TransmissionPath transmissionPath) throws ObjectNotFoundException, RetrieveObjectException {

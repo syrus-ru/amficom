@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.10 2004/08/11 14:28:48 arseniy Exp $
+ * $Id: MCMDatabase.java,v 1.11 2004/08/18 08:46:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,11 +22,12 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/08/11 14:28:48 $
+ * @version $Revision: 1.11 $, $Date: 2004/08/18 08:46:04 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -51,6 +52,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 		MCM mcm = this.fromStorableObject(storableObject);
 		this.retrieveMCM(mcm);
 		this.retrieveKISIds(mcm);
+		mcm.setCharacteristics(CharacteristicDatabase.retrieveCharacteristics(mcm.getId(), CharacteristicSort.CHARACTERISTIC_SORT_MCM));
 	}
 
 	private void retrieveMCM(MCM mcm) throws ObjectNotFoundException, RetrieveObjectException {

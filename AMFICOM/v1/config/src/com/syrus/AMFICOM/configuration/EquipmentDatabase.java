@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.20 2004/08/17 09:04:11 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.21 2004/08/18 08:46:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,12 +26,13 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/08/17 09:04:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.21 $, $Date: 2004/08/18 08:46:04 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -68,6 +69,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		Equipment eq = this.fromStorableObject(storableObject);
 		this.retrieveEquipment(eq);
 		this.retrieveEquipmentMELink(eq);
+		eq.setCharacteristics(CharacteristicDatabase.retrieveCharacteristics(eq.getId(), CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENT));
 	}
 
 	private void retrieveEquipment(Equipment equipment) throws ObjectNotFoundException, RetrieveObjectException{

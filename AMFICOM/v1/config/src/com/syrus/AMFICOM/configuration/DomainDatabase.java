@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.1 2004/08/10 19:01:08 arseniy Exp $
+ * $Id: DomainDatabase.java,v 1.2 2004/08/18 08:46:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,12 +21,13 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/10 19:01:08 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/18 08:46:04 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -43,7 +44,8 @@ public class DomainDatabase extends StorableObjectDatabase {
 	
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Domain domain = this.fromStorableObject(storableObject);
-		this.retrieveDomain(domain);	
+		this.retrieveDomain(domain);
+		domain.setCharacteristics(CharacteristicDatabase.retrieveCharacteristics(domain.getId(), CharacteristicSort.CHARACTERISTIC_SORT_DOMAIN));
 	}
 
 	private void retrieveDomain(Domain domain) throws ObjectNotFoundException, RetrieveObjectException {

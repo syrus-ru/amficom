@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.20 2004/08/13 14:08:14 bob Exp $
+ * $Id: Equipment.java,v 1.21 2004/08/18 08:46:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentSort;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/08/13 14:08:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.21 $, $Date: 2004/08/18 08:46:04 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -40,13 +40,14 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 	private String description;
 	private Identifier imageId;
 
-	private List characteristicIds;
 	private List portIds;
 	private List cablePortIds;
 	private List specialPortIds;
-	
+
 	private int sort;
 	private Identifier kisId;
+
+	private List characteristics;
 
 	private StorableObjectDatabase equipmentDatabase;
 
@@ -78,10 +79,6 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		this.description = new String(et.description);
 		this.imageId = new Identifier(et.image_id);
 
-		this.characteristicIds = new ArrayList(et.characteristic_ids.length);
-		for (int i = 0; i < et.characteristic_ids.length; i++)
-			this.characteristicIds.add(new Identifier(et.characteristic_ids[i]));
-
 		this.portIds = new ArrayList(et.port_ids.length);
 		for (int i = 0; i < et.port_ids.length; i++)
 			this.portIds.add(new Identifier(et.port_ids[i]));
@@ -105,35 +102,40 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		catch (IllegalDataException ide) {
 			throw new CreateObjectException(ide.getMessage(), ide);
 		}
+
+		this.characteristics = new ArrayList(et.characteristic_ids.length);
+		for (int i = 0; i < et.characteristic_ids.length; i++)
+			this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(et.characteristic_ids[i]), true));
 	}
 	
 	private Equipment(Identifier id,
-						Identifier creatorId,
-						Identifier domainId,
-						EquipmentType type,
-						String name,
-						String description,
-						Identifier imageId,
-						int sort,
-						Identifier kisId){
+										Identifier creatorId,
+										Identifier domainId,
+										EquipmentType type,
+										String name,
+										String description,
+										Identifier imageId,
+										int sort,
+										Identifier kisId) {
 				super(id,
-						new Date(System.currentTimeMillis()),
-						new Date(System.currentTimeMillis()),
-						creatorId,
-						creatorId,
-						domainId);
-				this.type = type;
+							new Date(System.currentTimeMillis()),
+							new Date(System.currentTimeMillis()),
+							creatorId,
+							creatorId,
+							domainId);
+							this.type = type;
 				this.name = name;
 				this.description = description;
 				this.imageId = imageId;
 				this.sort = sort;
 				this.kisId = kisId;
 				
-				super.monitoredElementIds = new ArrayList();				
-				this.characteristicIds = new ArrayList();
+				super.monitoredElementIds = new ArrayList();
 				this.portIds = new ArrayList();
 				this.cablePortIds = new ArrayList();
 				this.specialPortIds = new ArrayList();
+
+				this.characteristics = new ArrayList();
 	}
 				
 	/**
@@ -149,37 +151,37 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 	 * @param kisId
 	 * @return
 	 */
-	public static Equipment  createInstance(Identifier id,
-											Identifier creatorId,
-											Identifier domainId,
-											EquipmentType type,
-											String name,
-											String description,
-											Identifier imageId,
-											int sort,
-											Identifier kisId){
+	public static Equipment createInstance(Identifier id,
+																				 Identifier creatorId,
+																				 Identifier domainId,
+																				 EquipmentType type,
+																				 String name,
+																				 String description,
+																				 Identifier imageId,
+																				 int sort,
+																				 Identifier kisId) {
 		return new Equipment(id,
-							 creatorId,
-							 domainId,
-							 type,
-							 name,
-							 description,
-							 imageId,
-							 sort,
-							 kisId);
+												 creatorId,
+												 domainId,
+												 type,
+												 name,
+												 description,
+												 imageId,
+												 sort,
+												 kisId);
 	}
 
 	public Object getTransferable() {
 		int i = 0;
-		
+
 		Identifier_Transferable[] meIds = new Identifier_Transferable[super.monitoredElementIds.size()];
 		for (Iterator iterator = super.monitoredElementIds.iterator(); iterator.hasNext();)
 			meIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
-		
+
 		i = 0;
-		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristicIds.size()];
-		for (Iterator iterator = this.characteristicIds.iterator(); iterator.hasNext();)
-			charIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
+		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
+		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
+			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
 
 		i = 0;		
 		Identifier_Transferable[] pIds = new Identifier_Transferable[this.portIds.size()];
@@ -231,8 +233,8 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		return this.imageId;
 	}
 
-	public List getCharacteristicIds() {
-		return this.characteristicIds;
+	public List getCharacteristics() {
+		return this.characteristics;
 	}
 
 	public List getPortIds() {
@@ -255,8 +257,8 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		return this.kisId;
 	}
 
-	public void setCharacteristicIds(List characteristicIds) {
-		this.characteristicIds = characteristicIds;
+	public void setCharacteristics(List characteristics) {
+		this.characteristics = characteristics;
 	}
 
 	protected synchronized void setAttributes(Date created,

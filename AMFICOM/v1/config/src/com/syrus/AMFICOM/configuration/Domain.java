@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.2 2004/08/13 14:08:14 bob Exp $
+ * $Id: Domain.java,v 1.3 2004/08/18 08:46:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.configuration;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/13 14:08:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2004/08/18 08:46:04 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.configuration.corba.Domain_Transferable;
 public class Domain extends DomainMember implements Characterized {
 	private String name;
 	private String description;
-	private List characteristicIds;
+	private List characteristics;
 
 	private StorableObjectDatabase domainDatabase;
 
@@ -56,10 +56,6 @@ public class Domain extends DomainMember implements Characterized {
 		this.name = new String(dt.name);
 		this.description = new String(dt.description);
 
-		this.characteristicIds = new ArrayList(dt.characteristic_ids.length);
-		for (int i = 0; i < dt.characteristic_ids.length; i++)
-			this.characteristicIds.add(new Identifier(dt.characteristic_ids[i]));
-
 		this.domainDatabase = ConfigurationDatabaseContext.domainDatabase;
 		try {
 			this.domainDatabase.insert(this);
@@ -67,6 +63,10 @@ public class Domain extends DomainMember implements Characterized {
 		catch (IllegalDataException ide) {
 			throw new CreateObjectException(ide.getMessage(), ide);
 		}
+
+		this.characteristics = new ArrayList(dt.characteristic_ids.length);
+		for (int i = 0; i < dt.characteristic_ids.length; i++)
+			this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(dt.characteristic_ids[i]), true));
 	}
 
 	private Domain(Identifier id,
@@ -83,15 +83,15 @@ public class Domain extends DomainMember implements Characterized {
 		this.name = name;
 		this.description = description;
 
-		this.characteristicIds = new ArrayList();
+		this.characteristics = new ArrayList();
 	}
 
 	public Object getTransferable() {
 		int i = 0;
 
-		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristicIds.size()];
-		for (Iterator iterator = this.characteristicIds.iterator(); iterator.hasNext();)
-			charIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
+		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
+		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
+			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
 
 		return new Domain_Transferable((Identifier_Transferable)super.id.getTransferable(),
 																	 super.created.getTime(),
@@ -112,12 +112,12 @@ public class Domain extends DomainMember implements Characterized {
 		return this.description;
 	}
 
-	public List getCharacteristicIds() {
-		return this.characteristicIds;
+	public List getCharacteristics() {
+		return this.characteristics;
 	}
 
-	public void setCharacteristicIds(List characteristicIds) {
-		this.characteristicIds = characteristicIds;
+	public void setCharacteristics(List characteristics) {
+		this.characteristics = characteristics;
 	}
 	
 	/**

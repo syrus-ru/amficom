@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.13 2004/08/11 14:28:48 arseniy Exp $
+ * $Id: MCM.java,v 1.14 2004/08/18 08:46:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/08/11 14:28:48 $
+ * @version $Revision: 1.14 $, $Date: 2004/08/18 08:46:04 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -33,9 +33,9 @@ public class MCM extends DomainMember implements Characterized {
 	private Identifier userId;
 	private Identifier serverId;
 
-	private List characteristicIds;
-
 	private List kisIds;
+
+	private List characteristics;
 
 	private StorableObjectDatabase mcmDatabase;
 
@@ -63,10 +63,6 @@ public class MCM extends DomainMember implements Characterized {
 		this.userId = new Identifier(mt.user_id);
 		this.serverId = new Identifier(mt.server_id);
 
-		this.characteristicIds = new ArrayList(mt.characteristic_ids.length);
-		for (int i = 0; i < mt.characteristic_ids.length; i++)
-			this.characteristicIds.add(new Identifier(mt.characteristic_ids[i]));
-			
 		this.kisIds = new ArrayList(mt.kis_ids.length);
 		for (int i = 0; i < mt.kis_ids.length; i++)
 			this.kisIds.add(new Identifier(mt.kis_ids[i]));
@@ -78,6 +74,10 @@ public class MCM extends DomainMember implements Characterized {
 		catch (IllegalDataException ide) {
 			throw new CreateObjectException(ide.getMessage(), ide);
 		}
+
+		this.characteristics = new ArrayList(mt.characteristic_ids.length);
+		for (int i = 0; i < mt.characteristic_ids.length; i++)
+			this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(mt.characteristic_ids[i]), true));
 	}
 
 	private MCM(Identifier id,
@@ -98,7 +98,7 @@ public class MCM extends DomainMember implements Characterized {
 		this.userId = userId;
 		this.serverId = serverId;
 
-		this.characteristicIds = new ArrayList();
+		this.characteristics = new ArrayList();
 
 		this.kisIds = new ArrayList();
 	}
@@ -106,9 +106,9 @@ public class MCM extends DomainMember implements Characterized {
 	public Object getTransferable() {
 		int i = 0;
 
-		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristicIds.size()];
-		for (Iterator iterator = this.characteristicIds.iterator(); iterator.hasNext();)
-			charIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
+		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
+		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
+			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
 		
 		i = 0;
 		Identifier_Transferable[] kisIdsT = new Identifier_Transferable[this.kisIds.size()];
@@ -146,12 +146,12 @@ public class MCM extends DomainMember implements Characterized {
 	}
 
 
-	public List getCharacteristicIds() {
-		return this.characteristicIds;
+	public List getCharacteristics() {
+		return this.characteristics;
 	}
 
-	public void setCharacteristicIds(List characteristicIds) {
-		this.characteristicIds = characteristicIds;
+	public void setCharacteristics(List characteristics) {
+		this.characteristics = characteristics;
 	}
 
 	public List getKISIds() {

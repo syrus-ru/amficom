@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.10 2004/08/13 14:08:14 bob Exp $
+ * $Id: Characteristic.java,v 1.11 2004/08/18 08:46:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.ArrayList;
 import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -24,8 +23,8 @@ import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/08/13 14:08:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2004/08/18 08:46:03 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 

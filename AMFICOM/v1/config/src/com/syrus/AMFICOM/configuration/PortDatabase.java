@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.8 2004/08/17 09:04:11 bob Exp $
+ * $Id: PortDatabase.java,v 1.9 2004/08/18 08:46:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,13 +25,14 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/08/17 09:04:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2004/08/18 08:46:04 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 public class PortDatabase extends StorableObjectDatabase {
@@ -56,7 +57,8 @@ public class PortDatabase extends StorableObjectDatabase {
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Port port = this.fromStorableObject(storableObject);
-		this.retrievePort(port);	
+		this.retrievePort(port);
+		port.setCharacteristics(CharacteristicDatabase.retrieveCharacteristics(port.getId(), CharacteristicSort.CHARACTERISTIC_SORT_MCM));
 	}
 
 	private void retrievePort(Port port) throws ObjectNotFoundException, RetrieveObjectException{

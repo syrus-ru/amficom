@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.12 2004/08/11 14:48:33 arseniy Exp $
+ * $Id: ServerDatabase.java,v 1.13 2004/08/18 08:46:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,11 +23,12 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/08/11 14:48:33 $
+ * @version $Revision: 1.13 $, $Date: 2004/08/18 08:46:04 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -51,7 +52,8 @@ public class ServerDatabase extends StorableObjectDatabase {
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Server server = this.fromStorableObject(storableObject);
-		this.retrieveServer(server);	
+		this.retrieveServer(server);
+		server.setCharacteristics(CharacteristicDatabase.retrieveCharacteristics(server.getId(), CharacteristicSort.CHARACTERISTIC_SORT_SERVER));
 	}
 
 	private void retrieveServer(Server server) throws ObjectNotFoundException, RetrieveObjectException {

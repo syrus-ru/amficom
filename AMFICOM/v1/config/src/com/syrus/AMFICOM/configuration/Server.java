@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.9 2004/08/11 14:48:33 arseniy Exp $
+ * $Id: Server.java,v 1.10 2004/08/18 08:46:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Server_Transferable;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/08/11 14:48:33 $
+ * @version $Revision: 1.10 $, $Date: 2004/08/18 08:46:04 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -33,7 +33,7 @@ public class Server extends DomainMember implements Characterized {
 	private String name;
 	private String description;
 	private Identifier userId;
-	private List characteristicIds;
+	private List characteristics;
 
 	private StorableObjectDatabase serverDatabase;
 
@@ -60,10 +60,6 @@ public class Server extends DomainMember implements Characterized {
 		this.description = new String(st.description);
 		this.userId = new Identifier(st.user_id);
 
-		this.characteristicIds = new ArrayList(st.characteristic_ids.length);
-		for (int i = 0; i < st.characteristic_ids.length; i++)
-			this.characteristicIds.add(new Identifier(st.characteristic_ids[i]));
-
 		this.serverDatabase = ConfigurationDatabaseContext.serverDatabase;
 		try {
 			this.serverDatabase.insert(this);
@@ -71,6 +67,10 @@ public class Server extends DomainMember implements Characterized {
 		catch (IllegalDataException ide) {
 			throw new CreateObjectException(ide.getMessage(), ide);
 		}
+
+		this.characteristics = new ArrayList(st.characteristic_ids.length);
+		for (int i = 0; i < st.characteristic_ids.length; i++)
+			this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(st.characteristic_ids[i]), true));
 	}
 
 	private Server(Identifier id,
@@ -89,15 +89,15 @@ public class Server extends DomainMember implements Characterized {
 		this.description = description;
 		this.userId = userId;
 
-		this.characteristicIds = new ArrayList();
+		this.characteristics = new ArrayList();
 	}
 
 	public Object getTransferable() {
 		int i = 0;
 
-		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristicIds.size()];
-		for (Iterator iterator = this.characteristicIds.iterator(); iterator.hasNext();)
-			charIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
+		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
+		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
+			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
 
 		return new Server_Transferable((Identifier_Transferable)super.id.getTransferable(),
 																	 super.created.getTime(),
@@ -132,12 +132,12 @@ public class Server extends DomainMember implements Characterized {
 		return this.userId;
 	}
 
-	public List getCharacteristicIds() {
-		return this.characteristicIds;
+	public List getCharacteristics() {
+		return this.characteristics;
 	}
 
-	public void setCharacteristicIds(List characteristicIds) {
-		this.characteristicIds = characteristicIds;
+	public void setCharacteristics(List characteristics) {
+		this.characteristics = characteristics;
 	}
 	
 	public static Server createInstance(Identifier id,

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.9 2004/08/16 09:02:05 bob Exp $
+ * $Id: TransmissionPath.java,v 1.10 2004/08/18 08:46:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 /**
- * @version $Revision: 1.9 $, $Date: 2004/08/16 09:02:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2004/08/18 08:46:04 $
+ * @author $Author: arseniy $
  * @module configuration_v1
  */
 
@@ -31,7 +31,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 	protected static final int		UPDATE_ATTACH_ME	= 1;
 	protected static final int		UPDATE_DETACH_ME	= 2;
 	
-	private List characteristicIds;
+	private List characteristics;
 	private String name;
 	private String description;	
 	private Identifier startPortId;
@@ -69,7 +69,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 		this.startPortId = startPortId;
 		this.finishPortId = finishPortId;
 		
-		this.characteristicIds = new ArrayList();
+		this.characteristics = new ArrayList();
 		super.monitoredElementIds = new ArrayList();
 	}
 	
@@ -124,6 +124,10 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 		catch (IllegalDataException ide) {
 			throw new CreateObjectException(ide.getMessage(), ide);
 		}
+
+		this.characteristics = new ArrayList(tpt.characteristic_ids.length);
+		for (int i = 0; i < tpt.characteristic_ids.length; i++)
+			this.characteristics.add(ConfigurationStorableObjectPool.getStorableObject(new Identifier(tpt.characteristic_ids[i]), true));
 	}
 	
 	public Object getTransferable() {
@@ -134,9 +138,9 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 			meIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 
 		i = 0;		
-		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristicIds.size()];
-		for (Iterator iterator = this.characteristicIds.iterator(); iterator.hasNext();)
-			charIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();		
+		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
+		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
+			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
 		
 
 		return new TransmissionPath_Transferable((Identifier_Transferable)super.id.getTransferable(),
@@ -169,15 +173,15 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 		return this.startPortId;
 	}
 
-	public List getCharacteristicIds() {
-		return this.characteristicIds;
+	public List getCharacteristics() {
+		return this.characteristics;
 	}
 	
 	/**
 	 * @param characteristicIds The characteristicIds to set.
 	 */
-	public void setCharacteristicIds(List characteristicIds) {
-		this.characteristicIds = characteristicIds;
+	public void setCharacteristics(List characteristics) {
+		this.characteristics = characteristics;
 	}
 	
 	protected synchronized void setAttributes(Date created,
