@@ -1,9 +1,0 @@
-src/com/syrus/AMFICOM/filter/ElementsActiveZone_yo.java
-src/com/syrus/AMFICOM/filter/Filter.java
-src/com/syrus/AMFICOM/filter/FilterExpression_yo.java
-src/com/syrus/AMFICOM/filter/FilterExpressionInterface.java
-src/com/syrus/AMFICOM/filter/FilterTreeNodeHolder.java
-src/com/syrus/AMFICOM/filter/FinishedLink_yo.java
-src/com/syrus/AMFICOM/filter/LogicScheme_yo.java
-src/com/syrus/AMFICOM/filter/LogicSchemeElement_yo.java
-src/com/syrus/AMFICOM/filter/ProSchemeElement_yo.java
