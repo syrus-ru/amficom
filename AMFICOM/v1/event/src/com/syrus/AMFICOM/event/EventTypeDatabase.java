@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.15 2005/02/28 14:12:41 bob Exp $
+ * $Id: EventTypeDatabase.java,v 1.16 2005/03/01 16:44:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/02/28 14:12:41 $
- * @author $Author: bob $
+ * @version $Revision: 1.16 $, $Date: 2005/03/01 16:44:09 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 
@@ -163,7 +163,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 			}
 		}
 
-		((ArrayList)parTyps).trimToSize();
+		((ArrayList) parTyps).trimToSize();
 		eventType.setParameterTypes(parTyps);
 	}
 
