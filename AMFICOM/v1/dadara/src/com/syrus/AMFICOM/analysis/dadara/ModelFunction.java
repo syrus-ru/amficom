@@ -20,7 +20,7 @@ import java.io.*;
  * <p>Should be constructed as one of three AMFICOM-specific simple functions.
  * The modelling function will probably change when fit() will be called.</p>
  *
- * @version $Revision: 1.12 $, $Date: 2005/03/05 11:07:17 $
+ * @version $Revision: 1.13 $, $Date: 2005/03/15 13:41:37 $
  * @author $Author: saa $
  * @module analysis_v1
  */
@@ -424,6 +424,23 @@ public class ModelFunction {
 		dos.writeInt(pars.length);
 		for (int i = 0; i < pars.length; i++)
 			dos.writeDouble(pars[i]);
+	}
+
+	public byte[] toByteArray()
+	{
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		DataOutputStream dos = new DataOutputStream(baos);
+		try
+		{
+			writeToDOS(dos);
+			dos.close();
+			return baos.toByteArray();
+		} catch (IOException e)
+		{
+			System.out.println("IOException caught: " + e);
+			e.printStackTrace();
+			return new byte[0]; //null // XXX
+		}
 	}
 
 	public static ModelFunction createFromDIS(DataInputStream dis) throws IOException {
