@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElement.java,v 1.12 2004/09/28 07:58:37 krupenn Exp $
+ * $Id: MapPhysicalNodeElement.java,v 1.13 2004/10/05 12:29:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2004/09/28 07:58:37 $
+ * @version $Revision: 1.13 $, $Date: 2004/10/05 12:29:12 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -206,7 +206,7 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 	 */
 	public void updateLocalFromTransferable()
 	{
-		this.map = (Map)Pool.get(com.syrus.AMFICOM.Client.Resource.Map.Map.typ, this.mapId);
+		this.map = (Map)Pool.get(Map.typ, this.mapId);
 	}
 
 	public Object getTransferable()

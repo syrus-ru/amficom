@@ -27,10 +27,10 @@ public class MapPipePathElement extends MapLinkElement
 
 	protected MapPipePathElement_Transferable transferable;
 
-	public static final String COLUMN_ID = "";	
-	public static final String COLUMN_NAME = "";	
-	public static final String COLUMN_DESCRIPTION = "";	
-	public static final String COLUMN_LINKS = "";	
+	public static final String COLUMN_ID = "id";	
+	public static final String COLUMN_NAME = "name";	
+	public static final String COLUMN_DESCRIPTION = "description";	
+	public static final String COLUMN_LINKS = "links";	
 
 	protected List physicalLinkIds = new ArrayList();
 
@@ -51,11 +51,11 @@ public class MapPipePathElement extends MapLinkElement
 		exportColumns[0][1] = getId();
 		exportColumns[1][1] = getName();
 		exportColumns[2][1] = getDescription();
-		exportColumns[4][1] = "";
+		exportColumns[3][1] = "";
 		for(Iterator it = getLinks().iterator(); it.hasNext();)
 		{
 			MapPhysicalLinkElement mple = (MapPhysicalLinkElement )it.next();
-			exportColumns[4][1] += mple.getId() + " ";
+			exportColumns[3][1] += mple.getId() + " ";
 		}
 
 		return exportColumns;
@@ -150,6 +150,19 @@ public class MapPipePathElement extends MapLinkElement
 		}
 
 		return mppe;
+	}
+
+	/**
+	 * »спользуетс€ дл€ дл€ загрузки класса из базы данных
+	 */
+	public void updateLocalFromTransferable()
+	{
+		this.map = (Map )Pool.get(Map.typ, this.mapId);
+		for(Iterator it = physicalLinkIds.iterator(); it.hasNext();)
+		{
+			String pli = (String )it.next();
+			links.add(Pool.get(MapPhysicalLinkElement.typ, pli));
+		}
 	}
 
 	public boolean isVisible(Rectangle2D.Double visibleBounds)

@@ -41,4 +41,3 @@ src\com\syrus\AMFICOM\Client\Resource\Map\MapPhysicalNodeElementState.java
 src\com\syrus\AMFICOM\Client\Resource\Map\MapPipePathElement.java
 src\com\syrus\AMFICOM\Client\Resource\Map\MapSiteNodeElement.java
 src\com\syrus\AMFICOM\Client\Resource\Map\MapSiteNodeElementState.java
-src\com\syrus\AMFICOM\Client\Resource\Map\VoidMapElement.java
