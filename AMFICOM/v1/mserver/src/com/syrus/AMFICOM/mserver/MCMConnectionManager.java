@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConnectionManager.java,v 1.1 2005/04/01 09:39:07 arseniy Exp $
+ * $Id: MCMConnectionManager.java,v 1.2 2005/04/02 17:12:17 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.mcm.corba.MCMHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/01 09:39:07 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/02 17:12:17 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -51,6 +51,7 @@ public class MCMConnectionManager extends Thread {
 		this.mcmCheckTimeout = mcmCheckTimeout;
 
 		this.mcmIds = Collections.synchronizedSet(new HashSet());
+		this.retrieveMCMIds();
 		this.mcmRefsMap = Collections.synchronizedMap(new HashMap());
 		this.disconnectedMCMIds = Collections.synchronizedSet(new HashSet());
 	}
