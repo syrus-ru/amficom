@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.63 2004/11/02 15:28:21 bob Exp $
+ * $Id: CMServerImpl.java,v 1.64 2004/11/03 17:15:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -116,7 +116,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2004/11/02 15:28:21 $
+ * @version $Revision: 1.64 $, $Date: 2004/11/03 17:15:37 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -3769,7 +3769,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 for (int i = 0; i < identifier_Transferables.length; i++)
                     idsList.add(new Identifier(identifier_Transferables[i]));
 
-                list = MeasurementStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.ANALYSISTYPE_ENTITY_CODE), idsList, true);
+                list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, getDomainCondition(domain, ObjectEntities.ANALYSISTYPE_ENTITY_CODE), true);
             } else
                 list = MeasurementStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.ANALYSISTYPE_ENTITY_CODE), true);
 
@@ -4081,7 +4081,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
                 for (int i = 0; i < identifier_Transferables.length; i++)
                     idsList.add(new Identifier(identifier_Transferables[i]));
 
-                list = MeasurementStorableObjectPool.getStorableObjectsButIds(new Short(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE),idsList, true);
+                list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, getDomainCondition(domain, ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE), true);
 
             } else
                 list = MeasurementStorableObjectPool.getStorableObjectsByCondition(getDomainCondition(domain, ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE), true);
