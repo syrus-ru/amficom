@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeWrapper.java,v 1.5 2005/02/08 11:11:47 max Exp $
+ * $Id: AnalysisTypeWrapper.java,v 1.6 2005/02/14 11:16:45 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,28 +16,25 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/08 11:11:47 $
- * @author $Author: max $
+ * @version $Revision: 1.6 $, $Date: 2005/02/14 11:16:45 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class AnalysisTypeWrapper implements StorableObjectWrapper {
 
-	public static final String			MODE_IN				= "IN";
-	public static final String			MODE_CRITERION		= "CRI";
-	public static final String			MODE_ETALON			= "ETA";
-	public static final String			MODE_OUT			= "OUT";
+	public static final String MODE_IN = "IN";
+	public static final String MODE_CRITERION = "CRI";
+	public static final String MODE_ETALON = "ETA";
+	public static final String MODE_OUT = "OUT";
+	public static final String LINK_COLUMN_ANALYSIS_TYPE_ID = "analysis_type_id";
 
 	private static AnalysisTypeWrapper	instance;
 
 	private List						keys;
-	
-	public static final String PARAMETER_TYPE_ID = "parameter_type_id";
-	public static final String PARAMETER_MODE = "parameter_mode";
 
 	private AnalysisTypeWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, MODE_IN, MODE_OUT, MODE_CRITERION,
-				MODE_ETALON};
+		String[] keysArray = new String[] {COLUMN_CODENAME, COLUMN_DESCRIPTION, MODE_IN, MODE_OUT, MODE_CRITERION, MODE_ETALON};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}

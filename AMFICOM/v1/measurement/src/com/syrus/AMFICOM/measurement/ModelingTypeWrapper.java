@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeWrapper.java,v 1.3 2005/02/03 08:36:47 bob Exp $
+ * $Id: ModelingTypeWrapper.java,v 1.4 2005/02/14 11:16:45 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,15 +16,15 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/03 08:36:47 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/02/14 11:16:45 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class ModelingTypeWrapper implements StorableObjectWrapper {
 
-	public static final String			MODE_IN				= "IN";
-	public static final String			MODE_OUT			= "OUT";
-	public static final String			PARAMETER_TYPE_ID	= "parameter_type_id";
+	public static final String MODE_IN = "IN";
+	public static final String MODE_OUT = "OUT";
+	public static final String LINK_COLUMN_MODELING_TYPE_ID = "modeling_type_id";
 
 	private static ModelingTypeWrapper	instance;
 
