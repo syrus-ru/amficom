@@ -140,3 +140,4 @@ public class ElementaryTestModel extends ObjectResourceModel {
 		return getColumnRenderer(col_id);
 	}
 }
+

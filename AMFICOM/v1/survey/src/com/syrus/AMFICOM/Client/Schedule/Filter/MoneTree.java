@@ -34,3 +34,4 @@ public class MoneTree extends FilterTree
 		tree = new JTree(myModel);
 	}
 }
+

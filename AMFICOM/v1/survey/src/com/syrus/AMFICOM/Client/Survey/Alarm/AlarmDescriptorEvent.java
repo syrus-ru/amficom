@@ -115,3 +115,4 @@ public class AlarmDescriptorEvent extends StubResource
 		return tpd;
 	}
 }
+

@@ -20,3 +20,4 @@ public class DefaultResultApplicationModelFactory
 		return aModel;
 	}
 }
+

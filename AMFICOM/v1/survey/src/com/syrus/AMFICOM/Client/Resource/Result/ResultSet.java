@@ -312,3 +312,4 @@ class ResultSetTimeSorter extends ObjectResourceSorter {
 		return "";
 	}
 }
+

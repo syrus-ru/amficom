@@ -389,3 +389,4 @@ public class TestType extends ObjectResource implements Serializable {
 		out.writeLong(modified);
 	}
 }
+

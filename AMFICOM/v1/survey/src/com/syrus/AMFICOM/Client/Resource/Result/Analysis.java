@@ -479,3 +479,4 @@ public class Analysis extends ObjectResource implements Serializable {
 		this.changed = false;
 	}
 }
+

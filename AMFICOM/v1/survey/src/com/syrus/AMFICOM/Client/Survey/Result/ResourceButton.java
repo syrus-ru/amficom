@@ -28,3 +28,4 @@ public class ResourceButton extends JButton implements ActionListener
 	{
 	}
 }
+

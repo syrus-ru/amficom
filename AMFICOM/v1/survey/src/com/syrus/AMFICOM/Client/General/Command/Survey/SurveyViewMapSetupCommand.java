@@ -64,3 +64,4 @@ public class SurveyViewMapSetupCommand extends VoidCommand
 	}
 
 }
+

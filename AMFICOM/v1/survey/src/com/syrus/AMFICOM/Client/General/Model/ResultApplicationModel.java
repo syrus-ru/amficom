@@ -28,3 +28,4 @@ public class ResultApplicationModel extends ApplicationModel
 		return null;
 	}
 }
+

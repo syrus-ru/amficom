@@ -250,3 +250,4 @@ public class SurveyReportsTreeModel extends ObjectResourceTreeModel
 		return true;
 	}
 }
+

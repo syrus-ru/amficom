@@ -588,3 +588,4 @@ public class AlarmFrame extends JInternalFrame
 		}
 	}
 }
+

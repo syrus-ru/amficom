@@ -115,3 +115,4 @@ public class EventSource extends ObjectResource implements Serializable
 		updateLocalFromTransferable();
 	}
 }
+

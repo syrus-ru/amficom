@@ -136,3 +136,4 @@ public class SystemEvent extends ObjectResource implements Serializable
 		updateLocalFromTransferable();
 	}
 }
+

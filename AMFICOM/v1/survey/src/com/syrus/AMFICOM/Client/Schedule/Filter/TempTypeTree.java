@@ -28,3 +28,4 @@ public class TempTypeTree extends FilterTree
 		tree = new JTree(myModel);
 	}
 }
+

@@ -53,3 +53,4 @@ public class MapCloseCommand extends VoidCommand
 	}
 
 }
+

@@ -108,3 +108,4 @@ public class OpenResultsCommand extends VoidCommand
 	}
 
 }
+

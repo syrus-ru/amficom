@@ -26,3 +26,4 @@ public class AlarmTree extends FilterTree
 		tree = new JTree(myModel);
 	}
 }
+

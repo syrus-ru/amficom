@@ -64,3 +64,4 @@ public class AlarmDisplayModel extends StubDisplayModel
 		return super.getColumnColor(or, col_id);
 	}
 }
+

@@ -35,3 +35,4 @@ public class AnalysisModel extends ObjectResourceModel {
 		return s;
 	}
 }
+

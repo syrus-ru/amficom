@@ -13,3 +13,4 @@ public class ResultApplicationModelFactory
 		return aModel;
 	}
 }
+

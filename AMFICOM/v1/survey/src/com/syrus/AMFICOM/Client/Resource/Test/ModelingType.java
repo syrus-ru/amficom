@@ -325,3 +325,4 @@ public class ModelingType extends ObjectResource implements Serializable {
 		out.writeLong(modified);
 	}
 }
+

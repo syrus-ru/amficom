@@ -31,3 +31,4 @@ public class TestTypeTree extends FilterTree
 		tree = new JTree(myModel);
 	}
 }
+

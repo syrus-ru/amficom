@@ -70,3 +70,4 @@ public class KISTree extends FilterTree
 		tree = new JTree(myModel);
 	}
 }
+

@@ -28,3 +28,4 @@ public class StatusTree extends FilterTree
 		tree = new JTree(myModel);
 	}
 }
+

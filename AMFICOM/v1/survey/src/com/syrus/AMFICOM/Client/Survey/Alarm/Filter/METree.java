@@ -47,3 +47,4 @@ public class METree extends FilterTree
 		tree = new JTree(myModel);
 	}
 }
+

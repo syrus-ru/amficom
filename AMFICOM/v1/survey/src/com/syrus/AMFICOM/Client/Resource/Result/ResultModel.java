@@ -66,3 +66,4 @@ public class ResultModel extends ObjectResourceModel {
 	}
 
 }
+

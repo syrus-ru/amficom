@@ -338,3 +338,4 @@ public class GlobalParameterType extends ObjectResource implements Serializable 
 		this.changed = false;
 	}
 }
+

@@ -69,3 +69,4 @@ public class AlarmModel extends ObjectResourceModel
 		return s;
 	}
 }
+

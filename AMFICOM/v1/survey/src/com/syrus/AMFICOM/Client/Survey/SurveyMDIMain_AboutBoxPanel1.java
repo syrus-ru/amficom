@@ -52,4 +52,3 @@ public class SurveyMDIMain_AboutBoxPanel1 extends JPanel
 	}
 }
 
- 

@@ -99,3 +99,4 @@ public class OpenAnalysisCommand extends VoidCommand
 */
 	}
 }
+

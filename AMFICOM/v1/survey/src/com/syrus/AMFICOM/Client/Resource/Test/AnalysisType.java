@@ -433,3 +433,4 @@ public class AnalysisType extends ObjectResource implements Serializable {
 		out.writeLong(modified);
 	}
 }
+

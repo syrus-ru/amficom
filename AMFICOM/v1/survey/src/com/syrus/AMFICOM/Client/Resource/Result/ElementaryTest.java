@@ -114,3 +114,4 @@ public class ElementaryTest extends StubResource {
 		return new ElementaryTestModel(this);
 	}
 }
+

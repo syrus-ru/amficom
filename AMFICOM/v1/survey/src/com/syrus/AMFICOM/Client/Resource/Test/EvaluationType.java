@@ -469,3 +469,4 @@ public class EvaluationType extends ObjectResource implements Serializable {
 		out.writeLong(this.modified);
 	}
 }
+

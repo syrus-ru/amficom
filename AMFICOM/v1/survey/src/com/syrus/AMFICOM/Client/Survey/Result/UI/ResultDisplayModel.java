@@ -32,3 +32,4 @@ public class ResultDisplayModel extends StubDisplayModel
 	}
 
 }
+

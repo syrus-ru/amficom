@@ -60,3 +60,4 @@ public class ResultSetModel extends ObjectResourceModel {
 		return getColumnRenderer(colId);
 	}
 }
+

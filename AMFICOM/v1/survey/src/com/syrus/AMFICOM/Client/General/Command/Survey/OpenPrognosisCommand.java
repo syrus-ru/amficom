@@ -89,3 +89,4 @@ public class OpenPrognosisCommand extends VoidCommand
 */
 	}
 }
+

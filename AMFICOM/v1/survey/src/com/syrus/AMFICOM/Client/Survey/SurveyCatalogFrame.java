@@ -112,3 +112,4 @@ public class SurveyCatalogFrame extends ObjectResourceCatalogFrame
 		}
 	}
 }
+

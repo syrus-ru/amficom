@@ -41,3 +41,4 @@ public interface ConstStorage {
 	final String			SYS_DOMAIN					= "sysdomain";
 
 }
+

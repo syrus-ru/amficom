@@ -170,3 +170,4 @@ public class ActionParameterType extends ObjectResource implements Serializable 
 		this.changed = false;
 	}
 }
+

@@ -648,7 +648,8 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 				for (int j = ep[i].begin; j <= ep[i].end && j < n; j++)
 					y[j] = ep[i].refAmpl(j)[0];
 			}
-			y = com.syrus.AMFICOM.Client.Analysis.MathRef.correctReflectogramm(y);
+//			y = com.syrus.AMFICOM.Client.Analysis.MathRef.correctReflectogramm(y);
+			y = com.syrus.AMFICOM.analysis.dadara.MathRef.correctReflectogramm(y);
 
 			if (test != null)
 			{
@@ -703,8 +704,8 @@ public class ResultFrame extends JInternalFrame implements OperationListener
 
 		for (int i = 0; i < bs.dataPts.TPS[0]; i++)
 			y[i] = (double)(65535 - bs.dataPts.DSF[0][i])/1000d;
-		y = com.syrus.AMFICOM.Client.Analysis.MathRef.correctReflectogramm(y);
-
+//		y = com.syrus.AMFICOM.Client.Analysis.MathRef.correctReflectogramm(y);
+		y = com.syrus.AMFICOM.analysis.dadara.MathRef.correctReflectogramm(y);
 		if (test != null)
 		{
 			dataSource.loadTestSetup(test.test_setup_id);

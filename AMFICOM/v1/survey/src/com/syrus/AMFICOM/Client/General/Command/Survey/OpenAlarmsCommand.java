@@ -98,3 +98,4 @@ public class OpenAlarmsCommand extends VoidCommand
 	}
 
 }
+

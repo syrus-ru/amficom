@@ -39,3 +39,4 @@ public class SurveyViewAllCommand extends VoidCommand
 		}
 	}
 }
+
