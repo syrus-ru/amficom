@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.10 2004/08/06 14:57:59 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.11 2004/08/09 07:39:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -26,12 +29,13 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/08/06 14:57:59 $
+ * @version $Revision: 1.11 $, $Date: 2004/08/09 07:39:57 $
  * @author $Author: bob $
  * @module configuration_v1
  */
 
 public class EquipmentDatabase extends StorableObjectDatabase {
+	// table :: Equipment
 	 // description VARCHAR2(256),
     public static final String COLUMN_DESCRIPTION   = "description";
     // domain_id Identifier,
@@ -46,6 +50,13 @@ public class EquipmentDatabase extends StorableObjectDatabase {
     public static final String COLUMN_SORT  = "sort";
     // type_id Identifier NOT NULL,
     public static final String COLUMN_TYPE_ID       = "type_id";
+    
+    // table :: EquipmentMELink
+    // equipment_id Identifier,
+    public static final String LINK_COLUMN_EQUIPMENT_ID  = "equipment_id";
+    // monitored_element_id Identifier,
+    public static final String LINK_COLUMN_MONITORED_ELEMENT_ID  = "monitored_element_id";
+
 
 	
 	private Equipment fromStorableObject(StorableObject storableObject) throws IllegalDataException {
@@ -57,6 +68,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Equipment eq = this.fromStorableObject(storableObject);
 		this.retrieveEquipment(eq);
+		this.retrieveEquipmentMELink(eq);
 	}
 
 	private void retrieveEquipment(Equipment equipment) throws ObjectNotFoundException, RetrieveObjectException{
@@ -160,6 +172,59 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		}
 	}
 
+	
+	private void retrieveEquipmentMELink(Equipment equipment) throws RetrieveObjectException{
+		String sql;
+		String eqIdStr = equipment.getId().toSQLString();
+		{
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(StorableObjectDatabase.SQL_SELECT);		
+		buffer.append(LINK_COLUMN_MONITORED_ELEMENT_ID);
+		buffer.append(StorableObjectDatabase.SQL_FROM);
+		buffer.append(ObjectEntities.EQUIPMENTMELINK_ENTITY);
+		buffer.append(StorableObjectDatabase.SQL_WHERE);
+		buffer.append(LINK_COLUMN_EQUIPMENT_ID);
+		buffer.append(StorableObjectDatabase.EQUALS);
+		buffer.append(eqIdStr);
+		sql = buffer.toString();
+		}
+		
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("EquipmentDatabase.retrieveEquipmentMELink | Trying: " + sql, Log.DEBUGLEVEL05);
+			resultSet = statement.executeQuery(sql);
+			List meLink = new ArrayList();
+			while (resultSet.next()) {				
+				/**
+				* @todo when change DB Identifier model ,change getString() to getLong()
+				*/
+				Identifier meId = new Identifier(resultSet.getString(LINK_COLUMN_MONITORED_ELEMENT_ID));
+				meLink.add(meId);				
+			}
+			equipment.setMonitoredElementIds(meLink);
+		}
+		catch (SQLException sqle) {
+			String mesg = "EquipmentDatabase.retrieveEquipmentMELink | Cannot retrieve equipment " + eqIdStr;
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+	}
+
+	
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Equipment equipment = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
@@ -170,13 +235,26 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		Equipment equipment = this.fromStorableObject(storableObject);
+		
 		try {
-			this.insertEquipment(equipment);			
-		}
-		catch (CreateObjectException e) {
-			this.delete(equipment);
+			this.insertEquipment(equipment);	
+			this.insertEquipmentMELinks(equipment);
+		} catch (CreateObjectException e) {
+			try {
+				connection.rollback();
+			} catch (SQLException sqle) {
+				Log.errorMessage("Exception in rolling back");
+				Log.errorException(sqle);
+			}
 			throw e;
 		}
+		try {
+			connection.commit();
+		} catch (SQLException sqle) {
+			Log.errorMessage("Exception in commiting");
+			Log.errorException(sqle);
+		}
+		
 	}
 
 	private void insertEquipment(Equipment equipment) throws CreateObjectException {
@@ -300,13 +378,176 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 			}
 		}
 	}
+	
+	private void insertEquipmentMELinks(Equipment equipment)	throws CreateObjectException {
+		/**
+		 * @todo when change DB Identifier model ,change String to long
+		 */
+		String eqIdCode = equipment.getId().getCode();
+		List meIds = equipment.getMonitoredElementIds();
+		String sql = SQL_INSERT_INTO 
+					+ ObjectEntities.MSMELINK_ENTITY
+					+ OPEN_BRACKET
+					+ LINK_COLUMN_EQUIPMENT_ID 
+					+ COMMA 
+					+ LINK_COLUMN_MONITORED_ELEMENT_ID
+					+ CLOSE_BRACKET
+					+ SQL_VALUES
+					+ OPEN_BRACKET
+					+ QUESTION
+					+ COMMA
+					+ QUESTION
+					+ CLOSE_BRACKET;
+		PreparedStatement preparedStatement = null;
+		/**
+		 * @todo when change DB Identifier model ,change String to long
+		 */
+		String meIdCode = null;
+		try {
+			preparedStatement = connection.prepareStatement(sql);
+			for (Iterator iterator = meIds.iterator(); iterator.hasNext();) {
+				/**
+				 * @todo when change DB Identifier model ,change setString() to
+				 *       setLong()
+				 */
+				preparedStatement.setString(1, eqIdCode);
+				meIdCode = ((Identifier) iterator.next()).getCode();
+				/**
+				 * @todo when change DB Identifier model ,change setString() to
+				 *       setLong()
+				 */
+				preparedStatement.setString(2, meIdCode);
+				Log.debugMessage("EquipmentDatabase.insertEquipmentMELinks | Inserting link for equipment "
+								+ eqIdCode
+								+ " and monitored element "
+								+ meIdCode, Log.DEBUGLEVEL05);
+				preparedStatement.executeUpdate();
+			}
+		}
+		catch (SQLException sqle) {
+			String mesg = "EquipmentDatabase.insertEquipmentMELinks | Cannot insert link for monitored element "
+							+ meIdCode + " and Equipment " + eqIdCode;
+			throw new CreateObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (preparedStatement != null)
+					preparedStatement.close();
+				preparedStatement = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+	}
+
+	
+	private void createMEAttachment(Equipment equipment,
+									Identifier monitoredElementId) throws UpdateObjectException {
+		String eqIdStr = equipment.getId().toSQLString();
+		String meIdStr = monitoredElementId.toSQLString();
+		String sql = SQL_INSERT_INTO + ObjectEntities.EQUIPMENTMELINK_ENTITY
+			+ OPEN_BRACKET
+			+ LINK_COLUMN_EQUIPMENT_ID
+			+ COMMA
+			+ LINK_COLUMN_MONITORED_ELEMENT_ID
+			+ CLOSE_BRACKET
+			+ SQL_VALUES
+			+ OPEN_BRACKET				
+			+ eqIdStr 
+			+ COMMA 
+			+ meIdStr 
+			+ CLOSE_BRACKET;
+		Statement statement = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("EquipmentDatabase.createMEAttachment | Trying: " + sql, Log.DEBUGLEVEL05);
+			statement.executeUpdate(sql);
+		}
+		catch (SQLException sqle) {
+			String mesg = "EquipmentDatabase.createMEAttachment | Cannot attach equipment "
+				+ eqIdStr + " to monitored element " + meIdStr;
+			throw new UpdateObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				statement = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+	}
+
+	private void deleteMEAttachment(Equipment equipment,
+									Identifier monitoredElementId) throws IllegalDataException {
+		String eqIdStr = equipment.getId().toSQLString();
+		String meIdStr = monitoredElementId.toSQLString();
+		String sql = SQL_DELETE_FROM 
+					+ ObjectEntities.EQUIPMENTMELINK_ENTITY
+					+ SQL_WHERE
+					+ LINK_COLUMN_EQUIPMENT_ID 
+					+ EQUALS 
+					+ eqIdStr
+					+ SQL_AND
+					+ LINK_COLUMN_MONITORED_ELEMENT_ID
+					+ EQUALS 
+					+ meIdStr;
+		Statement statement = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("EquipmentDatabase.deleteMEAttachment | Trying: " + sql, Log.DEBUGLEVEL05);
+			statement.executeUpdate(sql);
+		}
+		catch (SQLException sqle) {
+			String mesg = "EquipmentDatabase.deleteMEAttachment | Cannot detach equipment "
+				+ eqIdStr + " from monitored element " + meIdStr;
+			throw new IllegalDataException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				statement = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+	}
 
 
 	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, UpdateObjectException {
 		Equipment equipment = this.fromStorableObject(storableObject);
-		switch (updateKind) {			
-			default:
-				return;
+		try {
+			switch (updateKind) {
+				case Equipment.UPDATE_ATTACH_ME:
+					this.createMEAttachment(equipment, (Identifier) obj);
+					this.setModified(equipment);
+					break;
+				case Equipment.UPDATE_DETACH_ME:
+					this.deleteMEAttachment(equipment, (Identifier) obj);
+					this.setModified(equipment);
+					break;
+				default:
+					return;
+			}
+		} catch (UpdateObjectException e) {
+			try {
+				connection.rollback();
+			} catch (SQLException sqle) {
+				Log.errorMessage("Exception in rolling back");
+				Log.errorException(sqle);
+			}
+			throw e;
+		}
+		try {
+			connection.commit();
+		} catch (SQLException sqle) {
+			Log.errorMessage("Exception in commiting");
+			Log.errorException(sqle);
 		}
 	}
 
