@@ -34,6 +34,25 @@ public class ReflectogramMath
 	{
 		return yArr[getArrayMinIndex(yArr, 0, yArr.length - 1)];
 	}
+	
+	public static void updateMinArray(double[] acc, double[] arg)
+	{
+		int len = Math.min(acc.length, arg.length);
+		for (int i = 0; i < len; i++)
+		{
+			if (acc[i] > arg[i])
+				acc[i] = arg[i];
+		}
+	}
+	public static void updateMaxArray(double[] acc, double[] arg)
+	{
+		int len = Math.min(acc.length, arg.length);
+		for (int i = 0; i < len; i++)
+		{
+			if (acc[i] < arg[i])
+				acc[i] = arg[i];
+		}
+	}
 /*
 	public static double[] getReflectogrammFromEvents(ReflectogramEvent[] re, int arrayLength)
 	{

@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.24 2005/03/24 08:41:03 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.25 2005/03/24 13:25:32 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,10 +9,11 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.24 $, $Date: 2005/03/24 08:41:03 $
+ * @version $Revision: 1.25 $, $Date: 2005/03/24 13:25:32 $
  * @module
  */
 
+import java.util.Iterator;
 import java.util.Map;
 
 import com.syrus.io.BellcoreStructure;
@@ -207,8 +208,27 @@ public class CoreAnalysisManager
 	}
 
 	/**
+	 * Проверяет параметры для анализа.
+	 * @param pars проверяемые параметры
+	 * @return true, если набор корректен, false, если набор некорректен
+	 */
+	public static boolean checkAnalysisParameters(double[] pars)
+	{
+		if (pars.length < 3)
+			return false;
+		if (pars[0] < 0.01) // minThreshold
+			return false;
+		if (pars[1] < pars[0]) // minSplice
+			return false;
+		if (pars[2] < pars[1]) // minReflective
+			return false;
+		return true;
+	}
+
+	/**
 	 * Делает анализ. Скрывает сложности, связанные с правильным
 	 * порядком вызова IA, fit, calcMutualParameters и выставлением нач. порогов.
+	 * @todo: declare to throw "invalid parameters exception"
 	 * 
 	 * @param strategy степень аппроксимации. Недокументировано.
 	 * @param bs рефлектограмма
@@ -278,14 +298,35 @@ public class CoreAnalysisManager
 
 		// теперь формируем пороги
 		// FIXME: testing...
-		mtm.updateUpperThreshToContain(y);
-		mtm.updateLowerThreshToContain(y);
+		updateMTMThresholdsByBSMap(mtm, bellcoreTraces);
 		// @todo: добавить запас к порогам - и по DX, и по DY
 
 		long t5 = System.currentTimeMillis();
 		System.out.println("makeAnalysis: getDataAndLength: " + (t1-t0) + "; noiseArray:" + (t2-t1) + "; IA: " + (t3-t2) + "; fit: " + (t4-t3) + "; postProcess: " + (t5-t4));
 
 		return mtm;
+	}
+
+	/**
+	 * @param mtm
+	 * @param bellcoreTraces
+	 */
+	private static void updateMTMThresholdsByBSMap(ModelTraceManager mtm, Map bellcoreTraces)
+	{
+		double[] yBase = mtm.getModelTrace().getYArray();
+		double[] yMax = new double[yBase.length];
+		double[] yMin = new double[yBase.length];
+		System.arraycopy(yBase, 0, yMax, 0, yBase.length);
+		System.arraycopy(yBase, 0, yMin, 0, yBase.length);
+		for (Iterator it = bellcoreTraces.keySet().iterator(); it.hasNext(); )
+		{
+			BellcoreStructure bs = (BellcoreStructure )(bellcoreTraces.get(it.next()));
+			double[] y = bs.getTraceData();
+			ReflectogramMath.updateMaxArray(yMax, y);
+			ReflectogramMath.updateMinArray(yMin, y);
+		}
+		mtm.updateUpperThreshToContain(yMax);
+		mtm.updateLowerThreshToContain(yMin);
 	}
 
 	/**
