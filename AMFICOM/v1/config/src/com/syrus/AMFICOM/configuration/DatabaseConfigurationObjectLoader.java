@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConfigurationObjectLoader.java,v 1.17 2004/11/17 11:12:26 max Exp $
+ * $Id: DatabaseConfigurationObjectLoader.java,v 1.18 2004/11/18 12:10:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,14 +9,13 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -27,8 +26,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/11/17 11:12:26 $
- * @author $Author: max $
+ * @version $Revision: 1.18 $, $Date: 2004/11/18 12:10:59 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -1218,77 +1217,84 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	}
 
 	public Set refresh(Set storableObjects) throws CommunicationException, DatabaseException {
-		List soIds = new ArrayList();
-        short entityCode = 0;
-        for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-			StorableObject so = (StorableObject) it.next();
-            soIds.add(so.getId());		
-		}
-        for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-			StorableObject so = (StorableObject) it.next();            
-			so.getId().getMajor();
-		}
-        List loadedSo = null;
+		if (storableObjects.isEmpty())
+			return Collections.EMPTY_SET;
+		
+        short entityCode = ((StorableObject) storableObjects.iterator().next()).getId().getMajor();
+        
+        StorableObjectDatabase database = null;
         try {
             switch (entityCode) {
                 case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
-                    loadedSo = loadCharacteristicTypes(soIds);
+                	database = ConfigurationDatabaseContext.getCharacteristicTypeDatabase();
                     break;
                 case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
-                    loadedSo = loadEquipmentTypes(soIds);
+                	database = ConfigurationDatabaseContext.getEquipmentTypeDatabase();
                     break;
                 case ObjectEntities.KISTYPE_ENTITY_CODE:
-                    loadedSo = loadKISTypes(soIds);
+                	database = ConfigurationDatabaseContext.getKISTypeDatabase();
                     break;
                 case ObjectEntities.PORTTYPE_ENTITY_CODE:
-                    loadedSo = loadPortTypes(soIds);
+                	database = ConfigurationDatabaseContext.getPortTypeDatabase();
+                    break;
+                case ObjectEntities.LINKTYPE_ENTITY_CODE:
+                	database = ConfigurationDatabaseContext.getLinkTypeDatabase();
                     break;
                 case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
-                    loadedSo = loadMeasurementPortTypes(soIds);
+                	database = ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
                     break;
                 case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-                    loadedSo = loadCharacteristics(soIds);
+                	database = ConfigurationDatabaseContext.getCharacteristicDatabase();
+                    break;
+                case ObjectEntities.TRANSPATHTYPE_ENTITY_CODE:
+                	database = ConfigurationDatabaseContext.getTransmissionPathTypeDatabase();
                     break;
                 //          case ObjectEntities.PERMATTR_ENTITY_CODE:
                 //              storableObject =
                 // loadPermissionAttributes(soIds);
                 //              break;
                 case ObjectEntities.USER_ENTITY_CODE:
-                    loadedSo = loadUsers(soIds);
+                    database = ConfigurationDatabaseContext.getUserDatabase();
                     break;
                 case ObjectEntities.DOMAIN_ENTITY_CODE:
-                    loadedSo = loadDomains(soIds);
+                	database = ConfigurationDatabaseContext.getDomainDatabase();
                     break;
                 case ObjectEntities.SERVER_ENTITY_CODE:
-                    loadedSo = loadServers(soIds);
+                	database = ConfigurationDatabaseContext.getServerDatabase();
                     break;
                 case ObjectEntities.MCM_ENTITY_CODE:
-                    loadedSo = loadMCMs(soIds);
+                	database = ConfigurationDatabaseContext.getDomainDatabase();
                     break;
                 case ObjectEntities.EQUIPMENT_ENTITY_CODE:
-                    loadedSo = loadEquipments(soIds);
+                	database = ConfigurationDatabaseContext.getEquipmentDatabase();
                     break;
                 case ObjectEntities.PORT_ENTITY_CODE:
-                    loadedSo = loadPorts(soIds);
+                	database = ConfigurationDatabaseContext.getPortDatabase();
                     break;
                 case ObjectEntities.TRANSPATH_ENTITY_CODE:
-                    loadedSo = loadTransmissionPaths(soIds);
+                    database = ConfigurationDatabaseContext.getTransmissionPathDatabase();
                     break;
                 case ObjectEntities.KIS_ENTITY_CODE:
-                    loadedSo = loadKISs(soIds);
+                	database = ConfigurationDatabaseContext.getKISDatabase();
                     break;
                 case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
-                    loadedSo = loadMeasurementPorts(soIds);
+	                database = ConfigurationDatabaseContext.getMeasurementPortDatabase();
                     break;
                 case ObjectEntities.ME_ENTITY_CODE:
-                    loadedSo = loadMonitoredElements(soIds);
+                    database = ConfigurationDatabaseContext.getMonitoredElementDatabase();
+                    break;
+                case ObjectEntities.LINK_ENTITY_CODE:
+                    database = ConfigurationDatabaseContext.getLinkDatabase();
                     break;
                 default:
                     Log.errorMessage("DatabaseConfigurationObjectLoader.refresh | Unknown entity: "
-                            + entityCode);                
+                            + ObjectEntities.codeToString(entityCode));                
             }
-                        
-            return new HashSet(loadedSo);
+             
+            if (database != null)
+            	return database.refresh(storableObjects);
+            
+            return Collections.EMPTY_SET;
         } catch (DatabaseException e) {
             Log.errorMessage("DatabaseConfigurationObjectLoader.refresh | DatabaseException: " + e.getMessage());
             throw new DatabaseException("DatabaseConfigurationObjectLoader.refresh | DatabaseException: " + e.getMessage());
