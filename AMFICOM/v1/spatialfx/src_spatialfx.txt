@@ -1,0 +1,5 @@
+src\com\syrus\AMFICOM\Client\Map\ObjectFX\OfxConnection.java
+src\com\syrus\AMFICOM\Client\Map\ObjectFX\OfxLogicalNetLayer.java
+src\com\syrus\AMFICOM\Client\Map\ObjectFX\OfxNetMapViewer.java
+src\com\syrus\AMFICOM\Client\Map\ObjectFX\OfxSpatialLayer.java
+src\com\syrus\AMFICOM\Client\Map\ObjectFX\OfxSpatialObject.java
