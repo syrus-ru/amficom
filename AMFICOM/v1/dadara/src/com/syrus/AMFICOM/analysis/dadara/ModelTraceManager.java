@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.30 2005/03/28 12:01:36 bob Exp $
+ * $Id: ModelTraceManager.java,v 1.31 2005/03/28 12:47:50 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import java.util.LinkedList;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.30 $, $Date: 2005/03/28 12:01:36 $
+ * @author $Author: saa $
+ * @version $Revision: 1.31 $, $Date: 2005/03/28 12:47:50 $
  * @module
  */
 public class ModelTraceManager
@@ -287,7 +287,7 @@ public class ModelTraceManager
 		}
 	}
 
-	public ThreshEditor[] getThreshEditor(int nEvent)
+	public ThreshEditor[] getThreshEditors(int nEvent)
 	{
 		//return re[nEvents].getThreshold();
 
