@@ -118,7 +118,7 @@ public class MapProtoNavigatorPanel extends JPanel implements OperationListener
 			{
 				if (dse.getSelectionNumber() != -1)
 				{
-					MapProtoGroup group = (MapProtoGroup)dse.getDataSet().get(dse.getSelectionNumber());
+					MapProtoGroup group = (MapProtoGroup)dse.getList().get(dse.getSelectionNumber());
 					if (group.mapproto_ids.isEmpty())
 						createMapGroupButton.setEnabled(true);
 				}

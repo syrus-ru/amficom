@@ -160,7 +160,7 @@ public class ChooseMapGroupDialog extends JDialog implements OperationListener
 			{
 				if (dse.getSelectionNumber() != -1)
 				{
-					MapProtoGroup group = (MapProtoGroup)dse.getDataSet().get(dse.getSelectionNumber());
+					MapProtoGroup group = (MapProtoGroup)dse.getList().get(dse.getSelectionNumber());
 					if (group.mapproto_ids.isEmpty())
 						;
 				}
@@ -173,7 +173,7 @@ public class ChooseMapGroupDialog extends JDialog implements OperationListener
 
 				if (dse.getSelectionNumber() != -1)
 				{
-					MapProtoElement map_proto = (MapProtoElement)dse.getDataSet().get(dse.getSelectionNumber());
+					MapProtoElement map_proto = (MapProtoElement)dse.getList().get(dse.getSelectionNumber());
 					gpp.init(map_proto, aContext.getDataSourceInterface());
 				}
 			}

@@ -337,7 +337,7 @@ public class PropsFrame extends JInternalFrame
 			{
 				if (ev.getSelectionNumber() != -1)
 				{
-					ProtoElement element = (ProtoElement)ev.getDataSet().get(ev.getSelectionNumber());
+					ProtoElement element = (ProtoElement)ev.getList().get(ev.getSelectionNumber());
 					attr_hash = element.attributes;
 
 					EquipmentType type = (EquipmentType)Pool.get(EquipmentType.typ, element.equipment_type_id);
@@ -361,7 +361,7 @@ public class PropsFrame extends JInternalFrame
 			{
 				if (ev.getSelectionNumber() != -1)
 				{
-					SchemeElement element = (SchemeElement)ev.getDataSet().get(ev.getSelectionNumber());
+					SchemeElement element = (SchemeElement)ev.getList().get(ev.getSelectionNumber());
 					attr_hash = element.attributes;
 
 					if (!element.equipment_id.equals(""))

@@ -104,7 +104,7 @@ public class SchemePanel extends ElementsPanel
 		{
 			TreeDataSelectionEvent ev = (TreeDataSelectionEvent)ae;
 			Class cl = ev.getDataClass();
-			java.util.List ds = ev.getDataSet();
+			java.util.List ds = ev.getList();
 			if (ev.getSelectionNumber() != -1)
 			{
 				if (cl.equals(SchemePath.class))

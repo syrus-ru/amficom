@@ -302,7 +302,7 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 			{
 				if (ev.getSelectionNumber() != -1)
 				{
-					ProtoElement proto = (ProtoElement)ev.getDataSet().get(ev.getSelectionNumber());
+					ProtoElement proto = (ProtoElement)ev.getList().get(ev.getSelectionNumber());
 					showProtoCharacteristics(proto, false);
 				}
 				else
@@ -312,7 +312,7 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 			{
 				if (ev.getSelectionNumber() != -1)
 				{
-					MapProtoElement map_proto = (MapProtoElement)ev.getDataSet().get(ev.getSelectionNumber());
+					MapProtoElement map_proto = (MapProtoElement)ev.getList().get(ev.getSelectionNumber());
 					showGroupCharacteristics(map_proto, false);
 				}
 				else
@@ -322,7 +322,7 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 			{
 				if (ev.getSelectionNumber() != -1)
 				{
-					SchemeElement element = (SchemeElement)ev.getDataSet().get(ev.getSelectionNumber());
+					SchemeElement element = (SchemeElement)ev.getList().get(ev.getSelectionNumber());
 					showSchemeElementCharacteristics(element, false);
 				}
 				else
@@ -332,7 +332,7 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 			{
 				if (ev.getSelectionNumber() != -1)
 				{
-					Scheme scheme = (Scheme)ev.getDataSet().get(ev.getSelectionNumber());
+					Scheme scheme = (Scheme)ev.getList().get(ev.getSelectionNumber());
 					showSchemeCharacteristics(scheme, false);
 				}
 				else

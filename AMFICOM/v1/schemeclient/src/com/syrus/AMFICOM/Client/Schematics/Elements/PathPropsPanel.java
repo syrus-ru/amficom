@@ -92,7 +92,7 @@ public class PathPropsPanel extends JPanel
 
 		table.initialize(
 				new PathDisplayModel(),
-				new DataSet());
+				new ArrayList());
 		table.setSorter(PathElement.getSorter());
 
 		table.getTable().getSelectionModel().addListSelectionListener(new MySelectionListener());
@@ -243,8 +243,7 @@ public class PathPropsPanel extends JPanel
 
 		typeComboBox.setSelected(Pool.get(TransmissionPathType.typ, path.type_id));
 
-		DataSet ds = new DataSet(path.links);
-		table.setContents(ds);
+		table.setContents(path.links);
 
 		undoCompName = path.getName();
 		undoEndDevId = path.end_device_id;
@@ -299,8 +298,7 @@ public class PathPropsPanel extends JPanel
 					}
 				}
 
-				DataSet ds = new DataSet(path.links);
-				table.setContents(ds);
+				table.setContents(path.links);
 				table.updateUI();
 
 				links_to_add = new ArrayList();
@@ -314,9 +312,7 @@ public class PathPropsPanel extends JPanel
 		if (pe != null)
 		{
 			path.links.remove(pe);
-			DataSet ds = new DataSet(path.links);
-
-			table.setContents(ds);
+			table.setContents(path.links);
 			table.updateUI();
 		}
 
@@ -376,8 +372,7 @@ public class PathPropsPanel extends JPanel
 					addCableLink(link.getId(), thread.getId());
 			}
 		}
-		DataSet ds = new DataSet(path.links);
-		table.setContents(ds);
+		table.setContents(path.links);
 		table.updateUI();
 
 		links_to_add = new ArrayList();
