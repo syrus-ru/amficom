@@ -1,5 +1,5 @@
 /*
-* $Id: MCMGeneralObjectLoader.java,v 1.8 2005/03/30 15:46:34 arseniy Exp $
+* $Id: MCMGeneralObjectLoader.java,v 1.9 2005/03/31 16:01:56 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/03/30 15:46:34 $
+ * @version $Revision: 1.9 $, $Date: 2005/03/31 16:01:56 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -77,13 +77,13 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
+					MeasurementControlModule.resetMServerConnection();
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 			}
 			String mesg = "Remote reference for server is null; will try to reactivate it";
 			Log.errorMessage(mesg);
-			MeasurementControlModule.activateMServerReference();
+			MeasurementControlModule.resetMServerConnection();
 			throw new CommunicationException(mesg);
 		}
 	}
@@ -118,13 +118,13 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
+					MeasurementControlModule.resetMServerConnection();
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 			}
 			String mesg = "Remote reference for server is null; will try to reactivate it";
 			Log.errorMessage(mesg);
-			MeasurementControlModule.activateMServerReference();
+			MeasurementControlModule.resetMServerConnection();
 			throw new CommunicationException(mesg);
 		}
 	}
@@ -159,13 +159,13 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
+					MeasurementControlModule.resetMServerConnection();
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 			}
 			String mesg = "Remote reference for server is null; will try to reactivate it";
 			Log.errorMessage(mesg);
-			MeasurementControlModule.activateMServerReference();
+			MeasurementControlModule.resetMServerConnection();
 			throw new CommunicationException(mesg);
 		}
 	}
@@ -210,7 +210,7 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
+					MeasurementControlModule.resetMServerConnection();
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 
@@ -228,7 +228,7 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 			}
 			else {
 				Log.errorMessage("Remote reference for server is null; will try to reactivate it");
-				MeasurementControlModule.activateMServerReference();
+				MeasurementControlModule.resetMServerConnection();
 			}
 		}
 
@@ -270,7 +270,7 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
+					MeasurementControlModule.resetMServerConnection();
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 
@@ -288,7 +288,7 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 			}
 			else {
 				Log.errorMessage("Remote reference for server is null; will try to reactivate it");
-				MeasurementControlModule.activateMServerReference();
+				MeasurementControlModule.resetMServerConnection();
 			}
 		}
 
@@ -333,7 +333,7 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
+					MeasurementControlModule.resetMServerConnection();
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 
@@ -351,7 +351,7 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 			}
 			else {
 				Log.errorMessage("Remote reference for server is null; will try to reactivate it");
-				MeasurementControlModule.activateMServerReference();
+				MeasurementControlModule.resetMServerConnection();
 			}
 		}
 

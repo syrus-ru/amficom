@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.23 2005/03/30 15:46:34 arseniy Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.24 2005/03/31 16:01:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -61,7 +61,7 @@ import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/03/30 15:46:34 $
+ * @version $Revision: 1.24 $, $Date: 2005/03/31 16:01:56 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -98,13 +98,13 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
+					MeasurementControlModule.resetMServerConnection();
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 			}
 			String mesg = "Remote reference for server is null; will try to reactivate it";
 			Log.errorMessage(mesg);
-			MeasurementControlModule.activateMServerReference();
+			MeasurementControlModule.resetMServerConnection();
 			throw new CommunicationException(mesg);
 		}
 	}
@@ -139,13 +139,13 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
+					MeasurementControlModule.resetMServerConnection();
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 			}
 			String mesg = "Remote reference for server is null; will try to reactivate it";
 			Log.errorMessage(mesg);
-			MeasurementControlModule.activateMServerReference();
+			MeasurementControlModule.resetMServerConnection();
 			throw new CommunicationException(mesg);
 		}
 	}
@@ -180,13 +180,13 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
+					MeasurementControlModule.resetMServerConnection();
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 			}
 			String mesg = "Remote reference for server is null; will try to reactivate it";
 			Log.errorMessage(mesg);
-			MeasurementControlModule.activateMServerReference();
+			MeasurementControlModule.resetMServerConnection();
 			throw new CommunicationException(mesg);
 		}
 	}
@@ -221,13 +221,13 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
+					MeasurementControlModule.resetMServerConnection();
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 			}
 			String mesg = "Remote reference for server is null; will try to reactivate it";
 			Log.errorMessage(mesg);
-			MeasurementControlModule.activateMServerReference();
+			MeasurementControlModule.resetMServerConnection();
 			throw new CommunicationException(mesg);
 		}
 	}
@@ -262,13 +262,13 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
+					MeasurementControlModule.resetMServerConnection();
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 			}
 			String mesg = "Remote reference for server is null; will try to reactivate it";
 			Log.errorMessage(mesg);
-			MeasurementControlModule.activateMServerReference();
+			MeasurementControlModule.resetMServerConnection();
 			throw new CommunicationException(mesg);
 		}
 	}
@@ -303,13 +303,13 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
+					MeasurementControlModule.resetMServerConnection();
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 			}
 			String mesg = "Remote reference for server is null; will try to reactivate it";
 			Log.errorMessage(mesg);
-			MeasurementControlModule.activateMServerReference();
+			MeasurementControlModule.resetMServerConnection();
 			throw new CommunicationException(mesg);
 		}
 	}
@@ -344,13 +344,13 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
+					MeasurementControlModule.resetMServerConnection();
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 			}
 			String mesg = "Remote reference for server is null; will try to reactivate it";
 			Log.errorMessage(mesg);
-			MeasurementControlModule.activateMServerReference();
+			MeasurementControlModule.resetMServerConnection();
 			throw new CommunicationException(mesg);
 		}
 	}
@@ -385,13 +385,13 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
+					MeasurementControlModule.resetMServerConnection();
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 			}
 			String mesg = "Remote reference for server is null; will try to reactivate it";
 			Log.errorMessage(mesg);
-			MeasurementControlModule.activateMServerReference();
+			MeasurementControlModule.resetMServerConnection();
 			throw new CommunicationException(mesg);
 		}
 	}
@@ -426,13 +426,13 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
+					MeasurementControlModule.resetMServerConnection();
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 			}
 			String mesg = "Remote reference for server is null; will try to reactivate it";
 			Log.errorMessage(mesg);
-			MeasurementControlModule.activateMServerReference();
+			MeasurementControlModule.resetMServerConnection();
 			throw new CommunicationException(mesg);
 		}
 	}
@@ -467,13 +467,13 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
+					MeasurementControlModule.resetMServerConnection();
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 			}
 			String mesg = "Remote reference for server is null; will try to reactivate it";
 			Log.errorMessage(mesg);
-			MeasurementControlModule.activateMServerReference();
+			MeasurementControlModule.resetMServerConnection();
 			throw new CommunicationException(mesg);
 		}
 	}
@@ -508,13 +508,13 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
+					MeasurementControlModule.resetMServerConnection();
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 			}
 			String mesg = "Remote reference for server is null; will try to reactivate it";
 			Log.errorMessage(mesg);
-			MeasurementControlModule.activateMServerReference();
+			MeasurementControlModule.resetMServerConnection();
 			throw new CommunicationException(mesg);
 		}
 	}
@@ -549,13 +549,13 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
-					MeasurementControlModule.activateMServerReference();
+					MeasurementControlModule.resetMServerConnection();
 					throw new CommunicationException("System exception -- " + se.getMessage(), se);
 				}
 			}
 			String mesg = "Remote reference for server is null; will try to reactivate it";
 			Log.errorMessage(mesg);
-			MeasurementControlModule.activateMServerReference();
+			MeasurementControlModule.resetMServerConnection();
 			throw new CommunicationException(mesg);
 		}
 	}
@@ -603,7 +603,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 			}
 			catch (org.omg.CORBA.SystemException se) {
 				Log.errorException(se);
-				MeasurementControlModule.activateMServerReference();
+				MeasurementControlModule.resetMServerConnection();
 				throw new CommunicationException("System exception -- " + se.getMessage(), se);
 			}
 
@@ -621,7 +621,7 @@ final class MCMConfigurationObjectLoader extends DatabaseConfigurationObjectLoad
 		}
 		else {
 			Log.errorMessage("Remote reference for server is null; will try to reactivate it");
-			MeasurementControlModule.activateMServerReference();
+			MeasurementControlModule.resetMServerConnection();
 		}
 
 		return objects;
