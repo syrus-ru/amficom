@@ -98,7 +98,7 @@ public class ReportTemplate extends StubResource implements Serializable
 	/**
 	 * <p>Шаблон по планированию</p>
 	 */
-	static final public String rtt_Sheduler = "rtt_Sheduler";
+	static final public String rtt_Scheduler = "rtt_Sheduler";
 	/**
 	 * <p>Все шаблоны</p>
 	 */

@@ -42,7 +42,7 @@ public class SaveSolutionAsCommand extends VoidCommand
        int ret = sd.init(mdiMain.scheme.getName(), "", false);
        if (ret == 0)
  return;
-        if (!MyUtil.validName(sd.name))
+        if (!MiscUtil.validName(sd.name))
        {  JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Некорректное название решения.", "Ошибка", JOptionPane.OK_OPTION);
        }
        else

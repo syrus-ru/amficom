@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Optimize.Report;
+package com.syrus.AMFICOM.Client.General.Report;
 
 import com.syrus.AMFICOM.Client.General.Report.RenderingObject;
 import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
@@ -19,12 +19,12 @@ import java.awt.Color;
  * @version 1.0
  */
 
-public class IterHistoryPanelRenderer extends JPanel
+public class JPanelRenderer extends JPanel
 {
 	JPanel insidePanel = null;
 	RenderingObject ro = null;
 
-	public IterHistoryPanelRenderer(RenderingObject ro)
+	public JPanelRenderer (RenderingObject ro)
 		throws CreateReportException
 	{
 		this.ro = ro;
