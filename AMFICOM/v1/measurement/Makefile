@@ -87,7 +87,8 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/TestDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/TestCondition.java \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/DomainCondition.java \
-		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementCondition.java 
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementCondition.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementSetupCondition.java 
 	touch $@
 
 .ora:	$(CLASSDIR)
