@@ -1,6 +1,6 @@
-SRC=./src
-CLASSES=./classes
-IDL=../idl_v1
+SRCDIR=./src
+CLASSDIR=./classes
+IDLDIR=../idl_v1/idl
 LIB=../lib
 
 LIBNAME=measurement.jar
@@ -9,41 +9,69 @@ ARCHFILE=measurement.tar.gz
 APPCLASSPATH=$(LIB)/util.jar:$(LIB)/general.jar
 
 IDL2JAVA=idl2java
-IDL2JAVA_FLAGS=-no_examples -no_tie -root_dir $(SRC) -I$(IDL)
+IDL2JAVA_FLAGS = \
+	-C \
+	-H \
+	-no_bind \
+	-no_examples \
+	-no_tie \
+	-narrow_compliance \
+	-portable \
+	-strict \
+	-root_dir $(SRCDIR) \
+	-I$(IDLDIR)
 #JAVAC=javac
 JAVAC=jikes
-JAVAC_CUSTOM_OPTIONS=-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar -extdirs $(JAVA_HOME)/jre/lib/ext +E +Pno-modifier-order +Predundant-modifiers +Pswitchcheck +Pno-naming-convention -nowarn +T=2
-JAVAC_OPTIONS=-d $(CLASSES)
+JIKES_FLAGS = \
+	-target 1.4.2 \
+	-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar \
+	-extdirs $(JAVA_HOME)/jre/lib/ext \
+	+E \
+	+Pmodifier-order \
+	+Predundant-modifiers \
+	+Pswitchcheck \
+	+Pnaming-convention \
+	+T=2
+JAVAC_FLAGS = \
+	-d $(CLASSDIR) \
+	-g \
+	-O \
+	-deprecation
 
-mach:	corba
-	$(JAVAC) $(JAVAC_CUSTOM_OPTIONS) $(JAVAC_OPTIONS) -classpath $(CLASSES):$(APPCLASSPATH) \
-		$(SRC)/com/syrus/AMFICOM/measurement/TemporalPattern.java
+JAVAC_FLAGS := $(JAVAC_FLAGS) $(JIKES_FLAGS)
 
-corba:
-	$(IDL2JAVA) $(IDL2JAVA_FLAGS) $(IDL)/event.idl
-	$(IDL2JAVA) $(IDL2JAVA_FLAGS) $(IDL)/measurement.idl
-	$(JAVAC) $(JAVAC_CUSTOM_OPTIONS) $(JAVAC_OPTIONS) -classpath $(APPCLASSPATH) -sourcepath $(SRC) \
-		$(SRC)/com/syrus/AMFICOM/event/corba/*.java \
-		$(SRC)/com/syrus/AMFICOM/measurement/corba/*.java
+mach:	corba $(CLASSDIR)
+	$(JAVAC) $(JAVAC_FLAGS) -classpath $(CLASSDIR):$(APPCLASSPATH) \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/TemporalPattern.java
+
+corba:	$(CLASSDIR)
+	$(IDL2JAVA) $(IDL2JAVA_FLAGS) $(IDLDIR)/event.idl
+	$(IDL2JAVA) $(IDL2JAVA_FLAGS) $(IDLDIR)/measurement.idl
+	$(JAVAC) $(JAVAC_FLAGS) -nowarn -classpath $(APPCLASSPATH) -sourcepath $(SRCDIR) \
+		$(SRCDIR)/com/syrus/AMFICOM/event/corba/*.java \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/corba/*.java
 	touch corba
+
+$(CLASSDIR):
+	mkdir -p $@
 
 clean:	cleanmach cleancorba
 	rm -f $(LIBNAME)
 
 cleanmach:
-	rm -rf $(CLASSES)/com/syrus/AMFICOM/measurement/*.class
+	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/measurement/*.class
 	rm -f mach
 
 cleancorba:
-	rm -rf $(SRC)/com/syrus/AMFICOM/measurement/corba
-	rm -rf $(CLASSES)/com/syrus/AMFICOM/measurement/corba
-	rm -rf $(SRC)/com/syrus/AMFICOM/event/corba
-	rm -rf $(CLASSES)/com/syrus/AMFICOM/event/corba
+	rm -rf $(SRCDIR)/com/syrus/AMFICOM/measurement/corba
+	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/measurement/corba
+	rm -rf $(SRCDIR)/com/syrus/AMFICOM/event/corba
+	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/event/corba
 	rm -f corba
 
 #### Archive ####
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
-		$(IDL)/measurement.idl \
-		$(SRC)/com/syrus/AMFICOM/measurement/*.java
+		$(IDLDIR)/measurement.idl \
+		$(SRCDIR)/com/syrus/AMFICOM/measurement/*.java
