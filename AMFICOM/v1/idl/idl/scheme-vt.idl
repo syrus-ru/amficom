@@ -1,5 +1,5 @@
 /*
- * $Id: scheme-vt.idl,v 1.17 2005/01/20 10:04:29 bass Exp $
+ * $Id: scheme-vt.idl,v 1.18 2005/02/28 14:16:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ module com {
 					typedef sequence<SchemeProtoGroup> SchemeProtoGroupSeq;
 
 					valuetype AbstractSchemePort:
-							general::corba::StorableObject,
+							general::corba::IStorableObject,
 							general::corba::Namable,
 							general::corba::Describable,
 							scheme::Characterizable,
@@ -62,8 +62,8 @@ module com {
 							_OUT
 						};
 
-						private wstring thisName;
-						private wstring thisDescription;
+						private general::corba::WString32 thisName;
+						private general::corba::WString256 thisDescription;
 						private general::corba::Identifier schemeDeviceId;
 						/**
 						 * Depending on implementation, may reference either {@link SchemeLink} or {@link SchemeCableLink}.
@@ -112,7 +112,10 @@ module com {
 
 						SchemePort cloneInstance();
 
-						factory newInstance();
+						/**
+						 * @deprecated Use {@link #newInstance()} instead.
+						 */
+						factory newDefaultInstance();
 					};
 
 					typedef sequence<SchemePort> SchemePortSeq;
@@ -125,19 +128,22 @@ module com {
 
 						SchemeCablePort cloneInstance();
 
-						factory newInstance();
+						/**
+						 * @deprecated Use {@link #newInstance()} instead.
+						 */
+						factory newDefaultInstance();
 					};
 
 					typedef sequence<SchemeCablePort> SchemeCablePortSeq;
 
 					valuetype SchemeDevice:
-							general::corba::StorableObject,
+							general::corba::IStorableObject,
 							general::corba::Namable,
 							general::corba::Describable,
 							scheme::Characterizable,
 							general::Characterizable {
-						private wstring thisName;
-						private wstring thisDescription;
+						private general::corba::WString32 thisName;
+						private general::corba::WString256 thisDescription;
 						private general::corba::IdentifierSeq schemePortIds;
 						private general::corba::IdentifierSeq schemeCablePortIds;
 						private general::corba::IdentifierSeq characteristicIds;
@@ -147,19 +153,22 @@ module com {
 
 						SchemeDevice cloneInstance();
 
-						factory newInstance();
+						/**
+						 * @deprecated Use {@link #newInstance()} instead.
+						 */
+						factory newDefaultInstance();
 					};
 
 					typedef sequence<SchemeDevice> SchemeDeviceSeq;
 
 					valuetype AbstractSchemeElement:
-							general::corba::StorableObject,
+							general::corba::IStorableObject,
 							general::corba::Namable,
 							general::corba::Describable,
 							scheme::Characterizable,
 							general::Characterizable {
-						private wstring thisName;
-						private wstring thisDescription;
+						private general::corba::WString32 thisName;
+						private general::corba::WString256 thisDescription;
 						private general::corba::Identifier schemeId;
 						private general::corba::IdentifierSeq characteristicIds;
 
@@ -238,20 +247,23 @@ module com {
 
 						SchemeLink cloneInstance();
 
-						factory newInstance();
+						/**
+						 * @deprecated Use {@link #newInstance()} instead.
+						 */
+						factory newDefaultInstance();
 					};
 
 					typedef sequence<SchemeLink> SchemeLinkSeq;
 
 					valuetype SchemeCableThread:
-							general::corba::StorableObject,
+							general::corba::IStorableObject,
 							general::corba::Namable,
 							general::corba::Describable,
 							scheme::Characterizable,
 							general::Characterizable,
 							configuration::ComSyrusAmficomConfigurationSchemeCableThread {
-						private wstring thisName;
-						private wstring thisDescription;
+						private general::corba::WString32 thisName;
+						private general::corba::WString256 thisDescription;
 						private general::corba::Identifier cableThreadTypeId;
 						private general::corba::Identifier sourceSchemePortId;
 						private general::corba::Identifier targetSchemePortId;
@@ -284,7 +296,10 @@ module com {
 
 						SchemeCableThread cloneInstance();
 
-						factory newInstance();
+						/**
+						 * @deprecated Use {@link #newInstance()} instead.
+						 */
+						factory newDefaultInstance();
 
 						/**
 						 * Returns a scheme port this cable thread is attached to (within scheme
@@ -311,12 +326,12 @@ module com {
 					typedef sequence<SchemeCableThread> SchemeCableThreadSeq;
 
 					valuetype CableChannelingItem:
-							general::corba::StorableObject,
+							general::corba::IStorableObject,
 							general::corba::Namable,
 							general::corba::Describable,
 							map::ComSyrusAmficomMapCableChannelingItem {
-						private wstring thisName;
-						private wstring thisDescription;
+						private general::corba::WString32 thisName;
+						private general::corba::WString256 thisDescription;
 						private long thisSequentialNumber;
 						private general::corba::Identifier physicalLinkId;
 						private long thisRowX;
@@ -334,7 +349,10 @@ module com {
 
 						CableChannelingItem cloneInstance();
 
-						factory newInstance();
+						/**
+						 * @deprecated Use {@link #newInstance()} instead.
+						 */
+						factory newDefaultInstance();
 					};
 
 					typedef sequence<CableChannelingItem> CableChannelingItemSeq;
@@ -358,7 +376,10 @@ module com {
 
 						SchemeCableLink cloneInstance();
 
-						factory newInstance();
+						/**
+						 * @deprecated Use {@link #newInstance()} instead.
+						 */
+						factory newDefaultInstance();
 					};
 
 					typedef sequence<SchemeCableLink> SchemeCableLinkSeq;
@@ -367,7 +388,7 @@ module com {
 					 * PathElement has no associated <code>name</code> (or <code>thisName</code>) field: its {@link PathElement#name() name()} method actually returns {@link PathElement#abstractSchemeElement() abstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#name() name()}.
 					 */
 					valuetype PathElement:
-							general::corba::StorableObject,
+							general::corba::IStorableObject,
 							general::corba::Namable,
 							general::corba::Describable {
 						enum Type {
@@ -376,7 +397,7 @@ module com {
 							SCHEME_LINK
 						};
 
-						private wstring thisDescription;
+						private general::corba::WString256 thisDescription;
 						private long thisSequentialNumber;
 						private Type thisType;
 						/**
@@ -407,20 +428,23 @@ module com {
 
 						PathElement cloneInstance();
 
-						factory newInstance();
+						/**
+						 * @deprecated Use {@link #newInstance()} instead.
+						 */
+						factory newDefaultInstance();
 					};
 
 					typedef sequence<PathElement> PathElementSeq;
 
 					valuetype SchemePath:
-							general::corba::StorableObject,
+							general::corba::IStorableObject,
 							general::corba::Namable,
 							general::corba::Describable,
 							scheme::Characterizable,
 							general::Characterizable,
 							configuration::ComSyrusAmficomConfigurationSchemePath {
-						private wstring thisName;
-						private wstring thisDescription;
+						private general::corba::WString32 thisName;
+						private general::corba::WString256 thisDescription;
 						private general::corba::Identifier _typeId;
 						private general::corba::Identifier startDeviceId;
 						private general::corba::Identifier endDeviceId;
@@ -436,21 +460,24 @@ module com {
 
 						SchemePath cloneInstance();
 
-						factory newInstance();
+						/**
+						 * @deprecated Use {@link #newInstance()} instead.
+						 */
+						factory newDefaultInstance();
 					};
 
 					typedef sequence<SchemePath> SchemePathSeq;
 
 					valuetype SchemeProtoElement:
-							general::corba::StorableObject,
+							general::corba::IStorableObject,
 							general::corba::Namable,
 							general::corba::Describable,
 							resource::SchemeCellContainer,
 							scheme::Characterizable,
 							general::Characterizable,
 							configuration::ComSyrusAmficomConfigurationSchemeProtoElement {
-						private wstring thisName;
-						private wstring thisDescription;
+						private general::corba::WString32 thisName;
+						private general::corba::WString256 thisDescription;
 						private general::corba::Identifier equipmentTypeId;
 						private general::corba::IdentifierSeq deviceIds;
 						private general::corba::IdentifierSeq linkIds;
@@ -480,7 +507,10 @@ module com {
 
 						SchemeProtoElement cloneInstance();
 
-						factory newInstance();
+						/**
+						 * @deprecated Use {@link #newInstance()} instead.
+						 */
+						factory newDefaultInstance();
 					};
 
 					valuetype SchemeElement:
@@ -529,7 +559,10 @@ module com {
 
 						SchemeElement cloneInstance();
 
-						factory newInstance();
+						/**
+						 * @deprecated Use {@link #newInstance()} instead.
+						 */
+						factory newDefaultInstance();
 
 						/**
 						 * Transient attribute.
@@ -542,11 +575,11 @@ module com {
 					};
 
 					valuetype SchemeMonitoringSolution:
-							general::corba::StorableObject,
+							general::corba::IStorableObject,
 							general::corba::Namable,
 							general::corba::Describable {
-						private wstring thisName;
-						private wstring thisDescription;
+						private general::corba::WString32 thisName;
+						private general::corba::WString256 thisDescription;
 						private general::corba::Identifier schemeId;
 						private double thisPrice;
 						private general::corba::IdentifierSeq schemePathIds;
@@ -557,13 +590,16 @@ module com {
 
 						SchemeMonitoringSolution cloneInstance();
 
-						factory newInstance();
+						/**
+						 * @deprecated Use {@link #newInstance()} instead.
+						 */
+						factory newDefaultInstance();
 					};
 
 					typedef sequence<SchemeMonitoringSolution> SchemeMonitoringSolutionSeq;
 
 					valuetype Scheme:
-							general::corba::StorableObject,
+							general::corba::IStorableObject,
 							general::corba::Namable,
 							general::corba::Describable,
 							resource::SchemeCellContainer,
@@ -580,8 +616,8 @@ module com {
 							CARDCAGE
 						};
 
-						private wstring thisName;
-						private wstring thisDescription;
+						private general::corba::WString32 thisName;
+						private general::corba::WString256 thisDescription;
 						private Type thisType;
 						/**
 						 * Value is assigned automatically.
@@ -616,42 +652,81 @@ module com {
 
 						Scheme cloneInstance();
 
-						factory newInstance();
+						/**
+						 * @deprecated Use {@link #newInstance()} instead.
+						 */
+						factory newDefaultInstance();
 					};
 
 					typedef sequence<Scheme> SchemeSeq;
 
-					valuetype SchemeProtoGroup:
-							general::corba::StorableObject,
+					abstract valuetype ISchemeProtoGroup:
+							general::corba::IStorableObject,
 							general::corba::Namable,
 							general::corba::Describable,
 							resource::SchemeSymbolContainer {
-						private wstring thisName;
-						private wstring thisDescription;
-						private general::corba::Identifier symbolId;
-						private general::corba::Identifier parentId;
-						private general::corba::IdentifierSeq SchemeProtoGroupIds;
-						private general::corba::IdentifierSeq SchemeProtoElementIds;
-
-						attribute SchemeProtoGroup parent;
+						/**
+						 * @deprecated Use {@link #parentSchemeProtoGroup()} instead.
+						 */
+						readonly attribute SchemeProtoGroup parent;
+						readonly attribute SchemeProtoGroup parentSchemeProtoGroup;
+						/**
+						 * Transient attribute.
+						 */
 						attribute SchemeProtoGroupSeq schemeProtoGroups;
+						/**
+						 * Transient attribute.
+						 */
 						attribute SchemeProtoElementSeq schemeProtoElements;
+					};
+
+					/**
+					 * #01 in hierarchy.
+					 */
+					valuetype SchemeProtoGroup: ISchemeProtoGroup {
+						private general::corba::StorableObject delegate;
+						private general::corba::WString32 thisName;
+						private general::corba::WString256 thisDescription;
+						private general::corba::Identifier symbolId;
+						private general::corba::Identifier parentSchemeProtoGroupId;
 
 						SchemeProtoGroup cloneInstance();
 
-						factory newInstance();
+						void setAttributes(in long long created,
+								in long long modified,
+								in general::corba::Identifier creatorId,
+								in general::corba::Identifier modifierId,
+								in long long version,
+								in general::corba::WString32 name,
+								in general::corba::WString256 description,
+								in resource::corba::ImageResource symbol,
+								in SchemeProtoGroup parentSchemeProtoGroup);
+
+						factory newInstance(in general::corba::Identifier id,
+								in long long created,
+								in long long modified,
+								in general::corba::Identifier creatorId,
+								in general::corba::Identifier modifierId,
+								in long long version,
+								in general::corba::WString32 name,
+								in SchemeProtoGroup parentSchemeProtoGroup);
+						factory getInstance(in general::corba::Identifier id);
+						/**
+						 * @deprecated Use {@link #newInstance()} instead.
+						 */
+						factory newDefaultInstance();
 					};
 
 					valuetype SchemeOptimizeInfo:
-							general::corba::StorableObject,
+							general::corba::IStorableObject,
 							general::corba::Namable,
 							general::corba::Describable {
 						enum OptimizationMode {
 							_DEFAULT
 						};
 
-						private wstring thisName;
-						private wstring thisDescription;
+						private general::corba::WString32 thisName;
+						private general::corba::WString256 thisDescription;
 						private general::corba::Identifier schemeId;
 						private general::corba::Identifier schemeMonitoringSolutionId;
 						private OptimizationMode thisOptimizationMode;
@@ -696,7 +771,10 @@ module com {
 
 						SchemeOptimizeInfo cloneInstance();
 
-						factory newInstance();
+						/**
+						 * @deprecated Use {@link #newInstance()} instead.
+						 */
+						factory newDefaultInstance();
 					};
 
 					typedef sequence<SchemeOptimizeInfo> SchemeOptimizeInfoSeq;

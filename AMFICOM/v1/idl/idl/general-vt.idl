@@ -1,5 +1,5 @@
 /*
- * $Id: general-vt.idl,v 1.8 2004/12/21 13:55:38 bass Exp $
+ * $Id: general-vt.idl,v 1.9 2005/02/28 14:16:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,9 +22,7 @@ module com {
 		module AMFICOM {
 			module general {
 				module corba {
-					valuetype StorableObject;
-
-					typedef sequence<StorableObject> StorableObjectSeq;
+					native StorableObjectFactory;
 
 					valuetype Identifier {
 						const char SEPARATOR = '_';
@@ -45,8 +43,6 @@ module com {
 						readonly attribute short major;
 						readonly attribute long long minor;
 						readonly attribute string identifierString;
-
-						Identifier cloneInstance();
 
 						/**
 						 * Utility method introduced to provide interoperability with native Java Identifier.
@@ -69,31 +65,58 @@ module com {
 					};
 
 					abstract valuetype Namable {
-						attribute wstring name;
+						attribute WString32 name;
 					};
 
 					abstract valuetype Describable {
-						attribute wstring description;
+						attribute WString256 description;
 					};
 
-					valuetype StorableObject: Identifiable {
+					abstract valuetype IStorableObject: Identifiable {
+						readonly attribute long long created;
+						readonly attribute long long modified;
+						readonly attribute Identifier creatorId;
+						readonly attribute Identifier modifierId;
+						readonly attribute long long version;
+
+						readonly attribute boolean isChanged;
+						void setChanged(in StorableObjectFactory storableObjectFactory, in boolean changed);
+						readonly attribute StorableObject_Transferable headerTransferable;
+						/**
+						 * Since dependencies may include both valuetyped and non-valuetyped storable
+						 * objects, they are returned as a sequence of valuetyped identifiers, as
+						 * valutyped and non-valuetyped ones can be easily converted into each other.
+						 */
+						readonly attribute IdentifierSeq dependencies;
+					};
+
+					valuetype StorableObject: IStorableObject {
 						private Identifier thisId;
+
 						private long long thisCreated;
 						private long long thisModified;
 						private Identifier thisCreatorId;
 						private Identifier thisModifierId;
 						private long long thisVersion;
 
-						readonly attribute long long created;
-						readonly attribute Identifier creatorId;
-						readonly attribute long long modified;
-						readonly attribute Identifier modifierId;
-						readonly attribute long long version;
+						StorableObject cloneInstance();
 
-						readonly attribute boolean changed;
-						readonly attribute StorableObject_Transferable headerTransferable;
-						readonly attribute StorableObjectSeq dependencies;
+						void setAttributes(in long long created,
+								in long long modified,
+								in general::corba::Identifier creatorId,
+								in general::corba::Identifier modifierId,
+								in long long version);
+
+						factory newInstance(in general::corba::Identifier id,
+								in long long created,
+								in long long modified,
+								in general::corba::Identifier creatorId,
+								in general::corba::Identifier modifierId,
+								in long long version);
+						factory getInstance(in general::corba::Identifier id);
 					};
+
+					typedef sequence<StorableObject> StorableObjectSeq;
 				};
 			};
 		};
