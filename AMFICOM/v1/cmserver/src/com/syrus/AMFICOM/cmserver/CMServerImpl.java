@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.62 2004/11/02 13:23:01 bob Exp $
+ * $Id: CMServerImpl.java,v 1.63 2004/11/02 15:28:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -116,7 +116,7 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2004/11/02 13:23:01 $
+ * @version $Revision: 1.63 $, $Date: 2004/11/02 15:28:21 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -257,7 +257,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         Identifier id = new Identifier(id_Transferable);
         Log.debugMessage("CMServerImpl.Characteristic | require " + id.toString(), Log.DEBUGLEVEL07);
         try {
-            Characteristic characteristic = (Characteristic) MeasurementStorableObjectPool.getStorableObject(id, true);
+            Characteristic characteristic = (Characteristic) ConfigurationStorableObjectPool.getStorableObject(id, true);
             return (Characteristic_Transferable) characteristic.getTransferable();
         } catch (ObjectNotFoundException onfe) {
             Log.errorException(onfe);
@@ -288,7 +288,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         Identifier id = new Identifier(id_Transferable);
         Log.debugMessage("CMServerImpl.CharacteristicType | require " + id.toString(), Log.DEBUGLEVEL07);
         try {
-            CharacteristicType characteristicType = (CharacteristicType) MeasurementStorableObjectPool.getStorableObject(id, true);
+            CharacteristicType characteristicType = (CharacteristicType) ConfigurationStorableObjectPool.getStorableObject(id, true);
             return (CharacteristicType_Transferable) characteristicType.getTransferable();
         } catch (ObjectNotFoundException onfe) {
             Log.errorException(onfe);
@@ -319,7 +319,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         Identifier id = new Identifier(id_Transferable);
         Log.debugMessage("CMServerImpl.Equipment | require " + id.toString(), Log.DEBUGLEVEL07);
         try {
-            Equipment equipment = (Equipment) MeasurementStorableObjectPool.getStorableObject(id, true);
+            Equipment equipment = (Equipment) ConfigurationStorableObjectPool.getStorableObject(id, true);
             return (Equipment_Transferable) equipment.getTransferable();
         } catch (ObjectNotFoundException onfe) {
             Log.errorException(onfe);
@@ -350,7 +350,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         Identifier id = new Identifier(id_Transferable);
         Log.debugMessage("CMServerImpl.EquipmentType | require " + id.toString(), Log.DEBUGLEVEL07);
         try {
-            EquipmentType equipmentType = (EquipmentType) MeasurementStorableObjectPool.getStorableObject(id, true);
+            EquipmentType equipmentType = (EquipmentType) ConfigurationStorableObjectPool.getStorableObject(id, true);
             return (EquipmentType_Transferable) equipmentType.getTransferable();
         } catch (ObjectNotFoundException onfe) {
             Log.errorException(onfe);
@@ -381,7 +381,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         Identifier id = new Identifier(id_Transferable);
         Log.debugMessage("CMServerImpl.KIS | require " + id.toString(), Log.DEBUGLEVEL07);
         try {
-            KIS kis = (KIS) MeasurementStorableObjectPool.getStorableObject(id, true);
+            KIS kis = (KIS) ConfigurationStorableObjectPool.getStorableObject(id, true);
             return (KIS_Transferable) kis.getTransferable();
         } catch (ObjectNotFoundException onfe) {
             Log.errorException(onfe);
@@ -412,7 +412,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         Identifier id = new Identifier(id_Transferable);
         Log.debugMessage("CMServerImpl.KISType | require " + id.toString(), Log.DEBUGLEVEL07);
         try {
-            KISType kisType = (KISType) MeasurementStorableObjectPool.getStorableObject(id, true);
+            KISType kisType = (KISType) ConfigurationStorableObjectPool.getStorableObject(id, true);
             return (KISType_Transferable) kisType.getTransferable();
         } catch (ObjectNotFoundException onfe) {
             Log.errorException(onfe);
@@ -443,7 +443,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         Identifier id = new Identifier(id_Transferable);
         Log.debugMessage("CMServerImpl.MCM | require " + id.toString(), Log.DEBUGLEVEL07);
         try {
-            MCM mcm = (MCM) MeasurementStorableObjectPool.getStorableObject(id, true);
+            MCM mcm = (MCM) ConfigurationStorableObjectPool.getStorableObject(id, true);
             return (MCM_Transferable) mcm.getTransferable();
         } catch (ObjectNotFoundException onfe) {
             Log.errorException(onfe);
@@ -474,7 +474,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         Identifier id = new Identifier(id_Transferable);
         Log.debugMessage("CMServerImpl.MeasurementPort | require " + id.toString(), Log.DEBUGLEVEL07);
         try {
-            MeasurementPort measurementPort = (MeasurementPort) MeasurementStorableObjectPool.getStorableObject(id, true);
+            MeasurementPort measurementPort = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(id, true);
             return (MeasurementPort_Transferable) measurementPort.getTransferable();
         } catch (ObjectNotFoundException onfe) {
             Log.errorException(onfe);
@@ -505,7 +505,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         Identifier id = new Identifier(id_Transferable);
         Log.debugMessage("CMServerImpl.MeasurementPortType | require " + id.toString(), Log.DEBUGLEVEL07);
         try {
-            MeasurementPortType measurementPortType = (MeasurementPortType) MeasurementStorableObjectPool.getStorableObject(id, true);
+            MeasurementPortType measurementPortType = (MeasurementPortType) ConfigurationStorableObjectPool.getStorableObject(id, true);
             return (MeasurementPortType_Transferable) measurementPortType.getTransferable();
         } catch (ObjectNotFoundException onfe) {
             Log.errorException(onfe);
@@ -536,7 +536,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         Identifier id = new Identifier(id_Transferable);
         Log.debugMessage("CMServerImpl.Port | require " + id.toString(), Log.DEBUGLEVEL07);
         try {
-            Port port = (Port) MeasurementStorableObjectPool.getStorableObject(id, true);
+            Port port = (Port) ConfigurationStorableObjectPool.getStorableObject(id, true);
             return (Port_Transferable) port.getTransferable();
         } catch (ObjectNotFoundException onfe) {
             Log.errorException(onfe);
@@ -567,7 +567,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         Identifier id = new Identifier(id_Transferable);
         Log.debugMessage("CMServerImpl.PortType | require " + id.toString(), Log.DEBUGLEVEL07);
         try {
-            PortType portType = (PortType) MeasurementStorableObjectPool.getStorableObject(id, true);
+            PortType portType = (PortType) ConfigurationStorableObjectPool.getStorableObject(id, true);
             return (PortType_Transferable) portType.getTransferable();
         } catch (ObjectNotFoundException onfe) {
             Log.errorException(onfe);
@@ -598,7 +598,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         Identifier id = new Identifier(id_Transferable);
         Log.debugMessage("CMServerImpl.Server | require " + id.toString(), Log.DEBUGLEVEL07);
         try {
-            Server server = (Server) MeasurementStorableObjectPool.getStorableObject(id, true);
+            Server server = (Server) ConfigurationStorableObjectPool.getStorableObject(id, true);
             return (Server_Transferable) server.getTransferable();
         } catch (ObjectNotFoundException onfe) {
             Log.errorException(onfe);
@@ -629,7 +629,7 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         Identifier id = new Identifier(id_Transferable);
         Log.debugMessage("CMServerImpl.User | require " + id.toString(), Log.DEBUGLEVEL07);
         try {
-            User user = (User) MeasurementStorableObjectPool.getStorableObject(id, true);
+            User user = (User) ConfigurationStorableObjectPool.getStorableObject(id, true);
             return (User_Transferable) user.getTransferable();
         } catch (ObjectNotFoundException onfe) {
             Log.errorException(onfe);
