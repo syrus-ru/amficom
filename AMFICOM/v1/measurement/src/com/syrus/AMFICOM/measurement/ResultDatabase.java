@@ -1,7 +1,6 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -10,44 +9,40 @@ import oracle.sql.BLOB;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.ByteArrayDatabase;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 
 public class ResultDatabase extends StorableObjectDatabase {
 	
 //	 measurementId VARCHAR2(32) NOT NULL,
-	public static final String COLUMN_MEASUREMENT_ID		=	"measurementId";
+	public static final String COLUMN_MEASUREMENT_ID		=	"measurement_id";
 //	 analysisId VARCHAR2(32),
-	public static final String COLUMN_ANALYSIS_ID			=	"analysisId";
+	public static final String COLUMN_ANALYSIS_ID			=	"analysis_id";
 //	 evaluationId VARCHAR2(32),
-	public static final String COLUMN_EVALUATION_ID			=	"evaluationId";
+	public static final String COLUMN_EVALUATION_ID			=	"evaluation_id";
 //	 sort NUMBER(2, 0) NOT NULL,
 	public static final String COLUMN_SORT					=	"sort";
 //	 alarmLevel NUMBER(2, 0) NOT NULL,
-	public static final String COLUMN_ALARM_LEVEL			=	"alarmLevel";
+	public static final String COLUMN_ALARM_LEVEL			=	"alarm_level";
 	
-	public static final String LINK_COLUMN_TYPE_ID			=	"typeId";
-	public static final String LINK_COLUMN_RESULT_ID		=	"resultId";
+	public static final String LINK_COLUMN_TYPE_ID			=	"type_id";
+	public static final String LINK_COLUMN_RESULT_ID		=	"result_id";
 	public static final String LINK_COLUMN_VALUE			=	"value";
 
-	private Result fromStorableObject(StorableObject storableObject) throws Exception {
+	private Result fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Result)
 			return (Result)storableObject;
-		else
-			throw new Exception("ResultDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+		throw new IllegalDataException("ResultDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	public void retrieve(StorableObject storableObject) throws Exception {
+	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Result result = this.fromStorableObject(storableObject);
 		this.retrieveResult(result);
 		this.retrieveResultParameters(result);
 	}
 
-	private void retrieveResult(Result result) throws Exception {
+	private void retrieveResult(Result result) throws ObjectNotFoundException, RetrieveObjectException {
 		String resultIdStr = result.getId().toSQLString();
 		String sql = SQL_SELECT
 			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
@@ -111,11 +106,11 @@ public class ResultDatabase extends StorableObjectDatabase {
 														 resultSet.getInt(COLUMN_ALARM_LEVEL));
 			}
 			else
-				throw new Exception("No such result: " + resultIdStr);
+				throw new ObjectNotFoundException("No such result: " + resultIdStr);
 		}
 		catch (SQLException sqle) {
 			String mesg = "ResultDatabase.retrieveResult | Cannot retrieve result " + resultIdStr;
-			throw new Exception(mesg, sqle);
+			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -126,11 +121,13 @@ public class ResultDatabase extends StorableObjectDatabase {
 				statement = null;
 				resultSet = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+//				 nothing yet.
+				}
 		}
 	}
 
-	private void retrieveResultParameters(Result result) throws Exception {
+	private void retrieveResultParameters(Result result) throws RetrieveObjectException {
 		String resultIdStr = result.getId().toSQLString();
 		String sql = SQL_SELECT
 			+ COLUMN_ID + COMMA
@@ -161,7 +158,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 		}
 		catch (SQLException sqle) {
 			String mesg = "ResultDatabase.retrieveResultParameters | Cannot retrieve parameters for result " + resultIdStr;
-			throw new Exception(mesg, sqle);
+			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -172,12 +169,14 @@ public class ResultDatabase extends StorableObjectDatabase {
 				statement = null;
 				resultSet = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+//				 nothing yet.
+				}
 		}
 		result.setParameters((SetParameter[])arraylist.toArray(new SetParameter[arraylist.size()]));
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws Exception {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Result result = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
@@ -185,19 +184,19 @@ public class ResultDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void insert(StorableObject storableObject) throws Exception {
+	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		Result result = this.fromStorableObject(storableObject);
 		try {
 			this.insertResult(result);
 			this.insertResultParameters(result);
 		}
-		catch (Exception e) {
+		catch (CreateObjectException e) {
 			this.delete(result);
 			throw e;
 		}
 	}
 
-	private void insertResult(Result result) throws Exception {
+	private void insertResult(Result result) throws CreateObjectException {
 		String resultIdStr = result.getId().toSQLString();
 		String sql;
 		{			
@@ -274,7 +273,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 		}
 		catch (SQLException sqle) {
 			String mesg = "ResultDatabase.insertResult | Cannot insert result " + resultIdStr;
-			throw new Exception(mesg, sqle);
+			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -282,11 +281,13 @@ public class ResultDatabase extends StorableObjectDatabase {
 					statement.close();
 				statement = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+//				 nothing yet.
+				}
 		}
 	}
 
-	private void insertResultParameters(Result result) throws Exception {
+	private void insertResultParameters(Result result) throws CreateObjectException {
 		/**
 		 * @todo when change DB Identifier model ,change String to long
 		 */
@@ -336,7 +337,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 		}
 		catch (SQLException sqle) {
 			String mesg = "ResultDatabase.insertResultParameters | Cannot insert parameter " + setParameters[i].getId().toString() + " of type " + setParameters[i].getTypeId().toString() + " for result " + resultIdCode;
-			throw new Exception(mesg, sqle);
+			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -348,7 +349,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj) throws Exception {
+	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, UpdateObjectException {
 		Result result = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			default:
@@ -384,7 +385,9 @@ public class ResultDatabase extends StorableObjectDatabase {
 					statement.close();
 				statement = null;
 			}
-			catch(SQLException Ex) { }
+			catch(SQLException Ex) {
+				// nothing yet.
+				}
 		}
 	}
 }

@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.measurement.ora.CronStringArray;
 
 public class TemporalPatternDatabase extends StorableObjectDatabase {
@@ -158,7 +159,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object arg) throws IllegalDataException, CreateObjectException {
+	public void update(StorableObject storableObject, int updateKind, Object arg) throws IllegalDataException, UpdateObjectException {
 		TemporalPattern temporalPattern = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			default:

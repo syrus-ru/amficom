@@ -6,10 +6,7 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
@@ -23,26 +20,25 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 	public static final String	COLUMN_CODENAME					= "codename";
 	public static final String	COLUMN_DESCRIPTION				= "description";
 
-	public static final String	LINK_COLUMN_EVALUATION_TYPE_ID	= "evaluationTypeId";
+	public static final String	LINK_COLUMN_EVALUATION_TYPE_ID	= "evaluation_type_id";
 
 	private EvaluationType fromStorableObject(StorableObject storableObject)
-			throws Exception {
+			throws IllegalDataException {
 		if (storableObject instanceof EvaluationType)
 			return (EvaluationType) storableObject;
-		else
-			throw new Exception(
+		throw new IllegalDataException(
 					"EvaluationTypeDatabase.fromStorableObject | Illegal Storable Object: "
 							+ storableObject.getClass().getName());
 	}
 
-	public void retrieve(StorableObject storableObject) throws Exception {
+	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		EvaluationType evaluationType = this.fromStorableObject(storableObject);
 		this.retrieveEvaluationType(evaluationType);
 		this.retrieveParameterTypes(evaluationType);
 	}
 
 	private void retrieveEvaluationType(EvaluationType evaluationType)
-			throws Exception {
+			throws ObjectNotFoundException, RetrieveObjectException {
 		String evaluationTypeIdStr = evaluationType.getId().toSQLString();
 		String sql;
 		{
@@ -91,12 +87,12 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 						resultSet.getString(COLUMN_CODENAME), resultSet
 								.getString(COLUMN_DESCRIPTION));
 			else
-				throw new Exception("No such evaluation type: "
+				throw new ObjectNotFoundException("No such evaluation type: "
 						+ evaluationTypeIdStr);
 		} catch (SQLException sqle) {
 			String mesg = "EvaluationTypeDatabase.retrieveEvaluationType | Cannot retrieve evaluation type "
 					+ evaluationTypeIdStr;
-			throw new Exception(mesg, sqle);
+			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			try {
 				if (statement != null)
@@ -106,12 +102,13 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 				statement = null;
 				resultSet = null;
 			} catch (SQLException sqle1) {
+				// nothing yet.
 			}
 		}
 	}
 
 	private void retrieveParameterTypes(EvaluationType evaluationType)
-			throws Exception {	
+			throws RetrieveObjectException {	
 
 		 ArrayList inParTyps = new ArrayList();
 		 ArrayList thresholdParTyps = new ArrayList();
@@ -172,7 +169,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 		} catch (SQLException sqle) {
 			String mesg = "EvaluationTypeDatabase.retrieveParameterTypes | Cannot retrieve parameter types for evaluation type "
 					+ evaluationTypeIdStr;
-			throw new Exception(mesg, sqle);
+			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			try {
 				if (statement != null)
@@ -182,6 +179,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 				statement = null;
 				resultSet = null;
 			} catch (SQLException sqle1) {
+				// nothing yet.
 			}
 		}
 		inParTyps.trimToSize();
@@ -193,7 +191,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 	}
 
 	public Object retrieveObject(StorableObject storableObject,
-			int retrieveKind, Object arg) throws Exception {
+			int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		EvaluationType evaluationType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
@@ -201,12 +199,12 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void insert(StorableObject storableObject) throws Exception {
+	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
 		EvaluationType evaluationType = this.fromStorableObject(storableObject);
 		try {
 			this.insertEvaluationType(evaluationType);
 			this.insertParameterTypes(evaluationType);
-		} catch (Exception e) {
+		} catch (CreateObjectException e) {
 			try {
 				connection.rollback();
 			} catch (SQLException sqle) {
@@ -224,7 +222,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 	}
 
 	private void insertEvaluationType(EvaluationType evaluationType)
-			throws Exception {
+			throws CreateObjectException {
 		String evaluationTypeIdStr = evaluationType.getId().toSQLString();
 		String sql;
 		{
@@ -271,19 +269,20 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 		} catch (SQLException sqle) {
 			String mesg = "EvaluationTypeDatabase.insertEvaluationType | Cannot insert evaluation type "
 					+ evaluationTypeIdStr;
-			throw new Exception(mesg, sqle);
+			throw new CreateObjectException(mesg, sqle);
 		} finally {
 			try {
 				if (statement != null)
 					statement.close();
 				statement = null;
 			} catch (SQLException sqle1) {
+				// nothing yet.
 			}
 		}
 	}
 
 	private void insertParameterTypes(EvaluationType evaluationType)
-			throws Exception {
+			throws CreateObjectException {
 		ArrayList inParTyps = evaluationType.getInParameterTypes();
 		ArrayList thresholdParTyps = evaluationType
 				.getThresholdParameterTypes();
@@ -392,19 +391,20 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 					+ parameterMode
 					+ "' for evaluation type "
 					+ evaluationTypeIdCode;
-			throw new Exception(mesg, sqle);
+			throw new CreateObjectException(mesg, sqle);
 		} finally {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
 				preparedStatement = null;
 			} catch (SQLException sqle1) {
+				// nothing yet.
 			}
 		}
 	}
 
 	public void update(StorableObject storableObject, int updateKind,
-			Object obj) throws Exception {
+			Object obj) throws IllegalDataException, UpdateObjectException {
 		EvaluationType evaluationType = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			default:
@@ -433,12 +433,13 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 					statement.close();
 				statement = null;
 			} catch (SQLException ex) {
+				// nothing yet.
 			}
 		}
 	}
 
 	public static EvaluationType retrieveForCodename(String codename)
-			throws Exception {
+			throws ObjectNotFoundException , RetrieveObjectException {
 		String sql;
 		{
 			StringBuffer buffer = new StringBuffer(SQL_SELECT);
@@ -468,13 +469,13 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 				 */
 				return new EvaluationType(new Identifier(resultSet
 						.getString(COLUMN_ID)));
-			} else
-				throw new Exception("No evaluation type with codename: '"
+			} 
+			throw new ObjectNotFoundException("No evaluation type with codename: '"
 						+ codename + "'");
 		} catch (SQLException sqle) {
 			String mesg = "EvaluationTypeDatabase.retrieveForCodename | Cannot retrieve evaluation type with codename: '"
 					+ codename + "'";
-			throw new Exception(mesg, sqle);
+			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			try {
 				if (statement != null)

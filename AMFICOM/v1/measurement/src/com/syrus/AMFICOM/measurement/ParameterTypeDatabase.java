@@ -3,10 +3,7 @@ package com.syrus.AMFICOM.measurement;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
@@ -16,14 +13,13 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	public static final String	COLUMN_DESCRIPTION	= "description";	
 	public static final String	COLUMN_NAME			= "name";	
 
-	private ParameterType fromStorableObject(StorableObject storableObject) throws Exception {
+	private ParameterType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof ParameterType)
 			return (ParameterType)storableObject;
-		else
-			throw new Exception("ParameterTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+		throw new IllegalDataException("ParameterTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	public void retrieve(StorableObject storableObject) throws Exception {
+	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		ParameterType parameterType = this.fromStorableObject(storableObject);
 
 		String parameterTypeIdStr = parameterType.getId().toSQLString();
@@ -63,11 +59,11 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 											resultSet.getString(COLUMN_NAME));
 			}
 			else
-				throw new Exception("No such parameter type: " + parameterTypeIdStr);
+				throw new ObjectNotFoundException("No such parameter type: " + parameterTypeIdStr);
 		}
 		catch (SQLException sqle) {
 			String mesg = "ParameterTypeDatabase.retrieve | Cannot retrieve parameter type " + parameterTypeIdStr;
-			throw new Exception(mesg, sqle);
+			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -78,16 +74,18 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 				statement = null;
 				resultSet = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+				// nothing yet.
+				}
 		}
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws Exception {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		ParameterType parameterType = null;
 		if (storableObject instanceof ParameterType)
 			parameterType = (ParameterType)storableObject;
 		else
-			throw new Exception("ParameterTypeDatabase.retrieveObject | Illegal Storable Object: " + storableObject.getClass().getName());
+			throw new RetrieveObjectException("ParameterTypeDatabase.retrieveObject | Illegal Storable Object: " + storableObject.getClass().getName());
 
 		switch (retrieveKind) {
 			default:
@@ -95,12 +93,12 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 		}
 	}
 
-	public void insert(StorableObject storableObject) throws Exception {
+	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		ParameterType parameterType = null;
 		if (storableObject instanceof ParameterType)
 			parameterType = (ParameterType)storableObject;
-		else
-			throw new Exception("ParameterTypeDatabase.insert | Illegal Storable Object: " + storableObject.getClass().getName());
+		else 
+			throw new IllegalDataException("ParameterTypeDatabase.insert | Illegal Storable Object: " + storableObject.getClass().getName());
 
 		String parameterTypeIdStr = parameterType.getId().toSQLString();
 		String sql = SQL_INSERT_INTO
@@ -139,7 +137,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 		}
 		catch (SQLException sqle) {
 			String mesg = "ParameterTypeDatabase.insert | Cannot insert parameter type " + parameterTypeIdStr;
-			throw new Exception(mesg, sqle);
+			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -147,19 +145,21 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 					statement.close();
 				statement = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+//				 nothing yet.
+				}
 		}
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj) throws Exception {
+	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, UpdateObjectException {
 		ParameterType parameterType = null;
 		if (storableObject instanceof ParameterType)
 			parameterType = (ParameterType)storableObject;
 		else
-			throw new Exception("ParameterTypeDatabase.update | Illegal Storable Object: " + storableObject.getClass().getName());
+			throw new UpdateObjectException("ParameterTypeDatabase.update | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	public static ParameterType retrieveForCodename(String codename) throws Exception {
+	public static ParameterType retrieveForCodename(String codename) throws ObjectNotFoundException , RetrieveObjectException {
 		String sql = SQL_SELECT
 			+ COLUMN_ID
 			+ SQL_FROM
@@ -182,12 +182,11 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 				 */
 				return new ParameterType(new Identifier(resultSet.getString(COLUMN_ID)));
 			}
-			else
-				throw new Exception("No such parameter type with codename: '" + codename + "'");
+			throw new ObjectNotFoundException("No such parameter type with codename: '" + codename + "'");
 		}
 		catch (SQLException sqle) {
 			String mesg = "ParameterTypeDatabase.retrieveForCodename | Cannot retrieve parameter type with codename: '" + codename + "'";
-			throw new Exception(mesg, sqle);
+			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -198,7 +197,9 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 				statement = null;
 				resultSet = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+//				 nothing yet.
+				}
 		}
 	}
 }

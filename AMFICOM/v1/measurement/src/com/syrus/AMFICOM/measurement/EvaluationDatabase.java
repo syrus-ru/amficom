@@ -1,39 +1,34 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.sql.Statement;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.*;
 
 public class EvaluationDatabase extends StorableObjectDatabase {
 
-	public static final String	COLUMN_TYPE_ID				= "typeId";
-	public static final String	COLUMN_MONITORED_ELEMENT_ID	= "monitoredElementId";
-	public static final String	COLUMN_THRESHOLD_SET_ID		= "thresholdSetId";
-	public static final String	COLUMN_ETHALON_ID			= "etalonId";
+	public static final String	COLUMN_TYPE_ID				= "type_id";
+	public static final String	COLUMN_MONITORED_ELEMENT_ID	= "monitored_element_id";
+	public static final String	COLUMN_THRESHOLD_SET_ID		= "threshold_set_id";
+	public static final String	COLUMN_ETHALON_ID			= "etalon_id";
 
 	private Evaluation fromStorableObject(StorableObject storableObject)
-			throws Exception {
+			throws IllegalDataException {
 		if (storableObject instanceof Evaluation)
 			return (Evaluation) storableObject;
-		else
-			throw new Exception(
+		throw new IllegalDataException(
 					"EvaluationDatabase.fromStorableObject | Illegal Storable Object: "
 							+ storableObject.getClass().getName());
 	}
 
-	public void retrieve(StorableObject storableObject) throws Exception {
+	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Evaluation evaluation = this.fromStorableObject(storableObject);
 		this.retrieveEvaluation(evaluation);
 	}
 
-	private void retrieveEvaluation(Evaluation evaluation) throws Exception {
+	private void retrieveEvaluation(Evaluation evaluation) throws ObjectNotFoundException, RetrieveObjectException {
 		String evaluationIdStr = evaluation.getId().toSQLString();
 		String sql;
 		{
@@ -102,11 +97,11 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 										.getString(COLUMN_MONITORED_ELEMENT_ID)),
 								thresholdSet, etalon);
 			} else
-				throw new Exception("No such evaluation: " + evaluationIdStr);
+				throw new ObjectNotFoundException("No such evaluation: " + evaluationIdStr);
 		} catch (SQLException sqle) {
 			String mesg = "EvaluationDatabase.retrieve | Cannot retrieve evaluation "
 					+ evaluationIdStr;
-			throw new Exception(mesg, sqle);
+			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			try {
 				if (statement != null)
@@ -116,12 +111,13 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 				statement = null;
 				resultSet = null;
 			} catch (SQLException sqle1) {
+				// nothing yet
 			}
 		}
 	}
 
 	public Object retrieveObject(StorableObject storableObject,
-			int retrieveKind, Object arg) throws Exception {
+			int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Evaluation evaluation = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
@@ -129,11 +125,11 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void insert(StorableObject storableObject) throws Exception {
+	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
 		Evaluation evaluation = this.fromStorableObject(storableObject);
 		try {
 			this.insertEvaluation(evaluation);
-		} catch (Exception e) {
+		} catch (CreateObjectException e) {
 			try {
 				connection.rollback();
 			} catch (SQLException sqle) {
@@ -150,7 +146,7 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void insertEvaluation(Evaluation evaluation) throws Exception {
+	public void insertEvaluation(Evaluation evaluation) throws CreateObjectException {
 		String evaluationIdStr = evaluation.getId().toSQLString();
 		String sql;
 		{
@@ -208,19 +204,20 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 		} catch (SQLException sqle) {
 			String mesg = "EvaluationDatabase.insert | Cannot insert evaluation "
 					+ evaluationIdStr;
-			throw new Exception(mesg, sqle);
+			throw new CreateObjectException(mesg, sqle);
 		} finally {
 			try {
 				if (statement != null)
 					statement.close();
 				statement = null;
 			} catch (SQLException sqle1) {
+				// nothing yet.
 			}
 		}
 	}
 
 	public void update(StorableObject storableObject, int updateKind,
-			Object obj) throws Exception {
+			Object obj) throws IllegalDataException, UpdateObjectException {
 		Evaluation evaluation = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			default:

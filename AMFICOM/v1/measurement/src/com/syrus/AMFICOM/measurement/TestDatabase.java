@@ -9,55 +9,40 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 
 public class TestDatabase extends StorableObjectDatabase {
-//	 analysisTypeId VARCHAR2(32),
-	public static final String COLUMN_ANALYSIS_TYPE_ID	= "analysisTypeId";
-	// description VARCHAR2(256),
+	public static final String COLUMN_ANALYSIS_TYPE_ID	= "analysis_type_id";
 	public static final String COLUMN_DESCRIPTION	= "description";
-	// endTime DATE,
-	public static final String COLUMN_END_TIME	= "endTime";
-	// evaluationTypeId VARCHAR2(32),
-	public static final String COLUMN_EVALUATION_TYPE_ID	= "evaluationTypeId";
-	// measurementTypeId VARCHAR2(32) NOT NULL,
-	public static final String COLUMN_MEASUREMENT_TYPE_ID	= "measurementTypeId";
-	// monitoredElementId VARCHAR2(32) NOT NULL,
-	public static final String COLUMN_MONITORED_ELEMENT_ID	= "monitoredElementId";
-	// returnType NUMBER(2, 0) NOT NULL,
-	public static final String COLUMN_RETURN_TYPE	= "returnType";
-	// startTime DATE,
-	public static final String COLUMN_START_TIME	= "startTime";
-	// status NUMBER(2, 0) NOT NULL,
+	public static final String COLUMN_END_TIME	= "end_time";
+	public static final String COLUMN_EVALUATION_TYPE_ID	= "evaluation_type_id";
+	public static final String COLUMN_MEASUREMENT_TYPE_ID	= "measurement_type_id";
+	public static final String COLUMN_MONITORED_ELEMENT_ID	= "monitored_element_id";
+	public static final String COLUMN_RETURN_TYPE	= "return_type";
+	public static final String COLUMN_START_TIME	= "start_time";
 	public static final String COLUMN_STATUS	= "status";
-	// temporalPatternId VARCHAR2(32),
-	public static final String COLUMN_TEMPORAL_PATTERN_ID	= "temporalPatternId";
-	// temporalType NUMBER(2, 0) NOT NULL,
-	public static final String COLUMN_TEMPORAL_TYPE	= "temporalType";
+	public static final String COLUMN_TEMPORAL_PATTERN_ID	= "temporal_pattern_id";
+	public static final String COLUMN_TEMPORAL_TYPE	= "temporal_type";
 	
-	public static final String LINK_COLMN_MEASUREMENT_SETUP_ID = "measurementSetupId";
-	public static final String LINK_COLMN_TEST_ID = "testId";
+	public static final String LINK_COLMN_MEASUREMENT_SETUP_ID = "measurement_setup_id";
+	public static final String LINK_COLMN_TEST_ID = "test_id";
 
 	
-	private Test fromStorableObject(StorableObject storableObject) throws Exception {
+	private Test fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Test)
 			return (Test)storableObject;
-		else
-			throw new Exception("TestDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+		throw new IllegalDataException("TestDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	public void retrieve(StorableObject storableObject) throws Exception {
+	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Test test = this.fromStorableObject(storableObject);
 		this.retrieveTest(test);
 		this.retrieveMeasurementSetupTestLinks(test);
 	}
 
-	private void retrieveTest(Test test) throws Exception {
+	private void retrieveTest(Test test) throws ObjectNotFoundException, RetrieveObjectException {
 		String testIdStr = test.getId().toSQLString();
 		String sql = SQL_SELECT
 			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
@@ -130,11 +115,11 @@ public class TestDatabase extends StorableObjectDatabase {
 													 (description != null)?description:"");
 			}
 			else
-				throw new Exception("No such test: " + testIdStr);
+				throw new ObjectNotFoundException("No such test: " + testIdStr);
 		}
 		catch (SQLException sqle) {
 			String mesg = "TestDatabase.retrieveTest | Cannot retrieve test " + testIdStr;
-			throw new Exception(mesg, sqle);
+			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -151,7 +136,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void retrieveMeasurementSetupTestLinks(Test test) throws Exception {
+	private void retrieveMeasurementSetupTestLinks(Test test) throws RetrieveObjectException {
 		String testIdStr = test.getId().toSQLString();
 		String sql = SQL_SELECT
 			+ LINK_COLMN_MEASUREMENT_SETUP_ID
@@ -175,7 +160,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 		catch (SQLException sqle) {
 			String mesg = "TestDatabase.retrieveMeasurementSetupTestLinks | Cannot retrieve measurement setup ids for test " + testIdStr;
-			throw new Exception(mesg, sqle);
+			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -193,7 +178,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		test.setMeasurementSetupIds(arraylist);
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws Exception {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Test test = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			case Test.RETRIEVE_MEASUREMENTS:
@@ -203,7 +188,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private ArrayList retrieveMeasurementsOrderByStartTime(Test test, MeasurementStatus measurementStatus) throws Exception {
+	private ArrayList retrieveMeasurementsOrderByStartTime(Test test, MeasurementStatus measurementStatus) throws RetrieveObjectException {
 		String testIdStr = test.getId().toSQLString();
 		String sql = SQL_SELECT
 			+ COLUMN_ID
@@ -230,7 +215,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 		catch (SQLException sqle) {
 			String mesg = "TestDatabase.retrieveMeasurementsOrderByStartTime | Cannot retrieve measurements for test " + testIdStr + " and status " + Integer.toString(measurementStatus.value());
-			throw new Exception(mesg, sqle);
+			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -248,13 +233,13 @@ public class TestDatabase extends StorableObjectDatabase {
 		return arraylist;
 	}
 
-	public void insert(StorableObject storableObject) throws Exception {
+	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		Test test = this.fromStorableObject(storableObject);
 		try {
 			this.insertTest(test);
 			this.insertMeasurementSetupTestLinks(test);
 		}
-		catch (Exception e) {
+		catch (CreateObjectException e) {
 			try {
 				connection.rollback();
 			}
@@ -273,7 +258,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void insertTest(Test test) throws Exception {
+	private void insertTest(Test test) throws CreateObjectException {
 		/**
 		 * @todo when change DB Identifier model ,change String to long
 		 */
@@ -366,7 +351,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 		catch (SQLException sqle) {
 			String mesg = "TestDatabase.insertTest | Cannot insert test " + testIdCode;
-			throw new Exception(mesg, sqle);
+			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -380,7 +365,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void insertMeasurementSetupTestLinks(Test test) throws Exception {
+	private void insertMeasurementSetupTestLinks(Test test) throws CreateObjectException {
 		/**
 		 * @todo when change DB Identifier model ,change String to long
 		 */
@@ -413,7 +398,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 		catch (SQLException sqle) {
 			String mesg = "TestDatabase.insertMeasurementSetupTestLinks | Cannot insert link for measurement setup " + msIdCode + " and test " + testIdCode;
-			throw new Exception(mesg, sqle);
+			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -427,7 +412,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object arg) throws Exception {
+	public void update(StorableObject storableObject, int updateKind, Object arg) throws IllegalDataException, UpdateObjectException {
 		Test test = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case Test.UPDATE_STATUS:
@@ -439,7 +424,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void updateStatus(Test test) throws Exception {
+	private void updateStatus(Test test) throws UpdateObjectException {
 		String testIdStr = test.getId().toSQLString();
 		String sql = SQL_UPDATE + ObjectEntities.TEST_ENTITY
 			+ SQL_SET
@@ -460,7 +445,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 		catch (SQLException sqle) {
 			String mesg = "TestDatabase.updateStatus | Cannot update status of test " + testIdStr;
-			throw new Exception(mesg, sqle);
+			throw new UpdateObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -474,7 +459,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void updateModified(Test test) throws Exception {
+	private void updateModified(Test test) throws UpdateObjectException {
 		String testIdStr = test.getId().toSQLString();
 		String sql = SQL_UPDATE + ObjectEntities.TEST_ENTITY
 			+ SQL_SELECT
@@ -493,7 +478,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 		catch (SQLException sqle) {
 			String mesg = "TestDatabase.updateStatus | Cannot update modified of test " + testIdStr;
-			throw new Exception(mesg, sqle);
+			throw new UpdateObjectException(mesg, sqle);
 		}
 		finally {
 			try {

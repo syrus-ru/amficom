@@ -6,10 +6,7 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
@@ -22,23 +19,22 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	public static final String	COLUMN_CODENAME					= "codename";
 	public static final String	COLUMN_DESCRIPTION				= "description";	
 	
-	public static final String	LINK_COLUMN_ANALYSIS_TYPE_ID 	= "analysisTypeId";
+	public static final String	LINK_COLUMN_ANALYSIS_TYPE_ID 	= "analysis_type_id";
 
-	private AnalysisType fromStorableObject(StorableObject storableObject) throws Exception {
+	private AnalysisType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof AnalysisType)
 			return (AnalysisType) storableObject;
-		else
-			throw new Exception("AnalysisTypeDatabase.fromStorableObject | Illegal Storable Object: "
+		throw new IllegalDataException("AnalysisTypeDatabase.fromStorableObject | Illegal Storable Object: "
 					+ storableObject.getClass().getName());
 	}
 
-	public void retrieve(StorableObject storableObject) throws Exception {
+	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		AnalysisType analysisType = this.fromStorableObject(storableObject);
 		this.retrieveAnalysisType(analysisType);
 		this.retrieveParameterTypes(analysisType);
 	}
 
-	private void retrieveAnalysisType(AnalysisType analysisType) throws Exception {
+	private void retrieveAnalysisType(AnalysisType analysisType) throws ObjectNotFoundException, RetrieveObjectException {
 		String analysisTypeIdStr = analysisType.getId().toSQLString();
 		String sql;
 		{
@@ -78,11 +74,11 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 						.getString(COLUMN_CREATOR_ID)), new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
 						resultSet.getString(COLUMN_CODENAME), resultSet.getString(COLUMN_DESCRIPTION));
 			else
-				throw new Exception("No such analysis type: " + analysisTypeIdStr);
+				throw new ObjectNotFoundException("No such analysis type: " + analysisTypeIdStr);
 		} catch (SQLException sqle) {
 			String mesg = "AnalysisTypeDatabase.retrieveAnalysisType | Cannot retrieve analysis type "
 					+ analysisTypeIdStr;
-			throw new Exception(mesg, sqle);
+			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			try {
 				if (statement != null) statement.close();
@@ -94,7 +90,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void retrieveParameterTypes(AnalysisType analysisType) throws Exception {	
+	private void retrieveParameterTypes(AnalysisType analysisType) throws RetrieveObjectException {	
 		ArrayList inParTyps = new ArrayList();
 		ArrayList criteriaParTyps = new ArrayList();
 		ArrayList outParTyps = new ArrayList();
@@ -111,7 +107,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			buffer.append(SQL_WHERE);
 			buffer.append(LINK_COLUMN_ANALYSIS_TYPE_ID);
 			buffer.append(EQUALS);
-			buffer.append( analysisTypeIdStr);
+			buffer.append(analysisTypeIdStr);
 			sql = buffer.toString();
 		}
 		Statement statement = null;
@@ -142,7 +138,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		} catch (SQLException sqle) {
 			String mesg = "AnalysisTypeDatabase.retrieveParameterTypes | Cannot retrieve parameter types for analysis type "
 					+ analysisTypeIdStr;
-			throw new Exception(mesg, sqle);
+			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			try {
 				if (statement != null) statement.close();
@@ -150,6 +146,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				statement = null;
 				resultSet = null;
 			} catch (SQLException sqle1) {
+				// nothing yet.
 			}
 		}
 		inParTyps.trimToSize();
@@ -158,7 +155,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		analysisType.setParameterTypes(inParTyps, criteriaParTyps, outParTyps);
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws Exception {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		AnalysisType analysisType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
@@ -166,12 +163,12 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void insert(StorableObject storableObject) throws Exception {
+	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
 		AnalysisType analysisType = this.fromStorableObject(storableObject);
 		try {
 			this.insertAnalysisType(analysisType);
 			this.insertParameterTypes(analysisType);
-		} catch (Exception e) {
+		} catch (CreateObjectException e) {
 			try {
 				connection.rollback();
 			} catch (SQLException sqle) {
@@ -188,7 +185,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void insertAnalysisType(AnalysisType analysisType) throws Exception {
+	private void insertAnalysisType(AnalysisType analysisType) throws CreateObjectException {
 		String analysisTypeIdStr = analysisType.getId().toSQLString();
 		String sql = SQL_INSERT_INTO 
 			+ ObjectEntities.ANALYSISTYPE_ENTITY + OPEN_BRACKET 
@@ -215,7 +212,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		} catch (SQLException sqle) {
 			String mesg = "AnalysisTypeDatabase.insertAnalysisType | Cannot insert analysis type "
 					+ analysisTypeIdStr;
-			throw new Exception(mesg, sqle);
+			throw new CreateObjectException(mesg, sqle);
 		} finally {
 			try {
 				if (statement != null) statement.close();
@@ -225,7 +222,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void insertParameterTypes(AnalysisType analysisType) throws Exception {
+	private void insertParameterTypes(AnalysisType analysisType) throws CreateObjectException {
 		ArrayList inParTyps = analysisType.getInParameterTypes();
 		ArrayList criteriaParTyps = analysisType.getCriteriaParameterTypes();
 		ArrayList outParTyps = analysisType.getOutParameterTypes();
@@ -286,17 +283,18 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			String mesg = "AnalysisTypeDatabase.insertParameterTypes | Cannot insert parameter type "
 					+ parameterTypeIdCode + " of parameter mode '" + parameterMode + "' for analysis type "
 					+ analysisTypeIdCode;
-			throw new Exception(mesg, sqle);
+			throw new CreateObjectException(mesg, sqle);
 		} finally {
 			try {
 				if (preparedStatement != null) preparedStatement.close();
 				preparedStatement = null;
 			} catch (SQLException sqle1) {
+				// nothing yet.
 			}
 		}
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj) throws Exception {
+	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, UpdateObjectException {
 		AnalysisType analysisType = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			default:
@@ -305,13 +303,13 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	}
 
 	public void delete(AnalysisType analysisType) {
-		String analysisTypeIdStr = analysisType.getId().toString();
+		String analysisTypeIdStr = analysisType.getId().toSQLString();
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
-			statement.executeUpdate("DELETE FROM " + ObjectEntities.ANATYPPARTYPLINK_ENTITY
-					+ " WHERE analysisTypeId = " + analysisTypeIdStr);
-			statement.executeUpdate("DELETE FROM " + ObjectEntities.ANALYSISTYPE_ENTITY + " WHERE " + COLUMN_ID + " = "
+			statement.executeUpdate(SQL_DELETE_FROM + ObjectEntities.ANATYPPARTYPLINK_ENTITY
+					+ SQL_WHERE + LINK_COLUMN_ANALYSIS_TYPE_ID + EQUALS + analysisTypeIdStr);
+			statement.executeUpdate(SQL_DELETE_FROM + ObjectEntities.ANALYSISTYPE_ENTITY + SQL_WHERE + COLUMN_ID + EQUALS
 					+ analysisTypeIdStr);
 			connection.commit();
 		} catch (SQLException sqle1) {
@@ -325,7 +323,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public static AnalysisType retrieveForCodename(String codename) throws Exception {
+	public static AnalysisType retrieveForCodename(String codename) throws ObjectNotFoundException , RetrieveObjectException {
 		String sql = SQL_SELECT + COLUMN_ID + SQL_FROM + ObjectEntities.ANALYSISTYPE_ENTITY + SQL_WHERE
 				+ COLUMN_CODENAME + " = '" + codename + "'";
 		Statement statement = null;
@@ -336,12 +334,11 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next())
 				return new AnalysisType(new Identifier(resultSet.getString(COLUMN_ID)));
-			else
-				throw new Exception("No analysis type with codename: '" + codename + "'");
+			throw new ObjectNotFoundException("No analysis type with codename: '" + codename + "'");
 		} catch (SQLException sqle) {
 			String mesg = "AnalysisTypeDatabase.retrieveForCodename | Cannot retrieve analysis type with codename: '"
 					+ codename + "'";
-			throw new Exception(mesg, sqle);
+			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			try {
 				if (statement != null) statement.close();

@@ -7,10 +7,7 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
@@ -21,22 +18,21 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	public static final String	COLUMN_CODENAME					= "codename";
 	public static final String	COLUMN_DESCRIPTION				= "description";
 	
-	public static final String	LINK_COLUMN_MEASUREMENT_TYPE_ID	= "measurementTypeId";
+	public static final String	LINK_COLUMN_MEASUREMENT_TYPE_ID	= "measurement_type_id";
 
-	private MeasurementType fromStorableObject(StorableObject storableObject) throws Exception {
+	private MeasurementType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MeasurementType)
 			return (MeasurementType)storableObject;
-		else
-			throw new Exception("MeasurementTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+		throw new IllegalDataException("MeasurementTypeDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	public void retrieve(StorableObject storableObject) throws Exception {
+	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		MeasurementType measurementType = this.fromStorableObject(storableObject);
 		this.retrieveMeasurementType(measurementType);
 		this.retrieveParameterTypes(measurementType);
 	}
 
-	private void retrieveMeasurementType(MeasurementType measurementType) throws Exception {
+	private void retrieveMeasurementType(MeasurementType measurementType) throws ObjectNotFoundException, RetrieveObjectException {
 		String measurementTypeIdStr = measurementType.getId().toSQLString();
 		String sql = SQL_SELECT
 			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) 
@@ -78,11 +74,11 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 																			resultSet.getString(COLUMN_CODENAME),
 																			resultSet.getString(COLUMN_DESCRIPTION));
 			else
-				throw new Exception("No such measurement type: " + measurementTypeIdStr);
+				throw new ObjectNotFoundException("No such measurement type: " + measurementTypeIdStr);
 		}
 		catch (SQLException sqle) {
 			String mesg = "MeasurementTypeDatabase.retrieveMeasurementType | Cannot retrieve measurement type " + measurementTypeIdStr;
-			throw new Exception(mesg, sqle);
+			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -93,11 +89,13 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 				statement = null;
 				resultSet = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+//				 nothing yet.
+				}
 		}
 	}
 
-	private void retrieveParameterTypes(MeasurementType measurementType) throws Exception {
+	private void retrieveParameterTypes(MeasurementType measurementType) throws RetrieveObjectException {
 		ArrayList inParTyps = new ArrayList();
 		ArrayList outParTyps = new ArrayList();
 
@@ -140,7 +138,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		}
 		catch (SQLException sqle) {
 			String mesg = "MeasurementTypeDatabase.retrieveParameterTypes | Cannot retrieve parameter types for measurement type " + measurementTypeIdStr;
-			throw new Exception(mesg, sqle);
+			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -151,14 +149,16 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 				statement = null;
 				resultSet = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+				// nothing yet.
+				}
 		}
 		inParTyps.trimToSize();
 		outParTyps.trimToSize();
 		measurementType.setParameterTypes(inParTyps, outParTyps);
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws Exception {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		MeasurementType measurementType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
@@ -166,13 +166,13 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		}
 	}
 
-	public void insert(StorableObject storableObject) throws Exception {
+	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		MeasurementType measurementType = this.fromStorableObject(storableObject);
 		try {
 			this.insertMeasurementType(measurementType);
 			this.insertParameterTypes(measurementType);
 		}
-		catch (Exception e) {
+		catch (CreateObjectException e) {
 			try {
 				connection.rollback();
 			}
@@ -191,7 +191,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		}
 	}
 
-	private void insertMeasurementType(MeasurementType measurementType) throws Exception {
+	private void insertMeasurementType(MeasurementType measurementType) throws CreateObjectException {
 		String measurementTypeIdStr = measurementType.getId().toSQLString();
 		String sql = SQL_INSERT_INTO
 			+ ObjectEntities.MEASUREMENTTYPE_ENTITY
@@ -238,7 +238,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		}
 		catch (SQLException sqle) {
 			String mesg = "MeasurementTypeDatabase.insertMeasurementType | Cannot insert measurement type " + measurementTypeIdStr;
-			throw new Exception(mesg, sqle);
+			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -246,11 +246,13 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 					statement.close();
 				statement = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+//				 nothing yet.
+				}
 		}
 	}
 
-	private void insertParameterTypes(MeasurementType measurementType) throws Exception {
+	private void insertParameterTypes(MeasurementType measurementType) throws CreateObjectException {
 		List inParTyps = measurementType.getInParameterTypes();
 		List outParTyps = measurementType.getOutParameterTypes();
 		/**
@@ -319,7 +321,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		}
 		catch (SQLException sqle) {
 			String mesg = "MeasurementTypeDatabase.insertParameterTypes | Cannot insert parameter type " + parameterTypeIdCode + " of parameter mode '" + parameterMode + "' for measurement type " + measurementTypeIdCode;
-			throw new Exception(mesg, sqle);
+			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -327,11 +329,13 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 					preparedStatement.close();
 				preparedStatement = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+//				 nothing yet.
+				}
 		}
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj) throws Exception {
+	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, UpdateObjectException {
 		MeasurementType measurementType = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			default:
@@ -367,11 +371,13 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 					statement.close();
 				statement = null;
 			}
-			catch(SQLException Ex) { }
+			catch(SQLException Ex) {
+//				 nothing yet.
+				}
 		}
 	}
 
-	public static MeasurementType retrieveForCodename(String codename) throws Exception {
+	public static MeasurementType retrieveForCodename(String codename) throws ObjectNotFoundException , RetrieveObjectException {
 		String sql = SQL_SELECT
 			+ COLUMN_ID
 			+ SQL_FROM 
@@ -395,12 +401,11 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 				 */
 				return new MeasurementType(new Identifier(resultSet.getString(COLUMN_ID)));
 			}
-			else
-				throw new Exception("No measurement type with codename: '" + codename + "'");
+			throw new ObjectNotFoundException("No measurement type with codename: '" + codename + "'");
 		}
 		catch (SQLException sqle) {
 			String mesg = "MeasurementTypeDatabase.retrieveForCodename | Cannot retrieve measurement type with codename: '" + codename + "'";
-			throw new Exception(mesg, sqle);
+			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -411,7 +416,9 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 				statement = null;
 				resultSet = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+				// nothing yet.
+				}
 		}
 	}
 }

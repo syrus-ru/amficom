@@ -5,47 +5,35 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 public class MeasurementDatabase extends StorableObjectDatabase {
-//   typeId VARCHAR2(32) NOT NULL,
-	public static final String COLUMN_TYPE_ID				=	"typeId";
-//	 monitoredElementId VARCHAR2(32) NOT NULL,
-	public static final String COLUMN_MONITORED_ELEMENT_ID	=	"monitoredElementId";
-//	 setupId VARCHAR2(32) NOT NULL,
-	public static final String COLUMN_SETUP_ID				= 	"setupId";
-//	 startTime DATE NOT NULL,
-	public static final String COLUMN_START_TIME			= 	"startTime";
-//	 duration NUMBER(20) NOT NULL,
+	public static final String COLUMN_TYPE_ID				=	"type_id";
+	public static final String COLUMN_MONITORED_ELEMENT_ID	=	"monitored_element_id";
+	public static final String COLUMN_SETUP_ID				= 	"setup_id";
+	public static final String COLUMN_START_TIME			= 	"start_time";
 	public static final String COLUMN_DURATION				=	"duration";
-//	 status NUMBER(2, 0) NOT NULL,
 	public static final String COLUMN_STATUS				=	"status";
-//	 localAddress VARCHAR2(64) NOT NULL,
-	public static final String COLUMN_LOCAL_ADDRESS			=	"localAddress";
-//	 testId VARCHAR2(32) NOT NULL,
-	public static final String COLUMN_TEST_ID				=	"testId";
+	public static final String COLUMN_LOCAL_ADDRESS			=	"local_address";
+	public static final String COLUMN_TEST_ID				=	"test_id";
 	
-	public static final String LINK_COLUMN_MEASUREMENT_ID	=	"measurementId";
+	public static final String LINK_COLUMN_MEASUREMENT_ID	=	"measurement_id";
 	public static final String LINK_SORT					=	"sort";
 
-	private Measurement fromStorableObject(StorableObject storableObject) throws Exception {
+	private Measurement fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Measurement)
 			return (Measurement)storableObject;
-		else
-			throw new Exception("MeasurementDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+		throw new IllegalDataException("MeasurementDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	public void retrieve(StorableObject storableObject) throws Exception {
+	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Measurement measurement = this.fromStorableObject(storableObject);
 		this.retrieveMeasurement(measurement);
 	}
 
-	private void retrieveMeasurement(Measurement measurement) throws Exception {
+	private void retrieveMeasurement(Measurement measurement) throws RetrieveObjectException, ObjectNotFoundException {
 		String measurementIdStr = measurement.getId().toSQLString();
 		String sql = SQL_SELECT
 			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) 
@@ -117,11 +105,11 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 											new Identifier(resultSet.getString(COLUMN_TEST_ID)));
 			}
 			else
-				throw new Exception("No such measurement: " + measurementIdStr);
+				throw new ObjectNotFoundException("No such measurement: " + measurementIdStr);
 		}
 		catch (SQLException sqle) {
 			String mesg = "MeasurementDatabase.retrieve | Cannot retrieve measurement " + measurementIdStr;
-			throw new Exception(mesg, sqle);
+			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -132,11 +120,13 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 				statement = null;
 				resultSet = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+//				 nothing yet.
+				}
 		}
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws Exception {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Measurement measurement = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			case Measurement.RETRIEVE_RESULT:
@@ -146,7 +136,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private Result retrieveResult(Measurement measurement, ResultSort resultSort) throws Exception {
+	private Result retrieveResult(Measurement measurement, ResultSort resultSort) throws ObjectNotFoundException, RetrieveObjectException {
 		String measurementIdStr = measurement.getId().toSQLString();
 		int resultSortNum = resultSort.value();
 		String sql = SQL_SELECT
@@ -173,12 +163,11 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 				 */
 				return new Result(new Identifier(resultSet.getString(COLUMN_ID)));
 			}
-			else	
-				throw new Exception("No result of sort: " + resultSortNum + " for measurement " + measurementIdStr);
+			throw new ObjectNotFoundException("No result of sort: " + resultSortNum + " for measurement " + measurementIdStr);
 		}
 		catch (SQLException sqle) {
 			String mesg = "MeasurementDatabase.retrieveResult | Cannot retrieve result of sort " + resultSortNum + " for measurement " + measurementIdStr;
-			throw new Exception(mesg , sqle);
+			throw new RetrieveObjectException(mesg , sqle);
 		}
 		finally {
 			try {
@@ -189,16 +178,18 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 				statement = null;
 				resultSet = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+				// nothing yet.
+				}
 		}
 	}
 
-	public void insert(StorableObject storableObject) throws Exception {
+	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
 		Measurement measurement = this.fromStorableObject(storableObject);
 		try {
 			this.insertMeasurement(measurement);
 		}
-		catch (Exception e) {
+		catch (CreateObjectException e) {
 			try {
 				connection.rollback();
 			}
@@ -217,7 +208,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void insertMeasurement(Measurement measurement) throws Exception {
+	private void insertMeasurement(Measurement measurement) throws CreateObjectException {
 		String measurementIdStr = measurement.getId().toSQLString();
 		String sql = SQL_INSERT_INTO 
 			+ ObjectEntities.MEASUREMENT_ENTITY
@@ -287,7 +278,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		}
 		catch (SQLException sqle) {
 			String mesg = "MeasurementDatabase.insert | Cannot insert measurement " + measurementIdStr;
-			throw new Exception(mesg, sqle);
+			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -295,11 +286,13 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 					statement.close();
 				statement = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+//				 nothing yet.
+				}
 		}
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj) throws Exception {
+	public void update(StorableObject storableObject, int updateKind, Object obj) throws  IllegalDataException, UpdateObjectException {
 		Measurement measurement = this.fromStorableObject(storableObject);
 		try {
 			switch (updateKind) {
@@ -308,7 +301,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 					break;
 			}
 		}
-		catch (Exception e) {
+		catch (UpdateObjectException e) {
 			try {
 				connection.rollback();
 			}
@@ -327,7 +320,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void updateStatus(Measurement measurement) throws Exception {
+	private void updateStatus(Measurement measurement) throws UpdateObjectException {
 		String measurementIdStr = measurement.getId().toSQLString();
 		String sql = SQL_UPDATE
 			+ ObjectEntities.MEASUREMENT_ENTITY
@@ -351,7 +344,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		}
 		catch (SQLException sqle) {
 			String mesg = "MeasurementDatabase.updateStatus | Cannot update status of measurement " + measurementIdStr;
-			throw new Exception(mesg, sqle);
+			throw new UpdateObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -359,7 +352,9 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 					statement.close();
 				statement = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+				// nothing yet.
+				}
 		}
 	}
 }

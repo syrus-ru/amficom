@@ -10,38 +10,31 @@ import oracle.sql.BLOB;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.ByteArrayDatabase;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.*;
 
 public class SetDatabase extends StorableObjectDatabase {
 	
-//	 sort NUMBER(2, 0) NOT NULL,
 	public static final String	COLUMN_SORT			= "sort";
-//	 description VARCHAR2(256),
-	public static final String	COLUMN_DESCRIPTION	= "description";
-	
-	public static final String LINK_COLUMN_SET_ID	= "setId";
-	public static final String LINK_COLUMN_ME_ID 	= "monitoredElementId";
-	public static final String LINK_COLUMN_TYPE_ID	= "typeId";
+	public static final String	COLUMN_DESCRIPTION	= "description";	
+	public static final String LINK_COLUMN_SET_ID	= "set_id";
+	public static final String LINK_COLUMN_ME_ID 	= "monitored_element_id";
+	public static final String LINK_COLUMN_TYPE_ID	= "type_id";
 	public static final String LINK_COLUMN_VALUE	= "value";
 
-	private Set fromStorableObject(StorableObject storableObject) throws Exception {
+	private Set fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Set)
 			return (Set)storableObject;
-		else
-			throw new Exception("SetDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+		throw new IllegalDataException("SetDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	public void retrieve(StorableObject storableObject) throws Exception {
+	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Set set = this.fromStorableObject(storableObject);
 		this.retrieveSet(set);
 		this.retrieveSetParameters(set);
 		this.retrieveSetMELinks(set);
 	}
 
-	private void retrieveSet(Set set) throws Exception {
+	private void retrieveSet(Set set) throws ObjectNotFoundException, RetrieveObjectException {
 		String setIdStr = set.getId().toSQLString();
 		String sql = SQL_SELECT
 			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
@@ -77,11 +70,11 @@ public class SetDatabase extends StorableObjectDatabase {
 								  (description != null)?description:"");
 			}
 			else
-				throw new Exception("No such set: " + setIdStr);
+				throw new ObjectNotFoundException("No such set: " + setIdStr);
 		}
 		catch (SQLException sqle) {
 			String mesg = "SetDatabase.retrieveSet | Cannot retrieve set " + setIdStr;
-			throw new Exception(mesg, sqle);
+			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -92,11 +85,13 @@ public class SetDatabase extends StorableObjectDatabase {
 				statement = null;
 				resultSet = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+//				 nothing yet.
+				}
 		}
 	}
 
-	private void retrieveSetParameters(Set set) throws Exception {
+	private void retrieveSetParameters(Set set) throws RetrieveObjectException {
 		String setIdStr = set.getId().toSQLString();
 		String sql = SQL_SELECT
 			+ COLUMN_ID + COMMA			
@@ -128,7 +123,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		}
 		catch (SQLException sqle) {
 			String mesg = "SetDatabase.retrieveSetParameters | Cannot retrieve parameters for set " + setIdStr;
-			throw new Exception(mesg, sqle);
+			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -139,12 +134,14 @@ public class SetDatabase extends StorableObjectDatabase {
 				statement = null;
 				resultSet = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+//				 nothing yet.
+				}
 		}
 		set.setParameters((SetParameter[])arraylist.toArray(new SetParameter[arraylist.size()]));
 	}
 
-	private void retrieveSetMELinks(Set set) throws Exception {
+	private void retrieveSetMELinks(Set set) throws RetrieveObjectException {
 		String setIdStr = set.getId().toSQLString();
 		String sql = SQL_SELECT
 			+ LINK_COLUMN_ME_ID
@@ -167,7 +164,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		}
 		catch (SQLException sqle) {
 			String mesg = "SetDatabase.retrieveSetMELinks | Cannot retrieve monitored element ids for set " + setIdStr;
-			throw new Exception(mesg, sqle);
+			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -178,12 +175,14 @@ public class SetDatabase extends StorableObjectDatabase {
 				statement = null;
 				resultSet = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+//				 nothing yet.
+				}
 		}
 		set.setMonitoredElementIds(arraylist);
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws Exception {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Set set = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
@@ -191,20 +190,20 @@ public class SetDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void insert(StorableObject storableObject) throws Exception {
+	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		Set set = this.fromStorableObject(storableObject);
 		try {
 			this.insertSet(set);
 			this.insertSetParameters(set);
 			this.insertSetMELinks(set);
 		}
-		catch (Exception e) {
+		catch (CreateObjectException e) {
 			this.delete(set);
 			throw e;
 		}
 	}
 
-	private void insertSet(Set set) throws Exception {
+	private void insertSet(Set set) throws CreateObjectException {
 		String setIdStr = set.getId().toSQLString();
 		String sql = SQL_INSERT_INTO
 			+ ObjectEntities.SET_ENTITY
@@ -234,7 +233,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		}
 		catch (SQLException sqle) {
 			String mesg = "SetDatabase.insertSet | Cannot insert set " + setIdStr;
-			throw new Exception(mesg, sqle);
+			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -242,11 +241,13 @@ public class SetDatabase extends StorableObjectDatabase {
 					statement.close();
 				statement = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+//				 nothing yet.
+				}
 		}
 	}
 
-	private void insertSetParameters(Set set) throws Exception {
+	private void insertSetParameters(Set set) throws CreateObjectException {
 		String setIdStr = set.getId().toString();
 		SetParameter[] setParameters = set.getParameters();
 		String sql = SQL_INSERT_INTO 
@@ -292,7 +293,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		}
 		catch (SQLException sqle) {
 			String mesg = "SetDatabase.insertSetParameters | Cannot insert parameter " + setParameters[i].getId().toString() + " of type " + setParameters[i].getTypeId().toString() + " for set " + setIdStr;
-			throw new Exception(mesg, sqle);
+			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -300,11 +301,13 @@ public class SetDatabase extends StorableObjectDatabase {
 					preparedStatement.close();
 				preparedStatement = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+//				 nothing yet.
+				}
 		}
 	}
 
-	private void insertSetMELinks(Set set) throws Exception {
+	private void insertSetMELinks(Set set) throws CreateObjectException {
 		/**
 		 * @todo when change DB Identifier model ,change String to long
 		 */
@@ -344,7 +347,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		}
 		catch (SQLException sqle) {
 			String mesg = "SetDatabase.insertSetMELinks | Cannot insert link for monitored element " + meIdCode + " and set " + setIdCode;
-			throw new Exception(mesg, sqle);
+			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -352,11 +355,13 @@ public class SetDatabase extends StorableObjectDatabase {
 					preparedStatement.close();
 				preparedStatement = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+//				 nothing yet.
+				}
 		}
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj) throws Exception {
+	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, UpdateObjectException {
 		Set set = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case Set.UPDATE_ATTACH_ME:
@@ -370,7 +375,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void createMEAttachment(Set set, Identifier monitoredElementId) throws Exception {
+	private void createMEAttachment(Set set, Identifier monitoredElementId) throws UpdateObjectException {
 		String setIdStr = set.getId().toSQLString();
 		String meIdStr = monitoredElementId.toSQLString();
 		String sql = SQL_INSERT_INTO 
@@ -393,7 +398,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		}
 		catch (SQLException sqle) {
 			String mesg = "Set.createMEAttachment | Cannot attach set " + setIdStr + " to monitored element " + meIdStr;
-			throw new Exception(mesg, sqle);
+			throw new UpdateObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -401,11 +406,13 @@ public class SetDatabase extends StorableObjectDatabase {
 					statement.close();
 				statement = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+//				 nothing yet.
+				}
 		}
 	}
 
-	private void deleteMEAttachment(Set set, Identifier monitoredElementId) throws Exception {
+	private void deleteMEAttachment(Set set, Identifier monitoredElementId) throws UpdateObjectException {
 		String setIdStr = set.getId().toSQLString();
 		String meIdStr = monitoredElementId.toSQLString();
 		String sql = SQL_DELETE_FROM 
@@ -425,7 +432,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		}
 		catch (SQLException sqle) {
 			String mesg = "SetDatabase.deleteMEAttachment | Cannot detach set " + setIdStr + " from monitored element " + meIdStr;
-			throw new Exception(mesg, sqle);
+			throw new UpdateObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -433,11 +440,13 @@ public class SetDatabase extends StorableObjectDatabase {
 					statement.close();
 				statement = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+//				 nothing yet.
+				}
 		}
 	}
 
-	private void setModified(Set set) throws Exception {
+	private void setModified(Set set) throws UpdateObjectException {
 		String setIdStr = set.getId().toSQLString();
 		String sql = SQL_UPDATE
 					+ ObjectEntities.SET_ENTITY
@@ -455,7 +464,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		}
 		catch (SQLException sqle) {
 			String mesg = "SetDatabase.setModified | Cannot set modified for set " + setIdStr;
-			throw new Exception(mesg, sqle);
+			throw new UpdateObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -463,7 +472,9 @@ public class SetDatabase extends StorableObjectDatabase {
 					statement.close();
 				statement = null;
 			}
-			catch (SQLException sqle1) {}
+			catch (SQLException sqle1) {
+//				 nothing yet.
+				}
 		}
 	}
 
@@ -498,7 +509,9 @@ public class SetDatabase extends StorableObjectDatabase {
 					statement.close();
 				statement = null;
 			}
-			catch(SQLException Ex) { }
+			catch(SQLException Ex) {
+				// nothing yet.
+				}
 		}
 	}
 }

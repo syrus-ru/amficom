@@ -9,30 +9,27 @@ import java.util.Iterator;
 
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.*;
 
 public class MeasurementSetupDatabase extends StorableObjectDatabase {
 
-	public static final String	COLUMN_CRITERIA_SET_ID				= "criteriaSetId";
+	public static final String	COLUMN_CRITERIA_SET_ID				= "criteria_set_id";
 	public static final String	COLUMN_DESCRIPTION					= "description";
-	public static final String	COLUMN_ETHALON_ID					= "etalonId";
-	public static final String	COLUMN_MEASUREMENT_DURAION			= "measurementDuration";
-	public static final String	COLUMN_PARAMETER_SET_ID				= "parameterSetId";
-	public static final String	COLUMN_THRESHOLD_SET_ID				= "thresholdSetId";
+	public static final String	COLUMN_ETHALON_ID					= "etalon_id";
+	public static final String	COLUMN_MEASUREMENT_DURAION			= "measurement_duration";
+	public static final String	COLUMN_PARAMETER_SET_ID				= "parameter_set_id";
+	public static final String	COLUMN_THRESHOLD_SET_ID				= "threshold_set_id";
 
-	public static final String	LINK_COLUMN_ME_ID					= "monitoredElementId";
-	public static final String	LINK_COLUMN_MEASUREMENT_SETUP_ID	= "measurementSetupId";
+	public static final String	LINK_COLUMN_ME_ID					= "monitored_element_id";
+	public static final String	LINK_COLUMN_MEASUREMENT_SETUP_ID	= "measurement_setup_id";
 
-	public void insert(StorableObject storableObject) throws Exception {
+	public void insert(StorableObject storableObject) throws CreateObjectException, IllegalDataException {
 		MeasurementSetup measurementSetup = this
 				.fromStorableObject(storableObject);
 		try {
 			this.insertMeasurementSetup(measurementSetup);
 			this.insertMeasurementSetupMELinks(measurementSetup);
-		} catch (Exception e) {
+		} catch (CreateObjectException e) {
 			try {
 				connection.rollback();
 			} catch (SQLException sqle) {
@@ -49,7 +46,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void retrieve(StorableObject storableObject) throws Exception {
+	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		MeasurementSetup measurementSetup = this
 				.fromStorableObject(storableObject);
 		this.retrieveMeasurementSetup(measurementSetup);
@@ -57,7 +54,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	}
 
 	public Object retrieveObject(StorableObject storableObject,
-			int retrieveKind, Object arg) throws Exception {
+			int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		MeasurementSetup measurementSetup = this
 				.fromStorableObject(storableObject);
 		switch (retrieveKind) {
@@ -67,7 +64,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	}
 
 	public void update(StorableObject storableObject, int updateKind,
-			Object obj) throws Exception {
+			Object obj) throws IllegalDataException, UpdateObjectException {
 		MeasurementSetup measurementSetup = this
 				.fromStorableObject(storableObject);
 		try {
@@ -81,7 +78,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 					this.setModified(measurementSetup);
 					break;
 			}
-		} catch (Exception e) {
+		} catch (UpdateObjectException e) {
 			try {
 				connection.rollback();
 			} catch (SQLException sqle) {
@@ -99,7 +96,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	}
 
 	private void createMEAttachment(MeasurementSetup measurementSetup,
-			Identifier monitoredElementId) throws Exception {
+			Identifier monitoredElementId) throws UpdateObjectException {
 		String msIdStr = measurementSetup.getId().toSQLString();
 		String meIdStr = monitoredElementId.toSQLString();
 		String sql = SQL_INSERT_INTO + ObjectEntities.MSMELINK_ENTITY
@@ -124,7 +121,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		} catch (SQLException sqle) {
 			String mesg = "MeasurementSetupDatabase.createMEAttachment | Cannot attach measurement setup "
 					+ msIdStr + " to monitored element " + meIdStr;
-			throw new Exception(mesg, sqle);
+			throw new UpdateObjectException(mesg, sqle);
 		} finally {
 			try {
 				if (statement != null)
@@ -136,7 +133,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	}
 
 	private void deleteMEAttachment(MeasurementSetup measurementSetup,
-			Identifier monitoredElementId) throws Exception {
+			Identifier monitoredElementId) throws IllegalDataException {
 		String msIdStr = measurementSetup.getId().toSQLString();
 		String meIdStr = monitoredElementId.toSQLString();
 		String sql = SQL_DELETE_FROM 
@@ -159,7 +156,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		} catch (SQLException sqle) {
 			String mesg = "MeasurementSetupDatabase.deleteMEAttachment | Cannot detach measurement setup "
 					+ msIdStr + " from monitored element " + meIdStr;
-			throw new Exception(mesg, sqle);
+			throw new IllegalDataException(mesg, sqle);
 		} finally {
 			try {
 				if (statement != null)
@@ -171,17 +168,16 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	}
 
 	private MeasurementSetup fromStorableObject(StorableObject storableObject)
-			throws Exception {
+			throws IllegalDataException {
 		if (storableObject instanceof MeasurementSetup)
 			return (MeasurementSetup) storableObject;
-		else
-			throw new Exception(
+		throw new IllegalDataException(
 					"MeasurementSetupDatabase.fromStorableObject | Illegal Storable Object: "
 							+ storableObject.getClass().getName());
 	}
 
 	private void insertMeasurementSetup(MeasurementSetup measurementSetup)
-			throws Exception {
+			throws CreateObjectException {
 		String msIdStr = measurementSetup.getId().toSQLString();
 		Set criteriaSet = measurementSetup.getCriteriaSet();
 		Set thresholdSet = measurementSetup.getThresholdSet();
@@ -260,19 +256,20 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		} catch (SQLException sqle) {
 			String mesg = "MeasurementSetupDatabase.insertMeasurementSetup | Cannot insert Measurement Setup "
 					+ msIdStr;
-			throw new Exception(mesg, sqle);
+			throw new CreateObjectException(mesg, sqle);
 		} finally {
 			try {
 				if (statement != null)
 					statement.close();
 				statement = null;
 			} catch (SQLException sqle1) {
+//				 nothing yet.
 			}
 		}
 	}
 
 	private void insertMeasurementSetupMELinks(MeasurementSetup measurementSetup)
-			throws Exception {
+			throws CreateObjectException {
 		/**
 		 * @todo when change DB Identifier model ,change String to long
 		 */
@@ -321,19 +318,20 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		} catch (SQLException sqle) {
 			String mesg = "MeasurementSetupDatabase.insertMeasurementSetupMELinks | Cannot insert link for monitored element "
 					+ meIdCode + " and Measurement Setup " + msIdCode;
-			throw new Exception(mesg, sqle);
+			throw new CreateObjectException(mesg, sqle);
 		} finally {
 			try {
 				if (preparedStatement != null)
 					preparedStatement.close();
 				preparedStatement = null;
 			} catch (SQLException sqle1) {
+//				 nothing yet.
 			}
 		}
 	}
 
 	private void retrieveMeasurementSetup(MeasurementSetup measurementSetup)
-			throws Exception {
+			throws ObjectNotFoundException, RetrieveObjectException {
 		String msIdStr = measurementSetup.getId().toSQLString();
 		String sql;
 		{
@@ -422,11 +420,11 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 						(description != null) ? description : "", resultSet
 								.getLong(COLUMN_MEASUREMENT_DURAION));
 			} else
-				throw new Exception("No such measurement setup: " + msIdStr);
+				throw new ObjectNotFoundException("No such measurement setup: " + msIdStr);
 		} catch (SQLException sqle) {
 			String mesg = "MeasurementSetupDatabase.retrieveMeasurementSetup | Cannot retrieve measurement setup "
 					+ msIdStr;
-			throw new Exception(mesg, sqle);
+			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			try {
 				if (statement != null)
@@ -436,12 +434,13 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 				statement = null;
 				resultSet = null;
 			} catch (SQLException sqle1) {
+//				 nothing yet.
 			}
 		}
 	}
 
 	private void retrieveMeasurementSetupMELinks(
-			MeasurementSetup measurementSetup) throws Exception {
+			MeasurementSetup measurementSetup) throws RetrieveObjectException {
 		String msIdStr = measurementSetup.getId().toSQLString();
 		String sql;
 		{
@@ -474,7 +473,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		} catch (SQLException sqle) {
 			String mesg = "MeasurementSetupDatabase.retrieveMeasurementSetupMELinks | Cannot retrieve monitored element ids for measurement setup "
 					+ msIdStr;
-			throw new Exception(mesg, sqle);
+			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			try {
 				if (statement != null)
@@ -484,13 +483,14 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 				statement = null;
 				resultSet = null;
 			} catch (SQLException sqle1) {
+//				 nothing yet.
 			}
 		}
 		measurementSetup.setMonitoredElementIds(arraylist);
 	}
 
 	private void setModified(MeasurementSetup measurementSetup)
-			throws Exception {
+			throws UpdateObjectException {
 		String msIdStr = measurementSetup.getId().toString();
 		String sql = SQL_UPDATE
 				+ ObjectEntities.MS_ENTITY
@@ -515,13 +515,14 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		} catch (SQLException sqle) {
 			String mesg = "MeasurementSetupDatabase.setModified | Cannot set modified for measurement setup "
 					+ msIdStr;
-			throw new Exception(mesg, sqle);
+			throw new UpdateObjectException(mesg, sqle);
 		} finally {
 			try {
 				if (statement != null)
 					statement.close();
 				statement = null;
 			} catch (SQLException sqle1) {
+				// nothing yet.
 			}
 		}
 	}

@@ -1,25 +1,17 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.sql.Statement;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.*;
 
 public class AnalysisDatabase extends StorableObjectDatabase {
 
-	public static final String	COLUMN_TYPE_ID				= "typeId";
-	public static final String	COLUMN_MONITORED_ELEMENT_ID	= "monitoredElementId";
-	public static final String	COLUMN_CRITERIA_SET_ID		= "criteriaSetId";
+	public static final String	COLUMN_TYPE_ID				= "type_id";
+	public static final String	COLUMN_MONITORED_ELEMENT_ID	= "monitored_element_id";
+	public static final String	COLUMN_CRITERIA_SET_ID		= "criteria_set_id";
 
 	private Analysis fromStorableObject(StorableObject storableObject)
 			throws IllegalDataException {
@@ -210,7 +202,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 	}
 
 	public void update(StorableObject storableObject, int updateKind,
-			Object obj) throws IllegalDataException, CreateObjectException {
+			Object obj) throws IllegalDataException, UpdateObjectException {
 		Analysis analysis = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			default:
