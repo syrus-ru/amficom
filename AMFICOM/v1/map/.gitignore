@@ -1,2 +1,11 @@
 classes
+*.deploy
+*.jar
+*.jpr
+*.jpx*
 *.swp
+*.tar
+*.gz
+.corba
+.ora
+.mach
