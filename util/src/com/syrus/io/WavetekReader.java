@@ -1,5 +1,5 @@
 /*
- * $Id: WavetekReader.java,v 1.3 2004/11/22 14:03:46 stas Exp $
+ * $Id: WavetekReader.java,v 1.4 2004/12/08 12:46:17 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,8 @@ package com.syrus.io;
 import java.io.*;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/11/22 14:03:46 $
- * @author $Author: stas $
+ * @version $Revision: 1.4 $, $Date: 2004/12/08 12:46:17 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public class WavetekReader extends DataReader
@@ -96,7 +96,7 @@ public class WavetekReader extends DataReader
 		try
 		{
 			size = bac.readIUnsignedShort(pos + 0x6);
-			resolution = range / (double)size;
+			resolution = range / size;
 		}
 		catch (IOException e) { e.printStackTrace(); }
 		return 1;
