@@ -146,6 +146,8 @@ cmserver_v1	AMFICOM/v1/cmserver
 mshserver_v1	AMFICOM/v1/mshserver
 #M	mapview_v1	Map View Module
 mapview_v1	AMFICOM/v1/mapview
+#M	mapviewclient_v1	Client Map View Module
+mapviewclient_v1	AMFICOM/v1/mapviewclient
 #M	database_v1	Database Scheme (new)
 database_v1	AMFICOM/v1/database
 #M	dbscheme_v1	Database Scheme (old)
