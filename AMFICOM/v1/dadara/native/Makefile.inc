@@ -11,7 +11,7 @@ OUT = $(SO_PREFIX)dadara.$(SO_EXT)
 #@todo: improve system detecton
 
 # unixes
-ifeq (${COMSPEC},)
+ifeq (${ComSpec}${COMSPEC},)
 
 OBJ_EXT = o
 SO_EXT = so
