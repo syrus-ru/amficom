@@ -5,15 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.PoolId;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
@@ -84,8 +76,9 @@ public class MeasurementSetup extends StorableObject {
 		}
 	}
 
-	/**
+	/** 
 	 * client constructor
+	 * @param id
 	 * @param parameterSet
 	 * @param criteriaSet
 	 * @param thresholdSet
@@ -94,14 +87,16 @@ public class MeasurementSetup extends StorableObject {
 	 * @param measurementDuration
 	 * @param monitoredElementIds
 	 */
-	public MeasurementSetup(long measurementDuration,
+	public MeasurementSetup(Identifier id,
+							long measurementDuration,
 							String description,
 							Set criteriaSet,
 							Set etalon,
 							Set parameterSet,			
 							Set thresholdSet,	
 							List monitoredElementIds) {
-		super(PoolId.getId(ObjectEntities.MS_ENTITY));
+		//super(PoolId.getId(ObjectEntities.MS_ENTITY));
+		super(id);
 		setParameterSet(parameterSet);
 		setCriteriaSet(criteriaSet);
 		setThresholdSet(thresholdSet);

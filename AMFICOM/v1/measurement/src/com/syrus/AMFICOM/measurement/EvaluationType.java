@@ -6,13 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.PoolId;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 
@@ -66,16 +60,19 @@ public class EvaluationType extends ActionType {
 	
 	/**
 	 * client constructor
+	 * @param id
 	 * @param inParameterTypes
 	 * @param thresholdParameterTypes
 	 * @param etalonParameterTypes
 	 * @param outParameterTypes
 	 */
-	public EvaluationType(List etalonParameterTypes,
+	public EvaluationType(Identifier id,
+						  List etalonParameterTypes,
 						  List inParameterTypes,
 						  List outParameterTypes,
 						  List thresholdParameterTypes) {
-		super(PoolId.getId(ObjectEntities.EVALUATIONTYPE_ENTITY));
+		super(id);
+		//super(PoolId.getId(ObjectEntities.EVALUATIONTYPE_ENTITY));
 		setInParameterTypes(inParameterTypes);
 		setThresholdParameterTypes(thresholdParameterTypes);
 		setEtalonParameterTypes(etalonParameterTypes);

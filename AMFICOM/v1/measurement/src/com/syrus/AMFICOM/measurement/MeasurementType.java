@@ -4,14 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.PoolId;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 
@@ -62,12 +55,15 @@ public class MeasurementType extends ActionType {
 	
 	/**
 	 * client constructor
+	 * @param id
 	 * @param inParameterTypes
 	 * @param outParameterTypes
 	 */
-	public MeasurementType(List inParameterTypes,
+	public MeasurementType(Identifier id,
+						   List inParameterTypes,
 						   List	outParameterTypes){
-		super(PoolId.getId(ObjectEntities.MEASUREMENTTYPE_ENTITY));
+		//super(PoolId.getId(ObjectEntities.MEASUREMENTTYPE_ENTITY));
+		super(id);
 		setInParameterTypes(inParameterTypes);
 		setOutParameterTypes(outParameterTypes);
 	}

@@ -190,6 +190,7 @@ public class Test extends StorableObject {
 	
 	/**
 	 * client constructor
+	 * @param id
 	 * @param analysisTypeId
 	 * @param description
 	 * @param evaluationTypeId
@@ -201,7 +202,8 @@ public class Test extends StorableObject {
 	 * @param temporalPatternId
 	 * @param temporalType
 	 */
-	public Test( Identifier				analysisTypeId,
+	public Test( Identifier				id,
+				 Identifier				analysisTypeId,
 				 String					description,
 				 Identifier				evaluationTypeId,				 
 				 MeasurementSetup		mainMeasurementSetup,
@@ -211,7 +213,8 @@ public class Test extends StorableObject {
 				 TestStatus				status,
 				 Identifier				temporalPatternId,
 				 TestTemporalType		temporalType){
-		super(PoolId.getId(ObjectEntities.TEST_ENTITY));
+		//super(PoolId.getId(ObjectEntities.TEST_ENTITY));
+		super(id);
 		setAnalysisTypeId(analysisTypeId);
 		setDescription(description);
 		setEvaluationTypeId(evaluationTypeId);

@@ -11,15 +11,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.PoolId;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
@@ -687,12 +679,15 @@ public class TemporalPattern extends StorableObject {
 	
 	/**
 	 * cleint constructor
+	 * @param id
 	 * @param description
 	 * @param cronString
 	 */
-	public TemporalPattern(String description,
+	public TemporalPattern(Identifier id,
+						   String description,
 						   List cronString){		
-		super(PoolId.getId(ObjectEntities.TEMPORALPATTERN_ENTITY));
+		//super(PoolId.getId(ObjectEntities.TEMPORALPATTERN_ENTITY));
+		super(id);
 		setDescription(description);
 		for(Iterator it=cronString.iterator();it.hasNext();){
 			String str = (String)it.next();

@@ -4,14 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.PoolId;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 
@@ -60,14 +53,17 @@ public class AnalysisType extends ActionType {
 
 	/**
 	 * client constructor
+	 * @param id
 	 * @param inParameterTypes
 	 * @param criteriaParameterTypes
 	 * @param outParameterTypes
 	 */
-	public AnalysisType(List criteriaParameterTypes,
+	public AnalysisType(Identifier id,						
+						List criteriaParameterTypes,
 						List inParameterTypes,						
-						List outParameterTypes) {		
-		super(PoolId.getId(ObjectEntities.ANALYSISTYPE_ENTITY));
+						List outParameterTypes) {
+		super(id);
+		//super(PoolId.getId(ObjectEntities.ANALYSISTYPE_ENTITY));
 		setInParameterTypes(inParameterTypes);
 		setCriteriaParameterTypes(criteriaParameterTypes);
 		setOutParameterTypes(outParameterTypes);
