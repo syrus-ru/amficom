@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.30 2004/09/20 14:06:50 bob Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.31 2004/10/13 10:35:52 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/09/20 14:06:50 $
- * @author $Author: bob $
+ * @version $Revision: 1.31 $, $Date: 2004/10/13 10:35:52 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -48,6 +48,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	public static final String	COLUMN_DESCRIPTION = "description";	
 	
 	public static final String	LINK_COLUMN_ANALYSIS_TYPE_ID = "analysis_type_id";
+    public static final String  PARAMETER_TYPE_ID = "parameter_type_id";
+    public static final String  PARAMETER_MODE = "parameter_mode";
 	
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 	
@@ -451,4 +453,24 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		}
 		return i;
 	}
+
+    public List retrieveButIdsByCriteriaSet(List ids, List criteriaSetIds) throws RetrieveObjectException, IllegalDataException {
+        
+        String condition = new String();
+        StringBuffer criteriaSetIdNames = new StringBuffer();
+        
+        for (Iterator it = criteriaSetIds.iterator(); it.hasNext();) {
+            criteriaSetIdNames.append( ((Identifier) it.next()).getIdentifierString() );
+            if (it.hasNext())
+                criteriaSetIdNames.append(COMMA);
+        }
+        condition = PARAMETER_TYPE_ID + SQL_IN + OPEN_BRACKET +
+                        SQL_SELECT + SetDatabase.LINK_COLUMN_TYPE_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
+                        + SQL_WHERE + SetDatabase.LINK_COLUMN_SET_ID + SQL_IN + OPEN_BRACKET + criteriaSetIdNames 
+                        + CLOSE_BRACKET
+                    + CLOSE_BRACKET 
+                    + SQL_AND + PARAMETER_MODE + EQUALS + APOSTOPHE + MODE_CRITERION + APOSTOPHE;
+        
+        return retrieveByIds( ids, condition);
+    }
 }

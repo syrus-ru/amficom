@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.28 2004/10/04 13:17:12 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.29 2004/10/13 10:35:52 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/10/04 13:17:12 $
- * @author $Author: bob $
+ * @version $Revision: 1.29 $, $Date: 2004/10/13 10:35:52 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -52,6 +52,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	public static final String	LINK_COLUMN_ME_ID					= "monitored_element_id";
 	public static final String	LINK_COLUMN_MEASUREMENT_SETUP_ID	= "measurement_setup_id";
 	
+    public static final String  PARAMETER_TYPE_ID                   = "parameter_type_id";
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;	
 	
 	private String updateColumns;	
@@ -600,5 +601,22 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		
 		return list;
 	}
-
+    
+    public List retrieveButIdMeasurementIds(List ids, List measurementIds) throws RetrieveObjectException, IllegalDataException {
+        String condition = new String();
+        StringBuffer measurementIdsStr = new StringBuffer();
+        
+        for (Iterator it = measurementIds.iterator(); it.hasNext();) {
+            measurementIdsStr.append( ((Identifier) it.next()).getIdentifierString() );
+            if (it.hasNext())
+                measurementIdsStr.append(COMMA);
+        }
+        
+        condition = COLUMN_ID + SQL_IN + OPEN_BRACKET
+                        + SQL_SELECT + LINK_COLUMN_MEASUREMENT_SETUP_ID + SQL_FROM + ObjectEntities.MSMELINK_ENTITY
+                        + SQL_WHERE + LINK_COLUMN_ME_ID + SQL_IN + OPEN_BRACKET + measurementIdsStr 
+                        + CLOSE_BRACKET
+                    + CLOSE_BRACKET;        
+        return retrieveButIds(ids , condition);
+    }
 }

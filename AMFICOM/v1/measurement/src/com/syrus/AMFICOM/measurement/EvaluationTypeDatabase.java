@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.27 2004/09/20 14:06:50 bob Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.28 2004/10/13 10:35:52 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/09/20 14:06:50 $
- * @author $Author: bob $
+ * @version $Revision: 1.28 $, $Date: 2004/10/13 10:35:52 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -52,6 +52,9 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 	
+    public static final String  PARAMETER_TYPE_ID = "parameter_type_id";
+    public static final String  PARAMETER_MODE = "parameter_mode";
+    
 	private String updateColumns;
 	private String updateMultiplySQLValues;
 
@@ -454,5 +457,25 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 		
 		return list;	
 	}
+
+    public List retrieveButIdByThresholdSet(List ids, List thresholdSetIds) throws RetrieveObjectException, IllegalDataException {
+        
+        String condition = new String();        
+        StringBuffer tresholds = new StringBuffer();
+        
+        for (Iterator it = thresholdSetIds.iterator(); it.hasNext();) {
+            tresholds.append (( (Identifier) it.next() ).getIdentifierString());            
+            if (it.hasNext())
+                tresholds.append(COMMA);            
+        }
+        
+        condition = PARAMETER_TYPE_ID + SQL_IN + OPEN_BRACKET +
+                SQL_SELECT + SetDatabase.LINK_COLUMN_TYPE_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
+                + SQL_WHERE + SetDatabase.LINK_COLUMN_SET_ID + SQL_IN + OPEN_BRACKET + tresholds 
+                + CLOSE_BRACKET
+            + CLOSE_BRACKET 
+            + SQL_AND + PARAMETER_MODE + EQUALS + APOSTOPHE + MODE_THRESHOLD + APOSTOPHE;
+        return retrieveButIds(ids , condition);
+    }
 	
 }

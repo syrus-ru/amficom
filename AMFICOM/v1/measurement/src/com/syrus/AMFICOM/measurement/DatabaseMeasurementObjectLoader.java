@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.17 2004/10/11 14:17:05 bob Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.18 2004/10/13 10:35:52 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/10/11 14:17:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.18 $, $Date: 2004/10/13 10:35:52 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -278,8 +278,14 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		AnalysisTypeDatabase database = (AnalysisTypeDatabase)MeasurementDatabaseContext.getAnalysisTypeDatabase();
 		List list = null;
 		try {
-		    list = database.retrieveButIds(ids);
-		} catch (IllegalDataException e) {
+            if (condition instanceof LinkedIdsCondition){
+                LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
+                list = database.retrieveButIdsByCriteriaSet(ids, linkedIdsCondition.getCriteriaSetIds());
+            } else {
+                Log.errorMessage("DatabaseMeasumentObjectLoader.loadEvaluationsButIds | Unknown condition class: " + condition);
+                list = database.retrieveButIds(ids);
+            }
+        } catch (IllegalDataException e) {
 		    Log.errorMessage("DatabaseMeasumentObjectLoader.loadAnalysisTypesButIds | Illegal Storable Object: " + e.getMessage());
 		    throw new DatabaseException("DatabaseMeasumentObjectLoader.loadAnalysisTypesButIds | Illegal Storable Object: " + e.getMessage());
 		}
@@ -310,7 +316,13 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		EvaluationTypeDatabase database = (EvaluationTypeDatabase)MeasurementDatabaseContext.getEvaluationTypeDatabase();
 		List list = null;
 		try {
-		    list = database.retrieveButIds(ids);
+		    if (condition instanceof LinkedIdsCondition){
+                LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
+                list = database.retrieveButIdByThresholdSet(ids, linkedIdsCondition.getThresholdSetIds());
+            } else {
+                Log.errorMessage("DatabaseMeasumentObjectLoader.loadEvaluationTypesButIds | Unknown condition class: " + condition);
+                list = database.retrieveButIds(ids);
+            }
 		} catch (IllegalDataException e) {
 		    Log.errorMessage("DatabaseMeasumentObjectLoader.loadEvaluationTypesButIds | Illegal Storable Object: " + e.getMessage());
 		    throw new DatabaseException("DatabaseMeasumentObjectLoader.loadEvaluationTypesButIds | Illegal Storable Object: " + e.getMessage());
@@ -371,8 +383,10 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 					list = database.retrieveButIdsByMeasurementType(ids, measurementType);
 				else if (monitoredElement != null)
 					list = database.retrieveButIdsByMonitoredElement(ids, monitoredElement);			
-			}
-			else{
+            } else if ( condition instanceof MeasurementSetupCondition ) {
+                LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
+                list = database.retrieveButIdMeasurementIds(ids, linkedIdsCondition.getMeasurementIds());
+            } else {
 				Log.errorMessage("DatabaseMeasumentObjectLoader.loadMeasurementSetupsButIds | Unknown condition class: " + condition);
 				list = database.retrieveButIds(ids);
 			}

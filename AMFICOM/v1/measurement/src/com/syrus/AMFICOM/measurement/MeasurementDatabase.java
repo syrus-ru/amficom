@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.28 2004/10/07 14:27:08 bob Exp $
+ * $Id: MeasurementDatabase.java,v 1.29 2004/10/13 10:35:52 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,8 +37,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/10/07 14:27:08 $
- * @author $Author: bob $
+ * @version $Revision: 1.29 $, $Date: 2004/10/13 10:35:52 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -406,8 +406,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
         	buffer.append(COLUMN_TEST_ID);
         	buffer.append(SQL_IN);
         	buffer.append(OPEN_BRACKET);
-        	int i = 1;         
-			for (Iterator it = testIds.iterator(); it.hasNext(); i++) {
+			for (Iterator it = testIds.iterator(); it.hasNext(); ) {
 				Object object = it.next();
 				Identifier id = null;
 				if (object instanceof Identifier)
@@ -420,7 +419,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 
 				if (id != null){
 					buffer.append(id.toSQLString());
-					if (i < idsLength)
+					if (it.hasNext())
 						buffer.append(COMMA);
 				}
 			}
