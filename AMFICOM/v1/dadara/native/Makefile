@@ -40,6 +40,6 @@ clean:
 	rm -f dadara.dll dadara.exp dadara.lib 
 
 head:
-	$(JAVAH) -classpath $(CLASS_DIR) -d Common com.syrus.AMFICOM.analysis.dadara.ModelFunction
-	$(JAVAH) -classpath $(CLASS_DIR) -d Common com.syrus.AMFICOM.analysis.CoreAnalysisManager
-	$(JAVAH) -classpath $(CLASS_DIR) -d Common com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent
+	$(JAVAH) -classpath $(CLASS_DIR) -d common com.syrus.AMFICOM.analysis.dadara.ModelFunction
+	$(JAVAH) -classpath $(CLASS_DIR) -d common com.syrus.AMFICOM.analysis.CoreAnalysisManager
+	$(JAVAH) -classpath $(CLASS_DIR) -d common com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent
