@@ -90,8 +90,8 @@ clean:	cleanmach cleancorba cleanhead
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/mcm/*.class
-	$(RM) -r $(CLASSDIR)/com/syrus/util/*.class
+	$(RM) $(wildcard $(CLASSDIR)/com/syrus/AMFICOM/mcm/*.class)
+	$(RM) $(wildcard $(CLASSDIR)/com/syrus/util/*.class)
 	$(RM) .mach
 
 .PHONY:	cleanhead
