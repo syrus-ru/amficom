@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.7 2004/12/22 13:01:41 bob Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.8 2004/12/22 13:57:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -48,8 +48,8 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.7 $, $Date: 2004/12/22 13:01:41 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2004/12/22 13:57:26 $
+ * @author $Author: arseniy $
  * @module module_name
  */
 public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
@@ -394,7 +394,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		List list;
 		List ids2 = new ArrayList(ids);
 		Measurement_Transferable[] measurementTransferables;
-														
+
 		try {
 			list = database.retrieveByCondition(ids2, condition);
 			for (Iterator it = list.iterator(); it.hasNext();) {
@@ -405,7 +405,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			for (Iterator it = ids2.iterator(); it.hasNext(); i++) {
 				identifierTransferables[i] = (Identifier_Transferable)( (Identifier) it.next() ).getTransferable();
 			}
-			
+
 			LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition) condition;
 			LinkedIdsCondition_Transferable linkedIdsConditionTransferable = (LinkedIdsCondition_Transferable)linkedIdsCondition.getTransferable();
 			List tests;
@@ -430,10 +430,12 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("CMServerMeasurementObjectLoader.loadMeasurementsButIds | Illegal Storable Object: " + e.getMessage());
+			Log.errorException(e);
 			throw new DatabaseException("CMServerMeasurementObjectLoader.loadMeasurementsButIds | Illegal Storable Object: " + e.getMessage());
 		}
 		catch (AMFICOMRemoteException ae) {
-			Log.errorMessage("CMServerMeasurementObjectLoader.loadMeasurementsButIds | Illegal Storable Object: " + ae.getMessage());
+			Log.errorException(ae);
+			Log.errorMessage("CMServerMeasurementObjectLoader.loadMeasurementsButIds | AMFICOMRemoteException: " + ae.getMessage());
 			throw new CommunicationException("CMServerMeasurementObjectLoader.loadMeasurementsButIds | Illegal Storable Object: " + ae.getMessage());
 		}
 		catch (Throwable throwable) {
