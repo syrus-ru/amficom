@@ -9,7 +9,35 @@ module AMFICOM {
 module configuration {
 module corba {
 
+//////////////////// CharacteristicType ///////////////////
+
+	struct CharacteristicType_Transferable {
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
+	  long long created;
+	  long long modified;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+
+		wstring codename;
+		wstring description;
+		com::syrus::AMFICOM::general::corba::DataType data_type;
+		boolean is_editable;
+		boolean is_visible;
+	};
+
+	typedef sequence <CharacteristicType_Transferable> CharacteristicTypeSeq_Transferable;
+
 ////////////////////// Characteristic /////////////////////
+
+	enum CharacteristicSort {
+		CHARACTERISTIC_SORT_EQUIPMENT,
+		CHARACTERISTIC_SORT_PORT,
+		CHARACTERISTIC_SORT_CABLEPORT,
+		CHARACTERISTIC_SORT_MEASUREMENTPORT,
+		CHARACTERISTIC_SORT_MONITORINGPORT,
+		CHARACTERISTIC_SORT_LINK,
+		CHARACTERISTIC_SORT_CABLELINK
+	};
 
 	struct Characteristic_Transferable {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
@@ -21,6 +49,7 @@ module corba {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
 		wstring name;
 		wstring description;
+		CharacteristicSort sort;
 		wstring value;
 	};
 
@@ -39,7 +68,6 @@ module corba {
 		wstring name;
 		wstring description;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable equipment_id;
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable interface_id;
 		
 		CharacteristicSeq_Transferable characteristics;
 	};
