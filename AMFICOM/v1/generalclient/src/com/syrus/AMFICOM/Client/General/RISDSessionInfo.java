@@ -1,5 +1,5 @@
 /*
- * $Id: RISDSessionInfo.java,v 1.23 2005/02/15 10:40:26 bob Exp $
+ * $Id: RISDSessionInfo.java,v 1.24 2005/02/16 13:38:54 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -49,9 +49,12 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LocalIdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.ParameterTypeCodenames;
 import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.XMLGeneralObjectLoader;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.EmptyClientMapObjectLoader;
@@ -69,8 +72,8 @@ import com.syrus.util.corba.JavaSoftORBUtil;
 import com.syrus.util.prefs.IIOPConnectionManager;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.23 $, $Date: 2005/02/15 10:40:26 $
+ * @author $Author: stas $
+ * @version $Revision: 1.24 $, $Date: 2005/02/16 13:38:54 $
  * @module generalclient_v1
  */
 public final class RISDSessionInfo extends SessionInterface {
@@ -366,6 +369,62 @@ public final class RISDSessionInfo extends SessionInterface {
 				}
 				else {
 					domain = (Domain)domains.iterator().next();
+				}
+				
+				condition = new EquivalentCondition(ObjectEntities.PARAMETERTYPE_ENTITY_CODE);
+				Collection paramaterTypes = GeneralStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				if (paramaterTypes.isEmpty()) {
+					 // creating some default ParameterTypes 
+					Identifier creatorId = user.getId();
+					String codename = ParameterTypeCodenames.DADARA_EVENTS;
+					String name = "Dadara events";
+					String description = "List of analysis events";
+					DataType dataType = DataType.DATA_TYPE_RAW;
+					ParameterType type = ParameterType.createInstance(creatorId, codename, name, description, dataType);
+					GeneralStorableObjectPool.putStorableObject(type);
+					
+					codename = ParameterTypeCodenames.DADARA_THRESHOLDS;
+					name = "Dadara thresholds";
+					description = "List of thresholds";
+					dataType = DataType.DATA_TYPE_RAW;
+					type = ParameterType.createInstance(creatorId, codename, name, description, dataType);
+					GeneralStorableObjectPool.putStorableObject(type);
+					
+					codename = ParameterTypeCodenames.MAX_NOISE_LEVEL;
+					name = "Maximal noise level";
+					description = "Maximal noise level";
+					dataType = DataType.DATA_TYPE_DOUBLE;
+					type = ParameterType.createInstance(creatorId, codename, name, description, dataType);
+					GeneralStorableObjectPool.putStorableObject(type);
+					
+					codename = ParameterTypeCodenames.MIN_CONNECTOR;
+					name = "Minimal connector level";
+					description = "Minimal connector level";
+					dataType = DataType.DATA_TYPE_DOUBLE;
+					type = ParameterType.createInstance(creatorId, codename, name, description, dataType);
+					GeneralStorableObjectPool.putStorableObject(type);
+					
+					codename = ParameterTypeCodenames.MIN_SPLICE;
+					name = "Minimal splice level";
+					description = "Minimal splice level";
+					dataType = DataType.DATA_TYPE_DOUBLE;
+					type = ParameterType.createInstance(creatorId, codename, name, description, dataType);
+					GeneralStorableObjectPool.putStorableObject(type);
+					
+					codename = ParameterTypeCodenames.MIN_END_LEVEL;
+					name = "Minimal trace end level";
+					description = "Minimal trace end level";
+					dataType = DataType.DATA_TYPE_DOUBLE;
+					type = ParameterType.createInstance(creatorId, codename, name, description, dataType);
+					GeneralStorableObjectPool.putStorableObject(type);
+					
+					codename = ParameterTypeCodenames.MIN_EVENT_LEVEL;
+					name = "Minimal event level";
+					description = "Minimal event level";
+					dataType = DataType.DATA_TYPE_DOUBLE;
+					type = ParameterType.createInstance(creatorId, codename, name, description, dataType);
+					GeneralStorableObjectPool.putStorableObject(type);
+					GeneralStorableObjectPool.flush(true);
 				}
 
 				this.domainId = domain.getId();
