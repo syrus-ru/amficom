@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.27 2004/10/26 12:46:57 max Exp $
+ * $Id: KISDatabase.java,v 1.28 2004/10/29 15:03:39 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,9 +32,10 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/10/26 12:46:57 $
+ * @version $Revision: 1.28 $, $Date: 2004/10/29 15:03:39 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -103,8 +104,8 @@ public class KISDatabase extends StorableObjectDatabase {
 		String sql = super.getUpdateSingleSQLValues(storableObject)
 		+ kis.getDomainId().toSQLString() + COMMA
         + kis.getType().getId().toSQLString() + COMMA
-		+ APOSTOPHE + kis.getName() + APOSTOPHE + COMMA
-		+ APOSTOPHE + kis.getDescription() + APOSTOPHE + COMMA
+		+ APOSTOPHE + DatabaseString.toQuerySubString(kis.getName()) + APOSTOPHE + COMMA
+		+ APOSTOPHE + DatabaseString.toQuerySubString(kis.getDescription()) + APOSTOPHE + COMMA
 		+ kis.getEquipmentId().toSQLString() + COMMA
 		+ kis.getMCMId().toSQLString();
 		return sql;
@@ -183,8 +184,8 @@ public class KISDatabase extends StorableObjectDatabase {
 								* @todo when change DB Identifier model ,change getString() to getLong()
 								*/
 							new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),													
-							resultSet.getString(COLUMN_NAME),
-							resultSet.getString(COLUMN_DESCRIPTION),
+							DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
+							DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
                             kisType,
 							/**
 								* @todo when change DB Identifier model ,change getString() to getLong()

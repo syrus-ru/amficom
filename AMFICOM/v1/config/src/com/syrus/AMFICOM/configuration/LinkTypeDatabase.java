@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeDatabase.java,v 1.2 2004/10/26 14:31:43 bob Exp $
+ * $Id: LinkTypeDatabase.java,v 1.3 2004/10/29 15:03:39 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,10 +29,11 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/10/26 14:31:43 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2004/10/29 15:03:39 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -93,14 +94,14 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
 		LinkType linkType = fromStorableObject(storableObject);
-		String name = linkType.getName();
+		String name = DatabaseString.toQuerySubString(linkType.getName());
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + linkType.getCodename() + APOSTOPHE + COMMA
-			+ APOSTOPHE + linkType.getDescription() + APOSTOPHE 
+			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getCodename()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getDescription()) + APOSTOPHE 
 			+ APOSTOPHE + (name != null ? name : "") + APOSTOPHE + COMMA
 			+ linkType.getSort().value() + COMMA
-			+ APOSTOPHE + linkType.getManufacturer() + APOSTOPHE + COMMA
-			+ APOSTOPHE + linkType.getManufacturerCode() + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getManufacturer()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getManufacturerCode()) + APOSTOPHE + COMMA
 			+ linkType.getImageId().toSQLString();
 		return sql;
 	}
@@ -172,12 +173,12 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 										* @todo when change DB Identifier model ,change getString() to getLong()
 										*/
 									new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-									resultSet.getString(COLUMN_CODENAME),
-									resultSet.getString(COLUMN_DESCRIPTION),
-									resultSet.getString(COLUMN_NAME),
+									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
+									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
+									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
 									resultSet.getInt(COLUMN_SORT),
-									resultSet.getString(COLUMN_MANUFACTURER),
-									resultSet.getString(COLUMN_MANUFACTURER_CODE),
+									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_MANUFACTURER)),
+									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_MANUFACTURER_CODE)),
 									/**
 									* @todo when change DB Identifier model ,change getString() to getLong()
 									*/

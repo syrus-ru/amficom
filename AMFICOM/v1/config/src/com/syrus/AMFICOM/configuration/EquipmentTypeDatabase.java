@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeDatabase.java,v 1.14 2004/10/26 14:31:43 bob Exp $
+ * $Id: EquipmentTypeDatabase.java,v 1.15 2004/10/29 15:03:39 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,10 +29,11 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/10/26 14:31:43 $
- * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2004/10/29 15:03:39 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -77,10 +78,10 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
 		EquipmentType equipmentType = fromStorableObject(storableObject);
-		String name = equipmentType.getName();
+		String name = DatabaseString.toQuerySubString(equipmentType.getName());
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + equipmentType.getCodename() + APOSTOPHE + COMMA
-			+ APOSTOPHE + equipmentType.getDescription() + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(equipmentType.getCodename()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(equipmentType.getDescription()) + APOSTOPHE + COMMA
 			+ APOSTOPHE + (name != null ? name : "") + APOSTOPHE;
 		return sql;
 	}
@@ -143,9 +144,9 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 										* @todo when change DB Identifier model ,change getString() to getLong()
 										*/
 									new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-									resultSet.getString(COLUMN_CODENAME),
-									resultSet.getString(COLUMN_DESCRIPTION),
-									resultSet.getString(COLUMN_NAME));
+									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
+									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
+									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)));
 
 		
 		return equipmentType;

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.22 2004/10/22 13:54:27 bob Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.23 2004/10/29 15:03:39 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,10 +26,11 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/10/22 13:54:27 $
- * @author $Author: bob $
+ * @version $Revision: 1.23 $, $Date: 2004/10/29 15:03:39 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -80,8 +81,8 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, UpdateObjectException {
 		CharacteristicType characteristicType = fromStorableObject(storableObject); 
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA 
-			+ APOSTOPHE + characteristicType.getCodename() + APOSTOPHE + COMMA
-			+ APOSTOPHE + characteristicType.getDescription() + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristicType.getCodename()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristicType.getDescription()) + APOSTOPHE + COMMA
 			+ Integer.toString(characteristicType.getDataType().value()) + COMMA
 			+ Integer.toString(characteristicType.getSort().value());
 		return sql;
@@ -151,8 +152,8 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 											*       getLong()
 											*/
 										 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-										 resultSet.getString(COLUMN_CODENAME),
-										 resultSet.getString(COLUMN_DESCRIPTION),
+										 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
+										 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
 										 resultSet.getInt(COLUMN_DATA_TYPE),
 										 resultSet.getInt(COLUMN_SORT));
 

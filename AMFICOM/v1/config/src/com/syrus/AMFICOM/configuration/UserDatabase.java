@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.19 2004/10/20 06:29:19 bob Exp $
+ * $Id: UserDatabase.java,v 1.20 2004/10/29 15:03:39 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,10 +27,11 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/10/20 06:29:19 $
- * @author $Author: bob $
+ * @version $Revision: 1.20 $, $Date: 2004/10/29 15:03:39 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -89,10 +90,10 @@ public class UserDatabase extends StorableObjectDatabase {
 			UpdateObjectException {
 		User user = fromStorableObject(storableObject);
 		return super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + user.getLogin() + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(user.getLogin()) + APOSTOPHE + COMMA
 			+ Integer.toString(user.getSort().value()) + COMMA
-			+ APOSTOPHE + user.getName() + APOSTOPHE + COMMA
-			+ APOSTOPHE + user.getDescription() + APOSTOPHE;
+			+ APOSTOPHE + DatabaseString.toQuerySubString(user.getName()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(user.getDescription()) + APOSTOPHE;
 	}
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
@@ -126,10 +127,10 @@ public class UserDatabase extends StorableObjectDatabase {
 								*/
 							new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
 							
-							resultSet.getString(COLUMN_LOGIN),
+							DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_LOGIN)),
 							resultSet.getInt(COLUMN_SORT),				
-							resultSet.getString(EquipmentDatabase.COLUMN_NAME),
-							resultSet.getString(EquipmentDatabase.COLUMN_DESCRIPTION));
+							DatabaseString.fromQuerySubString(resultSet.getString(EquipmentDatabase.COLUMN_NAME)),
+							DatabaseString.fromQuerySubString(resultSet.getString(EquipmentDatabase.COLUMN_DESCRIPTION)));
 		return user;
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.22 2004/10/27 09:52:08 max Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.23 2004/10/29 15:03:39 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,9 +33,10 @@ import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/10/27 09:52:08 $
+ * @version $Revision: 1.23 $, $Date: 2004/10/29 15:03:39 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -110,8 +111,8 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		return super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ transmissionPath.getDomainId().toSQLString() + COMMA
             + transmissionPath.getType().getId().toSQLString() + COMMA
-			+ APOSTOPHE + transmissionPath.getName() + APOSTOPHE + COMMA
-			+ APOSTOPHE + transmissionPath.getDescription() + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(transmissionPath.getName()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(transmissionPath.getDescription()) + APOSTOPHE + COMMA
 			+ transmissionPath.getStartPortId().toSQLString() + COMMA
 			+ transmissionPath.getFinishPortId().toSQLString();
 	}
@@ -163,8 +164,8 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		TransmissionPath transmissionPath = (storableObject == null) ?
 				new TransmissionPath(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, null, null, null) :
 					fromStorableObject(storableObject);
-		String name = resultSet.getString(COLUMN_NAME);
-		String description = resultSet.getString(COLUMN_DESCRIPTION);
+		String name = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME));
+		String description = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION));
 		
         TransmissionPathType type;
         try {

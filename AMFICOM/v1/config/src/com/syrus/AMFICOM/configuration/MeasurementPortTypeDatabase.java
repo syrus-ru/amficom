@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeDatabase.java,v 1.10 2004/10/26 14:31:43 bob Exp $
+ * $Id: MeasurementPortTypeDatabase.java,v 1.11 2004/10/29 15:03:39 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,10 +28,11 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/10/26 14:31:43 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2004/10/29 15:03:39 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -82,10 +83,10 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
 		MeasurementPortType measurementPortType = fromStorableObject(storableObject);
-		String name = measurementPortType.getName();
+		String name = DatabaseString.toQuerySubString(measurementPortType.getName());
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + measurementPortType.getCodename() + APOSTOPHE + COMMA
-			+ APOSTOPHE + measurementPortType.getDescription() + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementPortType.getCodename()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementPortType.getDescription()) + APOSTOPHE + COMMA
 			+ APOSTOPHE + (name != null ? name : "") + APOSTOPHE;
 		return sql;
 	}
@@ -141,9 +142,9 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 												* @todo when change DB Identifier model ,change getString() to getLong()
 												*/
 											new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-											resultSet.getString(COLUMN_CODENAME),
-											resultSet.getString(COLUMN_DESCRIPTION),
-											resultSet.getString(COLUMN_NAME));
+											DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
+											DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
+											DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)));
 		return measurementPortType;
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.23 2004/10/19 07:48:58 bob Exp $
+ * $Id: MCMDatabase.java,v 1.24 2004/10/29 15:03:39 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,10 +32,11 @@ import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/10/19 07:48:58 $
- * @author $Author: bob $
+ * @version $Revision: 1.24 $, $Date: 2004/10/29 15:03:39 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -94,8 +95,8 @@ public class MCMDatabase extends StorableObjectDatabase {
 		MCM mcm = fromStorableObject(storableObject);
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ mcm.getDomainId().toSQLString() + COMMA
-			+ APOSTOPHE + mcm.getName() + APOSTOPHE + COMMA
-			+ APOSTOPHE + mcm.getDescription() + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(mcm.getName()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(mcm.getDescription()) + APOSTOPHE + COMMA
 			+ mcm.getUserId().toSQLString() + COMMA
 			+ mcm.getServerId().toSQLString(); 
 		return sql;
@@ -168,8 +169,8 @@ public class MCMDatabase extends StorableObjectDatabase {
 							 *       getLong()
 							 */
 							 new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),
-							 resultSet.getString(COLUMN_NAME),
-							 resultSet.getString(COLUMN_DESCRIPTION),
+							 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
+							 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
 							 /**
 							 * @todo when change DB Identifier model ,change getString() to
 							 *       getLong()

@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.23 2004/10/19 07:48:58 bob Exp $
+ * $Id: PortDatabase.java,v 1.24 2004/10/29 15:03:39 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,11 +29,11 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
-
+import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/10/19 07:48:58 $
- * @author $Author: bob $
+ * @version $Revision: 1.24 $, $Date: 2004/10/29 15:03:39 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 public class PortDatabase extends StorableObjectDatabase {
@@ -97,7 +97,7 @@ public class PortDatabase extends StorableObjectDatabase {
 		Identifier equipmentId = port.getEquipmentId();
 		return super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ ((typeId != null) ? typeId.getCode(): SQL_NULL) + COMMA
-			+ APOSTOPHE + port.getDescription() + APOSTOPHE	+ COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(port.getDescription()) + APOSTOPHE	+ COMMA
 			+ ((equipmentId != null) ? equipmentId.getCode() : SQL_NULL) + COMMA 
 			+ port.getSort();
 	}
@@ -148,7 +148,7 @@ public class PortDatabase extends StorableObjectDatabase {
 			throw new RetrieveObjectException(ae);
 		}
 		
-		String description = resultSet.getString(COLUMN_DESCRIPTION);
+		String description = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION));
 		port.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 						  DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),								  
 						  

@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.22 2004/10/19 07:48:58 bob Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.23 2004/10/29 15:03:39 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,10 +32,11 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/10/19 07:48:58 $
- * @author $Author: bob $
+ * @version $Revision: 1.23 $, $Date: 2004/10/29 15:03:39 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -98,10 +99,10 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		MonitoredElement monitoredElement = fromStorableObject(storableObject);
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 				+ monitoredElement.getDomainId().toSQLString() + COMMA
-				+ APOSTOPHE + monitoredElement.getName() + APOSTOPHE + COMMA
+				+ APOSTOPHE + DatabaseString.toQuerySubString(monitoredElement.getName()) + APOSTOPHE + COMMA
 				+ monitoredElement.getMeasurementPortId().toSQLString() + COMMA
 				+ monitoredElement.getSort().value() + COMMA
-				+ APOSTOPHE + monitoredElement.getLocalAddress() + APOSTOPHE;
+				+ APOSTOPHE + DatabaseString.toQuerySubString(monitoredElement.getLocalAddress()) + APOSTOPHE;
 		return sql;
 	}
 	
@@ -169,14 +170,14 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 										 *       getLong()
 										 */
 									   new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),
-									   resultSet.getString(COLUMN_NAME),
+									   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
 									   /**
 										 * @todo when change DB Identifier model ,change getString() to
 										 *       getLong()
 										 */
 									   new Identifier(resultSet.getString(COLUMN_MEASUREMENT_PORT_ID)),
 									   resultSet.getInt(COLUMN_SORT),
-									   resultSet.getString(COLUMN_LOCAL_ADDRESS));
+									   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_LOCAL_ADDRESS)));
 		return monitoredElement;
 	}
 

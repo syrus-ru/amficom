@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.34 2004/10/29 12:48:49 bob Exp $
+ * $Id: CharacteristicDatabase.java,v 1.35 2004/10/29 15:03:39 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -34,8 +35,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/10/29 12:48:49 $
- * @author $Author: bob $
+ * @version $Revision: 1.35 $, $Date: 2004/10/29 15:03:39 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -103,9 +104,9 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		int sort = characteristic.getSort().value();
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ characteristic.getType().getId().toSQLString() + COMMA
-			+ APOSTOPHE + characteristic.getName() + APOSTOPHE + COMMA
-			+ APOSTOPHE + characteristic.getDescription() + APOSTOPHE  + COMMA
-			+ APOSTOPHE + characteristic.getValue() + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristic.getName()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristic.getDescription()) + APOSTOPHE  + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristic.getValue()) + APOSTOPHE + COMMA
 			+ (characteristic.isEditable()?"1":"0") + COMMA
 			+ (characteristic.isVisible()?"1":"0") + COMMA
 			+ sort + COMMA
@@ -196,10 +197,10 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 									  */
 									 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
 									 characteristicType,
-									 resultSet.getString(COLUMN_NAME),
-									 resultSet.getString(COLUMN_DESCRIPTION),
+                                     DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
+                                     DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
 									 sort,
-									 resultSet.getString(COLUMN_VALUE),
+                                     DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_VALUE)),
 									 characterizedId,
 									 (resultSet.getInt(COLUMN_IS_EDITABLE) == 0) ? false : true,
 									 (resultSet.getInt(COLUMN_IS_VISIBLE) == 0) ? false : true);

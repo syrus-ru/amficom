@@ -21,9 +21,10 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
 
 /*
- * $Id: KISTypeDatabase.java,v 1.2 2004/10/26 14:31:43 bob Exp $
+ * $Id: KISTypeDatabase.java,v 1.3 2004/10/29 15:03:39 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +32,8 @@ import com.syrus.util.database.DatabaseDate;
  */
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/10/26 14:31:43 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2004/10/29 15:03:39 $
+ * @author $Author: max $
  * @module module_name
  */
 public class KISTypeDatabase extends StorableObjectDatabase {
@@ -88,8 +89,8 @@ public class KISTypeDatabase extends StorableObjectDatabase {
         KISType kisType = fromStorableObject(storableObject);
         String name = kisType.getName();
         String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-            + APOSTOPHE + kisType.getCodename() + APOSTOPHE + COMMA
-            + APOSTOPHE + kisType.getDescription() + APOSTOPHE + COMMA
+            + APOSTOPHE + DatabaseString.toQuerySubString(kisType.getCodename()) + APOSTOPHE + COMMA
+            + APOSTOPHE + DatabaseString.toQuerySubString(kisType.getDescription()) + APOSTOPHE + COMMA
 			+ APOSTOPHE + (name != null ? name : "") + APOSTOPHE;
         return sql;
     }
@@ -140,9 +141,9 @@ public class KISTypeDatabase extends StorableObjectDatabase {
                                         * @todo when change DB Identifier model ,change getString() to getLong()
                                         */
                                     new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-                                    resultSet.getString(COLUMN_CODENAME),
-                                    resultSet.getString(COLUMN_DESCRIPTION),
-									resultSet.getString(COLUMN_NAME));
+                                    DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
+                                    DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
+                                    DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)));
 
         
         return kisType;

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathTypeDatabase.java,v 1.2 2004/10/27 12:26:54 max Exp $
+ * $Id: TransmissionPathTypeDatabase.java,v 1.3 2004/10/29 15:03:39 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,9 +28,10 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/10/27 12:26:54 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/29 15:03:39 $
  * @author $Author: max $
  * @module module_name
  */
@@ -85,10 +86,10 @@ public class TransmissionPathTypeDatabase extends StorableObjectDatabase {
     protected String getUpdateSingleSQLValues(StorableObject storableObject)
             throws IllegalDataException, UpdateObjectException {
         TransmissionPathType transmissionPathType = fromStorableObject(storableObject);
-        String name = transmissionPathType.getName();
+        String name = DatabaseString.toQuerySubString(transmissionPathType.getName());
         String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-            + APOSTOPHE + transmissionPathType.getCodename() + APOSTOPHE + COMMA
-            + APOSTOPHE + transmissionPathType.getDescription() + APOSTOPHE + COMMA
+            + APOSTOPHE + DatabaseString.toQuerySubString(transmissionPathType.getCodename()) + APOSTOPHE + COMMA
+            + APOSTOPHE + DatabaseString.toQuerySubString(transmissionPathType.getDescription()) + APOSTOPHE + COMMA
             + APOSTOPHE + (name != null ? name : "") + APOSTOPHE;
         return sql;
     }
@@ -140,9 +141,9 @@ public class TransmissionPathTypeDatabase extends StorableObjectDatabase {
                                         * @todo when change DB Identifier model ,change getString() to getLong()
                                         */
                                     new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-                                    resultSet.getString(COLUMN_CODENAME),
-                                    resultSet.getString(COLUMN_DESCRIPTION),
-                                    resultSet.getString(COLUMN_NAME));
+                                    DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
+                                    DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
+                                    DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)));
 
         
         return transmissionPathType;

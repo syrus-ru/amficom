@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.18 2004/10/19 07:48:58 bob Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.19 2004/10/29 15:03:39 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,11 +30,12 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/10/19 07:48:58 $
- * @author $Author: bob $
+ * @version $Revision: 1.19 $, $Date: 2004/10/29 15:03:39 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 public class MeasurementPortDatabase extends StorableObjectDatabase {
@@ -97,8 +98,8 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 				+ ((typeId != null)?typeId.toSQLString():Identifier.getNullSQLString())
 				+ COMMA
-				+ APOSTOPHE + measurementPort.getName() + APOSTOPHE	+ COMMA
-				+ APOSTOPHE + measurementPort.getDescription() + APOSTOPHE + COMMA
+				+ APOSTOPHE + DatabaseString.toQuerySubString(measurementPort.getName()) + APOSTOPHE	+ COMMA
+				+ APOSTOPHE + DatabaseString.toQuerySubString(measurementPort.getDescription()) + APOSTOPHE + COMMA
 				+ ((kisId != null)?kisId.toSQLString():Identifier.getNullSQLString()) 
 				+ COMMA
 				+ ((portId != null)?portId.toSQLString():Identifier.getNullSQLString());
@@ -182,9 +183,9 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 			throw new RetrieveObjectException(ae);
 		}
 		
-		String name = resultSet.getString(COLUMN_NAME);
+		String name = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME));
 		
-		String description = resultSet.getString(COLUMN_DESCRIPTION);
+		String description = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION));
 		measurementPort.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 						  DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),								  
 						  

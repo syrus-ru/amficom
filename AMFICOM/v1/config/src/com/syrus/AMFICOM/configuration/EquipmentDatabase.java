@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.39 2004/10/22 13:00:19 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.40 2004/10/29 15:03:39 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,10 +33,11 @@ import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2004/10/22 13:00:19 $
- * @author $Author: bob $
+ * @version $Revision: 1.40 $, $Date: 2004/10/29 15:03:39 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -106,8 +107,8 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ equipment.getDomainId().toSQLString() + COMMA
 			+ equipment.getType().getId().toSQLString() + COMMA
-			+ APOSTOPHE + equipment.getName() + APOSTOPHE + COMMA
-			+ APOSTOPHE + equipment.getDescription() + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(equipment.getName()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(equipment.getDescription()) + APOSTOPHE + COMMA
 			+ equipment.getImageId().toSQLString();
 		return sql;
 	}
@@ -154,8 +155,8 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 			equipment = new Equipment(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null,
 									   null, null);			
 		}
-		String name = resultSet.getString(COLUMN_NAME);
-		String description = resultSet.getString(COLUMN_DESCRIPTION);
+		String name = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME));
+		String description = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION));
 		EquipmentType equipmentType;
 		try {
 			equipmentType = (EquipmentType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
