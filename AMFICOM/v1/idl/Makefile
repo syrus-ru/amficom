@@ -1,11 +1,16 @@
 #
-# $Id: Makefile,v 1.1 2004/06/03 08:14:20 bass Exp $
+# $Id: Makefile,v 1.2 2004/06/21 10:37:11 bass Exp $
 #
 # vim:set ft=make:
 #
 
 MODULE_NAME = idl_v1
 MODULE_VERSION = $(shell date +%Y%m%d)
+
+USER = AMFICOM
+PASSWORD = amficom
+HOST = RESEARCH
+SERVICE_NAME = SHAITAN
 
 LIBNAME = corba.jar
 LIBNAME_OBJECT = ServerObjectInterface.jar
@@ -18,10 +23,24 @@ LIBNAME_NETWORK = ServerInterface_Network.jar
 LIBNAME_REPORT = ServerInterface_Report.jar
 LIBNAME_SCHEME = ServerInterface_Scheme.jar
 LIBNAME_SURVEY = ServerInterface_Survey.jar
+SRC_SUFFIXES = \
+	.java \
+	.generated.java
+
+CLASS_SUFFIXES = \
+	.class \
+	$$%.class \
+	_SJProfile0.class \
+	_SJProfileKeys.class
 
 IDLDIR = idl
 SRCDIR = src
 CLASSDIR = classes
+ifeq ($(shell hostname -s),bass)
+LIBDIR = lib
+else
+LIBDIR = ../lib
+endif
 ENCODING = windows-1251
 JAVACFLAGS = -source 1.3 -sourcepath $(SRCDIR) -deprecation -g -O
 SUNJAVACFLAGS = -target 1.2
@@ -34,7 +53,7 @@ JIKESFLAGS = \
 	+Predundant-modifiers \
 	+Pno-switchcheck \
 	+Pnaming-convention \
-	+T=4
+	+T=8
 IDL2JAVAFLAGS = \
 	-C \
 	-H \
@@ -45,6 +64,23 @@ IDL2JAVAFLAGS = \
 	-root_dir $(SRCDIR) \
 	-strict \
 	-no_toString
+SQLJFLAGS = \
+	-cache=true \
+	-checkfilename=true \
+	-checksource=true \
+	-codegen=iso \
+	-compile=true \
+	-compiler-encoding-flag=true \
+	-explain=true \
+	-linemap=true \
+	-parse=both \
+	-password "$(PASSWORD)" \
+	-profile=true \
+	-ser2class=true \
+	-status=false \
+	-url "jdbc:oracle:oci:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=$(HOST))(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=$(SERVICE_NAME))))" \
+	-user "$(USER)" \
+	-warn=all
 
 include Makefile.inc
 $(call checkenve,JAVA_HOME)
@@ -57,17 +93,14 @@ export: $(LIBNAME) $(LIBNAME_OBJECT) $(LIBNAME_ADMIN) $(LIBNAME_ALARM) $(LIBNAME
 .PHONY: all
 all: .all
 
-.all: .idl
+.all: .idl .sqlj
 	$(JAVAC) \
 		$(JAVACFLAGS) \
-		-classpath $(CLASSDIR) \
+		-classpath $(AMFICOMCLASSPATH)$(AURORACLASSPATH):$(VBJCLASSPATH):$(JDBCCLASSPATH):$(SQLJCLASSPATH):$(CLASSDIR) \
 		-d $(CLASSDIR) \
 		-encoding $(ENCODING) \
 	 	$(shell find $(SRCDIR) -name '*.java')
 	touch $@
-
-$(SRCDIR) $(CLASSDIR):
-	mkdir -p $@
 
 .PHONY: idl
 idl: .idl
@@ -96,10 +129,29 @@ idlclean:
 		$(SRCDIR)/* \
 		.idl
 
+.PHONY: sqlj
+sqlj: .sqlj
+
+.sqlj: $(CLASSDIR)
+	echo "sqlj.compiler-executable=$(JAVAC) $(JAVACFLAGS)" > sqlj.properties
+	$(RM) \
+		$(filter $(foreach source, $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj')), $(foreach src_suffix, $(SRC_SUFFIXES), $(source)$(src_suffix))), $(shell find $(SRCDIR) -name '*\.java')) \
+		$(foreach file, $(filter-out $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)')
+	touch $@
+
+.PHONY: sqljclean
+sqljclean:
+	$(RM) \
+		$(foreach file, $(filter $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)') \
+		.sqlj
+
+$(SRCDIR) $(CLASSDIR):
+	mkdir -p $@
+
 .PHONY: clean
-clean: idlclean
-	$(RM) -r \
-		$(CLASSDIR)/* \
+clean: sqljclean idlclean
+	$(RM) \
+		$(foreach file, $(filter-out $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)') \
 		.all
 
 .PHONY: dist
@@ -113,6 +165,8 @@ distclean: clean
 	$(RM) -r \
 		$(SRCDIR) \
 		$(CLASSDIR) \
+		SQLChecker.cache \
+		sqlj.properties \
 		*.jar
 
 $(LIBNAME): .all

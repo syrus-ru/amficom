@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.4 2004/06/18 08:50:24 bass Exp $
+# $Id: Makefile,v 1.5 2004/06/21 10:40:51 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -24,6 +24,7 @@ CLASS_SUFFIXES = \
 	_SJProfile0.class \
 	_SJProfileKeys.class
 
+IDLDIR = idl
 SRCDIR = src
 CLASSDIR = classes
 ifeq ($(shell hostname -s),bass)
@@ -43,7 +44,17 @@ JIKESFLAGS = \
 	+Predundant-modifiers \
 	+Pno-switchcheck \
 	+Pnaming-convention \
-	+T=4
+	+T=8
+IDL2JAVAFLAGS = \
+	-C \
+	-H \
+	-no_bind \
+	-no_examples \
+	-narrow_compliance \
+	-portable \
+	-root_dir $(SRCDIR) \
+	-strict \
+	-no_toString
 SQLJFLAGS = \
 	-cache=true \
 	-checkfilename=true \
@@ -73,14 +84,25 @@ export: $(LIBNAME)
 .PHONY: all
 all: .all
 
-.all: .sqlj
+.all: .idl .sqlj
 	$(JAVAC) \
 		$(JAVACFLAGS) \
-		-classpath $(AMFICOMCLASSPATH)$(JDBCCLASSPATH):$(SQLJCLASSPATH):$(CLASSDIR) \
+		-classpath $(AMFICOMCLASSPATH)$(AURORACLASSPATH):$(VBJCLASSPATH):$(JDBCCLASSPATH):$(SQLJCLASSPATH):$(CLASSDIR) \
 		-d $(CLASSDIR) \
 		-encoding $(ENCODING) \
 	 	$(shell find $(SRCDIR) -name '*.java')
 	touch $@
+
+.PHONY: idl
+idl: .idl
+
+.idl: $(SRCDIR) $(CLASSDIR)
+	touch $@
+
+.PHONY: idlclean
+idlclean:
+	$(RM) -r \
+		.idl
 
 .PHONY: sqlj
 sqlj: .sqlj
@@ -104,18 +126,14 @@ sqljclean:
 		$(foreach file, $(filter $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)') \
 		.sqlj
 
-$(CLASSDIR):
+$(SRCDIR) $(CLASSDIR):
 	mkdir -p $@
 
 .PHONY: clean
-clean: sqljclean
+clean: sqljclean idlclean
 	$(RM) \
 		$(foreach file, $(filter-out $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)') \
 		.all
-
-$(LIBNAME): .all
-	$(JAR) cf $@ \
-		-C $(CLASSDIR) com
 
 .PHONY: dist
 dist: distclean
@@ -130,3 +148,7 @@ distclean: clean
 		SQLChecker.cache \
 		sqlj.properties \
 		*.jar
+
+$(LIBNAME): .all
+	$(JAR) cf $@ \
+		-C $(CLASSDIR) com

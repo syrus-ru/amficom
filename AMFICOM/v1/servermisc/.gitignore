@@ -5,10 +5,12 @@ lib
 *.jar
 *.jpr
 *.jpx
+*.trc
 *.swp
 *.tar
 *.gz
-.all
-.sqlj
 SQLChecker.cache
 sqlj.properties
+.all
+.idl
+.sqlj
