@@ -1,5 +1,5 @@
 /**
- * $Id: MapOpenCommand.java,v 1.10 2004/12/28 17:35:12 krupenn Exp $
+ * $Id: MapOpenCommand.java,v 1.11 2005/01/20 14:37:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,13 +17,14 @@ import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceChooserDialog;
 import com.syrus.AMFICOM.Client.Map.UI.MapController;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.Domain;
-import com.syrus.AMFICOM.configuration.DomainCondition;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.DomainCondition;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -45,7 +46,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/12/28 17:35:12 $
+ * @version $Revision: 1.11 $, $Date: 2005/01/20 14:37:52 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -90,7 +91,7 @@ public class MapOpenCommand extends VoidCommand
 		List maps;
 		try
 		{
-			Domain domain = (Domain )ConfigurationStorableObjectPool.getStorableObject(
+			Domain domain = (Domain )AdministrationStorableObjectPool.getStorableObject(
 				new Identifier(
 					aContext.getSessionInterface().getAccessIdentifier().domain_id), 
 				false);

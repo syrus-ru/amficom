@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkController.java,v 1.2 2005/01/14 15:03:13 krupenn Exp $
+ * $Id: PhysicalLinkController.java,v 1.3 2005/01/20 14:37:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.LineComboBox;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.configuration.Characteristic;
-import com.syrus.AMFICOM.configuration.CharacteristicType;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.Client.Map.Controllers.NodeLinkController;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2005/01/14 15:03:13 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/20 14:37:52 $
  * @module
  * @author $Author: krupenn $
  * @see

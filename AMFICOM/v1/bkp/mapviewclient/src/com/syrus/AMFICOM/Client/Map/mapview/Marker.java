@@ -1,5 +1,5 @@
 /**
- * $Id: Marker.java,v 1.2 2005/01/13 15:16:24 krupenn Exp $
+ * $Id: Marker.java,v 1.3 2005/01/20 14:37:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -56,7 +56,7 @@ import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2005/01/13 15:16:24 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/20 14:37:52 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -439,7 +439,7 @@ public class Marker extends AbstractNode
 		return distance;
 	}
 
-	public Object[][] exportColumns()
+	public java.util.Map getExportMap()
 	{
 		throw new UnsupportedOperationException();
 	}

@@ -5,11 +5,12 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
+import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.Domain;
-import com.syrus.AMFICOM.configuration.DomainCondition;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.DomainCondition;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -123,7 +124,7 @@ public class MapPanel
 				new DomainCondition(null, ObjectEntities.DOMAIN_ENTITY_CODE);
 			try
 			{
-				domains = ConfigurationStorableObjectPool.getStorableObjectsByCondition(
+				domains = AdministrationStorableObjectPool.getStorableObjectsByCondition(
 						condition,
 						true);
 			}
@@ -134,7 +135,7 @@ public class MapPanel
 
 			try
 			{
-				domain = (Domain )ConfigurationStorableObjectPool.getStorableObject(
+				domain = (Domain )AdministrationStorableObjectPool.getStorableObject(
 						map.getDomainId(),
 						false);
 			}

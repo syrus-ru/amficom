@@ -1,5 +1,5 @@
 /**
- * $Id: CablePath.java,v 1.2 2005/01/13 15:16:24 krupenn Exp $
+ * $Id: CablePath.java,v 1.3 2005/01/20 14:37:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,7 +11,7 @@
 
 package com.syrus.AMFICOM.Client.Map.mapview;
 
-import com.syrus.AMFICOM.configuration.Characteristic;
+import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2005/01/13 15:16:24 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/20 14:37:52 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -657,7 +657,7 @@ public class CablePath implements MapElement
 		throw new UnsupportedOperationException();
 	}
 
-	public Object[][] exportColumns()
+	public java.util.Map getExportMap()
 	{
 		throw new UnsupportedOperationException();
 	}

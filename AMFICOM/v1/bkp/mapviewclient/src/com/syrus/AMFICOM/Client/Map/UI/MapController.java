@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.Map.UI;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -86,7 +87,7 @@ public final class MapController implements ObjectResourceController
 		{
 			try
 			{
-				result = ConfigurationStorableObjectPool.getStorableObject(map.getDomainId(), false);
+				result = AdministrationStorableObjectPool.getStorableObject(map.getDomainId(), false);
 			}
 			catch (CommunicationException e)
 			{
@@ -102,7 +103,7 @@ public final class MapController implements ObjectResourceController
 		{
 			try
 			{
-				result = ConfigurationStorableObjectPool.getStorableObject(map.getCreatorId(), false);
+				result = AdministrationStorableObjectPool.getStorableObject(map.getCreatorId(), false);
 			}
 			catch (CommunicationException e)
 			{

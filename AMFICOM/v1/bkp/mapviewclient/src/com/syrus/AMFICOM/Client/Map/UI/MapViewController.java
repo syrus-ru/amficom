@@ -11,6 +11,7 @@ import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.Object.Domain;
 import com.syrus.AMFICOM.Client.Resource.Object.User;
 import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
@@ -83,7 +84,7 @@ public final class MapViewController implements ObjectResourceController
 		{
 			try
 			{
-				result = ConfigurationStorableObjectPool.getStorableObject(view.getDomainId(), false);
+				result = AdministrationStorableObjectPool.getStorableObject(view.getDomainId(), false);
 			}
 			catch (CommunicationException e)
 			{
@@ -99,7 +100,7 @@ public final class MapViewController implements ObjectResourceController
 		{
 			try
 			{
-				result = ConfigurationStorableObjectPool.getStorableObject(view.getCreatorId(), false);
+				result = AdministrationStorableObjectPool.getStorableObject(view.getCreatorId(), false);
 			}
 			catch (CommunicationException e)
 			{

@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.1 2004/12/24 15:42:12 krupenn Exp $
+ * $Id: AbstractLinkController.java,v 1.2 2005/01/20 14:37:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,9 +14,10 @@ package com.syrus.AMFICOM.Client.Map.Controllers;
 import com.syrus.AMFICOM.Client.General.UI.LineComboBox;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.configuration.Characteristic;
-import com.syrus.AMFICOM.configuration.CharacteristicType;
-import com.syrus.AMFICOM.configuration.corba.CharacteristicTypeSort;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.CharacteristicType;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -40,7 +41,7 @@ import com.syrus.AMFICOM.Client.Map.Controllers.MapElementController;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/12/24 15:42:12 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/20 14:37:52 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -82,7 +83,7 @@ public abstract class AbstractLinkController implements MapElementController
 		try
 		{
 			List pTypes =
-				MeasurementStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+				ConfigurationStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
 			for (Iterator it = pTypes.iterator(); it.hasNext();)
 			{
 				CharacteristicType type = (CharacteristicType )it.next();
@@ -98,14 +99,16 @@ public abstract class AbstractLinkController implements MapElementController
 
 		try
 		{
-			return CharacteristicType.createInstance(
+			CharacteristicType type = CharacteristicType.createInstance(
 					userId,
 					codename,
 					"",
 					dataType.value(),
 					sort);
+			ConfigurationStorableObjectPool.putStorableObject(type);
+			return type;
 		}
-		catch (CreateObjectException e)
+		catch (ApplicationException e)
 		{
 			e.printStackTrace();
 			return null;

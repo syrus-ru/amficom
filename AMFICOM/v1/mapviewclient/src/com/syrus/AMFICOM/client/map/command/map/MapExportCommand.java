@@ -1,5 +1,5 @@
 /*
- * $Id: MapExportCommand.java,v 1.7 2005/01/13 15:16:24 krupenn Exp $
+ * $Id: MapExportCommand.java,v 1.8 2005/01/20 14:37:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import java.util.Iterator;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.7 $, $Date: 2005/01/13 15:16:24 $
+ * @version $Revision: 1.8 $, $Date: 2005/01/20 14:37:52 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -78,7 +78,7 @@ public class MapExportCommand extends ExportCommand
         System.out.println("Closing map");
 
 		Map map = mapFrame.getMap();
-		Object[][] exportColumns = null;
+		java.util.Map exportColumns = null;
 		
 		String fileName = super.openFileForWriting(MapPropertiesManager.getLastDirectory());
 		if(fileName == null)
@@ -87,10 +87,11 @@ public class MapExportCommand extends ExportCommand
 		super.open(fileName);
 		
 		super.startObject(MAP_TYPE);
-		exportColumns = map.exportColumns();
-		for (int i = 0; i < exportColumns.length; i++) 
+		exportColumns = map.getExportMap();
+		for(Iterator it = exportColumns.keySet().iterator(); it.hasNext();)
 		{
-			super.put(exportColumns[i][0], exportColumns[i][1]);
+			Object key = it.next();
+			super.put(key, exportColumns.get(key));
 		}
 		super.endObject();
 
@@ -99,10 +100,11 @@ public class MapExportCommand extends ExportCommand
 			MapElement me = (MapElement )it.next();
 			String entityCodeString = ObjectEntities.codeToString(me.getId().getMajor());
 			super.startObject((String )typesMap.get(entityCodeString));
-			exportColumns = me.exportColumns();
-			for (int i = 0; i < exportColumns.length; i++) 
+			exportColumns = me.getExportMap();
+			for(Iterator it2 = exportColumns.keySet().iterator(); it2.hasNext();)
 			{
-				super.put(exportColumns[i][0], exportColumns[i][1]);
+				Object key = it2.next();
+				super.put(key, exportColumns.get(key));
 			}
 			super.endObject();
 		}

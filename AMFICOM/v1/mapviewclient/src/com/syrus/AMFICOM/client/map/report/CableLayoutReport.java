@@ -6,15 +6,20 @@ import com.syrus.AMFICOM.Client.General.Report.DividableTableColumnModel;
 import com.syrus.AMFICOM.Client.General.Report.DividableTableModel;
 import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
 import com.syrus.AMFICOM.Client.General.Report.ReportData;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.CableChannelingItem;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
+import com.syrus.AMFICOM.scheme.corba.Scheme;
+import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 
 import java.util.Iterator;
 
@@ -56,39 +61,46 @@ class CableLayoutReportTableModel extends DividableTableModel
 	{
 		super (divisionsNumber,4);
 
-		String schemeCableLink_id = (String)report.getReserve();
-		if (schemeCableLink_id == null)
+		com.syrus.AMFICOM.general.corba.Identifier schemeCableLinkId = 
+			(com.syrus.AMFICOM.general.corba.Identifier)report.getReserve();
+		if (schemeCableLinkId == null)
 			throw new CreateReportException(report.getName(),CreateReportException.cantImplement);
 
-		SchemeCableLink scLink =
-      (SchemeCableLink)Pool.get(SchemeCableLink.typ,schemeCableLink_id);
-      
+		SchemeCableLink scLink = null;
+		try
+		{
+			scLink = (SchemeCableLink)SchemeStorableObjectPool.getStorableObject(
+				schemeCableLinkId,false);
+		}
+		catch (DatabaseException dExc)
+		{
+		}
+		catch (CommunicationException cExc)
+		{
+		}
+		
 		if (scLink == null)
 			throw new CreateReportException(report.getName(),CreateReportException.poolObjNotExists);
 
-    Scheme scheme = (Scheme) Pool.get(Scheme.typ,scLink.getSchemeId());
+    Scheme scheme = scLink.scheme();
 		if (scheme == null)
 			throw new CreateReportException(report.getName(),CreateReportException.poolObjNotExists);
 
-    Map map = scheme.getMap();
+    Map map = scheme.mapImpl();
 		if (map == null)
 			throw new CreateReportException(report.getName(),CreateReportException.poolObjNotExists);
 
-    scLink.channelingItems.setMap(map);
-    Iterator cciIterator = scLink.channelingItems.iterator();
-    
-    length = scLink.channelingItems.size() + 1;
+    length = scLink.cableChannelingItems().length + 1;
     
     tableData = new String[this.getBaseColumnCount()][];
     for (int i = 0; i < this.getBaseColumnCount(); i++)
       tableData[i] = new String[length];
     
-    int curCCI = 0;
-    for (;cciIterator.hasNext();)
+    for (int curCCI = 0; curCCI < scLink.cableChannelingItems().length; curCCI++)
     {
-      CableChannelingItem chanellingItem = (CableChannelingItem) cciIterator.next();
+      CableChannelingItem chanellingItem = scLink.cableChannelingItems()[curCCI];
       
-      String fullName = this.getSiteFullName(map,chanellingItem.startSiteId);
+      String fullName = this.getSiteFullName(map,chanellingItem.startSiteNodeImpl());
       if (fullName == null)
         throw new CreateReportException(report.getName(),CreateReportException.poolObjNotExists);
         
@@ -96,11 +108,11 @@ class CableLayoutReportTableModel extends DividableTableModel
       tableData[0][curCCI] = fullName;
 
       //Запас на входе
-      tableData[1][curCCI] = Double.toString(chanellingItem.startSpare);
+      tableData[1][curCCI] = Double.toString(chanellingItem.startSpare());
 
       //Запас на выходе
       if (curCCI != 0)
-        tableData[3][curCCI] = Double.toString(chanellingItem.endSpare);
+        tableData[3][curCCI] = Double.toString(chanellingItem.endSpare());
       else
         tableData[3][curCCI] = "--";
 
@@ -110,9 +122,7 @@ class CableLayoutReportTableModel extends DividableTableModel
       {
         String tunnelInfo = "";
         
-        PhysicalLink physicalLink = (PhysicalLink) Pool.get(
-          PhysicalLink.typ,
-          chanellingItem.physicalLinkId);
+        PhysicalLink physicalLink = chanellingItem.physicalLinkImpl();
           
         if (physicalLink == null)
           throw new CreateReportException(report.getName(),CreateReportException.poolObjNotExists);
@@ -122,11 +132,11 @@ class CableLayoutReportTableModel extends DividableTableModel
         if (pipePath != null)
           tunnelInfo += LangModelMap.getString("Collector") + pipePath.getName();
         else
-          tunnelInfo += LangModelMap.getString("Tunnel") + chanellingItem.getName();
+          tunnelInfo += LangModelMap.getString("Tunnel") + chanellingItem.name();
         
         int place = physicalLink.getBinding().getSequenceNumber(
-          chanellingItem.row_x,
-          chanellingItem.place_y);
+          chanellingItem.rowX(),
+          chanellingItem.placeY());
         
         //Место в тоннеле
         tunnelInfo += "," + LangModelMap.getString("maptunnelposit") +
@@ -138,12 +148,10 @@ class CableLayoutReportTableModel extends DividableTableModel
         tableData[2][curCCI] = tunnelInfo;
       }
       
-      curCCI++;
-      
       //Информация о замыкающем узле - имя + запас на входе
-      if (!cciIterator.hasNext())
+      if (curCCI == scLink.cableChannelingItems().length - 1)
       {
-        fullName = this.getSiteFullName(map,chanellingItem.endSiteId);
+        fullName = this.getSiteFullName(map,chanellingItem.endSiteNodeImpl());
         if (fullName == null)
           throw new CreateReportException(report.getName(),CreateReportException.poolObjNotExists);
           
@@ -151,23 +159,16 @@ class CableLayoutReportTableModel extends DividableTableModel
         tableData[0][curCCI] = fullName;
       }
     }
-		
 	}
 
-  private String getSiteFullName(Map map,String id)
+  private String getSiteFullName(Map map,SiteNode node)
   {
-      SiteNode siteNode = map.getMapSiteNodeElement(id);
-      if (siteNode == null)
-        return null;
-        
-      SiteNodeType nodeProto = (SiteNodeType) Pool.get(
-        SiteNodeType.typ,
-        siteNode.getMapProtoId());
+      SiteNodeType nodeProto = (SiteNodeType) node.getType();
         
       if (nodeProto == null)
         return null;
  
-      return nodeProto.getName() + " " + siteNode.getName();
+      return nodeProto.getName() + " " + node.getName();
   }
 
 	public int getRowCount()

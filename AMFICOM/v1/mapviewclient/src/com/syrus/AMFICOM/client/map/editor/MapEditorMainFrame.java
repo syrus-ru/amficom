@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.14 2004/12/30 16:17:48 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.15 2005/01/20 14:37:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -63,9 +63,10 @@ import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapPropertyFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapSchemeTreeFrame;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.Domain;
-import com.syrus.AMFICOM.configuration.User;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.io.IniFile;
@@ -97,7 +98,7 @@ import javax.swing.JViewport;
  * 
  * 
  * 
- * @version $Revision: 1.14 $, $Date: 2004/12/30 16:17:48 $
+ * @version $Revision: 1.15 $, $Date: 2005/01/20 14:37:52 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -717,7 +718,7 @@ public class MapEditorMainFrame extends JFrame
 		try
 		{
 			Identifier userId = new Identifier(aContext.getSessionInterface().getAccessIdentifier().user_id);
-			User user = (User )ConfigurationStorableObjectPool.getStorableObject(
+			User user = (User )AdministrationStorableObjectPool.getStorableObject(
 					userId, true);
 			statusBar.setText(StatusBarModel.FIELD_USER, aContext.getSessionInterface().getUser());
 		}
@@ -770,7 +771,7 @@ public class MapEditorMainFrame extends JFrame
 		try
 		{
 			Identifier domain_id = new Identifier(aContext.getSessionInterface().getAccessIdentifier().domain_id);
-			Domain domain = (Domain )ConfigurationStorableObjectPool.getStorableObject(
+			Domain domain = (Domain )AdministrationStorableObjectPool.getStorableObject(
 					domain_id, true);
 			statusBar.setText("domain", domain.getName());
 		}

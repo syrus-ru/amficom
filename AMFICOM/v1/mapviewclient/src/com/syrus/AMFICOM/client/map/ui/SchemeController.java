@@ -8,8 +8,9 @@ package com.syrus.AMFICOM.Client.Map.UI;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.User;
+import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
@@ -87,7 +88,7 @@ public final class SchemeController implements ObjectResourceController
 			try
 			{
 				Identifier id = new Identifier(sc.creatorId().transferable());
-				result = (User )ConfigurationStorableObjectPool.getStorableObject(id, false);
+				result = (User )AdministrationStorableObjectPool.getStorableObject(id, false);
 			}
 			catch (Exception e)
 			{

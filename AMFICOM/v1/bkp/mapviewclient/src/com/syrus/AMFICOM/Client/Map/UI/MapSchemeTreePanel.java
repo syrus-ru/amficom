@@ -16,9 +16,10 @@ import com.syrus.AMFICOM.Client.General.UI.UniTreePanel;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.Domain;
-import com.syrus.AMFICOM.configuration.DomainCondition;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.DomainCondition;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -312,7 +313,7 @@ public final class MapSchemeTreePanel extends JPanel
 		{
 			Identifier domainId = new Identifier(
 				aContext.getSessionInterface().getAccessIdentifier().domain_id);
-			Domain domain = (Domain )ConfigurationStorableObjectPool.getStorableObject(
+			Domain domain = (Domain )AdministrationStorableObjectPool.getStorableObject(
 					domainId,
 					false);
 			DomainCondition condition = new DomainCondition(

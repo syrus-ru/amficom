@@ -6,12 +6,16 @@ import com.syrus.AMFICOM.Client.General.Report.DividableTableColumnModel;
 import com.syrus.AMFICOM.Client.General.Report.DividableTableModel;
 import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
 import com.syrus.AMFICOM.Client.General.Report.ReportData;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.IntPoint;
 import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 
 import java.awt.Point;
 
@@ -53,13 +57,22 @@ class TunnelCableListReportTableModel extends DividableTableModel
 	{
 		super (divisionsNumber,2);
 
-		String physicalLink_id = (String)report.getReserve();
+		Identifier physicalLink_id = (Identifier)report.getReserve();
 		if (physicalLink_id == null)
 			throw new CreateReportException(report.getName(),CreateReportException.cantImplement);
 
-		PhysicalLink physicalLink =
-      (PhysicalLink)Pool.get(PhysicalLink.typ,physicalLink_id);
-      
+		PhysicalLink physicalLink = null;
+		try
+		{
+			physicalLink = (PhysicalLink)MapStorableObjectPool.getStorableObject(physicalLink_id,false);
+		}
+		catch (DatabaseException dExc)
+		{
+		}
+		catch (CommunicationException cExc)
+		{
+		}
+     
 		if (physicalLink == null)
 			throw new CreateReportException(report.getName(),CreateReportException.poolObjNotExists);
 
@@ -108,7 +121,7 @@ class TunnelCableListReportTableModel extends DividableTableModel
       SchemeCableLink cableLink = (SchemeCableLink) sclIterator.next();
      
       // Имя колодца/узла      
-      tableData[0][tdIterator] = cableLink.getName();
+      tableData[0][tdIterator] = cableLink.name();
       // Информация о тоннеле - строка типа Тоннель тон.1, место N, L = xxx
       IntPoint binding = physicalLink.getBinding().getBinding(cableLink);
       tableData[1][tdIterator++] =

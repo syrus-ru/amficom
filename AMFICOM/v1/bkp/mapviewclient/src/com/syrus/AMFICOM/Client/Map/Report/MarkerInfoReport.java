@@ -6,17 +6,23 @@ import com.syrus.AMFICOM.Client.General.Report.DividableTableColumnModel;
 import com.syrus.AMFICOM.Client.General.Report.DividableTableModel;
 import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
 import com.syrus.AMFICOM.Client.General.Report.ReportData;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.IntPoint;
 import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapStorableObjectPool;
+import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
-import com.syrus.AMFICOM.Client.Resource.MapView.MarkerController;
+import com.syrus.AMFICOM.scheme.corba.PathElement;
+import com.syrus.AMFICOM.Client.Map.mapview.Marker;
+import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 
 import java.awt.Point;
 
@@ -56,18 +62,29 @@ class MarkerInfoReportTableModel extends DividableTableModel
 	{
 		super (divisionsNumber,4);
 
-		String markerId = (String)report.getReserve();
+		Identifier markerId = (Identifier)report.getReserve();
 		if (markerId == null)
 			throw new CreateReportException(report.getName(),CreateReportException.cantImplement);
 
-		MapMarker marker =
-      (MapMarker)Pool.get(MapMarker.typ,markerId);
-		MarkerController mc = (MarkerController )MarkerController.getInstance();
+		Marker marker =	null;
+		try
+		{
+			marker = (Marker)MapStorableObjectPool.getStorableObject(markerId,false);
+		}
+		catch (DatabaseException dExc)
+		{
+		}
+		catch (CommunicationException cExc)
+		{
+		}
+
+		MarkerController mc = (MarkerController)MarkerController.getInstance();
       
 		if (marker == null)
 			throw new CreateReportException(report.getName(),CreateReportException.poolObjNotExists);
 
-    MapCablePathElement cableLink = marker.getCablePath();
+    CablePath cablePath = marker.getCablePath();
+		NodeLink nodeLink = marker.getNodeLink();
 
     length = 12;
     
@@ -85,13 +102,13 @@ class MarkerInfoReportTableModel extends DividableTableModel
     tableData[1][curCCI++] = "";
     
     tableData[0][curCCI] = LangModelMap.getString("Cable");
-    tableData[1][curCCI++] = cableLink.getName();
+    tableData[1][curCCI++] = cablePath.getName();//!!!!!!Тут фигня возможно
 
     tableData[0][curCCI] = "";
     tableData[1][curCCI++] = "";
 
     tableData[0][curCCI] = LangModelMap.getString("mapnodedistances");
-    tableData[1][curCCI++] = cableLink.getName();
+    tableData[1][curCCI++] = nodeLink.getName();//!!!!!!И тут тоже
 
     tableData[0][curCCI] = "";
     tableData[1][curCCI++] = "";
@@ -100,17 +117,26 @@ class MarkerInfoReportTableModel extends DividableTableModel
     tableData[1][curCCI++] = Double.toString(mc.getPhysicalDistanceFromLeft(marker));
 
     tableData[0][curCCI] = "fornode" + " " + marker.getRight().getName();
-    tableData[1][curCCI++] = Double.toString(mc.getPhysicalDistanceFromFight(marker));
+    tableData[1][curCCI++] = Double.toString(mc.getPhysicalDistanceFromRight(marker));
     
     tableData[0][curCCI] = "";
     tableData[1][curCCI++] = "";
 
-    PhysicalLink physicalLink = (PhysicalLink )Pool.get(
-			PhysicalLink.typ,
-			marker.getNodeLink().getPhysicalLink().getId());
-
+    PhysicalLink physicalLink = null;
+		try
+		{
+			physicalLink = (PhysicalLink)MapStorableObjectPool.getStorableObject(
+				marker.getNodeLink().getPhysicalLink().getId(),false);
+		}
+		catch (DatabaseException dExc)
+		{
+		}
+		catch (CommunicationException cExc)
+		{
+		}
+		
     if (physicalLink == null)
-		throw new CreateReportException(
+			throw new CreateReportException(
 				report.getName(),
 				CreateReportException.poolObjNotExists);
       
@@ -134,30 +160,24 @@ class MarkerInfoReportTableModel extends DividableTableModel
       tableData[0][curCCI] = LangModelMap.getString("mapcollectorposit");
     }
     
-    IntPoint binding = physicalLink.getBinding().getBinding(cableLink);
+    IntPoint binding = physicalLink.getBinding().getBinding(cablePath);//И здесь
     tableData[1][curCCI++] =
       Integer.toString(binding.x) + ":" + Integer.toString(binding.y);
   
     tableData[0][curCCI] = LangModelMap.getString("geographicCoords");
     tableData[1][curCCI++] =
-      Double.toString(marker.getLocation().x) + ":" +
-      Double.toString(marker.getLocation().y);
+      Double.toString(marker.getLocation().getX()) + ":" +
+      Double.toString(marker.getLocation().getY());
 	}
 
-  private String getSiteFullName(Map map,String id)
+  private String getSiteFullName(Map map,Identifier id)
   {
-      SiteNode siteNode = map.getMapSiteNodeElement(id);
-      if (siteNode == null)
-        return null;
-        
-      SiteNodeType nodeProto = (SiteNodeType) Pool.get(
-        SiteNodeType.typ,
-        siteNode.getMapProtoId());
-        
-      if (nodeProto == null)
-        return null;
- 
-      return nodeProto.getName() + " " + siteNode.getName();
+    SiteNode siteNode = map.getSiteNode(id);
+		if (siteNode == null)
+			return null;
+
+		SiteNodeType nodeType = (SiteNodeType) siteNode.getType();
+		return nodeType.getName() + " " + siteNode.getName();
   }
 
 	public int getRowCount()

@@ -62,6 +62,10 @@ public final class SimpleMapElementController implements ObjectResourceControlle
 	{
 		Object result = null;
 
+		if(object == null)
+		{
+		}
+		else
 		if (key.equals(KEY_NAME))
 		{
 			Class clazz = object.getClass();

@@ -190,6 +190,10 @@ src\com\syrus\AMFICOM\Client\Map\Props\ObjectResourceLabel.java
 src\com\syrus\AMFICOM\Client\Map\Props\SiteBindingRenderer.java
 src\com\syrus\AMFICOM\Client\Map\Props\SiteCrossingPanel.java
 src\com\syrus\AMFICOM\Client\Map\Props\TunnelLayout.java
+src\com\syrus\AMFICOM\Client\Map\Report\CableLayoutReport.java
+src\com\syrus\AMFICOM\Client\Map\Report\MapReportModel.java
+src\com\syrus\AMFICOM\Client\Map\Report\MarkerInfoReport.java
+src\com\syrus\AMFICOM\Client\Map\Report\TunnelCableListReport.java
 src\com\syrus\AMFICOM\Client\Map\Setup\AMFICOMSearchPanel.java
 src\com\syrus\AMFICOM\Client\Map\Setup\ControlsFrame.java
 src\com\syrus\AMFICOM\Client\Map\Setup\LayersPanel.java
@@ -239,5 +243,4 @@ src\com\syrus\AMFICOM\Client\Map\UI\MotionDescriptor.java
 src\com\syrus\AMFICOM\Client\Map\UI\NodeSizePanel.java
 src\com\syrus\AMFICOM\Client\Map\UI\SchemeController.java
 src\com\syrus\AMFICOM\Client\Map\UI\SimpleMapElementController.java
-src\com\syrus\AMFICOM\Client\Resource\EmptyMapViewDataSource.java
 src\com\syrus\AMFICOM\Client\Resource\MapView\MapView.java

@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.12 2005/01/14 10:06:28 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.13 2005/01/20 14:37:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.Client.General.Command.ImportCommand;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.User;
+import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -54,7 +54,7 @@ import java.util.List;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.12 $, $Date: 2005/01/14 10:06:28 $
+ * @version $Revision: 1.13 $, $Date: 2005/01/20 14:37:52 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -95,7 +95,7 @@ public class MapImportCommand extends ImportCommand
 			MapElement me;
 			ImportCommand.ImportObject importObject;
 			String type;
-			Object[][] exportColumns;
+			java.util.Map exportColumns;
 	
 			String fileName = super.openFileForReading(MapPropertiesManager.getLastDirectory());
 			if(fileName == null)
@@ -203,16 +203,16 @@ public class MapImportCommand extends ImportCommand
 		}
 	}
 
-	private void correctCrossLinks(String type, Object[][] exportColumns)
+	private void correctCrossLinks(String type, java.util.Map exportColumns)
 		throws IllegalObjectEntityException
 	{
 		Object field;
 		Object value;
 
-		for (int i = 1; i < exportColumns.length; i++) 
+		for(Iterator it = exportColumns.keySet().iterator(); it.hasNext();)
 		{
-			field = exportColumns[i][0];
-			value = exportColumns[i][1];
+			field = it.next();
+			value = exportColumns.get(field);
 
 			if(type.equals(MARK_TYPE))
 			{
@@ -253,9 +253,9 @@ public class MapImportCommand extends ImportCommand
 				{
 					List list = (List )value;
 					List newList = new ArrayList(list.size());
-					for(Iterator it = list.iterator(); it.hasNext();)
+					for(Iterator it2 = list.iterator(); it2.hasNext();)
 					{
-						String id = (String )it.next();
+						String id = (String )it2.next();
 						newList.add(super.getClonedId(ObjectEntities.NODE_LINK_ENTITY_CODE, id));
 					}
 					value = newList;
@@ -279,9 +279,9 @@ public class MapImportCommand extends ImportCommand
 				{
 					List list = (List )value;
 					List newList = new ArrayList(list.size());
-					for(Iterator it = list.iterator(); it.hasNext();)
+					for(Iterator it2 = list.iterator(); it2.hasNext();)
 					{
-						String id = (String )it.next();
+						String id = (String )it2.next();
 						newList.add(super.getClonedId(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, id));
 					}
 					value = newList;
@@ -294,7 +294,7 @@ public class MapImportCommand extends ImportCommand
 					value = super.getClonedId(ObjectEntities.SITE_NODE_ENTITY_CODE, (String )value);
 			}
 
-			exportColumns[i][1] = value;
+			exportColumns.put(field, value);
 		}	
 	}
 }
