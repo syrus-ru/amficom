@@ -1,5 +1,5 @@
 /*
- * $Id: ComplexReflectogramEvent.java,v 1.8 2005/03/05 11:07:17 saa Exp $
+ * $Id: ComplexReflectogramEvent.java,v 1.9 2005/03/05 11:47:32 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.8 $, $Date: 2005/03/05 11:07:17 $
+ * @version $Revision: 1.9 $, $Date: 2005/03/05 11:47:32 $
  * @module dadara
  * 
  * Класс предназначен для хранения расширенной информации о
@@ -38,11 +38,18 @@ public class ComplexReflectogramEvent implements SimpleReflectogramEvent
 
 	public double getALet() { return aLet; }
 	public double getMLoss() { return mLoss; }
-	public double getWidth0() { return end - begin; }
+	public double getLength() { return end - begin; }
 	public double getAsympY0() { return asympY0; }
 	public double getAsympY1() { return asympY1; }
+	
+	protected boolean isSplice()
+	{
+		return type == LOSS || type == GAIN;
+	}
 
-	public ComplexReflectogramEvent(SimpleReflectogramEvent se, ModelTrace mt)
+	// Метод сделан private, т.к. он создает объект не в окончательном виде.
+	// Например, для сварки потом надо будет уточнить mloss.
+	private ComplexReflectogramEvent(SimpleReflectogramEvent se, ModelTrace mt)
 	{
 		begin = se.getBegin();
 		end = se.getEnd();
@@ -54,15 +61,48 @@ public class ComplexReflectogramEvent implements SimpleReflectogramEvent
 			ModelFunction lin = ModelFunction.createLinear(yArr, begin);
 			asympY0 = lin.fun(begin);
 			asympY1 = lin.fun(end);
-			mLoss = asympY1 - asympY0;
+			mLoss = asympY0 - asympY1;
 			aLet = 0;
 		}
 		else
 		{
 			asympY0 = yArr[0];
 			asympY1 = yArr[N - 1];
-			mLoss = asympY1 - asympY0;
+			mLoss = asympY0 - asympY1;
 			aLet = ReflectogramMath.getArrayMax(yArr) - asympY0;
 		}
+	}
+	
+	public static ComplexReflectogramEvent[] createEvents(SimpleReflectogramEvent[] se, ModelTrace mt)
+	{
+		ComplexReflectogramEvent[] ret = new ComplexReflectogramEvent[se.length];
+		// создаем события
+		for (int i = 0; i < ret.length; i++)
+			ret[i] = new ComplexReflectogramEvent(se[i], mt);
+		// корректируем mloss сварок (вычитаем средний наклон прямых)
+		for (int i = 0; i < ret.length; i++)
+		{
+			if (ret[i].isSplice())
+			{
+				// берем средний (из одного или двух) наклон смежных линейных
+				// событий, которые по длине больше этой сварки
+				int linCount = 0;
+				double linAtt = 0;
+				if (i > 0 && ret[i - 1].getLength() > ret[i].getLength())
+				{
+					linCount++;
+					linAtt += ret[i - 1].mLoss / ret[i - 1].getLength();
+				}
+				if (i < ret.length && ret[i + 1].getLength() > ret[i].getLength())
+				{
+					linCount++;
+					linAtt += ret[i + 1].mLoss / ret[i + 1].getLength();
+				}
+				if (linCount > 0)
+					linAtt /= linCount;
+				ret[i].mLoss -= linAtt * ret[i].getLength(); 
+			}
+		}
+		return ret;
 	}
 }

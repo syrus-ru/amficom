@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.16 2005/03/03 15:10:55 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.17 2005/03/05 11:47:32 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.16 $, $Date: 2005/03/03 15:10:55 $
+ * @version $Revision: 1.17 $, $Date: 2005/03/05 11:47:32 $
  * @module
  */
 public class ModelTraceManager
@@ -159,22 +159,13 @@ public class ModelTraceManager
 	public SimpleReflectogramEvent[] getSimpleEvents()
 	{
 		// Copy an array and all its references to protect se array.
-		// se[i] are unmodifiable, so we need not clone them.
+		// Array elements are unmodifiable, so no need to clone them.
 		return (SimpleReflectogramEvent[] )se.clone();
-	}
-
-	public ComplexReflectogramEvent getComplexEvent(int nEvent)
-	{
-		//return new ComplexReflectogramEvent(re[nEvent]);
-		return new ComplexReflectogramEvent(se[nEvent], mt);
 	}
 
 	public ComplexReflectogramEvent[] getComplexEvents()
 	{
-		ComplexReflectogramEvent[] ret = new ComplexReflectogramEvent[se.length];
-		for (int i = 0; i < ret.length; i++)
-			ret[i] = getComplexEvent(i);
-		return ret;
+		return ComplexReflectogramEvent.createEvents(se, mt);
 	}
 
 	public void setDeltaX(double deltaX)
