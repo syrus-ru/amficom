@@ -14,6 +14,10 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.*;
 import com.syrus.io.BellcoreStructure;
 
+/*
+ * TODO: отучить его от сравнения событий с одинаковыми номерами.
+ * Приучить к сравнению с помощью нового ReflectogramComparer'а
+ */
 public class DetailedEventsFrame extends JInternalFrame
 	implements OperationListener
 {
@@ -96,13 +100,6 @@ public class DetailedEventsFrame extends JInternalFrame
 				String id = (String)(rce.getSource());
 				if (id.equals("primarytrace"))
 				{
-				/*	if ((RefAnalysis)Pool.get("refanalysis", id) != null)
-					{
-						a = (RefAnalysis)Pool.get("refanalysis", id);
-						bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
-						res = (double)(3 * bs.fxdParams.DS[0]) / (double)(bs.fxdParams.GI * 10000);
-						updTableModel (0);
-					}*/
 					data_ = null;
 //					ctModel.clearTable();
 					tabbedPane.setSelectedIndex(0);
@@ -339,14 +336,13 @@ public class DetailedEventsFrame extends JInternalFrame
 
 	private void setData(int nEvent)
 	{
-
 		if(etalon == null || data_ == null)
 		{
 			tabbedPane.setSelectedIndex(0);
 			tabbedPane.setEnabledAt(1, false);
 			return;
 		}
-		if(nEvent > data_.length || nEvent<0)
+		if(nEvent >= data_.length || nEvent < 0)
 		{
 			return;
 		}
@@ -391,7 +387,7 @@ public class DetailedEventsFrame extends JInternalFrame
 
 		double difference = ReflectogramComparer.getDeviation(etalon, data_, nEvent);
 		double meanDeviation = ReflectogramComparer.getMeanDeviation(data_, etalon, nEvent);
-		double loss = ReflectogramComparer.getLoss(etalon, data_, nEvent);
+		double loss = ReflectogramComparer.getLossChange(etalon, data_, nEvent);
 		double locationDiff = ReflectogramComparer.getLocationDifference(etalon, data_, nEvent)*delta_x;
 		double widthDiff = ReflectogramComparer.getWidthDifference(etalon, data_, nEvent)*delta_x;
 
@@ -631,12 +627,15 @@ class CompareTableRenderer extends DefaultTableCellRenderer
 	{
 		Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
+		/*
 		if(!sameType && row == 0)
 			c.setForeground(Color.red);
-		else if(!sameType && row == 1)
+		else if(!sameType && row == 1) // XXX -- ?
 			c.setForeground(Color.red);
 		else
-			c.setForeground(Color.black);
+			c.setForeground(Color.black);*/
+		
+		c.setForeground(sameType ? Color.black : Color.red);
 
 		return c;
 	}
