@@ -398,14 +398,14 @@ public class SelectTemplate extends JDialog
 	{
 		int curLength = selectedTemplateNameField.getText().length();
 
-		if ((e.getKeyCode() == e.VK_BACK_SPACE) ||
-				(e.getKeyCode() == e.VK_DELETE))
+		if ((e.getKeyCode() == KeyEvent.VK_BACK_SPACE) ||
+				(e.getKeyCode() == KeyEvent.VK_DELETE))
 			curLength--;
 		else
 			if (!(e.isActionKey() ||
-					 (e.getKeyCode() == e.VK_ALT) ||
-					 (e.getKeyCode() == e.VK_CONTROL) ||
-					 (e.getKeyCode() == e.VK_SHIFT)))
+					 (e.getKeyCode() == KeyEvent.VK_ALT) ||
+					 (e.getKeyCode() == KeyEvent.VK_CONTROL) ||
+					 (e.getKeyCode() == KeyEvent.VK_SHIFT)))
 				curLength++;
 
 		if (curLength > 0)

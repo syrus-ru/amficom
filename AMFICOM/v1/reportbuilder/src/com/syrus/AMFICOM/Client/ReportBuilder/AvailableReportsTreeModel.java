@@ -23,8 +23,6 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceDomainFilter;
 import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 
@@ -36,7 +34,6 @@ import com.syrus.AMFICOM.Client.Resource.DataSet;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.ImageCatalogue;
 import com.syrus.AMFICOM.Client.Resource.ImageResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceSorter;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
@@ -538,10 +535,10 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 						 sorter.setDataSet(dSet);
 						 dSet = sorter.default_sort();*/
 
-					Enumeration enum = dSet.elements();
-					for (; enum.hasMoreElements(); )
+					Enumeration enumerer = dSet.elements();
+					for (; enumerer.hasMoreElements(); )
 					{
-						MapContext mc = (MapContext) enum.nextElement();
+						MapContext mc = (MapContext) enumerer.nextElement();
 						ObjectResourceTreeNode n = new ObjectResourceTreeNode(mc,
 							mc.getName(), true);
 						vec.add(n);
@@ -567,10 +564,10 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 				sorter.setDataSet(dSet);
 				dSet = sorter.default_sort();
 
-				Enumeration enum = dSet.elements();
-				for (; enum.hasMoreElements(); )
+				Enumeration enumerer = dSet.elements();
+				for (; enumerer.hasMoreElements(); )
 				{
-					MapEquipmentNodeElement me = (MapEquipmentNodeElement) enum.
+					MapEquipmentNodeElement me = (MapEquipmentNodeElement) enumerer.
 						nextElement();
 					ObjectResourceTreeNode n = new ObjectResourceTreeNode(me,
 						me.getName(), true);
@@ -584,10 +581,10 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 				MapContext mc = (MapContext) parent.getObject();
 
 				DataSet dSet = new DataSet();
-				for (Enumeration enum = mc.getNodes().elements();
-					enum.hasMoreElements(); )
+				for (Enumeration enumer = mc.getNodes().elements();
+					enumer.hasMoreElements(); )
 				{
-					ObjectResource os = (ObjectResource) enum.nextElement();
+					ObjectResource os = (ObjectResource) enumer.nextElement();
 					if (os instanceof MapKISNodeElement)
 						dSet.add(os);
 				}
@@ -597,10 +594,10 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 				sorter.setDataSet(dSet);
 				dSet = sorter.default_sort();
 
-				Enumeration enum = dSet.elements();
-				for (; enum.hasMoreElements(); )
+				Enumeration enumer = dSet.elements();
+				for (; enumer.hasMoreElements(); )
 				{
-					MapKISNodeElement me = (MapKISNodeElement) enum.nextElement();
+					MapKISNodeElement me = (MapKISNodeElement) enumer.nextElement();
 					ObjectResourceTreeNode n = new ObjectResourceTreeNode(me,
 						me.getName(), true);
 					vec.add(n);
@@ -625,10 +622,10 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 				sorter.setDataSet(dSet);
 				dSet = sorter.default_sort();
 
-				Enumeration enum = dSet.elements();
-				for (; enum.hasMoreElements(); )
+				Enumeration enumerer = dSet.elements();
+				for (; enumerer.hasMoreElements(); )
 				{
-					MapPhysicalNodeElement me = (MapPhysicalNodeElement) enum.
+					MapPhysicalNodeElement me = (MapPhysicalNodeElement) enumerer.
 						nextElement();
 					ObjectResourceTreeNode n = new ObjectResourceTreeNode(me,
 						me.getName(), true);
@@ -668,10 +665,10 @@ getObject();
 				sorter.setDataSet(dSet);
 				dSet = sorter.default_sort();
 
-				Enumeration enum = dSet.elements();
-				for (; enum.hasMoreElements(); )
+				Enumeration enumerer = dSet.elements();
+				for (; enumerer.hasMoreElements(); )
 				{
-					MapPhysicalLinkElement ml = (MapPhysicalLinkElement) enum.
+					MapPhysicalLinkElement ml = (MapPhysicalLinkElement) enumerer.
 						nextElement();
 
 					String curName = ml.getName();
@@ -714,11 +711,11 @@ getObject();
 				sorter.setDataSet(dSet);
 				dSet = sorter.default_sort();
 
-				Enumeration enum = dSet.elements();
-				for (; enum.hasMoreElements(); )
+				Enumeration enumerer = dSet.elements();
+				for (; enumerer.hasMoreElements(); )
 				{
 					MapTransmissionPathElement me = (MapTransmissionPathElement)
-						enum.
+						enumerer.
 						nextElement();
 					ObjectResourceTreeNode n = new ObjectResourceTreeNode(me,
 						me.getName(), true);
@@ -745,10 +742,10 @@ getObject();
 				sorter.setDataSet(dSet);
 				dSet = sorter.default_sort();
 
-				Enumeration enum = dSet.elements();
-				for (; enum.hasMoreElements(); )
+				Enumeration enumerer = dSet.elements();
+				for (; enumerer.hasMoreElements(); )
 				{
-					MapMarkElement mme = (MapMarkElement) enum.nextElement();
+					MapMarkElement mme = (MapMarkElement) enumerer.nextElement();
 					ObjectResourceTreeNode n = new ObjectResourceTreeNode(mme,
 						mme.getName(), true);
 					vec.add(n);
@@ -768,9 +765,9 @@ getObject();
 				 sorter.setDataSet(dSet);
 				 dSet = sorter.default_sort();*/
 
-				for (Enumeration enum = dSet.elements(); enum.hasMoreElements(); )
+				for (Enumeration enumer = dSet.elements(); enumer.hasMoreElements(); )
 				{
-					Scheme scheme = (Scheme) enum.nextElement();
+					Scheme scheme = (Scheme) enumer.nextElement();
 					if (scheme.scheme_type.equals(s))
 					{
 						ObjectsReport or = new ObjectsReport (
@@ -852,10 +849,10 @@ getObject();
 			 Scheme scheme = (Scheme) node.getObject();*/
 
 			//Ёлементы
-			for (Enumeration enum = scheme.elements.elements();
-				enum.hasMoreElements(); )
+			for (Enumeration enumer = scheme.elements.elements();
+				enumer.hasMoreElements(); )
 			{
-				SchemeElement element = (SchemeElement) enum.nextElement();
+				SchemeElement element = (SchemeElement) enumer.nextElement();
 				if (element.scheme_id.equals(""))
 				{
 					ObjectsReport rep = new ObjectsReport(new
@@ -1010,10 +1007,10 @@ getObject();
 			if (!schel.scheme_id.equals(""))
 			{
 				Scheme scheme = (Scheme) Pool.get(Scheme.typ, schel.scheme_id);
-				for (Enumeration enum = scheme.elements.elements();
-					enum.hasMoreElements(); )
+				for (Enumeration enumer = scheme.elements.elements();
+					enumer.hasMoreElements(); )
 				{
-					SchemeElement element = (SchemeElement) enum.nextElement();
+					SchemeElement element = (SchemeElement) enumer.nextElement();
 
 					if (element.scheme_id.equals(""))
 					{

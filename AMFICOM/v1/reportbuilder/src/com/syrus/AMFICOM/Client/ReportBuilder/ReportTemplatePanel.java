@@ -393,7 +393,7 @@ public class ReportTemplatePanel extends JPanel
 	{
 		reportTemplate.curModified = System.currentTimeMillis();
 		this.repaint();
-};
+  }
 
 	private void textPaneMouseClicked(MouseEvent e)
 	{
@@ -418,10 +418,10 @@ public class ReportTemplatePanel extends JPanel
 						textPane.getFont());
 
 					fcDialog.show();
-					if (fcDialog.selectedFont == null)
+					if (FontChooserDialog.selectedFont == null)
 						return;
 
-					textPane.setFont(fcDialog.selectedFont);
+					textPane.setFont(FontChooserDialog.selectedFont);
 					textPaneKeyPressed(new KeyEvent(textPane, 0, 0, 0, 0, ' '));
 					reportTemplate.curModified = System.currentTimeMillis();
 				}
@@ -1270,10 +1270,10 @@ getHeight();
 			{
 				int newY = tp.getY();
 
-				if (tp.verticalFirmTo.equals(tp.toTop))
+				if (tp.verticalFirmTo.equals(FirmedTextPane.toTop))
 					newY = tp.vertFirmer.y + tp.distanceY;
 
-				if (tp.verticalFirmTo.equals(tp.toBottom))
+				if (tp.verticalFirmTo.equals(FirmedTextPane.toBottom))
 					newY = tp.vertFirmer.y + tp.vertFirmer.height + tp.distanceY;
 
 				return newY;
@@ -1724,10 +1724,10 @@ getHeight();
 					tgpDialog.setLocation(300, 300);
 					tgpDialog.setVisible(true);
 
-					if (tgpDialog.interval_value == null)
+					if (TimeGraphProperties.interval_value == null)
 						return;
 
-					transf_rep.setReserve(tgpDialog.interval_value);
+					transf_rep.setReserve(TimeGraphProperties.interval_value);
 				}
 
 				if (transf_rep.view_type.equals(ObjectResourceReportModel.

@@ -107,19 +107,18 @@ public class TimeGraphProperties extends JDialog
 
 	void jButton1_actionPerformed(ActionEvent e) {
 	 if (jComboBox1.getSelectedItem().equals(LangModelReport.String("label_hour")))
-		this.interval_value =  Hour.class;
+		TimeGraphProperties.interval_value =  Hour.class;
 	 if (jComboBox1.getSelectedItem().equals(LangModelReport.String("label_day")))
-		this.interval_value =  Day.class;
+		TimeGraphProperties.interval_value =  Day.class;
 	 if (jComboBox1.getSelectedItem().equals(LangModelReport.String("label_week")))
-		this.interval_value =  Week.class;
+		TimeGraphProperties.interval_value =  Week.class;
 	 if (jComboBox1.getSelectedItem().equals(LangModelReport.String("label_month")))
-		this.interval_value =  Month.class;
+		TimeGraphProperties.interval_value =  Month.class;
 	 if (jComboBox1.getSelectedItem().equals(LangModelReport.String("label_quarter")))
-		this.interval_value =  Quarter.class;
+		TimeGraphProperties.interval_value =  Quarter.class;
 	 if (jComboBox1.getSelectedItem().equals(LangModelReport.String("label_year")))
-		this.interval_value =  Year.class;
+		TimeGraphProperties.interval_value =  Year.class;
 
 	 this.dispose();
 	}
-
 }

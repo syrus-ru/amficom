@@ -304,10 +304,10 @@ public class ReportToolBar
 
 		selectTemplateDialog.setVisible(true);
 
-		if (selectTemplateDialog.selectedTemplate == null)
+		if (SelectTemplate.selectedTemplate == null)
 			return;
 
-		mainWindow.setTemplate(selectTemplateDialog.selectedTemplate);
+		mainWindow.setTemplate(SelectTemplate.selectedTemplate);
 	}
 
 	private void newTemplateButton_actionPerformed(ActionEvent e)
@@ -494,4 +494,4 @@ class RTFileFilter implements FileFilter
 
 		return false;
 	}
-};
+}

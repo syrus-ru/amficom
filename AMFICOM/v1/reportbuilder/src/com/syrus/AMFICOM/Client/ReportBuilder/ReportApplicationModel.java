@@ -46,5 +46,4 @@ public class ReportApplicationModel extends ApplicationModel {
 		return null;
 
 	}
-
 }
