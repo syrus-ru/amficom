@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImplementation.java,v 1.22 2005/02/08 12:54:46 bob Exp $
+ * $Id: MCMImplementation.java,v 1.23 2005/02/15 15:11:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.mcm;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
@@ -45,8 +46,8 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/02/08 12:54:46 $
- * @author $Author: bob $
+ * @version $Revision: 1.23 $, $Date: 2005/02/15 15:11:22 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -69,7 +70,8 @@ public class MCMImplementation extends MCMPOA {
 				condition = new EquivalentCondition(transferable.equialentCondition());
 				break;
 			default:
-				String msg = "CMGeneralReceive.restoreCondition | condition class " + transferable.getClass().getName()
+				String msg = "CMGeneralReceive.restoreCondition | condition class "
+						+ transferable.getClass().getName()
 						+ " is not suppoted";
 				Log.errorMessage(msg);
 				throw new IllegalDataException(msg);
@@ -77,45 +79,48 @@ public class MCMImplementation extends MCMPOA {
 		}
 		return condition;
 	}
-	
+
 	public void receiveTests(Test_Transferable[] testsT) throws AMFICOMRemoteException {
-		try{
+		try {
 			Log.debugMessage("Received " + testsT.length + " tests", Log.DEBUGLEVEL07);
 			List testList = new ArrayList(testsT.length);
 			for (int i = 0; i < testsT.length; i++) {
 				try {
 					Test test = new Test(testsT[i]);
 					testList.add(test);
-				}	
-				
+				}
+
 				catch (CreateObjectException coe) {
 					Log.errorException(coe);
 					throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
 				}
-				catch (Exception e){
+				catch (Exception e) {
 					Log.errorException(e);
 					throw new AMFICOMRemoteException();
 				}
 			}
-			
+
 			TestDatabase testDatabase = (TestDatabase) MeasurementDatabaseContext.getTestDatabase();
 			try {
 				testDatabase.insert(testList);
-			} catch (CreateObjectException e) {
-				Log.errorException(e);
-				throw new AMFICOMRemoteException();
-			} catch (IllegalDataException e) {
+			}
+			catch (CreateObjectException e) {
 				Log.errorException(e);
 				throw new AMFICOMRemoteException();
 			}
-			
+			catch (IllegalDataException e) {
+				Log.errorException(e);
+				throw new AMFICOMRemoteException();
+			}
+
 			for (Iterator it = testList.iterator(); it.hasNext();) {
 				Test test = (Test) it.next();
-				MeasurementControlModule.addTest(test);			
+				MeasurementControlModule.addTest(test);
 			}
-		}catch(Throwable throwable){
+		}
+		catch (Throwable throwable) {
 			Log.errorException(throwable);
-			throw new AMFICOMRemoteException();			
+			throw new AMFICOMRemoteException();
 		}
 	}
 
@@ -123,22 +128,26 @@ public class MCMImplementation extends MCMPOA {
 		Identifier testId = new Identifier(testIdT);
 		Log.debugMessage("Received signal to abort test '" + testId + "'", Log.DEBUGLEVEL07);
 		try {
-			Test test = (Test)MeasurementStorableObjectPool.getStorableObject(testId, true);
+			Test test = (Test) MeasurementStorableObjectPool.getStorableObject(testId, true);
 			MeasurementControlModule.abortTest(test);
 		}
 		catch (ApplicationException ae) {
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, "Test '" + testIdT.identifier_string + "' not found -- " + ae.getMessage());
-		} catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_NOT_FOUND, CompletionStatus.COMPLETED_YES, "Test '"
+					+ testIdT.identifier_string
+					+ "' not found -- "
+					+ ae.getMessage());
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
 	public Measurement_Transferable transmitMeasurement(Identifier_Transferable idT) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(idT);
 		try {
 			Measurement measurement = new Measurement(id);
-			return (Measurement_Transferable)measurement.getTransferable();
+			return (Measurement_Transferable) measurement.getTransferable();
 		}
 		catch (ObjectNotFoundException onfe) {
 			Log.errorException(onfe);
@@ -147,57 +156,63 @@ public class MCMImplementation extends MCMPOA {
 		catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
 
-	public Measurement_Transferable[] transmitMeasurementsButIds(	StorableObjectCondition_Transferable storableObjectCondition_Transferable,
-																	Identifier_Transferable[] identifier_Transferables)
-			throws AMFICOMRemoteException {
+	public Measurement_Transferable[] transmitMeasurementsButIds(StorableObjectCondition_Transferable storableObjectCondition_Transferable,
+			Identifier_Transferable[] identifier_Transferables) throws AMFICOMRemoteException {
 		try {
-			List list;
+			Collection collection;
 			StorableObjectCondition condition = this.restoreCondition(storableObjectCondition_Transferable);
 			if (identifier_Transferables.length > 0) {
 				List idsList = new ArrayList(identifier_Transferables.length);
 				for (int i = 0; i < identifier_Transferables.length; i++)
 					idsList.add(new Identifier(identifier_Transferables[i]));
-				list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
-			} else
-				list = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
+			}
+			else
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-			Measurement_Transferable[] transferables = new Measurement_Transferable[list.size()];
+			Measurement_Transferable[] transferables = new Measurement_Transferable[collection.size()];
 			int i = 0;
-			for (Iterator it = list.iterator(); it.hasNext(); i++) {
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				Measurement measurement = (Measurement) it.next();
 				transferables[i] = (Measurement_Transferable) measurement.getTransferable();
 			}
 			return transferables;
 
-        } catch (RetrieveObjectException roe) {
-            Log.errorException(roe);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-        } catch (IllegalDataException ide) {
-            Log.errorException(ide);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide.getMessage());
-        } catch (IllegalObjectEntityException ioee) {
-            Log.errorException(ioee);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-        } catch (ApplicationException e) {
-            Log.errorException(e);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-        } catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
-    }
-    
+		}
+		catch (RetrieveObjectException roe) {
+			Log.errorException(roe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
+		}
+		catch (IllegalDataException ide) {
+			Log.errorException(ide);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide.getMessage());
+		}
+		catch (IllegalObjectEntityException ioee) {
+			Log.errorException(ioee);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee.getMessage());
+		}
+		catch (ApplicationException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
+
     public Analysis_Transferable transmitAnalysis(Identifier_Transferable idT) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(idT);
 		try {
 			Analysis analysis = new Analysis(id);
-			return (Analysis_Transferable)analysis.getTransferable();
+			return (Analysis_Transferable) analysis.getTransferable();
 		}
 		catch (ObjectNotFoundException onfe) {
 			Log.errorException(onfe);
@@ -206,62 +221,65 @@ public class MCMImplementation extends MCMPOA {
 		catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
-	    
-    public Analysis_Transferable[] transmitAnalysesButIds(
-	        StorableObjectCondition_Transferable storableObjectCondition_Transferable,
-            Identifier_Transferable[] identifier_Transferables) throws AMFICOMRemoteException {
-               
-        try {            
-            List list;
-            StorableObjectCondition condition = this.restoreCondition(storableObjectCondition_Transferable);
-            if (identifier_Transferables.length > 0) {
-                List idsList = new ArrayList(identifier_Transferables.length);
-                for (int i = 0; i < identifier_Transferables.length; i++)
-                    idsList.add(new Identifier(identifier_Transferables[i]));
-                list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
-            } else 
-                list = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-            Analysis_Transferable[] transferables = new Analysis_Transferable[list.size()];
-            int i = 0;
-            for (Iterator it = list.iterator(); it.hasNext(); i++) {
-                Analysis analysis = (Analysis) it.next();
-                transferables[i] = (Analysis_Transferable) analysis.getTransferable();
-            }
-            return transferables;
+	public Analysis_Transferable[] transmitAnalysesButIds(StorableObjectCondition_Transferable storableObjectCondition_Transferable,
+			Identifier_Transferable[] identifier_Transferables) throws AMFICOMRemoteException {
 
-        } catch (RetrieveObjectException roe) {
-            Log.errorException(roe);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
-                    .getMessage());
-        } catch (IllegalDataException ide) {
-            Log.errorException(ide);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide
-                    .getMessage());
-        } catch (IllegalObjectEntityException ioee) {
-            Log.errorException(ioee);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee
-                    .getMessage());
-        } catch (ApplicationException e) {
-            Log.errorException(e);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-        } catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
-        
-    }
-    
+		try {
+			Collection collection;
+			StorableObjectCondition condition = this.restoreCondition(storableObjectCondition_Transferable);
+			if (identifier_Transferables.length > 0) {
+				List idsList = new ArrayList(identifier_Transferables.length);
+				for (int i = 0; i < identifier_Transferables.length; i++)
+					idsList.add(new Identifier(identifier_Transferables[i]));
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
+			}
+			else
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+
+			Analysis_Transferable[] transferables = new Analysis_Transferable[collection.size()];
+			int i = 0;
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
+				Analysis analysis = (Analysis) it.next();
+				transferables[i] = (Analysis_Transferable) analysis.getTransferable();
+			}
+			return transferables;
+
+		}
+		catch (RetrieveObjectException roe) {
+			Log.errorException(roe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
+		}
+		catch (IllegalDataException ide) {
+			Log.errorException(ide);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide.getMessage());
+		}
+		catch (IllegalObjectEntityException ioee) {
+			Log.errorException(ioee);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee.getMessage());
+		}
+		catch (ApplicationException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+
+	}
+
 	public Evaluation_Transferable transmitEvaluation(Identifier_Transferable idT) throws AMFICOMRemoteException {
 		Identifier id = new Identifier(idT);
 		try {
 			Evaluation evaluation = new Evaluation(id);
-			return (Evaluation_Transferable)evaluation.getTransferable();
+			return (Evaluation_Transferable) evaluation.getTransferable();
 		}
 		catch (ObjectNotFoundException onfe) {
 			Log.errorException(onfe);
@@ -270,54 +288,57 @@ public class MCMImplementation extends MCMPOA {
 		catch (RetrieveObjectException roe) {
 			Log.errorException(roe);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
 	}
-    
-    public Evaluation_Transferable[] transmitEvaluationsButIds(
-            StorableObjectCondition_Transferable storableObjectCondition_Transferable,
-            Identifier_Transferable[] identifier_Transferables) throws AMFICOMRemoteException {
-        try {            
-            List list;
-            StorableObjectCondition condition = this.restoreCondition(storableObjectCondition_Transferable);
-            if (identifier_Transferables.length > 0) {
-                List idsList = new ArrayList(identifier_Transferables.length);
-                for (int i = 0; i < identifier_Transferables.length; i++)
-                    idsList.add(new Identifier(identifier_Transferables[i]));
-                list = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
-            } else 
-                list = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-            Evaluation_Transferable[] transferables = new Evaluation_Transferable[list.size()];
-            int i = 0;
-            for (Iterator it = list.iterator(); it.hasNext(); i++) {
-                Evaluation evaluation = (Evaluation) it.next();
-                transferables[i] = (Evaluation_Transferable) evaluation.getTransferable();
-            }
-            return transferables;
+	public Evaluation_Transferable[] transmitEvaluationsButIds(StorableObjectCondition_Transferable storableObjectCondition_Transferable,
+			Identifier_Transferable[] identifier_Transferables) throws AMFICOMRemoteException {
+		try {
+			Collection collection;
+			StorableObjectCondition condition = this.restoreCondition(storableObjectCondition_Transferable);
+			if (identifier_Transferables.length > 0) {
+				List idsList = new ArrayList(identifier_Transferables.length);
+				for (int i = 0; i < identifier_Transferables.length; i++)
+					idsList.add(new Identifier(identifier_Transferables[i]));
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
+			}
+			else
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-        } catch (RetrieveObjectException roe) {
-            Log.errorException(roe);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
-                    .getMessage());
-        } catch (IllegalDataException ide) {
-            Log.errorException(ide);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide
-                    .getMessage());
-        } catch (IllegalObjectEntityException ioee) {
-            Log.errorException(ioee);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee
-                    .getMessage());
-        } catch (ApplicationException e) {
-            Log.errorException(e);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-        } catch (Throwable t) {
-            Log.errorException(t);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-        }
-    }
+			Evaluation_Transferable[] transferables = new Evaluation_Transferable[collection.size()];
+			int i = 0;
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
+				Evaluation evaluation = (Evaluation) it.next();
+				transferables[i] = (Evaluation_Transferable) evaluation.getTransferable();
+			}
+			return transferables;
+
+		}
+		catch (RetrieveObjectException roe) {
+			Log.errorException(roe);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
+		}
+		catch (IllegalDataException ide) {
+			Log.errorException(ide);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide.getMessage());
+		}
+		catch (IllegalObjectEntityException ioee) {
+			Log.errorException(ioee);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee.getMessage());
+		}
+		catch (ApplicationException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
 
 	public void ping(int i) {
 		System.out.println("i == " + i);
