@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundLink.java,v 1.4 2005/02/02 15:17:30 krupenn Exp $
+ * $Id: UnboundLink.java,v 1.5 2005/02/18 14:29:11 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,8 +29,8 @@ import java.util.List;
  * Элемент непривязанной линии. Использыется как составляющая честь 
  * {@link CablePath} в случае, когда кабель не привязан на каком-либо участке 
  * между узлами.
- * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/02/02 15:17:30 $
+ * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/02/18 14:29:11 $
  * @module mapviewclient_v1
  */
 public class UnboundLink extends PhysicalLink
@@ -56,12 +56,13 @@ public class UnboundLink extends PhysicalLink
 	protected UnboundLink(
 			Identifier id,
 			Identifier creatorId,
+			final long version,
 			AbstractNode stNode, 
 			AbstractNode eNode, 
 			Map map,
 			PhysicalLinkType proto)
 	{
-		super(id, creatorId, id.toString(), "", proto, stNode, eNode, "", "", "", 0, 0, true, true);
+		super(id, creatorId, version, id.toString(), "", proto, stNode, eNode, "", "", "", 0, 0, true, true);
 	}
 
 	/**
@@ -88,15 +89,16 @@ public class UnboundLink extends PhysicalLink
 		
 		try
 		{
-			Identifier ide =
-				LocalIdentifierGenerator.generateIdentifier(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE);
-			return new UnboundLink(
-				ide,
+			UnboundLink unboundLink = new UnboundLink(
+				LocalIdentifierGenerator.generateIdentifier(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE),
 				creatorId,
+				0L,
 				stNode, 
 				eNode, 
 				map,
 				proto);
+			unboundLink.changed = true;
+			return unboundLink;
 		}
 		catch (IdentifierGenerationException e)
 		{

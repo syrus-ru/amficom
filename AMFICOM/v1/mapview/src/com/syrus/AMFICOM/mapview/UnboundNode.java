@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNode.java,v 1.5 2005/02/10 13:00:42 krupenn Exp $
+ * $Id: UnboundNode.java,v 1.6 2005/02/18 14:29:11 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,8 +30,8 @@ import java.util.List;
  * Непривязанный элемент. Сооветствует элеименту схемы, не привязанному 
  * ни к какому элементу топологической схемы.
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/02/10 13:00:42 $
+ * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/02/18 14:29:11 $
  * @module mapviewclient_v1
  */
 public class UnboundNode extends SiteNode
@@ -68,6 +68,7 @@ public class UnboundNode extends SiteNode
 	protected UnboundNode(
 		Identifier id,
 		Identifier creatorId,
+		final long version,
 		SchemeElement schemeElement,
 		DoublePoint location,
 		Map map,
@@ -76,6 +77,7 @@ public class UnboundNode extends SiteNode
 		super(
 				id, 
 				creatorId, 
+				version,
 				nodeType.getImageId(), 
 				nodeType.getName(), 
 				"", 
@@ -116,16 +118,16 @@ public class UnboundNode extends SiteNode
 		
 		try
 		{
-			Identifier ide =
-				LocalIdentifierGenerator.generateIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE);
-//				IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE);
-			return new UnboundNode(
-				ide,
+			UnboundNode unboundNode = new UnboundNode(
+				LocalIdentifierGenerator.generateIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE),
 				creatorId,
+				0L,
 				schemeElement,
 				location,
 				map,
 				nodeType);
+			unboundNode.changed = true;
+			return unboundNode;
 		}
 		catch (IdentifierGenerationException e)
 		{

@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.8 2005/02/02 15:17:30 krupenn Exp $
+* $Id: MapView.java,v 1.9 2005/02/18 14:29:11 bob Exp $
 *
 * Copyright њ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,6 +38,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 import com.syrus.AMFICOM.scheme.corba.SchemePath;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -51,8 +52,8 @@ import java.util.List;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/02/02 15:17:30 $
+ * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/02/18 14:29:11 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -134,7 +135,8 @@ public class MapView extends StorableObject {
 	}
 
 	protected MapView(final Identifier id, 
-				  final Identifier creatorId, 
+				  final Identifier creatorId,
+				  final long version,
 				  final Identifier domainId,
 				  final String name,
 				  final String description,
@@ -143,12 +145,12 @@ public class MapView extends StorableObject {
 				  final double scale,
 				  final double defaultScale,
 				  final Map map) {
-		super(id);
-		long time = System.currentTimeMillis();
-		super.created = new Date(time);
-		super.modified = new Date(time);
-		super.creatorId = creatorId;
-		super.modifierId = creatorId;
+		super(id,
+			new Date(System.currentTimeMillis()),
+			new Date(System.currentTimeMillis()),
+			creatorId,
+			creatorId,
+			version);
 		this.domainId = domainId;
 		this.name = name;
 		this.description = description;
@@ -160,22 +162,9 @@ public class MapView extends StorableObject {
 
 		this.schemes = new LinkedList();
 
-		super.currentVersion = super.getNextVersion();
-
 		this.mapViewDatabase = MapViewDatabaseContext.getMapViewDatabase();
-	}
-
+	}	
 	
-	public void insert() throws CreateObjectException {
-		this.mapViewDatabase = MapViewDatabaseContext.getMapViewDatabase();
-		try {
-			if (this.mapViewDatabase != null)
-				this.mapViewDatabase.insert(this);
-		} catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
-		}
-	}
-
 	public static MapView createInstance(
 			final Identifier creatorId,
 			final Identifier domainId,
@@ -190,9 +179,10 @@ public class MapView extends StorableObject {
 		if (domainId == null || name == null || description == null || map == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		try {
-			return new MapView(
+			MapView mapView = new MapView(
 				IdentifierPool.getGeneratedIdentifier(ObjectEntities.MAPVIEW_ENTITY_CODE),
 					creatorId,
+					0L,
 					domainId,
 					name,
 					description,
@@ -201,6 +191,8 @@ public class MapView extends StorableObject {
 					scale,
 					defaultScale,
 					map);
+			mapView.changed = true;
+			return mapView;
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("MapView.createInstance | cannot generate identifier ", e);
 		}
@@ -243,13 +235,13 @@ public class MapView extends StorableObject {
 	public void addScheme(Scheme scheme)
 	{
 		this.schemes.add(scheme);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	
 	public void removeScheme(Scheme scheme)
 	{
 		this.schemes.remove(scheme);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	
 	protected void setSchemes0(List schemes) {
@@ -260,7 +252,7 @@ public class MapView extends StorableObject {
 	
 	public void setSchemeIds(List schemeIds) {
 		this.setSchemes0(schemeIds);
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	
 	/**
@@ -277,7 +269,7 @@ public class MapView extends StorableObject {
 	 */
 	public void setDescription(String description) {
 		this.description = description;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	
 	/**
@@ -294,7 +286,7 @@ public class MapView extends StorableObject {
 	 */
 	public void setDomainId(Identifier domainId) {
 		this.domainId = domainId;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	
 	/**
@@ -311,13 +303,14 @@ public class MapView extends StorableObject {
 	 */
 	public void setName(String name) {
 		this.name = name;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}	
 	
 	protected synchronized void setAttributes(final Date created,
 											  final Date modified,
 											  final Identifier creatorId,
-											  final Identifier modifierId,											  
+											  final Identifier modifierId,
+											  final long version,
 											  final Identifier domainId,
 											  final String name,
 											  final String description,
@@ -329,7 +322,8 @@ public class MapView extends StorableObject {
 			super.setAttributes(created,
 					modified,
 					creatorId,
-					modifierId);
+					modifierId,
+					version);
 			this.domainId = domainId;
 			this.name = name;
 			this.description = description;
@@ -347,7 +341,7 @@ public class MapView extends StorableObject {
 	
 	public void setDefaultScale(double defaultScale) {
 		this.defaultScale = defaultScale;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	
 	public double getLatitude() {
@@ -356,7 +350,7 @@ public class MapView extends StorableObject {
 	
 	public void setLatitude(double latitude) {
 		this.latitude = latitude;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	
 	public double getLongitude() {
@@ -365,7 +359,7 @@ public class MapView extends StorableObject {
 	
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	
 	/**
@@ -382,7 +376,7 @@ public class MapView extends StorableObject {
 	 */
 	public void setMap(Map map) {
 		this.map = map;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 	
 	/**
@@ -399,7 +393,7 @@ public class MapView extends StorableObject {
 	 */
 	public void setScale(double scale) {
 		this.scale = scale;
-		super.currentVersion = super.getNextVersion();
+		super.changed = true;
 	}
 
 	/**
@@ -892,9 +886,9 @@ public class MapView extends StorableObject {
 	 * ѕолучить список всех олементов контекста карты.
 	 * @return список всех топологических элементов
 	 */
-	public List getAllElements()
+	public Collection getAllElements()
 	{
-		List returnVector = getMap().getAllElements();
+		Collection returnVector = getMap().getAllElements();
 		
 		Iterator e;
 
