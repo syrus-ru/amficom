@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.22 2004/10/19 07:48:21 bob Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.23 2004/10/29 13:49:23 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,8 @@ import oracle.jdbc.driver.OraclePreparedStatement;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.util.database.DatabaseString;
+
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -33,8 +35,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.ora.CronStringArray;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/10/19 07:48:21 $
- * @author $Author: bob $
+ * @version $Revision: 1.23 $, $Date: 2004/10/29 13:49:23 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -109,7 +111,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 																	DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 																	new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
 																	new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-																	resultSet.getString(COLUMN_DESCRIPTION),
+																	DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
 																	cronStrings);
 		return temporalPattern;
 	}
