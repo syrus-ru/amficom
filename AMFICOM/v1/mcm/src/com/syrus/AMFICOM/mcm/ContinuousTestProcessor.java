@@ -1,5 +1,5 @@
 /*
- * $Id: ContinuousTestProcessor.java,v 1.9 2004/08/13 17:43:52 arseniy Exp $
+ * $Id: ContinuousTestProcessor.java,v 1.10 2004/08/14 19:37:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,16 +25,12 @@ import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/08/13 17:43:52 $
+ * @version $Revision: 1.10 $, $Date: 2004/08/14 19:37:27 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
 
 public class ContinuousTestProcessor extends TestProcessor {
-//	private static final long FRAME = 24*60*60*1000;//ms
-//
-//	private TemporalPattern temporalPattern;
-//	private List timeStampsList;//List <Date>
 	
 	private Date nextTimeStamp;
 
@@ -109,58 +105,61 @@ public class ContinuousTestProcessor extends TestProcessor {
 		Identifier measurementId = null;
 		Measurement measurement = null;
 		while (super.running) {
-			if (this.nextTimeStamp != null) {
-				if (this.nextTimeStamp.getTime() <= System.currentTimeMillis()) {
-					try {
-						measurementId = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_ENTITY_CODE, 10);
-					}
-					catch (IllegalObjectEntityException ioee) {
-						Log.errorException(ioee);
-						Log.errorMessage("Aborted test '" + super.test.getId().toString() + "' because cannot create identifier for measurement");
-						super.shutdown();
-						continue;
-					}
-					catch (AMFICOMRemoteException are) {
-						Log.errorException(are);
-						super.sleepCauseOfFall();
-						continue;
-					}
-					try {
-						measurement = super.test.createMeasurement(measurementId,
-																											 MeasurementControlModule.iAm.getUserId(),
-																											 this.nextTimeStamp);
-						super.clearFalls();
-					}
-					catch (CreateObjectException coe) {
-						Log.errorException(coe);
-						super.sleepCauseOfFall();
-						continue;
-					}
-					
-					if (measurement != null)
-						super.transceiver.addMeasurement(measurement, this);
-					
-				}
-				
-
-				//after all
-				//measurement = null;
-				this.nextTimeStamp = null;
-			}
-			else {
-				// have got report after measurement ?				
-				Result result = (Result) super.measurementResultQueue.get(measurement);
-				if (result != null)
-					this.nextTimeStamp = new Date(System.currentTimeMillis());
-			}
-
-			try {
-				sleep(super.initialTimeToSleep);
-			}
-			catch (InterruptedException ie) {
-				Log.errorException(ie);
-			}
+//			if (this.nextTimeStamp != null) {
+//				if (this.nextTimeStamp.getTime() <= System.currentTimeMillis()) {
+//					try {
+//						measurementId = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_ENTITY_CODE, 10);
+//					}
+//					catch (IllegalObjectEntityException ioee) {
+//						Log.errorException(ioee);
+//						Log.errorMessage("Aborted test '" + super.test.getId().toString() + "' because cannot create identifier for measurement");
+//						super.shutdown();
+//						continue;
+//					}
+//					catch (AMFICOMRemoteException are) {
+//						Log.errorException(are);
+//						super.sleepCauseOfFall();
+//						continue;
+//					}
+//					try {
+//						measurement = super.test.createMeasurement(measurementId,
+//																											 MeasurementControlModule.iAm.getUserId(),
+//																											 this.nextTimeStamp);
+//						super.clearFalls();
+//					}
+//					catch (CreateObjectException coe) {
+//						Log.errorException(coe);
+//						super.sleepCauseOfFall();
+//						continue;
+//					}
+//					
+//					if (measurement != null)
+//						super.transceiver.addMeasurement(measurement, this);
+//					
+//				}
+//				
+//
+//				//after all
+//				//measurement = null;
+//				this.nextTimeStamp = null;
+//			}
+//			else {
+//				// have got report after measurement ?				
+//				Result result = (Result) super.measurementResultQueue.get(measurement);
+//				if (result != null)
+//					this.nextTimeStamp = new Date(System.currentTimeMillis());
+//			}
+//
+//			try {
+//				sleep(super.initialTimeToSleep);
+//			}
+//			catch (InterruptedException ie) {
+//				Log.errorException(ie);
+//			}
 		}	//while
 	}
 
+	protected void processFall() {
+		
+	}
 }

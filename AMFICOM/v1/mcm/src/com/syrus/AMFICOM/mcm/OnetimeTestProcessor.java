@@ -1,5 +1,5 @@
 /*
- * $Id: OnetimeTestProcessor.java,v 1.7 2004/07/30 13:31:37 bob Exp $
+ * $Id: OnetimeTestProcessor.java,v 1.8 2004/08/14 19:37:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,140 +9,83 @@
 package com.syrus.AMFICOM.mcm;
 
 import java.util.Date;
-
-import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
-import com.syrus.AMFICOM.measurement.corba.TestStatus;
-import com.syrus.util.Log;
-
-/**
- * @version $Revision: 1.7 $, $Date: 2004/07/30 13:31:37 $
- * @author $Author: bob $
- * @module mcm_v1
- */
-
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.NewIdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.ErrorCode;
+import com.syrus.util.Log;
+
+/**
+ * @version $Revision: 1.8 $, $Date: 2004/08/14 19:37:27 $
+ * @author $Author: arseniy $
+ * @module mcm_v1
+ */
 
 public class OnetimeTestProcessor extends TestProcessor {
 	private Date startTime;
 
 	public OnetimeTestProcessor(Test test) {
 		super(test);
-
-		int testStatus = test.getStatus().value();
-		switch (testStatus) {
-			case TestStatus._TEST_STATUS_SCHEDULED:
-				//Normal
-				break;
-			case TestStatus._TEST_STATUS_PROCESSING:
-				try {
-					this.completeLastMeasurement();
-				}
-				catch (TestProcessingException tpe) {
-					super.shutdown();
-				}
-				break;
-			default:
-				Log.errorMessage("Inappropriate status: " + testStatus + " of test: '" + test.getId().toString() + "'");
-				super.shutdown();
-		}
-
-		try {
-			this.startTime = test.getStartTime();
-		}
-		catch (Exception e) {
-			Log.errorException(e);
-			super.shutdown();
-		}
-		
-	}
-	
-	private void completeLastMeasurement() throws TestProcessingException {
-		Measurement measurement;
-		try {
-			measurement = super.test.retrieveLastMeasurement();
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.errorException(onfe);
-			return;
-		}
-		catch (Exception e) {
-			Log.errorException(e);
-			throw new TestProcessingException("Cannot retrieve last measurement for test '" + super.test.getId().toString() + "'", e);
-		}
-
-		int measurementStatus = measurement.getStatus().value();
-		switch (measurementStatus) {
-			case MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED:
-			case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRING:
-				//process measurement
-				break;
-			case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRED:
-				//analyse and/or evaluate
-				break;
-			case MeasurementStatus._MEASUREMENT_STATUS_ANALYZED_OR_EVALUATED:
-				//all results of the measurement must go to server
-				break;
-			case MeasurementStatus._MEASUREMENT_STATUS_COMPLETED:
-				//do next
-				break;
-			case MeasurementStatus._MEASUREMENT_STATUS_ABORTED:
-				//do next (?)
-				break;
-		}
+		this.startTime = test.getStartTime();
 	}
 
 	public void run() {
 		Identifier measurementId = null;
 		Measurement measurement = null;
 		while (super.running) {
-			if (this.startTime != null) {
-				if (this.startTime.getTime() <= System.currentTimeMillis()) {
-					try {
-						measurementId = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_ENTITY, 10);
-						super.clearFalls();
-					}
-					catch (IllegalObjectEntityException ioee) {
-						Log.errorException(ioee);
-						Log.errorMessage("Aborted test '" + super.test.getId().toString() + "' because cannot create identifier for measurement");
+			if (this.startTime.getTime() <= System.currentTimeMillis()) {
+				try {
+					measurementId = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_ENTITY_CODE, 10);
+					super.clearFalls();
+				}
+				catch (IllegalObjectEntityException ioee) {
+					Log.errorException(ioee);
+					Log.debugMessage("Aborting test '" + super.test.getId().toString() + "' because cannot create identifier for measurement", Log.DEBUGLEVEL03);
+					super.shutdown();
+				}
+				catch (AMFICOMRemoteException are) {
+					if (are.error_code == ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY) {
+						Log.errorMessage("Server nothing knows about entity '" + ObjectEntities.MEASUREMENT_ENTITY + "', code " + ObjectEntities.MEASUREMENT_ENTITY_CODE);
 						super.shutdown();
-						continue;
 					}
-					catch (AMFICOMRemoteException are) {
-						Log.errorException(are);
+					else {
+						Log.errorMessage("Server cannot generate identifier -- " + are.message + "; sleepeng cause of fall");
 						super.sleepCauseOfFall();
 						continue;
 					}
+				}
+
+				if (measurementId != null) {
 					try {
 						measurement = super.test.createMeasurement(measurementId,
 																											 MeasurementControlModule.iAm.getUserId(),
 																											 this.startTime);
+						MeasurementStorableObjectPool.putStorableObject(measurement);
 						super.clearFalls();
 					}
 					catch (CreateObjectException coe) {
 						Log.errorException(coe);
 						super.sleepCauseOfFall();
-						continue;
 					}
-					
-					if (measurement != null)
-						super.transceiver.addMeasurement(measurement, this);
+					catch (IllegalObjectEntityException ioee) {
+						Log.errorException(ioee);
+					}
+				}	//if (measurementId != null)
 
-					
+				if (measurement != null) {
+					super.transceiver.addMeasurement(measurement, this);
+					measurement = null;
 				}
-				
+			}	//if (this.startTime.getTime() <= System.currentTimeMillis())
 
-				//after all
-				measurement = null;				
-			}
-			
+			super.processMeasurementResult();
+
 			try {
 				sleep(super.initialTimeToSleep);
 			}
@@ -150,5 +93,9 @@ public class OnetimeTestProcessor extends TestProcessor {
 				Log.errorException(ie);
 			}
 		}	//while
+	}
+	
+	protected void processFall() {
+		super.shutdown();
 	}
 }

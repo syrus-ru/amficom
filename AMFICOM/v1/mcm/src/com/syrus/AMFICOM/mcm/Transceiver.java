@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.15 2004/08/13 17:43:52 arseniy Exp $
+ * $Id: Transceiver.java,v 1.16 2004/08/14 19:37:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/08/13 17:43:52 $
+ * @version $Revision: 1.16 $, $Date: 2004/08/14 19:37:27 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -84,8 +84,8 @@ public class Transceiver extends SleepButWorkThread {
 			else {
 				if (this.transmit(measurement)) {
 					try {
-						measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRING,
-																	MeasurementControlModule.iAm.getUserId());
+						measurement.updateStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRING,
+																		 MeasurementControlModule.iAm.getUserId());
 					}
 					catch (UpdateObjectException uoe) {
 						Log.errorException(uoe);
@@ -113,8 +113,8 @@ public class Transceiver extends SleepButWorkThread {
 						result = null;
 						try {
 							result = kisReport.createResult(measurement);
-							measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRED,
-																		MeasurementControlModule.iAm.getUserId());
+							measurement.updateStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRED,
+																			 MeasurementControlModule.iAm.getUserId());
 							super.clearFalls();
 						}
 						catch (MeasurementException me) {
@@ -128,7 +128,7 @@ public class Transceiver extends SleepButWorkThread {
 							Log.errorException(uoe);
 						}
 						if (result != null)
-							testProcessor.setMeasurementResult(measurement, result);
+							testProcessor.addMeasurementResult(result);
 					}
 					else
 						Log.errorMessage("Cannot find test processor for measurement '" + measurementId.toString() + "'; throwing away it's report");
@@ -148,7 +148,7 @@ public class Transceiver extends SleepButWorkThread {
 		}//while
 	}
 
-	protected void processError() {
+	protected void processFall() {
 		
 	}
 

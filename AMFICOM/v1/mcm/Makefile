@@ -71,8 +71,11 @@ $(LIBNAME_INTERFACE):	.corba
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/DatabaseContextSetup.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/MCMMeasurementObjectLoader.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/TestProcessor.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/OnetimeTestProcessor.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/PeriodicalTestProcessor.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/ContinuousTestProcessor.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/MeasurementControlModule.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/MCMImplementation.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/KISReport.java \

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.3 2004/08/11 16:52:57 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.4 2004/08/14 19:37:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,24 +27,24 @@ import com.syrus.AMFICOM.configuration.TransmissionPathDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 import com.syrus.AMFICOM.configuration.MonitoredElementDatabase;
 
-import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
-import com.syrus.AMFICOM.measurement.AnalysisDatabase;
-import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
-import com.syrus.AMFICOM.measurement.EvaluationDatabase;
-import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
-import com.syrus.AMFICOM.measurement.MeasurementDatabase;
-import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
-import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
 import com.syrus.AMFICOM.measurement.ParameterTypeDatabase;
-import com.syrus.AMFICOM.measurement.ResultDatabase;
+import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
+import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
+import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
 import com.syrus.AMFICOM.measurement.SetDatabase;
-import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
+import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
+import com.syrus.AMFICOM.measurement.MeasurementDatabase;
+import com.syrus.AMFICOM.measurement.AnalysisDatabase;
+import com.syrus.AMFICOM.measurement.EvaluationDatabase;
 import com.syrus.AMFICOM.measurement.TestDatabase;
+import com.syrus.AMFICOM.measurement.ResultDatabase;
+import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
+
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/08/11 16:52:57 $
+ * @version $Revision: 1.4 $, $Date: 2004/08/14 19:37:27 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -70,22 +70,22 @@ public abstract class DatabaseContextSetup {
 																			new TransmissionPathDatabase(),
 																			new KISDatabase(),
 																			new MonitoredElementDatabase());
-		MeasurementDatabaseContext.init(new AnalysisDatabase(),
-																		new AnalysisTypeDatabase(),
-																		new EvaluationDatabase(),
-																		new EvaluationTypeDatabase(),
-																		new MeasurementDatabase(),
-																		new MeasurementSetupDatabase(),
+		MeasurementDatabaseContext.init(new ParameterTypeDatabase(),
 																		new MeasurementTypeDatabase(),
-																		new ParameterTypeDatabase(),
-																		new ResultDatabase(),
+																		new AnalysisTypeDatabase(),
+																		new EvaluationTypeDatabase(),
 																		new SetDatabase(),
-																		new TemporalPatternDatabase(),
-																		new TestDatabase());
+																		new MeasurementSetupDatabase(),
+																		new MeasurementDatabase(),
+																		new AnalysisDatabase(),
+																		new EvaluationDatabase(),
+																		new TestDatabase(),
+																		new ResultDatabase(),
+																		new TemporalPatternDatabase());
 	}
 	
 	public static void initObjectPools() {
-		MeasurementStorableObjectPool.init(new DatabaseMeasurementObjectLoader());
+		MeasurementStorableObjectPool.init(new MCMMeasurementObjectLoader());
 		ConfigurationStorableObjectPool.init(new DatabaseConfigurationObjectLoader());
 	}
 }

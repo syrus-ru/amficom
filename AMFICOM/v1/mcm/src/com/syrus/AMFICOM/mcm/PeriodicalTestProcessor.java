@@ -1,5 +1,5 @@
 /*
- * $Id: PeriodicalTestProcessor.java,v 1.12 2004/08/12 13:35:08 arseniy Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.13 2004/08/14 19:37:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/08/12 13:35:08 $
+ * @version $Revision: 1.13 $, $Date: 2004/08/14 19:37:27 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -173,5 +173,9 @@ public class PeriodicalTestProcessor extends TestProcessor {
 	protected void cleanup() {
 		super.cleanup();
 		this.timeStampsList.clear();
+	}
+
+	protected void processFall() {
+		
 	}
 }
