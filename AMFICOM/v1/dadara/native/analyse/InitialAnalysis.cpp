@@ -124,8 +124,8 @@ void InitialAnalysis::performAnalysis()
     deleteAllEventsAfterLastConnector();// если ни одного коннектора не будет найдено, то удалятся все события  
     correctAllConnectorsFronts(data);
     excludeShortLinesBetweenConnectors(data, wlet_width);
-    addLinearPartsBetweenEvents();
     correctAllSpliceCoords();// поскольку уточнение двигает соседние события, то к этому моменту динейные участки должы уже существовать ( поэтому вызов после addLinearPartsBetweenEvents() )
+    addLinearPartsBetweenEvents();
 	verifyResults(); // проверяем ошибки
 }
 //-------------------------------------------------------------------------------------------------
@@ -248,15 +248,13 @@ int InitialAnalysis::getLastPoint()
 // f- исходная ф-ция,
 // f_wlet - вейвлет-образ
 void InitialAnalysis::performTransformationAndCenter(double* f, int begin, int end, double* f_wlet, int scale, double norma)
-{
-	// transform
+{	// transform
 	performTransformationOnly(f, begin, end, f_wlet, scale, norma);
 	centerWletImageOnly(f_wlet, scale, begin, end, norma);
 }
-
+//------------------------------------------------------------------------------------------------------------
 void InitialAnalysis::centerWletImageOnly(double* f_wlet, int scale, int begin, int end, double norma1)
-{
-	// shift (calcAverageFactor must be performed by now!)
+{   // shift (calcAverageFactor must be performed by now!)
 	double f_wlet_avrg = average_factor * getWLetNorma2(scale) / norma1;
 	for(int i=begin; i<end; i++)
     {	f_wlet[i] -= f_wlet_avrg;
@@ -449,18 +447,12 @@ return;
 #endif
     }
 	//prf_b("correctSpliceCoords: scales done");
-	if( (ev.begin!=w_l || ev.end!=w_r) && (w_l<w_r))
-    { 	ev.begin = w_l;
-    	ev.end = w_r;
-	    //корректируем крайние события
-        if(n > 0)
-        {	EventParams& ev_left = *(EventParams*)(*events)[n-1];
-        	ev_left.end = ev.begin;
-        }
-		if(n < events->getLength()-1)
-        {	EventParams& ev_right = *(EventParams*)(*events)[n+1];
-	        ev_right.begin = ev.end;
-        }
+	if( w_l < w_r )
+    {   double old_left = ev.begin;
+        double old_right = ev.end;
+		// можем только сужать события
+    	if(w_l>old_left && w_l<old_right ) { ev.begin = w_l;}
+    	if(w_r<old_right && w_r>old_left)  { ev.end = w_r;}
     }
 #ifdef debug_VCL
     wn = getWLetNorma(wlet_width);
@@ -560,11 +552,26 @@ void InitialAnalysis::verifyResults()
 {	int prevEnd = 0;
 	for(int i=0; i<events->getLength(); i++)
     {	EventParams& ev = *(EventParams*)(*events)[i];
+//#ifndef debug_VCL
 		assert(ev.begin >= 0);
 		assert(ev.end < lastNonZeroPoint);
 		assert(ev.end >= ev.begin);
 		assert(ev.end > ev.begin); // >, not just >=
 		assert(ev.begin == prevEnd || i == 0); // XXX
+//#else
+// сюда понатыкать брекпоинтов
+/*		if(!(ev.begin >= 0))
+        { int o=0;}
+		if(!(ev.end < lastNonZeroPoint))
+        { int o=0;}
+		if(!(ev.end >= ev.begin))
+        { int o=0;}
+		if(!(ev.end > ev.begin)) // >, not just >=
+        { int o=0;}
+		if(!(ev.begin == prevEnd || i == 0)) // XXX
+        { int o=0;}
+*/
+//#endif
 		prevEnd = ev.end;
 
     }
