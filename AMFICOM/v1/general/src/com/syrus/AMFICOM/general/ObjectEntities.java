@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.21 2004/10/07 13:39:45 bob Exp $
+ * $Id: ObjectEntities.java,v 1.22 2004/10/22 10:44:59 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/10/07 13:39:45 $
- * @author $Author: bob $
+ * @version $Revision: 1.22 $, $Date: 2004/10/22 10:44:59 $
+ * @author $Author: max $
  * @module general_v1
  */
 
@@ -29,6 +29,7 @@ public abstract class ObjectEntities {
 	public static final String ANATYPPARTYPLINK_ENTITY = "AnaTypParTypLink";
 	public static final String EVALUATIONTYPE_ENTITY = "EvaluationType";
 	public static final String EVATYPPARTYPLINK_ENTITY = "EvaTypParTypLink";
+    public static final String KISTYPE_ENTITY = "KISType";
 
 	/*	Administration	*/
 
@@ -40,12 +41,12 @@ public abstract class ObjectEntities {
 	public static final String SERVER_ENTITY = "Server";
 	public static final String MCM_ENTITY = "MCM";
 	public static final String EQUIPMENT_ENTITY = "Equipment";
-	public static final String EQUIPMENTMELINK_ENTITY = "EquipmentMELink";
+    public static final String EQUIPMENTMELINK_ENTITY = "EquipmentMELink";
 	public static final String PORT_ENTITY = "Port";
 	public static final String TRANSPATH_ENTITY = "TransmissionPath";
 	public static final String TRANSPATHMELINK_ENTITY = "TransmissionPathMELink";	
 	public static final String KIS_ENTITY = "KIS";
-	public static final String MEASUREMENTPORT_ENTITY = "MeasurementPort";
+    public static final String MEASUREMENTPORT_ENTITY = "MeasurementPort";
 	public static final String ME_ENTITY = "MonitoredElement";
 
 	/*	Measurement	*/
@@ -77,6 +78,7 @@ public abstract class ObjectEntities {
 	public static final short MEASUREMENTTYPE_ENTITY_CODE = 0x0006;
 	public static final short ANALYSISTYPE_ENTITY_CODE = 0x0007;
 	public static final short EVALUATIONTYPE_ENTITY_CODE = 0x0008;
+    public static final short KISTYPE_ENTITY_CODE = 0x0009;
 
 	/*	Administration 129 -- 256	*/
 
