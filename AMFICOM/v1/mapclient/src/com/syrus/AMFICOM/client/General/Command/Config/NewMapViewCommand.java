@@ -103,7 +103,7 @@ public class NewMapViewCommand extends VoidCommand
 				else
 				{
 					frame = null;
-					MessageBox mb = new MessageBox("Окно топологической схемы уже открыто в другом модуле.");
+					MessageBox mb = new MessageBox(LangModelMap.getString("MapWindowAlreadyOpened"));
 					return;
 				}
 			}

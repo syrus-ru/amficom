@@ -8,6 +8,7 @@ import com.syrus.AMFICOM.Client.General.Command.Map.ViewMapSetupCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModelFactory;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.UI.MessageBox;
 import com.syrus.AMFICOM.Client.Resource.Map.MapContext;
 import com.syrus.AMFICOM.Client.Resource.Pool;
@@ -50,10 +51,10 @@ public class MapConfigViewOpenCommand extends MapViewOpenCommand
 		com.execute();
 		if(com.retCode == 1)
 		{
-			MapContext mc = (MapContext )Pool.get("mapcontext", com.retobj_id);
+			MapContext mc = (MapContext )Pool.get(MapContext.typ, com.retobj_id);
 			if(mc.isOpened())
 			{
-				MessageBox mb = new MessageBox("Топологическая схема уже открыта в другом окне!");
+				MessageBox mb = new MessageBox(LangModelMap.getString("MapAlreadyOpened"));
 				return;
 			}
 		

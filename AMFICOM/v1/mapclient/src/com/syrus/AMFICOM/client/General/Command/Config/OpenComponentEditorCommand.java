@@ -96,7 +96,7 @@ public class OpenComponentEditorCommand extends VoidCommand
 		catch(Exception e)
 		{
 			System.out.println("Ошибка запуска модуля - " + e.getMessage());
-			dispatcher.notify(new StatusMessageEvent("Ошибка открытия модуля ElementsEditor"));
+			dispatcher.notify(new StatusMessageEvent(LangModel.getString("")"Ошибка открытия модуля ElementsEditor"));
 			e.printStackTrace();
 		}
 */

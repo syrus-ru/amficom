@@ -70,11 +70,11 @@ public class MapViewOpenCommand extends VoidCommand
 		com.execute();
 		if(com.retCode == 1)
 		{
-			MapContext mc = (MapContext )Pool.get("mapcontext", com.retobj_id);
+			MapContext mc = (MapContext )Pool.get(MapContext.typ, com.retobj_id);
 /*			
 			if(mc.isOpened())
 			{
-				MessageBox mb = new MessageBox("Топологическая схема уже открыта в другом окне!");
+				MessageBox mb = new MessageBox(LangModelMap.getString("MapAlreadyOpened");
 				return;
 			}
 */		
