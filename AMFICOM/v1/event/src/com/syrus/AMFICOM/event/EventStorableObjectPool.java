@@ -1,5 +1,5 @@
 /*
- * $Id: EventStorableObjectPool.java,v 1.1 2004/12/27 22:07:46 arseniy Exp $
+ * $Id: EventStorableObjectPool.java,v 1.2 2005/02/02 15:09:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/12/27 22:07:46 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/02 15:09:13 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -133,15 +133,15 @@ public class EventStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.EVENTTYPE_ENTITY_CODE:
 				storableObject = eObjectLoader.loadEventType(objectId);
 				break;
-			case ObjectEntities.ALARMTYPE_ENTITY_CODE:
-				storableObject = eObjectLoader.loadAlarmType(objectId);
-				break;
+//			case ObjectEntities.ALARMTYPE_ENTITY_CODE:
+//				storableObject = eObjectLoader.loadAlarmType(objectId);
+//				break;
 			case ObjectEntities.EVENT_ENTITY_CODE:
 				storableObject = eObjectLoader.loadEvent(objectId);
 				break;
-			case ObjectEntities.ALARM_ENTITY_CODE:
-				storableObject = eObjectLoader.loadAlarm(objectId);
-				break;
+//			case ObjectEntities.ALARM_ENTITY_CODE:
+//				storableObject = eObjectLoader.loadAlarm(objectId);
+//				break;
 			default:
 				Log.errorMessage("EventStorableObjectPool.loadStorableObject | Unknown entity: '" + ObjectEntities.codeToString(objectId.getMajor()) + "', entity code: " + objectId.getMajor());
 				storableObject = null;
@@ -155,15 +155,15 @@ public class EventStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.EVENTTYPE_ENTITY_CODE:
 				storableObjects = eObjectLoader.loadEventTypes(ids);
 				break;
-			case ObjectEntities.ALARMTYPE_ENTITY_CODE:
-				storableObjects = eObjectLoader.loadAlarmTypes(ids);
-				break;
+//			case ObjectEntities.ALARMTYPE_ENTITY_CODE:
+//				storableObjects = eObjectLoader.loadAlarmTypes(ids);
+//				break;
 			case ObjectEntities.EVENT_ENTITY_CODE:
 				storableObjects = eObjectLoader.loadEvents(ids);
 				break;
-			case ObjectEntities.ALARM_ENTITY_CODE:
-				storableObjects = eObjectLoader.loadAlarms(ids);
-				break;
+//			case ObjectEntities.ALARM_ENTITY_CODE:
+//				storableObjects = eObjectLoader.loadAlarms(ids);
+//				break;
 			default:
 				Log.errorMessage("EventStorableObjectPool.loadStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode.shortValue()) + "', entity code: " + entityCode);
 				storableObjects = null;
@@ -178,15 +178,15 @@ public class EventStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.EVENTTYPE_ENTITY_CODE:
 				loadedList = eObjectLoader.loadEventTypesButIds(condition, ids);
 				break;
-			case ObjectEntities.ALARMTYPE_ENTITY_CODE:
-				loadedList = eObjectLoader.loadAlarmTypesButIds(condition, ids);
-				break;
+//			case ObjectEntities.ALARMTYPE_ENTITY_CODE:
+//				loadedList = eObjectLoader.loadAlarmTypesButIds(condition, ids);
+//				break;
 			case ObjectEntities.EVENT_ENTITY_CODE:
 				loadedList = eObjectLoader.loadEventsButIds(condition, ids);
 				break;
-			case ObjectEntities.ALARM_ENTITY_CODE:
-				loadedList = eObjectLoader.loadAlarmsButIds(condition, ids);
-				break;
+//			case ObjectEntities.ALARM_ENTITY_CODE:
+//				loadedList = eObjectLoader.loadAlarmsButIds(condition, ids);
+//				break;
 			default:
 				Log.errorMessage("EventStorableObjectPool.loadStorableObjectsButIds | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
 				loadedList = null;
@@ -205,24 +205,24 @@ public class EventStorableObjectPool extends StorableObjectPool {
 					else 
 						eObjectLoader.saveEventTypes(list, force);
 					break;
-				case ObjectEntities.ALARMTYPE_ENTITY_CODE:
-					if (alone)
-						eObjectLoader.saveAlarmType((AlarmType)list.get(0), force);
-					else 
-						eObjectLoader.saveAlarmTypes(list, force);
-					break;
+//				case ObjectEntities.ALARMTYPE_ENTITY_CODE:
+//					if (alone)
+//						eObjectLoader.saveAlarmType((AlarmType)list.get(0), force);
+//					else 
+//						eObjectLoader.saveAlarmTypes(list, force);
+//					break;
 				case ObjectEntities.EVENT_ENTITY_CODE:
 					if (alone)
 						eObjectLoader.saveEvent((Event)list.get(0), force);
 					else 
 						eObjectLoader.saveEvents(list, force);
 					break;
-				case ObjectEntities.ALARM_ENTITY_CODE:
-					if (alone)
-						eObjectLoader.saveAlarm((Alarm)list.get(0), force);
-					else 
-						eObjectLoader.saveAlarms(list, force);
-					break;
+//				case ObjectEntities.ALARM_ENTITY_CODE:
+//					if (alone)
+//						eObjectLoader.saveAlarm((Alarm)list.get(0), force);
+//					else 
+//						eObjectLoader.saveAlarms(list, force);
+//					break;
 				default:
 					Log.errorMessage("EventStorableObjectPool.saveStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(code) + "', entity code: " + code);
 			}
