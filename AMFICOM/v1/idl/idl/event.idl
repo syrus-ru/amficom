@@ -1,7 +1,13 @@
-#ifndef _EVENT_IDL_
-#define	_EVENT_IDL_
+/*
+ * $Id: event.idl,v 1.2 2004/10/04 13:33:18 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
-#include <general.idl>
+#ifndef EVENT_IDL
+#define	EVENT_IDL
 
 module com {
 module syrus {

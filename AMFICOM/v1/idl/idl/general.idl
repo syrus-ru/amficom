@@ -1,13 +1,13 @@
 /*
- * $Id: general.idl,v 1.18 2004/09/28 14:46:27 bob Exp $
+ * $Id: general.idl,v 1.19 2004/10/04 13:33:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 
-#ifndef _GENERAL_IDL_
-#define _GENERAL_IDL_
+#ifndef GENERAL_IDL
+#define GENERAL_IDL
 
 module com
 {
@@ -18,11 +18,6 @@ module AMFICOM
 
 module general {
 module corba {
-
-	typedef sequence <octet> octetSeq;
-	typedef sequence <wstring> wstringSeq;
-	typedef sequence <long> longSeq;
-
 	struct Identifier_Transferable {
 		wstring identifier_string;
 	};
@@ -81,14 +76,6 @@ module CORBA
 
 module General
 {
-	typedef sequence <octet> octetSeq;
-
-	typedef sequence <wstring> wstringSeq;
-
-	typedef sequence <long> longSeq;
-
-   	typedef sequence <double> doubleSeq;
-
 	exception AMFICOMRemoteException
 	{
 		long code;

@@ -1,39 +1,15 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: Реализация серверной части интерфейса прототипа РИСД       * //
-// *           (включает реализацию пакета pmServer и класса pmRISDImpl)  * //
-// * Тип: IDL                                                             * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 22 jan 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOM\Object.idl                       * //
-// *                                                                      * //
-// * Компилятор: Oracle JDeveloper (javac)                                * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
+/*
+ * $Id: alarm.idl,v 1.4 2004/10/04 13:33:18 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
-#ifndef _alarm_idl_
-#define _alarm_idl_
+#ifndef ALARM_IDL
+#define ALARM_IDL
 
-#include <general.idl>
+#include "general.idl"
 
 module com
 {
@@ -46,9 +22,6 @@ module CORBA
 
 module Alarm
 {
-	/**
-	 * @deprecated
-	 */
 	struct Message_Transferable
 	{
 		wstring id;
@@ -56,9 +29,6 @@ module Alarm
 		wstring event_id;
 	};
 
-	/**
-	 * @deprecated
-	 */
 	typedef sequence <Message_Transferable> MessageSeq_Transferable;
 
 	struct AlarmType_Transferable
@@ -112,9 +82,6 @@ module Alarm
 
 // Maintenance configuring
 
-	/**
-	 * @deprecated
-	 */
 	struct Rule_Transferable
 	{
 		wstring event_type_id;
@@ -124,14 +91,8 @@ module Alarm
 		boolean is_generated;
 	};
 
-	/**
-	 * @deprecated
-	 */
 	typedef sequence <Rule_Transferable> RuleSeq_Transferable;
 
-	/**
-	 * @deprecated
-	 */
 	struct EventSourceType_Transferable
 	{
 		wstring id;
@@ -139,9 +100,6 @@ module Alarm
 		RuleSeq_Transferable rules;
 	};
 
-	/**
-	 * @deprecated
-	 */
 	typedef sequence <EventSourceType_Transferable> EventSourceTypeSeq_Transferable;
 /*
 	struct MessageType_Transferable
@@ -171,9 +129,6 @@ module Alarm
 	};
 	typedef sequence <EventType_Transferable> EventTypeSeq_Transferable;
 */
-	/**
-	 * @deprecated
-	 */
 	struct AlertingMessage_Transferable
 	{
 		wstring id;
@@ -182,14 +137,8 @@ module Alarm
 		wstring message_type_id;
 	};
 
-	/**
-	 * @deprecated
-	 */
 	typedef sequence <AlertingMessage_Transferable> AlertingMessageSeq_Transferable;
 
-	/**
-	 * @deprecated
-	 */
 	struct AlertingMessageUser_Transferable
 	{
 		wstring id;
@@ -198,9 +147,6 @@ module Alarm
 		wstring alerting_message_id;
 	};
 
-	/**
-	 * @deprecated
-	 */
 	typedef sequence <AlertingMessageUser_Transferable> AlertingMessageUserSeq_Transferable;
 };
 };

@@ -1,16 +1,15 @@
 /*
- * $Id: report.idl,v 1.6 2004/09/28 14:32:29 bass Exp $
+ * $Id: report.idl,v 1.7 2004/10/04 13:33:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 
-#ifndef _report_idl_
-#define _report_idl_
+#ifndef REPORT_IDL
+#define REPORT_IDL
 
-#include <general.idl>
-#include <resource.idl>
+#include "resource.idl"
 
 module com
 {
@@ -57,7 +56,7 @@ module Report
 		long width;
 		long height;
 		
-		General::octetSeq bytes;
+		::CORBA::OctetSeq bytes;
 	};
 
 	struct ReportTemplate_Transferable

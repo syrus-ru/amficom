@@ -1,39 +1,15 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: Реализация серверной части интерфейса прототипа РИСД       * //
-// *           (включает реализацию пакета pmServer и класса pmRISDImpl)  * //
-// * Тип: IDL                                                             * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 22 jan 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOM\Object.idl                       * //
-// *                                                                      * //
-// * Компилятор: Oracle JDeveloper (javac)                                * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
+/*
+ * $Id: admin.idl,v 1.5 2004/10/04 13:33:18 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
-#ifndef _object_idl_
-#define _object_idl_
+#ifndef ADMIN_IDL
+#define ADMIN_IDL
 
-#include <general.idl>
+#include <streams.idl>
 
 module com
 {
@@ -51,8 +27,8 @@ module Admin
 	  wstring id;
 	  wstring rwx;
 
-	  General::wstringSeq group_ids;
-	  General::wstringSeq category_ids;
+	  ::CORBA::WStringSeq group_ids;
+	  ::CORBA::WStringSeq category_ids;
 
 	  wstring owner_id;
 	  wstring name;
@@ -79,7 +55,7 @@ module Admin
 
 		wstring domain_id;
 
-		General::wstringSeq domain_ids;
+		::CORBA::WStringSeq domain_ids;
 		ObjectPermissionAttributes_Transferable permissions;
 	};
 	typedef sequence <Domain_Transferable> DomainSeq_Transferable;
@@ -92,7 +68,7 @@ module Admin
 		wstring description;
 		long long modified;
 
-		General::wstringSeq user_ids;
+		::CORBA::WStringSeq user_ids;
 	};
 	typedef sequence <OperatorCategory_Transferable> OperatorCategorySeq_Transferable;
 
@@ -109,8 +85,8 @@ module Admin
 		long long modified;
 		wstring modified_by;
 
-		General::wstringSeq user_ids;
-		General::wstringSeq exec_ids;
+		::CORBA::WStringSeq user_ids;
+		::CORBA::WStringSeq exec_ids;
 	};
 	typedef sequence <OperatorGroup_Transferable> OperatorGroupSeq_Transferable;
 
@@ -130,7 +106,7 @@ module Admin
 		wstring owner_id;
 
 		wstring login;
-		General::octetSeq password;
+		::CORBA::OctetSeq password;
 		long long password_expiry;
 
 		long long last_login;
@@ -144,8 +120,8 @@ module Admin
 		wstring priority;
 		wstring logfile;
 
-		General::wstringSeq category_ids;
-		General::wstringSeq group_ids;
+		::CORBA::WStringSeq category_ids;
+		::CORBA::WStringSeq group_ids;
 
 		wstring first_name;
 		wstring second_name;
@@ -186,8 +162,8 @@ module Admin
 		long long logged;
 		long sessions;
 
-		General::wstringSeq category_ids;
-		General::wstringSeq group_ids;
+		::CORBA::WStringSeq category_ids;
+		::CORBA::WStringSeq group_ids;
 	};
 	typedef sequence <User_Transferable> UserSeq_Transferable;
 
@@ -206,8 +182,8 @@ module Admin
 	  boolean otherW;
 	  boolean otherX;
 */
-	  General::wstringSeq group_ids;
-	  General::wstringSeq category_ids;
+	  ::CORBA::WStringSeq group_ids;
+	  ::CORBA::WStringSeq category_ids;
 
 	  wstring owner_id;
 	  wstring name;

@@ -1,16 +1,15 @@
 /*
- * $Id: client.idl,v 1.2 2004/06/03 08:14:20 bass Exp $
+ * $Id: client.idl,v 1.3 2004/10/04 13:33:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 
-#ifndef _client_idl_
-#define _client_idl_
+#ifndef CLIENT_IDL
+#define CLIENT_IDL
 
-#include <alarm.idl>
-#include <general.idl>
+#include "alarm.idl"
 
 module com
 {
@@ -26,34 +25,10 @@ module CORBA
 //////////////////////////////////////////////////////////////////////////////
 interface AMFICOMClient
 {
-#if 0
-	oneway void asyncPing(
-		in Server server,
-		in long long serverTimeMillis);
-
-	oneway void asyncPingCallback(
-		in long long clientTimeMillis,
-		in long long serverTimeMillis);
-#endif
-
-	/**
-	 * @deprecated
-	 */
 	void syncPing(
 		out long long clientTimeMillis)
 		raises (General::AMFICOMRemoteException);
 
-#if 0
-	void reportAlarm(
-		in Alarm::AlarmSeq_Transferable alarms,
-		in Alarm::EventSourceSeq_Transferable eventsources,
-		in Alarm::EventSeq_Transferable events)
-		raises (General::AMFICOMRemoteException);
-#endif
-
-	/**
-	 * @deprecated
-	 */
 	void reportMessage(
 		in Alarm::MessageSeq_Transferable messages)
 		raises (General::AMFICOMRemoteException);

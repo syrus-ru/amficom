@@ -1,40 +1,15 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: Реализация серверной части интерфейса прототипа РИСД       * //
-// *           (включает реализацию пакета pmServer и класса pmRISDImpl)  * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 22 jan 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMConfigure\                        * //
-// *        com\syrus\AMFICOM\Client\Configure\ISM\AccessPoint.java       * //
-// *                                                                      * //
-// * Компилятор: Oracle JDeveloper (javac)                                * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
+/*
+ * $Id: resource.idl,v 1.6 2004/10/04 13:33:18 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
-#ifndef _resource_idl_
-#define _resource_idl_
+#ifndef RESOURCE_IDL
+#define RESOURCE_IDL
 
-#include <general.idl>
+#include <streams.idl>
 
 module com
 {
@@ -54,7 +29,7 @@ module Resource
 		wstring source_string;
 
 		wstring filename;				// only one of these
-		General::octetSeq image;	// should be valid
+		::CORBA::OctetSeq image;	// should be valid
 	};
 	typedef sequence <ImageResource_Transferable> ImageResourceSeq_Transferable;
 
@@ -78,7 +53,7 @@ module Resource
 		wstring id;
 		wstring resource_typ;
 //		long long modified;
-		General::octetSeq logic_scheme;
+		::CORBA::OctetSeq logic_scheme;
 	};
 	typedef sequence <Filter_Transferable> FilterSeq_Transferable;
 };
