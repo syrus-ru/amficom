@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.48 2004/12/24 12:52:00 bob Exp $
+ * $Id: ResultDatabase.java,v 1.49 2004/12/27 13:29:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2004/12/24 12:52:00 $
+ * @version $Revision: 1.49 $, $Date: 2004/12/27 13:29:17 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -126,11 +126,11 @@ public class ResultDatabase extends StorableObjectDatabase {
 			case ResultSort._RESULT_SORT_MEASUREMENT:
 				buffer.append(DatabaseIdentifier.toSQLString(result.getMeasurement().getId()));
 				buffer.append(COMMA);				
-				buffer.append(DatabaseIdentifier.toSQLString(null));
+				buffer.append(DatabaseIdentifier.toSQLString((Identifier)null));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString(null));
+				buffer.append(DatabaseIdentifier.toSQLString((Identifier)null));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString(null));
+				buffer.append(DatabaseIdentifier.toSQLString((Identifier)null));
 				buffer.append(COMMA);
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
@@ -138,27 +138,27 @@ public class ResultDatabase extends StorableObjectDatabase {
 				buffer.append(COMMA);				
 				buffer.append(DatabaseIdentifier.toSQLString(result.getAction().getId()));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString(null));
+				buffer.append(DatabaseIdentifier.toSQLString((Identifier)null));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString(null));
+				buffer.append(DatabaseIdentifier.toSQLString((Identifier)null));
 				buffer.append(COMMA);
 				break;
 			case ResultSort._RESULT_SORT_EVALUATION:
 				buffer.append(DatabaseIdentifier.toSQLString(result.getMeasurement().getId()));
 				buffer.append(COMMA);				
-				buffer.append(DatabaseIdentifier.toSQLString(null));
+				buffer.append(DatabaseIdentifier.toSQLString((Identifier)null));
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString(result.getAction().getId()));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString(null));
+				buffer.append(DatabaseIdentifier.toSQLString((Identifier)null));
 				buffer.append(COMMA);
 				break;
 			case ResultSort._RESULT_SORT_MODELING:
-				buffer.append(DatabaseIdentifier.toSQLString(null));
+				buffer.append(DatabaseIdentifier.toSQLString((Identifier)null));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString(null));
+				buffer.append(DatabaseIdentifier.toSQLString((Identifier)null));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString(null));
+				buffer.append(DatabaseIdentifier.toSQLString((Identifier)null));
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString(result.getAction().getId()));
 				buffer.append(COMMA);				
