@@ -1,5 +1,5 @@
 /*
- * $Id: Link.java,v 1.39 2005/04/01 07:57:28 bob Exp $
+ * $Id: Link.java,v 1.40 2005/04/01 11:02:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/04/01 07:57:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.40 $, $Date: 2005/04/01 11:02:30 $
+ * @author $Author: bass $
  * @module config_v1
  */
 public class Link extends DomainMember implements Characterizable, TypedObject {
@@ -63,7 +63,7 @@ public class Link extends DomainMember implements Characterizable, TypedObject {
 		super(id);
 
 		this.characteristics = new HashSet();
-		this.linkDatabase = ConfigurationDatabaseContext.linkDatabase;
+		this.linkDatabase = ConfigurationDatabaseContext.getLinkDatabase();
 		try {
 			this.linkDatabase.retrieve(this);
 		}
@@ -99,7 +99,7 @@ public class Link extends DomainMember implements Characterizable, TypedObject {
 			throw new CreateObjectException(ae);
 		}
 
-		this.linkDatabase = ConfigurationDatabaseContext.linkDatabase;
+		this.linkDatabase = ConfigurationDatabaseContext.getLinkDatabase();
 	}
 
 	protected Link(Identifier id,
@@ -134,7 +134,7 @@ public class Link extends DomainMember implements Characterizable, TypedObject {
 		this.mark = mark;
 		this.characteristics = new HashSet();
 
-		this.linkDatabase = ConfigurationDatabaseContext.linkDatabase;
+		this.linkDatabase = ConfigurationDatabaseContext.getLinkDatabase();
 	}
 
 	/**

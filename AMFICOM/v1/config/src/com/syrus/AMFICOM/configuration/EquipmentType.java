@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.48 2005/04/01 07:57:28 bob Exp $
+ * $Id: EquipmentType.java,v 1.49 2005/04/01 11:02:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/04/01 07:57:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.49 $, $Date: 2005/04/01 11:02:30 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -53,7 +53,7 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 		super(id);
 
 		this.characteristics = new HashSet();
-		this.equipmentTypeDatabase = ConfigurationDatabaseContext.equipmentTypeDatabase;
+		this.equipmentTypeDatabase = ConfigurationDatabaseContext.getEquipmentTypeDatabase();
 		try {
 			this.equipmentTypeDatabase.retrieve(this);
 		}
@@ -78,7 +78,7 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 			throw new CreateObjectException(ae);
 		}
 
-		this.equipmentTypeDatabase = ConfigurationDatabaseContext.equipmentTypeDatabase;
+		this.equipmentTypeDatabase = ConfigurationDatabaseContext.getEquipmentTypeDatabase();
 	}
 
 	protected EquipmentType(Identifier id,
@@ -102,7 +102,7 @@ public class EquipmentType extends StorableObjectType implements Characterizable
 		this.manufacturerCode = manufacturerCode;
 		this.characteristics = new HashSet();
 
-		this.equipmentTypeDatabase = ConfigurationDatabaseContext.equipmentTypeDatabase;
+		this.equipmentTypeDatabase = ConfigurationDatabaseContext.getEquipmentTypeDatabase();
 	}
 
 

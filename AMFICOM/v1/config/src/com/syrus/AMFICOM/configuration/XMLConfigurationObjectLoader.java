@@ -1,5 +1,5 @@
 /*
- * $Id: XMLConfigurationObjectLoader.java,v 1.10 2005/04/01 07:57:28 bob Exp $
+ * $Id: XMLConfigurationObjectLoader.java,v 1.11 2005/04/01 11:02:30 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -23,8 +24,8 @@ import com.syrus.AMFICOM.general.StorableObjectXML;
 import com.syrus.AMFICOM.general.StorableObjectXMLDriver;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/04/01 07:57:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/04/01 11:02:30 $
+ * @author $Author: bass $
  * @module configuration_v1
  */
 
@@ -307,7 +308,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 
 	public Set refresh(Set storableObjects) throws ApplicationException {
 		// TODO Auto-generated method stub
-		return null;
+		return Collections.EMPTY_SET;
 	}
 
 	public void saveCableLinkType(CableLinkType cableLinkType, boolean force) throws ApplicationException {

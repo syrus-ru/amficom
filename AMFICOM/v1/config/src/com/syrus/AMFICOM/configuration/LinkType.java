@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.36 2005/04/01 07:57:28 bob Exp $
+ * $Id: LinkType.java,v 1.37 2005/04/01 11:02:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/04/01 07:57:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.37 $, $Date: 2005/04/01 11:02:30 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -59,7 +59,7 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 		super(id);
 
 		this.characteristics = new HashSet();
-		this.linkTypeDatabase = ConfigurationDatabaseContext.linkTypeDatabase;
+		this.linkTypeDatabase = ConfigurationDatabaseContext.getLinkTypeDatabase();
 		try {
 			this.linkTypeDatabase.retrieve(this);
 		}
@@ -85,7 +85,7 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 			throw new CreateObjectException(ae);
 		}
 
-		this.linkTypeDatabase = ConfigurationDatabaseContext.linkTypeDatabase;
+		this.linkTypeDatabase = ConfigurationDatabaseContext.getLinkTypeDatabase();
 	}
 
 	protected LinkType(Identifier id,
@@ -113,7 +113,7 @@ public class LinkType extends AbstractLinkType implements Characterizable {
 		this.imageId = imageId;
 		this.characteristics = new HashSet();
 
-		this.linkTypeDatabase = ConfigurationDatabaseContext.linkTypeDatabase;
+		this.linkTypeDatabase = ConfigurationDatabaseContext.getLinkTypeDatabase();
 	}
 
 	/**

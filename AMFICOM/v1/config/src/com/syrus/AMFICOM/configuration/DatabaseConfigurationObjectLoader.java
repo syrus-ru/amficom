@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConfigurationObjectLoader.java,v 1.44 2005/04/01 07:57:28 bob Exp $
+ * $Id: DatabaseConfigurationObjectLoader.java,v 1.45 2005/04/01 11:02:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/04/01 07:57:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.45 $, $Date: 2005/04/01 11:02:30 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -101,7 +101,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	// for multiple objects
 
 	public Set loadEquipmentTypes(Set ids) throws ApplicationException {
-		EquipmentTypeDatabase database = (EquipmentTypeDatabase) ConfigurationDatabaseContext.equipmentTypeDatabase;
+		EquipmentTypeDatabase database = ConfigurationDatabaseContext.getEquipmentTypeDatabase();
 		Set objects = null;
 		try {
 			objects = database.retrieveByIdsByCondition(ids, null);
@@ -115,7 +115,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	}
 
 	public Set loadPortTypes(Set ids) throws ApplicationException {
-		PortTypeDatabase database = (PortTypeDatabase) ConfigurationDatabaseContext.portTypeDatabase;
+		PortTypeDatabase database = ConfigurationDatabaseContext.getPortTypeDatabase();
 		Set objects = null;
 		try {
 			objects = database.retrieveByIdsByCondition(ids, null);
@@ -128,7 +128,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	}
 
 	public Set loadMeasurementPortTypes(Set ids) throws ApplicationException {
-		MeasurementPortTypeDatabase database = (MeasurementPortTypeDatabase) ConfigurationDatabaseContext.measurementPortTypeDatabase;
+		MeasurementPortTypeDatabase database = ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
 		Set objects = null;
 		try {
 			objects = database.retrieveByIdsByCondition(ids, null);
@@ -142,7 +142,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	}
 
 	public Set loadLinkTypes(Set ids) throws ApplicationException {
-		LinkTypeDatabase database = (LinkTypeDatabase) ConfigurationDatabaseContext.linkTypeDatabase;
+		LinkTypeDatabase database = ConfigurationDatabaseContext.getLinkTypeDatabase();
 		Set objects = null;
 		try {
 			objects = database.retrieveByIdsByCondition(ids, null);
@@ -155,7 +155,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	}
 
 	public Set loadCableLinkTypes(Set ids) throws ApplicationException {
-		CableLinkTypeDatabase database = (CableLinkTypeDatabase) ConfigurationDatabaseContext.cableLinkTypeDatabase;
+		CableLinkTypeDatabase database = ConfigurationDatabaseContext.getCableLinkTypeDatabase();
 		Set objects = null;
 		try {
 			objects = database.retrieveByIdsByCondition(ids, null);
@@ -169,7 +169,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	}
 
 	public Set loadCableThreadTypes(Set ids) throws ApplicationException {
-		CableThreadTypeDatabase database = (CableThreadTypeDatabase) ConfigurationDatabaseContext.cableThreadTypeDatabase;
+		CableThreadTypeDatabase database = ConfigurationDatabaseContext.getCableThreadTypeDatabase();
 		Set objects = null;
 		try {
 			objects = database.retrieveByIdsByCondition(ids, null);
@@ -183,7 +183,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	}
 
 	public Set loadEquipments(Set ids) throws ApplicationException {
-		EquipmentDatabase database = (EquipmentDatabase) ConfigurationDatabaseContext.equipmentDatabase;
+		EquipmentDatabase database = ConfigurationDatabaseContext.getEquipmentDatabase();
 		Set objects = null;
 		try {
 			objects = database.retrieveByIdsByCondition(ids, null);
@@ -196,7 +196,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	}
 
 	public Set loadPorts(Set ids) throws ApplicationException {
-		PortDatabase database = (PortDatabase) ConfigurationDatabaseContext.portDatabase;
+		PortDatabase database = ConfigurationDatabaseContext.getPortDatabase();
 		Set objects = null;
 		try {
 			objects = database.retrieveByIdsByCondition(ids, null);
@@ -209,7 +209,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	}
 
 	public Set loadMeasurementPorts(Set ids) throws ApplicationException {
-		MeasurementPortDatabase database = (MeasurementPortDatabase) ConfigurationDatabaseContext.measurementPortDatabase;
+		MeasurementPortDatabase database = ConfigurationDatabaseContext.getMeasurementPortDatabase();
 		Set objects = null;
 		try {
 			objects = database.retrieveByIdsByCondition(ids, null);
@@ -223,7 +223,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	}
 
 	public Set loadTransmissionPaths(Set ids) throws ApplicationException {
-		TransmissionPathDatabase database = (TransmissionPathDatabase) ConfigurationDatabaseContext.transmissionPathDatabase;
+		TransmissionPathDatabase database = ConfigurationDatabaseContext.getTransmissionPathDatabase();
 		Set objects = null;
 		try {
 			objects = database.retrieveByIdsByCondition(ids, null);
@@ -237,7 +237,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	}
 
 	public Set loadTransmissionPathTypes(Set ids) throws ApplicationException {
-		TransmissionPathTypeDatabase database = (TransmissionPathTypeDatabase) ConfigurationDatabaseContext.transmissionPathTypeDatabase;
+		TransmissionPathTypeDatabase database = ConfigurationDatabaseContext.getTransmissionPathTypeDatabase();
 		Set objects = null;
 		try {
 			objects = database.retrieveByIdsByCondition(ids, null);
@@ -251,7 +251,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	}
 
 	public Set loadKISs(Set ids) throws ApplicationException {
-		KISDatabase database = (KISDatabase) ConfigurationDatabaseContext.kisDatabase;
+		KISDatabase database = ConfigurationDatabaseContext.getKISDatabase();
 		Set objects = null;
 		try {
 			objects = database.retrieveByIdsByCondition(ids, null);
@@ -264,7 +264,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	}
 
 	public Set loadMonitoredElements(Set ids) throws ApplicationException {
-		MonitoredElementDatabase database = (MonitoredElementDatabase) ConfigurationDatabaseContext.monitoredElementDatabase;
+		MonitoredElementDatabase database = ConfigurationDatabaseContext.getMonitoredElementDatabase();
 		Set objects = null;
 		try {
 			objects = database.retrieveByIdsByCondition(ids, null);
@@ -278,7 +278,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	}
 
 	public Set loadLinks(Set ids) throws ApplicationException {
-		LinkDatabase database = (LinkDatabase) ConfigurationDatabaseContext.linkDatabase;
+		LinkDatabase database = ConfigurationDatabaseContext.getLinkDatabase();
 		Set objects = null;
 		try {
 			objects = database.retrieveByIdsByCondition(ids, null);
@@ -291,7 +291,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	}
 
 	public Set loadCableThreads(Set ids) throws ApplicationException {
-		CableThreadDatabase database = (CableThreadDatabase) ConfigurationDatabaseContext.cableThreadDatabase;
+		CableThreadDatabase database = ConfigurationDatabaseContext.getCableThreadDatabase();
 		Set objects = null;
 		try {
 			objects = database.retrieveByIdsByCondition(ids, null);
@@ -308,7 +308,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 
 
 	public Set loadCableLinkTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		CableLinkTypeDatabase database = (CableLinkTypeDatabase) ConfigurationDatabaseContext.cableLinkTypeDatabase;
+		CableLinkTypeDatabase database = ConfigurationDatabaseContext.getCableLinkTypeDatabase();
 		Set objects = null;
 		try {
 			objects = database.retrieveButIdsByCondition(ids, condition);
@@ -322,7 +322,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	}
 
 	public Set loadCableThreadsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		CableThreadDatabase database = (CableThreadDatabase) ConfigurationDatabaseContext.cableThreadDatabase;
+		CableThreadDatabase database = ConfigurationDatabaseContext.getCableThreadDatabase();
 		Set objects = null;
 		try {
 			objects = database.retrieveButIdsByCondition(ids, condition);
@@ -338,7 +338,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	/* Load Configuration StorableObject but argument ids */
 
 	public Set loadCableThreadTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		CableThreadTypeDatabase database = (CableThreadTypeDatabase) ConfigurationDatabaseContext.cableThreadTypeDatabase;
+		CableThreadTypeDatabase database = ConfigurationDatabaseContext.getCableThreadTypeDatabase();
 		Set objects = null;
 		try {
 			objects = database.retrieveButIdsByCondition(ids, condition);
@@ -353,7 +353,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	}
 
 	public Set loadEquipmentsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		EquipmentDatabase database = (EquipmentDatabase) ConfigurationDatabaseContext.equipmentDatabase;
+		EquipmentDatabase database = ConfigurationDatabaseContext.getEquipmentDatabase();
 		Set objects = null;
 		try {
 			objects = database.retrieveButIdsByCondition(ids, condition);
@@ -367,7 +367,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	}
 
 	public Set loadEquipmentTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		EquipmentTypeDatabase database = (EquipmentTypeDatabase) ConfigurationDatabaseContext.equipmentTypeDatabase;
+		EquipmentTypeDatabase database = ConfigurationDatabaseContext.getEquipmentTypeDatabase();
 		Set objects = null;
 		try {
 			objects = database.retrieveButIdsByCondition(ids, condition);
@@ -381,7 +381,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	}
 
 	public Set loadKISsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		KISDatabase database = (KISDatabase) ConfigurationDatabaseContext.kisDatabase;
+		KISDatabase database = ConfigurationDatabaseContext.getKISDatabase();
 		Set objects = null;
 		try {
 			objects = database.retrieveButIdsByCondition(ids, condition);
@@ -394,7 +394,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	}
 
 	public Set loadLinksButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		LinkDatabase database = (LinkDatabase) ConfigurationDatabaseContext.linkDatabase;
+		LinkDatabase database = ConfigurationDatabaseContext.getLinkDatabase();
 		Set objects = null;
 		try {
 			objects = database.retrieveButIdsByCondition(ids, condition);
@@ -408,7 +408,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	}
 
 	public Set loadLinkTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		LinkTypeDatabase database = (LinkTypeDatabase) ConfigurationDatabaseContext.linkTypeDatabase;
+		LinkTypeDatabase database = ConfigurationDatabaseContext.getLinkTypeDatabase();
 		Set objects = null;
 		try {
 			objects = database.retrieveButIdsByCondition(ids, condition);
@@ -422,7 +422,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	}
 
 	public Set loadMeasurementPortsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		MeasurementPortDatabase database = (MeasurementPortDatabase) ConfigurationDatabaseContext.measurementPortDatabase;
+		MeasurementPortDatabase database = ConfigurationDatabaseContext.getMeasurementPortDatabase();
 		Set objects = null;
 		try {
 			objects = database.retrieveButIdsByCondition(ids, condition);
@@ -437,7 +437,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	}
 
 	public Set loadMeasurementPortTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		MeasurementPortTypeDatabase database = (MeasurementPortTypeDatabase) ConfigurationDatabaseContext.measurementPortTypeDatabase;
+		MeasurementPortTypeDatabase database = ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
 		Set objects = null;
 		try {
 			objects = database.retrieveButIdsByCondition(ids, condition);
@@ -452,7 +452,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	}
 
 	public Set loadMonitoredElementsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		MonitoredElementDatabase database = (MonitoredElementDatabase) ConfigurationDatabaseContext.monitoredElementDatabase;
+		MonitoredElementDatabase database = ConfigurationDatabaseContext.getMonitoredElementDatabase();
 		Set objects = null;
 		try {
 			objects = database.retrieveButIdsByCondition(ids, condition);
@@ -467,7 +467,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	}
 
 	public Set loadPortsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		PortDatabase database = (PortDatabase) ConfigurationDatabaseContext.portDatabase;
+		PortDatabase database = ConfigurationDatabaseContext.getPortDatabase();
 		Set objects = null;
 		try {
 			objects = database.retrieveButIdsByCondition(ids, condition);
@@ -481,7 +481,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	}
 
 	public Set loadPortTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		PortTypeDatabase database = (PortTypeDatabase) ConfigurationDatabaseContext.portTypeDatabase;
+		PortTypeDatabase database = ConfigurationDatabaseContext.getPortTypeDatabase();
 		Set objects = null;
 		try {
 			objects = database.retrieveButIdsByCondition(ids, condition);
@@ -495,7 +495,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	}
 
 	public Set loadTransmissionPathsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		TransmissionPathDatabase database = (TransmissionPathDatabase) ConfigurationDatabaseContext.transmissionPathDatabase;
+		TransmissionPathDatabase database = ConfigurationDatabaseContext.getTransmissionPathDatabase();
 		Set objects = null;
 		try {
 			objects = database.retrieveButIdsByCondition(ids, condition);
@@ -510,7 +510,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 	}
 
 	public Set loadTransmissionPathTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
-		TransmissionPathTypeDatabase database = (TransmissionPathTypeDatabase) ConfigurationDatabaseContext.transmissionPathTypeDatabase;
+		TransmissionPathTypeDatabase database = ConfigurationDatabaseContext.getTransmissionPathTypeDatabase();
 		Set objects = null;
 		try {
 			objects = database.retrieveButIdsByCondition(ids, condition);
@@ -530,84 +530,84 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 
 
 	public void saveEquipmentType(EquipmentType equipmentType, boolean force) throws ApplicationException {
-		EquipmentTypeDatabase database = (EquipmentTypeDatabase) ConfigurationDatabaseContext.equipmentTypeDatabase;
+		EquipmentTypeDatabase database = ConfigurationDatabaseContext.getEquipmentTypeDatabase();
 		database.update(equipmentType, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void savePortType(PortType portType, boolean force) throws ApplicationException {
-		PortTypeDatabase database = (PortTypeDatabase) ConfigurationDatabaseContext.portTypeDatabase;
+		PortTypeDatabase database = ConfigurationDatabaseContext.getPortTypeDatabase();
 		database.update(portType, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveMeasurementPortType(MeasurementPortType measurementPortType, boolean force) throws ApplicationException {
-		MeasurementPortTypeDatabase database = (MeasurementPortTypeDatabase) ConfigurationDatabaseContext.measurementPortTypeDatabase;
+		MeasurementPortTypeDatabase database = ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
 		database.update(measurementPortType, SessionContext.getAccessIdentity().getUserId(),
 				force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveLinkType(LinkType linkType, boolean force) throws ApplicationException {
-		LinkTypeDatabase database = (LinkTypeDatabase) ConfigurationDatabaseContext.linkTypeDatabase;
+		LinkTypeDatabase database = ConfigurationDatabaseContext.getLinkTypeDatabase();
 		database.update(linkType, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveCableLinkType(CableLinkType cableLinkType, boolean force) throws ApplicationException {
-		StorableObjectDatabase database = ConfigurationDatabaseContext.cableLinkTypeDatabase;
+		StorableObjectDatabase database = ConfigurationDatabaseContext.getCableLinkTypeDatabase();
 		database.update(cableLinkType, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveCableThreadType(CableThreadType cableThreadType, boolean force) throws ApplicationException {
-		CableThreadTypeDatabase database = (CableThreadTypeDatabase) ConfigurationDatabaseContext.cableThreadTypeDatabase;
+		CableThreadTypeDatabase database = ConfigurationDatabaseContext.getCableThreadTypeDatabase();
 		database.update(cableThreadType, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveEquipment(Equipment equipment, boolean force) throws ApplicationException {
-		EquipmentDatabase database = (EquipmentDatabase) ConfigurationDatabaseContext.equipmentDatabase;
+		EquipmentDatabase database = ConfigurationDatabaseContext.getEquipmentDatabase();
 		database.update(equipment, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void savePort(Port port, boolean force) throws ApplicationException {
-		PortDatabase database = (PortDatabase) ConfigurationDatabaseContext.portDatabase;
+		PortDatabase database = ConfigurationDatabaseContext.getPortDatabase();
 		database.update(port, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveMeasurementPort(MeasurementPort measurementPort, boolean force)
 			throws ApplicationException {
-		MeasurementPortDatabase database = (MeasurementPortDatabase) ConfigurationDatabaseContext.measurementPortDatabase;
+		MeasurementPortDatabase database = ConfigurationDatabaseContext.getMeasurementPortDatabase();
 		database.update(measurementPort, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveTransmissionPath(TransmissionPath transmissionPath, boolean force)
 			throws ApplicationException {
-		TransmissionPathDatabase database = (TransmissionPathDatabase) ConfigurationDatabaseContext.transmissionPathDatabase;
+		TransmissionPathDatabase database = ConfigurationDatabaseContext.getTransmissionPathDatabase();
 		database.update(transmissionPath, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveTransmissionPathType(TransmissionPathType transmissionPathType, boolean force)
 			throws ApplicationException {
-		TransmissionPathTypeDatabase database = (TransmissionPathTypeDatabase) ConfigurationDatabaseContext.transmissionPathTypeDatabase;
+		TransmissionPathTypeDatabase database = ConfigurationDatabaseContext.getTransmissionPathTypeDatabase();
 		database.update(transmissionPathType, SessionContext.getAccessIdentity().getUserId(),
 				force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveKIS(KIS kis, boolean force) throws ApplicationException {
-		KISDatabase database = (KISDatabase) ConfigurationDatabaseContext.kisDatabase;
+		KISDatabase database = ConfigurationDatabaseContext.getKISDatabase();
 		database.update(kis, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveMonitoredElement(MonitoredElement monitoredElement, boolean force)
 			throws ApplicationException {
-		MonitoredElementDatabase database = (MonitoredElementDatabase) ConfigurationDatabaseContext.monitoredElementDatabase;
+		MonitoredElementDatabase database = ConfigurationDatabaseContext.getMonitoredElementDatabase();
 		database.update(monitoredElement, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveLink(Link link, boolean force) throws ApplicationException {
-		LinkDatabase database = (LinkDatabase) ConfigurationDatabaseContext.linkDatabase;
+		LinkDatabase database = ConfigurationDatabaseContext.getLinkDatabase();
 		database.update(link, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveCableThread(CableThread cableThread, boolean force)
 			throws ApplicationException {
-		CableThreadDatabase database = (CableThreadDatabase) ConfigurationDatabaseContext.cableThreadDatabase;
+		CableThreadDatabase database = ConfigurationDatabaseContext.getCableThreadDatabase();
 		database.update(cableThread, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
@@ -617,77 +617,77 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 
 
 	public void saveCableLinkTypes(Set objects, boolean force) throws ApplicationException {
-		StorableObjectDatabase database = ConfigurationDatabaseContext.cableLinkTypeDatabase;
+		StorableObjectDatabase database = ConfigurationDatabaseContext.getCableLinkTypeDatabase();
 		database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveCableThreads(Set objects, boolean force) throws ApplicationException {
-		StorableObjectDatabase database = ConfigurationDatabaseContext.cableThreadDatabase;
+		StorableObjectDatabase database = ConfigurationDatabaseContext.getCableThreadDatabase();
 		database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveCableThreadTypes(Set objects, boolean force) throws ApplicationException {
-		CableThreadTypeDatabase database = (CableThreadTypeDatabase) ConfigurationDatabaseContext.cableThreadTypeDatabase;
+		CableThreadTypeDatabase database = ConfigurationDatabaseContext.getCableThreadTypeDatabase();
 		database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveEquipments(Set objects, boolean force) throws ApplicationException {
-		EquipmentDatabase database = (EquipmentDatabase) ConfigurationDatabaseContext.equipmentDatabase;
+		EquipmentDatabase database = ConfigurationDatabaseContext.getEquipmentDatabase();
 		database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveEquipmentTypes(Set objects, boolean force) throws ApplicationException {
-		EquipmentTypeDatabase database = (EquipmentTypeDatabase) ConfigurationDatabaseContext.equipmentTypeDatabase;
+		EquipmentTypeDatabase database = ConfigurationDatabaseContext.getEquipmentTypeDatabase();
 		database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveKISs(Set objects, boolean force) throws ApplicationException {
-		KISDatabase database = (KISDatabase) ConfigurationDatabaseContext.kisDatabase;
+		KISDatabase database = ConfigurationDatabaseContext.getKISDatabase();
 		database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveLinks(Set objects, boolean force) throws ApplicationException {
-		LinkDatabase database = (LinkDatabase) ConfigurationDatabaseContext.linkDatabase;
+		LinkDatabase database = ConfigurationDatabaseContext.getLinkDatabase();
 		database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveLinkTypes(Set objects, boolean force) throws ApplicationException {
-		LinkTypeDatabase database = (LinkTypeDatabase) ConfigurationDatabaseContext.linkTypeDatabase;
+		LinkTypeDatabase database = ConfigurationDatabaseContext.getLinkTypeDatabase();
 		database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveMeasurementPorts(Set objects, boolean force) throws ApplicationException {
-		MeasurementPortDatabase database = (MeasurementPortDatabase) ConfigurationDatabaseContext.measurementPortDatabase;
+		MeasurementPortDatabase database = ConfigurationDatabaseContext.getMeasurementPortDatabase();
 		database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveMeasurementPortTypes(Set objects, boolean force) throws ApplicationException {
-		MeasurementPortTypeDatabase database = (MeasurementPortTypeDatabase) ConfigurationDatabaseContext.measurementPortTypeDatabase;
+		MeasurementPortTypeDatabase database = ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
 		database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveMonitoredElements(Set objects, boolean force) throws ApplicationException {
-		MonitoredElementDatabase database = (MonitoredElementDatabase) ConfigurationDatabaseContext.monitoredElementDatabase;
+		MonitoredElementDatabase database = ConfigurationDatabaseContext.getMonitoredElementDatabase();
 		database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void savePorts(Set objects, boolean force) throws ApplicationException {
-		PortDatabase database = (PortDatabase) ConfigurationDatabaseContext.portDatabase;
+		PortDatabase database = ConfigurationDatabaseContext.getPortDatabase();
 		database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void savePortTypes(Set objects, boolean force) throws ApplicationException {
-		PortTypeDatabase database = (PortTypeDatabase) ConfigurationDatabaseContext.portTypeDatabase;
+		PortTypeDatabase database = ConfigurationDatabaseContext.getPortTypeDatabase();
 		database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveTransmissionPaths(Set objects, boolean force) throws ApplicationException {
-		TransmissionPathDatabase database = (TransmissionPathDatabase) ConfigurationDatabaseContext.transmissionPathDatabase;
+		TransmissionPathDatabase database = ConfigurationDatabaseContext.getTransmissionPathDatabase();
 		database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 
 	public void saveTransmissionPathTypes(Set objects, boolean force) throws ApplicationException {
-		TransmissionPathTypeDatabase database = (TransmissionPathTypeDatabase) ConfigurationDatabaseContext.transmissionPathTypeDatabase;
+		TransmissionPathTypeDatabase database = ConfigurationDatabaseContext.getTransmissionPathTypeDatabase();
 		database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 	}
 

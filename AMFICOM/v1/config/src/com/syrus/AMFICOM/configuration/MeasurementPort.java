@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.41 2005/04/01 07:57:28 bob Exp $
+ * $Id: MeasurementPort.java,v 1.42 2005/04/01 11:02:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/04/01 07:57:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.42 $, $Date: 2005/04/01 11:02:30 $
+ * @author $Author: bass $
  * @module config_v1
  */
 public class MeasurementPort extends StorableObject implements Characterizable, TypedObject {
@@ -57,7 +57,7 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 	public MeasurementPort(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.measurementPortDatabase = ConfigurationDatabaseContext.measurementPortDatabase;
+		this.measurementPortDatabase = ConfigurationDatabaseContext.getMeasurementPortDatabase();
 		this.characteristics = new HashSet();
 		try {
 			this.measurementPortDatabase.retrieve(this);
@@ -91,7 +91,7 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 			throw new CreateObjectException(ae);
 		}
 
-		this.measurementPortDatabase = ConfigurationDatabaseContext.measurementPortDatabase;
+		this.measurementPortDatabase = ConfigurationDatabaseContext.getMeasurementPortDatabase();
 	}
 
 	protected MeasurementPort(Identifier id,
@@ -115,7 +115,7 @@ public class MeasurementPort extends StorableObject implements Characterizable, 
 		this.portId = portId;
 		this.characteristics = new HashSet();
 
-		this.measurementPortDatabase = ConfigurationDatabaseContext.measurementPortDatabase;
+		this.measurementPortDatabase = ConfigurationDatabaseContext.getMeasurementPortDatabase();
 	}
 	
 	/**

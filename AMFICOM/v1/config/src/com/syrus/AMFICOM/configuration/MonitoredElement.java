@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.40 2005/04/01 07:57:28 bob Exp $
+ * $Id: MonitoredElement.java,v 1.41 2005/04/01 11:02:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/04/01 07:57:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.41 $, $Date: 2005/04/01 11:02:30 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -50,7 +50,7 @@ public class MonitoredElement extends DomainMember {
 		super(id);
 
 		this.monitoredDomainMemberIds = new HashSet();
-		this.monitoredElementDatabase = ConfigurationDatabaseContext.monitoredElementDatabase;
+		this.monitoredElementDatabase = ConfigurationDatabaseContext.getMonitoredElementDatabase();
 		try {
 			this.monitoredElementDatabase.retrieve(this);
 		}
@@ -72,7 +72,7 @@ public class MonitoredElement extends DomainMember {
 		for (int i= 0; i < met.monitored_domain_member_ids.length; i++)
 			this.monitoredDomainMemberIds.add(new Identifier(met.monitored_domain_member_ids[i]));
 
-		this.monitoredElementDatabase = ConfigurationDatabaseContext.monitoredElementDatabase;
+		this.monitoredElementDatabase = ConfigurationDatabaseContext.getMonitoredElementDatabase();
 	}
 	
 	protected MonitoredElement(Identifier id,
@@ -99,7 +99,7 @@ public class MonitoredElement extends DomainMember {
 		this.monitoredDomainMemberIds = new HashSet();
 		this.setMonitoredDomainMemberIds0(monitoredDomainMemberIds);
 
-		this.monitoredElementDatabase = ConfigurationDatabaseContext.monitoredElementDatabase;
+		this.monitoredElementDatabase = ConfigurationDatabaseContext.getMonitoredElementDatabase();
 	}
 	
 	/**

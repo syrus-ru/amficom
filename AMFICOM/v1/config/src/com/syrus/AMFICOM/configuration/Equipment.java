@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.76 2005/04/01 07:57:28 bob Exp $
+ * $Id: Equipment.java,v 1.77 2005/04/01 11:02:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,8 +37,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.76 $, $Date: 2005/04/01 07:57:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.77 $, $Date: 2005/04/01 11:02:30 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -69,7 +69,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 
 		this.characteristics = new HashSet();
 
-		this.equipmentDatabase = ConfigurationDatabaseContext.equipmentDatabase;
+		this.equipmentDatabase = ConfigurationDatabaseContext.getEquipmentDatabase();
 		try {
 			this.equipmentDatabase.retrieve(this);
 		}
@@ -111,7 +111,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 			throw new CreateObjectException(ae);
 		}
 
-		this.equipmentDatabase = ConfigurationDatabaseContext.equipmentDatabase;
+		this.equipmentDatabase = ConfigurationDatabaseContext.getEquipmentDatabase();
 	}
 
 	protected Equipment(Identifier id,
@@ -155,7 +155,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 
 		this.characteristics = new HashSet();
 
-		this.equipmentDatabase = ConfigurationDatabaseContext.equipmentDatabase;
+		this.equipmentDatabase = ConfigurationDatabaseContext.getEquipmentDatabase();
 	}
 
 	/**

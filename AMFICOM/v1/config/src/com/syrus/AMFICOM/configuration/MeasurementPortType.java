@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.35 2005/04/01 07:57:28 bob Exp $
+ * $Id: MeasurementPortType.java,v 1.36 2005/04/01 11:02:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/04/01 07:57:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.36 $, $Date: 2005/04/01 11:02:30 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -51,7 +51,7 @@ public class MeasurementPortType extends StorableObjectType implements Character
 		super(id);
 
 		this.characteristics = new HashSet();
-		this.measurementPortTypeDatabase = ConfigurationDatabaseContext.measurementPortTypeDatabase;
+		this.measurementPortTypeDatabase = ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
 		try {
 			this.measurementPortTypeDatabase.retrieve(this);
 		}
@@ -74,7 +74,7 @@ public class MeasurementPortType extends StorableObjectType implements Character
 			throw new CreateObjectException(ae);
 		}
 
-		this.measurementPortTypeDatabase = ConfigurationDatabaseContext.measurementPortTypeDatabase;
+		this.measurementPortTypeDatabase = ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
 	}
 
 	protected MeasurementPortType(Identifier id,
@@ -94,7 +94,7 @@ public class MeasurementPortType extends StorableObjectType implements Character
 			this.name = name;
 			this.characteristics = new HashSet();
 
-			this.measurementPortTypeDatabase = ConfigurationDatabaseContext.measurementPortTypeDatabase;
+			this.measurementPortTypeDatabase = ConfigurationDatabaseContext.getMeasurementPortTypeDatabase();
 	}
 	
 	/**

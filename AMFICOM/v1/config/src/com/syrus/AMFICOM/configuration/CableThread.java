@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.14 2005/04/01 07:57:28 bob Exp $
+ * $Id: CableThread.java,v 1.15 2005/04/01 11:02:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/04/01 07:57:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2005/04/01 11:02:30 $
+ * @author $Author: bass $
  * @module config_v1
  */
 public class CableThread extends DomainMember implements TypedObject {
@@ -45,7 +45,7 @@ public class CableThread extends DomainMember implements TypedObject {
 	public CableThread(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
-		this.cableThreadDatabase = ConfigurationDatabaseContext.cableThreadDatabase;
+		this.cableThreadDatabase = ConfigurationDatabaseContext.getCableThreadDatabase();
 		try {
 			this.cableThreadDatabase.retrieve(this);
 		}
@@ -67,7 +67,7 @@ public class CableThread extends DomainMember implements TypedObject {
 			throw new CreateObjectException(ae);
 		}
 
-		this.cableThreadDatabase = ConfigurationDatabaseContext.cableThreadDatabase;
+		this.cableThreadDatabase = ConfigurationDatabaseContext.getCableThreadDatabase();
 	}
 
 	protected CableThread(Identifier id,
@@ -88,7 +88,7 @@ public class CableThread extends DomainMember implements TypedObject {
 		this.description = description;
 		this.type = type;
 	
-		this.cableThreadDatabase = ConfigurationDatabaseContext.cableThreadDatabase;
+		this.cableThreadDatabase = ConfigurationDatabaseContext.getCableThreadDatabase();
 	}
 
 	public static CableThread createInstance(Identifier creatorId,

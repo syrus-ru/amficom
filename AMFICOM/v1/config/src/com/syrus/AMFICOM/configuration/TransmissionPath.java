@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.52 2005/04/01 07:57:28 bob Exp $
+ * $Id: TransmissionPath.java,v 1.53 2005/04/01 11:02:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 /**
- * @version $Revision: 1.52 $, $Date: 2005/04/01 07:57:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.53 $, $Date: 2005/04/01 11:02:30 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -58,7 +58,7 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 
 		this.characteristics = new HashSet();
 
-		this.transmissionPathDatabase = ConfigurationDatabaseContext.transmissionPathDatabase;
+		this.transmissionPathDatabase = ConfigurationDatabaseContext.getTransmissionPathDatabase();
 		try {
 			this.transmissionPathDatabase.retrieve(this);
 		}
@@ -87,7 +87,7 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 			throw new CreateObjectException(ae);
 		}
 
-		this.transmissionPathDatabase = ConfigurationDatabaseContext.transmissionPathDatabase;
+		this.transmissionPathDatabase = ConfigurationDatabaseContext.getTransmissionPathDatabase();
 	}
 
 	protected TransmissionPath(Identifier id,
@@ -108,7 +108,7 @@ public class TransmissionPath extends DomainMember implements MonitoredDomainMem
 
 		this.characteristics = new HashSet();
 
-		this.transmissionPathDatabase = ConfigurationDatabaseContext.transmissionPathDatabase;
+		this.transmissionPathDatabase = ConfigurationDatabaseContext.getTransmissionPathDatabase();
 	}
 
 	/**

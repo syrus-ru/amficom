@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.26 2005/04/01 07:57:28 bob Exp $
+ * $Id: CableLinkType.java,v 1.27 2005/04/01 11:02:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/04/01 07:57:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.27 $, $Date: 2005/04/01 11:02:30 $
+ * @author $Author: bass $
  * @module config_v1
  */
 public final class CableLinkType extends AbstractLinkType implements Characterizable {
@@ -57,7 +57,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 
 		this.characteristics = new HashSet();
 
-		this.cableLinkTypeDatabase = ConfigurationDatabaseContext.cableLinkTypeDatabase;
+		this.cableLinkTypeDatabase = ConfigurationDatabaseContext.getCableLinkTypeDatabase();
 		try {
 			this.cableLinkTypeDatabase.retrieve(this);
 		}
@@ -84,7 +84,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 			throw new CreateObjectException(ae);
 		}
 
-		this.cableLinkTypeDatabase = ConfigurationDatabaseContext.cableLinkTypeDatabase;
+		this.cableLinkTypeDatabase = ConfigurationDatabaseContext.getCableLinkTypeDatabase();
 	}
 
 	protected CableLinkType(Identifier id,
@@ -113,7 +113,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 
 		this.characteristics = new HashSet();
 
-		this.cableLinkTypeDatabase = ConfigurationDatabaseContext.cableLinkTypeDatabase;
+		this.cableLinkTypeDatabase = ConfigurationDatabaseContext.getCableLinkTypeDatabase();
 	}
 
 	/**

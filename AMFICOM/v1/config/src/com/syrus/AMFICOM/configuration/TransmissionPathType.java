@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.34 2005/04/01 07:57:28 bob Exp $
+ * $Id: TransmissionPathType.java,v 1.35 2005/04/01 11:02:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/04/01 07:57:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.35 $, $Date: 2005/04/01 11:02:30 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -51,7 +51,7 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 	public TransmissionPathType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 		this.characteristics = new HashSet();
-		this.transmissionPathTypeDatabase = ConfigurationDatabaseContext.transmissionPathTypeDatabase;
+		this.transmissionPathTypeDatabase = ConfigurationDatabaseContext.getTransmissionPathTypeDatabase();
 		try {
 			this.transmissionPathTypeDatabase.retrieve(this);
 		} catch (IllegalDataException ide) {
@@ -71,7 +71,7 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 			throw new CreateObjectException(ae);
 		}
 
-		this.transmissionPathTypeDatabase = ConfigurationDatabaseContext.transmissionPathTypeDatabase;
+		this.transmissionPathTypeDatabase = ConfigurationDatabaseContext.getTransmissionPathTypeDatabase();
 	}
 
 	protected TransmissionPathType(Identifier id,
@@ -85,7 +85,7 @@ public class TransmissionPathType extends StorableObjectType implements Characte
 		this.name = name;
 		this.characteristics = new HashSet();
 
-		this.transmissionPathTypeDatabase = ConfigurationDatabaseContext.transmissionPathTypeDatabase;
+		this.transmissionPathTypeDatabase = ConfigurationDatabaseContext.getTransmissionPathTypeDatabase();
 	}
 
 	/**

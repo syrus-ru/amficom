@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.47 2005/04/01 07:57:28 bob Exp $
+ * $Id: Port.java,v 1.48 2005/04/01 11:02:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/04/01 07:57:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.48 $, $Date: 2005/04/01 11:02:30 $
+ * @author $Author: bass $
  * @module config_v1
  */
 public class Port extends StorableObject implements Characterizable, TypedObject {
@@ -56,7 +56,7 @@ public class Port extends StorableObject implements Characterizable, TypedObject
 		super(id);
 
 		this.characteristics = new HashSet();
-		this.portDatabase = ConfigurationDatabaseContext.portDatabase;
+		this.portDatabase = ConfigurationDatabaseContext.getPortDatabase();
 		try {
 			this.portDatabase.retrieve(this);
 		}
@@ -89,7 +89,7 @@ public class Port extends StorableObject implements Characterizable, TypedObject
 			throw new CreateObjectException(ae);
 		}
 
-		this.portDatabase = ConfigurationDatabaseContext.portDatabase;
+		this.portDatabase = ConfigurationDatabaseContext.getPortDatabase();
 	}
 
 	protected Port(Identifier id,
@@ -112,7 +112,7 @@ public class Port extends StorableObject implements Characterizable, TypedObject
 
 		this.characteristics = new HashSet();
 
-		this.portDatabase = ConfigurationDatabaseContext.portDatabase;
+		this.portDatabase = ConfigurationDatabaseContext.getPortDatabase();
 	}
 
 	/**
