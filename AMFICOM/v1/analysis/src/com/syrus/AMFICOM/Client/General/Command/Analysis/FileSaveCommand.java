@@ -5,6 +5,7 @@ import java.util.Properties;
 
 import javax.swing.JFileChooser;
 
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrameSimplified;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
@@ -45,18 +46,21 @@ public class FileSaveCommand extends VoidCommand
 
 	public void execute()
 	{
-		try
+		if (!AnalyseMainFrameSimplified.DEBUG) // XXX: saa: security bypass
 		{
-			this.checker = new Checker(this.aContext.getSessionInterface());
-			if(!checker.checkCommand(Checker.saveReflectogrammFile))
+			try
 			{
-				return;
+				this.checker = new Checker(this.aContext.getSessionInterface());
+				if(!checker.checkCommand(Checker.saveReflectogrammFile))
+				{
+					return;
+				}
 			}
+			catch (NullPointerException ex)
+			{
+				System.out.println("Application context and/or user are not defined");
+				return;
 		}
-		catch (NullPointerException ex)
-		{
-			System.out.println("Application context and/or user are not defined");
-			return;
 		}
 
 		Properties properties = new Properties();
