@@ -75,7 +75,7 @@ idl: .idl
 corba: .corba
 
 # Compilation of stubs & skeletons
-.corba:	$(CLASSDIR)
+.corba:	$(CLASSDIR) .idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
