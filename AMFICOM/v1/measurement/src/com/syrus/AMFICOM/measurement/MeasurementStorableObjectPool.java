@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.20 2004/09/27 11:59:35 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.21 2004/09/28 13:13:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/09/27 11:59:35 $
+ * @version $Revision: 1.21 $, $Date: 2004/09/28 13:13:11 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -638,5 +638,141 @@ public static List getStorableObjectsByDomain(short entityCode,
 			}
 		}
 		return object;
+	}
+	
+	public static void flush() throws DatabaseException, CommunicationException{		 
+		List list = new LinkedList();
+		for (Iterator it = objectPoolMap.keySet().iterator(); it.hasNext();) {
+			Short entityCode = (Short) it.next();
+			LRUMap objectPool = (LRUMap) objectPoolMap.get(entityCode);
+			if (objectPool != null){
+				list.clear();
+				for(Iterator poolIt = objectPool.iterator();poolIt.hasNext();){
+					StorableObject storableObject = (StorableObject)poolIt.next();
+					if (storableObject.isChanged())
+						list.add(storableObject);				
+				}
+				
+				short code = entityCode.shortValue();
+				if (!list.isEmpty()){
+					boolean alone = (list.size()==1);
+					switch (code) {
+						case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
+							/**
+							 * FIXME check for version collision
+							 */
+							if (alone)
+								mObjectLoader.saveParameterType((ParameterType)list.get(0), true);
+							else 
+								mObjectLoader.saveParameterTypes(list, true);
+							break;
+						case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
+							/**
+							 * FIXME check for version collision
+							 */
+							if (alone)
+								mObjectLoader.saveMeasurementType((MeasurementType)list.get(0), true);
+							else 
+								mObjectLoader.saveMeasurementTypes(list, true);
+							break;
+						case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
+							/**
+							 * FIXME check for version collision
+							 */
+							if (alone)
+								mObjectLoader.saveAnalysisType((AnalysisType)list.get(0), true);
+							else 
+								mObjectLoader.saveAnalysisTypes(list, true);
+							break;
+						case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
+							/**
+							 * FIXME check for version collision
+							 */
+							if (alone)
+								mObjectLoader.saveEvaluationType((EvaluationType)list.get(0), true);
+							else 
+								mObjectLoader.saveEvaluationTypes(list, true);
+							break;
+						case ObjectEntities.SET_ENTITY_CODE:
+							/**
+							 * FIXME check for version collision
+							 */
+							if (alone)
+								mObjectLoader.saveSet((Set)list.get(0), true);
+							else 
+								mObjectLoader.saveSets(list, true);
+							break;
+						case ObjectEntities.MS_ENTITY_CODE:
+							/**
+							 * FIXME check for version collision
+							 */
+							if (alone)
+								mObjectLoader.saveMeasurementSetup((MeasurementSetup)list.get(0), true);
+							else 
+								mObjectLoader.saveMeasurementSetups(list, true);
+							break;
+						case ObjectEntities.ANALYSIS_ENTITY_CODE:
+							/**
+							 * FIXME check for version collision
+							 */
+							if (alone)
+								mObjectLoader.saveAnalysis((Analysis)list.get(0), true);
+							else 
+								mObjectLoader.saveAnalyses(list, true);
+							break;
+						case ObjectEntities.EVALUATION_ENTITY_CODE:
+							/**
+							 * FIXME check for version collision
+							 */
+							if (alone)
+								mObjectLoader.saveEvaluation((Evaluation)list.get(0), true);
+							else 
+								mObjectLoader.saveEvaluations(list, true);
+							break;
+						case ObjectEntities.MEASUREMENT_ENTITY_CODE:
+							/**
+							 * FIXME check for version collision
+							 */
+							if (alone)
+								mObjectLoader.saveMeasurement((Measurement)list.get(0), true);
+							else 
+								mObjectLoader.saveMeasurements(list, true);
+							break;
+						case ObjectEntities.TEST_ENTITY_CODE:
+							/**
+							 * FIXME check for version collision
+							 */
+							if (alone)
+								mObjectLoader.saveTest((Test)list.get(0), true);
+							else 
+								mObjectLoader.saveTests(list, true);
+							break;
+						case ObjectEntities.RESULT_ENTITY_CODE:
+							/**
+							 * FIXME check for version collision
+							 */
+							if (alone)
+								mObjectLoader.saveResult((Result)list.get(0), true);
+							else 
+								mObjectLoader.saveResults(list, true);
+							break;
+						case ObjectEntities.TEMPORALPATTERN_ENTITY_CODE:
+							/**
+							 * FIXME check for version collision
+							 */
+							if (alone)
+								mObjectLoader.saveTemporalPattern((TemporalPattern)list.get(0), true);
+							else 
+								mObjectLoader.saveTemporalPatterns(list, true);
+							break;
+						default:
+							Log
+									.errorMessage("MeasurementStorableObjectPool.flush | Unknown entityCode : "
+											+ entityCode);
+					}
+
+				}
+			}
+		}
 	}
 }

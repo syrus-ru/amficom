@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.10 2004/09/24 07:01:15 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.11 2004/09/28 13:13:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/09/24 07:01:15 $
+ * @version $Revision: 1.11 $, $Date: 2004/09/28 13:13:21 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -511,4 +511,160 @@ public class ConfigurationStorableObjectPool {
 		}
 		throw new IllegalObjectEntityException("ConfigurationStorableObjectPool.putStorableObject | Illegal object entity: '" + objectId.getObjectEntity() + "'", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
+	
+	public static void flush() throws DatabaseException, CommunicationException{		 
+		List list = new LinkedList();
+		for (Iterator it = objectPoolMap.keySet().iterator(); it.hasNext();) {
+			Short entityCode = (Short) it.next();
+			LRUMap objectPool = (LRUMap) objectPoolMap.get(entityCode);
+			if (objectPool != null){
+				list.clear();
+				for(Iterator poolIt = objectPool.iterator();poolIt.hasNext();){
+					StorableObject storableObject = (StorableObject)poolIt.next();
+					if (storableObject.isChanged())
+						list.add(storableObject);				
+				}
+				
+				short code = entityCode.shortValue();
+				if (!list.isEmpty()){
+					boolean alone = (list.size()==1);
+					switch (code) {
+			            case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
+			            	/**
+							 * FIXME check for version collision
+							 */
+			            	if (alone)
+			            		cObjectLoader.saveCharacteristicType((CharacteristicType)list.get(0), true);
+			            	else 
+			            		cObjectLoader.saveCharacteristicTypes(list, true);
+			                break;
+			            case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
+			            	/**
+							 * FIXME check for version collision
+							 */
+			            	if (alone)
+			            		cObjectLoader.saveEquipmentType((EquipmentType)list.get(0), true);
+			            	else 
+			            		cObjectLoader.saveEquipmentTypes(list, true);
+			                break;
+			            case ObjectEntities.PORTTYPE_ENTITY_CODE:
+			            	/**
+							 * FIXME check for version collision
+							 */
+			            	if (alone)
+			            		cObjectLoader.savePortType((PortType)list.get(0), true);
+			            	else 
+			            		cObjectLoader.savePortTypes(list, true);
+			                break;
+			            case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
+			            	/**
+							 * FIXME check for version collision
+							 */
+			            	if (alone)
+			            		cObjectLoader.saveMeasurementPortType((MeasurementPortType)list.get(0), true);
+			            	else 
+			            		cObjectLoader.saveMeasurementPortTypes(list, true);
+			                break;
+			            case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
+			            	/**
+							 * FIXME check for version collision
+							 */
+			            	if (alone)
+			            		cObjectLoader.saveCharacteristic((Characteristic)list.get(0), true);
+			            	else 
+			            		cObjectLoader.saveCharacteristics(list, true);
+			                break;
+			            case ObjectEntities.USER_ENTITY_CODE:
+			            	/**
+							 * FIXME check for version collision
+							 */
+			            	if (alone)
+			            		cObjectLoader.saveUser((User)list.get(0), true);
+			            	else 
+			            		cObjectLoader.saveUsers(list, true);
+			                break;
+			            case ObjectEntities.DOMAIN_ENTITY_CODE:
+			            	/**
+							 * FIXME check for version collision
+							 */
+			            	if (alone)
+			            		cObjectLoader.saveDomain((Domain)list.get(0), true);
+			            	else 
+			            		cObjectLoader.saveDomains(list, true);
+			                break;
+			            case ObjectEntities.SERVER_ENTITY_CODE:
+			            	/**
+							 * FIXME check for version collision
+							 */
+			            	if (alone)
+			            		cObjectLoader.saveServer((Server)list.get(0), true);
+			            	else 
+			            		cObjectLoader.saveServers(list, true);
+			                break;
+			            case ObjectEntities.MCM_ENTITY_CODE:
+			            	/**
+							 * FIXME check for version collision
+							 */
+			            	if (alone)
+			            		cObjectLoader.saveMCM((MCM)list.get(0), true);
+			            	else 
+			            		cObjectLoader.saveMCMs(list, true);
+			                break;
+			            case ObjectEntities.EQUIPMENT_ENTITY_CODE:
+			            	/**
+							 * FIXME check for version collision
+							 */
+			            	if (alone)
+			            		cObjectLoader.saveEquipment((Equipment)list.get(0), true);
+			            	else 
+			            		cObjectLoader.saveEquipments(list, true);
+			                break;
+			            case ObjectEntities.PORT_ENTITY_CODE:
+			            	/**
+							 * FIXME check for version collision
+							 */
+			            	if (alone)
+			            		cObjectLoader.savePort((Port)list.get(0), true);
+			            	else 
+			            		cObjectLoader.savePorts(list, true);
+			                break;
+			            case ObjectEntities.KIS_ENTITY_CODE:
+			            	/**
+							 * FIXME check for version collision
+							 */
+			            	if (alone)
+			            		cObjectLoader.saveKIS((KIS)list.get(0), true);
+			            	else 
+			            		cObjectLoader.saveKISs(list, true);
+			                break;
+			            case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
+			            	/**
+							 * FIXME check for version collision
+							 */
+			            	if (alone)
+			            		cObjectLoader.saveMeasurementPort((MeasurementPort)list.get(0), true);
+			            	else 
+			            		cObjectLoader.saveMeasurementPorts(list, true);
+			                break;
+			            case ObjectEntities.ME_ENTITY_CODE:
+			            	/**
+							 * FIXME check for version collision
+							 */
+			            	if (alone)
+			            		cObjectLoader.saveMonitoredElement((MonitoredElement)list.get(0), true);
+			            	else 
+			            		cObjectLoader.saveMonitoredElements(list, true);
+			                break;
+
+						default:
+							Log
+									.errorMessage("ConfigurationStorableObjectPool.flush | Unknown entityCode : "
+											+ entityCode);
+					}
+
+				}
+			}
+		}
+	}
+
 }
