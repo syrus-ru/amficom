@@ -275,7 +275,7 @@ public class ReflectogramMath
 		return eventSize;
 	}
 
-	public static int getNonReflectiveEventSize(double[] data, int pulsewidth, double refraction, double resolution)
+	public static int getNonReflectiveEventSize(double[] data, double pulsewidth, double refraction, double resolution)
 	{
 		double firstLevel = 0.25;
 		double secondLevel = 1.75;
@@ -301,7 +301,7 @@ public class ReflectogramMath
 				break;
 			}
 		double[] d = MathRef.linearize2point(data, firstPoint, secondPoint);
-		double eventSize = - 3d / d[0] + 150d / refraction * (double)pulsewidth / 1000d / resolution;
+		double eventSize = - 3d / d[0] + 150d / refraction * pulsewidth / 1000d / resolution;
 		if(eventSize < 2)
 			eventSize = 2;
 		return (int)eventSize;

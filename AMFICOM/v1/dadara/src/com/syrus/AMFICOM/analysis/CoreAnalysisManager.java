@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.19 2005/03/04 16:40:52 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.20 2005/03/04 17:03:16 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.19 $, $Date: 2005/03/04 16:40:52 $
+ * @version $Revision: 1.20 $, $Date: 2005/03/04 17:03:16 $
  * @module
  */
 
@@ -195,11 +195,12 @@ public class CoreAnalysisManager
 	    // достаем данные
 	    double y[] = bs.getTraceData();
 	    double deltaX = bs.getResolution(); // метры
+	    double pulseWidth = bs.getPulsewidth(); // нс
 
 		int reflSize = ReflectogramMath.getReflectiveEventSize(y, 0.5);
 		int nReflSize = ReflectogramMath.getNonReflectiveEventSize(
 				y,
-				1000, // @todo: брать длительность импульса извне
+				pulseWidth,
 				bs.getIOR(),
 				deltaX);
 		if (nReflSize > 3 * reflSize / 5) // @todo: remove?
