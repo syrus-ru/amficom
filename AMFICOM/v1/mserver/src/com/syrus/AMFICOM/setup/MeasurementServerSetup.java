@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServerSetup.java,v 1.17 2004/11/24 09:23:02 arseniy Exp $
+ * $Id: MeasurementServerSetup.java,v 1.18 2004/11/24 09:29:16 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/11/24 09:23:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2004/11/24 09:29:16 $
+ * @author $Author: max $
  * @module mserver_v1
  */
 
@@ -79,9 +79,7 @@ public class MeasurementServerSetup {
 		PortType portType = createPortType(sysAdminId);
 
 		MeasurementPortType mPortType = createMeasurementPortType(sysAdminId);
-
-		KISType kisType = createKISType(sysAdminId);
-        
+		        
         TransmissionPathType transmissionPathType = createTransmissionPathType(sysAdminId);
 		
         Identifier domainId = createDomain(sysAdminId);
@@ -113,7 +111,7 @@ public class MeasurementServerSetup {
 		Identifier tpId = createTransmissionPath(sysAdminId, domainId, portId1, portId2, transmissionPathType);
 
 
-		Identifier kisId = createKIS(sysAdminId, domainId, equipmentId, mcmId, "rtu-1", (short)7501, kisType);
+		Identifier kisId = createKIS(sysAdminId, domainId, equipmentId, mcmId, "rtu-1", (short)7501);
 
 		Identifier mportId = createMeasurementPort(sysAdminId, mPortType, kisId, portId1);
 
@@ -180,23 +178,7 @@ public class MeasurementServerSetup {
         }
     }
     
-    private static KISType createKISType(Identifier creatorId) {
-        try {
-            Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.KISTYPE_ENTITY_CODE);
-            KISType kisType = KISType.createInstance(id,
-                    creatorId,
-                    "Type of KIS",
-                    "",
-                    "");            
-            return KISType.getInstance((KISType_Transferable)kisType.getTransferable());
-        }
-        catch (Exception e) {
-            Log.errorException(e);
-            return null;
-        }
-    }
-
-	private static PortType createPortType(Identifier creatorId) {
+    private static PortType createPortType(Identifier creatorId) {
 		try {
 			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.PORTTYPE_ENTITY_CODE);
 			PortType portType = PortType.createInstance(id,
@@ -296,8 +278,7 @@ public class MeasurementServerSetup {
 																			Identifier equipmentId,
 																			Identifier mcmId,
 																			String hostName,
-																			short tcpPort,
-																			KISType kisType) {
+																			short tcpPort) {
 		try {
 			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.KIS_ENTITY_CODE);
 			KIS kis = KIS.createInstance(id,
@@ -307,7 +288,6 @@ public class MeasurementServerSetup {
 																	 "kis ",
 																	 hostName,
 																	 tcpPort,
-																	 kisType,
 																	 equipmentId,
 																	 mcmId);
 			KIS.getInstance((KIS_Transferable)kis.getTransferable());
