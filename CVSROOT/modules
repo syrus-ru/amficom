@@ -124,6 +124,8 @@ scheduler_v1	AMFICOM/v1/scheduler
 agent_v1	AMFICOM/v1/agent
 #M	mcm_v1		Measurement Control Module
 mcm_v1		AMFICOM/v1/mcm
+#M	mserver_v1	Measurement Server
+mserver_v1	AMFICOM/v1/mserver
 
 database_v1	AMFICOM/v1/database
 
