@@ -7,6 +7,9 @@ CREATE TABLE KIS (
 --
  domain_id VARCHAR2(32),
 --
+ name VARCHAR2(64) NOT NULL,
+ description VARCHAR2(256),
+--
  mcm_id VARCHAR2(32) NOT NULL,
 --
  CONSTRAINT kis_pk PRIMARY KEY (id),
