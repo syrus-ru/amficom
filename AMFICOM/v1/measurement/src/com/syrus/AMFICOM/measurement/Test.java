@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.31 2004/08/17 05:28:18 bob Exp $
+ * $Id: Test.java,v 1.32 2004/08/17 09:04:29 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/08/17 05:28:18 $
+ * @version $Revision: 1.32 $, $Date: 2004/08/17 09:04:29 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -539,26 +540,11 @@ public class Test extends StorableObject {
 		else this.hashCodeGenerator.clear();
 		this.hashCodeGenerator.addObject(this.id);
 		this.hashCodeGenerator.addInt(this.timeStamps.hashCode());
-		/**
-		 * FIXME fix for analysisType.hashCode when it'd be made.
-		 */
-		this.hashCodeGenerator.addObject(this.analysisType.getId());
-		/**
-		 * FIXME fix for evaluationType.hashCode when it'd be made.
-		 */
-		this.hashCodeGenerator.addObject(this.evaluationType.getId());
-		/**
-		 * FIXME fix for measurementType.hashCode when it'd be made.
-		 */
-		this.hashCodeGenerator.addObject(this.measurementType.getId());
-		/**
-		 * FIXME fix for monitoredElement.hashCode when it'd be made.
-		 */
-		this.hashCodeGenerator.addObject(this.monitoredElement.getId());
-		/**
-		 * FIXME fix for mainMeasurementSetup.hashCode when it'd be made.
-		 */
-		this.hashCodeGenerator.addObject(this.mainMeasurementSetup.getId());
+		this.hashCodeGenerator.addObject(this.analysisType);
+		this.hashCodeGenerator.addObject(this.evaluationType);
+		this.hashCodeGenerator.addObject(this.measurementType);
+		this.hashCodeGenerator.addObject(this.monitoredElement);
+		this.hashCodeGenerator.addObject(this.mainMeasurementSetup);
 
 		this.hashCodeGenerator.addObjectArray(this.measurementSetupIds.toArray());
 		this.hashCodeGenerator.addInt(this.returnType);
@@ -569,13 +555,16 @@ public class Test extends StorableObject {
 	
 	public boolean equals(Object obj) {
 		boolean equals = (this == obj);
-		
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm:ss");
 		if ((!equals) && (obj instanceof Test)){
-			Test test = (Test)obj;			
+			Test test = (Test)obj;
+			System.out.println(sdf.format(test.getStartTime()));
+			System.out.println(sdf.format(getStartTime()));
 			if (	(test.getId().equals(getId())) &&
-					(test.getStartTime().equals(getStartTime())) &&
+					( ((test.getStartTime() == null) && (getStartTime() == null) ) 
+							|| (test.getStartTime().getTime()==getStartTime().getTime()) ) &&
 					( ((test.getEndTime() == null) && (getEndTime() == null) ) 
-							|| (test.getEndTime().equals(getEndTime())) ) &&
+							|| (test.getEndTime().getTime()==getEndTime().getTime()) ) &&
 					(test.getTemporalType().equals(getTemporalType())) &&
 					( ((test.getTemporalPatternId()==null) && (getTemporalPatternId() == null)) 
 							|| (test.getTemporalPatternId().equals(getTemporalPatternId())) ) &&

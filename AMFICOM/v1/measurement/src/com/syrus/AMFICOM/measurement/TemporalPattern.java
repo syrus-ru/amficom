@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.26 2004/08/16 14:22:05 bob Exp $
+ * $Id: TemporalPattern.java,v 1.27 2004/08/17 09:04:29 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -28,9 +29,10 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
+import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/08/16 14:22:05 $
+ * @version $Revision: 1.27 $, $Date: 2004/08/17 09:04:29 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -55,15 +57,15 @@ public class TemporalPattern extends StorableObject {
 		private static final long	DAY_LONG	= 24 * HOUR_LONG;
 		private static final long	MONTH_LONG	= 31 * DAY_LONG;
 
-		protected ArrayList			dateList;
+		protected List			dateList;
 		private TimeValue			dayOfMonth;
 		private TimeValue			dayOfWeek;
 
 		private String				description;
 
-		private ArrayList			divisorList	= new ArrayList();
+		private List			divisorList	= new ArrayList();
 		private long				endPeriod;
-		private ArrayList			endsList	= new ArrayList();
+		private List			endsList	= new ArrayList();
 		private TimeValue			hours;
 
 		private TimeValue			minutes;
@@ -518,6 +520,29 @@ public class TemporalPattern extends StorableObject {
 				System.out.println();
 			return timeValue;
 		}
+		
+		
+		public boolean equals(Object obj) {
+			boolean equals = (obj == this);
+			if ((!equals)&&(obj instanceof TimeLine)){
+				TimeLine line = (TimeLine)obj;
+				if ((line.getTemplate().equals(getTemplate()))&&
+					(line.getStartPeriod()==getStartPeriod()) &&
+					(line.getEndPeriod()==getEndPeriod()))
+					equals = true;
+			}
+			return equals;
+		}		
+		
+		public int hashCode() {
+			HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
+			hashCodeGenerator.addObject(this.template);
+			hashCodeGenerator.addLong(this.startPeriod);
+			hashCodeGenerator.addLong(this.endPeriod);
+			int result = hashCodeGenerator.getResult();
+			hashCodeGenerator = null;
+			return result;
+		}
 	}
 
 	public class TimeValue {
@@ -532,7 +557,7 @@ public class TemporalPattern extends StorableObject {
 		public String	name;
 		public String[]	names;
 		public String	pluralName;
-		public int[]	starts;
+		public int[]	starts;		
 
 		public TimeValue(String name) {
 			this.name = name;
@@ -614,6 +639,36 @@ public class TemporalPattern extends StorableObject {
 				}
 			}
 			return sbuf.toString();
+		}
+		
+		
+		public boolean equals(Object obj) {
+			boolean equals = (obj == this);
+			if ((!equals)&&(obj instanceof TimeValue)){
+				TimeValue value = (TimeValue)obj;
+				if (HashCodeGenerator.equalsArray(this.starts,value.starts) &&
+					HashCodeGenerator.equalsArray(this.ends,value.ends)&&
+					HashCodeGenerator.equalsArray(this.divisor,value.divisor) &&
+					HashCodeGenerator.equalsArray(this.host,value.host) &&
+					(this.max==value.max) &&
+					(this.min==value.min))
+					equals = true;
+			}
+			return equals;
+		}
+		
+		
+		public int hashCode() {
+			HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
+			hashCodeGenerator.addIntArray(this.starts);
+			hashCodeGenerator.addIntArray(this.ends);
+			hashCodeGenerator.addIntArray(this.divisor);
+			hashCodeGenerator.addIntArray(this.host);
+			hashCodeGenerator.addInt(this.max);
+			hashCodeGenerator.addInt(this.min);
+			int result = hashCodeGenerator.getResult();
+			hashCodeGenerator = null;
+			return result;
 		}
 	}
 
@@ -735,7 +790,8 @@ public class TemporalPattern extends StorableObject {
 		{
 			int i = 0;
 			for (Iterator it = this.templates.keySet().iterator(); it.hasNext();) {
-				TimeLine line = (TimeLine) this.templates.get(it.next());
+				Object key = it.next();
+				TimeLine line = (TimeLine) this.templates.get(key);
 				this.cronStrings[i++] = new String(line.getTemplate());
 			}
 		}
@@ -905,5 +961,28 @@ public class TemporalPattern extends StorableObject {
 	public void setDescription(String description) {
 		this.currentVersion = super.getNextVersion();
 		this.description = description;
+	}
+	
+	
+	public boolean equals(Object obj) {
+		boolean equals = (obj == this);
+		if ((!equals)&&(obj instanceof TemporalPattern)){
+			TemporalPattern pattern = (TemporalPattern)obj;
+			if ((pattern.getId().equals(getId()))&&
+				(HashCodeGenerator.equalsArray(pattern.getTimeLines().toArray(),getTimeLines().toArray())))
+				equals = true;
+		}
+		return equals;
+	}
+	
+	
+	public int hashCode() {
+		HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
+		hashCodeGenerator.addObject(this.getId());
+		hashCodeGenerator.addObjectArray(this.cronStrings);
+		hashCodeGenerator.addObject(this.getTimeLines());
+		int result = hashCodeGenerator.getResult();
+		hashCodeGenerator = null;
+		return result;	
 	}
 }

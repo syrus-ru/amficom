@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.8 2004/08/16 14:22:05 bob Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.9 2004/08/17 09:04:29 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +32,7 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.measurement.ora.CronStringArray;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/08/16 14:22:05 $
+ * @version $Revision: 1.9 $, $Date: 2004/08/17 09:04:29 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -158,8 +159,8 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		try {			
 			preparedStatement = connection.prepareStatement(sql);
 			preparedStatement.setString(1, tpIdCode);
-			preparedStatement.setDate(2, new java.sql.Date(temporalPattern.getCreated().getTime()));
-			preparedStatement.setDate(3, new java.sql.Date(temporalPattern.getModified().getTime()));
+			preparedStatement.setTimestamp(2, new Timestamp(temporalPattern.getCreated().getTime()));
+			preparedStatement.setTimestamp(3, new Timestamp(temporalPattern.getModified().getTime()));
 			preparedStatement.setString(4, temporalPattern.getCreatorId().getCode());
 			preparedStatement.setString(5, temporalPattern.getModifierId().getCode());
 			preparedStatement.setString(6, temporalPattern.getDescription());

@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.20 2004/08/16 16:09:09 bob Exp $
+ * $Id: TestDatabase.java,v 1.21 2004/08/17 09:04:29 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -36,7 +37,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/08/16 16:09:09 $
+ * @version $Revision: 1.21 $, $Date: 2004/08/17 09:04:29 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -382,8 +383,8 @@ public class TestDatabase extends StorableObjectDatabase {
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */
 			preparedStatement.setString(1, testIdCode);
-			preparedStatement.setDate(2, new java.sql.Date(test.getCreated().getTime()));
-			preparedStatement.setDate(3, new java.sql.Date(test.getModified().getTime()));
+			preparedStatement.setTimestamp(2, new Timestamp(test.getCreated().getTime()));
+			preparedStatement.setTimestamp(3, new Timestamp(test.getModified().getTime()));
 			/**
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */
@@ -393,8 +394,8 @@ public class TestDatabase extends StorableObjectDatabase {
 			  */
 			preparedStatement.setString(5, test.getModifierId().getCode());
 			preparedStatement.setInt(6, test.getTemporalType().value());
-			preparedStatement.setDate(7, (startTime != null)?(new java.sql.Date(startTime.getTime())):null);
-			preparedStatement.setDate(8, (endTime != null)?(new java.sql.Date(endTime.getTime())):null);
+			preparedStatement.setTimestamp(7, (startTime != null)?(new Timestamp(startTime.getTime())):null);
+			preparedStatement.setTimestamp(8, (endTime != null)?(new Timestamp(endTime.getTime())):null);
 			/**
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */
