@@ -1,5 +1,5 @@
 /*
- * $Id: SessionOpenCommand.java,v 1.10 2004/09/27 12:17:28 bass Exp $
+ * $Id: SessionOpenCommand.java,v 1.11 2005/02/10 13:17:07 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Report.ReportBuilder;
 import com.syrus.AMFICOM.Client.General.UI.Session.SessionOpenDialog;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
@@ -20,8 +21,8 @@ import com.syrus.AMFICOM.Client.Resource.Object.Domain;
 import java.awt.*;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2004/09/27 12:17:28 $
+ * @author $Author: stas $
+ * @version $Revision: 1.11 $, $Date: 2005/02/10 13:17:07 $
  * @module generalclient_v1
  */
 public class SessionOpenCommand extends VoidCommand
@@ -62,8 +63,38 @@ public class SessionOpenCommand extends VoidCommand
 	{
 		return new SessionOpenCommand(dispatcher, aContext);
 	}
+	
+	public void execute(){
+		if(Environment.getConnectionType().equals(Environment.CONNECTION_EMPTY))
+			executeLocal();
+		else
+			executeRemote();
+	}
+	
+	private void executeLocal()
+	{
+		SessionInterface ssi = aContext.getSessionInterface().OpenSession();
 
-	public void execute()
+		dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Открытие сессии..."));
+		dispatcher.notify(new ContextChangeEvent(aContext.getSessionInterface(), ContextChangeEvent.SESSION_CHANGING_EVENT));
+
+			final DataSourceInterface dataSource = aContext.getApplicationModel().getDataSource(aContext.getSessionInterface());
+//
+			dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Инициализация начальных данных"));
+
+			dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_PROGRESS_BAR, true));
+
+      dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_PROGRESS_BAR, false));
+
+      SessionInterface sess = dataSource.getSession();
+          
+          dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE,
+				"Сессия открыта"));
+		dispatcher.notify(new ContextChangeEvent(aContext.getSessionInterface(),
+				ContextChangeEvent.SESSION_OPENED_EVENT));
+	}
+	
+	private void executeRemote()
 	{
 		ConnectionInterface connection = ConnectionInterface.getInstance();
 		if(!connection.isConnected())
@@ -130,7 +161,7 @@ public class SessionOpenCommand extends VoidCommand
     
           dispatcher.notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Сессия открыта"));
           dispatcher.notify(new ContextChangeEvent(
-              sDialog.si,
+          		aContext.getSessionInterface(),
               ContextChangeEvent.SESSION_OPENED_EVENT));
         }
       },

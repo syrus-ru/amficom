@@ -1,5 +1,5 @@
 /*
- * $Id: RISDSessionInfo.java,v 1.21 2005/01/31 15:03:04 stas Exp $
+ * $Id: RISDSessionInfo.java,v 1.22 2005/02/10 13:17:07 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,20 @@
 
 package com.syrus.AMFICOM.Client.General;
 
+import java.io.File;
+import java.util.List;
+
 import com.syrus.AMFICOM.CORBA.AMFICOM;
 import com.syrus.AMFICOM.CORBA.Admin.AccessIdentity_Transferable;
 import com.syrus.AMFICOM.CORBA.Admin.AccessIdentity_TransferableHolder;
 import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.ClientAdministrationObjectLoader;
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.administration.XMLAdministrationObjectLoader;
+import com.syrus.AMFICOM.administration.corba.UserSort;
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.configuration.ClientConfigurationObjectLoader;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
@@ -24,10 +32,13 @@ import com.syrus.AMFICOM.corba.portable.client.ClientImpl;
 import com.syrus.AMFICOM.corba.portable.client.ClientPOATie;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClientGeneralObjectLoader;
+import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LocalIdentifierGeneratorServer;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.XMLGeneralObjectLoader;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.EmptyClientMapObjectLoader;
@@ -36,13 +47,13 @@ import com.syrus.AMFICOM.mapview.EmptyClientMapViewObjectLoader;
 import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
 import com.syrus.AMFICOM.measurement.ClientMeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+import com.syrus.AMFICOM.measurement.XMLMeasurementObjectLoader;
 import com.syrus.AMFICOM.resource.EmptyClientResourceObjectLoader;
 import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 import com.syrus.io.Rewriter;
 import com.syrus.util.ClientLRUMap;
 import com.syrus.util.corba.JavaSoftORBUtil;
 import com.syrus.util.prefs.IIOPConnectionManager;
-import java.io.File;
 
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.UserException;
@@ -57,7 +68,7 @@ import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.21 $, $Date: 2005/01/31 15:03:04 $
+ * @version $Revision: 1.22 $, $Date: 2005/02/10 13:17:07 $
  * @module generalclient_v1
  */
 public final class RISDSessionInfo extends SessionInterface {
@@ -106,13 +117,11 @@ public final class RISDSessionInfo extends SessionInterface {
 	 * The client-side CORBA object.
 	 */
 	private Client client = null;
-
+	
 	/**
 	 * Конструктор - новая сессия для соединения.
 	 */
 	public RISDSessionInfo(ConnectionInterface ci) {
-		if (ci instanceof RISDConnectionInfo)
-			this.ci = (RISDConnectionInfo) ci;
 	}
 
 	/**
@@ -142,6 +151,12 @@ public final class RISDSessionInfo extends SessionInterface {
 	 * Открыть сессию с установленными для нее параметрами.
 	 */
 	public SessionInterface OpenSession() {
+		if(Environment.getConnectionType().equals(Environment.CONNECTION_EMPTY))
+			return OpenLocalSession();
+		return OpenRemoteSession();
+	}
+	
+	private SessionInterface OpenRemoteSession() {
 		try {
 			/*
 			 * параметр для возврата идентификатора сессии
@@ -235,9 +250,7 @@ public final class RISDSessionInfo extends SessionInterface {
 			final int size = 200;
 
 			ClientConfigurationObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
-//			ConfigurationStorableObjectPool.init(new ClientConfigurationObjectLoader(cmServer), clazz, size);
-			File configPath = new File("/catalog");
-			ConfigurationStorableObjectPool.init(new XMLConfigurationObjectLoader(configPath), clazz, size);
+			ConfigurationStorableObjectPool.init(new ClientConfigurationObjectLoader(cmServer), clazz, size);
 
 			ClientMeasurementObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
 			MeasurementStorableObjectPool.init(new ClientMeasurementObjectLoader(cmServer), clazz, size);
@@ -254,8 +267,8 @@ public final class RISDSessionInfo extends SessionInterface {
 
 			ResourceStorableObjectPool.init(new EmptyClientResourceObjectLoader(), clazz, size);
 
-//			IdentifierPool.init(cmServer);
-			IdentifierPool.init(new LocalIdentifierGeneratorServer());
+			IdentifierPool.init(cmServer);
+//			IdentifierPool.init(new LocalIdentifierGeneratorServer());
 
 			System.err.println("domainId: " + this.accessIdentifier.domain_id.identifier_string);
 			System.err.println("sessionId: " + this.accessIdentifier.session_id.identifier_string);
@@ -297,7 +310,96 @@ public final class RISDSessionInfo extends SessionInterface {
 			return null;
 		}
 	}
+	
+	
+	private SessionInterface OpenLocalSession() {
+		
+			final Class clazz = ClientLRUMap.class;
+			final int size = 200;
 
+			ClientConfigurationObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
+			File configPath = new File("/catalog");
+			ConfigurationStorableObjectPool.init(new XMLConfigurationObjectLoader(configPath), clazz, size);
+
+			ClientMeasurementObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
+			MeasurementStorableObjectPool.init(new XMLMeasurementObjectLoader(configPath), clazz, size);
+
+			ClientAdministrationObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
+			AdministrationStorableObjectPool.init(new XMLAdministrationObjectLoader(configPath), clazz, size);
+
+			ClientGeneralObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
+			GeneralStorableObjectPool.init(new XMLGeneralObjectLoader(configPath), clazz, size);
+
+			MapStorableObjectPool.init(new EmptyClientMapObjectLoader(), clazz, size);
+
+			MapViewStorableObjectPool.init(new EmptyClientMapViewObjectLoader(), clazz, size);
+
+			ResourceStorableObjectPool.init(new EmptyClientResourceObjectLoader(), clazz, size);
+
+			IdentifierPool.init(new LocalIdentifierGeneratorServer());
+
+			try {
+				EquivalentCondition condition = new EquivalentCondition(ObjectEntities.USER_ENTITY_CODE);
+				List users = AdministrationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				User user;
+				if (users.isEmpty()) {
+					user = User.createInstance(new Identifier("User_0"), "sys", UserSort.USER_SORT_REGULAR, "sysuser", "");	
+					AdministrationStorableObjectPool.putStorableObject(user);
+					AdministrationStorableObjectPool.flush(true);
+
+				}
+				else {
+					user = (User)users.get(0);
+				}
+				condition = new EquivalentCondition(ObjectEntities.DOMAIN_ENTITY_CODE);
+				List domains = AdministrationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				Domain domain;
+				if (domains.isEmpty()) {
+					domain = Domain.createInstance(user.getId(), new Identifier("Domain_0"), "LocalDomain", "");	
+					AdministrationStorableObjectPool.putStorableObject(domain);
+					AdministrationStorableObjectPool.flush(true);
+				}
+				else {
+					domain = (Domain)domains.get(0);
+				}
+
+				this.domainId = domain.getId();
+				this.userId = user.getId();
+				
+			this.LogonTime = System.currentTimeMillis();
+			this.session_state = SESSION_OPENED;
+			this.accessIdentity = new AccessIdentity_Transferable(
+					this.LogonTime,
+					user.getName(),
+					this.userId.getIdentifierString(),
+					"Null_0",
+					this.domainId.getIdentifierString());
+
+			this.accessIdentifier = new AccessIdentifier_Transferable(
+					this.LogonTime,
+					(Identifier_Transferable)this.domainId.getTransferable(),
+					(Identifier_Transferable)this.userId.getTransferable(),
+					new Identifier_Transferable("Null_0"));
+
+
+			System.err.println("domainId: " + this.accessIdentifier.domain_id.identifier_string);
+			System.err.println("sessionId: " + this.accessIdentifier.session_id.identifier_string);
+			System.err.println("started: " + new java.util.Date(this.accessIdentifier.started));
+			System.err.println("userId: " + this.accessIdentifier.user_id.identifier_string);
+			
+			add(this);
+			setActiveSession(this);
+			
+			} 
+			catch (ApplicationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			return this;
+	}
+
+	
 	/**
 	 * Закрыть сессию.
 	 */
@@ -310,6 +412,11 @@ public final class RISDSessionInfo extends SessionInterface {
 			 * @todo Later, show a confirmation dialog.
 			 */
 			try {
+				GeneralStorableObjectPool.flush(true);
+			} catch (ApplicationException ae) {
+				ae.printStackTrace();
+			}
+			try {
 				MeasurementStorableObjectPool.flush(true);
 			} catch (ApplicationException ae) {
 				ae.printStackTrace();
@@ -319,15 +426,18 @@ public final class RISDSessionInfo extends SessionInterface {
 			} catch (ApplicationException ae) {
 				ae.printStackTrace();
 			}
-			try {
-				ci.getServer().Logoff(accessIdentity);
-			} catch (Exception e) {
-				e.printStackTrace();
+			if(!Environment.getConnectionType().equals(Environment.CONNECTION_EMPTY))
+			{
+				try {
+					ci.getServer().Logoff(accessIdentity);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				try {
+					clientShutdown();
+				} catch (UserException ue) {
+					ue.printStackTrace();
 			}
-			try {
-				clientShutdown();
-			} catch (UserException ue) {
-				ue.printStackTrace();
 			}
 		}
 		session_state = SESSION_CLOSED;
@@ -421,6 +531,7 @@ public final class RISDSessionInfo extends SessionInterface {
 		}
 	}
 
+
 	/**
 	 * Getter for {@link #accessIdentity} property.
 	 * @see #accessIdentity
@@ -485,7 +596,7 @@ public final class RISDSessionInfo extends SessionInterface {
 	}
 
 	public ConnectionInterface getConnectionInterface() {
-		return ci;
+		return null;
 	}
 
 	/**
