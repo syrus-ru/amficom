@@ -99,7 +99,7 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 		buttonSessionOpen.setText("");
 		buttonSessionOpen.setMaximumSize(buttonSize);
 		buttonSessionOpen.setPreferredSize(buttonSize);
-		buttonSessionOpen.setToolTipText(LangModelMain.ToolTip("menuSessionNew"));
+		buttonSessionOpen.setToolTipText(LangModelMain.getString("menuSessionNew"));
 		buttonSessionOpen.setName("menuSessionNew");
 		buttonSessionOpen.addActionListener(actionAdapter);
 
@@ -111,7 +111,7 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 		buttonSessionClose.setText("");
 		buttonSessionClose.setMaximumSize(buttonSize);
 		buttonSessionClose.setPreferredSize(buttonSize);
-		buttonSessionClose.setToolTipText(LangModelMain.ToolTip("menuSessionClose"));
+		buttonSessionClose.setToolTipText(LangModelMain.getString("menuSessionClose"));
 		buttonSessionClose.setName("menuSessionClose");
 		buttonSessionClose.addActionListener(actionAdapter);
 
@@ -123,7 +123,7 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 		buttonViewPanel.setText("");
 		buttonViewPanel.setMaximumSize(buttonSize);
 		buttonViewPanel.setPreferredSize(buttonSize);
-		buttonViewPanel.setToolTipText(LangModelMain.ToolTip("menuViewPanel"));
+		buttonViewPanel.setToolTipText(LangModelMain.getString("menuViewPanel"));
 		buttonViewPanel.setName("menuViewPanel");
 		buttonViewPanel.addActionListener(actionAdapter);
 
@@ -135,7 +135,7 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 		buttonAdmin.setText("");
 		buttonAdmin.setMaximumSize(buttonSize);
 		buttonAdmin.setPreferredSize(buttonSize);
-		buttonAdmin.setToolTipText(LangModelMain.ToolTip("menuToolsAdmin"));
+		buttonAdmin.setToolTipText(LangModelMain.getString("menuToolsAdmin"));
 		buttonAdmin.setName("menuToolsAdmin");
 		buttonAdmin.addActionListener(actionAdapter);
 
@@ -147,7 +147,7 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 		buttonConfig.setText("");
 		buttonConfig.setMaximumSize(buttonSize);
 		buttonConfig.setPreferredSize(buttonSize);
-		buttonConfig.setToolTipText(LangModelMain.ToolTip("menuToolsConfig"));
+		buttonConfig.setToolTipText(LangModelMain.getString("menuToolsConfig"));
 		buttonConfig.setName("menuToolsConfig");
 		buttonConfig.addActionListener(actionAdapter);
 
@@ -159,7 +159,7 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 		buttonComponents.setText("");
 		buttonComponents.setMaximumSize(buttonSize);
 		buttonComponents.setPreferredSize(buttonSize);
-		buttonComponents.setToolTipText(LangModelMain.ToolTip("menuToolsComponents"));
+		buttonComponents.setToolTipText(LangModelMain.getString("menuToolsComponents"));
 		buttonComponents.setName("menuToolsComponents");
 		buttonComponents.addActionListener(actionAdapter);
 
@@ -171,7 +171,7 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 		buttonScheme.setText("");
 		buttonScheme.setMaximumSize(buttonSize);
 		buttonScheme.setPreferredSize(buttonSize);
-		buttonScheme.setToolTipText(LangModelMain.ToolTip("menuToolsScheme"));
+		buttonScheme.setToolTipText(LangModelMain.getString("menuToolsScheme"));
 		buttonScheme.setName("menuToolsScheme");
 		buttonScheme.addActionListener(actionAdapter);
 
@@ -183,7 +183,7 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 		buttonMap.setText("");
 		buttonMap.setMaximumSize(buttonSize);
 		buttonMap.setPreferredSize(buttonSize);
-		buttonMap.setToolTipText(LangModelMain.ToolTip("menuToolsMap"));
+		buttonMap.setToolTipText(LangModelMain.getString("menuToolsMap"));
 		buttonMap.setName("menuToolsMap");
 		buttonMap.addActionListener(actionAdapter);
 
@@ -195,7 +195,7 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 		buttonTrace.setText("");
 		buttonTrace.setMaximumSize(buttonSize);
 		buttonTrace.setPreferredSize(buttonSize);
-		buttonTrace.setToolTipText(LangModelMain.ToolTip("menuToolsTrace"));
+		buttonTrace.setToolTipText(LangModelMain.getString("menuToolsTrace"));
 		buttonTrace.setName("menuToolsTrace");
 		buttonTrace.addActionListener(actionAdapter);
 
@@ -207,7 +207,7 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 		buttonSchedule.setText("");
 		buttonSchedule.setMaximumSize(buttonSize);
 		buttonSchedule.setPreferredSize(buttonSize);
-		buttonSchedule.setToolTipText(LangModelMain.ToolTip("menuToolsSchedule"));
+		buttonSchedule.setToolTipText(LangModelMain.getString("menuToolsSchedule"));
 		buttonSchedule.setName("menuToolsSchedule");
 		buttonSchedule.addActionListener(actionAdapter);
 
@@ -219,7 +219,7 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 		buttonSurvey.setText("");
 		buttonSurvey.setMaximumSize(buttonSize);
 		buttonSurvey.setPreferredSize(buttonSize);
-		buttonSurvey.setToolTipText(LangModelMain.ToolTip("menuToolsSurvey"));
+		buttonSurvey.setToolTipText(LangModelMain.getString("menuToolsSurvey"));
 		buttonSurvey.setName("menuToolsSurvey");
 		buttonSurvey.addActionListener(actionAdapter);
 
@@ -231,7 +231,7 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 		buttonModel.setText("");
 		buttonModel.setMaximumSize(buttonSize);
 		buttonModel.setPreferredSize(buttonSize);
-		buttonModel.setToolTipText(LangModelMain.ToolTip("menuToolsModel"));
+		buttonModel.setToolTipText(LangModelMain.getString("menuToolsModel"));
 		buttonModel.setName("menuToolsModel");
 		buttonModel.addActionListener(actionAdapter);
 
@@ -243,7 +243,7 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 		buttonMonitor.setText("");
 		buttonMonitor.setMaximumSize(buttonSize);
 		buttonMonitor.setPreferredSize(buttonSize);
-		buttonMonitor.setToolTipText(LangModelMain.ToolTip("menuToolsMonitor"));
+		buttonMonitor.setToolTipText(LangModelMain.getString("menuToolsMonitor"));
 		buttonMonitor.setName("menuToolsMonitor");
 		buttonMonitor.addActionListener(actionAdapter);
 
@@ -255,7 +255,7 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 		buttonAnalyse.setText("");
 		buttonAnalyse.setMaximumSize(buttonSize);
 		buttonAnalyse.setPreferredSize(buttonSize);
-		buttonAnalyse.setToolTipText(LangModelMain.ToolTip("menuToolsAnalyse"));
+		buttonAnalyse.setToolTipText(LangModelMain.getString("menuToolsAnalyse"));
 		buttonAnalyse.setName("menuToolsAnalyse");
 		buttonAnalyse.addActionListener(actionAdapter);
 
@@ -267,7 +267,7 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 		buttonNorms.setText("");
 		buttonNorms.setMaximumSize(buttonSize);
 		buttonNorms.setPreferredSize(buttonSize);
-		buttonNorms.setToolTipText(LangModelMain.ToolTip("menuToolsNorms"));
+		buttonNorms.setToolTipText(LangModelMain.getString("menuToolsNorms"));
 		buttonNorms.setName("menuToolsNorms");
 		buttonNorms.addActionListener(actionAdapter);
 
@@ -279,7 +279,7 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 		buttonMaintain.setText("");
 		buttonMaintain.setMaximumSize(buttonSize);
 		buttonMaintain.setPreferredSize(buttonSize);
-		buttonMaintain.setToolTipText(LangModelMain.ToolTip("menuToolsMaintain"));
+		buttonMaintain.setToolTipText(LangModelMain.getString("menuToolsMaintain"));
 		buttonMaintain.setName("menuToolsMaintain");
 		buttonMaintain.addActionListener(actionAdapter);
 
@@ -291,7 +291,7 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 		buttonPrognosis.setText("");
 		buttonPrognosis.setMaximumSize(buttonSize);
 		buttonPrognosis.setPreferredSize(buttonSize);
-		buttonPrognosis.setToolTipText(LangModelMain.ToolTip("menuToolsPrognosis"));
+		buttonPrognosis.setToolTipText(LangModelMain.getString("menuToolsPrognosis"));
 		buttonPrognosis.setName("menuToolsPrognosis");
 		buttonPrognosis.addActionListener(actionAdapter);
 
@@ -303,7 +303,7 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 		buttonReportBuilder.setText("");
 		buttonReportBuilder.setMaximumSize(buttonSize);
 		buttonReportBuilder.setPreferredSize(buttonSize);
-		buttonReportBuilder.setToolTipText(LangModelMain.ToolTip("menuToolsReportBuilder"));
+		buttonReportBuilder.setToolTipText(LangModelMain.getString("menuToolsReportBuilder"));
 		buttonReportBuilder.setName("menuToolsReportBuilder");
 		buttonReportBuilder.addActionListener(actionAdapter);
 
@@ -315,7 +315,7 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 		buttonHelp.setText("");
 		buttonHelp.setMaximumSize(buttonSize);
 		buttonHelp.setPreferredSize(buttonSize);
-		buttonHelp.setToolTipText(LangModelMain.ToolTip("menuHelpAbout"));
+		buttonHelp.setToolTipText(LangModelMain.getString("menuHelpAbout"));
 		buttonHelp.setName("menuHelpAbout");
 		buttonHelp.addActionListener(actionAdapter);
 

@@ -132,7 +132,7 @@ public class StarterPanel
 		labelAdmin.setText("");
 		labelAdmin.setMaximumSize(buttonSize);
 		labelAdmin.setPreferredSize(buttonSize);
-		labelAdmin.setToolTipText(LangModelMain.ToolTip("menuToolsAdmin"));
+		labelAdmin.setToolTipText(LangModelMain.getString("menuToolsAdmin"));
 		labelAdmin.setName("menuToolsAdmin");
 		labelAdmin.addMouseListener(this);
 		labelAdmin.setBorder(normalBorder);
@@ -145,7 +145,7 @@ public class StarterPanel
 		labelConfig.setText("");
 		labelConfig.setMaximumSize(buttonSize);
 		labelConfig.setPreferredSize(buttonSize);
-		labelConfig.setToolTipText(LangModelMain.ToolTip("menuToolsConfig"));
+		labelConfig.setToolTipText(LangModelMain.getString("menuToolsConfig"));
 		labelConfig.setName("menuToolsConfig");
 		labelConfig.addMouseListener(this);
 		labelConfig.setBorder(normalBorder);
@@ -158,7 +158,7 @@ public class StarterPanel
 		labelComponents.setText("");
 		labelComponents.setMaximumSize(buttonSize);
 		labelComponents.setPreferredSize(buttonSize);
-		labelComponents.setToolTipText(LangModelMain.ToolTip("menuToolsComponents"));
+		labelComponents.setToolTipText(LangModelMain.getString("menuToolsComponents"));
 		labelComponents.setName("menuToolsComponents");
 		labelComponents.addMouseListener(this);
 		labelComponents.setBorder(normalBorder);
@@ -171,7 +171,7 @@ public class StarterPanel
 		labelScheme.setText("");
 		labelScheme.setMaximumSize(buttonSize);
 		labelScheme.setPreferredSize(buttonSize);
-		labelScheme.setToolTipText(LangModelMain.ToolTip("menuToolsScheme"));
+		labelScheme.setToolTipText(LangModelMain.getString("menuToolsScheme"));
 		labelScheme.setName("menuToolsScheme");
 		labelScheme.addMouseListener(this);
 		labelScheme.setBorder(normalBorder);
@@ -184,7 +184,7 @@ public class StarterPanel
 		labelMap.setText("");
 		labelMap.setMaximumSize(buttonSize);
 		labelMap.setPreferredSize(buttonSize);
-		labelMap.setToolTipText(LangModelMain.ToolTip("menuToolsMap"));
+		labelMap.setToolTipText(LangModelMain.getString("menuToolsMap"));
 		labelMap.setName("menuToolsMap");
 		labelMap.addMouseListener(this);
 		labelMap.setBorder(normalBorder);
@@ -197,7 +197,7 @@ public class StarterPanel
 		labelTrace.setText("");
 		labelTrace.setMaximumSize(buttonSize);
 		labelTrace.setPreferredSize(buttonSize);
-		labelTrace.setToolTipText(LangModelMain.ToolTip("menuToolsTrace"));
+		labelTrace.setToolTipText(LangModelMain.getString("menuToolsTrace"));
 		labelTrace.setName("menuToolsTrace");
 		labelTrace.addMouseListener(this);
 		labelTrace.setBorder(normalBorder);
@@ -210,7 +210,7 @@ public class StarterPanel
 		labelSchedule.setText("");
 		labelSchedule.setMaximumSize(buttonSize);
 		labelSchedule.setPreferredSize(buttonSize);
-		labelSchedule.setToolTipText(LangModelMain.ToolTip("menuToolsSchedule"));
+		labelSchedule.setToolTipText(LangModelMain.getString("menuToolsSchedule"));
 		labelSchedule.setName("menuToolsSchedule");
 		labelSchedule.addMouseListener(this);
 		labelSchedule.setBorder(normalBorder);
@@ -223,7 +223,7 @@ public class StarterPanel
 		labelSurvey.setText("");
 		labelSurvey.setMaximumSize(buttonSize);
 		labelSurvey.setPreferredSize(buttonSize);
-		labelSurvey.setToolTipText(LangModelMain.ToolTip("menuToolsSurvey"));
+		labelSurvey.setToolTipText(LangModelMain.getString("menuToolsSurvey"));
 		labelSurvey.setName("menuToolsSurvey");
 		labelSurvey.addMouseListener(this);
 		labelSurvey.setBorder(normalBorder);
@@ -236,7 +236,7 @@ public class StarterPanel
 		labelModel.setText("");
 		labelModel.setMaximumSize(buttonSize);
 		labelModel.setPreferredSize(buttonSize);
-		labelModel.setToolTipText(LangModelMain.ToolTip("menuToolsModel"));
+		labelModel.setToolTipText(LangModelMain.getString("menuToolsModel"));
 		labelModel.setName("menuToolsModel");
 		labelModel.addMouseListener(this);
 		labelModel.setBorder(normalBorder);
@@ -249,7 +249,7 @@ public class StarterPanel
 		labelMonitor.setText("");
 		labelMonitor.setMaximumSize(buttonSize);
 		labelMonitor.setPreferredSize(buttonSize);
-		labelMonitor.setToolTipText(LangModelMain.ToolTip("menuToolsMonitor"));
+		labelMonitor.setToolTipText(LangModelMain.getString("menuToolsMonitor"));
 		labelMonitor.setName("menuToolsMonitor");
 		labelMonitor.addMouseListener(this);
 		labelMonitor.setBorder(normalBorder);
@@ -262,7 +262,7 @@ public class StarterPanel
 		labelAnalyse.setText("");
 		labelAnalyse.setMaximumSize(buttonSize);
 		labelAnalyse.setPreferredSize(buttonSize);
-		labelAnalyse.setToolTipText(LangModelMain.ToolTip("menuToolsAnalyse"));
+		labelAnalyse.setToolTipText(LangModelMain.getString("menuToolsAnalyse"));
 		labelAnalyse.setName("menuToolsAnalyse");
 		labelAnalyse.addMouseListener(this);
 		labelAnalyse.setBorder(normalBorder);
@@ -275,7 +275,7 @@ public class StarterPanel
 		labelNorms.setText("");
 		labelNorms.setMaximumSize(buttonSize);
 		labelNorms.setPreferredSize(buttonSize);
-		labelNorms.setToolTipText(LangModelMain.ToolTip("menuToolsNorms"));
+		labelNorms.setToolTipText(LangModelMain.getString("menuToolsNorms"));
 		labelNorms.setName("menuToolsNorms");
 		labelNorms.addMouseListener(this);
 		labelNorms.setBorder(normalBorder);
@@ -288,7 +288,7 @@ public class StarterPanel
 		labelMaintain.setText("");
 		labelMaintain.setMaximumSize(buttonSize);
 		labelMaintain.setPreferredSize(buttonSize);
-		labelMaintain.setToolTipText(LangModelMain.ToolTip("menuToolsMaintain"));
+		labelMaintain.setToolTipText(LangModelMain.getString("menuToolsMaintain"));
 		labelMaintain.setName("menuToolsMaintain");
 		labelMaintain.addMouseListener(this);
 		labelMaintain.setBorder(normalBorder);
@@ -301,7 +301,7 @@ public class StarterPanel
 		labelPrognosis.setText("");
 		labelPrognosis.setMaximumSize(buttonSize);
 		labelPrognosis.setPreferredSize(buttonSize);
-		labelPrognosis.setToolTipText(LangModelMain.ToolTip("menuToolsPrognosis"));
+		labelPrognosis.setToolTipText(LangModelMain.getString("menuToolsPrognosis"));
 		labelPrognosis.setName("menuToolsPrognosis");
 		labelPrognosis.addMouseListener(this);
 		labelPrognosis.setBorder(normalBorder);
@@ -314,7 +314,7 @@ public class StarterPanel
 		labelReportBuilder.setText("");
 		labelReportBuilder.setMaximumSize(buttonSize);
 		labelReportBuilder.setPreferredSize(buttonSize);
-		labelReportBuilder.setToolTipText(LangModelMain.ToolTip("menuToolsReportBuilder"));
+		labelReportBuilder.setToolTipText(LangModelMain.getString("menuToolsReportBuilder"));
 		labelReportBuilder.setName("menuToolsReportBuilder");
 		labelReportBuilder.addMouseListener(this);
 		labelReportBuilder.setBorder(normalBorder);

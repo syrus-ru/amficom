@@ -111,7 +111,7 @@ public class StarterFrame extends JFrame implements OperationListener
 	{
 		this.getContentPane().setLayout(borderLayout1);
 		this.setSize(new Dimension(530, 400));
-		this.setTitle(LangModelMain.String("AppTitle"));
+		this.setTitle(LangModelMain.getString("AppTitle"));
 		this.addComponentListener(new StarterFrame_this_componentAdapter(this));
 		this.addWindowListener(new java.awt.event.WindowAdapter()
 		{
@@ -163,10 +163,10 @@ public class StarterFrame extends JFrame implements OperationListener
     statusBar.setWidth("user", 80);
     statusBar.setWidth("time", 50);
 
-		statusBar.setText("status", LangModelMain.String("statusReady"));
-		statusBar.setText("server", LangModelMain.String("statusNoConnection"));
-		statusBar.setText("session", LangModelMain.String("statusNoSession"));
-		statusBar.setText("user", LangModelMain.String("statusNoUser"));
+		statusBar.setText("status", LangModelMain.getString("statusReady"));
+		statusBar.setText("server", LangModelMain.getString("statusNoConnection"));
+		statusBar.setText("session", LangModelMain.getString("statusNoSession"));
+		statusBar.setText("user", LangModelMain.getString("statusNoUser"));
 		statusBar.setText("time", " ");
 		statusBar.organize();
 		statusBar.setDispatcher(Environment.the_dispatcher);
@@ -198,21 +198,21 @@ public class StarterFrame extends JFrame implements OperationListener
 
 		aModel.setCommand("menuViewPanel", new ViewPanelCommand(internal_dispatcher));
 
-		aModel.setCommand("menuToolsAdmin", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Administrate.Administrate", LangModelMain.Text("menuToolsAdmin")));
-		aModel.setCommand("menuToolsConfig", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Configure.Configure", LangModelMain.Text("menuToolsConfig")));
-		aModel.setCommand("menuToolsComponents", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Schematics.Elements.ElementsEditor", LangModelMain.Text("menuToolsComponents")));
-		aModel.setCommand("menuToolsScheme", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Schematics.Scheme.SchemeEditor", LangModelMain.Text("menuToolsScheme")));
-		aModel.setCommand("menuToolsMap", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Map.Editor.MapEditor", LangModelMain.Text("menuToolsMap")));
-		aModel.setCommand("menuToolsTrace", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Optimize.Optimize", LangModelMain.Text("menuToolsTrace")));
-		aModel.setCommand("menuToolsSchedule", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Schedule.Schedule", LangModelMain.Text("menuToolsSchedule")));
-		aModel.setCommand("menuToolsSurvey", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Survey.Survey", LangModelMain.Text("menuToolsSurvey")));
-		aModel.setCommand("menuToolsModel", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Model.Model", LangModelMain.Text("menuToolsModel")));
-		aModel.setCommand("menuToolsMonitor", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Analysis.Reflectometry.Analyse", LangModelMain.Text("menuToolsMonitor")));
-		aModel.setCommand("menuToolsAnalyse", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Analysis.Reflectometry.AnalyseExt", LangModelMain.Text("menuToolsAnalyse")));
-		aModel.setCommand("menuToolsNorms", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Analysis.Reflectometry.Evaluation", LangModelMain.Text("menuToolsNorms")));
-		aModel.setCommand("menuToolsPrognosis", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Prediction.Prediction", LangModelMain.Text("menuToolsPrognosis")));
-		aModel.setCommand("menuToolsMaintain", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Maintenance.Maintenance", LangModelMain.Text("menuToolsMaintain")));
-		aModel.setCommand("menuToolsReportBuilder", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.ReportBuilder.ReportMain", LangModelMain.Text("menuToolsReportBuilder")));
+		aModel.setCommand("menuToolsAdmin", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Administrate.Administrate", LangModelMain.getString("menuToolsAdmin")));
+		aModel.setCommand("menuToolsConfig", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Configure.Configure", LangModelMain.getString("menuToolsConfig")));
+		aModel.setCommand("menuToolsComponents", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Schematics.Elements.ElementsEditor", LangModelMain.getString("menuToolsComponents")));
+		aModel.setCommand("menuToolsScheme", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Schematics.Scheme.SchemeEditor", LangModelMain.getString("menuToolsScheme")));
+		aModel.setCommand("menuToolsMap", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Map.Editor.MapEditor", LangModelMain.getString("menuToolsMap")));
+		aModel.setCommand("menuToolsTrace", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Optimize.Optimize", LangModelMain.getString("menuToolsTrace")));
+		aModel.setCommand("menuToolsSchedule", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Schedule.Schedule", LangModelMain.getString("menuToolsSchedule")));
+		aModel.setCommand("menuToolsSurvey", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Survey.Survey", LangModelMain.getString("menuToolsSurvey")));
+		aModel.setCommand("menuToolsModel", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Model.Model", LangModelMain.getString("menuToolsModel")));
+		aModel.setCommand("menuToolsMonitor", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Analysis.Reflectometry.Analyse", LangModelMain.getString("menuToolsMonitor")));
+		aModel.setCommand("menuToolsAnalyse", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Analysis.Reflectometry.AnalyseExt", LangModelMain.getString("menuToolsAnalyse")));
+		aModel.setCommand("menuToolsNorms", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Analysis.Reflectometry.Evaluation", LangModelMain.getString("menuToolsNorms")));
+		aModel.setCommand("menuToolsPrognosis", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Prediction.Prediction", LangModelMain.getString("menuToolsPrognosis")));
+		aModel.setCommand("menuToolsMaintain", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.Maintenance.Maintenance", LangModelMain.getString("menuToolsMaintain")));
+		aModel.setCommand("menuToolsReportBuilder", new ToolStartCommand(internal_dispatcher, "com.syrus.AMFICOM.Client.ReportBuilder.ReportMain", LangModelMain.getString("menuToolsReportBuilder")));
 
 		aModel.setCommand("menuHelpAbout", new HelpAboutCommand(this));
 
@@ -372,7 +372,7 @@ public class StarterFrame extends JFrame implements OperationListener
 			}
 			if(cce.SESSION_CHANGING)
 			{
-				statusBar.setText("status", LangModelMain.String("statusSettingSession"));
+				statusBar.setText("status", LangModelMain.getString("statusSettingSession"));
 			}
 			if(cce.SESSION_CHANGED)
 			{

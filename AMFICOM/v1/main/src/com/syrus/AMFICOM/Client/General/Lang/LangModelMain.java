@@ -48,7 +48,7 @@ import java.text.DateFormatSymbols;
 
 import com.syrus.AMFICOM.Client.General.Lang.*;
 
-public class LangModelMain extends LangModel
+public class LangModelMain
 {
 	static public DateFormatSymbols symbols;
 
@@ -56,7 +56,7 @@ public class LangModelMain extends LangModel
 			"com.syrus.AMFICOM.Client.General.Lang.main";
 
 	private static final ResourceBundle	RESOURCE_BUNDLE = 
-			ResourceBundle.getBundle(getBundleName());
+			ResourceBundle.getBundle(BUNDLE_NAME);
 
 	protected LangModelMain()
 	{
