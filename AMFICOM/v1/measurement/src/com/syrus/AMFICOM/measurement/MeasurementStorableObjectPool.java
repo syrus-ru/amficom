@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.74 2005/03/29 12:08:55 arseniy Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.75 2005/03/31 16:27:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Hashtable;
 
@@ -24,8 +23,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2005/03/29 12:08:55 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.75 $, $Date: 2005/03/31 16:27:21 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -150,15 +149,15 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		return instance.getStorableObjectImpl(objectId, useLoader);
 	}
 
-	public static Collection getStorableObjects(Collection objectIds, boolean useLoader) throws ApplicationException {
+	public static java.util.Set getStorableObjects(java.util.Set objectIds, boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectsImpl(objectIds, useLoader);
 	}
 
-	public static Collection getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
+	public static java.util.Set getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectsByConditionImpl(condition, useLoader);
 	}
 
-	public static Collection getStorableObjectsByConditionButIds(Collection ids, StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
+	public static java.util.Set getStorableObjectsByConditionButIds(java.util.Set ids, StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
 	}
 
@@ -211,8 +210,8 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		return storableObject;
 	}
 
-	protected Collection loadStorableObjects(Short entityCode, Collection ids) throws ApplicationException {
-		Collection storableObjects;
+	protected java.util.Set loadStorableObjects(Short entityCode, java.util.Set ids) throws ApplicationException {
+		java.util.Set storableObjects;
 		switch (entityCode.shortValue()) {
 			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
 				storableObjects = mObjectLoader.loadMeasurementTypes(ids);
@@ -260,8 +259,8 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		return storableObjects;
 	}
 
-	protected Collection loadStorableObjectsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
-		Collection loadedCollection = null;
+	protected java.util.Set loadStorableObjectsButIds(StorableObjectCondition condition, java.util.Set ids) throws ApplicationException {
+		java.util.Set loadedCollection = null;
 		short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
 			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
@@ -310,7 +309,7 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		return loadedCollection;
 	}
 
-	protected void saveStorableObjects(short code, Collection list, boolean force) throws ApplicationException {
+	protected void saveStorableObjects(short code, java.util.Set list, boolean force) throws ApplicationException {
 		if (!list.isEmpty()) {
 			boolean alone = (list.size() == 1);			
 
@@ -408,7 +407,7 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		instance.deleteImpl(id);
 	}
 
-	public static void delete(Collection objects) throws IllegalDataException {
+	public static void delete(java.util.Set objects) throws IllegalDataException {
 		instance.deleteImpl(objects);
 	}
 
@@ -416,7 +415,7 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		mObjectLoader.delete(id);
 	}
 
-	protected void deleteStorableObjects(Collection objects) throws IllegalDataException {
+	protected void deleteStorableObjects(java.util.Set objects) throws IllegalDataException {
 		mObjectLoader.delete(objects);
 	}
 

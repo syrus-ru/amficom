@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMapSaver.java,v 1.8 2005/03/04 08:05:49 bass Exp $
+ * $Id: LRUMapSaver.java,v 1.9 2005/03/31 16:27:02 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,17 +15,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Set;
 
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/03/04 08:05:49 $
- * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/03/31 16:27:02 $
+ * @author $Author: bob $
  * @module util
  */
 public class LRUMapSaver {
@@ -55,7 +55,7 @@ public class LRUMapSaver {
 			tempFile = new File(saveFile.getPath() + ".swp"); //$NON-NLS-1$
 			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(tempFile));
 			Log.debugMessage("LRUMapSaver.save | Trying to save LRUMap with " + objectEntityName + " to file " + saveFile.getAbsolutePath(), Log.DEBUGLEVEL10); //$NON-NLS-1$ //$NON-NLS-2$
-			List keys = new LinkedList();
+			Set keys = new HashSet();
 			for (Iterator it = lruMap.keyIterator(); it.hasNext();) {
 				Object key = it.next();
 				keys.add(key);
@@ -87,7 +87,7 @@ public class LRUMapSaver {
 	 * @todo Consider returning an empty list instead of null. Check all
 	 *       dependent code (within workspace).
 	 */
-	public static List load(final String objectEntityName) {
+	public static Set load(final String objectEntityName) {
 		try {
 			if (pathNameOfSaveDir == null)
 				pathNameOfSaveDir = ApplicationProperties.getString(KEY_CACHE_PATH, DEFAULT_CACHE_PATH);
@@ -103,7 +103,7 @@ public class LRUMapSaver {
 				Log.errorMessage("LRUMapSaver.load | Wrong input file "+ saveFile.getAbsolutePath() + ". Loading failed"); //$NON-NLS-1$ //$NON-NLS-2$
 				return null;
 			}
-			List keys = (LinkedList) in.readObject();
+			Set keys = (HashSet) in.readObject();
 			return keys;
 		}
 		catch (FileNotFoundException fnfe) {

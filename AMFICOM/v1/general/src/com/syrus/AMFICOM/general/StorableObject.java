@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.46 2005/03/21 16:43:46 bass Exp $
+ * $Id: StorableObject.java,v 1.47 2005/03/31 16:27:13 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.general;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
@@ -24,8 +24,8 @@ import com.syrus.util.Log;
  * there can only be a single inctance of <code>StorableObject</code> with the
  * same identifier, comparison of object references (in Java terms) is enough.
  *
- * @author $Author: bass $
- * @version $Revision: 1.46 $, $Date: 2005/03/21 16:43:46 $
+ * @author $Author: bob $
+ * @version $Revision: 1.47 $, $Date: 2005/03/31 16:27:13 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -113,7 +113,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	/**
 	 * Will be overridden by descendants.
 	 */
-	public abstract List getDependencies();
+	public abstract Set getDependencies();
 
 	/**
 	 * Returns structure to be transmitted via CORBA. Should be declared

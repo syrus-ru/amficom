@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.54 2005/03/31 15:58:38 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.55 2005/03/31 16:27:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,13 +11,10 @@ package com.syrus.AMFICOM.general;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,8 +24,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/03/31 15:58:38 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.55 $, $Date: 2005/03/31 16:27:13 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -48,7 +45,7 @@ public abstract class StorableObjectPool {
 	private Map savingObjectsMap; // Map <Integer dependencyLevel, Map <Short entityCode, Collection <StorableObject> levelEntitySavingObjects > >
 	private HashSet savingObjectIds; // HashSet <Identifier>
 
-	private Collection deletedIds; // Collection <Identifier>
+	private Set deletedIds; // Collection <Identifier>
 
 	public StorableObjectPool(short selfGroupCode) {
 		this(selfGroupCode, LRUMap.class);
@@ -150,14 +147,14 @@ public abstract class StorableObjectPool {
 					+ ObjectEntities.codeToString(entityCode.shortValue()) + "' entity code: " + entityCode);
 
 		if (this.deletedIds == null)
-			this.deletedIds = Collections.synchronizedCollection(new LinkedList());
+			this.deletedIds = Collections.synchronizedSet(new HashSet());
 
 		this.deletedIds.add(id);
 		/* do not delete object immediatly, delete during flushing */
 		// this.deleteStorableObject(id);
 	}
 
-	protected synchronized void deleteImpl(final Collection objects) throws IllegalDataException {
+	protected synchronized void deleteImpl(final Set objects) throws IllegalDataException {
 		Object object;
 		Identifier id;
 		for (Iterator it = objects.iterator(); it.hasNext();) {
@@ -171,7 +168,7 @@ public abstract class StorableObjectPool {
 						+ object.getClass().getName() + " isn't Identifier or Identifiable");
 
 			if (this.deletedIds == null)
-				this.deletedIds = Collections.synchronizedCollection(new LinkedList());
+				this.deletedIds = Collections.synchronizedSet(new HashSet());
 
 			this.deletedIds.add(id);
 
@@ -191,7 +188,7 @@ public abstract class StorableObjectPool {
 
 	protected abstract void deleteStorableObject(final Identifier id) throws IllegalDataException;
 
-	protected abstract void deleteStorableObjects(final Collection objects) throws IllegalDataException;
+	protected abstract void deleteStorableObjects(final Set objects) throws IllegalDataException;
 
 	/**
 	 * This method is only invoked by this class' descendants, using their
@@ -242,7 +239,7 @@ public abstract class StorableObjectPool {
 		Integer dependencyKey;
 		Short entityKey;
 		Map levelSavingObjectsMap;
-		Collection levelEntitySavingObjects;
+		Set levelEntitySavingObjects;
 		for (Iterator levelIt = this.savingObjectsMap.keySet().iterator(); levelIt.hasNext();) {
 			dependencyKey = (Integer) levelIt.next();
 			levelSavingObjectsMap = (Map) this.savingObjectsMap.get(dependencyKey);
@@ -250,7 +247,7 @@ public abstract class StorableObjectPool {
 			if (levelSavingObjectsMap != null) {
 				for (Iterator entityIt = levelSavingObjectsMap.keySet().iterator(); entityIt.hasNext();) {
 					entityKey = (Short) entityIt.next();
-					levelEntitySavingObjects = (Collection) levelSavingObjectsMap.get(entityKey);
+					levelEntitySavingObjects = (Set) levelSavingObjectsMap.get(entityKey);
 
 					if (levelEntitySavingObjects != null)
 						this.saveStorableObjects(entityKey.shortValue(), levelEntitySavingObjects, force);
@@ -273,7 +270,7 @@ public abstract class StorableObjectPool {
 
 		this.savingObjectIds.add(id);
 
-		Collection dependencies = storableObject.getDependencies();
+		Set dependencies = storableObject.getDependencies();
 		StorableObject dependencyObject = null;
 		for (Iterator dIt = dependencies.iterator(); dIt.hasNext();) {
 			Object object = dIt.next();
@@ -299,7 +296,7 @@ public abstract class StorableObjectPool {
 				this.savingObjectsMap.put(dependencyKey, levelSavingObjectsMap);
 			}
 			Short entityKey = new Short(storableObject.getId().getMajor());
-			Collection levelEntitySavingObjects = (Collection) levelSavingObjectsMap.get(entityKey);
+			Set levelEntitySavingObjects = (Set) levelSavingObjectsMap.get(entityKey);
 			if (levelEntitySavingObjects == null) {
 				levelEntitySavingObjects = new HashSet();
 				levelSavingObjectsMap.put(entityKey, levelEntitySavingObjects);
@@ -396,7 +393,7 @@ public abstract class StorableObjectPool {
 	 * @param useLoader
 	 * @throws ApplicationException
 	 */
-	protected Collection getStorableObjectsByConditionButIdsImpl(final Collection ids,
+	protected Set getStorableObjectsByConditionButIdsImpl(final Set ids,
 			final StorableObjectCondition condition,
 			final boolean useLoader) throws ApplicationException {
 		assert ids != null : "Supply an empty list instead";
@@ -419,10 +416,10 @@ public abstract class StorableObjectPool {
 				soSet.add(storableObject);
 		}
 
-		Collection loadedList = null;
+		Set loadedList = null;
 
 		if (useLoader && condition.isNeedMore(soSet)) {
-			List idsList = new ArrayList(soSet.size());
+			Set idsList = new HashSet(soSet.size());
 			for (Iterator iter = soSet.iterator(); iter.hasNext();) {
 				StorableObject storableObject = (StorableObject) iter.next();
 				idsList.add(storableObject.getId());
@@ -463,9 +460,9 @@ public abstract class StorableObjectPool {
 		return soSet;
 	}
 
-	protected Collection getStorableObjectsByConditionImpl(	final StorableObjectCondition condition,
+	protected Set getStorableObjectsByConditionImpl(	final StorableObjectCondition condition,
 															final boolean useLoader) throws ApplicationException {
-		return this.getStorableObjectsByConditionButIdsImpl(Collections.EMPTY_LIST, condition, useLoader);
+		return this.getStorableObjectsByConditionButIdsImpl(Collections.EMPTY_SET, condition, useLoader);
 	}
 
 	/**
@@ -477,7 +474,7 @@ public abstract class StorableObjectPool {
 	 * @todo Check references within workspace, convert a run time warning (if
 	 *       objectIds is null) into a run time error.
 	 */
-	protected Collection getStorableObjectsImpl(final Collection objectIds,
+	protected Set getStorableObjectsImpl(final Set objectIds,
 												final boolean useLoader) throws ApplicationException {
 		Set list = null;
 		Map objectQueueMap = null;
@@ -502,9 +499,9 @@ public abstract class StorableObjectPool {
 					if (storableObject == null && useLoader) {
 						if (objectQueueMap == null)
 							objectQueueMap = new HashMap();
-						List objectQueue = (List) objectQueueMap.get(entityCode);
+						Set objectQueue = (Set) objectQueueMap.get(entityCode);
 						if (objectQueue == null) {
-							objectQueue = new LinkedList();
+							objectQueue = new HashSet();
 							objectQueueMap.put(entityCode, objectQueue);
 						}
 						objectQueue.add(objectId);
@@ -529,7 +526,7 @@ public abstract class StorableObjectPool {
 			for (Iterator it = objectQueueMap.keySet().iterator(); it.hasNext();) {
 				Short entityCode = (Short) it.next();
 				short code = entityCode.shortValue();
-				List objectQueue = (List) objectQueueMap.get(entityCode);
+				Set objectQueue = (Set) objectQueueMap.get(entityCode);
 				if (this.deletedIds != null) {
 					/* do not load deleted object with entityCode */
 					for (Iterator iter = this.deletedIds.iterator(); iter.hasNext();) {
@@ -538,7 +535,7 @@ public abstract class StorableObjectPool {
 							objectQueue.add(id);
 					}
 				}
-				Collection storableObjects = this.loadStorableObjects(entityCode, objectQueue);
+				Set storableObjects = this.loadStorableObjects(entityCode, objectQueue);
 				if (storableObjects != null) {
 					try {
 						for (Iterator iter = storableObjects.iterator(); iter.hasNext();) {
@@ -558,17 +555,17 @@ public abstract class StorableObjectPool {
 
 	protected abstract StorableObject loadStorableObject(final Identifier objectId) throws ApplicationException;
 
-	protected abstract Collection loadStorableObjects(	final Short entityCode,
-														final Collection ids) throws ApplicationException;
+	protected abstract Set loadStorableObjects(	final Short entityCode,
+												final Set ids) throws ApplicationException;
 
-	protected abstract Collection loadStorableObjectsButIds(final StorableObjectCondition condition,
-															final Collection ids) throws ApplicationException;
+	protected abstract Set loadStorableObjectsButIds(	final StorableObjectCondition condition,
+														final Set ids) throws ApplicationException;
 
 	protected void populatePools() {
 		try {
 			for (Iterator it = this.objectPoolMap.keySet().iterator(); it.hasNext();) {
 				Short objectEntityCode = (Short) it.next();
-				List keys = LRUMapSaver.load(ObjectEntities.codeToString(objectEntityCode));
+				Set keys = LRUMapSaver.load(ObjectEntities.codeToString(objectEntityCode));
 				if (keys != null)
 					getStorableObjectsImpl(keys, true);
 			}
@@ -636,7 +633,7 @@ public abstract class StorableObjectPool {
 					+ ObjectEntities.codeToString(entityCode) + "' entity", Log.DEBUGLEVEL08);
 
 			final Set returnedStorableObjectsIds = this.refreshStorableObjects(storableObjects);
-			Collection loadedRefreshedObjects = this.loadStorableObjects(entityCode, returnedStorableObjectsIds);
+			Set loadedRefreshedObjects = this.loadStorableObjects(entityCode, returnedStorableObjectsIds);
 			for (Iterator iter = loadedRefreshedObjects.iterator(); iter.hasNext();) {
 				try {
 					this.putStorableObjectImpl((StorableObject) iter.next());
@@ -661,7 +658,7 @@ public abstract class StorableObjectPool {
 	 * @return <code>true</code> if all entities within this list are of the
 	 *         same type, <code>false</code> otherwise.
 	 */
-	private boolean hasSingleTypeEntities(final Collection storableObjects) {
+	private boolean hasSingleTypeEntities(final Set storableObjects) {
 		/*
 		 * Nested assertions are ok.
 		 */
@@ -692,7 +689,7 @@ public abstract class StorableObjectPool {
 	 *            same type.
 	 * @return common type of storable objects supplied as <code>short</code>.
 	 */
-	protected short getEntityCodeOfStorableObjects(final Collection storableObjects) {
+	protected short getEntityCodeOfStorableObjects(final Set storableObjects) {
 		assert storableObjects.size() >= 1;
 
 		return ((StorableObject) storableObjects.iterator().next()).getId().getMajor();
@@ -711,7 +708,7 @@ public abstract class StorableObjectPool {
 	 *       them to use {@link #getEntityCodeOfStorableObjects(List)}.
 	 */
 	protected abstract void saveStorableObjects(final short entityCode,
-												final Collection storableObjects,
+												final Set storableObjects,
 												final boolean force) throws ApplicationException;
 
 	protected void serializePoolImpl() {
