@@ -42,7 +42,7 @@ public interface Command extends Cloneable
 	public static int RESULT_YES = 1;
 	public static int RESULT_NO = 2;
 	public static int RESULT_CANCEL = 3;
-
+	
 	public void execute();			// первое выполнение команды
 
 	public void undo();				// обратное выполнение - восстановление

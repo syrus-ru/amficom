@@ -1,54 +1,42 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: Заглушка для команды (пустая команда)                      * //
-// *                                                                      * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 16 jul 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMMain\com\syrus\AMFICOM\Client\    * //
-// *        General\Command\VoidCommand.java                              * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
+/**
+ * $Id: VoidCommand.java,v 1.4 2004/08/11 07:10:04 krupenn Exp $
+ *
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ Автоматизированный МногоФункциональный
+ *         Интеллектуальный Комплекс Объектного Мониторинга
+ *
+ * Платформа: java 1.4.1
+ */
 
 package com.syrus.AMFICOM.Client.General.Command;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 
+/**
+ *  Заглушка для команды (пустая команда)
+ * 
+ * 
+ * 
+ * @version $Revision: 1.4 $, $Date: 2004/08/11 07:10:04 $
+ * @module
+ * @author $Author: krupenn $
+ * @see
+ */
 public class VoidCommand implements Command
 {
-	// поле источника команды
+	protected int result = RESULT_UNSPECIFIED;
+
+	/** поле источника команды */
 	private Object source;
 
-	// у пустой команды по умолчанию нет источника
+	/** у пустой команды по умолчанию нет источника */ 
 	public VoidCommand()
 	{
 		source = new String("NULL");
 	}
 
-	// получить
+	/** получить */
 	public Object clone()
 	{
 		return new VoidCommand(source);
@@ -61,7 +49,7 @@ public class VoidCommand implements Command
 		this.source = source;
 	}
 
-	// пустая команда не выполняет никаких действий
+	/** пустая команда не выполняет никаких действий */ 
 	public void execute()
 	{
 		System.out.println("Void command executed for " + source.toString() + " - ignored");
@@ -77,7 +65,12 @@ public class VoidCommand implements Command
 	
 	public int getResult()
 	{
-		return RESULT_OK;
+		return result;
+	}
+	
+	protected void setResult(int res)
+	{
+		this.result = res;
 	}
 
 	// пустая команда не выполняет никаких действий
