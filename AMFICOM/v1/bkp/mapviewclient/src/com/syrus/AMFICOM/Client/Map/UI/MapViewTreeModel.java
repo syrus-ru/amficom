@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewTreeModel.java,v 1.5 2005/03/18 10:37:35 peskovsky Exp $
+ * $Id: MapViewTreeModel.java,v 1.6 2005/04/05 13:53:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -39,8 +39,8 @@ import javax.swing.tree.TreeModel;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/03/18 10:37:35 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.6 $, $Date: 2005/04/05 13:53:58 $
+ * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {
@@ -134,7 +134,7 @@ public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {
 		}
 		else {
 			if(this.mapView != null && this.mapView.equals(mapView)) {
-				updateTree((StorableObjectTreeNode )root);
+				updateTree((StorableObjectTreeNode )this.root);
 			}
 			else {
 				this.root = new StorableObjectTreeNode(mapView, getObjectName(mapView), mapViewIcon);
@@ -142,7 +142,7 @@ public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {
 						MapViewTreeModel.MAP_BRANCH,
 						getObjectName(MapViewTreeModel.MAP_BRANCH),
 						folderIcon);
-				((StorableObjectTreeNode )root).add(mapNode);
+				((StorableObjectTreeNode )this.root).add(mapNode);
 				mapNode.add(buildMapTree(mapView.getMap()));
 			}
 		}
@@ -328,7 +328,7 @@ public class MapViewTreeModel extends DefaultTreeModel implements TreeModel {
 			updateMapTree(mapNode);
 		else {
 			mapTopNode.remove(mapNode);
-			mapTopNode.add(buildMapTree(mapView.getMap()));
+			mapTopNode.add(buildMapTree(this.mapView.getMap()));
 		}
 	}
 
