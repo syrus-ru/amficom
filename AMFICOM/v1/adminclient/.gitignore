@@ -1,9 +1,12 @@
 classes
 docs
+images
 lib
+resources
 *.deploy
 *.jpr
 *.jpx
+*.properties
 *.tar
 *.gz
 *.swp
