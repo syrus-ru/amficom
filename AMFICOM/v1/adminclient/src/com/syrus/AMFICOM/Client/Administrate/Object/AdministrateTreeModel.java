@@ -150,9 +150,9 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
       if(s.equals(Domain.typ))
         return new ObjectResourceCatalogActionModel(
             ObjectResourceCatalogActionModel.PANEL,
-            ObjectResourceCatalogActionModel.NO_ADD_BUTTON,
+            ObjectResourceCatalogActionModel.ADD_BUTTON,
             ObjectResourceCatalogActionModel.SAVE_BUTTON,
-            ObjectResourceCatalogActionModel.NO_REMOVE_BUTTON,
+            ObjectResourceCatalogActionModel.REMOVE_BUTTON,
             ObjectResourceCatalogActionModel.PROPS_BUTTON,
             ObjectResourceCatalogActionModel.CANCEL_BUTTON);
       else
