@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.12 2005/02/21 13:39:33 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.13 2005/02/21 15:51:10 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.12 $, $Date: 2005/02/21 13:39:33 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/21 15:51:10 $
  * @module
  */
 
@@ -205,7 +205,7 @@ public class CoreAnalysisManager
 
 		// установка параметров фитировки и фитировка
 		// (с определением параметров нужных для расчета потерь и отражения)
-		//fitTrace(y, deltaX, ep, strategy, meanAttenuation[0], noiseArray); -- более не используется
+		fitTrace(y, deltaX, ep, strategy, meanAttenuation[0], noiseArray); // -- ныне используется только для формирования параметров yB, yE
 		
 		long t3 = System.currentTimeMillis();
 		//фитируем ОДНОЙ кривой
