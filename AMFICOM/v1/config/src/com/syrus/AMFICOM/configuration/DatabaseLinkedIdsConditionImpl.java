@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.4 2005/03/09 15:40:18 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.5 2005/03/10 11:44:36 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/03/09 15:40:18 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/10 11:44:36 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -60,10 +60,16 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				}
 				break;
 			case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
-				query = super.getLinkedQuery(MeasurementPortWrapper.COLUMN_KIS_ID,
-						StorableObjectWrapper.COLUMN_ID,
-						DomainMember.COLUMN_DOMAIN_ID,
-						ObjectEntities.KIS_ENTITY);
+				switch (super.condition.getLinkedEntityCode()) {
+					case ObjectEntities.KIS_ENTITY_CODE:
+						query = super.getQuery(MeasurementPortWrapper.COLUMN_KIS_ID);
+						break;
+					default:
+						query = super.getLinkedQuery(MeasurementPortWrapper.COLUMN_KIS_ID,
+								StorableObjectWrapper.COLUMN_ID,
+								DomainMember.COLUMN_DOMAIN_ID,
+								ObjectEntities.KIS_ENTITY);
+				}
 				break;
 		}
 		return query;

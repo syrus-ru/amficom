@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.12 2005/03/09 15:37:30 arseniy Exp $
+ * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.13 2005/03/10 11:44:18 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.general;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/03/09 15:37:30 $
+ * @version $Revision: 1.13 $, $Date: 2005/03/10 11:44:18 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -31,11 +31,7 @@ public abstract class AbstractDatabaseLinkedIdsCondition implements DatabaseStor
 		if (columnName == null)
 			throw new IllegalDataException("AbstractDatabaseLinkedIdsCondition.getQuery | "
 					+ ObjectEntities.codeToString(this.getEntityCode()) + " isn't supported");
-		StringBuffer buffer = new StringBuffer();
-		buffer.append(" 1=0 ");
-		buffer.append(StorableObjectDatabase.SQL_OR);
-		buffer.append(StorableObjectDatabase.idsEnumerationString(this.condition.getLinkedIds(), columnName, true));
-		return buffer.toString();
+		return StorableObjectDatabase.idsEnumerationString(this.condition.getLinkedIds(), columnName, true).toString();
 	}
 
 	protected String getLinkedQuery(final String linkedColumnIdName,
@@ -53,8 +49,6 @@ public abstract class AbstractDatabaseLinkedIdsCondition implements DatabaseStor
 									final String linkedColumnTargetName,
 									final String linkedTableName) throws IllegalDataException {
 		StringBuffer query = new StringBuffer();
-		query.append(" 1=0 ");
-		query.append(StorableObjectDatabase.SQL_OR);
 		query.append(columnName);
 		query.append(StorableObjectDatabase.SQL_IN);
 		query.append(StorableObjectDatabase.OPEN_BRACKET);
@@ -64,6 +58,7 @@ public abstract class AbstractDatabaseLinkedIdsCondition implements DatabaseStor
 		query.append(linkedTableName);
 		query.append(StorableObjectDatabase.SQL_WHERE);
 		query.append(this.getQuery(linkedColumnTargetName));
+		query.append(StorableObjectDatabase.CLOSE_BRACKET);
 		return query.toString();
 	}
 

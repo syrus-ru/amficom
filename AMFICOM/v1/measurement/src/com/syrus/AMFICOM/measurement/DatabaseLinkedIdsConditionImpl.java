@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.6 2005/02/14 11:21:55 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.7 2005/03/10 11:45:11 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/14 11:21:55 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/10 11:45:11 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -39,9 +39,13 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 					ObjectEntities.EVATYPPARTYPLINK_ENTITY));
 			break;
 		case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
-			query.append(getLinkedQuery(MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID, 
-					MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID,
-					ObjectEntities.MNTTYPPARTYPLINK_ENTITY));
+			switch (super.condition.getLinkedEntityCode()) {
+				case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
+					query.append(super.getLinkedQuery(MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID,
+							MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID,
+							ObjectEntities.MNTTYMEASPORTTYPELINK_ENTITY));
+					break;
+			}
 			break;
 		case ObjectEntities.MS_ENTITY_CODE:
 			query.append(getLinkedQuery(MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID, 

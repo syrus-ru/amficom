@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.116 2005/03/09 15:38:50 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.117 2005/03/10 11:44:18 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.116 $, $Date: 2005/03/09 15:38:50 $
+ * @version $Revision: 1.117 $, $Date: 2005/03/10 11:44:18 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -1372,9 +1372,9 @@ public abstract class StorableObjectDatabase {
 	 */
 	protected static StringBuffer idsEnumerationString(Collection objects, String idColumn, boolean inList) throws IllegalDataException {
 		if (objects == null || objects.isEmpty())
-			return null;
+			return new StringBuffer(inList ? "1=0" : "1=1");
 
-		StringBuffer stringBuffer = new StringBuffer(idColumn + (inList ? SQL_IN : SQL_NOT_IN) + OPEN_BRACKET);
+		StringBuffer stringBuffer = new StringBuffer(OPEN_BRACKET + idColumn + (inList ? SQL_IN : SQL_NOT_IN) + OPEN_BRACKET);
 
 		Object object;
 		Identifier id;
@@ -1405,11 +1405,12 @@ public abstract class StorableObjectDatabase {
 			}
 		}
 		stringBuffer.append(CLOSE_BRACKET);
+		stringBuffer.append(CLOSE_BRACKET);
 
 		return stringBuffer;
 	}
 
-	private String[] parseInsertStringValues(String insertValues, int columnCount){
+	private String[] parseInsertStringValues(String insertValues, int columnCount) {
 		int length = insertValues.length();
 		Pattern pattern = Pattern.compile("(('(''|[^'])*')|([^',\\s]+)|(\\w+\\([^)]+\\)))\\s*(,|$)");
 		Matcher matcher = pattern.matcher(insertValues);
