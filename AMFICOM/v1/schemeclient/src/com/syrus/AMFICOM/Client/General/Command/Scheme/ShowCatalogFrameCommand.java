@@ -1,5 +1,7 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
+import java.beans.PropertyVetoException;
+
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
@@ -38,13 +40,23 @@ public class ShowCatalogFrameCommand extends VoidCommand
 			catalogFrame = new ObjectResourceCatalogFrame("", aContext);
 			desktopPane.add(catalogFrame);
 
-			int w = desktopPane.getSize().width;
-			int h = desktopPane.getSize().height;
+			int w = desktopPane.getWidth();
+			int h = desktopPane.getHeight();
 			catalogFrame.setSize(3*w/5, h);
 			catalogFrame.setLocation(w/5, 0);
 		}
 		catalogFrame.setVisible(true);
-		catalogFrame.toFront();
+		if (catalogFrame.isIcon())
+		{
+			try
+			{
+				catalogFrame.setIcon(false);
+			}
+			catch (PropertyVetoException ex)
+			{
+				System.out.println(ex.getMessage());
+			}
+		}
+		catalogFrame.moveToFront();
 	}
 }
-

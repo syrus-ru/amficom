@@ -212,7 +212,7 @@ public class SchemeCableLink extends StubResource
 
 		ObjectResourceSorter sorter = getSorter();
 		sorter.setDataSet(cableThreads);
-		cableThreads = sorter.sort("num", CableThreadSorter.SORT_ASCENDING);
+		cableThreads = sorter.sort("num", ObjectResourceSorter.SORT_ASCENDING);
 	}
 
 	public Object clone(DataSourceInterface dataSource)

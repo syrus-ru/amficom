@@ -1,8 +1,11 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
+import java.beans.PropertyVetoException;
+
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+
 
 public class ShowFrameCommand extends VoidCommand
 {
@@ -25,7 +28,17 @@ public class ShowFrameCommand extends VoidCommand
 		if (frame != null)
 		{
 			frame.setVisible(true);
-			frame.toFront();
+			if (frame.isIcon())
+			{
+				try
+				{
+					frame.setIcon(false);
+				}
+				catch (PropertyVetoException ex)
+				{
+				}
+			}
+			frame.moveToFront();
 		}
 	}
 }

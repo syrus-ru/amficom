@@ -135,11 +135,17 @@ public class SchemePath extends StubResource
 
 	public boolean isElementInPath(String linkId)
 	{
-		for (Iterator it = links.iterator(); it.hasNext();)
-		{
-			PathElement pe = (PathElement)it.next();
-			if (linkId.equals(pe.getObjectId()))
-				return true;
+		try {
+			for (Iterator it = links.iterator(); it.hasNext();)
+			{
+				PathElement pe = (PathElement) it.next();
+				if (linkId.equals(pe.getObjectId()))
+				{
+					return true;
+				}
+			}
+		}
+		catch (Exception ex) {
 		}
 		return false;
 	}
@@ -245,6 +251,8 @@ public class SchemePath extends StubResource
 	{
 		if (pathId.length() != 0)
 			path = (TransmissionPath)Pool.get(TransmissionPath.typ, pathId);
+		for (Iterator it = links.iterator(); it.hasNext();)
+			((PathElement)it.next()).updateLocalFromTransferable();
 	}
 
 	public String getSchemeId()

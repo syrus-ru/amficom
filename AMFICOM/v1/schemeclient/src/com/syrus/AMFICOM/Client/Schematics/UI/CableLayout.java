@@ -43,7 +43,7 @@ public class CableLayout implements OperationListener
 //				type.codename.equals("okst16"))
 //			nModules = 6;
 
-		int tmp = (int)(2 * FIBER_RADIUS * Math.sqrt(Math.round((double)link.cableThreads.size() / (double)nModules + 0.49)));
+		int tmp = (int)(2 * FIBER_RADIUS * Math.sqrt(Math.round((double)link.cableThreads.size() / (double)nModules + 0.499)));
 		if (tmp > radius)
 			radius = tmp;
 

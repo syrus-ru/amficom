@@ -9,7 +9,7 @@ import javax.swing.*;
 import com.syrus.AMFICOM.Client.General.Event.SchemeElementsEvent;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 
@@ -395,15 +395,18 @@ public class CableLinkPropsPanel extends JPanel
 		for (int i = 0; i < links.length; i++)
 		{
 			links[i].cableLinkTypeId = clt.getId();
-			links[i].cableThreads = new ArrayList();
-			for (int j = 0; j < clt.cableThreads.size(); j++)
+			links[i].cableThreads = new ArrayList(clt.cableThreads.size());
+			for (Iterator it = clt.cableThreads.iterator(); it.hasNext();)
 			{
-				CableTypeThread ctt = (CableTypeThread)clt.cableThreads.get(j);
+				CableTypeThread ctt = (CableTypeThread)it.next();
 				SchemeCableThread scheme_cable_thread = new SchemeCableThread(aContext.getDataSourceInterface().GetUId(SchemeCableThread.typ));
 				scheme_cable_thread.linkTypeId = ctt.linkTypeId;
 				scheme_cable_thread.name = ctt.getName();
 				links[i].cableThreads.add(scheme_cable_thread);
 			}
+			ObjectResourceSorter sorter = SchemeCableLink.getSorter();
+			sorter.setDataSet(links[i].cableThreads);
+			links[i].cableThreads = sorter.sort("num", ObjectResourceSorter.SORT_ASCENDING);
 		}
 		descriptionTextArea.setText(clt.description);
 		manufacturerTextField.setText(clt.manufacturer);
