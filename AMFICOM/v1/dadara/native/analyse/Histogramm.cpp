@@ -26,7 +26,7 @@ Histogramm::~Histogramm()
 {
 	delete histo;
 }
- 
+
 void Histogramm::init(double* data, int data_length, int start, int end)
 {
 	histo = new double[nBins];
@@ -63,6 +63,6 @@ double Histogramm::getMaximumValue()
 {
 	double deriv_delta = (up_limit - down_limit) / (double)nBins;
 	int max_index = getMaximumIndex();
-	return down_limit + (max_index + .5) * deriv_delta;
+	return down_limit + (max_index + 0.5) * deriv_delta;
 }
 
