@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.2 2004/12/07 09:54:19 bob Exp $
+ * $Id: StorableObjectPool.java,v 1.3 2004/12/07 11:50:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/12/07 09:54:19 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/07 11:50:40 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -65,7 +65,9 @@ public abstract class StorableObjectPool {
 			Object obj = constructor.newInstance(new Object[] { new Integer(poolSize)});
 			if (obj instanceof LRUMap) {
 				objectPool = (LRUMap) obj;
-				this.objectPoolMap.put(new Short(objectEntityCode), objectPool);
+				Short short1 = new Short(objectEntityCode);
+				this.objectPoolMap.put(short1, objectPool);
+//				Log.debugMessage("StorableObjectPool.addObjectPool | pool for " + ObjectEntities.codeToString(short1.shortValue()) + "/" + short1 + "(" + objectEntityCode +") size  " + poolSize + " added", Log.DEBUGLEVEL07);
 			} else
 				throw new UnsupportedOperationException("StorableObjectPool.addObjectPool | CacheMapClass " + this.cacheMapClass.getName()
 						+ " must extends LRUMap");
@@ -170,9 +172,14 @@ public abstract class StorableObjectPool {
 					return storableObject;
 				}
 			}
+			
 			Log
 					.errorMessage("StorableObjectPool.getStorableObjectImpl | Cannot find object pool for objectId: '"
 							+ objectId.toString() + "' entity code: '" + objectEntityCode + "'");
+			for(Iterator it = this.objectPoolMap.keySet().iterator();it.hasNext();){
+				Short entityCode = (Short)it.next();
+				Log.debugMessage("StorableObjectPool.getStorableObjectImpl | available " + ObjectEntities.codeToString(entityCode.shortValue()) + " / " + entityCode, Log.DEBUGLEVEL05);
+			}
 			return null;
 
 		}
@@ -336,8 +343,8 @@ public abstract class StorableObjectPool {
 	}
 
 	protected StorableObject putStorableObjectImpl(StorableObject storableObject) throws IllegalObjectEntityException {
-		if (storableObject == null)
-			return null;
+//		if (storableObject == null)
+//			return null;
 		Identifier objectId = storableObject.getId();
 		LRUMap objectPool = (LRUMap) this.objectPoolMap.get(new Short(objectId.getMajor()));
 		if (objectPool != null) { return (StorableObject) objectPool.put(objectId, storableObject); }

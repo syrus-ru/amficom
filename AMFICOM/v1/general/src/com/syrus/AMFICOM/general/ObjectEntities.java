@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.33 2004/12/06 17:51:31 bass Exp $
+ * $Id: ObjectEntities.java,v 1.34 2004/12/07 11:50:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2004/12/06 17:51:31 $
- * @author $Author: bass $
+ * @version $Revision: 1.34 $, $Date: 2004/12/07 11:50:40 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public final class ObjectEntities {
@@ -145,6 +145,10 @@ public final class ObjectEntities {
 	public static final short EQUIPMENTTYPE_ENTITY_CODE = 0x0142;
 	public static final short PORTTYPE_ENTITY_CODE = 0x0143;
 	public static final short MEASUREMENTPORTTYPE_ENTITY_CODE = 0x0144;
+	public static final short LINKTYPE_ENTITY_CODE = 0x0145;
+//	public static final short KISTYPE_ENTITY_CODE = 0x0146;
+	public static final short TRANSPATHTYPE_ENTITY_CODE = 0x0147;
+	public static final short CABLETHREADTYPE_ENTITY_CODE = 0x0148;
 
 	public static final short CONFIGURATION_MAX_ENTITY_CODE = 0x0180;
 
@@ -170,10 +174,6 @@ public final class ObjectEntities {
 	public static final short MEASUREMENTTYPE_ENTITY_CODE = 0x01C2;
 	public static final short ANALYSISTYPE_ENTITY_CODE = 0x01C3;
 	public static final short EVALUATIONTYPE_ENTITY_CODE = 0x01C4;
-	public static final short LINKTYPE_ENTITY_CODE = 0x01C5;
-//	public static final short KISTYPE_ENTITY_CODE = 0x01C6;
-	public static final short TRANSPATHTYPE_ENTITY_CODE = 0x01C7;
-	public static final short CABLETHREADTYPE_ENTITY_CODE = 0x01C8;
 
 	public static final short MEASUREMENT_MAX_ENTITY_CODE = 0x0200;
 
@@ -249,7 +249,7 @@ public final class ObjectEntities {
 		else if (entity.equals(MEASUREMENTPORTTYPE_ENTITY)) return MEASUREMENTPORTTYPE_ENTITY_CODE;
 		else if (entity.equals(LINKTYPE_ENTITY)) return LINKTYPE_ENTITY_CODE;
 		else if (entity.equals(CABLETHREADTYPE_ENTITY)) return CABLETHREADTYPE_ENTITY_CODE;
-
+		
 		else if (entity.equals(PARAMETERTYPE_ENTITY)) return PARAMETERTYPE_ENTITY_CODE;
 		else if (entity.equals(MEASUREMENTTYPE_ENTITY)) return MEASUREMENTTYPE_ENTITY_CODE;
 		else if (entity.equals(ANALYSISTYPE_ENTITY)) return ANALYSISTYPE_ENTITY_CODE;
@@ -351,7 +351,7 @@ public final class ObjectEntities {
 				return LINKTYPE_ENTITY;
 			case CABLETHREADTYPE_ENTITY_CODE:
 				return CABLETHREADTYPE_ENTITY;
-
+				
 			case PARAMETERTYPE_ENTITY_CODE:
 				return PARAMETERTYPE_ENTITY;
 			case MEASUREMENTTYPE_ENTITY_CODE:
