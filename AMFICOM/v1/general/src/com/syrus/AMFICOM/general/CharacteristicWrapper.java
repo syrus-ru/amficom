@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicWrapper.java,v 1.8 2005/03/05 21:31:01 arseniy Exp $
+ * $Id: CharacteristicWrapper.java,v 1.9 2005/04/04 06:58:34 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import java.util.List;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/03/05 21:31:01 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/04/04 06:58:34 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public class CharacteristicWrapper implements StorableObjectWrapper {
@@ -44,7 +44,7 @@ public class CharacteristicWrapper implements StorableObjectWrapper {
 		String[] keysArray = new String[] { COLUMN_TYPE_ID, COLUMN_NAME, COLUMN_DESCRIPTION, COLUMN_SORT, COLUMN_VALUE,
 				COLUMN_CHARACTERIZABLE_ID, COLUMN_EDITABLE, COLUMN_VISIBLE};
 
-		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
+		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 
 	}
 

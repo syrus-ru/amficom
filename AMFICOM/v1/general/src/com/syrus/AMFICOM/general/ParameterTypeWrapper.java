@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeWrapper.java,v 1.4 2005/02/03 08:37:26 bob Exp $
+ * $Id: ParameterTypeWrapper.java,v 1.5 2005/04/04 06:58:34 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.corba.DataType;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/03 08:37:26 $
+ * @version $Revision: 1.5 $, $Date: 2005/04/04 06:58:34 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -33,7 +33,7 @@ public class ParameterTypeWrapper implements StorableObjectWrapper {
 		String[] keysArray = new String[] { StorableObjectWrapper.COLUMN_CODENAME,
 				StorableObjectWrapper.COLUMN_DESCRIPTION, StorableObjectWrapper.COLUMN_NAME, COLUMN_DATA_TYPE};
 
-		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
+		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 
 	}
 
