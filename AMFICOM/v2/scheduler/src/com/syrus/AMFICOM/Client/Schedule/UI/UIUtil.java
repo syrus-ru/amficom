@@ -106,7 +106,7 @@ final public class UIUtil {
 		g2d.setFont(font);
 		g2d.setColor(Color.black);
 		g2d.drawString(s, w / 4, (h / 2 + fm.getHeight()) / 2);
-		Icon icon = new ImageIcon((Image) img);
+		Icon icon = new ImageIcon(img);
 		return icon;
 	}
 
