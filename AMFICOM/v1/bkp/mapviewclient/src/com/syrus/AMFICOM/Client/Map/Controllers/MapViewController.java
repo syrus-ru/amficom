@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.14 2005/02/22 11:00:15 krupenn Exp $
+ * $Id: MapViewController.java,v 1.15 2005/02/22 17:53:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -53,7 +53,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemePath;
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
  * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/02/22 11:00:15 $
+ * @version $Revision: 1.15 $, $Date: 2005/02/22 17:53:55 $
  * @module mapviewclient_v1
  */
 public final class MapViewController
@@ -236,49 +236,6 @@ public final class MapViewController
 	{
 		return this.mapView;
 	}
-
-	/**
-	 * Конструктор для создания нового объекта пользователем.
-	 * @param creatorId идентификатор пользователя
-	 * @param domainId идентификатор домена
-	 * @param map Ссылка на топологическую схему
-	 * @return new MapView
-	 * @throws com.syrus.AMFICOM.general.CreateObjectException
-	 *    см. {@link com.syrus.AMFICOM.mapview.MapView#createInstance(
-	 *    	Identifier,
-	 *  		Identifier,
-	 *  		String,
-	 *  		String,
-	 *  		double,
-	 *  		double,
-	 *  		double,
-	 *  		double,
-	 *  		Map)}
-	 * @deprecated use {@link com.syrus.AMFICOM.mapview.MapView#createInstance(
-	 *    	Identifier,
-	 *  		Identifier,
-	 *  		String,
-	 *  		String,
-	 *  		double,
-	 *  		double,
-	 *  		double,
-	 *  		double,
-	 *  		Map)}
-	 */
-//	public static MapView createMapView(Identifier creatorId, Identifier domainId, Map map)
-//		throws CreateObjectException
-//	{
-//		return com.syrus.AMFICOM.mapview.MapView.createInstance(
-//			creatorId,
-//			domainId,
-//			LangModelMap.getString("New"),
-//			"",
-//			0.0D,
-//			0.0D,
-//			1.0D,
-//			1.0D,
-//			map);
-//	}
 
 	/**
 	 * Получить топологический путь по идентификатору измерительного элемента.
