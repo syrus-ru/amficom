@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.77 2005/01/11 16:19:01 arseniy Exp $
+ * $Id: configuration.idl,v 1.78 2005/01/13 12:08:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,27 +32,6 @@ module corba {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable user_id;		
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable session_id;
 	};
-
-//////////////////// CharacteristicType ///////////////////
-
-	enum CharacteristicTypeSort {
-		CHARACTERISTICTYPESORT_OPTICAL,
-		CHARACTERISTICTYPESORT_ELECTRICAL,
-		CHARACTERISTICTYPESORT_OPERATIONAL,
-		CHARACTERISTICTYPESORT_INTERFACE,
-		CHARACTERISTICTYPESORT_VISUAL
-	};
-
-	struct CharacteristicType_Transferable {
-		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
-
-		com::syrus::AMFICOM::general::corba::WString32 codename;
-		com::syrus::AMFICOM::general::corba::WString256 description;
-		com::syrus::AMFICOM::general::corba::DataType data_type;
-		CharacteristicTypeSort sort;
-	};
-
-	typedef sequence <CharacteristicType_Transferable> CharacteristicTypeSeq_Transferable;
 
 /////////////////////// EquipmentType /////////////////////
 	struct EquipmentType_Transferable {
@@ -194,133 +173,7 @@ module corba {
 	typedef sequence <AbstractLinkType_Transferable> AbstractLinkTypeSeq_Transferable;	
 	typedef AbstractLinkType_Transferable AbstractLinkType;	
 	typedef sequence<AbstractLinkType> AbstractLinkTypeSeq;	
-
-//////////////////////////////////// User /////////////////////////////////
-	enum UserSort {
-		USER_SORT_SYSADMIN,
-		USER_SORT_REGULAR,
-		USER_SORT_SERVER,
-		USER_SORT_MCM
-	};
-
-	struct User_Transferable {
-		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 	
-		com::syrus::AMFICOM::general::corba::WString32 login;
-		UserSort sort;
-		com::syrus::AMFICOM::general::corba::WString128 name;
-		com::syrus::AMFICOM::general::corba::WString256 description;
-	};
-	
-	typedef sequence <User_Transferable> UserSeq_Transferable;
-	typedef User_Transferable User;
-	typedef sequence<User> UserSeq;
-	
-	/////////////////////////////////// Domain ////////////////////////////////
-	struct Domain_Transferable {
-		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
-
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
-
-		com::syrus::AMFICOM::general::corba::WString128 name;
-		com::syrus::AMFICOM::general::corba::WString256 description;
-		
-		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
-	};
-	
-	typedef sequence <Domain_Transferable> DomainSeq_Transferable;
-	typedef Domain_Transferable Domain;
-	typedef sequence<Domain> DomainSeq;
-
-/////////////////////////////////// Server ////////////////////////////////
-	struct Server_Transferable {
-		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
-
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
-
-		com::syrus::AMFICOM::general::corba::WString128 name;
-		com::syrus::AMFICOM::general::corba::WString256 description;
-		com::syrus::AMFICOM::general::corba::WString64 hostname;
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable user_id;
-
-		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
-	};
-
-	typedef sequence <Server_Transferable> ServerSeq_Transferable;
-	
-//////////////////////////////////// MCM //////////////////////////////////
-	struct MCM_Transferable {
-		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
-
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
-
-		com::syrus::AMFICOM::general::corba::WString128 name;
-		com::syrus::AMFICOM::general::corba::WString256 description;
-		com::syrus::AMFICOM::general::corba::WString64 hostname;
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable user_id;
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable server_id;
-		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
-		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable kis_ids;
-	};
-	
-	typedef sequence <MCM_Transferable> MCMSeq_Transferable;
-
-////////////////////// Characteristic /////////////////////
-	enum CharacteristicSort {
-		CHARACTERISTIC_SORT_DOMAIN,
-		CHARACTERISTIC_SORT_SERVER,
-		CHARACTERISTIC_SORT_MCM,
-		CHARACTERISTIC_SORT_TRANSMISSIONPATH,
-		CHARACTERISTIC_SORT_EQUIPMENT,
-		CHARACTERISTIC_SORT_PORT,
-		CHARACTERISTIC_SORT_CABLEPORT,
-		CHARACTERISTIC_SORT_MEASUREMENTPORT,
-		CHARACTERISTIC_SORT_MONITORINGPORT,
-		CHARACTERISTIC_SORT_LINK,
-		CHARACTERISTIC_SORT_CABLELINK,
-		CHARACTERISTIC_SORT_CABLELINKTYPE,
-		CHARACTERISTIC_SORT_KIS,
-		CHARACTERISTIC_SORT_EQUIPMENTTYPE,
-		CHARACTERISTIC_SORT_PORTTYPE,
-		CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE,
-		CHARACTERISTIC_SORT_TRANSMISSIONPATHTYPE,
-		CHARACTERISTIC_SORT_LINKTYPE,
-		CHARACTERISTIC_SORT_SCHEMECABLELINK,
-		CHARACTERISTIC_SORT_SCHEMECABLEPORT,
-		CHARACTERISTIC_SORT_SCHEMECABLETHREAD,
-		CHARACTERISTIC_SORT_SCHEMEDEVICE,
-		CHARACTERISTIC_SORT_SCHEMEELEMENT,
-		CHARACTERISTIC_SORT_SCHEMELINK,
-		CHARACTERISTIC_SORT_SCHEMEPATH,
-		CHARACTERISTIC_SORT_SCHEMEPORT,
-		CHARACTERISTIC_SORT_SCHEMEPROTOELEMENT,
-		CHARACTERISTIC_SORT_COLLECTOR,
-		CHARACTERISTIC_SORT_MARK,
-		CHARACTERISTIC_SORT_NODE_LINK,
-		CHARACTERISTIC_SORT_PHYSICAL_LINK,
-		CHARACTERISTIC_SORT_PHYSICAL_LINK_TYPE,
-		CHARACTERISTIC_SORT_TOPOLOGICAL_NODE,
-		CHARACTERISTIC_SORT_SITE_NODE,
-		CHARACTERISTIC_SORT_SITE_NODE_TYPE
-	};
-
-	struct Characteristic_Transferable {
-		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
-
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
-		com::syrus::AMFICOM::general::corba::WString128 name;
-		com::syrus::AMFICOM::general::corba::WString256 description;
-		CharacteristicSort sort;
-		com::syrus::AMFICOM::general::corba::WString256 value;
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable characterized_id;
-		boolean is_editable;
-		boolean is_visible;
-		
-	};
-
-	typedef sequence <Characteristic_Transferable> CharacteristicSeq_Transferable;
-	typedef Characteristic_Transferable Characteristic;
-	typedef sequence<Characteristic> CharacteristicSeq;
 
 ///////////////////////// Equipment ///////////////////////
 	struct Equipment_Transferable	{

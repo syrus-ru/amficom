@@ -1,5 +1,5 @@
 /*
- * $Id: measurement.idl,v 1.47 2005/01/12 13:33:31 arseniy Exp $
+ * $Id: measurement.idl,v 1.48 2005/01/13 12:08:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 #ifndef MEASUREMENT_IDL
 #define	MEASUREMENT_IDL
 
-#include "event.idl"
+#include "general.idl"
 
 module com {
 module syrus {
@@ -296,21 +296,20 @@ module corba {
 			long long start;
 			long long end;
 	};
-	
+
 	struct ResultCondition_Transferable {	
 			short	entity_code;
 			com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
 			long long start;
 			long long end;
 	};
-	
-	
+
 	struct ResultSortCondition_Transferable {
 			short	entity_code;
 			com::syrus::AMFICOM::general::corba::Identifier_Transferable measurement_id;
 			ResultSort sort;
 	};
-	
+
 };
 };
 };
@@ -318,4 +317,3 @@ module corba {
 };
 
 #endif
-

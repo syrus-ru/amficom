@@ -1,5 +1,5 @@
 /*
- * $Id: event.idl,v 1.4 2004/12/24 18:23:28 arseniy Exp $
+ * $Id: event.idl,v 1.5 2005/01/13 12:08:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,13 +9,50 @@
 #ifndef EVENT_IDL
 #define	EVENT_IDL
 
-#include "general.idl"
+#include "measurement.idl"
+#include "configuration.idl"
 
 module com {
 module syrus {
 module AMFICOM {
 module event {
 module corba {
+
+////////////////// MeasurementEvent //////////////////
+
+	enum MeasurementEventSort {
+		TEST_STATUS_CHANGED,
+		NEW_MEASUREMENT_GENERATED,
+		MEASUREMENT_STATUS_CHANGED,
+		MEASUREMENT_ALARM
+	};
+
+	struct MeasurementEvent {
+		MeasurementEventSort sort;
+		any data;
+	};
+
+	abstract interface MeasurementEventListener {
+		void event_notification(in MeasurementEvent event);
+	};
+
+///////////////// ConfigurationEvent /////////////////
+
+	enum ConfigurationEventSort {
+		MCM_CONNECTION_LOST,
+		MCM_CONNECTION_RESTORED,
+		KIS_CONNECTION_LOST,
+		KIS_CONNECTION_RESTORED
+	};
+
+	struct ConfigurationEvent {
+		ConfigurationEventSort sort;
+		any data;
+	};
+
+	abstract interface ConfigurationEventListener {
+		void event_notification(in ConfigurationEvent event);
+	};
 
 /////////////////////// Event ////////////////////////
 
