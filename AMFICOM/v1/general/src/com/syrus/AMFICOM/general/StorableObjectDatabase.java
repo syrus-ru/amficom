@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.88 2005/02/08 19:53:56 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.89 2005/02/09 12:39:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.88 $, $Date: 2005/02/08 19:53:56 $
+ * @version $Revision: 1.89 $, $Date: 2005/02/09 12:39:25 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -432,11 +432,11 @@ public abstract class StorableObjectDatabase {
 		return i;
 	}
 
-	protected void checkAndUpdateEntity(StorableObject localStorableObject,final boolean force) 
+	protected void checkAndUpdateEntity(StorableObject localStorableObject, final boolean force) 
 					throws IllegalDataException, UpdateObjectException, VersionCollisionException {
 
 		String atIdStr = DatabaseIdentifier.toSQLString(localStorableObject.getId());
-		String sql = retrieveQuery(StorableObjectWrapper.COLUMN_ID + EQUALS + atIdStr);
+		String sql = this.retrieveQuery(StorableObjectWrapper.COLUMN_ID + EQUALS + atIdStr);
 
 		StorableObject storableObject = null;
 
@@ -449,17 +449,17 @@ public abstract class StorableObjectDatabase {
 			resultSet = statement.executeQuery(sql);
 			try {
 				if (resultSet.next()) {
-					updateEntityFromResultSet(storableObject, resultSet);
+					this.updateEntityFromResultSet(storableObject, resultSet);
 
 					boolean update = force;
 					if (!update)
 						update =	((storableObject.getModifierId().equals(localStorableObject.getModifierId()))&&
-						(Math.abs(storableObject.getModified().getTime()-localStorableObject.getModified().getTime())<1000));
+						(Math.abs(storableObject.getModified().getTime() - localStorableObject.getModified().getTime()) < 1000));
 
 					if (update) {
 						localStorableObject.setAttributes(localStorableObject.getCreated(), new Date(System.currentTimeMillis()), 
 														  localStorableObject.getCreatorId(), localStorableObject.getModifierId());
-						updateEntity(localStorableObject);
+						this.updateEntity(localStorableObject);
 					}
 					else {
 						String msg = "SorableObjectDatabase.checkAndUpdateEntity | " + getEnityName() + " conflict version ";
@@ -492,8 +492,8 @@ public abstract class StorableObjectDatabase {
 			}
 		}
 		catch (SQLException sqle) {			
-			String mesg = "SorableObjectDatabase.checkAndUpdateEntity | Cannot update " + getEnityName() + " '"
-					+ atIdStr + "' -- " + sqle.getMessage();
+			String mesg = "SorableObjectDatabase.checkAndUpdateEntity | Cannot update " + this.getEnityName() + " "
+					+ atIdStr + " -- " + sqle.getMessage();
 			try {
 				connection.rollback();
 			}
