@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.Client.Resource.Result.Parameter;
 import com.syrus.AMFICOM.Client.Resource.Result.Result;
 import com.syrus.AMFICOM.Client.Resource.Result.TestSetup;
 
-import com.syrus.AMFICOM.Client.Analysis.MathRef;
+import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.ReflectoEventContainer;
 import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.ReflectoEventStatistics;
 import com.syrus.AMFICOM.Client.Prediction.UI.Calendar.DateDiapazonAndPathAndTestSetupSelectionDialog;

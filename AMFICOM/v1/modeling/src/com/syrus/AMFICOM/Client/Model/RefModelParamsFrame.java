@@ -136,9 +136,9 @@ public class RefModelParamsFrame extends ATableFrame
 	{
 		this.scheme = scheme;
 		pathIDsComboBox.removeAllItems();
-		for(Enumeration e = scheme.getTopLevelPaths(); e.hasMoreElements();)
+		for(Iterator it = scheme.getTopLevelPaths().iterator(); it.hasNext();)
 		{
-			SchemePath path = (SchemePath)e.nextElement();
+			SchemePath path = (SchemePath)it.next();
 			pathIDsComboBox.addItem(path);
 		}
 	}

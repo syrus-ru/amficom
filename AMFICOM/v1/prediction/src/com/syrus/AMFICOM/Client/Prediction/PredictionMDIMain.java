@@ -69,7 +69,6 @@ import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.ReflectoEventStatistic
 import com.syrus.AMFICOM.Client.Prediction.UI.TimeDependence.TimeDependenceFrame;
 import com.syrus.AMFICOM.Client.Prediction.UI.TimeDependence.TimeDependenceTable;
 import com.syrus.io.BellcoreStructure;
-import com.syrus.io.IniFile;
 
 public class PredictionMDIMain extends JFrame implements OperationListener
 {
@@ -100,9 +99,6 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 //++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 	private Dispatcher internal_dispatcher = new Dispatcher();
 	public ApplicationContext aContext = new ApplicationContext();
-
-	static IniFile iniFile;
-	static String iniFileName = "Statistics.properties";
 
 	static SimpleDateFormat sdf =
 			new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
@@ -264,17 +260,6 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 		statusBar.setText("user", LangModel.getString("statusNoUser"));
 		statusBar.setText("time", " ");
 		statusBar.organize();
-
-		// load values from properties file
-		try
-		{
-			iniFile = new IniFile(iniFileName);
-			System.out.println("read ini file " + iniFileName);
-		}
-		catch(java.io.IOException e)
-		{
-			System.out.println("Error opening " + iniFileName + " - setting defaults");
-		}
 
 		aContext.setDispatcher(internal_dispatcher);
 
@@ -636,11 +621,11 @@ public class PredictionMDIMain extends JFrame implements OperationListener
 		new SurveyDataSourceImage(dataSource).LoadModelingTypes();
 
 		ApplicationModel aModel = aContext.getApplicationModel();
-		aModel.enable("menuSessionDomain");
-		aModel.enable("menuSessionClose");
-		aModel.enable("menuSessionOptions");
-		aModel.enable("menuSessionChangePassword");
-		aModel.disable("menuSessionOpen");
+		aModel.setEnabled("menuSessionDomain", true);
+		aModel.setEnabled("menuSessionClose", true);
+		aModel.setEnabled("menuSessionOptions", true);
+		aModel.setEnabled("menuSessionChangePassword", true);
+		aModel.setEnabled("menuSessionOpen", false);
 
 		aModel.fireModelChanged("");
 

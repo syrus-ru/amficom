@@ -7,7 +7,7 @@ import java.util.Date;
 
 import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.LinearCoeffs;
 import com.syrus.AMFICOM.Client.Prediction.StatisticsMath.TimeDependenceData;
-import com.syrus.AMFICOM.Client.Analysis.MathRef;
+import com.syrus.AMFICOM.analysis.dadara.MathRef;
 
 public class TimeDependencePanel extends TraceEventsPanel
 {

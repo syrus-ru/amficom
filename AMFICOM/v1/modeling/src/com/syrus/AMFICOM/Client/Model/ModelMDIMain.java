@@ -4,12 +4,13 @@ package com.syrus.AMFICOM.Client.Model;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.text.SimpleDateFormat;
+import java.text.*;
 import java.util.*;
 
 import javax.swing.*;
-import javax.swing.event.InternalFrameEvent;
+import javax.swing.event.*;
 
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.*;
 import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.*;
@@ -20,26 +21,21 @@ import com.syrus.AMFICOM.Client.General.Command.Session.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
+import com.syrus.AMFICOM.Client.General.Report.*;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
-import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Map.MapContext;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.*;
+import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Map.*;
+import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Map.*;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Schematics.Elements.*;
-import com.syrus.AMFICOM.Client.Schematics.Scheme.SchemeViewerFrame;
+import com.syrus.AMFICOM.Client.Schematics.Scheme.*;
 import com.syrus.io.*;
 
 public class ModelMDIMain extends JFrame implements OperationListener
 {
 	private Dispatcher internal_dispatcher = new Dispatcher();
 	public ApplicationContext aContext = new ApplicationContext();
-
-	static IniFile iniFile;
-	static String iniFileName = "Model.properties";
 
 	static SimpleDateFormat sdf =
 			new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
@@ -68,7 +64,7 @@ public class ModelMDIMain extends JFrame implements OperationListener
 
 	PropsFrame propsFrame;
 	ElementsListFrame elementsListFrame;
-	JInternalFrame schemeFrame;
+	SchemeViewerFrame schemeFrame;
 	SchemePanelNoEdition panel;
 	SchemeGraph graph;
 
@@ -158,6 +154,8 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		transData = new TransData ();
 		desktopPane.add(transData);
 
+		panel = new SchemePanelNoEdition(aContext);
+
 		mmlp = new MapMarkersLayeredPanel(internal_dispatcher);
 		analysisFrame = new ScalableFrame(mmlp)
 		{
@@ -169,9 +167,6 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		analysisFrame.setTitle(LangModelAnalyse.getString("analysisTitle"));
 		graphs.add(analysisFrame);
 		desktopPane.add(analysisFrame);
-
-		IniFile ini = new IniFile("analyse.ini");
-		Pool.put("inifile", "analyse", ini);
 	}
 
 	public void init_module()
@@ -192,17 +187,6 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		statusBar.setText("user", LangModel.getString("statusNoUser"));
 		statusBar.setText("time", " ");
 		statusBar.organize();
-
-		// load values from properties file
-		try
-		{
-			iniFile = new IniFile(iniFileName);
-			System.out.println("read ini file " + iniFileName);
-		}
-		catch(java.io.IOException e)
-		{
-			System.out.println("Error opening " + iniFileName + " - setting defaults");
-		}
 
 		aContext.setDispatcher(internal_dispatcher);
 		internal_dispatcher.register(this, "mapopenevent");
@@ -232,7 +216,7 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		aModel.setCommand("menuViewModelLoad", new LoadModelingCommand(internal_dispatcher, aContext));
 		aModel.setCommand("menuViewSchemeOpen", new SchemeOpenCommand(aContext, graph));
 		aModel.setCommand("menuViewSchemeEdit", new OpenSchemeEditorCommand(internal_dispatcher, aContext, new SchematicsApplicationModelFactory()));
-		aModel.setCommand("menuViewSchemeClose", new SchemeCloseCommand(aContext, graph));
+		aModel.setCommand("menuViewSchemeClose", new SchemeCloseCommand(aContext, panel));
 
 		aModel.setCommand("menuFileOpen", new FileOpenCommand(internal_dispatcher, aContext));
 		aModel.setCommand("menuFileOpenAsBellcore", new FileOpenAsBellcoreCommand(internal_dispatcher, aContext));
@@ -487,7 +471,7 @@ public class ModelMDIMain extends JFrame implements OperationListener
 					aModel.setEnabled("menuTraceRemoveCompare", false);
 
 					if( Pool.get("bellcorestructure", "primarytrace") != null &&
-							((BellcoreStructure)Pool.get("bellcorestructure", "primarytrace")).title.equals("model"))
+							((BellcoreStructure)Pool.get("bellcorestructure", "primarytrace")).title.startsWith("Модель"))
 						aModel.setEnabled("menuViewModelSave", true);
 					else
 						aModel.setEnabled("menuViewModelSave", false);
@@ -572,19 +556,21 @@ public class ModelMDIMain extends JFrame implements OperationListener
 				{
 					propsFrame = new PropsFrame(aContext, true);
 					propsFrame.setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
-					desktopPane.add(propsFrame);
 				}
+				desktopPane.add(propsFrame);
 
 				if (elementsListFrame == null)
 				{
 					elementsListFrame = new ElementsListFrame(aContext, false);
 					elementsListFrame.setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
-					desktopPane.add(elementsListFrame);
 				}
+				desktopPane.add(elementsListFrame);
+
+				//panel.operationPerformed(ae);
 
 				if (schemeFrame == null)
 				{
-					schemeFrame = new JInternalFrame()
+					schemeFrame = new SchemeViewerFrame(aContext, panel)
 					{
 						protected void fireInternalFrameEvent(int id)
 						{
@@ -603,15 +589,9 @@ public class ModelMDIMain extends JFrame implements OperationListener
 					schemeFrame.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
 					schemeFrame.setMaximizable(true);
 					schemeFrame.setIconifiable(true);
-					schemeFrame.getContentPane().setLayout(new BorderLayout());
 					schemeFrame.setTitle(LangModelModel.getString("elementsMainTitle"));
-					schemeFrame.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
-					desktopPane.add(schemeFrame);
-
-					panel = new SchemePanelNoEdition(aContext);
-					schemeFrame.getContentPane().add(panel, BorderLayout.CENTER);
-					panel.operationPerformed(ae);
 				}
+				desktopPane.add(schemeFrame);
 
 				//graph = panel.getGraph();
 
@@ -891,12 +871,12 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		new SurveyDataSourceImage(dataSource).LoadModelingTypes();
 
 		ApplicationModel aModel = aContext.getApplicationModel();
-		aModel.enable("menuSessionDomain");
-		aModel.enable("menuSessionClose");
-		aModel.enable("menuSessionOptions");
-		aModel.enable("menuSessionChangePassword");
+		aModel.setEnabled("menuSessionDomain", true);
+		aModel.setEnabled("menuSessionClose", true);
+		aModel.setEnabled("menuSessionOptions", true);
+		aModel.setEnabled("menuSessionChangePassword", true);
 
-		aModel.disable("menuSessionOpen");
+		aModel.setEnabled("menuSessionOpen", false);
 
 		aModel.fireModelChanged("");
 
@@ -914,11 +894,15 @@ public class ModelMDIMain extends JFrame implements OperationListener
 	{
 		DataSourceInterface dataSource = aContext.getDataSourceInterface();
 
+		new SchemeDataSourceImage(dataSource).LoadSchemes();
+		new ConfigDataSourceImage(dataSource).LoadNet();
+		new ConfigDataSourceImage(dataSource).LoadISM();
+
 		ApplicationModel aModel = aContext.getApplicationModel();
 
-		aModel.enable("menuSessionClose");
-		aModel.enable("menuSessionOptions");
-		aModel.enable("menuSessionChangePassword");
+		aModel.setEnabled("menuSessionClose", true);
+		aModel.setEnabled("menuSessionOptions", true);
+		aModel.setEnabled("menuSessionChangePassword", true);
 
 		aModel.setEnabled("menuViewMapOpen", true);
 		aModel.setEnabled("menuViewSchemeOpen", true);
@@ -950,11 +934,11 @@ public class ModelMDIMain extends JFrame implements OperationListener
 		aModel.setEnabled("menuFileOpen", false);
 		aModel.setEnabled("menuFileOpen", false);
 
-		aModel.enable("menuSessionOpen");
-		aModel.enable("menuSession");
-		aModel.enable("menuHelp");
-		aModel.enable("menuView");
-		aModel.enable("menuHelpView");
+		aModel.setEnabled("menuSessionOpen", true);
+		aModel.setEnabled("menuSession", true);
+		aModel.setEnabled("menuHelp", true);
+		aModel.setEnabled("menuView", true);
+		aModel.setEnabled("menuHelpView", true);
 
 		aModel.fireModelChanged("menuFileOpenAsBellcore");
 		aModel.fireModelChanged("menuFileOpenAsWavetek");
