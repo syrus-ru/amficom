@@ -128,42 +128,42 @@ public class TestFilter extends ObjectResourceFilter {
 	public boolean expression(FilterExpressionInterface exp, ObjectResource or) {
 		boolean result = false;
 		Test test = (Test) or;
-		Vector vec = exp.getVec();
-		String type = (String) vec.elementAt(0);
+		List vec = exp.getVec();
+		String type = (String) vec.get(0);
 		String expId = exp.getId();
 
 		if (type.equals(ObjectResourceModel.COLUMN_TYPE_NUMERIC)) {
 			if (expId.equals(ObjectResourceModel.COLUMN_TYPE_TIME)) {
-				if (((String) vec.elementAt(1)).equals("=")) {
-					if (test.getStartTime() == Long.parseLong((String) vec.elementAt(2))) {
+				if (((String) vec.get(1)).equals("=")) {
+					if (test.getStartTime() == Long.parseLong((String) vec.get(2))) {
 						result = true;
 					}
-				} else if (((String) vec.elementAt(1)).equals(">")) {
-					if (test.getStartTime() > Long.parseLong((String) vec.elementAt(2))) {
+				} else if (((String) vec.get(1)).equals(">")) {
+					if (test.getStartTime() > Long.parseLong((String) vec.get(2))) {
 						result = true;
 					}
-				} else if (((String) vec.elementAt(1)).equals("<")) {
-					if (test.getStartTime() < Long.parseLong((String) vec.elementAt(2))) {
+				} else if (((String) vec.get(1)).equals("<")) {
+					if (test.getStartTime() < Long.parseLong((String) vec.get(2))) {
 						result = true;
 					}
 				}
 			}
 		} else if (type.equals(ObjectResourceModel.COLUMN_TYPE_TIME)) {
 			if (expId.equals(ObjectResourceModel.COLUMN_TYPE_TIME)) {
-				if (test.getStartTime() > Long.parseLong((String) vec.elementAt(1))
-						&& test.getStartTime() < Long.parseLong((String) vec.elementAt(2))) {
+				if (test.getStartTime() > Long.parseLong((String) vec.get(1))
+						&& test.getStartTime() < Long.parseLong((String) vec.get(2))) {
 					result = true;
 				}
 			}
 		} else if (type.equals(ObjectResourceModel.COLUMN_TYPE_RANGE)) {
 			if (expId.equals(ObjectResourceModel.COLUMN_TYPE_TIME)) {
-				if (test.getStartTime() > Long.parseLong((String) vec.elementAt(1))
-						&& test.getStartTime() < Long.parseLong((String) vec.elementAt(2))) {
+				if (test.getStartTime() > Long.parseLong((String) vec.get(1))
+						&& test.getStartTime() < Long.parseLong((String) vec.get(2))) {
 					result = true;
 				}
 			}
 		} else if (type.equals(ObjectResourceModel.COLUMN_TYPE_STRING)) {
-			String substring = (String) vec.elementAt(1);
+			String substring = (String) vec.get(1);
 			if (expId.equals(COLUMN_KIS)) {
 				String name = Pool.getName(KIS.typ, test.getKisId());
 				result = SearchSubstring(name, substring);
@@ -177,7 +177,7 @@ public class TestFilter extends ObjectResourceFilter {
 				}
 			}
 		} else if (type.equals(ObjectResourceModel.COLUMN_TYPE_LIST)) {
-			TreeModelClone tree = (TreeModelClone) vec.elementAt(1);
+			TreeModelClone tree = (TreeModelClone) vec.get(1);
 			if (expId.equals(COLUMN_KIS)) {
 				FilterTreeNode mmtn = (FilterTreeNode) tree.getRoot();
 				String portid = "";

@@ -49,6 +49,8 @@ src\com\syrus\AMFICOM\Client\Schedule\Filter\TempTypeTree.java
 src\com\syrus\AMFICOM\Client\Schedule\Filter\TestFilter.java
 src\com\syrus\AMFICOM\Client\Schedule\Filter\TestTypeTree.java
 src\com\syrus\AMFICOM\Client\Schedule\Sorter\TestSorter.java
+src\com\syrus\AMFICOM\Client\Survey\Alarm\AlarmDescriptor.java
+src\com\syrus\AMFICOM\Client\Survey\Alarm\AlarmDescriptorEvent.java
 src\com\syrus\AMFICOM\Client\Survey\Alarm\Filter\AlarmFilter.java
 src\com\syrus\AMFICOM\Client\Survey\Alarm\Filter\AlarmSourceTree.java
 src\com\syrus\AMFICOM\Client\Survey\Alarm\Filter\AlarmStatusTree.java
