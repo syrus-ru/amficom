@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.44 2005/03/16 17:02:35 arseniy Exp $
+ * $Id: StorableObject.java,v 1.45 2005/03/18 19:19:49 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.44 $, $Date: 2005/03/16 17:02:35 $
+ * @author $Author: bass $
+ * @version $Revision: 1.45 $, $Date: 2005/03/18 19:19:49 $
  * @module general_v1
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -238,21 +238,20 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 
 	protected Object clone() throws CloneNotSupportedException {
 		final StorableObject clone = (StorableObject) super.clone();
-		/**
-		 * @bug Later, for id property, generate a <b>new </b>
-		 *       identifier from the same sequence.
-		 */
-		clone.id = this.id;
+		clone.id = IdentifierPool.getGeneratedIdentifier0(this.id.getMajor());
 
 		final Date cloneCreated = new Date();
 		clone.created = cloneCreated;
 		clone.modified = cloneCreated;
+
 		/**
 		 * @todo Initialize creatorId and modifierId with values from
-		 *       current session, if this session is available.
+		 *       current session, if this session is available. In the
+		 *       general case, this can't be done.
 		 */
 		clone.creatorId = this.creatorId;
 		clone.modifierId = this.modifierId;
+
 		/*
 		 * Initialize version vith 0L, like for all newly created
 		 * objects.

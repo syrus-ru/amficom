@@ -1,5 +1,5 @@
 /*
- * $Id: Namable.java,v 1.2 2005/03/17 18:16:12 bass Exp $
+ * $Id: Namable.java,v 1.3 2005/03/18 19:19:49 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.general;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/03/17 18:16:12 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/18 19:19:49 $
  * @module general_v1
  */
 public interface Namable {
@@ -21,7 +21,7 @@ public interface Namable {
 	String getName();
 
 	/**
-	 * @param name cannot be <code>null</code> or empty string.
+	 * @param name can be neither <code>null</code> nor an empty string.
 	 */
 	void setName(final String name);
 }

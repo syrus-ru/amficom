@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierPool.java,v 1.13 2005/03/04 19:13:37 bass Exp $
+ * $Id: IdentifierPool.java,v 1.14 2005/03/18 19:19:49 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/03/04 19:13:37 $
+ * @version $Revision: 1.14 $, $Date: 2005/03/18 19:19:49 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -52,36 +52,45 @@ public class IdentifierPool {
 		igServer = igServer1;
 	}
 
-	public static synchronized Identifier getGeneratedIdentifier(final short entityCode) throws IllegalObjectEntityException {
-		if (ObjectEntities.codeIsValid(entityCode)) {
-			Short entityCodeShort = new Short(entityCode);
-			Fifo fifo = (Fifo) idPoolMap.get(entityCodeShort);
+	public static Identifier getGeneratedIdentifier(final short entityCode) throws IllegalObjectEntityException {
+		if (ObjectEntities.codeIsValid(entityCode))
+			return getGeneratedIdentifier0(entityCode);
+		throw new IllegalObjectEntityException("Illegal or unknown entity code supplied: " + entityCode, IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE); //$NON-NLS-1$
+	}
 
-			// Add new fifo if need
-			if (fifo == null) {
-				fifo = new Fifo(capacity);
-				fillFifo(fifo, entityCode);
-				idPoolMap.put(entityCodeShort, fifo);
-			}
+	/**
+	 * Package-private method used in {@link #getGeneratedIdentifier(short)}
+	 * and {@link StorableObject#clone()}.
+	 *
+	 * @param entityCode
+	 */
+	static synchronized Identifier getGeneratedIdentifier0(final short entityCode) {
+		assert ObjectEntities.codeIsValid(entityCode);
 
-			// Transfer ids when fifo filling minimum than minFillFactor
-			if (fifo.getNumber() < MIN_FILL_FACTOR * fifo.capacity())
-				fillFifo(fifo, entityCode);
+		final Short entityCodeShort = new Short(entityCode);
+		Fifo fifo = (Fifo) idPoolMap.get(entityCodeShort);
 
-			// Wait if fifo is empty yet
-			while (fifo.getNumber() < 1) {
-				try {
-					Log.debugMessage("IdentifierPool.generateId | Wait for fetching ids", Log.DEBUGLEVEL10);
-					Thread.sleep(TIME_TO_SLEEP);
-				}
-				catch (InterruptedException ie) {
-					Log.errorException(ie);
-				}
-			}
-
-			return (Identifier)fifo.remove();
+		// Add new fifo if needed
+		if (fifo == null) {
+			fifo = new Fifo(capacity);
+			fillFifo(fifo, entityCode);
+			idPoolMap.put(entityCodeShort, fifo);
 		}
-		throw new IllegalObjectEntityException("Illegal or unknown entity code supplied: " + entityCode, IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+
+		// Transfer ids when fifo filling minimum than minFillFactor
+		if (fifo.getNumber() < MIN_FILL_FACTOR * fifo.capacity())
+			fillFifo(fifo, entityCode);
+
+		// Wait if fifo is empty yet
+		while (fifo.getNumber() < 1)
+			try {
+				Log.debugMessage("IdentifierPool.generateId | Wait for fetching ids", Log.DEBUGLEVEL10); //$NON-NLS-1$
+				Thread.sleep(TIME_TO_SLEEP);
+			} catch (final InterruptedException ie) {
+				Log.errorException(ie);
+			}
+
+		return (Identifier)fifo.remove();
 	}
 
 	private static void fillFifo(Fifo fifo, final short entityCode) {
