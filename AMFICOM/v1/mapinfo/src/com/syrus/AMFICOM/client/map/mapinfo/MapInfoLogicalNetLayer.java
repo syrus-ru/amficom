@@ -9,18 +9,13 @@ import java.awt.geom.Rectangle2D;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.mapinfo.dp.Attribute;
-import com.mapinfo.dp.Feature;
-import com.mapinfo.dp.FeatureSet;
-import com.mapinfo.dp.QueryParams;
-import com.mapinfo.mapj.FeatureLayer;
-import com.mapinfo.mapj.LayerType;
 import com.mapinfo.mapj.MapJ;
 import com.mapinfo.util.DoubleRect;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
@@ -230,14 +225,15 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	{
 		if(fullRepaint)
 		{
-			String url = ((MapInfoNetMapViewer )this.viewer).getConnection().getURL();
-			url += this.getMapMainParamString();
+			String uriString = ((MapInfoNetMapViewer )this.viewer).getConnection().getURL();
+			uriString += createRenderCommandString();
 
 			try
 			{
-				URL mapServer = new URL(url);
-				System.out.println("url: " + mapServer);
-				URLConnection s = mapServer.openConnection();
+				URI mapServerURI = new URI(uriString);
+				URL mapServerURL = new URL(mapServerURI.toASCIIString());
+				System.out.println("url: " + mapServerURL);
+				URLConnection s = mapServerURL.openConnection();
 
 				System.out.println("MIFLNL - repaint - Conection opened");
 
@@ -262,7 +258,6 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 				}
 				catch(IOException optExc)
 				{
-					optExc.printStackTrace();
 				}
 
 				int dataSize = this.nmViewer.mapImagePanel.getWidth()
@@ -275,8 +270,8 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 				}
 				catch(EOFException eofExc)
 				{
-					eofExc.printStackTrace();
 				}
+				
 				System.out.println("MIFLNL - repaint - Image read");
 
 				ois.close();
@@ -420,50 +415,70 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	public List findSpatialObjects(String searchText)
 	{
 		List resultList = new ArrayList();
-		Iterator layersIt = getLocalMapJ().getLayers().iterator(
-				LayerType.FEATURE);
-		for(; layersIt.hasNext();)
-		{
-			FeatureLayer currLayer = (FeatureLayer )layersIt.next();
 
+		String uriString = ((MapInfoNetMapViewer )this.viewer).getConnection().getURL();
+		uriString += createSearchCommandString(searchText);
+
+		try
+		{
+			URI mapServerURI = new URI(uriString);
+			URL mapServerURL = new URL(mapServerURI.toASCIIString());
+			System.out.println("url: " + mapServerURL);
+			URLConnection s = mapServerURL.openConnection();
+
+			System.out.println("MIFLNL - searchText - Conection opened");
+
+			if(s.getInputStream() == null)
+				return resultList;
+			
+			ObjectInputStream ois = new ObjectInputStream(s
+					.getInputStream());
+
+			System.out
+					.println("MIFLNL - searchText - ObjectInputStream exists");
+
+			//reading possible error from server
 			try
 			{
-				// Названия всех колонок - чтобы достать инфу об объекте
-				// Может они и не понадобятся!!!!!!!!
-				List allColumnNames = new ArrayList();
-				for(int i = 0; i < currLayer.getTableInfo().getColumnCount(); i++)
-					allColumnNames.add(currLayer.getTableInfo()
-							.getColumnName(i));
-
-				// Название колонки с надписями
-				String labelColumnName = (String )currLayer
-						.getLabelProperties().getLabelColumns().get(0);
-				// Её индекс в TableInfo
-				int labelColumnIndex = currLayer.getTableInfo().getColumnIndex(
-						labelColumnName);
-
-				// Поиск для "лэйбловой колонки"
-				FeatureSet fs = currLayer.searchByAttribute(
-						allColumnNames,
-						labelColumnName,
-						new Attribute(searchText),
-						QueryParams.ALL_PARAMS);
-
-				Feature feature = null;
-				// Loop until FeatureSet.getNextFeature() returns null
-				while((feature = fs.getNextFeature()) != null)
+				Object readObject = ois.readObject();
+				if(readObject instanceof String)
 				{
-					String featureName = feature.getAttribute(labelColumnIndex)
-							.getString();
+					Environment.log(
+							Environment.LOG_LEVEL_FINER,
+							(String )readObject);
+					return resultList;
+				}
+			}
+			catch(IOException optExc)
+			{
+			}
+
+			//reading names and centers
+			try
+			{
+				for(;;)
+				{
+					double xCoord  = ois.readDouble();
+					double yCoord  = ois.readDouble();				
+					String featureName = (String)ois.readObject();
+					
 					resultList.add(new MapInfoSpatialObject(
-							feature,
+							new DoublePoint(xCoord,yCoord),
 							featureName));
 				}
 			}
-			catch(Exception exc)
+			catch(EOFException eofExc)
 			{
-				exc.printStackTrace();
 			}
+			System.out.println("MIFLNL - searchText - Spatial objects read");
+
+			ois.close();
+			System.out.println("MIFLNL - searchText - Stream closed");
+		}
+
+		catch(Exception exc)
+		{
+			exc.printStackTrace();
 		}
 
 		return resultList;
@@ -472,9 +487,7 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 	public void centerSpatialObject(SpatialObject so)
 	{
 		MapInfoSpatialObject miso = (MapInfoSpatialObject )so;
-		com.mapinfo.util.DoublePoint miDp = miso.getCenter();
-		DoublePoint dp = new DoublePoint(miDp.x, miDp.y);
-		this.setCenter(dp);
+		this.setCenter(miso.getCenter());
 	}
 
 	public void setMapViewer(NetMapViewer mapViewer)
@@ -489,18 +502,22 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 		// this.localMapJ = this.nmViewer.localMapJ;
 	}
 
-	public String getMapMainParamString()
+	public String createRenderCommandString()
 	{
 		String result = "";
-		result += "?" + ServletCommandNames.WIDTH + "="
+
+		result += "?" + ServletCommandNames.COMMAND_NAME + "="
+		+ ServletCommandNames.CN_RENDER_IMAGE;
+		
+		result += "&" + ServletCommandNames.PAR_WIDTH + "="
 				+ this.nmViewer.mapImagePanel.getWidth();
-		result += "&" + ServletCommandNames.HEIGHT + "="
+		result += "&" + ServletCommandNames.PAR_HEIGHT + "="
 				+ this.nmViewer.mapImagePanel.getHeight();
-		result += "&" + ServletCommandNames.CENTER_X + "="
+		result += "&" + ServletCommandNames.PAR_CENTER_X + "="
 				+ this.getCenter().getX();
-		result += "&" + ServletCommandNames.CENTER_Y + "="
+		result += "&" + ServletCommandNames.PAR_CENTER_Y + "="
 				+ this.getCenter().getY();
-		result += "&" + ServletCommandNames.ZOOM_FACTOR + "=" + this.getScale();
+		result += "&" + ServletCommandNames.PAR_ZOOM_FACTOR + "=" + this.getScale();
 
 		int index = 0;
 		Iterator layersIt = ((MapInfoNetMapViewer )this.viewer).getLayers()
@@ -508,12 +525,24 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 		for(; layersIt.hasNext();)
 		{
 			SpatialLayer spL = (SpatialLayer )layersIt.next();
-			result += "&" + ServletCommandNames.LAYER_VISIBLE + index + "="
+			result += "&" + ServletCommandNames.PAR_LAYER_VISIBLE + index + "="
 					+ (spL.isVisible() ? 1 : 0);
-			result += "&" + ServletCommandNames.LAYER_LABELS_VISIBLE + index
+			result += "&" + ServletCommandNames.PAR_LAYER_LABELS_VISIBLE + index
 					+ "=" + (spL.isLabelVisible() ? 1 : 0);
 			index++;
 		}
+
+		return result;
+	}
+
+	public String createSearchCommandString(String nameToSearch)
+	{
+		String result = "";
+
+		result += "?" + ServletCommandNames.COMMAND_NAME + "="
+			+ ServletCommandNames.CN_SEARCH_NAME;
+		
+		result += "&" + ServletCommandNames.PAR_NAME_TO_SEARCH + "=" + nameToSearch;
 
 		return result;
 	}

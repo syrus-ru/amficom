@@ -98,7 +98,7 @@ public class MapInfoConnection extends MapConnection
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass()
 				.getName(), "setURL(" + mapperURL + ")");
-
+		
 		this.mapperServletURL = mapperURL;
 	}
 

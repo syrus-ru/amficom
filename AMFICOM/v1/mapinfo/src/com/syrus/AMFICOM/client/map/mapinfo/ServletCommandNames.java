@@ -1,24 +1,30 @@
 package com.syrus.AMFICOM.Client.Map.Mapinfo;
 
+/**
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.5 $, $Date: 2005/03/03 17:38:03 $
+ * @module mapper-servlet
+ */
 public class ServletCommandNames
 {
-	public static final String WIDTH = "width";
+	//Parameters for rendering image
+	public static final String COMMAND_NAME = "command";
 
-	public static final String HEIGHT = "height";
+	//Values for parameter 	
+	public static final String CN_RENDER_IMAGE = "render";
+	public static final String CN_SEARCH_NAME = "search";	
+	
+	//Parameters for rendering image
+	public static final String PAR_WIDTH = "width";
+	public static final String PAR_HEIGHT = "height";
+	public static final String PAR_CENTER_X = "centerX";
+	public static final String PAR_CENTER_Y = "centerY";
+	public static final String PAR_ZOOM_FACTOR = "zoom";
 
-	public static final String CENTER_X = "centerX";
-
-	public static final String CENTER_Y = "centerY";
-
-	public static final String ZOOM_FACTOR = "zoom";
-
-	public static final String LAYER_INDEX = "LI";
-
-	public static final String LAYER_VISIBLE = "LV";
-
-	public static final String LAYER_LABELS_VISIBLE = "LLV";
-
-	private ServletCommandNames()
-	{//empty
-	}
+	public static final String PAR_LAYER_INDEX = "LI";
+	public static final String PAR_LAYER_VISIBLE = "LV";
+	public static final String PAR_LAYER_LABELS_VISIBLE = "LLV";
+	
+	//Parameters for searching name
+	public static final String PAR_NAME_TO_SEARCH = "name";
 }
