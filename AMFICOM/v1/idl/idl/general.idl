@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.59 2005/02/28 13:20:29 bass Exp $
+ * $Id: general.idl,v 1.60 2005/03/02 15:28:23 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -285,17 +285,14 @@ module corba {
 		 * <code>innerConditions</code> must be an array containing 
 		 * instances of {@link StorableObjectCondition_Transferable}.
 		 */
-		sequence<any> innerConditions;
+		::CORBA::AnySeq innerConditions;
 	};
 
 	union StorableObjectCondition_Transferable switch(enum StorableObjectConditionSort {
-#			STRING_FIELD,
 			LINKED_IDS,
 			COMPOUND,
 			TYPICAL,
 			EQUIVALENT}) {
-#		case STRING_FIELD:
-#			StringFieldCondition_Transferable stringFieldCondition;
 		case LINKED_IDS:
 			LinkedIdsCondition_Transferable linkedIdsCondition;
 		case COMPOUND:
