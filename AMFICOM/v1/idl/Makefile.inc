@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.inc,v 1.1 2004/06/03 08:14:20 bass Exp $
+# $Id: Makefile.inc,v 1.2 2004/06/21 07:05:11 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -78,11 +78,19 @@ runtime12 = $(wildcard $(ORACLE_HOME)/sqlj/lib/runtime12.jar)
 ifeq ($(runtime12),)
 runtime12 = $(wildcard $(ORACLE_HOME)/sqlj/lib/runtime12.zip)
 endif
+ifeq ($(runtime12),)
+runtime12 = $(wildcard $(ORACLE_HOME)/sqlj/lib/runtime12ee.jar)
+endif
+ifeq ($(runtime12),)
+runtime12 = $(wildcard $(ORACLE_HOME)/sqlj/lib/runtime12ee.zip)
+endif
 translator = $(wildcard $(ORACLE_HOME)/sqlj/lib/translator.jar)
 ifeq ($(translator),)
 translator = $(wildcard $(ORACLE_HOME)/sqlj/lib/translator.zip)
 endif
 SQLJCLASSPATH = $(runtime12):$(translator)
+
+AMFICOMCLASSPATH ?= $(shell find $(LIBDIR) -name '*\.[jz][ai][pr]' -printf '%p:')
 
 JAVAC = $(call pathsearch,jikes$(exesuffix))
 ifeq ($(JAVAC),)
