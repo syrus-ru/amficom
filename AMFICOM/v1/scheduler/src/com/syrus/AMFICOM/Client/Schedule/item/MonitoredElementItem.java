@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementItem.java,v 1.3 2005/03/21 13:13:36 bob Exp $
+ * $Id: MonitoredElementItem.java,v 1.4 2005/03/25 08:09:28 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.Client.Schedule.item;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/03/21 13:13:36 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/25 08:09:28 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -34,8 +34,12 @@ public class MonitoredElementItem extends ElementItem {
 		return ((MonitoredElement) super.object).getName();
 	}
 
-	public boolean isParentAllow() {
+	public boolean canHaveParent() {
 		return true;
+	}
+	
+	public boolean canHaveChildren() {
+		return false;
 	}
 
 }

@@ -25,9 +25,11 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 import javax.swing.ListCellRenderer;
 import javax.swing.Timer;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Schedule.TestsEditor;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
@@ -208,7 +210,8 @@ public class PlanPanel extends JList implements TestsEditor, ActionListener {
 		});
 
 		setStartDate(new Date(System.currentTimeMillis()));
-		updateRealScale();
+		this.updateRealScale();
+		this.setBackground(UIManager.getColor(ResourceKeys.COLOR_GRAPHICS_BACKGROUND));
 	}
 
 	// private static final int TIME_OUT = 500;

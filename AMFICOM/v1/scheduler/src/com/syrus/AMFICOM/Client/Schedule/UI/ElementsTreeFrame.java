@@ -82,12 +82,12 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 		TreePath treePath = tree.getSelectionPath();
 		if (treePath != null) {
 			for (int i = 0; i < treePath.getPathCount(); i++) {
-				DefaultMutableTreeNode node = (DefaultMutableTreeNode) treePath.getPathComponent(i);
-				Object nodeObject = node.getUserObject();
+				Object nodeObject = treePath.getPathComponent(i);
 				if (nodeObject instanceof Item) {
 					Item item = (Item) nodeObject;
 					Object object = item.getObject();
-					if (object.getClass().equals(clazz))
+					Class class1 = object == null ? null : object.getClass();
+					if (class1 != null && class1.equals(clazz))
 						return object;
 				}
 			}

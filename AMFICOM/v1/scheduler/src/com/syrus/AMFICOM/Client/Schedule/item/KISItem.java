@@ -1,5 +1,5 @@
 /*
-* $Id: KISItem.java,v 1.3 2005/03/21 13:13:36 bob Exp $
+* $Id: KISItem.java,v 1.4 2005/03/25 08:09:28 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPort;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/03/21 13:13:36 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/25 08:09:28 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -33,7 +33,13 @@ public class KISItem extends ElementItem {
 		return kis == null ? "" : kis.getName();
 	}	
 	
-	public boolean isParentAllow() {
+
+	public boolean canHaveParent() {
 		return true;
 	}
+	
+	public boolean canHaveChildren() {
+		return true;
+	}
+	
 }

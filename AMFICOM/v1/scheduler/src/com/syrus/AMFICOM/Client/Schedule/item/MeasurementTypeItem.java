@@ -1,5 +1,5 @@
 /*
-* $Id: MeasurementTypeItem.java,v 1.3 2005/03/21 13:13:36 bob Exp $
+* $Id: MeasurementTypeItem.java,v 1.4 2005/03/25 08:09:28 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/03/21 13:13:36 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/25 08:09:28 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -151,8 +151,11 @@ public class MeasurementTypeItem extends ElementItem {
 		return this.populatedChildren;
 	}
 	
-	public boolean isParentAllow() {
-		return false;
+	public boolean canHaveParent() {
+		return true;
 	}
 	
+	public boolean canHaveChildren() {
+		return true;
+	}
 }
