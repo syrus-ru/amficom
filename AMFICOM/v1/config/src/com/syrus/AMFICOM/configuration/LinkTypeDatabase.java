@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeDatabase.java,v 1.11 2004/12/10 16:49:34 max Exp $
+ * $Id: LinkTypeDatabase.java,v 1.12 2004/12/14 10:25:01 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/12/10 16:49:34 $
+ * @version $Revision: 1.12 $, $Date: 2004/12/14 10:25:01 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -44,8 +44,10 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
     // sort NUMBER(2,0),
     public static final String COLUMN_SORT  = "sort";
     // manufacturer VARCHAR2(64),
+    private static final int SIZE_MANUFACTURER_COLUMN = 64;
     public static final String COLUMN_MANUFACTURER  = "manufacturer";
     // manufacturer_code VARCHAR2(64),
+    private static final int SIZE_MANUFACTURER_CODE_COLUMN = 64;
     public static final String COLUMN_MANUFACTURER_CODE     = "manufacturer_code";
     // image_id VARCHAR2(32),
     public static final String COLUMN_IMAGE_ID      = "image_id";
@@ -89,12 +91,12 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, UpdateObjectException {
 		LinkType linkType = fromStorableObject(storableObject);
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getCodename()) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getDescription()) + APOSTOPHE 
-			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getName()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE 
+			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
 			+ linkType.getSort().value() + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getManufacturer()) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getManufacturerCode()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getManufacturer(), SIZE_MANUFACTURER_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getManufacturerCode(), SIZE_MANUFACTURER_CODE_COLUMN) + APOSTOPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(linkType.getImageId());
 		return sql;
 	}

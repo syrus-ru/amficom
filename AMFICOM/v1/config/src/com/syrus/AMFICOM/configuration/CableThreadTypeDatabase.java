@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeDatabase.java,v 1.5 2004/12/14 09:41:48 max Exp $
+ * $Id: CableThreadTypeDatabase.java,v 1.6 2004/12/14 10:24:45 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/12/14 09:41:48 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/14 10:24:45 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -82,9 +82,9 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, UpdateObjectException {
 		CableThreadType cableThreadType = fromStorableObject(storableObject);
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(cableThreadType.getCodename()) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(cableThreadType.getDescription()) + APOSTOPHE
-            + APOSTOPHE + DatabaseString.toQuerySubString(cableThreadType.getName()) + APOSTOPHE
+			+ APOSTOPHE + DatabaseString.toQuerySubString(cableThreadType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(cableThreadType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE
+            + APOSTOPHE + DatabaseString.toQuerySubString(cableThreadType.getName(), SIZE_NAME_COLUMN) + APOSTOPHE
 			+ APOSTOPHE + DatabaseString.toQuerySubString(cableThreadType.getColor()) + APOSTOPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(cableThreadType.getLinkType().getId());
 		return sql;
