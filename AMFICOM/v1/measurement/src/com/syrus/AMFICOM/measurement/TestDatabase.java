@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.81 2005/03/17 14:46:33 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.82 2005/03/18 14:30:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.81 $, $Date: 2005/03/17 14:46:33 $
+ * @version $Revision: 1.82 $, $Date: 2005/03/18 14:30:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -79,7 +79,7 @@ public class TestDatabase extends StorableObjectDatabase {
 	}	
 
 	protected String getUpdateMultipleSQLValuesTmpl() {
-		if (updateMultipleSQLValues == null){
+		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues =  QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
