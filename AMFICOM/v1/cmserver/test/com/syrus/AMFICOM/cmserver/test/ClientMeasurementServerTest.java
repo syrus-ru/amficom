@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementServerTest.java,v 1.3 2004/09/22 07:20:55 bob Exp $
+ * $Id: ClientMeasurementServerTest.java,v 1.4 2004/09/23 07:39:37 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/09/22 07:20:55 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2004/09/23 07:39:37 $
+ * @author $Author: max $
  * @module cmserver_v1
  */
 public class ClientMeasurementServerTest {
@@ -58,25 +58,28 @@ public class ClientMeasurementServerTest {
 			accessIdentifier_Transferable.user_id = (Identifier_Transferable) id.getTransferable();
 			accessIdentifier_Transferable.session_id = (Identifier_Transferable) id.getTransferable();
 
-			long time0 = System.currentTimeMillis();
-			// 2 month ago
-			Date start = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24 * 31 * 2);
-			Date end = new Date(System.currentTimeMillis());
-			Test_Transferable[] test_Transferables = server.transmitTestsByTime(start.getTime(), end.getTime(),
-												accessIdentifier_Transferable);
-			long time1 = System.currentTimeMillis();
-			System.out.println("transmit " + test_Transferables.length + " test(s) for " + (time1 - time0) + " ms");
+            long time0 = System.currentTimeMillis();
+            // 2 month ago
+            Date start = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24 * 31 * 2);
+            Date end = new Date(System.currentTimeMillis());
+            Test_Transferable[] test_Transferables = server.transmitTestsByTime(start.getTime(), end.getTime(),
+                                                accessIdentifier_Transferable);
+            long time1 = System.currentTimeMillis();
+            System.out.println("transmit " + test_Transferables.length + " test(s) for " + (time1 - time0) + " ms");
 
-			Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[test_Transferables.length];
-			for (int i = 0; i < identifier_Transferables.length; i++) {
-				identifier_Transferables[i] = test_Transferables[i].id;
-			}
-			long time2 = System.currentTimeMillis();
-			Measurement_Transferable[] measurement_Transferables = server
-					.transmitMeasurementForTests(identifier_Transferables, accessIdentifier_Transferable);
-			long time3 = System.currentTimeMillis();
-			System.out.println("transmit " + measurement_Transferables.length + " measuremen(s) for "
-					+ (time3 - time2) + " ms");
+            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[test_Transferables.length];
+            for (int i = 0; i < identifier_Transferables.length; i++) {
+                com.syrus.AMFICOM.measurement.Test test = new com.syrus.AMFICOM.measurement.Test(
+                                                            test_Transferables[i]);
+                identifier_Transferables[i] = test_Transferables[i].id;
+                System.out.println("test " + test.getId().toString() + " status :" + test.getStatus().value());
+            }
+            long time2 = System.currentTimeMillis();
+            Measurement_Transferable[] measurement_Transferables = server
+                    .transmitMeasurementForTests(identifier_Transferables, accessIdentifier_Transferable);
+            long time3 = System.currentTimeMillis();
+            System.out.println("transmit " + measurement_Transferables.length + " measuremen(s) for "
+                    + (time3 - time2) + " ms");
 
 		} catch (Exception e) {
 			e.printStackTrace();
