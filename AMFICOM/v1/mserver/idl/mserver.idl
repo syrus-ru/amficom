@@ -165,6 +165,16 @@ module corba {
 						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
 			raises (general::corba::AMFICOMRemoteException);
 
+		measurement::corba::AnalysisTypeSeq_Transferable transmitAnalysisTypesButIdsByCondition(
+						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+			raises (general::corba::AMFICOMRemoteException);
+
+		measurement::corba::EvaluationTypeSeq_Transferable transmitEvaluationTypesButIdsByCondition(
+						in general::corba::IdentifierSeq_Transferable ids_Transferable,
+						in general::corba::StorableObjectCondition_Transferable condition_Transferable)
+			raises (general::corba::AMFICOMRemoteException);
+
 
 
 

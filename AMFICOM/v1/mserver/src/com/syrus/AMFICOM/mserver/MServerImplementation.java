@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.38 2005/03/23 20:41:39 arseniy Exp $
+ * $Id: MServerImplementation.java,v 1.39 2005/03/24 17:02:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -99,7 +99,7 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/03/23 20:41:39 $
+ * @version $Revision: 1.39 $, $Date: 2005/03/24 17:02:30 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -982,6 +982,76 @@ public class MServerImplementation extends MServerPOA {
 			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
 				MeasurementType measurementType = (MeasurementType) it.next();
 				transferables[i] = (MeasurementType_Transferable) measurementType.getTransferable();
+			}
+			return transferables;
+
+		}
+
+		catch (ApplicationException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
+
+	public AnalysisType_Transferable[] transmitAnalysisTypesButIdsByCondition(Identifier_Transferable[] ids_Transferable,
+			StorableObjectCondition_Transferable condition_Transferable)
+			throws AMFICOMRemoteException {
+		try {
+			Collection collection;
+			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
+			if (ids_Transferable.length > 0) {
+				List idsList = new ArrayList(ids_Transferable.length);
+				for (int i = 0; i < ids_Transferable.length; i++)
+					idsList.add(new Identifier(ids_Transferable[i]));
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
+			}
+			else
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+
+			AnalysisType_Transferable[] transferables = new AnalysisType_Transferable[collection.size()];
+			int i = 0;
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
+				AnalysisType analysisType = (AnalysisType) it.next();
+				transferables[i] = (AnalysisType_Transferable) analysisType.getTransferable();
+			}
+			return transferables;
+
+		}
+
+		catch (ApplicationException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
+		}
+		catch (Throwable t) {
+			Log.errorException(t);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
+
+	public EvaluationType_Transferable[] transmitEvaluationTypesButIdsByCondition(Identifier_Transferable[] ids_Transferable,
+			StorableObjectCondition_Transferable condition_Transferable)
+			throws AMFICOMRemoteException {
+		try {
+			Collection collection;
+			StorableObjectCondition condition = StorableObjectConditionBuilder.restoreCondition(condition_Transferable);
+			if (ids_Transferable.length > 0) {
+				List idsList = new ArrayList(ids_Transferable.length);
+				for (int i = 0; i < ids_Transferable.length; i++)
+					idsList.add(new Identifier(ids_Transferable[i]));
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
+			}
+			else
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+
+			EvaluationType_Transferable[] transferables = new EvaluationType_Transferable[collection.size()];
+			int i = 0;
+			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
+				EvaluationType evaluationType = (EvaluationType) it.next();
+				transferables[i] = (EvaluationType_Transferable) evaluationType.getTransferable();
 			}
 			return transferables;
 
