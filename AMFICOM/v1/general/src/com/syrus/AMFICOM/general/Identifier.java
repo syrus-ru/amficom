@@ -1,5 +1,5 @@
 /*
- * $Id: Identifier.java,v 1.8 2004/08/10 19:04:51 arseniy Exp $
+ * $Id: Identifier.java,v 1.9 2004/10/19 12:23:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,8 @@ package com.syrus.AMFICOM.general;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/08/10 19:04:51 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2004/10/19 12:23:28 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -22,7 +22,6 @@ public class Identifier implements Comparable, Cloneable, TransferableObject {
 	private short major;
 	private long minor;
 	private String identifierString;
-	/**	@deprecated*/
 	private String majorString;
 
 	public Identifier(String identifierString) {
@@ -92,13 +91,12 @@ public class Identifier implements Comparable, Cloneable, TransferableObject {
 	public boolean equals(Object obj) {
 		if(obj instanceof Identifier)
 			return ((Identifier)obj).getIdentifierString().equals(this.identifierString);
-		else
-			return false;
+		return false;
 	}
 
 	public int hashCode() {
 		int ret = 17;
-		ret = 37 * ret + (int)this.major;
+		ret = 37 * ret + this.major;
 		ret = 37 * ret + (int)(this.minor ^ (this.minor >>> 32));
 		ret = 37 * ret + this.identifierString.hashCode();
 		ret = 37 * ret + this.majorString.hashCode();
@@ -117,10 +115,10 @@ public class Identifier implements Comparable, Cloneable, TransferableObject {
 		return this.major;
 	}
 
-	/** @deprecated*/
-	public String getMajorString() {
-		return this.majorString;
-	}
+//	/** @deprecated*/
+//	public String getMajorString() {
+//		return this.majorString;
+//	}
 
 	public long getMinor() {
 		return this.minor;
