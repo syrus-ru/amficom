@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.40 2004/11/17 08:22:30 bob Exp $
+ * $Id: ResultDatabase.java,v 1.41 2004/11/19 09:01:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2004/11/17 08:22:30 $
+ * @version $Revision: 1.41 $, $Date: 2004/11/19 09:01:07 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -606,7 +606,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void delete(Result result) {
+	public void delete(StorableObject storableObject) throws IllegalDataException {
+		Result result = fromStorableObject(storableObject);
 		String resultIdStr = DatabaseIdentifier.toSQLString(result.getId());
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();

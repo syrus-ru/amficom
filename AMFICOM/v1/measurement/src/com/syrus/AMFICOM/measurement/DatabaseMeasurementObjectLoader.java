@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.25 2004/11/18 12:25:00 bob Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.26 2004/11/19 09:01:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,10 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -27,7 +24,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/11/18 12:25:00 $
+ * @version $Revision: 1.26 $, $Date: 2004/11/19 09:01:07 $
  * @author $Author: bob $
  * @module measurement_v1
  */

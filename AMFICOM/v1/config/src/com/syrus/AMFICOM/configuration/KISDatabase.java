@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.37 2004/11/17 07:56:25 bob Exp $
+ * $Id: KISDatabase.java,v 1.38 2004/11/19 08:59:52 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2004/11/17 07:56:25 $
+ * @version $Revision: 1.38 $, $Date: 2004/11/19 08:59:52 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -504,37 +504,6 @@ public class KISDatabase extends StorableObjectDatabase {
 		default:
 			super.checkAndUpdateEntities(storableObjects, false);
 			break;
-		}
-	}
-
-	public void delete(KIS kis) {
-		String kisIdStr = DatabaseIdentifier.toSQLString(kis.getId());
-		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
-		try {
-			statement = connection.createStatement();
-			String sql = SQL_DELETE_FROM
-				+ ObjectEntities.KIS_ENTITY
-				+ SQL_WHERE + COLUMN_ID + EQUALS + kisIdStr;
-			Log.debugMessage("KISDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql);
-			connection.commit();
-		}
-		catch (SQLException sqle1) {
-			Log.errorException(sqle1);
-		}
-		finally {
-			try {
-				if(statement != null)
-					statement.close();
-				statement = null;
-			}
-			catch(SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-			finally {
-				DatabaseConnection.closeConnection(connection);
-			}
 		}
 	}
 

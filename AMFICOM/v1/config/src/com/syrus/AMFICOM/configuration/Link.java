@@ -1,5 +1,5 @@
 /*
- * $Id: Link.java,v 1.9 2004/11/15 15:30:53 bob Exp $
+ * $Id: Link.java,v 1.10 2004/11/19 08:59:52 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/11/15 15:30:53 $
+ * @version $Revision: 1.10 $, $Date: 2004/11/19 08:59:52 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -35,7 +35,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 
 	private String name;
 	private String description;		
-	private LinkType type;		
+	private AbstractLinkType type;		
 	private String inventoryNo;
 	private String supplier;
 	private String supplierCode;
@@ -83,7 +83,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 		}
 		
 		try {
-			this.type = (LinkType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(lt.type_id), true);
+			this.type = (AbstractLinkType) ConfigurationStorableObjectPool.getStorableObject(new Identifier(lt.type_id), true);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
@@ -96,7 +96,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 				  Identifier domainId,
 				  String name,
 				  String description,
-				  LinkType type,
+				  AbstractLinkType type,
 				  String inventoryNo,
 				  String supplier,
 				  String supplierCode,
@@ -134,7 +134,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 																	 Identifier domainId,
 																	 String name,
 																	 String description,
-																	 LinkType type,
+																	 AbstractLinkType type,
 																	 String inventoryNo,
 																	 String supplier,
 																	 String supplierCode,
@@ -195,7 +195,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 												Identifier domainId,
 												String name,
 												String description,
-												LinkType type,
+												AbstractLinkType type,
 												String inventoryNo,						
 												String supplier,
 												String supplierCode,
@@ -258,10 +258,13 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 	}
 	
 	/**
-	 * @return paretn link identifier
+	 * 
+	 * @return paretn link identifier if sort is _LINKSORT_CABLELINK_THREAD, throws {@link UnsupportedOperationException} otherwise 
 	 */
 	public Identifier getLinkId(){
-		return this.linkId;
+		if (this.sort == LinkSort._LINKSORT_CABLELINK_THREAD)
+			return this.linkId;
+		throw new UnsupportedOperationException("LinkSort isn't LINKSORT_CABLELINK_THREAD");
 	}
 	
 	public String getColor(){

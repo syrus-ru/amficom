@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.38 2004/11/16 15:48:44 bob Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.39 2004/11/19 09:01:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2004/11/16 15:48:44 $
+ * @version $Revision: 1.39 $, $Date: 2004/11/19 09:01:07 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -464,7 +464,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 	
-	public void delete(AnalysisType analysisType) {
+	public void delete(StorableObject storableObject) throws IllegalDataException {
+		AnalysisType analysisType = fromStorableObject(storableObject);
 		String analysisTypeIdStr = DatabaseIdentifier.toSQLString(analysisType.getId());
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();

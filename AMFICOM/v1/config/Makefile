@@ -67,9 +67,12 @@ $(LIBNAME): .mach
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredElement.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredElementDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/Link.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/AbstractLinkType.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/LinkType.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/LinkDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/CableThreadType.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/LinkTypeDatabase.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/CableThreadTypeDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/StringFieldCondition.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/DomainCondition.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/LinkedIdsCondition.java

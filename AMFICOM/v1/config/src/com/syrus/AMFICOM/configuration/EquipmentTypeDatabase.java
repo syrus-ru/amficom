@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeDatabase.java,v 1.17 2004/11/16 12:33:17 bob Exp $
+ * $Id: EquipmentTypeDatabase.java,v 1.18 2004/11/19 08:59:52 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,31 +8,28 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.List;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
-import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/11/16 12:33:17 $
+ * @version $Revision: 1.18 $, $Date: 2004/11/19 08:59:52 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -184,38 +181,6 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
         }
         return list;
     }
-	
-	public void delete(EquipmentType equipmentType) {
-		String eqIdStr = DatabaseIdentifier.toSQLString(equipmentType.getId());
-		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
-        try {
-			statement = connection.createStatement();
-			String sql = SQL_DELETE_FROM
-						+ ObjectEntities.EQUIPMENTTYPE_ENTITY
-						+ SQL_WHERE
-						+ COLUMN_ID + EQUALS
-						+ eqIdStr;
-			Log.debugMessage("EquipmentTypeDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql);
-			connection.commit();
-		}
-		catch (SQLException sqle1) {
-			Log.errorException(sqle1);
-		}
-		finally {
-			try {
-				if(statement != null)
-					statement.close();
-				statement = null;
-			}
-			catch(SQLException sqle1) {
-				Log.errorException(sqle1);
-			} finally {
-                DatabaseConnection.closeConnection(connection);
-            }
-		}
-	}
 	
 	public List retrieveByIds(List ids, String condition) 
 			throws IllegalDataException, RetrieveObjectException {

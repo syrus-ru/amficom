@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationDatabaseContext.java,v 1.25 2004/10/27 08:18:52 max Exp $
+ * $Id: ConfigurationDatabaseContext.java,v 1.26 2004/11/19 08:59:52 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,8 @@ package com.syrus.AMFICOM.configuration;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/10/27 08:18:52 $
- * @author $Author: max $
+ * @version $Revision: 1.26 $, $Date: 2004/11/19 08:59:52 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -22,6 +22,7 @@ public class ConfigurationDatabaseContext {
 	protected static StorableObjectDatabase portTypeDatabase;
 	protected static StorableObjectDatabase measurementPortTypeDatabase;
 	protected static StorableObjectDatabase linkTypeDatabase;
+	protected static StorableObjectDatabase cableThreadTypeDatabase;
     protected static StorableObjectDatabase kisTypeDatabase;
     protected static StorableObjectDatabase transmissionPathTypeDatabase;
 	
@@ -47,6 +48,7 @@ public class ConfigurationDatabaseContext {
 													StorableObjectDatabase portTypeDatabase1,
 													StorableObjectDatabase measurementPortTypeDatabase1,
 													StorableObjectDatabase linkTypeDatabase1,
+													StorableObjectDatabase cableThreadTypeDatabase1,
                                                     StorableObjectDatabase kisTypeDatabase1,
 													StorableObjectDatabase characteristicDatabase1,
 													StorableObjectDatabase userDatabase1,
@@ -66,6 +68,7 @@ public class ConfigurationDatabaseContext {
 		portTypeDatabase = portTypeDatabase1;
 		measurementPortTypeDatabase = measurementPortTypeDatabase1;
 		linkTypeDatabase = linkTypeDatabase1;
+		cableThreadTypeDatabase = cableThreadTypeDatabase1;
         kisTypeDatabase = kisTypeDatabase1;
 		
 		characteristicDatabase = characteristicDatabase1;
@@ -105,6 +108,9 @@ public class ConfigurationDatabaseContext {
     }
     public static StorableObjectDatabase getLinkDatabase() {
         return linkDatabase;
+    }
+    public static StorableObjectDatabase getCableThreadTypeDatabase(){
+    	return cableThreadTypeDatabase;
     }
     public static StorableObjectDatabase getLinkTypeDatabase() {
         return linkTypeDatabase;

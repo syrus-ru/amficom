@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.27 2004/11/17 07:56:25 bob Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.28 2004/11/19 08:59:52 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/11/17 07:56:25 $
+ * @version $Revision: 1.28 $, $Date: 2004/11/19 08:59:52 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -555,7 +555,8 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
         return list;
     }
 
-	public void delete(MonitoredElement monitoredElement) {
+	public void delete(StorableObject storableObject) throws IllegalDataException {
+		MonitoredElement monitoredElement = fromStorableObject(storableObject);
 		String meIdStr = DatabaseIdentifier.toSQLString(monitoredElement.getId());
 		int meSort = monitoredElement.getSort().value();
 		

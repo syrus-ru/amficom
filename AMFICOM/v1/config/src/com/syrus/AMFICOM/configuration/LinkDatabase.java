@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.7 2004/11/17 07:56:25 bob Exp $
+ * $Id: LinkDatabase.java,v 1.8 2004/11/19 08:59:52 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/11/17 07:56:25 $
+ * @version $Revision: 1.8 $, $Date: 2004/11/19 08:59:52 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -174,9 +174,9 @@ public class LinkDatabase extends StorableObjectDatabase {
 		String inventoryNo = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_INVENTORY_NO));
 		String supplier = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_SUPPLIER));
 		String supplierCode = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_SUPPLIER_CODE));
-		LinkType linkType;
+		AbstractLinkType linkType;
 		try {
-			linkType = (LinkType)ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TYPE_ID), true);
+			linkType = (AbstractLinkType)ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TYPE_ID), true);
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);

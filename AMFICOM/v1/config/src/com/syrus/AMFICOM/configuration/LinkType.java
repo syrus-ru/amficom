@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.6 2004/11/15 13:50:27 bob Exp $
+ * $Id: LinkType.java,v 1.7 2004/11/19 08:59:52 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,18 +20,20 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/11/15 13:50:27 $
+ * @version $Revision: 1.7 $, $Date: 2004/11/19 08:59:52 $
  * @author $Author: bob $
  * @module configuration_v1
  */
 
-public class LinkType extends StorableObjectType {
-	static final long serialVersionUID = -3742889500686769011L;
+public class LinkType extends AbstractLinkType {
     
+	/**
+	 * Comment for <code>serialVersionUID</code>
+	 */
+	private static final long	serialVersionUID	= 3257007652839372857L;
 	private String name;
 	private int						sort;
 	private String					manufacturer;
@@ -97,17 +99,17 @@ public class LinkType extends StorableObjectType {
 	}
 
 	public static LinkType getInstance(LinkType_Transferable ltt) throws CreateObjectException {
-		LinkType equipmentType = new LinkType(ltt);
+		LinkType linkType = new LinkType(ltt);
 
-		equipmentType.linkTypeDatabase = ConfigurationDatabaseContext.linkTypeDatabase;
+		linkType.linkTypeDatabase = ConfigurationDatabaseContext.linkTypeDatabase;
 		try {
-			if (equipmentType.linkTypeDatabase != null)
-				equipmentType.linkTypeDatabase.insert(equipmentType);
+			if (linkType.linkTypeDatabase != null)
+				linkType.linkTypeDatabase.insert(linkType);
 		} catch (IllegalDataException ide) {
 			throw new CreateObjectException(ide.getMessage(), ide);
 		}
 
-		return equipmentType;
+		return linkType;
 	}
 
 	public Object getTransferable() {

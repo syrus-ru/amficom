@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.37 2004/11/16 15:48:45 bob Exp $
+ * $Id: SetDatabase.java,v 1.38 2004/11/19 09:01:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2004/11/16 15:48:45 $
+ * @version $Revision: 1.38 $, $Date: 2004/11/19 09:01:07 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -676,7 +676,8 @@ public class SetDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void delete(Set set) {
+	public void delete(StorableObject storableObject) throws IllegalDataException {
+		Set set = fromStorableObject(storableObject);
 		String setIdStr = DatabaseIdentifier.toSQLString(set.getId());
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();

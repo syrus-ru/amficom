@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeDatabase.java,v 1.6 2004/11/17 07:56:25 bob Exp $
+ * $Id: LinkTypeDatabase.java,v 1.7 2004/11/19 08:59:52 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,11 +8,9 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -27,12 +25,11 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
-import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/11/17 07:56:25 $
+ * @version $Revision: 1.7 $, $Date: 2004/11/19 08:59:52 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -90,11 +87,10 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
 		LinkType linkType = fromStorableObject(storableObject);
-		String name = DatabaseString.toQuerySubString(linkType.getName());
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getCodename()) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getDescription()) + APOSTOPHE 
-			+ APOSTOPHE + (name != null ? name : "") + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getName()) + APOSTOPHE + COMMA
 			+ linkType.getSort().value() + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getManufacturer()) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getManufacturerCode()) + APOSTOPHE + COMMA
@@ -213,38 +209,6 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
         }
         return list;
     }
-	
-	public void delete(LinkType linkType) {
-		String ltIdStr = DatabaseIdentifier.toSQLString(linkType.getId());
-		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
-        try {
-			statement = connection.createStatement();
-			String sql = SQL_DELETE_FROM
-						+ ObjectEntities.LINKTYPE_ENTITY
-						+ SQL_WHERE
-						+ COLUMN_ID + EQUALS
-						+ ltIdStr;
-			Log.debugMessage("LinkTypeDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql);
-			connection.commit();
-		}
-		catch (SQLException sqle1) {
-			Log.errorException(sqle1);
-		}
-		finally {
-			try {
-				if(statement != null)
-					statement.close();
-				statement = null;
-			}
-			catch(SQLException sqle1) {
-				Log.errorException(sqle1);
-			} finally {
-                DatabaseConnection.closeConnection(connection);
-            }
-		}
-	}
 	
 	public List retrieveByIds(List ids, String condition) 
 			throws IllegalDataException, RetrieveObjectException {

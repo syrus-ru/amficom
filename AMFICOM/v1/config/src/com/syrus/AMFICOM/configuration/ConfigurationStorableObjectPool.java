@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.38 2004/11/18 14:53:10 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.39 2004/11/19 08:59:52 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2004/11/18 14:53:10 $
+ * @version $Revision: 1.39 $, $Date: 2004/11/19 08:59:52 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -684,6 +684,7 @@ public class ConfigurationStorableObjectPool {
 				if (depList != null && !depList.isEmpty()){
 					Log.debugMessage("ConfigurationStorableObjectPool.saveStorableObjects | recursieve save '" 
 									 + ObjectEntities.codeToString(major.shortValue()) + "'", Log.DEBUGLEVEL08);
+					// [:]/\/\/\/\/|||||||||||||||||||||||||||[:]
 					saveStorableObjects(major.shortValue(), depList, force);
 				}
 			}
