@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.16 2004/12/23 11:13:01 bass Exp $
+# $Id: Makefile,v 1.17 2005/01/18 07:29:55 bob Exp $
 #
 # vim:ft=make:
 #
@@ -61,6 +61,8 @@ idl: .idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/general.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/report.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/resource.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/administration.idl
+
 	touch $@
 
 .PHONY: idlclean
