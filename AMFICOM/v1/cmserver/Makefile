@@ -32,7 +32,10 @@ $(LIBNAME_INTERFACE):	.corba
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(CLASSDIR) 
+		-classpath $(APPCLASSPATH):$(CLASSDIR) \
+		$(SRCDIR)/com/syrus/AMFICOM/cmserver/CMServerImpl.java \
+		$(SRCDIR)/com/syrus/AMFICOM/cmserver/ClientMeasurementServer.java \
+		$(SRCDIR)/com/syrus/AMFICOM/cmserver/DatabaseContextSetup.java
 	touch $@
 
 .corba:	$(CLASSDIR)
@@ -69,3 +72,7 @@ arch:
 		Makefile \
 		$(IDLDIR)/cmserver.idl \
 		$(SRCDIR)/com/syrus/AMFICOM/cmserver/*.java
+
+
+lib: $(LIBNAME)
+	$(CP) $(LIBNAME) $(LIBDIR)
