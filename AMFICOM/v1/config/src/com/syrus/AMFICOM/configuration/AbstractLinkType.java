@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractLinkType.java,v 1.3 2004/12/14 09:22:20 max Exp $
+ * $Id: AbstractLinkType.java,v 1.4 2004/12/14 12:42:50 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.util.Date;
-import java.util.List;
 
 import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
 import com.syrus.AMFICOM.general.Identifier;
@@ -17,7 +16,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/12/14 09:22:20 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/14 12:42:50 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -84,14 +83,18 @@ public abstract class AbstractLinkType extends StorableObjectType {
 		this.description = description;
 	}
     
+    
+    
     abstract public Identifier getImageId();
     
     abstract public String getManufacturer();
+    abstract public void setManufacturer();
     
     abstract public String getManufacturerCode();
+    abstract public void setManufacturerCode();
     
     abstract public LinkTypeSort getSort();
     
     abstract public String getName();        
-    
+    abstract public void setName();
 }
