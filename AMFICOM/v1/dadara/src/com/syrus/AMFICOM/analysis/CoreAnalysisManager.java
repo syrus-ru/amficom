@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.20 2005/03/04 17:03:16 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.21 2005/03/10 17:00:01 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.20 $, $Date: 2005/03/04 17:03:16 $
+ * @version $Revision: 1.21 $, $Date: 2005/03/10 17:00:01 $
  * @module
  */
 
@@ -117,7 +117,7 @@ public class CoreAnalysisManager
 	 */
 	private static double[] calcNoiseArray(double[] y, int length, SimpleReflectogramEvent[] ev)
 	{
-		double[] ret = nCalcNoiseArray(y, 0);
+		double[] ret = nCalcNoiseArray(y, length);
 		for (int i = 0; i < ret.length; i++)
 			ret[i] *= 3.0;
 		return ret;
