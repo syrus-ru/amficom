@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.12 2004/10/12 07:39:01 bass Exp $
+# $Id: Makefile,v 1.13 2004/10/20 08:26:48 bass Exp $
 #
 # vim:ft=make:
 #
@@ -41,6 +41,18 @@ all: .all
 	 	$(shell find $(SRCDIR) -name '*.java')
 	touch $@
 
+# Target created for IDEs compiling everything from scratch not to tie client
+# code to (cm)server implementation.
+.PHONY: xtra
+xtra: .xtra
+
+.xtra: .idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/event.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/configuration.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/measurement.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/cmserver.idl
+	touch $@
+
 .PHONY: idl
 idl: .idl
 
@@ -66,11 +78,16 @@ idlclean:
 		$(SRCDIR)/* \
 		.idl
 
+.PHONY: xtraclean
+xtraclean: idlclean
+	$(RM) -r \
+		.xtra
+
 $(SRCDIR) $(CLASSDIR):
 	mkdir -p $@
 
 .PHONY: clean
-clean: idlclean
+clean: xtraclean
 	$(RM) \
 		.all
 
