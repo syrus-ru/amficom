@@ -17,7 +17,7 @@ public:
 	unsigned int getLength() const;
 	char* getSegment() const;
 	char* getData() const; //---
-	ByteArray* clone()const;
+	ByteArray* clone() const;
 
 private:
 	unsigned int length;
