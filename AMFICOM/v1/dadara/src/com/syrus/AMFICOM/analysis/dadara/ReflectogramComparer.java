@@ -20,7 +20,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * по ModelTrace - MaxDeviation и пр.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2005/01/27 08:41:14 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/11 14:05:07 $
  * @module analysis_v1
  */
 public class ReflectogramComparer
@@ -282,45 +282,47 @@ public class ReflectogramComparer
 	private static double getMaxDeviation(ModelTrace mt1,
 			ModelTrace mt2, int iFrom, int iToEx)
 	{
+		int N = iToEx - iFrom;
+		double[] y1 = mt1.getYArrayZeroPad(iFrom, N);
+		double[] y2 = mt2.getYArrayZeroPad(iFrom, N);
+
 		double ret = 0.;
-		for (int i = iFrom; i < iToEx; i++)
+		for (int i = 0; i < N; i++)
 		{
-				double a1 = mt1.getY(i);
-				double a2 = mt2.getY(i);
-				double diff = Math.abs(a1 - a2);
-				if (diff > ret)
-					ret = diff;
+			double diff = Math.abs(y1[i] - y2[i]);
+			if (diff > ret)
+				ret = diff;
 		}
 		return ret;
 	}
-	
+
 	private static double getMeanDeviation(ModelTrace mt1,
 			ModelTrace mt2, int iFrom, int iToEx)
 	{
+		int N = iToEx - iFrom;
+		double[] y1 = mt1.getYArrayZeroPad(iFrom, N);
+		double[] y2 = mt2.getYArrayZeroPad(iFrom, N);
 		double sum = 0.;
-		int count = 0;
-		for (int i = iFrom; i < iToEx; i++)
+		for (int i = 0; i < N; i++)
 		{
-				double a1 = mt1.getY(i);
-				double a2 = mt2.getY(i);
-				sum += Math.abs(a1 - a2);
-				count++;
+				sum += Math.abs(y1[i] - y2[i]);
 		}
-		return count > 0 ? sum / count : 0.0;
+		return N > 0 ? sum / N : 0.0;
 	}
-	
+
 	private static double getRMSDeviation(ModelTrace mt1,
 			ModelTrace mt2, int iFrom, int iToEx)
 	{
+		int N = iToEx - iFrom;
+		double[] y1 = mt1.getYArrayZeroPad(iFrom, N);
+		double[] y2 = mt2.getYArrayZeroPad(iFrom, N);
 		double sum = 0.;
-		int count = 0;
-		for (int i = iFrom; i < iToEx; i++)
+		for (int i = 0; i < N; i++)
 		{
-				double diff = mt1.getY(i) - mt2.getY(i);
+				double diff = y1[i] - y2[i];
 				sum += diff * diff;
-				count++;
 		}
-		return count > 0 ? Math.sqrt(sum / count) : 0.0;
+		return N > 0 ? Math.sqrt(sum / N) : 0.0;
 	}
 
 	public static double getMaxDeviation(ModelTraceManager data,
