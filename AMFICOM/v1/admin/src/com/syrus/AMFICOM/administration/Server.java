@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.9 2005/03/04 13:30:41 bass Exp $
+ * $Id: Server.java,v 1.10 2005/03/05 21:34:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.administration;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -28,11 +29,12 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/03/04 13:30:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/03/05 21:34:42 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -45,7 +47,8 @@ public class Server extends DomainMember implements Characterizable {
 	private String description;
 	private String hostname;
 	private Identifier userId;
-	private List characteristics;
+
+	private Collection characteristics;
 
 	private StorableObjectDatabase serverDatabase;
 
@@ -106,16 +109,6 @@ public class Server extends DomainMember implements Characterizable {
 
 		this.serverDatabase = AdministrationDatabaseContext.serverDatabase;
 	}
-//
-//	public void insert() throws CreateObjectException {
-//		try {
-//			if (this.serverDatabase != null)
-//				this.serverDatabase.update(this, this.creatorId, StorableObjectDatabase.UPDATE_FORCE);
-//		}
-//		catch (ApplicationException ae) {
-//			throw new CreateObjectException(ae.getMessage(), ae);
-//		}
-//	}
 
 	public Object getTransferable() {
 		int i = 0;
@@ -177,17 +170,17 @@ public class Server extends DomainMember implements Characterizable {
 		}
 	}
 
-	public List getCharacteristics() {
-		return this.characteristics;
+	public Collection getCharacteristics() {
+		return Collections.unmodifiableCollection(this.characteristics);
 	}
 
-	protected void setCharacteristics0(List characteristics) {
+	public void setCharacteristics0(Collection characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
 
-	public void setCharacteristics(List characteristics) {
+	public void setCharacteristics(Collection characteristics) {
 		this.setCharacteristics0(characteristics);
 		super.changed = true;
 	}
@@ -258,5 +251,9 @@ public class Server extends DomainMember implements Characterizable {
 	public void setUserId(Identifier userId) {
 		this.userId = userId;
 		super.changed = true;
+	}
+
+	public CharacteristicSort getCharacteristicSort() {
+		return CharacteristicSort.CHARACTERISTIC_SORT_SERVER;
 	}
 }
