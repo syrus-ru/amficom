@@ -1,3 +1,13 @@
+/*
+ * $Id: Environment.java,v 1.2 2004/06/18 12:15:20 krupenn Exp $
+ *
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ
+ *
+ * Платформа: java 1.4.1
+*/
+
 package com.syrus.AMFICOM.Client.General.Model;
 
 import com.incors.plaf.kunststoff.KunststoffLookAndFeel;
@@ -12,13 +22,24 @@ import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.io.IniFile;
 import java.awt.*;
 import java.io.IOException;
-import java.util.Vector;
+import java.util.ArrayList;
 import javax.swing.*;
 import javax.swing.plaf.metal.*;
 
+import java.util.logging.*;
+
+/**
+ * Класс $RCSfile: Environment.java,v $ используется для хранения общей для приложения информации
+ * 
+ * 
+ * 
+ * @version $Revision: 1.2 $, $Date: 2004/06/18 12:15:20 $
+ * @author $Author: krupenn $
+ * @see
+ */
 public class Environment extends Singleton
 {
-	static private Vector windows = new Vector();
+	static private ArrayList windows = new ArrayList();
 	static public Dispatcher the_dispatcher = new Dispatcher();
 
 	static private IniFile iniFile;
@@ -50,6 +71,38 @@ public class Environment extends Singleton
 
 	private static boolean debugMode = false;
 
+	private static Handler handler;
+	private static Formatter formatter;
+	private static Level logLevel;
+
+	private static final String LOG_HANDLER_FILE = "file";
+	private static final String LOG_HANDLER_MEMORY = "memory";
+	private static final String LOG_HANDLER_SOCKET = "socket";
+	private static final String LOG_HANDLER_CONSOLE = "console";
+
+	private static final String LOG_LEVEL_ID_OFF = "off";
+	private static final String LOG_LEVEL_ID_SEVERE = "severe";
+	private static final String LOG_LEVEL_ID_WARNING = "warning";
+	private static final String LOG_LEVEL_ID_INFO = "info";
+	private static final String LOG_LEVEL_ID_CONFIG = "config";
+	private static final String LOG_LEVEL_ID_FINE = "fine";
+	private static final String LOG_LEVEL_ID_FINER = "finer";
+	private static final String LOG_LEVEL_ID_FINEST = "finest";
+	private static final String LOG_LEVEL_ID_ALL = "all";
+
+	private static final String LOG_FORMATTER_XML = "xml";
+	private static final String LOG_FORMATTER_SIMPLE = "simple";
+
+	private static String logFileName;
+
+	public static final Level LOG_LEVEL_SEVERE = Level.SEVERE;
+	public static final Level LOG_LEVEL_WARNING = Level.WARNING;
+	public static final Level LOG_LEVEL_INFO = Level.INFO;
+	public static final Level LOG_LEVEL_CONFIG = Level.CONFIG;
+	public static final Level LOG_LEVEL_FINE = Level.FINE;
+	public static final Level LOG_LEVEL_FINER = Level.FINER;
+	public static final Level LOG_LEVEL_FINEST = Level.FINEST;
+
 	static
 	{
 		LangModel.initialize();
@@ -72,12 +125,156 @@ public class Environment extends Singleton
 			System.out.println("read connection = " + connection);
 			if(connection == null)
 				SetDefaults();
+
+			String lf_val = iniFile.getValue("logformatter");
+			String ll_val = iniFile.getValue("loglevel");
+			String lh_val = iniFile.getValue("loghandler");
+			initLog(lh_val, ll_val, lf_val);
 		}
 		catch(IOException e)
 		{
 			System.out.println("Error opening " + iniFileName + " - setting defaults");
 			SetDefaults();
 		}
+	}
+
+	private static void initLog(String lh, String ll, String lf)
+	{
+		try
+		{
+			if(lh.equalsIgnoreCase(LOG_HANDLER_FILE))
+			{
+				logFileName = "./logs/" + System.currentTimeMillis() + ".log";
+				handler = new FileHandler(logFileName);
+			}
+			else
+			if(lh.equalsIgnoreCase(LOG_HANDLER_CONSOLE))
+			{
+				handler = new ConsoleHandler();
+			}
+			else
+			if(lh.equalsIgnoreCase(LOG_HANDLER_SOCKET))
+			{
+				throw new UnsupportedOperationException();
+			}
+			else
+			if(lh.equalsIgnoreCase(LOG_HANDLER_MEMORY))
+			{
+				throw new UnsupportedOperationException();
+			}
+		}
+		catch(Exception e)
+		{
+			handler = new ConsoleHandler();
+		}
+		
+		try
+		{
+			if(ll.equalsIgnoreCase(LOG_LEVEL_ID_OFF))
+			{
+				logLevel = Level.OFF;
+			}
+			else
+			if(ll.equalsIgnoreCase(LOG_LEVEL_ID_SEVERE))
+			{
+				logLevel = Level.SEVERE;
+			}
+			else
+			if(ll.equalsIgnoreCase(LOG_LEVEL_ID_WARNING))
+			{
+				logLevel = Level.WARNING;
+			}
+			else
+			if(ll.equalsIgnoreCase(LOG_LEVEL_ID_INFO))
+			{
+				logLevel = Level.INFO;
+			}
+			else
+			if(ll.equalsIgnoreCase(LOG_LEVEL_ID_CONFIG))
+			{
+				logLevel = Level.CONFIG;
+			}
+			else
+			if(ll.equalsIgnoreCase(LOG_LEVEL_ID_FINE))
+			{
+				logLevel = Level.FINE;
+			}
+			else
+			if(ll.equalsIgnoreCase(LOG_LEVEL_ID_FINER))
+			{
+				logLevel = Level.FINER;
+			}
+			else
+			if(ll.equalsIgnoreCase(LOG_LEVEL_ID_FINEST))
+			{
+				logLevel = Level.FINEST;
+			}
+			else
+			if(ll.equalsIgnoreCase(LOG_LEVEL_ID_ALL))
+			{
+				logLevel = Level.ALL;
+			}
+			handler.setLevel(logLevel);
+		}
+		catch(Exception e)
+		{
+			handler.setLevel(Level.WARNING);
+		}
+		
+		try
+		{
+			if(lf.equalsIgnoreCase(LOG_FORMATTER_XML))
+			{
+				formatter = new XMLFormatter();
+			}
+			else
+			if(lf.equalsIgnoreCase(LOG_FORMATTER_SIMPLE))
+			{
+				formatter = new SimpleFormatter();
+			}
+			handler.setFormatter(formatter);
+		}
+		catch(Exception e)
+		{
+			handler.setFormatter(new SimpleFormatter());
+		}
+	}
+
+	public static void log(String text)
+	{
+		log(Level.CONFIG, text);
+	}
+
+	public static void log(Level level, String text)
+	{
+		log(level, text, null);
+	}
+
+	public static void log(Level level, String text, String className)
+	{
+		log(level, text, className, null);
+	}
+
+	public static void log(Level level, String text, String className, String methodName)
+	{
+		log(level, text, className, methodName, null);
+	}
+
+	public static synchronized void log(Level level, String text, String className, String methodName, Throwable throwable)
+	{
+		LogRecord logRecord;
+		logRecord = new LogRecord(level, text);
+		logRecord.setLoggerName("");
+		if(className != null)
+		{
+			logRecord.setMillis(System.currentTimeMillis());
+			logRecord.setSourceClassName(className);
+		}
+		if(methodName != null)
+			logRecord.setSourceMethodName(methodName);
+		if(throwable != null)
+			logRecord.setThrown(throwable);
+		handler.publish(logRecord);
 	}
 
 	protected Environment()
@@ -101,7 +298,7 @@ public class Environment extends Singleton
 		return beep;
 	}
 
-	static public void initialize()
+	public static void initialize()
 	{
 		if(!initiated)
 		{
@@ -176,7 +373,7 @@ public class Environment extends Singleton
 		}
 	}
 
-	static public String getConnectionType()
+	public static String getConnectionType()
 	{
 		return connection;
 	}
@@ -214,7 +411,7 @@ public class Environment extends Singleton
 			return new EmptyConnectionInfo();
 	}
 
-	static public SessionInterface getDefaultSessionInterface(ConnectionInterface ci)
+	public static SessionInterface getDefaultSessionInterface(ConnectionInterface ci)
 	{
 		if(ci instanceof RISDConnectionInfo)
 			return new RISDSessionInfo(ci);
@@ -224,7 +421,7 @@ public class Environment extends Singleton
 		return null;
 	}
 
-	static public DataSourceInterface getDefaultDataSourceInterface(SessionInterface si)
+	public static DataSourceInterface getDefaultDataSourceInterface(SessionInterface si)
 	{
 		if(si instanceof RISDSessionInfo)
 			return new RISDDataSource(si);
@@ -234,13 +431,13 @@ public class Environment extends Singleton
 		return null;
 	}
 
-	static public void addWindow(Window window)
+	public static void addWindow(Window window)
 	{
 		System.out.println("new window " + window.getName());
 		windows.add(window);
 	}
 
-	static public void disposeWindow(Window window)
+	public static void disposeWindow(Window window)
 	{
 		System.out.println("close window " + window.getName());
 		windows.remove(window);
@@ -260,12 +457,12 @@ public class Environment extends Singleton
 		}
 	}
 
-	static public void setActiveWindow(JFrame window)
+	public static void setActiveWindow(JFrame window)
 	{
 		activeWindow = window;
 	}
 
-	static public JFrame getActiveWindow()
+	public static JFrame getActiveWindow()
 	{
 		return activeWindow;
 	}
