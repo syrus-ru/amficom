@@ -1,1 +1,0 @@
-nmake /f makemodeling %1
