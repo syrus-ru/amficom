@@ -5,12 +5,10 @@ import java.util.*;
 
 import java.awt.Color;
 
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
-
 /**
  * @deprecated нахЪ
- * @version $Revision: 1.7 $, $Date: 2005/03/25 09:34:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/03/29 17:49:51 $
+ * @author $Author: saa $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
  */

@@ -31,7 +31,6 @@ public class PrimaryParametersFrame extends ATableFrame
 implements OperationListener
 {
 
-	private Dispatcher dispatcher;
 	private FixedSizeEditableTableModel tModel;
 	private ATable jTable;
 
@@ -63,7 +62,6 @@ implements OperationListener
 
 	void init_module(Dispatcher dispatcher)
 	{
-		this.dispatcher = dispatcher;
 		dispatcher.register(this, RefChangeEvent.typ);
 	}
 

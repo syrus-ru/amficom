@@ -23,7 +23,6 @@ import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.io.BellcoreStructure;
 
 public class AnalyseMainFrameSimplified extends JFrame
 	implements OperationListener
@@ -301,7 +300,6 @@ public class AnalyseMainFrameSimplified extends JFrame
 		{
 			ContextChangeEvent cce = (ContextChangeEvent)ae;
 			System.out.println("perform context change \"" + Long.toHexString(cce.change_type) + "\" at " + this.getTitle());
-			ApplicationModel aModel = aContext.getApplicationModel();
 			if(cce.SESSION_OPENED)
 			{
 				SessionInterface ssi = (SessionInterface)cce.getSource();

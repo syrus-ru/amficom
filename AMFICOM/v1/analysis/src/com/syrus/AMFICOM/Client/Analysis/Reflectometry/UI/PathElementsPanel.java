@@ -1,7 +1,6 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.util.*;
-import java.util.List;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -17,7 +16,6 @@ public final class PathElementsPanel extends AnalysisPanel
 	private boolean setting_active_pe = false;
 
 	SchemePath path;
-	private PathDecomposer decomposer;
 	private PathElement startPathElement;
 	private PathElement endPathElement;
 	private PathElement activePathElement;
@@ -30,7 +28,7 @@ public final class PathElementsPanel extends AnalysisPanel
 	public void setPath(SchemePath path)
 	{
 		this.path = path;
-		decomposer = new PathDecomposer(path);
+		PathDecomposer decomposer = new PathDecomposer(path);
 //		if (events != null)
 //			decompositor.setTotalOpticalLength(events[events.length - 1].last_point * deltaX);
 //		else if (ep != null)

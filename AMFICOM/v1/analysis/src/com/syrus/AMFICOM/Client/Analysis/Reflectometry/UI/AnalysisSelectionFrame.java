@@ -26,7 +26,6 @@ import javax.swing.WindowConstants;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
-import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.MinuitAnalyseCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
@@ -46,7 +45,7 @@ import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.io.BellcoreStructure;
 
 public class AnalysisSelectionFrame extends ATableFrame
-																		implements OperationListener
+implements OperationListener
 {
 	
 	static final Double[] ff =
@@ -75,10 +74,6 @@ public class AnalysisSelectionFrame extends ATableFrame
 	private Dispatcher dispatcher;
 	private ParamTableModel tModelMinuit;
 	private ATable jTable;
-	private static final String OT_analysisparameters = "analysisparameters";
-	private static final String OID_minuitanalysis = "minuitanalysis";
-	private static final String OID_minuitinitials = "minuitinitials";
-	private static final String OID_minuitdefaults = "minuitdefaults";
 
 	BorderLayout borderLayout = new BorderLayout();
 	JPanel mainPanel = new JPanel();

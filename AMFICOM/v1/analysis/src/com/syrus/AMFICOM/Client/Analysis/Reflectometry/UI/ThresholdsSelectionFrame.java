@@ -48,8 +48,6 @@ public class ThresholdsSelectionFrame extends ATableFrame
 	protected Dispatcher dispatcher;
 	JTable jTable;
 
-	private BellcoreStructure bs; // для доступа к самой р/г во время пересчета порогов
-
 	protected ModelTraceManager mtm;
 
 	protected int current_ev = -1;
@@ -335,11 +333,11 @@ public class ThresholdsSelectionFrame extends ATableFrame
 				}
 			}
 			if (rue.analysisPerformed()) {
-				String id = (String) (rue.getSource());
+				//String id = (String) (rue.getSource());
 				// if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
 				{
 					//mtm = Heap.getMTMByKey(id); // FIXME: what is MTM here?  
-					bs = Heap.getAnyBSTraceByKey(id);
+					//bs = Heap.getAnyBSTraceByKey(id); // bs was never read locally
 					updateThresholds();
 				}
 			}

@@ -30,7 +30,6 @@ import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.analysis.dadara.ModelTrace;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
-import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
@@ -40,8 +39,6 @@ import com.syrus.io.BellcoreStructure;
 public class OverallStatsFrame extends ATableFrame
 implements OperationListener
 {
-
-	private Dispatcher dispatcher;
 	private FixedSizeEditableTableModel tModel;
 	private JTable jTable;
 
@@ -86,7 +83,6 @@ implements OperationListener
 
 	void init_module(Dispatcher dispatcher)
 	{
-		this.dispatcher = dispatcher;
 		dispatcher.register(this, RefChangeEvent.typ);
 		dispatcher.register(this, RefUpdateEvent.typ);
 	}
@@ -247,7 +243,7 @@ implements OperationListener
 
 	private void setWholeData()
 	{
-		ModelTraceManager etalonMTM = Heap.getMTMByKey(AnalysisUtil.ETALON);
+		ModelTraceManager etalonMTM = Heap.getMTMByKey(Heap.ETALON_TRACE_KEY);
 		ModelTraceManager dataMTM = Heap.getMTMByKey(RefUpdateEvent.PRIMARY_TRACE);
 		if(etalonMTM == null || dataMTM == null || dataMTM.getNEvents() == 0)
 		{

@@ -20,10 +20,8 @@ public class MarkersInfoFrame extends JInternalFrame implements OperationListene
 			append('/').append(LangModelAnalyse.getString("km"));
 	private static String dash = "-----";
 
-	private Dispatcher dispatcher;
 	private FixedSizeEditableTableModel tModel;
 	private ATable jTable;
-	private MarkersInfo mInfo;
 
 	BorderLayout borderLayout = new BorderLayout();
 	JPanel mainPanel = new JPanel();
@@ -57,7 +55,6 @@ public class MarkersInfoFrame extends JInternalFrame implements OperationListene
 
 	void init_module(Dispatcher dispatcher)
 	{
-		this.dispatcher = dispatcher;
 		dispatcher.register(this, RefChangeEvent.typ);
 		dispatcher.register(this, RefUpdateEvent.typ);
 	}

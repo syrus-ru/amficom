@@ -62,7 +62,7 @@ public class MinuitAnalyseCommand extends VoidCommand
 		System.out.println("MinuitAnalysis.execute(): create AnalysisManager at dt/ms " + (System.currentTimeMillis()-t0));
 				new ClientAnalysisManager();
 		System.out.println("MinuitAnalysis.execute(): AnalysisManager created at dt/ms " + (System.currentTimeMillis()-t0));
-				params = (double[])Heap.getMinuitAnalysisParams();
+				params = Heap.getMinuitAnalysisParams();
 			}
 
 			Map tracesMap = Heap.getBsBellCoreMap();

@@ -193,9 +193,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 
 	public void paint (Graphics g)
 	{
-		long t0 = System.currentTimeMillis();
 		paint_scales(g);
-		long t1 = System.currentTimeMillis();
 
 		if (draw_events)
 		{
@@ -205,16 +203,13 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		{
 			paint_trace(g);
 		}
-		long t2 = System.currentTimeMillis();
 		if (draw_modeled)
 		{
 			paint_modeled_trace(g);
 		}
-		long t3 = System.currentTimeMillis();
 
 		if (draw_alarms)
 			paint_alarms(g);
-		long t4 = System.currentTimeMillis();
 
 		if (draw_min_trace_level && draw_events)
 		{
@@ -223,10 +218,8 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		}
 		else if (draw_noise_level && draw_events)
 			paint_noise_level(g);
-		long t5 = System.currentTimeMillis();
 
 		paint_scale_digits(g);
-		long t6 = System.currentTimeMillis();
 
 		if (paint_thresholds)
 		{
@@ -235,16 +228,6 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 			else
 				paint_threshold(g);
 		}
-		long t7 = System.currentTimeMillis();  // XXX: remove t0 - t7
-//		System.err.println("paint:"
-//			+ " ta=" + (t1 - t0)
-//			+ " tb=" + (t2 - t1)
-//			+ " tc=" + (t3 - t2)
-//			+ " td=" + (t4 - t3)
-//			+ " te=" + (t5 - t4)
-//			+ " tf=" + (t6 - t5)
-//			+ " tg=" + (t7 - t6)
-//		);
 	}
 
 	// nEvent < 0 => paint all thresholds

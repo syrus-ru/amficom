@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.1 2005/03/29 16:00:51 saa Exp $
+ * $Id: Heap.java,v 1.2 2005/03/29 17:49:51 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.io.BellcoreStructure;
  * использование остальных методов работы с BS
  * 
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/03/29 16:00:51 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/29 17:49:51 $
  * @module
  */
 public class Heap
@@ -40,7 +40,7 @@ public class Heap
 	private static HashMap refAnalysisHash = new HashMap();		// "refanalysis", *
 	private static HashMap MTMHash = new HashMap();	// ModelTraceManager.CODENAME, *
 	private static MeasurementSetup contextMeasurementSetup;	// AnalysisUtil.CONTEXT, "MeasurementSetup"
-	private static Map bsBellCoreMap; // "bellcoremap", "current": GUI-level BS hash; do not confuse with bsHash
+	private static Map bsBellCoreMap;				// "bellcoremap", "current": GUI-level BS hash; do not confuse with bsHash
 	private static Double minTraceLevel;			// "min_trace_level", PRIMARY_TRACE_KEY
 	private static HashMap dialogHash = new HashMap();	// "dialog", "*"
 	

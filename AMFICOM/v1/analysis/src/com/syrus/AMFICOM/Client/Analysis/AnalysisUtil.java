@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -41,14 +40,9 @@ import com.syrus.util.ByteArray;
 public class AnalysisUtil
 {
 	public static final String ETALON = Heap.ETALON_TRACE_KEY;
-	public static final String CONTEXT = "analysiscontext";
-	private static final String OT_analysisparameters = "analysisparameters";
-	private static final String OID_minuitanalysis = "minuitanalysis";
-	private static final String OID_minuitinitials = "minuitinitials";
-	private static final String OID_minuitdefaults = "minuitdefaults";
 
 	private AnalysisUtil()
-	{
+	{ // empty
 	}
 
 	public static ParameterType getParameterType(Identifier userId, String codename, DataType dataType){
@@ -259,7 +253,7 @@ public class AnalysisUtil
 			if (type.getCodename().equals(ParameterTypeCodenames.DADARA_ETALON_EVENTS))
 			{
 				mtm = ModelTraceManager.eventsAndTraceFromByteArray(params[i].getValue());
-				Heap.setMTMByKey(ETALON, mtm);
+				Heap.setMTMByKey(Heap.ETALON_TRACE_KEY, mtm);
 				Heap.setEtalonEtalonMetas(metas);
 			}
 			else if (type.getCodename().equals(ParameterTypeCodenames.REFLECTOGRAMMA))

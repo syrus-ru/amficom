@@ -94,7 +94,6 @@ public class FileOpenAsBellcoreCommand extends VoidCommand
 					new FileCloseCommand(dispatcher, aContext).execute();
 			}
 
-			String activeRefId = chooser.getSelectedFile().getAbsolutePath().toLowerCase();
 			bs.title = chooser.getSelectedFile().getName();
 			Heap.setBSPrimaryTrace(bs);
 			Heap.setActiveContextActivePathIDToEmptyString();

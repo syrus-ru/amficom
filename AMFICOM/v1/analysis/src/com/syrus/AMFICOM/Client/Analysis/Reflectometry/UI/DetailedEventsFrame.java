@@ -20,20 +20,14 @@ import com.syrus.io.BellcoreStructure;
 public class DetailedEventsFrame extends JInternalFrame
 	implements OperationListener
 {
-//	private ReflectogramEvent []data;
-//	private ReflectogramEvent []data_;
-//	private ReflectogramEvent []etalon;
-
 	private ModelTraceManager etalonMTM;
 	private ModelTraceManager dataMTM;
 	private ModelTrace alignedDataMT;
 
-	private Dispatcher dispatcher;
 	private Map tModels = new HashMap(6);
 
 	private ATable jTable;
 	private int selected = 0;
-	private int concSelected = 0;
 	private RefAnalysis a;
 	private BellcoreStructure bs;
 	private double res_km;
@@ -85,7 +79,6 @@ public class DetailedEventsFrame extends JInternalFrame
 
 	void init_module(Dispatcher dispatcher)
 	{
-		this.dispatcher = dispatcher;
 		dispatcher.register(this, RefChangeEvent.typ);
 		dispatcher.register(this, RefUpdateEvent.typ);
 	}
@@ -110,7 +103,6 @@ public class DetailedEventsFrame extends JInternalFrame
 				if (id.equals(Heap.PRIMARY_TRACE_KEY))
 				{
 					alignedDataMT = null;
-//					ctModel.clearTable();
 					tabbedPane.setSelectedIndex(0);
 					tabbedPane.setEnabledAt(0, true);
 					tabbedPane.setEnabledAt(1, false);
@@ -123,7 +115,6 @@ public class DetailedEventsFrame extends JInternalFrame
 				if (id.equals("all"))
 				{
 					alignedDataMT = null;
-//					tModel.clearTable();
 					ctModel.clearTable();
 					tabbedPane.setSelectedIndex(0);
 					tabbedPane.setEnabledAt(0, true);
@@ -144,7 +135,6 @@ public class DetailedEventsFrame extends JInternalFrame
 			if(rce.OPEN_ETALON)
 			{
 				etalonMTM = Heap.getMTMByKey(AnalysisUtil.ETALON);
-				ModelTrace etalonMT = etalonMTM.getModelTrace();
 				if(dataMTM != null)
 					makeAlignedDataMT();
 				else

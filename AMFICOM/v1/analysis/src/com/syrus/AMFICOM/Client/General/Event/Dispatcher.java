@@ -41,11 +41,9 @@ public class Dispatcher implements OperationListener
 	// на каждое событие может подписываться произвольное число наблюдателей
 	private class Cmd
 	{
-		private String command; // поле, определяющее тип события
 		protected LinkedList listeners; // наблюдатели
-		private Cmd(String command)
+		private Cmd()
 		{
-			this.command = command;
 			listeners = new LinkedList();
 		}
 
@@ -68,7 +66,7 @@ public class Dispatcher implements OperationListener
 		// добавляется новый наблюдатель
 		if (cmd == null)
 		{
-			cmd = new Cmd(command);
+			cmd = new Cmd();
 			events.put(command, cmd);
 		}
 		// если событие найдено в списке, просто добавляется новый наблюдатель

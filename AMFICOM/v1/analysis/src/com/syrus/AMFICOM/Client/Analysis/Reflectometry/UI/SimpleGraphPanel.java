@@ -142,15 +142,6 @@ public class SimpleGraphPanel extends JPanel
 				(int )(color.getGreen() * a + b),
 				(int )(color.getBlue() * a + b))
 			: color;
-	    /*
-	    return weakColor ?
-	            new Color(
-	                color.getRed(),
-	                color.getGreen(),
-	                color.getBlue(),
-	                250)
-	    		: color;
-	    */
 	}
 
 	// plots from y[i0] to y[i0+N] _inclusively_ at x=x0..x0+N

@@ -69,7 +69,6 @@ public class TraceSelectorFrame extends JInternalFrame
 
 				traces.add(id);
 
-				String title = id;
 				BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
 				if (bs != null)
 					title = bs.title;

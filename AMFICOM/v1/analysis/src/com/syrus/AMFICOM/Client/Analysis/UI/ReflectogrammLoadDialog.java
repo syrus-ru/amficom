@@ -22,7 +22,6 @@ public class ReflectogrammLoadDialog extends JDialog implements OperationListene
 {
 	public int ret_code = 0;
 	private Object resource;
-	private String testId = null;
 
 	private Dispatcher dispatcher = new Dispatcher();
 	private ApplicationContext aContext;
