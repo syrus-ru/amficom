@@ -223,7 +223,6 @@ src\com\syrus\AMFICOM\Client\Map\UI\MapPropertyFrame.java
 src\com\syrus\AMFICOM\Client\Map\UI\MapSchemeTreeFrame.java
 src\com\syrus\AMFICOM\Client\Map\UI\MapSchemeTreeModel.java
 src\com\syrus\AMFICOM\Client\Map\UI\MapSchemeTreePanel.java
-src\com\syrus\AMFICOM\Client\Map\UI\MapScrollPane.java
 src\com\syrus\AMFICOM\Client\Map\UI\MapTableController.java
 src\com\syrus\AMFICOM\Client\Map\UI\MapToolBar.java
 src\com\syrus\AMFICOM\Client\Map\UI\MapToolTip.java

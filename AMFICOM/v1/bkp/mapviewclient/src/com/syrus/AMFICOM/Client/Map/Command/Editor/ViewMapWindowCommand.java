@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapWindowCommand.java,v 1.16 2005/02/24 14:37:24 krupenn Exp $
+ * $Id: ViewMapWindowCommand.java,v 1.17 2005/02/25 12:52:04 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import javax.swing.JOptionPane;
 /**
  * Команда отображает окно карты 
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/02/24 14:37:24 $
+ * @version $Revision: 1.17 $, $Date: 2005/02/25 12:52:04 $
  * @module mapviewclient_v1
  */
 public class ViewMapWindowCommand extends VoidCommand
@@ -99,7 +99,7 @@ public class ViewMapWindowCommand extends VoidCommand
 				
 				setMapFrame();
 			}
-	
+
 			this.mapFrame.setVisible(true);
 			this.dispatcher.notify(new MapEvent(this.mapFrame, MapEvent.MAP_FRAME_SHOWN));
 			this.aContext.getDispatcher().notify(new StatusMessageEvent(
