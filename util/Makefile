@@ -1,95 +1,122 @@
-SRC=./src
-CLASSES=./classes
-LIB=../lib
+#
+# $Id: Makefile,v 1.6 2004/06/01 11:03:35 bass Exp $
+#
+# vim:set ft=make:
+#
 
-LIBNAME=util.jar
-LIBNAMESERVER=utilserver.jar
-ARCHFILE=util.tar.gz
+MODULE_NAME = util
+MODULE_VERSION = $(shell date +%Y%m%d)
 
-ORACLECLASSPATH=$(JDEV_HOME)/sqlj/lib/translator.jar:$(JDEV_HOME)/sqlj/lib/runtime12.jar:$(JDEV_HOME)/jdbc/lib/classes12.jar
-VBCLASSPATH=$(ORACLE_HOME)/lib/aurora_client.jar:$(ORACLE_HOME)/lib/vbjorb.jar
+USER = AMFICOM
+PASSWORD = amficom
+HOST = RESEARCH
+SERVICE_NAME = SHAITAN
 
-DBHOSTNAME=mongol
-CONNECTSTRING=mongol
-#DBHOSTNAME=amficom
-#CONNECTSTRING=jamaica
+SRCDIR = src
+CLASSDIR = classes
+ENCODING = windows-1251
+JAVACFLAGS = -source 1.3 -sourcepath $(SRCDIR) -deprecation -g -O
+SUNJAVACFLAGS = -target 1.2
+JIKESFLAGS = \
+	-target 1.2 \
+	-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar \
+	+E \
+	+P \
+	+Pmodifier-order \
+	+Predundant-modifiers \
+	+Pno-switchcheck \
+	+Pnaming-convention \
+	+T=4
+SQLJFLAGS = \
+	-cache=true \
+	-checkfilename=true \
+	-checksource=true \
+	-codegen=iso \
+	-compile=true \
+	-compiler-encoding-flag=true \
+	-explain=true \
+	-linemap=true \
+	-parse=both \
+	-password "$(PASSWORD)" \
+	-profile=true \
+	-ser2class=true \
+	-status=false \
+	-url "jdbc:oracle:oci:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=$(HOST))(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=$(SERVICE_NAME))))" \
+	-user "$(USER)" \
+	-warn=all
 
-JAVAC=javac
-SQLJ=$(JDEV_HOME)/bin/sqlj
-SQLJOPTIONS=-compile=false -optcols -u amficom/amficom -url=jdbc:oracle:thin:@$(DBHOSTNAME):1521:$(CONNECTSTRING) -codegen=oraclejdbc -status -d $(CLASSES) -dir $(SRC) -classpath $(ORACLECLASSPATH)
-JAR=jar-3.3.1
+include Makefile.inc
+$(call checkenve,JAVA_HOME)
+$(call checkenve,ORACLE_HOME)
+$(call checkenve,IDL2JAVA)
 
-$(LIBNAME):	misc con corba mail cache
-	$(JAR) -cf $(LIBNAME) \
-		-C $(CLASSES) com/syrus/util
-	cp -f $(LIBNAME) $(LIB)
+.PHONY: all
+all: sqlj sqljclean
+	$(JAVAC) \
+		$(JAVACFLAGS) \
+		-classpath $(AURORACLASSPATH):$(VBJCLASSPATH):$(JDBCCLASSPATH):$(SQLJCLASSPATH):$(CLASSDIR) \
+		-d $(CLASSDIR) \
+		-encoding $(ENCODING) \
+	 	$(shell find $(SRCDIR) -name '*.java')
 
-misc:	log
-	$(JAVAC) -d $(CLASSES) -sourcepath $(SRC) $(SRC)/com/syrus/util/MathRef.java
-	$(JAVAC) -d $(CLASSES) -classpath $(ORACLECLASSPATH) -sourcepath $(SRC) $(SRC)/com/syrus/util/database/ByteArrayDatabase.java
-	$(JAVAC) -d $(CLASSES) $(SRC)/com/syrus/util/database/DatabaseDate.java
-	touch misc
+.PHONY: sqlj
+sqlj: $(CLASSDIR)
+	echo "sqlj.compiler-executable=$(JAVAC) $(JAVACFLAGS)" > sqlj.properties
+	$(SQLJ) \
+		$(SQLJFLAGS) \
+		-classpath $(JDBCCLASSPATH):$(SQLJCLASSPATH):$(CLASSDIR) \
+		-d $(CLASSDIR) \
+		-encoding $(ENCODING) \
+		$(SRCDIR)/com/syrus/util/database/ServerProperties.sqlj \
+		$(SRCDIR)/com/syrus/util/Log.java \
+		$(SRCDIR)/com/syrus/util/Logger.java
 
-con:	log
-	$(JAVAC) -d $(CLASSES) -classpath $(CLASSES) $(SRC)/com/syrus/util/database/DatabaseConnection.java
-	touch con
+.PHONY: sqljclean
+sqljclean:
+	$(RM) \
+		sqlj.properties \
+		$(SRCDIR)/com/syrus/util/database/ServerProperties.java \
+		$(SRCDIR)/com/syrus/util/database/ServerProperties.generated.java
 
-corba:	log mail
-	$(JAVAC) -d $(CLASSES) -classpath $(CLASSES):$(VBCLASSPATH) $(SRC)/com/syrus/util/corba/*.java
-	touch corba
-
-log:
-	$(SQLJ) $(SQLJOPTIONS) $(SRC)/com/syrus/util/database/ServerProperties.sqlj
-	$(JAVAC) -d $(CLASSES) -classpath $(ORACLECLASSPATH) -sourcepath $(SRC) $(SRC)/com/syrus/util/database/Server.java
-	$(JAVAC) -d $(CLASSES) -sourcepath $(SRC) $(SRC)/com/syrus/util/Application.java
-	touch log
-
-mail:
-	$(JAVAC) -d $(CLASSES) -classpath $(ORACLECLASSPATH) \
-		$(SRC)/com/syrus/util/prefs/ui/JPreferencesManagerFrame.java \
-		$(SRC)/com/syrus/util/prefs/IIOPConnectionManager.java \
-		$(SRC)/com/syrus/util/prefs/PreferencesManager.java
-	touch mail
-
-cache:
-	$(JAVAC) -d $(CLASSES) \
-		$(SRC)/com/syrus/util/CacheLock.java \
-		$(SRC)/com/syrus/util/CacheLockObject.java \
-		$(SRC)/com/syrus/util/LeerCacheLock.java \
-		$(SRC)/com/syrus/util/LeerCacheLockObject.java \
-		$(SRC)/com/syrus/util/NativeCacheLock.java \
-		$(SRC)/com/syrus/util/NIOCacheLock.java
-	touch cache
-
-$(LIBNAMESERVER):	$(LIBNAME)
-	jar -cf $(LIBNAMESERVER)\
-		-C $(CLASSES) com/syrus/io/Rewriter.class \
-		-C $(CLASSES) com/syrus/util/ByteArray.class \
-		-C $(CLASSES) com/syrus/util/Log.class \
-		-C $(CLASSES) com/syrus/util/Logger.class \
-		-C $(CLASSES) com/syrus/util/ServerLogger.class \
-		-C $(CLASSES) com/syrus/util/StolenLogger.class \
-		-C $(CLASSES) com/syrus/util/database/ByteArrayDatabase.class \
-		-C $(CLASSES) com/syrus/util/database/DatabaseConnection.class \
-		-C $(CLASSES) com/syrus/util/database/Server.class \
-		-C $(CLASSES) com/syrus/util/database/ServerProperties.class
-	cp -f $(LIBNAMESERVER) $(LIB)/
+$(CLASSDIR):
+	mkdir -p $@
 
 .PHONY: clean
-clean:
-	rm -f $(SRC)/com/syrus/util/database/ServerProperties.java
-	rm -f $(SRC)/com/syrus/util/database/ServerProperties.generated.java
-	rm -rf $(CLASSES)/com
-	rm -f $(LIBNAME)
-	rm -f misc con corba log mail cache
+clean: sqljclean
 
-.PHONY: arch
-arch:
-	tar -czvf $(ARCHFILE) \
-		Makefile \
-		$(SRC)/com/syrus/util/*.java \
-		$(SRC)/com/syrus/util/database/ByteArrayDatabase.java \
-		$(SRC)/com/syrus/util/database/DatabaseConnection.java \
-		$(SRC)/com/syrus/util/database/Server.java \
-		$(SRC)/com/syrus/util/database/ServerProperties.sqlj \
-		$(SRC)/com/syrus/util/corba
+.PHONY: export
+export: $(MODULE_NAME).jar $(MODULE_NAME)server.jar
+
+$(MODULE_NAME).jar: all
+	$(JAR) cf $@ \
+		-C $(CLASSDIR) com
+
+$(MODULE_NAME)server.jar: all
+	-$(JAR) cf $@ \
+        -C $(CLASSDIR) com/syrus/io/Rewriter.class \
+        -C $(CLASSDIR) com/syrus/util/ByteArray.class \
+        -C $(CLASSDIR) com/syrus/util/Log.class \
+        -C $(CLASSDIR) com/syrus/util/Logger.class \
+        -C $(CLASSDIR) com/syrus/util/ServerLogger.class \
+        -C $(CLASSDIR) com/syrus/util/StolenLogger.class \
+        -C $(CLASSDIR) com/syrus/util/corba/ORBUtil.class \
+        -C $(CLASSDIR) com/syrus/util/corba/VisiBrokerORBUtil.class \
+        -C $(CLASSDIR) com/syrus/util/corba/AuroraORBUtil.class \
+        -C $(CLASSDIR) com/syrus/util/database/ByteArrayDatabase.class \
+        -C $(CLASSDIR) com/syrus/util/database/DatabaseConnection.class \
+        -C $(CLASSDIR) com/syrus/util/database/Server.class \
+        -C $(CLASSDIR) com/syrus/util/database/ServerProperties.class \
+        -C $(CLASSDIR) com/syrus/util/database/ServerProperties_SJProfile0.class \
+        -C $(CLASSDIR) com/syrus/util/database/ServerProperties_SJProfileKeys.class
+
+.PHONY: dist
+dist: distclean
+	tar cf ../$(MODULE_NAME)-$(MODULE_VERSION).tar ../$(MODULE_NAME)
+	bzip2 -9 ../$(MODULE_NAME)-$(MODULE_VERSION).tar
+
+.PHONY: distclean
+distclean: clean
+	$(RM) -r \
+		$(CLASSDIR) \
+		SQLChecker.cache \
+		*.jar
