@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.32 2005/02/11 11:42:12 bob Exp $
+# $Id: Makefile,v 1.33 2005/02/11 16:21:04 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -51,7 +51,7 @@ clean:	cleanmach cleancorba
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) $(wildcard $(CLASSDIR)/com/syrus/AMFICOM/general/*.class)
+	$(RM) $(subst $$,\$$,$(wildcard $(CLASSDIR)/com/syrus/AMFICOM/general/*.class))
 	$(RM) .mach
 
 .PHONY:	cleancorba
