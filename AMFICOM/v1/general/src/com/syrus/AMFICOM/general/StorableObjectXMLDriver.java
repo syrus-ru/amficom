@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.6 2005/01/31 13:54:14 bob Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.7 2005/01/31 15:10:03 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 /**
  * XML Driver for storable object package, one per package.
  * 
- * @version $Revision: 1.6 $, $Date: 2005/01/31 13:54:14 $
+ * @version $Revision: 1.7 $, $Date: 2005/01/31 15:10:03 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -172,7 +172,7 @@ public class StorableObjectXMLDriver {
 				NodeList childNodes = node.getChildNodes();
 				if (childNodes.getLength() != 1)
 					Log.errorMessage("StorableObjectXMLDriver.parse | more that one child for : " + node.getNodeName());
-				System.out.println("name:" + node.getNodeName());
+				// System.out.println("name:" + node.getNodeName());
 				object = this.getObject(childNodes.item(0).getNodeValue(), className);
 			}
 		} else
@@ -190,12 +190,18 @@ public class StorableObjectXMLDriver {
 			object = new Identifier(value);
 		} else if (className.equals(Date.class.getName())) {
 			object = new Date(Long.parseLong(value));
+		} else if (className.equals(Short.class.getName())) {
+			Short short1 = Short.valueOf(value);
+			object = short1;
 		} else if (className.equals(Integer.class.getName())) {
 			Integer integer = Integer.valueOf(value);
 			object = integer;
 		} else if (className.equals(Long.class.getName())) {
 			Long long1 = Long.valueOf(value);
 			object = long1;
+		} else if (className.equals(Float.class.getName())) {
+			Float float1 = Float.valueOf(value);
+			object = float1;
 		} else if (className.equals(Double.class.getName())) {
 			Double double1 = Double.valueOf(value);
 			object = double1;
@@ -233,9 +239,17 @@ public class StorableObjectXMLDriver {
 			Integer integer = (Integer) object;
 			Text text = this.doc.createTextNode(integer.toString());
 			element.appendChild(text);
+		} else if (object instanceof Short) {
+			Short short1 = (Short) object;
+			Text text = this.doc.createTextNode(short1.toString());
+			element.appendChild(text);
 		} else if (object instanceof Long) {
 			Long long1 = (Long) object;
 			Text text = this.doc.createTextNode(long1.toString());
+			element.appendChild(text);
+		} else if (object instanceof Float) {
+			Float float1 = (Float) object;
+			Text text = this.doc.createTextNode(float1.toString());
 			element.appendChild(text);
 		} else if (object instanceof Double) {
 			Double double1 = (Double) object;
