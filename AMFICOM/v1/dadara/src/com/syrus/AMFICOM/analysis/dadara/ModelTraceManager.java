@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.28 2005/03/24 15:59:12 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.29 2005/03/28 09:53:12 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.28 $, $Date: 2005/03/24 15:59:12 $
+ * @version $Revision: 1.29 $, $Date: 2005/03/28 09:53:12 $
  * @module
  */
 public class ModelTraceManager
@@ -342,6 +342,22 @@ public class ModelTraceManager
 			thMTCache[key] = thMt;
 		}
 		return thMt;
+	}
+
+	/**
+	 * Выдает модельную кривую указанного порога на участке указанного события,
+	 * такую, как будто бы на соседних событиях порога нет совсем.
+	 * Обеспечивает также мнимальное кэширование (в кэше хранятся результаты для
+	 * одного nEvent).
+	 * Производительность - не самая лучшая.
+	 * FIXME: сейчас игнорирует nEvent и вызывает getThresholdMT(key)
+	 * @param key код порога (Threshold)
+	 * @param nEvent номер события, для которого одного нужно сгенерировать порог
+	 * @return модельная кривая запрошенного порога, определенная на длине всей р/г
+	 */
+	public ModelTrace getEventThresholdMT(int key, int nEvent)
+	{
+		return getThresholdMT(key);
 	}
 
 	public void updateUpperThreshToContain(double[] yTop)
