@@ -160,6 +160,19 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse2(
 	for (i = 0; i < nEvents; i++)
 	{
 		EPold2EPnew((EventParams*)ev[i], re[i], delta_x);
+		assert(re[i].begin >= 0);
+		assert(re[i].end < sz);
+		
+		{
+			fprintf(stderr, "event %d begin %d end %d type %d\n", i,re[i].begin, re[i].end, re[i].gentype);
+			fflush(stderr);
+		}
+//		assert(re[i].end >= re[i].begin);
+//		assert(re[i].end > re[i].begin); // >, not just >=
+		if (i)
+		{
+			assert(re[i].begin == re[i-1].end);
+		}
 
 #ifdef DEBUG_DADARA_ANALYSE
 		fprintf (dbg_stream, "event [%d]: begin %d end %d gentype %d mf.ID %d\n", i, re[i].begin, re[i].end, re[i].gentype, re[i].mf.getID());
