@@ -1,10 +1,10 @@
 #ifndef _DEBUG_H
 #define _DEBUG_H
 
-#ifdef VIT_DEBUG
+//#ifdef VIT_DEBUG
   #define debug_VCL
   #define debug_lines // !!! отрисовка вспомогательных линий
-#endif
+//#endif
 
 //#define DEBUG_DADARA_ANALYSE
 //#define DEBUG_INITIAL_ANALYSIS
