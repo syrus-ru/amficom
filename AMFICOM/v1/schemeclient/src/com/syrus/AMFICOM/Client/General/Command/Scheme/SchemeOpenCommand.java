@@ -57,7 +57,8 @@ public class SchemeOpenCommand extends VoidCommand
 		if(mcd.retCode == mcd.RET_OK)
 		{
 			Scheme scheme = (Scheme)mcd.retObject;
-			GraphActions.clearGraph(graph);
+			if (graph != null)
+				GraphActions.clearGraph(graph);
 
 			scheme.serializable_cell = null;
 			scheme.serializable_ugo = null;
