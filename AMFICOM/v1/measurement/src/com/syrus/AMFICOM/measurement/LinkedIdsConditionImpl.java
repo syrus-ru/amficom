@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.17 2005/03/05 21:37:32 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.18 2005/03/10 19:36:40 arseniy Exp $
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -10,13 +10,16 @@ package com.syrus.AMFICOM.measurement;
 import java.util.Collection;
 import java.util.LinkedList;
 
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.KIS;
+import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/03/05 21:37:32 $
+ * @version $Revision: 1.18 $, $Date: 2005/03/10 19:36:40 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -107,19 +110,36 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				break;
 			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE: {
 				MeasurementType measurementType = (MeasurementType) object;
-				params.addAll(measurementType.getMeasurementPortTypes());
-				params.addAll(measurementType.getInParameterTypes());
-				params.addAll(measurementType.getOutParameterTypes());
-				return super.conditionTest(params);
+				switch (this.linkedEntityCode) {
+					case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
+						condition = super.conditionTest(measurementType.getMeasurementPortTypes());
+						break;
+				}
+				break;
 			}
 			case ObjectEntities.MS_ENTITY_CODE:
 				MeasurementSetup measurementSetup = (MeasurementSetup) object;
 				params.addAll(measurementSetup.getMonitoredElementIds());
-				return super.conditionTest(params);
+				condition = super.conditionTest(params);
 			case ObjectEntities.RESULT_ENTITY_CODE:
 				Identifier actionId = ((Result) object).getAction().getId();
 				condition = super.conditionTest(actionId);
 				break;
+			case ObjectEntities.TEST_ENTITY_CODE:
+				Test test = (Test) object;
+				switch (this.linkedEntityCode) {
+					case ObjectEntities.ME_ENTITY_CODE:
+						condition = super.conditionTest(test.getMonitoredElement().getId());
+						break;
+					case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
+						condition = super.conditionTest(test.getMonitoredElement().getMeasurementPortId());
+						break;
+					case ObjectEntities.MCM_ENTITY_CODE:
+						MeasurementPort measurementPort = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(test.getMonitoredElement().getMeasurementPortId(), true);
+						KIS kis = (KIS) ConfigurationStorableObjectPool.getStorableObject(measurementPort.getKISId(), true);
+						condition = super.conditionTest(kis.getMCMId());
+						break;
+				}
 			default:
 				throw new UnsupportedOperationException("entityCode "
 						+ ObjectEntities.codeToString(this.entityCode.shortValue()) + " is unknown for this condition");

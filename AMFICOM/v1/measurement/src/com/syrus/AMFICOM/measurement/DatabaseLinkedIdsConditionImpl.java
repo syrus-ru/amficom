@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.8 2005/03/10 15:22:26 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.9 2005/03/10 19:36:40 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,15 +8,18 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import com.syrus.AMFICOM.configuration.KISWrapper;
+import com.syrus.AMFICOM.configuration.MeasurementPortWrapper;
 import com.syrus.AMFICOM.configuration.MonitoredElementWrapper;
 import com.syrus.AMFICOM.general.AbstractDatabaseLinkedIdsCondition;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/03/10 15:22:26 $
+ * @version $Revision: 1.9 $, $Date: 2005/03/10 19:36:40 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -28,6 +31,7 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 	
 	public String getSQLQuery() throws IllegalDataException {
 		String query = null;
+		StringBuffer stringBuffer;
 		switch (super.condition.getEntityCode().shortValue()) {
 		case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
 			query = super.getLinkedQuery(AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID,
@@ -54,7 +58,7 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 					ObjectEntities.MSMELINK_ENTITY);
 			break;
 		case ObjectEntities.RESULT_ENTITY_CODE:
-			StringBuffer stringBuffer = new StringBuffer();
+			stringBuffer = new StringBuffer();
 			stringBuffer.append(super.getQuery(ResultWrapper.COLUMN_MEASUREMENT_ID));
 			stringBuffer.append(super.getQuery(ResultWrapper.COLUMN_ANALYSIS_ID));
 			stringBuffer.append(super.getQuery(ResultWrapper.COLUMN_EVALUATION_ID));
@@ -72,6 +76,31 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 							MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID,
 							ObjectEntities.ME_ENTITY);
 					break;
+				case ObjectEntities.MCM_ENTITY_CODE:
+					stringBuffer = new StringBuffer();
+					stringBuffer.append(TestWrapper.COLUMN_MONITORED_ELEMENT_ID);
+					stringBuffer.append(StorableObjectDatabase.SQL_IN);
+					stringBuffer.append(StorableObjectDatabase.OPEN_BRACKET);
+					stringBuffer.append(StorableObjectDatabase.SQL_SELECT);
+					stringBuffer.append(StorableObjectWrapper.COLUMN_ID);
+					stringBuffer.append(StorableObjectDatabase.SQL_FROM);
+					stringBuffer.append(ObjectEntities.ME_ENTITY);
+					stringBuffer.append(StorableObjectDatabase.SQL_WHERE);
+					stringBuffer.append(MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID);
+					stringBuffer.append(StorableObjectDatabase.SQL_IN);
+					stringBuffer.append(StorableObjectDatabase.OPEN_BRACKET);
+					stringBuffer.append(StorableObjectDatabase.SQL_SELECT);
+					stringBuffer.append(StorableObjectWrapper.COLUMN_ID);
+					stringBuffer.append(StorableObjectDatabase.SQL_FROM);
+					stringBuffer.append(ObjectEntities.MEASUREMENTPORT_ENTITY);
+					stringBuffer.append(StorableObjectDatabase.SQL_WHERE);
+					stringBuffer.append(super.getLinkedQuery(MeasurementPortWrapper.COLUMN_KIS_ID,
+							StorableObjectWrapper.COLUMN_ID,
+							KISWrapper.COLUMN_MCM_ID,
+							ObjectEntities.KIS_ENTITY));
+					stringBuffer.append(StorableObjectDatabase.CLOSE_BRACKET);
+					stringBuffer.append(StorableObjectDatabase.CLOSE_BRACKET);
+					query = stringBuffer.toString();
 			}
 			break;
 		default:
