@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.5 2005/03/25 13:24:52 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.6 2005/03/28 08:24:52 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,13 +17,11 @@ import java.util.*;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/03/25 13:24:52 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/28 08:24:52 $
  * @module scheme_v1
  */
 public final class SchemeCableLink extends AbstractSchemeLink {
 	private static final long serialVersionUID = 3760847878314274867L;
-
-	protected Identifier cableChannelingItemIds[] = null;
 
 	protected Identifier schemeCableThreadIds[] = null;
 
@@ -73,16 +71,33 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 		}
 	}
 
-	public CableChannelingItem[] cableChannelingItems() {
+	/**
+	 * @deprecated
+	 */
+	public CableChannelingItem[] getCableChannelingItemsAsArray() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @param newCableChannelingItems
-	 * @see com.syrus.AMFICOM.scheme.SchemeCableLink#cableChannelingItems(com.syrus.AMFICOM.scheme.CableChannelingItem[])
+	 * @deprecated
 	 */
-	public void cableChannelingItems(
-			CableChannelingItem[] newCableChannelingItems) {
+	public void setCableChannelingItemsAsArray(final CableChannelingItem cableChannelingItems[]) {
+		throw new UnsupportedOperationException();
+	}
+
+	public Collection getCableChannelingItems() {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setCableChannelingItems(final Collection cableChannelingItems) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void addCableChannelingItem(final CableChannelingItem cableChannelingItem) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void removeCableChannelingItem(final CableChannelingItem cableChannelingItem) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -166,15 +181,33 @@ public final class SchemeCableLink extends AbstractSchemeLink {
 		throw new UnsupportedOperationException();
 	}
 
-	public SchemeCableThread[] schemeCableThreads() {
+	/**
+	 * @deprecated
+	 */
+	public SchemeCableThread[] getSchemeCableThreadsAsArray() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @param newSchemeCableThreads
-	 * @see com.syrus.AMFICOM.scheme.SchemeCableLink#schemeCableThreads(com.syrus.AMFICOM.scheme.SchemeCableThread[])
+	 * @deprecated
 	 */
-	public void schemeCableThreads(SchemeCableThread[] newSchemeCableThreads) {
+	public void setSchemeCableThreadsAsArray(final SchemeCableThread schemeCableThreads[]) {
+		throw new UnsupportedOperationException();
+	}
+
+	public Collection getSchemeCableThreads() {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setSchemeCableThreads(final Collection schemeCableThreads) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void addSchemeCableThread(final SchemeCableThread schemeCableThread) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void removeSchemeCableThread(final SchemeCableThread schemeCableThread) {
 		throw new UnsupportedOperationException();
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.7 2005/03/25 18:00:37 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.8 2005/03/28 08:24:52 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,18 +17,18 @@ import java.util.*;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/03/25 18:00:37 $
+ * @version $Revision: 1.8 $, $Date: 2005/03/28 08:24:52 $
  * @module scheme_v1
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
 		implements Describable, Characterizable {
 	private static final long serialVersionUID = 4050204133015171124L;
 
-	protected Identifier cableThreadTypeId = null;
+	private Identifier cableThreadTypeId;
 
-	protected Identifier sourceSchemePortId = null;
+	private Identifier sourceSchemePortId;
 
-	protected Identifier targetSchemePortId = null;
+	private Identifier targetSchemePortId;
 
 	protected Identifier threadId = null;
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.4 2005/03/25 18:00:37 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.5 2005/03/28 08:24:52 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,32 +16,34 @@ import java.util.*;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/03/25 18:00:37 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/28 08:24:52 $
  * @module scheme_v1
  */
 public final class CableChannelingItem extends AbstractCloneableStorableObject
 		implements Describable {
 	private static final long serialVersionUID = 3256437027796038705L;
 
-	protected Identifier endSiteNodeId = null;
+	private String description;
 
-	protected Identifier physicalLinkId = null;
+	private Identifier endSiteNodeId;
 
-	protected Identifier startSiteNodeId = null;
+	private double endSpare;
 
-	private String description = null;
+	private String name;
 
-	protected double thisEndSpare = 0;
+	private Identifier parentSchemeCableLinkId;
 
-	private String name = null;
+	private Identifier physicalLinkId;
 
-	protected int thisPlaceY = 0;
+	private int placeY;
 
-	protected int thisRowX = 0;
+	private int rowX;
 
-	protected int thisSequentialNumber = 0;
+	private int sequentialNumber;
 
-	protected double thisStartSpare = 0;
+	private Identifier startSiteNodeId;
+
+	private double startSpare;
 
 	/**
 	 * @param id
@@ -64,129 +66,10 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 		super(id, created, modified, creatorId, modifierId, version);
 	}
 
-	public SiteNode getEndSiteNode() {
-		throw new UnsupportedOperationException();
-	}
-
 	/**
-	 * @param endSiteNode
+	 * @deprecated Use {@link #createInstance(Identifier)}instead.
 	 */
-	public void setEndSiteNode(final SiteNode endSiteNode) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see CableChannelingItem#endSpare()
-	 */
-	public double endSpare() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see CableChannelingItem#endSpare(double)
-	 */
-	public void endSpare(double endSpare) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
-	 */
-	public List getDependencies() {
-		throw new UnsupportedOperationException();
-	}
-
-	public PhysicalLink getPhysicalLink() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param physicalLink
-	 */
-	public void setPhysicalLink(final PhysicalLink physicalLink) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see CableChannelingItem#placeY()
-	 */
-	public int placeY() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see CableChannelingItem#placeY(int)
-	 */
-	public void placeY(int placeY) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see CableChannelingItem#rowX()
-	 */
-	public int rowX() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see CableChannelingItem#rowX(int)
-	 */
-	public void rowX(int rowX) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see CableChannelingItem#sequentialNumber()
-	 */
-	public int sequentialNumber() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see CableChannelingItem#sequentialNumber(int)
-	 */
-	public void sequentialNumber(int sequentialNumber) {
-		throw new UnsupportedOperationException();
-	}
-
-	public SiteNode getStartSiteNode() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param startSiteNode
-	 */
-	public void setStartSiteNode(final SiteNode startSiteNode) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see CableChannelingItem#startSpare()
-	 */
-	public double startSpare() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see CableChannelingItem#startSpare(double)
-	 */
-	public void startSpare(double startSpare) {
-		throw new UnsupportedOperationException();
-	}
-
-	public Object clone() {
-		final CableChannelingItem cableChannelingItem = (CableChannelingItem) super
-				.clone();
-		/**
-		 * @todo Update the newly created object.
-		 */
-		return cableChannelingItem;
-	}
-
-	/**
-	 * @see TransferableObject#getTransferable()
-	 */
-	public Object getTransferable() {
+	public static CableChannelingItem createInstance() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -209,10 +92,78 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 		}
 	}
 
+	public Object clone() {
+		final CableChannelingItem cableChannelingItem = (CableChannelingItem) super
+				.clone();
+		/**
+		 * @todo Update the newly created object.
+		 */
+		return cableChannelingItem;
+	}
+
 	/**
-	 * @deprecated Use {@link #createInstance(Identifier)}instead.
+	 * @see StorableObject#getDependencies()
 	 */
-	public static CableChannelingItem createInstance() {
+	public List getDependencies() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see Describable#getDescription()
+	 */
+	public String getDescription() {
+		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.description;
+	}
+
+	public SiteNode getEndSiteNode() {
+		throw new UnsupportedOperationException();
+	}
+
+	public double getEndSpare() {
+		return this.endSpare;
+	}
+
+	/**
+	 * @see Namable#getName()
+	 */
+	public String getName() {
+		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.name;
+	}
+
+	public SchemeCableLink getParentSchemeCableLink() {
+		throw new UnsupportedOperationException();
+	}
+
+	public PhysicalLink getPhysicalLink() {
+		throw new UnsupportedOperationException();
+	}
+
+	public int getPlaceY() {
+		return this.placeY;
+	}
+
+	public int getRowX() {
+		return this.rowX;
+	}
+
+	public int getSequentialNumber() {
+		return this.sequentialNumber;
+	}
+
+	public SiteNode getStartSiteNode() {
+		throw new UnsupportedOperationException();
+	}
+
+	public double getStartSpare() {
+		return this.startSpare;
+	}
+
+	/**
+	 * @see TransferableObject#getTransferable()
+	 */
+	public Object getTransferable() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -229,11 +180,14 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @see Describable#getDescription()
+	 * @param endSiteNode
 	 */
-	public String getDescription() {
-		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		return this.description;
+	public void setEndSiteNode(final SiteNode endSiteNode) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setEndSpare(final double endSpare) {
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -248,11 +202,37 @@ public final class CableChannelingItem extends AbstractCloneableStorableObject
 		this.changed = true;
 	}
 
+	public void setParentSchemeCableLink(final SchemeCableLink parentSchemeCableLink) {
+		throw new UnsupportedOperationException();
+	}
+
 	/**
-	 * @see Namable#getName()
+	 * @param physicalLink
 	 */
-	public String getName() {
-		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		return this.name;
+	public void setPhysicalLink(final PhysicalLink physicalLink) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setPlaceY(final int placeY) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setRowX(final int rowX) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setSequentialNumber(final int sequentialNumber) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param startSiteNode
+	 */
+	public void setStartSiteNode(final SiteNode startSiteNode) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setStartSpare(final double startSpare) {
+		throw new UnsupportedOperationException();
 	}
 }

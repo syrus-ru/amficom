@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeUtils.java,v 1.17 2005/03/25 18:12:11 bass Exp $
+ * $Id: SchemeUtils.java,v 1.18 2005/03/28 08:24:52 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.*;
  * Functionality will be partially moved to {@link PathElement}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/03/25 18:12:11 $
+ * @version $Revision: 1.18 $, $Date: 2005/03/28 08:24:52 $
  * @todo Move to corba subpackage.
  * @module scheme_v1
  */
@@ -67,7 +67,7 @@ public class SchemeUtils {
 
 	public static PathElement getPathElement(SchemePath path, Identifier pathElementId)
 	{
-		PathElement[] pes = path.links();
+		PathElement[] pes = path.getPathElementsAsArray();
 		for (int i = 0; i < pes.length; i++)
 			if (pes[i].getId().equals(pathElementId))
 				return pes[i];
@@ -386,7 +386,7 @@ public class SchemeUtils {
 
 	public static boolean isElementInPath(SchemePath path, Identifier element_id)
 	{
-		PathElement[] pes = path.links();
+		PathElement[] pes = path.getPathElementsAsArray();
 		for (int i = 0; i < pes.length; i++) {
 			if (pes[i].getAbstractSchemeElement().getId().equals(element_id))
 				return true;
@@ -405,7 +405,7 @@ public class SchemeUtils {
 	public static double getOpticalLength(SchemePath path)
 	{
 		double length = 0;
-		PathElement[] links = path.links();
+		PathElement[] links = path.getPathElementsAsArray();
 		for (int i = 0; i < links.length; i++)
 			length += getOpticalLength(links[i]);
 		return length;
@@ -434,7 +434,7 @@ public class SchemeUtils {
 	public static double getPhysicalLength(SchemePath path)
 	{
 		double length = 0;
-		PathElement[] links = path.links();
+		PathElement[] links = path.getPathElementsAsArray();
 		for (int i = 0; i < links.length; i++)
 			length += getPhysicalLength(links[i]);
 		return length;

@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.6 2005/03/25 18:18:39 bass Exp $
+ * $Id: PathElement.java,v 1.7 2005/03/28 08:24:52 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import java.util.*;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/03/25 18:18:39 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/28 08:24:52 $
  * @module scheme_v1
  */
 public final class PathElement extends AbstractCloneableStorableObject implements Describable {
@@ -33,6 +33,8 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 	 * than {@link PathElementKind#SCHEME_ELEMENT}.
 	 */
 	private Identifier endAbstractSchemePortId;
+
+	private Identifier parentSchemePathId;
 
 	private PathElementKind pathElementKind;
 
@@ -165,6 +167,10 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 		return getAbstractSchemeElement().getParentScheme();
 	}
 
+	public SchemePath getParentSchemePath() {
+		throw new UnsupportedOperationException();
+	}
+
 	public PathElementKind getPathElementKind() {
 		return this.pathElementKind;
 	}
@@ -292,6 +298,10 @@ public final class PathElement extends AbstractCloneableStorableObject implement
 
 	public void setParentScheme(final Scheme parentScheme) {
 		getAbstractSchemeElement().setParentScheme(parentScheme);
+	}
+
+	public void setParentSchemePath(final SchemePath parentSchemePath) {
+		throw new UnsupportedOperationException();
 	}
 
 	public void setSchemeCableLink(final SchemeCableLink schemeCableLink) {

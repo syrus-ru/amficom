@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.6 2005/03/25 18:00:37 bass Exp $
+ * $Id: SchemePath.java,v 1.7 2005/03/28 08:24:52 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,7 @@
 
 package com.syrus.AMFICOM.scheme;
 
-import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import java.util.*;
@@ -17,30 +17,26 @@ import java.util.*;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/03/25 18:00:37 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/28 08:24:52 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements
 		Describable, Characterizable {
 	private static final long serialVersionUID = 3257567312831132469L;
 
-	private Identifier typeId = null;
-
-	protected Identifier characteristicIds[] = null;
-
-	protected Identifier endDeviceId = null;
-
-	protected Identifier links[] = null;
-
-	protected Identifier pathId = null;
-
-	protected Identifier schemeId = null;
-
-	protected Identifier startDeviceId = null;
+	private Collection characteristics;
 
 	private String description;
 
+	private Identifier endSchemeElementId;
+
 	private String name;
+
+	private Identifier parentSchemeMonitoringSolutionId;
+
+	private Identifier startSchemeElementId;
+
+	private Identifier transmissionPathId;
 
 	/**
 	 * @param id
@@ -64,10 +60,39 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 	}
 
 	/**
+	 * @deprecated Use {@link #createInstance(Identifier)}instead.
+	 */
+	public static SchemePath createInstance() {
+		throw new UnsupportedOperationException();
+	}
+
+	public static SchemePath createInstance(final Identifier creatorId)
+			throws CreateObjectException {
+		assert creatorId != null;
+		try {
+			final Date created = new Date();
+			final SchemePath schemePath = new SchemePath(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_PATH_ENTITY_CODE),
+					created, created, creatorId, creatorId,
+					0L);
+			schemePath.changed = true;
+			return schemePath;
+		} catch (final IllegalObjectEntityException ioee) {
+			throw new CreateObjectException(
+					"SchemePath.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+	}
+
+	/**
 	 * @param characteristic
 	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(Characteristic)
 	 */
 	public void addCharacteristic(final Characteristic characteristic) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void addPathElement(final PathElement pathElement) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -77,18 +102,6 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		 * @todo Update the newly created object.
 		 */
 		return schemePath;
-	}
-
-	public SchemeElement endDevice() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newEndDevice
-	 * @see com.syrus.AMFICOM.scheme.SchemePath#endDevice(com.syrus.AMFICOM.scheme.SchemeElement)
-	 */
-	public void endDevice(SchemeElement newEndDevice) {
-		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -112,26 +125,60 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		throw new UnsupportedOperationException();
 	}
 
-	public PathElement[] links() {
+	/**
+	 * @see Describable#getDescription()
+	 */
+	public String getDescription() {
+		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.description;
+	}
+
+	public SchemeElement getEndSchemeElement() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @param newLinks
-	 * @see com.syrus.AMFICOM.scheme.SchemePath#links(com.syrus.AMFICOM.scheme.PathElement[])
+	 * @see Namable#getName()
 	 */
-	public void links(PathElement[] newLinks) {
+	public String getName() {
+		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.name;
+	}
+
+	public SchemeMonitoringSolution getParentSchemeMonitoringSolution() {
+		throw new UnsupportedOperationException();
+	}
+
+	public Collection getPathElements() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public PathElement[] getPathElementsAsArray() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * Getter for a transient property <code>scheme</code>.
+	 */
+	public Scheme getScheme() {
+		throw new UnsupportedOperationException();
+	}
+
+	public SchemeElement getStartSchemeElement() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 */
+	public Object getTransferable() {
 		throw new UnsupportedOperationException();
 	}
 
 	public TransmissionPath getTransmissionPath() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newPathImpl
-	 */
-	public void setTransmissionPath(TransmissionPath newPathImpl) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -143,18 +190,7 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @see SchemePath#scheme()
-	 */
-	public Scheme scheme() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newScheme
-	 * @see SchemePath#scheme(Scheme)
-	 */
-	public void scheme(final Scheme newScheme) {
+	public void removePathElement(final PathElement pathElement) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -174,61 +210,6 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		throw new UnsupportedOperationException();
 	}
 
-	public SchemeElement startDevice() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newStartDevice
-	 * @see com.syrus.AMFICOM.scheme.SchemePath#startDevice(com.syrus.AMFICOM.scheme.SchemeElement)
-	 */
-	public void startDevice(SchemeElement newStartDevice) {
-		throw new UnsupportedOperationException();
-	}
-
-	public TransmissionPathType getTransmissionPathType() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newTypeImpl
-	 */
-	public void setTransmissionPathType(TransmissionPathType newTypeImpl) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
-	 */
-	public Object getTransferable() {
-		throw new UnsupportedOperationException();
-	}
-
-	public static SchemePath createInstance(final Identifier creatorId)
-			throws CreateObjectException {
-		assert creatorId != null;
-		try {
-			final Date created = new Date();
-			final SchemePath schemePath = new SchemePath(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_PATH_ENTITY_CODE),
-					created, created, creatorId, creatorId,
-					0L);
-			schemePath.changed = true;
-			return schemePath;
-		} catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
-					"SchemePath.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
-		}
-	}
-
-	/**
-	 * @deprecated Use {@link #createInstance(Identifier)}instead.
-	 */
-	public static SchemePath createInstance() {
-		throw new UnsupportedOperationException();
-	}
-
 	/**
 	 * @see Describable#setDescription(String)
 	 */
@@ -241,12 +222,8 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		this.changed = true;
 	}
 
-	/**
-	 * @see Describable#getDescription()
-	 */
-	public String getDescription() {
-		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		return this.description;
+	public void setEndSchemeElement(final SchemeElement endSchemeElement) {
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -261,11 +238,36 @@ public final class SchemePath extends AbstractCloneableStorableObject implements
 		this.changed = true;
 	}
 
+	public void setParentSchemeMonitoringSolution(final SchemeMonitoringSolution parentSchemeMonitoringSolution) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setPathElements(final Collection pathElements) {
+		throw new UnsupportedOperationException();
+	}
+
 	/**
-	 * @see Namable#getName()
+	 * @deprecated
 	 */
-	public String getName() {
-		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		return this.name;
+	public void setPathElementsAsArray(final PathElement pathElements[]) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * Setter for a transient property <code>scheme</code>.
+	 */
+	public void setScheme(final Scheme scheme) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setStartSchemeElement(final SchemeElement startSchemeElement) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newPathImpl
+	 */
+	public void setTransmissionPath(TransmissionPath newPathImpl) {
+		throw new UnsupportedOperationException();
 	}
 }
