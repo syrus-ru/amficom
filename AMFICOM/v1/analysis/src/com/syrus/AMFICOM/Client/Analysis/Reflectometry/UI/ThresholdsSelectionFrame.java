@@ -3,6 +3,9 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
@@ -17,7 +20,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 {
 	public static final Dimension btn_size = new Dimension(24, 24);
 	protected Dispatcher dispatcher;
-	private ATable jTable;
+	private JTable jTable;
 
 	private BellcoreStructure bs; // для доступа к самой р/г во время пересчета порогов
 
@@ -69,17 +72,17 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		this.setIconifiable(true);
 		this.setTitle(LangModelAnalyse.getString("thresholdsTableTitle"));
 
-		EventTableModel tModelEmpty = new EventTableModel( // FIXME - переделать
+		ThresholdTableModel tModelEmpty = new ThresholdTableModel( // FIXME - переделать
 			new String[] { LangModelAnalyse.getString("thresholdsKey") },
-			new Object[] { },
 			new String[] {
 					LangModelAnalyse.getString("thresholdsUpWarning"),
 					LangModelAnalyse.getString("thresholdsUpAlarm"),
 					LangModelAnalyse.getString("thresholdsDownWarning"),
 					LangModelAnalyse.getString("thresholdsDownAlarm")},
-			new int[] { }
+			new int[] { },
+			null
 		);
-		jTable = new ATable (tModelEmpty);
+		jTable = new JTable(tModelEmpty);
 
 		jButton1.setMaximumSize(btn_size);
 		jButton1.setMinimumSize(btn_size);
@@ -118,6 +121,26 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
 		jTable.setMinimumSize(new Dimension(200, 213));
 		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+		jTable.setColumnSelectionAllowed(true);
+		jTable.setRowSelectionAllowed(false);
+		
+		//jTable.getColumnModel().setColumnMargin(2); // XXX
+		jTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer()
+			{
+			// (1) hides 'focus' - just because its color overrides selection colot
+			// (2) suppress visualization of selection of 1st column
+			public Component getTableCellRendererComponent(JTable table,
+                    Object value, boolean isSelected, boolean hasFocus,
+                    int row, int column)
+			{
+				//noFocusBorder = new EmptyBorder(1,2,1,2); // FIXME!
+				if (column == 0)
+					isSelected = false;
+				hasFocus = false;
+				return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+			}
+			});
 
 		scrollPane.setViewport(viewport);
 		scrollPane.getViewport().add(jTable);
@@ -276,21 +299,6 @@ public class ThresholdsSelectionFrame extends ATableFrame
 			// default... - @todo
 			}
 		}
-		Object[] pObjects = new Object[te.length + 1];
-		pObjects[0] = new Double(0);
-		for (int i = 1; i < pColumns.length; i++)
-			pObjects[i] = new Double(0); // XXX
-
-		EventTableModel tModel = new EventTableModel(
-			pColumns,
-			pObjects,
-			new String[] {
-					LangModelAnalyse.getString("thresholdsUpWarning"),
-					LangModelAnalyse.getString("thresholdsUpAlarm"),
-					LangModelAnalyse.getString("thresholdsDownWarning"),
-					LangModelAnalyse.getString("thresholdsDownAlarm")
-			},
-			new int[]    { 1, 2, 3, 4, 5 });
 
 		Object[][] pData = new Object[4][];
 		for (int k = 0; k < 4; k++)
@@ -300,27 +308,90 @@ public class ThresholdsSelectionFrame extends ATableFrame
 				((Double[] )pData[k])[i] = new Double(te[i].getValue(k));
 		}
 
+		ThresholdTableModel tModel = new ThresholdTableModel(
+			pColumns,
+			new String[] {
+					LangModelAnalyse.getString("thresholdsUpWarning"),
+					LangModelAnalyse.getString("thresholdsUpAlarm"),
+					LangModelAnalyse.getString("thresholdsDownWarning"),
+					LangModelAnalyse.getString("thresholdsDownAlarm")
+			},
+			new int[]    { 1, 2, 3, 4, 5 },
+			pData);
+
 		tModel.updateData(pData);
 		jTable.setModel(tModel);
 	}
 
-	class EventTableModel extends FixedSizeEditableTableModel {
-		public EventTableModel(String[] p_columns, Object[] p_defaultv,
-				String[] p_rows, int[] editable) {
-			super(p_columns, p_defaultv, p_rows, editable);
+	class ThresholdTableModel extends AbstractTableModel {
+		private String[] p_columns;
+		private Object[][] p_values;
+		private String[] p_rows;
+		int[] editable;
+		public ThresholdTableModel(String[] p_columns,
+				String[] p_rows, int[] editable, Object[][] p_data) {
+			//super(p_columns, p_defaultv, p_rows, editable);
+			this.p_columns = p_columns;
+			this.p_values = p_data;
+			this.p_rows = p_rows;
+			this.editable = editable;
+		}
+
+		public void updateData(Object[][] pData)
+		{
+			p_values = pData;
 		}
 
 		public void setValueAt(Object value, int row, int col) {
-			super.setValueAt(value, row, col);
 			if (mtm != null && current_ev != -1) {
 				ModelTraceManager.ThreshEditor[] te =
 					mtm.getThreshEditor(current_ev);
-				te[col - 1].setValue(
-						row,
-						((Double) value).doubleValue());
-				dispatcher.notify(new RefUpdateEvent(this,
-						RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
+				try
+				{
+					te[col - 1].setValue(
+							row,
+							Double.valueOf(value.toString()).doubleValue());
+					dispatcher.notify(new RefUpdateEvent(this,
+							RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
+				}
+				catch(NumberFormatException e)
+				{
+					// ignore invalid input
+				}
 			}
+		}
+
+		public int getColumnCount()
+		{
+			return p_columns.length;
+		}
+
+		public int getRowCount()
+		{
+			return p_rows.length;
+		}
+
+		public Object getValueAt(int rowIndex, int columnIndex)
+		{
+			if (columnIndex == 0)
+				return p_rows[rowIndex];
+			else
+			{
+				if (p_values == null)
+					return ""; // XXX
+				else
+					return p_values[rowIndex][columnIndex - 1];
+			}
+		}
+
+		public boolean isCellEditable(int row, int column)
+		{
+			return column > 0;
+		}
+
+		public String getColumnName(int column)
+		{
+			return p_columns[column];
 		}
 	}
 }
