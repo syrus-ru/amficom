@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.44 2004/08/30 07:37:18 bob Exp $
+ * $Id: Test.java,v 1.45 2004/08/30 10:33:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -39,7 +40,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2004/08/30 07:37:18 $
+ * @version $Revision: 1.45 $, $Date: 2004/08/30 10:33:11 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -194,6 +195,8 @@ public class Test extends StorableObject {
 		this.returnType = returnType;
 		this.description = description;
 		this.measurementSetupIds = measurementSetupIds;
+		if (this.measurementSetupIds == null)
+			this.measurementSetupIds = new LinkedList();
 
 		this.status = TestStatus._TEST_STATUS_NEW;
 
