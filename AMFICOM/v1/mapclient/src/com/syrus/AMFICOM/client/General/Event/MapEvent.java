@@ -1,5 +1,5 @@
 /**
- * $Id: MapEvent.java,v 1.3 2004/10/04 15:58:19 krupenn Exp $
+ * $Id: MapEvent.java,v 1.4 2004/10/11 15:24:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,7 +15,7 @@ package com.syrus.AMFICOM.Client.General.Event;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/04 15:58:19 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/11 15:24:52 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -54,6 +54,9 @@ public class MapEvent extends OperationEvent
 	public static final String MAP_ELEMENT_SELECTED = "mapelementselectedevent";
 	/** снято выделение элемента карты */
 	public static final String MAP_ELEMENT_DESELECTED = "mapelementdeselectedevent";
+	/** изменен элемент карты */
+	public static final String MAP_ELEMENT_CHANGED = "mapelementchangedevent";
+
 	/** изменился список выбранных элементов на карте */
 	public static final String SELECTION_CHANGED = "mapselectionchangedevent";
 	
