@@ -246,8 +246,6 @@ module corba {
 		wstring description;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable user_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable server_id;
-		wstring location;
-		wstring hostname;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable kis_ids;
 	};
