@@ -1,23 +1,27 @@
-package com.syrus.AMFICOM.configuration;
+package com.syrus.AMFICOM.scheme;
 
 import java.util.*;
 
-import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.scheme.corba.*;
 
-public final class MeasurementPortController implements ObjectResourceController
+public final class SchemePathController implements ObjectResourceController
 {
 	public static final String COLUMN_NAME = "name";
+	public static final String COLUMN_START_DEVICE_ID = "start_device_id";
+	public static final String COLUMN_END_DEVICE_ID = "end_device_id";
+	public static final String COLUMN_PATH_ID = "path_id";
 	public static final String COLUMN_TYPE_ID = "type_id";
-	public static final String COLUMN_KIS_ID = "kis_id";
-	public static final String COLUMN_PORT_ID = "port_id";
+	public static final String COLUMN_SCHEME_ID = "scheme_id";
+	public static final String COLUMN_LINK_IDS = "link_ids";
 	public static final String COLUMN_CHARACTERISTICS = "characteristics";
 
-	private static MeasurementPortController instance;
+	private static SchemePathController instance;
 
 	private List keys;
 
-	private MeasurementPortController()
+	private SchemePathController()
 	{
 		// empty private constructor
 		String[] keysArray = new String[] {
@@ -26,21 +30,25 @@ public final class MeasurementPortController implements ObjectResourceController
 				StorableObjectDatabase.COLUMN_CREATOR_ID,
 				StorableObjectDatabase.COLUMN_MODIFIED,
 				StorableObjectDatabase.COLUMN_MODIFIER_ID,
+				StorableObjectType.COLUMN_CODENAME,
 				StorableObjectType.COLUMN_DESCRIPTION,
 				COLUMN_NAME,
+				COLUMN_START_DEVICE_ID,
+				COLUMN_END_DEVICE_ID,
+				COLUMN_PATH_ID,
 				COLUMN_TYPE_ID,
-				COLUMN_KIS_ID,
-				COLUMN_PORT_ID,
+				COLUMN_SCHEME_ID,
+				COLUMN_LINK_IDS,
 				COLUMN_CHARACTERISTICS
 		};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
 
-	public static MeasurementPortController getInstance()
+	public static SchemePathController getInstance()
 	{
 		if (instance == null)
-			instance = new MeasurementPortController();
+			instance = new SchemePathController();
 		return instance;
 	}
 
@@ -54,40 +62,50 @@ public final class MeasurementPortController implements ObjectResourceController
 		String name = null;
 		if (key.equals(COLUMN_NAME))
 			name = "Название";
-		if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
-			name = "Описание";
 		return name;
 	}
 
 	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
-		if (object instanceof MeasurementPort)
+		if (object instanceof SchemePath)
 		{
-			MeasurementPort port = (MeasurementPort)object;
+			SchemePath path = (SchemePath)object;
 			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				result = port.getId().toString();
+				result = path.id().toString();
 			else if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				result = port.getCreated().toString();
+				result = Long.toString(path.created());
 			else if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				result = port.getCreatorId().getIdentifierString();
+				result = path.creatorId().identifierString();
 			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				result = port.getModified().toString();
+				result = Long.toString(path.modified());
 			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				result = port.getModifierId().getIdentifierString();
+				result = path.modifierId().identifierString();
 			else if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
-				result = port.getDescription();
+				result = path.description();
 			else if (key.equals(COLUMN_NAME))
-				result = port.getName();
+				result = path.name();
+			else if (key.equals(COLUMN_PATH_ID))
+				result = path.pathImpl().getId().getIdentifierString();
 			else if (key.equals(COLUMN_TYPE_ID))
-				result = port.getType().getId().getIdentifierString();
-			else if (key.equals(COLUMN_KIS_ID))
-				result = port.getKISId().getIdentifierString();
-			else if (key.equals(COLUMN_PORT_ID))
-				result = port.getPortId().getIdentifierString();
+				result = path.typeImpl().getId().getIdentifierString();
+			else if (key.equals(COLUMN_START_DEVICE_ID))
+				result = path.startDevice().id().identifierString();
+			else if (key.equals(COLUMN_END_DEVICE_ID))
+				result = path.endDevice().id().identifierString();
+			else if (key.equals(COLUMN_SCHEME_ID))
+				result = path.scheme().id().identifierString();
+			else if (key.equals(COLUMN_LINK_IDS)) {
+				PathElement[] pes = path.links();
+				List res = new ArrayList(pes.length);
+				for (int i = 0; i < pes.length; i++) {
+					res.add(pes[i].id().identifierString());
+				}
+				result = res;
+			}
 			else if (key.equals(COLUMN_CHARACTERISTICS)) {
-				List res = new ArrayList(port.getCharacteristics().size());
-				for (Iterator it = port.getCharacteristics().iterator(); it.hasNext(); ) {
+				List res = new ArrayList(path.characteristics().length);
+				for (Iterator it = path.characteristicsImpl().getValue().iterator(); it.hasNext(); ) {
 					Characteristic ch = (Characteristic)it.next();
 					res.add(ch.getId().getIdentifierString());
 				}

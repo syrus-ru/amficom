@@ -2,11 +2,15 @@ package com.syrus.AMFICOM.configuration;
 
 import java.util.*;
 
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.client_.resource.*;
 
 public final class MonitoredElementController implements ObjectResourceController
 {
-	public static final String KEY_NAME = "name";
+	public static final String COLUMN_NAME = "name";
+	public static final String COLUMN_MEASUREMENT_PORT_ID = "measurement_port_id";
+	public static final String COLUMN_SORT = "sort";
+	public static final String COLUMN_LOCAL_ADDRESS = "local_address";
 
 	private static MonitoredElementController instance;
 
@@ -16,7 +20,15 @@ public final class MonitoredElementController implements ObjectResourceControlle
 	{
 		// empty private constructor
 		String[] keysArray = new String[] {
-				KEY_NAME
+				StorableObjectDatabase.COLUMN_ID,
+				StorableObjectDatabase.COLUMN_CREATED,
+				StorableObjectDatabase.COLUMN_CREATOR_ID,
+				StorableObjectDatabase.COLUMN_MODIFIED,
+				StorableObjectDatabase.COLUMN_MODIFIER_ID,
+				COLUMN_NAME,
+				COLUMN_MEASUREMENT_PORT_ID,
+				COLUMN_SORT,
+				COLUMN_LOCAL_ADDRESS
 		};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
@@ -37,7 +49,7 @@ public final class MonitoredElementController implements ObjectResourceControlle
 	public String getName(final String key)
 	{
 		String name = null;
-		if (key.equals(KEY_NAME))
+		if (key.equals(COLUMN_NAME))
 			name = "Название";
 		return name;
 	}
@@ -48,10 +60,24 @@ public final class MonitoredElementController implements ObjectResourceControlle
 		if (object instanceof MonitoredElement)
 		{
 			MonitoredElement me = (MonitoredElement)object;
-			if (key.equals(KEY_NAME))
-			{
+			if (key.equals(StorableObjectDatabase.COLUMN_ID))
+				result = me.getId().toString();
+			else if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
+				result = me.getCreated().toString();
+			else if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
+				result = me.getCreatorId().getIdentifierString();
+			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
+				result = me.getModified().toString();
+			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
+				result = me.getModifierId().getIdentifierString();
+			else if (key.equals(COLUMN_NAME))
 				result = me.getName();
-			}
+			else if (key.equals(COLUMN_MEASUREMENT_PORT_ID))
+				result = me.getMeasurementPortId().getIdentifierString();
+			else if (key.equals(COLUMN_SORT))
+				result = Integer.toString(me.getSort().value());
+			else if (key.equals(COLUMN_LOCAL_ADDRESS))
+				result = me.getLocalAddress();
 		}
 		return result;
 	}

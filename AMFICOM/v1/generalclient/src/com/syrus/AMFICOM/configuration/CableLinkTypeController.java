@@ -2,22 +2,24 @@ package com.syrus.AMFICOM.configuration;
 
 import java.util.*;
 
-import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.general.*;
 
-public final class MeasurementPortController implements ObjectResourceController
+public final class CableLinkTypeController implements ObjectResourceController
 {
 	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_TYPE_ID = "type_id";
-	public static final String COLUMN_KIS_ID = "kis_id";
-	public static final String COLUMN_PORT_ID = "port_id";
+	public static final String COLUMN_SORT = "sort";
+	public static final String COLUMN_MANUFACTURER = "manufacturer";
+	public static final String COLUMN_MANUFACTURER_CODE = "manufacturer_code";
+	public static final String COLUMN_IMAGE_ID = "image_id";
 	public static final String COLUMN_CHARACTERISTICS = "characteristics";
+	public static final String COLUMN_CABLE_THREAD_TYPES = "cable_thread_type_id";
 
-	private static MeasurementPortController instance;
+	private static CableLinkTypeController instance;
 
 	private List keys;
 
-	private MeasurementPortController()
+	private CableLinkTypeController()
 	{
 		// empty private constructor
 		String[] keysArray = new String[] {
@@ -26,21 +28,23 @@ public final class MeasurementPortController implements ObjectResourceController
 				StorableObjectDatabase.COLUMN_CREATOR_ID,
 				StorableObjectDatabase.COLUMN_MODIFIED,
 				StorableObjectDatabase.COLUMN_MODIFIER_ID,
+				StorableObjectType.COLUMN_CODENAME,
 				StorableObjectType.COLUMN_DESCRIPTION,
 				COLUMN_NAME,
-				COLUMN_TYPE_ID,
-				COLUMN_KIS_ID,
-				COLUMN_PORT_ID,
+				COLUMN_SORT,
+				COLUMN_MANUFACTURER,
+				COLUMN_MANUFACTURER_CODE,
+				COLUMN_IMAGE_ID,
 				COLUMN_CHARACTERISTICS
 		};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
 
-	public static MeasurementPortController getInstance()
+	public static CableLinkTypeController getInstance()
 	{
 		if (instance == null)
-			instance = new MeasurementPortController();
+			instance = new CableLinkTypeController();
 		return instance;
 	}
 
@@ -62,32 +66,44 @@ public final class MeasurementPortController implements ObjectResourceController
 	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
-		if (object instanceof MeasurementPort)
+		if (object instanceof CableLinkType)
 		{
-			MeasurementPort port = (MeasurementPort)object;
+			CableLinkType type = (CableLinkType)object;
 			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				result = port.getId().toString();
+				result = type.getId().toString();
 			else if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				result = port.getCreated().toString();
+				result = type.getCreated().toString();
 			else if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				result = port.getCreatorId().getIdentifierString();
+				result = type.getCreatorId().getIdentifierString();
 			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				result = port.getModified().toString();
+				result = type.getModified().toString();
 			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				result = port.getModifierId().getIdentifierString();
+				result = type.getModifierId().getIdentifierString();
+			else if (key.equals(StorableObjectType.COLUMN_CODENAME))
+				result = type.getCodename();
 			else if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
-				result = port.getDescription();
+				result = type.getDescription();
 			else if (key.equals(COLUMN_NAME))
-				result = port.getName();
-			else if (key.equals(COLUMN_TYPE_ID))
-				result = port.getType().getId().getIdentifierString();
-			else if (key.equals(COLUMN_KIS_ID))
-				result = port.getKISId().getIdentifierString();
-			else if (key.equals(COLUMN_PORT_ID))
-				result = port.getPortId().getIdentifierString();
+				result = type.getName();
+			else if (key.equals(COLUMN_SORT))
+				result = Integer.toString(type.getSort().value());
+			else if (key.equals(COLUMN_MANUFACTURER))
+				result = type.getManufacturer();
+			else if (key.equals(COLUMN_MANUFACTURER_CODE))
+				result = type.getManufacturerCode();
+			else if (key.equals(COLUMN_IMAGE_ID))
+				result = type.getImageId().getIdentifierString();
+			else if (key.equals(COLUMN_CABLE_THREAD_TYPES)) {
+				List res = new ArrayList(type.getCableThreadTypes().size());
+				for (Iterator it = type.getCableThreadTypes().iterator(); it.hasNext(); ) {
+					CableThreadType ctt = (CableThreadType)it.next();
+					res.add(ctt.getId().getIdentifierString());
+				}
+				result = res;
+			}
 			else if (key.equals(COLUMN_CHARACTERISTICS)) {
-				List res = new ArrayList(port.getCharacteristics().size());
-				for (Iterator it = port.getCharacteristics().iterator(); it.hasNext(); ) {
+				List res = new ArrayList(type.getCharacteristics().size());
+				for (Iterator it = type.getCharacteristics().iterator(); it.hasNext(); ) {
 					Characteristic ch = (Characteristic)it.next();
 					res.add(ch.getId().getIdentifierString());
 				}

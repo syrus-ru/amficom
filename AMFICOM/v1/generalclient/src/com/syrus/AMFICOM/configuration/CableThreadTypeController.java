@@ -2,22 +2,20 @@ package com.syrus.AMFICOM.configuration;
 
 import java.util.*;
 
-import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.general.*;
 
-public final class MeasurementPortController implements ObjectResourceController
+public final class CableThreadTypeController implements ObjectResourceController
 {
 	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_TYPE_ID = "type_id";
-	public static final String COLUMN_KIS_ID = "kis_id";
-	public static final String COLUMN_PORT_ID = "port_id";
-	public static final String COLUMN_CHARACTERISTICS = "characteristics";
+	public static final String COLUMN_COLOR = "color";
+	public static final String COLUMN_LINK_TYPE_ID = "link_type_id";
 
-	private static MeasurementPortController instance;
+	private static CableThreadTypeController instance;
 
 	private List keys;
 
-	private MeasurementPortController()
+	private CableThreadTypeController()
 	{
 		// empty private constructor
 		String[] keysArray = new String[] {
@@ -26,21 +24,20 @@ public final class MeasurementPortController implements ObjectResourceController
 				StorableObjectDatabase.COLUMN_CREATOR_ID,
 				StorableObjectDatabase.COLUMN_MODIFIED,
 				StorableObjectDatabase.COLUMN_MODIFIER_ID,
+				StorableObjectType.COLUMN_CODENAME,
 				StorableObjectType.COLUMN_DESCRIPTION,
 				COLUMN_NAME,
-				COLUMN_TYPE_ID,
-				COLUMN_KIS_ID,
-				COLUMN_PORT_ID,
-				COLUMN_CHARACTERISTICS
+				COLUMN_COLOR,
+				COLUMN_LINK_TYPE_ID
 		};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
 
-	public static MeasurementPortController getInstance()
+	public static CableThreadTypeController getInstance()
 	{
 		if (instance == null)
-			instance = new MeasurementPortController();
+			instance = new CableThreadTypeController();
 		return instance;
 	}
 
@@ -62,37 +59,29 @@ public final class MeasurementPortController implements ObjectResourceController
 	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
-		if (object instanceof MeasurementPort)
+		if (object instanceof CableThreadType)
 		{
-			MeasurementPort port = (MeasurementPort)object;
+			CableThreadType type = (CableThreadType)object;
 			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				result = port.getId().toString();
+				result = type.getId().toString();
 			else if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				result = port.getCreated().toString();
+				result = type.getCreated().toString();
 			else if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				result = port.getCreatorId().getIdentifierString();
+				result = type.getCreatorId().getIdentifierString();
 			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				result = port.getModified().toString();
+				result = type.getModified().toString();
 			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				result = port.getModifierId().getIdentifierString();
+				result = type.getModifierId().getIdentifierString();
+			else if (key.equals(StorableObjectType.COLUMN_CODENAME))
+				result = type.getCodename();
 			else if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
-				result = port.getDescription();
+				result = type.getDescription();
 			else if (key.equals(COLUMN_NAME))
-				result = port.getName();
-			else if (key.equals(COLUMN_TYPE_ID))
-				result = port.getType().getId().getIdentifierString();
-			else if (key.equals(COLUMN_KIS_ID))
-				result = port.getKISId().getIdentifierString();
-			else if (key.equals(COLUMN_PORT_ID))
-				result = port.getPortId().getIdentifierString();
-			else if (key.equals(COLUMN_CHARACTERISTICS)) {
-				List res = new ArrayList(port.getCharacteristics().size());
-				for (Iterator it = port.getCharacteristics().iterator(); it.hasNext(); ) {
-					Characteristic ch = (Characteristic)it.next();
-					res.add(ch.getId().getIdentifierString());
-				}
-				result = res;
-			}
+				result = type.getName();
+			else if (key.equals(COLUMN_COLOR))
+				result = Integer.toString(type.getColor());
+			else if (key.equals(COLUMN_LINK_TYPE_ID))
+				result = type.getLinkType().getId().getIdentifierString();
 		}
 		return result;
 	}

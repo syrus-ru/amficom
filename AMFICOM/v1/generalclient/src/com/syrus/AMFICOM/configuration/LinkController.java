@@ -2,22 +2,25 @@ package com.syrus.AMFICOM.configuration;
 
 import java.util.*;
 
-import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.general.*;
 
-public final class MeasurementPortController implements ObjectResourceController
+public final class LinkController implements ObjectResourceController
 {
 	public static final String COLUMN_NAME = "name";
 	public static final String COLUMN_TYPE_ID = "type_id";
-	public static final String COLUMN_KIS_ID = "kis_id";
-	public static final String COLUMN_PORT_ID = "port_id";
+	public static final String COLUMN_SORT = "sort";
+	public static final String COLUMN_SUPPLIER = "supplier";
+	public static final String COLUMN_SUPPLIER_CODE = "supplier_code";
+	public static final String COLUMN_COLOR = "color";
+	public static final String COLUMN_MARK = "mark";
 	public static final String COLUMN_CHARACTERISTICS = "characteristics";
 
-	private static MeasurementPortController instance;
+	private static LinkController instance;
 
 	private List keys;
 
-	private MeasurementPortController()
+	private LinkController()
 	{
 		// empty private constructor
 		String[] keysArray = new String[] {
@@ -29,18 +32,20 @@ public final class MeasurementPortController implements ObjectResourceController
 				StorableObjectType.COLUMN_DESCRIPTION,
 				COLUMN_NAME,
 				COLUMN_TYPE_ID,
-				COLUMN_KIS_ID,
-				COLUMN_PORT_ID,
+				COLUMN_SORT,
+				COLUMN_SUPPLIER,
+				COLUMN_SUPPLIER_CODE,
+				COLUMN_COLOR,
 				COLUMN_CHARACTERISTICS
 		};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
 
-	public static MeasurementPortController getInstance()
+	public static LinkController getInstance()
 	{
 		if (instance == null)
-			instance = new MeasurementPortController();
+			instance = new LinkController();
 		return instance;
 	}
 
@@ -62,32 +67,36 @@ public final class MeasurementPortController implements ObjectResourceController
 	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
-		if (object instanceof MeasurementPort)
+		if (object instanceof Link)
 		{
-			MeasurementPort port = (MeasurementPort)object;
+			Link link = (Link)object;
 			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				result = port.getId().toString();
+				result = link.getId().toString();
 			else if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				result = port.getCreated().toString();
+				result = link.getCreated().toString();
 			else if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				result = port.getCreatorId().getIdentifierString();
+				result = link.getCreatorId().getIdentifierString();
 			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				result = port.getModified().toString();
+				result = link.getModified().toString();
 			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				result = port.getModifierId().getIdentifierString();
-			else if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
-				result = port.getDescription();
+				result = link.getModifierId().getIdentifierString();
 			else if (key.equals(COLUMN_NAME))
-				result = port.getName();
+				result = link.getName();
 			else if (key.equals(COLUMN_TYPE_ID))
-				result = port.getType().getId().getIdentifierString();
-			else if (key.equals(COLUMN_KIS_ID))
-				result = port.getKISId().getIdentifierString();
-			else if (key.equals(COLUMN_PORT_ID))
-				result = port.getPortId().getIdentifierString();
+				result = link.getType().getId().getIdentifierString();
+			else if (key.equals(COLUMN_SORT))
+				result = Integer.toString(link.getSort().value());
+			else if (key.equals(COLUMN_SUPPLIER))
+				result = link.getSupplier();
+			else if (key.equals(COLUMN_SUPPLIER_CODE))
+				result = link.getSupplierCode();
+			else if (key.equals(COLUMN_COLOR))
+				result = Integer.toString(link.getColor());
+			else if (key.equals(COLUMN_MARK))
+				result = link.getMark();
 			else if (key.equals(COLUMN_CHARACTERISTICS)) {
-				List res = new ArrayList(port.getCharacteristics().size());
-				for (Iterator it = port.getCharacteristics().iterator(); it.hasNext(); ) {
+				List res = new ArrayList(link.getCharacteristics().size());
+				for (Iterator it = link.getCharacteristics().iterator(); it.hasNext(); ) {
 					Characteristic ch = (Characteristic)it.next();
 					res.add(ch.getId().getIdentifierString());
 				}

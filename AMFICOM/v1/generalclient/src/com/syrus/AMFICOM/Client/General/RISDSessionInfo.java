@@ -1,5 +1,5 @@
 /*
- * $Id: RISDSessionInfo.java,v 1.19 2005/01/24 16:50:53 krupenn Exp $
+ * $Id: RISDSessionInfo.java,v 1.20 2005/01/31 09:07:42 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.administration.ClientAdministrationObjectLoader;
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.configuration.ClientConfigurationObjectLoader;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.XMLConfigurationObjectLoader;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.corba.portable.client.Client;
 import com.syrus.AMFICOM.corba.portable.client.ClientImpl;
@@ -41,6 +42,7 @@ import com.syrus.io.Rewriter;
 import com.syrus.util.ClientLRUMap;
 import com.syrus.util.corba.JavaSoftORBUtil;
 import com.syrus.util.prefs.IIOPConnectionManager;
+import java.io.File;
 
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.UserException;
@@ -54,8 +56,8 @@ import org.omg.PortableServer.POAHelper;
 import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/01/24 16:50:53 $
+ * @author $Author: stas $
+ * @version $Revision: 1.20 $, $Date: 2005/01/31 09:07:42 $
  * @module generalclient_v1
  */
 public final class RISDSessionInfo extends SessionInterface {
@@ -233,7 +235,9 @@ public final class RISDSessionInfo extends SessionInterface {
 			final int size = 200;
 
 			ClientConfigurationObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
-			ConfigurationStorableObjectPool.init(new ClientConfigurationObjectLoader(cmServer), clazz, size);
+//			ConfigurationStorableObjectPool.init(new ClientConfigurationObjectLoader(cmServer), clazz, size);
+			File configPath = new File("\\catalog");
+			ConfigurationStorableObjectPool.init(new XMLConfigurationObjectLoader(configPath), clazz, size);
 
 			ClientMeasurementObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
 			MeasurementStorableObjectPool.init(new ClientMeasurementObjectLoader(cmServer), clazz, size);
@@ -449,7 +453,7 @@ public final class RISDSessionInfo extends SessionInterface {
 		return this.userId;
 	}
 
-	/** 
+	/**
 	 * Есть ли открытая сессия.
 	 */
 	public boolean isOpened() {

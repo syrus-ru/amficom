@@ -5,19 +5,18 @@ import java.util.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
-public final class MeasurementPortController implements ObjectResourceController
+public final class PortController implements ObjectResourceController
 {
-	public static final String COLUMN_NAME = "name";
 	public static final String COLUMN_TYPE_ID = "type_id";
-	public static final String COLUMN_KIS_ID = "kis_id";
-	public static final String COLUMN_PORT_ID = "port_id";
+	public static final String COLUMN_SORT = "sort";
+	public static final String COLUMN_EQUIPMENT_ID = "equipment_id";
 	public static final String COLUMN_CHARACTERISTICS = "characteristics";
 
-	private static MeasurementPortController instance;
+	private static PortController instance;
 
 	private List keys;
 
-	private MeasurementPortController()
+	private PortController()
 	{
 		// empty private constructor
 		String[] keysArray = new String[] {
@@ -26,21 +25,21 @@ public final class MeasurementPortController implements ObjectResourceController
 				StorableObjectDatabase.COLUMN_CREATOR_ID,
 				StorableObjectDatabase.COLUMN_MODIFIED,
 				StorableObjectDatabase.COLUMN_MODIFIER_ID,
+				StorableObjectType.COLUMN_CODENAME,
 				StorableObjectType.COLUMN_DESCRIPTION,
-				COLUMN_NAME,
 				COLUMN_TYPE_ID,
-				COLUMN_KIS_ID,
-				COLUMN_PORT_ID,
+				COLUMN_SORT,
+				COLUMN_EQUIPMENT_ID,
 				COLUMN_CHARACTERISTICS
 		};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
 
-	public static MeasurementPortController getInstance()
+	public static PortController getInstance()
 	{
 		if (instance == null)
-			instance = new MeasurementPortController();
+			instance = new PortController();
 		return instance;
 	}
 
@@ -52,8 +51,6 @@ public final class MeasurementPortController implements ObjectResourceController
 	public String getName(final String key)
 	{
 		String name = null;
-		if (key.equals(COLUMN_NAME))
-			name = "Название";
 		if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
 			name = "Описание";
 		return name;
@@ -62,9 +59,9 @@ public final class MeasurementPortController implements ObjectResourceController
 	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
-		if (object instanceof MeasurementPort)
+		if (object instanceof Port)
 		{
-			MeasurementPort port = (MeasurementPort)object;
+			Port port = (Port)object;
 			if (key.equals(StorableObjectDatabase.COLUMN_ID))
 				result = port.getId().toString();
 			else if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
@@ -77,14 +74,12 @@ public final class MeasurementPortController implements ObjectResourceController
 				result = port.getModifierId().getIdentifierString();
 			else if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
 				result = port.getDescription();
-			else if (key.equals(COLUMN_NAME))
-				result = port.getName();
 			else if (key.equals(COLUMN_TYPE_ID))
 				result = port.getType().getId().getIdentifierString();
-			else if (key.equals(COLUMN_KIS_ID))
-				result = port.getKISId().getIdentifierString();
-			else if (key.equals(COLUMN_PORT_ID))
-				result = port.getPortId().getIdentifierString();
+			else if (key.equals(COLUMN_SORT))
+				result = Integer.toString(port.getSort());
+			else if (key.equals(COLUMN_EQUIPMENT_ID))
+				result = port.getEquipmentId().getIdentifierString();
 			else if (key.equals(COLUMN_CHARACTERISTICS)) {
 				List res = new ArrayList(port.getCharacteristics().size());
 				for (Iterator it = port.getCharacteristics().iterator(); it.hasNext(); ) {

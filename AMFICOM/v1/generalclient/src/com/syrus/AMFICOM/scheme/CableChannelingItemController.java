@@ -3,25 +3,26 @@ package com.syrus.AMFICOM.scheme;
 import java.util.*;
 
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-import com.syrus.AMFICOM.scheme.corba.PathElement;
 import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.scheme.corba.*;
 
-public final class PathElementController implements ObjectResourceController
+public final class CableChannelingItemController implements ObjectResourceController
 {
 	public static final String COLUMN_NAME = "name";
 	public static final String COLUMN_SEQUENTIAL_NUMBER = "number";
-	public static final String COLUMN_SCHEME_ID = "scheme_id";
-	public static final String COLUMN_SCHEME_ELEMENT_ID = "scheme_element_id";
-	public static final String COLUMN_SCHEME_CABLE_THREAD_ID = "scheme_cable_thread_id";
-	public static final String COLUMN_TYPE = "type";
-	public static final String COLUMN_START_ABSTRACT_PORT_ID = "start_abstract_port_id";
-	public static final String COLUMN_END_ABSTRACT_PORT_ID = "end_abstract_port_id";
+	public static final String COLUMN_START_SITE_NODE_ID = "start_site_node_id";
+	public static final String COLUMN_END_SITE_NODE_ID = "end_site_node_id";
+	public static final String COLUMN_START_SPARE = "start_spare";
+	public static final String COLUMN_END_SPARE = "end_spare";
+	public static final String COLUMN_ROW_X = "row_x";
+	public static final String COLUMN_PLACE_Y = "place_y";
+	public static final String COLUMN_PHYSICAL_LINK_ID = "physical_link_id";
 
-	private static PathElementController instance;
+	private static CableChannelingItemController instance;
 
 	private List keys;
 
-	private PathElementController()
+	private CableChannelingItemController()
 	{
 		// empty private constructor
 		String[] keysArray = new String[] {
@@ -34,21 +35,22 @@ public final class PathElementController implements ObjectResourceController
 				StorableObjectType.COLUMN_DESCRIPTION,
 				COLUMN_NAME,
 				COLUMN_SEQUENTIAL_NUMBER,
-				COLUMN_SCHEME_ID,
-				COLUMN_SCHEME_ELEMENT_ID,
-				COLUMN_SCHEME_CABLE_THREAD_ID,
-				COLUMN_TYPE,
-				COLUMN_START_ABSTRACT_PORT_ID,
-				COLUMN_END_ABSTRACT_PORT_ID
+				COLUMN_START_SITE_NODE_ID,
+				COLUMN_END_SITE_NODE_ID,
+				COLUMN_START_SPARE,
+				COLUMN_END_SPARE,
+				COLUMN_ROW_X,
+				COLUMN_PLACE_Y,
+				COLUMN_PHYSICAL_LINK_ID
 		};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
 
-	public static PathElementController getInstance()
+	public static CableChannelingItemController getInstance()
 	{
 		if (instance == null)
-			instance = new PathElementController();
+			instance = new CableChannelingItemController();
 		return instance;
 	}
 
@@ -62,46 +64,45 @@ public final class PathElementController implements ObjectResourceController
 		String name = null;
 		if (key.equals(COLUMN_NAME))
 			name = "Название";
-		if (key.equals(COLUMN_SEQUENTIAL_NUMBER))
-			name = "№";
 		return name;
 	}
 
 	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
-		if (object instanceof PathElement)
+		if (object instanceof CableChannelingItem)
 		{
-			PathElement pe = (PathElement)object;
+			CableChannelingItem item = (CableChannelingItem)object;
 			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				result = pe.id().toString();
+				result = item.id().toString();
 			else if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				result = Long.toString(pe.created());
+				result = Long.toString(item.created());
 			else if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				result = pe.creatorId().identifierString();
+				result = item.creatorId().identifierString();
 			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				result = Long.toString(pe.modified());
+				result = Long.toString(item.modified());
 			else if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				result = pe.modifierId().identifierString();
+				result = item.modifierId().identifierString();
 			else if (key.equals(StorableObjectType.COLUMN_DESCRIPTION))
-				result = pe.description();
+				result = item.description();
 			else if (key.equals(COLUMN_NAME))
-				result = pe.name();
+				result = item.name();
 			else if (key.equals(COLUMN_SEQUENTIAL_NUMBER))
-				result = Integer.toString(pe.sequentialNumber());
-			else if (key.equals(COLUMN_SCHEME_ID))
-				result = pe.scheme().id().identifierString();
-			else if (key.equals(COLUMN_SCHEME_ELEMENT_ID))
-				result = pe.abstractSchemeElement().id().identifierString();
-			else if (key.equals(COLUMN_SCHEME_CABLE_THREAD_ID))
-				result = pe.schemeCableThread().id().identifierString();
-			else if (key.equals(COLUMN_TYPE))
-				result = Integer.toString(pe.type().value());
-			else if (key.equals(COLUMN_START_ABSTRACT_PORT_ID))
-				result = pe.startAbstractSchemePort().id().identifierString();
-			else if (key.equals(COLUMN_END_ABSTRACT_PORT_ID))
-				result = pe.endAbstractSchemePort().id().identifierString();
-
+				result = Integer.toString(item.sequentialNumber());
+			else if (key.equals(COLUMN_START_SITE_NODE_ID))
+				result = item.startSiteNodeImpl().getId().getIdentifierString();
+			else if (key.equals(COLUMN_END_SITE_NODE_ID))
+				result = item.endSiteNodeImpl().getId().getIdentifierString();
+			else if (key.equals(COLUMN_START_SPARE))
+				result = Double.toString(item.startSpare());
+			else if (key.equals(COLUMN_END_SPARE))
+				result = Double.toString(item.endSpare());
+			else if (key.equals(COLUMN_ROW_X))
+				result = Integer.toString(item.rowX());
+			else if (key.equals(COLUMN_PLACE_Y))
+				result = Integer.toString(item.placeY());
+			else if (key.equals(COLUMN_PHYSICAL_LINK_ID))
+				result = item.physicalLinkImpl().getId().getIdentifierString();
 		}
 		return result;
 	}
@@ -136,5 +137,3 @@ public final class PathElementController implements ObjectResourceController
 		return clazz;
 	}
 }
-
-
