@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.9 2005/02/11 07:50:02 bob Exp $
+ * $Id: UserDatabase.java,v 1.10 2005/02/11 15:35:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.administration;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -29,8 +30,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/02/11 07:50:02 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/02/11 15:35:32 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -133,7 +134,7 @@ public class UserDatabase extends StorableObjectDatabase {
 		this.insertEntity(user);
 	}
 	
-	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		insertEntities(storableObjects);
 	}
 
@@ -151,7 +152,7 @@ public class UserDatabase extends StorableObjectDatabase {
 		}
 	}
 	
-	public void update(List storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind) throws IllegalDataException,
 		VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {	
 			case UPDATE_CHECK:
@@ -165,7 +166,7 @@ public class UserDatabase extends StorableObjectDatabase {
 		
 	}	
 
-	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
+	public List retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
 			return this.retrieveByIdsOneQuery(null, condition);
 		return this.retrieveByIdsOneQuery(ids, condition);

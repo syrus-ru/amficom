@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseGeneralObjectLoader.java,v 1.8 2005/02/11 12:52:22 bob Exp $
+ * $Id: DatabaseGeneralObjectLoader.java,v 1.9 2005/02/11 15:35:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.general;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Iterator;
@@ -19,8 +20,8 @@ import java.util.Set;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/11 12:52:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/02/11 15:35:16 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -44,7 +45,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 
 	// for multiple objects
 
-	public List loadParameterTypes(List ids) throws DatabaseException, CommunicationException {
+	public List loadParameterTypes(Collection ids) throws DatabaseException, CommunicationException {
 		ParameterTypeDatabase database = (ParameterTypeDatabase) GeneralDatabaseContext.parameterTypeDatabase;
 		List list = null;
 		try {
@@ -57,7 +58,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		return list;
 	}
 
-	public List loadCharacteristicTypes(List ids) throws DatabaseException, CommunicationException {
+	public List loadCharacteristicTypes(Collection ids) throws DatabaseException, CommunicationException {
 		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) GeneralDatabaseContext.getCharacteristicTypeDatabase();
 		List list = null;
 		try {
@@ -71,7 +72,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		return list;
 	}
 
-	public List loadCharacteristics(List ids) throws DatabaseException, CommunicationException {
+	public List loadCharacteristics(Collection ids) throws DatabaseException, CommunicationException {
 		CharacteristicDatabase database = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
 		List list = null;
 		try {
@@ -88,7 +89,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 
 
 
-	public List loadParameterTypesButIds(StorableObjectCondition condition, List ids)
+	public List loadParameterTypesButIds(StorableObjectCondition condition, Collection ids)
 			throws DatabaseException,
 				CommunicationException {
 		ParameterTypeDatabase database = (ParameterTypeDatabase) GeneralDatabaseContext.parameterTypeDatabase;
@@ -104,7 +105,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		return list;
 	}
 
-	public List loadCharacteristicTypesButIds(StorableObjectCondition condition, List ids)
+	public List loadCharacteristicTypesButIds(StorableObjectCondition condition, Collection ids)
 			throws DatabaseException,
 				CommunicationException {
 		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) GeneralDatabaseContext.getCharacteristicTypeDatabase();
@@ -120,7 +121,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		return list;
 	}
 
-	public List loadCharacteristicsButIds(StorableObjectCondition condition, List ids)
+	public List loadCharacteristicsButIds(StorableObjectCondition condition, Collection ids)
 			throws DatabaseException,
 				CommunicationException {
 		CharacteristicDatabase database = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
@@ -205,7 +206,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 
 
 
-	public void saveParameterTypes(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveParameterTypes(Collection list, boolean force) throws DatabaseException, CommunicationException {
 		ParameterTypeDatabase database = (ParameterTypeDatabase) GeneralDatabaseContext.getParameterTypeDatabase();
 		try {
 			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
@@ -224,7 +225,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		}
 	}
 
-	public void saveCharacteristicTypes(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveCharacteristicTypes(Collection list, boolean force) throws DatabaseException, CommunicationException {
 		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) GeneralDatabaseContext.getCharacteristicTypeDatabase();
 		try {
 			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
@@ -246,7 +247,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		}
 	}
 
-	public void saveCharacteristics(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveCharacteristics(Collection list, boolean force) throws DatabaseException, CommunicationException {
 		CharacteristicDatabase database = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
 		try {
 			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
@@ -298,7 +299,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		delete(id, null);
 	}
 
-	public void delete(List objects) throws CommunicationException, DatabaseException, IllegalDataException {
+	public void delete(Collection objects) throws CommunicationException, DatabaseException, IllegalDataException {
 		if (objects == null || objects.isEmpty())
 			return;
 		/**
@@ -337,7 +338,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		}
 	}
 
-	private void delete(Identifier id, List objects) throws DatabaseException {
+	private void delete(Identifier id, Collection objects) throws DatabaseException {
 		short entityCode = (id != null) ? id.getMajor() : 0;
 		if (id == null) {
 			if (objects.isEmpty())

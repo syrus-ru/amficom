@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralObjectLoader.java,v 1.5 2005/02/11 12:52:22 bob Exp $
+ * $Id: GeneralObjectLoader.java,v 1.6 2005/02/11 15:35:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,13 @@
 
 package com.syrus.AMFICOM.general;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/11 12:52:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/02/11 15:35:16 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -26,20 +27,20 @@ public interface GeneralObjectLoader {
 	Characteristic loadCharacteristic(Identifier id) throws DatabaseException, CommunicationException;
 
 
-	List loadParameterTypes(List ids) throws DatabaseException, CommunicationException;
+	List loadParameterTypes(Collection ids) throws DatabaseException, CommunicationException;
 
-	List loadCharacteristicTypes(List ids) throws DatabaseException, CommunicationException;
+	List loadCharacteristicTypes(Collection ids) throws DatabaseException, CommunicationException;
 
-	List loadCharacteristics(List ids) throws DatabaseException, CommunicationException;
+	List loadCharacteristics(Collection ids) throws DatabaseException, CommunicationException;
 
 
     /* Load Configuration StorableObject but argument ids */
 
-	List loadParameterTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
+	List loadParameterTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
 
-	List loadCharacteristicTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
+	List loadCharacteristicTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
 
-	List loadCharacteristicsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
+	List loadCharacteristicsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
 
 
 	void saveParameterType(ParameterType parameterType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
@@ -49,11 +50,11 @@ public interface GeneralObjectLoader {
 	void saveCharacteristic(Characteristic characteristic, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 
-	void saveParameterTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveParameterTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveCharacteristicTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveCharacteristicTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveCharacteristics(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveCharacteristics(Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 
 	Set refresh(Set storableObjects) throws CommunicationException, DatabaseException;
@@ -61,6 +62,6 @@ public interface GeneralObjectLoader {
 
 	void delete(Identifier id) throws CommunicationException, DatabaseException;
 
-	void delete(List objects) throws CommunicationException, DatabaseException, IllegalDataException;
+	void delete(Collection objects) throws CommunicationException, DatabaseException, IllegalDataException;
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.7 2005/02/11 09:29:28 bob Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.8 2005/02/11 15:35:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.general;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 
 import com.syrus.util.Log;
@@ -18,8 +19,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/11 09:29:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/02/11 15:35:16 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -136,7 +137,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		super.insertEntity(characteristicType);		
 	}
 
-	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 	}
 
@@ -153,7 +154,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(List storableObjects, Identifier modifierId, int updateKind)
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
 			throws IllegalDataException, VersionCollisionException,
 			UpdateObjectException {
 		switch (updateKind) {
@@ -179,7 +180,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		return list;
 	}
 
-	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
+	public List retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
 			return this.retrieveByIdsOneQuery(null, condition);
 		return this.retrieveByIdsOneQuery(ids, condition);	

@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationStorableObjectPool.java,v 1.4 2005/02/11 12:55:19 bob Exp $
+ * $Id: AdministrationStorableObjectPool.java,v 1.5 2005/02/11 15:35:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.administration;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
@@ -27,8 +28,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/11 12:55:19 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/02/11 15:35:32 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -127,7 +128,7 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 		return instance.getStorableObjectsByConditionImpl(condition, useLoader);
 	}
 
-	public static List getStorableObjectsByConditionButIds(List ids,
+	public static List getStorableObjectsByConditionButIds(Collection ids,
 								StorableObjectCondition condition,
 								boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
@@ -158,7 +159,7 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 		return storableObject;
 	}
 
-	protected List loadStorableObjects(Short entityCode, List ids) throws DatabaseException, CommunicationException {
+	protected List loadStorableObjects(Short entityCode, Collection ids) throws DatabaseException, CommunicationException {
 		List loadedList = null;
 		switch (entityCode.shortValue()) {
 			case ObjectEntities.USER_ENTITY_CODE:
@@ -183,7 +184,7 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 		return loadedList;
 	}
 
-	protected List loadStorableObjectsButIds(StorableObjectCondition condition, List ids)
+	protected List loadStorableObjectsButIds(StorableObjectCondition condition, Collection ids)
 			throws DatabaseException, CommunicationException {
 		List loadedList = null;
 		short entityCode = condition.getEntityCode().shortValue();
@@ -212,33 +213,33 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 
 	//public static void save()
 
-	protected void saveStorableObjects(short code, List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException {
-		if (!list.isEmpty()) {
-			boolean alone = (list.size() == 1);
+	protected void saveStorableObjects(short code, Collection collection, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException {
+		if (!collection.isEmpty()) {
+			boolean alone = (collection.size() == 1);
 			switch (code) {
 				case ObjectEntities.USER_ENTITY_CODE:
 					if (alone)
-						aObjectLoader.saveUser((User) list.get(0), force);
+						aObjectLoader.saveUser((User) collection.iterator().next(), force);
 					else
-						aObjectLoader.saveUsers(list, force);
+						aObjectLoader.saveUsers(collection, force);
 					break;
 				case ObjectEntities.DOMAIN_ENTITY_CODE:
 					if (alone)
-						aObjectLoader.saveDomain((Domain) list.get(0), force);
+						aObjectLoader.saveDomain((Domain) collection.iterator().next(), force);
 					else
-						aObjectLoader.saveDomains(list, force);
+						aObjectLoader.saveDomains(collection, force);
 					break;
 				case ObjectEntities.SERVER_ENTITY_CODE:
 					if (alone)
-						aObjectLoader.saveServer((Server) list.get(0), force);
+						aObjectLoader.saveServer((Server) collection.iterator().next(), force);
 					else
-						aObjectLoader.saveServers(list, force);
+						aObjectLoader.saveServers(collection, force);
 					break;
 				case ObjectEntities.MCM_ENTITY_CODE:
 					if (alone)
-						aObjectLoader.saveMCM((MCM) list.get(0), force);
+						aObjectLoader.saveMCM((MCM) collection.iterator().next(), force);
 					else
-						aObjectLoader.saveMCMs(list, force);
+						aObjectLoader.saveMCMs(collection, force);
 					break;
 				default:
 					Log.errorMessage("AdministrationStorableObjectPool.saveStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(code) + "', entity code: " + code);
@@ -267,7 +268,7 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 		instance.deleteImpl(id);
 	}
 
-	public static void delete(List objects) throws DatabaseException, CommunicationException, IllegalDataException {
+	public static void delete(Collection objects) throws DatabaseException, CommunicationException, IllegalDataException {
 		instance.deleteImpl(objects);
 	}
 
@@ -285,7 +286,7 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 		}
 	}
 	
-	protected void deleteStorableObjects(List objects) throws DatabaseException, CommunicationException, IllegalDataException {
+	protected void deleteStorableObjects(Collection objects) throws DatabaseException, CommunicationException, IllegalDataException {
 		try {
 			aObjectLoader.delete(objects);
 		}

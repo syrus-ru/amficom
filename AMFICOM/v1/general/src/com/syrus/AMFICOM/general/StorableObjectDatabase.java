@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.94 2005/02/11 13:30:55 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.95 2005/02/11 15:35:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.94 $, $Date: 2005/02/11 13:30:55 $
+ * @version $Revision: 1.95 $, $Date: 2005/02/11 15:35:16 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -327,7 +327,7 @@ public abstract class StorableObjectDatabase {
 
 	public abstract void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException;
 
-	public abstract List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException;
+	public abstract List retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException;
 
 	public abstract Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException;
@@ -379,7 +379,7 @@ public abstract class StorableObjectDatabase {
 	 * @throws IllegalDataException
 	 * @throws RetrieveObjectException
 	 */
-	public List retrieveButIds(List ids) throws IllegalDataException, RetrieveObjectException {
+	public List retrieveButIds(Collection ids) throws IllegalDataException, RetrieveObjectException {
 		return this.retrieveButIds(ids, null);
 	}
 
@@ -390,7 +390,7 @@ public abstract class StorableObjectDatabase {
 	 * @throws IllegalDataException
 	 * @throws RetrieveObjectException
 	 */
-	protected List retrieveButIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
+	protected List retrieveButIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		StringBuffer stringBuffer = this.idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, false);
 		if ((condition != null) && (condition.length() > 0)) {
 			if (stringBuffer.length() != 0)
@@ -401,9 +401,8 @@ public abstract class StorableObjectDatabase {
 		return this.retrieveByIds(null, stringBuffer.toString());
 	}
 
-	public final List retrieveByCondition(List ids, StorableObjectCondition condition)
-			throws RetrieveObjectException,
-				IllegalDataException {
+	public final List retrieveByCondition(Collection ids, StorableObjectCondition condition)
+			throws RetrieveObjectException, IllegalDataException {
 
 		DatabaseStorableObjectCondition databaseStorableObjectCondition = this.reflectDatabaseCondition(condition);
 		short conditionCode = databaseStorableObjectCondition.getEntityCode().shortValue();
@@ -428,7 +427,7 @@ public abstract class StorableObjectDatabase {
 	 * @throws IllegalDataException
 	 * @throws RetrieveObjectException
 	 */
-	protected List retrieveByIdsOneQuery(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
+	protected List retrieveByIdsOneQuery(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List storableObjects = new LinkedList();
 
 		StringBuffer stringBuffer = new StringBuffer("1=1");
@@ -490,7 +489,7 @@ public abstract class StorableObjectDatabase {
 	 * @throws RetrieveObjectException
 	 * @throws IllegalDataException
 	 */
-	protected Map retrieveLinkedEntityIds(List storableObjects, String tableName, String idColumnName, String linkedIdColumnName) throws RetrieveObjectException, IllegalDataException{
+	protected Map retrieveLinkedEntityIds(Collection storableObjects, String tableName, String idColumnName, String linkedIdColumnName) throws RetrieveObjectException, IllegalDataException{
 		if (storableObjects == null || storableObjects.isEmpty())
 			return Collections.EMPTY_MAP;
 
@@ -552,7 +551,7 @@ public abstract class StorableObjectDatabase {
 
 	public abstract void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException;
 
-	public abstract void insert(List storableObjects) throws IllegalDataException, CreateObjectException;
+	public abstract void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException;
 
 	protected void insertEntity(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		String storableObjectIdStr = DatabaseIdentifier.toSQLString(storableObject.getId());
@@ -599,12 +598,12 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	protected void insertEntities(List storableObjects) throws IllegalDataException, CreateObjectException {
+	protected void insertEntities(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		if ((storableObjects == null) || (storableObjects.size() == 0))
 			return;
 
 		if (storableObjects.size() == 1) {
-			insertEntity((StorableObject) storableObjects.get(0));
+			this.insertEntity((StorableObject) storableObjects.iterator().next());
 			return;
 		}
 
@@ -723,7 +722,7 @@ public abstract class StorableObjectDatabase {
 	public abstract void update(StorableObject storableObject, Identifier modifierId, int updateKind)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException;
 
-	public abstract void update(List storableObjects, Identifier modifierId, int updateKind)
+	public abstract void update(Collection storableObjects, Identifier modifierId, int updateKind)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException;
 
 
@@ -821,7 +820,7 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	protected void checkAndUpdateEntities(List storableObjects, Identifier modifierId, final boolean force)
+	protected void checkAndUpdateEntities(Collection storableObjects, Identifier modifierId, final boolean force)
 			throws UpdateObjectException, VersionCollisionException, IllegalDataException {
 		if (storableObjects == null || storableObjects.isEmpty())
 			return;
@@ -986,13 +985,13 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	protected void updateEntities(List storableObjects) throws IllegalDataException, UpdateObjectException {
+	protected void updateEntities(Collection storableObjects) throws IllegalDataException, UpdateObjectException {
 
 		if ((storableObjects == null) || (storableObjects.size() == 0))
 			return;
 
 		if (storableObjects.size() == 1) {
-			updateEntity((StorableObject) storableObjects.get(0));
+			this.updateEntity((StorableObject) storableObjects.iterator().next());
 			return;
 		}
 
@@ -1202,7 +1201,7 @@ public abstract class StorableObjectDatabase {
 		}
 	}
 
-	public void delete(List objects) throws IllegalDataException {
+	public void delete(Collection objects) throws IllegalDataException {
 		if ((objects == null) || (objects.isEmpty()))
 			return;
 

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseAdministrationObjectLoader.java,v 1.10 2005/02/11 12:55:19 bob Exp $
+ * $Id: DatabaseAdministrationObjectLoader.java,v 1.11 2005/02/11 15:35:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.administration;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -30,8 +31,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/02/11 12:55:19 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/02/11 15:35:32 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -62,7 +63,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 
 	// for multiple objects
 
-	public List loadUsers(List ids) throws DatabaseException, CommunicationException {
+	public List loadUsers(Collection ids) throws DatabaseException, CommunicationException {
 		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.userDatabase;
 		List list = null;
 		try {
@@ -76,7 +77,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		return list;
 	}
 
-	public List loadDomains(List ids) throws DatabaseException, CommunicationException {
+	public List loadDomains(Collection ids) throws DatabaseException, CommunicationException {
 		DomainDatabase database = (DomainDatabase) AdministrationDatabaseContext.domainDatabase;
 		List list = null;
 		try {
@@ -90,7 +91,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		return list;
 	}
 
-	public List loadServers(List ids) throws DatabaseException, CommunicationException {
+	public List loadServers(Collection ids) throws DatabaseException, CommunicationException {
 		ServerDatabase database = (ServerDatabase) AdministrationDatabaseContext.serverDatabase;
 		List list = null;
 		try {
@@ -104,7 +105,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		return list;
 	}
 
-	public List loadMCMs(List ids) throws DatabaseException, CommunicationException {
+	public List loadMCMs(Collection ids) throws DatabaseException, CommunicationException {
 		MCMDatabase database = (MCMDatabase) AdministrationDatabaseContext.mcmDatabase;
 		List list = null;
 		try {
@@ -128,7 +129,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 
 
 
-	public List loadUsersButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public List loadUsersButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.userDatabase;
 		List list = null;
 		try {
@@ -142,7 +143,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		return list;
 	}
 
-	public List loadDomainsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public List loadDomainsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 		DomainDatabase database = (DomainDatabase) AdministrationDatabaseContext.domainDatabase;
 		List list = null;
 		try {
@@ -156,7 +157,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		return list;
 	}
 
-	public List loadServersButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public List loadServersButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 		ServerDatabase database = (ServerDatabase) AdministrationDatabaseContext.serverDatabase;
 		List list = null;
 		try {
@@ -170,7 +171,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		return list;
 	}
 
-	public List loadMCMsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public List loadMCMsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 		MCMDatabase database = (MCMDatabase) AdministrationDatabaseContext.mcmDatabase;
 		List list = null;
 		try {
@@ -285,10 +286,10 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 
 
 
-	public void saveUsers(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveUsers(Collection collection, boolean force) throws DatabaseException, CommunicationException {
 		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.userDatabase;
 		try {
-			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.saveUsers | UpdateObjectException: " + e.getMessage();
@@ -307,10 +308,10 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		}
 	}
 
-	public void saveDomains(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveDomains(Collection collection, boolean force) throws DatabaseException, CommunicationException {
 		DomainDatabase database = (DomainDatabase) AdministrationDatabaseContext.domainDatabase;
 		try {
-			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.saveDomains | UpdateObjectException: " + e.getMessage();
@@ -329,10 +330,10 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		}
 	}
 
-	public void saveServers(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveServers(Collection collection, boolean force) throws DatabaseException, CommunicationException {
 		ServerDatabase database = (ServerDatabase) AdministrationDatabaseContext.serverDatabase;
 		try {
-			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.saveServers | UpdateObjectException: " + e.getMessage();
@@ -351,10 +352,10 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		}
 	}
 
-	public void saveMCMs(List list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveMCMs(Collection collection, boolean force) throws DatabaseException, CommunicationException {
 		MCMDatabase database = (MCMDatabase) AdministrationDatabaseContext.mcmDatabase;
 		try {
-			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.saveMCMs | UpdateObjectException: " + e.getMessage();
@@ -405,7 +406,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		delete(id, null);
 	}
 
-	public void delete(List objects) throws CommunicationException, DatabaseException, IllegalDataException {
+	public void delete(Collection objects) throws CommunicationException, DatabaseException, IllegalDataException {
 		if (objects == null || objects.isEmpty())
 			return;
 		/**
@@ -444,7 +445,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		}
 	}
 
-	private void delete(Identifier id, List objects) throws DatabaseException {
+	private void delete(Identifier id, Collection objects) throws DatabaseException {
 		short entityCode = (id != null) ? id.getMajor() : 0;
 		if (id == null) {
 			if (objects.isEmpty())

@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationObjectLoader.java,v 1.4 2005/02/11 12:55:19 bob Exp $
+ * $Id: AdministrationObjectLoader.java,v 1.5 2005/02/11 15:35:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.administration;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -19,8 +20,8 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/11 12:55:19 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/02/11 15:35:32 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -39,28 +40,28 @@ public interface AdministrationObjectLoader {
 
     // this block for multiple objects
 
-	List loadUsers(List ids) throws DatabaseException, CommunicationException;
+	List loadUsers(Collection ids) throws DatabaseException, CommunicationException;
 
-	List loadDomains(List ids) throws DatabaseException, CommunicationException;
+	List loadDomains(Collection ids) throws DatabaseException, CommunicationException;
 
-	List loadServers(List ids) throws DatabaseException, CommunicationException;
+	List loadServers(Collection ids) throws DatabaseException, CommunicationException;
 
-	List loadMCMs(List ids) throws DatabaseException, CommunicationException;
+	List loadMCMs(Collection ids) throws DatabaseException, CommunicationException;
 
-//  PermissionAttributes loadPermissionAttributes(List ids) throws DatabaseException, CommunicationException;
+//  PermissionAttributes loadPermissionAttributes(Collection ids) throws DatabaseException, CommunicationException;
 
 
     /* Load StorableObject but argument ids */
 
-	List loadUsersButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
+	List loadUsersButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
 
-	List loadDomainsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
+	List loadDomainsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
 
-	List loadServersButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
+	List loadServersButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
 
-	List loadMCMsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
+	List loadMCMsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
 
-//  PermissionAttributes loadPermissionAttributesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
+//  PermissionAttributes loadPermissionAttributesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
 
 
 	void saveUser(User user, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
@@ -74,13 +75,13 @@ public interface AdministrationObjectLoader {
 //	void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 
-	void saveUsers(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveUsers(Collection collection, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveDomains(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveDomains(Collection collection, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveServers(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveServers(Collection collection, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveMCMs(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveMCMs(Collection collection, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 //	void savePermissionAttributes(PermissionAttributes permissionAttributes, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
@@ -89,6 +90,6 @@ public interface AdministrationObjectLoader {
 
 	void delete(Identifier id) throws CommunicationException, DatabaseException;
 
-	void delete(List objects) throws CommunicationException, DatabaseException, IllegalDataException;
+	void delete(Collection objects) throws CommunicationException, DatabaseException, IllegalDataException;
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.21 2005/02/09 13:52:50 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.22 2005/02/11 15:35:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,7 +27,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/02/09 13:52:50 $
+ * @version $Revision: 1.22 $, $Date: 2005/02/11 15:35:16 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -132,7 +133,7 @@ public abstract class StorableObjectPool {
 		this.deleteStorableObject(id);
 	}
 
-	protected void deleteImpl(final List objects) throws DatabaseException, CommunicationException, IllegalDataException {
+	protected void deleteImpl(final Collection objects) throws DatabaseException, CommunicationException, IllegalDataException {
 		Object object;
 		Identifier id;
 		for (Iterator it = objects.iterator(); it.hasNext();) {
@@ -158,7 +159,7 @@ public abstract class StorableObjectPool {
 
 	protected abstract void deleteStorableObject(final Identifier id) throws DatabaseException, CommunicationException;
 
-	protected abstract void deleteStorableObjects(final List objects) throws DatabaseException, CommunicationException, IllegalDataException;
+	protected abstract void deleteStorableObjects(final Collection objects) throws DatabaseException, CommunicationException, IllegalDataException;
 
 	/**
 	 * This method is only invoked by this class' descendants, using their
@@ -248,7 +249,7 @@ public abstract class StorableObjectPool {
 	 * @param useLoader
 	 * @throws ApplicationException
 	 */
-	protected List getStorableObjectsByConditionButIdsImpl(final List ids,
+	protected List getStorableObjectsByConditionButIdsImpl(final Collection ids,
 			final StorableObjectCondition condition,
 			final boolean useLoader) throws ApplicationException {
 		assert ids != null : "Supply an empty list instead...";
@@ -319,7 +320,7 @@ public abstract class StorableObjectPool {
 	 * @todo Check references within workspace, convert a run time warning
 	 *       (if objectIds is null) into a run time error.
 	 */
-	protected List getStorableObjectsImpl(final List objectIds, final boolean useLoader) throws DatabaseException, CommunicationException {
+	protected List getStorableObjectsImpl(final Collection objectIds, final boolean useLoader) throws DatabaseException, CommunicationException {
 		List list = null;
 		Map objectQueueMap = null;
 		if (objectIds != null) {
@@ -388,9 +389,9 @@ public abstract class StorableObjectPool {
 
 	protected abstract StorableObject loadStorableObject(final Identifier objectId) throws DatabaseException, CommunicationException;
 
-	protected abstract List loadStorableObjects(final Short entityCode, final List ids) throws DatabaseException, CommunicationException;
+	protected abstract List loadStorableObjects(final Short entityCode, final Collection ids) throws DatabaseException, CommunicationException;
 
-	protected abstract List loadStorableObjectsButIds(final StorableObjectCondition condition, final List ids) throws DatabaseException, CommunicationException;
+	protected abstract List loadStorableObjectsButIds(final StorableObjectCondition condition, final Collection ids) throws DatabaseException, CommunicationException;
 
 	protected void populatePools() {
 		try {
@@ -457,21 +458,23 @@ public abstract class StorableObjectPool {
 				}
 				if (storableObjects.isEmpty()) {
 					Log.debugMessage("StorableObjectPool.refreshImpl | LRUMap for '"
-							+ ObjectEntities.codeToString(entityCode) + "' entity has no elements",
-							Log.DEBUGLEVEL08);
+							+ ObjectEntities.codeToString(entityCode)
+							+ "' entity has no elements", Log.DEBUGLEVEL08);
 					continue;
 				}
 				Log.debugMessage("StorableObjectPool.refreshImpl | try refresh LRUMap for '"
-						+ ObjectEntities.codeToString(entityCode) + "' entity",
-						Log.DEBUGLEVEL08);
+						+ ObjectEntities.codeToString(entityCode)
+						+ "' entity", Log.DEBUGLEVEL08);
 
-				final Set returnedStorableObjectsIds = this.refreshStorableObjects(storableObjects);				
+				final Set returnedStorableObjectsIds = this.refreshStorableObjects(storableObjects);
 				this.getStorableObjectsImpl(new ArrayList(returnedStorableObjectsIds), true);
 			}
-		} catch (DatabaseException de) {
+		}
+		catch (DatabaseException de) {
 			Log.errorMessage("StorableObjectPool.refreshImpl | DatabaseException: " + de.getMessage());
 			throw new DatabaseException("StorableObjectPool.refreshImpl", de);
-		} catch (CommunicationException ce) {
+		}
+		catch (CommunicationException ce) {
 			Log.errorMessage("StorableObjectPool.refreshImpl | CommunicationException: " + ce.getMessage());
 			throw new CommunicationException("StorableObjectPool.refreshImpl", ce);
 		}
@@ -488,7 +491,7 @@ public abstract class StorableObjectPool {
 	 * @return <code>true</code> if all entities within this list are of the
 	 *         same type, <code>false</code> otherwise.
 	 */
-	private boolean hasSingleTypeEntities(final List storableObjects) {
+	private boolean hasSingleTypeEntities(final Collection storableObjects) {
 		/*
 		 * Nested assertions are ok.
 		 */
@@ -517,7 +520,7 @@ public abstract class StorableObjectPool {
 	 *        objects of the same type.
 	 * @return common type of storable objects supplied as <code>short</code>.
 	 */
-	protected short getEntityCodeOfStorableObjects(final List storableObjects) {
+	protected short getEntityCodeOfStorableObjects(final Collection storableObjects) {
 		assert storableObjects.size() >= 1;
 
 		return ((StorableObject) storableObjects.iterator().next()).getId().getMajor();
@@ -562,7 +565,7 @@ public abstract class StorableObjectPool {
 //		}
 //	}
 
-	private void save(final List storableObjects, final boolean force)
+	private void save(final Collection storableObjects, final boolean force)
 			throws VersionCollisionException,
 				DatabaseException,
 				CommunicationException,
@@ -718,7 +721,7 @@ public abstract class StorableObjectPool {
 	 *       <code>entityCode</code>, rewrite overriding classes in order
 	 *       for them to use {@link #getEntityCodeOfStorableObjects(List)}. 
 	 */
-	protected abstract void saveStorableObjects(final short entityCode, final List storableObjects, final boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException;
+	protected abstract void saveStorableObjects(final short entityCode, final Collection storableObjects, final boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException;
 
 	protected void serializePoolImpl() {
 		final Set entityCodeSet = this.objectPoolMap.keySet();

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.13 2005/02/11 10:24:22 bob Exp $
+ * $Id: CharacteristicDatabase.java,v 1.14 2005/02/11 15:35:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -27,8 +28,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/02/11 10:24:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.14 $, $Date: 2005/02/11 15:35:16 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -173,7 +174,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 	}
 
@@ -195,7 +196,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(List storableObjects, Identifier modifierId, int updateKind)
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 		case UPDATE_FORCE:
@@ -258,39 +259,15 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		return characteristics;
 	}
 
-	public Map retrieveCharacteristicsByOneQuery(List list, CharacteristicSort sort) throws RetrieveObjectException, IllegalDataException {
-		if (list == null || list.size() == 0)
+	public Map retrieveCharacteristicsByOneQuery(Collection objects, CharacteristicSort sort) throws RetrieveObjectException, IllegalDataException {
+		if (objects == null || objects.size() == 0)
 			return null;
 
 		int sortValue = sort.value();
-		String sql;
-		StringBuffer buff = new StringBuffer(CharacteristicWrapper.COLUMN_SORT
-							+ EQUALS + Integer.toString(sortValue)
-							+ SQL_AND + CharacteristicWrapper.COLUMN_CHARACTERIZED_ID
-							+ SQL_IN + OPEN_BRACKET);
-		int i = 1;
-		for (Iterator it = list.iterator(); it.hasNext();i++) {
-			StorableObject storableObject = (StorableObject)it.next();
-			Identifier id = storableObject.getId();
-			// check items for Characterized
-			if (!(storableObject instanceof Characterized)) {
-				throw new IllegalDataException("CharacteristicDatabase.retrieveCharacteristicsByOneQuery | Illegal entity: entity " + id + " is not characterized ");
-			}
-			buff.append(DatabaseIdentifier.toSQLString(id));
-			if (it.hasNext()) {
-				if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-					buff.append(COMMA);
-				else {
-					buff.append(CLOSE_BRACKET);
-					buff.append(SQL_OR);
-					buff.append(CharacteristicWrapper.COLUMN_CHARACTERIZED_ID);
-					buff.append(SQL_IN);
-					buff.append(OPEN_BRACKET);
-				}                   
-			}
-		}
-		buff.append(CLOSE_BRACKET);        
-		sql = retrieveQuery(buff.toString());
+		StringBuffer stringBuffer = new StringBuffer(CharacteristicWrapper.COLUMN_SORT + EQUALS + Integer.toString(sortValue)
+							+ SQL_AND);
+		stringBuffer.append(this.idsEnumerationString(objects, CharacteristicWrapper.COLUMN_CHARACTERIZED_ID, true));
+		String sql = retrieveQuery(stringBuffer.toString());
 
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -360,7 +337,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
+	public List retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
 			return this.retrieveByIdsOneQuery(null, condition);
 		return this.retrieveByIdsOneQuery(ids, condition);	
@@ -432,7 +409,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 
 	}
 
-	public void updateCharacteristics(List storableObjects) throws UpdateObjectException {
+	public void updateCharacteristics(Collection storableObjects) throws UpdateObjectException {
     // Construction of Map <StorableObjectIdentifier> <List <CharacteristicIdentifier> >
 		if(storableObjects == null || storableObjects.isEmpty())
 			return;
@@ -465,30 +442,14 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		}
 
     // creating sql query. This query gets all Characteristics whose characterized_id contained in storableObjects
-		StringBuffer buff = new StringBuffer();
-		buff.append(CharacteristicWrapper.COLUMN_CHARACTERIZED_ID);
-		buff.append(SQL_IN);
-		buff.append(OPEN_BRACKET);
-		int i = 0;
-		for (Iterator it = storableObjects.iterator(); it.hasNext();i++) {
-			StorableObject storableObject = (StorableObject) it.next();
-			buff.append(APOSTOPHE);
-			buff.append(storableObject.getId());
-			buff.append(APOSTOPHE);
-			if (it.hasNext()) {
-				if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-					buff.append(COMMA);
-				else {
-					buff.append(CLOSE_BRACKET);
-					buff.append(SQL_OR);
-					buff.append(CharacteristicWrapper.COLUMN_CHARACTERIZED_ID);
-					buff.append(SQL_IN);
-					buff.append(OPEN_BRACKET);
-				}                   
-			}
+		StringBuffer stringBuffer = new StringBuffer();
+		try {
+			stringBuffer.append(this.idsEnumerationString(storableObjects, CharacteristicWrapper.COLUMN_CHARACTERIZED_ID, true));
 		}
-		buff.append(CLOSE_BRACKET);        
-		String sql = retrieveQuery(buff.toString());
+		catch (IllegalDataException e) {
+			Log.errorException(e);
+		}
+		String sql = retrieveQuery(stringBuffer.toString());
 		Map dbStorableObjectIdCharIdsMap = new HashMap();
 		List listIdToDelete = new LinkedList();       
 		Statement statement = null;

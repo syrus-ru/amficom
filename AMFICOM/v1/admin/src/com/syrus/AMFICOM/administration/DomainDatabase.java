@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.12 2005/02/11 10:34:58 bob Exp $
+ * $Id: DomainDatabase.java,v 1.13 2005/02/11 15:35:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.administration;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -35,8 +36,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/02/11 10:34:58 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2005/02/11 15:35:32 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -156,7 +157,7 @@ public class DomainDatabase extends StorableObjectDatabase {
 		}              
 	}
 
-	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		
 		try {
@@ -185,7 +186,7 @@ public class DomainDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(List storableObjects, Identifier modifierId, int updateKind)
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
 		switch (updateKind) {
@@ -201,7 +202,7 @@ public class DomainDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
+	public List retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
 			return this.retrieveByIdsOneQuery(null, condition);
 
@@ -223,7 +224,7 @@ public class DomainDatabase extends StorableObjectDatabase {
 		// return retriveByIdsPreparedStatement(ids);
 	}
 
-// private List retrieveButIdsByDomain(List ids, Domain domain) throws
+// private List retrieveButIdsByDomain(Collection ids, Domain domain) throws
 // RetrieveObjectException {
 //		List list = null;
 //

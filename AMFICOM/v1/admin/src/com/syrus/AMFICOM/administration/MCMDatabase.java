@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.10 2005/02/11 07:50:02 bob Exp $
+ * $Id: MCMDatabase.java,v 1.11 2005/02/11 15:35:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -41,8 +42,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/02/11 07:50:02 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/02/11 15:35:32 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -198,7 +199,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 		mcm.setKISIds0(kisIds);
 	}
 
-  private void retrieveKISIdsByOneQuery(List mcms) throws RetrieveObjectException {
+  private void retrieveKISIdsByOneQuery(Collection mcms) throws RetrieveObjectException {
 
     if ((mcms == null) || (mcms.isEmpty()))
 			return;     
@@ -296,7 +297,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
 		try {
@@ -323,7 +324,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 		characteristicDatabase.updateCharacteristics(mcm);
 	}
 
-	public void update(List storableObjects, Identifier modifierId, int updateKind)
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 		case UPDATE_FORCE:
@@ -338,7 +339,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 		characteristicDatabase.updateCharacteristics(storableObjects);
 	}
 
-	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
+	public List retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List list = null;
 		if ((ids == null) || (ids.isEmpty()))
 			list = this.retrieveByIdsOneQuery(null, condition);
@@ -362,7 +363,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 		//return retriveByIdsPreparedStatement(ids);
 	}
 
-//	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
+//	private List retrieveButIdsByDomain(Collection ids, Domain domain) throws RetrieveObjectException {
 //		List list = null;
 //
 //		String condition = DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId());

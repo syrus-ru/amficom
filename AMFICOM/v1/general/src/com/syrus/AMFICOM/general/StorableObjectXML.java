@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.14 2005/02/11 10:22:30 bob Exp $
+ * $Id: StorableObjectXML.java,v 1.15 2005/02/11 15:35:16 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.general;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -30,8 +31,8 @@ import java.util.Map;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  * 
- * @version $Revision: 1.14 $, $Date: 2005/02/11 10:22:30 $
- * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2005/02/11 15:35:16 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public class StorableObjectXML {
@@ -96,7 +97,7 @@ public class StorableObjectXML {
 		return storableObject;
 	}
 
-	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
+	public List retrieveByCondition(Collection ids, StorableObjectCondition condition) throws RetrieveObjectException,
 			IllegalDataException {
 		List list = null;
 		List identifiers = this.driver.getIdentifiers(condition.getEntityCode().shortValue());

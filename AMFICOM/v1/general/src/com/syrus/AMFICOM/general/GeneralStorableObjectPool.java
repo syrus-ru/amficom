@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralStorableObjectPool.java,v 1.5 2005/02/11 12:52:22 bob Exp $
+ * $Id: GeneralStorableObjectPool.java,v 1.6 2005/02/11 15:35:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.general;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
@@ -16,8 +17,8 @@ import java.util.Set;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/11 12:52:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/02/11 15:35:16 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -103,7 +104,7 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		return instance.getStorableObjectImpl(objectId, useLoader);
 	}
 
-	public static List getStorableObjects(List objectIds, boolean useLoader) throws DatabaseException, CommunicationException {
+	public static List getStorableObjects(Collection objectIds, boolean useLoader) throws DatabaseException, CommunicationException {
 		return instance.getStorableObjectsImpl(objectIds, useLoader);
 	}
 
@@ -112,7 +113,7 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		return instance.getStorableObjectsByConditionImpl(condition, useLoader);
 	}
 
-	public static List getStorableObjectsByConditionButIds(List ids,
+	public static List getStorableObjectsByConditionButIds(Collection ids,
 												StorableObjectCondition condition,
 												boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
@@ -137,7 +138,7 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		return storableObject;
 	}
 
-	protected List loadStorableObjects(Short entityCode, List ids) throws DatabaseException, CommunicationException {
+	protected List loadStorableObjects(Short entityCode, Collection ids) throws DatabaseException, CommunicationException {
 		List loadedList = null;
 		switch (entityCode.shortValue()) {
 			case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
@@ -156,7 +157,7 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		return loadedList;
 	}
 
-	protected List loadStorableObjectsButIds(StorableObjectCondition condition, List ids)
+	protected List loadStorableObjectsButIds(StorableObjectCondition condition, Collection ids)
 			throws DatabaseException, CommunicationException {
 		List loadedList = null;
 		short entityCode = condition.getEntityCode().shortValue();
@@ -179,25 +180,25 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 
 	//public static void save()
 
-	protected void saveStorableObjects(short code, List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException {
+	protected void saveStorableObjects(short code, Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException {
 		if (!list.isEmpty()) {
 			boolean alone = (list.size() == 1);
 			switch (code) {
 				case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
 					if (alone)
-						gObjectLoader.saveParameterType((ParameterType)list.get(0), force);
+						gObjectLoader.saveParameterType((ParameterType)list.iterator().next(), force);
 					else 
 						gObjectLoader.saveParameterTypes(list, force);
 					break;
 				case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
 					if (alone)
-						gObjectLoader.saveCharacteristicType((CharacteristicType) list.get(0), force);
+						gObjectLoader.saveCharacteristicType((CharacteristicType) list.iterator().next(), force);
 					else
 						gObjectLoader.saveCharacteristicTypes(list, force);
 					break;
 				case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
 					if (alone)
-						gObjectLoader.saveCharacteristic((Characteristic) list.get(0), force);
+						gObjectLoader.saveCharacteristic((Characteristic) list.iterator().next(), force);
 					else
 						gObjectLoader.saveCharacteristics(list, force);
 					break;
@@ -228,7 +229,7 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		instance.deleteImpl(id);
 	}
 
-	public static void delete(List objects) throws DatabaseException, CommunicationException, IllegalDataException {
+	public static void delete(Collection objects) throws DatabaseException, CommunicationException, IllegalDataException {
 		instance.deleteImpl(objects);
 	}
 
@@ -246,7 +247,7 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		}
 	}
 	
-	protected void deleteStorableObjects(List objects) throws DatabaseException, CommunicationException, IllegalDataException {
+	protected void deleteStorableObjects(Collection objects) throws DatabaseException, CommunicationException, IllegalDataException {
 		try {
 			gObjectLoader.delete(objects);
 		}
