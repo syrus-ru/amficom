@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.2 2004/08/06 16:07:06 arseniy Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.3 2004/08/09 08:28:51 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,14 +13,15 @@ import java.util.Map;
 import java.util.Hashtable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectLoader;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/08/06 16:07:06 $
+ * @version $Revision: 1.3 $, $Date: 2004/08/09 08:28:51 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -44,41 +45,39 @@ public class MeasurementStorableObjectPool {
 	private static final int EVALUATIONTYPE_OBJECT_POOL_SIZE = 1;
 
 	private static Map objectPoolMap; /*	Map <String objectEntity, LRUMap objectPool>	*/
-	private static StorableObjectLoader soLoader;
+	private static MeasurementObjectLoader mObjectLoader;
 
 	private MeasurementStorableObjectPool() {
 	}
 
-	public static void init(StorableObjectLoader soLoader1) {
+	public static void init(MeasurementObjectLoader mObjectLoader1) {
 		objectPoolMap = Collections.synchronizedMap(new Hashtable(OBJECT_POOL_MAP_SIZE));
 
-		addObjectPool(ObjectEntities.SET_ENTITY, SET_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.SETPARAMETER_ENTITY, SETPARAMETER_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.MS_ENTITY, MS_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.MEASUREMENT_ENTITY, MEASUREMENT_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.ANALYSIS_ENTITY, ANALYSIS_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.EVALUATION_ENTITY, EVALUATION_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.TEST_ENTITY, TEST_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.RESULT_ENTITY, RESULT_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.RESULTPARAMETER_ENTITY, RESULTPARAMETER_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.TEMPORALPATTERN_ENTITY, TEMPORALPATTERN_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, PARAMETERTYPE_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE, MEASUREMENTTYPE_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.ANALYSISTYPE_ENTITY_CODE, ANALYSISTYPE_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, EVALUATIONTYPE_OBJECT_POOL_SIZE);
 
-		addObjectPool(ObjectEntities.PARAMETERTYPE_ENTITY, PARAMETERTYPE_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.MEASUREMENTTYPE_ENTITY, MEASUREMENTTYPE_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.ANALYSISTYPE_ENTITY, ANALYSISTYPE_OBJECT_POOL_SIZE);
-		addObjectPool(ObjectEntities.EVALUATIONTYPE_ENTITY, EVALUATIONTYPE_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.SET_ENTITY_CODE, SET_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.MS_ENTITY_CODE, MS_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.MEASUREMENT_ENTITY_CODE, MEASUREMENT_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.ANALYSIS_ENTITY_CODE, ANALYSIS_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.EVALUATION_ENTITY_CODE, EVALUATION_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.TEST_ENTITY_CODE, TEST_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.RESULT_ENTITY_CODE, RESULT_OBJECT_POOL_SIZE);
+		addObjectPool(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE, TEMPORALPATTERN_OBJECT_POOL_SIZE);
 
-		soLoader = soLoader1;
+		mObjectLoader = mObjectLoader1;
 	}
 
-	private static void addObjectPool(String objectEntity, int poolSize) {
+	private static void addObjectPool(short objectEntityCode, int poolSize) {
 		LRUMap objectPool = new LRUMap(poolSize);
-		objectPoolMap.put(objectEntity, objectPool);
+		objectPoolMap.put(new Short(objectEntityCode), objectPool);
 	}
 
 	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader) {
-		String objectEntity = objectId.getObjectEntity();
-		LRUMap objectPool = (LRUMap)objectPoolMap.get(objectEntity);
+		short objectEntityCode = objectId.getMajor();
+		LRUMap objectPool = (LRUMap)objectPoolMap.get(new Short(objectEntityCode));
 		if (objectPool != null) {
 			StorableObject storableObject = (StorableObject)objectPool.get(objectId);
 			if (storableObject != null)
@@ -86,7 +85,7 @@ public class MeasurementStorableObjectPool {
 			else {
 				if (useLoader) {
 					try {
-						storableObject = soLoader.load(objectId);
+						storableObject = loadStorableObject(objectId);
 						putStorableObject(storableObject);
 					}
 					catch (Exception e) {
@@ -97,14 +96,60 @@ public class MeasurementStorableObjectPool {
 			}
 		}
 		else {
-			Log.errorMessage("Cannot find object pool for objectId: '" + objectId.toString() + "' entity: '" + objectEntity + "'");
+			Log.errorMessage("Cannot find object pool for objectId: '" + objectId.toString() + "' entity code: '" + objectEntityCode + "'");
 			return null;
 		}
 	}
 
+	private static StorableObject loadStorableObject(Identifier objectId) throws DatabaseException, CommunicationException {
+		StorableObject storableObject;
+		switch (objectId.getMajor()) {
+			case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
+				storableObject = mObjectLoader.loadParameterType(objectId);
+				break;
+			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
+				storableObject = mObjectLoader.loadMeasurementType(objectId);
+				break;
+			case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
+				storableObject = mObjectLoader.loadAnalysisType(objectId);
+				break;
+			case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
+				storableObject = mObjectLoader.loadEvaluationType(objectId);
+				break;
+			case ObjectEntities.SET_ENTITY_CODE:
+				storableObject = mObjectLoader.loadSet(objectId);
+				break;
+			case ObjectEntities.MS_ENTITY_CODE:
+				storableObject = mObjectLoader.loadMeasurementSetup(objectId);
+				break;
+			case ObjectEntities.ANALYSIS_ENTITY_CODE:
+				storableObject = mObjectLoader.loadAnalysis(objectId);
+				break;
+			case ObjectEntities.EVALUATION_ENTITY_CODE:
+				storableObject = mObjectLoader.loadEvaluation(objectId);
+				break;
+			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
+				storableObject = mObjectLoader.loadMeasurement(objectId);
+				break;
+			case ObjectEntities.TEST_ENTITY_CODE:
+				storableObject = mObjectLoader.loadTest(objectId);
+				break;
+			case ObjectEntities.RESULT_ENTITY_CODE:
+				storableObject = mObjectLoader.loadResult(objectId);
+				break;
+			case ObjectEntities.TEMPORALPATTERN_ENTITY_CODE:
+				storableObject = mObjectLoader.loadTemporalPattern(objectId);
+				break;
+			default:
+				Log.errorMessage("Unknown entity: " + objectId.getObjectEntity());
+				storableObject = null;
+		}
+		return storableObject;
+	}
+
 	public static StorableObject putStorableObject(StorableObject storableObject) throws IllegalObjectEntityException {
 		Identifier objectId = storableObject.getId();
-		LRUMap objectPool = (LRUMap)objectPoolMap.get(objectId.getObjectEntity());
+		LRUMap objectPool = (LRUMap)objectPoolMap.get(new Short(objectId.getMajor()));
 		if (objectPool != null) {
 			return (StorableObject)objectPool.put(objectId, storableObject);
 		}
