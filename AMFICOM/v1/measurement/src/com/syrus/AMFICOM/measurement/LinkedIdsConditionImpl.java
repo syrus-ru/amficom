@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.18 2005/03/10 19:36:40 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.19 2005/03/10 21:06:25 arseniy Exp $
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/03/10 19:36:40 $
+ * @version $Revision: 1.19 $, $Date: 2005/03/10 21:06:25 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -140,6 +140,7 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						condition = super.conditionTest(kis.getMCMId());
 						break;
 				}
+				break;
 			default:
 				throw new UnsupportedOperationException("entityCode "
 						+ ObjectEntities.codeToString(this.entityCode.shortValue()) + " is unknown for this condition");
