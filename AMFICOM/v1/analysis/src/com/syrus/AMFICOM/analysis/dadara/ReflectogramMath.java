@@ -228,10 +228,8 @@ public class ReflectogramMath
 		for(int i = 0; i < y.length; i++)
 		{
 			double tmp = 0.;
-			for(int j = i - freq; j < Math.min(i + freq + 1, y.length); j++)
-				if(j >= 0)
-					tmp = tmp + y[j] * wLet(j - i, freq, norma, wLet);
-
+			for(int j = Math.max(i - freq, 0); j < Math.min(i + freq + 1, y.length); j++)
+				tmp = tmp + y[j] * wLet(j - i, freq, norma, wLet);
 			trans[i] = tmp;
 		}
 		return trans;
@@ -243,9 +241,8 @@ public class ReflectogramMath
 		for(int i = start; i < end; i++)
 		{
 			double tmp = 0.;
-			for(int j = i - freq; j < Math.min(i + freq + 1, end); j++)
-				if(j >= 0)
-					tmp = tmp + y[j] * wLet(j - i, freq, norma, wLet);
+			for(int j = Math.max(i - freq, 0); j < Math.min(i + freq + 1, end); j++)
+				tmp = tmp + y[j] * wLet(j - i, freq, norma, wLet);
 			trans[i] = tmp;
 		}
 		return trans;

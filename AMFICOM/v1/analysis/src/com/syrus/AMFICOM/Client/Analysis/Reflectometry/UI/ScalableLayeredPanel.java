@@ -180,7 +180,7 @@ public class ScalableLayeredPanel extends ResizableLayeredPanel
 	}
 
 
-	protected void updScale2fit(int start, int end)
+	public void updScale2fit(int start, int end)
 	{
 		updScale2fit(start, end, 0, 0);
 	}
@@ -228,7 +228,8 @@ public class ScalableLayeredPanel extends ResizableLayeredPanel
 		panel.scale_x = factor_x*((double)(jLayeredPane.getWidth()) / (double)(panel.y.length));
 		panel.scale_y = factor_y*((double)(jLayeredPane.getHeight()) / (panel.max_y - panel.min_y));
 		//panel.updateScale((double)(jLayeredPane.getWidth())*factor_x,  (double)(jLayeredPane.getHeight()*factor_y));
-		panel.setSize(new Dimension (jLayeredPane.getWidth(), jLayeredPane.getHeight()));
+		//panel.setSize(new Dimension (jLayeredPane.getWidth(), jLayeredPane.getHeight()));
+		panel.setSize(jLayeredPane.getSize());
 	}
 
 	public void updScale (double kx, // коэфиициент ресайза по иксу
