@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.44 2005/01/31 13:47:50 arseniy Exp $
+ * $Id: TransmissionPath.java,v 1.45 2005/02/03 20:17:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 /**
- * @version $Revision: 1.44 $, $Date: 2005/01/31 13:47:50 $
+ * @version $Revision: 1.45 $, $Date: 2005/02/03 20:17:36 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -55,7 +55,7 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 		super(id);
 
 		this.characteristics = new ArrayList();
-		this.monitoredElementIds = new LinkedList();
+		super.monitoredElementIds = new ArrayList();
 		this.transmissionPathDatabase = ConfigurationDatabaseContext.transmissionPathDatabase;
 		try {
 			this.transmissionPathDatabase.retrieve(this);
@@ -111,8 +111,8 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 		this.startPortId = startPortId;
 		this.finishPortId = finishPortId;
 
+		super.monitoredElementIds = new ArrayList();
 		this.characteristics = new ArrayList();
-		super.monitoredElementIds = new LinkedList();
 
 		super.currentVersion = super.getNextVersion();
 
