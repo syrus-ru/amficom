@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.40 2004/11/25 15:00:58 bob Exp $
+ * $Id: CharacteristicDatabase.java,v 1.41 2004/11/25 15:59:50 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -40,8 +39,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2004/11/25 15:00:58 $
- * @author $Author: bob $
+ * @version $Revision: 1.41 $, $Date: 2004/11/25 15:59:50 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -278,9 +277,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 	}
     
     public Map retrieveCharacteristicsByOneQuery(List list, CharacteristicSort sort) throws RetrieveObjectException, IllegalDataException {
-        if (list == null || list.isEmpty())
-        	return Collections.EMPTY_MAP;
-    	
+        
         int sortValue = sort.value();
         String sql;
         StringBuffer buff = new StringBuffer(COLUMN_SORT
@@ -341,7 +338,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
             return characteristicMap;
             
         } catch (SQLException sqle) {
-            String mesg = "CharacteristicDatabase.retrieveCharacteristicsByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
+            String mesg = "TestDatabase.retrieveMeasurementSetupTestLinksByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
             throw new RetrieveObjectException(mesg, sqle);
         } finally {
             try {
@@ -379,5 +376,10 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			}
 		} else list =  this.retrieveButIds(ids);
 		return list;
+	}
+
+	public void updateCharacteristics(StorableObject storableObject) {
+		// TODO Auto-generated method stub
+		
 	}
 }

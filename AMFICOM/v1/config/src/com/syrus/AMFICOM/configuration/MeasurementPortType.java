@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.14 2004/11/25 15:41:11 bob Exp $
+ * $Id: MeasurementPortType.java,v 1.15 2004/11/25 15:59:50 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,12 +26,12 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/11/25 15:41:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2004/11/25 15:59:50 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
-public class MeasurementPortType extends StorableObjectType {
+public class MeasurementPortType extends StorableObjectType implements Characterized {
 	static final long serialVersionUID = 7733425194674608181L;
 
 	private String name;

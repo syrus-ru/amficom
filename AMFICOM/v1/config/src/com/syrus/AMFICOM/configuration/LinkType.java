@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.9 2004/11/25 15:41:11 bob Exp $
+ * $Id: LinkType.java,v 1.10 2004/11/25 15:59:50 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,12 +26,12 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/11/25 15:41:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2004/11/25 15:59:50 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
-public class LinkType extends AbstractLinkType {
+public class LinkType extends AbstractLinkType implements Characterized {
     
 	/**
 	 * Comment for <code>serialVersionUID</code>

@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.9 2004/11/25 10:44:55 max Exp $
+ * $Id: LinkDatabase.java,v 1.10 2004/11/25 15:59:50 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/11/25 10:44:55 $
+ * @version $Revision: 1.10 $, $Date: 2004/11/25 15:59:50 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -237,13 +237,16 @@ public class LinkDatabase extends StorableObjectDatabase {
 
 	public void update(StorableObject storableObject, int updateKind, Object obj)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
+        CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
 		switch (updateKind) {
 		case UPDATE_FORCE:
-			super.checkAndUpdateEntity(storableObject, true);
+			super.checkAndUpdateEntity(storableObject, true);            
+            characteristicDatabase.updateCharacteristics(storableObject);
 			break;
 		case UPDATE_CHECK: 					
 		default:
 			super.checkAndUpdateEntity(storableObject, false);
+            characteristicDatabase.updateCharacteristics(storableObject);
 			break;
 		}
 	}

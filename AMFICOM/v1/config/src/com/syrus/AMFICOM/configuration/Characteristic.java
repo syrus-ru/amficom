@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.27 2004/11/15 15:30:53 bob Exp $
+ * $Id: Characteristic.java,v 1.28 2004/11/25 15:59:50 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/11/15 15:30:53 $
- * @author $Author: bob $
+ * @version $Revision: 1.28 $, $Date: 2004/11/25 15:59:50 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -265,7 +265,22 @@ public class Characteristic extends StorableObject implements TypedObject {
 				break;
 			case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
 				csort = CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORT;
-				break;				
+				break;
+            case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
+                csort = CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENTTYPE;
+                break;
+            case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
+                csort = CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORTTYPE;
+                break;
+            case ObjectEntities.PORTTYPE_ENTITY_CODE:
+                csort = CharacteristicSort.CHARACTERISTIC_SORT_PORTTYPE;
+                break;    
+            case ObjectEntities.TRANSPATHTYPE_ENTITY_CODE:
+                csort = CharacteristicSort.CHARACTERISTIC_SORT_TRANSMISSIONPATHTYPE;
+                break;
+            case ObjectEntities.LINKTYPE_ENTITY_CODE:
+                csort = CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE;
+                break;
 			default:
 				throw new IllegalDataException("Unknown characterized entity, id: '" + id.getIdentifierString() + '\'');
 		}

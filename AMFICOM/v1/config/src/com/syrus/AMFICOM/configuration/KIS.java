@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.35 2004/11/25 15:41:11 bob Exp $
+ * $Id: KIS.java,v 1.36 2004/11/25 15:59:50 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,12 +25,12 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2004/11/25 15:41:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.36 $, $Date: 2004/11/25 15:59:50 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
-public class KIS extends DomainMember {
+public class KIS extends DomainMember implements Characterized {
 	
 	/**
 	 * Comment for <code>serialVersionUID</code>
