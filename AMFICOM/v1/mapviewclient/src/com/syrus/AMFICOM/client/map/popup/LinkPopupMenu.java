@@ -1,22 +1,32 @@
 package com.syrus.AMFICOM.Client.Map.Popup;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.Command.Action.CreateMarkCommand;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceSelectionDialog;
+import com.syrus.AMFICOM.Client.Map.Command.Action.*;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapElementState;
+import com.syrus.AMFICOM.Client.Resource.Map.MapLinkProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 
+import com.syrus.AMFICOM.Client.Resource.Map.MapPipePathElement;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.util.List;
 import javax.swing.JMenuItem;
 
 public final class LinkPopupMenu extends MapPopupMenu 
 {
 	private JMenuItem removeMenuItem = new JMenuItem();
 	private JMenuItem propertiesMenuItem = new JMenuItem();
-	
-	private MapPhysicalLinkElement link;
 	private JMenuItem addMarkMenuItem = new JMenuItem();
+	private JMenuItem newCollectorMenuItem = new JMenuItem();
+	private JMenuItem addToCollectorMenuItem = new JMenuItem();
+
+	private MapPhysicalLinkElement link;
 	
 	private static LinkPopupMenu instance = new LinkPopupMenu();
 
@@ -69,9 +79,27 @@ public final class LinkPopupMenu extends MapPopupMenu
 					addMark();
 				}
 			});
+		newCollectorMenuItem.setText(LangModelMap.getString("CreateCollector"));
+		newCollectorMenuItem.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					newCollector();
+				}
+			});
+		addToCollectorMenuItem.setText(LangModelMap.getString("AddToCollector"));
+		addToCollectorMenuItem.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					addToCollector();
+				}
+			});
 		this.add(removeMenuItem);
 		this.add(propertiesMenuItem);
 		this.add(addMarkMenuItem);
+		this.add(newCollectorMenuItem);
+		this.add(addToCollectorMenuItem);
 	}
 
 	private void showProperties()
@@ -99,6 +127,48 @@ public final class LinkPopupMenu extends MapPopupMenu
 			getLogicalNetLayer().getCommandList().execute();
 	
 			getLogicalNetLayer().repaint();
+		}
+	}
+
+	private void newCollector()
+	{
+	}
+
+	private void addToCollector()
+	{
+		MapPipePathElement collector;
+		
+		List list = logicalNetLayer.getMapView().getMap().getCollectors();
+		
+		ObjectResourceSelectionDialog dialog = new ObjectResourceSelectionDialog(list);
+			
+		dialog.setModal(true);
+
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		Dimension frameSize = dialog.getSize();
+		dialog.setLocation(
+				(screenSize.width - frameSize.width) / 2, 
+				(screenSize.height - frameSize.height) / 2);
+
+		dialog.show();
+
+		if(dialog.getReturnCode() == ObjectResourceSelectionDialog.RET_OK)
+		{
+			collector = (MapPipePathElement )dialog.getSelected();
+			if(collector != null)
+			{
+				MapElementState state = link.getState();
+				collector.addLink(link);
+				MapLinkProtoElement proto = (MapLinkProtoElement )Pool.get(MapLinkProtoElement.typ, MapLinkProtoElement.COLLECTIOR);
+				link.setMapProtoId(proto.getId());
+
+				MapElementStateChangeCommand command = new MapElementStateChangeCommand(link, state, link.getState());
+				command.setLogicalNetLayer(logicalNetLayer);
+				getLogicalNetLayer().getCommandList().add(command);
+				getLogicalNetLayer().getCommandList().execute();
+				
+				getLogicalNetLayer().repaint();
+			}
 		}
 	}
 }

@@ -39,7 +39,7 @@ public class TunnelLayout implements OperationListener
 		internalContext.setDispatcher(new Dispatcher());
 
 		panel = new UgoPanel(internalContext);
-		panel.getGraph().setEditable(false);
+		panel.getGraph().setGraphEditable(false);
 //		panel = new SchemePanelNoEdition(internalContext);
 //		panel.getGraph().setActualSize(new Dimension(0, 0));
 

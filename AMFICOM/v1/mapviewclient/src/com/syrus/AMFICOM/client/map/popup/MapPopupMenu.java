@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.2 2004/09/16 12:00:43 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.3 2004/09/17 11:39:25 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import javax.swing.JPopupMenu;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/16 12:00:43 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/17 11:39:25 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -62,7 +62,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 		return point;
 	}
 
-	protected void showProperties(MapElement me)
+	public void showProperties(MapElement me)
 	{
 		ObjectResourcePropertiesPane prop = MapPropsManager.getPropsPane(me);
 		if(prop == null)

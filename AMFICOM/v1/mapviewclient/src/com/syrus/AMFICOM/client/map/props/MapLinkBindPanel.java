@@ -14,6 +14,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Point;
 import java.awt.SystemColor;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -21,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.Box;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -44,6 +46,9 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 	private JPanel jPanel1 = new JPanel();
 	private JButton bindButton = new JButton();
 	private JButton unbindButton = new JButton();
+
+	private JLabel topDownLabel = new JLabel();
+	private JLabel leftRightLabel = new JLabel();
 
 	public MapLinkBindPanel()
 	{
@@ -107,17 +112,17 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 		jPanel1.add(bindButton, null);
 		jPanel1.add(unbindButton, null);
 
-//		scrollPane.getViewport().add(tunnelLayout.getPanel());
-
-//		scrollPane.setWheelScrollingEnabled(true);
-//		scrollPane.getViewport().setBackground(SystemColor.window);
+		topDownLabel.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/topdown.gif")));
+		leftRightLabel.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/leftright.gif")));
 		
-		this.add(titleLabel, ReusedGridBagConstraints.get(0, 0, 3, 1, 0.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.add(cableList, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 100, 150));
-		this.add(Box.createVerticalGlue(), ReusedGridBagConstraints.get(1, 1, 1, 1, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 10, 150));
-//		this.add(scrollPane, ReusedGridBagConstraints.get(2, 1, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
-		this.add(tunnelLayout.getPanel(), ReusedGridBagConstraints.get(2, 1, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
-		this.add(jPanel1, ReusedGridBagConstraints.get(0, 2, 3, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.add(titleLabel, ReusedGridBagConstraints.get(0, 0, 4, 1, 0.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		this.add(cableList, ReusedGridBagConstraints.get(0, 1, 1, 2, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 100, 150));
+		this.add(Box.createVerticalGlue(), ReusedGridBagConstraints.get(1, 1, 1, 2, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 10, 150));
+//		this.add(Box.createGlue(), ReusedGridBagConstraints.get(2, 1, 1, 1, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.add(leftRightLabel, ReusedGridBagConstraints.get(3, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.add(topDownLabel, ReusedGridBagConstraints.get(2, 2, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH, GridBagConstraints.NONE, null, 0, 0));
+		this.add(tunnelLayout.getPanel(), ReusedGridBagConstraints.get(3, 2, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
+		this.add(jPanel1, ReusedGridBagConstraints.get(0, 3, 4, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
 	}
 
 	public ObjectResource getObjectResource()

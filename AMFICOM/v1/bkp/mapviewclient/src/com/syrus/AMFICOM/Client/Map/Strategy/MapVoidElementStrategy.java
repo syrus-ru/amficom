@@ -1,5 +1,5 @@
 /**
- * $Id: MapVoidElementStrategy.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: MapVoidElementStrategy.java,v 1.2 2004/09/17 11:39:25 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.VoidMapElement;
 
 import java.awt.Point;
@@ -35,7 +36,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/17 11:39:25 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -136,19 +137,43 @@ public final class MapVoidElementStrategy implements  MapStrategy
 
 		e = logicalNetLayer.getMapView().getMap().getNodeLinks().iterator();
 
-		//Пробегаем и смотрим вхотит ли в область nodeLink
-		while (e.hasNext() )
+		if(logicalNetLayer.getMapState().getShowMode() == MapState.SHOW_NODE_LINK)
 		{
-			MapNodeLinkElement nodeLink = (MapNodeLinkElement )e.next();
-			Point p;
-			if (
-				selectionRect.contains(logicalNetLayer.convertMapToScreen(nodeLink.getStartNode().getAnchor())) 
-				&& selectionRect.contains(logicalNetLayer.convertMapToScreen(nodeLink.getEndNode().getAnchor())))
-	       {
-				nodeLink.setSelected(true);
+			//Пробегаем и смотрим вхотит ли в область nodeLink
+			while (e.hasNext() )
+			{
+				MapNodeLinkElement nodeLink = (MapNodeLinkElement )e.next();
+				Point p;
+				if (
+					selectionRect.contains(logicalNetLayer.convertMapToScreen(nodeLink.getStartNode().getAnchor())) 
+					&& selectionRect.contains(logicalNetLayer.convertMapToScreen(nodeLink.getEndNode().getAnchor())))
+			   {
+					nodeLink.setSelected(true);
+				}
+				else
+					nodeLink.setSelected(false);
 			}
-			else
-				nodeLink.setSelected(false);
+		}
+		else
+		if(logicalNetLayer.getMapState().getShowMode() == MapState.SHOW_PHYSICAL_LINK)
+		{
+			for(Iterator it = logicalNetLayer.getMapView().getMap().getPhysicalLinks().iterator(); it.hasNext();)
+			{
+				MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
+				boolean select = true;
+				for(Iterator it2 = link.getNodeLinks().iterator(); it2.hasNext();)
+				{
+					MapNodeLinkElement nodeLink = (MapNodeLinkElement )it2.next();
+					Point p;
+					if (! (
+						selectionRect.contains(logicalNetLayer.convertMapToScreen(nodeLink.getStartNode().getAnchor())) 
+						&& selectionRect.contains(logicalNetLayer.convertMapToScreen(nodeLink.getEndNode().getAnchor()))))
+				   {
+						select = false;
+				   }
+				}
+				link.setSelected(select);
+			}
 		}
 
 		logicalNetLayer.getMapState().setActionMode(MapState.NULL_ACTION_MODE);

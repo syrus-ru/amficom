@@ -4,8 +4,10 @@ import com.syrus.AMFICOM.Client.General.UI.ObjectResourceSelectionDialog;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.Command.Action.BindToSiteCommandBundle;
+import com.syrus.AMFICOM.Client.Map.Command.Action.CreateSiteCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.DeleteNodeCommandBundle;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
 
@@ -25,7 +27,8 @@ public class UnboundPopupMenu extends MapPopupMenu
 	private JMenuItem removeMenuItem = new JMenuItem();
 	private JMenuItem propertiesMenuItem = new JMenuItem();
 	private JMenuItem bindMenuItem = new JMenuItem();
-	
+	private JMenuItem generateMenuItem = new JMenuItem();
+
 	private MapUnboundNodeElement unbound;
 
 	private static UnboundPopupMenu instance = new UnboundPopupMenu();
@@ -79,9 +82,18 @@ public class UnboundPopupMenu extends MapPopupMenu
 					bind();
 				}
 			});
+		generateMenuItem.setText(LangModelMap.getString("GenerateSite"));
+		generateMenuItem.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					generateSite();
+				}
+			});
 		this.add(removeMenuItem);
 		this.add(propertiesMenuItem);
 		this.add(bindMenuItem);
+		this.add(generateMenuItem);
 	}
 
 	private void showProperties()
@@ -130,6 +142,47 @@ public class UnboundPopupMenu extends MapPopupMenu
 				command.setLogicalNetLayer(logicalNetLayer);
 				logicalNetLayer.getCommandList().add(command);
 				logicalNetLayer.getCommandList().execute();
+			}
+		}
+	}
+
+	private void generateSite()
+	{
+		MapNodeProtoElement proto;
+		
+		List list = logicalNetLayer.getTopologicalProtos();
+		
+		ObjectResourceSelectionDialog dialog = new ObjectResourceSelectionDialog(list);
+			
+		dialog.setModal(true);
+
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		Dimension frameSize = dialog.getSize();
+		dialog.setLocation(
+				(screenSize.width - frameSize.width) / 2, 
+				(screenSize.height - frameSize.height) / 2);
+
+		dialog.show();
+
+		if(dialog.getReturnCode() == ObjectResourceSelectionDialog.RET_OK)
+		{
+			proto = (MapNodeProtoElement )dialog.getSelected();
+			if(proto != null)
+			{
+				CreateSiteCommand command = new CreateSiteCommand(proto, point);
+				command.setLogicalNetLayer(logicalNetLayer);
+				getLogicalNetLayer().getCommandList().add(command);
+				getLogicalNetLayer().getCommandList().execute();
+				
+				MapSiteNodeElement site = command.getSite();
+
+				BindToSiteCommandBundle command2 = new BindToSiteCommandBundle(unbound, site);
+				command2.setLogicalNetLayer(logicalNetLayer);
+				getLogicalNetLayer().getCommandList().add(command2);
+				getLogicalNetLayer().getCommandList().execute();
+				
+				getLogicalNetLayer().repaint();
+				
 			}
 		}
 	}

@@ -90,7 +90,7 @@ public final class MapSiteBindPanel extends JPanel implements ObjectResourceProp
 		jPanel1.add(bindButton, null);
 		jPanel1.add(unbindButton, null);
 
-		schemePanel.getGraph().setEditable(false);
+		schemePanel.getGraph().setGraphEditable(false);
 
 		this.add(titleLabel, ReusedGridBagConstraints.get(0, 0, 3, 1, 0.0, 0.0, GridBagConstraints.NORTH, GridBagConstraints.NONE, null, 0, 0));
 		this.add(elementsList, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 1.0, GridBagConstraints.WEST, GridBagConstraints.VERTICAL, null, 100, 150));

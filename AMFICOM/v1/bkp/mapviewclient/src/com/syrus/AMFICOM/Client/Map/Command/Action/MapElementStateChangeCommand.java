@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementStateChangeCommand.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: MapElementStateChangeCommand.java,v 1.2 2004/09/17 11:39:25 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,12 +19,12 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapElementState;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/17 11:39:25 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
-class MapElementStateChangeCommand extends MapActionCommand
+public final class MapElementStateChangeCommand extends MapActionCommand
 {
 	MapElement me;
 	MapElementState initialState;

@@ -1,5 +1,5 @@
 /**
- * $Id: MapCablePathElement.java,v 1.2 2004/09/14 14:48:51 krupenn Exp $
+ * $Id: MapCablePathElement.java,v 1.3 2004/09/17 11:39:25 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,6 +31,7 @@ import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -50,7 +51,7 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/14 14:48:51 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/17 11:39:25 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -362,7 +363,40 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		return null;
 	}
 
+	boolean isSelectionVisible()
+	{
+		return isSelected();
+	}
+
+	public void paint(Graphics g, Stroke stroke, Color color, boolean selectionVisible)
+	{
+		for(Iterator it = getLinks().iterator(); it.hasNext();)
+		{
+			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
+			link.paint(g, stroke, color, selectionVisible);
+		}
+	}
+
 	public void paint(Graphics g)
+	{
+		MapCoordinatesConverter converter = getMapView().getMap().getConverter();
+	
+		Graphics2D p = (Graphics2D )g;
+
+		BasicStroke stroke = (BasicStroke )this.getStroke();
+		Stroke str = new BasicStroke(
+				this.getLineSize(), 
+				stroke.getEndCap(), 
+				stroke.getLineJoin(), 
+				stroke.getMiterLimit(), 
+				stroke.getDashArray(), 
+				stroke.getDashPhase());
+		Color color = this.getColor();
+
+		paint(g, str, color, isSelectionVisible());
+	}
+
+	public void paint1(Graphics g)
 	{
 		MapCoordinatesConverter converter = getMapView().getMap().getConverter();
 	

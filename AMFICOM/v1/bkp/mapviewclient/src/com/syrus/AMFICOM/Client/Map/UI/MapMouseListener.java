@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.2 2004/09/16 10:39:53 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.3 2004/09/17 11:39:25 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 
+import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import java.awt.Cursor;
 import java.awt.Rectangle;
@@ -50,7 +51,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/16 10:39:53 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/17 11:39:25 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -68,6 +69,21 @@ public final class MapMouseListener implements MouseListener
 
 	public void mouseClicked(MouseEvent me)
 	{
+		if(me.getClickCount() == 2
+			&& SwingUtilities.isLeftMouseButton(me))
+		{
+			// show properties
+			if ( logicalNetLayer.getMapView() != null)
+			{
+				MapElement mapElement = logicalNetLayer.getCurrentMapElement();
+				if(mapElement != null)
+				{
+						MapPopupMenu contextMenu = MapPopupMenuManager.getPopupMenu(mapElement);
+						if(contextMenu != null)
+							contextMenu.showProperties(mapElement);
+				}
+			}
+		}
 	}
 
 	public void mousePressed(MouseEvent me)
@@ -152,10 +168,10 @@ public final class MapMouseListener implements MouseListener
 //						mapElement.setSelected(true);
 
 						List selection = logicalNetLayer.getSelectedElements();
-						if(selection.size() > 1)
-							contextMenu = SelectionPopupMenu.getInstance();
-						else
 						//Выводим контекстное меню
+						if(selection.size() > 1)
+							mapElement = new MapSelection(logicalNetLayer);
+
 						contextMenu = MapPopupMenuManager.getPopupMenu(mapElement);
 //							contextMenu = mapElement.getContextMenu();
 						if(contextMenu != null)
