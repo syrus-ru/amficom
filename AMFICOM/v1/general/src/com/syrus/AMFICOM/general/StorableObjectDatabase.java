@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.56 2004/11/23 12:19:32 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.57 2004/12/07 10:42:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2004/11/23 12:19:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.57 $, $Date: 2004/12/07 10:42:03 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -697,7 +697,6 @@ public abstract class StorableObjectDatabase {
 	/**
 	 * retrive storable objects by identifiers not in ids
 	 * @param ids List&lt;{@link Identifier}&gt; or List&lt;{@link Identified}&gt;
-	 * @return
 	 * @throws IllegalDataException
 	 * @throws RetrieveObjectException
 	 */
@@ -711,7 +710,6 @@ public abstract class StorableObjectDatabase {
 	 * retrive storable objects by additional condition and identifiers not in ids   
 	 * @param ids List&lt;{@link Identifier}&gt; or List&lt;{@link Identified}&gt;
 	 * @param condition
-	 * @return
 	 * @throws IllegalDataException
 	 * @throws RetrieveObjectException
 	 */
@@ -777,7 +775,6 @@ public abstract class StorableObjectDatabase {
 	 * retrive storable objects by identifiers and additional condition
 	 * @param ids List&lt;{@link Identifier}&gt; or List&lt;{@link Identified}&gt;
 	 * @param condition
-	 * @return
 	 * @throws IllegalDataException
 	 * @throws RetrieveObjectException
 	 */
