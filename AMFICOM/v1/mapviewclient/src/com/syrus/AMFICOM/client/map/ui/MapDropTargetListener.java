@@ -1,5 +1,5 @@
 /**
- * $Id: MapDropTargetListener.java,v 1.15 2005/02/18 12:19:46 krupenn Exp $
+ * $Id: MapDropTargetListener.java,v 1.16 2005/02/28 16:18:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemeElement;
  * 
  * 
  * 
- * @version $Revision: 1.15 $, $Date: 2005/02/18 12:19:46 $
+ * @version $Revision: 1.16 $, $Date: 2005/02/28 16:18:18 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -90,7 +90,7 @@ public final class MapDropTargetListener implements DropTargetListener
 					if(or instanceof SchemeCableLink)
 					{
 						SchemeCableLink scl = (SchemeCableLink )or;
-						schemeCableLinkDropped(scl, point);
+						schemeCableLinkDropped(scl);
 					}
 				}
 				else
@@ -159,7 +159,7 @@ public final class MapDropTargetListener implements DropTargetListener
 		}
 	}
 
-	protected void schemeCableLinkDropped(SchemeCableLink schemeCableLink, Point point)
+	protected void schemeCableLinkDropped(SchemeCableLink schemeCableLink)
 	{
 		CablePath cp = this.logicalNetLayer.getMapView().findCablePath(schemeCableLink);
 		if(cp != null)
