@@ -1,7 +1,5 @@
 package com.syrus.AMFICOM.general;
 
-import java.util.Map;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.sql.Statement;
 import java.sql.ResultSet;

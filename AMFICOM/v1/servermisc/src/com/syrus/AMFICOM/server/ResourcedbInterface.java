@@ -1,5 +1,5 @@
 /*
- * $Id: ResourcedbInterface.java,v 1.1 2004/08/20 13:54:21 bass Exp $
+ * $Id: ResourcedbInterface.java,v 1.2 2004/08/27 08:19:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,11 @@ import java.util.*;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
+ * All methods which don't accept {@link Connection} as their first argument
+ * will be removed.
+ *
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/08/20 13:54:21 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/27 08:19:19 $
  * @module servermisc_v1
  * @todo Dispose of duplicate string literals. 
  */
@@ -224,6 +227,9 @@ public final class ResourcedbInterface {
 	private ResourcedbInterface() {
 	}
 
+	/**
+	 * @deprecated 
+	 */
 	public static String getUid(String type) throws SQLException {
 		Statement stmt = null;
 		ResultSet resultSet = null;
@@ -253,6 +259,16 @@ public final class ResourcedbInterface {
 		}
 	}
 
+	/**
+	 * Just a stub per se; will be rewritten.
+	 */
+	public static String getUid(Connection conn, String type) throws SQLException {
+		return getUid(type);
+	}
+
+	/**
+	 * @deprecated 
+	 */
 	public static ImageResource_Transferable getImage(String imageResourceId) throws SQLException {
 		try {
 			Collection imageResourceIds = new LinkedList();
@@ -264,19 +280,31 @@ public final class ResourcedbInterface {
 		}
 	}
 
-	/**
-	 * Implicitly issues <code>COMMIT</code> immediately after data is
-	 * stored, which may cause some overhead. This behaviour should be
-	 * changed for optimal performance.
-	 */
-	public static void setImage(String imageResourceId, byte data[]) throws SQLException {
-		JdbcBlobManager.setData(CONN, COLUMN_NAME_IMG, TABLE_NAME_IMAGERESOURCES, ID_EQUALS + imageResourceId + '\'', data);
+	public static ImageResource_Transferable getImage(Connection conn, String imageResourceId) throws SQLException {
+		return getImage(imageResourceId);
 	}
 
 	/**
 	 * Implicitly issues <code>COMMIT</code> immediately after data is
 	 * stored, which may cause some overhead. This behaviour should be
 	 * changed for optimal performance.
+	 *
+	 * @deprecated 
+	 */
+	public static void setImage(String imageResourceId, byte data[]) throws SQLException {
+		JdbcBlobManager.setData(CONN, COLUMN_NAME_IMG, TABLE_NAME_IMAGERESOURCES, ID_EQUALS + imageResourceId + '\'', data);
+	}
+
+	public static void setImage(Connection conn, String imageResourceId, byte data[]) throws SQLException {
+		setImage(imageResourceId, data);
+	}
+
+	/**
+	 * Implicitly issues <code>COMMIT</code> immediately after data is
+	 * stored, which may cause some overhead. This behaviour should be
+	 * changed for optimal performance.
+	 * 
+	 * @deprecated 
 	 */
 	public static String setImage(byte data[]) throws SQLException {
 		Statement stmt = null;
@@ -296,6 +324,10 @@ public final class ResourcedbInterface {
 					stmt.close();
 			}
 		}
+	}
+
+	public static String setImage(Connection conn, byte data[]) throws SQLException {
+		return setImage(data);
 	}
 
 	/**
@@ -321,6 +353,7 @@ public final class ResourcedbInterface {
 	 *
 	 * @param imageResourceSeq an array of images to be saved.
 	 * @throws SQLException if a database error occurs.
+	 * @deprecated 
 	 */
 	public static void setImages(ImageResource_Transferable imageResourceSeq[]) throws SQLException {
 		if (imageResourceSeq == null)
@@ -433,10 +466,24 @@ public final class ResourcedbInterface {
 		}
 	}
 
+	public static void setImages(Connection conn, ImageResource_Transferable imageResourceSeq[]) throws SQLException {
+		setImages(imageResourceSeq);
+	}
+
+	/**
+	 * @deprecated 
+	 */
 	public static Collection getImages() throws SQLException {
 		return getImages(Integer.MAX_VALUE);
 	}
 
+	public static Collection getImages(Connection conn) throws SQLException {
+		return getImages();
+	}
+
+	/**
+	 * @deprecated 
+	 */
 	public static Collection getImages(final int fetchSize) throws SQLException {
 		Statement stmt = null;
 		ResultSet resultSet = null;
@@ -473,6 +520,10 @@ public final class ResourcedbInterface {
 		}
 	}
 
+	public static Collection getImages(Connection conn, final int fetchSize) throws SQLException {
+		return getImages(fetchSize);
+	}
+
 	/**
 	 * Returns a collection (actually a {@link LinkedList}) of images
 	 * fetched by their identifiers. It is assumed that
@@ -481,6 +532,7 @@ public final class ResourcedbInterface {
 	 * @param imageResourceIds identifiers of images to be fetched.
 	 * @return a collection of images.
 	 * @throws SQLException if a database error occurs.
+	 * @deprecated 
 	 */
 	public static Collection getImages(final Collection imageResourceIds) throws SQLException {
 		if (imageResourceIds == null)
@@ -553,6 +605,10 @@ public final class ResourcedbInterface {
 		}
 	}
 
+	public static Collection getImages(Connection conn, final Collection imageResourceIds) throws SQLException {
+		return getImages(imageResourceIds);
+	}
+
 	/**
 	 * Does the same as {@link #getImages(Collection)}, using a different
 	 * (less tricky) SQL query. This method is slightly slower (24 seconds
@@ -562,6 +618,7 @@ public final class ResourcedbInterface {
 	 * @param imageResourceIds identifiers of images to be fetched.
 	 * @return a collection of images.
 	 * @throws SQLException if a database error occurs.
+	 * @deprecated 
 	 */
 	public static Collection getImagesStd(final Collection imageResourceIds) throws SQLException {
 		Collection imageResources = new LinkedList();
@@ -635,6 +692,10 @@ public final class ResourcedbInterface {
 					stmt.close();
 			}
 		}
+	}
+
+	public static Collection getImagesStd(Connection conn, final Collection imageResourceIds) throws SQLException {
+		return getImagesStd(imageResourceIds);
 	}
 
 	/**
