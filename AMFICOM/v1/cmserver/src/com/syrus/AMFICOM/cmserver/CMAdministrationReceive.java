@@ -1,5 +1,5 @@
 /*
- * $Id: CMAdministrationReceive.java,v 1.1 2005/01/19 20:59:09 arseniy Exp $
+ * $Id: CMAdministrationReceive.java,v 1.2 2005/01/28 12:19:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/19 20:59:09 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/28 12:19:16 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -48,7 +48,7 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 	public void receiveUser(User_Transferable user_Transferable,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveUser | Received " + " user", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMAdministrationReceive.receiveUser | Received " + " user", Log.DEBUGLEVEL07);
 		try {
 			user_Transferable.header.modifier_id = accessIdentifier.user_id;
 			User user = new User(user_Transferable);
@@ -84,7 +84,7 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 	public void receiveUsers(User_Transferable[] user_Transferables,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveUsers | Received " + user_Transferables.length + " users", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMAdministrationReceive.receiveUsers | Received " + user_Transferables.length + " users", Log.DEBUGLEVEL07);
 		List userList = new ArrayList(user_Transferables.length);
 		try {
 			for (int i = 0; i < user_Transferables.length; i++) {
@@ -121,7 +121,7 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 	public void receiveDomain(Domain_Transferable domain_Transferable,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveDomain | Received " + " domain", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMAdministrationReceive.receiveDomain | Received " + " domain", Log.DEBUGLEVEL07);
 		try {
 			domain_Transferable.header.modifier_id = accessIdentifier.user_id;
 			Domain domain = new Domain(domain_Transferable);
@@ -158,7 +158,7 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 	public void receiveDomains(Domain_Transferable[] domain_Transferables,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveDomains | Received " + domain_Transferables.length + " domains", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMAdministrationReceive.receiveDomains | Received " + domain_Transferables.length + " domains", Log.DEBUGLEVEL07);
 		List domainList = new ArrayList(domain_Transferables.length);
 		try {
 			for (int i = 0; i < domain_Transferables.length; i++) {
@@ -199,7 +199,7 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 	public void receiveServer(Server_Transferable server_Transferable,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveServer | Received " + " server", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMAdministrationReceive.receiveServer | Received " + " server", Log.DEBUGLEVEL07);
 		try {
 			server_Transferable.header.modifier_id = accessIdentifier.user_id;
 			Server server = new Server(server_Transferable);
@@ -236,7 +236,7 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 	public void receiveServers(Server_Transferable[] server_Transferables,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveServers | Received " + server_Transferables.length + " servers", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMAdministrationReceive.receiveServers | Received " + server_Transferables.length + " servers", Log.DEBUGLEVEL07);
 		List serverList = new ArrayList(server_Transferables.length);
 		try {
 			for (int i = 0; i < server_Transferables.length; i++) {
@@ -277,7 +277,7 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 	public void receiveMCM(MCM_Transferable mcm_Transferable,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveMCM | Received " + " mcm", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMAdministrationReceive.receiveMCM | Received " + " mcm", Log.DEBUGLEVEL07);
 		try {
 			mcm_Transferable.header.modifier_id = accessIdentifier.user_id;
 			MCM mcm = new MCM(mcm_Transferable);
@@ -314,7 +314,7 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 	public void receiveMCMs(MCM_Transferable[] mcm_Transferables,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveMCMs | Received " + mcm_Transferables.length + " mcms", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMAdministrationReceive.receiveMCMs | Received " + mcm_Transferables.length + " mcms", Log.DEBUGLEVEL07);
 		List mcmList = new ArrayList(mcm_Transferables.length);
 		try {
 			for (int i = 0; i < mcm_Transferables.length; i++) {

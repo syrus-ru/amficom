@@ -1,5 +1,5 @@
 /*
- * $Id: CMMeasurementReceive.java,v 1.1 2005/01/19 20:59:09 arseniy Exp $
+ * $Id: CMMeasurementReceive.java,v 1.2 2005/01/28 12:19:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -62,24 +62,22 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/19 20:59:09 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/28 12:19:16 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
 public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 
 	private static final long serialVersionUID = 2044666930827736818L;
-	/**
-	 * TODO set modifier_id
-	 */
-	//////////////////////////////////Measurement Receive/////////////////////////////////////////////
+
+//////////////////////////////////Measurement Receive/////////////////////////////////////////////
 	public void receiveAnalysis( Analysis_Transferable analysis_Transferable,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		/**
 		* TODO check user for access
 		*/
-		Log.debugMessage("CMServerImpl.receiveAnalysis | Received " + " analysis", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementReceive.receiveAnalysis | Received " + " analysis", Log.DEBUGLEVEL07);
 		try {
 			analysis_Transferable.header.modifier_id = accessIdentifier.user_id;
 			Analysis analysis = new Analysis(analysis_Transferable);
@@ -119,7 +117,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		/**
 		* TODO check user for access
 		*/
-		Log.debugMessage("CMServerImpl.receiveAnalyses | Received " + analysis_Transferables.length + " analysisTypes", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementReceive.receiveAnalyses | Received " + analysis_Transferables.length + " analysisTypes", Log.DEBUGLEVEL07);
 		List analysisList = new ArrayList(analysis_Transferables.length);
 		try {
 			for (int i = 0; i < analysis_Transferables.length; i++) {
@@ -163,7 +161,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		/**
 		* TODO check user for access
 		*/
-		Log.debugMessage("CMServerImpl.receiveAnalysisType | Received " + " analysisType", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementReceive.receiveAnalysisType | Received " + " analysisType", Log.DEBUGLEVEL07);
 		try {
 			analysisType_Transferable.header.modifier_id = accessIdentifier.user_id;
 			AnalysisType analysisType = new AnalysisType(analysisType_Transferable);
@@ -203,7 +201,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 	/**
 	 * TODO check user for access
 	 */
-		Log.debugMessage("CMServerImpl.receiveAnalysisTypes | Received " + analysisType_Transferables.length
+		Log.debugMessage("CMMeasurementReceive.receiveAnalysisTypes | Received " + analysisType_Transferables.length
 			+ " analysisTypes", Log.DEBUGLEVEL07);
 		List analysisTypeList = new ArrayList(analysisType_Transferables.length);
 		try {
@@ -251,7 +249,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		/**
 		 * TODO check user for access
 		 */
-		Log.debugMessage("CMServerImpl.receiveEvaluation | Received " + " evaluation", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementReceive.receiveEvaluation | Received " + " evaluation", Log.DEBUGLEVEL07);
 		try {
 			evaluation_Transferable.header.modifier_id = accessIdentifier.user_id;
 			Evaluation evaluation = new Evaluation(evaluation_Transferable);
@@ -291,7 +289,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		/**
 		* TODO check user for access
 		*/
-		Log.debugMessage("CMServerImpl.receiveEvaluations | Received " + evaluation_Transferables.length + " Evaluations", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementReceive.receiveEvaluations | Received " + evaluation_Transferables.length + " Evaluations", Log.DEBUGLEVEL07);
 		List evaluationList = new ArrayList(evaluation_Transferables.length);
 		try {
 			for (int i = 0; i < evaluation_Transferables.length; i++) {
@@ -335,7 +333,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		/**
 		 * TODO check user for access
 		 */
-		Log.debugMessage("CMServerImpl.receiveEvaluationType | Received " + " evaluationType", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementReceive.receiveEvaluationType | Received " + " evaluationType", Log.DEBUGLEVEL07);
 		try {
 			evaluationType_Transferable.header.modifier_id = accessIdentifier.user_id;
 			EvaluationType evaluationType = new EvaluationType(evaluationType_Transferable);
@@ -375,7 +373,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		/**
 		* TODO check user for access
 		*/
-		Log.debugMessage("CMServerImpl.receiveEvaluationTypes | Received " + evaluationType_Transferables.length + " EvaluationTypes", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementReceive.receiveEvaluationTypes | Received " + evaluationType_Transferables.length + " EvaluationTypes", Log.DEBUGLEVEL07);
 		List evaluationTypeList = new ArrayList(evaluationType_Transferables.length);
 		try {
 			for (int i = 0; i < evaluationType_Transferables.length; i++) {
@@ -419,7 +417,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		/**
 		 * TODO check user for access
 		 */
-		Log.debugMessage("CMServerImpl.receiveMeasurement | Received " + " measurement", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementReceive.receiveMeasurement | Received " + " measurement", Log.DEBUGLEVEL07);
 		try {
 			measurement_Transferable.header.modifier_id = accessIdentifier.user_id;
 			Measurement measurement = new Measurement(measurement_Transferable);
@@ -459,7 +457,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		/**
 		* TODO check user for access
 		*/
-		Log.debugMessage("CMServerImpl.receiveMeasurements | Received " + measurement_Transferables.length + " Measurements", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementReceive.receiveMeasurements | Received " + measurement_Transferables.length + " Measurements", Log.DEBUGLEVEL07);
 		List measurementList = new ArrayList(measurement_Transferables.length);
 		try {
 			for (int i = 0; i < measurement_Transferables.length; i++) {
@@ -503,7 +501,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		/**
 		 * TODO check user for access
 		 */
-		Log.debugMessage("CMServerImpl.receiveMeasurementSetup | Received " + " measurementSetup", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementReceive.receiveMeasurementSetup | Received " + " measurementSetup", Log.DEBUGLEVEL07);
 		try {         		
 			measurementSetup_Transferable.header.modifier_id = accessIdentifier.user_id; 
 			MeasurementSetup measurementSetup = new MeasurementSetup(measurementSetup_Transferable);
@@ -543,7 +541,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		/**
 		* TODO check user for access
 		*/
-		Log.debugMessage("CMServerImpl.receiveMeasurementSetups | Received "
+		Log.debugMessage("CMMeasurementReceive.receiveMeasurementSetups | Received "
 				+ measurementSetup_Transferables.length + " MeasurementSetups", Log.DEBUGLEVEL07);
 		List measurementSetupList = new ArrayList(measurementSetup_Transferables.length);
 		try {
@@ -588,7 +586,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		/**
 		 * TODO check user for access
 		 */
-		Log.debugMessage("CMServerImpl.receiveMeasurementType | Received " + " measurementType", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementReceive.receiveMeasurementType | Received " + " measurementType", Log.DEBUGLEVEL07);
 		try {
 			measurementType_Transferable.header.modifier_id = accessIdentifier.user_id;
 			MeasurementType measurementType = new MeasurementType(measurementType_Transferable);
@@ -628,7 +626,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		/**
 		 * TODO check user for access
 		 */
-		Log.debugMessage("CMServerImpl.receiveMeasurementTypes | Received " + measurementType_Transferables.length + " MeasurementTypes", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementReceive.receiveMeasurementTypes | Received " + measurementType_Transferables.length + " MeasurementTypes", Log.DEBUGLEVEL07);
 		List measurementTypeList = new ArrayList(measurementType_Transferables.length);
 		try {
 			for (int i = 0; i < measurementType_Transferables.length; i++) {
@@ -672,7 +670,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		/**
 		 * TODO check user for access
 		 */
-		Log.debugMessage("CMServerImpl.receiveModeling | Received " + " modeling", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementReceive.receiveModeling | Received " + " modeling", Log.DEBUGLEVEL07);
 		try {
 			modeling_Transferable.header.modifier_id = accessIdentifier.user_id;
 			Modeling modeling = new Modeling(modeling_Transferable);
@@ -712,7 +710,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		/**
 		* TODO check user for access
 		*/
-		Log.debugMessage("CMServerImpl.receiveModelings | Received " + modeling_Transferables.length + " Modelings", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementReceive.receiveModelings | Received " + modeling_Transferables.length + " Modelings", Log.DEBUGLEVEL07);
 		List modelingList = new ArrayList(modeling_Transferables.length);
 		try {
 			for (int i = 0; i < modeling_Transferables.length; i++) {
@@ -756,7 +754,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		/**
 		 * TODO check user for access
 		 */
-		Log.debugMessage("CMServerImpl.receiveResult | Received " + " result", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementReceive.receiveResult | Received " + " result", Log.DEBUGLEVEL07);
 		try {
 			result_Transferable.header.modifier_id = accessIdentifier.user_id;
 			Result result = new Result(result_Transferable);
@@ -796,7 +794,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		/**
 		* TODO check user for access
 		*/
-		Log.debugMessage("CMServerImpl.receiveResults | Received " + result_Transferables.length + " Results", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementReceive.receiveResults | Received " + result_Transferables.length + " Results", Log.DEBUGLEVEL07);
 		List resultList = new ArrayList(result_Transferables.length);
 		try {
 			for (int i = 0; i < result_Transferables.length; i++) {
@@ -840,7 +838,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		/**
 		 * TODO check user for access
 		 */
-		Log.debugMessage("CMServerImpl.receiveTest | Received " + " test", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementReceive.receiveTest | Received " + " test", Log.DEBUGLEVEL07);
 		try {
 			test_Transferable.header.modifier_id = accessIdentifier.user_id;
 			Test test = new Test(test_Transferable);
@@ -880,7 +878,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		/**
 		 * TODO check user for access
 		 */
-		Log.debugMessage("CMServerImpl.receiveTests | Received " + test_Transferables.length + " tests", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementReceive.receiveTests | Received " + test_Transferables.length + " tests", Log.DEBUGLEVEL07);
 		List testList = new ArrayList(test_Transferables.length);
 		try {
 			for (int i = 0; i < test_Transferables.length; i++) {
@@ -924,7 +922,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		/**
 		 * TODO check user for access
 		 */
-		Log.debugMessage("CMServerImpl.receiveTemporalPattern | Received " + " temporalPattern", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementReceive.receiveTemporalPattern | Received " + " temporalPattern", Log.DEBUGLEVEL07);
 		try {
 			temporalPattern_Transferable.header.modifier_id = accessIdentifier.user_id;
 			TemporalPattern temporalPattern = new TemporalPattern(temporalPattern_Transferable);
@@ -964,7 +962,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		/**
 		* TODO check user for access
 		*/
-		Log.debugMessage("CMServerImpl.receiveTemporalPatterns | Received " + temporalPattern_Transferables.length + " TemporalPatterns", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementReceive.receiveTemporalPatterns | Received " + temporalPattern_Transferables.length + " TemporalPatterns", Log.DEBUGLEVEL07);
 		List temporalPatternList = new ArrayList(temporalPattern_Transferables.length);
 		try {
 			for (int i = 0; i < temporalPattern_Transferables.length; i++) {
@@ -1008,7 +1006,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		/**
 		 * TODO check user for access
 		 */
-		Log.debugMessage("CMServerImpl.receiveSet | Received " + " set", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementReceive.receiveSet | Received " + " set", Log.DEBUGLEVEL07);
 		try {
 			set_Transferable.header.modifier_id = accessIdentifier.user_id;
 			Set set = new Set(set_Transferable);
@@ -1048,7 +1046,7 @@ public abstract class CMMeasurementReceive extends CMConfigurationReceive {
 		/**
 			* TODO check user for access
 			*/
-		Log.debugMessage("CMServerImpl.receiveSets | Received " + set_Transferables.length + " sets", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMMeasurementReceive.receiveSets | Received " + set_Transferables.length + " sets", Log.DEBUGLEVEL07);
 		List setList = new ArrayList(set_Transferables.length);
 		try {
 			for (int i = 0; i < set_Transferables.length; i++) {

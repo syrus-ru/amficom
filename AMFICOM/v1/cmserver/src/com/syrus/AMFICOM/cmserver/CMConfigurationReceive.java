@@ -1,5 +1,5 @@
 /*
- * $Id: CMConfigurationReceive.java,v 1.10 2005/01/19 20:59:09 arseniy Exp $
+ * $Id: CMConfigurationReceive.java,v 1.11 2005/01/28 12:19:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -71,19 +71,18 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/01/19 20:59:09 $
+ * @version $Revision: 1.11 $, $Date: 2005/01/28 12:19:16 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
 public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	
 	private static final long serialVersionUID = 5462858483804681509L;
-    //////////////////////////////Configuration Recieve///////////////////////////////////
 
 	public void receiveCableThreadType(CableThreadType_Transferable cableThreadType_Transferable,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveCableThreadType | Received " + " cableThreadType", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMConfigurationReceive.receiveCableThreadType | Received " + " cableThreadType", Log.DEBUGLEVEL07);
 		try {
 			cableThreadType_Transferable.header.modifier_id = accessIdentifier.user_id;
 			CableThreadType cableThreadType = new CableThreadType(cableThreadType_Transferable);
@@ -116,7 +115,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	public void receiveCableThreadTypes(CableThreadType_Transferable[] cableThreadType_Transferables,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveCableThreadTypes | Received " + cableThreadType_Transferables.length
+		Log.debugMessage("CMConfigurationReceive.receiveCableThreadTypes | Received " + cableThreadType_Transferables.length
                 + " cableThreadTypes", Log.DEBUGLEVEL07);
 		List cableThreadTypeList = new ArrayList(cableThreadType_Transferables.length);
 		try {
@@ -154,7 +153,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	public void receiveEquipment(Equipment_Transferable equipment_Transferable,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveEquipment | Received " + " equipment", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMConfigurationReceive.receiveEquipment | Received " + " equipment", Log.DEBUGLEVEL07);
 		try {
 			equipment_Transferable.header.modifier_id = accessIdentifier.user_id;
 			Equipment equipment = new Equipment(equipment_Transferable);
@@ -191,7 +190,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	public void receiveEquipments(Equipment_Transferable[] equipment_Transferables,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveEquipments | Received " + equipment_Transferables.length + " equipments", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMConfigurationReceive.receiveEquipments | Received " + equipment_Transferables.length + " equipments", Log.DEBUGLEVEL07);
 		List equipmentList = new ArrayList(equipment_Transferables.length);
 		try {
 			for (int i = 0; i < equipment_Transferables.length; i++) {
@@ -230,7 +229,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	}
 
 	public void receiveEquipmentType(EquipmentType_Transferable equipmentType_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveEquipmentType | Received " + " equipmentType", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMConfigurationReceive.receiveEquipmentType | Received " + " equipmentType", Log.DEBUGLEVEL07);
 		try {
 			equipmentType_Transferable.header.modifier_id = accessIdentifier.user_id;
 			EquipmentType equipmentType = new EquipmentType(equipmentType_Transferable);
@@ -265,7 +264,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	}
 
 	public void receiveEquipmentTypes(EquipmentType_Transferable[] equipmentType_Transferables, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveEquipmentTypes | Received " + equipmentType_Transferables.length
+		Log.debugMessage("CMConfigurationReceive.receiveEquipmentTypes | Received " + equipmentType_Transferables.length
 						+ " equipmentTypes", Log.DEBUGLEVEL07);
 		List equipmentTypeList = new ArrayList(equipmentType_Transferables.length);
 		try {
@@ -307,7 +306,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	public void receiveKIS(KIS_Transferable kis_Transferable,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveKIS | Received " + " kis", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMConfigurationReceive.receiveKIS | Received " + " kis", Log.DEBUGLEVEL07);
 		try {
 			kis_Transferable.header.modifier_id = accessIdentifier.user_id;
 			KIS kis = new KIS(kis_Transferable);
@@ -341,7 +340,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	}
 
 	public void receiveKISs(KIS_Transferable[] kis_Transferables, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveKISs | Received " + kis_Transferables.length
+		Log.debugMessage("CMConfigurationReceive.receiveKISs | Received " + kis_Transferables.length
 						+ " kiss", Log.DEBUGLEVEL07);
 		List kisList = new ArrayList(kis_Transferables.length);
 		try {
@@ -383,7 +382,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	public void receiveLink(Link_Transferable link_Transferable,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveLink | Received " + " link", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMConfigurationReceive.receiveLink | Received " + " link", Log.DEBUGLEVEL07);
 		try {
 			link_Transferable.header.modifier_id = accessIdentifier.user_id;
 			Link link = new Link(link_Transferable);
@@ -420,7 +419,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	public void receiveLinks(Link_Transferable[] link_Transferables,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveLinks | Received " + link_Transferables.length + " links", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMConfigurationReceive.receiveLinks | Received " + link_Transferables.length + " links", Log.DEBUGLEVEL07);
 		List linkList = new ArrayList(link_Transferables.length);
 		try {
 			for (int i = 0; i < link_Transferables.length; i++) {
@@ -461,7 +460,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	public void receiveLinkType(LinkType_Transferable linkType_Transferable,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveLinkType | Received " + " linkType", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMConfigurationReceive.receiveLinkType | Received " + " linkType", Log.DEBUGLEVEL07);
 		try {
 			linkType_Transferable.header.modifier_id = accessIdentifier.user_id;
 			LinkType linkType = new LinkType(linkType_Transferable);
@@ -494,7 +493,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	public void receiveLinkTypes(AbstractLinkType_Transferable[] linkType_Transferables,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveLinkTypes | Received " + linkType_Transferables.length + " links", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMConfigurationReceive.receiveLinkTypes | Received " + linkType_Transferables.length + " links", Log.DEBUGLEVEL07);
 		List linkTypeList = new ArrayList(linkType_Transferables.length);
 		try {
 			for (int i = 0; i < linkType_Transferables.length; i++) {
@@ -547,7 +546,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	public void receiveMeasurementPort(MeasurementPort_Transferable measurementPort_Transferable,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveMeasurementPort | Received " + " measurementPort", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMConfigurationReceive.receiveMeasurementPort | Received " + " measurementPort", Log.DEBUGLEVEL07);
 		try {
 			measurementPort_Transferable.header.modifier_id = accessIdentifier.user_id;
 			MeasurementPort measurementPort = new MeasurementPort(measurementPort_Transferable);
@@ -582,7 +581,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	}
 
 	public void receiveMeasurementPorts(MeasurementPort_Transferable[] measurementPort_Transferables, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveMeasurementPorts | Received " + measurementPort_Transferables.length + " measurementPorts", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMConfigurationReceive.receiveMeasurementPorts | Received " + measurementPort_Transferables.length + " measurementPorts", Log.DEBUGLEVEL07);
 		List measurementPortList = new ArrayList(measurementPort_Transferables.length);
 		try {
 			for (int i = 0; i < measurementPort_Transferables.length; i++) {
@@ -621,7 +620,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	}
 
 	public void receiveMeasurementPortType(MeasurementPortType_Transferable measurementPortType_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveMeasurementPortType | Received " + " measurementPortType", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMConfigurationReceive.receiveMeasurementPortType | Received " + " measurementPortType", Log.DEBUGLEVEL07);
 		try {
 			measurementPortType_Transferable.header.modifier_id = accessIdentifier.user_id;
 			MeasurementPortType measurementPortType = new MeasurementPortType(measurementPortType_Transferable);
@@ -656,7 +655,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	}
 
 	public void receiveMeasurementPortTypes(MeasurementPortType_Transferable[] measurementPortType_Transferables, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveMeasurementPortTypes | Received " + measurementPortType_Transferables.length
+		Log.debugMessage("CMConfigurationReceive.receiveMeasurementPortTypes | Received " + measurementPortType_Transferables.length
 						+ " measurementPortTypes", Log.DEBUGLEVEL07);
 		List measurementPortTypeList = new ArrayList(measurementPortType_Transferables.length);
 		try {
@@ -698,7 +697,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	public void receiveMonitoredElement(MonitoredElement_Transferable monitoredElement_Transferable,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveMonitoredElement | Received " + " monitoredElement", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMConfigurationReceive.receiveMonitoredElement | Received " + " monitoredElement", Log.DEBUGLEVEL07);
 		try {
 			monitoredElement_Transferable.header.modifier_id = accessIdentifier.user_id;
 			MonitoredElement monitoredElement = new MonitoredElement(monitoredElement_Transferable);
@@ -729,7 +728,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	}
 
 	public void receiveMonitoredElements(MonitoredElement_Transferable[] monitoredElement_Transferables, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveMonitoredElements | Received " + monitoredElement_Transferables.length
+		Log.debugMessage("CMConfigurationReceive.receiveMonitoredElements | Received " + monitoredElement_Transferables.length
 							+ " monitoredElements", Log.DEBUGLEVEL07);
 		List monitoredElementList = new ArrayList(monitoredElement_Transferables.length);
 		try {
@@ -765,7 +764,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	}
 
 	public void receivePort(Port_Transferable port_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receivePort | Received " + " port", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMConfigurationReceive.receivePort | Received " + " port", Log.DEBUGLEVEL07);
 		try {
 			port_Transferable.header.modifier_id = accessIdentifier.user_id;
 			Port port = new Port(port_Transferable);
@@ -800,7 +799,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	}
 
 	public void receivePorts(Port_Transferable[] port_Transferables, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receivePorts | Received " + port_Transferables.length + " ports", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMConfigurationReceive.receivePorts | Received " + port_Transferables.length + " ports", Log.DEBUGLEVEL07);
 		List portList = new ArrayList(port_Transferables.length);
 		try {
 			for (int i = 0; i < port_Transferables.length; i++) {
@@ -839,7 +838,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	}
 
 	public void receivePortType(PortType_Transferable portType_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receivePortType | Received " + " domain", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMConfigurationReceive.receivePortType | Received " + " domain", Log.DEBUGLEVEL07);
 		try {
 			portType_Transferable.header.modifier_id = accessIdentifier.user_id;
 			PortType portType = new PortType(portType_Transferable);
@@ -874,7 +873,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	}
 
 	public void receivePortTypes(PortType_Transferable[] portType_Transferables, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receivePortTypes | Received " + portType_Transferables.length
+		Log.debugMessage("CMConfigurationReceive.receivePortTypes | Received " + portType_Transferables.length
 						+ " portTypes", Log.DEBUGLEVEL07);
 		List portTypeList = new ArrayList(portType_Transferables.length);
 		try {
@@ -916,7 +915,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	public void receiveTransmissionPath(TransmissionPath_Transferable transmissionPath_Transferable,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveTransmissionPath | Received " + " transmissionPath", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMConfigurationReceive.receiveTransmissionPath | Received " + " transmissionPath", Log.DEBUGLEVEL07);
 		try {
 		transmissionPath_Transferable.header.modifier_id = accessIdentifier.user_id;
 		TransmissionPath transmissionPath = new TransmissionPath(transmissionPath_Transferable);
@@ -953,7 +952,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	public void receiveTransmissionPathType(TransmissionPathType_Transferable transmissionPathType_Transferable,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveTransmissionPathType | Received " + " transmissionPathType", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMConfigurationReceive.receiveTransmissionPathType | Received " + " transmissionPathType", Log.DEBUGLEVEL07);
 		try {
 			transmissionPathType_Transferable.header.modifier_id = accessIdentifier.user_id;
 			TransmissionPathType transmissionPathType = new TransmissionPathType(transmissionPathType_Transferable);
@@ -990,7 +989,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	public void receiveTransmissionPaths(TransmissionPath_Transferable[] transmissionPath_Transferables,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveTransmissionPaths | Received " + transmissionPath_Transferables.length
+		Log.debugMessage("CMConfigurationReceive.receiveTransmissionPaths | Received " + transmissionPath_Transferables.length
                 + " transmissionPaths", Log.DEBUGLEVEL07);
     List transmissionPathList = new ArrayList(transmissionPath_Transferables.length);
 		try {
@@ -1032,7 +1031,7 @@ public abstract class CMConfigurationReceive extends CMAdministrationReceive {
 	public void receiveTransmissionPathTypes(TransmissionPathType_Transferable[] transmissionPathType_Transferables,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveTransmissionPathTypes | Received " + transmissionPathType_Transferables.length
+		Log.debugMessage("CMConfigurationReceive.receiveTransmissionPathTypes | Received " + transmissionPathType_Transferables.length
                 + " transmissionPathTypes", Log.DEBUGLEVEL07);
 		List transmissionPathTypeList = new ArrayList(transmissionPathType_Transferables.length);
 		try {

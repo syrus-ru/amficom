@@ -1,5 +1,5 @@
 /*
- * $Id: CMGeneralReceive.java,v 1.2 2005/01/26 15:43:17 arseniy Exp $
+ * $Id: CMGeneralReceive.java,v 1.3 2005/01/28 12:19:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,14 +34,14 @@ import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/26 15:43:17 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/28 12:19:16 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
 
 public abstract class CMGeneralReceive extends CMServerPOA {
 
-	//private static final long serialVersionUID = 4217287655251415892L;
+	private static final long serialVersionUID = 4217287655251415892L;
 
 	public void receiveParameterType(ParameterType_Transferable parameterType_Transferable,
 									boolean force,
@@ -49,7 +49,7 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 		/**
 		 * TODO check user for access
 		 */
-		Log.debugMessage("CMServerImpl.receiveParameterType | Received " + " parameterType", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMGeneralReceive.receiveParameterType | Received " + " parameterType", Log.DEBUGLEVEL07);
 		try {
 			parameterType_Transferable.header.modifier_id = accessIdentifier.user_id;
 			ParameterType parameterType = new ParameterType(parameterType_Transferable);
@@ -85,7 +85,7 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 		/**
 		 * TODO check user for access
 		 */
-		Log.debugMessage("CMServerImpl.receiveParameterTypes | Received " + parameterType_Transferables.length + " ParameterTypes", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMGeneralReceive.receiveParameterTypes | Received " + parameterType_Transferables.length + " ParameterTypes", Log.DEBUGLEVEL07);
 		List parameterTypeList = new ArrayList(parameterType_Transferables.length);
 		try {
 			for (int i = 0; i < parameterType_Transferables.length; i++) {
@@ -120,7 +120,7 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 	}
 
 	public void receiveCharacteristic(Characteristic_Transferable characteristic_Transferable, boolean force, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveCharacteristic | Received " + " characteristic", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMGeneralReceive.receiveCharacteristic | Received " + " characteristic", Log.DEBUGLEVEL07);
 		try {
 			characteristic_Transferable.header.modifier_id = accessIdentifier.user_id;
 			Characteristic characteristic = new Characteristic(characteristic_Transferable);
@@ -157,7 +157,7 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 	public void receiveCharacteristics(Characteristic_Transferable[] characteristic_Transferables,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveCharacteristics | Received " + characteristic_Transferables.length + " characteristics", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMGeneralReceive.receiveCharacteristics | Received " + characteristic_Transferables.length + " characteristics", Log.DEBUGLEVEL07);
 		List characteristicList = new ArrayList(characteristic_Transferables.length);
 		try {
 			for (int i = 0; i < characteristic_Transferables.length; i++) {
@@ -200,7 +200,7 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 									CharacteristicType_Transferable characteristicType_Transferable,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receiveCharacteristicType | Received " + " characteristicTypes", Log.DEBUGLEVEL07);
+		Log.debugMessage("CMGeneralReceive.receiveCharacteristicType | Received " + " characteristicTypes", Log.DEBUGLEVEL07);
 		try {
 			characteristicType_Transferable.header.modifier_id = accessIdentifier.user_id;
 			CharacteristicType characteristicType = new CharacteristicType(characteristicType_Transferable);
@@ -233,7 +233,7 @@ public abstract class CMGeneralReceive extends CMServerPOA {
 	public void receiveCharacteristicTypes(CharacteristicType_Transferable[] characteristicType_Transferables,
 									boolean force,
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-		Log.debugMessage("CMServerImpl.receivecharacteristicTypes | Received " + characteristicType_Transferables.length
+		Log.debugMessage("CMGeneralReceive.receivecharacteristicTypes | Received " + characteristicType_Transferables.length
                 + " characteristicTypes", Log.DEBUGLEVEL07);
 		List characteristicTypeList = new ArrayList(characteristicType_Transferables.length);
 		try {
