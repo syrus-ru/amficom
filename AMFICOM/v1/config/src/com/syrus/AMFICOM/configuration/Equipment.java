@@ -114,6 +114,11 @@ public abstract class Equipment extends DomainMember implements Characterized, T
 		return this.swVersion;
 	}
 
+	
+	public Identifier getImageId(){
+		return this.imageId;
+	}
+	
 	public String getInventoryNumber() {
 		return this.inventoryNumber;
 	}
