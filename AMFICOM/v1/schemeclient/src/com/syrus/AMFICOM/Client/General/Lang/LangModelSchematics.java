@@ -19,7 +19,7 @@ public class LangModelSchematics extends LangModel
 		symbols = new DateFormatSymbols(locale);
 	}
 
-	static public void initialize()
+/*	static public void initialize()
 	{
 		initialize("com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics");
 	}
@@ -121,5 +121,5 @@ public class LangModelSchematics extends LangModel
 			System.out.println(e);
 			return "ERROR key!" + keyName;
 		}
-	}
+	}*/
 }
