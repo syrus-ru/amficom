@@ -1,5 +1,5 @@
 /*
- * $Id: CMGeneralTransmit.java,v 1.8 2005/02/25 08:16:44 bob Exp $
+ * $Id: CMGeneralTransmit.java,v 1.9 2005/02/25 08:40:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -49,7 +49,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/25 08:16:44 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/25 08:40:07 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -556,7 +556,7 @@ public abstract class CMGeneralTransmit extends CMMeasurementReceive {
 				for (int i = 0; i < ids_Transferable.length; i++)
 					idsList.add(new Identifier(ids_Transferable[i]));
 				collection = GeneralStorableObjectPool.getStorableObjectsByConditionButIds(idsList,
-					new EquivalentCondition(ObjectEntities.CHARACTERISTIC_ENTITY_CODE), true);
+					new EquivalentCondition(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE), true);
 			} else
 				collection = GeneralStorableObjectPool.getStorableObjectsByCondition(
 					new EquivalentCondition(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE), true);
