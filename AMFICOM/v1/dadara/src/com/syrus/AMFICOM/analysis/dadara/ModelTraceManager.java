@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.26 2005/03/24 14:27:11 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.27 2005/03/24 14:46:16 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.26 $, $Date: 2005/03/24 14:27:11 $
+ * @version $Revision: 1.27 $, $Date: 2005/03/24 14:46:16 $
  * @module
  */
 public class ModelTraceManager
@@ -625,7 +625,7 @@ public class ModelTraceManager
 	 * @param yCapture радиус захвата кривой мышью по вертикали
 	 * @param prioFactor поправка на приоритет алармов,
 	 *     =0: приоритетов нет; =1: 100% приоритет HARD-алармов
-	 * @param button номер кнопки мыши, 0=LMB, 1=RMB, пока не используется. 
+	 * @param button номер кнопки мыши, 0=LMB, 1=RMB. 
 	 * @return handle либо null
 	 */
 	public ThresholdHandle getThresholdHandle(double x0, double y0, double xCapture, double yCapture, double prioFactor, int button)
