@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.29 2005/04/01 14:34:27 bass Exp $
+ * $Id: Modeling.java,v 1.30 2005/04/01 15:40:18 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,8 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
 import java.util.Collections;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -26,8 +28,8 @@ import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/04/01 14:34:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.30 $, $Date: 2005/04/01 15:40:18 $
+ * @author $Author: bob $
  * @author arseniy
  * @module measurement_v1
  */
@@ -56,23 +58,8 @@ public class Modeling extends Action {
 	}
 
 	public Modeling(Modeling_Transferable mt) throws CreateObjectException {
-		super(mt.header,
-			  null,
-			  new Identifier(mt.monitored_element_id),
-			  null);
-
-		try {
-			super.type = (ModelingType)MeasurementStorableObjectPool.getStorableObject(new Identifier(mt.type_id), true);
-
-			this.argumentSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(mt.argument_set_id), true);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-
-		this.name = new String(mt.name);
-
 		this.modelingDatabase = MeasurementDatabaseContext.getModelingDatabase();
+		this.fromTransferable(mt);
 	}
 
 	protected Modeling(Identifier id,
@@ -98,6 +85,25 @@ public class Modeling extends Action {
 
 	}
 
+	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+		Modeling_Transferable mt = (Modeling_Transferable)transferable;
+		super.fromTransferable(mt.header,
+			  null,
+			  new Identifier(mt.monitored_element_id),
+			  null);
+
+		try {
+			super.type = (ModelingType)MeasurementStorableObjectPool.getStorableObject(new Identifier(mt.type_id), true);
+
+			this.argumentSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(mt.argument_set_id), true);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+
+		this.name = mt.name;
+	}
+	
 	public Object getTransferable() {
 		return new Modeling_Transferable(super.getHeaderTransferable(),
 									(Identifier_Transferable)super.type.getId().getTransferable(),

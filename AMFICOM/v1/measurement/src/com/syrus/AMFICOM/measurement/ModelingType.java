@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.13 2005/04/01 14:34:27 bass Exp $
+ * $Id: ModelingType.java,v 1.14 2005/04/01 15:40:18 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,8 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Date;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
@@ -30,8 +32,8 @@ import com.syrus.AMFICOM.measurement.corba.ModelingType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/04/01 14:34:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/04/01 15:40:18 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -74,28 +76,8 @@ public class ModelingType extends ActionType {
 	}
 
 	public ModelingType(ModelingType_Transferable mtt) throws CreateObjectException {
-		super(mtt.header,
-			  new String(mtt.codename),
-			  new String(mtt.description));
-
-		try {
-			java.util.Set parTypeIds;
-
-			parTypeIds = new HashSet(mtt.in_parameter_type_ids.length);
-			for (int i = 0; i < mtt.in_parameter_type_ids.length; i++)
-				parTypeIds.add(new Identifier(mtt.in_parameter_type_ids[i]));
-			this.inParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypeIds, true);
-			
-			parTypeIds.clear();
-			for (int i = 0; i < mtt.out_parameter_type_ids.length; i++)
-				parTypeIds.add(new Identifier(mtt.out_parameter_type_ids[i]));
-			this.outParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypeIds, true);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-
 		this.modelingTypeDatabase = MeasurementDatabaseContext.getModelingTypeDatabase();
+		this.fromTransferable(mtt);
 	}
 
 	protected ModelingType(Identifier id,
@@ -156,6 +138,31 @@ public class ModelingType extends ActionType {
 		}
 	}
 
+	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+		ModelingType_Transferable mtt = (ModelingType_Transferable)transferable;
+		super.fromTransferable(mtt.header,
+			  mtt.codename,
+			  mtt.description);
+
+		try {
+			java.util.Set parTypeIds;
+
+			parTypeIds = new HashSet(mtt.in_parameter_type_ids.length);
+			for (int i = 0; i < mtt.in_parameter_type_ids.length; i++)
+				parTypeIds.add(new Identifier(mtt.in_parameter_type_ids[i]));
+			this.inParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypeIds, true);
+			
+			parTypeIds.clear();
+			for (int i = 0; i < mtt.out_parameter_type_ids.length; i++)
+				parTypeIds.add(new Identifier(mtt.out_parameter_type_ids[i]));
+			this.outParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypeIds, true);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+
+	}
+	
 	public Object getTransferable() {
 		int i;
 

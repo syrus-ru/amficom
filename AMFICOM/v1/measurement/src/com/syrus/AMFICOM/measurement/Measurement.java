@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.56 2005/04/01 14:34:27 bass Exp $
+ * $Id: Measurement.java,v 1.57 2005/04/01 15:40:18 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,8 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
 import java.util.HashSet;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -29,8 +31,8 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/04/01 14:34:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.57 $, $Date: 2005/04/01 15:40:18 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -67,26 +69,8 @@ public class Measurement extends Action {
 	}
 
 	public Measurement(Measurement_Transferable mt) throws CreateObjectException {
-		super(mt.header,
-			  null,
-			  new Identifier(mt.monitored_element_id),
-			  null);
-		try {
-			super.type = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(new Identifier(mt.type_id), true);
-
-			this.setup = (MeasurementSetup)MeasurementStorableObjectPool.getStorableObject(new Identifier(mt.setup_id), true);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-		this.name = mt.name;
-		this.startTime = new Date(mt.start_time);
-		this.duration = mt.duration;
-		this.status = mt.status.value();
-		this.localAddress = new String(mt.local_address);
-		this.testId = new Identifier(mt.test_id);
-
 		this.measurementDatabase = MeasurementDatabaseContext.getMeasurementDatabase();
+		this.fromTransferable(mt);
 	}
 
 	protected Measurement(Identifier id,
@@ -120,6 +104,26 @@ public class Measurement extends Action {
 		this.measurementDatabase = MeasurementDatabaseContext.getMeasurementDatabase();
 	}
 
+	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+		Measurement_Transferable mt = (Measurement_Transferable) transferable;
+		super.fromTransferable(mt.header, null, new Identifier(mt.monitored_element_id), null);
+		try {
+			super.type = (MeasurementType) MeasurementStorableObjectPool.getStorableObject(new Identifier(mt.type_id),
+				true);
+
+			this.setup = (MeasurementSetup) MeasurementStorableObjectPool.getStorableObject(
+				new Identifier(mt.setup_id), true);
+		} catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+		this.name = mt.name;
+		this.startTime = new Date(mt.start_time);
+		this.duration = mt.duration;
+		this.status = mt.status.value();
+		this.localAddress = new String(mt.local_address);
+		this.testId = new Identifier(mt.test_id);
+	}
+	
 	public Object getTransferable() {
 		return new Measurement_Transferable(super.getHeaderTransferable(),
 											(Identifier_Transferable)super.type.getId().getTransferable(),

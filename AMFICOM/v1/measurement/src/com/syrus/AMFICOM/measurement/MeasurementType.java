@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.56 2005/04/01 14:34:27 bass Exp $
+ * $Id: MeasurementType.java,v 1.57 2005/04/01 15:40:18 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
@@ -32,8 +34,8 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/04/01 14:34:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.57 $, $Date: 2005/04/01 15:40:18 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -80,33 +82,8 @@ public class MeasurementType extends ActionType {
 	}
 
 	public MeasurementType(MeasurementType_Transferable mtt) throws CreateObjectException {
-		super(mtt.header,
-			  new String(mtt.codename),
-			  new String(mtt.description));
-
-		try {
-			java.util.Set typeIds;
-			
-			typeIds = new HashSet(mtt.in_parameter_type_ids.length);
-			for (int i = 0; i < mtt.in_parameter_type_ids.length; i++)
-				typeIds.add(new Identifier(mtt.in_parameter_type_ids[i]));
-			this.inParameterTypes = GeneralStorableObjectPool.getStorableObjects(typeIds, true);
-
-			typeIds.clear();
-			for (int i = 0; i < mtt.out_parameter_type_ids.length; i++)
-				typeIds.add(new Identifier(mtt.out_parameter_type_ids[i]));
-			this.outParameterTypes = GeneralStorableObjectPool.getStorableObjects(typeIds, true);
-
-			typeIds.clear();
-			for (int i = 0; i < mtt.measurement_port_type_ids.length; i++)
-				typeIds.add(new Identifier(mtt.measurement_port_type_ids[i]));
-			this.measurementPortTypes = ConfigurationStorableObjectPool.getStorableObjects(typeIds, true);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-
 		this.measurementTypeDatabase = MeasurementDatabaseContext.getMeasurementTypeDatabase();
+		this.fromTransferable(mtt);
 	}
 
 	protected MeasurementType(Identifier id,
@@ -173,6 +150,35 @@ public class MeasurementType extends ActionType {
 		}
 	}
 
+	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+		MeasurementType_Transferable mtt = (MeasurementType_Transferable)transferable;
+		super.fromTransferable(mtt.header,
+			  new String(mtt.codename),
+			  new String(mtt.description));
+
+		try {
+			java.util.Set typeIds;
+			
+			typeIds = new HashSet(mtt.in_parameter_type_ids.length);
+			for (int i = 0; i < mtt.in_parameter_type_ids.length; i++)
+				typeIds.add(new Identifier(mtt.in_parameter_type_ids[i]));
+			this.inParameterTypes = GeneralStorableObjectPool.getStorableObjects(typeIds, true);
+
+			typeIds.clear();
+			for (int i = 0; i < mtt.out_parameter_type_ids.length; i++)
+				typeIds.add(new Identifier(mtt.out_parameter_type_ids[i]));
+			this.outParameterTypes = GeneralStorableObjectPool.getStorableObjects(typeIds, true);
+
+			typeIds.clear();
+			for (int i = 0; i < mtt.measurement_port_type_ids.length; i++)
+				typeIds.add(new Identifier(mtt.measurement_port_type_ids[i]));
+			this.measurementPortTypes = ConfigurationStorableObjectPool.getStorableObjects(typeIds, true);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+	}
+	
 	public Object getTransferable() {
 		int i;
 

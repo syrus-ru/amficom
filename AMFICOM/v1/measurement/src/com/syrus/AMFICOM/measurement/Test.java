@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.98 2005/04/01 14:34:27 bass Exp $
+ * $Id: Test.java,v 1.99 2005/04/01 15:40:19 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,8 @@ package com.syrus.AMFICOM.measurement;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.KIS;
@@ -44,8 +46,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.98 $, $Date: 2005/04/01 14:34:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.99 $, $Date: 2005/04/01 15:40:19 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -230,7 +232,13 @@ public class Test extends StorableObject {
 	}
 
 	public Test(Test_Transferable tt) throws CreateObjectException {
-		super(tt.header);
+		this.testDatabase = MeasurementDatabaseContext.getTestDatabase();
+		this.fromTransferable(tt);
+	}
+
+	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+		Test_Transferable tt = (Test_Transferable)transferable;
+		super.fromTransferable(tt.header);
 		this.temporalType = tt.temporal_type.value();
 		this.timeStamps = new TestTimeStamps(tt.time_stamps);
 		this.measurementTypeId = new Identifier(tt.measurement_type_id);
@@ -270,8 +278,6 @@ public class Test extends StorableObject {
 		}
 		else
 			throw new CreateObjectException("Cannot find measurement setup for test '" + this.id + '\'');
-
-		this.testDatabase = MeasurementDatabaseContext.getTestDatabase();
 	}
 
 	public short getEntityCode() {

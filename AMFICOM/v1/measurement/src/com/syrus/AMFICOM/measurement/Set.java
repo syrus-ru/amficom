@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.51 2005/04/01 14:34:27 bass Exp $
+ * $Id: Set.java,v 1.52 2005/04/01 15:40:18 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -33,8 +35,8 @@ import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/04/01 14:34:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.52 $, $Date: 2005/04/01 15:40:18 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -78,22 +80,8 @@ public class Set extends StorableObject {
 	}
 
 	public Set(Set_Transferable st) throws CreateObjectException {
-		super(st.header);
-		this.sort = st.sort.value();
-		this.description = new String(st.description);
-
-		try {
-			this.parameters = new SetParameter[st.parameters.length];
-			for (int i = 0; i < this.parameters.length; i++)
-				this.parameters[i] = new SetParameter(st.parameters[i]);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-
-		this.monitoredElementIds = new HashSet(st.monitored_element_ids.length);
-		for (int i = 0; i < st.monitored_element_ids.length; i++)
-			this.monitoredElementIds.add(new Identifier(st.monitored_element_ids[i]));
+		this.setDatabase = MeasurementDatabaseContext.getSetDatabase();
+		this.fromTransferable(st);
 		
 	}	
 	
@@ -185,6 +173,26 @@ public class Set extends StorableObject {
 		this.monitoredElementIds.remove(monitoredElementId);
   }
 
+	
+	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+		Set_Transferable st = (Set_Transferable)transferable;
+		super.fromTransferable(st.header);
+		this.sort = st.sort.value();
+		this.description = new String(st.description);
+
+		try {
+			this.parameters = new SetParameter[st.parameters.length];
+			for (int i = 0; i < this.parameters.length; i++)
+				this.parameters[i] = new SetParameter(st.parameters[i]);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+
+		this.monitoredElementIds = new HashSet(st.monitored_element_ids.length);
+		for (int i = 0; i < st.monitored_element_ids.length; i++)
+			this.monitoredElementIds.add(new Identifier(st.monitored_element_ids[i]));
+	}
 	public Object getTransferable() {
 		Parameter_Transferable[] pts = new Parameter_Transferable[this.parameters.length];
 		for (int i = 0; i < pts.length; i++)

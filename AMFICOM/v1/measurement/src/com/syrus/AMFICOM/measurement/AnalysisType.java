@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.55 2005/04/01 14:34:27 bass Exp $
+ * $Id: AnalysisType.java,v 1.56 2005/04/01 15:40:18 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -30,8 +32,8 @@ import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/04/01 14:34:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.56 $, $Date: 2005/04/01 15:40:18 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -86,41 +88,8 @@ public class AnalysisType extends ActionType {
 	}
 
 	public AnalysisType(AnalysisType_Transferable att) throws CreateObjectException {
-		super(att.header, new String(att.codename), new String(att.description));
-
-		try {
-			java.util.Set parTypIds;
-
-			parTypIds = new HashSet(att.in_parameter_type_ids.length);
-			for (int i = 0; i < att.in_parameter_type_ids.length; i++)
-				parTypIds.add(new Identifier(att.in_parameter_type_ids[i]));
-			this.inParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
-
-			parTypIds.clear();
-			for (int i = 0; i < att.criteria_parameter_type_ids.length; i++)
-				parTypIds.add(new Identifier(att.criteria_parameter_type_ids[i]));
-			this.criteriaParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
-
-			parTypIds.clear();
-			for (int i = 0; i < att.etalon_parameter_type_ids.length; i++)
-				parTypIds.add(new Identifier(att.etalon_parameter_type_ids[i]));
-			this.etalonParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
-
-			parTypIds.clear();
-			for (int i = 0; i < att.out_parameter_type_ids.length; i++)
-				parTypIds.add(new Identifier(att.out_parameter_type_ids[i]));
-			this.outParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
-
-
-			this.measurementTypeIds = new HashSet(att.measurement_type_ids.length);
-			for (int i = 0; i < att.measurement_type_ids.length; i++)
-				this.measurementTypeIds.add(new Identifier(att.measurement_type_ids[i]));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-
 		this.analysisTypeDatabase = MeasurementDatabaseContext.getAnalysisTypeDatabase();
+		this.fromTransferable(att);
 	}
 
 	protected AnalysisType(Identifier id,
@@ -203,6 +172,41 @@ public class AnalysisType extends ActionType {
 		}
 	}
 
+	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+		AnalysisType_Transferable att = (AnalysisType_Transferable) transferable;
+		super.fromTransferable(att.header, att.codename, att.description);
+
+		try {
+			java.util.Set parTypIds;
+
+			parTypIds = new HashSet(att.in_parameter_type_ids.length);
+			for (int i = 0; i < att.in_parameter_type_ids.length; i++)
+				parTypIds.add(new Identifier(att.in_parameter_type_ids[i]));
+			this.inParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
+
+			parTypIds.clear();
+			for (int i = 0; i < att.criteria_parameter_type_ids.length; i++)
+				parTypIds.add(new Identifier(att.criteria_parameter_type_ids[i]));
+			this.criteriaParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
+
+			parTypIds.clear();
+			for (int i = 0; i < att.etalon_parameter_type_ids.length; i++)
+				parTypIds.add(new Identifier(att.etalon_parameter_type_ids[i]));
+			this.etalonParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
+
+			parTypIds.clear();
+			for (int i = 0; i < att.out_parameter_type_ids.length; i++)
+				parTypIds.add(new Identifier(att.out_parameter_type_ids[i]));
+			this.outParameterTypes = GeneralStorableObjectPool.getStorableObjects(parTypIds, true);
+
+			this.measurementTypeIds = new HashSet(att.measurement_type_ids.length);
+			for (int i = 0; i < att.measurement_type_ids.length; i++)
+				this.measurementTypeIds.add(new Identifier(att.measurement_type_ids[i]));
+		} catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+	}
+	
 	public Object getTransferable() {
 		int i;
 

@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.45 2005/04/01 14:34:27 bass Exp $
+ * $Id: Result.java,v 1.46 2005/04/01 15:40:18 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,8 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
 import java.util.HashSet;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -29,8 +31,8 @@ import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/04/01 14:34:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.46 $, $Date: 2005/04/01 15:40:18 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -58,7 +60,32 @@ public class Result extends StorableObject {
 	}
 
 	public Result(Result_Transferable rt) throws CreateObjectException {
-		super(rt.header);
+		this.resultDatabase = MeasurementDatabaseContext.getResultDatabase();
+		this.fromTransferable(rt);
+	}	
+
+	protected Result(Identifier id,
+					 Identifier creatorId,
+					 long version,
+					 Action action,
+					 int sort,
+					 SetParameter[] parameters) {
+		super(id,
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version);
+		this.action = action;
+		this.sort = sort;
+		this.parameters = parameters;
+
+		this.resultDatabase = MeasurementDatabaseContext.getResultDatabase();
+	}
+	
+	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+		Result_Transferable rt = (Result_Transferable) transferable;
+		super.fromTransferable(rt.header);
 
 		this.sort = rt.sort.value();
 		switch (this.sort) {
@@ -107,28 +134,8 @@ public class Result extends StorableObject {
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
-
 	}
-
-	protected Result(Identifier id,
-					 Identifier creatorId,
-					 long version,
-					 Action action,
-					 int sort,
-					 SetParameter[] parameters) {
-		super(id,
-				new Date(System.currentTimeMillis()),
-				new Date(System.currentTimeMillis()),
-				creatorId,
-				creatorId,
-				version);
-		this.action = action;
-		this.sort = sort;
-		this.parameters = parameters;
-
-		this.resultDatabase = MeasurementDatabaseContext.getResultDatabase();
-	}
-
+	
 	public Object getTransferable() {
 		Parameter_Transferable[] pts = new Parameter_Transferable[this.parameters.length];
 		for (int i = 0; i < pts.length; i++)

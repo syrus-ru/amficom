@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.64 2005/04/01 14:34:27 bass Exp $
+ * $Id: TemporalPattern.java,v 1.65 2005/04/01 15:40:19 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.omg.CORBA.portable.IDLEntity;
+
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -33,8 +35,8 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/04/01 14:34:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.65 $, $Date: 2005/04/01 15:40:19 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -801,17 +803,8 @@ public class TemporalPattern extends StorableObject {
 	}
 
 	public TemporalPattern(TemporalPattern_Transferable tpt) throws CreateObjectException {
-		super(tpt.header);
-
-		this.description = new String(tpt.description);
-
-		this.removeAll();
-		for (int i = 0; i < tpt.cron_strings.length; i++) {
-			this.addTemplate(new String(tpt.cron_strings[i]));
-		}
-
-		this.changed = false;
 		this.temporalPatternDatabase = MeasurementDatabaseContext.getTemporalPatternDatabase();
+		this.fromTransferable(tpt);
 	}
 
 	protected TemporalPattern(Identifier id, Identifier creatorId, long version, String description, String[] cronStrings) {
@@ -917,6 +910,21 @@ public class TemporalPattern extends StorableObject {
 		return this.description;
 	}
 
+	
+	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+		TemporalPattern_Transferable tpt = (TemporalPattern_Transferable)transferable;
+		super.fromTransferable(tpt.header);
+
+		this.description = new String(tpt.description);
+
+		this.removeAll();
+		for (int i = 0; i < tpt.cron_strings.length; i++) {
+			this.addTemplate(new String(tpt.cron_strings[i]));
+		}
+
+		this.changed = false;
+	}
+	
 	public Object getTransferable() {
 		return new TemporalPattern_Transferable(super.getHeaderTransferable(),
 							new String(this.description), getCronStrings());

@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.46 2005/04/01 14:34:27 bass Exp $
+ * $Id: Evaluation.java,v 1.47 2005/04/01 15:40:18 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,8 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
 import java.util.HashSet;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -26,8 +28,8 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/04/01 14:34:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.47 $, $Date: 2005/04/01 15:40:18 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -54,22 +56,8 @@ public class Evaluation extends Action {
 	}
 
 	public Evaluation(Evaluation_Transferable et) throws CreateObjectException {
-		super(et.header,
-			  null,
-			  new Identifier(et.monitored_element_id),
-			  null);
-
-		try {
-			super.type = (EvaluationType)MeasurementStorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
-			super.parentAction = (et.measurement_id.identifier_string.length() != 0) ? (Measurement) MeasurementStorableObjectPool.getStorableObject(new Identifier(et.measurement_id), true) : null;
-
-			this.thresholdSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(et.threshold_set_id), true);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-
 		this.evaluationDatabase = MeasurementDatabaseContext.getEvaluationDatabase();
+		this.fromTransferable(et);
 	}
 
 	protected Evaluation(Identifier id,
@@ -92,6 +80,24 @@ public class Evaluation extends Action {
 		this.thresholdSet = thresholdSet;
 
 		this.evaluationDatabase = MeasurementDatabaseContext.getEvaluationDatabase();
+	}
+
+	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+		Evaluation_Transferable et = (Evaluation_Transferable)transferable;
+		super.fromTransferable(et.header,
+			  null,
+			  new Identifier(et.monitored_element_id),
+			  null);
+
+		try {
+			super.type = (EvaluationType)MeasurementStorableObjectPool.getStorableObject(new Identifier(et.type_id), true);
+			super.parentAction = (et.measurement_id.identifier_string.length() != 0) ? (Measurement) MeasurementStorableObjectPool.getStorableObject(new Identifier(et.measurement_id), true) : null;
+
+			this.thresholdSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(et.threshold_set_id), true);
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	public Object getTransferable() {

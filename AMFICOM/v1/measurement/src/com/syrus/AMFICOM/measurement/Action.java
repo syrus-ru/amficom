@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.21 2005/02/10 14:54:42 bob Exp $
+ * $Id: Action.java,v 1.22 2005/04/01 15:40:18 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,15 +8,17 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
+
+import org.omg.CORBA.portable.IDLEntity;
+
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/02/10 14:54:42 $
+ * @version $Revision: 1.22 $, $Date: 2005/04/01 15:40:18 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -33,15 +35,8 @@ public abstract class Action extends StorableObject implements TypedObject {
 		super(id);
 	}
 
-	Action(StorableObject_Transferable transferable,
-				  ActionType type,
-				  Identifier monitoredElementId,
-				  Action parentAction) {
-		super(transferable);
-		this.type = type;
-		this.monitoredElementId = monitoredElementId;
-
-		this.parentAction = parentAction;
+	Action() {
+		super();
 	}
 
 	Action(Identifier id,
@@ -59,6 +54,17 @@ public abstract class Action extends StorableObject implements TypedObject {
 				creatorId,
 				modifierId,
 				version);
+		this.type = type;
+		this.monitoredElementId = monitoredElementId;
+
+		this.parentAction = parentAction;
+	}
+	
+	protected void fromTransferable(IDLEntity transferable,
+	              				  ActionType type,
+	            				  Identifier monitoredElementId,
+	            				  Action parentAction) throws CreateObjectException {
+		super.fromTransferable(transferable);
 		this.type = type;
 		this.monitoredElementId = monitoredElementId;
 
