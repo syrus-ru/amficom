@@ -9,14 +9,16 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
-import java.util.Iterator;
+
 
 public class ObjectResourceListBox extends JList
 		implements PropertyRenderer, PropertyEditor
@@ -24,11 +26,11 @@ public class ObjectResourceListBox extends JList
 	static public final String _DEFAULT_COL_ID = "name";
 	static public final String _ID_COL_ID = "id";
 
-	public Vector vec = new Vector();
+	public List vec = new ArrayList();
 	String obj_id = "";
 	String type = "";
 	String col_id = "name";
-	Hashtable objs = new Hashtable();
+	HashMap objs = new HashMap();
 
 	boolean doRestrict = false;
 	String domain_id = "";
@@ -89,19 +91,21 @@ public class ObjectResourceListBox extends JList
 //        this.setMaximumRowCount(5);
 	}
 
-	public ObjectResourceListBox(Hashtable objs, String col_id)
+	public ObjectResourceListBox(HashMap objs, String col_id)
 	{
 		super();
 		this.objs = objs;
 		this.col_id = col_id;
 
 		if(objs != null)
-			for(Enumeration enum = objs.elements(); enum.hasMoreElements();)
+    {
+      Iterator it = objs.values().iterator();
+			for(;it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource)enum.nextElement();
-				vec.addElement(or);
+				ObjectResource or = (ObjectResource )it.next();
+				vec.add(or);
 			}
-
+    }
 //        setModel(new DefaultComboBoxModel(vec));
 		setListData(vec);
 
@@ -114,7 +118,7 @@ public class ObjectResourceListBox extends JList
 //        this.setMaximumRowCount(5);
 	}
 
-	public ObjectResourceListBox(Hashtable objs, String col_id, Object obj)
+	public ObjectResourceListBox(HashMap objs, String col_id, Object obj)
 	{
 		this(objs, col_id);
 		setSelected(obj);
@@ -125,14 +129,16 @@ public class ObjectResourceListBox extends JList
 		this.type = type;
 		this.col_id = col_id;
 
-		objs = Pool.getHash(type);
+		objs = (HashMap)Pool.getMap(type);
 		if(objs != null)
-			for(Enumeration enum = objs.elements(); enum.hasMoreElements();)
+    {
+      Iterator it = objs.values().iterator();
+			for(;it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource)enum.nextElement();
-				vec.addElement(or);
+				ObjectResource or = (ObjectResource )it.next();
+				vec.add(or);
 			}
-
+    }
 //        setModel(new DefaultComboBoxModel(vec));
 		setListData(vec);
 
@@ -151,12 +157,12 @@ public class ObjectResourceListBox extends JList
 		setSelected(obj);
 	}
 	
-	public ObjectResourceListBox(Hashtable objs, Object obj)
+	public ObjectResourceListBox(HashMap objs, Object obj)
 	{
 		this(objs, _DEFAULT_COL_ID, obj);
 	}
 	
-	public ObjectResourceListBox(Hashtable objs)
+	public ObjectResourceListBox(HashMap objs)
 	{
 		this(objs, _DEFAULT_COL_ID);
 	}
@@ -171,41 +177,36 @@ public class ObjectResourceListBox extends JList
 		this(type, _DEFAULT_COL_ID);
 	}
 
-	public void setContents(Collection co)
+	public void setContents(Collection enum)
 	{
-		vec = new Vector();
-		for(Iterator it = co.iterator(); it.hasNext();)
-		{
-			vec.addElement(it.next());
-		}
-	}
-
-	public void setContents(Enumeration enum)
-	{
-		vec = new Vector();
+		vec = new ArrayList();
 		if(enum != null)
-			for(; enum.hasMoreElements();)
+    {
+      Iterator it = enum.iterator();
+			for(;it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource )enum.nextElement();
-				vec.addElement(or);
+				ObjectResource or = (ObjectResource )it.next();
+				vec.add(or);
 			}
-
+    }
 //        setModel(new DefaultComboBoxModel(vec));
 		if(doRestrict)
 			restrictContents();
 		setListData(vec);
 	}
 
-	public void setContents(Hashtable objs)
+	public void setContents(HashMap objs)
 	{
-		vec = new Vector();
+		vec = new ArrayList();
 		if(objs != null)
-			for(Enumeration enum = objs.elements(); enum.hasMoreElements();)
+    {
+      Iterator it = objs.values().iterator();
+			for(;it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource )enum.nextElement();
-				vec.addElement(or);
+				ObjectResource or = (ObjectResource )it.next();
+				vec.add(or);
 			}
-
+    }
 //        setModel(new DefaultListModel(vec));
 		if(doRestrict)
 			restrictContents();
@@ -215,13 +216,13 @@ public class ObjectResourceListBox extends JList
 
 	public void setContents(String type)
 	{
-		Hashtable objs = Pool.getHash(type);
+		HashMap objs = (HashMap)Pool.getMap(type);
 		setContents(objs);
 	}
 
 	public void removeAll()
 	{
-		vec.removeAllElements();
+		vec.clear();
 		setListData(vec);
 	}
 	
@@ -257,24 +258,27 @@ public class ObjectResourceListBox extends JList
 		setListData(vec);
 	}
 	
-	public void add(Hashtable h)
+	public void add(HashMap h)
 	{
-		add(h.elements());
+		add(h);
 	}
 
-	public void add(Vector v)
+	public void add(List v)
 	{
-		add(v.elements());
+		add(v);
 	}
 
-	public void add(Enumeration e)
+	public void add(Collection e)
 	{
 		if(e != null)
-			for(; e.hasMoreElements();)
+    {
+      Iterator it = e.iterator();
+			for(; it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource )e.nextElement();
-				vec.addElement(or);
+				ObjectResource or = (ObjectResource )it.next();
+				vec.add(or);
 			}
+    }
 		if(doRestrict)
 			restrictContents();
 		setListData(vec);
@@ -310,21 +314,16 @@ public class ObjectResourceListBox extends JList
 		if(obj instanceof String)
 		{
 			obj_id = (String)obj;
-			for(Enumeration enum = vec.elements(); enum.hasMoreElements();)
+      Iterator it = vec.listIterator();
+			for(;it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource )enum.nextElement();
+				ObjectResource or = (ObjectResource )it.next();
 				if(or.getId().equals(obj_id))
 				{
 					this.setSelectedValue(or, true);
 					break;
 				}
 			}
-/*
-			obj_id = (String)obj;
-			Object or = Pool.get(type, obj_id);
-			if(or != null)
-				this.setSelectedValue(or, true);
-*/
 		}
 	}
 
@@ -338,9 +337,11 @@ public class ObjectResourceListBox extends JList
 		if(obj instanceof String)
 		{
 			obj_id = (String )obj;
-			for(Enumeration enum = vec.elements(); enum.hasMoreElements();)
+      
+      Iterator it = vec.listIterator();
+			for(;it.hasNext();)
 			{
-				ObjectResource or1 = (ObjectResource )enum.nextElement();
+				ObjectResource or1 = (ObjectResource )it.next();
 				if(or1.getId().equals(obj_id))
 				{
 					or = or1;
@@ -355,9 +356,10 @@ public class ObjectResourceListBox extends JList
 		if(or != null)
 		{
 			int index = 0;
-			for(Enumeration enum = vec.elements(); enum.hasMoreElements();)
+      Iterator it = vec.listIterator();
+			for(;it.hasNext();)
 			{
-				ObjectResource or2 = (ObjectResource )enum.nextElement();
+				ObjectResource or2 = (ObjectResource )it.next();
 				if(or2.equals(or))
 				{
 					this.getSelectionModel().removeSelectionInterval(index, index);
@@ -378,10 +380,12 @@ public class ObjectResourceListBox extends JList
 
 	public void restrictContents()
 	{
-		Vector vec_to_remove = new Vector();
-		for(Enumeration enum = vec.elements(); enum.hasMoreElements();)
-		{
-			ObjectResource or = (ObjectResource )enum.nextElement();
+		List vec_to_remove = new ArrayList();
+
+    Iterator it = vec.listIterator();
+    for(;it.hasNext();)
+    {
+      ObjectResource or = (ObjectResource )it.next();
 			if(!or.getDomainId().equals(domain_id))
 				vec_to_remove.add(or);
 		}
@@ -398,5 +402,9 @@ public class ObjectResourceListBox extends JList
 	{
 		return domain_id;
 	}
-
+  
+  public void setListData(List data)
+  {
+    super.setListData(data.toArray());
+  }
 }

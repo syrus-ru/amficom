@@ -581,39 +581,44 @@ public static final String predict  = "PREDICT";
 
 // Definition of the helping functions.
 /**/
- private static CommandPermissionAttributes getCommand(String commandName)
- {
-   Hashtable h = Pool.getHash(CommandPermissionAttributes.typ);
-   if(h == null)
-     return null;
-   for(Enumeration e = h.elements(); e.hasMoreElements();)
-   {
-     CommandPermissionAttributes tmp =
-                       (CommandPermissionAttributes)e.nextElement();
-     if(tmp.codename.equals(commandName))
-     {
-       return tmp;
-     }
+  private static CommandPermissionAttributes getCommand(String commandName)
+  {
+    HashMap h = (HashMap)Pool.getMap(CommandPermissionAttributes.typ);
+    if(h == null)
+      return null;
+    
+    Iterator it = h.values().iterator(); 
+    for(;it.hasNext();)
+    {
+      CommandPermissionAttributes tmp =
+                         (CommandPermissionAttributes)it.next();
+      if(tmp.codename.equals(commandName))
+      {
+         return tmp;
+      }
    }
    return null;
- }
+  }
 
 
  /**/
- private static boolean hasEqualElements(Vector a, Vector b)
- {
-   for(int i=0; i<a.size(); i++)
-   {
-     for(int j=0; j<b.size(); j++)
-     {
-       String as = (String)a.get(i);
-       String bs = (String)b.get(j);
-       if(as.equals(bs))
-         return true;
-     }
-   }
-   return false;
- }
+  private static boolean hasEqualElements(List a, List b)
+  {
+    ListIterator aLIt = a.listIterator();
+    ListIterator bLIt = b.listIterator();
+    
+    for(;aLIt.hasNext();)
+    {
+      for(;bLIt.hasNext();)
+      {
+        String as = (String)aLIt.next();
+        String bs = (String)bLIt.next();
+        if(as.equals(bs))
+          return true;
+      }
+    }
+    return false;
+  }
 
  /**/
  private static boolean hasEqualElements(Vector a, Vector b, String s)

@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorGroup.java,v 1.1 2004/08/06 12:14:19 bass Exp $
+ * $Id: OperatorGroup.java,v 1.2 2004/08/19 15:50:00 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,20 +9,25 @@
 package com.syrus.AMFICOM.Client.Resource.Object;
 
 import java.io.*;
-import java.util.*;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.syrus.AMFICOM.CORBA.Admin.*;
 import com.syrus.AMFICOM.Client.Administrate.Object.UI.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
+import java.util.ListIterator;
 
 /**
  * This class actually belongs to <tt>admin_v1</tt> module. It was
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/08/06 12:14:19 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.2 $, $Date: 2004/08/19 15:50:00 $
  * @module generalclient_v1
  */
 public class OperatorGroup extends AdminObjectResource implements Serializable
@@ -42,11 +47,11 @@ public class OperatorGroup extends AdminObjectResource implements Serializable
   public long modified;
   public String modified_by="";
 
-  public Vector user_ids = new Vector();
-  public Vector exec_ids = new Vector();
+  public List user_ids = new ArrayList();
+  public List exec_ids = new ArrayList();
 
-  public Hashtable users = new Hashtable();
-	public Hashtable execs = new Hashtable();
+  public HashMap users = new HashMap();
+	public HashMap execs = new HashMap();
 
 
   static final public String typ = "operatorgroup";
@@ -73,10 +78,10 @@ public class OperatorGroup extends AdminObjectResource implements Serializable
       String created_by,
       long modified,
       String modified_by,
-      Vector operator_ids,
-      Vector role_ids,
-      Vector privilege_ids,
-      Vector execIds)
+      List operator_ids,
+      List role_ids,
+      List privilege_ids,
+      List execIds)
   {
 //    super("operatorgroup");
     this.id = id;
@@ -112,7 +117,7 @@ public class OperatorGroup extends AdminObjectResource implements Serializable
     modified_by = transferable.modified_by;
 
     count = transferable.user_ids.length;
-    user_ids = new Vector(count);
+    user_ids = new ArrayList();
     for(i = 0; i < count; i++)
       user_ids.add(transferable.user_ids[i]);
   }
@@ -165,34 +170,38 @@ public class OperatorGroup extends AdminObjectResource implements Serializable
     int i;
 
     l = user_ids.size();
-    users = new Hashtable();
-    for(i = 0; i < l; i++)
+    users = new HashMap();
+    
+    ListIterator lIt = user_ids.listIterator();
+    for(; lIt.hasNext();)
     {
-      Object o = Pool.get(User.typ, (String)user_ids.get(i));
+      String str = (String)lIt.next();
+      Object o = Pool.get(User.typ, str);
       if(o != null)
-        users.put(user_ids.get(i), o);
+        users.put(str, o);
     }
   }
 
-  public Enumeration getChildren(String key)
+  public Collection getChildren(String key)
   {
     if(key.equals(User.typ))
-      return users.elements();
+      return users.values();
 
-    return new Vector().elements();
+    return new ArrayList();
   }
-  public Enumeration getChildTypes()
+  public Collection getChildTypes()
   {
-    Vector ret = new Vector();
+    ArrayList ret = new ArrayList();
     ret.add(User.typ);
-    return ret.elements();
+    
+    return ret;
   }
 
-  public Vector getChildIds(String key)
+  public List getChildIds(String key)
   {
     if(key.equals(User.typ))
       return user_ids;
-    return new Vector();
+    return new ArrayList();
   }
 
   public void addChildId(String key, String id)
@@ -207,9 +216,9 @@ public class OperatorGroup extends AdminObjectResource implements Serializable
   }
 
 
-  public static Vector getChildTypes_()
+  public static List getChildTypes_()
   {
-    Vector ret = new Vector();
+    ArrayList ret = new ArrayList();
     ret.add(User.typ);
     return ret;
   }
@@ -280,8 +289,8 @@ public class OperatorGroup extends AdminObjectResource implements Serializable
 		created_by = (String )in.readObject();
 		modified = in.readLong();
 		modified_by = (String )in.readObject();
-		user_ids = (Vector )in.readObject();
-		exec_ids = (Vector )in.readObject();
+		user_ids = (List)in.readObject();
+		exec_ids = (List)in.readObject();
 
 		transferable = new OperatorGroup_Transferable();
 		updateLocalFromTransferable();

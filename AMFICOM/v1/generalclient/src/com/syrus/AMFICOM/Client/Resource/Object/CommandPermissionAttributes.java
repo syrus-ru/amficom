@@ -1,6 +1,9 @@
 package com.syrus.AMFICOM.Client.Resource.Object;
-import java.util.*;
 
+import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.ArrayList;
 
 import com.syrus.AMFICOM.CORBA.Admin.*;
 import com.syrus.AMFICOM.Client.Administrate.Object.UI.*;
@@ -27,11 +30,11 @@ public class CommandPermissionAttributes extends AdminObjectResource implements 
   public boolean otherW=false;    //9  ... for other
   public boolean otherX=false;    //10 ... for other
 
-  public Vector category_ids = new Vector();
-  public Vector group_ids = new Vector();
+  public List category_ids = new ArrayList();
+  public List group_ids = new ArrayList();
 
-  public Hashtable categories = new Hashtable();
-  public Hashtable groups = new Hashtable();
+  public HashMap categories = new HashMap();
+  public HashMap groups = new HashMap();
 
   public String owner_id="";
   public String name="";
@@ -227,7 +230,7 @@ public class CommandPermissionAttributes extends AdminObjectResource implements 
     this.setRWXstateFromString(transferable.rwx);
 
     count = transferable.category_ids.length;
-    this.category_ids = new Vector(count);
+    this.category_ids = new ArrayList();
     for(i=0; i<count; i++)
       this.category_ids.add(transferable.category_ids[i]);
 
@@ -304,7 +307,7 @@ public class CommandPermissionAttributes extends AdminObjectResource implements 
     int i;
 
     l = category_ids.size();
-    categories = new Hashtable();
+    categories = new HashMap();
     for(i = 0; i < l; i++)
     {
       Object o = Pool.get(OperatorCategory.typ, (String)category_ids.get(i));
@@ -313,27 +316,27 @@ public class CommandPermissionAttributes extends AdminObjectResource implements 
     }
 
   }
-  public Enumeration getChildren(String key)
+  public Collection getChildren(String key)
   {
     if(key.equals(OperatorCategory.typ))
     {
-      return categories.elements();
+      return categories.values();
     }
-    return new Vector().elements();
+    return new ArrayList();
   }
 
-  public Enumeration getChildTypes()
+  public Collection getChildTypes()
   {
-    Vector ret = new Vector();
+    List ret = new ArrayList();
     ret.add(OperatorCategory.typ);
-    return ret.elements();
+    return ret;
   }
 
-  public Vector getChildIds(String key)
+  public List getChildIds(String key)
   {
     if(key.equals(OperatorCategory.typ))
       return category_ids;
-    return new Vector();
+    return new ArrayList();
   }
 
   public void addChildId(String key, String id)
@@ -347,15 +350,12 @@ public class CommandPermissionAttributes extends AdminObjectResource implements 
       category_ids.remove(id);
   }
 
-
-  public static Vector getChildTypes_()
+  public static Collection getChildTypes_()
   {
-    Vector ret = new Vector();
+    List ret = new ArrayList();
     ret.add(OperatorCategory.typ);
     return ret;
   }
-
-
 
   public Class getChildClass(String type)
   {
@@ -364,7 +364,6 @@ public class CommandPermissionAttributes extends AdminObjectResource implements 
 
     return ObjectResource.class;
   }
-
 
   public ObjectResourceModel getModel()
   {

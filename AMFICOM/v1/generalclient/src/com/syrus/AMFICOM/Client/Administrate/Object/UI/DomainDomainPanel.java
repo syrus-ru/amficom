@@ -2,9 +2,12 @@ package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.*;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Collection;
+import java.util.HashMap;
+
 import javax.swing.*;
 
 import oracle.jdeveloper.layout.*;
@@ -171,46 +174,36 @@ public class DomainDomainPanel extends GeneralPanel
     this.fatherDomain.setTyp(Domain.typ);
     this.fatherDomain.remove(this.domain);
     this.fatherDomain.setSelectedTyp(Domain.typ, domain.domain_id);
-    {
-      List dSet = new DataSet(this.domain.getChildren(Domain.typ));
-      ObjectResourceSorter sorter = new ObjectResourceNameSorter();//MonitoredElement.getDefaultSorter();
-      sorter.setDataSet(dSet);
-      dSet = sorter.default_sort();
-      internalDomainsList.setContents(dSet);
-    }
+    ObjectResourceSorter sorter = new ObjectResourceNameSorter();//MonitoredElement.getDefaultSorter();
+    sorter.setDataSet(this.domain.getChildren(Domain.typ));
+    internalDomainsList.setContents(sorter.default_sort());
 
-
-    {
-      List dSet = new DataSet(getOtherDomains());
-      ObjectResourceSorter sorter = new ObjectResourceNameSorter();//MonitoredElement.getDefaultSorter();
-      sorter.setDataSet(dSet);
-      dSet = sorter.default_sort();
-      otherDomainsList.setContents(dSet);
-    }
+    sorter = new ObjectResourceNameSorter();//MonitoredElement.getDefaultSorter();
+    sorter.setDataSet(getOtherDomains());
+    otherDomainsList.setContents(sorter.default_sort());
   }
 
 //--------------------------------------------------------
-  private Enumeration getOtherDomains()
+  private Collection getOtherDomains()
   {
-    Vector exeptOtherIds = this.internalDomainsList.getVectorIDfromList();
+    List exeptOtherIds = this.internalDomainsList.getVectorIDfromList();
     exeptOtherIds.add(this.domain.id);
     exeptOtherIds.add(this.fatherDomain.getSelectedId());
 
 
-    Hashtable other = new Hashtable();
-    Hashtable tmp_h = Pool.getHash(Domain.typ);
+    HashMap other = new HashMap();
+    HashMap tmp_h = (HashMap) Pool.getMap(Domain.typ);
 
     if(tmp_h == null)
-      tmp_h = new Hashtable();
+      tmp_h = new HashMap();
 
-    for(Enumeration e = tmp_h.elements();
-        e.hasMoreElements(); )
+    for(Iterator it = tmp_h.values().iterator(); it.hasNext();)
     {
-      ObjectResource o = (ObjectResource)e.nextElement();
+      ObjectResource o = (ObjectResource)it.next();
       if(!exeptOtherIds.contains(o.getId()))
         other.put(o.getId(), o);
     }
-    return other.elements();
+    return other.values();
   }
 
 //--------------------------------------------------------
@@ -253,7 +246,7 @@ public class DomainDomainPanel extends GeneralPanel
       fatherID = "";
     Domain fatherDomain = (Domain)Pool.get(Domain.typ, fatherID);
 
-    Vector internalIds = this.internalDomainsList.getVectorIDfromList();
+    List internalIds = this.internalDomainsList.getVectorIDfromList();
 
     if(internalIds.contains(fatherID))
     {

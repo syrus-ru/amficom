@@ -1,8 +1,11 @@
 package com.syrus.AMFICOM.Client.Administrate.Object;
 import java.awt.*;
 
+import java.util.Enumeration;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Map;
+
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.*;
@@ -647,7 +650,7 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
     return vec;
   }
 
-  private void setVectorFromPool(Vector vec, String typ)
+  private void setVectorFromPool(List vec, String typ)
   {
     ImageIcon ii = getIcon(typ);
 
@@ -670,7 +673,7 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
 
 
 
-  private void setCommandVectorFromPool(Vector vec, String filterGroup)
+  private void setCommandVectorFromPool(List vec, String filterGroup)
   {
     ObjectResourceTreeNode ortn;
 
@@ -693,7 +696,7 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
 
 
 
-  private void setVectorFromObjectResource(AdminObjectResource or, String typ, Vector vec)
+  private void setVectorFromObjectResource(AdminObjectResource or, String typ, List vec)
   {
     or.updateLocalFromTransferable();
     ImageIcon ii = getIcon(typ);
@@ -713,29 +716,22 @@ public class AdministrateTreeModel extends ObjectResourceTreeModel
     }
   }
 
-
-
-  private Enumeration getSortedElements(Enumeration e)
+  private List getSortedElements(Map h)
   {
-    List dSet = new DataSet(e);
     ObjectResourceSorter sorter = new ObjectResourceNameSorter();//  MonitoredElement.getDefaultSorter();
-    sorter.setDataSet(dSet);
-    dSet = sorter.default_sort();
-    return Collections.enumeration(dSet);
+    sorter.setDataSet(h);
+  
+    return sorter.default_sort();
   }
 
 
 
-  private Enumeration getSortedElements(Hashtable h)
+  private Enumeration getSortedElements(List l)
   {
-    return getSortedElements(h.elements());
-  }
-
-
-
-  private Enumeration getSortedElements(Vector v)
-  {
-    return getSortedElements(v.elements());
+    ObjectResourceSorter sorter = new ObjectResourceNameSorter();//  MonitoredElement.getDefaultSorter();
+    sorter.setDataSet(l);
+  
+    return sorter.default_sort();
   }
 
 

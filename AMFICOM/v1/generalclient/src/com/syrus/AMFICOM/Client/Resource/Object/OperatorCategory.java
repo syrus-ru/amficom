@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorCategory.java,v 1.1 2004/08/06 12:14:19 bass Exp $
+ * $Id: OperatorCategory.java,v 1.2 2004/08/19 15:50:00 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,11 @@
 package com.syrus.AMFICOM.Client.Resource.Object;
 
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 
 import com.syrus.AMFICOM.CORBA.Admin.*;
 import com.syrus.AMFICOM.Client.Administrate.Object.UI.*;
@@ -21,8 +25,8 @@ import com.syrus.AMFICOM.Client.Resource.*;
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/08/06 12:14:19 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.2 $, $Date: 2004/08/19 15:50:00 $
  * @module generalclient_v1
  */
 public class OperatorCategory extends AdminObjectResource implements Serializable
@@ -47,8 +51,8 @@ public class OperatorCategory extends AdminObjectResource implements Serializabl
   public String description="";
   public long modified = 0;
 
-  public Vector user_ids = new Vector();
-  public Hashtable users = new Hashtable();
+  public List user_ids = new ArrayList();
+  public HashMap users = new HashMap();
 
   static final public String typ = "operatorcategory";
 
@@ -69,7 +73,7 @@ public class OperatorCategory extends AdminObjectResource implements Serializabl
       String name,
       String codename,
       String description,
-      Vector user_ids)
+      List user_ids)
   {
 //    super("operatorcategory");
     this.id = id;
@@ -92,10 +96,10 @@ public class OperatorCategory extends AdminObjectResource implements Serializabl
     name = transferable.name;
     codename = transferable.codename;
     description = transferable.description;
-	modified = transferable.modified;
+  	modified = transferable.modified;
 
     count = transferable.user_ids.length;
-    user_ids = new Vector(count);
+    user_ids = new ArrayList();
     for(i = 0; i < count; i++)
       user_ids.add(transferable.user_ids[i]);
   }
@@ -144,7 +148,7 @@ public class OperatorCategory extends AdminObjectResource implements Serializabl
    operator_ids.add(transferable.operator_ids[i]);
 */
     l = user_ids.size();
-    users = new Hashtable();
+    users = new HashMap();
     for(i = 0; i < l; i++)
     {
       Object o = Pool.get(User.typ, (String)user_ids.get(i));
@@ -153,27 +157,27 @@ public class OperatorCategory extends AdminObjectResource implements Serializabl
     }
   }
 
-  public Enumeration getChildren(String key)
+  public Collection getChildren(String key)
   {
     if(key.equals(User.typ))
     {
-      return users.elements();
+      return users.values();
     }
-    return new Vector().elements();
+    return new ArrayList();
   }
 
-  public Enumeration getChildTypes()
+  public Collection getChildTypes()
   {
-    Vector ret = new Vector();
+    List ret = new ArrayList();
     ret.add(User.typ);
-    return ret.elements();
+    return ret;
   }
 
-  public Vector getChildIds(String key)
+  public List getChildIds(String key)
   {
     if(key.equals(User.typ))
       return user_ids;
-    return new Vector();
+    return new ArrayList();
   }
 
   public void addChildId(String key, String id)
@@ -189,9 +193,9 @@ public class OperatorCategory extends AdminObjectResource implements Serializabl
   }
 
 
-  public static Vector getChildTypes_()
+  public static Collection getChildTypes_()
   {
-    Vector ret = new Vector();
+    List ret = new ArrayList();
     ret.add(User.typ);
     return ret;
   }
@@ -222,11 +226,13 @@ public class OperatorCategory extends AdminObjectResource implements Serializabl
 
   static public String idByCodeName(String code)
   {
-    for(Enumeration enum =
-        Pool.getHash(OperatorCategory.typ).elements();
-        enum.hasMoreElements();)
+    HashMap hM = (HashMap) Pool.getMap(OperatorCategory.typ);
+    if (hM == null)
+      return "";
+      
+    for(Iterator it = hM.values().iterator(); it.hasNext();)
     {
-      OperatorCategory cat = (OperatorCategory)enum.nextElement();
+      OperatorCategory cat = (OperatorCategory)it.next();
       if(cat.codename.equals(code))
         return cat.id;
     }
@@ -266,7 +272,7 @@ public class OperatorCategory extends AdminObjectResource implements Serializabl
 		codename = (String )in.readObject();
 		description = (String )in.readObject();
 		modified = in.readLong();
-		user_ids = (Vector )in.readObject();
+		user_ids = (List)in.readObject();
 
 		transferable = new OperatorCategory_Transferable();
 		updateLocalFromTransferable();

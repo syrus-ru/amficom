@@ -164,7 +164,7 @@ public class UserPanel  extends GeneralPanel
         c.add(o);
     }
 
-    this.groupList.setContents(g.elements());
-    this.categoryList.setContents(c.elements());
+    this.groupList.setContents(g);
+    this.categoryList.setContents(c);
   }
 }

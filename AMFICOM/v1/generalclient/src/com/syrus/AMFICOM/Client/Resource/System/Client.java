@@ -1,5 +1,5 @@
 /*
- * $Id: Client.java,v 1.1 2004/08/06 12:14:19 bass Exp $
+ * $Id: Client.java,v 1.2 2004/08/19 15:50:00 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,9 @@
 package com.syrus.AMFICOM.Client.Resource.System;
 
 import java.io.*;
-import java.util.*;
+import java.util.List;
+import java.util.Collection;
+import java.util.ArrayList;
 
 import com.syrus.AMFICOM.CORBA.Admin.*;
 import com.syrus.AMFICOM.Client.Administrate.Object.UI.*;
@@ -22,8 +24,8 @@ import com.syrus.AMFICOM.Client.Resource.Object.*;
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/08/06 12:14:19 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.2 $, $Date: 2004/08/19 15:50:00 $
  * @module generalclient_v1
  */
 public class Client extends AdminObjectResource implements Serializable
@@ -134,9 +136,9 @@ public class Client extends AdminObjectResource implements Serializable
 		return ObjectResource.class;
 	}
 
-  public Vector getChildIds(String key)
+  public List getChildIds(String key)
   {
-    return new Vector();
+    return new ArrayList();
   }
 
   public void addChildId(String key, String id)
@@ -147,19 +149,19 @@ public class Client extends AdminObjectResource implements Serializable
   }
 
 
-	public Enumeration getChildren(String key)
+	public Collection getChildren(String key)
 	{
-		return new Vector().elements();
+		return new ArrayList();
 	}
 
-	public Enumeration getChildTypes()
+	public Collection getChildTypes()
 	{
-		return new Vector().elements();
+		return new ArrayList();
 	}
 
-  public static Vector getChildTypes_()
+  public static Collection getChildTypes_()
   {
-    return new Vector();
+    return new ArrayList();
   }
 
 	public static ObjectResourceDisplayModel getDefaultDisplayModel()

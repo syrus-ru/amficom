@@ -2,8 +2,10 @@ package com.syrus.AMFICOM.Client.Resource.Object;
 
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.StubResource;
-import java.util.Enumeration;
-import java.util.Vector;
+
+import java.util.List;
+import java.util.Collection;
+
 /**
  * <p>Title: </p>
  * <p>Description: </p>
@@ -32,9 +34,9 @@ public abstract class AdminObjectResource extends StubResource
   }
 */
 
-	public abstract Enumeration getChildTypes();
-	public abstract Enumeration getChildren(String key);
-	public abstract Vector getChildIds(String key);
+	public abstract Collection getChildTypes();
+	public abstract Collection getChildren(String key);
+	public abstract List getChildIds(String key);
 	public abstract void addChildId(String key, String id);
 	public abstract void removeChildId(String key, String id);
 	public abstract String getOwnerId();

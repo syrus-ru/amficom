@@ -1,7 +1,9 @@
 package com.syrus.AMFICOM.Client.Resource.Object;
 
-import java.util.*;
-
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.HashMap;
 
 import com.syrus.AMFICOM.CORBA.Admin.*;
 import com.syrus.AMFICOM.Client.Administrate.Object.UI.*;
@@ -20,11 +22,11 @@ public class User extends AdminObjectResource
   public long last_login;
   public String type="";
 
-  public Vector category_ids = new Vector();
-  public Vector group_ids = new Vector();
+  public List category_ids = new ArrayList();
+  public List group_ids = new ArrayList();
 
-  public Hashtable groups = new Hashtable();
-  public Hashtable categories = new Hashtable();
+  public HashMap groups = new HashMap();
+  public HashMap categories = new HashMap();
 
   static final public String typ = "user";
 
@@ -53,14 +55,14 @@ public class User extends AdminObjectResource
     type = transferable.type;
 
     l = transferable.category_ids.length;
-    this.category_ids = new Vector();
+    this.category_ids = new ArrayList();
     for(i=0; i<l; i++)
     {
       this.category_ids.add(transferable.category_ids[i]);
     }
 
     l = transferable.group_ids.length;
-    this.group_ids = new Vector();
+    this.group_ids = new ArrayList();
     for(i=0; i<l; i++)
     {
       this.group_ids.add(transferable.group_ids[i]);
@@ -117,7 +119,7 @@ public class User extends AdminObjectResource
     int i;
 
     l = category_ids.size();
-    categories = new Hashtable();
+    categories = new HashMap();
     for(i = 0; i < l; i++)
     {
       Object o = Pool.get(OperatorCategory.typ, (String)category_ids.get(i));
@@ -126,7 +128,7 @@ public class User extends AdminObjectResource
     }
 
     l = group_ids.size();
-    groups = new Hashtable();
+    groups = new HashMap();
     for(i = 0; i < l; i++)
     {
       Object o = Pool.get(OperatorGroup.typ, (String)group_ids.get(i));
@@ -171,13 +173,13 @@ public class User extends AdminObjectResource
   {
   }
 
-  public Vector getChildIds(String key)
+  public List getChildIds(String key)
   {
     if(key.equals(OperatorGroup.typ))
       return group_ids;
     if(key.equals(OperatorCategory.typ))
       return category_ids;
-    return new Vector();
+    return new ArrayList();
   }
 
   public void addChildId(String key, String id)
@@ -196,30 +198,30 @@ public class User extends AdminObjectResource
   }
 
 
-  public Enumeration getChildren(String key)
+  public Collection getChildren(String key)
   {
     if(key.equals(OperatorGroup.typ))
     {
-      return groups.elements();
+      return groups.values();
     }
     if(key.equals(OperatorCategory.typ))
     {
-      return categories.elements();
+      return categories.values();
     }
-    return new Vector().elements();
+    return new ArrayList();
   }
 
-  public Enumeration getChildTypes()
+  public Collection getChildTypes()
   {
-    Vector ret = new Vector();
+    List ret = new ArrayList();
     ret.add(OperatorCategory.typ);
     ret.add(OperatorGroup.typ);
-    return ret.elements();
+    return ret;
   }
 
-  public static Vector getChildTypes_()
+  public static Collection getChildTypes_()
   {
-    Vector ret = new Vector();
+    List ret = new ArrayList();
     ret.add(OperatorCategory.typ);
     ret.add(OperatorGroup.typ);
     return ret;
@@ -228,7 +230,4 @@ public class User extends AdminObjectResource
   public  void setModificationTime(long time)
   {
   }
-
-
-
 }

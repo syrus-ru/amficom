@@ -1,5 +1,9 @@
 package com.syrus.AMFICOM.Client.Resource.Object;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
 
 
 import com.syrus.AMFICOM.CORBA.Admin.*;
@@ -22,11 +26,11 @@ public class ObjectPermissionAttributes extends AdminObjectResource implements A
   public boolean otherW=false;    //9  ... for other
   public boolean otherX=false;    //10 ... for other
 
-  public Vector category_ids = new Vector();
-  public Vector group_ids = new Vector();
+  public List category_ids = new ArrayList();
+  public List group_ids = new ArrayList();
 
-  public Hashtable categories = new Hashtable();
-  public Hashtable groups = new Hashtable();
+  public HashMap categories = new HashMap();
+  public HashMap groups = new HashMap();
 
   public String owner_id="";
   public String name="";
@@ -222,7 +226,7 @@ public class ObjectPermissionAttributes extends AdminObjectResource implements A
 
 
     count = transferable.group_ids.length;
-    this.group_ids = new Vector(count);
+    this.group_ids = new ArrayList(count);
     for(i=0; i<count; i++)
       this.group_ids.add(transferable.group_ids[i]);
   }
@@ -260,7 +264,7 @@ public class ObjectPermissionAttributes extends AdminObjectResource implements A
     int i;
 
     l = group_ids.size();
-    groups = new Hashtable();
+    groups = new HashMap();
     for(i = 0; i < l; i++)
     {
       Object o = Pool.get(OperatorGroup.typ, (String)group_ids.get(i));
@@ -268,20 +272,20 @@ public class ObjectPermissionAttributes extends AdminObjectResource implements A
         groups.put(group_ids.get(i), o);
     }
   }
-  public Enumeration getChildren(String key)
+  public Collection getChildren(String key)
   {
     if(key.equals(OperatorGroup.typ))
     {
-      return groups.elements();
+      return groups.values();
     }
-    return new Vector().elements();
+    return new ArrayList();
   }
 
-  public Vector getChildIds(String key)
+  public List getChildIds(String key)
   {
     if(key.equals(OperatorGroup.typ))
       return group_ids;
-    return new Vector();
+    return new ArrayList();
   }
 
   public void addChildId(String key, String id)
@@ -297,16 +301,16 @@ public class ObjectPermissionAttributes extends AdminObjectResource implements A
   }
 
 
-  public Enumeration getChildTypes()
+  public Collection getChildTypes()
   {
-    Vector ret = new Vector();
+    List ret = new ArrayList();
     ret.add(OperatorGroup.typ);
-    return ret.elements();
+    return ret;
   }
 
-  public static Vector getChildTypes_()
+  public static List getChildTypes_()
   {
-    Vector ret = new Vector();
+    List ret = new ArrayList();
     ret.add(OperatorGroup.typ);
     return ret;
   }

@@ -1,7 +1,10 @@
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
-
-import java.util.*;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.HashMap;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
@@ -33,18 +36,22 @@ public class NewUpDater{
     for(int i=0; i<childTyps.length; i++){
       for(int j=0; j<parentTyps.length; j++){
         if(childTyps[i].equals(parentTyps[j])){ //Or can link to child and child can link to Or;
-          Vector childIds = aor.getChildIds(childTyps[i]);
-          Hashtable h = Pool.getHash(childTyps[i]);
+          List childIds = aor.getChildIds(childTyps[i]);
+          HashMap h = (HashMap)Pool.getMap(childTyps[i]);
           if(h == null)
-            h = new Hashtable();
-          for(Enumeration e = h.elements(); e.hasMoreElements();){
-            AdminObjectResource child = (AdminObjectResource)e.nextElement();
-            Vector parentIds = child.getChildIds(aor.getTyp());
-            if(childIds.contains(child.getId()) && !parentIds.contains(aor.getId())){
+            h = new HashMap();
+            
+          for(Iterator it = h.values().iterator(); it.hasNext();)
+          {
+            AdminObjectResource child = (AdminObjectResource)it.next();
+            List parentIds = child.getChildIds(aor.getTyp());
+            if(childIds.contains(child.getId()) && !parentIds.contains(aor.getId()))
+            {
               child.addChildId(aor.getTyp(), aor.getId());//And, it must be saved;
               saveObjectResource(child);
             }
-            else if(!childIds.contains(child.getId()) && parentIds.contains(aor.getId())){
+            else if(!childIds.contains(child.getId()) && parentIds.contains(aor.getId()))
+            {
               child.removeChildId(aor.getTyp(), aor.getId());//And, it must be saved;
               saveObjectResource(child);
             }
@@ -71,8 +78,8 @@ public class NewUpDater{
       OperatorProfile op = (OperatorProfile)or;
       User user = (User)Pool.get(User.typ, op.user_id);
 
-      user.category_ids = new Vector();
-      user.group_ids    = new Vector();
+      user.category_ids = new ArrayList();
+      user.group_ids    = new ArrayList();
       for(int i=0; i<op.group_ids.size(); i++){
         user.group_ids.add(op.group_ids.get(i));
       }
@@ -109,8 +116,8 @@ public class NewUpDater{
       User user = (User)or;
       OperatorProfile op = (OperatorProfile)Pool.get(OperatorProfile.typ, user.object_id);
 
-      op.group_ids = new Vector();
-      op.category_ids = new Vector();
+      op.group_ids = new ArrayList();
+      op.category_ids = new ArrayList();
 
       for(int i=0; i<user.group_ids.size(); i++){
         op.group_ids.add(user.group_ids.get(i));
@@ -145,13 +152,14 @@ public class NewUpDater{
 
       for(int j=0; j<parentTyps.length; j++)
       {
-        Hashtable h = Pool.getHash(parentTyps[j]);
+        HashMap h = (HashMap) Pool.getMap(parentTyps[j]);
         if(h == null)
-          h = new Hashtable();
+          h = new HashMap();
 
-        for(Enumeration e = h.elements(); e.hasMoreElements();){
-          AdminObjectResource parent = (AdminObjectResource)e.nextElement();
-          Vector chilsIds = parent.getChildIds(aor.getTyp());
+        for(Iterator it = h.values().iterator(); it.hasNext();)
+        {
+          AdminObjectResource parent = (AdminObjectResource)it.next();
+          List chilsIds = parent.getChildIds(aor.getTyp());
           if(chilsIds.contains(aor.getId())){
             parent.removeChildId(aor.getTyp(), aor.getId());//And, it must be saved;
             parent.setTransferableFromLocal();
@@ -184,11 +192,12 @@ public class NewUpDater{
 
     for(int i=0; i<typs.length; i++)
     {
-      Hashtable h = Pool.getHash(typs[i]);
+      HashMap h = (HashMap)Pool.getMap(typs[i]);
       if(h == null)
-        h = new Hashtable();
-      for(Enumeration e = h.elements(); e.hasMoreElements();){
-        AdminObjectResource or = (AdminObjectResource)e.nextElement();
+        h = new HashMap();
+      for(Iterator it = h.values().iterator(); it.hasNext();)
+      {
+        AdminObjectResource or = (AdminObjectResource)it.next();
         if(or.getOwnerId().equals(owner)){
           or.setOwnerId("");
         }
@@ -208,7 +217,7 @@ public class NewUpDater{
 
 //------------------------------------------------------------------------------
   public String []getParentTyps(ObjectResource or){
-    Vector v = new Vector();
+    List v = new ArrayList();
 
     if(Domain.getChildTypes_().contains(or.getTyp()))
       v.add(Domain.typ);
@@ -237,9 +246,10 @@ public class NewUpDater{
 
 //------------------------------------------------------------------------------
   public String []getChildTyps(AdminObjectResource or){
-    Vector v = new Vector();
-    for(Enumeration e = or.getChildTypes(); e.hasMoreElements(); ){
-      v.add(e.nextElement());
+    List v = new ArrayList();
+    for(Iterator it = or.getChildTypes().iterator(); it.hasNext(); )
+    {
+      v.add(it.next());
     }
     String []childTyps = (String [])v.toArray(new String[v.size()]);
 
@@ -262,55 +272,66 @@ public class NewUpDater{
 
     if(toBeDeleted){
       domain.domain_id = "";
-      domain.domain_ids.removeAllElements();
+      domain.domain_ids.clear();
     }
 
-    Hashtable h = Pool.getHash(Domain.typ);
+    HashMap h = (HashMap)Pool.getMap(Domain.typ);
     if(h == null)
-      h = new Hashtable();
-
-    Enumeration e = h.elements();
+      h = new HashMap();
 
     Domain d;
     boolean save;
-    for(; e.hasMoreElements(); ){
-      d = (Domain)e.nextElement();
-      if(!d.getId().equals(domain.getId())){
+    for(Iterator it = h.values().iterator(); it.hasNext(); )
+    {
+      d = (Domain)it.next();
+      if(!d.getId().equals(domain.getId()))
+      {
         save = false;
-        if(domain.domain_id.equals(d.getId())){ // d must be father of the domain;
-          if(!d.domain_ids.contains(domain.getId())){
+        if(domain.domain_id.equals(d.getId()))
+        { // d must be father of the domain;
+          if(!d.domain_ids.contains(domain.getId()))
+          {
             d.domain_ids.add(domain.getId());
             save = true;
           }
-          if(d.domain_id.equals(domain.getId())){
+          if(d.domain_id.equals(domain.getId()))
+          {
             d.domain_id = "";
             save = true;
           }
         }
-        if(domain.domain_ids.contains(d.getId())){ // d must be child of the domain;
-          if(d.domain_ids.contains(domain.getId())){
+        if(domain.domain_ids.contains(d.getId()))
+        { // d must be child of the domain;
+          if(d.domain_ids.contains(domain.getId()))
+          {
             d.domain_ids.remove(domain.getId());
             save = true;
           }
-          if(!d.domain_id.equals(domain.getId())){
+          if(!d.domain_id.equals(domain.getId()))
+          {
             d.domain_id = domain.getId();
             save = true;
           }
         }
         if(d.domain_id.equals(domain.getId())){ // d probably is child of domain;
-          if(!domain.domain_ids.contains(d.getId())){
+          if(!domain.domain_ids.contains(d.getId()))
+          {
             d.domain_id = "";
             save = true;
           }
         }
-        if(d.domain_ids.contains(domain.getId())){ // d probably is father of domain;
-          if(!domain.domain_id.equals(d.getId())){
+        if(d.domain_ids.contains(domain.getId()))
+        { // d probably is father of domain;
+          if(!domain.domain_id.equals(d.getId()))
+          {
             d.domain_ids.remove(domain.getId());
             save = true;
           }
         }
-        for(int i=0; i<domain.domain_ids.size(); i++){
-          if(d.domain_ids.contains(domain.domain_ids.get(i))){
+        for(int i=0; i<domain.domain_ids.size(); i++)
+        {
+          if(d.domain_ids.contains(domain.domain_ids.get(i)))
+          {
             d.domain_ids.remove(domain.domain_ids.get(i));
             save = true;
           }
@@ -326,9 +347,11 @@ public class NewUpDater{
 
 
 
-  public static boolean contains(Hashtable h, String s){
-    for(Enumeration e = h.elements(); e.hasMoreElements(); ){
-      String str = (String)e.nextElement();
+  public static boolean contains(HashMap h, String s)
+  {
+    for(Iterator it = h.values().iterator(); it.hasNext(); )
+    {
+      String str = (String) it.next();
       if(str.equals(s))
         return true;
     }
@@ -336,19 +359,24 @@ public class NewUpDater{
   }
 
 
-  public static boolean contains(Vector v , String s){
-    for(Enumeration e = v.elements(); e.hasMoreElements(); ){
-      String str = (String)e.nextElement();
+  public static boolean contains(List v , String s)
+  {
+    for(Iterator it = v.listIterator(); it.hasNext(); )
+    {
+      String str = (String)it.next();
       if(str.equals(s))
         return true;
     }
     return false;
   }
 
-  public static void remove(Vector v, String s){
-    for(int i=0; i<v.size(); i++){
-      String str = (String)v.get(i);
-      if(str.equals(s)){
+  public static void remove(List v, String s)
+  {
+    for(Iterator it = v.listIterator(); it.hasNext(); )
+    {
+      String str = (String)it.next();
+      if(str.equals(s))
+      {
         v.remove(str);
         return;
       }

@@ -1,5 +1,5 @@
 /*
- * $Id: OperatorProfile.java,v 1.1 2004/08/06 12:14:19 bass Exp $
+ * $Id: OperatorProfile.java,v 1.2 2004/08/19 15:50:00 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,12 @@
 package com.syrus.AMFICOM.Client.Resource.Object;
 
 import java.io.*;
-import java.util.*;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.HashMap;
+import java.util.ArrayList;
 
 import com.syrus.AMFICOM.CORBA.Admin.*;
 import com.syrus.AMFICOM.Client.Administrate.Object.UI.*;
@@ -23,8 +28,8 @@ import com.syrus.io.Rewriter;
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2004/08/06 12:14:19 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.2 $, $Date: 2004/08/19 15:50:00 $
  * @module generalclient_v1
  */
 public class OperatorProfile extends AdminObjectResource implements Serializable
@@ -79,11 +84,11 @@ public class OperatorProfile extends AdminObjectResource implements Serializable
 	public String e_mail="";
 
 // End of the privelegies fields
-	public Vector category_ids = new Vector();
-	public Vector group_ids = new Vector();
+	public List category_ids = new ArrayList();
+	public List group_ids = new ArrayList();
 
-	public Hashtable categories = new Hashtable();
-	public Hashtable groups = new Hashtable();
+	public HashMap categories = new HashMap();
+	public HashMap groups = new HashMap();
 
 	static final public String typ = "operatorprofile";
 
@@ -168,13 +173,13 @@ public class OperatorProfile extends AdminObjectResource implements Serializable
 		e_mail = transferable.e_mail;
 
 		count = transferable.category_ids.length;
-		category_ids = new Vector(count);
+		category_ids = new ArrayList();
 		for(i = 0; i < count; i++)
 			category_ids.add(transferable.category_ids[i]);
 
 
 		count = transferable.group_ids.length;
-		group_ids = new Vector(count);
+		group_ids = new ArrayList();
 		for(i = 0; i < count; i++)
 			group_ids.add(transferable.group_ids[i]);
 	}
@@ -250,35 +255,32 @@ public class OperatorProfile extends AdminObjectResource implements Serializable
 
 	public void updateLocalFromTransferable()
 	{
-		int l;
-		int i;
-
-    l = category_ids.size();
-    categories = new Hashtable();
-    for(i = 0; i < l; i++)
+    categories = new HashMap();
+    for(Iterator it = category_ids.iterator();it.hasNext();)
     {
-		  Object o = Pool.get(OperatorCategory.typ, (String)category_ids.get(i));
-		  if(o!=null)
-		  categories.put(category_ids.get(i), o);
+      String str = (String)it.next();
+		  Object o = Pool.get(OperatorCategory.typ, str);
+		  if(o != null)
+        categories.put(str, o);
 		}
 
-		l = group_ids.size();
-		groups = new Hashtable();
-		for(i = 0; i < l; i++)
-		{
-		  Object o = Pool.get(OperatorGroup.typ, (String)group_ids.get(i));
-		  if(o!=null)
- 		  groups.put(group_ids.get(i), o);
+    groups = new HashMap();
+    for(Iterator it = group_ids.iterator();it.hasNext();)
+    {
+      String str = (String)it.next();
+		  Object o = Pool.get(OperatorGroup.typ, str);
+		  if(o != null)
+        groups.put(str, o);
 		}
 	}
 
-  public Vector getChildIds(String key)
+  public List getChildIds(String key)
   {
     if(key.equals(OperatorGroup.typ))
       return group_ids;
     if(key.equals(OperatorCategory.typ))
       return category_ids;
-    return new Vector();
+    return new ArrayList();
   }
 
   public void addChildId(String key, String id)
@@ -297,30 +299,30 @@ public class OperatorProfile extends AdminObjectResource implements Serializable
   }
 
 
-	public Enumeration getChildren(String key)
+	public Collection getChildren(String key)
 	{
 		if(key.equals(OperatorGroup.typ))
 		{
-			return groups.elements();
+			return groups.values();
 		}
 		if(key.equals(OperatorCategory.typ))
 		{
-			return categories.elements();
+			return categories.values();
 		}
-		return new Vector().elements();
+		return new ArrayList();
 	}
 
-	public Enumeration getChildTypes()
+	public Collection getChildTypes()
 	{
-	  Vector ret = new Vector();
+	  List ret = new ArrayList();
 	  ret.add(OperatorCategory.typ);
 	  ret.add(OperatorGroup.typ);
-	  return ret.elements();
+	  return ret;
 	}
 
-  public static Vector getChildTypes_()
+  public static Collection getChildTypes_()
   {
-    Vector ret = new Vector();
+    List ret = new ArrayList();
     ret.add(OperatorCategory.typ);
     ret.add(OperatorGroup.typ);
     return ret;
@@ -449,8 +451,8 @@ public class OperatorProfile extends AdminObjectResource implements Serializable
 		organization = (String )in.readObject();
 		e_mail = (String )in.readObject();
 
-		category_ids = (Vector )in.readObject();
-		group_ids = (Vector )in.readObject();
+		category_ids = (List)in.readObject();
+		group_ids = (List)in.readObject();
 
 		transferable = new OperatorProfile_Transferable();
 		updateLocalFromTransferable();

@@ -9,9 +9,11 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ListIterator;
 
 public class Domain extends AdminObjectResource
 {
@@ -32,9 +34,9 @@ public class Domain extends AdminObjectResource
 
   public String domain_id="";
 
-  public Vector domain_ids = new Vector();
+  public List domain_ids = new ArrayList();
 
-  public Hashtable domains = new Hashtable();
+  public HashMap domains = new HashMap();
 
   static final public String typ = "domain";
 
@@ -61,7 +63,7 @@ public class Domain extends AdminObjectResource
       long modified,
       String modified_by,
       String domain_id,
-      Vector domain_ids)
+      List domain_ids)
   {
 //    super("domain");
     this.id = id;
@@ -97,7 +99,7 @@ public class Domain extends AdminObjectResource
     domain_id = transferable.domain_id;
 
     count = transferable.domain_ids.length;
-    domain_ids = new Vector(count);
+    domain_ids = new ArrayList();
     for(i = 0; i < count; i++)
       domain_ids.add(transferable.domain_ids[i]);
 
@@ -149,27 +151,25 @@ public class Domain extends AdminObjectResource
 
   public void updateLocalFromTransferable()
   {
-    int l;
-    int i;
-
-    l = domain_ids.size();
-    domains = new Hashtable();
-    for(i = 0; i < l; i++)
+    domains = new HashMap();
+    
+    for(ListIterator lIt = domain_ids.listIterator(); lIt.hasNext();)
     {
-      Object o = Pool.get(Domain.typ, (String)domain_ids.get(i));
+      String str = (String)lIt.next();
+      Object o = Pool.get(Domain.typ, str);
       if(o != null)
-        domains.put(domain_ids.get(i), o);
+        domains.put(str, o);
     }
 
     opa.updateLocalFromTransferable();
   }
 
 //AdminObjectResource
-  public Vector getChildIds(String key)
+  public List getChildIds(String key)
   {
     if(key.equals(Domain.typ))
       return domain_ids;
-    return new Vector();
+    return new ArrayList();
   }
 
   public void addChildId(String key, String id)
@@ -183,25 +183,25 @@ public class Domain extends AdminObjectResource
       domain_ids.remove(id);
   }
 
-  public Enumeration getChildren(String key)
+  public Collection getChildren(String key)
   {
     if(key.equals(Domain.typ))
     {
-      return domains.elements();
+      return domains.values();
     }
-    return new Vector().elements();
+    return new ArrayList();
   }
 
-  public Enumeration getChildTypes()
+  public Collection getChildTypes()
   {
-    Vector ret = new Vector();
+    List ret = new ArrayList();
     ret.add(Domain.typ);
-    return ret.elements();
+    return ret;
   }
 
-  public static Vector getChildTypes_()
+  public static Collection getChildTypes_()
   {
-    Vector ret = new Vector();
+    List ret = new ArrayList();
     ret.add(Domain.typ);
     return ret;
   }
