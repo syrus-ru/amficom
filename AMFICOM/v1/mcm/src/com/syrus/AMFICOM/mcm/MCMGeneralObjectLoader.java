@@ -1,5 +1,5 @@
 /*
-* $Id: MCMGeneralObjectLoader.java,v 1.9 2005/03/31 16:01:56 arseniy Exp $
+* $Id: MCMGeneralObjectLoader.java,v 1.10 2005/04/01 21:54:56 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,8 +8,6 @@
 
 package com.syrus.AMFICOM.mcm;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -37,11 +35,12 @@ import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
+import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/03/31 16:01:56 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/01 21:54:56 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -53,39 +52,37 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 			return new ParameterType(id);
 		}
 		catch (ObjectNotFoundException e) {
-			Log.debugMessage("ParameterType '" + id + "' not found in database; trying to load from MServer", Log.DEBUGLEVEL08);
-			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
-			if (mServerRef != null) {
+			Log.debugMessage("MCMGeneralObjectLoader.loadParameterType | ParameterType '" + id
+					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
+			ParameterType parameterType = null;
 
-				try {
-					ParameterType_Transferable transferable = mServerRef.transmitParameterType((Identifier_Transferable) id.getTransferable());
-					ParameterType parameterType = new ParameterType(transferable);
-
-					try {
-						GeneralDatabaseContext.getParameterTypeDatabase().insert(parameterType);
-					}
-					catch (ApplicationException ae) {
-						Log.errorException(ae);
-					}
-
-					return parameterType;
-				}
-				catch (AMFICOMRemoteException are) {
-					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
-						throw new ObjectNotFoundException("ParameterType '" + id + "' not found in MServer database");
-					throw new RetrieveObjectException("Cannot retrieve ParameterType '" + id + "' from MServer database -- " + are.message);
-				}
-				catch (org.omg.CORBA.SystemException se) {
-					Log.errorException(se);
-					MeasurementControlModule.resetMServerConnection();
-					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
+			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
+			try {
+				ParameterType_Transferable transferable = mServerRef.transmitParameterType((Identifier_Transferable) id.getTransferable());
+				parameterType = new ParameterType(transferable);
+				Log.debugMessage("MCMGeneralObjectLoader.loadParameterType | ParameterType '" + id
+						+ "' loaded from MeasurementServer", Log.DEBUGLEVEL08);
 			}
-			String mesg = "Remote reference for server is null; will try to reactivate it";
-			Log.errorMessage(mesg);
-			MeasurementControlModule.resetMServerConnection();
-			throw new CommunicationException(mesg);
-		}
+			catch (AMFICOMRemoteException are) {
+				if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+					throw new ObjectNotFoundException("ParameterType '" + id + "' not found on Measurement Server -- " + are.message);
+				throw new RetrieveObjectException("Cannot retrieve ParameterType '" + id + "' from Measurement Server -- " + are.message);
+			}
+			catch (Throwable throwable) {
+				Log.errorException(throwable);
+			}
+
+			if (parameterType != null) {
+				try {
+					GeneralDatabaseContext.getParameterTypeDatabase().insert(parameterType);
+				}
+				catch (ApplicationException ae) {
+					Log.errorException(ae);
+				}
+				return parameterType;
+			}
+			throw new ObjectNotFoundException("ParameterType '" + id + "' not found on Measurement Server");
+		}	//catch (ObjectNotFoundException e)
 	}
 
 	public CharacteristicType loadCharacteristicType(Identifier id)
@@ -94,39 +91,37 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 			return new CharacteristicType(id);
 		}
 		catch (ObjectNotFoundException e) {
-			Log.debugMessage("CharacteristicType '" + id + "' not found in database; trying to load from MServer", Log.DEBUGLEVEL08);
-			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
-			if (mServerRef != null) {
+			Log.debugMessage("MCMGeneralObjectLoader.loadCharacteristicType | CharacteristicType '" + id
+					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
+			CharacteristicType characteristicType = null;
 
-				try {
-					CharacteristicType_Transferable transferable = mServerRef.transmitCharacteristicType((Identifier_Transferable) id.getTransferable());
-					CharacteristicType characteristicType = new CharacteristicType(transferable);
-
-					try {
-						GeneralDatabaseContext.getCharacteristicTypeDatabase().insert(characteristicType);
-					}
-					catch (ApplicationException ae) {
-						Log.errorException(ae);
-					}
-
-					return characteristicType;
-				}
-				catch (AMFICOMRemoteException are) {
-					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
-						throw new ObjectNotFoundException("CharacteristicType '" + id + "' not found in MServer database");
-					throw new RetrieveObjectException("Cannot retrieve CharacteristicType '" + id + "' from MServer database -- " + are.message);
-				}
-				catch (org.omg.CORBA.SystemException se) {
-					Log.errorException(se);
-					MeasurementControlModule.resetMServerConnection();
-					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
+			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
+			try {
+				CharacteristicType_Transferable transferable = mServerRef.transmitCharacteristicType((Identifier_Transferable) id.getTransferable());
+				characteristicType = new CharacteristicType(transferable);
+				Log.debugMessage("MCMGeneralObjectLoader.loadCharacteristicType | CharacteristicType '" + id
+						+ "' loaded from MeasurementServer", Log.DEBUGLEVEL08);
 			}
-			String mesg = "Remote reference for server is null; will try to reactivate it";
-			Log.errorMessage(mesg);
-			MeasurementControlModule.resetMServerConnection();
-			throw new CommunicationException(mesg);
-		}
+			catch (AMFICOMRemoteException are) {
+				if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+					throw new ObjectNotFoundException("CharacteristicType '" + id + "' not found on Measurement Server -- " + are.message);
+				throw new RetrieveObjectException("Cannot retrieve CharacteristicType '" + id + "' from Measurement Server -- " + are.message);
+			}
+			catch (Throwable throwable) {
+				Log.errorException(throwable);
+			}
+
+			if (characteristicType != null) {
+				try {
+					GeneralDatabaseContext.getCharacteristicTypeDatabase().insert(characteristicType);
+				}
+				catch (ApplicationException ae) {
+					Log.errorException(ae);
+				}
+				return characteristicType;
+			}
+			throw new ObjectNotFoundException("CharacteristicType '" + id + "' not found on Measurement Server");
+		}	//catch (ObjectNotFoundException e)
 	}
 
 	public Characteristic loadCharacteristic(Identifier id)
@@ -135,223 +130,223 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 			return new Characteristic(id);
 		}
 		catch (ObjectNotFoundException e) {
-			Log.debugMessage("Characteristic '" + id + "' not found in database; trying to load from MServer", Log.DEBUGLEVEL08);
-			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
-			if (mServerRef != null) {
+			Log.debugMessage("MCMGeneralObjectLoader.loadCharacteristic | Characteristic '" + id
+					+ "' not found in database; trying to load from Measurement Server", Log.DEBUGLEVEL08);
+			Characteristic characteristic = null;
 
-				try {
-					Characteristic_Transferable transferable = mServerRef.transmitCharacteristic((Identifier_Transferable) id.getTransferable());
-					Characteristic characteristic = new Characteristic(transferable);
-
-					try {
-						GeneralDatabaseContext.getCharacteristicDatabase().insert(characteristic);
-					}
-					catch (ApplicationException ae) {
-						Log.errorException(ae);
-					}
-
-					return characteristic;
-				}
-				catch (AMFICOMRemoteException are) {
-					if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
-						throw new ObjectNotFoundException("Characteristic '" + id + "' not found in MServer database");
-					throw new RetrieveObjectException("Cannot retrieve Characteristic '" + id + "' from MServer database -- " + are.message);
-				}
-				catch (org.omg.CORBA.SystemException se) {
-					Log.errorException(se);
-					MeasurementControlModule.resetMServerConnection();
-					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
+			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
+			try {
+				Characteristic_Transferable transferable = mServerRef.transmitCharacteristic((Identifier_Transferable) id.getTransferable());
+				characteristic = new Characteristic(transferable);
+				Log.debugMessage("MCMGeneralObjectLoader.loadCharacteristic | Characteristic '" + id
+						+ "' loaded from MeasurementServer", Log.DEBUGLEVEL08);
 			}
-			String mesg = "Remote reference for server is null; will try to reactivate it";
-			Log.errorMessage(mesg);
-			MeasurementControlModule.resetMServerConnection();
-			throw new CommunicationException(mesg);
-		}
+			catch (AMFICOMRemoteException are) {
+				if (are.error_code.value() == ErrorCode._ERROR_NOT_FOUND)
+					throw new ObjectNotFoundException("Characteristic '" + id + "' not found on Measurement Server -- " + are.message);
+				throw new RetrieveObjectException("Cannot retrieve Characteristic '" + id + "' from Measurement Server -- " + are.message);
+			}
+			catch (Throwable throwable) {
+				Log.errorException(throwable);
+			}
+
+			if (characteristic != null) {
+				try {
+					GeneralDatabaseContext.getCharacteristicDatabase().insert(characteristic);
+				}
+				catch (ApplicationException ae) {
+					Log.errorException(ae);
+				}
+				return characteristic;
+			}
+			throw new ObjectNotFoundException("Characteristic '" + id + "' not found on Measurement Server");
+		}	//catch (ObjectNotFoundException e)
 	}
 
 
 
 
 
-	public Collection loadParameterTypes(Collection ids) throws ApplicationException {
-		ParameterTypeDatabase database = (ParameterTypeDatabase) GeneralDatabaseContext.getParameterTypeDatabase();
-		Collection objects;
+	public Set loadParameterTypes(Set ids) throws RetrieveObjectException {
+		ParameterTypeDatabase database = GeneralDatabaseContext.getParameterTypeDatabase();
+		Set objects;
 		try {
 			objects = database.retrieveByIdsByCondition(ids, null);
 		}
 		catch (IllegalDataException ide) {
 			Log.errorException(ide);
-			String mesg = "MCMGeneralObjectLoader.loadParameterTypes | Cannot load objects from database: " + ide.getMessage();
+			String mesg = "Cannot load objects from database: " + ide.getMessage();
 			throw new RetrieveObjectException(mesg, ide);
 		}
 
 		Identifier id;
-		Collection loadIds = new HashSet(ids);
+		Set loadIds = new HashSet(ids);
 		for (Iterator it = objects.iterator(); it.hasNext();) {
 			id = ((StorableObject) it.next()).getId();
 			loadIds.remove(id);
 		}
 
-		if (!loadIds.isEmpty()) {
-			Identifier_Transferable[] loadIdsT = Identifier.createTransferables(loadIds);
+		if (loadIds.isEmpty())
+			return objects;
 
-			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
-			if (mServerRef != null) {
-				Collection loadedObjects = null;
-				try {
-					ParameterType_Transferable[] transferables = mServerRef.transmitParameterTypes(loadIdsT);
-					loadedObjects = new ArrayList(transferables.length);
-					for (int i = 0; i < transferables.length; i++)
-						loadedObjects.add(new ParameterType(transferables[i]));
-				}
-				catch (AMFICOMRemoteException are) {
-					Log.errorMessage("Cannot retrieve parameter types from MServer database -- " + are.message);
-				}
-				catch (org.omg.CORBA.SystemException se) {
-					Log.errorException(se);
-					MeasurementControlModule.resetMServerConnection();
-					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
+		Identifier_Transferable[] loadIdsT = null;
+		try {
+			loadIdsT = Identifier.createTransferables(loadIds);
+		}
+		catch (IllegalDataException ide) {
+			// Never
+			Log.errorException(ide);
+		}
+		Set loadedObjects = new HashSet();
 
-				if (loadedObjects != null && !loadedObjects.isEmpty()) {
-					objects.addAll(loadedObjects);
+		try {
+			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
+			ParameterType_Transferable[] transferables = mServerRef.transmitParameterTypes(loadIdsT);
+			for (int i = 0; i < transferables.length; i++)
+				loadedObjects.add(new ParameterType(transferables[i]));
+		}
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
+		}
+		catch (AMFICOMRemoteException are) {
+			Log.errorMessage("MCMGeneralObjectLoader.loadParameterTypes | Cannot load objects from MeasurementServer");
+		}
+		catch (Throwable throwable) {
+			Log.errorException(throwable);
+		}
 
-					try {
-						database.insert(loadedObjects);
-					}
-					catch (ApplicationException ae) {
-						Log.errorException(ae);
-					}
-				}
+		if (!loadedObjects.isEmpty()) {
+			objects.addAll(loadedObjects);
 
+			try {
+				database.insert(loadedObjects);
 			}
-			else {
-				Log.errorMessage("Remote reference for server is null; will try to reactivate it");
-				MeasurementControlModule.resetMServerConnection();
+			catch (ApplicationException ae) {
+				Log.errorException(ae);
 			}
 		}
 
 		return objects;
 	}
 
-	public Collection loadCharacteristicTypes(Collection ids) throws ApplicationException {
-		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) GeneralDatabaseContext.getCharacteristicTypeDatabase();
-		Collection objects;
+	public Set loadCharacteristicTypes(Set ids) throws RetrieveObjectException {
+		CharacteristicTypeDatabase database = GeneralDatabaseContext.getCharacteristicTypeDatabase();
+		Set objects;
 		try {
 			objects = database.retrieveByIdsByCondition(ids, null);
 		}
 		catch (IllegalDataException ide) {
 			Log.errorException(ide);
-			String mesg = "MCMGeneralObjectLoader.loadCharacteristicTypes | Cannot load objects from database: " + ide.getMessage();
+			String mesg = "Cannot load objects from database: " + ide.getMessage();
 			throw new RetrieveObjectException(mesg, ide);
 		}
 
 		Identifier id;
-		Collection loadIds = new HashSet(ids);
+		Set loadIds = new HashSet(ids);
 		for (Iterator it = objects.iterator(); it.hasNext();) {
 			id = ((StorableObject) it.next()).getId();
 			loadIds.remove(id);
 		}
 
-		if (!loadIds.isEmpty()) {
-			Identifier_Transferable[] loadIdsT = Identifier.createTransferables(loadIds);
-			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
-			if (mServerRef != null) {
-				Collection loadedObjects = null;
-				try {
-					CharacteristicType_Transferable[] transferables = mServerRef.transmitCharacteristicTypes(loadIdsT);
-					loadedObjects = new ArrayList(transferables.length);
-					for (int i = 0; i < transferables.length; i++)
-						loadedObjects.add(new CharacteristicType(transferables[i]));
-				}
-				catch (AMFICOMRemoteException are) {
-					Log.errorMessage("Cannot retrieve characteristic types from MServer database -- " + are.message);
-				}
-				catch (org.omg.CORBA.SystemException se) {
-					Log.errorException(se);
-					MeasurementControlModule.resetMServerConnection();
-					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
+		if (loadIds.isEmpty())
+			return objects;
 
-				if (loadedObjects != null && !loadedObjects.isEmpty()) {
-					objects.addAll(loadedObjects);
+		Identifier_Transferable[] loadIdsT = null;
+		try {
+			loadIdsT = Identifier.createTransferables(loadIds);
+		}
+		catch (IllegalDataException ide) {
+			// Never
+			Log.errorException(ide);
+		}
+		Set loadedObjects = new HashSet();
 
-					try {
-						database.insert(loadedObjects);
-					}
-					catch (ApplicationException ae) {
-						Log.errorException(ae);
-					}
-				}
+		try {
+			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
+			CharacteristicType_Transferable[] transferables = mServerRef.transmitCharacteristicTypes(loadIdsT);
+			for (int i = 0; i < transferables.length; i++)
+				loadedObjects.add(new CharacteristicType(transferables[i]));
+		}
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
+		}
+		catch (AMFICOMRemoteException are) {
+			Log.errorMessage("MCMGeneralObjectLoader.loadCharacteristicTypes | Cannot load objects from MeasurementServer");
+		}
+		catch (Throwable throwable) {
+			Log.errorException(throwable);
+		}
 
+		if (!loadedObjects.isEmpty()) {
+			objects.addAll(loadedObjects);
+
+			try {
+				database.insert(loadedObjects);
 			}
-			else {
-				Log.errorMessage("Remote reference for server is null; will try to reactivate it");
-				MeasurementControlModule.resetMServerConnection();
+			catch (ApplicationException ae) {
+				Log.errorException(ae);
 			}
 		}
 
 		return objects;
 	}
 
-	public Collection loadCharacteristics(Collection ids) throws ApplicationException {
-		CharacteristicDatabase database = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
-		Collection objects;
+	public Set loadCharacteristics(Set ids) throws RetrieveObjectException {
+		CharacteristicDatabase database = GeneralDatabaseContext.getCharacteristicDatabase();
+		Set objects;
 		try {
 			objects = database.retrieveByIdsByCondition(ids, null);
 		}
 		catch (IllegalDataException ide) {
 			Log.errorException(ide);
-			String mesg = "MCMGeneralObjectLoader.loadCharacteristics | Cannot load objects from database: " + ide.getMessage();
+			String mesg = "Cannot load objects from database: " + ide.getMessage();
 			throw new RetrieveObjectException(mesg, ide);
 		}
 
 		Identifier id;
-		Collection loadIds = new HashSet(ids);
+		Set loadIds = new HashSet(ids);
 		for (Iterator it = objects.iterator(); it.hasNext();) {
 			id = ((StorableObject) it.next()).getId();
 			loadIds.remove(id);
 		}
 
-		if (!loadIds.isEmpty()) {
-			Identifier_Transferable[] loadIdsT = Identifier.createTransferables(loadIds);
-			com.syrus.AMFICOM.mserver.corba.MServer mServerRef = MeasurementControlModule.mServerRef;
-			if (mServerRef != null) {
-				Collection loadedObjects = null;
-				try {
-					Characteristic_Transferable[] transferables = mServerRef.transmitCharacteristics(loadIdsT);
-					loadedObjects = new ArrayList(transferables.length);
-					for (int i = 0; i < transferables.length; i++)
-						loadedObjects.add(new Characteristic(transferables[i]));
-				}
-				catch (AMFICOMRemoteException are) {
-					Log.errorMessage("Cannot retrieve characteristics from MServer database -- " + are.message);
-				}
-				catch (CreateObjectException coe) {
-					Log.errorException(coe);
-				}
-				catch (org.omg.CORBA.SystemException se) {
-					Log.errorException(se);
-					MeasurementControlModule.resetMServerConnection();
-					throw new CommunicationException("System exception -- " + se.getMessage(), se);
-				}
+		if (loadIds.isEmpty())
+			return objects;
 
-				if (loadedObjects != null && !loadedObjects.isEmpty()) {
-					objects.addAll(loadedObjects);
+		Identifier_Transferable[] loadIdsT = null;
+		try {
+			loadIdsT = Identifier.createTransferables(loadIds);
+		}
+		catch (IllegalDataException ide) {
+			// Never
+			Log.errorException(ide);
+		}
+		Set loadedObjects = new HashSet();
 
-					try {
-						database.insert(loadedObjects);
-					}
-					catch (ApplicationException ae) {
-						Log.errorException(ae);
-					}
-				}
+		try {
+			MServer mServerRef = MeasurementControlModule.mServerConnectionManager.getVerifiedMServerReference();
+			Characteristic_Transferable[] transferables = mServerRef.transmitCharacteristics(loadIdsT);
+			for (int i = 0; i < transferables.length; i++)
+				loadedObjects.add(new Characteristic(transferables[i]));
+		}
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
+		}
+		catch (AMFICOMRemoteException are) {
+			Log.errorMessage("MCMGeneralObjectLoader.loadCharacteristics | Cannot load objects from MeasurementServer");
+		}
+		catch (Throwable throwable) {
+			Log.errorException(throwable);
+		}
 
+		if (!loadedObjects.isEmpty()) {
+			objects.addAll(loadedObjects);
+
+			try {
+				database.insert(loadedObjects);
 			}
-			else {
-				Log.errorMessage("Remote reference for server is null; will try to reactivate it");
-				MeasurementControlModule.resetMServerConnection();
+			catch (ApplicationException ae) {
+				Log.errorException(ae);
 			}
 		}
 
@@ -362,13 +357,13 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 
 
 
-	public Collection loadParameterTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadParameterTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
-	public Collection loadCharacteristicTypesButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadCharacteristicTypesButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
-	public Collection loadCharacteristicsButIds(StorableObjectCondition condition, Collection ids) throws ApplicationException {
+	public Set loadCharacteristicsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
@@ -393,15 +388,15 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 
 
 
-	public void saveParameterTypes(Collection objects, boolean force) throws ApplicationException {
+	public void saveParameterTypes(Set objects, boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 
-	public void saveCharacteristicTypes(Collection objects, boolean force) throws ApplicationException {
+	public void saveCharacteristicTypes(Set objects, boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 
-	public void saveCharacteristics(Collection objects, boolean force) throws ApplicationException {
+	public void saveCharacteristics(Set objects, boolean force) throws ApplicationException {
 		throw new UnsupportedOperationException("Method not implemented, collection: " + objects + ", force: " + force);
 	}
 
@@ -415,7 +410,7 @@ final class MCMGeneralObjectLoader extends DatabaseGeneralObjectLoader {
 
 
 
-	public void delete(Collection objects) throws IllegalDataException {
+	public void delete(Set objects) throws IllegalDataException {
 		throw new UnsupportedOperationException("Method not implemented, objects: " + objects);
 	}
 
