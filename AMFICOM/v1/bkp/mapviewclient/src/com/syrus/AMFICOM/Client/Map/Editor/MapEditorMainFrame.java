@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.7 2004/11/01 15:40:10 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.8 2004/11/12 19:09:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -97,7 +97,7 @@ import javax.swing.JViewport;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/11/01 15:40:10 $
+ * @version $Revision: 1.8 $, $Date: 2004/11/12 19:09:54 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -849,7 +849,8 @@ public class MapEditorMainFrame extends JFrame
 		}
 		if (e.getID() == WindowEvent.WINDOW_CLOSING)
 		{
-			getMapFrame().saveConfig();
+			if(getMapFrame() != null)
+				getMapFrame().saveConfig();
 			Command closeCommand = aContext.getApplicationModel().getCommand("menuExit");
 			this.setContext(null);
 			closeCommand.execute();

@@ -60,6 +60,7 @@ public final class SitePopupMenu extends MapPopupMenu
 				}
 			});
 		this.add(removeMenuItem);
+		this.addSeparator();
 		this.add(propertiesMenuItem);
 	}
 

@@ -12,6 +12,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
@@ -68,15 +69,19 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 	private JLabel startNodeTitleLabel = new JLabel();
 	private JLabel startNodeLabel = new JLabel();
 	private JLabel startLinkLabel = new JLabel();
+	private JLabel startNodeToLabel = new JLabel();
 	private JTextField startNodeTextField = new JTextField();
 	private ObjectResourceComboBox startLinkComboBox = new ObjectResourceComboBox(MapPhysicalLinkElement.typ, true);
+	private ObjectResourceComboBox startNodeToComboBox = new ObjectResourceComboBox(MapSiteNodeElement.typ, true);
 
 	private JPanel endPanel = new JPanel();
 	private JLabel endNodeTitleLabel = new JLabel();
 	private JLabel endNodeLabel = new JLabel();
 	private JLabel endLinkLabel = new JLabel();
+	private JLabel endNodeToLabel = new JLabel();
 	private JTextField endNodeTextField = new JTextField();
 	private ObjectResourceComboBox endLinkComboBox = new ObjectResourceComboBox(MapPhysicalLinkElement.typ, true);
+	private ObjectResourceComboBox endNodeToComboBox = new ObjectResourceComboBox(MapSiteNodeElement.typ, true);
 
 	private MapNodeElement startNode;
 	private MapNodeElement endNode;
@@ -106,38 +111,78 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 
 	}
 
+	private boolean doChanges = true;
+
 	private void jbInit()
 	{
 		this.setLayout(gridBagLayout1);
 		this.setName(LangModelMap.getString("LinkBinding"));
 		titleLabel.setText(LangModelMap.getString("LinkBinding"));
 		
-		ActionListener al = new ActionListener()
+		ActionListener lcbal = new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
+					if(!MapCablePathBindPanel.this.doChanges)
+						return;
+
 					ObjectResource mle = (ObjectResource )startLinkComboBox.getSelectedObjectResource();
 					ObjectResource mle2 = (ObjectResource )endLinkComboBox.getSelectedObjectResource();
 					boolean flag = (mle instanceof MapPhysicalLinkElement) || (mle2 instanceof MapPhysicalLinkElement);
-//							(mle != null && mle.getId() != null && mle.getId().length() != 0)
-//							|| (mle2 != null && mle2.getId() != null && mle2.getId().length() != 0);
 					bindButton.setEnabled(flag);
 					bindChainButton.setEnabled(flag);
+					
+					MapCablePathBindPanel.this.doChanges = false;
+					if(mle instanceof MapPhysicalLinkElement)
+					{
+						MapPhysicalLinkElement pl = (MapPhysicalLinkElement )mle;
+						startNodeToComboBox.setSelected(pl.getOtherNode(startNode));
+					}
+					if(mle2 instanceof MapPhysicalLinkElement)
+					{
+						MapPhysicalLinkElement pl = (MapPhysicalLinkElement )mle2;
+						endNodeToComboBox.setSelected(pl.getOtherNode(endNode));
+					}
+					MapCablePathBindPanel.this.doChanges = true;
 				}
 			};
-		startLinkComboBox.addActionListener(al);
-		endLinkComboBox.addActionListener(al);
+		startLinkComboBox.addActionListener(lcbal);
+		endLinkComboBox.addActionListener(lcbal);
+
+		ActionListener ncbal = new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					if(!MapCablePathBindPanel.this.doChanges)
+						return;
+
+					ObjectResource mle = (ObjectResource )startNodeToComboBox.getSelectedObjectResource();
+					ObjectResource mle2 = (ObjectResource )endNodeToComboBox.getSelectedObjectResource();
+					boolean flag = (mle instanceof MapSiteNodeElement) || (mle2 instanceof MapSiteNodeElement);
+					bindButton.setEnabled(flag);
+					bindChainButton.setEnabled(flag);
+
+					MapCablePathBindPanel.this.doChanges = false;
+					if(mle instanceof MapSiteNodeElement)
+					{
+						MapSiteNodeElement s = (MapSiteNodeElement )mle;
+						startLinkComboBox.setSelected(s.getMap().getPhysicalLink(startNode, s));
+					}
+					if(mle2 instanceof MapSiteNodeElement)
+					{
+						MapSiteNodeElement s = (MapSiteNodeElement )mle2;
+						endLinkComboBox.setSelected(s.getMap().getPhysicalLink(endNode, s));
+					}
+					MapCablePathBindPanel.this.doChanges = true;
+				}
+			};
+		startNodeToComboBox.addActionListener(ncbal);
+		endNodeToComboBox.addActionListener(ncbal);
+
 		table.getSelectionModel().addListSelectionListener(new ListSelectionListener()
 			{
 				public void valueChanged(ListSelectionEvent e)
 				{
-//					MapPhysicalLinkElement link = (MapPhysicalLinkElement )model.getObjectResource(table.getSelectedRow());
-//					boolean flag = false;
-//					if(link instanceof MapUnboundLinkElement)
-//						if(path.previousLink(link) != null)
-//							if(path.previousLink(link) instanceof MapUnboundLinkElement)
-//								flag = true;
-//					unbindButton.setEnabled(flag);
 					unbindButton.setEnabled(table.getSelectedRowCount() != 0);
 				}
 			});
@@ -179,11 +224,13 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 		startNodeTitleLabel.setText(LangModelMap.getString("StartNodeTitle"));
 		startNodeLabel.setText(LangModelMap.getString("StartNode"));
 		startLinkLabel.setText(LangModelMap.getString("StartLink"));
+		startNodeToLabel.setText(LangModelMap.getString("To"));
 
 		endPanel.setLayout(gridBagLayout2);
 		endNodeTitleLabel.setText(LangModelMap.getString("EndNodeTitle"));
 		endNodeLabel.setText(LangModelMap.getString("EndNode"));
 		endLinkLabel.setText(LangModelMap.getString("EndLink"));
+		endNodeToLabel.setText(LangModelMap.getString("To"));
 
 		buttonsPanel.add(bindButton, null);
 		buttonsPanel.add(bindChainButton, null);
@@ -208,14 +255,18 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 		startPanel.add(startNodeTitleLabel, ReusedGridBagConstraints.get(0, 0, 2, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		startPanel.add(startNodeLabel, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 100, 0));
 		startPanel.add(startLinkLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 100, 0));
+		startPanel.add(startNodeToLabel, ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 100, 0));
 		startPanel.add(startNodeTextField, ReusedGridBagConstraints.get(1, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		startPanel.add(startLinkComboBox, ReusedGridBagConstraints.get(1, 2, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		startPanel.add(startNodeToComboBox, ReusedGridBagConstraints.get(1, 3, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
 
 		endPanel.add(endNodeTitleLabel, ReusedGridBagConstraints.get(0, 0, 2, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		endPanel.add(endNodeLabel, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 100, 0));
 		endPanel.add(endLinkLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 100, 0));
+		endPanel.add(endNodeToLabel, ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 100, 0));
 		endPanel.add(endNodeTextField, ReusedGridBagConstraints.get(1, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		endPanel.add(endLinkComboBox, ReusedGridBagConstraints.get(1, 2, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
+		endPanel.add(endNodeToComboBox, ReusedGridBagConstraints.get(1, 3, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
 
 		startNodeTextField.setEnabled(false);
 		endNodeTextField.setEnabled(false);
@@ -237,9 +288,13 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 		endNodeTextField.setText("");
 		startLinkComboBox.removeAll();
 		endLinkComboBox.removeAll();
+		startNodeToComboBox.removeAll();
+		endNodeToComboBox.removeAll();
 
 		startLinkComboBox.setEnabled(true);
 		endLinkComboBox.setEnabled(true);
+		startNodeToComboBox.setEnabled(true);
+		endNodeToComboBox.setEnabled(true);
 		
 		if(path == null)
 		{
@@ -275,6 +330,8 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 		if(startLastBound != null)
 			smnelinks.remove(startLastBound);
 
+		List smnenodes = new LinkedList();
+
 		startAvailableLinksCount = smnelinks.size();
 		for(Iterator it = smnelinks.iterator(); it.hasNext();)
 		{
@@ -288,11 +345,18 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 			if(mle.getStartNode() instanceof MapPhysicalNodeElement
 				|| mle.getEndNode() instanceof MapPhysicalNodeElement)
 					it.remove();
+			else
+			{
+				smnenodes.add(mle.getOtherNode(startNode));
+			}
 		}
 
 		List emnelinks = path.getMap().getPhysicalLinksAt(endNode);
 		if(endLastBound != null)
 			emnelinks.remove(endLastBound);
+
+		List emnenodes = new LinkedList();
+
 		endAvailableLinksCount = emnelinks.size();
 		for(Iterator it = emnelinks.iterator(); it.hasNext();)
 		{
@@ -306,15 +370,26 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 			if(mle.getStartNode() instanceof MapPhysicalNodeElement
 				|| mle.getEndNode() instanceof MapPhysicalNodeElement)
 					it.remove();
+			else
+			{
+				emnenodes.add(mle.getOtherNode(endNode));
+			}
 		}
 
 		startLinkComboBox.setContents(smnelinks, true);
 		startLinkComboBox.setSelected(null);
 		endLinkComboBox.setContents(emnelinks, true);
 		endLinkComboBox.setSelected(null);
+
+		startNodeToComboBox.setContents(smnenodes, true);
+		startNodeToComboBox.setSelected(null);
+		endNodeToComboBox.setContents(emnenodes, true);
+		endNodeToComboBox.setSelected(null);
 		
 		startLinkComboBox.setEnabled(!startNode.equals(path.getEndNode()));
 		endLinkComboBox.setEnabled(!endNode.equals(path.getStartNode()));
+		startNodeToComboBox.setEnabled(startLinkComboBox.isEnabled());
+		endNodeToComboBox.setEnabled(endLinkComboBox.isEnabled());
 	}
 
 	/**
@@ -384,6 +459,7 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 			path.addLink(unbound);
 			link.getBinding().remove(path);
 		}
+		model.setContents(path.getLinks());
 		model.fireTableDataChanged();
 		setBindingPanels();
 	}
@@ -456,41 +532,6 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 			
 			MapUnboundLinkElement unbound = (MapUnboundLinkElement )path.nextLink(startLastBound);
 			addLinkBinding(selectedStartLink, unbound, startNode);
-/*
-			if(selectedStartLink.getOtherNode(startNode).equals(unbound.getOtherNode(startNode)))
-			{
-				if(unbound != null)
-				{
-					path.removeLink(unbound);
-	
-					RemoveUnboundLinkCommandBundle command = new RemoveUnboundLinkCommandBundle(unbound);
-					command.setLogicalNetLayer(path.getMapView().getLogicalNetLayer());
-					command.execute();
-				}
-			}
-			else
-			{
-				if(unbound.getStartNode().equals(startNode))
-				{
-					unbound.setStartNode(selectedStartLink.getOtherNode(startNode));
-				}
-				else
-				{
-					unbound.setEndNode(selectedStartLink.getOtherNode(startNode));
-				}
-
-				for(Iterator it = unbound.getNodeLinksAt(startNode).iterator(); it.hasNext();)
-				{
-					MapNodeLinkElement nl = (MapNodeLinkElement )it.next();
-					if(nl.getStartNode().equals(startNode))
-						nl.setStartNode(selectedStartLink.getOtherNode(startNode));
-					else
-						nl.setEndNode(selectedStartLink.getOtherNode(startNode));
-				}
-			}
-			path.addLink(selectedStartLink);
-			selectedStartLink.getBinding().add(path);
-*/
 		}
 		catch (ClassCastException e)
 		{
@@ -507,40 +548,6 @@ public final class MapCablePathBindPanel extends JPanel implements ObjectResourc
 				MapUnboundLinkElement unbound = (MapUnboundLinkElement )path.previousLink(endLastBound);
 
 				addLinkBinding(selectedEndLink, unbound, endNode);
-/*
-				if(selectedEndLink.getOtherNode(startNode).equals(unbound.getOtherNode(startNode)))
-				{
-					if(unbound != null)
-					{
-						path.removeLink(unbound);
-	
-						RemoveUnboundLinkCommandBundle command = new RemoveUnboundLinkCommandBundle(unbound);
-						command.setLogicalNetLayer(path.getMapView().getLogicalNetLayer());
-						command.execute();
-					}
-				}
-				else
-				{
-					if(unbound != null)
-					{
-						if(unbound.getStartNode().equals(startNode))
-							unbound.setStartNode(selectedEndLink.getOtherNode(startNode));
-						else
-							unbound.setEndNode(selectedEndLink.getOtherNode(startNode));
-
-						for(Iterator it = unbound.getNodeLinksAt(startNode).iterator(); it.hasNext();)
-						{
-							MapNodeLinkElement nl = (MapNodeLinkElement )it.next();
-							if(nl.getStartNode().equals(startNode))
-								nl.setStartNode(selectedEndLink.getOtherNode(startNode));
-							else
-								nl.setEndNode(selectedEndLink.getOtherNode(startNode));
-						}
-					}
-				}
-				path.addLink(selectedEndLink);
-				selectedStartLink.getBinding().add(path);
-*/
 			}
 		}
 		catch (ClassCastException e)

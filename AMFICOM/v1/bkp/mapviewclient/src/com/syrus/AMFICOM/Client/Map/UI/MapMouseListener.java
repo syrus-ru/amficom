@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.11 2004/11/10 16:00:54 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.12 2004/11/12 19:09:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -48,7 +48,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/11/10 16:00:54 $
+ * @version $Revision: 1.12 $, $Date: 2004/11/12 19:09:55 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -88,8 +88,6 @@ public final class MapMouseListener implements MouseListener
 
 	public void mousePressed(MouseEvent me)
 	{
-		//Берём фокус
-		logicalNetLayer.getMapViewer().getVisualComponent().grabFocus();
 		MapState mapState = logicalNetLayer.getMapState();
 		
 		mapState.setMouseMode(MapState.MOUSE_PRESSED);//Установить режим
@@ -109,6 +107,8 @@ public final class MapMouseListener implements MouseListener
 				case MapState.ZOOM_TO_RECT:
 					// fall throuth
 				case MapState.MOVE_TO_CENTER:
+					//Берём фокус
+					logicalNetLayer.getMapViewer().getVisualComponent().grabFocus();
 					break;
 
 				case MapState.NODELINK_SIZE_EDIT:
@@ -116,7 +116,7 @@ public final class MapMouseListener implements MouseListener
 				case MapState.NO_OPERATION:
 					if(logicalNetLayer.getCurrentMapElement() != null)
 						if(logicalNetLayer.getCurrentMapElement() instanceof MapNodeElement)
-							if(logicalNetLayer.getMapState().getShowMode() == MapState.SHOW_NODE_LINK)
+							if(mapState.getShowMode() == MapState.SHOW_NODE_LINK)
 						{
 							MapNodeElement node = (MapNodeElement )logicalNetLayer.getCurrentMapElement();
 							MapNodeLinkElement nodelink = logicalNetLayer.getEditedNodeLink(me.getPoint());
@@ -124,6 +124,9 @@ public final class MapMouseListener implements MouseListener
 								if(nodelink.getStartNode() == node
 									|| nodelink.getEndNode() == node)
 							{
+								if(this.sizeEditBox != null)
+									if(this.sizeEditBox.isVisible())
+										return;
 								sizeEditBox = new MapNodeLinkSizeField(logicalNetLayer, nodelink, node);
 								Rectangle rect = nodelink.getLabelBox();
 								sizeEditBox.setBounds(rect.x, rect.y, rect.width + 3, rect.height + 3);
@@ -142,6 +145,9 @@ public final class MapMouseListener implements MouseListener
 								return;
 							}
 						}
+
+					//Берём фокус
+					logicalNetLayer.getMapViewer().getVisualComponent().grabFocus();
 
 					MapElement mapElement = logicalNetLayer.getMapElementAtPoint(me.getPoint());
 					MapElement curElement = logicalNetLayer.getCurrentMapElement();
@@ -194,6 +200,15 @@ public final class MapMouseListener implements MouseListener
 					}
 					break;
 				default:
+					try
+					{
+						System.out.println("unknown map operation: " + mapState.getOperationMode());
+						throw new Exception("dummy");
+					}
+					catch(Exception e)
+					{
+						Environment.log(Environment.LOG_LEVEL_FINER, "current execution point with call stack:", null, null, e);
+					}
 					break;
 			}//switch (mapState.getOperationMode()
 		}

@@ -171,7 +171,7 @@ public class MapSiteGeneralPanel extends JPanel implements ObjectResourcePropert
 			
 			LogicalNetLayer lnl = (LogicalNetLayer )(site.getMap().getConverter());
 			
-			site.setScaleCoefficient(lnl.getDefaultScale() / lnl.getScale());
+			site.setScaleCoefficient(lnl.getDefaultScale() / lnl.getCurrentScale());
 
 			try 
 			{

@@ -16,7 +16,6 @@ import javax.swing.JMenuItem;
 public class UnboundPopupMenu extends MapPopupMenu 
 {
 	private JMenuItem removeMenuItem = new JMenuItem();
-	private JMenuItem propertiesMenuItem = new JMenuItem();
 	private JMenuItem bindMenuItem = new JMenuItem();
 	private JMenuItem generateMenuItem = new JMenuItem();
 
@@ -57,14 +56,6 @@ public class UnboundPopupMenu extends MapPopupMenu
 					removeUnbound();
 				}
 			});
-		propertiesMenuItem.setText(LangModelMap.getString("Properties"));
-		propertiesMenuItem.addActionListener(new ActionListener()
-			{
-				public void actionPerformed(ActionEvent e)
-				{
-					showProperties();
-				}
-			});
 		bindMenuItem.setText(LangModelMap.getString("Bind"));
 		bindMenuItem.addActionListener(new ActionListener()
 			{
@@ -82,14 +73,8 @@ public class UnboundPopupMenu extends MapPopupMenu
 				}
 			});
 		this.add(removeMenuItem);
-		this.add(propertiesMenuItem);
 		this.add(bindMenuItem);
 		this.add(generateMenuItem);
-	}
-
-	private void showProperties()
-	{
-		super.showProperties(unbound);
 	}
 
 	private void removeUnbound()

@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMenuBar.java,v 1.6 2004/10/19 11:48:27 krupenn Exp $
+ * $Id: MapEditorMenuBar.java,v 1.7 2004/11/12 19:09:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import javax.swing.JMenuItem;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/10/19 11:48:27 $
+ * @version $Revision: 1.7 $, $Date: 2004/11/12 19:09:54 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -291,17 +291,17 @@ public class MapEditorMenuBar extends JMenuBar
 		menuMapView.add(menuMapViewSaveAs);
 		menuMapView.add(menuMapViewClose);
 
-		menuHelp.add(menuHelpContents);
-		menuHelp.add(menuHelpFind);
-		menuHelp.add(menuHelpTips);
-		menuHelp.add(menuHelpStart);
-		menuHelp.add(menuHelpCourse);
-		menuHelp.addSeparator();
-		menuHelp.add(menuHelpHelp);
-		menuHelp.addSeparator();
-		menuHelp.add(menuHelpSupport);
-		menuHelp.add(menuHelpLicense);
-		menuHelp.addSeparator();
+//		menuHelp.add(menuHelpContents);
+//		menuHelp.add(menuHelpFind);
+//		menuHelp.add(menuHelpTips);
+//		menuHelp.add(menuHelpStart);
+//		menuHelp.add(menuHelpCourse);
+//		menuHelp.addSeparator();
+//		menuHelp.add(menuHelpHelp);
+//		menuHelp.addSeparator();
+//		menuHelp.add(menuHelpSupport);
+//		menuHelp.add(menuHelpLicense);
+//		menuHelp.addSeparator();
 		menuHelp.add(menuHelpAbout);
 
 		this.add(menuSession);

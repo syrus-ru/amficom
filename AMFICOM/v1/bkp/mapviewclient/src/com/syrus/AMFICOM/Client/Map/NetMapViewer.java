@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.2 2004/11/10 16:00:54 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.3 2004/11/12 19:09:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 
 import java.awt.Component;
 
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.List;
 
@@ -30,7 +31,7 @@ import javax.swing.JComponent;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/11/10 16:00:54 $
+ * @version $Revision: 1.3 $, $Date: 2004/11/12 19:09:54 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see SpatialNetMapViewer, MapInfoNetMapViewer
@@ -68,7 +69,7 @@ public abstract class NetMapViewer
 	 */
 	public abstract JComponent getVisualComponent();
 
-	public BufferedImage getMapShot()
+	public Image getMapShot()
 	{
 		JComponent component = getVisualComponent();
 		int width = component.getWidth();

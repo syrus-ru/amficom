@@ -1,5 +1,5 @@
 /**
- * $Id: CreateSiteCommandAtomic.java,v 1.3 2004/11/01 15:40:10 krupenn Exp $
+ * $Id: CreateSiteCommandAtomic.java,v 1.4 2004/11/12 19:09:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,7 +27,7 @@ import java.awt.geom.Point2D;
  * Разместить сетевой элемент на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.3 $, $Date: 2004/11/01 15:40:10 $
+ * @version $Revision: 1.4 $, $Date: 2004/11/12 19:09:54 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -102,7 +102,7 @@ public class CreateSiteCommandAtomic extends MapActionCommand
 				dataSource.GetUId( MapSiteNodeElement.typ),
 				coordinatePoint,
 				map,
-				logicalNetLayer.getDefaultScale() / logicalNetLayer.getScale(),
+				logicalNetLayer.getDefaultScale() / logicalNetLayer.getCurrentScale(),
 				proto);
 
 		Pool.put(MapSiteNodeElement.typ, site.getId(), site);

@@ -127,10 +127,10 @@ public final class SelectionPopupMenu extends MapPopupMenu
 		this.add(removeMenuItem);
 		this.add(insertSiteMenuItem);
 		this.add(generateMenuItem);
-		this.addSeparator();
+//		this.addSeparator();
 		this.add(addToCollectorMenuItem);
 		this.add(removeFromCollectorMenuItem);
-		this.addSeparator();
+//		this.addSeparator();
 		this.add(newCollectorMenuItem);
 		this.add(removeCollectorMenuItem);
 	}

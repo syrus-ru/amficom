@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorToolBar.java,v 1.4 2004/10/19 11:48:27 krupenn Exp $
+ * $Id: MapEditorToolBar.java,v 1.5 2004/11/12 19:09:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import java.awt.event.ActionListener;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/19 11:48:27 $
+ * @version $Revision: 1.5 $, $Date: 2004/11/12 19:09:54 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -51,6 +51,7 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 	JButton menuMapViewNew = new JButton();
 	JButton menuMapViewOpen = new JButton();
 	JButton menuMapViewSave = new JButton();
+	JButton menuViewSetup = new JButton();
 
 	public final static int imgSize = 16;
 	public final static int btnSize = 24;
@@ -154,6 +155,14 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		menuMapViewSave.setName("menuMapViewSave");
 		menuMapViewSave.addActionListener(actionAdapter);
 
+		menuViewSetup.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/mapsetup.gif").
+				getScaledInstance(imgSize, imgSize, Image.SCALE_DEFAULT)));
+		menuViewSetup.setMaximumSize(buttonSize);
+		menuViewSetup.setPreferredSize(buttonSize);
+		menuViewSetup.setToolTipText(LangModelMap.getString("menuViewSetup"));
+		menuViewSetup.setName("menuViewSetup");
+		menuViewSetup.addActionListener(actionAdapter);
+
 		add(sessionOpen);
 //		add(buttonCloseSession);
 //		addSeparator();
@@ -166,6 +175,8 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		add(menuMapViewNew);
 		add(menuMapViewOpen);
 		add(menuMapViewSave);
+		addSeparator();
+		add(menuViewSetup);
 		addSeparator();
 	}
 
@@ -201,6 +212,9 @@ public class MapEditorToolBar extends JToolBar implements ApplicationModelListen
 		menuMapViewOpen.setEnabled(aModel.isEnabled("menuMapViewOpen"));
 		menuMapViewSave.setVisible(aModel.isVisible("menuMapViewSave"));
 		menuMapViewSave.setEnabled(aModel.isEnabled("menuMapViewSave"));
+
+		menuViewSetup.setVisible(aModel.isVisible("menuViewSetup"));
+		menuViewSetup.setEnabled(aModel.isEnabled("menuViewSetup"));
 	}
 
 	public void buttonActionPerformed(ActionEvent e)

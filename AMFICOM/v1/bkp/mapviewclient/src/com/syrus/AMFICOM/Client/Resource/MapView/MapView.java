@@ -1,5 +1,5 @@
 /**
- * $Id: MapView.java,v 1.19 2004/11/01 15:40:10 krupenn Exp $
+ * $Id: MapView.java,v 1.20 2004/11/12 19:09:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -58,7 +58,7 @@ import java.io.Serializable;
  * 
  * 
  * 
- * @version $Revision: 1.19 $, $Date: 2004/11/01 15:40:10 $
+ * @version $Revision: 1.20 $, $Date: 2004/11/12 19:09:55 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -1236,6 +1236,7 @@ public final class MapView extends StubResource implements Serializable
 			MapElement mapElement = (MapElement )e.next();
 			mapElement.setSelected(false);
 		}
+		getMap().clearSelection();
 	}
 
 	/**

@@ -85,9 +85,10 @@ public class CablePathPopupMenu extends MapPopupMenu
 				}
 			});
 		this.add(removeMenuItem);
-		this.add(propertiesMenuItem);
 		this.add(bindMenuItem);
 		this.add(generateMenuItem);
+		this.addSeparator();
+		this.add(propertiesMenuItem);
 	}
 
 	private void showProperties()

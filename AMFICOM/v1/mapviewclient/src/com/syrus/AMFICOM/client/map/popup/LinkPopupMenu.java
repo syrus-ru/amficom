@@ -137,14 +137,15 @@ public final class LinkPopupMenu extends MapPopupMenu
 			});
 
 		this.add(removeMenuItem);
-		this.add(propertiesMenuItem);
 		this.add(addMarkMenuItem);
-		this.addSeparator();
+//		this.addSeparator();
 		this.add(addToCollectorMenuItem);
 		this.add(removeFromCollectorMenuItem);
-		this.addSeparator();
+//		this.addSeparator();
 		this.add(newCollectorMenuItem);
 		this.add(removeCollectorMenuItem);
+		this.addSeparator();
+		this.add(propertiesMenuItem);
 	}
 
 	private void showProperties()

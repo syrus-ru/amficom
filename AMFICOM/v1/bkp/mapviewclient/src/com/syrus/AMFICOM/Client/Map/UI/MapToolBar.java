@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.7 2004/11/11 18:09:30 krupenn Exp $
+ * $Id: MapToolBar.java,v 1.8 2004/11/12 19:09:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,11 +13,14 @@ import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModelListener;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -26,7 +29,9 @@ import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
@@ -40,7 +45,7 @@ import java.awt.event.KeyEvent;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/11/11 18:09:30 $
+ * @version $Revision: 1.8 $, $Date: 2004/11/12 19:09:55 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -78,6 +83,8 @@ public final class MapToolBar extends JToolBar
 	private JTextField scaleField = new JTextField();
 
 	private JButton optionsButton = new JButton();
+
+	private JButton shotButton = new JButton();
 
 	private static Dimension buttonSize = new Dimension(24, 24);
 	private static Dimension fieldSize = new Dimension(60, 24);
@@ -265,6 +272,30 @@ public final class MapToolBar extends JToolBar
 		optionsButton.setMaximumSize(buttonSize);
 		optionsButton.setMinimumSize(buttonSize);
 		optionsButton.setName("mapViewOptions");
+
+		shotButton.setToolTipText("Снимок");
+		shotButton.setText("Снимок");
+		shotButton.setPreferredSize(buttonSize);
+		shotButton.setMaximumSize(buttonSize);
+		shotButton.setMinimumSize(buttonSize);
+		shotButton.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					JDialog dialog = new JDialog(
+							Environment.getActiveWindow(),
+							true);
+					Image image = getLogicalNetLayer().getMapViewer().getMapShot();
+//					JPanel panel = new JPanel();
+					JLabel label = new JLabel(new ImageIcon(image));
+//					panel.add(label);
+					dialog.getContentPane().setLayout(new BorderLayout());
+					dialog.getContentPane().add(label, BorderLayout.CENTER);
+					dialog.pack();
+
+					dialog.setVisible(true);
+				}
+			});
 	
 		
 		latitudeLabel.setText(LangModelMap.getString("Latitude"));
@@ -363,7 +394,8 @@ public final class MapToolBar extends JToolBar
 		this.add(sp);
 		this.addSeparator();
 		this.add(optionsButton);
-//		this.addSeparator();
+		this.addSeparator();
+		this.add(shotButton);
 //		this.add(penp);
 	}
 

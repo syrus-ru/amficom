@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.4 2004/10/18 15:33:00 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.5 2004/11/12 19:09:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,7 +25,7 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/18 15:33:00 $
+ * @version $Revision: 1.5 $, $Date: 2004/11/12 19:09:54 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -71,7 +71,7 @@ public class CreatePhysicalNodeCommandAtomic extends MapActionCommand
 		// установить коэффициент для масштабирования изображения
 		// в соответствии с текущим масштабом отображения карты
 		node.setScaleCoefficient(
-				logicalNetLayer.getDefaultScale() / logicalNetLayer.getScale());
+				logicalNetLayer.getDefaultScale() / logicalNetLayer.getCurrentScale());
 
 		// по умолчанию топологиеский узел не активен
 		node.setActive(false);

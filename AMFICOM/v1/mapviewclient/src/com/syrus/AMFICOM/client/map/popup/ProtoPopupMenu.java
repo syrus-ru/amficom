@@ -68,6 +68,7 @@ public final class ProtoPopupMenu extends MapPopupMenu
 				}
 			});
 		this.add(removeMenuItem);
+		this.addSeparator();
 		this.add(propertiesMenuItem);
 	}
 

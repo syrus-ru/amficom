@@ -72,8 +72,9 @@ public final class MeasurementPathPopupMenu extends MapPopupMenu
 					addMarker();
 				}
 			});
-		this.add(propertiesMenuItem);
 		this.add(addMarkerMenuItem);
+		this.addSeparator();
+		this.add(propertiesMenuItem);
 	}
 
 	private void showProperties()

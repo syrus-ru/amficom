@@ -60,6 +60,7 @@ public class VoidElementPopupMenu extends MapPopupMenu
 				}
 			});
 		this.add(addSiteMenuItem);
+		this.addSeparator();
 		this.add(propertiesMenuItem);
 	}
 
