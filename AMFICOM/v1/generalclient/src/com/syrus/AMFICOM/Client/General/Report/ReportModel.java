@@ -77,10 +77,13 @@ abstract public class ReportModel
 	/**
 	 *
 	 * @param rp Элемент шаблона
-	 * @return возвращает true, если при реализации эелемента
-	 * шаблона строится таблица.
+	 * @return возвращает
+	 *  1, если при реализации эелемента
+	 * шаблона строится таблица,
+	 *  0, если график,
+	 *  -1, если схема
 	 */
-	abstract public boolean isTableReport(ObjectsReport rp);
+	abstract public int getReportKind(ObjectsReport rp);
 
 	/**
 	 * Заполняет шаблон, отчёты которого описываются

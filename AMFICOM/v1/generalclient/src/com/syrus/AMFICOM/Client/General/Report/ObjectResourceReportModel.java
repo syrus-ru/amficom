@@ -209,14 +209,14 @@ else
 		return reportObjects;
 	}
 
-	public boolean isTableReport(ObjectsReport rp)
+	public int getReportKind(ObjectsReport rp)
 	{
 		if (  rp.view_type.equals(ObjectResourceReportModel.rt_statistics)
 			|| rp.view_type.equals(ObjectResourceReportModel.rt_objProperies)
 			|| rp.view_type.equals(ObjectResourceReportModel.rt_objectsReport))
-			return true;
+			return 1;
 
-		return false;
+		return 0;
 	}
 
 	public JComponent createReport(
