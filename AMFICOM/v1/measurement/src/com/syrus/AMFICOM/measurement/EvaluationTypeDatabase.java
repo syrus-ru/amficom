@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.11 2004/07/28 11:58:31 arseniy Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.12 2004/07/28 16:00:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/07/28 11:58:31 $
+ * @version $Revision: 1.12 $, $Date: 2004/07/28 16:00:05 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -44,7 +44,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 	public static final String	COLUMN_DESCRIPTION = "description";
 
 	public static final String	LINK_COLUMN_EVALUATION_TYPE_ID = "evaluation_type_id";
-	
+
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
 	private EvaluationType fromStorableObject(StorableObject storableObject) throws IllegalDataException {

@@ -10,6 +10,7 @@ APPCLASSPATH = $(LIBDIR)/general.jar:$(LIBDIR)/util.jar
 HOST=mongol
 SERVICE_NAME=mongol
 
+IDL2JAVAFLAGS = -strict
 JAVACFLAGS = -source 1.3
 SUNJAVACFLAGS = -target 1.2
 JIKESFLAGS = -target 1.2

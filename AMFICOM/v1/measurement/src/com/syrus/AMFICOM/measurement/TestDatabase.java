@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.12 2004/07/28 07:22:49 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.13 2004/07/28 16:00:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/07/28 07:22:49 $
+ * @version $Revision: 1.13 $, $Date: 2004/07/28 16:00:05 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -541,7 +541,7 @@ public class TestDatabase extends StorableObjectDatabase {
 	private void updateModified(Test test) throws UpdateObjectException {
 		String testIdStr = test.getId().toSQLString();
 		String sql = SQL_UPDATE + ObjectEntities.TEST_ENTITY
-			+ SQL_SELECT
+			+ SQL_SET
 			+ COLUMN_MODIFIED + EQUALS
 			+ DatabaseDate.toUpdateSubString(test.getModified()) + COMMA
 			+ COLUMN_MODIFIER_ID + EQUALS
@@ -570,4 +570,22 @@ public class TestDatabase extends StorableObjectDatabase {
 			}
 		}
 	}
+
+//	public static List retrieveTestsForMCMOrderByStartTime(Identifier mcmId) {
+//		String mcmIdStr = mcmId.toSQLString();
+//		String sql = SQL_SELECT
+//			+ COLUMN_ID
+//			+ SQL_FROM + ObjectEntities.TEST_ENTITY
+//			+ SQL_WHERE + COLUMN_MONITORED_ELEMENT_ID + SQL_IN
+//				+ OPEN_BRACKET
+//				+ SQL_SELECT
+//				+ COLUMN_ID
+//				+ SQL_FROM + ObjectEntities.ME_ENTITY
+//				+ SQL_WHERE + "path_id" + SQL_IN
+//					+ OPEN_BRACKET
+//					+ SQL_SELECT
+//					+ COLUMN_ID
+//					+ SQL_FROM + "transmissionpaths"
+//				+ CLOSE_BRACKET
+//	}
 }
