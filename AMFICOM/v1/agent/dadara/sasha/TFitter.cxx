@@ -1,4 +1,4 @@
-// @(#)root/minuit:$Name:  $:$Id: TFitter.cxx,v 1.1 2004/04/05 14:41:03 arseniy Exp $
+// @(#)root/minuit:$Name:  $:$Id: TFitter.cxx,v 1.1.1.1 2004/04/05 14:41:03 arseniy Exp $
 // Author: Rene Brun   31/08/99
 /*************************************************************************
  * Copyright (C) 1995-2000, Rene Brun and Fons Rademakers.               *
