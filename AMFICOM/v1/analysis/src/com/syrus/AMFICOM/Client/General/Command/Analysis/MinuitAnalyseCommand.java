@@ -8,7 +8,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 
-import com.syrus.AMFICOM.analysis.AnalysisManager;
+import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
@@ -64,7 +64,7 @@ public class MinuitAnalyseCommand extends VoidCommand
 			if (params == null)
 			{
 		System.out.println("MinuitAnalysis.execute(): create AnalysisManager at dt/ms " + (System.currentTimeMillis()-t0));
-				new AnalysisManager();
+				new ClientAnalysisManager();
 		System.out.println("MinuitAnalysis.execute(): AnalysisManager created at dt/ms " + (System.currentTimeMillis()-t0));
 				params = (double[])Pool.get("analysisparameters", "minuitanalysis");
 			}
@@ -84,7 +84,7 @@ public class MinuitAnalyseCommand extends VoidCommand
 
 	  double[] meanAttenuation = { 0 };
 
-	  ReflectogramEvent[] ep = AnalysisManager.makeAnalysis(
+	  ReflectogramEvent[] ep = ClientAnalysisManager.makeAnalysis(
 		  (int)params[6], bs, params, meanAttenuation, reflSize, nReflSize,
 		  tracesMap);
 

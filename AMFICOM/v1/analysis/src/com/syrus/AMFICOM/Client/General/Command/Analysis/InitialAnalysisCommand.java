@@ -3,7 +3,7 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 import java.util.Map;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.analysis.AnalysisManager;
+import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.*;
 import com.syrus.io.BellcoreStructure;
 
@@ -22,7 +22,7 @@ public class InitialAnalysisCommand extends VoidCommand {
 			double[] params = (double[]) Pool.get("analysisparameters",
 					"minuitanalysis");
 			if (params == null) {
-				new AnalysisManager();
+				new ClientAnalysisManager();
 				params = (double[]) Pool.get("analysisparameters",
 						"minuitanalysis");
 			}
@@ -46,7 +46,7 @@ public class InitialAnalysisCommand extends VoidCommand {
 
 			double meanAttenuation[] = { 0 };
 
-			ReflectogramEvent[] ep = AnalysisManager.makeAnalysis(
+			ReflectogramEvent[] ep = ClientAnalysisManager.makeAnalysis(
 					0, bs,
 					pars, meanAttenuation, reflSize, nReflSize, tracesMap);
 			

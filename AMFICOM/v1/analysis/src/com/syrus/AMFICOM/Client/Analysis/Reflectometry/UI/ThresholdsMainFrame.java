@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.analysis.AnalysisManager;
+import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.io.BellcoreStructure;
@@ -31,7 +31,7 @@ public class ThresholdsMainFrame extends JFrame
 			new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 	private Dispatcher internal_dispatcher = new Dispatcher();
 
-	AnalysisManager aManager = new AnalysisManager();
+	ClientAnalysisManager aManager = new ClientAnalysisManager();
 	BorderLayout borderLayout = new BorderLayout();
 	JPanel mainPanel = new JPanel();
 	AnalyseMainToolBar toolBar = new AnalyseMainToolBar();

@@ -5,7 +5,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.SwingUtilities;
 
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.analysis.AnalysisManager;
+import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.*;
 
 public class HistogrammPanel extends ScaledGraphPanel
@@ -185,8 +185,8 @@ public class HistogrammPanel extends ScaledGraphPanel
 		int max_index = histo.getMaximumIndex();
 
 		init(y, delta_x);
-		gauss = AnalysisManager.calcGaussian(y, max_index);
-		threshold = AnalysisManager.calcThresholdCurve(y, max_index);
+		gauss = CoreAnalysisManager.calcGaussian(y, max_index);
+		threshold = CoreAnalysisManager.calcThresholdCurve(y, max_index);
 
 		for (int i = 0; i < y.length; i++)
 		{
