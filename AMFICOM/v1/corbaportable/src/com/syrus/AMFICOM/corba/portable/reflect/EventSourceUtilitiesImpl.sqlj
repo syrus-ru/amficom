@@ -1,5 +1,5 @@
 /*
- * $Id: EventSourceUtilitiesImpl.sqlj,v 1.1 2004/06/22 12:27:24 bass Exp $
+ * $Id: EventSourceUtilitiesImpl.sqlj,v 1.2 2004/09/25 18:06:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,33 +16,38 @@ import sqlj.runtime.ExecutionContext;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/06/22 12:27:24 $
  * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2004/09/25 18:06:32 $
+ * @module corbaportable_v1
  */
 public final class EventSourceUtilitiesImpl extends MutableObjectResourceUtilitiesImpl implements EventSourceUtilitiesOperations {
 	public EventSourceUtilitiesImpl() {
 	}
 
 	protected String[] getIds(DefaultContext connCtx, ExecutionContext execCtx) throws SQLException {
-		IdIterator idIterator;
-		if (connCtx == null) {
-			#sql idIterator = {
-				SELECT id FROM amficom.eventsources
-			};
-		} else if (execCtx == null) {
-			#sql [connCtx] idIterator = {
-				SELECT id FROM amficom.eventsources
-			};
-		} else {
-			#sql [connCtx, execCtx] idIterator = {
-				SELECT id FROM amficom.eventsources
-			};
+		IdIterator idIterator = null;
+		try {
+			if (connCtx == null) {
+				#sql idIterator = {
+					SELECT id FROM amficom.eventsources
+				};
+			} else if (execCtx == null) {
+				#sql [connCtx] idIterator = {
+					SELECT id FROM amficom.eventsources
+				};
+			} else {
+				#sql [connCtx, execCtx] idIterator = {
+					SELECT id FROM amficom.eventsources
+				};
+			}
+			ArrayList ids = new ArrayList();
+			while (idIterator.next())
+				ids.add(idIterator.id());
+			return (String[]) (ids.toArray(new String[ids.size()]));
+		} finally {
+			if (idIterator != null)
+				idIterator.close();
 		}
-		ArrayList ids = new ArrayList();
-		while (idIterator.next())
-			ids.add(idIterator.id());
-		idIterator.close();
-		return (String[]) (ids.toArray(new String[ids.size()]));
 	}
 
 	protected String getUUID(DefaultContext connCtx, ExecutionContext execCtx) throws SQLException {
@@ -87,7 +92,8 @@ public final class EventSourceUtilitiesImpl extends MutableObjectResourceUtiliti
 			ExecutionContext execCtx = connCtx.getExecutionContext();
 			return getObjectSourceName(id, connCtx, execCtx);
 		} catch (SQLException sqle) {
-			throw new DatabaseAccessException();
+			sqle.printStackTrace();
+			throw ObjectResourceImpl.box(sqle);
 		}
 	}
 
@@ -115,7 +121,8 @@ public final class EventSourceUtilitiesImpl extends MutableObjectResourceUtiliti
 			ExecutionContext execCtx = connCtx.getExecutionContext();
 			return getDescription(id, connCtx, execCtx);
 		} catch (SQLException sqle) {
-			throw new DatabaseAccessException();
+			sqle.printStackTrace();
+			throw ObjectResourceImpl.box(sqle);
 		}
 	}
 
@@ -143,7 +150,8 @@ public final class EventSourceUtilitiesImpl extends MutableObjectResourceUtiliti
 			ExecutionContext execCtx = connCtx.getExecutionContext();
 			return getObjectSourceId(id, connCtx, execCtx);
 		} catch (SQLException sqle) {
-			throw new DatabaseAccessException();
+			sqle.printStackTrace();
+			throw ObjectResourceImpl.box(sqle);
 		}
 	}
 
@@ -171,32 +179,37 @@ public final class EventSourceUtilitiesImpl extends MutableObjectResourceUtiliti
 			ExecutionContext execCtx = connCtx.getExecutionContext();
 			return getTypeId(id, connCtx, execCtx);
 		} catch (SQLException sqle) {
-			throw new DatabaseAccessException();
+			sqle.printStackTrace();
+			throw ObjectResourceImpl.box(sqle);
 		}
 	}
 
 	String[] getMatchingIds(String eventSourceType, DefaultContext connCtx, ExecutionContext execCtx) throws SQLException {
 		if (eventSourceType == null)
 			return new String[0];
-		IdIterator idIterator;
-		if (connCtx == null) {
-			#sql idIterator = {
-				SELECT id FROM amficom.eventsources WHERE type_id = :(eventSourceType)
-			};
-		} else if (execCtx == null) {
-			#sql [connCtx] idIterator = {
-				SELECT id FROM amficom.eventsources WHERE type_id = :(eventSourceType)
-			};
-		} else {
-			#sql [connCtx, execCtx] idIterator = {
-				SELECT id FROM amficom.eventsources WHERE type_id = :(eventSourceType)
-			};
+		IdIterator idIterator = null;
+		try {
+			if (connCtx == null) {
+				#sql idIterator = {
+					SELECT id FROM amficom.eventsources WHERE type_id = :(eventSourceType)
+				};
+			} else if (execCtx == null) {
+				#sql [connCtx] idIterator = {
+					SELECT id FROM amficom.eventsources WHERE type_id = :(eventSourceType)
+				};
+			} else {
+				#sql [connCtx, execCtx] idIterator = {
+					SELECT id FROM amficom.eventsources WHERE type_id = :(eventSourceType)
+				};
+			}
+			ArrayList ids = new ArrayList();
+			while (idIterator.next())
+				ids.add(idIterator.id());
+			return (String[]) (ids.toArray(new String[ids.size()]));
+		} finally {
+			if (idIterator != null)
+				idIterator.close();
 		}
-		ArrayList ids = new ArrayList();
-		while (idIterator.next())
-			ids.add(idIterator.id());
-		idIterator.close();
-		return (String[]) (ids.toArray(new String[ids.size()]));
 	}
 
 	public String[] getMatchingIds(String eventSourceType) throws DatabaseAccessException {
@@ -205,7 +218,8 @@ public final class EventSourceUtilitiesImpl extends MutableObjectResourceUtiliti
 			ExecutionContext execCtx = connCtx.getExecutionContext();
 			return getMatchingIds(eventSourceType, connCtx, execCtx);
 		} catch (SQLException sqle) {
-			throw new DatabaseAccessException();
+			sqle.printStackTrace();
+			throw ObjectResourceImpl.box(sqle);
 		}
 	}
 

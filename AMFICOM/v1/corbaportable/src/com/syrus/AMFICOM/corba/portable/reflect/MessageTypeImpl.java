@@ -1,5 +1,5 @@
 /*
- * $Id: MessageTypeImpl.java,v 1.1 2004/06/22 12:27:24 bass Exp $
+ * $Id: MessageTypeImpl.java,v 1.2 2004/09/25 18:06:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,14 +10,14 @@ package com.syrus.AMFICOM.corba.portable.reflect;
 
 import com.syrus.AMFICOM.CORBA.Constant.MessageTypeConstants;
 import com.syrus.AMFICOM.corba.portable.common.DatabaseAccessException;
-import com.syrus.util.corba.JavaSoftORBUtil;
+import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResourceImpl;
+import com.syrus.util.logging.ErrorHandler;
 import java.util.*;
-import org.omg.CORBA.UserException;
-import org.omg.CosNaming.NamingContextExtHelper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/06/22 12:27:24 $
  * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2004/09/25 18:06:32 $
+ * @module corbaportable_v1
  */
 public final class MessageTypeImpl {
 	/**
@@ -209,9 +209,17 @@ public final class MessageTypeImpl {
 
 	static {
 		try {
-			messageTypeUtilities = MessageTypeUtilitiesHelper.narrow(NamingContextExtHelper.narrow(JavaSoftORBUtil.getInstance().getORB().resolve_initial_references("NameService")).resolve_str("MessageTypeUtilities"));
-		} catch (UserException ue) {
-			ue.printStackTrace();
+			messageTypeUtilities
+				= MessageTypeUtilitiesHelper
+				.narrow(ObjectResourceImpl.getObject("MessageTypeUtilities"));
+		} catch (Exception e) {
+			/**
+			 * @todo In the future, catch UserException and/or
+			 *       InvocationTargetException separately.
+			 *       In particular, when using JdbcConnection, a
+			 *       UserException will be surely thrown.
+			 */
+			e.printStackTrace();
 		}
 	}
 
@@ -220,7 +228,7 @@ public final class MessageTypeImpl {
 		try {
 			messageType = MessageTypeImpl(ID_WARNING);
 		} catch (DatabaseAccessException dae) {
-			dae.printStackTrace();
+			ErrorHandler.getInstance().error(ObjectResourceImpl.unbox(dae));
 			messageType = null;
 		}
 		DEFAULT_MESSAGE_TYPE = messageType;
@@ -286,7 +294,7 @@ public final class MessageTypeImpl {
 		try {	
 			ids = getIds();
 		} catch (DatabaseAccessException dae) {
-			dae.printStackTrace();
+			ErrorHandler.getInstance().error(ObjectResourceImpl.unbox(dae));
 			ids = new String[0];
 		}
 		ArrayList messageTypes = new ArrayList();

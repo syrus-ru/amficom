@@ -1,5 +1,5 @@
 /*
- * $Id: AlarmTypeUtilitiesImpl.sqlj,v 1.1 2004/06/22 12:27:24 bass Exp $
+ * $Id: AlarmTypeUtilitiesImpl.sqlj,v 1.2 2004/09/25 18:06:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,40 +9,45 @@
 package com.syrus.AMFICOM.corba.portable.reflect;
 
 import com.syrus.AMFICOM.corba.portable.common.DatabaseAccessException;
-import com.syrus.AMFICOM.corba.portable.reflect.common.ImmutableObjectResourceUtilitiesImpl;
+import com.syrus.AMFICOM.corba.portable.reflect.common.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import sqlj.runtime.ExecutionContext;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/06/22 12:27:24 $
  * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2004/09/25 18:06:32 $
+ * @module corbaportable_v1
  */
 public final class AlarmTypeUtilitiesImpl extends ImmutableObjectResourceUtilitiesImpl implements AlarmTypeUtilitiesOperations {
 	public AlarmTypeUtilitiesImpl() {
 	}
 
 	protected String[] getIds(DefaultContext connCtx, ExecutionContext execCtx) throws SQLException {
-		IdIterator idIterator;
-		if (connCtx == null) {
-			#sql idIterator = {
-				SELECT id FROM amficom.alarmtypes
-			};
-		} else if (execCtx == null) {
-			#sql [connCtx] idIterator = {
-				SELECT id FROM amficom.alarmtypes
-			};
-		} else {
-			#sql [connCtx, execCtx] idIterator = {
-				SELECT id FROM amficom.alarmtypes
-			};
+		IdIterator idIterator = null;
+		try {
+			if (connCtx == null) {
+				#sql idIterator = {
+					SELECT id FROM amficom.alarmtypes
+				};
+			} else if (execCtx == null) {
+				#sql [connCtx] idIterator = {
+					SELECT id FROM amficom.alarmtypes
+				};
+			} else {
+				#sql [connCtx, execCtx] idIterator = {
+					SELECT id FROM amficom.alarmtypes
+				};
+			}
+			ArrayList ids = new ArrayList();
+			while (idIterator.next())
+				ids.add(idIterator.id());
+			return (String[]) (ids.toArray(new String[ids.size()]));
+		} finally {
+			if (idIterator != null)
+				idIterator.close();
 		}
-		ArrayList ids = new ArrayList();
-		while (idIterator.next())
-			ids.add(idIterator.id());
-		idIterator.close();
-		return (String[]) (ids.toArray(new String[ids.size()]));
 	}
 
 	protected String getCodename(String id, DefaultContext connCtx, ExecutionContext execCtx) throws SQLException {
@@ -105,7 +110,8 @@ public final class AlarmTypeUtilitiesImpl extends ImmutableObjectResourceUtiliti
 			ExecutionContext execCtx = connCtx.getExecutionContext();
 			return getDescription(id, connCtx, execCtx);
 		} catch (SQLException sqle) {
-			throw new DatabaseAccessException();
+			sqle.printStackTrace();
+			throw ObjectResourceImpl.box(sqle);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: AlertingMessageUserLinkUtilitiesImpl.sqlj,v 1.1 2004/06/22 12:27:24 bass Exp $
+ * $Id: AlertingMessageUserLinkUtilitiesImpl.sqlj,v 1.2 2004/09/25 18:06:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,16 +8,17 @@
 
 package com.syrus.AMFICOM.corba.portable.reflect;
 
-import com.syrus.AMFICOM.corba.portable.common.*;
-import com.syrus.AMFICOM.corba.portable.reflect.common.MutableObjectResourceUtilitiesImpl;
+import com.syrus.AMFICOM.corba.portable.common.DatabaseAccessException;
+import com.syrus.AMFICOM.corba.portable.reflect.common.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import sqlj.runtime.ExecutionContext;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/06/22 12:27:24 $
  * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2004/09/25 18:06:32 $
+ * @module corbaportable_v1
  *
  * @todo rewrite the class to have only one getMatching* accessor method.
  *       Consider that certain fields can be nulls.
@@ -35,25 +36,29 @@ public final class AlertingMessageUserLinkUtilitiesImpl extends MutableObjectRes
 	}
 
 	protected String[] getIds(DefaultContext connCtx, ExecutionContext execCtx) throws SQLException {
-		IdIterator idIterator;
-		if (connCtx == null) {
-			#sql idIterator = {
-				SELECT id FROM amficom.alertingmessageuserlinks
-			};
-		} else if (execCtx == null) {
-			#sql [connCtx] idIterator = {
-				SELECT id FROM amficom.alertingmessageuserlinks
-			};
-		} else {
-			#sql [connCtx, execCtx] idIterator = {
-				SELECT id FROM amficom.alertingmessageuserlinks
-			};
+		IdIterator idIterator = null;
+		try {
+			if (connCtx == null) {
+				#sql idIterator = {
+					SELECT id FROM amficom.alertingmessageuserlinks
+				};
+			} else if (execCtx == null) {
+				#sql [connCtx] idIterator = {
+					SELECT id FROM amficom.alertingmessageuserlinks
+				};
+			} else {
+				#sql [connCtx, execCtx] idIterator = {
+					SELECT id FROM amficom.alertingmessageuserlinks
+				};
+			}
+			ArrayList ids = new ArrayList();
+			while (idIterator.next())
+				ids.add(idIterator.id());
+			return (String[]) (ids.toArray(new String[ids.size()]));
+		} finally {
+			if (idIterator != null)
+				idIterator.close();
 		}
-		ArrayList ids = new ArrayList();
-		while (idIterator.next())
-			ids.add(idIterator.id());
-		idIterator.close();
-		return (String[]) (ids.toArray(new String[ids.size()]));
 	}
 
 	protected String getUUID(DefaultContext connCtx, ExecutionContext execCtx) throws SQLException {
@@ -116,7 +121,8 @@ public final class AlertingMessageUserLinkUtilitiesImpl extends MutableObjectRes
 			ExecutionContext execCtx = connCtx.getExecutionContext();
 			return _new(alertingMessageId, alertingTypeId, sourceId, userId, connCtx, execCtx);
 		} catch (SQLException sqle) {
-			throw new DatabaseAccessException();
+			sqle.printStackTrace();
+			throw ObjectResourceImpl.box(sqle);
 		}
 	}
 
@@ -159,7 +165,8 @@ public final class AlertingMessageUserLinkUtilitiesImpl extends MutableObjectRes
 			ExecutionContext execCtx = connCtx.getExecutionContext();
 			delete(id, connCtx, execCtx);
 		} catch (SQLException sqle) {
-			throw new DatabaseAccessException();
+			sqle.printStackTrace();
+			throw ObjectResourceImpl.box(sqle);
 		}
 	}
 
@@ -187,7 +194,8 @@ public final class AlertingMessageUserLinkUtilitiesImpl extends MutableObjectRes
 			ExecutionContext execCtx = connCtx.getExecutionContext();
 			return getAlertingMessageId(id, connCtx, execCtx);
 		} catch (SQLException sqle) {
-			throw new DatabaseAccessException();
+			sqle.printStackTrace();
+			throw ObjectResourceImpl.box(sqle);
 		}
 	}
 
@@ -224,7 +232,8 @@ public final class AlertingMessageUserLinkUtilitiesImpl extends MutableObjectRes
 			ExecutionContext execCtx = connCtx.getExecutionContext();
 			setAlertingMessageId(id, alertingMessageId, connCtx, execCtx);
 		} catch (SQLException sqle) {
-			throw new DatabaseAccessException();
+			sqle.printStackTrace();
+			throw ObjectResourceImpl.box(sqle);
 		}
 	}
 
@@ -252,7 +261,8 @@ public final class AlertingMessageUserLinkUtilitiesImpl extends MutableObjectRes
 			ExecutionContext execCtx = connCtx.getExecutionContext();
 			return getAlertingTypeId(id, connCtx, execCtx);
 		} catch (SQLException sqle) {
-			throw new DatabaseAccessException();
+			sqle.printStackTrace();
+			throw ObjectResourceImpl.box(sqle);
 		}
 	}
 
@@ -289,7 +299,8 @@ public final class AlertingMessageUserLinkUtilitiesImpl extends MutableObjectRes
 			ExecutionContext execCtx = connCtx.getExecutionContext();
 			setAlertingTypeId(id, alertingTypeId, connCtx, execCtx);
 		} catch (SQLException sqle) {
-			throw new DatabaseAccessException();
+			sqle.printStackTrace();
+			throw ObjectResourceImpl.box(sqle);
 		}
 	}
 
@@ -317,7 +328,8 @@ public final class AlertingMessageUserLinkUtilitiesImpl extends MutableObjectRes
 			ExecutionContext execCtx = connCtx.getExecutionContext();
 			return getSourceId(id, connCtx, execCtx);
 		} catch (SQLException sqle) {
-			throw new DatabaseAccessException();
+			sqle.printStackTrace();
+			throw ObjectResourceImpl.box(sqle);
 		}
 	}
 
@@ -345,32 +357,37 @@ public final class AlertingMessageUserLinkUtilitiesImpl extends MutableObjectRes
 			ExecutionContext execCtx = connCtx.getExecutionContext();
 			return getUserId(id, connCtx, execCtx);
 		} catch (SQLException sqle) {
-			throw new DatabaseAccessException();
+			sqle.printStackTrace();
+			throw ObjectResourceImpl.box(sqle);
 		}
 	}
 
 	String[] getMatchingIds1(String alertingMessageId, String sourceId, DefaultContext connCtx, ExecutionContext execCtx) throws SQLException {
 		if ((alertingMessageId == null) || (sourceId == null))
 			return new String[0];
-		IdIterator idIterator;
-		if (connCtx == null) {
-			#sql idIterator = {
-				SELECT id FROM amficom.alertingmessageuserlinks WHERE alerting_message_id = :(alertingMessageId) AND source_id = :(sourceId)
-			};
-		} else if (execCtx == null) {
-			#sql [connCtx] idIterator = {
-				SELECT id FROM amficom.alertingmessageuserlinks WHERE alerting_message_id = :(alertingMessageId) AND source_id = :(sourceId)
-			};
-		} else {
-			#sql [connCtx, execCtx] idIterator = {
-				SELECT id FROM amficom.alertingmessageuserlinks WHERE alerting_message_id = :(alertingMessageId) AND source_id = :(sourceId)
-			};
+		IdIterator idIterator = null;
+		try {
+			if (connCtx == null) {
+				#sql idIterator = {
+					SELECT id FROM amficom.alertingmessageuserlinks WHERE alerting_message_id = :(alertingMessageId) AND source_id = :(sourceId)
+				};
+			} else if (execCtx == null) {
+				#sql [connCtx] idIterator = {
+					SELECT id FROM amficom.alertingmessageuserlinks WHERE alerting_message_id = :(alertingMessageId) AND source_id = :(sourceId)
+				};
+			} else {
+				#sql [connCtx, execCtx] idIterator = {
+					SELECT id FROM amficom.alertingmessageuserlinks WHERE alerting_message_id = :(alertingMessageId) AND source_id = :(sourceId)
+				};
+			}
+			ArrayList ids = new ArrayList();
+			while (idIterator.next())
+				ids.add(idIterator.id());
+			return (String[]) (ids.toArray(new String[ids.size()]));
+		} finally {
+			if (idIterator != null)
+				idIterator.close();
 		}
-		ArrayList ids = new ArrayList();
-		while (idIterator.next())
-			ids.add(idIterator.id());
-		idIterator.close();
-		return (String[]) (ids.toArray(new String[ids.size()]));
 	}
 
 	public String[] getMatchingIds1(String alertingMessageId, String sourceId) throws DatabaseAccessException {
@@ -379,32 +396,37 @@ public final class AlertingMessageUserLinkUtilitiesImpl extends MutableObjectRes
 			ExecutionContext execCtx = connCtx.getExecutionContext();
 			return getMatchingIds1(alertingMessageId, sourceId, connCtx, execCtx);
 		} catch (SQLException sqle) {
-			throw new DatabaseAccessException();
+			sqle.printStackTrace();
+			throw ObjectResourceImpl.box(sqle);
 		}
 	}
 
 	String[] getMatchingIds2(String alertingMessageId, String sourceId, String userId, DefaultContext connCtx, ExecutionContext execCtx) throws SQLException {
 		if ((alertingMessageId == null) || (sourceId == null) || (userId == null))
 			return new String[0];
-		IdIterator idIterator;
-		if (connCtx == null) {
-			#sql idIterator = {
-				SELECT id FROM amficom.alertingmessageuserlinks WHERE alerting_message_id = :(alertingMessageId) AND source_id = :(sourceId) AND user_id = :(userId)
-			};
-		} else if (execCtx == null) {
-			#sql [connCtx] idIterator = {
-				SELECT id FROM amficom.alertingmessageuserlinks WHERE alerting_message_id = :(alertingMessageId) AND source_id = :(sourceId) AND user_id = :(userId)
-			};
-		} else {
-			#sql [connCtx, execCtx] idIterator = {
-				SELECT id FROM amficom.alertingmessageuserlinks WHERE alerting_message_id = :(alertingMessageId) AND source_id = :(sourceId) AND user_id = :(userId)
-			};
+		IdIterator idIterator = null;
+		try {
+			if (connCtx == null) {
+				#sql idIterator = {
+					SELECT id FROM amficom.alertingmessageuserlinks WHERE alerting_message_id = :(alertingMessageId) AND source_id = :(sourceId) AND user_id = :(userId)
+				};
+			} else if (execCtx == null) {
+				#sql [connCtx] idIterator = {
+					SELECT id FROM amficom.alertingmessageuserlinks WHERE alerting_message_id = :(alertingMessageId) AND source_id = :(sourceId) AND user_id = :(userId)
+				};
+			} else {
+				#sql [connCtx, execCtx] idIterator = {
+					SELECT id FROM amficom.alertingmessageuserlinks WHERE alerting_message_id = :(alertingMessageId) AND source_id = :(sourceId) AND user_id = :(userId)
+				};
+			}
+			ArrayList ids = new ArrayList();
+			while (idIterator.next())
+				ids.add(idIterator.id());
+			return (String[]) (ids.toArray(new String[ids.size()]));
+		} finally {
+			if (idIterator != null)
+				idIterator.close();
 		}
-		ArrayList ids = new ArrayList();
-		while (idIterator.next())
-			ids.add(idIterator.id());
-		idIterator.close();
-		return (String[]) (ids.toArray(new String[ids.size()]));
 	}
 
 	public String[] getMatchingIds2(String alertingMessageId, String sourceId, String userId) throws DatabaseAccessException {
@@ -413,7 +435,8 @@ public final class AlertingMessageUserLinkUtilitiesImpl extends MutableObjectRes
 			ExecutionContext execCtx = connCtx.getExecutionContext();
 			return getMatchingIds2(alertingMessageId, sourceId, userId, connCtx, execCtx);
 		} catch (SQLException sqle) {
-			throw new DatabaseAccessException();
+			sqle.printStackTrace();
+			throw ObjectResourceImpl.box(sqle);
 		}
 	}
 
@@ -425,26 +448,30 @@ public final class AlertingMessageUserLinkUtilitiesImpl extends MutableObjectRes
 	String[] getMatchingIds3(String alertingMessageId, String alertingTypeId, String sourceId, String userId, DefaultContext connCtx, ExecutionContext execCtx) throws SQLException {
 		if ((alertingMessageId == null) || (alertingTypeId == null) || (sourceId == null) || (userId == null))
 			return new String[0];
-		IdIterator idIterator;
-		if (connCtx == null) {
-			#sql idIterator = {
-				SELECT id FROM amficom.alertingmessageuserlinks WHERE alerting_message_id = :(alertingMessageId) AND alerting_type_id = :(alertingTypeId) AND source_id = :(sourceId) AND user_id = :(userId)
-			};
-		} else if (execCtx == null) {
-			#sql [connCtx] idIterator = {
-				SELECT id FROM amficom.alertingmessageuserlinks WHERE alerting_message_id = :(alertingMessageId) AND alerting_type_id = :(alertingTypeId) AND source_id = :(sourceId) AND user_id = :(userId)
-			};
-		} else {
-			#sql [connCtx, execCtx] idIterator = {
-				SELECT id FROM amficom.alertingmessageuserlinks WHERE alerting_message_id = :(alertingMessageId) AND alerting_type_id = :(alertingTypeId) AND source_id = :(sourceId) AND user_id = :(userId)
-			};
+		IdIterator idIterator = null;
+		try {
+			if (connCtx == null) {
+				#sql idIterator = {
+					SELECT id FROM amficom.alertingmessageuserlinks WHERE alerting_message_id = :(alertingMessageId) AND alerting_type_id = :(alertingTypeId) AND source_id = :(sourceId) AND user_id = :(userId)
+				};
+			} else if (execCtx == null) {
+				#sql [connCtx] idIterator = {
+					SELECT id FROM amficom.alertingmessageuserlinks WHERE alerting_message_id = :(alertingMessageId) AND alerting_type_id = :(alertingTypeId) AND source_id = :(sourceId) AND user_id = :(userId)
+				};
+			} else {
+				#sql [connCtx, execCtx] idIterator = {
+					SELECT id FROM amficom.alertingmessageuserlinks WHERE alerting_message_id = :(alertingMessageId) AND alerting_type_id = :(alertingTypeId) AND source_id = :(sourceId) AND user_id = :(userId)
+				};
+			}
+			ArrayList ids = new ArrayList();
+			while (idIterator.next())
+				ids.add(idIterator.id());
+//			assert (ids.size() <= 1): "Unique constraint broken";
+			return (String[]) (ids.toArray(new String[ids.size()]));
+		} finally {
+			if (idIterator != null)
+				idIterator.close();
 		}
-		ArrayList ids = new ArrayList();
-		while (idIterator.next())
-			ids.add(idIterator.id());
-		idIterator.close();
-//		assert (ids.size() <= 1): "Unique constraint broken";
-		return (String[]) (ids.toArray(new String[ids.size()]));
 	}
 
 	/**
@@ -458,7 +485,8 @@ public final class AlertingMessageUserLinkUtilitiesImpl extends MutableObjectRes
 			ExecutionContext execCtx = connCtx.getExecutionContext();
 			return getMatchingIds3(alertingMessageId, alertingTypeId, sourceId, userId, connCtx, execCtx);
 		} catch (SQLException sqle) {
-			throw new DatabaseAccessException();
+			sqle.printStackTrace();
+			throw ObjectResourceImpl.box(sqle);
 		}
 	}
 

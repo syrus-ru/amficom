@@ -1,5 +1,5 @@
 /*
- * $Id: AlertingTypeImpl.java,v 1.1 2004/06/22 12:27:24 bass Exp $
+ * $Id: AlertingTypeImpl.java,v 1.2 2004/09/25 18:06:32 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,14 +9,15 @@
 package com.syrus.AMFICOM.corba.portable.reflect;
 
 import com.syrus.AMFICOM.corba.portable.common.*;
-import com.syrus.util.corba.JavaSoftORBUtil;
-import java.util.*;
-import org.omg.CORBA.UserException;
-import org.omg.CosNaming.NamingContextExtHelper;
+import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResourceImpl;
+import com.syrus.util.logging.ErrorHandler;
+import java.util.ArrayList;
+import java.util.Hashtable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/06/22 12:27:24 $
  * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2004/09/25 18:06:32 $
+ * @module corbaportable_v1
  */
 public final class AlertingTypeImpl extends AlertingType {
 	/**
@@ -147,9 +148,17 @@ public final class AlertingTypeImpl extends AlertingType {
 
 	static {
 		try {
-			alertingTypeUtilities = AlertingTypeUtilitiesHelper.narrow(NamingContextExtHelper.narrow(JavaSoftORBUtil.getInstance().getORB().resolve_initial_references("NameService")).resolve_str("AlertingTypeUtilities"));
-		} catch (UserException ue) {
-			ue.printStackTrace();
+			alertingTypeUtilities
+				= AlertingTypeUtilitiesHelper
+				.narrow(ObjectResourceImpl.getObject("AlertingTypeUtilities"));
+		} catch (Exception e) {
+			/**
+			 * @todo In the future, catch UserException and/or
+			 *       InvocationTargetException separately.
+			 *       In particular, when using JdbcConnection, a
+			 *       UserException will be surely thrown.
+			 */
+			e.printStackTrace();
 		}
 	}
 
@@ -158,7 +167,7 @@ public final class AlertingTypeImpl extends AlertingType {
 		try {
 			alertingType = AlertingTypeImpl(new IdentifierImpl(ID_POPUP));
 		} catch (DatabaseAccessException dae) {
-			dae.printStackTrace();
+			ErrorHandler.getInstance().error(ObjectResourceImpl.unbox(dae));
 			alertingType = null;
 		}
 		DEFAULT_ALERTING_TYPE = alertingType;
@@ -224,7 +233,7 @@ public final class AlertingTypeImpl extends AlertingType {
 		try {	
 			ids = getIds();
 		} catch (DatabaseAccessException dae) {
-			dae.printStackTrace();
+			ErrorHandler.getInstance().error(ObjectResourceImpl.unbox(dae));
 			ids = new Identifier[0];
 		}
 		ArrayList alertingTypes = new ArrayList();
