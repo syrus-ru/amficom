@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.6 2004/08/11 12:37:30 bob Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.7 2004/08/11 14:19:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/08/11 12:37:30 $
+ * @version $Revision: 1.7 $, $Date: 2004/08/11 14:19:43 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -40,6 +40,11 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
     public static final String COLUMN_DESCRIPTION   = "description";
     // name VARCHAR2(64) NOT NULL,
     public static final String COLUMN_NAME  = "name";
+    // start_port_id VARCHAR2(32),
+    public static final String COLUMN_START_PORT_ID = "start_port_id";
+    // finish_port_id VARCHAR2(32),
+    public static final String COLUMN_FINISH_PORT_ID        = "finish_port_id";
+
 
     // table :: TransmissionPathMELink
     // monitored_element_id Identifier,
@@ -78,6 +83,10 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		buffer.append(COLUMN_NAME);
 		buffer.append(StorableObjectDatabase.COMMA);
 		buffer.append(COLUMN_DESCRIPTION);
+		buffer.append(StorableObjectDatabase.COMMA);
+		buffer.append(COLUMN_START_PORT_ID);
+		buffer.append(StorableObjectDatabase.COMMA);
+		buffer.append(COLUMN_FINISH_PORT_ID);
 		buffer.append(StorableObjectDatabase.SQL_FROM);
 		buffer.append(ObjectEntities.TRANSPATH_ENTITY);
 		buffer.append(StorableObjectDatabase.SQL_WHERE);
@@ -113,7 +122,12 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 								  new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),								  
 
 								  (name != null)?name:"",
-								  (description != null)?description:"");
+								  (description != null)?description:"",
+								  /**
+									* @todo when change DB Identifier model ,change getString() to getLong()
+									*/
+								  new Identifier(resultSet.getString(COLUMN_START_PORT_ID)),
+								  new Identifier(resultSet.getString(COLUMN_FINISH_PORT_ID)));
 			}
 			else
 				throw new ObjectNotFoundException("No such transmission path: " + tpIdStr);
@@ -228,10 +242,10 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		 */
 		String trIdCode = transmissionPath.getId().getCode();
 
-		/**
-		 * @todo when change DB Identifier model ,change String to long
-		 */
 		Identifier domainId = transmissionPath.getDomainId();
+		
+		Identifier startPortId = transmissionPath.getStartPortId();
+		Identifier finishPortId = transmissionPath.getFinishPortId();
 		
 		String sql = SQL_INSERT_INTO
 			+ ObjectEntities.TRANSPATH_ENTITY
@@ -243,7 +257,9 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 			+ COLUMN_MODIFIER_ID + COMMA
 			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 			+ COLUMN_NAME + COMMA
-			+ COLUMN_DESCRIPTION
+			+ COLUMN_DESCRIPTION + COMMA
+			+ COLUMN_START_PORT_ID + COMMA
+			+ COLUMN_FINISH_PORT_ID 
 			+ CLOSE_BRACKET
 			+ SQL_VALUES + OPEN_BRACKET
 			+ QUESTION + COMMA
@@ -282,7 +298,15 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 			preparedStatement.setString(7, transmissionPath.getName());
 			
 			preparedStatement.setString(8, transmissionPath.getDescription());			
-			
+			/**
+			  * @todo when change DB Identifier model ,change setString() to setLong()
+			  */
+			preparedStatement.setString(9, (startPortId != null)?startPortId.getCode():Identifier.getNullSQLString());
+			/**
+			  * @todo when change DB Identifier model ,change setString() to setLong()
+			  */
+			preparedStatement.setString(10, (finishPortId != null)?finishPortId.getCode():Identifier.getNullSQLString());
+
 										
 			Log.debugMessage("TransmissionPathDatabase.insertTransmissionPath | Trying: " + sql, Log.DEBUGLEVEL05);
 			preparedStatement.executeUpdate();

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.5 2004/08/10 19:01:09 arseniy Exp $
+ * $Id: TransmissionPath.java,v 1.6 2004/08/11 14:19:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 /**
- * @version $Revision: 1.5 $, $Date: 2004/08/10 19:01:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2004/08/11 14:19:43 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -34,6 +34,9 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 	private List characteristicIds;
 	private String name;
 	private String description;	
+
+	private Identifier startPortId;
+	private Identifier finishPortId;
 
 	private StorableObjectDatabase transmissionPathDatabase;
 
@@ -104,6 +107,14 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 	public String getDescription() {
 		return this.description;
 	}
+	
+	public Identifier getFinishPortId() {
+		return this.finishPortId;
+	}
+
+	public Identifier getStartPortId() {
+		return this.startPortId;
+	}
 
 	public List getCharacteristicIds() {
 		return this.characteristicIds;
@@ -122,7 +133,9 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 												Identifier modifierId,
 												Identifier domainId,												
 												String name,
-												String description) {
+												String description,
+												Identifier startPortId,
+												Identifier finishPortId) {
 		super.setAttributes(created,
 							modified,
 							creatorId,
@@ -130,6 +143,8 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 							domainId);		
 		this.name = name;
 		this.description = description;
+		this.startPortId = startPortId;
+		this.finishPortId = finishPortId;
 	}
 	
 }
