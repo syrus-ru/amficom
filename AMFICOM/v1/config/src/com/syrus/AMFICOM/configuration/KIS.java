@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.55 2005/01/26 15:09:22 bob Exp $
+ * $Id: KIS.java,v 1.56 2005/01/28 10:12:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.administration.DomainMember;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/01/26 15:09:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.56 $, $Date: 2005/01/28 10:12:50 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -267,10 +267,14 @@ public class KIS extends DomainMember implements Characterized {
 		this.mcmId = mcmId;
 	}
 
-	protected synchronized void setMeasurementPortIds(List measurementPortIds) {
+	protected synchronized void setMeasurementPortIds0(List measurementPortIds) {
 		this.measurementPortIds.clear();
 		if (measurementPortIds != null)
 			this.measurementPortIds.addAll(measurementPortIds);
+	}
+
+	public void setMeasurementPortIds(List measurementPortIds) {
+		this.setMeasurementPortIds0(measurementPortIds);
 		super.currentVersion = super.getNextVersion();
 	}
 
