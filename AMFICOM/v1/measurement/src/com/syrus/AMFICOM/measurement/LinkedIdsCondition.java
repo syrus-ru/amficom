@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.12 2004/10/20 13:09:25 bob Exp $
+ * $Id: LinkedIdsCondition.java,v 1.13 2004/10/20 13:53:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,12 +14,14 @@ import java.util.List;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.configuration.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/10/20 13:09:25 $
+ * @version $Revision: 1.13 $, $Date: 2004/10/20 13:53:34 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -29,16 +31,20 @@ public class LinkedIdsCondition extends com.syrus.AMFICOM.configuration.LinkedId
 	private static boolean				initialized				= false;
 	private static Object				lock					= new Object();
 
-	protected static final Short			ANALYSISTYPE_SHORT		= new Short(ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
-	protected static final Short			EVALUATIONTYPE_SHORT	= new Short(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
-	protected static final Short			MEASUREMENT_SHORT		= new Short(ObjectEntities.MEASUREMENT_ENTITY_CODE);
-	protected static final Short			RESULT_SHORT			= new Short(ObjectEntities.RESULT_ENTITY_CODE);
-	protected static final Short			MEASUREMENTTYPE_SHORT	= new Short(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
-	protected static final Short			MS_SHORT				= new Short(ObjectEntities.MS_ENTITY_CODE);
-
+	protected static final Short		ANALYSISTYPE_SHORT		= new Short(ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
+	protected static final Short		EVALUATIONTYPE_SHORT	= new Short(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
+	protected static final Short		MEASUREMENT_SHORT		= new Short(ObjectEntities.MEASUREMENT_ENTITY_CODE);
+	protected static final Short		RESULT_SHORT			= new Short(ObjectEntities.RESULT_ENTITY_CODE);
+	protected static final Short		MEASUREMENTTYPE_SHORT	= new Short(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
+	protected static final Short		MS_SHORT				= new Short(ObjectEntities.MS_ENTITY_CODE);
 
 	private LinkedIdsCondition() {
 		super((Identifier) null, (Short) null);
+	}
+
+	public LinkedIdsCondition(LinkedIdsCondition_Transferable transferable) throws DatabaseException,
+			CommunicationException {
+		super(transferable);
 	}
 
 	public static LinkedIdsCondition getInstance() {
@@ -58,11 +64,11 @@ public class LinkedIdsCondition extends com.syrus.AMFICOM.configuration.LinkedId
 	 * @return <code>true</code>
 	 *         <ul>
 	 * 
-	 * <li>if {@link entityCode}is {@link AnalysisType}for all analysesType for
-	 * criteria ParameterTypes identifier in linkedIds;</li>
+	 * <li>if {@link entityCode}is {@link AnalysisType}for all analysesType
+	 * for criteria ParameterTypes identifier in linkedIds;</li>
 	 * 
-	 * <li>if {@link entityCode}is {@link EvaluationType}for all analysesType for
-	 * threshold  ParameterTypes identifier in linkedIds;</li>
+	 * <li>if {@link entityCode}is {@link EvaluationType}for all analysesType
+	 * for threshold ParameterTypes identifier in linkedIds;</li>
 	 * 
 	 * <li>if {@link entityCode}is {@link Measurement}for all measurements
 	 * for Test identifier in linkedIds;</li>
@@ -83,22 +89,22 @@ public class LinkedIdsCondition extends com.syrus.AMFICOM.configuration.LinkedId
 		switch (this.entityCode.shortValue()) {
 			case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
 				if (object instanceof AnalysisType) {
-					AnalysisType analysisType = (AnalysisType) object;					
-					List criteriaParameterTypes = analysisType.getCriteriaParameterTypes();					
+					AnalysisType analysisType = (AnalysisType) object;
+					List criteriaParameterTypes = analysisType.getCriteriaParameterTypes();
 					if (this.linkedIds == null) {
 						Identifier criteriaParameterTypeId = this.identifier;
-						for(Iterator it=criteriaParameterTypes.iterator();it.hasNext();){
-							Identifier id = ((ParameterType)it.next()).getId();
+						for (Iterator it = criteriaParameterTypes.iterator(); it.hasNext();) {
+							Identifier id = ((ParameterType) it.next()).getId();
 							if (criteriaParameterTypeId.equals(id)) {
 								condition = true;
 								break;
 							}
-						}						
+						}
 					} else {
 						for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
 							Identifier criteriaParameterTypeId = (Identifier) it.next();
-							for(Iterator it2=criteriaParameterTypes.iterator();it2.hasNext();){
-								Identifier id = ((ParameterType)it2.next()).getId();
+							for (Iterator it2 = criteriaParameterTypes.iterator(); it2.hasNext();) {
+								Identifier id = ((ParameterType) it2.next()).getId();
 								if (criteriaParameterTypeId.equals(id)) {
 									condition = true;
 									break;
@@ -114,18 +120,18 @@ public class LinkedIdsCondition extends com.syrus.AMFICOM.configuration.LinkedId
 					List thresholdParameterTypes = evaluationType.getThresholdParameterTypes();
 					if (this.linkedIds == null) {
 						Identifier thresholdParameterTypeId = this.identifier;
-						for(Iterator it=thresholdParameterTypes.iterator();it.hasNext();){
-							Identifier id = ((ParameterType)it.next()).getId();
+						for (Iterator it = thresholdParameterTypes.iterator(); it.hasNext();) {
+							Identifier id = ((ParameterType) it.next()).getId();
 							if (thresholdParameterTypeId.equals(id)) {
 								condition = true;
 								break;
 							}
-						}						
+						}
 					} else {
 						for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
 							Identifier thresholdParameterTypeId = (Identifier) it.next();
-							for(Iterator it2=thresholdParameterTypes.iterator();it2.hasNext();){
-								Identifier id = ((ParameterType)it2.next()).getId();
+							for (Iterator it2 = thresholdParameterTypes.iterator(); it2.hasNext();) {
+								Identifier id = ((ParameterType) it2.next()).getId();
 								if (thresholdParameterTypeId.equals(id)) {
 									condition = true;
 									break;

@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementServer.java,v 1.13 2004/10/20 10:55:46 bob Exp $
+ * $Id: ClientMeasurementServer.java,v 1.14 2004/10/20 13:51:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.corba.JavaSoftORBUtil;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/10/20 10:55:46 $
+ * @version $Revision: 1.14 $, $Date: 2004/10/20 13:51:54 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -227,7 +227,6 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 
 	public void run() {
 		while (this.running) {
-			System.out.print(".");
 			try {
 				sleep(super.initialTimeToSleep);
 			} catch (InterruptedException ie) {
