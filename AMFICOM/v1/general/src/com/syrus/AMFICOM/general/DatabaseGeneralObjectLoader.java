@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseGeneralObjectLoader.java,v 1.4 2005/02/07 12:13:20 arseniy Exp $
+ * $Id: DatabaseGeneralObjectLoader.java,v 1.5 2005/02/08 09:14:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,7 @@ import java.util.Set;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/07 12:13:20 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/08 09:14:37 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -298,8 +298,8 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		delete(id, null);
 	}
 
-	public void delete(List ids) throws CommunicationException, DatabaseException {
-		if (ids == null || ids.isEmpty())
+	public void delete(List objects) throws CommunicationException, DatabaseException, IllegalDataException {
+		if (objects == null || objects.isEmpty())
 			return;
 		/**
 		 * TODO: use Trove collection instead java.util.Map
@@ -309,7 +309,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		/**
 		 * separate objects by kind of entity
 		 */
-		for (Iterator it = ids.iterator(); it.hasNext();) {
+		for (Iterator it = objects.iterator(); it.hasNext();) {
 			Object object = it.next();
 			Identifier identifier = null;
 			if (object instanceof Identifier)
@@ -318,7 +318,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 				if (object instanceof Identified)
 					identifier = ((Identified) object).getId();
 				else
-					throw new DatabaseException("DatabaseGeneralObjectLoader.delete | Object "
+					throw new IllegalDataException("DatabaseGeneralObjectLoader.delete | Object "
 							+ object.getClass().getName()
 							+ " isn't Identifier or Identified");
 			Short entityCode = new Short(identifier.getMajor());
@@ -337,12 +337,12 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		}
 	}
 
-	private void delete(Identifier id, List ids) throws DatabaseException {
+	private void delete(Identifier id, List objects) throws DatabaseException {
 		short entityCode = (id != null) ? id.getMajor() : 0;
 		if (id == null) {
-			if (ids.isEmpty())
+			if (objects.isEmpty())
 				return;
-			Object obj = ids.iterator().next();
+			Object obj = objects.iterator().next();
 			if (obj instanceof Identifier)
 				entityCode = ((Identifier) obj).getMajor();
 			else
@@ -355,8 +355,8 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 				if (id != null)
 					database.delete(id);
 				else
-					if (ids != null && !ids.isEmpty()) {
-						database.delete(ids);
+					if (objects != null && !objects.isEmpty()) {
+						database.delete(objects);
 					}
 			}
 		}

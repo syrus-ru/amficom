@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralObjectLoader.java,v 1.2 2005/01/19 20:42:59 arseniy Exp $
+ * $Id: GeneralObjectLoader.java,v 1.3 2005/02/08 09:14:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/19 20:42:59 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/08 09:14:37 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -61,6 +61,6 @@ public interface GeneralObjectLoader {
 
 	void delete(Identifier id) throws CommunicationException, DatabaseException;
 
-	void delete(List ids) throws CommunicationException, DatabaseException;
+	void delete(List objects) throws CommunicationException, DatabaseException, IllegalDataException;
 
 }
