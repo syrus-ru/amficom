@@ -416,31 +416,16 @@ class EventTableRenderer extends DefaultTableCellRenderer
 												boolean isSelected, boolean hasFocus, int row, int column)
 	{
 		Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-
-		if(table.getSelectedRow() == row && containsRow(row, newEventsList))
-		{
-			c.setForeground(Color.MAGENTA);
-		}
-		else if(table.getSelectedRow() == row && (containsRow(row, lossChangedEventsList) || containsRow(row, amplitudeChangedEventsList)))
-		{
-			c.setForeground(Color.ORANGE);
-		}
-		else if(table.getSelectedRow() == row)
-		{
-			c.setForeground(Color.WHITE);
-		}
-		else if(containsRow(row, newEventsList))
-		{
-			c.setForeground(Color.red);
-		}
-		else if(containsRow(row, lossChangedEventsList) || containsRow(row, amplitudeChangedEventsList))
-		{
-			c.setForeground(Color.CYAN);
-		}
+		
+		boolean isCurrent = table.getSelectedRow() == row;
+		
+		if (containsRow(row, newEventsList))
+		    c.setForeground(isCurrent ? Color.MAGENTA : Color.RED);
+		else if (containsRow(row, lossChangedEventsList) || containsRow(row, amplitudeChangedEventsList))
+		    c.setForeground(isCurrent ? Color.ORANGE : Color.CYAN); // maybe yellow is better that cyan?
 		else
-		{
-			c.setForeground(Color.black);
-		}
+		    c.setForeground(isCurrent ? Color.WHITE : Color.BLACK);
+
 		return c;
 	}
 
