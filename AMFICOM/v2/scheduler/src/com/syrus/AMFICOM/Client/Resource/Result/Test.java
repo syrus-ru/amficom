@@ -9,6 +9,7 @@ import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
 import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
 import com.syrus.AMFICOM.Client.Survey.Result.UI.TestDisplayModel;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.measurement.TemporalPattern;
 
 import java.io.IOException;
 import java.io.Serializable;

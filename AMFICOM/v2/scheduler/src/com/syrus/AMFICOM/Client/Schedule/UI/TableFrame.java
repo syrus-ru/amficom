@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.Client.Resource.Test.TestType;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.I18N;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
+import com.syrus.AMFICOM.measurement.TemporalPattern;
 
 /**
  * @author Vladimir Dolzhenko

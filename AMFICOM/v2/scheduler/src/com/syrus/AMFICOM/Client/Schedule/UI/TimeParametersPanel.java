@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.measurement.TemporalPattern;
 
 public class TimeParametersPanel extends JPanel implements OperationListener {
 

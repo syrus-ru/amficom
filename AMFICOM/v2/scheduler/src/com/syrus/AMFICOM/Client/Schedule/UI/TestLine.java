@@ -13,6 +13,7 @@ import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
+import com.syrus.AMFICOM.measurement.TemporalPattern;
 
 public class TestLine extends JLabel implements ActionListener,
 		OperationListener {

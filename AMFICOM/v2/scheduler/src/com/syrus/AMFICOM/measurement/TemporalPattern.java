@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Resource.Result;
+package com.syrus.AMFICOM.measurement;
 
 import java.util.*;
 import java.util.regex.*;

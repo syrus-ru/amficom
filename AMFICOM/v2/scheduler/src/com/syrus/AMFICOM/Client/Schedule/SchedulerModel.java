@@ -20,7 +20,6 @@ import com.syrus.AMFICOM.Client.Resource.ISM.KIS;
 import com.syrus.AMFICOM.Client.Resource.ISM.MonitoredElement;
 import com.syrus.AMFICOM.Client.Resource.Result.Analysis;
 import com.syrus.AMFICOM.Client.Resource.Result.Evaluation;
-import com.syrus.AMFICOM.Client.Resource.Result.TemporalPattern;
 import com.syrus.AMFICOM.Client.Resource.Result.Test;
 import com.syrus.AMFICOM.Client.Resource.Result.TestArgumentSet;
 import com.syrus.AMFICOM.Client.Resource.Result.TestRequest;
@@ -28,6 +27,7 @@ import com.syrus.AMFICOM.Client.Resource.Result.TestSetup;
 import com.syrus.AMFICOM.Client.Resource.Test.AnalysisType;
 import com.syrus.AMFICOM.Client.Resource.Test.EvaluationType;
 import com.syrus.AMFICOM.Client.Resource.Test.TestType;
+import com.syrus.AMFICOM.measurement.TemporalPattern;
 
 /**
  * @author Vladimir Dolzhenko
