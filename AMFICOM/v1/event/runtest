@@ -5,4 +5,4 @@ JDBCCLASSPATH=$ORACLE_HOME/jdbc/lib/ojdbc14.jar:$ORACLE_HOME/jdbc/lib/orai18n.ja
 LIB=../lib
 APPCLASSPATH=$LIB/util.jar:$LIB/general.jar:$LIB/administration.jar:$LIB/configuration.jar
 
-java -classpath $APPCLASSPATH:$JDBCCLASSPATH:$JUNITCLASSPATH:../general_v1/classes:./classes junit.textui.TestRunner com.syrus.AMFICOM.event.TestEventSource
+java -classpath $APPCLASSPATH:$JDBCCLASSPATH:$JUNITCLASSPATH:../general_v1/classes:./classes junit.textui.TestRunner com.syrus.AMFICOM.event.TestEvent
