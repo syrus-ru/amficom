@@ -55,7 +55,7 @@ public class TestRequestFrame extends JInternalFrame implements OperationListene
 
 			if (tue.testSelected) {
 
-				TestRequest treq = (TestRequest) Pool.get(TestRequest.typ, this.receivedTest.getRequestId());
+				TestRequest treq = (TestRequest) Pool.get(TestRequest.TYPE, this.receivedTest.getRequestId());
 				if (treq == null)
 					Environment.log(Environment.LOG_LEVEL_WARNING,
 									"TestRequestFrame.operationPerformed() treq not found id " //$NON-NLS-1$

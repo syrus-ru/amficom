@@ -29,7 +29,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 
 		//private ApplicationContext aContext;
 
-		private Dispatcher				dispatcher;
+		//private Dispatcher				dispatcher;
 
 		private TreeModel				model;
 
@@ -44,7 +44,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 		public TestsTreeModel(ApplicationContext aContext) {
 			//this.aContext = aContext;
 			//this.dsi = aContext.getDataSourceInterface();
-			this.dispatcher = aContext.getDispatcher();
+			final Dispatcher dispatcher = aContext.getDispatcher();
 
 			this.root = new ObjectResourceTreeNode(ROOT_NODE_NAME, LangModelSchedule.getString("TestType"), true, //$NON-NLS-1$ //$NON-NLS-2$
 													(ImageIcon) UIStorage.FOLDER_ICON);
@@ -66,8 +66,8 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 				if (kisTable != null) {
 					for (Enumeration kisTypeEnum = kisTable.elements(); kisTypeEnum.hasMoreElements();) {
 						KIS kis = (KIS) kisTypeEnum.nextElement();
-						for (Enumeration en = kis.access_ports.elements(); en.hasMoreElements();) {
-							AccessPort acessPort = (AccessPort) en.nextElement();
+						for (Iterator it = kis.access_ports.iterator(); it.hasNext();) {
+							AccessPort acessPort = (AccessPort) it.next();
 							AccessPortType apt = (AccessPortType) aptTable.get(acessPort.type_id);
 							if (apt.test_type_ids.contains(testType.getId())) {
 								ObjectResourceTreeNode kisNode = new ObjectResourceTreeNode(
@@ -77,8 +77,8 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 																							(ImageIcon) UIStorage.TESTING_ICON,
 																							false);
 								testTypeNode.add(kisNode);
-								for (int i = 0; i < kis.access_ports.size(); i++) {
-									AccessPort aport = (AccessPort) kis.access_ports.get(i);
+								for (Iterator iter = kis.access_ports.iterator(); iter.hasNext();) {
+									AccessPort aport = (AccessPort) iter.next();
 									{
 										ObjectResourceTreeNode accessPortNode = new ObjectResourceTreeNode(aport, aport
 												.getName(), true, (ImageIcon) UIStorage.PORT_ICON, false);
@@ -157,14 +157,14 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 				ElementsTreePanel.this.skipTestUpdate = true;
 				AccessPort port = (AccessPort) obj;
 				ret = MonitoredElement.class;
-				this.dispatcher.notify(new OperationEvent(port, 0, SchedulerModel.COMMAND_CHANGE_PORT_TYPE));
+				dispatcher.notify(new OperationEvent(port, 0, SchedulerModel.COMMAND_CHANGE_PORT_TYPE));
 
 				Vector vec = this.getChildNodes(node);
 				for (int i = 0; i < vec.size(); i++) {
 					ObjectResourceTreeNode n = (ObjectResourceTreeNode) vec.get(i);
 					Object o = n.getObject();
 					MonitoredElement me = (MonitoredElement) o;
-					this.dispatcher.notify(new OperationEvent(me.getId(), 0, SchedulerModel.COMMAND_CHANGE_ME_TYPE));
+					dispatcher.notify(new OperationEvent(me.getId(), 0, SchedulerModel.COMMAND_CHANGE_ME_TYPE));
 
 				}
 				ElementsTreePanel.this.skipTestUpdate = false;
@@ -208,7 +208,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 	// aContext;
 
 	private JButton				delMapGroupButton;
-	private Dispatcher			dispatcher;
+	Dispatcher			dispatcher;
 	private JButton				loadButton;
 	//private ObjectResourceTreeModel model;
 	SurveyDataSourceImage		surveyDsi;
@@ -366,21 +366,16 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 						//System.out.println("testType:" + testType.id + "\t" +
 						// testType.name);
 						KIS kis = (KIS) Pool.get(KIS.typ, test.getKisId());
-						Vector accessPorts = kis.access_ports;
+						Collection accessPorts = kis.access_ports;
 						//System.out.println("kis:" + kis.id + "\t" +
 						// kis.name);
 						MonitoredElement me = (MonitoredElement) Pool.get(MonitoredElement.typ, test
 								.getMonitoredElementId());
 						AccessPort port = null;
-						for (int i = 0; i < accessPorts.size(); i++) {
-							AccessPort aport = (AccessPort) accessPorts.get(i);
+						for (Iterator it=accessPorts.iterator(); it.hasNext();) {
+							AccessPort aport = (AccessPort) it.next();
 							if (me.access_port_id.equals(aport.getId())) {
-								port = aport;
-								//System.out.println("port:" + port.id + "\t" +
-								// port.name);
-								//System.out.println("me:" + me.element_id +
-								// "\t" +
-								// me.element_name);
+								port = aport;		
 								break;
 							}
 						}

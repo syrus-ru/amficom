@@ -170,13 +170,13 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			 * @TODO recast to static final fields
 			 */
 			//System.out.println("test_setup_id:" + test_setup_id);
-			TestSetup ts = (TestSetup) Pool.get(TestSetup.typ, testSetupId);
+			TestSetup ts = (TestSetup) Pool.get(TestSetup.TYPE, testSetupId);
 			if (ts == null) {
 				ts = new TestSetup();
 				//System.out.println("new TestSetup()");
 			}
 			//System.out.println("ts:" + ts.id);
-			tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ, ts.getTestArgumentSetId());
+			tas = (TestArgumentSet) Pool.get(TestArgumentSet.TYPE, ts.getTestArgumentSetId());
 			if (tas == null) {
 				tas = new TestArgumentSet();
 				//System.out.println("new TestArgumentSet()");
@@ -293,7 +293,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	}
 
 	public void setPort(AccessPort port) {
-		Hashtable table = port.characteristics;
+		Map table = port.characteristics;
 		if (this.resolutionMap == null)
 			this.resolutionMap = new HashMap();
 		else
@@ -405,18 +405,18 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				this.test = test;
 				TestArgumentSet tas = test.getTestArgumentSet();
 				if (tas == null)
-					tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ, test.getTestArgumentSetId());
+					tas = (TestArgumentSet) Pool.get(TestArgumentSet.TYPE, test.getTestArgumentSetId());
 				if (tas != null) {
 					setTestArgumentSet(tas);
 				} else {
 					TestSetup testSetup = null;
 					if ((test.getTestSetupId() != null) || (test.getTestSetupId().length() > 0))
-						testSetup = (TestSetup) Pool.get(TestSetup.typ, test.getTestSetupId());
+						testSetup = (TestSetup) Pool.get(TestSetup.TYPE, test.getTestSetupId());
 					if (testSetup == null)
 						testSetup = test.getTestSetup();
 					if (testSetup == null) {
 						if (test.getTestArgumentSetId() != null)
-							tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ, test.getTestArgumentSetId());
+							tas = (TestArgumentSet) Pool.get(TestArgumentSet.TYPE, test.getTestArgumentSetId());
 					} else
 						setTestSetup(testSetup);
 
@@ -486,7 +486,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	public void setTestSetup(TestSetup testSetup) {
 		//DataSourceInterface dsi = this.aContext.getDataSourceInterface();
 
-		TestArgumentSet tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ, testSetup.getTestArgumentSetId());
+		TestArgumentSet tas = (TestArgumentSet) Pool.get(TestArgumentSet.TYPE, testSetup.getTestArgumentSetId());
 //		if (tas == null) {
 //			dsi.LoadTestArgumentSets(new String[] { testSetup.getTestArgumentSetId()});
 //			tas = (TestArgumentSet) Pool.get(TestArgumentSet.typ, testSetup.getTestArgumentSetId());

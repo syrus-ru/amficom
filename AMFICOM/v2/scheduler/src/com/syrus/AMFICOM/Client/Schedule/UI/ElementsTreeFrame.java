@@ -3,7 +3,6 @@ package com.syrus.AMFICOM.Client.Schedule.UI;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Event.TestUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Schedule.WindowCommand;

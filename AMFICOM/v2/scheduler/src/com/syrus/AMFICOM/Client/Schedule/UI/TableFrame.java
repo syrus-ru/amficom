@@ -247,11 +247,10 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 
 				KIS kis = (KIS) Pool.get(KIS.typ, test.getKisId());
 				this.rtu = kis.name;
-				Vector accessPorts = kis.access_ports;
 				MonitoredElement me = (MonitoredElement) Pool.get(MonitoredElement.typ, test.getMonitoredElementId());
 				AccessPort port = null;
-				for (int i = 0; i < accessPorts.size(); i++) {
-					AccessPort aport = (AccessPort) accessPorts.get(i);
+				for (Iterator it=kis.access_ports.iterator(); it.hasNext();) {
+					AccessPort aport = (AccessPort) it.next();
 					if (me.access_port_id.equals(aport.getId())) {
 						port = aport;
 						break;

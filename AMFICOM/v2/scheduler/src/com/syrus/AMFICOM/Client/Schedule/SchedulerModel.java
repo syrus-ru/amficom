@@ -288,33 +288,33 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			} else if (id == DATA_ID_PARAMETERS_ANALYSIS) {
 				this.receiveData.put(AnalysisType.typ, obj);
 			} else if (id == DATA_ID_PARAMETERS_EVALUATION) {
-				this.receiveData.put(EvaluationType.typ, obj);
+				this.receiveData.put(EvaluationType.TYPE, obj);
 			}
 			if (obj instanceof AnalysisType) {
 				System.out.println("AnalysisType instanceof have got"); //$NON-NLS-1$
 				this.receiveData.put(AnalysisType.typ, obj);
 			} else if (obj instanceof EvaluationType) {
 				System.out.println("EvaluationType instanceof have got"); //$NON-NLS-1$
-				this.receiveData.put(EvaluationType.typ, obj);
+				this.receiveData.put(EvaluationType.TYPE, obj);
 			} else if (obj instanceof TestArgumentSet) {
 				System.out.println("TestArgumentSet instanceof have got"); //$NON-NLS-1$
-				this.receiveData.put(TestArgumentSet.typ, obj);
+				this.receiveData.put(TestArgumentSet.TYPE, obj);
 				//receiveTestArgumentSet = (TestArgumentSet) obj;
 			} else if (obj instanceof TestSetup) {
 				System.out.println("TestSetup instanceof have got"); //$NON-NLS-1$
 				//receiveTestSetup = (TestSetup) obj;
 				System.out.println(((TestSetup) obj).getId());
-				this.receiveData.put(TestSetup.typ, obj);
+				this.receiveData.put(TestSetup.TYPE, obj);
 			} else if (obj instanceof TimeStamp) {
 				System.out.println("timestamp instanceof have got"); //$NON-NLS-1$
 				//receiveTimeStamp = (TimeStamp) obj;
-				this.receiveData.put(TimeStamp.TYP, obj);
+				this.receiveData.put(TimeStamp.TYPE, obj);
 			} else if (obj instanceof TestReturnType) {
 				System.out.println("TestReturnType instanceof have got");
 				this.returnType = (TestReturnType) obj;
 			} else if (obj instanceof TestRequest) {
 				System.out.println("TestRequest instanceof have got");
-				this.receiveData.put(TestRequest.typ, obj);
+				this.receiveData.put(TestRequest.TYPE, obj);
 			}
 			//System.out.println("receiveDataCount:" + receiveDataCount);
 			// //$NON-NLS-1$
@@ -333,19 +333,19 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			//					+ (this.receiveData.get(TestArgumentSet.typ) != null));
 			//			System.err.println("this.receiveTreeElements:" +
 			// (this.receiveTreeElements != null));
-			//			System.err.println("this.receiveData.get(TimeStamp.TYP):" +
-			// (this.receiveData.get(TimeStamp.TYP) != null));
+			//			System.err.println("this.receiveData.get(TimeStamp.TYPE):" +
+			// (this.receiveData.get(TimeStamp.TYPE) != null));
 			//			System.err.println("this.receiveData.get(TestRequest.TYPE):"
 			//					+ (this.receiveData.get(TestRequest.TYPE) != null));
 
-			if ((this.receiveData.get(TestRequest.typ) != null)
+			if ((this.receiveData.get(TestRequest.TYPE) != null)
 					&& (this.returnType != null)
-					&& (((this.receiveData.get(TestSetup.typ) != null)
+					&& (((this.receiveData.get(TestSetup.TYPE) != null)
 							&& (this.receiveData.get(AnalysisType.typ) != null) && (this.receiveData
-							.get(EvaluationType.typ) != null)) || (this.receiveData.get(TestArgumentSet.typ) != null)
+							.get(EvaluationType.TYPE) != null)) || (this.receiveData.get(TestArgumentSet.TYPE) != null)
 
-					) && (this.receiveTreeElements != null) && (this.receiveData.get(TimeStamp.TYP) != null)
-					&& (this.receiveData.get(TestRequest.typ) != null)) {
+					) && (this.receiveTreeElements != null) && (this.receiveData.get(TimeStamp.TYPE) != null)
+					&& (this.receiveData.get(TestRequest.TYPE) != null)) {
 				if ((this.flag & FLAG_CREATE) != 0) {
 					System.out.println("createTest"); //$NON-NLS-1$
 					this.receivedTest = null;
@@ -469,7 +469,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		dsi.GetRequests();
 		HashSet loadTests = new HashSet();
 		for (Iterator it = treqs.iterator(); it.hasNext();) {
-			TestRequest treq = (TestRequest) Pool.get(TestRequest.typ, (String) it.next());
+			TestRequest treq = (TestRequest) Pool.get(TestRequest.TYPE, (String) it.next());
 			if (treq != null) {
 				java.util.List testIds = treq.getTestIds();
 				for (Iterator it2 = testIds.iterator(); it2.hasNext();) {
@@ -501,7 +501,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			for (Iterator it = this.tests.iterator(); it.hasNext();) {
 				Test test = (Test) it.next();
 
-				TestSetup testSetup = (TestSetup) Pool.get(TestSetup.typ, test.getTestSetupId());
+				TestSetup testSetup = (TestSetup) Pool.get(TestSetup.TYPE, test.getTestSetupId());
 				if (testSetup == null) {
 					//if (testSetupIds==null)
 					//	testSetupIds=new ArrayList();
@@ -514,7 +514,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 					}
 				}
 
-				TestArgumentSet testArgumentSet = (TestArgumentSet) Pool.get(TestArgumentSet.typ, test
+				TestArgumentSet testArgumentSet = (TestArgumentSet) Pool.get(TestArgumentSet.TYPE, test
 						.getTestArgumentSetId());
 				if (testArgumentSet == null) {
 					if (testArgumentSetIds == null)
@@ -552,10 +552,10 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 	private void commitChanges() {
 		DataSourceInterface dataSource = this.aContext.getDataSourceInterface();
-		Hashtable unsavedTestArgumentSet = Pool.getChangedHash(TestArgumentSet.typ);
-		Hashtable unsavedAnalysis = Pool.getChangedHash(Analysis.typ);
-		Hashtable unsavedEvaluation = Pool.getChangedHash(Evaluation.typ);
-		Hashtable unsavedTestRequest = Pool.getChangedHash(TestRequest.typ);
+		Hashtable unsavedTestArgumentSet = Pool.getChangedHash(TestArgumentSet.TYPE);
+		Hashtable unsavedAnalysis = Pool.getChangedHash(Analysis.TYPE);
+		Hashtable unsavedEvaluation = Pool.getChangedHash(Evaluation.TYPE);
+		Hashtable unsavedTestRequest = Pool.getChangedHash(TestRequest.TYPE);
 		Hashtable unsavedTest = Pool.getChangedHash(Test.TYPE);
 
 		// remove tests
@@ -568,7 +568,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 					String testId = test.getId();
 					if (test.getStatus().value() != TestStatus._TEST_STATUS_SCHEDULED)
 						deleteTests.add(testId);
-					TestRequest treq = (TestRequest) Pool.get(TestRequest.typ, test.getRequestId());
+					TestRequest treq = (TestRequest) Pool.get(TestRequest.TYPE, test.getRequestId());
 					//System.out.println("removing test:" + testId + " from
 					// testRequest:" + treq.getId());
 					treq.removeTest(test);
@@ -673,7 +673,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			test = new Test(dsi.GetUId(Test.TYPE)); //$NON-NLS-1$
 			test.setStatus(TestStatus.TEST_STATUS_SCHEDULED);
 			Pool.put(Test.TYPE, test.getId(), test);
-			TestRequest testRequest = (TestRequest) this.receiveData.get(TestRequest.typ);
+			TestRequest testRequest = (TestRequest) this.receiveData.get(TestRequest.TYPE);
 			testRequest.addTest(test);
 			test.setRequestId(testRequest.getId());
 		}
@@ -689,22 +689,22 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 		test.setReturnType(this.returnType);
 		test.setUserId(this.aContext.getSessionInterface().getUserId());
-		test.setTimeStamp((TimeStamp) this.receiveData.get(TimeStamp.TYP));
+		test.setTimeStamp((TimeStamp) this.receiveData.get(TimeStamp.TYPE));
 		{
 
-			TestArgumentSet testArgumentSet = (TestArgumentSet) this.receiveData.get(TestArgumentSet.typ);
+			TestArgumentSet testArgumentSet = (TestArgumentSet) this.receiveData.get(TestArgumentSet.TYPE);
 			if (testArgumentSet != null) {
 				testArgumentSet.setTestTypeId(testType.getId());
-				testArgumentSet.setId(dsi.GetUId(TestArgumentSet.typ));
+				testArgumentSet.setId(dsi.GetUId(TestArgumentSet.TYPE));
 				testArgumentSet.setChanged(true);
-				Pool.put(TestArgumentSet.typ, testArgumentSet.getId(), testArgumentSet);
+				Pool.put(TestArgumentSet.TYPE, testArgumentSet.getId(), testArgumentSet);
 				testArgumentSet.setName(testArgumentSet.getId());
 				test.setTestArgumentSet(testArgumentSet);
 				test.setTestArgumentSetId(testArgumentSet.getId());
 			}
 		}
 
-		test.setTestSetup((TestSetup) this.receiveData.get(TestSetup.typ));
+		test.setTestSetup((TestSetup) this.receiveData.get(TestSetup.TYPE));
 		if (test.getTestSetup() != null)
 			test.setTestSetupId(test.getTestSetup().getId());
 
@@ -714,31 +714,31 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				test.setAnalysisId(""); //$NON-NLS-1$
 			else {
 				AnalysisType analysisType = (AnalysisType) obj;
-				Analysis analysis = new Analysis(dsi.GetUId(Analysis.typ));
+				Analysis analysis = new Analysis(dsi.GetUId(Analysis.TYPE));
 				analysis.setMonitoredElementId(me.getId());
 				analysis.setTypeId(analysisType.getId());
 				analysis.setCriteriaSetId(test.getTestSetup().getCriteriaSetId());
 				test.setAnalysisId(analysis.getId());
 				analysis.setChanged(true);
-				Pool.put(Analysis.typ, analysis.getId(), analysis);
+				Pool.put(Analysis.TYPE, analysis.getId(), analysis);
 				//System.err.println("test.analysis_id:" + test.analysis_id);
 			}
 
-			obj = this.receiveData.get(EvaluationType.typ);
+			obj = this.receiveData.get(EvaluationType.TYPE);
 			//EvaluationType evaluationType = (EvaluationType)
 			// this.receiveData.get(EvaluationType.typ);
 			if (obj == null || obj instanceof String)
 				test.setEvaluationId(""); //$NON-NLS-1$
 			else {
 				EvaluationType evaluationType = (EvaluationType) obj;
-				Evaluation evaluation = new Evaluation(dsi.GetUId(Evaluation.typ));
+				Evaluation evaluation = new Evaluation(dsi.GetUId(Evaluation.TYPE));
 				evaluation.setMonitoredElementId(me.getId());
 				evaluation.setTypeId(evaluationType.getId());
 				evaluation.setThresholdSetId(test.getTestSetup().getThresholdSetId());
 				evaluation.setEthalonId(test.getTestSetup().getEthalonId());
 				test.setEvaluationId(evaluation.getId());
 				evaluation.setChanged(true);
-				Pool.put(Evaluation.typ, evaluation.getId(), evaluation);
+				Pool.put(Evaluation.TYPE, evaluation.getId(), evaluation);
 				//System.err.println("test.evaluation_id:" +
 				// test.evaluation_id);
 			}

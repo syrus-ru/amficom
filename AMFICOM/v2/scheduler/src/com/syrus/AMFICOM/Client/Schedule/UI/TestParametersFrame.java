@@ -60,9 +60,8 @@ public class TestParametersFrame extends JInternalFrame implements OperationList
 			Test test = tue.test;
 			if (tue.testSelected) {
 				KIS kis = (KIS) Pool.get(KIS.typ, test.getKisId());
-				Vector ports = kis.access_ports;
-				for (Enumeration e = ports.elements(); e.hasMoreElements();) {
-					AccessPort port = (AccessPort) e.nextElement();
+				for (Iterator it=kis.access_ports.iterator(); it.hasNext();) {
+					AccessPort port = (AccessPort) it.next();
 					//System.out.println("portId:" + port.type_id);
 					if (port.type_id.equals(ElementsTreePanel.ACCESSPORT_NAME_REFLECTOMETER)) {
 						if (!this.panel.isParameterPanelExists(ReflectometryTestPanel.PANEL_NAME)) {

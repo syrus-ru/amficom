@@ -31,7 +31,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 
 	JCheckBox					useAnalysisBox;
 	ObjectResourceComboBox		analysisComboBox		= new ObjectResourceComboBox(AnalysisType.typ, true);
-	ObjectResourceComboBox		evaluationComboBox		= new ObjectResourceComboBox(EvaluationType.typ, true);
+	ObjectResourceComboBox		evaluationComboBox		= new ObjectResourceComboBox(EvaluationType.TYPE, true);
 
 	final JPanel				switchPanel				= new JPanel(new CardLayout());
 
@@ -133,7 +133,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 					//TestParametersPanel.this.evaluationComboBox.setContents(dsEvaluation.elements(),
 					// true);
 					TestParametersPanel.this.evaluationComboBox.removeAll();
-					TestParametersPanel.this.evaluationComboBox.add((ObjectResource) Pool.get(EvaluationType.typ, ts
+					TestParametersPanel.this.evaluationComboBox.add((ObjectResource) Pool.get(EvaluationType.TYPE, ts
 							.getEvaluationTypeId()));
 
 					for (Iterator it = TestParametersPanel.this.testPanels.keySet().iterator(); it.hasNext();) {
@@ -252,7 +252,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 			this.parameters = null;
 			return;
 		}
-		this.parameters.put(TestSetup.typ, ts);
+		this.parameters.put(TestSetup.TYPE, ts);
 		EvaluationType evaluationType = null;
 		AnalysisType analysisType = null;
 		//DataSourceInterface dsi = aContext.getDataSourceInterface();
@@ -262,7 +262,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 
 		}
 		//if (evaluationType != null)
-		this.parameters.put(EvaluationType.typ, evaluationType);
+		this.parameters.put(EvaluationType.TYPE, evaluationType);
 		//if (analysisType != null)
 		this.parameters.put(AnalysisType.typ, analysisType);
 	}
@@ -282,9 +282,9 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 			} else if (this.patternRadioButton.isSelected()) {
 				this.getParameters();
 				if (this.parameters != null) {
-					TestSetup ts = (TestSetup) this.parameters.get(TestSetup.typ);
+					TestSetup ts = (TestSetup) this.parameters.get(TestSetup.TYPE);
 					AnalysisType analysisType = (AnalysisType) this.parameters.get(AnalysisType.typ);
-					EvaluationType evaluationType = (EvaluationType) this.parameters.get(EvaluationType.typ);
+					EvaluationType evaluationType = (EvaluationType) this.parameters.get(EvaluationType.TYPE);
 					this.dispatcher.notify(new OperationEvent((ts == null) ? (Object) "" : (Object) ts, //$NON-NLS-1$
 																SchedulerModel.DATA_ID_PARAMETERS_PATTERN,
 																SchedulerModel.COMMAND_SEND_DATA));
@@ -340,7 +340,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		this.testSetups.removeAll();
 		this.testMap.clear();
 		if (this.meList != null) {
-			Hashtable tsTable = Pool.getHash(TestSetup.typ);
+			Hashtable tsTable = Pool.getHash(TestSetup.TYPE);
 			if (tsTable != null) {
 				for (Iterator it = tsTable.keySet().iterator(); it.hasNext();) {
 					TestSetup ts = (TestSetup) tsTable.get(it.next());
@@ -372,7 +372,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 
 		if (this.test != null) {
 
-			TestSetup testsetup = (TestSetup) Pool.get(TestSetup.typ, this.test.getTestSetupId());
+			TestSetup testsetup = (TestSetup) Pool.get(TestSetup.TYPE, this.test.getTestSetupId());
 
 			if ((this.test.getEvalution() != null) || (this.test.getAnalysis() != null)
 					|| (this.test.getAnalysisId().length() > 0)) {
@@ -398,7 +398,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 				if (this.test.getAnalysisId().length() > 0) {
 					Analysis analysis = this.test.getAnalysis();
 					if (analysis == null) {
-						analysis = (Analysis) Pool.get(Analysis.typ, this.test.getAnalysisId());
+						analysis = (Analysis) Pool.get(Analysis.TYPE, this.test.getAnalysisId());
 						//this.test.setAnalysis(analysis);
 						selectComboBox(this.analysisComboBox, analysis.getTypeId());
 					}
