@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.49 2005/03/29 11:32:27 bob Exp $
+ * $Id: StorableObjectPool.java,v 1.50 2005/03/29 11:36:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/03/29 11:32:27 $
- * @author $Author: bob $
+ * @version $Revision: 1.50 $, $Date: 2005/03/29 11:36:23 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -610,8 +610,7 @@ public abstract class StorableObjectPool {
 	 * @throws CommunicationException
 	 */
 	protected void refreshImpl() throws ApplicationException {
-		Log.debugMessage(this.selfGroupName + "StorableObjectPool.refreshImpl | trying to refresh Pool...",
-			Log.DEBUGLEVEL03);
+		Log.debugMessage(this.selfGroupName + "StorableObjectPool.refreshImpl | trying to refresh Pool...", Log.DEBUGLEVEL03);
 		final Set storableObjects = new HashSet();
 		final Set entityCodes = this.objectPoolMap.keySet();
 
@@ -626,11 +625,13 @@ public abstract class StorableObjectPool {
 						storableObjects.add(storableObject);
 			}
 			if (storableObjects.isEmpty()) {
-				Log.debugMessage(this.selfGroupName + "StorableObjectPool.refreshImpl | LRUMap for '"
+				Log.debugMessage(this.selfGroupName
+						+ "StorableObjectPool.refreshImpl | LRUMap for '"
 						+ ObjectEntities.codeToString(entityCode) + "' entity has no elements", Log.DEBUGLEVEL08);
 				continue;
 			}
-			Log.debugMessage(this.selfGroupName + "StorableObjectPool.refreshImpl | try refresh LRUMap for '"
+			Log.debugMessage(this.selfGroupName
+					+ "StorableObjectPool.refreshImpl | try refresh LRUMap for '"
 					+ ObjectEntities.codeToString(entityCode) + "' entity", Log.DEBUGLEVEL08);
 
 			final Set returnedStorableObjectsIds = this.refreshStorableObjects(storableObjects);
@@ -638,7 +639,8 @@ public abstract class StorableObjectPool {
 			for (Iterator iter = loadedRefreshedObjects.iterator(); iter.hasNext();) {
 				try {
 					this.putStorableObjectImpl((StorableObject) iter.next());
-				} catch (IllegalObjectEntityException e) {
+				}
+				catch (IllegalObjectEntityException e) {
 					Log.errorException(e);
 				}
 			}

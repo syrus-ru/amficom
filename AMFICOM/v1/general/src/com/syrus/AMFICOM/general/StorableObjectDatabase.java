@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.130 2005/03/29 11:31:37 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.131 2005/03/29 11:32:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.130 $, $Date: 2005/03/29 11:31:37 $
- * @author $Author: bob $
+ * @version $Revision: 1.131 $, $Date: 2005/03/29 11:32:53 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -177,15 +177,16 @@ public abstract class StorableObjectDatabase {
 		if (this.retrieveQuery == null) {
 			buffer = new StringBuffer(SQL_SELECT);
 			String cols = this.getColumns(MODE_INSERT);
-			cols = cols.replaceFirst(StorableObjectWrapper.COLUMN_CREATED, DatabaseDate
-					.toQuerySubString(StorableObjectWrapper.COLUMN_CREATED));
-			cols = cols.replaceFirst(StorableObjectWrapper.COLUMN_MODIFIED, DatabaseDate
-					.toQuerySubString(StorableObjectWrapper.COLUMN_MODIFIED));
+			cols = cols.replaceFirst(StorableObjectWrapper.COLUMN_CREATED,
+					DatabaseDate.toQuerySubString(StorableObjectWrapper.COLUMN_CREATED));
+			cols = cols.replaceFirst(StorableObjectWrapper.COLUMN_MODIFIED,
+					DatabaseDate.toQuerySubString(StorableObjectWrapper.COLUMN_MODIFIED));
 			buffer.append(cols);
 			buffer.append(SQL_FROM);
 			buffer.append(this.getEnityName());
 			this.retrieveQuery = buffer.toString();
-		} else
+		}
+		else
 			buffer = new StringBuffer(this.retrieveQuery);
 
 		if (condition != null && condition.trim().length() > 0) {
