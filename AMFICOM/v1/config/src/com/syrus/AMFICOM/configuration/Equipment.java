@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.36 2004/11/25 15:26:44 bob Exp $
+ * $Id: Equipment.java,v 1.37 2004/11/30 14:27:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
@@ -26,7 +28,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2004/11/25 15:26:44 $
+ * @version $Revision: 1.37 $, $Date: 2004/11/30 14:27:51 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -126,7 +128,6 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 				
 	/**
 	 * create new instance for client 
-	 * @param id
 	 * @param creatorId
 	 * @param domainId
 	 * @param type
@@ -137,20 +138,19 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 	 * @param kisId
 	 * @return
 	 */
-	public static Equipment createInstance(Identifier id,
-																				 Identifier creatorId,
-																				 Identifier domainId,
-																				 EquipmentType type,
-																				 String name,
-																				 String description,
-																				 Identifier imageId) {
-		return new Equipment(id,
-												 creatorId,
-												 domainId,
-												 type,
-												 name,
-												 description,
-												 imageId);
+	public static Equipment createInstance(Identifier creatorId,
+										   Identifier domainId,
+										   EquipmentType type,
+										   String name,
+										   String description,
+										   Identifier imageId) {
+		return new Equipment(IdentifierPool.generateId(ObjectEntities.EQUIPMENT_ENTITY_CODE),
+							creatorId,
+							domainId,
+							type,
+							name,
+							description,
+							imageId);
 	}
 	
 	public static Equipment getInstance(Equipment_Transferable et) throws CreateObjectException{
