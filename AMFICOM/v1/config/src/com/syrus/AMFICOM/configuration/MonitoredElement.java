@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.24 2004/11/15 13:50:27 bob Exp $
+ * $Id: MonitoredElement.java,v 1.25 2004/11/16 15:54:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/11/15 13:50:27 $
+ * @version $Revision: 1.25 $, $Date: 2004/11/16 15:54:37 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -157,6 +157,11 @@ public class MonitoredElement extends DomainMember {
 
 	public String getLocalAddress() {
 		return this.localAddress;
+	}
+	
+	public void setLocalAddress(String localAddress){
+		this.currentVersion = super.getNextVersion();
+		this.localAddress = localAddress;
 	}
 
 	public List getMonitoredDomainMemberIds() {
