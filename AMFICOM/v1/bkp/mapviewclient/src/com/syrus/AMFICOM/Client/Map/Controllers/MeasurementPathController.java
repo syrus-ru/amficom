@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPathController.java,v 1.8 2005/03/01 15:43:01 krupenn Exp $
+ * $Id: MeasurementPathController.java,v 1.9 2005/03/04 08:32:37 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
 /**
  * Контроллер топологическиго пути.
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/03/01 15:43:01 $
+ * @version $Revision: 1.9 $, $Date: 2005/03/04 08:32:37 $
  * @module mapviewclient_v1
  */
 public final class MeasurementPathController extends AbstractLinkController
@@ -318,7 +318,7 @@ public final class MeasurementPathController extends AbstractLinkController
 
 			me = (MonitoredElement )
 				ConfigurationStorableObjectPool.getStorableObject(
-						(Identifier )(tp.getMonitoredElementIds().get(0)), 
+						(Identifier )(tp.getMonitoredElementIds().iterator().next()), 
 						true);
 
 		}
