@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MeasurementTypeController;
 
 public class MeasurementPortTypeGeneralPanel extends GeneralPanel {
-	private static Dimension list_size = new Dimension(150, 50);
+	private static Dimension list_size = new Dimension(100, 50);
 	private static Dimension btn_size = new Dimension(24, 24);
 	
 	protected MeasurementPortType type;

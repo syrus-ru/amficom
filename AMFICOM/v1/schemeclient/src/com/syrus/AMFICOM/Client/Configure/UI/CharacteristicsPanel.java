@@ -116,11 +116,12 @@ public class CharacteristicsPanel extends GeneralPanel implements
 		jTable.getColumnModel().getColumn(0).setPreferredWidth(180);
 		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		// jTable.setFocusable(false);
-
+		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.getViewport().add(jTable);
 		scrollPane.getViewport().setBackground(SystemColor.window);
 		scrollPane.setAutoscrolls(true);
+		scrollPane.setPreferredSize(new Dimension(100, 50));
 
 		PropsTreeModel model = new PropsTreeModel();
 		utp = new UniTreePanel(this.dispatcher, aContext, model);

@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeLayout.java,v 1.1 2005/02/21 14:14:56 stas Exp $
+ * $Id: CableLinkTypeLayout.java,v 1.2 2005/03/01 07:17:58 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/02/21 14:14:56 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/01 07:17:58 $
  * @module schemeclient_v1
  */
 
@@ -126,6 +126,7 @@ public class CableLinkTypeLayout implements OperationListener {
 			Rectangle bounds = new Rectangle(x, y, 2 * radius, 2 * radius);
 			addCell(panel.getGraph(), "", bounds, Color.WHITE);
 		}
+		panel.setGraphSize(new Dimension(2 * GAP + 2 * (r2 + r1), 2 * GAP + 2 * (r2 + r1)));
 	}
 
 	public UgoPanel getPanel() {

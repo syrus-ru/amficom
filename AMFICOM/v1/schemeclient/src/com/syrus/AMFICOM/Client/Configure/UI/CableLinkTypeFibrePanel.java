@@ -14,7 +14,6 @@ import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Scheme.ThreadTypeCell;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client_.general.ui_.*;
@@ -24,29 +23,25 @@ import com.syrus.AMFICOM.general.*;
 public class CableLinkTypeFibrePanel extends GeneralPanel {
 	protected CableLinkType clt;
 
-	JPanel linksPanel = new JPanel();
-	JLabel linksTypeLabel = new JLabel();
-	JLabel linksMarkLabel = new JLabel();
-	JLabel linksNameLabel = new JLabel();
-	JLabel linksNumberLabel = new JLabel();
-	JLabel threadColorLabel = new JLabel();
-	JLabel linksIdLabel = new JLabel();
-	ObjComboBox linksTypeBox;
-	JTextArea linksMarkArea = new JTextArea();
-	JTextField linksNameField = new JTextField();
-	JTextField linksNumberField = new JTextField();
-	JButton linksNumberButton = new JButton();
-	JComboBox colorComboBox = new JComboBox();
-	JButton colorButton = new JButton();
-	JPanel listPanel = new JPanel();
-	JScrollPane jScrollPane1 = new JScrollPane();
-	ObjList threadsList = new ObjList(CableThreadTypeController.getInstance(),
-			StorableObjectWrapper.COLUMN_NAME);
-	static JColorChooser tcc;
-	
-	CableLinkTypeLayout layout = new CableLinkTypeLayout();
+	JPanel pnMainPanel = new JPanel();
+	ObjList lsThreadsList  = new ObjList(CableThreadTypeController.getInstance(),
+		StorableObjectWrapper.COLUMN_NAME);
+	JLabel lbNameLabel = new JLabel(LangModelConfig.getString("label_name"));
+	JTextField tfNameText = new JTextField();
+	JLabel lbDescrLabel = new JLabel(LangModelConfig.getString("label_mark"));
+	JTextArea taDescrArea = new JTextArea(2,10);
+	JLabel lbTypeLabel = new JLabel(LangModelConfig.getString("label_type"));
+	JComboBox cmbTypeCombo;
+	JLabel lbColorLabel = new JLabel(LangModelConfig.getString("label_threadColor"));
+	JComboBox cmbColorCombo = new JComboBox();
+	JButton btColorBut = new JButton(LangModelConfig.getString("label_addColor"));
+	JLabel lbNumberLabel = new JLabel(LangModelConfig.getString("label_linksnumber"));
+	JTextField tfNumberText = new JTextField( );
+	JButton btNumberBut = new JButton(LangModelConfig.getString("label_linksnumberbutton"));
 
-	Color[] defaultColors = new Color[] { Color.WHITE, Color.BLUE, Color.GREEN, Color.RED,
+	static JColorChooser tcc;
+	CableLinkTypeLayout layout = new CableLinkTypeLayout();
+	static Color[] defaultColors = new Color[] { Color.WHITE, Color.BLUE, Color.GREEN, Color.RED,
 			Color.GRAY, Color.CYAN, Color.MAGENTA, Color.ORANGE, Color.PINK,
 			Color.YELLOW, Color.BLACK };
 
@@ -68,129 +63,207 @@ public class CableLinkTypeFibrePanel extends GeneralPanel {
 		EquivalentCondition condition = new EquivalentCondition(
 				ObjectEntities.LINKTYPE_ENTITY_CODE);
 		List lTypes = new ArrayList(ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true)); 
-
-		linksTypeBox = new ObjComboBox(LinkTypeController.getInstance(),
+		cmbTypeCombo = new ObjComboBox(LinkTypeController.getInstance(),
 				lTypes,
 				StorableObjectWrapper.COLUMN_NAME);
-		setName(LangModelConfig.getString("label_fibers"));
+		
+		GridBagLayout gbMainPanel = new GridBagLayout();
+		GridBagConstraints gbcMainPanel = new GridBagConstraints();
+		pnMainPanel.setLayout( gbMainPanel );
 
-		this.setLayout(new GridBagLayout());
-
-		linksTypeLabel.setText(LangModelConfig.getString("label_type"));
-		linksTypeLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		linksMarkLabel.setText(LangModelConfig.getString("label_mark"));
-		linksMarkLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		linksNameLabel.setText(LangModelConfig.getString("label_name"));
-		linksNameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		linksNumberLabel.setText(LangModelConfig.getString("label_linksnumber"));
-		linksNumberLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		linksNumberButton.setText(LangModelConfig
-				.getString("label_linksnumberbutton"));
-		linksNumberButton.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		linksNumberButton.addActionListener(new LinkNumberActionListener());
-		threadColorLabel.setText(LangModelConfig.getString("label_threadColor"));
-		threadColorLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-
-		linksIdLabel.setText(LangModelConfig.getString("label_id"));
-		linksIdLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		listPanel.setLayout(new BorderLayout());
-
-		colorButton.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		colorButton.setText(LangModelConfig.getString("label_addColor"));
-		colorButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				colorButton_actionPerformed(e);
-			}
-		});
-		colorComboBox.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
-		colorComboBox.setFocusable(false);
-		colorComboBox.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				colorComboBox_itemStateChanged(e);
-			}
-		});
-		colorComboBox.setRenderer(new ListColorRenderer());
-		for (int i = 0; i < defaultColors.length; i++)
-			colorComboBox.addItem(defaultColors[i]);
-
-		jScrollPane1.setPreferredSize(new Dimension(145, 125));
-		jScrollPane1.setMinimumSize(new Dimension(145, 125));
-		// jScrollPane1.setMaximumSize(new Dimension(145, 125));
-		// jScrollPane1.setSize(new Dimension(145, 125));
-		threadsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		threadsList.setBorder(BorderFactory.createLoweredBevelBorder());
-		threadsList.addListSelectionListener(new ListSelectionListener() {
+		JScrollPane scpThreadsList = new JScrollPane( lsThreadsList );
+		lsThreadsList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		lsThreadsList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				threadsList_valueChanged(e);
 			}
 		});
+		scpThreadsList.setPreferredSize(new Dimension(100, 100));
+		gbcMainPanel.gridx = 0;
+		gbcMainPanel.gridy = 0;
+		gbcMainPanel.gridwidth = 2;
+		gbcMainPanel.gridheight = 8;
+		gbcMainPanel.fill = GridBagConstraints.BOTH;
+		gbcMainPanel.weightx = 0;
+		gbcMainPanel.weighty = 1;
+		gbcMainPanel.anchor = GridBagConstraints.NORTH;
+		gbMainPanel.setConstraints( scpThreadsList, gbcMainPanel );
+		pnMainPanel.add( scpThreadsList );
 
-		jScrollPane1.getViewport();
-		jScrollPane1.getViewport().add(threadsList, null);
-		listPanel.add(jScrollPane1, BorderLayout.CENTER);
+		lbNameLabel.setFocusable( false );
+		gbcMainPanel.gridx = 2;
+		gbcMainPanel.gridy = 0;
+		gbcMainPanel.gridwidth = 2;
+		gbcMainPanel.gridheight = 1;
+		gbcMainPanel.fill = GridBagConstraints.BOTH;
+		gbcMainPanel.weightx = 0;
+		gbcMainPanel.weighty = 0;
+		gbcMainPanel.anchor = GridBagConstraints.NORTH;
+		gbMainPanel.setConstraints( lbNameLabel, gbcMainPanel );
+		pnMainPanel.add( lbNameLabel );
 
-		linksPanel.setLayout(new GridBagLayout());
+		gbcMainPanel.gridx = 4;
+		gbcMainPanel.gridy = 0;
+		gbcMainPanel.gridwidth = 3;
+		gbcMainPanel.gridheight = 1;
+		gbcMainPanel.fill = GridBagConstraints.BOTH;
+		gbcMainPanel.weightx = 1;
+		gbcMainPanel.weighty = 0;
+		gbcMainPanel.anchor = GridBagConstraints.NORTH;
+		gbMainPanel.setConstraints( tfNameText, gbcMainPanel );
+		pnMainPanel.add( tfNameText );
 
-		linksPanel.add(linksNameLabel, new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
-				GridBagConstraints.WEST, GridBagConstraints.NONE,
-				new Insets(0, 0, 0, 0), 0, 0));
-		linksPanel.add(linksMarkLabel, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.4,
-				GridBagConstraints.WEST, GridBagConstraints.NONE,
-				new Insets(0, 0, 0, 0), 0, 0));
-		linksPanel.add(linksTypeLabel, new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
-				GridBagConstraints.WEST, GridBagConstraints.NONE,
-				new Insets(0, 0, 0, 0), 0, 0));
-		linksPanel.add(threadColorLabel, new GridBagConstraints(0, 3, 1, 1, 0.0,
-				0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0,
-						0, 0), 0, 0));
-		linksPanel.add(linksNumberLabel, new GridBagConstraints(0, 4, 1, 1, 0.0,
-				0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0,
-						0, 0), 0, 0));
+		lbDescrLabel.setFocusable( false );
+		gbcMainPanel.gridx = 2;
+		gbcMainPanel.gridy = 1;
+		gbcMainPanel.gridwidth = 2;
+		gbcMainPanel.gridheight = 1;
+		gbcMainPanel.fill = GridBagConstraints.BOTH;
+		gbcMainPanel.weightx = 0;
+		gbcMainPanel.weighty = 0;
+		gbcMainPanel.anchor = GridBagConstraints.NORTH;
+		gbMainPanel.setConstraints( lbDescrLabel, gbcMainPanel );
+		pnMainPanel.add( lbDescrLabel );
 
-		if (Environment.isDebugMode())
-			linksPanel.add(linksIdLabel, new GridBagConstraints(0, 5, 1, 1, 0.0, 0.0,
-					GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0,
-							0), 0, 0));
+		JScrollPane scpDescrArea = new JScrollPane( taDescrArea );
+		scpDescrArea.setPreferredSize(new Dimension(50, 100));
+		gbcMainPanel.gridx = 4;
+		gbcMainPanel.gridy = 1;
+		gbcMainPanel.gridwidth = 3;
+		gbcMainPanel.gridheight = 2;
+		gbcMainPanel.fill = GridBagConstraints.BOTH;
+		gbcMainPanel.weightx = 1;
+		gbcMainPanel.weighty = 0;
+		gbcMainPanel.anchor = GridBagConstraints.NORTH;
+		gbMainPanel.setConstraints( scpDescrArea, gbcMainPanel );
+		pnMainPanel.add( scpDescrArea );
 
-		linksPanel.add(linksNameField, new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0,
-				GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0,
-						0, 0, 0), 0, 0));
-		JScrollPane scrollPane = new JScrollPane(linksMarkArea);
-		linksPanel.add(scrollPane, new GridBagConstraints(1, 1, 1, 1, 1.0, 0.4,
-				GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0,
-						0), 0, 0));
-		linksPanel.add(linksTypeBox, new GridBagConstraints(1, 2, 1, 1, 1.0, 0.0,
-				GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0,
-						0, 0, 0), 0, 0));
+		lbTypeLabel.setFocusable( false );
+		gbcMainPanel.gridx = 2;
+		gbcMainPanel.gridy = 3;
+		gbcMainPanel.gridwidth = 2;
+		gbcMainPanel.gridheight = 1;
+		gbcMainPanel.fill = GridBagConstraints.BOTH;
+		gbcMainPanel.weightx = 0;
+		gbcMainPanel.weighty = 0;
+		gbcMainPanel.anchor = GridBagConstraints.NORTH;
+		gbMainPanel.setConstraints( lbTypeLabel, gbcMainPanel );
+		pnMainPanel.add( lbTypeLabel );
 
-		JPanel p0 = new JPanel(new BorderLayout());
-		p0.add(colorComboBox, BorderLayout.CENTER);
-		p0.add(colorButton, BorderLayout.EAST);
-		linksPanel.add(p0, new GridBagConstraints(1, 3, 1, 1, 0.8, 0.0,
-				GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0,
-						0, 0, 0), 0, 0));
+		cmbTypeCombo.setPreferredSize(cmbColorCombo.getPreferredSize());
+		gbcMainPanel.gridx = 4;
+		gbcMainPanel.gridy = 3;
+		gbcMainPanel.gridwidth = 3;
+		gbcMainPanel.gridheight = 1;
+		gbcMainPanel.fill = GridBagConstraints.BOTH;
+		gbcMainPanel.weightx = 1;
+		gbcMainPanel.weighty = 0;
+		gbcMainPanel.anchor = GridBagConstraints.NORTH;
+		gbMainPanel.setConstraints( cmbTypeCombo, gbcMainPanel );
+		pnMainPanel.add( cmbTypeCombo );
 
-		JPanel p1 = new JPanel(new BorderLayout());
-		p1.add(linksNumberField, BorderLayout.CENTER);
-		p1.add(linksNumberButton, BorderLayout.EAST);
-		linksPanel.add(p1, new GridBagConstraints(1, 4, 1, 1, 0.8, 0.0,
-				GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0,
-						0, 0, 0), 0, 0));
+		lbColorLabel.setFocusable( false );
+		gbcMainPanel.gridx = 2;
+		gbcMainPanel.gridy = 4;
+		gbcMainPanel.gridwidth = 2;
+		gbcMainPanel.gridheight = 1;
+		gbcMainPanel.fill = GridBagConstraints.BOTH;
+		gbcMainPanel.weightx = 0;
+		gbcMainPanel.weighty = 0;
+		gbcMainPanel.anchor = GridBagConstraints.NORTH;
+		gbMainPanel.setConstraints( lbColorLabel, gbcMainPanel );
+		pnMainPanel.add( lbColorLabel );
 
-		this.add(listPanel, new GridBagConstraints(0, 0, 1, 1, 0.0, 1.0,
-				GridBagConstraints.NORTHWEST, GridBagConstraints.VERTICAL, new Insets(
-						0, 0, 0, 0), 0, 0));
-		this.add(linksPanel, new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0,
-				GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 0, 0,
-						0), 0, 0));
+		cmbColorCombo.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				colorComboBox_itemStateChanged(e);
+			}
+		});
+		cmbColorCombo.setRenderer(new ListColorRenderer());
+		for (int i = 0; i < defaultColors.length; i++)
+			cmbColorCombo.addItem(defaultColors[i]);
+		gbcMainPanel.gridx = 4;
+		gbcMainPanel.gridy = 4;
+		gbcMainPanel.gridwidth = 2;
+		gbcMainPanel.gridheight = 1;
+		gbcMainPanel.fill = GridBagConstraints.BOTH;
+		gbcMainPanel.weightx = 1;
+		gbcMainPanel.weighty = 0;
+		gbcMainPanel.anchor = GridBagConstraints.NORTH;
+		gbMainPanel.setConstraints( cmbColorCombo, gbcMainPanel );
+		pnMainPanel.add( cmbColorCombo );
 
-		linksPanel.add(layout.getPanel(), new GridBagConstraints(1, 5, 1, 1, 1.0,
-				1.0, GridBagConstraints.SOUTHEAST, GridBagConstraints.BOTH, new Insets(
-						0, 0, 0, 0), 0, 0));
+		btColorBut.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				colorButton_actionPerformed(e);
+			}
+		});
+		gbcMainPanel.gridx = 6;
+		gbcMainPanel.gridy = 4;
+		gbcMainPanel.gridwidth = 1;
+		gbcMainPanel.gridheight = 1;
+		gbcMainPanel.fill = GridBagConstraints.BOTH;
+		gbcMainPanel.weightx = 0;
+		gbcMainPanel.weighty = 0;
+		gbcMainPanel.anchor = GridBagConstraints.NORTH;
+		gbMainPanel.setConstraints( btColorBut, gbcMainPanel );
+		pnMainPanel.add( btColorBut );
+
+		lbNumberLabel.setFocusable( false );
+		gbcMainPanel.gridx = 2;
+		gbcMainPanel.gridy = 5;
+		gbcMainPanel.gridwidth = 2;
+		gbcMainPanel.gridheight = 1;
+		gbcMainPanel.fill = GridBagConstraints.BOTH;
+		gbcMainPanel.weightx = 0;
+		gbcMainPanel.weighty = 0;
+		gbcMainPanel.anchor = GridBagConstraints.NORTH;
+		gbMainPanel.setConstraints( lbNumberLabel, gbcMainPanel );
+		pnMainPanel.add( lbNumberLabel );
+
+		gbcMainPanel.gridx = 4;
+		gbcMainPanel.gridy = 5;
+		gbcMainPanel.gridwidth = 2;
+		gbcMainPanel.gridheight = 1;
+		gbcMainPanel.fill = GridBagConstraints.BOTH;
+		gbcMainPanel.weightx = 1;
+		gbcMainPanel.weighty = 0;
+		gbcMainPanel.anchor = GridBagConstraints.NORTH;
+		gbMainPanel.setConstraints( tfNumberText, gbcMainPanel );
+		pnMainPanel.add( tfNumberText );
+
+		btNumberBut.addActionListener(new LinkNumberActionListener());
+		gbcMainPanel.gridx = 6;
+		gbcMainPanel.gridy = 5;
+		gbcMainPanel.gridwidth = 1;
+		gbcMainPanel.gridheight = 1;
+		gbcMainPanel.fill = GridBagConstraints.BOTH;
+		gbcMainPanel.weightx = 0;
+		gbcMainPanel.weighty = 0;
+		gbcMainPanel.anchor = GridBagConstraints.NORTH;
+		gbMainPanel.setConstraints( btNumberBut, gbcMainPanel );
+		pnMainPanel.add( btNumberBut );
+
+		JPanel pnLayoutPanel = layout.getPanel();
+		JScrollPane scpLayoutPanel = new JScrollPane( pnLayoutPanel );
+		scpLayoutPanel.setPreferredSize(new Dimension(100, 100));
+		gbcMainPanel.gridx = 4;
+		gbcMainPanel.gridy = 6;
+		gbcMainPanel.gridwidth = 3;
+		gbcMainPanel.gridheight = 2;
+		gbcMainPanel.fill = GridBagConstraints.BOTH;
+		gbcMainPanel.weightx = 1;
+		gbcMainPanel.weighty = 1;
+		gbcMainPanel.anchor = GridBagConstraints.NORTH;
+		gbMainPanel.setConstraints( scpLayoutPanel, gbcMainPanel );
+		pnMainPanel.add( scpLayoutPanel );
 
 		SelectionListener selectionListener = new SelectionListener();
 		layout.getInternalDispatcher().register(selectionListener,
 				SchemeNavigateEvent.type);
+		
+		this.setLayout(new BorderLayout());
+		this.add(pnMainPanel, BorderLayout.CENTER);
 	}
 
 	class SelectionListener implements OperationListener {
@@ -207,7 +280,7 @@ public class CableLinkTypeFibrePanel extends GeneralPanel {
 						if (objs[i] instanceof ThreadTypeCell) {
 							CableThreadType type = ((ThreadTypeCell) objs[i])
 									.getCableThreadType();
-							threadsList.setSelectedValue(type, true);
+							lsThreadsList.setSelectedValue(type, true);
 						}
 					}
 				}
@@ -218,17 +291,17 @@ public class CableLinkTypeFibrePanel extends GeneralPanel {
 	class LinkNumberActionListener implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			try {
-				int num = Integer.parseInt(linksNumberField.getText());
+				int num = Integer.parseInt(tfNumberText.getText());
 				if (num < 0)
 					throw new NumberFormatException();
 
 				int old_num = clt.getCableThreadTypes().size();
 				if (num > old_num) {
-					LinkType link_type = (LinkType) linksTypeBox.getSelectedItem();
+					LinkType link_type = (LinkType) cmbTypeCombo.getSelectedItem();
 					if (link_type == null)
 						return;
 					String codename = link_type.getCodename();
-					String name = linksNameField.getText();
+					String name = tfNameText.getText();
 					if (name.equals("")) {
 						if (old_num > 0) {
 							CableThreadType ctt = (CableThreadType) clt.getCableThreadTypes()
@@ -284,7 +357,7 @@ public class CableLinkTypeFibrePanel extends GeneralPanel {
 					modify();
 				setObject(clt);
 			} catch (NumberFormatException ex) {
-				linksNumberField.setText(String.valueOf(clt.getCableThreadTypes()
+				tfNumberText.setText(String.valueOf(clt.getCableThreadTypes()
 						.size()));
 			}
 		}
@@ -304,25 +377,25 @@ public class CableLinkTypeFibrePanel extends GeneralPanel {
 	public void setObject(Object or) {
 		this.clt = (CableLinkType) or;
 
-		this.threadsList.removeAll();
-		this.linksNameField.setText("");
-		this.linksNumberField.setText(String.valueOf(clt.getCableThreadTypes()
+		this.lsThreadsList.removeAll();
+		this.tfNameText.setText("");
+		this.tfNumberText.setText(String.valueOf(clt.getCableThreadTypes()
 				.size()));
-		this.linksMarkArea.setText("");
+		this.taDescrArea.setText("");
 		// this.linksTypeBox.setSelectedItem(null);
 
 		if (clt != null)
-			threadsList.addElements(clt.getCableThreadTypes());
+			lsThreadsList.addElements(clt.getCableThreadTypes());
 		layout.setObject(or);
 	}
 
 	public boolean modify() {
 		try {
-			CableThreadType ctt = (CableThreadType) threadsList.getSelectedValue();
-			if (clt != null) {
-				ctt.setName(linksNameField.getText());
-				ctt.setDescription(this.linksMarkArea.getText());
-				ctt.setLinkType((LinkType) this.linksTypeBox.getSelectedItem());
+			CableThreadType ctt = (CableThreadType) lsThreadsList.getSelectedValue();
+			if (ctt != null) {
+				ctt.setName(tfNameText.getText());
+				ctt.setDescription(this.taDescrArea.getText());
+				ctt.setLinkType((LinkType) this.cmbTypeCombo.getSelectedItem());
 			}
 		} catch (Exception ex) {
 			return false;
@@ -335,11 +408,11 @@ public class CableLinkTypeFibrePanel extends GeneralPanel {
 		/**
 		 * fix colored drop button in not Windows LAF 
 		 */
-		Color tmp = colorComboBox.getComponents()[0].getBackground();
-		colorComboBox.setBackground(newColor);
-		colorComboBox.getComponents()[0].setBackground(tmp);
+		Color tmp = cmbColorCombo.getComponents()[0].getBackground();
+		cmbColorCombo.setBackground(newColor);
+		cmbColorCombo.getComponents()[0].setBackground(tmp);
 		
-		CableThreadType type = (CableThreadType)threadsList.getSelectedValue();
+		CableThreadType type = (CableThreadType)lsThreadsList.getSelectedValue();
 		if (type != null) {
 			type.setColor(newColor.getRGB());
 			layout.getInternalDispatcher().notify(
@@ -350,26 +423,26 @@ public class CableLinkTypeFibrePanel extends GeneralPanel {
 	
 	void colorButton_actionPerformed(ActionEvent e) {
 		if (tcc == null)
-			tcc = new JColorChooser((Color)colorComboBox.getSelectedItem());
+			tcc = new JColorChooser((Color)cmbColorCombo.getSelectedItem());
 		else 
-			tcc.setColor((Color)colorComboBox.getSelectedItem());
+			tcc.setColor((Color)cmbColorCombo.getSelectedItem());
 		
 		int res = JOptionPane.showOptionDialog(this, tcc, LangModelConfig.getString("label_chooseColor"), 
 				JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
 		if (res == JOptionPane.OK_OPTION) {
 			Color newColor = tcc.getColor();
 			if (isConatainsColor(newColor.getRGB())) {
-					colorComboBox.setSelectedItem(newColor);
+					cmbColorCombo.setSelectedItem(newColor);
 					return;
 				}
-			colorComboBox.addItem(newColor);
-			colorComboBox.setSelectedItem(newColor);
+			cmbColorCombo.addItem(newColor);
+			cmbColorCombo.setSelectedItem(newColor);
 		}
 	}
 	
 	boolean isConatainsColor(int color) {
-		for (int i = 0; i < colorComboBox.getItemCount(); i++)
-			if (((Color)colorComboBox.getItemAt(i)).getRGB() == color)
+		for (int i = 0; i < cmbColorCombo.getItemCount(); i++)
+			if (((Color)cmbColorCombo.getItemAt(i)).getRGB() == color)
 				return true;
 		return false;
 	}
@@ -379,15 +452,15 @@ public class CableLinkTypeFibrePanel extends GeneralPanel {
 		if (e.getValueIsAdjusting())
 			return;
 
-		CableThreadType ctt = (CableThreadType) this.threadsList.getSelectedValue();
+		CableThreadType ctt = (CableThreadType) this.lsThreadsList.getSelectedValue();
 		if (ctt != null) {
-			this.linksNameField.setText(ctt.getName());
-			this.linksMarkArea.setText(ctt.getDescription());
-			this.linksTypeBox.setSelectedItem(ctt.getLinkType());
+			this.tfNameText.setText(ctt.getName());
+			this.taDescrArea.setText(ctt.getDescription());
+			this.cmbTypeCombo.setSelectedItem(ctt.getLinkType());
 			Color newColor = new Color(ctt.getColor());
 			if (!isConatainsColor(ctt.getColor()))
-				this.colorComboBox.addItem(newColor);
-			this.colorComboBox.setSelectedItem(newColor);
+				this.cmbColorCombo.addItem(newColor);
+			this.cmbColorCombo.setSelectedItem(newColor);
 
 			layout.getInternalDispatcher().notify(
 					new SchemeNavigateEvent(new Object[] { layout.getCell(ctt) },
