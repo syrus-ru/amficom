@@ -49,7 +49,8 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taDX, ThreshDYArray &taDY,
 // В режиме autoThresh возможно полное отслеживание порогов запрошенных типов:
 // ttdxOut != 0: ThreshDX,
 // ttdyOut != 0: ThreshDY.
-// Без autoThresh пороги отслеживаются не полностью.
+// Без autoThresh пороги отслеживаются не полностью
+//   (не отслеживаются DY-пороги на участках сшивки границ DX-порогов).
 
 // для mf
 void ChangeBreakLByThreshEx (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, int key,
