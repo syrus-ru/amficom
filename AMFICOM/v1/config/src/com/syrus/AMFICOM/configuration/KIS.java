@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.24 2004/11/04 09:05:13 bob Exp $
+ * $Id: KIS.java,v 1.25 2004/11/05 06:52:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/11/04 09:05:13 $
+ * @version $Revision: 1.25 $, $Date: 2004/11/05 06:52:21 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -233,7 +233,7 @@ public class KIS extends DomainMember implements TypedObject {
 	
 	public List getDependencies() {
 		List dependencies = new LinkedList();
-		dependencies.add(this.type.getId());
+		dependencies.add(this.type);
 		dependencies.add(this.equipmentId);
 		dependencies.add(this.mcmId);
 		dependencies.addAll(this.measurementPortIds);		

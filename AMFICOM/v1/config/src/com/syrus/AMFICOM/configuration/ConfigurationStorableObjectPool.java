@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.25 2004/11/04 14:20:15 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.26 2004/11/05 06:52:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,6 +21,7 @@ import java.util.Hashtable;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -32,7 +33,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/11/04 14:20:15 $
+ * @version $Revision: 1.26 $, $Date: 2004/11/05 06:52:21 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -543,7 +544,7 @@ public class ConfigurationStorableObjectPool {
 							IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
 	
-	public static void flush(boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{		 
+	public static void flush(boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException{		 
 		List list = new LinkedList();
 		for (Iterator it = objectPoolMap.keySet().iterator(); it.hasNext();) {
 			Short entityCode = (Short) it.next();
@@ -571,7 +572,7 @@ public class ConfigurationStorableObjectPool {
 		}
 	}
 	
-	private static void saveStorableObjects(short code, List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
+	private static void saveStorableObjects(short code, List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException{
 		if (!list.isEmpty()){
 			boolean alone = (list.size()==1);
 			
@@ -583,14 +584,25 @@ public class ConfigurationStorableObjectPool {
 								 + storableObject.getId() + "'", Log.DEBUGLEVEL08);
 				List dependencies = storableObject.getDependencies();
 				for (Iterator depIt = dependencies.iterator(); depIt.hasNext();) {
-					Identifier id = (Identifier) depIt.next();
+					Object depItObj = depIt.next();
+					Identifier id;
+					StorableObject stObj;
+					if (depItObj instanceof StorableObject){
+						stObj = (StorableObject)depItObj;
+						id = stObj.getId();
+					} else if (depItObj instanceof Identifier) {
+						id = (Identifier) depItObj;
+						stObj = getStorableObject(id, true);
+					} else {
+						throw new IllegalDataException("ConfigurationStorableObjectPool.saveStorableObjects | Illegal dependencies Object: " + depItObj.getClass().getName());
+					}
+					
 					Short major = new Short(id.getMajor());
 					List depList = (List)dependenciesMap.get(major);
 					if (depList == null){
 						depList = new LinkedList();
 						dependenciesMap.put(major, depList);
 					}
-					StorableObject stObj = getStorableObject(id, true);
 					if (stObj != null && stObj.isChanged() && !depList.contains(stObj))
 						depList.add(stObj);
 				}

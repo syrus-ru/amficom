@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.41 2004/11/04 14:03:06 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.42 2004/11/05 06:52:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,6 +21,7 @@ import java.util.Hashtable;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -33,7 +34,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2004/11/04 14:03:06 $
+ * @version $Revision: 1.42 $, $Date: 2004/11/05 06:52:14 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -495,7 +496,7 @@ public class MeasurementStorableObjectPool {
 		return loadedList;
 	}
 	
-	private static void saveStorableObjects(short code, List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
+	private static void saveStorableObjects(short code, List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException{
 		if (!list.isEmpty()){
 			boolean alone = (list.size()==1);
 			
@@ -507,14 +508,26 @@ public class MeasurementStorableObjectPool {
 								 + storableObject.getId() + "'", Log.DEBUGLEVEL08);
 				List dependencies = storableObject.getDependencies();
 				for (Iterator depIt = dependencies.iterator(); depIt.hasNext();) {
-					Identifier id = (Identifier) depIt.next();
+					Object depItObj = depIt.next();
+					Identifier id;
+					StorableObject stObj;
+					if (depItObj instanceof StorableObject){
+						stObj = (StorableObject)depItObj;
+						id = stObj.getId();
+					} else if (depItObj instanceof Identifier) {
+						id = (Identifier) depItObj;
+						stObj = getStorableObject(id, true);
+					} else {
+						throw new IllegalDataException("MeasurementStorableObjectPool.saveStorableObjects | Illegal dependencies Object: " + depItObj.getClass().getName());
+					}
+					
 					Short major = new Short(id.getMajor());
 					List depList = (List)dependenciesMap.get(major);
 					if (depList == null){
 						depList = new LinkedList();
 						dependenciesMap.put(major, depList);
 					}
-					StorableObject stObj = getStorableObject(id, true);
+					
 					if (stObj != null && stObj.isChanged() && !depList.contains(stObj))
 						depList.add(stObj);
 				}
@@ -668,7 +681,7 @@ public class MeasurementStorableObjectPool {
 		return object;
 	}
 	
-	public static void flush(boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{		 
+	public static void flush(boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException{		 
 		List list = new LinkedList();
 		for (Iterator it = objectPoolMap.keySet().iterator(); it.hasNext();) {
 			Short entityCode = (Short) it.next();
