@@ -9,6 +9,8 @@
 *.gz
 *.swp
 *.log
+.classpath
+.project
 classes
 logs
 cache
