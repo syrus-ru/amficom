@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.91 2005/02/11 09:26:41 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.92 2005/02/11 10:01:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.91 $, $Date: 2005/02/11 09:26:41 $
+ * @version $Revision: 1.92 $, $Date: 2005/02/11 10:01:48 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -371,7 +371,7 @@ public abstract class StorableObjectDatabase {
 		return this.retrieveByIds(null, stringBuffer.toString());
 	}
 
-	public List retrieveByCondition(List ids, StorableObjectCondition condition)
+	public final List retrieveByCondition(List ids, StorableObjectCondition condition)
 			throws RetrieveObjectException,
 				IllegalDataException {
 
