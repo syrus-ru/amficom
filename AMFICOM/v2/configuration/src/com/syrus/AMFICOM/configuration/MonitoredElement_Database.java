@@ -33,6 +33,7 @@ public class MonitoredElement_Database extends StorableObject_Database {
 			+ DatabaseDate.toQuerySubString("modified") + ", "
 			+ "creator_id, "
 			+ "modifier_id, "
+			+ "domain_id, "
 			+ "kis_id, "
 			+ "local_address"
 			+ " FROM " + ObjectEntities.ME_ENTITY
@@ -48,6 +49,7 @@ public class MonitoredElement_Database extends StorableObject_Database {
 																			 DatabaseDate.fromQuerySubString(resultSet, "modified"),
 																			 new Identifier(resultSet.getLong("creator_id")),
 																			 new Identifier(resultSet.getLong("modifier_id")),
+																			 new Identifier(resultSet.getLong("domain_id")),
 																			 new Identifier(resultSet.getLong("kis_id")),
 																			 resultSet.getString("local_address"));
 			else
@@ -105,13 +107,14 @@ public class MonitoredElement_Database extends StorableObject_Database {
 	private void insertMonitoredElement(MonitoredElement monitoredElement) throws Exception {
 		String me_id_str = monitoredElement.getId().toString();
 		String sql = "INSERT INTO " + ObjectEntities.ME_ENTITY
-			+ " (id, created, modified, creator_id, modifier_id, kis_id, local_address)"
+			+ " (id, created, modified, creator_id, modifier_id, domain_id, kis_id, local_address)"
 			+ " VALUES ("
 			+ me_id_str + ", "
 			+ DatabaseDate.toUpdateSubString(monitoredElement.getCreated()) + ", "
 			+ DatabaseDate.toUpdateSubString(monitoredElement.getModified()) + ", "
 			+ monitoredElement.getCreatorId().toString() + ", "
 			+ monitoredElement.getModifierId().toString() + ", "
+			+ monitoredElement.getDomainId().toString() + ", "
 			+ monitoredElement.getKISId().toString() + ", '"
 			+ monitoredElement.getLocalAddress()
 			+ "')";

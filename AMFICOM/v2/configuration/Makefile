@@ -33,6 +33,7 @@ $(LIBNAME):	mach
 mach:	corba
 	$(JAVAC) $(JAVAC_CUSTOM_OPTIONS) $(JAVAC_OPTIONS) -classpath $(CLASSES):$(APPCLASSPATH) \
 		$(SRC)/com/syrus/AMFICOM/configuration/ConfigurationDatabaseContext.java \
+		$(SRC)/com/syrus/AMFICOM/configuration/DomainMember.java \
 		$(SRC)/com/syrus/AMFICOM/configuration/KIS.java \
 		$(SRC)/com/syrus/AMFICOM/configuration/KIS_Database.java \
 		$(SRC)/com/syrus/AMFICOM/configuration/MonitoredElement.java \

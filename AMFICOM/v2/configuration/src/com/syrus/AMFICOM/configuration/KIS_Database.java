@@ -29,6 +29,7 @@ public class KIS_Database extends StorableObject_Database {
 			+ DatabaseDate.toQuerySubString("modified") + ", "
 			+ "creator_id, "
 			+ "modifier_id, "
+			+ "domain_id, "
 			+ "mcm_id, "
 			+ "name, "
 			+ "description"
@@ -45,6 +46,7 @@ public class KIS_Database extends StorableObject_Database {
 													DatabaseDate.fromQuerySubString(resultSet, "modified"),
 													new Identifier(resultSet.getLong("creator_id")),
 													new Identifier(resultSet.getLong("modifier_id")),
+													new Identifier(resultSet.getLong("domain_id")),
 													new Identifier(resultSet.getLong("mcm_id")),
 													resultSet.getString("name"),
 													resultSet.getString("description"));
@@ -76,13 +78,14 @@ public class KIS_Database extends StorableObject_Database {
 	public void insertKIS(KIS kis) throws Exception {
 		String kis_id_str = kis.getId().toString();
 		String sql = "INSERT INTO " + ObjectEntities.KIS_ENTITY
-			+ " (id, created, modified, creator_id, modifier_id, mcm_id, name, description)"
+			+ " (id, created, modified, creator_id, modifier_id, domain_id, mcm_id, name, description)"
 			+ " VALUES ("
 			+ kis_id_str + ", "
 			+ DatabaseDate.toUpdateSubString(kis.getCreated()) + ", "
 			+ DatabaseDate.toUpdateSubString(kis.getModified()) + ", "
 			+ kis.getCreatorId().toString() + ", "
 			+ kis.getModifierId().toString() + ", "
+			+ kis.getDomainId().toString() + ", "
 			+ kis.getMCMId().toString() + ", '"
 			+ kis.getName() + "', '"
 			+ kis.getDescription()

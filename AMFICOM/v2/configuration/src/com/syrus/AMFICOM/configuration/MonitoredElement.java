@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.general.StorableObject_Database;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 
-public class MonitoredElement extends StorableObject {
+public class MonitoredElement extends DomainMember {
 	private Identifier kis_id;
 	private String local_address;
 
@@ -33,7 +33,8 @@ public class MonitoredElement extends StorableObject {
 					new Date(met.created),
 					new Date(met.modified),
 					new Identifier(met.creator_id),
-					new Identifier(met.modifier_id));
+					new Identifier(met.modifier_id),
+					new Identifier(met.domain_id));
 		this.kis_id = new Identifier(met.kis_id);
 		this.local_address = new String(met.local_address);
 
@@ -52,6 +53,7 @@ public class MonitoredElement extends StorableObject {
 																						 super.modified.getTime(),
 																						 (Identifier_Transferable)super.creator_id.getTransferable(),
 																						 (Identifier_Transferable)super.modifier_id.getTransferable(),
+																						 (Identifier_Transferable)super.domain_id.getTransferable(),
 																						 (Identifier_Transferable)this.kis_id.getTransferable(),
 																						 new String(this.local_address));
 	}
@@ -68,12 +70,14 @@ public class MonitoredElement extends StorableObject {
 																						Date modified,
 																						Identifier creator_id,
 																						Identifier modifier_id,
+																						Identifier domain_id,
 																						Identifier kis_id,
 																						String local_address) {
 		super.setAttributes(created,
 												modified,
 												creator_id,
-												modifier_id);
+												modifier_id,
+												domain_id);
 		this.kis_id = kis_id;
 		this.local_address = local_address;
 	}

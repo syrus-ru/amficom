@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.general.StorableObject_Database;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 
-public class KIS extends StorableObject {
+public class KIS extends DomainMember {
 	private Identifier mcm_id;
 	private String name;
 	private String description;
@@ -38,7 +38,8 @@ public class KIS extends StorableObject {
 					new Date(kt.created),
 					new Date(kt.modified),
 					new Identifier(kt.creator_id),
-					new Identifier(kt.modifier_id));
+					new Identifier(kt.modifier_id),
+					new Identifier(kt.domain_id));
 		this.mcm_id = new Identifier(kt.mcm_id);
 		this.name = new String(kt.name);
 		this.description = new String(kt.description);
@@ -60,6 +61,7 @@ public class KIS extends StorableObject {
 																super.modified.getTime(),
 																(Identifier_Transferable)super.creator_id.getTransferable(),
 																(Identifier_Transferable)super.modifier_id.getTransferable(),
+																(Identifier_Transferable)super.domain_id.getTransferable(),
 																(Identifier_Transferable)this.mcm_id.getTransferable(),
 																new String(this.name),
 																new String(this.description));
@@ -85,13 +87,15 @@ public class KIS extends StorableObject {
 																						Date modified,
 																						Identifier creator_id,
 																						Identifier modifier_id,
+																						Identifier domain_id,
 																						Identifier mcm_id,
 																						String name,
 																						String description) {
 		super.setAttributes(created,
 												modified,
 												creator_id,
-												modifier_id);
+												modifier_id,
+												domain_id);
 		this.mcm_id = mcm_id;
 		this.name = name;
 		this.description = description;
