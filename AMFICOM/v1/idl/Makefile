@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.18 2005/01/18 07:49:33 max Exp $
+# $Id: Makefile,v 1.19 2005/01/18 08:35:20 bob Exp $
 #
 # vim:ft=make:
 #
@@ -47,7 +47,7 @@ xtra: .xtra
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/configuration.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/measurement.idl
 	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/cmserver.idl
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/lilmapletty.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/map.idl
 	touch $@
 
 .PHONY: idl
