@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeDatabase.java,v 1.7 2005/01/17 10:54:59 bob Exp $
+ * $Id: SiteNodeDatabase.java,v 1.8 2005/01/26 07:19:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,31 +35,12 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/01/17 10:54:59 $
+ * @version $Revision: 1.8 $, $Date: 2005/01/26 07:19:34 $
  * @author $Author: bob $
  * @module map_v1
  */
 public class SiteNodeDatabase extends StorableObjectDatabase {
-	 // name VARCHAR2(128),
-    public static final String COLUMN_NAME  = "name";
-    // description VARCHAR2(256),
-    public static final String COLUMN_DESCRIPTION   = "description";
-    // longitude NUMBER(12,6),
-    public static final String COLUMN_LONGITUDE     = "longitude";
-    // latiude NUMBER(12,6),
-    public static final String COLUMN_LATIUDE       = "latiude";
-    // image_id VARCHAR2(32) NOT NULL,
-    public static final String COLUMN_IMAGE_ID      = "image_id";
-    // site_node_type_id VARCHAR2(32) NOT NULL,
-    public static final String COLUMN_SITE_NODE_TYPE_ID     = "site_node_type_id";
-    // city VARCHAR2(128),
-    public static final String COLUMN_CITY  = "city";
-    // street VARCHAR2(128),
-    public static final String COLUMN_STREET        = "street";
-    // building VARCHAR2(128),
-    public static final String COLUMN_BUILDING      = "building";
-    
-	private static String columns;
+	 private static String columns;
 	
 	private static String updateMultiplySQLValues;
 
@@ -85,15 +66,15 @@ public class SiteNodeDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null){
 			columns = super.getColumns(mode) + COMMA
-				+ COLUMN_NAME + COMMA
-				+ COLUMN_DESCRIPTION + COMMA
-				+ COLUMN_LONGITUDE + COMMA
-				+ COLUMN_LATIUDE + COMMA 
-				+ COLUMN_IMAGE_ID + COMMA
-				+ COLUMN_SITE_NODE_TYPE_ID + COMMA
-				+ COLUMN_CITY + COMMA
-				+ COLUMN_STREET + COMMA
-				+ COLUMN_BUILDING;
+				+ SiteNodeWrapper.COLUMN_NAME + COMMA
+				+ SiteNodeWrapper.COLUMN_DESCRIPTION + COMMA
+				+ SiteNodeWrapper.COLUMN_LONGITUDE + COMMA
+				+ SiteNodeWrapper.COLUMN_LATIUDE + COMMA 
+				+ SiteNodeWrapper.COLUMN_IMAGE_ID + COMMA
+				+ SiteNodeWrapper.COLUMN_SITE_NODE_TYPE_ID + COMMA
+				+ SiteNodeWrapper.COLUMN_CITY + COMMA
+				+ SiteNodeWrapper.COLUMN_STREET + COMMA
+				+ SiteNodeWrapper.COLUMN_BUILDING;
 		}
 		return columns;
 	}	
@@ -160,7 +141,7 @@ public class SiteNodeDatabase extends StorableObjectDatabase {
 				
 		SiteNodeType type;
 		try {
-			type = (SiteNodeType) MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_SITE_NODE_TYPE_ID), true);
+			type = (SiteNodeType) MapStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, SiteNodeWrapper.COLUMN_SITE_NODE_TYPE_ID), true);
 		} catch (ApplicationException ae) {
 			String msg = this.getEnityName() + "Database.updateEntityFromResultSet | Error " + ae.getMessage();
 			throw new RetrieveObjectException(msg, ae);
@@ -172,15 +153,15 @@ public class SiteNodeDatabase extends StorableObjectDatabase {
 							   DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
-							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
-							   resultSet.getDouble(COLUMN_LONGITUDE),
-							   resultSet.getDouble(COLUMN_LATIUDE),
-							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_IMAGE_ID),
+							   DatabaseString.fromQuerySubString(resultSet.getString(SiteNodeWrapper.COLUMN_NAME)),
+							   DatabaseString.fromQuerySubString(resultSet.getString(SiteNodeWrapper.COLUMN_DESCRIPTION)),
+							   resultSet.getDouble(SiteNodeWrapper.COLUMN_LONGITUDE),
+							   resultSet.getDouble(SiteNodeWrapper.COLUMN_LATIUDE),
+							   DatabaseIdentifier.getIdentifier(resultSet, SiteNodeWrapper.COLUMN_IMAGE_ID),
 							   type,
-							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CITY)),
-							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_STREET)),
-							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_BUILDING)));		
+							   DatabaseString.fromQuerySubString(resultSet.getString(SiteNodeWrapper.COLUMN_CITY)),
+							   DatabaseString.fromQuerySubString(resultSet.getString(SiteNodeWrapper.COLUMN_STREET)),
+							   DatabaseString.fromQuerySubString(resultSet.getString(SiteNodeWrapper.COLUMN_BUILDING)));		
 		return siteNode;
 	}
 
