@@ -10,7 +10,6 @@ HOST := mongol
 SERVICE_NAME := mongol
 
 TRANSCEIVER_DIR := ./transceiver
-DADARA_DIR := ./dadara
 
 include ../tools/Makefile.inc
 
@@ -98,8 +97,7 @@ cleanmach:
 .PHONY:	cleanhead
 cleanhead:
 	$(RM) \
-		$(TRANSCEIVER_DIR)/com_syrus_AMFICOM_mcm_TCPKISConnection.h \
-		$(DADARA_DIR)/com_syrus_AMFICOM_mcm_DadaraAnalysisManager.h
+		$(TRANSCEIVER_DIR)/com_syrus_AMFICOM_mcm_TCPKISConnection.h
 	$(RM) .head
 	
 
