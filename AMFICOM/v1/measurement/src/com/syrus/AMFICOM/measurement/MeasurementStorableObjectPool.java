@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.10 2004/09/15 10:05:07 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.11 2004/09/15 11:58:19 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/09/15 10:05:07 $
+ * @version $Revision: 1.11 $, $Date: 2004/09/15 11:58:19 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -273,6 +273,8 @@ public class MeasurementStorableObjectPool {
 		boolean cache = true;		
 		Identifier objectId = storableObject.getId();
 		short entityCode = objectId.getMajor();
+		
+		// some entities such as processing and scheduled test cannot be cached 
 		switch(entityCode){
 			case ObjectEntities.TEST_ENTITY_CODE:
 				Test test = (Test)storableObject;
