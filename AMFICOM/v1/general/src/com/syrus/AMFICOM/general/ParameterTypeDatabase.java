@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.18 2005/03/05 09:56:46 arseniy Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.19 2005/03/10 15:16:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/03/05 09:56:46 $
+ * @version $Revision: 1.19 $, $Date: 2005/03/10 15:16:07 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -117,23 +117,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 	}	
-	
-	public Collection retrieveAll() throws RetrieveObjectException {
-		try{
-			return this.retrieveByIds(null, null);
-		}
-		catch(IllegalDataException ide){
-			throw new RetrieveObjectException(ide);
-		}
-	}
 
-	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
-		if ((ids == null) || (ids.isEmpty()))
-			return this.retrieveByIdsOneQuery(null, condition);
-		return this.retrieveByIdsOneQuery(ids, condition);
-	}
-	
-	
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, SQLException {
 		ParameterType parameterType = this.fromStorableObject(storableObject);

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.18 2005/03/10 12:51:46 arseniy Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.19 2005/03/10 15:16:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/03/10 12:51:46 $
+ * @version $Revision: 1.19 $, $Date: 2005/03/10 15:16:07 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -133,44 +133,6 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 
 	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
-	}
-
-	public Collection retrieveAll() throws RetrieveObjectException {
-		Collection collection = null;
-		try {
-			collection = this.retrieveByIds(null, null);
-		}
-		catch (IllegalDataException ide) {
-			Log.debugMessage("CharacteristicTypeDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
-			throw new RetrieveObjectException(ide);
-		}
-		return collection;
-	}
-
-	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
-		if ((ids == null) || (ids.isEmpty()))
-			return this.retrieveByIdsOneQuery(null, condition);
-		return this.retrieveByIdsOneQuery(ids, condition);	
-		//return retriveByIdsPreparedStatement(ids, condition);
-	}	
-
-	/**
-	 * @deprecated use {@link StorableObjectDatabase#retrieveButIdsByCondition(Collection, StorableObjectCondition)} and {@link TypicalCondition}
-	 */
-	public CharacteristicType retrieveForCodename(String codename) throws ObjectNotFoundException , RetrieveObjectException {		
-		Collection collection = null;
-
-		try {
-			collection = this.retrieveByIds( null , StorableObjectWrapper.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
-		}
-		catch (IllegalDataException ide) {				
-			throw new RetrieveObjectException(ide);
-		}
-
-		if ((collection == null) || (collection.isEmpty()))
-				throw new ObjectNotFoundException("No characteristic type with codename: '" + codename + "'");
-
-		return (CharacteristicType) collection.iterator().next();
 	}
 
 }
