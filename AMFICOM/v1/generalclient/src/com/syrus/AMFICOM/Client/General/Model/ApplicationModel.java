@@ -1,39 +1,13 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: Модель приложения описывает действия, которые пользователь * //
-// *         (оператор) может производить с системой                      * //
-// *                                                                      * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 16 jul 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMMain\com\syrus\AMFICOM\Client\    * //
-// *        General\Model\ApplicationModel.java                           * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
-
+/**
+ * $Id: ApplicationModel.java,v 1.4 2004/07/28 11:54:51 krupenn Exp $
+ *
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ Автоматизированный МногоФункциональный
+ *         Интеллектуальный Комплекс Объектного Мониторинга
+ *
+ * Платформа: java 1.4.1
+ */
 package com.syrus.AMFICOM.Client.General.Model;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
@@ -46,45 +20,106 @@ import com.syrus.AMFICOM.Client.Resource.RISDDataSource;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-// модель приложения
+/**
+ * Модель приложения описывает действия, которые пользователь (оператор) 
+ * может производить с системой
+ * 
+ * 
+ * 
+ * @version $Revision: 1.4 $, $Date: 2004/07/28 11:54:51 $
+ * @module
+ * @author $Author: krupenn $
+ * @see
+ */
 public class ApplicationModel
 {
-	// запись об элементе модели включает имя элемента, связанную с ним команду и
-	// флаги видимости и доступности команды пользователю.
-	// конструктора без параметров нет, так как элемент определяется идентификатором
+	/**
+	 * запись об элементе модели включает имя элемента, связанную с ним команду 
+	 * и флаги видимости и доступности команды пользователю.
+	 * конструктора без параметров нет, так как элемент определяется 
+	 * идентификатором
+	 * 
+	 * @version $Revision: 1.4 $, $Date: 2004/07/28 11:54:51 $
+	 * @module
+	 * @author $Author: krupenn $
+	 * @see
+	 */
 	class ApplicationEntry
 	{
-		boolean selected = false;	// выделен ли пункт (для пункта меню - отмечен
-									// галочкой, для западающей кнопки - западание
-		boolean installed = true;	// виден ли пункт в текущей инсталлированной
-									// конфигурации
-		boolean visible = true;		// виден ли пункт в текущем контексте
-		boolean usable = true;		// доступен ли пункт в текущей инсталлированной
-									// конфигурации
-		boolean accessible = true;	// доступен ли пункт в текущем контексте
-		String name;				// идентификатор элемента меню
-		Command command = new VoidCommand();
-									// комманда, ассоциируемая с данным пунктом
+		/**
+		 * выделен ли пункт (для пункта меню - отмечен галочкой, для 
+		 * западающей кнопки - западание
+		 */
+		boolean selected = false;
 
-		// конструктор с указанием имени элемента и связанной с ним команды.
-		// по умолчанию логические поля элемента устанавливаются следующим образом:
-		//  selected = false
-		//  visible = true
-		//  usable = true
-		//  accessible = true
+		/**
+		 * виден ли пункт в текущей инсталлированной конфигурации
+		 */
+		boolean installed = true;
+
+		/**
+		 * виден ли пункт в текущем контексте
+		 */
+		boolean visible = true;
+		
+		/**
+		 * доступен ли пункт в текущей инсталлированной конфигурации
+		 */
+		boolean usable = true;
+
+		/**
+		 * доступен ли пункт в текущем контексте
+		 */
+		boolean accessible = true;
+		
+		/**
+		 * идентификатор элемента меню
+		 */
+		String name; 
+		
+		/**
+		 * комманда, ассоциируемая с данным пунктом
+		 */
+		Command command = new VoidCommand();
+
+		/**
+		 * конструктор с указанием имени элемента и связанной с ним команды.
+		 * по умолчанию логические поля элемента устанавливаются следующим 
+		 * образом:
+		 * selected = false
+		 * visible = true
+		 * usable = true
+		 * accessible = true
+		 * 
+		 * @param name
+		 * @param command
+		 */
 		public ApplicationEntry(String name, Command command)
 		{
 			this.name = name;
 			this.command = command;
 		}
 
-		// по умолчанию с элементом модели связана пустая команда
+		/**
+		 * по умолчанию с элементом модели связана пустая команда
+		 * @param name
+		 */
 		public ApplicationEntry(String name)
 		{
 			this.name = name;
 		}
 
-		// конструктор с инициализацией всех членов класса
+		// 
+		/**
+		 * конструктор с инициализацией всех членов класса
+		 * @param name
+		 * @param command
+		 * @param installed
+		 * @param visible
+		 * @param usable
+		 * @param accessible
+		 * @param selected
+		 */
 		public ApplicationEntry(
 				String name,
 				Command command,
@@ -103,7 +138,10 @@ public class ApplicationModel
 			this.command = command;
 		}
 
-		// при создании нового объекта берутся копии всех членов объекта
+		/**
+		 * при создании нового объекта берутся копии всех членов объекта
+		 * @param entry
+		 */
 		public ApplicationEntry(ApplicationEntry entry)
 		{
 			this.name = entry.name;
@@ -115,7 +153,9 @@ public class ApplicationModel
 			this.command = (Command )entry.command.clone();
 		}
 
-		// дублирование объекта включает создание нового объекта
+		/**
+		 * дублирование объекта включает создание нового объекта
+		 */
 		public Object clone()
 		{
 			return new ApplicationEntry(this);
@@ -125,37 +165,48 @@ public class ApplicationModel
 ///////////////////////////////////////////////////////////////////////////////
 // поля и методы класса ApplicationModel
 ///////////////////////////////////////////////////////////////////////////////
-	private Hashtable appHash = new Hashtable();	// список элементов модели
-//	private com.syrus.AMFICOM.Client.Test.Hashtable appHash = new com.syrus.AMFICOM.Client.Test.Hashtable();	// список элементов модели
-	private ApplicationModelListenerList listenerList =
-			new ApplicationModelListenerList();		// список объектов, получаю-
-													// щих информацию об
-													// изменениях в модели
 
-	// конструктор без параметров - инициализируются список элементов и
-	// список объектов, принимающих уведомление об изменениях в модели
+	/**
+	 * список элементов модели
+	 */
+	private Hashtable appHash = new Hashtable();
+	
+	/**
+	 * список объектов, получающих информацию об изменениях в модели
+	 */
+	private ApplicationModelListenerList listenerList =
+			new ApplicationModelListenerList();
+
+	/**
+	 * конструктор без параметров - инициализируются список элементов и
+	 * список объектов, принимающих уведомление об изменениях в модели
+	 */
 	public ApplicationModel()
 	{
 		// nothing
 	}
 
-	// при дублировании модели дублируются все элементы и объекты, принимающие
-	// информацию об изменениях в модели
+	/**
+	 * при дублировании модели дублируются все элементы и объекты, принимающие
+	 * информацию об изменениях в модели
+	 * 
+	 * @param aModel
+	 */
 	public ApplicationModel(ApplicationModel aModel)
 	{
-		
-			// копируются Слушатели изменения модели
+		// копируются Слушатели изменения модели
 		for (int i = aModel.listenerList.getListenerCount() - 1; i >= 0; i--)
 		{
 			listenerList.add(
 					aModel.listenerList.getListenerClass(i),
 					aModel.listenerList.getListener(i));
 		}
-			// инициализируется список элементов
+
+		// инициализируется список элементов
 		appHash = new Hashtable();
-//		appHash = new com.syrus.AMFICOM.Client.Test.Hashtable();
-			// копируются элементы модели, с тем, чтобы в каждой модели элементы
-			// изменялись независимо
+
+		// копируются элементы модели, с тем, чтобы в каждой модели элементы
+		// изменялись независимо
 		for(Enumeration e = aModel.appHash.keys(); e.hasMoreElements();)
 		{
 			String key = (String )e.nextElement();
@@ -164,7 +215,9 @@ public class ApplicationModel
 		}
 	}
 
-	// добавить в модель элемент с указанием всех членов
+	/**
+	 * добавить в модель элемент с указанием всех членов
+	 */
 	public void add(
 			String name,
 			Command command,
@@ -187,7 +240,9 @@ public class ApplicationModel
 		appHash.put(name, entry);
 	}
 
-	// добавить в модель элемент с установкой флагов по умолчанию
+	/**
+	 * добавить в модель элемент с установкой флагов по умолчанию
+	 */
 	public void add(String name, Command command)
 	{
 		if(command == null)
@@ -196,32 +251,44 @@ public class ApplicationModel
 		appHash.put(name, entry);
 	}
 
-	// добавить в модель элемент с установкой флагов и команды по умолчанию
+	/**
+	 * добавить в модель элемент с установкой флагов и команды по умолчанию
+	 */
 	public void add(String name)
 	{
 		ApplicationEntry entry = new ApplicationEntry(name);
 		appHash.put(name, entry);
 	}
 
-	// получить количество элементов в модели
+	/**
+	 * получить количество элементов в модели
+	 */
 	public int getCount()
 	{
 		return appHash.size();
 	}
 
-	// установить флаг "выбран" для элемента
+	/**
+	 * установить флаг "выбран" для элемента
+	 * @deprecated use {@link setSelected(name, true)}
+	 */
 	public void select(String name)
 	{
 		setSelected(name, true);
 	}
 
-	// снять флаг "выбран" для элемента
+	/**
+	 * снять флаг "выбран" для элемента
+	 * @deprecated use {@link setSelected(name, false)}
+	 */
 	public void deselect(String name)
 	{
 		setSelected(name, false);
 	}
 
-	// установить флаг "выбран" для элемента в bool
+	/**
+	 * установить флаг "выбран" для элемента в bool
+	 */
 	public void setSelected(String name, boolean bool)
 	{
 		ApplicationEntry entry = (ApplicationEntry) appHash.get(name);
@@ -230,19 +297,27 @@ public class ApplicationModel
 		entry.selected = bool;
 	}
 
-	// установить флаг "разрешенный" для элемента
+	/**
+	 * установить флаг "разрешенный" для элемента
+	 * @deprecated use {@link setEnabled(name, true)}
+	 */
 	public void enable(String name)
 	{
 		setEnabled(name, true);
 	}
 
-	// снять флаг "разрешенный" для элемента
+	/**
+	 * снять флаг "разрешенный" для элемента
+	 * @deprecated use {@link setEnabled(name, false)}
+	 */
 	public void disable(String name)
 	{
 		setEnabled(name, false);
 	}
 
-	// установить флаг "разрешенный" для элемента в bool
+	/**
+	 * установить флаг "разрешенный" для элемента в bool
+	 */
 	public void setEnabled(String name, boolean bool)
 	{
 		ApplicationEntry entry = (ApplicationEntry) appHash.get(name);
@@ -251,19 +326,27 @@ public class ApplicationModel
 		entry.accessible = bool;
 	}
 
-	// установить флаг "видимый" для элемента
+	/**
+	 * установить флаг "видимый" для элемента
+	 * @deprecated use {@see setVisible(name, true)}
+	 */
 	public void show(String name)
 	{
 		setVisible(name, true);
 	}
 
-	// снять флаг "видимый" для элемента
+	/**
+	 * снять флаг "видимый" для элемента
+	 * @deprecated use {@link setVisible(name, false)}
+	 */
 	public void hide(String name)
 	{
 		setVisible(name, false);
 	}
 
-	// установить флаг "видимый" для элемента в bool
+	/**
+	 * установить флаг "видимый" для элемента в bool
+	 */
 	public void setVisible(String name, boolean bool)
 	{
 		ApplicationEntry entry = (ApplicationEntry) appHash.get(name);
@@ -272,7 +355,9 @@ public class ApplicationModel
 		entry.visible = bool;
 	}
 
-	// установить флаг "установленный" для элемента в bool
+	/**
+	 * установить флаг "установленный" для элемента в bool
+	 */
 	public void setInstalled(String name, boolean bool)
 	{
 		ApplicationEntry entry = (ApplicationEntry) appHash.get(name);
@@ -281,7 +366,9 @@ public class ApplicationModel
 		entry.installed = bool;
 	}
 
-	// установить флаг "доступный" для элемента в bool
+	/**
+	 * установить флаг "доступный" для элемента в bool
+	 */
 	public void setAccessible(String name, boolean bool)
 	{
 		ApplicationEntry entry = (ApplicationEntry) appHash.get(name);
@@ -290,7 +377,9 @@ public class ApplicationModel
 		entry.accessible = bool;
 	}
 
-	// установить флаг "установленный" для элемента в bool
+	/**
+	 * установить флаг "установленный" для элемента в bool
+	 */
 	public void setUsable(String name, boolean bool)
 	{
 		ApplicationEntry entry = (ApplicationEntry) appHash.get(name);
@@ -299,7 +388,9 @@ public class ApplicationModel
 		entry.usable = bool;
 	}
 
-	// получить флаг "видимый"
+	/**
+	 * получить флаг "видимый"
+	 */
 	public boolean isVisible(String name)
 	{
 		ApplicationEntry entry = (ApplicationEntry) appHash.get(name);
@@ -308,7 +399,9 @@ public class ApplicationModel
 		return entry.visible && entry.installed;
 	}
 
-	// получить флаг "доступный"
+	/**
+	 * получить флаг "доступный"
+	 */
 	public boolean isAccessible(String name)
 	{
 		ApplicationEntry entry = (ApplicationEntry) appHash.get(name);
@@ -317,7 +410,9 @@ public class ApplicationModel
 		return entry.accessible;
 	}
 
-	// получить флаг "выбранный"
+	/**
+	 * получить флаг "выбранный"
+	 */
 	public boolean isSelected(String name)
 	{
 		ApplicationEntry entry = (ApplicationEntry) appHash.get(name);
@@ -326,7 +421,9 @@ public class ApplicationModel
 		return entry.selected;
 	}
 
-	// получить флаг "установленный"
+	/**
+	 * получить флаг "установленный"
+	 */
 	public boolean isUsable(String name)
 	{
 		ApplicationEntry entry = (ApplicationEntry) appHash.get(name);
@@ -335,7 +432,9 @@ public class ApplicationModel
 		return entry.usable;
 	}
 
-	// получить флаг "разрешенный"
+	/**
+	 * получить флаг "разрешенный"
+	 */
 	public boolean isEnabled(String name)
 	{
 		ApplicationEntry entry = (ApplicationEntry) appHash.get(name);
@@ -344,13 +443,17 @@ public class ApplicationModel
 		return entry.usable && entry.accessible;
 	}
 
-	// установить флаг "разрешенный" в bool для всех элементов
+	/**
+	 * установить флаг "разрешенный" в bool для всех элементов
+	 */
 	public void setAllItemsEnabled(boolean bool)
 	{
 		setAllItemsAccessible(bool);
 	}
 
-	// установить флаг "доступный" в bool для всех элементов
+	/**
+	 * установить флаг "доступный" в bool для всех элементов
+	 */
 	public void setAllItemsAccessible(boolean bool)
 	{
 		ApplicationEntry entry;
@@ -362,7 +465,9 @@ public class ApplicationModel
 		}
 	}
 
-	// установить флаг "видимый" в bool для всех элементов
+	/**
+	 * установить флаг "видимый" в bool для всех элементов
+	 */
 	public void setAllItemsVisible(boolean bool)
 	{
 		ApplicationEntry entry;
@@ -374,7 +479,9 @@ public class ApplicationModel
 		}
 	}
 
-	// установить флаг "установленный" в bool для всех элементов
+	/**
+	 * установить флаг "установленный" в bool для всех элементов
+	 */
 	public void setAllItemsUsable(boolean bool)
 	{
 		ApplicationEntry entry;
@@ -386,7 +493,9 @@ public class ApplicationModel
 		}
 	}
 
-	// установить флаг "выбранный" в bool для всех элементов
+	/**
+	 * установить флаг "выбранный" в bool для всех элементов
+	 */
 	public void setAllItemsSelected(boolean bool)
 	{
 		ApplicationEntry entry;
@@ -398,7 +507,9 @@ public class ApplicationModel
 		}
 	}
 
-	// установить команду для элемента
+	/**
+	 * установить команду для элемента
+	 */
 	public void setCommand(String name, Command command)
 	{
 		ApplicationEntry entry = (ApplicationEntry) appHash.get(name);
@@ -409,7 +520,9 @@ public class ApplicationModel
 		entry.command = command;
 	}
 
-	// получить связанную с элементом команду
+	/**
+	 * получить связанную с элементом команду
+	 */
 	public Command getCommand(String name)
 	{
 		ApplicationEntry entry = (ApplicationEntry) appHash.get(name);
@@ -418,33 +531,45 @@ public class ApplicationModel
 		return entry.command;
 	}
 
-	// добавить Слушателя - объект, получающий уведомление об изменениях модели
+	/**
+	 * добавить Слушателя - объект, получающий уведомление об изменениях модели
+	 */
 	public void addListener(ApplicationModelListener l)
 	{
 		listenerList.add(ApplicationModelListener.class, l);
 	}
 
-	// удалить Слушателя
+	/**
+	 * удалить Слушателя
+	 */
 	public void removeListener(ApplicationModelListener l)
 	{
 		listenerList.remove(ApplicationModelListener.class, l);
 	}
 
-	// проинформировать слушателей о том, что изменилось состояние элемента
-	// s - имя элемента
+	/**
+	 * проинформировать слушателей о том, что изменилось состояние элемента
+	 * @param s - имя элемента
+	 */
 	public void fireModelChanged(String e)
 	{
 		fireModelChanged(new String [] { e });
 	}
 
-	// проинформировать слушателей о том, что изменилось состояние элементов
-	// e - массив имен элементов
+	/**
+	 * проинформировать слушателей о том, что изменилось состояние элементов
+	 * @param e - массив имен элементов
+	 */
+	// 
+	// 
 	public void fireModelChanged(String e[])
 	{
 		int i;
+
 		// возвращается ненулевой список Слушателей
 		Object[] listeners = listenerList.getListenerList();
 		Object[] listenerclasses = listenerList.getListenerClassList();
+
 		// Идем по всем слушателям и каждого информируем об изменениях
 		// элементов e в модели
 		for (i = listeners.length - 1; i >= 0; i--)
@@ -456,18 +581,23 @@ public class ApplicationModel
 		}
 	}
 
+	/**
+	 * 
+	 */
 	public DataSourceInterface getDataSource(SessionInterface si)
 	{
 		String connection = Environment.getConnectionType();
-		if(connection.equals("RISD"))
+		if(connection.equals(Environment.CONNECTION_RISD))
 			return new RISDDataSource(si);
 		else
-		if(connection.equals("Empty"))
+		if(connection.equals(Environment.CONNECTION_EMPTY))
 			return new EmptyDataSource(si);
 		return null;
 	}
 
-	// дублирование модели
+	/**
+	 * дублирование модели
+	 */
 	public Object clone()
 	{
 		return new ApplicationModel(this);

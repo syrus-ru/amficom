@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.8 2004/07/28 10:26:24 krupenn Exp $
+ * $Id: Environment.java,v 1.9 2004/07/28 11:54:51 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -58,7 +58,7 @@ import javax.swing.plaf.metal.MetalTheme;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/07/28 10:26:24 $
+ * @version $Revision: 1.9 $, $Date: 2004/07/28 11:54:51 $
  * @author $Author: krupenn $
  * @see
  */
@@ -76,9 +76,9 @@ public class Environment extends Singleton
 	/** Connection */
 	private static final String FIELD_CONNECTION = "connection";
 
-	private static final String CONNECTION_RISD = "RISD";
-	private static final String CONNECTION_EMPTY = "Empty";
-	private static final String CONNECTION_JDBC = "JDBC";
+	public static final String CONNECTION_RISD = "RISD";
+	public static final String CONNECTION_EMPTY = "Empty";
+	public static final String CONNECTION_JDBC = "JDBC";
 
 	private static String connection = CONNECTION_RISD;
 
