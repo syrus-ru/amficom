@@ -2,13 +2,16 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.Client.Analysis.*;
+import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.Analysis.UI.TestSetupLoadDialog;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Result.TestSetup;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.io.BellcoreStructure;
 
 public class LoadTestSetupCommand extends VoidCommand
@@ -29,12 +32,8 @@ public class LoadTestSetupCommand extends VoidCommand
 
 	public void execute()
 	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		if(dataSource == null)
-			return;
-
 		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", traceid);
-		if (bs == null || bs.monitored_element_id.equals(""))
+		if (bs == null || bs.monitoredElementId == null)
 		{
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
@@ -48,12 +47,13 @@ public class LoadTestSetupCommand extends VoidCommand
 
 		if(dialog.ret_code == 0)
 			return;
-		if (!(dialog.resource instanceof TestSetup))
+		if (!(dialog.resource instanceof MeasurementSetup))
 			return;
 
-		TestSetup ts = (TestSetup)dialog.resource;
+		MeasurementSetup ms = (MeasurementSetup)dialog.resource;
+		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
 
-		bs.test_setup_id = ts.getId();
+//		bs.test_setup_id = ts.getId();
 
 		if (Pool.get("eventparams", AnalysisUtil.ETALON) != null)
 		{
@@ -61,13 +61,13 @@ public class LoadTestSetupCommand extends VoidCommand
 			aContext.getDispatcher().notify(new RefChangeEvent("primarytrace", RefChangeEvent.SELECT_EVENT));
 		}
 
-		AnalysisUtil.load_CriteriaSet(dataSource, ts);
+		AnalysisUtil.load_CriteriaSet(userId, ms);
 
-		if (!ts.getEthalonId().equals(""))
-			AnalysisUtil.load_Etalon(dataSource, ts);
+		if (ms.getEtalon() != null)
+			AnalysisUtil.load_Etalon(ms);
 
-		//		if (!ts.threshold_set_id.equals(""))
-		AnalysisUtil.load_Thresholds(dataSource, ts);
+		if (ms.getThresholdSet() != null)
+			AnalysisUtil.load_Thresholds(userId, ms);
 
 		aContext.getDispatcher().notify(new RefUpdateEvent(AnalysisUtil.ETALON,
 				RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));

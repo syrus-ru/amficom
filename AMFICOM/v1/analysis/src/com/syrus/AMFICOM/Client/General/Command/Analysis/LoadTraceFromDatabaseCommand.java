@@ -3,14 +3,16 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 import java.awt.Cursor;
 import javax.swing.JFrame;
 
-import com.syrus.AMFICOM.Client.Analysis.*;
-import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.Analysis.UI.ReflectogrammLoadDialog;
+import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Result.*;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.measurement.*;
 import com.syrus.io.*;
 
 public class LoadTraceFromDatabaseCommand extends VoidCommand
@@ -65,11 +67,6 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 			return;
 		}
 
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		if(dataSource == null)
-			return;
-
-
 		ReflectogrammLoadDialog dialog;
 		JFrame parent = Environment.getActiveWindow();
 		if(Pool.get("dialog", parent.getName()) != null)
@@ -93,11 +90,12 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 		BellcoreStructure bs = null;
 		Result res = dialog.getResult();
 
-		java.util.Iterator it = res.getParameterList().iterator();
-		while (it.hasNext())
+		SetParameter[] parameters = res.getParameters();
+		for (int i = 0; i < parameters.length; i++)
 		{
-			Parameter param = (Parameter)it.next();
-			if (param.getGpt().getId().equals(AnalysisUtil.REFLECTOGRAMM))
+			SetParameter param = parameters[i];
+			ParameterType type = (ParameterType)param.getType();
+			if (type.getCodename().equals(ParameterTypeCodenames.REFLECTOGRAMMA))
 				bs = new BellcoreReader().getData(param.getValue());
 		}
 		if (bs == null)
@@ -110,17 +108,16 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 		}
 		Pool.put("bellcorestructure", "primarytrace", bs);
 
-		Test test = (Test)Pool.get(Test.TYPE, res.getActionId());
-		bs.title = res.getName();
+//		res.getMeasurement().getT
+//		Test test = (Test)Pool.get(Test.TYPE, res.getActionId());
 
-		TestSetup ts;
-		if(test != null)
-		{
-			bs.monitored_element_id = test.getMonitoredElementId();
+		Measurement m = res.getMeasurement();
+		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
+		bs.title = m.getName();
+		bs.monitoredElementId = m.getMonitoredElementId();
 
 			//Если нет тестсетапа создаем его
-
-			if (test.getTestSetupId().equals(""))
+			/*if (test.getTestSetupId().equals(""))
 			{
 				ts = new TestSetup();
 				ts.settestTypeId(test.getTestTypeId());
@@ -130,27 +127,26 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 				bs.test_setup_id = ts.getId();
 				Pool.put(TestSetup.TYPE, ts.getId(), ts);
 			}
-			else
-			{
-				dataSource.loadTestSetup(test.getTestSetupId());
-				bs.test_setup_id = test.getTestSetupId();
-				ts = (TestSetup)Pool.get(TestSetup.TYPE, bs.test_setup_id);
-			}
+			else*/
 
-			AnalysisUtil.load_CriteriaSet(dataSource, ts);
+		bs.measurementId = m.getId();
+		Pool.put("testsetup", m.getId().getIdentifierString(), m);
+		MeasurementSetup ms = res.getMeasurement().getSetup();
 
-			if (ts.getEthalonId().length() != 0)
-				AnalysisUtil.load_Etalon(dataSource, ts);
-			else
-				Pool.remove("bellcorestructure", AnalysisUtil.ETALON);
+		AnalysisUtil.load_CriteriaSet(userId, ms);
 
-			AnalysisUtil.load_Thresholds(dataSource, ts);
+		if (ms.getEtalon() != null)
+			AnalysisUtil.load_Etalon(ms);
+		else
+			Pool.remove("bellcorestructure", AnalysisUtil.ETALON);
 
-			new InitialAnalysisCommand().execute();
-			//new MinuitAnalyseCommand(aContext.getDispatcher(), "primarytrace", aContext).execute();
+		AnalysisUtil.load_Thresholds(userId, ms);
 
-			ReflectogramEvent[] etalon = (ReflectogramEvent[])Pool.get("eventparams", AnalysisUtil.ETALON);
-			ReflectogramEvent[] revents = (ReflectogramEvent[])Pool.get("eventparams", "primarytrace");
+		new InitialAnalysisCommand().execute();
+		//new MinuitAnalyseCommand(aContext.getDispatcher(), "primarytrace", aContext).execute();
+
+		ReflectogramEvent[] etalon = (ReflectogramEvent[])Pool.get("eventparams", AnalysisUtil.ETALON);
+		ReflectogramEvent[] revents = (ReflectogramEvent[])Pool.get("eventparams", "primarytrace");
 
 /*
 			Threshold[] thresholds = new Threshold[etalon.length];
@@ -161,53 +157,51 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 			ReflectogramAlarm[] alarms = comp.getAlarms();
 */
 
-			if (etalon != null && revents != null)
-			{
-				int delta = 5;
-				//correct end of trace
-				if (revents.length > etalon.length)
-				{
-					ReflectogramEvent endEvent = etalon[etalon.length-1];
-					for (int i = revents.length - 1; i >= 0; i--)
-					{
-						if (revents[i].getType() == ReflectogramEvent.CONNECTOR &&
-								Math.abs(revents[i].begin - endEvent.begin) < delta &&
-								Math.abs(revents[i].end - endEvent.end) < delta)
-							{
-								ReflectogramEvent[] new_revents = new ReflectogramEvent[i+1];
-								for (int j = 0; j < i+1; j++)
-									new_revents[j] = revents[j];
-								revents = new_revents;
-								break;
-							}
-					}
-				}
+	 if(etalon != null && revents != null)
+	 {
+		 int delta = 5;
+		 //correct end of trace
+		 if(revents.length > etalon.length)
+		 {
+			 ReflectogramEvent endEvent = etalon[etalon.length - 1];
+			 for(int i = revents.length - 1; i >= 0; i--)
+			 {
+				 if(revents[i].getType() == ReflectogramEvent.CONNECTOR &&
+						 Math.abs(revents[i].begin - endEvent.begin) < delta &&
+						 Math.abs(revents[i].end - endEvent.end) < delta)
+				 {
+					 ReflectogramEvent[] new_revents = new ReflectogramEvent[i + 1];
+					 for(int j = 0; j < i + 1; j++)
+						 new_revents[j] = revents[j];
+					 revents = new_revents;
+					 break;
+				 }
+			 }
+		 }
 
-				//correct event types
-				if (revents.length == etalon.length)
-				{
-					for (int i = 0; i < etalon.length; i++)
-					{
-						if (Math.abs(revents[i].begin - etalon[i].begin) < delta &&
-								Math.abs(revents[i].end - etalon[i].end) < delta)
-						{
-							revents[i].setType(etalon[i].getType());
-						}
-					}
-				}
-			}
+		 //correct event types
+		 if(revents.length == etalon.length)
+		 {
+			 for(int i = 0; i < etalon.length; i++)
+			 {
+				 if(Math.abs(revents[i].begin - etalon[i].begin) < delta &&
+						 Math.abs(revents[i].end - etalon[i].end) < delta)
+				 {
+					 revents[i].setType(etalon[i].getType());
+				 }
+			 }
+		 }
+	 }
 
-			dispatcher.notify(new RefChangeEvent("primarytrace",
-					RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
+	 dispatcher.notify(new RefChangeEvent("primarytrace",
+			 RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
 
-			dispatcher.notify(new RefUpdateEvent("primarytrace",
-					RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
+	 dispatcher.notify(new RefUpdateEvent("primarytrace",
+			 RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
 
-			dispatcher.notify(new RefUpdateEvent(AnalysisUtil.ETALON,
-					RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
+	 dispatcher.notify(new RefUpdateEvent(AnalysisUtil.ETALON,
+			 RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
 
-			Environment.getActiveWindow().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-		}
-	}
-
+	 Environment.getActiveWindow().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+ }
 }

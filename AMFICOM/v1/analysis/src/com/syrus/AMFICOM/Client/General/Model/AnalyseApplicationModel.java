@@ -1,15 +1,10 @@
 package com.syrus.AMFICOM.Client.General.Model;
 
-import com.syrus.AMFICOM.Client.General.SessionInterface;
-import com.syrus.AMFICOM.Client.Resource.*;
-
 public class AnalyseApplicationModel extends ApplicationModel
 {
 
 	public AnalyseApplicationModel()
 	{
-		super();
-
 		add("menuSession");
 		add("menuSessionNew");
 		add("menuSessionClose");
@@ -77,7 +72,7 @@ public class AnalyseApplicationModel extends ApplicationModel
 		add("statusBar");
 		add("reflectometryFrame");
 	}
-
+/*
 	public DataSourceInterface getDataSource(SessionInterface si)
 	{
 		String connection = Environment.getConnectionType();
@@ -88,5 +83,5 @@ public class AnalyseApplicationModel extends ApplicationModel
 		if(connection.equals("Empty"))
 			return new EmptySurveyDataSource(si);
 		return null;
-	}
+	}*/
 }

@@ -1,12 +1,14 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
-import com.syrus.AMFICOM.Client.Analysis.*;
+import javax.swing.JFrame;
+
+import com.syrus.AMFICOM.Client.Analysis.UI.ReflectogrammLoadDialog;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Result.*;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.measurement.*;
 import com.syrus.io.*;
 
 public class AddTraceFromDatabaseCommand extends VoidCommand
@@ -63,26 +65,16 @@ public class AddTraceFromDatabaseCommand extends VoidCommand
 			return;
 		}
 
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		if(dataSource == null)
-			return;
-
-
-
-//    TraceLoadDialog dialog;
 		ReflectogrammLoadDialog dialog;
-		if(Pool.get("dialog", "TraceLoadDialog") == null)
+		JFrame parent = Environment.getActiveWindow();
+		if(Pool.get("dialog", parent.getName()) != null)
 		{
-			dataSource.LoadISM();
-//      dialog = new TraceLoadDialog (this.aContext);
-			dialog = new ReflectogrammLoadDialog (this.aContext);
-			Pool.put("dialog", "TraceLoadDialog", dialog);
+			dialog = (ReflectogrammLoadDialog)Pool.get("dialog", parent.getName());
 		}
 		else
 		{
-//      dialog = (TraceLoadDialog)Pool.get("dialog", "TraceLoadDialog");
-			dialog = (ReflectogrammLoadDialog)Pool.get("dialog", "TraceLoadDialog");
-
+			dialog = new ReflectogrammLoadDialog (aContext);
+			Pool.put("dialog", parent.getName(), dialog);
 		}
 		dialog.show();
 
@@ -94,17 +86,18 @@ public class AddTraceFromDatabaseCommand extends VoidCommand
 		BellcoreStructure bs = null;
 		Result res = dialog.getResult();
 
-		java.util.Iterator it = res.getParameterList().iterator();
-		while (it.hasNext())
+		SetParameter[] parameters = res.getParameters();
+		for (int i = 0; i < parameters.length; i++)
 		{
-			Parameter param = (Parameter)it.next();
-			if (param.getGpt().getId().equals(AnalysisUtil.REFLECTOGRAMM))
+			SetParameter param = parameters[i];
+			ParameterType type = (ParameterType)param.getType();
+			if (type.getCodename().equals(ParameterTypeCodenames.REFLECTOGRAMMA))
 				bs = new BellcoreReader().getData(param.getValue());
 		}
 		if (bs == null)
 			return;
 
-		bs.title = res.getName();
+		bs.title = res.getMeasurement().getName();
 		Pool.put("bellcorestructure", bs.title, bs);
 
 		dispatcher.notify(new RefChangeEvent(bs.title,

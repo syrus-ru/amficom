@@ -1,6 +1,5 @@
 package com.syrus.AMFICOM.Client.General.Lang;
 
-import java.text.DateFormatSymbols;
 import java.util.*;
 
 public class LangModelAnalyse

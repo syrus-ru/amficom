@@ -6,14 +6,19 @@ import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Result.TestSetup;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.measurement.*;
 import com.syrus.io.BellcoreStructure;
 
 public class CreateTestSetupCommand extends VoidCommand
 {
+	public static final int CANCEL = 0;
+	public static final int OK = 1;
 	ApplicationContext aContext;
 	String traceid;
+	int status = CANCEL;
+	MeasurementSetup measurementSetup;
 
 	public CreateTestSetupCommand(ApplicationContext aContext, String id)
 	{
@@ -28,15 +33,11 @@ public class CreateTestSetupCommand extends VoidCommand
 
 	public void execute()
 	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		if(dataSource == null)
-			return;
-
 		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", traceid);
 		if (bs == null)
 			return;
 
-		if (bs.monitored_element_id.equals(""))
+		if (bs.monitoredElementId == null)
 		{
 			JOptionPane.showMessageDialog (
 					Environment.getActiveWindow(),
@@ -46,33 +47,46 @@ public class CreateTestSetupCommand extends VoidCommand
 			return;
 		}
 
-		TestSetup _ts = (TestSetup)Pool.get(TestSetup.TYPE, bs.test_setup_id);
-		if (_ts == null)
+		Measurement m = null;
+		try
 		{
-			JOptionPane.showMessageDialog(
-					Environment.getActiveWindow(),
-					LangModelAnalyse.getString("unkError"),
-					LangModelAnalyse.getString("error"),
-					JOptionPane.OK_OPTION);
+			m = (Measurement)MeasurementStorableObjectPool.getStorableObject(bs.measurementId, true);
+		}
+		catch(ApplicationException ex)
+		{
+			System.err.println("Exception retrieving measurenent with " + bs.measurementId);
+			ex.printStackTrace();
 			return;
 		}
+		MeasurementSetup ms = m.getSetup();
 
-		String ret = JOptionPane.showInputDialog(
+		String name = JOptionPane.showInputDialog(
 				Environment.getActiveWindow(),
 				LangModelAnalyse.getString("newname"),
 				LangModelAnalyse.getString("testsetup"),
 				JOptionPane.QUESTION_MESSAGE);
-		if (ret == null || ret.equals(""))
+		if (name == null || name.equals(""))
 			return;
 
-		TestSetup ts = new TestSetup();
-		ts.setName(ret);
-		ts.settestTypeId(_ts.getTestTypeId());
-		ts.setId(dataSource.GetUId(TestSetup.TYPE));
-		ts.setTestArgumentSetId(_ts.getTestArgumentSetId());
+		measurementSetup = MeasurementSetup.createInstance(
+				IdentifierPool.generateId(ObjectEntities.MS_ENTITY_CODE),
+				new Identifier(aContext.getSessionInterface().getUserId()),
+				ms.getParameterSet(),
+				ms.getThresholdSet(),
+				ms.getEtalon(),
+				ms.getThresholdSet(),
+				name,
+				ms.getMeasurementDuration(),
+				ms.getMonitoredElementIds());
 
-		bs.test_setup_id = ts.getId();
-		Pool.put(TestSetup.TYPE, ts.getId(), ts);
+		try
+		{
+			MeasurementStorableObjectPool.putStorableObject(measurementSetup);
+			status = OK;
+		}
+		catch(IllegalObjectEntityException ex)
+		{
+		}
 
 		aContext.getDispatcher().notify(new RefChangeEvent(traceid,
 				RefChangeEvent.THRESHOLDS_CALC_EVENT));

@@ -1,12 +1,19 @@
 package com.syrus.AMFICOM.Client.Analysis;
 
 import java.io.IOException;
-import java.util.Iterator;
+import java.util.*;
 
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Result.*;
-import com.syrus.AMFICOM.Client.Resource.Test.*;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.*;
+import com.syrus.AMFICOM.configuration.CharacteristicType;
+import com.syrus.AMFICOM.configuration.corba.*;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.Client.General.*;
+import com.syrus.AMFICOM.general.corba.DataType;
+import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.measurement.Set;
+import com.syrus.AMFICOM.measurement.StringFieldCondition;
+import com.syrus.AMFICOM.measurement.corba.SetSort;
 import com.syrus.io.*;
 import com.syrus.util.ByteArray;
 
@@ -17,296 +24,320 @@ import com.syrus.util.ByteArray;
  * @author Stanislav Kholshin
  * @version 1.0
  */
+
 public class AnalysisUtil
 {
-	public static final String DADARA = "dadara";
 	public static final String ETALON = "etalon";
-	public static final String DADARA_ETALON_ARRAY = "dadara_etalon_event_array";
-	public static final String REFLECTOGRAMM = "reflectogramm";
 
 	private AnalysisUtil()
 	{
 	}
 
-	/**
-	 * Method for loading CriteriaSet for certain TestSetup to Pool. If there is no
-	 * CriteriaSet attached to TestSetup new CriteriaSet created by call method
-	 * createDefaultCriteriaSet(dataSource);
-	 *
-	 * @param dataSource .
-	 * @param ts .
-	 * @see com.syrus.AMFICOM.Client.Resource.Result.CriteriaSet
-	 */
-
-	public static void load_CriteriaSet(DataSourceInterface dataSource, TestSetup ts)
+	public static ParameterType getParameterType(Identifier userId, String codename)
 	{
-			/*
-	 * <ul>
-* <li>{@link com.syrus.AMFICOM.Client.Resource.Result.CriteriaSet CriteriaSet}
-* <li>{@link #load_CriteriaSet(DataSourceInterface, TestSetup) load_CriteriaSet()}
-* <li>{@link #load_CriteriaSet load_CriteriaSet()}
-	 * </ul>
-	 */
+		StorableObjectCondition pTypeCondition = new StringFieldCondition(
+				codename,
+				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
+				StringFieldSort.STRINGSORT_BASE);
 
 		try
 		{
-			CriteriaSet cs;
-			if (ts.getCriteriaSetId().length() == 0)
+			List pTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+			for (Iterator it = pTypes.iterator(); it.hasNext();)
 			{
-				cs = createDefaultCriteriaSet(dataSource);
-				Pool.put(CriteriaSet.TYPE, cs.getId(), cs);
-				ts.setCriteriaSetId(cs.getId());
-			}
-			else
-			{
-				dataSource.LoadCriteriaSets(new String[] {ts.getCriteriaSetId()});
-				cs = (CriteriaSet)Pool.get(CriteriaSet.TYPE, ts.getCriteriaSetId());
-				setParamsFromCriteriaSet(cs);
+				ParameterType type = (ParameterType)it.next();
+				if (type.getCodename().equals(codename))
+					return type;
 			}
 		}
-		catch (Exception ex)
+		catch(ApplicationException ex)
 		{
-			System.out.println("Error loading CriteriaSet. ME not set");
+			System.err.println("Exception searching ParameterType. Creating new one.");
 			ex.printStackTrace();
+		}
+
+		return ParameterType.createInstance(
+				IdentifierPool.generateId(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
+				userId,
+				codename,
+				"",
+				"");
+	}
+
+	public static CharacteristicType getCharacteristicType(Identifier userId, String codename, CharacteristicTypeSort sort, DataType dataType)
+	{
+		StorableObjectCondition pTypeCondition = new StringFieldCondition(
+				codename,
+				ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE,
+				StringFieldSort.STRINGSORT_BASE);
+
+		try
+		{
+			List pTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+			for (Iterator it = pTypes.iterator(); it.hasNext();)
+			{
+				CharacteristicType type = (CharacteristicType)it.next();
+				if (type.getCodename().equals(codename))
+					return type;
+			}
+		}
+		catch(ApplicationException ex)
+		{
+			System.err.println("Exception searching ParameterType. Creating new one.");
+			ex.printStackTrace();
+		}
+
+		return CharacteristicType.createInstance(
+				IdentifierPool.generateId(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE),
+				userId,
+				codename,
+				"",
+				dataType.value(),
+				sort);
+	}
+
+
+	public static AnalysisType getAnalysisType(Identifier userId, String codename)
+	{
+		StorableObjectCondition aTypeCondition = new StringFieldCondition(
+				codename,
+				ObjectEntities.ANALYSISTYPE_ENTITY_CODE,
+				StringFieldSort.STRINGSORT_BASE);
+
+		try
+		{
+			List aTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(aTypeCondition, true);
+			for (Iterator it = aTypes.iterator(); it.hasNext();)
+			{
+				AnalysisType type = (AnalysisType)it.next();
+				if (type.getCodename().equals(codename))
+					return type;
+			}
+		}
+		catch(ApplicationException ex)
+		{
+			System.err.println("Exception searching ParameterType. Creating new one.");
+			ex.printStackTrace();
+		}
+
+		List inParameterTypes = new ArrayList();
+		ParameterType ptype = getParameterType(userId, ParameterTypeCodenames.REFLECTOGRAMMA);
+		inParameterTypes.add(ptype);
+
+		List outParameterTypes = new ArrayList();
+		ptype = getParameterType(userId, ParameterTypeCodenames.TRACE_EVENTS);
+		outParameterTypes.add(ptype);
+
+		return AnalysisType.createInstance(
+				IdentifierPool.generateId(ObjectEntities.ANALYSISTYPE_ENTITY_CODE),
+				userId,
+				codename,
+				"",
+				inParameterTypes,
+				new ArrayList(0),
+				new ArrayList(0),
+				outParameterTypes);
+	}
+
+	/**
+	 * Method for loading CriteriaSet for certain TestSetup to Pool. If there is no
+	 * CriteriaSet attached to TestSetup new CriteriaSet created by call method
+	 * createDefaultCriteriaSet(ms);
+	 *
+	 * @param ms MeasurementSetup
+	 * @see com.syrus.AMFICOM.Client.Resource.Result.CriteriaSet
+	 */
+
+	public static void load_CriteriaSet(Identifier userId, MeasurementSetup ms)
+	{
+		/*
+		 * <ul>
+		 * <li>{@link com.syrus.AMFICOM.Client.Resource.Result.CriteriaSet CriteriaSet}
+		 * <li>{@link #load_CriteriaSet(MeasurementSetup) load_CriteriaSet()}
+		 * <li>{@link #load_CriteriaSet load_CriteriaSet()}
+		 * </ul>
+		 */
+
+		Set criteriaSet = ms.getCriteriaSet();
+		if (criteriaSet != null)
+			setParamsFromCriteriaSet(criteriaSet);
+		else
+		{
+			criteriaSet = createCriteriaSetFromParams(userId, ms.getMonitoredElementIds());
+			ms.setCriteriaSet(criteriaSet);
 		}
 	}
 
 	/**
 	 * Method for loading ThresholdSet for certain TestSetup to Pool. If there is no
 	 * ThresholdSet attached to TestSetup default ThresholdSet created by call method
-	 * createDefaultThresholdSet(dataSource, ep);
-	 * @param dataSource server interface
-	 * @param ts TestSetup
+	 * createDefaultThresholdSet(userId, ms);
+	 * @param userId Identifier
+	 * @param ms MeasurementSetup
 	 * @see <a href=ThresholdSet>ThresholdSet</a>
 	 */
-	public static void load_Thresholds(DataSourceInterface dataSource, TestSetup ts)
+	public static void load_Thresholds(Identifier userId, MeasurementSetup ms)
 	{
-		try
-		{
-			ReflectogramEvent[] ep = (ReflectogramEvent[])Pool.get("eventparams", AnalysisUtil.ETALON);
-			if (ep == null)
-			{
-				Pool.remove("eventparams", AnalysisUtil.ETALON);
-				return;
-			}
+		Set thresholdSet = ms.getThresholdSet();
 
-			ThresholdSet thrs;
+		ReflectogramEvent[] ep = (ReflectogramEvent[])Pool.get("eventparams", AnalysisUtil.ETALON);
+		if (ep == null)
+			return;
 
-			if (ts.getThresholdSetId().length() == 0)
-			{
-				thrs = createDefaultThresholdSet(dataSource, ep);
-				ts.setThresholdSetId(thrs.getId());
-			}
-			else
-			{
-				dataSource.LoadThresholdSets(new String[] {ts.getThresholdSetId()});
-				thrs = (ThresholdSet)Pool.get(ThresholdSet.TYPE, ts.getThresholdSetId());
-				setParamsFromThresholdsSet(thrs, ep);
-			}
-		}
-		catch (Exception ex)
-		{
-			System.out.println("Error loading ThresholdSet. ME not set");
-			ex.printStackTrace();
-		}
+		if (thresholdSet == null)
+			thresholdSet = createThresholdSet(userId, ms.getMonitoredElementIds(), ep);
+		else
+			setParamsFromThresholdsSet(thresholdSet, ep);
+
+//		try
+//		{
+//			ReflectogramEvent[] ep = (ReflectogramEvent[])Pool.get("eventparams", AnalysisUtil.ETALON);
+//			if (ep == null)
+//			{
+//				Pool.remove("eventparams", AnalysisUtil.ETALON);
+//				return;
+//			}
+//
+//			ThresholdSet thrs;
+//
+//			if (ts.getThresholdSetId().length() == 0)
+//			{
+//				thrs = createDefaultThresholdSet(dataSource, ep);
+//				ts.setThresholdSetId(thrs.getId());
+//			}
+//			else
+//			{
+//				dataSource.LoadThresholdSets(new String[] {ts.getThresholdSetId()});
+//				thrs = (ThresholdSet)Pool.get(ThresholdSet.TYPE, ts.getThresholdSetId());
+//				setParamsFromThresholdsSet(thrs, ep);
+//			}
+//		}
+//		catch (Exception ex)
+//		{
+//			System.out.println("Error loading ThresholdSet. ME not set");
+//			ex.printStackTrace();
+//		}
 	}
 
 	/**
 	 * Method for loading Etalon for certain TestSetup to Pool. If there is no
 	 * Etalon attached to TestSetup method returns.
-	 * @param dataSource server interface
-	 * @param ts TestSetup
+	 * @param ms MeasurementSetup
 	 * @see com.syrus.AMFICOM.Client.Resource.Result.Etalon
 	 */
-	public static void load_Etalon(DataSourceInterface dataSource, TestSetup ts)
+	public static void load_Etalon(MeasurementSetup ms)
 	{
-		if (ts.getEthalonId().length() == 0)
-			return;
-
-		dataSource.LoadEtalons(new String[] {ts.getEthalonId()});
-		dataSource.LoadTestArgumentSets(new String[] {ts.getTestArgumentSetId()});
-		Etalon et = (Etalon)Pool.get(Etalon.TYPE, ts.getEthalonId());
-		TestArgumentSet metas = (TestArgumentSet)Pool.get(TestArgumentSet.TYPE, ts.getTestArgumentSetId());
+		Set etalon = ms.getEtalon();
+		Set metas = ms.getParameterSet();
 
 		ReflectogramEvent[] events=null;
 		BellcoreStructure bsEt=null;
 
-		for (Iterator it = et.getEthalonParameterList().iterator(); it.hasNext();)
+		SetParameter[] params = etalon.getParameters();
+		for (int i = 0; i < params.length; i++)
 		{
-			Parameter p = (Parameter)it.next();
-			if (p.getCodename().equals(DADARA_ETALON_ARRAY))
+			ParameterType type = (ParameterType)params[i].getType();
+			if (type.getCodename().equals(ParameterTypeCodenames.DADARA_ETALON_EVENTS))
 			{
-				events = ReflectogramEvent.fromByteArray(p.getValue());
+				events = ReflectogramEvent.fromByteArray(params[i].getValue());
 				Pool.put("eventparams", ETALON, events);
-				Pool.put(TestArgumentSet.TYPE, ETALON, metas);
+				Pool.put("etalon", ETALON, metas);
 			}
-			else if (p.getCodename().equals(REFLECTOGRAMM))
+			else if (type.getCodename().equals(ParameterTypeCodenames.REFLECTOGRAMMA))
 			{
-				bsEt = new BellcoreReader().getData(p.getValue());
+				bsEt = new BellcoreReader().getData(params[i].getValue());
 				Pool.put("bellcorestructure", AnalysisUtil.ETALON, bsEt);
-				bsEt.title = "Эталон (" + (ts.getName().equals("") ? ts.getId() : ts.getName()) + ")";
-				bsEt.test_setup_id = ts.getId();
+				bsEt.title = "Эталон (" + (ms.getDescription().equals("") ? ms.getId().getIdentifierString() : ms.getDescription()) + ")";
+//				bsEt.measurementId = m.getId().getIdentifierString();
 			}
 		}
 
 		if(bsEt!=null && events!=null)
 		{
 			double delta_x = bsEt.getDeltaX();
-
 			for(int i=0; i<events.length; i++)
-			{
 				events[i].setDeltaX(delta_x);
-			}
 		}
 	}
 
-	public static CriteriaSet createDefaultCriteriaSet(DataSourceInterface dataSource)
+	public static Set createCriteriaSetFromParams(Identifier userId, List meIds)
 	{
-		CriteriaSet cs = new CriteriaSet();
-		cs.setId(dataSource.GetUId(CriteriaSet.TYPE));
-		cs.setAnalysisTypeId(AnalysisUtil.DADARA);
-		cs.setCreatedBy(dataSource.getSession().getUserId());
-
-		AnalysisType atype = (AnalysisType)Pool.get(AnalysisType.typ, cs.getAnalysisTypeId());
-		ActionParameterType apt;
+		SetParameter[] params = new SetParameter[8];
 
 		double[] defaultMinuitParams;
 		defaultMinuitParams = (double[])Pool.get("analysisparameters", "minuitanalysis");
 		if (defaultMinuitParams == null)
 			defaultMinuitParams = (double[])Pool.get("analysisparameters", "minuitdefaults");
 
+		String[] parameterCodenames = new String[] {
+				ParameterTypeCodenames.MIN_EVENT_LEVEL,//0
+				ParameterTypeCodenames.MIN_SPLICE,//1
+				ParameterTypeCodenames.MIN_CONNECTOR,//2
+				ParameterTypeCodenames.MIN_END_LEVEL,//3
+				ParameterTypeCodenames.MAX_NOISE_LEVEL,//4
+				ParameterTypeCodenames.CONNECTOR_FORM_FACTOR,//5
+				ParameterTypeCodenames.STRATEGY,//6
+				ParameterTypeCodenames.WAVELET_TYPE,//7
+		};
+
 		try
 		{
-			apt = (ActionParameterType)atype.getSortedCriterias().get("ref_uselinear");
-			Parameter p1 = new Parameter();
-			p1.setId(dataSource.GetUId(Parameter.typ));
-			p1.setParameterTypeId("integer");
-			p1.setTypeId(apt.getId());
-			p1.setValue(ByteArray.toByteArray(defaultMinuitParams[7]));
-			p1.setCodename("ref_uselinear");
-			cs.getCriteriaList().add(p1);
-
-			apt = (ActionParameterType)atype.getSortedCriterias().get("ref_eventsize");
-			Parameter p2 = new Parameter();
-			p2.setId(dataSource.GetUId(Parameter.typ));
-			p2.setParameterTypeId("integer");
-			p2.setTypeId(apt.getId());
-			p2.setValue(ByteArray.toByteArray(20));
-			p2.setCodename("ref_eventsize");
-			cs.getCriteriaList().add(p2);
-
-			apt = (ActionParameterType)atype.getSortedCriterias().get("ref_conn_fall_params");
-			Parameter p3 = new Parameter();
-			p3.setId(dataSource.GetUId(Parameter.typ));
-			p3.setParameterTypeId("double");
-			p3.setTypeId(apt.getId());
-			p3.setValue(ByteArray.toByteArray(defaultMinuitParams[5]));
-			p3.setCodename("ref_conn_fall_params");
-			cs.getCriteriaList().add(p3);
-
-			apt = (ActionParameterType)atype.getSortedCriterias().get("ref_min_level");
-			Parameter p4 = new Parameter();
-			p4.setId(dataSource.GetUId(Parameter.typ));
-			p4.setParameterTypeId("double");
-			p4.setTypeId(apt.getId());
-			p4.setValue(ByteArray.toByteArray(defaultMinuitParams[0]));
-			p4.setCodename("ref_min_level");
-			cs.getCriteriaList().add(p4);
-
-			apt = (ActionParameterType)atype.getSortedCriterias().get("ref_max_level_noise");
-			Parameter p5 = new Parameter();
-			p5.setId(dataSource.GetUId(Parameter.typ));
-			p5.setParameterTypeId("double");
-			p5.setTypeId(apt.getId());
-			p5.setValue(ByteArray.toByteArray(defaultMinuitParams[4]));
-			p5.setCodename("ref_max_level_noise");
-			cs.getCriteriaList().add(p5);
-
-			apt = (ActionParameterType)atype.getSortedCriterias().get("ref_min_level_to_find_end");
-			Parameter p6 = new Parameter();
-			p6.setId(dataSource.GetUId(Parameter.typ));
-			p6.setParameterTypeId("double");
-			p6.setTypeId(apt.getId());
-			p6.setValue(ByteArray.toByteArray(defaultMinuitParams[3]));
-			p6.setCodename("ref_min_level_to_find_end");
-			cs.getCriteriaList().add(p6);
-
-			apt = (ActionParameterType)atype.getSortedCriterias().get("ref_min_weld");
-			Parameter p7 = new Parameter();
-			p7.setId(dataSource.GetUId(Parameter.typ));
-			p7.setParameterTypeId("double");
-			p7.setTypeId(apt.getId());
-			p7.setValue(ByteArray.toByteArray(defaultMinuitParams[1]));
-			p7.setCodename("ref_min_weld");
-			cs.getCriteriaList().add(p7);
-
-			apt = (ActionParameterType)atype.getSortedCriterias().get("ref_min_connector");
-			Parameter p8 = new Parameter();
-			p8.setId(dataSource.GetUId(Parameter.typ));
-			p8.setParameterTypeId("double");
-			p8.setTypeId(apt.getId());
-			p8.setValue(ByteArray.toByteArray(defaultMinuitParams[2]));
-			p8.setCodename("ref_min_connector");
-			cs.getCriteriaList().add(p8);
-
-			apt = (ActionParameterType)atype.getSortedCriterias().get("ref_strategy");
-			Parameter p9 = new Parameter();
-			p9.setId(dataSource.GetUId(Parameter.typ));
-			p9.setParameterTypeId("integer");
-			p9.setTypeId(apt.getId());
-			p9.setValue(ByteArray.toByteArray((int)defaultMinuitParams[6]));
-			p9.setCodename("ref_strategy");
-			cs.getCriteriaList().add(p9);
-
-			double[] minuitInitialParams = (double[])Pool.get("analysisparameters", "minuitinitials");
-			for (int i = 0; i < defaultMinuitParams.length; i++)
-				minuitInitialParams[i] = defaultMinuitParams[i];
-
-			Pool.put(CriteriaSet.TYPE, cs.getId(), cs);
+			for (int i = 0; i < parameterCodenames.length; i++)
+			{
+				ParameterType ptype = getParameterType(userId, parameterCodenames[i]);
+				params[i] = new SetParameter(
+						IdentifierPool.generateId(ObjectEntities.SETPARAMETER_ENTITY_CODE),
+						ptype,
+						ByteArray.toByteArray((int)defaultMinuitParams[i]));
+			}
 		}
 		catch (IOException ex)
 		{
 			ex.printStackTrace();
 		}
-		return cs;
+
+		Set criteriaSet = Set.createInstance(
+				IdentifierPool.generateId(ObjectEntities.SET_ENTITY_CODE),
+				userId,
+				SetSort.SET_SORT_ANALYSIS_CRITERIA,
+				"",
+				params,
+				meIds);
+
+		return criteriaSet;
 	}
 
-	public static Etalon createEtalon(DataSourceInterface dataSource, ReflectogramEvent[] ep)
+	public static Set createEtalon(Identifier userId, List meIds, ReflectogramEvent[] ep)
 	{
-		Etalon et = new Etalon();
-		et.setId(dataSource.GetUId(Etalon.TYPE));
-		et.setTypeId(AnalysisUtil.DADARA);
+		SetParameter[] params = new SetParameter[2];
 
-		Parameter p1 = new Parameter();
-		p1.setId(dataSource.GetUId(Parameter.typ));
-		p1.setParameterTypeId("traceeventarray");
-		p1.setTypeId(DADARA_ETALON_ARRAY);
-		p1.setValue(ReflectogramEvent.toByteArray(ep));
-		p1.setCodename(DADARA_ETALON_ARRAY);
-		et.getEthalonParameterList().add(p1);
+		ParameterType ptype = getParameterType(userId, ParameterTypeCodenames.DADARA_ETALON_EVENTS);
+		params[0] = new SetParameter(
+				IdentifierPool.generateId(ObjectEntities.SETPARAMETER_ENTITY_CODE),
+				ptype,
+				ReflectogramEvent.toByteArray(ep));
 
 		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", "primarytrace");
-		Parameter p2 = new Parameter();
-		p2.setId(dataSource.GetUId(Parameter.typ));
-		p2.setParameterTypeId(REFLECTOGRAMM);
-		p2.setTypeId(REFLECTOGRAMM);
-		p2.setValue(new BellcoreWriter().write(bs));
-		p2.setCodename(REFLECTOGRAMM);
-		et.getEthalonParameterList().add(p2);
 
-		Pool.put(Etalon.TYPE, et.getId(), et);
-		return et;
+		ptype = getParameterType(userId, ParameterTypeCodenames.REFLECTOGRAMMA);
+		params[1] = new SetParameter(
+				IdentifierPool.generateId(ObjectEntities.SETPARAMETER_ENTITY_CODE),
+				ptype,
+				new BellcoreWriter().write(bs));
+
+		Set etalon = Set.createInstance(
+				IdentifierPool.generateId(ObjectEntities.SET_ENTITY_CODE),
+				userId,
+				SetSort.SET_SORT_ETALON,
+				"",
+				params,
+				meIds);
+		return etalon;
 	}
 
-	public static ThresholdSet createDefaultThresholdSet(DataSourceInterface dataSource, ReflectogramEvent[] ep)
+	public static Set createThresholdSet(Identifier userId, List meIds, ReflectogramEvent[] ep)
 	{
-		ThresholdSet ts = new ThresholdSet();
-		ts.setId(dataSource.GetUId(ThresholdSet.TYPE));
-		ts.setEvaluationTypeId(AnalysisUtil.DADARA);
-		ts.setCreatedBy(dataSource.getSession().getUserId());
-
-		EvaluationType etype = (EvaluationType)Pool.get(EvaluationType.TYPE, ts.getEvaluationTypeId());
-		ActionParameterType apt = (ActionParameterType)etype.getSortedThresholds().get("dadara_thresholds");
+		SetParameter[] params = new SetParameter[2];
 
 		Threshold[] threshs = new Threshold[ep.length];
 		for (int i = 0; i < ep.length; i++)
@@ -319,290 +350,291 @@ public class AnalysisUtil
 				ep[i].setThreshold(threshs[i]);
 			}
 		}
-		//threshs[i] = ep[i].getThreshold();
 
-		Parameter p1 = new Parameter();
-		p1.setId(dataSource.GetUId(Parameter.typ));
-		p1.setParameterTypeId("double_array");
-		p1.setTypeId(apt.getId());
-		p1.setValue(Threshold.toByteArray(threshs));
-		p1.setCodename("dadara_thresholds");
-		ts.getThresholdList().add(p1);
+		ParameterType ptype = getParameterType(userId, ParameterTypeCodenames.DADARA_THRESHOLDS);
+		params[0] = new SetParameter(
+				IdentifierPool.generateId(ObjectEntities.SETPARAMETER_ENTITY_CODE),
+				ptype,
+				Threshold.toByteArray(threshs));
 
+		byte[] minLevel;
 		try
 		{
-			Parameter p2 = new Parameter();
-			apt = (ActionParameterType)etype.getSortedThresholds().get("dadara_min_trace_level");
-			p2.setId(dataSource.GetUId(Parameter.typ));
-			p2.setParameterTypeId("double");
-			p2.setTypeId(apt.getId());
-			Double min_level = (Double)Pool.get("min_trace_level", "primarytrace");
-			if (min_level == null)
-				p2.setValue(ByteArray.toByteArray(0d));
-			else
-				p2.setValue(ByteArray.toByteArray(min_level.doubleValue()));
-			p2.setCodename("dadara_min_trace_level");
-			ts.getThresholdList().add(p2);
+			Double level = (Double)Pool.get("min_trace_level", "primarytrace");
+			minLevel = ByteArray.toByteArray(level == null ? 0d : level.doubleValue());
 		}
-		catch (IOException ex)
+		catch(Exception ex)
 		{
-			ex.printStackTrace();
+			minLevel = new byte[0];
 		}
 
-		Pool.put(ThresholdSet.TYPE, ts.getId(), ts);
-		return ts;
+		ptype = getParameterType(userId, ParameterTypeCodenames.DADARA_MIN_TRACE_LEVEL);
+		params[1] = new SetParameter(
+				IdentifierPool.generateId(ObjectEntities.SETPARAMETER_ENTITY_CODE),
+				ptype,
+				minLevel);
+
+		Set thresholdSet = Set.createInstance(
+				IdentifierPool.generateId(ObjectEntities.SET_ENTITY_CODE),
+				userId,
+				SetSort.SET_SORT_EVALUATION_THRESHOLDS,
+				"",
+				params,
+				meIds);
+
+		return thresholdSet;
 	}
 
-	public static void setParamsFromThresholdsSet(ThresholdSet ts, ReflectogramEvent[] ep)
+	public static void setParamsFromThresholdsSet(Set thresholdSet, ReflectogramEvent[] ep)
 	{
-		Double min_level = (Double)Pool.get("min_trace_level", "primarytrace");
+		SetParameter[] params = thresholdSet.getParameters();
 
-		for (Iterator it = ts.getThresholdList().iterator(); it.hasNext();)
+		for (int i = 0; i < params.length; i++)
 		{
-			Parameter p = (Parameter)it.next();
-			if (p.getCodename().equals("dadara_thresholds"))
+			ParameterType type = (ParameterType)params[i].getType();
+			if (type.getCodename().equals(ParameterTypeCodenames.DADARA_MIN_TRACE_LEVEL))
 			{
-				Threshold[] threshs = Threshold.fromByteArray(p.getValue());
+				try
+				{
+					Double min_level = new Double(new ByteArray(params[i].getValue()).toDouble());
+					Pool.put("min_trace_level", "primarytrace", min_level);
+				}
+				catch (IOException ex)
+				{
+				}
+			}
+			else if (type.getCodename().equals(ParameterTypeCodenames.DADARA_THRESHOLDS))
+			{
+				Threshold[] threshs = Threshold.fromByteArray(params[i].getValue());
 				for (int j = 0; j < Math.min(threshs.length, ep.length); j++)
 				{
 					ep[j].setThreshold(threshs[j]);
 					threshs[j].setReflectogramEvent(ep[j]);
 				}
 			}
-			if (p.getCodename().equals("dadara_min_trace_level"))
-			{
-				try
-				{
-					min_level = new Double(new ByteArray(p.getValue()).toDouble());
-					min_level.doubleValue();
-					Pool.put("min_trace_level", "primarytrace", min_level);
-				}
-				catch (IOException ex)
-				{
-					ex.printStackTrace();
-				}
-			}
 		}
 	}
+//
+//	public static boolean save_CriteriaSet(DataSourceInterface dataSource, BellcoreStructure bs)
+//	{
+//		try
+//		{
+//			TestSetup ts = (TestSetup)Pool.get(TestSetup.TYPE, bs.test_setup_id);
+//			CriteriaSet cs;
+//
+//			if (ts.getCriteriaSetId().equals(""))
+//			{
+//				cs = createDefaultCriteriaSet(dataSource);
+//				Pool.put(CriteriaSet.TYPE, cs.getId(), cs);
+//
+//				ts.setAnalysisTypeId(AnalysisUtil.DADARA);
+//				ts.setCriteriaSetId(cs.getId());
+//			}
+//			else
+//			{
+//				cs = (CriteriaSet)Pool.get(CriteriaSet.TYPE, ts.getCriteriaSetId());
+//				setCriteriaSetFromParams(cs);
+//			}
+//			dataSource.saveCriteriaSet(cs.getId());
+//			dataSource.attachCriteriaSetToME(cs.getId(), bs.monitored_element_id);
+//		}
+//		catch (Exception ex)
+//		{
+//			System.out.println("Error saving CriteriaSet. ME not set");
+//			ex.printStackTrace();
+//			return false;
+//		}
+//		return true;
+//	}
+//
+//	public static boolean save_Etalon(DataSourceInterface dataSource, BellcoreStructure bs, ReflectogramEvent[] ep)
+//	{
+//		try
+//		{
+//			TestSetup ts = (TestSetup)Pool.get(TestSetup.TYPE, bs.test_setup_id);
+//
+//			// save etalon and attach to monitored element
+//			Etalon et;
+//
+//			if (ts.getEthalonId().length() == 0)
+//			{
+//				et = createEtalon(dataSource, ep);
+//				Pool.put(Etalon.TYPE, et.getId(), et);
+//
+//				ts.setEthalonId(et.getId());
+//				ts.setEvaluationTypeId(AnalysisUtil.DADARA);
+//			}
+//			else
+//			{
+//				et = (Etalon)Pool.get(Etalon.TYPE, ts.getEthalonId());
+//				if (et == null)
+//				{
+//					et = createEtalon(dataSource, ep);
+//					Pool.put(Etalon.TYPE, et.getId(), et);
+//
+//					ts.setEthalonId(et.getId());
+//					ts.setEvaluationTypeId(AnalysisUtil.DADARA);
+//				}
+//				else
+//					updateEtalon(et, ep);
+//			}
+//			dataSource.saveEtalon(et.getId());
+//			dataSource.attachEtalonToME(et.getId(), bs.monitored_element_id);
+//		}
+//
+//		catch (Exception ex)
+//		{
+//			System.out.println("Error saving Etalon. ME not set");
+//			ex.printStackTrace();
+//			return false;
+//		}
+//		return true;
+//	}
+//
+//	public static boolean save_Thresholds(DataSourceInterface dataSource, BellcoreStructure bs, ReflectogramEvent[] ep)
+//	{
+//		try
+//		{
+//			TestSetup tset = (TestSetup)Pool.get(TestSetup.TYPE, bs.test_setup_id);
+//			ThresholdSet ts;
+//
+//			if (tset.getThresholdSetId().length() == 0)
+//			{
+//				ts = createDefaultThresholdSet(dataSource, ep);
+//				Pool.put(ThresholdSet.TYPE, ts.getId(), ts);
+//				setThresholdsSetFromParams(ts);
+//				tset.setThresholdSetId(ts.getId());
+//				tset.setEvaluationTypeId(AnalysisUtil.DADARA);
+//			}
+//			else
+//			{
+//				ts = (ThresholdSet)Pool.get(ThresholdSet.TYPE, tset.getThresholdSetId());
+//				setThresholdsSetFromParams(ts);
+//			}
+//			dataSource.saveThresholdSet(ts.getId());
+//			dataSource.attachThresholdSetToME(ts.getId(), bs.monitored_element_id);
+//		}
+//		catch (Exception ex)
+//		{
+//			System.out.println("Error saving saveThresholdSet. ME not set");
+//			ex.printStackTrace();
+//			return false;
+//		}
+//		return true;
+//	}
+//
+//	public static void setThresholdsSetFromParams(ThresholdSet ts)
+//	{
+//		ReflectogramEvent[] ep = (ReflectogramEvent[])Pool.get("eventparams", "primarytrace");
+//		Double min_level = (Double)Pool.get("min_trace_level", "primarytrace");
+//		if (ep == null || min_level == null)
+//			return;
+//
+//		Threshold[] threshs = new Threshold[ep.length];
+//		for (int i = 0; i < ep.length; i++)
+//			threshs[i] = ep[i].getThreshold();
+//
+//		for (Iterator it = ts.getThresholdList().iterator(); it.hasNext();)
+//		{
+//			Parameter p = (Parameter)it.next();
+//			if (p.getCodename().equals("dadara_thresholds"))
+//			{
+//				p.setValue(Threshold.toByteArray(threshs));
+//			}
+//			if (p.getCodename().equals("dadara_min_trace_level"))
+//			{
+//				try
+//				{
+//					p.setValue(ByteArray.toByteArray(min_level.doubleValue()));
+//				}
+//				catch (IOException ex)
+//				{
+//					ex.printStackTrace();
+//				}
+//			}
+//		}
+//	}
+//
+//	static void updateEtalon(Etalon et, ReflectogramEvent[] ep)
+//	{
+//		for (Iterator it = et.getEthalonParameterList().iterator(); it.hasNext();)
+//		{
+//			Parameter p = (Parameter)it.next();
+//			if (p.getCodename().equals(DADARA_ETALON_ARRAY))
+//			{
+//				p.setValue(ReflectogramEvent.toByteArray(ep));
+//			}
+//			if (p.getCodename().equals(REFLECTOGRAMM))
+//			{
+//				BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", "primarytrace");
+//				p.setValue(new BellcoreWriter().write(bs));
+//			}
+//		}
+//	}
+//
+//	public static void setCriteriaSetFromParams(Set criteriaSet)
+//	{
+//		double[] defaultMinuitParams;
+//		defaultMinuitParams = (double[])Pool.get("analysisparameters", "minuitanalysis");
+//		if (defaultMinuitParams == null)
+//			defaultMinuitParams = (double[])Pool.get("analysisparameters", "minuitdefaults");
+//
+//		try
+//		{
+//			SetParameter[] params = criteriaSet.getParameters();
+//			for (int i = 0; i < params.length; i++)
+//			{
+//				ParameterType p = (ParameterType)params[i].getType();
+//				if (p.getCodename().equals("ref_uselinear"))
+//					params[i].setValue(ByteArray.toByteArray((int)defaultMinuitParams[7]));
+//				else if (p.getCodename().equals("ref_strategy"))
+//					params[i].setValue(ByteArray.toByteArray((int)defaultMinuitParams[6]));
+//				else if (p.getCodename().equals("ref_conn_fall_params"))
+//					params[i].setValue(ByteArray.toByteArray(defaultMinuitParams[5]));
+//				else if (p.getCodename().equals("ref_min_level"))
+//					params[i].setValue(ByteArray.toByteArray(defaultMinuitParams[0]));
+//				else if (p.getCodename().equals("ref_max_level_noise"))
+//					params[i].setValue(ByteArray.toByteArray(defaultMinuitParams[4]));
+//				else if (p.getCodename().equals("ref_min_level_to_find_end"))
+//					params[i].setValue(ByteArray.toByteArray(defaultMinuitParams[3]));
+//				else if (p.getCodename().equals("ref_min_weld"))
+//					params[i].setValue(ByteArray.toByteArray(defaultMinuitParams[1]));
+//				else if (p.getCodename().equals("ref_min_connector"))
+//					params[i].setValue(ByteArray.toByteArray(defaultMinuitParams[2]));
+//			}
+//		}
+//		catch (IOException ex)
+//		{
+//			ex.printStackTrace();
+//		}
+//	}
 
-	public static boolean save_CriteriaSet(DataSourceInterface dataSource, BellcoreStructure bs)
-	{
-		try
-		{
-			TestSetup ts = (TestSetup)Pool.get(TestSetup.TYPE, bs.test_setup_id);
-			CriteriaSet cs;
-
-			if (ts.getCriteriaSetId().equals(""))
-			{
-				cs = createDefaultCriteriaSet(dataSource);
-				Pool.put(CriteriaSet.TYPE, cs.getId(), cs);
-
-				ts.setAnalysisTypeId(AnalysisUtil.DADARA);
-				ts.setCriteriaSetId(cs.getId());
-			}
-			else
-			{
-				cs = (CriteriaSet)Pool.get(CriteriaSet.TYPE, ts.getCriteriaSetId());
-				setCriteriaSetFromParams(cs);
-			}
-			dataSource.saveCriteriaSet(cs.getId());
-			dataSource.attachCriteriaSetToME(cs.getId(), bs.monitored_element_id);
-		}
-		catch (Exception ex)
-		{
-			System.out.println("Error saving CriteriaSet. ME not set");
-			ex.printStackTrace();
-			return false;
-		}
-		return true;
-	}
-
-	public static boolean save_Etalon(DataSourceInterface dataSource, BellcoreStructure bs, ReflectogramEvent[] ep)
-	{
-		try
-		{
-			TestSetup ts = (TestSetup)Pool.get(TestSetup.TYPE, bs.test_setup_id);
-
-			// save etalon and attach to monitored element
-			Etalon et;
-
-			if (ts.getEthalonId().length() == 0)
-			{
-				et = createEtalon(dataSource, ep);
-				Pool.put(Etalon.TYPE, et.getId(), et);
-
-				ts.setEthalonId(et.getId());
-				ts.setEvaluationTypeId(AnalysisUtil.DADARA);
-			}
-			else
-			{
-				et = (Etalon)Pool.get(Etalon.TYPE, ts.getEthalonId());
-				if (et == null)
-				{
-					et = createEtalon(dataSource, ep);
-					Pool.put(Etalon.TYPE, et.getId(), et);
-
-					ts.setEthalonId(et.getId());
-					ts.setEvaluationTypeId(AnalysisUtil.DADARA);
-				}
-				else
-					updateEtalon(et, ep);
-			}
-			dataSource.saveEtalon(et.getId());
-			dataSource.attachEtalonToME(et.getId(), bs.monitored_element_id);
-		}
-
-		catch (Exception ex)
-		{
-			System.out.println("Error saving Etalon. ME not set");
-			ex.printStackTrace();
-			return false;
-		}
-		return true;
-	}
-
-	public static boolean save_Thresholds(DataSourceInterface dataSource, BellcoreStructure bs, ReflectogramEvent[] ep)
-	{
-		try
-		{
-			TestSetup tset = (TestSetup)Pool.get(TestSetup.TYPE, bs.test_setup_id);
-			ThresholdSet ts;
-
-			if (tset.getThresholdSetId().length() == 0)
-			{
-				ts = createDefaultThresholdSet(dataSource, ep);
-				Pool.put(ThresholdSet.TYPE, ts.getId(), ts);
-				setThresholdsSetFromParams(ts);
-				tset.setThresholdSetId(ts.getId());
-				tset.setEvaluationTypeId(AnalysisUtil.DADARA);
-			}
-			else
-			{
-				ts = (ThresholdSet)Pool.get(ThresholdSet.TYPE, tset.getThresholdSetId());
-				setThresholdsSetFromParams(ts);
-			}
-			dataSource.saveThresholdSet(ts.getId());
-			dataSource.attachThresholdSetToME(ts.getId(), bs.monitored_element_id);
-		}
-		catch (Exception ex)
-		{
-			System.out.println("Error saving saveThresholdSet. ME not set");
-			ex.printStackTrace();
-			return false;
-		}
-		return true;
-	}
-
-	public static void setThresholdsSetFromParams(ThresholdSet ts)
-	{
-		ReflectogramEvent[] ep = (ReflectogramEvent[])Pool.get("eventparams", "primarytrace");
-		Double min_level = (Double)Pool.get("min_trace_level", "primarytrace");
-		if (ep == null || min_level == null)
-			return;
-
-		Threshold[] threshs = new Threshold[ep.length];
-		for (int i = 0; i < ep.length; i++)
-			threshs[i] = ep[i].getThreshold();
-
-		for (Iterator it = ts.getThresholdList().iterator(); it.hasNext();)
-		{
-			Parameter p = (Parameter)it.next();
-			if (p.getCodename().equals("dadara_thresholds"))
-			{
-				p.setValue(Threshold.toByteArray(threshs));
-			}
-			if (p.getCodename().equals("dadara_min_trace_level"))
-			{
-				try
-				{
-					p.setValue(ByteArray.toByteArray(min_level.doubleValue()));
-				}
-				catch (IOException ex)
-				{
-					ex.printStackTrace();
-				}
-			}
-		}
-	}
-
-	static void updateEtalon(Etalon et, ReflectogramEvent[] ep)
-	{
-		for (Iterator it = et.getEthalonParameterList().iterator(); it.hasNext();)
-		{
-			Parameter p = (Parameter)it.next();
-			if (p.getCodename().equals(DADARA_ETALON_ARRAY))
-			{
-				p.setValue(ReflectogramEvent.toByteArray(ep));
-			}
-			if (p.getCodename().equals(REFLECTOGRAMM))
-			{
-				BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", "primarytrace");
-				p.setValue(new BellcoreWriter().write(bs));
-			}
-		}
-	}
-
-	public static void setCriteriaSetFromParams(CriteriaSet cs)
-	{
-		double[] defaultMinuitParams;
-		defaultMinuitParams = (double[])Pool.get("analysisparameters", "minuitanalysis");
-		if (defaultMinuitParams == null)
-			defaultMinuitParams = (double[])Pool.get("analysisparameters", "minuitdefaults");
-
-		try
-		{
-			for (Iterator it = cs.getCriteriaList().iterator(); it.hasNext();)
-			{
-				Parameter p = (Parameter)it.next();
-				if (p.getCodename().equals("ref_uselinear"))
-					p.setValue(ByteArray.toByteArray((int)defaultMinuitParams[7]));
-				else if (p.getCodename().equals("ref_strategy"))
-					p.setValue(ByteArray.toByteArray((int)defaultMinuitParams[6]));
-				else if (p.getCodename().equals("ref_conn_fall_params"))
-					p.setValue(ByteArray.toByteArray(defaultMinuitParams[5]));
-				else if (p.getCodename().equals("ref_min_level"))
-					p.setValue(ByteArray.toByteArray(defaultMinuitParams[0]));
-				else if (p.getCodename().equals("ref_max_level_noise"))
-					p.setValue(ByteArray.toByteArray(defaultMinuitParams[4]));
-				else if (p.getCodename().equals("ref_min_level_to_find_end"))
-					p.setValue(ByteArray.toByteArray(defaultMinuitParams[3]));
-				else if (p.getCodename().equals("ref_min_weld"))
-					p.setValue(ByteArray.toByteArray(defaultMinuitParams[1]));
-				else if (p.getCodename().equals("ref_min_connector"))
-					p.setValue(ByteArray.toByteArray(defaultMinuitParams[2]));
-			}
-		}
-		catch (IOException ex)
-		{
-			ex.printStackTrace();
-		}
-	}
-
-	public static void setParamsFromCriteriaSet(CriteriaSet cs)
+	public static void setParamsFromCriteriaSet(Set criteriaSet)
 	{
 		double[] minuitParams = (double[])Pool.get("analysisparameters", "minuitanalysis");
 
 		try
 		{
-			for (Iterator it = cs.getCriteriaList().iterator(); it.hasNext();)
+			SetParameter[] params = criteriaSet.getParameters();
+			for (int i = 0; i < params.length; i++)
 			{
-				Parameter p = (Parameter)it.next();
-				if (p.getCodename().equals("ref_uselinear"))
-					minuitParams[7] = new ByteArray(p.getValue()).toInt();
-				else if (p.getCodename().equals("ref_strategy"))
-					minuitParams[6] = new ByteArray(p.getValue()).toInt();
-				else if (p.getCodename().equals("ref_conn_fall_params"))
-					minuitParams[5] = new ByteArray(p.getValue()).toDouble();
-				else if (p.getCodename().equals("ref_min_level"))
-					minuitParams[0] = new ByteArray(p.getValue()).toDouble();
-				else if (p.getCodename().equals("ref_max_level_noise"))
-					minuitParams[4] = new ByteArray(p.getValue()).toDouble();
-				else if (p.getCodename().equals("ref_min_level_to_find_end"))
-					minuitParams[3] = new ByteArray(p.getValue()).toDouble();
-				else if (p.getCodename().equals("ref_min_weld"))
-					minuitParams[1] = new ByteArray(p.getValue()).toDouble();
-				else if (p.getCodename().equals("ref_min_connector"))
-					minuitParams[2] = new ByteArray(p.getValue()).toDouble();
+				ParameterType p = (ParameterType)params[i].getType();
+				if (p.getCodename().equals(ParameterTypeCodenames.WAVELET_TYPE))
+					minuitParams[7] = new ByteArray(params[i].getValue()).toInt();
+				else if (p.getCodename().equals(ParameterTypeCodenames.STRATEGY))
+					minuitParams[6] = new ByteArray(params[i].getValue()).toInt();
+				else if (p.getCodename().equals(ParameterTypeCodenames.CONNECTOR_FORM_FACTOR))
+					minuitParams[5] = new ByteArray(params[i].getValue()).toDouble();
+				else if (p.getCodename().equals(ParameterTypeCodenames.MIN_EVENT_LEVEL))
+					minuitParams[0] = new ByteArray(params[i].getValue()).toDouble();
+				else if (p.getCodename().equals(ParameterTypeCodenames.MAX_NOISE_LEVEL))
+					minuitParams[4] = new ByteArray(params[i].getValue()).toDouble();
+				else if (p.getCodename().equals(ParameterTypeCodenames.MIN_END_LEVEL))
+					minuitParams[3] = new ByteArray(params[i].getValue()).toDouble();
+				else if (p.getCodename().equals(ParameterTypeCodenames.MIN_SPLICE))
+					minuitParams[1] = new ByteArray(params[i].getValue()).toDouble();
+				else if (p.getCodename().equals(ParameterTypeCodenames.MIN_CONNECTOR))
+					minuitParams[2] = new ByteArray(params[i].getValue()).toDouble();
 			}
 		}
 		catch (IOException ex)

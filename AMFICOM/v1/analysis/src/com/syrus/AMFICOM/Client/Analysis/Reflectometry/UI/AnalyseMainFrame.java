@@ -20,6 +20,8 @@ import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.analysis.AnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.io.BellcoreStructure;
 
 public class AnalyseMainFrame extends JFrame
@@ -255,24 +257,16 @@ public class AnalyseMainFrame extends JFrame
 
 		aModel.fireModelChanged("");
 
-		if(ConnectionInterface.getActiveConnection() != null)
+		if(ConnectionInterface.getInstance() != null)
 		{
-			aContext.setConnectionInterface(ConnectionInterface.getActiveConnection());
-			if(aContext.getConnectionInterface().isConnected())
+			if(ConnectionInterface.getInstance().isConnected())
 				internal_dispatcher.notify(new ContextChangeEvent(
-						aContext.getConnectionInterface(),
+						ConnectionInterface.getInstance(),
 						ContextChangeEvent.CONNECTION_OPENED_EVENT));
-		}
-		else
-		{
-			aContext.setConnectionInterface(Environment.getDefaultConnectionInterface());
-			ConnectionInterface.setActiveConnection(aContext.getConnectionInterface());
-//			new CheckConnectionCommand(internal_dispatcher, aContext).execute();
 		}
 		if(SessionInterface.getActiveSession() != null)
 		{
 			aContext.setSessionInterface(SessionInterface.getActiveSession());
-			aContext.setConnectionInterface(aContext.getSessionInterface().getConnectionInterface());
 			if(aContext.getSessionInterface().isOpened())
 				internal_dispatcher.notify(new ContextChangeEvent(
 						aContext.getSessionInterface(),
@@ -280,7 +274,7 @@ public class AnalyseMainFrame extends JFrame
 		}
 		else
 		{
-			aContext.setSessionInterface(Environment.getDefaultSessionInterface(aContext.getConnectionInterface()));
+			aContext.setSessionInterface(Environment.getDefaultSessionInterface(ConnectionInterface.getInstance()));
 			SessionInterface.setActiveSession(aContext.getSessionInterface());
 		}
 	}
@@ -310,7 +304,7 @@ public class AnalyseMainFrame extends JFrame
 		this.aContext = aContext;
 		aContext.setDispatcher(internal_dispatcher);
 		if(aContext.getApplicationModel() == null)
-			aContext.setApplicationModel(new ApplicationModel());
+			aContext.setApplicationModel(ApplicationModel.getInstance());
 		setModel(aContext.getApplicationModel());
 	}
 
@@ -359,7 +353,6 @@ public class AnalyseMainFrame extends JFrame
 				{
 //					aContext.setSessionInterface(ssi);
 //					aContext.setDataSourceInterface(Environment.getDefaultDataSourceInterface(aContext.getSessionInterface()));
-					aContext.setDataSourceInterface(aContext.getApplicationModel().getDataSource(aContext.getSessionInterface()));
 
 					setSessionOpened();
 
@@ -373,8 +366,6 @@ public class AnalyseMainFrame extends JFrame
 				SessionInterface ssi = (SessionInterface)cce.getSource();
 				if(aContext.getSessionInterface().equals(ssi))
 				{
-					aContext.setDataSourceInterface(null);
-
 					setSessionClosed();
 
 					statusBar.setText("status", LangModel.getString("statusReady"));
@@ -385,18 +376,18 @@ public class AnalyseMainFrame extends JFrame
 			if(cce.CONNECTION_OPENED)
 			{
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
-				if(aContext.getConnectionInterface().equals(cci))
+				if(ConnectionInterface.getInstance().equals(cci))
 				{
 					setConnectionOpened();
 
 					statusBar.setText("status", LangModel.getString("statusReady"));
-					statusBar.setText("server", aContext.getConnectionInterface().getServiceURL());
+					statusBar.setText("server", ConnectionInterface.getInstance().getServerName());
 				}
 			}
 			if(cce.CONNECTION_CLOSED)
 			{
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
-				if(aContext.getConnectionInterface().equals(cci))
+				if(ConnectionInterface.getInstance().equals(cci))
 				{
 					statusBar.setText("status", LangModel.getString("statusError"));
 					statusBar.setText("server", LangModel.getString("statusConnectionError"));
@@ -405,13 +396,12 @@ public class AnalyseMainFrame extends JFrame
 					statusBar.setText("server", LangModel.getString("statusNoConnection"));
 
 					setConnectionClosed();
-
 				}
 			}
 			if(cce.CONNECTION_FAILED)
 			{
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
-				if(aContext.getConnectionInterface().equals(cci))
+				if (ConnectionInterface.getInstance().equals(cci))
 				{
 					statusBar.setText("status", LangModel.getString("statusError"));
 					statusBar.setText("server", LangModel.getString("statusConnectionError"));
@@ -641,9 +631,9 @@ public class AnalyseMainFrame extends JFrame
 
 	public void setDomainSelected()
 	{
-		new SchemeDataSourceImage(aContext.getDataSourceInterface()).LoadSchemes();
-		new ConfigDataSourceImage(aContext.getDataSourceInterface()).LoadNet();
-		new ConfigDataSourceImage(aContext.getDataSourceInterface()).LoadISM();
+		new SchemeDataSourceImage(aContext.getDataSource()).LoadSchemes();
+//		new ConfigDataSourceImage(aContext.getDataSource()).LoadNet();
+//		new ConfigDataSourceImage(aContext.getDataSource()).LoadISM();
 
 		ApplicationModel aModel = aContext.getApplicationModel();
 		aModel.setEnabled("menuSessionClose", true);
@@ -659,24 +649,33 @@ public class AnalyseMainFrame extends JFrame
 		aModel.setEnabled("menuNetStudy", true);
 		aModel.fireModelChanged("");
 
-		String domain_id = aContext.getSessionInterface().getDomainId();
-		statusBar.setText("domain", ((ObjectResource)Pool.get("domain", domain_id)).getName());
+		try
+		{
+			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
+			Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+					domain_id, true);
+			statusBar.setText("domain", domain.getName());
+		}
+		catch(ApplicationException ex)
+		{
+			ex.printStackTrace();
+		}
 	}
 
 	public void setSessionOpened()
 	{
-		Checker checker = new Checker(aContext.getDataSourceInterface());
+		Checker checker = new Checker(aContext.getDataSource());
 		if(!checker.checkCommand(checker.enterExtendedAnalysisModul))
 		{
 			JOptionPane.showMessageDialog(this, "Недостаточно прав для работы с модулем исследования.", "Ошибка", JOptionPane.OK_OPTION);
 			return;
 		}
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		new SurveyDataSourceImage(dataSource).LoadParameterTypes();
-		new SurveyDataSourceImage(dataSource).LoadTestTypes();
-		new SurveyDataSourceImage(dataSource).LoadAnalysisTypes();
-		new SurveyDataSourceImage(dataSource).LoadEvaluationTypes();
-		new SurveyDataSourceImage(dataSource).LoadModelingTypes();
+//		DataSourceInterface dataSource = aContext.getDataSourceInterface();
+//		new SurveyDataSourceImage(dataSource).LoadParameterTypes();
+//		new SurveyDataSourceImage(dataSource).LoadTestTypes();
+//		new SurveyDataSourceImage(dataSource).LoadAnalysisTypes();
+//		new SurveyDataSourceImage(dataSource).LoadEvaluationTypes();
+//		new SurveyDataSourceImage(dataSource).LoadModelingTypes();
 
 		ApplicationModel aModel = aContext.getApplicationModel();
 		aModel.setEnabled("menuSessionDomain", true);

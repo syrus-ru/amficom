@@ -9,9 +9,12 @@ import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.ISM.MonitoredElement;
-import com.syrus.AMFICOM.Client.Resource.Result.*;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.measurement.Set;
+
 import com.syrus.io.BellcoreStructure;
 import com.syrus.util.ByteArray;
 
@@ -118,13 +121,15 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 
 		if (id.equals("primarytrace") || id.equals("modeledtrace"))
 		{
-			if (!bs.monitored_element_id.equals(""))
+			try
 			{
-				MonitoredElement me = (MonitoredElement)Pool.get(MonitoredElement.typ, bs.monitored_element_id);
+				MonitoredElement me = (MonitoredElement)MeasurementStorableObjectPool.getStorableObject(bs.monitoredElementId, true);
 				setTitle(me.getName());
 			}
-			else
+			catch(Exception ex)
+			{
 				setTitle(LangModelAnalyse.getString("analysisTitle"));
+			}
 
 			p = new AnalysisPanel((AnalysisLayeredPanel)panel, dispatcher, y, delta_x);
 			((AnalysisPanel)p).updEvents(id);
@@ -171,23 +176,38 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 			addTrace (id);
 		else
 		{
+			if (bs.measurementId == null)
+				return;
+
 			int n = 0;
 			double delta_x = 0;
 
-			TestArgumentSet metas = (TestArgumentSet)Pool.get(TestArgumentSet.TYPE, id);
+			Measurement m = null;
+			try
+			{
+				m = (Measurement)MeasurementStorableObjectPool.getStorableObject(bs.measurementId, true);
+			}
+			catch(ApplicationException ex)
+			{
+				System.err.println("Exception retrieving measurenent with " + bs.measurementId);
+				ex.printStackTrace();
+				return;
+			}
+
+			SetParameter[] params = m.getSetup().getParameterSet().getParameters();
 			double len = 0;
 			try
 			{
-				for (Iterator it = metas.getArgumentList().iterator(); it.hasNext();)
+				for (int i = 0; i < params.length; i++)
 				{
-					Parameter p = (Parameter)it.next();
-					if (p.getCodename().equals("ref_res"))
+					ParameterType type = (ParameterType)params[i].getType();
+					if (type.getCodename().equals(ParameterTypeCodenames.TRACE_RESOLUTION))
 					{
-						delta_x = new ByteArray(p.getValue()).toDouble();
+						delta_x = new ByteArray(params[i].getValue()).toDouble();
 					}
-					if (p.getCodename().equals("ref_trclen"))
+					if (type.getCodename().equals(ParameterTypeCodenames.TRACE_LENGTH))
 					{
-						len = new ByteArray(p.getValue()).toDouble();
+						len = new ByteArray(params[i].getValue()).toDouble();
 					}
 				}
 				if (delta_x == 0 || len == 0)

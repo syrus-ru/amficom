@@ -12,7 +12,7 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 import java.util.Iterator;
 
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseEvent;
 
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;

@@ -17,8 +17,10 @@ import com.syrus.AMFICOM.Client.General.Lang.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
 import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.AnalysisManager;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.io.BellcoreStructure;
 
 public class ThresholdsMainFrame extends JFrame
@@ -239,23 +241,16 @@ public class ThresholdsMainFrame extends JFrame
 
 		aModel.fireModelChanged("");
 
-		if(ConnectionInterface.getActiveConnection() != null)
+		if(ConnectionInterface.getInstance() != null)
 		{
-			aContext.setConnectionInterface(ConnectionInterface.getActiveConnection());
-			if(aContext.getConnectionInterface().isConnected())
+			if(ConnectionInterface.getInstance().isConnected())
 		 internal_dispatcher.notify(new ContextChangeEvent(
-				 aContext.getConnectionInterface(),
+				 ConnectionInterface.getInstance(),
 				 ContextChangeEvent.CONNECTION_OPENED_EVENT));
-		}
-		else
-		{
-			aContext.setConnectionInterface(Environment.getDefaultConnectionInterface());
-			ConnectionInterface.setActiveConnection(aContext.getConnectionInterface());
 		}
 		if(SessionInterface.getActiveSession() != null)
 		{
 			aContext.setSessionInterface(SessionInterface.getActiveSession());
-			aContext.setConnectionInterface(aContext.getSessionInterface().getConnectionInterface());
 			if(aContext.getSessionInterface().isOpened())
 		 internal_dispatcher.notify(new ContextChangeEvent(
 				 aContext.getSessionInterface(),
@@ -263,7 +258,7 @@ public class ThresholdsMainFrame extends JFrame
 		}
 		else
 		{
-			aContext.setSessionInterface(Environment.getDefaultSessionInterface(aContext.getConnectionInterface()));
+			aContext.setSessionInterface(Environment.getDefaultSessionInterface(ConnectionInterface.getInstance()));
 			SessionInterface.setActiveSession(aContext.getSessionInterface());
 		}
 	}
@@ -296,7 +291,7 @@ public class ThresholdsMainFrame extends JFrame
 		this.aContext = aContext;
 		aContext.setDispatcher(internal_dispatcher);
 		if(aContext.getApplicationModel() == null)
-		aContext.setApplicationModel(new ApplicationModel());
+		aContext.setApplicationModel(ApplicationModel.getInstance());
 	setModel(aContext.getApplicationModel());
 	}
 
@@ -336,7 +331,6 @@ public class ThresholdsMainFrame extends JFrame
 				SessionInterface ssi = (SessionInterface)cce.getSource();
 				if(aContext.getSessionInterface().equals(ssi))
 				{
-					aContext.setDataSourceInterface(aContext.getApplicationModel().getDataSource(aContext.getSessionInterface()));
 					setSessionOpened();
 					statusBar.setText("status", LangModel.getString("statusReady"));
 					statusBar.setText("session", sdf.format(new Date(aContext.getSessionInterface().getLogonTime())));
@@ -348,7 +342,6 @@ public class ThresholdsMainFrame extends JFrame
 				SessionInterface ssi = (SessionInterface)cce.getSource();
 				if(aContext.getSessionInterface().equals(ssi))
 				{
-					aContext.setDataSourceInterface(null);
 					setSessionClosed();
 					statusBar.setText("status", LangModel.getString("statusReady"));
 					statusBar.setText("session", LangModel.getString("statusNoSession"));
@@ -358,17 +351,17 @@ public class ThresholdsMainFrame extends JFrame
 			if(cce.CONNECTION_OPENED)
 			{
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
-				if(aContext.getConnectionInterface().equals(cci))
+				if(ConnectionInterface.getInstance().equals(cci))
 				{
 					setConnectionOpened();
 					statusBar.setText("status", LangModel.getString("statusReady"));
-					statusBar.setText("server", aContext.getConnectionInterface().getServiceURL());
+					statusBar.setText("server", ConnectionInterface.getInstance().getServerName());
 				}
 			}
 			if(cce.CONNECTION_CLOSED)
 			{
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
-				if(aContext.getConnectionInterface().equals(cci))
+				if(ConnectionInterface.getInstance().equals(cci))
 				{
 					statusBar.setText("status", LangModel.getString("statusDisconnected"));
 					statusBar.setText("server", LangModel.getString("statusNoConnection"));
@@ -378,7 +371,7 @@ public class ThresholdsMainFrame extends JFrame
 			if(cce.CONNECTION_FAILED)
 			{
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
-				if(aContext.getConnectionInterface().equals(cci))
+				if(ConnectionInterface.getInstance().equals(cci))
 				{
 					statusBar.setText("status", LangModel.getString("statusError"));
 					statusBar.setText("server", LangModel.getString("statusConnectionError"));
@@ -593,7 +586,7 @@ public class ThresholdsMainFrame extends JFrame
 
 	public void setSessionOpened()
 	{
-		Checker checker = new Checker(aContext.getDataSourceInterface());
+		Checker checker = new Checker(aContext.getDataSource());
 		if(!checker.checkCommand(checker.enterThresholdModul))
 		{
 			JOptionPane.showMessageDialog(
@@ -603,12 +596,12 @@ public class ThresholdsMainFrame extends JFrame
 		 JOptionPane.OK_OPTION);
 			return;
 		}
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		new SurveyDataSourceImage(dataSource).LoadParameterTypes();
-		new SurveyDataSourceImage(dataSource).LoadTestTypes();
-		new SurveyDataSourceImage(dataSource).LoadAnalysisTypes();
-		new SurveyDataSourceImage(dataSource).LoadEvaluationTypes();
-		new SurveyDataSourceImage(dataSource).LoadModelingTypes();
+//		DataSourceInterface dataSource = aContext.getDataSourceInterface();
+//		new SurveyDataSourceImage(dataSource).LoadParameterTypes();
+//		new SurveyDataSourceImage(dataSource).LoadTestTypes();
+//		new SurveyDataSourceImage(dataSource).LoadAnalysisTypes();
+//		new SurveyDataSourceImage(dataSource).LoadEvaluationTypes();
+//		new SurveyDataSourceImage(dataSource).LoadModelingTypes();
 
 		ApplicationModel aModel = aContext.getApplicationModel();
 		aModel.setEnabled("menuSessionDomain", true);
@@ -635,8 +628,17 @@ public class ThresholdsMainFrame extends JFrame
 
 		aModel.fireModelChanged("");
 
-		String domain_id = aContext.getSessionInterface().getDomainId();
-		statusBar.setText("domain", ((ObjectResource)Pool.get("domain", domain_id)).getName());
+		try
+		{
+			Identifier domain_id = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().domain_id);
+			Domain domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(
+					domain_id, true);
+			statusBar.setText("domain", domain.getName());
+		}
+		catch(ApplicationException ex)
+		{
+			ex.printStackTrace();
+		}
 	}
 
 	public void setSessionClosed()

@@ -1,12 +1,13 @@
 package com.syrus.AMFICOM.Client.Analysis.Report;
 
-import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.JComponent;
+import javax.swing.table.TableModel;
 
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Report.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Result.*;
+import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.measurement.*;
 
 abstract public class ESAPEReportModel extends APOReportModel
 {
@@ -67,9 +68,19 @@ abstract public class ESAPEReportModel extends APOReportModel
 		CreateReportException
 	{
 		String result_id = (String) rp.getReserve();
-		Result result = (Result) Pool.get(Result.TYPE, result_id);
-		if (result != null)
-			return ":" + result.getName();
+
+		try
+		{
+			Result result = (Result)MeasurementStorableObjectPool.getStorableObject(
+					new Identifier(result_id),
+					true);
+
+			if (result != null)
+				return ":" + result.getMeasurement().getName();
+		}
+		catch(ApplicationException ex)
+		{
+		}
 
 		return "";
 	}
@@ -79,9 +90,9 @@ abstract public class ESAPEReportModel extends APOReportModel
 	}
 
 	public void loadRequiredObjects(
-		DataSourceInterface dsi,
-		ObjectsReport rp,
-		ReportTemplate rt)
+			DataSourceInterface dsi,
+			ObjectsReport rp,
+			ReportTemplate rt)
 	{
 	}
 

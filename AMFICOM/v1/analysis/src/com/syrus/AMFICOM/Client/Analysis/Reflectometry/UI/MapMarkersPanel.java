@@ -6,11 +6,12 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.general.Identifier;
 
 public class MapMarkersPanel extends ThresholdsPanel
 {
-	protected String monitored_element_id = null;
-	protected String map_path_id = null;
+	protected Identifier monitored_element_id = null;
+	protected String scheme_path_id = null;
 
 	protected boolean show_markers = true;
 	protected boolean creating_marker = false;
@@ -44,14 +45,14 @@ public class MapMarkersPanel extends ThresholdsPanel
 	{
 	}
 
-	public void setMonitoredElementId (String monitored_element_id)
+	public void setMonitoredElementId (Identifier monitored_element_id)
 	{
 		this.monitored_element_id = monitored_element_id;
 	}
 
-	public void setMapPathId (String map_path_id)
+	public void setSchemePathId (String scheme_path_id)
 	{
-		this.map_path_id = map_path_id;
+		this.scheme_path_id = scheme_path_id;
 	}
 
 	protected void this_mousePressed(MouseEvent e)
@@ -69,7 +70,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 
 			MapNavigateEvent mne = new MapNavigateEvent (this,
 					MapNavigateEvent.DATA_MARKER_CREATED_EVENT,
-					m.id, m.pos * delta_x, map_path_id, monitored_element_id);
+					m.id, m.pos * delta_x, scheme_path_id, monitored_element_id);
 			if(true)
 			{
 //				mne.spd = new SchemePathDecompositor();
@@ -80,7 +81,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 			dispatcher.notify(mne);
 			dispatcher.notify(new MapNavigateEvent (this,
 											MapNavigateEvent.DATA_MARKER_SELECTED_EVENT,
-													m.id, m.pos * delta_x, map_path_id, monitored_element_id));
+													m.id, m.pos * delta_x, scheme_path_id, monitored_element_id));
 
 			return;
 		}
@@ -100,7 +101,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 					}
 					active_marker = m;
 					dispatcher.notify (new MapNavigateEvent (this, MapNavigateEvent.DATA_MARKER_SELECTED_EVENT,
-														 m.id, m.pos * delta_x, map_path_id, monitored_element_id));
+														 m.id, m.pos * delta_x, scheme_path_id, monitored_element_id));
 				}
 			}
 		}
@@ -130,7 +131,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 	void move_notify()
 	{
 		dispatcher.notify (new MapNavigateEvent (this, MapNavigateEvent.DATA_MARKER_MOVED_EVENT,
-												 active_marker.id, active_marker.pos * delta_x, map_path_id, monitored_element_id));
+												 active_marker.id, active_marker.pos * delta_x, scheme_path_id, monitored_element_id));
 	}
 
 	protected void this_mouseReleased(MouseEvent e)
@@ -266,7 +267,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 						MapNavigateEvent.DATA_ALARMMARKER_DELETED_EVENT,
 						m.id,
 						alarms[i].alarmPointCoord * delta_x,
-						map_path_id,
+						scheme_path_id,
 						monitored_element_id);
 				}
 				else
@@ -276,10 +277,10 @@ public class MapMarkersPanel extends ThresholdsPanel
 						MapNavigateEvent.DATA_MARKER_DELETED_EVENT,
 						m.id,
 						m.pos * delta_x,
-						map_path_id,
+						scheme_path_id,
 						monitored_element_id);
 				}
-				mne.descriptor = "refevent";
+//				mne.setDescriptor("refevent");
 				dispatcher.notify(mne);
 				deleteMarker(m);
 			}
@@ -387,7 +388,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 				MapNavigateEvent.DATA_ALARMMARKER_DELETED_EVENT,
 				m.id,
 				m.pos * delta_x,
-				map_path_id,
+				scheme_path_id,
 				monitored_element_id);
 		}
 		else
@@ -397,7 +398,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 				MapNavigateEvent.DATA_MARKER_DELETED_EVENT,
 				m.id,
 				m.pos * delta_x,
-				map_path_id,
+				scheme_path_id,
 				monitored_element_id);
 		}
 		dispatcher.notify(mne);

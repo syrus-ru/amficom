@@ -9,13 +9,16 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
  * @version 1.0
  */
 
-import java.util.Iterator;
+import java.util.*;
 
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
+import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.corba.*;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.io.BellcoreStructure;
 
 public class PathElementsFrame extends AnalysisFrame
@@ -46,29 +49,31 @@ public class PathElementsFrame extends AnalysisFrame
 		{
 			SchemePath path = null;
 
-			if (bs.monitored_element_id.equals(""))
-				bs.monitored_element_id = "mone2";
-
-			if (!bs.monitored_element_id.equals(""))
+			try
 			{
-				MonitoredElement me = (MonitoredElement)Pool.get(MonitoredElement.typ, bs.monitored_element_id);
-				setTitle(me.getName());
-				if (me.element_type.equals("path"))
+				MonitoredElement me = (MonitoredElement)MeasurementStorableObjectPool.getStorableObject(bs.monitoredElementId, true);
+				if(me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH))
 				{
-					TransmissionPath tpath = (TransmissionPath)Pool.get(TransmissionPath.typ, me.element_id);
-					for (Iterator it = Pool.getMap(SchemePath.typ).values().iterator(); it.hasNext();)
+					List tpathIds = me.getMonitoredDomainMemberIds();
+					for(Iterator it = Pool.getMap(SchemePath.typ).values().iterator(); it.hasNext(); )
 					{
 						SchemePath sp = (SchemePath)it.next();
-						if (sp.path_id.equals(tpath.getId()))
+						/**
+						 * @todo remove comment when SchemePath moves to new TransmissionPath
+						 */
+//						if(sp.path != null && tpathIds.contains(sp.path.getId()))
 						{
 							path = sp;
 							break;
 						}
 					}
 				}
+				setTitle(me.getName());
 			}
-			else
+			catch(ApplicationException ex)
+			{
 				setTitle(LangModelAnalyse.getString("analysisTitle"));
+			}
 
 			p = new PathElementsPanel((PathElementsLayeredPanel)panel, dispatcher, y, delta_x);
 			((PathElementsPanel)p).updEvents(id);

@@ -8,7 +8,8 @@ import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Result.TestSetup;
+import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.io.BellcoreStructure;
 
 public class LoadEtalonCommand extends VoidCommand
@@ -39,9 +40,7 @@ public class LoadEtalonCommand extends VoidCommand
 	public void execute()
 	{
 		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", "primarytrace");
-		TestSetup ts = (TestSetup)Pool.get(TestSetup.TYPE, bs.test_setup_id);
-
-		if (bs.test_setup_id.equals(""))
+		if (bs.measurementId == null)
 		{
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
@@ -51,7 +50,19 @@ public class LoadEtalonCommand extends VoidCommand
 			return;
 		}
 
-		if (ts.getEthalonId().length() == 0)
+		Measurement m = null;
+		try
+		{
+			m = (Measurement)MeasurementStorableObjectPool.getStorableObject(bs.measurementId, true);
+		}
+		catch(ApplicationException ex)
+		{
+			System.err.println("Exception retrieving measurenent with " + bs.measurementId);
+			ex.printStackTrace();
+			return;
+		}
+
+		if (m.getSetup().getEtalon() == null)
 		{
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),

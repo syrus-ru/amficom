@@ -39,12 +39,12 @@ public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements O
 	void init_module(Dispatcher dispatcher)
 	{
 		super.init_module(dispatcher);
-		dispatcher.register(this, MapNavigateEvent.type);
+		dispatcher.register(this, MapEvent.MAP_NAVIGATE);
 	}
 
 	public void operationPerformed(OperationEvent ae)
 	{
-		if(ae.getActionCommand().equals(MapNavigateEvent.type))
+		if(ae.getActionCommand().equals(MapEvent.MAP_NAVIGATE))
 		{
 			MapNavigateEvent mne = (MapNavigateEvent)ae;
 			for(int i = 0; i < jLayeredPane.getComponentCount(); i++)
@@ -52,55 +52,55 @@ public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements O
 				SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
 				if (panel instanceof MapMarkersPanel)
 				{
-					if(mne.MAP_MARKER_CREATED)
+					if(mne.isMapMarkerCreated())
 					{
-						if ( (mne.meID != null && mne.meID.equals(((MapMarkersPanel)panel).monitored_element_id) )||
-								 (mne.mappathID != null && mne.mappathID.equals(((MapMarkersPanel)panel).map_path_id)) )
+						if ( (mne.getMeId() != null && mne.getMeId().equals(((MapMarkersPanel)panel).monitored_element_id)) ||
+								 (mne.getSchemePathId() != null && mne.getSchemePathId().equals(((MapMarkersPanel)panel).scheme_path_id)))
 						{
 
 //							double d = WorkWithReflectoArray.getDistanceTillLastSplash(panel.y, panel.delta_x, 1);
 //							mne.spd.setMeasurement (new LengthParameters (((MapMarkersPanel)panel).ep, panel.delta_x, "", d));
 //							double dist = mne.spd.getMeasuredDistance(mne.distance);
-							double dist = mne.distance;
-							((MapMarkersPanel)panel).createMarker("", mne.marker_id, dist);
+							double dist = mne.getDistance();
+							((MapMarkersPanel)panel).createMarker("", mne.getMarkerId(), dist);
 							((MapMarkersPanel)panel).move_notify();
 							((MapMarkersToolBar)toolbar).deleteMarkerButton.setEnabled(true);
 							jLayeredPane.repaint();
 						}
 					}
-					if(mne.DATA_ALARMMARKER_CREATED)
+					if(mne.isDataAlarmMarkerCreated())
 					{
-						if ( (mne.meID != null && mne.meID.equals(((MapMarkersPanel)panel).monitored_element_id) )||
-								 (mne.mappathID != null && mne.mappathID.equals(((MapMarkersPanel)panel).map_path_id)) )
+						if ( (mne.getMeId() != null && mne.getMeId().equals(((MapMarkersPanel)panel).monitored_element_id)) ||
+								 (mne.getSchemePathId() != null && mne.getSchemePathId().equals(((MapMarkersPanel)panel).scheme_path_id)))
 						{
-							double dist = mne.distance;
+							double dist = mne.getDistance();
 							AlarmMarker am = ((MapMarkersPanel)panel).get_alarm_marker();
 							if(am == null)
 							{
-								((MapMarkersPanel)panel).createAlarmMarker("", mne.marker_id, dist);
+								((MapMarkersPanel)panel).createAlarmMarker("", mne.getMarkerId(), dist);
 							}
 							else
 							{
-								am.id = mne.marker_id;
-								((MapMarkersPanel)panel).moveMarker(mne.marker_id, dist);
+								am.id = mne.getMarkerId();
+								((MapMarkersPanel)panel).moveMarker(mne.getMarkerId(), dist);
 							}
 							((MapMarkersToolBar)toolbar).deleteMarkerButton.setEnabled(true);
 							jLayeredPane.repaint();
 						}
 					}
-					if(mne.MAP_MARKER_SELECTED)
+					if(mne.isMapMarkerSelected())
 					{
-						((MapMarkersPanel)panel).activateMarker(mne.marker_id);
+						((MapMarkersPanel)panel).activateMarker(mne.getMarkerId());
 						jLayeredPane.repaint();
 					}
-					if(mne.MAP_MARKER_MOVED)
+					if(mne.isMapMarkerMoved())
 					{
-						((MapMarkersPanel)panel).moveMarker(mne.marker_id, mne.distance);
+						((MapMarkersPanel)panel).moveMarker(mne.getMarkerId(), mne.getDistance());
 						jLayeredPane.repaint();
 					}
-					if(mne.MAP_MARKER_DELETED)
+					if(mne.isMapMarkerDeleted())
 					{
-						if (((MapMarkersPanel)panel).deleteMarker(mne.marker_id) == null)
+						if (((MapMarkersPanel)panel).deleteMarker(mne.getMarkerId()) == null)
 							((MapMarkersToolBar)toolbar).deleteMarkerButton.setEnabled(false);
 						jLayeredPane.repaint();
 					}

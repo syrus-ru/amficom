@@ -3,13 +3,15 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Result.*;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.io.BellcoreStructure;
 
 public class SaveTestSetupAsCommand extends VoidCommand
@@ -33,16 +35,6 @@ public class SaveTestSetupAsCommand extends VoidCommand
 
 	public void execute()
 	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		if(dataSource == null)
-		{
-			JOptionPane.showMessageDialog(
-					Environment.getActiveWindow(),
-					LangModelAnalyse.getString("noSessionError"),
-					LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
-			return;
-		}
-
 		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", traceid);
 		if (bs == null)
 		{
@@ -53,7 +45,7 @@ public class SaveTestSetupAsCommand extends VoidCommand
 			return;
 		}
 
-		if (bs.monitored_element_id.equals(""))
+		if (bs.monitoredElementId == null)
 		{
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
@@ -62,7 +54,7 @@ public class SaveTestSetupAsCommand extends VoidCommand
 			return;
 		}
 
-		if (bs.test_setup_id.equals(""))
+		if (bs.measurementId == null)
 		{
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
@@ -82,47 +74,29 @@ public class SaveTestSetupAsCommand extends VoidCommand
 			return;
 		}
 
-		String s = JOptionPane.showInputDialog(
-				Environment.getActiveWindow(),
-				LangModelAnalyse.getString("testsetup"),
-				LangModelAnalyse.getString("newname"),
-				JOptionPane.OK_CANCEL_OPTION);
-		if (s == null || s.equals(""))
+		CreateTestSetupCommand command = new CreateTestSetupCommand(aContext, "primarytrace");
+		command.execute();
+		if (command.status != CreateTestSetupCommand.OK)
 			return;
 
-		TestSetup ts = (TestSetup)Pool.get(TestSetup.TYPE, bs.test_setup_id);
-		TestSetup newts = new TestSetup();
-		newts.setId(aContext.getDataSourceInterface().GetUId(TestSetup.TYPE));
-		Pool.put(TestSetup.TYPE, newts.getId(), newts);
-		newts.setName(s);
-		bs.test_setup_id = newts.getId();
-
-		CriteriaSet newcs = AnalysisUtil.createDefaultCriteriaSet(dataSource);
-		AnalysisUtil.setCriteriaSetFromParams(newcs);
-		newts.setCriteriaSetId(newcs.getId());
-
-		Etalon newet = AnalysisUtil.createEtalon(dataSource, (ReflectogramEvent[])Pool.get("eventparams", traceid));
-		newet.setName(newet.getId());
-		newts.setEthalonId(newet.getId());
+		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
+		MeasurementSetup newms = command.measurementSetup;
+		newms.setCriteriaSet(AnalysisUtil.createCriteriaSetFromParams(
+				userId,
+				newms.
+				getMonitoredElementIds()));
+		newms.setEtalon(AnalysisUtil.createEtalon(
+				userId,
+				newms.getMonitoredElementIds(),
+				(ReflectogramEvent[])Pool.get("eventparams", traceid)));
 
 		if ((type & SaveTestSetupCommand.THRESHOLDS) != 0)
 		{
-			ThresholdSet tset = (ThresholdSet)Pool.get(ThresholdSet.TYPE, ts.getThresholdSetId());
-			ThresholdSet newtset = AnalysisUtil.createDefaultThresholdSet(
-					dataSource, (ReflectogramEvent[])Pool.get("eventparams", traceid));
-			newts.setThresholdSetId(newtset.getId());
+			newms.setThresholdSet(AnalysisUtil.createThresholdSet(
+					userId,
+					newms.getMonitoredElementIds(),
+					(ReflectogramEvent[])Pool.get("eventparams", traceid)));
 		}
-
-		newts.setAnalysisTypeId(ts.getAnalysisTypeId());
-		newts.setDescription(ts.getDescription());
-		newts.setEvaluationTypeId(ts.getEvaluationTypeId());
-		newts.setTestArgumentSetId(ts.getTestArgumentSetId());
-		newts.settestTypeId(ts.getTestTypeId());
-
-		String[] me_ids = new String[ts.getMonitoredElementIds().length];
-		for (int i = 0; i < me_ids.length; i++)
-			me_ids[i] = new String(ts.getMonitoredElementIds()[i]);
-		newts.setMonitoredElementIds(me_ids);
 
 		new SaveTestSetupCommand(aContext, traceid, type).execute();
 

@@ -2,13 +2,13 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Result.TestSetup;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.measurement.*;
 import com.syrus.io.BellcoreStructure;
 
 public class SaveTestSetupCommand extends VoidCommand
@@ -36,16 +36,6 @@ public class SaveTestSetupCommand extends VoidCommand
 
 	public void execute()
 	{
-		DataSourceInterface dataSource = aContext.getDataSourceInterface();
-		if(dataSource == null)
-		{
-			JOptionPane.showMessageDialog(
-					Environment.getActiveWindow(),
-					LangModelAnalyse.getString("noSessionError"),
-					LangModelAnalyse.getString("error"), JOptionPane.OK_OPTION);
-			return;
-		}
-
 		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", traceid);
 		if (bs == null)
 		{
@@ -56,7 +46,7 @@ public class SaveTestSetupCommand extends VoidCommand
 			return;
 		}
 
-		if (bs.monitored_element_id.equals(""))
+		if (bs.monitoredElementId == null)
 		{
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
@@ -65,7 +55,7 @@ public class SaveTestSetupCommand extends VoidCommand
 			return;
 		}
 
-		if (bs.test_setup_id.equals(""))
+		if (bs.measurementId == null)
 		{
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
@@ -74,8 +64,20 @@ public class SaveTestSetupCommand extends VoidCommand
 			return;
 		}
 
-		TestSetup ts = (TestSetup)Pool.get(TestSetup.TYPE, bs.test_setup_id);
-		if (ts.getTestArgumentSetId().length() == 0)
+		Measurement m = null;
+		try
+		{
+			m = (Measurement)MeasurementStorableObjectPool.getStorableObject(bs.measurementId, true);
+		}
+		catch(ApplicationException ex)
+		{
+			System.err.println("Exception retrieving measurenent with " + bs.measurementId);
+			ex.printStackTrace();
+			return;
+		}
+
+		MeasurementSetup ms = m.getSetup();
+		if (ms.getParameterSet() == null)
 		{
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
@@ -98,32 +100,42 @@ public class SaveTestSetupCommand extends VoidCommand
 			}
 		}
 
-		if (ts.getName().equals(""))
+		if (ms.getDescription().equals(""))
 		{
 			String s = JOptionPane.showInputDialog(
 					Environment.getActiveWindow(),
 					LangModelAnalyse.getString("testsetup"),
 					LangModelAnalyse.getString("newname"), JOptionPane.OK_CANCEL_OPTION);
-			if (s == null || s.equals(""))
+			if (!MiscUtil.validName(s))
 				return;
-			ts.setName(s);
+			ms.setDescription(s);
 		}
 
-		dataSource.attachTestArgumentSetToME(ts.getTestArgumentSetId(), bs.monitored_element_id);
+		try
+		{
+			ms.attachToMonitoredElement(
+					bs.monitoredElementId,
+					new Identifier(aContext.getSessionInterface().getUserId()));
+		}
+		catch(UpdateObjectException ex)
+		{
+			ex.printStackTrace();
+		}
 
-		ts.setCreatedBy(dataSource.getSession().getUserId());
+		/**
+		 * @todo use flush(false) to non forced saving
+		 */
+		try
+		{
+			MeasurementStorableObjectPool.flush(true);
+		}
+		catch(VersionCollisionException ex)
+		{
+		}
+		catch(ApplicationException ex)
+		{
+		}
 
-		if ((type & CRITERIA) != 0)
-			AnalysisUtil.save_CriteriaSet(dataSource, bs);
-		if ((type & ETALON) != 0)
-			AnalysisUtil.save_Etalon(dataSource, bs, ep);
-		if ((type & THRESHOLDS) != 0)
-			AnalysisUtil.save_Thresholds(dataSource, bs, ep);
-
-		dataSource.saveTestSetup(ts.getId());
-		dataSource.attachTestSetupToME(ts.getId(), bs.monitored_element_id);
 	}
-
-
 
 }

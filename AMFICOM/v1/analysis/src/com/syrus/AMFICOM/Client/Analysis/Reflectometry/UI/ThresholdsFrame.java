@@ -7,7 +7,8 @@ import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Result.*;
+import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.util.ByteArray;
@@ -79,10 +80,11 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 		}
 	}
 
-	void addEtalon(String id)
+	public void addEtalon(String id)
 	{
 		if (traces.get(id) != null)
 			return;
+
 		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
 		if (bs != null)
 			addTrace (id);
@@ -91,20 +93,32 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 			int n = 0;
 			double delta_x = 0;
 
-			TestArgumentSet metas = (TestArgumentSet)Pool.get(TestArgumentSet.TYPE, id);
+			Measurement m = null;
+			try
+			{
+				m = (Measurement)MeasurementStorableObjectPool.getStorableObject(bs.measurementId, true);
+			}
+			catch(ApplicationException ex)
+			{
+				System.err.println("Exception retrieving measurenent with " + bs.measurementId);
+				ex.printStackTrace();
+				return;
+			}
+
+			SetParameter[] params = m.getSetup().getParameterSet().getParameters();
 			double len = 0;
 			try
 			{
-				for (Iterator it = metas.getArgumentList().iterator(); it.hasNext();)
+				for (int i = 0; i < params.length; i++)
 				{
-					Parameter p = (Parameter)it.next();
-					if (p.getCodename().equals("ref_res"))
+					ParameterType type = (ParameterType)params[i].getType();
+					if (type.getCodename().equals(ParameterTypeCodenames.TRACE_RESOLUTION))
 					{
-						delta_x = new ByteArray(p.getValue()).toDouble();
+						delta_x = new ByteArray(params[i].getValue()).toDouble();
 					}
-					if (p.getCodename().equals("ref_trclen"))
+					if (type.getCodename().equals(ParameterTypeCodenames.TRACE_LENGTH))
 					{
-						len = new ByteArray(p.getValue()).toDouble();
+						len = new ByteArray(params[i].getValue()).toDouble();
 					}
 				}
 				if (delta_x == 0 || len == 0)
@@ -118,7 +132,6 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 					traces.remove(id);
 				}
 
-				SimpleGraphPanel epPanel;
 				ReflectogramEvent[] ep = (ReflectogramEvent[])Pool.get("eventparams", id);
 				if (ep != null)
 				{
@@ -128,11 +141,10 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 						for (int j = ep[i].begin; j <= ep[i].end && j < n; j++)
 							y[j] = ep[i].refAmpl(j)[0];
 					}
-					epPanel = new SimpleGraphPanel(y, delta_x);
+					SimpleGraphPanel epPanel = new SimpleGraphPanel(y, delta_x);
 					epPanel.setColorModel(AnalysisUtil.ETALON);
 					((ScalableLayeredPanel)panel).addGraphPanel(epPanel);
 					panel.updScale2fit();
-					((ThresholdsLayeredPanel)panel).updScale2fitCurrentEv(.2, 1.);
 					traces.put(id, epPanel);
 				}
 			}

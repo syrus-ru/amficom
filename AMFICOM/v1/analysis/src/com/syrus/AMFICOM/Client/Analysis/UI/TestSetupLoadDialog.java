@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.Client.Analysis;
+package com.syrus.AMFICOM.Client.Analysis.UI;
 
 import java.util.*;
 import java.util.List;
@@ -11,8 +11,10 @@ import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.ISM.MonitoredElement;
-import com.syrus.AMFICOM.Client.Resource.Result.TestSetup;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.measurement.DomainCondition;
 import com.syrus.io.BellcoreStructure;
 
 public class TestSetupLoadDialog extends JDialog implements OperationListener
@@ -61,7 +63,7 @@ public class TestSetupLoadDialog extends JDialog implements OperationListener
 
 		setResizable(true);
 
-		TestSetupTreeModel lrtm = new TestSetupTreeModel(aContext.getDataSourceInterface());
+		TestSetupTreeModel lrtm = new TestSetupTreeModel(aContext);
 
 		UniTreePanel utp = new UniTreePanel(dispatcher, aContext, lrtm);
 
@@ -105,7 +107,7 @@ public class TestSetupLoadDialog extends JDialog implements OperationListener
 		if (oe instanceof TreeDataSelectionEvent)
 		{
 			TreeDataSelectionEvent ev = (TreeDataSelectionEvent)oe;
-			if (ev.getDataClass() != null && ev.getDataClass().equals(TestSetup.class)
+			if (ev.getDataClass() != null && ev.getDataClass().equals(MeasurementSetup.class)
 					&& ev.getSelectionNumber() != -1)
 			{
 				okButton.setEnabled(true);
@@ -133,23 +135,26 @@ public class TestSetupLoadDialog extends JDialog implements OperationListener
 
 class TestSetupTreeModel extends ObjectResourceTreeModel
 {
-	DataSourceInterface dsi;
+	ApplicationContext aContext;
 
-	public TestSetupTreeModel(DataSourceInterface dsi)
+	public TestSetupTreeModel(ApplicationContext aContext)
 	{
-		this.dsi = dsi;
+		this.aContext = aContext;
 	}
 
 	public ObjectResourceTreeNode getRoot()
 	{
 		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", "primarytrace");
-		if (bs != null && !bs.monitored_element_id.equals(""))
+		try
 		{
-			MonitoredElement me = (MonitoredElement)Pool.get(MonitoredElement.typ, bs.monitored_element_id);
-			return new ObjectResourceTreeNode ("root", "Шаблоны на \"" +
-					(me.getName().equals("") ? me.getId() : me.getName()) + "\"" , true);
+			MonitoredElement me = (MonitoredElement)MeasurementStorableObjectPool.getStorableObject(bs.monitoredElementId, true);
+			return new ObjectResourceTreeNode("root", "Шаблоны на \"" +
+					(me.getName().equals("") ? me.getId().getIdentifierString() : me.getName()) + "\"", true);
 		}
-		return new ObjectResourceTreeNode("root", "Шаблоны", true);
+		catch(ApplicationException ex)
+		{
+			return new ObjectResourceTreeNode("root", "Шаблоны", true);
+		}
 	}
 
 	public ImageIcon getNodeIcon(ObjectResourceTreeNode node)
@@ -172,9 +177,9 @@ class TestSetupTreeModel extends ObjectResourceTreeModel
 
 	private Class getNodeClass(ObjectResourceTreeNode node)
 	{
-		if(node.getObject() instanceof TestSetup)
+		if(node.getObject() instanceof MeasurementSetup)
 		{
-			return TestSetup.class;
+			return MeasurementSetup.class;
 		}
 		else
 			return null;
@@ -182,7 +187,7 @@ class TestSetupTreeModel extends ObjectResourceTreeModel
 
 	public Class getNodeChildClass(ObjectResourceTreeNode node)
 	{
-		return TestSetup.class;
+		return MeasurementSetup.class;
 	}
 
 	public List getChildNodes(ObjectResourceTreeNode node)
@@ -197,37 +202,44 @@ class TestSetupTreeModel extends ObjectResourceTreeModel
 			if(s.equals("root"))
 			{
 				BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", "primarytrace");
-				if (bs != null && !bs.monitored_element_id.equals(""))
+				if (bs != null && !bs.monitoredElementId.equals(""))
 				{
-					String me_id = bs.monitored_element_id;
-					String ids[] = dsi.getTestSetupsByME(me_id);
-					for (int i = 0; i < ids.length; i++)
-						dsi.loadTestSetup(ids[i]);
-
-					Map testsHt = new HashMap();
-					Map ht = Pool.getMap(TestSetup.TYPE);
-					if(ht != null)
+					Identifier me_id = bs.monitoredElementId;
+					Identifier domain_id = new Identifier(aContext.getSessionInterface().getDomainId());
+					try
 					{
-						for(Iterator it = ht.values().iterator(); it.hasNext(); )
+						Domain domain = (Domain)MeasurementStorableObjectPool.getStorableObject(domain_id, true);
+
+						StorableObjectCondition mSetupCondition = new DomainCondition(domain, ObjectEntities.MS_ENTITY_CODE);
+						List mSetups = MeasurementStorableObjectPool.getStorableObjectsByCondition(mSetupCondition, true);
+
+						java.util.Set testsHt = new HashSet();
+						for(Iterator it = mSetups.iterator(); it.hasNext(); )
 						{
-							TestSetup t = (TestSetup)it.next();
-							String[] me_ids = t.getMonitoredElementIds();
-							for (int i = 0; i < me_ids.length; i++)
-								if(me_ids[i].equals(me_id))
+							MeasurementSetup t = (MeasurementSetup)it.next();
+							List me_ids = t.getMonitoredElementIds();
+							for(Iterator it2 = me_ids.iterator(); it2.hasNext(); )
+							{
+								Identifier meId = (Identifier)it2.next();
+								if(meId.equals(me_id))
 								{
-								testsHt.put(t.getId(), t);
-								break;
+									testsHt.add(t);
+									break;
+								}
 							}
 						}
-					}
 
-					ObjectResourceSorter sorter = StubResource.getDefaultSorter();
-					sorter.setDataSet(testsHt);
-					for(Iterator it = sorter.default_sort().iterator(); it.hasNext();)
+						ObjectResourceSorter sorter = StubResource.getDefaultSorter();
+						sorter.setDataSet(testsHt);
+						for(Iterator it = sorter.default_sort().iterator(); it.hasNext(); )
+						{
+							MeasurementSetup t = (MeasurementSetup)it.next();
+							ortn = new ObjectResourceTreeNode(t, t.getDescription(), true, true);
+							vec.add(ortn);
+						}
+					}
+					catch(ApplicationException ex1)
 					{
-						TestSetup t = (TestSetup)it.next();
-						ortn = new ObjectResourceTreeNode(t, t.getName(), true, true);
-						vec.add(ortn);
 					}
 				}
 			}
