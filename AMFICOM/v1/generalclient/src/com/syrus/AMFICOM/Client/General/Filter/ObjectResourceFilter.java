@@ -1,10 +1,15 @@
 package com.syrus.AMFICOM.Client.General.Filter;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 import com.syrus.AMFICOM.Client.General.Filter.FilterPanel;
 
-import java.util.*;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.DataSet;
 
 import com.syrus.AMFICOM.filter.*;
 
@@ -19,9 +24,8 @@ public abstract class ObjectResourceFilter implements Filter
 	
 	public LogicScheme logicScheme = null;
 	public String resource_typ = "";
-//	public Vector criteria = new Vector();
 
-	String id = "";
+	private String id = "";
 
 	public int lastListID = 1;
 
@@ -37,7 +41,7 @@ public abstract class ObjectResourceFilter implements Filter
 		this.logicScheme = ls;
 	}
 
-	public abstract Vector getFilterColumns();
+	public abstract List getFilterColumns();
 	public abstract String getFilterColumnName(String col_id);
 	public abstract String[] getColumnFilterTypes(String col_id);
 	public abstract FilterPanel getColumnFilterPanel(String col_id, String type);
@@ -100,7 +104,7 @@ public abstract class ObjectResourceFilter implements Filter
 //		criteria = new Vector();
 	}
 
-	public Vector getCriteria()
+	public List getCriteria()
 	{
 		return this.logicScheme.getFilterExpressions();
 //		return criteria;
@@ -108,21 +112,11 @@ public abstract class ObjectResourceFilter implements Filter
 
 	public List filter(List dataSet)
 	{
-		List ds = new DataSet(dataSet);
-		for(Iterator it = dataSet.iterator(); it.hasNext();)
-		{
+		List ds = new ArrayList(dataSet);
+		for(Iterator it = dataSet.iterator(); it.hasNext();){
 			ObjectResource or = (ObjectResource )it.next();
-
-			if (this.logicScheme.passesAllConstraints(or) == false)
+			if (!this.logicScheme.passesAllConstraints(or))
 				ds.remove(or);
-/*
-			for(Enumeration e2 = criteria.elements(); e2.hasMoreElements();)
-			{
-				FilterExpression expr = (FilterExpression)e2.nextElement();
-				if(expression(expr, or) == false)
-					ds.remove(or);
-			}
-*/
 		}
 		return ds;
 	}
