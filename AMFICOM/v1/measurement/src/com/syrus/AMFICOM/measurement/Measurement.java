@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.38 2004/12/09 12:47:20 bob Exp $
+ * $Id: Measurement.java,v 1.39 2004/12/09 13:25:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2004/12/09 12:47:20 $
- * @author $Author: bob $
+ * @version $Revision: 1.39 $, $Date: 2004/12/09 13:25:10 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -242,7 +242,8 @@ public class Measurement extends Action {
 				startTime,
 				localAddress,
 				testId);
-		} catch (IllegalObjectEntityException e) {
+		}
+		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Measurement.createInstance | cannot generate identifier ", e);
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.70 2004/12/09 12:47:20 bob Exp $
+ * $Id: Test.java,v 1.71 2004/12/09 13:25:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,8 +46,8 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2004/12/09 12:47:20 $
- * @author $Author: bob $
+ * @version $Revision: 1.71 $, $Date: 2004/12/09 13:25:10 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -90,18 +90,18 @@ public class Test extends StorableObject {
 		}
 	}
 
-	public Measurement createMeasurement(Identifier creatorId,
-										 Date startTime) throws CreateObjectException {
+	public Measurement createMeasurement(Identifier creatorId, Date startTime) throws CreateObjectException {
 			Measurement measurement1 = Measurement.createInstance(creatorId,
-				this.measurementType,
-				"create by Test:'" 
-				+ this.getDescription() + "' at "
-				+ DatabaseDate.SDF.format(new Date(System.currentTimeMillis())),
-				this.monitoredElement.getId(),
-				this.mainMeasurementSetup,
-				startTime,
-				this.monitoredElement.getLocalAddress(),
-				this.id);
+																								this.measurementType,
+																								"created by Test:'"
+																									+ this.getDescription()
+																									+ "' at "
+																									+ DatabaseDate.SDF.format(new Date(System.currentTimeMillis())),
+																								this.monitoredElement.getId(),
+																								this.mainMeasurementSetup,
+																								startTime,
+																								this.monitoredElement.getLocalAddress(),
+																								this.id);
 		Measurement measurement = Measurement.getInstance((Measurement_Transferable)measurement1.getTransferable());
 		super.modified = new Date(System.currentTimeMillis());
 		super.modifierId = (Identifier) creatorId.clone();
@@ -183,7 +183,7 @@ public class Test extends StorableObject {
 									  MonitoredElement monitoredElement,
 									  TestReturnType returnType,
 									  String description,
-									  List measurementSetupIds) throws CreateObjectException{
+									  List measurementSetupIds) throws CreateObjectException {
 		if (creatorId == null || startTime == null || endTime == null || 
 				temporalPattern == null || temporalType == null || measurementType == null ||
 				monitoredElement == null || returnType == null || description == null)

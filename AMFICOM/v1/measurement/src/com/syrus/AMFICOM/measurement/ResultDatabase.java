@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.44 2004/12/08 09:11:37 bob Exp $
+ * $Id: ResultDatabase.java,v 1.45 2004/12/09 13:25:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,8 +44,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2004/12/08 09:11:37 $
- * @author $Author: bob $
+ * @version $Revision: 1.45 $, $Date: 2004/12/09 13:25:10 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -320,7 +320,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 					throw new RetrieveObjectException(ae);
 				}
 				parameter = new SetParameter(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
-											 parameterType, ByteArrayDatabase.toByteArray((BLOB) resultSet.getBlob(LINK_COLUMN_VALUE)));
+											 parameterType,
+											 ByteArrayDatabase.toByteArray((BLOB) resultSet.getBlob(LINK_COLUMN_VALUE)));
 				parameters.add(parameter);
 			}
 		} catch (SQLException sqle) {

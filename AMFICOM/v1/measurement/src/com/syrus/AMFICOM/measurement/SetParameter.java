@@ -1,5 +1,5 @@
 /*
- * $Id: SetParameter.java,v 1.13 2004/12/08 10:24:09 bob Exp $
+ * $Id: SetParameter.java,v 1.14 2004/12/09 13:25:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,16 +12,20 @@ package com.syrus.AMFICOM.measurement;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.TypedObject;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/12/08 10:24:09 $
- * @author $Author: bob $
+ * @version $Revision: 1.14 $, $Date: 2004/12/09 13:25:10 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -40,12 +44,21 @@ public class SetParameter implements TransferableObject, TypedObject {
 			this.value[i] = pt.value[i];
 	}
 
-	public SetParameter(Identifier id,
-						ParameterType type,
-						byte[] value) {
+	protected SetParameter(Identifier id,
+								ParameterType type,
+								byte[] value) {
 		this.id = id;
 		this.type = type;
 		this.value = value;
+	}
+
+	public static SetParameter createInstance(ParameterType type, byte[] value) throws CreateObjectException {
+		try {
+			return new SetParameter(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SETPARAMETER_ENTITY_CODE), type, value);
+		}
+		catch (IllegalObjectEntityException ioee) {
+			throw new CreateObjectException("SetParameter.createInstance | Cannot generate identifier", ioee);
+		}
 	}
 	
 //	public SetParameter(Identifier id,
