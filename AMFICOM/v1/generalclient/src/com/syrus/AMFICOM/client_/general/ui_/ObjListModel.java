@@ -1,23 +1,22 @@
-
 package com.syrus.AMFICOM.client_.general.ui_;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 import javax.swing.AbstractListModel;
-import javax.swing.MutableComboBoxModel;
 
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/10/06 13:17:35 $
+ * @version $Revision: 1.1 $, $Date: 2004/10/06 14:04:55 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
-public class ObjComboBoxModel extends AbstractListModel implements MutableComboBoxModel, Serializable {
+public class ObjListModel extends AbstractListModel {
+
+	private static final long	serialVersionUID	= -1607982236171940302L;
 
 	private Object				selectedObject;
 
@@ -35,12 +34,12 @@ public class ObjComboBoxModel extends AbstractListModel implements MutableComboB
 	 * @param controller
 	 *                see {@link #controller}
 	 */
-	public ObjComboBoxModel(ObjectResourceController controller, String key) {
+	public ObjListModel(ObjectResourceController controller, String key) {
 		this(controller, new ArrayList(), key);
 
 	}
 
-	public ObjComboBoxModel(ObjectResourceController controller, List objects, String key) {
+	public ObjListModel(ObjectResourceController controller, List objects, String key) {
 		this.controller = controller;
 		this.key = key;
 		this.objects = objects;

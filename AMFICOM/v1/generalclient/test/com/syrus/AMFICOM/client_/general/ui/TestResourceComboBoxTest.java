@@ -1,5 +1,5 @@
 /*
- * $Id: TestResourceComboBoxTest.java,v 1.1 2004/10/06 13:17:35 bob Exp $
+ * $Id: TestResourceComboBoxTest.java,v 1.2 2004/10/06 14:04:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,14 +21,14 @@ import com.syrus.AMFICOM.CORBA.General.TestStatus;
 import com.syrus.AMFICOM.Client.General.UI.AComboBox;
 import com.syrus.AMFICOM.client_.general.ui_.LabelCheckBoxRenderer;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
-import com.syrus.AMFICOM.client_.general.ui_.ObjComboBoxModel;
+import com.syrus.AMFICOM.client_.general.ui_.ObjListModel;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
 import com.syrus.AMFICOM.client_.resource.TestResource;
 import com.syrus.AMFICOM.client_.resource.TestResourceController;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.1 $, $Date: 2004/10/06 13:17:35 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/06 14:04:55 $
  * @module general_v1
  */
 public class TestResourceComboBoxTest {
@@ -51,7 +51,7 @@ public class TestResourceComboBoxTest {
 		list.add(tr1);
 		list.add(tr2);
 
-		ObjComboBoxModel objComboBoxModel = new ObjComboBoxModel(controller, list, TestResourceController.KEY_STATUS);
+		ObjListModel objComboBoxModel = new ObjListModel(controller, list, TestResourceController.KEY_STATUS);
 		ObjComboBox comboBox = new ObjComboBox(objComboBoxModel); 
 
 		JPanel panel = new JPanel(new GridLayout(0, 1));
