@@ -1,5 +1,5 @@
 /*
- * $Id: IniFile.java,v 1.6 2004/07/30 11:29:21 bass Exp $
+ * $Id: IniFile.java,v 1.7 2004/12/08 13:45:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import java.util.Vector;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2004/07/30 11:29:21 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/08 13:45:18 $
  * @deprecated java.util.prefs will be used instead.
  * @module util
  */
@@ -60,9 +60,6 @@ public class IniFile
 		this.fis.close();
 	}
 
-	/**
-	 * @return 
-	 */
 	public Vector getKeys()
 	{
 		return this.keys;
@@ -70,7 +67,6 @@ public class IniFile
 
 	/**
 	 * @param key
-	 * @return 
 	 */
 	public String getValue(String key)
 	{
@@ -82,7 +78,6 @@ public class IniFile
 
 	/**
 	 * @param key
-	 * @return 
 	 */
 	public String getValue (Object key)
 	{
@@ -92,7 +87,6 @@ public class IniFile
 	/**
 	 * @param key
 	 * @param defaultValue
-	 * @return 
 	 */
 	public String getValue(String key, String defaultValue)
 	{
@@ -121,9 +115,6 @@ public class IniFile
 			this.values.set(n, val.toString());
 	}
 
-	/**
-	 * @return 
-	 */
 	public boolean saveKeys()
 	{
 		try
@@ -148,9 +139,6 @@ public class IniFile
 		return true;
 	}
 
-	/**
-	 * @return 
-	 */
 	int findKeys ()
 	{
 		this.idis = new IntelDataInputStream(this.bais);
