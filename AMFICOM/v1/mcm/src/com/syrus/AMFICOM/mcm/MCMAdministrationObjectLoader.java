@@ -1,5 +1,5 @@
 /*
-* $Id: MCMAdministrationObjectLoader.java,v 1.12 2005/04/01 21:54:55 arseniy Exp $
+* $Id: MCMAdministrationObjectLoader.java,v 1.13 2005/04/04 14:12:11 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.mcm;
 
+import java.util.Collections;
 import java.util.Set;
 
 import com.syrus.AMFICOM.administration.AdministrationDatabaseContext;
@@ -36,7 +37,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/04/01 21:54:55 $
+ * @version $Revision: 1.13 $, $Date: 2005/04/04 14:12:11 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -201,6 +202,27 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 
 
 
+
+
+	/*	In normal circumstances MCM needs only one 'Server' and only one 'MCM'*/
+
+	public Set loadServers(Set ids) throws ApplicationException {
+		if (ids.size() == 1)
+			return Collections.singleton(this.loadServer((Identifier) ids.iterator().next()));
+
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
+	}
+
+	public Set loadMCMs(Set ids) throws ApplicationException {
+		if (ids.size() == 1)
+			return Collections.singleton(this.loadMCM((Identifier) ids.iterator().next()));
+
+		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
+	}
+
+
+
+
 	/*
 	 * MCM do not need in all below methods
 	 * */
@@ -221,16 +243,8 @@ final class MCMAdministrationObjectLoader extends DatabaseAdministrationObjectLo
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
 	}
 
-	public Set loadServers(Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
-	}
-
 	public Set loadServersButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
 		throw new UnsupportedOperationException("Method not implemented, ids: " + ids + ", condition: " + condition);
-	}
-
-	public Set loadMCMs(Set ids) throws ApplicationException {
-		throw new UnsupportedOperationException("Method not implemented, ids: " + ids);
 	}
 
 	public Set loadMCMsButIds(StorableObjectCondition condition, Set ids) throws ApplicationException {
