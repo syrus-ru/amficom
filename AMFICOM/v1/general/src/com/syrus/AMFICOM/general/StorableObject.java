@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.7 2004/08/17 14:33:42 bob Exp $
+ * $Id: StorableObject.java,v 1.8 2004/09/14 12:52:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.general;
 import java.util.Date;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/08/17 14:33:42 $
+ * @version $Revision: 1.8 $, $Date: 2004/09/14 12:52:59 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -58,7 +58,7 @@ public abstract class StorableObject implements Identified, TransferableObject {
 		return this.modifierId;
 	}
 
-	public boolean isChanged() throws VersionCollisionException {
+	public boolean isChanged() {
 		boolean result = (this.currentVersion != this.version);
 		/**
 		 * @todo: check version at DB, if object was deleted or DB version isn't
