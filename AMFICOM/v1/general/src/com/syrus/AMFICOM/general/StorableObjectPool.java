@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.3 2004/12/07 11:50:40 bob Exp $
+ * $Id: StorableObjectPool.java,v 1.4 2004/12/21 12:24:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/12/07 11:50:40 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/21 12:24:53 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -354,6 +354,11 @@ public abstract class StorableObjectPool {
 												IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
 
+	/**
+	 * refresh only unchanged storable object
+	 * @throws DatabaseException
+	 * @throws CommunicationException
+	 */
 	protected void refreshImpl() throws DatabaseException, CommunicationException {
 		try {
 			Log.debugMessage("StorableObjectPool.refreshImpl | trying to refresh Pool...", Log.DEBUGLEVEL03);
@@ -366,7 +371,9 @@ public abstract class StorableObjectPool {
 				LRUMap lruMap = (LRUMap) this.objectPoolMap.get(entityCode);
 
 				for (Iterator it2 = lruMap.iterator(); it2.hasNext();) {
-					storableObjects.add(it2.next());
+					StorableObject storableObject = (StorableObject) it2.next();
+					if (!storableObject.isChanged())
+						storableObjects.add(storableObject);
 				}
 				if (storableObjects == null || storableObjects.isEmpty()) {
 					Log.debugMessage("StorableObjectPool.refreshImpl | LRUMap for '"
@@ -377,8 +384,7 @@ public abstract class StorableObjectPool {
 				Log.debugMessage("StorableObjectPool.refreshImpl | try refresh LRUMap for '"
 						+ ObjectEntities.codeToString(entityCode.shortValue()) + "' entity", Log.DEBUGLEVEL08);
 
-				returnedStorableObjectsIds = refreshStorableObjects(storableObjects);
-
+				returnedStorableObjectsIds = refreshStorableObjects(storableObjects);				
 				getStorableObjectsImpl(new ArrayList(returnedStorableObjectsIds), true);
 			}
 		} catch (DatabaseException e) {
