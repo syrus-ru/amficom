@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.11 2005/04/01 12:52:57 saa Exp $
+ * $Id: Heap.java,v 1.12 2005/04/01 12:56:15 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.io.BellcoreStructure;
  * использование остальных методов работы с BS
  * 
  * @author $Author: saa $
- * @version $Revision: 1.11 $, $Date: 2005/04/01 12:52:57 $
+ * @version $Revision: 1.12 $, $Date: 2005/04/01 12:56:15 $
  * @module
  */
 public class Heap
@@ -47,11 +47,12 @@ public class Heap
 	private static double[] minuitInitialParams;	// OT_analysisparameters, OID_minuitinitials
 	private static HashMap bsHash = new HashMap();	// "bellcorestructure", *
 	private static HashMap refAnalysisHash = new HashMap();		// "refanalysis", *
-	private static HashMap MTMHash = new HashMap();	// ModelTraceManager.CODENAME, *
 	private static MeasurementSetup contextMeasurementSetup;	// AnalysisUtil.CONTEXT, "MeasurementSetup"
 	private static Map bsBellCoreMap;				// "bellcoremap", "current": GUI-level BS hash; do not confuse with bsHash
 	private static Double minTraceLevel;			// "min_trace_level", PRIMARY_TRACE_KEY
 	private static HashMap dialogHash = new HashMap();	// "dialog", "*"
+	private static ModelTraceManager primaryMTM = null;
+	private static ModelTraceManager etalonMTM = null;
 
 	private static String currentTrace = ""; // XXX: initialize to avoid crushes
 
@@ -65,16 +66,16 @@ public class Heap
 	}
 
 	public static ModelTraceManager getMTMPrimary() {
-		return (ModelTraceManager)MTMHash.get(PRIMARY_TRACE_KEY);
+		return primaryMTM;
 	}
 	public static ModelTraceManager getMTMEtalon() {
-		return (ModelTraceManager)MTMHash.get(ETALON_TRACE_KEY);
+		return etalonMTM;
 	}
 	public static void setMTMPrimary(ModelTraceManager mtm) {
-		MTMHash.put(PRIMARY_TRACE_KEY, mtm);
+		primaryMTM = mtm;
 	}
 	public static void setMTMEtalon(ModelTraceManager mtm) {
-		MTMHash.put(ETALON_TRACE_KEY, mtm);
+		etalonMTM = mtm;
 	}
 	public static RefAnalysis getRefAnalysisByKey(String key) {
 		return (RefAnalysis)refAnalysisHash.get(key);
