@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.16 2004/12/24 13:51:41 bob Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.17 2004/12/27 13:18:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -49,7 +49,7 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.16 $, $Date: 2004/12/24 13:51:41 $
+ * @version $Revision: 1.17 $, $Date: 2004/12/27 13:18:10 $
  * @author $Author: bob $
  * @module module_name
  */
@@ -435,15 +435,18 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 					measurementTransferables = mcmRef.transmitMeasurementsButIds(  linkedIdsConditionTransferable , identifierTransferables);
 					for (int j = 0; j < measurementTransferables.length; j++) {
 						Measurement measurement = new Measurement(measurementTransferables[j]);
+						Log.debugMessage("CMServerMeasurementObjectLoader.loadMeasurementsButIds | loaded measurement : " + measurement.getId().toString(), Log.DEBUGLEVEL05);
 						loadedFromMCM.add(measurement);
 					}
 					list.addAll(loadedFromMCM);
 				}
 				/* force update measurements that loaded from mcm because of client want it to use*/
+				Log.debugMessage("CMServerMeasurementObjectLoader.loadMeasurementsButIds | " + loadedFromMCM.size() + " measurement(s) to update", Log.DEBUGLEVEL05);
 				database.update(loadedFromMCM, StorableObjectDatabase.UPDATE_FORCE, null);
 			} else {
 				Log.errorMessage("CMServerMeasurementObjectLoader.loadMeasurementsButIds | unsupported condition class: " + condition.getClass().getName());
 			}
+			Log.debugMessage("CMServerMeasurementObjectLoader.loadMeasurementsButIds | " + list.size() + " measurement(s) return", Log.DEBUGLEVEL05);
 			return list;
 		}
 		catch (org.omg.CORBA.SystemException se) {
