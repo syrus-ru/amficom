@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.11 2004/10/19 11:37:14 bob Exp $
+ * $Id: LinkedIdsCondition.java,v 1.12 2004/10/20 13:09:25 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.measurement;
 import java.util.Iterator;
 import java.util.List;
 
-import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.configuration.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -20,7 +19,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/10/19 11:37:14 $
+ * @version $Revision: 1.12 $, $Date: 2004/10/20 13:09:25 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -30,19 +29,13 @@ public class LinkedIdsCondition extends com.syrus.AMFICOM.configuration.LinkedId
 	private static boolean				initialized				= false;
 	private static Object				lock					= new Object();
 
-	private Domain						domain;
+	protected static final Short			ANALYSISTYPE_SHORT		= new Short(ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
+	protected static final Short			EVALUATIONTYPE_SHORT	= new Short(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
+	protected static final Short			MEASUREMENT_SHORT		= new Short(ObjectEntities.MEASUREMENT_ENTITY_CODE);
+	protected static final Short			RESULT_SHORT			= new Short(ObjectEntities.RESULT_ENTITY_CODE);
+	protected static final Short			MEASUREMENTTYPE_SHORT	= new Short(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
+	protected static final Short			MS_SHORT				= new Short(ObjectEntities.MS_ENTITY_CODE);
 
-	private static final Short			ANALYSISTYPE_SHORT		= new Short(ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
-	private static final Short			EVALUATIONTYPE_SHORT	= new Short(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
-	private static final Short			MEASUREMENT_SHORT		= new Short(ObjectEntities.MEASUREMENT_ENTITY_CODE);
-	private static final Short			RESULT_SHORT			= new Short(ObjectEntities.RESULT_ENTITY_CODE);
-	private static final Short			MEASUREMENTTYPE_SHORT	= new Short(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
-	private static final Short			MS_SHORT				= new Short(ObjectEntities.MS_ENTITY_CODE);
-
-	private Short						entityCode;
-
-	private List						linkedIds;
-	private Identifier					identifier;
 
 	private LinkedIdsCondition() {
 		super((Identifier) null, (Short) null);

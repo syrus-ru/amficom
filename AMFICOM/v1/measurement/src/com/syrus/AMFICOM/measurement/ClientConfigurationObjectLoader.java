@@ -1,5 +1,5 @@
 /*
- * $Id: ClientConfigurationObjectLoader.java,v 1.2 2004/10/20 07:51:40 bob Exp $
+ * $Id: ClientConfigurationObjectLoader.java,v 1.3 2004/10/20 13:09:25 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.KIS;
+import com.syrus.AMFICOM.configuration.LinkedIdsCondition;
 import com.syrus.AMFICOM.configuration.MCM;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
@@ -37,6 +38,7 @@ import com.syrus.AMFICOM.configuration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
+import com.syrus.AMFICOM.configuration.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MeasurementPort_Transferable;
@@ -61,7 +63,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/10/20 07:51:40 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/20 13:09:25 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -1247,9 +1249,16 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
                 Identifier id = (Identifier) it.next();
                 identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
             }
-            Characteristic_Transferable[] transferables = this.server
-                    .transmitCharacteristicsButIds(identifierTransferables,
-                                    accessIdentifierTransferable);
+            Characteristic_Transferable[] transferables;
+            if (condition instanceof LinkedIdsCondition){
+            	LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
+            	transferables = this.server.transmitCharacteristicsButIdsCondition(identifierTransferables,
+												                                   accessIdentifierTransferable,
+																				   (LinkedIdsCondition_Transferable)linkedIdsCondition.getTransferable());
+            } else
+            	transferables = this.server
+                .transmitCharacteristicsButIds(identifierTransferables,
+			                                    accessIdentifierTransferable);
             List list = new ArrayList(transferables.length);
             for (int j = 0; j < transferables.length; j++) {
                 list.add(new Characteristic(transferables[j]));
