@@ -38,12 +38,15 @@ public class LangModelSchematics
 			try
 			{
 				string = RESOURCE_BUNDLE.getString(keyName + "Text");
+			}
+			catch (MissingResourceException mre)
+			{
 				try
 				{
 					throw new Exception("key '"
-											  + keyName
-											  + "' "
-											  + "not found");
+												+ keyName
+												+ "' "
+												+ "not found");
 				}
 				catch (Exception exc)
 				{
@@ -52,6 +55,7 @@ public class LangModelSchematics
 			}
 			catch (Exception exc)
 			{
+				exc.printStackTrace();
 			}
 		}
 		return string;
