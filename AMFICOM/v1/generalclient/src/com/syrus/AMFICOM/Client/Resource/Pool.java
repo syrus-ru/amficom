@@ -78,22 +78,14 @@ public class Pool extends Object {
 	 */
 	public static Object get(String objTypeId, String objId) {
 		Object result = null;
-		if ((objTypeId == null) || (objId == null)) {
-			try {
-				throw new Exception("(objTypeId==null) = "
-						+ (objTypeId == null) + "\t(objId==null) = "
-						+ (objId == null));
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		} else {
+		if ((objTypeId != null) && (objId != null)) {
 			// получаем список всех объектов типа obj_type_id
 			Hashtable hash2 = (Hashtable) objHash.get(objTypeId);
 			// если такого списка нет, то есть нет ни одного объекта данного
 			// типа, то возвращаем null
-			if (hash2 == null)
-					System.out
-							.println("hash2 is null , objTypeId=" + objTypeId);
+			//			if (hash2 == null)
+			//					System.out
+			//							.println("hash2 is null , objTypeId=" + objTypeId);
 			result = (hash2 == null) ? null : hash2.get(objId); // вынимаем из
 			// списка объект
 			// с нужным
@@ -113,10 +105,7 @@ public class Pool extends Object {
 	 */
 	public static String getName(String objTypeId, String objId) {
 		String result = null;
-		if ((objTypeId == null) || (objId == null)) {
-			System.out.println("(objTypeId==null) = " + (objTypeId == null)
-					+ "\t(objId==null) = " + (objId == null));
-		} else {
+		if ((objTypeId != null) && (objId != null)) {
 			// получаем список имен всех объектов типа obj_type_id
 			Hashtable hash2 = (Hashtable) objHash.get(objTypeId);
 			// если такого списка нет, то есть нет ни одного объекта данного
@@ -125,8 +114,10 @@ public class Pool extends Object {
 			// вынимаем из списка имя объекта с нужным идентификатором
 			try {
 				ObjectResource or = (ObjectResource) hash2.get(objId);
-				if (or == null) return "";
-				result = or.getName();
+				if (or == null)
+					result = "";
+				else
+					result = or.getName();
 			} catch (Exception ex) {
 				result = hash2.get(objId).toString();
 			}
