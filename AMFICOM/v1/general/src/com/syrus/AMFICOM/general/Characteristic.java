@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.18 2005/04/01 14:12:32 bob Exp $
+ * $Id: Characteristic.java,v 1.19 2005/04/04 13:07:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/04/01 14:12:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.19 $, $Date: 2005/04/04 13:07:03 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -151,7 +151,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 		
 	}
 
-	public Object getTransferable() {
+	public IDLEntity getTransferable() {
 		return new Characteristic_Transferable(super.getHeaderTransferable(),
 												 (Identifier_Transferable)this.type.getId().getTransferable(),
 												 new String(this.name),

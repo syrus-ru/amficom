@@ -1,5 +1,5 @@
 /*
- * $Id: Event.java,v 1.13 2005/04/01 15:20:21 arseniy Exp $
+ * $Id: Event.java,v 1.14 2005/04/04 13:08:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/04/01 15:20:21 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/04/04 13:08:53 $
+ * @author $Author: bass $
  * @module event_v1
  */
 
@@ -157,7 +157,7 @@ public class Event extends StorableObject implements TypedObject {
 			this.eventSourceIds.add(new Identifier(et.event_source_ids[i]));
 	}
 
-	public Object getTransferable() {
+	public IDLEntity getTransferable() {
 		int i = 0;
 		EventParameter_Transferable[] ept = new EventParameter_Transferable[this.eventParameters.size()];
 		for (Iterator it = this.eventParameters.iterator(); it.hasNext(); i++)

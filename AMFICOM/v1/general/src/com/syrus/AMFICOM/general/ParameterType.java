@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.12 2005/04/01 14:12:32 bob Exp $
+ * $Id: ParameterType.java,v 1.13 2005/04/04 13:07:04 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/04/01 14:12:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2005/04/04 13:07:04 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -120,7 +120,7 @@ public class ParameterType extends StorableObjectType {
 		this.dataType = ptt.data_type.value();
 	}
 	
-  public Object getTransferable() {
+  public IDLEntity getTransferable() {
 		return new ParameterType_Transferable(super.getHeaderTransferable(),
 											  new String(super.codename),
 											  (super.description != null) ? (new String(super.description)) : "",

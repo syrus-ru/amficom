@@ -1,7 +1,7 @@
-/*
- * $Id: TypicalConditionImpl.java,v 1.7 2005/04/02 17:37:01 arseniy Exp $
+/*-
+ * $Id: TypicalConditionImpl.java,v 1.8 2005/04/04 13:10:29 bass Exp $
  *
- * Copyright ¿ 2004 Syrus Systems.
+ * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -12,24 +12,23 @@ import java.util.Date;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.TypicalSort;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/04/02 17:37:01 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/04/04 13:10:29 $
+ * @author $Author: bass $
  * @module resource_v1
  */
-public class TypicalConditionImpl extends TypicalCondition {
-
+final class TypicalConditionImpl extends TypicalCondition {
 	private TypicalConditionImpl(final int firstInt,
 			final int secondInt,
 			final OperationSort operation,
 			final Short entityCode,
 			final String key) {
-		super(); // First line must invoke superconstructor w/o parameters.
 		this.firstInt = firstInt;
 		this.secondInt = secondInt;
 		this.type = TypicalSort._TYPE_NUMBER_INT;
@@ -43,7 +42,6 @@ public class TypicalConditionImpl extends TypicalCondition {
 			final OperationSort operation,
 			final Short entityCode,
 			final String key) {
-		super(); // First line must invoke superconstructor w/o parameters.
 		this.firstLong = firstLong;
 		this.secondLong = secondLong;
 		this.type = TypicalSort._TYPE_NUMBER_LONG;
@@ -57,7 +55,6 @@ public class TypicalConditionImpl extends TypicalCondition {
 			final OperationSort operation,
 			final Short entityCode,
 			final String key) {
-		super(); // First line must invoke superconstructor w/o parameters.
 		this.firstDouble = firstDouble;
 		this.secondDouble = secondDouble;
 		this.type = TypicalSort._TYPE_NUMBER_DOUBLE;
@@ -70,7 +67,6 @@ public class TypicalConditionImpl extends TypicalCondition {
 			final OperationSort operation,
 			final Short entityCode,
 			final String key) {
-		super(); // First line must invoke superconstructor w/o parameters.
 		this.value = value;
 		this.type = TypicalSort._TYPE_STRING;
 		this.operation = operation.value();
@@ -83,29 +79,30 @@ public class TypicalConditionImpl extends TypicalCondition {
 			final OperationSort operation,
 			final Short entityCode,
 			final String key) {
-		super(); // First line must invoke superconstructor w/o parameters.
 		this.value = firstDate;
 		this.otherValue = secondDate;
 		this.type = TypicalSort._TYPE_DATE;
 		this.operation = operation.value();
 		this.entityCode = entityCode;
 		this.key = key;
-		
 	}
 
-	public boolean isNeedMore(final Set set) {
-		return true;
+	public boolean isNeedMore(final Set storableObjects) {
+		return this.type != TypicalSort._TYPE_STRING
+				|| this.operation != OperationSort._OPERATION_EQUALS
+				|| storableObjects == null
+				|| storableObjects.isEmpty();
 	}
 
-	public boolean isConditionTrue(final Object object) throws IllegalObjectEntityException {
+	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		Wrapper wrapper;
-		if (object instanceof AbstractImageResource)
+		if (storableObject instanceof AbstractImageResource)
 			wrapper = ImageResourceWrapper.getInstance();
 		else
-			throw new IllegalObjectEntityException(ENTITY_NOT_REGISTERED + object.getClass().getName(),
+			throw new IllegalObjectEntityException(ENTITY_NOT_REGISTERED + storableObject.getClass().getName(),
 					IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 
-		return super.parseCondition(wrapper.getValue(object, this.key));
+		return super.parseCondition(wrapper.getValue(storableObject, this.key));
 	}
 
 }

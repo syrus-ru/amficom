@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectCondition.java,v 1.11 2005/04/02 17:33:48 arseniy Exp $
+ * $Id: StorableObjectCondition.java,v 1.12 2005/04/04 13:07:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,24 +11,23 @@ import java.util.Set;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/04/02 17:33:48 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/04/04 13:07:03 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public interface StorableObjectCondition extends TransferableObject {
-
-	boolean isConditionTrue(final Object object) throws IllegalObjectEntityException;
+	boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException;
 	
 	/**
 	 * Returns false if all objects that match this condition are already
 	 * present in the local pool, and true otherwise (i. e. when certain
 	 * objects <em>do need</em> loading.
 	 *
-	 * @param objects objects present in the local pool.
+	 * @param storableObjects objects present in the local pool.
 	 * @return true if certain objects need to be loaded, false otherwise.
 	 * @see StorableObjectPool#getStorableObjectsByConditionButIdsImpl(Set, StorableObjectCondition, boolean)
 	 */
-	boolean isNeedMore(final Set objects);
+	boolean isNeedMore(final Set storableObjects);
 
 	Short getEntityCode();
 	

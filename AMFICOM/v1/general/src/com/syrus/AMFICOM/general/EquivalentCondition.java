@@ -1,5 +1,5 @@
 /*
-* $Id: EquivalentCondition.java,v 1.6 2005/04/02 17:33:48 arseniy Exp $
+* $Id: EquivalentCondition.java,v 1.7 2005/04/04 13:07:03 bass Exp $
 *
 * Copyright ø 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 import java.util.Set;
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.EquivalentCondition_Transferable;
 
@@ -16,8 +17,8 @@ import com.syrus.AMFICOM.general.corba.EquivalentCondition_Transferable;
 /**
  * Equivalent (identical, allways true) condition
  * written with especial cynicism
- * @version $Revision: 1.6 $, $Date: 2005/04/02 17:33:48 $
- * @author ÷÷œ‘ $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/04/04 13:07:03 $
+ * @author ÷÷œ‘ $Author: bass $
  * @module general_v1
  */
 public final class EquivalentCondition implements StorableObjectCondition {
@@ -36,11 +37,11 @@ public final class EquivalentCondition implements StorableObjectCondition {
 		this(transferable.entity_code);
 	}
 
-	public boolean isConditionTrue(final Object object) {
+	public boolean isConditionTrue(final StorableObject storableObject) {
 		return true;
 	}
 
-	public boolean isNeedMore(final Set set) {
+	public boolean isNeedMore(final Set storableObjects) {
 		return true;
 	}
 	
@@ -53,7 +54,7 @@ public final class EquivalentCondition implements StorableObjectCondition {
 
 	}
 
-	public Object getTransferable() {
+	public IDLEntity getTransferable() {
 		return new EquivalentCondition_Transferable(this.entityCode.shortValue());
 	}
 

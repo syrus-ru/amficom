@@ -1,6 +1,9 @@
-/*
- * $Id: LinkedIdsConditionImpl.java,v 1.9 2005/04/02 17:33:48 arseniy Exp $
- * Copyright © 2004 Syrus Systems. Научно-технический центр. Проект: АМФИКОМ.
+/*-
+ * $Id: LinkedIdsConditionImpl.java,v 1.10 2005/04/04 13:07:03 bass Exp $
+ *
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.general;
@@ -8,15 +11,15 @@ package com.syrus.AMFICOM.general;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/02 17:33:48 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/04/04 13:07:03 $
+ * @author $Author: bass $
  * @module general_v1
  */
-class LinkedIdsConditionImpl extends LinkedIdsCondition {
+final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 
 	protected static final Short CHARACTERISTIC_SHORT = new Short(ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
 
-	private LinkedIdsConditionImpl(Set linkedIds, Short linkedEntityCode, Short entityCode) {
+	private LinkedIdsConditionImpl(final Set linkedIds, final Short linkedEntityCode, final Short entityCode) {
 		this.linkedIds = linkedIds;
 		this.linkedEntityCode = linkedEntityCode.shortValue();
 		this.entityCode = entityCode;
@@ -30,11 +33,11 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	 *         characteristics in identifier;</li>
 	 *         </ul>
 	 */
-	public boolean isConditionTrue(final Object object) throws IllegalObjectEntityException {
+	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		boolean condition = false;
 		switch (this.entityCode.shortValue()) {
 			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-				Characteristic characteristic = (Characteristic) object;
+				Characteristic characteristic = (Characteristic) storableObject;
 				Identifier id = characteristic.getCharacterizableId();
 				condition = super.conditionTest(id);
 				break;
@@ -59,7 +62,7 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		}
 	}
 
-	public boolean isNeedMore(final Set set) {
+	public boolean isNeedMore(final Set storableObjects) {
 		return true;
 	}
 }

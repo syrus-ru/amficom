@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.26 2005/04/01 17:32:28 arseniy Exp $
+ * $Id: CableThreadType.java,v 1.27 2005/04/04 13:09:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.26 $, $Date: 2005/04/01 17:32:28 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.27 $, $Date: 2005/04/04 13:09:40 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -155,7 +155,7 @@ public final class CableThreadType extends StorableObjectType {
 		}
 	}
 
-	public Object getTransferable() {
+	public IDLEntity getTransferable() {
 		return new CableThreadType_Transferable(super.getHeaderTransferable(),
 				super.codename,
 				super.description != null ? super.description : "",

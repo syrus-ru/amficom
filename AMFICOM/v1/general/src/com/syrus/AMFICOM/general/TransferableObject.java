@@ -1,19 +1,20 @@
-/*
- * $Id: TransferableObject.java,v 1.6 2004/12/27 14:42:54 arseniy Exp $
+/*-
+ * $Id: TransferableObject.java,v 1.7 2005/04/04 13:07:03 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
+ * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 
 package com.syrus.AMFICOM.general;
 
+import org.omg.CORBA.portable.IDLEntity;
+
 /**
- * @version $Revision: 1.6 $, $Date: 2004/12/27 14:42:54 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/04/04 13:07:03 $
+ * @author $Author: bass $
  * @module general_v1
  */
-
 public interface TransferableObject {
 
 	String KEY_VALUE_SEPERATOR = ":";
@@ -32,5 +33,5 @@ public interface TransferableObject {
 	String OPEN_BLOCK			= " { \n";
 	String CLOSE_BLOCK		= "\n}" + EOSL;
 
-	Object getTransferable();
+	IDLEntity getTransferable();
 }

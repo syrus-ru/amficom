@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeImageResource.java,v 1.12 2005/04/02 15:29:47 arseniy Exp $
+ * $Id: SchemeImageResource.java,v 1.13 2005/04/04 13:10:29 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,10 +16,11 @@ import com.syrus.util.Log;
 import java.io.*;
 import java.util.*;
 import java.util.zip.*;
+import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.12 $, $Date: 2005/04/02 15:29:47 $
+ * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/04/04 13:10:29 $
  * @module resource_v1
  */
 public final class SchemeImageResource extends AbstractImageResource {
@@ -108,7 +109,7 @@ public final class SchemeImageResource extends AbstractImageResource {
 		return this.safePack(this.data);
 	}
 
-	public Object getTransferable() {
+	public IDLEntity getTransferable() {
 		final ImageResourceData imageResourceData = new ImageResourceData();
 		imageResourceData.image(ImageResourceSort.SCHEME, safePack(this.data));
 		return new ImageResource_Transferable(getHeaderTransferable(), imageResourceData);

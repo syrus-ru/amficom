@@ -1,5 +1,5 @@
 /*
- * $Id: CompoundCondition.java,v 1.20 2005/04/02 17:33:48 arseniy Exp $
+ * $Id: CompoundCondition.java,v 1.21 2005/04/04 13:07:03 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import java.util.Set;
 
 import org.omg.CORBA.Any;
 import org.omg.CORBA.ORB;
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.CompoundCondition_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObjectCondition_Transferable;
@@ -26,8 +27,8 @@ import com.syrus.util.corba.JavaSoftORBUtil;
  * Compound condition such as (A & B & C & ... etc), (A | B | C | ... etc) where A, B, C .. are
  * conditions (they can be also compound condition too)
  * 
- * @version $Revision: 1.20 $, $Date: 2005/04/02 17:33:48 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.21 $, $Date: 2005/04/04 13:07:03 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public final class CompoundCondition implements StorableObjectCondition {
@@ -114,35 +115,35 @@ public final class CompoundCondition implements StorableObjectCondition {
 			throw new IllegalDataException("Unable to create CompoundCondition unknown entities");
 	}
 
-	public boolean isConditionTrue(final Object object) throws IllegalObjectEntityException {
+	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		boolean firstItem = true;
 		boolean result = false;
 		for (Iterator it = this.conditions.iterator(); it.hasNext();) {
 			StorableObjectCondition condition = (StorableObjectCondition) it.next();
 			if (firstItem) {
-				result = condition.isConditionTrue(object);
+				result = condition.isConditionTrue(storableObject);
 				firstItem = false;
 			}
 			else {
-				result = this.doCompare(result, condition.isConditionTrue(object));
+				result = this.doCompare(result, condition.isConditionTrue(storableObject));
 			}
 		}
 
 		return result;
 	}
 
-	public boolean isNeedMore(final Set set) {
+	public boolean isNeedMore(final Set storableObjects) {
 		boolean firstItem = true;
 		boolean result = false;
 
 		for (Iterator it = this.conditions.iterator(); it.hasNext();) {
 			StorableObjectCondition condition = (StorableObjectCondition) it.next();
 			if (firstItem) {
-				result = condition.isNeedMore(set);
+				result = condition.isNeedMore(storableObjects);
 				firstItem = false;
 			}
 			else {
-				result = this.doCompare(result, condition.isNeedMore(set));
+				result = this.doCompare(result, condition.isNeedMore(storableObjects));
 			}
 		}
 		return result;
@@ -156,7 +157,7 @@ public final class CompoundCondition implements StorableObjectCondition {
 		throw new UnsupportedOperationException("Cannot set entity code " + entityCode + " for this condition");
 	}
 
-	public Object getTransferable() {
+	public IDLEntity getTransferable() {
 		CompoundCondition_Transferable transferable = new CompoundCondition_Transferable();
 		transferable.sort = CompoundConditionSort.from_int(this.operation);
 		transferable.innerConditions = new org.omg.CORBA.Any[this.conditions.size()];

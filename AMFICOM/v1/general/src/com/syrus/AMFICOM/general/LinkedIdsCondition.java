@@ -1,7 +1,7 @@
-/*
- * $Id: LinkedIdsCondition.java,v 1.26 2005/04/01 06:34:57 bob Exp $
+/*-
+ * $Id: LinkedIdsCondition.java,v 1.27 2005/04/04 13:07:04 bass Exp $
  *
- * Copyright ¿ 2004 Syrus Systems.
+ * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -16,6 +16,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.LinkedIdsCondition_Transferable;
@@ -60,12 +61,12 @@ import com.syrus.util.Log;
  * </pre>
  * 
  * </li>
- * <li>It must override {@link #isConditionTrue(Object)},
+ * <li>It must override {@link #isConditionTrue(StorableObject)},
  * {@link #isNeedMore(Set)}and {@link #setEntityCode(Short)}.</li>
  * </ul>
  * 
- * @author $Author: bob $
- * @version $Revision: 1.26 $, $Date: 2005/04/01 06:34:57 $
+ * @author $Author: bass $
+ * @version $Revision: 1.27 $, $Date: 2005/04/04 13:07:04 $
  * @module general_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -184,9 +185,9 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			if (this.delegate == null) {
 				this.delegate = new LinkedIdsCondition() {
 
-					public boolean isConditionTrue(final Object object) {
+					public boolean isConditionTrue(final StorableObject storableObject) {
 						Log.debugMessage(LINKED_IDS_CONDITION_INNER_ONE_IS_CONDITION_TRUE
-								+ "Object: " + object.toString() + "; "
+								+ "Object: " + storableObject.toString() + "; "
 								+ "This is a dummy condition; evaluation result is always false...", //$NON-NLS-1$
 								Log.WARNING);
 						return false;
@@ -286,9 +287,9 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			if (this.delegate == null) {
 				this.delegate = new LinkedIdsCondition() {
 
-					public boolean isConditionTrue(final Object object) {
+					public boolean isConditionTrue(final StorableObject storableObject) {
 						Log.debugMessage(LINKED_IDS_CONDITION_INNER_ONE_IS_CONDITION_TRUE
-								+ "Object: " + object.toString() + "; "
+								+ "Object: " + storableObject.toString() + "; "
 								+ "This is a dummy condition; evaluation result is always false...", //$NON-NLS-1$
 								Log.WARNING);
 						return false;
@@ -317,7 +318,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	 * 
 	 * @see StorableObjectCondition#getTransferable()
 	 */
-	public final Object getTransferable() {
+	public final IDLEntity getTransferable() {
 		Identifier_Transferable[] linkedIdTransferable = new Identifier_Transferable[this.delegate.linkedIds.size()];
 		int i = 0;
 		for (Iterator it = this.delegate.linkedIds.iterator(); it.hasNext(); i++)
@@ -332,20 +333,20 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	 * Must be overridden by descendants, or a {@link NullPointerException}will
 	 * occur.
 	 * 
-	 * @param object
+	 * @param storableObject
 	 * @throws IllegalObjectEntityException
-	 * @see StorableObjectCondition#isConditionTrue(Object)
+	 * @see StorableObjectCondition#isConditionTrue(StorableObject)
 	 */
-	public boolean isConditionTrue(final Object object) throws IllegalObjectEntityException {
-		return this.delegate.isConditionTrue(object);
+	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
+		return this.delegate.isConditionTrue(storableObject);
 	}
 
 	/**
-	 * @param set
+	 * @param storableObjects
 	 * @see StorableObjectCondition#isNeedMore(Set)
 	 */
-	public boolean isNeedMore(final Set set) {
-		return this.delegate.isNeedMore(set);
+	public boolean isNeedMore(final Set storableObjects) {
+		return this.delegate.isNeedMore(storableObjects);
 	}
 
 	public final void setEntityCode(final short entityCode) throws IllegalObjectEntityException {

@@ -1,7 +1,7 @@
-/*
- * $Id: TypicalConditionImpl.java,v 1.9 2005/04/02 17:35:47 arseniy Exp $
+/*-
+ * $Id: TypicalConditionImpl.java,v 1.10 2005/04/04 13:09:40 bass Exp $
  *
- * Copyright ¿ 2004 Syrus Systems.
+ * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -12,23 +12,22 @@ import java.util.Date;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.TypicalSort;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/04/02 17:35:47 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/04/04 13:09:40 $
+ * @author $Author: bass $
  * @module config_v1
  */
-class TypicalConditionImpl extends TypicalCondition {
-
+final class TypicalConditionImpl extends TypicalCondition {
 	private TypicalConditionImpl(final int firstInt,
 			final int secondInt,
 			final OperationSort operation,
 			final Short entityCode,
 			final String key) {
-		super(); // First line must invoke superconstructor w/o parameters.
 		this.firstInt = firstInt;
 		this.secondInt = secondInt;
 		this.type = TypicalSort._TYPE_NUMBER_INT;
@@ -42,7 +41,6 @@ class TypicalConditionImpl extends TypicalCondition {
 			final OperationSort operation,
 			final Short entityCode,
 			final String key) {
-		super(); // First line must invoke superconstructor w/o parameters.
 		this.firstLong = firstLong;
 		this.secondLong = secondLong;
 		this.type = TypicalSort._TYPE_NUMBER_LONG;
@@ -56,7 +54,6 @@ class TypicalConditionImpl extends TypicalCondition {
 			final OperationSort operation,
 			final Short entityCode,
 			final String key) {
-		super(); // First line must invoke superconstructor w/o parameters.
 		this.firstDouble = firstDouble;
 		this.secondDouble = secondDouble;
 		this.type = TypicalSort._TYPE_NUMBER_DOUBLE;
@@ -69,7 +66,6 @@ class TypicalConditionImpl extends TypicalCondition {
 			final OperationSort operation,
 			final Short entityCode,
 			final String key) {
-		super(); // First line must invoke superconstructor w/o parameters.
 		this.value = value;
 		this.type = TypicalSort._TYPE_STRING;
 		this.operation = operation.value();
@@ -82,28 +78,23 @@ class TypicalConditionImpl extends TypicalCondition {
 			final OperationSort operation,
 			final Short entityCode,
 			final String key) {
-		super(); // First line must invoke superconstructor w/o parameters.
 		this.value = firstDate;
 		this.otherValue = secondDate;
 		this.type = TypicalSort._TYPE_DATE;
 		this.operation = operation.value();
 		this.entityCode = entityCode;
 		this.key = key;
-		
 	}
 
-	public boolean isNeedMore(final Set set) {
-		boolean more = true;
-
-		if (this.type == TypicalSort._TYPE_STRING && this.operation == OperationSort._OPERATION_EQUALS)
-			if (set != null && !set.isEmpty())
-				more = false;
-
-		return more;
+	public boolean isNeedMore(final Set storableObjects) {
+		return this.type != TypicalSort._TYPE_STRING
+				|| this.operation != OperationSort._OPERATION_EQUALS
+				|| storableObjects == null
+				|| storableObjects.isEmpty();
 	}
 
-	public boolean isConditionTrue(final Object object) throws IllegalObjectEntityException {
-		throw new IllegalObjectEntityException(ENTITY_NOT_REGISTERED + object.getClass().getName(),
+	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
+		throw new IllegalObjectEntityException(ENTITY_NOT_REGISTERED + storableObject.getClass().getName(),
 				IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: AccessIdentity.java,v 1.3 2005/04/01 09:28:35 arseniy Exp $
+ * $Id: AccessIdentity.java,v 1.4 2005/04/04 13:07:03 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,13 +9,14 @@
 package com.syrus.AMFICOM.general;
 
 import java.util.Date;
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/01 09:28:35 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/04/04 13:07:03 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public class AccessIdentity implements TransferableObject {
@@ -52,7 +53,7 @@ public class AccessIdentity implements TransferableObject {
 		return this.start;
 	}
 
-	public Object getTransferable() {
+	public IDLEntity getTransferable() {
 		return new AccessIdentifier_Transferable(this.start.getTime(), (Identifier_Transferable) this.domainId
 				.getTransferable(), (Identifier_Transferable) this.userId.getTransferable(),
 													(Identifier_Transferable) this.sessionId.getTransferable());

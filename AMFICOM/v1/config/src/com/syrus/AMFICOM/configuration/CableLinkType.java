@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.28 2005/04/01 16:00:37 max Exp $
+ * $Id: CableLinkType.java,v 1.29 2005/04/04 13:09:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/04/01 16:00:37 $
- * @author $Author: max $
+ * @version $Revision: 1.29 $, $Date: 2005/04/04 13:09:40 $
+ * @author $Author: bass $
  * @module config_v1
  */
 public final class CableLinkType extends AbstractLinkType implements Characterizable {
@@ -164,7 +164,7 @@ public final class CableLinkType extends AbstractLinkType implements Characteriz
 		}
 	}
 	
-	public Object getTransferable() {
+	public IDLEntity getTransferable() {
 		int i = 0;
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
 		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)

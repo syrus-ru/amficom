@@ -1,5 +1,5 @@
 /*
- * $Id: Identifier.java,v 1.26 2005/03/30 11:24:10 arseniy Exp $
+ * $Id: Identifier.java,v 1.27 2005/04/04 13:07:04 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
@@ -22,8 +23,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.26 $, $Date: 2005/03/30 11:24:10 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.27 $, $Date: 2005/04/04 13:07:04 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public class Identifier implements
@@ -98,7 +99,7 @@ public class Identifier implements
 		return this.minor;
 	}
 
-	public Object getTransferable() {
+	public IDLEntity getTransferable() {
 		return new Identifier_Transferable(this.identifierString);
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.15 2005/04/01 15:21:09 arseniy Exp $
+ * $Id: CharacteristicType.java,v 1.16 2005/04/04 13:07:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/04/01 15:21:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/04/04 13:07:03 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -118,7 +118,7 @@ public class CharacteristicType extends StorableObjectType {
 		}
 	}
 
-	public Object getTransferable() {
+	public IDLEntity getTransferable() {
 		return new CharacteristicType_Transferable(super.getHeaderTransferable(),
 													 new String(super.codename),
 													 (super.description != null) ? (new String(super.description)) : "",

@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.19 2005/04/02 17:33:49 arseniy Exp $
+ * $Id: TypicalCondition.java,v 1.20 2005/04/04 13:07:03 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.TypicalCondition_Transferable;
@@ -110,17 +111,17 @@ import com.syrus.util.Log;
  * 
  * </li>
  * 
- * <li>It must override {@link #isConditionTrue(Object)},
+ * <li>It must override {@link #isConditionTrue(StorableObject)},
  * {@link #isNeedMore(java.util.Set)}.</li>
  * 
- * <li>Overrided method {@link #isConditionTrue(Object)}get correspond value
+ * <li>Overrided method {@link #isConditionTrue(StorableObject)}get correspond value
  * of object using controller (wrapper) and key, and return result calculated at
  * {@link #parseCondition(Object)}</li>
  * 
  * </ul>
  * 
- * @version $Revision: 1.19 $, $Date: 2005/04/02 17:33:49 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/04/04 13:07:03 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public class TypicalCondition implements StorableObjectCondition {
@@ -289,7 +290,7 @@ public class TypicalCondition implements StorableObjectCondition {
 			if (this.delegate == null) {
 				this.delegate = new TypicalCondition() {
 
-					public boolean isConditionTrue(final Object object) {
+					public boolean isConditionTrue(final StorableObject storableObject) {
 						Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE
 								+ "This is a dummy condition; evaluation result is always false...", //$NON-NLS-1$
 							Log.WARNING);
@@ -396,7 +397,7 @@ public class TypicalCondition implements StorableObjectCondition {
 			if (this.delegate == null) {
 				this.delegate = new TypicalCondition() {
 
-					public boolean isConditionTrue(final Object object) {
+					public boolean isConditionTrue(final StorableObject storableObject) {
 						Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE
 								+ "This is a dummy condition; evaluation result is always false...", //$NON-NLS-1$
 							Log.WARNING);
@@ -503,7 +504,7 @@ public class TypicalCondition implements StorableObjectCondition {
 			if (this.delegate == null) {
 				this.delegate = new TypicalCondition() {
 
-					public boolean isConditionTrue(final Object object) {
+					public boolean isConditionTrue(final StorableObject storableObject) {
 						Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE
 								+ "This is a dummy condition; evaluation result is always false...", //$NON-NLS-1$
 							Log.WARNING);
@@ -596,7 +597,7 @@ public class TypicalCondition implements StorableObjectCondition {
 			if (this.delegate == null) {
 				this.delegate = new TypicalCondition() {
 
-					public boolean isConditionTrue(final Object object) {
+					public boolean isConditionTrue(final StorableObject storableObject) {
 						Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE
 								+ "This is a dummy condition; evaluation result is always false...", //$NON-NLS-1$
 							Log.WARNING);
@@ -705,7 +706,7 @@ public class TypicalCondition implements StorableObjectCondition {
 			if (this.delegate == null) {
 				this.delegate = new TypicalCondition() {
 
-					public boolean isConditionTrue(final Object object) {
+					public boolean isConditionTrue(final StorableObject storableObject) {
 						Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE
 								+ "This is a dummy condition; evaluation result is always false...", //$NON-NLS-1$
 							Log.WARNING);
@@ -781,7 +782,7 @@ public class TypicalCondition implements StorableObjectCondition {
 					if (this.delegate == null) {
 						this.delegate = new TypicalCondition() {
 
-							public boolean isConditionTrue(final Object object) {
+							public boolean isConditionTrue(final StorableObject storableObject) {
 								Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE
 										+ "This is a dummy condition; evaluation result is always false...", //$NON-NLS-1$
 									Log.WARNING);
@@ -846,7 +847,7 @@ public class TypicalCondition implements StorableObjectCondition {
 			if (this.delegate == null) {
 				this.delegate = new TypicalCondition() {
 
-					public boolean isConditionTrue(final Object object) {
+					public boolean isConditionTrue(final StorableObject storableObject) {
 						Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE
 								+ "This is a dummy condition; evaluation result is always false...", //$NON-NLS-1$
 							Log.WARNING);
@@ -862,19 +863,19 @@ public class TypicalCondition implements StorableObjectCondition {
 	 * Must be overridden by descendants, or a {@link NullPointerException}will
 	 * occur.
 	 * 
-	 * @param object
-	 * @see StorableObjectCondition#isConditionTrue(Object)
+	 * @param storableObject
+	 * @see StorableObjectCondition#isConditionTrue(StorableObject)
 	 */
-	public boolean isConditionTrue(final Object object) throws IllegalObjectEntityException {
-		return this.delegate.isConditionTrue(object);
+	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
+		return this.delegate.isConditionTrue(storableObject);
 	}
 
 	/**
-	 * @param set
+	 * @param storableObjects
 	 * @see StorableObjectCondition#isNeedMore(Set)
 	 */
-	public boolean isNeedMore(final Set set) {
-		return this.delegate.isNeedMore(set);
+	public boolean isNeedMore(final Set storableObjects) {
+		return this.delegate.isNeedMore(storableObjects);
 	}
 
 	/**
@@ -899,7 +900,7 @@ public class TypicalCondition implements StorableObjectCondition {
 		this.delegate.key = key;
 	}
 
-	public Object getTransferable() {
+	public IDLEntity getTransferable() {
 		TypicalCondition_Transferable transferable = new TypicalCondition_Transferable();
 		switch (this.delegate.type) {
 			case TypicalSort._TYPE_NUMBER_INT:
