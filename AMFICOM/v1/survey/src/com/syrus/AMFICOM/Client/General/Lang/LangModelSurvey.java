@@ -52,7 +52,7 @@ public class LangModelSurvey {
 	static public String getComponentText(ResourceBundle lang,
 			String componentName) {
 		//return String(componentName + "Text");
-		return getString(componentName + "Text");
+		return getString(componentName);
 	}
 
 	/**
@@ -61,7 +61,7 @@ public class LangModelSurvey {
 	static public String getComponentToolTip(ResourceBundle lang,
 			String componentName) {
 		//return String(componentName + "ToolTip");
-		return getString(componentName + "ToolTip");
+		return getString(componentName);
 	}
 
 	/**
