@@ -21,10 +21,10 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
 import com.syrus.AMFICOM.Client.General.UI.AComboBox;
-import com.syrus.AMFICOM.client.resource.ObjectResourceController;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/26 10:21:39 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/26 10:26:40 $
  * @author $Author: krupenn $
  * @module generalclient_v1
  */

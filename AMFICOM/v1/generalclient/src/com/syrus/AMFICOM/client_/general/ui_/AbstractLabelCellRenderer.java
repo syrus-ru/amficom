@@ -10,13 +10,13 @@ import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
 
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.client.resource.ObjectResourceController;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
  * Abstract class for JLabel and simple Component (witch extends JLabel)
  * rendering at JTable
  * 
- * @version $Revision: 1.1 $, $Date: 2004/08/26 10:21:39 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/26 10:26:40 $
  * @author $Author: krupenn $
  * @module generalclient_v1
  */

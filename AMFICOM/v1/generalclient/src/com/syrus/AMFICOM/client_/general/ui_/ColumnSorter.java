@@ -3,13 +3,13 @@ package com.syrus.AMFICOM.client_.general.ui_;
 import java.util.Comparator;
 
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.client.resource.ObjectResourceController;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
  * ColumnSorter used for sorting elements with aid of Collections i.g.
  * <code>Collections.sort(list, new ColumnSorter(controller, key, ascending))</code>
  * 
- * @version $Revision: 1.1 $, $Date: 2004/08/26 10:21:39 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/26 10:26:40 $
  * @author $Author: krupenn $
  * @module generalclient_v1
  */
