@@ -1,5 +1,5 @@
 /*
- * $Id: PeriodicalTestProcessor.java,v 1.13 2004/08/14 19:37:27 arseniy Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.14 2004/08/16 10:48:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,54 +11,45 @@ package com.syrus.AMFICOM.mcm;
 import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Collections;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.NewIdentifierPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.ErrorCode;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
-import com.syrus.AMFICOM.measurement.corba.TestStatus;
-import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/08/14 19:37:27 $
+ * @version $Revision: 1.14 $, $Date: 2004/08/16 10:48:22 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
 
 public class PeriodicalTestProcessor extends TestProcessor {
 	private static final long FRAME = 24*60*60*1000;//ms
+	/*	Error codes for method processFall()	*/
+	public static final int FALL_CODE_CREATE_IDENTIFIER = 1;
+	public static final int FALL_CODE_CREATE_MEASUREMENT = 2;
 
+	private Date startTime;
+	private Date endTime;
 	private TemporalPattern temporalPattern;
-	private List timeStampsList;//List <Date>
+
+	private List timeStampsList;	//List <Date timeStamp>
+	private Date currentTimeStamp;
+
+	private boolean allMeasurementsAcquired;
 
 	public PeriodicalTestProcessor(Test test) {
 		super(test);
 
-		int testStatus = test.getStatus().value();
-		switch (testStatus) {
-			case TestStatus._TEST_STATUS_SCHEDULED:
-				//Normal
-				break;
-			case TestStatus._TEST_STATUS_PROCESSING:
-				try {
-					this.completeLastMeasurement();
-				}
-				catch (TestProcessingException tpe) {
-					super.shutdown();
-				}
-				break;
-			default:
-				Log.errorMessage("Inappropriate status: " + testStatus + " of test: '" + test.getId().toString() + "'");
-				super.shutdown();
-		}
-
+		this.startTime = test.getStartTime();
+		this.endTime = test.getEndTime();
 		try {
 			this.temporalPattern = new TemporalPattern(test.getTemporalPatternId());
 		}
@@ -66,116 +57,111 @@ public class PeriodicalTestProcessor extends TestProcessor {
 			Log.errorException(e);
 			super.shutdown();
 		}
-		
-		this.timeStampsList = Collections.synchronizedList(new ArrayList(0));
-	}
-	
-	private void completeLastMeasurement() throws TestProcessingException {
-		Measurement measurement;
-		try {
-			measurement = super.test.retrieveLastMeasurement();
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.errorException(onfe);
-			return;
-		}
-		catch (Exception e) {
-			Log.errorException(e);
-			throw new TestProcessingException("Cannot retrieve last measurement for test '" + super.test.getId().toString() + "'", e);
-		}
 
-		int measurementStatus = measurement.getStatus().value();
-		switch (measurementStatus) {
-			case MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED:
-			case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRING:
-				//process measurement
-				break;
-			case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRED:
-				//analyse and/or evaluate
-				break;
-			case MeasurementStatus._MEASUREMENT_STATUS_ANALYZED_OR_EVALUATED:
-				//all results of the measurement must go to server
-				break;
-			case MeasurementStatus._MEASUREMENT_STATUS_COMPLETED:
-				//do next
-				break;
-			case MeasurementStatus._MEASUREMENT_STATUS_ABORTED:
-				//do next (?)
-				break;
+		this.timeStampsList = new ArrayList(10);
+		this.currentTimeStamp = null;
+
+		this.allMeasurementsAcquired = false;
+	}
+
+	private Date getCurrentTimeStamp() {
+		Date timeStamp = null;
+		if (! this.allMeasurementsAcquired) {
+			if (! this.timeStampsList.isEmpty()) {
+				timeStamp = (Date)this.timeStampsList.remove(0);
+			}
+			else {
+				long start = System.currentTimeMillis();
+				if (start <= this.endTime.getTime())
+					this.timeStampsList.addAll(this.temporalPattern.getTimes(start, start + FRAME));
+				else
+					this.allMeasurementsAcquired = true;
+			}
 		}
+		return timeStamp;
 	}
 
 	public void run() {
-		Date nextTimeStamp = null;
 		Identifier measurementId = null;
 		Measurement measurement = null;
 		while (super.running) {
-			if (nextTimeStamp != null) {
-				if (nextTimeStamp.getTime() <= System.currentTimeMillis()) {
+			if (! allMeasurementsAcquired) {
+				if (this.currentTimeStamp == null) {
+					this.currentTimeStamp = this.getCurrentTimeStamp();
+				}
+				else {
 					try {
 						measurementId = NewIdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_ENTITY_CODE, 10);
-						super.clearFalls();
 					}
 					catch (IllegalObjectEntityException ioee) {
 						Log.errorException(ioee);
-						Log.errorMessage("Aborted test '" + super.test.getId().toString() + "' because cannot create identifier for measurement");
+						Log.debugMessage("Aborting test '" + super.test.getId().toString() + "' because cannot create identifier for measurement", Log.DEBUGLEVEL03);
 						super.shutdown();
-						continue;
 					}
 					catch (AMFICOMRemoteException are) {
-						Log.errorException(are);
-						super.sleepCauseOfFall();
-						continue;
-					}
-					try {
-						measurement = super.test.createMeasurement(measurementId,
-																											 MeasurementControlModule.iAm.getUserId(),
-																											 nextTimeStamp);
-						super.clearFalls();
-					}
-					catch (CreateObjectException coe) {
-						Log.errorException(coe);
-						super.sleepCauseOfFall();
-						continue;
-					}
-					
-					if (measurement != null)
+						if (are.error_code.value() == ErrorCode._ERROR_ILLEGAL_OBJECT_ENTITY) {
+							Log.errorMessage("Server nothing knows about entity '" + ObjectEntities.MEASUREMENT_ENTITY + "', code " + ObjectEntities.MEASUREMENT_ENTITY_CODE);
+							super.shutdown();
+						}
+						else {
+							Log.errorMessage("Server cannot generate identifier -- " + are.message + "; sleepeng cause of fall");
+							super.fallCode = FALL_CODE_CREATE_IDENTIFIER;
+							super.sleepCauseOfFall();
+						}
+					}	//catch
+
+					if (measurementId != null) {
+						try {
+							measurement = super.test.createMeasurement(measurementId,
+																												 MeasurementControlModule.iAm.getUserId(),
+																												 this.startTime);
+							MeasurementStorableObjectPool.putStorableObject(measurement);
+							super.clearFalls();
+						}
+						catch (CreateObjectException coe) {
+							Log.errorException(coe);
+							super.sleepCauseOfFall();
+						}
+						catch (IllegalObjectEntityException ioee) {
+							Log.errorException(ioee);
+						}
+					}	//if (measurementId != null)
+
+					if (measurement != null) {
 						super.transceiver.addMeasurement(measurement, this);
-					
-				}
-				
+						this.currentTimeStamp = null;
+					}
+				}	//if (this.currentTimeStamp == null)
+			}	//if (! allMeasurementsAcquired)
 
-				//after all
-				measurement = null;
-				nextTimeStamp = null;
-			}
-			else {
-				if (! this.timeStampsList.isEmpty())
-					nextTimeStamp = (Date)this.timeStampsList.remove(0);
-				else
-					this.fillTimeStampsList();
-			}
-
-			try {
-				sleep(super.initialTimeToSleep);
-			}
-			catch (InterruptedException ie) {
-				Log.errorException(ie);
-			}
-		}	//while
+			super.processMeasurementResult();
+			if (super.numberOfReceivedMResults == super.numberOfScheduledMeasurements && this.allMeasurementsAcquired)
+				super.shutdown();
+		}
 	}
 
-	private void fillTimeStampsList() {
-		long start = System.currentTimeMillis();
-		this.timeStampsList.addAll(this.temporalPattern.getTimes(start, start + FRAME));
-	}
-	
 	protected void cleanup() {
 		super.cleanup();
 		this.timeStampsList.clear();
 	}
 
 	protected void processFall() {
-		
+		switch (super.fallCode) {
+			case FALL_CODE_NO_ERROR:
+				break;
+			case FALL_CODE_CREATE_IDENTIFIER:
+				this.continueWithNextMeasurement();
+				break;
+			case FALL_CODE_CREATE_MEASUREMENT:
+				this.continueWithNextMeasurement();
+				break;
+			default:
+				Log.errorMessage("processError | Unknown error code: " + super.fallCode);
+		}
+		super.clearFalls();
+	}
+
+	private void continueWithNextMeasurement() {
+		this.currentTimeStamp = null;
 	}
 }

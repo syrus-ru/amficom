@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.17 2004/08/15 14:40:14 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.18 2004/08/16 10:48:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/08/15 14:40:14 $
+ * @version $Revision: 1.18 $, $Date: 2004/08/16 10:48:22 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -38,6 +38,8 @@ public abstract class TestProcessor extends SleepButWorkThread {
 	Test test;
 	boolean running;
 	Transceiver transceiver;
+	int numberOfScheduledMeasurements;
+	int numberOfReceivedMResults;
 	
 	//protected Map measurementResultQueue;	//Map <Identifier measurementId, Result result>
 	private List measurementResultList;	//List <Result measurementResult>
@@ -58,6 +60,8 @@ public abstract class TestProcessor extends SleepButWorkThread {
 			Log.errorMessage("Cannot find transceiver for kis '" + kisId.toString() + "'");
 			this.shutdown();
 		}
+
+		this.numberOfScheduledMeasurements = this.numberOfReceivedMResults = 0;
 
 		switch (this.test.getStatus().value()) {
 			case TestStatus._TEST_STATUS_SCHEDULED:
@@ -88,13 +92,12 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		this.measurementResultList.add(result);
 	}
 
-	public abstract void run();
-
 	void processMeasurementResult() {
 		Result measurementResult;
 		if (! this.measurementResultList.isEmpty()) {
 			measurementResult = (Result)this.measurementResultList.remove(0);
 			MeasurementControlModule.resultList.add(measurementResult);
+			this.numberOfReceivedMResults ++;
 
 			Result[] aeResults = null;
 			try {

@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.17 2004/08/15 14:40:14 arseniy Exp $
+ * $Id: Transceiver.java,v 1.18 2004/08/16 10:48:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,16 +16,17 @@ import java.util.Collections;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/08/15 14:40:14 $
+ * @version $Revision: 1.18 $, $Date: 2004/08/16 10:48:22 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -43,7 +44,6 @@ public class Transceiver extends SleepButWorkThread {
 
 	private List measurementQueue;//List <Measurement measurement>
 	private Map testProcessors;//Map <Identifier measurementId, TestProcessor testProcessor>
-	private Map processingMeasurements;//Map <Identifier measurementId, Measurement measurement>
 	private KISReport kisReport;
 
 	/*	Variables for method processFall()	*/
@@ -62,8 +62,8 @@ public class Transceiver extends SleepButWorkThread {
 		this.running = true;
 		
 		this.measurementQueue = Collections.synchronizedList(new ArrayList());
-		this.processingMeasurements = Collections.synchronizedMap(new Hashtable());
 		this.testProcessors = Collections.synchronizedMap(new Hashtable());
+		this.kisReport = null;
 
 		this.measurementToRemove = null;
 	}
@@ -95,11 +95,14 @@ public class Transceiver extends SleepButWorkThread {
 					try {
 						measurement.updateStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRING,
 																		 MeasurementControlModule.iAm.getUserId());
+						MeasurementStorableObjectPool.putStorableObject(measurement);
 					}
 					catch (UpdateObjectException uoe) {
 						Log.errorException(uoe);
 					}
-					this.processingMeasurements.put(measurementId, measurement);
+					catch (IllegalObjectEntityException ioee) {
+						Log.errorException(ioee);
+					}
 					Log.debugMessage("Transmitted measurement '" + measurementId.toString() + "'", Log.DEBUGLEVEL03);
 					this.measurementQueue.remove(measurement);
 					measurement = null;
@@ -119,20 +122,16 @@ public class Transceiver extends SleepButWorkThread {
 			else {
 				measurementId = this.kisReport.getMeasurementId();
 				Log.debugMessage("Received report for measurement '" + measurementId.toString() + "'", Log.DEBUGLEVEL03);
-				measurement = (Measurement)this.processingMeasurements.remove(measurementId);
+				measurement = (Measurement)MeasurementStorableObjectPool.getStorableObject(measurementId, true);
 				if (measurement != null) {
 					testProcessor = (TestProcessor)this.testProcessors.remove(measurementId);
 					if (testProcessor != null) {
 						result = null;
 						try {
-							result = this.kisReport.createResult(measurement);
+							result = this.kisReport.createResult();
 							measurement.updateStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRED,
 																			 MeasurementControlModule.iAm.getUserId());
 							super.clearFalls();
-						}
-						catch (IllegalDataException ide) {
-							Log.errorException(ide);
-							this.throwAwayKISReport();
 						}
 						catch (MeasurementException me) {
 							if (me.getCause() instanceof AMFICOMRemoteException) {
@@ -211,7 +210,6 @@ public class Transceiver extends SleepButWorkThread {
 	
 	private void cleanup() {
 		this.measurementQueue.clear();
-		this.processingMeasurements.clear();
 		this.testProcessors.clear();
 	}
 

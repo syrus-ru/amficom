@@ -1,5 +1,5 @@
 /*
- * $Id: OnetimeTestProcessor.java,v 1.9 2004/08/15 14:40:14 arseniy Exp $
+ * $Id: OnetimeTestProcessor.java,v 1.10 2004/08/16 10:48:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/08/15 14:40:14 $
+ * @version $Revision: 1.10 $, $Date: 2004/08/16 10:48:22 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -60,8 +60,8 @@ public class OnetimeTestProcessor extends TestProcessor {
 					}
 					else {
 						Log.errorMessage("Server cannot generate identifier -- " + are.message + "; sleepeng cause of fall");
+						super.fallCode = FALL_CODE_CREATE_IDENTIFIER;
 						super.sleepCauseOfFall();
-						continue;
 					}
 				}
 
@@ -75,6 +75,7 @@ public class OnetimeTestProcessor extends TestProcessor {
 					}
 					catch (CreateObjectException coe) {
 						Log.errorException(coe);
+						super.fallCode = FALL_CODE_CREATE_MEASUREMENT;
 						super.sleepCauseOfFall();
 					}
 					catch (IllegalObjectEntityException ioee) {
@@ -82,10 +83,9 @@ public class OnetimeTestProcessor extends TestProcessor {
 					}
 				}	//if (measurementId != null)
 
-				if (measurement != null) {
+				if (measurement != null)
 					super.transceiver.addMeasurement(measurement, this);
-					measurement = null;
-				}
+
 			}	//if (this.startTime.getTime() <= System.currentTimeMillis())
 
 			super.processMeasurementResult();
