@@ -1,5 +1,5 @@
 /*
- * $Id: XMLConfigurationObjectLoader.java,v 1.8 2005/02/25 07:01:41 bob Exp $
+ * $Id: XMLConfigurationObjectLoader.java,v 1.9 2005/02/25 07:02:44 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,10 +22,9 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectXML;
 import com.syrus.AMFICOM.general.StorableObjectXMLDriver;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/25 07:01:41 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/25 07:02:44 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -312,8 +311,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		return null;
 	}
 
-	public void saveCableLinkType(CableLinkType cableLinkType, boolean force) throws VersionCollisionException,
-			ApplicationException {
+	public void saveCableLinkType(CableLinkType cableLinkType, boolean force) throws ApplicationException {
 		this.saveStorableObject(cableLinkType, force);
 		this.configurationXML.flush();
 
@@ -324,8 +322,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 
 	}
 
-	public void saveCableThread(CableThread cableThread, boolean force) throws VersionCollisionException,
-			ApplicationException {
+	public void saveCableThread(CableThread cableThread, boolean force) throws ApplicationException {
 		this.saveStorableObject(cableThread, force);
 		this.configurationXML.flush();
 	}
@@ -334,8 +331,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.saveStorableObjects(list, force);
 	}
 
-	public void saveCableThreadType(CableThreadType cableThreadType, boolean force) throws VersionCollisionException,
-			ApplicationException {
+	public void saveCableThreadType(CableThreadType cableThreadType, boolean force) throws ApplicationException {
 		this.saveStorableObject(cableThreadType, force);
 		this.configurationXML.flush();
 	}
@@ -353,8 +349,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.saveStorableObjects(list, force);
 	}
 
-	public void saveEquipmentType(EquipmentType equipmentType, boolean force) throws VersionCollisionException,
-			ApplicationException {
+	public void saveEquipmentType(EquipmentType equipmentType, boolean force) throws ApplicationException {
 		this.saveStorableObject(equipmentType, force);
 		this.configurationXML.flush();
 	}
@@ -390,8 +385,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.saveStorableObjects(list, force);
 	}
 
-	public void saveMeasurementPort(MeasurementPort measurementPort, boolean force) throws VersionCollisionException,
-			ApplicationException {
+	public void saveMeasurementPort(MeasurementPort measurementPort, boolean force) throws ApplicationException {
 		this.saveStorableObject(measurementPort, force);
 		this.configurationXML.flush();
 	}
@@ -454,8 +448,7 @@ public final class XMLConfigurationObjectLoader implements ConfigurationObjectLo
 		this.configurationXML.flush();
 	}
 
-	public void saveTransmissionPathTypes(Collection list, boolean force) throws VersionCollisionException,
-			ApplicationException {
+	public void saveTransmissionPathTypes(Collection list, boolean force) throws ApplicationException {
 		this.saveStorableObjects(list, force);
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationXMLTestCase.java,v 1.4 2005/02/09 12:49:48 bob Exp $
+ * $Id: ConfigurationXMLTestCase.java,v 1.5 2005/02/25 07:01:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,25 +15,19 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.LinkType;
-import com.syrus.AMFICOM.configuration.XMLConfigurationObjectLoader;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.XMLGeneralObjectLoader;
 import com.syrus.AMFICOM.general.XMLIdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/09 12:49:48 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/25 07:01:41 $
  * @author $Author: bob $
  * @module tools
  */
@@ -74,13 +68,7 @@ public class ConfigurationXMLTestCase extends TestCase {
 				} catch (VersionCollisionException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} catch (DatabaseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (CommunicationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IllegalDataException e) {
+				} catch (ApplicationException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -95,7 +83,7 @@ public class ConfigurationXMLTestCase extends TestCase {
 	}
 
 	
-	public void testLinkType() throws DatabaseException, CommunicationException, IllegalObjectEntityException {
+	public void testLinkType() throws ApplicationException {
 		System.out.println("testLinkType:");
 		LinkType linkType = (LinkType) ConfigurationStorableObjectPool.getStorableObject(
 			new Identifier("LinkType_1107771596853"), true);
