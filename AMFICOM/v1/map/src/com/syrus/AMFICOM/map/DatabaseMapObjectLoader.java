@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMapObjectLoader.java,v 1.1 2004/12/02 12:10:20 bob Exp $
+ * $Id: DatabaseMapObjectLoader.java,v 1.2 2004/12/03 18:01:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identified;
@@ -26,7 +25,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/12/02 12:10:20 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/03 18:01:11 $
  * @author $Author: bob $
  * @module map_v1
  */
