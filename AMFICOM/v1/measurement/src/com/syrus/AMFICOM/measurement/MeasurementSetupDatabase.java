@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.42 2004/11/16 15:48:45 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.43 2004/11/17 08:13:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2004/11/16 15:48:45 $
+ * @version $Revision: 1.43 $, $Date: 2004/11/17 08:13:30 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -262,14 +262,11 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		Set criteriaSet = measurementSetup.getCriteriaSet();
 		Set thresholdSet = measurementSetup.getThresholdSet();
 		Set etalon = measurementSetup.getEtalon();
-		String criteriaSetIdSubstr = (criteriaSet != null) ? DatabaseIdentifier.toSQLString(criteriaSet.getId()) : DatabaseIdentifier.getNullSQLString();
-		String thresholdSetIdSubstr = (thresholdSet != null) ? DatabaseIdentifier.toSQLString(thresholdSet.getId()) : DatabaseIdentifier.getNullSQLString();
-		String etalonIdSubstr = (etalon != null) ? DatabaseIdentifier.toSQLString(etalon.getId()) : DatabaseIdentifier.getNullSQLString();
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ DatabaseIdentifier.toSQLString(measurementSetup.getParameterSet().getId()) + COMMA
-			+ criteriaSetIdSubstr + COMMA
-			+ thresholdSetIdSubstr + COMMA
-			+ etalonIdSubstr + COMMA
+			+ DatabaseIdentifier.toSQLString((criteriaSet != null) ? criteriaSet.getId() : null) + COMMA
+			+ DatabaseIdentifier.toSQLString((thresholdSet != null) ? thresholdSet.getId() : null) + COMMA
+			+ DatabaseIdentifier.toSQLString((etalon != null) ? etalon.getId() : null) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementSetup.getDescription()) + APOSTOPHE + COMMA
 			+ Long.toString(measurementSetup.getMeasurementDuration());
 		return values;
