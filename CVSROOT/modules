@@ -53,6 +53,7 @@ AMFICOM_v1	&idl_v1\
 		&map_v1\
 		&survey_v1\
 		&filter_v1\
+		&reportbuilder_v1\
 		&server_v1\
 		&servermisc_v1\
 		&load_v1\
