@@ -5,6 +5,7 @@ FIT_DIR = ./fit
 JNI_DIR = ./JNI
 BREAKL_DIR = ./BreakL
 THRESH_DIR = ./thresh
+WAVELET_DIR = ./wavelet
 CLASS_DIR = ../classes
 
 OUT = $(SO_PREFIX)dadara.$(SO_EXT)

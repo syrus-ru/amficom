@@ -1,10 +1,11 @@
 include Makefile.inc
 
-.PHONY:	clean common analyse fit an2 JNI thresh BreakL head
+.PHONY:	clean common analyse fit an2 JNI thresh BreakL wavelet head
 .PHONY: all
+
 all: $(OUT)
 
-$(OUT):	common analyse fit an2 JNI thresh BreakL
+$(OUT):	head common analyse fit an2 JNI thresh BreakL wavelet
 	$(LD) $(LDFLAGS) \
 	$(COMMON_DIR)/*.$(OBJ_EXT) \
 	$(ANALYSE_DIR)/*.$(OBJ_EXT) \
@@ -13,6 +14,7 @@ $(OUT):	common analyse fit an2 JNI thresh BreakL
 	$(JNI_DIR)/*.$(OBJ_EXT) \
 	$(BREAKL_DIR)/*.$(OBJ_EXT) \
 	$(THRESH_DIR)/*.$(OBJ_EXT) \
+	$(WAVELET_DIR)/*.$(OBJ_EXT) \
 	$(LD_OUTPUT_FLAG)$@ \
 	$(LDLIBS)
 
@@ -37,6 +39,9 @@ BreakL:
 thresh:
 	make -C ./thresh
 
+wavelet:
+	make -C ./wavelet
+
 clean:
 	make -C common clean
 	make -C analyse clean
@@ -45,9 +50,11 @@ clean:
 	make -C JNI clean
 	make -C BreakL clean
 	make -C thresh clean
+	make -C wavelet clean
 	rm -f $(OUT) dadara.exp dadara.lib 
 
 head:
 	$(JAVAH) -classpath $(CLASS_DIR) -d common com.syrus.AMFICOM.analysis.dadara.ModelFunction
 	$(JAVAH) -classpath $(CLASS_DIR) -d common com.syrus.AMFICOM.analysis.CoreAnalysisManager
 	$(JAVAH) -classpath $(CLASS_DIR) -d common com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent
+	$(JAVAH) -classpath $(CLASS_DIR) -d common com.syrus.AMFICOM.analysis.dadara.Wavelet

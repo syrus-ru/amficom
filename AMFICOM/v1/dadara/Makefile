@@ -58,6 +58,9 @@ $(LIBNAME):	.head .mach
 	$(JAVAH) $(JAVAH_FLAGS) \
 		-d $(NATIVE_DIR) \
 		com.syrus.AMFICOM.analysis.dadara.ComplexReflectogramEvent
+	$(JAVAH) $(JAVAH_FLAGS) \
+		-d $(NATIVE_DIR) \
+		com.syrus.AMFICOM.analysis.dadara.Wavelet
 
 	touch $@
 
@@ -86,7 +89,8 @@ cleanhead:
 		$(NATIVE_DIR)/com_syrus_AMFICOM_analysis_CoreAnalysisManager.h \
 		$(NATIVE_DIR)/com_syrus_AMFICOM_analysis_dadara_ModelFunction.h \
 		$(NATIVE_DIR)/com_syrus_AMFICOM_analysis_dadara_SimpleReflectogramEvent.h \
-		$(NATIVE_DIR)/com_syrus_AMFICOM_analysis_dadara_ComplexReflectogramEvent.h 
+		$(NATIVE_DIR)/com_syrus_AMFICOM_analysis_dadara_ComplexReflectogramEvent.h \
+		$(NATIVE_DIR)/com_syrus_AMFICOM_analysis_dadara_Wavelet.h 
 	$(RM) .head
 
 #### Install ####
