@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.5 2004/12/20 14:04:45 bob Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.6 2004/12/22 12:11:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.MCM;
+import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -48,8 +48,8 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.5 $, $Date: 2004/12/20 14:04:45 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2004/12/22 12:11:56 $
+ * @author $Author: arseniy $
  * @module module_name
  */
 public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementObjectLoader {
@@ -415,19 +415,11 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			for (Iterator it = tests.iterator(); it.hasNext();) {
 				Test test = (Test) it.next();				
 				MeasurementPort measurementPort = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(test.getMonitoredElement().getMeasurementPortId(), true);
-				Identifier kisId = measurementPort.getKISId();
-				LinkedIdsCondition linkedIdsCondition2 = LinkedIdsCondition.getInstance();
-				linkedIdsCondition2.setEntityCode(ObjectEntities.MCM_ENTITY_CODE);
-				linkedIdsCondition2.setIdentifier(kisId);
-				List mcms = ConfigurationStorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition2, true);
-				for (Iterator mcmIter = mcms.iterator(); mcmIter.hasNext();) {
-					MCM mcm = (MCM) mcmIter.next();
-					mcmId  = mcm.getId();
-					com.syrus.AMFICOM.mcm.corba.MCM mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)ClientMeasurementServer.mcmRefs.get(mcmId);
-					measurementTransferables = mcmRef.transmitMeasurementsButIds(  linkedIdsConditionTransferable , identifierTransferables);
-					list.add(measurementTransferables);
-				}
-				
+				KIS kis = (KIS)ConfigurationStorableObjectPool.getStorableObject(measurementPort.getKISId(), true);
+				com.syrus.AMFICOM.mcm.corba.MCM mcmRef = (com.syrus.AMFICOM.mcm.corba.MCM)ClientMeasurementServer.mcmRefs.get(kis.getMCMId());
+				measurementTransferables = mcmRef.transmitMeasurementsButIds(  linkedIdsConditionTransferable , identifierTransferables);
+				list.add(measurementTransferables);
+
 			}
 			return list;
 		}

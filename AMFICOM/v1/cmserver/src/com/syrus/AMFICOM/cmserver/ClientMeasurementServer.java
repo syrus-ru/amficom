@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementServer.java,v 1.23 2004/12/21 17:36:54 arseniy Exp $
+ * $Id: ClientMeasurementServer.java,v 1.24 2004/12/22 12:11:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,19 +8,10 @@
 
 package com.syrus.AMFICOM.cmserver;
 
-import java.net.InetAddress;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import org.omg.CORBA.ORB;
-import org.omg.CosNaming.NameComponent;
-import org.omg.CosNaming.NamingContextExt;
-import org.omg.CosNaming.NamingContextExtHelper;
-import org.omg.CosNaming.NamingContextPackage.AlreadyBound;
-import org.omg.PortableServer.POA;
-import org.omg.PortableServer.POAHelper;
 
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Server;
@@ -32,11 +23,10 @@ import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
-import com.syrus.util.corba.JavaSoftORBUtil;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/12/21 17:36:54 $
+ * @version $Revision: 1.24 $, $Date: 2004/12/22 12:11:56 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -181,33 +171,31 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 
 	private static void stopCORBAServer() {
 		try {
-			ORB orb = JavaSoftORBUtil.getInstance().getORB();
+			corbaServer.deactivateServant("CMServer");
+//			ORB orb = JavaSoftORBUtil.getInstance().getORB();
+//
+//			POA rootPOA = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
+//			rootPOA.the_POAManager().activate();
+//			NamingContextExt rootNamingCtx = NamingContextExtHelper.narrow(orb.resolve_initial_references("NameService"));
+//
+//			final String hostName = InetAddress.getLocalHost().getCanonicalHostName().replaceAll("\\.", "_");
+//
+//			NameComponent childPath[] = rootNamingCtx.to_name(hostName);
+//
+//			NamingContextExt childNamingCtx;
+//			try {
+//				childNamingCtx = NamingContextExtHelper.narrow(rootNamingCtx.bind_new_context(childPath));
+//			}
+//			catch (AlreadyBound ab) {
+//				childNamingCtx = NamingContextExtHelper.narrow(rootNamingCtx.resolve_str(hostName));
+//			}
+//
+//			NameComponent serverPath[] = rootNamingCtx.to_name("CMServer");
+//
+//			childNamingCtx.unbind(serverPath);			
 
-			POA rootPOA = POAHelper.narrow(orb
-					.resolve_initial_references("RootPOA"));
-			rootPOA.the_POAManager().activate();
-			NamingContextExt rootNamingCtx = NamingContextExtHelper.narrow(orb
-					.resolve_initial_references("NameService"));
-
-			final String hostName = InetAddress.getLocalHost()
-					.getCanonicalHostName().replaceAll("\\.", "_");
-
-			NameComponent childPath[] = rootNamingCtx.to_name(hostName);
-
-			NamingContextExt childNamingCtx;
-			try {
-				childNamingCtx = NamingContextExtHelper.narrow(rootNamingCtx
-						.bind_new_context(childPath));
-			} catch (AlreadyBound ab) {
-				childNamingCtx = NamingContextExtHelper.narrow(rootNamingCtx
-						.resolve_str(hostName));
-			}
-
-			NameComponent serverPath[] = rootNamingCtx.to_name("CMServer");
-
-			childNamingCtx.unbind(serverPath);			
-
-		} catch (Exception e) {
+		}
+		catch (Exception e) {
 			Log.errorException(e);
 			System.err.println(e);
 			System.exit(-1);
