@@ -203,7 +203,7 @@ return;
             i++;// потому что состоит из двух всплесков
         }
 
-        else if( sp1->begin_weld_n != -1) //сварка
+        else if( begin_weld_n != -1 && fabs(sp1->end_weld_n-begin_weld_n)<1) //сварка
         {	EventParams *ep = new EventParams;
 			SetSpliceParamsBySplash( (EventParams&)*ep, (Splash&)*sp1 );
             events->add(ep);
