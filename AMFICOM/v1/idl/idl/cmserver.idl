@@ -927,14 +927,8 @@ module corba {
 		com::syrus::AMFICOM::measurement::corba::MeasurementSetupSeq_Transferable transmitMeasurementSetupsButIds(
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
-			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
-			
-		com::syrus::AMFICOM::measurement::corba::MeasurementSetupSeq_Transferable transmitMeasurementSetupsButIdsMeasurementSetupCondition(
-			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
-			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
-			in com::syrus::AMFICOM::measurement::corba::MeasurementSetupCondition_Transferable measurementSetupCondition_Transferable)
-			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
-			
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);			
+	
 		com::syrus::AMFICOM::measurement::corba::MeasurementSetupSeq_Transferable transmitMeasurementSetupsButIdsLinkedCondition(
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,

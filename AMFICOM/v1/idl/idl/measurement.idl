@@ -1,5 +1,5 @@
 /*
- * $Id: measurement.idl,v 1.43 2004/12/27 21:04:42 arseniy Exp $
+ * $Id: measurement.idl,v 1.44 2004/12/28 10:35:52 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -289,11 +289,6 @@ module corba {
 
 	typedef sequence <Result_Transferable> ResultSeq_Transferable;
 //////////////// Conditions //////////////
-	
-	struct MeasurementSetupCondition_Transferable {
-			short	entity_code;
-			com::syrus::AMFICOM::general::corba::Identifier_Transferable object_id;
-	};
 
 	struct TemporalCondition_Transferable {	
 			short	entity_code;
