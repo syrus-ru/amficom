@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.66 2004/12/29 12:11:13 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.67 2004/12/29 14:14:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2004/12/29 12:11:13 $
+ * @version $Revision: 1.67 $, $Date: 2004/12/29 14:14:39 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -833,30 +833,35 @@ public abstract class StorableObjectDatabase {
 					Identifier identifier = null;
 					if (object instanceof Identifier)
 						identifier = (Identifier)object;
-					else if (object instanceof Identified)
-						identifier = ((Identified)object).getId();
-					else throw new IllegalDataException("StorableObjectDatabase.retrieveByIdsOneQuery | Object " + 
+					else
+						if (object instanceof Identified)
+							identifier = ((Identified)object).getId();
+						else
+							throw new IllegalDataException("StorableObjectDatabase.retrieveByIdsOneQuery | Object " + 
 														object.getClass().getName() 
 														+ " isn't Identifier or Identified");
 					buffer.append(DatabaseIdentifier.toSQLString(identifier));
-				} else {
+				}
+				else {
 					buffer.append(SQL_IN);
 					buffer.append(OPEN_BRACKET);
-					
+
 					int i = 1;
-					for (Iterator it = ids.iterator(); it.hasNext();i++) {						
+					for (Iterator it = ids.iterator(); it.hasNext(); i++) {						
 						Object object = it.next();
 						Identifier id = null;
 						if (object instanceof Identifier)
 							id = (Identifier)object;
-						else if (object instanceof Identified)
-							id = ((Identified)object).getId();
-						else throw new IllegalDataException("StorableObjectDatabase.retrieveByIdsOneQuery | Object " + 
+						else
+							if (object instanceof Identified)
+								id = ((Identified)object).getId();
+							else
+								throw new IllegalDataException("StorableObjectDatabase.retrieveByIdsOneQuery | Object " + 
 															object.getClass().getName() 
 															+ " isn't Identifier or Identified");
 						buffer.append(DatabaseIdentifier.toSQLString(id));
 						if (it.hasNext()) {
-							if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+							if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0))
 								buffer.append(COMMA);
 							else {
 								buffer.append(CLOSE_BRACKET);
@@ -869,9 +874,10 @@ public abstract class StorableObjectDatabase {
 					}
 
 					buffer.append(CLOSE_BRACKET);
-					}
+				}
 				buffer.append(CLOSE_BRACKET);
 			}
+
 			if ((condition != null) && (condition.length() > 0)) {
 				buffer.append(SQL_AND);
 				buffer.append(condition);
@@ -885,18 +891,18 @@ public abstract class StorableObjectDatabase {
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage(this.getEnityName() + "Database.retriveByIdsOneQuery | Trying: " + sql,
-						Log.DEBUGLEVEL09);
+			Log.debugMessage(this.getEnityName() + "Database.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
 				StorableObject storableObject = updateEntityFromResultSet(null, resultSet);
 				result.add(storableObject);
 			}
-		} catch (SQLException sqle) {
-			String mesg = this.getEnityName() + "Database.retriveByIdsOneQuery | Cannot execute query "
-					+ sqle.getMessage();
+		}
+		catch (SQLException sqle) {
+			String mesg = this.getEnityName() + "Database.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
-		} finally {
+		}
+		finally {
 			try {
 				if (statement != null)
 					statement.close();
@@ -904,9 +910,11 @@ public abstract class StorableObjectDatabase {
 					resultSet.close();
 				statement = null;
 				resultSet = null;				
-			} catch (SQLException sqle1) {
+			}
+			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally{
+			}
+			finally{
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}

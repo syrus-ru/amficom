@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.30 2004/12/29 10:11:46 arseniy Exp $
+ * $Id: AnalysisDatabase.java,v 1.31 2004/12/29 14:14:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/12/29 10:11:46 $
+ * @version $Revision: 1.31 $, $Date: 2004/12/29 14:14:27 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -160,8 +160,8 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(List storableObjects, int updateKind, Object arg) throws IllegalDataException,
-		VersionCollisionException, UpdateObjectException {
+	public void update(List storableObjects, int updateKind, Object arg)
+			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntities(storableObjects, false);
@@ -171,7 +171,6 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 				super.checkAndUpdateEntities(storableObjects, true);		
 				return;
 		}
-
 	}
 
 	public List retrieveByIds(List ids, String conditions) throws IllegalDataException, RetrieveObjectException {
@@ -198,8 +197,8 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 		return list;
 	}
 
-	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
-			IllegalDataException {
+	public List retrieveByCondition(List ids, StorableObjectCondition condition)
+			throws RetrieveObjectException, IllegalDataException {
 		List list = null;
 		if (condition instanceof DomainCondition){
 			DomainCondition domainCondition = (DomainCondition)condition;
