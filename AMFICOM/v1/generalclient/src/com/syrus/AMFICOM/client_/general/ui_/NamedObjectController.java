@@ -49,7 +49,7 @@ public class NamedObjectController implements ObjectResourceController
 	{
 		Object result = null;
 
-		if (key.equals(KEY_NAME))
+		if (object != null && key.equals(KEY_NAME))
 		{
 			Class clazz = object.getClass();
 			String methodName = "getName";
