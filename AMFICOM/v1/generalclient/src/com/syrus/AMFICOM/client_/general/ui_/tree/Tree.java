@@ -2,23 +2,24 @@ package com.syrus.AMFICOM.client_.general.ui_.tree;
 
 import java.awt.*;
 import java.awt.dnd.*;
-import java.util.*;
+import java.util.Enumeration;
+
 import javax.swing.JTree;
 import javax.swing.event.*;
 import javax.swing.tree.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Event.TreeDataSelectionEvent;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
  * 
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/03/16 13:40:57 $
+ * @author $Author: stas $
+ * @version $Revision: 1.3 $, $Date: 2005/03/17 14:44:00 $
  * @module mapviewclient_v1
  */
 
 public class Tree extends JTree implements OperationListener, DragGestureListener {
+	private static final long serialVersionUID = 3544949952682735665L;
 	Dispatcher dispatcher;
 	boolean isDragDropEnabled = true;
 	DragSource dragSource = null;
@@ -50,6 +51,7 @@ public class Tree extends JTree implements OperationListener, DragGestureListene
 	private void jbInit() throws Exception {
 		setRootVisible(true);
 		setCellRenderer(SOTreeRenderer.getInstance());
+		setCellEditor(SOTreeEditor.getInstance(this, SOTreeRenderer.getInstance()));
 		getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
 						
 		addTreeWillExpandListener(new TreeWillExpandListener() {
@@ -65,9 +67,10 @@ public class Tree extends JTree implements OperationListener, DragGestureListene
 				thisValueChanged(e);
 			}
 		});
-	
+
 		dragSource = new DragSource();
 		dragSource.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_MOVE, this);
+		super.setEditable(true);
 	}
 
 	void thisTreeWillExpand(TreeExpansionEvent e) {
@@ -80,7 +83,7 @@ public class Tree extends JTree implements OperationListener, DragGestureListene
 		setSelectionPath(new TreePath(node.getPath()));
 		this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 	}
-	
+
 	public void thisValueChanged(TreeSelectionEvent e) {
 		SONode node = (SONode) e.getPath().getLastPathComponent();
 		if (node == null)

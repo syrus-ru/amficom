@@ -1,5 +1,5 @@
 /*
- * $Id: SOMutableNode.java,v 1.1 2005/03/14 13:30:48 stas Exp $
+ * $Id: SOMutableNode.java,v 1.2 2005/03/17 14:44:00 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,19 +8,20 @@
 
 package com.syrus.AMFICOM.client_.general.ui_.tree;
 
-import java.awt.Color;
-
-import javax.swing.Icon;
-
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import javax.swing.tree.*;
+import javax.swing.tree.TreeCellRenderer;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/03/14 13:30:48 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/17 14:44:00 $
  * @module generalclient_v1
  */
 
 public class SOMutableNode extends SONode {
+	private static final long serialVersionUID = 3689069555917796403L;
+	private static TreeCellRenderer renderer = SOTextRenderer.getInstance();
+	private static TreeCellEditor editor = SOTextEditor.getInstance();
+	
 	public SOMutableNode(SOTreeDataModel treeDataModel, Object userObject) {
 		this(treeDataModel, userObject, true);
 	}
@@ -28,20 +29,12 @@ public class SOMutableNode extends SONode {
 	public SOMutableNode(SOTreeDataModel treeDataModel, Object userObject, boolean allowsChildren) {
 		super(treeDataModel, userObject, allowsChildren);
 	}
-	
-	public String getName() {
-		return super.treeDataModel.getNodeName(this);
+
+	public TreeCellRenderer getRenderer() {
+		return renderer;
 	}
-	
-	public Icon getIcon() {
-		return super.treeDataModel.getNodeIcon(this);
-	}
-	
-	public Color getColor() {
-		return super.treeDataModel.getNodeColor(this);
-	}
-	
-	public ObjectResourceController getNodeController() {
-		return super.treeDataModel.getNodeController(this);
+
+	public TreeCellEditor getEditor() {
+		return editor;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectTree.java,v 1.4 2005/03/11 16:10:18 stas Exp $
+ * $Id: StorableObjectTree.java,v 1.5 2005/03/17 14:44:00 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,10 +24,13 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/03/11 16:10:18 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/17 14:44:00 $
  * @module generalclient_v1
  */
 
+/**
+ * @deprecated use Tree 
+ */
 public class StorableObjectTree extends JTree implements OperationListener,
 		DragGestureListener {
 	private static final long serialVersionUID = 3976731458805248816L;

@@ -1,5 +1,5 @@
 /*
- * $Id: CheckableTreeNode.java,v 1.2 2005/03/10 07:54:59 stas Exp $
+ * $Id: CheckableTreeNode.java,v 1.3 2005/03/17 14:44:00 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,10 +17,13 @@ import javax.swing.tree.MutableTreeNode;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/03/10 07:54:59 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/17 14:44:00 $
  * @module generalclient_v1
  */
 
+/**
+ * @deprecated use SOChekableNode 
+ */
 public class CheckableTreeNode extends StorableObjectTreeNode {
 	private static final long serialVersionUID = 3832617370274837815L;
 	private boolean isChecked;
