@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.17 2004/08/11 15:15:57 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.18 2004/08/11 15:24:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/08/11 15:15:57 $
+ * @version $Revision: 1.18 $, $Date: 2004/08/11 15:24:32 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -38,13 +38,13 @@ public abstract class ObjectEntities {
 	public static final String DOMAIN_ENTITY = "Domain";
 	public static final String SERVER_ENTITY = "Server";
 	public static final String MCM_ENTITY = "MCM";
-	public static final String MEASUREMENTPORT_ENTITY = "MeasurementPort";
 	public static final String EQUIPMENT_ENTITY = "Equipment";
 	public static final String EQUIPMENTMELINK_ENTITY = "EquipmentMELink";
 	public static final String PORT_ENTITY = "Port";
 	public static final String TRANSPATH_ENTITY = "TransmissionPath";
 	public static final String TRANSPATHMELINK_ENTITY = "TransmissionPathMELink";	
 	public static final String KIS_ENTITY = "KIS";
+	public static final String MEASUREMENTPORT_ENTITY = "MeasurementPort";
 	public static final String ME_ENTITY = "MonitoredElement";
 
 	/*	Measurement	*/
@@ -68,11 +68,13 @@ public abstract class ObjectEntities {
 	/*	Object Types 1 -- 128	*/
 	public static final short CHARACTERISTICTYPE_ENTITY_CODE = 0x0001;
 	public static final short EQUIPMENTTYPE_ENTITY_CODE = 0x0002;
+	public static final short PORTTYPE_ENTITY_CODE = 0x0003;
+	public static final short MEASUREMENTPORTTYPE_ENTITY_CODE = 0x0004;
 
-	public static final short PARAMETERTYPE_ENTITY_CODE = 0x0003;
-	public static final short MEASUREMENTTYPE_ENTITY_CODE = 0x0004;
-	public static final short ANALYSISTYPE_ENTITY_CODE = 0x0005;
-	public static final short EVALUATIONTYPE_ENTITY_CODE = 0x0006;
+	public static final short PARAMETERTYPE_ENTITY_CODE = 0x0005;
+	public static final short MEASUREMENTTYPE_ENTITY_CODE = 0x0006;
+	public static final short ANALYSISTYPE_ENTITY_CODE = 0x0007;
+	public static final short EVALUATIONTYPE_ENTITY_CODE = 0x0008;
 
 	/*	Administration 129 -- 256	*/
 
@@ -83,11 +85,11 @@ public abstract class ObjectEntities {
 	public static final short DOMAIN_ENTITY_CODE = 0x0104;
 	public static final short SERVER_ENTITY_CODE = 0x0105;
 	public static final short MCM_ENTITY_CODE = 0x0106;
-	public static final short MEASUREMENTPORT_ENTITY_CODE = 0x0107;
-	public static final short EQUIPMENT_ENTITY_CODE = 0x0108;
-	public static final short PORT_ENTITY_CODE = 0x0109;
-	public static final short TRANSPATH_ENTITY_CODE = 0x010A;
-	public static final short KIS_ENTITY_CODE = 0x010B;
+	public static final short EQUIPMENT_ENTITY_CODE = 0x0107;
+	public static final short PORT_ENTITY_CODE = 0x0108;
+	public static final short TRANSPATH_ENTITY_CODE = 0x0109;
+	public static final short KIS_ENTITY_CODE = 0x010A;
+	public static final short MEASUREMENTPORT_ENTITY_CODE = 0x010B;
 	public static final short ME_ENTITY_CODE = 0x010C;
 
 	/*	Measurement 385 -- 512	*/
@@ -105,6 +107,8 @@ public abstract class ObjectEntities {
 	public static short stringToCode(String entity) {
 		if (entity.equals(CHARACTERISTICTYPE_ENTITY)) return CHARACTERISTICTYPE_ENTITY_CODE;
 		else if (entity.equals(EQUIPMENTTYPE_ENTITY)) return EQUIPMENTTYPE_ENTITY_CODE;
+		else if (entity.equals(PORTTYPE_ENTITY)) return PORTTYPE_ENTITY_CODE;
+		else if (entity.equals(MEASUREMENTPORTTYPE_ENTITY)) return MEASUREMENTPORTTYPE_ENTITY_CODE;
 
 		else if (entity.equals(PARAMETERTYPE_ENTITY)) return PARAMETERTYPE_ENTITY_CODE;
 		else if (entity.equals(MEASUREMENTTYPE_ENTITY)) return MEASUREMENTTYPE_ENTITY_CODE;
@@ -118,8 +122,10 @@ public abstract class ObjectEntities {
 		else if (entity.equals(SERVER_ENTITY)) return SERVER_ENTITY_CODE;
 		else if (entity.equals(MCM_ENTITY)) return MCM_ENTITY_CODE;
 		else if (entity.equals(EQUIPMENT_ENTITY)) return EQUIPMENT_ENTITY_CODE;
+		else if (entity.equals(PORT_ENTITY)) return PORT_ENTITY_CODE;
 		else if (entity.equals(TRANSPATH_ENTITY)) return TRANSPATH_ENTITY_CODE;
 		else if (entity.equals(KIS_ENTITY)) return KIS_ENTITY_CODE;
+		else if (entity.equals(MEASUREMENTPORT_ENTITY)) return MEASUREMENTPORT_ENTITY_CODE;
 		else if (entity.equals(ME_ENTITY)) return ME_ENTITY_CODE;
 
 		else if (entity.equals(SET_ENTITY)) return SET_ENTITY_CODE;
@@ -142,6 +148,10 @@ public abstract class ObjectEntities {
 				return CHARACTERISTICTYPE_ENTITY;
 			case EQUIPMENTTYPE_ENTITY_CODE:
 				return EQUIPMENTTYPE_ENTITY;
+			case PORTTYPE_ENTITY_CODE:
+				return PORTTYPE_ENTITY;
+			case MEASUREMENTPORTTYPE_ENTITY_CODE:
+				return MEASUREMENTPORTTYPE_ENTITY;
 
 			case PARAMETERTYPE_ENTITY_CODE:
 				return PARAMETERTYPE_ENTITY;
@@ -166,10 +176,14 @@ public abstract class ObjectEntities {
 				return MCM_ENTITY;
 			case EQUIPMENT_ENTITY_CODE:
 				return EQUIPMENT_ENTITY;
+			case PORT_ENTITY_CODE:
+				return PORT_ENTITY;
 			case TRANSPATH_ENTITY_CODE:
 				return TRANSPATH_ENTITY;
 			case KIS_ENTITY_CODE:
 				return KIS_ENTITY;
+			case MEASUREMENTPORT_ENTITY_CODE:
+				return MEASUREMENTPORT_ENTITY;
 			case ME_ENTITY_CODE:
 				return ME_ENTITY;
 
