@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.61 2005/02/03 14:59:13 arseniy Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.62 2005/02/08 11:36:42 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,12 +28,10 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -44,8 +42,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/02/03 14:59:13 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.62 $, $Date: 2005/02/08 11:36:42 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -549,7 +547,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		
 		return list;	
 	}
-	
+
 	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
 		List list = null;
 		
@@ -613,7 +611,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		
 		return list;
 	}
-	
+
 	private List retrieveButIdsByMonitoredElement(List ids, List monitoredElementIds) throws RetrieveObjectException {
 		if (monitoredElementIds == null || monitoredElementIds.isEmpty())
 			return Collections.EMPTY_LIST;
@@ -654,7 +652,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		
 		return list;
 	}
-    
+
     private List retrieveButIdMeasurementIds(List ids, List measurementIds) throws RetrieveObjectException, IllegalDataException {
     	
     	if (measurementIds != null && !measurementIds.isEmpty()){
@@ -688,54 +686,4 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
     	}
     	return Collections.EMPTY_LIST;
     }
-    
-	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
-			IllegalDataException {
-		List list = null;
-		if ( condition instanceof LinkedIdsCondition ) {
-            LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
-            /* choose type of linked objects */
-			short entityCode = 0;
-			List objectList;
-			if (linkedIdsCondition.getLinkedIds() != null){
-				for (Iterator it = linkedIdsCondition.getLinkedIds().iterator(); it.hasNext();) {
-					Identifier id = (Identifier) it.next();
-					if (entityCode == 0)
-						entityCode = id.getMajor();
-					else 
-						if (entityCode != id.getMajor())
-							throw new UnsupportedOperationException("MeasurementSetupDatabase.retrieveByCondition | there some different entities : " 
-								+ ObjectEntities.codeToString(entityCode) + " and " + ObjectEntities.codeToString(id.getMajor()));
-				}
-				objectList = linkedIdsCondition.getLinkedIds();
-			} else{
-				/* work with simple identifier*/
-				entityCode = linkedIdsCondition.getIdentifier().getMajor();
-				objectList = Collections.singletonList(linkedIdsCondition.getIdentifier());
-			}
-			
-			switch(entityCode){
-				case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
-				{
-					list = this.retrieveButIdsByMeasurementType(ids, objectList);
-				}
-				break;
-				case ObjectEntities.ME_ENTITY_CODE:
-				{
-					list = this.retrieveButIdsByMonitoredElement(ids, objectList);
-				}
-				break;
-			default:
-				throw new UnsupportedOperationException("MeasurementSetupDatabase.retrieveByCondition | unknown linked entity : " 
-					+ ObjectEntities.codeToString(entityCode));
-			}
-            
-            list = this.retrieveButIdMeasurementIds(ids, objectList);
-        } else {
-			Log.errorMessage("MeasurementSetupDatabase.retrieveByCondition | Unknown condition class: " + condition);
-			list = this.retrieveButIds(ids);
-		}
-		return list;
-	}
-    
 }
