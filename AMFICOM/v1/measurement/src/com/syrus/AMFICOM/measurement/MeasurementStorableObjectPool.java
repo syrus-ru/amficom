@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.14 2004/09/17 14:28:21 max Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.15 2004/09/21 10:59:25 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/09/17 14:28:21 $
- * @author $Author: max $
+ * @version $Revision: 1.15 $, $Date: 2004/09/21 10:59:25 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -77,6 +77,27 @@ public class MeasurementStorableObjectPool {
 	private MeasurementStorableObjectPool() {
 	}
 
+	
+	public static void init(MeasurementObjectLoader mObjectLoader1, final int size) {
+		objectPoolMap = Collections.synchronizedMap(new Hashtable(size));
+
+		addObjectPool(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.ANALYSISTYPE_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, size);
+
+		addObjectPool(ObjectEntities.SET_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.MS_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.MEASUREMENT_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.ANALYSIS_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.EVALUATION_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.TEST_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.RESULT_ENTITY_CODE, size);
+		addObjectPool(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE, size);
+
+		mObjectLoader = mObjectLoader1;
+	}
+	
 	public static void init(MeasurementObjectLoader mObjectLoader1) {
 		objectPoolMap = Collections.synchronizedMap(new Hashtable(
 				OBJECT_POOL_MAP_SIZE));
@@ -159,7 +180,7 @@ public class MeasurementStorableObjectPool {
 				Identifier objectId = (Identifier) it.next();
 				short objectEntityCode = objectId.getMajor();
 				Short entityCode = new Short(objectEntityCode);
-				LRUMap objectPool = (LRUMap) objectPoolMap.get(objectId);
+				LRUMap objectPool = (LRUMap) objectPoolMap.get(entityCode);
 				StorableObject storableObject = null;
 				if (objectPool != null) {
 					storableObject = (StorableObject) objectPool.get(objectId);
@@ -195,6 +216,8 @@ public class MeasurementStorableObjectPool {
 		}
 
 		if (objectQueueMap != null) {
+			if (list == null)
+                list = new LinkedList();
 			for (Iterator it = objectQueueMap.keySet().iterator(); it.hasNext();) {
 				Short entityCode = (Short) it.next();
 				List objectQueue = (List) objectQueueMap.get(entityCode);
