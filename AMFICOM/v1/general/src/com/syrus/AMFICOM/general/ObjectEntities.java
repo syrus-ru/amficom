@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.28 2004/11/23 12:27:55 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.29 2004/11/23 15:18:19 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/11/23 12:27:55 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.29 $, $Date: 2004/11/23 15:18:19 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -31,7 +31,7 @@ public class ObjectEntities {
 	public static final String ANATYPPARTYPLINK_ENTITY = "AnaTypParTypLink";
 	public static final String EVALUATIONTYPE_ENTITY = "EvaluationType";
 	public static final String EVATYPPARTYPLINK_ENTITY = "EvaTypParTypLink";
-	public static final String KISTYPE_ENTITY = "KISType";
+	//public static final String KISTYPE_ENTITY = "KISType";
 	public static final String TRANSPATHTYPE_ENTITY = "TransmissionPathType";
 
 	/*	Administration	*/
@@ -83,7 +83,7 @@ public class ObjectEntities {
 	public static final short ANALYSISTYPE_ENTITY_CODE = 0x0007;
 	public static final short EVALUATIONTYPE_ENTITY_CODE = 0x0008;	
 	public static final short LINKTYPE_ENTITY_CODE = 0x0009;
-	public static final short KISTYPE_ENTITY_CODE = 0x000A;
+	//public static final short KISTYPE_ENTITY_CODE = 0x000A;
 	public static final short TRANSPATHTYPE_ENTITY_CODE = 0x000B;
 	public static final short CABLETHREADTYPE_ENTITY_CODE = 0x000C;
 
@@ -147,7 +147,7 @@ public class ObjectEntities {
 		else if (entity.equals(TRANSPATH_ENTITY)) return TRANSPATH_ENTITY_CODE;
         else if (entity.equals(TRANSPATHTYPE_ENTITY)) return TRANSPATHTYPE_ENTITY_CODE;
 		else if (entity.equals(KIS_ENTITY)) return KIS_ENTITY_CODE;
-		else if (entity.equals(KISTYPE_ENTITY)) return KISTYPE_ENTITY_CODE;
+		//else if (entity.equals(KISTYPE_ENTITY)) return KISTYPE_ENTITY_CODE;
         else if (entity.equals(MEASUREMENTPORT_ENTITY)) return MEASUREMENTPORT_ENTITY_CODE;
 		else if (entity.equals(ME_ENTITY)) return ME_ENTITY_CODE;
 		else if (entity.equals(LINK_ENTITY)) return LINK_ENTITY_CODE;
@@ -216,8 +216,8 @@ public class ObjectEntities {
                 return TRANSPATHTYPE_ENTITY;
 			case KIS_ENTITY_CODE:
 				return KIS_ENTITY;
-            case KISTYPE_ENTITY_CODE:
-                return KISTYPE_ENTITY;
+//            case KISTYPE_ENTITY_CODE:
+//                return KISTYPE_ENTITY;
 			case MEASUREMENTPORT_ENTITY_CODE:
 				return MEASUREMENTPORT_ENTITY;
 			case ME_ENTITY_CODE:

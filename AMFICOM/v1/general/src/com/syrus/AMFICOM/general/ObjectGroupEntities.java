@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectGroupEntities.java,v 1.2 2004/11/23 12:26:47 arseniy Exp $
+ * $Id: ObjectGroupEntities.java,v 1.3 2004/11/23 15:20:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,8 +8,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/11/23 12:26:47 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2004/11/23 15:20:10 $
+ * @author $Author: bob $
  * @module module_name
  */
 public class ObjectGroupEntities {
@@ -48,32 +48,21 @@ public class ObjectGroupEntities {
     public static boolean isInMeasurementGroup(short entityCode) {
     	switch (entityCode) {
             case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-                return true;
             case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
-                return true;
             case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
-                return true;
             case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
-                return true;
             case ObjectEntities.SET_ENTITY_CODE:
-                return true;
             case ObjectEntities.MODELING_ENTITY_CODE:
-                return true;
             case ObjectEntities.MS_ENTITY_CODE:
-                return true;
             case ObjectEntities.ANALYSIS_ENTITY_CODE:
-                return true;
             case ObjectEntities.EVALUATION_ENTITY_CODE:
-                return true;
             case ObjectEntities.MEASUREMENT_ENTITY_CODE:
-                return true;
             case ObjectEntities.TEST_ENTITY_CODE:
-                return true;
             case ObjectEntities.RESULT_ENTITY_CODE:
-                return true;
             case ObjectEntities.TEMPORALPATTERN_ENTITY_CODE:
-                return true;
-            default: return false;
+            	return true;
+            default: 
+            	return false;
         }
     }
     
@@ -85,48 +74,30 @@ public class ObjectGroupEntities {
     public static boolean isInConfigurationGroup(short entityCode) {
         switch (entityCode) {
             case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
-                return true;
             case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
-                return true;
             case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
-                return true;
-            case ObjectEntities.KISTYPE_ENTITY_CODE:
-                return true;
             case ObjectEntities.LINKTYPE_ENTITY_CODE:
-                return true;
             case ObjectEntities.PORTTYPE_ENTITY_CODE:
-                return true;
             case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
-                return true;
             case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-                return true;
             //          case ObjectEntities.PERMATTR_ENTITY_CODE:
             //              storableObject =
             // cObjectLoader.loadPermissionAttributes(objectId);
             //              break;
             case ObjectEntities.USER_ENTITY_CODE:
-                return true;
             case ObjectEntities.DOMAIN_ENTITY_CODE:
-                return true;
             case ObjectEntities.SERVER_ENTITY_CODE:
-                return true;
             case ObjectEntities.MCM_ENTITY_CODE:
-                return true;
             case ObjectEntities.EQUIPMENT_ENTITY_CODE:
-                return true;
             case ObjectEntities.PORT_ENTITY_CODE:
-                return true;
             case ObjectEntities.TRANSPATH_ENTITY_CODE:
-                return true;
             case ObjectEntities.KIS_ENTITY_CODE:
-                return true;
             case ObjectEntities.LINK_ENTITY_CODE:
-                return true;
             case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
-                return true;
             case ObjectEntities.ME_ENTITY_CODE:
                 return true;
-            default: return false;
+            default: 
+            	return false;
         }
     }
     
