@@ -1,5 +1,5 @@
 /*
- * $Id: ClientGeneralObjectLoader.java,v 1.10 2005/04/04 15:04:34 bob Exp $
+ * $Id: ClientGeneralObjectLoader.java,v 1.11 2005/04/04 15:29:09 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,11 +25,11 @@ import com.syrus.AMFICOM.general.corba.ParameterType_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/04/04 15:04:34 $
+ * @version $Revision: 1.11 $, $Date: 2005/04/04 15:29:09 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
-public class ClientGeneralObjectLoader implements GeneralObjectLoader {
+public class ClientGeneralObjectLoader extends AbstractClientObjectLoader implements GeneralObjectLoader {
 
 	private CMServer								server;
 
@@ -49,7 +49,7 @@ public class ClientGeneralObjectLoader implements GeneralObjectLoader {
 			// nothing do
 		}
 		if (so != null)
-			so.fromTransferable(transferable);
+			super.fromTransferable(so, transferable);
 		return so;
 	}
 

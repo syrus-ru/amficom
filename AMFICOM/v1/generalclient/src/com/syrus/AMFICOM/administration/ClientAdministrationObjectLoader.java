@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAdministrationObjectLoader.java,v 1.10 2005/04/04 14:05:37 bob Exp $
+ * $Id: ClientAdministrationObjectLoader.java,v 1.11 2005/04/04 15:29:09 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,14 +12,19 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.omg.CORBA.portable.IDLEntity;
+
 import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
 import com.syrus.AMFICOM.administration.corba.Server_Transferable;
 import com.syrus.AMFICOM.administration.corba.User_Transferable;
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
+import com.syrus.AMFICOM.general.AbstractClientObjectLoader;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -35,11 +40,11 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/04/04 14:05:37 $
+ * @version $Revision: 1.11 $, $Date: 2005/04/04 15:29:09 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
-public class ClientAdministrationObjectLoader implements AdministrationObjectLoader {
+public class ClientAdministrationObjectLoader extends AbstractClientObjectLoader implements AdministrationObjectLoader {
 
 	private CMServer								cmserver;
 
@@ -49,6 +54,18 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 	
 	private AccessIdentifier_Transferable getAccessIdentifierTransferable() {
 		return  (AccessIdentifier_Transferable) SessionContext.getAccessIdentity().getTransferable();
+	}
+	
+	private StorableObject fromTransferable(Identifier id, IDLEntity transferable) throws CreateObjectException {
+		StorableObject so = null;
+		try {
+			so = GeneralStorableObjectPool.getStorableObject(id, false);
+		} catch (ApplicationException e) {
+			// nothing do
+		}
+		if (so != null)
+			super.fromTransferable(so, transferable);
+		return so;
 	}
 	
 	public void delete(Identifier id) throws IllegalDataException {
@@ -78,8 +95,12 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 
 	public Domain loadDomain(Identifier id) throws RetrieveObjectException, CommunicationException {
 		try {
-			return new Domain(this.cmserver.transmitDomain((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable()));
+			Domain_Transferable dt = this.cmserver.transmitDomain((Identifier_Transferable) id.getTransferable(),
+				getAccessIdentifierTransferable());
+			Domain domain = (Domain) this.fromTransferable(id, dt);
+			if (domain == null)
+				domain = new Domain(dt);
+			return domain;			
 		} catch (CreateObjectException e) {
 			String msg = "ClientAdministrationObjectLoader.loadDomain | new Domain(" + id.toString() + ")";
 			throw new RetrieveObjectException(msg, e);
@@ -101,7 +122,10 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 				getAccessIdentifierTransferable());
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				set.add(new Domain(transferables[j]));
+				Domain domain = (Domain) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
+				if (domain == null)
+					domain = new Domain(transferables[j]);
+				set.add(domain);
 			}
 			return set;
 		} catch (CreateObjectException e) {
@@ -137,8 +161,12 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 
 	public MCM loadMCM(Identifier id) throws RetrieveObjectException, CommunicationException {
 		try {
-			return new MCM(this.cmserver.transmitMCM((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable()));
+			MCM_Transferable mt = this.cmserver.transmitMCM((Identifier_Transferable) id.getTransferable(),
+				getAccessIdentifierTransferable());
+			MCM mcm = (MCM) this.fromTransferable(id, mt);
+			if (mcm == null)
+				mcm = new MCM(mt);
+			return mcm;			
 		} catch (CreateObjectException e) {
 			String msg = "ClientAdministrationObjectLoader.loadMCM | new MCM(" + id.toString() + ")";
 			throw new RetrieveObjectException(msg, e);
@@ -160,7 +188,10 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 				getAccessIdentifierTransferable());
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				set.add(new MCM(transferables[j]));
+				MCM mcm = (MCM) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
+				if (mcm == null)
+					mcm = new MCM(transferables[j]);
+				set.add(mcm);
 			}
 			return set;
 		} catch (CreateObjectException e) {
@@ -196,8 +227,12 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 
 	public Server loadServer(Identifier id) throws RetrieveObjectException, CommunicationException {
 		try {
-			return new Server(this.cmserver.transmitServer((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable()));
+			Server_Transferable st = this.cmserver.transmitServer((Identifier_Transferable) id.getTransferable(),
+				getAccessIdentifierTransferable());
+			Server server = (Server) this.fromTransferable(id, st);
+			if (server == null)
+				server = new Server(st);
+			return server;		
 		} catch (CreateObjectException e) {
 			String msg = "ClientAdministrationObjectLoader.loadServer | new Server(" + id.toString() + ")";
 			throw new RetrieveObjectException(msg, e);
@@ -219,7 +254,10 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 				getAccessIdentifierTransferable());
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				set.add(new Server(transferables[j]));
+				Server server = (Server) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
+				if (server == null)
+					server = new Server(transferables[j]);
+				set.add(server);
 			}
 			return set;
 		} catch (CreateObjectException e) {
@@ -253,10 +291,14 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 		}
 	}
 
-	public User loadUser(Identifier id) throws RetrieveObjectException, CommunicationException {
+	public User loadUser(Identifier id) throws RetrieveObjectException, CommunicationException, CreateObjectException {
 		try {
-			return new User(this.cmserver.transmitUser((Identifier_Transferable) id.getTransferable(),
-				getAccessIdentifierTransferable()));
+			User_Transferable ut = this.cmserver.transmitUser((Identifier_Transferable) id.getTransferable(),
+				getAccessIdentifierTransferable());
+			User user = (User) this.fromTransferable(id, ut);
+			if (user == null)
+				user = new User(ut);
+			return user;		
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientAdministrationObjectLoader.loadUser | server.transmitUser(" + id.toString() + ")";
 			throw new CommunicationException(msg, e);
@@ -275,7 +317,10 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 				getAccessIdentifierTransferable());
 			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				set.add(new User(transferables[j]));
+				User user = (User) this.fromTransferable(new Identifier(transferables[j].header.id), transferables[j]);
+				if (user == null)
+					user = new User(transferables[j]);
+				set.add(user);
 			}
 			return set;
 		} catch (AMFICOMRemoteException e) {
