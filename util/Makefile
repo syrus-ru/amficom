@@ -51,20 +51,9 @@ log:
 
 mail:
 	$(JAVAC) -d $(CLASSES) -classpath $(ORACLECLASSPATH):$(APPCLASSPATH) \
-		$(SRC)/com/syrus/util/mail/MailIdentity.java \
-		$(SRC)/com/syrus/util/mail/SimpleMailer.java \
-		$(SRC)/com/syrus/util/sms/ui/JSMSSendFrame.java \
-		$(SRC)/com/syrus/util/sms/RSMSUCPProvider.java \
-		$(SRC)/com/syrus/util/sms/SMSMailProvider.java \
-		$(SRC)/com/syrus/util/sms/SMSProviderFactory.java \
-		$(SRC)/com/syrus/util/sms/SMSProvider.java \
-		$(SRC)/com/syrus/AMFICOM/corba/portable/common/MessageDeliveryFailedException.java \
-		$(SRC)/com/syrus/AMFICOM/corba/portable/common/MessageDeliveryFailedExceptionHelper.java \
 		$(SRC)/com/syrus/util/prefs/ui/JPreferencesManagerFrame.java \
 		$(SRC)/com/syrus/util/prefs/IIOPConnectionManager.java \
-		$(SRC)/com/syrus/util/prefs/JDBCConnectionManager.java \
-		$(SRC)/com/syrus/util/prefs/PreferencesManager.java \
-		$(SRC)/com/syrus/util/prefs/SMTPConnectionManager.java
+		$(SRC)/com/syrus/util/prefs/PreferencesManager.java
 	touch mail
 
 cache:
