@@ -297,6 +297,7 @@ module corba {
 	};
 
 	enum UserSort {
+		USER_SORT_SYSADMIN,
 		USER_SORT_REGULAR,
 		USER_SORT_SERVER,
 		USER_SORT_MCM
