@@ -1,5 +1,5 @@
 /*
- * $Id: StringFieldConditionTestCase.java,v 1.3 2004/12/15 14:44:39 bass Exp $
+ * $Id: StringFieldConditionTestCase.java,v 1.4 2005/01/13 13:03:31 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,12 @@ import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.StringFieldCondition;
 import com.syrus.AMFICOM.general.corba.StringFieldSort;
 import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageResourceDataPackage.ImageResourceSort;
+import java.lang.reflect.Field;
 import junit.framework.TestCase;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2004/12/15 14:44:39 $
+ * @version $Revision: 1.4 $, $Date: 2005/01/13 13:03:31 $
  * @module resource_v1
  */
 public class StringFieldConditionTestCase extends TestCase {
@@ -53,6 +54,24 @@ public class StringFieldConditionTestCase extends TestCase {
 		} catch (AssertionError ae) {
 			assertTrue(true);
 		}
+	}
+
+	public final void testToString() throws SecurityException,
+			NoSuchFieldException, IllegalArgumentException,
+			IllegalAccessException {
+		final String string = String.valueOf(ImageResourceSort._BITMAP);
+		final short entityCode = ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE;
+		final StringFieldSort sort = StringFieldSort.STRINGSORT_INTEGER;
+		final StringFieldCondition stringFieldCondition = new StringFieldCondition(
+			string,
+			entityCode,
+			sort);
+
+		final Field field = StringFieldCondition.class.getDeclaredField("delegate"); //$NON-NLS-1$
+		field.setAccessible(true);
+
+		System.out.println(stringFieldCondition);
+		System.out.println(field.get(stringFieldCondition));
 	}
 
 	public final void testValidCtor() {
