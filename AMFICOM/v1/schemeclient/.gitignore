@@ -12,3 +12,6 @@ scheme.jpx
 doc
 src
 oldsrc
+Makefile
+makescheme
+mk.bat
