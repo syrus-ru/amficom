@@ -1,5 +1,5 @@
 /*
- * $Id: arserver.idl,v 1.3 2005/02/02 05:58:54 max Exp $
+ * $Id: arserver.idl,v 1.4 2005/02/22 09:20:38 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,31 +21,31 @@ module com {
 					interface ARServer:general::corba::IdentifierGeneratorServer {
 /////////////////////////////////////////// Delete Resources ////////////////////////////////////////////
 						void delete(in general::corba::Identifier_Transferable id_Transferable,
-								in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+								in general::corba::AccessIdentifier_Transferable accessIdentifier)
 							raises (general::corba::AMFICOMRemoteException);
 			
 						void deleteList(in general::corba::IdentifierSeq_Transferable id_Transferables,
-								in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+								in general::corba::AccessIdentifier_Transferable accessIdentifier)
 							raises (general::corba::AMFICOMRemoteException);
 /////////////////////////////////////////// Recieve Resources ////////////////////////////////////////////
 						void receiveImageResource(in resource::corba::ImageResource_Transferable imageResource_Transferable,
 								in boolean force,
-								in configuration::corba::AccessIdentifier_Transferable accessIdentifier)						 		   
+								in general::corba::AccessIdentifier_Transferable accessIdentifier)						 		   
 							raises (general::corba::AMFICOMRemoteException);
 						
 						void receiveImageResources(in resource::corba::ImageResourceSeq_Transferable imageResources_Transferable,
 								in boolean force,
-								in configuration::corba::AccessIdentifier_Transferable accessIdentifier)						 		   
+								in general::corba::AccessIdentifier_Transferable accessIdentifier)						 		   
 							raises (general::corba::AMFICOMRemoteException);
 /////////////////////////////////////////// Transmit Resources ////////////////////////////////////////////
 						resource::corba::ImageResource_Transferable transmitImageResource(
 								in general::corba::Identifier_Transferable id_Transferable,
-								in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+								in general::corba::AccessIdentifier_Transferable accessIdentifier)
 							raises (general::corba::AMFICOMRemoteException);
 	
 						resource::corba::ImageResourceSeq_Transferable transmitImageResources(
 								in general::corba::IdentifierSeq_Transferable id_Transferables,
-								in configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+								in general::corba::AccessIdentifier_Transferable accessIdentifier)
 							raises (general::corba::AMFICOMRemoteException);
 					};
 				};
