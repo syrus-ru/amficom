@@ -65,9 +65,9 @@ public class EquipFeaturesReportModel extends ReportModel
 	{
 	}
 
-	public boolean isTableReport(ObjectsReport rp)
+	public int getReportKind(ObjectsReport rp)
 	{
-		return true;
+		return 1;
 	}
 
 	public JComponent createReport(
