@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralStorableObjectPool.java,v 1.11 2005/02/24 14:59:36 arseniy Exp $
+ * $Id: GeneralStorableObjectPool.java,v 1.12 2005/03/18 17:31:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,22 +16,20 @@ import java.util.Set;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/02/24 14:59:36 $
+ * @version $Revision: 1.12 $, $Date: 2005/03/18 17:31:27 $
  * @author $Author: arseniy $
  * @module general_v1
  */
 
 public final class GeneralStorableObjectPool extends StorableObjectPool {
 
-	private static final int OBJECT_POOL_MAP_SIZE = 3;		/* Number of entities */
+	private static final int OBJECT_POOL_MAP_SIZE = 3; /* Number of entities */
 
-	private static final int PARAMETERTYPE_OBJECT_POOL_SIZE= 9;
-
+	private static final int PARAMETERTYPE_OBJECT_POOL_SIZE = 9;
 	private static final int CHARACTERISTICTYPE_OBJECT_POOL_SIZE = 9;
-
 	private static final int CHARACTERISTIC_OBJECT_POOL_SIZE = 4;
 
-	private static GeneralObjectLoader	gObjectLoader;
+	private static GeneralObjectLoader gObjectLoader;
 	private static GeneralStorableObjectPool instance;
 
 	private GeneralStorableObjectPool() {
@@ -54,8 +52,8 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.CHARACTERISTIC_ENTITY_CODE, size);
-		
-		instance.populatePools();		
+
+		instance.populatePools();
 	}
 
 	public static void init(GeneralObjectLoader gObjectLoader1) {
@@ -69,17 +67,10 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, PARAMETERTYPE_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE, CHARACTERISTICTYPE_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.CHARACTERISTIC_ENTITY_CODE, CHARACTERISTIC_OBJECT_POOL_SIZE);
-		
+
 		instance.populatePools();
 	}
 
-	/**
-	 * 
-	 * @param gObjectLoader1
-	 * @param cacheClass
-	 *                class must extend LRUMap
-	 * @param size
-	 */
 	public static void init(GeneralObjectLoader gObjectLoader1, Class cacheClass, final int size) {
 		Class clazz = null;
 		try {
@@ -87,9 +78,23 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 			instance = new GeneralStorableObjectPool(clazz);
 		}
 		catch (ClassNotFoundException e) {
-			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default");
+			Log.errorMessage("Cache class '" + cacheClass.getName() + "' cannot be found, use default");
+			instance = new GeneralStorableObjectPool();
 		}
 		init(gObjectLoader1, size);
+	}
+
+	public static void init(GeneralObjectLoader gObjectLoader1, Class cacheClass) {
+		Class clazz = null;
+		try {
+			clazz = Class.forName(cacheClass.getName());
+			instance = new GeneralStorableObjectPool(clazz);
+		}
+		catch (ClassNotFoundException e) {
+			Log.errorMessage("Cache class '" + cacheClass.getName() + "' cannot be found, use default");
+			instance = new GeneralStorableObjectPool();
+		}
+		init(gObjectLoader1);
 	}
 
 	public static void refresh() throws ApplicationException {
