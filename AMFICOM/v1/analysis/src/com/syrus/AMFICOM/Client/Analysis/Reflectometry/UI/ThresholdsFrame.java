@@ -212,6 +212,7 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 			SimpleGraphPanel p = (SimpleGraphPanel)traces.get(id);
 			if (p != null)
 			{
+//				p.removeColorModel(id);
 				panel.removeGraphPanel(p);
 				traces.remove(id);
 				bellcoreTraces.remove(id);

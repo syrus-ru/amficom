@@ -8,8 +8,6 @@ import javax.swing.ImageIcon;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
-
 public class AnalyseApplicationModel extends ApplicationModel {
 
 	public static final String SELECT_PREVIOUS_EVENT = "SelectPreviousEvent";
@@ -165,7 +163,12 @@ public class AnalyseApplicationModel extends ApplicationModel {
 		defaults.put(AnalysisResourceKeys.COLOR_END, new Color(160,32,255));
 		defaults.put(AnalysisResourceKeys.COLOR_MARKER, Color.BLACK);
 		
-		defaults.put(RefUpdateEvent.PRIMARY_TRACE, Color.BLUE);		
+		defaults.put(AnalysisResourceKeys.COLOR_TRACE_PREFIX + 0, new Color(0, 128, 128));
+		defaults.put(AnalysisResourceKeys.COLOR_TRACE_PREFIX + 1, new Color(128, 64, 0));
+		defaults.put(AnalysisResourceKeys.COLOR_TRACE_PREFIX + 2, new Color(128, 0, 128));
+		defaults.put(AnalysisResourceKeys.COLOR_TRACE_PREFIX + 3, new Color(0, 96, 0));
+		defaults.put(AnalysisResourceKeys.COLOR_TRACE_PREFIX + 4, new Color(0, 64, 128));
+		defaults.put(AnalysisResourceKeys.COLOR_TRACE_PREFIX + 5, new Color(128, 128, 0));
 	}
 	/*
 	 * public DataSourceInterface getDataSource(SessionInterface si) { String

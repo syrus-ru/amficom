@@ -2,7 +2,6 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.*;
 import java.awt.event.*;
-
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
@@ -10,7 +9,6 @@ import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 public class SimpleResizableFrame extends JInternalFrame
 {
 	public ResizableLayeredPanel panel;
-	public ColorManager cMan;
 
 	public SimpleResizableFrame()
 	{
@@ -41,23 +39,20 @@ public class SimpleResizableFrame extends JInternalFrame
 		this.setIconifiable(true);
 		this.setDoubleBuffered(true);
 
-//		this.addPropertyChangeListener(JInternalFrame.IS_MAXIMUM_PROPERTY, new java.beans.PropertyChangeListener()
-//		{
-//			public void propertyChange(java.beans.PropertyChangeEvent evt)
-//			{
-//				this_propertyChanged(evt);
-//			}
-//		});
-
-		this.addComponentListener(new ComponentAdapter() {
-			public void componentResized(ComponentEvent e) {
-				panel.resize();
-				
+		this.addPropertyChangeListener(JInternalFrame.IS_MAXIMUM_PROPERTY, new java.beans.PropertyChangeListener()
+		{
+			public void propertyChange(java.beans.PropertyChangeEvent evt)
+			{
+				this_propertyChanged(evt);
 			}
-			
-			
-		}
-			);
+		});
+		this.addMouseMotionListener(new java.awt.event.MouseMotionAdapter()
+		{
+			public void mouseDragged(MouseEvent e)
+			{
+				this_mouseDragged(e);
+			}
+		});
 
 		this.getContentPane().setLayout(new BorderLayout());
 		this.getContentPane().add(panel, BorderLayout.CENTER);
@@ -100,6 +95,17 @@ public class SimpleResizableFrame extends JInternalFrame
 	public void updScales ()
 	{
 		panel.updScale2fit();
+	}
+
+	void this_mouseDragged(MouseEvent e)
+	{
+		panel.resize();
+	}
+
+	void this_propertyChanged(java.beans.PropertyChangeEvent evt)
+	{
+		if (evt.getPropertyName().equals(JInternalFrame.IS_MAXIMUM_PROPERTY))
+			panel.resize();
 	}
 
 	public void doDefaultCloseAction()

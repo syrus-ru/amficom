@@ -3,13 +3,12 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 import java.awt.*;
 
 import javax.swing.JPanel;
-import javax.swing.UIManager;
 
 public class SimpleGraphPanel extends JPanel
 {
 	public static final int mouse_coupling = 5;
 
-	protected String colorId;
+	protected String color_id;
 
 	protected Color traceColor; // color, which used to paint graphic itself
 	
@@ -18,8 +17,7 @@ public class SimpleGraphPanel extends JPanel
 	protected double[] y; // array of graphic points
 	protected double deltaX;  // range between two neighbour points
 	protected double maxY, minY; // maximum & minimum value of graph
-	protected double scaleX;
-	protected double scaleY; // scales, used to resize graphic
+	protected double scaleX, scaleY; // scales, used to resize graphic
 
 	protected int start = 0; // номер начальной точки
 	protected int end = 0; // номер конечной точки
@@ -90,9 +88,9 @@ public class SimpleGraphPanel extends JPanel
 		scaleY = getHeight() / (maxY - minY);
 	}
 
-	public void setColorModel(String colorId)
+	public void setColorModel(String color_id)
 	{
-		this.colorId = colorId;
+		this.color_id = color_id;
 		updColorModel();
 	}
 	
@@ -120,8 +118,8 @@ public class SimpleGraphPanel extends JPanel
 
 	protected void updColorModel()
 	{
-		System.out.println("ColorId is " + colorId);
-		traceColor = correctColor(UIManager.getColor(colorId));
+		System.out.println(color_id);
+		traceColor = correctColor(ColorManager.getColor(color_id));
 	}
 
 	// plots from y[i0] to y[i0+N] _inclusively_ at x=x0..x0+N
@@ -165,31 +163,6 @@ public class SimpleGraphPanel extends JPanel
 
 	public void paint(Graphics g)
 	{
-		setDefaultScales();
 		paint_trace(g);
 	}
-
-	
-	public double getScaleX() {
-		return this.scaleX;
-	}
-	
-
-	
-	public void setScaleX(double scaleX) {
-		this.scaleX = scaleX;
-	}
-	
-
-	
-	public double getScaleY() {
-		return this.scaleY;
-	}
-	
-
-	
-	public void setScaleY(double scaleY) {
-		this.scaleY = scaleY;
-	}
-	
 }
