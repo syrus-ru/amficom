@@ -58,3 +58,5 @@ serveradd	serveradd
 filter	filter
 #M	server	AMFICOM Server instance (server-client interface)
 server	server
+#M	load	Initial data server load
+load	load
