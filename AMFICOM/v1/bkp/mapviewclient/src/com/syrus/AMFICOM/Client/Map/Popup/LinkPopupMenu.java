@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.Map.Popup;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceSelectionDialog;
 import com.syrus.AMFICOM.Client.Map.Command.Action.*;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
@@ -17,6 +18,7 @@ import java.awt.event.ActionListener;
 
 import java.util.List;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
 public final class LinkPopupMenu extends MapPopupMenu 
 {
@@ -132,6 +134,29 @@ public final class LinkPopupMenu extends MapPopupMenu
 
 	private void newCollector()
 	{
+		String inputValue = JOptionPane.showInputDialog(
+				Environment.getActiveWindow(), 
+				"Введите имя коллектора", 
+				"Коллектор1");
+		if(inputValue != null)
+		{
+			MapPipePathElement collector = new MapPipePathElement(
+					logicalNetLayer.getContext().getDataSourceInterface().GetUId(
+							MapPipePathElement.typ),
+					link.getMap());
+
+			MapElementState state = link.getState();
+			collector.addLink(link);
+			MapLinkProtoElement proto = (MapLinkProtoElement )Pool.get(MapLinkProtoElement.typ, MapLinkProtoElement.COLLECTIOR);
+			link.setMapProtoId(proto.getId());
+
+			MapElementStateChangeCommand command = new MapElementStateChangeCommand(link, state, link.getState());
+			command.setLogicalNetLayer(logicalNetLayer);
+			getLogicalNetLayer().getCommandList().add(command);
+			getLogicalNetLayer().getCommandList().execute();
+			
+			getLogicalNetLayer().repaint();
+		}
 	}
 
 	private void addToCollector()
@@ -159,8 +184,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 			{
 				MapElementState state = link.getState();
 				collector.addLink(link);
-				MapLinkProtoElement proto = (MapLinkProtoElement )Pool.get(MapLinkProtoElement.typ, MapLinkProtoElement.COLLECTIOR);
-				link.setMapProtoId(proto.getId());
+				link.setMapProtoId(MapLinkProtoElement.COLLECTIOR);
 
 				MapElementStateChangeCommand command = new MapElementStateChangeCommand(link, state, link.getState());
 				command.setLogicalNetLayer(logicalNetLayer);
