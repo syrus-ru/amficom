@@ -30,7 +30,7 @@ public class RefAnalysis
 		double top = max_y - min_y;
 
 		int type;
-		int last_point = re[re.length-1].end;
+		int last_point = re[re.length-1].begin;
 		double Po = 0;
 
 		events = new TraceEvent[re.length];
