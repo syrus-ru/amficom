@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceChooserDialog.java,v 1.2 2005/02/22 11:02:34 krupenn Exp $
+ * $Id: ObjectResourceChooserDialog.java,v 1.3 2005/03/01 15:45:12 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import javax.swing.event.ListSelectionListener;
  * setCanDelete(boolean bool)
  *
  * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2005/02/22 11:02:34 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/01 15:45:12 $
  * @module generalclient_v1
  */
 public class ObjectResourceChooserDialog extends JDialog 
@@ -77,9 +77,20 @@ public class ObjectResourceChooserDialog extends JDialog
 
 	protected boolean canDelete = false;
 
+	/**
+	 * 
+	 * @param controller
+	 * @param typ
+	 * @deprecated use {@link #ObjectResourceChooserDialog(String , ObjectResourceController )}
+	 */
 	public ObjectResourceChooserDialog(ObjectResourceController controller, String typ)
 	{
-		super(Environment.getActiveWindow(), LangModel.getString("node" + typ), true);
+		this(LangModel.getString("node" + typ), controller);
+	}
+
+	public ObjectResourceChooserDialog(String title, ObjectResourceController controller)
+	{
+		super(Environment.getActiveWindow(), title, true);
 
 		this.controller = controller;
 		model = new ObjectResourceTableModel(controller);
