@@ -1,8 +1,10 @@
 classes
 docs
 lib
+test
 .classpath
 .project
+.settings
 *.deploy
 *.jpr
 *.jpx
