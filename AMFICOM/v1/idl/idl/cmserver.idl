@@ -337,6 +337,11 @@ module corba {
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
 			
+		com::syrus::AMFICOM::configuration::corba::KISType_Transferable transmitKISType(
+			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
 		com::syrus::AMFICOM::configuration::corba::MCM_Transferable transmitMCM(
 			in com::syrus::AMFICOM::general::corba::Identifier_Transferable id_Transferable,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
@@ -467,6 +472,16 @@ module corba {
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
 			in com::syrus::AMFICOM::configuration::corba::DomainCondition_Transferable domainCondition)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::configuration::corba::KISTypeSeq_Transferable transmitKISTypes(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+		com::syrus::AMFICOM::configuration::corba::KISTypeSeq_Transferable transmitKISTypesButIds(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids_Transferable,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
 			
 		com::syrus::AMFICOM::configuration::corba::MCMSeq_Transferable transmitMCMs(
