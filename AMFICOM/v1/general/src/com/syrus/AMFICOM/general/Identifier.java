@@ -1,5 +1,5 @@
 /*
- * $Id: Identifier.java,v 1.23 2005/03/17 18:16:12 bass Exp $
+ * $Id: Identifier.java,v 1.24 2005/03/29 17:04:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,8 @@
 package com.syrus.AMFICOM.general;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Iterator;
 
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
@@ -18,8 +20,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.23 $, $Date: 2005/03/17 18:16:12 $
- * @author $Author: bass $
+ * @version $Revision: 1.24 $, $Date: 2005/03/29 17:04:14 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public class Identifier implements
@@ -112,5 +114,13 @@ public class Identifier implements
 
 	public String toString() {
 		return this.identifierString;
+	}
+
+	public static Identifier_Transferable[] createTransferables(Collection ids) {
+		Identifier_Transferable[] idsT = new Identifier_Transferable[ids.size()];
+		int i = 0;
+		for (Iterator it = ids.iterator(); it.hasNext(); i++)
+			idsT[i] = (Identifier_Transferable) ((Identifier) it.next()).getTransferable();
+		return idsT;
 	}
 }
