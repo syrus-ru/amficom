@@ -10,6 +10,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
+import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
@@ -21,7 +22,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.KIS;
 
-public class Test extends StorableObject {
+public class Test extends StorableObject implements TypedObject {
 	protected static final int RETRIEVE_MEASUREMENTS = 1;
 	protected static final int UPDATE_STATUS = 1;
 	protected static final int UPDATE_MODIFIED = 2;
@@ -32,9 +33,9 @@ public class Test extends StorableObject {
 	private Identifier analysis_type_id;
 	private Identifier evaluation_type_id;
 	private int status;
-	private MonitoredElement monitoredElement;
 	private int return_type;
 	private String description;
+	private MonitoredElement monitoredElement;
 	private ArrayList measurement_setup_ids;
 
 	private MeasurementSetup mainMeasurementSetup;
