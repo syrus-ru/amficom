@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.83 2005/02/24 14:59:59 arseniy Exp $
+ * $Id: Test.java,v 1.84 2005/02/25 09:34:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,8 +46,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.83 $, $Date: 2005/02/24 14:59:59 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.84 $, $Date: 2005/02/25 09:34:23 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -154,6 +154,7 @@ public class Test extends StorableObject {
 		this.monitoredElement = monitoredElement;
 		this.returnType = returnType;
 		this.description = description;
+		this.measurementSetupIds = new HashSet();
 		this.setMeasurementSetupIds0(measurementSetupIds);
 		this.status = TestStatus._TEST_STATUS_NEW;
 		
