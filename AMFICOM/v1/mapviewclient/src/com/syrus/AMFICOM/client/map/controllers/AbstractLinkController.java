@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.9 2005/02/10 11:48:39 krupenn Exp $
+ * $Id: AbstractLinkController.java,v 1.10 2005/02/22 11:00:14 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,8 +13,8 @@ package com.syrus.AMFICOM.Client.Map.Controllers;
 
 import java.awt.Color;
 import java.awt.Stroke;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import com.syrus.AMFICOM.Client.General.UI.LineComboBox;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.map.MapElement;
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/02/10 11:48:39 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/22 11:00:14 $
  * @module mapviewclient_v1
  */
 public abstract class AbstractLinkController implements MapElementController
@@ -107,7 +107,7 @@ public abstract class AbstractLinkController implements MapElementController
 
 		try
 		{
-			List pTypes =
+			Collection pTypes =
 				GeneralStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
 			for (Iterator it = pTypes.iterator(); it.hasNext();)
 			{

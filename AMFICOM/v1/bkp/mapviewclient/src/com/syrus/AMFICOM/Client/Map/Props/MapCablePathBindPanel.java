@@ -30,6 +30,7 @@ import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -358,7 +359,7 @@ public final class MapCablePathBindPanel
 		this.startLastBound = this.path.getStartLastBoundLink();
 		this.endLastBound = this.path.getEndLastBoundLink();
 		
-		List smnelinks = this.path.getMap().getPhysicalLinksAt(this.startNode);
+		Collection smnelinks = this.path.getMap().getPhysicalLinksAt(this.startNode);
 		if(this.startLastBound != null)
 			smnelinks.remove(this.startLastBound);
 
@@ -383,7 +384,7 @@ public final class MapCablePathBindPanel
 			}
 		}
 
-		List emnelinks = this.path.getMap().getPhysicalLinksAt(this.endNode);
+		Collection emnelinks = this.path.getMap().getPhysicalLinksAt(this.endNode);
 		if(this.endLastBound != null)
 			emnelinks.remove(this.endLastBound);
 

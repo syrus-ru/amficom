@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsPanel.java,v 1.15 2005/02/10 11:48:39 krupenn Exp $
+ * $Id: MapElementsPanel.java,v 1.16 2005/02/22 11:00:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,6 +15,7 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.SystemColor;
 import java.awt.event.ActionEvent;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -51,7 +52,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * видов элементов и талица элементов с полями "Идентификатор" и "Название"
  * 
  * 
- * @version $Revision: 1.15 $, $Date: 2005/02/10 11:48:39 $
+ * @version $Revision: 1.16 $, $Date: 2005/02/22 11:00:15 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -257,7 +258,7 @@ public final class MapElementsPanel extends JPanel
 		this.table.clearSelection();
 
 		String selection = (String )this.typeComboBox.getSelectedItem();
-		List dataSet = new LinkedList();
+		Collection dataSet = new LinkedList();
 
 		if(this.map != null && this.logicalNetLayer != null)
 		{

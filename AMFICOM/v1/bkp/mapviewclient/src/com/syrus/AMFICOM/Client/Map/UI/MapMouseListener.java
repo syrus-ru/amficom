@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.23 2005/02/18 12:19:47 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.24 2005/02/22 11:00:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -48,7 +48,7 @@ import com.syrus.AMFICOM.mapview.VoidElement;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.23 $, $Date: 2005/02/18 12:19:47 $
+ * @version $Revision: 1.24 $, $Date: 2005/02/22 11:00:15 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -175,7 +175,6 @@ public final class MapMouseListener implements MouseListener
 
 	/**
 	 * @param me
-	 * @param point
 	 * @throws MapConnectionException
 	 * @throws MapDataException
 	 */

@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsBarPanel.java,v 1.8 2005/02/10 11:48:39 krupenn Exp $
+ * $Id: MapElementsBarPanel.java,v 1.9 2005/02/22 11:00:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.map.SiteNodeType;
 
 import java.awt.FlowLayout;
 
+import java.util.Collection;
 import java.util.Iterator;
 
 import javax.swing.JPanel;
@@ -26,7 +27,7 @@ import javax.swing.JPanel;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2005/02/10 11:48:39 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/22 11:00:15 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -67,7 +68,7 @@ public final class MapElementsBarPanel extends JPanel
 
 		this.removeAll();
 		
-		java.util.List elements = getMapProtoElements();
+		Collection elements = getMapProtoElements();
 		
 		for(Iterator it = elements.iterator(); it.hasNext();)
 		{
@@ -85,7 +86,7 @@ public final class MapElementsBarPanel extends JPanel
 			((MapElementLabel)this.getComponent(i)).setEnabled(b);
 	}
 
-	private java.util.List getMapProtoElements()
+	private Collection getMapProtoElements()
 	{
 		return NodeTypeController.getTopologicalProtos(this.aContext);
 	}

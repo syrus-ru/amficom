@@ -3,7 +3,7 @@ package com.syrus.AMFICOM.Client.Map.Props;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.util.List;
+import java.util.Collection;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -116,7 +116,7 @@ public class MapPanel
 			this.nameTextField.setText(this.map.getName());
 
 			Domain domain = null;
-			List domains = null;
+			Collection domains = null;
 			
 			StorableObjectCondition condition = 
 				new EquivalentCondition(ObjectEntities.DOMAIN_ENTITY_CODE);

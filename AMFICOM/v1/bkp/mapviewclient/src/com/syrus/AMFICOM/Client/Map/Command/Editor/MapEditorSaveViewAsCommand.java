@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorSaveViewAsCommand.java,v 1.9 2005/02/18 12:19:45 krupenn Exp $
+ * $Id: MapEditorSaveViewAsCommand.java,v 1.10 2005/02/22 11:00:14 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,22 +10,22 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Editor;
 
+import java.util.Iterator;
+
+import javax.swing.JDesktopPane;
+import javax.swing.JOptionPane;
+
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewSaveAsCommand;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewSaveAsCommand;
 import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
-import java.util.Iterator;
-import javax.swing.JDesktopPane;
-import javax.swing.JOptionPane;
 
 /**
  * Класс $RCSfile: MapEditorSaveViewAsCommand.java,v $ используется для сохранения топологической схемы в модуле
@@ -33,7 +33,7 @@ import javax.swing.JOptionPane;
  * MapSaveAsCommand
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/02/18 12:19:45 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/22 11:00:14 $
  * @module mapviewclient_v1
  * @see MapViewSaveAsCommand
  */

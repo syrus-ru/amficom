@@ -1,5 +1,5 @@
 /*
- * Название: $Id: SpatialSearchPanel.java,v 1.6 2005/02/18 12:19:46 krupenn Exp $
+ * Название: $Id: SpatialSearchPanel.java,v 1.7 2005/02/22 11:00:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,12 +10,6 @@
 
 package com.syrus.AMFICOM.Client.Map.Setup;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.SpatialObject;
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -25,22 +19,26 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
 import java.util.List;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
+import com.syrus.AMFICOM.Client.Map.SpatialObject;
+import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+
 /**
  * панель поиска географических объектов
- * @version $Revision: 1.6 $, $Date: 2005/02/18 12:19:46 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/22 11:00:15 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewOpenCommand.java,v 1.16 2005/02/10 12:59:54 krupenn Exp $
+ * $Id: MapViewOpenCommand.java,v 1.17 2005/02/22 11:00:14 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -11,7 +11,7 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Map;
 
-import java.util.List;
+import java.util.Collection;
 
 import javax.swing.JDesktopPane;
 
@@ -30,13 +30,13 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
 
 /**
  * открыть вид 
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/02/10 12:59:54 $
+ * @version $Revision: 1.17 $, $Date: 2005/02/22 11:00:14 $
  * @module mapviewclient_v1
  */
 public class MapViewOpenCommand extends VoidCommand
@@ -70,7 +70,7 @@ public class MapViewOpenCommand extends VoidCommand
 				StatusMessageEvent.STATUS_MESSAGE,
 				LangModelMap.getString("MapOpening")));
 
-		List mvs;
+		Collection mapViews;
 		try
 		{
 			Identifier domainId = new Identifier(
@@ -80,7 +80,7 @@ public class MapViewOpenCommand extends VoidCommand
 //						false);
 
 			StorableObjectCondition condition = new LinkedIdsCondition(domainId, ObjectEntities.MAPVIEW_ENTITY_CODE);
-			mvs = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			mapViews = MapViewStorableObjectPool.getStorableObjectsByCondition(condition, true);
 		}
 		catch (CommunicationException e)
 		{
@@ -102,7 +102,7 @@ public class MapViewOpenCommand extends VoidCommand
 
 		mcd.setCanDelete(this.canDelete);
 
-		mcd.setContents(mvs);
+		mcd.setContents(mapViews);
 
 		mcd.setModal(true);
 		mcd.setVisible(true);

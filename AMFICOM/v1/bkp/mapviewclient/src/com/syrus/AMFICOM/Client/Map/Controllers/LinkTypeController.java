@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.10 2005/02/18 12:19:45 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.11 2005/02/22 11:00:14 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -16,10 +16,10 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
@@ -47,7 +47,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 /**
  *  онтроллер типа линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/02/18 12:19:45 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/22 11:00:14 $
  * @module mapviewclient_v1
  */
 public final class LinkTypeController extends AbstractLinkController
@@ -561,7 +561,7 @@ public final class LinkTypeController extends AbstractLinkController
 
 		try
 		{
-			List pTypes =
+			Collection pTypes =
 				MapStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
 			for (Iterator it = pTypes.iterator(); it.hasNext();)
 			{
@@ -605,7 +605,7 @@ public final class LinkTypeController extends AbstractLinkController
 	 * @param aContext контекст приложени€
 	 * @return список типов линий &lt;{@link PhysicalLinkType}&gt;
 	 */
-	public static List getPens(ApplicationContext aContext)
+	public static Collection getPens(ApplicationContext aContext)
 	{
 		Identifier creatorId = new Identifier(
 			aContext.getSessionInterface().getAccessIdentifier().user_id);
@@ -618,7 +618,7 @@ public final class LinkTypeController extends AbstractLinkController
 		StorableObjectCondition pTypeCondition = new EquivalentCondition(
 				ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE);
 
-		List list = null;
+		Collection list = null;
 		try
 		{
 			list =
@@ -628,7 +628,7 @@ public final class LinkTypeController extends AbstractLinkController
 		}
 		catch(Exception e)
 		{
-			list = new LinkedList();
+			list = Collections.EMPTY_LIST;
 		}
 		
 		return list;

@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewSaveAsCommand.java,v 1.12 2005/02/08 15:11:10 krupenn Exp $
+ * $Id: MapViewSaveAsCommand.java,v 1.13 2005/02/22 11:00:14 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.Props.MapViewPanel;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesDialog;
-import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
  * Класс используется для сохранения топологической схемы с новым
  * именем
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/02/08 15:11:10 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/22 11:00:14 $
  * @module mapviewclient_v1
  */
 public class MapViewSaveAsCommand extends VoidCommand

@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.13 2005/02/18 12:19:45 krupenn Exp $
+ * $Id: MapViewController.java,v 1.14 2005/02/22 11:00:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,7 +10,16 @@
 
 package com.syrus.AMFICOM.Client.Map.Controllers;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.geom.Rectangle2D;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeElementCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemePathCommand;
@@ -18,16 +27,12 @@ import com.syrus.AMFICOM.Client.Map.Command.Action.RemoveNodeCommandAtomic;
 import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemeElementCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemePathCommand;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.DoublePoint;
@@ -44,19 +49,11 @@ import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 import com.syrus.AMFICOM.scheme.corba.SchemePath;
 
-import java.awt.Graphics;
-import java.awt.Point;
-import java.awt.geom.Rectangle2D;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-
 /**
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
  * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/02/18 12:19:45 $
+ * @version $Revision: 1.14 $, $Date: 2005/02/22 11:00:15 $
  * @module mapviewclient_v1
  */
 public final class MapViewController
@@ -300,7 +297,7 @@ public final class MapViewController
 			ConfigurationStorableObjectPool.getStorableObject(meId, true);
 		if(me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH))
 		{
-			Identifier tpId = (Identifier )(me.getMonitoredDomainMemberIds().get(0));
+			Identifier tpId = (Identifier )(me.getMonitoredDomainMemberIds().iterator().next());
 			TransmissionPath tp = (TransmissionPath )
 				ConfigurationStorableObjectPool.getStorableObject(tpId, true);
 			if(tp != null)

@@ -1,5 +1,5 @@
 /**
- * $Id: MapOpenCommand.java,v 1.16 2005/02/10 12:59:54 krupenn Exp $
+ * $Id: MapOpenCommand.java,v 1.17 2005/02/22 11:00:14 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,7 +11,7 @@
 
 package com.syrus.AMFICOM.Client.Map.Command.Map;
 
-import java.util.List;
+import java.util.Collection;
 
 import javax.swing.JDesktopPane;
 
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.map.MapStorableObjectPool;
 /**
  * открыть карту. карта открывается в новом виде
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/02/10 12:59:54 $
+ * @version $Revision: 1.17 $, $Date: 2005/02/22 11:00:14 $
  * @module mapviewclient_v1
  */
 public class MapOpenCommand extends VoidCommand
@@ -71,7 +71,7 @@ public class MapOpenCommand extends VoidCommand
 				LangModelMap.getString("MapOpening")));
 
 //		StorableObjectContidion 
-		List maps;
+		Collection maps;
 		try
 		{
 			Identifier domainId = new Identifier(

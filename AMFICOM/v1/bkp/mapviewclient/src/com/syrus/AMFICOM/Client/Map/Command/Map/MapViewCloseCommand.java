@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewCloseCommand.java,v 1.9 2005/02/08 15:11:10 krupenn Exp $
+ * $Id: MapViewCloseCommand.java,v 1.10 2005/02/22 11:00:14 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,8 +12,6 @@ package com.syrus.AMFICOM.Client.Map.Command.Map;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
 
@@ -24,7 +22,7 @@ import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
  * что активной карты нет, и карта центрируется по умолчанию
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/02/08 15:11:10 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/22 11:00:14 $
  * @module mapviewclient_v1
  */
 public class MapViewCloseCommand extends VoidCommand
@@ -44,19 +42,8 @@ public class MapViewCloseCommand extends VoidCommand
 //		mapFrame.saveConfig();
 
 		if(this.mapView != null)
-		try
-		{
-			// TODO should be 'remove', node 'delete'
+			// TODO should be 'remove', not 'delete'
 			MapViewStorableObjectPool.delete(this.mapView.getId());
-		}
-		catch (CommunicationException e)
-		{
-			e.printStackTrace();
-		}
-		catch (DatabaseException e)
-		{
-			e.printStackTrace();
-		}
 
 		setResult(Command.RESULT_OK);
 	}

@@ -26,6 +26,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -215,7 +216,7 @@ public final class MapSiteBindPanel
 		CablePath cablePath = mapView.findCablePath(scl);
 
 		List pathLinks = cablePath.getLinks();
-		List siteLinks = mapView.getMap().getPhysicalLinksAt(this.site);
+		Collection siteLinks = mapView.getMap().getPhysicalLinksAt(this.site);
 
 		PhysicalLink linkRight = null;
 		PhysicalLink linkLeft = null;

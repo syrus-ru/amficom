@@ -3,7 +3,7 @@ package com.syrus.AMFICOM.Client.Map.Props;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.util.List;
+import java.util.Collection;
 
 import javax.swing.Box;
 import javax.swing.JLabel;
@@ -21,13 +21,13 @@ import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.DomainCondition;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.map.DoublePoint;
@@ -181,7 +181,7 @@ public class MapViewPanel
 			this.nameTextField.setText(this.view.getName());
 
 			Domain domain = null;
-			List domains = null;
+			Collection domains = null;
 
 			StorableObjectCondition condition = 
 				new EquivalentCondition(ObjectEntities.DOMAIN_ENTITY_CODE);
@@ -214,10 +214,10 @@ public class MapViewPanel
 			this.domainComboBox.addElements(domains);
 			this.domainComboBox.setSelectedItem(domain);
 
-			List maps = null;
+			Collection maps = null;
 
 			StorableObjectCondition domainCondition = 
-				new DomainCondition(domain, ObjectEntities.MAP_ENTITY_CODE);
+				new LinkedIdsCondition(domain.getId(), ObjectEntities.MAP_ENTITY_CODE);
 			try
 			{
 				maps = MapViewStorableObjectPool.getStorableObjectsByCondition(

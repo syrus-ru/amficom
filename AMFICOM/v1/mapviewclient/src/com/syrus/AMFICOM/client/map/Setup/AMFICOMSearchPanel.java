@@ -1,5 +1,5 @@
 /*
- * Название: $Id: AMFICOMSearchPanel.java,v 1.9 2005/02/10 11:48:39 krupenn Exp $
+ * Название: $Id: AMFICOMSearchPanel.java,v 1.10 2005/02/22 11:00:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * Панель поиска элементов карты АМФИКОМ
- * @version $Revision: 1.9 $, $Date: 2005/02/10 11:48:39 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/22 11:00:15 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -221,7 +221,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 		try
 		{
 			Iterator it;
-			for(it = map.getNodes().listIterator(); it.hasNext();)
+			for(it = map.getNodes().iterator(); it.hasNext();)
 			{
 				MapElement me = (MapElement )it.next();
 
@@ -231,7 +231,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 					vec.add(me);
 			}
 			
-			for(it = map.getPhysicalLinks().listIterator(); it.hasNext();)
+			for(it = map.getPhysicalLinks().iterator(); it.hasNext();)
 			{
 				MapElement me = (MapElement )it.next();
 				if(me.getName().indexOf(this.searchText) != -1)

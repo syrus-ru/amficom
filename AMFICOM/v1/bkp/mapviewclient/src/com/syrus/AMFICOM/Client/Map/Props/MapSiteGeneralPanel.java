@@ -4,7 +4,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.List;
+import java.util.Collection;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -166,7 +166,7 @@ public class MapSiteGeneralPanel
 			this.nameTextField.setEnabled(true);
 			this.nameTextField.setText(this.site.getName());
 
-			List protos = NodeTypeController.getTopologicalProtos(getLogicalNetLayer().getContext());
+			Collection protos = NodeTypeController.getTopologicalProtos(getLogicalNetLayer().getContext());
 
 			this.typeComboBox.setEnabled(true);
 			this.typeComboBox.addElements(protos);

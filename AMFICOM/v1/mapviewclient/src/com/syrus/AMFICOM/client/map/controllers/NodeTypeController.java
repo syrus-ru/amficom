@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.9 2005/02/18 12:19:45 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.10 2005/02/22 11:00:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,10 +14,10 @@ package com.syrus.AMFICOM.Client.Map.Controllers;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 /**
  * контроллер типа сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/02/18 12:19:45 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/22 11:00:15 $
  * @module mapviewclient_v1
  */
 public class NodeTypeController extends AbstractNodeController
@@ -166,7 +166,7 @@ public class NodeTypeController extends AbstractNodeController
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE,
 				ImageResourceWrapper.COLUMN_SORT);
-			List bitMaps = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			Collection bitMaps = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
 //			List bitMaps = Collections.EMPTY_LIST;
 
 			for (Iterator it = bitMaps.iterator(); it.hasNext(); ) 
@@ -221,7 +221,7 @@ public class NodeTypeController extends AbstractNodeController
 
 		try
 		{
-			List pTypes =
+			Collection pTypes =
 				MapStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
 			for (Iterator it = pTypes.iterator(); it.hasNext();)
 			{
@@ -263,9 +263,9 @@ public class NodeTypeController extends AbstractNodeController
 	 * @param aContext контекст приложения
 	 * @return список типов сетевых узлов &lt;{@link SiteNodeType}&gt;
 	 */
-	public static List getTopologicalProtos(ApplicationContext aContext)
+	public static Collection getTopologicalProtos(ApplicationContext aContext)
 	{
-		List topologicalProtos = Collections.EMPTY_LIST;
+		Collection topologicalProtos = Collections.EMPTY_LIST;
 
 		Identifier creatorId = new Identifier(
 			aContext.getSessionInterface().getAccessIdentifier().user_id);

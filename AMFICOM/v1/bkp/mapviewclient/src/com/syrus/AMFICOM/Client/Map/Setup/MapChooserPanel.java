@@ -1,5 +1,5 @@
 /*
- * Название: $Id: MapChooserPanel.java,v 1.6 2005/02/18 12:19:46 krupenn Exp $
+ * Название: $Id: MapChooserPanel.java,v 1.7 2005/02/22 11:00:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,18 +10,12 @@
 
 package com.syrus.AMFICOM.Client.Map.Setup;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.util.Iterator;
 import java.util.List;
 
@@ -30,11 +24,14 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import org.apache.xpath.axes.PredicatedNodeTest;
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
+import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 
 /**
  * панель выбора вида карты
- * @version $Revision: 1.6 $, $Date: 2005/02/18 12:19:46 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/22 11:00:15 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

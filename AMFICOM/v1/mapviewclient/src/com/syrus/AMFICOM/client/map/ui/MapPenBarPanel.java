@@ -1,5 +1,5 @@
 /**
- * $Id: MapPenBarPanel.java,v 1.6 2005/02/10 11:48:39 krupenn Exp $
+ * $Id: MapPenBarPanel.java,v 1.7 2005/02/22 11:00:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,24 +9,23 @@
 
 package com.syrus.AMFICOM.Client.Map.UI;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
-import com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.map.PhysicalLinkType;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import java.util.List;
+import java.util.Collection;
 
 import javax.swing.JPanel;
 
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController;
+import com.syrus.AMFICOM.map.PhysicalLinkType;
+
 /**
  *  На этой панельке располагаются элементы которые будут наноситься на карту
- * @version $Revision: 1.6 $, $Date: 2005/02/10 11:48:39 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/22 11:00:15 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -81,7 +80,7 @@ public final class MapPenBarPanel extends JPanel
 	{
 		if(this.logicalNetLayer == null)
 			return;
-		List els = LinkTypeController.getPens(this.logicalNetLayer.getContext());
+		Collection els = LinkTypeController.getPens(this.logicalNetLayer.getContext());
 		this.penComboBox.setContents(els, false);
 		this.penComboBox.setSelected(this.logicalNetLayer.getPen());
 	}

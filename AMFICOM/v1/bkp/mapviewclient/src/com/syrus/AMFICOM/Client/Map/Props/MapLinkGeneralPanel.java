@@ -4,7 +4,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.List;
+import java.util.Collection;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -188,7 +188,7 @@ public class MapLinkGeneralPanel
 			this.nameTextField.setEnabled(true);
 			this.nameTextField.setText(this.link.getName());
 
-			List protos = LinkTypeController.getPens(getLogicalNetLayer().getContext());
+			Collection protos = LinkTypeController.getPens(getLogicalNetLayer().getContext());
 			
 			this.typeComboBox.setEnabled(true);
 			this.typeComboBox.addElements(protos);

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.28 2005/02/18 12:19:46 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.29 2005/02/22 11:00:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ package com.syrus.AMFICOM.Client.Map.Popup;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Toolkit;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -61,7 +62,7 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 /**
  * Контекстное меню элемента карты
  * @author $Author: krupenn $
- * @version $Revision: 1.28 $, $Date: 2005/02/18 12:19:46 $
+ * @version $Revision: 1.29 $, $Date: 2005/02/22 11:00:15 $
  * @module mapviewclient_v1
  */
 public abstract class MapPopupMenu extends JPopupMenu
@@ -137,7 +138,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 	{
 		Collector collector = null;
 
-		List list = this.logicalNetLayer.getMapView().getMap().getCollectors();
+		Collection list = this.logicalNetLayer.getMapView().getMap().getCollectors();
 		
 		ObjectResourceSelectionDialog dialog = new ObjectResourceSelectionDialog(list);
 			
@@ -163,7 +164,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 	{
 		SiteNodeType proto = null;
 
-		List list = NodeTypeController.getTopologicalProtos(this.logicalNetLayer.getContext());
+		Collection list = NodeTypeController.getTopologicalProtos(this.logicalNetLayer.getContext());
 
 		ObjectResourceSelectionDialog dialog = new ObjectResourceSelectionDialog(list);
 			
@@ -228,7 +229,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 		List list = new LinkedList();
 
 		// select physical links that connect same end nodes as link
-		List list2 = map.getPhysicalLinksAt(node1);
+		Collection list2 = map.getPhysicalLinksAt(node1);
 		for(Iterator it = map.getPhysicalLinksAt(node2).iterator(); it.hasNext();)
 		{
 			PhysicalLink le = (PhysicalLink)it.next();
