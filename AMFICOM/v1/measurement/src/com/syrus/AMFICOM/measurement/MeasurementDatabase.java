@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.57 2005/02/03 14:59:29 bob Exp $
+ * $Id: MeasurementDatabase.java,v 1.58 2005/02/03 15:00:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,41 +10,33 @@ package com.syrus.AMFICOM.measurement;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
+import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
-import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.DomainMember;
-import com.syrus.AMFICOM.administration.DomainCondition;
-import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.Identified;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
-import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/02/03 14:59:29 $
+ * @version $Revision: 1.58 $, $Date: 2005/02/03 15:00:40 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -337,100 +329,22 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 		//return retriveByIdsPreparedStatement(ids, condition);
 	}
 
-	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
-		List list = null;
-
-		String condition = MeasurementWrapper.COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
-				+ SQL_SELECT + StorableObjectWrapper.COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
-				+ DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId())
-				+ CLOSE_BRACKET;
-
-		try {
-			list = retrieveButIds(ids, condition);
-		}
-		catch (IllegalDataException ide) {           
-			Log.debugMessage("MeasurementDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
-		}
-
-		return list;
-	}
-
-	private List retrieveButIdsByTest(List ids, List testIds) throws RetrieveObjectException {
-		List list = null;
-
-		if ((testIds != null) && (!testIds.isEmpty())) {
-			StringBuffer buffer = new StringBuffer();
-			buffer.append(MeasurementWrapper.COLUMN_TEST_ID);
-			buffer.append(SQL_IN);
-			buffer.append(OPEN_BRACKET);
-			int i = 1;
-			for (Iterator it = testIds.iterator(); it.hasNext(); i++) {
-				Object object = it.next();
-				Identifier id = null;
-				if (object instanceof Identifier)
-					id = (Identifier) object;
-				else
-					if (object instanceof Identified)
-						id = ((Identified) object).getId();
-					else
-						throw new RetrieveObjectException("MeasurementDatabase.retrieveButIdsByTest | Object "
-								+ object.getClass().getName()
-								+ " isn't Identifier or Identified");
-
-				if (id != null) {
-					buffer.append(DatabaseIdentifier.toSQLString(id));
-					if (it.hasNext()) {
-						if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-							buffer.append(COMMA);
-						else {
-							buffer.append(CLOSE_BRACKET);
-							buffer.append(SQL_OR);
-							buffer.append(MeasurementWrapper.COLUMN_TEST_ID);
-							buffer.append(SQL_IN);
-							buffer.append(OPEN_BRACKET);
-						}
-					}
-				}
-			}
-			buffer.append(CLOSE_BRACKET);
-			try {
-				list = retrieveButIds(ids, buffer.toString());
-			}
-			catch (IllegalDataException ide) {
-				Log.debugMessage("MeasurementDatabase.retrieveButIdsByTest | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
-			}
-		}
-		else
-			list = Collections.EMPTY_LIST;
-
-		return list;
-	}
-
-//	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException, IllegalDataException {
+//	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
 //		List list = null;
-//		if (condition instanceof LinkedIdsCondition) {
-//			LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
-//			List testIds = linkedIdsCondition.getLinkedIds();
-//			if (testIds == null)
-//				testIds = Collections.singletonList(linkedIdsCondition.getIdentifier());
-//			for (Iterator it = testIds.iterator(); it.hasNext();) {
-//				Identifier testId = (Identifier) it.next();
-//				Log.errorMessage("MeasurementDatabase.retrieveByCondition | get measurements for test " + testId.toString());
-//			}
-//			if (testIds != null && !testIds.isEmpty())
-//				list = this.retrieveButIdsByTest(ids, testIds);
-//			else 
-//				Log.errorMessage("MeasurementDatabase.retrieveByCondition | there are no tests to retrieve measurements");
+//
+//		String condition = MeasurementWrapper.COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
+//				+ SQL_SELECT + StorableObjectWrapper.COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
+//				+ DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId())
+//				+ CLOSE_BRACKET;
+//
+//		try {
+//			list = retrieveButIds(ids, condition);
 //		}
-//		else
-//			if (condition instanceof DomainCondition) {
-//				DomainCondition domainCondition = (DomainCondition)condition;
-//				list = this.retrieveButIdsByDomain(ids, domainCondition.getDomain());
-//			}
-//			else {
-//				Log.errorMessage("MeasurementDatabase.retrieveByCondition | Unknown condition class: " + condition);
-//				list = this.retrieveButIds(ids);
-//			}
+//		catch (IllegalDataException ide) {           
+//			Log.debugMessage("MeasurementDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
+//		}
+//
 //		return list;
 //	}
+
 }
