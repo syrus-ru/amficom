@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.20 2004/10/03 12:43:06 bob Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.21 2004/10/07 14:10:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/10/03 12:43:06 $
+ * @version $Revision: 1.21 $, $Date: 2004/10/07 14:10:07 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -41,6 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 public class MonitoredElementDatabase extends StorableObjectDatabase {
     public static final String COLUMN_MEASUREMENT_PORT_ID = "measurement_port_id";
     // sort NUMBER(2) NOT NULL,
+    public static final String COLUMN_NAME = "name";
     public static final String COLUMN_SORT = "sort";
     public static final String COLUMN_LOCAL_ADDRESS = "local_address";
 
@@ -71,6 +72,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		if (this.updateColumns == null){
     		this.updateColumns = super.getUpdateColumns() + COMMA
 			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
+			+ COLUMN_NAME + COMMA
 			+ COLUMN_MEASUREMENT_PORT_ID + COMMA
 			+ COLUMN_SORT + COMMA
 			+ COLUMN_LOCAL_ADDRESS;
@@ -84,6 +86,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
+					+ QUESTION + COMMA
 					+ QUESTION;
     	}
 		return this.updateMultiplySQLValues;
@@ -94,6 +97,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		MonitoredElement monitoredElement = fromStorableObject(storableObject);
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 				+ monitoredElement.getDomainId().toSQLString() + COMMA
+				+ APOSTOPHE + monitoredElement.getName() + APOSTOPHE + COMMA
 				+ monitoredElement.getMeasurementPortId().toSQLString() + COMMA
 				+ monitoredElement.getSort().value() + COMMA
 				+ APOSTOPHE + monitoredElement.getLocalAddress() + APOSTOPHE;
@@ -108,6 +112,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		try {
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
 			preparedStatement.setString( ++i, monitoredElement.getDomainId().toString());
+			preparedStatement.setString( ++i, monitoredElement.getName());
 			preparedStatement.setString( ++i, monitoredElement.getMeasurementPortId().toString());
 			preparedStatement.setInt( ++i, monitoredElement.getSort().value());
 			preparedStatement.setString( ++i, monitoredElement.getLocalAddress());
@@ -127,7 +132,8 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 
 	protected String retrieveQuery(String condition){
 		return super.retrieveQuery(condition) + COMMA
-				+ DomainMember.COLUMN_DOMAIN_ID + COMMA		
+				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
+				+ COLUMN_NAME + COMMA
 				+ COLUMN_MEASUREMENT_PORT_ID + COMMA
 				+ COLUMN_SORT + COMMA
 				+ COLUMN_LOCAL_ADDRESS
@@ -143,7 +149,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			/**
 			 * @todo when change DB Identifier model ,change getString() to getLong()
 			 */
-			monitoredElement = new MonitoredElement(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, 0, null, null);			
+			monitoredElement = new MonitoredElement(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, 0, null, null);			
 		}
 		monitoredElement.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 									   DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
@@ -162,6 +168,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 										 *       getLong()
 										 */
 									   new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),
+									   resultSet.getString(COLUMN_NAME),
 									   /**
 										 * @todo when change DB Identifier model ,change getString() to
 										 *       getLong()

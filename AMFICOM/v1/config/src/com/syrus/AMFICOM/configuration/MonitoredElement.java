@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.19 2004/09/01 15:08:01 bob Exp $
+ * $Id: MonitoredElement.java,v 1.20 2004/10/07 14:10:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/09/01 15:08:01 $
+ * @version $Revision: 1.20 $, $Date: 2004/10/07 14:10:07 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -31,6 +31,7 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 public class MonitoredElement extends DomainMember {
 	private Identifier measurementPortId;
 	private int sort;
+	private String name;
 	private String localAddress;
 
 	private List monitoredDomainMemberIds;
@@ -61,6 +62,8 @@ public class MonitoredElement extends DomainMember {
 		this.localAddress = new String(met.local_address);
 
 		this.monitoredDomainMemberIds = new ArrayList(met.monitored_domain_member_ids.length);
+		this.name = met.name;
+		
 		for (int i= 0; i < met.monitored_domain_member_ids.length; i++)
 			this.monitoredDomainMemberIds.add(new Identifier(met.monitored_domain_member_ids[i]));		
 	}
@@ -68,6 +71,7 @@ public class MonitoredElement extends DomainMember {
 	protected MonitoredElement(Identifier id,
 													 Identifier creatorId,
 													 Identifier domainId,
+													 String name,
 													 Identifier measurementPortId,
 													 int sort,
 													 String localAddress,
@@ -78,6 +82,7 @@ public class MonitoredElement extends DomainMember {
 					creatorId,
 					creatorId,
 					domainId);
+		this.name = name;
 		this.measurementPortId = measurementPortId;
 		this.sort = sort;
 		this.localAddress = localAddress;
@@ -99,6 +104,7 @@ public class MonitoredElement extends DomainMember {
 	public static MonitoredElement createInstance(Identifier id,
 																								Identifier creatorId,
 																								Identifier domainId,
+																								String name,
 																								Identifier measurementPortId,
 																								int sort,
 																								String localAddress,
@@ -106,6 +112,7 @@ public class MonitoredElement extends DomainMember {
 		return new MonitoredElement(id,
 																creatorId,
 																domainId,
+																name,
 																measurementPortId,
 																sort,
 																localAddress,
@@ -138,6 +145,7 @@ public class MonitoredElement extends DomainMember {
 																						 (Identifier_Transferable)super.creatorId.getTransferable(),
 																						 (Identifier_Transferable)super.modifierId.getTransferable(),
 																						 (Identifier_Transferable)super.domainId.getTransferable(),
+																						 this.name,
 																						 (Identifier_Transferable)this.measurementPortId.getTransferable(),
 																						 MonitoredElementSort.from_int(this.sort),
 																						 new String(this.localAddress),
@@ -165,6 +173,7 @@ public class MonitoredElement extends DomainMember {
 																						Identifier creator_id,
 																						Identifier modifier_id,
 																						Identifier domainId,
+																						String name,
 																						Identifier measurementPortId,
 																						int sort,
 																						String localAddress) {
@@ -173,6 +182,7 @@ public class MonitoredElement extends DomainMember {
 												creator_id,
 												modifier_id,
 												domainId);
+		this.name = name;
 		this.measurementPortId = measurementPortId;
 		this.sort = sort;
 		this.localAddress = localAddress;
@@ -180,5 +190,13 @@ public class MonitoredElement extends DomainMember {
 
 	protected synchronized void setMonitoredDomainMemberIds(List monitoredDomainMemberIds) {
 		this.monitoredDomainMemberIds = monitoredDomainMemberIds;
+	}
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 }
