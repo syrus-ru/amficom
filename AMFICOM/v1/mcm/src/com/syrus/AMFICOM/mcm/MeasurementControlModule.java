@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.27 2004/08/29 13:37:32 bob Exp $
+ * $Id: MeasurementControlModule.java,v 1.28 2004/08/30 14:41:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,6 +27,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.*;
+import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.AMFICOM.measurement.Result;
@@ -41,7 +42,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/08/29 13:37:32 $
+ * @version $Revision: 1.28 $, $Date: 2004/08/30 14:41:15 $
  * @author $Author: bob $
  * @module mcm_v1
  */
@@ -197,7 +198,8 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		testList = Collections.synchronizedList(new ArrayList());
 		List tests;
 		
-		TestDatabase testDatabase = TestDatabase.getInstance();
+		TestDatabase testDatabase = (TestDatabase)MeasurementDatabaseContext.getTestDatabase();
+		
 
 		try {
 			tests = testDatabase.retrieveTestsForMCM(iAm.getId(), TestStatus.TEST_STATUS_SCHEDULED);
