@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.15 2004/12/09 14:24:01 max Exp $
+ * $Id: LinkDatabase.java,v 1.16 2004/12/14 12:53:35 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/12/09 14:24:01 $
+ * @version $Revision: 1.16 $, $Date: 2004/12/14 12:53:35 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -48,14 +48,18 @@ public class LinkDatabase extends StorableObjectDatabase {
     // description VARCHAR2(256),
     public static final String COLUMN_DESCRIPTION   = "description";
     // inventory_no VARCHAR2(64),
+    private static final int SIZE_INVENTORY_NO_COLUMN  = 64;
     public static final String COLUMN_INVENTORY_NO  = "inventory_no";
     // supplier VARCHAR2(64),
+    private static final int SIZE_SUPPLIER_COLUMN  = 64;
     public static final String COLUMN_SUPPLIER      = "supplier";
     // supplier_code VARCHAR2(64),
+    private static final int SIZE_SUPPLIER_CODE_COLUMN  = 64;
     public static final String COLUMN_SUPPLIER_CODE = "supplier_code";
     // color VARCHAR(32),
     public static final String COLUMN_COLOR = "color";
     // mark VARCHAR(32),
+    private static final int SIZE_MARK_COLUMN  = 32;
     public static final String COLUMN_MARK  = "mark";
 
 
@@ -110,17 +114,17 @@ public class LinkDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
 		Link link = fromStorableObject(storableObject);
-		String inventoryNo = DatabaseString.toQuerySubString(link.getInventoryNo());
-		String supplier = DatabaseString.toQuerySubString(link.getSupplier());
-		String supplierCode = DatabaseString.toQuerySubString(link.getSupplierCode());
+		String inventoryNo = DatabaseString.toQuerySubString(link.getInventoryNo(), SIZE_INVENTORY_NO_COLUMN);
+		String supplier = DatabaseString.toQuerySubString(link.getSupplier(), SIZE_SUPPLIER_COLUMN);
+		String supplierCode = DatabaseString.toQuerySubString(link.getSupplierCode(), SIZE_SUPPLIER_CODE_COLUMN);
 		String color = DatabaseString.toQuerySubString(link.getColor());
-		String mark = DatabaseString.toQuerySubString(link.getMark());
+		String mark = DatabaseString.toQuerySubString(link.getMark(),SIZE_MARK_COLUMN);
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ DatabaseIdentifier.toSQLString(link.getDomainId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(link.getType().getId()) + COMMA
 			+ link.getSort().value() + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(link.getName()) + APOSTOPHE + COMMA
-			+ APOSTOPHE + DatabaseString.toQuerySubString(link.getDescription()) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(link.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
+			+ APOSTOPHE + DatabaseString.toQuerySubString(link.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + (inventoryNo != null ? inventoryNo : "") + APOSTOPHE + COMMA
 			+ APOSTOPHE + (supplier != null ? supplier : "") + APOSTOPHE + COMMA
 			+ APOSTOPHE + (supplierCode != null ? supplierCode : "") + APOSTOPHE + COMMA
@@ -201,7 +205,7 @@ public class LinkDatabase extends StorableObjectDatabase {
 	}	
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		Link link = this.fromStorableObject(storableObject);
+		//Link link = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				return null;

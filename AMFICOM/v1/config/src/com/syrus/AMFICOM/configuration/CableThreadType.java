@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.9 2004/12/14 09:16:08 max Exp $
+ * $Id: CableThreadType.java,v 1.10 2004/12/14 12:58:27 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/12/14 09:16:08 $
+ * @version $Revision: 1.10 $, $Date: 2004/12/14 12:58:27 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -167,6 +167,13 @@ public class CableThreadType extends StorableObjectType {
         return this.name;
     }
 	
+	public void setName(String name) {
+		this.name = name;
+	}
+    
+	public void setLinkType(LinkType type) {
+		this.type = type;
+	}
 	public List getDependencies() {
 		return Collections.singletonList(this.type);
 	}
