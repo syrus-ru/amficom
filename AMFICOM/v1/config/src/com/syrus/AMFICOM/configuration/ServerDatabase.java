@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.32 2004/12/07 15:32:33 max Exp $
+ * $Id: ServerDatabase.java,v 1.33 2004/12/10 10:32:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2004/12/07 15:32:33 $
- * @author $Author: max $
+ * @version $Revision: 1.33 $, $Date: 2004/12/10 10:32:15 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -103,7 +103,7 @@ public class ServerDatabase extends StorableObjectDatabase {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
 		Server server = this.fromStorableObject(storableObject);
 		this.retrieveEntity(server);
-		server.setCharacteristics(characteristicDatabase.retrieveCharacteristics(server.getId(), CharacteristicSort.CHARACTERISTIC_SORT_SERVER));
+		server.setCharacteristics0(characteristicDatabase.retrieveCharacteristics(server.getId(), CharacteristicSort.CHARACTERISTIC_SORT_SERVER));
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
@@ -148,7 +148,7 @@ public class ServerDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private List retrieveMCMIds(Server server) throws ObjectNotFoundException, RetrieveObjectException {
+	private List retrieveMCMIds(Server server) throws RetrieveObjectException {
 		List mcmIds = new ArrayList();
 
 		String serverIdStr = DatabaseIdentifier.toSQLString(server.getId());
@@ -193,11 +193,23 @@ public class ServerDatabase extends StorableObjectDatabase {
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		Server server = this.fromStorableObject(storableObject);
 		this.insertEntity(server);
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+        try {
+			characteristicDatabase.updateCharacteristics(server);
+		} catch (UpdateObjectException e) {
+			throw new CreateObjectException(e);
+		}
 	}
 	
 	
 	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
 		insertEntities(storableObjects);
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		try {
+			characteristicDatabase.updateCharacteristics(storableObjects);
+		} catch (UpdateObjectException e) {
+			throw new CreateObjectException(e);
+		}
 	}
 
 	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, 
@@ -205,13 +217,15 @@ public class ServerDatabase extends StorableObjectDatabase {
 		Server server = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(storableObject, false);
+				super.checkAndUpdateEntity(server, false);
 				break;
 			case UPDATE_FORCE:					
 			default:
-				super.checkAndUpdateEntity(storableObject, true);		
+				super.checkAndUpdateEntity(server, true);		
 				return;
 		}
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		characteristicDatabase.updateCharacteristics(server);
 	}
 	
 	public void update(List storableObjects, int updateKind, Object arg) throws IllegalDataException,
@@ -225,7 +239,8 @@ public class ServerDatabase extends StorableObjectDatabase {
 				super.checkAndUpdateEntities(storableObjects, true);		
 				return;
 		}
-		
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		characteristicDatabase.updateCharacteristics(storableObjects);
 	}	
 	
 	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
@@ -238,9 +253,9 @@ public class ServerDatabase extends StorableObjectDatabase {
             CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
             Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_SERVER);
              for (Iterator iter = list.iterator(); iter.hasNext();) {
-                TransmissionPath transmissionPath = (TransmissionPath) iter.next();
-                List characteristics = (List)characteristicMap.get(transmissionPath);
-                transmissionPath.setCharacteristics(characteristics);
+                Server server = (Server) iter.next();
+                List characteristics = (List)characteristicMap.get(server);
+                server.setCharacteristics0(characteristics);
             }
         }
 		return list;

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.26 2004/12/07 15:32:33 max Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.27 2004/12/10 10:32:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/12/07 15:32:33 $
- * @author $Author: max $
+ * @version $Revision: 1.27 $, $Date: 2004/12/10 10:32:15 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 public class MeasurementPortDatabase extends StorableObjectDatabase {
@@ -133,7 +133,7 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 		MeasurementPort measurementPort = this.fromStorableObject(storableObject);
 		super.retrieveEntity(measurementPort);
         CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
-        measurementPort.setCharacteristics(characteristicDatabase.retrieveCharacteristics(measurementPort.getId(), CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORT));
+        measurementPort.setCharacteristics0(characteristicDatabase.retrieveCharacteristics(measurementPort.getId(), CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORT));
 	}
 	
 	public List retrieveByIds(List ids, String condition)
@@ -150,7 +150,7 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
             for (Iterator iter = list.iterator(); iter.hasNext();) {
                 MeasurementPort measurementPort = (MeasurementPort) iter.next();
                 List characteristics = (List)characteristicMap.get(measurementPort);
-                measurementPort.setCharacteristics(characteristics);
+                measurementPort.setCharacteristics0(characteristics);
             }
         }
         
@@ -200,38 +200,55 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 			CreateObjectException {
 		MeasurementPort measurementPort = this.fromStorableObject(storableObject);
 		super.insertEntity(measurementPort);		
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		try {
+			characteristicDatabase.updateCharacteristics(measurementPort);
+		} catch (UpdateObjectException e) {
+			throw new CreateObjectException(e);
+		}
 	}
 	
 	public void insert(List storableObjects) throws IllegalDataException,
 			CreateObjectException {
 		super.insertEntities(storableObjects);
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		try {
+			characteristicDatabase.updateCharacteristics(storableObjects);
+		} catch (UpdateObjectException e) {
+			throw new CreateObjectException(e);
+		}
 	}
 	
 
 	public void update(StorableObject storableObject, int updateKind, Object obj)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
+		MeasurementPort measurementPort = this.fromStorableObject(storableObject);
 		switch (updateKind) {
-		case UPDATE_FORCE:
-			super.checkAndUpdateEntity(storableObject, true);
-			break;
-		case UPDATE_CHECK: 					
-		default:
-			super.checkAndUpdateEntity(storableObject, false);
-		break;
+			case UPDATE_FORCE:
+				super.checkAndUpdateEntity(measurementPort, true);
+				break;
+			case UPDATE_CHECK: 					
+			default:
+				super.checkAndUpdateEntity(measurementPort, false);
+				break;
 		}
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		characteristicDatabase.updateCharacteristics(measurementPort);
 	}
 
 	public void update(List storableObjects, int updateKind, Object arg)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
-		case UPDATE_FORCE:
-			super.checkAndUpdateEntities(storableObjects, true);
-			break;
-		case UPDATE_CHECK: 					
-		default:
-			super.checkAndUpdateEntities(storableObjects, false);
-			break;
+			case UPDATE_FORCE:
+				super.checkAndUpdateEntities(storableObjects, true);
+				break;
+			case UPDATE_CHECK: 					
+			default:
+				super.checkAndUpdateEntities(storableObjects, false);
+				break;
 		}
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		characteristicDatabase.updateCharacteristics(storableObjects);
 	}
 	
 	public List retrieveAll() throws RetrieveObjectException {

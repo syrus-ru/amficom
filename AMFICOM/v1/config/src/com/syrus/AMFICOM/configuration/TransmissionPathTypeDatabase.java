@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathTypeDatabase.java,v 1.10 2004/12/07 15:32:33 max Exp $
+ * $Id: TransmissionPathTypeDatabase.java,v 1.11 2004/12/10 10:32:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/12/07 15:32:33 $
- * @author $Author: max $
+ * @version $Revision: 1.11 $, $Date: 2004/12/10 10:32:15 $
+ * @author $Author: bob $
  * @module module_name
  */
 
@@ -48,7 +48,7 @@ public class TransmissionPathTypeDatabase extends StorableObjectDatabase {
         TransmissionPathType transmissionPathType = this.fromStorableObject(storableObject);
         super.retrieveEntity(transmissionPathType);
         CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
-        transmissionPathType.setCharacteristics(characteristicDatabase.retrieveCharacteristics(transmissionPathType.getId(), CharacteristicSort.CHARACTERISTIC_SORT_TRANSMISSIONPATHTYPE));
+        transmissionPathType.setCharacteristics0(characteristicDatabase.retrieveCharacteristics(transmissionPathType.getId(), CharacteristicSort.CHARACTERISTIC_SORT_TRANSMISSIONPATHTYPE));
     }
     
     private TransmissionPathType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
@@ -128,9 +128,9 @@ public class TransmissionPathTypeDatabase extends StorableObjectDatabase {
         return transmissionPathType;
     }
     
-    public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-        TransmissionPathType transmissionPathType = this.fromStorableObject(storableObject);
-        switch (retrieve_kind) {
+    public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+//        TransmissionPathType transmissionPathType = this.fromStorableObject(storableObject);
+        switch (retrieveKind) {
             default:
                 return null;
         }
@@ -138,12 +138,25 @@ public class TransmissionPathTypeDatabase extends StorableObjectDatabase {
     
     public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
         TransmissionPathType transmissionPathType = this.fromStorableObject(storableObject);
-        super.insertEntity(transmissionPathType);      
+        super.insertEntity(transmissionPathType);     
+        CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+        try {
+			characteristicDatabase.updateCharacteristics(transmissionPathType);
+		} catch (UpdateObjectException e) {
+			throw new CreateObjectException(e);
+		}
+
     }
 
     public void insert(List storableObjects) throws IllegalDataException,
             CreateObjectException {
         super.insertEntities(storableObjects);
+        CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+        try {
+			characteristicDatabase.updateCharacteristics(storableObjects);
+		} catch (UpdateObjectException e) {
+			throw new CreateObjectException(e);
+		}
     }
     
     public void update(StorableObject storableObject, int updateKind, Object obj)
@@ -157,6 +170,8 @@ public class TransmissionPathTypeDatabase extends StorableObjectDatabase {
             super.checkAndUpdateEntity(storableObject, false);
             break;
         }
+        CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		characteristicDatabase.updateCharacteristics(storableObject);
     }
         
     public void update(List storableObjects, int updateKind, Object arg)
@@ -170,6 +185,8 @@ public class TransmissionPathTypeDatabase extends StorableObjectDatabase {
             super.checkAndUpdateEntities(storableObjects, false);
             break;
         }
+        CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		characteristicDatabase.updateCharacteristics(storableObjects);
     }
     
     public List retrieveAll() throws RetrieveObjectException {
@@ -192,12 +209,12 @@ public class TransmissionPathTypeDatabase extends StorableObjectDatabase {
             list = retrieveByIdsOneQuery(ids, condition);
         
         if (list != null) {
-            CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+            CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
             Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_TRANSMISSIONPATHTYPE);
             for (Iterator iter = list.iterator(); iter.hasNext();) {
                 TransmissionPathType transmissionPathType = (TransmissionPathType) iter.next();
                 List characteristics = (List)characteristicMap.get(transmissionPathType);
-                transmissionPathType.setCharacteristics(characteristics);
+                transmissionPathType.setCharacteristics0(characteristics);
             }
         }
         return list;

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.26 2004/12/09 16:12:48 arseniy Exp $
+ * $Id: MeasurementPort.java,v 1.27 2004/12/10 10:32:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/12/09 16:12:48 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.27 $, $Date: 2004/12/10 10:32:15 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 public class MeasurementPort extends StorableObject implements Characterized, TypedObject{
@@ -207,18 +207,18 @@ public class MeasurementPort extends StorableObject implements Characterized, Ty
 	}
 
 	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creatorId,
-																						Identifier modifierId,
-																						MeasurementPortType type,
-																						String name,
-																						String description,	
-																						Identifier kisId,
-																						Identifier portId) {
+											  Date modified,
+											  Identifier creatorId,
+											  Identifier modifierId,
+											  MeasurementPortType type,
+											  String name,
+											  String description,	
+											  Identifier kisId,
+											  Identifier portId) {
 		super.setAttributes(created,
-												modified,
-												creatorId,
-												modifierId);
+				modified,
+				creatorId,
+				modifierId);
 		this.type = type;
 		this.name = name;
 		this.description = description;
@@ -249,10 +249,14 @@ public class MeasurementPort extends StorableObject implements Characterized, Ty
         return this.characteristics;
     }
     
-    public void setCharacteristics(final List characteristics) {
+    protected void setCharacteristics0(final List characteristics) {
         this.characteristics.clear();
         if (characteristics != null)
                 this.characteristics.addAll(characteristics);
+    }
+    
+    public void setCharacteristics(final List characteristics) {
+        this.setCharacteristics0(characteristics);
         super.currentVersion = super.getNextVersion();
     }
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.30 2004/12/09 16:12:48 arseniy Exp $
+ * $Id: TransmissionPath.java,v 1.31 2004/12/10 10:32:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -28,8 +29,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 /**
- * @version $Revision: 1.30 $, $Date: 2004/12/09 16:12:48 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.31 $, $Date: 2004/12/10 10:32:15 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -224,33 +225,37 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 	}
 
 	public List getCharacteristics() {
-		return this.characteristics;
+		return Collections.unmodifiableList(this.characteristics);
+	}
+	
+	protected void setCharacteristics0(List characteristics) {
+		this.characteristics.clear();
+	     if (characteristics != null)
+	     	this.characteristics.addAll(characteristics);
 	}
 	
 	/**
 	 * @param characteristics The characteristicIds to set.
 	 */
 	public void setCharacteristics(List characteristics) {
-		this.characteristics.clear();
-	     if (characteristics != null)
-	     	this.characteristics.addAll(characteristics);
+		this.setCharacteristics0(characteristics);
 	     super.currentVersion = super.getNextVersion();
 	}
 	
 	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creatorId,
-																						Identifier modifierId,
-																						Identifier domainId,
-																						String name,
-																						String description,
-                                                                                        TransmissionPathType type,																						Identifier startPortId,
-																						Identifier finishPortId) {
+											  Date modified,
+											  Identifier creatorId,
+											  Identifier modifierId,
+											  Identifier domainId,
+											  String name,
+											  String description,
+											  TransmissionPathType type,																						Identifier startPortId,
+											  Identifier finishPortId) {
 		super.setAttributes(created,
-												modified,
-												creatorId,
-												modifierId,
-												domainId);		
+				modified,
+				creatorId,
+				modifierId,
+				domainId);		
 		this.name = name;
 		this.description = description;
         this.type = type;

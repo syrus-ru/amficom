@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeDatabase.java,v 1.19 2004/12/07 15:32:33 max Exp $
+ * $Id: MeasurementPortTypeDatabase.java,v 1.20 2004/12/10 10:32:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/12/07 15:32:33 $
- * @author $Author: max $
+ * @version $Revision: 1.20 $, $Date: 2004/12/10 10:32:15 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -130,7 +130,7 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		MeasurementPortType measurementPortType = this.fromStorableObject(storableObject);
+//		MeasurementPortType measurementPortType = this.fromStorableObject(storableObject);
 		switch (retrieve_kind) {
 			default:
 				return null;
@@ -139,25 +139,40 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		MeasurementPortType measurementPortType = this.fromStorableObject(storableObject);
-		super.insertEntity(measurementPortType);		
+		super.insertEntity(measurementPortType);	
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		try {
+			characteristicDatabase.updateCharacteristics(measurementPortType);
+		} catch (UpdateObjectException e) {
+			throw new CreateObjectException(e);
+		}
 	}
 	
 	public void insert(List storableObjects) throws IllegalDataException,
 			CreateObjectException {
 		super.insertEntities(storableObjects);
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		try {
+			characteristicDatabase.updateCharacteristics(storableObjects);
+		} catch (UpdateObjectException e) {
+			throw new CreateObjectException(e);
+		}
 	}
 
 	public void update(StorableObject storableObject, int updateKind, Object obj)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
+		MeasurementPortType measurementPortType = fromStorableObject(storableObject);
 		switch (updateKind) {
 		case UPDATE_FORCE:
-			super.checkAndUpdateEntity(storableObject, true);
+			super.checkAndUpdateEntity(measurementPortType, true);
 			break;
 		case UPDATE_CHECK: 					
 		default:
-			super.checkAndUpdateEntity(storableObject, false);
+			super.checkAndUpdateEntity(measurementPortType, false);
 		break;
 		}
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		characteristicDatabase.updateCharacteristics(measurementPortType);
 	}
 
 	public void update(List storableObjects, int updateKind, Object arg)
@@ -171,6 +186,8 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 			super.checkAndUpdateEntities(storableObjects, false);
 			break;
 		}
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		characteristicDatabase.updateCharacteristics(storableObjects);
 	}
 
 	public List retrieveAll() throws RetrieveObjectException {
@@ -198,7 +215,7 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
             for (Iterator iter = list.iterator(); iter.hasNext();) {
                 MeasurementPortType measurementPortType = (MeasurementPortType) iter.next();
                 List characteristics = (List)characteristicMap.get(measurementPortType);
-                measurementPortType.setCharacteristics(characteristics);
+                measurementPortType.setCharacteristics0(characteristics);
             }
         }
         return list;

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.14 2004/12/09 16:12:48 arseniy Exp $
+ * $Id: TransmissionPathType.java,v 1.15 2004/12/10 10:32:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -28,9 +29,9 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/12/09 16:12:48 $
- * @author $Author: arseniy $
- * @module module_name
+ * @version $Revision: 1.15 $, $Date: 2004/12/10 10:32:15 $
+ * @author $Author: bob $
+ * @module config_v1
  */
 
 public class TransmissionPathType extends StorableObjectType implements Characterized {
@@ -176,7 +177,13 @@ public class TransmissionPathType extends StorableObjectType implements Characte
     }
     
     public List getCharacteristics() {
-        return this.characteristics;
+        return Collections.unmodifiableList(this.characteristics);
+    }
+    
+    protected void setCharacteristics0(final List characteristics) {
+        this.characteristics.clear();
+        if (characteristics != null)
+                this.characteristics.addAll(characteristics);
     }
     
     public void setCharacteristics(final List characteristics) {

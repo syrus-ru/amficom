@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.31 2004/12/07 15:32:33 max Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.32 2004/12/10 10:32:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/12/07 15:32:33 $
- * @author $Author: max $
+ * @version $Revision: 1.32 $, $Date: 2004/12/10 10:32:15 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -142,7 +142,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
 		this.retrieveEntity(transmissionPath);
 		this.retrieveTransmissionPathMELink(transmissionPath);
-		transmissionPath.setCharacteristics(characteristicDatabase.retrieveCharacteristics(transmissionPath.getId(), CharacteristicSort.CHARACTERISTIC_SORT_TRANSMISSIONPATH));
+		transmissionPath.setCharacteristics0(characteristicDatabase.retrieveCharacteristics(transmissionPath.getId(), CharacteristicSort.CHARACTERISTIC_SORT_TRANSMISSIONPATH));
 	}
 	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
@@ -302,7 +302,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
     }
     
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException{
-		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
+//		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
 		switch (retrieve_kind) {
 			default:
 				return null;
@@ -312,10 +312,22 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
 		this.insertEntity(transmissionPath);
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+        try {
+			characteristicDatabase.updateCharacteristics(transmissionPath);
+		} catch (UpdateObjectException e) {
+			throw new CreateObjectException(e);
+		}
 	}
 	
 	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
 		insertEntities(storableObjects);
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+        try {
+			characteristicDatabase.updateCharacteristics(storableObjects);
+		} catch (UpdateObjectException e) {
+			throw new CreateObjectException(e);
+		}
 	}
 
 	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, 
@@ -323,13 +335,15 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(storableObject, false);
+				super.checkAndUpdateEntity(transmissionPath, false);
 				break;
 			case UPDATE_FORCE:					
 			default:
-				super.checkAndUpdateEntity(storableObject, true);		
+				super.checkAndUpdateEntity(transmissionPath, true);		
 				return;
 		}
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+		characteristicDatabase.updateCharacteristics(transmissionPath);
 	}
 	
 	public void update(List storableObjects, int updateKind, Object arg) throws IllegalDataException,
@@ -343,7 +357,8 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 				super.checkAndUpdateEntities(storableObjects, true);		
 				return;
 		}
-		
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
+		characteristicDatabase.updateCharacteristics(storableObjects);
 	}	
 
 	private void setModified(TransmissionPath transmissionPath) throws UpdateObjectException {		
@@ -405,7 +420,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
             for (Iterator iter = list.iterator(); iter.hasNext();) {
                 TransmissionPath transmissionPath = (TransmissionPath) iter.next();
                 List characteristics = (List)characteristicMap.get(transmissionPath);
-                transmissionPath.setCharacteristics(characteristics);
+                transmissionPath.setCharacteristics0(characteristics);
             }
 		}
 		return list;

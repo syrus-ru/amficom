@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.31 2004/12/07 15:32:33 max Exp $
+ * $Id: PortDatabase.java,v 1.32 2004/12/10 10:32:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/12/07 15:32:33 $
- * @author $Author: max $
+ * @version $Revision: 1.32 $, $Date: 2004/12/10 10:32:15 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 public class PortDatabase extends StorableObjectDatabase {
@@ -105,7 +105,7 @@ public class PortDatabase extends StorableObjectDatabase {
 		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
 		Port port = this.fromStorableObject(storableObject);
 		this.retrieveEntity(port);
-		port.setCharacteristics(characteristicDatabase.retrieveCharacteristics(port.getId(), CharacteristicSort.CHARACTERISTIC_SORT_MCM));
+		port.setCharacteristics0(characteristicDatabase.retrieveCharacteristics(port.getId(), CharacteristicSort.CHARACTERISTIC_SORT_MCM));
 	}
 	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
@@ -135,7 +135,7 @@ public class PortDatabase extends StorableObjectDatabase {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		Port port = this.fromStorableObject(storableObject);
+//		Port port = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				return null;
@@ -144,12 +144,24 @@ public class PortDatabase extends StorableObjectDatabase {
 
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		Port port = this.fromStorableObject(storableObject);
-		this.insertEntity(port);			
+		this.insertEntity(port);
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		try {
+			characteristicDatabase.updateCharacteristics(port);
+		} catch (UpdateObjectException e) {
+			throw new CreateObjectException(e);
+		}
 	}
 	
 	
 	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		try {
+			characteristicDatabase.updateCharacteristics(storableObjects);
+		} catch (UpdateObjectException e) {
+			throw new CreateObjectException(e);
+		}
 	}
 
 	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, 
@@ -157,13 +169,15 @@ public class PortDatabase extends StorableObjectDatabase {
 		Port port = this.fromStorableObject(storableObject);
 			switch (updateKind) {
 				case UPDATE_CHECK:
-					super.checkAndUpdateEntity(storableObject, false);
+					super.checkAndUpdateEntity(port, false);
 					break;
 				case UPDATE_FORCE:					
 				default:
-					super.checkAndUpdateEntity(storableObject, true);		
+					super.checkAndUpdateEntity(port, true);		
 					return;
 			}
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		characteristicDatabase.updateCharacteristics(port);
 	}
 	
 	public void update(List storableObjects, int updateKind, Object arg) throws IllegalDataException,
@@ -177,7 +191,8 @@ public class PortDatabase extends StorableObjectDatabase {
 				super.checkAndUpdateEntities(storableObjects, true);		
 				return;
 		}
-		
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		characteristicDatabase.updateCharacteristics(storableObjects);
 	}
 	
 	public List retrieveAll() throws RetrieveObjectException {
@@ -204,7 +219,7 @@ public class PortDatabase extends StorableObjectDatabase {
             for (Iterator iter = list.iterator(); iter.hasNext();) {
                 Port port = (Port) iter.next();
                 List characteristics = (List)characteristicMap.get(port);
-                port.setCharacteristics(characteristics);
+                port.setCharacteristics0(characteristics);
             }
         }
 		return list;

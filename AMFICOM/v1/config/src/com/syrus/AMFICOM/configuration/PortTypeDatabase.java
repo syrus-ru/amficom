@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.23 2004/12/07 15:32:33 max Exp $
+ * $Id: PortTypeDatabase.java,v 1.24 2004/12/10 10:32:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/12/07 15:32:33 $
- * @author $Author: max $
+ * @version $Revision: 1.24 $, $Date: 2004/12/10 10:32:15 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -97,7 +97,7 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 		PortType portType = this.fromStorableObject(storableObject);
 		this.retrieveEntity(portType);
         CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
-        portType.setCharacteristics(characteristicDatabase.retrieveCharacteristics(portType.getId(), CharacteristicSort.CHARACTERISTIC_SORT_PORTTYPE));
+        portType.setCharacteristics0(characteristicDatabase.retrieveCharacteristics(portType.getId(), CharacteristicSort.CHARACTERISTIC_SORT_PORTTYPE));
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
@@ -117,7 +117,7 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 	}	
 
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		PortType portType = this.fromStorableObject(storableObject);
+//		PortType portType = this.fromStorableObject(storableObject);
 		switch (retrieve_kind) {
 			default:
 				return null;
@@ -127,10 +127,22 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		PortType portType = this.fromStorableObject(storableObject);
 		this.insertEntity(portType);
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		try {
+			characteristicDatabase.updateCharacteristics(portType);
+		} catch (UpdateObjectException e) {
+			throw new CreateObjectException(e);
+		}
 	}
 	
 	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
 		insertEntities(storableObjects);
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		try {
+			characteristicDatabase.updateCharacteristics(storableObjects);
+		} catch (UpdateObjectException e) {
+			throw new CreateObjectException(e);
+		}
 	}
 
 	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, 
@@ -138,13 +150,15 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 		PortType portType = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(storableObject, false);
+				super.checkAndUpdateEntity(portType, false);
 				break;
 			case UPDATE_FORCE:					
 			default:
-				super.checkAndUpdateEntity(storableObject, true);		
+				super.checkAndUpdateEntity(portType, true);		
 				return;
 		}
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		characteristicDatabase.updateCharacteristics(portType);
 	}
 	
 	public void update(List storableObjects, int updateKind, Object arg) throws IllegalDataException,
@@ -158,7 +172,8 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 				super.checkAndUpdateEntities(storableObjects, true);		
 				return;
 		}
-		
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.getCharacteristicDatabase());
+		characteristicDatabase.updateCharacteristics(storableObjects);
 	}	
 
 	public List retrieveAll() throws RetrieveObjectException {
@@ -185,7 +200,7 @@ public class PortTypeDatabase extends StorableObjectDatabase {
             for (Iterator iter = list.iterator(); iter.hasNext();) {
                 PortType portType = (PortType) iter.next();
                 List characteristics = (List)characteristicMap.get(portType);
-                portType.setCharacteristics(characteristics);
+                portType.setCharacteristics0(characteristics);
             }
         }
 		return list;

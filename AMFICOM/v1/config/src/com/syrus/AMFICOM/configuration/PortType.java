@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.22 2004/12/09 16:12:48 arseniy Exp $
+ * $Id: PortType.java,v 1.23 2004/12/10 10:32:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -31,8 +32,8 @@ import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
 import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/12/09 16:12:48 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2004/12/10 10:32:15 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -161,19 +162,19 @@ public class PortType extends StorableObjectType implements Characterized {
 	}
 	
 	protected synchronized void setAttributes(Date created,
-																						Date modified,
-																						Identifier creatorId,
-																						Identifier modifierId,
-																						String codename,
-																						String description,
-																						String name,
-                                                                                        int sort) {
+											  Date modified,
+											  Identifier creatorId,
+											  Identifier modifierId,
+											  String codename,
+											  String description,
+											  String name,
+											  int sort) {
 		super.setAttributes(created,
-												modified,
-												creatorId,
-												modifierId,
-												codename,
-												description);
+				modified,
+				creatorId,
+				modifierId,
+				codename,
+				description);
 		this.name = name;
         this.sort = sort;
 	}
@@ -193,17 +194,21 @@ public class PortType extends StorableObjectType implements Characterized {
 	}	
 
 	public List getDependencies() {		
-		return this.characteristics;
+		return Collections.unmodifiableList(this.characteristics);
 	}
     
     public List getCharacteristics() {
-        return this.characteristics;
+        return Collections.unmodifiableList(this.characteristics);
     }
     
-    public void setCharacteristics(final List characteristics) {
+    protected void setCharacteristics0(final List characteristics) {
         this.characteristics.clear();
         if (characteristics != null)
                 this.characteristics.addAll(characteristics);
+    }
+    
+    public void setCharacteristics(final List characteristics) {
+        this.setCharacteristics0(characteristics);
         super.currentVersion = super.getNextVersion();
     }
 }
