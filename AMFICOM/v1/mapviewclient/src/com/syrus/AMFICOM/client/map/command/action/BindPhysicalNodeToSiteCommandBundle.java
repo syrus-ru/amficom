@@ -1,5 +1,5 @@
 /**
- * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.5 2004/10/18 15:33:00 krupenn Exp $
+ * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.6 2004/10/19 14:10:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import java.util.Iterator;
  *  принадлежит данный узел, делится на 2 части
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/18 15:33:00 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/19 14:10:03 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -99,7 +99,7 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 			else
 				node2 = mnle.getOtherNode(node);
 
-			if(mnle.getStartNode() == node)
+			if(mnle.getStartNode().equals(node))
 				mnle.setStartNode(site);
 			else
 				mnle.setEndNode(site);
@@ -109,10 +109,10 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 		super.removeNode(node);
 
 		// обновляются концевые узлы линии
-		if(link.getStartNode() == node)
+		if(link.getStartNode().equals(node))
 			link.setStartNode(site);
 		else
-		if(link.getEndNode() == node)
+		if(link.getEndNode().equals(node))
 			link.setEndNode(site);
 
 		// создается вторая линия
@@ -120,7 +120,7 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 		newLink.setProto(link.getProto());
 
 		// single cpath, as long as link is UnboundLink
-		MapCablePathElement cpath = (MapCablePathElement )(mapView.getCablePaths(link).getFirst());
+		MapCablePathElement cpath = (MapCablePathElement )(mapView.getCablePaths(link).get(0));
 		
 		// новая линия добавляется в кабельный путь
 		cpath.addLink(newLink);

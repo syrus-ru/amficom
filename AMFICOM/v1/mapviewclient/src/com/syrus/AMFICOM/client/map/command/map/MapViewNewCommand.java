@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewNewCommand.java,v 1.4 2004/10/19 10:41:03 krupenn Exp $
+ * $Id: MapViewNewCommand.java,v 1.5 2004/10/19 14:10:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/19 10:41:03 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/19 14:10:03 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -51,11 +51,6 @@ public class MapViewNewCommand extends VoidCommand
 		this.aContext = aContext;
 	}
 
-	public Object clone()
-	{
-		return new MapViewNewCommand(mapFrame, aContext);
-	}
-
 	public void execute()
 	{
 		Environment.log(Environment.LOG_LEVEL_CONFIG, "Creating new map view", getClass().getName(), "execute()");
@@ -72,7 +67,7 @@ public class MapViewNewCommand extends VoidCommand
 		mv.setName(LangModelMap.getString("New"));
 
 		Map mc = new Map();
-		mc.setId(aContext.getDataSource().GetUId(com.syrus.AMFICOM.Client.Resource.Map.Map.typ));
+		mc.setId(aContext.getDataSource().GetUId(Map.typ));
 		mc.setDomainId(aContext.getSessionInterface().getDomainId());
 		mc.setUserId(aContext.getSessionInterface().getUserId());
 		Pool.put( mc.getTyp(), mc.getId(), mc);

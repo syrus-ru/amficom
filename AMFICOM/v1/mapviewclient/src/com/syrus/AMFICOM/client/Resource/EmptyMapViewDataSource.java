@@ -208,23 +208,26 @@ public class EmptyMapViewDataSource
 					Environment.getActiveWindow(),
 					"Ошибка чтения");
 		}
-		try
+		else
 		{
-			FileInputStream in = new FileInputStream(fileName);
-			ObjectInputStream ias = new ObjectInputStream(in);
-			MapView mv = (MapView )ias.readObject();
-			ias.close();
-			
-			Pool.put(MapView.typ, mv.getId(), mv);
-		}
-		catch(FileNotFoundException e)
-		{
-		}
-		catch(ClassNotFoundException e)
-		{
-		}
-		catch(IOException e)
-		{
+			try
+			{
+				FileInputStream in = new FileInputStream(fileName);
+				ObjectInputStream ias = new ObjectInputStream(in);
+				MapView mv = (MapView )ias.readObject();
+				ias.close();
+				
+				Pool.put(MapView.typ, mv.getId(), mv);
+			}
+			catch(FileNotFoundException e)
+			{
+			}
+			catch(ClassNotFoundException e)
+			{
+			}
+			catch(IOException e)
+			{
+			}
 		}
 	}
 	

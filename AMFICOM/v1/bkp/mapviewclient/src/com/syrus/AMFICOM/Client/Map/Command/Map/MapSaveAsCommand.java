@@ -1,5 +1,5 @@
 /*
- * $Id: MapSaveAsCommand.java,v 1.6 2004/10/19 10:41:03 krupenn Exp $
+ * $Id: MapSaveAsCommand.java,v 1.7 2004/10/19 14:10:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import java.awt.Toolkit;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/10/19 10:41:03 $
+ * @version $Revision: 1.7 $, $Date: 2004/10/19 14:10:03 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -58,11 +58,6 @@ public class MapSaveAsCommand extends VoidCommand
 	{
 		this.mapFrame = mapFrame;
 		this.aContext = aContext;
-	}
-
-	public Object clone()
-	{
-		return new MapSaveAsCommand(mapFrame, aContext);
 	}
 
 	public void execute()

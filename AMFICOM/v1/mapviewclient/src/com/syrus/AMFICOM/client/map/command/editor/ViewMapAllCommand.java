@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapAllCommand.java,v 1.2 2004/10/19 10:41:03 krupenn Exp $
+ * $Id: ViewMapAllCommand.java,v 1.3 2004/10/19 14:10:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/19 10:41:03 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/19 14:10:03 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -44,11 +44,6 @@ public class ViewMapAllCommand extends VoidCommand
 		this.desktop = desktop;
 		this.aContext = aContext;
 		this.factory = factory;
-	}
-
-	public Object clone()
-	{
-		return new ViewMapAllCommand(desktop, aContext, factory);
 	}
 
 	public void execute()

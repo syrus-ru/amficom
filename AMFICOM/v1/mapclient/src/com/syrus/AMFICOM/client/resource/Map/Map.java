@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.12 2004/10/18 12:43:09 krupenn Exp $
+ * $Id: Map.java,v 1.13 2004/10/19 14:09:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,6 @@ import com.syrus.AMFICOM.Client.Resource.StubResource;
 import java.io.IOException;
 import java.io.Serializable;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -35,7 +34,7 @@ import java.util.Set;
  * 
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2004/10/18 12:43:09 $
+ * @version $Revision: 1.13 $, $Date: 2004/10/19 14:09:42 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -68,26 +67,26 @@ public final class Map extends StubResource implements Serializable
 	protected String modifiedBy = "";
 
 	/** Вспомогательный список для загрузки с сервера */
-	protected ArrayList nodeIds = new ArrayList();
+	protected List nodeIds = new LinkedList();
 	/** Вспомогательный список для загрузки с сервера */
-	protected ArrayList siteIds = new ArrayList();
+	protected List siteIds = new LinkedList();
 	/** Вспомогательный список для загрузки с сервера */
-	protected ArrayList nodelinkIds = new ArrayList();
+	protected List nodelinkIds = new LinkedList();
 	/** Вспомогательный список для загрузки с сервера */
-	protected ArrayList linkIds = new ArrayList();
+	protected List linkIds = new LinkedList();
 	/** Вспомогательный список для загрузки с сервера */
-	protected ArrayList markIds = new ArrayList();
+	protected List markIds = new LinkedList();
 	/** Вспомогательный список для загрузки с сервера */
-	protected ArrayList collectorIds = new ArrayList();
+	protected List collectorIds = new LinkedList();
 
 	/** Вектор элементов наследников класса Node */
-	protected ArrayList nodes = new ArrayList();
+	protected List nodes = new LinkedList();
 	/** Вектор элементов типа NodeLinks */
-	protected ArrayList nodeLinks = new ArrayList();
+	protected List nodeLinks = new LinkedList();
 	/** Вектор элементов типа physicalLinks */
-	protected ArrayList physicalLinks = new ArrayList();
+	protected List physicalLinks = new LinkedList();
 	/** Вектор элементов типа PipePaths */
-	protected ArrayList collectors = new ArrayList();
+	protected List collectors = new LinkedList();
 
 	/** список удаленных элементов */
 	protected LinkedList removedElements = new LinkedList();
@@ -170,53 +169,53 @@ public final class Map extends StubResource implements Serializable
 		Pool.put(Map.typ, mc.getId(), mc);
 		Pool.put(MapPropertiesManager.MAP_CLONED_IDS, id, mc.getId());
 
-		mc.nodeLinks = new ArrayList();
+		mc.nodeLinks = new LinkedList();
 		for(Iterator it = nodeLinks.iterator(); it.hasNext();)
 			mc.nodeLinks.add(((MapElement )it.next()).clone(dataSource));
 			
-		mc.nodes = new ArrayList();
+		mc.nodes = new LinkedList();
 		for(Iterator it = nodes.iterator(); it.hasNext();)
 			mc.nodes.add(((MapElement)it.next()).clone(dataSource));
 			
-		mc.physicalLinks = new ArrayList();
+		mc.physicalLinks = new LinkedList();
 		for(Iterator it = physicalLinks.iterator(); it.hasNext();)
 			mc.physicalLinks.add((((MapElement)it.next()).clone(dataSource)));
 
-		mc.collectors = new ArrayList();
+		mc.collectors = new LinkedList();
 		for(Iterator it = collectors.iterator(); it.hasNext();)
 			mc.collectors.add(((MapElement)it.next()).clone(dataSource));
 			
-		mc.markIds = new ArrayList();
+		mc.markIds = new LinkedList();
 		for(Iterator it = markIds.iterator(); it.hasNext();)
 			mc.markIds.add(Pool.get(
 					MapPropertiesManager.MAP_CLONED_IDS, 
 					(String )it.next()));
 			
-		mc.nodelinkIds = new ArrayList();
+		mc.nodelinkIds = new LinkedList();
 		for(Iterator it = nodelinkIds.iterator(); it.hasNext();)
 			mc.nodelinkIds.add(Pool.get(
 					MapPropertiesManager.MAP_CLONED_IDS, 
 					(String )it.next()));
 			
-		mc.nodeIds = new ArrayList();
+		mc.nodeIds = new LinkedList();
 		for(Iterator it = nodeIds.iterator(); it.hasNext();)
 			mc.nodeIds.add(Pool.get(
 					MapPropertiesManager.MAP_CLONED_IDS, 
 					(String )it.next()));
 			
-		mc.siteIds = new ArrayList();
+		mc.siteIds = new LinkedList();
 		for(Iterator it = siteIds.iterator(); it.hasNext();)
 			mc.siteIds.add(Pool.get(
 					MapPropertiesManager.MAP_CLONED_IDS, 
 					(String )it.next()));
 			
-		mc.linkIds = new ArrayList();
+		mc.linkIds = new LinkedList();
 		for(Iterator it = linkIds.iterator(); it.hasNext();)
 			mc.linkIds.add(Pool.get(
 					MapPropertiesManager.MAP_CLONED_IDS, 
 					(String )it.next()));
 			
-		mc.collectorIds = new ArrayList();
+		mc.collectorIds = new LinkedList();
 		for(Iterator it = collectorIds.iterator(); it.hasNext();)
 			mc.collectorIds.add(Pool.get(
 					MapPropertiesManager.MAP_CLONED_IDS, 
@@ -250,32 +249,32 @@ public final class Map extends StubResource implements Serializable
 		description = transferable.description;
 
 		count = transferable.nodeIds.length;
-		nodeIds = new ArrayList(count);
+		nodeIds = new LinkedList();
 		for(i = 0; i < count; i++)
 			nodeIds.add(transferable.nodeIds[i]);
 
 		count = transferable.siteIds.length;
-		siteIds = new ArrayList(count);
+		siteIds = new LinkedList();
 		for(i = 0; i < count; i++)
 			siteIds.add(transferable.siteIds[i]);
 
 		count = transferable.nodeLinkIds.length;
-		nodelinkIds = new ArrayList(count);
+		nodelinkIds = new LinkedList();
 		for(i = 0; i < count; i++)
 			nodelinkIds.add(transferable.nodeLinkIds[i]);
 
 		count = transferable.physicalLinkIds.length;
-		linkIds = new ArrayList(count);
+		linkIds = new LinkedList();
 		for(i = 0; i < count; i++)
 			linkIds.add(transferable.physicalLinkIds[i]);
 
 		count = transferable.markIds.length;
-		markIds = new ArrayList(count);
+		markIds = new LinkedList();
 		for(i = 0; i < count; i++)
 			markIds.add(transferable.markIds[i]);
 
 		count = transferable.collectorIds.length;
-		collectorIds = new ArrayList(count);
+		collectorIds = new LinkedList();
 		for(i = 0; i < count; i++)
 			collectorIds.add(transferable.collectorIds[i]);
 	}
@@ -303,9 +302,9 @@ public final class Map extends StubResource implements Serializable
 		transferable.modifiedBy = userId;
 		transferable.createdBy = userId;
 
-		nodeIds = new ArrayList();
-		siteIds = new ArrayList();
-		markIds = new ArrayList();
+		nodeIds = new LinkedList();
+		siteIds = new LinkedList();
+		markIds = new LinkedList();
 
 		for(Iterator it = nodes.iterator(); it.hasNext();)
 		{
@@ -321,7 +320,7 @@ public final class Map extends StubResource implements Serializable
 		transferable.siteIds = (String [])siteIds.toArray(new String[siteIds.size()]);
 		transferable.markIds = (String [])markIds.toArray(new String[markIds.size()]);
 
-		nodelinkIds = new ArrayList();
+		nodelinkIds = new LinkedList();
 		
 		for(Iterator it = nodeLinks.iterator(); it.hasNext();)
 		{
@@ -331,7 +330,7 @@ public final class Map extends StubResource implements Serializable
 		transferable.nodeLinkIds = (String [])nodelinkIds.toArray(
 				new String[nodelinkIds.size()]);
 
-		linkIds = new ArrayList();
+		linkIds = new LinkedList();
 		for(Iterator it = physicalLinks.iterator(); it.hasNext();)
 		{
 			os = (ObjectResource)it.next();
@@ -340,7 +339,7 @@ public final class Map extends StubResource implements Serializable
 		transferable.physicalLinkIds = (String [])linkIds.toArray(
 				new String[linkIds.size()]);
 
-		collectorIds = new ArrayList();
+		collectorIds = new LinkedList();
 		for(Iterator it = collectors.iterator(); it.hasNext();)
 		{
 			os = (ObjectResource)it.next();
@@ -362,7 +361,7 @@ public final class Map extends StubResource implements Serializable
 				getClass().getName(), 
 				"updateLocalFromTransferable()");
 		
-		nodes = new ArrayList();
+		nodes = new LinkedList();
 
 		for(Iterator it = nodeIds.iterator(); it.hasNext();)
 			nodes.add(Pool.get(MapPhysicalNodeElement.typ, (String )it.next()));
@@ -371,15 +370,15 @@ public final class Map extends StubResource implements Serializable
 		for(Iterator it = markIds.iterator(); it.hasNext();)
 			nodes.add(Pool.get(MapMarkElement.typ, (String)it.next()));
 
-		nodeLinks = new ArrayList();
+		nodeLinks = new LinkedList();
 		for(Iterator it = nodelinkIds.iterator(); it.hasNext();)
 			nodeLinks.add(Pool.get(MapNodeLinkElement.typ, (String )it.next()));
 
-		physicalLinks = new ArrayList();
+		physicalLinks = new LinkedList();
 		for(Iterator it = linkIds.iterator(); it.hasNext();)
 			physicalLinks.add(Pool.get(MapPhysicalLinkElement.typ, (String)it.next()));
 
-		collectors = new ArrayList();
+		collectors = new LinkedList();
 		for(Iterator it = collectorIds.iterator(); it.hasNext();)
 			collectors.add(Pool.get(MapPipePathElement.typ, (String)it.next()));
 	}
@@ -947,6 +946,7 @@ public final class Map extends StubResource implements Serializable
 		out.writeObject(nodes);
 		out.writeObject(nodeLinks);
 		out.writeObject(physicalLinks);
+		out.writeObject(collectors);
 	}
 
 	private void readObject(java.io.ObjectInputStream in)
@@ -963,17 +963,18 @@ public final class Map extends StubResource implements Serializable
 		createdBy = (String )in.readObject();
 		modified = in.readLong();
 		modifiedBy = (String )in.readObject();
-		nodes = (ArrayList )in.readObject();
-		nodeLinks = (ArrayList )in.readObject();
-		physicalLinks = (ArrayList )in.readObject();
+		nodes = (List )in.readObject();
+		nodeLinks = (List )in.readObject();
+		physicalLinks = (List )in.readObject();
+		collectors = (List )in.readObject();
 
 		transferable = new Map_Transferable();
 
-		nodeIds = new ArrayList();
-		siteIds = new ArrayList();
-		nodelinkIds = new ArrayList();
-		linkIds = new ArrayList();
-		markIds = new ArrayList();
+		nodeIds = new LinkedList();
+		siteIds = new LinkedList();
+		nodelinkIds = new LinkedList();
+		linkIds = new LinkedList();
+		markIds = new LinkedList();
 	
 		removedElements = new LinkedList();
 	

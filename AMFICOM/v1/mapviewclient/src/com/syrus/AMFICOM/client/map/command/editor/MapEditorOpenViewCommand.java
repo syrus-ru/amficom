@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorOpenViewCommand.java,v 1.5 2004/10/19 10:41:03 krupenn Exp $
+ * $Id: MapEditorOpenViewCommand.java,v 1.6 2004/10/19 14:10:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,9 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModelFactory;
 import com.syrus.AMFICOM.Client.General.Model.MapMapEditorApplicationModelFactory;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewOpenCommand;
+import com.syrus.AMFICOM.Client.Map.UI.MapElementsFrame;
+import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import com.syrus.AMFICOM.Client.Map.UI.MapPropertyFrame;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 
 import javax.swing.JDesktopPane;
@@ -26,7 +29,7 @@ import javax.swing.JDesktopPane;
  * пользователь выбрал MapContext, открывается окно карты и сопутствующие окна
  * и MapContext передается в окно карты
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/19 10:41:03 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/19 14:10:03 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapOpenCommand
@@ -35,6 +38,10 @@ public class MapEditorOpenViewCommand extends VoidCommand
 {
 	ApplicationContext aContext;
 	JDesktopPane desktop;
+	
+	MapFrame mapFrame = null;
+	MapPropertyFrame propFrame = null;
+	MapElementsFrame elementsFrame = null;
 
 	public MapEditorOpenViewCommand()
 	{
@@ -51,37 +58,49 @@ public class MapEditorOpenViewCommand extends VoidCommand
 		this.aContext = aContext;
 	}
 
-	public Object clone()
-	{
-		return new MapEditorOpenViewCommand(desktop, aContext);
-	}
-
 	public void execute()
 	{
 		ApplicationModelFactory factory = new MapMapEditorApplicationModelFactory();
-		ApplicationContext aC = new ApplicationContext();
-		aC.setApplicationModel(factory.create());
-		aC.setSessionInterface(aContext.getSessionInterface());
-		aC.setDispatcher(aContext.getDispatcher());
 
-		MapViewOpenCommand moc = new MapViewOpenCommand(desktop, null, aC);
+		MapViewOpenCommand moc = new MapViewOpenCommand(desktop, null, aContext);
 		// в модуле редактирования топологических схем у пользователя есть
 		// возможность удалять MapContext в окне управления схемами
 		moc.setCanDelete(true);
 		moc.execute();
 		if (moc.getResult() == Command.RESULT_OK)
 		{
-			ViewMapWindowCommand com2 = new ViewMapWindowCommand(aContext.getDispatcher(), desktop, aContext, factory);
-			com2.execute();
-			if(com2.frame == null)
+			ViewMapWindowCommand mapCommand = new ViewMapWindowCommand(aContext.getDispatcher(), desktop, aContext, factory);
+			mapCommand.execute();
+			this.mapFrame = mapCommand.frame;
+
+			if(mapFrame == null)
 				return;
 
-			new ViewMapPropertiesCommand(desktop, aContext).execute();
-			new ViewMapElementsCommand(desktop, aContext).execute();
-//			new ViewMapSchemeNavigatorCommand(desktop, aContext).execute();
+			ViewMapPropertiesCommand propCommand = new ViewMapPropertiesCommand(desktop, aContext);
+			propCommand.execute();
+			this.propFrame = propCommand.frame;
 
-			com2.frame.setMapView((MapView)moc.getReturnObject());
+			ViewMapElementsCommand elementsCommand = new ViewMapElementsCommand(desktop, aContext);
+			elementsCommand.execute();
+			this.elementsFrame = elementsCommand.frame;
+
+			mapFrame.setMapView((MapView)moc.getReturnObject());
 		}
+	}
+
+	public MapFrame getMapFrame()
+	{
+		return mapFrame;
+	}
+
+	public MapPropertyFrame getPropertiesFrame()
+	{
+		return propFrame;
+	}
+
+	public MapElementsFrame getElementsFrame()
+	{
+		return elementsFrame;
 	}
 
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: MapOpenCommand.java,v 1.5 2004/10/19 10:41:03 krupenn Exp $
+ * $Id: MapOpenCommand.java,v 1.6 2004/10/19 14:10:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/19 10:41:03 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/19 14:10:03 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -61,11 +61,6 @@ public class MapOpenCommand extends VoidCommand
 		this.desktop = desktop;
 		this.mapFrame = mapFrame;
 		this.aContext = aContext;
-	}
-
-	public Object clone()
-	{
-		return new MapOpenCommand(desktop, mapFrame, aContext);
 	}
 
 	public void setCanDelete(boolean flag)

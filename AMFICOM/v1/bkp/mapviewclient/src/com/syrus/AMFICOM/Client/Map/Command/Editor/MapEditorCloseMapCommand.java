@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorCloseMapCommand.java,v 1.2 2004/10/04 16:04:43 krupenn Exp $
+ * $Id: MapEditorCloseMapCommand.java,v 1.3 2004/10/19 14:10:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.Client.Map.Editor.MapEditorMainFrame;
  * класс использует команду MapCloseCommand для закрытия карты, после чего
  * генерирует событие закрытия
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/04 16:04:43 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/19 14:10:03 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapCloseCommand
@@ -37,11 +37,6 @@ public class MapEditorCloseMapCommand extends VoidCommand
 	{
 		this.mainFrame = mainFrame;
 		this.dispatcher = dispatcher;
-	}
-
-	public Object clone()
-	{
-		return new MapEditorCloseMapCommand(mainFrame, dispatcher);
 	}
 
 	public void execute()

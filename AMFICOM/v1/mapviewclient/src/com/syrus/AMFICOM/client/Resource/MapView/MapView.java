@@ -1,5 +1,5 @@
 /**
- * $Id: MapView.java,v 1.14 2004/10/19 11:48:28 krupenn Exp $
+ * $Id: MapView.java,v 1.15 2004/10/19 14:10:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,11 +35,12 @@ import com.syrus.AMFICOM.Client.Resource.StubResource;
 
 import java.awt.geom.Point2D;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.io.Serializable;
 
 /**
  * Класс используется для хранения объектов, отображаемых на 
@@ -50,20 +51,17 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.14 $, $Date: 2004/10/19 11:48:28 $
+ * @version $Revision: 1.15 $, $Date: 2004/10/19 14:10:03 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
  */
-public final class MapView extends StubResource
+public final class MapView extends StubResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
 	public static final String typ = "mapview";
 
 	protected MapView_Transferable transferable;
-
-	protected Map map;
-	protected ArrayList schemes = new ArrayList();
 
 	protected String id;
 	protected String name = "Без названия";
@@ -75,7 +73,7 @@ public final class MapView extends StubResource
 	protected String modifiedBy;
 
 	protected String mapId = "";
-	protected ArrayList schemeIds = new ArrayList();
+	protected List schemeIds = new LinkedList();
 	protected double scale = 0.00001;
 	protected double longitude = 0.0;
 	protected double latitude = 0.0;
@@ -84,10 +82,13 @@ public final class MapView extends StubResource
 	
 	protected boolean isOpened = false;
 
-	protected ArrayList cablePaths = new ArrayList();
-	protected ArrayList measurementPaths = new ArrayList();
+	protected Map map;
+	protected List schemes = new LinkedList();
+
+	protected List cablePaths = new LinkedList();
+	protected List measurementPaths = new LinkedList();
 	/** Вектор маркеров */
-	protected ArrayList markers = new ArrayList();
+	protected List markers = new LinkedList();
 
 	/**
 	 * 
@@ -135,7 +136,9 @@ public final class MapView extends StubResource
 		mv.description = description;
 		mv.domainId = domainId;
 		mv.mapId = mapId;
-		mv.schemeIds = (ArrayList )schemeIds.clone();
+		mv.schemeIds = new LinkedList();
+		for(Iterator it = schemes.iterator(); it.hasNext();)
+			mv.schemeIds.add(((Scheme )it.next()).getId());
 
 		mv.createdBy = dataSource.getSession().getUserId();
 		mv.modified = mv.created;
@@ -145,13 +148,9 @@ public final class MapView extends StubResource
 		mv.longitude = longitude;
 		mv.latitude = latitude;
 
-		mv.schemeIds = new ArrayList();
-		for(Iterator it = schemeIds.iterator(); it.hasNext();)
-			mv.schemeIds.add(it.next());
+		mv.markers = new LinkedList();
 
-		mv.markers = new ArrayList();
-
-		Pool.put(com.syrus.AMFICOM.Client.Resource.MapView.MapView.typ, mv.getId(), mv);
+		Pool.put(MapView.typ, mv.getId(), mv);
 		
 		return mv;
 	}
@@ -180,7 +179,7 @@ public final class MapView extends StubResource
 		latitude = Double.parseDouble( transferable.latitude);
 
 		count = transferable.schemeIds.length;
-		schemeIds = new ArrayList(count);
+		schemeIds = new LinkedList();
 		for(i = 0; i < count; i++)
 			schemeIds.add(transferable.schemeIds[i]);
 	}
@@ -205,7 +204,7 @@ public final class MapView extends StubResource
 		transferable.longitude = String.valueOf(longitude);
 		transferable.latitude = String.valueOf(latitude);
 
-		schemeIds = new ArrayList();
+		schemeIds = new LinkedList();
 		
 		for(Iterator it = schemes.iterator(); it.hasNext();)
 		{
@@ -291,9 +290,13 @@ public final class MapView extends StubResource
 	 */
 	public void updateLocalFromTransferable()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "updateLocalFromTransferable()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"updateLocalFromTransferable()");
 		
-		schemes = new ArrayList();
+		schemes = new LinkedList();
 
 		for(Iterator it = schemeIds.iterator(); it.hasNext();)
 			addScheme((Scheme )Pool.get(Scheme.typ, (String )it.next()));
@@ -802,7 +805,7 @@ public final class MapView extends StubResource
 	/**
 	 * Получить список путей тестирования
 	 */
-	public ArrayList getCablePaths()
+	public List getCablePaths()
 	{
 		return cablePaths;
 	}
@@ -829,7 +832,7 @@ public final class MapView extends StubResource
 //		removedElements.add(ob);
 	}
 
-	public LinkedList getCablePaths(MapPhysicalLinkElement mple)
+	public List getCablePaths(MapPhysicalLinkElement mple)
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getCablePaths(" + mple + ")");
 		
@@ -843,7 +846,7 @@ public final class MapView extends StubResource
 		return returnVector;
 	}
 
-	public LinkedList getCablePaths(MapNodeElement mne)
+	public List getCablePaths(MapNodeElement mne)
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getCablePaths(" + mne + ")");
 
@@ -858,7 +861,7 @@ public final class MapView extends StubResource
 		return returnVector;
 	}
 
-	public LinkedList getCablePaths(MapNodeLinkElement mnle)
+	public List getCablePaths(MapNodeLinkElement mnle)
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getCablePaths(" + mnle + ")");
 
@@ -876,7 +879,7 @@ public final class MapView extends StubResource
 	/**
 	 * Получить список путей тестирования
 	 */
-	public ArrayList getMeasurementPaths()
+	public List getMeasurementPaths()
 	{
 		return measurementPaths;
 	}
@@ -903,7 +906,7 @@ public final class MapView extends StubResource
 //		removedElements.add(ob);
 	}
 
-	public LinkedList getMeasurementPaths(MapPhysicalLinkElement mple)
+	public List getMeasurementPaths(MapPhysicalLinkElement mple)
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getPaths(" + mple + ")");
 		
@@ -924,7 +927,7 @@ public final class MapView extends StubResource
 		return returnVector;
 	}
 
-	public LinkedList getMeasurementPaths(MapNodeElement mne)
+	public List getMeasurementPaths(MapNodeElement mne)
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getPaths(" + mne + ")");
 
@@ -946,7 +949,7 @@ public final class MapView extends StubResource
 		return returnVector;
 	}
 
-	public LinkedList getMeasurementPaths(MapNodeLinkElement mnle)
+	public List getMeasurementPaths(MapNodeLinkElement mnle)
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getPaths(" + mnle + ")");
 
@@ -1062,6 +1065,50 @@ public final class MapView extends StubResource
 	public void revert()
 	{
 		removeMarkers();
+	}
+
+	private void writeObject(java.io.ObjectOutputStream out) throws IOException
+	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "writeObject(out)");
+		setTransferableFromLocal();
+		
+		out.writeObject(id);
+		out.writeObject(name);
+		out.writeObject(description);
+		out.writeObject(domainId);
+		out.writeLong(created);
+		out.writeObject(createdBy);
+		out.writeLong(modified);
+		out.writeObject(modifiedBy);
+		out.writeObject(mapId);
+		out.writeObject(schemeIds);
+		out.writeDouble(scale);
+		out.writeDouble(longitude);
+		out.writeDouble(latitude);
+	}
+
+	private void readObject(java.io.ObjectInputStream in)
+			throws IOException, ClassNotFoundException
+	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "readObject(in)");
+		
+		id = (String )in.readObject();
+		name = (String )in.readObject();
+		description = (String )in.readObject();
+		domainId = (String )in.readObject();
+		created = in.readLong();
+		createdBy = (String )in.readObject();
+		modified = in.readLong();
+		modifiedBy = (String )in.readObject();
+		mapId = (String )in.readObject();
+		schemeIds = (List )in.readObject();
+		scale = in.readDouble();
+		longitude = in.readDouble();
+		latitude = in.readDouble();
+
+		transferable = new MapView_Transferable();
+
+		updateLocalFromTransferable();
 	}
 
 	public void setDescription(String description)

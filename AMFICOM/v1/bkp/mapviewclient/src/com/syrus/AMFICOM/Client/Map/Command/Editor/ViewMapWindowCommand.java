@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapWindowCommand.java,v 1.3 2004/10/19 10:41:03 krupenn Exp $
+ * $Id: ViewMapWindowCommand.java,v 1.4 2004/10/19 14:10:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/19 10:41:03 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/19 14:10:03 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -79,11 +79,6 @@ public class ViewMapWindowCommand extends VoidCommand
 	public void setApplicationContext(ApplicationContext aContext)
 	{
 		this.aContext = aContext;
-	}
-
-	public Object clone()
-	{
-		return new ViewMapWindowCommand(dispatcher, desktop, aContext, factory);
 	}
 
 	public void execute()
