@@ -7,7 +7,6 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
-import com.syrus.AMFICOM.general.StorableObject_DatabaseContext;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 
@@ -23,7 +22,7 @@ public class KIS extends StorableObject {
 	public KIS(Identifier id) throws RetrieveObjectException {
 		super(id);
 
-		this.kisDatabase = StorableObject_DatabaseContext.kisDatabase;
+		this.kisDatabase = ConfigurationDatabaseContext.kisDatabase;
 		try {
 			this.kisDatabase.retrieve(this);
 		}
@@ -44,7 +43,7 @@ public class KIS extends StorableObject {
 		this.name = new String(kt.name);
 		this.description = new String(kt.description);
 
-		this.kisDatabase = StorableObject_DatabaseContext.kisDatabase;
+		this.kisDatabase = ConfigurationDatabaseContext.kisDatabase;
 		try {
 			this.kisDatabase.insert(this);
 		}

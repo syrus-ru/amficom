@@ -7,7 +7,6 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
-import com.syrus.AMFICOM.general.StorableObject_DatabaseContext;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 
@@ -20,7 +19,7 @@ public class MonitoredElement extends StorableObject {
 	public MonitoredElement(Identifier id) throws RetrieveObjectException {
 		super(id);
 
-		this.monitoredElementDatabase = StorableObject_DatabaseContext.monitoredElementDatabase;
+		this.monitoredElementDatabase = ConfigurationDatabaseContext.monitoredElementDatabase;
 		try {
 			this.monitoredElementDatabase.retrieve(this);
 		}
@@ -38,7 +37,7 @@ public class MonitoredElement extends StorableObject {
 		this.kis_id = new Identifier(met.kis_id);
 		this.local_address = new String(met.local_address);
 
-		this.monitoredElementDatabase = StorableObject_DatabaseContext.monitoredElementDatabase;
+		this.monitoredElementDatabase = ConfigurationDatabaseContext.monitoredElementDatabase;
 		try {
 			this.monitoredElementDatabase.insert(this);
 		}
