@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorOpenViewCommand.java,v 1.10 2005/01/21 13:49:27 krupenn Exp $
+ * $Id: MapEditorOpenViewCommand.java,v 1.11 2005/01/26 16:25:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import javax.swing.JDesktopPane;
  * пользователь выбрал MapContext, открывается окно карты и сопутствующие окна
  * и MapContext передается в окно карты
  * 
- * @version $Revision: 1.10 $, $Date: 2005/01/21 13:49:27 $
+ * @version $Revision: 1.11 $, $Date: 2005/01/26 16:25:02 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapOpenCommand
@@ -40,11 +40,17 @@ public class MapEditorOpenViewCommand extends VoidCommand
 	protected ApplicationContext aContext;
 	protected JDesktopPane desktop;
 	
-	MapFrame mapFrame = null;
-	MapPropertyFrame propFrame = null;
-	MapElementsFrame elementsFrame = null;
+	protected MapFrame mapFrame = null;
+	protected MapPropertyFrame propFrame = null;
+	protected MapElementsFrame elementsFrame = null;
 	
-	MapView mapView = null;
+	protected MapView mapView = null;
+
+	// в модуле редактирования топологических схем у пользователя есть
+	// возможность удалять MapContext в окне управления схемами
+	private boolean canDelete = true;
+
+	private boolean checkSave = true;
 
 	public MapEditorOpenViewCommand()
 	{
@@ -66,16 +72,17 @@ public class MapEditorOpenViewCommand extends VoidCommand
 		mapFrame = MapDesktopCommand.findMapFrame(desktop);
 		if(mapFrame != null)
 		{
-			if(!mapFrame.checkCanCloseMap())
-				return;
-			if(!mapFrame.checkCanCloseMapView())
-				return;
+			if(isCheckSave())
+			{
+				if(!mapFrame.checkCanCloseMap())
+					return;
+				if(!mapFrame.checkCanCloseMapView())
+					return;
+			}
 		}
 
 		MapViewOpenCommand moc = new MapViewOpenCommand(desktop, aContext);
-		// в модуле редактирования топологических схем у пользователя есть
-		// возможность удалять MapContext в окне управления схемами
-		moc.setCanDelete(true);
+		moc.setCanDelete(isCanDelete());
 		moc.execute();
 
 		if (moc.getResult() == Command.RESULT_OK)
@@ -123,6 +130,30 @@ public class MapEditorOpenViewCommand extends VoidCommand
 	public MapElementsFrame getElementsFrame()
 	{
 		return elementsFrame;
+	}
+
+
+	public void setCanDelete(boolean canDelete)
+	{
+		this.canDelete = canDelete;
+	}
+
+
+	public boolean isCanDelete()
+	{
+		return canDelete;
+	}
+
+
+	public void setCheckSave(boolean checkSave)
+	{
+		this.checkSave = checkSave;
+	}
+
+
+	public boolean isCheckSave()
+	{
+		return checkSave;
 	}
 
 }
