@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNode.java,v 1.21 2005/02/24 15:47:38 bob Exp $
+ * $Id: TopologicalNode.java,v 1.22 2005/03/04 14:24:46 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -40,9 +40,10 @@ import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
  * быть концевым дл€ линии и дл€ фрагмента линии. ¬ физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует 
  * дополнительной описательной информации.
- * @author $Author: bob $
- * @version $Revision: 1.21 $, $Date: 2005/02/24 15:47:38 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.22 $, $Date: 2005/03/04 14:24:46 $
  * @module map_v1
+ * @todo physicalLink should be transient
  */
 public class TopologicalNode extends AbstractNode {
 
@@ -60,15 +61,14 @@ public class TopologicalNode extends AbstractNode {
 	 */
 	private static java.util.Map exportMap = null;
 	
-	private PhysicalLink			physicalLink;
-
 	/**
 	 * ‘лаг показывающий закрыт ли узел
 	 * true значит что из узла выходит две линии, false одна
 	 */
 	private boolean					active;
-
 	private StorableObjectDatabase	topologicalNodeDatabase;
+
+	private transient PhysicalLink			physicalLink = null;
 
 	/**
 	 * physical node can be bound to site only if it is part of an unbound link
@@ -94,9 +94,6 @@ public class TopologicalNode extends AbstractNode {
 		this.active = tnt.active;
 
 		try {
-			this.physicalLink = (PhysicalLink) MapStorableObjectPool.getStorableObject(
-				new Identifier(tnt.physicalLinkId), true);
-
 			this.characteristics = new ArrayList(tnt.characteristicIds.length);
 			ArrayList characteristicIds = new ArrayList(tnt.characteristicIds.length);
 			for (int i = 0; i < tnt.characteristicIds.length; i++)
@@ -305,6 +302,8 @@ public class TopologicalNode extends AbstractNode {
 	}
 
 	public PhysicalLink getPhysicalLink() {
+		if(this.physicalLink == null)
+			this.physicalLink = findPhysicalLink();
 		return this.physicalLink;
 	}
 	
@@ -437,4 +436,9 @@ public class TopologicalNode extends AbstractNode {
   			throw new CreateObjectException("Mark.createInstance |  ", e);
   		}
   	}
+
+	private PhysicalLink findPhysicalLink()
+	{
+		return this.map.getNodeLink(this).getPhysicalLink();
+	}
 }
