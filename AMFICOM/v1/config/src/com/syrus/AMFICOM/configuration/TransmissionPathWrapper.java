@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathWrapper.java,v 1.3 2005/01/27 07:02:32 bob Exp $
+ * $Id: TransmissionPathWrapper.java,v 1.4 2005/01/31 14:42:35 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,19 +11,15 @@ package com.syrus.AMFICOM.configuration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Wrapper;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/01/27 07:02:32 $
+ * @version $Revision: 1.4 $, $Date: 2005/01/31 14:42:35 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -79,25 +75,25 @@ public final class TransmissionPathWrapper implements Wrapper {
 		if (object instanceof TransmissionPath) {
 			TransmissionPath path = (TransmissionPath) object;
 			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				return path.getId().toString();
+				return path.getId();
 			if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				return path.getCreated().toString();
+				return path.getCreated();
 			if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				return path.getCreatorId().getIdentifierString();
+				return path.getCreatorId();
 			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				return path.getModified().toString();
+				return path.getModified();
 			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				return path.getModifierId().getIdentifierString();
+				return path.getModifierId();
 			if (key.equals(COLUMN_DESCRIPTION))
 				return path.getDescription();
 			if (key.equals(COLUMN_NAME))
 				return path.getName();
 			if (key.equals(COLUMN_TYPE_ID))
-				return path.getType().getId().getIdentifierString();
+				return path.getType();
 			if (key.equals(COLUMN_START_PORT_ID))
-				return path.getStartPortId().getIdentifierString();
+				return path.getStartPortId();
 			if (key.equals(COLUMN_FINISH_PORT_ID))
-				return path.getFinishPortId().getIdentifierString();
+				return path.getFinishPortId();
 			if (key.equals(COLUMN_CHARACTERISTICS))
 				return path.getCharacteristics();
 			if (key.equals(ObjectEntities.TRANSPATHMELINK_ENTITY))
@@ -117,33 +113,16 @@ public final class TransmissionPathWrapper implements Wrapper {
 				path.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
 				path.setDescription((String) value);
-			else if (key.equals(COLUMN_TYPE_ID)) {
-				try {
-					path.setType((TransmissionPathType) ConfigurationStorableObjectPool.getStorableObject(
-						new Identifier((String) value), true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("TransmissionPathWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
-			} else if (key.equals(COLUMN_START_PORT_ID))
-				path.setStartPortId(new Identifier((String) value));
+			else if (key.equals(COLUMN_TYPE_ID))
+				path.setType((TransmissionPathType) value);
+			else if (key.equals(COLUMN_START_PORT_ID))
+				path.setStartPortId((Identifier) value);
 			else if (key.equals(COLUMN_FINISH_PORT_ID))
-				path.setFinishPortId(new Identifier((String) value));
-			else if (key.equals(COLUMN_CHARACTERISTICS)) {
-				List charIdStr = (List) value;
-				List characteristicIds = new ArrayList(charIdStr.size());
-				for (Iterator it = charIdStr.iterator(); it.hasNext();)
-					characteristicIds.add(new Identifier((String) it.next()));
-				try {
-					path.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("TransmissionPathWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
-			} else if (key.equals(ObjectEntities.EQUIPMENTMELINK_ENTITY)) {
-				List meIds = new ArrayList(((List) value).size());
-				for (Iterator it = ((List) value).iterator(); it.hasNext();)
-					meIds.add(new Identifier((String) it.next()));
-				path.setMonitoredElementIds(meIds);
-			}
+				path.setFinishPortId((Identifier) value);
+			else if (key.equals(COLUMN_CHARACTERISTICS))
+				path.setCharacteristics((List) value);
+			else if (key.equals(ObjectEntities.EQUIPMENTMELINK_ENTITY))
+				path.setMonitoredElementIds((List) value);
 		}
 	}
 

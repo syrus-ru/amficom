@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortWrapper.java,v 1.2 2005/01/26 15:09:22 bob Exp $
+ * $Id: MeasurementPortWrapper.java,v 1.3 2005/01/31 14:42:34 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,18 +11,14 @@ package com.syrus.AMFICOM.configuration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Wrapper;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/26 15:09:22 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/31 14:42:34 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -77,25 +73,25 @@ public final class MeasurementPortWrapper implements Wrapper {
 		if (object instanceof MeasurementPort) {
 			MeasurementPort port = (MeasurementPort) object;
 			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				return port.getId().toString();
+				return port.getId();
 			if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				return port.getCreated().toString();
+				return port.getCreated();
 			if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				return port.getCreatorId().getIdentifierString();
+				return port.getCreatorId();
 			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				return port.getModified().toString();
+				return port.getModified();
 			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				return port.getModifierId().getIdentifierString();
+				return port.getModifierId();
 			if (key.equals(COLUMN_DESCRIPTION))
 				return port.getDescription();
 			if (key.equals(COLUMN_NAME))
 				return port.getName();
 			if (key.equals(COLUMN_TYPE_ID))
-				return port.getType().getId().getIdentifierString();
+				return port.getType();
 			if (key.equals(COLUMN_KIS_ID))
-				return port.getKISId().getIdentifierString();
+				return port.getKISId();
 			if (key.equals(COLUMN_PORT_ID))
-				return port.getPortId().getIdentifierString();
+				return port.getPortId();
 			if (key.equals(COLUMN_CHARACTERISTICS))
 				return port.getCharacteristics();
 		}
@@ -113,28 +109,14 @@ public final class MeasurementPortWrapper implements Wrapper {
 				port.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
 				port.setDescription((String) value);
-			else if (key.equals(COLUMN_TYPE_ID)) {
-				try {
-					port.setType((MeasurementPortType) ConfigurationStorableObjectPool.getStorableObject(
-						new Identifier((String) value), true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("MeasurementPortWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
-			} else if (key.equals(COLUMN_KIS_ID))
-				port.setKISId(new Identifier((String) value));
+			else if (key.equals(COLUMN_TYPE_ID))
+				port.setType((MeasurementPortType) value);
+			else if (key.equals(COLUMN_KIS_ID))
+				port.setKISId((Identifier) value);
 			else if (key.equals(COLUMN_PORT_ID))
-				port.setPortId(new Identifier((String) value));
-			else if (key.equals(COLUMN_CHARACTERISTICS)) {
-				List charIdStr = (List) value;
-				List characteristicIds = new ArrayList(charIdStr.size());
-				for (Iterator it = charIdStr.iterator(); it.hasNext();)
-					characteristicIds.add(new Identifier((String) it.next()));
-				try {
-					port.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("MeasurementPortWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
-			}
+				port.setPortId((Identifier) value);
+			else if (key.equals(COLUMN_CHARACTERISTICS)) 
+				port.setCharacteristics((List) value);
 		}
 	}
 

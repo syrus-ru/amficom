@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentWrapper.java,v 1.3 2005/01/27 07:02:32 bob Exp $
+ * $Id: EquipmentWrapper.java,v 1.4 2005/01/31 14:42:34 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,19 +11,15 @@ package com.syrus.AMFICOM.configuration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Wrapper;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/01/27 07:02:32 $
+ * @version $Revision: 1.4 $, $Date: 2005/01/31 14:42:34 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -95,27 +91,27 @@ public final class EquipmentWrapper implements Wrapper {
 		if (object instanceof Equipment) {
 			Equipment equipment = (Equipment) object;
 			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				return equipment.getId().toString();
+				return equipment.getId();
 			if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				return equipment.getCreated().toString();
+				return equipment.getCreated();
 			if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				return equipment.getCreatorId().getIdentifierString();
+				return equipment.getCreatorId();
 			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				return equipment.getModified().toString();
+				return equipment.getModified();
 			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				return equipment.getModifierId().getIdentifierString();
+				return equipment.getModifierId();
 			if (key.equals(COLUMN_DESCRIPTION))
 				return equipment.getDescription();
 			if (key.equals(COLUMN_NAME))
 				return equipment.getName();
 			if (key.equals(COLUMN_TYPE_ID))
-				return equipment.getType().getId().getIdentifierString();
+				return equipment.getType();
 			if (key.equals(COLUMN_IMAGE_ID))
-				return equipment.getImageId().getIdentifierString();
+				return equipment.getImageId();
 			if (key.equals(COLUMN_LONGITUDE))
-				return Float.toString(equipment.getLongitude());
+				return new Float(equipment.getLongitude());
 			if (key.equals(COLUMN_LATITUDE))
-				return Float.toString(equipment.getLatitude());
+				return new Float(equipment.getLatitude());
 			if (key.equals(COLUMN_SUPPLIER))
 				return equipment.getSupplier();
 			if (key.equals(COLUMN_SUPPLIER_CODE))
@@ -151,19 +147,14 @@ public final class EquipmentWrapper implements Wrapper {
 				equipment.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
 				equipment.setDescription((String) value);
-			else if (key.equals(COLUMN_TYPE_ID)) {
-				try {
-					equipment.setType((EquipmentType) ConfigurationStorableObjectPool.getStorableObject(
-						new Identifier((String) value), true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("EquipmentWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
-			} else if (key.equals(COLUMN_IMAGE_ID))
-				equipment.setImageId(new Identifier((String) value));
+			else if (key.equals(COLUMN_TYPE_ID)) 
+				equipment.setType((EquipmentType)value);
+			else if (key.equals(COLUMN_IMAGE_ID))
+				equipment.setImageId((Identifier) value);
 			else if (key.equals(COLUMN_LONGITUDE))
-				equipment.setLongitude(Float.parseFloat((String) value));
+				equipment.setLongitude(((Float)value).floatValue());
 			else if (key.equals(COLUMN_LATITUDE))
-				equipment.setLatitude(Float.parseFloat((String) value));
+				equipment.setLatitude(((Float)value).floatValue());
 			else if (key.equals(COLUMN_SUPPLIER))
 				equipment.setSupplier((String) value);
 			else if (key.equals(COLUMN_SUPPLIER_CODE))
@@ -178,28 +169,12 @@ public final class EquipmentWrapper implements Wrapper {
 				equipment.setSwVersion((String) value);
 			else if (key.equals(COLUMN_INVENTORY_NUMBER))
 				equipment.setInventoryNumber((String) value);
-			else if (key.equals(COLUMN_PORT_IDS)) {
-				List portIds = new ArrayList(((List) value).size());
-				for (Iterator it = ((List) value).iterator(); it.hasNext();)
-					portIds.add(new Identifier((String) it.next()));
-				equipment.setPortIds(portIds);
-			} else if (key.equals(COLUMN_CHARACTERISTICS)) {
-				List charIdStr = (List) value;
-				List characteristicIds = new ArrayList(charIdStr.size());
-				for (Iterator it = charIdStr.iterator(); it.hasNext();)
-					characteristicIds.add(new Identifier((String) it.next()));
-				try {
-					equipment
-							.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("EquipmentWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
-			} else if (key.equals(ObjectEntities.EQUIPMENTMELINK_ENTITY)) {
-				List meIds = new ArrayList(((List) value).size());
-				for (Iterator it = ((List) value).iterator(); it.hasNext();)
-					meIds.add(new Identifier((String) it.next()));
-				equipment.setMonitoredElementIds(meIds);
-			}
+			else if (key.equals(COLUMN_PORT_IDS)) 
+				equipment.setPortIds((List)value);
+			else if (key.equals(COLUMN_CHARACTERISTICS))
+				equipment.setCharacteristics((List)value);
+			else if (key.equals(ObjectEntities.EQUIPMENTMELINK_ENTITY))
+				equipment.setMonitoredElementIds((List)value);			
 		}
 	}
 

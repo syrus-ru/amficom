@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementWrapper.java,v 1.3 2005/01/27 07:02:32 bob Exp $
+ * $Id: MonitoredElementWrapper.java,v 1.4 2005/01/31 14:42:34 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Wrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/01/27 07:02:32 $
+ * @version $Revision: 1.4 $, $Date: 2005/01/31 14:42:34 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -72,21 +72,21 @@ public final class MonitoredElementWrapper implements Wrapper {
 		if (object instanceof MonitoredElement) {
 			MonitoredElement me = (MonitoredElement) object;
 			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				return me.getId().toString();
+				return me.getId();
 			if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				return me.getCreated().toString();
-			if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				return me.getCreatorId().getIdentifierString();
+				return me.getCreated();
 			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				return me.getModified().toString();
+				return me.getModified();
+			if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
+				return me.getCreatorId();
 			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				return me.getModifierId().getIdentifierString();
+				return me.getModifierId();
 			if (key.equals(COLUMN_NAME))
 				return me.getName();
 			if (key.equals(COLUMN_MEASUREMENT_PORT_ID))
-				return me.getMeasurementPortId().getIdentifierString();
+				return me.getMeasurementPortId();
 			if (key.equals(COLUMN_SORT))
-				return Integer.toString(me.getSort().value());
+				return new Integer(me.getSort().value());
 			if (key.equals(COLUMN_LOCAL_ADDRESS))
 				return me.getLocalAddress();
 			if (key.equals(COLUMN_MONITORED_DOMAIN_MEMBER))

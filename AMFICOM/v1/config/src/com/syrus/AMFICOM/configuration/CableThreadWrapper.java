@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadWrapper.java,v 1.2 2005/01/26 15:09:21 bob Exp $
+ * $Id: CableThreadWrapper.java,v 1.3 2005/01/31 14:42:34 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,14 +13,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Wrapper;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/26 15:09:21 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/31 14:42:34 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -68,21 +65,21 @@ public final class CableThreadWrapper implements Wrapper {
 		if (object instanceof CableThread) {
 			CableThread thread = (CableThread) object;
 			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				return thread.getId().toString();
+				return thread.getId();
 			if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				return thread.getCreated().toString();
+				return thread.getCreated();
 			if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				return thread.getCreatorId().getIdentifierString();
+				return thread.getCreatorId();
 			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				return thread.getModified().toString();
+				return thread.getModified();
 			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				return thread.getModifierId().getIdentifierString();
+				return thread.getModifierId();
 			if (key.equals(COLUMN_DESCRIPTION))
 				return thread.getDescription();
 			if (key.equals(COLUMN_NAME))
 				return thread.getName();
 			if (key.equals(COLUMN_TYPE_ID))
-				return thread.getType().getId().getIdentifierString();
+				return thread.getType();
 		}
 		return null;
 	}
@@ -98,14 +95,8 @@ public final class CableThreadWrapper implements Wrapper {
 				thread.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
 				thread.setDescription((String) value);
-			else if (key.equals(COLUMN_TYPE_ID)) {
-				try {
-					thread.setType((CableThreadType) ConfigurationStorableObjectPool.getStorableObject(
-						new Identifier((String) value), true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("CharacteristicWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
-			}
+			else if (key.equals(COLUMN_TYPE_ID)) 
+				thread.setType((CableThreadType)value);
 		}
 	}
 

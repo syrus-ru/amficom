@@ -1,5 +1,5 @@
 /*
- * $Id: LinkWrapper.java,v 1.2 2005/01/26 15:09:22 bob Exp $
+ * $Id: LinkWrapper.java,v 1.3 2005/01/31 14:42:34 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,19 +11,14 @@ package com.syrus.AMFICOM.configuration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import com.syrus.AMFICOM.configuration.corba.LinkSort;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Wrapper;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/26 15:09:22 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/31 14:42:34 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -93,29 +88,29 @@ public final class LinkWrapper implements Wrapper {
 		if (object instanceof Link) {
 			Link link = (Link) object;
 			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				return link.getId().toString();
+				return link.getId();
 			if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				return link.getCreated().toString();
+				return link.getCreated();
 			if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				return link.getCreatorId().getIdentifierString();
+				return link.getCreatorId();
 			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				return link.getModified().toString();
+				return link.getModified();
 			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				return link.getModifierId().getIdentifierString();
+				return link.getModifierId();
 			if (key.equals(COLUMN_DESCRIPTION))
 				return link.getDescription();
 			if (key.equals(COLUMN_NAME))
 				return link.getName();
 			if (key.equals(COLUMN_TYPE_ID))
-				return link.getType().getId().getIdentifierString();
+				return link.getType();
 			if (key.equals(COLUMN_SORT))
-				return Integer.toString(link.getSort().value());
+				return new Integer(link.getSort().value());
 			if (key.equals(COLUMN_SUPPLIER))
 				return link.getSupplier();
 			if (key.equals(COLUMN_SUPPLIER_CODE))
 				return link.getSupplierCode();
 			if (key.equals(COLUMN_COLOR))
-				return Integer.toString(link.getColor());
+				return new Integer(link.getColor());
 			if (key.equals(COLUMN_MARK))
 				return link.getMark();
 			if (key.equals(COLUMN_CHARACTERISTICS))
@@ -135,34 +130,20 @@ public final class LinkWrapper implements Wrapper {
 				link.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
 				link.setDescription((String) value);
-			else if (key.equals(COLUMN_TYPE_ID)) {
-				try {
-					link.setType((LinkType) ConfigurationStorableObjectPool.getStorableObject(new Identifier((String) value),
-						true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("LinkWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
-			} else if (key.equals(COLUMN_SORT))
-				link.setSort(LinkSort.from_int(Integer.parseInt((String) value)));
+			else if (key.equals(COLUMN_TYPE_ID)) 
+				link.setType((LinkType)value);
+			else if (key.equals(COLUMN_SORT))
+				link.setSort(LinkSort.from_int(((Integer) value).intValue()));
 			else if (key.equals(COLUMN_SUPPLIER))
 				link.setSupplier((String) value);
 			else if (key.equals(COLUMN_SUPPLIER_CODE))
 				link.setSupplierCode((String) value);
 			else if (key.equals(COLUMN_COLOR))
-				link.setColor(Integer.parseInt((String) value));
+				link.setColor(((Integer) value).intValue());
 			else if (key.equals(COLUMN_MARK))
 				link.setMark((String) value);
-			else if (key.equals(COLUMN_CHARACTERISTICS)) {
-				List charIdStr = (List) value;
-				List characteristicIds = new ArrayList(charIdStr.size());
-				for (Iterator it = charIdStr.iterator(); it.hasNext();)
-					characteristicIds.add(new Identifier((String) it.next()));
-				try {
-					link.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("LinkWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
-			}
+			else if (key.equals(COLUMN_CHARACTERISTICS)) 
+				link.setCharacteristics((List) value);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: KISWrapper.java,v 1.2 2005/01/26 15:09:22 bob Exp $
+ * $Id: KISWrapper.java,v 1.3 2005/01/31 14:42:34 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,18 +11,14 @@ package com.syrus.AMFICOM.configuration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Wrapper;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/26 15:09:22 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/31 14:42:34 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -79,27 +75,27 @@ public final class KISWrapper implements Wrapper {
 		if (object instanceof KIS) {
 			KIS kis = (KIS) object;
 			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				return kis.getId().toString();
+				return kis.getId();
 			if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				return kis.getCreated().toString();
+				return kis.getCreated();
 			if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				return kis.getCreatorId().getIdentifierString();
+				return kis.getCreatorId();
 			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				return kis.getModified().toString();
+				return kis.getModified();
 			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				return kis.getModifierId().getIdentifierString();
+				return kis.getModifierId();
 			if (key.equals(COLUMN_DESCRIPTION))
 				return kis.getDescription();
 			if (key.equals(COLUMN_NAME))
 				return kis.getName();
 			if (key.equals(COLUMN_EQUIPMENT_ID))
-				return kis.getEquipmentId().getIdentifierString();
+				return kis.getEquipmentId();
 			if (key.equals(COLUMN_MCM_ID))
-				return kis.getMCMId().getIdentifierString();
+				return kis.getMCMId();
 			if (key.equals(COLUMN_HOSTNAME))
 				return kis.getHostName();
 			if (key.equals(COLUMN_TCP_PORT))
-				return Short.toString(kis.getTCPPort());
+				return new Short(kis.getTCPPort());
 			if (key.equals(COLUMN_MEASUREMENT_PORT_IDS))
 				return kis.getMeasurementPortIds();
 			if (key.equals(COLUMN_CHARACTERISTICS))
@@ -120,29 +116,17 @@ public final class KISWrapper implements Wrapper {
 			else if (key.equals(COLUMN_DESCRIPTION))
 				kis.setDescription((String) value);
 			else if (key.equals(COLUMN_EQUIPMENT_ID))
-				kis.setEquipmentId(new Identifier((String) value));
+				kis.setEquipmentId((Identifier) value);
 			else if (key.equals(COLUMN_MCM_ID))
-				kis.setMCMId(new Identifier((String) value));
+				kis.setMCMId((Identifier) value);
 			else if (key.equals(COLUMN_HOSTNAME))
 				kis.setHostName((String) value);
 			else if (key.equals(COLUMN_TCP_PORT))
-				kis.setTCPPort(Short.parseShort((String) value));
-			else if (key.equals(COLUMN_MEASUREMENT_PORT_IDS)) {
-				List portIds = new ArrayList(((List) value).size());
-				for (Iterator it = ((List) value).iterator(); it.hasNext();)
-					portIds.add(new Identifier((String) it.next()));
-				kis.setMeasurementPortIds(portIds);
-			} else if (key.equals(COLUMN_CHARACTERISTICS)) {
-				List charIdStr = (List) value;
-				List characteristicIds = new ArrayList(charIdStr.size());
-				for (Iterator it = charIdStr.iterator(); it.hasNext();)
-					characteristicIds.add(new Identifier((String) it.next()));
-				try {
-					kis.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("KISWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
-			}
+				kis.setTCPPort(((Short)value).shortValue());
+			else if (key.equals(COLUMN_MEASUREMENT_PORT_IDS)) 
+				kis.setMeasurementPortIds((List) value);
+			else if (key.equals(COLUMN_CHARACTERISTICS))
+				kis.setCharacteristics((List) value);
 		}
 	}
 

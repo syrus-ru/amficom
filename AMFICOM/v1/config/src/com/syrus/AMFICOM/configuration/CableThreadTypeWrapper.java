@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeWrapper.java,v 1.2 2005/01/26 15:09:21 bob Exp $
+ * $Id: CableThreadTypeWrapper.java,v 1.3 2005/01/31 14:42:34 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,14 +13,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Wrapper;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/26 15:09:21 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/31 14:42:34 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -74,15 +71,15 @@ public final class CableThreadTypeWrapper implements Wrapper {
 		if (object instanceof CableThreadType) {
 			CableThreadType type = (CableThreadType) object;
 			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				return type.getId().toString();
+				return type.getId();
 			if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				return type.getCreated().toString();
+				return type.getCreated();
 			if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				return type.getCreatorId().getIdentifierString();
+				return type.getCreatorId();
 			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				return type.getModified().toString();
+				return type.getModified();
 			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				return type.getModifierId().getIdentifierString();
+				return type.getModifierId();
 			if (key.equals(COLUMN_CODENAME))
 				return type.getCodename();
 			if (key.equals(COLUMN_DESCRIPTION))
@@ -90,9 +87,9 @@ public final class CableThreadTypeWrapper implements Wrapper {
 			if (key.equals(COLUMN_NAME))
 				return type.getName();
 			if (key.equals(COLUMN_COLOR))
-				return Integer.toString(type.getColor());
+				return new Integer(type.getColor());
 			if (key.equals(COLUMN_LINK_TYPE_ID))
-				return type.getLinkType().getId().getIdentifierString();
+				return type.getLinkType();
 		}
 		return null;
 	}
@@ -111,15 +108,9 @@ public final class CableThreadTypeWrapper implements Wrapper {
 			else if (key.equals(COLUMN_CODENAME))
 				type.setCodename((String) value);
 			else if (key.equals(COLUMN_COLOR))
-				type.setColor(Integer.parseInt((String) value));
-			else if (key.equals(COLUMN_LINK_TYPE_ID)) {
-				try {
-					type.setLinkType((LinkType) ConfigurationStorableObjectPool.getStorableObject(
-						new Identifier((String) value), true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("CableThreadWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
-			}
+				type.setColor(((Integer)value).intValue());
+			else if (key.equals(COLUMN_LINK_TYPE_ID)) 
+				type.setLinkType((LinkType)value);
 		}
 	}
 

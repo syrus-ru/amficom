@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeWrapper.java,v 1.2 2005/01/26 15:09:22 bob Exp $
+ * $Id: LinkTypeWrapper.java,v 1.3 2005/01/31 14:42:34 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,19 +11,15 @@ package com.syrus.AMFICOM.configuration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.Wrapper;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/26 15:09:22 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/31 14:42:34 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -85,15 +81,15 @@ public final class LinkTypeWrapper implements Wrapper {
 		if (object instanceof LinkType) {
 			LinkType type = (LinkType) object;
 			if (key.equals(StorableObjectDatabase.COLUMN_ID))
-				return type.getId().toString();
+				return type.getId();
 			if (key.equals(StorableObjectDatabase.COLUMN_CREATED))
-				return type.getCreated().toString();
+				return type.getCreated();
 			if (key.equals(StorableObjectDatabase.COLUMN_CREATOR_ID))
-				return type.getCreatorId().getIdentifierString();
+				return type.getCreatorId();
 			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIED))
-				return type.getModified().toString();
+				return type.getModified();
 			if (key.equals(StorableObjectDatabase.COLUMN_MODIFIER_ID))
-				return type.getModifierId().getIdentifierString();
+				return type.getModifierId();
 			if (key.equals(COLUMN_CODENAME))
 				return type.getCodename();
 			if (key.equals(COLUMN_DESCRIPTION))
@@ -101,13 +97,13 @@ public final class LinkTypeWrapper implements Wrapper {
 			if (key.equals(COLUMN_NAME))
 				return type.getName();
 			if (key.equals(COLUMN_SORT))
-				return Integer.toString(type.getSort().value());
+				return new Integer(type.getSort().value());
 			if (key.equals(COLUMN_MANUFACTURER))
 				return type.getManufacturer();
 			if (key.equals(COLUMN_MANUFACTURER_CODE))
 				return type.getManufacturerCode();
 			if (key.equals(COLUMN_IMAGE_ID))
-				return type.getImageId().getIdentifierString();
+				return type.getImageId();
 			if (key.equals(COLUMN_CHARACTERISTICS)) 
 				return type.getCharacteristics();
 		}
@@ -124,28 +120,19 @@ public final class LinkTypeWrapper implements Wrapper {
 			if (key.equals(COLUMN_NAME))
 				type.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
-				type.setDescription0((String) value);
+				type.setDescription((String) value);
 			else if (key.equals(COLUMN_CODENAME))
 				type.setCodename((String) value);
 			else if (key.equals(COLUMN_SORT))
-				type.setSort(LinkTypeSort.from_int(Integer.parseInt((String) value)));
+				type.setSort(LinkTypeSort.from_int(((Integer)value).intValue()));
 			else if (key.equals(COLUMN_MANUFACTURER))
 				type.setManufacturer((String) value);
 			else if (key.equals(COLUMN_MANUFACTURER_CODE))
 				type.setManufacturerCode((String) value);
 			else if (key.equals(COLUMN_IMAGE_ID))
-				type.setImageId(new Identifier((String) value));
-			else if (key.equals(COLUMN_CHARACTERISTICS)) {
-				List charIdStr = (List) value;
-				List characteristicIds = new ArrayList(charIdStr.size());
-				for (Iterator it = charIdStr.iterator(); it.hasNext();)
-					characteristicIds.add(new Identifier((String) it.next()));
-				try {
-					type.setCharacteristics0(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
-				} catch (ApplicationException e) {
-					Log.errorMessage("LinkTypeWrapper.setValue | key '" + key + "' caught " + e.getMessage());
-				}
-			}
+				type.setImageId((Identifier) value);
+			else if (key.equals(COLUMN_CHARACTERISTICS)) 
+				type.setCharacteristics((List) value);
 		}
 	}
 
