@@ -57,8 +57,8 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 	private SelectionListener	selectionListener;
 
 	ApplicationContext			aContext;
-	
-	private Item rootItem = new ServiceItem("/");
+
+	private Item				rootItem						= new ServiceItem("/");
 
 	public static final String	ACCESSPORT_NAME_REFLECTOMETER	= "MeasurementPortTypeReflectometry";	//$NON-NLS-1$
 
@@ -102,8 +102,9 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 
 	public KIS getKIS() {
 		try {
-			return (KIS) ConfigurationStorableObjectPool.getStorableObject(this.getObject(ObjectEntities.KIS_ENTITY_CODE), true);
-		} catch (ApplicationException e) {			
+			return (KIS) ConfigurationStorableObjectPool.getStorableObject(this
+					.getObject(ObjectEntities.KIS_ENTITY_CODE), true);
+		} catch (ApplicationException e) {
 			//
 		}
 		return null;
@@ -111,8 +112,9 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 
 	public MeasurementType getMeasurementType() {
 		try {
-			return (MeasurementType) MeasurementStorableObjectPool.getStorableObject(this.getObject(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE), true);
-		} catch (ApplicationException e) {			
+			return (MeasurementType) MeasurementStorableObjectPool.getStorableObject(this
+					.getObject(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE), true);
+		} catch (ApplicationException e) {
 			//
 		}
 		return null;
@@ -120,56 +122,62 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 
 	public MonitoredElement getMonitoredElement() {
 		try {
-			return (MonitoredElement) ConfigurationStorableObjectPool.getStorableObject(this.getObject(ObjectEntities.ME_ENTITY_CODE), true);
-		} catch (ApplicationException e) {			
+			return (MonitoredElement) ConfigurationStorableObjectPool.getStorableObject(this
+					.getObject(ObjectEntities.ME_ENTITY_CODE), true);
+		} catch (ApplicationException e) {
 			//
 		}
 		return null;
 	}
 
 	public void setKIS(KIS kis) {
-//		this.paramMap.put(ObjectEntities.KIS_ENTITY, kis);
+		// this.paramMap.put(ObjectEntities.KIS_ENTITY, kis);
 		this.treePanel.expandAll(true);
 		this.selectItems();
 	}
 
 	public void setMeasurementType(MeasurementType measurementType) {
-//		this.paramMap.put(ObjectEntities.MEASUREMENTTYPE_ENTITY, measurementType);
+		// this.paramMap.put(ObjectEntities.MEASUREMENTTYPE_ENTITY,
+		// measurementType);
 		this.treePanel.expandAll(true);
 		this.selectItems();
 
 	}
 
 	public void setMonitoredElement(MonitoredElement monitoredElement) {
-//		try {
-//			MeasurementPort measurementPort = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(
-//				monitoredElement.getMeasurementPortId(), true);
-//			this.paramMap.put(ObjectEntities.MEASUREMENTPORT_ENTITY, measurementPort);
-			this.paramMap.put(ObjectEntities.ME_ENTITY, monitoredElement);			
-			this.treePanel.expandAll(true);
-			this.selectItems();
+		// try {
+		// MeasurementPort measurementPort = (MeasurementPort)
+		// ConfigurationStorableObjectPool.getStorableObject(
+		// monitoredElement.getMeasurementPortId(), true);
+		// this.paramMap.put(ObjectEntities.MEASUREMENTPORT_ENTITY,
+		// measurementPort);
+		this.paramMap.put(ObjectEntities.ME_ENTITY, monitoredElement);
+		this.treePanel.expandAll(true);
+		this.selectItems();
 
-//		} catch (ApplicationException e) {
-//			SchedulerModel.showErrorMessage(this, e);
-//		}
+		// } catch (ApplicationException e) {
+		// SchedulerModel.showErrorMessage(this, e);
+		// }
 	}
-	
+
 	private void selectItems() {
 		List list = new LinkedList();
 		this.getSelectItem((Item) this.treePanel.getTreeModel().getRoot(), list);
 		this.treePanel.selectedItems(list);
 	}
-	
-	private void getSelectItem(Item parent, List list) {
+
+	private void getSelectItem(	Item parent,
+								List list) {
 		Object object = parent.getObject();
 		if (object instanceof Identifier) {
-			Identifier identifier = (Identifier)object;
-			StorableObject storableObject = (StorableObject) this.paramMap.get(ObjectEntities.codeToString(identifier.getMajor()));
+			Identifier identifier = (Identifier) object;
+			StorableObject storableObject = (StorableObject) this.paramMap.get(ObjectEntities.codeToString(identifier
+					.getMajor()));
 			if (storableObject != null && storableObject.getId().equals(identifier)) {
 				list.add(parent);
 			}
 		}
-		
+
 		List children = parent.getChildren();
 		if (!children.isEmpty()) {
 			for (Iterator it = children.iterator(); it.hasNext();) {
@@ -185,9 +193,9 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 			this.rootItem.addChild(item);
 			this.treePanel.addItem(item);
 			this.treePanel.expandAll(item);
-		}		
+		}
 	}
-	
+
 	public void init() {
 		this.schedulerModel = (SchedulerModel) this.aContext.getApplicationModel();
 		if (this.treePanel == null) {
@@ -199,9 +207,12 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 					for (Iterator it = items.iterator(); it.hasNext();) {
 						Item item = (Item) it.next();
 						Object object = item.getObject();
-						if (object instanceof MonitoredElement) {
-							MonitoredElement me = (MonitoredElement) object;
-							dispatcher.notify(new OperationEvent(me.getId(), 0, SchedulerModel.COMMAND_CHANGE_ME_TYPE));
+						if (object instanceof Identifier) {
+							Identifier identifier = (Identifier) object;
+							if (identifier.getMajor() == ObjectEntities.ME_ENTITY_CODE) {
+								dispatcher.notify(new OperationEvent(identifier, 0,
+																		SchedulerModel.COMMAND_CHANGE_ME_TYPE));
+							}
 						}
 					}
 

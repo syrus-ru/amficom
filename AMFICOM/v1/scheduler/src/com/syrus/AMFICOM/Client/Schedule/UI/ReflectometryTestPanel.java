@@ -373,7 +373,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 	public void setPort(MeasurementPort port) {
 		try {
-			LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(port.getId(),
+			LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(port.getType().getId(),
 																			ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
 			Collection characteristics = GeneralStorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition,
 				true);
