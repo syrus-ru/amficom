@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMapSaver.java,v 1.1 2004/11/11 08:01:29 max Exp $
+ * $Id: LRUMapSaver.java,v 1.2 2004/11/11 09:15:19 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,24 +21,20 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/11/11 08:01:29 $
+ * @version $Revision: 1.2 $, $Date: 2004/11/11 09:15:19 $
  * @author $Author: max $
  * @module module_name
  */
 public class LRUMapSaver {
     
     private File file;
-        
-    public LRUMapSaver() {
-    	        
-    }
-       
-    public void saveLRUMap(LRUMap lruMap, File outputFile) throws FileNotFoundException, IOException {
+          
+    public void saveLRUMap(LRUMap lruMap, File outputFile) {
         this.file = outputFile;
         save(lruMap);
     }
     
-    public void saveLRUMap(LRUMap lruMap, String pathName) throws FileNotFoundException, IOException {
+    public void saveLRUMap(LRUMap lruMap, String pathName) {
         this.file = new File(pathName);
         save(lruMap);
     }
@@ -57,7 +53,7 @@ public class LRUMapSaver {
                 objectEntity = e.getId().getObjectEntity();
                 break;
     		}
-            Log.debugMessage("Trying to save LRUMap with " + objectEntity + " | LRUMapSaver.save ", Log.DEBUGLEVEL10);       
+            Log.debugMessage("LRUMapSaver.save | Trying to save LRUMap with " + objectEntity, Log.DEBUGLEVEL10);       
             out.writeObject(objectEntity);
             out.writeObject(lruMap);
             out.close();
@@ -65,9 +61,9 @@ public class LRUMapSaver {
             System.out.println(tempFile.getPath());
             tempFile.renameTo(this.file);
         } catch (FileNotFoundException fnfe) {
-            Log.errorMessage("LRUMapSaver.save | " + fnfe.getMessage());        	
+            Log.errorMessage("LRUMapSaver.save | Error: " + fnfe.getMessage());        	
         } catch (IOException ioe) {
-        	Log.errorMessage("LRUMapSaver.save | " + ioe.getMessage());
+        	Log.errorMessage("LRUMapSaver.save | Error: " + ioe.getMessage());
         } finally {
         	tempFile.delete();
         }
