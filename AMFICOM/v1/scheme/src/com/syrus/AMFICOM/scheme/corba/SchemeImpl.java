@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeImpl.java,v 1.8 2004/12/17 15:58:58 bass Exp $
+ * $Id: SchemeImpl.java,v 1.9 2004/12/21 15:35:01 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,17 +16,25 @@ import com.syrus.AMFICOM.resource.*;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
 import com.syrus.util.logging.ErrorHandler;
-import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2004/12/17 15:58:58 $
- * @module schemecommon_v1
+ * @version $Revision: 1.9 $, $Date: 2004/12/21 15:35:01 $
+ * @module scheme_v1
  */
 final class SchemeImpl extends Scheme implements Cloneable {
 	private static final ErrorHandler ERROR_HANDLER = ErrorHandler.getInstance();
 
+	private static final long serialVersionUID = 3546639914939594546L;
+
 	SchemeImpl() {
+	}
+
+	/**
+	 * @see StorableObject#changed()
+	 */
+	public boolean changed() {
+		throw new UnsupportedOperationException();
 	}
 
 	public Scheme cloneInstance() {
@@ -43,16 +51,16 @@ final class SchemeImpl extends Scheme implements Cloneable {
 	}
 
 	/**
-	 * @see java.util.JavaUtilIStorableObject#createdImpl()
+	 * @see StorableObject#creatorId()
 	 */
-	public Date createdImpl() {
+	public Identifier creatorId() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see StorableObject#creatorId()
+	 * @see StorableObject#dependencies()
 	 */
-	public Identifier creatorId() {
+	public StorableObject[] dependencies() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -92,30 +100,9 @@ final class SchemeImpl extends Scheme implements Cloneable {
 	}
 
 	/**
-	 * @see java.util.JavaUtilIStorableObject#getCreated()
+	 * @see StorableObject#headerTransferable()
 	 */
-	public Date getCreated() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see java.util.JavaUtilIStorableObject#getDependencies()
-	 */
-	public List getDependencies() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.corba.IStorableObject#getHeaderTransferable()
-	 */
-	public StorableObject_Transferable getHeaderTransferable() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see java.util.JavaUtilIStorableObject#getModified()
-	 */
-	public Date getModified() {
+	public StorableObject_Transferable headerTransferable() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -128,13 +115,6 @@ final class SchemeImpl extends Scheme implements Cloneable {
 	}
 
 	public Identifier id() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.corba.IStorableObject#isChanged()
-	 */
-	public boolean isChanged() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -155,13 +135,6 @@ final class SchemeImpl extends Scheme implements Cloneable {
 	}
 
 	public long modified() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see java.util.JavaUtilIStorableObject#modifiedImpl()
-	 */
-	public Date modifiedImpl() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -315,6 +288,10 @@ final class SchemeImpl extends Scheme implements Cloneable {
 	}
 
 	protected Object clone() throws CloneNotSupportedException {
-		throw new UnsupportedOperationException();
+		final SchemeImpl scheme = (SchemeImpl) super.clone();
+		/**
+		 * @todo Update the newly created object.
+		 */
+		return scheme;
 	}
 }

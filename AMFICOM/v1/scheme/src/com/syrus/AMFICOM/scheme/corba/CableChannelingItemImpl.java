@@ -1,5 +1,5 @@
 /*
- * $Id: CableChannelingItemImpl.java,v 1.8 2004/12/20 10:10:09 bass Exp $
+ * $Id: CableChannelingItemImpl.java,v 1.9 2004/12/21 15:35:01 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,20 +12,28 @@ import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.map.*;
 import com.syrus.AMFICOM.map.corba.*;
 import com.syrus.util.logging.ErrorHandler;
-import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2004/12/20 10:10:09 $
- * @module schemecommon_v1
+ * @version $Revision: 1.9 $, $Date: 2004/12/21 15:35:01 $
+ * @module scheme_v1
  */
 final class CableChannelingItemImpl extends CableChannelingItem implements Cloneable {
 	private static final ErrorHandler ERROR_HANDLER = ErrorHandler.getInstance();
+
+	private static final long serialVersionUID = 3544387011336024880L;
 
 	/**
 	 * @todo Check whether constructor is invoked during deserialization.
 	 */
 	CableChannelingItemImpl() {
+	}
+
+	/**
+	 * @see StorableObject#changed()
+	 */
+	public boolean changed() {
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -48,16 +56,16 @@ final class CableChannelingItemImpl extends CableChannelingItem implements Clone
 	}
 
 	/**
-	 * @see java.util.JavaUtilIStorableObject#createdImpl()
+	 * @see StorableObject#creatorId()
 	 */
-	public Date createdImpl() {
+	public Identifier creatorId() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see StorableObject#creatorId()
+	 * @see StorableObject#dependencies()
 	 */
-	public Identifier creatorId() {
+	public StorableObject[] dependencies() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -120,30 +128,9 @@ final class CableChannelingItemImpl extends CableChannelingItem implements Clone
 	}
 
 	/**
-	 * @see JavaUtilIStorableObject#getCreated()
+	 * @see StorableObject#headerTransferable()
 	 */
-	public Date getCreated() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see JavaUtilIStorableObject#getDependencies()
-	 */
-	public List getDependencies() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see IStorableObject#getHeaderTransferable()
-	 */
-	public StorableObject_Transferable getHeaderTransferable() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see JavaUtilIStorableObject#getModified()
-	 */
-	public Date getModified() {
+	public StorableObject_Transferable headerTransferable() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -155,23 +142,9 @@ final class CableChannelingItemImpl extends CableChannelingItem implements Clone
 	}
 
 	/**
-	 * @see IStorableObject#isChanged()
-	 */
-	public boolean isChanged() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @see StorableObject#modified()
 	 */
 	public long modified() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see java.util.JavaUtilIStorableObject#modifiedImpl()
-	 */
-	public Date modifiedImpl() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -319,6 +292,10 @@ final class CableChannelingItemImpl extends CableChannelingItem implements Clone
 	}
 
 	protected Object clone() throws CloneNotSupportedException {
-		throw new UnsupportedOperationException();
+		final CableChannelingItemImpl cableChannelingItem = (CableChannelingItemImpl) super.clone();
+		/**
+		 * @todo Update the newly created object.
+		 */
+		return cableChannelingItem;
 	}
 }

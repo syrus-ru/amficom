@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeCableThreadImpl.java,v 1.7 2004/12/20 10:09:50 bass Exp $
+ * $Id: SchemeCableThreadImpl.java,v 1.8 2004/12/21 15:35:01 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,16 +11,18 @@ package com.syrus.AMFICOM.scheme.corba;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.*;
 import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.scheme.CharacteristicSeqContainer;
 import com.syrus.util.logging.ErrorHandler;
-import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2004/12/20 10:09:50 $
- * @module schemecommon_v1
+ * @version $Revision: 1.8 $, $Date: 2004/12/21 15:35:01 $
+ * @module scheme_v1
  */
 final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable {
 	private static final ErrorHandler ERROR_HANDLER = ErrorHandler.getInstance();
+
+	private static final long serialVersionUID = 3618420423407186485L;
 
 	SchemeCableThreadImpl() {
 	}
@@ -52,6 +54,13 @@ final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @see StorableObject#changed()
+	 */
+	public boolean changed() {
+		throw new UnsupportedOperationException();
+	}
+
 	public Characteristic_Transferable[] characteristics() {
 		throw new UnsupportedOperationException();
 	}
@@ -61,17 +70,17 @@ final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable
 	}
 
 	/**
-	 * @see java.util.JavaUtilCharacterizable#characteristicsImpl()
+	 * @see com.syrus.AMFICOM.scheme.Characterizable#characteristicsImpl()
 	 */
-	public List characteristicsImpl() {
+	public CharacteristicSeqContainer characteristicsImpl() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @param newCharacteristicsImpl
-	 * @see java.util.JavaUtilCharacterizable#characteristicsImpl(java.util.List)
+	 * @param characteristics
+	 * @see com.syrus.AMFICOM.scheme.Characterizable#characteristicsImpl(CharacteristicSeqContainer)
 	 */
-	public void characteristicsImpl(List newCharacteristicsImpl) {
+	public void characteristicsImpl(final CharacteristicSeqContainer characteristics) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -89,16 +98,16 @@ final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable
 	}
 
 	/**
-	 * @see java.util.JavaUtilIStorableObject#createdImpl()
+	 * @see StorableObject#creatorId()
 	 */
-	public Date createdImpl() {
+	public Identifier creatorId() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see StorableObject#creatorId()
+	 * @see StorableObject#dependencies()
 	 */
-	public Identifier creatorId() {
+	public StorableObject[] dependencies() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -111,30 +120,9 @@ final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable
 	}
 
 	/**
-	 * @see java.util.JavaUtilIStorableObject#getCreated()
+	 * @see StorableObject#headerTransferable()
 	 */
-	public Date getCreated() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see java.util.JavaUtilIStorableObject#getDependencies()
-	 */
-	public List getDependencies() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.corba.IStorableObject#getHeaderTransferable()
-	 */
-	public StorableObject_Transferable getHeaderTransferable() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see java.util.JavaUtilIStorableObject#getModified()
-	 */
-	public Date getModified() {
+	public StorableObject_Transferable headerTransferable() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -142,21 +130,7 @@ final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable
 		throw new UnsupportedOperationException();
 	}
 
-	/**
-	 * @see com.syrus.AMFICOM.general.corba.IStorableObject#isChanged()
-	 */
-	public boolean isChanged() {
-		throw new UnsupportedOperationException();
-	}
-
 	public long modified() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see java.util.JavaUtilIStorableObject#modifiedImpl()
-	 */
-	public Date modifiedImpl() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -249,6 +223,10 @@ final class SchemeCableThreadImpl extends SchemeCableThread implements Cloneable
 	}
 
 	protected Object clone() throws CloneNotSupportedException {
-		throw new UnsupportedOperationException();
+		final SchemeCableThreadImpl schemeCableThread = (SchemeCableThreadImpl) super.clone();
+		/**
+		 * @todo Update the newly created object.
+		 */
+		return schemeCableThread;
 	}
 }

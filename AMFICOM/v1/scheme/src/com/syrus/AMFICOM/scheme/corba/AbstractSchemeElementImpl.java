@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractSchemeElementImpl.java,v 1.7 2004/12/17 15:58:57 bass Exp $
+ * $Id: AbstractSchemeElementImpl.java,v 1.8 2004/12/21 15:35:01 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.scheme.corba;
 
 import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.*;
-import java.util.*;
+import com.syrus.AMFICOM.scheme.CharacteristicSeqContainer;
 
 /**
  * This class is never used directly, it was provided just in order for source
@@ -18,8 +18,8 @@ import java.util.*;
  * {@link AbstractSchemeElement} instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2004/12/17 15:58:57 $
- * @module schemecommon_v1
+ * @version $Revision: 1.8 $, $Date: 2004/12/21 15:35:01 $
+ * @module scheme_v1
  */
 final class AbstractSchemeElementImpl extends AbstractSchemeElement {
 	private static final long serialVersionUID = -494520769118198959L;
@@ -32,6 +32,10 @@ final class AbstractSchemeElementImpl extends AbstractSchemeElement {
 		throw new UnsupportedOperationException();
 	}
 
+	public boolean changed() {
+		throw new UnsupportedOperationException();
+	}
+
 	public Characteristic_Transferable[] characteristics() {
 		throw new UnsupportedOperationException();
 	}
@@ -40,11 +44,11 @@ final class AbstractSchemeElementImpl extends AbstractSchemeElement {
 		throw new UnsupportedOperationException();
 	}
 
-	public List characteristicsImpl() {
+	public CharacteristicSeqContainer characteristicsImpl() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void characteristicsImpl(List characteristics) {
+	public void characteristicsImpl(final CharacteristicSeqContainer characteristics) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -53,16 +57,13 @@ final class AbstractSchemeElementImpl extends AbstractSchemeElement {
 	}
 
 	/**
-	 * @see JavaUtilIStorableObject#createdImpl()
-	 */
-	public Date createdImpl() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @see StorableObject#creatorId()
 	 */
 	public Identifier creatorId() {
+		throw new UnsupportedOperationException();
+	}
+
+	public StorableObject[] dependencies() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -74,38 +75,15 @@ final class AbstractSchemeElementImpl extends AbstractSchemeElement {
 		throw new UnsupportedOperationException();
 	}
 
-	public Date getCreated() {
-		return createdImpl();
-	}
-
-	public List getDependencies() {
+	public StorableObject_Transferable headerTransferable() {
 		throw new UnsupportedOperationException();
-	}
-
-	public StorableObject_Transferable getHeaderTransferable() {
-		throw new UnsupportedOperationException();
-	}
-
-	public Date getModified() {
-		return modifiedImpl();
 	}
 
 	public Identifier id() {
 		throw new UnsupportedOperationException();
 	}
 
-	public boolean isChanged() {
-		throw new UnsupportedOperationException();
-	}
-
 	public long modified() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see JavaUtilIStorableObject#modifiedImpl()
-	 */
-	public Date modifiedImpl() {
 		throw new UnsupportedOperationException();
 	}
 

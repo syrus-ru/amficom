@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeElementImpl.java,v 1.9 2004/12/17 15:58:58 bass Exp $
+ * $Id: SchemeElementImpl.java,v 1.10 2004/12/21 15:35:01 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.                                              
  * Dept. of Science & Technology.                                               
@@ -14,16 +14,18 @@ import com.syrus.AMFICOM.configuration.corba.*;
 import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.resource.*;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
+import com.syrus.AMFICOM.scheme.CharacteristicSeqContainer;
 import com.syrus.util.logging.ErrorHandler;
-import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2004/12/17 15:58:58 $
- * @module schemecommon_v1
+ * @version $Revision: 1.10 $, $Date: 2004/12/21 15:35:01 $
+ * @module scheme_v1
  */
 final class SchemeElementImpl extends SchemeElement implements Cloneable {
 	private static final ErrorHandler ERROR_HANDLER = ErrorHandler.getInstance();
+
+	private static final long serialVersionUID = 3690758397188124983L;
 
 	SchemeElementImpl() {
 	}
@@ -52,6 +54,13 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @see StorableObject#changed()
+	 */
+	public boolean changed() {
+		throw new UnsupportedOperationException();
+	}
+
 	public Characteristic_Transferable[] characteristics() {
 		throw new UnsupportedOperationException();
 	}
@@ -61,17 +70,16 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 	}
 
 	/**
-	 * @see java.util.JavaUtilCharacterizable#characteristicsImpl()
+	 * @see com.syrus.AMFICOM.scheme.Characterizable#characteristicsImpl()
 	 */
-	public List characteristicsImpl() {
+	public CharacteristicSeqContainer characteristicsImpl() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @param newCharacteristicsImpl
-	 * @see java.util.JavaUtilCharacterizable#characteristicsImpl(java.util.List)
+	 * @see com.syrus.AMFICOM.scheme.Characterizable#characteristicsImpl(CharacteristicSeqContainer)
 	 */
-	public void characteristicsImpl(List newCharacteristicsImpl) {
+	public void characteristicsImpl(final CharacteristicSeqContainer characteristics) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -89,16 +97,16 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 	}
 
 	/**
-	 * @see java.util.JavaUtilIStorableObject#createdImpl()
+	 * @see StorableObject#creatorId()
 	 */
-	public Date createdImpl() {
+	public Identifier creatorId() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see StorableObject#creatorId()
+	 * @see StorableObject#dependencies()
 	 */
-	public Identifier creatorId() {
+	public StorableObject[] dependencies() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -157,30 +165,9 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 	}
 
 	/**
-	 * @see java.util.JavaUtilIStorableObject#getCreated()
+	 * @see StorableObject#headerTransferable()
 	 */
-	public Date getCreated() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see java.util.JavaUtilIStorableObject#getDependencies()
-	 */
-	public List getDependencies() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.corba.IStorableObject#getHeaderTransferable()
-	 */
-	public StorableObject_Transferable getHeaderTransferable() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see java.util.JavaUtilIStorableObject#getModified()
-	 */
-	public Date getModified() {
+	public StorableObject_Transferable headerTransferable() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -193,13 +180,6 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 	}
 
 	public void internalScheme(Scheme internalScheme) {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.corba.IStorableObject#isChanged()
-	 */
-	public boolean isChanged() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -219,13 +199,6 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 	}
 
 	public long modified() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see java.util.JavaUtilIStorableObject#modifiedImpl()
-	 */
-	public Date modifiedImpl() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -401,6 +374,10 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 	}
 
 	protected Object clone() throws CloneNotSupportedException {
-		throw new UnsupportedOperationException();
+		final SchemeElementImpl schemeElement = (SchemeElementImpl) super.clone();
+		/**
+		 * @todo Update the newly created object.
+		 */
+		return schemeElement;
 	}
 }

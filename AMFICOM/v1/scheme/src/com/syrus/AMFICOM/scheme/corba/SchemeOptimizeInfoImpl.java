@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeOptimizeInfoImpl.java,v 1.6 2004/12/17 15:58:57 bass Exp $
+ * $Id: SchemeOptimizeInfoImpl.java,v 1.7 2004/12/21 15:35:01 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,17 +11,25 @@ package com.syrus.AMFICOM.scheme.corba;
 import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.scheme.corba.SchemeOptimizeInfoPackage.OptimizationMode;
 import com.syrus.util.logging.ErrorHandler;
-import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2004/12/17 15:58:57 $
- * @module schemecommon_v1
+ * @version $Revision: 1.7 $, $Date: 2004/12/21 15:35:01 $
+ * @module scheme_v1
  */
 final class SchemeOptimizeInfoImpl extends SchemeOptimizeInfo implements Cloneable {
 	private static final ErrorHandler ERROR_HANDLER = ErrorHandler.getInstance();
 
+	private static final long serialVersionUID = 4121130333883609142L;
+
 	SchemeOptimizeInfoImpl() {
+	}
+
+	/**
+	 * @see StorableObject#changed()
+	 */
+	public boolean changed() {
+		throw new UnsupportedOperationException();
 	}
 	
 	public SchemeOptimizeInfo cloneInstance() {
@@ -38,16 +46,16 @@ final class SchemeOptimizeInfoImpl extends SchemeOptimizeInfo implements Cloneab
 	}
 
 	/**
-	 * @see java.util.JavaUtilIStorableObject#createdImpl()
+	 * @see StorableObject#creatorId()
 	 */
-	public Date createdImpl() {
+	public Identifier creatorId() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see StorableObject#creatorId()
+	 * @see StorableObject#dependencies()
 	 */
-	public Identifier creatorId() {
+	public StorableObject[] dependencies() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -60,41 +68,13 @@ final class SchemeOptimizeInfoImpl extends SchemeOptimizeInfo implements Cloneab
 	}
 
 	/**
-	 * @see java.util.JavaUtilIStorableObject#getCreated()
+	 * @see StorableObject#headerTransferable()
 	 */
-	public Date getCreated() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see java.util.JavaUtilIStorableObject#getDependencies()
-	 */
-	public List getDependencies() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.corba.IStorableObject#getHeaderTransferable()
-	 */
-	public StorableObject_Transferable getHeaderTransferable() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see java.util.JavaUtilIStorableObject#getModified()
-	 */
-	public Date getModified() {
+	public StorableObject_Transferable headerTransferable() {
 		throw new UnsupportedOperationException();
 	}
 
 	public Identifier id() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.corba.IStorableObject#isChanged()
-	 */
-	public boolean isChanged() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -123,13 +103,6 @@ final class SchemeOptimizeInfoImpl extends SchemeOptimizeInfo implements Cloneab
 	}
 
 	public long modified() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see java.util.JavaUtilIStorableObject#modifiedImpl()
-	 */
-	public Date modifiedImpl() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -369,6 +342,10 @@ final class SchemeOptimizeInfoImpl extends SchemeOptimizeInfo implements Cloneab
 	}
 
 	protected Object clone() throws CloneNotSupportedException {
-		throw new UnsupportedOperationException();
+		final SchemeOptimizeInfoImpl schemeOptimizeInfo = (SchemeOptimizeInfoImpl) super.clone(); 
+		/**
+		 * @todo Update the newly created object.
+		 */
+		return schemeOptimizeInfo;
 	}
 }

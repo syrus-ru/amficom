@@ -1,5 +1,5 @@
 /*
- * $Id: PathElementImpl.java,v 1.7 2004/12/17 15:58:58 bass Exp $
+ * $Id: PathElementImpl.java,v 1.8 2004/12/21 15:35:01 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.                                              
  * Dept. of Science & Technology.                                               
@@ -12,15 +12,16 @@ import com.syrus.AMFICOM.general.corba.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
 import com.syrus.util.logging.ErrorHandler;
-import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2004/12/17 15:58:58 $
- * @module schemecommon_v1
+ * @version $Revision: 1.8 $, $Date: 2004/12/21 15:35:01 $
+ * @module scheme_v1
  */
 final class PathElementImpl extends PathElement implements Cloneable {
 	private static final ErrorHandler ERROR_HANDLER = ErrorHandler.getInstance();
+
+	private static final long serialVersionUID = 3833746603058934071L;
 
 	private AbstractSchemeElement abstractSchemeElement;
 
@@ -48,6 +49,13 @@ final class PathElementImpl extends PathElement implements Cloneable {
 	}
 
 	/**
+	 * @see StorableObject#changed()
+	 */
+	public boolean changed() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * @see PathElement#cloneInstance()
 	 */
 	public PathElement cloneInstance() {
@@ -67,16 +75,16 @@ final class PathElementImpl extends PathElement implements Cloneable {
 	}
 
 	/**
-	 * @see java.util.JavaUtilIStorableObject#createdImpl()
+	 * @see StorableObject#creatorId()
 	 */
-	public Date createdImpl() {
+	public Identifier creatorId() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @see StorableObject#creatorId()
+	 * @see StorableObject#dependencies()
 	 */
-	public Identifier creatorId() {
+	public StorableObject[] dependencies() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -109,30 +117,9 @@ final class PathElementImpl extends PathElement implements Cloneable {
 	}
 
 	/**
-	 * @see JavaUtilIStorableObject#getCreated()
+	 * @see StorableObject#headerTransferable()
 	 */
-	public Date getCreated() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see JavaUtilIStorableObject#getDependencies()
-	 */
-	public List getDependencies() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see IStorableObject#getHeaderTransferable()
-	 */
-	public StorableObject_Transferable getHeaderTransferable() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see JavaUtilIStorableObject#getModified()
-	 */
-	public Date getModified() {
+	public StorableObject_Transferable headerTransferable() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -144,23 +131,9 @@ final class PathElementImpl extends PathElement implements Cloneable {
 	}
 
 	/**
-	 * @see IStorableObject#isChanged()
-	 */
-	public boolean isChanged() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @see StorableObject#modified()
 	 */
 	public long modified() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @see java.util.JavaUtilIStorableObject#modifiedImpl()
-	 */
-	public Date modifiedImpl() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -265,6 +238,10 @@ final class PathElementImpl extends PathElement implements Cloneable {
 	}
 
 	protected Object clone() throws CloneNotSupportedException {
-		throw new UnsupportedOperationException();
+		final PathElementImpl pathElement = (PathElementImpl) super.clone();
+		/**
+		 * @todo Update the newly created object.
+		 */
+		return pathElement;
 	}
 }
