@@ -1,5 +1,5 @@
 /*
- * $Id: StringFieldCondition.java,v 1.3 2004/10/13 11:07:37 bob Exp $
+ * $Id: StringFieldCondition.java,v 1.4 2004/10/13 12:54:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,13 +7,13 @@
  */
 package com.syrus.AMFICOM.measurement;
 
+import com.syrus.AMFICOM.configuration.corba.StringFieldCondition_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.measurement.corba.StringFieldCondition_Transferable;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/10/13 11:07:37 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/13 12:54:53 $
  * @author $Author: bob $
  * @module measurement_v1
  */

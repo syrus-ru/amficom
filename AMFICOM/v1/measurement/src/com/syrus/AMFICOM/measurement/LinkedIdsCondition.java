@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.7 2004/10/13 10:35:52 max Exp $
+ * $Id: LinkedIdsCondition.java,v 1.8 2004/10/13 12:54:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,28 +8,23 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
+import com.syrus.AMFICOM.configuration.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.measurement.corba.LinkedIdsCondition_Transferable;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/10/13 10:35:52 $
- * @author $Author: max $
+ * @version $Revision: 1.8 $, $Date: 2004/10/13 12:54:53 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
-public class LinkedIdsCondition implements StorableObjectCondition {
+public class LinkedIdsCondition extends com.syrus.AMFICOM.configuration.LinkedIdsCondition {
 
 	private static LinkedIdsCondition	instance = null;
 	private static boolean			initialized	= false;
@@ -53,7 +48,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	private Identifier			identifier;
 
 	private LinkedIdsCondition() {
-		// empty
+		super((Identifier)null, (Short)null);
 	}
 
 	public static LinkedIdsCondition getInstance() {
@@ -67,48 +62,6 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			}
 		}
 		return instance;
-	}
-
-	public LinkedIdsCondition(LinkedIdsCondition_Transferable transferable) throws DatabaseException,
-			CommunicationException {
-		this.domain = (Domain) ConfigurationStorableObjectPool
-				.getStorableObject(new Identifier(transferable.domain_id), true);
-		if (transferable.linked_ids.length == 1) {
-			this.identifier = new Identifier(transferable.linked_ids[0]);
-		} else {
-			this.linkedIds = new ArrayList(transferable.linked_ids.length);
-			for (int i = 0; i < transferable.linked_ids.length; i++) {
-				this.linkedIds.add(new Identifier(transferable.linked_ids[i]));
-			}
-		}
-
-		setEntityCode(transferable.entity_code);
-	}
-
-	public LinkedIdsCondition(List linkedIds, short entityCode) {
-		this(linkedIds, new Short(entityCode));
-	}
-
-	public LinkedIdsCondition(List linkedIds, Short entityCode) {
-		this.linkedIds = linkedIds;
-		this.entityCode = entityCode;
-	}
-
-	public LinkedIdsCondition(Identifier identifier, Short entityCode) {
-		this.identifier = identifier;
-		this.entityCode = entityCode;
-	}
-
-	public LinkedIdsCondition(Identifier identifier, short entityCode) {
-		this(identifier, new Short(entityCode));
-	}
-
-	public Domain getDomain() {
-		return this.domain;
-	}
-
-	public Short getEntityCode() {
-		return this.entityCode;
 	}
 
 	/**
@@ -271,14 +224,10 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 				}
 				break;
 			default:
-				throw new UnsupportedOperationException("entityCode is unknown for this condition");
+				condition = super.isConditionTrue(object);
 		}
 
 		return condition;
-	}
-
-	public void setDomain(Domain domain) {
-		this.domain = domain;
 	}
 
 	public void setEntityCode(short entityCode) {
@@ -305,15 +254,6 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 				throw new UnsupportedOperationException("entityCode is unknown for this condition");
 		}
 
-	}
-
-	public void setEntityCode(Short entityCode) {
-		this.setEntityCode(entityCode.shortValue());
-	}
-
-	public void setLinkedIds(List linkedIds) {
-		this.linkedIds = linkedIds;
-		this.identifier = null;
 	}
 
 	public Object getTransferable() {
@@ -383,14 +323,5 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		if (this.entityCode.equals(EVALUATION_SHORT))
 			return this.linkedIds;
 		return null;
-	}
-
-	public Identifier getIdentifier() {
-		return this.identifier;
-	}
-
-	public void setIdentifier(Identifier identifier) {
-		this.identifier = identifier;
-		this.linkedIds = null;
 	}
 }
