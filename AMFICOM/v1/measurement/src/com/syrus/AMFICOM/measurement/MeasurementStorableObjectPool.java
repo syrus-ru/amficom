@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.30 2004/10/05 10:24:54 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.31 2004/10/05 11:41:29 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/10/05 10:24:54 $
+ * @version $Revision: 1.31 $, $Date: 2004/10/05 11:41:29 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -281,6 +281,54 @@ public class MeasurementStorableObjectPool {
 					}
 				}
 			}
+		}
+
+		return list;
+	}
+
+	public static List getStorableObjectsButIds(Short entityCode, List ids, boolean useLoader) throws ApplicationException {
+		List list = null;
+		LRUMap objectPool = (LRUMap) objectPoolMap.get(entityCode);
+		if (objectPool != null) {
+			list = new LinkedList();
+			for (Iterator it = objectPool.iterator(); it.hasNext();) {
+				StorableObject storableObject = (StorableObject) it.next();
+				if ( ids == null || !ids.contains(storableObject.getId()))
+					list.add(storableObject);
+			}			
+			
+			List loadedList = null;
+			
+			if (useLoader){								
+				List idsList = new ArrayList(list.size());
+				for (Iterator iter = list.iterator(); iter.hasNext();) {
+					StorableObject storableObject = (StorableObject) iter.next();
+					idsList.add(storableObject.getId());					
+				}
+				
+				if (ids != null){
+					for (Iterator iter = ids.iterator(); iter.hasNext();) {
+						Identifier id = (Identifier) iter.next();
+						idsList.add(id);					
+					}
+				}
+				
+				loadedList = loadStorableObjectsButIds(null, idsList);
+			}
+			
+			for (Iterator it = list.iterator(); it.hasNext();) {
+				StorableObject storableObject = (StorableObject) it.next();
+				objectPool.get(storableObject);				
+			}
+			
+			if (loadedList!=null){
+				for (Iterator it = loadedList.iterator(); it.hasNext();) {
+					StorableObject storableObject = (StorableObject) it.next();
+					objectPool.put(storableObject.getId(), storableObject);
+					list.add(storableObject);
+				}
+			}
+
 		}
 
 		return list;
