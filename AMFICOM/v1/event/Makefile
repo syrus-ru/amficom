@@ -17,7 +17,6 @@ $(call checkenve,JAVA_HOME)
 
 
 $(LIBNAME): .mach
-	cp \
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com/syrus/AMFICOM/event
 
@@ -32,7 +31,7 @@ $(LIBNAME): .mach
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
-		$(SRCDIR)/com/syrus/AMFICOM/event/corba/*.java \
+		$(SRCDIR)/com/syrus/AMFICOM/event/corba/*.java
 	touch $@
 
 $(CLASSDIR):

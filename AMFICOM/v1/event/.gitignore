@@ -10,7 +10,6 @@ build.xml
 *.tar
 *.gz
 .corba
-.ora
 .mach
 .classpath
 .project
