@@ -1,5 +1,5 @@
 /*
- * $Id: ContinuousTestProcessor.java,v 1.11 2004/08/25 11:37:37 bob Exp $
+ * $Id: ContinuousTestProcessor.java,v 1.12 2004/11/18 19:31:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,95 +10,36 @@ package com.syrus.AMFICOM.mcm;
 
 import java.util.Date;
 
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
-import com.syrus.AMFICOM.measurement.corba.TestStatus;
-import com.syrus.util.Log;
+//import com.syrus.AMFICOM.general.Identifier;
+//import com.syrus.AMFICOM.general.ObjectNotFoundException;
+//import com.syrus.AMFICOM.measurement.Measurement;
+//import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
+//import com.syrus.AMFICOM.measurement.corba.TestStatus;
+//import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/08/25 11:37:37 $
- * @author $Author: bob $
+ * @version $Revision: 1.12 $, $Date: 2004/11/18 19:31:10 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
 public class ContinuousTestProcessor extends TestProcessor {
-	
+/**
+ * This class is not implemented as unuseful
+ * */	
 	private Date nextTimeStamp;
 
 	public ContinuousTestProcessor(Test test) {
 		super(test);
 
-		int testStatus = test.getStatus().value();
-		switch (testStatus) {
-			case TestStatus._TEST_STATUS_SCHEDULED:
-				//Normal
-				break;
-			case TestStatus._TEST_STATUS_PROCESSING:
-				try {
-					this.completeLastMeasurement();
-				}
-				catch (TestProcessingException tpe) {
-					super.shutdown();
-				}
-				break;
-			default:
-				Log.errorMessage("Inappropriate status: " + testStatus + " of test: '" + test.getId().toString() + "'");
-				super.shutdown();
-		}
-
-		try {			
-			this.nextTimeStamp = test.getStartTime();
-		}
-		catch (Exception e) {
-			Log.errorException(e);
-			super.shutdown();
-		}
-		
-		//this.timeStampsList = Collections.synchronizedList(new ArrayList(0));
-	}
-	
-	private void completeLastMeasurement() throws TestProcessingException {
-		Measurement measurement;
-		try {
-			measurement = super.test.retrieveLastMeasurement();
-		}
-		catch (ObjectNotFoundException onfe) {
-			Log.errorException(onfe);
-			return;
-		}
-		catch (Exception e) {
-			Log.errorException(e);
-			throw new TestProcessingException("Cannot retrieve last measurement for test '" + super.test.getId().toString() + "'", e);
-		}
-
-		int measurementStatus = measurement.getStatus().value();
-		switch (measurementStatus) {
-			case MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED:
-			case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRING:
-				//process measurement
-				break;
-			case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRED:
-				//analyse and/or evaluate
-				break;
-			case MeasurementStatus._MEASUREMENT_STATUS_ANALYZED_OR_EVALUATED:
-				//all results of the measurement must go to server
-				break;
-			case MeasurementStatus._MEASUREMENT_STATUS_COMPLETED:
-				//do next
-				break;
-			case MeasurementStatus._MEASUREMENT_STATUS_ABORTED:
-				//do next (?)
-				break;
-		}
+//Not implemented
 	}
 
 	public void run() {
-		Identifier measurementId = null;
-		Measurement measurement = null;
-		while (super.running) {
+//		Identifier measurementId = null;
+//		Measurement measurement = null;
+//		while (super.running) {
 //			if (this.nextTimeStamp != null) {
 //				if (this.nextTimeStamp.getTime() <= System.currentTimeMillis()) {
 //					try {
@@ -150,7 +91,7 @@ public class ContinuousTestProcessor extends TestProcessor {
 //			catch (InterruptedException ie) {
 //				Log.errorException(ie);
 //			}
-		}	//while
+//		}	//while
 	}
 
 	protected void processFall() {

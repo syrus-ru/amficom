@@ -1,5 +1,5 @@
 /*
- * $Id: OnetimeTestProcessor.java,v 1.18 2004/11/18 16:21:35 arseniy Exp $
+ * $Id: OnetimeTestProcessor.java,v 1.19 2004/11/18 19:31:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/11/18 16:21:35 $
+ * @version $Revision: 1.19 $, $Date: 2004/11/18 19:31:10 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -55,12 +55,12 @@ public class OnetimeTestProcessor extends TestProcessor {
 					catch (IllegalObjectEntityException ioee) {
 						Log.errorException(ioee);
 						Log.debugMessage("Aborting test '" + super.test.getId() + "' because cannot create identifier for measurement", Log.DEBUGLEVEL07);
-						super.abort();
+						this.abort();
 					}
 					catch (AMFICOMRemoteException are) {
 						if (are.error_code == ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY) {
 							Log.errorMessage("Server nothing knows about entity '" + ObjectEntities.MEASUREMENT_ENTITY + "', code " + ObjectEntities.MEASUREMENT_ENTITY_CODE);
-							super.abort();
+							this.abort();
 						}
 						else {
 							Log.errorMessage("Server cannot generate identifier -- " + are.message + "; sleepeng cause of fall");
@@ -98,16 +98,16 @@ public class OnetimeTestProcessor extends TestProcessor {
 				}	//if (this.startTime.getTime() <= System.currentTimeMillis())
 			}	//if (! super.lastMeasurementAcquisition)
 
-			super.processMeasurementResult();
+			this.processMeasurementResult();
 			Log.debugMessage("numberOfReceivedMResults: " + super.numberOfReceivedMResults 
 							   + ", numberOfScheduledMeasurements: " + super.numberOfScheduledMeasurements 
 							   + ", lastMeasurementAcquisition: " + this.lastMeasurementAcquisition, Log.DEBUGLEVEL07);
 			if (super.numberOfReceivedMResults == super.numberOfScheduledMeasurements && this.lastMeasurementAcquisition)
-				super.complete();
+				this.complete();
 			else if (super.lastMeasurementAcquisition && (time + super.forgetFrame < System.currentTimeMillis())){
 				Log.debugMessage("Past " + (super.forgetFrame/1000) + " sec since last measurement,"
 								 + " forget acquire results for '" + super.test.getId().getIdentifierString() + "'", Log.DEBUGLEVEL03);
-				super.abort();
+				this.abort();
 			}
 
 			try {
@@ -124,10 +124,10 @@ public class OnetimeTestProcessor extends TestProcessor {
 			case FALL_CODE_NO_ERROR:
 				break;
 			case FALL_CODE_CREATE_IDENTIFIER:
-				super.abort();
+				this.abort();
 				break;
 			case FALL_CODE_CREATE_MEASUREMENT:
-				super.abort();
+				this.abort();
 				break;
 			default:
 				Log.errorMessage("processError | Unknown error code: " + super.fallCode);

@@ -43,7 +43,10 @@ $(LIBNAME_INTERFACE):	.corba
 .head:	.mach
 	$(JAVAH) $(JAVAH_FLAGS) \
 		-d $(TRANSCEIVER_DIR) \
-		com.syrus.AMFICOM.mcm.TransmissionManager
+		com.syrus.AMFICOM.mcm.Transceiver
+	$(JAVAH) $(JAVAH_FLAGS) \
+		-d $(TRANSCEIVER_DIR) \
+		com.syrus.AMFICOM.mcm.TCPKISConnection
 #	$(JAVAH) $(JAVAH_FLAGS) \
 		-d $(TRANSCEIVER_DIR) \
 		com.syrus.AMFICOM.mcm.TCPServer
@@ -65,7 +68,11 @@ $(LIBNAME_INTERFACE):	.corba
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/MeasurementControlModule.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/MCMImplementation.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/KISReport.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/TransmissionManager.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/Transceiver.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/KISConnection.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/KISConnectionLRUMap.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/KISConnectionManager.java \
+		$(SRCDIR)/com/syrus/AMFICOM/mcm/TCPKISConnection.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisException.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/EvaluationException.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/MeasurementException.java \

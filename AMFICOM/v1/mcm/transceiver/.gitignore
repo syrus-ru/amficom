@@ -1,5 +1,5 @@
-com_syrus_AMFICOM_mcm_TransmissionManager_Transmitter.h
 com_syrus_AMFICOM_mcm_Transceiver.h
+com_syrus_AMFICOM_mcm_TCPKISConnection.h
 com_syrus_AMFICOM_mcm_TCPServer.h
 *.so
 *.o

@@ -1,5 +1,5 @@
 /*
- * $Id: PeriodicalTestProcessor.java,v 1.27 2004/11/18 16:21:35 arseniy Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.28 2004/11/18 19:31:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/11/18 16:21:35 $
+ * @version $Revision: 1.28 $, $Date: 2004/11/18 19:31:10 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -51,7 +51,7 @@ public class PeriodicalTestProcessor extends TestProcessor {
 		this.temporalPattern = test.getTemporalPattern();
 		if (this.temporalPattern == null) {
 			Log.errorMessage("Temporal pattern is NULL");
-			super.abort();
+			this.abort();
 		}
 
 		this.timeStampsList = new LinkedList();
@@ -99,12 +99,12 @@ public class PeriodicalTestProcessor extends TestProcessor {
 						catch (IllegalObjectEntityException ioee) {
 							Log.errorException(ioee);
 							Log.debugMessage("Aborting test '" + super.test.getId().toString() + "' because cannot create identifier for measurement", Log.DEBUGLEVEL03);
-							super.abort();
+							this.abort();
 						}
 						catch (AMFICOMRemoteException are) {
 							if (are.error_code.value() == ErrorCode._ERROR_ILLEGAL_OBJECT_ENTITY) {
 								Log.errorMessage("Server nothing knows about entity '" + ObjectEntities.MEASUREMENT_ENTITY + "', code " + ObjectEntities.MEASUREMENT_ENTITY_CODE);
-								super.abort();
+								this.abort();
 							}
 							else {
 								Log.errorMessage("Server cannot generate identifier -- " + are.message + "; sleepeng cause of fall");
@@ -149,11 +149,11 @@ public class PeriodicalTestProcessor extends TestProcessor {
 							 + ", numberOfScheduledMeasurements: " + super.numberOfScheduledMeasurements 
 							 + ", lastMeasurementAcquisition: " + super.lastMeasurementAcquisition, Log.DEBUGLEVEL07);
 			if (super.numberOfReceivedMResults == super.numberOfScheduledMeasurements && super.lastMeasurementAcquisition)
-				super.complete();
+				this.complete();
 			else if (super.lastMeasurementAcquisition && (this.endTime + super.forgetFrame < System.currentTimeMillis())){
 					Log.debugMessage("Past " + (super.forgetFrame/1000) + " sec since last measurement,"
 									 + " forget acquire results for '" + super.test.getId().getIdentifierString() + "'", Log.DEBUGLEVEL03);
-					super.abort();
+					this.abort();
 				}
 
 			try {

@@ -4,6 +4,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.util.LRUMap;
 
 public class KISConnectionLRUMap extends LRUMap {
+	static final long serialVersionUID = -1243965322879317241L;
 
 	public KISConnectionLRUMap() {
 		super();

@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.30 2004/11/18 16:21:35 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.31 2004/11/18 19:31:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/11/18 16:21:35 $
+ * @version $Revision: 1.31 $, $Date: 2004/11/18 19:31:10 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -67,11 +67,11 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
-			this.abort();
+			this.stopInit();
 		}
 		if (! MeasurementControlModule.iAm.getKISs().contains(this.kis)) {
 			Log.errorMessage("TestProcessor<init> | Invalid kis: '" + kis.getId().toString() + "'");
-			this.abort();
+			this.stopInit();
 		}
 
 		this.numberOfScheduledMeasurements = this.numberOfReceivedMResults = 0;
@@ -89,12 +89,19 @@ public abstract class TestProcessor extends SleepButWorkThread {
 				break;
 			default:
 				Log.errorMessage("Unappropriate status " + this.test.getStatus().value() + " of test '" + this.test.getId() + "'");
-				this.abort();
+				this.stopInit();
 		}		
 	}
 
+	private final void stopInit() {
+		this.updateMyTestStatus(TestStatus.TEST_STATUS_ABORTED);
+		this.running = false;
+		this.measurementResultList.clear();
+		MeasurementControlModule.testProcessors.remove(this.test.getId());
+		this.test = null;
+	}
+
 	private void startWithScheduledTest() {
-//		this.startedWithProcessingTest = false;
 		this.updateMyTestStatus(TestStatus.TEST_STATUS_PROCESSING);
 
 		try {
@@ -106,60 +113,60 @@ public abstract class TestProcessor extends SleepButWorkThread {
 	}
 
 	private void startWithProcessingTest() {
-//		Measurement lastMeasurement = null;
-//		try {
-//			lastMeasurement = this.test.retrieveLastMeasurement();
-//		}
-//		catch (DatabaseException de){
-//			if (de instanceof ObjectNotFoundException) {
-//				startWithScheduledTest();
-//				return;
-//			}
-//			this.abort();
-//		}
-//
-//		Result measurementResult = null;
-//		if (lastMeasurement != null) {
-//			try{
-//				this.numberOfScheduledMeasurements = this.test.retrieveNumberOfMeasurements();
-//				this.numberOfReceivedMResults = this.test.retrieveNumberOfResults(ResultSort.RESULT_SORT_MEASUREMENT);
-//				switch (lastMeasurement.getStatus().value()) {
-//					case MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED:
-//						this.transceiver.addMeasurement(lastMeasurement, this);
-//						break;
-//					case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRING:
-//						this.transceiver.addAcquiringMeasurement(lastMeasurement, this);
-//						break;
-//					case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRED:
-//						measurementResult = lastMeasurement.retrieveResult(ResultSort.RESULT_SORT_MEASUREMENT);
-//						this.addMeasurementResult(measurementResult);
-//						break;
-//					case MeasurementStatus._MEASUREMENT_STATUS_ANALYZED_OR_EVALUATED:
-//						measurementResult = lastMeasurement.retrieveResult(ResultSort.RESULT_SORT_MEASUREMENT);
-//						Result analysisResult = lastMeasurement.retrieveResult(ResultSort.RESULT_SORT_ANALYSIS);
-//						Result evaluationResult = lastMeasurement.retrieveResult(ResultSort.RESULT_SORT_EVALUATION);
-//						MeasurementControlModule.resultList.add(measurementResult);
-//						if (analysisResult != null)
-//							MeasurementControlModule.resultList.add(analysisResult);
-//						if (evaluationResult != null)
-//							MeasurementControlModule.resultList.add(evaluationResult);
-//						lastMeasurement.updateStatus(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED,
-//																				 MeasurementControlModule.iAm.getUserId());
-//						break;
-//				}
-//			}
-//			catch (DatabaseException de) {
-//				Log.errorException(de);
-//				this.abort();
-//			}
-//		}
+		Measurement lastMeasurement = null;
+		try {
+			lastMeasurement = this.test.retrieveLastMeasurement();
+		}
+		catch (DatabaseException de) {
+			if (de instanceof ObjectNotFoundException) {
+				startWithScheduledTest();
+				return;
+			}
+			this.stopInit();
+		}
+
+		Result measurementResult = null;
+		if (lastMeasurement != null) {
+			try{
+				this.numberOfScheduledMeasurements = this.test.retrieveNumberOfMeasurements();
+				this.numberOfReceivedMResults = this.test.retrieveNumberOfResults(ResultSort.RESULT_SORT_MEASUREMENT);
+				switch (lastMeasurement.getStatus().value()) {
+					case MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED:
+						MeasurementControlModule.transceiver.transmitMeasurementToKIS(lastMeasurement, this.kis, this);
+						break;
+					case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRING:
+						MeasurementControlModule.transceiver.considerAcquiringMeasurement(lastMeasurement, this);
+						break;
+					case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRED:
+						measurementResult = lastMeasurement.retrieveResult(ResultSort.RESULT_SORT_MEASUREMENT);
+						this.addMeasurementResult(measurementResult);
+						break;
+					case MeasurementStatus._MEASUREMENT_STATUS_ANALYZED_OR_EVALUATED:
+						measurementResult = lastMeasurement.retrieveResult(ResultSort.RESULT_SORT_MEASUREMENT);
+						Result analysisResult = lastMeasurement.retrieveResult(ResultSort.RESULT_SORT_ANALYSIS);
+						Result evaluationResult = lastMeasurement.retrieveResult(ResultSort.RESULT_SORT_EVALUATION);
+						MeasurementControlModule.resultList.add(measurementResult);
+						if (analysisResult != null)
+							MeasurementControlModule.resultList.add(analysisResult);
+						if (evaluationResult != null)
+							MeasurementControlModule.resultList.add(evaluationResult);
+						lastMeasurement.updateStatus(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED,
+																				 MeasurementControlModule.iAm.getUserId());
+						break;
+				}
+			}
+			catch (DatabaseException de) {
+				Log.errorException(de);
+				this.abort();
+			}
+		}
 	}
 
 	protected final void addMeasurementResult(Result result) {
 		this.measurementResultList.add(result);
 	}
 
-	void processMeasurementResult() {
+	final void processMeasurementResult() {
 		Result measurementResult;
 		Measurement measurement;
 		if (! this.measurementResultList.isEmpty()) {
@@ -206,17 +213,17 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		}
 	}
 
-	protected final void complete() {
+	protected void complete() {
 		this.updateMyTestStatus(TestStatus.TEST_STATUS_COMPLETED);
 		this.shutdown();
 	}
 
-	protected final void abort() {
+	protected void abort() {
 		this.updateMyTestStatus(TestStatus.TEST_STATUS_ABORTED);
 		this.shutdown();
 	}
 
-	protected final void shutdown() {
+	private void shutdown() {
 		this.running = false;
 		this.cleanup();
 	}
@@ -226,6 +233,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		MeasurementControlModule.testProcessors.remove(this.test.getId());
 		this.test = null;
 	}
+
 
 	private class TestStatusVerifier extends SleepButWorkThread {
 		private Identifier testId;
