@@ -11,6 +11,7 @@ import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.configuration.DomainMember;
 import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
 
 public class Domain extends DomainMember {

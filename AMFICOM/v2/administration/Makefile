@@ -33,7 +33,6 @@ $(LIBNAME):	mach
 mach:	corba
 	$(JAVAC) $(JAVAC_CUSTOM_OPTIONS) $(JAVAC_OPTIONS) -classpath $(CLASSES):$(APPCLASSPATH) \
 		$(SRC)/com/syrus/AMFICOM/administration/AdministrationDatabaseContext.java \
-		$(SRC)/com/syrus/AMFICOM/administration/DomainMember.java \
 		$(SRC)/com/syrus/AMFICOM/administration/PermissionAttributes.java \
 		$(SRC)/com/syrus/AMFICOM/administration/PermissionAttributes_Database.java \
 		$(SRC)/com/syrus/AMFICOM/administration/Domain.java \
