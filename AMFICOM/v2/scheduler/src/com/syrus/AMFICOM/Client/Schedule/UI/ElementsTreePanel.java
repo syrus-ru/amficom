@@ -332,7 +332,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 			//			selectedObject = dse.selectedObject;
 			Class selectedClass = dse.getDataClass();
 			//DataSet set = dse.getDataSet();
-			Collection col = dse.getCollection();
+			java.util.List col = dse.getList();
 
 			if (selectedClass.equals(MonitoredElement.class)) {
 				this.loadButton.setEnabled(true);				 

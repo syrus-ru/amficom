@@ -71,5 +71,16 @@ public class WindowCommand implements Command {
 	public void undo() {
 		// nothing
 	}
+	
+	
+	public Command getNext() {
+		// TODO Auto-generated method stub
+		return null;
+	}	
+	
+	public void setNext(Command next) {
+		// TODO Auto-generated method stub
+
+	}
 
 }

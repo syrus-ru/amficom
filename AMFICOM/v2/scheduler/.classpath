@@ -19,7 +19,7 @@
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/vbjapp.jar"/>
 	<classpathentry kind="src" path="/generalclient_v1"/>
 	<classpathentry kind="src" path="/filter_v1"/>
-	<classpathentry kind="src" path="/Survey"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/administrate.jar"/>
+	<classpathentry kind="src" path="/surveyresource_v1"/>
 	<classpathentry kind="output" path=""/>
 </classpath>
