@@ -113,7 +113,7 @@ public class LangModelSurvey {
 								+ key + "' key.");
 				throw new Exception(s);
 			} catch (Exception exc) {
-				exc.printStackTrace();
+//				exc.printStackTrace();
 			}
 			if (key != null) string = LangModelSurvey.getString(key);
 
