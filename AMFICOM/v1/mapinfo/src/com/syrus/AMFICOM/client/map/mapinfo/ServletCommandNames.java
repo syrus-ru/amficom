@@ -17,4 +17,8 @@ public class ServletCommandNames
 	public static final String LAYER_VISIBLE = "LV";
 
 	public static final String LAYER_LABELS_VISIBLE = "LLV";
+
+	private ServletCommandNames()
+	{//empty
+	}
 }
