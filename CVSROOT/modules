@@ -72,7 +72,8 @@ AMFICOM_v1	&idl_v1\
 		&mapview_v1\
 		&dbscheme_v1 \
 		&mapinfo_v1 \
-		&spatialfx_v1
+		&spatialfx_v1 \
+		&arserver_v1
 
 #M	idl_v1		Client-side AMFICOM CORBA object & interface
 idl_v1		AMFICOM/v1/idl
@@ -158,8 +159,10 @@ dbscheme_v1	AMFICOM/v1/dbscheme
 mapinfo_v1	AMFICOM/v1/mapinfo
 #M	spatialfx_v1	SpatialFX-dependent Implementation
 spatialfx_v1	AMFICOM/v1/spatialfx
-#DADARA module for modeling functions, analysis, etc
+#M	dadara_v1	DADARA module for modeling functions, analysis, etc
 dadara		AMFICOM/v1/dadara
+#M	arserver_v1	Administration and Resource Server
+arserver_v1	AMFICOM/v1/arserver
 
 akp		hw/akp
 trc		hw/trc
