@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseEventObjectLoader.java,v 1.8 2005/02/24 15:23:06 arseniy Exp $
+ * $Id: DatabaseEventObjectLoader.java,v 1.9 2005/03/04 13:30:58 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
-import com.syrus.AMFICOM.general.Identified;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.SessionContext;
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/24 15:23:06 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/03/04 13:30:58 $
+ * @author $Author: bass $
  * @module event_v1
  */
 public class DatabaseEventObjectLoader implements EventObjectLoader {
@@ -216,11 +216,11 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 			if (object instanceof Identifier)
 				identifier = (Identifier) object;
 			else
-				if (object instanceof Identified)
-					identifier = ((Identified) object).getId();
+				if (object instanceof Identifiable)
+					identifier = ((Identifiable) object).getId();
 				else
 					throw new IllegalDataException("DatabaseEventObjectLoader.delete | Object "
-							+ object.getClass().getName() + " isn't Identifier or Identified");
+							+ object.getClass().getName() + " isn't Identifier or Identifiable");
 
 			entityCode = new Short(identifier.getMajor());
 			entityObjects = (Collection) map.get(entityCode);

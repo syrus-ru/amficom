@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.14 2005/02/25 09:35:02 bob Exp $
+ * $Id: LinkedIdsCondition.java,v 1.15 2005/03/04 13:29:36 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,8 +64,8 @@ import com.syrus.util.Log;
  * {@link #isNeedMore(Collection)}and {@link #setEntityCode(Short)}.</li>
  * </ul>
  * 
- * @author $Author: bob $
- * @version $Revision: 1.14 $, $Date: 2005/02/25 09:35:02 $
+ * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/03/04 13:29:36 $
  * @module general_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -366,16 +366,16 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 				Identifier id = null;
 				if (object instanceof Identifier)
 					id = (Identifier)object;
-				else if (object instanceof Identified)
-					id = ((Identified)object).getId();				
+				else if (object instanceof Identifiable)
+					id = ((Identifiable)object).getId();				
 				if (id != null)
 					for (Iterator iterator = links.iterator(); iterator.hasNext();) {
 						Identifier id2 = null;
 						object = iterator.next();
 						if (object instanceof Identifier)
 							id2 = (Identifier)object;
-						else if (object instanceof Identified)
-							id2 = ((Identified)object).getId();
+						else if (object instanceof Identifiable)
+							id2 = ((Identifiable)object).getId();
 						if (id.equals(id2)) {
 							return true;
 							

@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectImpl.java,v 1.9 2005/03/01 13:59:24 bass Exp $
+ * $Id: StorableObjectImpl.java,v 1.10 2005/03/04 13:29:36 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ package com.syrus.AMFICOM.general.corba;
  * {@link StorableObject} instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/03/01 13:59:24 $
+ * @version $Revision: 1.10 $, $Date: 2005/03/04 13:29:36 $
  * @module general_v1
  */
 final class StorableObjectImpl extends StorableObject implements Cloneable {
@@ -121,7 +121,7 @@ final class StorableObjectImpl extends StorableObject implements Cloneable {
 
 	/**
 	 * @see Identifiable#getId()
-	 * @see com.syrus.AMFICOM.general.Identified#getId()
+	 * @see com.syrus.AMFICOM.general.Identifiable#getId()
 	 * @see com.syrus.AMFICOM.general.StorableObject#getId()
 	 */
 	public Identifier getId() {

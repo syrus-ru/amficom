@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseGeneralObjectLoader.java,v 1.13 2005/02/24 15:22:19 arseniy Exp $
+ * $Id: DatabaseGeneralObjectLoader.java,v 1.14 2005/03/04 13:29:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,8 +19,8 @@ import java.util.Set;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/02/24 15:22:19 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/03/04 13:29:36 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -221,11 +221,11 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 			if (object instanceof Identifier)
 				identifier = (Identifier) object;
 			else
-				if (object instanceof Identified)
-					identifier = ((Identified) object).getId();
+				if (object instanceof Identifiable)
+					identifier = ((Identifiable) object).getId();
 				else
 					throw new IllegalDataException("DatabaseGeneralObjectLoader.delete | Object "
-							+ object.getClass().getName() + " isn't Identifier or Identified");
+							+ object.getClass().getName() + " isn't Identifier or Identifiable");
 
 			entityCode = new Short(identifier.getMajor());
 			entityObjects = (Collection) map.get(entityCode);

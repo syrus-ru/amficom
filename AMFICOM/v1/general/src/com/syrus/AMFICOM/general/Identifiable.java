@@ -1,5 +1,5 @@
 /*
- * $Id: Identified.java,v 1.4 2004/08/06 13:43:43 arseniy Exp $
+ * $Id: Identifiable.java,v 1.1 2005/03/04 13:29:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,11 +9,11 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/08/06 13:43:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.1 $, $Date: 2005/03/04 13:29:36 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
-public interface Identified {
+public interface Identifiable {
 	Identifier getId();
 }

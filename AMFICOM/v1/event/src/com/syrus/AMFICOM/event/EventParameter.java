@@ -1,5 +1,5 @@
 /*
- * $Id: EventParameter.java,v 1.7 2005/03/01 16:42:27 arseniy Exp $
+ * $Id: EventParameter.java,v 1.8 2005/03/04 13:30:58 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ import com.syrus.AMFICOM.event.corba.EventParameter_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
-import com.syrus.AMFICOM.general.Identified;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -24,11 +24,11 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/03/01 16:42:27 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/03/04 13:30:58 $
+ * @author $Author: bass $
  * @module event_v1
  */
-public class EventParameter implements Identified, TransferableObject, TypedObject {
+public class EventParameter implements Identifiable, TransferableObject, TypedObject {
 
 	private Identifier id;
 	private ParameterType type;

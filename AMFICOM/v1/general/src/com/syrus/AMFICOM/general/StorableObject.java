@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.38 2005/03/01 13:59:25 bass Exp $
+ * $Id: StorableObject.java,v 1.39 2005/03/04 13:29:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,11 +17,11 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/03/01 13:59:25 $
+ * @version $Revision: 1.39 $, $Date: 2005/03/04 13:29:36 $
  * @author $Author: bass $
  * @module general_v1
  */
-public abstract class StorableObject implements Identified, TransferableObject, Serializable {
+public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
 	private static final long serialVersionUID = 3904998894075738999L;
 
 	private static final long VERSION_ILLEGAL = -1L;
@@ -150,7 +150,7 @@ public abstract class StorableObject implements Identified, TransferableObject, 
 	}
 
 	/**
-	 * @see Identified#getId()
+	 * @see Identifiable#getId()
 	 * @see com.syrus.AMFICOM.general.corba.Identifiable#getId()
 	 * @see com.syrus.AMFICOM.general.corba.StorableObject#getId()
 	 */

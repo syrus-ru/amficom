@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.9 2005/02/24 09:25:01 arseniy Exp $
+ * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.10 2005/03/04 13:29:36 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/02/24 09:25:01 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/03/04 13:29:36 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public abstract class AbstractDatabaseLinkedIdsCondition implements DatabaseStorableObjectCondition {
@@ -46,11 +46,11 @@ public abstract class AbstractDatabaseLinkedIdsCondition implements DatabaseStor
 			Identifier id = null;
 			if (object instanceof Identifier)
 				id = (Identifier) object;
-			else if (object instanceof Identified)
-				id = ((Identified) object).getId();
+			else if (object instanceof Identifiable)
+				id = ((Identifiable) object).getId();
 			else
 				throw new IllegalDataException("AbstractDatabaseLinkedIdsCondition.getQuery | Object "
-						+ object.getClass().getName() + " isn't Identifier or Identified");
+						+ object.getClass().getName() + " isn't Identifier or Identifiable");
 
 			if (id != null) {
 				buffer.append(DatabaseIdentifier.toSQLString(id));

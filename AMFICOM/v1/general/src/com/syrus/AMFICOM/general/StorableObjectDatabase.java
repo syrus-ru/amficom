@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.112 2005/03/01 16:37:03 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.113 2005/03/04 13:29:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.112 $, $Date: 2005/03/01 16:37:03 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.113 $, $Date: 2005/03/04 13:29:36 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -371,7 +371,7 @@ public abstract class StorableObjectDatabase {
 
 	/**
 	 * retrive storable objects by identifiers not in ids
-	 * @param ids List&lt;{@link Identifier}&gt; or List&lt;{@link Identified}&gt;
+	 * @param ids List&lt;{@link Identifier}&gt; or List&lt;{@link Identifiable}&gt;
 	 * @throws IllegalDataException
 	 * @throws RetrieveObjectException
 	 */
@@ -381,7 +381,7 @@ public abstract class StorableObjectDatabase {
 
 	/**
 	 * retrive storable objects by additional condition and identifiers not in ids   
-	 * @param ids List&lt;{@link Identifier}&gt; or List&lt;{@link Identified}&gt;
+	 * @param ids List&lt;{@link Identifier}&gt; or List&lt;{@link Identifiable}&gt;
 	 * @param condition
 	 * @throws IllegalDataException
 	 * @throws RetrieveObjectException
@@ -421,7 +421,7 @@ public abstract class StorableObjectDatabase {
 
 	/**
 	 * retrive storable objects by identifiers and additional condition
-	 * @param ids List&lt;{@link Identifier}&gt; or List&lt;{@link Identified}&gt;
+	 * @param ids List&lt;{@link Identifier}&gt; or List&lt;{@link Identifiable}&gt;
 	 * @param condition
 	 * @throws IllegalDataException
 	 * @throws RetrieveObjectException
@@ -1363,12 +1363,12 @@ public abstract class StorableObjectDatabase {
 			if (object instanceof Identifier)
 				id = (Identifier) object;
 			else
-				if (object instanceof Identified)
-					id = ((Identified) object).getId();
+				if (object instanceof Identifiable)
+					id = ((Identifiable) object).getId();
 				else
 					throw new IllegalDataException(this.getEnityName() + "Database.listIdsString | Object "
 							+ object.getClass().getName()
-							+ " isn't Identifier or Identified");
+							+ " isn't Identifier or Identifiable");
 
 			stringBuffer.append(DatabaseIdentifier.toSQLString(id));
 			if (it.hasNext()) {

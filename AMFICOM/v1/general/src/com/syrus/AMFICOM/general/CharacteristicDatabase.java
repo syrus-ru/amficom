@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.22 2005/03/04 13:11:55 arseniy Exp $
+ * $Id: CharacteristicDatabase.java,v 1.23 2005/03/04 13:29:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/03/04 13:11:55 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/03/04 13:29:36 $
+ * @author $Author: bass $
  * @module general_v1
  */
 
@@ -264,19 +264,19 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 
 			// NOTE
 			// The below code is not correct, because method
-			// Characterized.setCharacteristics(List characteristics)
-			// updates version of Characterized StorableObject.
+			// Characterizable.setCharacteristics(List characteristics)
+			// updates version of Characterizable StorableObject.
 			// Instead, one must set characteristics from returned characteristicMap,
 			// using method setCharacteristics0(List characteristics).
-			// For every Characterized from incoming list, be sure, that corresponding
+			// For every Characterizable from incoming list, be sure, that corresponding
 			// list of characteristic
 			// is available, i. e. characteristicMap.get(characterizedId) != null for
 			// a given characterizedId.
 			// Also, be sure, that returned map characteristicMap != null
 //
-//			Characterized characterized;
+//			Characterizable characterized;
 //      for (Iterator it = characteristicMap.keySet().iterator(); it.hasNext();) {
-//				characterized = (Characterized) it.next();
+//				characterized = (Characterizable) it.next();
 //				characterizedId = characterized.getId();
 //				characteristics = (List) characteristicMap.get(characterizedId);
 //
@@ -315,13 +315,13 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 	}	
 
 	public void updateCharacteristics(StorableObject storableObject) throws UpdateObjectException {
-		if (!(storableObject instanceof Characterized)) {
+		if (!(storableObject instanceof Characterizable)) {
 			String mesg = "CharacteristicDatabase.updateCharacteristics | Storable object " +
-				storableObject.getClass().getName() + " is not a type of Characterized";
+				storableObject.getClass().getName() + " is not a type of Characterizable";
 			throw new UpdateObjectException(mesg);           
 		}
 
-		Characterized characterizedStorableObject = (Characterized) storableObject;
+		Characterizable characterizedStorableObject = (Characterizable) storableObject;
 		List characteristics = characterizedStorableObject.getCharacteristics();
 		List characteristicIds = new ArrayList(characteristics.size());
 		for (Iterator it = characteristics.iterator(); it.hasNext();) {
@@ -384,9 +384,9 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		Map modifierIdCharacteristics = new HashMap();
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			StorableObject storableObject = (StorableObject) it.next();
-			if (!(storableObject instanceof Characterized)) {
+			if (!(storableObject instanceof Characterizable)) {
 				String mesg = "CharacteristicDatabase.updateCharacteristics(List) | Storable object " + 
-								storableObject.getClass().getName() + " is not a type of Characterized";
+								storableObject.getClass().getName() + " is not a type of Characterizable";
 				throw new UpdateObjectException(mesg);                
 			}
 
@@ -396,7 +396,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 				modifierIdCharacteristics.put(storableObject.getModifierId(), characteristics);
 			}
 
-			for (Iterator iter = ((Characterized) storableObject).getCharacteristics().iterator(); iter.hasNext();) {
+			for (Iterator iter = ((Characterizable) storableObject).getCharacteristics().iterator(); iter.hasNext();) {
 				Characteristic characteristic = (Characteristic) iter.next();
 				characteristics.add(characteristic);
 				List charIdList = (List) storableObjectIdCharIdsMap.get(storableObject.getId());

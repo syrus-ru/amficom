@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.38 2005/02/28 09:33:17 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.39 2005/03/04 13:29:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/02/28 09:33:17 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.39 $, $Date: 2005/03/04 13:29:36 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -161,10 +161,10 @@ public abstract class StorableObjectPool {
 			if (object instanceof Identifier)
 				id = (Identifier) object;
 			else
-				if (object instanceof Identified)
-					id = ((Identified) object).getId();
+				if (object instanceof Identifiable)
+					id = ((Identifiable) object).getId();
 				else
-					throw new IllegalDataException(this.selfGroupName + "StorableObjectPool.deleteImpl | Object " + object.getClass().getName() + " isn't Identifier or Identified");
+					throw new IllegalDataException(this.selfGroupName + "StorableObjectPool.deleteImpl | Object " + object.getClass().getName() + " isn't Identifier or Identifiable");
 
 			if (this.deletedIds == null)
 				this.deletedIds = Collections.synchronizedCollection(new LinkedList());

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseAdministrationObjectLoader.java,v 1.15 2005/02/24 15:22:33 arseniy Exp $
+ * $Id: DatabaseAdministrationObjectLoader.java,v 1.16 2005/03/04 13:30:41 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
-import com.syrus.AMFICOM.general.Identified;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.SessionContext;
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/02/24 15:22:33 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/03/04 13:30:41 $
+ * @author $Author: bass $
  * @module administration_v1
  */
 
@@ -283,11 +283,11 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 			if (object instanceof Identifier)
 				identifier = (Identifier) object;
 			else
-				if (object instanceof Identified)
-					identifier = ((Identified) object).getId();
+				if (object instanceof Identifiable)
+					identifier = ((Identifiable) object).getId();
 				else
 					throw new IllegalDataException("DatabaseAdministrationObjectLoader.delete | Object "
-							+ object.getClass().getName() + " isn't Identifier or Identified");
+							+ object.getClass().getName() + " isn't Identifier or Identifiable");
 
 			entityCode = new Short(identifier.getMajor());
 			entityObjects = (Collection) map.get(entityCode);
