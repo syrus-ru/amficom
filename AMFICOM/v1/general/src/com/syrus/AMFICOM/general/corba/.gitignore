@@ -24,3 +24,8 @@ ElementAttribute.java
 StringFieldSort.java
 CharacteristicSort.java
 CharacteristicTypeSort.java
+CompoundCondition_TransferablePackage
+OperationSort.java
+StorableObjectCondition_TransferablePackage
+TypicalCondition.java
+TypicalSort.java
