@@ -1,5 +1,5 @@
 /*
-* $Id: MapViewDatabase.java,v 1.4 2005/02/03 08:39:01 bob Exp $
+* $Id: MapViewDatabase.java,v 1.5 2005/02/04 09:48:56 bob Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/03 08:39:01 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/04 09:48:56 $
  * @author $Author: bob $
  * @module mapview_v1
  */
@@ -94,7 +94,7 @@ public class MapViewDatabase extends StorableObjectDatabase {
 		this.retrieveEntity(mapView);
 		List maps = Collections.singletonList(mapView);
 		
-		java.util.Map schemeIdsMap = super.retrieveLinkedEntities(maps, MAPVIEW_SCHEME, LINK_COLUMN_MAPVIEW_ID, LINK_COLUMN_SCHEME_ID);
+		java.util.Map schemeIdsMap = super.retrieveLinkedEntityIds(maps, MAPVIEW_SCHEME, LINK_COLUMN_MAPVIEW_ID, LINK_COLUMN_SCHEME_ID);
 		for (Iterator it = schemeIdsMap.keySet().iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			List schemeIds = (List)schemeIdsMap.get(id);
@@ -399,7 +399,7 @@ public class MapViewDatabase extends StorableObjectDatabase {
 			mapIds.put(map.getId(), map);
 		}
 		
-		java.util.Map schemeIdsMap = super.retrieveLinkedEntities(maps, MAPVIEW_SCHEME, LINK_COLUMN_MAPVIEW_ID, LINK_COLUMN_SCHEME_ID);
+		java.util.Map schemeIdsMap = super.retrieveLinkedEntityIds(maps, MAPVIEW_SCHEME, LINK_COLUMN_MAPVIEW_ID, LINK_COLUMN_SCHEME_ID);
 		for (Iterator it = schemeIdsMap.keySet().iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
 			MapView map = (MapView) mapIds.get(id);
