@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.45 2004/12/02 11:58:06 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.46 2004/12/07 18:59:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
@@ -42,7 +42,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2004/12/02 11:58:06 $
+ * @version $Revision: 1.46 $, $Date: 2004/12/07 18:59:52 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -105,8 +105,8 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	/*	Reference to KISConnectionManager*/
 	protected static KISConnectionManager kisConnectionManager;
 
-	/*	Reference to Transceiver*/
-	protected static Transceiver transceiver;
+	/*	Key - kisId, value - corresponding transmitter-receiver*/
+	protected static Map transceivers;	//Map <Identifier kisId, Transceiver transceiver>
 
 	private long forwardProcessing;
 	private boolean running;
@@ -165,13 +165,13 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		NewIdentifierPool.init(mServerRef);
 
 		/*	Create map of test processors*/
-		testProcessors = new Hashtable(Collections.synchronizedMap(new Hashtable()));
+		testProcessors = Collections.synchronizedMap(new HashMap());
 
 		/*	Create (and start - ?) KIS connection manager*/
 		activateKISConnectionManager();
 
-		/*	Create and start transceiver*/
-		activateTransceiver();
+		/*	Create and start transceiver for every KIS*/
+		activateKISTransceivers();
 
 		/*	Start main loop	*/
 		final MeasurementControlModule measurementControlModule = new MeasurementControlModule();
@@ -264,15 +264,21 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 //		kisConnectionManager.start();
 	}
 
-	private static void activateTransceiver() {
-		try {
-			transceiver = new Transceiver();
-			transceiver.start();
-		}
-		catch (CommunicationException ce) {
-			Log.errorException(ce);
-			DatabaseConnection.closeConnection();
-			System.exit(-1);
+	private static void activateKISTransceivers() {
+		List kiss = iAm.getKISs();
+		transceivers = Collections.synchronizedMap(new HashMap(kiss.size()));
+		KIS kis;
+		Identifier kisId;
+		Transceiver transceiver;
+		synchronized (kiss) {
+			for (Iterator it = kiss.iterator(); it.hasNext();) {
+				kis = (KIS)it.next();
+				kisId = kis.getId();
+				transceiver = new Transceiver(kis);
+				transceiver.start();
+				transceivers.put(kisId, transceiver);
+				Log.debugMessage("Started transceiver for KIS '" + kisId + "'", Log.DEBUGLEVEL07);
+			}
 		}
 	}
 
@@ -428,7 +434,8 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 
 	protected void shutdown() {/*!!	Need synchronization	*/
 		this.running = false;
-		transceiver.shutdown();
+		for (Iterator it = transceivers.keySet().iterator(); it.hasNext();)
+			((Transceiver)transceivers.get(it.next())).shutdown();
 		DatabaseConnection.closeConnection();
 	}
 

@@ -4,6 +4,7 @@ import com.syrus.AMFICOM.general.Identifier;
 
 //import com.syrus.AMFICOM.general.SleepButWorkThread;
 
+import com.syrus.util.KISConnectionLRUMap;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.util.Log;
@@ -28,19 +29,10 @@ public class KISConnectionManager/* extends SleepButWorkThread*/ {
 		if (kisConnection != null)
 			return kisConnection;
 
+		Log.debugMessage("KISConnection.getConnection | Connection for KIS '" + kisId + "' not found in map; establishing new one", Log.DEBUGLEVEL07);
 		kisConnection = this.establishNewConnection(kis);
 		this.kisConnections.put(kisId, kisConnection);
 		return kisConnection;
-	}
-
-	public void dropConnection(Identifier kisId) {
-		KISConnection kisConnection = (KISConnection)this.kisConnections.get(kisId);
-		if (kisConnection != null) {
-			kisConnection.drop();
-			this.kisConnections.remove(kisId);
-		}
-		else
-			Log.errorMessage("KISConnectionManager.dropConnection | Connection for KIS '" + kisId + "' not found");
 	}
 
 	private KISConnection establishNewConnection(KIS kis) throws CommunicationException {

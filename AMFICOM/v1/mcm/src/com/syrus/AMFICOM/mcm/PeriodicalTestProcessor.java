@@ -1,5 +1,5 @@
 /*
- * $Id: PeriodicalTestProcessor.java,v 1.29 2004/11/24 16:40:41 arseniy Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.30 2004/12/07 18:59:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/11/24 16:40:41 $
+ * @version $Revision: 1.30 $, $Date: 2004/12/07 18:59:52 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -134,7 +134,7 @@ public class PeriodicalTestProcessor extends TestProcessor {
 						}	//if (measurementId != null)
 
 						if (measurement != null) {
-							MeasurementControlModule.transceiver.transmitMeasurementToKIS(measurement, super.kis, this);
+							super.transceiver.addMeasurement(measurement, this);
 							super.numberOfScheduledMeasurements ++;
 							this.currentTimeStamp = null;
 						}

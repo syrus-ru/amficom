@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.31 2004/11/18 19:31:10 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.32 2004/12/07 18:59:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/11/18 19:31:10 $
+ * @version $Revision: 1.32 $, $Date: 2004/12/07 18:59:52 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -45,7 +45,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 	private static final int FORGET_FRAME = 24 * 60 * 60;
 
 	Test test;
-	KIS kis;
+	Transceiver transceiver;
 	int numberOfScheduledMeasurements;
 	int numberOfReceivedMResults;
 	boolean lastMeasurementAcquisition;
@@ -63,14 +63,22 @@ public abstract class TestProcessor extends SleepButWorkThread {
 
 		try {
 			MeasurementPort mp = (MeasurementPort)ConfigurationStorableObjectPool.getStorableObject(this.test.getMonitoredElement().getMeasurementPortId(), true);
-			this.kis = (KIS)ConfigurationStorableObjectPool.getStorableObject(mp.getKISId(), true);
+			Identifier kisId = mp.getKISId();
+			KIS kis = (KIS)ConfigurationStorableObjectPool.getStorableObject(kisId, true);
+
+			this.transceiver = (Transceiver)MeasurementControlModule.transceivers.get(kisId);
+			if (this.transceiver == null) {
+				Log.errorMessage("TestProcessor<init> | Cannot find transceiver for kis '" + kisId + "'");
+				this.stopInit();
+			}
+
+			if (! MeasurementControlModule.iAm.getKISs().contains(kis)) {
+				Log.errorMessage("TestProcessor<init> | Invalid kis: '" + kisId + "'");
+				this.stopInit();
+			}
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
-			this.stopInit();
-		}
-		if (! MeasurementControlModule.iAm.getKISs().contains(this.kis)) {
-			Log.errorMessage("TestProcessor<init> | Invalid kis: '" + kis.getId().toString() + "'");
 			this.stopInit();
 		}
 
@@ -79,6 +87,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		this.forgetFrame = ApplicationProperties.getInt(KEY_FORGET_FRAME, FORGET_FRAME) * 1000;
 		this.measurementResultList = Collections.synchronizedList(new LinkedList());
 		this.running = true;
+
 		switch (this.test.getStatus().value()) {
 			case TestStatus._TEST_STATUS_SCHEDULED:
 				//Normally
@@ -132,10 +141,10 @@ public abstract class TestProcessor extends SleepButWorkThread {
 				this.numberOfReceivedMResults = this.test.retrieveNumberOfResults(ResultSort.RESULT_SORT_MEASUREMENT);
 				switch (lastMeasurement.getStatus().value()) {
 					case MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED:
-						MeasurementControlModule.transceiver.transmitMeasurementToKIS(lastMeasurement, this.kis, this);
+						this.transceiver.addMeasurement(lastMeasurement, this);
 						break;
 					case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRING:
-						MeasurementControlModule.transceiver.considerAcquiringMeasurement(lastMeasurement, this);
+						this.transceiver.addAcquiringMeasurement(lastMeasurement, this);
 						break;
 					case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRED:
 						measurementResult = lastMeasurement.retrieveResult(ResultSort.RESULT_SORT_MEASUREMENT);
@@ -157,7 +166,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 			}
 			catch (DatabaseException de) {
 				Log.errorException(de);
-				this.abort();
+				this.stopInit();
 			}
 		}
 	}

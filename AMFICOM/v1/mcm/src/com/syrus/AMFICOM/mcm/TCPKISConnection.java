@@ -15,6 +15,8 @@ public class TCPKISConnection implements KISConnection {
 	private String kisHostName;
 	private short kisTCPPort;
 	private int kisTCPSocket;
+	
+	private KISReport kisReport; 
 
 	public TCPKISConnection(KIS kis) {
 		this.kisId = kis.getId();
@@ -73,8 +75,8 @@ public class TCPKISConnection implements KISConnection {
 	}
 
 	public void drop() {
-		this.kisTCPSocket = KIS_TCP_SOCKET_DISCONNECTED;
 		this.dropSocketConnection();
+		this.kisTCPSocket = KIS_TCP_SOCKET_DISCONNECTED;
 	}
 
 	public void transmitMeasurement(Measurement measurement) throws CommunicationException {
@@ -88,6 +90,21 @@ public class TCPKISConnection implements KISConnection {
 			Log.debugMessage("TCPKISConnection.transmitMeasurement | Transmitted measurement '" + measurementId + "' to KIS '" + this.kisId + "'", Log.DEBUGLEVEL07);
 		else
 			throw new CommunicationException("TCPKISConnection.transmitMeasurement | Cannot transmit measurement '" + measurementId + "' to KIS '" + this.kisId + "'");
+	}
+
+	public KISReport receiveKISReport(long timewait) throws CommunicationException {
+		this.kisReport = null;
+		if (this.receiveKISReportFromSocket(timewait)) {
+			if (this.kisReport != null)
+				Log.debugMessage("TCPKISConnection.receiveKISReport | Received report for measurement '" + this.kisReport.getMeasurementId() + "'", Log.DEBUGLEVEL07);
+			return this.kisReport;
+		}
+		else
+			throw new CommunicationException("TCPKISConnection.receiveKISReport | Cannot receive report");
+	}
+
+	public Identifier getKISId() {
+		return this.kisId;
 	}
 
 	/**
@@ -118,4 +135,11 @@ public class TCPKISConnection implements KISConnection {
 														String localAddress,
 														String[] parameterTypeCodenames,
 														byte[][] parameterValues);
+
+	/**
+	 * Receive report from socket. On success save the report into field kisReport
+	 * @param timeout
+	 * @return true on success, false on failure.
+	 */
+	public native boolean receiveKISReportFromSocket(long timeout);
 }

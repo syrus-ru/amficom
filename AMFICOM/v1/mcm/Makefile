@@ -58,6 +58,7 @@ $(LIBNAME_INTERFACE):	.corba
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
+		$(SRCDIR)/com/syrus/util/KISConnectionLRUMap.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/DatabaseContextSetup.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/MCMConfigurationObjectLoader.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/MCMMeasurementObjectLoader.java \
@@ -70,7 +71,6 @@ $(LIBNAME_INTERFACE):	.corba
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/KISReport.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/Transceiver.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/KISConnection.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mcm/KISConnectionLRUMap.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/KISConnectionManager.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/TCPKISConnection.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisException.java \
@@ -81,7 +81,6 @@ $(LIBNAME_INTERFACE):	.corba
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/EvaluationManager.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/DadaraAnalysisManager.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mcm/AnalysisEvaluationProcessor.java
-#		$(SRCDIR)/com/syrus/AMFICOM/mcm/TCPServer.java
 	touch $@
 
 .corba:	$(CLASSDIR)
@@ -108,26 +107,27 @@ $(CLASSDIR):
 
 .PHONY:	clean
 clean:	cleanmach cleancorba cleanhead
-	$(RM) -f $(LIBNAME) $(LIBNAME_INTERFACE)
+	$(RM) $(LIBNAME) $(LIBNAME_INTERFACE)
 
 .PHONY:	cleanmach
 cleanmach:
-	$(RM) -rf $(CLASSDIR)/com/syrus/AMFICOM/mcm/*.class
-	$(RM) -f .mach
+	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/mcm/*.class
+	$(RM) -r $(CLASSDIR)/com/syrus/util/*.class
+	$(RM) .mach
 
 .PHONY:	cleanhead
 cleanhead:
-	$(RM) -f \
+	$(RM) \
 		$(TRANSCEIVER_DIR)/com_syrus_AMFICOM_mcm_TransmissionManager.h \
 		$(DADARA_DIR)/com_syrus_AMFICOM_mcm_DadaraAnalysisManager.h
-	$(RM) -f .head
+	$(RM) .head
 	
 
 .PHONY:	cleancorba
 cleancorba:
-	$(RM) -rf $(SRCDIR)/com/syrus/AMFICOM/mcm/corba
-	$(RM) -rf $(CLASSDIR)/com/syrus/AMFICOM/mcm/corba
-	$(RM) -f .corba
+	$(RM) -r $(SRCDIR)/com/syrus/AMFICOM/mcm/corba
+	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/mcm/corba
+	$(RM) .corba
 
 #### Archive ####
 .PHONY:	arch

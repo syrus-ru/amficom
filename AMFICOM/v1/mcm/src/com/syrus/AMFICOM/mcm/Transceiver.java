@@ -1,8 +1,10 @@
 package com.syrus.AMFICOM.mcm;
 
-import java.util.Collections;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
-import java.util.Hashtable;
+import java.util.HashMap;
+import java.util.Collections;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -15,53 +17,55 @@ import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
-import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
+import com.syrus.util.ApplicationProperties;
 
 public class Transceiver extends SleepButWorkThread {
-	private static final int TCP_SOCKET_INVALID = -1;
+	/*	Error codes for method processFall()	*/
+	public static final int FALL_CODE_ESTABLISH_CONNECTION = 1;
+	public static final int FALL_CODE_TRANSMIT_MEASUREMENT = 2;
+	public static final int FALL_CODE_RECEIVE_KIS_REPORT = 3;
+	public static final int FALL_CODE_GENERATE_IDENTIFIER = 4;
 
-/*	Error codes for method processFall()	*/
-	public static final int FALL_CODE_GENERATE_IDENTIFIER = 1;
-	public static final int FALL_CODE_RECEIVE_KIS_REPORT = 2;
-
-	private short tcpPort;
-	private int tcpSocket;
+	private KIS kis;
+	private KISConnection kisConnection;
+	private List scheduledMeasurements;
 	private Map testProcessors;//Map <Identifier measurementId, TestProcessor testProcessor>
+
 	private KISReport kisReport;
+	private Measurement measurementToRemove;
 
 	private boolean running;
 
-	static {
-		System.loadLibrary("mcmtransceiver");
-	}
-
-	public Transceiver() throws CommunicationException {
+	public Transceiver(KIS kis) {
 		super(ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_TICK_TIME, MeasurementControlModule.KIS_TICK_TIME) * 1000,
 				ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_MAX_FALLS, MeasurementControlModule.KIS_MAX_FALLS));
 
-		this.tcpPort = MeasurementControlModule.iAm.getTCPPort();
-		if (this.tcpPort <= 0)
-			this.tcpPort = (short)ApplicationProperties.getInt(MeasurementControlModule.KEY_TCP_PORT, MeasurementControlModule.TCP_PORT);
-		this.setupReceiverInterface();
-
-		this.testProcessors = Collections.synchronizedMap(new Hashtable());
-		this.kisReport = null;
+		this.kis = kis;
+		try {
+			this.kisConnection = MeasurementControlModule.kisConnectionManager.getConnection(kis);
+		}
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
+		}
+		this.scheduledMeasurements = Collections.synchronizedList(new ArrayList());
+		this.testProcessors = Collections.synchronizedMap(new HashMap());
 
 		this.running = true;
 	}
 
-	public void transmitMeasurementToKIS(Measurement measurement, KIS kis, TestProcessor testProcessor) {
+	public void addMeasurement(Measurement measurement, TestProcessor testProcessor) {
 		Identifier measurementId = measurement.getId();
 		if (measurement.getStatus().value() == MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED) {
-			Log.debugMessage("Transceiver.transmitMeasurementToKIS | measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
-			(new MeasurementTransmitter(measurement, kis, testProcessor)).start();
+			Log.debugMessage("Transceiver.addMeasurement | Adding measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
+			this.scheduledMeasurements.add(measurement);
+			this.testProcessors.put(measurementId, testProcessor);
 		}
 		else
 			Log.errorMessage("Transceiver.transmitMeasurementToKIS | Status: " + measurement.getStatus().value() + " of measurement '" + measurementId + "' not SCHEDULED -- cannot add to queue");
 	}
 
-	protected void considerAcquiringMeasurement(Measurement measurement, TestProcessor testProcessor) {
+	protected void addAcquiringMeasurement(Measurement measurement, TestProcessor testProcessor) {
 		Identifier measurementId = measurement.getId();
 		if (measurement.getStatus().value() == MeasurementStatus._MEASUREMENT_STATUS_ACQUIRING) {
 			Log.debugMessage("Transceiver.addAcquiringMeasurement | Adding measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
@@ -80,243 +84,177 @@ public class Transceiver extends SleepButWorkThread {
 	public void run() {
 		Measurement measurement;
 		Identifier measurementId;
-		TestProcessor testProcessor = null;
+		TestProcessor testProcessor;
 		Result result;
 
 		while (this.running) {
-			if (this.kisReport == null) {
-				if (this.receiverInterfaceIsUp()) {
-					if (! this.receive()) {
-						this.downReceiverInterface();
-						super.clearFalls();
-						try {
-							sleep(super.initialTimeToSleep);
-						}
-						catch (InterruptedException ie) {
-							Log.errorException(ie);
-						}
-					}
-				}
-				else {
-					Log.debugMessage("Transceiver.run | Receiver interface is down - trying set it up", Log.DEBUGLEVEL07);
-					try {
-						this.setupReceiverInterface();
-					}
-					catch (CommunicationException ce) {
-						Log.errorException(ce);
-						super.fallCode = FALL_CODE_RECEIVE_KIS_REPORT;
-						super.sleepCauseOfFall();
-					}
-				}
-			}
-			else {
-				measurementId = this.kisReport.getMeasurementId();
-				Log.debugMessage("Transceiver.run | Received report for measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
-				measurement = null;
-				try {
-					measurement = (Measurement)MeasurementStorableObjectPool.getStorableObject(measurementId, true);
-				}
-				catch (ApplicationException ae) {
-					Log.errorException(ae);
-				}
-				if (measurement != null) {
-					testProcessor = (TestProcessor)this.testProcessors.remove(measurementId);
-					if (testProcessor != null) {
-						result = null;
 
+			if (this.kisConnection != null) {
+				if (this.kisConnection.isEstablished()) {
+
+					if (! this.scheduledMeasurements.isEmpty()) {
+						measurement = (Measurement)this.scheduledMeasurements.get(0);
+						measurementId = measurement.getId();
 						try {
-							result = this.kisReport.createResult();
-							measurement.updateStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRED, MeasurementControlModule.iAm.getUserId());
+							this.kisConnection.transmitMeasurement(measurement);
+
+							Log.debugMessage("Transceiver.run | Successfully transferred measurement '" + measurementId + "'", Log.DEBUGLEVEL03);
+							this.scheduledMeasurements.remove(measurement);
+							measurement.updateStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRING, MeasurementControlModule.iAm.getUserId());
+							MeasurementStorableObjectPool.putStorableObject(measurement);
 							super.clearFalls();
 						}
-						catch (MeasurementException me) {
-							if (me.getCause() instanceof AMFICOMRemoteException) {
-								Log.debugMessage("Transceiver.run | Cannot get identifier - trying to wait", Log.DEBUGLEVEL07);
-								MeasurementControlModule.resetMServerConnection();
-								super.fallCode = FALL_CODE_GENERATE_IDENTIFIER;
-								super.sleepCauseOfFall();
-							}
-							else {
-								Log.errorException(me);
-								this.throwAwayKISReport();
-							}
+						catch (CommunicationException ce) {
+							Log.errorException(ce);
+							this.kisConnection.drop();
+							super.fallCode = FALL_CODE_TRANSMIT_MEASUREMENT;
+							this.measurementToRemove = measurement;
+							super.sleepCauseOfFall();
 						}
 						catch (UpdateObjectException uoe) {
 							Log.errorException(uoe);
 						}
-
-						if (result != null) {
-							testProcessor.addMeasurementResult(result);
-							this.kisReport = null;
+						catch (IllegalObjectEntityException ioee) {
+							Log.errorException(ioee);
 						}
+					}// if (! this.scheduledMeasurements.isEmpty())
 
-					}	//if (testProcessor != null)
-					else
-						Log.errorMessage("Transceiver.run | Cannot find test processor for measurement '" + measurementId + "'");
-				}	//if (measurement != null)
-				else
-					Log.errorMessage("Transceiver.run | Cannot find measurement for id '" + measurementId + "'");
-			}	//else if (this.kisReport == null)
+					if (this.kisReport == null) {
+						try {
+							this.kisReport = this.kisConnection.receiveKISReport(super.initialTimeToSleep);
+						}
+						catch (CommunicationException ce) {
+							Log.errorException(ce);
+							this.kisConnection.drop();
+							super.fallCode = FALL_CODE_RECEIVE_KIS_REPORT;
+							super.sleepCauseOfFall();
+						}
+					}// if (this.kisReport == null)
+					else {
+						measurementId = this.kisReport.getMeasurementId();
+						Log.debugMessage("Transceiver.run | Received report for measurement '" + measurementId + "'", Log.DEBUGLEVEL03);
+						measurement = null;
+						try {
+							measurement = (Measurement) MeasurementStorableObjectPool.getStorableObject(measurementId, true);
+						}
+						catch (ApplicationException ae) {
+							Log.errorException(ae);
+						}
+						if (measurement != null) {
+							testProcessor = (TestProcessor) this.testProcessors.remove(measurementId);
+							if (testProcessor != null) {
+								result = null;
 
-//	Not need as receive already do it
-//			try {
-//				sleep(super.initialTimeToSleep);
-//			}
-//			catch (InterruptedException ie) {
-//				Log.errorException(ie);
-//			}
+								try {
+									result = this.kisReport.createResult();
+									measurement.updateStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRED, MeasurementControlModule.iAm.getUserId());
+									super.clearFalls();
+								}
+								catch (MeasurementException me) {
+									if (me.getCause() instanceof AMFICOMRemoteException) {
+										Log.debugMessage("Transceiver.run | Cannot obtain identifier -- trying to wait", Log.DEBUGLEVEL05);
+										MeasurementControlModule.resetMServerConnection();
+										super.fallCode = FALL_CODE_GENERATE_IDENTIFIER;
+										super.sleepCauseOfFall();
+									}
+									else {
+										Log.errorException(me);
+										this.throwAwayKISReport();
+									}
+								}
+								catch (UpdateObjectException uoe) {
+									Log.errorException(uoe);
+								}
 
-		}	//while
+								if (result != null) {
+									testProcessor.addMeasurementResult(result);
+									this.kisReport = null;
+								}
+							}// if (testProcessor != null)
+							else {
+								Log.errorMessage("Transceiver.run | Cannot find test processor for measurement '" + measurementId + "'");
+								this.throwAwayKISReport();
+							}
+						}// if (measurement != null)
+						else {
+							Log.errorMessage("Transceiver.run | Cannot find measurement for id '" + measurementId + "'");
+							this.throwAwayKISReport();
+						}
+					}// else if (this.kisReport == null)
+
+				}// if (this.kisConnection.isEstablished())
+				else {
+					long kisConnectionTimeout = ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_CONNECTION_TIMEOUT, MeasurementControlModule.KIS_CONNECTION_TIMEOUT) * 1000;
+					try {
+						this.kisConnection.establish(kisConnectionTimeout, true);
+					}
+					catch (CommunicationException ce) {
+						Log.errorException(ce);
+						super.fallCode = FALL_CODE_ESTABLISH_CONNECTION;
+						super.sleepCauseOfFall();
+					}
+				}// else if (this.kisConnection.isEstablished())
+			}// if (this.kisConnection != null)
+			else {
+				try {
+					this.kisConnection = MeasurementControlModule.kisConnectionManager.getConnection(this.kis);
+				}
+				catch (CommunicationException ce) {
+					Log.errorException(ce);
+					super.fallCode = FALL_CODE_ESTABLISH_CONNECTION;
+					super.sleepCauseOfFall();
+				}
+			}// else if (this.kisConnection != null)
+
+		}// while
 	}
 
 	protected void processFall() {
 		switch (super.fallCode) {
 			case FALL_CODE_NO_ERROR:
 				break;
-			case FALL_CODE_GENERATE_IDENTIFIER:
-				this.throwAwayKISReport();
+			case FALL_CODE_ESTABLISH_CONNECTION:
+				Log.errorMessage("Transceiver.run | Many errors while establishing connection");
+				break;
+			case FALL_CODE_TRANSMIT_MEASUREMENT:
+				this.removeMeasurement();
+				break;
 			case FALL_CODE_RECEIVE_KIS_REPORT:
-				Log.errorMessage("Cannot setup receiver interface");
+				Log.errorMessage("Transceiver.run | Many errors while readig KIS report");
+				break;
+			case FALL_CODE_GENERATE_IDENTIFIER:
+				Log.errorMessage("Transceiver.run | Cannot generate identifier");
+				this.throwAwayKISReport();
 				break;
 		default:
 				Log.errorMessage("processError | Unknown error code: " + super.fallCode);
 		}
 	}
 
+	private void removeMeasurement() {
+		if (this.measurementToRemove != null) {
+			Log.debugMessage("Transceiver.throwAwayKISReport | removing measurement '" + this.measurementToRemove.getId() + "' from KIS '" + this.kis.getId() + "'", Log.DEBUGLEVEL05);
+			this.scheduledMeasurements.remove(this.measurementToRemove);
+			this.testProcessors.remove(this.measurementToRemove.getId());
+
+			this.measurementToRemove = null;
+		}
+		else
+			Log.errorMessage("Transceiver.removeMeasurement | Measurement to remove is null -- nothing to remove");
+	}
+
 	private void throwAwayKISReport() {
 		if (this.kisReport != null) {
-			Log.debugMessage("Transceiver.throwAwayKISReport | Throwing away kis report for measurement '" + this.kisReport.getMeasurementId() + "'", Log.DEBUGLEVEL07);
+			Log.debugMessage("Transceiver.throwAwayKISReport | Throwing away report of measurement '" + this.kisReport.getMeasurementId() + "' from KIS '" + this.kis.getId() + "'", Log.DEBUGLEVEL05);
 			this.kisReport = null;
 		}
-	}
-
-	private void setupReceiverInterface() throws CommunicationException {
-		this.tcpSocket = this.setupTCPInterface();
-		if (this.receiverInterfaceIsUp())
-			return;
 		else
-			throw new CommunicationException("Cannot setup network interface");
-	}
-
-	private void downReceiverInterface() {
-		if (this.receiverInterfaceIsUp()) {
-			this.downTCPInterface();
-			this.tcpSocket = TCP_SOCKET_INVALID;
-		}
-	}
-
-	private boolean receiverInterfaceIsUp() {
-		return (this.tcpSocket != TCP_SOCKET_INVALID);
+			Log.errorMessage("Transceiver.throwAwayKISReport | KIS report is null -- nothing to throw away");
 	}
 
 	protected void shutdown() {
+		this.scheduledMeasurements.clear();
 		this.running = false;
-		this.testProcessors = null;
-		this.throwAwayKISReport();
-		this.downReceiverInterface();
+		this.kisConnection.drop();
 	}
-
-	/**
-	 * Creates listening socket on local machine.
-	 * @return socket file descriptor.
-	 */
-	private native int setupTCPInterface();
-
-	/**
-	 * Closes TCP socket
-	 */
-	private native void downTCPInterface();
-
-	/**
-	 * Receives result of measurement from remote KIS.
-	 * Writes received report to field kisReport
-	 * @return true on success, false on failure.
-	 */
-	private native boolean receive();
-
-
-	private class MeasurementTransmitter extends SleepButWorkThread {
-		/*	Error codes for method processFall()	*/
-		public static final int FALL_CODE_TRANSMIT_MEASUREMENT = 1;
-
-		private Measurement measurement;
-		private KIS kis;
-		private TestProcessor testProcessor;
-		private KISConnection kisConnection;
-
-		private boolean moreTransmissionAttempts;
-
-		MeasurementTransmitter(Measurement measurement, KIS kis, TestProcessor testProcessor) {
-			super(ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_TICK_TIME, MeasurementControlModule.KIS_TICK_TIME) * 1000,
-					ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_MAX_FALLS, MeasurementControlModule.KIS_MAX_FALLS));
-
-			this.measurement = measurement;
-			this.kis = kis;
-			this.testProcessor = testProcessor;
-			this.kisConnection = null;
-
-			this.moreTransmissionAttempts = true;
-		}
-
-		public void run() {
-			try {
-				this.kisConnection = MeasurementControlModule.kisConnectionManager.getConnection(this.kis);
-			}
-			catch (CommunicationException ce) {
-				Log.errorException(ce);
-				this.abortMeasurement();
-				return;
-			}
-
-			Identifier measurementId = this.measurement.getId();
-			while (this.moreTransmissionAttempts) {
-				try {
-					this.kisConnection.transmitMeasurement(this.measurement);
-
-					this.moreTransmissionAttempts = false;
-					this.measurement.updateStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRING, MeasurementControlModule.iAm.getUserId());
-					MeasurementStorableObjectPool.putStorableObject(this.measurement);
-					Transceiver.this.testProcessors.put(measurementId, this.testProcessor);
-					Log.debugMessage("TransmissionManager.MeasurementTransmitter.run | Transmitted measurement '" + measurementId + "' to KIS '" + this.kis.getId() + "'", Log.DEBUGLEVEL07);
-					super.clearFalls();
-				}
-				catch (CommunicationException ce) {
-					Log.errorException(ce);
-					super.fallCode = FALL_CODE_TRANSMIT_MEASUREMENT;
-					super.sleepCauseOfFall();
-				}
-				catch (UpdateObjectException uoe) {
-					Log.errorException(uoe);
-				}
-				catch (IllegalObjectEntityException ioee) {
-					Log.errorException(ioee);
-				}
-			}
-		}
-		
-		protected void processFall() {
-			switch (super.fallCode) {
-				case FALL_CODE_NO_ERROR:
-					break;
-				case FALL_CODE_TRANSMIT_MEASUREMENT:
-					this.abortMeasurement();
-					MeasurementControlModule.kisConnectionManager.dropConnection(this.kis.getId());
-					this.moreTransmissionAttempts = false;
-					break;
-				default:
-					Log.errorMessage("processError | Unknown error code: " + super.fallCode);
-			}
-		}
-
-		private void abortMeasurement() {
-			Log.debugMessage("Aborting measurement '" + this.measurement.getId() + "'", Log.DEBUGLEVEL07);
-			try {
-				this.measurement.updateStatus(MeasurementStatus.MEASUREMENT_STATUS_ABORTED, MeasurementControlModule.iAm.getUserId());
-			}
-			catch (UpdateObjectException uoe) {
-				Log.errorException(uoe);
-			}
-		}
-	}
-
 }

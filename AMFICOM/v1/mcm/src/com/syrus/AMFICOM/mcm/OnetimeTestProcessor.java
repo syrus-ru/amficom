@@ -1,5 +1,5 @@
 /*
- * $Id: OnetimeTestProcessor.java,v 1.19 2004/11/18 19:31:10 arseniy Exp $
+ * $Id: OnetimeTestProcessor.java,v 1.20 2004/12/07 18:59:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/11/18 19:31:10 $
+ * @version $Revision: 1.20 $, $Date: 2004/12/07 18:59:52 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -90,7 +90,7 @@ public class OnetimeTestProcessor extends TestProcessor {
 					}	//if (measurementId != null)
 
 					if (measurement != null) {
-						MeasurementControlModule.transceiver.transmitMeasurementToKIS(measurement, super.kis, this);
+						this.transceiver.addMeasurement(measurement, this);
 						super.numberOfScheduledMeasurements ++;
 						super.lastMeasurementAcquisition = true;
 					}
