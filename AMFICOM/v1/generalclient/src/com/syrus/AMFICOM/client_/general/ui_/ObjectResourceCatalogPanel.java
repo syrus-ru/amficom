@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceCatalogPanel.java,v 1.5 2005/02/08 16:22:43 stas Exp $
+ * $Id: ObjectResourceCatalogPanel.java,v 1.6 2005/02/21 14:23:07 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import java.lang.reflect.InvocationTargetException;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/02/08 16:22:43 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/21 14:23:07 $
  * @module generalclient_v1
  */
 public class ObjectResourceCatalogPanel extends JPanel implements OperationListener
@@ -381,9 +381,9 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 
 		propScrollPane = new JScrollPane((JComponent)propPane);
 
-		jTabbedPane.addTab("", new TextIcon(table.getName(), jTabbedPane), table);
-		jTabbedPane.addTab("", new TextIcon(((JComponent)propPane).getName(), jTabbedPane), propScrollPane);
-		jTabbedPane.addTab("", new TextIcon(filterPane.getName(), jTabbedPane), filterContainingPanel);
+		jTabbedPane.addTab("", new TextIcon("Список", jTabbedPane), table);
+		jTabbedPane.addTab("", new TextIcon("Свойства", jTabbedPane), propScrollPane);
+		jTabbedPane.addTab("", new TextIcon("Фильтр", jTabbedPane), filterContainingPanel);
 
 		table.setBackground(SystemColor.window);
 		jTabbedPane.setBackground(SystemColor.control);

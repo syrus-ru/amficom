@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.jfree.util.StringUtils;
+
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -84,11 +86,18 @@ public class MiscUtil
 	{
 		if(name == null)
 			return false;
-		if(name.length() == 0)
-			return false;
 		if(name.trim().length() == 0)
 			return false;
 		return true;
+	}
+	
+	public static String removeDigitsFromString(String str)
+	{
+		StringBuffer f = new StringBuffer(str);
+		for (int i = f.length() - 1; i > 0; i--)
+			if (!Character.isDigit(str.charAt(i)))
+				return f.substring(0, i + 1); 
+		return "";
 	}
 
 	public static double diagonale(double x1, double y1, double x1_, double y1_)
