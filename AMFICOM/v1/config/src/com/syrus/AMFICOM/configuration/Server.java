@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.6 2004/08/09 12:04:23 arseniy Exp $
+ * $Id: Server.java,v 1.7 2004/08/09 12:06:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,9 +22,9 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Server_Transferable;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/08/09 12:04:23 $
+ * @version $Revision: 1.7 $, $Date: 2004/08/09 12:06:23 $
  * @author $Author: arseniy $
- * @module general_v1
+ * @module configuration_v1
  */
 
 public class Server extends DomainMember implements Characterized {

@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationDatabaseContext.java,v 1.14 2004/08/09 11:12:20 arseniy Exp $
+ * $Id: ConfigurationDatabaseContext.java,v 1.15 2004/08/09 12:04:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.configuration;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/08/09 11:12:20 $
+ * @version $Revision: 1.15 $, $Date: 2004/08/09 12:04:23 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -27,6 +27,7 @@ public class ConfigurationDatabaseContext {
 	protected static StorableObjectDatabase transmissionPathDatabase;
 	protected static StorableObjectDatabase mcmDatabase;
 	protected static StorableObjectDatabase serverDatabase;
+	protected static StorableObjectDatabase userDatabase;
 	
 	private ConfigurationDatabaseContext() {	
 	}
@@ -40,7 +41,8 @@ public class ConfigurationDatabaseContext {
 													StorableObjectDatabase equipmentTypeDatabase1,
 													StorableObjectDatabase transmissionPathDatabase1,
 													StorableObjectDatabase mcmDatabase1,
-													StorableObjectDatabase serverDatabase1) {
+													StorableObjectDatabase serverDatabase1,
+													StorableObjectDatabase userDatabase1) {
 		characteristicDatabase = characteristicDatabase1;
 		characteristicTypeDatabase = characteristicTypeDatabase1;
 		portDatabase = portDatabase1;
@@ -51,5 +53,6 @@ public class ConfigurationDatabaseContext {
 		transmissionPathDatabase = transmissionPathDatabase1;
 		mcmDatabase = mcmDatabase1;
 		serverDatabase = serverDatabase1;
+		userDatabase = userDatabase1;
 	}
 }
