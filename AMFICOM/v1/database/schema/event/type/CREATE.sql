@@ -1,2 +1,0 @@
-@@eventtype.sql
-@@eventtyppartyplink.sql
