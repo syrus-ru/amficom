@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.11 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.12 2004/12/27 16:49:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -68,7 +68,6 @@ import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.Object.Domain;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.SchemeDataSourceImage;
 import com.syrus.io.IniFile;
 
 import java.awt.AWTEvent;
@@ -98,7 +97,7 @@ import javax.swing.JViewport;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.12 $, $Date: 2004/12/27 16:49:35 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -758,8 +757,6 @@ public class MapEditorMainFrame extends JFrame
 		aContext.getDispatcher().notify(new StatusMessageEvent(
 				StatusMessageEvent.STATUS_MESSAGE, 
 				LangModel.getString("Initiating")));
-
-		new SchemeDataSourceImage(dataSource).LoadAttributeTypes();
 
 		aContext.getDispatcher().notify(new StatusMessageEvent(
 				StatusMessageEvent.STATUS_MESSAGE,

@@ -86,7 +86,7 @@ public final class SchemeController implements ObjectResourceController
 		{
 			try
 			{
-				Identifier id = new Identifier(sc.creatorId().getTransferable());
+				Identifier id = new Identifier(sc.creatorId().transferable());
 				result = (User )ConfigurationStorableObjectPool.getStorableObject(id, false);
 			}
 			catch (Exception e)

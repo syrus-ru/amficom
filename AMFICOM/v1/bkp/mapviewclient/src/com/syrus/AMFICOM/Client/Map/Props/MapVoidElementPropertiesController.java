@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 public final class MapVoidElementPropertiesController 
-		implements MapElementPropertiesController 
+		extends MapElementPropertiesController 
 {
 
 	private static MapVoidElementPropertiesController instance;

@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Iterator;
 
 public final class MapCablePathPropertiesController 
-		implements MapElementPropertiesController 
+		extends MapElementPropertiesController 
 {
 
 	private static MapCablePathPropertiesController instance;

@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
 
 public final class MapUnboundLinkPropertiesController 
-		implements MapElementPropertiesController 
+		extends MapElementPropertiesController 
 {
 
 	private static MapUnboundLinkPropertiesController instance;

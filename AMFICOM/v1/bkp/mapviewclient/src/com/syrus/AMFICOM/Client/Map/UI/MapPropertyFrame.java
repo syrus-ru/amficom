@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertyFrame.java,v 1.10 2004/12/22 16:38:42 krupenn Exp $
+ * $Id: MapPropertyFrame.java,v 1.11 2004/12/27 16:49:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.Map.Props.MapElementPropertiesController;
 import com.syrus.AMFICOM.Client.Map.Props.MapPropsManager;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
@@ -42,7 +43,7 @@ import javax.swing.event.TableModelListener;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/12/22 16:38:42 $
+ * @version $Revision: 1.11 $, $Date: 2004/12/27 16:49:35 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -118,6 +119,7 @@ public final class MapPropertyFrame extends JInternalFrame
 
 	public void initialize()
 	{
+		controller = new MapElementPropertiesController();
 		model = new ObjPropertyTableModel(controller, null);
 		table = new ObjPropertyTable(model);
 		model.addTableModelListener(this);

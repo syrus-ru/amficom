@@ -21,7 +21,7 @@ import java.util.List;
 import com.syrus.AMFICOM.map.PhysicalLink;
 
 public final class MapMarkPropertiesController 
-		implements MapElementPropertiesController 
+		extends MapElementPropertiesController 
 {
 
 	private static MapMarkPropertiesController instance;

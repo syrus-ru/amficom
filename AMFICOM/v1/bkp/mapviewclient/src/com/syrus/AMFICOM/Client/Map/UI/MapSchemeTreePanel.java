@@ -24,7 +24,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.*;
-import com.syrus.AMFICOM.Client.Resource.SchemeDataSourceImage;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
 
 import java.awt.BorderLayout;

@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapElementsBarCommand.java,v 1.6 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: ViewMapElementsBarCommand.java,v 1.7 2004/12/27 16:49:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,8 +15,6 @@ import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.UI.MapElementsBarFrame;
-/**todo*/		
-//import com.syrus.AMFICOM.Client.Resource.MapDataSourceImage;
 
 import java.awt.Dimension;
 
@@ -28,7 +26,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/27 16:49:34 $
  * @module
  * @author $Author: krupenn $
  * @see

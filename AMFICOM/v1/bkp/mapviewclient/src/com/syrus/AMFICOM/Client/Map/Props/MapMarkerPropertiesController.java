@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
 
 public final class MapMarkerPropertiesController 
-		implements MapElementPropertiesController 
+		extends MapElementPropertiesController 
 {
 
 	private static MapMarkerPropertiesController instance;

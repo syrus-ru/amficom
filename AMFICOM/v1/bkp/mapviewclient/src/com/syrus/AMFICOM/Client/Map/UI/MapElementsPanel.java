@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsPanel.java,v 1.8 2004/12/24 15:42:13 krupenn Exp $
+ * $Id: MapElementsPanel.java,v 1.9 2004/12/27 16:49:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -57,23 +57,23 @@ import javax.swing.event.ListSelectionListener;
  * видов элементов и талица элементов с полями "Идентификатор" и "Название"
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/12/24 15:42:13 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/27 16:49:35 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
  */
 public final class MapElementsPanel extends JPanel
 {
-	public static final String ELEMENTS_SITE = "site";
-	public static final String ELEMENTS_WELL = "well";
-	public static final String ELEMENTS_PIQUET = "piquet";
-	public static final String ELEMENTS_LINK = "link";
-	public static final String ELEMENTS_COLLECTOR = "collector";
-	public static final String ELEMENTS_CABLE = "cable";
-	public static final String ELEMENTS_NODE = "node";
-	public static final String ELEMENTS_MARK = "mark";
-	public static final String ELEMENTS_PATH = "path";
-	public static final String ELEMENTS_MARKER = "marker";
+	public static final String ELEMENTS_SITE = "Site";
+	public static final String ELEMENTS_WELL = "Well";
+	public static final String ELEMENTS_PIQUET = "Piquet";
+	public static final String ELEMENTS_LINK = "Link";
+	public static final String ELEMENTS_COLLECTOR = "Collector";
+	public static final String ELEMENTS_CABLE = "Cable";
+	public static final String ELEMENTS_NODE = "Node";
+	public static final String ELEMENTS_MARK = "Mark";
+	public static final String ELEMENTS_PATH = "Path";
+	public static final String ELEMENTS_MARKER = "Marker";
 
 	Map map;
 	MapView mapView;
@@ -265,12 +265,12 @@ public final class MapElementsPanel extends JPanel
 		String selection = (String )typeComboBox.getSelectedItem();
 		List dataSet = new LinkedList();
 
-		SiteNodeType well = logicalNetLayer.getSiteNodeType(SiteNodeType.WELL);
-		SiteNodeType piquet = logicalNetLayer.getSiteNodeType(SiteNodeType.PIQUET);
-		SiteNodeType cableinlet = logicalNetLayer.getSiteNodeType(SiteNodeType.CABLE_INLET);
-
-		if(map != null)
+		if(map != null && logicalNetLayer != null)
 		{
+			SiteNodeType well = logicalNetLayer.getSiteNodeType(SiteNodeType.WELL);
+			SiteNodeType piquet = logicalNetLayer.getSiteNodeType(SiteNodeType.PIQUET);
+			SiteNodeType cableinlet = logicalNetLayer.getSiteNodeType(SiteNodeType.CABLE_INLET);
+
 			if(selection.equals(ELEMENTS_SITE))
 			{
 				for(Iterator it = map.getSiteNodes().iterator(); it.hasNext();)

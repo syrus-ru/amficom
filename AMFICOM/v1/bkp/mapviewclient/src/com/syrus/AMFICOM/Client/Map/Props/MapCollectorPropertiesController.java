@@ -17,7 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 public final class MapCollectorPropertiesController 
-		implements MapElementPropertiesController 
+		extends MapElementPropertiesController 
 {
 
 	private static MapCollectorPropertiesController instance;

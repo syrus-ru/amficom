@@ -1,5 +1,5 @@
 /**
- * $Id: MapView.java,v 1.26 2004/12/24 15:42:14 krupenn Exp $
+ * $Id: MapView.java,v 1.27 2004/12/27 16:49:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -58,7 +58,7 @@ import com.syrus.AMFICOM.Client.Map.mapview.UnboundNode;
  * 
  * 
  * 
- * @version $Revision: 1.26 $, $Date: 2004/12/24 15:42:14 $
+ * @version $Revision: 1.27 $, $Date: 2004/12/27 16:49:35 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -75,7 +75,6 @@ public final class MapView
 
 	protected boolean changed = false;
 
-	protected Map map;
 	protected List schemes = new LinkedList();
 
 	protected List cablePaths = new LinkedList();
@@ -109,7 +108,7 @@ public final class MapView
 			0.0D,
 			1.0D,
 			1.0D,
-			map.getId());
+			map);
 
 		setLogicalNetLayer(logical);
 	}
@@ -178,18 +177,17 @@ public final class MapView
 
 	public Map getMap()
 	{
-		return this.map;
+		return mapViewStorable.getMap();
 	}
 	
 	public void setMap(Map mc)
 	{
-		this.map = mc;
-		mapViewStorable.setMapId(mc.getId());
+		mapViewStorable.setMap(mc);
 	}
 	
 	public List getSchemes()
 	{
-		return this.schemes;
+		return mapViewStorable.getSchemes();
 	}
 	
 	private static final String PROPERTY_PANE_CLASS_NAME = 

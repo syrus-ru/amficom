@@ -20,7 +20,7 @@ import java.util.List;
 import com.syrus.AMFICOM.map.AbstractNode;
 
 public final class MapMeasurementPathPropertiesController 
-		implements MapElementPropertiesController 
+		extends MapElementPropertiesController 
 {
 
 	private static MapMeasurementPathPropertiesController instance;

@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewOpenCommand.java,v 1.8 2004/12/24 15:42:12 krupenn Exp $
+ * $Id: MapViewOpenCommand.java,v 1.9 2004/12/27 16:49:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,6 @@ import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.Client.Resource.MapDataSourceImage;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
@@ -46,7 +45,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/12/24 15:42:12 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/27 16:49:35 $
  * @module
  * @author $Author: krupenn $
  * @see

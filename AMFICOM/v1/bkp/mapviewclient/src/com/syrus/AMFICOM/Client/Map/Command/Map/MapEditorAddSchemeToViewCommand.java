@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorAddSchemeToViewCommand.java,v 1.3 2004/10/19 10:41:03 krupenn Exp $
+ * $Id: MapEditorAddSchemeToViewCommand.java,v 1.4 2004/12/27 16:49:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResource;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/19 10:41:03 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/27 16:49:35 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -70,8 +70,6 @@ public class MapEditorAddSchemeToViewCommand extends VoidCommand
 		aContext.getDispatcher().notify(new StatusMessageEvent(
 				StatusMessageEvent.STATUS_MESSAGE,
 				LangModelMap.getString("MapOpening")));
-
-		new SchemeDataSourceImage(dataSource).LoadSchemes();
 
 		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(dataSource, Scheme.typ);
 

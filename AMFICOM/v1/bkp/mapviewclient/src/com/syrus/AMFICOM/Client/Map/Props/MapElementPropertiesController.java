@@ -3,9 +3,11 @@ package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesController;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import java.util.LinkedList;
+import java.util.List;
 
-public interface MapElementPropertiesController
-	extends ObjectResourcePropertiesController
+public class MapElementPropertiesController
+	implements ObjectResourcePropertiesController
 {
 	String PROPERTY_ID = "Id";
 	String PROPERTY_NAME = "Name";
@@ -39,4 +41,53 @@ public interface MapElementPropertiesController
 	String PROPERTY_DISTANCE = "Distance";
 	String PROPERTY_TYPE = "Type";
 	String PROPERTY_SELECTION_COUNT = "SelectionCount";
+
+	private List keys = new LinkedList();
+	{
+		keys.add("");
+		keys.add("");
+	}
+
+	public String getKey(final int index) 
+	{
+		return (String )this.keys.get(index);
+	}
+
+	public List getKeys() 
+	{
+		return this.keys;
+	}
+
+	public String getName(final String key)
+	{
+		return "";
+	}
+
+	public Object getValue(final Object object, final String key)
+	{
+		return null;
+	}
+
+	public boolean isEditable(final String key)
+	{
+		return false;
+	}
+
+	public void setValue(Object object, final String key, final Object value)
+	{
+	}
+
+	public Object getPropertyValue(final String key) 
+	{
+		return "";
+	}
+
+	public void setPropertyValue(String key, Object objectKey, Object objectValue) 
+	{
+	}
+
+	public Class getPropertyClass(String key) 
+	{
+		return String.class;
+	}
 }

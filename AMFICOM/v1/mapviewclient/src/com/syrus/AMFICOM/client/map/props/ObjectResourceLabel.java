@@ -1,14 +1,6 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-
 import javax.swing.JLabel;
-
-import com.syrus.AMFICOM.CORBA.General.TestStatus;
 
 public class ObjectResourceLabel extends JLabel implements Comparable 
 {

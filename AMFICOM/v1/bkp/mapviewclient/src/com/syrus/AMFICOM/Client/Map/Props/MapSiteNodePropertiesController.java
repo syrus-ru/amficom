@@ -23,7 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 public final class MapSiteNodePropertiesController 
-		implements MapElementPropertiesController 
+		extends MapElementPropertiesController 
 {
 
 	private static MapSiteNodePropertiesController instance;

@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.PhysicalLink;
 
 public final class MapPhysicalNodePropertiesController 
-		implements MapElementPropertiesController 
+		extends MapElementPropertiesController 
 {
 
 	private static MapPhysicalNodePropertiesController instance;
