@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceTablePane.java,v 1.9 2004/09/25 19:56:36 bass Exp $
+ * $Id: ObjectResourceTablePane.java,v 1.10 2004/09/25 20:00:39 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.Client.General.UI;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import java.awt.SystemColor;
 import java.awt.event.*;
@@ -20,7 +19,7 @@ import javax.swing.table.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2004/09/25 19:56:36 $
+ * @version $Revision: 1.10 $, $Date: 2004/09/25 20:00:39 $
  * @module generalclient_v1
  */
 public class ObjectResourceTablePane extends JScrollPane
