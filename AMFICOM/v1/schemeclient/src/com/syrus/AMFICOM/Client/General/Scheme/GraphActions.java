@@ -216,7 +216,7 @@ public class GraphActions
 			SchemeCableLink link = new SchemeCableLink(dataSource.GetUId(SchemeCableLink.typ));
 			Pool.put(SchemeCableLink.typ, link.getId(), link);
 			((DefaultCableLink)cell).setSchemeCableLinkId(link.getId());
-			link.name = name;
+			link.setName(name);
 
 //			if (s_cable_port_cell != null)
 //				SchemeActions.connectSchemeCableLink(graph, cell, s_cable_port_cell, true);

@@ -111,8 +111,11 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 
 		 Scheme scheme = (Scheme)Pool.get("currentscheme", "currentscheme");
 		 PathBuilder.addLink(pathpanel.path.links, (SchemeLink)pathpanel.links_to_add.get(0));
+		 int st_size = pathpanel.path.links.size();
 			boolean res = PathBuilder.explore(scheme, pathpanel.path);
-			System.out.println("RES after add = " + res);
+			int end_size = pathpanel.path.links.size();
+			System.out.println("RES after add = " + res + "; " + (end_size - st_size) + " elements added!");
+			System.out.println("last element = " + pathpanel.path.links.listIterator(pathpanel.path.links.size()).previous());
 
 			dispatcher.notify(new SchemeNavigateEvent(
 					new SchemePath[] {pathpanel.path},

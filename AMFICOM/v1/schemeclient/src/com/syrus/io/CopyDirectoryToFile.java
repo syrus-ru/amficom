@@ -836,7 +836,7 @@ public class CopyDirectoryToFile
 						if (s[0].equals(""))
 							link = new SchemeCableLink("");
 						else if (s[0].equals("@name"))
-							link.name = s[1];
+							link.setName(s[1]);
 						else if (s[0].equals("@id"))
 						{
 							String new_id = (String)Pool.get("cl_ids", s[1]);

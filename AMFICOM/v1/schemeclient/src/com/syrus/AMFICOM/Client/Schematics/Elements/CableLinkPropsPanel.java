@@ -197,8 +197,8 @@ public class CableLinkPropsPanel extends JPanel
 			{
 				if (links == null || links.length != 1)
 					return;
-				links[0].name = nameText.getText();
-				aContext.getDispatcher().notify(new SchemeElementsEvent(links[0].getId(), links[0].name, SchemeElementsEvent.CABLE_LINK_NAME_UPDATE_EVENT));
+				links[0].setName(nameText.getText());
+				aContext.getDispatcher().notify(new SchemeElementsEvent(links[0].getId(), links[0].getName(), SchemeElementsEvent.CABLE_LINK_NAME_UPDATE_EVENT));
 			}
 			public void keyPressed(KeyEvent ae)
 					{}

@@ -2044,7 +2044,7 @@ public class DirectoryToFile
 						if (s[0].equals(""))
 							link = new SchemeCableLink("");
 						else if (s[0].equals("@name"))
-							link.name = s[1];
+							link.setName(s[1]);
 						else if (s[0].equals("@id"))
 						{
 							link.id = s[1];

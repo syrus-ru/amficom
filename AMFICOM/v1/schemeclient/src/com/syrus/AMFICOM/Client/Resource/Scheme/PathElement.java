@@ -85,6 +85,22 @@ public class PathElement extends StubResource implements Serializable
 		this.type = type;
 	}
 
+	public String toString()
+	{
+		StringBuffer str = new StringBuffer();
+		str.append("type = ").append(type).append("\n");
+		str.append("scheme_element_id = ").append(scheme_element_id).append("\n");
+		str.append("link_id = ").append(link_id).append("\n");
+		str.append("thread_id = ").append(thread_id).append("\n");
+		if (type == SCHEME_ELEMENT)
+			str.append("name = ").append(((SchemeElement)Pool.get(SchemeElement.typ, scheme_element_id)).getName()).append("\n");
+		if (type == CABLE_LINK)
+			str.append("name = ").append(((SchemeCableLink)Pool.get(SchemeCableLink.typ, link_id)).getName()).append("\n");
+		if (type == LINK)
+			str.append("name = ").append(((SchemeLink)Pool.get(SchemeLink.typ, link_id)).getName()).append("\n");
+		return str.toString();
+	}
+
 	public String getName()
 	{
 		if (link_id.length() == 0)

@@ -18,7 +18,7 @@ public class SchemeDevice extends StubResource implements Serializable
 	public Collection ports;
 	public Collection cableports;
 
-	public Map crossroute;
+	private Map crossroute;
 	public Map attributes;
 
 	public SchemeDevice(SchemeDevice_Transferable transferable)
@@ -50,6 +50,36 @@ public class SchemeDevice extends StubResource implements Serializable
 	public String getId()
 	{
 		return id;
+	}
+
+	public Map getCrossRoute()
+	{
+		return crossroute;
+	}
+
+	public void setCrossRoute(Map crossroute)
+	{
+		this.crossroute = crossroute;
+	}
+
+	public SchemeCableThread getRoutedThread(SchemePort port)
+	{
+		if (!isCrossRouteValid())
+			createDefaultCrossRoute();
+		return (SchemeCableThread)crossroute.get(port);
+	}
+
+	public SchemePort getRoutedPort(SchemeCableThread thread)
+	{
+		if (!isCrossRouteValid())
+			createDefaultCrossRoute();
+		for (Iterator it = crossroute.keySet().iterator(); it.hasNext();)
+		{
+			SchemePort port = (SchemePort)it.next();
+			if (crossroute.get(port).equals(thread))
+				return port;
+		}
+		return null;
 	}
 
 	public boolean isCrossRouteValid()
@@ -172,6 +202,7 @@ public class SchemeDevice extends StubResource implements Serializable
 	private void findCrossRoute(Collection cables, String direction, Map crossroute)
 	{
 		List freePorts = new ArrayList(ports.size());
+		List freeThreads = new ArrayList();
 		for (Iterator it = ports.iterator(); it.hasNext(); )
 		{
 			SchemePort p = (SchemePort) it.next();
@@ -186,17 +217,25 @@ public class SchemeDevice extends StubResource implements Serializable
 				for (Iterator tit = cable.cable_threads.iterator(); tit.hasNext(); )
 				{
 					SchemeCableThread thread = (SchemeCableThread) tit.next();
-					int num = parseNumber(thread.getName());
+					int num = parseNumber(SchemeCableLink.parseName(thread.getName()));
 					SchemePort p = null;
 					if (num != -1)
 						p = getPortByNumber(freePorts, num);
-					if (p == null)
-						p = (SchemePort) freePorts.get(0);
-					crossroute.put(p, thread);
-					freePorts.remove(p);
-					if (freePorts.isEmpty())
-						break;
+					if (p != null)
+					{
+						crossroute.put(p, thread);
+						freePorts.remove(p);
+						if (freePorts.isEmpty())
+							break;
+					}
+					else
+						freeThreads.add(thread);
 				}
+			}
+			if (!freePorts.isEmpty() && !freeThreads.isEmpty())
+			{
+				for (int i = 0; i < Math.min(freePorts.size(), freeThreads.size()); i++)
+					crossroute.put(freePorts.get(i), freeThreads.get(i));
 			}
 		}
 	}

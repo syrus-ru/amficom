@@ -17,11 +17,12 @@ public class SchemeCableLink extends StubResource
 		implements Transferable, Serializable
 {
 	public static final String typ = "schemecablelink";
+	public static final char delimeter = ':';
 	private static final long serialVersionUID = 01L;
 	public SchemeCableLink_Transferable transferable;
 
 	public String id = "";
-	public String name = "";
+	private String name = "";
 	public String source_port_id = "";
 	public String target_port_id = "";
 	public String cable_link_id = "";
@@ -60,6 +61,24 @@ public class SchemeCableLink extends StubResource
 	public String getName()
 	{
 		return name;
+	}
+
+	public void setName(String name)
+	{
+		this.name = name;
+		for (Iterator it = cable_threads.iterator(); it.hasNext();)
+		{
+			SchemeCableThread thread = (SchemeCableThread)it.next();
+			thread.name = new StringBuffer(name).append(delimeter).append(parseName(thread.getName())).toString();
+		}
+	}
+
+	static String parseName(String name)
+	{
+		int pos = name.lastIndexOf(delimeter);
+		if (pos == -1)
+			return name;
+		return pos == name.length() ? name : name.substring(pos + 1);
 	}
 
 	public String getId()
@@ -107,7 +126,7 @@ public class SchemeCableLink extends StubResource
 	public void setLocalFromTransferable()
 	{
 		id  = transferable.id;
-		name = transferable.name;
+
 		source_port_id = transferable.source_port_id;
 		target_port_id = transferable.target_port_id;
 		cable_link_id = transferable.cable_link_id;
@@ -133,6 +152,8 @@ public class SchemeCableLink extends StubResource
 		cable_threads = new ArrayList();
 		for (int i = 0; i < transferable.cable_threads.length; i++)
 			cable_threads.add(new SchemeCableThread(transferable.cable_threads[i]));
+
+		setName(transferable.name);
 
 		attributes = new HashMap(transferable.attributes.length);
 		for(int i = 0; i < transferable.attributes.length; i++)
@@ -189,7 +210,6 @@ public class SchemeCableLink extends StubResource
 
 		SchemeCableLink link = new SchemeCableLink(dataSource.GetUId(SchemeCableLink.typ));
 
-		link.name = name;
 		link.cable_link_id = cable_link_id;
 		link.cable_link_type_id = cable_link_type_id;
 		link.source_port_id = (String)Pool.get("clonedids", source_port_id);
@@ -215,6 +235,7 @@ public class SchemeCableLink extends StubResource
 
 		for (Iterator it = cable_threads.iterator(); it.hasNext();)
 			link.cable_threads.add(((SchemeCableThread)it.next()).clone(dataSource));
+		link.setName(name);
 
 		link.attributes = ResourceUtil.copyAttributes(dataSource, attributes);
 

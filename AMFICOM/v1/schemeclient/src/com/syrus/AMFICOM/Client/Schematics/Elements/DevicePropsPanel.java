@@ -37,6 +37,7 @@ public class DevicePropsPanel extends JPanel
 		setLayout(new BorderLayout());
 		table = new JTable();
 		table.setSelectionMode(table.getSelectionModel().SINGLE_SELECTION);
+
 		JScrollPane scrollPane = new JScrollPane(table);
 		add(new JLabel("Соответствие волокон кабеля портам"), BorderLayout.NORTH);
 		add(scrollPane, BorderLayout.CENTER);
@@ -54,10 +55,12 @@ public class DevicePropsPanel extends JPanel
 		if (!dev.isCrossRouteValid())
 			dev.createDefaultCrossRoute();
 
-		RouteTableModel tmodel = new RouteTableModel(dev.ports, dev.crossroute);
+		RouteTableModel tmodel = new RouteTableModel(dev.ports, dev.getCrossRoute());
 		table.setModel(tmodel);
 		table.setDefaultEditor(Object.class, new RouteTableEditor(tmodel));
 		table.setDefaultRenderer(Object.class, new RouteTableRenderer(tmodel));
+		table.getColumnModel().getColumn(0).setPreferredWidth(50);
+		table.getColumnModel().getColumn(1).setPreferredWidth(80);
 
 		updateUI();
 	}
@@ -74,7 +77,8 @@ public class DevicePropsPanel extends JPanel
 		{
 			public void itemStateChanged(ItemEvent e)
 			{
-				if (e.getStateChange() == ItemEvent.SELECTED)
+				if (e.getStateChange() == ItemEvent.SELECTED &&
+						e.getItem() instanceof SchemeCableThread)
 				{
 					for (int i = 0; i < getRowCount(); i++)
 					{
@@ -84,6 +88,17 @@ public class DevicePropsPanel extends JPanel
 						{
 							box.setSelected(null);
 							table.setRowSelectionInterval(i, i);
+							dev.getCrossRoute().remove(getObjectResource(i, 0));
+						}
+					}
+					for (int i = 0; i < getRowCount(); i++)
+					{
+						ObjectResourceComboBox box = (ObjectResourceComboBox) getValueAt(i, 1);
+						if (e.getItem().equals(box.getSelectedItem()) &&
+								e.getSource().equals(box))
+						{
+							table.setRowSelectionInterval(i, i);
+							dev.getCrossRoute().put(getObjectResource(i, 0), box.getSelectedItem());
 						}
 					}
 				}
@@ -106,7 +121,7 @@ public class DevicePropsPanel extends JPanel
 			for (int i = 0; i < sortedPorts.size(); i++)
 			{
 				SchemePort p = (SchemePort)it.next();
-				data[i][0] = p.getName();
+				data[i][0] = p;
 
 				SchemeCableThread thread = (SchemeCableThread)crossroute.get(p);
 				ObjectResourceComboBox box = new ObjectResourceComboBox();
@@ -120,82 +135,76 @@ public class DevicePropsPanel extends JPanel
 			super.setDataVector(data, columnNames);
 		}
 
-		public void setValueAt(Object value, int row, int col)
-		{
-			if (col == 1)
-			{
-				for (int i = 0; i < getRowCount(); i++)
-					if (getValueAt(i, 1).equals(value))
-					{
-						super.setValueAt(null, i, 1);
-						fireTableCellUpdated(i, 1);
-					}
-			}
-			super.setValueAt(value, row, col);
-		}
-
 		public boolean isCellEditable(int row, int col)
 		{
 			if (col == 0)
 				return false;
 			return true;
 		}
+
+		public Object getValueAt(int row, int col)
+		{
+			if (col == 0)
+				return ((SchemePort)super.getValueAt(row, col)).getName();
+			return super.getValueAt(row, col);
+		}
+
+		public ObjectResource getObjectResource(int row, int col)
+		{
+			if (col == 0)
+				return (ObjectResource)super.getValueAt(row, col);
+			return ((ObjectResourceComboBox)super.getValueAt(row, col)).getSelectedObjectResource();
+		}
 	}
 
 	class RouteTableEditor extends DefaultCellEditor
-{
-	Object editor;
-	RouteTableModel model;
-
-	public RouteTableEditor(RouteTableModel model)
 	{
-		super(new JTextField());
-		this.model = model;
-	}
+		Object editor;
+		RouteTableModel model;
 
-	public Component getTableCellEditorComponent(JTable table, Object value,
-						boolean isSelected,
-						int row, int column)
-	{
-		editor = value;
-		if(column == 1)
+		public RouteTableEditor(RouteTableModel model)
 		{
-			return (Component)model.getValueAt(row, 1);
+			super(new JTextField());
+			this.model = model;
+			setClickCountToStart(1);
 		}
-		return super.getTableCellEditorComponent (table, value, isSelected, row,  column);
-	 }
 
-	public Object getCellEditorValue()
-	{
-		if(editor instanceof JComboBox)
-			return editor;
-		Object obj = super.getCellEditorValue();
-		return obj;
+		public Component getTableCellEditorComponent(JTable table, Object value,
+				boolean isSelected,
+				int row, int column)
+		{
+			editor = value;
+			if (column == 1)
+			{
+				return (Component) model.getValueAt(row, 1);
+			}
+			return super.getTableCellEditorComponent(table, value, isSelected, row, column);
+		}
+
+		public Object getCellEditorValue()
+		{
+			if (editor instanceof JComboBox)
+				return editor;
+			Object obj = super.getCellEditorValue();
+			return obj;
+		}
 	}
 
-	public int getClickCountToStart()
+	class RouteTableRenderer extends DefaultTableCellRenderer
 	{
-		return 0;
+		RouteTableModel model;
+		public RouteTableRenderer(RouteTableModel model)
+		{
+			this.model = model;
+		}
+
+		public Component getTableCellRendererComponent(JTable table, Object value,
+				boolean isSelected, boolean hasFocus, int row, int column)
+		{
+			if (column == 1)
+				return (Component) model.getValueAt(row, 1);
+
+			return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+		}
 	}
-}
-
-class RouteTableRenderer extends DefaultTableCellRenderer
-{
-	RouteTableModel model;
-	public RouteTableRenderer(RouteTableModel model)
-	{
-		this.model = model;
-	}
-
-	public Component getTableCellRendererComponent(JTable table, Object value,
-			boolean isSelected, boolean hasFocus, int row, int column)
-	{
-		if(column == 1)
-			return (Component)model.getValueAt(row, 1);
-
-		return  super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-	}
-}
-
-
 }
