@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.27 2005/02/28 14:35:57 bass Exp $
+ * $Id: MapFrame.java,v 1.28 2005/02/28 16:16:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,8 +10,6 @@
 
 package com.syrus.AMFICOM.Client.Map.UI;
 
-import com.syrus.AMFICOM.Client.Map.MapConnectionException;
-import com.syrus.AMFICOM.Client.Map.MapDataException;
 import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -42,8 +40,9 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.Module;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapConnection;
+import com.syrus.AMFICOM.Client.Map.MapConnectionException;
+import com.syrus.AMFICOM.Client.Map.MapDataException;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.Client.Map.NetMapViewer;
@@ -82,8 +81,8 @@ import com.syrus.AMFICOM.scheme.corba.Scheme;
  * 
  * 
  * 
- * @version $Revision: 1.27 $, $Date: 2005/02/28 14:35:57 $
- * @author $Author: bass $
+ * @version $Revision: 1.28 $, $Date: 2005/02/28 16:16:17 $
+ * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
 public class MapFrame extends JInternalFrame 
@@ -524,15 +523,6 @@ public class MapFrame extends JInternalFrame
 		else
 			canClose = true;
 		return canClose;
-	}
-
-	/**
-	 * используется для востанивления класса из базы данных
-	 */
-	public void createFromPool(Map map, LogicalNetLayer logical)
-	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "createFromPool(" + logical + ")");
-		
 	}
 
 	public Map getMap()
