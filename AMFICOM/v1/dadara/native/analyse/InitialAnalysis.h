@@ -12,6 +12,11 @@ class Splash;
 //---------------------------------------------------------------------------------------------------------------
 class InitialAnalysis
 {
+private:
+#ifdef DEBUG_INITIAL_ANALYSIS
+	FILE *logf;
+#endif
+
 public:
 #ifdef debug_lines
 	static const int sz = 1000000;

@@ -32,6 +32,16 @@ InitialAnalysis::InitialAnalysis(
 	int lengthTillZero,			//вычисленная заранее длина ( ==0 -> найти самим)
 	double *externalNoise)		//вычисленный заранее шум ( ==0 -> ищем сами)
 {
+#ifdef DEBUG_INITIAL_ANALYSIS
+	logf = fopen(DEBUG_INITIAL_WIN_LOGF, "a");
+	assert(logf);
+	fprintf(logf, "=== IA invoked\n"
+		"len %d deltaX %g minTh %g minWeld %g minConn %g minES %g\n",
+		data_length, delta_x, minimalThreshold, minimalWeld, minimalConnector, minimalEndingSplash);
+	fprintf(logf, "refSize %d nRefSize %d lTZ %d extNoise %s\n",
+		reflectiveSize, nonReflectiveSize, lengthTillZero, externalNoise ? "present" : "absent");
+#endif
+
 #ifdef debug_lines
     cou = 0;
     for(int i=0; i<sz; i++){col[i] = -1;}
@@ -81,6 +91,9 @@ InitialAnalysis::InitialAnalysis(
 	prf_b("IA: analyse");
 	performAnalysis();
 	prf_b("IA: done");
+#ifdef DEBUG_INITIAL_ANALYSIS
+	fprintf(logf, "IA: resulting nEvents = %d\n", (int)(getEvents().getLength()));
+#endif
 }
 //------------------------------------------------------------------------------------------------------------
 InitialAnalysis::~InitialAnalysis()
@@ -91,6 +104,9 @@ InitialAnalysis::~InitialAnalysis()
     events->disposeAll();
 
     delete events;
+#ifdef DEBUG_INITIAL_ANALYSIS
+	fclose(logf);
+#endif
 }
 //------------------------------------------------------------------------------------------------------------
 void InitialAnalysis::performAnalysis()
