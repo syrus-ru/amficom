@@ -1,5 +1,5 @@
 /*
-* $Id: QP1643ACharacteristrics.java,v 1.1 2004/12/29 08:56:40 bob Exp $
+* $Id: QP1643ACharacteristrics.java,v 1.2 2004/12/29 09:18:08 bob Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -12,6 +12,8 @@ import junit.framework.Test;
 
 import com.syrus.AMFICOM.configuration.Characteristic;
 import com.syrus.AMFICOM.configuration.CharacteristicType;
+import com.syrus.AMFICOM.configuration.CharacteristicTypeDatabase;
+import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicTypeSort;
@@ -24,7 +26,7 @@ import com.syrus.AMFICOM.measurement.ParameterTypeCodenames;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/12/29 08:56:40 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/29 09:18:08 $
  * @author $Author: bob $
  * @module tools
  */
@@ -47,57 +49,94 @@ public class QP1643ACharacteristrics extends ConfigureTestCase{
 		return suiteWrapper(QP1643ACharacteristrics.class);
 	}
 	public void testCreateCharacteristics() throws CreateObjectException, ObjectNotFoundException, RetrieveObjectException{
-		CharacteristicType waveLengthType = CharacteristicType.createInstance(
+		CharacteristicTypeDatabase characteristicTypeDatabase = (CharacteristicTypeDatabase)ConfigurationDatabaseContext.getCharacteristicTypeDatabase();
+		
+		
+		
+		CharacteristicType waveLengthType;
+		try{
+			waveLengthType = characteristicTypeDatabase.retrieveForCodename(ParameterTypeCodenames.TRACE_WAVELENGTH);
+		}catch(ObjectNotFoundException onfe){
+			waveLengthType = CharacteristicType.createInstance(
 				creatorId,
 				ParameterTypeCodenames.TRACE_WAVELENGTH,
 				"reflectometer wavelength",
 				DataType._DATA_TYPE_DOUBLE,									  
 				CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
+				waveLengthType.insert();
+		}
 		
-		CharacteristicType traceLengthType = CharacteristicType.createInstance(
-			creatorId,
-			ParameterTypeCodenames.TRACE_LENGTH,
-			"reflectometer trace length",
-			DataType._DATA_TYPE_DOUBLE,									  
-			CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL); 
 		
-		traceLengthType.insert();
-		
-		CharacteristicType pulseWidthType = CharacteristicType.createInstance(
-			creatorId,
-			ParameterTypeCodenames.TRACE_PULSE_WIDTH,
-			"reflectometer pulse width",
-			DataType._DATA_TYPE_LONG,									  
-			CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL); 
-		
-		pulseWidthType.insert();
+		CharacteristicType traceLengthType;
+		try{
+			traceLengthType = characteristicTypeDatabase.retrieveForCodename(ParameterTypeCodenames.TRACE_LENGTH);
+		}catch(ObjectNotFoundException onfe){
+			traceLengthType = CharacteristicType.createInstance(
+				creatorId,
+				ParameterTypeCodenames.TRACE_LENGTH,
+				"reflectometer trace length",
+				DataType._DATA_TYPE_DOUBLE,									  
+				CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
+				traceLengthType.insert();
 
-		CharacteristicType indexOfRefractionType = CharacteristicType.createInstance(
-			creatorId,
-			ParameterTypeCodenames.TRACE_INDEX_OF_REFRACTION,
-			"reflectometer index of refraction",
-			DataType._DATA_TYPE_DOUBLE,									  
-			CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL); 
+		}
 		
-		indexOfRefractionType.insert();
+		CharacteristicType pulseWidthType;
+		try{
+			pulseWidthType = characteristicTypeDatabase.retrieveForCodename(ParameterTypeCodenames.TRACE_PULSE_WIDTH);
+		}catch(ObjectNotFoundException onfe){
+			pulseWidthType = CharacteristicType.createInstance(
+				creatorId,
+				ParameterTypeCodenames.TRACE_PULSE_WIDTH,
+				"reflectometer pulse width",
+				DataType._DATA_TYPE_LONG,									  
+				CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
+				pulseWidthType.insert();
+		}
 
-		CharacteristicType averageCountType = CharacteristicType.createInstance(
-			creatorId,
-			ParameterTypeCodenames.TRACE_AVERAGE_COUNT,
-			"reflectometer average count",
-			DataType._DATA_TYPE_INTEGER,									  
-			CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL); 
+		CharacteristicType indexOfRefractionType; 
 		
-		averageCountType.insert();
+		try{
+			indexOfRefractionType = characteristicTypeDatabase.retrieveForCodename(ParameterTypeCodenames.TRACE_INDEX_OF_REFRACTION);
+		}catch(ObjectNotFoundException onfe){
+			indexOfRefractionType = CharacteristicType.createInstance(
+				creatorId,
+				ParameterTypeCodenames.TRACE_INDEX_OF_REFRACTION,
+				"reflectometer index of refraction",
+				DataType._DATA_TYPE_DOUBLE,									  
+				CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
+				indexOfRefractionType.insert();
+		}
+		
+		CharacteristicType averageCountType;
+		
+		try{
+			averageCountType = characteristicTypeDatabase.retrieveForCodename(ParameterTypeCodenames.TRACE_AVERAGE_COUNT);
+		}catch(ObjectNotFoundException onfe){
+			averageCountType = CharacteristicType.createInstance(
+				creatorId,
+				ParameterTypeCodenames.TRACE_AVERAGE_COUNT,
+				"reflectometer average count",
+				DataType._DATA_TYPE_INTEGER,									  
+				CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL); 
+			
+			averageCountType.insert();
+		}
 
-		CharacteristicType resoulutionType = CharacteristicType.createInstance(
-			creatorId,
-			ParameterTypeCodenames.TRACE_RESOLUTION,
-			"reflectometer resolution",
-			DataType._DATA_TYPE_DOUBLE,									  
-			CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL); 
+		CharacteristicType resoulutionType;
 		
-		averageCountType.insert();
+		try{
+			resoulutionType = characteristicTypeDatabase.retrieveForCodename(ParameterTypeCodenames.TRACE_RESOLUTION);
+		}catch(ObjectNotFoundException onfe){
+			resoulutionType = CharacteristicType.createInstance(
+				creatorId,
+				ParameterTypeCodenames.TRACE_RESOLUTION,
+				"reflectometer resolution",
+				DataType._DATA_TYPE_DOUBLE,									  
+				CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL); 
+			
+			resoulutionType.insert();
+		}
 
 		MeasurementPort measurementPort = new MeasurementPort(new Identifier("MeasurementPort_19"));
 		
