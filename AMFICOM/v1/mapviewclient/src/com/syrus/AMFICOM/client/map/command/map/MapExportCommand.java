@@ -1,5 +1,5 @@
 /*
- * $Id: MapExportCommand.java,v 1.13 2005/02/25 13:49:16 krupenn Exp $
+ * $Id: MapExportCommand.java,v 1.14 2005/03/01 15:38:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,9 +11,11 @@
 package com.syrus.AMFICOM.Client.Map.Command.Map;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import java.util.LinkedList;
 import javax.swing.JDesktopPane;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
@@ -35,7 +37,7 @@ import com.syrus.AMFICOM.map.XMLMapObjectLoader;
  * что активной карты нет, и карта центрируется по умолчанию
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/02/25 13:49:16 $
+ * @version $Revision: 1.14 $, $Date: 2005/03/01 15:38:19 $
  * @module mapviewclient_v1
  */
 public class MapExportCommand extends ExportCommand
@@ -125,6 +127,21 @@ public class MapExportCommand extends ExportCommand
 		}
 	}
 
+	Collection getAllElements(Map map)
+	{
+		Collection allElements = new LinkedList();
+
+		allElements.addAll(map.getMarks());
+		allElements.addAll(map.getTopologicalNodes());
+		allElements.addAll(map.getSiteNodes());
+
+		allElements.addAll(map.getPhysicalLinks());
+		allElements.addAll(map.getNodeLinks());
+		allElements.addAll(map.getCollectors());
+
+		return allElements;
+	}
+
 	protected void saveESF(Map map, String fileName)
 	{
 		java.util.Map exportColumns = null;
@@ -140,7 +157,7 @@ public class MapExportCommand extends ExportCommand
 		}
 		super.endObject();
 
-		for(Iterator it = map.getAllElements().iterator(); it.hasNext();)
+		for(Iterator it = getAllElements(map).iterator(); it.hasNext();)
 		{
 			MapElement me = (MapElement )it.next();
 			String entityCodeString = ObjectEntities.codeToString(me.getId().getMajor());
