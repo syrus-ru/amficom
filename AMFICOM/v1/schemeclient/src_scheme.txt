@@ -27,7 +27,6 @@ src\com\syrus\AMFICOM\Client\General\Event\CreatePathEvent.java
 src\com\syrus\AMFICOM\Client\General\Event\SchemeElementsEvent.java
 src\com\syrus\AMFICOM\Client\General\Event\SchemeNavigateEvent.java
 src\com\syrus\AMFICOM\Client\General\Lang\LangModelSchematics.java
-src\com\syrus\AMFICOM\Client\General\Lang\LangModelSchematics_ru.java
 src\com\syrus\AMFICOM\Client\General\Model\DefaultSchematicsApplicationModelFactory.java
 src\com\syrus\AMFICOM\Client\General\Model\SchematicsApplicationModel.java
 src\com\syrus\AMFICOM\Client\General\Model\SchematicsApplicationModelFactory.java

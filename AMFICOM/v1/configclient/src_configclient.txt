@@ -60,7 +60,6 @@ src/com/syrus/AMFICOM/Client/General/Command/Config/OpenCatalogCommand.java
 src/com/syrus/AMFICOM/Client/General/Command/Config/OpenDomainsCommand.java
 src/com/syrus/AMFICOM/Client/General/Command/Config/ViewConfNavigatorCommand.java
 src/com/syrus/AMFICOM/Client/General/Lang/LangModelConfig.java
-src/com/syrus/AMFICOM/Client/General/Lang/LangModelConfig_ru.java
 src/com/syrus/AMFICOM/Client/Resource/Alarm/AlarmType.java
 src/com/syrus/AMFICOM/Client/Resource/Alarm/AlertingMessage.java
 src/com/syrus/AMFICOM/Client/Resource/Alarm/AlertingMessageUser.java

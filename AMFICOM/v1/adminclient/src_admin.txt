@@ -27,7 +27,6 @@ src/com/syrus/AMFICOM/Client/General/Command/Admin/OpenMaintenanceCommand.java
 src/com/syrus/AMFICOM/Client/General/Command/Admin/OpenObjectFrameCommand.java
 src/com/syrus/AMFICOM/Client/General/Command/Admin/ViewObjectNavigatorCommand.java
 src/com/syrus/AMFICOM/Client/General/Lang/LangModelAdmin.java
-src/com/syrus/AMFICOM/Client/General/Lang/LangModelAdmin_ru.java
 src/com/syrus/AMFICOM/Client/General/Model/AdminApplicationModel.java
 src/com/syrus/AMFICOM/Client/General/Model/AdminApplicationModelFactory.java
 src/com/syrus/AMFICOM/Client/General/Model/DefaultAdminApplicationModelFactory.java
