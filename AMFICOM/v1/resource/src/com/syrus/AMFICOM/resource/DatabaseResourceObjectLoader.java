@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseResourceObjectLoader.java,v 1.7 2005/02/24 16:10:21 bob Exp $
+ * $Id: DatabaseResourceObjectLoader.java,v 1.8 2005/03/04 13:33:42 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.DatabaseException;
-import com.syrus.AMFICOM.general.Identified;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/24 16:10:21 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/03/04 13:33:42 $
+ * @author $Author: bass $
  * @module resource_v1
  */
 public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
@@ -163,10 +163,10 @@ public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
 			Identifier identifier = null;
 			if (object instanceof Identifier)
 				identifier = (Identifier)object;
-			else if (object instanceof Identified)
-				identifier = ((Identified)object).getId();
+			else if (object instanceof Identifiable)
+				identifier = ((Identifiable)object).getId();
 			else
-				throw new IllegalDataException("ResourceObjectLoader.delete | Object " + object.getClass().getName() + " isn't Identifier or Identified"); //$NON-NLS-1$ //$NON-NLS-2$
+				throw new IllegalDataException("ResourceObjectLoader.delete | Object " + object.getClass().getName() + " isn't Identifier or Identifiable"); //$NON-NLS-1$ //$NON-NLS-2$
 			Short entityCode = new Short(identifier.getMajor());
 			Collection list = (Collection)map.get(entityCode);
 			if (list == null) {
@@ -199,8 +199,8 @@ public class DatabaseResourceObjectLoader implements ResourceObjectLoader {
 			Object obj = ids.iterator().next();
 			if (obj instanceof Identifier)
 				entityCode = ((Identifier)obj).getMajor();
-			else if (obj instanceof Identified)
-				entityCode = ((Identified)obj).getId().getMajor();
+			else if (obj instanceof Identifiable)
+				entityCode = ((Identifiable)obj).getId().getMajor();
 		}
 		StorableObjectDatabase database = null;
 		switch (entityCode) {

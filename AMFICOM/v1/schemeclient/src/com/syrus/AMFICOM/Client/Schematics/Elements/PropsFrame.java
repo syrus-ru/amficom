@@ -37,7 +37,7 @@ public class PropsFrame extends JInternalFrame implements OperationListener
 	Identifier characterizedId;
 	CharacteristicSort attributedSort;
 	CharacteristicSort characterizedSort;
-	Characterized characterizedObj;
+	Characterizable characterizedObj;
 	Characterizable attributedObj;
 
 	boolean attributesEditable;
@@ -348,7 +348,7 @@ public class PropsFrame extends JInternalFrame implements OperationListener
 		cPanel.clear();
 	}
 
-	void removeCharacterisric(Characterized object, String name)
+	void removeCharacterisric(Characterizable object, String name)
 	{
 		for (Iterator it = object.getCharacteristics().iterator(); it.hasNext();)
 		{

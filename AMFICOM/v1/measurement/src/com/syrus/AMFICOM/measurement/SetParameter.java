@@ -1,5 +1,5 @@
 /*
- * $Id: SetParameter.java,v 1.21 2005/03/01 15:15:30 arseniy Exp $
+ * $Id: SetParameter.java,v 1.22 2005/03/04 13:34:22 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ package com.syrus.AMFICOM.measurement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
-import com.syrus.AMFICOM.general.Identified;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -27,12 +27,12 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/03/01 15:15:30 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.22 $, $Date: 2005/03/04 13:34:22 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
-public class SetParameter implements TransferableObject, TypedObject, Identified {
+public class SetParameter implements TransferableObject, TypedObject, Identifiable {
 	private Identifier id;
 	private ParameterType type;
 	private byte[] value;	

@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.21 2005/02/14 09:15:45 arseniy Exp $
+ * $Id: CableLinkType.java,v 1.22 2005/03/04 13:32:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.configuration.corba.CableLinkType_Transferable;
 import com.syrus.AMFICOM.configuration.corba.LinkTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.Characterized;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
@@ -32,11 +32,11 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/02/14 09:15:45 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.22 $, $Date: 2005/03/04 13:32:12 $
+ * @author $Author: bass $
  * @module config_v1
  */
-public class CableLinkType extends AbstractLinkType implements Characterized {
+public class CableLinkType extends AbstractLinkType implements Characterizable {
 
 	private static final long   serialVersionUID    = 3257007652839372857L;
 

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.42 2005/02/24 15:22:59 arseniy Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.43 2005/03/04 13:34:22 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import java.util.Map;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
-import com.syrus.AMFICOM.general.Identified;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.SessionContext;
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/02/24 15:22:59 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.43 $, $Date: 2005/03/04 13:34:22 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -661,11 +661,11 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 			if (object instanceof Identifier)
 				identifier = (Identifier) object;
 			else
-				if (object instanceof Identified)
-					identifier = ((Identified) object).getId();
+				if (object instanceof Identifiable)
+					identifier = ((Identifiable) object).getId();
 				else
 					throw new IllegalDataException("DatabaseMeasumentObjectLoader.delete | Object "
-							+ object.getClass().getName() + " isn't Identifier or Identified");
+							+ object.getClass().getName() + " isn't Identifier or Identifiable");
 
 			entityCode = new Short(identifier.getMajor());
 			entityObjects = (Collection) map.get(entityCode);

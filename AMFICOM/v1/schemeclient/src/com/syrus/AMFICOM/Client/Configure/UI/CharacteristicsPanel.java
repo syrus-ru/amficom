@@ -44,9 +44,9 @@ public class CharacteristicsPanel extends GeneralPanel implements
 
 		Identifier characterizedId;
 
-		Characterized characterized;
+		Characterizable characterized;
 
-		CharacterizedObject(CharacteristicSort sort, Characterized characterized,
+		CharacterizedObject(CharacteristicSort sort, Characterizable characterized,
 				Identifier characterizedId) {
 			this.characterized = characterized;
 			this.characterizedId = characterizedId;
@@ -164,7 +164,7 @@ public class CharacteristicsPanel extends GeneralPanel implements
 					}
 				}
 			} else if (obj instanceof CharacterizedObject) {
-				Characterized characterized = ((CharacterizedObject) obj).characterized;
+				Characterizable characterized = ((CharacterizedObject) obj).characterized;
 				List added = (List) addedCharacteristics.get(obj);
 				if (added != null) {
 					for (Iterator it = added.iterator(); it.hasNext();) {
@@ -233,7 +233,7 @@ public class CharacteristicsPanel extends GeneralPanel implements
 	}
 
 	public void setTypeSortMapping(CharacteristicTypeSort typeSort,
-			CharacteristicSort sort, Characterized characterized,
+			CharacteristicSort sort, Characterizable characterized,
 			Identifier characterizedId, boolean isEditable) {
 		typeSortsCharacterizedIds.put(typeSort, new CharacterizedObject(sort,
 				characterized, characterizedId));
@@ -462,7 +462,7 @@ public class CharacteristicsPanel extends GeneralPanel implements
 				} else if (obj instanceof CharacterizedObject) {
 					CharacteristicSort sort = ((CharacterizedObject) obj).sort;
 					Identifier characterizedId = ((CharacterizedObject) obj).characterizedId;
-//					 Characterized characterized =
+//					 Characterizable characterized =
 //					 ((CharacterizedObject)obj).characterized;
 
 					try {

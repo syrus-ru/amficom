@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNodeType.java,v 1.15 2005/02/11 15:14:51 bob Exp $
+ * $Id: SiteNodeType.java,v 1.16 2005/03/04 13:34:49 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,7 +13,7 @@ package com.syrus.AMFICOM.map;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.Characterized;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
@@ -41,11 +41,11 @@ import java.util.List;
  * {@link #codename}, соответствующим какому-либо значению {@link #WELL}, 
  * {@link #PIQUET}, {@link #ATS}, {@link #BUILDING}, {@link #UNBOUND}, 
  * {@link #CABLE_INLET}, {@link #TOWER}
- * @author $Author: bob $
- * @version $Revision: 1.15 $, $Date: 2005/02/11 15:14:51 $
+ * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/03/04 13:34:49 $
  * @module map_v1
  */
-public class SiteNodeType extends StorableObjectType implements Characterized {
+public class SiteNodeType extends StorableObjectType implements Characterizable {
 
 	public static final String WELL = "well";
 	public static final String PIQUET = "piquet";

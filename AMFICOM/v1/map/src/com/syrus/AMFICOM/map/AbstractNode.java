@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractNode.java,v 1.12 2005/03/04 08:05:48 krupenn Exp $
+ * $Id: AbstractNode.java,v 1.13 2005/03/04 13:34:49 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,7 +11,7 @@
 package com.syrus.AMFICOM.map;
 
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.Characterized;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
@@ -27,15 +27,15 @@ import java.util.List;
  * ({@link Map}). Узловой объект характеризуется наличием координат
  * ({@link #location}) и изображением ({@link #imageId}).
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/03/04 08:05:48 $
+ * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/03/04 13:34:49 $
  * @module map_v1
  * @see SiteNode
  * @see TopologicalNode
  */
 public abstract class AbstractNode 
 	extends StorableObject 
-	implements Characterized, MapElement
+	implements Characterizable, MapElement
 {
 
 	static final long serialVersionUID = -2623880496462305233L;

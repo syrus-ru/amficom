@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMapObjectLoader.java,v 1.8 2005/02/24 15:47:37 bob Exp $
+ * $Id: DatabaseMapObjectLoader.java,v 1.9 2005/03/04 13:34:49 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
-import com.syrus.AMFICOM.general.Identified;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/24 15:47:37 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/03/04 13:34:49 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public class DatabaseMapObjectLoader implements MapObjectLoader {
@@ -77,8 +77,8 @@ public class DatabaseMapObjectLoader implements MapObjectLoader {
 			Object obj = ids.iterator().next();
 			if (obj instanceof Identifier)
 				entityCode = ((Identifier) obj).getMajor();
-			else if (obj instanceof Identified)
-				entityCode = ((Identified) obj).getId().getMajor();
+			else if (obj instanceof Identifiable)
+				entityCode = ((Identifiable) obj).getId().getMajor();
 		}
 		try {
 			StorableObjectDatabase database = this.getDatabase(entityCode);

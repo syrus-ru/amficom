@@ -1,5 +1,5 @@
 /**
- * $Id: Mark.java,v 1.19 2005/02/11 15:14:51 bob Exp $
+ * $Id: Mark.java,v 1.20 2005/03/04 13:34:49 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -13,7 +13,7 @@ package com.syrus.AMFICOM.map;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.Characterized;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
@@ -43,11 +43,11 @@ import java.util.ListIterator;
  * в св€зи с чем методы класса {@link AbstractNode}, работающие с лини€ми и 
  * фрагментами линий, переопределены и бросают 
  * <code>{@link UnsupportedOperationException}</code>.
- * @author $Author: bob $
- * @version $Revision: 1.19 $, $Date: 2005/02/11 15:14:51 $
+ * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2005/03/04 13:34:49 $
  * @module map_v1
  */
-public class Mark extends AbstractNode implements Characterized {
+public class Mark extends AbstractNode implements Characterizable {
 
 	public static final String IMAGE_NAME = "mark";
 	/**

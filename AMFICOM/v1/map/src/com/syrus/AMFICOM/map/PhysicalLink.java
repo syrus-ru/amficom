@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLink.java,v 1.32 2005/03/01 15:32:39 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.33 2005/03/04 13:34:49 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -20,7 +20,7 @@ import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.Characterized;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
@@ -48,11 +48,11 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * ѕредуствновленными €вл€ютс€  два типа - 
  * тоннель (<code>{@link PhysicalLinkType#TUNNEL}</code>) 
  * и коллектор (<code>{@link PhysicalLinkType#COLLECTOR}</code>).
- * @author $Author: krupenn $
- * @version $Revision: 1.32 $, $Date: 2005/03/01 15:32:39 $
+ * @author $Author: bass $
+ * @version $Revision: 1.33 $, $Date: 2005/03/04 13:34:49 $
  * @module map_v1
  */
-public class PhysicalLink extends StorableObject implements Characterized, TypedObject, MapElement {
+public class PhysicalLink extends StorableObject implements Characterizable, TypedObject, MapElement {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.49 2005/03/04 13:11:58 arseniy Exp $
+ * $Id: TransmissionPath.java,v 1.50 2005/03/04 13:32:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.Characterized;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
@@ -35,12 +35,12 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 /**
- * @version $Revision: 1.49 $, $Date: 2005/03/04 13:11:58 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.50 $, $Date: 2005/03/04 13:32:12 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
-public class TransmissionPath extends DomainMember implements MonitoredDomainMember, Characterized, TypedObject {
+public class TransmissionPath extends DomainMember implements MonitoredDomainMember, Characterizable, TypedObject {
 
 	private static final long serialVersionUID = 8129503678304843903L;
 

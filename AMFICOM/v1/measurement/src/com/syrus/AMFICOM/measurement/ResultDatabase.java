@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.74 2005/03/01 15:15:30 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.75 2005/03/04 13:34:22 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2005/03/01 15:15:30 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.75 $, $Date: 2005/03/04 13:34:22 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -566,12 +566,12 @@ public class ResultDatabase extends StorableObjectDatabase {
 //				if (object instanceof Identifier)
 //					id = (Identifier) object;
 //				else
-//					if (object instanceof Identified)
-//						id = ((Identified) object).getId();
+//					if (object instanceof Identifiable)
+//						id = ((Identifiable) object).getId();
 //					else
 //						throw new RetrieveObjectException(
 //										"ResultDatabase.retrieveButIdsByMeasurement | Object "
-//												+ object.getClass().getName() + " isn't Identifier or Identified");
+//												+ object.getClass().getName() + " isn't Identifier or Identifiable");
 //
 //				if (id != null) {
 //					buffer.append(DatabaseIdentifier.toSQLString(id));

@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNodeDatabase.java,v 1.15 2005/02/28 14:12:22 bob Exp $
+ * $Id: TopologicalNodeDatabase.java,v 1.16 2005/03/04 13:34:49 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.GeneralDatabaseContext;
-import com.syrus.AMFICOM.general.Identified;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/02/28 14:12:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.16 $, $Date: 2005/03/04 13:34:49 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public class TopologicalNodeDatabase extends StorableObjectDatabase {
@@ -126,11 +126,11 @@ public class TopologicalNodeDatabase extends StorableObjectDatabase {
 				Identifier id = null;
 				if (object instanceof Identifier)
 					id = (Identifier) object;
-				else if (object instanceof Identified)
-					id = ((Identified)object).getId();
+				else if (object instanceof Identifiable)
+					id = ((Identifiable)object).getId();
 				else throw new IllegalDataException(this.getEnityName() + "Database.retrievePhysicalLinks | Object " +
 													object.getClass().getName()
-													+ " isn't Identifier or Identified");
+													+ " isn't Identifier or Identifiable");
 
 				if (id != null){
 					startNodeBuffer.append(DatabaseIdentifier.toSQLString(id));

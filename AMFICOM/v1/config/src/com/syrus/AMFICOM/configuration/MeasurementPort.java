@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.38 2005/02/14 09:15:46 arseniy Exp $
+ * $Id: MeasurementPort.java,v 1.39 2005/03/04 13:32:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.Characterized;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -35,11 +35,11 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/02/14 09:15:46 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.39 $, $Date: 2005/03/04 13:32:12 $
+ * @author $Author: bass $
  * @module config_v1
  */
-public class MeasurementPort extends StorableObject implements Characterized, TypedObject {
+public class MeasurementPort extends StorableObject implements Characterizable, TypedObject {
 	private static final long serialVersionUID = -5100885507408715167L;
 
 	private MeasurementPortType type;

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConfigurationObjectLoader.java,v 1.40 2005/02/24 15:22:40 arseniy Exp $
+ * $Id: DatabaseConfigurationObjectLoader.java,v 1.41 2005/03/04 13:32:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
-import com.syrus.AMFICOM.general.Identified;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.SessionContext;
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/02/24 15:22:40 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.41 $, $Date: 2005/03/04 13:32:12 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
@@ -738,11 +738,11 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 			if (object instanceof Identifier)
 				identifier = (Identifier) object;
 			else
-				if (object instanceof Identified)
-					identifier = ((Identified) object).getId();
+				if (object instanceof Identifiable)
+					identifier = ((Identifiable) object).getId();
 				else
 					throw new IllegalDataException("DatabaseConfigurationObjectLoader.delete | Object "
-							+ object.getClass().getName() + " isn't Identifier or Identified");
+							+ object.getClass().getName() + " isn't Identifier or Identifiable");
 
 			entityCode = new Short(identifier.getMajor());
 			entityObjects = (Collection) map.get(entityCode);

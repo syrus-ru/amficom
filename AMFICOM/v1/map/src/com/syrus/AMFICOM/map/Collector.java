@@ -1,5 +1,5 @@
 /**
- * $Id: Collector.java,v 1.23 2005/02/14 10:30:56 bob Exp $
+ * $Id: Collector.java,v 1.24 2005/03/04 13:34:49 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,7 +13,7 @@ package com.syrus.AMFICOM.map;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.Characterized;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
@@ -41,13 +41,13 @@ import java.util.List;
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  * 
- * @author $Author: bob $
- * @version $Revision: 1.23 $, $Date: 2005/02/14 10:30:56 $
+ * @author $Author: bass $
+ * @version $Revision: 1.24 $, $Date: 2005/03/04 13:34:49 $
  * @module map_v1
  */
 public class Collector 
 	extends StorableObject 
-	implements Characterized, MapElement {
+	implements Characterizable, MapElement {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>

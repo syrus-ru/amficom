@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLink.java,v 1.24 2005/02/24 15:47:38 bob Exp $
+ * $Id: NodeLink.java,v 1.25 2005/03/04 13:34:49 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,7 @@ import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.Characterized;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
@@ -41,11 +41,11 @@ import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты 
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: bob $
- * @version $Revision: 1.24 $, $Date: 2005/02/24 15:47:38 $
+ * @author $Author: bass $
+ * @version $Revision: 1.25 $, $Date: 2005/03/04 13:34:49 $
  * @module map_v1
  */
-public class NodeLink extends StorableObject implements Characterized, MapElement {
+public class NodeLink extends StorableObject implements Characterizable, MapElement {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>

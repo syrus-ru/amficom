@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.61 2005/02/24 10:20:23 arseniy Exp $
+ * $Id: KIS.java,v 1.62 2005/03/04 13:32:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.Characterized;
+import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -35,12 +35,12 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.administration.DomainMember;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/02/24 10:20:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.62 $, $Date: 2005/03/04 13:32:12 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
-public class KIS extends DomainMember implements Characterized {
+public class KIS extends DomainMember implements Characterizable {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>

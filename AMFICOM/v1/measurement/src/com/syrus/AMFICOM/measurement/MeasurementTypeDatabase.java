@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.75 2005/02/28 14:12:18 bob Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.76 2005/03/04 13:34:22 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2005/02/28 14:12:18 $
- * @author $Author: bob $
+ * @version $Revision: 1.76 $, $Date: 2005/03/04 13:34:22 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 
@@ -676,12 +676,12 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 //				if (object instanceof Identifier)
 //					id = (Identifier) object;
 //				else
-//					if (object instanceof Identified)
-//						id = ((Identified) object).getId();
+//					if (object instanceof Identifiable)
+//						id = ((Identifiable) object).getId();
 //					else
 //						throw new RetrieveObjectException(
 //								getEnityName() + "Database.retrieveButIdsByMeasurementPortType | Object "
-//								+ object.getClass().getName() + " isn't Identifier or Identified");
+//								+ object.getClass().getName() + " isn't Identifier or Identifiable");
 //	
 //				if (id != null) {
 //					buffer.append(DatabaseIdentifier.toSQLString(id));
