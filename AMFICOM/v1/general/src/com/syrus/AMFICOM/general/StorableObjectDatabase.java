@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.76 2005/02/03 14:57:26 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.77 2005/02/03 19:57:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.76 $, $Date: 2005/02/03 14:57:26 $
- * @author $Author: bob $
+ * @version $Revision: 1.77 $, $Date: 2005/02/03 19:57:14 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -1214,90 +1214,80 @@ public abstract class StorableObjectDatabase {
 	 * @throws RetrieveObjectException
 	 * @throws IllegalDataException
 	 */
-	protected Map retrieveLinkedEntities(List storableObjects, String tableName, String idColumnName, String linkedIdColumnName) throws RetrieveObjectException, IllegalDataException{
+	protected Map retrieveLinkedEntityIds(List storableObjects, String tableName, String idColumnName, String linkedIdColumnName) throws RetrieveObjectException, IllegalDataException{
 		if (storableObjects == null || storableObjects.isEmpty())
 			return Collections.EMPTY_MAP;
-		String sql;
-		
-		{
-			StringBuffer buffer = new StringBuffer(SQL_SELECT);
-			buffer.append(idColumnName);
-			buffer.append(COMMA);
-			buffer.append(linkedIdColumnName); 
-			buffer.append(SQL_FROM);
-			buffer.append(tableName);
-			buffer.append(SQL_WHERE);
-			buffer.append(idColumnName);
-			buffer.append(SQL_IN);
-			buffer.append(OPEN_BRACKET);
-			
-			int i = 1;
-			for (Iterator it = storableObjects.iterator(); it.hasNext();i++) {
-				Object object = it.next();
-				Identifier id = null;
-				if (object instanceof Identifier)
-					id = (Identifier) object;
-				else if (object instanceof Identified)
-					id = ((Identified)object).getId();
-				else throw new IllegalDataException("StorableObjectDatabase.retrieveLinkedEntities | Object " +
-													object.getClass().getName()
-													+ " isn't Identifier or Identified");
 
-				if (id != null){
-					buffer.append(DatabaseIdentifier.toSQLString(id));
-					if (it.hasNext()) {
-						if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0)){
-							buffer.append(COMMA);
-						}
-						else {
-							buffer.append(CLOSE_BRACKET);
-							buffer.append(SQL_OR);
-							buffer.append(idColumnName);				
-							buffer.append(SQL_IN);
-							buffer.append(OPEN_BRACKET);
-						}
+		StringBuffer buffer = new StringBuffer(SQL_SELECT);
+		buffer.append(idColumnName);
+		buffer.append(COMMA);
+		buffer.append(linkedIdColumnName);
+		buffer.append(SQL_FROM);
+		buffer.append(tableName);
+		buffer.append(SQL_WHERE);
+		buffer.append(idColumnName);
+		buffer.append(SQL_IN);
+		buffer.append(OPEN_BRACKET);
+
+		int i = 1;
+		for (Iterator it = storableObjects.iterator(); it.hasNext(); i++) {
+			Object object = it.next();
+			Identifier id = null;
+			if (object instanceof Identifier)
+				id = (Identifier) object;
+			else
+				if (object instanceof Identified)
+					id = ((Identified) object).getId();
+				else
+					throw new IllegalDataException("StorableObjectDatabase.retrieveLinkedEntityIds | Object "
+							+ object.getClass().getName()
+							+ " isn't Identifier or Identified");
+
+			if (id != null) {
+				buffer.append(DatabaseIdentifier.toSQLString(id));
+				if (it.hasNext()) {
+					if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0)) {
+						buffer.append(COMMA);
+					}
+					else {
+						buffer.append(CLOSE_BRACKET);
+						buffer.append(SQL_OR);
+						buffer.append(idColumnName);
+						buffer.append(SQL_IN);
+						buffer.append(OPEN_BRACKET);
 					}
 				}
 			}
-			buffer.append(CLOSE_BRACKET);
-			
-			sql = buffer.toString();
 		}
+		buffer.append(CLOSE_BRACKET);
+
+		String sql = buffer.toString();
+
 		Statement statement = null;
 		ResultSet resultSet = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("StorableObjectDatabase.retrieveLinkedEntities | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("StorableObjectDatabase.retrieveLinkedEntityIds | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 
-			java.util.Map storableObjectLinkedEntityIds = new HashMap();
-			while (resultSet.next()){		
-				Identifier collectorId = DatabaseIdentifier.getIdentifier(resultSet, idColumnName);
-				StorableObject storableObject = null;
-				for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-					StorableObject storableObject2 = (StorableObject) it.next();
-					if (storableObject2.getId().equals(collectorId)){
-						storableObject = storableObject2;
-						break;
-					}
-				}
-				if (storableObject == null){
-                    String mesg = "StorableObjectDatabase.retrieveLinkedEntities | Cannot found correspond entity " ;
-                    throw new RetrieveObjectException(mesg);
-                }
-				List linkedEntityIds = (List)storableObjectLinkedEntityIds.get(storableObject);
-				if (linkedEntityIds == null){
+			Map linkedEntityIdsMap = new HashMap();
+			Identifier storabeObjectId;
+			List linkedEntityIds;
+			while (resultSet.next()) {
+				storabeObjectId = DatabaseIdentifier.getIdentifier(resultSet, idColumnName);
+				linkedEntityIds = (List) linkedEntityIdsMap.get(storabeObjectId);
+				if (linkedEntityIds == null) {
 					linkedEntityIds = new LinkedList();
-					storableObjectLinkedEntityIds.put(storableObject, linkedEntityIds);
+					linkedEntityIdsMap.put(storabeObjectId, linkedEntityIds);
 				}
 				linkedEntityIds.add(DatabaseIdentifier.getIdentifier(resultSet, linkedIdColumnName));
 			}
-			
-			return storableObjectLinkedEntityIds;
-			
-		} catch (SQLException sqle) {
-			String mesg = "StorableObjectDatabase.retrieveLinkedEntities | Cannot retrieve linked entites for entity -- " + sqle.getMessage();
+
+			return linkedEntityIdsMap;
+		}
+		catch (SQLException sqle) {
+			String mesg = "StorableObjectDatabase.retrieveLinkedEntityIds | Cannot retrieve linked entity identifiers for entity -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -1329,22 +1319,22 @@ public abstract class StorableObjectDatabase {
 		if (idLinkedIdMap == null || idLinkedIdMap.isEmpty())
 			return;
 
-        StringBuffer buffer = new StringBuffer(SQL_SELECT);
-        buffer.append(idColumnName);
-        buffer.append(COMMA);
-        buffer.append(linkedIdColumnName);
-        buffer.append(SQL_FROM);
-        buffer.append(tableName);
-        buffer.append(SQL_WHERE);
-        buffer.append(idColumnName);
-        buffer.append(SQL_IN);
-        buffer.append(OPEN_BRACKET);
+		StringBuffer buffer = new StringBuffer(SQL_SELECT);
+		buffer.append(idColumnName);
+		buffer.append(COMMA);
+		buffer.append(linkedIdColumnName);
+		buffer.append(SQL_FROM);
+		buffer.append(tableName);
+		buffer.append(SQL_WHERE);
+		buffer.append(idColumnName);
+		buffer.append(SQL_IN);
+		buffer.append(OPEN_BRACKET);
 
-        int i = 0;
-		for (Iterator iter = idLinkedIdMap.keySet().iterator(); iter.hasNext();i++) {
-	        Identifier id = (Identifier) iter.next();
-	        buffer.append(DatabaseIdentifier.toSQLString(id));
-	        if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+		int i = 0;
+		for (Iterator iter = idLinkedIdMap.keySet().iterator(); iter.hasNext(); i++) {
+			Identifier id = (Identifier) iter.next();
+			buffer.append(DatabaseIdentifier.toSQLString(id));
+			if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0))
 				buffer.append(COMMA);
 			else {
 				buffer.append(CLOSE_BRACKET);
@@ -1355,80 +1345,80 @@ public abstract class StorableObjectDatabase {
 			}
 		}
 		buffer.append(CLOSE_BRACKET);
-		
+
 		java.util.Map dbLinkedObjIdsMap = new HashMap();
-		
-        String sql = buffer.toString();
-        Statement statement = null;
-        ResultSet resultSet = null;
-        Connection connection = DatabaseConnection.getConnection();
-        try {
-            statement = connection.createStatement();
-            Log.debugMessage("StorableObjectDatabase.updateLinkedEntities | Trying: " + sql, Log.DEBUGLEVEL09);
-            resultSet = statement.executeQuery(sql);
-            
-            while (resultSet.next()) {
-            	Identifier id = DatabaseIdentifier.getIdentifier(resultSet, idColumnName);
-            	Identifier linkedObjId = DatabaseIdentifier.getIdentifier(resultSet, linkedIdColumnName);
-            	List linkedObjIdList = (List) dbLinkedObjIdsMap.get(id);
-            	if (linkedObjIdList == null){
-            		linkedObjIdList = new LinkedList();
-            		dbLinkedObjIdsMap.put(id, linkedObjIdList);
-            	}
-            	linkedObjIdList.add(linkedObjId);
-            }	
-        } catch (SQLException sqle) {
-            String mesg = "StorableObjectDatabase.updateLinkedEntities | SQLException: " + sqle.getMessage();
-            throw new UpdateObjectException(mesg, sqle);
-        }
-		
-		
-		
-		
+
+		String sql = buffer.toString();
+		Statement statement = null;
+		ResultSet resultSet = null;
+		Connection connection = DatabaseConnection.getConnection();
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("StorableObjectDatabase.updateLinkedEntities | Trying: " + sql, Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql);
+
+			while (resultSet.next()) {
+				Identifier id = DatabaseIdentifier.getIdentifier(resultSet, idColumnName);
+				Identifier linkedObjId = DatabaseIdentifier.getIdentifier(resultSet, linkedIdColumnName);
+				List linkedObjIdList = (List) dbLinkedObjIdsMap.get(id);
+				if (linkedObjIdList == null) {
+					linkedObjIdList = new LinkedList();
+					dbLinkedObjIdsMap.put(id, linkedObjIdList);
+				}
+				linkedObjIdList.add(linkedObjId);
+			}
+		}
+		catch (SQLException sqle) {
+			String mesg = "StorableObjectDatabase.updateLinkedEntities | SQLException: " + sqle.getMessage();
+			throw new UpdateObjectException(mesg, sqle);
+		}
+
 		java.util.Map insertMap = new HashMap();
 		java.util.Map deleteMap = new HashMap();
 		for (Iterator iter = idLinkedIdMap.keySet().iterator(); iter.hasNext();) {
 			Identifier id = (Identifier) iter.next();
-	        List linkedObjIdList = (List) idLinkedIdMap.get(id);	
-            List dbPhysicalLinkIds = (List) dbLinkedObjIdsMap.get(id);
+			List linkedObjIdList = (List) idLinkedIdMap.get(id);
+			List dbPhysicalLinkIds = (List) dbLinkedObjIdsMap.get(id);
 
-            List deleteList = null;
-            List insertList = null;
-            // prepare list for	deleting
-            for (Iterator it = linkedObjIdList.iterator(); it.hasNext();) {
-            	Identifier linkedObjectId = (Identifier) it.next();
-            	if (!dbPhysicalLinkIds.contains(linkedObjectId)){
-            		if (insertList == null){
-            			insertList = new LinkedList();
-            			insertMap.put(id, insertList);
-            		}
-            		insertList.add(linkedObjectId);
-            	}
-            }
-            
-            //  prepare list for inserting
-            for (Iterator it = dbPhysicalLinkIds.iterator(); it.hasNext();) {
-                Identifier dbPhysicalLinkId = (Identifier) it.next();
-    			if(!linkedObjIdList.contains(dbPhysicalLinkId)) {
-    				if (deleteList == null){
-    					deleteList = new LinkedList();
-    					deleteMap.put(id, insertList);
-    				}
-    				deleteList.add(dbPhysicalLinkId);
-                }    			
-    		}
+			List deleteList = null;
+			List insertList = null;
+			// prepare list for deleting
+			for (Iterator it = linkedObjIdList.iterator(); it.hasNext();) {
+				Identifier linkedObjectId = (Identifier) it.next();
+				if (!dbPhysicalLinkIds.contains(linkedObjectId)) {
+					if (insertList == null) {
+						insertList = new LinkedList();
+						insertMap.put(id, insertList);
+					}
+					insertList.add(linkedObjectId);
+				}
+			}
+
+			// prepare list for inserting
+			for (Iterator it = dbPhysicalLinkIds.iterator(); it.hasNext();) {
+				Identifier dbPhysicalLinkId = (Identifier) it.next();
+				if (!linkedObjIdList.contains(dbPhysicalLinkId)) {
+					if (deleteList == null) {
+						deleteList = new LinkedList();
+						deleteMap.put(id, insertList);
+					}
+					deleteList.add(dbPhysicalLinkId);
+				}
+			}
 		}
 		try {
 			this.insertLinkedEntityIds(insertMap, tableName, idColumnName, linkedIdColumnName);
 			this.deleteLinedEntityIds(deleteMap, tableName, linkedIdColumnName);
-		} catch (CreateObjectException e) {
+		}
+		catch (CreateObjectException e) {
 			throw new UpdateObjectException(e);
 		}
 	}
 	
 	/**
-	 * 
-	 * @param idLinkedObjectIdsMap map of &lt;&lt;Identifier&gt; collectorId , List&lt;Identifier&gt; physicalLinkIds&gt; 
+	 * @param idLinkedObjectIdsMap
+	 *          map of &lt;&lt;Identifier&gt; collectorId , List&lt;Identifier&gt;
+	 *          physicalLinkIds&gt;
 	 * @throws CreateObjectException
 	 */
 	private void insertLinkedEntityIds(Map idLinkedObjectIdsMap, String tableName, String idColumnName, String linkedIdColumnName) throws CreateObjectException{
