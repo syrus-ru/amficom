@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.60 2005/03/30 15:28:17 arseniy Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.61 2005/03/31 08:58:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/03/30 15:28:17 $
+ * @version $Revision: 1.61 $, $Date: 2005/03/31 08:58:44 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -467,7 +467,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 				mdmIdsMap.put(monitoredElement.getId(), mdmIds);
 			}
 
-			super.updateLinkedEntities(mdmIdsMap, linkTable, MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID, linkColumn);
+			super.updateLinkedEntityIds(mdmIdsMap, linkTable, MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID, linkColumn);
 		}
 		catch (IllegalDataException ide) {
 			throw new UpdateObjectException("Cannot update monitored element domain members ids -- "  + ide.getMessage(), ide);

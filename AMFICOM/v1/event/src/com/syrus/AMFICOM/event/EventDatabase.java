@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.21 2005/03/11 10:58:19 bob Exp $
+ * $Id: EventDatabase.java,v 1.22 2005/03/31 08:58:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/03/11 10:58:19 $
- * @author $Author: bob $
+ * @version $Revision: 1.22 $, $Date: 2005/03/31 08:58:50 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 
@@ -336,7 +336,7 @@ public class EventDatabase extends StorableObjectDatabase {
 			eventSourceIdsMap.put(event.getId(), eventSourceIds);
 		}
 
-		this.updateLinkedEntities(eventSourceIdsMap,
+		this.updateLinkedEntityIds(eventSourceIdsMap,
 				ObjectEntities.EVENTSOURCE_LINK_ENTITY,
 				EventWrapper.LINK_COLUMN_EVENT_ID,
 				EventWrapper.LINK_COLUMN_SOURCE_ID);
