@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat;
 
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
+import com.syrus.AMFICOM.Client.Schedule.ConstStorage;
 
 /**
  * Storage for frequency used gui routines

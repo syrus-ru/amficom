@@ -33,10 +33,10 @@ import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.TestUpdateEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.client_.general.ui_.ColumnSorter;
@@ -465,7 +465,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 				Collection msList = MeasurementStorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition, true);
 				for (Iterator it = msList.iterator(); it.hasNext();) {
 					MeasurementSetup ts = (MeasurementSetup) it.next();
-					List meIds = ts.getMonitoredElementIds();
+					Collection meIds = ts.getMonitoredElementIds();
 					if (meIds.isEmpty()) {
 						// System.out.println("meIds.length
 						// == 0\t" +
@@ -508,7 +508,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 				/**
 				 * FIXME WARNING!!! test when more than one element
 				 */
-				Identifier msId = (Identifier) this.test.getMeasurementSetupIds().get(0);
+				Identifier msId = (Identifier) this.test.getMeasurementSetupIds().iterator().next();
 				MeasurementSetup measurementSetup = (MeasurementSetup) MeasurementStorableObjectPool.getStorableObject(
 					msId, true);
 				if ((this.test.getEvaluationType() != null) || (this.test.getAnalysisType() != null)) {

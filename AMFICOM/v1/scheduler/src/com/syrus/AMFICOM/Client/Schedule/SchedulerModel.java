@@ -24,14 +24,13 @@ import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
 import com.syrus.AMFICOM.Client.General.Event.TestUpdateEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
+import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.RISDSurveyDataSource;
-import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
+import com.syrus.AMFICOM.Client.Resource.RISDDataSource;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
@@ -41,12 +40,10 @@ import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
 import com.syrus.AMFICOM.measurement.AnalysisType;
@@ -194,9 +191,10 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		// return new RISDSurveyDataSource(si);
 		// else if (connection.equals("Empty"))
 		// return new EmptySurveyDataSource(si);
-		if (this.dataSourceInterface == null)
-			this.dataSourceInterface = new RISDSurveyDataSource(si);
+//		if (this.dataSourceInterface == null)
+			this.dataSourceInterface = new RISDDataSource(si);
 		return this.dataSourceInterface;
+//		return null;
 	}
 
 	public List getTests() {
@@ -291,16 +289,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		} else if (commandName.equals(COMMAND_COMMIT_CHANGES)) {
 			try {
 				commitChanges();
-			} catch (VersionCollisionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (DatabaseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (CommunicationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalDataException e) {
+			} catch (ApplicationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -508,8 +497,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		}
 	}
 
-	private void commitChanges() throws VersionCollisionException, DatabaseException, CommunicationException,
-			IllegalDataException {
+	private void commitChanges() throws ApplicationException {
 
 		/**
 		 * FIXME remove deleted tests
@@ -611,10 +599,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			StorableObject storableObject = MeasurementStorableObjectPool.getStorableObject(test.getId(), false);
 			System.out.println(storableObject);
 			System.out.println(storableObject.getId());
-		} catch (DatabaseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (CommunicationException e1) {
+		} catch (ApplicationException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}

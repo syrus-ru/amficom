@@ -31,8 +31,6 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -222,7 +220,7 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 		flashUnsavedTest();
 	}
 
-	public void addTest(Identifier id) throws DatabaseException, CommunicationException {
+	public void addTest(Identifier id) throws ApplicationException {
 		Test test = (Test) MeasurementStorableObjectPool.getStorableObject(id, true);
 		if (test != null)
 			addTest(test);
@@ -290,7 +288,7 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 
 		try {
 			MeasurementSetup measurementSetup = (MeasurementSetup) MeasurementStorableObjectPool.getStorableObject(
-				(Identifier) test.getMeasurementSetupIds().get(0), true);
+				(Identifier) test.getMeasurementSetupIds().iterator().next(), true);
 			switch (test.getTemporalType().value()) {
 				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
 					List times = test.getTemporalPattern().getTimes(test.getStartTime(), test.getEndTime());

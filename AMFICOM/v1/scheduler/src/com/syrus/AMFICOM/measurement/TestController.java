@@ -1,5 +1,5 @@
 /*
- * $Id: TestController.java,v 1.1 2004/12/20 15:45:14 arseniy Exp $
+ * $Id: TestController.java,v 1.2 2005/02/25 09:18:38 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,19 +15,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
+import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/12/20 15:45:14 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/02/25 09:18:38 $
+ * @author $Author: bob $
  * @module module
  */
 public class TestController implements ObjectResourceController {
@@ -142,24 +141,17 @@ public class TestController implements ObjectResourceController {
 					MeasurementPort mp = (MeasurementPort)ConfigurationStorableObjectPool.getStorableObject(test.getMonitoredElement().getMeasurementPortId(), true);
 					KIS kis = (KIS)ConfigurationStorableObjectPool.getStorableObject(mp.getKISId(), true);
 					value = kis.getName();
-				} catch (DatabaseException e) {
+				} catch (ApplicationException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} catch (CommunicationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}				
-
+				} 
 			else if (key.equals(KEY_MONITORED_ELEMENT))
 				value = test.getMonitoredElement().getName();
 			else if (key.equals(KEY_TEST_OBJECT)){
 				try {
 					MeasurementPort mp = (MeasurementPort)ConfigurationStorableObjectPool.getStorableObject(test.getMonitoredElement().getMeasurementPortId(), true);
 					value = mp.getName();
-				} catch (DatabaseException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (CommunicationException e) {
+				} catch (ApplicationException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}				

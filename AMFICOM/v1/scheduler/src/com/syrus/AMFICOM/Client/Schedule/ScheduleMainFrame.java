@@ -32,16 +32,14 @@ import com.syrus.AMFICOM.Client.General.Event.ContextChangeEvent;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
 import com.syrus.AMFICOM.Client.General.UI.WindowArranger;
+import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Schedule.UI.ElementsTreeFrame;
 import com.syrus.AMFICOM.Client.Schedule.UI.PlanFrame;
@@ -50,11 +48,9 @@ import com.syrus.AMFICOM.Client.Schedule.UI.TableFrame;
 import com.syrus.AMFICOM.Client.Schedule.UI.TestParametersFrame;
 import com.syrus.AMFICOM.Client.Schedule.UI.TestRequestFrame;
 import com.syrus.AMFICOM.Client.Schedule.UI.TimeParametersFrame;
-import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 
 public class ScheduleMainFrame extends JFrame implements OperationListener {
@@ -341,9 +337,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 			Domain domain = (Domain) AdministrationStorableObjectPool.getStorableObject(sessionInterface
 					.getDomainIdentifier(), true);
 			this.statusBar.setText("domain", domain.getName());
-		} catch (DatabaseException e) {
-			SchedulerModel.showErrorMessage(this, e);
-		} catch (CommunicationException e) {
+		} catch (ApplicationException e) {
 			SchedulerModel.showErrorMessage(this, e);
 		}
 		
@@ -461,8 +455,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 		this.aContext.setDispatcher(this.dispatcher);
 		this.dispatcher.register(this, StatusMessageEvent.STATUS_MESSAGE);
-		this.dispatcher.register(this, RefChangeEvent.typ);
-		this.dispatcher.register(this, RefUpdateEvent.typ);
+//		this.dispatcher.register(this, RefChangeEvent.typ);
+//		this.dispatcher.register(this, RefUpdateEvent.typ);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CHANGE_STATUSBAR_STATE);
 
 		this.dispatcher.register(this, CONTEXT_CHANGE);
