@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceChooserDialog.java,v 1.6 2004/10/06 08:20:48 krupenn Exp $
+ * $Id: ObjectResourceChooserDialog.java,v 1.7 2004/10/11 14:20:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import oracle.jdeveloper.layout.XYLayout;
  * чтобы включить эту возможность, необходимо вызвать метод 
  * setCanDelete(boolean bool)
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2004/10/06 08:20:48 $
+ * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2004/10/11 14:20:07 $
  * @module generalclient_v1
  */
 public class ObjectResourceChooserDialog extends JDialog 
@@ -187,7 +187,7 @@ public class ObjectResourceChooserDialog extends JDialog
 
 	protected void buttonOpen_actionPerformed(ActionEvent e)
 	{
-		retObject = (ObjectResource )getTableModel().getObjectResource(table.getSelectedRow());
+		retObject = (ObjectResource )getTableModel().getObject(table.getSelectedRow());
 		if(retObject == null)
 			return;
 
@@ -224,7 +224,7 @@ public class ObjectResourceChooserDialog extends JDialog
 		if(!canDelete)
 			return;
 
-		ObjectResource obj = (ObjectResource )getTableModel().getObjectResource(table.getSelectedRow());
+		ObjectResource obj = (ObjectResource )getTableModel().getObject(table.getSelectedRow());
 		if(obj == null)
 			return;
 
@@ -242,7 +242,7 @@ public class ObjectResourceChooserDialog extends JDialog
 //		if (e.getValueIsAdjusting())
 //			return;
 
-		ObjectResource or = (ObjectResource )getTableModel().getObjectResource(table.getSelectedRow());
+		ObjectResource or = (ObjectResource )getTableModel().getObject(table.getSelectedRow());
 		if (or != null)
 		{
 			buttonOpen.setEnabled(true);

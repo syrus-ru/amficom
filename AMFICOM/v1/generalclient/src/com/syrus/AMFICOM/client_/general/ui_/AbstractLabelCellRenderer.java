@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
  * Abstract class for JLabel and simple Component (witch extends JLabel)
  * rendering at JTable
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/07 11:31:15 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/11 14:20:07 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -85,7 +85,7 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 		Object tableModel = table.getModel();
 		if (tableModel instanceof ObjectResourceTableModel){
 			ObjectResourceTableModel model = (ObjectResourceTableModel)tableModel; 
-			obj = model.getObjectResource(rowIndex);
+			obj = model.getObject(rowIndex);
 			colId = model.controller.getKey(mColIndex);
 			customRendering(table, obj, model.controller, colId);
 		} else if (tableModel instanceof ObjPropertyTableModel){

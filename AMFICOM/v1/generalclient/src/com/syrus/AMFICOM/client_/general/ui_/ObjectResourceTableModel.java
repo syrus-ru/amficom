@@ -1,3 +1,4 @@
+
 package com.syrus.AMFICOM.client_.general.ui_;
 
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
@@ -12,52 +13,54 @@ import javax.swing.table.AbstractTableModel;
 import java.util.Iterator;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/10/07 06:07:45 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/11 14:20:07 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
 public class ObjectResourceTableModel extends AbstractTableModel {
 
-	private static final long	serialVersionUID	= 4007513055820570639L;
+	private static final long			serialVersionUID	= 4007513055820570639L;
 
 	/**
-	 * ObjectResourceController of Model (ObjectResource) will be used for sorting.
-	 * see {@link ObjectResourceController}
+	 * ObjectResourceController of Model (ObjectResource) will be used for
+	 * sorting. see {@link ObjectResourceController}
 	 */
-	protected ObjectResourceController	controller;	
-	
-	/**
-	 * ask Kruppen
-	 */
-	private String						domainId	= "";
+	protected ObjectResourceController	controller;
 
 	/**
 	 * ask Kruppen
 	 */
-	private boolean						doRestrict	= false;
+	private String						domainId			= "";
 
 	/**
-	 * list of Model (ObjectResouce) elements.
-	 * see {@link ObjectResource} 
+	 * ask Kruppen
+	 */
+	private boolean						doRestrict			= false;
+
+	/**
+	 * list of Model (ObjectResouce) elements. see {@link ObjectResource}
 	 */
 	private List						orList;
 
 	/**
-	 * saved direction of column sorting. Used when change direction to negative to current.
-	 * see {@link ColumnSorter#ascending} 
+	 * saved direction of column sorting. Used when change direction to negative
+	 * to current. see {@link ColumnSorter#ascending}
 	 */
 	private boolean[]					ascendings;
 
-	/** 
-	 * @param controller see {@link #controller}
+	/**
+	 * @param controller
+	 *            see {@link #controller}
 	 */
 	public ObjectResourceTableModel(ObjectResourceController controller) {
 		this(controller, new ArrayList());
 	}
 
-	/** 
-	 * @param controller see {@link #controller}
-	 * @param objectResourceList see {@link #orList}
+	/**
+	 * @param controller
+	 *            see {@link #controller}
+	 * @param objectResourceList
+	 *            see {@link #orList}
 	 */
 	public ObjectResourceTableModel(ObjectResourceController controller, List objectResourceList) {
 		this.controller = controller;
@@ -74,7 +77,7 @@ public class ObjectResourceTableModel extends AbstractTableModel {
 	}
 
 	/**
-	 * override {@link AbstractTableModel#getColumnClass(int)} method
+	 * override {@link AbstractTableModel#getColumnClass(int)}method
 	 */
 	public Class getColumnClass(int columnIndex) {
 		String key = this.controller.getKey(columnIndex);
@@ -82,7 +85,7 @@ public class ObjectResourceTableModel extends AbstractTableModel {
 	}
 
 	/**
-	 * override {@link javax.swing.table.TableModel#getColumnCount()} method
+	 * override {@link javax.swing.table.TableModel#getColumnCount()}method
 	 */
 	public int getColumnCount() {
 		return this.controller.getKeys().size();
@@ -101,8 +104,12 @@ public class ObjectResourceTableModel extends AbstractTableModel {
 		return this.domainId;
 	}
 
-	public ObjectResource getObjectResource(int index) {
-		return (ObjectResource) this.orList.get(index);
+	public int getIndexOfObject(Object object) {		
+		return this.orList.indexOf(object);
+	}
+
+	public Object getObject(int index) {
+		return this.orList.get(index);
 	}
 
 	public int getRowCount() {
@@ -111,23 +118,23 @@ public class ObjectResourceTableModel extends AbstractTableModel {
 
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		String key = this.controller.getKey(columnIndex);
-		ObjectResource or = (ObjectResource) this.orList.get(rowIndex);
-		Object obj = this.controller.getValue(or, key);
+		Object object =  this.orList.get(rowIndex);
+		Object obj = this.controller.getValue(object, key);
 
 		if (this.controller.getPropertyValue(key) instanceof Map) {
 			Map map = (Map) this.controller.getPropertyValue(key);
 			Object keyObject = null;
-			for(Iterator it=map.keySet().iterator();it.hasNext();){
+			for (Iterator it = map.keySet().iterator(); it.hasNext();) {
 				Object keyObj = it.next();
-				if (map.get(keyObj).equals(obj)){
+				if (map.get(keyObj).equals(obj)) {
 					keyObject = keyObj;
 					break;
 				}
 			}
 			obj = keyObject;
-			
+
 		}
-		
+
 		return obj;
 	}
 
@@ -170,12 +177,12 @@ public class ObjectResourceTableModel extends AbstractTableModel {
 
 	public void setValueAt(Object obj, int rowIndex, int columnIndex) {
 		String key = this.controller.getKey(columnIndex);
-		ObjectResource or = (ObjectResource) this.orList.get(rowIndex);
+		Object object = this.orList.get(rowIndex);
 		if (this.controller.getPropertyValue(key) instanceof Map) {
 			Map map = (Map) this.controller.getPropertyValue(key);
-			this.controller.setValue(or, key, map.get(obj));
+			this.controller.setValue(object, key, map.get(obj));
 		} else
-			this.controller.setValue(or, key, obj);
+			this.controller.setValue(object, key, obj);
 		this.fireTableDataChanged();
 	}
 
