@@ -106,6 +106,10 @@ cleancorba:
 	$(RM) -rf $(CLASSDIR)/com/syrus/AMFICOM/configuration/corba
 	$(RM) -f .corba
 
+#### Install ####
+install: $(LIBNAME)
+	$(CP) $(LIBNAME) $(LIBDIR)
+
 #### Archive ####
 .PHONY:	arch
 arch:
@@ -114,6 +118,3 @@ arch:
 		$(IDLDIR)/configuration.idl \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/*.java
 
-#### Compile and install jar to libdir
-lib: $(LIBNAME)
-	$(CP) $(LIBNAME) $(LIBDIR)	

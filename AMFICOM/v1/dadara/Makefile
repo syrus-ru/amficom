@@ -38,7 +38,7 @@ JAVAH_FLAGS := \
 $(call checkenve,JAVA_HOME)
 
 
-.PHONY:	clean cleanmach cleanhead arch lib
+.PHONY:	clean cleanmach cleanhead arch install
 
 
 $(LIBNAME):	.mach
@@ -84,6 +84,10 @@ cleanhead:
 		$(NATIVE_DIR)/com_syrus_AMFICOM_analysis_dadara_ReflectogramEvent.h
 	$(RM) .head
 
+#### Install ####
+install: $(LIBNAME)
+	$(CP) $(LIBNAME) $(LIBDIR)
+
 #### Archive ####
 arch:
 	tar -czvf $(ARCHFILE) \
@@ -91,5 +95,3 @@ arch:
 		$(SRCDIR)/com/syrus/AMFICOM/analysis/*.java \
 		$(SRCDIR)/com/syrus/AMFICOM/analysis/dadara/*.java
 
-lib: $(LIBNAME)
-	$(CP) $(LIBNAME) $(LIBDIR)
