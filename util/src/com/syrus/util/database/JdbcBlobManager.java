@@ -1,5 +1,5 @@
 /*
- * $Id: JdbcBlobManager.java,v 1.2 2004/08/03 13:36:29 bass Exp $
+ * $Id: JdbcBlobManager.java,v 1.3 2004/08/03 14:38:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import java.sql.*;
  * as a byte&nbsp;array/input&nbsp;stream.
  *
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/08/03 13:36:29 $
+ * @version $Revision: 1.3 $, $Date: 2004/08/03 14:38:20 $
  * @module util
  */
 public final class JdbcBlobManager {
@@ -373,7 +373,8 @@ public final class JdbcBlobManager {
 		try {
 			int b;
 			long position = 0;
-			OutputStream out = blob.setBinaryStream(0L);
+//			OutputStream out = blob.setBinaryStream(0L);
+			OutputStream out = ((oracle.sql.BLOB) blob).getBinaryOutputStream();
 			while (true) {
 				b = in.read();
 				if (b == -1)
@@ -383,10 +384,11 @@ public final class JdbcBlobManager {
 			}
 			out.flush();
 			out.close();
-			blob.truncate(position);
+//			blob.truncate(position);
+			((oracle.sql.BLOB) blob).trim(position);
 		} catch (IOException ioe) {
 			SQLException sqle = new SQLException(ioe.toString());
-			sqle.initCause(ioe);
+//			sqle.initCause(ioe);
 			throw sqle;
 		}
 	}
