@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.76 2005/02/03 14:58:34 arseniy Exp $
+ * $Id: Test.java,v 1.77 2005/02/08 19:43:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,16 +45,14 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.76 $, $Date: 2005/02/03 14:58:34 $
+ * @version $Revision: 1.77 $, $Date: 2005/02/08 19:43:26 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public class Test extends StorableObject {	
-	/**
-	 * Comment for <code>serialVersionUID</code>
-	 */
 	private static final long	serialVersionUID	= 3688785890592241972L;
+
 	protected static final int		RETRIEVE_MEASUREMENTS	= 1;
 	protected static final int		RETRIEVE_LAST_MEASUREMENT	= 2;
 	protected static final int		RETRIEVE_NUMBER_OF_MEASUREMENTS	= 3;
@@ -127,6 +125,7 @@ public class Test extends StorableObject {
 							 String description,
 							 List measurementSetupIds) {
 		super(id);
+
 		long time = System.currentTimeMillis();
 		super.created = new Date(time);
 		super.modified = new Date(time);
