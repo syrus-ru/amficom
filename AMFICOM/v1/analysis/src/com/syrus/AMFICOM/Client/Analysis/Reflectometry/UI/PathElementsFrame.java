@@ -15,11 +15,10 @@ import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
-import com.syrus.AMFICOM.measurement.*;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.*;
-import com.syrus.AMFICOM.general.*;
 import com.syrus.io.BellcoreStructure;
+import com.syrus.AMFICOM.general.Identifier;
 
 public class PathElementsFrame extends AnalysisFrame
 {

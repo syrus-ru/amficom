@@ -183,8 +183,8 @@ public class AnalysisSelectionFrame extends ATableFrame
 	{
 		scrollPane.getViewport().setBackground(SystemColor.window);
 		jTable.setBackground(SystemColor.window);
-		jTable.setForeground(cManager.getColor("textColor"));
-		jTable.setGridColor(cManager.getColor("tableGridColor"));
+		jTable.setForeground(ColorManager.getColor("textColor"));
+		jTable.setGridColor(ColorManager.getColor("tableGridColor"));
 	}
 
 	private void jbInit() throws Exception
@@ -267,7 +267,7 @@ public class AnalysisSelectionFrame extends ATableFrame
 		jTable.getColumnModel().getColumn(0).setPreferredWidth(250);
 		jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
 		jTable.setMinimumSize(new Dimension(200, 213));
-		jTable.setSelectionMode(jTable.getSelectionModel().SINGLE_SELECTION);
+		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		scrollPane.setViewport(viewport);
 		scrollPane.getViewport().add(jTable);

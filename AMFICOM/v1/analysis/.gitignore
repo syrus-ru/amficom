@@ -11,3 +11,4 @@ classes
 docs
 lib
 Makefile.inc
+clean.cmd

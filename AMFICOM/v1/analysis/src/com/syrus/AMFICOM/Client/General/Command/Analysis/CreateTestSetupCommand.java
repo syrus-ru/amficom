@@ -11,6 +11,7 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.io.BellcoreStructure;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 
 public class CreateTestSetupCommand extends VoidCommand
 {
@@ -71,8 +72,7 @@ public class CreateTestSetupCommand extends VoidCommand
 			return;
 
 		measurementSetup = MeasurementSetup.createInstance(
-				IdentifierPool.generateId(ObjectEntities.MS_ENTITY_CODE),
-				new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id),
+				((RISDSessionInfo)aContext.getSessionInterface()).getUserIdentifier(),
 				ms.getParameterSet(),
 				ms.getThresholdSet(),
 				ms.getEtalon(),

@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.dadara;
 
-
+import com.syrus.AMFICOM.analysis.dadara.MathRef;
 
 public class ReflectogramMath
 {
@@ -9,14 +9,14 @@ public class ReflectogramMath
 		correctEvents(re);
 
 		if (arrayLength <= 0)
-			arrayLength = re[re.length-1].end;
+			arrayLength = re[re.length-1].getEnd();
 		double[] y = new double[arrayLength];
 
 		for(int i = 0; i < re.length; i++)
-			for(int j = re[i].begin; j < Math.min(re[i].end + 1, y.length); j++)
+			for(int j = re[i].getBegin(); j < Math.min(re[i].getEnd() + 1, y.length); j++)
 				y[j] = re[i].refAmplitude(j);
 
-		for(int i = re[re.length-1].end; i < y.length; i++)
+		for(int i = re[re.length-1].getEnd(); i < y.length; i++)
 			y[i] = 0.;
 
 		return y;
@@ -36,22 +36,39 @@ public class ReflectogramMath
 	{
 		double ret = 0;
 		for(int i = 0; i < re.length; i++)
-			for(int j = re[i].begin; j < re[i].end; j++)
+			for(int j = re[i].getBegin(); j < re[i].getEnd(); j++)
 				if(re[i].refAmplitude(j) > ret)
 					ret = re[i].refAmplitude(j);
 		return ret;
 	}
+	
+	public static double[] getMaxDifPM(double[] y, ModelFunction mf, int begin, int end)
+	{
+	    double[] ret = new double[2];
+	    ret[0] = 0;
+	    ret[1] = 0;
+	    for (int i = begin; i < end; i++)
+	    {
+	        double dif = y[i] - mf.fun(i);
+	        if (dif < ret[0])
+	            ret[0] = dif;
+	        if (dif > ret[1])
+	            ret[1] = dif;
+	    }
+	    return ret;
+	}
 
+  // ?: the same thing is made inside ReflectogramComparer.doIt()... //saa
 	public static void align(ReflectogramEvent[] y, ReflectogramEvent[] etalon)
 	{
 		double maxData = 0;
 		double maxEtalon = 0;
 
-		for(int i = etalon[0].begin; i < etalon[0].end; i++)
+		for(int i = etalon[0].getBegin(); i < etalon[0].getEnd(); i++)
 			if(etalon[0].refAmplitude(i) > maxEtalon)
 				maxEtalon = etalon[0].refAmplitude(i);
 
-		for(int i = y[0].begin; i < y[0].end; i++)
+		for(int i = y[0].getBegin(); i < y[0].getEnd(); i++)
 			if(maxData < y[0].refAmplitude(i))
 				maxData = y[0].refAmplitude(i);
 
@@ -59,19 +76,21 @@ public class ReflectogramMath
 		if (dA != 0)
 			for(int i = 0; i < y.length; i++)
 			{
-				y[i].a1_connector += dA;
+				y[i].shiftY(dA);
+        /*a1_connector += dA;
 				y[i].a2_connector += dA;
 				y[i].a_linear += dA;
-				y[i].a_weld += dA;
+				y[i].a_weld += dA;*/
 			}
 	}
 
+	// XXX: unused?
 	public static void align(double[] y, ReflectogramEvent[] etalon)
 	{
 		double maxData = 0;
 		double maxEtalon = 0;
 
-		for(int i = etalon[0].begin; i < etalon[0].end; i++)
+		for(int i = etalon[0].getBegin(); i < etalon[0].getEnd(); i++)
 			if(etalon[0].refAmplitude(i) > maxEtalon)
 				maxEtalon = etalon[0].refAmplitude(i);
 
@@ -81,13 +100,10 @@ public class ReflectogramMath
 
 		double dA = maxEtalon - maxData;
 		if (dA != 0)
+		{
 			for(int i = 0; i < etalon.length; i++)
-			{
-				etalon[i].a1_connector += dA;
-				etalon[i].a2_connector += dA;
-				etalon[i].a_linear += dA;
-				etalon[i].a_weld += dA;
-			}
+				etalon[i].shiftY(dA);
+		}
 	}
 
 	public static ReflectogramEvent[] alignClone(ReflectogramEvent[] y, ReflectogramEvent[] etalon)
@@ -103,16 +119,17 @@ public class ReflectogramMath
 	public static void correctEvents(ReflectogramEvent[] re)
 	{
 		for(int i = 0; i < re.length; i++)
-			if(re[i].getType() == ReflectogramEvent.CONNECTOR)
+			if(re[i].getEventType() == ReflectogramEvent.CONNECTOR)
 			{
-				if(re[i].begin < 0)
-					re[i].begin = 0;
+				if(re[i].getBegin() < 0)
+					re[i].setBegin(0);
 
 				if(i > 0)
-					re[i-1].end =	re[i].begin;
+					re[i-1].setEnd(re[i].getBegin());
 				if(i < re.length-1)
-					re[i+1].begin =	re[i].end;
+					re[i+1].setBegin(re[i].getEnd());
 			}
+			// XXX: refit is necessary?? // solution depends on IA
 	}
 
 	public static ReflectogramEvent getEvent(int coord, ReflectogramEvent[] re)
@@ -122,18 +139,28 @@ public class ReflectogramMath
 
 		for(int i = 0; i < re.length; i++)
 		{
-			if(re[i].begin <= coord && re[i].end >= coord)
+			if(re[i].getBegin() <= coord && re[i].getEnd() >= coord)
 				return re[i];
 		}
 		return null;
 	}
+	
+	// takes amplitude with protection against for NullPointer //saa, 2004-10
+	public static double getEventAmplitudeAt(int coord, ReflectogramEvent[] re)
+	{
+		ReflectogramEvent ev = getEvent(coord, re);
+		if (ev == null)
+			return 0; // XXX
+		else
+			return ev.refAmplitude(coord);		
+	}	
 
 	public static int getEventType(int coord, ReflectogramEvent[] re)
 	{
 		for(int i = 0; i < re.length; i++)
 		{
-			if(re[i].begin <= coord && re[i].end >= coord)
-				return re[i].getType();
+			if(re[i].getBegin() <= coord && re[i].getEnd() >= coord)
+				return re[i].getEventType();
 		}
 		return -1;
 	}
@@ -142,27 +169,17 @@ public class ReflectogramMath
 	{
 		for(int i = 0; i < re.length; i++)
 		{
-			if(re[i].begin <= coord && re[i].end >= coord)
+			if(re[i].getBegin() <= coord && re[i].getEnd() >= coord)
 				return i;
 		}
 		return -1;
 	}
 
-	public static int getEventCenter(ReflectogramEvent re)
-	{
-		if(re.getType() == ReflectogramEvent.CONNECTOR)
-			return (int)re.center_connector;
-		else if(re.getType() == ReflectogramEvent.WELD)
-			return (int)re.center_weld;
-		else
-			return (re.begin + re.end) / 2;
-	}
-
 	public static int getLastSplash(ReflectogramEvent[] re)
 	{
 		for(int i = re.length - 1; i >= 0; i--)
-			if(re[i].getType() == ReflectogramEvent.CONNECTOR)
-				return re[i].begin;
+			if(re[i].getEventType() == ReflectogramEvent.CONNECTOR)
+				return re[i].getBegin();
 		return 0;
 	}
 
@@ -222,6 +239,7 @@ public class ReflectogramMath
 		return (int)eventSize;
 	}
 
+	/*
 	public static double[] waveletTransform(double[] y, int freq, double[] norma, int wLet)
 	{
 		double[] trans = new double[y.length];
@@ -234,7 +252,7 @@ public class ReflectogramMath
 		}
 		return trans;
 	}
-
+	*/
 	public static double[] waveletTransform(double[] y, int freq, double norma, int wLet, int start, int end)
 	{
 		double[] trans = new double[end - start];
@@ -264,7 +282,7 @@ public class ReflectogramMath
 
 		return shift;
 	}
-
+	/*
 	public static double[] getWLetNorma(int freq)
 	{
 		double[] n = new double[10];
@@ -290,6 +308,7 @@ public class ReflectogramMath
 
 		return n;
 	}
+	*/
 
 	static double getWLetNorma(int freq, int waveletType)
 	{
@@ -345,6 +364,7 @@ public class ReflectogramMath
 		return n;
 	}
 
+	/*
 	public static double wLet(int arg, int freq, double[] norma, int waveletType)
 	{
 		switch (waveletType)
@@ -362,6 +382,7 @@ public class ReflectogramMath
 			default: return  wLet1(arg, freq, norma[0]);
 		}
 	}
+	*/
 
 	public static double wLet(int arg, int freq, double norma, int waveletType)
 	{
@@ -438,5 +459,4 @@ public class ReflectogramMath
 	{
 		return (Math.sin(arg * Math.PI / freq / 2.) - ((double)arg) / freq / 2.) / norma;
 	}
-
 }

@@ -15,9 +15,9 @@ import com.syrus.io.BellcoreStructure;
 public class OverallStatsFrame extends ATableFrame
 																		implements OperationListener
 {
-	private static StringBuffer km = new StringBuffer(' ').append(LangModelAnalyse.getString("km"));
-	private static StringBuffer db = new StringBuffer(' ').append(LangModelAnalyse.getString("dB"));
-	private static StringBuffer dbkm = new StringBuffer(' ').append(LangModelAnalyse.getString("dB")).
+	private static StringBuffer km = new StringBuffer(" ").append(LangModelAnalyse.getString("km"));
+	private static StringBuffer db = new StringBuffer(" ").append(LangModelAnalyse.getString("dB"));
+	private static StringBuffer dbkm = new StringBuffer(" ").append(LangModelAnalyse.getString("dB")).
 			append('/').append(LangModelAnalyse.getString("km"));
 
 	private Dispatcher dispatcher;
@@ -132,7 +132,7 @@ public class OverallStatsFrame extends ATableFrame
 		if(ae.getActionCommand().equals(RefUpdateEvent.typ))
 		{
 			RefUpdateEvent rue = (RefUpdateEvent)ae;
-			if(rue.ANALYSIS_PERFORMED)
+			if(rue.analysisPerformed())
 			{
 				String id = (String)(rue.getSource());
 				if (id.equals("primarytrace"))
@@ -195,7 +195,7 @@ public class OverallStatsFrame extends ATableFrame
 
 		tabbedPane.add("Основная", mainPanel);
 
-		jTable.setSelectionMode(jTable.getSelectionModel().SINGLE_SELECTION);
+		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
 		jTable.setMaximumSize(new Dimension(200, 213));
 		jTable.setMinimumSize(new Dimension(200, 213));
@@ -288,16 +288,16 @@ public class OverallStatsFrame extends ATableFrame
 		if (ev == null)
 			return;
 
-		double range = ev.last_point * bs.getResolution() / 1000d;
+		double range_km = ev.last_point * bs.getResolution() / 1000.0;
 		double loss = Math.abs(ev.data[0] -  ev.data[1]);
-		double attenuation = loss / range;
+		double attenuation = loss / range_km;
 		double orl = MathRef.ORL(ev.data[0], ev.data[1]);
 		double noise = ev.data[2];
 		double DD = ev.data[2] - ev.data[3];
 		int evNum = (int)ev.data[4];
 
 		tModel.updateColumn(new Object[] {
-			new StringBuffer().append(MathRef.round_3(range)).append(km).toString(),
+			new StringBuffer().append(MathRef.round_3(range_km)).append(km).toString(),
 			new StringBuffer().append(MathRef.round_2(loss)).append(db).toString(),
 			new StringBuffer().append(MathRef.round_4(attenuation)).append(dbkm).toString(),
 			new StringBuffer().append(MathRef.round_2(orl)).append(db).toString(),

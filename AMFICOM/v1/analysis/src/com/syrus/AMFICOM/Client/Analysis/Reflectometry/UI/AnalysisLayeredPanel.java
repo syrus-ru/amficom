@@ -38,7 +38,7 @@ public class AnalysisLayeredPanel extends TraceEventsLayeredPanel implements Ope
 				SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
 				if (panel instanceof AnalysisPanel)
 				{
-					if(rue.ANALYSIS_PERFORMED)
+					if(rue.analysisPerformed())
 					{
 						String id = (String)(rue.getSource());
 						if (id.equals("primarytrace"))
@@ -51,7 +51,7 @@ public class AnalysisLayeredPanel extends TraceEventsLayeredPanel implements Ope
 							jLayeredPane.repaint();
 						}
 					}
-					if(rue.EVENT_SELECTED)
+					if(rue.eventSelected())
 					{
 						int num = Integer.parseInt((String)rue.getSource());
 						((AnalysisPanel)panel).move_marker_to_ev(num);

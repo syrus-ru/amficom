@@ -24,8 +24,10 @@ import com.syrus.AMFICOM.general.*;
 import com.syrus.io.BellcoreStructure;
 
 public class AnalyseMainFrameSimplified extends JFrame
-																				implements OperationListener
+	implements OperationListener
 {
+    public static final boolean DEBUG = System.getProperty("amficom.debug.nonstrict", "false").equals("true");
+
 	public ApplicationContext aContext;
 	static SimpleDateFormat sdf =
 			new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
@@ -247,6 +249,8 @@ public class AnalyseMainFrameSimplified extends JFrame
 		aModel.setEnabled("menuHelp", true);
 		aModel.setEnabled("menuReport", true);
 		aModel.setEnabled("menuWindow", true);
+		
+		aModel.setEnabled("menuFileOpen", AnalyseMainFrameSimplified.DEBUG); // XXX: saa: security bypass
 
 		aModel.setVisible("menuTestSetup", false);
 		aModel.setVisible("menuNetStudy", false);
@@ -536,7 +540,7 @@ public class AnalyseMainFrameSimplified extends JFrame
 	public void setSessionOpened()
 	{
 		Checker checker = new Checker(aContext.getDataSource());
-		if(!checker.checkCommand(checker.enterAnalysisModul))
+		if(!checker.checkCommand(Checker.enterAnalysisModul))
 		{
 			JOptionPane.showMessageDialog(this, "Недостаточно прав для работы с модулем анализа.", "Ошибка", JOptionPane.OK_OPTION);
 			return;

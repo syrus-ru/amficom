@@ -291,6 +291,8 @@ public class AnalyseMainFrame extends JFrame
 		aModel.setEnabled("menuHelp", true);
 		aModel.setEnabled("menuReport", true);
 		aModel.setEnabled("menuWindow", true);
+		
+		aModel.setEnabled("menuFileOpen", AnalyseMainFrameSimplified.DEBUG); // XXX: saa: security bypass
 
 		aModel.setVisible("menuAnalyseSaveCriteria", false);
 		aModel.setVisible("menuSaveEtalon", false);
@@ -590,7 +592,7 @@ public class AnalyseMainFrame extends JFrame
 		{
 			RefUpdateEvent rue = (RefUpdateEvent)ae;
 
-			if(rue.ANALYSIS_PERFORMED)
+			if(rue.analysisPerformed())
 			{
 				String id = (String)(rue.getSource());
 				if (id.equals("primarytrace"))
@@ -665,7 +667,7 @@ public class AnalyseMainFrame extends JFrame
 	public void setSessionOpened()
 	{
 		Checker checker = new Checker(aContext.getDataSource());
-		if(!checker.checkCommand(checker.enterExtendedAnalysisModul))
+		if(!checker.checkCommand(Checker.enterExtendedAnalysisModul))
 		{
 			JOptionPane.showMessageDialog(this, "Недостаточно прав для работы с модулем исследования.", "Ошибка", JOptionPane.OK_OPTION);
 			return;

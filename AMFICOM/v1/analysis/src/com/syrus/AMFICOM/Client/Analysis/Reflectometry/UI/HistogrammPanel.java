@@ -43,7 +43,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 
 		ReflectogramEvent[] ep = (ReflectogramEvent[])Pool.get("eventparams", "primarytrace");
 		if (ep != null)
-			updateHistogrammData(0, ep[ep.length-1].end);
+			updateHistogrammData(0, ep[ep.length-1].getEnd());
 		else
 			updateHistogrammData(0, y.length / 2);
 	}

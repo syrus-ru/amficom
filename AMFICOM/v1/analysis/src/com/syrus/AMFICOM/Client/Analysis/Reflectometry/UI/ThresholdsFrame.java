@@ -17,6 +17,7 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 {
 	private Dispatcher dispatcher;
 	Map traces = new HashMap();
+	Map bellcoreTraces = null; // надо знать, какие р/г отображены
 
 	public ThresholdsFrame(Dispatcher dispatcher)
 	{
@@ -46,6 +47,8 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 	void init_module(Dispatcher dispatcher)
 	{
 		this.dispatcher = dispatcher;
+		bellcoreTraces = new HashMap();
+		Pool.put("bellcoremap", "current", bellcoreTraces);
 		dispatcher.register(this, RefChangeEvent.typ);
 	}
 
@@ -139,8 +142,8 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 					double[] y = new double[n];
 					for (int i = 0; i < ep.length; i++)
 					{
-						for (int j = ep[i].begin; j <= ep[i].end && j < n; j++)
-							y[j] = ep[i].refAmpl(j)[0];
+						for (int j = ep[i].getBegin(); j <= ep[i].getEnd() && j < n; j++)
+							y[j] = ep[i].refAmplitude(j);
 					}
 					SimpleGraphPanel epPanel = new SimpleGraphPanel(y, delta_x);
 					epPanel.setColorModel(AnalysisUtil.ETALON);
@@ -168,6 +171,7 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 			return;
 		SimpleGraphPanel p;
 		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
+		bellcoreTraces.put(id, bs);
 
 		double delta_x = bs.getResolution();
 		double[] y = bs.getTraceData();
@@ -185,6 +189,8 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 		{
 			p = new SimpleGraphPanel(y, delta_x);
 		}
+		p.setWeakColors(true);
+
 		((ThresholdsLayeredPanel)panel).addGraphPanel(p);
 		panel.updScale2fit();
 		((ThresholdsLayeredPanel)panel).updScale2fitCurrentEv(.2, 1.);
@@ -200,6 +206,8 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 		{
 			((ThresholdsLayeredPanel)panel).removeAllGraphPanels();
 			traces = new HashMap();
+			bellcoreTraces = new HashMap();
+			Pool.put("bellcoremap", "current", bellcoreTraces);
 		}
 		else
 		{
@@ -208,8 +216,14 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 			{
 				panel.removeGraphPanel(p);
 				traces.remove(id);
+				bellcoreTraces.remove(id);
 				((ThresholdsLayeredPanel)panel).updScale2fitCurrentEv(.2, 1.);
 			}
 		}
+	}
+	
+	public Map getBellcoreTraces()
+	{
+	    return bellcoreTraces;
 	}
 }

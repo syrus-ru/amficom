@@ -50,7 +50,7 @@ public class FileOpenAsBellcoreCommand extends VoidCommand
 		try
 		{
 			this.checker = new Checker(this.aContext.getSessionInterface());
-			if(!checker.checkCommand(checker.openReflectogrammFile))
+			if(!checker.checkCommand(Checker.openReflectogrammFile))
 			{
 				return;
 			}

@@ -9,6 +9,7 @@ import com.syrus.AMFICOM.configuration.CharacteristicType;
 import com.syrus.AMFICOM.configuration.corba.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.DataType;
+import com.syrus.AMFICOM.general.corba.StringFieldSort;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.StringFieldCondition;
@@ -32,35 +33,45 @@ public class AnalysisUtil
 	{
 	}
 
-	public static ParameterType getParameterType(Identifier userId, String codename)
-	{
+	public static ParameterType getParameterType(Identifier userId, String codename){
 		StorableObjectCondition pTypeCondition = new StringFieldCondition(
 				codename,
 				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
 				StringFieldSort.STRINGSORT_BASE);
 
-		try
-		{
+		ParameterType parameterType = null;
+		try	{
+		    try{
 			List pTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
-			for (Iterator it = pTypes.iterator(); it.hasNext();)
-			{
+			for (Iterator it = pTypes.iterator(); it.hasNext();){
 				ParameterType type = (ParameterType)it.next();
-				if (type.getCodename().equals(codename))
-					return type;
+				if (type.getCodename().equals(codename)){
+				    parameterType = type;
+				    break;
+				}
+			}
+		    }catch(ApplicationException roe){
+				// ...
+			    System.err.println("Exception searching ParameterType. Creating new one.");
+				roe.printStackTrace();
+		    }        
+
+			if (parameterType == null){
+			    parameterType = ParameterType.createInstance(
+					userId,
+					codename,
+					codename + "_Description",
+					codename + "_Name"); // by saa after a talk with bob
+			    MeasurementStorableObjectPool.putStorableObject(parameterType);
 			}
 		}
 		catch(ApplicationException ex)
 		{
-			System.err.println("Exception searching ParameterType. Creating new one.");
+			// ...
+		    System.err.println("Exception handling ParameterType. Giving up.");
 			ex.printStackTrace();
 		}
-
-		return ParameterType.createInstance(
-				IdentifierPool.generateId(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
-				userId,
-				codename,
-				"",
-				"");
+		return parameterType;
 	}
 
 	public static CharacteristicType getCharacteristicType(Identifier userId, String codename, CharacteristicTypeSort sort, DataType dataType)
@@ -127,7 +138,6 @@ public class AnalysisUtil
 		outParameterTypes.add(ptype);
 
 		return AnalysisType.createInstance(
-				IdentifierPool.generateId(ObjectEntities.ANALYSISTYPE_ENTITY_CODE),
 				userId,
 				codename,
 				"",
@@ -143,7 +153,6 @@ public class AnalysisUtil
 	 * createDefaultCriteriaSet(ms);
 	 *
 	 * @param ms MeasurementSetup
-	 * @see com.syrus.AMFICOM.Client.Resource.Result.CriteriaSet
 	 */
 
 	public static void load_CriteriaSet(Identifier userId, MeasurementSetup ms)
@@ -172,7 +181,6 @@ public class AnalysisUtil
 	 * createDefaultThresholdSet(userId, ms);
 	 * @param userId Identifier
 	 * @param ms MeasurementSetup
-	 * @see <a href=ThresholdSet>ThresholdSet</a>
 	 */
 	public static void load_Thresholds(Identifier userId, MeasurementSetup ms)
 	{
@@ -304,7 +312,6 @@ public class AnalysisUtil
 		}
 
 		Set criteriaSet = Set.createInstance(
-				IdentifierPool.generateId(ObjectEntities.SET_ENTITY_CODE),
 				userId,
 				SetSort.SET_SORT_ANALYSIS_CRITERIA,
 				"",
@@ -333,7 +340,6 @@ public class AnalysisUtil
 				new BellcoreWriter().write(bs));
 
 		Set etalon = Set.createInstance(
-				IdentifierPool.generateId(ObjectEntities.SET_ENTITY_CODE),
 				userId,
 				SetSort.SET_SORT_ETALON,
 				"",
@@ -353,7 +359,7 @@ public class AnalysisUtil
 				threshs[i] = ep[i].getThreshold();
 			else
 			{
-				threshs[i] = new Threshold(ep[i]);
+				threshs[i] = new Threshold();
 				ep[i].setThreshold(threshs[i]);
 			}
 		}
@@ -382,7 +388,6 @@ public class AnalysisUtil
 				minLevel);
 
 		Set thresholdSet = Set.createInstance(
-				IdentifierPool.generateId(ObjectEntities.SET_ENTITY_CODE),
 				userId,
 				SetSort.SET_SORT_EVALUATION_THRESHOLDS,
 				"",
@@ -416,7 +421,6 @@ public class AnalysisUtil
 				for (int j = 0; j < Math.min(threshs.length, ep.length); j++)
 				{
 					ep[j].setThreshold(threshs[j]);
-					threshs[j].setReflectogramEvent(ep[j]);
 				}
 			}
 		}

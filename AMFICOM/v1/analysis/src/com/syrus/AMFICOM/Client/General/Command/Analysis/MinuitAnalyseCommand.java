@@ -1,13 +1,17 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
+import java.util.Map;
 import java.awt.Cursor;
-
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+
 import com.syrus.AMFICOM.analysis.AnalysisManager;
-import com.syrus.AMFICOM.analysis.dadara.*;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
+import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
 import com.syrus.io.BellcoreStructure;
 
 public class MinuitAnalyseCommand extends VoidCommand
@@ -30,8 +34,9 @@ public class MinuitAnalyseCommand extends VoidCommand
 	{
 		if(field.equals("dispatcher"))
 			setDispatcher((Dispatcher )value);
-		if(field.equals("id"))
-			this.id = id;
+		// strange code:
+		//if(field.equals("id"))
+		//	this.id = id;
 	}
 
 	public void setDispatcher(Dispatcher dispatcher)
@@ -46,7 +51,8 @@ public class MinuitAnalyseCommand extends VoidCommand
 
 	public void execute()
 	{
-		bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
+		long t0 = System.currentTimeMillis();
+    bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
 		if (bs != null)
 		{
 			Environment.getActiveWindow().setCursor(new Cursor(Cursor.WAIT_CURSOR));
@@ -57,14 +63,13 @@ public class MinuitAnalyseCommand extends VoidCommand
 			double[] params = (double[])Pool.get("analysisparameters", "minuitanalysis");
 			if (params == null)
 			{
+        System.out.println("MinuitAnalysis.execute(): create AnalysisManager at dt/ms " + (System.currentTimeMillis()-t0));
 				new AnalysisManager();
+        System.out.println("MinuitAnalysis.execute(): AnalysisManager created at dt/ms " + (System.currentTimeMillis()-t0));
 				params = (double[])Pool.get("analysisparameters", "minuitanalysis");
 			}
-
-			//AnalysResult anaresult = new AnalysResult(y, delta_x);
-
-//			InitialAnalysis ia = new InitialAnalysis(y, delta_x, params[0], params[1], params[2], params[3], params[4], (int)params[7], params[5]);
-//			ReflectogramEvent[] ep = ia.performAnalysis();
+			
+			Map tracesMap = (Map )Pool.get("bellcoremap", "current");
 
 			int reflSize = ReflectogramMath.getReflectiveEventSize(y, 0.5);
 			int nReflSize = ReflectogramMath.getNonReflectiveEventSize(
@@ -74,10 +79,25 @@ public class MinuitAnalyseCommand extends VoidCommand
 					delta_x);
 			if (nReflSize > 3 * reflSize / 5)
 				nReflSize = 3 * reflSize / 5;
-			ReflectogramEvent[] ep = AnalysisManager.analyseTrace(y, delta_x, params, reflSize, nReflSize);
+
+      //System.out.println("MinuitAnalysis.execute(): starting analyseTrace+fitTrace at dt/ms " + (System.currentTimeMillis()-t0));
+
+      double[] meanAttenuation = { 0 };
+
+      ReflectogramEvent[] ep = AnalysisManager.makeAnalysis(
+          (int)params[6], bs, params, meanAttenuation, reflSize, nReflSize,
+          tracesMap);
+
+      //for (int i = 0; i < 2; i++) // FIXIT
+      //ep = AnalysisManager.fitTrace(
+      //   y, delta_x, ep, (int)params[6], meanAttenuation[0]);
+
+      //System.out.println("MinuitAnalysis.execute(): completed analyseTrace+fitTrace at dt/ms " + (System.currentTimeMillis()-t0));
 
 			RefAnalysis a = new RefAnalysis();
+      //System.out.println("MinuitAnalysis.execute(): new RefAnalysis complete at dt/ms " + (System.currentTimeMillis()-t0));
 			a.decode(y, ep);
+      //System.out.println("MinuitAnalysis.execute(): decode complete at dt/ms " + (System.currentTimeMillis()-t0));
 
 //			EventReader reader = new EventReader();
 			//reader.decode(result);
@@ -95,7 +115,7 @@ public class MinuitAnalyseCommand extends VoidCommand
 			Pool.put("eventparams", id, ep);
 
 			Environment.getActiveWindow().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+      //System.out.println("MinuitAnalysis.execute(): pool & Cursor complete at dt/ms " + (System.currentTimeMillis()-t0));
 		}
 	}
-
 }

@@ -10,6 +10,8 @@ public class SimpleGraphPanel extends JPanel
 	protected String color_id;
 
 	protected Color traceColor; // color, which used to paint graphic itself
+	
+	protected boolean weakColor;
 
 	protected double[] y; // array of graphic points
 	protected double delta_x;  // range between two neighbour points
@@ -25,7 +27,7 @@ public class SimpleGraphPanel extends JPanel
 	{
 		init (y, delta_x);
 		setDefaultScales();
-		traceColor = color;
+		traceColor = correctColor(color);
 	}
 
 	public SimpleGraphPanel (double[] y, double delta_x)
@@ -33,7 +35,12 @@ public class SimpleGraphPanel extends JPanel
 		init (y, delta_x);
 		setDefaultScales();
 	}
-
+	
+	public void setWeakColors(boolean weakColors)
+	{
+	    this.weakColor = weakColors;
+	}
+	
 	public void init (double[] y, double delta_x)
 	{
 		this.delta_x = delta_x;
@@ -85,10 +92,32 @@ public class SimpleGraphPanel extends JPanel
 		this.color_id = color_id;
 		updColorModel();
 	}
+	
+	protected Color correctColor(Color color)
+	{
+	    double weight = 0.3; // XXX
+	    double a = weight;
+	    double b = 255 * (1.0 - weight);
+	    return weakColor ?
+            new Color(
+                (int )(color.getRed() * a + b),
+                (int )(color.getGreen() * a + b),
+                (int )(color.getBlue() * a + b))
+    		: color;
+	    /*
+	    return weakColor ?
+	            new Color(
+	                color.getRed(),
+	                color.getGreen(),
+	                color.getBlue(),
+	                250)
+	    		: color;
+	    */
+	}
 
 	protected void updColorModel()
 	{
-		traceColor = ColorManager.getColor(color_id);
+		traceColor = correctColor(ColorManager.getColor(color_id));
 	}
 
 	protected void paint_trace(Graphics g)

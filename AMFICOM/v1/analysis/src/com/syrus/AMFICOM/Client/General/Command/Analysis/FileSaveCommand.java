@@ -48,7 +48,7 @@ public class FileSaveCommand extends VoidCommand
 		try
 		{
 			this.checker = new Checker(this.aContext.getSessionInterface());
-			if(!checker.checkCommand(checker.saveReflectogrammFile))
+			if(!checker.checkCommand(Checker.saveReflectogrammFile))
 			{
 				return;
 			}

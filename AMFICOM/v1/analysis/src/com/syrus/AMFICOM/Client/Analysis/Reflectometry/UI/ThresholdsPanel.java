@@ -20,14 +20,15 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 	protected int c_threshold = -1;
 	protected boolean isRbutton = false;
 	protected double max_et_y = 0;
-
+	
+	// XXX: read colors from file?
 	protected static Color warningThresholdColor = new Color(255, 220, 0);
 	protected static Color alarmThresholdColor = new Color(255, 150, 60);
 
 	public ThresholdsPanel(ResizableLayeredPanel panel, Dispatcher dispatcher, double y[], double delta_x)
 	{
 		super (panel, dispatcher, y, delta_x);
-
+		
 		try
 		{
 			jbInit();
@@ -88,70 +89,42 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 			isRbutton = true;
 		else
 			isRbutton = false;
+		
+		// определяем позицию, на котороую попали
+		int index = coord2index(currpos.x);
 
-		if (coord2index(currpos.x) > y.length)
-			return;
-
-//		if (Math.abs(currpos.y-value2coord(et_ep[c_event].getThreshold().getThresholdValue(coord2index(currpos.x), Threshold.UP2))) < mouse_coupling)
-		if (Math.abs(currpos.y-value2coord(et_ep[c_event].getThresholdReflectogramEvent(Threshold.UP2).refAmplitude(coord2index(currpos.x)))) < mouse_coupling)
+		// если это текущее событие - пытаемся "ухватить" (drag) порог
+		if (index >= et_ep[c_event].getBegin() && index <= et_ep[c_event].getEnd())
 		{
-			if (et_ep[c_event].getType() == ReflectogramEvent.CONNECTOR)
+			
+			int new_threshold = -1;
+	
+			if (Math.abs(currpos.y-value2coord(et_ep[c_event].getThresholdReflectogramEvent(Threshold.UP2).refAmplitude(index))) < mouse_coupling)
+				new_threshold = Threshold.UP2;
+			else
+			if (Math.abs(currpos.y-value2coord(et_ep[c_event].getThresholdReflectogramEvent(Threshold.DOWN2).refAmplitude(index))) < mouse_coupling)
+				new_threshold = Threshold.DOWN2;
+			else
+			if (Math.abs(currpos.y-value2coord(et_ep[c_event].getThresholdReflectogramEvent(Threshold.UP1).refAmplitude(index))) < mouse_coupling)
+				new_threshold = Threshold.UP1;
+			else
+			if (Math.abs(currpos.y-value2coord(et_ep[c_event].getThresholdReflectogramEvent(Threshold.DOWN1).refAmplitude(index))) < mouse_coupling)
+				new_threshold = Threshold.DOWN1;
+			
+			if (new_threshold != -1)
 			{
-				c_threshold = Threshold.UP2;
-				setCursor(new Cursor(Cursor.MOVE_CURSOR));
-			}
-			else if (!isRbutton)
-			{
-				c_threshold = Threshold.UP2;
-				setCursor(new Cursor(Cursor.N_RESIZE_CURSOR));
-			}
-		}
-		else //if (Math.abs(currpos.y-value2coord(et_ep[c_event].getThreshold().getThresholdValue(coord2index(currpos.x), Threshold.DOWN2))) < mouse_coupling)
-				if (Math.abs(currpos.y-value2coord(et_ep[c_event].getThresholdReflectogramEvent(Threshold.DOWN2).refAmplitude(coord2index(currpos.x)))) < mouse_coupling)
-		{
-			if (et_ep[c_event].getType() == ReflectogramEvent.CONNECTOR)
-			{
-				c_threshold = Threshold.DOWN2;
-				setCursor(new Cursor(Cursor.MOVE_CURSOR));
-				return;
-			}
-			else if (!isRbutton)
-			{
-				c_threshold = Threshold.DOWN2;
-				setCursor(new Cursor(Cursor.N_RESIZE_CURSOR));
-				return;
-			}
-		}
-		else //if (Math.abs(currpos.y-value2coord(et_ep[c_event].getThreshold().getThresholdValue(coord2index(currpos.x), Threshold.UP1))) < mouse_coupling)
-		if (Math.abs(currpos.y-value2coord(et_ep[c_event].getThresholdReflectogramEvent(Threshold.UP1).refAmplitude(coord2index(currpos.x)))) < mouse_coupling)
-		{
-			if (et_ep[c_event].getType() == ReflectogramEvent.CONNECTOR)
-			{
-				c_threshold = Threshold.UP1;
-				setCursor(new Cursor(Cursor.MOVE_CURSOR));
-				return;
-			}
-			else if (!isRbutton)
-			{
-				c_threshold = Threshold.UP1;
-				setCursor(new Cursor(Cursor.N_RESIZE_CURSOR));
-				return;
-			}
-		}
-		else //if (Math.abs(currpos.y-value2coord(et_ep[c_event].getThreshold().getThresholdValue(coord2index(currpos.x), Threshold.DOWN1))) < mouse_coupling)
-		if (Math.abs(currpos.y-value2coord(et_ep[c_event].getThresholdReflectogramEvent(Threshold.DOWN1).refAmplitude(coord2index(currpos.x)))) < mouse_coupling)
-		{
-			if (et_ep[c_event].getType() == ReflectogramEvent.CONNECTOR)
-			{
-				c_threshold = Threshold.DOWN1;
-				setCursor(new Cursor(Cursor.MOVE_CURSOR));
-				return;
-			}
-			else if (!isRbutton)
-			{
-				c_threshold = Threshold.DOWN1;
-				setCursor(new Cursor(Cursor.N_RESIZE_CURSOR));
-				return;
+				if (et_ep[c_event].getThresholdType() == ReflectogramEvent.CONNECTOR)
+				{
+					c_threshold = new_threshold;
+					setCursor(new Cursor(Cursor.MOVE_CURSOR));
+					return;
+				}
+				else if (!isRbutton)
+				{
+					c_threshold = new_threshold;
+					setCursor(new Cursor(Cursor.N_RESIZE_CURSOR));
+					return;
+				}
 			}
 		}
 
@@ -167,14 +140,36 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		}
 		if (c_threshold != -1)
 		{
+			//long t0 = System.currentTimeMillis();
 			upd_currpos(e);
 
+			//long t1 = System.currentTimeMillis();
+
 			if (!isRbutton)
-				et_ep[c_event].getThreshold().changeThreshold((double)(tmppos.y - currpos.y)/scale_y, (double)(tmppos.x - currpos.x)/scale_x, 0, 0, c_threshold);
-			if (isRbutton && (et_ep[c_event].getType() == ReflectogramEvent.CONNECTOR))
-				et_ep[c_event].getThreshold().changeThreshold(0, 0, (double)(tmppos.x - currpos.x)/scale_x, (double)(tmppos.y - currpos.y)/scale_y, c_threshold);
+				et_ep[c_event].getThreshold().changeThresholdBy(
+						(double) (tmppos.y - currpos.y) / scale_y,
+						(double) (tmppos.x - currpos.x) / scale_x,
+						0, 0,
+						et_ep[c_event], c_threshold);
+			if (isRbutton
+					&& (et_ep[c_event].getThresholdType() == ReflectogramEvent.CONNECTOR))
+				et_ep[c_event].getThreshold().changeThresholdBy(
+						0, 0,
+						(double) (tmppos.x - currpos.x) / scale_x,
+						(double) (tmppos.y - currpos.y) / scale_y,
+						et_ep[c_event], c_threshold);
+
+			//long t2 = System.currentTimeMillis();
+
 			parent.repaint();
-			dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
+
+			//long t3 = System.currentTimeMillis();
+
+			dispatcher.notify(new RefUpdateEvent(this,
+					RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
+
+			//long t4 = System.currentTimeMillis();
+			//System.out.println("t0 " + t0 + " dt1 " + (t1-t0) + " dt2 " + (t2-t1) + " dt3 " + (t3-t2) + " dt4 " + (t4-t3));
 		}
 		else
 			// иначе выделяем область квадратиком
@@ -194,7 +189,31 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 			setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
 		else
+		{
 			super.this_mouseReleased(e);
+		}
+	}
+	
+	protected void this_mouseClicked(MouseEvent e)
+	{
+	    // если кликнули, но не на текущее событие, переходим к новому событию
+	    int evId = -1;
+	    ReflectogramEvent[] events = et_ep;
+		if (events != null)
+		{
+		    int pos = coord2index(e.getPoint().x);
+			for(int j=0; j<events.length; j++)
+				if(pos > events[j].getBegin() && pos <= events[j].getEnd())
+					evId = j;
+		}
+		
+		if (evId != -1 && evId != c_event)
+		{
+		    dispatcher.notify(
+		            new RefUpdateEvent(String.valueOf(evId), RefUpdateEvent.EVENT_SELECTED_EVENT)
+		    );
+		    return;
+		}
 	}
 
 	public void paint (Graphics g)
@@ -235,212 +254,61 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 				paint_threshold(g);
 		}
 	}
-
 	void paint_all_thresholds(Graphics g)
 	{
 		if(et_ep == null)
 			return;
 
-
 		ReflectogramEvent []up1   = ReflectogramMath.getThreshold(et_ep, 0);
 		ReflectogramEvent []up2   = ReflectogramMath.getThreshold(et_ep, 1);
 		ReflectogramEvent []down1 = ReflectogramMath.getThreshold(et_ep, 2);
 		ReflectogramEvent []down2 = ReflectogramMath.getThreshold(et_ep, 3);
-
-		for(int i=0; i<et_ep.length; i++)
+		
+		ReflectogramEvent[][] p_curves = { up1, down1, up2, down2 };
+		Color[] p_colors = {warningThresholdColor, warningThresholdColor, alarmThresholdColor, alarmThresholdColor };
+		
+		for (int key = 0; key < 4; key++)
 		{
-
-			g.setColor(warningThresholdColor);
-			for(int j=Math.max(0, up1[i].begin - start); j<= Math.min (end, up1[i].end) - start && j<y.length; j++)
+			g.setColor(p_colors[key]);
+			for(int j=0; j<et_ep.length; j++)
 			{
-				g.drawLine((int)(j*scale_x+1), (int)((max_et_y - up1[i].refAmplitude(j+start) - top) * scale_y - 1),
-				(int)((j+1)*scale_x+1), (int)((max_et_y - up1[i].refAmplitude(j+start+1) - top) * scale_y - 1));
-			}
-			for(int j=Math.max(0, down1[i].begin - start); j<= Math.min (end, down1[i].end) - start && j<y.length; j++)
-			{
-				g.drawLine((int)(j*scale_x+1), (int)((max_et_y - down1[i].refAmplitude(j+start) - top) * scale_y - 1),
-				(int)((j+1)*scale_x+1), (int)((max_et_y - down1[i].refAmplitude(j+start+1) - top) * scale_y - 1));
-			}
-
-			g.setColor(alarmThresholdColor);
-			for(int j=Math.max(0, up2[i].begin - start); j<= Math.min (end, up2[i].end) - start && j<y.length; j++)
-			{
-				g.drawLine((int)(j*scale_x+1), (int)((max_et_y - up2[i].refAmplitude(j+start) - top) * scale_y - 1),
-				(int)((j+1)*scale_x+1), (int)((max_et_y - up2[i].refAmplitude(j+start+1) - top) * scale_y - 1));
-			}
-			for(int j=Math.max(0, down2[i].begin - start); j<= Math.min (end, down2[i].end) - start && j<y.length; j++)
-			{
-				g.drawLine((int)(j*scale_x+1), (int)((max_et_y - down2[i].refAmplitude(j+start) - top) * scale_y - 1),
-				(int)((j+1)*scale_x+1), (int)((max_et_y - down2[i].refAmplitude(j+start+1) - top) * scale_y - 1));
+				((Graphics2D) g).setStroke(DASHED_STROKE);
+				if (j != 0)
+					draw_joint_of_two_model_curves(g, p_curves[key][j-1], p_curves[key][j]);
+				((Graphics2D) g).setStroke(j == c_event ? DEFAULT_STROKE : DASHED_STROKE);
+				draw_one_model_curve(g, p_curves[key][j]);
 			}
 		}
-
-
-/*
-
-		for(int i=0; i<et_ep.length; i++)
-		{
-			try
-			{
-				if(et_ep[i].threshold != null)
-				{
-					int st = Math.max (start, et_ep[i].begin);
-					int en = Math.min (end, et_ep[i].end);
-					ReflectogramEvent up1   = et_ep[i].getThresholdReflectogramEvent(0);
-					ReflectogramEvent up2   = et_ep[i].getThresholdReflectogramEvent(1);
-					ReflectogramEvent down1 = et_ep[i].getThresholdReflectogramEvent(2);
-					ReflectogramEvent down2 = et_ep[i].getThresholdReflectogramEvent(3);
-
-					if (et_ep[i].getType() == ReflectogramEvent.LINEAR)
-					{
-						g.setColor(warningThresholdColor);
-						g.drawLine(index2coord(st), (int)((max_et_y - up1.refAmplitude(st) - top) * scale_y - 1),
-											 index2coord(en), (int)((max_et_y - up1.refAmplitude(en) - top) * scale_y - 1));
-						g.drawLine(index2coord(st), (int)((max_et_y - down1.refAmplitude(st) - top) * scale_y - 1),
-											 index2coord(en), (int)((max_et_y - down1.refAmplitude(en) - top) * scale_y - 1));
-
-						g.setColor(alarmThresholdColor);
-						g.drawLine(index2coord(st), (int)((max_et_y - up2.refAmplitude(st) - top) * scale_y - 1),
-											 index2coord(en), (int)((max_et_y - up2.refAmplitude(en) - top) * scale_y - 1));
-						g.drawLine(index2coord(st), (int)((max_et_y - down2.refAmplitude(st) - top) * scale_y - 1),
-											 index2coord(en), (int)((max_et_y - down2.refAmplitude(en) - top) * scale_y - 1));
-					}
-					else
-					{
-						for(int j=Math.max(0, et_ep[i].begin - (int)(start)); j<= Math.min (end, et_ep[i].end) - start; j++)// && j<y.length
-						{
-							g.setColor(warningThresholdColor);
-							g.drawLine((int)(j*scale_x+1), (int)((max_et_y - up1.refAmplitude(j+start) - top) * scale_y - 1),
-												 (int)((j+1)*scale_x+1), (int)((max_et_y - up1.refAmplitude(j+start+1) - top) * scale_y - 1));
-							g.drawLine((int)(j*scale_x+1), (int)((max_et_y - down1.refAmplitude(j+start) - top) * scale_y - 1),
-												 (int)((j+1)*scale_x+1), (int)((max_et_y - down1.refAmplitude(j+start+1) - top) * scale_y - 1));
-
-							g.setColor(alarmThresholdColor);
-							g.drawLine((int)(j*scale_x+1), (int)((max_et_y - up2.refAmplitude(j+start) - top) * scale_y - 1),
-												 (int)((j+1)*scale_x+1), (int)((max_et_y - up2.refAmplitude(j+start+1) - top) * scale_y - 1));
-							g.drawLine((int)(j*scale_x+1), (int)((max_et_y - down2.refAmplitude(j+start) - top) * scale_y - 1),
-												 (int)((j+1)*scale_x+1), (int)((max_et_y - down2.refAmplitude(j+start+1) - top) * scale_y - 1));
-						}
-					}
-				}
-			}
-			catch (Exception ex)
-			{
-			}
-		}*/
+		((Graphics2D) g).setStroke(DEFAULT_STROKE);
 	}
 
 	void paint_threshold (Graphics g)
 	{
 		if (et_ep == null)
 			return;
-/*
-		ReflectogramEvent []up1   = WorkWithReflectoEventsArray.getThresholdReflectogramEventArray(et_ep, 0);
-		ReflectogramEvent []up2   = WorkWithReflectoEventsArray.getThresholdReflectogramEventArray(et_ep, 1);
-		ReflectogramEvent []down1 = WorkWithReflectoEventsArray.getThresholdReflectogramEventArray(et_ep, 2);
-		ReflectogramEvent []down2 = WorkWithReflectoEventsArray.getThresholdReflectogramEventArray(et_ep, 3);
 
-		if(et_ep[c_event].type == ReflectogramEvent.LINEAR)
-		{
-			g.setColor(warningThresholdColor);
-					for(int j=Math.max(0, up1[c_event].begin - start); j<= Math.min (end, up1[c_event].end) - start && j<y.length; j++)
-					{
-							g.drawLine((int)(j*scale_x+1), (int)((max_et_y - up1[c_event].refAmplitude(j+start) - top) * scale_y - 1),
-							(int)((j+1)*scale_x+1), (int)((max_et_y - up1[c_event].refAmplitude(j+start+1) - top) * scale_y - 1));
-					}
-					for(int j=Math.max(0, down1[c_event].begin - start); j<= Math.min (end, down1[c_event].end) - start && j<y.length; j++)
-					{
-						g.drawLine((int)(j*scale_x+1), (int)((max_et_y - down1[c_event].refAmplitude(j+start) - top) * scale_y - 1),
-						(int)((j+1)*scale_x+1), (int)((max_et_y - down1[c_event].refAmplitude(j+start+1) - top) * scale_y - 1));
-					}
+		//long t0 = System.currentTimeMillis();
 
-			g.setColor(alarmThresholdColor);
-					for(int j=Math.max(0, up2[c_event].begin - start); j<= Math.min (end, up2[c_event].end) - start && j<y.length; j++)
-					{
-						g.drawLine((int)(j*scale_x+1), (int)((max_et_y - up2[c_event].refAmplitude(j+start) - top) * scale_y - 1),
-										 (int)((j+1)*scale_x+1), (int)((max_et_y - up2[c_event].refAmplitude(j+start+1) - top) * scale_y - 1));
-					}
-					for(int j=Math.max(0, down2[c_event].begin - start); j<= Math.min (end, down2[c_event].end) - start && j<y.length; j++)
-					{
-						g.drawLine((int)(j*scale_x+1), (int)((max_et_y - down2[c_event].refAmplitude(j+start) - top) * scale_y - 1),
-						(int)((j+1)*scale_x+1), (int)((max_et_y - down2[c_event].refAmplitude(j+start+1) - top) * scale_y - 1));
-					}
-		}
-		else
-		{
-			g.setColor(warningThresholdColor);
-
-			int x1 = Math.max(0, up1[c_event].begin - start);
-			int x2 = Math.min (end, up1[c_event].end - start);
-			g.drawLine((int)(x1*scale_x+1), (int)((max_et_y - up1[c_event].refAmplitude(x1+start) - top) * scale_y - 1),
-								 (int)(x2*scale_x+1), (int)((max_et_y - up1[c_event].refAmplitude(x2+start) - top) * scale_y - 1));
-
-			x1 = Math.max(0, down1[c_event].begin - start);
-			x2 = Math.min (end, down1[c_event].end - start);
-			g.drawLine((int)(x1*scale_x+1), (int)((max_et_y - down1[c_event].refAmplitude(x1+start) - top) * scale_y - 1),
-								 (int)(x2*scale_x+1), (int)((max_et_y - down1[c_event].refAmplitude(x2+start) - top) * scale_y - 1));
-
-
-
-			g.setColor(alarmThresholdColor);
-
-			x1 = Math.max(0, up2[c_event].begin - start);
-			x2 = Math.min (end, up2[c_event].end - start);
-			g.drawLine((int)(x1*scale_x+1), (int)((max_et_y - up2[c_event].refAmplitude(x1+start) - top) * scale_y - 1),
-								 (int)(x2*scale_x+1), (int)((max_et_y - up2[c_event].refAmplitude(x2+start) - top) * scale_y - 1));
-
-			x1 = Math.max(0, down2[c_event].begin - start);
-			x2 = Math.min (end, down2[c_event].end - start);
-			g.drawLine((int)(x1*scale_x+1), (int)((max_et_y - down2[c_event].refAmplitude(x1+start) - top) * scale_y - 1),
-								 (int)(x2*scale_x+1), (int)((max_et_y - down2[c_event].refAmplitude(x2+start) - top) * scale_y - 1));
-		}
-*/
-
-
-		int st = Math.max (start, et_ep[c_event].begin);
-		int en = et_ep[c_event].end;
+		int st = Math.max (start, et_ep[c_event].getBegin());
+		int en = et_ep[c_event].getEnd();
 
 		ReflectogramEvent up1   = et_ep[c_event].getThresholdReflectogramEvent(0);
 		ReflectogramEvent up2   = et_ep[c_event].getThresholdReflectogramEvent(1);
 		ReflectogramEvent down1 = et_ep[c_event].getThresholdReflectogramEvent(2);
 		ReflectogramEvent down2 = et_ep[c_event].getThresholdReflectogramEvent(3);
 
+		//long t1 = System.currentTimeMillis();
 
-		if (et_ep[c_event].getType() == ReflectogramEvent.LINEAR)
-		{
-			g.setColor(warningThresholdColor);
-			g.drawLine(index2coord(st), (int)((max_et_y - up1.refAmplitude(st) - top) * scale_y - 1),
-								 index2coord(en), (int)((max_et_y - up1.refAmplitude(en) - top) * scale_y - 1));
+		g.setColor(warningThresholdColor);
+		draw_one_model_curve(g, up1);
+		draw_one_model_curve(g, down1);
+		g.setColor(alarmThresholdColor);
+		draw_one_model_curve(g, up2);
+		draw_one_model_curve(g, down2);
 
-			g.drawLine(index2coord(st), (int)((max_et_y - down1.refAmplitude(st) - top) * scale_y - 1),
-								 index2coord(en), (int)((max_et_y - down1.refAmplitude(en) - top) * scale_y - 1));
+		//long t2 = System.currentTimeMillis();
 
-			g.setColor(alarmThresholdColor);
-			g.drawLine(index2coord(st), (int)((max_et_y - up2.refAmplitude(st) - top) * scale_y - 1),
-								 index2coord(en), (int)((max_et_y - up2.refAmplitude(en) - top) * scale_y - 1));
-
-			g.drawLine(index2coord(st), (int)((max_et_y - down2.refAmplitude(st) - top) * scale_y - 1),
-								 index2coord(en), (int)((max_et_y - down2.refAmplitude(en) - top) * scale_y - 1));
-		}
-		else
-		{
-			for(int j=Math.max(0, et_ep[c_event].begin - (int)(start)); j<= Math.min (end, et_ep[c_event].end) - start; j++)// && j<y.length
-			{
-				g.setColor(warningThresholdColor);
-				g.drawLine((int)(j*scale_x+1), (int)((max_et_y - up1.refAmplitude(j+start) - top) * scale_y - 1),
-									 (int)((j+1)*scale_x+1), (int)((max_et_y - up1.refAmplitude(j+start+1) - top) * scale_y - 1));
-
-				g.drawLine((int)(j*scale_x+1), (int)((max_et_y - down1.refAmplitude(j+start) - top) * scale_y - 1),
-									 (int)((j+1)*scale_x+1), (int)((max_et_y - down1.refAmplitude(j+start+1) - top) * scale_y - 1));
-
-				g.setColor(alarmThresholdColor);
-				g.drawLine((int)(j*scale_x+1), (int)((max_et_y - up2.refAmplitude(j+start) - top) * scale_y - 1),
-									 (int)((j+1)*scale_x+1), (int)((max_et_y - up2.refAmplitude(j+start+1) - top) * scale_y - 1));
-
-				g.drawLine((int)(j*scale_x+1), (int)((max_et_y - down2.refAmplitude(j+start) - top) * scale_y - 1),
-									 (int)((j+1)*scale_x+1), (int)((max_et_y - down2.refAmplitude(j+start+1) - top) * scale_y - 1));
-			}
-		}
+		//System.out.println("paint_threshold: dt1 " + (t1-t0) + " dt2 " + (t2-t1));
 	}
 
 	private double getShift(ReflectogramEvent []etalon, double []data)
@@ -451,7 +319,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		double maxEtalon = -1000.;
 		double maxData   = -1000.;
 
-		for(int i=etalon[0].begin; i<=etalon[0].end && i<data.length; i++)
+		for(int i=etalon[0].getBegin(); i<=etalon[0].getEnd() && i<data.length; i++)
 		{
 			if(maxEtalon<etalon[0].refAmplitude(i))
 				maxEtalon=etalon[0].refAmplitude(i);

@@ -5,6 +5,7 @@ import java.util.*;
 
 import javax.swing.*;
 
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrameSimplified;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
@@ -46,17 +47,21 @@ public class FileAddCommand extends VoidCommand
 
 	public void execute()
 	{
-		try
+		if (!AnalyseMainFrameSimplified.DEBUG) // XXX: saa: security bypass
 		{
-			this.checker = new Checker(this.aContext.getSessionInterface());
-		/*
-			The code for administrating should be placed here
-		*/
-		}
-		catch (NullPointerException ex)
-		{
-			System.out.println("Application context and/or user are not defined");
-			return;
+			try
+			{
+				this.checker = new Checker(this.aContext.getSessionInterface());
+				if(!checker.checkCommand(Checker.openReflectogrammFile))
+				{
+					return;
+				}
+			}
+			catch (NullPointerException ex)
+			{
+				System.out.println("Application context and/or user are not defined");
+				return;
+			}
 		}
 
 		Properties properties = new Properties();
@@ -68,7 +73,6 @@ public class FileAddCommand extends VoidCommand
 		}
 		catch (IOException ex)
 		{
-
 		}
 
 		JFileChooser chooser = new JFileChooser(lastDir);
@@ -85,14 +89,14 @@ public class FileAddCommand extends VoidCommand
 					if (((String)it.next()).equals(id))
 					{
 						JOptionPane cDialog = new JOptionPane();
-						int ret = cDialog.showConfirmDialog (
+						int ret = JOptionPane.showConfirmDialog (
 								null,
 								LangModelAnalyse.getString("messageFileAlreadyLoaded"),
 								"",
 								JOptionPane.YES_NO_OPTION);
-						if (ret == cDialog.NO_OPTION)
+						if (ret == JOptionPane.NO_OPTION)
 							 return;
-						if (ret == cDialog.YES_OPTION)
+						if (ret == JOptionPane.YES_OPTION)
 							 new FileRemoveCommand(dispatcher, id, aContext).execute();
 					}
 				}

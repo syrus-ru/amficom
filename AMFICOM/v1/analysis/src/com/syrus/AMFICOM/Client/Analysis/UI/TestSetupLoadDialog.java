@@ -1,6 +1,5 @@
 package com.syrus.AMFICOM.Client.Analysis.UI;
 
-import java.util.*;
 import java.util.List;
 
 import java.awt.*;
@@ -9,18 +8,16 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.client_.general.ui_.tree.*;
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
-import com.syrus.AMFICOM.measurement.DomainCondition;
-import com.syrus.io.BellcoreStructure;
+
+//import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+
+import com.syrus.AMFICOM.client_.general.ui_.tree.UniTreePanel;
 
 public class TestSetupLoadDialog extends JDialog implements OperationListener
 {
 	public int ret_code = 0;
-	public Object resource;
+	public MeasurementSetup resource;
 
 	private Dispatcher dispatcher = new Dispatcher();
 	private ApplicationContext aContext;
@@ -107,12 +104,17 @@ public class TestSetupLoadDialog extends JDialog implements OperationListener
 		if (oe instanceof TreeDataSelectionEvent)
 		{
 			TreeDataSelectionEvent ev = (TreeDataSelectionEvent)oe;
+			
+//		    System.out.println("oe instanceof TreeDataSelectionEvent, A1 " + (ev.getDataClass() != null));
+//		    if (ev.getDataClass() != null)
+//		        System.out.println("   A2 " + ev.getDataClass().equals(MeasurementSetup.class) + " A3 " + (ev.getSelectionNumber() != -1));
+		    
 			if (ev.getDataClass() != null && ev.getDataClass().equals(MeasurementSetup.class)
 					&& ev.getSelectionNumber() != -1)
 			{
 				okButton.setEnabled(true);
 				data = ev.getList();
-				resource = data.get(ev.getSelectionNumber());
+				resource = (MeasurementSetup )data.get(ev.getSelectionNumber());
 			}
 			else
 			{
@@ -130,122 +132,6 @@ public class TestSetupLoadDialog extends JDialog implements OperationListener
 	void cancelButton_actionPerformed(ActionEvent e)
 	{
 		dispose();
-	}
-}
-
-class TestSetupTreeModel extends ObjectResourceTreeModel
-{
-	ApplicationContext aContext;
-
-	public TestSetupTreeModel(ApplicationContext aContext)
-	{
-		this.aContext = aContext;
-	}
-
-	public ObjectResourceTreeNode getRoot()
-	{
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", "primarytrace");
-		try
-		{
-			MonitoredElement me = (MonitoredElement)MeasurementStorableObjectPool.getStorableObject(
-						 new Identifier(bs.monitoredElementId), true);
-			return new ObjectResourceTreeNode("root", "Шаблоны на \"" +
-					(me.getName().equals("") ? me.getId().getIdentifierString() : me.getName()) + "\"", true);
-		}
-		catch(ApplicationException ex)
-		{
-			return new ObjectResourceTreeNode("root", "Шаблоны", true);
-		}
-	}
-
-	public ImageIcon getNodeIcon(ObjectResourceTreeNode node)
-	{
-		return null;
-	}
-
-	public Color getNodeTextColor(ObjectResourceTreeNode node)
-	{
-		return null;
-	}
-
-	public void nodeAfterSelected(ObjectResourceTreeNode node)
-	{
-	}
-
-	public void nodeBeforeExpanded(ObjectResourceTreeNode node)
-	{
-	}
-
-	private Class getNodeClass(ObjectResourceTreeNode node)
-	{
-		if(node.getObject() instanceof MeasurementSetup)
-		{
-			return MeasurementSetup.class;
-		}
-		else
-			return null;
-	}
-
-	public Class getNodeChildClass(ObjectResourceTreeNode node)
-	{
-		return MeasurementSetup.class;
-	}
-
-	public List getChildNodes(ObjectResourceTreeNode node)
-	{
-		List vec = new ArrayList();
-		ObjectResourceTreeNode ortn;
-
-		if(node.getObject() instanceof String)
-		{
-			String s = (String)node.getObject();
-
-			if(s.equals("root"))
-			{
-				BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", "primarytrace");
-				if (bs != null && !bs.monitoredElementId.equals(""))
-				{
-					Identifier me_id = new Identifier(bs.monitoredElementId);
-					Identifier domain_id = new Identifier(aContext.getSessionInterface().getDomainId());
-					try
-					{
-						Domain domain = (Domain)MeasurementStorableObjectPool.getStorableObject(domain_id, true);
-
-						StorableObjectCondition mSetupCondition = new DomainCondition(domain, ObjectEntities.MS_ENTITY_CODE);
-						List mSetups = MeasurementStorableObjectPool.getStorableObjectsByCondition(mSetupCondition, true);
-
-						java.util.Set testsHt = new HashSet();
-						for(Iterator it = mSetups.iterator(); it.hasNext(); )
-						{
-							MeasurementSetup t = (MeasurementSetup)it.next();
-							List me_ids = t.getMonitoredElementIds();
-							for(Iterator it2 = me_ids.iterator(); it2.hasNext(); )
-							{
-								Identifier meId = (Identifier)it2.next();
-								if(meId.equals(me_id))
-								{
-									testsHt.add(t);
-									break;
-								}
-							}
-						}
-
-//						ObjectResourceSorter sorter = StubResource.getDefaultSorter();
-//						sorter.setDataSet(testsHt);
-						for(Iterator it = testsHt.iterator(); it.hasNext(); )
-						{
-							MeasurementSetup t = (MeasurementSetup)it.next();
-							ortn = new ObjectResourceTreeNode(t, t.getDescription(), true, true);
-							vec.add(ortn);
-						}
-					}
-					catch(ApplicationException ex1)
-					{
-					}
-				}
-			}
-		}
-		return vec;
 	}
 }
 

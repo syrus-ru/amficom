@@ -54,12 +54,20 @@ public class TraceEventsLayeredPanel extends ScalableLayeredPanel implements Ope
 				SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
 				if (panel instanceof ReflectogramEventsPanel)
 				{
-					if(rue.MIN_TRACE_LEVEL_CHANGED)
+					if(rue.minTraceLevelChanged())
 					{
 						((ReflectogramEventsPanel)panel).updateMinTraceLevel((Double)rue.getSource());
 						jLayeredPane.repaint();
 					}
 				}
+			}
+			if (rue.modelFunctionChanged())
+			{
+			    jLayeredPane.repaint();
+			}
+			if (rue.analysisPerformed())
+			{
+			    updPaintingMode();
 			}
 		}
 	}

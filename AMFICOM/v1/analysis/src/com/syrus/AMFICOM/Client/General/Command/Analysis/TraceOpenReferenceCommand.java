@@ -48,7 +48,7 @@ public class TraceOpenReferenceCommand extends VoidCommand
 		try
 		{
 			this.checker = new Checker(this.aContext.getSessionInterface());
-			if(!checker.checkCommand(checker.loadReferenceTrace))
+			if(!checker.checkCommand(Checker.loadReferenceTrace))
 			{
 				return;
 			}

@@ -13,7 +13,6 @@ import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
-import com.syrus.AMFICOM.measurement.Set;
 
 import com.syrus.io.BellcoreStructure;
 import com.syrus.util.ByteArray;
@@ -123,7 +122,7 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 		{
 			try
 			{
-				MonitoredElement me = (MonitoredElement)MeasurementStorableObjectPool.getStorableObject(
+				MonitoredElement me = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(
 								new Identifier(bs.monitoredElementId), true);
 				setTitle(me.getName());
 			}
@@ -229,8 +228,8 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 					double[] y = new double[n];
 					for (int i = 0; i < ep.length; i++)
 					{
-						for (int j = ep[i].begin; j <= ep[i].end && j < n; j++)
-							y[j] = ep[i].refAmpl(j)[0];
+						for (int j = ep[i].getBegin(); j <= ep[i].getEnd() && j < n; j++)
+							y[j] = ep[i].refAmplitude(j);
 					}
 					SimpleGraphPanel epPanel = new SimpleGraphPanel(y, delta_x);
 					epPanel.setColorModel(AnalysisUtil.ETALON);

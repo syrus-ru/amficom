@@ -30,6 +30,7 @@ public class MathRef
 		return data;
 	}
 
+	/*
 	public static double[] getDerivative(double[] y)
 	{
 		double[] deriv = new double[y.length];
@@ -38,6 +39,7 @@ public class MathRef
 		deriv[y.length-1] = 0.;
 		return deriv;
 	}
+	*/
 
 	public static double getLinearStartPoint (double[] y)
 	{
@@ -53,6 +55,7 @@ public class MathRef
 		return res;
 	}
 
+	/*
 	public static int findInflectionPoint(double[] y, int start, int end)
 	{
 		for (int i = start + 1; i < end - 1; i++)
@@ -152,6 +155,7 @@ public class MathRef
 			_res[i] = res[i] + start;
 		return _res;
 	}
+	*/
 
 	public static double[] LSA(double[] y, int begin, int end)
 	{
@@ -206,23 +210,38 @@ public class MathRef
 	// параметры: длина волны в нм, длительность импульса в нс
 	public static double calcSigma (int wavelength, int pulsewidth)
 	{
-		double sigma;
+		// FIXIT: verify
+		//System.out.println("calcSigma: wavelength = " + wavelength + " pulse = " + pulsewidth); // FIXIT - remove
+		
+		// XXX: приблизительные расчет, предполагающий стандартное волокно
+		double sigma0;
+		double Vg = 3e8 / 1.47 * 1e-9; // м/нс
 		switch (wavelength)
 		{
-			case 1310: sigma = 49d; break;
-			case 1550: sigma = 52d; break;
-			case 1625: sigma = 52.8d; break;
-			default: sigma = 51d;
+			//case 1310: sigma = 49d; break;
+			//case 1550: sigma = 52d; break;
+			//case 1625: sigma = 52.8d; break;
+			//default: sigma = 51d;
+			case 1310: sigma0 = 42d; break;
+			case 1550: sigma0 = 45d; break;
+			case 1625: sigma0 = 46d; break; // 46: XXX
+			default:
+				sigma0 = 46d;
+				System.out.println("calcSigma: warning: unknown wavelength " + wavelength);
 		}
 		if (pulsewidth == 0)
-			pulsewidth = 1000;
-		return sigma + Math.log(1000d/(double)pulsewidth)/Math.log(10d);
+			pulsewidth = 1000; // XXX
+		//return sigma + Math.log(1000d/(double)pulsewidth) / Math.log(10d);
+		return sigma0 + Math.log(Vg / (double)pulsewidth) / Math.log(10d);
 	}
 
 	// вычислить отражение
 	// параметры вышеприведенна€ сигма, амплитуда отражени€ в дЅ
 	public static double calcReflectance (double sigma, double peak)
 	{
+		//System.out.println("calcReflectance: sigma "+sigma+" peak "+peak);
+		if (peak < 0)
+			peak = 0; // XXX
 		return (-sigma + 10d*Math.log(Math.pow(10d, peak/5d) - 1)/Math.log(10));
 	}
 
@@ -246,12 +265,15 @@ public class MathRef
 		return ((double)Math.round(d * 100d)) / 100d;
 	}
 
+	/*
 	public static double round (double d, int digits)
 	{
 		double pow = Math.pow(10d, (double)digits);
 		return ((double)Math.round(d * pow)) / pow;
 	}
+	*/
 
+	/*
 	public static int sign(double d)
 	{
 		if (d > 0)
@@ -260,6 +282,7 @@ public class MathRef
 			return -1;
 		return 0;
 	}
+	*/
 
 	public static int sign2(double d)
 	{

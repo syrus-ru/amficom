@@ -276,6 +276,8 @@ public class ThresholdsMainFrame extends JFrame
 		aModel.setEnabled("menuReport", true);
 		aModel.setEnabled("menuWindow", true);
 
+		aModel.setEnabled("menuFileOpen", AnalyseMainFrameSimplified.DEBUG); // XXX: saa: security bypass
+
 		aModel.setVisible("menuAnalyseUpload", false);
 		aModel.setVisible("menuAnalyseSaveCriteria", false);
 		aModel.setVisible("menuSaveEtalon", false);
@@ -587,7 +589,7 @@ public class ThresholdsMainFrame extends JFrame
 	public void setSessionOpened()
 	{
 		Checker checker = new Checker(aContext.getDataSource());
-		if(!checker.checkCommand(checker.enterThresholdModul))
+		if(!checker.checkCommand(Checker.enterThresholdModul))
 		{
 			JOptionPane.showMessageDialog(
 					this,

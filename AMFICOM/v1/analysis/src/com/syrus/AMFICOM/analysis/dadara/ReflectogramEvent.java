@@ -1,1529 +1,855 @@
-package com.syrus.AMFICOM.analysis.dadara;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.util.LinkedList;
-
-public class ReflectogramEvent {
-	public static final int NUMBER_OF_PARAMETERS = 38;
-	public static final int EVENT_SIZE = 35 * 8 + 3 * 4;
-	//public static final int OLD_EVENT_SIZE = 316;
-
-	public static final int LINEAR = 1;
-	public static final int WELD = 2;
-	public static final int CONNECTOR = 3;
-	public static final int SINGULARITY = 4;
-
-	private int type;
-	public int begin;
-	public int end;
-// Parameters for linear part
-	public double  a_linear;
-	public double  a_linearError;
-	public double  b_linear;
-	public double  b_linearError;
-	public double  chi2Linear;
-// Parameters for the welds
-	public double  a_weld;
-	public double  a_weldError;
-	public double  b_weld;
-	public double  b_weldError;
-	public double  boost_weld;
-	public double  boost_weldError;
-	public double  center_weld;
-	public double  center_weldError;
-	public double  width_weld;
-	public double  width_weldError;
-	public double  chi2Weld;
-// Parameters for the Connectors
-	public double  a1_connector;
-	public double  a1_connectorError;
-	public double  a2_connector;
-	public double  a2_connectorError;
-	public double  aLet_connector;
-	public double  aLet_connectorError;
-	public double  width_connector;
-	public double  width_connectorError;
-	public double  center_connector;
-	public double  center_connectorError;
-	public double  sigma1_connector;
-	public double  sigma1_connectorError;
-	public double  sigma2_connector;
-	public double  sigma2_connectorError;
-	public double  sigmaFit_connector;
-	public double  sigmaFit_connectorError;
-	public double  k_connector;
-	public double  k_connectorError;
-	public double  chi2Connector;
-
-// Delta_x
-	private double delta_x = 1.;
-
-	public Threshold threshold;
-
-	public ReflectogramEvent() {
-		threshold = new Threshold(this);
-	}
-
-	public ReflectogramEvent(byte[] b) {
-		ByteArrayInputStream bais = new ByteArrayInputStream(b);
-		DataInputStream dis = new DataInputStream(bais);
-		try	{
-			this.type = dis.readInt();
-			this.begin = dis.readInt();
-			this.end = dis.readInt();
-
-			this.a_linear = dis.readDouble();
-			this.a_linearError = dis.readDouble();
-			this.b_linear = dis.readDouble();
-			this.b_linearError = dis.readDouble();
-			this.chi2Linear = dis.readDouble();
-// Parameters for the welds
-			this.a_weld = dis.readDouble();
-			this.a_weldError = dis.readDouble();
-			this.b_weld = dis.readDouble();
-			this.b_weldError = dis.readDouble();
-			this.boost_weld = dis.readDouble();
-			this.boost_weldError = dis.readDouble();
-			this.center_weld = dis.readDouble();
-			this.center_weldError = dis.readDouble();
-			this.width_weld = dis.readDouble();
-			this.width_weldError = dis.readDouble();
-			this.chi2Weld = dis.readDouble();
-// Parameters for the Connectors
-			this.a1_connector = dis.readDouble();
-			this.a1_connectorError = dis.readDouble();
-			this.a2_connector = dis.readDouble();
-			this.a2_connectorError = dis.readDouble();
-			this.aLet_connector = dis.readDouble();
-			this.aLet_connectorError = dis.readDouble();
-			this.width_connector = dis.readDouble();
-			this.width_connectorError = dis.readDouble();
-			this.center_connector = dis.readDouble();
-			this.center_connectorError = dis.readDouble();
-			this.sigma1_connector = dis.readDouble();
-			this.sigma1_connectorError = dis.readDouble();
-			this.sigma2_connector = dis.readDouble();
-			this.sigma2_connectorError = dis.readDouble();
-			this.sigmaFit_connector = dis.readDouble();
-			this.sigmaFit_connectorError = dis.readDouble();
-			this.k_connector = dis.readDouble();
-			this.k_connectorError = dis.readDouble();
-			this.chi2Connector = dis.readDouble();
-
-			dis.close();
-		}
-		catch (IOException e)	{
-			System.out.println("Exception while converting byte array to ReflectogramEvent: " + e.getMessage());
-			e.printStackTrace();
-		}
-	}
-
-	public Threshold getThreshold()	{
-		return threshold;
-	}
-
-	public void setThreshold(Threshold threshold)	{
-		this.threshold = threshold;
-	}
-
-	public double connectorF(int x) {
-		double ret = 0.;
-		double arg;
-		double arg1;
-		double arg2;
-
-		arg = x-center_connector;
-		arg1 = arg+width_connector/2.;
-		arg2 = arg-width_connector/2.;
-		double tmp;
-
-		if(arg<-width_connector/2.)	{
-			ret = a1_connector;
-		}
-		else
-			if(arg>=-width_connector/2. && arg<=width_connector/2.)	{
-				ret = aLet_connector*(1.-Math.exp(-arg1/sigma1_connector)) +
-							a1_connector;
-			}
-			else
-				if(arg>width_connector/2.) {
-					tmp = a1_connector+aLet_connector*
-								(1.-Math.exp(-width_connector/sigma1_connector));
-
-					ret = tmp -
-								(tmp-a2_connector)*(1. - expa(arg2, sigma2_connector,
-								sigmaFit_connector, k_connector));
-				}
-				else
-					ret = 0.;
-
-				return ret;
-	}
-
-	public double linearF(int x)	{
-		double ret;
-		double arg = x-begin;
-		ret = a_linear + b_linear*arg;
-		return ret;
-	}
-
-	public double weldF(int x) {
-		double ret;
-		double arg = x-this.center_weld;
-		double halfWidth = this.width_weld/2.;
-
-		if(arg<-halfWidth) ret = -1.;
-		else
-			if(arg> halfWidth) ret = 1.;
-		else
-			ret = Math.sin(3.14159*arg/width_weld);
-
-		ret = ret*this.boost_weld/2. + a_weld + b_weld*arg;
-		return ret;
-	}
-
-
-	public double[] refAmpl(int x) {
-		double []ret = new double[2];
-		double retA = 0.;
-		double retErr = 0.;
-	//	double distance = 0.;
-		if(this.type == LINEAR)	{
-			retA = this.linearF(x);
-	//		distance = endLinear - beginLinear;
-			retErr = Math.sqrt(a_linearError*a_linearError);// +
-//                         b_linearError*distance*b_linearError*distance/2.);
-		}
-		else
-			if(this.type == CONNECTOR) {
-				retA = this.connectorF(x);
-				retErr = Math.sqrt(a1_connectorError*a1_connectorError +
-													 a2_connectorError*a2_connectorError +
-													 aLet_connectorError*aLet_connectorError);
-			}
-			else
-				if(this.type == WELD)	{
-					retA = this.weldF(x);
-					retErr = Math.sqrt(a_weldError*a_weldError +
-														 boost_weldError*boost_weldError);
-				}
-				else {
-					retA = 0.;
-					retErr = 10.;
-				}
-				ret[0] = retA;
-				ret[1] = retErr;
-				return ret;
-	}
-
-
-
-	public double refAmplitude(int x) {
-		double retA = 0.;
-
-		if(this.type == LINEAR)	{
-			retA = this.linearF(x);
-		}
-		else
-			if(this.type == CONNECTOR) {
-				retA = this.connectorF(x);
-			}
-			else
-				if(this.type == WELD)	{
-					retA = this.weldF(x);
-				}
-				else {
-					retA = 0.;
-				}
-				return retA;
-	}
-
-
-	public void setParams(double []signal, int begin) {
-		this.type = (int)signal[begin];
-		this.begin = (int)signal[begin+1];
-		this.end =   (int)signal[begin+2];
-		// Linear
-		a_linear = signal[begin+3];
-		a_linearError = signal[begin+4];
-		b_linear = signal[begin+5];
-		b_linearError = signal[begin+6];
-		chi2Linear = signal[begin+7];
-		// Weld
-		a_weld = signal[begin+8];
-		a_weldError = signal[begin+9];
-		b_weld = signal[begin+10];
-		b_weldError = signal[begin+11];
-		boost_weld = signal[begin+12];
-		boost_weldError = signal[begin+13];
-		center_weld = signal[begin+14];
-		center_weldError = signal[begin+15];
-		width_weld = signal[begin+16];
-		width_weldError = signal[begin+17];
-		chi2Weld = signal[begin+18];
-		//Connector
-		a1_connector = signal[begin+19];
-		a1_connectorError = signal[begin+20];
-		a2_connector = signal[begin+21];
-		a2_connectorError = signal[begin+22];
-		aLet_connector = signal[begin+23];
-		aLet_connectorError = signal[begin+24];
-		width_connector = signal[begin+25];
-		width_connectorError = signal[begin+26];
-		center_connector = signal[begin+27];
-		center_connectorError = signal[begin+28];
-		sigma1_connector = signal[begin+29];
-		sigma1_connectorError = signal[begin+30];
-		sigma2_connector = signal[begin+31];
-		sigma2_connectorError = signal[begin+32];
-		sigmaFit_connector = signal[begin+33];
-		sigmaFit_connectorError = signal[begin+34];
-		k_connector = signal[begin+35];
-		k_connectorError = signal[begin+36];
-		chi2Connector = signal[begin+37];
-	}
-
-	public void toDoubleArray(double[] d, int start)
-	{
-		d[start] = this.type;
-		d[start+1] = this.begin;
-		d[start+2] = this.end;
-		// Linear
-		d[start+3] = a_linear;
-		d[start+4] = a_linearError;
-		d[start+5] = b_linear;
-		d[start+6] = b_linearError;
-		d[start+7] = chi2Linear;
-		// Weld
-		d[start+8] = a_weld;
-		d[start+9] = a_weldError;
-		d[start+10] = b_weld;
-		d[start+11] = b_weldError;
-		d[start+12] = boost_weld;
-		d[start+13] = boost_weldError;
-		d[start+14] = center_weld;
-		d[start+15] = center_weldError;
-		d[start+16] = width_weld;
-		d[start+17] = width_weldError;
-		d[start+18] = chi2Weld;
-		//Connector
-		d[start+19] = a1_connector;
-		d[start+20] = a1_connectorError;
-		d[start+21] = a2_connector;
-		d[start+22] = a2_connectorError;
-		d[start+23] = aLet_connector;
-		d[start+24] = aLet_connectorError;
-		d[start+25] = width_connector;
-		d[start+26] = width_connectorError;
-		d[start+27] = center_connector;
-		d[start+28] = center_connectorError;
-		d[start+29] = sigma1_connector;
-		d[start+30] = sigma1_connectorError;
-		d[start+31] = sigma2_connector;
-		d[start+32] = sigma2_connectorError;
-		d[start+33] = sigmaFit_connector;
-		d[start+34] = sigmaFit_connectorError;
-		d[start+35] = k_connector;
-		d[start+36] = k_connectorError;
-		d[start+37] = chi2Connector;
-	}
-
-
-	public double expa(double x, double s1, double s2, double part)	{
-		double ret = 0.;
-
-		double arg1 = x/s1;
-		double arg2 = x/s2;
-
-		ret = Math.exp(-arg1)*part + Math.exp(-arg2)*(1.-part);
-
-		return ret;
-	}
-
-// functions for default threshold
-//  public double connectorThresholdF(int x, double dL, double dA, double dX, double dC,
-//                                    ReflectogramEvent previousEvent, ReflectogramEvent nextEvent)
-//  {
-//    double ret = 0.;
-//    double arg;
-//    double arg1;
-//    double arg2;
-//
-//    this.begin = (int)(this.begin-dX+dC);
-//    this.end = (int)(this.end+dX+dC);
-//
-//    if(this.begin<0)
-//      this.begin = 0;
-//
-//    this.begin = this.begin = this.begin;
-//    this.end = this.end = this.end;
-//
-//    if(previousEvent != null)
-//    {
-//      previousEvent.end = previousEvent.end = previousEvent.end = this.begin;
-//    }
-//    if(nextEvent != null)
-//    {
-//      nextEvent.begin = nextEvent.begin = nextEvent.begin = this.end;
-//    }
-//
-//
-//
-//    double width_connector = this.width_connector+dX*2.;
-//    double a1_connector = this.a1_connector+dA;
-//    double a2_connector = this.a2_connector+dA;
-//    double aLet_connector = this.aLet_connector+dL;
-//    double center_connector = this.center_connector+dC;
-//
-//    arg = x-center_connector;
-//    arg1 = arg+width_connector/2.;
-//    arg2 = arg-width_connector/2.;
-//
-//    if(arg<-width_connector/2.)	{
-//      ret = a1_connector;
-//    }
-//    else
-//      if(arg>=-width_connector/2. && arg<=width_connector/2.)	{
-//        ret = aLet_connector*(1.-Math.exp(-arg1/sigma1_connector)) +
-//              a1_connector;
-//      }
-//      else
-//        if(arg>width_connector/2.) {
-//          ret = (a1_connector+aLet_connector*(1.-Math.exp(-width_connector/
-//              sigma1_connector))) -
-//                (a1_connector+aLet_connector*(1.-Math.exp(-width_connector/
-//                sigma1_connector))-a2_connector)*
-//                (1. - expa(arg2, sigma2_connector,
-//                sigmaFit_connector, k_connector) );
-//        }
-//        else
-//          ret = 0.;
-//
-//        return ret;
-//  }
-
-
-	public double connectorThresholdF(int x, double dL, double dA, double dX, double dC)
-	{
-		double ret = 0.;
-		double arg;
-		double arg1;
-		double arg2;
-
-		double width_connector = this.width_connector+dX*2.;
-		double a1_connector = this.a1_connector+dA;
-		double a2_connector = this.a2_connector+dA;
-		double aLet_connector = this.aLet_connector+dL;
-		double center_connector = this.center_connector+dC;
-
-		arg = x-center_connector;
-		arg1 = arg+width_connector/2.;
-		arg2 = arg-width_connector/2.;
-
-		if(arg<-width_connector/2.)	{
-			ret = a1_connector;
-		}
-		else
-			if(arg>=-width_connector/2. && arg<=width_connector/2.)	{
-				ret = aLet_connector*(1.-Math.exp(-arg1/sigma1_connector)) +
-							a1_connector;
-			}
-			else
-				if(arg>width_connector/2.) {
-					ret = (a1_connector+aLet_connector*(1.-Math.exp(-width_connector/
-							sigma1_connector))) -
-								(a1_connector+aLet_connector*(1.-Math.exp(-width_connector/
-								sigma1_connector))-a2_connector)*
-								(1. - expa(arg2, sigma2_connector,
-								sigmaFit_connector, k_connector) );
-				}
-				else
-					ret = 0.;
-
-				return ret;
-	}
-
-
-	public double connectorThresholdF(int x, int thresholdNumeral)
-	{
-		double dL;
-		double dA;
-		double dX;
-		double dC;
-		if(threshold == null) //if threshold is not set;
-			return 0.;
-		else
-		{
-			dL = threshold.dL[thresholdNumeral];
-			dA = threshold.dA[thresholdNumeral];
-			dX = threshold.dX[thresholdNumeral];
-			dC = threshold.dC[thresholdNumeral];
-		}
-
-
-		double ret = 0.;
-		double arg;
-		double arg1;
-		double arg2;
-
-		double width_connector = this.width_connector+dX*2.;
-		double a1_connector = this.a1_connector+dA;
-		double a2_connector = this.a2_connector+dA;
-		double aLet_connector = this.aLet_connector+dL;
-		double center_connector = this.center_connector+dC;
-
-		arg = x-center_connector;
-		arg1 = arg+width_connector/2.;
-		arg2 = arg-width_connector/2.;
-
-		if(arg<-width_connector/2.)	{
-			ret = a1_connector;
-		}
-		else
-			if(arg>=-width_connector/2. && arg<=width_connector/2.)	{
-				ret = aLet_connector*(1.-Math.exp(-arg1/sigma1_connector)) +
-							a1_connector;
-			}
-			else
-				if(arg>width_connector/2.) {
-					ret = (a1_connector+aLet_connector*(1.-Math.exp(-width_connector/
-							sigma1_connector))) -
-								(a1_connector+aLet_connector*(1.-Math.exp(-width_connector/
-								sigma1_connector))-a2_connector)*
-								(1. - expa(arg2, sigma2_connector,
-								sigmaFit_connector, k_connector) );
-				}
-				else
-					ret = 0.;
-
-				return ret;
-	}
-
-
-	public double linearThresholdF(int x, double dA)	{
-		double ret;
-		double arg = x-begin;
-		double a_linear = this.a_linear+dA;
-		ret = a_linear + b_linear*arg;
-		return ret;
-	}
-
-
-	public double linearThresholdF(int x, int thresholdNumeral)
-	{
-		double dA;
-		if(threshold == null) // Case, when threshold is not set;
-			return 0.;
-		else
-		{
-			dA = threshold.dA[thresholdNumeral];
-		}
-
-		double ret;
-		double arg = x-begin;
-
-		double a_linear = this.a_linear+dA;
-
-		ret = a_linear + b_linear*arg;
-		return ret;
-	}
-
-	public double weldThresholdF(int x, double dA, double dX) {
-
-		double a_weld = this.a_weld + dA;
-
-		double ret;
-		double arg = x-this.center_weld;
-		double halfWidth = this.width_weld/2.;
-
-		if(arg<-halfWidth) ret = -1.;
-		else
-			if(arg> halfWidth) ret = 1.;
-		else
-			ret = Math.sin(3.14159*arg/width_weld);
-
-		ret = ret*this.boost_weld/2. + a_weld + b_weld*arg;
-		return ret;
-	}
-
-
-	public double weldThresholdF(int x, int thresholdNumeral)
-	{
-		double dA;
-		if(threshold == null)
-			return 0.;
-		else
-		{
-			dA = threshold.dA[thresholdNumeral];
-		}
-
-		double a_weld = this.a_weld + dA;
-
-		double ret;
-		double arg = x-this.center_weld;
-		double halfWidth = this.width_weld/2.;
-
-		if(arg<-halfWidth) ret = -1.;
-		else
-			if(arg> halfWidth) ret = 1.;
-		else
-			ret = Math.sin(3.14159*arg/width_weld);
-
-		ret = ret*this.boost_weld/2. + a_weld + b_weld*arg;
-		return ret;
-	}
-
-	public int getType() {
-		return type;
-	}
-
-	public void setType(int type)	{
-		this.type = type;
-	}
-
-	public ReflectogramEvent copy()	{
-		ReflectogramEvent re = new ReflectogramEvent();
-
-		re.type = type;
-		re.begin = begin;
-		re.end = end;
-
-		re.a_linear = a_linear;
-		re.a_linearError = a_linearError;
-		re.b_linear = b_linear;
-		re.b_linearError = b_linearError;
-		re.chi2Linear = chi2Linear;
-// Parameters for the welds
-		re.a_weld = a_weld;
-		re.a_weldError = a_weldError;
-		re.b_weld = b_weld;
-		re.b_weldError = b_weldError;
-		re.boost_weld = boost_weld;
-		re.boost_weldError = boost_weldError;
-		re.center_weld = center_weld;
-		re.center_weldError = center_weldError;
-		re.width_weld = width_weld;
-		re.width_weldError = width_weldError;
-		re.chi2Weld = chi2Weld;
-// Parameters for the Connectors
-		re.a1_connector = a1_connector;
-		re.a1_connectorError = a1_connectorError;
-		re.a2_connector = a2_connector;
-		re.a2_connectorError = a2_connectorError;
-		re.aLet_connector = aLet_connector;
-		re.aLet_connectorError = aLet_connectorError;
-		re.width_connector = width_connector;
-		re.width_connectorError = width_connectorError;
-		re.center_connector = center_connector;
-		re.center_connectorError = center_connectorError;
-		re.sigma1_connector = sigma1_connector;
-		re.sigma1_connectorError = sigma1_connectorError;
-		re.sigma2_connector = sigma2_connector;
-		re.sigma2_connectorError = sigma2_connectorError;
-		re.sigmaFit_connector = sigmaFit_connector;
-		re.sigmaFit_connectorError = sigmaFit_connectorError;
-		re.k_connector = k_connector;
-		re.k_connectorError = k_connectorError;
-		re.chi2Connector = chi2Connector;
-
-		re.threshold = threshold;
-		return re;
-	}
-
-	public byte[] getByteArray() {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream(EVENT_SIZE);
-		DataOutputStream dos = new DataOutputStream(baos);
-		try {
-			dos.writeInt(this.type);
-			dos.writeInt(this.begin);
-			dos.writeInt(this.end);
-
-			dos.writeDouble(this.a_linear);
-			dos.writeDouble(this.a_linearError);
-			dos.writeDouble(this.b_linear);
-			dos.writeDouble(this.b_linearError);
-			dos.writeDouble(this.chi2Linear);
-
-			dos.writeDouble(this.a_weld);
-			dos.writeDouble(this.a_weldError);
-			dos.writeDouble(this.b_weld);
-			dos.writeDouble(this.b_weldError);
-			dos.writeDouble(this.boost_weld);
-			dos.writeDouble(this.boost_weldError);
-			dos.writeDouble(this.center_weld);
-			dos.writeDouble(this.center_weldError);
-			dos.writeDouble(this.width_weld);
-			dos.writeDouble(this.width_weldError);
-			dos.writeDouble(this.chi2Weld);
-
-			dos.writeDouble(this.a1_connector);
-			dos.writeDouble(this.a1_connectorError);
-			dos.writeDouble(this.a2_connector);
-			dos.writeDouble(this.a2_connectorError);
-			dos.writeDouble(this.aLet_connector);
-			dos.writeDouble(this.aLet_connectorError);
-			dos.writeDouble(this.width_connector);
-			dos.writeDouble(this.width_connectorError);
-			dos.writeDouble(this.center_connector);
-			dos.writeDouble(this.center_connectorError);
-			dos.writeDouble(this.sigma1_connector);
-			dos.writeDouble(this.sigma1_connectorError);
-			dos.writeDouble(this.sigma2_connector);
-			dos.writeDouble(this.sigma2_connectorError);
-			dos.writeDouble(this.sigmaFit_connector);
-			dos.writeDouble(this.sigmaFit_connectorError);
-			dos.writeDouble(this.k_connector);
-			dos.writeDouble(this.k_connectorError);
-			dos.writeDouble(this.chi2Connector);
-
-			dos.close();
-		}
-		catch (IOException ioe) {
-			System.out.println("Exception while getting byte array from reflectogram event: " + ioe.getMessage());
-			ioe.printStackTrace();
-			return null;
-		}
-		return baos.toByteArray();
-	}
-
-	public static byte[] toByteArray(ReflectogramEvent[] revents) {
-		byte[] bar = new byte[EVENT_SIZE * revents.length];
-		byte[] bar1;
-		for (int i = 0; i < revents.length; i++) {
-			bar1 = revents[i].getByteArray();
-			for (int j = 0; j < EVENT_SIZE; j++)
-				bar[i * EVENT_SIZE + j] = bar1[j];
-		}
-		return bar;
-	}
-
-	public static ReflectogramEvent[] fromByteArray(byte[] bar) {
-		ByteArrayInputStream bais = new ByteArrayInputStream(bar);
-		DataInputStream dis = new DataInputStream(bais);
-		byte[] buf = new byte[EVENT_SIZE];
-		LinkedList ll = new LinkedList();
-		try {
-			while (dis.read(buf) == EVENT_SIZE)
-				ll.add(new ReflectogramEvent(buf));
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-		return (ReflectogramEvent[])ll.toArray(new ReflectogramEvent[ll.size()]);
-	}
-
-
-	public ReflectogramEvent getThresholdReflectogramEvent(int thresholdNumeral)
-	{
-		ReflectogramEvent re = this.copy();
-		if(threshold != null && thresholdNumeral>=0 && thresholdNumeral<4)
-		{
-			if(re.type == CONNECTOR)
-			{
-				re.width_connector = this.width_connector + threshold.dX[thresholdNumeral]*2.;
-				re.a1_connector = this.a1_connector + threshold.dA[thresholdNumeral];
-				re.a2_connector = this.a2_connector + threshold.dA[thresholdNumeral];
-				re.aLet_connector = this.aLet_connector + threshold.dL[thresholdNumeral];
-				re.center_connector = this.center_connector + threshold.dC[thresholdNumeral];
-
-				re.begin = (int)(re.begin - threshold.dX[thresholdNumeral] +
-														threshold.dC[thresholdNumeral]);
-
-				re.end = (int)(re.end + threshold.dX[thresholdNumeral] +
-														threshold.dC[thresholdNumeral]);
-			}
-			else if(re.type == LINEAR)
-			{
-				re.a_linear = this.a_linear + threshold.dA[thresholdNumeral];
-			}
-			else
-			{
-				re.a_weld = this.a_weld + threshold.dA[thresholdNumeral];
-			}
-		}
-
-		return re;
-	}
-
-	public void setDeltaX(double delta_x)
-	{
-		this.delta_x = delta_x;
-	}
-
-	public double getDeltaX()
-	{
-		return this.delta_x;
-	}
-
-}
 /*
+ * Два варианта создания объектов:
+ * 1. Native-код AnalysisManager'а
+ * 2. static метод fromByteArray() 
+ */
+
+// TODO: упорядочить методы согласно хотя бы доступу
 
 package com.syrus.AMFICOM.analysis.dadara;
 
+import java.util.Map;
+import java.util.Iterator;
+import com.syrus.io.BellcoreStructure;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.LinkedList;
-
-public class ReflectogramEvent {
-	public static final int NUMBER_OF_PARAMETERS = 44;
-	public static final int EVENT_SIZE = 316;
-
-	public static final int LINEAR = 10;
-	public static final int WELD = 11;
-	public static final int CONNECTOR = 12;
-
-// Parameters for linear part
-	public double  a_linear;
-	public double  a_linearError;
-	public double  b_linear;
-	public double  b_linearError;
-	public int     beginLinear;
-	public int     endLinear;
-	public double  chi2Linear;
-	public int     linearEvent=0;
-// Parameters for the welds
-	public double  a_weld;
-	public double  a_weldError;
-	public double  b_weld;
-	public double  b_weldError;
-	public double  boost_weld;
-	public double  boost_weldError;
-	public double  center_weld;
-	public double  center_weldError;
-	public double  width_weld;
-	public double  width_weldError;
-	public int     beginWeld;
-	public int     endWeld;
-	public double  chi2Weld;
-	public int     weldEvent=0;
-// Parameters for the Connectors
-	public double  a1_connector;
-	public double  a1_connectorError;
-	public double  a2_connector;
-	public double  a2_connectorError;
-	public double  aLet_connector;
-	public double  aLet_connectorError;
-	public double  width_connector;
-	public double  width_connectorError;
-	public double  center_connector;
-	public double  center_connectorError;
-	public double  sigma1_connector;
-	public double  sigma1_connectorError;
-	public double  sigma2_connector;
-	public double  sigma2_connectorError;
-	public double  sigmaFit_connector;
-	public double  sigmaFit_connectorError;
-	public double  k_connector;
-	public double  k_connectorError;
-	public int     beginConnector;
-	public int     endConnector;
-	public double  chi2Connector;
-	public int     connectorEvent=0;
-
-// Delta_x
-	private double delta_x = 1.;
-
-	public Threshold threshold;
-
-	public ReflectogramEvent() {
-		threshold = new Threshold(this);
-	}
-
-	public ReflectogramEvent(byte[] b) {
-		ByteArrayInputStream bais = new ByteArrayInputStream(b);
-		DataInputStream dis = new DataInputStream(bais);
-		try	{
-			this.a_linear = dis.readDouble();
-			this.a_linearError = dis.readDouble();
-			this.b_linear = dis.readDouble();
-			this.b_linearError = dis.readDouble();
-			this.beginLinear = dis.readInt();
-			this.endLinear = dis.readInt();
-			this.chi2Linear = dis.readDouble();
-			this.linearEvent = dis.readInt();
-// Parameters for the welds
-			this.a_weld = dis.readDouble();
-			this.a_weldError = dis.readDouble();
-			this.b_weld = dis.readDouble();
-			this.b_weldError = dis.readDouble();
-			this.boost_weld = dis.readDouble();
-			this.boost_weldError = dis.readDouble();
-			this.center_weld = dis.readDouble();
-			this.center_weldError = dis.readDouble();
-			this.width_weld = dis.readDouble();
-			this.width_weldError = dis.readDouble();
-			this.beginWeld = dis.readInt();
-			this.endWeld = dis.readInt();
-			this.chi2Weld = dis.readDouble();
-			this.weldEvent = dis.readInt();
-// Parameters for the Connectors
-			this.a1_connector = dis.readDouble();
-			this.a1_connectorError = dis.readDouble();
-			this.a2_connector = dis.readDouble();
-			this.a2_connectorError = dis.readDouble();
-			this.aLet_connector = dis.readDouble();
-			this.aLet_connectorError = dis.readDouble();
-			this.width_connector = dis.readDouble();
-			this.width_connectorError = dis.readDouble();
-			this.center_connector = dis.readDouble();
-			this.center_connectorError = dis.readDouble();
-			this.sigma1_connector = dis.readDouble();
-			this.sigma1_connectorError = dis.readDouble();
-			this.sigma2_connector = dis.readDouble();
-			this.sigma2_connectorError = dis.readDouble();
-			this.sigmaFit_connector = dis.readDouble();
-			this.sigmaFit_connectorError = dis.readDouble();
-			this.k_connector = dis.readDouble();
-			this.k_connectorError = dis.readDouble();
-			this.beginConnector = dis.readInt();
-			this.endConnector = dis.readInt();
-			this.chi2Connector = dis.readDouble();
-			this.connectorEvent = dis.readInt();
-
-			dis.close();
-		}
-		catch (IOException e)	{
-			System.out.println("Exception while converting byte array to ReflectogramEvent: " + e.getMessage());
-			e.printStackTrace();
-		}
-	}
-
-	public Threshold getThreshold()	{
-		return threshold;
-	}
-
-	public void setThreshold(Threshold threshold)	{
-		this.threshold = threshold;
-	}
-
-	public double connectorF(int x) {
-		double ret = 0.;
-		double arg;
-		double arg1;
-		double arg2;
-
-		arg = x-center_connector;
-		arg1 = arg+width_connector/2.;
-		arg2 = arg-width_connector/2.;
-		double tmp;
-
-		if(arg<-width_connector/2.)	{
-			ret = a1_connector;
-		}
-		else
-			if(arg>=-width_connector/2. && arg<=width_connector/2.)	{
-				ret = aLet_connector*(1.-Math.exp(-arg1/sigma1_connector)) +
-							a1_connector;
-			}
-			else
-				if(arg>width_connector/2.) {
-					tmp = a1_connector+aLet_connector*
-								(1.-Math.exp(-width_connector/sigma1_connector));
-
-					ret = tmp -
-								(tmp-a2_connector)*(1. - expa(arg2, sigma2_connector,
-								sigmaFit_connector, k_connector));
-				}
-				else
-					ret = 0.;
-
-				return ret;
-	}
-
-	public double linearF(int x)	{
-		double ret;
-		double arg = x-beginLinear;
-		ret = a_linear + b_linear*arg;
-		return ret;
-	}
-
-	public double weldF(int x) {
-		double ret;
-		double arg = x-this.center_weld;
-		double halfWidth = this.width_weld/2.;
-
-		if(arg<-halfWidth) ret = -1.;
-		else
-			if(arg> halfWidth) ret = 1.;
-		else
-			ret = Math.sin(3.14159*arg/width_weld);
-
-		ret = ret*this.boost_weld/2. + a_weld + b_weld*arg;
-		return ret;
-	}
-
-
-	public double[] refAmpl(int x) {
-		double []ret = new double[2];
-		double retA = 0.;
-		double retErr = 0.;
-	//	double distance = 0.;
-		if(this.linearEvent == 1)	{
-			retA = this.linearF(x);
-	//		distance = endLinear - beginLinear;
-			retErr = Math.sqrt(a_linearError*a_linearError);// +
-//                         b_linearError*distance*b_linearError*distance/2.);
-		}
-		else
-			if(this.connectorEvent == 1) {
-				retA = this.connectorF(x);
-				retErr = Math.sqrt(a1_connectorError*a1_connectorError +
-													 a2_connectorError*a2_connectorError +
-													 aLet_connectorError*aLet_connectorError);
-			}
-			else
-				if(this.weldEvent == 1)	{
-					retA = this.weldF(x);
-					retErr = Math.sqrt(a_weldError*a_weldError +
-														 boost_weldError*boost_weldError);
-				}
-				else {
-					retA = 0.;
-					retErr = 10.;
-				}
-				ret[0] = retA;
-				ret[1] = retErr;
-				return ret;
-	}
-
-
-
-	public double refAmplitude(int x) {
-		double retA = 0.;
-
-		if(this.linearEvent == 1)	{
-			retA = this.linearF(x);
-		}
-		else
-			if(this.connectorEvent == 1) {
-				retA = this.connectorF(x);
-			}
-			else
-				if(this.weldEvent == 1)	{
-					retA = this.weldF(x);
-				}
-				else {
-					retA = 0.;
-				}
-				return retA;
-	}
-
-
-	public void setParams(double []signal, int begin) {
-		// Linear
-		a_linear = signal[begin];
-		a_linearError = signal[begin+1];
-		b_linear = signal[begin+2];
-		b_linearError = signal[begin+3];
-		beginLinear = (int)signal[begin+4];
-		endLinear =   (int)signal[begin+5];
-		chi2Linear = signal[begin+6];
-		linearEvent = (int)signal[begin+7];
-		// Weld
-		a_weld = signal[begin+8];
-		a_weldError = signal[begin+9];
-		b_weld = signal[begin+10];
-		b_weldError = signal[begin+11];
-		boost_weld = signal[begin+12];
-		boost_weldError = signal[begin+13];
-		center_weld = signal[begin+14];
-		center_weldError = signal[begin+15];
-		width_weld = signal[begin+16];
-		width_weldError = signal[begin+17];
-		beginWeld = (int)signal[begin+18];
-		endWeld = (int)signal[begin+19];
-		chi2Weld = signal[begin+20];
-		weldEvent = (int)signal[begin+21];
-		//Connector
-		a1_connector = signal[begin+22];
-		a1_connectorError = signal[begin+23];
-		a2_connector = signal[begin+24];
-		a2_connectorError = signal[begin+25];
-		aLet_connector = signal[begin+26];
-		aLet_connectorError = signal[begin+27];
-		width_connector = signal[begin+28];
-		width_connectorError = signal[begin+29];
-		center_connector = signal[begin+30];
-		center_connectorError = signal[begin+31];
-		sigma1_connector = signal[begin+32];
-		sigma1_connectorError = signal[begin+33];
-		sigma2_connector = signal[begin+34];
-		sigma2_connectorError = signal[begin+35];
-		sigmaFit_connector = signal[begin+36];
-		sigmaFit_connectorError = signal[begin+37];
-		k_connector = signal[begin+38];
-		k_connectorError = signal[begin+39];
-		beginConnector = (int)signal[begin+40];
-		endConnector = (int)signal[begin+41];
-		chi2Connector = signal[begin+42];
-		connectorEvent = (int)signal[begin+43];
-	}
-
-	public double expa(double x, double s1, double s2, double part)	{
-		double ret = 0.;
-
-		double arg1 = x/s1;
-		double arg2 = x/s2;
-
-		ret = Math.exp(-arg1)*part + Math.exp(-arg2)*(1.-part);
-
-		return ret;
-	}
-
-// functions for default threshold
-//  public double connectorThresholdF(int x, double dL, double dA, double dX, double dC,
-//                                    ReflectogramEvent previousEvent, ReflectogramEvent nextEvent)
-//  {
-//    double ret = 0.;
-//    double arg;
-//    double arg1;
-//    double arg2;
-//
-//    this.beginConnector = (int)(this.beginConnector-dX+dC);
-//    this.endConnector = (int)(this.endConnector+dX+dC);
-//
-//    if(this.beginConnector<0)
-//      this.beginConnector = 0;
-//
-//    this.beginLinear = this.beginWeld = this.beginConnector;
-//    this.endLinear = this.endWeld = this.endConnector;
-//
-//    if(previousEvent != null)
-//    {
-//      previousEvent.endConnector = previousEvent.endLinear = previousEvent.endWeld = this.beginConnector;
-//    }
-//    if(nextEvent != null)
-//    {
-//      nextEvent.beginConnector = nextEvent.beginLinear = nextEvent.beginWeld = this.endConnector;
-//    }
-//
-//
-//
-//    double width_connector = this.width_connector+dX*2.;
-//    double a1_connector = this.a1_connector+dA;
-//    double a2_connector = this.a2_connector+dA;
-//    double aLet_connector = this.aLet_connector+dL;
-//    double center_connector = this.center_connector+dC;
-//
-//    arg = x-center_connector;
-//    arg1 = arg+width_connector/2.;
-//    arg2 = arg-width_connector/2.;
-//
-//    if(arg<-width_connector/2.)	{
-//      ret = a1_connector;
-//    }
-//    else
-//      if(arg>=-width_connector/2. && arg<=width_connector/2.)	{
-//        ret = aLet_connector*(1.-Math.exp(-arg1/sigma1_connector)) +
-//              a1_connector;
-//      }
-//      else
-//        if(arg>width_connector/2.) {
-//          ret = (a1_connector+aLet_connector*(1.-Math.exp(-width_connector/
-//              sigma1_connector))) -
-//                (a1_connector+aLet_connector*(1.-Math.exp(-width_connector/
-//                sigma1_connector))-a2_connector)*
-//                (1. - expa(arg2, sigma2_connector,
-//                sigmaFit_connector, k_connector) );
-//        }
-//        else
-//          ret = 0.;
-//
-//        return ret;
-//  }
-
-
-	public double connectorThresholdF(int x, double dL, double dA, double dX, double dC)
-	{
-		double ret = 0.;
-		double arg;
-		double arg1;
-		double arg2;
-
-		double width_connector = this.width_connector+dX*2.;
-		double a1_connector = this.a1_connector+dA;
-		double a2_connector = this.a2_connector+dA;
-		double aLet_connector = this.aLet_connector+dL;
-		double center_connector = this.center_connector+dC;
-
-		arg = x-center_connector;
-		arg1 = arg+width_connector/2.;
-		arg2 = arg-width_connector/2.;
-
-		if(arg<-width_connector/2.)	{
-			ret = a1_connector;
-		}
-		else
-			if(arg>=-width_connector/2. && arg<=width_connector/2.)	{
-				ret = aLet_connector*(1.-Math.exp(-arg1/sigma1_connector)) +
-							a1_connector;
-			}
-			else
-				if(arg>width_connector/2.) {
-					ret = (a1_connector+aLet_connector*(1.-Math.exp(-width_connector/
-							sigma1_connector))) -
-								(a1_connector+aLet_connector*(1.-Math.exp(-width_connector/
-								sigma1_connector))-a2_connector)*
-								(1. - expa(arg2, sigma2_connector,
-								sigmaFit_connector, k_connector) );
-				}
-				else
-					ret = 0.;
-
-				return ret;
-	}
-
-
-	public double connectorThresholdF(int x, int thresholdNumeral)
-	{
-		double dL;
-		double dA;
-		double dX;
-		double dC;
-		if(threshold == null) //if threshold is not set;
-			return 0.;
-		else
-		{
-			dL = threshold.dL[thresholdNumeral];
-			dA = threshold.dA[thresholdNumeral];
-			dX = threshold.dX[thresholdNumeral];
-			dC = threshold.dC[thresholdNumeral];
-		}
-
-
-		double ret = 0.;
-		double arg;
-		double arg1;
-		double arg2;
-
-		double width_connector = this.width_connector+dX*2.;
-		double a1_connector = this.a1_connector+dA;
-		double a2_connector = this.a2_connector+dA;
-		double aLet_connector = this.aLet_connector+dL;
-		double center_connector = this.center_connector+dC;
-
-		arg = x-center_connector;
-		arg1 = arg+width_connector/2.;
-		arg2 = arg-width_connector/2.;
-
-		if(arg<-width_connector/2.)	{
-			ret = a1_connector;
-		}
-		else
-			if(arg>=-width_connector/2. && arg<=width_connector/2.)	{
-				ret = aLet_connector*(1.-Math.exp(-arg1/sigma1_connector)) +
-							a1_connector;
-			}
-			else
-				if(arg>width_connector/2.) {
-					ret = (a1_connector+aLet_connector*(1.-Math.exp(-width_connector/
-							sigma1_connector))) -
-								(a1_connector+aLet_connector*(1.-Math.exp(-width_connector/
-								sigma1_connector))-a2_connector)*
-								(1. - expa(arg2, sigma2_connector,
-								sigmaFit_connector, k_connector) );
-				}
-				else
-					ret = 0.;
-
-				return ret;
-	}
-
-
-	public double linearThresholdF(int x, double dA)	{
-		double ret;
-		double arg = x-beginLinear;
-		double a_linear = this.a_linear+dA;
-		ret = a_linear + b_linear*arg;
-		return ret;
-	}
-
-
-	public double linearThresholdF(int x, int thresholdNumeral)
-	{
-		double dA;
-		if(threshold == null) // Case, when threshold is not set;
-			return 0.;
-		else
-		{
-			dA = threshold.dA[thresholdNumeral];
-		}
-
-		double ret;
-		double arg = x-beginLinear;
-
-		double a_linear = this.a_linear+dA;
-
-		ret = a_linear + b_linear*arg;
-		return ret;
-	}
-
-	public double weldThresholdF(int x, double dA, double dX) {
-
-		double a_weld = this.a_weld + dA;
-
-		double ret;
-		double arg = x-this.center_weld;
-		double halfWidth = this.width_weld/2.;
-
-		if(arg<-halfWidth) ret = -1.;
-		else
-			if(arg> halfWidth) ret = 1.;
-		else
-			ret = Math.sin(3.14159*arg/width_weld);
-
-		ret = ret*this.boost_weld/2. + a_weld + b_weld*arg;
-		return ret;
-	}
-
-
-	public double weldThresholdF(int x, int thresholdNumeral)
-	{
-		double dA;
-		if(threshold == null)
-			return 0.;
-		else
-		{
-			dA = threshold.dA[thresholdNumeral];
-		}
-
-		double a_weld = this.a_weld + dA;
-
-		double ret;
-		double arg = x-this.center_weld;
-		double halfWidth = this.width_weld/2.;
-
-		if(arg<-halfWidth) ret = -1.;
-		else
-			if(arg> halfWidth) ret = 1.;
-		else
-			ret = Math.sin(3.14159*arg/width_weld);
-
-		ret = ret*this.boost_weld/2. + a_weld + b_weld*arg;
-		return ret;
-	}
-
-	public int getType() {
-		if (linearEvent == 1)
-			return LINEAR;
-		if (weldEvent == 1)
-			return WELD;
-		if (connectorEvent == 1)
-			return CONNECTOR;
-		return 0;
-	}
-
-	public void setType(int type)	{
-		if (type == LINEAR)	{
-			linearEvent = 1;
-			weldEvent = 0;
-			connectorEvent = 0;
-		}
-		else if (type == WELD) {
-			linearEvent = 0;
-			weldEvent = 1;
-			connectorEvent = 0;
-		}
-		else if (type == CONNECTOR)	{
-			linearEvent = 0;
-			weldEvent = 0;
-			connectorEvent = 1;
-		}
-	}
-
-	public ReflectogramEvent copy()	{
-		ReflectogramEvent re = new ReflectogramEvent();
-		re.a_linear = a_linear;
-		re.a_linearError = a_linearError;
-		re.b_linear = b_linear;
-		re.b_linearError = b_linearError;
-		re.beginLinear = beginLinear;
-		re.endLinear = endLinear;
-		re.chi2Linear = chi2Linear;
-		re.linearEvent = linearEvent;
-// Parameters for the welds
-		re.a_weld = a_weld;
-		re.a_weldError = a_weldError;
-		re.b_weld = b_weld;
-		re.b_weldError = b_weldError;
-		re.boost_weld = boost_weld;
-		re.boost_weldError = boost_weldError;
-		re.center_weld = center_weld;
-		re.center_weldError = center_weldError;
-		re.width_weld = width_weld;
-		re.width_weldError = width_weldError;
-		re.beginWeld = beginWeld;
-		re.endWeld = endWeld;
-		re.chi2Weld = chi2Weld;
-		re.weldEvent = weldEvent;
-// Parameters for the Connectors
-		re.a1_connector = a1_connector;
-		re.a1_connectorError = a1_connectorError;
-		re.a2_connector = a2_connector;
-		re.a2_connectorError = a2_connectorError;
-		re.aLet_connector = aLet_connector;
-		re.aLet_connectorError = aLet_connectorError;
-		re.width_connector = width_connector;
-		re.width_connectorError = width_connectorError;
-		re.center_connector = center_connector;
-		re.center_connectorError = center_connectorError;
-		re.sigma1_connector = sigma1_connector;
-		re.sigma1_connectorError = sigma1_connectorError;
-		re.sigma2_connector = sigma2_connector;
-		re.sigma2_connectorError = sigma2_connectorError;
-		re.sigmaFit_connector = sigmaFit_connector;
-		re.sigmaFit_connectorError = sigmaFit_connectorError;
-		re.k_connector = k_connector;
-		re.k_connectorError = k_connectorError;
-		re.beginConnector = beginConnector;
-		re.endConnector = endConnector;
-		re.chi2Connector = chi2Connector;
-		re.connectorEvent = connectorEvent;
-
-		re.threshold = threshold;
-		return re;
-	}
-
-	public byte[] getByteArray() {
-		ByteArrayOutputStream baos = new ByteArrayOutputStream(EVENT_SIZE);
-		DataOutputStream dos = new DataOutputStream(baos);
-		try {
-			dos.writeDouble(this.a_linear);
-			dos.writeDouble(this.a_linearError);
-			dos.writeDouble(this.b_linear);
-			dos.writeDouble(this.b_linearError);
-			dos.writeInt(this.beginLinear);
-			dos.writeInt(this.endLinear);
-			dos.writeDouble(this.chi2Linear);
-			dos.writeInt(this.linearEvent);
-
-			dos.writeDouble(this.a_weld);
-			dos.writeDouble(this.a_weldError);
-			dos.writeDouble(this.b_weld);
-			dos.writeDouble(this.b_weldError);
-			dos.writeDouble(this.boost_weld);
-			dos.writeDouble(this.boost_weldError);
-			dos.writeDouble(this.center_weld);
-			dos.writeDouble(this.center_weldError);
-			dos.writeDouble(this.width_weld);
-			dos.writeDouble(this.width_weldError);
-			dos.writeInt(this.beginWeld);
-			dos.writeInt(this.endWeld);
-			dos.writeDouble(this.chi2Weld);
-			dos.writeInt(this.weldEvent);
-
-			dos.writeDouble(this.a1_connector);
-			dos.writeDouble(this.a1_connectorError);
-			dos.writeDouble(this.a2_connector);
-			dos.writeDouble(this.a2_connectorError);
-			dos.writeDouble(this.aLet_connector);
-			dos.writeDouble(this.aLet_connectorError);
-			dos.writeDouble(this.width_connector);
-			dos.writeDouble(this.width_connectorError);
-			dos.writeDouble(this.center_connector);
-			dos.writeDouble(this.center_connectorError);
-			dos.writeDouble(this.sigma1_connector);
-			dos.writeDouble(this.sigma1_connectorError);
-			dos.writeDouble(this.sigma2_connector);
-			dos.writeDouble(this.sigma2_connectorError);
-			dos.writeDouble(this.sigmaFit_connector);
-			dos.writeDouble(this.sigmaFit_connectorError);
-			dos.writeDouble(this.k_connector);
-			dos.writeDouble(this.k_connectorError);
-			dos.writeInt(this.beginConnector);
-			dos.writeInt(this.endConnector);
-			dos.writeDouble(this.chi2Connector);
-			dos.writeInt(this.connectorEvent);
-
-			dos.close();
-		}
-		catch (IOException ioe) {
-			System.out.println("Exception while getting byte array from reflectogram event: " + ioe.getMessage());
-			ioe.printStackTrace();
-			return null;
-		}
-		return baos.toByteArray();
-	}
-
-	public static byte[] toByteArray(ReflectogramEvent[] revents) {
-		byte[] bar = new byte[EVENT_SIZE * revents.length];
-		byte[] bar1;
-		for (int i = 0; i < revents.length; i++) {
-			bar1 = revents[i].getByteArray();
-			for (int j = 0; j < EVENT_SIZE; j++)
-				bar[i * EVENT_SIZE + j] = bar1[j];
-		}
-		return bar;
-	}
-
-	public static ReflectogramEvent[] fromByteArray(byte[] bar) {
-		ByteArrayInputStream bais = new ByteArrayInputStream(bar);
-		DataInputStream dis = new DataInputStream(bais);
-		byte[] buf = new byte[EVENT_SIZE];
-		LinkedList ll = new LinkedList();
-		try {
-			while (dis.read(buf) == EVENT_SIZE)
-				ll.add(new ReflectogramEvent(buf));
-		}
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-		return (ReflectogramEvent[])ll.toArray(new ReflectogramEvent[ll.size()]);
-	}
-
-
-	public ReflectogramEvent getThresholdReflectogramEvent(int thresholdNumeral)
-	{
-		ReflectogramEvent re = this.copy();
-		if(threshold != null && thresholdNumeral>=0 && thresholdNumeral<4)
-		{
-			if(re.connectorEvent == 1)
-			{
-				re.width_connector = this.width_connector + threshold.dX[thresholdNumeral]*2.;
-				re.a1_connector = this.a1_connector + threshold.dA[thresholdNumeral];
-				re.a2_connector = this.a2_connector + threshold.dA[thresholdNumeral];
-				re.aLet_connector = this.aLet_connector + threshold.dL[thresholdNumeral];
-				re.center_connector = this.center_connector + threshold.dC[thresholdNumeral];
-
-				re.beginLinear = re.beginWeld =
-				re.beginConnector = (int)(re.beginConnector - threshold.dX[thresholdNumeral] +
-														threshold.dC[thresholdNumeral]);
-
-				re.endLinear = re.endWeld =
-				re.endConnector = (int)(re.endConnector + threshold.dX[thresholdNumeral] +
-														threshold.dC[thresholdNumeral]);
-			}
-			else if(re.linearEvent == 1)
-			{
-				re.a_linear = this.a_linear + threshold.dA[thresholdNumeral];
-			}
-			else
-			{
-				re.a_weld = this.a_weld + threshold.dA[thresholdNumeral];
-			}
-		}
-
-		return re;
-	}
-
-	public void setDeltaX(double delta_x)
-	{
-		this.delta_x = delta_x;
-	}
-
-	public double getDeltaX()
-	{
-		return this.delta_x;
-	}
+
+public class ReflectogramEvent //implements Cloneable
+{
+    public static final int RESERVED_VALUE = -1; // заведомо не использующееся значение
+    public static final int LINEAR = 1;
+    public static final int WELD = 2;
+    public static final int CONNECTOR = 3;
+    public static final int SINGULARITY = 4;
+
+    private static final int STORE_yB = 0x1;
+    private static final int STORE_yE = 0x2;
+    private static final int STORE_aLet = 0x4;
+    private static final int STORE_mloss = 0x40;
+    private static final int STORE_asympY0 = 0x8;
+    private static final int STORE_asympY1 = 0x10;
+    private static final int STORE_linkFlags = 0x20;
+
+    private static final int STORE_FLAGS = 0x7f;
+    
+    private static int LINK_FIXLEFT = ModelFunction.LINK_FIXLEFT;
+
+    private int begin; // начальная точка
+    private int end; // последняя точка включительно: длина = end - begin + 1
+    private int eventType; // тип события (как определено)
+    private int thresholdType; // тип для маски (как задано)
+    private ModelFunction mf;
+    private int linkFlags;
+    private double delta_x = 1.; // XXX
+
+    private FittingParameters fittingParameters;
+
+    private Threshold threshold;
+
+    // XXX
+    // "краевые значения"
+    // вычисляются во время doFit()
+    // для лин. событий - на основе лин. аппрокс.
+    // для нел. событий - на основе значений р/г в конечных точках
+    private double yB; // Y в точке begin
+    private double yE; // Y в точке end
+    
+    // XXX
+    // аппроксимации с учетом смежных событий на основе calcMutualParameters
+    // для лин. события - по его собств. аппрокс.,
+    // для нел. с лин. соседом - по соседу,
+    // для нел. с нел. соседом (или без соседа) - по значению р/г в точке
+    private double asympY0; // слева
+    private double asympY1; // справа
+
+    //////////////////////
+    // loss, reflectance -- используются в сравнении,
+    // так же сохраняются на сервер.
+    // TODO: оформить в виде производного класса
+    // (поэтому мало толку от getter/setter-методов)
+    // mloss хранит усиление - причем для нелин. событий должна бы
+    // быть величина соотв. ступеньки, а не просто
+    // (FIXME - как сейчас) полное смещение р/г на длине события
+    private double mloss; // для нел. событий - усиление, для лин. - (-1) * ослабление
+    private double aLet; // величина всплеска вверх (для определения отражения)
+    
+    // cache part
+
+    private ReflectogramEvent[] cacheThresholdData; // 4 elements
+    private long cacheThresholdSerialNumber;
+    private double cacheRefAmplitude[]; // end + 1 - begin elements
+    
+    // left-right linking
+    
+    private ReflectogramEvent eventAtLeft;
+    private ReflectogramEvent eventAtRight;
+    
+    // methods
+    
+    private ModelFunction getThresholdBaseMF()
+    {
+        ModelFunction ret;
+        if (thresholdType == ReflectogramEvent.LINEAR && false) // true приведет к тому, что пороги окажутся вне мф
+        {
+            ret = ModelFunction.CreateLinear();
+            ret.SetAsLinear(begin, yB, end, yE); // NB: needs yB, yE
+        }
+        else
+            ret = mf.copy();
+        return ret;
+    }
+    
+    public int getBegin()
+    {
+        return begin;
+    }
+
+    public int getEnd()
+    {
+        return end;
+    }
+
+    public void setBegin(int x)
+    {
+        // XXX: need to refit mf?
+        begin = x;
+        updated();
+    }
+
+    public void setEnd(int x)
+    {
+        // XXX: need to refit mf?
+        updated();
+        end = x;
+    }
+
+    public int getEventType()
+    {
+        return eventType;
+    }
+
+    public void setEventType(int newType)
+    {
+        eventType = newType; // XXX, it is used but not possible!
+        thresholdType = newType;
+        updated();
+        // todo: recalc yB, yEp?
+    }
+
+    public int getThresholdType()
+    {
+        return thresholdType;
+    }
+
+    public void shiftY(double dy)
+    { // seems to be used in comparison
+        mf.shiftY(dy);
+        updated();
+    }
+
+    //  seems to be used only in event-based comparer (to get nearest event)
+    // XXX: i guess the use of getMiddle in such a way is not a best idea //saa
+    public int getMiddle()
+    {
+        return (begin + end) / 2;
+    }
+
+    public Threshold getThreshold()
+    {
+        return threshold;
+    }
+
+    public void setThreshold(Threshold threshold)
+    {
+        this.threshold = threshold;
+        cacheThresholdInvalidate();
+    }
+
+    /*
+     * public int steal_shapeID() { return mf.steal_shapeID(); }
+     */
+
+    public void setDeltaX(double delta_x)
+    {
+        this.delta_x = delta_x;
+        updated();
+    }
+
+    public double getDeltaX()
+    {
+        return this.delta_x;
+    }
+
+    // можно вызывать только после doFit()
+    private double getAsympYB()
+    {
+        return yB;
+    }
+    private double getAsympYE()
+    {
+        return yE;
+    }
+    
+    // только после doFit() + calcMutialParameters()
+    public double getAsympY0()
+    {
+        return asympY0;
+    }
+
+    public double getAsympY1()
+    {
+        return asympY1;
+    }
+
+    public double getWidth0()
+    {
+        return end - begin;
+    }
+
+    /*
+     * public double getWidth() { if (getType() == LINEAR) return end - begin;
+     * else return mf.getWidth(); }
+     */
+
+    // XXX: не самый хороший способ определения амплитуды коннектора
+    // XXX: дополнительная плохость - необходимость предварительной фитировки
+    // XXX: относительно медленная реализация
+    private double getYMax1()
+    {
+        double yMax = refAmplitude(begin);
+        for (int i = begin + 1; i <= end; i++)
+        {
+            if (yMax < refAmplitude(i))
+                yMax = refAmplitude(i);
+        }
+        return yMax;
+    }
+
+    // Расчет параметров
+    // нужно предварительное doFit()
+    public double getMLoss()
+    {
+        return mloss;
+    }
+    public double getALet()
+    {
+        return aLet;
+    }
+
+    public static void createLeftRightLinks(ReflectogramEvent[] re)
+    {
+        int len = re.length;
+        re[0].eventAtLeft = null;
+        for (int i = 1; i < len; i++)
+            re[i].eventAtLeft = re[i - 1];
+        re[len - 1].eventAtRight = null;
+        for (int i = 1; i < len - 1; i++)
+            re[i].eventAtRight = re[i + 1];
+    }
+
+    /**
+     * Заполняет поля mloss и reflectance, анализируя весь массив событий.
+     * (эдакий пост-анализ)
+     * 
+     * TODO: вынести это из этого класса в производный, либо как-то еще
+     * (например, в IA)
+     * 
+     * @param re
+     *            массив событий
+     * @param y
+     *            рефлектограмма, по которым он получен
+     */
+    public static void calcMutualParameters(ReflectogramEvent[] re, double[] y)
+    {
+        for (int i = 0; i < re.length; i++)
+        {
+            // определяем "асимптотические" значения слева и справа
+            // если наш участок нелинейный,
+            // а соответствующий смежный участок линейный,
+            // то берем из смежного, иначе - со своего.
+            // TODO: переделать?
+
+            double asympB = re[i].getAsympYB();
+            double asympE = re[i].getAsympYE();
+            if (re[i].getEventType() != ReflectogramEvent.LINEAR)
+            if (i > 0 && re[i - 1].getEventType() == ReflectogramEvent.LINEAR)
+                asympB = re[i - 1].getAsympYE();
+            if (i < re.length - 1
+                    && re[i + 1].getEventType() == ReflectogramEvent.LINEAR)
+                asympE = re[i + 1].getAsympYB();
+
+            re[i].mloss = asympE - asympB;
+
+            double yMax = y[re[i].getBegin()];
+            for (int j = re[i].getBegin(); j < re[i].getEnd(); j++)
+            {
+                if (yMax < y[j])
+                    yMax = y[j];
+            }
+
+            // XXX: вместо asympB лучше брать усредненное значение в конце
+            // предыдущего события
+            re[i].aLet = yMax - asympB;
+            re[i].asympY0 = asympB;
+            re[i].asympY1 = asympE;
+        }
+        
+        // теперь, когда в класс введены ссылки createLeftRightLinks,
+        // многие вещи можно вынести из calcMutualMarametes - TODO
+
+        createLeftRightLinks(re);
+    }
+
+    // рассчитываем массив значений на всей длине события
+    private void refAmplitudeFillCache()
+    {
+        cacheRefAmplitude = mf.funFillArray(begin, 1, end - begin + 1);
+    }
+
+    public double refAmplitude(int x)
+    {
+        // значения из [begin .. end] ищем в кэше,
+        // при необходимости заполняем кэш
+        if (x >= begin && x <= end)
+        {
+            if (!cacheRefAmplitudeIsValid())
+                refAmplitudeFillCache();
+
+            return cacheRefAmplitude[x - begin];
+        } else
+        {
+            //System.out.println("O: "+this+" [ "+x+" !in
+            // ["+begin+";"+end+"]");
+            //if (x != 0)
+            //	throw new Error();
+            return mf.fun(x);
+        }
+    }
+
+    /*
+     * public void doFit(double[] y, int fitMode) { doFit(y, fitMode, 0, 0.0,
+     * 0.0); }
+     */
+
+    public static class FittingParameters
+    {
+        public double[] y;
+        public int errorMode;
+        public double error1;
+        public double error2;
+        public FittingParameters(double[] y, int errorMode, double error1, double error2)
+        {
+            this.y = y;
+            this.errorMode = errorMode;
+            this.error1 = error1;
+            this.error2 = error2;
+        }
+    }
+
+    // errorMode:
+    //	0: default mode (best fit)
+    //  2: rgdB noise level is supplied
+
+    public void setFittingParameters(FittingParameters fPars)
+    {
+        this.fittingParameters = fPars;
+    }
+    public void doFit()
+    {
+        int maxpoints = eventType == CONNECTOR
+            				? 25 // FIXIT
+            				: 5; // FIXIT
+        FittingParameters fP = fittingParameters;
+        mf.fit(fP.y, begin, end,
+            fP.errorMode, fP.error1, fP.error2, maxpoints,
+            activeLinkFlags(), activeLinkData0());
+        
+        updated();
+
+        if (eventType == LINEAR)
+        {
+            //System.out.println("lin fit");
+            // лин. аппроксимация для лин. событий
+            // (this.mf не обязательно линейна, это м б ломаная)
+            ModelFunction lin = ModelFunction.CreateLinear();
+            lin.fit(fP.y, begin, end, 0, 0.0);
+            yB = lin.fun(begin);
+            yE = lin.fun(end);
+        } else
+        {
+            // грубая оценка - по самой р/г
+            yB = fP.y[begin];
+            yE = fP.y[end];
+        }
+    }
+
+    public double getRMSDeviation(double[] y)
+    {
+        return mf.calcRMS(y, begin, end);
+    }
+    
+    // вычисляет отклонение ЭТОЙ функции от ТОЙ
+    private double[] getMaxDeviationPM(ModelFunction that)
+    {
+        double[] maxDev = new double[2];
+        for (int i = begin; i <= end; i++)
+        {
+            double val = refAmplitude(i) - that.fun(i);
+            if (val > maxDev[0])
+                maxDev[0] = val;
+            if (val < maxDev[1])
+                maxDev[1] = val;
+        }
+        return maxDev;
+    }
+
+    public double getMaxDeviation(double[] y)
+    {
+        double maxDev = 0;
+        for (int i = begin; i <= end; i++)
+        {
+            double val = Math.abs(refAmplitude(i) - y[i]);
+            if (val > maxDev)
+                maxDev = val;
+        }
+        return maxDev;
+    }
+    
+    private ReflectogramEvent copyWithoutMFAndTh()
+    {
+        ReflectogramEvent ret = new ReflectogramEvent();
+        ret.threshold = null;
+        // copy; неизвестно какой правильнее
+        ret.begin = begin;
+        ret.end = end;
+        ret.mf = null;
+        ret.delta_x = delta_x;
+        ret.mloss = mloss;
+        ret.aLet = aLet;
+        ret.asympY0 = asympY0;
+        ret.asympY1 = asympY1;
+        return ret;
+    }
+
+    /**
+     * NOTE: the copy is partially swallow, it do not copy the threshold, only
+     * its reference XXX: I don't know if it matters. //saa It is also partially
+     * deep since it does copy mf, and this does matter.
+     * 
+     * @return the partially swallow copy of this
+     */
+    public ReflectogramEvent copy()
+    {
+        ReflectogramEvent ret = copyWithoutMFAndTh();
+        ret.threshold = threshold; // XXX: три варианта - null, reference, deep
+        // copy; неизвестно какой правильнее
+        ret.mf = mf.copy();
+        return ret;
+    }
+
+    // byte array presentation functions are untested
+    public void writeToDOS(DataOutputStream dos) throws IOException
+    {
+        dos.writeInt(begin);
+        dos.writeInt(end);
+        dos.writeDouble(delta_x);
+        mf.writeToDOS(dos);
+        dos.writeInt(STORE_FLAGS);
+        int i;
+        for (i = 1; i != 0; i = i * 2)
+        {
+            if ((STORE_FLAGS & i) != 0)
+            {
+                double tmp = 0;
+                switch (i)
+                {
+                case STORE_yB:
+                    tmp = yB;
+                    break;
+                case STORE_yE:
+                    tmp = yE;
+                    break;
+                case STORE_aLet:
+                    tmp = aLet;
+                    break;
+                case STORE_mloss:
+                    tmp = mloss;
+                    break;
+                case STORE_asympY0:
+                    tmp = asympY0;
+                    break;
+                case STORE_asympY1:
+                    tmp = asympY1;
+                    break;
+                case STORE_linkFlags:
+                    tmp = (double )linkFlags;
+                }
+                dos.writeDouble(tmp);
+            }
+        }
+        // do not write thresholds
+    }
+
+    /**
+     * Считывает все параметры события с потока.
+     * Метод сделан private на всякий случай на будущее,
+     * когда, возможно, будут сохраняться не все параметры
+     * и придется вычислять из с использованием смежных событий.
+     * @param dis Входной поток
+     * @throws IOException
+     */
+    private void readFromDIS(DataInputStream dis) throws IOException
+    {
+        begin = dis.readInt();
+        end = dis.readInt();
+        delta_x = dis.readDouble();
+        mf.readFromDIS(dis);
+        int flags = dis.readInt();
+        int i;
+        for (i = 1; i != 0; i = i * 2)
+        {
+            if ((flags & i) != 0)
+            {
+                double tmp = dis.readDouble();
+                switch (i)
+                {
+                case STORE_yB:
+                    yB = tmp;
+                    break;
+                case STORE_yE:
+                    yE = tmp;
+                    break;
+                case STORE_aLet:
+                    aLet = tmp;
+                    break;
+                case STORE_mloss:
+                    mloss = tmp;
+                    break;
+                case STORE_asympY0:
+                    asympY0 = tmp;
+                    break;
+                case STORE_asympY1:
+                    asympY1 = tmp;
+                    break;
+                case STORE_linkFlags:
+                    linkFlags = (int )tmp;
+                }
+            }
+        }
+        // do not read thresholds
+
+        updated();
+    }
+
+    // xtodo: change name: toByteArray -> arrayToBytes
+    // xtodo: use stream operations instead of byte arrays - for simplicity
+    public static byte[] toByteArray(ReflectogramEvent[] revents)
+    {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        DataOutputStream dos = new DataOutputStream(baos);
+        try
+        {
+            dos.writeInt(revents.length);
+            for (int i = 0; i < revents.length; i++)
+                revents[i].writeToDOS(dos);
+            return baos.toByteArray();
+        } catch (IOException e)
+        {
+            System.out.println("IOException caught: " + e);
+            e.printStackTrace();
+            return null; // XXX
+        }
+    }
+
+    public static ReflectogramEvent[] fromByteArray(byte[] bar)
+    {
+        try
+        {
+            ByteArrayInputStream bais = new ByteArrayInputStream(bar);
+            DataInputStream dis = new DataInputStream(bais);
+            int len = dis.readInt();
+            ReflectogramEvent[] ret = new ReflectogramEvent[len];
+            for (int i = 0; i < len; i++)
+                ret[i].readFromDIS(dis);
+            return ret;
+        } catch (IOException e)
+        {
+            System.out.println("IOException caught: " + e);
+            e.printStackTrace();
+            return null; // XXX
+        }
+    }
+
+    private ReflectogramEvent makeThresholdEvent(Threshold th,
+            int thresholdNumeral)
+    {
+        ReflectogramEvent ret = this.getThresholdBaseRE();
+        double[] thresholdValues = th.getThresholds(thresholdNumeral);
+        switch (thresholdType)
+        {
+        case LINEAR:
+            // fall through
+        case WELD:
+            thresholdValues[1] = 0;
+            thresholdValues[2] = 0;
+            // fall through
+        case SINGULARITY:
+            // fall through
+        case CONNECTOR:
+            break;
+        }
+
+        ret.mf.changeByACXLThreshold(thresholdValues);
+        return ret;
+    }
+
+    public ReflectogramEvent getThresholdReflectogramEvent(int thresholdNumeral)
+    {
+        //кэширование результата makeThresholdEvent в thresholdsCache
+        if (thresholdNumeral < 4)
+        {
+            if (!cacheThresholdIsValid())
+            {
+                cacheThresholdData = new ReflectogramEvent[4];
+                cacheThresholdSerialNumber = threshold.getSerialNumber();
+            }
+
+            if (cacheThresholdData[thresholdNumeral] == null)
+            {
+                cacheThresholdData[thresholdNumeral] = makeThresholdEvent(
+                        threshold, thresholdNumeral);
+            }
+
+            return cacheThresholdData[thresholdNumeral];
+        }
+        return makeThresholdEvent(threshold, thresholdNumeral);
+    }
+
+    public void changeThresholdType(int newType, double[] y)
+    {
+        thresholdType = newType;
+        System.out.println("changeThresholdType: y = " + y);
+        if (y != null)
+            setDefaultThreshold(y);
+        cacheThresholdInvalidate();
+    }
+
+    // выставляет порог, рекомендуемый для рефлектограммы
+    public void setDefaultThreshold_old2(double[] y)
+    {
+        // составляющая, соответствующая оценке шума
+        // основана на разнице модельной функции события и р/г
+        double noiseDev = Math.max(getMaxDeviation(y) * 0.5,
+                getRMSDeviation(y) * 3.0); // XXX
+
+        // составляющая, соответствующая разнице базовой мф порога
+        // и р/г
+        ModelFunction base = getThresholdBaseMF();
+        double[] dif = ReflectogramMath.getMaxDifPM(y, base, begin, end);
+        threshold.initFromDY(
+                dif[0] - noiseDev * 2,
+                dif[0] - noiseDev,
+                dif[1] + noiseDev,
+                dif[1] + noiseDev * 2);
+    }
+
+    private int activeLinkFlags()
+    {
+        return
+        	eventAtLeft != null
+        	&& ((linkFlags & LINK_FIXLEFT) != 0)
+        	&& eventAtLeft.end == begin
+                		? LINK_FIXLEFT
+                        : 0;
+    }
+
+    // XXX:
+    // Метод возвращает корректное значение только после того
+    // как левое событие профитируется.
+    // Посколько метод используется в фитировке, мы сильно
+    // полагаемся на то, что фитировка будет проводиться слева направо.
+    private double activeLinkData0()
+    {
+        return ((activeLinkFlags() & LINK_FIXLEFT) != 0)
+		? eventAtLeft.mf.fun(begin) // значение левого события на стыке событий 
+        : 0;
+    }
+
+    // выставляет порог, рекомендуемый для модельной функции,
+    // фитируемой к эталонной в линейном режиме.
+    // Если указаны primaryTrace и bellcoreTraces,
+    // и среди bellcoreTraces есть хотя бы две совместимые по параметрам
+    // с primaryTrace, то добавляет также оценку
+    // отклонения по разбросу р/г
+    // если указан primaryTrace, он должен совпадать с кривой y
+    // <br>
+    // NB: эта функция должна вызываться ПОСЛЕ calcMutualParameters
+    // т.к. она использует флаг leftLink и поэтому может зависеть от
+    // смежных событий. TODO(?): если ссылок на смежные события нет,
+    // то не падать, а просто игнорировать leftLink.
+    protected void setDefaultThreshold(double[] y, BellcoreStructure primaryTrace, Map bellcoreTraces)
+    {
+        //System.out.println("setDefaultThreshold: pTrace " + primaryTrace + " bellcoreTraces " + bellcoreTraces);
+        //if (bellcoreTraces != null)
+        //    System.out.println("bellcoreTraces.size() " + (bellcoreTraces.size()));
+
+        // составляющая, соответствующая оценке шума
+        // основана на разнице модельной функции события и р/г
+        double noiseDev = Math.max(getMaxDeviation(y) * 1.0, // XXX
+                getRMSDeviation(y) * 5.0); // XXX
+
+        // оцениваем фактор уменьшения уровня флуктуаций при сглаживании
+        double noiseSL = mf.getEstimatedNoiseSuppressionLength();
+        double typicalAverageLength = 10; // NetTest Specific (8..30) // XXX
+        
+        // оценка флуктуаций сглаженной кривой
+        double noiseModel =
+            noiseSL > typicalAverageLength
+            		? noiseDev / Math.sqrt(noiseSL / typicalAverageLength)
+                    : noiseDev;
+            		
+        // определяем макс. и мин. модели отклонения в выбранном наборе
+        double maxDevP = 0;
+        double maxDevM = 0;
+        //int noiseSetCount = 0;
+        BellcoreStructure pTrace = primaryTrace;
+        if (pTrace != null && bellcoreTraces != null)
+        {
+            int count = 0;
+            for (Iterator it = bellcoreTraces.keySet().iterator(); it.hasNext();)
+            {
+                // берем очередную р/г из списка
+                Object key = it.next();
+                BellcoreStructure bs = (BellcoreStructure )bellcoreTraces.get(key);
+                
+                // пропускаем рефлектограммы, несовпадающие по условиям измерения 
+                final boolean strictMode = true;
+                if (bs.getRange() != pTrace.getRange()
+                        || bs.getResolution() != pTrace.getResolution()
+                        || strictMode
+                        && (bs.getWavelength() != pTrace.getWavelength() || bs.getPulsewidth() != pTrace.getPulsewidth()))
+                {
+                    //System.out.println("ReflectogramEvent: setDefaultThresholds: reflectogram ignored: " + key.toString()); // слишком обильный вывод - выводит список на каждое событие
+                    continue;
+                }
+                //System.out.println("ReflectogramEvent: setDefaultThresholds: reflectogram accepted: " + key.toString());
+
+                // пропускаем рефлектограммы, несовпадающие по длине
+                double[] yt = bs.getTraceData();
+                if (yt == null || yt.length != y.length)
+                    continue;
+
+                // смотрим maxDev нашей модельной функции
+                ModelFunction temp = mf.copy();
+                temp.fitLinearOnly(yt, begin, end, activeLinkFlags(), activeLinkData0());
+                double[] maxDev = getMaxDeviationPM(temp);
+                //System.out.println("ReflectogramEvent: setDefaultThresholds: maxDev = (" + maxDev[0] + ", " + maxDev[1] + ")");
+
+                count++;
+
+                // нас интересует знак отклонение ТОЙ функции от ЭТОЙ,
+                // а getMaxDeviationPM вычисляет отклонение ЭТОЙ от ТОЙ.
+                // Здесь мы учтем это, поменяв maxDevP и maxDevM знаками и местами
+                if (-maxDev[1] > maxDevP)
+                    maxDevP = -maxDev[1];
+                if (-maxDev[0] < maxDevM)
+                    maxDevM = -maxDev[0];
+            }
+            //System.out.println("setDefaultThreshold: count " + count);
+        }
+
+        // устанавливаем пороги
+
+        double maxDiff = maxDevP - maxDevM; // разброс
+        double width0 = noiseModel * 1.0 + maxDiff * 0.1; // XXX
+
+        //System.out.println("ReflectogramEvent: setDefaultThresholds: noiseModel " + noiseModel + " maxDevP " + maxDevP + " maxDevM " + maxDevM);
+
+        threshold.initFromDY(
+            maxDevM - width0 * 2,
+            maxDevM - width0,
+            maxDevP + width0,
+            maxDevP + width0 * 2);
+    }
+
+    public void setDefaultThreshold(double[] y)
+    {
+        setDefaultThreshold(y, null, null);
+    }
+
+    public void setDefaultThreshold(BellcoreStructure primaryTrace, Map allTraces)
+    {
+        double y[] = primaryTrace.getTraceData();
+        setDefaultThreshold(y, primaryTrace, allTraces);
+    }
+
+    // returns true if event has changes
+    // needs fitting parameters already initialized (FIXME?)
+    public boolean setLeftLink(boolean leftLink)
+    {
+        int newLinkFlags = linkFlags & ~LINK_FIXLEFT;
+        if (leftLink)
+            newLinkFlags |= LINK_FIXLEFT;
+        if (newLinkFlags == linkFlags)
+            return false;
+        linkFlags = newLinkFlags;
+        doFit();
+        updated();
+        return true;
+    }
+
+    public boolean getLeftLink()
+    {
+        return (linkFlags & LINK_FIXLEFT) != 0;
+    }
+
+    // cache methods
+
+    private void cacheThresholdInvalidate()
+    {
+        cacheThresholdData = null;
+    }
+
+    private boolean cacheThresholdIsValid()
+    {
+        return cacheThresholdData != null
+                && cacheThresholdSerialNumber == threshold.getSerialNumber();
+    }
+
+    private void cacheRefAmplitudeInvalidate()
+    {
+        cacheRefAmplitude = null;
+    }
+
+    private boolean cacheRefAmplitudeIsValid()
+    {
+        return cacheRefAmplitude != null;
+    }
+
+    private void updated()
+    {
+        cacheRefAmplitudeInvalidate();
+        cacheThresholdInvalidate();
+    }
+
+    // end of cache methods
+
+    // XXX: зачем копировать?
+    // может, лучше совсем отказаться от использовании RE в верхнем и нижнем порогах?
+    private ReflectogramEvent getThresholdBaseRE()
+    {
+        ReflectogramEvent ret = this.copyWithoutMFAndTh();
+        ret.threshold = null; // undefined -- XXX
+        ret.mf = getThresholdBaseMF();
+        return ret;
+    }
+   
+    private ReflectogramEvent()
+    {
+        threshold = new Threshold(); // для амфикома нужно значение по умолчанию
+    } // FIXIT
 
 }
-
-
-*/

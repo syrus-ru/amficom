@@ -20,7 +20,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 	protected ReflectogramAlarm[] alarms;
 
 	protected Double min_trace_level;
-	protected double noise_level = 28;
+	protected double noise_level = 28; // ???!
 	protected boolean moving_level = false;
 
 	protected double[] modeled_y;
@@ -45,12 +45,12 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 
 		if (ep != null)
 		{
-			int n = ep[ep.length-1].end+2;
+			int n = ep[ep.length-1].getEnd()+2;
 			modeled_y = new double[n];
 			for (int i = 0; i < ep.length; i++)
 			{
-				for (int j = ep[i].begin; j <= ep[i].end && j < n; j++)
-					modeled_y[j] = ep[i].refAmpl(j)[0];
+				for (int j = ep[i].getBegin(); j <= ep[i].getEnd() && j < n; j++)
+					modeled_y[j] = ep[i].refAmplitude(j);
 			}
 		}
 	}
@@ -198,7 +198,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 							 jw, (int)((min_trace_level.doubleValue() - top) * scale_y - 1));
 		((Graphics2D) g).setStroke(DEFAULT_STROKE);
 	}
-
+	
 	protected void paint_alarms(Graphics g)
 	{
 		if (alarms == null)
@@ -216,6 +216,47 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		}
 	}
 
+	protected void draw_one_model_curve(Graphics g, ReflectogramEvent re)
+	{
+		if ((re.getBegin() <= end) && (re.getEnd() >= start))
+		{
+		    int i_from = Math.max(0, re.getBegin() - start);
+		    int i_to = Math.min (end, re.getEnd()) - start;
+		    int len = i_to - i_from + 1;
+		    if (len >= 1)
+		    {
+		        int[] xArr = new int[len]; 
+		        int[] yArr = new int[len];
+		        for (int i = i_from; i <= i_to; i++)
+		        {
+		            xArr[i - i_from] = (int)(i * scale_x + 1);
+		            yArr[i - i_from] = (int)((max_y - re.refAmplitude(i + start) - top) * scale_y);
+		        }
+		        g.drawPolyline(xArr, yArr, len);
+		    }
+		    /*
+		    int i_from = Math.max(0, re.getBegin() - start);
+		    int i_to = Math.min (end, re.getEnd() - 1) - start;
+			for (int i = i_from; i <= i_to; i++)
+			{
+				g.drawLine((int)(i*scale_x+1), (int)((max_y - re.refAmplitude(i+start) - top) * scale_y),
+						   (int)((i+1)*scale_x+1), (int)((max_y - re.refAmplitude(i+start+1) - top) * scale_y));
+			}
+			*/
+		}
+	}
+	
+	protected void draw_joint_of_two_model_curves(Graphics g, ReflectogramEvent reL, ReflectogramEvent reR)
+	{
+		int i = reR.getBegin() - start;
+		if (i == reL.getEnd() - start && i <= end - start && i >= 0)
+		{
+			g.drawLine(
+					(int )(i*scale_x+1), (int )((max_y - reL.refAmplitude(i+start) - top)*scale_y),
+					(int )(i*scale_x+1), (int )((max_y - reR.refAmplitude(i+start) - top)*scale_y));
+		}
+	}
+
 	protected void paint_modeled_trace(Graphics g)
 	{
 		if (modeled_y == null)
@@ -223,16 +264,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 
 		g.setColor(modeledColor);
 		for(int j=0; j<ep.length; j++)
-		{
-			if ((ep[j].begin < end) && (ep[j].end > start))
-			{
-				for (int i = Math.max(0, ep[j].begin - start); i < Math.min (end, ep[j].end) - start; i++)
-				{
-					g.drawLine((int)(i*scale_x+1), (int)((max_y - modeled_y[i+start] - top) * scale_y),
-										 (int)((i+1)*scale_x+1), (int)((max_y - modeled_y[i+start+1] - top) * scale_y));
-				}
-			}
-		}
+			draw_one_model_curve(g, ep[j]);
 	}
 
 	protected void paint_reflectogram_events(Graphics g)
@@ -244,40 +276,47 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 		}
 		for(int j=0; j<ep.length; j++)
 		{
-			if ((ep[j].begin < end) && (ep[j].end > start))
+			if ((ep[j].getBegin() < end) && (ep[j].getEnd() > start))
 			{
-				int type = ep[j].getType();
+				int type = ep[j].getEventType();
+				Color color;
 				switch (type)
 				{
-					case ReflectogramEvent.LINEAR: g.setColor(linezoneColor); break;
-					case ReflectogramEvent.CONNECTOR:
-					{
-						if (j == 0)
-							g.setColor(deadzoneColor);
-						else if (j == ep.length - 1)
-							g.setColor(endColor);
-						else
-							g.setColor(connectColor);
+					case ReflectogramEvent.LINEAR:
+					    color = linezoneColor;
 						break;
-					}
-					case ReflectogramEvent.WELD: g.setColor(weldColor); break;
-					default: g.setColor(noiseColor);
+					case ReflectogramEvent.CONNECTOR:
+						if (j == 0)
+						    color = deadzoneColor;
+						else if (j == ep.length - 1)
+						    color = endColor;
+						else
+						    color = connectColor;
+						break;
+					case ReflectogramEvent.WELD:
+					    color = weldColor;
+						break;
+					default:
+					    color = noiseColor;
 				}
+				g.setColor(correctColor(color));
 
-				for (int i = Math.max(0, ep[j].begin - start); i <= Math.min (end, ep[j].end) - start; i++)
+				int i_begin = Math.max(start, ep[j].getBegin()) - start;
+				int i_end = Math.min (end, ep[j].getEnd()) - start;
+				for (int i = i_begin; i < i_end; i++)
 				{
-//					g.drawLine((int)(i*scale_x+1), (int)((max_y - y[i+start] - top) * scale_y - 1),
-//										 (int)((i+1)*scale_x+1), (int)((max_y - y[i+start+1] - top) * scale_y - 1));
 					g.drawLine((int)(i*scale_x+1), (int)((max_y - y[i+start] - top) * scale_y),
-										 (int)((i+1)*scale_x+1), (int)((max_y - y[i+start+1] - top) * scale_y));
+					        (int)((i+1)*scale_x+1), (int)((max_y - y[i+start+1] - top) * scale_y));
 				}
 			}
 		}
 
-		g.setColor(noiseColor);
-		if (ep[ep.length-1].end < end)
-			for (int i =  Math.max(0, ep[ep.length-1].end - start); i< Math.min (end, y.length - start - 1); i++)
+		g.setColor(correctColor(noiseColor));
+		int i_begin = Math.max(0, ep[ep.length-1].getEnd() - start);
+		int i_end = Math.min (end, y.length - start - 1);
+		if (ep[ep.length-1].getEnd() < end)
+			for (int i = i_begin; i < i_end; i++)
 				g.drawLine((int)(i*scale_x+1), (int)((max_y - y[i+start] - top) * scale_y),
-									 (int)((i+1)*scale_x+1), (int)((max_y - y[i+start+1] - top) * scale_y));
+					(int)((i+1)*scale_x+1), (int)((max_y - y[i+start+1] - top) * scale_y));
 	}
 }

@@ -137,7 +137,7 @@ public class TraceSelectorFrame extends JInternalFrame
 		scrollPane.setViewport(viewport);
 		scrollPane.setAutoscrolls(true);
 
-		jTable.setSelectionMode(jTable.getSelectionModel().SINGLE_SELECTION);
+		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		ListSelectionModel rowSM = jTable.getSelectionModel();
 		jTable.getColumnModel().setSelectionModel(rowSM);
 		rowSM.addListSelectionListener(new ListSelectionListener()

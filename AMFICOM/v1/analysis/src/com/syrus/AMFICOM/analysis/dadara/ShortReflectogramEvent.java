@@ -27,28 +27,28 @@ public class ShortReflectogramEvent
 
 	public void setData(ReflectogramEvent re)
 	{
-		this.begin = re.begin;
-		this.end   = re.end;
-		this.type = (short)re.getType();
-			 if(re.getType() == ReflectogramEvent.CONNECTOR)
+		this.begin = re.getBegin();
+		this.end   = re.getEnd();
+		this.type = (short)re.getEventType();
+			 if(re.getEventType() == ReflectogramEvent.CONNECTOR)
 			 {
-				 this.A1 = (float)re.a1_connector;
-				 this.aLet = (float)re.aLet_connector;
-				 this.attenuation = (float)(re.a1_connector - re.a2_connector);
+				 this.A1 = (float)re.getAsympY0();
+				 this.aLet = (float)re.getALet();
+				 this.attenuation = (float)(re.getAsympY0() - re.getAsympY1());
 			 }
-			 else if(re.getType() == ReflectogramEvent.WELD)
+			 else if(re.getEventType() == ReflectogramEvent.WELD)
 			 {
-				 this.A1 = (float)re.a_weld;
+				 this.A1 = (float)re.getAsympY0();
 				 this.aLet = 0f;
 				 //this.attenuation = (float)re.boost_weld;// + (float)((re.end - re.begin)*re.b_weld);
 				 // changed by Stas
-				 this.attenuation = (float)(re.refAmpl(re.begin)[0] - re.refAmpl(re.end)[0]);
+				 this.attenuation = (float)re.getMLoss();
 			 }
 			 else
 			 {
-				 this.A1 = (float)re.a_linear;
+				 this.A1 = (float)re.getAsympY0();
 				 this.aLet = 0f;
-				 this.attenuation = (float)re.b_linear;
+				 this.attenuation = (float)re.getMLoss();
 			 }
 	}
 }

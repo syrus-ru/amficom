@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.analysis.dadara.*;
 import com.syrus.io.BellcoreStructure;
 
 public class DetailedEventsFrame extends JInternalFrame
-															 implements OperationListener
+	implements OperationListener
 {
 	private ReflectogramEvent []data;
 	private ReflectogramEvent []data_;
@@ -29,7 +29,7 @@ public class DetailedEventsFrame extends JInternalFrame
 	private int concSelected = 0;
 	private RefAnalysis a;
 	private BellcoreStructure bs;
-	private double res;
+	private double res_km;
 
 	BorderLayout borderLayout = new BorderLayout();
 	JPanel mainPanel = new JPanel();
@@ -48,9 +48,9 @@ public class DetailedEventsFrame extends JInternalFrame
 	JViewport viewportComp = new JViewport();
 	private JTabbedPane tabbedPane = new JTabbedPane();
 
-	private static StringBuffer km = new StringBuffer(' ').append(LangModelAnalyse.getString("km"));
-	private static StringBuffer mt = new StringBuffer(' ').append(LangModelAnalyse.getString("mt"));
-	private static StringBuffer db = new StringBuffer(' ').append(LangModelAnalyse.getString("dB"));
+	private static StringBuffer km = new StringBuffer(" ").append(LangModelAnalyse.getString("km"));
+	private static StringBuffer mt = new StringBuffer(" ").append(LangModelAnalyse.getString("mt"));
+	private static StringBuffer db = new StringBuffer(" ").append(LangModelAnalyse.getString("dB"));
 
 	private static String linear = LangModelAnalyse.getString("eventType" + String.valueOf(TraceEvent.LINEAR));
 	private static String connector = LangModelAnalyse.getString("eventType" + String.valueOf(TraceEvent.CONNECTOR));
@@ -163,7 +163,7 @@ public class DetailedEventsFrame extends JInternalFrame
 		if(ae.getActionCommand().equals(RefUpdateEvent.typ))
 		{
 			RefUpdateEvent rue = (RefUpdateEvent)ae;
-			if (rue.ANALYSIS_PERFORMED)
+			if (rue.analysisPerformed())
 			{
 				String id = (String)(rue.getSource());
 				if (id.equals("primarytrace"))
@@ -172,7 +172,7 @@ public class DetailedEventsFrame extends JInternalFrame
 					{
 						a = (RefAnalysis)Pool.get("refanalysis", id);
 						bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
-						res = bs.getResolution() / 1000d;
+						res_km = bs.getResolution() / 1000.0;
 						this.data =  (ReflectogramEvent [])Pool.get("eventparams", "primarytrace");
 						if(data != null && etalon != null)
 							this.data_ = ReflectogramMath.alignClone(data, etalon);
@@ -186,7 +186,7 @@ public class DetailedEventsFrame extends JInternalFrame
 				if(etalon_loaded)
 					tabbedPane.setEnabledAt(1, true);
 			}
-			if (rue.EVENT_SELECTED)
+			if (rue.eventSelected())
 			{
 				selected = Integer.parseInt((String)rue.getSource());
 				updTableModel (selected);
@@ -253,8 +253,8 @@ public class DetailedEventsFrame extends JInternalFrame
 						LangModelAnalyse.getString("eventLength"), // прот€женность
 						LangModelAnalyse.getString("eventStartLevel"),
 						LangModelAnalyse.getString("eventEndLevel"),
-						LangModelAnalyse.getString("eventReflectionLevel"),
-						LangModelAnalyse.getString("eventFormFactor")
+						LangModelAnalyse.getString("eventReflectionLevel")
+						//LangModelAnalyse.getString("eventFormFactor") // removed by saa 
 				},
 				null);
 		tModels.put(connector, connectorModel);
@@ -281,7 +281,7 @@ public class DetailedEventsFrame extends JInternalFrame
 						LangModelAnalyse.getString("eventLength"), // прот€женность
 						LangModelAnalyse.getString("eventStartLevel"),
 						LangModelAnalyse.getString("eventReflectionLevel"),
-						LangModelAnalyse.getString("eventFormFactor")
+						//LangModelAnalyse.getString("eventFormFactor") // removed by saa
 				},
 				null);
 		tModels.put(terminate, terminateModel);
@@ -305,7 +305,7 @@ public class DetailedEventsFrame extends JInternalFrame
 		scrollPane.setViewport(viewport);
 		scrollPane.setAutoscrolls(true);
 
-		jTable.setSelectionMode(jTable.getSelectionModel().SINGLE_SELECTION);
+		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jTable.setPreferredScrollableViewportSize(new Dimension(200, 200));
 		jTable.setMinimumSize(new Dimension(200, 200));
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
@@ -352,39 +352,35 @@ public class DetailedEventsFrame extends JInternalFrame
 		}
 		double delta_x = data_[0].getDeltaX();
 
-		//int dataType = WorkWithReflectoEventsArray.getEventType(data_[nEvent]);
-		int coord = ReflectogramMath.getEventCenter(data_[nEvent]);
-		//int etalonType = WorkWithReflectoEventsArray.getEventType(coord, etalon);
-
-		if(data_[nEvent].getType() == etalon[nEvent].getType())
+		if(data_[nEvent].getEventType() == etalon[nEvent].getEventType())
 			((CompareTableRenderer)jTableComp.getDefaultRenderer(Object.class)).setSameType(true);
 		else
 			((CompareTableRenderer)jTableComp.getDefaultRenderer(Object.class)).setSameType(false);
 
 		String dataT = LangModelAnalyse.getString("eventTypeUnk");
 		String etalonT = LangModelAnalyse.getString("eventTypeUnk");
-		if(data_[nEvent].getType() == ReflectogramEvent.CONNECTOR)
+		if(data_[nEvent].getEventType() == ReflectogramEvent.CONNECTOR)
 		{
 			dataT = LangModelAnalyse.getString("eventType4");
 		}
-		else if(data_[nEvent].getType() == ReflectogramEvent.WELD)
+		else if(data_[nEvent].getEventType() == ReflectogramEvent.WELD)
 		{
 			dataT = LangModelAnalyse.getString("eventType3");
 		}
-		else if(data_[nEvent].getType() == ReflectogramEvent.LINEAR)
+		else if(data_[nEvent].getEventType() == ReflectogramEvent.LINEAR)
 		{
 			dataT = LangModelAnalyse.getString("eventType0");
 		}
 
-		if(etalon[nEvent].getType() == ReflectogramEvent.CONNECTOR)
+		if(etalon[nEvent].getEventType() == ReflectogramEvent.CONNECTOR)
 		{
 			etalonT = LangModelAnalyse.getString("eventType4");
 		}
-		else if(etalon[nEvent].getType() == ReflectogramEvent.WELD)
+		else if(etalon[nEvent].getEventType() == ReflectogramEvent.WELD)
 		{
 			etalonT = LangModelAnalyse.getString("eventType3");
 		}
-		else if(etalon[nEvent].getType() == ReflectogramEvent.LINEAR)
+		else if(etalon[nEvent].getEventType() == ReflectogramEvent.LINEAR)
 		{
 			etalonT = LangModelAnalyse.getString("eventType0");
 		}
@@ -408,7 +404,7 @@ public class DetailedEventsFrame extends JInternalFrame
 		ctModel.setValueAt(String.valueOf(locationDiff)+" м", 6, 1);
 
 
-		if(etalon[nEvent].getType() == data_[nEvent].getType())
+		if(etalon[nEvent].getEventType() == data_[nEvent].getEventType())
 		{
 			ctModel.setValueAt(String.valueOf(loss)+" дЅ", 4, 1);
 			ctModel.setValueAt(String.valueOf(widthDiff)+" м", 5, 1);
@@ -446,15 +442,15 @@ public class DetailedEventsFrame extends JInternalFrame
 				tModel = (FixedSizeEditableTableModel)tModels.get(linear);
 				tModel.setValueAt(linear,	0, 0);
 				tModel.updateColumn(new Object[] { String.valueOf(num + 1),
-						new StringBuffer().append(MathRef.round_3((ev.last_point - ev.first_point)*res))
+						new StringBuffer().append(MathRef.round_3((ev.last_point - ev.first_point)*res_km))
 								.append(km).toString(),
-						new StringBuffer().append(MathRef.round_4(ev.data[0]))
+						new StringBuffer().append(MathRef.round_2(ev.data[0]))
 								.append(db).toString(),
-						new StringBuffer().append(MathRef.round_4(ev.data[1]))
+						new StringBuffer().append(MathRef.round_2(ev.data[1]))
 								.append(db).toString(),
-						new StringBuffer().append(MathRef.round_4(ev.data[3]))
+						new StringBuffer().append(MathRef.round_3(ev.data[3]))
 								.append(db).toString(),
-						new StringBuffer().append(MathRef.round_4(ev.data[4]))
+						new StringBuffer().append(MathRef.round_3(ev.data[4]))
 								.append(db).toString()
 				}, 1);
 				break;
@@ -462,15 +458,15 @@ public class DetailedEventsFrame extends JInternalFrame
 				tModel = (FixedSizeEditableTableModel)tModels.get(initiate);
 				tModel.setValueAt(initiate,	0, 0);
 				tModel.updateColumn(new Object[] { String.valueOf(num + 1),
-						new StringBuffer().append(MathRef.round_3((ev.last_point - ev.first_point)*res))
+						new StringBuffer().append(MathRef.round_3((ev.last_point - ev.first_point)*res_km))
 								.append(km).toString(),
-						new StringBuffer().append(MathRef.round_4(ev.data[0]))
+						new StringBuffer().append(MathRef.round_2(ev.data[0]))
 								.append(db).toString(),
-						new StringBuffer().append(MathRef.round_4(ev.data[1]))
+						new StringBuffer().append(MathRef.round_2(ev.data[1]))
 								.append(db).toString(),
-						new StringBuffer().append(Math.round(ev.data[2] * res * 1000d))
+						new StringBuffer().append(Math.round(ev.data[2] * res_km * 1000d))
 								.append(mt).toString(),
-						new StringBuffer().append(Math.round(ev.data[3] * res * 1000d))
+						new StringBuffer().append(Math.round(ev.data[3] * res_km * 1000d))
 								.append(mt).toString()
 					}, 1);
 					break;
@@ -478,13 +474,13 @@ public class DetailedEventsFrame extends JInternalFrame
 				tModel = (FixedSizeEditableTableModel)tModels.get(noid);
 				tModel.setValueAt(noid,	0, 0);
 				tModel.updateColumn(new Object[] { String.valueOf(num + 1),
-						new StringBuffer().append(MathRef.round_3((ev.last_point - ev.first_point)*res))
+						new StringBuffer().append(MathRef.round_3((ev.last_point - ev.first_point)*res_km))
 								.append(km).toString(),
-						new StringBuffer().append(MathRef.round_4(ev.data[0]))
+						new StringBuffer().append(MathRef.round_3(ev.data[0]))
 								.append(db).toString(),
-						new StringBuffer().append(MathRef.round_4(ev.data[1]))
+						new StringBuffer().append(MathRef.round_3(ev.data[1]))
 								.append(db).toString(),
-						new StringBuffer().append(MathRef.round_4(ev.data[2]))
+						new StringBuffer().append(MathRef.round_3(ev.data[2]))
 								.append(db).toString()
 					}, 1);
 					break;
@@ -492,26 +488,26 @@ public class DetailedEventsFrame extends JInternalFrame
 				tModel = (FixedSizeEditableTableModel)tModels.get(connector);
 				tModel.setValueAt(connector, 0, 0);
 				tModel.updateColumn(new Object[] { String.valueOf(num + 1),
-						new StringBuffer().append(MathRef.round_3((ev.last_point - ev.first_point)*res))
+						new StringBuffer().append(MathRef.round_3((ev.last_point - ev.first_point)*res_km))
 								.append(km).toString(),
-						new StringBuffer().append(MathRef.round_4(ev.data[0]))
+						new StringBuffer().append(MathRef.round_2(ev.data[0]))
 								.append(db).toString(),
-						new StringBuffer().append(MathRef.round_4(ev.data[1]))
+						new StringBuffer().append(MathRef.round_2(ev.data[1]))
 								.append(db).toString(),
-						new StringBuffer().append(MathRef.round_4(ev.data[2]))
-								.append(db).toString(),
-						String.valueOf(MathRef.round_4(ev.data[3]))
+						new StringBuffer().append(MathRef.round_2(ev.data[2]))
+								.append(db).toString()
+						//String.valueOf(MathRef.round_3(ev.data[3])) // removed by saa
 					}, 1);
 					break;
 			case TraceEvent.WELD:
 				tModel = (FixedSizeEditableTableModel)tModels.get(weld);
 				tModel.setValueAt(weld,	0, 0);
 				tModel.updateColumn(new Object[] { String.valueOf(num + 1),
-						new StringBuffer().append(MathRef.round_3((ev.last_point - ev.first_point)*res))
+						new StringBuffer().append(MathRef.round_3((ev.last_point - ev.first_point)*res_km))
 								.append(km).toString(),
-						new StringBuffer().append(MathRef.round_4(ev.data[0]))
+						new StringBuffer().append(MathRef.round_2(ev.data[0]))
 								.append(db).toString(),
-						new StringBuffer().append(MathRef.round_4(ev.data[1]))
+						new StringBuffer().append(MathRef.round_2(ev.data[1]))
 								.append(db).toString()
 					}, 1);
 					break;
@@ -519,13 +515,13 @@ public class DetailedEventsFrame extends JInternalFrame
 				tModel = (FixedSizeEditableTableModel)tModels.get(terminate);
 				tModel.setValueAt(terminate, 0, 0);
 				tModel.updateColumn(new Object[] { String.valueOf(num + 1),
-						new StringBuffer().append(MathRef.round_3((ev.last_point - ev.first_point)*res))
+						new StringBuffer().append(MathRef.round_3((ev.last_point - ev.first_point)*res_km))
 								.append(km).toString(),
-						new StringBuffer().append(MathRef.round_4(ev.data[0]))
+						new StringBuffer().append(MathRef.round_2(ev.data[0]))
 								.append(db).toString(),
-						new StringBuffer().append(MathRef.round_4(ev.data[1]))
-								.append(db).toString(),
-						String.valueOf(MathRef.round_4(ev.data[2]))
+						new StringBuffer().append(MathRef.round_2(ev.data[1]))
+								.append(db).toString()
+						//String.valueOf(MathRef.round_3(ev.data[2])) // removed by saa
 					}, 1);
 				 break;
 			}

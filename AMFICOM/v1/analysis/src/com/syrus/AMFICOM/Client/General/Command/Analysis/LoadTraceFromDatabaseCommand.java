@@ -56,7 +56,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 		try
 		{
 			this.checker = new Checker(this.aContext.getSessionInterface());
-			if(!checker.checkCommand(checker.loadReflectogrammFromDB))
+			if(!checker.checkCommand(Checker.loadReflectogrammFromDB))
 			{
 				return;
 			}
@@ -166,9 +166,9 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 			 ReflectogramEvent endEvent = etalon[etalon.length - 1];
 			 for(int i = revents.length - 1; i >= 0; i--)
 			 {
-				 if(revents[i].getType() == ReflectogramEvent.CONNECTOR &&
-						 Math.abs(revents[i].begin - endEvent.begin) < delta &&
-						 Math.abs(revents[i].end - endEvent.end) < delta)
+				 if(revents[i].getEventType() == ReflectogramEvent.CONNECTOR &&
+						 Math.abs(revents[i].getBegin() - endEvent.getBegin()) < delta &&
+						 Math.abs(revents[i].getEnd() - endEvent.getEnd()) < delta)
 				 {
 					 ReflectogramEvent[] new_revents = new ReflectogramEvent[i + 1];
 					 for(int j = 0; j < i + 1; j++)
@@ -180,14 +180,15 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 		 }
 
 		 //correct event types
+		 // XXX: rude alg.: probable errors when end - begin < delta
 		 if(revents.length == etalon.length)
 		 {
 			 for(int i = 0; i < etalon.length; i++)
 			 {
-				 if(Math.abs(revents[i].begin - etalon[i].begin) < delta &&
-						 Math.abs(revents[i].end - etalon[i].end) < delta)
+				 if(Math.abs(revents[i].getBegin() - etalon[i].getBegin()) < delta &&
+						 Math.abs(revents[i].getEnd() - etalon[i].getEnd()) < delta)
 				 {
-					 revents[i].setType(etalon[i].getType());
+					 revents[i].setEventType(etalon[i].getEventType());
 				 }
 			 }
 		 }

@@ -54,7 +54,7 @@ public class AddTraceFromDatabaseCommand extends VoidCommand
 		try
 		{
 			this.checker = new Checker(this.aContext.getSessionInterface());
-			if(!checker.checkCommand(checker.loadReflectogrammFromDB))
+			if(!checker.checkCommand(Checker.loadReflectogrammFromDB))
 			{
 				return;
 			}

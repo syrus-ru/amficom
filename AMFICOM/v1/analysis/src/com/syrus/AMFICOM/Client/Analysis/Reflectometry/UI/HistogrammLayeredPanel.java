@@ -58,7 +58,7 @@ public class HistogrammLayeredPanel extends ScalableLayeredPanel implements Oper
 					SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
 					if (panel instanceof HistogrammPanel)
 					{
-						if(rue.MARKER_MOVED)
+						if(rue.markerMoved())
 						{
 							MarkersInfo mInfo = (MarkersInfo)rue.getSource();
 							((HistogrammPanel)panel).updateHistogrammData(

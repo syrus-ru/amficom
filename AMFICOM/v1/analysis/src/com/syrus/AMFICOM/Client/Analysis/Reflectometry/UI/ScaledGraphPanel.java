@@ -31,6 +31,7 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 
 	public static Stroke SELECTION_STROKE =
 			new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[] { 5f, 5f }, 0.0f);
+	public static Stroke DASHED_STROKE = SELECTION_STROKE;
 	public static Stroke DEFAULT_STROKE = new BasicStroke(1);
 
 	public ScaledGraphPanel(ResizableLayeredPanel panel, double[] y, double delta_x)
@@ -57,6 +58,7 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 			{
 				this_mouseDragged(e);
 			}
+
 			public void mouseMoved(MouseEvent e)
 			{
 				this_mouseMoved(e);
@@ -72,6 +74,10 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 			{
 				this_mouseReleased(e);
 			}
+			public void mouseClicked(MouseEvent e)
+			{
+			    this_mouseClicked(e);
+			}
 		});
 	}
 
@@ -80,8 +86,12 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 		startpos = e.getPoint();
 		currpos = e.getPoint();
 	}
-
+	
 	protected void this_mouseMoved(MouseEvent e)
+	{
+	}
+	
+	protected void this_mouseClicked(MouseEvent e)
 	{
 	}
 

@@ -88,7 +88,6 @@ public class SaveAnalysisCommand extends VoidCommand
 		try
 		{
 			a = Analysis.createInstance(
-					IdentifierPool.generateId(ObjectEntities.ANALYSIS_ENTITY_CODE),
 					userId,
 					type,
 					new Identifier(bs.monitoredElementId),
@@ -128,7 +127,6 @@ public class SaveAnalysisCommand extends VoidCommand
 		try
 		{
 			a.createResult(
-					IdentifierPool.generateId(ObjectEntities.RESULT_ENTITY_CODE),
 					userId,
 					m,
 					AlarmLevel.ALARM_LEVEL_NONE,

@@ -71,7 +71,7 @@ public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel implements O
 				SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
 				if (panel instanceof ThresholdsPanel)
 				{
-					if(rue.ANALYSIS_PERFORMED)
+					if(rue.analysisPerformed())
 					{
 						String id = (String)(rue.getSource());
 						//if (id.equals("primarytrace"))
@@ -83,17 +83,21 @@ public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel implements O
 							jLayeredPane.repaint();
 						}
 					}
-					if(rue.EVENT_SELECTED)
+					if(rue.eventSelected())
 					{
 						int num = Integer.parseInt((String)rue.getSource());
 						((ThresholdsPanel)panel).showEvent(num);
 						updScale2fitCurrentEv (.2, 1.);
 					}
-					if(rue.THRESHOLD_CHANGED)
+					if(rue.thresholdChanged())
 					{
 						jLayeredPane.repaint();
 					}
-					if(rue.THRESHOLDS_UPDATED)
+					if (rue.modelFunctionChanged())
+					{
+					    jLayeredPane.repaint();
+					}
+					if(rue.thresholdsUpdated())
 					{
 						String id = (String)(rue.getSource());
 						ReflectogramEvent[] ep = ((ReflectogramEvent[])Pool.get("eventparams", id));
@@ -115,9 +119,11 @@ public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel implements O
 			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
 			if (panel instanceof ThresholdsPanel)
 			{
-				if (((ThresholdsPanel)panel).et_ep != null)
+				ThresholdsPanel tp = (ThresholdsPanel)panel;
+				if (tp.et_ep != null)
 				{
-					((ThresholdsPanel)panel).et_ep[((ThresholdsPanel)panel).c_event].getThreshold().changeThreshold(da, dc, dx, dl, key);
+					ReflectogramEvent ep = tp.et_ep[tp.c_event];
+					ep.getThreshold().changeThresholdBy(da, dc, dx, dl, ep, key);
 					jLayeredPane.repaint();
 					return;
 				}
@@ -277,6 +283,9 @@ class ThresholdsToolBar extends TraceEventsToolBar
 					}
 				},
 				true));
+		
+		if (!modeledTButton.isSelected())
+			modeledTButton.doClick();
 
 		return buttons;
 	}

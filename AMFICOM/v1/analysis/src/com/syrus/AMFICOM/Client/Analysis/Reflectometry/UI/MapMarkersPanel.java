@@ -117,15 +117,21 @@ public class MapMarkersPanel extends ThresholdsPanel
 		// если двигаем курсор
 		if(move_marker)
 		{
+			//long t0 = System.currentTimeMillis();
 			upd_currpos(e);
 
 			moveMarker (active_marker, coord2index(currpos.x));
 			move_notify();
 			parent.repaint();
+			//long t1 = System.currentTimeMillis();
+			//System.out.println("MapMarkersPanel: tmD: mm dt " + (t1-t0));
 			return;
 		}
-
+		
+		//long t0 = System.currentTimeMillis();
 		super.this_mouseDragged(e);
+		//long t1 = System.currentTimeMillis();
+		//System.out.println("MapMarkersPanel: tmD: !mm dt " + (t1-t0));
 	}
 
 	void move_notify()

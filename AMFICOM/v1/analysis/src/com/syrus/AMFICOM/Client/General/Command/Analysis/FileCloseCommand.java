@@ -37,6 +37,7 @@ public class FileCloseCommand extends VoidCommand
 
 	public void execute()
 	{
+		if(false) // fixme
 		try
 		{
 			this.checker = new Checker(this.aContext.getSessionInterface());

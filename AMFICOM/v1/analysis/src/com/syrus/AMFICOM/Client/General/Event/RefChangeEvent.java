@@ -21,13 +21,12 @@ public class RefChangeEvent extends OperationEvent
 	public static final long SELECT_EVENT = 0x00010000;
 	public static final long ANALYSE_EVENT = 0x00100000;
 
-	public long change_type;
+	//public long change_type;
 	public static final String typ = "refchange";
 
 	public RefChangeEvent(Object source, long type)
 	{
 		super(source, 0, typ);
-		change_type = type;
 
 		if((type & OPEN_EVENT) != 0)
 			OPEN = true;

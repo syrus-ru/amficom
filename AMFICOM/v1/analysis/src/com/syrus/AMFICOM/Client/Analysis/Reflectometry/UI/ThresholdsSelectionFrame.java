@@ -10,10 +10,10 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.*;
-import oracle.jdeveloper.layout.*;
+import com.syrus.io.BellcoreStructure;
 
 public class ThresholdsSelectionFrame extends ATableFrame
-																			implements OperationListener
+	implements OperationListener
 {
 	public static final Dimension btn_size = new Dimension(24, 24);
 	private Dispatcher dispatcher;
@@ -21,12 +21,14 @@ public class ThresholdsSelectionFrame extends ATableFrame
 
 	private EventTableModel tModelLinear;
 	private EventTableModel tModelConnector;
-	ReflectogramEvent[] ep;
+	private ReflectogramEvent[] ep;
+	
+	private BellcoreStructure bs; // для доступа к самой р/г во время пересчета порогов
 
-	Threshold[] init_Threshs;
-	int current_ev = 0;
-	boolean selected_there = false;
-	int _type = -1;
+	private Threshold[] init_Threshs;
+	private int current_ev = -1;
+	private boolean selected_there = false;
+	private int _type = -1;
 
 	JPanel mainPanel = new JPanel();
 	JScrollPane scrollPane = new JScrollPane();
@@ -35,6 +37,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 	JToolBar jToolBar1 = new JToolBar();
 	JButton jButton1 = new JButton();
 	JButton jButton3 = new JButton();
+	JCheckBox jCheckBox1 = new JCheckBox(); // LeftJoin
 
 	public ThresholdsSelectionFrame(Dispatcher dispatcher)
 	{
@@ -83,16 +86,20 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		);
 
 		tModelConnector = new EventTableModel(
-				new String[] {LangModelAnalyse.getString("thresholdsKey"),
-											LangModelAnalyse.getString("thresholdsAmplitude"),
-											LangModelAnalyse.getString("thresholdsCenter"),
-											LangModelAnalyse.getString("thresholdsWidth"),
-											LangModelAnalyse.getString("thresholdsHeight")},
+				new String[] {
+						LangModelAnalyse.getString("thresholdsKey"),
+						LangModelAnalyse.getString("thresholdsAmplitude"),
+						LangModelAnalyse.getString("thresholdsCenter"),
+						LangModelAnalyse.getString("thresholdsWidth"),
+						LangModelAnalyse.getString("thresholdsHeight")
+				},
 				new Object[] {new Double(1), new Double(1), new Double(1), new Double(1), new Double(1)},
-				new String[] {LangModelAnalyse.getString("thresholdsUpWarning"),
-										 LangModelAnalyse.getString("thresholdsUpAlarm"),
-										 LangModelAnalyse.getString("thresholdsDownWarning"),
-										 LangModelAnalyse.getString("thresholdsDownAlarm")},
+				new String[] {
+						LangModelAnalyse.getString("thresholdsUpWarning"),
+						LangModelAnalyse.getString("thresholdsUpAlarm"),
+						LangModelAnalyse.getString("thresholdsDownWarning"),
+						LangModelAnalyse.getString("thresholdsDownAlarm")
+				},
 				new int[]    { 1, 2, 3, 4 }
 		);
 
@@ -136,17 +143,29 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		jComboBox1.addItem(LangModelAnalyse.getString("thresholdsConnector"));
 		jComboBox1.addItem(LangModelAnalyse.getString("thresholdsWeld"));
 		jComboBox1.addItem(LangModelAnalyse.getString("thresholdsLinear"));
+		
+		jCheckBox1.setText(LangModelAnalyse.getString("modelLeftJoin"));
+		jCheckBox1.addActionListener(new ActionListener() {
+		    public void actionPerformed(ActionEvent e) {
+		        if (current_ev >= 0 && ep[current_ev].setLeftLink(jCheckBox1.isSelected()))
+		        {
+		            //System.out.println("LeftLink type changed");
+		            dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.MODEL_CHANGED_EVENT));
+		            dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
+		        }
+		    }
+		});
 
 		//jToolBar1.setBorderPainted(true);
 		jToolBar1.setFloatable(false);
-		jToolBar1.setLayout(new XYLayout());
-		jToolBar1.add(jButton1, new XYConstraints(0, 0, -1, -1));
-		jToolBar1.add(jButton3, new XYConstraints(btn_size.width, 0, -1, -1));
+		jToolBar1.add(jButton1);
+		jToolBar1.add(jButton3);
+		jToolBar1.add(jCheckBox1);
 
 		jTable.getColumnModel().getColumn(0).setPreferredWidth(250);
 		jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
 		jTable.setMinimumSize(new Dimension(200, 213));
-		jTable.setSelectionMode(jTable.getSelectionModel().SINGLE_SELECTION);
+		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
 		scrollPane.setViewport(viewport);
 		scrollPane.getViewport().add(jTable);
@@ -196,40 +215,43 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		if(ae.getActionCommand().equals(RefUpdateEvent.typ))
 		{
 			RefUpdateEvent rue = (RefUpdateEvent)ae;
-			if(rue.THRESHOLDS_UPDATED)
+			if(rue.thresholdsUpdated())
 			{
 				String id = (String)(rue.getSource());
 				//if (id.equals("primarytrace"))
 				{
 					ReflectogramEvent[] ep = (ReflectogramEvent[])Pool.get("eventparams", id);
 					this.ep = ep;
-
+					
 					selected_there = true;
 					updThresholds();
 					selected_there = false;
 				}
 			}
-			if(rue.ANALYSIS_PERFORMED)
+			if(rue.analysisPerformed())
 			{
 				String id = (String)(rue.getSource());
 				//if (id.equals("primarytrace"))
 				{
-					ReflectogramEvent[] ep = (ReflectogramEvent[])Pool.get("eventparams", id);
+				    //System.out.println("thresholdsSelectionFrame: ANALYSIS_PERFORMED: source = '"+id+"'"); // FIXIT
+
+				    ReflectogramEvent[] ep = (ReflectogramEvent[])Pool.get("eventparams", id);
+					bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
 
 					if (ep != null)
 					{
-						if (this.ep != null && this.ep.length <= ep.length)
+						if (false && this.ep != null && this.ep.length <= ep.length) // пофикшено мною -- saa
 						{
 							for (int i = 0; i < this.ep.length; i++)
 							{
 								Threshold t = this.ep[i].getThreshold();
-								t.setReflectogramEvent(ep[i]);
 								ep[i].setThreshold(t);
 							}
 						}
+
 						init_Threshs = new Threshold[ep.length];
 						for (int i = 0; i < ep.length; i++)
-							init_Threshs[i] = (Threshold)ep[i].getThreshold().clone();
+							init_Threshs[i] = (Threshold)ep[i].getThreshold().copy();
 
 						this.ep = ep;
 
@@ -239,14 +261,19 @@ public class ThresholdsSelectionFrame extends ATableFrame
 					}
 				}
 			}
-			if(rue.EVENT_SELECTED)
+			if(rue.eventSelected())
 			{
 				current_ev = Integer.parseInt((String)rue.getSource());
+				if (current_ev < 0 || current_ev >= ep.length)
+				{
+				    System.out.println("Warning: current_ev out of range");
+				    current_ev = 0;
+				}
 				selected_there = true;
 				updThresholds();
 				selected_there = false;
 			}
-			if(rue.THRESHOLD_CHANGED)
+			if(rue.thresholdChanged())
 			{
 				selected_there = true;
 				updThresholds();
@@ -257,9 +284,9 @@ public class ThresholdsSelectionFrame extends ATableFrame
 
 	void jButton1_actionPerformed(ActionEvent e)
 	{
-		if (ep != null)
+		if (ep != null && current_ev != -1)
 		{
-			ep[current_ev].setThreshold((Threshold)init_Threshs[current_ev].clone());
+			ep[current_ev].setThreshold((Threshold)init_Threshs[current_ev].copy());
 			updThresholds();
 			dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
 		}
@@ -267,9 +294,9 @@ public class ThresholdsSelectionFrame extends ATableFrame
 
 	void jButton3_actionPerformed(ActionEvent e)
 	{
-		if (ep != null)
+		if (ep != null && current_ev != -1)
 		{
-			ep[current_ev].setThreshold(new Threshold(ep[current_ev]));
+			ep[current_ev].setThreshold(new Threshold());
 			updThresholds();
 			dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
 		}
@@ -277,28 +304,31 @@ public class ThresholdsSelectionFrame extends ATableFrame
 
 	void jComboBox1_itemStateChanged(ItemEvent e)
 	{
-		if ((ep == null) || (selected_there))
+		if (ep == null || selected_there || current_ev == -1)
 			return;
 
 		if (e.getStateChange() == ItemEvent.SELECTED)
 		{
 			String type = (String)e.getItem();
+			int newType = ReflectogramEvent.RESERVED_VALUE;
+			
+			double[] y = bs == null ? null : bs.getTraceData(); // reflectogram
 			if (type.equals(LangModelAnalyse.getString("thresholdsConnector")))
-			{
-				ep[current_ev].setType(ReflectogramEvent.CONNECTOR);
-				updThresholds();
-				dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
-			}
+			    newType = ReflectogramEvent.CONNECTOR;
 			else if (type.equals(LangModelAnalyse.getString("thresholdsWeld")))
-			{
-				ep[current_ev].setType(ReflectogramEvent.WELD);
-				updThresholds();
-				dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
-			}
+			    newType = ReflectogramEvent.WELD;
 			else if (type.equals(LangModelAnalyse.getString("thresholdsLinear")))
+			    newType = ReflectogramEvent.LINEAR;
+			
+			System.out.println("TSF: change threshold type: newType="+newType+"; y="+y);
+			
+			if (newType != ReflectogramEvent.RESERVED_VALUE)
 			{
-				ep[current_ev].setType(ReflectogramEvent.LINEAR);
+			    // change thresold type
+				ep[current_ev].changeThresholdType(newType, y);
+				// redraw thresholds
 				updThresholds();
+				// notify others (is there any listener for this event??)
 				dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
 			}
 		}
@@ -313,17 +343,27 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		if (current_ev >= ep.length)
 			current_ev = ep.length - 1;
 
+		int ttype   = ep[current_ev].getThresholdType(); 
 		Threshold t = ep[current_ev].getThreshold();
 
-		if (ep[current_ev].getType() == ReflectogramEvent.CONNECTOR)
+		if (ttype == ReflectogramEvent.CONNECTOR)
 		{
-			tModelConnector.updateData (
+			// FIXIT: предоставляем больше данных чем надо
+			Double[] u1v = t.getThresholdsObject(Threshold.UP1);
+			Double[] u2v = t.getThresholdsObject(Threshold.UP2);
+			Double[] d1v = t.getThresholdsObject(Threshold.DOWN1);
+			Double[] d2v = t.getThresholdsObject(Threshold.DOWN2);
+			tModelConnector.updateData(
+			    new Double[][]{u1v, u2v, d1v, d2v}
+			    );
+				/*
 				new Double[][]{
-												t.getThresholdsObject(Threshold.UP1),
-												t.getThresholdsObject(Threshold.UP2),
-												t.getThresholdsObject(Threshold.DOWN1),
-												t.getThresholdsObject(Threshold.DOWN2)
-			});
+						{u1v[0], u1v[1], u1v[2], u1v[3]},
+						{u2v[0], u2v[1], u2v[2], u2v[3]},
+						{d1v[0], d1v[1], d1v[2], d1v[3]},
+						{d2v[0], d2v[1], d2v[2], d2v[3]}
+				});
+				*/
 
 			if (_type != ReflectogramEvent.CONNECTOR)
 			{
@@ -338,7 +378,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 				jTable.updateUI();
 			}
 		}
-		else if (ep[current_ev].getType() == ReflectogramEvent.WELD)
+		else if (ttype == ReflectogramEvent.WELD)
 		{
 			tModelLinear.updateData( new Object[][] {
 				{ t.getThresholdsObject(Threshold.UP1)[0]},
@@ -356,7 +396,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 				jTable.updateUI();
 			}
 		}
-		else if (ep[current_ev].getType() == ReflectogramEvent.LINEAR)
+		else if (ttype == ReflectogramEvent.LINEAR)
 		{
 			tModelLinear.updateData( new Object[][] {
 				{	t.getThresholdsObject(Threshold.UP1)[0]},
@@ -374,25 +414,27 @@ public class ThresholdsSelectionFrame extends ATableFrame
 				jTable.updateUI();
 			}
 		}
+		
+		if (jCheckBox1.isSelected() ^ ep[current_ev].getLeftLink())
+		{
+		    jCheckBox1.setSelected(ep[current_ev].getLeftLink());
+		}
 	}
 
-	class EventTableModel extends FixedSizeEditableTableModel
-	{
-		public EventTableModel (String[] p_columns,
-																		 Object[] p_defaultv,
-																		 String[] p_rows,
-																		 int[] editable)
-		{
-			super ( p_columns, p_defaultv, p_rows, editable);
+	class EventTableModel extends FixedSizeEditableTableModel {
+		public EventTableModel(String[] p_columns, Object[] p_defaultv,
+				String[] p_rows, int[] editable) {
+			super(p_columns, p_defaultv, p_rows, editable);
 		}
 
-		public void setValueAt(Object value, int row, int col)
-		{
+		public void setValueAt(Object value, int row, int col) {
 			super.setValueAt(value, row, col);
-			if (ep != null)
-			{
-				ep[current_ev].getThreshold().setThresholdValue(((Double)value).doubleValue(), col, row);
-				dispatcher.notify(new RefUpdateEvent(this, RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
+			if (ep != null) {
+				ep[current_ev].getThreshold().setThresholdValue(
+						((Double) value).doubleValue(), col, ep[current_ev],
+						row);
+				dispatcher.notify(new RefUpdateEvent(this,
+						RefUpdateEvent.THRESHOLD_CHANGED_EVENT));
 			}
 		}
 	}

@@ -1,7 +1,6 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
 
 import java.awt.*;
 import javax.swing.*;
@@ -16,11 +15,11 @@ import com.syrus.io.BellcoreStructure;
 public class PrimaryParametersFrame extends ATableFrame
 																		implements OperationListener
 {
-	private static StringBuffer km = new StringBuffer(' ').append(LangModelAnalyse.getString("km"));
-	private static StringBuffer mt = new StringBuffer(' ').append(LangModelAnalyse.getString("mt"));
-	private static StringBuffer nm = new StringBuffer(' ').append(LangModelAnalyse.getString("nm"));
-	private static StringBuffer db = new StringBuffer(' ').append(LangModelAnalyse.getString("dB"));
-	private static StringBuffer ns = new StringBuffer(' ').append(LangModelAnalyse.getString("ns"));
+	private static StringBuffer km = new StringBuffer(" ").append(LangModelAnalyse.getString("km"));
+	private static StringBuffer mt = new StringBuffer(" ").append(LangModelAnalyse.getString("mt"));
+	private static StringBuffer nm = new StringBuffer(" ").append(LangModelAnalyse.getString("nm"));
+	private static StringBuffer db = new StringBuffer(" ").append(LangModelAnalyse.getString("dB"));
+	private static StringBuffer ns = new StringBuffer(" ").append(LangModelAnalyse.getString("ns"));
 
 	private Dispatcher dispatcher;
 	private FixedSizeEditableTableModel tModel;
@@ -136,7 +135,7 @@ public class PrimaryParametersFrame extends ATableFrame
 		scrollPane.setViewport(viewport);
 		scrollPane.setAutoscrolls(true);
 
-		jTable.setSelectionMode(jTable.getSelectionModel().SINGLE_SELECTION);
+		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
 //		jTable.setMaximumSize(new Dimension(200, 213));
 		jTable.setMinimumSize(new Dimension(200, 213));
