@@ -203,6 +203,6 @@ int BellcoreWriter::write_special(int j, int i) {
 	int ret = 0x00000001;
 	unsigned int k;
 	for (k = 0; k < this->bs->special[j]->get_size(); k++)
-		ret &= this->idos->write_char(this->bs->special[j]->spec_data[k]);
+		ret &= this->idos->write_char(this->bs->special[j]->data[k]);
 	return ret;
 }

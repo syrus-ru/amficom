@@ -42,6 +42,11 @@ JNIEXPORT jbyteArray JNICALL Java_com_syrus_io_TraceDataReader_getBellcoreData__
 }
 
 int get_bellcore_data(const char* compdata, const unsigned short compdata_size, unsigned char*& bellcoredata, unsigned int& bellcoredata_size) {
+//---------
+FILE* fi = fopen("t5.trc", "wb");
+fwrite(compdata, 1, compdata_size, fi);
+fclose(fi);
+//---------
 	BellcoreStructure* bs = new BellcoreStructure();
 	if (fill_bellcore_structure(compdata, compdata_size, bs) >= 0) {
 		BellcoreWriter* bw = new BellcoreWriter();
@@ -75,12 +80,152 @@ int get_bellcore_data(const char* file_name, unsigned char*& bellcoredata, unsig
 	}
 }
 
+int fill_bellcore_structure(const char* compdata, const unsigned short compdata_size, BellcoreStructure* bs) {
+	NTTraceData* nttrace_data = (NTTraceData*)malloc(sizeof(NTTraceData));
+	short stdecomp_ret = stdecomp(compdata, compdata_size, nttrace_data);
+	if (stdecomp_ret != 0) {
+		printf("stdecomp returned error: %d\n", stdecomp_ret);
+		free(nttrace_data);
+		return -1;
+	}
+	print_nttrace_data(nttrace_data);
+
+	bellcore_from_nttrace(nttrace_data, bs);
+
+	free(nttrace_data);
+
+	return 0;
+}
+int fill_bellcore_structure(const char* file_name, BellcoreStructure* bs) {
+	if (file_name == NULL)
+		return -1;
+
+	if (file_name[0] == 0)
+		return -1;
+
+	struct stat file_stat;
+	int stat_ret = stat(file_name, &file_stat);
+	if (stat_ret != 0)
+		return -1;
+
+	int file_is_trc_ret = file_is_trc(file_name);
+	if (!file_is_trc_ret) {
+		//Read "UFAS Analysis" -- return later
+		printf("file %s is not trc\n", file_name);
+		return -1;
+	}
+
+	NTTraceData* nttrace_data = (NTTraceData*)malloc(sizeof(NTTraceData));
+	short ftdecomp_ret = ftdecomp(file_name, nttrace_data);
+	if (ftdecomp_ret != 0) {
+		printf("ftdecomp returned error: %d, file: <%s>\n", ftdecomp_ret, file_name);
+		free(nttrace_data);
+		return -1;
+	}
+	print_nttrace_data(nttrace_data);
+
+	bellcore_from_nttrace(nttrace_data, bs);
+
+	free(nttrace_data);
+
+	return 0;
+}
+
+
 double dbl_10050458 = 1.4989625e-3;	//dbl_10050458
 double dbl_100504F0 = 1.0e4;		//dbl_100504F0
 double dynamic_range_koeff = 1.0;	//dbl_10050478
 double min_refl_val = 0.0;		//dbl_10050468
 double dbl_10050460 = 3.4e2;		//dbl_10050460
 
+void bellcore_from_nttrace(const NTTraceData* nttrace_data, BellcoreStructure* bs) {
+
+	bs->add_field_gen_params("Cable ID",
+			"Fiber ID",
+			0,
+			nttrace_data->_00014,
+			"Originating Location",
+			"Terminating Location",
+			"Cable code",
+			"DF",
+			"Operator",
+			"QuestFiber");
+
+	bs->add_field_sup_params("Supplier name",
+			"Nettest Starprobe",
+			"OTDR",
+			nttrace_data->_00084,
+			"OM serial number",
+			"Software revision",
+			"Other");
+
+	int tpw = 1;
+	short* pwu = new short[tpw];
+	pwu[0] = nttrace_data->_00020[2];
+	int* ds = new int[tpw];
+	ds[0] = (int)(nttrace_data->_40072 * nttrace_data->_00012 / 3. * 100);
+	int* nppw = new int[tpw];
+	nppw[0] = nttrace_data->_40066;
+	int ar = (int)(nttrace_data->_40072 * nttrace_data->_40066 * (nttrace_data->_00012/10000.) * 100 / 3.);
+	bs->add_field_fxd_params(nttrace_data->_00002,
+			"mt",
+			nttrace_data->_00014 * 10,
+			0,
+			tpw,
+			pwu,
+			ds,
+			nppw,
+			nttrace_data->_00012 * 10,
+			nttrace_data->_00044,
+			ar);
+	delete[] pwu;
+	delete[] ds;
+	delete[] nppw;
+
+//	double km_per_data_point = (nttrace_data->_40072 * dbl_10050458)/(nttrace_data->_00012 / dbl_100504F0);
+	double dynamic_range = nttrace_data->_00048*8 + 24;
+	double d = dynamic_range_koeff * dynamic_range;
+	double* reflectogramma = new double[nttrace_data->_40066];
+	for (unsigned int i = 0; i < nttrace_data->_40066; i++) {
+		if (nttrace_data->_40068[i] > 0) {
+			reflectogramma[i] = d - (nttrace_data->_40068[i]*dynamic_range_koeff / dbl_10050460);
+			if (reflectogramma[i] < min_refl_val)
+				reflectogramma[i] = d;
+		}
+		else
+			reflectogramma[i] = d;
+	}
+//---------
+FILE* fi = fopen("reflectogramma", "wb");
+for (unsigned int i = 0; i < nttrace_data->_40066; i++)
+	fprintf(fi, "%hd\n", nttrace_data->_40068[i]);//fprintf(fi, "%f\n", reflectogramma[i]);
+fclose(fi);
+//---------
+	short tsf = 1;
+	int* tps = new int[tsf];
+	tps[0] = nttrace_data->_40066;
+	short* sf = new short[tsf];
+	sf[0] = 1000;
+	unsigned short** dsf = new unsigned short*[tsf];
+	dsf[0] = new unsigned short[nttrace_data->_40066];
+	for (int i = 0; i < nttrace_data->_40066; i++)
+		dsf[0][i] = (unsigned short)(reflectogramma[i] * 1000);
+	delete[] reflectogramma;
+	bs->add_field_data_pts(nttrace_data->_40066,
+			tsf,
+			tps,
+			sf,
+			dsf);
+	delete[] tps;
+	delete[] sf;
+	//!!!Don't delete dsf - it will be deleted in the destructor of BellcoreStructure
+
+	bs->add_field_cksum(0);
+
+	bs->add_field_map();
+
+}
+/*
 int fill_bellcore_structure(const char* compdata, const unsigned short compdata_size, BellcoreStructure* bs) {
 	NTTraceData* nttrace_data = (NTTraceData*)malloc(sizeof(NTTraceData));
 	unsigned int i;
@@ -103,8 +248,9 @@ int fill_bellcore_structure(const char* compdata, const unsigned short compdata_
 
 	bs->addField(BellcoreStructure::FXDPARAMS);
 	bs->fxdParams->DTS = nttrace_data->_00002;
-	bs->fxdParams->AW = nttrace_data->_00014 * 10;
 	bs->fxdParams->UD = "mt";
+	bs->fxdParams->AW = nttrace_data->_00014 * 10;
+	bs->fxdParams->AO = 0;
 	bs->fxdParams->TPW = 1;
 	bs->fxdParams->PWU = new short[1];	//!
 	bs->fxdParams->PWU[0] = nttrace_data->_00020[2];
@@ -116,7 +262,6 @@ int fill_bellcore_structure(const char* compdata, const unsigned short compdata_
 	bs->fxdParams->NAV = nttrace_data->_00044;
 	bs->fxdParams->AR =
 		(int)(nttrace_data->_40072 * nttrace_data->_40066 * (nttrace_data->_00012/10000.) * 100 / 3.);
-	bs->fxdParams->AO = 0;
 
 //	double km_per_data_point = (nttrace_data->_40072 * dbl_10050458)/(nttrace_data->_00012 / dbl_100504F0);
 	double dynamic_range = nttrace_data->_00048*8 + 24;
@@ -150,7 +295,7 @@ fclose(fi);
 fi = fopen("t5.trc", "wb");
 fwrite(compdata, 1, compdata_size, fi);
 fclose(fi);
-//---------*/
+//---------
 	delete[] reflectogramma;
 
 	bs->addField(BellcoreStructure::CKSUM);
@@ -182,7 +327,8 @@ fclose(fi);
 	free(nttrace_data);
 	return 0;
 }
-
+*/
+/*
 int fill_bellcore_structure(const char* file_name, BellcoreStructure* bs) {
 	if (file_name == NULL)
 		return -1;
@@ -293,6 +439,7 @@ int fill_bellcore_structure(const char* file_name, BellcoreStructure* bs) {
 	free(nttrace_data);
 	return 0;
 }
+*/
 
 int file_is_trc(const char* file_name) {
 	char* file_ext = strrchr(file_name, '.') + 1;	//ebp+var_4

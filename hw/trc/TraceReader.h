@@ -12,6 +12,9 @@ int fill_bellcore_structure(const char* compdata, const unsigned short compdata_
 
 int fill_bellcore_structure(const char* file_name, BellcoreStructure* bs);
 
+
+void bellcore_from_nttrace(const NTTraceData* nttrace_data, BellcoreStructure* bs);
+
 int file_is_trc(const char* fileName);
 
 short stdecomp(const char* compdata, const unsigned short compdata_size, NTTraceData* nttrace_data);
