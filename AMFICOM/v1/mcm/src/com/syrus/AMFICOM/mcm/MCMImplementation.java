@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImplementation.java,v 1.18 2004/10/20 10:52:33 max Exp $
+ * $Id: MCMImplementation.java,v 1.19 2004/12/22 14:26:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/10/20 10:52:33 $
- * @author $Author: max $
+ * @version $Revision: 1.19 $, $Date: 2004/12/22 14:26:53 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -148,16 +148,13 @@ public class MCMImplementation extends MCMPOA {
 
         } catch (RetrieveObjectException roe) {
             Log.errorException(roe);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe
-                    .getMessage());
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
         } catch (IllegalDataException ide) {
             Log.errorException(ide);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide
-                    .getMessage());
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide.getMessage());
         } catch (IllegalObjectEntityException ioee) {
             Log.errorException(ioee);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee
-                    .getMessage());
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee.getMessage());
         } catch (ApplicationException e) {
             Log.errorException(e);
             throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());

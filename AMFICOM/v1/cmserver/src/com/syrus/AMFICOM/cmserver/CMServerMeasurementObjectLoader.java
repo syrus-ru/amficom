@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.8 2004/12/22 13:57:26 arseniy Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.9 2004/12/22 14:23:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -48,7 +48,7 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.8 $, $Date: 2004/12/22 13:57:26 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/22 14:23:01 $
  * @author $Author: arseniy $
  * @module module_name
  */
@@ -433,10 +433,10 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			Log.errorException(e);
 			throw new DatabaseException("CMServerMeasurementObjectLoader.loadMeasurementsButIds | Illegal Storable Object: " + e.getMessage());
 		}
-		catch (AMFICOMRemoteException ae) {
-			Log.errorException(ae);
-			Log.errorMessage("CMServerMeasurementObjectLoader.loadMeasurementsButIds | AMFICOMRemoteException: " + ae.getMessage());
-			throw new CommunicationException("CMServerMeasurementObjectLoader.loadMeasurementsButIds | Illegal Storable Object: " + ae.getMessage());
+		catch (AMFICOMRemoteException are) {
+			Log.errorException(are);
+			Log.errorMessage("CMServerMeasurementObjectLoader.loadMeasurementsButIds | AMFICOMRemoteException: " + are.message);
+			throw new CommunicationException("CMServerMeasurementObjectLoader.loadMeasurementsButIds | Illegal Storable Object: " + are.message);
 		}
 		catch (Throwable throwable) {
 			Log.errorException(throwable);
@@ -476,9 +476,9 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			Log.errorMessage("CMServerMeasurementObjectLoader.loadAnalysesButIds | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("CMServerMeasurementObjectLoader.loadAnalysesButIds | Illegal Storable Object: " + e.getMessage());
 		}
-		catch (AMFICOMRemoteException ae) {
-			Log.errorMessage("CMServerMeasurementObjectLoader.loadAnalysesButIds | Illegal Storable Object: " + ae.getMessage());
-			throw new DatabaseException("CMServerMeasurementObjectLoader.loadAnalysesButIds | Illegal Storable Object: " + ae.getMessage());
+		catch (AMFICOMRemoteException are) {
+			Log.errorMessage("CMServerMeasurementObjectLoader.loadAnalysesButIds | Illegal Storable Object: " + are.message);
+			throw new DatabaseException("CMServerMeasurementObjectLoader.loadAnalysesButIds | Illegal Storable Object: " + are.message);
 		}
 	}
 
@@ -513,9 +513,9 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			Log.errorMessage("CMServerMeasurementObjectLoader.loadEvaluationsButIds | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("CMServerMeasurementObjectLoader.loadEvaluationsButIds | Illegal Storable Object: " + e.getMessage());
 		}
-		catch (AMFICOMRemoteException ae) {
-			Log.errorMessage("CMServerMeasurementObjectLoader.loadEvaluationsButIds | Illegal Storable Object: " + ae.getMessage());
-			throw new DatabaseException("CMServerMeasurementObjectLoader.loadEvaluationsButIds | Illegal Storable Object: " + ae.getMessage());
+		catch (AMFICOMRemoteException are) {
+			Log.errorMessage("CMServerMeasurementObjectLoader.loadEvaluationsButIds | Illegal Storable Object: " + are.message);
+			throw new DatabaseException("CMServerMeasurementObjectLoader.loadEvaluationsButIds | Illegal Storable Object: " + are.message);
 		}
 	}	
 
