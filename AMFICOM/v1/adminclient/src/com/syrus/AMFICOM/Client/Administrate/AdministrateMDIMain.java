@@ -1,15 +1,17 @@
+/*
+ * $Id: AdministrateMDIMain.java,v 1.3 2004/09/27 16:20:13 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.Client.Administrate;
 
-import java.awt.*;
-import java.awt.event.*;
-import java.text.*;
-import java.util.*;
-
-import javax.swing.*;
-
-import com.syrus.AMFICOM.Client.Administrate.Object.UI.*;
+import com.syrus.AMFICOM.Client.Administrate.Object.UI.WhoAmIFrame;
 import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
+import com.syrus.AMFICOM.Client.General.Command.Admin.*;
 import com.syrus.AMFICOM.Client.General.Command.Session.*;
 import com.syrus.AMFICOM.Client.General.Command.Window.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
@@ -19,59 +21,49 @@ import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Object.*;
 import com.syrus.AMFICOM.Client.Resource.System.*;
-import com.syrus.io.*;
-import com.syrus.AMFICOM.Client.General.Command.Admin.OpenWhoAmIFrameCommand;
-import com.syrus.AMFICOM.Client.General.Command.Admin.OpenAllWindowsCommand;
-import com.syrus.AMFICOM.Client.General.Command.Admin.ViewObjectNavigatorCommand;
-import com.syrus.AMFICOM.Client.General.Command.Admin.OpenObjectFrameCommand;
-import com.syrus.AMFICOM.Client.General.Command.Admin.OpenMaintenanceCommand;
+import java.awt.*;
+import java.awt.event.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.*;
 
-public class AdministrateMDIMain extends JFrame implements OperationListener
-{
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2004/09/27 16:20:13 $
+ * @module admin_v1
+ */
+public class AdministrateMDIMain extends JFrame implements OperationListener {
   private Dispatcher internal_dispatcher = new Dispatcher();
   public ApplicationContext aContext = new ApplicationContext();
 
-  static IniFile iniFile;
-  static String iniFileName = "Administrate.properties";
 
   static SimpleDateFormat sdf =
 		new java.text.SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
-  BorderLayout borderLayout = new BorderLayout();
+	private BorderLayout borderLayout = new BorderLayout();
+	private JPanel mainPanel = new JPanel();
+	private JScrollPane scrollPane = new JScrollPane();
+	private JViewport viewport = new JViewport();
+	private JDesktopPane desktopPane = new JDesktopPane();
+	private JPanel statusBarPanel = new JPanel();
+	private StatusBarModel statusBar = new StatusBarModel(0);
+	private AdministrateMenuBar menuBar = new AdministrateMenuBar();
+	private AdministrateToolBar toolBar = new AdministrateToolBar();
 
-  JPanel mainPanel = new JPanel();
-//	JPanel toolBarPanel = new JPanel();
-  JScrollPane scrollPane = new JScrollPane();
-  JViewport viewport = new JViewport();
-  JDesktopPane desktopPane = new JDesktopPane();
-  JPanel statusBarPanel = new JPanel();
-  StatusBarModel statusBar = new StatusBarModel(0);
-  AdministrateMenuBar menuBar = new AdministrateMenuBar();
-  AdministrateToolBar toolBar = new AdministrateToolBar();
-
-  public AdministrateMDIMain(ApplicationContext aContext)
-  {
-	 super();
-	 try
-	 {
+	public AdministrateMDIMain(ApplicationContext aContext) {
 		jbInit();
-	 }
-	 catch (Exception e)
-	 {
-		e.printStackTrace();
-	 }
-	 Environment.addWindow(this);
-	 setContext(aContext);
-  }
+		Environment.addWindow(this);
+		setContext(aContext);
+	}
 
-  public AdministrateMDIMain()
-  {
-	 this(new ApplicationContext());
-  }
+	/**
+	 * @deprecated
+	 */
+	public AdministrateMDIMain() {
+		this(new ApplicationContext());
+	}
 
-  private void jbInit() throws Exception
-  {
-//	setUndecorated(true);
+	private void jbInit() {
 	 enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 	 setContentPane(mainPanel);
 
@@ -80,23 +72,24 @@ public class AdministrateMDIMain extends JFrame implements OperationListener
 		setSize(frameSize);
 		setLocation(0, 0);
 
-//    setSize(new Dimension(960, 670));
-	 this.setTitle(LangModelAdmin.getString("AppTitle"));
-	 this.addComponentListener(new AdministrateMDIMain_this_componentAdapter(this));
-	 this.addWindowListener(new java.awt.event.WindowAdapter()
-	 {
-		public void windowClosing(WindowEvent e)
-		{
-		  this_windowClosing(e);
-		}
-	 });
+		this.setTitle(LangModelAdmin.getString("AppTitle"));
+		this.addComponentListener(new ComponentAdapter() {
+			public void componentShown(ComponentEvent e) {
+				init_module();
+			}
+		});
+		this.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				internal_dispatcher.unregister(AdministrateMDIMain.this, "contextchange");
+				Environment.getDispatcher().unregister(AdministrateMDIMain.this, "contextchange");
+				aContext.getApplicationModel().getCommand("menuExit").execute();
+			}
+		});
 
-	 mainPanel.setLayout(new BorderLayout());//new FlowLayout());
+	 mainPanel.setLayout(new BorderLayout());
 	 mainPanel.setBackground(Color.darkGray);
 	 desktopPane.setLayout(null);
-//    desktopPane.setBackground(Color.darkGray);
 	 desktopPane.setBackground(SystemColor.control.darker().darker());
-
 
 	 statusBarPanel.setBorder(BorderFactory.createLoweredBevelBorder());
 	 statusBarPanel.setLayout(new BorderLayout());
@@ -122,12 +115,16 @@ public class AdministrateMDIMain extends JFrame implements OperationListener
 	 this.setJMenuBar(menuBar);
   }
 
-  public void SetDefaults()
-  {
-  }
+	/**
+	 * @deprecared
+	 */
+	public void SetDefaults() {
+	}
 
-  public void init_module()
-  {
+	/**
+	 * @deprecated
+	 */
+	public void init_module() {
 	 ApplicationModel aModel = aContext.getApplicationModel();
 
 	 statusBar.distribute();
@@ -144,34 +141,20 @@ public class AdministrateMDIMain extends JFrame implements OperationListener
 	 statusBar.setText("time", " ");
 	 statusBar.organize();
 
-	 //Setting of the dispatcher to te  status bar;
-	 statusBar.setDispatcher(Environment.the_dispatcher);
-	 statusBar.setDispatcher(internal_dispatcher);
-
-	 // load values from properties file
-	 try
-	 {
-		iniFile = new IniFile(iniFileName);
-//      System.out.println("read ini file " + iniFileName);
-//			objectName = iniFile.getValue("objectName");
-	 }
-	 catch(java.io.IOException e)
-	 {
-//      System.out.println("Error opening " + iniFileName + " - setting defaults");
-		SetDefaults();
-	 }
+		statusBar.addDispatcher(Environment.getDispatcher());
+		statusBar.addDispatcher(internal_dispatcher);
 
 	 aContext.setDispatcher(internal_dispatcher);
 
-	 internal_dispatcher.register(this, "contextchange");
-	 Environment.the_dispatcher.register(this, "contextchange");
+		internal_dispatcher.register(this, "contextchange");
+		Environment.getDispatcher().register(this, "contextchange");
 
-	 aModel.setCommand("menuSessionNew", new SessionOpenCommand(Environment.the_dispatcher, aContext));
-	 aModel.setCommand("menuSessionClose", new SessionCloseCommand(Environment.the_dispatcher, aContext));
-	 aModel.setCommand("menuSessionOptions", new SessionOptionsCommand(aContext));
-	 aModel.setCommand("menuSessionConnection", new SessionConnectionCommand(Environment.the_dispatcher, aContext));
-	 aModel.setCommand("menuSessionChangePassword", new SessionChangePasswordCommand(Environment.the_dispatcher, aContext));
-	 aModel.setCommand("menuExit", new ExitCommand(this));
+		aModel.setCommand("menuSessionNew", new SessionOpenCommand(Environment.getDispatcher(), aContext));
+		aModel.setCommand("menuSessionClose", new SessionCloseCommand(Environment.getDispatcher(), aContext));
+		aModel.setCommand("menuSessionOptions", new SessionOptionsCommand(aContext));
+		aModel.setCommand("menuSessionConnection", new SessionConnectionCommand(Environment.getDispatcher(), aContext));
+		aModel.setCommand("menuSessionChangePassword", new SessionChangePasswordCommand(Environment.getDispatcher(), aContext));
+		aModel.setCommand("menuExit", new ExitCommand(this));
 
 	 aModel.setCommand("menuViewNavigator", new ViewObjectNavigatorCommand(
 		  internal_dispatcher,
@@ -272,84 +255,61 @@ public class AdministrateMDIMain extends JFrame implements OperationListener
 		  OperatorGroup.class));
 
 
-	 aModel.setCommand("menuUserProfile", new OpenObjectFrameCommand(
-		  desktopPane,
-		  aContext,
-		  "operatorprofile",
-		  new StubDisplayModel(
-		  new String[] {"id", "name", "user_id", "created", "login"},
-		  new String[] {"Идентификатор", "Название", "Владелец", "Создан", "Пользователь"}),
-		  OperatorProfile.class));
+		aModel.setCommand("menuUserProfile", new OpenObjectFrameCommand(desktopPane, aContext, "operatorprofile", new StubDisplayModel(new String[] {"id", "name", "user_id", "created", "login"}, new String[] {"Идентификатор", "Название", "Владелец", "Создан", "Пользователь"}), OperatorProfile.class));
 
-	 aModel.setCommand("menuWindow", new WindowCloseCommand(desktopPane));
-	 aModel.setCommand("menuWindowClose", new WindowCloseCommand(desktopPane));
-	 aModel.setCommand("menuWindowCloseAll", new WindowCloseAllCommand(desktopPane));
-	 aModel.setCommand("menuWindowTileHorizontal", new WindowTileHorizontalCommand(desktopPane));
-	 aModel.setCommand("menuWindowTileVertical", new WindowTileVerticalCommand(desktopPane));
-	 aModel.setCommand("menuWindowCascade", new WindowCascadeCommand(desktopPane));
-	 aModel.setCommand("menuWindowArrange", new WindowArrangeCommand(desktopPane));
-	 aModel.setCommand("menuWindowArrangeIcons", new WindowArrangeIconsCommand(desktopPane));
-	 aModel.setCommand("menuWindowMinimizeAll", new WindowMinimizeAllCommand(desktopPane));
-	 aModel.setCommand("menuWindowRestoreAll", new WindowRestoreAllCommand(desktopPane));
-	 aModel.setCommand("menuWindowList", new WindowListCommand(desktopPane));
+		aModel.setCommand("menuWindow", new WindowCloseCommand(desktopPane));
+		aModel.setCommand("menuWindowClose", new WindowCloseCommand(desktopPane));
+		aModel.setCommand("menuWindowCloseAll", new WindowCloseAllCommand(desktopPane));
+		aModel.setCommand("menuWindowTileHorizontal", new WindowTileHorizontalCommand(desktopPane));
+		aModel.setCommand("menuWindowTileVertical", new WindowTileVerticalCommand(desktopPane));
+		aModel.setCommand("menuWindowCascade", new WindowCascadeCommand(desktopPane));
+		aModel.setCommand("menuWindowArrange", new WindowArrangeCommand(desktopPane));
+		aModel.setCommand("menuWindowArrangeIcons", new WindowArrangeIconsCommand(desktopPane));
+		aModel.setCommand("menuWindowMinimizeAll", new WindowMinimizeAllCommand(desktopPane));
+		aModel.setCommand("menuWindowRestoreAll", new WindowRestoreAllCommand(desktopPane));
+		aModel.setCommand("menuWindowList", new WindowListCommand(desktopPane));
 
-	 aModel.add("menuHelpAbout", new HelpAboutCommand(this));
+		aModel.add("menuHelpAbout", new HelpAboutCommand(this));
 
-	 aModel.setAllItemsEnabled(false);
-	 aModel.setEnabled("menuSession", true);
-	 aModel.setEnabled("menuSessionNew", true);
-	 aModel.setEnabled("menuSessionConnection", true);
-	 aModel.setEnabled("menuExit", true);
-	 aModel.setEnabled("menuView", true);
-	 aModel.setEnabled("menuTools", true);
-	 aModel.setEnabled("menuHelp", true);
-	 aModel.setEnabled("menuHelpAbout", true);
+		aModel.setAllItemsEnabled(false);
+		aModel.setEnabled("menuSession", true);
+		aModel.setEnabled("menuSessionNew", true);
+		aModel.setEnabled("menuSessionConnection", true);
+		aModel.setEnabled("menuExit", true);
+		aModel.setEnabled("menuView", true);
+		aModel.setEnabled("menuTools", true);
+		aModel.setEnabled("menuHelp", true);
+		aModel.setEnabled("menuHelpAbout", true);
 
+		aModel.setEnabled("menuView", true);
+		aModel.setEnabled("menuArchitecture", true);
+		aModel.setEnabled("menuUser", true);
+		aModel.setEnabled("menuAccess", true);
 
-	 aModel.enable("menuView");
-	 aModel.enable("menuArchitecture");
-	 aModel.enable("menuUser");
-	 aModel.enable("menuAccess");
+		aModel.fireModelChanged("");
 
-	 aModel.fireModelChanged("");
+		ConnectionInterface connection = ConnectionInterface.getInstance();
+		if (connection.isConnected())
+			internal_dispatcher.notify(new ContextChangeEvent(connection, ContextChangeEvent.CONNECTION_OPENED_EVENT));
+		if (SessionInterface.getActiveSession() != null) {
+			aContext.setSessionInterface(SessionInterface.getActiveSession());
+			if (aContext.getSessionInterface().isOpened())
+				internal_dispatcher.notify(new ContextChangeEvent(aContext.getSessionInterface(), ContextChangeEvent.SESSION_OPENED_EVENT));
+		} else {
+			aContext.setSessionInterface(Environment.getDefaultSessionInterface(connection));
+			SessionInterface.setActiveSession(aContext.getSessionInterface());
+		}
+	}
 
-	 if(ConnectionInterface.getActiveConnection() != null)
-	 {
-		aContext.setConnectionInterface(ConnectionInterface.getActiveConnection());
-		if(aContext.getConnectionInterface().isConnected())
-		  internal_dispatcher.notify(new ContextChangeEvent(
-				aContext.getConnectionInterface(),
-				ContextChangeEvent.CONNECTION_OPENED_EVENT));
-	 }
-	 else
-	 {
-		aContext.setConnectionInterface(Environment.getDefaultConnectionInterface());
-		ConnectionInterface.setActiveConnection(aContext.getConnectionInterface());
-//			new CheckConnectionCommand(internal_dispatcher, aContext).execute();
-	 }
-	 if(SessionInterface.getActiveSession() != null)
-	 {
-		aContext.setSessionInterface(SessionInterface.getActiveSession());
-		aContext.setConnectionInterface(aContext.getSessionInterface().getConnectionInterface());
-		if(aContext.getSessionInterface().isOpened())
-		  internal_dispatcher.notify(new ContextChangeEvent(
-				aContext.getSessionInterface(),
-				ContextChangeEvent.SESSION_OPENED_EVENT));
-	 }
-	 else
-	 {
-		aContext.setSessionInterface(Environment.getDefaultSessionInterface(aContext.getConnectionInterface()));
-		SessionInterface.setActiveSession(aContext.getSessionInterface());
-	 }
-  }
-
-  public void setContext(ApplicationContext aContext)
-  {
-	 this.aContext = aContext;
-	 if(aContext.getApplicationModel() == null)
-		aContext.setApplicationModel(new ApplicationModel());
-	 setModel(aContext.getApplicationModel());
-  }
+	public void setContext(ApplicationContext applicationContext) {
+		this.aContext = applicationContext;
+		ApplicationModel applicationModel = applicationContext.getApplicationModel();
+		if (applicationModel == null) {
+			applicationModel = ApplicationModel.getInstance();
+			applicationContext.setApplicationModel(applicationModel);
+		}
+		setModel(applicationModel);
+	}
 
   public ApplicationContext getContext()
   {
@@ -376,20 +336,16 @@ public class AdministrateMDIMain extends JFrame implements OperationListener
 	 if(ae.getActionCommand().equals("contextchange"))
 	 {
 		ContextChangeEvent cce = (ContextChangeEvent)ae;
-//      System.out.println("perform context change \"" + Long.toHexString(cce.change_type) + "\" at " + this.getTitle());
 		ApplicationModel aModel = aContext.getApplicationModel();
 		if(cce.SESSION_OPENED)
 		{
 		  SessionInterface ssi = (SessionInterface)cce.getSource();
 		  if(aContext.getSessionInterface().equals(ssi))
 		  {
-//					aContext.setSessionInterface(ssi);
-//					aContext.setDataSourceInterface(Environment.getDefaultDataSourceInterface(aContext.getSessionInterface()));
 
-			 Environment.the_dispatcher.notify(new StatusMessageEvent("Подгрузка административных объектов..."));
+			 Environment.getDispatcher().notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, "Подгрузка административных объектов..."));
 
-			 aContext.setDataSourceInterface(aContext.getApplicationModel().getDataSource(aContext.getSessionInterface()));
-			 DataSourceInterface dataSource = aContext.getDataSourceInterface();
+			 DataSourceInterface dataSource = aContext.getDataSource();
 
 			 new ObjectDataSourceImage(dataSource).GetObjects();
 			 new ObjectDataSourceImage(dataSource).GetAdminObjects();
@@ -410,7 +366,7 @@ public class AdministrateMDIMain extends JFrame implements OperationListener
 			 statusBar.setText("session", sdf.format(new Date(aContext.getSessionInterface().getLogonTime())));
 			 statusBar.setText("user", aContext.getSessionInterface().getUser());
 
-			 Environment.the_dispatcher.notify(new StatusMessageEvent(" "));
+			 Environment.getDispatcher().notify(new StatusMessageEvent(StatusMessageEvent.STATUS_MESSAGE, " "));
 
 		  }
 		}
@@ -440,56 +396,33 @@ public class AdministrateMDIMain extends JFrame implements OperationListener
 
 		  //---------------------------------------------------------------
 		  SessionInterface ssi = (SessionInterface)cce.getSource();
-		  if(aContext.getSessionInterface().equals(ssi))
+		  if (aContext.getSessionInterface().equals(ssi))
 		  {
-			 aContext.setDataSourceInterface(null);
-
 			 setSessionClosed();
-
 			 statusBar.setText("status", LangModel.getString("statusReady"));
 			 statusBar.setText("session", LangModel.getString("statusNoSession"));
 			 statusBar.setText("user", LangModel.getString("statusNoUser"));
 		  }
 		}
-		if(cce.CONNECTION_OPENED)
-		{
-		  ConnectionInterface cci = (ConnectionInterface)cce.getSource();
-		  if(aContext.getConnectionInterface().equals(cci))
-		  {
-			 setConnectionOpened();
-
-			 statusBar.setText("status", LangModel.getString("statusReady"));
-			 statusBar.setText("server", aContext.getConnectionInterface().getServiceURL());
-		  }
+			if (cce.CONNECTION_OPENED) {
+				setConnectionOpened();
+				statusBar.setText("status", LangModel.getString("statusReady"));
+				statusBar.setText("server", ConnectionInterface.getInstance().getServerName());
+			}
+			if (cce.CONNECTION_CLOSED) {
+				statusBar.setText("status", LangModel.getString("statusError"));
+				statusBar.setText("server", LangModel.getString("statusConnectionError"));
+				statusBar.setText("status", LangModel.getString("statusDisconnected"));
+				statusBar.setText("server", LangModel.getString("statusNoConnection"));
+				setConnectionClosed();
+			}
+			if (cce.CONNECTION_FAILED) {
+				statusBar.setText("status", LangModel.getString("statusError"));
+				statusBar.setText("server", LangModel.getString("statusConnectionError"));
+				setConnectionFailed();
+			}
 		}
-		if(cce.CONNECTION_CLOSED)
-		{
-		  ConnectionInterface cci = (ConnectionInterface)cce.getSource();
-		  if(aContext.getConnectionInterface().equals(cci))
-		  {
-			 statusBar.setText("status", LangModel.getString("statusError"));
-			 statusBar.setText("server", LangModel.getString("statusConnectionError"));
-
-			 statusBar.setText("status", LangModel.getString("statusDisconnected"));
-			 statusBar.setText("server", LangModel.getString("statusNoConnection"));
-
-			 setConnectionClosed();
-
-		  }
-		}
-		if(cce.CONNECTION_FAILED)
-		{
-		  ConnectionInterface cci = (ConnectionInterface)cce.getSource();
-		  if(aContext.getConnectionInterface().equals(cci))
-		  {
-			 statusBar.setText("status", LangModel.getString("statusError"));
-			 statusBar.setText("server", LangModel.getString("statusConnectionError"));
-
-			 setConnectionFailed();
-		  }
-		}
-	 }
-  }
+	}
 
   public void setConnectionOpened()
   {
@@ -531,31 +464,31 @@ public class AdministrateMDIMain extends JFrame implements OperationListener
   {
 	 ApplicationModel aModel = aContext.getApplicationModel();
 
-	 aModel.enable("menuSessionClose");
-	 aModel.enable("menuSessionOptions");
-	 aModel.enable("menuSessionChangePassword");
+		aModel.setEnabled("menuSessionClose", true);
+		aModel.setEnabled("menuSessionOptions", true);
+		aModel.setEnabled("menuSessionChangePassword", true);
 
-	 aModel.enable("menuView");
-	 aModel.enable("menuViewNavigator");
+		aModel.setEnabled("menuView", true);
+		aModel.setEnabled("menuViewNavigator", true);
 
 
-	 aModel.enable("menuViewWhoAmI");
-	 aModel.enable("menuAccessDomain");
-	aModel.enable("menuAccessMaintain");
-	 aModel.enable("menuArchitectureAgent");
-	 aModel.enable("menuArchitectureClient");
-	 aModel.enable("menuArchitectureServer");
-	 aModel.enable("menuViewOpenAll");
-	 aModel.enable("menuViewOpenObjectsWindow");
-	 aModel.enable("menuAccessModul");
-	 aModel.enable("menuUser");
-	 aModel.enable("menuUserCategory");
-	 aModel.enable("menuUserGroup");
-	 aModel.enable("menuUserRole");
-	 aModel.enable("menuUserPrivilege");
-	 aModel.enable("menuUserProfile");
+		aModel.setEnabled("menuViewWhoAmI", true);
+		aModel.setEnabled("menuAccessDomain", true);
+		aModel.setEnabled("menuAccessMaintain", true);
+		aModel.setEnabled("menuArchitectureAgent", true);
+		aModel.setEnabled("menuArchitectureClient", true);
+		aModel.setEnabled("menuArchitectureServer", true);
+		aModel.setEnabled("menuViewOpenAll", true);
+		aModel.setEnabled("menuViewOpenObjectsWindow", true);
+		aModel.setEnabled("menuAccessModul", true);
+		aModel.setEnabled("menuUser", true);
+		aModel.setEnabled("menuUserCategory", true);
+		aModel.setEnabled("menuUserGroup", true);
+		aModel.setEnabled("menuUserRole", true);
+		aModel.setEnabled("menuUserPrivilege", true);
+		aModel.setEnabled("menuUserProfile", true);
 
-	 aModel.disable("menuSessionNew");
+		aModel.setEnabled("menuSessionNew", false);
 
 	new OpenAllWindowsCommand(
 		  desktopPane,
@@ -583,30 +516,30 @@ public class AdministrateMDIMain extends JFrame implements OperationListener
   {
 	 ApplicationModel aModel = aContext.getApplicationModel();
 
-	 aModel.disable("menuSessionClose");
-	 aModel.disable("menuSessionOptions");
-	 aModel.disable("menuSessionChangePassword");
+		aModel.setEnabled("menuSessionClose", false);
+		aModel.setEnabled("menuSessionOptions", false);
+		aModel.setEnabled("menuSessionChangePassword", false);
 
 
-	 aModel.disable("menuViewNavigator");
+		aModel.setEnabled("menuViewNavigator", false);
 
-	 aModel.disable("menuViewWhoAmI");
-	 aModel.disable("menuAccessDomain");
-	aModel.disable("menuAccessMaintain");
-	 aModel.disable("menuArchitectureAgent");
-	 aModel.disable("menuArchitectureClient");
-	 aModel.disable("menuArchitectureServer");
+		aModel.setEnabled("menuViewWhoAmI", false);
+		aModel.setEnabled("menuAccessDomain", false);
+		aModel.setEnabled("menuAccessMaintain", false);
+		aModel.setEnabled("menuArchitectureAgent", false);
+		aModel.setEnabled("menuArchitectureClient", false);
+		aModel.setEnabled("menuArchitectureServer", false);
 
-	 aModel.disable("menuViewOpenAll");
-	 aModel.disable("menuViewOpenObjectsWindow");
-	 aModel.disable("menuAccessModul");
-	 aModel.disable("menuUserCategory");
-	 aModel.disable("menuUserGroup");
-	 aModel.disable("menuUserRole");
-	 aModel.disable("menuUserPrivilege");
-	 aModel.disable("menuUserProfile");
+		aModel.setEnabled("menuViewOpenAll", false);
+		aModel.setEnabled("menuViewOpenObjectsWindow", false);
+		aModel.setEnabled("menuAccessModul", false);
+		aModel.setEnabled("menuUserCategory", false);
+		aModel.setEnabled("menuUserGroup", false);
+		aModel.setEnabled("menuUserRole", false);
+		aModel.setEnabled("menuUserPrivilege", false);
+		aModel.setEnabled("menuUserProfile", false);
 
-	 aModel.enable("menuSessionNew");
+		aModel.setEnabled("menuSessionNew", true);
 
 	 aModel.fireModelChanged("");
   }
@@ -616,57 +549,17 @@ public class AdministrateMDIMain extends JFrame implements OperationListener
 	 return internal_dispatcher;
   }
 
-  void this_componentShown(ComponentEvent e)
-  {
-	 init_module();
-  }
 
-  void this_windowClosing(WindowEvent e)
-  {
-	 internal_dispatcher.unregister(this, "contextchange");
-	 Environment.the_dispatcher.unregister(this, "contextchange");
-	 aContext.getApplicationModel().getCommand("menuExit").execute();
-  }
-  void this_windowResizing(WindowEvent e)
-  {
-//    System.out.println("RESIZED!!!");
-  }
-
-  protected void processWindowEvent(WindowEvent e)
-  {
-	 if (e.getID() == WindowEvent.WINDOW_ACTIVATED)
-	 {
-		Environment.setActiveWindow(this);
-//      ConnectionInterface.setActiveConnection(aContext.getConnectionInterface());
-//      SessionInterface.setActiveSession(aContext.getSessionInterface());
-	 }
-	 if (e.getID() == WindowEvent.WINDOW_CLOSING)
-	 {
-		internal_dispatcher.unregister(this, "contextchange");
-		Environment.the_dispatcher.unregister(this, "contextchange");
-		aContext.getApplicationModel().getCommand("menuExit").execute();
-		return;
-	 }
-	 super.processWindowEvent(e);
-  }
-}
-
-class AdministrateMDIMain_this_componentAdapter extends java.awt.event.ComponentAdapter
-{
-  AdministrateMDIMain adaptee;
-
-  AdministrateMDIMain_this_componentAdapter(AdministrateMDIMain adaptee)
-  {
-	 this.adaptee = adaptee;
-  }
-
-  public void componentShown(ComponentEvent e)
-  {
-	 adaptee.this_componentShown(e);
-  }
-
-
-
-
-
+	protected void processWindowEvent(WindowEvent e) {
+		int id = e.getID();
+		if (id == WindowEvent.WINDOW_ACTIVATED)
+			Environment.setActiveWindow(this);
+		else if (id == WindowEvent.WINDOW_CLOSING) {
+			internal_dispatcher.unregister(this, "contextchange");
+			Environment.getDispatcher().unregister(this, "contextchange");
+			aContext.getApplicationModel().getCommand("menuExit").execute();
+			return;
+		}
+		super.processWindowEvent(e);
+	}
 }

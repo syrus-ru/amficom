@@ -1,5 +1,5 @@
 /*
- * $Id: JAlertingConfigPanel.java,v 1.1 2004/06/24 10:53:57 bass Exp $
+ * $Id: JAlertingConfigPanel.java,v 1.2 2004/09/27 16:23:25 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,8 @@ package com.syrus.AMFICOM.Client.Resource.Alarm.ui;
 
 import com.syrus.AMFICOM.corba.portable.common.DatabaseAccessException;
 import com.syrus.AMFICOM.corba.portable.reflect.*;
+import com.syrus.AMFICOM.corba.portable.reflect.common.ObjectResourceImpl;
+import com.syrus.util.logging.ErrorHandler;
 import java.awt.*;
 import java.util.*;
 import javax.swing.*;
@@ -19,8 +21,9 @@ import javax.swing.tree.*;
  * @todo When deleting from alertingmessageuserlinks, also delete from
  *       alertings (prior to link removal), then perform sanity check upon
  *       alertingmessagetexts.
- * @version $Revision: 1.1 $, $Date: 2004/06/24 10:53:57 $
  * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2004/09/27 16:23:25 $
+ * @module admin_v1
  */
 public final class JAlertingConfigPanel extends JPanel {
 	/**
@@ -497,7 +500,7 @@ public final class JAlertingConfigPanel extends JPanel {
 			try {
 				AlertingMessageUserLinkImpl.delete(alertingMessageUserLinks[i].getId());
 			} catch (DatabaseAccessException dae) {
-				dae.printStackTrace();
+				ErrorHandler.getInstance().error(ObjectResourceImpl.unbox(dae));
 			}
 		populateUserList();
 	}//GEN-LAST:event_removeUserButtonActionPerformed
@@ -689,7 +692,7 @@ public final class JAlertingConfigPanel extends JPanel {
 			try {
 				alertingMessageUserLinks[0].setAlertingTypeId((AlertingTypeImpl) (alertTypeComboBox.getSelectedItem()));
 			} catch (DatabaseAccessException dae) {
-				dae.printStackTrace();
+				ErrorHandler.getInstance().error(ObjectResourceImpl.unbox(dae));
 			}
 			AlertingMessageTextImpl alertingMessageId = null;
 			/**
@@ -700,27 +703,27 @@ public final class JAlertingConfigPanel extends JPanel {
 				try {
 					alertingMessageId = AlertingMessageTextImpl.AlertingMessageTextImpl(eventType, (MessageTypeImpl) (messageTypeComboBox.getSelectedItem()));
 				} catch (DatabaseAccessException dae) {
-					dae.printStackTrace();
+					ErrorHandler.getInstance().error(ObjectResourceImpl.unbox(dae));
 				} catch (Exception e) {
 					;
 				}
 				try {
 					alertingMessageUserLinks[0].setAlertingMessageId(alertingMessageId);
 				} catch (DatabaseAccessException dae) {
-					dae.printStackTrace();
+					ErrorHandler.getInstance().error(ObjectResourceImpl.unbox(dae));
 				}
 			} else {
 				alertingMessageId = alertingMessageUserLinks[0].getAlertingMessageId();
 				try {
 					alertingMessageId.setMessageTypeId((MessageTypeImpl) (messageTypeComboBox.getSelectedItem()));
 				} catch (DatabaseAccessException dae) {
-					dae.printStackTrace();
+					ErrorHandler.getInstance().error(ObjectResourceImpl.unbox(dae));
 				}
 			}
 			try {
 				alertingMessageId.setText(messageTextPane.getText());
 			} catch (DatabaseAccessException dae) {
-				dae.printStackTrace();
+				ErrorHandler.getInstance().error(ObjectResourceImpl.unbox(dae));
 			} catch (NullPointerException npe) {
 				;
 			}

@@ -1,5 +1,5 @@
 /*
- * $Id: WhoAmIPasswordPanel.java,v 1.2 2004/08/06 06:46:12 bass Exp $
+ * $Id: WhoAmIPasswordPanel.java,v 1.3 2004/09/27 16:21:03 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import oracle.jdeveloper.layout.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/08/06 06:46:12 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/27 16:21:03 $
  * @module admin_v1
  */
 final class WhoAmIPasswordPanel extends JPanel
@@ -157,7 +157,7 @@ final class WhoAmIPasswordPanel extends JPanel
 		this.op.modified_by = this.user.id;
 		this.op.modified = d.getTime();
 		Pool.put(OperatorProfile.typ, this.op.id, this.op);
-		this.aContext.getDataSourceInterface().SaveOperatorProfile(this.op.id);
+		this.aContext.getDataSource().SaveOperatorProfile(this.op.id);
 		this.dispatcher.notify(new OperationEvent(this, 0, OperatorProfile.typ + "updated"));
 	}
 }
