@@ -8,6 +8,8 @@ CREATE TABLE KISType (
  codename VARCHAR2(32) NOT NULL,
  description VARCHAR2(256),
  --
+ name VARCHAR2(64),
+ --
  CONSTRAINT kistype_pk PRIMARY KEY (id),
  CONSTRAINT kistype_creator_fk FOREIGN KEY (creator_id)
   REFERENCES Users (id) ON DELETE CASCADE,
