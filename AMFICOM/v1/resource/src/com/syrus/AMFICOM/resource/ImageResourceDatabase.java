@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.9 2005/02/08 10:23:33 bob Exp $
+ * $Id: ImageResourceDatabase.java,v 1.10 2005/02/15 08:12:07 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.9 $, $Date: 2005/02/08 10:23:33 $
+ * @author $Author: max $
+ * @version $Revision: 1.10 $, $Date: 2005/02/15 08:12:07 $
  * @module resource_v1
  */
 
@@ -207,7 +207,7 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 		}
 	}
     
-	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		insertEntities(storableObjects);
 		for(Iterator it = storableObjects.iterator();it.hasNext();){
 			AbstractImageResource abstractImageResource = this.fromStorableObject((StorableObject)it.next());
@@ -227,9 +227,9 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 		super.retrieveEntity(abstractImageResource);		
 	}
 
-	public List retrieveByIds(List ids, String condition)
+	public Collection retrieveByIds(Collection ids, String condition)
 			throws IllegalDataException, RetrieveObjectException {
-		List list = null;
+		Collection list = null;
 		list = super.retrieveByIdsOneQuery(ids, condition);
 		return list;
 	}
@@ -243,16 +243,16 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(List storableObjects, int updateKind, Object arg)
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
 			throws IllegalDataException, VersionCollisionException,
 			UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntities(storableObjects, false);
+				super.checkAndUpdateEntities(storableObjects, modifierId, false);
 				break;
 			case UPDATE_FORCE:
 			default:
-				super.checkAndUpdateEntities(storableObjects, true);				
+				super.checkAndUpdateEntities(storableObjects, modifierId, true);				
 		}
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			AbstractImageResource abstractImageResource = fromStorableObject((AbstractImageResource) it.next());
@@ -262,17 +262,17 @@ public final class ImageResourceDatabase extends StorableObjectDatabase {
 		
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj)
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
 			throws IllegalDataException, VersionCollisionException,
 			UpdateObjectException {
 //		AbstractImageResource abstractImageResource = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(storableObject, false);
+				super.checkAndUpdateEntity(storableObject, modifierId, false);
 				break;
 			case UPDATE_FORCE:
 			default:
-				super.checkAndUpdateEntity(storableObject, true);						
+				super.checkAndUpdateEntity(storableObject, modifierId, true);						
 		}		
 	}
 	
