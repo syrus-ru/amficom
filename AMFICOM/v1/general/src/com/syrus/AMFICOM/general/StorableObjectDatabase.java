@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.48 2004/11/16 10:33:32 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.49 2004/11/16 10:57:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,10 +23,10 @@ import java.util.regex.Pattern;
 
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
-import com.syrus.util.database.DatabaseDaier;
+import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2004/11/16 10:33:32 $
+ * @version $Revision: 1.49 $, $Date: 2004/11/16 10:57:10 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -91,7 +91,7 @@ public abstract class StorableObjectDatabase {
 	}
 
 	public void delete(StorableObject storableObject) {
-		String storableObjectIdStr = storableObject.getId().toSQLString();
+		String storableObjectIdStr = DatabaseIdentifier.toSQLString(storableObject.getId());
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {			
@@ -159,15 +159,15 @@ public abstract class StorableObjectDatabase {
 	}
 
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException, UpdateObjectException {
-		return storableObject.getId().toSQLString() + COMMA
+		return DatabaseIdentifier.toSQLString(storableObject.getId()) + COMMA
 			+ DatabaseDate.toUpdateSubString(storableObject.getCreated()) + COMMA
 			+ DatabaseDate.toUpdateSubString(storableObject.getModified()) + COMMA
-			+ storableObject.getCreatorId().toSQLString() + COMMA
-			+ storableObject.getModifierId().toSQLString();
+			+ DatabaseIdentifier.toSQLString(storableObject.getCreatorId()) + COMMA
+			+ DatabaseIdentifier.toSQLString(storableObject.getModifierId());
 	}
 
 	protected void insertEntity(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
-		String storableObjectIdStr = storableObject.getId().toSQLString();
+		String storableObjectIdStr = DatabaseIdentifier.toSQLString(storableObject.getId());
 		try{
 			String sql = SQL_INSERT_INTO + this.getEnityName() + OPEN_BRACKET + this.getColumns()
 				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
@@ -276,7 +276,7 @@ public abstract class StorableObjectDatabase {
 	}
 
 	protected void retrieveEntity(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		String strorableObjectTypeIdStr = storableObject.getId().toSQLString();
+		String strorableObjectTypeIdStr = DatabaseIdentifier.toSQLString(storableObject.getId());
 		String sql = retrieveQuery(COLUMN_ID + EQUALS + strorableObjectTypeIdStr);
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -356,7 +356,7 @@ public abstract class StorableObjectDatabase {
 	protected void checkAndUpdateEntity(StorableObject localStorableObject,final boolean force) 
 					throws IllegalDataException, UpdateObjectException, VersionCollisionException {
 
-		String atIdStr = localStorableObject.getId().toSQLString();
+		String atIdStr = DatabaseIdentifier.toSQLString(localStorableObject.getId());
 		String sql = retrieveQuery(COLUMN_ID + EQUALS + atIdStr);
 
 		StorableObject storableObject = null;
@@ -570,7 +570,7 @@ public abstract class StorableObjectDatabase {
 															+ " isn't Identifier or Identified");
 	
 						if (id != null){
-							buffer.append(id.toSQLString());
+							buffer.append(DatabaseIdentifier.toSQLString(id));
 							if (it.hasNext()) {
 								if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
 									buffer.append(COMMA);
@@ -632,7 +632,7 @@ public abstract class StorableObjectDatabase {
 					else throw new IllegalDataException("StorableObjectDatabase.retrieveByIdsOneQuery | Object " + 
 														object.getClass().getName() 
 														+ " isn't Identifier or Identified");
-					buffer.append(identifier.toSQLString());
+					buffer.append(DatabaseIdentifier.toSQLString(identifier));
 				} else {
 					buffer.append(SQL_IN);
 					buffer.append(OPEN_BRACKET);
@@ -648,7 +648,7 @@ public abstract class StorableObjectDatabase {
 						else throw new IllegalDataException("StorableObjectDatabase.retrieveByIdsOneQuery | Object " + 
 															object.getClass().getName() 
 															+ " isn't Identifier or Identified");
-						buffer.append(id.toSQLString());
+						buffer.append(DatabaseIdentifier.toSQLString(id));
 						if (it.hasNext()) {
 							if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
 								buffer.append(COMMA);
@@ -776,7 +776,7 @@ public abstract class StorableObjectDatabase {
 	}
 	
 	protected void updateEntity(StorableObject storableObject) throws IllegalDataException, UpdateObjectException {
-		String storableObjectIdStr = storableObject.getId().toSQLString();
+		String storableObjectIdStr = DatabaseIdentifier.toSQLString(storableObject.getId());
 		
 		String[] cols = this.getColumns().split(COMMA);
 		String[] values = this.parseInsertStringValues(this.getUpdateSingleSQLValues(storableObject), cols.length);
