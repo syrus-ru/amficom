@@ -1,5 +1,5 @@
 /*
- * $Id: XMLGeneralObjectLoader.java,v 1.3 2005/01/25 07:12:05 bob Exp $
+ * $Id: XMLGeneralObjectLoader.java,v 1.4 2005/01/27 13:21:32 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/01/25 07:12:05 $
+ * @version $Revision: 1.4 $, $Date: 2005/01/27 13:21:32 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -82,22 +82,32 @@ public final class XMLGeneralObjectLoader implements GeneralObjectLoader {
 		return list;
 	}
 
+	private List loadStorableObjectButIds(StorableObjectCondition condition, List ids) throws CommunicationException {
+		try {
+			return this.generalXML.retrieveByCondition(ids, condition);
+		} catch (RetrieveObjectException e) {
+			throw new CommunicationException("XMLGeneralObjectLoader.loadParameterTypesButIds | caught "
+					+ e.getMessage(), e);
+		} catch (IllegalDataException e) {
+			throw new CommunicationException("XMLGeneralObjectLoader.loadParameterTypesButIds | caught "
+					+ e.getMessage(), e);
+		}
+
+	}
+
 	public List loadParameterTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
 			CommunicationException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.loadStorableObjectButIds(condition, ids);
 	}
 
 	public List loadCharacteristicTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
 			CommunicationException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.loadStorableObjectButIds(condition, ids);
 	}
 
 	public List loadCharacteristicsButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
 			CommunicationException {
-		// TODO Auto-generated method stub
-		return null;
+		return this.loadStorableObjectButIds(condition, ids);
 	}
 
 	private void saveStorableObject(StorableObject storableObject) throws CommunicationException {
