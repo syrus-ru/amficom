@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceChooserDialog.java,v 1.1 2004/12/22 13:24:41 krupenn Exp $
+ * $Id: ObjectResourceChooserDialog.java,v 1.2 2005/02/22 11:02:34 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -43,7 +44,7 @@ import javax.swing.event.ListSelectionListener;
  * setCanDelete(boolean bool)
  *
  * @author $Author: krupenn $
- * @version $Revision: 1.1 $, $Date: 2004/12/22 13:24:41 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/22 11:02:34 $
  * @module generalclient_v1
  */
 public class ObjectResourceChooserDialog extends JDialog 
@@ -99,6 +100,13 @@ public class ObjectResourceChooserDialog extends JDialog
 	public void setContents(List list)
 	{
 		model.setContents(list);
+		buttonOpen.setEnabled(false);
+		buttonDelete.setEnabled(false);
+	}
+	
+	public void setContents(Collection collection)
+	{
+		model.setContents(collection);
 		buttonOpen.setEnabled(false);
 		buttonDelete.setEnabled(false);
 	}

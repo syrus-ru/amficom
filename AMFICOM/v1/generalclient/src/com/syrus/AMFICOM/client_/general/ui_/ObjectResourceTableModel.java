@@ -5,6 +5,7 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -13,8 +14,8 @@ import javax.swing.table.AbstractTableModel;
 import java.util.Iterator;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/11/03 07:23:50 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/02/22 11:02:34 $
+ * @author $Author: krupenn $
  * @module generalclient_v1
  */
 public class ObjectResourceTableModel extends AbstractTableModel {
@@ -165,6 +166,17 @@ public class ObjectResourceTableModel extends AbstractTableModel {
 		if (list == null)
 			list = new ArrayList();
 		this.orList = list;
+		if (this.doRestrict)
+			restrictContents();
+		super.fireTableDataChanged();
+	}
+
+	public void setContents(Collection collection) {
+		if (this.orList == null)
+			this.orList = new ArrayList();
+		this.orList.clear();
+		if(collection != null)
+			this.orList.addAll(collection);
 		if (this.doRestrict)
 			restrictContents();
 		super.fireTableDataChanged();
