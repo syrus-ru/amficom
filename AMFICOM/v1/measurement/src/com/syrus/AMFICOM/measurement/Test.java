@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.91 2005/03/30 08:04:20 bob Exp $
+ * $Id: Test.java,v 1.92 2005/03/30 15:33:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -48,8 +48,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.91 $, $Date: 2005/03/30 08:04:20 $
- * @author $Author: bob $
+ * @version $Revision: 1.92 $, $Date: 2005/03/30 15:33:41 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -342,10 +342,13 @@ public class Test extends StorableObject {
 	}
 
 	public Object getTransferable() {
-		Identifier_Transferable[] msIds = new Identifier_Transferable[this.measurementSetupIds.size()];
-		int i = 0;
-		for (Iterator iterator = this.measurementSetupIds.iterator(); iterator.hasNext();)
-			msIds[i++] = (Identifier_Transferable) ((Identifier) iterator.next()).getTransferable();
+		Identifier_Transferable[] msIdsT = null;
+		try {
+			msIdsT = Identifier.createTransferables(this.measurementSetupIds);
+		}
+		catch (IllegalDataException ide) {
+			Log.errorException(ide);
+		}
 
 		return new Test_Transferable(super.getHeaderTransferable(),
 				TestTemporalType.from_int(this.temporalType),
@@ -359,7 +362,7 @@ public class Test extends StorableObject {
 				(Identifier_Transferable) this.monitoredElement.getId().getTransferable(),
 				TestReturnType.from_int(this.returnType),
 				new String(this.description),
-				msIds);
+				msIdsT);
 	}
 
 	public Collection retrieveMeasurementsOrderByStartTime(MeasurementStatus measurementStatus)	throws RetrieveObjectException, ObjectNotFoundException {
