@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.2 2004/12/29 14:18:14 arseniy Exp $
+ * $Id: EventDatabase.java,v 1.3 2004/12/29 15:26:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.database.DatabaseString;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/12/29 14:18:14 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/29 15:26:31 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -56,7 +56,7 @@ public class EventDatabase extends StorableObjectDatabase {
 	}	
 
 	protected String getEnityName() {		
-		return ObjectEntities.ANALYSIS_ENTITY;
+		return ObjectEntities.EVENT_ENTITY;
 	}
 
 	protected String getColumns(int mode) {
@@ -81,7 +81,7 @@ public class EventDatabase extends StorableObjectDatabase {
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
-		Event event = fromStorableObject(storableObject);
+		Event event = this.fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
 			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, event.getType().getId());
@@ -96,7 +96,7 @@ public class EventDatabase extends StorableObjectDatabase {
 
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
-		Event event = fromStorableObject(storableObject);
+		Event event = this.fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ DatabaseIdentifier.toSQLString(event.getType().getId()) + COMMA
 			+ Integer.toString(event.getStatus().value()) + COMMA
@@ -108,7 +108,7 @@ public class EventDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Event event = (storableObject == null) ? 
 				new Event(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null) : 
-					fromStorableObject(storableObject);
+					this.fromStorableObject(storableObject);
 		EventType eventType;
 		try {
 			eventType = (EventType)EventStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TYPE_ID), true);			
