@@ -1,17 +1,8 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-/**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2004</p>
- * <p>Company: </p>
- * @author not attributable
- * @version 1.0
- */
-
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
@@ -68,7 +59,7 @@ public class PathElementsFrame extends AnalysisFrame
 							getAccessIdentifier().domain_id);
 					LinkedIdsCondition condition = new LinkedIdsCondition(domainId,
 							ObjectEntities.SCHEME_PATH_ENTITY_CODE);
-					List paths = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					Set paths = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 					Collection tpathIds = me.getMonitoredDomainMemberIds();
 					for (Iterator it = paths.iterator(); it.hasNext(); ) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: ArchiveChildrenFactory.java,v 1.3 2005/04/06 11:23:46 bob Exp $
+ * $Id: ArchiveChildrenFactory.java,v 1.4 2005/04/06 15:50:39 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/06 11:23:46 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/06 15:50:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
@@ -145,7 +145,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 				LinkedIdsCondition condition = new LinkedIdsCondition(this.domainId,
 																		ObjectEntities.SCHEME_PATH_ENTITY_CODE);
 				try {
-					List paths = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
+					Set paths = SchemeStorableObjectPool.getStorableObjectsByCondition(condition, true);
 					for (Iterator it = paths.iterator(); it.hasNext();) {
 						SchemePath path = (SchemePath) it.next();						
 						IconPopulatableItem item2 = new IconPopulatableItem();
