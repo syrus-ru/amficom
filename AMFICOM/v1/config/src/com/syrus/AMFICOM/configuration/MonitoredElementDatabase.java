@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.62 2005/03/31 10:00:09 arseniy Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.60 2005/03/30 15:28:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/03/31 10:00:09 $
+ * @version $Revision: 1.60 $, $Date: 2005/03/30 15:28:17 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -388,13 +388,29 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 
 	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
 			throws VersionCollisionException, UpdateObjectException {
-		super.update(storableObject, modifierId, updateKind);
+		switch (updateKind) {
+			case UPDATE_FORCE:
+				super.checkAndUpdateEntity(storableObject, modifierId, true);
+				break;
+			case UPDATE_CHECK:
+			default:
+				super.checkAndUpdateEntity(storableObject, modifierId, false);
+		}
+		
 		this.updateMonitoredDomainMemberIds(Collections.singletonList(storableObject));
 	}
 
 	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
 			throws VersionCollisionException, UpdateObjectException {
-		super.update(storableObjects, modifierId, updateKind);
+		switch (updateKind) {
+			case UPDATE_FORCE:
+				super.checkAndUpdateEntities(storableObjects, modifierId, true);
+				break;
+			case UPDATE_CHECK:
+			default:
+				super.checkAndUpdateEntities(storableObjects, modifierId, false);
+		}
+
 		this.updateMonitoredDomainMemberIds(storableObjects);
 	}
 
@@ -451,7 +467,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 				mdmIdsMap.put(monitoredElement.getId(), mdmIds);
 			}
 
-			super.updateLinkedEntityIds(mdmIdsMap, linkTable, MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID, linkColumn);
+			super.updateLinkedEntities(mdmIdsMap, linkTable, MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID, linkColumn);
 		}
 		catch (IllegalDataException ide) {
 			throw new UpdateObjectException("Cannot update monitored element domain members ids -- "  + ide.getMessage(), ide);
