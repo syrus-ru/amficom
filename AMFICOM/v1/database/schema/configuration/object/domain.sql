@@ -1,4 +1,6 @@
-CREATE TABLE Domain (
+-- $Id: domain.sql,v 1.2 2004/10/13 16:11:23 bass Exp $
+
+CREATE TABLE mcm.domain (
  id VARCHAR2(32),
 --
  created DATE NOT NULL,
@@ -14,15 +16,17 @@ CREATE TABLE Domain (
 --
  CONSTRAINT domain_pk PRIMARY KEY (id),
  CONSTRAINT domain_creator_fk FOREIGN KEY (creator_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES mcm.users (id) ON DELETE CASCADE,
  CONSTRAINT domain_modifier_fk FOREIGN KEY (modifier_id)
-  REFERENCES Users (id) ON DELETE CASCADE,
+  REFERENCES mcm.users (id) ON DELETE CASCADE,
 --
  CONSTRAINT domain_domain_fk FOREIGN KEY (domain_id)
-  REFERENCES Domain (id) ON DELETE CASCADE,
+  REFERENCES mcm.domain (id) ON DELETE CASCADE,
 --
  CONSTRAINT domain_owner_fk FOREIGN KEY (owner_id)
-  REFERENCES Users (id) ON DELETE CASCADE
+  REFERENCES mcm.users (id) ON DELETE CASCADE,
+ CONSTRAINT domain_name_fk FOREIGN KEY (name) 
+  REFERENCES amficom.domains (name) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE domain_seq ORDER;
