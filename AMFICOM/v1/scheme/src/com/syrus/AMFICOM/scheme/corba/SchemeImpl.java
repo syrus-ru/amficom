@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeImpl.java,v 1.9 2004/12/21 15:35:01 bass Exp $
+ * $Id: SchemeImpl.java,v 1.10 2004/12/22 11:07:45 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,11 @@
 
 package com.syrus.AMFICOM.scheme.corba;
 
-import com.syrus.AMFICOM.CORBA.Map.Map_Transferable;
 import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.corba.Map_Transferable;
 import com.syrus.AMFICOM.resource.*;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import com.syrus.AMFICOM.scheme.corba.SchemePackage.Type;
@@ -19,7 +20,7 @@ import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2004/12/21 15:35:01 $
+ * @version $Revision: 1.10 $, $Date: 2004/12/22 11:07:45 $
  * @module scheme_v1
  */
 final class SchemeImpl extends Scheme implements Cloneable {
@@ -126,11 +127,33 @@ final class SchemeImpl extends Scheme implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapScheme#map()
+	 */
 	public Map_Transferable map() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void map(Map_Transferable map) {
+	/**
+	 * @param map
+	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapScheme#map(Map_Transferable)
+	 */
+	public void map(final Map_Transferable map) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapScheme#mapImpl()
+	 */
+	public Map mapImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param map
+	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapScheme#mapImpl(Map)
+	 */
+	public void mapImpl(final Map map) {
 		throw new UnsupportedOperationException();
 	}
 

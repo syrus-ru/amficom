@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeLinkImpl.java,v 1.8 2004/12/22 10:00:13 bass Exp $
+ * $Id: SchemeLinkImpl.java,v 1.9 2004/12/22 11:07:40 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,16 +8,17 @@
 
 package com.syrus.AMFICOM.scheme.corba;
 
-import com.syrus.AMFICOM.CORBA.Map.MapSiteElement_Transferable;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.*;
 import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
 import com.syrus.AMFICOM.scheme.CharacteristicSeqContainer;
 import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2004/12/22 10:00:13 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/22 11:07:40 $
  * @module scheme_v1
  */
 final class SchemeLinkImpl extends SchemeLink implements Cloneable {
@@ -246,15 +247,33 @@ final class SchemeLinkImpl extends SchemeLink implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public MapSiteElement_Transferable site() {
+	/**
+	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapSchemeLink#siteNode()
+	 */
+	public SiteNode_Transferable siteNode() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * @param newSite
-	 * @see com.syrus.AMFICOM.scheme.corba.SchemeLink#site(com.syrus.AMFICOM.CORBA.Map.MapSiteElement_Transferable)
+	 * @param siteNode
+	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapSchemeLink#siteNode(SiteNode_Transferable)
 	 */
-	public void site(MapSiteElement_Transferable newSite) {
+	public void siteNode(final SiteNode_Transferable siteNode) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapSchemeLink#siteNodeImpl()
+	 */
+	public SiteNode siteNodeImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param siteNode
+	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapSchemeLink#siteNodeImpl(SiteNode)
+	 */
+	public void siteNodeImpl(final SiteNode siteNode) {
 		throw new UnsupportedOperationException();
 	}
 

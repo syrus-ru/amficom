@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeElementImpl.java,v 1.11 2004/12/22 10:00:13 bass Exp $
+ * $Id: SchemeElementImpl.java,v 1.12 2004/12/22 11:07:44 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.                                              
  * Dept. of Science & Technology.                                               
@@ -8,10 +8,11 @@
 
 package com.syrus.AMFICOM.scheme.corba;
 
-import com.syrus.AMFICOM.CORBA.Map.MapSiteElement_Transferable;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.*;
 import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
 import com.syrus.AMFICOM.resource.*;
 import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import com.syrus.AMFICOM.scheme.CharacteristicSeqContainer;
@@ -19,7 +20,7 @@ import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2004/12/22 10:00:13 $
+ * @version $Revision: 1.12 $, $Date: 2004/12/22 11:07:44 $
  * @module scheme_v1
  */
 final class SchemeElementImpl extends SchemeElement implements Cloneable {
@@ -327,11 +328,33 @@ final class SchemeElementImpl extends SchemeElement implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
-	public MapSiteElement_Transferable site() {
+	/**
+	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapSchemeElement#siteNode()
+	 */
+	public SiteNode_Transferable siteNode() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void site(MapSiteElement_Transferable site) {
+	/**
+	 * @param siteNode
+	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapSchemeElement#siteNode(SiteNode_Transferable)
+	 */
+	public void siteNode(final SiteNode_Transferable siteNode) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapSchemeElement#siteNodeImpl()
+	 */
+	public SiteNode siteNodeImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param siteNode
+	 * @see com.syrus.AMFICOM.map.ComSyrusAmficomMapSchemeElement#siteNodeImpl(SiteNode)
+	 */
+	public void siteNodeImpl(final SiteNode siteNode) {
 		throw new UnsupportedOperationException();
 	}
 
