@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.10 2005/02/04 14:36:36 bob Exp $
+ * $Id: StorableObjectXML.java,v 1.11 2005/02/08 10:16:45 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,12 +30,14 @@ import java.util.Map;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  * 
- * @version $Revision: 1.10 $, $Date: 2005/02/04 14:36:36 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/08 10:16:45 $
  * @author $Author: bob $
  * @module general_v1
  */
 public class StorableObjectXML {
 
+	private static final String CLASSNAME = "className";
+	
 	private StorableObjectXMLDriver	driver;
 
 	public StorableObjectXML(final StorableObjectXMLDriver driver) {
@@ -73,12 +75,13 @@ public class StorableObjectXML {
 			RetrieveObjectException {
 		Map objectMap = this.driver.getObjectMap(identifier);
 		short entityCode = identifier.getMajor();
-		StorableObject storableObject = getStorableObject(identifier);
+		StorableObject storableObject = getStorableObject(identifier, (String)objectMap.get(CLASSNAME));
 		StorableObjectWrapper wrapper = this.getWrapper(entityCode);
 		storableObject.setAttributes((Date) objectMap.get(StorableObjectWrapper.COLUMN_CREATED), (Date) objectMap
 				.get(StorableObjectWrapper.COLUMN_MODIFIED), (Identifier) objectMap
 				.get(StorableObjectWrapper.COLUMN_CREATOR_ID), (Identifier) objectMap
 				.get(StorableObjectWrapper.COLUMN_MODIFIER_ID));
+		objectMap.remove(CLASSNAME);
 		objectMap.remove(StorableObjectWrapper.COLUMN_ID);
 		objectMap.remove(StorableObjectWrapper.COLUMN_CREATED);
 		objectMap.remove(StorableObjectWrapper.COLUMN_MODIFIED);
@@ -132,7 +135,15 @@ public class StorableObjectXML {
 			String key = (String) it.next();
 			objectMap.put(key, wrapper.getValue(storableObject, key));
 		}
-		objectMap.put(StorableObjectWrapper.COLUMN_ID, storableObject.getId());
+		Identifier id = storableObject.getId();
+		{
+			String className = storableObject.getClass().getName();
+			String shortClassName = className.substring(className.lastIndexOf('.') + 1);
+			/* put short class name when id is not unambiguously define entity  */
+			if (!shortClassName.equals(ObjectEntities.codeToString(id.getMajor())))
+				objectMap.put(CLASSNAME, shortClassName);
+		}
+		objectMap.put(StorableObjectWrapper.COLUMN_ID, id);
 		objectMap.put(StorableObjectWrapper.COLUMN_CREATED, storableObject.getCreated());
 		objectMap.put(StorableObjectWrapper.COLUMN_MODIFIED, storableObject.getModified());
 		objectMap.put(StorableObjectWrapper.COLUMN_CREATOR_ID, storableObject.getCreatorId());
@@ -140,12 +151,17 @@ public class StorableObjectXML {
 		this.driver.putObjectMap(storableObject.getId(), objectMap);
 	}
 
-	private StorableObject getStorableObject(final Identifier identifier) throws IllegalDataException {
+	private StorableObject getStorableObject(final Identifier identifier, String className)
+			throws IllegalDataException {
 		short entityCode = identifier.getMajor();
-		String className = ObjectGroupEntities.getPackageName(entityCode) + "."
-				+ ObjectEntities.codeToString(entityCode);
+		String clazzName;
+		if (className == null)
+			clazzName = ObjectGroupEntities.getPackageName(entityCode) + '.' + ObjectEntities.codeToString(entityCode);
+		else 
+			clazzName = ObjectGroupEntities.getPackageName(entityCode) + '.'
+					+ className.substring(className.lastIndexOf('.') + 1);
 		try {
-			Class clazz = Class.forName(className);
+			Class clazz = Class.forName(clazzName);
 			Constructor[] constructors = clazz.getDeclaredConstructors();
 			for (int i = 0; i < constructors.length; i++) {
 				Class[] parameterTypes = constructors[i].getParameterTypes();
@@ -191,7 +207,7 @@ public class StorableObjectXML {
 				}
 			}
 		} catch (ClassNotFoundException e) {
-			throw new IllegalDataException("StorableObjectXML.getStorableObject | Class " + className //$NON-NLS-1$
+			throw new IllegalDataException("StorableObjectXML.getStorableObject | Class " + clazzName //$NON-NLS-1$
 					+ " not found on the classpath - " + e.getMessage());
 		}
 		throw new IllegalDataException(
