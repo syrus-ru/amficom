@@ -29,7 +29,7 @@ public class MiscUtil
 		
 
 		try {
-			List pTypes = GeneralStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+			Collection pTypes = GeneralStorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
 			for (Iterator it = pTypes.iterator(); it.hasNext(); ) {
 				CharacteristicType type = (CharacteristicType)it.next();
 				if (type.getCodename().equals(codename))

@@ -1,5 +1,5 @@
 /*
- * $Id: RISDSessionInfo.java,v 1.22 2005/02/10 13:17:07 stas Exp $
+ * $Id: RISDSessionInfo.java,v 1.23 2005/02/15 10:40:26 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,12 +9,23 @@
 package com.syrus.AMFICOM.Client.General;
 
 import java.io.File;
-import java.util.List;
+import java.util.Collection;
+
+import org.omg.CORBA.ORB;
+import org.omg.CORBA.UserException;
+import org.omg.CosNaming.NamingContextExt;
+import org.omg.CosNaming.NamingContextExtHelper;
+import org.omg.CosNaming.NamingContextPackage.CannotProceed;
+import org.omg.CosNaming.NamingContextPackage.InvalidName;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
+import org.omg.PortableServer.POA;
+import org.omg.PortableServer.POAHelper;
+import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 
 import com.syrus.AMFICOM.CORBA.AMFICOM;
+import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.Admin.AccessIdentity_Transferable;
 import com.syrus.AMFICOM.CORBA.Admin.AccessIdentity_TransferableHolder;
-import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.ClientAdministrationObjectLoader;
@@ -26,10 +37,10 @@ import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.configuration.ClientConfigurationObjectLoader;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.XMLConfigurationObjectLoader;
-import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.corba.portable.client.Client;
 import com.syrus.AMFICOM.corba.portable.client.ClientImpl;
 import com.syrus.AMFICOM.corba.portable.client.ClientPOATie;
+import com.syrus.AMFICOM.general.AccessIdentity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClientGeneralObjectLoader;
 import com.syrus.AMFICOM.general.EquivalentCondition;
@@ -38,8 +49,10 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LocalIdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.XMLGeneralObjectLoader;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.EmptyClientMapObjectLoader;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
@@ -55,20 +68,9 @@ import com.syrus.util.ClientLRUMap;
 import com.syrus.util.corba.JavaSoftORBUtil;
 import com.syrus.util.prefs.IIOPConnectionManager;
 
-import org.omg.CORBA.ORB;
-import org.omg.CORBA.UserException;
-import org.omg.CosNaming.NamingContextExt;
-import org.omg.CosNaming.NamingContextExtHelper;
-import org.omg.CosNaming.NamingContextPackage.CannotProceed;
-import org.omg.CosNaming.NamingContextPackage.InvalidName;
-import org.omg.CosNaming.NamingContextPackage.NotFound;
-import org.omg.PortableServer.POA;
-import org.omg.PortableServer.POAHelper;
-import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
-
 /**
- * @author $Author: stas $
- * @version $Revision: 1.22 $, $Date: 2005/02/10 13:17:07 $
+ * @author $Author: bob $
+ * @version $Revision: 1.23 $, $Date: 2005/02/15 10:40:26 $
  * @module generalclient_v1
  */
 public final class RISDSessionInfo extends SessionInterface {
@@ -248,17 +250,18 @@ public final class RISDSessionInfo extends SessionInterface {
 
 			final Class clazz = ClientLRUMap.class;
 			final int size = 200;
+			SessionContext.init(new AccessIdentity(this.accessIdentifier));
 
-			ClientConfigurationObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
+//			ClientConfigurationObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
 			ConfigurationStorableObjectPool.init(new ClientConfigurationObjectLoader(cmServer), clazz, size);
 
-			ClientMeasurementObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
+//			ClientMeasurementObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
 			MeasurementStorableObjectPool.init(new ClientMeasurementObjectLoader(cmServer), clazz, size);
 
-			ClientAdministrationObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
+//			ClientAdministrationObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
 			AdministrationStorableObjectPool.init(new ClientAdministrationObjectLoader(cmServer), clazz, size);
 
-			ClientGeneralObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
+//			ClientGeneralObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
 			GeneralStorableObjectPool.init(new ClientGeneralObjectLoader(cmServer), clazz, size);
 
 			MapStorableObjectPool.init(new EmptyClientMapObjectLoader(), clazz, size);
@@ -317,17 +320,19 @@ public final class RISDSessionInfo extends SessionInterface {
 			final Class clazz = ClientLRUMap.class;
 			final int size = 200;
 
-			ClientConfigurationObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
+			SessionContext.init(new AccessIdentity(this.accessIdentifier));
+
+//			ClientConfigurationObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
 			File configPath = new File("/catalog");
 			ConfigurationStorableObjectPool.init(new XMLConfigurationObjectLoader(configPath), clazz, size);
 
-			ClientMeasurementObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
+//			ClientMeasurementObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
 			MeasurementStorableObjectPool.init(new XMLMeasurementObjectLoader(configPath), clazz, size);
 
-			ClientAdministrationObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
+//			ClientAdministrationObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
 			AdministrationStorableObjectPool.init(new XMLAdministrationObjectLoader(configPath), clazz, size);
 
-			ClientGeneralObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
+//			ClientGeneralObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
 			GeneralStorableObjectPool.init(new XMLGeneralObjectLoader(configPath), clazz, size);
 
 			MapStorableObjectPool.init(new EmptyClientMapObjectLoader(), clazz, size);
@@ -340,7 +345,7 @@ public final class RISDSessionInfo extends SessionInterface {
 
 			try {
 				EquivalentCondition condition = new EquivalentCondition(ObjectEntities.USER_ENTITY_CODE);
-				List users = AdministrationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				Collection users = AdministrationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 				User user;
 				if (users.isEmpty()) {
 					user = User.createInstance(new Identifier("User_0"), "sys", UserSort.USER_SORT_REGULAR, "sysuser", "");	
@@ -349,10 +354,10 @@ public final class RISDSessionInfo extends SessionInterface {
 
 				}
 				else {
-					user = (User)users.get(0);
+					user = (User)users.iterator().next();
 				}
 				condition = new EquivalentCondition(ObjectEntities.DOMAIN_ENTITY_CODE);
-				List domains = AdministrationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				Collection domains = AdministrationStorableObjectPool.getStorableObjectsByCondition(condition, true);
 				Domain domain;
 				if (domains.isEmpty()) {
 					domain = Domain.createInstance(user.getId(), new Identifier("Domain_0"), "LocalDomain", "");	
@@ -360,7 +365,7 @@ public final class RISDSessionInfo extends SessionInterface {
 					AdministrationStorableObjectPool.flush(true);
 				}
 				else {
-					domain = (Domain)domains.get(0);
+					domain = (Domain)domains.iterator().next();
 				}
 
 				this.domainId = domain.getId();

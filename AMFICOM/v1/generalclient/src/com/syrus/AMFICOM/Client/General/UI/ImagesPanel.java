@@ -7,8 +7,8 @@ import java.awt.FlowLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.administration.DomainCondition;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -94,7 +94,7 @@ public class ImagesPanel extends JPanel
 		this.chooseButton.setText("Выбрать");
 		this.chooseButton.setEnabled(false);
 		this.addButton.setText("Добавить");
-		cancelButton.setText("Отменить");
+		this.cancelButton.setText("Отменить");
 		buttonsPanel.add(chooseButton, null);
 		buttonsPanel.add(addButton, null);
 		buttonsPanel.add(cancelButton, null);
@@ -115,9 +115,9 @@ public class ImagesPanel extends JPanel
 		disp.register(this, "selectir");
 		
 		StorableObjectCondition condition = 
-			new DomainCondition(null, ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE);
+			new EquivalentCondition(ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE);
 		
-		List irs = null;
+		Collection irs = null;
 
 		try
 		{
@@ -134,8 +134,8 @@ public class ImagesPanel extends JPanel
 			AbstractImageResource ir = (AbstractImageResource )it.next();
 			ImageIcon icon = new ImageIcon(ir.getImage());
 			Image im = icon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-			ImagesPanelLabel ipl = new ImagesPanelLabel(disp, new ImageIcon(im), ir);
-			imagesPanel.add(ipl);
+			ImagesPanelLabel ipl = new ImagesPanelLabel(this.disp, new ImageIcon(im), ir);
+			this.imagesPanel.add(ipl);
 		}
 	}
 
@@ -144,8 +144,8 @@ public class ImagesPanel extends JPanel
 		if(oe.getActionCommand().equals("select"))
 		{
 			ImagesPanelLabel ipl = (ImagesPanelLabel )oe.getSource();
-			ir = (AbstractImageResource )ipl.ir;
-			chooseButton.setEnabled(true);
+			ir = ipl.ir;
+			this.chooseButton.setEnabled(true);
 		}
 		else
 		if(oe.getActionCommand().equals("selectir"))

@@ -1,5 +1,5 @@
 /*
- * $Id: ImagesPanel.java,v 1.4 2005/02/08 11:27:38 bob Exp $
+ * $Id: ImagesPanel.java,v 1.5 2005/02/15 10:40:27 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -48,7 +48,7 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.4 $, $Date: 2005/02/08 11:27:38 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/15 10:40:27 $
  * @module generalclient_v1
  */
 public class ImagesPanel extends JPanel
@@ -99,13 +99,13 @@ public class ImagesPanel extends JPanel
 				ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE,
 				ImageResourceWrapper.COLUMN_SORT);
 			
-			List bitMaps = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			Collection bitMaps = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 			for (Iterator it = bitMaps.iterator(); it.hasNext(); ) {
 				BitmapImageResource ir = (BitmapImageResource)it.next();
 				ImageIcon icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(ir.getImage()).getScaledInstance(30, 30, Image.SCALE_SMOOTH));
-				ImagesPanelLabel ipl = new ImagesPanelLabel(disp, icon, ir);
-				imagesPanel.add(ipl);
+				ImagesPanelLabel ipl = new ImagesPanelLabel(this.disp, icon, ir);
+				this.imagesPanel.add(ipl);
 			}
 		}
 		catch (ApplicationException ex) {

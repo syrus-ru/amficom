@@ -1,5 +1,5 @@
 /*
-* $Id: EmptyClientMapObjectLoader.java,v 1.1 2004/12/27 14:15:37 bob Exp $
+* $Id: EmptyClientMapObjectLoader.java,v 1.2 2005/02/15 10:40:27 bob Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,8 +8,8 @@
 
 package com.syrus.AMFICOM.map;
 
+import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/12/27 14:15:37 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/15 10:40:27 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -30,7 +30,7 @@ public class EmptyClientMapObjectLoader implements MapObjectLoader {
 		// nothing
 	}
 
-	public void delete(List ids) throws CommunicationException, DatabaseException {
+	public void delete(Collection ids) throws CommunicationException, DatabaseException {
 		//		 nothing
 	}
 
@@ -38,7 +38,7 @@ public class EmptyClientMapObjectLoader implements MapObjectLoader {
 		return null;
 	}
 
-	public List loadCollectors(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadCollectors(Collection ids) throws DatabaseException, CommunicationException {
 		return Collections.EMPTY_LIST;
 	}
 
@@ -46,7 +46,7 @@ public class EmptyClientMapObjectLoader implements MapObjectLoader {
 		return null;
 	}
 
-	public List loadMaps(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadMaps(Collection ids) throws DatabaseException, CommunicationException {
 		return Collections.EMPTY_LIST;
 	}
 
@@ -54,7 +54,7 @@ public class EmptyClientMapObjectLoader implements MapObjectLoader {
 		return null;
 	}
 
-	public List loadMarks(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadMarks(Collection ids) throws DatabaseException, CommunicationException {
 		return Collections.EMPTY_LIST;
 	}
 
@@ -62,7 +62,7 @@ public class EmptyClientMapObjectLoader implements MapObjectLoader {
 		return null;
 	}
 
-	public List loadNodeLinks(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadNodeLinks(Collection ids) throws DatabaseException, CommunicationException {
 		return Collections.EMPTY_LIST;
 	}
 
@@ -70,7 +70,7 @@ public class EmptyClientMapObjectLoader implements MapObjectLoader {
 		return null;
 	}
 
-	public List loadPhysicalLinks(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadPhysicalLinks(Collection ids) throws DatabaseException, CommunicationException {
 		return Collections.EMPTY_LIST;
 	}
 
@@ -78,7 +78,7 @@ public class EmptyClientMapObjectLoader implements MapObjectLoader {
 		return null;
 	}
 
-	public List loadPhysicalLinkTypes(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadPhysicalLinkTypes(Collection ids) throws DatabaseException, CommunicationException {
 		return Collections.EMPTY_LIST;
 	}
 
@@ -86,7 +86,7 @@ public class EmptyClientMapObjectLoader implements MapObjectLoader {
 		return null;
 	}
 
-	public List loadSiteNodes(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadSiteNodes(Collection ids) throws DatabaseException, CommunicationException {
 		return Collections.EMPTY_LIST;
 	}
 
@@ -94,7 +94,7 @@ public class EmptyClientMapObjectLoader implements MapObjectLoader {
 		return null;
 	}
 
-	public List loadSiteNodeTypes(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadSiteNodeTypes(Collection ids) throws DatabaseException, CommunicationException {
 		return Collections.EMPTY_LIST;
 	}
 
@@ -102,51 +102,51 @@ public class EmptyClientMapObjectLoader implements MapObjectLoader {
 		return null;
 	}
 
-	public List loadTopologicalNodes(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadTopologicalNodes(Collection ids) throws DatabaseException, CommunicationException {
 		return Collections.EMPTY_LIST;
 	}
 
-	public List loadCollectorsButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadCollectorsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return Collections.EMPTY_LIST;
 	}
 
-	public List loadMapsButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadMapsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return Collections.EMPTY_LIST;
 	}
 
-	public List loadMarksButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadMarksButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return Collections.EMPTY_LIST;
 	}
 
-	public List loadNodeLinksButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadNodeLinksButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return Collections.EMPTY_LIST;
 	}
 
-	public List loadPhysicalLinksButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadPhysicalLinksButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return Collections.EMPTY_LIST;
 	}
 
-	public List loadPhysicalLinkTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadPhysicalLinkTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return Collections.EMPTY_LIST;
 	}
 
-	public List loadSiteNodesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadSiteNodesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return Collections.EMPTY_LIST;
 	}
 
-	public List loadSiteNodeTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadSiteNodeTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return Collections.EMPTY_LIST;
 	}
 
-	public List loadTopologicalNodesButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	public Collection loadTopologicalNodesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return Collections.EMPTY_LIST;
 	}
@@ -208,55 +208,55 @@ public class EmptyClientMapObjectLoader implements MapObjectLoader {
 
 	}
 
-	public void saveCollectors(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveCollectors(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		// empty
 
 	}
 
-	public void saveMaps(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveMaps(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		// empty
 
 	}
 
-	public void saveMarks(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveMarks(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		// empty
 
 	}
 
-	public void saveNodeLinks(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveNodeLinks(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		// empty
 
 	}
 
-	public void savePhysicalLinks(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void savePhysicalLinks(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		// empty
 
 	}
 
-	public void savePhysicalLinkTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void savePhysicalLinkTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		// empty
 
 	}
 
-	public void saveSiteNodes(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveSiteNodes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		// empty
 
 	}
 
-	public void saveSiteNodeTypes(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveSiteNodeTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		// empty
 
 	}
 
-	public void saveTopologicalNodes(List list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveTopologicalNodes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		// empty
 

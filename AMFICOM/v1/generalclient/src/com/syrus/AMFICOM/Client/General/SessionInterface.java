@@ -1,5 +1,5 @@
 /*
- * $Id: SessionInterface.java,v 1.6 2004/11/02 08:06:35 bass Exp $
+ * $Id: SessionInterface.java,v 1.7 2005/02/15 10:40:26 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,13 +8,15 @@
 
 package com.syrus.AMFICOM.Client.General;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.syrus.AMFICOM.CORBA.Admin.AccessIdentity_Transferable;
-import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
-import java.util.Vector;
+import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2004/11/02 08:06:35 $
+ * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/02/15 10:40:26 $
  * @module generalclient_v1
  */
 public abstract class SessionInterface {
@@ -25,7 +27,7 @@ public abstract class SessionInterface {
 	public static final int SESSION_CLOSED = 0;	// вспомогательные константы
 	public static final int SESSION_OPENED = 1;	// состояния сессии
 
-	private static Vector sessions = new Vector();	// открытые сессии
+	private static List sessions = new LinkedList();	// открытые сессии
 
 	private static SessionInterface active_session;	// активная сессия
 
