@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServerSetup.java,v 1.23 2004/12/20 08:55:01 bob Exp $
+ * $Id: MeasurementServerSetup.java,v 1.24 2005/01/12 14:24:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/12/20 08:55:01 $
- * @author $Author: bob $
+ * @version $Revision: 1.24 $, $Date: 2005/01/12 14:24:55 $
+ * @author $Author: arseniy $
  * @module mserver_v1
  */
 
@@ -93,6 +93,7 @@ public final class MeasurementServerSetup {
 																				 "User for measurement server");
 		Identifier serverId = createServer(sysAdminId,
 																			 domainId,
+																			 "mongol",
 																			 serverUserId);
 
 		Identifier mcmUserId = createUser(sysAdminId,
@@ -100,7 +101,7 @@ public final class MeasurementServerSetup {
 																			UserSort.USER_SORT_MCM,
 																			"User Mcmovich",
 																			"User for measurement control module");
-		Identifier mcmId = createMCM(sysAdminId, domainId, mcmUserId, serverId, (short)7500);
+		Identifier mcmId = createMCM(sysAdminId, domainId, "aldan", mcmUserId, serverId);
 
 		Identifier equipmentId = createEquipment(sysAdminId,
 																						 domainId,
@@ -225,12 +226,14 @@ public final class MeasurementServerSetup {
 
 	private static Identifier createServer(Identifier creatorId,
 																				 Identifier domainId,
+																				 String hostname,
 																				 Identifier serverUserId) {
 		try {
 			Server server = Server.createInstance(creatorId,
 				domainId,
 				"server 1",
 				"Measurement server",
+				hostname,
 				serverUserId);
 			server.insert();
 			return server.getId();
@@ -243,17 +246,17 @@ public final class MeasurementServerSetup {
 
 	private static Identifier createMCM(Identifier creatorId,
 										Identifier domainId,
+										String hostname,
 										Identifier mcmUserId,
-										Identifier serverId,
-										short tcpPort) {
+										Identifier serverId) {
 		try {
 			MCM mcm = MCM.createInstance(creatorId,
 				domainId,
 				"mcm 1",
 				"Measurement control module",
+				hostname,
 				mcmUserId,
-				serverId,
-				tcpPort);
+				serverId);
 			mcm.insert();
 			return mcm.getId();
 		}
