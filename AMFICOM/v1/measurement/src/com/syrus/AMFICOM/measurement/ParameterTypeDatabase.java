@@ -17,9 +17,9 @@ import com.syrus.util.database.DatabaseDate;
 
 public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	
-	public static final String	COLUMN_CODENAME		= "codename";
-	public static final String	COLUMN_DESCRIPTION	= "description";	
-	public static final String	COLUMN_NAME			= "name";	
+	public static final String COLUMN_CODENAME = "codename";
+	public static final String COLUMN_DESCRIPTION = "description";	
+	public static final String COLUMN_NAME = "name";	
 
 	private ParameterType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof ParameterType)
@@ -29,20 +29,21 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		ParameterType parameterType = this.fromStorableObject(storableObject);
+		this.retrieveParameterType(parameterType);
+	}
 
+	private void retrieveParameterType(ParameterType parameterType) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		String parameterTypeIdStr = parameterType.getId().toSQLString();
 		String sql = SQL_SELECT
-			+ COLUMN_CODENAME
-			+ COMMA
+			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
+			+ DatabaseDate.toQuerySubString(COLUMN_MODIFIED) + COMMA
+			+ COLUMN_CREATOR_ID + COMMA
+			+ COLUMN_MODIFIER_ID + COMMA
+			+ COLUMN_CODENAME + COMMA
+			+ COLUMN_DESCRIPTION + COMMA
 			+ COLUMN_NAME
-			+ COMMA
-			+ COLUMN_DESCRIPTION
-			+ SQL_FROM
-			+ ObjectEntities.PARAMETERTYPE_ENTITY
-			+ SQL_WHERE
-			+ COLUMN_ID
-			+ EQUALS
-			+ parameterTypeIdStr;
+			+ SQL_FROM + ObjectEntities.PARAMETERTYPE_ENTITY
+			+ SQL_WHERE + COLUMN_ID + EQUALS + parameterTypeIdStr;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
@@ -51,20 +52,20 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()){
 				parameterType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-											DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-											/**
-											 * @todo when change DB Identifier model ,change getString() to
-											 *       getLong()
-											 */																			
-											new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-											/**
-											 * @todo when change DB Identifier model ,change getString() to
-											 *       getLong()
-											 */
-											new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-											resultSet.getString(COLUMN_CODENAME),
-											resultSet.getString(COLUMN_DESCRIPTION),
-											resultSet.getString(COLUMN_NAME));
+																		DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+																		/**
+																		 * @todo when change DB Identifier model ,change getString() to
+																		 *       getLong()
+																		 */																			
+																		new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+																		/**
+																		 * @todo when change DB Identifier model ,change getString() to
+																		 *       getLong()
+																		 */
+																		new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+																		resultSet.getString(COLUMN_CODENAME),
+																		resultSet.getString(COLUMN_DESCRIPTION),
+																		resultSet.getString(COLUMN_NAME));
 			}
 			else
 				throw new ObjectNotFoundException("No such parameter type: " + parameterTypeIdStr);
@@ -89,12 +90,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		ParameterType parameterType = null;
-		if (storableObject instanceof ParameterType)
-			parameterType = (ParameterType)storableObject;
-		else
-			throw new RetrieveObjectException("ParameterTypeDatabase.retrieveObject | Illegal Storable Object: " + storableObject.getClass().getName());
-
+		ParameterType parameterType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				return null;
@@ -102,46 +98,56 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	}
 
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
-		ParameterType parameterType = null;
-		if (storableObject instanceof ParameterType)
-			parameterType = (ParameterType)storableObject;
-		else 
-			throw new IllegalDataException("ParameterTypeDatabase.insert | Illegal Storable Object: " + storableObject.getClass().getName());
+		ParameterType parameterType = this.fromStorableObject(storableObject);
+		try {
+			this.insertParameterType(parameterType);
+		}
+		catch (CreateObjectException e) {
+			try {
+				connection.rollback();
+			}
+			catch (SQLException sqle) {
+				Log.errorMessage("Exception in rolling back");
+				Log.errorException(sqle);
+			}
+			throw e;
+		}
+		try {
+			connection.commit();
+		}
+		catch (SQLException sqle) {
+			Log.errorMessage("Exception in commiting");
+			Log.errorException(sqle);
+		}
+	}
 
+	private void insertParameterType(ParameterType parameterType) throws IllegalDataException, CreateObjectException {
 		String parameterTypeIdStr = parameterType.getId().toSQLString();
 		String sql = SQL_INSERT_INTO
-			+ ObjectEntities.PARAMETERTYPE_ENTITY
-			+ OPEN_BRACKET
-			+ COLUMN_ID
-			+ COMMA
-			+ COLUMN_CODENAME
-			+ COMMA
+			+ ObjectEntities.PARAMETERTYPE_ENTITY + OPEN_BRACKET
+			+ COLUMN_ID + COMMA
+			+ COLUMN_CREATED + COMMA
+			+ COLUMN_MODIFIED + COMMA
+			+ COLUMN_CREATOR_ID + COMMA
+			+ COLUMN_MODIFIER_ID + COMMA
+			+ COLUMN_CODENAME + COMMA
+			+ COLUMN_DESCRIPTION + COMMA
 			+ COLUMN_NAME
-			+ COMMA
-			+ COLUMN_DESCRIPTION
-			+ CLOSE_BRACKET
-			+ SQL_VALUES
-			+ OPEN_BRACKET
-			+ parameterTypeIdStr
-			+ COMMA
-			+ APOSTOPHE
-			+ parameterType.getCodename()
-			+ APOSTOPHE
-			+ COMMA
-			+ APOSTOPHE
-			+ parameterType.getName()
-			+ APOSTOPHE
-			+ COMMA
-			+ APOSTOPHE
-			+ parameterType.getDescription()
-			+ APOSTOPHE
+			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
+			+ parameterTypeIdStr + COMMA
+			+ DatabaseDate.toUpdateSubString(parameterType.getCreated()) + COMMA
+			+ DatabaseDate.toUpdateSubString(parameterType.getModified()) + COMMA
+			+ parameterType.getCreatorId().toString() + COMMA
+			+ parameterType.getModifierId().toString() + COMMA
+			+ APOSTOPHE + parameterType.getCodename() + APOSTOPHE + COMMA
+			+ APOSTOPHE + parameterType.getDescription() + APOSTOPHE + COMMA
+			+ APOSTOPHE + parameterType.getName() + APOSTOPHE
 			+ CLOSE_BRACKET;
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
 			Log.debugMessage("ParameterTypeDatabase.insert | Trying: " + sql, Log.DEBUGLEVEL05);
 			statement.executeUpdate(sql);
-			connection.commit();
 		}
 		catch (SQLException sqle) {
 			String mesg = "ParameterTypeDatabase.insert | Cannot insert parameter type " + parameterTypeIdStr;
@@ -158,24 +164,18 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	}
 
 	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, UpdateObjectException {
-		ParameterType parameterType = null;
-		if (storableObject instanceof ParameterType)
-			parameterType = (ParameterType)storableObject;
-		else
-			throw new UpdateObjectException("ParameterTypeDatabase.update | Illegal Storable Object: " + storableObject.getClass().getName());
+		ParameterType parameterType = this.fromStorableObject(storableObject);
+		switch (updateKind) {
+			default:
+				return;
+		}
 	}
 
 	public static ParameterType retrieveForCodename(String codename) throws ObjectNotFoundException , RetrieveObjectException {
 		String sql = SQL_SELECT
 			+ COLUMN_ID
-			+ SQL_FROM
-			+ ObjectEntities.PARAMETERTYPE_ENTITY
-			+ SQL_WHERE
-			+ COLUMN_CODENAME
-			+ EQUALS
-			+ APOSTOPHE
-			+ codename
-			+ APOSTOPHE;
+			+ SQL_FROM + ObjectEntities.PARAMETERTYPE_ENTITY
+			+ SQL_WHERE + COLUMN_CODENAME + EQUALS + APOSTOPHE + codename + APOSTOPHE;
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
