@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.50 2005/01/31 11:01:05 bob Exp $
+ * $Id: SetDatabase.java,v 1.51 2005/02/01 15:09:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,8 +47,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/01/31 11:01:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.51 $, $Date: 2005/02/01 15:09:21 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -139,7 +139,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		String sql = SQL_SELECT
 			+ COLUMN_ID + COMMA			
 			+ SetWrapper.LINK_COLUMN_TYPE_ID + COMMA
-			+ SetWrapper.LINK_COLUMN_VALUE
+			+ SetWrapper.LINK_COLUMN_PARAMETER_VALUE
 			+ SQL_FROM
 			+ ObjectEntities.SETPARAMETER_ENTITY
 			+ SQL_WHERE
@@ -163,7 +163,7 @@ public class SetDatabase extends StorableObjectDatabase {
 				}
 				parameter = new SetParameter(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 											 parameterType,
-											 ByteArrayDatabase.toByteArray(resultSet.getBlob(SetWrapper.LINK_COLUMN_VALUE)));
+											 ByteArrayDatabase.toByteArray(resultSet.getBlob(SetWrapper.LINK_COLUMN_PARAMETER_VALUE)));
 				parameters.add(parameter);
 			}
 		}
@@ -195,7 +195,7 @@ public class SetDatabase extends StorableObjectDatabase {
 			return;
 
 		StringBuffer sql = new StringBuffer(SQL_SELECT + COLUMN_ID + COMMA
-				+ SetWrapper.LINK_COLUMN_TYPE_ID + COMMA + SetWrapper.LINK_COLUMN_VALUE + COMMA
+				+ SetWrapper.LINK_COLUMN_TYPE_ID + COMMA + SetWrapper.LINK_COLUMN_PARAMETER_VALUE + COMMA
 				+ SetWrapper.LINK_COLUMN_SET_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
 				+ SQL_WHERE + SetWrapper.LINK_COLUMN_SET_ID + SQL_IN + OPEN_BRACKET);
 		int i = 1;
@@ -238,7 +238,7 @@ public class SetDatabase extends StorableObjectDatabase {
 				}
 				parameter = new SetParameter(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 														parameterType,
-														ByteArrayDatabase.toByteArray(resultSet.getBlob(SetWrapper.LINK_COLUMN_VALUE)));
+														ByteArrayDatabase.toByteArray(resultSet.getBlob(SetWrapper.LINK_COLUMN_PARAMETER_VALUE)));
 				setId = DatabaseIdentifier.getIdentifier(resultSet, SetWrapper.LINK_COLUMN_SET_ID);
 				setParameters = (List) setParametersMap.get(setId);
 				if (setParameters == null) {
@@ -398,7 +398,7 @@ public class SetDatabase extends StorableObjectDatabase {
 			+ COLUMN_ID  + COMMA
 			+ SetWrapper.LINK_COLUMN_TYPE_ID + COMMA
 			+ SetWrapper.LINK_COLUMN_SET_ID + COMMA
-			+ SetWrapper.LINK_COLUMN_VALUE + CLOSE_BRACKET
+			+ SetWrapper.LINK_COLUMN_PARAMETER_VALUE + CLOSE_BRACKET
 			+ SQL_VALUES 
 			+ OPEN_BRACKET
 			+ QUESTION + COMMA
@@ -424,7 +424,7 @@ public class SetDatabase extends StorableObjectDatabase {
 				ByteArrayDatabase.saveAsBlob(setParameters[i].getValue(),
 											 connection,
 											 ObjectEntities.SETPARAMETER_ENTITY,
-											 SetWrapper.LINK_COLUMN_VALUE,
+											 SetWrapper.LINK_COLUMN_PARAMETER_VALUE,
 											 COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(parameterId));
 			}
 			connection.commit();

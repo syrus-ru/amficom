@@ -1,5 +1,5 @@
 /*
- * $Id: SetWrapper.java,v 1.2 2005/02/01 06:38:49 bob Exp $
+ * $Id: SetWrapper.java,v 1.3 2005/02/01 15:09:21 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.Wrapper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/01 06:38:49 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/02/01 15:09:21 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 public class SetWrapper implements Wrapper {
@@ -34,9 +34,8 @@ public class SetWrapper implements Wrapper {
 	public static final String	LINK_COLUMN_SET_PARAMETERS		= "set_parameters";
 
 	public static final String	LINK_COLUMN_SET_PARAMETER_ID	= "set_parameter_id";
-
-	public static final String	LINK_COLUMN_TYPE_ID				= "type_id";
-	public static final String	LINK_COLUMN_VALUE				= "value";
+	public static final String	LINK_COLUMN_TYPE_ID = "type_id";
+	public static final String	LINK_COLUMN_PARAMETER_VALUE				= "value";
 
 	private static SetWrapper	instance;
 
@@ -80,7 +79,7 @@ public class SetWrapper implements Wrapper {
 				for (int i = 0; i < parameters.length; i++) {
 					values.put(LINK_COLUMN_SET_PARAMETER_ID + i, parameters[i].getId());
 					values.put(LINK_COLUMN_TYPE_ID + i, parameters[i].getType());
-					values.put(LINK_COLUMN_VALUE + i, parameters[i].getValue());
+					values.put(LINK_COLUMN_PARAMETER_VALUE + i, parameters[i].getValue());
 
 				}
 				return values;
@@ -109,7 +108,7 @@ public class SetWrapper implements Wrapper {
 				for (int i = 0; i < setParameters.length; i++) {
 					Identifier parameterId = (Identifier) setParameterMap.get(LINK_COLUMN_SET_PARAMETER_ID + i);
 					ParameterType parameterType = (ParameterType) setParameterMap.get(LINK_COLUMN_TYPE_ID + i);
-					byte[] setParameterValue = (byte[]) setParameterMap.get(LINK_COLUMN_VALUE + i);
+					byte[] setParameterValue = (byte[]) setParameterMap.get(LINK_COLUMN_PARAMETER_VALUE + i);
 					setParameters[i] = new SetParameter(parameterId, parameterType, setParameterValue);
 
 				}
