@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.33 2005/03/29 07:51:53 bob Exp $
+ * $Id: ModelTraceManager.java,v 1.34 2005/03/29 16:11:56 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import java.util.LinkedList;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.33 $, $Date: 2005/03/29 07:51:53 $
+ * @author $Author: saa $
+ * @version $Revision: 1.34 $, $Date: 2005/03/29 16:11:56 $
  * @module
  */
 public class ModelTraceManager
@@ -365,7 +365,7 @@ public class ModelTraceManager
 	 */
 	public ModelTrace getEventThresholdMT(int key, int nEvent)
 	{
-		return getThresholdMT(key);
+		return getThresholdMT(key); // FIXME
 	}
 
 	public void updateUpperThreshToContain(double[] yTop)
