@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationObjectLoader.java,v 1.28 2005/02/11 12:47:59 bob Exp $
+ * $Id: ConfigurationObjectLoader.java,v 1.29 2005/02/11 12:59:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,16 +11,15 @@ package com.syrus.AMFICOM.configuration;
 import java.util.List;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.AccessIdentity;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/02/11 12:47:59 $
+ * @version $Revision: 1.29 $, $Date: 2005/02/11 12:59:05 $
  * @author $Author: bob $
  * @module config_v1
  */

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.37 2005/02/11 11:55:22 bob Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.38 2005/02/11 13:02:21 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,17 +10,17 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
-import com.syrus.AMFICOM.general.AccessIdentity;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identified;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/02/11 11:55:22 $
+ * @version $Revision: 1.38 $, $Date: 2005/02/11 13:02:21 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -483,11 +483,11 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		return list;
 	}
 
-	public void saveMeasurementType(MeasurementType measurementType, AccessIdentity accessIdentity, boolean force) throws DatabaseException,
+	public void saveMeasurementType(MeasurementType measurementType, boolean force) throws DatabaseException,
 			CommunicationException {
 		MeasurementTypeDatabase database = (MeasurementTypeDatabase) MeasurementDatabaseContext.measurementTypeDatabase;
 		try {
-			database.update(measurementType, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
+			database.update(measurementType, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.saveMeasurementType | UpdateObjectException: "
@@ -508,11 +508,11 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		}
 	}
 
-	public void saveAnalysisType(AnalysisType analysisType, AccessIdentity accessIdentity, boolean force) throws DatabaseException,
+	public void saveAnalysisType(AnalysisType analysisType, boolean force) throws DatabaseException,
 			CommunicationException {
 		AnalysisTypeDatabase database = (AnalysisTypeDatabase) MeasurementDatabaseContext.analysisTypeDatabase;
 		try {
-			database.update(analysisType, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
+			database.update(analysisType, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.saveAnalysisType | UpdateObjectException: "
@@ -532,11 +532,11 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		}
 	}
 
-	public void saveEvaluationType(EvaluationType evaluationType, AccessIdentity accessIdentity, boolean force) throws DatabaseException,
+	public void saveEvaluationType(EvaluationType evaluationType, boolean force) throws DatabaseException,
 			CommunicationException {
 		EvaluationTypeDatabase database = (EvaluationTypeDatabase) MeasurementDatabaseContext.evaluationTypeDatabase;
 		try {
-			database.update(evaluationType, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
+			database.update(evaluationType, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.saveEvaluationType | UpdateObjectException: "
@@ -557,10 +557,10 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		}
 	}
 
-	public void saveSet(Set set, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
+	public void saveSet(Set set, boolean force) throws DatabaseException, CommunicationException {
 		SetDatabase database = (SetDatabase) MeasurementDatabaseContext.setDatabase;
 		try {
-			database.update(set, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(set, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.saveSet | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMeasumentObjectLoader.saveSet | UpdateObjectException: "
@@ -576,11 +576,11 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		}
 	}
 
-	public void saveMeasurementSetup(MeasurementSetup measurementSetup, AccessIdentity accessIdentity, boolean force) throws DatabaseException,
+	public void saveMeasurementSetup(MeasurementSetup measurementSetup, boolean force) throws DatabaseException,
 			CommunicationException {
 		MeasurementSetupDatabase database = (MeasurementSetupDatabase) MeasurementDatabaseContext.measurementSetupDatabase;
 		try {
-			database.update(measurementSetup, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
+			database.update(measurementSetup, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.saveMeasurementSetup | UpdateObjectException: "
@@ -602,10 +602,10 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		}
 	}
 
-	public void saveModeling(Modeling modeling, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
+	public void saveModeling(Modeling modeling, boolean force) throws DatabaseException, CommunicationException {
 		ModelingDatabase database = (ModelingDatabase) MeasurementDatabaseContext.modelingDatabase;
 		try {
-			database.update(modeling, accessIdentity.getUserId(), 
+			database.update(modeling, SessionContext.getAccessIdentity().getUserId(), 
 				force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.saveModeling | UpdateObjectException: " + e.getMessage());
@@ -623,11 +623,11 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		}
 	}
 
-	public void saveModelingType(ModelingType modelingType, AccessIdentity accessIdentity, boolean force) throws VersionCollisionException,
+	public void saveModelingType(ModelingType modelingType, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
 		ModelingTypeDatabase database = (ModelingTypeDatabase) MeasurementDatabaseContext.modelingTypeDatabase;
 		try {
-			database.update(modelingType, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
+			database.update(modelingType, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.saveModelingType | UpdateObjectException: "
@@ -648,11 +648,11 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 
 	}
 
-	public void saveMeasurement(Measurement measurement, AccessIdentity accessIdentity, boolean force) throws DatabaseException,
+	public void saveMeasurement(Measurement measurement, boolean force) throws DatabaseException,
 			CommunicationException {
 		MeasurementDatabase database = (MeasurementDatabase) MeasurementDatabaseContext.measurementDatabase;
 		try {
-			database.update(measurement, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
+			database.update(measurement, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log
@@ -673,10 +673,10 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		}
 	}
 
-	public void saveAnalysis(Analysis analysis, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
+	public void saveAnalysis(Analysis analysis, boolean force) throws DatabaseException, CommunicationException {
 		AnalysisDatabase database = (AnalysisDatabase) MeasurementDatabaseContext.analysisDatabase;
 		try {
-			database.update(analysis, accessIdentity.getUserId(), 
+			database.update(analysis, SessionContext.getAccessIdentity().getUserId(), 
 				force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.saveAnalysis | UpdateObjectException: " + e.getMessage());
@@ -694,10 +694,10 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		}
 	}
 
-	public void saveEvaluation(Evaluation evaluation, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
+	public void saveEvaluation(Evaluation evaluation, boolean force) throws DatabaseException, CommunicationException {
 		EvaluationDatabase database = (EvaluationDatabase) MeasurementDatabaseContext.evaluationDatabase;
 		try {
-			database.update(evaluation, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
+			database.update(evaluation, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.saveEvaluation | UpdateObjectException: " + e.getMessage());
@@ -716,10 +716,10 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		}
 	}
 
-	public void saveTest(Test test, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
+	public void saveTest(Test test, boolean force) throws DatabaseException, CommunicationException {
 		TestDatabase database = (TestDatabase) MeasurementDatabaseContext.testDatabase;
 		try {
-			database.update(test, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(test, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.saveTest | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMeasumentObjectLoader.saveTest | UpdateObjectException: "
@@ -735,10 +735,10 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		}
 	}
 
-	public void saveResult(Result result, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
+	public void saveResult(Result result, boolean force) throws DatabaseException, CommunicationException {
 		ResultDatabase database = (ResultDatabase) MeasurementDatabaseContext.resultDatabase;
 		try {
-			database.update(result, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(result, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.saveResult | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMeasumentObjectLoader.saveResult | UpdateObjectException: "
@@ -754,11 +754,11 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		}
 	}
 
-	public void saveTemporalPattern(TemporalPattern temporalPattern, AccessIdentity accessIdentity, boolean force) throws DatabaseException,
+	public void saveTemporalPattern(TemporalPattern temporalPattern, boolean force) throws DatabaseException,
 			CommunicationException {
 		TemporalPatternDatabase database = (TemporalPatternDatabase) MeasurementDatabaseContext.temporalPatternDatabase;
 		try {
-			database.update(temporalPattern, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
+			database.update(temporalPattern, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE
 					: StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.saveTemporalPattern | UpdateObjectException: "
@@ -783,10 +783,10 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 
 
 
-	public void saveMeasurementTypes(List list, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
+	public void saveMeasurementTypes(List list, boolean force) throws DatabaseException, CommunicationException {
 		MeasurementTypeDatabase database = (MeasurementTypeDatabase) MeasurementDatabaseContext.measurementTypeDatabase;
 		try {
-			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.saveMeasurementTypes | UpdateObjectException: "
 					+ e.getMessage());
@@ -807,10 +807,10 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		}
 	}
 
-	public void saveAnalysisTypes(List list, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
+	public void saveAnalysisTypes(List list, boolean force) throws DatabaseException, CommunicationException {
 		AnalysisTypeDatabase database = (AnalysisTypeDatabase) MeasurementDatabaseContext.analysisTypeDatabase;
 		try {
-			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.saveAnalysisTypes | UpdateObjectException: "
 					+ e.getMessage());
@@ -829,10 +829,10 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		}
 	}
 
-	public void saveEvaluationTypes(List list, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
+	public void saveEvaluationTypes(List list, boolean force) throws DatabaseException, CommunicationException {
 		EvaluationTypeDatabase database = (EvaluationTypeDatabase) MeasurementDatabaseContext.evaluationTypeDatabase;
 		try {
-			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.saveEvaluationType | UpdateObjectException: "
 					+ e.getMessage());
@@ -852,10 +852,10 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		}
 	}
 
-	public void saveSets(List list, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
+	public void saveSets(List list, boolean force) throws DatabaseException, CommunicationException {
 		SetDatabase database = (SetDatabase) MeasurementDatabaseContext.setDatabase;
 		try {
-			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.saveSet | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMeasumentObjectLoader.saveSet | UpdateObjectException: "
@@ -871,10 +871,10 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		}
 	}
 
-	public void saveModelings(List list, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
+	public void saveModelings(List list, boolean force) throws DatabaseException, CommunicationException {
 		ModelingDatabase database = (ModelingDatabase) MeasurementDatabaseContext.modelingDatabase;
 		try {
-			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.saveModeling | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMeasumentObjectLoader.saveModeling | UpdateObjectException: "
@@ -891,10 +891,10 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		}
 	}
 	
-	public void saveModelingTypes(List list, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
+	public void saveModelingTypes(List list, boolean force) throws DatabaseException, CommunicationException {
 		ModelingTypeDatabase database = (ModelingTypeDatabase) MeasurementDatabaseContext.modelingTypeDatabase;
 		try {
-			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.saveModelingType | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMeasumentObjectLoader.saveModelingType | UpdateObjectException: "
@@ -911,10 +911,10 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		}
 	}
 
-	public void saveMeasurementSetups(List list, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
+	public void saveMeasurementSetups(List list, boolean force) throws DatabaseException, CommunicationException {
 		MeasurementSetupDatabase database = (MeasurementSetupDatabase) MeasurementDatabaseContext.measurementSetupDatabase;
 		try {
-			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.saveMeasurementSetup | UpdateObjectException: "
 					+ e.getMessage());
@@ -935,10 +935,10 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		}
 	}
 
-	public void saveMeasurements(List list, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
+	public void saveMeasurements(List list, boolean force) throws DatabaseException, CommunicationException {
 		MeasurementDatabase database = (MeasurementDatabase) MeasurementDatabaseContext.measurementDatabase;
 		try {
-			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log
 					.errorMessage("DatabaseMeasumentObjectLoader.saveMeasurement | UpdateObjectException: "
@@ -958,10 +958,10 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		}
 	}
 
-	public void saveAnalyses(List list, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
+	public void saveAnalyses(List list, boolean force) throws DatabaseException, CommunicationException {
 		AnalysisDatabase database = (AnalysisDatabase) MeasurementDatabaseContext.analysisDatabase;
 		try {
-			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.saveAnalysis | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMeasumentObjectLoader.saveAnalysis | UpdateObjectException: "
@@ -978,10 +978,10 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		}
 	}
 
-	public void saveEvaluations(List list, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
+	public void saveEvaluations(List list, boolean force) throws DatabaseException, CommunicationException {
 		EvaluationDatabase database = (EvaluationDatabase) MeasurementDatabaseContext.evaluationDatabase;
 		try {
-			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.saveEvaluation | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMeasumentObjectLoader.saveEvaluation | UpdateObjectException: "
@@ -999,10 +999,10 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		}
 	}
 
-	public void saveTests(List list, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
+	public void saveTests(List list, boolean force) throws DatabaseException, CommunicationException {
 		TestDatabase database = (TestDatabase) MeasurementDatabaseContext.testDatabase;
 		try {
-			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.saveTest | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMeasumentObjectLoader.saveTest | UpdateObjectException: "
@@ -1018,10 +1018,10 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		}
 	}
 
-	public void saveResults(List list, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
+	public void saveResults(List list, boolean force) throws DatabaseException, CommunicationException {
 		ResultDatabase database = (ResultDatabase) MeasurementDatabaseContext.resultDatabase;
 		try {
-			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.saveResult | UpdateObjectException: " + e.getMessage());
 			throw new DatabaseException("DatabaseMeasumentObjectLoader.saveResult | UpdateObjectException: "
@@ -1037,10 +1037,10 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		}
 	}
 
-	public void saveTemporalPatterns(List list, AccessIdentity accessIdentity, boolean force) throws DatabaseException, CommunicationException {
+	public void saveTemporalPatterns(List list, boolean force) throws DatabaseException, CommunicationException {
 		TemporalPatternDatabase database = (TemporalPatternDatabase) MeasurementDatabaseContext.temporalPatternDatabase;
 		try {
-			database.update(list, accessIdentity.getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		} catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseMeasumentObjectLoader.saveTemporalPattern | UpdateObjectException: "
 					+ e.getMessage());
