@@ -1,72 +1,58 @@
-//////////////////////////////////////////////////////////////////////////////
-// *                                                                      * //
-// * Syrus Systems                                                        * //
-// * Департамент Системных Исследований и Разработок                      * //
-// *                                                                      * //
-// * Проект: АМФИКОМ - система Автоматизированного Многофункционального   * //
-// *         Интеллектуального Контроля и Объектного Мониторинга          * //
-// *                                                                      * //
-// *         реализация Интегрированной Системы Мониторинга               * //
-// *                                                                      * //
-// * Название: Реализация серверной части интерфейса прототипа РИСД       * //
-// *           (включает реализацию пакета pmServer и класса pmRISDImpl)  * //
-// * Тип: Java 1.2.2                                                      * //
-// *                                                                      * //
-// * Автор: Крупенников А.В.                                              * //
-// *                                                                      * //
-// * Версия: 0.1                                                          * //
-// * От: 22 jan 2002                                                      * //
-// * Расположение: ISM\prog\java\AMFICOMConfigure\com\syrus\AMFICOM\      * //
-// *        Client\Configure\Application\TextIcon.java                    * //
-// *                                                                      * //
-// * Среда разработки: Oracle JDeveloper 3.2.2 (Build 915)                * //
-// *                                                                      * //
-// * Компилятор: Oracle javac (Java 2 SDK, Standard Edition, ver 1.2.2)   * //
-// *                                                                      * //
-// * Статус: разработка                                                   * //
-// *                                                                      * //
-// * Изменения:                                                           * //
-// *  Кем         Верс   Когда      Комментарии                           * //
-// * -----------  ----- ---------- -------------------------------------- * //
-// *                                                                      * //
-// * Описание:                                                            * //
-// *                                                                      * //
-//////////////////////////////////////////////////////////////////////////////
+/*
+ * $Id: TextIcon.java,v 1.3 2004/09/23 14:53:17 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
 package com.syrus.AMFICOM.Client.General.UI;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.FontMetrics;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
-
 import javax.swing.Icon;
 
-public class TextIcon extends Object implements Icon
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2004/09/23 14:53:17 $
+ * @module generalclient_v1
+ */
+public class TextIcon implements Icon
 {
-	String text;
-	Component parent;
-	int height;
-	int width;
-	AffineTransform at = new AffineTransform(0, -1, 0, 1, 0, 0);
-	boolean visible = true;
+	private String text;
 
-	public TextIcon(String s, Component c)
+	private Component parent;
+
+	private int height;
+
+	private int width;
+
+	private boolean visible;
+
+	private boolean valid;
+
+	public TextIcon(final String text, final Component parent)
 	{
-		text = s;
-		parent = c;
-
-		FontMetrics fm = c.getFontMetrics(c.getFont());
-		height = fm.stringWidth(s);
-		width = fm.getHeight();
+		this(text, parent, true);
 	}
 
-	public TextIcon(String s, Component c, boolean visible)
+	public TextIcon(final String text, final Component parent, final boolean visible)
 	{
-		this(s, c);
+		if (text == null)
+		{
+			this.text = "null";
+			this.valid = false;
+		}
+		else
+		{
+			this.text = text;
+			this.valid = true;
+		}
+		this.parent = parent;
 		this.visible = visible;
+		FontMetrics fm = this.parent.getFontMetrics(this.parent.getFont());
+		height = fm.stringWidth(this.text);
+		width = fm.getHeight();
 	}
 
 	public int getIconHeight()
@@ -81,21 +67,17 @@ public class TextIcon extends Object implements Icon
 
 	public void paintIcon(Component c, Graphics g, int x, int y)
 	{
-		Graphics2D g2 = (Graphics2D )g;
-
+		Graphics2D g2 = (Graphics2D) g;
 		AffineTransform t = g2.getTransform();
-
-		FontMetrics fm = g2.getFontMetrics(g2.getFont());
 		g2.translate(0, height + 10);
 		g2.rotate (Math.toRadians(270), x - 5, y);
-
-		if(visible)
-			g2.setColor(Color.black);
+		if (!valid)
+			g2.setColor(Color.RED);
+		else if (visible)
+			g2.setColor(Color.BLACK);
 		else
-			g2.setColor(Color.gray);
-
-		g2.drawString(text, x - 5, y + fm.getAscent());
-
+			g2.setColor(Color.GRAY);
+		g2.drawString(text, x - 5, y + g2.getFontMetrics(g2.getFont()).getAscent());
 		g2.setTransform(t);
 	}
 }
