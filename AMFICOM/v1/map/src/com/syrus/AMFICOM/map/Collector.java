@@ -1,5 +1,5 @@
 /**
- * $Id: Collector.java,v 1.25 2005/03/09 14:49:53 bass Exp $
+ * $Id: Collector.java,v 1.26 2005/03/24 14:10:15 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,44 +41,39 @@ import java.util.List;
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  * 
- * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/03/09 14:49:53 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2005/03/24 14:10:15 $
  * @module map_v1
  */
-public class Collector 
-	extends StorableObject 
-	implements MapElement {
+public class Collector extends StorableObject implements MapElement {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
-	private static final long	serialVersionUID	= 4049922679379212598L;
+	private static final long serialVersionUID = 4049922679379212598L;
 
-	public static final String COLUMN_ID = "id";	
-	public static final String COLUMN_NAME = "name";	
-	public static final String COLUMN_DESCRIPTION = "description";	
-	public static final String COLUMN_LINKS = "links";	
+	public static final String COLUMN_ID = "id";
+	public static final String COLUMN_NAME = "name";
+	public static final String COLUMN_DESCRIPTION = "description";
+	public static final String COLUMN_LINKS = "links";
 
 	/** 
 	 * набор параметров для экспорта. инициализируется только в случае
 	 * необходимости экспорта
 	 */
 	private static java.util.Map exportMap = null;
-	
-	private String					name;
-	private String					description;
 
-	private List					physicalLinks;
-	private List					characteristics;
+	private String name;
+	private String description;
 
-	private StorableObjectDatabase	collectorDatabase;
+	private List physicalLinks;
+	private List characteristics;
+
+	private StorableObjectDatabase collectorDatabase;
 
 	protected transient Map map;
-
 	protected transient boolean selected = false;
-
 	protected transient boolean removed = false;
-
 	protected transient boolean alarmState = false;
 
 	public Collector(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
@@ -89,7 +84,8 @@ public class Collector
 		this.collectorDatabase = MapDatabaseContext.getCollectorDatabase();
 		try {
 			this.collectorDatabase.retrieve(this);
-		} catch (IllegalDataException e) {
+		}
+		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 	}
@@ -111,24 +107,25 @@ public class Collector
 			for (int i = 0; i < mt.characteristicIds.length; i++)
 				characteristicIds.add(new Identifier(mt.characteristicIds[i]));
 			this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
-		} catch (ApplicationException ae) {
+		}
+		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
 
 	protected Collector(final Identifier id,
-					final Identifier creatorId,
-					final long version,
-					final String name,
-					final String description) {
+			final Identifier creatorId,
+			final long version,
+			final String name,
+			final String description) {
 		super(id,
-			new Date(System.currentTimeMillis()),
-			new Date(System.currentTimeMillis()),
-			creatorId,
-			creatorId,
-			version);
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version);
 		this.name = name;
-		this.description = description;		
+		this.description = description;
 
 		this.physicalLinks = new LinkedList();
 		this.characteristics = new LinkedList();
@@ -136,37 +133,22 @@ public class Collector
 		this.collectorDatabase = MapDatabaseContext.getCollectorDatabase();
 	}
 
-	
-	public void insert() throws CreateObjectException {
-		this.collectorDatabase = MapDatabaseContext.getCollectorDatabase();
-		try {
-			if (this.collectorDatabase != null)
-				this.collectorDatabase.insert(this);
-		} catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
-		}
-	}
-
-	public static Collector createInstance(
-			Identifier creatorId,
-			Map map,
-			String name,
-			String description)
-		throws CreateObjectException {
+	public static Collector createInstance(Identifier creatorId, Map map, String name, String description)
+			throws CreateObjectException {
 
 		if (creatorId == null || map == null || name == null || description == null)
 			throw new IllegalArgumentException("Argument is 'null'");
-		
+
 		try {
-			Collector collector = new Collector(
-				IdentifierPool.getGeneratedIdentifier(ObjectEntities.COLLECTOR_ENTITY_CODE),
-				creatorId,
-				0L,
-				name,
-				description);
+			Collector collector = new Collector(IdentifierPool.getGeneratedIdentifier(ObjectEntities.COLLECTOR_ENTITY_CODE),
+					creatorId,
+					0L,
+					name,
+					description);
 			collector.changed = true;
 			return collector;
-		} catch (IllegalObjectEntityException e) {
+		}
+		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Collector.createInstance | cannot generate identifier ", e);
 		}
 	}
@@ -182,31 +164,251 @@ public class Collector
 		Identifier_Transferable[] physicalLinkIds = new Identifier_Transferable[this.physicalLinks.size()];
 		for (Iterator iterator = this.physicalLinks.iterator(); iterator.hasNext();)
 			physicalLinkIds[i++] = (Identifier_Transferable) ((PhysicalLink) iterator.next()).getId().getTransferable();
-		
-		i= 0;
+
+		i = 0;
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
 		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
 			charIds[i++] = (Identifier_Transferable) ((Characteristic) iterator.next()).getId().getTransferable();
-		
-		return new Collector_Transferable(super.getHeaderTransferable(),
-								this.name,
-								this.description,
-								physicalLinkIds,
-								charIds);
+
+		return new Collector_Transferable(super.getHeaderTransferable(), this.name, this.description, physicalLinkIds, charIds);
+	}
+
+	public String getDescription() {
+		return this.description;
+	}
+
+	protected void setDescription0(String description) {
+		this.description = description;
+	}
+
+	public void setDescription(String description) {
+		this.setDescription0(description);
+		this.changed = true;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	protected void setName0(String name) {
+		this.name = name;
+	}
+
+	public void setName(String name) {
+		this.setName0(name);
+		this.changed = true;
+	}
+
+	public List getPhysicalLinks() {
+		return Collections.unmodifiableList(this.physicalLinks);
+	}
+
+	protected void setPhysicalLinks0(Collection physicalLinks) {
+		this.physicalLinks.clear();
+		if (physicalLinks != null)
+			this.physicalLinks.addAll(physicalLinks);
+	}
+
+	public void setPhysicalLinks(List physicalLinks) {
+		this.setPhysicalLinks0(physicalLinks);
+		this.changed = true;
+	}
+
+	protected synchronized void setAttributes(Date created,
+			Date modified,
+			Identifier creatorId,
+			Identifier modifierId,
+			long version,
+			String name,
+			String description) {
+		super.setAttributes(created, modified, creatorId, modifierId, version);
+		this.name = name;
+		this.description = description;
+	}
+
+	/**
+	 * Убрать линию из состава коллектора. Внимание! концевые точки линии не обновляются.
+	 * @param link линия
+	 */
+	public void removePhysicalLink(PhysicalLink link) {
+		this.physicalLinks.remove(link);
+		this.changed = true;
+	}
+
+	/**
+	 * Добавить линию в состав коллектора. Внимание! концевые точки линии не обновляются.
+	 * @param link линия
+	 */
+	public void addPhysicalLink(PhysicalLink link) {
+		this.physicalLinks.add(link);
+		this.changed = true;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public DoublePoint getLocation() {
+		int count = 0;
+		DoublePoint point = new DoublePoint(0.0, 0.0);
+
+		double x = 0.0;
+		double y = 0.0;
+		for (Iterator it = getPhysicalLinks().iterator(); it.hasNext();) {
+			PhysicalLink mle = (PhysicalLink) it.next();
+			DoublePoint an = mle.getLocation();
+			x += an.getX();
+			y += an.getY();
+			count++;
+		}
+		if (count > 0) {
+			x /= count;
+			y /= count;
+			point.setLocation(x, y);
+		}
+
+		return point;
+	}
+
+	/**
+	 * Возвращает суммарную топологическую длинну всех линий в составе 
+	 * коллектора в метрах.
+	 * @return суммарная длина
+	 */
+	public double getLengthLt() {
+		double length = 0;
+		Iterator e = getPhysicalLinks().iterator();
+		while (e.hasNext()) {
+			PhysicalLink mle = (PhysicalLink) e.next();
+			length = length + mle.getLengthLt();
+		}
+		return length;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isRemoved() {
+		return this.removed;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setRemoved(boolean removed) {
+		this.removed = removed;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean isSelected() {
+		return this.selected;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+		getMap().setSelected(this, selected);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public Map getMap() {
+		return this.map;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setMap(Map map) {
+		this.map = map;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setAlarmState(boolean alarmState) {
+		this.alarmState = alarmState;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public boolean getAlarmState() {
+		return this.alarmState;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public MapElementState getState() {
+		throw new UnsupportedOperationException("Not implemented");
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public void revert(MapElementState state) {
+		throw new UnsupportedOperationException("Not implemented; MapElementState: " + state);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public java.util.Map getExportMap() {
+		if (exportMap == null)
+			exportMap = new HashMap();
+		synchronized (exportMap) {
+			exportMap.clear();
+			exportMap.put(COLUMN_ID, this.id);
+			exportMap.put(COLUMN_NAME, this.name);
+			exportMap.put(COLUMN_DESCRIPTION, this.description);
+			List physicalLinkIds = new ArrayList(getPhysicalLinks().size());
+			for (Iterator it = getPhysicalLinks().iterator(); it.hasNext();) {
+				PhysicalLink link = (PhysicalLink) it.next();
+				physicalLinkIds.add(link.getId());
+			}
+			exportMap.put(COLUMN_LINKS, physicalLinkIds);
+			return Collections.unmodifiableMap(exportMap);
+		}
+	}
+
+	public static Collector createInstance(Identifier creatorId, java.util.Map exportMap1) throws CreateObjectException {
+		Identifier id1 = (Identifier) exportMap1.get(COLUMN_ID);
+		String name1 = (String) exportMap1.get(COLUMN_NAME);
+		String description1 = (String) exportMap1.get(COLUMN_DESCRIPTION);
+		List physicalLinkIds1 = (List) exportMap1.get(COLUMN_LINKS);
+
+		if (id1 == null || creatorId == null || name1 == null || description1 == null || physicalLinkIds1 == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+
+		try {
+			Collector collector = new Collector(id1, creatorId, 0L, name1, description1);
+			for (Iterator it = physicalLinkIds1.iterator(); it.hasNext();) {
+				Identifier physicalLinkId = (Identifier) it.next();
+				PhysicalLink physicalLink = (PhysicalLink) MapStorableObjectPool.getStorableObject(physicalLinkId, false);
+				collector.addPhysicalLink(physicalLink);
+			}
+			return collector;
+		}
+		catch (ApplicationException e) {
+			throw new CreateObjectException("Collector.createInstance |  ", e);
+		}
 	}
 
 	public Collection getCharacteristics() {
 		return Collections.unmodifiableList(this.characteristics);
-	}	
+	}
 
-	public void addCharacteristic(Characteristic characteristic)
-	{
+	public void addCharacteristic(Characteristic characteristic) {
 		this.characteristics.add(characteristic);
 		this.changed = true;
 	}
 
-	public void removeCharacteristic(Characteristic characteristic)
-	{
+	public void removeCharacteristic(Characteristic characteristic) {
 		this.characteristics.remove(characteristic);
 		this.changed = true;
 	}
@@ -216,271 +418,20 @@ public class Collector
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
-	
-	public void setCharacteristics(final List characteristics) {
-		this.setCharacteristics0(characteristics);
-		this.changed = true;
-	}
-
-	public String getDescription() {
-		return this.description;
-	}
-	
-	protected void setDescription0(String description) {
-		this.description = description;
-	}
-	
-	public void setDescription(String description) {
-		this.setDescription0(description);
-		this.changed = true;
-	}
-	
-	public String getName() {
-		return this.name;
-	}
-	
-	protected void setName0(String name) {
-		this.name = name;
-	}
-	
-	public void setName(String name) {
-		this.setName0(name);
-		this.changed = true;
-	}
-	
-	public List getPhysicalLinks() {
-		return  Collections.unmodifiableList(this.physicalLinks);
-	}
-	
-	protected void setPhysicalLinks0(Collection physicalLinks) {
-		this.physicalLinks.clear();
-		if (physicalLinks != null)
-			this.physicalLinks.addAll(physicalLinks);
-	}
-	
-	public void setPhysicalLinks(List physicalLinks) {
-		this.setPhysicalLinks0(physicalLinks);
-		this.changed = true;		
-	}
-	
-	protected synchronized void setAttributes(Date created,
-											  Date modified,
-											  Identifier creatorId,
-											  Identifier modifierId,		
-											  long version,
-											  String name,
-											  String description) {
-			super.setAttributes(created,
-					modified,
-					creatorId,
-					modifierId,
-					version);
-			this.name = name;
-			this.description = description;					
-	}
-
-	/**
-	 * Убрать линию из состава коллектора. Внимание! концевые точки линии не обновляются.
-	 * @param link линия
-	 */
-	public void removePhysicalLink(PhysicalLink link)
-	{
-		this.physicalLinks.remove(link);
-		this.changed = true;
-	}
-
-	/**
-	 * Добавить линию в состав коллектора. Внимание! концевые точки линии не обновляются.
-	 * @param link линия
-	 */
-	public void addPhysicalLink(PhysicalLink link)
-	{
-		this.physicalLinks.add(link);
-		this.changed = true;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public DoublePoint getLocation()
-	{
-		int count = 0;
-		DoublePoint point = new DoublePoint(0.0, 0.0);
-
-		double x = 0.0;
-		double y = 0.0;
-		for(Iterator it = getPhysicalLinks().iterator(); it.hasNext();){
-			PhysicalLink mle = (PhysicalLink )it.next();
-			DoublePoint an = mle.getLocation();
-			x += an.getX();
-			y += an.getY();
-			count++;
-		}
-		if (count > 0){			
-			x /= count;
-			y /= count;
-			point.setLocation(x, y);
-		}
-		
-		return point;
-	}
-
-	/**
-	 * Возвращает суммарную топологическую длинну всех линий в составе 
-	 * коллектора в метрах.
-	 * @return суммарная длина
-	 */
-	public double getLengthLt()
-	{
-		double length = 0;
-		Iterator e = getPhysicalLinks().iterator();
-		while( e.hasNext())
-		{
-			PhysicalLink mle = (PhysicalLink )e.next();
-			length = length + mle.getLengthLt();
-		}
-		return length;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isRemoved()
-	{
-		return this.removed;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setRemoved(boolean removed)
-	{
-		this.removed = removed;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean isSelected()
-	{
-		return this.selected;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setSelected(boolean selected)
-	{
-		this.selected = selected;
-		getMap().setSelected(this, selected);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public Map getMap()
-	{
-		return this.map;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setMap(Map map)
-	{
-		this.map = map;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void setAlarmState(boolean alarmState)
-	{
-		this.alarmState = alarmState;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public boolean getAlarmState()
-	{
-		return this.alarmState;
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public MapElementState getState()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public void revert(MapElementState state)
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public java.util.Map getExportMap() {
-		if (exportMap == null)
-			exportMap = new HashMap();
-		synchronized(exportMap) {
-			exportMap.clear();
-			exportMap.put(COLUMN_ID, this.id);
-			exportMap.put(COLUMN_NAME, this.name);
-			exportMap.put(COLUMN_DESCRIPTION, this.description);
-			List physicalLinkIds = new ArrayList(getPhysicalLinks().size());
-			for(Iterator it = getPhysicalLinks().iterator(); it.hasNext();)	{
-				PhysicalLink link = (PhysicalLink )it.next();
-				physicalLinkIds.add(link.getId());
-			}
-			exportMap.put(COLUMN_LINKS, physicalLinkIds);
-			return Collections.unmodifiableMap(exportMap);
-		}		
-	}
-
-	public static Collector createInstance(Identifier creatorId,
-	                                       java.util.Map exportMap)
-	                           		throws CreateObjectException {
-		Identifier id = (Identifier) exportMap.get(COLUMN_ID);
-		String name = (String) exportMap.get(COLUMN_NAME);
-		String description = (String) exportMap.get(COLUMN_DESCRIPTION);
-		List physicalLinkIds = (List) exportMap.get(COLUMN_LINKS);
-		
-		if (id == null || creatorId == null || name == null || description == null || physicalLinkIds == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-
-		try {
-			Collector collector = new Collector(id, creatorId, 0L, name, description);
-			for (Iterator it = physicalLinkIds.iterator(); it.hasNext();) {
-				Identifier physicalLinkId = (Identifier) it.next();
-				PhysicalLink physicalLink = (PhysicalLink) MapStorableObjectPool.getStorableObject(physicalLinkId,
-					false);
-				collector.addPhysicalLink(physicalLink);
-			}
-			return collector;
-		} catch (ApplicationException e) {
-			throw new CreateObjectException("Collector.createInstance |  ", e);
-		}
-	}
 
 	/**
 	 * @param characteristics
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
 	 */
-	public void setCharacteristics(Collection characteristics) {
-		throw new UnsupportedOperationException();
+	public void setCharacteristics(final Collection characteristics) {
+		this.setCharacteristics0(characteristics);
+		this.changed = true;
 	}
 
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
 	 */
 	public CharacteristicSort getCharacteristicSort() {
-		throw new UnsupportedOperationException();
+		return CharacteristicSort.CHARACTERISTIC_SORT_COLLECTOR;
 	}
 }

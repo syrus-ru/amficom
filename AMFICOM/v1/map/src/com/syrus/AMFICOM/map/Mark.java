@@ -1,5 +1,5 @@
 /**
- * $Id: Mark.java,v 1.21 2005/03/09 14:49:53 bass Exp $
+ * $Id: Mark.java,v 1.22 2005/03/24 14:10:15 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,8 +44,8 @@ import java.util.ListIterator;
  * в связи с чем методы класса {@link AbstractNode}, работающие с линиями и 
  * фрагментами линий, переопределены и бросают 
  * <code>{@link UnsupportedOperationException}</code>.
- * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/03/09 14:49:53 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.22 $, $Date: 2005/03/24 14:10:15 $
  * @module map_v1
  */
 public class Mark extends AbstractNode {
@@ -54,11 +54,11 @@ public class Mark extends AbstractNode {
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
-	private static final long	serialVersionUID	= 3258126938496186164L;
+	private static final long serialVersionUID = 3258126938496186164L;
 
 	public static final String COLUMN_ID = "id";
 	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_DESCRIPTION = "description";	
+	public static final String COLUMN_DESCRIPTION = "description";
 	public static final String COLUMN_PHYSICAL_LINK_ID = "physical_link_id";
 	public static final String COLUMN_DISTANCE = "distance";
 	public static final String COLUMN_X = "x";
@@ -67,29 +67,25 @@ public class Mark extends AbstractNode {
 	public static final String COLUMN_STREET = "street";
 	public static final String COLUMN_BUILDING = "building";
 
-	/** 
+	/**
 	 * набор параметров для экспорта. инициализируется только в случае
 	 * необходимости экспорта
 	 */
 	private static java.util.Map exportMap = null;
 
-	private PhysicalLink			physicalLink;
+	private PhysicalLink physicalLink;
 
-	private double					distance;
+	private double distance;
 
-	private String					city;
-	private String					street;
-	private String					building;
+	private String city;
+	private String street;
+	private String building;
 
-	private StorableObjectDatabase	markDatabase;
-
+	private StorableObjectDatabase markDatabase;
 
 	protected transient double sizeInDoubleLt;
-
 	protected transient NodeLink nodeLink;
-
 	protected transient AbstractNode startNode;
-
 
 	public Mark(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -97,7 +93,8 @@ public class Mark extends AbstractNode {
 		this.markDatabase = MapDatabaseContext.getMarkDatabase();
 		try {
 			this.markDatabase.retrieve(this);
-		} catch (IllegalDataException e) {
+		}
+		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 	}
@@ -116,40 +113,40 @@ public class Mark extends AbstractNode {
 		this.building = mt.building;
 
 		try {
-			this.physicalLink = (PhysicalLink) MapStorableObjectPool.getStorableObject(
-				new Identifier(mt.physicalLinkId), true);
+			this.physicalLink = (PhysicalLink) MapStorableObjectPool.getStorableObject(new Identifier(mt.physicalLinkId), true);
 
 			super.characteristics = new ArrayList(mt.characteristicIds.length);
 			ArrayList characteristicIds = new ArrayList(mt.characteristicIds.length);
 			for (int i = 0; i < mt.characteristicIds.length; i++)
 				characteristicIds.add(new Identifier(mt.characteristicIds[i]));
 			super.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
-		} catch (ApplicationException ae) {
+		}
+		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
 
-	protected Mark(final Identifier id, 
-				   final Identifier creatorId, 
-				   final long version,
-				   final String name, 
-				   final String description,
-				   final double longitude, 
-				   final double latitude, 
-				   final PhysicalLink physicalLink,
-				   final double distance,
-				   final String city, 
-				   final String street, 
-				   final String building) {
+	protected Mark(final Identifier id,
+			final Identifier creatorId,
+			final long version,
+			final String name,
+			final String description,
+			final double longitude,
+			final double latitude,
+			final PhysicalLink physicalLink,
+			final double distance,
+			final String city,
+			final String street,
+			final String building) {
 		super(id,
-			new Date(System.currentTimeMillis()),
-			new Date(System.currentTimeMillis()),
-			creatorId,
-			creatorId,
-			version,
-			name,
-			description,
-			new DoublePoint(longitude, latitude));
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version,
+				name,
+				description,
+				new DoublePoint(longitude, latitude));
 		this.physicalLink = physicalLink;
 		this.distance = distance;
 		this.city = city;
@@ -161,57 +158,48 @@ public class Mark extends AbstractNode {
 		this.markDatabase = MapDatabaseContext.getMarkDatabase();
 	}
 
-	
-	public void insert() throws CreateObjectException {
-		this.markDatabase = MapDatabaseContext.getMarkDatabase();
-		try {
-			if (this.markDatabase != null)
-				this.markDatabase.insert(this);
-		} catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
-		}
-	}
-
-	public static Mark createInstance(
-			final Identifier creatorId,
+	public static Mark createInstance(final Identifier creatorId,
 			final PhysicalLink link,
 			final double len)
-		throws CreateObjectException 
-	{
-		return Mark.createInstance(
-			creatorId,
-			"",
-			"",
-			0.0D,
-			0.0D,
-			link,
-			len,
-			"",
-			"",
-			"");
+			throws CreateObjectException {
+		return Mark.createInstance(creatorId,
+				"",
+				"",
+				0.0D,
+				0.0D,
+				link,
+				len,
+				"",
+				"",
+				"");
 	}
 
-	public static Mark createInstance(	final Identifier creatorId,
-										final String name,
-										final String description,
-										final double longitude,
-										final double latitude,
-										final PhysicalLink physicalLink,
-										final double distance,
-										final String city,
-										final String street,
-										final String building) throws CreateObjectException {
-		if (creatorId == null || name == null || description == null || physicalLink == null 
-				|| city == null || street == null || building == null)
+	public static Mark createInstance(final Identifier creatorId,
+			final String name,
+			final String description,
+			final double longitude,
+			final double latitude,
+			final PhysicalLink physicalLink,
+			final double distance,
+			final String city,
+			final String street,
+			final String building) throws CreateObjectException {
+		if (creatorId == null
+				|| name == null
+				|| description == null
+				|| physicalLink == null
+				|| city == null
+				|| street == null
+				|| building == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			Mark mark = new Mark(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MARK_ENTITY_CODE), 
+			Mark mark = new Mark(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MARK_ENTITY_CODE),
 					creatorId,
 					0L,
 					name,
 					description,
-					longitude, 
+					longitude,
 					latitude,
 					physicalLink,
 					distance,
@@ -220,7 +208,8 @@ public class Mark extends AbstractNode {
 					building);
 			mark.changed = true;
 			return mark;
-		} catch (IllegalObjectEntityException e) {
+		}
+		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Mark.createInstance | cannot generate identifier ", e);
 		}
 	}
@@ -234,87 +223,86 @@ public class Mark extends AbstractNode {
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
 		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
 			charIds[i++] = (Identifier_Transferable) ((Characteristic) iterator.next()).getId().getTransferable();
-		
+
 		return new Mark_Transferable(super.getHeaderTransferable(),
-						this.name,
-						this.description,
-						this.location.getX(),
-						this.location.getY(),
-						(Identifier_Transferable)this.physicalLink.getId().getTransferable(),
-						this.distance,
-						this.city,
-						this.street,
-						this.building,
-						charIds);
+				this.name,
+				this.description,
+				this.location.getX(),
+				this.location.getY(),
+				(Identifier_Transferable) this.physicalLink.getId().getTransferable(),
+				this.distance,
+				this.city,
+				this.street,
+				this.building,
+				charIds);
 	}
-	
+
 	public String getBuilding() {
 		return this.building;
 	}
-	
+
 	protected void setBuilding0(String building) {
 		this.building = building;
 	}
-	
+
 	public void setBuilding(String building) {
 		this.setBuilding0(building);
 		this.changed = true;
 	}
-	
+
 	public String getCity() {
 		return this.city;
 	}
-	
+
 	protected void setCity0(String city) {
 		this.city = city;
 	}
-	
+
 	public void setCity(String city) {
 		this.setCity0(city);
 		this.changed = true;
 	}
-	
+
 	public double getDistance() {
 		return this.distance;
 	}
-	
+
 	protected void setDistance0(double distance) {
 		this.distance = distance;
 	}
-	
+
 	public void setDistance(double distance) {
 		this.setDistance0(distance);
 		this.changed = true;
 	}
-	
+
 	public PhysicalLink getPhysicalLink() {
 		return this.physicalLink;
 	}
-	
+
 	protected void setPhysicalLink0(PhysicalLink physicalLink) {
 		this.physicalLink = physicalLink;
 	}
-	
+
 	public void setPhysicalLink(PhysicalLink physicalLink) {
 		this.setPhysicalLink0(physicalLink);
 		this.changed = true;
 	}
-	
+
 	public String getStreet() {
 		return this.street;
-	}	
-	
+	}
+
 	protected void setStreet0(String street) {
 		this.street = street;
 	}
-	
+
 	public void setStreet(String street) {
 		this.setStreet0(street);
 		this.changed = true;
 	}
-	
-	protected synchronized void setAttributes(
-			Date created,
+
+	protected synchronized void setAttributes(Date created,
 			Date modified,
 			Identifier creatorId,
 			Identifier modifierId,
@@ -340,75 +328,75 @@ public class Mark extends AbstractNode {
 		this.distance = distance;
 		this.city = city;
 		this.street = street;
-		this.building = building;					
+		this.building = building;
 	}
 
 	/**
 	 * Установить фрагмент, на который помещается метка.
-	 * @param nodeLink фрагмент линии
+	 * 
+	 * @param nodeLink
+	 *          фрагмент линии
 	 */
-	public void setNodeLink(NodeLink nodeLink)
-	{
+	public void setNodeLink(NodeLink nodeLink) {
 		this.nodeLink = nodeLink;
 	}
 
 	/**
 	 * Установить фрагмент, на котором находится метка.
+	 * 
 	 * @return фрагмент линии
 	 */
-	public NodeLink getNodeLink()
-	{
+	public NodeLink getNodeLink() {
 		return this.nodeLink;
 	}
 
 	/**
 	 * Установить начальный узел фрагмента, на котором находится метка.
-	 * @param startNode узел
+	 * 
+	 * @param startNode
+	 *          узел
 	 */
-	public void setStartNode(AbstractNode startNode)
-	{
+	public void setStartNode(AbstractNode startNode) {
 		this.startNode = startNode;
 	}
 
 	/**
 	 * Получить начальный узел фрагмента, на котором находится метка.
+	 * 
 	 * @return узел
 	 */
-	public AbstractNode getStartNode()
-	{
+	public AbstractNode getStartNode() {
 		return this.startNode;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public DoublePoint getLocation()
-	{
-		return (DoublePoint)this.location.clone();
+	public DoublePoint getLocation() {
+		return (DoublePoint) this.location.clone();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setLocation(DoublePoint location)
-	{
+	public void setLocation(DoublePoint location) {
 		super.setLocation(location);
 		setDistance(this.getFromStartLengthLt());
 	}
 
 	/**
 	 * Получить топологическую дистанцию от начального узла линии до метки.
+	 * 
 	 * @return дистанция
 	 */
-	public double getFromStartLengthLt()
-	{
+	public double getFromStartLengthLt() {
 		getPhysicalLink().sortNodeLinks();
 
 		double pathLength = 0;
-		
-		for(Iterator it = getPhysicalLink().getNodeLinks().iterator(); it.hasNext();){
-			NodeLink nl = (NodeLink )it.next();
-			if(nl.equals(this.nodeLink)){
+
+		for (Iterator it = getPhysicalLink().getNodeLinks().iterator(); it.hasNext();) {
+			NodeLink nl = (NodeLink) it.next();
+			if (nl.equals(this.nodeLink)) {
 				pathLength += this.getSizeInDoubleLt();
 				break;
 			}
@@ -419,21 +407,18 @@ public class Mark extends AbstractNode {
 
 	/**
 	 * Получить топологическую дистанцию от концевого узла линии до метки.
+	 * 
 	 * @return дистанция
 	 */
-	public double getFromEndLengthLt()
-	{
+	public double getFromEndLengthLt() {
 		getPhysicalLink().sortNodeLinks();
 
 		double pathLength = 0;
-		
-		ListIterator it = getPhysicalLink().getNodeLinks().listIterator(
-				getPhysicalLink().getNodeLinks().size());
-		while(it.hasPrevious())
-		{
-			NodeLink nl = (NodeLink )it.previous();
-			if(nl == this.nodeLink)
-			{
+
+		ListIterator it = getPhysicalLink().getNodeLinks().listIterator(getPhysicalLink().getNodeLinks().size());
+		while (it.hasPrevious()) {
+			NodeLink nl = (NodeLink) it.previous();
+			if (nl == this.nodeLink) {
 				pathLength += nl.getLengthLt() - this.getSizeInDoubleLt();
 				break;
 			}
@@ -446,73 +431,68 @@ public class Mark extends AbstractNode {
 	 * Установить листанцию от начального узла фрагмента линии, на которой
 	 * находится метка, до метки. Вычисление осуществляется в том месте, где
 	 * осуществляется управление передвижением метки.
-	 * @param sizeInDoubleLt дистанция
+	 * 
+	 * @param sizeInDoubleLt
+	 *          дистанция
 	 */
-	public void setSizeInDoubleLt(double sizeInDoubleLt)
-	{
+	public void setSizeInDoubleLt(double sizeInDoubleLt) {
 		this.sizeInDoubleLt = sizeInDoubleLt;
 	}
 
 	/**
-	 * Получить листанцию от начального узла фрагмента линии, на которой
-	 * находится метка, до метки. 
+	 * Получить листанцию от начального узла фрагмента линии, на которой находится
+	 * метка, до метки.
+	 * 
 	 * @return дистанция
 	 */
-	public double getSizeInDoubleLt()
-	{
+	public double getSizeInDoubleLt() {
 		return this.sizeInDoubleLt;
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * <br>Suppress since mark cannot be an end node
+	 * {@inheritDoc}<br>
+	 * Suppress since mark cannot be an end node
 	 */
-	public List getNodeLinks()
-	{
-		throw new UnsupportedOperationException();
+	public List getNodeLinks() {
+		throw new UnsupportedOperationException("Not implemented");
+	}
+
+	/**
+	 * {@inheritDoc}<br>
+	 * Suppress since mark cannot be an end node
+	 */
+	public NodeLink getOtherNodeLink(NodeLink nl) {
+		throw new UnsupportedOperationException("Not implemented; NodeLink: " + nl);
+	}
+
+	/**
+	 * {@inheritDoc}<br>
+	 * Suppress since mark cannot be an end node
+	 */
+	public List getPhysicalLinks() {
+		throw new UnsupportedOperationException("Not implemented");
+	}
+
+	/**
+	 * {@inheritDoc}<br>
+	 * Suppress since mark cannot be an end node
+	 */
+	public List getOppositeNodes() {
+		throw new UnsupportedOperationException("Not implemented");
 	}
 
 	/**
 	 * {@inheritDoc}
-	 * <br>Suppress since mark cannot be an end node
 	 */
-	public NodeLink getOtherNodeLink(NodeLink nl)
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <br>Suppress since mark cannot be an end node
-	 */
-	public List getPhysicalLinks()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * <br>Suppress since mark cannot be an end node
-	 */
-	public List getOppositeNodes()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public MapElementState getState()
-	{
+	public MapElementState getState() {
 		return new NodeState(this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void revert(MapElementState state)
-	{
-		NodeState mnes = (NodeState )state;
+	public void revert(MapElementState state) {
+		NodeState mnes = (NodeState) state;
 		setName(mnes.name);
 		setDescription(mnes.description);
 		setImageId(mnes.imageId);
@@ -523,9 +503,9 @@ public class Mark extends AbstractNode {
 	 * {@inheritDoc}
 	 */
 	public java.util.Map getExportMap() {
-		if(exportMap == null)
-			exportMap = new HashMap();		
-		synchronized(exportMap) {
+		if (exportMap == null)
+			exportMap = new HashMap();
+		synchronized (exportMap) {
 			exportMap.clear();
 			exportMap.put(COLUMN_ID, this.id);
 			exportMap.put(COLUMN_NAME, this.name);
@@ -538,69 +518,75 @@ public class Mark extends AbstractNode {
 			exportMap.put(COLUMN_STREET, this.street);
 			exportMap.put(COLUMN_BUILDING, this.building);
 			return Collections.unmodifiableMap(exportMap);
-		}		
+		}
 	}
-	
-	public static Mark createInstance(Identifier creatorId,
-	                      			java.util.Map exportMap) throws CreateObjectException {
-			Identifier id = (Identifier) exportMap.get(COLUMN_ID);
-			String name = (String) exportMap.get(COLUMN_NAME);
-			String description = (String) exportMap.get(COLUMN_DESCRIPTION);
-      		Identifier physicalLinkId = (Identifier) exportMap.get(COLUMN_PHYSICAL_LINK_ID);
-      		double distance = Double.parseDouble((String) exportMap.get(COLUMN_DISTANCE));
-      		String city = (String) exportMap.get(COLUMN_CITY);
-      		String street = (String) exportMap.get(COLUMN_STREET);
-      		String building = (String) exportMap.get(COLUMN_BUILDING);
-      		double x = Double.parseDouble((String) exportMap.get(COLUMN_X));
-      		double y = Double.parseDouble((String) exportMap.get(COLUMN_Y));
 
-      		if (id == null || creatorId == null || name == null || description == null || physicalLinkId == null 
-      				|| city == null || street == null || building == null)
-      			throw new IllegalArgumentException("Argument is 'null'");
+	public static Mark createInstance(Identifier creatorId, java.util.Map exportMap1) throws CreateObjectException {
+		Identifier id1 = (Identifier) exportMap1.get(COLUMN_ID);
+		String name1 = (String) exportMap1.get(COLUMN_NAME);
+		String description1 = (String) exportMap1.get(COLUMN_DESCRIPTION);
+		Identifier physicalLinkId1 = (Identifier) exportMap1.get(COLUMN_PHYSICAL_LINK_ID);
+		double distance1 = Double.parseDouble((String) exportMap1.get(COLUMN_DISTANCE));
+		String city1 = (String) exportMap1.get(COLUMN_CITY);
+		String street1 = (String) exportMap1.get(COLUMN_STREET);
+		String building1 = (String) exportMap1.get(COLUMN_BUILDING);
+		double x1 = Double.parseDouble((String) exportMap1.get(COLUMN_X));
+		double y1 = Double.parseDouble((String) exportMap1.get(COLUMN_Y));
 
-      		try {
-      			PhysicalLink physicalLink = (PhysicalLink ) 
-      				MapStorableObjectPool.getStorableObject(
-      					physicalLinkId, false);
-      			return new Mark(
-      					id, 
-      					creatorId,
-      					0L,
-      					name,
-      					description,
-      					x, 
-      					y,
-      					physicalLink,
-      					distance,
-      					city,
-      					street,
-      					building);
-      		} catch (ApplicationException e) {
-      			throw new CreateObjectException("Mark.createInstance |  ", e);
-      		}
-      	}
+		if (id1 == null
+				|| creatorId == null
+				|| name1 == null
+				|| description1 == null
+				|| physicalLinkId1 == null
+				|| city1 == null
+				|| street1 == null
+				|| building1 == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+
+		try {
+			PhysicalLink physicalLink1 = (PhysicalLink) MapStorableObjectPool.getStorableObject(physicalLinkId1, false);
+			return new Mark(id1,
+					creatorId,
+					0L,
+					name1,
+					description1,
+					x1,
+					y1,
+					physicalLink1,
+					distance1,
+					city1,
+					street1,
+					building1);
+		}
+		catch (ApplicationException e) {
+			throw new CreateObjectException("Mark.createInstance |  ", e);
+		}
+	}
 
 	/**
 	 * @param characteristics
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
 	 */
-	public void setCharacteristics(Collection characteristics) {
-		throw new UnsupportedOperationException();
+	public void setCharacteristics(final Collection characteristics) {
+		this.setCharacteristics0(characteristics);
+		this.changed = true;
 	}
 
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
 	 */
 	public CharacteristicSort getCharacteristicSort() {
-		throw new UnsupportedOperationException();
+		return CharacteristicSort.CHARACTERISTIC_SORT_MARK;
 	}
 
 	/**
 	 * @param characteristics
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
 	 */
-	public void setCharacteristics0(Collection characteristics) {
-		throw new UnsupportedOperationException();
+	public void setCharacteristics0(final Collection characteristics) {
+		this.characteristics.clear();
+		if (characteristics != null)
+			this.characteristics.addAll(characteristics);
 	}
 
 }

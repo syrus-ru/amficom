@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNode.java,v 1.24 2005/03/09 14:49:53 bass Exp $
+ * $Id: SiteNode.java,v 1.25 2005/03/24 14:10:15 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -56,8 +56,8 @@ import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
  * ƒополнительно описываетс€ пол€ми
  * {@link #city}, {@link #street}, {@link #building} дл€ поиска по 
  * географическим параметрам. 
- * @author $Author: bass $
- * @version $Revision: 1.24 $, $Date: 2005/03/09 14:49:53 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/03/24 14:10:15 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject {
@@ -65,33 +65,33 @@ public class SiteNode extends AbstractNode implements TypedObject {
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
-	private static final long	serialVersionUID	= 3257567325699190835L;
+	private static final long serialVersionUID = 3257567325699190835L;
 
 	public static final String COLUMN_ID = "id";
 	public static final String COLUMN_NAME = "name";
 	public static final String COLUMN_DESCRIPTION = "description";
 	public static final String COLUMN_X = "x";
 	public static final String COLUMN_Y = "y";
-	public static final String COLUMN_PROTO_ID = "proto_id";	
-	public static final String COLUMN_CITY = "city";	
-	public static final String COLUMN_STREET = "street";	
-	public static final String COLUMN_BUILDING = "building";	
+	public static final String COLUMN_PROTO_ID = "proto_id";
+	public static final String COLUMN_CITY = "city";
+	public static final String COLUMN_STREET = "street";
+	public static final String COLUMN_BUILDING = "building";
 	public static final String COLUMN_COEF = "coef";
 	public static final String COLUMN_IMAGE = "image_id";
 
-	/** 
+	/**
 	 * набор параметров дл€ экспорта. инициализируетс€ только в случае
 	 * необходимости экспорта
 	 */
 	private static java.util.Map exportMap = null;
 
-	private SiteNodeType			type;
+	private SiteNodeType type;
 
-	private String					city;
-	private String					street;
-	private String					building;
+	private String city;
+	private String street;
+	private String building;
 
-	private StorableObjectDatabase	siteNodeDatabase;
+	private StorableObjectDatabase siteNodeDatabase;
 
 	public SiteNode(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -99,7 +99,8 @@ public class SiteNode extends AbstractNode implements TypedObject {
 		this.siteNodeDatabase = MapDatabaseContext.getSiteNodeDatabase();
 		try {
 			this.siteNodeDatabase.retrieve(this);
-		} catch (IllegalDataException e) {
+		}
+		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 	}
@@ -109,21 +110,22 @@ public class SiteNode extends AbstractNode implements TypedObject {
 		super.name = snt.name;
 		super.description = snt.description;
 		super.location = new DoublePoint(snt.longitude, snt.latitude);
-		this.imageId = new Identifier(snt.imageId);		
+		this.imageId = new Identifier(snt.imageId);
 		this.city = snt.city;
 		this.street = snt.street;
 		this.building = snt.building;
 
 		try {
 			this.type = (SiteNodeType) MapStorableObjectPool.getStorableObject(new Identifier(snt.siteNodeTypeId), true);
-			
+
 			this.characteristics = new ArrayList(snt.characteristicIds.length);
 			ArrayList characteristicIds = new ArrayList(snt.characteristicIds.length);
 			for (int i = 0; i < snt.characteristicIds.length; i++)
 				characteristicIds.add(new Identifier(snt.characteristicIds[i]));
 
 			this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
-		} catch (ApplicationException ae) {
+		}
+		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -141,14 +143,14 @@ public class SiteNode extends AbstractNode implements TypedObject {
 			final String street,
 			final String building) {
 		super(id,
-			new Date(System.currentTimeMillis()),
-			new Date(System.currentTimeMillis()),
-			creatorId,
-			creatorId,
-			version,
-			name,
-			description,
-			new DoublePoint(longitude, latitude));
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version,
+				name,
+				description,
+				new DoublePoint(longitude, latitude));
 		this.imageId = imageId;
 		this.type = type;
 		this.city = city;
@@ -162,67 +164,57 @@ public class SiteNode extends AbstractNode implements TypedObject {
 		this.selected = false;
 	}
 
-	public void insert() throws CreateObjectException {
-		this.siteNodeDatabase = MapDatabaseContext.getSiteNodeDatabase();
-		try {
-			if (this.siteNodeDatabase != null)
-				this.siteNodeDatabase.insert(this);
-		} catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
-		}
-	}
-
-	public static SiteNode createInstance(
-			final Identifier creatorId,
+	public static SiteNode createInstance(final Identifier creatorId,
 			String name,
 			String description,
 			SiteNodeType siteNodeType,
 			DoublePoint location,
 			String city,
 			String street,
-			String building)
-		throws CreateObjectException {
+			String building) throws CreateObjectException {
 
-		if (creatorId == null || name == null || description == null ||						 
-				siteNodeType == null || location == null || city == null || street == null || building == null)
+		if (creatorId == null
+				|| name == null
+				|| description == null
+				|| siteNodeType == null
+				|| location == null
+				|| city == null
+				|| street == null
+				|| building == null)
 			throw new IllegalArgumentException("Argument is 'null'");
-		
+
 		try {
-			SiteNode siteNode = new SiteNode(
-				IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE),
-				creatorId,
-				0L,
-				siteNodeType.getImageId(),
-				name,
-				description,
-				siteNodeType,
-				location.getX(),
-				location.getY(),
-				city,
-				street,
-				building);
+			SiteNode siteNode = new SiteNode(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE),
+					creatorId,
+					0L,
+					siteNodeType.getImageId(),
+					name,
+					description,
+					siteNodeType,
+					location.getX(),
+					location.getY(),
+					city,
+					street,
+					building);
 			siteNode.changed = true;
 			return siteNode;
-		} catch (IllegalObjectEntityException e) {
+		}
+		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("SiteNode.createInstance | cannot generate identifier ", e);
 		}
 	}
 
-	public static SiteNode createInstance(
-			final Identifier creatorId,
-			final DoublePoint location,
-			final SiteNodeType type)
-		throws CreateObjectException {
+	public static SiteNode createInstance(final Identifier creatorId, final DoublePoint location, final SiteNodeType type)
+			throws CreateObjectException {
 
-		return SiteNode.createInstance(
-			creatorId,
-			type.getName(),
-			"",
-			type,
-			location,
-			"",
-			"",
-			"");		
+		return SiteNode.createInstance(creatorId,
+				type.getName(),
+				"",
+				type,
+				location,
+				"",
+				"",
+				"");
 	}
 
 	public List getDependencies() {
@@ -238,17 +230,17 @@ public class SiteNode extends AbstractNode implements TypedObject {
 		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
 			charIds[i++] = (Identifier_Transferable) ((Characteristic) iterator.next()).getId().getTransferable();
 
-		return new SiteNode_Transferable(super.getHeaderTransferable(), 
-							this.name,
-							this.description,
-							this.location.getX(),
-							this.location.getY(), 
-							(Identifier_Transferable) this.imageId.getTransferable(),
-							(Identifier_Transferable) this.type.getId().getTransferable(),
-							this.city,
-							this.street, 
-							this.building, 
-							charIds);
+		return new SiteNode_Transferable(super.getHeaderTransferable(),
+				this.name,
+				this.description,
+				this.location.getX(),
+				this.location.getY(),
+				(Identifier_Transferable) this.imageId.getTransferable(),
+				(Identifier_Transferable) this.type.getId().getTransferable(),
+				this.city,
+				this.street,
+				this.building,
+				charIds);
 	}
 
 	public StorableObjectType getType() {
@@ -256,7 +248,7 @@ public class SiteNode extends AbstractNode implements TypedObject {
 	}
 
 	public void setType(StorableObjectType type) {
-		this.type = (SiteNodeType )type;
+		this.type = (SiteNodeType) type;
 		setImageId(this.type.getImageId());
 		this.changed = true;
 	}
@@ -264,85 +256,81 @@ public class SiteNode extends AbstractNode implements TypedObject {
 	public String getBuilding() {
 		return this.building;
 	}
-	
+
 	public void setBuilding(String building) {
 		this.building = building;
 		this.changed = true;
 	}
-	
+
 	public String getCity() {
 		return this.city;
 	}
-	
+
 	public void setCity(String city) {
 		this.city = city;
 		this.changed = true;
 	}
-	
+
 	public String getStreet() {
 		return this.street;
 	}
-	
+
 	public void setStreet(String street) {
 		this.street = street;
 		this.changed = true;
 	}
-	
+
 	protected synchronized void setAttributes(Date created,
-											  Date modified,
-											  Identifier creatorId,
-											  Identifier modifierId,	
-											  long version,
-											  String name,
-											  String description,
-											  double longitude,
-											  double latitude,
-											  Identifier imageId,
-											  SiteNodeType type,
-											  String city,
-											  String street,
-											  String building) {
-			super.setAttributes(created,
-					modified,
-					creatorId,
-					modifierId,
-					version);
-			this.name = name;
-			this.description = description;
-			this.location.setLocation(longitude, latitude);
-			this.imageId = imageId;
-			this.type = type;
-			this.city = city;
-			this.street = street;
-			this.building = building;					
+			Date modified,
+			Identifier creatorId,
+			Identifier modifierId,
+			long version,
+			String name,
+			String description,
+			double longitude,
+			double latitude,
+			Identifier imageId,
+			SiteNodeType type,
+			String city,
+			String street,
+			String building) {
+		super.setAttributes(created,
+				modified,
+				creatorId,
+				modifierId,
+				version);
+		this.name = name;
+		this.description = description;
+		this.location.setLocation(longitude, latitude);
+		this.imageId = imageId;
+		this.type = type;
+		this.city = city;
+		this.street = street;
+		this.building = building;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public MapElementState getState()
-	{
+	public MapElementState getState() {
 		return new SiteNodeState(this);
 	}
 
 	/**
 	 * восстановить состо€ние
 	 */
-	public void revert(MapElementState state)
-	{
-		SiteNodeState msnes = (SiteNodeState)state;
-		
+	public void revert(MapElementState state) {
+		SiteNodeState msnes = (SiteNodeState) state;
+
 		setName(msnes.name);
 		setDescription(msnes.description);
 		setImageId(msnes.imageId);
 		setLocation(msnes.location);
-		
-		try
-		{
-			setType((SiteNodeType )(MapStorableObjectPool.getStorableObject(msnes.mapProtoId, true)));
+
+		try {
+			setType((SiteNodeType) (MapStorableObjectPool.getStorableObject(msnes.mapProtoId, true)));
 		}
-		catch (ApplicationException e)
-		{
+		catch (ApplicationException e) {
 			e.printStackTrace();
 		}
 	}
@@ -351,12 +339,11 @@ public class SiteNode extends AbstractNode implements TypedObject {
 	 * {@inheritDoc}
 	 */
 	public java.util.Map getExportMap() {
-		if(exportMap == null)
-			exportMap = new HashMap();		
-		synchronized(exportMap) {
+		if (exportMap == null)
+			exportMap = new HashMap();
+		synchronized (exportMap) {
 			exportMap.clear();
-			try
-			{
+			try {
 				exportMap.put(COLUMN_ID, this.id);
 				exportMap.put(COLUMN_NAME, this.name);
 				exportMap.put(COLUMN_DESCRIPTION, this.description);
@@ -366,120 +353,109 @@ public class SiteNode extends AbstractNode implements TypedObject {
 				exportMap.put(COLUMN_CITY, this.city);
 				exportMap.put(COLUMN_STREET, this.street);
 				exportMap.put(COLUMN_BUILDING, this.building);
-				AbstractBitmapImageResource imageResource = (AbstractBitmapImageResource )
-					ResourceStorableObjectPool.getStorableObject(this.imageId, false);
+				AbstractBitmapImageResource imageResource = (AbstractBitmapImageResource) ResourceStorableObjectPool.getStorableObject(this.imageId,
+						false);
 				exportMap.put(COLUMN_IMAGE, imageResource.getCodename());
 			}
-			catch (ApplicationException e)
-			{
+			catch (ApplicationException e) {
 				return null;
 			}
 			return Collections.unmodifiableMap(exportMap);
-		}		
+		}
 	}
 
-	public static SiteNode createInstance(Identifier creatorId,
-	                                      java.util.Map exportMap) throws CreateObjectException {
-			Identifier id = (Identifier) exportMap.get(COLUMN_ID);
-			String name = (String) exportMap.get(COLUMN_NAME);
-			String description = (String) exportMap.get(COLUMN_DESCRIPTION);
-	  		String typeCodeName = (String) exportMap.get(COLUMN_PROTO_ID);
-      		String city = (String) exportMap.get(COLUMN_CITY);
-      		String street = (String) exportMap.get(COLUMN_STREET);
-      		String building = (String) exportMap.get(COLUMN_BUILDING);
-      		double x = Double.parseDouble((String) exportMap.get(COLUMN_X));
-      		double y = Double.parseDouble((String) exportMap.get(COLUMN_Y));
-      		String imageCodeName = (String) exportMap.get(COLUMN_IMAGE);
+	public static SiteNode createInstance(Identifier creatorId, java.util.Map exportMap1) throws CreateObjectException {
+		Identifier id1 = (Identifier) exportMap1.get(COLUMN_ID);
+		String name1 = (String) exportMap1.get(COLUMN_NAME);
+		String description1 = (String) exportMap1.get(COLUMN_DESCRIPTION);
+		String typeCodeName1 = (String) exportMap1.get(COLUMN_PROTO_ID);
+		String city1 = (String) exportMap1.get(COLUMN_CITY);
+		String street1 = (String) exportMap1.get(COLUMN_STREET);
+		String building1 = (String) exportMap1.get(COLUMN_BUILDING);
+		double x1 = Double.parseDouble((String) exportMap1.get(COLUMN_X));
+		double y1 = Double.parseDouble((String) exportMap1.get(COLUMN_Y));
+		String imageCodeName1 = (String) exportMap1.get(COLUMN_IMAGE);
 
-      		if (id == null || creatorId == null || name == null || description == null
-      				|| city == null || street == null || building == null)
-      			throw new IllegalArgumentException("Argument is 'null'");
+		if (id1 == null
+				|| creatorId == null
+				|| name1 == null
+				|| description1 == null
+				|| city1 == null
+				|| street1 == null
+				|| building1 == null)
+			throw new IllegalArgumentException("Argument is 'null'");
 
-      		try {
-				SiteNodeType siteNodeType;
-	
-				TypicalCondition condition = new TypicalCondition(
-						typeCodeName,
-						OperationSort.OPERATION_EQUALS,
-						ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE,
-						StorableObjectWrapper.COLUMN_CODENAME);
-				
-				Collection collection = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
-				if(collection == null || collection.size() == 0)
-				{
-					typeCodeName = SiteNodeType.BUILDING;
-	
-					condition.setValue(typeCodeName);
-					
-					collection = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
-					if(collection == null || collection.size() == 0)
-					{
-						throw new CreateObjectException("SiteNodeType \'" + SiteNodeType.BUILDING + "\' not found");
-					}
+		try {
+			SiteNodeType siteNodeType;
+
+			TypicalCondition condition = new TypicalCondition(typeCodeName1,
+					OperationSort.OPERATION_EQUALS,
+					ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE,
+					StorableObjectWrapper.COLUMN_CODENAME);
+
+			Collection collection = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			if (collection == null || collection.size() == 0) {
+				typeCodeName1 = SiteNodeType.BUILDING;
+
+				condition.setValue(typeCodeName1);
+
+				collection = MapStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				if (collection == null || collection.size() == 0) {
+					throw new CreateObjectException("SiteNodeType \'" + SiteNodeType.BUILDING + "\' not found");
 				}
-				siteNodeType = (SiteNodeType) collection.iterator().next();
+			}
+			siteNodeType = (SiteNodeType) collection.iterator().next();
 
-				Identifier imageId;
-	
-				condition = new TypicalCondition(
-					imageCodeName,
+			Identifier imageId1;
+
+			condition = new TypicalCondition(imageCodeName1,
 					OperationSort.OPERATION_EQUALS,
 					ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME);
-				
-				collection = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
-				if(collection == null || collection.size() == 0)
-				{
-					imageCodeName = SiteNodeType.BUILDING_IMAGE;
-	
-					condition.setValue(imageCodeName);
-					
-					collection = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
-					if(collection == null || collection.size() == 0)
-					{
-						throw new CreateObjectException("ImageResource \'" + SiteNodeType.BUILDING_IMAGE + "\' not found");
-					}
-				}
-				imageId = ((AbstractImageResource ) collection.iterator().next()).getId();
 
-      			return new SiteNode(
-      					id,
-      					creatorId,
-      					0L,
-      					imageId,
-      					name,
-      					description,
-      					siteNodeType,
-      					x, 
-      					y,
-      					city,
-      					street,
-      					building);
-      		} catch (ApplicationException e) {
-      			throw new CreateObjectException("SiteNode.createInstance |  ", e);
-      		}
-      	}
+			collection = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			if (collection == null || collection.size() == 0) {
+				imageCodeName1 = SiteNodeType.BUILDING_IMAGE;
+
+				condition.setValue(imageCodeName1);
+
+				collection = ResourceStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				if (collection == null || collection.size() == 0) {
+					throw new CreateObjectException("ImageResource \'" + SiteNodeType.BUILDING_IMAGE + "\' not found");
+				}
+			}
+			imageId1 = ((AbstractImageResource) collection.iterator().next()).getId();
+
+			return new SiteNode(id1, creatorId, 0L, imageId1, name1, description1, siteNodeType, x1, y1, city1, street1, building1);
+		}
+		catch (ApplicationException e) {
+			throw new CreateObjectException("SiteNode.createInstance |  ", e);
+		}
+	}
 
 	/**
 	 * @param characteristics
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
 	 */
-	public void setCharacteristics(Collection characteristics) {
-		throw new UnsupportedOperationException();
+	public void setCharacteristics(final Collection characteristics) {
+		this.setCharacteristics0(characteristics);
+		this.changed = true;
 	}
 
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
 	 */
 	public CharacteristicSort getCharacteristicSort() {
-		throw new UnsupportedOperationException();
+		return CharacteristicSort.CHARACTERISTIC_SORT_SITE_NODE;
 	}
 
 	/**
 	 * @param characteristics
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
 	 */
-	public void setCharacteristics0(Collection characteristics) {
-		throw new UnsupportedOperationException();
+	public void setCharacteristics0(final Collection characteristics) {
+		this.characteristics.clear();
+		if (characteristics != null)
+			this.characteristics.addAll(characteristics);
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.22 2005/03/04 14:26:24 krupenn Exp $
+ * $Id: Map.java,v 1.23 2005/03/24 14:10:15 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.map.corba.Map_Transferable;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на 
  * линиях, коллекторов (объединяющих в себе линии).
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.22 $, $Date: 2005/03/04 14:26:24 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/03/24 14:10:15 $
  * @module map_v1
  * @todo make maps persistent 
  */
@@ -51,7 +51,7 @@ public class Map extends DomainMember {
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
-	private static final long	serialVersionUID	= 3256722862181200184L;
+	private static final long serialVersionUID = 3256722862181200184L;
 
 	public static final String COLUMN_ID = "id";
 	public static final String COLUMN_NAME = "name";
@@ -61,28 +61,26 @@ public class Map extends DomainMember {
 	public static final String COLUMN_MODIFIER_ID = "modifierId";
 	public static final String COLUMN_MODIFIED = "modified";
 
-	/** 
+	/**
 	 * набор параметров для экспорта. инициализируется только в случае
 	 * необходимости экспорта
 	 */
 	private static java.util.Map exportMap = null;
 
-	private String					name;
-	private String					description;
+	private String name;
+	private String description;
 
-	private Collection					siteNodes;
-	private Collection					topologicalNodes;
-	private Collection					nodeLinks;
-	private Collection					physicalLinks;
-	private Collection					marks;
-	private Collection					collectors;
+	private Collection siteNodes;
+	private Collection topologicalNodes;
+	private Collection nodeLinks;
+	private Collection physicalLinks;
+	private Collection marks;
+	private Collection collectors;
 
-	private StorableObjectDatabase	mapDatabase;
+	private StorableObjectDatabase mapDatabase;
 
 	protected transient Collection maps = new LinkedList();
-	
 	protected transient Set selectedElements = new HashSet();
-
 	protected transient Collection allElements = new LinkedList();
 	protected transient Collection nodeElements = new LinkedList();
 
@@ -92,7 +90,8 @@ public class Map extends DomainMember {
 		this.mapDatabase = MapDatabaseContext.getMapDatabase();
 		try {
 			this.mapDatabase.retrieve(this);
-		} catch (IllegalDataException e) {
+		}
+		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 	}
@@ -108,21 +107,19 @@ public class Map extends DomainMember {
 			for (int i = 0; i < mt.siteNodeIds.length; i++)
 				siteNodeIds.add(new Identifier(mt.siteNodeIds[i]));
 			this.siteNodes.addAll(MapStorableObjectPool.getStorableObjects(siteNodeIds, true));
-			
-			for(Iterator it = this.siteNodes.iterator(); it.hasNext();)
-			{
-				((SiteNode )it.next()).setMap(this);
+
+			for (Iterator it = this.siteNodes.iterator(); it.hasNext();) {
+				((SiteNode) it.next()).setMap(this);
 			}
-			
+
 			this.topologicalNodes = new ArrayList(mt.topologicalNodeIds.length);
 			ArrayList topologicalNodeIds = new ArrayList(mt.topologicalNodeIds.length);
 			for (int i = 0; i < mt.topologicalNodeIds.length; i++)
 				topologicalNodeIds.add(new Identifier(mt.topologicalNodeIds[i]));
 			this.topologicalNodes.addAll(MapStorableObjectPool.getStorableObjects(topologicalNodeIds, true));
 
-			for(Iterator it = this.topologicalNodes.iterator(); it.hasNext();)
-			{
-				((TopologicalNode )it.next()).setMap(this);
+			for (Iterator it = this.topologicalNodes.iterator(); it.hasNext();) {
+				((TopologicalNode) it.next()).setMap(this);
 			}
 
 			this.nodeLinks = new ArrayList(mt.nodeLinkIds.length);
@@ -131,9 +128,8 @@ public class Map extends DomainMember {
 				nodeLinkIds.add(new Identifier(mt.nodeLinkIds[i]));
 			this.nodeLinks.addAll(MapStorableObjectPool.getStorableObjects(nodeLinkIds, true));
 
-			for(Iterator it = this.nodeLinks.iterator(); it.hasNext();)
-			{
-				((NodeLink )it.next()).setMap(this);
+			for (Iterator it = this.nodeLinks.iterator(); it.hasNext();) {
+				((NodeLink) it.next()).setMap(this);
 			}
 
 			this.physicalLinks = new ArrayList(mt.physicalLinkIds.length);
@@ -141,10 +137,9 @@ public class Map extends DomainMember {
 			for (int i = 0; i < mt.physicalLinkIds.length; i++)
 				physicalNodeLinkIds.add(new Identifier(mt.physicalLinkIds[i]));
 			this.physicalLinks.addAll(MapStorableObjectPool.getStorableObjects(physicalNodeLinkIds, true));
-			
-			for(Iterator it = this.physicalLinks.iterator(); it.hasNext();)
-			{
-				((PhysicalLink )it.next()).setMap(this);
+
+			for (Iterator it = this.physicalLinks.iterator(); it.hasNext();) {
+				((PhysicalLink) it.next()).setMap(this);
 			}
 
 			this.marks = new ArrayList(mt.markIds.length);
@@ -152,10 +147,9 @@ public class Map extends DomainMember {
 			for (int i = 0; i < mt.markIds.length; i++)
 				markIds.add(new Identifier(mt.markIds[i]));
 			this.marks.addAll(MapStorableObjectPool.getStorableObjects(markIds, true));
-			
-			for(Iterator it = this.marks.iterator(); it.hasNext();)
-			{
-				((Mark )it.next()).setMap(this);
+
+			for (Iterator it = this.marks.iterator(); it.hasNext();) {
+				((Mark) it.next()).setMap(this);
 			}
 
 			this.collectors = new ArrayList(mt.collectorIds.length);
@@ -164,12 +158,12 @@ public class Map extends DomainMember {
 				collectorIds.add(new Identifier(mt.collectorIds[i]));
 			this.collectors.addAll(MapStorableObjectPool.getStorableObjects(collectorIds, true));
 
-			for(Iterator it = this.collectors.iterator(); it.hasNext();)
-			{
-				((Collector )it.next()).setMap(this);
+			for (Iterator it = this.collectors.iterator(); it.hasNext();) {
+				((Collector) it.next()).setMap(this);
 			}
 
-		} catch (ApplicationException ae) {
+		}
+		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -200,40 +194,22 @@ public class Map extends DomainMember {
 		this.mapDatabase = MapDatabaseContext.getMapDatabase();
 	}
 
-	
-	public void insert() throws CreateObjectException {
-		this.mapDatabase = MapDatabaseContext.getMapDatabase();
-		try {
-			if (this.mapDatabase != null)
-				this.mapDatabase.insert(this);
-		} catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
-		}
-	}
-
-	public static Map createInstance(
-			Identifier creatorId,
-			Identifier domainId,
-			String name,
-			String description) 
-		throws CreateObjectException 
-	{
+	public static Map createInstance(Identifier creatorId, Identifier domainId, String name, String description)
+			throws CreateObjectException {
 		if (name == null || description == null || creatorId == null || domainId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
-		try 
-		{
-			Map map = new Map(
-				IdentifierPool.getGeneratedIdentifier(ObjectEntities.MAP_ENTITY_CODE),
-				creatorId,
-				0L,
-				domainId,
-				name,
-				description);
+		try {
+			Map map = new Map(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MAP_ENTITY_CODE),
+					creatorId,
+					0L,
+					domainId,
+					name,
+					description);
 			map.changed = true;
 			return map;
-		} catch (IllegalObjectEntityException e) 
-		{
+		}
+		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Map.createInstance | cannot generate identifier ", e);
 		}
 	}
@@ -254,22 +230,22 @@ public class Map extends DomainMember {
 		Identifier_Transferable[] siteNodeIds = new Identifier_Transferable[this.siteNodes.size()];
 		for (Iterator iterator = this.siteNodes.iterator(); iterator.hasNext();)
 			siteNodeIds[i++] = (Identifier_Transferable) ((SiteNode) iterator.next()).getId().getTransferable();
-		
+
 		i = 0;
 		Identifier_Transferable[] topologicalNodeIds = new Identifier_Transferable[this.topologicalNodes.size()];
 		for (Iterator iterator = this.topologicalNodes.iterator(); iterator.hasNext();)
 			topologicalNodeIds[i++] = (Identifier_Transferable) ((TopologicalNode) iterator.next()).getId().getTransferable();
-		
+
 		i = 0;
 		Identifier_Transferable[] nodeLinkIds = new Identifier_Transferable[this.nodeLinks.size()];
 		for (Iterator iterator = this.nodeLinks.iterator(); iterator.hasNext();)
 			nodeLinkIds[i++] = (Identifier_Transferable) ((NodeLink) iterator.next()).getId().getTransferable();
-		
+
 		i = 0;
 		Identifier_Transferable[] physicalNodeLinkIds = new Identifier_Transferable[this.physicalLinks.size()];
 		for (Iterator iterator = this.physicalLinks.iterator(); iterator.hasNext();)
 			physicalNodeLinkIds[i++] = (Identifier_Transferable) ((PhysicalLink) iterator.next()).getId().getTransferable();
-		
+
 		i = 0;
 		Identifier_Transferable[] markIds = new Identifier_Transferable[this.marks.size()];
 		for (Iterator iterator = this.marks.iterator(); iterator.hasNext();)
@@ -281,7 +257,7 @@ public class Map extends DomainMember {
 			collectorIds[i++] = (Identifier_Transferable) ((Collector) iterator.next()).getId().getTransferable();
 
 		return new Map_Transferable(super.getHeaderTransferable(),
-				(Identifier_Transferable)this.getDomainId().getTransferable(),
+				(Identifier_Transferable) this.getDomainId().getTransferable(),
 				this.name,
 				this.description,
 				siteNodeIds,
@@ -295,169 +271,157 @@ public class Map extends DomainMember {
 	public Collection getCollectors() {
 		return Collections.unmodifiableCollection(this.collectors);
 	}
-	
+
 	protected void setCollectors0(Collection collectors) {
 		this.collectors.clear();
-		if (collectors != null)
-		{
-			for(Iterator it = collectors.iterator(); it.hasNext();)
-			{
-				Collector collector = (Collector )it.next();
+		if (collectors != null) {
+			for (Iterator it = collectors.iterator(); it.hasNext();) {
+				Collector collector = (Collector) it.next();
 				collector.setMap(this);
 			}
 			this.collectors.addAll(collectors);
 		}
 	}
-	
+
 	public void setCollectors(Collection collectors) {
 		this.setCollectors0(collectors);
 		this.changed = true;
 	}
-	
+
 	public String getDescription() {
 		return this.description;
 	}
-	
+
 	protected void setDescription0(String description) {
 		this.description = description;
 	}
-	
+
 	public void setDescription(String description) {
 		this.setDescription0(description);
 		this.changed = true;
 	}	
-	
+
 	public Collection getMarks() {
 		return Collections.unmodifiableCollection(this.marks);
 	}
-	
+
 	protected void setMarks0(Collection marks) {
 		this.marks.clear();
-		if (marks != null)
-		{
-			for(Iterator it = marks.iterator(); it.hasNext();)
-			{
-				Mark mark = (Mark )it.next();
+		if (marks != null) {
+			for (Iterator it = marks.iterator(); it.hasNext();) {
+				Mark mark = (Mark) it.next();
 				mark.setMap(this);
 			}
 			this.marks.addAll(marks);
 		}
 	}
-	
+
 	public void setMarks(Collection marks) {
 		this.setMarks0(marks);
 		this.changed = true;
 	}
-	
+
 	public String getName() {
 		return this.name;
 	}
-	
+
 	protected void setName0(String name) {
 		this.name = name;
 	}
-	
+
 	public void setName(String name) {
 		this.setName0(name);
 		this.changed = true;
 	}
-	
+
 	public Collection getNodeLinks() {
 		return Collections.unmodifiableCollection(this.nodeLinks);
 	}
-	
+
 	protected void setNodeLinks0(Collection nodeLinks) {
 		this.nodeLinks.clear();
-		if (nodeLinks != null)
-		{
-			for(Iterator it = nodeLinks.iterator(); it.hasNext();)
-			{
-				NodeLink nodeLink = (NodeLink )it.next();
+		if (nodeLinks != null) {
+			for (Iterator it = nodeLinks.iterator(); it.hasNext();) {
+				NodeLink nodeLink = (NodeLink) it.next();
 				nodeLink.setMap(this);
 			}
 			this.nodeLinks.addAll(nodeLinks);
 		}
 	}
-	
+
 	public void setNodeLinks(Collection nodeLinks) {
 		this.setNodeLinks0(nodeLinks);
 		this.changed = true;
 	}
-	
+
 	public Collection getPhysicalLinks() {
 		return Collections.unmodifiableCollection(this.physicalLinks);
 	}
-	
+
 	protected void setPhysicalLinks0(Collection physicalLinks) {
 		this.physicalLinks.clear();
-		if (physicalLinks != null)
-		{
-			for(Iterator it = physicalLinks.iterator(); it.hasNext();)
-			{
-				PhysicalLink physicalLink = (PhysicalLink )it.next();
+		if (physicalLinks != null) {
+			for (Iterator it = physicalLinks.iterator(); it.hasNext();) {
+				PhysicalLink physicalLink = (PhysicalLink) it.next();
 				physicalLink.setMap(this);
 			}
 			this.physicalLinks.addAll(physicalLinks);
 		}
 		this.changed = true;
 	}
-	
+
 	public void setPhysicalLinks(Collection physicalLinks) {
 		this.setPhysicalLinks0(physicalLinks);
 		this.changed = true;
 	}
-	
+
 	public Collection getSiteNodes() {
 		return Collections.unmodifiableCollection(this.siteNodes);
 	}
-	
+
 	protected void setSiteNodes0(Collection siteNodes) {
 		this.siteNodes.clear();
-		if (siteNodes != null)
-		{
-			for(Iterator it = siteNodes.iterator(); it.hasNext();)
-			{
-				SiteNode siteNode = (SiteNode )it.next();
+		if (siteNodes != null) {
+			for (Iterator it = siteNodes.iterator(); it.hasNext();) {
+				SiteNode siteNode = (SiteNode) it.next();
 				siteNode.setMap(this);
 			}
 			this.siteNodes.addAll(siteNodes);
 		}
 	}
-	
+
 	public void setSiteNodes(Collection siteNodes) {
 		this.setSiteNodes0(siteNodes);
 		this.changed = true;
 	}
-	
+
 	public Collection getTopologicalNodes() {
 		return Collections.unmodifiableCollection(this.topologicalNodes);
 	}
-	
+
 	protected void setTopologicalNodes0(Collection topologicalNodes) {
 		this.topologicalNodes.clear();
-		if (topologicalNodes != null)
-		{
-			for(Iterator it = topologicalNodes.iterator(); it.hasNext();)
-			{
-				TopologicalNode topologicalNode = (TopologicalNode )it.next();
+		if (topologicalNodes != null) {
+			for (Iterator it = topologicalNodes.iterator(); it.hasNext();) {
+				TopologicalNode topologicalNode = (TopologicalNode) it.next();
 				topologicalNode.setMap(this);
 			}
 			this.topologicalNodes.addAll(topologicalNodes);
 		}
 	}
-	
+
 	public void setTopologicalNodes(Collection topologicalNodes) {
 		this.setTopologicalNodes0(topologicalNodes);
 		this.changed = true;
 	}
-	
+
 	public Collection getMaps() {
 		return Collections.unmodifiableCollection(this.maps);
 	}
 
 	protected void setMaps0(Collection maps) {
 		this.maps.clear();
-		if(maps != null)
+		if (maps != null)
 			this.maps.addAll(maps);
 	}
 
@@ -467,58 +431,53 @@ public class Map extends DomainMember {
 	}
 
 	protected synchronized void setAttributes(Date created,
-											  Date modified,
-											  Identifier creatorId,
-											  Identifier modifierId,
-											  long version,
-											  String name,
-											  String description,
-											  Identifier domainId) {
-			super.setAttributes(created,
-					modified,
-					creatorId,
-					modifierId,
-					version,
-					domainId);
-			this.name = name;
-			this.description = description;
+			Date modified,
+			Identifier creatorId,
+			Identifier modifierId,
+			long version,
+			String name,
+			String description,
+			Identifier domainId) {
+		super.setAttributes(created, modified, creatorId, modifierId, version, domainId);
+		this.name = name;
+		this.description = description;
 	}
 
 	public Collection getAllCollectors() {
 		Collection returnElements = new LinkedList();
 		returnElements.addAll(this.collectors);
-		for(Iterator iter = this.maps.iterator(); iter.hasNext();) {
-			Map innerMap = (Map )iter.next();
+		for (Iterator iter = this.maps.iterator(); iter.hasNext();) {
+			Map innerMap = (Map) iter.next();
 			returnElements.addAll(innerMap.getAllCollectors());
 		}
 		return returnElements;
 	}
-	
+
 	public Collection getAllMarks() {
 		Collection returnElements = new LinkedList();
 		returnElements.addAll(this.marks);
-		for(Iterator iter = this.maps.iterator(); iter.hasNext();) {
-			Map innerMap = (Map )iter.next();
+		for (Iterator iter = this.maps.iterator(); iter.hasNext();) {
+			Map innerMap = (Map) iter.next();
 			returnElements.addAll(innerMap.getAllMarks());
 		}
 		return returnElements;
 	}
-	
+
 	public Collection getAllNodeLinks() {
 		Collection returnElements = new LinkedList();
 		returnElements.addAll(this.nodeLinks);
-		for(Iterator iter = this.maps.iterator(); iter.hasNext();) {
-			Map innerMap = (Map )iter.next();
+		for (Iterator iter = this.maps.iterator(); iter.hasNext();) {
+			Map innerMap = (Map) iter.next();
 			returnElements.addAll(innerMap.getAllNodeLinks());
 		}
 		return returnElements;
 	}
-	
+
 	public Collection getAllPhysicalLinks() {
 		Collection returnElements = new LinkedList();
 		returnElements.addAll(this.physicalLinks);
-		for(Iterator iter = this.maps.iterator(); iter.hasNext();) {
-			Map innerMap = (Map )iter.next();
+		for (Iterator iter = this.maps.iterator(); iter.hasNext();) {
+			Map innerMap = (Map) iter.next();
 			returnElements.addAll(innerMap.getAllPhysicalLinks());
 		}
 		return returnElements;
@@ -527,25 +486,26 @@ public class Map extends DomainMember {
 	public Collection getAllSiteNodes() {
 		Collection returnElements = new LinkedList();
 		returnElements.addAll(this.siteNodes);
-		for(Iterator iter = this.maps.iterator(); iter.hasNext();) {
-			Map innerMap = (Map )iter.next();
+		for (Iterator iter = this.maps.iterator(); iter.hasNext();) {
+			Map innerMap = (Map) iter.next();
 			returnElements.addAll(innerMap.getAllSiteNodes());
 		}
 		return returnElements;
 	}
-	
+
 	public Collection getAllTopologicalNodes() {
 		Collection returnElements = new LinkedList();
 		returnElements.addAll(this.topologicalNodes);
-		for(Iterator iter = this.maps.iterator(); iter.hasNext();) {
-			Map innerMap = (Map )iter.next();
+		for (Iterator iter = this.maps.iterator(); iter.hasNext();) {
+			Map innerMap = (Map) iter.next();
 			returnElements.addAll(innerMap.getAllTopologicalNodes());
 		}
 		return returnElements;
 	}
-	
+
 	/**
 	 * Получить список всех узловых элементов топологической схемы.
+	 * 
 	 * @return список узлов
 	 */
 	public Collection getNodes() {
@@ -558,15 +518,19 @@ public class Map extends DomainMember {
 
 	/**
 	 * Добавить новый узел.
-	 * @param node узел
+	 * 
+	 * @param node
+	 *          узел
 	 */
 	public void addNode(AbstractNode node) {
 		if (node instanceof SiteNode)
 			this.siteNodes.add(node);
-		else if (node instanceof TopologicalNode)
-			this.topologicalNodes.add(node);
-		else if (node instanceof Mark)
-			this.marks.add(node);
+		else
+			if (node instanceof TopologicalNode)
+				this.topologicalNodes.add(node);
+			else
+				if (node instanceof Mark)
+					this.marks.add(node);
 		node.setMap(this);
 		node.setRemoved(false);
 		this.changed = true;
@@ -574,23 +538,29 @@ public class Map extends DomainMember {
 
 	/**
 	 * Удалить узел.
-	 * @param node узел
+	 * 
+	 * @param node
+	 *          узел
 	 */
 	public void removeNode(AbstractNode node) {
 		node.setSelected(false);
 		if (node instanceof SiteNode)
 			this.siteNodes.remove(node);
-		else if (node instanceof TopologicalNode)
-			this.topologicalNodes.remove(node);
-		else if (node instanceof Mark)
-			this.marks.remove(node);
+		else
+			if (node instanceof TopologicalNode)
+				this.topologicalNodes.remove(node);
+			else
+				if (node instanceof Mark)
+					this.marks.remove(node);
 		node.setRemoved(true);
 		this.changed = true;
 	}
 
 	/**
 	 * Получить элемент сетевого узла по идентификатору.
-	 * @param siteId идентификатор сетевого узла
+	 * 
+	 * @param siteId
+	 *          идентификатор сетевого узла
 	 * @return сетевой узел или null, если узел не найден
 	 */
 	public SiteNode getSiteNode(Identifier siteId) {
@@ -606,7 +576,9 @@ public class Map extends DomainMember {
 
 	/**
 	 * Получить элемент топологического узла по идентификатору.
-	 * @param topologicalNodeId идентификатор топологического узла
+	 * 
+	 * @param topologicalNodeId
+	 *          идентификатор топологического узла
 	 * @return топологический узел или null, если узел не найден
 	 */
 	public TopologicalNode getTopologicalNode(Identifier topologicalNodeId) {
@@ -622,7 +594,9 @@ public class Map extends DomainMember {
 
 	/**
 	 * Получить метку по идентификатору.
-	 * @param markId идентификатор метки
+	 * 
+	 * @param markId
+	 *          идентификатор метки
 	 * @return метка или null, если метка не найден
 	 */
 	public Mark getMark(Identifier markId) {
@@ -638,7 +612,9 @@ public class Map extends DomainMember {
 
 	/**
 	 * Получить узел по идентификатору.
-	 * @param nodeId идентификатор метки
+	 * 
+	 * @param nodeId
+	 *          идентификатор метки
 	 * @return узел или null, если узел не найден
 	 */
 	public AbstractNode getNode(Identifier nodeId) {
@@ -662,7 +638,9 @@ public class Map extends DomainMember {
 
 	/**
 	 * Добавить новый коллектор.
-	 * @param collector новый коллектор
+	 * 
+	 * @param collector
+	 *          новый коллектор
 	 */
 	public void addCollector(Collector collector) {
 		this.collectors.add(collector);
@@ -673,7 +651,9 @@ public class Map extends DomainMember {
 
 	/**
 	 * Удалить коллектор.
-	 * @param collector коллектор
+	 * 
+	 * @param collector
+	 *          коллектор
 	 */
 	public void removeCollector(Collector collector) {
 		collector.setSelected(false);
@@ -684,7 +664,9 @@ public class Map extends DomainMember {
 
 	/**
 	 * Получить коллектор, в составе которого есть заданная линия.
-	 * @param physicalLink линия
+	 * 
+	 * @param physicalLink
+	 *          линия
 	 * @return коллектор
 	 */
 	public Collector getCollector(PhysicalLink physicalLink) {
@@ -699,7 +681,8 @@ public class Map extends DomainMember {
 	/**
 	 * Получить список линий, начинающихся или заканчивающихся в заданном узле.
 	 * 
-	 * @param node узел
+	 * @param node
+	 *          узел
 	 * @return список линий
 	 */
 	public Collection getPhysicalLinksAt(AbstractNode node) {
@@ -716,7 +699,9 @@ public class Map extends DomainMember {
 
 	/**
 	 * Добавить новую линию.
-	 * @param physicalLink линия
+	 * 
+	 * @param physicalLink
+	 *          линия
 	 */
 	public void addPhysicalLink(PhysicalLink physicalLink) {
 
@@ -728,7 +713,9 @@ public class Map extends DomainMember {
 
 	/**
 	 * Удалить линию.
-	 * @param physicalLink линия
+	 * 
+	 * @param physicalLink
+	 *          линия
 	 */
 	public void removePhysicalLink(PhysicalLink physicalLink) {
 
@@ -744,7 +731,9 @@ public class Map extends DomainMember {
 
 	/**
 	 * Получить линию по ее идентификатору.
-	 * @param phisicalLinkId идентификатор линии
+	 * 
+	 * @param phisicalLinkId
+	 *          идентификатор линии
 	 * @return лниия
 	 */
 	public PhysicalLink getPhysicalLink(Identifier phisicalLinkId) {
@@ -760,21 +749,19 @@ public class Map extends DomainMember {
 
 	/**
 	 * Получить линию по концевым узлам.
-	 * @param startNode один концевой узел
-	 * @param endNode другой концевой узел
+	 * 
+	 * @param startNode
+	 *          один концевой узел
+	 * @param endNode
+	 *          другой концевой узел
 	 * @return линия
 	 */
-	public PhysicalLink getPhysicalLink(
-			AbstractNode startNode, 
-			AbstractNode endNode) {
+	public PhysicalLink getPhysicalLink(AbstractNode startNode, AbstractNode endNode) {
 		for (Iterator it = this.getAllPhysicalLinks().iterator(); it.hasNext();) {
 			PhysicalLink link = (PhysicalLink) it.next();
-			if (((link.getStartNode().equals(startNode)) 
-					&& (link.getEndNode().equals(endNode)))
-				|| ((link.getStartNode().equals(endNode)) 
-					&& (link.getEndNode().equals(startNode)))) 
-			{ 
-				return link; 
+			if (((link.getStartNode().equals(startNode)) && (link.getEndNode().equals(endNode)))
+					|| ((link.getStartNode().equals(endNode)) && (link.getEndNode().equals(startNode)))) {
+				return link;
 			}
 		}
 		return null;
@@ -782,7 +769,9 @@ public class Map extends DomainMember {
 
 	/**
 	 * добавить новый фрагмент линии.
-	 * @param nodeLink фрагмент линии
+	 * 
+	 * @param nodeLink
+	 *          фрагмент линии
 	 */
 	public void addNodeLink(NodeLink nodeLink) {
 		this.nodeLinks.add(nodeLink);
@@ -793,7 +782,9 @@ public class Map extends DomainMember {
 
 	/**
 	 * Удалить фрагмент линии.
-	 * @param nodeLink фрагмент линии
+	 * 
+	 * @param nodeLink
+	 *          фрагмент линии
 	 */
 	public void removeNodeLink(NodeLink nodeLink) {
 		nodeLink.setSelected(false);
@@ -804,7 +795,9 @@ public class Map extends DomainMember {
 
 	/**
 	 * Получить фрагмент линии по идентификатору.
-	 * @param nodeLinkId идентификатор фрагмента линии
+	 * 
+	 * @param nodeLinkId
+	 *          идентификатор фрагмента линии
 	 * @return фрагмент линии
 	 */
 	public NodeLink getNodeLink(Identifier nodeLinkId) {
@@ -812,21 +805,18 @@ public class Map extends DomainMember {
 
 		while (e.hasNext()) {
 			NodeLink nodeLink = (NodeLink) e.next();
-			if (nodeLink.getId().equals(nodeLinkId)) 
-			{ 
-				return nodeLink; 
+			if (nodeLink.getId().equals(nodeLinkId)) {
+				return nodeLink;
 			}
 		}
 		return null;
 	}
 
-	public List getNodeLinks(PhysicalLink link)
-	{
+	public List getNodeLinks(PhysicalLink link) {
 		List nlinks = new ArrayList();
-		for(Iterator it = this.nodeLinks.iterator(); it.hasNext();)
-		{
-			NodeLink nodeLink = (NodeLink )it.next();
-			if(nodeLink.getPhysicalLink().equals(link))
+		for (Iterator it = this.nodeLinks.iterator(); it.hasNext();) {
+			NodeLink nodeLink = (NodeLink) it.next();
+			if (nodeLink.getPhysicalLink().equals(link))
 				nlinks.add(nodeLink);
 		}
 		return nlinks;
@@ -834,16 +824,16 @@ public class Map extends DomainMember {
 
 	/**
 	 * Получить фрагмент линии по концевому узлу.
-	 * @param node концевой узел
+	 * 
+	 * @param node
+	 *          концевой узел
 	 * @return фрагмент линии
 	 */
 	public NodeLink getNodeLink(AbstractNode node) {
 		for (Iterator it = this.getNodeLinks().iterator(); it.hasNext();) {
 			NodeLink nodeLink = (NodeLink) it.next();
-			if ((nodeLink.getStartNode().equals(node)) 
-				|| (nodeLink.getEndNode().equals(node)))
-			{ 
-				return nodeLink; 
+			if ((nodeLink.getStartNode().equals(node)) || (nodeLink.getEndNode().equals(node))) {
+				return nodeLink;
 			}
 		}
 		return null;
@@ -851,19 +841,19 @@ public class Map extends DomainMember {
 
 	/**
 	 * Получить фрагмент линии по концевым узлам.
-	 * @param startNode один концевой узел
-	 * @param endNode другой концевой узел
+	 * 
+	 * @param startNode
+	 *          один концевой узел
+	 * @param endNode
+	 *          другой концевой узел
 	 * @return фрагмент линии
 	 */
 	public NodeLink getNodeLink(AbstractNode startNode, AbstractNode endNode) {
 		for (Iterator it = this.getNodeLinks().iterator(); it.hasNext();) {
 			NodeLink link = (NodeLink) it.next();
-			if (((link.getStartNode().equals(startNode)) 
-					&& (link.getEndNode().equals(endNode)))
-				|| ((link.getStartNode().equals(endNode)) 
-					&& (link.getEndNode().equals(startNode)))) 
-			{ 
-				return link; 
+			if (((link.getStartNode().equals(startNode)) && (link.getEndNode().equals(endNode)))
+					|| ((link.getStartNode().equals(endNode)) && (link.getEndNode().equals(startNode)))) {
+				return link;
 			}
 		}
 		return null;
@@ -871,6 +861,7 @@ public class Map extends DomainMember {
 
 	/**
 	 * Получить список всех топологических элементов карты ({@link MapElement}).
+	 * 
 	 * @return список всех элементов
 	 */
 	public Collection getAllElements() {
@@ -906,8 +897,11 @@ public class Map extends DomainMember {
 
 	/**
 	 * Зарегистрировать изменение флага выделения элемента топологической схемы.
-	 * @param me элемент
-	 * @param selected флаг выделения
+	 * 
+	 * @param me
+	 *          элемент
+	 * @param selected
+	 *          флаг выделения
 	 */
 	public void setSelected(MapElement me, boolean selected) {
 		if (selected)
@@ -917,47 +911,36 @@ public class Map extends DomainMember {
 	}
 
 	/**
-	 * Возвращает описывающий элемент набор параметров,
-	 * который используется для экспорта.
+	 * Возвращает описывающий элемент набор параметров, который используется для
+	 * экспорта.
+	 * 
 	 * @return хэш-таблица параметров элемента
 	 */
 	public java.util.Map getExportMap() {
-		if(exportMap == null)
-			exportMap = new HashMap();		
-		synchronized(exportMap) {
+		if (exportMap == null)
+			exportMap = new HashMap();
+		synchronized (exportMap) {
 			exportMap.clear();
 			exportMap.put(COLUMN_ID, this.id);
 			exportMap.put(COLUMN_NAME, this.name);
 			exportMap.put(COLUMN_DESCRIPTION, this.description);
 			return Collections.unmodifiableMap(exportMap);
-		}		
+		}
 	}
 
-	public static Map createInstance(
-			Identifier creatorId,
-			Identifier domainId,
-			java.util.Map exportMap) 
-		throws CreateObjectException 
-	{
-		Identifier id = (Identifier) exportMap.get(COLUMN_ID);
-		String name = (String) exportMap.get(COLUMN_NAME);
-		String description = (String) exportMap.get(COLUMN_DESCRIPTION);
+	public static Map createInstance(Identifier creatorId, Identifier domainId, java.util.Map exportMap1)
+			throws CreateObjectException {
+		Identifier id1 = (Identifier) exportMap1.get(COLUMN_ID);
+		String name1 = (String) exportMap1.get(COLUMN_NAME);
+		String description1 = (String) exportMap1.get(COLUMN_DESCRIPTION);
 
-		if (id == null || name == null || description == null
-			|| creatorId == null || domainId == null)
+		if (id1 == null || name1 == null || description1 == null || creatorId == null || domainId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
-		try 
-		{
-			return new Map(
-				id,
-				creatorId,
-				0L,
-				domainId,
-				name,
-				description);
-		} catch (Exception e) 
-		{
+		try {
+			return new Map(id1, creatorId, 0L, domainId, name1, description1);
+		}
+		catch (Exception e) {
 			throw new CreateObjectException("Map.createInstance |  ", e);
 		}
 	}

@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNode.java,v 1.23 2005/03/09 14:49:53 bass Exp $
+ * $Id: TopologicalNode.java,v 1.24 2005/03/24 14:10:15 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.map.corba.TopologicalNode_Transferable;
  * быть концевым для линии и для фрагмента линии. В физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует 
  * дополнительной описательной информации.
- * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2005/03/09 14:49:53 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/03/24 14:10:15 $
  * @module map_v1
  * @todo physicalLink should be transient
  */
@@ -55,22 +55,22 @@ public class TopologicalNode extends AbstractNode {
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
-	private static final long	serialVersionUID	= 3258130254244885554L;
+	private static final long serialVersionUID = 3258130254244885554L;
 
-	/** 
+	/**
 	 * набор параметров для экспорта. инициализируется только в случае
 	 * необходимости экспорта
 	 */
 	private static java.util.Map exportMap = null;
-	
-	/**
-	 * Флаг показывающий закрыт ли узел
-	 * true значит что из узла выходит две линии, false одна
-	 */
-	private boolean					active;
-	private StorableObjectDatabase	topologicalNodeDatabase;
 
-	private transient PhysicalLink			physicalLink = null;
+	/**
+	 * Флаг показывающий закрыт ли узел true значит что из узла выходит две линии,
+	 * false одна
+	 */
+	private boolean active;
+	private StorableObjectDatabase topologicalNodeDatabase;
+
+	private transient PhysicalLink physicalLink = null;
 
 	/**
 	 * physical node can be bound to site only if it is part of an unbound link
@@ -83,7 +83,8 @@ public class TopologicalNode extends AbstractNode {
 		this.topologicalNodeDatabase = MapDatabaseContext.getTopologicalNodeDatabase();
 		try {
 			this.topologicalNodeDatabase.retrieve(this);
-		} catch (IllegalDataException e) {
+		}
+		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
 	}
@@ -102,28 +103,29 @@ public class TopologicalNode extends AbstractNode {
 				characteristicIds.add(new Identifier(tnt.characteristicIds[i]));
 
 			this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
-		} catch (ApplicationException ae) {
+		}
+		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
 	}
 
 	protected TopologicalNode(final Identifier id,
 			final Identifier creatorId,
-			final long version, 
+			final long version,
 			String name,
 			String description,
 			double longitude,
 			double latitude,
 			boolean active) {
 		super(id,
-			new Date(System.currentTimeMillis()),
-			new Date(System.currentTimeMillis()),
-			creatorId,
-			creatorId,
-			version,
-			name,
-			description,
-			new DoublePoint(longitude, latitude));
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version,
+				name,
+				description,
+				new DoublePoint(longitude, latitude));
 		this.active = active;
 
 		this.characteristics = new LinkedList();
@@ -141,14 +143,14 @@ public class TopologicalNode extends AbstractNode {
 			double latitude,
 			boolean active) {
 		super(id,
-			new Date(System.currentTimeMillis()),
-			new Date(System.currentTimeMillis()),
-			creatorId,
-			creatorId,
-			version,
-			name,
-			description,
-			new DoublePoint(longitude, latitude));
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version,
+				name,
+				description,
+				new DoublePoint(longitude, latitude));
 		this.physicalLink = physicalLink;
 		this.active = active;
 
@@ -157,16 +159,6 @@ public class TopologicalNode extends AbstractNode {
 		this.topologicalNodeDatabase = MapDatabaseContext.getTopologicalNodeDatabase();
 
 		this.selected = false;
-	}
-
-	public void insert() throws CreateObjectException {
-		this.topologicalNodeDatabase = MapDatabaseContext.getTopologicalNodeDatabase();
-		try {
-			if (this.topologicalNodeDatabase != null)
-				this.topologicalNodeDatabase.insert(this);
-		} catch (IllegalDataException e) {
-			throw new CreateObjectException(e.getMessage(), e);
-		}
 	}
 
 	protected static TopologicalNode createInstance0(
@@ -192,22 +184,22 @@ public class TopologicalNode extends AbstractNode {
 
 		if (creatorId == null || name == null || description == null || location == null)
 			throw new IllegalArgumentException("Argument is 'null'");
-		
+
 		try {
-			TopologicalNode topologicalNode = new TopologicalNode(
-				IdentifierPool.getGeneratedIdentifier(ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE),
-				creatorId,
-				0L,
-				name,
-				description,
-				physicalLink,
-				location.getX(),
-				location.getY(),
-				false);
+			TopologicalNode topologicalNode = new TopologicalNode(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE),
+					creatorId,
+					0L,
+					name,
+					description,
+					physicalLink,
+					location.getX(),
+					location.getY(),
+					false);
 			topologicalNode.changed = true;
 			return topologicalNode;
-			
-		} catch (IllegalObjectEntityException e) {
+
+		}
+		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("TopologicalNode.createInstance | cannot generate identifier ", e);
 		}
 	}
@@ -225,7 +217,7 @@ public class TopologicalNode extends AbstractNode {
 
 		if (physicalLink == null)
 			throw new IllegalArgumentException("Argument is 'null'");
-		
+
 		return TopologicalNode.createInstance0(
 				creatorId,
 				name,
@@ -234,37 +226,23 @@ public class TopologicalNode extends AbstractNode {
 				location);
 		}
 
-	public static TopologicalNode createInstance(
-			final Identifier creatorId,
-			final PhysicalLink physicalLink, 
-			final DoublePoint location)
-		throws CreateObjectException {
+	public static TopologicalNode createInstance(final Identifier creatorId,
+			final PhysicalLink physicalLink,
+			final DoublePoint location) throws CreateObjectException {
 
 		// validate physicalLink as long as validation is not performad
 		// in createInstance0
 
 		if (physicalLink == null)
 			throw new IllegalArgumentException("Argument is 'null'");
-		
-		return TopologicalNode.createInstance0(
-			creatorId,
-			"",
-			"",
-			physicalLink,
-			location);
+
+		return TopologicalNode.createInstance0(creatorId, "", "", physicalLink, location);
 	}
 
-	public static TopologicalNode createInstance(
-			final Identifier creatorId,
-			final DoublePoint location)
-		throws CreateObjectException {
+	public static TopologicalNode createInstance(final Identifier creatorId, final DoublePoint location)
+			throws CreateObjectException {
 
-		return TopologicalNode.createInstance0(
-				creatorId,
-				"",
-				"",
-				null,
-				location);
+		return TopologicalNode.createInstance0(creatorId, "", "", null, location);
 	}
 
 	public List getDependencies() {
@@ -276,14 +254,13 @@ public class TopologicalNode extends AbstractNode {
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
 		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
 			charIds[i++] = (Identifier_Transferable) ((Characteristic) iterator.next()).getId().getTransferable();
-		return new TopologicalNode_Transferable(
-				super.getHeaderTransferable(), 
-				this.name, 
+		return new TopologicalNode_Transferable(super.getHeaderTransferable(),
+				this.name,
 				this.description,
-				this.location.getX(), 
+				this.location.getX(),
 				this.location.getY(),
 				(Identifier_Transferable) this.physicalLink.getId().getTransferable(),
-				this.active, 
+				this.active,
 				charIds);
 	}
 
@@ -292,11 +269,12 @@ public class TopologicalNode extends AbstractNode {
 	}
 
 	/**
-	 * установить активность топологического узла.
-	 * узел активен, если он находится в середине связи, и не активен, если
-	 * он находится на конце связи. активные и неактивные топологические узлы
-	 * отображаются разными иконками
-	 * @param active флаг активности
+	 * установить активность топологического узла. узел активен, если он находится
+	 * в середине связи, и не активен, если он находится на конце связи. активные
+	 * и неактивные топологические узлы отображаются разными иконками
+	 * 
+	 * @param active
+	 *          флаг активности
 	 */
 	public void setActive(boolean active) {
 		this.active = active;
@@ -304,95 +282,91 @@ public class TopologicalNode extends AbstractNode {
 	}
 
 	public PhysicalLink getPhysicalLink() {
-		if(this.physicalLink == null)
+		if (this.physicalLink == null)
 			this.physicalLink = findPhysicalLink();
 		return this.physicalLink;
 	}
-	
+
 	public void setPhysicalLink(PhysicalLink physicalLink) {
 		this.physicalLink = physicalLink;
 		// do not change version due to physical link is not dependence object
 	}
-	
+
 	protected synchronized void setAttributes(Date created,
-											  Date modified,
-											  Identifier creatorId,
-											  Identifier modifierId,	
-											  long version,
-											  String name,
-											  String description,
-											  double longitude,
-											  double latitude,
-											  boolean active) {
-			super.setAttributes(created,
-					modified,
-					creatorId,
-					modifierId,
-					version);
-			this.name = name;
-			this.description = description;
-			this.location.setLocation(longitude, latitude);
-			this.active = active;					
+			Date modified,
+			Identifier creatorId,
+			Identifier modifierId,
+			long version,
+			String name,
+			String description,
+			double longitude,
+			double latitude,
+			boolean active) {
+		super.setAttributes(created,
+				modified,
+				creatorId,
+				modifierId,
+				version);
+		this.name = name;
+		this.description = description;
+		this.location.setLocation(longitude, latitude);
+		this.active = active;
 	}
 
 	/**
-	 * Установить флаг возможности привязки топологического узла к 
-	 * сетевому и/или непривязанному узлу.
-	 * @param canBind флаг овзможности привязки
+	 * Установить флаг возможности привязки топологического узла к сетевому и/или
+	 * непривязанному узлу.
+	 * 
+	 * @param canBind
+	 *          флаг овзможности привязки
 	 */
-	public void setCanBind(boolean canBind)
-	{
+	public void setCanBind(boolean canBind) {
 		this.canBind = canBind;
 	}
 
-
 	/**
-	 * Получить флаг возможности привязки топологического узла к 
-	 * сетевому и/или непривязанному узлу.
+	 * Получить флаг возможности привязки топологического узла к сетевому и/или
+	 * непривязанному узлу.
+	 * 
 	 * @return флаг овзможности привязки
 	 */
-	public boolean isCanBind()
-	{
+	public boolean isCanBind() {
 		return this.canBind;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public MapElementState getState()
-	{
+	public MapElementState getState() {
 		return new TopologicalNodeState(this);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void revert(MapElementState state)
-	{
-		TopologicalNodeState mpnes = (TopologicalNodeState)state;
-		
+	public void revert(MapElementState state) {
+		TopologicalNodeState mpnes = (TopologicalNodeState) state;
+
 		setName(mpnes.name);
 		setDescription(mpnes.description);
 		setImageId(mpnes.imageId);
 		setLocation(mpnes.location);
 		setActive(mpnes.active);
-		try
-		{
-			setPhysicalLink((PhysicalLink )MapStorableObjectPool.getStorableObject(mpnes.physicalLinkId, false));
+		try {
+			setPhysicalLink((PhysicalLink) MapStorableObjectPool.getStorableObject(mpnes.physicalLinkId, false));
 		}
-		catch (ApplicationException e)
-		{
+		catch (ApplicationException e) {
 			e.printStackTrace();
-		}		
+		}
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	public java.util.Map getExportMap() {
-		if(exportMap == null)
-			exportMap = new HashMap();		
-		synchronized(exportMap) {
+		if (exportMap == null)
+			exportMap = new HashMap();
+		synchronized (exportMap) {
 			exportMap.clear();
 			exportMap.put(StorableObjectWrapper.COLUMN_ID, this.id);
 			exportMap.put(StorableObjectWrapper.COLUMN_NAME, this.name);
@@ -402,45 +376,35 @@ public class TopologicalNode extends AbstractNode {
 			exportMap.put(TopologicalNodeWrapper.COLUMN_Y, String.valueOf(this.location.getY()));
 			exportMap.put(TopologicalNodeWrapper.COLUMN_ACTIVE, String.valueOf(this.active));
 			return Collections.unmodifiableMap(exportMap);
-		}		
+		}
 	}
 
-	public static TopologicalNode createInstance(Identifier creatorId,
-		                      			java.util.Map exportMap) throws CreateObjectException {
-		Identifier id = (Identifier) exportMap.get(StorableObjectWrapper.COLUMN_ID);
-		String name = (String) exportMap.get(StorableObjectWrapper.COLUMN_NAME);
-		String description = (String) exportMap.get(StorableObjectWrapper.COLUMN_DESCRIPTION);
-  		Identifier physicalLinkId = (Identifier) exportMap.get(TopologicalNodeWrapper.COLUMN_PHYSICAL_LINK_ID);
-  		double x = Double.parseDouble((String) exportMap.get(TopologicalNodeWrapper.COLUMN_X));
-  		double y = Double.parseDouble((String) exportMap.get(TopologicalNodeWrapper.COLUMN_Y));
-  		boolean active = Boolean.valueOf((String)exportMap.get(TopologicalNodeWrapper.COLUMN_ACTIVE)).booleanValue();
+	public static TopologicalNode createInstance(Identifier creatorId, java.util.Map exportMap1) throws CreateObjectException {
+		Identifier id1 = (Identifier) exportMap1.get(StorableObjectWrapper.COLUMN_ID);
+		String name1 = (String) exportMap1.get(StorableObjectWrapper.COLUMN_NAME);
+		String description1 = (String) exportMap1.get(StorableObjectWrapper.COLUMN_DESCRIPTION);
+		Identifier physicalLinkId1 = (Identifier) exportMap1.get(TopologicalNodeWrapper.COLUMN_PHYSICAL_LINK_ID);
+		double x1 = Double.parseDouble((String) exportMap1.get(TopologicalNodeWrapper.COLUMN_X));
+		double y1 = Double.parseDouble((String) exportMap1.get(TopologicalNodeWrapper.COLUMN_Y));
+		boolean active1 = Boolean.valueOf((String) exportMap1.get(TopologicalNodeWrapper.COLUMN_ACTIVE)).booleanValue();
 
-  		if (id == null || creatorId == null || name == null || description == null || physicalLinkId == null)
-  			throw new IllegalArgumentException("Argument is 'null'");
+		if (id1 == null || creatorId == null || name1 == null || description1 == null || physicalLinkId1 == null)
+			throw new IllegalArgumentException("Argument is 'null'");
 
-  		try {
-  			PhysicalLink physicalLink = (PhysicalLink) MapStorableObjectPool.getStorableObject(
-				physicalLinkId, false);
-			TopologicalNode node = new TopologicalNode(
-					id, 
-					creatorId,
-					0L,
-					name,
-					description,
-					x, 
-					y,
-					active);
-			node.changed = true;
-			node.setPhysicalLink(physicalLink);
+		try {
+			PhysicalLink physicalLink1 = (PhysicalLink) MapStorableObjectPool.getStorableObject(physicalLinkId1, false);
+			TopologicalNode node1 = new TopologicalNode(id1, creatorId, 0L, name1, description1, x1, y1, active1);
+			node1.changed = true;
+			node1.setPhysicalLink(physicalLink1);
 
-			return node;
-  		} catch (ApplicationException e) {
-  			throw new CreateObjectException("Mark.createInstance |  ", e);
-  		}
-  	}
+			return node1;
+		}
+		catch (ApplicationException e) {
+			throw new CreateObjectException("Mark.createInstance |  ", e);
+		}
+	}
 
-	private PhysicalLink findPhysicalLink()
-	{
+	private PhysicalLink findPhysicalLink() {
 		return this.map.getNodeLink(this).getPhysicalLink();
 	}
 
@@ -448,22 +412,25 @@ public class TopologicalNode extends AbstractNode {
 	 * @param characteristics
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics(java.util.Collection)
 	 */
-	public void setCharacteristics(Collection characteristics) {
-		throw new UnsupportedOperationException();
+	public void setCharacteristics(final Collection characteristics) {
+		this.setCharacteristics0(characteristics);
+		this.changed = true;
 	}
 
 	/**
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristicSort()
 	 */
 	public CharacteristicSort getCharacteristicSort() {
-		throw new UnsupportedOperationException();
+		return CharacteristicSort.CHARACTERISTIC_SORT_TOPOLOGICAL_NODE;
 	}
 
 	/**
 	 * @param characteristics
 	 * @see com.syrus.AMFICOM.general.Characterizable#setCharacteristics0(java.util.Collection)
 	 */
-	public void setCharacteristics0(Collection characteristics) {
-		throw new UnsupportedOperationException();
+	public void setCharacteristics0(final Collection characteristics) {
+		this.characteristics.clear();
+		if (characteristics != null)
+			this.characteristics.addAll(characteristics);
 	}
 }
