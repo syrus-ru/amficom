@@ -26,7 +26,7 @@ public class ScalableFrame extends SimpleResizableFrame
 	}
 
 	private void jbInit() throws Exception
-	{
+	{ // empty
 	}
 
 	public void addGraph (SimpleGraphPanel p, String id)

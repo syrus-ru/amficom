@@ -15,10 +15,10 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.io.BellcoreStructure;
 
 public class TraceSelectorFrame extends JInternalFrame
-																		implements OperationListener
+  implements OperationListener
 {
-	private static List traces = new ArrayList();
-	private Dispatcher dispatcher;
+	protected static List traces = new ArrayList();
+	protected Dispatcher dispatcher;
 	private FixedSizeEditableTableModel tModel; //DefaultTableModel
 	private ColorChooserTable jTable;
 

@@ -87,7 +87,6 @@ public class ColorManager
 			traceColorTable.put(traceanalysiscolors[i].name, traceanalysiscolors[i].color);
 
 		properties = new Properties();
-		String lastDir = "";
 		try
 		{
 			properties.load(new FileInputStream(propertiesFileName));
@@ -167,7 +166,6 @@ public class ColorManager
 	public static void releaseColor(String id)
 	{
 		String colId;
-		Color col;
 		//если цвет в списке занятых, переносим его в свободные
 		if (!busyTraceColors.isEmpty())
 		{

@@ -9,7 +9,6 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.measurement.*;
-import com.syrus.AMFICOM.general.*;
 import com.syrus.io.BellcoreStructure;
 
 public class LoadEtalonCommand extends VoidCommand

@@ -35,7 +35,7 @@ public class TraceEventsLayeredPanel extends ScalableLayeredPanel implements Ope
 	}
 
 	private void jbInit() throws Exception
-	{
+	{ // empty
 	}
 
 	protected ToolBarPanel createToolBar()
@@ -81,7 +81,7 @@ public class TraceEventsLayeredPanel extends ScalableLayeredPanel implements Ope
 			{
 				((TraceEventsPanel)panel).draw_events = b;
 				jLayeredPane.repaint();
-			};
+			}
 		}
 	}
 
@@ -94,7 +94,7 @@ public class TraceEventsLayeredPanel extends ScalableLayeredPanel implements Ope
 			{
 				((ReflectogramEventsPanel)panel).draw_modeled = b;
 				jLayeredPane.repaint();
-			};
+			}
 		}
 	}
 
@@ -108,7 +108,7 @@ public class TraceEventsLayeredPanel extends ScalableLayeredPanel implements Ope
 				((TraceEventsPanel)panel).updEvents(id);
 				jLayeredPane.repaint();
 				return;
-			};
+			}
 		}
 	}
 

@@ -210,7 +210,7 @@ public class ResizableLayeredPanel extends JPanel
 				((ScaledGraphPanel)panel).inversed_y = b;
 				jLayeredPane.repaint();
 				return;
-			};
+			}
 		}
 	}
 
@@ -225,7 +225,7 @@ public class ResizableLayeredPanel extends JPanel
 				((ScaledGraphPanel)panel).Ky = Ky;
 				jLayeredPane.repaint();
 				return;
-			};
+			}
 		}
 	}
 

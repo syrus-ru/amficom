@@ -28,7 +28,7 @@ public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements O
 	}
 
 	private void jbInit() throws Exception
-	{
+	{ // empty
 	}
 
 	protected ToolBarPanel createToolBar()
@@ -119,7 +119,7 @@ public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements O
 			if (panel instanceof MapMarkersPanel)
 			{
 				((MapMarkersPanel)panel).removeAllMarkers();
-			};
+			}
 		}
 
 		super.removeAllGraphPanels();
@@ -135,7 +135,7 @@ public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements O
 			{
 				((MapMarkersPanel)panel).creating_marker = b;
 				return;
-			};
+			}
 		}
 	}
 
@@ -239,6 +239,6 @@ class MapMarkersToolBar extends TraceEventsToolBar
 	void deleteMarkerButton_actionPerformed(ActionEvent e)
 	{
 		MapMarkersLayeredPanel panel = (MapMarkersLayeredPanel)super.panel;
-		Marker m = panel.deleteActiveMarker();
+		panel.deleteActiveMarker();
 	}
 }

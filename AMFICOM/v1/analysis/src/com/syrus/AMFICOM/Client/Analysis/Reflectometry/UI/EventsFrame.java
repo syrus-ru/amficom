@@ -28,11 +28,11 @@ public class EventsFrame extends ATableFrame
 	private ReflectogramEvent []data;
 	private ReflectogramEvent []etalon;
 
-	private Dispatcher dispatcher;
+	protected Dispatcher dispatcher;
 	private FixedSizeEditableTableModel tModel;
 	private JTable jTable;
-	private int selected = 0;
-	private boolean skip = false;
+	protected int selected = 0;
+	protected boolean skip = false;
 
 	BorderLayout borderLayout = new BorderLayout();
 	JPanel mainPanel = new JPanel();

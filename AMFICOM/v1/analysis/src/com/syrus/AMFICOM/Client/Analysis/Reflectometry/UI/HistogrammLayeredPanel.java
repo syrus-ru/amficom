@@ -37,7 +37,7 @@ public class HistogrammLayeredPanel extends ScalableLayeredPanel implements Oper
 	}
 
 	private void jbInit() throws Exception
-	{
+	{ // empty
 	}
 
 	protected ToolBarPanel createToolBar()

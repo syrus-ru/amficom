@@ -12,7 +12,6 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.measurement.*;
 import com.syrus.io.BellcoreStructure;
 import oracle.jdeveloper.layout.*;

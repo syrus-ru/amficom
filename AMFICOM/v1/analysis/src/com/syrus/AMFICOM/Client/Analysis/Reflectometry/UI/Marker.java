@@ -35,7 +35,7 @@ class Marker
 
 	public void setId(Identifier id)
 	{
-		this.id = id;;
+		this.id = id;
 	}
 
 	void move (int new_position)

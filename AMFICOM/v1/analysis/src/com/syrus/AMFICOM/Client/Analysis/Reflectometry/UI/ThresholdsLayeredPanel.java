@@ -29,7 +29,7 @@ public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel implements O
 	}
 
 	private void jbInit() throws Exception
-	{
+	{ // empty
 	}
 
 	protected ToolBarPanel createToolBar()

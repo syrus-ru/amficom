@@ -40,7 +40,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 	}
 
 	private void jbInit() throws Exception
-	{
+	{ // empty
 	}
 
 	public void updateThresholds(ReflectogramEvent[] ep)
@@ -287,17 +287,10 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		if (et_ep == null)
 			return;
 
-		//long t0 = System.currentTimeMillis();
-
-		int st = Math.max (start, et_ep[c_event].getBegin());
-		int en = et_ep[c_event].getEnd();
-
 		ReflectogramEvent up1   = et_ep[c_event].getThresholdReflectogramEvent(0);
 		ReflectogramEvent up2   = et_ep[c_event].getThresholdReflectogramEvent(1);
 		ReflectogramEvent down1 = et_ep[c_event].getThresholdReflectogramEvent(2);
 		ReflectogramEvent down2 = et_ep[c_event].getThresholdReflectogramEvent(3);
-
-		//long t1 = System.currentTimeMillis();
 
 		g.setColor(warningThresholdColor);
 		draw_one_model_curve(g, up1);
@@ -305,10 +298,6 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		g.setColor(alarmThresholdColor);
 		draw_one_model_curve(g, up2);
 		draw_one_model_curve(g, down2);
-
-		//long t2 = System.currentTimeMillis();
-
-		//System.out.println("paint_threshold: dt1 " + (t1-t0) + " dt2 " + (t2-t1));
 	}
 
 	private double getShift(ReflectogramEvent []etalon, double []data)

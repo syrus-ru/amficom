@@ -9,7 +9,6 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
 import com.syrus.io.BellcoreStructure;

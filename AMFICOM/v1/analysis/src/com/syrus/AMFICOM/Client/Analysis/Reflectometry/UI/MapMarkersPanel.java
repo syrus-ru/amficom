@@ -42,7 +42,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 	}
 
 	private void jbInit() throws Exception
-	{
+	{ // empty
 	}
 
 	public void setMonitoredElementId (Identifier monitored_element_id)

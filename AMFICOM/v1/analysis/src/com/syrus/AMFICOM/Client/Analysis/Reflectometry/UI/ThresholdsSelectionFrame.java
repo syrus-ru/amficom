@@ -16,17 +16,17 @@ public class ThresholdsSelectionFrame extends ATableFrame
 	implements OperationListener
 {
 	public static final Dimension btn_size = new Dimension(24, 24);
-	private Dispatcher dispatcher;
+	protected Dispatcher dispatcher;
 	private ATable jTable;
 
 	private EventTableModel tModelLinear;
 	private EventTableModel tModelConnector;
-	private ReflectogramEvent[] ep;
+	protected ReflectogramEvent[] ep;
 	
 	private BellcoreStructure bs; // для доступа к самой р/г во время пересчета порогов
 
 	private Threshold[] init_Threshs;
-	private int current_ev = -1;
+	protected int current_ev = -1;
 	private boolean selected_there = false;
 	private int _type = -1;
 

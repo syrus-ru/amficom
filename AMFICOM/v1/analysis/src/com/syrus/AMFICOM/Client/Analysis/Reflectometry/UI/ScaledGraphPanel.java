@@ -89,10 +89,12 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 	
 	protected void this_mouseMoved(MouseEvent e)
 	{
+		// do nothing
 	}
 	
 	protected void this_mouseClicked(MouseEvent e)
 	{
+		// do nothing
 	}
 
 	protected void this_mouseDragged(MouseEvent e)

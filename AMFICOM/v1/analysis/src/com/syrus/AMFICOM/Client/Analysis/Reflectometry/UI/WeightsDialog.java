@@ -367,18 +367,14 @@ class ParametersTable extends AbstractTableModel
 	}
 }
 
-
-
-
 	class SystemExec
 	{
 		public static void executeCommand(String command)
 		{
 			Runtime r = Runtime.getRuntime();
-			Process p = null;
 			try
 			{
-				p = r.exec(command);
+				r.exec(command);
 			}
 			catch(Exception e)
 			{

@@ -42,14 +42,14 @@ public class Dispatcher implements OperationListener
 	private class Cmd
 	{
 		private String command; // поле, определяющее тип события
-		private LinkedList listeners; // наблюдатели
+		protected LinkedList listeners; // наблюдатели
 		private Cmd(String command)
 		{
 			this.command = command;
 			listeners = new LinkedList();
 		}
 
-		private synchronized LinkedList cloneListeners()
+		protected synchronized LinkedList cloneListeners()
 		{
 			return (LinkedList)listeners.clone();
 		}
