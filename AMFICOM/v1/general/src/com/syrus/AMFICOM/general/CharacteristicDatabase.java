@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.4 2005/01/24 15:29:27 bob Exp $
+ * $Id: CharacteristicDatabase.java,v 1.5 2005/01/28 10:08:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.database.DatabaseString;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/01/24 15:29:27 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/01/28 10:08:11 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -124,8 +124,8 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet) throws RetrieveObjectException, SQLException, IllegalDataException {
-		Characteristic characteristic = storableObject == null ? null : this.fromStorableObject(storableObject); 
-		if (characteristic == null){
+		Characteristic characteristic = (storableObject == null) ? null : this.fromStorableObject(storableObject); 
+		if (characteristic == null) {
 			characteristic = new Characteristic(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 																null,
 																null,
@@ -257,10 +257,13 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 	}
 
 	public Map retrieveCharacteristicsByOneQuery(List list, CharacteristicSort sort) throws RetrieveObjectException, IllegalDataException {
+		if (list == null || list.size() == 0)
+			return null;
+
 		int sortValue = sort.value();
 		String sql;
 		StringBuffer buff = new StringBuffer(CharacteristicWrapper.COLUMN_SORT
-							+ EQUALS + sortValue
+							+ EQUALS + Integer.toString(sortValue)
 							+ SQL_AND + CharacteristicWrapper.COLUMN_CHARACTERIZED_ID
 							+ SQL_IN + OPEN_BRACKET);
 		int i = 1;
@@ -294,34 +297,39 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			statement = connection.createStatement();
 			Log.debugMessage("CharacteristicDatabase.retrieveCharacteristicsByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
+			
 			Map characteristicMap = new HashMap();
+			Identifier characterizedId;
+			Characteristic characteristic;
+			List characteristics;
 			while (resultSet.next()) {
-				StorableObject storableObject = null;
-				Identifier storableObjectId = DatabaseIdentifier.getIdentifier(resultSet, CharacteristicWrapper.COLUMN_CHARACTERIZED_ID);
-				for (Iterator it = list.iterator(); it.hasNext();) {
-					StorableObject storableObjectToCompare = (StorableObject) it.next();
-					if (storableObjectToCompare.getId().equals(storableObjectId)){
-						storableObject = storableObjectToCompare;
-						break;
-					}                   
-				}
-
-				if (storableObject == null) {
-					String mesg = "CharacteristicDatabase.retrieveCharacteristicsByOneQuery | Cannot found correspond result for '" + storableObjectId +"'" ;
-					throw new RetrieveObjectException(mesg);
-				}
-				StorableObject characteristic = updateEntityFromResultSet(null, resultSet);
-				List characteristics = (List)characteristicMap.get(storableObject);
+				characterizedId = DatabaseIdentifier.getIdentifier(resultSet, CharacteristicWrapper.COLUMN_CHARACTERIZED_ID);
+				characteristic = (Characteristic) this.updateEntityFromResultSet(null, resultSet);
+				characteristics = (List) characteristicMap.get(characterizedId);
 				if (characteristics == null) {
 					characteristics = new LinkedList();
-					characteristicMap.put(storableObject, characteristics);
-				}               
-				characteristics.add(characteristic);              
+					characteristicMap.put(characterizedId, characteristics);
+				}
+				characteristics.add(characteristic);
 			}
 
+			// This is not correct, because method
+			// Characterized.setCharacteristics(List characteristics)
+			// updates version of Characterized StorableObject.
+			// Instead, one must set characteristics from returned characteristicMap,
+			// using method setCharacteristics0(List characteristics).
+			// For every Characterized from incoming list, be sure, that corresponding
+			// list of characteristic
+			// is available, i. e. characteristicMap.get(characterizedId) != null for
+			// a given characterizedId.
+			// Also, be sure, that returned map characteristicMap != null
+//
+//			Characterized characterized;
 //      for (Iterator it = characteristicMap.keySet().iterator(); it.hasNext();) {
-//				Characterized characterized = (Characterized) it.next();
-//				List characteristics = (List)characteristicMap.get(characterized);
+//				characterized = (Characterized) it.next();
+//				characterizedId = characterized.getId();
+//				characteristics = (List) characteristicMap.get(characterizedId);
+//
 //				characterized.setCharacteristics(characteristics);				
 //			}
 			return characteristicMap;
