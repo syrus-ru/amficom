@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseTypicalCondition.java,v 1.2 2005/02/04 14:12:36 bob Exp $
+ * $Id: DatabaseTypicalCondition.java,v 1.3 2005/02/07 09:58:20 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
  *	}
  * </pre> 
  * 
- * @version $Revision: 1.2 $, $Date: 2005/02/04 14:12:36 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/07 09:58:20 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -90,7 +90,7 @@ public class DatabaseTypicalCondition extends AbstractDatabaseTypicalCondition {
 		}
 	}
 
-	protected String getColumnName() {
+	protected String getColumnName() throws IllegalDataException {
 		return this.delegate.getColumnName();
 	}
 

@@ -1,5 +1,5 @@
 /*
-* $Id: DatabaseTypicalConditionImpl.java,v 1.2 2005/02/07 08:58:38 bob Exp $
+* $Id: DatabaseTypicalConditionImpl.java,v 1.3 2005/02/07 09:58:31 bob Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -9,13 +9,14 @@
 package com.syrus.AMFICOM.administration;
 
 import com.syrus.AMFICOM.general.AbstractDatabaseTypicalCondition;
+import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/07 08:58:38 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/07 09:58:31 $
  * @author $Author: bob $
  * @module admin_v1
  */
@@ -25,7 +26,7 @@ public class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditi
 		super(typicalCondition);
 	}
 	
-	protected String getColumnName() {
+	protected String getColumnName() throws IllegalDataException {
 		String columnName = null;
 		/* check key support */
 		switch(super.condition.getEntityCode().shortValue()) {
@@ -40,6 +41,9 @@ public class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditi
 					return StorableObjectWrapper.COLUMN_NAME;
 				}
 				break;
+			default:
+				throw new IllegalDataException("DatabaseTypicalConditionImpl.getColumnName | entity "
+					+ ObjectEntities.codeToString(this.condition.getEntityCode()) + " is not supported.");
 		}
 		return columnName;
 	}

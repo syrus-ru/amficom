@@ -1,5 +1,5 @@
 /*
-* $Id: AbstractDatabaseTypicalCondition.java,v 1.2 2005/02/04 14:09:18 bob Exp $
+* $Id: AbstractDatabaseTypicalCondition.java,v 1.3 2005/02/07 09:58:20 bob Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/04 14:09:18 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/07 09:58:20 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -30,7 +30,7 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 		this.condition = delegate;
 	}
 
-	protected abstract String getColumnName();
+	protected abstract String getColumnName() throws IllegalDataException;
 	
 	public Short getEntityCode() {
 		return this.condition.getEntityCode();
