@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorCloseViewCommand.java,v 1.5 2004/10/20 10:14:39 krupenn Exp $
+ * $Id: MapEditorCloseViewCommand.java,v 1.6 2004/12/28 17:35:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,8 +14,13 @@ import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
+import com.syrus.AMFICOM.Client.Map.Command.Map.MapNewCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewCloseCommand;
+import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewNewCommand;
 import com.syrus.AMFICOM.Client.Map.Editor.MapEditorMainFrame;
+import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.map.Map;
 
 /**
  * Класс MapMapCloseCommand используется для закрытия карты в окне карты в модуле 
@@ -23,7 +28,7 @@ import com.syrus.AMFICOM.Client.Map.Editor.MapEditorMainFrame;
  * класс использует команду MapCloseCommand для закрытия карты, после чего
  * генерирует событие закрытия
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/20 10:14:39 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/28 17:35:12 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapCloseCommand
@@ -41,15 +46,30 @@ public class MapEditorCloseViewCommand extends VoidCommand
 
 	public void execute()
 	{
-		if(mainFrame.getMapFrame() == null)
+		MapFrame mapFrame = mainFrame.getMapFrame();
+
+		if(mapFrame == null)
 			return;
 
-		if(!mainFrame.getMapFrame().checkCanCloseMap())
+		if(!mapFrame.checkCanCloseMap())
 			return;
-		if(!mainFrame.getMapFrame().checkCanCloseMapView())
+		if(!mapFrame.checkCanCloseMapView())
 			return;
 
-		new MapViewCloseCommand(mainFrame.getMapFrame()).execute();
+		new MapViewCloseCommand(mapFrame.getMapView()).execute();
+
+		MapNewCommand cmd = new MapNewCommand(mapFrame.getContext());
+		cmd.execute();
+		
+		Map map = cmd.getMap();
+
+		MapViewNewCommand cmd2 = new MapViewNewCommand(map, mapFrame.getContext());
+		cmd2.execute();
+
+		MapView mapView = cmd2.getMapView();
+
+        mapFrame.setMapView(mapView);
+
 		dispatcher.notify(new MapEvent(this, MapEvent.MAP_VIEW_CLOSED));
 		setResult(Command.RESULT_OK);
 	}

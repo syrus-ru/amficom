@@ -1,5 +1,5 @@
 /**
- * $Id: MapOpenCommand.java,v 1.9 2004/12/27 16:49:35 krupenn Exp $
+ * $Id: MapOpenCommand.java,v 1.10 2004/12/28 17:35:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceChooserDialog;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceChooserDialog;
 import com.syrus.AMFICOM.Client.Map.UI.MapController;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
@@ -45,29 +45,23 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/12/27 16:49:35 $
+ * @version $Revision: 1.10 $, $Date: 2004/12/28 17:35:12 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
 public class MapOpenCommand extends VoidCommand
 {
-	MapFrame mapFrame;
 	ApplicationContext aContext;
 	JDesktopPane desktop;
 
-	protected ObjectResource retObj;
+	protected Map map;
 
 	protected boolean canDelete = false;
 
-	public MapOpenCommand()
-	{
-	}
-
-	public MapOpenCommand(JDesktopPane desktop, MapFrame mapFrame, ApplicationContext aContext)
+	public MapOpenCommand(JDesktopPane desktop, ApplicationContext aContext)
 	{
 		this.desktop = desktop;
-		this.mapFrame = mapFrame;
 		this.aContext = aContext;
 	}
 
@@ -76,9 +70,9 @@ public class MapOpenCommand extends VoidCommand
 		this.canDelete = flag;
 	}
 
-	public ObjectResource getReturnObject()
+	public Map getMap()
 	{
-		return this.retObj;
+		return this.map;
 	}
 
 	public void execute()
@@ -128,13 +122,9 @@ public class MapOpenCommand extends VoidCommand
 
 		mcd.setContents(maps);
 
-		// отфильтровываем по домену
-		ObjectResourceTableModel ortm = mcd.getTableModel();
-		ortm.setDomainId(aContext.getSessionInterface().getDomainId());
-		ortm.restrictToDomain(true);//ф-я фильтрации схем по домену
-
 		mcd.setModal(true);
 		mcd.setVisible(true);
+
 		if(mcd.getReturnCode() == mcd.RET_CANCEL)
 		{
 			aContext.getDispatcher().notify(new StatusMessageEvent(
@@ -146,27 +136,10 @@ public class MapOpenCommand extends VoidCommand
 
 		if(mcd.getReturnCode() == mcd.RET_OK)
 		{
-			retObj = mcd.getReturnObject();
+			map = (Map )mcd.getReturnObject();
 
-			if(mapFrame == null)
-			{
-				System.out.println("mapviewer is NULL");
-				setResult(Command.RESULT_NO);
-			}
-			else
-			{
-				MapViewNewCommand cmd = new MapViewNewCommand(mapFrame, aContext);
-				cmd.execute();
-				MapView mv = cmd.mv;
-				mv.setMap((Map)mcd.getReturnObject());
+			setResult(Command.RESULT_OK);
 
-				MapView mapView = mapFrame.getMapView();
-		
-				Map map = mapView.getMap();
-		
-				mapFrame.setMapView(mv);
-				setResult(Command.RESULT_OK);
-			}
 			aContext.getDispatcher().notify(new StatusMessageEvent(
 					StatusMessageEvent.STATUS_MESSAGE,
 					LangModel.getString("Finished")));

@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorSaveViewCommand.java,v 1.3 2004/10/19 14:10:03 krupenn Exp $
+ * $Id: MapEditorSaveViewCommand.java,v 1.4 2004/12/28 17:35:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/19 14:10:03 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/28 17:35:12 $
  * @module
  * @author $Author: krupenn $
  * @see MapSaveCommand
@@ -31,10 +31,6 @@ public class MapEditorSaveViewCommand extends VoidCommand
 {
 	MapFrame mapFrame;
 	ApplicationContext aContext;
-
-	public MapEditorSaveViewCommand()
-	{
-	}
 
 	/**
 	 * 
@@ -61,7 +57,8 @@ public class MapEditorSaveViewCommand extends VoidCommand
 			setResult(Command.RESULT_NO);
 			return;
 		}
-		new MapViewSaveCommand(mapFrame, aContext).execute();
+		new MapViewSaveCommand(mapFrame.getMapView(), aContext).execute();
+
 		setResult(Command.RESULT_OK);
 	}
 

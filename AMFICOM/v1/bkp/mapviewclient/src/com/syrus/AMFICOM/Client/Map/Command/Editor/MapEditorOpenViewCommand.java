@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorOpenViewCommand.java,v 1.8 2004/10/26 13:32:01 krupenn Exp $
+ * $Id: MapEditorOpenViewCommand.java,v 1.9 2004/12/28 17:35:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,7 @@ import javax.swing.JDesktopPane;
  * пользователь выбрал MapContext, открывается окно карты и сопутствующие окна
  * и MapContext передается в окно карты
  * 
- * @version $Revision: 1.8 $, $Date: 2004/10/26 13:32:01 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/28 17:35:12 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapOpenCommand
@@ -62,26 +62,36 @@ public class MapEditorOpenViewCommand extends VoidCommand
 
 	public void execute()
 	{
+		if(mapFrame.getMapMainFrame() != null)
+		{
+			if(!mapFrame.getMapMainFrame().checkCanCloseMap())
+				return;
+			if(!mapFrame.getMapMainFrame().checkCanCloseMapView())
+				return;
+		}
 
-		if(!MapFrame.getMapMainFrame().checkCanCloseMap())
-			return;
-		if(!MapFrame.getMapMainFrame().checkCanCloseMapView())
-			return;
-
-		ApplicationModelFactory factory = new MapMapEditorApplicationModelFactory();
-
-		MapViewOpenCommand moc = new MapViewOpenCommand(desktop, MapFrame.getMapMainFrame(), aContext);
+		MapViewOpenCommand moc = new MapViewOpenCommand(desktop, aContext);
 		// в модуле редактирования топологических схем у пользователя есть
 		// возможность удалять MapContext в окне управления схемами
 		moc.setCanDelete(true);
 		moc.execute();
+
 		if (moc.getResult() == Command.RESULT_OK)
 		{
-			mapView = (MapView )moc.getReturnObject();
+			mapView = moc.getMapView();
 		
-			ViewMapWindowCommand mapCommand = new ViewMapWindowCommand(aContext.getDispatcher(), desktop, aContext, factory);
-			mapCommand.execute();
-			this.mapFrame = mapCommand.frame;
+			MapFrame mapFrame = MapFrame.getMapMainFrame();
+			if(mapFrame == null)
+			{
+				ViewMapWindowCommand mapCommand = new ViewMapWindowCommand(
+					aContext.getDispatcher(), 
+					desktop, 
+					aContext, 
+					new MapMapEditorApplicationModelFactory());
+
+				mapCommand.execute();
+				this.mapFrame = mapCommand.frame;
+			}
 
 			if(mapFrame == null)
 				return;

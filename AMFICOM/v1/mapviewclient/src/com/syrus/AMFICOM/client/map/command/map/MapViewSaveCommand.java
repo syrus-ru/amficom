@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewSaveCommand.java,v 1.9 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: MapViewSaveCommand.java,v 1.10 2004/12/28 17:35:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
+import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
 import java.awt.Dimension;
@@ -40,28 +41,24 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.10 $, $Date: 2004/12/28 17:35:12 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
  */
 public class MapViewSaveCommand extends VoidCommand
 {
-	MapFrame mapFrame;
+	MapView mapView;
 	ApplicationContext aContext;
-
-	public MapViewSaveCommand()
-	{
-	}
 
 	/**
 	 * 
 	 * @param mapFrame comments
 	 * @param aContext comments
 	 */
-	public MapViewSaveCommand(MapFrame mapFrame, ApplicationContext aContext)
+	public MapViewSaveCommand(MapView mapView, ApplicationContext aContext)
 	{
-		this.mapFrame = mapFrame;
+		this.mapView = mapView;
 		this.aContext = aContext;
 	}
 
@@ -72,16 +69,6 @@ public class MapViewSaveCommand extends VoidCommand
 		if(dataSource == null)
 			return;
 			
-		MapSaveCommand cmd = new MapSaveCommand(mapFrame, aContext);
-		cmd.execute();
-		if(cmd.getResult() == Command.RESULT_CANCEL)
-		{
-			setResult(Command.RESULT_CANCEL);
-			return;
-		}
-		
-		MapView mapView = mapFrame.getMapView();
-
 		ObjectResourcePropertiesDialog dialog = new ObjectResourcePropertiesDialog(
 				Environment.getActiveWindow(), 
 				LangModelMap.getString("MapViewProperties"), 
@@ -107,26 +94,12 @@ public class MapViewSaveCommand extends VoidCommand
 					StatusMessageEvent.STATUS_MESSAGE,
 					LangModelMap.getString("MapSaving")));
 
-//			MapStorableObjectPool.putStorableObject(mapView);
-			try
+			MapSaveCommand cmd = new MapSaveCommand(mapView.getMap(), aContext);
+			cmd.execute();
+			if(cmd.getResult() == Command.RESULT_CANCEL)
 			{
-				MapStorableObjectPool.flush(true);// save mapview
-			}
-			catch (VersionCollisionException e)
-			{
-				e.printStackTrace();
-			}
-			catch (IllegalDataException e)
-			{
-				e.printStackTrace();
-			}
-			catch (CommunicationException e)
-			{
-				e.printStackTrace();
-			}
-			catch (DatabaseException e)
-			{
-				e.printStackTrace();
+				setResult(Command.RESULT_CANCEL);
+				return;
 			}
 			
 			for(Iterator it = mapView.getSchemes().iterator(); it.hasNext();)
@@ -155,34 +128,28 @@ public class MapViewSaveCommand extends VoidCommand
 				}
 			}
 			
-			for(Iterator it = mapView.getSchemes().iterator(); it.hasNext();)
+//			MapStorableObjectPool.putStorableObject(mapView);
+			try
 			{
-				Scheme scheme = (Scheme )it.next();
-				if(scheme.changed())
-				{
-					try
-					{
-						SchemeStorableObjectPool.flush(true);// save scheme
-					}
-					catch (VersionCollisionException e)
-					{
-						e.printStackTrace();
-					}
-					catch (IllegalDataException e)
-					{
-						e.printStackTrace();
-					}
-					catch (CommunicationException e)
-					{
-						e.printStackTrace();
-					}
-					catch (DatabaseException e)
-					{
-						e.printStackTrace();
-					}
-				}
+				MapViewStorableObjectPool.flush(true);// save mapview
 			}
-
+			catch (VersionCollisionException e)
+			{
+				e.printStackTrace();
+			}
+			catch (IllegalDataException e)
+			{
+				e.printStackTrace();
+			}
+			catch (CommunicationException e)
+			{
+				e.printStackTrace();
+			}
+			catch (DatabaseException e)
+			{
+				e.printStackTrace();
+			}
+			
 			aContext.getDispatcher().notify(new StatusMessageEvent(
 					StatusMessageEvent.STATUS_MESSAGE,
 					LangModel.getString("Finished")));

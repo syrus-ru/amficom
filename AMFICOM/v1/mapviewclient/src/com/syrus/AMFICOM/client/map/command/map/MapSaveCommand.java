@@ -1,5 +1,5 @@
 /*
- * $Id: MapSaveCommand.java,v 1.7 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: MapSaveCommand.java,v 1.8 2004/12/28 17:35:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,28 +38,24 @@ import java.awt.Toolkit;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/28 17:35:12 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
  */
 public class MapSaveCommand extends VoidCommand
 {
-	MapFrame mapFrame;
+	Map map;
 	ApplicationContext aContext;
-
-	public MapSaveCommand()
-	{
-	}
 
 	/**
 	 * 
 	 * @param mapFrame comments
 	 * @param aContext comments
 	 */
-	public MapSaveCommand(MapFrame mapFrame, ApplicationContext aContext)
+	public MapSaveCommand(Map map, ApplicationContext aContext)
 	{
-		this.mapFrame = mapFrame;
+		this.map = map;
 		this.aContext = aContext;
 	}
 
@@ -70,8 +66,6 @@ public class MapSaveCommand extends VoidCommand
 		if(dataSource == null)
 			return;
 			
-		Map map = mapFrame.getMapView().getMap();
-
 		aContext.getDispatcher().notify(new StatusMessageEvent(
 				StatusMessageEvent.STATUS_MESSAGE,
 				LangModelMap.getString("MapSaving")));

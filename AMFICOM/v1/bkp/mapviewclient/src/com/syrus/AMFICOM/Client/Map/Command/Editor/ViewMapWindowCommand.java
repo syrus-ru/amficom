@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapWindowCommand.java,v 1.6 2004/11/10 16:00:54 krupenn Exp $
+ * $Id: ViewMapWindowCommand.java,v 1.7 2004/12/28 17:35:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,6 +27,7 @@ import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 
+import com.syrus.AMFICOM.map.Map;
 import java.awt.Dimension;
 
 import javax.swing.JDesktopPane;
@@ -36,7 +37,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/11/10 16:00:54 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/28 17:35:12 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -94,29 +95,14 @@ public class ViewMapWindowCommand extends VoidCommand
 
 		frame = MapFrame.getMapMainFrame();
 		
-		MapView mv = null;
-		
-		MapViewNewCommand command = new MapViewNewCommand(null, aContext);
-		command.execute();
-		if(command.getResult() == Command.RESULT_OK)
-		{
-			mv = command.mv;
-		}
-		MapNewCommand command1 = new MapNewCommand(null, aContext);
-		command1.execute();
-		if(command1.getResult() == Command.RESULT_OK)
-		{
-			mv.setMap(command1.mc);
-		}
-
 		if(frame.isVisible())
 		{
 			if(frame.getParent() != null)
 			{
 				if(frame.getParent().equals(desktop))
 				{
-					frame.setMapView(mv);
-					frame.show();
+					showMapFrame(frame);
+
 					dispatcher.notify(new MapEvent(frame, MapEvent.MAP_FRAME_SHOWN));
 					aContext.getDispatcher().notify(new StatusMessageEvent(
 							StatusMessageEvent.STATUS_MESSAGE,
@@ -134,6 +120,48 @@ public class ViewMapWindowCommand extends VoidCommand
 			}
 		}//if(frame.isVisible())
 
+		setMapFrame(frame, aC);
+		showMapFrame(frame);
+		dispatcher.notify(new MapEvent(frame, MapEvent.MAP_FRAME_SHOWN));
+		aContext.getDispatcher().notify(new StatusMessageEvent(
+				StatusMessageEvent.STATUS_MESSAGE,
+				LangModel.getString("Finished")));
+		setResult(Command.RESULT_OK);
+	}
+
+	protected void showMapFrame(MapFrame mapFrame)
+	{
+		MapView mapView = null;
+		Map map = null;
+		
+		MapNewCommand mnc = new MapNewCommand(aContext);
+		mnc.execute();
+		if(mnc.getResult() == Command.RESULT_OK)
+		{
+			map = mnc.getMap();
+		}
+		else
+			return;
+
+		MapViewNewCommand mvnc = new MapViewNewCommand(null, aContext);
+		mvnc.execute();
+		if(mvnc.getResult() == Command.RESULT_OK)
+		{
+			mapView = mvnc.getMapView();
+		}
+		else
+			return;
+		
+		mapView.setMap(map);
+
+		mapView.setLogicalNetLayer(frame.getMapViewer().getLogicalNetLayer());
+
+		frame.setMapView(mapView);
+		frame.show();
+	}
+
+	protected void setMapFrame(MapFrame mapFrame, ApplicationContext aC)
+	{
 		JDesktopPane dt = (JDesktopPane )frame.getParent();
 		if(dt != null)
 		{
@@ -144,14 +172,6 @@ public class ViewMapWindowCommand extends VoidCommand
 		Dimension dim = desktop.getSize();
 		frame.setLocation(0, 0);
 		frame.setSize(dim.width * 4 / 5, dim.height * 7 / 8);
-		mv.setLogicalNetLayer(frame.getMapViewer().getLogicalNetLayer());
-		frame.setMapView(mv);
-		frame.show();
-		dispatcher.notify(new MapEvent(frame, MapEvent.MAP_FRAME_SHOWN));
-		aContext.getDispatcher().notify(new StatusMessageEvent(
-				StatusMessageEvent.STATUS_MESSAGE,
-				LangModel.getString("Finished")));
-		setResult(Command.RESULT_OK);
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewSaveAsCommand.java,v 1.7 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: MapViewSaveAsCommand.java,v 1.8 2004/12/28 17:35:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,10 +25,13 @@ import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
+import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 
@@ -38,28 +41,25 @@ import java.awt.Toolkit;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/28 17:35:12 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
  */
 public class MapViewSaveAsCommand extends VoidCommand
 {
-	MapFrame mapFrame;
+	MapView mapView;
+	MapView newMapView;
     ApplicationContext aContext;
-
-	public MapViewSaveAsCommand()
-	{
-	}
 
 	/**
 	 * 
 	 * @param paramName comments
 	 * @exception Exception comments
 	 */
-	public MapViewSaveAsCommand(MapFrame mapFrame, ApplicationContext aContext)
+	public MapViewSaveAsCommand(MapView mapView, ApplicationContext aContext)
 	{
-		this.mapFrame = mapFrame;
+		this.mapView = mapView;
 		this.aContext = aContext;
 	}
 
@@ -70,15 +70,31 @@ public class MapViewSaveAsCommand extends VoidCommand
 		if(dataSource == null)
 			return;
 			
-		MapView mv = mapFrame.getMapView();
+		try
+		{
+			newMapView = new MapView(null, mapView.getMap());
 
-		MapView mv2 = null;//(MapView)mv.clone(dataSource);
+			MapViewStorableObjectPool.putStorableObject(newMapView.getMapViewStorable());
+
+			newMapView.setName(mapView.getName() + "(Copy)");
+		}
+		catch (CreateObjectException e)
+		{
+			e.printStackTrace();
+			return;
+		}
+		catch (IllegalObjectEntityException e)
+		{
+			e.printStackTrace();
+			setResult(RESULT_NO);
+			return;
+		}
 
 		ObjectResourcePropertiesDialog dialog = new ObjectResourcePropertiesDialog(
 				Environment.getActiveWindow(), 
 				LangModelMap.getString("MapViewProperties"), 
 				true, 
-				mv2,
+				newMapView,
 				MapViewPanel.getInstance());
 
 		Dimension screenSize =  Toolkit.getDefaultToolkit().getScreenSize();
@@ -95,10 +111,23 @@ public class MapViewSaveAsCommand extends VoidCommand
 
 		if ( dialog.ifAccept())
 		{
-//			MapStorableObjectPool.putStorableObject(mv2);
+//			try
+//			{
+//				newMapView = (MapView )mapView.clone();
+//			}
+//			catch(CloneNotSupportedException e)
+//			{
+//				return;
+//			}
+/*
+			if(!mc2.scheme_id.equals(mc.scheme_id))
+			{
+				Pool.removeHash(MapPropertiesManager.MAP_CLONED_IDS);
+			}
+*/
 			try
 			{
-				MapStorableObjectPool.flush(true);// save mapview
+				MapViewStorableObjectPool.flush(true);// save mapview
 			}
 			catch (VersionCollisionException e)
 			{
@@ -117,13 +146,6 @@ public class MapViewSaveAsCommand extends VoidCommand
 				e.printStackTrace();
 			}
 	
-			if (mapFrame != null)
-			{
-				mapFrame.setMapView(mv2);
-				mv2.setMap(mv.getMap());
-				mapFrame.setTitle( LangModelMap.getString("Map") + " - "
-												 + mv2.getName());
-			}
 			aContext.getDispatcher().notify(new StatusMessageEvent(
 					StatusMessageEvent.STATUS_MESSAGE,
 					LangModel.getString("Finished")));
@@ -136,6 +158,16 @@ public class MapViewSaveAsCommand extends VoidCommand
 					LangModel.getString("Aborted")));
 			setResult(Command.RESULT_CANCEL);
 		}
+	}
+
+	public MapView getMapView()
+	{
+		return mapView;
+	}
+
+	public MapView getNewMapView()
+	{
+		return newMapView;
 	}
 
 }

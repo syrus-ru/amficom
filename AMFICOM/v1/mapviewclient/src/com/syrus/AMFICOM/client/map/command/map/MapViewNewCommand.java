@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewNewCommand.java,v 1.9 2004/12/24 15:42:12 krupenn Exp $
+ * $Id: MapViewNewCommand.java,v 1.10 2004/12/28 17:35:12 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -19,17 +19,20 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
 
 /**
  * создать новый вид 
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/12/24 15:42:12 $
+ * @version $Revision: 1.10 $, $Date: 2004/12/28 17:35:12 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -37,18 +40,17 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
 public class MapViewNewCommand extends VoidCommand
 {
 	ApplicationContext aContext;
-	MapFrame mapFrame;
 
-	public MapView mv;
-	public Map mc;
+	MapView mapView;
+	Map map;
 
 	public MapViewNewCommand()
 	{
 	}
 
-	public MapViewNewCommand(MapFrame mapFrame, ApplicationContext aContext)
+	public MapViewNewCommand(Map map, ApplicationContext aContext)
 	{
-		this.mapFrame = mapFrame;
+		this.map = map;
 		this.aContext = aContext;
 	}
 
@@ -61,45 +63,49 @@ public class MapViewNewCommand extends VoidCommand
 				new StatusMessageEvent(
 					StatusMessageEvent.STATUS_MESSAGE,
 					LangModelMap.getString("MapNew")));
-		mv = new MapView(null);
-
-		mv.setName(LangModelMap.getString("New"));
-
-		Map mc;
 		try
 		{
-			mc = Map.createInstance(
-				new Identifier(aContext.getSessionInterface().getAccessIdentifier().user_id), 
-				"", 
-				"");
+			mapView = new MapView(null, map);
+
+			MapViewStorableObjectPool.putStorableObject(mapView.getMapViewStorable());
 		}
-		catch (Exception e)
+		catch (CreateObjectException e)
 		{
 			e.printStackTrace();
+			setResult(RESULT_NO);
+			return;
+		}
+		catch (IllegalObjectEntityException e)
+		{
+			e.printStackTrace();
+			setResult(RESULT_NO);
 			return;
 		}
 
-		mc.setDomainId(
-				new Identifier(aContext.getSessionInterface().getAccessIdentifier().domain_id));
-
-		mv.setMap(mc);
+		mapView.setName(LangModelMap.getString("New"));
 
 		setResult(Command.RESULT_OK);
-		if (mapFrame != null)
-		{
-			mv.setLogicalNetLayer(mapFrame.getMapViewer().getLogicalNetLayer());
-
-			MapView mapView = mapFrame.getMapView();
-	
-			Map map = mapView.getMap();
-
-			mapFrame.setMapView(mv);
-			mapFrame.setTitle( LangModelMap.getString("Map") + " - " + mv.getName());
-		}
+//		if (mapFrame != null)
+//		{
+//			mv.setLogicalNetLayer(mapFrame.getMapViewer().getLogicalNetLayer());
+//
+//			MapView mapView = mapFrame.getMapView();
+//	
+//			Map map = mapView.getMap();
+//
+//			mapFrame.setMapView(mv);
+//			mapFrame.setTitle( LangModelMap.getString("Map") + " - " + mv.getName());
+//		}
 		aContext.getDispatcher().notify(new StatusMessageEvent(
 				StatusMessageEvent.STATUS_MESSAGE,
 				LangModel.getString("Finished")));
 			setResult(Command.RESULT_OK);
+	}
+
+
+	public MapView getMapView()
+	{
+		return mapView;
 	}
 
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: MapNewCommand.java,v 1.11 2004/12/24 15:42:12 krupenn Exp $
+ * $Id: MapNewCommand.java,v 1.12 2004/12/28 17:35:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.map.MapStorableObjectPool;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/12/24 15:42:12 $
+ * @version $Revision: 1.12 $, $Date: 2004/12/28 17:35:12 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -40,18 +40,15 @@ import com.syrus.AMFICOM.map.MapStorableObjectPool;
 public class MapNewCommand extends VoidCommand
 {
 	ApplicationContext aContext;
-	MapFrame mapFrame;
 
-	public MapView mv;
-	public Map mc;
+	Map map;
 
 	public MapNewCommand()
 	{
 	}
 
-	public MapNewCommand(MapFrame mapFrame, ApplicationContext aContext)
+	public MapNewCommand(ApplicationContext aContext)
 	{
-		this.mapFrame = mapFrame;
 		this.aContext = aContext;
 	}
 
@@ -68,55 +65,55 @@ public class MapNewCommand extends VoidCommand
 						LangModelMap.getString("MapNew")));
 		try
 		{
-			mc = Map.createInstance(
+			map = Map.createInstance(
 				new Identifier(aContext.getSessionInterface().getAccessIdentifier().user_id), 
-				"", 
+				LangModelMap.getString("New"), 
 				"");
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
+			map = null;
+			setResult(Command.RESULT_NO);
 			return;
 		}
 
-		mc.setDomainId(
+		map.setDomainId(
 				new Identifier(aContext.getSessionInterface().getAccessIdentifier().domain_id));
 
-		mv = new MapView(null);
-
-		mv.setName(LangModelMap.getString("New"));
-
-		mv.setMap(mc);
-
-//		Pool.put( MapView.typ, mv.getId(), mv);
-
-		if (mapFrame != null)
-		{
-
-			MapView mapView = mapFrame.getMapView();
-	
-			Map map = mapView.getMap();
-			try
-			{
-				MapStorableObjectPool.delete(map.getId());
-			}
-			catch (CommunicationException e)
-			{
-				e.printStackTrace();
-			}
-			catch (DatabaseException e)
-			{
-				e.printStackTrace();
-			}
-	
-			mv.setLogicalNetLayer(mapFrame.getMapViewer().getLogicalNetLayer());
-			mapFrame.setMapView(mv);
-			mapFrame.setTitle( LangModelMap.getString("Map") + " - " + mv.getName());
-		}
+//		if (mapFrame != null)
+//		{
+//
+//			MapView mapView = mapFrame.getMapView();
+//	
+//			Map map = mapView.getMap();
+//			try
+//			{
+//				MapStorableObjectPool.delete(map.getId());
+//			}
+//			catch (CommunicationException e)
+//			{
+//				e.printStackTrace();
+//			}
+//			catch (DatabaseException e)
+//			{
+//				e.printStackTrace();
+//			}
+//	
+//			mapView.setLogicalNetLayer(mapFrame.getMapViewer().getLogicalNetLayer());
+//			mapFrame.setMapView(mv);
+//			mapFrame.setTitle( LangModelMap.getString("Map") + " - " + mv.getName());
+//		}
 		aContext.getDispatcher().notify(new StatusMessageEvent(
 				StatusMessageEvent.STATUS_MESSAGE,
 				LangModel.getString("Finished")));
 		setResult(Command.RESULT_OK);
+	}
+
+
+	public Map getMap()
+	{
+		return map;
 	}
 
 }

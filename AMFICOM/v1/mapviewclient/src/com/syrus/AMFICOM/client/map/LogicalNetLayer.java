@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.29 2004/12/24 15:42:11 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.30 2004/12/28 17:35:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -102,7 +102,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.29 $, $Date: 2004/12/24 15:42:11 $
+ * @version $Revision: 1.30 $, $Date: 2004/12/28 17:35:12 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -396,14 +396,15 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 
 		if(mapView == null)
 		{
-			try
-			{
-				this.mapView = new MapView(this, null);
-			}
-			catch (CreateObjectException e)
-			{
-				
-			}
+			System.out.println("mapView null!");
+//			try
+//			{
+//				this.mapView = new MapView(this, null);
+//			}
+//			catch (CreateObjectException e)
+//			{
+//				
+//			}
 		}
 		else
 		{
@@ -451,14 +452,14 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setMap(" + map + ")");
 		
-		try
-		{
-			setMapView(new MapView(this, map));
-		}
-		catch (CreateObjectException e)
-		{
-			
-		}
+//		try
+//		{
+//			setMapView(new MapView(this, map));
+//		}
+//		catch (CreateObjectException e)
+//		{
+//			
+//		}
 		getMapView().setMap(map);
 	}
 

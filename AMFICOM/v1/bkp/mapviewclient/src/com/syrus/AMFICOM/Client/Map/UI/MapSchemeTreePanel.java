@@ -327,12 +327,6 @@ public final class MapSchemeTreePanel extends JPanel
 			return;
 		}
 
-		// отфильтровываем по домену
-		ObjectResourceTableModel ortm = mcd.getTableModel();
-		ortm.setDomainId(aContext.getSessionInterface().getDomainId());
-		ortm.restrictToDomain(true);//ф-я фильтрации схем по домену
-		ortm.fireTableDataChanged();
-
 		mcd.setModal(true);
 		mcd.setVisible(true);
 		if(mcd.getReturnCode() == mcd.RET_CANCEL)

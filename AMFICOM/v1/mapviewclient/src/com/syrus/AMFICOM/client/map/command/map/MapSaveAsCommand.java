@@ -1,5 +1,5 @@
 /*
- * $Id: MapSaveAsCommand.java,v 1.10 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: MapSaveAsCommand.java,v 1.11 2004/12/28 17:35:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,19 +41,16 @@ import java.awt.Toolkit;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.11 $, $Date: 2004/12/28 17:35:12 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
  */
 public class MapSaveAsCommand extends VoidCommand
 {
-	MapFrame mapFrame;
+	Map map;
+	Map newMap;
     ApplicationContext aContext;
-
-	public MapSaveAsCommand()
-	{
-	}
 
 	/**
 	 * 
@@ -61,10 +58,10 @@ public class MapSaveAsCommand extends VoidCommand
 	 * @exception Exception comments
 	 */
 	public MapSaveAsCommand(
-			MapFrame mapFrame, 
+			Map map, 
 			ApplicationContext aContext)
 	{
-		this.mapFrame = mapFrame;
+		this.map = map;
 		this.aContext = aContext;
 	}
 
@@ -75,16 +72,12 @@ public class MapSaveAsCommand extends VoidCommand
 		if(dataSource == null)
 			return;
 			
-		Map mc = mapFrame.getMapView().getMap();
-
 		Identifier userId = new Identifier(
 			aContext.getSessionInterface().getAccessIdentifier().user_id);
 
-		Map mc2;
-
 		try
 		{
-			mc2 = Map.createInstance(userId, mc.getName() + "(Copy)", "");
+			newMap = Map.createInstance(userId, map.getName() + "(Copy)", "");
 		}
 		catch (CreateObjectException e)
 		{
@@ -94,13 +87,13 @@ public class MapSaveAsCommand extends VoidCommand
 
 		aContext.getDispatcher().notify(new StatusMessageEvent(
 				StatusMessageEvent.STATUS_MESSAGE,
-				LangModelMap.getString("MapContextSaving")));
+				LangModelMap.getString("MapSaving")));
 
 		ObjectResourcePropertiesDialog dialog = new ObjectResourcePropertiesDialog(
 				Environment.getActiveWindow(), 
-				LangModel.getString("MapContextProperties"), 
+				LangModelMap.getString("MapProperties"), 
 				true, 
-				mc2,
+				newMap,
 				MapPanel.getInstance());
 
 		Dimension screenSize =  Toolkit.getDefaultToolkit().getScreenSize();
@@ -111,15 +104,15 @@ public class MapSaveAsCommand extends VoidCommand
 		if (frameSize.width > screenSize.width)
 			frameSize.width = screenSize.width;
 		dialog.setLocation(
-				(screenSize.width - frameSize.width)/2, 
-				(screenSize.height - frameSize.height)/2);
+				(screenSize.width - frameSize.width) / 2, 
+				(screenSize.height - frameSize.height) / 2);
 		dialog.setVisible(true);
 
 		if ( dialog.ifAccept())
 		{
 //			try
 //			{
-//				mc2 = (Map )mc.clone(dataSource);
+//				newMap = (Map )map.clone();
 //			}
 //			catch(CloneNotSupportedException e)
 //			{
@@ -133,7 +126,7 @@ public class MapSaveAsCommand extends VoidCommand
 */
 			try
 			{
-				MapStorableObjectPool.putStorableObject(mc2);
+				MapStorableObjectPool.putStorableObject(newMap);
 			}
 			catch (IllegalObjectEntityException e)
 			{
@@ -141,7 +134,7 @@ public class MapSaveAsCommand extends VoidCommand
 			}
 			try
 			{
-				MapStorableObjectPool.flush(true);// save mc2
+				MapStorableObjectPool.flush(true);// save newMap
 			}
 			catch (VersionCollisionException e)
 			{
@@ -160,12 +153,6 @@ public class MapSaveAsCommand extends VoidCommand
 				e.printStackTrace();
 			}
 
-			if (mapFrame != null)
-			{
-				mapFrame.getMapView().setMap(mc2);
-				mapFrame.setTitle( LangModelMap.getString("Map") + " - "
-												 + mc2.getName());
-			}
 			aContext.getDispatcher().notify(new StatusMessageEvent(
 					StatusMessageEvent.STATUS_MESSAGE,
 					LangModel.getString("Finished")));
@@ -178,6 +165,16 @@ public class MapSaveAsCommand extends VoidCommand
 					LangModel.getString("Aborted")));
 			setResult(Command.RESULT_CANCEL);
 		}
+	}
+
+	public Map getMap()
+	{
+		return map;
+	}
+
+	public Map getNewMap()
+	{
+		return newMap;
 	}
 
 }

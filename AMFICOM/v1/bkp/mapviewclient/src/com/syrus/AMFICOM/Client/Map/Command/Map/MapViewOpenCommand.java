@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewOpenCommand.java,v 1.9 2004/12/27 16:49:35 krupenn Exp $
+ * $Id: MapViewOpenCommand.java,v 1.10 2004/12/28 17:35:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -45,29 +45,23 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/12/27 16:49:35 $
+ * @version $Revision: 1.10 $, $Date: 2004/12/28 17:35:12 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
 public class MapViewOpenCommand extends VoidCommand
 {
-	MapFrame mapFrame;
 	ApplicationContext aContext;
 	JDesktopPane desktop;
 
-	protected Object retObj;
+	protected MapView mapView;
 
 	protected boolean canDelete = false;
 
-	public MapViewOpenCommand()
-	{
-	}
-
-	public MapViewOpenCommand(JDesktopPane desktop, MapFrame mapFrame, ApplicationContext aContext)
+	public MapViewOpenCommand(JDesktopPane desktop, ApplicationContext aContext)
 	{
 		this.desktop = desktop;
-		this.mapFrame = mapFrame;
 		this.aContext = aContext;
 	}
 
@@ -76,9 +70,9 @@ public class MapViewOpenCommand extends VoidCommand
 		this.canDelete = flag;
 	}
 	
-	public Object getReturnObject()
+	public MapView getMapView()
 	{
-		return this.retObj;
+		return this.mapView;
 	}
 
 	public void execute()
@@ -122,18 +116,14 @@ public class MapViewOpenCommand extends VoidCommand
 		}
 
 		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(MapViewController.getInstance(), ObjectEntities.MAP_ENTITY);//ObjectEntities.MAP_VIEW_ENTITY
+
 		mcd.setCanDelete(canDelete);
 
 		mcd.setContents(mvs);
 
-		// отфильтровываем по домену
-		ObjectResourceTableModel ortm = mcd.getTableModel();
-		ortm.setDomainId(aContext.getSessionInterface().getDomainId());
-		ortm.restrictToDomain(true);//ф-я фильтрации схем по домену
-		ortm.fireTableDataChanged();
-
 		mcd.setModal(true);
 		mcd.setVisible(true);
+
 		if(mcd.getReturnCode() == mcd.RET_CANCEL)
 		{
 			aContext.getDispatcher().notify(new StatusMessageEvent(
@@ -145,22 +135,10 @@ public class MapViewOpenCommand extends VoidCommand
 
 		if(mcd.getReturnCode() == mcd.RET_OK)
 		{
-			retObj = mcd.getReturnObject();
+			mapView = (MapView )mcd.getReturnObject();
 
-			if(mapFrame == null)
-			{
-				System.out.println("mapviewer is NULL");
-				setResult(Command.RESULT_NO);
-			}
-			else
-			{
-				MapView mapView = mapFrame.getMapView();
-		
-				Map map = mapView.getMap();
-		
-				mapFrame.setMapView((MapView)mcd.getReturnObject());
-				setResult(Command.RESULT_OK);
-			}
+			setResult(Command.RESULT_OK);
+
 			aContext.getDispatcher().notify(new StatusMessageEvent(
 					StatusMessageEvent.STATUS_MESSAGE,
 					LangModel.getString("Finished")));

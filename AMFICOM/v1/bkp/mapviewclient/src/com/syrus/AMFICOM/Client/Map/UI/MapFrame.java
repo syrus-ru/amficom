@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.15 2004/12/23 16:57:59 krupenn Exp $
+ * $Id: MapFrame.java,v 1.16 2004/12/28 17:35:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -79,7 +79,7 @@ import javax.swing.event.InternalFrameEvent;
  * 
  * 
  * 
- * @version $Revision: 1.15 $, $Date: 2004/12/23 16:57:59 $
+ * @version $Revision: 1.16 $, $Date: 2004/12/28 17:35:13 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -272,8 +272,6 @@ public class MapFrame extends JInternalFrame
 		if(aContext != null)
 		{
 			this.aContext = aContext;
-			if(aContext.getApplicationModel() == null)
-				aContext.setApplicationModel(new ApplicationModel());
 			setModel(aContext.getApplicationModel());
 			aContext.getDispatcher().register(this, MapEvent.MAP_ELEMENT_CHANGED);
 			aContext.getDispatcher().register(this, MapEvent.MAP_ELEMENT_SELECTED);
@@ -335,7 +333,7 @@ public class MapFrame extends JInternalFrame
 			ContextChangeEvent cce = (ContextChangeEvent )ae;
 			if(cce.DOMAIN_SELECTED)
 			{
-				String di = aContext.getSessionInterface().getDomainId();
+				Identifier di = new Identifier(aContext.getSessionInterface().getAccessIdentifier().domain_id);
 				if(getMapView() == null)
 					return;
 				Identifier di2 = getMapView().getDomainId();

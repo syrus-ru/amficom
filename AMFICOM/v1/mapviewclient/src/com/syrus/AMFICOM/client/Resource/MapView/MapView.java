@@ -1,5 +1,5 @@
 /**
- * $Id: MapView.java,v 1.27 2004/12/27 16:49:35 krupenn Exp $
+ * $Id: MapView.java,v 1.28 2004/12/28 17:35:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,7 @@
 
 package com.syrus.AMFICOM.Client.Resource.MapView;
 
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeElementCommand;
@@ -36,6 +37,7 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.scheme.corba.*;
 
@@ -58,7 +60,7 @@ import com.syrus.AMFICOM.Client.Map.mapview.UnboundNode;
  * 
  * 
  * 
- * @version $Revision: 1.27 $, $Date: 2004/12/27 16:49:35 $
+ * @version $Revision: 1.28 $, $Date: 2004/12/28 17:35:13 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -74,8 +76,6 @@ public final class MapView
 	protected boolean isOpened = false;
 
 	protected boolean changed = false;
-
-	protected List schemes = new LinkedList();
 
 	protected List cablePaths = new LinkedList();
 	protected List measurementPaths = new LinkedList();
@@ -102,7 +102,7 @@ public final class MapView
 		mapViewStorable = com.syrus.AMFICOM.mapview.MapView.createInstance(
 			creatorId,
 			domainId,
-			"Без названия",
+			LangModelMap.getString("New"),
 			"",
 			0.0D,
 			0.0D,
@@ -123,7 +123,7 @@ public final class MapView
 				"constructor call", 
 				getClass().getName(), 
 				"MapView()");
-				
+
 		this.mapViewStorable = mapViewStorable;
 		setLogicalNetLayer(null);
 	}
@@ -183,6 +183,7 @@ public final class MapView
 	public void setMap(Map mc)
 	{
 		mapViewStorable.setMap(mc);
+		scanSchemes();
 	}
 	
 	public List getSchemes()
@@ -302,16 +303,25 @@ public final class MapView
 		return logicalNetLayer;
 	}
 
+	public void scanSchemes()
+	{
+		for(Iterator it = mapViewStorable.getSchemes().iterator(); it.hasNext();)
+		{
+			scanElements((Scheme )it.next());
+		}
+	}
+
+
 	public void addScheme(Scheme sch)
 	{
-		this.schemes.add(sch);
+		mapViewStorable.addScheme(sch);
 //		mapViewStorable.addSchemeId(sch.id());
 		scanElements(sch);
 	}
 
 	public void removeScheme(Scheme sch)
 	{
-		this.schemes.remove(sch);
+		mapViewStorable.addScheme(sch);
 		removePaths(sch);
 		removeCables(sch);
 		removeElements(sch);
@@ -1106,6 +1116,12 @@ public final class MapView
 	public boolean isChanged()
 	{
 		return mapViewStorable.isChanged();
+	}
+
+
+	public com.syrus.AMFICOM.mapview.MapView getMapViewStorable()
+	{
+		return mapViewStorable;
 	}
 
 /* from SiteNode
