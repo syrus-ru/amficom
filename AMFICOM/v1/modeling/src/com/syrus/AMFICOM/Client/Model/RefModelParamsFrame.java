@@ -97,7 +97,7 @@ public class RefModelParamsFrame extends ATableFrame
 		if (bs == null)
 			return;
 		bs.title = "Модель \"" + path.name() + "\"";
-		bs.schemePathId = path.id().identifierString();
+		bs.schemePathId = path.getId().getIdentifierString();
 		Pool.put("bellcorestructure", "primarytrace", bs);
 		aContext.getDispatcher().notify(new RefChangeEvent("all", RefChangeEvent.CLOSE_EVENT));
 		aContext.getDispatcher().notify(new RefChangeEvent("primarytrace", RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
@@ -196,7 +196,7 @@ public class RefModelParamsFrame extends ATableFrame
 		writer.setWavelength((int)wl);
 		writer.setTime(System.currentTimeMillis() / 1000);
 		writer.setOpticalModule("AMFICOM generated");
-		writer.setPathId(path.id().identifierString());
+		writer.setPathId(path.getId().getIdentifierString());
 		writer.setUnits("mt");
 		writer.setAverages(1);
 		writer.setRangeParameters(1.46800, delta_x, delta_x * y.length);

@@ -41,7 +41,7 @@ public class ModelGenerator
 //		ObjectResourceSorter sorter = SchemePath.getSorter();
 //		sorter.setDataSet(pathelements);
 //		path.links = sorter.sort("num", ObjectResourceSorter.SORT_ASCENDING);
-		Pool.put("activecontext", "activepathid", path.id());
+		Pool.put("activecontext", "activepathid", path.getId());
 	}
 
 	public ReflectogramEvent[] model(
@@ -213,7 +213,7 @@ public class ModelGenerator
 				ModelingEvent event = addCableLink(scl, thread);
 				if (event == null) {
 					System.out.println("Fail creating modeling element from cable " + scl.name() + "(" +
-														 scl.id().identifierString() + ")");
+														 scl.getId().getIdentifierString() + ")");
 					return null;
 				}
 				reflectoElements.add(event);
@@ -228,7 +228,7 @@ public class ModelGenerator
 				ModelingEvent event = addPort(sourcePort);
 				if (event == null) {
 					System.out.println("Fail creating modeling element from port " + sourcePort.name() + "(" +
-														 sourcePort.id().identifierString() + ")");
+														 sourcePort.getId().getIdentifierString() + ")");
 					return null;
 				}
 				reflectoElements.add(event);
@@ -236,7 +236,7 @@ public class ModelGenerator
 				event = addLink(sl);
 				if (event == null) {
 					System.out.println("Fail creating modeling element from link " + sl.name() + "(" +
-														 sl.id().identifierString() + ")");
+														 sl.getId().getIdentifierString() + ")");
 					return null;
 				}
 				reflectoElements.add(event);
@@ -248,7 +248,7 @@ public class ModelGenerator
 				event = addPort(targetPort);
 				if (event == null) {
 					System.out.println("Fail creating modeling element from port " + targetPort.name() +
-														 "(" + targetPort.id().identifierString() + ")");
+														 "(" + targetPort.getId().getIdentifierString() + ")");
 					return null;
 				}
 				reflectoElements.add(event);

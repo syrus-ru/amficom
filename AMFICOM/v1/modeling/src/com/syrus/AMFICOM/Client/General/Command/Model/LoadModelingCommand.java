@@ -155,7 +155,7 @@ public class LoadModelingCommand extends VoidCommand
 						SchemePath sp = (SchemePath)it.next();
 						if (tpathIds.contains(sp.pathImpl().getId()))
 						{
-							Pool.put("activecontext", "activepathid", sp.id());
+							Pool.put("activecontext", "activepathid", sp.getId());
 							break;
 						}
 					}
