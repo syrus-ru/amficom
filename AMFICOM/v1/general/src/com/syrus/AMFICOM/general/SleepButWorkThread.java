@@ -1,5 +1,5 @@
 /*
- * $Id: SleepButWorkThread.java,v 1.4 2004/08/13 17:46:03 arseniy Exp $
+ * $Id: SleepButWorkThread.java,v 1.5 2004/08/14 19:25:18 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.general;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/08/13 17:46:03 $
+ * @version $Revision: 1.5 $, $Date: 2004/08/14 19:25:18 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -19,11 +19,13 @@ import com.syrus.util.Log;
 public abstract class SleepButWorkThread extends Thread {
 	static final int TIME_MULTIPLIER = 2;
 	public static final int MAX_FALLS = 3;
+	public static final int FALL_CODE_NO_ERROR = 0;
 
 	protected long initialTimeToSleep;
 	private long timeToSleep;
 	private int maxFalls;
 	private int fallsCounter;
+	protected int fallCode;
 
 	protected SleepButWorkThread(long initialTimeToSleep) {
 		this (initialTimeToSleep, MAX_FALLS);
@@ -34,6 +36,7 @@ public abstract class SleepButWorkThread extends Thread {
 		this.timeToSleep = initialTimeToSleep;
 		this.maxFalls = maxFalls;
 		this.fallsCounter = 0;
+		this.fallCode = FALL_CODE_NO_ERROR;
 	}
 	
 	protected void sleepCauseOfFall() {
@@ -51,14 +54,15 @@ public abstract class SleepButWorkThread extends Thread {
 		else {
 			Log.errorMessage("Number of falls: " + this.fallsCounter + " reached maximum: " + this.maxFalls + ". Shutting down");
 			this.clearFalls();
-			this.processError();
+			this.processFall();
 		}
 	}
 	
 	protected void clearFalls() {
 		this.fallsCounter = 0;
 		this.timeToSleep = this.initialTimeToSleep;
+		this.fallCode = FALL_CODE_NO_ERROR;
 	}
 	
-	protected abstract void processError();
+	protected abstract void processFall();
 }
