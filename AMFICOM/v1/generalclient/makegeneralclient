@@ -18,7 +18,7 @@ TARGET_SRC=$(LIBSRC)\generalclientsource.jar
 TEST_CLASS_LIST=src_generalclienttest.txt
 
 SERVERCP=$(LIB)\corba.jar
-CLIENTCP=$(LIB)\util.jar;$(LIB)\corbaportable.jar;$(LIB)\filter.jar
+CLIENTCP=$(LIB)\util.jar;$(LIB)\corbaportable.jar;$(LIB)\general.jar;$(LIB)\filter.jar;$(LIB)\configuration.jar;$(LIB)\measurement.jar
 
 LAYOUTCP=$(EXTLIB)\layout.jar;$(EXTLIB)\kunststoff.jar
 REPORTCP=$(EXTLIB)\jfreechartK.jar

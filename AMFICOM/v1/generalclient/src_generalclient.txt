@@ -39,7 +39,9 @@ src\com\syrus\AMFICOM\Client\General\Command\Command.java
 src\com\syrus\AMFICOM\Client\General\Command\CommandBundle.java
 src\com\syrus\AMFICOM\Client\General\Command\CommandList.java
 src\com\syrus\AMFICOM\Client\General\Command\ExitCommand.java
+src\com\syrus\AMFICOM\Client\General\Command\ExportCommand.java
 src\com\syrus\AMFICOM\Client\General\Command\HelpAboutCommand.java
+src\com\syrus\AMFICOM\Client\General\Command\ImportCommand.java
 src\com\syrus\AMFICOM\Client\General\Command\OpenTypedTemplateCommand.java
 src\com\syrus\AMFICOM\Client\General\Command\ViewNavigatorCommand.java
 src\com\syrus\AMFICOM\Client\General\Command\VoidCommand.java

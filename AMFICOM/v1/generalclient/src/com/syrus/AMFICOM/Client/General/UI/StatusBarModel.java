@@ -129,14 +129,34 @@ class StatusBarField
 public class StatusBarModel extends JPanel implements OperationListener
 {
 	public static final String FIELD_PREFIX = "field";
-	
+
+	/**
+	 * @deprecated use FIELD_STATUS
+	 */	
 	public static String field_status = "status";
+	/**
+	 * @deprecated use FIELD_SERVER
+	 */	
 	public static String field_server = "server";
+	/**
+	 * @deprecated use FIELD_SESSION
+	 */	
 	public static String field_session = "session";
+	/**
+	 * @deprecated use FIELD_USER
+	 */	
 	public static String field_user = "user";
+	/**
+	 * @deprecated use FIELD_TIME
+	 */	
 	public static String field_time = "time";
 
 	public static String FIELD_DOMAIN = "domain";
+	public static String FIELD_STATUS = "status";
+	public static String FIELD_SERVER = "server";
+	public static String FIELD_SESSION = "session";
+	public static String FIELD_USER = "user";
+	public static String FIELD_TIME = "time";
 
 	private ProgressBar pbar;
 	private boolean pbarEnabled = false;
