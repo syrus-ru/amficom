@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.26 2004/12/10 12:13:50 bob Exp $
+ * $Id: EquipmentType.java,v 1.27 2004/12/14 13:41:33 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,19 +30,19 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/12/10 12:13:50 $
- * @author $Author: bob $
+ * @version $Revision: 1.27 $, $Date: 2004/12/14 13:41:33 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
 public class EquipmentType extends StorableObjectType implements Characterized {
 	static final long serialVersionUID = 9157517478787463967L;
 
-	private String name;
-
-	private StorableObjectDatabase equipmentTypeDatabase;
-    
-    private List characteristics;
+	private String                     name;
+	private String                     manufacturer;
+	private String                     manufacturerCode;
+	private StorableObjectDatabase     equipmentTypeDatabase;
+	private List                       characteristics;
 
 	public EquipmentType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
@@ -62,6 +62,8 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 			  new String(ett.codename),
 			  new String(ett.description));	
 		this.name = ett.name;
+        this.manufacturer = ett.manufacturer;
+        this.manufacturerCode = ett.manufacturerCode;
         try {
             this.characteristics = new ArrayList(ett.characteristic_ids.length);
             for (int i = 0; i < ett.characteristic_ids.length; i++)
@@ -76,7 +78,9 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 					 Identifier creatorId,
 					 String codename,
 					 String description,
-					 String name){
+					 String name,
+                     String manufacturer,
+                     String manufacturerCode){
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -85,6 +89,8 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 				codename,
 				description);
 		this.name = name;
+        this.manufacturer = manufacturer;
+        this.manufacturerCode = manufacturerCode;
         this.characteristics = new ArrayList();		
 		this.equipmentTypeDatabase = ConfigurationDatabaseContext.equipmentTypeDatabase;
 	}
@@ -100,8 +106,11 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 	public static EquipmentType createInstance(Identifier creatorId,
 											 String codename,
 											 String description,
-											 String name) throws CreateObjectException{
-		if (creatorId == null || codename == null || description == null || name == null)
+											 String name,
+                                             String manufacturer,
+                                             String manufacturerCode) throws CreateObjectException{
+		if (creatorId == null || codename == null || description == null || name == null
+                || manufacturer == null || manufacturerCode == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
@@ -109,7 +118,9 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 								creatorId,
 								codename,
 								description,
-								name);
+								name,
+                                manufacturer,
+                                manufacturerCode);
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("EquipmentType.createInstance | cannot generate identifier ", e);
 		}		
@@ -150,6 +161,8 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 											  new String(super.codename),
 											  (super.description != null) ? (new String(super.description)) : "",
 											  (this.name != null) ? (new String(this.name)) : "",
+                                              (this.manufacturer != null) ? (new String(this.manufacturer)) : "",
+                                              (this.manufacturerCode != null) ? (new String(this.manufacturerCode)) : "",
                                               charIds);
 	}
 	
@@ -159,7 +172,9 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 																						Identifier modifierId,
 																						String codename,
 																						String description,
-																						String name) {
+																						String name,
+                                                                                        String manufacturer,
+                                                                                        String manufacturerCode) {
 		super.setAttributes(created,
 												modified,
 												creatorId,
@@ -167,6 +182,8 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 												codename,
 												description);
 		this.name = name;
+        this.manufacturer = manufacturer;
+        this.manufacturerCode = manufacturerCode;
 	}
 	
 	public String getName(){
@@ -196,4 +213,20 @@ public class EquipmentType extends StorableObjectType implements Characterized {
         this.setCharacteristics0(characteristics);
         super.currentVersion = super.getNextVersion();
     }
+    
+	public String getManufacturer() {
+		return this.manufacturer;
+	}
+    
+	public void setManufacturer(String manufacturer) {
+		this.manufacturer = manufacturer;
+	}
+    
+	public String getManufacturerCode() {
+		return this.manufacturerCode;
+	}
+    
+	public void setManufacturerCode(String manufacturerCode) {
+		this.manufacturerCode = manufacturerCode;
+	}
 }
