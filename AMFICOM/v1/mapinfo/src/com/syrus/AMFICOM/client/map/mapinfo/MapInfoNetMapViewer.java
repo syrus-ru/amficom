@@ -133,6 +133,7 @@ public class MapInfoNetMapViewer extends NetMapViewer
 		catch (IOException e)
 		{
 			System.out.println("MapImagePanel - Can't load geoset: " + mapDefinitionFile);
+			e.printStackTrace();
 		}
 
 		System.out.println("Units " + myMap.getDistanceUnits().toString());
@@ -219,8 +220,8 @@ public class MapInfoNetMapViewer extends NetMapViewer
 			dropTarget.setActive(true);
 
 			mttp = new MapToolTippedPanel(this);
-			mapImagePanel.addMouseListener(mttp.ls);
-			mapImagePanel.addMouseMotionListener(mttp.ls);
+			mapImagePanel.addMouseListener(mttp.toolTippedPanelListener);
+			mapImagePanel.addMouseMotionListener(mttp.toolTippedPanelListener);
 
 			mka = new MapKeyAdapter(lnl);
 			scrollPane.addKeyListener(mka);
