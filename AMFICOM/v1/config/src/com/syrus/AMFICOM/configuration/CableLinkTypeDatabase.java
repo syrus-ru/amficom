@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeDatabase.java,v 1.1 2004/12/10 16:49:52 max Exp $
+ * $Id: CableLinkTypeDatabase.java,v 1.2 2004/12/14 10:18:36 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,12 +7,10 @@
  */
 package com.syrus.AMFICOM.configuration;
 
-import java.awt.Stroke;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -38,7 +36,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/12/10 16:49:52 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/14 10:18:36 $
  * @author $Author: max $
  * @module config_v1
  */
@@ -51,8 +49,10 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
     // sort NUMBER(2,0),
     public static final String COLUMN_SORT  = "sort";
     // manufacturer VARCHAR2(64),
+    private static final int SIZE_MANUFACTURER_COLUMN = 64; 
     public static final String COLUMN_MANUFACTURER  = "manufacturer";
     // manufacturer_code VARCHAR2(64),
+    private static final int SIZE_MANUFACTURER_CODE_COLUMN = 64;
     public static final String COLUMN_MANUFACTURER_CODE     = "manufacturer_code";
     // image_id VARCHAR2(32),
     public static final String COLUMN_IMAGE_ID      = "image_id";
@@ -100,12 +100,12 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
             throws IllegalDataException, UpdateObjectException {
         CableLinkType cableLinkType = fromStorableObject(storableObject);
         String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-            + APOSTOPHE + DatabaseString.toQuerySubString(cableLinkType.getCodename()) + APOSTOPHE + COMMA
-            + APOSTOPHE + DatabaseString.toQuerySubString(cableLinkType.getDescription()) + APOSTOPHE 
-            + APOSTOPHE + DatabaseString.toQuerySubString(cableLinkType.getName()) + APOSTOPHE + COMMA
+            + APOSTOPHE + DatabaseString.toQuerySubString(cableLinkType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
+            + APOSTOPHE + DatabaseString.toQuerySubString(cableLinkType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE 
+            + APOSTOPHE + DatabaseString.toQuerySubString(cableLinkType.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
             + cableLinkType.getSort().value() + COMMA
-            + APOSTOPHE + DatabaseString.toQuerySubString(cableLinkType.getManufacturer()) + APOSTOPHE + COMMA
-            + APOSTOPHE + DatabaseString.toQuerySubString(cableLinkType.getManufacturerCode()) + APOSTOPHE + COMMA
+            + APOSTOPHE + DatabaseString.toQuerySubString(cableLinkType.getManufacturer(), SIZE_MANUFACTURER_COLUMN) + APOSTOPHE + COMMA
+            + APOSTOPHE + DatabaseString.toQuerySubString(cableLinkType.getManufacturerCode(), SIZE_MANUFACTURER_CODE_COLUMN) + APOSTOPHE + COMMA
             + DatabaseIdentifier.toSQLString(cableLinkType.getImageId());
         return sql;
     }
