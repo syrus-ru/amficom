@@ -1,6 +1,20 @@
+/*
+ * $Id: StorableObject.java,v 1.5 2004/08/06 13:43:44 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.general;
 
 import java.util.Date;
+
+/**
+ * @version $Revision: 1.5 $, $Date: 2004/08/06 13:43:44 $
+ * @author $Author: arseniy $
+ * @module general_v1
+ */
 
 public abstract class StorableObject implements Identified, TransferableObject {
 

@@ -1,21 +1,21 @@
 /*
- * ObjectNotFoundException.java
- * Created on 28.06.2004 17:23:11
- * 
+ * $Id: ObjectNotFoundException.java,v 1.4 2004/08/06 13:43:43 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
  */
+
 package com.syrus.AMFICOM.general;
 
-
 /**
- * @author Vladimir Dolzhenko
+ * @version $Revision: 1.4 $, $Date: 2004/08/06 13:43:43 $
+ * @author $Author: arseniy $
+ * @module general_v1
  */
-public class ObjectNotFoundException extends Exception {
+
+public class ObjectNotFoundException extends DatabaseException {
 	private static final long serialVersionUID = 8931150523740838625L;
-
-	public ObjectNotFoundException() {
-		super();		
-	}
-
 	/**
 	 * @param message
 	 */

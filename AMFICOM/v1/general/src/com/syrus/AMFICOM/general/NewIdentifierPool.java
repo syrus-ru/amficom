@@ -1,5 +1,5 @@
 /*
- * $Id: NewIdentifierPool.java,v 1.3 2004/07/21 18:47:57 arseniy Exp $
+ * $Id: NewIdentifierPool.java,v 1.4 2004/08/06 13:43:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.util.Log;
 
 /**
- * @version $ $
+ * @version $Revision: 1.4 $, $Date: 2004/08/06 13:43:43 $
  * @author $Author: arseniy $
  * @module general_v1
  */
