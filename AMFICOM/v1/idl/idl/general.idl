@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.61 2005/03/05 21:15:40 arseniy Exp $
+ * $Id: general.idl,v 1.62 2005/03/29 16:52:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -62,6 +62,7 @@ module corba {
 		ERROR_RISD_ERROR,
 		ERROR_WRONG_PASSWORD,
 		ERROR_WRONG_LOGIN,
+		ERROR_ILLEGAL_DATA,
 		ERROR_ILLEGAL_OBJECT_ENTITY,
 		ERROR_NO_CONNECT,
 		ERROR_SAVE,
