@@ -52,5 +52,28 @@ public class Foo {
 	    </example>
 	</rule>
 
-	-->
+	<rule name="DontImportOracleLayoutRule"
+	message="Avoid importing anything from the 'oracle.jdeveloper.layout.*' packages"
+	class="net.sourceforge.pmd.rules.XPathRule">
+       <description>
+          Avoid importing anything from the 'oracle.jdeveloper.layout.*' packages.  These packages are not portable and are likely to change.
+       </description>
+       <properties>
+          <property name="xpath">
+               <value>
+<![CDATA[
+   //ImportDeclaration
+   [starts-with(Name/@Image, 'oracle.jdeveloper.layout')]
+]]>
+
+               </value>
+          </property>
+       </properties>
+       <priority>4</priority>
+
+       <example>
+<![CDATA[
+   import oracle.jdeveloper.layout.XYLayout;
+   import oracle.jdeveloper.layout.VerticalFlowLayout;
+]]>
 </ruleset>
