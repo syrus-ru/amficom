@@ -1,9 +1,5 @@
 package com.syrus.AMFICOM.setup;
 
-import com.syrus.AMFICOM.measurement.ParameterType;
-import com.syrus.AMFICOM.measurement.MeasurementType;
-import com.syrus.AMFICOM.measurement.AnalysisType;
-import com.syrus.AMFICOM.measurement.EvaluationType;
 
 public class Setup {
 

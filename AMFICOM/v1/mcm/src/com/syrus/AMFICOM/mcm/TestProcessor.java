@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.22 2004/08/25 12:24:09 bob Exp $
+ * $Id: TestProcessor.java,v 1.23 2004/10/15 08:24:06 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.LinkedList;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -33,8 +32,8 @@ import com.syrus.util.Log;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/08/25 12:24:09 $
- * @author $Author: bob $
+ * @version $Revision: 1.23 $, $Date: 2004/10/15 08:24:06 $
+ * @author $Author: bass $
  * @module mcm_v1
  */
 
