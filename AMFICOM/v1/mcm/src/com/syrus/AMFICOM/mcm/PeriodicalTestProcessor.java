@@ -1,5 +1,5 @@
 /*
- * $Id: PeriodicalTestProcessor.java,v 1.10 2004/07/30 12:28:15 arseniy Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.11 2004/07/30 13:36:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/07/30 12:28:15 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2004/07/30 13:36:45 $
+ * @author $Author: bob $
  * @module mcm_v1
  */
 
@@ -138,6 +138,9 @@ public class PeriodicalTestProcessor extends TestProcessor {
 						super.sleepCauseOfFall();
 						continue;
 					}
+					
+					if (measurement != null)
+						super.transceiver.addMeasurement(measurement, this);
 					
 				}
 				
