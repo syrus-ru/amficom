@@ -97,7 +97,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 			while(it.hasNext())
 			{
 				Marker m = (Marker)it.next();
-				if(Math.abs(index2coord(m.pos)-currpos.x) < mouse_coupling)
+				if(Math.abs(index2coord(m.pos)-currpos.x) < MOUSE_COUPLING)
 				{
 					if(m.canMove())
 					{

@@ -105,16 +105,16 @@ public class AnalysisPanel extends MapMarkersPanel
 				moving_point = 0;
 				if (loss_analysis)
 				{
-					if(Math.abs(currpos.x-index2coord(lines[1].point[1])) < mouse_coupling &&
-						 Math.abs(currpos.y-lindraw(lines[1].factor[0], lines[1].factor[1], lines[1].point[1])) < mouse_coupling)
+					if(Math.abs(currpos.x-index2coord(lines[1].point[1])) < MOUSE_COUPLING &&
+						 Math.abs(currpos.y-lindraw(lines[1].factor[0], lines[1].factor[1], lines[1].point[1])) < MOUSE_COUPLING)
 					{
 						moving_point = 4;
 						setCursor(new Cursor(Cursor.HAND_CURSOR));
 						setPaintMode(useXORMode);
 						return;
 					}
-					if(Math.abs(currpos.x-index2coord(lines[1].point[0])) < mouse_coupling &&
-						 Math.abs(currpos.y-lindraw(lines[1].factor[0], lines[1].factor[1], lines[1].point[0])) < mouse_coupling)
+					if(Math.abs(currpos.x-index2coord(lines[1].point[0])) < MOUSE_COUPLING &&
+						 Math.abs(currpos.y-lindraw(lines[1].factor[0], lines[1].factor[1], lines[1].point[0])) < MOUSE_COUPLING)
 					{
 						moving_point = 3;
 						setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -124,8 +124,8 @@ public class AnalysisPanel extends MapMarkersPanel
 				}
 				if (reflection_analysis)
 				{
-					if(Math.abs(currpos.x-index2coord(lines[1].point[0])) < mouse_coupling &&
-						 Math.abs(currpos.y-(int)((maxY - y[lines[1].point[0]] - top)*scaleY)) < mouse_coupling)
+					if(Math.abs(currpos.x-index2coord(lines[1].point[0])) < MOUSE_COUPLING &&
+						 Math.abs(currpos.y-(int)((maxY - y[lines[1].point[0]] - top)*scaleY)) < MOUSE_COUPLING)
 					{
 						moving_point = 3;
 						setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -135,8 +135,8 @@ public class AnalysisPanel extends MapMarkersPanel
 				}
 				for(int i=0; i<=1; i++)
 				{
-					if(Math.abs(currpos.x-index2coord(lines[0].point[i])) < mouse_coupling &&
-						 Math.abs(currpos.y-lindraw(lines[0].factor[0], lines[0].factor[1], lines[0].point[i])) < mouse_coupling)
+					if(Math.abs(currpos.x-index2coord(lines[0].point[i])) < MOUSE_COUPLING &&
+						 Math.abs(currpos.y-lindraw(lines[0].factor[0], lines[0].factor[1], lines[0].point[i])) < MOUSE_COUPLING)
 					{
 						moving_point = i + 1;
 						setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -146,7 +146,7 @@ public class AnalysisPanel extends MapMarkersPanel
 				}
 			}
 			// если ткнули в маркер
-			if (Math.abs(index2coord(markerA.pos)-currpos.x) < mouse_coupling)
+			if (Math.abs(index2coord(markerA.pos)-currpos.x) < MOUSE_COUPLING)
 			{
 				moving_marker = markerA;
 				setCursor(new Cursor(Cursor.W_RESIZE_CURSOR));
@@ -154,7 +154,7 @@ public class AnalysisPanel extends MapMarkersPanel
 				setPaintMode(useXORMode);
 				return;
 			}
-			if (Math.abs(index2coord(markerB.pos)-currpos.x) < mouse_coupling)
+			if (Math.abs(index2coord(markerB.pos)-currpos.x) < MOUSE_COUPLING)
 			{
 				moving_marker = markerB;
 				setCursor(new Cursor(Cursor.W_RESIZE_CURSOR));

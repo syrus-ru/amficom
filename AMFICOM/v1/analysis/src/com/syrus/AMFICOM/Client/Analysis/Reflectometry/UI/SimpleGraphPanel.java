@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 
 public class SimpleGraphPanel extends JPanel
 {
-	public static final int mouse_coupling = 5;
+	public static final int MOUSE_COUPLING = 5;
 
 	protected String colorId;
 

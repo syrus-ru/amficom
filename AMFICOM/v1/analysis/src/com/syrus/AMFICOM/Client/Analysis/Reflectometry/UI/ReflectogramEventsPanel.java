@@ -99,7 +99,7 @@ public class ReflectogramEventsPanel extends TraceEventsPanel
 			if (coord2index(currpos.x) > y.length)
 				return;
 
-			if(Math.abs(currpos.y-(int)((min_trace_level.doubleValue() - top) * scaleY - 1)) < mouse_coupling)
+			if(Math.abs(currpos.y-(int)((min_trace_level.doubleValue() - top) * scaleY - 1)) < MOUSE_COUPLING)
 			{
 				moving_level = true;
 				setCursor(new Cursor(Cursor.N_RESIZE_CURSOR));

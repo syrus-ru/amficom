@@ -143,7 +143,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 		currpos = e.getPoint();
 
 		if (SwingUtilities.isRightMouseButton(e) ||
-				Math.abs(currpos.y-(int)((maxY - level - top)*scaleY)) < mouse_coupling)
+				Math.abs(currpos.y-(int)((maxY - level - top)*scaleY)) < MOUSE_COUPLING)
 		{
 			move_level = true;
 			level = coord2value(currpos.y);
