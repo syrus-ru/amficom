@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.31 2004/10/13 12:55:28 bob Exp $
+ * $Id: configuration.idl,v 1.32 2004/10/20 06:29:38 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -354,9 +354,16 @@ module corba {
 			com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable linked_ids;		
 	};
 
+	enum StringFieldSort {
+		STRINGSORT_BASE,
+		STRINGSORT_USERNAME,
+		STRINGSORT_USERLOGIN
+	};
+	
 	struct StringFieldCondition_Transferable {	
 			short	entity_code;
 			wstring field_string;
+			StringFieldSort sort;
 	};
 
 };
