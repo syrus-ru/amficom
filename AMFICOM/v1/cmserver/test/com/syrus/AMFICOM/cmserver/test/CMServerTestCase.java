@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerTestCase.java,v 1.14 2004/09/29 06:55:02 bob Exp $
+ * $Id: CMServerTestCase.java,v 1.15 2004/09/30 09:07:21 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,6 +38,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
@@ -46,6 +47,7 @@ import com.syrus.AMFICOM.measurement.ParameterType;
 import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
+import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
@@ -59,8 +61,8 @@ import com.syrus.util.ClientLRUMap;
 import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/09/29 06:55:02 $
- * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2004/09/30 09:07:21 $
+ * @author $Author: max $
  * @module module
  */
 public class CMServerTestCase extends TestCase {
@@ -159,7 +161,32 @@ public class CMServerTestCase extends TestCase {
         // empty;
 	}
 
-	public void testRecieveAnalysisTypes() throws AMFICOMRemoteException, CreateObjectException {
+	public void testRecieveAnalyses() throws AMFICOMRemoteException, CreateObjectException {
+        
+        //      Checking recieveAnalysiss and transmitAnalysiss methods
+        
+        Analysis[]              Analysiss =              new Analysis[3];
+        Analysis_Transferable[] Analysis_Transferables = new Analysis_Transferable[Analysiss.length];
+        Identifier_Transferable[]   identifier_Transferables =   new Identifier_Transferable[Analysiss.length];                      
+        Set emptySet = new ArrayList();
+        for (int i = 0; i < Analysiss.length; i++) {
+            Identifier id = IdentifierPool.generateId(ObjectEntities.ANALYSIS_ENTITY_CODE);
+            Analysiss[i] = Analysis.createInstance(id, userId, new AnalysisType(new Identifier("Analyses test")) , new Identifier("Analyses test"), new Set());            
+            Analysis_Transferables[i] = (Analysis_Transferable)Analysiss[i].getTransferable();
+            identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+            System.out.println("the object has been created with codename " + "Test"+ id);
+        }
+        
+        server.receiveAnalysiss(Analysis_Transferables, false, accessIdentifier_Transferable);
+        Analysis_Transferable[] Analysis_Transferables2 = server.transmitAnalysiss(identifier_Transferables, accessIdentifier_Transferable);
+        for (int i = 0; i < Analysis_Transferables2.length; i++) {
+            Identifier id = new Identifier(Analysis_Transferables2[i].id);
+            System.out.println("the object has been recieved with codename " + (new Analysis(Analysis_Transferables2[i]).getCodename()));            
+        }
+        
+    }
+    
+    public void _testRecieveAnalysisTypes() throws AMFICOMRemoteException, CreateObjectException {
 	    
         //      Checking recieveAnalysisTypes and transmitAnalysisTypes methods
         
@@ -184,7 +211,7 @@ public class CMServerTestCase extends TestCase {
         
     }
     
-    public void testRecieveEvaluationTypes() throws AMFICOMRemoteException {
+    public void _testRecieveEvaluationTypes() throws AMFICOMRemoteException {
         
         //      Checking recieveEvaluationTypes and transmitEvaluationTypes methods
         
@@ -209,7 +236,7 @@ public class CMServerTestCase extends TestCase {
         
     }
     
-    public void testRecieveMeasurementTypes() throws AMFICOMRemoteException {
+    public void _testRecieveMeasurementTypes() throws AMFICOMRemoteException {
         
         //      Checking recieveMeasurementTypes and transmitMeasurementTypes methods
         
@@ -234,7 +261,7 @@ public class CMServerTestCase extends TestCase {
         
     }
     
-    public void testRecieveParameterTypes() throws AMFICOMRemoteException {
+    public void _testRecieveParameterTypes() throws AMFICOMRemoteException {
         
         //      Checking recieveParameterTypes and transmitParameterTypes methods
         
@@ -258,7 +285,7 @@ public class CMServerTestCase extends TestCase {
         
     }
     
-    public void testRecieveSets() throws AMFICOMRemoteException {
+    public void _testRecieveSets() throws AMFICOMRemoteException {
         
         //      Checking recievesets and transmitsets methods
         
