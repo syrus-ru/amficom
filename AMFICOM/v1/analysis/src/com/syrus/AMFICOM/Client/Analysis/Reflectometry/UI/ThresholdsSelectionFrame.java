@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
+import com.syrus.AMFICOM.Client.General.UI.ATable;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
@@ -102,7 +103,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 			new int[] { },
 			null
 		);
-		jTable = new JTable(tModelEmpty);
+		jTable = new ATable(tModelEmpty);
 		
 		{	// set up button size
 			JButton[] buttons = new JButton[] { jButton1, jButton3, jButtonInc, jButtonDec };
@@ -199,13 +200,14 @@ public class ThresholdsSelectionFrame extends ATableFrame
 															Object value,
 															boolean isSelected,
 															boolean hasFocus,
-															int row,
-															int column) {
+															int rowIndex,
+															int vColIndex) {
+				int mColIndex = table.convertColumnIndexToModel(vColIndex);
 
-				if (column == 0)
+				if (mColIndex == 0)
 					isSelected = false;
 				hasFocus = false;
-				return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+				return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, rowIndex, vColIndex);
 			}
 		});
 
