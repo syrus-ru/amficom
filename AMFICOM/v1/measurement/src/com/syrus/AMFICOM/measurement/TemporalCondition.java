@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalCondition.java,v 1.6 2005/01/19 12:36:38 arseniy Exp $
+ * $Id: TemporalCondition.java,v 1.7 2005/02/11 16:18:49 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,8 +8,8 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.TemporalCondition_Transferable;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/01/19 12:36:38 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/02/11 16:18:49 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 public class TemporalCondition implements StorableObjectCondition {
@@ -70,7 +70,7 @@ public class TemporalCondition implements StorableObjectCondition {
 		return condition;
 	}
 
-	public boolean isNeedMore(List list) throws ApplicationException {
+	public boolean isNeedMore(Collection collection) throws ApplicationException {
 		return true;
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalConditionImpl.java,v 1.1 2005/02/07 10:33:29 bob Exp $
+ * $Id: TypicalConditionImpl.java,v 1.2 2005/02/11 16:18:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,8 @@
 
 package com.syrus.AMFICOM.map;
 
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.TypicalCondition;
@@ -19,7 +19,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/07 10:33:29 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/11 16:18:55 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -94,7 +94,7 @@ public class TypicalConditionImpl extends TypicalCondition {
 		
 	}
 
-	public boolean isNeedMore(List list) throws ApplicationException {
+	public boolean isNeedMore(Collection collection) throws ApplicationException {
 		return true;
 	}
 
