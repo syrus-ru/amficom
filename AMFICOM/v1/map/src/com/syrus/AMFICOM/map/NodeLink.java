@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLink.java,v 1.28 2005/04/01 11:11:05 bob Exp $
+ * $Id: NodeLink.java,v 1.29 2005/04/02 15:29:52 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -40,8 +42,8 @@ import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты 
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: bob $
- * @version $Revision: 1.28 $, $Date: 2005/04/01 11:11:05 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.29 $, $Date: 2005/04/02 15:29:52 $
  * @module map_v1
  */
 public class NodeLink extends StorableObject implements MapElement {
@@ -92,25 +94,8 @@ public class NodeLink extends StorableObject implements MapElement {
 	}
 
 	public NodeLink(NodeLink_Transferable nlt) throws CreateObjectException {
-		super(nlt.header);
-		this.name = nlt.name;
-		this.length = nlt.length;
-
-		try {
-			this.physicalLink = (PhysicalLink) MapStorableObjectPool.getStorableObject(new Identifier(nlt.physicalLinkId), true);
-
-			this.startNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(nlt.startNodeId), true);
-			this.endNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(nlt.endNodeId), true);
-
-			this.characteristics = new HashSet(nlt.characteristicIds.length);
-			Set characteristicIds = new HashSet(nlt.characteristicIds.length);
-			for (int i = 0; i < nlt.characteristicIds.length; i++)
-				characteristicIds.add(new Identifier(nlt.characteristicIds[i]));
-			this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		this.nodeLinkDatabase = MapDatabaseContext.getNodeLinkDatabase();
+		this.fromTransferable(nlt);
 	}
 
 	protected NodeLink(final Identifier id,
@@ -178,12 +163,28 @@ public class NodeLink extends StorableObject implements MapElement {
 		}
 	}
 
-	public Set getDependencies() {
-		Set dependencies = new HashSet();
-		dependencies.add(this.physicalLink);
-		dependencies.add(this.startNode);
-		dependencies.add(this.endNode);
-		return dependencies;
+	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+		NodeLink_Transferable nlt = (NodeLink_Transferable) transferable;
+		super.fromTransferable(nlt.header);
+
+		this.name = nlt.name;
+		this.length = nlt.length;
+
+		try {
+			this.physicalLink = (PhysicalLink) MapStorableObjectPool.getStorableObject(new Identifier(nlt.physicalLinkId), true);
+
+			this.startNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(nlt.startNodeId), true);
+			this.endNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(nlt.endNodeId), true);
+
+			this.characteristics = new HashSet(nlt.characteristicIds.length);
+			Set characteristicIds = new HashSet(nlt.characteristicIds.length);
+			for (int i = 0; i < nlt.characteristicIds.length; i++)
+				characteristicIds.add(new Identifier(nlt.characteristicIds[i]));
+			this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	public Object getTransferable() {
@@ -498,4 +499,13 @@ public class NodeLink extends StorableObject implements MapElement {
 		if (characteristics != null)
 			this.characteristics.addAll(characteristics);
 	}
+
+	public Set getDependencies() {
+		Set dependencies = new HashSet();
+		dependencies.add(this.physicalLink);
+		dependencies.add(this.startNode);
+		dependencies.add(this.endNode);
+		return dependencies;
+	}
+
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractNode.java,v 1.15 2005/04/01 11:11:04 bob Exp $
+ * $Id: AbstractNode.java,v 1.16 2005/04/02 15:29:51 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,7 @@
 package com.syrus.AMFICOM.map;
 
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
@@ -23,13 +24,15 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.omg.CORBA.portable.IDLEntity;
+
 /**
  * Абстрактный класс, описывающий узловой элемент топологической схемы 
  * ({@link Map}). Узловой объект характеризуется наличием координат
  * ({@link #location}) и изображением ({@link #imageId}).
  * 
- * @author $Author: bob $
- * @version $Revision: 1.15 $, $Date: 2005/04/01 11:11:04 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/04/02 15:29:51 $
  * @module map_v1
  * @see SiteNode
  * @see TopologicalNode
@@ -124,8 +127,13 @@ public abstract class AbstractNode
 		this.characteristics = new HashSet();
 	}
 
-	protected AbstractNode(StorableObject_Transferable transferable) {
-		super(transferable);
+	protected AbstractNode(StorableObject_Transferable transferable) throws CreateObjectException {
+		this.fromTransferable(transferable);
+	}
+
+	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+		StorableObject_Transferable sot = (StorableObject_Transferable) transferable;
+		super.fromTransferable(sot);
 		this.characteristics = new HashSet();
 	}
 

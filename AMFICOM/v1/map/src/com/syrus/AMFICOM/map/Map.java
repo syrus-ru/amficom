@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.24 2005/04/01 11:11:05 bob Exp $
+ * $Id: Map.java,v 1.25 2005/04/02 15:29:51 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,6 +20,8 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import org.omg.CORBA.portable.IDLEntity;
+
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -39,8 +41,8 @@ import com.syrus.AMFICOM.map.corba.Map_Transferable;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на 
  * линиях, коллекторов (объединяющих в себе линии).
  * 
- * @author $Author: bob $
- * @version $Revision: 1.24 $, $Date: 2005/04/01 11:11:05 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/04/02 15:29:51 $
  * @module map_v1
  * @todo make maps persistent 
  */
@@ -95,7 +97,60 @@ public class Map extends DomainMember {
 	}
 
 	public Map(Map_Transferable mt) throws CreateObjectException {
-		super(mt.header, new Identifier(mt.domain_id));
+		this.mapDatabase = MapDatabaseContext.getMapDatabase();
+		this.fromTransferable(mt);
+	}
+
+	protected Map(final Identifier id, 
+				  final Identifier creatorId, 
+				  final long version,
+				  final Identifier domainId, 
+				  final String name, 
+				  final String description) {
+		super(id,
+			new Date(System.currentTimeMillis()),
+			new Date(System.currentTimeMillis()),
+			creatorId,
+			creatorId,
+			version,
+			domainId);
+		this.name = name;
+		this.description = description;
+
+		this.siteNodes = new HashSet();
+		this.topologicalNodes = new HashSet();
+		this.nodeLinks = new HashSet();
+		this.physicalLinks = new HashSet();
+		this.marks = new HashSet();
+		this.collectors = new HashSet();
+		this.maps = new HashSet();
+		this.mapDatabase = MapDatabaseContext.getMapDatabase();
+	}
+
+	public static Map createInstance(Identifier creatorId, Identifier domainId, String name, String description)
+			throws CreateObjectException {
+		if (name == null || description == null || creatorId == null || domainId == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+
+		try {
+			Map map = new Map(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MAP_ENTITY_CODE),
+					creatorId,
+					0L,
+					domainId,
+					name,
+					description);
+			map.changed = true;
+			return map;
+		}
+		catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("Map.createInstance | cannot generate identifier ", e);
+		}
+	}
+
+	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+		Map_Transferable mt = (Map_Transferable) transferable;
+		super.fromTransferable(mt.header, new Identifier(mt.domain_id));
+
 		this.name = mt.name;
 		this.description = mt.description;
 
@@ -163,52 +218,6 @@ public class Map extends DomainMember {
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
-		}
-	}
-
-	protected Map(final Identifier id, 
-				  final Identifier creatorId, 
-				  final long version,
-				  final Identifier domainId, 
-				  final String name, 
-				  final String description) {
-		super(id,
-			new Date(System.currentTimeMillis()),
-			new Date(System.currentTimeMillis()),
-			creatorId,
-			creatorId,
-			version,
-			domainId);
-		this.name = name;
-		this.description = description;
-
-		this.siteNodes = new HashSet();
-		this.topologicalNodes = new HashSet();
-		this.nodeLinks = new HashSet();
-		this.physicalLinks = new HashSet();
-		this.marks = new HashSet();
-		this.collectors = new HashSet();
-		this.maps = new HashSet();
-		this.mapDatabase = MapDatabaseContext.getMapDatabase();
-	}
-
-	public static Map createInstance(Identifier creatorId, Identifier domainId, String name, String description)
-			throws CreateObjectException {
-		if (name == null || description == null || creatorId == null || domainId == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-
-		try {
-			Map map = new Map(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MAP_ENTITY_CODE),
-					creatorId,
-					0L,
-					domainId,
-					name,
-					description);
-			map.changed = true;
-			return map;
-		}
-		catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("Map.createInstance | cannot generate identifier ", e);
 		}
 	}
 

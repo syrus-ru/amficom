@@ -1,5 +1,5 @@
 /**
- * $Id: Collector.java,v 1.27 2005/04/01 11:11:05 bob Exp $
+ * $Id: Collector.java,v 1.28 2005/04/02 15:29:51 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,12 +35,14 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.omg.CORBA.portable.IDLEntity;
+
 /**
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  * 
- * @author $Author: bob $
- * @version $Revision: 1.27 $, $Date: 2005/04/01 11:11:05 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.28 $, $Date: 2005/04/02 15:29:51 $
  * @module map_v1
  */
 public class Collector extends StorableObject implements MapElement {
@@ -88,27 +90,9 @@ public class Collector extends StorableObject implements MapElement {
 		}
 	}
 
-	public Collector(Collector_Transferable mt) throws CreateObjectException {
-		super(mt.header);
-		this.name = mt.name;
-		this.description = mt.description;
-
-		try {
-			this.physicalLinks = new HashSet(mt.physicalLinkIds.length);
-			HashSet physicalLinkIds = new HashSet(mt.physicalLinkIds.length);
-			for (int i = 0; i < mt.characteristicIds.length; i++)
-				physicalLinkIds.add(new Identifier(mt.physicalLinkIds[i]));
-			this.physicalLinks.addAll(MapStorableObjectPool.getStorableObjects(physicalLinkIds, true));
-
-			this.characteristics = new HashSet(mt.characteristicIds.length);
-			HashSet characteristicIds = new HashSet(mt.characteristicIds.length);
-			for (int i = 0; i < mt.characteristicIds.length; i++)
-				characteristicIds.add(new Identifier(mt.characteristicIds[i]));
-			this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+	public Collector(Collector_Transferable ct) throws CreateObjectException {
+		this.collectorDatabase = MapDatabaseContext.getCollectorDatabase();
+		this.fromTransferable(ct);
 	}
 
 	protected Collector(final Identifier id,
@@ -148,6 +132,31 @@ public class Collector extends StorableObject implements MapElement {
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("Collector.createInstance | cannot generate identifier ", e);
+		}
+	}
+
+	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+		Collector_Transferable ct = (Collector_Transferable) transferable;
+		super.fromTransferable(ct.header);
+
+		this.name = ct.name;
+		this.description = ct.description;
+
+		try {
+			this.physicalLinks = new HashSet(ct.physicalLinkIds.length);
+			HashSet physicalLinkIds = new HashSet(ct.physicalLinkIds.length);
+			for (int i = 0; i < ct.characteristicIds.length; i++)
+				physicalLinkIds.add(new Identifier(ct.physicalLinkIds[i]));
+			this.physicalLinks.addAll(MapStorableObjectPool.getStorableObjects(physicalLinkIds, true));
+
+			this.characteristics = new HashSet(ct.characteristicIds.length);
+			HashSet characteristicIds = new HashSet(ct.characteristicIds.length);
+			for (int i = 0; i < ct.characteristicIds.length; i++)
+				characteristicIds.add(new Identifier(ct.characteristicIds[i]));
+			this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 

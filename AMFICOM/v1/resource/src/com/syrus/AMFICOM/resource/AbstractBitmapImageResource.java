@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractBitmapImageResource.java,v 1.5 2005/02/15 08:13:16 bob Exp $
+ * $Id: AbstractBitmapImageResource.java,v 1.6 2005/04/02 15:29:47 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_Transferable;
 import java.util.Date;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.5 $, $Date: 2005/02/15 08:13:16 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/04/02 15:29:47 $
  * @module resource_v1
  */
 public abstract class AbstractBitmapImageResource extends AbstractImageResource {
@@ -33,7 +33,7 @@ public abstract class AbstractBitmapImageResource extends AbstractImageResource 
 		super(id, created, modified, creatorId, modifierId, version);
 	}
 
-	protected AbstractBitmapImageResource(final ImageResource_Transferable imageResource) {
+	protected AbstractBitmapImageResource(final ImageResource_Transferable imageResource) throws CreateObjectException {
 		super(imageResource);
 	}
 

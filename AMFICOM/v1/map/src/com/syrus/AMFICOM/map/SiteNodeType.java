@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNodeType.java,v 1.19 2005/04/01 11:11:05 bob Exp $
+ * $Id: SiteNodeType.java,v 1.20 2005/04/02 15:29:52 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -35,14 +35,16 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.omg.CORBA.portable.IDLEntity;
+
 /**
  * “ип сетевого узла топологической схемы. —уществует несколько 
  * предустановленных  типов сетевых узлов, которые определ€ютс€ полем 
  * {@link #codename}, соответствующим какому-либо значению {@link #WELL}, 
  * {@link #PIQUET}, {@link #ATS}, {@link #BUILDING}, {@link #UNBOUND}, 
  * {@link #CABLE_INLET}, {@link #TOWER}
- * @author $Author: bob $
- * @version $Revision: 1.19 $, $Date: 2005/04/01 11:11:05 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/04/02 15:29:52 $
  * @module map_v1
  */
 public class SiteNodeType extends StorableObjectType implements Characterizable {
@@ -89,22 +91,8 @@ public class SiteNodeType extends StorableObjectType implements Characterizable 
 	}
 
 	public SiteNodeType(SiteNodeType_Transferable sntt) throws CreateObjectException {
-		super(sntt.header, sntt.codename, sntt.description);
-		this.name = sntt.name;
-		this.imageId = new Identifier(sntt.imageId);
-		this.topological = sntt.topological;
-
-		try {
-			this.characteristics = new HashSet(sntt.characteristicIds.length);
-			Set characteristicIds = new HashSet(sntt.characteristicIds.length);
-			for (int i = 0; i < sntt.characteristicIds.length; i++)
-				characteristicIds.add(new Identifier(sntt.characteristicIds[i]));
-
-			this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		this.siteNodeTypeDatabase = MapDatabaseContext.getSiteNodeTypeDatabase();
+		this.fromTransferable(sntt);
 	}
 
 	protected SiteNodeType(final Identifier id,
@@ -156,6 +144,27 @@ public class SiteNodeType extends StorableObjectType implements Characterizable 
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("SiteNodeType.createInstance | cannot generate identifier ", e);
+		}
+	}
+
+	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+		SiteNodeType_Transferable sntt = (SiteNodeType_Transferable) transferable;
+		super.fromTransferable(sntt.header, new String(sntt.codename), new String(sntt.description));
+
+		this.name = sntt.name;
+		this.imageId = new Identifier(sntt.imageId);
+		this.topological = sntt.topological;
+
+		try {
+			this.characteristics = new HashSet(sntt.characteristicIds.length);
+			Set characteristicIds = new HashSet(sntt.characteristicIds.length);
+			for (int i = 0; i < sntt.characteristicIds.length; i++)
+				characteristicIds.add(new Identifier(sntt.characteristicIds[i]));
+
+			this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeImageResource.java,v 1.11 2005/02/15 08:41:26 bob Exp $
+ * $Id: SchemeImageResource.java,v 1.12 2005/04/02 15:29:47 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import java.util.*;
 import java.util.zip.*;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.11 $, $Date: 2005/02/15 08:41:26 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/04/02 15:29:47 $
  * @module resource_v1
  */
 public final class SchemeImageResource extends AbstractImageResource {
@@ -34,8 +34,9 @@ public final class SchemeImageResource extends AbstractImageResource {
 	/**
 	 * If given a bad argument, will raise an AssertionError if assertions
 	 * enabled, and ::CORBA::BAD_OPERATION otherwise.
+	 * @throws CreateObjectException 
 	 */
-	public SchemeImageResource(final ImageResource_Transferable imageResource) {
+	public SchemeImageResource(final ImageResource_Transferable imageResource) throws CreateObjectException {
 		super(imageResource);
 		final ImageResourceData imageResourceData = imageResource.data;
 		assert imageResourceData.discriminator().value() == ImageResourceSort._SCHEME;
@@ -153,17 +154,17 @@ public final class SchemeImageResource extends AbstractImageResource {
 
 	/**
 	 * If return is put prior to finally clause, an underlying gzip output stream is not flushed.
-	 * @param data
+	 * @param data1
 	 * @return byte[]
 	 * @throws IOException
 	 */
-	private byte[] pack(final List data) throws IOException {
+	private byte[] pack(final List data1) throws IOException {
 		ObjectOutputStream out = null;
 		ByteArrayOutputStream subOut = null;
 		try {
 			subOut = new ByteArrayOutputStream();
 			out = new ObjectOutputStream(new GZIPOutputStream(subOut));
-			out.writeObject(data);
+			out.writeObject(data1);
 			out.flush();
 		} finally {
 			if (out != null)
@@ -175,9 +176,9 @@ public final class SchemeImageResource extends AbstractImageResource {
 	/**
 	 * @todo Add error-handling mechanism.
 	 */
-	private byte[] safePack(final List data) {
+	private byte[] safePack(final List data1) {
 		try {
-			return pack(data);
+			return pack(data1);
 		} catch (IOException ioe) {
 			Log.errorException(ioe);
 		}

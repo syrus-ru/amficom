@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLink.java,v 1.39 2005/04/01 12:07:21 bob Exp $
+ * $Id: PhysicalLink.java,v 1.40 2005/04/02 15:29:52 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -52,8 +54,8 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * ѕредуствновленными €вл€ютс€  два типа - 
  * тоннель (<code>{@link PhysicalLinkType#TUNNEL}</code>) 
  * и коллектор (<code>{@link PhysicalLinkType#COLLECTOR}</code>).
- * @author $Author: bob $
- * @version $Revision: 1.39 $, $Date: 2005/04/01 12:07:21 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.40 $, $Date: 2005/04/02 15:29:52 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -126,44 +128,8 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	}
 
 	public PhysicalLink(PhysicalLink_Transferable plt) throws CreateObjectException {
-		super(plt.header);
-		this.name = plt.name;
-		this.description = plt.description;
-
-		this.city = plt.city;
-		this.street = plt.street;
-		this.building = plt.building;
-		this.dimensionX = plt.dimensionX;
-		this.dimensionY = plt.dimensionY;
-		this.leftToRight = plt.leftToRight;
-		this.topToBottom = plt.topToBottom;
-
-		try {
-			this.physicalLinkType = (PhysicalLinkType) MapStorableObjectPool.getStorableObject(new Identifier(plt.physicalLinkTypeId),
-					true);
-
-			this.startNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(plt.startNodeId), true);
-			this.endNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(plt.endNodeId), true);
-
-			this.nodeLinks = new TreeSet();
-			Set nodeLinksIds = new HashSet(plt.nodeLinkIds.length);
-			for (int i = 0; i < plt.nodeLinkIds.length; i++)
-				nodeLinksIds.add(new Identifier(plt.nodeLinkIds[i]));
-			this.nodeLinks.addAll(MapStorableObjectPool.getStorableObjects(nodeLinksIds, true));
-
-			this.characteristics = new HashSet(plt.characteristicIds.length);
-			Set characteristicIds = new HashSet(plt.characteristicIds.length);
-			for (int i = 0; i < plt.characteristicIds.length; i++)
-				characteristicIds.add(new Identifier(plt.characteristicIds[i]));
-			this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-
-		this.selected = false;
-
-		this.binding = new PhysicalLinkBinding(new IntDimension(this.dimensionX, this.dimensionY));
+		this.physicalLinkDatabase = MapDatabaseContext.getPhysicalLinkDatabase();
+		this.fromTransferable(plt);
 	}
 
 	protected PhysicalLink(final Identifier id,
@@ -280,6 +246,49 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("PhysicalLink.createInstance | cannot generate identifier ", e);
 		}
+	}
+
+	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+		PhysicalLink_Transferable plt = (PhysicalLink_Transferable) transferable;
+		super.fromTransferable(plt.header);
+
+		this.name = plt.name;
+		this.description = plt.description;
+
+		this.city = plt.city;
+		this.street = plt.street;
+		this.building = plt.building;
+		this.dimensionX = plt.dimensionX;
+		this.dimensionY = plt.dimensionY;
+		this.leftToRight = plt.leftToRight;
+		this.topToBottom = plt.topToBottom;
+
+		try {
+			this.physicalLinkType = (PhysicalLinkType) MapStorableObjectPool.getStorableObject(new Identifier(plt.physicalLinkTypeId),
+					true);
+
+			this.startNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(plt.startNodeId), true);
+			this.endNode = (AbstractNode) MapStorableObjectPool.getStorableObject(new Identifier(plt.endNodeId), true);
+
+			this.nodeLinks = new TreeSet();
+			Set nodeLinksIds = new HashSet(plt.nodeLinkIds.length);
+			for (int i = 0; i < plt.nodeLinkIds.length; i++)
+				nodeLinksIds.add(new Identifier(plt.nodeLinkIds[i]));
+			this.nodeLinks.addAll(MapStorableObjectPool.getStorableObjects(nodeLinksIds, true));
+
+			this.characteristics = new HashSet(plt.characteristicIds.length);
+			Set characteristicIds = new HashSet(plt.characteristicIds.length);
+			for (int i = 0; i < plt.characteristicIds.length; i++)
+				characteristicIds.add(new Identifier(plt.characteristicIds[i]));
+			this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+
+		this.selected = false;
+
+		this.binding = new PhysicalLinkBinding(new IntDimension(this.dimensionX, this.dimensionY));
 	}
 
 	public Set getDependencies() {

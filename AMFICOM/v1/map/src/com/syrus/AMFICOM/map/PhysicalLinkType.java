@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkType.java,v 1.23 2005/04/01 11:11:05 bob Exp $
+ * $Id: PhysicalLinkType.java,v 1.24 2005/04/02 15:29:52 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -33,13 +33,15 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.omg.CORBA.portable.IDLEntity;
+
 /**
  * “ип линии топологической схемы. —уществует несколько предустановленных 
  * типов линий, которые определ€ютс€ полем {@link #codename}, соответствующим
  * какому-либо значению {@link #TUNNEL}, {@link #COLLECTOR}, {@link #INDOOR}, 
  * {@link #SUBMARINE}, {@link #OVERHEAD}, {@link #UNBOUND}
- * @author $Author: bob $
- * @version $Revision: 1.23 $, $Date: 2005/04/01 11:11:05 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/04/02 15:29:52 $
  * @module map_v1
  */
 public class PhysicalLinkType extends StorableObjectType implements Characterizable {
@@ -89,20 +91,8 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 	}
 
 	public PhysicalLinkType(PhysicalLinkType_Transferable pltt) throws CreateObjectException {
-		super(pltt.header, pltt.codename, pltt.description);
-		this.name = pltt.name;
-
-		try {
-			this.characteristics = new HashSet(pltt.characteristicIds.length);
-			Set characteristicIds = new HashSet(pltt.characteristicIds.length);
-			for (int i = 0; i < pltt.characteristicIds.length; i++)
-				characteristicIds.add(new Identifier(pltt.characteristicIds[i]));
-
-			this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
+		this.physicalLinkTypeDatabase = MapDatabaseContext.getPhysicalLinkTypeDatabase();
+		this.fromTransferable(pltt);
 	}
 
 	protected PhysicalLinkType(final Identifier id,
@@ -153,6 +143,25 @@ public class PhysicalLinkType extends StorableObjectType implements Characteriza
 		}
 		catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("PhysicalLinkType.createInstance | cannot generate identifier ", e);
+		}
+	}
+
+	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+		PhysicalLinkType_Transferable pltt = (PhysicalLinkType_Transferable) transferable;
+		super.fromTransferable(pltt.header, new String(pltt.codename), new String(pltt.description));
+
+		this.name = pltt.name;
+
+		try {
+			this.characteristics = new HashSet(pltt.characteristicIds.length);
+			Set characteristicIds = new HashSet(pltt.characteristicIds.length);
+			for (int i = 0; i < pltt.characteristicIds.length; i++)
+				characteristicIds.add(new Identifier(pltt.characteristicIds[i]));
+
+			this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 

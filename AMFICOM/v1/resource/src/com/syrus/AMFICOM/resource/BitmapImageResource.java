@@ -1,5 +1,5 @@
 /*
- * $Id: BitmapImageResource.java,v 1.9 2005/04/01 09:07:53 bob Exp $
+ * $Id: BitmapImageResource.java,v 1.10 2005/04/02 15:29:47 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 import java.util.Date;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.9 $, $Date: 2005/04/01 09:07:53 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/04/02 15:29:47 $
  * @module resource_v1
  */
 public final class BitmapImageResource extends AbstractBitmapImageResource {
@@ -41,8 +41,9 @@ public final class BitmapImageResource extends AbstractBitmapImageResource {
 	/**
 	 * If given a bad argument, will raise an AssertionError if assertions
 	 * enabled, and ::CORBA::BAD_OPERATION otherwise.
+	 * @throws CreateObjectException 
 	 */
-	public BitmapImageResource(final ImageResource_Transferable imageResource) {
+	public BitmapImageResource(final ImageResource_Transferable imageResource) throws CreateObjectException {
 		super(imageResource);
 		final ImageResourceData imageResourceData = imageResource.data;
 		assert imageResourceData.discriminator().value() == ImageResourceSort._BITMAP;
