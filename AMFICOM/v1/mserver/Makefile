@@ -10,7 +10,7 @@ SERVICE_NAME=mongol
 
 APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar
 
-IDL2JAVAFLAGS = -I$(INCIDLDIR)
+IDL2JAVAFLAGS = -strict -I$(INCIDLDIR)
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
@@ -26,6 +26,7 @@ $(LIBNAME): .mach
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/mserver/DatabaseContextSetup.java
+		$(SRCDIR)/com/syrus/AMFICOM/mserver/MServerImplementation.java
 	touch $@
 
 .corba:	$(CLASSDIR)
