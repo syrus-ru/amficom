@@ -1,5 +1,5 @@
 /*
- * $Id: RISDSessionInfo.java,v 1.16 2004/12/27 16:52:42 krupenn Exp $
+ * $Id: RISDSessionInfo.java,v 1.17 2005/01/21 14:51:18 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,33 +8,52 @@
 
 package com.syrus.AMFICOM.Client.General;
 
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.Admin.*;
+import com.syrus.AMFICOM.CORBA.AMFICOM;
+import com.syrus.AMFICOM.CORBA.Admin.AccessIdentity_Transferable;
+import com.syrus.AMFICOM.CORBA.Admin.AccessIdentity_TransferableHolder;
+import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
+import com.syrus.AMFICOM.administration.ClientAdministrationObjectLoader;
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.configuration.ClientConfigurationObjectLoader;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
-import com.syrus.AMFICOM.corba.portable.client.*;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.corba.portable.client.Client;
+import com.syrus.AMFICOM.corba.portable.client.ClientImpl;
+import com.syrus.AMFICOM.corba.portable.client.ClientPOATie;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.LocalIdentifierGeneratorServer;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.EmptyClientMapObjectLoader;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.mapview.EmptyClientMapViewObjectLoader;
 import com.syrus.AMFICOM.mapview.MapViewStorableObjectPool;
-import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.measurement.ClientMeasurementObjectLoader;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
+import com.syrus.AMFICOM.resource.EmptyClientResourceObjectLoader;
+import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 import com.syrus.io.Rewriter;
 import com.syrus.util.ClientLRUMap;
 import com.syrus.util.corba.JavaSoftORBUtil;
 import com.syrus.util.prefs.IIOPConnectionManager;
-import org.omg.CORBA.*;
-import org.omg.CosNaming.*;
-import org.omg.CosNaming.NamingContextPackage.*;
-import org.omg.PortableServer.*;
+
+import org.omg.CORBA.ORB;
+import org.omg.CORBA.UserException;
+import org.omg.CosNaming.NamingContextExt;
+import org.omg.CosNaming.NamingContextExtHelper;
+import org.omg.CosNaming.NamingContextPackage.CannotProceed;
+import org.omg.CosNaming.NamingContextPackage.InvalidName;
+import org.omg.CosNaming.NamingContextPackage.NotFound;
+import org.omg.PortableServer.POA;
+import org.omg.PortableServer.POAHelper;
 import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2004/12/27 16:52:42 $
+ * @version $Revision: 1.17 $, $Date: 2005/01/21 14:51:18 $
  * @module generalclient_v1
  */
 public final class RISDSessionInfo extends SessionInterface {
@@ -209,11 +228,17 @@ public final class RISDSessionInfo extends SessionInterface {
 			ClientMeasurementObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
 			MeasurementStorableObjectPool.init(new ClientMeasurementObjectLoader(cmServer), clazz, size);
 
+			ClientAdministrationObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
+			AdministrationStorableObjectPool.init(new ClientAdministrationObjectLoader(cmServer), clazz, size);
+
 			MapStorableObjectPool.init(new EmptyClientMapObjectLoader(), clazz, size);
 
 			MapViewStorableObjectPool.init(new EmptyClientMapViewObjectLoader(), clazz, size);
 
+			ResourceStorableObjectPool.init(new EmptyClientResourceObjectLoader(), clazz, size);
+
 			IdentifierPool.init(cmServer);
+//			IdentifierPool.init(new LocalIdentifierGeneratorServer());
 
 			System.err.println("domainId: " + this.accessIdentifier.domain_id.identifier_string);
 			System.err.println("sessionId: " + this.accessIdentifier.session_id.identifier_string);
@@ -228,6 +253,19 @@ public final class RISDSessionInfo extends SessionInterface {
 			 */
 
 			return this;
+		} catch (AMFICOMRemoteException e) {
+			System.out.println(e.message);
+			e.printStackTrace();
+			setActiveSession(null);
+			/*
+			 * Another unsuccessful return point after client activation.
+			 */
+			try {
+				clientShutdown(true);
+			} catch (UserException ue) {
+				ue.printStackTrace();
+			}
+			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
 			setActiveSession(null);

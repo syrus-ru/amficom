@@ -328,4 +328,5 @@ src\com\syrus\AMFICOM\measurement\TestController.java
 src\com\syrus\AMFICOM\scheme\AbstractSchemePortController.java
 src\com\syrus\AMFICOM\scheme\CableThreadController.java
 src\com\syrus\AMFICOM\scheme\PathElementController.java
+src\com\syrus\AMFICOM\resource\EmptyClientResourceObjectLoader.java
 src\com\syrus\util\ClientLRUMap.java
