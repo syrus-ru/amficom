@@ -1,5 +1,5 @@
 /*
- * $Id: RISDSessionInfo.java,v 1.14 2004/11/02 08:06:35 bass Exp $
+ * $Id: RISDSessionInfo.java,v 1.15 2004/11/15 13:23:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.Client.General;
 import com.syrus.AMFICOM.CORBA.*;
 import com.syrus.AMFICOM.CORBA.Admin.*;
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
+import com.syrus.AMFICOM.configuration.ClientConfigurationObjectLoader;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.corba.portable.client.*;
@@ -28,8 +29,8 @@ import org.omg.PortableServer.*;
 import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2004/11/02 08:06:35 $
+ * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2004/11/15 13:23:54 $
  * @module generalclient_v1
  */
 public final class RISDSessionInfo extends SessionInterface {
