@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationDatabase.java,v 1.30 2005/01/26 15:38:40 arseniy Exp $
+ * $Id: EvaluationDatabase.java,v 1.31 2005/01/27 11:55:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,17 +33,12 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/01/26 15:38:40 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.31 $, $Date: 2005/01/27 11:55:07 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
 public class EvaluationDatabase extends StorableObjectDatabase {
-
-	public static final String	COLUMN_TYPE_ID				= "type_id";
-	public static final String	COLUMN_MONITORED_ELEMENT_ID	= "monitored_element_id";
-	public static final String COLUMN_MEASUREMENT_ID = "measurement_id";
-	public static final String	COLUMN_THRESHOLD_SET_ID		= "threshold_set_id";
 
 	private static String columns;	
 	private static String updateMultiplySQLValues;
@@ -66,10 +61,10 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
-				+ COLUMN_TYPE_ID + COMMA
-				+ COLUMN_MONITORED_ELEMENT_ID + COMMA
-				+ COLUMN_MEASUREMENT_ID + COMMA
-				+ COLUMN_THRESHOLD_SET_ID;
+				+ EvaluationWrapper.COLUMN_TYPE_ID + COMMA
+				+ EvaluationWrapper.COLUMN_MONITORED_ELEMENT_ID + COMMA
+				+ EvaluationWrapper.COLUMN_MEASUREMENT_ID + COMMA
+				+ EvaluationWrapper.COLUMN_THRESHOLD_SET_ID;
 		}
 		return columns;
 	}
@@ -128,11 +123,11 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 		Measurement measurement = null;
 		Set thresholdSet;
 		try {
-			evaluationType = (EvaluationType)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TYPE_ID), true);
-			Identifier measurementId = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MEASUREMENT_ID);
+			evaluationType = (EvaluationType)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, EvaluationWrapper.COLUMN_TYPE_ID), true);
+			Identifier measurementId = DatabaseIdentifier.getIdentifier(resultSet, EvaluationWrapper.COLUMN_MEASUREMENT_ID);
 			if (measurementId != null)
 				measurement = (Measurement) MeasurementStorableObjectPool.getStorableObject(measurementId, true);
-			thresholdSet = (Set)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_THRESHOLD_SET_ID), true);
+			thresholdSet = (Set)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, EvaluationWrapper.COLUMN_THRESHOLD_SET_ID), true);
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
@@ -142,7 +137,7 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 								 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 								 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 								 evaluationType,
-								 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MONITORED_ELEMENT_ID),
+								 DatabaseIdentifier.getIdentifier(resultSet, EvaluationWrapper.COLUMN_MONITORED_ELEMENT_ID),
 								 measurement,
 								 thresholdSet);
 		return evaluation;
@@ -202,7 +197,7 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
 		List list = null;
 
-		String condition = COLUMN_MONITORED_ELEMENT_ID + SQL_IN
+		String condition = EvaluationWrapper.COLUMN_MONITORED_ELEMENT_ID + SQL_IN
 				+ OPEN_BRACKET
 					+ SQL_SELECT
 					+ COLUMN_ID

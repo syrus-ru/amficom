@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.34 2005/01/26 15:38:40 arseniy Exp $
+ * $Id: AnalysisDatabase.java,v 1.35 2005/01/27 11:55:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,17 +33,12 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/01/26 15:38:40 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.35 $, $Date: 2005/01/27 11:55:07 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
 public class AnalysisDatabase extends StorableObjectDatabase {
-
-	public static final String COLUMN_TYPE_ID = "type_id";
-	public static final String COLUMN_MONITORED_ELEMENT_ID = "monitored_element_id";
-	public static final String COLUMN_MEASUREMENT_ID = "measurement_id";
-	public static final String COLUMN_CRITERIA_SET_ID = "criteria_set_id";
 
 	private static String columns;
 
@@ -67,10 +62,10 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
-				+ COLUMN_TYPE_ID + COMMA
-				+ COLUMN_MONITORED_ELEMENT_ID + COMMA
-				+ COLUMN_MEASUREMENT_ID + COMMA
-				+ COLUMN_CRITERIA_SET_ID;
+				+ AnalysisWrapper.COLUMN_TYPE_ID + COMMA
+				+ AnalysisWrapper.COLUMN_MONITORED_ELEMENT_ID + COMMA
+				+ AnalysisWrapper.COLUMN_MEASUREMENT_ID + COMMA
+				+ AnalysisWrapper.COLUMN_CRITERIA_SET_ID;
 		}
 		return columns;
 	}
@@ -129,11 +124,11 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 		Measurement measurement = null;
 		Set criteriaSet;
 		try {
-			analysisType = (AnalysisType) MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TYPE_ID), true);
-			Identifier measurementId = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MEASUREMENT_ID);
+			analysisType = (AnalysisType) MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, AnalysisWrapper.COLUMN_TYPE_ID), true);
+			Identifier measurementId = DatabaseIdentifier.getIdentifier(resultSet, AnalysisWrapper.COLUMN_MEASUREMENT_ID);
 			if (measurementId != null)
 				measurement = (Measurement) MeasurementStorableObjectPool.getStorableObject(measurementId, true);
-			criteriaSet = (Set) MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CRITERIA_SET_ID), true);
+			criteriaSet = (Set) MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, AnalysisWrapper.COLUMN_CRITERIA_SET_ID), true);
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
@@ -143,7 +138,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 							   analysisType,
-							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MONITORED_ELEMENT_ID),
+							   DatabaseIdentifier.getIdentifier(resultSet, AnalysisWrapper.COLUMN_MONITORED_ELEMENT_ID),
 							   measurement,
 							   criteriaSet);
 		return analysis;
@@ -202,7 +197,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
 		List list = null;
 		
-		String condition = COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
+		String condition = AnalysisWrapper.COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
 				+ SQL_SELECT + COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
 				+ DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId())
 			+ CLOSE_BRACKET;
