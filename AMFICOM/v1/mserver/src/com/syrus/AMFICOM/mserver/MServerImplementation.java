@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.23 2004/12/23 12:32:57 bob Exp $
+ * $Id: MServerImplementation.java,v 1.24 2004/12/24 13:40:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -90,12 +90,13 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/12/23 12:32:57 $
- * @author $Author: bob $
+ * @version $Revision: 1.24 $, $Date: 2004/12/24 13:40:42 $
+ * @author $Author: arseniy $
  * @module mserver_v1
  */
 
 public class MServerImplementation extends MServerPOA {
+	static final long serialVersionUID = 3278262178679212253L;
 
 /////////////////////////////////////////	Identifier Generator ////////////////////////////////////////////////
 	public Identifier_Transferable getGeneratedIdentifier(short entityCode) throws AMFICOMRemoteException {
@@ -156,18 +157,21 @@ public class MServerImplementation extends MServerPOA {
 				catch (CreateObjectException coe) {
 					Log.errorException(coe);
 					throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, coe.getMessage());
-				} catch (Throwable t) {
-                    Log.errorException(t);
-                    throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-                }
+				}
+				catch (Throwable t) {
+					Log.errorException(t);
+					throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+				}
 			}
 			ResultDatabase resultDatabase = (ResultDatabase) MeasurementDatabaseContext.getResultDatabase();
 			try {
 				resultDatabase.insert(results);
-			} catch (CreateObjectException e) {
+			}
+			catch (CreateObjectException e) {
 				Log.errorException(e);
 				throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-			} catch (IllegalDataException e) {
+			}
+			catch (IllegalDataException e) {
 				Log.errorException(e);
 				throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e.getMessage());
 			}
