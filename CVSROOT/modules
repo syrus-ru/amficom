@@ -66,3 +66,5 @@ importmif	importmif
 general_v1	general
 #M	admin	Administrative module
 admin	admin
+#M	map	Mapping module
+map	map
