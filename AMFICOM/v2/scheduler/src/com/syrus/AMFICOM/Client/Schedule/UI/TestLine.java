@@ -483,61 +483,71 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 			//for (Iterator it = tests.values().iterator(); it.hasNext();) {
 			//			System.out.println(":" + allTests.size() + "\t"
 			//					+ System.currentTimeMillis());
-			for (Iterator it = this.allTests.iterator(); it.hasNext();) {
-				Color color;
-				Test test = (Test) it.next();
 
-				if ((this.selectedTest == null) || (!this.selectedTest.getId().equals(test.getId()))) {
-					switch (test.getStatus().value()) {
-						case TestStatus._TEST_STATUS_COMPLETED:
-							color = COLOR_COMPLETED_SELECTED;
-							break;
-						case TestStatus._TEST_STATUS_SCHEDULED:
-							color = COLOR_SCHEDULED_SELECTED;
-							break;
-						case TestStatus._TEST_STATUS_PROCESSING:
-							color = COLOR_PROCCESSING_SELECTED;
-							break;
-						case TestStatus._TEST_STATUS_ABORTED:
-							color = COLOR_ABORDED_SELECTED;
-							break;
-						default:
-							color = COLOR_UNRECOGNIZED;
-							break;
-					}
-				} else {
-					switch (test.getStatus().value()) {
-						case TestStatus._TEST_STATUS_COMPLETED:
-							color = COLOR_COMPLETED;
-							break;
-						case TestStatus._TEST_STATUS_SCHEDULED:
-							color = COLOR_SCHEDULED;
-							break;
-						case TestStatus._TEST_STATUS_PROCESSING:
-							color = COLOR_PROCCESSING;
-							break;
-						case TestStatus._TEST_STATUS_ABORTED:
-							color = COLOR_ABORDED;
-							break;
-						default:
-							color = COLOR_UNRECOGNIZED;
-							break;
-					}
-				}
-				//System.out.println("color:" + color);
-				if ((this.unsavedTests == null) || (!this.unsavedTests.containsValue(test))) {
-					g.setColor(color);
-					drawTestRect(g, test);
-				}
+			/**
+			 * FIXME fix occur ConcurrentModificationException
+			 */
+			synchronized (this.allTests) {
+				for (Iterator it = this.allTests.iterator(); it.hasNext();) {
+					Color color;
+					Test test = (Test) it.next();
 
+					if ((this.selectedTest == null) || (!this.selectedTest.getId().equals(test.getId()))) {
+						switch (test.getStatus().value()) {
+							case TestStatus._TEST_STATUS_COMPLETED:
+								color = COLOR_COMPLETED_SELECTED;
+								break;
+							case TestStatus._TEST_STATUS_SCHEDULED:
+								color = COLOR_SCHEDULED_SELECTED;
+								break;
+							case TestStatus._TEST_STATUS_PROCESSING:
+								color = COLOR_PROCCESSING_SELECTED;
+								break;
+							case TestStatus._TEST_STATUS_ABORTED:
+								color = COLOR_ABORDED_SELECTED;
+								break;
+							default:
+								color = COLOR_UNRECOGNIZED;
+								break;
+						}
+					} else {
+						switch (test.getStatus().value()) {
+							case TestStatus._TEST_STATUS_COMPLETED:
+								color = COLOR_COMPLETED;
+								break;
+							case TestStatus._TEST_STATUS_SCHEDULED:
+								color = COLOR_SCHEDULED;
+								break;
+							case TestStatus._TEST_STATUS_PROCESSING:
+								color = COLOR_PROCCESSING;
+								break;
+							case TestStatus._TEST_STATUS_ABORTED:
+								color = COLOR_ABORDED;
+								break;
+							default:
+								color = COLOR_UNRECOGNIZED;
+								break;
+						}
+					}
+					//System.out.println("color:" + color);
+					if ((this.unsavedTests == null) || (!this.unsavedTests.containsValue(test))) {
+						g.setColor(color);
+						drawTestRect(g, test);
+					}
+
+				}
 			}
 		}
 	}
 
 	public void removeAllTests() {
-		synchronized (this) {
+		synchronized (this.tests) {
 			this.tests.clear();
+		}
+		synchronized (this.allTests){
 			this.allTests.clear();
+		}
+		synchronized (this.unsavedTests){
 			this.unsavedTests.clear();
 		}
 	}

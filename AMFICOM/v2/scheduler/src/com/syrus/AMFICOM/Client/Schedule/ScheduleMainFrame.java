@@ -18,6 +18,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JViewport;
 
 import com.syrus.AMFICOM.Client.General.ConnectionInterface;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.General.Command.ExitCommand;
 import com.syrus.AMFICOM.Client.General.Command.HelpAboutCommand;
@@ -41,10 +42,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.StatusBarModel;
 import com.syrus.AMFICOM.Client.General.UI.WindowArranger;
-import com.syrus.AMFICOM.Client.Resource.ConfigDataSourceImage;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Object.Domain;
 import com.syrus.AMFICOM.Client.Schedule.UI.ElementsTreeFrame;
 import com.syrus.AMFICOM.Client.Schedule.UI.PlanFrame;
 import com.syrus.AMFICOM.Client.Schedule.UI.SaveParametersFrame;
@@ -53,6 +51,10 @@ import com.syrus.AMFICOM.Client.Schedule.UI.TestParametersFrame;
 import com.syrus.AMFICOM.Client.Schedule.UI.TestRequestFrame;
 import com.syrus.AMFICOM.Client.Schedule.UI.TimeParametersFrame;
 import com.syrus.AMFICOM.Client.Survey.General.ConstStorage;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.Domain;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 
 public class ScheduleMainFrame extends JFrame implements OperationListener {
@@ -323,8 +325,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 	}
 
 	public void setDomainSelected() {
-		DataSourceInterface dataSource = this.aContext.getDataSource();
-		new ConfigDataSourceImage(dataSource).LoadISM();
+		//DataSourceInterface dataSource = this.aContext.getDataSource();
+		//new ConfigDataSourceImage(dataSource).LoadISM();
 
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_SESSION_CLOSE, true);
@@ -333,8 +335,18 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 		aModel.fireModelChanged("");
 
-		String domainId = this.aContext.getSessionInterface().getDomainId();
-		this.statusBar.setText("domain", Pool.getName(Domain.typ, domainId));
+		
+		try {
+			RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
+			Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(sessionInterface
+					.getDomainIdentifier(), true);
+			this.statusBar.setText("domain", domain.getName());
+		} catch (DatabaseException e) {
+			SchedulerModel.showErrorMessage(this, e);
+		} catch (CommunicationException e) {
+			SchedulerModel.showErrorMessage(this, e);
+		}
+		
 
 		this.treeFrame.init();
 

@@ -454,6 +454,9 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			if (dsi == null)
 				return;
 
+			ConfigurationStorableObjectPool.refresh();
+			MeasurementStorableObjectPool.refresh();
+
 			if (this.allTests == null)
 				this.allTests = new ArrayList();
 			else
