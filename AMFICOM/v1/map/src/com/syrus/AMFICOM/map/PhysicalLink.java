@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLink.java,v 1.12 2004/12/23 09:38:39 bob Exp $
+ * $Id: PhysicalLink.java,v 1.13 2004/12/23 16:34:26 krupenn Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ.
@@ -37,8 +37,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/12/23 09:38:39 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2004/12/23 16:34:26 $
+ * @author $Author: krupenn $
  * @module map_v1
  */
 public class PhysicalLink extends StorableObject implements Characterized, TypedObject, MapElement {
@@ -75,6 +75,8 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	protected transient Map map;
 
 	protected transient boolean selected = false;
+
+	protected transient boolean selectionVisible = false;
 
 	protected transient boolean removed = false;
 
@@ -190,6 +192,29 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		} catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
+	}
+
+	public static PhysicalLink createInstance(
+			final Identifier creatorId,
+			final AbstractNode stNode, 
+			final AbstractNode eNode, 
+			final PhysicalLinkType type)
+		throws CreateObjectException {
+
+		return PhysicalLink.createInstance(
+			creatorId,
+			"",
+			"",
+			type,
+			stNode,
+			eNode,
+			"",
+			"",
+			"",
+			type.getBindingDimension().getWidth(),
+			type.getBindingDimension().getHeight(),
+			true,
+			true);
 	}
 
 	public static PhysicalLink createInstance(final Identifier creatorId,
@@ -617,6 +642,14 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	}
 
 	/**
+	 * Установить наличие сигнала тревоги
+	 */
+	public void setAlarmState(boolean alarmState) 
+	{
+		this.alarmState = alarmState;
+	}
+
+	/**
 	 * получить флаг удаления элемента
 	 */
 	public boolean isRemoved()
@@ -722,10 +755,13 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		this.nodeLinksSorted = false;
 	}
 	
-	/**
-	 * Установить наличие сигнала тревоги
-	 */
-	public void setAlarmState(boolean alarmState) {
-		this.alarmState = alarmState;
+	public void setSelectionVisible(boolean selectionVisible)
+	{
+		this.selectionVisible = selectionVisible;
+	}
+
+	public boolean isSelectionVisible()
+	{
+		return selectionVisible;
 	}
 }

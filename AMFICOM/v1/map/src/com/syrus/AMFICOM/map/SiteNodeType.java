@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeType.java,v 1.9 2004/12/20 12:36:01 krupenn Exp $
+ * $Id: SiteNodeType.java,v 1.10 2004/12/23 16:34:26 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/12/20 12:36:01 $
+ * @version $Revision: 1.10 $, $Date: 2004/12/23 16:34:26 $
  * @author $Author: krupenn $
  * @module map_v1
  */
@@ -45,6 +45,7 @@ public class SiteNodeType extends StorableObjectType implements Characterized {
 	public static final String BUILDING = "building";
 	public static final String UNBOUND = "unbound";
 	public static final String CABLE_INLET = "cableinlet";
+	public static final String TOWER = "tower";
 
 	/**
 	 * Comment for <code>serialVersionUID</code>

@@ -1,5 +1,5 @@
 /*
- * $Id: Mark.java,v 1.8 2004/12/23 09:38:39 bob Exp $
+ * $Id: Mark.java,v 1.9 2004/12/23 16:34:26 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/12/23 09:38:39 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2004/12/23 16:34:26 $
+ * @author $Author: krupenn $
  * @module map_v1
  */
 public class Mark extends AbstractNode implements Characterized {
@@ -144,6 +144,25 @@ public class Mark extends AbstractNode implements Characterized {
 		} catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
+	}
+
+	public static Mark createInstance(
+			final Identifier creatorId,
+			final PhysicalLink link,
+			final double len)
+		throws CreateObjectException 
+	{
+		return Mark.createInstance(
+			creatorId,
+			"",
+			"",
+			0.0D,
+			0.0D,
+			link,
+			len,
+			"",
+			"",
+			"");
 	}
 
 	public static Mark createInstance(	final Identifier creatorId,

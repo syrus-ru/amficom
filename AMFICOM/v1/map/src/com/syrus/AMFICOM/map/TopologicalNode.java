@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNode.java,v 1.8 2004/12/23 09:38:39 bob Exp $
+ * $Id: TopologicalNode.java,v 1.9 2004/12/23 16:34:26 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/12/23 09:38:39 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2004/12/23 16:34:26 $
+ * @author $Author: krupenn $
  * @module map_v1
  */
 public class TopologicalNode extends AbstractNode {
@@ -158,7 +158,7 @@ public class TopologicalNode extends AbstractNode {
 		}
 	}
 
-	public static TopologicalNode createInstance(
+	protected static TopologicalNode createInstance0(
 			Identifier creatorId,
 			String name,
 			String description,
@@ -166,7 +166,20 @@ public class TopologicalNode extends AbstractNode {
 			DoublePoint location)
 		throws CreateObjectException {
 
-		if (creatorId == null || name == null || description == null || physicalLink == null || location == null)
+		// IMPORTANT!!
+		// physicalLink validation should NOT be performad
+		// as long as a known case of creation with null PhysicalLink exists.
+		// It is programmer's responsibility to make sure that call to
+		// 
+		// topologicalNode.setPhysicalLink(PhysicalLink physicalLink)
+		// 
+		// is performed after creation of TopologicalNode with physicalLink
+		// set to null.
+		// 
+		// Where needed physicalLink validation is performed in corresponding
+		// public createInstance methods
+
+		if (creatorId == null || name == null || description == null || location == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
@@ -187,30 +200,58 @@ public class TopologicalNode extends AbstractNode {
 	}
 
 	public static TopologicalNode createInstance(
-			Map map, 
+			Identifier creatorId,
+			String name,
+			String description,
+			PhysicalLink physicalLink, 
 			DoublePoint location)
 		throws CreateObjectException {
 
-		if (map == null || location == null)
+		// validate physicalLink as long as validation is not performad
+		// in createInstance0
+
+		if (physicalLink == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
-		try {
-			Identifier id =
-				IdentifierPool.getGeneratedIdentifier(ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE);
-			TopologicalNode tnode = new TopologicalNode(
-				id,
-				map.getCreatorId(),
-				id.toString(),
+		return TopologicalNode.createInstance0(
+				creatorId,
+				name,
+				description,
+				physicalLink,
+				location);
+	}
+
+	public static TopologicalNode createInstance(
+			final Identifier creatorId,
+			final PhysicalLink physicalLink, 
+			final DoublePoint location)
+		throws CreateObjectException {
+
+		// validate physicalLink as long as validation is not performad
+		// in createInstance0
+
+		if (physicalLink == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+		
+		return TopologicalNode.createInstance0(
+			creatorId,
+			"",
+			"",
+			physicalLink,
+			location);
+	}
+
+	public static TopologicalNode createInstance(
+			final Identifier creatorId,
+			final DoublePoint location)
+		throws CreateObjectException {
+
+		return TopologicalNode.createInstance0(
+				creatorId,
+				"",
 				"",
 				null,
-				location.getX(),
-				location.getY(),
-				false);
-			tnode.setMap(map);
-			return tnode;
-		} catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("TopologicalNode.createInstance | cannot generate identifier ", e);
-		}
+				location);
 	}
 
 	public List getDependencies() {

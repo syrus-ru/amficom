@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNode.java,v 1.7 2004/12/23 09:38:39 bob Exp $
+ * $Id: SiteNode.java,v 1.8 2004/12/23 16:34:26 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/12/23 09:38:39 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2004/12/23 16:34:26 $
+ * @author $Author: krupenn $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject {
@@ -163,6 +163,73 @@ public class SiteNode extends AbstractNode implements TypedObject {
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("SiteNode.createInstance | cannot generate identifier ", e);
 		}
+	}
+
+	public static SiteNode createInstance(
+			final Identifier creatorId,
+			final DoublePoint location,
+			final Map map,
+			final SiteNodeType type)
+		throws CreateObjectException {
+
+		if (location == null || map == null || type == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+		
+		try {
+			Identifier ide =
+				IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE);
+			return new SiteNode(
+				ide,
+				creatorId,
+				type.getImageId(),
+				type.getName(),
+				"",
+				type,
+				location.getX(),
+				location.getY(),
+				"",
+				"",
+				"");
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("SiteNode.createInstance | cannot generate identifier ", e);
+		}
+	}
+
+	public static SiteNode importInstance(
+			final Identifier id,
+			final Identifier creatorId,
+			final String name,
+			final String description,
+			final SiteNodeType type,
+			final double x,
+			final double y,
+			final String city,
+			final String building,
+			final String street)
+		throws CreateObjectException {
+
+		if (id == null 
+			|| creatorId == null 
+			|| name == null 
+			|| description == null 
+			|| type == null 
+			|| city == null 
+			|| street == null 
+			|| building == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+		
+		return new SiteNode(
+				id,
+				creatorId,
+				type.getImageId(),
+				name,
+				description,
+				type,
+				x,
+				y,
+				city,
+				street,
+				building);
 	}
 
 	public List getDependencies() {

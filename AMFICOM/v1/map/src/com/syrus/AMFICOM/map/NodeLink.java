@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLink.java,v 1.11 2004/12/23 09:38:39 bob Exp $
+ * $Id: NodeLink.java,v 1.12 2004/12/23 16:34:26 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/12/23 09:38:39 $
- * @author $Author: bob $
+ * @version $Revision: 1.12 $, $Date: 2004/12/23 16:34:26 $
+ * @author $Author: krupenn $
  * @module map_v1
  */
 public class NodeLink extends StorableObject implements Characterized, MapElement {
@@ -137,6 +137,22 @@ public class NodeLink extends StorableObject implements Characterized, MapElemen
 		} catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
+	}
+
+	public static NodeLink createInstance(
+			final Identifier creatorId,
+			final PhysicalLink physicalLink,
+			final AbstractNode stNode, 
+			final AbstractNode eNode) 
+		throws CreateObjectException 
+	{
+		return NodeLink.createInstance(
+			creatorId,
+			"",
+			physicalLink,
+			stNode,
+			eNode,
+			0.0D);
 	}
 
 	public static NodeLink createInstance(										  
