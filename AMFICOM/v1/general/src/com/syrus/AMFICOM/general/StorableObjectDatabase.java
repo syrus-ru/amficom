@@ -32,6 +32,8 @@ public abstract class StorableObjectDatabase {
 	public static final String	SQL_UPDATE						= " UPDATE ";
 	public static final String	SQL_VALUES						= " VALUES ";
 	public static final String	SQL_WHERE						= " WHERE ";
+	
+	public static final String	SQL_FUNCTION_MAX		= " MAX ";
 
 	protected static Connection	connection;
 
