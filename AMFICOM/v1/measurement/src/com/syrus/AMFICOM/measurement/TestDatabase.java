@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.35 2004/09/09 14:26:00 bob Exp $
+ * $Id: TestDatabase.java,v 1.36 2004/09/10 14:35:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2004/09/09 14:26:00 $
+ * @version $Revision: 1.36 $, $Date: 2004/09/10 14:35:51 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -761,6 +761,24 @@ public class TestDatabase extends StorableObjectDatabase {
 		
 		try {
 			list = retrieveByIds(null, null);
+		}  catch (IllegalDataException ide) {			
+			Log.debugMessage("TestDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
+		}
+		
+		return list;
+	}
+	
+	public List retrieveByTimeRange(Date start, Date end) throws RetrieveObjectException {
+		List list = null;
+		
+		/**
+		 * FIXME test conditions !!!
+		 */
+		String condition = COLUMN_START_TIME + " <= " + DatabaseDate.toUpdateSubString(end)
+			+ SQL_AND + COLUMN_END_TIME + " >= " + DatabaseDate.toUpdateSubString(start);
+		
+		try {
+			list = retrieveByIds(null, condition);
 		}  catch (IllegalDataException ide) {			
 			Log.debugMessage("TestDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
 		}
