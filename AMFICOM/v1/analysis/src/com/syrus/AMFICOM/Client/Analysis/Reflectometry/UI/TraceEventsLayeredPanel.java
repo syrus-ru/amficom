@@ -1,13 +1,18 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Map;
 
-import java.awt.Toolkit;
-import java.awt.event.*;
-import javax.swing.*;
+import javax.swing.JToggleButton;
+import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 
 public class TraceEventsLayeredPanel extends ScalableLayeredPanel implements OperationListener
 {
@@ -140,7 +145,7 @@ class TraceEventsToolBar extends ScalableToolBar
 
 	protected static String[] buttons = new String[]
 	{
-		ex, dx, ey, dy, fit, separator, events, modeled
+		EX, DX, EY, DY, FIX, separator, events, modeled
 	};
 
 	protected String[] getButtons()
@@ -159,7 +164,7 @@ class TraceEventsToolBar extends ScalableToolBar
 				btn_size,
 				null,
 				LangModelAnalyse.getString("showevents"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/events.gif")),
+				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_EVENTS),
 				new ActionListener()
 				{
 					public void actionPerformed(ActionEvent e)
@@ -175,7 +180,7 @@ class TraceEventsToolBar extends ScalableToolBar
 				btn_size,
 				null,
 				LangModelAnalyse.getString("showmodel"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/modeled.gif")),
+				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_MODELED),
 				new ActionListener()
 				{
 					public void actionPerformed(ActionEvent e)

@@ -1,13 +1,21 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
 
-import java.awt.Toolkit;
-import java.awt.event.*;
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JToggleButton;
+import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
+import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 
 public class MapMarkersLayeredPanel extends TraceEventsLayeredPanel implements OperationListener
 {
@@ -176,7 +184,7 @@ class MapMarkersToolBar extends TraceEventsToolBar
 
 	protected static String[] buttons = new String[]
 	{
-		ex, dx, ey, dy, fit, separator, events, separator, createMarker, deleteMarker
+		EX, DX, EY, DY, FIX, separator, events, separator, createMarker, deleteMarker
 	};
 
 	public MapMarkersToolBar(MapMarkersLayeredPanel panel)
@@ -200,7 +208,7 @@ class MapMarkersToolBar extends TraceEventsToolBar
 				btn_size,
 				null,
 				LangModelAnalyse.getString("addmarker"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/marker.gif")),
+				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_MARKER),
 				new ActionListener()
 				{
 					public void actionPerformed(ActionEvent e)
@@ -216,7 +224,7 @@ class MapMarkersToolBar extends TraceEventsToolBar
 				btn_size,
 				null,
 				LangModelAnalyse.getString("removemarker"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/marker_delete.gif")),
+				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_DELETE_MARKER),
 				new ActionListener()
 				{
 					public void actionPerformed(ActionEvent e)

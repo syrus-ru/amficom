@@ -1,17 +1,37 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.SystemColor;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JToolBar;
+import javax.swing.JViewport;
+import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
+import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
-import com.syrus.AMFICOM.analysis.dadara.*;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager.ThreshEditor;
 import com.syrus.io.BellcoreStructure;
 
@@ -95,7 +115,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		}
 
 		jButton1.setToolTipText(LangModelAnalyse.getString("analysisInitial"));
-		jButton1.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/th_initial.gif")));
+		jButton1.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INITIAL));
 		jButton1.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -109,7 +129,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		});
 
 		jButton3.setToolTipText(LangModelAnalyse.getString("analysisDefaults"));
-		jButton3.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/th_default.gif")));
+		jButton3.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_DEFAULT));
 		jButton3.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -124,7 +144,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		});
 
 		jButtonInc.setToolTipText(LangModelAnalyse.getString("increaseThresh"));
-		jButtonInc.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/increaseThresh.gif")));
+		jButtonInc.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_INCREASE));
 		jButtonInc.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)
@@ -139,7 +159,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		});
 
 		jButtonDec.setToolTipText(LangModelAnalyse.getString("decreaseThresh"));
-		jButtonDec.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/decreaseThresh.gif")));
+		jButtonDec.setIcon(UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD_DECREASE));
 		jButtonDec.addActionListener(new ActionListener()
 		{
 			public void actionPerformed(ActionEvent e)

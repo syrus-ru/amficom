@@ -1,22 +1,29 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
+import java.awt.Adjustable;
+import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.util.Map;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JScrollBar;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 
 public class ScalableLayeredPanel extends ResizableLayeredPanel
 {
 	public static final int hwidth = 20; // число градаций видимой части оси X
 	public static final int vheight = 20; // число градаций видимой части оси Y
 
-	protected JScrollBar horizontalBar = new JScrollBar(JScrollBar.HORIZONTAL);
+	protected JScrollBar horizontalBar = new JScrollBar(Adjustable.HORIZONTAL);
 	protected double horizontalMax = 0; // max слайдера оси X
 	protected int horizontalValue = 0; // положение слайдера оси X
-	protected JScrollBar verticalBar = new JScrollBar(JScrollBar.VERTICAL);
+	protected JScrollBar verticalBar = new JScrollBar(Adjustable.VERTICAL);
 	protected double verticalMax = 0; // max слайдера оси Y
 	protected int verticalValue = 0; // положение слайдера оси Y
 
@@ -83,23 +90,23 @@ public class ScalableLayeredPanel extends ResizableLayeredPanel
 
 	protected void	bar_adjustmentValueChanged ()
 	{
-		double hsize = (double)horizontalBar.getMaximum();
-		double hposition = (double)horizontalBar.getValue();
-		double vsize = (double)verticalBar.getMaximum();
-		double vposition = (double)verticalBar.getValue();
+		double hsize = horizontalBar.getMaximum();
+		double hposition = horizontalBar.getValue();
+		double vsize = verticalBar.getMaximum();
+		double vposition = verticalBar.getValue();
 
 		for(int i = 0; i < jLayeredPane.getComponentCount(); i++)
 		{
 			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
 
 			double factor_x = (panel.y.length*panel.deltaX)/(maxLength*maxDeltaX/scale_x);
-			double factor_y = ((double)(panel.maxY - panel.minY))/((double)maxY/scale_y);
+			double factor_y = (panel.maxY - panel.minY)/(maxY/scale_y);
 
 			panel.setGraphBounds(
 					((int) (panel.y.length * hposition / (hsize * factor_x))),
 					(int) (panel.y.length * (hposition + hwidth) / (hsize * factor_x)) + 1);
-			panel.top = ((double)((panel.maxY - panel.minY) * vposition) / (vsize * factor_y));
-			panel.bottom = ((double)((panel.maxY - panel.minY) * (vsize - vposition - vheight)) / (vsize * factor_y));
+			panel.top = (((panel.maxY - panel.minY) * vposition) / (vsize * factor_y));
+			panel.bottom = (((panel.maxY - panel.minY) * (vsize - vposition - vheight)) / (vsize * factor_y));
 		}
 		jLayeredPane.repaint();
 	}
@@ -145,7 +152,7 @@ public class ScalableLayeredPanel extends ResizableLayeredPanel
 			if((panel.maxY - panel.minY) > maxTraceAmplitude)
 			{
 				maxTraceAmplitude = panel.maxY - panel.minY;
-				scale_y = (double)(jLayeredPane.getHeight()) / maxTraceAmplitude;
+				scale_y = jLayeredPane.getHeight() / maxTraceAmplitude;
 			}
 
 			if(panel.y.length*panel.deltaX > maxTraceLength)
@@ -202,14 +209,14 @@ public class ScalableLayeredPanel extends ResizableLayeredPanel
 		double _scale_x = activePanel.scaleX;
 		double _scale_y = activePanel.scaleY;
 		double sc_x = ((double)(jLayeredPane.getWidth()) / (double)(end - start + 2*ix));
-		double sc_y = ((double)(jLayeredPane.getHeight()) / (max - min + 2*iy));
+		double sc_y = (jLayeredPane.getHeight() / (max - min + 2*iy));
 
 		updScale (sc_x/_scale_x, sc_y/_scale_y, 0.5, 0.5);
 
 		horizontalBar.setMinimum(-5);
-		horizontalBar.setValue((int)(horizontalMax * ((double)(start - ix)  * activePanel.deltaX) / (maxLength*maxDeltaX/scale_x)));
+		horizontalBar.setValue((int)(horizontalMax * ((start - ix)  * activePanel.deltaX) / (maxLength*maxDeltaX/scale_x)));
 		verticalBar.setMinimum(-5);
-		verticalBar.setValue((int)(verticalMax * ((activePanel.maxY - max - iy) / ((double)maxY/scale_y))));
+		verticalBar.setValue((int)(verticalMax * ((activePanel.maxY - max - iy) / (maxY/scale_y))));
 	}
 
 	void updScale2fit_panel(SimpleGraphPanel panel)
@@ -218,7 +225,7 @@ public class ScalableLayeredPanel extends ResizableLayeredPanel
 		double factor_y = (panel.maxY - panel.minY)/(maxY/scale_y);
 
 		panel.scaleX = factor_x*((double)(jLayeredPane.getWidth()) / (double)(panel.y.length));
-		panel.scaleY = factor_y*((double)(jLayeredPane.getHeight()) / (panel.maxY - panel.minY));
+		panel.scaleY = factor_y*((jLayeredPane.getHeight()) / (panel.maxY - panel.minY));
 		//panel.updateScale((double)(jLayeredPane.getWidth())*factor_x,  (double)(jLayeredPane.getHeight()*factor_y));
 		//panel.setSize(new Dimension (jLayeredPane.getWidth(), jLayeredPane.getHeight()));
 		panel.setSize(jLayeredPane.getSize());
@@ -269,21 +276,21 @@ public class ScalableLayeredPanel extends ResizableLayeredPanel
 
 class ScalableToolBar extends ToolBarPanel
 {
-	protected static final String ex = "exButton";
-	protected static final String ey = "eyButton";
-	protected static final String dx = "dxButton";
-	protected static final String dy = "dyButton";
-	protected static final String fit = "fitButton";
+	protected static final String EX = "exButton";
+	protected static final String EY = "eyButton";
+	protected static final String DX = "dxButton";
+	protected static final String DY = "dyButton";
+	protected static final String FIX = "fitButton";
 
-	JButton exButton = new JButton();
-	JButton eyButton = new JButton();
-	JButton dxButton = new JButton();
-	JButton dyButton = new JButton();
-	JButton fitButton = new JButton();
+	private JButton exButton = new JButton();
+	private JButton eyButton = new JButton();
+	private JButton dxButton = new JButton();
+	private JButton dyButton = new JButton();
+	private JButton fitButton = new JButton();
 
 	protected static String[] buttons = new String[]
 	{
-		ex, dx, ey, dy, fit
+		EX, DX, EY, DY, FIX
 	};
 
 	public ScalableToolBar(ScalableLayeredPanel panel)
@@ -301,13 +308,13 @@ class ScalableToolBar extends ToolBarPanel
 		Map buttons = super.createGraphButtons();
 
 		buttons.put(
-				ex,
+				EX,
 				createToolButton(
 				exButton,
 				btn_size,
 				null,
 				LangModelAnalyse.getString("encreasex"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/enlargex.gif")),
+				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_ENLARGE_X),
 				new ActionListener()
 				{
 					public void actionPerformed(ActionEvent e)
@@ -317,13 +324,13 @@ class ScalableToolBar extends ToolBarPanel
 				},
 				true));
 		buttons.put(
-				ey,
+				EY,
 				createToolButton(
 				eyButton,
 				btn_size,
 				null,
 				LangModelAnalyse.getString("encreasey"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/enlargey.gif")),
+				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_ENLARGE_Y),
 				new ActionListener()
 				{
 					public void actionPerformed(ActionEvent e)
@@ -333,13 +340,13 @@ class ScalableToolBar extends ToolBarPanel
 				},
 				true));
 		buttons.put(
-				dx,
+				DX,
 				createToolButton(
 				dxButton,
 				btn_size,
 				null,
 				LangModelAnalyse.getString("decreasex"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/reducex.gif")),
+				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_REDUCE_X),
 				new ActionListener()
 				{
 					public void actionPerformed(ActionEvent e)
@@ -349,13 +356,13 @@ class ScalableToolBar extends ToolBarPanel
 				},
 				true));
 		buttons.put(
-				dy,
+				DY,
 				createToolButton(
 				dyButton,
 				btn_size,
 				null,
 				LangModelAnalyse.getString("decreasey"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/reducey.gif")),
+				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_REDUCE_Y),
 				new ActionListener()
 				{
 					public void actionPerformed(ActionEvent e)
@@ -365,13 +372,13 @@ class ScalableToolBar extends ToolBarPanel
 				},
 				true));
 		buttons.put(
-				fit,
+				FIX,
 				createToolButton(
 				fitButton,
 				btn_size,
 				null,
 				LangModelAnalyse.getString("fittoscreen"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/fit.gif")),
+				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_FIT),
 				new ActionListener()
 				{
 					public void actionPerformed(ActionEvent e)
@@ -388,9 +395,9 @@ class ScalableToolBar extends ToolBarPanel
 	{
 		ScalableLayeredPanel panel = (ScalableLayeredPanel)super.panel;
 		double k = .8;
-		if (panel.horizontalMax * k < panel.hwidth)
-			k = (double)panel.hwidth / panel.horizontalMax;
-		if (panel.horizontalBar.getMaximum() > panel.hwidth)
+		if (panel.horizontalMax * k < ScalableLayeredPanel.hwidth)
+			k = ScalableLayeredPanel.hwidth / panel.horizontalMax;
+		if (panel.horizontalBar.getMaximum() > ScalableLayeredPanel.hwidth)
 			panel.updScale(k, 1, .5, .5);
 	}
 
@@ -398,7 +405,7 @@ class ScalableToolBar extends ToolBarPanel
 	{
 		ScalableLayeredPanel panel = (ScalableLayeredPanel)super.panel;
 		double k = 1.25;
-		if (panel.horizontalBar.getMaximum() < panel.hwidth * 1000)
+		if (panel.horizontalBar.getMaximum() < ScalableLayeredPanel.hwidth * 1000)
 			panel.updScale(k, 1, .5, .5);
 	}
 
@@ -406,9 +413,9 @@ class ScalableToolBar extends ToolBarPanel
 	{
 		ScalableLayeredPanel panel = (ScalableLayeredPanel)super.panel;
 		double k = .8;
-		if (panel.verticalMax * k < panel.vheight)
-			k = (double)panel.vheight / (double)panel.verticalMax;
-		if (panel.verticalBar.getMaximum() > panel.vheight)
+		if (panel.verticalMax * k < ScalableLayeredPanel.vheight)
+			k = ScalableLayeredPanel.vheight / panel.verticalMax;
+		if (panel.verticalBar.getMaximum() > ScalableLayeredPanel.vheight)
 			panel.updScale(1, k, .5, .5);
 	}
 
@@ -416,7 +423,7 @@ class ScalableToolBar extends ToolBarPanel
 	{
 		ScalableLayeredPanel panel = (ScalableLayeredPanel)super.panel;
 		double k = 1.25;
-		if (panel.verticalBar.getMaximum() < panel.vheight * 150)
+		if (panel.verticalBar.getMaximum() < ScalableLayeredPanel.vheight * 150)
 			panel.updScale(1, k, .5, .5);
 	}
 

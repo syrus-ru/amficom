@@ -1,22 +1,28 @@
+/*
+ * $Id: PathElementsLayeredPanel.java,v 1.2 2005/03/22 09:36:15 bob Exp $
+ *
+ * Copyright ¿ 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 /**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2004</p>
- * <p>Company: </p>
- * @author not attributable
- * @version 1.0
+ * @version $Revision: 1.2 $, $Date: 2005/03/22 09:36:15 $
+ * @author $Author: bob $
+ * @module analysis_v1
  */
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Map;
 
-import java.awt.Toolkit;
-import java.awt.event.*;
-import javax.swing.*;
+import javax.swing.JToggleButton;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 
 public class PathElementsLayeredPanel extends AnalysisLayeredPanel
 {
@@ -66,7 +72,7 @@ class PathElementsToolBar extends AnalysisToolBar
 
 	protected static String[] buttons = new String[]
 	{
-		ex, dx, ey, dy, fit, separator, loss, ref, noana, separator, cA, cB, separator, events, modeled, separator, pe
+		EX, DX, EY, DY, FIX, separator, loss, ref, noana, separator, cA, cB, separator, events, modeled, separator, pe
 	};
 
 	public PathElementsToolBar (PathElementsLayeredPanel panel)
@@ -90,7 +96,7 @@ class PathElementsToolBar extends AnalysisToolBar
 				btn_size,
 				null,
 				LangModelAnalyse.getString("lossanalyse"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/loss.gif")),
+				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_LOSS),
 				new ActionListener()
 				{
 					public void actionPerformed(ActionEvent e)

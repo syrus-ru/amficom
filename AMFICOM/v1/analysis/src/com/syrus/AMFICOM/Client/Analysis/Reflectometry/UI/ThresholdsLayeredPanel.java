@@ -1,15 +1,22 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Map;
 
-import java.awt.Toolkit;
-import java.awt.event.*;
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JToggleButton;
+import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
+import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.analysis.dadara.*;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 
 public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel implements OperationListener
 {
@@ -144,15 +151,15 @@ public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel implements O
 
 class ThresholdsToolBar extends TraceEventsToolBar
 {
-	protected static final String fitEv = "fit2event";
-	protected static final String allTresh = "allTresholds";
+	protected static final String FIT_EVENT = "fit2event";
+	protected static final String ALL_TRESHOLDS = "allTresholds";
 
-	JButton fitEvButton = new JButton();
+	private JButton fitEvButton = new JButton();
 	protected JToggleButton showThresholdButton = new JToggleButton();
 
 	protected static String[] buttons = new String[]
 	{
-		fitEv, allTresh, separator, ex, dx, ey, dy, fit, separator, modeled
+		FIT_EVENT, ALL_TRESHOLDS, separator, EX, DX, EY, DY, FIX, separator, modeled
 	};
 
 	public ThresholdsToolBar (ThresholdsLayeredPanel panel)
@@ -170,13 +177,13 @@ class ThresholdsToolBar extends TraceEventsToolBar
 		Map buttons = super.createGraphButtons();
 
 		buttons.put(
-				fitEv,
+				FIT_EVENT,
 				createToolButton(
 				fitEvButton,
 				btn_size,
 				null,
 				LangModelAnalyse.getString("fittoevent"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/zoom_box.gif")),
+				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_ZOOM_BOX),
 				new ActionListener()
 				{
 					public void actionPerformed(ActionEvent e)
@@ -186,13 +193,13 @@ class ThresholdsToolBar extends TraceEventsToolBar
 				},
 				true));
 		buttons.put(
-				allTresh,
+				ALL_TRESHOLDS,
 				createToolButton(
 				showThresholdButton,
 				btn_size,
 				null,
 				LangModelAnalyse.getString("allThresholds"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/threshold.gif")),
+				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD),
 				new ActionListener()
 				{
 					public void actionPerformed(ActionEvent e)

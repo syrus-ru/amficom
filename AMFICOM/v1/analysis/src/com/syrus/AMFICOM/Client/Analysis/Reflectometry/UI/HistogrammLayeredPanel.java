@@ -1,13 +1,19 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
 
-import java.awt.Toolkit;
-import java.awt.event.*;
-import javax.swing.*;
+import javax.swing.JToggleButton;
+import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 
 public class HistogrammLayeredPanel extends ScalableLayeredPanel implements OperationListener
 {
@@ -80,13 +86,13 @@ public class HistogrammLayeredPanel extends ScalableLayeredPanel implements Oper
 
 class HistogrammToolBar extends ScalableToolBar
 {
-	protected static final String bindMark = "bind2markers";
+	protected static final String BIND_MARK = "bind2markers";
 
 	JToggleButton markersTButton = new JToggleButton();
 
 	protected static String[] buttons = new String[]
 	{
-		ex, dx, ey, dy, fit, separator, bindMark
+		EX, DX, EY, DY, FIX, separator, BIND_MARK
 	};
 
 	public HistogrammToolBar (HistogrammLayeredPanel panel)
@@ -104,13 +110,13 @@ class HistogrammToolBar extends ScalableToolBar
 		Map buttons = new HashMap();
 
 		buttons.put(
-				bindMark,
+				BIND_MARK,
 				createToolButton(
 				markersTButton,
 				btn_size,
 				null,
 				LangModelAnalyse.getString("bindToMarker"),
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/marker.gif")),
+				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_MARKER),
 				new ActionListener()
 				{
 					public void actionPerformed(ActionEvent e)

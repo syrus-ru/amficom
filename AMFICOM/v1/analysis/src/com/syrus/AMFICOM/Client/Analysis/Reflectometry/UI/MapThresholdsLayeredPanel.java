@@ -1,12 +1,15 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
 
-import java.awt.Toolkit;
-import java.awt.event.*;
-import javax.swing.*;
+import javax.swing.JToggleButton;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 
 public class MapThresholdsLayeredPanel extends MapMarkersLayeredPanel
 {
@@ -50,7 +53,7 @@ class MapThresholdsToolBar extends MapMarkersToolBar
 
 	protected static String[] buttons = new String[]
 	{
-		ex, dx, ey, dy, fit, separator, events, modeled, thresholds, separator, createMarker, deleteMarker
+		EX, DX, EY, DY, FIX, separator, events, modeled, thresholds, separator, createMarker, deleteMarker
 	};
 
 	public MapThresholdsToolBar(MapThresholdsLayeredPanel panel)
@@ -74,7 +77,7 @@ class MapThresholdsToolBar extends MapMarkersToolBar
 				btn_size,
 				null,
 				"",
-				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/threshold.gif")),
+				UIManager.getIcon(AnalysisResourceKeys.ICON_ANALYSIS_THRESHOLD),
 				new ActionListener()
 				{
 					public void actionPerformed(ActionEvent e)
