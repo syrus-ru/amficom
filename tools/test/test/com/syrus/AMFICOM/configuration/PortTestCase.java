@@ -1,5 +1,5 @@
 /*
- * $Id: PortTestCase.java,v 1.3 2004/08/31 15:29:12 bob Exp $
+ * $Id: PortTestCase.java,v 1.4 2004/10/18 11:09:01 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/08/31 15:29:12 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/18 11:09:01 $
  * @author $Author: bob $
  * @module tools
  */
@@ -80,7 +80,7 @@ public class PortTestCase extends ConfigureTestCase {
 		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.PORT_ENTITY_CODE);
 
 		Port port = Port.createInstance(id, ConfigureTestCase.creatorId, type, "testCasePort", equipment.getId(),
-										PortSort._PORT_SORT_PORT);
+										PortSort.PORT_SORT_PORT);
 
 		Port port2 = Port.getInstance((Port_Transferable) port.getTransferable());
 

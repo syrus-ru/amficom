@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementTestCase.java,v 1.4 2004/08/31 15:29:12 bob Exp $
+ * $Id: MonitoredElementTestCase.java,v 1.5 2004/10/18 11:09:01 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/08/31 15:29:12 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/18 11:09:01 $
  * @author $Author: bob $
  * @module tools
  */
@@ -73,7 +73,8 @@ public class MonitoredElementTestCase extends ConfigureTestCase {
 		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.ME_ENTITY_CODE);
 
 		MonitoredElement me = MonitoredElement
-				.createInstance(id, creatorId, domainId, meaurementPort.getId(),
+				.createInstance(id, creatorId, domainId, "MonitoredElement-1", 
+						meaurementPort.getId(),								
 						MonitoredElementSort._MONITOREDELEMENT_SORT_PORT, "testCaseAddress",
 						monitoredDomainMemberIds);
 
