@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNode.java,v 1.9 2004/12/23 16:34:26 krupenn Exp $
+ * $Id: TopologicalNode.java,v 1.10 2005/01/13 15:14:00 krupenn Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ.
@@ -32,7 +32,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/12/23 16:34:26 $
+ * @version $Revision: 1.10 $, $Date: 2005/01/13 15:14:00 $
  * @author $Author: krupenn $
  * @module map_v1
  */
@@ -45,6 +45,20 @@ public class TopologicalNode extends AbstractNode {
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long	serialVersionUID	= 3258130254244885554L;
+
+	public static final String COLUMN_ID = "id";
+	public static final String COLUMN_NAME = "name";
+	public static final String COLUMN_DESCRIPTION = "description";
+	public static final String COLUMN_PHYSICAL_LINK_ID = "physical_link_id";
+	public static final String COLUMN_X = "x";
+	public static final String COLUMN_Y = "y";
+	public static final String COLUMN_ACTIVE = "active";
+
+	/** 
+	 * массив параметров для экспорта. инициализируется только в случае
+	 * необходимости экспорта
+	 */
+	private static Object[][] exportColumns = null;
 
 	private PhysicalLink			physicalLink;
 
@@ -358,4 +372,98 @@ public class TopologicalNode extends AbstractNode {
 			e.printStackTrace();
 		}
 	}
+
+	public Object[][] exportColumns()
+	{
+		if(exportColumns == null)
+		{
+			exportColumns = new Object[7][2];
+			exportColumns[0][0] = COLUMN_ID;
+			exportColumns[1][0] = COLUMN_NAME;
+			exportColumns[2][0] = COLUMN_DESCRIPTION;
+			exportColumns[3][0] = COLUMN_PHYSICAL_LINK_ID;
+			exportColumns[4][0] = COLUMN_X;
+			exportColumns[5][0] = COLUMN_Y;
+			exportColumns[6][0] = COLUMN_ACTIVE;
+		}
+		exportColumns[0][1] = getId();
+		exportColumns[1][1] = getName();
+		exportColumns[2][1] = getDescription();
+		exportColumns[3][1] = getPhysicalLink().getId();
+		exportColumns[4][1] = String.valueOf(getLocation().getX());
+		exportColumns[5][1] = String.valueOf(getLocation().getY());
+		exportColumns[6][1] = String.valueOf(isActive());
+		
+		return exportColumns;
+	}
+
+	public static TopologicalNode createInstance(
+			Identifier creatorId,
+			Object[][] exportColumns)
+		throws CreateObjectException 
+	{
+		Identifier id = null;
+		String name = null;
+		String description = null;
+		Identifier physicalLinkId = null;
+		boolean active = false;
+		double x = -1.0D;
+		double y = -1.0D;
+
+		Object field;
+		Object value;
+
+		if (creatorId == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+
+		for(int i = 0; i < exportColumns.length; i++)
+		{
+			field = exportColumns[i][0];
+			value = exportColumns[i][1];
+
+			if(field.equals(COLUMN_ID))
+				id = (Identifier )value;
+			else
+			if(field.equals(COLUMN_NAME))
+				name = (String )value;
+			else
+			if(field.equals(COLUMN_DESCRIPTION))
+				description = (String )value;
+			else
+			if(field.equals(COLUMN_PHYSICAL_LINK_ID))
+				physicalLinkId = (Identifier )value;
+			else
+			if(field.equals(COLUMN_X))
+				x = Double.parseDouble((String )value);
+			else
+			if(field.equals(COLUMN_Y))
+				y = Double.parseDouble((String )value);
+			else
+			if(field.equals(COLUMN_ACTIVE))
+				active = Boolean.valueOf((String )value).booleanValue();
+		}
+
+		if (id == null || name == null || description == null || physicalLinkId == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+
+		try {
+			PhysicalLink physicalLink = (PhysicalLink ) 
+				MapStorableObjectPool.getStorableObject(
+					physicalLinkId, false);
+			TopologicalNode node = new TopologicalNode(
+					id, 
+					creatorId, 
+					name,
+					description,
+					x, 
+					y,
+					active);
+			node.setPhysicalLink(physicalLink);
+
+			return node;
+		} catch (ApplicationException e) {
+			throw new CreateObjectException("TopologicalNode.createInstance |  ", e);
+		}
+	}
+
 }

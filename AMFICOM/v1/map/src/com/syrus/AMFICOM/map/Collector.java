@@ -1,5 +1,5 @@
 /*
- * $Id: Collector.java,v 1.12 2004/12/23 09:38:39 bob Exp $
+ * $Id: Collector.java,v 1.13 2005/01/13 15:13:59 krupenn Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ.
@@ -33,8 +33,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/12/23 09:38:39 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2005/01/13 15:13:59 $
+ * @author $Author: krupenn $
  * @module map_v1
  */
 public class Collector 
@@ -45,6 +45,17 @@ public class Collector
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long	serialVersionUID	= 4049922679379212598L;
+
+	public static final String COLUMN_ID = "id";	
+	public static final String COLUMN_NAME = "name";	
+	public static final String COLUMN_DESCRIPTION = "description";	
+	public static final String COLUMN_LINKS = "links";	
+
+	/** 
+	 * массив параметров для экспорта. инициализируется только в случае
+	 * необходимости экспорта
+	 */
+	private static Object[][] exportColumns = null;
 	
 	private String					name;
 	private String					description;
@@ -357,5 +368,91 @@ public class Collector
 	public void revert(MapElementState state)
 	{
 		throw new UnsupportedOperationException();
+	}
+
+	public Object[][] exportColumns()
+	{
+		if(exportColumns == null)
+		{
+			exportColumns = new Object[4][2];
+			exportColumns[0][0] = COLUMN_ID;
+			exportColumns[1][0] = COLUMN_NAME;
+			exportColumns[2][0] = COLUMN_DESCRIPTION;
+			exportColumns[3][0] = COLUMN_LINKS;
+		}
+		exportColumns[0][1] = getId();
+		exportColumns[1][1] = getName();
+		exportColumns[2][1] = getDescription();
+		List physicalLinkIds = new ArrayList(getPhysicalLinks().size());
+		for(Iterator it = getPhysicalLinks().iterator(); it.hasNext();)
+		{
+			PhysicalLink link = (PhysicalLink )it.next();
+			physicalLinkIds.add(link.getId());
+		}
+		exportColumns[3][1] = physicalLinkIds;
+		
+		return exportColumns;
+	}
+
+	public static Collector createInstance(
+			Identifier creatorId,
+			Object[][] exportColumns)
+		throws CreateObjectException 
+	{
+		Identifier id = null;
+		String name = null;
+		String description = null;
+		List physicalLinkIds = null;
+
+		Object field;
+		Object value;
+
+		if (creatorId == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+
+		for(int i = 0; i < exportColumns.length; i++)
+		{
+			field = exportColumns[i][0];
+			value = exportColumns[i][1];
+
+			if(field.equals(COLUMN_ID))
+				id = (Identifier )value;
+			else
+			if(field.equals(COLUMN_NAME))
+				name = (String )value;
+			else
+			if(field.equals(COLUMN_DESCRIPTION))
+				description = (String )value;
+			else
+			if(field.equals(COLUMN_LINKS))
+			{
+				physicalLinkIds = (List )value;
+//				physicalLinkIds.clear();
+//				for(Iterator it = ResourceUtil.parseStrings(value).iterator(); it.hasNext();)
+//					physicalLinkIds.add(it.next());
+			}
+		}
+
+		if (id == null || name == null || description == null || physicalLinkIds == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+
+		try {
+			Collector collector = new Collector(
+					id, 
+					creatorId, 
+					name,
+					description);
+			for(Iterator it = physicalLinkIds.iterator(); it.hasNext();)
+			{
+				Identifier physicalLinkId = (Identifier )it.next();
+				PhysicalLink physicalLink = (PhysicalLink ) 
+					MapStorableObjectPool.getStorableObject(
+						physicalLinkId, false);
+				collector.addPhysicalLink(physicalLink);
+			}
+			return collector;
+		} catch (ApplicationException e) {
+			throw new CreateObjectException("Collector.createInstance |  ", e);
+		}
 	}
 }

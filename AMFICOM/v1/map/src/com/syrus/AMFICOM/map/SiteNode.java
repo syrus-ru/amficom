@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNode.java,v 1.9 2004/12/23 16:44:16 krupenn Exp $
+ * $Id: SiteNode.java,v 1.10 2005/01/13 15:14:00 krupenn Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ.
@@ -34,7 +34,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/12/23 16:44:16 $
+ * @version $Revision: 1.10 $, $Date: 2005/01/13 15:14:00 $
  * @author $Author: krupenn $
  * @module map_v1
  */
@@ -44,6 +44,25 @@ public class SiteNode extends AbstractNode implements TypedObject {
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long	serialVersionUID	= 3257567325699190835L;
+
+	public static final String COLUMN_ID = "id";
+	public static final String COLUMN_NAME = "name";
+	public static final String COLUMN_DESCRIPTION = "description";
+	public static final String COLUMN_X = "x";
+	public static final String COLUMN_Y = "y";
+	public static final String COLUMN_PROTO_ID = "proto_id";	
+	public static final String COLUMN_CITY = "city";	
+	public static final String COLUMN_STREET = "street";	
+	public static final String COLUMN_BUILDING = "building";	
+	public static final String COLUMN_COEF = "coef";
+	public static final String COLUMN_IMAGE_ID = "image_id";
+
+	/** 
+	 * массив параметров для экспорта. инициализируется только в случае
+	 * необходимости экспорта
+	 */
+	private static Object[][] exportColumns = null;
+
 	private SiteNodeType			type;
 
 	private String					city;
@@ -338,6 +357,119 @@ public class SiteNode extends AbstractNode implements TypedObject {
 		catch (DatabaseException e)
 		{
 			e.printStackTrace();
+		}
+	}
+
+	public Object[][] exportColumns()
+	{
+		if(exportColumns == null)
+		{
+			exportColumns = new Object[10][2];
+			exportColumns[0][0] = COLUMN_ID;
+			exportColumns[1][0] = COLUMN_NAME;
+			exportColumns[2][0] = COLUMN_DESCRIPTION;
+			exportColumns[3][0] = COLUMN_PROTO_ID;
+			exportColumns[4][0] = COLUMN_X;
+			exportColumns[5][0] = COLUMN_Y;
+			exportColumns[6][0] = COLUMN_CITY;
+			exportColumns[7][0] = COLUMN_STREET;
+			exportColumns[8][0] = COLUMN_BUILDING;
+			exportColumns[9][0] = COLUMN_IMAGE_ID;
+		}
+		exportColumns[0][1] = getId();
+		exportColumns[1][1] = getName();
+		exportColumns[2][1] = getDescription();
+		exportColumns[3][1] = getType().getId();
+		exportColumns[4][1] = String.valueOf(getLocation().getX());
+		exportColumns[5][1] = String.valueOf(getLocation().getY());
+		exportColumns[6][1] = getCity();
+		exportColumns[7][1] = getStreet();
+		exportColumns[8][1] = getBuilding();
+		exportColumns[9][1] = getImageId();
+		
+		return exportColumns;
+	}
+
+	public static SiteNode createInstance(
+			Identifier creatorId,
+			Object[][] exportColumns)
+		throws CreateObjectException 
+	{
+		Identifier id = null;
+		String name = null;
+		String description = null;
+		Identifier typeId = null;
+		String city = null;
+		String street = null;
+		String building = null;
+		double x = -1.0D;
+		double y = -1.0D;
+		Identifier imageId = null;
+
+		Object field;
+		Object value;
+
+		if (creatorId == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+
+		for(int i = 0; i < exportColumns.length; i++)
+		{
+			field = exportColumns[i][0];
+			value = exportColumns[i][1];
+
+			if(field.equals(COLUMN_ID))
+				id = (Identifier )value;
+			else
+			if(field.equals(COLUMN_NAME))
+				name = (String )value;
+			else
+			if(field.equals(COLUMN_DESCRIPTION))
+				description = (String )value;
+			else
+			if(field.equals(COLUMN_PROTO_ID))
+				typeId = (Identifier )value;
+			else
+			if(field.equals(COLUMN_X))
+				x = Double.parseDouble((String )value);
+			else
+			if(field.equals(COLUMN_Y))
+				y = Double.parseDouble((String )value);
+			else
+			if(field.equals(COLUMN_CITY))
+				city = (String )value;
+			else
+			if(field.equals(COLUMN_STREET))
+				street = (String )value;
+			else
+			if(field.equals(COLUMN_BUILDING))
+				building = (String )value;
+			else
+			if(field.equals(COLUMN_PROTO_ID))
+				imageId = (Identifier )value;
+		}
+
+		if (id == null || name == null || description == null || typeId == null 
+				|| city == null || street == null || building == null || imageId == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+
+		try {
+			SiteNodeType siteNodeType = (SiteNodeType ) 
+				MapStorableObjectPool.getStorableObject(
+					typeId, false);
+			return new SiteNode(
+					id, 
+					creatorId, 
+					imageId,
+					name,
+					description,
+					siteNodeType,
+					x, 
+					y,
+					city,
+					street,
+					building);
+		} catch (ApplicationException e) {
+			throw new CreateObjectException("SiteNode.createInstance |  ", e);
 		}
 	}
 

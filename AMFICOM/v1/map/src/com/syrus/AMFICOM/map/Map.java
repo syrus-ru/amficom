@@ -1,5 +1,5 @@
 /*
- * $Id: Map.java,v 1.8 2004/12/22 09:02:21 krupenn Exp $
+ * $Id: Map.java,v 1.9 2005/01/13 15:13:59 krupenn Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ.
@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/12/22 09:02:21 $
+ * @version $Revision: 1.9 $, $Date: 2005/01/13 15:13:59 $
  * @author $Author: krupenn $
  * @module map_v1
  */
@@ -42,6 +42,20 @@ public class Map extends StorableObject {
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long	serialVersionUID	= 3256722862181200184L;
+
+	public static final String COLUMN_ID = "id";
+	public static final String COLUMN_NAME = "name";
+	public static final String COLUMN_DESCRIPTION = "description";
+	public static final String COLUMN_CREATOR_ID = "creatorId";
+	public static final String COLUMN_CREATED = "created";
+	public static final String COLUMN_MODIFIER_ID = "modifierId";
+	public static final String COLUMN_MODIFIED = "modified";
+
+	/** 
+	 * массив параметров для экспорта. инициализируется только в случае
+	 * необходимости экспорта
+	 */
+	public static Object[][] exportColumns = null;
 
 	private Identifier				domainId;
 
@@ -154,6 +168,7 @@ public class Map extends StorableObject {
 
 	protected Map(final Identifier id, 
 				  final Identifier creatorId, 
+				  final Identifier domainId, 
 				  final String name, 
 				  final String description) {
 		super(id);
@@ -162,6 +177,7 @@ public class Map extends StorableObject {
 		super.modified = new Date(time);
 		super.creatorId = creatorId;
 		super.modifierId = creatorId;
+		this.domainId = domainId;
 		this.name = name;
 		this.description = description;
 
@@ -190,11 +206,12 @@ public class Map extends StorableObject {
 
 	public static Map createInstance(
 			Identifier creatorId,
+			Identifier domainId,
 			String name,
 			String description) 
 		throws CreateObjectException 
 	{
-		if (name == null || description == null || creatorId == null)
+		if (name == null || description == null || creatorId == null || domainId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try 
@@ -202,6 +219,7 @@ public class Map extends StorableObject {
 			return new Map(
 				IdentifierPool.getGeneratedIdentifier(ObjectEntities.MAP_ENTITY_CODE),
 				creatorId,
+				domainId,
 				name,
 				description);
 		} catch (IllegalObjectEntityException e) 
@@ -707,6 +725,70 @@ public class Map extends StorableObject {
 			selectedElements.add(me);
 		else
 			selectedElements.remove(me);
+	}
+
+	public Object[][] exportColumns()
+	{
+		if(exportColumns == null)
+		{
+			exportColumns = new Object[3][2];
+			exportColumns[0][0] = COLUMN_ID;
+			exportColumns[1][0] = COLUMN_NAME;
+			exportColumns[2][0] = COLUMN_DESCRIPTION;
+		}
+		exportColumns[0][1] = getId();
+		exportColumns[1][1] = getName();
+		exportColumns[2][1] = getDescription();
+		
+		return exportColumns;
+	}
+
+	public static Map createInstance(
+			Identifier creatorId,
+			Identifier domainId,
+			Object[][] exportColumns)
+		throws CreateObjectException 
+	{
+		Identifier id = null;
+		String name = null;
+		String description = null;
+
+		Object field;
+		Object value;
+
+		if (creatorId == null || domainId == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+
+		for(int i = 0; i < exportColumns.length; i++)
+		{
+			field = exportColumns[i][0];
+			value = exportColumns[i][1];
+
+			if(field.equals(COLUMN_ID))
+				id = (Identifier )value;
+			else
+			if(field.equals(COLUMN_NAME))
+				name = (String )value;
+			else
+			if(field.equals(COLUMN_DESCRIPTION))
+				description = (String )value;
+		}
+
+		if (id == null || name == null || description == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+
+		try 
+		{
+			return new Map(
+				id,
+				creatorId,
+				domainId,
+				name,
+				description);
+		} catch (Exception e) 
+		{
+			throw new CreateObjectException("Map.createInstance |  ", e);
+		}
 	}
 
 }

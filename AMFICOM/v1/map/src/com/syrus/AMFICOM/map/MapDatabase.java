@@ -1,5 +1,5 @@
 /*
- * $Id: MapDatabase.java,v 1.7 2004/12/22 09:51:06 bob Exp $
+ * $Id: MapDatabase.java,v 1.8 2005/01/13 15:14:00 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,8 +42,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2004/12/22 09:51:06 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/01/13 15:14:00 $
+ * @author $Author: krupenn $
  * @module map_v1
  */
 public class MapDatabase extends StorableObjectDatabase {
@@ -307,7 +307,7 @@ public class MapDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 	throws IllegalDataException, RetrieveObjectException, SQLException {
 		Map map = (storableObject == null) ? 
-				new Map(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null) : 
+				new Map(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null) : 
 					fromStorableObject(storableObject);				
 		
 		map.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),

@@ -1,5 +1,5 @@
 /**
- * $Id: MapElement.java,v 1.1 2004/12/20 12:36:01 krupenn Exp $
+ * $Id: MapElement.java,v 1.2 2005/01/13 15:14:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/12/20 12:36:01 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/13 15:14:00 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -96,7 +96,7 @@ public interface MapElement
 	 * Возвращает массив параметров, описывающих топологическюу схему,
 	 * который используется для экспорта
 	 */
-//	String[][] getExportColumns();
+	Object[][] exportColumns();
 
 	/**
 	 * установить параметр топологический схемы по переданному значению.
