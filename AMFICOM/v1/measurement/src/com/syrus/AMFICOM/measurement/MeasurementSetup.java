@@ -136,7 +136,7 @@ public class MeasurementSetup extends StorableObject {
 																								Set etalon,
 																								String description,
 																								long measurementDuration,
-																								List monitoredElementIds){
+																								List monitoredElementIds) {
 		return new MeasurementSetup(id,
 																creatorId,
 																parameterSet,

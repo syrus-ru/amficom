@@ -15,6 +15,9 @@ public abstract class MeasurementDatabaseContext {
 	protected static StorableObjectDatabase	setDatabase;
 	protected static StorableObjectDatabase	temporalPatternDatabase;
 	protected static StorableObjectDatabase	testDatabase;
+	
+	private MeasurementDatabaseContext() {
+	}
 
 	public static void init(StorableObjectDatabase analysisDatabase1,
 													StorableObjectDatabase analysisTypeDatabase1,

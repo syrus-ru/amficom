@@ -38,7 +38,6 @@ public class TestDatabase extends StorableObjectDatabase {
 	
 	public static final String LINK_COLMN_MEASUREMENT_SETUP_ID = "measurement_setup_id";
 	public static final String LINK_COLMN_TEST_ID = "test_id";
-
 	
 	private Test fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Test)

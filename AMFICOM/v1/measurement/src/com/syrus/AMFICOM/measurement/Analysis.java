@@ -120,13 +120,13 @@ public class Analysis extends Action {
 														 Measurement measurement,
 														 AlarmLevel alarmLevel,
 														 SetParameter[] parameters) throws CreateObjectException {
-		return Result.create(id,
-												 creatorId,
-												 measurement,
-												 this,
-												 ResultSort.RESULT_SORT_ANALYSIS,
-												 alarmLevel,
-												 parameters);
+		return Result.createInstance(id,
+																 creatorId,
+																 measurement,
+																 this,
+																 ResultSort.RESULT_SORT_ANALYSIS,
+																 alarmLevel,
+																 parameters);
 	}
 
 	public static Analysis createInstance(Identifier id,

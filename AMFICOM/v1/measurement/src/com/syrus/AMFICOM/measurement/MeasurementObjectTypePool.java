@@ -12,7 +12,6 @@ public class MeasurementObjectTypePool {
 	private static Map identifierActionTypes;
 	private static Map codenameParameterTypes;
 	private static Map codenameActionTypes;
-	
 
 	private MeasurementObjectTypePool() {
 	}
@@ -76,7 +75,7 @@ public class MeasurementObjectTypePool {
 		if (! identifierParameterTypes.containsKey(parameterTypeId))
 			identifierParameterTypes.put(parameterTypeId, parameterType);
 		else
-			Log.errorMessage("MeasurementDatabaseContext.addIdentifierParameterType | parameter type of id '" + parameterTypeId.toString() + "' already added");
+			Log.errorMessage("MeasurementObjectTypePool.addIdentifierParameterType | parameter type of id '" + parameterTypeId.toString() + "' already added");
 	}
 	
 	private static void addIdentifierActionType(ActionType actionType) {
@@ -84,7 +83,7 @@ public class MeasurementObjectTypePool {
 		if (! identifierActionTypes.containsKey(actionTypeId))
 			identifierActionTypes.put(actionTypeId, actionType);
 		else
-			Log.errorMessage("MeasurementDatabaseContext.addIdentifierActionType | action type of id '" + actionTypeId.toString() + "' already added");
+			Log.errorMessage("MeasurementObjectTypePool.addIdentifierActionType | action type of id '" + actionTypeId.toString() + "' already added");
 	}
 	
 	private static void addCodenameParameterType(ParameterType parameterType) {
@@ -92,7 +91,7 @@ public class MeasurementObjectTypePool {
 		if (! codenameParameterTypes.containsKey(parameterTypeCodename))
 			codenameParameterTypes.put(parameterTypeCodename, parameterType);
 		else
-			Log.errorMessage("MeasurementDatabaseContext.addCodenameParameterType | parameter type of codename '" + parameterTypeCodename + "' already added");
+			Log.errorMessage("MeasurementObjectTypePool.addCodenameParameterType | parameter type of codename '" + parameterTypeCodename + "' already added");
 	}
 	
 	private static void addCodenameActionType(ActionType actionType) {
@@ -100,6 +99,6 @@ public class MeasurementObjectTypePool {
 		if (! codenameActionTypes.containsKey(actionTypeCodename))
 			codenameActionTypes.put(actionTypeCodename, actionType);
 		else
-			Log.errorMessage("MeasurementDatabaseContext.addCodenameActionType | action type of codename '" + actionTypeCodename + "' already added");
+			Log.errorMessage("MeasurementObjectTypePool.addCodenameActionType | action type of codename '" + actionTypeCodename + "' already added");
 	}
 }

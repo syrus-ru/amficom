@@ -121,13 +121,13 @@ public class Evaluation extends Action {
 														 Measurement measurement,
 														 AlarmLevel alarmLevel,
 														 SetParameter[] parameters) throws CreateObjectException {
-		return Result.create(id,
-												 creatorId,
-												 measurement,
-												 this,
-												 ResultSort.RESULT_SORT_EVALUATION,
-												 alarmLevel,
-												 parameters);
+		return Result.createInstance(id,
+																 creatorId,
+																 measurement,
+																 this,
+																 ResultSort.RESULT_SORT_EVALUATION,
+																 alarmLevel,
+																 parameters);
 	}
 
 	public static Evaluation createInstance(Identifier id,

@@ -13,6 +13,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Result_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
+import com.syrus.util.Log;
 
 public class Result extends StorableObject {
 	private Measurement measurement;
@@ -35,7 +36,7 @@ public class Result extends StorableObject {
 		}
 	}
 
-	public Result(Result_Transferable rt) throws CreateObjectException, RetrieveObjectException, ObjectNotFoundException {
+	public Result(Result_Transferable rt) throws CreateObjectException {
 		super(new Identifier(rt.id),
 					new Date(rt.created),
 					new Date(rt.modified),
@@ -78,6 +79,8 @@ public class Result extends StorableObject {
 					throw new CreateObjectException(e.getMessage(), e);
 				}
 				break;
+			default:
+				Log.errorMessage("Result.init | Illegal sort: " + this.sort + " of result '" + super.id.toString() + "'");
 		}
 
 		this.parameters = new SetParameter[rt.parameters.length];
@@ -182,13 +185,13 @@ public class Result extends StorableObject {
 		this.parameters = parameters;
 	}
 
-	protected static Result create(Identifier id,
-																 Identifier creatorId,
-																 Measurement measurement,
-																 Action action,
-																 ResultSort sort,
-																 AlarmLevel alarmLevel,
-																 SetParameter[] parameters) throws CreateObjectException {
+	protected static Result createInstance(Identifier id,
+																				 Identifier creatorId,
+																				 Measurement measurement,
+																				 Action action,
+																				 ResultSort sort,
+																				 AlarmLevel alarmLevel,
+																				 SetParameter[] parameters) throws CreateObjectException {
 		return new Result(id,
 											creatorId,
 											measurement,

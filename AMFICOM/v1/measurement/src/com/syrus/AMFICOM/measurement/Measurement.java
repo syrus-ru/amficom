@@ -209,13 +209,13 @@ public class Measurement extends Action {
 														 Measurement measurement,
 														 AlarmLevel alarmLevel,
 														 SetParameter[] parameters) throws CreateObjectException {
-		return Result.create(id,
-												 creatorId,
-												 this,
-												 this,
-												 ResultSort.RESULT_SORT_MEASUREMENT,
-												 alarmLevel,
-												 parameters);						
+		return Result.createInstance(id,
+																 creatorId,
+																 this,
+																 this,
+																 ResultSort.RESULT_SORT_MEASUREMENT,
+																 alarmLevel,
+																 parameters);						
 	}
 
 	public Result retrieveResult(ResultSort resultSort) throws RetrieveObjectException, ObjectNotFoundException {

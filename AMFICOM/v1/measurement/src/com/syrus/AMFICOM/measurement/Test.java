@@ -55,6 +55,8 @@ public class Test extends StorableObject {
 					this.endTime = endTime;
 					this.temporalPatternId = null;
 					break;
+				default:
+					Log.errorMessage("TestTimeStamps | Illegal temporal type: " + temporalType + " of test");
 			}
 		}
 
@@ -77,6 +79,8 @@ public class Test extends StorableObject {
 					this.startTime = new Date(ctts.start_time);
 					this.endTime = new Date(ctts.end_time);
 					break;
+				default:
+					Log.errorMessage("TestTimeStamps | Illegal discriminator: " + discriminator);
 			}
 		}
 
@@ -95,6 +99,8 @@ public class Test extends StorableObject {
 					ttst.ctts(new ContinuousTestTimeStamps(this.startTime.getTime(),
 																								 this.endTime.getTime()));
 					break;
+				default:
+					Log.errorMessage("TestTimeStamps | Illegal discriminator: " + discriminator);
 			}
 			return ttst;
 		}

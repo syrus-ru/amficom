@@ -72,10 +72,8 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, int updateKind,
-			Object obj) throws IllegalDataException, UpdateObjectException {
-		MeasurementSetup measurementSetup = this
-				.fromStorableObject(storableObject);
+	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, UpdateObjectException {
+		MeasurementSetup measurementSetup = this.fromStorableObject(storableObject);
 		try {
 			switch (updateKind) {
 				case MeasurementSetup.UPDATE_ATTACH_ME:
@@ -86,6 +84,8 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 					this.deleteMEAttachment(measurementSetup, (Identifier) obj);
 					this.setModified(measurementSetup);
 					break;
+				default:
+					return;
 			}
 		} catch (UpdateObjectException e) {
 			try {

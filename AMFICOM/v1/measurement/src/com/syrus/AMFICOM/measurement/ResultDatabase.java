@@ -278,6 +278,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 				buffer.append(result.getAction().getId().toSQLString());
 				buffer.append(COMMA);
 				break;
+			default:
+				Log.errorMessage("ResultDatabase.insertResult | Illegal sort: " + resultSort + " of result '" + resultIdStr + "'");
 		}
 			buffer.append(Integer.toString(resultSort));
 			buffer.append(COMMA);
