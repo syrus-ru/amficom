@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLink.java,v 1.37 2005/04/01 11:11:05 bob Exp $
+ * $Id: PhysicalLink.java,v 1.38 2005/04/01 11:40:53 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -53,7 +53,7 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * тоннель (<code>{@link PhysicalLinkType#TUNNEL}</code>) 
  * и коллектор (<code>{@link PhysicalLinkType#COLLECTOR}</code>).
  * @author $Author: bob $
- * @version $Revision: 1.37 $, $Date: 2005/04/01 11:11:05 $
+ * @version $Revision: 1.38 $, $Date: 2005/04/01 11:40:53 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -624,7 +624,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 * Сортировка узлов неразрывно связана с сортировкой фрагментов
 	 */
 	public void sortNodes() {
-		sortNodeLinks();
+		this.sortNodeLinks();
 	}
 
 	/**
@@ -652,10 +652,10 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 			AbstractNode smne = this.getStartNode();
 			NodeLink nl = null;
 			LinkedList list = new LinkedList();
-			List nodevec = new LinkedList();
+			List nodeList = new LinkedList();
 			int count = getNodeLinks().size();
 			for (int i = 0; i < count; i++) {
-				nodevec.add(smne);
+				nodeList.add(smne);
 
 				for (Iterator it = getNodeLinks().iterator(); it.hasNext();) {
 					NodeLink nodeLink = (NodeLink) it.next();
@@ -679,11 +679,11 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 					}
 				}
 			}
-			nodevec.add(this.getEndNode());
+			nodeList.add(this.getEndNode());
 			this.nodeLinks.clear();
 			this.nodeLinks.addAll(list);
 			this.nodeLinksSorted = true;
-			this.sortedNodes = nodevec;
+			this.sortedNodes = nodeList;
 		}
 	}
 
