@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.7 2005/02/07 09:06:23 bob Exp $
+ * $Id: TypicalCondition.java,v 1.8 2005/02/08 11:07:10 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -119,7 +119,7 @@ import com.syrus.util.Log;
  * 
  * </ul>
  * 
- * @version $Revision: 1.7 $, $Date: 2005/02/07 09:06:23 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/08 11:07:10 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -197,6 +197,13 @@ public class TypicalCondition implements StorableObjectCondition {
 		// Empty constructor used by descendants only.
 	}
 
+	public TypicalCondition(final int firstInt,
+	            			final int secondInt,
+	            			final OperationSort operation,
+	            			final short entityCode,
+	            			final String key) {
+		this(firstInt, secondInt, operation, new Short(entityCode), key);
+	}
 	/**
 	 * @param firstInt
 	 *            left edge of range or value searching for
@@ -288,6 +295,13 @@ public class TypicalCondition implements StorableObjectCondition {
 		}
 	}
 
+	public TypicalCondition(final long firstLong,
+	            			final long secondLong,
+	            			final OperationSort operation,
+	            			final short entityCode,
+	            			final String key) {
+		this(firstLong, secondLong, operation, new Short(entityCode), key);
+	}
 	/**
 	 * @param firstLong
 	 *            left edge of range or value searching for
@@ -379,6 +393,13 @@ public class TypicalCondition implements StorableObjectCondition {
 		}
 	}
 
+	public TypicalCondition(final double firstDouble,
+	            			final double secondDouble,
+	            			final OperationSort operation,
+	            			final short entityCode,
+	            			final String key) {
+		this(firstDouble, secondDouble, operation, new Short(entityCode), key);
+	}
 	/**
 	 * @param firstDouble
 	 *            left edge of range or value searching for
@@ -470,6 +491,9 @@ public class TypicalCondition implements StorableObjectCondition {
 		}
 	}
 
+	public TypicalCondition(final String value, final OperationSort operation, final short entityCode, final String key) {
+		this(value, operation, new Short(entityCode), key);
+	}
 	/**
 	 * @param value
 	 *            value such as substring, regexp
@@ -552,6 +576,13 @@ public class TypicalCondition implements StorableObjectCondition {
 		}
 	}
 
+	public TypicalCondition(final Date firstDate,
+	            			final Date secondDate,
+	            			final OperationSort operation,
+	            			final short entityCode,
+	            			final String key) {
+		this(firstDate, secondDate, operation, new Short(entityCode), key);
+	}
 	/**
 	 * @param firstDate
 	 *            start date range
