@@ -1,5 +1,7 @@
 classes
+nbproject
 test
+build.xml
 *.deploy
 *.jar
 *.jpr
@@ -13,3 +15,4 @@ test
 .classpath
 .project
 .settings
+.#*
