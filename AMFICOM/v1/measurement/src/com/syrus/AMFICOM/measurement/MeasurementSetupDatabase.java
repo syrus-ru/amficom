@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.26 2004/10/04 10:22:17 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.27 2004/10/04 10:42:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/10/04 10:22:17 $
+ * @version $Revision: 1.27 $, $Date: 2004/10/04 10:42:22 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -564,7 +564,16 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	public List retrieveButIdsByMeasurementType(List ids, MeasurementType measurementType) throws RetrieveObjectException {
 		List list = null;
 		
-		String condition = null;	
+		String condition = COLUMN_PARAMETER_SET_ID + SQL_IN + OPEN_BRACKET		
+							+ SQL_SELECT + COLUMN_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
+							+ SQL_WHERE + StorableObjectDatabase.LINK_COLUMN_PARAMETER_TYPE_ID + SQL_IN + OPEN_BRACKET			
+								+ SQL_SELECT + StorableObjectDatabase.LINK_COLUMN_PARAMETER_TYPE_ID
+								+ SQL_FROM + ObjectEntities.MNTTYPPARTYPLINK_ENTITY + SQL_WHERE
+								+ MeasurementTypeDatabase.LINK_COLUMN_MEASUREMENT_TYPE_ID + EQUALS + measurementType.getId().toSQLString()								
+							+ CLOSE_BRACKET							
+			+ CLOSE_BRACKET;
+		
+		
 		try {
 			list = retrieveButIds(ids, condition);
 		}  catch (IllegalDataException ide) {			
