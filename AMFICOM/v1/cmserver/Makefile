@@ -4,7 +4,7 @@ LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
 LIBNAME_INTERFACE= $(subst _v1,_interface,$(MODULE_NAME)).jar
 ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
 
-INCIDLDIR=../idl_v1/idl
+IDLDIR=../idl_v1/idl
 
 HOST=mongol
 SERVICE_NAME=mongol
@@ -14,27 +14,7 @@ APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/configuration.
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
-$(call checkenve,IDL2JAVA)
-
-
-IDL2JAVA=$(JAVA_HOME)/bin/idlj
-IDL2JAVAFLAGS = \
-	-fall \
-	-i $(IDLDIR) \
-	-i $(INCIDLDIR) \
-	-td $(SRCDIR) \
-	-v
-
-#JAVAC = $(JAVA_HOME)/bin/javac
-#JAVACFLAGS = \
-	-O \
-	-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar \
-	-d $(CLASSDIR) \
-	-deprecation \
-	-encoding $(ENCODING) \
-	-extdirs $(JAVA_HOME)/jre/lib/ext \
-	-g
-
+$(call checkenve,IDLJ)
 
 all: $(LIBNAME) $(LIBNAME_INTERFACE)
 
@@ -52,12 +32,12 @@ $(LIBNAME_INTERFACE):	.corba
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(CLASSDIR) \
+		-classpath $(APPCLASSPATH):$(CLASSDIR) 
 	touch $@
 
 .corba:	$(CLASSDIR)
-	$(IDL2JAVA) $(IDL2JAVAFLAGS) \
-		$(IDLDIR)/cmserver.idl
+	$(IDLJ) $(IDLJFLAGS) \
+		idl/cmserver.idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
