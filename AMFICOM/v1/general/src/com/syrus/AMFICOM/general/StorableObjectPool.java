@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.40 2005/03/16 16:49:28 bob Exp $
+ * $Id: StorableObjectPool.java,v 1.41 2005/03/17 13:39:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/03/16 16:49:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.41 $, $Date: 2005/03/17 13:39:45 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -392,7 +392,8 @@ public abstract class StorableObjectPool {
 	protected Collection getStorableObjectsByConditionButIdsImpl(final Collection ids,
 			final StorableObjectCondition condition,
 			final boolean useLoader) throws ApplicationException {
-		assert ids != null : "Supply an empty list instead...";
+		assert ids != null : "Supply an empty list instead";
+		assert condition != null : "Supply EquivalentCondition instead";
 
 		Collection collection = null;
 		LRUMap objectPool = (LRUMap) this.objectPoolMap.get(condition.getEntityCode());
@@ -416,14 +417,12 @@ public abstract class StorableObjectPool {
 					idsList.add(storableObject.getId());
 				}
 
-				for (Iterator iter = ids.iterator(); iter.hasNext();) {
-					Identifier id = (Identifier) iter.next();
-					idsList.add(id);
-				}
+				idsList.addAll(ids);
+
 				/* do not load delete object too */
-				short code = condition.getEntityCode().shortValue();
 				if (this.deletedIds != null) {
 					/* do not load deleted object with entityCode */
+					short code = condition.getEntityCode().shortValue();
 					for (Iterator iter = this.deletedIds.iterator(); iter.hasNext();) {
 						Identifier id = (Identifier) iter.next();
 						if (id.getMajor() == code)
@@ -434,20 +433,20 @@ public abstract class StorableObjectPool {
 				loadedList = this.loadStorableObjectsButIds(condition, idsList);
 			}
 
-			/*
-			 * This block is only needed in order for LRUMap to rehash itself.
-			 */
-			for (Iterator it = collection.iterator(); it.hasNext();) {
-				StorableObject storableObject = (StorableObject) it.next();
-				objectPool.get(storableObject);
-			}
+//			/*
+//			 * This block is only needed in order for LRUMap to rehash itself.
+//			 */
+//			for (Iterator it = collection.iterator(); it.hasNext();) {
+//				StorableObject storableObject = (StorableObject) it.next();
+//				objectPool.get(storableObject);
+//			}
 
 			if (loadedList != null) {
 				for (Iterator it = loadedList.iterator(); it.hasNext();) {
 					StorableObject storableObject = (StorableObject) it.next();
 					objectPool.put(storableObject.getId(), storableObject);
-					collection.add(storableObject);
 				}
+				collection.addAll(loadedList);
 			}
 
 		}
