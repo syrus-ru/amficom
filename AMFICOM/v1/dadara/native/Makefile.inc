@@ -19,7 +19,7 @@ SO_PREFIX = lib
 
 LD = g++
 LDFLAGS = -shared 
-LD_OUTPUT_FLAG = "-o "
+LD_OUTPUT_FLAG = "-o"
 LDLIBS = -lm -lstdc++
 
 CXX = g++
