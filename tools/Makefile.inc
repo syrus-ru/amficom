@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.inc,v 1.11 2004/07/15 06:58:42 bass Exp $
+# $Id: Makefile.inc,v 1.12 2004/07/21 09:11:30 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -49,7 +49,7 @@ IDL2JAVA = $(call pathsearch,idl2java$(exesuffix))
 endif
 # -portable and -strict are temporarily removed: AMFICOMServer overrides
 # _execute() and _methods() from _AMFICOMImplBase.
-IDL2JAVAFLAGS = \
+IDL2JAVAFLAGS += \
 	-C \
 	-H \
 	-I$(IDLDIR) \
