@@ -48,7 +48,7 @@ TARGET_SRC=$(LIBSRC)\mapclientsource.jar
 TARGET_JAVADOC=$(LIBDOC)\mapclientdoc.jar
 
 SERVERCP=$(LIB)\corba.jar
-CLIENTCP=$(LIB)\util.jar;$(LIB)\generalclient.jar;$(LIB)\general.jar;$(LIB)\administrate.jar;$(LIB)\configureclient.jar;$(LIB)\corbaportable.jar;$(LIB)\filter.jar
+CLIENTCP=$(LIB)\util.jar;$(LIB)\generalclient.jar;$(LIB)\general.jar;$(LIB)\administrate.jar;$(LIB)\configuration.jar;$(LIB)\configureclient.jar;$(LIB)\corbaportable.jar;$(LIB)\filter.jar
 
 LAYOUTCP=$(EXTLIB)\layout.jar;$(EXTLIB)\kunststoff.jar
 SPATIALCP=$(EXTLIB)\ofx.spatialfx.jar
@@ -59,7 +59,7 @@ CLASSPATH=$(SERVERCP);$(CLIENTCP);$(LAYOUTCP);$(REPORTCP);$(JGRAPHCP);$(SPATIALC
 
 .PHONY:	$(TARGET)
 
-$(TARGET):	clean impl loc javadoc jar
+$(TARGET):	clean impl loc jar
 
 jar:
 	$(JAR) -cf $(TARGET) -C $(CLASSES) com

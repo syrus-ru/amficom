@@ -1,5 +1,5 @@
 /**
- * $Id: MapElement.java,v 1.11 2004/10/18 12:43:09 krupenn Exp $
+ * $Id: MapElement.java,v 1.12 2004/12/07 17:02:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,7 @@ import java.awt.geom.Rectangle2D;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/10/18 12:43:09 $
+ * @version $Revision: 1.12 $, $Date: 2004/12/07 17:02:02 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -33,6 +33,7 @@ public interface MapElement
 {
 	/**
 	 * отрисовка элемента
+	 * @deprecated
 	 */
 	void paint (Graphics g, Rectangle2D.Double visibleBounds);
 
@@ -66,6 +67,7 @@ public interface MapElement
 	 * в определенных границах элемента. Для узла границы определяются
 	 * размерами иконки, для линии дельта-окрестностью линии. Дельта задается
 	 * полем mouseTolerancy
+	 * @deprecated
 	 */
 	boolean isMouseOnThisObject(Point currentMousePoint);
 
@@ -73,21 +75,30 @@ public interface MapElement
 	 * определить, попадает ли элемент в область visibleBounds.
 	 * Используется при отрисовке (отображаются только элементы, попавшие
 	 * в видимую область)
+	 * @deprecated
 	 */
 	boolean isVisible(Rectangle2D.Double visibleBounds);
 
 	/**
 	 * текст всплывающей подсказки
+	 * @deprecated
 	 */
 	String getToolTipText();
 
 	/**
 	 * центр (ГМТ) элемента
+	 * @deprecated
 	 */
 	Point2D.Double getAnchor();
+	
+	/**
+	 * центр (ГМТ) элемента
+	 */
+	DoublePoint getLocation();
 
 	/**
 	 * дублирование элемента
+	 * @deprecated
 	 */	
 	Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException;

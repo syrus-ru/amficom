@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.11 2004/11/11 18:08:57 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.12 2004/12/07 17:02:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.ImageCatalogue;
 import com.syrus.AMFICOM.Client.Resource.ImageResource;
+import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
 import com.syrus.io.IniFile;
 
 import java.awt.BasicStroke;
@@ -46,7 +47,7 @@ import java.util.Map;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/11/11 18:08:57 $
+ * @version $Revision: 1.12 $, $Date: 2004/12/07 17:02:02 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -308,7 +309,10 @@ public final class MapPropertiesManager
 		}
 	}
 
-	public static Point2D.Double getCenter()
+	/**
+	 * @deprecated
+	 */
+	public static Point2D.Double getCenter1()
 	{
 		try
 		{
@@ -323,7 +327,41 @@ public final class MapPropertiesManager
 		}
 	}
 
+	public static DoublePoint getCenter()
+	{
+		try
+		{
+			double lng = Double.parseDouble(lastLong);
+			double lat = Double.parseDouble(lastLat);
+			
+			return new DoublePoint(lng, lat);
+		}
+		catch(Exception e)
+		{
+			return null;
+		}
+	}
+
+	/**
+	 * @deprecated
+	 */
 	public static void setCenter(Point2D.Double center)
+	{
+		String longoldval = lastLong;
+		String latoldval = lastLat;
+		try
+		{
+			lastLong = String.valueOf(center.x);
+			lastLat = String.valueOf(center.y);
+		}
+		catch(Exception e)
+		{
+			lastLong = longoldval;
+			lastLat = latoldval;
+		}
+	}
+
+	public static void setCenter(DoublePoint center)
 	{
 		String longoldval = lastLong;
 		String latoldval = lastLat;

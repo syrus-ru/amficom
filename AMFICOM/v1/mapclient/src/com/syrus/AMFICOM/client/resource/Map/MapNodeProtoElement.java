@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeProtoElement.java,v 1.9 2004/10/18 12:43:13 krupenn Exp $
+ * $Id: MapNodeProtoElement.java,v 1.10 2004/12/07 17:02:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/10/18 12:43:13 $
+ * @version $Revision: 1.10 $, $Date: 2004/12/07 17:02:03 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -41,6 +41,9 @@ public final class MapNodeProtoElement
 		implements Transferable, Serializable
 {
 	private static final long serialVersionUID = 02L;
+	/**
+	 * @deprecated
+	 */
 	public static final String typ = "mapprotoelement";
 	
 	public static final String WELL = "well";
@@ -50,10 +53,19 @@ public final class MapNodeProtoElement
 	public static final String UNBOUND = "unbound";
 	public static final String CABLE_INLET = "cableinlet";
 
+	/**
+	 * @deprecated
+	 */
 	protected MapNodeProtoElement_Transferable transferable;
 
+	/**
+	 * @deprecated
+	 */
 	protected long modified = 0;
 	
+	/**
+	 * @deprecated
+	 */
 	protected boolean isTopological = false;
 
 	private static final String PROPERTY_PANE_CLASS_NAME = "";
@@ -74,17 +86,26 @@ public final class MapNodeProtoElement
 		transferable = new MapNodeProtoElement_Transferable();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public MapNodeProtoElement(MapNodeProtoElement_Transferable transferable)
 	{
 		this.transferable = transferable;
 		setLocalFromTransferable();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public Object clone(DataSourceInterface dataSource)
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void setLocalFromTransferable()
 	{
 		this.id = transferable.id;
@@ -98,6 +119,9 @@ public final class MapNodeProtoElement
 			attributes.put(transferable.attributes[i].type_id, new ElementAttribute(transferable.attributes[i]));
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void setTransferableFromLocal()
 	{
 		transferable.id = this.id;
@@ -118,6 +142,9 @@ public final class MapNodeProtoElement
 		}
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public String getTyp()
 	{
 		return typ;
@@ -138,11 +165,17 @@ public final class MapNodeProtoElement
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void updateLocalFromTransferable()
 	{
 		setImageId(imageId);
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public Object getTransferable()
 	{
 		return transferable;

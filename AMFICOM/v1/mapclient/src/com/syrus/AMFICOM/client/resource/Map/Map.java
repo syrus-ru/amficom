@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.18 2004/11/25 13:00:23 krupenn Exp $
+ * $Id: Map.java,v 1.19 2004/12/07 17:02:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,9 +19,14 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.StubResource;
 
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.Serializable;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -34,7 +39,7 @@ import java.util.Set;
  * 
  * 
  * 
- * @version $Revision: 1.18 $, $Date: 2004/11/25 13:00:23 $
+ * @version $Revision: 1.19 $, $Date: 2004/12/07 17:02:02 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -42,8 +47,15 @@ import java.util.Set;
 public final class Map extends StubResource implements Serializable
 {
 	private static final long serialVersionUID = 02L;
+
+	/**
+	 * @deprecated
+	 */
 	public static final String typ = "map";
 
+	/**
+	 * @deprecated
+	 */
 	protected Map_Transferable transferable;
 
 	public static final String COLUMN_ID = "id";
@@ -55,44 +67,107 @@ public final class Map extends StubResource implements Serializable
 	public static final String COLUMN_MODIFIED = "modified";
 	public static final String COLUMN_MODIFIED_BY = "modified_by";
 	
+	/**
+	 * @deprecated
+	 */
 	protected String id = "";
+	/**
+	 * @deprecated
+	 */
 	protected String name = "Без названия";
+	/**
+	 * @deprecated
+	 */
 	protected String description = "";
+	/**
+	 * @deprecated
+	 */
 	protected String userId = "";
+	/**
+	 * @deprecated
+	 */
 	protected String domainId = "";
 
+	/**
+	 * @deprecated
+	 */
 	protected long created = 0;
+	/**
+	 * @deprecated
+	 */
 	protected String createdBy = "";
+	/**
+	 * @deprecated
+	 */
 	protected long modified = 0;
+	/**
+	 * @deprecated
+	 */
 	protected String modifiedBy = "";
 
 	/** Вспомогательный список для загрузки с сервера */
+	/**
+	 * @deprecated
+	 */
 	protected List nodeIds = new LinkedList();
 	/** Вспомогательный список для загрузки с сервера */
+	/**
+	 * @deprecated
+	 */
 	protected List siteIds = new LinkedList();
 	/** Вспомогательный список для загрузки с сервера */
+	/**
+	 * @deprecated
+	 */
 	protected List nodelinkIds = new LinkedList();
 	/** Вспомогательный список для загрузки с сервера */
+	/**
+	 * @deprecated
+	 */
 	protected List linkIds = new LinkedList();
 	/** Вспомогательный список для загрузки с сервера */
+	/**
+	 * @deprecated
+	 */
 	protected List markIds = new LinkedList();
 	/** Вспомогательный список для загрузки с сервера */
+	/**
+	 * @deprecated
+	 */
 	protected List collectorIds = new LinkedList();
 
 	/** Вектор элементов наследников класса Node */
+	/**
+	 * @deprecated
+	 */
 	protected List nodes = new LinkedList();
 	/** Вектор элементов типа NodeLinks */
+	/**
+	 * @deprecated
+	 */
 	protected List nodeLinks = new LinkedList();
 	/** Вектор элементов типа physicalLinks */
+	/**
+	 * @deprecated
+	 */
 	protected List physicalLinks = new LinkedList();
 	/** Вектор элементов типа PipePaths */
+	/**
+	 * @deprecated
+	 */
 	protected List collectors = new LinkedList();
 
 	/** список удаленных элементов */
+	/**
+	 * @deprecated
+	 */
 	protected LinkedList removedElements = new LinkedList();
 	
 	/**
 	 * объект, осуществляющий преобразование топологических/экранных координат
+	 */
+	/**
+	 * @deprecated
 	 */
 	protected MapCoordinatesConverter converter;
 
@@ -122,6 +197,7 @@ public final class Map extends StubResource implements Serializable
 
 	/**
 	 * Используется для создания элемента при подгрузке из базы данных
+	 * @deprecated
 	 */
 	public Map(Map_Transferable transferable)
 	{
@@ -140,6 +216,7 @@ public final class Map extends StubResource implements Serializable
 	 * (или клонированные) объекты используется хранилище 
 	 * 		Pool.get(MapPropertiesManager.MAP_CLONED_IDS, id
 	 * в котором по ключу старого Id хранится Id нового клонированного объекта
+	 * @deprecated
 	 */
 	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
@@ -226,6 +303,7 @@ public final class Map extends StubResource implements Serializable
 	
 	/**
 	 * Восстановление локальных переменных класса при подгрузке из базы данных
+	 * @deprecated
 	 */
 	public void setLocalFromTransferable()
 	{
@@ -282,6 +360,7 @@ public final class Map extends StubResource implements Serializable
 	/**
 	 * Установка полей в transferable по значениям локальных переменных
 	 * для сохранения в базе данных
+	 * @deprecated
 	 */
 	public void setTransferableFromLocal()
 	{
@@ -352,6 +431,7 @@ public final class Map extends StubResource implements Serializable
 	/**
 	 * Используется для обновления содержимого локальных переменных по 
 	 * значениям, полученным из transferable
+	 * @deprecated
 	 */
 	public void updateLocalFromTransferable()
 	{
@@ -386,6 +466,7 @@ public final class Map extends StubResource implements Serializable
 	/**
 	 * обновление локального содержимого объектов, содержащихся в карте.
 	 * используется при загрузке из кэша
+	 * @deprecated
 	 */
 	public void updateFromPool()
 	{
@@ -419,6 +500,7 @@ public final class Map extends StubResource implements Serializable
 
 	/**
 	 * получить объект для сохранения в базе данных
+	 * @deprecated
 	 */
 	public Object getTransferable()
 	{
@@ -563,8 +645,8 @@ public final class Map extends StubResource implements Serializable
 		for(Iterator it = this.getNodeLinks().iterator(); it.hasNext();)
 		{
 			MapNodeLinkElement link = (MapNodeLinkElement )it.next();
-			if (((link.startNode == start_node) && (link.endNode == end_node)) ||
-				((link.startNode == end_node) && (link.endNode == start_node)) )
+			if (((link.getStartNode().equals(start_node)) && (link.getEndNode().equals(end_node))) ||
+				((link.getStartNode().equals(end_node)) && (link.getEndNode().equals(start_node))) )
 			{
 				return link;
 			}
@@ -667,8 +749,8 @@ public final class Map extends StubResource implements Serializable
 		for(Iterator it = this.getPhysicalLinks().iterator(); it.hasNext();)
 		{
 			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
-			if (((link.startNode == start_node) && (link.endNode == end_node)) ||
-				((link.startNode == end_node) && (link.endNode == start_node)) )
+			if (((link.getStartNode().equals(start_node)) && (link.getEndNode().equals(end_node))) ||
+				((link.getStartNode().equals(end_node)) && (link.getEndNode().equals(start_node))) )
 			{
 				return link;
 			}
@@ -910,6 +992,9 @@ public final class Map extends StubResource implements Serializable
 			this.setDescription(value);
 	}
 
+	/**
+	 * @deprecated
+	 */
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "writeObject(out)");
@@ -929,6 +1014,9 @@ public final class Map extends StubResource implements Serializable
 		out.writeObject(collectors);
 	}
 
+	/**
+	 * @deprecated
+	 */
 	private void readObject(java.io.ObjectInputStream in)
 			throws IOException, ClassNotFoundException
 	{
@@ -965,6 +1053,9 @@ public final class Map extends StubResource implements Serializable
 		this.updateFromPool();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public String getTyp()
 	{
 		return typ;

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPipePathElement.java,v 1.10 2004/11/19 14:40:10 krupenn Exp $
+ * $Id: MapPipePathElement.java,v 1.11 2004/12/07 17:02:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,7 +40,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/11/19 14:40:10 $
+ * @version $Revision: 1.11 $, $Date: 2004/12/07 17:02:03 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -48,8 +48,15 @@ import java.util.List;
 public class MapPipePathElement extends MapLinkElement implements Serializable
 {
 	private static final long serialVersionUID = 02L;
+
+	/**
+	 * @deprecated
+	 */
 	public static final String typ = "mappipepathelement";
 
+	/**
+	 * @deprecated
+	 */
 	protected MapPipePathElement_Transferable transferable;
 
 	public static final String COLUMN_ID = "id";	
@@ -57,8 +64,14 @@ public class MapPipePathElement extends MapLinkElement implements Serializable
 	public static final String COLUMN_DESCRIPTION = "description";	
 	public static final String COLUMN_LINKS = "links";	
 
+	/**
+	 * @deprecated
+	 */
 	protected List physicalLinkIds = new ArrayList();
 
+	/**
+	 * @deprecated
+	 */
 	protected List links = new LinkedList();
 
 	public static String[][] exportColumns = null;
@@ -68,6 +81,9 @@ public class MapPipePathElement extends MapLinkElement implements Serializable
 		transferable = new MapPipePathElement_Transferable();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public MapPipePathElement(MapPipePathElement_Transferable transferable)
 	{
 		this.transferable = transferable;
@@ -92,11 +108,17 @@ public class MapPipePathElement extends MapLinkElement implements Serializable
 		transferable = new MapPipePathElement_Transferable();
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	public String getTyp()
 	{
 		return typ;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
 	{
@@ -137,6 +159,7 @@ public class MapPipePathElement extends MapLinkElement implements Serializable
 
 	/**
 	 * Используется для для загрузки класса из базы данных
+	 * @deprecated
 	 */
 	public void updateLocalFromTransferable()
 	{
@@ -156,6 +179,9 @@ public class MapPipePathElement extends MapLinkElement implements Serializable
 		return name;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public boolean isVisible(Rectangle2D.Double visibleBounds)
 	{
 		boolean vis = false;
@@ -171,6 +197,9 @@ public class MapPipePathElement extends MapLinkElement implements Serializable
 		return vis;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void paint(Graphics g, Rectangle2D.Double visibleBounds)
 	{
 		if(!isVisible(visibleBounds))
@@ -216,6 +245,7 @@ public class MapPipePathElement extends MapLinkElement implements Serializable
 
 	/**
 	 * получить центр (ГМТ) линии
+	 * @deprecated
 	 */
 	public Point2D.Double getAnchor()
 	{
@@ -226,6 +256,25 @@ public class MapPipePathElement extends MapLinkElement implements Serializable
 		{
 			MapPhysicalLinkElement mle = (MapPhysicalLinkElement )it.next();
 			Point2D.Double an = mle.getAnchor();
+			point.x += an.x;
+			point.y += an.y;
+			count ++;
+		}
+		point.x /= count;
+		point.y /= count;
+		
+		return point;
+	}
+
+	public DoublePoint getLocation()
+	{
+		int count = 0;
+		DoublePoint point = new DoublePoint(0.0, 0.0);
+
+		for(Iterator it = getLinks().iterator(); it.hasNext();)
+		{
+			MapPhysicalLinkElement mle = (MapPhysicalLinkElement )it.next();
+			DoublePoint an = mle.getLocation();
 			point.x += an.x;
 			point.y += an.y;
 			count ++;
@@ -249,6 +298,9 @@ public class MapPipePathElement extends MapLinkElement implements Serializable
 		return length;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public boolean isMouseOnThisObject(Point currentMousePoint)
 	{
 		return false;
@@ -296,6 +348,9 @@ public class MapPipePathElement extends MapLinkElement implements Serializable
 		}
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
 		out.writeObject(id);
@@ -314,6 +369,9 @@ public class MapPipePathElement extends MapLinkElement implements Serializable
 		out.writeObject(physicalLinkIds);
 	}
 
+	/**
+	 * @deprecated
+	 */
 	private void readObject(java.io.ObjectInputStream in)
 			throws IOException, ClassNotFoundException
 	{

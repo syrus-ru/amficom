@@ -1,5 +1,5 @@
 /**
- * $Id: MapLinkElement.java,v 1.13 2004/11/19 14:40:10 krupenn Exp $
+ * $Id: MapLinkElement.java,v 1.14 2004/12/07 17:02:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,29 +32,60 @@ import java.util.HashMap;
  * 
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2004/11/19 14:40:10 $
+ * @version $Revision: 1.14 $, $Date: 2004/12/07 17:02:03 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
 public abstract class MapLinkElement extends StubResource implements MapElement 
 {
+	/**
+	 * @deprecated
+	 */
 	protected String id = "";
+	
+	/**
+	 * @deprecated
+	 */
 	protected String name = "";
+	
+	/**
+	 * @deprecated
+	 */
 	protected String description = "";
+	
+	/**
+	 * @deprecated
+	 */
 	protected String mapId = "";
 
+	/**
+	 * @deprecated
+	 */
 	protected String startNodeId;
+
+	/**
+	 * @deprecated
+	 */
 	protected String endNodeId;
 
 	protected Map map;
 	
 	/** начальный узел */
+	/**
+	 * @deprecated
+	 */
 	protected MapNodeElement startNode;
 	/** конечный узел */
+	/**
+	 * @deprecated
+	 */
 	protected MapNodeElement endNode;
 
 	/** атрибуты отображения */
+	/**
+	 * @deprecated
+	 */
 	public java.util.Map attributes = new HashMap();
 
 	/** флаг выделения */
@@ -66,6 +97,22 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 	/** флаг наличия сигнала тревоги */
 	protected boolean alarmState = false;
 	
+	/**
+	 * Установить наличие сигнала тревоги
+	 */
+	public void setAlarmState(boolean i)
+	{
+		alarmState = i;
+	}
+
+	/**
+	 * получить наличие сигнала тревоги
+	 */
+	public boolean getAlarmState()
+	{
+		return alarmState;
+	}
+
 	/**
 	 * получить флаг удаления элемента
 	 */
@@ -112,6 +159,9 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 		this.id = id;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public String getDomainId()
 	{
 		return this.getMap().getDomainId();
@@ -160,11 +210,9 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 			this.mapId = map.getId();
 	}
 
-	public boolean isMovable()
-	{
-		return true;
-	}
-
+	/**
+	 * @deprecated
+	 */
 	public String getToolTipText()
 	{
 		String s1 = name;
@@ -203,11 +251,21 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 		return s1 + s2 + s3;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public Point2D.Double getAnchor()
 	{
 		return new Point2D.Double(
 			(startNode.getAnchor().getX() + endNode.getAnchor().getX()) / 2,
 			(startNode.getAnchor().getY() + endNode.getAnchor().getY()) / 2);
+	}
+
+	public DoublePoint getLocation()
+	{
+		return new DoublePoint(
+			(getStartNode().getLocation().getX() + getEndNode().getLocation().getX()) / 2,
+			(getStartNode().getLocation().getY() + getEndNode().getLocation().getY()) / 2);
 	}
 
 	/**
@@ -222,9 +280,9 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 			"getOtherNode(" + node + ")");
 		
 
-		if ( this.getEndNode() == node )
+		if ( this.getEndNode().equals(node) )
 			return getStartNode();
-		if ( this.getStartNode() == node )
+		if ( this.getStartNode().equals(node) )
 			return getEndNode();
 		return null;
 	}
@@ -263,6 +321,7 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 	
 	/**
 	 * Установить толщину линии
+	 * @deprecated
 	 */
 	public void setLineSize (int size)
 	{
@@ -286,6 +345,7 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 
 	/**
 	 * Получить толщину линии
+	 * @deprecated
 	 */
 	public int getLineSize ()
 	{
@@ -297,6 +357,7 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 
 	/**
 	 * Установить вид линии
+	 * @deprecated
 	 */
 	public void setStyle (String style)
 	{
@@ -320,6 +381,7 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 
 	/**
 	 * Получить вид линии
+	 * @deprecated
 	 */
 	public String getStyle ()
 	{
@@ -331,6 +393,7 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 
 	/**
 	 * Получить стиль линии
+	 * @deprecated
 	 */
 	public Stroke getStroke ()
 	{
@@ -344,6 +407,7 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 
 	/**
 	 * Установить цвет
+	 * @deprecated
 	 */
 	public void setColor (Color color)
 	{
@@ -367,6 +431,7 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 
 	/**
 	 * Получить цвет
+	 * @deprecated
 	 */
 	public Color getColor()
 	{
@@ -377,23 +442,8 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 	}
 
 	/**
-	 * Установить наличие сигнала тревоги
-	 */
-	public void setAlarmState(boolean i)
-	{
-		alarmState = i;
-	}
-
-	/**
-	 * получить наличие сигнала тревоги
-	 */
-	public boolean getAlarmState()
-	{
-		return alarmState;
-	}
-
-	/**
 	 * установить цвет при наличии сигнала тревоги
+	 * @deprecated
 	 */
 	public void setAlarmedColor (Color color)
 	{
@@ -417,6 +467,7 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 
 	/**
 	 * получить цвет при наличии сигнала тревоги
+	 * @deprecated
 	 */
 	public Color getAlarmedColor()
 	{
@@ -428,6 +479,7 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 
 	/**
 	 * установить толщину линии при наличи сигнала тревоги
+	 * @deprecated
 	 */
 	public void setAlarmedLineSize (int size)
 	{
@@ -451,6 +503,7 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 
 	/**
 	 * получить толщину линии при наличи сигнала тревоги
+	 * @deprecated
 	 */
 	public int getAlarmedLineSize ()
 	{

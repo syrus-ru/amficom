@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElement.java,v 1.16 2004/10/18 12:43:13 krupenn Exp $
+ * $Id: MapPhysicalNodeElement.java,v 1.17 2004/12/07 17:02:03 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -40,7 +40,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.16 $, $Date: 2004/10/18 12:43:13 $
+ * @version $Revision: 1.17 $, $Date: 2004/12/07 17:02:03 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -48,8 +48,15 @@ import javax.swing.ImageIcon;
 public final class MapPhysicalNodeElement extends MapNodeElement implements Serializable
 {
 	private static final long serialVersionUID = 02L;
+
+	/**
+	 * @deprecated
+	 */
 	public static final String typ = "mapnodeelement";
 
+	/**
+	 * @deprecated
+	 */
 	protected MapPhysicalNodeElement_Transferable transferable;
 
 	public static final String COLUMN_ID = "id";
@@ -60,14 +67,35 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 	public static final String COLUMN_Y = "y";
 	public static final String COLUMN_ACTIVE = "active";
 
+	/**
+	 * @deprecated
+	 */
 	public static final String CLOSED_NODE = "node";
+	/**
+	 * @deprecated
+	 */
 	public static final String OPEN_NODE = "void";
 
+	/**
+	 * @deprecated
+	 */
 	public static final String CLOSED_NODE_IMAGE = "images/node.gif";
+	/**
+	 * @deprecated
+	 */
 	public static final String OPEN_NODE_IMAGE = "images/void.gif";
 
+	/**
+	 * @deprecated
+	 */
 	public final static Rectangle DEFAULT_BOUNDS = new Rectangle(10, 10);
+	/**
+	 * @deprecated
+	 */
 	public final static Rectangle MIN_BOUNDS = new Rectangle(2, 2);
+	/**
+	 * @deprecated
+	 */
 	public final static Rectangle MAX_BOUNDS = new Rectangle(15, 15);
 
 	/**
@@ -104,18 +132,23 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 		transferable = new MapPhysicalNodeElement_Transferable();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public MapPhysicalNodeElement(MapPhysicalNodeElement_Transferable transferable)
 	{
 		this.transferable = transferable;
 		setLocalFromTransferable();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public MapPhysicalNodeElement (
 			String id, 
 			String physicalLinkId, 
 			Point2D.Double anchor,
-            Map map,
-            Rectangle bounds)
+            Map map)
 	{
 		this.map = map;
 		this.id = id;
@@ -126,12 +159,34 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 		this.physicalLinkId = physicalLinkId;
 		attributes = new HashMap();
 
-		setBounds(bounds);
 		selected = false;
 
 		transferable = new MapPhysicalNodeElement_Transferable();
 	}
 
+	public MapPhysicalNodeElement (
+			String id, 
+			String physicalLinkId, 
+			DoublePoint location,
+            Map map)
+	{
+		this.map = map;
+		this.setId(id);
+		this.setName(id);
+		setLocation(location);
+		this.mapId = map.getId();
+		setImageId(CLOSED_NODE);
+		this.physicalLinkId = physicalLinkId;
+		attributes = new HashMap();
+
+		selected = false;
+
+		transferable = new MapPhysicalNodeElement_Transferable();
+	}
+
+	/**
+	 * @deprecated
+	 */
 	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
 	{
@@ -143,8 +198,7 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 				dataSource.GetUId(MapPhysicalNodeElement.typ),
 				(String )Pool.get(MapPropertiesManager.MAP_CLONED_IDS, physicalLinkId),
 				new Point2D.Double(anchor.x, anchor.y),
-				(Map)map.clone(dataSource), 
-				bounds);
+				(Map)map.clone(dataSource)); 
 				
 		mpne.active = active;
 		mpne.alarmState = alarmState;
@@ -169,6 +223,9 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 		return mpne;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void setLocalFromTransferable()
 	{
 		this.id = transferable.id;
@@ -184,6 +241,9 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 			attributes.put(transferable.attributes[i].type_id, new ElementAttribute(transferable.attributes[i]));
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void setTransferableFromLocal()
 	{
 		transferable.id = this.id;
@@ -206,6 +266,9 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 		}
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public String getTyp()
 	{
 		return typ;
@@ -213,12 +276,16 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 
 	/**
 	 * »спользуетс€ дл€ дл€ загрузки класса из базы данных
+	 * @deprecated
 	 */
 	public void updateLocalFromTransferable()
 	{
 		this.map = (Map)Pool.get(Map.typ, this.mapId);
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public Object getTransferable()
 	{
 		return transferable;
@@ -229,16 +296,25 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 		return PROPERTY_PANE_CLASS_NAME;
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	public Rectangle getDefaultBounds()
 	{
 		return DEFAULT_BOUNDS;
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	public Rectangle getMinBounds()
 	{
 		return MIN_BOUNDS;
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	public Rectangle getMaxBounds()
 	{
 		return MAX_BOUNDS;
@@ -275,6 +351,9 @@ public final class MapPhysicalNodeElement extends MapNodeElement implements Seri
 		this.physicalLinkId = pId;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void paint(Graphics g, Rectangle2D.Double visibleBounds)
 	{
 		if(!isVisible(visibleBounds))

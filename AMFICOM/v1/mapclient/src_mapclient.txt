@@ -7,6 +7,9 @@ src\com\syrus\AMFICOM\Client\Map\UI\MapDataFlavor.java
 src\com\syrus\AMFICOM\Client\Resource\EmptyMapDataSource.java
 src\com\syrus\AMFICOM\Client\Resource\MapDataSourceImage.java
 src\com\syrus\AMFICOM\Client\Resource\RISDMapDataSource.java
+src\com\syrus\AMFICOM\Client\Resource\Map\DoublePoint.java
+src\com\syrus\AMFICOM\Client\Resource\Map\IntDimension.java
+src\com\syrus\AMFICOM\Client\Resource\Map\IntPoint.java
 src\com\syrus\AMFICOM\Client\Resource\Map\Map.java
 src\com\syrus\AMFICOM\Client\Resource\Map\MapElement.java
 src\com\syrus\AMFICOM\Client\Resource\Map\MapElementState.java

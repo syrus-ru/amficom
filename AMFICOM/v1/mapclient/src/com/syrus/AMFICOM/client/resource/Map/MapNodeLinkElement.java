@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkElement.java,v 1.21 2004/11/10 15:58:30 krupenn Exp $
+ * $Id: MapNodeLinkElement.java,v 1.22 2004/12/07 17:02:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,7 +40,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.21 $, $Date: 2004/11/10 15:58:30 $
+ * @version $Revision: 1.22 $, $Date: 2004/12/07 17:02:03 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -48,8 +48,15 @@ import java.util.Iterator;
 public final class MapNodeLinkElement extends MapLinkElement implements Serializable
 {
 	private static final long serialVersionUID = 02L;
+
+	/**
+	 * @deprecated
+	 */
 	public static final String typ = "mapnodelinkelement";
 
+	/**
+	 * @deprecated
+	 */
 	protected MapNodeLinkElement_Transferable transferable;
 
 	public static final String COLUMN_ID = "id";	
@@ -81,6 +88,9 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 		transferable = new MapNodeLinkElement_Transferable();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public MapNodeLinkElement(MapNodeLinkElement_Transferable transferable)
 	{
 		this.transferable = transferable;
@@ -108,6 +118,9 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 		transferable = new MapNodeLinkElement_Transferable();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
 	{
@@ -141,6 +154,9 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 		return mnle;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void setLocalFromTransferable()
 	{
 		this.id = transferable.id;
@@ -154,6 +170,9 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 			attributes.put(transferable.attributes[i].type_id, new ElementAttribute(transferable.attributes[i]));
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void setTransferableFromLocal()
 	{
 		transferable.id = this.id;
@@ -174,6 +193,9 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 		}
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public String getTyp()
 	{
 		return typ;
@@ -181,6 +203,7 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 
 	/**
 	 * Используется для для загрузки класса из базы данных
+	 * @deprecated
 	 */
 	public void updateLocalFromTransferable()
 	{
@@ -199,27 +222,49 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 		this.map = (Map )Pool.get(Map.typ, this.mapId);
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public Object getTransferable()
 	{
 		return transferable;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public static String getPropertyPaneClassName()
 	{
 		return PROPERTY_PANE_CLASS_NAME;
 	}
 	
+	public void setPhysicalLink(MapPhysicalLinkElement plink)
+	{
+		setPhysicalLinkId(plink.getId());
+	}
+	
+	public MapPhysicalLinkElement getPhysicalLink()
+	{
+		return getMap().getPhysicalLink(getPhysicalLinkId());
+	}
+	
 	public boolean getAlarmState()
 	{
-		return getMap().getPhysicalLink(getPhysicalLinkId()).getAlarmState();
+		return getPhysicalLink().getAlarmState();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public boolean isSelectionVisible()
 	{
 		return isSelected() 
-			|| getMap().getPhysicalLink(getPhysicalLinkId()).isSelectionVisible();
+			|| getPhysicalLink().isSelectionVisible();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public boolean isVisible(Rectangle2D.Double visibleBounds)
 	{
 		return visibleBounds.intersectsLine(
@@ -229,6 +274,9 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 			getEndNode().getAnchor().y);
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void paint (Graphics g, Rectangle2D.Double visibleBounds)
 	{
 		if(!isVisible(visibleBounds))
@@ -298,6 +346,9 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 		}
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void paint (
 			Graphics g, 
 			Rectangle2D.Double visibleBounds, 
@@ -390,10 +441,14 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 
 	}
 
+	/**
+	 * @deprecated
+	 */
 	private static Polygon searchPolygon = new Polygon(new int[6], new int[6], 6);
 
 	/**
 	 * точка находится на фрагменте, если она находится в рамках линий выделения
+	 * @deprecated
 	 */
 	public boolean isMouseOnThisObject(Point currentMousePoint)
 	{
@@ -440,6 +495,9 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 		return false;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public boolean isMouseOnThisObjectsLabel(Point currentMousePoint)
 	{
 		return labelBox.contains(currentMousePoint);
@@ -459,6 +517,9 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 			((MapPhysicalNodeElement )getEndNode()).setPhysicalLinkId(physicalLinkId);
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public Rectangle getLabelBox()
 	{
 		return labelBox;
@@ -474,6 +535,7 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 
 	/**
 	 * обновить топологическую длину линии по координатам концевых узлов
+	 * @deprecated
 	 */	
 	public void updateLengthLt()
 	{
@@ -485,6 +547,7 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 
 	/**
 	 * установить дистанцию от противоположного узла
+	 * @deprecated
 	 */
 	public void setSizeFrom(MapNodeElement node, double dist)
 	{
@@ -507,6 +570,9 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 		updateLengthLt();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public double getScreenLength()
 	{
 		MapCoordinatesConverter converter = getMap().getConverter();
@@ -520,9 +586,18 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 	}
 
 
+	/**
+	 * @deprecated
+	 */
 	protected double cosB;
+	/**
+	 * @deprecated
+	 */
 	protected double sinB;
 	
+	/**
+	 * @deprecated
+	 */
 	public void calcScreenSlope()
 	{
 		MapCoordinatesConverter converter = getMap().getConverter();
@@ -539,11 +614,17 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 		cosB = (end.x - start.x) / nodeLinkLength;
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	public double getScreenSin()
 	{
 		return sinB;
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	public double getScreenCos()
 	{
 		return cosB;
@@ -551,12 +632,20 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 
 	/**
 	 * получить центр (середину) фрагмента линии
+	 * @deprecated
 	 */
 	public Point2D.Double getAnchor()
 	{
 		return new Point2D.Double(
 				(startNode.getAnchor().getX() + endNode.getAnchor().getX()) / 2,
 				(startNode.getAnchor().getY() + endNode.getAnchor().getY()) / 2);
+	}
+
+	public DoublePoint getLocation()
+	{
+		return new DoublePoint(
+			(getStartNode().getLocation().getX() + getEndNode().getLocation().getX()) / 2,
+			(getStartNode().getLocation().getY() + getEndNode().getLocation().getY()) / 2);
 	}
 	
 	/**
@@ -624,6 +713,9 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 			endNodeId = value;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
 		out.writeObject(id);
@@ -641,6 +733,9 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 		out.writeDouble(lengthLt);
 	}
 
+	/**
+	 * @deprecated
+	 */
 	private void readObject(java.io.ObjectInputStream in)
 			throws IOException, ClassNotFoundException
 	{

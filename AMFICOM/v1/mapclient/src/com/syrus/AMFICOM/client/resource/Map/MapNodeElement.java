@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeElement.java,v 1.17 2004/10/27 15:45:58 krupenn Exp $
+ * $Id: MapNodeElement.java,v 1.18 2004/12/07 17:02:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.17 $, $Date: 2004/10/27 15:45:58 $
+ * @version $Revision: 1.18 $, $Date: 2004/12/07 17:02:03 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -44,23 +44,37 @@ import java.util.List;
 public abstract class MapNodeElement extends StubResource
     implements MapElement 
 {
-	/** Размер пиктограммы поумолчанию */
+	/** Размер пиктограммы поумолчанию 
+	 * @deprecated
+	 */
 	public static final Rectangle DEFAULT_BOUNDS = new Rectangle(14, 14);
-	/** минимальный размер элемента */
+	/** минимальный размер элемента 
+	 * @deprecated
+	 * */
 	public static final Rectangle MIN_BOUNDS = new Rectangle(6, 6);
-	/** максимальный размер элемента */
+	/** максимальный размер элемента 
+	 * @deprecated
+	 * */
 	public static final Rectangle MAX_BOUNDS = new Rectangle(40, 40);
 
-	/** коэффициент масштабирования пиктограммы по умолчанию */
+	/** коэффициент масштабирования пиктограммы по умолчанию 
+	 * @deprecated
+	 * */
 	public static final double DEFAULT_SCALE_COEFFICIENT = 1.0;
 
-	/** пиктограмма по умолчанию */	
+	/** пиктограмма по умолчанию 
+	 * @deprecated
+	 * */	
 	public static final String DEFAULT_IMAGE = "images/pc.gif";
 	
-	/** коэффициент масштабирования пиктограммы */
+	/** коэффициент масштабирования пиктограммы 
+	 * @deprecated
+	 * */
 	protected double scaleCoefficient = DEFAULT_SCALE_COEFFICIENT;
 
-	/** Размер пиктограммы в экранных координатах */
+	/** Размер пиктограммы в экранных координатах 
+	 * @deprecated
+	 * */
 	protected Rectangle bounds = new Rectangle(DEFAULT_BOUNDS);
 
 	protected Map map;
@@ -68,18 +82,43 @@ public abstract class MapNodeElement extends StubResource
 	/** флаг выделения элемента */
 	protected boolean selected = false;
 
+	/**
+	 * @deprecated
+	 */
 	protected String id = "";
+	
+	/**
+	 * @deprecated
+	 */
 	protected String name = "";
+	
+	/**
+	 * @deprecated
+	 */
 	protected String description = "";
+	
+	/**
+	 * @deprecated
+	 */
 	protected String mapId = "";
+	
+	/**
+	 * @deprecated
+	 */
 	protected String imageId = "";
 	
-	/** координаты элемента (топографические) */
+	/** координаты элемента (топографические) 
+	 * @deprecated
+	 * */
 	protected Point2D.Double anchor = new Point2D.Double( 0, 0);
+
+	protected DoublePoint location = new DoublePoint(0, 0);
 
 	public String optimizerAttribute = "optional";// "mandatory", "restricted"
 
-	/** атрибуты отображения */
+	/** атрибуты отображения 
+	 * @deprecated
+	 * */
 	public java.util.Map attributes = new HashMap();
 	
 	/** флаг наличия сигнала тревоги */
@@ -98,16 +137,25 @@ public abstract class MapNodeElement extends StubResource
 		this.removed = removed;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public Rectangle getDefaultBounds()
 	{
 		return DEFAULT_BOUNDS;
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	public Rectangle getMinBounds()
 	{
 		return MIN_BOUNDS;
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	public Rectangle getMaxBounds()
 	{
 		return MAX_BOUNDS;
@@ -116,6 +164,7 @@ public abstract class MapNodeElement extends StubResource
 	/**
 	 * установить коэффициент масштабирования пиктограммы.
 	 * при этом обновляются границы элемента
+	 * @deprecated
 	 */
 	public void setScaleCoefficient(double ss)
 	{
@@ -141,6 +190,7 @@ public abstract class MapNodeElement extends StubResource
 	
 	/**
 	 * получить границы элемента
+	 * @deprecated
 	 */
 	public Rectangle getBounds()
 	{
@@ -149,6 +199,7 @@ public abstract class MapNodeElement extends StubResource
 
 	/**
 	 * установить границы элемента
+	 * @deprecated
 	 */
 	public void setBounds(Rectangle rec)
 	{
@@ -157,12 +208,16 @@ public abstract class MapNodeElement extends StubResource
 
 	/**
 	 * получить пиктограмму элемента
+	 * @deprecated
 	 */
 	public Image getImage()
 	{
 		return MapPropertiesManager.getScaledImage(getImageId());
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	public Image getAlarmedImage()
 	{
 		return getImage();
@@ -187,19 +242,32 @@ public abstract class MapNodeElement extends StubResource
 
 	/**
 	 * получить копию центра элемента (для избежания его случайной модификации)
+	 * @deprecated
 	 */
 	public Point2D.Double getAnchor()
 	{
 		return new Point2D.Double(anchor.x, anchor.y);
 	}
 
+	public DoublePoint getLocation()
+	{
+		return new DoublePoint(location.x, location.y);
+	}
+
 	/**
 	 * установить новые координаты центра элемента
+	 * @deprecated
 	 */
 	public void setAnchor(Point2D.Double aAnchor)
 	{
 		anchor.x = aAnchor.x;
 		anchor.y = aAnchor.y;
+	}
+
+	public void setLocation(DoublePoint location)
+	{
+		this.location.x = location.x;
+		this.location.y = location.y;
 	}
 
 	public boolean isSelected ()
@@ -212,7 +280,7 @@ public abstract class MapNodeElement extends StubResource
 		this.selected = selected;
 		getMap().setSelected(this, selected);
 	}
-
+	
 	public String getId()
 	{
 		return id;
@@ -243,16 +311,25 @@ public abstract class MapNodeElement extends StubResource
 		this.description = description;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public String getDomainId()
 	{
 		return getMap().getDomainId();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public boolean isVisible(Rectangle2D.Double visibleBounds)
 	{
 		return visibleBounds.contains(getAnchor());
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void paint (Graphics g, Rectangle2D.Double visibleBounds)
 	{
 		if(!isVisible(visibleBounds))
@@ -318,8 +395,14 @@ public abstract class MapNodeElement extends StubResource
 		return alarmState;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	private static Rectangle searchBounds = new Rectangle();
 
+	/**
+	 * @deprecated
+	 */
 	public boolean isMouseOnThisObject (Point currentMousePoint)
 	{
 		MapCoordinatesConverter converter = getMap().getConverter();
@@ -352,6 +435,9 @@ public abstract class MapNodeElement extends StubResource
 			this.mapId = map.getId();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public String getToolTipText()
 	{
 		String s1 = getName();
@@ -370,8 +456,8 @@ public abstract class MapNodeElement extends StubResource
 			getClass().getName(), 
 			"getNodeLinks()");
 		
-		LinkedList returnList = new LinkedList();
-		for(Iterator it = map.getNodeLinks().iterator(); it.hasNext();)
+		List returnList = new LinkedList();
+		for(Iterator it = getMap().getNodeLinks().iterator(); it.hasNext();)
 		{
 			MapNodeLinkElement nodeLink = (MapNodeLinkElement )it.next();
 			
@@ -439,17 +525,17 @@ public abstract class MapNodeElement extends StubResource
 			getClass().getName(), 
 			"getPhysicalLinks()");
 		
-		LinkedList returnList = new LinkedList();
+		List returnList = new LinkedList();
 
-		for(Iterator it = map.getPhysicalLinks().iterator(); it.hasNext();)
+		for(Iterator it = getMap().getPhysicalLinks().iterator(); it.hasNext();)
 		{
 			MapPhysicalLinkElement physicalLink = 
 				(MapPhysicalLinkElement )it.next();
 			
 			//Если один из концов является данным node то добавляем его в вектор
-			if ( (physicalLink.endNode == this) 
-					|| (physicalLink.startNode == this) )
-				returnList.add( physicalLink);
+			if ( (physicalLink.getEndNode().equals(this)) 
+					|| (physicalLink.getStartNode().equals(this)) )
+				returnList.add(physicalLink);
 		}
 
 		return returnList;
@@ -474,7 +560,7 @@ public abstract class MapNodeElement extends StubResource
 		{
 			MapNodeLinkElement nodeLink = (MapNodeLinkElement )e.next();
 
-			if ( nodeLink.getEndNode() == this )
+			if ( nodeLink.getEndNode().equals(this) )
 				returnList.add(nodeLink.getStartNode());
 			else
 				returnList.add(nodeLink.getEndNode());
@@ -497,12 +583,10 @@ public abstract class MapNodeElement extends StubResource
 	public void revert(MapElementState state)
 	{
 		MapNodeElementState mnes = (MapNodeElementState )state;
-		setBounds(mnes.bounds);
-		setScaleCoefficient(mnes.scaleCoefficient);
 		setName(mnes.name);
 		setDescription(mnes.description);
 		setImageId(mnes.imageId);
-		setAnchor(mnes.anchor);
+		setLocation(mnes.location);
 		optimizerAttribute = mnes.optimizerAttribute;
 		attributes = new HashMap(mnes.attributes);
 	}

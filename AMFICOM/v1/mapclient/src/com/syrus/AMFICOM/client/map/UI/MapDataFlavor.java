@@ -1,5 +1,5 @@
 /**
- * $Id: MapDataFlavor.java,v 1.3 2004/10/18 12:43:09 krupenn Exp $
+ * $Id: MapDataFlavor.java,v 1.4 2004/12/07 17:02:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,7 @@ import java.awt.datatransfer.DataFlavor;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/18 12:43:09 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/07 17:02:02 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -26,6 +26,7 @@ import java.awt.datatransfer.DataFlavor;
 public class MapDataFlavor extends DataFlavor
 {
 	public static final String MAP_PROTO_LABEL = "ElementLabel";
+
     public MapDataFlavor(Class representationClass, String humanPresentableName)
 	{
 		super(representationClass, humanPresentableName);

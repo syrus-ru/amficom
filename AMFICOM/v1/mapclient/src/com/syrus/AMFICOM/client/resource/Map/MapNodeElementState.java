@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeElementState.java,v 1.3 2004/10/26 13:25:36 krupenn Exp $
+ * $Id: MapNodeElementState.java,v 1.4 2004/12/07 17:02:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,33 +22,27 @@ import java.util.HashMap;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/26 13:25:36 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/07 17:02:03 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
 public class MapNodeElementState extends MapElementState
 {
-	Rectangle bounds;
-	double scaleCoefficient;
 	String name;
 	String description;
-	Image icon;
 	String imageId;
-	Point2D.Double anchor;
+	DoublePoint location;
 	String optimizerAttribute;
 	java.util.Map attributes = new HashMap();
 	
 	public MapNodeElementState(MapNodeElement mne)
 	{
 		super();
-		bounds = (Rectangle )mne.getBounds().clone();
-		scaleCoefficient = mne.scaleCoefficient;
 		name = mne.getName();
 		description = mne.getDescription();
-		icon = mne.getImage();
 		imageId = mne.getImageId();
-		anchor = (Point2D.Double )mne.getAnchor().clone();
+		location = (DoublePoint )mne.getLocation().clone();
 		optimizerAttribute = mne.optimizerAttribute;
 
 		attributes.putAll(mne.attributes);
@@ -59,10 +53,8 @@ public class MapNodeElementState extends MapElementState
 		MapNodeElementState mnes = (MapNodeElementState )obj;
 		return (this.name.equals(mnes.name)
 			&& this.description.equals(mnes.description)
-			&& this.bounds.equals(mnes.bounds)
-			&& this.scaleCoefficient == mnes.scaleCoefficient
 			&& this.imageId.equals(mnes.imageId)
-			&& this.anchor.equals(mnes.anchor)
+			&& this.location.equals(mnes.location)
 			&& this.optimizerAttribute.equals(mnes.optimizerAttribute));
 	}
 }

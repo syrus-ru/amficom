@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalLinkBinding.java,v 1.6 2004/11/19 11:21:43 krupenn Exp $
+ * $Id: MapPhysicalLinkBinding.java,v 1.7 2004/12/07 17:02:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,9 +13,6 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
-import java.awt.Dimension;
-import java.awt.Point;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,7 +24,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/11/19 11:21:43 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/07 17:02:03 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -41,7 +38,7 @@ public final class MapPhysicalLinkBinding
 	private ArrayList bindObjects = new ArrayList();
 	
 	/** размерность тоннеля (матрица труб) */
-	private Dimension dimension = null;
+	private IntDimension dimension = null;
 
 	/**
 	 * порядок нумерации труб сверху вниз
@@ -59,7 +56,7 @@ public final class MapPhysicalLinkBinding
 	protected boolean horizontalVertical = true;
 
 
-	public MapPhysicalLinkBinding(Dimension bindingDimension)
+	public MapPhysicalLinkBinding(IntDimension bindingDimension)
 	{
 		setDimension(bindingDimension);
 	}
@@ -113,7 +110,7 @@ public final class MapPhysicalLinkBinding
 	/**
 	 * получить размерность матрицы прокладки кабелей по трубам тоннеля
 	 */
-	public Dimension getDimension()
+	public IntDimension getDimension()
 	{
 		return dimension;
 	}
@@ -121,7 +118,7 @@ public final class MapPhysicalLinkBinding
 	/**
 	 * установить размерность матрицы прокладки кабелей по трубам тоннеля
 	 */
-	public void setDimension(Dimension dimension)
+	public void setDimension(IntDimension dimension)
 	{
 		this.dimension = dimension;
 		
@@ -219,7 +216,7 @@ public final class MapPhysicalLinkBinding
 	 */
 	public void unbind(ObjectResource or)
 	{
-		Point binding = getBinding(or);
+		IntPoint binding = getBinding(or);
 		if(binding != null)
 			bindingMap[binding.x][binding.y].remove(or);
 	}
@@ -255,7 +252,7 @@ public final class MapPhysicalLinkBinding
 	 * получить координаты трубы, по которой проходит кабель
 	 * @return null если место кабеля не задано
 	 */
-	public Point getBinding(ObjectResource or)
+	public IntPoint getBinding(ObjectResource or)
 	{
 		int index = bindObjects.indexOf(or);
 		if(index == -1)
@@ -265,7 +262,7 @@ public final class MapPhysicalLinkBinding
 			for (int j = 0; j < bindingMap[i].length; j++) 
 			{
 				if(bindingMap[i][j].contains(or))
-					return new Point(i, j);
+					return new IntPoint(i, j);
 			}
 		}
 		return null;

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalLinkElement.java,v 1.29 2004/11/18 14:13:43 krupenn Exp $
+ * $Id: MapPhysicalLinkElement.java,v 1.30 2004/12/07 17:02:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -46,7 +46,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.29 $, $Date: 2004/11/18 14:13:43 $
+ * @version $Revision: 1.30 $, $Date: 2004/12/07 17:02:03 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -54,8 +54,15 @@ import java.util.List;
 public class MapPhysicalLinkElement extends MapLinkElement implements Serializable
 {
 	private static final long serialVersionUID = 02L;
+
+	/**
+	 * @deprecated
+	 */
 	public static final String typ = "maplinkelement";
 
+	/**
+	 * @deprecated
+	 */
 	protected MapPhysicalLinkElement_Transferable transferable;
 
 	public static final String COLUMN_ID = "id";	
@@ -69,16 +76,37 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	public static final String COLUMN_STREET = "street";	
 	public static final String COLUMN_BUILDING = "building";	
 
+	/**
+	 * @deprecated
+	 */
 	protected List nodeLinkIds = new ArrayList();
 
+	/**
+	 * @deprecated
+	 */
 	protected String mapProtoId = "";
 
 	//Вектор NodeLink из которых состоит path
+	/**
+	 * @deprecated
+	 */
 	protected List nodeLinks = new LinkedList();
+	/**
+	 * @deprecated
+	 */
 	protected MapLinkProtoElement proto;
 
+	/**
+	 * @deprecated
+	 */
 	protected String city = "";
+	/**
+	 * @deprecated
+	 */
 	protected String street = "";
+	/**
+	 * @deprecated
+	 */
 	protected String building = "";
 
 	protected List sortedNodes = new LinkedList();
@@ -98,6 +126,9 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		transferable = new MapPhysicalLinkElement_Transferable();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public MapPhysicalLinkElement( MapPhysicalLinkElement_Transferable transferable)
 	{
 		this.transferable = transferable;
@@ -128,6 +159,9 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		transferable = new MapPhysicalLinkElement_Transferable();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
 	{
@@ -169,6 +203,9 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		return mple;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void updateAttributes()
 	{
 		attributes.clear();
@@ -176,6 +213,9 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 			attributes.put(transferable.attributes[i].type_id, Pool.get(ElementAttribute.typ, transferable.attributes[i].id));
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void setLocalFromTransferable()
 	{
 		int i;
@@ -196,11 +236,14 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 			this.nodeLinkIds.add( transferable.nodeLinkIds[i]);
 		}
 		
-		binding = new MapPhysicalLinkBinding(new Dimension(
+		binding = new MapPhysicalLinkBinding(new IntDimension(
 				transferable.dimensionX,
 				transferable.dimensionY));
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void setTransferableFromLocal()
 	{
 		transferable.id = this.id;
@@ -233,17 +276,26 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		transferable.nodeLinkIds = (String[] )nodeLinkIds.toArray(new String[nodeLinkIds.size()]);
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public Object getTransferable()
 	{
 		return transferable;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public String getTyp()
 	{
 		return typ;
 	}
 
 	//Используется для для загрузки класса из базы данных
+	/**
+	 * @deprecated
+	 */
 	public void updateLocalFromTransferable()
 	{
 		this.startNode = (MapNodeElement )Pool.get(MapSiteNodeElement.typ, startNodeId);
@@ -272,6 +324,9 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		return PROPERTY_PANE_CLASS_NAME;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public String getToolTipText()
 	{
 		String s1 = name;
@@ -322,13 +377,22 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		nodeLinksSorted = false;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	protected boolean selectionVisible = false;
 
+	/**
+	 * @deprecated
+	 */
 	public boolean isSelectionVisible()
 	{
 		return isSelected() || selectionVisible;
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	public boolean isVisible(Rectangle2D.Double visibleBounds)
 	{
 		boolean vis = false;
@@ -344,6 +408,9 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		return vis;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void paint(Graphics g, Rectangle2D.Double visibleBounds, Stroke stroke, Color color, boolean selectionVisible)
 	{
 		if(!isVisible(visibleBounds))
@@ -402,6 +469,9 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		}
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void paint(Graphics g, Rectangle2D.Double visibleBounds)
 	{
 		if(!isVisible(visibleBounds))
@@ -448,6 +518,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	 * элементам, и в частности по фрагментам линии, что вернет true
 	 * для фрагмента. Поэтому в режиме работы с линиями ищется фрагмент
 	 * и из него уже берется ссылка на эту линию
+	 * @deprecated
 	 */
 	public boolean isMouseOnThisObject(Point currentMousePoint)
 	{
@@ -478,8 +549,8 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
 		{
 			startNodeLink = (MapNodeLinkElement )it.next();
-			if(startNodeLink.getStartNode() == getStartNode()
-				|| startNodeLink.getEndNode() == getStartNode())
+			if(startNodeLink.getStartNode().equals(getStartNode())
+				|| startNodeLink.getEndNode().equals(getStartNode()))
 			{
 				break;
 			}
@@ -524,6 +595,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 
 	/**
 	 * получить центр (ГМТ) линии
+	 * @deprecated
 	 */
 	public Point2D.Double getAnchor()
 	{
@@ -534,6 +606,25 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		{
 			MapNodeLinkElement mnle = (MapNodeLinkElement )it.next();
 			Point2D.Double an = mnle.getAnchor();
+			point.x += an.x;
+			point.y += an.y;
+			count ++;
+		}
+		point.x /= count;
+		point.y /= count;
+		
+		return point;
+	}
+
+	public DoublePoint getLocation()
+	{
+		int count = 0;
+		DoublePoint point = new DoublePoint(0.0, 0.0);
+
+		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
+		{
+			MapNodeLinkElement mnle = (MapNodeLinkElement )it.next();
+			DoublePoint an = mnle.getLocation();
 			point.x += an.x;
 			point.y += an.y;
 			count ++;
@@ -724,7 +815,10 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		if(field.equals(COLUMN_BUILDING))
 			setBuilding(value);
 	}
-	
+
+	/**
+	 * @deprecated
+	 */	
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
 		out.writeObject(id);
@@ -751,6 +845,9 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		out.writeObject(nodeLinkIds);
 	}
 
+	/**
+	 * @deprecated
+	 */	
 	private void readObject(java.io.ObjectInputStream in)
 			throws IOException, ClassNotFoundException
 	{
@@ -843,6 +940,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 
 	/**
 	 * Получить толщину линии
+	 * @deprecated
 	 */
 	public int getLineSize ()
 	{
@@ -851,6 +949,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 
 	/**
 	 * Получить вид линии
+	 * @deprecated
 	 */
 	public String getStyle ()
 	{
@@ -859,6 +958,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 
 	/**
 	 * Получить стиль линии
+	 * @deprecated
 	 */
 	public Stroke getStroke ()
 	{
@@ -867,6 +967,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 
 	/**
 	 * Получить цвет
+	 * @deprecated
 	 */
 	public Color getColor()
 	{
@@ -875,6 +976,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 
 	/**
 	 * получить цвет при наличии сигнала тревоги
+	 * @deprecated
 	 */
 	public Color getAlarmedColor()
 	{
@@ -883,6 +985,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 
 	/**
 	 * получить толщину линии при наличи сигнала тревоги
+	 * @deprecated
 	 */
 	public int getAlarmedLineSize ()
 	{

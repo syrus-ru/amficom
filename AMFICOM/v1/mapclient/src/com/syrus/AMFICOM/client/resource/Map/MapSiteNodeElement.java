@@ -1,5 +1,5 @@
 /**
- * $Id: MapSiteNodeElement.java,v 1.12 2004/10/18 12:43:13 krupenn Exp $
+ * $Id: MapSiteNodeElement.java,v 1.13 2004/12/07 17:02:03 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -36,7 +36,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2004/10/18 12:43:13 $
+ * @version $Revision: 1.13 $, $Date: 2004/12/07 17:02:03 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -44,8 +44,15 @@ import java.util.Iterator;
 public class MapSiteNodeElement extends MapNodeElement implements Serializable
 {
 	private static final long serialVersionUID = 02L;
+
+	/**
+	 * @deprecated
+	 */
 	public static final String typ = "mapsiteelement";
 
+	/**
+	 * @deprecated
+	 */
 	protected MapSiteElement_Transferable transferable;
 
 	public static final String COLUMN_ID = "id";
@@ -60,10 +67,22 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 	public static final String COLUMN_COEF = "coef";
 	public static final String COLUMN_IMAGE_ID = "image_id";
 
+	/**
+	 * @deprecated
+	 */
 	protected String city = "";
+	/**
+	 * @deprecated
+	 */
 	protected String street = "";
+	/**
+	 * @deprecated
+	 */
 	protected String building = "";
 
+	/**
+	 * @deprecated
+	 */
 	protected String mapProtoId = "";
 
 	protected static String[][] exportColumns = null;
@@ -76,34 +95,74 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 		attributes = new HashMap();
 		selected = false;
 		setImageId("pc");
-		setScaleCoefficient(1.0D);
+//		setScaleCoefficient(1.0D);
 
 		transferable = new MapSiteElement_Transferable();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public MapSiteNodeElement(MapSiteElement_Transferable transferable)
 	{
 		this.transferable = transferable;
 		setLocalFromTransferable();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public MapSiteNodeElement(
 		String id,
 		Point2D.Double anchor,
 		Map map,
-		double coef,
 		MapNodeProtoElement pe)
 	{
-		this(id, anchor, map, coef, pe.getImageId(), pe.getId());
+		this(id, anchor, map, pe.getImageId(), pe.getId());
 
 		name = pe.getName();
 	}
 
 	public MapSiteNodeElement(
 		String id,
+		DoublePoint location,
+		Map map,
+		MapNodeProtoElement pe)
+	{
+		this(id, location, map, pe.getImageId(), pe.getId());
+
+		name = pe.getName();
+	}
+
+	public MapSiteNodeElement(
+		String id,
+		DoublePoint location,
+		Map map,
+		String imageId,
+		String mapProtoId)
+	{
+		this.map = map;
+
+		this.setId(id);
+		this.setName(id);
+		this.mapProtoId = mapProtoId;
+		this.setDescription("");
+		setLocation(location);
+
+		if(map != null)
+			mapId = map.getId();
+		attributes = new HashMap();
+		setImageId( imageId);
+		selected = false;
+	}
+
+	/**
+	 * @deprecated
+	 */
+	public MapSiteNodeElement(
+		String id,
 		Point2D.Double anchor,
 		Map map,
-		double coef,
 		String imageId,
 		String mapProtoId)
 	{
@@ -119,12 +178,15 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 			mapId = map.getId();
 		attributes = new HashMap();
 		setImageId( imageId);
-		setScaleCoefficient(coef);
+//		setScaleCoefficient(coef);
 		selected = false;
 
 		transferable = new MapSiteElement_Transferable();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
 	{
@@ -136,7 +198,7 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 				dataSource.GetUId(MapSiteNodeElement.typ),
 				new Point2D.Double(anchor.x, anchor.y),
 				(Map)map.clone(dataSource), 
-				scaleCoefficient,
+//				scaleCoefficient,
 				imageId,
 				mapProtoId);
 				
@@ -164,6 +226,9 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 		return mene;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void updateAttributes()
 	{
 		attributes.clear();
@@ -172,6 +237,9 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 	}
 
 	//”станавливаем переменные класса из базы данных
+	/**
+	 * @deprecated
+	 */
 	public void setLocalFromTransferable()
 	{
 		this.id = transferable.id;
@@ -187,6 +255,9 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 			attributes.put(transferable.attributes[i].type_id, new ElementAttribute(transferable.attributes[i]));
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void setTransferableFromLocal()
 	{
 		transferable.id = this.id;
@@ -209,21 +280,33 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 		}
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public String getTyp()
 	{
 		return typ;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void updateLocalFromTransferable()
 	{
 		this.map = (Map)Pool.get(Map.typ, this.mapId);
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public Object getTransferable()
 	{
 		return transferable;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void paint (Graphics g, Rectangle2D.Double visibleBounds)
 	{
 		if(!isVisible(visibleBounds))
@@ -357,6 +440,9 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 			setImageId( imageId);
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
 		out.writeObject(id);
@@ -371,6 +457,9 @@ public class MapSiteNodeElement extends MapNodeElement implements Serializable
 		out.writeObject(attributes);
 	}
 
+	/**
+	 * @deprecated
+	 */
 	private void readObject(java.io.ObjectInputStream in)
 			throws IOException, ClassNotFoundException
 	{
