@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectResizableLRUMap.java,v 1.1 2005/03/18 16:52:10 arseniy Exp $
+ * $Id: StorableObjectResizableLRUMap.java,v 1.2 2005/03/18 16:55:57 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,12 +14,12 @@ import java.util.LinkedList;
 import com.syrus.util.LRUMap;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/18 16:52:10 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/18 16:55:57 $
  * @author $Author: arseniy $
  * @module general_v1
  */
 public class StorableObjectResizableLRUMap extends LRUMap {
-	private static final long serialVersionUID = 3835158350253339954L;
+	private static final long serialVersionUID = 5983495252523370955L;
 
 	public StorableObjectResizableLRUMap() {
 		super();
