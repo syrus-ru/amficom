@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandBundle.java,v 1.6 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandBundle.java,v 1.7 2004/12/23 16:57:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import java.awt.geom.Point2D;
  * два других фрагмента, разделенные новывм топологичсеским узлом. Команда
  * состоит из последовательности атомарных действий
  * 
- * @version $Revision: 1.6 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/23 16:57:59 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -82,9 +82,9 @@ public class CreatePhysicalNodeCommandBundle extends MapActionCommandBundle
 		AbstractNode endNode = nodeLink.getEndNode();
 
 		// разбить фрагмент на две части - т.е. создать два новых фрагмента
-		NodeLink link1 = createNodeLink(startNode, node);
+		NodeLink link1 = createNodeLink(physicalLink, startNode, node);
 		link1.setPhysicalLink(physicalLink);
-		NodeLink link2 = createNodeLink(node, endNode);
+		NodeLink link2 = createNodeLink(physicalLink, node, endNode);
 		link2.setPhysicalLink(physicalLink);
 
 		// удаляется старый фрагмент с карты

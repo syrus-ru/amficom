@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandBundle.java,v 1.6 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: CreateNodeLinkCommandBundle.java,v 1.7 2004/12/23 16:57:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,7 +38,7 @@ import java.util.LinkedList;
  * данная команда
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/23 16:57:59 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -133,7 +133,7 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 			endNode = super.createPhysicalNode(mapEndPoint);
 		}
 
-		nodeLink = super.createNodeLink(startNode, endNode);
+//		nodeLink = super.createNodeLink(startNode, endNode);
 
 		//Далее в зависимости от того какая комбинация startNode и endNode
 		if (startNode instanceof SiteNode 
@@ -142,8 +142,11 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 			// создается новая физическая линия из одного фрагмента
 			
 			physicalLink = super.createPhysicalLink(startNode, endNode);
-			physicalLink.addNodeLink( nodeLink);
+
+			nodeLink = super.createNodeLink(physicalLink, startNode, endNode);
 			nodeLink.setPhysicalLink(physicalLink);
+
+			physicalLink.addNodeLink( nodeLink);
 		}//if ( MapSiteNodeElement && MapSiteNodeElement)
 		else
 		if ( startNode instanceof SiteNode
@@ -160,8 +163,10 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 
 				MapElementState pls = physicalLink.getState();
 
-				physicalLink.addNodeLink(nodeLink);
+				nodeLink = super.createNodeLink(physicalLink, startNode, endNode);
 				nodeLink.setPhysicalLink(physicalLink);
+
+				physicalLink.addNodeLink(nodeLink);
 
 				// Коррекция начального и конечного узлов линии
 				if(physicalLink.getEndNode() == mpne)
@@ -174,8 +179,11 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 			else
 			{
 				physicalLink = super.createPhysicalLink(startNode, endNode);
-				physicalLink.addNodeLink( nodeLink);
+
+				nodeLink = super.createNodeLink(physicalLink, startNode, endNode);
 				nodeLink.setPhysicalLink(physicalLink);
+
+				physicalLink.addNodeLink( nodeLink);
 			}
 		}//if ( MapSiteNodeElement && MapPhysicalNodeElement )
 		else
@@ -190,8 +198,10 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 
 			MapElementState pls = physicalLink.getState();
 
-			physicalLink.addNodeLink(nodeLink);
+			nodeLink = super.createNodeLink(physicalLink, startNode, endNode);
 			nodeLink.setPhysicalLink(physicalLink);
+
+			physicalLink.addNodeLink(nodeLink);
 
 			super.changePhysicalNodeActivity(mpne, true);
 
@@ -216,8 +226,10 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 
 			MapElementState pls = physicalLink.getState();
 
-			physicalLink.addNodeLink(nodeLink);
+			nodeLink = super.createNodeLink(physicalLink, startNode, endNode);
 			nodeLink.setPhysicalLink(physicalLink);
+
+			physicalLink.addNodeLink(nodeLink);
 
 			super.changePhysicalNodeActivity(smpne, true);
 

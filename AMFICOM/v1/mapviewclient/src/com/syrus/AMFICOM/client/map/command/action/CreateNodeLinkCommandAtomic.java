@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandAtomic.java,v 1.5 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: CreateNodeLinkCommandAtomic.java,v 1.6 2004/12/23 16:57:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,10 +14,12 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.PhysicalLink;
 
 /**
  * создание фрагмента линии связи, внесение ее в пул и на карту - 
@@ -25,7 +27,7 @@ import com.syrus.AMFICOM.map.Map;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/23 16:57:59 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -39,12 +41,15 @@ public class CreateNodeLinkCommandAtomic extends MapActionCommand
 	
 	AbstractNode startNode;
 	AbstractNode endNode;
+	PhysicalLink physicalLink;
 	
-	public CreateNodeLinkCommandAtomic(		
+	public CreateNodeLinkCommandAtomic(
+			PhysicalLink physicalLink,
 			AbstractNode startNode,
 			AbstractNode endNode)
 	{
 		super(MapActionCommand.ACTION_DRAW_LINE);
+		this.physicalLink = physicalLink;
 		this.startNode = startNode;
 		this.endNode = endNode;
 	}
@@ -66,7 +71,11 @@ public class CreateNodeLinkCommandAtomic extends MapActionCommand
 
 		try
 		{
-			nodeLink = NodeLink.createInstance(startNode, endNode);
+			nodeLink = NodeLink.createInstance(
+					new Identifier(aContext.getSessionInterface().getAccessIdentifier().user_id),
+					physicalLink, 
+					startNode, 
+					endNode);
 		}
 		catch (CreateObjectException e)
 		{

@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundLinkController.java,v 1.2 2004/12/22 16:38:43 krupenn Exp $
+ * $Id: UnboundLinkController.java,v 1.3 2004/12/23 16:58:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,40 +11,22 @@
 
 package com.syrus.AMFICOM.Client.Resource.MapView;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.LineComboBox;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElementController;
 import com.syrus.AMFICOM.Client.Resource.Map.PhysicalLinkController;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.configuration.Characteristic;
-import com.syrus.AMFICOM.configuration.CharacteristicType;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.corba.CharacteristicTypeSort;
-import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.map.MapElement;
+
 import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Polygon;
-import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
-import java.util.HashMap;
-import java.util.Iterator;
 
 /**
  * линейный элемента карты 
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/12/22 16:38:43 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/23 16:58:00 $
  * @module
  * @author $Author: krupenn $
  * @see

@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractNodeController.java,v 1.3 2004/12/22 16:38:42 krupenn Exp $
+ * $Id: AbstractNodeController.java,v 1.4 2004/12/23 16:57:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,6 +15,8 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.MapElement;
 
 import java.awt.BasicStroke;
 import java.awt.Graphics;
@@ -24,17 +26,15 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+
 import java.util.HashMap;
-import com.syrus.AMFICOM.map.AbstractNode;
-import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
  * элемент карты - узел 
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/12/22 16:38:42 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/23 16:57:59 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -251,7 +251,7 @@ public abstract class AbstractNodeController implements MapElementController
 		if(!(me instanceof AbstractNode))
 			return null;
 
-		AbstractNode node = (AbstractNode)me;
+		AbstractNode node = (AbstractNode )me;
 
 		String s1 = node.getName();
 

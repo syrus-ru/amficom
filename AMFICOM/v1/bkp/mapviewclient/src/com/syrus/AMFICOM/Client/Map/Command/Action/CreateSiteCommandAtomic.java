@@ -1,5 +1,5 @@
 /**
- * $Id: CreateSiteCommandAtomic.java,v 1.6 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: CreateSiteCommandAtomic.java,v 1.7 2004/12/23 16:57:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.SiteNodeType;
@@ -30,7 +31,7 @@ import java.awt.geom.Point2D;
  * Разместить сетевой элемент на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.6 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/23 16:57:59 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -104,8 +105,8 @@ public class CreateSiteCommandAtomic extends MapActionCommand
 		try
 		{
 			site = SiteNode.createInstance(
+					new Identifier(aContext.getSessionInterface().getAccessIdentifier().user_id),
 					coordinatePoint,
-					map,
 					proto);
 		}
 		catch (CreateObjectException e)

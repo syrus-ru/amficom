@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.27 2004/12/22 16:38:39 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.28 2004/12/23 16:57:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -102,7 +102,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.27 $, $Date: 2004/12/22 16:38:39 $
+ * @version $Revision: 1.28 $, $Date: 2004/12/23 16:57:59 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -1563,10 +1563,10 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		DoublePoint anchor2 = node.getLocation();
 		cmd.setParameter(
 				MoveSelectionCommandBundle.DELTA_X, 
-				String.valueOf(anchor2.x - anchor1.x));
+				String.valueOf(anchor2.getX() - anchor1.getX()));
 		cmd.setParameter(
 				MoveSelectionCommandBundle.DELTA_Y, 
-				String.valueOf(anchor2.y - anchor1.y));
+				String.valueOf(anchor2.getY() - anchor1.getY()));
 		getCommandList().add(cmd);
 		getCommandList().execute();
 

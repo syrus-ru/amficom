@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkController.java,v 1.3 2004/12/22 16:38:42 krupenn Exp $
+ * $Id: PhysicalLinkController.java,v 1.4 2004/12/23 16:57:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,30 +15,23 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.LineComboBox;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.configuration.Characteristic;
 import com.syrus.AMFICOM.configuration.CharacteristicType;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.corba.CharacteristicTypeSort;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Polygon;
-import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
-import java.util.HashMap;
+
 import java.util.Iterator;
 
 /**
@@ -46,7 +39,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/12/22 16:38:42 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/23 16:57:59 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -111,10 +104,10 @@ public class PhysicalLinkController extends AbstractLinkController
 
 	public boolean isSelectionVisible(MapElement me)
 	{
-		if(! (me instanceof MapPhysicalLinkElement))
+		if(! (me instanceof PhysicalLink))
 			return false;
 
-		MapPhysicalLinkElement link = (MapPhysicalLinkElement )me;
+		PhysicalLink link = (PhysicalLink )me;
 
 		return link.isSelected() 
 			|| link.isSelectionVisible();
@@ -122,15 +115,15 @@ public class PhysicalLinkController extends AbstractLinkController
 
 	public boolean isElementVisible(MapElement me, Rectangle2D.Double visibleBounds)
 	{
-		if(! (me instanceof MapPhysicalLinkElement))
+		if(! (me instanceof PhysicalLink))
 			return false;
 
-		MapPhysicalLinkElement link = (MapPhysicalLinkElement )me;
+		PhysicalLink link = (PhysicalLink )me;
 		
 		boolean vis = false;
 		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();)
 		{
-			MapNodeLinkElement nodelink = (MapNodeLinkElement )it.next();
+			NodeLink nodelink = (NodeLink )it.next();
 			NodeLinkController nlc = (NodeLinkController )getLogicalNetLayer().getMapViewController().getController(nodelink);
 			if(nlc.isElementVisible(nodelink, visibleBounds))
 			{
@@ -143,10 +136,10 @@ public class PhysicalLinkController extends AbstractLinkController
 
 	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
 	{
-		if(! (me instanceof MapPhysicalLinkElement))
+		if(! (me instanceof PhysicalLink))
 			return;
 
-		MapPhysicalLinkElement link = (MapPhysicalLinkElement )me;
+		PhysicalLink link = (PhysicalLink )me;
 		
 		if(!isElementVisible(link, visibleBounds))
 			return;
@@ -186,7 +179,7 @@ public class PhysicalLinkController extends AbstractLinkController
 		link.setSelectionVisible(selectionVisible);
 		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();)
 		{
-			MapNodeLinkElement nodelink = (MapNodeLinkElement )it.next();
+			NodeLink nodelink = (NodeLink )it.next();
 			NodeLinkController nlc = (NodeLinkController )getLogicalNetLayer().getMapViewController().getController(nodelink);
 			nlc.paint(nodelink, g, visibleBounds, stroke, color);
 			
@@ -244,14 +237,14 @@ public class PhysicalLinkController extends AbstractLinkController
 	 */
 	public boolean isMouseOnElement(MapElement me, Point currentMousePoint)
 	{
-		if(! (me instanceof MapPhysicalLinkElement))
+		if(! (me instanceof PhysicalLink))
 			return false;
 
-		MapPhysicalLinkElement link = (MapPhysicalLinkElement )me;
+		PhysicalLink link = (PhysicalLink )me;
 		
 		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();)
 		{
-			MapNodeLinkElement nl = (MapNodeLinkElement )it.next();
+			NodeLink nl = (NodeLink )it.next();
 			NodeLinkController nlc = (NodeLinkController )getLogicalNetLayer().getMapViewController().getController(nl);
 			if(nlc.isMouseOnElement(nl, currentMousePoint))
 				return true;
@@ -264,10 +257,10 @@ public class PhysicalLinkController extends AbstractLinkController
 	 */
 	public int getLineSize (MapElement link)
 	{
-		if(! (link instanceof MapPhysicalLinkElement))
+		if(! (link instanceof PhysicalLink))
 			return MapPropertiesManager.getThickness();
 
-		MapPhysicalLinkElement plink = (MapPhysicalLinkElement )link;
+		PhysicalLink plink = (PhysicalLink )link;
 
 		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_THICKNESS);
 		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
@@ -285,10 +278,10 @@ public class PhysicalLinkController extends AbstractLinkController
 	 */
 	public String getStyle (MapElement link)
 	{
-		if(! (link instanceof MapPhysicalLinkElement))
+		if(! (link instanceof PhysicalLink))
 			return MapPropertiesManager.getStyle();
 
-		MapPhysicalLinkElement plink = (MapPhysicalLinkElement )link;
+		PhysicalLink plink = (PhysicalLink )link;
 
 		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_STYLE);
 		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
@@ -306,10 +299,10 @@ public class PhysicalLinkController extends AbstractLinkController
 	 */
 	public Stroke getStroke (MapElement link)
 	{
-		if(! (link instanceof MapPhysicalLinkElement))
+		if(! (link instanceof PhysicalLink))
 			return MapPropertiesManager.getStroke();
 
-		MapPhysicalLinkElement plink = (MapPhysicalLinkElement )link;
+		PhysicalLink plink = (PhysicalLink )link;
 
 		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_STYLE);
 		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
@@ -327,10 +320,10 @@ public class PhysicalLinkController extends AbstractLinkController
 	 */
 	public Color getColor(MapElement link)
 	{
-		if(! (link instanceof MapPhysicalLinkElement))
+		if(! (link instanceof PhysicalLink))
 			return MapPropertiesManager.getColor();
 
-		MapPhysicalLinkElement plink = (MapPhysicalLinkElement )link;
+		PhysicalLink plink = (PhysicalLink )link;
 
 		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_COLOR);
 		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
@@ -348,10 +341,10 @@ public class PhysicalLinkController extends AbstractLinkController
 	 */
 	public Color getAlarmedColor(MapElement link)
 	{
-		if(! (link instanceof MapPhysicalLinkElement))
+		if(! (link instanceof PhysicalLink))
 			return MapPropertiesManager.getAlarmedColor();
 
-		MapPhysicalLinkElement plink = (MapPhysicalLinkElement )link;
+		PhysicalLink plink = (PhysicalLink )link;
 
 		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_COLOR);
 		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
@@ -369,10 +362,10 @@ public class PhysicalLinkController extends AbstractLinkController
 	 */
 	public int getAlarmedLineSize (MapElement link)
 	{
-		if(! (link instanceof MapPhysicalLinkElement))
+		if(! (link instanceof PhysicalLink))
 			return MapPropertiesManager.getAlarmedThickness();
 
-		MapPhysicalLinkElement plink = (MapPhysicalLinkElement )link;
+		PhysicalLink plink = (PhysicalLink )link;
 
 		CharacteristicType cType = getCharacteristicType(link.getMap().getCreatorId(), ATTRIBUTE_ALARMED_THICKNESS);
 		Characteristic ea = (Characteristic )getCharacteristic(link, cType);

@@ -84,12 +84,12 @@ public final class MapSiteNodePropertiesController
 		else
 		if (key.equals(PROPERTY_LATITUDE))
 		{
-			result = MapPropertiesManager.getCoordinatesFormat().format(site.getLocation().x);
+			result = MapPropertiesManager.getCoordinatesFormat().format(site.getLocation().getX());
 		}
 		else
 		if (key.equals(PROPERTY_LONGITUDE))
 		{
-			result = MapPropertiesManager.getCoordinatesFormat().format(site.getLocation().y);
+			result = MapPropertiesManager.getCoordinatesFormat().format(site.getLocation().getY());
 		}
 
 		return result;
@@ -123,7 +123,7 @@ public final class MapSiteNodePropertiesController
 			try
 			{
 				DoublePoint pt = site.getLocation();
-				pt.x = Double.parseDouble((String )value);
+				pt.setLocation(Double.parseDouble((String )value), pt.getY());
 				site.setLocation(pt);
 			}
 			catch(NumberFormatException e)
@@ -137,7 +137,7 @@ public final class MapSiteNodePropertiesController
 			try
 			{
 				DoublePoint pt = site.getLocation();
-				pt.y = Double.parseDouble((String )value);
+				pt.setLocation(pt.getX(), Double.parseDouble((String )value));
 				site.setLocation(pt);
 			}
 			catch(NumberFormatException e)

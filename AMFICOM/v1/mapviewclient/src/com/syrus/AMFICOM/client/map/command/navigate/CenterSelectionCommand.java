@@ -1,5 +1,5 @@
 /**
- * $Id: CenterSelectionCommand.java,v 1.7 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: CenterSelectionCommand.java,v 1.8 2004/12/23 16:57:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.map.Map;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/23 16:57:59 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -65,6 +65,9 @@ public class CenterSelectionCommand extends VoidCommand
 
 		int count = 0;
 		DoublePoint point = new DoublePoint(0.0, 0.0);
+		
+		double x = 0.0D;
+		double y = 0.0D;
 
 		for(Iterator it = logicalNetLayer.getMapView().getMap().getNodes().iterator(); it.hasNext();)
 		{
@@ -72,9 +75,9 @@ public class CenterSelectionCommand extends VoidCommand
 			if(me.isSelected())
 			{
 				DoublePoint an = me.getLocation();
-				point.x += an.x;
-				point.y += an.y;
-				count ++;
+				x += an.getX();
+				y += an.getY();
+				count++;
 			}
 		}
 
@@ -84,9 +87,9 @@ public class CenterSelectionCommand extends VoidCommand
 			if(me.isSelected())
 			{
 				DoublePoint an = me.getLocation();
-				point.x += an.x;
-				point.y += an.y;
-				count ++;
+				x += an.getX();
+				y += an.getY();
+				count++;
 			}
 		}
 
@@ -96,9 +99,9 @@ public class CenterSelectionCommand extends VoidCommand
 			if(me.isSelected())
 			{
 				DoublePoint an = me.getLocation();
-				point.x += an.x;
-				point.y += an.y;
-				count ++;
+				x += an.getX();
+				y += an.getY();
+				count++;
 			}
 		}
 
@@ -108,9 +111,9 @@ public class CenterSelectionCommand extends VoidCommand
 			if(me.isSelected())
 			{
 				DoublePoint an = me.getLocation();
-				point.x += an.x;
-				point.y += an.y;
-				count ++;
+				x += an.getX();
+				y += an.getY();
+				count++;
 			}
 		}
 
@@ -120,9 +123,9 @@ public class CenterSelectionCommand extends VoidCommand
 			if(me.isSelected())
 			{
 				DoublePoint an = me.getLocation();
-				point.x += an.x;
-				point.y += an.y;
-				count ++;
+				x += an.getX();
+				y += an.getY();
+				count++;
 			}
 		}
 
@@ -132,14 +135,16 @@ public class CenterSelectionCommand extends VoidCommand
 			if(me.isSelected())
 			{
 				DoublePoint an = me.getLocation();
-				point.x += an.x;
-				point.y += an.y;
-				count ++;
+				x += an.getX();
+				y += an.getY();
+				count++;
 			}
 		}
 
-		point.x /= count;
-		point.y /= count;
+		x /= count;
+		y /= count;
+		
+		point.setLocation(x, y);
 		
 		logicalNetLayer.setCenter(point);
 

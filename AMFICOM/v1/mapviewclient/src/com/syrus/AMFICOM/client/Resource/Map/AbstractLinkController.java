@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.2 2004/12/22 16:38:42 krupenn Exp $
+ * $Id: AbstractLinkController.java,v 1.3 2004/12/23 16:57:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -39,7 +39,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/12/22 16:38:42 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/23 16:57:59 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -91,7 +91,7 @@ public abstract class AbstractLinkController implements MapElementController
 		}
 		catch(ApplicationException ex)
 		{
-			System.err.println("Exception searching ParameterType. Creating new one.");
+			System.err.println("Exception searching CharacteristicType. Creating new one.");
 			ex.printStackTrace();
 		}
 

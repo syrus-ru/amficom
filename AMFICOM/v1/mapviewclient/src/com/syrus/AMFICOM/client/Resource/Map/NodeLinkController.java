@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLinkController.java,v 1.3 2004/12/22 16:38:42 krupenn Exp $
+ * $Id: NodeLinkController.java,v 1.4 2004/12/23 16:57:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,7 +38,7 @@ import java.util.HashMap;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/12/22 16:38:42 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/23 16:57:59 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -108,10 +108,10 @@ public final class NodeLinkController extends AbstractLinkController
 
 	public boolean isSelectionVisible(MapElement me)
 	{
-		if(! (me instanceof MapNodeLinkElement))
+		if(! (me instanceof NodeLink))
 			return false;
 
-		MapNodeLinkElement nodeLink = (MapNodeLinkElement )me;
+		NodeLink nodeLink = (NodeLink )me;
 
 		PhysicalLinkController plc = (PhysicalLinkController )getLogicalNetLayer().getMapViewController().getController(nodeLink.getPhysicalLink());
 
@@ -121,16 +121,16 @@ public final class NodeLinkController extends AbstractLinkController
 
 	public boolean isElementVisible(MapElement me, Rectangle2D.Double visibleBounds)
 	{
-		if(! (me instanceof MapNodeLinkElement))
+		if(! (me instanceof NodeLink))
 			return false;
 
-		MapNodeLinkElement nodeLink = (MapNodeLinkElement )me;
+		NodeLink nodeLink = (NodeLink )me;
 		
 		return visibleBounds.intersectsLine(
-			nodeLink.getStartNode().getLocation().x,
-			nodeLink.getStartNode().getLocation().y,
-			nodeLink.getEndNode().getLocation().x,
-			nodeLink.getEndNode().getLocation().y);
+			nodeLink.getStartNode().getLocation().getX(),
+			nodeLink.getStartNode().getLocation().getY(),
+			nodeLink.getEndNode().getLocation().getX(),
+			nodeLink.getEndNode().getLocation().getY());
 	}
 
 	/**
@@ -149,10 +149,10 @@ public final class NodeLinkController extends AbstractLinkController
 
 	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
 	{
-		if(! (me instanceof MapNodeLinkElement))
+		if(! (me instanceof NodeLink))
 			return;
 
-		MapNodeLinkElement nodeLink = (MapNodeLinkElement )me;
+		NodeLink nodeLink = (NodeLink )me;
 		
 		if(!isElementVisible(nodeLink, visibleBounds))
 			return;
@@ -226,7 +226,7 @@ public final class NodeLinkController extends AbstractLinkController
 	}
 
 	public void paint(
-			MapNodeLinkElement nodeLink,
+			NodeLink nodeLink,
 			Graphics g, 
 			Rectangle2D.Double visibleBounds, 
 			Stroke stroke, 
@@ -323,10 +323,10 @@ public final class NodeLinkController extends AbstractLinkController
 	 */
 	public boolean isMouseOnElement(MapElement me, Point currentMousePoint)
 	{
-		if(! (me instanceof MapNodeLinkElement))
+		if(! (me instanceof NodeLink))
 			return false;
 
-		MapNodeLinkElement nodeLink = (MapNodeLinkElement )me;
+		NodeLink nodeLink = (NodeLink )me;
 		
 		MapCoordinatesConverter converter = getLogicalNetLayer();
 
@@ -405,10 +405,10 @@ public final class NodeLinkController extends AbstractLinkController
 		
 		double coef = dist / prevDist;
 
-		double absc = coef * (node.getLocation().x - oppositeNode.getLocation().x) 
-				+ oppositeNode.getLocation().x;
-		double ordi = coef * (node.getLocation().y - oppositeNode.getLocation().y) 
-				+ oppositeNode.getLocation().y;
+		double absc = coef * (node.getLocation().getX() - oppositeNode.getLocation().getX()) 
+				+ oppositeNode.getLocation().getX();
+		double ordi = coef * (node.getLocation().getY() - oppositeNode.getLocation().getY()) 
+				+ oppositeNode.getLocation().getY();
 
 		node.setLocation(new DoublePoint(absc, ordi));
 		

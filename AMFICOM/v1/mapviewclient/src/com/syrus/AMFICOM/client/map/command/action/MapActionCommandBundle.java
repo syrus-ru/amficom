@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommandBundle.java,v 1.11 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: MapActionCommandBundle.java,v 1.12 2004/12/23 16:57:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkBinding;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.12 $, $Date: 2004/12/23 16:57:59 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -118,10 +118,11 @@ public class MapActionCommandBundle extends CommandBundle
 	 * Создается фрагмент линии, не включенный ни в какую линию
 	 */
 	protected NodeLink createNodeLink(
+			PhysicalLink physicalLink,
 			AbstractNode startNode,
 			AbstractNode endNode)
 	{
-		CreateNodeLinkCommandAtomic cmd = new CreateNodeLinkCommandAtomic(startNode, endNode);
+		CreateNodeLinkCommandAtomic cmd = new CreateNodeLinkCommandAtomic(physicalLink, startNode, endNode);
 		cmd.setLogicalNetLayer(logicalNetLayer);
 		cmd.execute();
 		add(cmd);
@@ -217,7 +218,7 @@ public class MapActionCommandBundle extends CommandBundle
 	{
 		MapUnboundLinkElement unbound = this.createUnboundLink(startNode, endNode);
 
-		NodeLink nodeLink = this.createNodeLink(startNode, endNode);
+		NodeLink nodeLink = this.createNodeLink(unbound, startNode, endNode);
 		unbound.addNodeLink(nodeLink);
 		nodeLink.setPhysicalLink(unbound);
 		

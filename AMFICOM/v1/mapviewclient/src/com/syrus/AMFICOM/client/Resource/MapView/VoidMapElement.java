@@ -1,5 +1,5 @@
 /**
- * $Id: VoidMapElement.java,v 1.9 2004/12/22 16:38:43 krupenn Exp $
+ * $Id: VoidMapElement.java,v 1.10 2004/12/23 16:58:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,7 +25,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/12/22 16:38:43 $
+ * @version $Revision: 1.10 $, $Date: 2004/12/23 16:58:00 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -40,21 +40,21 @@ public final class VoidMapElement implements MapElement
 	{
 	}
 
-	public String[][] getExportColumns()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	public void setColumn(String field, String value)
-	{
-		throw new UnsupportedOperationException();
-	}
-
 	public static VoidMapElement getInstance(MapView mapView)
 	{
 		singleton.mapView = mapView;
 		return singleton;
 	}
+
+//	public String[][] getExportColumns()
+//	{
+//		throw new UnsupportedOperationException();
+//	}
+//
+//	public void setColumn(String field, String value)
+//	{
+//		throw new UnsupportedOperationException();
+//	}
 
 	private static final String PROPERTY_PANE_CLASS_NAME = "";
 
@@ -65,7 +65,7 @@ public final class VoidMapElement implements MapElement
 	
 	public MapElementState getState()
 	{
-		return new VoidMapState();
+		throw new UnsupportedOperationException();
 	}
 
 	public boolean isSelected()

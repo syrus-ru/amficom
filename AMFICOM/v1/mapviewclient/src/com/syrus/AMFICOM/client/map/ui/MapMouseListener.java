@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.16 2004/12/22 16:38:42 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.17 2004/12/23 16:57:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -53,7 +53,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.16 $, $Date: 2004/12/22 16:38:42 $
+ * @version $Revision: 1.17 $, $Date: 2004/12/23 16:57:59 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -342,11 +342,10 @@ public final class MapMouseListener implements MouseListener
 
 					DoublePoint p1 = logicalNetLayer.convertScreenToMap(logicalNetLayer.getStartPoint());
 					DoublePoint p2 = logicalNetLayer.convertScreenToMap(me.getPoint());
-					double dx = p1.x - p2.x;
-					double dy = p1.y - p2.y;
+					double dx = p1.getX() - p2.getX();
+					double dy = p1.getY() - p2.getY();
 
-					center.x += dx;
-					center.y += dy;
+					center.setLocation(center.getX() + dx, center.getY() + dy);
 
 					logicalNetLayer.setCenter(center);
 

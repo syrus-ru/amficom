@@ -1,5 +1,5 @@
 /**
- * $Id: MapView.java,v 1.24 2004/12/22 16:38:43 krupenn Exp $
+ * $Id: MapView.java,v 1.25 2004/12/23 16:58:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -51,7 +51,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.24 $, $Date: 2004/12/22 16:38:43 $
+ * @version $Revision: 1.25 $, $Date: 2004/12/23 16:58:00 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -244,8 +244,8 @@ public final class MapView
 	 */
 	public void setCenter(DoublePoint center)
 	{
-		longitude = center.x;
-		latitude = center.y;
+		longitude = center.getX();
+		latitude = center.getY();
 	}
 
 	/**
@@ -272,8 +272,8 @@ public final class MapView
 
 		if(logicalNetLayer != null)
 		{
-			longitude = logicalNetLayer.getCenter().x;
-			latitude = logicalNetLayer.getCenter().y;
+			longitude = logicalNetLayer.getCenter().getX();
+			latitude = logicalNetLayer.getCenter().getY();
 
 			scale = logicalNetLayer.getScale();
 

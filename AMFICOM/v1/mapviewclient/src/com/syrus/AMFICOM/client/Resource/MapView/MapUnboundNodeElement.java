@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundNodeElement.java,v 1.8 2004/12/22 16:38:42 krupenn Exp $
+ * $Id: MapUnboundNodeElement.java,v 1.9 2004/12/23 16:58:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,12 +20,10 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 
-import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,7 +31,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/12/22 16:38:42 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/23 16:58:00 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -58,8 +56,8 @@ public class MapUnboundNodeElement extends SiteNode
 				pe.getName(), 
 				"", 
 				pe, 
-				location.x,
-				location.y, 
+				location.getX(),
+				location.getY(), 
 				"", 
 				"", 
 				"");

@@ -1,5 +1,5 @@
 /**
- * $Id: MarkController.java,v 1.3 2004/12/22 16:38:42 krupenn Exp $
+ * $Id: MarkController.java,v 1.4 2004/12/23 16:57:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,8 +17,9 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElement;
-
 import com.syrus.AMFICOM.map.Mark;
+
+import com.syrus.AMFICOM.map.NodeLink;
 import java.awt.BasicStroke;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -36,7 +37,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/12/22 16:38:42 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/23 16:57:59 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -161,7 +162,7 @@ public final class MarkController extends AbstractNodeController
 		
 		for(Iterator it = mark.getPhysicalLink().getNodeLinks().iterator(); it.hasNext();)
 		{
-			mark.setNodeLink((MapNodeLinkElement )it.next());
+			mark.setNodeLink((NodeLink )it.next());
 			NodeLinkController nlc = (NodeLinkController )getLogicalNetLayer().getMapViewController().getController(mark.getNodeLink());
 			nlc.updateLengthLt(mark.getNodeLink());
 			if(cumulativeDistance + mark.getNodeLink().getLengthLt() > topologicalDistance)

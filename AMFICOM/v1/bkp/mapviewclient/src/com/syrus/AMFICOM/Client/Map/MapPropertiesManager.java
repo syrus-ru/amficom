@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.1 2004/12/22 16:20:46 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.2 2004/12/23 16:57:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -52,7 +52,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/12/22 16:20:46 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/23 16:57:59 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -335,8 +335,8 @@ public final class MapPropertiesManager
 		String latoldval = lastLat;
 		try
 		{
-			lastLong = String.valueOf(center.x);
-			lastLat = String.valueOf(center.y);
+			lastLong = String.valueOf(center.getX());
+			lastLat = String.valueOf(center.getY());
 		}
 		catch(Exception e)
 		{

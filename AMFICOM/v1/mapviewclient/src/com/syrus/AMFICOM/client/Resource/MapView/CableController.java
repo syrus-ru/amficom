@@ -1,5 +1,5 @@
 /**
- * $Id: CableController.java,v 1.3 2004/12/22 16:38:42 krupenn Exp $
+ * $Id: CableController.java,v 1.4 2004/12/23 16:57:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,37 +14,26 @@ package com.syrus.AMFICOM.Client.Resource.MapView;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.LineComboBox;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.Map.AbstractLinkController;
-import com.syrus.AMFICOM.map.DoublePoint;
-import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElementController;
-import com.syrus.AMFICOM.map.AbstractNode;
-import com.syrus.AMFICOM.map.NodeLink;
-import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.Client.Resource.Map.NodeLinkController;
 import com.syrus.AMFICOM.Client.Resource.Map.PhysicalLinkController;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.configuration.Characteristic;
-import com.syrus.AMFICOM.configuration.CharacteristicType;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.corba.CharacteristicTypeSort;
-import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.PhysicalLink;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Polygon;
-import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
-import java.util.HashMap;
+
 import java.util.Iterator;
 
 /**
@@ -52,7 +41,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/12/22 16:38:42 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/23 16:57:59 $
  * @module
  * @author $Author: krupenn $
  * @see

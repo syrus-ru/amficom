@@ -76,12 +76,12 @@ public final class MapMarkPropertiesController
 		else
 		if (key.equals(PROPERTY_LATITUDE))
 		{
-			result = MapPropertiesManager.getCoordinatesFormat().format(mark.getLocation().x);
+			result = MapPropertiesManager.getCoordinatesFormat().format(mark.getLocation().getX());
 		}
 		else
 		if (key.equals(PROPERTY_LONGITUDE))
 		{
-			result = MapPropertiesManager.getCoordinatesFormat().format(mark.getLocation().y);
+			result = MapPropertiesManager.getCoordinatesFormat().format(mark.getLocation().getY());
 		}
 		else
 		if (key.equals(PROPERTY_PHYSICAL_LINK_ID))
@@ -114,7 +114,7 @@ public final class MapMarkPropertiesController
 			try
 			{
 				DoublePoint pt = node.getLocation();
-				pt.x = Double.parseDouble((String )value);
+				pt.setLocation(Double.parseDouble((String )value), pt.getY());
 				node.setLocation(pt);
 			}
 			catch(NumberFormatException e)
@@ -128,7 +128,7 @@ public final class MapMarkPropertiesController
 			try
 			{
 				DoublePoint pt = node.getLocation();
-				pt.y = Double.parseDouble((String )value);
+				pt.setLocation(pt.getX(), Double.parseDouble((String )value));
 				node.setLocation(pt);
 			}
 			catch(NumberFormatException e)

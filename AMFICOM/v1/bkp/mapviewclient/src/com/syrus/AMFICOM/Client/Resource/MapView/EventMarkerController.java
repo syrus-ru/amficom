@@ -1,5 +1,5 @@
 /**
- * $Id: EventMarkerController.java,v 1.1 2004/12/22 16:38:42 krupenn Exp $
+ * $Id: EventMarkerController.java,v 1.2 2004/12/23 16:57:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,33 +11,22 @@
 
 package com.syrus.AMFICOM.Client.Resource.MapView;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-
-import com.syrus.AMFICOM.Client.Resource.Map.*;
-import java.awt.BasicStroke;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import javax.swing.ImageIcon;
+import com.syrus.AMFICOM.Client.Resource.Map.MapElementController;
 import com.syrus.AMFICOM.map.MapElement;
+
+import java.awt.Graphics;
+import java.awt.geom.Rectangle2D;
+
+import javax.swing.ImageIcon;
 
 /**
  * элемент карты - узел 
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/12/22 16:38:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/23 16:57:59 $
  * @module
  * @author $Author: krupenn $
  * @see

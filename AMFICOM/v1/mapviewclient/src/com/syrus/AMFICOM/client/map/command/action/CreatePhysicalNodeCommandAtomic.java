@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.7 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.8 2004/12/23 16:57:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,7 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.TopologicalNode;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.map.Map;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/23 16:57:59 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -65,7 +66,9 @@ public class CreatePhysicalNodeCommandAtomic extends MapActionCommand
 		
 		try
 		{
-			node = TopologicalNode.createInstance(logicalNetLayer.getMapView().getMap(), point);
+			node = TopologicalNode.createInstance(
+				new Identifier(aContext.getSessionInterface().getAccessIdentifier().user_id),
+				point);
 		}
 		catch (CreateObjectException e)
 		{

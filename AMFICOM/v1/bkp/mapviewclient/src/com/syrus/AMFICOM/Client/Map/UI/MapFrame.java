@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.14 2004/12/22 16:38:42 krupenn Exp $
+ * $Id: MapFrame.java,v 1.15 2004/12/23 16:57:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -79,7 +79,7 @@ import javax.swing.event.InternalFrameEvent;
  * 
  * 
  * 
- * @version $Revision: 1.14 $, $Date: 2004/12/22 16:38:42 $
+ * @version $Revision: 1.15 $, $Date: 2004/12/23 16:57:59 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -349,8 +349,8 @@ public class MapFrame extends JInternalFrame
 		else
 		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_CENTER_CHANGED))
 		{
-			DoublePoint p = (DoublePoint)ae.getSource();
-			mapToolBar.showLatLong(p.x, p.y);
+			DoublePoint p = (DoublePoint )ae.getSource();
+			mapToolBar.showLatLong(p.getX(), p.getY());
 		}
 		else
 		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_SCALE_CHANGED))

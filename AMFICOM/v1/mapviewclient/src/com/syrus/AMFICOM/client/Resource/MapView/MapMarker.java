@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarker.java,v 1.21 2004/12/22 16:38:42 krupenn Exp $
+ * $Id: MapMarker.java,v 1.22 2004/12/23 16:58:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,6 @@ import com.syrus.AMFICOM.scheme.PathDecompositor;
 import java.lang.UnsupportedOperationException;
 
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -54,22 +53,16 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.21 $, $Date: 2004/12/22 16:38:42 $
+ * @version $Revision: 1.22 $, $Date: 2004/12/23 16:58:00 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
  */
 
-public class MapMarker extends AbstractNode implements MapElement
+public class MapMarker extends AbstractNode
 {
 	private static final long serialVersionUID = 02L;
 	
-	/**
-	 * @deprecated
-	 */
-	public static final String IMAGE_NAME = "marker";
-
-
 	protected Identifier meId;
 
 	protected double distance = 0.0;
@@ -425,134 +418,5 @@ public class MapMarker extends AbstractNode implements MapElement
 	{
 		throw new UnsupportedOperationException();
 	}
-
-//	public List getCharacteristics() 
-//	{
-//		return Collections.unmodifiableList(this.characteristics);
-//	}
-//
-//	public void addCharacteristic(Characteristic ch)
-//	{
-//		this.characteristics.add(ch);
-//	}
-//
-//	public void removeCharacteristic(Characteristic ch)
-//	{
-//		this.characteristics.remove(ch);
-//	}
-//	
-//	public void setId(Identifier id)
-//	{
-//		this.id = id;
-//	}
-//	
-//	public Identifier getId()
-//	{
-//		return id;
-//	}
-//
-//	public String getName() 
-//	{
-//		return this.name;
-//	}
-//
-//	public void setName(String name) 
-//	{
-//		this.name = name;
-//	}
-//
-//	public String getDescription() 
-//	{
-//		return this.description;
-//	}
-//
-//	public void setDescription(String description) 
-//	{
-//		this.description = description;
-//	}
-//
-//	public Identifier getImageId() 
-//	{
-//		return this.imageId;
-//	}
-//	
-//	public void setImageId(Identifier imageId) 
-//	{
-//		this.imageId = imageId;
-//	}
-//	
-//	public Map getMap()
-//	{
-//		return map;
-//	}
-//
-//	public void setMap(Map map)
-//	{
-//		this.map = map;
-//	}
-//
-//	public boolean isSelected()
-//	{
-//		return selected;
-//	}
-//
-//	public void setSelected(boolean selected)
-//	{
-//		this.selected = selected;
-//		getMap().setSelected(this, selected);
-//	}
-//
-//	public void setAlarmState(boolean alarmState)
-//	{
-//		this.alarmState = alarmState;
-//	}
-//
-//	public boolean getAlarmState()
-//	{
-//		return alarmState;
-//	}
-//
-//	public DoublePoint getLocation()
-//	{
-//		return new DoublePoint(location.x, location.y);
-//	}
-//
-//	public void setLocation(DoublePoint location)
-//	{
-//		this.location.x = location.x;
-//		this.location.y = location.y;
-//	}
-//
-//	public boolean isRemoved()
-//	{
-//		return removed;
-//	}
-//
-//	public void setRemoved(boolean removed)
-//	{
-//		this.removed = removed;
-//	}
-
-//	protected Identifier id;
-//
-//	protected String	name;
-//
-//	protected String	description;
-//
-//	protected Identifier imageId;
-//
-//	protected List		characteristics;
-//
-//	protected DoublePoint location = new DoublePoint(0, 0);
-//
-//
-//	protected transient boolean selected = false;
-//
-//	protected transient boolean alarmState = false;
-//
-//	protected transient boolean removed = false;
-//
-//	protected transient Map map = null;
-
 
 }

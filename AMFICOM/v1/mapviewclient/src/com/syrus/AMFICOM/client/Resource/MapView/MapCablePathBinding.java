@@ -1,15 +1,14 @@
 package com.syrus.AMFICOM.Client.Resource.MapView;
 
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.PhysicalLink;
-
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
 import com.syrus.AMFICOM.scheme.corba.CableChannelingItemDefaultFactory;
+
 import java.util.HashMap;
 import java.util.Iterator;
 

@@ -234,9 +234,9 @@ public class MapViewPanel
 			descTextArea.setText(view.getDescription());
 
 			longTextField.setEnabled(true);
-			longTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(view.getCenter().x));
+			longTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(view.getCenter().getX()));
 			latTextField.setEnabled(true);
-			latTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(view.getCenter().y));
+			latTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(view.getCenter().getY()));
 
 			scaleTextField.setEnabled(true);
 			scaleTextField.setText(String.valueOf(view.getScale()));

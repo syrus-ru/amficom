@@ -1,5 +1,5 @@
 /**
- * $Id: MoveFixedDistanceCommand.java,v 1.4 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: MoveFixedDistanceCommand.java,v 1.5 2004/12/23 16:57:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,7 +25,7 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/23 16:57:59 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -49,10 +49,10 @@ public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle
 
 		fixedPoint = fixedNode.getLocation();
 
-		double fx = fixedNode.getLocation().x;
-		double fy = fixedNode.getLocation().y;
-		double mx = movedNode.getLocation().x;
-		double my = movedNode.getLocation().y;
+		double fx = fixedNode.getLocation().getX();
+		double fy = fixedNode.getLocation().getY();
+		double mx = movedNode.getLocation().getX();
+		double my = movedNode.getLocation().getY();
 
 		fixedDistance = Math.sqrt((mx - fx) * (mx - fx) + (my - fy) * (my - fy));
 	}

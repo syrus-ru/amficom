@@ -1,5 +1,5 @@
 /**
- * $Id: MapSelection.java,v 1.13 2004/12/22 16:38:42 krupenn Exp $
+ * $Id: MapSelection.java,v 1.14 2004/12/23 16:58:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,28 +13,26 @@ package com.syrus.AMFICOM.Client.Resource.MapView;
 
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.Map.*;
-import com.syrus.AMFICOM.Client.Resource.StubResource;
-
 import com.syrus.AMFICOM.configuration.Characteristic;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.MapElementState;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.TopologicalNode;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import com.syrus.AMFICOM.map.Map;
-import com.syrus.AMFICOM.map.TopologicalNode;
-import com.syrus.AMFICOM.map.MapElementState;
-import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
  * набор выбранных элементов 
  * 
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2004/12/22 16:38:42 $
+ * @version $Revision: 1.14 $, $Date: 2004/12/23 16:58:00 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -128,18 +126,20 @@ public final class MapSelection
 	protected void recalcLocation()
 	{
 		MapElement me;
-		location.x = 0.0D;
-		location.y = 0.0D;
+		double x = 0.0D;
+		double y = 0.0D;
 		for(Iterator it = elements.iterator(); it.hasNext();)
 		{
 			me = (MapElement)it.next();
 			DoublePoint pt = me.getLocation();
 
-			location.x += pt.x;
-			location.y += pt.y;
+			x += pt.getX();
+			y += pt.getY();
 		}
-		location.x /= elements.size();
-		location.y /= elements.size();
+		x /= elements.size();
+		y /= elements.size();
+		
+		location.setLocation(x, y);
 	}
 
 	private void recalcType()

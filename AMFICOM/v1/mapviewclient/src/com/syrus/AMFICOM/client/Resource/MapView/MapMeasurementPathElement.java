@@ -1,5 +1,5 @@
 /**
- * $Id: MapMeasurementPathElement.java,v 1.15 2004/12/22 16:38:42 krupenn Exp $
+ * $Id: MapMeasurementPathElement.java,v 1.16 2004/12/23 16:58:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,46 +12,40 @@
 package com.syrus.AMFICOM.Client.Resource.MapView;
 
 import com.syrus.AMFICOM.configuration.Characteristic;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
+import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LocalIdentifierGenerator;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.map.DoublePoint;
-import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.NodeLink;
-import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
-import com.syrus.AMFICOM.general.Identifier;
-
+import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
-import java.io.Serializable;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import com.syrus.AMFICOM.map.Map;
 
 /**
  * элемент пути 
  * 
  * 
  * 
- * @version $Revision: 1.15 $, $Date: 2004/12/22 16:38:42 $
+ * @version $Revision: 1.16 $, $Date: 2004/12/23 16:58:00 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -234,23 +228,25 @@ public class MapMeasurementPathElement implements MapElement
 		return alarmState;
 	}
 
+	protected DoublePoint location = new DoublePoint(0.0, 0.0);
+
 	public DoublePoint getLocation()
 	{
 		int count = 0;
-		DoublePoint point = new DoublePoint(0.0, 0.0);
+		double x = 0.0D;
+		double y = 0.0D;
 
 		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
 		{
 			MapCablePathElement cpath = (MapCablePathElement )it.next();
 			DoublePoint an = cpath.getLocation();
-			point.x += an.x;
-			point.y += an.y;
-			count ++;
+			x += an.getX();
+			y += an.getY();
+			count++;
 		}
-		point.x /= count;
-		point.y /= count;
+		location.setLocation(x /= count, y /= count);
 		
-		return point;
+		return location;
 	}
 
 

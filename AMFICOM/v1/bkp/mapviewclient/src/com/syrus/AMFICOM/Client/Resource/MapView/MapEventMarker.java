@@ -1,13 +1,7 @@
 package com.syrus.AMFICOM.Client.Resource.MapView;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IdentifierGenerationException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.LocalIdentifierGenerator;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import java.util.Date;
 
 public class MapEventMarker extends MapMarker
 {

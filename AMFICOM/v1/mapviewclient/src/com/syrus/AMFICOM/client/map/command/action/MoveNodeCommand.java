@@ -1,5 +1,5 @@
 /**
- * $Id: MoveNodeCommand.java,v 1.5 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: MoveNodeCommand.java,v 1.6 2004/12/23 16:57:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,7 +23,7 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/23 16:57:59 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -88,7 +88,11 @@ public class MoveNodeCommand extends MapActionCommand
 				getClass().getName(), 
 				"execute()");
 		
-		node.setLocation(new DoublePoint(location.x + deltaX, location.y + deltaY));
+		DoublePoint dp = node.getLocation();
+
+		dp.setLocation(dp.getX() + deltaX, dp.getY() + deltaY);
+
+		node.setLocation(dp);
 	}
 	
 	public void undo()

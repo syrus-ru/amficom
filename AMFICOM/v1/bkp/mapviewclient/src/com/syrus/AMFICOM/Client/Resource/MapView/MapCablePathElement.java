@@ -1,5 +1,5 @@
 /**
- * $Id: MapCablePathElement.java,v 1.21 2004/12/22 16:38:42 krupenn Exp $
+ * $Id: MapCablePathElement.java,v 1.22 2004/12/23 16:57:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,35 +18,29 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LocalIdentifierGenerator;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.IntPoint;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 
-import java.io.IOException;
-import java.io.Serializable;
-
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
-import com.syrus.AMFICOM.map.Map;
 
 /**
  * элемент пути 
  * 
  * 
  * 
- * @version $Revision: 1.21 $, $Date: 2004/12/22 16:38:42 $
+ * @version $Revision: 1.22 $, $Date: 2004/12/23 16:57:59 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -91,14 +85,14 @@ public class MapCablePathElement implements MapElement
 	
 	protected MapCablePathBinding binding;
 
-	public String[][] getExportColumns()
-	{
-		return null;
-	}
-
-	public void setColumn(String field, String value)
-	{
-	}
+//	public String[][] getExportColumns()
+//	{
+//		return null;
+//	}
+//
+//	public void setColumn(String field, String value)
+//	{
+//	}
 
 	public MapCablePathElement(
 			SchemeCableLink schemeCableLink,
@@ -257,17 +251,21 @@ public class MapCablePathElement implements MapElement
 	{
 		int count = 0;
 		DoublePoint point = new DoublePoint(0.0, 0.0);
+		double x = 0.0D;
+		double y = 0.0D;
 
 		for(Iterator it = getLinks().iterator(); it.hasNext();)
 		{
 			PhysicalLink link = (PhysicalLink )it.next();
 			DoublePoint an = link.getLocation();
-			point.x += an.x;
-			point.y += an.y;
+			x += an.getX();
+			y += an.getY();
 			count ++;
 		}
-		point.x /= count;
-		point.y /= count;
+		x /= count;
+		y /= count;
+		
+		point.setLocation(x, y);
 		
 		return point;
 	}

@@ -1,5 +1,5 @@
 /**
- * $Id: CollectorController.java,v 1.3 2004/12/22 16:38:42 krupenn Exp $
+ * $Id: CollectorController.java,v 1.4 2004/12/23 16:57:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,33 +11,17 @@
 
 package com.syrus.AMFICOM.Client.Resource.Map;
 
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.LineComboBox;
-import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
-import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.configuration.Characteristic;
-import com.syrus.AMFICOM.configuration.CharacteristicType;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.corba.CharacteristicTypeSort;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Collector;
+
 import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.PhysicalLink;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.Polygon;
-import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
-import java.util.HashMap;
+
 import java.util.Iterator;
 
 /**
@@ -45,7 +29,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/12/22 16:38:42 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/23 16:57:59 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -70,9 +54,9 @@ public final class CollectorController extends AbstractLinkController
 		if(! (me instanceof Collector))
 			return null;
 
-		Collector link = (Collector )me;
+		Collector collector = (Collector )me;
 		
-		return link.getName();
+		return collector.getName();
 	}
 
 	public boolean isSelectionVisible(MapElement me)
@@ -82,16 +66,16 @@ public final class CollectorController extends AbstractLinkController
 
 	public boolean isElementVisible(MapElement me, Rectangle2D.Double visibleBounds)
 	{
-		if(! (me instanceof MapPipePathElement))
+		if(! (me instanceof Collector))
 			return false;
 
-		MapPipePathElement collector = (MapPipePathElement )me;
+		Collector collector = (Collector )me;
 
 		
 		boolean vis = false;
 		for(Iterator it = collector.getPhysicalLinks().iterator(); it.hasNext();)
 		{
-			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
+			PhysicalLink link = (PhysicalLink )it.next();
 			PhysicalLinkController plc = (PhysicalLinkController )getLogicalNetLayer().getMapViewController().getController(link);
 			if(plc.isElementVisible(link, visibleBounds))
 			{
@@ -104,10 +88,10 @@ public final class CollectorController extends AbstractLinkController
 
 	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
 	{
-		if(! (me instanceof MapPipePathElement))
+		if(! (me instanceof Collector))
 			return;
 
-		MapPipePathElement collector = (MapPipePathElement )me;
+		Collector collector = (Collector )me;
 		
 		if(!isElementVisible(collector, visibleBounds))
 			return;
@@ -124,7 +108,7 @@ public final class CollectorController extends AbstractLinkController
 
 		for(Iterator it = collector.getPhysicalLinks().iterator(); it.hasNext();)
 		{
-			MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
+			PhysicalLink link = (PhysicalLink )it.next();
 			PhysicalLinkController plc = (PhysicalLinkController )getLogicalNetLayer().getMapViewController().getController(link);
 			plc.paint(link, g, visibleBounds, str, color, false);
 		}
@@ -135,10 +119,10 @@ public final class CollectorController extends AbstractLinkController
 	 */
 	public boolean isMouseOnElement(MapElement me, Point currentMousePoint)
 	{
-		if(! (me instanceof MapPipePathElement))
+		if(! (me instanceof Collector))
 			return false;
 
-		MapPipePathElement collector = (MapPipePathElement )me;
+		Collector collector = (Collector )me;
 		
 		return false;
 	}

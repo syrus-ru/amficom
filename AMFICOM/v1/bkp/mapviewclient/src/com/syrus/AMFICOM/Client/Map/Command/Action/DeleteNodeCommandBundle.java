@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.10 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.11 2004/12/23 16:57:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,7 +38,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.11 $, $Date: 2004/12/23 16:57:59 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -334,7 +334,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 			else
 			{
 				// создать новый фрагмент линии и добавить на карту и в линию
-				NodeLink newNodeLink = super.createNodeLink(nodeLeft, nodeRight);
+				NodeLink newNodeLink = super.createNodeLink(physicalLink, nodeLeft, nodeRight);
 				newNodeLink.setPhysicalLink(physicalLink);
 
 				physicalLink.addNodeLink(newNodeLink);

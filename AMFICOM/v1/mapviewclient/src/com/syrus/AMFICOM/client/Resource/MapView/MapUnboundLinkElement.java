@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundLinkElement.java,v 1.10 2004/12/22 16:38:42 krupenn Exp $
+ * $Id: MapUnboundLinkElement.java,v 1.11 2004/12/23 16:58:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,7 +23,6 @@ import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -31,7 +30,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/12/22 16:38:42 $
+ * @version $Revision: 1.11 $, $Date: 2004/12/23 16:58:00 $
  * @module
  * @author $Author: krupenn $
  * @see

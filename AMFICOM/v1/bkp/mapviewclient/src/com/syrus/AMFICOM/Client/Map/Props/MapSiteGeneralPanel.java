@@ -178,9 +178,9 @@ public class MapSiteGeneralPanel
 			descTextArea.setText(site.getDescription());
 
 			longTextField.setEnabled(true);
-			longTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(site.getLocation().x));
+			longTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(site.getLocation().getX()));
 			latTextField.setEnabled(true);
-			latTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(site.getLocation().y));
+			latTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(site.getLocation().getY()));
 
 			cityTextField.setText(site.getCity());
 			streetTextField.setText(site.getStreet());

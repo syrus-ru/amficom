@@ -203,8 +203,8 @@ public class MapLinkGeneralPanel
 			endComboBox.addElements(link.getMap().getSiteNodes());
 			endComboBox.setSelectedItem(link.getEndNode());
 
-			mTextField.setText(String.valueOf(link.getBinding().getDimension().width));
-			nTextField.setText(String.valueOf(link.getBinding().getDimension().height));
+			mTextField.setText(String.valueOf(link.getBinding().getDimension().getWidth()));
+			nTextField.setText(String.valueOf(link.getBinding().getDimension().getHeight()));
 
 			cityTextField.setText(link.getCity());
 			streetTextField.setText(link.getStreet());
