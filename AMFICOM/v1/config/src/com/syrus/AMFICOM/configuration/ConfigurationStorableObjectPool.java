@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.27 2004/11/12 07:37:55 max Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.28 2004/11/12 10:25:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/11/12 07:37:55 $
- * @author $Author: max $
+ * @version $Revision: 1.28 $, $Date: 2004/11/12 10:25:32 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -137,7 +137,7 @@ public class ConfigurationStorableObjectPool {
 		init(cObjectLoader1, size);
 	}
     
-    public static void serializePools() {
+    public static void serializePool() {
         java.util.Set entityCodeSet = objectPoolMap.keySet();
         for (Iterator it = entityCodeSet.iterator(); it.hasNext();) {
             Short entityCode = (Short) it.next();

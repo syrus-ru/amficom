@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.3 2004/11/04 09:05:13 bob Exp $
+ * $Id: TransmissionPathType.java,v 1.4 2004/11/12 10:25:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/11/04 09:05:13 $
+ * @version $Revision: 1.4 $, $Date: 2004/11/12 10:25:32 $
  * @author $Author: bob $
  * @module module_name
  */
@@ -44,13 +44,9 @@ public class TransmissionPathType extends StorableObjectType {
         }
     }
     public TransmissionPathType(TransmissionPathType_Transferable tptt) throws CreateObjectException {
-        super(new Identifier(tptt.id),
-                new Date(tptt.created),
-                new Date(tptt.modified),
-                new Identifier(tptt.creator_id),
-                new Identifier(tptt.modifier_id),
-                new String(tptt.codename),
-                new String(tptt.description));
+        super(tptt.header,
+			  new String(tptt.codename),
+			  new String(tptt.description));
         this.name = tptt.name;
     }
     protected TransmissionPathType(Identifier id,
@@ -104,11 +100,7 @@ public class TransmissionPathType extends StorableObjectType {
     }
     
     public Object getTransferable() {
-        return new TransmissionPathType_Transferable((Identifier_Transferable)super.id.getTransferable(),
-                super.created.getTime(),
-                super.modified.getTime(),
-                (Identifier_Transferable)super.creatorId.getTransferable(),
-                (Identifier_Transferable)super.modifierId.getTransferable(),
+        return new TransmissionPathType_Transferable(super.getHeaderTransferable(),
                 new String(super.codename),
                 (super.description != null) ? (new String(super.description)) : "",
                 (this.name != null) ? (new String(this.name)) : "");

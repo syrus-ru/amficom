@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.10 2004/11/04 09:05:13 bob Exp $
+ * $Id: PortType.java,v 1.11 2004/11/12 10:25:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,11 +19,10 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/11/04 09:05:13 $
+ * @version $Revision: 1.11 $, $Date: 2004/11/12 10:25:32 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -47,13 +46,9 @@ public class PortType extends StorableObjectType {
 	}
 
 	public PortType(PortType_Transferable ptt) throws CreateObjectException {
-		super(new Identifier(ptt.id),
-					new Date(ptt.created),
-					new Date(ptt.modified),
-					new Identifier(ptt.creator_id),
-					new Identifier(ptt.modifier_id),
-					new String(ptt.codename),
-					new String(ptt.description));
+		super(ptt.header,
+			  new String(ptt.codename),
+			  new String(ptt.description));
 		this.name = ptt.name;	
 	}
 	
@@ -111,14 +106,10 @@ public class PortType extends StorableObjectType {
 	}
 	
 	public Object getTransferable() {
-		return new PortType_Transferable((Identifier_Transferable)super.id.getTransferable(),
-																					super.created.getTime(),
-																					super.modified.getTime(),
-																					(Identifier_Transferable)super.creatorId.getTransferable(),
-																					(Identifier_Transferable)super.modifierId.getTransferable(),
-																					new String(super.codename),
-																					(super.description != null) ? (new String(super.description)) : "",
-																					(this.name != null) ? (new String(this.name)) : "");
+		return new PortType_Transferable(super.getHeaderTransferable(),
+										 new String(super.codename),
+										 (super.description != null) ? (new String(super.description)) : "",
+										 (this.name != null) ? (new String(this.name)) : "");
 	}
 	
 	protected synchronized void setAttributes(Date created,

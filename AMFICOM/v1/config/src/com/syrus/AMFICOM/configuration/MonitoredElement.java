@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.22 2004/11/04 09:05:13 bob Exp $
+ * $Id: MonitoredElement.java,v 1.23 2004/11/12 10:25:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/11/04 09:05:13 $
+ * @version $Revision: 1.23 $, $Date: 2004/11/12 10:25:32 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -52,12 +52,8 @@ public class MonitoredElement extends DomainMember {
 	}
 
 	public MonitoredElement(MonitoredElement_Transferable met) throws CreateObjectException {
-		super(new Identifier(met.id),
-					new Date(met.created),
-					new Date(met.modified),
-					new Identifier(met.creator_id),
-					new Identifier(met.modifier_id),
-					new Identifier(met.domain_id));
+		super(met.header,
+			  new Identifier(met.domain_id));
 		this.measurementPortId = new Identifier(met.measurement_port_id);
 		this.sort = met.sort.value();
 		this.localAddress = new String(met.local_address);
@@ -140,17 +136,13 @@ public class MonitoredElement extends DomainMember {
 		int i = 0;
 		for (Iterator it = this.monitoredDomainMemberIds.iterator(); it.hasNext();)
 			mdmIds[i++] = (Identifier_Transferable)((Identifier)it.next()).getTransferable();
-		return new MonitoredElement_Transferable((Identifier_Transferable)super.id.getTransferable(),
-																						 super.created.getTime(),
-																						 super.modified.getTime(),
-																						 (Identifier_Transferable)super.creatorId.getTransferable(),
-																						 (Identifier_Transferable)super.modifierId.getTransferable(),
-																						 (Identifier_Transferable)super.domainId.getTransferable(),
-																						 this.name,
-																						 (Identifier_Transferable)this.measurementPortId.getTransferable(),
-																						 MonitoredElementSort.from_int(this.sort),
-																						 new String(this.localAddress),
-																						 mdmIds);
+		return new MonitoredElement_Transferable(super.getHeaderTransferable(),
+												 (Identifier_Transferable)super.domainId.getTransferable(),
+												 this.name,
+												 (Identifier_Transferable)this.measurementPortId.getTransferable(),
+												 MonitoredElementSort.from_int(this.sort),
+												 new String(this.localAddress),
+												 mdmIds);
 	}
 
 	public Identifier getMeasurementPortId() {

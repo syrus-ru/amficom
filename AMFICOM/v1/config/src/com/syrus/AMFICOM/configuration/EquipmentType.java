@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.13 2004/11/04 09:05:13 bob Exp $
+ * $Id: EquipmentType.java,v 1.14 2004/11/12 10:25:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/11/04 09:05:13 $
+ * @version $Revision: 1.14 $, $Date: 2004/11/12 10:25:32 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -47,13 +47,9 @@ public class EquipmentType extends StorableObjectType {
 	}
 
 	public EquipmentType(EquipmentType_Transferable ett) throws CreateObjectException {
-		super(new Identifier(ett.id),
-					new Date(ett.created),
-					new Date(ett.modified),
-					new Identifier(ett.creator_id),
-					new Identifier(ett.modifier_id),
-					new String(ett.codename),
-					new String(ett.description));	
+		super(ett.header,
+			  new String(ett.codename),
+			  new String(ett.description));	
 		this.name = ett.name;
 	}
 	
@@ -111,14 +107,10 @@ public class EquipmentType extends StorableObjectType {
 	}
 	
 	public Object getTransferable() {
-		return new EquipmentType_Transferable((Identifier_Transferable)super.id.getTransferable(),
-																					super.created.getTime(),
-																					super.modified.getTime(),
-																					(Identifier_Transferable)super.creatorId.getTransferable(),
-																					(Identifier_Transferable)super.modifierId.getTransferable(),
-																					new String(super.codename),
-																					(super.description != null) ? (new String(super.description)) : "",
-																					(this.name != null) ? (new String(this.name)) : "");
+		return new EquipmentType_Transferable(super.getHeaderTransferable(),
+											  new String(super.codename),
+											  (super.description != null) ? (new String(super.description)) : "",
+											  (this.name != null) ? (new String(this.name)) : "");
 	}
 	
 	protected synchronized void setAttributes(Date created,

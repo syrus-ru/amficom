@@ -1,5 +1,5 @@
 /*
- * $Id: Link.java,v 1.6 2004/11/05 08:49:19 bob Exp $
+ * $Id: Link.java,v 1.7 2004/11/12 10:25:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/11/05 08:49:19 $
+ * @version $Revision: 1.7 $, $Date: 2004/11/12 10:25:32 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -61,12 +61,8 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 	}
 
 	public Link(Link_Transferable lt) throws CreateObjectException  {
-		super(new Identifier(lt.id),
-					new Date(lt.created),
-					new Date(lt.modified),
-					new Identifier(lt.creator_id),
-					new Identifier(lt.modifier_id),
-					new Identifier(lt.domain_id));
+		super(lt.header,
+			  new Identifier(lt.domain_id));
 		
 		this.name = lt.name;
 		this.description = lt.description;
@@ -177,11 +173,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 	}
 	
 	public Object getTransferable() {		
-		return new Link_Transferable((Identifier_Transferable)super.id.getTransferable(),
-									 super.created.getTime(),
-									 super.modified.getTime(),
-									 (Identifier_Transferable)super.creatorId.getTransferable(),
-									 (Identifier_Transferable)super.modifierId.getTransferable(),
+		return new Link_Transferable(super.getHeaderTransferable(),
 									 (Identifier_Transferable)super.domainId.getTransferable(),
 									 new String(this.name),
 									 new String(this.description),

@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.25 2004/11/05 06:52:21 bob Exp $
+ * $Id: KIS.java,v 1.26 2004/11/12 10:25:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/11/05 06:52:21 $
+ * @version $Revision: 1.26 $, $Date: 2004/11/12 10:25:32 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -59,12 +59,8 @@ public class KIS extends DomainMember implements TypedObject {
 	}
 
 	public KIS(KIS_Transferable kt) throws CreateObjectException {
-		super(new Identifier(kt.id),
-					new Date(kt.created),
-					new Date(kt.modified),
-					new Identifier(kt.creator_id),
-					new Identifier(kt.modifier_id),
-					new Identifier(kt.domain_id));
+		super(kt.header,
+			  new Identifier(kt.domain_id));
 		this.equipmentId = new Identifier(kt.equipment_id);
 		this.mcmId = new Identifier(kt.mcm_id);
 		this.name = kt.name;
@@ -158,18 +154,14 @@ public class KIS extends DomainMember implements TypedObject {
 		for (Iterator iterator = this.measurementPortIds.iterator(); iterator.hasNext();)
 			mportIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 		
-		return new KIS_Transferable((Identifier_Transferable)super.id.getTransferable(),
-																super.created.getTime(),
-																super.modified.getTime(),
-																(Identifier_Transferable)super.creatorId.getTransferable(),
-																(Identifier_Transferable)super.modifierId.getTransferable(),
-																(Identifier_Transferable)super.domainId.getTransferable(),
-																new String(this.name),
-																new String(this.description),
-                                                                (Identifier_Transferable)this.type.getId().getTransferable(),
-																(Identifier_Transferable)this.equipmentId.getTransferable(),
-																(Identifier_Transferable)this.mcmId.getTransferable(),
-																mportIds);
+		return new KIS_Transferable(super.getHeaderTransferable(),
+									(Identifier_Transferable)super.domainId.getTransferable(),
+									new String(this.name),
+									new String(this.description),
+									(Identifier_Transferable)this.type.getId().getTransferable(),
+									(Identifier_Transferable)this.equipmentId.getTransferable(),
+									(Identifier_Transferable)this.mcmId.getTransferable(),
+									mportIds);
 	}
 
 	public String getName() {

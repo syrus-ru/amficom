@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.24 2004/11/09 16:29:29 arseniy Exp $
+ * $Id: Characteristic.java,v 1.25 2004/11/12 10:25:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/11/09 16:29:29 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2004/11/12 10:25:32 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -58,12 +58,8 @@ public class Characteristic extends StorableObject implements TypedObject {
 	}
 
 	public Characteristic(Characteristic_Transferable ct) throws CreateObjectException {
-		super(new Identifier(ct.id),
-					new Date(ct.created),
-					new Date(ct.modified),
-					new Identifier(ct.creator_id),
-					new Identifier(ct.modifier_id));
-
+		super(ct.header);
+		
 		try {
 			this.type = (CharacteristicType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(ct.type_id), true);
 		}
@@ -158,19 +154,15 @@ public class Characteristic extends StorableObject implements TypedObject {
 	}
 
 	public Object getTransferable() {
-		return new Characteristic_Transferable((Identifier_Transferable)super.id.getTransferable(),
-																					 super.created.getTime(),
-																					 super.modified.getTime(),
-																					 (Identifier_Transferable)super.creatorId.getTransferable(),
-																					 (Identifier_Transferable)super.modifierId.getTransferable(),
-																					 (Identifier_Transferable)this.type.getId().getTransferable(),
-																					 new String(this.name),
-																					 new String(this.description),
-																					 CharacteristicSort.from_int(this.sort),
-																					 new String(this.value),
-																					 (Identifier_Transferable)this.characterizedId.getTransferable(),
-																					 this.editable,
-																					 this.visible);
+		return new Characteristic_Transferable(super.getHeaderTransferable(),
+											   (Identifier_Transferable)this.type.getId().getTransferable(),
+											   new String(this.name),
+											   new String(this.description),
+											   CharacteristicSort.from_int(this.sort),
+											   new String(this.value),
+											   (Identifier_Transferable)this.characterizedId.getTransferable(),
+											   this.editable,
+											   this.visible);
 	}
 
 

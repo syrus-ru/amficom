@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.12 2004/11/05 06:52:21 bob Exp $
+ * $Id: MeasurementPort.java,v 1.13 2004/11/12 10:25:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/11/05 06:52:21 $
+ * @version $Revision: 1.13 $, $Date: 2004/11/12 10:25:32 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -55,11 +55,7 @@ public class MeasurementPort extends StorableObject implements TypedObject{
 	}
 
 	public MeasurementPort(MeasurementPort_Transferable mpt) throws CreateObjectException {
-		super(new Identifier(mpt.id),
-					new Date(mpt.created),
-					new Date(mpt.modified),
-					new Identifier(mpt.creator_id),
-					new Identifier(mpt.modifier_id));
+		super(mpt.header);
 
 		try {
 			this.type = (MeasurementPortType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(mpt.type_id), true);
@@ -141,16 +137,12 @@ public class MeasurementPort extends StorableObject implements TypedObject{
 	
 	public Object getTransferable() {
 		    
-		return new MeasurementPort_Transferable((Identifier_Transferable)super.id.getTransferable(),
-																			super.created.getTime(),
-																			super.modified.getTime(),
-																			(Identifier_Transferable)super.creatorId.getTransferable(),
-																			(Identifier_Transferable)super.modifierId.getTransferable(),
-																			(Identifier_Transferable)this.type.getId().getTransferable(),
-																			new String(this.name),
-																			new String(this.description),
-																			(Identifier_Transferable)this.kisId.getTransferable(),
-																			(Identifier_Transferable)this.portId.getTransferable());
+		return new MeasurementPort_Transferable(super.getHeaderTransferable(),
+												(Identifier_Transferable)this.type.getId().getTransferable(),
+												new String(this.name),
+												new String(this.description),
+												(Identifier_Transferable)this.kisId.getTransferable(),
+												(Identifier_Transferable)this.portId.getTransferable());
 	}
 
 	public StorableObjectType getType() {

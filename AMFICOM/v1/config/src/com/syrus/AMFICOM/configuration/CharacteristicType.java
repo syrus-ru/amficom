@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.17 2004/11/04 09:05:13 bob Exp $
+ * $Id: CharacteristicType.java,v 1.18 2004/11/12 10:25:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.configuration.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicType_Transferable;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/11/04 09:05:13 $
+ * @version $Revision: 1.18 $, $Date: 2004/11/12 10:25:32 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -49,13 +49,9 @@ public class CharacteristicType extends StorableObjectType {
 	}
 
 	public CharacteristicType(CharacteristicType_Transferable ctt) throws CreateObjectException {
-		super(new Identifier(ctt.id),
-					new Date(ctt.created),
-					new Date(ctt.modified),
-					new Identifier(ctt.creator_id),
-					new Identifier(ctt.modifier_id),
-					new String(ctt.codename),
-					new String(ctt.description));
+		super(ctt.header,
+			  new String(ctt.codename),
+			  new String(ctt.description));
 		this.dataType = ctt.data_type.value();
 		this.sort = ctt.sort.value();
 	}
@@ -122,15 +118,11 @@ public class CharacteristicType extends StorableObjectType {
 	}
 
 	public Object getTransferable() {
-		return new CharacteristicType_Transferable((Identifier_Transferable)super.id.getTransferable(),
-																							 super.created.getTime(),
-																							 super.modified.getTime(),
-																							 (Identifier_Transferable)super.creatorId.getTransferable(),
-																							 (Identifier_Transferable)super.modifierId.getTransferable(),
-																							 new String(super.codename),
-																							 (super.description != null) ? (new String(super.description)) : "",
-																							 DataType.from_int(this.dataType),																							 
-																							 CharacteristicTypeSort.from_int(this.sort));
+		return new CharacteristicType_Transferable(super.getHeaderTransferable(),
+												   new String(super.codename),
+												   (super.description != null) ? (new String(super.description)) : "",
+												   DataType.from_int(this.dataType),
+												   CharacteristicTypeSort.from_int(this.sort));
 	}
 
 	public DataType getDataType() {

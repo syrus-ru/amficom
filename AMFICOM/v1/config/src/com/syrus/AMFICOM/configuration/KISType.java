@@ -1,5 +1,5 @@
 /*
- * $Id: KISType.java,v 1.5 2004/11/04 09:05:13 bob Exp $
+ * $Id: KISType.java,v 1.6 2004/11/12 10:25:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/11/04 09:05:13 $
+ * @version $Revision: 1.6 $, $Date: 2004/11/12 10:25:32 $
  * @author $Author: bob $
  * @module module_name
  */
@@ -43,13 +43,9 @@ public class KISType extends StorableObjectType {
         }
     }
     public KISType(KISType_Transferable ktt) throws CreateObjectException {
-    	super(new Identifier(ktt.id),
-    			new Date(ktt.created),
-				new Date(ktt.modified),
-				new Identifier(ktt.creator_id),
-				new Identifier(ktt.modifier_id),
-				new String(ktt.codename),
-				new String(ktt.description));
+    	super(ktt.header,
+			  new String(ktt.codename),
+			  new String(ktt.description));
     	this.name = ktt.name;
     }
     protected KISType(Identifier id,
@@ -104,11 +100,7 @@ public class KISType extends StorableObjectType {
     }
     
     public Object getTransferable() {
-        return new KISType_Transferable((Identifier_Transferable)super.id.getTransferable(),
-        		super.created.getTime(),
-				super.modified.getTime(),
-				(Identifier_Transferable)super.creatorId.getTransferable(),
-				(Identifier_Transferable)super.modifierId.getTransferable(),
+        return new KISType_Transferable(super.getHeaderTransferable(),
 				new String(super.codename),
 				(super.description != null) ? (new String(super.description)) : "",
 				(this.name != null) ? (new String(this.name)) : "");

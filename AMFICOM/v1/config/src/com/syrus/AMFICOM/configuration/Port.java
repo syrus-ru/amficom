@@ -1,5 +1,5 @@
 /*
- * $Id: Port.java,v 1.15 2004/11/05 06:55:28 bob Exp $
+ * $Id: Port.java,v 1.16 2004/11/12 10:25:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/11/05 06:55:28 $
+ * @version $Revision: 1.16 $, $Date: 2004/11/12 10:25:32 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -57,11 +57,7 @@ public class Port extends StorableObject implements Characterized, TypedObject {
 	}
 
 	public Port(Port_Transferable pt) throws CreateObjectException {
-		super(new Identifier(pt.id),
-					new Date(pt.created),
-					new Date(pt.modified),
-					new Identifier(pt.creator_id),
-					new Identifier(pt.modifier_id));
+		super(pt.header);
 
 		try {
 			this.type = (PortType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(pt.type_id), true);
@@ -152,17 +148,12 @@ public class Port extends StorableObject implements Characterized, TypedObject {
 		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
 			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
 		    
-		return new Port_Transferable((Identifier_Transferable)super.id.getTransferable(),
-																			super.created.getTime(),
-																			super.modified.getTime(),
-																			(Identifier_Transferable)super.creatorId.getTransferable(),
-																			(Identifier_Transferable)super.modifierId.getTransferable(),																			
-																			
-																			(Identifier_Transferable)this.type.getId().getTransferable(),																			
-																			new String(this.description),
-																			(Identifier_Transferable)this.equipmentId.getTransferable(),																			
-																			PortSort.from_int(this.sort),
-																			charIds);
+		return new Port_Transferable(super.getHeaderTransferable(),
+									 (Identifier_Transferable)this.type.getId().getTransferable(),
+									 new String(this.description),
+									 (Identifier_Transferable)this.equipmentId.getTransferable(),
+									 PortSort.from_int(this.sort),
+									 charIds);
 	}
 
 	public StorableObjectType getType() {

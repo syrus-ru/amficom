@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.13 2004/11/05 06:52:21 bob Exp $
+ * $Id: Domain.java,v 1.14 2004/11/12 10:25:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.configuration;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/11/05 06:52:21 $
+ * @version $Revision: 1.14 $, $Date: 2004/11/12 10:25:32 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -49,12 +49,8 @@ public class Domain extends DomainMember implements Characterized {
 	}
 
 	public Domain(Domain_Transferable dt) throws CreateObjectException {
-		super(new Identifier(dt.id),
-					new Date(dt.created),
-					new Date(dt.modified),
-					new Identifier(dt.creator_id),
-					new Identifier(dt.modifier_id),
-					(dt.domain_id.identifier_string.length() != 0) ? (new Identifier(dt.domain_id)) : null);
+		super(dt.header,
+			  (dt.domain_id.identifier_string.length() != 0) ? (new Identifier(dt.domain_id)) : null);
 		this.name = new String(dt.name);
 		this.description = new String(dt.description);
 		
@@ -94,15 +90,11 @@ public class Domain extends DomainMember implements Characterized {
 		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
 			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
 
-		return new Domain_Transferable((Identifier_Transferable)super.id.getTransferable(),
-																	 super.created.getTime(),
-																	 super.modified.getTime(),
-																	 (Identifier_Transferable)super.creatorId.getTransferable(),
-																	 (Identifier_Transferable)super.modifierId.getTransferable(),
-																	 (super.domainId != null) ? (Identifier_Transferable)super.domainId.getTransferable() : (new Identifier_Transferable("")),
-																	 new String(this.name),
-																	 new String(this.description),
-																	 charIds);
+		return new Domain_Transferable(super.getHeaderTransferable(),
+									   (super.domainId != null) ? (Identifier_Transferable)super.domainId.getTransferable() : (new Identifier_Transferable("")),
+									   new String(this.name),
+									   new String(this.description),
+									   charIds);
 	}	
 	
 

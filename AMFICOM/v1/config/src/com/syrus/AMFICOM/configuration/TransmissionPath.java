@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.20 2004/11/05 08:02:49 max Exp $
+ * $Id: TransmissionPath.java,v 1.21 2004/11/12 10:25:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 /**
- * @version $Revision: 1.20 $, $Date: 2004/11/05 08:02:49 $
- * @author $Author: max $
+ * @version $Revision: 1.21 $, $Date: 2004/11/12 10:25:32 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -113,12 +113,8 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 
 
 	public TransmissionPath(TransmissionPath_Transferable tpt) throws CreateObjectException {
-		super(new Identifier(tpt.id),
-					new Date(tpt.created),
-					new Date(tpt.modified),
-					new Identifier(tpt.creator_id),
-					new Identifier(tpt.modifier_id),
-					new Identifier(tpt.domain_id));
+		super(tpt.header,
+			  new Identifier(tpt.domain_id));
 		super.monitoredElementIds = new ArrayList(tpt.monitored_element_ids.length);
 		for (int i = 0; i < tpt.monitored_element_ids.length; i++)
 			super.monitoredElementIds.add(new Identifier(tpt.monitored_element_ids[i]));
@@ -168,19 +164,15 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 			charIds[i++] = (Identifier_Transferable)((Characteristic)iterator.next()).getId().getTransferable();
 		
 
-		return new TransmissionPath_Transferable((Identifier_Transferable)super.id.getTransferable(),
-																						 super.created.getTime(),
-																						 super.modified.getTime(),
-																						 (Identifier_Transferable)super.creatorId.getTransferable(),
-																						 (Identifier_Transferable)super.modifierId.getTransferable(),
-																						 (Identifier_Transferable)super.domainId.getTransferable(),
-																						 meIds,
-																						 new String(this.name),
-																						 new String(this.description),
-                                                                                         (Identifier_Transferable)this.type.getId().getTransferable(),
-																						 (Identifier_Transferable)this.startPortId.getTransferable(),
-																						 (Identifier_Transferable)this.finishPortId.getTransferable(),
-																						 charIds);
+		return new TransmissionPath_Transferable(super.getHeaderTransferable(),
+												 (Identifier_Transferable)super.domainId.getTransferable(),
+												 meIds,
+												 new String(this.name),
+												 new String(this.description),
+												 (Identifier_Transferable)this.type.getId().getTransferable(),
+												 (Identifier_Transferable)this.startPortId.getTransferable(),
+												 (Identifier_Transferable)this.finishPortId.getTransferable(),
+												 charIds);
 	}
 
 	public String getName() {

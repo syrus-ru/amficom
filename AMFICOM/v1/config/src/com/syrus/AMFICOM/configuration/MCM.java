@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.22 2004/11/05 08:02:49 max Exp $
+ * $Id: MCM.java,v 1.23 2004/11/12 10:25:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/11/05 08:02:49 $
- * @author $Author: max $
+ * @version $Revision: 1.23 $, $Date: 2004/11/12 10:25:32 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -54,12 +54,8 @@ public class MCM extends DomainMember implements Characterized {
 	}
 
 	public MCM(MCM_Transferable mt) throws CreateObjectException {
-		super(new Identifier(mt.id),
-					new Date(mt.created),
-					new Date(mt.modified),
-					new Identifier(mt.creator_id),
-					new Identifier(mt.modifier_id),
-					new Identifier(mt.domain_id));
+		super(mt.header,
+			  new Identifier(mt.domain_id));
 		this.name = new String(mt.name);
 		this.description = new String(mt.description);
 		this.userId = new Identifier(mt.user_id);
@@ -131,18 +127,14 @@ public class MCM extends DomainMember implements Characterized {
 		for (Iterator iterator = this.kisIds.iterator(); iterator.hasNext();)
 			kisIdsT[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 
-		return new MCM_Transferable((Identifier_Transferable)super.id.getTransferable(),
-																super.created.getTime(),
-																super.modified.getTime(),
-																(Identifier_Transferable)super.creatorId.getTransferable(),
-																(Identifier_Transferable)super.modifierId.getTransferable(),
-																(Identifier_Transferable)super.domainId.getTransferable(),
-																new String(this.name),
-																new String(this.description),
-																(Identifier_Transferable)this.userId.getTransferable(),
-																(Identifier_Transferable)this.serverId.getTransferable(),																
-																charIds,
-																kisIdsT);
+		return new MCM_Transferable(super.getHeaderTransferable(),
+									(Identifier_Transferable)super.domainId.getTransferable(),
+									new String(this.name),
+									new String(this.description),
+									(Identifier_Transferable)this.userId.getTransferable(),
+									(Identifier_Transferable)this.serverId.getTransferable(),
+									charIds,
+									kisIdsT);
 	}
 
 	public String getName() {

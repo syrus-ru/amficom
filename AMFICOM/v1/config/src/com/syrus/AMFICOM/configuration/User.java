@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.11 2004/11/04 09:05:13 bob Exp $
+ * $Id: User.java,v 1.12 2004/11/12 10:25:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,12 +19,11 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.User_Transferable;
 import com.syrus.AMFICOM.configuration.corba.UserSort;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/11/04 09:05:13 $
+ * @version $Revision: 1.12 $, $Date: 2004/11/12 10:25:32 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -50,11 +49,7 @@ public class User extends StorableObject {
 	}
 
 	public User(User_Transferable ut) throws CreateObjectException {
-		super(new Identifier(ut.id),
-					new Date(ut.created),
-					new Date(ut.modified),
-					new Identifier(ut.creator_id),
-					new Identifier(ut.modifier_id));
+		super(ut.header);
 		this.login = ut.login;
 		this.sort = ut.sort.value();
 		this.name = new String(ut.name);
@@ -96,15 +91,11 @@ public class User extends StorableObject {
 	}
 
 	public Object getTransferable() {
-		return new User_Transferable((Identifier_Transferable)super.id.getTransferable(),
-																 super.created.getTime(),
-																 super.modified.getTime(),
-																 (Identifier_Transferable)super.creatorId.getTransferable(),
-																 (Identifier_Transferable)super.modifierId.getTransferable(),
-																 new String(this.login),
-																 UserSort.from_int(this.sort),
-																 new String(this.name),
-																 new String(this.description));
+		return new User_Transferable(super.getHeaderTransferable(),
+									 new String(this.login),
+									 UserSort.from_int(this.sort),
+									 new String(this.name),
+									 new String(this.description));
 	}
 
 	public String getLogin() {

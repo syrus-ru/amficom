@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.4 2004/11/04 09:05:13 bob Exp $
+ * $Id: LinkType.java,v 1.5 2004/11/12 10:25:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/11/04 09:05:13 $
+ * @version $Revision: 1.5 $, $Date: 2004/11/12 10:25:32 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -52,8 +52,7 @@ public class LinkType extends StorableObjectType {
 	}
 
 	public LinkType(LinkType_Transferable ltt) {
-		super(new Identifier(ltt.id), new Date(ltt.created), new Date(ltt.modified), new Identifier(ltt.creator_id),
-				new Identifier(ltt.modifier_id), new String(ltt.codename), new String(ltt.description));
+		super(ltt.header, new String(ltt.codename), new String(ltt.description));
 		this.sort = ltt.sort.value();
 		this.manufacturer = ltt.manufacturer;
 		this.manufacturerCode = ltt.manufacturerCode;
@@ -112,14 +111,12 @@ public class LinkType extends StorableObjectType {
 	}
 
 	public Object getTransferable() {
-		return new LinkType_Transferable((Identifier_Transferable) super.id.getTransferable(), super.created.getTime(),
-											super.modified.getTime(), (Identifier_Transferable) super.creatorId
-													.getTransferable(), (Identifier_Transferable) super.modifierId
-													.getTransferable(), new String(super.codename),
-											(super.description != null) ? (new String(super.description)) : "",
-											(this.name != null) ? (new String(this.name)) : "",
-											LinkTypeSort.from_int(this.sort), this.manufacturer, this.manufacturerCode,
-											(Identifier_Transferable) this.imageId.getTransferable());
+		return new LinkType_Transferable(super.getHeaderTransferable(),
+										 new String(super.codename),
+										 (super.description != null) ? (new String(super.description)) : "",
+										 (this.name != null) ? (new String(this.name)) : "",
+										 LinkTypeSort.from_int(this.sort), this.manufacturer, this.manufacturerCode,
+										 (Identifier_Transferable) this.imageId.getTransferable());
 	}
 
 	protected synchronized void setAttributes(	Date created,

@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.11 2004/11/11 08:00:13 max Exp $
+ * $Id: StorableObject.java,v 1.12 2004/11/12 10:25:24 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,9 +12,12 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
+
 /**
- * @version $Revision: 1.11 $, $Date: 2004/11/11 08:00:13 $
- * @author $Author: max $
+ * @version $Revision: 1.12 $, $Date: 2004/11/12 10:25:24 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -38,6 +41,16 @@ public abstract class StorableObject implements Identified, TransferableObject, 
 		this.modified = modified;
 		this.creatorId = creatorId;
 		this.modifierId = modifierId;
+		this.version = 0;
+	}
+	
+	protected StorableObject(StorableObject_Transferable transferable){
+		this.id = new Identifier(transferable.id);
+		this.created = new Date(transferable.created);
+		this.modified = new Date(transferable.modified);
+		this.creatorId = new Identifier(transferable.creator_id);
+		this.modifierId = new Identifier(transferable.modifier_id);
+		this.version = transferable.version;
 	}
 
 	public Identifier getId() {
@@ -83,5 +96,14 @@ public abstract class StorableObject implements Identified, TransferableObject, 
 		this.modifierId = modifierId;
 	}
 	
-	public abstract List getDependencies(); 
+	public abstract List getDependencies();
+	
+	public StorableObject_Transferable getHeaderTransferable(){
+		return new StorableObject_Transferable((Identifier_Transferable)this.id.getTransferable(),
+											   this.created.getTime(),
+											   this.modified.getTime(),
+											   (Identifier_Transferable)this.creatorId.getTransferable(),
+											   (Identifier_Transferable)this.modifierId.getTransferable(),
+											   this.currentVersion);
+	}
 }

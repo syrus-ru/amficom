@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.31 2004/11/05 06:52:21 bob Exp $
+ * $Id: Equipment.java,v 1.32 2004/11/12 10:25:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/11/05 06:52:21 $
+ * @version $Revision: 1.32 $, $Date: 2004/11/12 10:25:32 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -60,12 +60,8 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 	}
 
 	public Equipment(Equipment_Transferable et) throws CreateObjectException {
-		super(new Identifier(et.id),
-					new Date(et.created),
-					new Date(et.modified),
-					new Identifier(et.creator_id),
-					new Identifier(et.modifier_id),
-					new Identifier(et.domain_id));
+		super(et.header,
+			  new Identifier(et.domain_id));
 
 		super.monitoredElementIds = new ArrayList(et.monitored_element_ids.length);
 		for (int i = 0; i < et.monitored_element_ids.length; i++)
@@ -185,19 +181,15 @@ public class Equipment extends MonitoredDomainMember implements Characterized, T
 		for (Iterator iterator = this.portIds.iterator(); iterator.hasNext();)
 			pIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
 
-		return new Equipment_Transferable((Identifier_Transferable)super.id.getTransferable(),
-																			super.created.getTime(),
-																			super.modified.getTime(),
-																			(Identifier_Transferable)super.creatorId.getTransferable(),
-																			(Identifier_Transferable)super.modifierId.getTransferable(),
-																			(Identifier_Transferable)super.domainId.getTransferable(),
-																			meIds,
-																			(Identifier_Transferable)this.type.getId().getTransferable(),
-																			new String(this.name),
-																			new String(this.description),
-																			(Identifier_Transferable)this.imageId.getTransferable(),
-																			pIds,
-																			charIds);
+		return new Equipment_Transferable(super.getHeaderTransferable(),
+										  (Identifier_Transferable)super.domainId.getTransferable(),
+										  meIds,
+										  (Identifier_Transferable)this.type.getId().getTransferable(),
+										  new String(this.name),
+										  new String(this.description),
+										  (Identifier_Transferable)this.imageId.getTransferable(),
+										  pIds,
+										  charIds);
 	}
 
 	public StorableObjectType getType() {
