@@ -1,6 +1,6 @@
 include Makefile.inc
 
-.PHONY:	clean common analyse fit An2 JNI BreakL
+.PHONY:	clean common analyse fit An2 JNI BreakL head
 
 $(OUT):	common analyse fit An2 JNI BreakL
 	$(LD) $(LDFLAGS) \
@@ -21,7 +21,7 @@ analyse:
 fit:
 	make -C ./fit
 
-An2:
+an2:
 	make -C ./An2
 
 JNI:
@@ -38,3 +38,8 @@ clean:
 	make -C JNI clean
 	make -C BreakL clean
 	rm -f dadara.dll dadara.exp dadara.lib 
+
+head:
+	$(JAVAH) -classpath $(CLASS_DIR) -d Common com.syrus.AMFICOM.analysis.dadara.ModelFunction
+	$(JAVAH) -classpath $(CLASS_DIR) -d Common com.syrus.AMFICOM.analysis.CoreAnalysisManager
+	$(JAVAH) -classpath $(CLASS_DIR) -d Common com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent

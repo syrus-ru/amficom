@@ -8,6 +8,7 @@ AN2_DIR = ./An2
 FIT_DIR = ./fit
 JNI_DIR = ./JNI
 BREAKL_DIR = ./BreakL
+CLASS_DIR = ../classes
 
 OUT = $(SO_PREFIX)dadara.$(SO_EXT)
 
@@ -20,3 +21,5 @@ CXXFLAGS = /nologo /O2 /GX /MT /FD
 CXX_NOLINK_FLAG = /c
 CXX_OUTPUT_FLAG = /Fo
 CPPFLAGS = /D "WIN32" /D "_WINDOWS" /D "DADARA_EXPORTS" /D "_USRDLL" /D "_MBCS"
+
+JAVAH = javah
