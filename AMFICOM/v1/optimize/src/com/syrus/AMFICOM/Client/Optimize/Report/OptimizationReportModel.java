@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.Client.Optimize.Report;
 import com.syrus.AMFICOM.Client.General.Report.APOReportModel;
 
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelOptimize;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
@@ -34,10 +35,22 @@ public class OptimizationReportModel extends APOReportModel
 {
 	public String getName() {return "optimizationreportmodel";}
 
+  //Отчёты по данным с сервера
 	public static String sourceData = "label_sourceData";
 	public static String equipFeatures = "label_equipFeatures";
 	public static String optimizeResults = "label_optimizeResults";
 	public static String cost = "label_cost";
+  
+  //Отчёты по данным из окон
+  
+  // окно графика хода оптимизации  
+  public static String iterationsHistory = "frameIterationsHistoryTitle";
+  // окно задания параметров оптимизации  
+  public static String optimizationParams = "frameOptimizationParamsTitle";
+  // окно подробной нитки маршрута одного из решений  
+  public static String solution = "frameSolutionTitle";
+  // окно задания режимов узлов ( fixed , active )  
+  public static String nodesOptimizeProperties = "frameNodesOptimizePropertiesTitle";
 
 	public String getObjectsName()
 	{
@@ -51,7 +64,7 @@ public class OptimizationReportModel extends APOReportModel
 		 else if (rp.field.equals(MapReportModel.rep_topology))
 			 return (new MapReportModel().getReportsName(rp));
 
-		String return_value = this.getObjectsName() + ":" + LangModelReport.getString(rp.field);
+		String return_value = this.getObjectsName() + ":" + getLangForField(rp.field);
 		if (rp.reserveName != null)
 			return_value += rp.reserveName;
 
@@ -65,7 +78,7 @@ public class OptimizationReportModel extends APOReportModel
 		else if (field.equals(MapReportModel.rep_topology))
 			return LangModelMap.getString(field);
 
-		return LangModelReport.getString(field);
+		return LangModelOptimize.getString(field);
 	}
 
 	public String getReportsReserveName(ObjectsReport rp)
@@ -104,6 +117,11 @@ public class OptimizationReportModel extends APOReportModel
 		result.add(OptimizationReportModel.equipFeatures);
 		result.add(OptimizationReportModel.optimizeResults);
 		result.add(OptimizationReportModel.cost);
+
+		result.add(OptimizationReportModel.iterationsHistory);
+		result.add(OptimizationReportModel.optimizationParams);
+		result.add(OptimizationReportModel.solution);
+		result.add(OptimizationReportModel.nodesOptimizeProperties);
 
 		return result;
 	}

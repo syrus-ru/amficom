@@ -1,5 +1,8 @@
 package com.syrus.AMFICOM.Client.General.Command.Optimize;
 
+import com.syrus.AMFICOM.Client.Map.Report.MapReportModel;
+import com.syrus.AMFICOM.Client.Optimize.Report.OptimizationReportModel;
+import com.syrus.AMFICOM.Client.Schematics.Report.SchemeReportModel;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -43,23 +46,22 @@ public class CreateOptimizeReportCommand extends VoidCommand
     if (mainFrame == null)
       return;
 
-    mainFrame.scheme;
-    mainFrame.optimizerContext;
-    mainFrame.kisSelectFrame;           // объект (окно), содержащй информацию о характеристиках и ценах оборудования
-    mainFrame.iterHistFrame;       // окно графика хода оптимизации
-    mainFrame.paramsFrame; // окно задания параметров оптимизации
-    mainFrame.solutionFrame;            // окно подробной нитки маршрута одного из решений
-    mainFrame.nodesModeFrame;// окно задания режимов узлов ( fixed , active )
-    mainFrame.ribsModeFrame;  // окно задания режимов рёбер ( active )
-    mainFrame.schemeFrame;                // окно отображения схемы
-    mainFrame.mapFrame;                      // окно отображения схемы
-      
-		AMTReport report = new AMTReport();
+    AMTReport aReport = new AMTReport();
     
-//    report.addReportTable(OptimizationReportModel.alarms_list,alarmFrame.getTableModel());    
+		aReport.addRecord(OptimizationReportModel.sourceData,null);
+		aReport.addRecord(SchemeReportModel.scheme,null);
+		aReport.addRecord(MapReportModel.rep_topology,null);
+		aReport.addRecord(OptimizationReportModel.equipFeatures,null);
+		aReport.addRecord(OptimizationReportModel.optimizeResults,null);
+		aReport.addRecord(OptimizationReportModel.cost,null);
 
+		aReport.addRecord(OptimizationReportModel.iterationsHistory,null);
+		aReport.addRecord(OptimizationReportModel.optimizationParams,null);
+		aReport.addRecord(OptimizationReportModel.solution,null);
+		aReport.addRecord(OptimizationReportModel.nodesOptimizeProperties,null);
+      
 		new OpenTypedTemplateCommand(aContext, ReportTemplate.rtt_Optimization,
-																 report).execute();
+																 aReport).execute();
 	}
 }
 
