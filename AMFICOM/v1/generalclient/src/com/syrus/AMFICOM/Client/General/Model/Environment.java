@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.17 2005/03/22 10:43:14 bob Exp $
+ * $Id: Environment.java,v 1.18 2005/03/23 10:19:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import javax.swing.plaf.metal.*;
  * Класс Environment используется для хранения общей для приложения информации.
  * 
  * @author $Author: bob $
- * @version $Revision: 1.17 $, $Date: 2005/03/22 10:43:14 $
+ * @version $Revision: 1.18 $, $Date: 2005/03/23 10:19:00 $
  * @module generalclient_v1
  */
 public final class Environment
@@ -214,9 +214,26 @@ public final class Environment
 		UIManager.put(ResourceKeys.ICON_REMOVE_FILE , new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/removefile.gif")));
 		
 		
-		UIManager.put(ResourceKeys.INSETS_NULL, new Insets(0, 0, 0, 0));
-		
-		UIManager.put(ResourceKeys.TABLE_NO_FOCUS_BORDER, new EmptyBorder(1, 2, 1, 2));
+		UIManager.put(ResourceKeys.INSETS_NULL, new UIDefaults.LazyValue() {
+
+			public Object createValue(UIDefaults table) {
+				return new Insets(0, 0, 0, 0);
+			}
+		});
+
+		UIManager.put(ResourceKeys.TABLE_NO_FOCUS_BORDER, new UIDefaults.LazyValue() {
+
+			public Object createValue(UIDefaults table) {
+				return new EmptyBorder(1, 2, 1, 2);
+			}
+		});
+
+		UIManager.put(ResourceKeys.SIZE_BUTTON, new UIDefaults.LazyValue() {
+
+			public Object createValue(UIDefaults table) {
+				return new Dimension(24, 24);
+			}
+		});
 	}
 
 	public static String getDomainId()
