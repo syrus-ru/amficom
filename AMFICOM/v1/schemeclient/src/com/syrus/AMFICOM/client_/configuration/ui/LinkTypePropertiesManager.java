@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypePropertiesManager.java,v 1.2 2005/03/14 13:36:18 stas Exp $
+ * $Id: LinkTypePropertiesManager.java,v 1.3 2005/03/30 13:33:39 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,16 +9,16 @@
 package com.syrus.AMFICOM.client_.configuration.ui;
 
 import com.syrus.AMFICOM.client_.general.ui_.*;
-import com.syrus.AMFICOM.client_.scheme.ui.PropertiesMananager;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.configuration.LinkTypeController;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/03/14 13:36:18 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/30 13:33:39 $
  * @module schemeclient_v1
  */
 
-public class LinkTypePropertiesManager implements PropertiesMananager {
-
+public class LinkTypePropertiesManager implements VisualManager {
 	private static LinkTypePropertiesManager instance;
 	private static AbstractLinkTypeGeneralPanel generalPanel;
 	private static LinkTypeCharacteristicsPanel charPanel;
@@ -47,6 +47,14 @@ public class LinkTypePropertiesManager implements PropertiesMananager {
 		if (charPanel == null)
 			charPanel = new LinkTypeCharacteristicsPanel();
 		return charPanel;
+	}
+
+	/**
+	 * @return LinkTypeController
+	 * @see com.syrus.AMFICOM.client_.general.ui_.VisualManager#getController()
+	 */
+	public ObjectResourceController getController() {
+		return LinkTypeController.getInstance();
 	}
 
 }

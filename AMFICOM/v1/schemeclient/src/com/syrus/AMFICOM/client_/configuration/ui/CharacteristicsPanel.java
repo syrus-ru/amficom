@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicsPanel.java,v 1.5 2005/03/17 14:45:35 stas Exp $
+ * $Id: CharacteristicsPanel.java,v 1.6 2005/03/30 13:33:39 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,27 +21,26 @@ import oracle.jdeveloper.layout.*;
 
 import com.syrus.AMFICOM.Client.Configure.UI.AddPropFrame;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
-import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
 import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
-import com.syrus.AMFICOM.client_.general.ui_.tree.*;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.client_.general.ui_.tree_.*;
+import com.syrus.AMFICOM.client_.scheme.ui.Constants;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.*;
+import com.syrus.AMFICOM.logic.Item;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/03/17 14:45:35 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/30 13:33:39 $
  * @module schemeclient_v1
  */
 
 public abstract class CharacteristicsPanel implements
-		OperationListener, StorableObjectEditor {
+		StorableObjectEditor {
 
 	ApplicationContext aContext;
-	private Dispatcher dispatcher = new Dispatcher();
 	protected CharacteristicTypeSort selectedTypeSort;
 	Map characteristics = new HashMap();
 	Set editableSorts = new HashSet();
@@ -51,7 +50,7 @@ public abstract class CharacteristicsPanel implements
 
 	JPanel pnPanel0 = new JPanel(); 
 	PropsADToolBar toolBar;
-	Tree utp;
+	IconedTreeUI treeUI;
 	JTable jTable;
 	PropsTableModel tModel;
 
@@ -78,7 +77,6 @@ public abstract class CharacteristicsPanel implements
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		this.dispatcher.register(this, TreeDataSelectionEvent.type);
 	}
 
 	public CharacteristicsPanel(List characteristics, Identifier characterizedId) {
@@ -93,10 +91,7 @@ public abstract class CharacteristicsPanel implements
 	}
 
 	public void setContext(ApplicationContext aContext) {
-		this.aContext = new ApplicationContext();
-		this.aContext.setDispatcher(dispatcher);
-		this.aContext.setSessionInterface(aContext.getSessionInterface());
-		this.aContext.setApplicationModel(aContext.getApplicationModel());
+		this.aContext = aContext;
 	}
 
 	private void jbInit() throws Exception {
@@ -117,27 +112,60 @@ public abstract class CharacteristicsPanel implements
 				});
 		jTable.getColumnModel().getColumn(0).setPreferredWidth(180);
 		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		// jTable.setFocusable(false);
 
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.getViewport().add(jTable);
-		scrollPane.getViewport().setBackground(SystemColor.window);
-		scrollPane.setAutoscrolls(true);
-		scrollPane.setPreferredSize(new Dimension(100, 50));
+		treeUI = new IconedTreeUI(createRoot());
+		JTree tree = treeUI.getTree();
+		tree.setRootVisible(false);
+		tree.addTreeSelectionListener(new TreeSelectionListener() {
+			public void valueChanged(TreeSelectionEvent e) {
+				tree_valueChanged(e);
+			}
+		});
+		JComponent treePanel = treeUI.getTree();
+		treePanel.setBorder(BorderFactory.createLoweredBevelBorder());
+		treePanel.setPreferredSize(null);
+		
+		GridBagLayout gbPanel0 = new GridBagLayout();
+		GridBagConstraints gbcPanel0 = new GridBagConstraints();
+		pnPanel0.setLayout(gbPanel0);
 
-		PropsTreeModel model = new PropsTreeModel();
-		utp = new Tree(this.dispatcher, new SOMutableNode(model, "root"));
-		utp.setRootVisible(false);
-		utp.setBorder(BorderFactory.createLoweredBevelBorder());
+		gbcPanel0.gridx = 0;
+		gbcPanel0.gridy = 0;
+		gbcPanel0.gridwidth = 1;
+		gbcPanel0.gridheight = 1;
+		gbcPanel0.fill = GridBagConstraints.BOTH;
+		gbcPanel0.weightx = 1;
+		gbcPanel0.weighty = 0;
+		gbcPanel0.anchor = GridBagConstraints.NORTH;
+		gbPanel0.setConstraints(toolBar, gbcPanel0);
+		pnPanel0.add(toolBar);
 
-		JPanel n_panel = new JPanel();
-		n_panel.setLayout(new BorderLayout());
-		n_panel.add(toolBar, BorderLayout.NORTH);
-		n_panel.add(utp, BorderLayout.CENTER);
+		gbcPanel0.gridx = 0;
+		gbcPanel0.gridy = 1;
+		gbcPanel0.gridwidth = 1;
+		gbcPanel0.gridheight = 1;
+		gbcPanel0.fill = GridBagConstraints.BOTH;
+		gbcPanel0.weightx = 1;
+		gbcPanel0.weighty = 0;
+		gbcPanel0.anchor = GridBagConstraints.NORTH;
+		gbPanel0.setConstraints(treePanel, gbcPanel0);
+		pnPanel0.add(treePanel);
 
-		pnPanel0.setLayout(new BorderLayout());
-		pnPanel0.add(n_panel, BorderLayout.NORTH);
-		pnPanel0.add(scrollPane, BorderLayout.CENTER);
+		JScrollPane tablePane = new JScrollPane(jTable);
+		tablePane.getViewport().setBackground(SystemColor.window);
+		tablePane.setAutoscrolls(true);
+		tablePane.setPreferredSize(new Dimension(100, 50));
+
+		gbcPanel0.gridx = 0;
+		gbcPanel0.gridy = 2;
+		gbcPanel0.gridwidth = 1;
+		gbcPanel0.gridheight = 1;
+		gbcPanel0.fill = GridBagConstraints.BOTH;
+		gbcPanel0.weightx = 1;
+		gbcPanel0.weighty = 1;
+		gbcPanel0.anchor = GridBagConstraints.NORTH;
+		gbPanel0.setConstraints(tablePane, gbcPanel0);
+		pnPanel0.add(tablePane);
 	}
 	
 	public JComponent getGUI() {
@@ -224,20 +252,6 @@ public abstract class CharacteristicsPanel implements
 			editableSorts.remove(typeSort);
 	}
 
-	public void operationPerformed(OperationEvent ae) {
-		if (ae.getActionCommand().equals(TreeDataSelectionEvent.type)) {
-			TreeDataSelectionEvent ev = (TreeDataSelectionEvent) ae;
-			if (ev.getSelectedObject() instanceof CharacteristicTypeSort) {
-				selectedTypeSort = (CharacteristicTypeSort) ev.getSelectedObject();
-				setPropsEditable(editableSorts.contains(selectedTypeSort));
-			} 
-			else
-				showNoSelection();
-
-			elementSelected(selectedTypeSort);
-		}
-	}
-
 	void setPropsEditable(boolean b) {
 		toolBar.setAddButtonEnabled(b && selectedTypeSort != null);
 		toolBar.setCancelButtonEnabled(!jTable.getSelectionModel()
@@ -274,6 +288,16 @@ public abstract class CharacteristicsPanel implements
 		tModel.clearTable();
 		setPropsEditable(false);
 	}
+	
+	void tree_valueChanged(TreeSelectionEvent e) {
+		Item node = (Item)e.getPath().getLastPathComponent();
+		if (node == null)
+			return;
+		
+		selectedTypeSort = (CharacteristicTypeSort)node.getObject();
+		setPropsEditable(editableSorts.contains(selectedTypeSort));
+		elementSelected(selectedTypeSort);
+	}
 
 	void tableUpdated(Object value, int row, int col) {
 		String name = (String) tModel.getValueAt(row, 0);
@@ -301,6 +325,21 @@ public abstract class CharacteristicsPanel implements
 		}
 	}
 
+	private Item createRoot() {
+		Item root = new IconedNode(Constants.ROOT, Constants.TEXT_ROOT);
+		root.addChild(new IconedNode(CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL,
+				Constants.TEXT_CHARACTERISTICTYPESORT_OPTICAL, false));
+		root.addChild(new IconedNode(CharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL,
+				Constants.TEXT_CHARACTERISTICTYPESORT_ELECTRICAL, false));
+		root.addChild(new IconedNode(CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL,
+				Constants.TEXT_CHARACTERISTICTYPESORT_OPERATIONAL, false));
+		root.addChild(new IconedNode(CharacteristicTypeSort.CHARACTERISTICTYPESORT_INTERFACE,
+				Constants.TEXT_CHARACTERISTICTYPESORT_INTERFACE, false));
+		root.addChild(new IconedNode(CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
+				Constants.TEXT_CHARACTERISTICTYPESORT_VISUAL, false));
+		return root;
+	}
+	
 	Characteristic getCharacterisric(List chars, String name) {
 		for (Iterator it = chars.iterator(); it.hasNext();) {
 			Characteristic ch = (Characteristic) it.next();
@@ -484,72 +523,6 @@ public abstract class CharacteristicsPanel implements
 
 				tModel.removeRow(n);
 				jTable.updateUI();
-			}
-		}
-	}
-}
-
-class PropsTreeModel implements SOTreeDataModel {
-	public Icon getNodeIcon(SONode node) {
-		return null;
-	}
-
-	public Color getNodeColor(SONode node) {
-		return Color.BLACK;
-	}
-	
-	public String getNodeName(SONode node) {
-		if (node.getUserObject() instanceof String) {
-			return Constants.ROOT;
-		}
-		if (node.getUserObject() instanceof CharacteristicTypeSort) {
-			CharacteristicTypeSort sort = (CharacteristicTypeSort)node.getUserObject();
-			switch (sort.value()) {
-				case CharacteristicTypeSort._CHARACTERISTICTYPESORT_OPTICAL:
-					return Constants.CHARACTERISTICTYPESORT_OPTICAL;
-				case CharacteristicTypeSort._CHARACTERISTICTYPESORT_ELECTRICAL:
-					return Constants.CHARACTERISTICTYPESORT_ELECTRICAL;
-				case CharacteristicTypeSort._CHARACTERISTICTYPESORT_OPERATIONAL:
-					return Constants.CHARACTERISTICTYPESORT_OPERATIONAL;
-				case CharacteristicTypeSort._CHARACTERISTICTYPESORT_INTERFACE:
-					return Constants.CHARACTERISTICTYPESORT_INTERFACE;
-				case CharacteristicTypeSort._CHARACTERISTICTYPESORT_VISUAL:
-					return Constants.CHARACTERISTICTYPESORT_VISUAL;
-				default:
-					throw new UnsupportedOperationException("Unsupported CharacteristicTypeSort"); //$NON-NLS-1$
-			}
-		}
-		throw new UnsupportedOperationException("Unsupported object"); //$NON-NLS-1$
-	}
-
-	public ObjectResourceController getNodeController(SONode node) {
-		return CharacteristicTypeController.getInstance();
-	}
-
-	public void updateChildNodes(SONode node) {
-		if(!node.isExpanded())
-			return;
-		List contents = node.getChildrenUserObjects();
-
-		if (node.getUserObject() instanceof String) {
-			String s = (String) node.getUserObject();
-
-			if (s.equals(Constants.ROOT)) {
-				if(!contents.contains(CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL))
-					node.add(new SOMutableNode(this,
-							CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL, false));
-				if(!contents.contains(CharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL))
-					node.add(new SOMutableNode(this,
-							CharacteristicTypeSort.CHARACTERISTICTYPESORT_ELECTRICAL, false));
-				if(!contents.contains(CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL))
-					node.add(new SOMutableNode(this,
-							CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL, false));
-				if(!contents.contains(CharacteristicTypeSort.CHARACTERISTICTYPESORT_INTERFACE))
-					node.add(new SOMutableNode(this,
-							CharacteristicTypeSort.CHARACTERISTICTYPESORT_INTERFACE, false));
-				if(!contents.contains(CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL))
-					node.add(new SOMutableNode(this,
-							CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL, false));
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: AddPropFrame.java,v 1.1 2005/03/10 08:09:08 stas Exp $
+ * $Id: AddPropFrame.java,v 1.2 2005/03/30 13:33:39 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,6 +35,7 @@ import javax.swing.JTextField;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
+import com.syrus.AMFICOM.client_.scheme.ui.Constants;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeController;
@@ -49,7 +50,7 @@ import com.syrus.AMFICOM.general.corba.DataType;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/03/10 08:09:08 $
+ * @version $Revision: 1.2 $, $Date: 2005/03/30 13:33:39 $
  * @module schemeclient_v1
  */
 

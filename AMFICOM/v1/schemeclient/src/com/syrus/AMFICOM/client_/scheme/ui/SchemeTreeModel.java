@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.12 2005/03/28 11:43:16 stas Exp $
+ * $Id: SchemeTreeModel.java,v 1.13 2005/03/30 13:33:39 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/03/28 11:43:16 $
+ * @version $Revision: 1.13 $, $Date: 2005/03/30 13:33:39 $
  * @module schemeclient_v1
  */
 
@@ -18,13 +18,13 @@ import java.awt.*;
 import java.util.*;
 import java.util.List;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
 
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Schematics.UI.SchemeController;
-import com.syrus.AMFICOM.client_.general.ui_.tree_.IconedNode;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.client_.configuration.ui.*;
+import com.syrus.AMFICOM.client_.general.ui_.VisualManager;
+import com.syrus.AMFICOM.client_.general.ui_.tree_.*;
 import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.corba.OperationSort;
@@ -33,110 +33,24 @@ import com.syrus.AMFICOM.measurement.*;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.corba.SchemeKind;
 
-public class SchemeTreeModel implements ChildrenFactory {
+public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 	ApplicationContext aContext;
 
 	private static SchemeKind[] schemeTypes = new SchemeKind[] { SchemeKind.NETWORK, SchemeKind.BUILDING,
 			SchemeKind.CABLE_SUBNETWORK };
+	private static String[] schemeTypeNames = new String[] {
+			Constants.TEXT_SCHEME_TYPE_NETWORK, Constants.TEXT_SCHEME_TYPE_BUILDING,
+			Constants.TEXT_SCHEME_TYPE_CABLE };
 
 	public SchemeTreeModel(ApplicationContext aContext) {
 		this.aContext = aContext;
 	}
 
-
-	public Icon getNodeIcon(Item node) {
-		if (node.getObject() instanceof String) {
-			String s = (String) node.getObject();
-			if (s.equals(Constants.SCHEME))
-				return Constants.SCHEME_ICON;
-			return Constants.CATALOG_ICON;
-		}
-		if (node.getObject() instanceof SchemeKind)
-			return Constants.CATALOG_ICON;
-		return null;
-	}
-
-	public String getNodeName(Item node) {
-		if (node.getObject() instanceof String) {
-			String s = (String) node.getObject();
-			if (s.equals(Constants.ROOT))
-				return Constants.TEXT_ROOT;
-			if (s.equals(Constants.CONFIGURATION))
-				return Constants.TEXT_CONFIGURATION;
-			if (s.equals(Constants.SCHEME_PROTO_GROUP))
-				return Constants.TEXT_SCHEME_PROTO_GROUP;
-			if (s.equals(Constants.SCHEME_TYPE))
-				return Constants.TEXT_SCHEME_TYPE;
-			if (s.equals(Constants.NETWORK_DIRECTORY))
-				return Constants.TEXT_NETWORK_DIRECTORY;
-			if (s.equals(Constants.MONITORING_DIRECTORY))
-				return Constants.TEXT_MONITORING_DIRECTORY;
-			if (s.equals(Constants.LINK_TYPE))
-				return Constants.TEXT_LINK_TYPE;
-			if (s.equals(Constants.CABLE_LINK_TYPE))
-				return Constants.TEXT_CABLE_LINK_TYPE;
-			if (s.equals(Constants.PORT_TYPE))
-				return Constants.TEXT_PORT_TYPE;
-			// if(s.equals("TransmissionPathType"))
-			// return LangModelConfig.getString("menuJDirPathText");
-			if (s.equals(Constants.MEASUREMENTPORT_TYPE))
-				return Constants.TEXT_MEASUREMENTPORT_TYPE;
-			if (s.equals(Constants.MEASUREMENT_TYPE))
-				return Constants.TEXT_MEASUREMENT_TYPE;
-			if (s.equals(SchemeKind.NETWORK))
-				return Constants.TEXT_SCHEME_TYPE_NETWORK;
-			if (s.equals(SchemeKind.BUILDING))
-				return Constants.TEXT_SCHEME_TYPE_BUILDING;
-			if (s.equals(SchemeKind.CABLE_SUBNETWORK))
-				return Constants.TEXT_SCHEME_TYPE_CABLE;
-		}
-		if (node.getObject() instanceof SchemeKind) {
-			SchemeKind type = (SchemeKind)node.getObject();
-			switch (type.value()) {
-			case SchemeKind._NETWORK:
-				return Constants.TEXT_SCHEME_TYPE_NETWORK;
-			case SchemeKind._CABLE_SUBNETWORK:
-				return Constants.TEXT_SCHEME_TYPE_CABLE;
-			case SchemeKind._BUILDING:
-				return Constants.TEXT_SCHEME_TYPE_BUILDING;
-			default:
-				throw new UnsupportedOperationException("Unknown scheme type");
-			}
-		}
-		if (node.getObject() instanceof LinkType)
-			return ((LinkType) node.getObject()).getName();
-		if (node.getObject() instanceof CableLinkType)
-			return ((CableLinkType) node.getObject()).getName();
-		if (node.getObject() instanceof PortType)
-			return ((PortType) node.getObject()).getName();
-		if (node.getObject() instanceof MeasurementPortType)
-			return ((MeasurementPortType) node.getObject()).getName();
-		if (node.getObject() instanceof MeasurementType)
-			return ((MeasurementType) node.getObject()).getDescription();
-
-		if (node.getObject() instanceof SchemeProtoGroup)
-			return ((SchemeProtoGroup)node.getObject()).getName();
-		if (node.getObject() instanceof Scheme)
-			return ((Scheme)node.getObject()).getName();
-		if (node.getObject() instanceof SchemeElement)
-			return ((SchemeElement)node.getObject()).getName();
-		if (node.getObject() instanceof SchemeLink)
-			return ((SchemeLink)node.getObject()).getName();
-		if (node.getObject() instanceof SchemeCableLink)
-			return ((SchemeCableLink)node.getObject()).getName();
-		if (node.getObject() instanceof SchemePath)
-			return ((SchemePath)node.getObject()).getName();
-		if (node.getObject() instanceof SchemePort)
-			return ((SchemePort)node.getObject()).getName();
-		if (node.getObject() instanceof SchemeCablePort)
-			return ((SchemeCablePort)node.getObject()).getName();
-		throw new UnsupportedOperationException("Unknown object");
-	}
-
-	public ObjectResourceController getNodeController(Item node) {
-		if (node.getObject() instanceof String) {
-			String s = (String) node.getObject();
-			if (s.equals(Constants.SCHEME))
+	public VisualManager getVisualManager(Item node) {
+		Object object = node.getObject();
+		if (object instanceof String) {
+			String s = (String)object;
+			/*if (s.equals(Constants.SCHEME))
 				return SchemeController.getInstance();
 			if (s.equals(Constants.SCHEME_ELEMENT))
 				return SchemeElementController.getInstance();
@@ -147,61 +61,59 @@ public class SchemeTreeModel implements ChildrenFactory {
 			if (s.equals(Constants.SCHEME_PATH))
 				return SchemePathController.getInstance();
 			if (s.equals(Constants.SCHEME_PROTO_GROUP))
-				return null;
+				return null;*/
 			/**
 			 * @todo write SchemeProtoGroupController return
 			 *       SchemeProtoGroupController.getInstance();
 			 */
 			if (s.equals(Constants.LINK_TYPE))
-				return LinkTypeController.getInstance();
+				return LinkTypePropertiesManager.getInstance();
 			if (s.equals(Constants.CABLE_LINK_TYPE))
-				return CableLinkTypeController.getInstance();
+				return CableLinkTypePropertiesManager.getInstance();
 			if (s.equals(Constants.PORT_TYPE))
-				return PortTypeController.getInstance();
-			// if(s.equals("TransmissionPathType"))
-			// return TransmissionPathTypeController.getInstance();
+				return PortTypePropertiesManager.getInstance();
 			if (s.equals(Constants.MEASUREMENTPORT_TYPE))
-				return MeasurementPortTypeController.getInstance();
+				return MeasurementPortTypePropertiesManager.getInstance();
 			if (s.equals(Constants.MEASUREMENT_TYPE))
-				return MeasurementTypeController.getInstance();
+				return MeasurementTypePropertiesManager.getInstance();
 			if (s.equals(Constants.SCHEME_TYPE))
 				return null;
+			// for any other strings return null Manager
 			return null;
 		}
-		if (node.getObject() instanceof SchemeKind)
-			return SchemeController.getInstance();
-		if (node.getObject() instanceof LinkType)
-			return LinkTypeController.getInstance();
-		if (node.getObject() instanceof CableLinkType)
-			return CableLinkTypeController.getInstance();
-		if (node.getObject() instanceof PortType)
-			return PortTypeController.getInstance();
-		if (node.getObject() instanceof TransmissionPathType)
-			return TransmissionPathTypeController.getInstance();
-		if (node.getObject() instanceof MeasurementPortType)
-			return MeasurementPortTypeController.getInstance();
-		if (node.getObject() instanceof MeasurementType)
-			return MeasurementTypeController.getInstance();
-
-		if (node.getObject() instanceof SchemeProtoGroup) {
-			if (!((SchemeProtoGroup) node.getObject()).getSchemeProtoGroups().isEmpty())
+		if (object instanceof LinkType)
+			return LinkTypePropertiesManager.getInstance();
+		if (object instanceof CableLinkType)
+			return CableLinkTypePropertiesManager.getInstance();
+		if (object instanceof PortType)
+			return PortTypePropertiesManager.getInstance();
+		if (object instanceof MeasurementPortType)
+			return MeasurementPortTypePropertiesManager.getInstance();
+		if (object instanceof MeasurementType)
+			return MeasurementTypePropertiesManager.getInstance();
+		if (object instanceof SchemeKind)
 				return null;
+//		if (object instanceof SchemeKind)
+//			return SchemeController.getInstance();
+//		if (object instanceof SchemeProtoGroup) {
+//			if (!((SchemeProtoGroup) object).getSchemeProtoGroups().isEmpty())
+//				return null;
 			/**
 			 * @todo write SchemeProtoGroupController return
 			 *       SchemeProtoGroupController.getInstance();
 			 */
-			else
-				return null;
+//			else
+//				return null;
 			/**
 			 * @todo write SchemeProtoElementController return
 			 *       SchemeProtoElementController.getInstance();
 			 */
-		}
-		if (node.getObject() instanceof Scheme)
-			return SchemeController.getInstance();
-		if (node.getObject() instanceof SchemeElement)
-			return SchemeElementController.getInstance();
-		throw new UnsupportedOperationException("Unknown object");
+//		}
+//		if (object instanceof Scheme)
+//			return SchemeController.getInstance();
+//		if (object instanceof SchemeElement)
+//			return SchemeElementController.getInstance();
+		throw new UnsupportedOperationException("Unknown object " + object);
 	}
 
 	public void populate(Item node) {
@@ -211,38 +123,38 @@ public class SchemeTreeModel implements ChildrenFactory {
 			String s = (String) node.getObject();
 			if (s.equals(Constants.ROOT)) {
 				if (!contents.contains(Constants.CONFIGURATION))
-					node.addChild(new IconedNode(this, Constants.CONFIGURATION, Constants.TEXT_CONFIGURATION, Constants.CATALOG_ICON));
+					node.addChild(new PopulatableIconedNode(this, Constants.CONFIGURATION, Constants.TEXT_CONFIGURATION, Constants.ICON_CATALOG));
 				if (!contents.contains(Constants.SCHEME_TYPE))
-					node.addChild(new IconedNode(this, Constants.SCHEME_TYPE, Constants.TEXT_SCHEME_TYPE, Constants.CATALOG_ICON));
+					node.addChild(new PopulatableIconedNode(this, Constants.SCHEME_TYPE, Constants.TEXT_SCHEME_TYPE, Constants.ICON_CATALOG));
 				if (!contents.contains(Constants.SCHEME_PROTO_GROUP))
-					node.addChild(new IconedNode(this, Constants.SCHEME_PROTO_GROUP, Constants.TEXT_SCHEME_PROTO_GROUP, Constants.CATALOG_ICON));
+					node.addChild(new PopulatableIconedNode(this, Constants.SCHEME_PROTO_GROUP, Constants.TEXT_SCHEME_PROTO_GROUP, Constants.ICON_CATALOG));
 			} 
 			else if (s.equals(Constants.CONFIGURATION)) {
 				if (!contents.contains(Constants.NETWORK_DIRECTORY))
-					node.addChild(new IconedNode(this, Constants.NETWORK_DIRECTORY, Constants.TEXT_NETWORK_DIRECTORY, Constants.CATALOG_ICON));
+					node.addChild(new PopulatableIconedNode(this, Constants.NETWORK_DIRECTORY, Constants.TEXT_NETWORK_DIRECTORY, Constants.ICON_CATALOG));
 				if (!contents.contains(Constants.MONITORING_DIRECTORY))
-					node.addChild(new IconedNode(this, Constants.MONITORING_DIRECTORY, Constants.TEXT_MONITORING_DIRECTORY, Constants.CATALOG_ICON));
+					node.addChild(new PopulatableIconedNode(this, Constants.MONITORING_DIRECTORY, Constants.TEXT_MONITORING_DIRECTORY, Constants.ICON_CATALOG));
 			} 
 			else if (s.equals(Constants.NETWORK_DIRECTORY)) {
 				if (!contents.contains(Constants.LINK_TYPE))
-					node.addChild(new IconedNode(this, Constants.LINK_TYPE, Constants.TEXT_LINK_TYPE, Constants.CATALOG_ICON));
+					node.addChild(new PopulatableIconedNode(this, Constants.LINK_TYPE, Constants.TEXT_LINK_TYPE, Constants.ICON_CATALOG));
 				if (!contents.contains(Constants.CABLE_LINK_TYPE))
-					node.addChild(new IconedNode(this, Constants.CABLE_LINK_TYPE, Constants.TEXT_CABLE_LINK_TYPE, Constants.CATALOG_ICON));
+					node.addChild(new PopulatableIconedNode(this, Constants.CABLE_LINK_TYPE, Constants.TEXT_CABLE_LINK_TYPE, Constants.ICON_CATALOG));
 				if (!contents.contains(Constants.PORT_TYPE))
-					node.addChild(new IconedNode(this, Constants.PORT_TYPE, Constants.TEXT_PORT_TYPE, Constants.CATALOG_ICON));
+					node.addChild(new PopulatableIconedNode(this, Constants.PORT_TYPE, Constants.TEXT_PORT_TYPE, Constants.ICON_CATALOG));
 			} 
 			else if (s.equals(Constants.MONITORING_DIRECTORY)) {
 				if (!contents.contains(Constants.MEASUREMENT_TYPE))
-					node.addChild(new IconedNode(this, Constants.MEASUREMENT_TYPE, Constants.TEXT_MEASUREMENT_TYPE, Constants.CATALOG_ICON));
+					node.addChild(new PopulatableIconedNode(this, Constants.MEASUREMENT_TYPE, Constants.TEXT_MEASUREMENT_TYPE, Constants.ICON_CATALOG));
 				if (!contents.contains(Constants.MEASUREMENTPORT_TYPE))
-					node.addChild(new IconedNode(this, Constants.MEASUREMENTPORT_TYPE, Constants.TEXT_MEASUREMENTPORT_TYPE, Constants.CATALOG_ICON));
-				// vec.add(new IconedNode(this, "TransmissionPathType",
+					node.addChild(new PopulatableIconedNode(this, Constants.MEASUREMENTPORT_TYPE, Constants.TEXT_MEASUREMENTPORT_TYPE, Constants.ICON_CATALOG));
+				// vec.add(new PopulatableIconedNode(this, "TransmissionPathType",
 				// LangModelConfig.getString("menuJDirPathText"), true));
 			} 
 			else if (s.equals(Constants.SCHEME_TYPE)) {
 				for (int i = 0; i < schemeTypes.length; i++) {
 					if (!contents.contains(schemeTypes[i]))
-						node.addChild(new IconedNode(this, schemeTypes[i]));
+						node.addChild(new PopulatableIconedNode(this, schemeTypes[i], schemeTypeNames[i], Constants.ICON_CATALOG));
 				}
 			} 
 			else if (s.equals(Constants.LINK_TYPE)) {
@@ -254,7 +166,7 @@ public class SchemeTreeModel implements ChildrenFactory {
 					for (Iterator it = linkTypes.iterator(); it.hasNext();) {
 						LinkType type = (LinkType) it.next();
 						if (!contents.contains(type))
-							node.addChild(new IconedNode(this, type, type.getName(), false));
+							node.addChild(new PopulatableIconedNode(this, type, type.getName(), false));
 					}
 				} 
 				catch (ApplicationException ex) {
@@ -270,7 +182,7 @@ public class SchemeTreeModel implements ChildrenFactory {
 					for (Iterator it = linkTypes.iterator(); it.hasNext();) {
 						CableLinkType type = (CableLinkType) it.next();
 						if (!contents.contains(type))
-							node.addChild(new IconedNode(this, type, type.getName(), false));
+							node.addChild(new PopulatableIconedNode(this, type, type.getName(), false));
 					}
 				} 
 				catch (ApplicationException ex) {
@@ -284,7 +196,7 @@ public class SchemeTreeModel implements ChildrenFactory {
 					for (Iterator it = portTypes.iterator(); it.hasNext();) {
 						PortType type = (PortType) it.next();
 						if (!contents.contains(type))
-							node.addChild(new IconedNode(this, type, type.getName(), false));
+							node.addChild(new PopulatableIconedNode(this, type, type.getName(), false));
 					}
 				} 
 				catch (ApplicationException ex) {
@@ -301,7 +213,7 @@ public class SchemeTreeModel implements ChildrenFactory {
 			//
 			// for (Iterator it = pathTypes.iterator(); it.hasNext(); ) {
 			// TransmissionPathType type = (TransmissionPathType)it.next();
-			// vec.add(new IconedNode(this, type, false));
+			// vec.add(new PopulatableIconedNode(this, type, false));
 			// }
 			// }
 			// catch (ApplicationException ex) {
@@ -318,7 +230,7 @@ public class SchemeTreeModel implements ChildrenFactory {
 					for (Iterator it = pathTypes.iterator(); it.hasNext();) {
 						MeasurementPortType type = (MeasurementPortType) it.next();
 						if (!contents.contains(type))
-							node.addChild(new IconedNode(this, type, type.getName(), false));
+							node.addChild(new PopulatableIconedNode(this, type, type.getName(), false));
 					}
 				} catch (ApplicationException ex) {
 					ex.printStackTrace();
@@ -334,7 +246,7 @@ public class SchemeTreeModel implements ChildrenFactory {
 					for (Iterator it = measurementTypes.iterator(); it.hasNext();) {
 						MeasurementType type = (MeasurementType) it.next();
 						if (!contents.contains(type))
-							node.addChild(new IconedNode(this, type, type.getDescription(), false));
+							node.addChild(new PopulatableIconedNode(this, type, type.getDescription(), false));
 					}
 				} 
 				catch (ApplicationException ex) {
@@ -353,7 +265,7 @@ public class SchemeTreeModel implements ChildrenFactory {
 					for (Iterator it = groups.iterator(); it.hasNext();) {
 						SchemeProtoGroup group = (SchemeProtoGroup) it.next();
 						if (!contents.contains(group))
-							node.addChild(new IconedNode(this, group));
+							node.addChild(new PopulatableIconedNode(this, group));
 					}
 				} 
 				catch (ApplicationException ex) {
@@ -372,7 +284,7 @@ public class SchemeTreeModel implements ChildrenFactory {
 					for (Iterator it = ds.iterator(); it.hasNext();) {
 						Scheme sch = (Scheme) it.next();
 						if (!contents.contains(sch))
-							node.addChild(new IconedNode(this, sch));
+							node.addChild(new PopulatableIconedNode(this, sch));
 					}
 				}
 			} 
@@ -396,11 +308,11 @@ public class SchemeTreeModel implements ChildrenFactory {
 						SchemeElement element = (SchemeElement) it.next();
 						if (element.getSchemeLinksAsArray().length != 0	|| element.getSchemeElementsAsArray().length != 0) {
 							if (!contents.contains(element))
-								node.addChild(new IconedNode(this, element, element.getName(), true));
+								node.addChild(new PopulatableIconedNode(this, element, element.getName(), true));
 						}
 						else {
 							if (!contents.contains(element))
-								node.addChild(new IconedNode(this, element, element.getName(), false));
+								node.addChild(new PopulatableIconedNode(this, element, element.getName(), false));
 						}
 					}
 				}
@@ -412,7 +324,7 @@ public class SchemeTreeModel implements ChildrenFactory {
 					for (int i = 0; i < scheme.getSchemeLinksAsArray().length; i++) {
 						SchemeLink link = scheme.getSchemeLinksAsArray()[i];
 						if (!contents.contains(link))
-							node.addChild(new IconedNode(this, link, link.getName(), false));
+							node.addChild(new PopulatableIconedNode(this, link, link.getName(), false));
 					}
 				} 
 				else if (parent instanceof SchemeElement) {
@@ -420,7 +332,7 @@ public class SchemeTreeModel implements ChildrenFactory {
 					for (int i = 0; i < el.getSchemeLinksAsArray().length; i++) {
 						SchemeLink link = el.getSchemeLinksAsArray()[i];
 						if (!contents.contains(link))
-							node.addChild(new IconedNode(this, link, link.getName(), false));
+							node.addChild(new PopulatableIconedNode(this, link, link.getName(), false));
 					}
 				}
 			} 
@@ -429,7 +341,7 @@ public class SchemeTreeModel implements ChildrenFactory {
 				for (int i = 0; i < parent.getSchemeCableLinksAsArray().length; i++) {
 					SchemeCableLink link = parent.getSchemeCableLinksAsArray()[i];
 					if (!contents.contains(link))
-						node.addChild(new IconedNode(this, link, link.getName(), false));
+						node.addChild(new PopulatableIconedNode(this, link, link.getName(), false));
 				}
 			} 
 			else if (s.equals(Constants.SCHEME_PATH)) {
@@ -437,7 +349,7 @@ public class SchemeTreeModel implements ChildrenFactory {
 				for (int i = 0; i < parent.getCurrentSchemeMonitoringSolution().getSchemePathsAsArray().length; i++) {
 					SchemePath path = parent.getCurrentSchemeMonitoringSolution().getSchemePathsAsArray()[i];
 					if (!contents.contains(path))
-						node.addChild(new IconedNode(this, path, path.getName(), false));
+						node.addChild(new PopulatableIconedNode(this, path, path.getName(), false));
 				}
 			}
 		} 
@@ -455,7 +367,7 @@ public class SchemeTreeModel implements ChildrenFactory {
 					for (Iterator it = schemes.iterator(); it.hasNext();) {
 						Scheme sc = (Scheme) it.next();
 						if (!contents.contains(sc))
-							node.addChild(new IconedNode(this, sc));
+							node.addChild(new PopulatableIconedNode(this, sc));
 					}
 				} 
 				catch (ApplicationException ex1) {
@@ -476,14 +388,14 @@ public class SchemeTreeModel implements ChildrenFactory {
 								Image.SCALE_SMOOTH));
 					}
 					if (!contents.contains(map_group))
-						node.addChild(new IconedNode(this, map_group, map_group.getName(), !map_group.getSchemeProtoGroups().isEmpty() || !map_group.getSchemeProtoElements().isEmpty()));
+						node.addChild(new PopulatableIconedNode(this, map_group, map_group.getName(), !map_group.getSchemeProtoGroups().isEmpty() || !map_group.getSchemeProtoElements().isEmpty()));
 				}
 				if (parent_group.getSchemeProtoGroups().isEmpty()) {
 					for (final Iterator schemeProtoElementIterator = parent_group.getSchemeProtoElements().iterator(); schemeProtoElementIterator.hasNext();) {
 						final SchemeProtoElement schemeProtoElement = (SchemeProtoElement) schemeProtoElementIterator.next();
 						// schemeProtoElement.parent(parent_group);
 						if (! contents.contains(schemeProtoElement))
-							node.addChild(new IconedNode(this, schemeProtoElement, schemeProtoElement.getName(), false));
+							node.addChild(new PopulatableIconedNode(this, schemeProtoElement, schemeProtoElement.getName(), false));
 					}
 				}
 			} 
@@ -508,24 +420,24 @@ public class SchemeTreeModel implements ChildrenFactory {
 					}
 					if (has_schemes) {
 						if (!contents.contains(Constants.SCHEME))
-							node.addChild(new IconedNode(this, Constants.SCHEME));
+							node.addChild(new PopulatableIconedNode(this, Constants.SCHEME));
 					}
 					if (has_elements) {
 						if (!contents.contains(Constants.SCHEME_ELEMENT))
-							node.addChild(new IconedNode(this, Constants.SCHEME_ELEMENT));
+							node.addChild(new PopulatableIconedNode(this, Constants.SCHEME_ELEMENT));
 					}
 				}
 				if (s.getSchemeLinksAsArray().length != 0) {
 					if (!contents.contains(Constants.SCHEME_LINK))
-						node.addChild(new IconedNode(this, Constants.SCHEME_LINK));
+						node.addChild(new PopulatableIconedNode(this, Constants.SCHEME_LINK));
 				}
 				if (s.getSchemeCableLinksAsArray().length != 0) {
 					if (!contents.contains(Constants.SCHEME_CABLELINK))
-						node.addChild(new IconedNode(this, Constants.SCHEME_CABLELINK));
+						node.addChild(new PopulatableIconedNode(this, Constants.SCHEME_CABLELINK));
 				}
 				if (s.getCurrentSchemeMonitoringSolution().getSchemePathsAsArray().length != 0) {
 					if (!contents.contains(Constants.SCHEME_PATH))
-						node.addChild(new IconedNode(this, Constants.SCHEME_PATH));
+						node.addChild(new PopulatableIconedNode(this, Constants.SCHEME_PATH));
 				}
 			} 
 			else if (node.getObject() instanceof SchemeElement) {
@@ -536,22 +448,22 @@ public class SchemeTreeModel implements ChildrenFactory {
 						SchemeElement element = scheme.getSchemeElementsAsArray()[i];
 						if (element.getScheme() == null) {
 							if (!contents.contains(element))
-								node.addChild(new IconedNode(this, element, element.getName(), (element.getSchemeLinksAsArray().length != 0 || element.getSchemeElementsAsArray().length != 0)));
+								node.addChild(new PopulatableIconedNode(this, element, element.getName(), (element.getSchemeLinksAsArray().length != 0 || element.getSchemeElementsAsArray().length != 0)));
 						} 
 						else {
 							if (!contents.contains(element))
-								node.addChild(new IconedNode(this, element));
+								node.addChild(new PopulatableIconedNode(this, element));
 						}
 					}
 				} 
 				else {
 					if (schel.getSchemeElementsAsArray().length != 0) {
 						if (!contents.contains(Constants.SCHEME_ELEMENT))
-							node.addChild(new IconedNode(this, Constants.SCHEME_ELEMENT));
+							node.addChild(new PopulatableIconedNode(this, Constants.SCHEME_ELEMENT));
 					}
 					if (schel.getSchemeLinksAsArray().length != 0) {
 						if (!contents.contains(Constants.SCHEME_LINK))
-							node.addChild(new IconedNode(this, Constants.SCHEME_LINK));
+							node.addChild(new PopulatableIconedNode(this, Constants.SCHEME_LINK));
 					}
 				}
 			}

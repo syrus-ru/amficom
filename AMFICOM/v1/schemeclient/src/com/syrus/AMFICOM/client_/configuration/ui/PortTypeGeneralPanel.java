@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeGeneralPanel.java,v 1.3 2005/03/14 13:36:18 stas Exp $
+ * $Id: PortTypeGeneralPanel.java,v 1.4 2005/03/30 13:33:39 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,21 +15,22 @@ import javax.swing.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
+import com.syrus.AMFICOM.client_.scheme.ui.Constants;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/03/14 13:36:18 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/30 13:33:39 $
  * @module schemeclient_v1
  */
 
 public class PortTypeGeneralPanel implements StorableObjectEditor {
 	protected PortType portType;
 	protected String[] sorts = new String[] {
-			Constants.PORTTYPESORT_OPTICAL,
-			Constants.PORTTYPESORT_THERMAL,
-			Constants.PORTTYPESORT_ELECTICAL
+			Constants.TEXT_PORTTYPESORT_OPTICAL,
+			Constants.TEXT_PORTTYPESORT_THERMAL,
+			Constants.TEXT_PORTTYPESORT_ELECTICAL
 	};  
 	
 	JPanel pnPanel0 = new JPanel();
@@ -154,7 +155,7 @@ public class PortTypeGeneralPanel implements StorableObjectEditor {
 		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder(Constants.TEXT_EMPTY) );
 		pnGeneralPanel.setBackground(Color.WHITE);
 		pnPanel0.setBackground(Color.WHITE);
-		scpDescriptionArea.setPreferredSize(Constants.TEXT_AREA_SIZE);
+		scpDescriptionArea.setPreferredSize(Constants.DIMENSION_TEXTAREA);
 		cmbSortCombo.setFont(UIGeneralStorage.DIALOG_FONT);
 	}
 	

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypePropertiesManager.java,v 1.3 2005/03/17 14:45:35 stas Exp $
+ * $Id: MeasurementTypePropertiesManager.java,v 1.4 2005/03/30 13:33:39 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,16 +8,17 @@
 
 package com.syrus.AMFICOM.client_.configuration.ui;
 
-import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
-import com.syrus.AMFICOM.client_.scheme.ui.PropertiesMananager;
+import com.syrus.AMFICOM.client_.general.ui_.*;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.measurement.MeasurementTypeController;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/03/17 14:45:35 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/30 13:33:39 $
  * @module schemeclient_v1
  */
 
-public class MeasurementTypePropertiesManager implements PropertiesMananager {
+public class MeasurementTypePropertiesManager implements VisualManager {
 
 	private static MeasurementTypePropertiesManager instance;
 	private static MeasurementTypeGeneralPanel generalPanel;
@@ -47,6 +48,14 @@ public class MeasurementTypePropertiesManager implements PropertiesMananager {
 		if (charPanel == null)
 			charPanel = new MeasurementTypeCharacteristicsPanel();
 		return charPanel;
+	}
+
+	/**
+	 * @return MeasurementTypeController
+	 * @see com.syrus.AMFICOM.client_.general.ui_.VisualManager#getController()
+	 */
+	public ObjectResourceController getController() {
+		return MeasurementTypeController.getInstance();
 	}
 
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: PropertiesMananager.java,v 1.2 2005/03/14 13:36:19 stas Exp $
+ * $Id: PropertiesMananager.java,v 1.3 2005/03/30 13:33:39 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,11 @@
 
 package com.syrus.AMFICOM.client_.scheme.ui;
 
-import com.syrus.AMFICOM.client_.general.ui_.*;
+import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/03/14 13:36:19 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/30 13:33:39 $
  * @module schemeclient_v1
  */
 

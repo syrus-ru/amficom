@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractPropertiesFrame.java,v 1.4 2005/03/17 14:45:35 stas Exp $
+ * $Id: AbstractPropertiesFrame.java,v 1.5 2005/03/30 13:33:39 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,18 +9,16 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 import java.awt.*;
-import java.lang.reflect.*;
 
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.client_.general.ui_.*;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/03/17 14:45:35 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/30 13:33:39 $
  * @module schemeclient_v1
  */
 
@@ -30,7 +28,6 @@ public abstract class AbstractPropertiesFrame extends JInternalFrame
 	Dispatcher dispatcher;
 	JScrollPane scrollPane;
 	
-	protected ObjectResourceController controller;
 	protected StorableObjectEditor editor;
 	protected JComponent emptyPane;
 	
@@ -67,10 +64,10 @@ public abstract class AbstractPropertiesFrame extends JInternalFrame
 		this.aContext = aContext;
 		
 		if (this.dispatcher != null) {
-			this.dispatcher.unregister(this, TreeDataSelectionEvent.type);
+			this.dispatcher.unregister(this, ObjectSelectedEvent.TYPE);
 		}
 		this.dispatcher = aContext.getDispatcher();
-		this.dispatcher.register(this, TreeDataSelectionEvent.type);
+		this.dispatcher.register(this, ObjectSelectedEvent.TYPE);
 	}
 	
 	public void doDefaultCloseAction() {
@@ -83,73 +80,57 @@ public abstract class AbstractPropertiesFrame extends JInternalFrame
 		super.doDefaultCloseAction();
 	}
 	
-	public void setObjectResourceController(ObjectResourceController controller) {
-		this.controller = controller;
-
+	public void setVisualManager(VisualManager manager) {
 		JComponent comp = emptyPane;
 		this.editor = null;
-		if (this.controller != null) {
-			PropertiesMananager manager = getPropertiesPaneManager();
-			if (manager != null) {
-				this.editor = getEditor(manager);
-				comp = this.editor.getGUI();
-			}
+		if (manager != null) {
+			this.editor = getEditor(manager);
+			comp = this.editor.getGUI();
 		}
 		setPropertiesPane(comp);
 	}
-	
-//	protected void setObject(Object obj) {
-//		this.panel.setObject(obj);
-//	}
 	
 	protected void setPropertiesPane(JComponent propertiesPane) {
 		scrollPane.getViewport().removeAll();
 		scrollPane.getViewport().add(propertiesPane);
 	}
 	
-		/**
-	 * @param e
-	 * @see com.syrus.AMFICOM.Client.General.Event.OperationListener#operationPerformed(com.syrus.AMFICOM.Client.General.Event.OperationEvent)
-	 */
 	public void operationPerformed(OperationEvent e) {
-		if (e.getActionCommand().equals(TreeDataSelectionEvent.type)) {
-			TreeDataSelectionEvent tdse = (TreeDataSelectionEvent) e;
-			ObjectResourceController controller0 = tdse.getController();
-
-			if (this.controller == null || !this.controller.equals(controller0))
-				setObjectResourceController(controller0);
-
+		if (e.getActionCommand().equals(ObjectSelectedEvent.TYPE)) {
+			ObjectSelectedEvent event = (ObjectSelectedEvent) e;
+			
+			setVisualManager(event.getVisualManager());				
 			if (this.editor != null)
-				this.editor.setObject(tdse.getSelectedObject());
+				this.editor.setObject(event.getSelectedObject());	
 		}
 	}
 	
-	protected abstract StorableObjectEditor getEditor(PropertiesMananager manager);
+	protected abstract StorableObjectEditor getEditor(VisualManager manager);
 	
-	protected PropertiesMananager getPropertiesPaneManager() {
-		PropertiesMananager manager = null;
-		try {
-			final String methodName1 = "getPropertyManagerClassName";
-			try {
-				Class clazz = Class.forName((String) (controller.getClass().getMethod(
-						methodName1, new Class[0]).invoke(controller.getClass(),
-						new Object[0])));
-				final String methodName2 = "getInstance";
-				try {
-					Method method = clazz.getMethod(methodName2, new Class[0]); 
-					manager = (PropertiesMananager) (method.invoke(clazz, new Object[0]));
-				} catch (NoSuchMethodException nsme) {
-					System.err.println("WARNING: " + clazz.getName() + '.' + methodName2 + "() not found.");
-				}
-			} catch (NoSuchMethodException nsme) {
-				System.err.println("WARNING: " + controller.getClass().getName() + '.' + methodName1 + "() not found.");
-			}
-		} catch (InvocationTargetException ite) {
-			ite.printStackTrace();
-			ite.getTargetException().printStackTrace();
-		} catch (Throwable t) {
-			t.printStackTrace();
-		}
-		return manager;
-	}
+//	protected PropertiesMananager getPropertiesPaneManager() {
+//		PropertiesMananager manager = null;
+//		try {
+//			final String methodName1 = "getPropertyManagerClassName";
+//			try {
+//				Class clazz = Class.forName((String) (controller.getClass().getMethod(
+//						methodName1, new Class[0]).invoke(controller.getClass(),
+//						new Object[0])));
+//				final String methodName2 = "getInstance";
+//				try {
+//					Method method = clazz.getMethod(methodName2, new Class[0]); 
+//					manager = (PropertiesMananager) (method.invoke(clazz, new Object[0]));
+//				} catch (NoSuchMethodException nsme) {
+//					System.err.println("WARNING: " + clazz.getName() + '.' + methodName2 + "() not found.");
+//				}
+//			} catch (NoSuchMethodException nsme) {
+//				System.err.println("WARNING: " + controller.getClass().getName() + '.' + methodName1 + "() not found.");
+//			}
+//		} catch (InvocationTargetException ite) {
+//			ite.printStackTrace();
+//			ite.getTargetException().printStackTrace();
+//		} catch (Throwable t) {
+//			t.printStackTrace();
+//		}
+//		return manager;
+//	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypePropertiesManager.java,v 1.2 2005/03/14 13:36:18 stas Exp $
+ * $Id: MeasurementPortTypePropertiesManager.java,v 1.3 2005/03/30 13:33:39 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,15 +9,16 @@
 package com.syrus.AMFICOM.client_.configuration.ui;
 
 import com.syrus.AMFICOM.client_.general.ui_.*;
-import com.syrus.AMFICOM.client_.scheme.ui.PropertiesMananager;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.configuration.MeasurementPortTypeController;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/03/14 13:36:18 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/30 13:33:39 $
  * @module schemeclient_v1
  */
 
-public class MeasurementPortTypePropertiesManager implements PropertiesMananager {
+public class MeasurementPortTypePropertiesManager implements VisualManager {
 
 	private static MeasurementPortTypePropertiesManager instance;
 	private static MeasurementPortTypeGeneralPanel generalPanel;
@@ -47,6 +48,14 @@ public class MeasurementPortTypePropertiesManager implements PropertiesMananager
 		if (charPanel == null)
 			charPanel = new MeasurementPortTypeCharacteristicsPanel();
 		return charPanel;
+	}
+
+	/**
+	 * @return MeasurementPortTypeController
+	 * @see com.syrus.AMFICOM.client_.general.ui_.VisualManager#getController()
+	 */
+	public ObjectResourceController getController() {
+		return MeasurementPortTypeController.getInstance();
 	}
 
 }

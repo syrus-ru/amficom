@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeGeneralPanel.java,v 1.5 2005/03/17 14:45:35 stas Exp $
+ * $Id: MeasurementPortTypeGeneralPanel.java,v 1.6 2005/03/30 13:33:39 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,18 +14,19 @@ import java.util.List;
 
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
-import com.syrus.AMFICOM.client_.general.ui_.tree.*;
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.client_.general.ui_.tree_.*;
+import com.syrus.AMFICOM.client_.scheme.ui.Constants;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.measurement.*;
+import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/03/17 14:45:35 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/30 13:33:39 $
  * @module schemeclient_v1
  */
 
@@ -40,8 +41,8 @@ public class MeasurementPortTypeGeneralPanel implements StorableObjectEditor {
 	JLabel lbTestTypeLabel = new JLabel(Constants.TEXT_MEASUREMENT_TYPES);
 	JPanel pnGeneralPanel = new JPanel();
 	JTree trTestTypeTree;
-	SONode root;	
-	List measurementTypes;
+	List measurementTypeNodes;
+	Item root;
 		
 	protected MeasurementPortTypeGeneralPanel()
 	{
@@ -56,19 +57,17 @@ public class MeasurementPortTypeGeneralPanel implements StorableObjectEditor {
 		}
 	}
 
-	protected MeasurementPortTypeGeneralPanel(MeasurementPortType apt)
-	{
+	protected MeasurementPortTypeGeneralPanel(MeasurementPortType apt) {
 		this();
 		setObject(apt);
 	}
 
-	private void jbInit() throws Exception
-	{
-		SOTreeDataModel model = new MeasurementTypeModel();
-		root = new SOMutableNode(model, Constants.ROOT);
-		trTestTypeTree = new Tree(new Dispatcher(), root);
+	private void jbInit() throws Exception {
+		root = createRoot();
+		CheckableTreeUI treeUI = new CheckableTreeUI(root); 
+		trTestTypeTree = treeUI.getTree();
 		trTestTypeTree.setRootVisible(false);
-		measurementTypes = getMeasurementTypes();
+		measurementTypeNodes = getMeasurementTypeNodes();
 	
 		GridBagLayout gbPanel0 = new GridBagLayout();
 		GridBagConstraints gbcPanel0 = new GridBagConstraints();
@@ -169,8 +168,8 @@ public class MeasurementPortTypeGeneralPanel implements StorableObjectEditor {
 		
 		pnPanel0.setBackground(Color.WHITE);
 		pnGeneralPanel.setBackground(Color.WHITE);
-		scpDescriptionArea.setPreferredSize(Constants.TEXT_AREA_SIZE);
-		scpTestTypeTree.setPreferredSize(Constants.TEXT_AREA_SIZE);
+		scpDescriptionArea.setPreferredSize(Constants.DIMENSION_TEXTAREA);
+		scpTestTypeTree.setPreferredSize(Constants.DIMENSION_TEXTAREA);
 	}
 
 	public JComponent getGUI() {
@@ -194,9 +193,9 @@ public class MeasurementPortTypeGeneralPanel implements StorableObjectEditor {
 				Collection mPTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(
 						condition, true);
 				
-				for (Iterator it = measurementTypes.iterator(); it.hasNext();) {
-					SOCheckableNode node = (SOCheckableNode)it.next();
-					node.setChecked(mPTypes.contains(node.getUserObject()));
+				for (Iterator it = measurementTypeNodes.iterator(); it.hasNext();) {
+					CheckableNode node = (CheckableNode)it.next();
+					node.setChecked(mPTypes.contains(node.getObject()));
 				}
 				trTestTypeTree.updateUI();
 			} catch (ApplicationException e) {
@@ -207,21 +206,16 @@ public class MeasurementPortTypeGeneralPanel implements StorableObjectEditor {
 		else {
 			this.tfNameText.setText(Constants.TEXT_EMPTY);
 			this.taDescriptionArea.setText(Constants.TEXT_EMPTY);
-			for (Iterator it = measurementTypes.iterator(); it.hasNext();) {
-				SOCheckableNode node = (SOCheckableNode)it.next();
+			for (Iterator it = measurementTypeNodes.iterator(); it.hasNext();) {
+				CheckableNode node = (CheckableNode)it.next();
 				node.setChecked(false);
 			}
 			trTestTypeTree.updateUI();
 		}
 	}
 	
-	List getMeasurementTypes() {
-		List types = new LinkedList();
-		for (Enumeration en = root.children(); en.hasMoreElements();) {
-			SOCheckableNode node = (SOCheckableNode)en.nextElement();
-			types.add(node);
-		}
-		return types;
+	List getMeasurementTypeNodes() {
+		return root.getChildren();
 	}
 
 	public void commitChanges() {
@@ -229,10 +223,9 @@ public class MeasurementPortTypeGeneralPanel implements StorableObjectEditor {
 			this.type.setName(tfNameText.getText());
 			this.type.setDescription(this.taDescriptionArea.getText());
 
-			List types = new LinkedList();
-			for (Iterator it = types.iterator(); it.hasNext();) {
-				SOCheckableNode node = (SOCheckableNode) it.next();
-				MeasurementType mtype = (MeasurementType) node.getUserObject();
+			for (Iterator it = measurementTypeNodes.iterator(); it.hasNext();) {
+				CheckableNode node = (CheckableNode)it.next();
+				MeasurementType mtype = (MeasurementType) node.getObject();
 				if (node.isChecked()) {
 					Collection pTypes = mtype.getMeasurementPortTypes();
 					if (!pTypes.contains(type)) {
@@ -250,61 +243,29 @@ public class MeasurementPortTypeGeneralPanel implements StorableObjectEditor {
 				}
 			}
 			try {
-				MeasurementStorableObjectPool.flush(false);
-			} catch (ApplicationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				MeasurementStorableObjectPool.flush(true);
+			} 
+			catch (ApplicationException e) {
+				Log.errorException(e);
 			}
 		}
 	}
-
-	class MeasurementTypeModel implements SOTreeDataModel {
-		public Color getNodeColor(SONode node) {
-			return Color.BLACK;
-		}
+	
+	Item createRoot() {
+		Item root1 = new IconedNode(Constants.ROOT, Constants.TEXT_ROOT);
 		
-		public Icon getNodeIcon(SONode node) {
-			return null;
-		}
-		
-		public String getNodeName(SONode node) {
-			if (node.getUserObject() instanceof String) {
-				return Constants.ROOT;
+		EquivalentCondition condition = new EquivalentCondition(
+				ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
+		try {
+			Collection allMPTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+			for (Iterator it = allMPTypes.iterator(); it.hasNext();) {
+				MeasurementType t = (MeasurementType) it.next();
+					root1.addChild(new CheckableNode(t, t.getDescription(), false));
 			}
-			if (node.getUserObject() instanceof MeasurementType) {
-				return ((MeasurementType)node.getUserObject()).getDescription();				
-			}
-			throw new UnsupportedOperationException("Unsupported object"); //$NON-NLS-1$
+		} 
+		catch (ApplicationException e) {
+			Log.errorException(e);
 		}
-
-		public ObjectResourceController getNodeController(SONode node) {
-			return MeasurementTypeController.getInstance();
-		}
-
-		public void updateChildNodes(SONode node) {
-			if(!node.isExpanded())
-				return;
-			List contents = node.getChildrenUserObjects();
-			
-			if (node.getUserObject() instanceof String) {
-				String s = (String) node.getUserObject();
-				if (s.equals(Constants.ROOT)) {
-					EquivalentCondition condition = new EquivalentCondition(
-							ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
-					try {
-						Collection allMPTypes = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
-						for (Iterator it = allMPTypes.iterator(); it.hasNext();) {
-							MeasurementType t = (MeasurementType) it.next();
-							if (!contents.contains(t))
-								node.add(new SOCheckableNode(this, t, false));
-						}
-					} 
-					catch (ApplicationException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			}
-		}
+		return root1;
 	}
 }

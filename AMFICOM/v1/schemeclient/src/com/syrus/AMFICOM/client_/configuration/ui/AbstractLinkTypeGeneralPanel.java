@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractLinkTypeGeneralPanel.java,v 1.3 2005/03/14 13:36:18 stas Exp $
+ * $Id: AbstractLinkTypeGeneralPanel.java,v 1.4 2005/03/30 13:33:39 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,11 +14,12 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client_.general.ui_.StorableObjectEditor;
+import com.syrus.AMFICOM.client_.scheme.ui.Constants;
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/03/14 13:36:18 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/30 13:33:39 $
  * @module schemeclient_v1
  */
 
@@ -175,7 +176,7 @@ public class AbstractLinkTypeGeneralPanel implements StorableObjectEditor
 
 		pnGeneralPanel.setBackground(Color.WHITE);
 		pnPanel0.setBackground(Color.WHITE);
-		scpDescriptionArea.setPreferredSize(Constants.TEXT_AREA_SIZE);
+		scpDescriptionArea.setPreferredSize(Constants.DIMENSION_TEXTAREA);
 	}
 	
 	public JComponent getGUI() {
