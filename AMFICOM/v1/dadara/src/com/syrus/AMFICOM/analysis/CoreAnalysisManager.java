@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.10 2005/02/11 13:58:51 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.11 2005/02/15 11:20:38 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.10 $, $Date: 2005/02/11 13:58:51 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/15 11:20:38 $
  * @module
  */
 
@@ -176,6 +176,7 @@ public class CoreAnalysisManager
 			int strategy, BellcoreStructure bs,
 			double[] pars, Map bellcoreTraces)
 	{
+		long t0 = System.currentTimeMillis();
 	    // достаем данные
 	    double y[] = bs.getTraceData();
 	    double deltaX = bs.getResolution(); // метры
@@ -189,12 +190,14 @@ public class CoreAnalysisManager
 		if (nReflSize > 3 * reflSize / 5)
 			nReflSize = 3 * reflSize / 5;
 
+		long t1 = System.currentTimeMillis();
 		// формирование событий
 		double[] meanAttenuation = { 0 }; // storage for meanAttenuation -- unused: XXX
 		ReflectogramEvent[] ep = analyse2((int) pars[7], y, deltaX, pars[5],
 				pars[0], pars[4], pars[3], pars[1], pars[2], meanAttenuation,
 				reflSize, nReflSize);
 
+		long t2 = System.currentTimeMillis();
 		// определяем уровень шума для фитировки
 		//double noiseLevel = calcNoise3s(y);
 		double[] noiseArray = calcNoiseArray(y, null);
@@ -203,12 +206,14 @@ public class CoreAnalysisManager
 		// (с определением параметров нужных для расчета потерь и отражения)
 		//fitTrace(y, deltaX, ep, strategy, meanAttenuation[0], noiseArray); -- более не используется
 		
+		long t3 = System.currentTimeMillis();
 		//фитируем ОДНОЙ кривой
 		ReflectogramEvent ev0 = ep[0].copy();
 		ev0.setEnd(ep[ep.length - 1].getEnd());
 		ReflectogramEvent[] el0 = new ReflectogramEvent[] { ev0 };
 		fitTrace(y, deltaX, el0, strategy, meanAttenuation[0], noiseArray);
 
+		long t4 = System.currentTimeMillis();
 		// определение параметров потерь и отражения (по смежным событиям)
 		ReflectogramEvent.calcMutualParameters(ep, y);
 
@@ -216,6 +221,8 @@ public class CoreAnalysisManager
 //		for (int i = 0; i < ep.length; i++)
 //			ep[i].setDefaultThreshold(bs, bellcoreTraces);
 
+		long t5 = System.currentTimeMillis();
+		System.out.println("makeAnalysis: getData: " + (t1-t0) + "; IA: " + (t2-t1) + "; noiseArray:" + (t3-t2) + "; fit: " + (t4-t3) + "; postProcess: " + (t5-t4));
 		return new ModelTraceManager(ep, el0[0].getMFClone());
 	}
 
@@ -233,7 +240,7 @@ public class CoreAnalysisManager
 			new ReflectogramEvent.FittingParameters(
 				y, noiseArray);
 
-		try
+		/*try
 		{
 			FileOutputStream fos = new FileOutputStream(new File("tr_er.dat"));
 			for (int i = 0; i < y.length; i++)
@@ -244,16 +251,18 @@ public class CoreAnalysisManager
 		catch(IOException e)
 		{
 			System.err.println("CoreAnalysismanager: debug output failed");
-		}
+		}*/
+
 		for (int i = 0; i < events.length; i++)
 		    events[i].setFittingParameters(fPars);
+		long t1 = System.currentTimeMillis();
 
 		for (int i = 0; i < events.length; i++)
 			events[i].doFit();
 
-		long t1 = System.currentTimeMillis();
+		long t2 = System.currentTimeMillis();
 
-		System.out.println("delta time: fit: " + (t1 - t0) + " ms");
+		System.out.println("delta time: fit: prepare: " + (t1-t0) + "; doFit: " + (t2-t1));
 
 		return events;
 	}

@@ -242,7 +242,7 @@ JNIEXPORT void JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunction_nFix
 		assert(0);
 	ThreshArray ta(env, threshArr);
 	mf.execCmd(MF_CMD_FIX_THRESH, (void *)&ta);
-	ModelF_C2J_update(env, mf, obj); // <-- usually not required
+	ModelF_C2J_update(env, mf, obj);
 	prf_e();
 }
 
