@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.22 2005/03/31 08:58:50 arseniy Exp $
+ * $Id: EventDatabase.java,v 1.23 2005/03/31 10:03:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,13 +34,14 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/03/31 08:58:50 $
+ * @version $Revision: 1.23 $, $Date: 2005/03/31 10:03:17 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -231,7 +232,8 @@ public class EventDatabase extends StorableObjectDatabase {
 		Event event = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
-				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName() + " '" +  event.getId() + "'; argument: " + arg);
+				Log.errorMessage("Unknown retrieve kind: " + retrieveKind + " for " + this.getEnityName()
+						+ " '" + event.getId() + "'; argument: " + arg);
 				return null;
 		}
 	}
@@ -322,6 +324,28 @@ public class EventDatabase extends StorableObjectDatabase {
 			finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
+		}
+	}
+
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
+			throws VersionCollisionException, UpdateObjectException {
+		super.update(storableObject, modifierId, updateKind);
+		try {
+			this.updateEventSources(Collections.singletonList(storableObject));
+		}
+		catch (IllegalDataException ide) {
+			Log.errorException(ide);
+		}
+	}
+
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
+			throws VersionCollisionException, UpdateObjectException {
+		super.update(storableObjects, modifierId, updateKind);
+		try {
+			this.updateEventSources(storableObjects);
+		}
+		catch (IllegalDataException ide) {
+			Log.errorException(ide);
 		}
 	}
 
