@@ -61,8 +61,8 @@ public class Characteristic extends StorableObject implements TypedObject {
 		return new Characteristic_Transferable((Identifier_Transferable)super.getId().getTransferable(),
 																					 super.created.getTime(),
 																					 super.modified.getTime(),
-																					 (Identifier_Transferable)super.creator_id.getTransferable(),
-																					 (Identifier_Transferable)super.modifier_id.getTransferable(),
+																					 (Identifier_Transferable)super.creatorId.getTransferable(),
+																					 (Identifier_Transferable)super.modifierId.getTransferable(),
 																					 (Identifier_Transferable)this.typeId.getTransferable(),
 																					 new String(this.name),
 																					 new String(this.description),
@@ -97,8 +97,8 @@ public class Characteristic extends StorableObject implements TypedObject {
 
 	protected synchronized void setAttributes(Date created,
 																						Date modified,
-																						Identifier creator_id,
-																						Identifier modifier_id,
+																						Identifier creatorId,
+																						Identifier modifierId,
 																						Identifier typeId,
 																						String name,
 																						String description,
@@ -107,8 +107,8 @@ public class Characteristic extends StorableObject implements TypedObject {
 																						Identifier characterizedId) {
 		super.setAttributes(created,
 												modified,
-												creator_id,
-												modifier_id);
+												creatorId,
+												modifierId);
 		this.typeId = typeId;
 		this.name = name;
 		this.description = description;

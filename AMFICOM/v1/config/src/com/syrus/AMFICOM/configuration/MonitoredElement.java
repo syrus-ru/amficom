@@ -56,8 +56,8 @@ public class MonitoredElement extends DomainMember {
 		return new MonitoredElement_Transferable((Identifier_Transferable)super.getId().getTransferable(),
 																						 super.created.getTime(),
 																						 super.modified.getTime(),
-																						 (Identifier_Transferable)super.creator_id.getTransferable(),
-																						 (Identifier_Transferable)super.modifier_id.getTransferable(),
+																						 (Identifier_Transferable)super.creatorId.getTransferable(),
+																						 (Identifier_Transferable)super.modifierId.getTransferable(),
 																						 (Identifier_Transferable)super.domainId.getTransferable(),
 																						 (Identifier_Transferable)this.kisId.getTransferable(),
 																						 new String(this.localAddress));
@@ -73,16 +73,16 @@ public class MonitoredElement extends DomainMember {
 
 	protected synchronized void setAttributes(Date created,
 																						Date modified,
-																						Identifier creator_id,
-																						Identifier modifier_id,
-																						Identifier domain_id,
+																						Identifier creatorId,
+																						Identifier modifierId,
+																						Identifier domainId,
 																						Identifier kisId,
 																						String localAddress) {
 		super.setAttributes(created,
 												modified,
-												creator_id,
-												modifier_id,
-												domain_id);
+												creatorId,
+												modifierId,
+												domainId);
 		this.kisId = kisId;
 		this.localAddress = localAddress;
 	}

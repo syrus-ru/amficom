@@ -1,8 +1,8 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.util.Date;
+import java.util.List;
 import java.util.ArrayList;
-import java.util.Iterator;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -27,10 +27,10 @@ public abstract class Equipment extends DomainMember implements Characterized, T
 	String eqClass;
 	Identifier imageId;
 
-	ArrayList characteristicIds;
-	ArrayList portIds;
-	ArrayList cablePortIds;
-	ArrayList specialPortIds;
+	List characteristicIds;
+	List portIds;
+	List cablePortIds;
+	List specialPortIds;
 
 	Equipment(Identifier id) {
 		super(id);
@@ -137,30 +137,30 @@ public abstract class Equipment extends DomainMember implements Characterized, T
 		return this.eqClass;
 	}
 
-	public ArrayList getCharacteristicIds() {
+	public List getCharacteristicIds() {
 		return this.characteristicIds;
 	}
 
-	public ArrayList getPortIds() {
+	public List getPortIds() {
 		return this.portIds;
 	}
 
-	public ArrayList getCablePortIds() {
+	public List getCablePortIds() {
 		return this.cablePortIds;
 	}
 
-	public ArrayList getSpecialPortIds() {
+	public List getSpecialPortIds() {
 		return this.specialPortIds;
 	}
 
-	public void setCharacteristicIds(ArrayList characteristicIds) {
+	public void setCharacteristicIds(List characteristicIds) {
 		this.characteristicIds = characteristicIds;
 	}
 
 	protected synchronized void setAttributes(Date created,
 																						Date modified,
-																						Identifier creator_id,
-																						Identifier modifier_id,
+																						Identifier creatorId,
+																						Identifier modifierId,
 																						Identifier domainId,
 																						Identifier typeId,
 																						String name,
@@ -180,8 +180,8 @@ public abstract class Equipment extends DomainMember implements Characterized, T
 																						Identifier imageId) {
 		super.setAttributes(created,
 												modified,
-												creator_id,
-												modifier_id,
+												creatorId,
+												modifierId,
 												domainId);
 		this.typeId = typeId;
 		this.name = name;

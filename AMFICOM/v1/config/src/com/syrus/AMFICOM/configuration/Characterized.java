@@ -2,11 +2,11 @@ package com.syrus.AMFICOM.configuration;
 
 import com.syrus.AMFICOM.general.Identified;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface Characterized extends Identified {
 
-	public ArrayList getCharacteristicIds();
+	List getCharacteristicIds();
 
-	public void setCharacteristicIds(ArrayList characteristic_ids);
+	void setCharacteristicIds(List characteristic_ids);
 }
