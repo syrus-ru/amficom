@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.17 2005/03/17 09:39:32 bass Exp $
+# $Id: Makefile,v 1.18 2005/03/17 13:08:15 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -25,24 +25,6 @@ DIRS_TO_SCRUB = \
 	com/syrus/AMFICOM/scheme/corba
 
 SRCDIRS_TO_SCRUB = $(foreach dir,$(DIRS_TO_SCRUB),$(SRCDIR)/$(dir))
-IDL_GENERATED_SCHEMA_SOURCES = $(foreach \
-	srcdir,\
-	$(SRCDIRS_TO_SCRUB),\
-	$(addprefix \
-		$(srcdir)/,\
-		$(shell cat $(srcdir)/.cvsignore)))
-IDL_GENERATED_SCHEMA_CLASSES = $(subst \
-	$(SRCDIR),\
-	$(CLASSDIR),\
-	$(foreach \
-		srcdir,\
-		$(SRCDIRS_TO_SCRUB),\
-		$(addprefix \
-			$(srcdir)/,\
-			$(subst \
-				.java,\
-				.class,\
-				$(shell cat $(srcdir)/.cvsignore)))))
 _CLASSPATH = $(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/corba.jar:$(LIBDIR)/general.jar:$(LIBDIR)/map.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/util.jar
 
 $(LIBNAME): .mach
@@ -54,7 +36,6 @@ $(LIBNAME): .mach
 	$(JAVAC) $(JAVACFLAGS) \
 		-sourcepath $(SRCDIR) \
 		-classpath $(_CLASSPATH):$(CLASSDIR) \
-		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/configuration/*.java) \
 		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/scheme/*.java)
 	touch $@
 
@@ -106,12 +87,6 @@ cleanmach:
 
 .PHONY: cleancorba
 cleancorba: idlclean
-	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/administration
-	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/configuration
-	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/general
-	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/map
-	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/resource
-	$(RM) -r $(IDL_GENERATED_SCHEMA_CLASSES)
 	$(RM) .corba
 
 #### Install ####
@@ -145,7 +120,6 @@ dist:
 		Makefile \
 		README \
 		$(SRCDIR)/com/syrus/AMFICOM/scheme/*.java \
-		$(filter-out $(wildcard $(IDL_GENERATED_SCHEMA_SOURCES)), $(wildcard $(SRCDIR)/com/syrus/AMFICOM/scheme/corba/*.java)) \
 		| bzip2 -9 >$(ARCHFILE)
 	$(RM) *.idl
 
