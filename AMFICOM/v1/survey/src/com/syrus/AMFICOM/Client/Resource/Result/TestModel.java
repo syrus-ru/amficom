@@ -33,7 +33,7 @@ public class TestModel extends ObjectResourceModel {
 						s = LangModelSurvey.getString("labelDoing");
 						break;
 					case TestStatus._TEST_STATUS_COMPLETED:
-						s = LangModelSurvey.getString("labelDone");
+						s = LangModelSurvey.getString("Done");
 						break;
 					case TestStatus._TEST_STATUS_SCHEDULED:
 						s = LangModelSurvey.getString("labelReadyToDo");
@@ -71,7 +71,7 @@ public class TestModel extends ObjectResourceModel {
 			else if (colId.equals(ConstStorage.COLUMN_NAME_TEMPORAL_TYPE)) {
 				switch (test.temporal_type.value()) {
 					case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
-						s = LangModelSurvey.getString("labelOnetime");
+						s = LangModelSurvey.getString("Onetime");
 						break;
 					case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
 						s = LangModelSurvey.getString("labelPeriod");
