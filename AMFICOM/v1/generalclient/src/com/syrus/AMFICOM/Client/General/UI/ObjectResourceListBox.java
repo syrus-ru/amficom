@@ -1,26 +1,23 @@
+/*
+ * $Id: ObjectResourceListBox.java,v 1.6 2004/09/27 06:01:12 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.Client.General.UI;
 
+import com.syrus.AMFICOM.Client.Resource.*;
+import java.awt.*;
+import java.util.*;
+import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Rectangle;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-
-import java.util.Map;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JList;
-
-
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2004/09/27 06:01:12 $
+ * @module generalclient_v1
+ */
 public class ObjectResourceListBox extends JList
 		implements PropertyRenderer, PropertyEditor
 {
