@@ -1,0 +1,118 @@
+package com.syrus.AMFICOM.configuration;
+
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ArrayList;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.TypedObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
+
+
+public class MCM extends DomainMember implements Characterized, TypedObject {
+	private Identifier typeId;
+	private String name;
+	private String description;
+	private List characteristicIds;
+
+	private StorableObjectDatabase mcmDatabase;
+
+	public MCM(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
+		super(id);
+
+		this.mcmDatabase = ConfigurationDatabaseContext.mcmDatabase;
+		try {
+			this.mcmDatabase.retrieve(this);
+		}
+		catch (IllegalDataException ide) {
+			throw new RetrieveObjectException(ide.getMessage(), ide);
+		}
+	}
+
+	public MCM(MCM_Transferable mt) throws CreateObjectException {
+		super(new Identifier(mt.id),
+					new Date(mt.created),
+					new Date(mt.modified),
+					new Identifier(mt.creator_id),
+					new Identifier(mt.modifier_id),
+					new Identifier(mt.domain_id));
+		this.typeId = new Identifier(mt.type_id);
+		this.name = new String(mt.name);
+		this.description = new String(mt.description);
+
+		this.characteristicIds = new ArrayList(mt.characteristic_ids.length);
+		for (int i = 0; i < mt.characteristic_ids.length; i++)
+			this.characteristicIds.add(new Identifier(mt.characteristic_ids[i]));
+
+		this.mcmDatabase = ConfigurationDatabaseContext.mcmDatabase;
+		try {
+			this.mcmDatabase.insert(this);
+		}
+		catch (IllegalDataException ide) {
+			throw new CreateObjectException(ide.getMessage(), ide);
+		}
+	}
+
+	public Object getTransferable() {
+		int i = 0;
+
+		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristicIds.size()];
+		for (Iterator iterator = this.characteristicIds.iterator(); iterator.hasNext();)
+			charIds[i++] = (Identifier_Transferable)((Identifier)iterator.next()).getTransferable();
+
+		return new MCM_Transferable((Identifier_Transferable)super.getId().getTransferable(),
+																super.created.getTime(),
+																super.modified.getTime(),
+																(Identifier_Transferable)super.creatorId.getTransferable(),
+																(Identifier_Transferable)super.modifierId.getTransferable(),
+																(Identifier_Transferable)super.domainId.getTransferable(),
+																(Identifier_Transferable)this.typeId.getTransferable(),
+																new String(this.name),
+																new String(this.description),
+																charIds);
+	}
+
+	public Identifier getTypeId() {
+		return this.typeId;
+	}
+
+	public String getName() {
+		return this.name;
+	}
+
+	public String getDescription() {
+		return this.description;
+	}
+
+	public List getCharacteristicIds() {
+		return this.characteristicIds;
+	}
+
+	public void setCharacteristicIds(List characteristicIds) {
+		this.characteristicIds = characteristicIds;
+	}
+
+	protected synchronized void setAttributes(Date created,
+																						Date modified,
+																						Identifier creatorId,
+																						Identifier modifierId,
+																						Identifier domainId,
+																						Identifier typeId,
+																						String name,
+																						String description) {
+		super.setAttributes(created,
+												modified,
+												creatorId,
+												modifierId,
+												domainId);
+		this.typeId = typeId;
+		this.name = name;
+		this.description = description;
+	}
+}

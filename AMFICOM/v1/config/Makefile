@@ -76,13 +76,20 @@ $(LIBNAME): .mach
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/ConfigurationDatabaseContext.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/CharacteristicType.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/CharacteristicTypeDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/DomainMember.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/Characterized.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/Characteristic.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/CharacteristicDatabase.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/Equipment.java \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/KIS.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredElement.java
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/MCM.java \
+		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredElement.java 
 	touch $@
+#		$(SRCDIR)/com/syrus/AMFICOM/configuration/KISDatabase.java 
+#		$(SRCDIR)/com/syrus/AMFICOM/configuration/MCMDatabase.java 
+#		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredElementDatabase.java
+
 
 .corba:	$(CLASSDIR)
 	$(IDL2JAVA) $(IDL2JAVA_FLAGS) \
