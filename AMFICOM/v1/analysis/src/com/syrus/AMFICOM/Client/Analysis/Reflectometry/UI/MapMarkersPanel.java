@@ -264,7 +264,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 				{
 					mne = new MapNavigateEvent(
 						this,
-						MapNavigateEvent.DATA_ALARMMARKER_DELETED_EVENT,
+						MapNavigateEvent.DATA_MARKER_DELETED_EVENT,
 						m.id,
 						alarms[i].alarmPointCoord * delta_x,
 						scheme_path_id,
@@ -385,7 +385,7 @@ public class MapMarkersPanel extends ThresholdsPanel
 		{
 			mne = new MapNavigateEvent(
 				this,
-				MapNavigateEvent.DATA_ALARMMARKER_DELETED_EVENT,
+				MapNavigateEvent.DATA_MARKER_DELETED_EVENT,
 				m.id,
 				m.pos * delta_x,
 				scheme_path_id,
