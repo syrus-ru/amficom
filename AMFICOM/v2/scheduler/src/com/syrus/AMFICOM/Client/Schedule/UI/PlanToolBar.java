@@ -20,9 +20,9 @@ class PlanToolBar extends JPanel {
 	private JSpinner timeSpinner = new TimeSpinner();
 
 	//JButton dateButton = new JButton("^");
-	private JButton dateButton = new JButton(UIUtil.calendarIcon);
+	private JButton dateButton = new JButton(UIUtil.CALENDAR_ICON);
 
-	private JButton nowButton = new JButton(UIUtil.timeIcon);
+	private JButton nowButton = new JButton(UIUtil.TIME_ICON);
 	private JButton applyButton = new JButton();
 
 	private JButton zoomInButton = new JButton();
@@ -55,12 +55,12 @@ class PlanToolBar extends JPanel {
 		String[] suportedScales = PlanPanel.getSupportedScales();
 		String[] scales = new String[suportedScales.length];
 		for (int i = 0; i < scales.length; i++)
-			scales[i] = new String(LangModelSchedule.String(suportedScales[i]));
+			scales[i] = new String(LangModelSchedule.getString(suportedScales[i]));
 		scaleComboBox = new AComboBox(scales);
 		scaleComboBox.setSelectedIndex(3);
-		dateButton.setMargin(UIUtil.nullInsets);
+		dateButton.setMargin(UIUtil.INSET_NULL);
 		dateButton.setFocusable(false);
-		dateButton.setToolTipText(LangModelSchedule.ToolTip("CalendarButton"));
+		dateButton.setToolTipText(LangModelSchedule.getComponentToolTip("CalendarButton"));
 		dateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				showCalendar();
@@ -73,7 +73,7 @@ class PlanToolBar extends JPanel {
 		zoomInButton.setIcon(
 			new ImageIcon(
 				Toolkit.getDefaultToolkit().getImage("images/zoom_in.gif")));
-		zoomInButton.setToolTipText(LangModelSchedule.ToolTip("ZoomIn"));
+		zoomInButton.setToolTipText(LangModelSchedule.getComponentToolTip("ZoomIn"));
 		zoomInButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				zoomInButton_actionPerformed();
@@ -86,7 +86,7 @@ class PlanToolBar extends JPanel {
 		zoomOutButton.setIcon(
 			new ImageIcon(
 				Toolkit.getDefaultToolkit().getImage("images/zoom_out.gif")));
-		zoomOutButton.setToolTipText(LangModelSchedule.ToolTip("ZoomOut"));
+		zoomOutButton.setToolTipText(LangModelSchedule.getComponentToolTip("ZoomOut"));
 		zoomOutButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				zoomOutButton_actionPerformed();
@@ -100,7 +100,7 @@ class PlanToolBar extends JPanel {
 			new ImageIcon(
 				Toolkit.getDefaultToolkit().getImage(
 					"images/zoom_actual.gif")));
-		zoomNoneButton.setToolTipText(LangModelSchedule.ToolTip("ZoomNone"));
+		zoomNoneButton.setToolTipText(LangModelSchedule.getComponentToolTip("ZoomNone"));
 		zoomNoneButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				zoomNoneButton_actionPerformed();
@@ -132,7 +132,7 @@ class PlanToolBar extends JPanel {
 			UIUtil.setRigidSize(timeSpinner,d);
 		}
 		box.add(timeSpinner);
-		nowButton.setMargin(UIUtil.nullInsets);
+		nowButton.setMargin(UIUtil.INSET_NULL);
 		box.add(nowButton);
 		box.add(Box.createHorizontalStrut(10));
 		box.add(applyButton);
@@ -140,7 +140,7 @@ class PlanToolBar extends JPanel {
 		applyButton.setIcon(
 			new ImageIcon(
 				Toolkit.getDefaultToolkit().getImage("images/refresh.gif")));
-		applyButton.setToolTipText(LangModelSchedule.ToolTip("apply"));
+		applyButton.setToolTipText(LangModelSchedule.getComponentToolTip("apply"));
 
 		box.add(Box.createHorizontalGlue());
 		box.add(zoomInButton);
@@ -150,7 +150,7 @@ class PlanToolBar extends JPanel {
 
 		nowButton.setFocusable(false);
 		nowButton.setToolTipText(
-			LangModelSchedule.ToolTip("CurrentTimeButton"));
+			LangModelSchedule.getComponentToolTip("CurrentTimeButton"));
 		nowButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dateSpinner.setValue(new Date(System.currentTimeMillis()));
@@ -159,7 +159,7 @@ class PlanToolBar extends JPanel {
 		});
 
 		applyButton.setFocusable(false);
-		applyButton.setToolTipText(LangModelSchedule.ToolTip("ApplyButton"));
+		applyButton.setToolTipText(LangModelSchedule.getComponentToolTip("ApplyButton"));
 		applyButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				apply_changes();
