@@ -21,7 +21,7 @@ public class DomainPaneAdmin extends PropertiesPanel
   Domain domain;
   BorderLayout borderLayout1 = new BorderLayout();
   JTabbedPane jtp = new JTabbedPane();
-//  DomainDomainPanel ddp = new DomainDomainPanel();
+  DomainDomainPanel ddp = new DomainDomainPanel();
   DomainGeneralPanel dgp = new DomainGeneralPanel();
 //  DomainPermissionAttributesPanel dpap = new DomainPermissionAttributesPanel();
   ObjectPermissionAttributesPanel opap = new ObjectPermissionAttributesPanel();
