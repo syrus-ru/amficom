@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.11 2004/07/30 11:28:48 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.12 2004/07/30 12:28:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/07/30 11:28:48 $
+ * @version $Revision: 1.12 $, $Date: 2004/07/30 12:28:15 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -30,7 +30,6 @@ public abstract class TestProcessor extends SleepButWorkThread {
 	private static final int TICK_TIME = 5;
 
 	Test test;
-	long tickTime;
 	boolean running;
 	Transceiver transceiver;
 	
@@ -40,7 +39,6 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		super(ApplicationProperties.getInt("TickTime", TICK_TIME) * 1000, ApplicationProperties.getInt("MaxFalls", MAX_FALLS));
 
 		this.test = test;
-		this.tickTime = super.initialTimeToSleep;
 		this.running = true;
 		
 		this.measurementResultQueue = Collections.synchronizedList(new ArrayList());

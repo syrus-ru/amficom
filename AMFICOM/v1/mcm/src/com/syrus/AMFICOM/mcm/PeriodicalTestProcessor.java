@@ -1,5 +1,5 @@
 /*
- * $Id: PeriodicalTestProcessor.java,v 1.9 2004/07/28 16:02:00 arseniy Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.10 2004/07/30 12:28:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/07/28 16:02:00 $
+ * @version $Revision: 1.10 $, $Date: 2004/07/30 12:28:15 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -154,7 +154,7 @@ public class PeriodicalTestProcessor extends TestProcessor {
 			}
 
 			try {
-				sleep(super.tickTime);
+				sleep(super.initialTimeToSleep);
 			}
 			catch (InterruptedException ie) {
 				Log.errorException(ie);

@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.10 2004/07/30 11:28:48 arseniy Exp $
+ * $Id: Transceiver.java,v 1.11 2004/07/30 12:28:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,18 +24,17 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/07/30 11:28:48 $
+ * @version $Revision: 1.11 $, $Date: 2004/07/30 12:28:15 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
 
 public class Transceiver extends SleepButWorkThread {
 	public static final int KIS_TICK_TIME = 1;
-	public static final int MAX_FALLS = 10;
+	public static final int KIS_MAX_FALLS = 10;
 
 	private final String taskFileName;
 	private final String reportFileName;
-	private long kisTickTime;
 	private boolean running;
 	private List measurementQueue;//List <Measurement>
 	private Map processingMeasurements;//Map <Identifier, Measurement>
@@ -46,13 +45,12 @@ public class Transceiver extends SleepButWorkThread {
 	}
 	
 	public Transceiver(Identifier kisId) {
-		super(ApplicationProperties.getInt("KISTickTime", KIS_TICK_TIME) * 1000, ApplicationProperties.getInt("MaxFalls", MAX_FALLS));
+		super(ApplicationProperties.getInt("KISTickTime", KIS_TICK_TIME) * 1000, ApplicationProperties.getInt("MaxFalls", KIS_MAX_FALLS));
 
 		String kisIdStr = kisId.toString();
 		this.taskFileName = "task" + kisIdStr;
     this.reportFileName = "report" + kisIdStr;
-		
-		this.kisTickTime = super.initialTimeToSleep;
+
 		this.running = true;
 		
 		this.measurementQueue = Collections.synchronizedList(new ArrayList());
@@ -142,7 +140,7 @@ public class Transceiver extends SleepButWorkThread {
 			
 ///*			We need not this as receive() already do it*/
 //			try {
-//				sleep(this.kis_tick_time);
+//				sleep(super.initialTimeToSleep);
 //			}
 //			catch (InterruptedException ie) {
 //				Log.errorException(ie);

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.13 2004/07/30 11:28:48 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.14 2004/07/30 12:28:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.corba.CORBAServer;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/07/30 11:28:48 $
+ * @version $Revision: 1.14 $, $Date: 2004/07/30 12:28:15 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -66,13 +66,11 @@ public class MeasurementControlModule extends SleepButWorkThread {
 //	/*	object reference to server	*/
 //	protected static MeasurementServer measurementServer;
 
-	private long tickTime;
 	private long forwardProcessing;
 	private boolean running;
 
 	public MeasurementControlModule() {
 		super(ApplicationProperties.getInt("TickTime", TICK_TIME) * 1000, ApplicationProperties.getInt("MaxFalls", MAX_FALLS));
-		this.tickTime = super.initialTimeToSleep;
 		this.forwardProcessing = ApplicationProperties.getInt("ForwardProcessing", FORWARD_PROCESSING)*1000;
 		this.running = true;
 	}
@@ -132,7 +130,7 @@ public class MeasurementControlModule extends SleepButWorkThread {
 			}
 
 			try {
-				sleep(this.tickTime);
+				sleep(super.initialTimeToSleep);
 			}
 			catch (InterruptedException ie) {
 				Log.errorException(ie);
