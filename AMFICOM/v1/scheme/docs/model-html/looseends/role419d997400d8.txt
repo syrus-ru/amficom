@@ -1,0 +1,3 @@
+*
+						 * @return scheme cable link containing this scheme cable thread.
+						 * @see #schemeCableLinkId

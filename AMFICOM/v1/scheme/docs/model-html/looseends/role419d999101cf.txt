@@ -1,0 +1,2 @@
+*
+						 * Getter/setter pair for internalScheme property.

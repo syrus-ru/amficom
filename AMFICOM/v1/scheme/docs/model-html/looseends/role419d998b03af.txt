@@ -1,0 +1,2 @@
+*
+						 * May be empty. Probably is subject removal (see {@link #equipmentTypeId}).

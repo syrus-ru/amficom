@@ -1,0 +1,3 @@
+*
+						 * Getter returns scheme parent to this scheme link or scheme cable link or scheme element.
+						 * @see #schemeId

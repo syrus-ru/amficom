@@ -1,0 +1,2 @@
+*
+						 * Depending on implementation, may reference either {@link LinkType link type} or {@link LinkType cable link type}.

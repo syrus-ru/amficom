@@ -1,0 +1,2 @@
+*
+						 * Empty if type is other than {@link com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type#SCHEME_CABLE_LINK}.
