@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.9 2004/10/18 14:19:01 bob Exp $
+ * $Id: LinkedIdsCondition.java,v 1.10 2004/10/19 11:17:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/10/18 14:19:01 $
+ * @version $Revision: 1.10 $, $Date: 2004/10/19 11:17:27 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -32,8 +32,8 @@ public class LinkedIdsCondition extends com.syrus.AMFICOM.configuration.LinkedId
 
 	private Domain						domain;
 
-	private static final Short			ANALYSIS_SHORT			= new Short(ObjectEntities.ANALYSIS_ENTITY_CODE);
-	private static final Short			EVALUATION_SHORT		= new Short(ObjectEntities.EVALUATION_ENTITY_CODE);
+	private static final Short			ANALYSISTYPE_SHORT		= new Short(ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
+	private static final Short			EVALUATIONTYPE_SHORT	= new Short(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE);
 	private static final Short			MEASUREMENT_SHORT		= new Short(ObjectEntities.MEASUREMENT_ENTITY_CODE);
 	private static final Short			RESULT_SHORT			= new Short(ObjectEntities.RESULT_ENTITY_CODE);
 	private static final Short			MEASUREMENTTYPE_SHORT	= new Short(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
@@ -65,11 +65,11 @@ public class LinkedIdsCondition extends com.syrus.AMFICOM.configuration.LinkedId
 	 * @return <code>true</code>
 	 *         <ul>
 	 * 
-	 * <li>if {@link entityCode}is {@link Analysis}for all analyses for
-	 * CriteriaSet identifier in linkedIds;</li>
+	 * <li>if {@link entityCode}is {@link AnalysisType}for all analysesType for
+	 * criteria ParameterTypes identifier in linkedIds;</li>
 	 * 
-	 * <li>if {@link entityCode}is {@link Evaluation}for all analyses for
-	 * ThresholdSet identifier in linkedIds;</li>
+	 * <li>if {@link entityCode}is {@link EvaluationType}for all analysesType for
+	 * threshold  ParameterTypes identifier in linkedIds;</li>
 	 * 
 	 * <li>if {@link entityCode}is {@link Measurement}for all measurements
 	 * for Test identifier in linkedIds;</li>
@@ -88,43 +88,55 @@ public class LinkedIdsCondition extends com.syrus.AMFICOM.configuration.LinkedId
 	public boolean isConditionTrue(Object object) throws ApplicationException {
 		boolean condition = false;
 		switch (this.entityCode.shortValue()) {
-			case ObjectEntities.ANALYSIS_ENTITY_CODE:
-				if (object instanceof Analysis) {
-					Analysis analysis = (Analysis) object;
-					Identifier id = analysis.getCriteriaSet().getId();
+			case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
+				if (object instanceof AnalysisType) {
+					AnalysisType analysisType = (AnalysisType) object;					
+					List criteriaParameterTypes = analysisType.getCriteriaParameterTypes();					
 					if (this.linkedIds == null) {
-						Identifier criteriaSetId = this.identifier;
-						if (criteriaSetId.equals(id)) {
-							condition = true;
-							break;
-						}
-					} else {
-						for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
-							Identifier criteriaSetId = (Identifier) it.next();
-							if (criteriaSetId.equals(id)) {
+						Identifier criteriaParameterTypeId = this.identifier;
+						for(Iterator it=criteriaParameterTypes.iterator();it.hasNext();){
+							Identifier id = ((ParameterType)it.next()).getId();
+							if (criteriaParameterTypeId.equals(id)) {
 								condition = true;
 								break;
+							}
+						}						
+					} else {
+						for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
+							Identifier criteriaParameterTypeId = (Identifier) it.next();
+							for(Iterator it2=criteriaParameterTypes.iterator();it2.hasNext();){
+								Identifier id = ((ParameterType)it2.next()).getId();
+								if (criteriaParameterTypeId.equals(id)) {
+									condition = true;
+									break;
+								}
 							}
 						}
 					}
 				}
 				break;
-			case ObjectEntities.EVALUATION_ENTITY_CODE:
-				if (object instanceof Evaluation) {
-					Evaluation evaluation = (Evaluation) object;
-					Identifier id = evaluation.getThresholdSet().getId();
+			case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
+				if (object instanceof EvaluationType) {
+					EvaluationType evaluationType = (EvaluationType) object;
+					List thresholdParameterTypes = evaluationType.getThresholdParameterTypes();
 					if (this.linkedIds == null) {
-						Identifier thresholdSetId = this.identifier;
-						if (thresholdSetId.equals(id)) {
-							condition = true;
-							break;
-						}
-					} else {
-						for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
-							Identifier thresholdSetId = (Identifier) it.next();
-							if (thresholdSetId.equals(id)) {
+						Identifier thresholdParameterTypeId = this.identifier;
+						for(Iterator it=thresholdParameterTypes.iterator();it.hasNext();){
+							Identifier id = ((ParameterType)it.next()).getId();
+							if (thresholdParameterTypeId.equals(id)) {
 								condition = true;
 								break;
+							}
+						}						
+					} else {
+						for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
+							Identifier thresholdParameterTypeId = (Identifier) it.next();
+							for(Iterator it2=thresholdParameterTypes.iterator();it2.hasNext();){
+								Identifier id = ((ParameterType)it2.next()).getId();
+								if (thresholdParameterTypeId.equals(id)) {
+									condition = true;
+									break;
+								}
 							}
 						}
 					}
@@ -231,11 +243,11 @@ public class LinkedIdsCondition extends com.syrus.AMFICOM.configuration.LinkedId
 
 	public void setEntityCode(short entityCode) {
 		switch (entityCode) {
-			case ObjectEntities.ANALYSIS_ENTITY_CODE:
-				this.entityCode = ANALYSIS_SHORT;
+			case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
+				this.entityCode = ANALYSISTYPE_SHORT;
 				break;
-			case ObjectEntities.EVALUATION_ENTITY_CODE:
-				this.entityCode = EVALUATION_SHORT;
+			case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
+				this.entityCode = EVALUATIONTYPE_SHORT;
 				break;
 			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
 				this.entityCode = MEASUREMENT_SHORT;
@@ -261,8 +273,8 @@ public class LinkedIdsCondition extends com.syrus.AMFICOM.configuration.LinkedId
 
 		short s = this.entityCode.shortValue();
 		switch (s) {
-			case ObjectEntities.ANALYSIS_ENTITY_CODE:
-			case ObjectEntities.EVALUATION_ENTITY_CODE:
+			case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
+			case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
 			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
 			case ObjectEntities.RESULT_ENTITY_CODE:
 			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
@@ -295,7 +307,7 @@ public class LinkedIdsCondition extends com.syrus.AMFICOM.configuration.LinkedId
 	}
 
 	public List getCriteriaSetIds() {
-		if (this.entityCode.equals(ANALYSIS_SHORT))
+		if (this.entityCode.equals(ANALYSISTYPE_SHORT))
 			return this.linkedIds;
 		return null;
 	}
@@ -319,7 +331,7 @@ public class LinkedIdsCondition extends com.syrus.AMFICOM.configuration.LinkedId
 	}
 
 	public List getThresholdSetIds() {
-		if (this.entityCode.equals(EVALUATION_SHORT))
+		if (this.entityCode.equals(EVALUATIONTYPE_SHORT))
 			return this.linkedIds;
 		return null;
 	}
