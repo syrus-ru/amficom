@@ -137,7 +137,8 @@ public class ReflectogramMath
 		if(re == null)
 			return null;
 
-		for(int i = 0; i < re.length; i++)
+		// ищем справа налево, чтобы отдать предпочтение [i].begin перед [i-1].end
+		for(int i = re.length - 1; i >= 0; i--)
 		{
 			if(re[i].getBegin() <= coord && re[i].getEnd() >= coord)
 				return re[i];
@@ -152,8 +153,8 @@ public class ReflectogramMath
 		if (ev == null)
 			return 0; // XXX
 		else
-			return ev.refAmplitude(coord);		
-	}	
+			return ev.refAmplitude(coord);
+	}
 
 	public static int getEventType(int coord, ReflectogramEvent[] re)
 	{

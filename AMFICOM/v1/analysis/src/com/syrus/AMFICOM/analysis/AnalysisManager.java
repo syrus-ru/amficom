@@ -9,11 +9,7 @@ import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.io.BellcoreStructure;
 
 public class AnalysisManager {
-	double[] minuitParams;
-
-	double[] minuitInitialParams;
-
-	private String propertiesFileName = "analysis.properties";
+	private final String propertiesFileName = "analysis.properties";
 
 	private static native double[] gauss(double[] y, double center,
 			double amplitude, double sigma);
@@ -204,7 +200,7 @@ public class AnalysisManager {
 		return nCalcNoise3s(y);
 	}
 
-	static double[] defaultMinuitParams = { 0.04, //минимальный уровень события
+	private static double[] defaultMinuitParams = { 0.04, //минимальный уровень события
 			0.06, //минимальный уровень сварки
 			0.2, //минимальный уровень коннектора
 			3, //минимальный уровень конца
@@ -215,6 +211,7 @@ public class AnalysisManager {
 	};
 
 	public AnalysisManager() {
+		double[] minuitParams;
 		Pool.put("analysisparameters", "minuitdefaults", defaultMinuitParams);
 
 		Properties properties = new Properties();
@@ -223,24 +220,21 @@ public class AnalysisManager {
 			String temp = properties.getProperty("parameters");
 			minuitParams = decompose(temp, defaultMinuitParams);
 		} catch (IOException ex) {
-			minuitParams = new double[defaultMinuitParams.length];
-			for (int i = 0; i < defaultMinuitParams.length; i++)
-				minuitParams[i] = defaultMinuitParams[i];
-		} finally {
-			Pool.put("analysisparameters", "minuitanalysis", minuitParams);
+		    // делаем копию массива
+			minuitParams = (double[] )defaultMinuitParams.clone();
 		}
 
-		minuitInitialParams = new double[minuitParams.length];
-		for (int i = 0; i < minuitParams.length; i++)
-			minuitInitialParams[i] = minuitParams[i];
-		Pool.put("analysisparameters", "minuitinitials", minuitInitialParams);
+		// сохраняем в Pool
+		Pool.put("analysisparameters", "minuitanalysis", minuitParams);
+		// сохраняем в Pool копию (double[] копируется целиком)
+		Pool.put("analysisparameters", "minuitinitials", minuitParams.clone());
 	}
 
 	public void saveIni() {
-		minuitParams = (double[]) Pool.get("analysisparameters",
+	    double[] minuitParams = (double[]) Pool.get("analysisparameters",
 				"minuitanalysis");
-		String type = (String) Pool.get("analysisparameters",
-				"analysisdefaulttype");
+//		String type = (String) Pool.get("analysisparameters",
+//				"analysisdefaulttype");
 		Properties properties = new Properties();
 		try {
 			properties.load(new FileInputStream(propertiesFileName));

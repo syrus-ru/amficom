@@ -1,7 +1,7 @@
 /**
  * ReflectogramEvent.java
  * 
- * @version $Revision: 1.6 $, $Date: 2004/12/10 08:42:30 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/13 15:47:19 $
  * @author $Author: saa $
  * @module general_v1
  */
@@ -25,24 +25,41 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-public class ReflectogramEvent //implements Cloneable
+public class ReflectogramEvent
 {
+    //private static final long serialVersionUID = 8468909716459300200L;
+    private static final long signature = 8468920041210182200L;
 	public static final int RESERVED_VALUE = -1; // заведомо не использующееся значение
 	public static final int LINEAR = 1;
 	public static final int WELD = 2;
 	public static final int CONNECTOR = 3;
 	public static final int SINGULARITY = 4;
 
-	private static final int STORE_yB = 0x1;
-	private static final int STORE_yE = 0x2;
-	private static final int STORE_aLet = 0x4;
-	private static final int STORE_mloss = 0x40;
-	private static final int STORE_asympY0 = 0x8;
-	private static final int STORE_asympY1 = 0x10;
-	private static final int STORE_linkFlags = 0x20;
+	// store flags for int vars
+	private static final int STORE_MASK_INT		= 0xff;
+	private static final int STORE_linkFlags	= 0x01;
 
-	private static final int STORE_FLAGS = 0x7f;
-	
+	// store flags for long vars
+	private static final int STORE_MASK_LONG	= 0xff00;
+
+	// store flags for double vars
+	private static final int STORE_MASK_DOUBLE	= 0xff0000;
+	private static final int STORE_yB			= 0x010000;
+	private static final int STORE_yE			= 0x020000;
+	private static final int STORE_aLet			= 0x040000;
+	private static final int STORE_asympY0		= 0x080000;
+	private static final int STORE_asympY1		= 0x100000;
+	private static final int STORE_mloss		= 0x200000;
+
+	private static final int STORE_FLAGS
+		= STORE_yB
+		| STORE_yE
+		| STORE_aLet
+		| STORE_asympY0
+		| STORE_asympY1
+		| STORE_mloss
+		| STORE_linkFlags;
+
 	private static int LINK_FIXLEFT = ModelFunction.LINK_FIXLEFT;
 
 	private int begin; // начальная точка
@@ -430,7 +447,6 @@ public class ReflectogramEvent //implements Cloneable
 	{
 		ReflectogramEvent ret = new ReflectogramEvent();
 		ret.threshold = null;
-		// copy; неизвестно какой правильнее
 		ret.begin = begin;
 		ret.end = end;
 		ret.mf = null;
@@ -439,6 +455,10 @@ public class ReflectogramEvent //implements Cloneable
 		ret.aLet = aLet;
 		ret.asympY0 = asympY0;
 		ret.asympY1 = asympY1;
+		ret.eventType = eventType;
+		ret.thresholdType = thresholdType;
+		ret.yB = yB;
+		ret.yE = yE;
 		return ret;
 	}
 
@@ -461,44 +481,46 @@ public class ReflectogramEvent //implements Cloneable
 	// byte array presentation functions are untested
 	public void writeToDOS(DataOutputStream dos) throws IOException
 	{
+	    dos.writeLong(signature);
 		dos.writeInt(begin);
 		dos.writeInt(end);
+		dos.writeInt(eventType);
+		dos.writeInt(thresholdType);
 		dos.writeDouble(delta_x);
 		mf.writeToDOS(dos);
 		dos.writeInt(STORE_FLAGS);
 		int i;
 		for (i = 1; i != 0; i = i * 2)
 		{
-			if ((STORE_FLAGS & i) != 0)
+			if ((STORE_FLAGS & i) == 0)
+			    continue;
+
+			switch (i)
 			{
-				double tmp = 0;
-				switch (i)
-				{
-				case STORE_yB:
-					tmp = yB;
-					break;
-				case STORE_yE:
-					tmp = yE;
-					break;
-				case STORE_aLet:
-					tmp = aLet;
-					break;
-				case STORE_mloss:
-					tmp = mloss;
-					break;
-				case STORE_asympY0:
-					tmp = asympY0;
-					break;
-				case STORE_asympY1:
-					tmp = asympY1;
-					break;
-				case STORE_linkFlags:
-					tmp = (double )linkFlags;
-				}
-				dos.writeDouble(tmp);
+			case STORE_yB:
+			    dos.writeDouble(yB);
+				break;
+			case STORE_yE:
+			    dos.writeDouble(yE);
+				break;
+			case STORE_aLet:
+			    dos.writeDouble(aLet);
+				break;
+			case STORE_mloss:
+			    dos.writeDouble(mloss);
+				break;
+			case STORE_asympY0:
+			    dos.writeDouble(asympY0);
+				break;
+			case STORE_asympY1:
+			    dos.writeDouble(asympY1);
+				break;
+			case STORE_linkFlags:
+			    dos.writeInt(linkFlags);
+				break;
 			}
 		}
-		// do not write thresholds
+		// we do not write thresholds
 	}
 
 	/**
@@ -511,8 +533,15 @@ public class ReflectogramEvent //implements Cloneable
 	 */
 	private void readFromDIS(DataInputStream dis) throws IOException
 	{
+	    long tsig = dis.readLong(); 
+	    if (tsig != signature)
+	    {
+	        throw new IOException("Signature mismatch"); // XXX
+	    }
 		begin = dis.readInt();
 		end = dis.readInt();
+		eventType = dis.readInt();
+		thresholdType = dis.readInt();
 		delta_x = dis.readDouble();
 		mf = ModelFunction.createFromDIS(dis);
 		int flags = dis.readInt();
@@ -521,29 +550,37 @@ public class ReflectogramEvent //implements Cloneable
 		{
 			if ((flags & i) != 0)
 			{
-				double tmp = dis.readDouble();
+			    int ti = 0; // unused
+			    long tl = 0;
+			    double td = 0;
+			    if ((i & STORE_MASK_INT) != 0)
+			        ti = dis.readInt();
+			    if ((i & STORE_MASK_LONG) != 0)
+			        tl = dis.readLong();
+			    if ((i & STORE_MASK_DOUBLE) != 0)
+			        td = dis.readDouble();
 				switch (i)
 				{
 				case STORE_yB:
-					yB = tmp;
+					yB = td;
 					break;
 				case STORE_yE:
-					yE = tmp;
+					yE = td;
 					break;
 				case STORE_aLet:
-					aLet = tmp;
+					aLet = td;
 					break;
 				case STORE_mloss:
-					mloss = tmp;
+					mloss = td;
 					break;
 				case STORE_asympY0:
-					asympY0 = tmp;
+					asympY0 = td;
 					break;
 				case STORE_asympY1:
-					asympY1 = tmp;
+					asympY1 = td;
 					break;
 				case STORE_linkFlags:
-					linkFlags = (int )tmp;
+					linkFlags = ti;
 				}
 			}
 		}

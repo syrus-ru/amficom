@@ -353,9 +353,11 @@ public class DetailedEventsFrame extends JInternalFrame
 		double delta_x = data_[0].getDeltaX();
 
 		if(data_[nEvent].getEventType() == etalon[nEvent].getEventType())
-			((CompareTableRenderer)jTableComp.getDefaultRenderer(Object.class)).setSameType(true);
+			((CompareTableRenderer)jTableComp
+			        .getDefaultRenderer(Object.class)).setSameType(true);
 		else
-			((CompareTableRenderer)jTableComp.getDefaultRenderer(Object.class)).setSameType(false);
+			((CompareTableRenderer)jTableComp
+			        .getDefaultRenderer(Object.class)).setSameType(false);
 
 		String dataT = LangModelAnalyse.getString("eventTypeUnk");
 		String etalonT = LangModelAnalyse.getString("eventTypeUnk");

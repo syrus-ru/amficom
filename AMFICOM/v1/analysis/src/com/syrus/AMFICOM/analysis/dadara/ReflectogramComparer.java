@@ -1046,7 +1046,7 @@ public class ReflectogramComparer
 			}
 		}
 
-		return ret;
+		return Math.abs(ret); // ?? - раньше возвращалось значение со знаком - зачем?
 	}
 
 	//-----------------------------------------------------------------------------
@@ -1061,7 +1061,7 @@ public class ReflectogramComparer
 			{
 				double a1 = data[nEvent].refAmplitude(i);
 				double a2 = ReflectogramMath.getEventAmplitudeAt(i, etalon);
-				ret += (a1 - a2);
+				ret += Math.abs(a1 - a2); // there was no abs!
 				norma++;
 			}
 		}

@@ -75,6 +75,7 @@ public class AnalysisUtil
 		return parameterType;
 	}
 
+	/*
 	public static CharacteristicType getCharacteristicType(Identifier userId, String codename, CharacteristicTypeSort sort, DataType dataType)
 	{
 		StorableObjectCondition pTypeCondition = new StringFieldCondition(
@@ -115,6 +116,7 @@ public class AnalysisUtil
 				return null;
 		}
 	}
+	*/
 
 	public static AnalysisType getAnalysisType(Identifier userId, String codename)
 	{
