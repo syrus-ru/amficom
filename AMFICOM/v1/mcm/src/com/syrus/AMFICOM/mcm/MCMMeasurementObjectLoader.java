@@ -1,5 +1,5 @@
 /*
- * $Id: MCMMeasurementObjectLoader.java,v 1.4 2004/09/16 15:49:53 max Exp $
+ * $Id: MCMMeasurementObjectLoader.java,v 1.5 2004/09/17 07:36:42 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/09/16 15:49:53 $
+ * @version $Revision: 1.5 $, $Date: 2004/09/17 07:36:42 $
  * @author $Author: max $
  * @module mcm_v1
  */
@@ -291,7 +291,7 @@ public final class MCMMeasurementObjectLoader implements MeasurementObjectLoader
     
     public List loadAnalysisTypes(List ids) throws DatabaseException,
             CommunicationException {
-        MeasurementDatabase database = (MeasurementDatabase)MeasurementDatabaseContext.getMeasurementDatabase();
+        AnalysisTypeDatabase database = (AnalysisTypeDatabase)MeasurementDatabaseContext.getAnalysisTypeDatabase();
         List list;
         List copyOfList;
         AnalysisType analysisType;
