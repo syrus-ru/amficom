@@ -282,25 +282,6 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 
 	}
 
-	/**
-	 * @todo only for testing mode
-	 */
-	public static void main(String[] args) {
-
-		TableFrame frame = new TableFrame(null);
-		JFrame mainFrame = new JFrame(LangModelSchedule.getString("Tests_status_and_characters")); //$NON-NLS-1$
-		mainFrame.addWindowListener(new WindowAdapter() {
-
-			public void windowClosing(WindowEvent e) {
-				System.exit(0);
-			}
-		});
-		mainFrame.getContentPane().add(frame.getPanel());
-		mainFrame.pack();
-		mainFrame.setSize(new Dimension(250, 465));
-		mainFrame.setVisible(true);
-	}
-
 	Dispatcher			dispatcher;
 	ObjectResourceTable	listTable;
 	ApplicationContext	aContext;
@@ -330,20 +311,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 			Test test = tue.test;
 			if ((this.test == null) || (!this.test.getId().equals(test.getId()))) {
 				java.util.List savedTests = ((SchedulerModel) this.aContext.getApplicationModel()).getTests();
-				//java.util.List unsavedTests = ((SchedulerModel)
-				// this.aContext.getApplicationModel()).getUnsavedTests();
 				this.test = test;
-				//boolean found = false;
-				//				if (savedTests != null) {
-				//					if (savedTests.contains(test))
-				//						found = true;
-				//				}
-				//				if (!found) {
-				//					if (unsavedTests != null) {
-				//						if (unsavedTests.contains(test))
-				//							found = true;
-				//					}
-				//				}
 
 				int rowIndex = ((TestTableModel) this.listTable.getModel()).getObjectResourceIndex(test);
 
@@ -410,6 +378,7 @@ public class TableFrame extends JInternalFrame implements OperationListener {
 					}
 				}
 
+				TableFrame.this.listTable.resort();
 				TableFrame.this.listTable.repaint();
 				TableFrame.this.listTable.revalidate();
 			}

@@ -148,40 +148,18 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	public TestArgumentSet getTestArgumentSet() {
 
 		DataSourceInterface dsi = this.aContext.getDataSourceInterface();
-		String testSetupId;
 		String testTypeId;
 		if (this.test == null) {
-			testSetupId = ""; //$NON-NLS-1$
 			testTypeId = TEST_TYPE;
 		} else {
-			testSetupId = this.test.getTestSetupId();
 			testTypeId = this.test.getTestTypeId();
 		}
 		TestArgumentSet tas = null;
 		//if (test_setup_id.equals(""))
 		{
-			//			tas.id = dsi.GetUId(TestArgumentSet.TYPE);
-			//			Pool.put(TestArgumentSet.TYPE, as.getId(), as);
-			//			tas.name = tas.id;
-			//			tas.created = 0;
-			//			tas.created_by = "";
-			//			tas.test_type_id = test_type_id;
-			/**
-			 * @TODO recast to static final fields
-			 */
-			//System.out.println("test_setup_id:" + test_setup_id);
-			TestSetup ts = (TestSetup) Pool.get(TestSetup.TYPE, testSetupId);
-			if (ts == null) {
-				ts = new TestSetup();
-				//System.out.println("new TestSetup()");
-			}
-			//System.out.println("ts:" + ts.id);
-			tas = (TestArgumentSet) Pool.get(TestArgumentSet.TYPE, ts.getTestArgumentSetId());
 			if (tas == null) {
 				tas = new TestArgumentSet();
-				//System.out.println("new TestArgumentSet()");
 			}
-			//System.out.println("tas:" + tas.id);
 			ActionParameterType apt;
 
 			TestType testType = (TestType) Pool.get(TestType.typ, testTypeId);

@@ -3,6 +3,7 @@
  * Created on 03.08.2004 9:25:28
  * 
  */
+
 package com.syrus.AMFICOM.Client.General.UI;
 
 import java.awt.Rectangle;
@@ -19,47 +20,48 @@ import javax.swing.table.TableModel;
 /**
  * @author Vladimir Dolzhenko
  */
-public class ObjectResourceTable extends JTable{
-	
+public class ObjectResourceTable extends JTable {
+
+	int	lastSortedIndex	= -1;
+
 	public ObjectResourceTable() {
 		customInitialization();
 	}
-	
-    public ObjectResourceTable(TableModel dm) {
-        super(dm);
-        customInitialization();
-    }
 
-    public ObjectResourceTable(TableModel dm, TableColumnModel cm) {
-     	super(dm,cm);
-     	customInitialization();
-    }
+	public ObjectResourceTable(TableModel dm) {
+		super(dm);
+		customInitialization();
+	}
 
-    public ObjectResourceTable(TableModel dm, TableColumnModel cm, ListSelectionModel sm) {
-    	super(dm, cm, sm);
-    	customInitialization();
-    }
+	public ObjectResourceTable(TableModel dm, TableColumnModel cm) {
+		super(dm, cm);
+		customInitialization();
+	}
 
-    public ObjectResourceTable(int numRows, int numColumns) {
-        super(numRows, numColumns);
-        customInitialization();
-    }
+	public ObjectResourceTable(TableModel dm, TableColumnModel cm, ListSelectionModel sm) {
+		super(dm, cm, sm);
+		customInitialization();
+	}
 
-    public ObjectResourceTable(Vector rowData, Vector columnNames) {
-        super(rowData, columnNames);
-        customInitialization();
-    }
+	public ObjectResourceTable(int numRows, int numColumns) {
+		super(numRows, numColumns);
+		customInitialization();
+	}
 
-    public ObjectResourceTable(final Object[][] rowData, final Object[] columnNames) {
-    	super(rowData, columnNames);
-    	customInitialization();
-    }
+	public ObjectResourceTable(Vector rowData, Vector columnNames) {
+		super(rowData, columnNames);
+		customInitialization();
+	}
 
-	
-	private void customInitialization(){
+	public ObjectResourceTable(final Object[][] rowData, final Object[] columnNames) {
+		super(rowData, columnNames);
+		customInitialization();
+	}
+
+	private void customInitialization() {
 		this.setColumnSelectionAllowed(false);
 		this.setRowSelectionAllowed(true);
-		
+
 		this.getTableHeader().addMouseListener(new MouseAdapter() {
 
 			public void mouseClicked(MouseEvent evt) {
@@ -67,7 +69,8 @@ public class ObjectResourceTable extends JTable{
 				JTable table = header.getTable();
 				TableColumnModel colModel = table.getColumnModel();
 
-				// The index of the column whose header was clicked
+				// The index of the column whose header was
+				// clicked
 				int columnIndex = colModel.getColumnIndexAtX(evt.getX());
 				int mColIndex = table.convertColumnIndexToModel(columnIndex);
 				ObjResTableModel model = (ObjResTableModel) table.getModel();
@@ -87,23 +90,30 @@ public class ObjectResourceTable extends JTable{
 
 				// Force the header to resize and repaint itself
 				header.resizeAndRepaint();
+				lastSortedIndex = mColIndex;
 				model.sortRows(mColIndex);
 
 				// Return if not clicked on any column header
 				if (columnIndex == -1) { return; }
 
-				// Determine if mouse was clicked between column heads
+				// Determine if mouse was clicked between column
+				// heads
 				Rectangle headerRect = table.getTableHeader().getHeaderRect(columnIndex);
 				if (columnIndex == 0) {
-					headerRect.width -= 3; // Hard-coded constant
+					headerRect.width -= 3; // Hard-coded
+							       // constant
 				} else {
-					headerRect.grow(-3, 0); // Hard-coded constant
+					headerRect.grow(-3, 0); // Hard-coded
+								// constant
 				}
 				if (!headerRect.contains(evt.getX(), evt.getY())) {
-					// Mouse was clicked between column heads
-					// vColIndex is the column head closest to the click
+					// Mouse was clicked between column
+					// heads
+					// vColIndex is the column head closest
+					// to the click
 
-					// vLeftColIndex is the column head to the left of the
+					// vLeftColIndex is the column head to
+					// the left of the
 					// click
 					int vLeftColIndex = columnIndex;
 					if (evt.getX() < headerRect.x) {
@@ -113,7 +123,14 @@ public class ObjectResourceTable extends JTable{
 			}
 		});
 
+	}
 
+	public void resort() {
+		if (this.lastSortedIndex >= 0) {			
+			ObjResTableModel model = (ObjResTableModel) this.getModel();
+			if (model!=null)
+				model.sortRows(this.lastSortedIndex);
+		}		
 	}
 
 }

@@ -316,27 +316,24 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				System.out.println("TestRequest instanceof have got");
 				this.receiveData.put(TestRequest.TYPE, obj);
 			}
-			//System.out.println("receiveDataCount:" + receiveDataCount);
-			// //$NON-NLS-1$
-
-			//			System.err.println("this.receiveData.get(TestRequest.TYPE):"
-			//					+ (this.receiveData.get(TestRequest.TYPE) != null));
-			//			System.err.println("this.returnType != null):" + (this.returnType
-			// != null));
-			//			System.err.println("this.receiveData.get(TestSetup.typ):" +
-			// (this.receiveData.get(TestSetup.typ) != null));
-			//			System.err.println("this.receiveData.get(AnalysisType.typ):"
-			//					+ (this.receiveData.get(AnalysisType.typ) != null));
-			//			System.err.println("this.receiveData.get(EvaluationType.typ):"
-			//					+ (this.receiveData.get(EvaluationType.typ) != null));
-			//			System.err.println("this.receiveData.get(TestArgumentSet.typ):"
-			//					+ (this.receiveData.get(TestArgumentSet.typ) != null));
-			//			System.err.println("this.receiveTreeElements:" +
-			// (this.receiveTreeElements != null));
-			//			System.err.println("this.receiveData.get(TimeStamp.TYPE):" +
-			// (this.receiveData.get(TimeStamp.TYPE) != null));
-			//			System.err.println("this.receiveData.get(TestRequest.TYPE):"
-			//					+ (this.receiveData.get(TestRequest.TYPE) != null));
+					System.err.println("this.receiveData.get(TestRequest.TYPE):"
+								+ (this.receiveData.get(TestRequest.TYPE) != null));
+						System.err.println("this.returnType != null):" + (this.returnType
+			 != null));
+						System.err.println("this.receiveData.get(TestSetup.typ):" +
+			 (this.receiveData.get(TestSetup.typ) != null));
+						System.err.println("this.receiveData.get(AnalysisType.typ):"
+								+ (this.receiveData.get(AnalysisType.typ) != null));
+						System.err.println("this.receiveData.get(EvaluationType.typ):"
+								+ (this.receiveData.get(EvaluationType.typ) != null));
+						System.err.println("this.receiveData.get(TestArgumentSet.typ):"
+								+ (this.receiveData.get(TestArgumentSet.typ) != null));
+						System.err.println("this.receiveTreeElements:" +
+			 (this.receiveTreeElements != null));
+						System.err.println("this.receiveData.get(TimeStamp.TYPE):" +
+			 (this.receiveData.get(TimeStamp.TYPE) != null));
+						System.err.println("this.receiveData.get(TestRequest.TYPE):"
+								+ (this.receiveData.get(TestRequest.TYPE) != null));
 
 			if ((this.receiveData.get(TestRequest.TYPE) != null)
 					&& (this.returnType != null)
