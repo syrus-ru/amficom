@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.47 2004/12/15 14:09:13 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.48 2004/12/17 17:20:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2004/12/15 14:09:13 $
+ * @version $Revision: 1.48 $, $Date: 2004/12/17 17:20:54 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -64,7 +64,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	public static final String KEY_KIS_MAX_FALLS = "KISMaxFalls";
 	public static final String KEY_KIS_HOST_NAME = "KISHostName";
 	public static final String KEY_KIS_TCP_PORT = "KISTCPPort";
-	public static final String KEY_KIS_MAX_OPENED_CONNECTIONS = "MaxOpenedConnections";
+	public static final String KEY_KIS_MAX_OPENED_CONNECTIONS = "KISMaxOpenedConnections";
 	public static final String KEY_KIS_CONNECTION_TIMEOUT = "KISConnectionTimeout";
 
 	public static final String ID = "mcm_1";
@@ -436,6 +436,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 		this.running = false;
 		for (Iterator it = transceivers.keySet().iterator(); it.hasNext();)
 			((Transceiver)transceivers.get(it.next())).shutdown();
+		System.out.println("FINISH");
 		DatabaseConnection.closeConnection();
 	}
 

@@ -34,10 +34,10 @@ JNIEXPORT jint JNICALL Java_com_syrus_AMFICOM_mcm_TCPKISConnection_establishSock
 	fid = env->GetFieldID(cls, FIELDNAME_KIS_TCP_PORT, "S");
 	kis_port = (short)env->GetShortField(obj, fid);
 
-	kis_socket = create_and_connect_socket(kis_host_name, kis_port);
+	kis_socket = create_connected_socket(kis_host_name, kis_port);
 	env->ReleaseStringUTFChars(jkisHostName, kis_host_name);
 
-	if (kis_socket <= 0)
+	if (kis_socket == INVALID_SOCKET)
 		kis_socket = (SOCKET)com_syrus_AMFICOM_mcm_TCPKISConnection_KIS_TCP_SOCKET_DISCONNECTED;
 	return (jint)kis_socket;
 }
@@ -55,7 +55,8 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_TCPKISConnection_transmitM
 		jstring jmeasurement_type_codename,
 		jstring jlocal_address,
 		jobjectArray jparameter_type_codenames,
-		jobjectArray jparameter_values) {
+		jobjectArray jparameter_values,
+		jlong jtimewait) {
 
 	unsigned int l;
 	char* buffer;
@@ -90,8 +91,7 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_TCPKISConnection_transmitM
 	Parameter** parameters = new Parameter*[parameters_length];
 	jstring jparameter_type_codename;
 	jbyteArray jparameter_value;
-	for (jsize s = 0; s < parameters_length; s++)
-	{
+	for (jsize s = 0; s < parameters_length; s++) {
 		jparameter_type_codename = (jstring)env->GetObjectArrayElement(jparameter_type_codenames, s);
 		l = env->GetStringUTFLength(jparameter_type_codename);
 		buffer = new char[l];
@@ -117,51 +117,86 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_TCPKISConnection_transmitM
 			parameters_length,
 			parameters);
 
+	unsigned int timewait = (unsigned int)(jtimewait / 1000);
+
 	jclass cls = env->GetObjectClass(obj);
 	jfieldID fid = env->GetFieldID(cls, FIELDNAME_KIS_TCP_SOCKET, "I");
 	SOCKET kis_socket = (SOCKET)env->GetIntField(obj, fid);
 
-	int r = transmit_segment(kis_socket, measurement_segment);
-	if (r)
-		printf("Successfully transferred measurement segment\n");
-	else
-		printf("Cannot transmit measurement segment\n");
+	WriteSegmentStatus wrt_ret = transmit_segment(kis_socket, timewait, measurement_segment);
+	switch (wrt_ret) {
+		case WSS_OK:
+			printf("Successfully transferred measurement segment\n");
+			break;
+		case WSS_INVALID_SOCKET:
+		case WSS_CANNOT_WRITE_DATA:
+			printf("Cannot transmit measurement segment\n");
+			break;
+		default:
+			printf("Illegal return value of transmit_segment: %d\n", wrt_ret);
+	}
 
 	delete measurement_segment;
 
-	return r ? JNI_TRUE : JNI_FALSE;
+	return (wrt_ret == WSS_OK) ? JNI_TRUE : JNI_FALSE;
 }
 
 JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_TCPKISConnection_receiveKISReportFromSocket(JNIEnv *env, jobject obj, jlong jtimewait) {
 	jclass cls = env->GetObjectClass(obj);
 	jfieldID fid;
 
-	int timeout = (int)(jtimewait / 1000);
+	unsigned int timewait = (unsigned int)(jtimewait / 1000);
 
 	fid = env->GetFieldID(cls, FIELDNAME_KIS_TCP_SOCKET, "I");
 	SOCKET kis_socket = (SOCKET)env->GetIntField(obj, fid);
 
-	Segment* segment = NULL;
-	int r = receive_segment(kis_socket, timeout, segment, 0);
+	fd_set in;
+	timeval tv;
+	int sel_ret;
 
-	if (r == 0)
-		return JNI_TRUE;
+	FD_ZERO(&in);
+	FD_SET(kis_socket, &in);
+	tv.tv_sec = timewait;
+	tv.tv_usec = 0;
 
-	jobject j_kis_report;
-	if (r == 1) {
-		switch (segment->getType()) {
-			case SEGMENT_RESULT:
-				printf("Received result segment\n");
-				j_kis_report = create_kis_report(env, (ResultSegment*)segment);
-				fid = env->GetFieldID(cls, FIELDNAME_KIS_REPORT, "Lcom/syrus/AMFICOM/mcm/KISReport;");
-				env->SetObjectField(obj, fid, j_kis_report);
-			default:
-				printf("Nothing to do with segment of type %d\n", segment->getType());
-		}
-		delete segment;
+	sel_ret = select(kis_socket + 1, &in, NULL, NULL, &tv);
+
+	if (sel_ret == 0) {
+		printf("Nothing to receive\n");
 		return JNI_TRUE;
 	}
 
+	ReadSegmentStatus rec_ret;
+	Segment* segment = NULL;
+//	jobject j_kis_report;
+	if (sel_ret > 0) {
+		rec_ret = receive_segment(kis_socket, timewait, segment);
+		switch (rec_ret) {
+			case RSS_OK:
+				if (segment->getType() == SEGMENT_RESULT) {
+					printf("Received result segment\n");
+					jobject j_kis_report = create_kis_report(env, (ResultSegment*)segment);
+					fid = env->GetFieldID(cls, FIELDNAME_KIS_REPORT, "Lcom/syrus/AMFICOM/mcm/KISReport;");
+					env->SetObjectField(obj, fid, j_kis_report);	
+				}
+				else {
+					printf("Nothing to do with segment of type %d\n", segment->getType());
+				}
+				delete segment;
+				return JNI_TRUE;
+			case RSS_INVALID_SOCKET:
+			case RSS_CANNOT_READ_HEADER:
+			case RSS_CANNOT_READ_DATA:
+			case RSS_ILLEGAL_HEADER:
+				printf("Cannot receive segment\n");
+				return JNI_FALSE;
+			default:
+				printf("Illegal return value of receive_segment: %d\n", rec_ret);
+				return JNI_FALSE;
+		}
+	}
+
+	show_error("select");
 	return JNI_FALSE;
 }
 

@@ -79,18 +79,22 @@ public class TCPKISConnection implements KISConnection {
 	}
 
 	public void drop() {
-		this.dropSocketConnection();
-		this.kisTCPSocket = KIS_TCP_SOCKET_DISCONNECTED;
+		if (this.kisTCPSocket != KIS_TCP_SOCKET_DISCONNECTED) {
+			Log.debugMessage("TCPKISConnection.drop | Closing socket: " + this.kisTCPSocket, Log.DEBUGLEVEL09);
+			this.dropSocketConnection();
+			this.kisTCPSocket = KIS_TCP_SOCKET_DISCONNECTED;
+		}
 	}
 
-	public void transmitMeasurement(Measurement measurement) throws CommunicationException {
+	public void transmitMeasurement(Measurement measurement, long timewait) throws CommunicationException {
 		Identifier measurementId  = measurement.getId();
 		Log.debugMessage("TCPKISConnection.transmitMeasurement | Transmitting measurement '" + measurementId + "' to KIS '" + this.kisId + "'", Log.DEBUGLEVEL07);
 		if (this.transmitMeasurementBySocket(measurementId.toString(),
 								measurement.getType().getCodename(),
 								measurement.getLocalAddress(),
 								measurement.getSetup().getParameterTypeCodenames(),
-								measurement.getSetup().getParameterValues()))
+								measurement.getSetup().getParameterValues(),
+								timewait))
 			Log.debugMessage("TCPKISConnection.transmitMeasurement | Transmitted measurement '" + measurementId + "' to KIS '" + this.kisId + "'", Log.DEBUGLEVEL07);
 		else
 			throw new CommunicationException("TCPKISConnection.transmitMeasurement | Cannot transmit measurement '" + measurementId + "' to KIS '" + this.kisId + "'");
@@ -138,10 +142,12 @@ public class TCPKISConnection implements KISConnection {
 														String measurementTypeCodename,
 														String localAddress,
 														String[] parameterTypeCodenames,
-														byte[][] parameterValues);
+														byte[][] parameterValues,
+														long timewait);
 
 	/**
 	 * Receive report from socket. On success save the report into field kisReport
+	 * NOTE: if nothing received, this method also returns true, but saves null into field kisReport
 	 * @param timeout
 	 * @return true on success, false on failure.
 	 */

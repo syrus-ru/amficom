@@ -95,7 +95,7 @@ public class Transceiver extends SleepButWorkThread {
 						measurement = (Measurement)this.scheduledMeasurements.get(0);
 						measurementId = measurement.getId();
 						try {
-							this.kisConnection.transmitMeasurement(measurement);
+							this.kisConnection.transmitMeasurement(measurement, super.initialTimeToSleep);
 
 							Log.debugMessage("Transceiver.run | Successfully transferred measurement '" + measurementId + "'", Log.DEBUGLEVEL03);
 							this.scheduledMeasurements.remove(measurement);

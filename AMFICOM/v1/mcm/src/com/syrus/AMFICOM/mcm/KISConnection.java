@@ -14,7 +14,7 @@ public interface KISConnection {
 
 	void drop();
 
-	void transmitMeasurement(Measurement measurement) throws CommunicationException;
+	void transmitMeasurement(Measurement measurement, long timewait) throws CommunicationException;
 
 	KISReport receiveKISReport(long timewait) throws CommunicationException;
 
