@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.45 2005/01/26 09:57:30 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.46 2005/01/26 10:57:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/01/26 09:57:30 $
+ * @version $Revision: 1.46 $, $Date: 2005/01/26 10:57:57 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -260,7 +260,8 @@ public class AnalysisType extends ActionType {
 			this.inParameterTypes = new ArrayList();
 		else
 			this.inParameterTypes.clear();
-		this.inParameterTypes.addAll(inParameterTypes);
+		if (inParameterTypes != null)
+			this.inParameterTypes.addAll(inParameterTypes);
 	}
 	
 	/**
@@ -279,7 +280,8 @@ public class AnalysisType extends ActionType {
 			this.criteriaParameterTypes = new ArrayList();
 		else
 			this.criteriaParameterTypes.clear();
-		this.criteriaParameterTypes.addAll(criteriaParameterTypes);
+		if (criteriaParameterTypes != null)
+			this.criteriaParameterTypes.addAll(criteriaParameterTypes);
 	}
 	/**
 	 * client setter for criteriaParameterTypes
@@ -297,7 +299,8 @@ public class AnalysisType extends ActionType {
 			this.etalonParameterTypes = new ArrayList();
 		else
 			this.etalonParameterTypes.clear();
-		this.etalonParameterTypes.addAll(etalonParameterTypes);
+		if (etalonParameterTypes != null)
+			this.etalonParameterTypes.addAll(etalonParameterTypes);
 	}
 	/**
 	 * client setter for etalonParameterTypes
@@ -315,7 +318,8 @@ public class AnalysisType extends ActionType {
 			this.outParameterTypes = new ArrayList();
 		else
 			this.outParameterTypes.clear();
-		this.outParameterTypes.addAll(outParameterTypes);
+		if (outParameterTypes != null)
+			this.outParameterTypes.addAll(outParameterTypes);
 	}
 	/**
 	 * client setter for outParameterTypes

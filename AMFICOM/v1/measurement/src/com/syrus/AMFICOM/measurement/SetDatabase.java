@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.48 2005/01/19 20:52:56 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.49 2005/01/26 10:57:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -26,6 +25,7 @@ import oracle.sql.BLOB;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.administration.DomainCondition;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -47,38 +47,38 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/01/19 20:52:56 $
+ * @version $Revision: 1.49 $, $Date: 2005/01/26 10:57:57 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public class SetDatabase extends StorableObjectDatabase {
-	
+
 	public static final String	COLUMN_SORT			= "sort";
 	public static final String	COLUMN_DESCRIPTION	= "description";	
 	public static final String LINK_COLUMN_SET_ID	= "set_id";
 	public static final String LINK_COLUMN_ME_ID 	= "monitored_element_id";
 	public static final String LINK_COLUMN_TYPE_ID	= "type_id";
 	public static final String LINK_COLUMN_VALUE	= "value";
-	
-    public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
-    
+
+	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
+
 	private static String columns;
 	private static String updateMultiplySQLValues;    
-	
+
 	protected String getEnityName() {
 		return ObjectEntities.SET_ENTITY;
 	}
-	
+
 	protected String getColumns(int mode) {
-		if (columns == null){
+		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
 				+ COLUMN_SORT  + COMMA
 				+ COLUMN_DESCRIPTION;
 		}
 		return columns;
-	}	
-	
+	}
+
 	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null){
 			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
@@ -87,7 +87,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		}
 		return updateMultiplySQLValues;
 	}	
-	
+
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
 		Set set = this.fromStorableObject(storableObject);
@@ -96,7 +96,7 @@ public class SetDatabase extends StorableObjectDatabase {
 			+ APOSTOPHE + DatabaseString.toQuerySubString(set.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE;
 		return values;
 	}	
-	
+
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
 		Set set = this.fromStorableObject(storableObject);
@@ -104,7 +104,8 @@ public class SetDatabase extends StorableObjectDatabase {
 		try {
 			preparedStatement.setInt(++i, set.getSort().value());
 			DatabaseString.setString(preparedStatement, ++i, set.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		} catch (SQLException sqle) {
+		}
+		catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
 		return i;
@@ -122,7 +123,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		this.retrieveSetParameters(set);
 		this.retrieveSetMELinksByOneQuery(Collections.singletonList(set));
 	}
-	
+
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Set set = (storableObject == null) ?
@@ -137,7 +138,6 @@ public class SetDatabase extends StorableObjectDatabase {
 						  (description != null) ? description : "");
 		return set;
 	}
-
 
 	private void retrieveSetParameters(Set set) throws RetrieveObjectException {
 		List parameters = new ArrayList();
@@ -189,200 +189,181 @@ public class SetDatabase extends StorableObjectDatabase {
 			}
 			catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally{
+			}
+			finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 		set.setParameters((SetParameter[])parameters.toArray(new SetParameter[parameters.size()]));
 	}
-    
+
 	private void retrieveSetParametersByOneQuery(List sets) throws RetrieveObjectException {
-		
         if ((sets == null) || (sets.isEmpty()))
-            return;     
-        
-        StringBuffer sql = new StringBuffer(SQL_SELECT
-                + COLUMN_ID + COMMA         
-                + LINK_COLUMN_TYPE_ID + COMMA
-                + LINK_COLUMN_VALUE + COMMA
-                + LINK_COLUMN_SET_ID 
-                + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
-                + SQL_WHERE + LINK_COLUMN_SET_ID
-                + SQL_IN + OPEN_BRACKET);
-        int i = 1;
-        for (Iterator it = sets.iterator(); it.hasNext();i++) {
-            Set set = (Set)it.next();
-            sql.append(DatabaseIdentifier.toSQLString(set.getId()));
-            if (it.hasNext()){
-                if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-                    sql.append(COMMA);
-                else {
-                    sql.append(CLOSE_BRACKET);
-                    sql.append(SQL_OR);
-                    sql.append(LINK_COLUMN_SET_ID);
-                    sql.append(SQL_IN);
-                    sql.append(OPEN_BRACKET);
-                }                   
-            }
-        }
-        sql.append(CLOSE_BRACKET);
-        
-        Statement statement = null;
-        ResultSet resultSet = null;
-        Connection connection = DatabaseConnection.getConnection();
-        try {
-            statement = connection.createStatement();
-            Log.debugMessage("SetDatabase.retrieveSetParametersByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
-            resultSet = statement.executeQuery(sql.toString());
-            SetParameter parameter;
-            ParameterType parameterType;
-            Map setParametersMap = new HashMap();
-            while (resultSet.next()) {
-                Set set = null;
-                Identifier setId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_SET_ID);
-                for (Iterator it = sets.iterator(); it.hasNext();) {
-                    Set setToCompare = (Set) it.next();
-                    if (setToCompare.getId().equals(setId)){
-                        set = setToCompare;
-                        break;
-                    }                   
-                }
-                
-                if (set == null){
-                    String mesg = "SetDatabase.retrieveSetParametersByOneQuery | Cannot found correspond result for '" + setId +"'" ;
-                    throw new RetrieveObjectException(mesg);
-                }
-                    
-                try {                    
-                    parameterType = (ParameterType) MeasurementStorableObjectPool
-                            .getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_TYPE_ID), true);
-                } catch (ApplicationException ae) {
-                    throw new RetrieveObjectException(ae);
-                }
-                parameter = new SetParameter(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
-											 parameterType, ByteArrayDatabase.toByteArray(resultSet.getBlob(LINK_COLUMN_VALUE)));
-                List parameters = (List)setParametersMap.get(set);
-                if (parameters == null){
-                    parameters = new LinkedList();
-                    setParametersMap.put(set, parameters);
-                }               
-                parameters.add(parameter);              
-            }
-            
-            for (Iterator iter = sets.iterator(); iter.hasNext();) {
-                Set set = (Set) iter.next();
-                List parameters = (List)setParametersMap.get(set);
-                if (parameters == null)
-                	parameters = Collections.EMPTY_LIST;
-                set.setParameters((SetParameter[]) parameters.toArray(new SetParameter[parameters.size()]));
-            }
-            
-        } catch (SQLException sqle) {
-            String mesg = "SetDatabase.retrieveSetParametersByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
-            throw new RetrieveObjectException(mesg, sqle);
-        } finally {
-            try {
-                if (statement != null)
-                    statement.close();
-                if (resultSet != null)
-                    resultSet.close();
-                statement = null;
-                resultSet = null;
-            } catch (SQLException sqle1) {
-                Log.errorException(sqle1);
-            } finally {
-                DatabaseConnection.releaseConnection(connection);
-            }
-        }   
+			return;
+
+		StringBuffer sql = new StringBuffer(SQL_SELECT + COLUMN_ID + COMMA
+				+ LINK_COLUMN_TYPE_ID + COMMA + LINK_COLUMN_VALUE + COMMA
+				+ LINK_COLUMN_SET_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
+				+ SQL_WHERE + LINK_COLUMN_SET_ID + SQL_IN + OPEN_BRACKET);
+		int i = 1;
+		for (Iterator it = sets.iterator(); it.hasNext(); i++) {
+			Set set = (Set) it.next();
+			sql.append(DatabaseIdentifier.toSQLString(set.getId()));
+			if (it.hasNext()) {
+				if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+					sql.append(COMMA);
+				else {
+					sql.append(CLOSE_BRACKET);
+					sql.append(SQL_OR);
+					sql.append(LINK_COLUMN_SET_ID);
+					sql.append(SQL_IN);
+					sql.append(OPEN_BRACKET);
+				}
+			}
+		}
+		sql.append(CLOSE_BRACKET);
+
+		Statement statement = null;
+		ResultSet resultSet = null;
+		Connection connection = DatabaseConnection.getConnection();
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("SetDatabase.retrieveSetParametersByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql.toString());
+
+			Map setParametersMap = new HashMap();
+			Identifier setId;
+			ParameterType parameterType;
+			SetParameter parameter;
+			List setParameters;
+			while (resultSet.next()) {
+				try {
+					parameterType = (ParameterType) GeneralStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_TYPE_ID), true);
+				}
+				catch (ApplicationException ae) {
+					throw new RetrieveObjectException(ae);
+				}
+				parameter = new SetParameter(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
+														parameterType,
+														ByteArrayDatabase.toByteArray(resultSet.getBlob(LINK_COLUMN_VALUE)));
+				setId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_SET_ID);
+				setParameters = (List) setParametersMap.get(setId);
+				if (setParameters == null) {
+					setParameters = new ArrayList();
+					setParametersMap.put(setId, setParameters);
+				}
+				setParameters.add(parameter);
+			}
+
+			Set set;
+			for (Iterator it = sets.iterator(); it.hasNext();) {
+				set = (Set)it.next();
+				setId = set.getId();
+				setParameters = (List) setParametersMap.get(setId);
+
+				if (setParameters != null)
+					set.setParameters((SetParameter[]) setParameters.toArray(new SetParameter[setParameters.size()]));
+			}
+		}
+		catch (SQLException sqle) {
+			String mesg = "SetDatabase.retrieveSetParametersByOneQuery | Cannot retrieve parameters for result -- "
+					+ sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+			finally {
+				DatabaseConnection.releaseConnection(connection);
+			}
+		}
 	}
-    
-    private void retrieveSetMELinksByOneQuery(List sets) throws RetrieveObjectException {
-    	if ((sets == null) || (sets.isEmpty()))
-            return;     
-        
-        StringBuffer sql = new StringBuffer(SQL_SELECT
-                + LINK_COLUMN_ME_ID + COMMA
-                + LINK_COLUMN_SET_ID
-                + SQL_FROM + ObjectEntities.SETMELINK_ENTITY
-                + SQL_WHERE + LINK_COLUMN_SET_ID
-                + SQL_IN + OPEN_BRACKET);
-        int i = 1;
-        for (Iterator it = sets.iterator(); it.hasNext();i++) {
-            Set set = (Set)it.next();
-            sql.append(DatabaseIdentifier.toSQLString(set.getId()));
-            if (it.hasNext()){
-                if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-                    sql.append(COMMA);
-                else {
-                    sql.append(CLOSE_BRACKET);
-                    sql.append(SQL_OR);
-                    sql.append(LINK_COLUMN_SET_ID);
-                    sql.append(SQL_IN);
-                    sql.append(OPEN_BRACKET);
-                }                   
-            }
-        }
-        sql.append(CLOSE_BRACKET);
-        
-        Statement statement = null;
-        ResultSet resultSet = null;
-        Connection connection = DatabaseConnection.getConnection();
-        try {
-            statement = connection.createStatement();
-            Log.debugMessage("SetDatabase.retrieveSetMELinksByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
-            resultSet = statement.executeQuery(sql.toString());
-            Map meLinkMap = new HashMap();
-            while (resultSet.next()) {
-                Set set = null;
-                Identifier setId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_SET_ID);
-                for (Iterator it = sets.iterator(); it.hasNext();) {
-                    Set setToCompare = (Set) it.next();
-                    if (setToCompare.getId().equals(setId)){
-                        set = setToCompare;
-                        break;
-                    }                   
-                }
-                
-                if (set == null){
-                    String mesg = "SetDatabase.retrieveSetMELinksByOneQuery | Cannot found correspond result for '" + setId +"'" ;
-                    throw new RetrieveObjectException(mesg);
-                }
-                
-                Identifier meId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_ME_ID);                    
-                List meIds = (List)meLinkMap.get(set);
-                if (meIds == null){
-                    meIds = new LinkedList();
-                    meLinkMap.put(set, meIds);
-                }               
-                meIds.add(meId);              
-            }
-            
-            for (Iterator iter = sets.iterator(); iter.hasNext();) {
-                Set set = (Set) iter.next();
-                List meIds = (List)meLinkMap.get(set);
-                set.setMonitoredElementIds0(meIds);
-            }
-            
-        } catch (SQLException sqle) {
-            String mesg = "SetDatabase.retrieveSetMELinksByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
-            throw new RetrieveObjectException(mesg, sqle);
-        } catch (ApplicationException ae) {
-            throw new RetrieveObjectException(ae);
-        } finally {
-            try {
-                if (statement != null)
-                    statement.close();
-                if (resultSet != null)
-                    resultSet.close();
-                statement = null;
-                resultSet = null;
-            } catch (SQLException sqle1) {
-                Log.errorException(sqle1);
-            } finally {
-                DatabaseConnection.releaseConnection(connection);
-            }
-        }        
-    }
+
+	private void retrieveSetMELinksByOneQuery(List sets) throws RetrieveObjectException {
+		if ((sets == null) || (sets.isEmpty()))
+			return;
+
+		StringBuffer sql = new StringBuffer(SQL_SELECT + LINK_COLUMN_ME_ID + COMMA
+				+ LINK_COLUMN_SET_ID + SQL_FROM + ObjectEntities.SETMELINK_ENTITY
+				+ SQL_WHERE + LINK_COLUMN_SET_ID + SQL_IN + OPEN_BRACKET);
+		int i = 1;
+		for (Iterator it = sets.iterator(); it.hasNext(); i++) {
+			Set set = (Set) it.next();
+			sql.append(DatabaseIdentifier.toSQLString(set.getId()));
+			if (it.hasNext()) {
+				if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+					sql.append(COMMA);
+				else {
+					sql.append(CLOSE_BRACKET);
+					sql.append(SQL_OR);
+					sql.append(LINK_COLUMN_SET_ID);
+					sql.append(SQL_IN);
+					sql.append(OPEN_BRACKET);
+				}
+			}
+		}
+		sql.append(CLOSE_BRACKET);
+
+		Statement statement = null;
+		ResultSet resultSet = null;
+		Connection connection = DatabaseConnection.getConnection();
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("SetDatabase.retrieveSetMELinksByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql.toString());
+
+			Map meLinkMap = new HashMap();
+			Identifier setId;
+			List meIds;
+			while (resultSet.next()) {
+				setId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_SET_ID);
+				meIds = (List) meLinkMap.get(setId);
+				if (meIds == null) {
+					meIds = new ArrayList();
+					meLinkMap.put(setId, meIds);
+				}
+				meIds.add(DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_ME_ID));
+
+				Set set;
+				for (Iterator it = sets.iterator(); it.hasNext();) {
+					set = (Set) it.next();
+					setId = set.getId();
+					meIds = (List) meLinkMap.get(setId);
+
+					set.setMonitoredElementIds0(meIds);
+				}
+			}
+		}
+		catch (SQLException sqle) {
+			String mesg = "SetDatabase.retrieveSetMELinksByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+			finally {
+				DatabaseConnection.releaseConnection(connection);
+			}
+		}
+	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Set set = this.fromStorableObject(storableObject);
@@ -447,7 +428,6 @@ public class SetDatabase extends StorableObjectDatabase {
 				preparedStatement.setBlob(4, BLOB.empty_lob());
 				Log.debugMessage("SetDatabase.insertSetParameters | Inserting parameter " + parameterTypeId.toString() + " for set " + setIdStr, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
-//				ByteArrayDatabase badb = new ByteArrayDatabase(setParameters[i].getValue());
 				ByteArrayDatabase.saveAsBlob(setParameters[i].getValue(),
 											 connection,
 											 ObjectEntities.SETPARAMETER_ENTITY,
@@ -539,8 +519,7 @@ public class SetDatabase extends StorableObjectDatabase {
 				return;
 		}
 	}
-	
-	
+
 	public void update(List storableObjects, int updateKind, Object obj) throws IllegalDataException,
 			VersionCollisionException, UpdateObjectException {		
 		switch (updateKind) {
@@ -720,7 +699,7 @@ public class SetDatabase extends StorableObjectDatabase {
 			}
 		}
 	}
-	
+
 	public List retrieveAll() throws RetrieveObjectException {
 		try{
 			return this.retrieveByIds(null, null);
@@ -738,33 +717,32 @@ public class SetDatabase extends StorableObjectDatabase {
 		
 		retrieveSetParametersByOneQuery(list);
 		retrieveSetMELinksByOneQuery(list);
-		
-		
+
 		return list;
 	}
-	
-	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
-        List list = null;
-        
-        String condition = COLUMN_ID + SQL_IN + OPEN_BRACKET
-				+ SQL_SELECT + LINK_COLUMN_SET_ID + SQL_FROM + ObjectEntities.SETMELINK_ENTITY
-				+ SQL_WHERE + LINK_COLUMN_ME_ID + SQL_IN + OPEN_BRACKET
-                	+ SQL_SELECT + COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
-					+ DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId())
-					+ CLOSE_BRACKET
-			+ CLOSE_BRACKET;
-        
-        try {
-            list = retrieveButIds(ids, condition);
-        }  catch (IllegalDataException ide) {           
-            Log.debugMessage("MeasurementDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
-        }
-        
-        return list;
-    }	
 
-	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
-			IllegalDataException {
+	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
+		List list = null;
+
+		String condition = COLUMN_ID + SQL_IN + OPEN_BRACKET + SQL_SELECT
+				+ LINK_COLUMN_SET_ID + SQL_FROM + ObjectEntities.SETMELINK_ENTITY
+				+ SQL_WHERE + LINK_COLUMN_ME_ID + SQL_IN + OPEN_BRACKET + SQL_SELECT
+				+ COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
+				+ DomainMember.COLUMN_DOMAIN_ID + EQUALS
+				+ DatabaseIdentifier.toSQLString(domain.getId()) + CLOSE_BRACKET
+				+ CLOSE_BRACKET;
+		try {
+			list = retrieveButIds(ids, condition);
+		}
+		catch (IllegalDataException ide) {
+			Log.debugMessage("MeasurementDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
+		}
+
+		return list;
+	}
+
+	public List retrieveByCondition(List ids, StorableObjectCondition condition)
+			throws RetrieveObjectException, IllegalDataException {
 		List list = null;
 		if (condition instanceof DomainCondition) {
 			DomainCondition domainCondition = (DomainCondition)condition;
