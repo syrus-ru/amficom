@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacterizableDatabase.java,v 1.4 2005/03/24 12:38:20 arseniy Exp $
+ * $Id: CharacterizableDatabase.java,v 1.5 2005/03/31 09:59:20 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import java.util.Map;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/03/24 12:38:20 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/31 09:59:20 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -141,14 +141,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 
 	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
 			throws VersionCollisionException, UpdateObjectException {
-		switch (updateKind) {
-			case UPDATE_FORCE:
-				super.checkAndUpdateEntity(storableObject, modifierId, true);
-				break;
-			case UPDATE_CHECK:
-			default:
-				super.checkAndUpdateEntity(storableObject, modifierId, false);
-		}
+		super.update(storableObject, modifierId, updateKind);
 
 		try {
 			this.updateCharacteristics(this.fromStorableObject(storableObject));
@@ -161,15 +154,7 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 
 	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
 			throws VersionCollisionException, UpdateObjectException {
-		switch (updateKind) {
-			case UPDATE_FORCE:
-				super.checkAndUpdateEntities(storableObjects, modifierId, true);
-				break;
-			case UPDATE_CHECK:
-			default:
-				super.checkAndUpdateEntities(storableObjects, modifierId, false);
-		}
-
+		super.update(storableObjects, modifierId, updateKind);
 		this.updateCharacteristics(storableObjects);
 	}
 

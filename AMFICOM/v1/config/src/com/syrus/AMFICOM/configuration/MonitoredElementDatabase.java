@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.61 2005/03/31 08:58:44 arseniy Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.62 2005/03/31 10:00:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/03/31 08:58:44 $
+ * @version $Revision: 1.62 $, $Date: 2005/03/31 10:00:09 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -388,29 +388,13 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 
 	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
 			throws VersionCollisionException, UpdateObjectException {
-		switch (updateKind) {
-			case UPDATE_FORCE:
-				super.checkAndUpdateEntity(storableObject, modifierId, true);
-				break;
-			case UPDATE_CHECK:
-			default:
-				super.checkAndUpdateEntity(storableObject, modifierId, false);
-		}
-		
+		super.update(storableObject, modifierId, updateKind);
 		this.updateMonitoredDomainMemberIds(Collections.singletonList(storableObject));
 	}
 
 	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
 			throws VersionCollisionException, UpdateObjectException {
-		switch (updateKind) {
-			case UPDATE_FORCE:
-				super.checkAndUpdateEntities(storableObjects, modifierId, true);
-				break;
-			case UPDATE_CHECK:
-			default:
-				super.checkAndUpdateEntities(storableObjects, modifierId, false);
-		}
-
+		super.update(storableObjects, modifierId, updateKind);
 		this.updateMonitoredDomainMemberIds(storableObjects);
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.132 2005/03/31 08:55:03 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.133 2005/03/31 09:58:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.132 $, $Date: 2005/03/31 08:55:03 $
+ * @version $Revision: 1.133 $, $Date: 2005/03/31 09:58:44 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -342,18 +342,11 @@ public abstract class StorableObjectDatabase {
 	public abstract void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException,
 			RetrieveObjectException;
 
-	// public abstract Collection retrieveByIds(Collection ids, String
-	// condition) throws IllegalDataException, RetrieveObjectException;
-
-	public abstract Object retrieveObject(	StorableObject storableObject,
-											int retrieveKind,
-											Object arg) throws IllegalDataException, ObjectNotFoundException,
-			RetrieveObjectException;
+	public abstract Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
+			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException;
 
 	protected final void retrieveEntity(StorableObject storableObject)
-			throws IllegalDataException,
-				ObjectNotFoundException,
-				RetrieveObjectException {
+			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		String strorableObjectIdStr = DatabaseIdentifier.toSQLString(storableObject.getId());
 		String sql = this.retrieveQuery(StorableObjectWrapper.COLUMN_ID + EQUALS + strorableObjectIdStr);
 		Statement statement = null;
@@ -1270,14 +1263,14 @@ public abstract class StorableObjectDatabase {
 			Log.errorException(ide);
 			return;
 		}
-		String sql = stringBuffer.toString();
 
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage(this.getEnityName() + "Database.delete(List) | Trying: " + sql, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql);
+			Log.debugMessage(this.getEnityName() + "Database.delete(List) | Trying: " + stringBuffer, Log.DEBUGLEVEL09);
+			statement.executeUpdate(stringBuffer.toString());
+			connection.commit();
 		}
 		catch (SQLException sqle1) {
 			Log.errorException(sqle1);

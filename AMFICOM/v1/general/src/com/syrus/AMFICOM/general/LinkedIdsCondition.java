@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.24 2005/03/31 09:05:38 bob Exp $
+ * $Id: LinkedIdsCondition.java,v 1.25 2005/03/31 09:57:34 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
@@ -65,8 +64,8 @@ import com.syrus.util.Log;
  * {@link #isNeedMore(Collection)}and {@link #setEntityCode(Short)}.</li>
  * </ul>
  * 
- * @author $Author: bob $
- * @version $Revision: 1.24 $, $Date: 2005/03/31 09:05:38 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/03/31 09:57:34 $
  * @module general_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -377,15 +376,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	}
 
 	public void setLinkedId(final Identifier linkedId) {
-		List singletonIdList = Collections.singletonList(linkedId);
-		try {
-			this.delegate.linkedEntityCode = getOnlyOneLinkedEntityCode(singletonIdList);
-		}
-		catch (IllegalDataException ide) {
-			this.delegate.linkedEntityCode = ObjectEntities.UNKNOWN_ENTITY_CODE;
-			Log.errorException(ide);
-		}
-		this.delegate.linkedIds = singletonIdList;
+		this.setLinkedIds(Collections.singleton(linkedId));
 	}
 
 	protected Map sort(Collection linkIds) {
