@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.84 2005/03/30 15:28:32 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.85 2005/03/31 09:52:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,9 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -35,6 +37,8 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
@@ -44,7 +48,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.84 $, $Date: 2005/03/30 15:28:32 $
+ * @version $Revision: 1.85 $, $Date: 2005/03/31 09:52:16 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -468,7 +472,12 @@ public class TestDatabase extends StorableObjectDatabase {
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		Test test = this.fromStorableObject(storableObject);
 		this.insertEntity(test);
-		this.insertMeasurementSetupTestLinks(test);
+		try {
+			this.updateMeasurementSetupIds(Collections.singleton(test));
+		}
+		catch (UpdateObjectException uoe) {
+			throw new CreateObjectException(uoe);
+		}
 		
 	}
 
@@ -476,63 +485,60 @@ public class TestDatabase extends StorableObjectDatabase {
 		if ((storableObjects == null) || (storableObjects.size() == 0))
 			return;
 
-//		if (storableObjects.size() == 1) {
-//			Test test = (Test) storableObjects.iterator().next();
-//			this.insertEntity(test);
-//			this.insertMeasurementSetupTestLinks(test);
-//			return;
-//		}
+		if (storableObjects.size() == 1) {
+			this.insert((StorableObject) storableObjects.iterator().next());
+			return;
+		}
 
 		this.insertEntities(storableObjects);
-		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-			Test test = (Test) it.next();
-			this.insertMeasurementSetupTestLinks(test);
+		try {
+			this.updateMeasurementSetupIds(storableObjects);
+		}
+		catch (UpdateObjectException uoe) {
+			throw new CreateObjectException(uoe);
 		}
 	}
 	
-	private void insertMeasurementSetupTestLinks(Test test) throws CreateObjectException {
-		Identifier testId = test.getId();
-		Collection msIds = test.getMeasurementSetupIds();
-		String sql = SQL_INSERT_INTO + ObjectEntities.MSTESTLINK_ENTITY
-			+ OPEN_BRACKET
-			+ LINK_COLMN_TEST_ID + COMMA
-			+ TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID
-			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
-			+ QUESTION + COMMA
-			+ QUESTION
-			+ CLOSE_BRACKET;
-
-		PreparedStatement preparedStatement = null;
-		Identifier msId = null;
-		Connection connection = DatabaseConnection.getConnection();
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind)
+			throws VersionCollisionException, UpdateObjectException {
+		super.update(storableObject, modifierId, updateKind);
 		try {
-			preparedStatement = connection.prepareStatement(sql);
-			for (Iterator iterator = msIds.iterator(); iterator.hasNext();) {
-				msId = ((Identifier)iterator.next());
-				DatabaseIdentifier.setIdentifier(preparedStatement, 1, testId);
-				DatabaseIdentifier.setIdentifier(preparedStatement, 2, msId);
-				Log.debugMessage("TestDatabase.insertMeasurementSetupTestLinks | Inserting link for test " + testId + " and measurement setup " + msId, Log.DEBUGLEVEL09);
-				preparedStatement.executeUpdate();
-			}
+			this.updateMeasurementSetupIds(Collections.singleton(storableObject));
 		}
-		catch (SQLException sqle) {
-			String mesg = "TestDatabase.insertMeasurementSetupTestLinks | Cannot insert link for measurement setup '" + msId + "' and test '" + testId + "' -- " + sqle.getMessage();
-			throw new CreateObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (preparedStatement != null)
-					preparedStatement.close();
-				preparedStatement = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			} finally {
-				DatabaseConnection.releaseConnection(connection);
-			}
+		catch (IllegalDataException ide) {
+			Log.errorException(ide);
 		}
 	}
 
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
+			throws VersionCollisionException, UpdateObjectException {
+		super.update(storableObjects, modifierId, updateKind);
+		try {
+			this.updateMeasurementSetupIds(storableObjects);
+		}
+		catch (IllegalDataException ide) {
+			Log.errorException(ide);
+		}
+	}
+
+	private void updateMeasurementSetupIds(Collection tests) throws IllegalDataException, UpdateObjectException {
+		if (tests == null || tests.isEmpty())
+			return;
+
+		Map measurementSetupIdsMap = new HashMap();
+		Test test;
+		Collection measurementSetupIds;
+		for (Iterator it = tests.iterator(); it.hasNext();) {
+			test = this.fromStorableObject((StorableObject) it.next());
+			measurementSetupIds = test.getMeasurementSetupIds();
+			measurementSetupIdsMap.put(test.getId(), measurementSetupIds);
+		}
+
+		this.updateLinkedEntityIds(measurementSetupIdsMap,
+				ObjectEntities.MSTESTLINK_ENTITY,
+				TestWrapper.LINK_COLUMN_TEST_ID,
+				TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID);
+	}
 	/*
 	private void updateStatus(Test test) throws UpdateObjectException {
 		String testIdStr = DatabaseIdentifier.toSQLString(test.getId());
