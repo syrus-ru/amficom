@@ -1,5 +1,5 @@
 /*
- * $Id: ComplexReflectogramEvent.java,v 1.10 2005/03/11 18:09:38 saa Exp $
+ * $Id: ComplexReflectogramEvent.java,v 1.11 2005/03/21 18:02:57 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.10 $, $Date: 2005/03/11 18:09:38 $
+ * @version $Revision: 1.11 $, $Date: 2005/03/21 18:02:57 $
  * @module dadara
  * 
  * Класс предназначен для хранения расширенной информации о
@@ -58,7 +58,7 @@ public class ComplexReflectogramEvent implements SimpleReflectogramEvent
 		double []yArr = mt.getYArray(begin, N);
 		if (type == SimpleReflectogramEvent.LINEAR)
 		{
-			ModelFunction lin = ModelFunction.createLinear(yArr, begin);
+			ModelFunction lin = ModelFunction.createLinearFrom0(yArr);
 			asympY0 = lin.fun(begin);
 			asympY1 = lin.fun(end);
 			mLoss = asympY0 - asympY1;

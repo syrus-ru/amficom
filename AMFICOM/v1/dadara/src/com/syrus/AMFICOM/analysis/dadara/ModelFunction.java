@@ -20,7 +20,7 @@ import java.io.*;
  * <p>Should be constructed as one of three AMFICOM-specific simple functions.
  * The modelling function will probably change when fit() will be called.</p>
  *
- * @version $Revision: 1.13 $, $Date: 2005/03/15 13:41:37 $
+ * @version $Revision: 1.14 $, $Date: 2005/03/21 18:02:57 $
  * @author $Author: saa $
  * @module analysis_v1
  */
@@ -160,10 +160,11 @@ public class ModelFunction {
 	}
 
 	/**
-	 * —оздает модельную функцию линейного типа (ax+b), фитиру€ по RMS,
+	 * —оздает модельную функцию линейного типа (ax+b), фитиру€ по RMS.
+	 * ѕредполагаетс€ значени€ X от нул€ до y.length-1
 	 * @return модельна€ функци€ линейного типа ax+b, a=0, b=0 
 	 */
-	public static ModelFunction createLinear(double[]y, int x0)
+	public static ModelFunction createLinearFrom0(double[]y)
 	{
 		ModelFunction ret = new ModelFunction();
 		ret.nFit1(y, 0, y.length - 1, FITMODE_SET_LINEAR, 0, 0);
