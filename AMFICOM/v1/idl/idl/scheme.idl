@@ -1,5 +1,5 @@
 /*
- * $Id: scheme.idl,v 1.13 2004/11/18 16:54:43 bass Exp $
+ * $Id: scheme.idl,v 1.14 2004/11/22 13:01:16 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -195,7 +195,7 @@ module com {
 						/**
 						 * Depending on implementation, may reference either {@link LinkType link type} or {@link LinkType cable link type}.
 						 */
-						private general::corba::Identifier linkTypeId;
+						private general::corba::Identifier abstractLinkTypeId;
 						/**
 						 * Depending on implementation, may reference either {@link Link link} or {@link Link cable link}.
 						 */
@@ -215,7 +215,7 @@ module com {
 
 						readonly attribute AbstractSchemePort sourceAbstractSchemePort;
 						readonly attribute AbstractSchemePort targetAbstractSchemePort;
-						readonly attribute configuration::corba::LinkType linkType;
+						readonly attribute configuration::corba::AbstractLinkType abstractLinkType;
 						readonly attribute configuration::corba::Link link;
 						/**
 						 * Getter returns physical length of this scheme link or scheme cable link.
@@ -240,6 +240,10 @@ module com {
 						 * @see AbstractSchemeLink#targetAbstractSchemePortId
 						 */
 						readonly attribute SchemePort targetSchemePort;
+						/**
+						 * @see AbstractSchemeLink#abstractLinkTypeId
+						 */
+						readonly attribute configuration::corba::LinkType linkType;
 						readonly attribute CORBA::Map::MapSiteElement site;
 
 						SchemeLink cloneInstance();
@@ -257,13 +261,13 @@ module com {
 							general::corba::Describable {
 						private wstring thisName;
 						private wstring thisDescription;
-						private general::corba::Identifier linkTypeId;
+						private general::corba::Identifier cableThreadTypeId;
 						private general::corba::Identifier schemePortId;
 						private general::corba::Identifier schemeCableLinkId;
 						private general::corba::Identifier threadId;
 						private general::corba::IdentifierSeq characteristicIds;
 
-						readonly attribute configuration::corba::LinkType linkType;
+						readonly attribute configuration::corba::CableThreadType cableThreadType;
 						/**
 						 * This is a circular dependency on {@link SchemePort}, see {@link SchemePort#schemeCableThread()}.
 						 *
@@ -334,6 +338,10 @@ module com {
 						 * @see AbstractSchemeLink#targetAbstractSchemePortId
 						 */
 						readonly attribute SchemeCablePort targetSchemeCablePort;
+						/**
+						 * @see AbstractSchemeLink#abstractLinkTypeId
+						 */
+						readonly attribute configuration::corba::CableLinkType cableLinkType;
 						readonly attribute SchemeCableThreadSeq schemeCableThreads;
 						readonly attribute CableChannelingItemSeq cableChannelingItems;
 
