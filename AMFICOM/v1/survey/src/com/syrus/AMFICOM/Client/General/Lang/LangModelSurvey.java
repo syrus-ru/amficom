@@ -1,16 +1,12 @@
 package com.syrus.AMFICOM.Client.General.Lang;
 
-import java.util.Vector;
-import java.awt.Component;
-import java.lang.reflect.Field;
+import java.util.*;
 
-import java.util.Locale;
-import java.util.ResourceBundle;
-import java.util.ListResourceBundle;
 import java.text.DateFormatSymbols;
 
-import com.syrus.AMFICOM.Client.General.Lang.*;
-
+/**
+ * @deprecated use com.syrus.AMFICOM.Client.General.Survey.I18N
+ */
 public class LangModelSurvey extends LangModel 
 {
 	static public Locale locale;
@@ -19,31 +15,41 @@ public class LangModelSurvey extends LangModel
 	static public ResourceBundle lang;
 	static public DateFormatSymbols symbols;
 	static public String resourceBundle;
-
+	/**
+	 * @deprecated use com.syrus.AMFICOM.Client.General.Survey.I18N
+	 */
 	public LangModelSurvey()
 	{
 		symbols = new DateFormatSymbols(locale);
 	}
-
+	/**
+	 * @deprecated use com.syrus.AMFICOM.Client.General.Survey.I18N	
+	 */
 	static public void initialize()
 	{
 		initialize("com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey");
 	}
-
+	/**
+	 * @deprecated use com.syrus.AMFICOM.Client.General.Survey.I18N	
+	 */
 	static public void initialize(String rb)
 	{
 		System.out.println("initialize lang - " + rb);
 		resourceBundle = new String(rb);
 		setLangModel("ru", "");
 	}
-
+	/**
+	 * @deprecated use com.syrus.AMFICOM.Client.General.Survey.I18N	 
+	 */
 	static public Vector getLangModels()
 	{
 
 		Vector vec = new Vector();
 		return vec;
 	}
-
+	/**
+	 * @deprecated use com.syrus.AMFICOM.Client.General.Survey.I18N
+	 */
 	static public boolean setLangModel(String l, String c)
 	{
 		language = l;
@@ -65,36 +71,48 @@ public class LangModelSurvey extends LangModel
 		}
 		return true;
 	}
-
+	/**
+	 * @deprecated use com.syrus.AMFICOM.Client.General.Survey.I18N.getString()	 
+	 */
 	static public String Text(String componentName)
 	{
 		return getComponentText(lang, componentName);
 	}
-
+	/**
+	 * @deprecated use com.syrus.AMFICOM.Client.General.Survey.I18N.getString()	 
+	 */
 	static public String ToolTip(String componentName)
 	{
 		return getComponentToolTip(lang, componentName);
 	}
-
+	/**
+	 * @deprecated use com.syrus.AMFICOM.Client.General.Survey.I18N.getString()	 
+	 */
 	static public String getComponentText(
 			ResourceBundle lang,
 			String componentName)
 	{
 		return String(componentName + "Text");
 	}
-
+	/**
+	 * @deprecated use com.syrus.AMFICOM.Client.General.Survey.I18N.getString()	 
+	 */
 	static public String getComponentToolTip(
 			ResourceBundle lang,
 			String componentName)
 	{
 		return String(componentName + "ToolTip");
 	}
-
+	/**
+	 * @deprecated use com.syrus.AMFICOM.Client.General.Survey.I18N.getString()	 
+	 */
 	static public String String(String keyName)
 	{
 		return String(lang, keyName);
 	}
-
+	/**
+	 * @deprecated use com.syrus.AMFICOM.Client.General.Survey.I18N.getString()	 
+	 */
 	static public String String(ResourceBundle lang, String keyName)
 	{
 		try
