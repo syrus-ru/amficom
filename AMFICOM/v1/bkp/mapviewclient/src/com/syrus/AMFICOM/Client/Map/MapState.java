@@ -1,5 +1,5 @@
 /**
- * $Id: MapState.java,v 1.7 2005/01/30 15:38:17 krupenn Exp $
+ * $Id: MapState.java,v 1.8 2005/02/03 16:24:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,7 @@ package com.syrus.AMFICOM.Client.Map;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/01/30 15:38:17 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/03 16:24:59 $
  * @module mapviewclient_v1
  */
 public final class MapState 
@@ -101,7 +101,7 @@ public final class MapState
 	 */
 	public int getMouseMode()
 	{
-		return mouseMode;
+		return this.mouseMode;
 	}
 
 	/**
@@ -110,7 +110,7 @@ public final class MapState
 	 */
 	public void setMouseMode(int mode)
 	{
-		mouseMode = mode;
+		this.mouseMode = mode;
 	}
 
 	/**
@@ -119,7 +119,7 @@ public final class MapState
 	 */
 	public int getActionMode()
 	{
-		return actionMode;
+		return this.actionMode;
 	}
 
 	/**
@@ -128,7 +128,7 @@ public final class MapState
 	 */
 	public void setActionMode(int mode)
 	{
-		actionMode = mode;
+		this.actionMode = mode;
 	}
 
 	/**
@@ -137,7 +137,7 @@ public final class MapState
 	 */
 	public int getOperationMode()
 	{
-		return operationMode;
+		return this.operationMode;
 	}
 
 	/**
@@ -146,7 +146,7 @@ public final class MapState
 	 */
 	public void setOperationMode(int mode)
 	{
-		operationMode = mode;
+		this.operationMode = mode;
 	}
 
 	/**
@@ -155,7 +155,7 @@ public final class MapState
 	 */
 	public int getShowMode()
 	{
-		return showMode;
+		return this.showMode;
 	}
 
 	/**
@@ -164,7 +164,7 @@ public final class MapState
 	 */
 	public void setShowMode(int mode)
 	{
-		showMode = mode;
+		this.showMode = mode;
 	}
 
 

@@ -1,5 +1,5 @@
 /**
- * $Id: AnimateThread.java,v 1.4 2005/01/21 16:19:56 krupenn Exp $
+ * $Id: AnimateThread.java,v 1.5 2005/02/03 16:24:59 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -10,21 +10,14 @@
 
 package com.syrus.AMFICOM.Client.Map;
 
-import java.util.*;
-
 /**
- * thread который отвечает за изменение ре∆има отображени€ графических 
- * элементов в состо€нии alarmed с периодом timeInterval
- * 
- * thread мен€ет флаг отрисовки и выдает команду
- * логическому слою перерисовать свое содержимое
- * 
- * 
- * 
- * @version $Revision: 1.4 $, $Date: 2005/01/21 16:19:56 $
- * @module map_v2
+ * Thread который отвечает за изменение ре∆има отображени€ графических 
+ * элементов в состо€нии alarmed с периодом timeInterval.
+ * Thread мен€ет флаг отрисовки и выдает команду
+ * логическому слою перерисовать свое содержимое.
+ * @version $Revision: 1.5 $, $Date: 2005/02/03 16:24:59 $
+ * @module mapviewclient_v1
  * @author $Author: krupenn $
- * @see
  */
 public class AnimateThread 
 		extends Thread
@@ -42,7 +35,7 @@ public class AnimateThread
 
 	public AnimateThread(LogicalNetLayer logical)
 	{
-		logicalNetLayer = logical;
+		this.logicalNetLayer = logical;
 	}
 
 	/**
@@ -50,7 +43,7 @@ public class AnimateThread
 	 */
 	public void stopRunning()
 	{
-		isRunning = false;
+		this.isRunning = false;
 	}
 	
 	public void run()

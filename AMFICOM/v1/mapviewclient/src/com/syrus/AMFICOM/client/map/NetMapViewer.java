@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.3 2004/11/12 19:09:54 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.4 2005/02/03 16:24:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,10 +31,11 @@ import javax.swing.JComponent;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/11/12 19:09:54 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/03 16:24:59 $
  * @module map_v2
  * @author $Author: krupenn $
- * @see SpatialNetMapViewer, MapInfoNetMapViewer
+ * @see {@link com.syrus.AMFICOM.Client.Map.ObjectFX.SpatialNetMapViewer} 
+ * @see {@link com.syrus.AMFICOM.Client.Map.Mapinfo.MapInfoNetMapViewer}
  */
 public abstract class NetMapViewer 
 {

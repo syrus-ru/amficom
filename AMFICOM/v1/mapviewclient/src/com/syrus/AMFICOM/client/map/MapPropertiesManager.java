@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.5 2005/01/21 16:19:57 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.6 2005/02/03 16:24:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -47,20 +47,17 @@ import javax.swing.ImageIcon;
  * Класс управляет инициализацией картографического отображения.
  * Считывает данные из файла Map.properties и в зависимости от считанных
  * данных создает объекты отображения:
- * 	NetMapViewer
- *  MapConnection
+ * <li>NetMapViewer
+ * <li>MapConnection
  *  
- * при завершении работы сохраняет настройки в Map.properties
- * 	type
- * 	center
- *  zoom
+ * <br>При завершении работы сохраняет настройки в Map.properties
+ * <li>type
+ * <li>center
+ * <li>zoom
  * 
- * 
- * 
- * @version $Revision: 1.5 $, $Date: 2005/01/21 16:19:57 $
- * @module
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.6 $, $Date: 2005/02/03 16:24:59 $
+ * @module mapviewclient_v1
  */
 public final class MapPropertiesManager 
 {
@@ -256,14 +253,14 @@ public final class MapPropertiesManager
 	}
 	
 	/**
-	 * приватный конструктор
+	 * приватный конструктор.
 	 */
 	private MapPropertiesManager()
-	{
+	{//empty
 	}
 
 	/**
-	 * получить имя класса, отображающего вид карты
+	 * Получить имя класса, отображающего вид карты.
 	 */
 	public static String getNetMapViewerClassName()
 	{
@@ -279,8 +276,8 @@ public final class MapPropertiesManager
 	}
 
 	/**
-	 * получить имя класса, реализующего подсоединение к данным ГИС
-	 * отображения географических объектов
+	 * Получить имя класса, реализующего подсоединение к данным ГИС
+	 * отображения географических объектов.
 	 */
 	public static String getConnectionClassName()
 	{
