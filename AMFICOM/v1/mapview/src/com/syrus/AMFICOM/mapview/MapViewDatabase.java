@@ -1,5 +1,5 @@
 /*
-* $Id: MapViewDatabase.java,v 1.17 2005/04/01 13:08:48 bob Exp $
+* $Id: MapViewDatabase.java,v 1.18 2005/04/05 12:47:05 max Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -44,8 +44,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/04/01 13:08:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.18 $, $Date: 2005/04/05 12:47:05 $
+ * @author $Author: max $
  * @module mapview_v1
  */
 public class MapViewDatabase extends CharacterizableDatabase {
@@ -267,8 +267,9 @@ public class MapViewDatabase extends CharacterizableDatabase {
 	        
 	        mapIdLinkedObjectIds.put(mapView.getId(), linkedObjectIds);
 		}
-		
-		super.updateLinkedEntities(mapIdLinkedObjectIds, MAPVIEW_SCHEME, LINK_COLUMN_MAPVIEW_ID, LINK_COLUMN_SCHEME_ID);
+		//TODO: may be wrong correction
+		//super.updateLinkedEntities(mapIdLinkedObjectIds, MAPVIEW_SCHEME, LINK_COLUMN_MAPVIEW_ID, LINK_COLUMN_SCHEME_ID);
+		super.updateLinkedEntityIds(mapIdLinkedObjectIds, MAPVIEW_SCHEME, LINK_COLUMN_MAPVIEW_ID, LINK_COLUMN_SCHEME_ID);
 	}
 	
 	public void delete(Identifier id) throws IllegalDataException {
