@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.12 2004/08/05 12:07:03 bass Exp $
+ * $Id: Environment.java,v 1.13 2004/09/03 08:17:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -58,12 +58,15 @@ import javax.swing.plaf.metal.MetalTheme;
  * 
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2004/08/05 12:07:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2004/09/03 08:17:18 $
+ * @author $Author: krupenn $
  * @see
  */
 public class Environment extends Singleton
 {
+	/**
+	 * @deprecated use Environment.getDispatcher()
+	 */
 	public static Dispatcher the_dispatcher = new Dispatcher();
 
 	private static ArrayList windows = new ArrayList();
@@ -443,6 +446,11 @@ public class Environment extends Singleton
 		{
 			return UIManager.getLookAndFeel();
 		}
+	}
+
+	public static Dispatcher getDispatcher()
+	{
+		return the_dispatcher;
 	}
 
 	public static String getConnectionType()
