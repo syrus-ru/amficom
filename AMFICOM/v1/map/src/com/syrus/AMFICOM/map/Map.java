@@ -1,5 +1,5 @@
 /*
- * $Id: Map.java,v 1.13 2005/01/24 16:48:55 krupenn Exp $
+ * $Id: Map.java,v 1.14 2005/01/25 11:58:24 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/01/24 16:48:55 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.14 $, $Date: 2005/01/25 11:58:24 $
+ * @author $Author: bob $
  * @module map_v1
  */
 public class Map extends StorableObject {
@@ -302,17 +302,25 @@ public class Map extends StorableObject {
 		return this.description;
 	}
 	
-	public void setDescription(String description) {
+	protected void setDescription0(String description) {
 		this.description = description;
-		super.currentVersion = super.getNextVersion();
 	}
+	
+	public void setDescription(String description) {
+		this.setDescription0(description);
+		super.currentVersion = super.getNextVersion();
+	}	
 	
 	public Identifier getDomainId() {
 		return this.domainId;
 	}
 	
-	public void setDomainId(Identifier domainId) {
+	protected void setDomainId0(Identifier domainId) {
 		this.domainId = domainId;
+	}
+	
+	public void setDomainId(Identifier domainId) {
+		this.setDomainId0(domainId);
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -335,8 +343,12 @@ public class Map extends StorableObject {
 		return this.name;
 	}
 	
-	public void setName(String name) {
+	protected void setName0(String name) {
 		this.name = name;
+	}
+	
+	public void setName(String name) {
+		this.setName0(name);
 		super.currentVersion = super.getNextVersion();
 	}
 	

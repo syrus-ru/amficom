@@ -1,5 +1,5 @@
 /*
- * $Id: MapDatabase.java,v 1.9 2005/01/17 10:54:58 bob Exp $
+ * $Id: MapDatabase.java,v 1.10 2005/01/25 11:58:24 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,19 +42,12 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/01/17 10:54:58 $
+ * @version $Revision: 1.10 $, $Date: 2005/01/25 11:58:24 $
  * @author $Author: bob $
  * @module map_v1
  */
 public class MapDatabase extends StorableObjectDatabase {
-	 // name VARCHAR2(128),
-    public static final String COLUMN_NAME  		= "name";
-    // description VARCHAR2(256),
-    public static final String COLUMN_DESCRIPTION   = "description";
-    // domain_id VARCHAR2(32),
-    public static final String COLUMN_DOMAIN_ID     = "domain_id";
-    
-    // linked tables :: 
+	 // linked tables :: 
     private static final String MAP_COLLECTOR 			= "MapCollector";    
     private static final String MAP_MARK 				= "MapMark";
 	private static final String MAP_NODE_LINK 			= "MapNodeLink";
@@ -70,32 +63,16 @@ public class MapDatabase extends StorableObjectDatabase {
 	private static final int _MAP_TOPOLOGICAL_NODE 		= 5;
 	
 
-    // map_id VARCHAR2(32),   
-    private static final String LINK_COLUMN_MAP_ID					= "map_id";
-    // collector_id VARCHAR2(32),
-    private static final String LINK_COLUMN_COLLECTOR_ID			= "collector_id";
-    // mark_id VARCHAR2(32),
-    private static final String LINK_COLUMN_MARK_ID					= "mark_id";
-    // node_link_id VARCHAR2(32),
-    private static final String LINK_COLUMN_NODE_LINK_ID			= "node_link_id";
-    // physical_link_id VARCHAR2(32),
-    private static final String LINK_COLUMN_PHYSICAL_LINK_ID		= "physical_link_id";
-    // site_node_id VARCHAR2(32),
-    private static final String LINK_COLUMN_SITE_NODE_ID  			= "site_node_id";
-    // topological_node_id VARCHAR2(32),
-    private static final String LINK_COLUMN_TOPOLOGICAL_NODE_ID		= "topological_node_id";
-
-
-	private static java.util.Map dbTableColumnName;
+    private static java.util.Map dbTableColumnName;
 	
 	static {
 		dbTableColumnName = new HashMap();
-		dbTableColumnName.put(MAP_COLLECTOR, LINK_COLUMN_COLLECTOR_ID);
-		dbTableColumnName.put(MAP_MARK, LINK_COLUMN_MARK_ID);
-		dbTableColumnName.put(MAP_NODE_LINK, LINK_COLUMN_NODE_LINK_ID);
-		dbTableColumnName.put(MAP_PHYSICAL_LINK, LINK_COLUMN_PHYSICAL_LINK_ID);
-		dbTableColumnName.put(MAP_SITE_NODE, LINK_COLUMN_SITE_NODE_ID);
-		dbTableColumnName.put(MAP_TOPOLOGICAL_NODE, LINK_COLUMN_TOPOLOGICAL_NODE_ID);
+		dbTableColumnName.put(MAP_COLLECTOR, MapWrapper.LINK_COLUMN_COLLECTOR_ID);
+		dbTableColumnName.put(MAP_MARK, MapWrapper.LINK_COLUMN_MARK_ID);
+		dbTableColumnName.put(MAP_NODE_LINK, MapWrapper.LINK_COLUMN_NODE_LINK_ID);
+		dbTableColumnName.put(MAP_PHYSICAL_LINK, MapWrapper.LINK_COLUMN_PHYSICAL_LINK_ID);
+		dbTableColumnName.put(MAP_SITE_NODE, MapWrapper.LINK_COLUMN_SITE_NODE_ID);
+		dbTableColumnName.put(MAP_TOPOLOGICAL_NODE, MapWrapper.LINK_COLUMN_TOPOLOGICAL_NODE_ID);
 	}
 
 
@@ -252,7 +229,7 @@ public class MapDatabase extends StorableObjectDatabase {
 		String tableName = this.getLinkedTableName(linkedTable);
 		String columnName = (String)dbTableColumnName.get(tableName);
 		
-		return super.retrieveLinkedEntities(maps, tableName, LINK_COLUMN_MAP_ID, columnName);
+		return super.retrieveLinkedEntities(maps, tableName, MapWrapper.LINK_COLUMN_MAP_ID, columnName);
 	}
 	
 	protected String getEnityName() {		
@@ -262,9 +239,9 @@ public class MapDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null){
 			columns = super.getColumns(mode) + COMMA
-				+ COLUMN_NAME + COMMA
-				+ COLUMN_DESCRIPTION + COMMA
-				+ COLUMN_DOMAIN_ID;
+				+ MapWrapper.COLUMN_NAME + COMMA
+				+ MapWrapper.COLUMN_DESCRIPTION + COMMA
+				+ MapWrapper.COLUMN_DOMAIN_ID;
 		}
 		return columns;
 	}	
@@ -314,9 +291,9 @@ public class MapDatabase extends StorableObjectDatabase {
 							   DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
-							   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
-							   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_DOMAIN_ID));		
+							   DatabaseString.fromQuerySubString(resultSet.getString(MapWrapper.COLUMN_NAME)),
+							   DatabaseString.fromQuerySubString(resultSet.getString(MapWrapper.COLUMN_DESCRIPTION)),
+							   DatabaseIdentifier.getIdentifier(resultSet, MapWrapper.COLUMN_DOMAIN_ID));		
 		return map;
 	}
 
@@ -455,7 +432,7 @@ public class MapDatabase extends StorableObjectDatabase {
 	        mapIdLinkedObjectIds.put(map.getId(), linkedObjectIds);
 		}
 		
-		super.updateLinkedEntities(mapIdLinkedObjectIds, tableName, LINK_COLUMN_MAP_ID, columnName);
+		super.updateLinkedEntities(mapIdLinkedObjectIds, tableName, MapWrapper.LINK_COLUMN_MAP_ID, columnName);
 
 	}
 	
