@@ -1,5 +1,5 @@
 /*
- * $Id: CMMeasurementTransmit.java,v 1.13 2005/03/29 17:45:46 arseniy Exp $
+ * $Id: CMMeasurementTransmit.java,v 1.14 2005/03/29 19:48:35 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,10 @@
 
 package com.syrus.AMFICOM.cmserver;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.general.AccessIdentity;
@@ -23,7 +21,6 @@ import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -67,7 +64,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/03/29 17:45:46 $
+ * @version $Revision: 1.14 $, $Date: 2005/03/29 19:48:35 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -499,211 +496,124 @@ public abstract class CMMeasurementTransmit extends CMConfigurationTransmit {
 
 
 	public AnalysisType_Transferable[] transmitAnalysisTypes(Identifier_Transferable[] identifier_Transferables,
-			AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
-
-		try {
-			Identifier domainId = new Identifier(accessIdentifier.domain_id);
-			Log.debugMessage("CMMeasurementTransmit.transmitAnalysisTypes | requiere "
-					+ (identifier_Transferables.length == 0 ? "all" : Integer.toString(identifier_Transferables.length))
-					+ " item(s) in domain: "
-					+ domainId.toString(), Log.DEBUGLEVEL07);
-
-			Collection collection = null;
-			if (identifier_Transferables.length > 0) {
-				List idsList = new ArrayList(identifier_Transferables.length);
-				for (int i = 0; i < identifier_Transferables.length; i++)
-					idsList.add(new Identifier(identifier_Transferables[i]));
-
-				collection = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
-			}
-			else
-				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.ANALYSISTYPE_ENTITY_CODE),
-						true);
-
-			AnalysisType_Transferable[] transferables = new AnalysisType_Transferable[collection.size()];
-
-			int i = 0;
-			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
-				AnalysisType analysisType = (AnalysisType) it.next();
-				transferables[i] = (AnalysisType_Transferable) analysisType.getTransferable();
-			}
-
-			return transferables;
-
-		}
-		catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		}
-		catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide.getMessage());
-		}
-		catch (IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		}
-		catch (ApplicationException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		}
-		catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
-		}
-
-	}
-
-	public EvaluationType_Transferable[] transmitEvaluationTypes(	Identifier_Transferable[] identifier_Transferables,
-																	AccessIdentifier_Transferable accessIdentifier)
+			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		Log.debugMessage("CMMeasurementTransmit.transmitAnalysisTypes | requiered " + identifier_Transferables.length
+				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
 
+		Collection ids = new HashSet(identifier_Transferables.length);
+		for (int i = 0; i < identifier_Transferables.length; i++)
+			ids.add(new Identifier(identifier_Transferables[i]));
+
+		Collection objects = null;
 		try {
-			Identifier domainId = new Identifier(accessIdentifier.domain_id);
-			Log.debugMessage(
-				"CMMeasurementTransmit.transmitEvaluationTypes | requiere "
-						+ (identifier_Transferables.length == 0 ? "all" : Integer
-								.toString(identifier_Transferables.length)) + " item(s) in domain: "
-						+ domainId.toString(), Log.DEBUGLEVEL07);
-			Collection collection;
-			if (identifier_Transferables.length > 0) {
-				List idsList = new ArrayList(identifier_Transferables.length);
-				for (int i = 0; i < identifier_Transferables.length; i++)
-					idsList.add(new Identifier(identifier_Transferables[i]));
-
-				collection = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
-
-			} else
-				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
-					new EquivalentCondition(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE), true);
-
-			EvaluationType_Transferable[] transferables = new EvaluationType_Transferable[collection.size()];
-			int i = 0;
-			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
-				EvaluationType evaluationType = (EvaluationType) it.next();
-				transferables[i] = (EvaluationType_Transferable) evaluationType.getTransferable();
-			}
-
-			return transferables;
-
-		} catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide.getMessage());
-		} catch (IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (ApplicationException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+			objects = MeasurementStorableObjectPool.getStorableObjects(ids, true);
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
 		}
 
+		AnalysisType_Transferable[] transferables = new AnalysisType_Transferable[objects.size()];
+		int i = 0;
+		AnalysisType analysisType;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			analysisType = (AnalysisType) it.next();
+			transferables[i] = (AnalysisType_Transferable) analysisType.getTransferable();
+		}
+		return transferables;
 	}
 
-	public MeasurementType_Transferable[] transmitMeasurementTypes(	Identifier_Transferable[] identifier_Transferables,
-																	AccessIdentifier_Transferable accessIdentifier)
+	public EvaluationType_Transferable[] transmitEvaluationTypes(Identifier_Transferable[] identifier_Transferables,
+			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		Log.debugMessage("CMMeasurementTransmit.transmitEvaluationTypes | requiered " + identifier_Transferables.length
+				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+
+		Collection ids = new HashSet(identifier_Transferables.length);
+		for (int i = 0; i < identifier_Transferables.length; i++)
+			ids.add(new Identifier(identifier_Transferables[i]));
+
+		Collection objects = null;
 		try {
-			Identifier domainId = new Identifier(accessIdentifier.domain_id);
-			Log.debugMessage(
-				"CMMeasurementTransmit.transmitMeasurementTypes | requiere "
-						+ (identifier_Transferables.length == 0 ? "all" : Integer
-								.toString(identifier_Transferables.length)) + " item(s) in domain: "
-						+ domainId.toString(), Log.DEBUGLEVEL07);
-			Collection collection = null;
-			if (identifier_Transferables.length > 0) {
-				List idsList = new ArrayList(identifier_Transferables.length);
-				for (int i = 0; i < identifier_Transferables.length; i++)
-					idsList.add(new Identifier(identifier_Transferables[i]));
-
-				collection = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
-
-			} else
-				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
-					new EquivalentCondition(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE), true);
-
-			MeasurementType_Transferable[] transferables = new MeasurementType_Transferable[collection.size()];
-			int i = 0;
-			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
-				MeasurementType measurementType = (MeasurementType) it.next();
-				transferables[i] = (MeasurementType_Transferable) measurementType.getTransferable();
-			}
-
-			return transferables;
-
-		} catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide.getMessage());
-		} catch (IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (ApplicationException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+			objects = MeasurementStorableObjectPool.getStorableObjects(ids, true);
 		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		}
+
+		EvaluationType_Transferable[] transferables = new EvaluationType_Transferable[objects.size()];
+		int i = 0;
+		EvaluationType evaluationType;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			evaluationType = (EvaluationType) it.next();
+			transferables[i] = (EvaluationType_Transferable) evaluationType.getTransferable();
+		}
+		return transferables;
 	}
 
-	public ModelingType_Transferable[] transmitModelingTypes(	Identifier_Transferable[] identifier_Transferables,
-																AccessIdentifier_Transferable accessIdentifier)
+	public MeasurementType_Transferable[] transmitMeasurementTypes(Identifier_Transferable[] identifier_Transferables,
+			AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		Log.debugMessage("CMMeasurementTransmit.transmitMeasurementTypes | requiered " + identifier_Transferables.length
+				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+
+		Collection ids = new HashSet(identifier_Transferables.length);
+		for (int i = 0; i < identifier_Transferables.length; i++)
+			ids.add(new Identifier(identifier_Transferables[i]));
+
+		Collection objects = null;
 		try {
-			Identifier domainId = new Identifier(accessIdentifier.domain_id);
-			Log.debugMessage(
-				"CMMeasurementTransmit.transmitModelingTypes | requiere "
-						+ (identifier_Transferables.length == 0 ? "all" : Integer
-								.toString(identifier_Transferables.length)) + " item(s) in domain: "
-						+ domainId.toString(), Log.DEBUGLEVEL07);
-			Collection collection;
-			if (identifier_Transferables.length > 0) {
-				List idsList = new ArrayList(identifier_Transferables.length);
-				for (int i = 0; i < identifier_Transferables.length; i++)
-					idsList.add(new Identifier(identifier_Transferables[i]));
-
-				collection = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
-
-			} else
-				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(
-					new EquivalentCondition(ObjectEntities.MODELING_ENTITY_CODE), true);
-
-			ModelingType_Transferable[] transferables = new ModelingType_Transferable[collection.size()];
-			int i = 0;
-			for (Iterator it = collection.iterator(); it.hasNext(); i++) {
-				ModelingType modeling = (ModelingType) it.next();
-				transferables[i] = (ModelingType_Transferable) modeling.getTransferable();
-			}
-
-			return transferables;
-
-		} catch (RetrieveObjectException roe) {
-			Log.errorException(roe);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, roe.getMessage());
-		} catch (IllegalDataException ide) {
-			Log.errorException(ide);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ide.getMessage());
-		} catch (IllegalObjectEntityException ioee) {
-			Log.errorException(ioee);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee.getMessage());
-		} catch (ApplicationException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (Throwable t) {
-			Log.errorException(t);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, t.getMessage());
+			objects = MeasurementStorableObjectPool.getStorableObjects(ids, true);
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
 		}
 
+		MeasurementType_Transferable[] transferables = new MeasurementType_Transferable[objects.size()];
+		int i = 0;
+		MeasurementType measurementType;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			measurementType = (MeasurementType) it.next();
+			transferables[i] = (MeasurementType_Transferable) measurementType.getTransferable();
+		}
+		return transferables;
 	}
 
+	public ModelingType_Transferable[] transmitModelingTypes(Identifier_Transferable[] identifier_Transferables,
+			AccessIdentifier_Transferable accessIdentifier)
+			throws AMFICOMRemoteException {
+		AccessIdentity accessIdentity = new AccessIdentity(accessIdentifier);
+		Log.debugMessage("CMMeasurementTransmit.transmitModelingTypes | requiered " + identifier_Transferables.length
+				+ " item(s) for '" + accessIdentity.getUserId() + "'", Log.DEBUGLEVEL07);
+
+		Collection ids = new HashSet(identifier_Transferables.length);
+		for (int i = 0; i < identifier_Transferables.length; i++)
+			ids.add(new Identifier(identifier_Transferables[i]));
+
+		Collection objects = null;
+		try {
+			objects = MeasurementStorableObjectPool.getStorableObjects(ids, true);
+		}
+		catch (ApplicationException ae) {
+			Log.errorException(ae);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ae.getMessage());
+		}
+
+		ModelingType_Transferable[] transferables = new ModelingType_Transferable[objects.size()];
+		int i = 0;
+		ModelingType modelingType;
+		for (Iterator it = objects.iterator(); it.hasNext(); i++) {
+			modelingType = (ModelingType) it.next();
+			transferables[i] = (ModelingType_Transferable) modelingType.getTransferable();
+		}
+		return transferables;
+	}
 
 
 
