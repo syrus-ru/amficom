@@ -511,6 +511,16 @@ public class PlanPanel extends JPanel implements OperationListener {
 		updateTests();
 		this.setCursor(UIStorage.DEFAULT_CURSOR);
 	}
+	
+	void updateTestLines(){
+		for (Iterator it = this.testLines.keySet().iterator(); it.hasNext();) {
+			Object key = it.next();
+			TestLine line = (TestLine) this.testLines.get(key);
+			line.setStart(this.scaleStart.getTime());
+			line.setEnd(this.scaleEnd.getTime());
+		}
+		updateRealScale();
+	}
 
 	void updateScale(double k) {
 		updateScale(k, (int) (this.parent.getViewport().getViewPosition().x + this.parent.getVisibleRect().width
@@ -617,6 +627,10 @@ public class PlanPanel extends JPanel implements OperationListener {
 					this.cal.set(Calendar.SECOND, 0);
 			}
 		}
+		revalidate();
+		repaint();
+		this.parent.revalidate();
+		this.parent.repaint();
 	}
 
 	private void updateTest(Test test) {
@@ -680,10 +694,6 @@ public class PlanPanel extends JPanel implements OperationListener {
 
 		setPreferredSize(new Dimension(getPreferredSize().width, 30 + 25 * this.testLines.values().size()));
 		updateRealScale();
-		revalidate();
-		repaint();
-		this.parent.revalidate();
-		this.parent.repaint();
 		//		this.setCursor(UIStorage.DEFAULT_CURSOR);
 	}
 }

@@ -24,6 +24,9 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 	 */
 	public static final Color	COLOR_ABORDED				= Color.RED;
 	public static final Color	COLOR_ABORDED_SELECTED		= new Color(255, 128, 128);
+
+	public static final Color	COLOR_ALARM					= new Color(128, 0, 128);
+	public static final Color	COLOR_ALARM_SELECTED		= new Color(255, 0, 255);
 	public static final Color	COLOR_COMPLETED				= new Color(0, 128, 0);
 	public static final Color	COLOR_COMPLETED_SELECTED	= new Color(0, 255, 0);
 	public static final Color	COLOR_PROCCESSING			= new Color(0, 128, 128);
@@ -35,9 +38,6 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 
 	public static final Color	COLOR_WARNING				= new Color(128, 128, 0);
 	public static final Color	COLOR_WARNING_SELECTED		= Color.YELLOW;
-
-	public static final Color	COLOR_ALARM					= new Color(128, 0, 128);
-	public static final Color	COLOR_ALARM_SELECTED		= new Color(255, 0, 255);
 
 	public static final int		MINIMAL_WIDTH				= 7;
 
@@ -51,19 +51,19 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 	int							height;
 	int							margin;
 	double						scale;
-	//	boolean skipTestUpdate = false;
-	long						start;
+	Test						test;
 
 	int							titleHeight;
 
 	int							width;
 	private long				end;
+	//	boolean skipTestUpdate = false;
+	private long				start;
 
 	private HashMap				tests						= new HashMap();
 	private javax.swing.Timer	timer;													//		=
 	//private ApplicationContext aContext;
 	private String				title;
-	Test						test;
 
 	private HashMap				unsavedTests;
 
@@ -251,8 +251,18 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 
 	}
 
-	public boolean isEmpty() {
-		return this.allTests.isEmpty();
+	/**
+	 * @return Returns the end.
+	 */
+	public long getEnd() {
+		return this.end;
+	}
+
+	/**
+	 * @return Returns the start.
+	 */
+	public long getStart() {
+		return this.start;
 	}
 
 	//	public Collection getTests() {
@@ -277,6 +287,10 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 		}
 
 		return test;
+	}
+
+	public boolean isEmpty() {
+		return this.allTests.isEmpty();
 	}
 
 	public void operationPerformed(OperationEvent e) {
@@ -397,6 +411,22 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 		// this.tests.containsKey(testId));
 	}
 
+	/**
+	 * @param end
+	 *            The end to set.
+	 */
+	public void setEnd(long end) {
+		this.end = end;
+	}
+
+	/**
+	 * @param start
+	 *            The start to set.
+	 */
+	public void setStart(long start) {
+		this.start = start;
+	}
+
 	private void drawTestRect(Graphics g, Test test) {
 		//System.out.println("drawTestRect:"+test.getId());
 		TimeStamp timeStamp = test.getTimeStamp();
@@ -501,5 +531,4 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 		this.dispatcher.register(this, SchedulerModel.COMMAND_TEST_SAVED_OK);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CLEAN);
 	}
-
 }

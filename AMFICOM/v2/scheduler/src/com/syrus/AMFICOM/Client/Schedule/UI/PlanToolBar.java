@@ -107,7 +107,8 @@ class PlanToolBar extends JPanel {
 					calDate.set(Calendar.MINUTE, timeDate.get(Calendar.MINUTE));
 					panel.setStartDate(calDate.getTime());
 					panel.setScale(comboBox.getSelectedIndex());
-					panel.updateTests();
+					//panel.updateTests();
+					panel.updateTestLines();
 				}
 			}
 		});
@@ -124,7 +125,8 @@ class PlanToolBar extends JPanel {
 				calDate.set(Calendar.HOUR_OF_DAY, timeDate.get(Calendar.HOUR_OF_DAY));
 				calDate.set(Calendar.MINUTE, timeDate.get(Calendar.MINUTE));
 				panel.setStartDate(calDate.getTime());
-				panel.updateTests();
+				//panel.updateTests();
+				panel.updateTestLines();
 			}
 		});
 
@@ -139,7 +141,8 @@ class PlanToolBar extends JPanel {
 				calDate.set(Calendar.HOUR_OF_DAY, timeDate.get(Calendar.HOUR_OF_DAY));
 				calDate.set(Calendar.MINUTE, timeDate.get(Calendar.MINUTE));
 				panel.setStartDate(calDate.getTime());
-				panel.updateTests();
+				//panel.updateTests();
+				panel.updateTestLines();
 			}
 		});
 
