@@ -73,7 +73,8 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Vector;
 
-public class LangModel extends ListResourceBundle
+public class LangModel 
+//extends ListResourceBundle
 {
 	static public Locale locale;
 	static public String language;
@@ -228,6 +229,11 @@ public class LangModel extends ListResourceBundle
 			return "ERROR tooltip!" + componentName;
 		}
 */
+	}
+
+	static public String getString(String keyName)
+	{
+		return String(lang, keyName);
 	}
 
 	static public String String(String keyName)
