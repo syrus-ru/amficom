@@ -26,7 +26,16 @@ public class Identifier implements Comparable, Cloneable, TransferableObject {
 	}
 
 	public Object clone() {
-		return new Identifier(this.identifierString);
+		Identifier id = null;
+		try {
+			id = (Identifier)super.clone();
+		}
+		catch(CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		id.major = new String(this.major);
+		id.identifierString = new String(this.identifierString);
+		return id;
 	}
 
 	public int compareTo(Object obj) {
