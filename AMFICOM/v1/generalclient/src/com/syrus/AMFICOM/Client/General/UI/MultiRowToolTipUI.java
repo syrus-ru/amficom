@@ -1,5 +1,5 @@
 /*
- * $Id: MultiRowToolTipUI.java,v 1.6 2004/09/15 13:17:56 bass Exp $
+ * $Id: MultiRowToolTipUI.java,v 1.7 2004/10/06 10:06:59 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import javax.swing.plaf.basic.*;
 import javax.swing.text.View;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/09/15 13:17:56 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2004/10/06 10:06:59 $
+ * @author $Author: krupenn $
  * @module generalclient_v1
  */
 public class MultiRowToolTipUI extends BasicToolTipUI
@@ -65,7 +65,7 @@ public class MultiRowToolTipUI extends BasicToolTipUI
 		Insets insets = c.getInsets();
 		Dimension prefSize = new Dimension(insets.left + insets.right, insets.top + insets.bottom);
 		String text = ((JToolTip) c).getTipText();
-		if (text != null)
+		if (text != null && text.length() != 0)
 		{
 			View v = (c != null) ? (View) c.getClientProperty("html") : null;
 			if (v != null)
