@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.30 2004/08/16 16:18:09 bob Exp $
+ * $Id: Test.java,v 1.31 2004/08/17 05:28:18 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/08/16 16:18:09 $
+ * @version $Revision: 1.31 $, $Date: 2004/08/17 05:28:18 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -49,6 +49,8 @@ public class Test extends StorableObject {
 		Identifier temporalPatternId;
 
 		private int	discriminator;
+		
+		//private HashCodeGenerator hashCodeGenerator;
 
 		TestTimeStamps(int temporalType,
 									 Date startTime,
@@ -123,12 +125,14 @@ public class Test extends StorableObject {
 		
 		
 		public int hashCode() {
-			HashCodeGenerator codeGenerator = new HashCodeGenerator();
-			codeGenerator.addInt(this.discriminator);
-			codeGenerator.addObject(this.startTime);
-			codeGenerator.addObject(this.endTime);
-			codeGenerator.addObject(this.temporalPatternId);
-			return codeGenerator.getResult();
+			if (Test.this.hashCodeGenerator==null)
+				Test.this.hashCodeGenerator = new HashCodeGenerator();
+			else Test.this.hashCodeGenerator.clear();
+			Test.this.hashCodeGenerator.addInt(this.discriminator);
+			Test.this.hashCodeGenerator.addObject(this.startTime);
+			Test.this.hashCodeGenerator.addObject(this.endTime);
+			Test.this.hashCodeGenerator.addObject(this.temporalPatternId);
+			return Test.this.hashCodeGenerator.getResult();
 		}
 	}
 
@@ -151,7 +155,7 @@ public class Test extends StorableObject {
 	private MeasurementSetup mainMeasurementSetup;
 	
 	private StorableObjectDatabase	testDatabase;
-	
+	HashCodeGenerator hashCodeGenerator;
 
 	public Test(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -530,35 +534,37 @@ public class Test extends StorableObject {
 	
 	
 	public int hashCode() {
-		HashCodeGenerator codeGenerator = new HashCodeGenerator();
-		codeGenerator.addObject(this.id);
-		codeGenerator.addInt(this.timeStamps.hashCode());
+		if (this.hashCodeGenerator==null)
+			this.hashCodeGenerator = new HashCodeGenerator();
+		else this.hashCodeGenerator.clear();
+		this.hashCodeGenerator.addObject(this.id);
+		this.hashCodeGenerator.addInt(this.timeStamps.hashCode());
 		/**
 		 * FIXME fix for analysisType.hashCode when it'd be made.
 		 */
-		codeGenerator.addObject(this.analysisType.getId());
+		this.hashCodeGenerator.addObject(this.analysisType.getId());
 		/**
 		 * FIXME fix for evaluationType.hashCode when it'd be made.
 		 */
-		codeGenerator.addObject(this.evaluationType.getId());
+		this.hashCodeGenerator.addObject(this.evaluationType.getId());
 		/**
 		 * FIXME fix for measurementType.hashCode when it'd be made.
 		 */
-		codeGenerator.addObject(this.measurementType.getId());
+		this.hashCodeGenerator.addObject(this.measurementType.getId());
 		/**
 		 * FIXME fix for monitoredElement.hashCode when it'd be made.
 		 */
-		codeGenerator.addObject(this.monitoredElement.getId());
+		this.hashCodeGenerator.addObject(this.monitoredElement.getId());
 		/**
 		 * FIXME fix for mainMeasurementSetup.hashCode when it'd be made.
 		 */
-		codeGenerator.addObject(this.mainMeasurementSetup.getId());
+		this.hashCodeGenerator.addObject(this.mainMeasurementSetup.getId());
 
-		codeGenerator.addObjectArray(this.measurementSetupIds.toArray());
-		codeGenerator.addInt(this.returnType);
-		codeGenerator.addInt(this.status);		
-		codeGenerator.addObject(this.description);
-		return codeGenerator.getResult();
+		this.hashCodeGenerator.addObjectArray(this.measurementSetupIds.toArray());
+		this.hashCodeGenerator.addInt(this.returnType);
+		this.hashCodeGenerator.addInt(this.status);		
+		this.hashCodeGenerator.addObject(this.description);
+		return this.hashCodeGenerator.getResult();
 	}
 	
 	public boolean equals(Object obj) {
