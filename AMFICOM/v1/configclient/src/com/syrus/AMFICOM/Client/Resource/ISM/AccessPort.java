@@ -53,7 +53,7 @@ import com.syrus.AMFICOM.Client.Configure.UI.*;
 public class AccessPort extends ObjectResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
-	static final public String typ = "accessport";
+	public static final String typ = "accessport";
 
 	private AccessPort_Transferable transferable;
 

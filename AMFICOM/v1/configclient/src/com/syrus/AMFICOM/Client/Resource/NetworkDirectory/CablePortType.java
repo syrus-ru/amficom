@@ -55,7 +55,7 @@ import com.syrus.AMFICOM.CORBA.NetworkDirectory.CablePortType_Transferable;
 public class CablePortType extends ObjectResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
-	static final public String typ = "cableporttype";
+	public static final String typ = "cableporttype";
 
 	public CablePortType_Transferable transferable;
 

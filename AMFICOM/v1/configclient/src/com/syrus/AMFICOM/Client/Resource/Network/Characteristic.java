@@ -49,7 +49,7 @@ public class Characteristic extends ObjectResource
 		implements Cloneable, Serializable
 {
 	private static final long serialVersionUID = 01L;
-	static final public String typ = "characteristic";
+	public static final String typ = "characteristic";
 
 	public Characteristic_Transferable transferable;
 

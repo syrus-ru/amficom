@@ -49,38 +49,38 @@ import com.syrus.AMFICOM.Client.General.Lang.*;
 
 public class LangModelConfig extends LangModel
 {
-	static public Locale locale;
-	static public String language;
-	static public String country;
-	static public ResourceBundle lang;
-	static public DateFormatSymbols symbols;
-	static public String resourceBundle;
+	public static Locale locale;
+	public static String language;
+	public static String country;
+	public static ResourceBundle lang;
+	public static DateFormatSymbols symbols;
+	public static String resourceBundle;
 
 	public LangModelConfig()
 	{
 		symbols = new DateFormatSymbols(locale);
 	}
 
-	static public void initialize()
+	public static void initialize()
 	{
 		initialize("com.syrus.AMFICOM.Client.General.Lang.LangModelConfig");
 	}
 
-	static public void initialize(String rb)
+	public static void initialize(String rb)
 	{
 		System.out.println("initialize lang - " + rb);
 		resourceBundle = new String(rb);
 		setLangModel("ru", "");
 	}
 
-	static public Vector getLangModels()
+	public static Vector getLangModels()
 	{
 
 		Vector vec = new Vector();
 		return vec;
 	}
 
-	static public boolean setLangModel(String l, String c)
+	public static boolean setLangModel(String l, String c)
 	{
 		language = l;
 		country = c;
@@ -102,36 +102,36 @@ public class LangModelConfig extends LangModel
 		return true;
 	}
 
-	static public String Text(String componentName)
+	public static String Text(String componentName)
 	{
 		return getComponentText(lang, componentName);
 	}
 
-	static public String ToolTip(String componentName)
+	public static String ToolTip(String componentName)
 	{
 		return getComponentToolTip(lang, componentName);
 	}
 
-	static public String getComponentText(
+	public static String getComponentText(
 			ResourceBundle lang,
 			String componentName)
 	{
 		return String(componentName + "Text");
 	}
 
-	static public String getComponentToolTip(
+	public static String getComponentToolTip(
 			ResourceBundle lang,
 			String componentName)
 	{
 		return String(componentName + "ToolTip");
 	}
 
-	static public String String(String keyName)
+	public static String String(String keyName)
 	{
 		return String(lang, keyName);
 	}
 
-	static public String String(ResourceBundle lang, String keyName)
+	public static String String(ResourceBundle lang, String keyName)
 	{
 		try
 		{

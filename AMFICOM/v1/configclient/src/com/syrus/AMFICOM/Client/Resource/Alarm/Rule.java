@@ -13,7 +13,7 @@ public class Rule extends ObjectResource
     public String source_id = "";
 	boolean is_generated = true;
 
-	static final public String typ = "eventrule";
+	public static final String typ = "eventrule";
 
 	public Rule()
 	{

@@ -44,7 +44,7 @@ import java.io.Serializable;
 public class CharacteristicType extends ObjectResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
-	static final public String typ = "characteristictype";
+	public static final String typ = "characteristictype";
 
 	public CharacteristicType_Transferable transferable;
 

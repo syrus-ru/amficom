@@ -54,7 +54,7 @@ import java.util.*;
 public class EquipmentType extends ObjectResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
-	static final public String typ = "equipmenttype";
+	public static final String typ = "equipmenttype";
 
 	public EquipmentType_Transferable transferable;
 

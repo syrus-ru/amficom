@@ -9,7 +9,7 @@ import com.syrus.AMFICOM.CORBA.Network.CableLinkThread_Transferable;
 public class CableLinkThread extends ObjectResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
-	static final public String typ = "cablelinkthread";
+	public static final String typ = "cablelinkthread";
 	CableLinkThread_Transferable transferable;
 
 	public String id = "";

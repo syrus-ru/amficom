@@ -13,7 +13,7 @@ public class AlertingMessageUser extends ObjectResource
     public String alerting_message_id = "";
     public String alerting_type_id = "";
 
-	static final public String typ = "alertingmessageuser";
+	public static final String typ = "alertingmessageuser";
 
 	public AlertingMessageUser()
 	{

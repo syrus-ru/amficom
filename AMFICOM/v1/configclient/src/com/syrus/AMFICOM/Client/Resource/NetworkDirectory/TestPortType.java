@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
 
 public class TestPortType extends ObjectResource
 {
-	static final public String typ = "testporttype";
+	public static final String typ = "testporttype";
 
 	public TestPortType_Transferable transferable;
 

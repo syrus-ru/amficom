@@ -12,7 +12,7 @@ public class AlertingMessage extends ObjectResource
     public String message_type_id = "";
     public String event_type_id = "";
 
-	static final public String typ = "alertingmessage";
+	public static final String typ = "alertingmessage";
 
 	public AlertingMessage()
 	{

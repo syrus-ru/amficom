@@ -55,7 +55,7 @@ import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
 public class Link extends ObjectResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
-	static final public String typ = "link";
+	public static final String typ = "link";
 
 	public Link_Transferable transferable;
 

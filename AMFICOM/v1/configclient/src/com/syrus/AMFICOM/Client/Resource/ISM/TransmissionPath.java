@@ -49,7 +49,7 @@ import com.syrus.AMFICOM.Client.Configure.UI.*;
 public class TransmissionPath extends ObjectResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
-	static final public String typ = "path";
+	public static final String typ = "path";
 
 	public TransmissionPath_Transferable transferable;
 

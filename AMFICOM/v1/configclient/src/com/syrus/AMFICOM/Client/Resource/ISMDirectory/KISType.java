@@ -47,7 +47,7 @@ import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
 public class KISType extends EquipmentType
 {
 	private static final long serialVersionUID = 01L;
-	static final public String typ = "kistype";
+	public static final String typ = "kistype";
 
 	public KISType()
 	{

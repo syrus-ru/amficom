@@ -48,7 +48,7 @@ import com.syrus.AMFICOM.CORBA.ISM.*;
 public class KIS extends Equipment
 {
 	private static final long serialVersionUID = 01L;
-	static final public String typ = "kis";
+	public static final String typ = "kis";
 
 
 //	public Vector access_port_ids = new Vector();

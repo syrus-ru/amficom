@@ -57,7 +57,7 @@ import java.util.Vector;
 public class CableLinkType extends ObjectResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
-	static final public String typ = "cablelinktype";
+	public static final String typ = "cablelinktype";
 
 	public CableLinkType_Transferable transferable;
 

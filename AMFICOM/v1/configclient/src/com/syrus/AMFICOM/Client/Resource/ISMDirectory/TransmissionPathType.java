@@ -51,7 +51,7 @@ import com.syrus.AMFICOM.CORBA.ISMDirectory.TransmissionPathType_Transferable;
 public class TransmissionPathType extends ObjectResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
-	static final public String typ = "pathtype";
+	public static final String typ = "pathtype";
 
 	private TransmissionPathType_Transferable transferable;
 

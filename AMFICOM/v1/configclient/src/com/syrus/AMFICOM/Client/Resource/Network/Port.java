@@ -56,7 +56,7 @@ import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
 public class Port extends ObjectResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
-	static final public String typ = "port";
+	public static final String typ = "port";
 
 	public Port_Transferable transferable;
 

@@ -82,71 +82,71 @@ public class SchemeViewOpenCommand extends VoidCommand
 		{
 			opened = true;
 			Scheme scheme = (Scheme)mcd.retObject;
-			scheme_id = scheme.getId();
-
-
-			Dimension dim = desktopPane.getSize();
-
-			SchemeViewerFrame frame = null;
-			PropsFrame propsFrame = null;
-			ElementsListFrame elementsListFrame = null;
-			for(int i = 0; i < desktopPane.getComponents().length; i++)
-			{
-				Component comp = desktopPane.getComponent(i);
-				if (comp instanceof SchemeViewerFrame)
-					frame = (SchemeViewerFrame)comp;
-				else if (comp instanceof PropsFrame)
-					propsFrame = (PropsFrame)comp;
-				else if (comp instanceof ElementsListFrame)
-					elementsListFrame = (ElementsListFrame)comp;
-			}
-			if (frame == null)
-			{
-				SchemePanel spanel = new SchemePanelNoEdition(aContext);
-				frame = new SchemeViewerFrame(aContext, spanel);
-//				frame = new SchemeViewerFrame(aContext);
-				frame.setTitle("Ñץולא סועט");
-				frame.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
-				desktopPane.add(frame);
-			}
-			frame.setLocation(0, 0);
-			frame.setSize(dim.width * 4 / 5, dim.height);
-			frame.show();
-
-			SchemeGraph graph = frame.getGraph();
-
-			graph.setSelectionCells(new Object[0]);
-			Object[] cells = graph.getAll();
-			graph.getModel().remove(cells);
-
-			scheme.unpack();
-			graph.setFromArchivedState(scheme.serializable_cell);
-
-			if (elementsListFrame == null)
-			{
-				elementsListFrame = new ElementsListFrame(aContext, false);
-				desktopPane.add(elementsListFrame);
-				elementsListFrame.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
-			}
-			elementsListFrame.setVisible(true);
-			elementsListFrame.setSize(dim.width / 5, dim.height / 3);
-			elementsListFrame.setLocation(dim.width * 4 / 5, 0);
-			if (propsFrame == null)
-			{
-				propsFrame = new PropsFrame(aContext, false);
-				desktopPane.add(propsFrame);
-				propsFrame.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
-			}
-//			propsFrame.can_be_editable = false;
-			propsFrame.setVisible(true);
-			propsFrame.setSize(dim.width / 5, dim.height * 2 / 3);
-			propsFrame.setLocation(dim.width * 4 / 5, dim.height / 3);
-
-			propsFrame.toFront();
-			elementsListFrame.toFront();
-			frame.toFront();
-
-			aContext.getDispatcher().notify(new SchemeElementsEvent(this, scheme, SchemeElementsEvent.OPEN_PRIMARY_SCHEME_EVENT));
+			scheme_id = scheme.getName();//scheme.getId();
+//
+//
+//			Dimension dim = desktopPane.getSize();
+//
+//			SchemeViewerFrame frame = null;
+//			PropsFrame propsFrame = null;
+//			ElementsListFrame elementsListFrame = null;
+//			for(int i = 0; i < desktopPane.getComponents().length; i++)
+//			{
+//				Component comp = desktopPane.getComponent(i);
+//				if (comp instanceof SchemeViewerFrame)
+//					frame = (SchemeViewerFrame)comp;
+//				else if (comp instanceof PropsFrame)
+//					propsFrame = (PropsFrame)comp;
+//				else if (comp instanceof ElementsListFrame)
+//					elementsListFrame = (ElementsListFrame)comp;
+//			}
+//			if (frame == null)
+//			{
+//				SchemePanel spanel = new SchemePanelNoEdition(aContext);
+//				frame = new SchemeViewerFrame(aContext, spanel);
+////				frame = new SchemeViewerFrame(aContext);
+//				frame.setTitle("Ñץולא סועט");
+//				frame.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
+//				desktopPane.add(frame);
+//			}
+//			frame.setLocation(0, 0);
+//			frame.setSize(dim.width * 4 / 5, dim.height);
+//			frame.show();
+//
+//			SchemeGraph graph = frame.getGraph();
+//
+//			graph.setSelectionCells(new Object[0]);
+//			Object[] cells = graph.getAll();
+//			graph.getModel().remove(cells);
+//
+//			scheme.unpack();
+//			graph.setFromArchivedState(scheme.serializable_cell);
+//
+//			if (elementsListFrame == null)
+//			{
+//				elementsListFrame = new ElementsListFrame(aContext, false);
+//				desktopPane.add(elementsListFrame);
+//				elementsListFrame.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
+//			}
+//			elementsListFrame.setVisible(true);
+//			elementsListFrame.setSize(dim.width / 5, dim.height / 3);
+//			elementsListFrame.setLocation(dim.width * 4 / 5, 0);
+//			if (propsFrame == null)
+//			{
+//				propsFrame = new PropsFrame(aContext, false);
+//				desktopPane.add(propsFrame);
+//				propsFrame.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
+//			}
+////			propsFrame.can_be_editable = false;
+//			propsFrame.setVisible(true);
+//			propsFrame.setSize(dim.width / 5, dim.height * 2 / 3);
+//			propsFrame.setLocation(dim.width * 4 / 5, dim.height / 3);
+//
+//			propsFrame.toFront();
+//			elementsListFrame.toFront();
+//			frame.toFront();
+//
+//			aContext.getDispatcher().notify(new SchemeElementsEvent(this, scheme, SchemeElementsEvent.OPEN_PRIMARY_SCHEME_EVENT));
 		}
 	}
 

@@ -5,7 +5,7 @@ import com.syrus.AMFICOM.Client.Resource.*;
 
 public class AlarmType extends ObjectResource
 {
-	static final public String typ = "alarmtype";
+	public static final String typ = "alarmtype";
 
 	AlarmType_Transferable transferable;
 

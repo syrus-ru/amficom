@@ -47,7 +47,7 @@ import com.syrus.AMFICOM.Client.General.UI.*;
 public class MonitoredElement extends ObjectResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
-	static final public String typ = "monitoredelement";
+	public static final String typ = "monitoredelement";
 
 	public MonitoredElement_Transferable transferable;
 

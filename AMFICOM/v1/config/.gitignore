@@ -5,3 +5,6 @@ classes
 *.tar
 *.gz
 *.swp
+.mach
+.corba
+.client

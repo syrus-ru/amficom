@@ -84,7 +84,7 @@ public class EventSourceType extends ObjectResource
 
 	public Vector rules = new Vector();
 
-	static final public String typ = "eventsourcetype";
+	public static final String typ = "eventsourcetype";
 
 	public EventSourceType()
 	{

@@ -59,7 +59,7 @@ import com.syrus.AMFICOM.CORBA.ISMDirectory.AccessPortType_Transferable;
 public class AccessPortType extends ObjectResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
-	static final public String typ = "accessporttype";
+	public static final String typ = "accessporttype";
 
 	private AccessPortType_Transferable transferable;
 

@@ -62,7 +62,7 @@ import java.util.Enumeration;
 public class Equipment extends ObjectResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
-	static final public String typ = "equipment";
+	public static final String typ = "equipment";
 
 	public Equipment_Transferable transferable;
 

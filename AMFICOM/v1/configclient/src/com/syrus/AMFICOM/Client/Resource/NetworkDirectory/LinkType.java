@@ -57,7 +57,7 @@ import com.syrus.AMFICOM.Client.Configure.UI.LinkTypePane;
 public class LinkType extends ObjectResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
-	static final public String typ = "linktype";
+	public static final String typ = "linktype";
 
 	public LinkType_Transferable transferable;
 

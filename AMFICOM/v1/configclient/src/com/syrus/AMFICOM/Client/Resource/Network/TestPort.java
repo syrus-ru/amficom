@@ -49,7 +49,7 @@ import com.syrus.AMFICOM.CORBA.Network.Characteristic_Transferable;
 public class TestPort extends ObjectResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
-	static final public String typ = "testport";
+	public static final String typ = "testport";
 
 	public TestPort_Transferable transferable;
 
