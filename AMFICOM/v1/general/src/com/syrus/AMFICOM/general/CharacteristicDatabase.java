@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.26 2005/03/05 09:56:46 arseniy Exp $
+ * $Id: CharacteristicDatabase.java,v 1.27 2005/03/05 21:30:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,28 +8,17 @@
 
 package com.syrus.AMFICOM.general;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
-import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.util.Log;
-import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/03/05 09:56:46 $
+ * @version $Revision: 1.27 $, $Date: 2005/03/05 21:30:26 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -54,7 +43,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			+ CharacteristicWrapper.COLUMN_EDITABLE + COMMA
 			+ CharacteristicWrapper.COLUMN_VISIBLE + COMMA
 			+ CharacteristicWrapper.COLUMN_SORT +	COMMA
-			+ CharacteristicWrapper.COLUMN_CHARACTERIZED_ID;
+			+ CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID;
 		}
 		return super.getColumns(mode) + columns;
 	}
@@ -85,7 +74,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			+ (characteristic.isEditable()?"1":"0") + COMMA
 			+ (characteristic.isVisible()?"1":"0") + COMMA
 			+ sort + COMMA
-			+ DatabaseIdentifier.toSQLString(characteristic.getCharacterizedId());
+			+ DatabaseIdentifier.toSQLString(characteristic.getCharacterizableId());
 			/**
 			 * check sort support
 			 */
@@ -105,7 +94,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		preparedStatement.setInt( ++i, characteristic.isEditable()? 1:0);
 		preparedStatement.setInt( ++i, characteristic.isVisible()? 1:0);
 		preparedStatement.setInt( ++i, sort);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, characteristic.getCharacterizedId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, characteristic.getCharacterizableId());
 		return i;
 	}	
 
@@ -137,7 +126,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		}
 
 		int sort = resultSet.getInt(CharacteristicWrapper.COLUMN_SORT);
-		Identifier characterizedId = DatabaseIdentifier.getIdentifier(resultSet, CharacteristicWrapper.COLUMN_CHARACTERIZED_ID);
+		Identifier characterizableId = DatabaseIdentifier.getIdentifier(resultSet, CharacteristicWrapper.COLUMN_CHARACTERIZABLE_ID);
 
 		CharacteristicType characteristicType;
 		try {
@@ -156,7 +145,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 									 DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 									 sort,
 									 DatabaseString.fromQuerySubString(resultSet.getString(CharacteristicWrapper.COLUMN_VALUE)),
-									 characterizedId,
+									 characterizableId,
 									 (resultSet.getInt(CharacteristicWrapper.COLUMN_EDITABLE) == 0) ? false : true,
 									 (resultSet.getInt(CharacteristicWrapper.COLUMN_VISIBLE) == 0) ? false : true);
 		return characteristic;
@@ -180,306 +169,12 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		super.insertEntity(characteristic);		
 	}
 
-	public List retrieveCharacteristics(Identifier characterizedId, CharacteristicSort sort) throws RetrieveObjectException, IllegalDataException {
-		List characteristics = new LinkedList();
-
-		String cdIdStr = DatabaseIdentifier.toSQLString(characterizedId);
-		int sortValue = sort.value();
-		String sql;
-		{
-			StringBuffer buffer = new StringBuffer(CharacteristicWrapper.COLUMN_SORT);
-			buffer.append(EQUALS);
-			buffer.append(sortValue);
-			buffer.append(SQL_AND);
-			buffer.append(CharacteristicWrapper.COLUMN_CHARACTERIZED_ID);
-			buffer.append(EQUALS);
-			buffer.append(cdIdStr);
-			sql = retrieveQuery(buffer.toString());
-		}
-		Statement statement = null;
-		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("CharacteristicDatabase.retrieveCharacteristics | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			while (resultSet.next()) {
-				characteristics.add(updateEntityFromResultSet(null, resultSet));
-			}
-		}
-		catch (SQLException sqle) {
-			String mesg = "CharacteristicDatabase.retrieveCharacteristics | Cannot retrieve characteristics for '" + cdIdStr + "' -- " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-			finally {
-				DatabaseConnection.releaseConnection(connection);
-			}
-		}
-		return characteristics;
-	}
-
-	public Map retrieveCharacteristicsByOneQuery(Collection objects, CharacteristicSort sort) throws RetrieveObjectException, IllegalDataException {
-		if (objects == null || objects.size() == 0)
-			return null;
-
-		int sortValue = sort.value();
-		StringBuffer stringBuffer = new StringBuffer(CharacteristicWrapper.COLUMN_SORT + EQUALS + Integer.toString(sortValue)
-							+ SQL_AND);
-		stringBuffer.append(this.idsEnumerationString(objects, CharacteristicWrapper.COLUMN_CHARACTERIZED_ID, true));
-		String sql = this.retrieveQuery(stringBuffer.toString());
-
-		Statement statement = null;
-		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("CharacteristicDatabase.retrieveCharacteristicsByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql.toString());
-			
-			Map characteristicMap = new HashMap();
-			Identifier characterizedId;
-			Characteristic characteristic;
-			List characteristics;
-			while (resultSet.next()) {
-				characterizedId = DatabaseIdentifier.getIdentifier(resultSet, CharacteristicWrapper.COLUMN_CHARACTERIZED_ID);
-				characteristic = (Characteristic) this.updateEntityFromResultSet(null, resultSet);
-				characteristics = (List) characteristicMap.get(characterizedId);
-				if (characteristics == null) {
-					characteristics = new LinkedList();
-					characteristicMap.put(characterizedId, characteristics);
-				}
-				characteristics.add(characteristic);
-			}
-
-			// NOTE
-			// The below code is not correct, because method
-			// Characterizable.setCharacteristics(List characteristics)
-			// updates version of Characterizable StorableObject.
-			// Instead, one must set characteristics from returned characteristicMap,
-			// using method setCharacteristics0(List characteristics).
-			// For every Characterizable from incoming list, be sure, that corresponding
-			// list of characteristic
-			// is available, i. e. characteristicMap.get(characterizedId) != null for
-			// a given characterizedId.
-			// Also, be sure, that returned map characteristicMap != null
-//
-//			Characterizable characterized;
-//      for (Iterator it = characteristicMap.keySet().iterator(); it.hasNext();) {
-//				characterized = (Characterizable) it.next();
-//				characterizedId = characterized.getId();
-//				characteristics = (List) characteristicMap.get(characterizedId);
-//
-//				characterized.setCharacteristics(characteristics);				
-//			}
-			return characteristicMap;
-
-		}
-		catch (SQLException sqle) {
-			String mesg = "CharacteristicDatabase.retrieveCharacteristicsByOneQuery | Cannot retrieve characteristics for characterized object -- " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-						statement.close();
-				if (resultSet != null)
-						resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-			finally {
-				DatabaseConnection.releaseConnection(connection);
-			}
-		}
-	}
-
 	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
 			return this.retrieveByIdsOneQuery(null, condition);
 		return this.retrieveByIdsOneQuery(ids, condition);	
 		//return retriveByIdsPreparedStatement(ids);
-	}	
-
-	public void updateCharacteristics(StorableObject storableObject) throws UpdateObjectException {
-		if (!(storableObject instanceof Characterizable)) {
-			String mesg = "CharacteristicDatabase.updateCharacteristics | Storable object " +
-				storableObject.getClass().getName() + " is not a type of Characterizable";
-			throw new UpdateObjectException(mesg);           
-		}
-
-		Characterizable characterizedStorableObject = (Characterizable) storableObject;
-		List characteristics = characterizedStorableObject.getCharacteristics();
-		List characteristicIds = new ArrayList(characteristics.size());
-		for (Iterator it = characteristics.iterator(); it.hasNext();) {
-			Characteristic characteristic = (Characteristic) it.next();
-			characteristicIds.add(characteristic.getId());
-		}
-
-    Map databaseIdCharacteristics = new HashMap();
-		String str = CharacteristicWrapper.COLUMN_CHARACTERIZED_ID + EQUALS + APOSTOPHE + storableObject.getId() + APOSTOPHE;
-		String sql = retrieveQuery(str);
-		Statement statement = null;
-		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("CharacteristicDatabase.updateCharacteristics | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql.toString());
-			while (resultSet.next()) {
-				Characteristic characteristic = (Characteristic)updateEntityFromResultSet(null, resultSet);
-				databaseIdCharacteristics.put(characteristic.getId(), characteristic);
-			}
-
-			//  delete
-			Collection deleteCharacteristicIds = new HashSet();
-			for (Iterator it = databaseIdCharacteristics.keySet().iterator(); it.hasNext();) {
-				Identifier dbCharacteristicId = (Identifier) it.next();
-				if(!characteristicIds.contains(dbCharacteristicId))
-					deleteCharacteristicIds.add(dbCharacteristicId);
-			}
-			this.delete(deleteCharacteristicIds);
-
-			//  insert or update
-			super.checkAndUpdateEntities(characteristics, storableObject.modifierId, true);
-		}
-		catch (SQLException sqle) {
-			String mesg = "CharacteristicDatabase.updateCharacteristics | SQLException: " + sqle.getMessage();
-			throw new UpdateObjectException(mesg, sqle);
-		}
-		catch (VersionCollisionException vce) {
-			String mesg = "CharacteristicDatabase.updateCharacteristics | VersionCollisionException: " + vce.getMessage();
-			throw new UpdateObjectException(mesg, vce);
-		}
-		catch (IllegalDataException ide) {
-			String mesg = "CharacteristicDatabase.updateCharacteristics | IllegalDataException: " + ide.getMessage();
-			throw new UpdateObjectException(mesg, ide);
-		}
-		catch (RetrieveObjectException roe) {
-			String mesg = "CharacteristicDatabase.updateCharacteristics | RetrieveObjectException: " + roe.getMessage();
-			throw new UpdateObjectException(mesg, roe);
-		}
-
 	}
 
-	public void updateCharacteristics(Collection storableObjects) throws UpdateObjectException {
-    // Construction of Map <StorableObjectIdentifier> <List <CharacteristicIdentifier> >
-		if(storableObjects == null || storableObjects.isEmpty())
-			return;
 
-		Map storableObjectIdCharIdsMap = new HashMap();
-		Map modifierIdCharacteristics = new HashMap();
-		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
-			StorableObject storableObject = (StorableObject) it.next();
-			if (!(storableObject instanceof Characterizable)) {
-				String mesg = "CharacteristicDatabase.updateCharacteristics(List) | Storable object " + 
-								storableObject.getClass().getName() + " is not a type of Characterizable";
-				throw new UpdateObjectException(mesg);                
-			}
-
-			List characteristics = (List) modifierIdCharacteristics.get(storableObject.getModifierId());
-			if (characteristics == null) {
-				characteristics = new LinkedList();
-				modifierIdCharacteristics.put(storableObject.getModifierId(), characteristics);
-			}
-
-			for (Iterator iter = ((Characterizable) storableObject).getCharacteristics().iterator(); iter.hasNext();) {
-				Characteristic characteristic = (Characteristic) iter.next();
-				characteristics.add(characteristic);
-				List charIdList = (List) storableObjectIdCharIdsMap.get(storableObject.getId());
-				if (charIdList == null) {
-					charIdList = new LinkedList();
-					storableObjectIdCharIdsMap.put(storableObject.getId(), charIdList);
-				}
-				charIdList.add(characteristic.getId());				
-			}
-		}
-
-    // creating sql query. This query gets all Characteristics whose characterized_id contained in storableObjects
-		StringBuffer stringBuffer = new StringBuffer();
-		try {
-			stringBuffer.append(this.idsEnumerationString(storableObjects, CharacteristicWrapper.COLUMN_CHARACTERIZED_ID, true));
-		}
-		catch (IllegalDataException e) {
-			Log.errorException(e);
-		}
-		String sql = retrieveQuery(stringBuffer.toString());
-		Map dbStorableObjectIdCharIdsMap = new HashMap();
-		List listIdToDelete = new LinkedList();       
-		Statement statement = null;
-		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("CharacteristicDatabase.updateCharacteristics(List) | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql.toString());
-			//  Construction of Map <CharacterizedIdentifier> <List <CharacteristicIdentifier> >              
-			while (resultSet.next()) {
-				Characteristic characteristic = (Characteristic)updateEntityFromResultSet(null, resultSet);
-				List charIdList = (List) dbStorableObjectIdCharIdsMap.get(characteristic.getCharacterizedId());
-				if (charIdList == null) {
-					charIdList = new LinkedList();
-					dbStorableObjectIdCharIdsMap.put(characteristic.getCharacterizedId(), charIdList);
-				}
-				charIdList.add(characteristic.getId());
-			}
-			//  delete. Iterating through DBMap and matching it with DBMap InMap  
-			for (Iterator it = dbStorableObjectIdCharIdsMap.keySet().iterator(); it.hasNext();) {
-				Identifier storableObljectId = (Identifier) it.next();
-				List dbCharIds = (List) dbStorableObjectIdCharIdsMap.get(storableObljectId);
-				List charIds = (List) storableObjectIdCharIdsMap.get(storableObljectId);
-				if (charIds == null || charIds.isEmpty()) {
-					for (Iterator iter = dbCharIds.iterator(); iter.hasNext();) {
-						Identifier dbCharacteristicId = (Identifier) iter.next();
-						listIdToDelete.add(dbCharacteristicId);                        
-					}
-					continue;
-				}
-				for (Iterator iter = dbCharIds.iterator(); iter.hasNext();) {
-					Identifier dbCharacteristicId = (Identifier) iter.next();
-					if (!charIds.contains(dbCharacteristicId))
-						listIdToDelete.add(dbCharacteristicId);
-				}       
-			}
-			super.delete(listIdToDelete);
-			// insert and update. Iterating through InMap and matching it with DBMap 
-			for (Iterator it = modifierIdCharacteristics.keySet().iterator(); it.hasNext();) {
-				Identifier modifierId = (Identifier) it.next();
-				List characteristics = (List) modifierIdCharacteristics.get(modifierId);
-				if (characteristics != null && !characteristics.isEmpty())
-					super.checkAndUpdateEntities(characteristics, modifierId, true);
-			}
-			
-		}
-		catch (SQLException sqle) {
-			String mesg = "CharacteristicDatabase.updateCharacteristics | SQLException: " + sqle.getMessage();
-			throw new UpdateObjectException(mesg, sqle);        
-		}
-		catch (IllegalDataException ide) {
-			String mesg = "CharacteristicDatabase.updateCharacteristics | IllegalDataException: " + ide.getMessage();
-			throw new UpdateObjectException(mesg, ide);
-		}
-		catch (RetrieveObjectException roe) {
-			String mesg = "CharacteristicDatabase.updateCharacteristics | RetrieveObjectException: " + roe.getMessage();
-			throw new UpdateObjectException(mesg, roe);        
-		}
-		catch (VersionCollisionException vce) {
-			String mesg = "CharacteristicDatabase.updateCharacteristics | VersionCollisionException: " + vce.getMessage();
-			throw new UpdateObjectException(mesg, vce);
-		}
-	}
 }
