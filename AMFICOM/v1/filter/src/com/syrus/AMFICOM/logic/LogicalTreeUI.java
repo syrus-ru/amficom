@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalTreeUI.java,v 1.4 2005/03/16 12:38:51 bob Exp $
+ * $Id: LogicalTreeUI.java,v 1.5 2005/03/16 12:58:18 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,11 +9,17 @@
 package com.syrus.AMFICOM.logic;
 
 import java.awt.Component;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -23,6 +29,8 @@ import java.util.List;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -30,6 +38,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -41,7 +50,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/03/16 12:38:51 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/16 12:58:18 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter_v1
@@ -72,6 +81,28 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 			return treeCellRendererComponent;
 		}
 	}
+
+	private static Icon getStringIcon(	String s,
+										int angle) {
+		int w = 16;
+		int h = 16;
+		BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+		Graphics2D g2d = (Graphics2D) img.getGraphics();
+		FontMetrics fm = g2d.getFontMetrics();
+		g2d.setBackground(UIManager.getColor("Button.background"));
+		g2d.clearRect(0, 0, w, h);
+		Font font = UIManager.getFont("Button.font");
+		g2d.setFont(font);
+		g2d.setColor(UIManager.getColor("Button.foreground"));		
+		g2d.drawString(s, w / 4, (h / 2 + fm.getHeight()) / 2);
+		AffineTransform tx = new AffineTransform();	
+	    tx.rotate(angle * Math.PI / 180.0, img.getWidth()/2, img.getHeight()/2);
+		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+		img = op.filter(img, null);
+		Icon icon = new ImageIcon(img);
+		return icon;
+	}
+
 	DefaultTreeModel				treeModel;
 	private ItemListener			itemListener;
 
@@ -93,7 +124,7 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 	}
 
 	void addItem2Node(	DefaultMutableTreeNode parent,
-					Item item) {
+						Item item) {
 		if (parent == null) {
 			if (this.root == null) {
 				this.root = new DefaultMutableTreeNode(".");
@@ -108,7 +139,7 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 			}
 		}
 	}
-	
+
 	public void addItem(Item parentItem,
 						Item childItem) {
 		DefaultMutableTreeNode itemNode = getItemNode(null, parentItem);
@@ -192,7 +223,7 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 		if (this.panel == null) {
 			this.panel = new JPanel(new GridBagLayout());
 
-			JButton expandButton = new JButton("v");
+			JButton expandButton = new JButton(getStringIcon("v", 0));
 			expandButton.setToolTipText("expand all");
 			expandButton.setMargin(nullInsets);
 
@@ -203,7 +234,7 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 				}
 			});
 
-			JButton collapseButton = new JButton("^");
+			JButton collapseButton = new JButton(getStringIcon("v", 180));
 			collapseButton.setToolTipText("collapse all");
 			collapseButton.setMargin(nullInsets);
 
@@ -315,7 +346,7 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems {
 
 	public void removeAll(Item item) {
 		DefaultMutableTreeNode itemNode = item == null ? this.root : this.getItemNode(null, item);
-		if (itemNode != null) {			
+		if (itemNode != null) {
 			for (int i = 0; i < itemNode.getChildCount(); i++) {
 				this.treeModel.removeNodeFromParent((MutableTreeNode) itemNode.getChildAt(i));
 			}
