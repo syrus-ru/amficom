@@ -1,5 +1,5 @@
 /*
- * $Id: ClientConfigurationObjectLoader.java,v 1.1 2004/09/22 07:27:52 bob Exp $
+ * $Id: ClientConfigurationObjectLoader.java,v 1.2 2004/09/22 10:59:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,8 @@
 
 package com.syrus.AMFICOM.cmserver.test;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
@@ -27,44 +29,70 @@ import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.Server;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.configuration.User;
+import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/09/22 07:27:52 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/22 10:59:00 $
  * @author $Author: bob $
- * @module mcm_v1
+ * @module cmserver_v1
  */
 
 public final class ClientConfigurationObjectLoader implements ConfigurationObjectLoader {
 
-	private CMServer	server;
+	private CMServer				server;
+
+	private static AccessIdentifier_Transferable	accessIdentifierTransferable;
 
 	public ClientConfigurationObjectLoader(CMServer server) {
 		this.server = server;
 	}
 
+	public static void setAccessIdentifierTransferable(AccessIdentifier_Transferable accessIdentifier_Transferable) {
+		accessIdentifierTransferable = accessIdentifier_Transferable;
+	}
+
 	public CharacteristicType loadCharacteristicType(Identifier id) throws RetrieveObjectException,
 			CommunicationException {
+		/**
+		 * FIXME method is not complete !
+		 */
 		throw new UnsupportedOperationException();
 	}
 
 	public EquipmentType loadEquipmentType(Identifier id) throws RetrieveObjectException, CommunicationException {
+		/**
+		 * FIXME method is not complete !
+		 */
 		throw new UnsupportedOperationException();
 	}
 
 	public PortType loadPortType(Identifier id) throws RetrieveObjectException, CommunicationException {
+		/**
+		 * FIXME method is not complete !
+		 */
 		throw new UnsupportedOperationException();
 	}
 
 	public MeasurementPortType loadMeasurementPortType(Identifier id) throws RetrieveObjectException,
-			CommunicationException {
+	/**
+	 * FIXME method is not complete !
+	 */
+	CommunicationException {
 		throw new UnsupportedOperationException();
 	}
 
 	public Characteristic loadCharacteristic(Identifier id) throws RetrieveObjectException, CommunicationException {
+		/**
+		 * FIXME method is not complete !
+		 */
 		throw new UnsupportedOperationException();
 	}
 
@@ -74,10 +102,16 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 	//	}
 
 	public User loadUser(Identifier id) throws RetrieveObjectException, CommunicationException {
+		/**
+		 * FIXME method is not complete !
+		 */
 		throw new UnsupportedOperationException();
 	}
 
 	public Domain loadDomain(Identifier id) throws RetrieveObjectException, CommunicationException {
+		/**
+		 * FIXME method is not complete !
+		 */
 		throw new UnsupportedOperationException();
 	}
 
@@ -90,77 +124,156 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 	}
 
 	public Equipment loadEquipment(Identifier id) throws RetrieveObjectException, CommunicationException {
+		/**
+		 * FIXME method is not complete !
+		 */
 		throw new UnsupportedOperationException();
 	}
 
 	public Port loadPort(Identifier id) throws RetrieveObjectException, CommunicationException {
+		/**
+		 * FIXME method is not complete !
+		 */
 		throw new UnsupportedOperationException();
 	}
 
 	public TransmissionPath loadTransmissionPath(Identifier id) throws RetrieveObjectException,
 			CommunicationException {
+		/**
+		 * FIXME method is not complete !
+		 */
+
 		throw new UnsupportedOperationException();
 	}
 
 	public KIS loadKIS(Identifier id) throws RetrieveObjectException, CommunicationException {
+		/**
+		 * FIXME method is not complete !
+		 */
 		throw new UnsupportedOperationException();
 	}
 
 	public MeasurementPort loadMeasurementPort(Identifier id) throws RetrieveObjectException,
 			CommunicationException {
+		/**
+		 * FIXME method is not complete !
+		 */
 		throw new UnsupportedOperationException();
 	}
 
 	public MonitoredElement loadMonitoredElement(Identifier id) throws RetrieveObjectException,
 			CommunicationException {
-		throw new UnsupportedOperationException();
+		try {
+			return new MonitoredElement(this.server.transmitMonitoredElement((Identifier_Transferable) id
+					.getTransferable(), accessIdentifierTransferable));
+		} catch (CreateObjectException e) {
+			String msg = "ClientConfigurationObjectLoader.loadMonitoredElement | new MonitoredElement("
+					+ id.toString() + ")";
+			throw new RetrieveObjectException(msg, e);
+		} catch (AMFICOMRemoteException e) {
+			String msg = "ClientConfigurationObjectLoader.loadMonitoredElement | server.loadMonitoredElement("
+					+ id.toString() + ")";
+			throw new CommunicationException(msg, e);
+		}
 	}
 
 	public List loadCharacteristics(List ids) throws DatabaseException, CommunicationException {
+		/**
+		 * FIXME method is not complete !
+		 */
 		throw new UnsupportedOperationException();
 	}
 
 	public List loadCharacteristicTypes(List ids) throws DatabaseException, CommunicationException {
+		/**
+		 * FIXME method is not complete !
+		 */
 		throw new UnsupportedOperationException();
 	}
 
 	public List loadDomains(List ids) throws DatabaseException, CommunicationException {
+		/**
+		 * FIXME method is not complete !
+		 */
 		throw new UnsupportedOperationException();
 	}
 
 	public List loadEquipments(List ids) throws DatabaseException, CommunicationException {
+		/**
+		 * FIXME method is not complete !
+		 */
 		throw new UnsupportedOperationException();
 	}
 
 	public List loadEquipmentTypes(List ids) throws DatabaseException, CommunicationException {
+		/**
+		 * FIXME method is not complete !
+		 */
 		throw new UnsupportedOperationException();
 	}
 
 	public List loadKISs(List ids) throws DatabaseException, CommunicationException {
+		/**
+		 * FIXME method is not complete !
+		 */
 		throw new UnsupportedOperationException();
 	}
 
 	public List loadMCMs(List ids) throws DatabaseException, CommunicationException {
+		/**
+		 * FIXME method is not complete !
+		 */
 		throw new UnsupportedOperationException();
 	}
 
 	public List loadMeasurementPorts(List ids) throws DatabaseException, CommunicationException {
+		/**
+		 * FIXME method is not complete !
+		 */
 		throw new UnsupportedOperationException();
 	}
 
 	public List loadMeasurementPortTypes(List ids) throws DatabaseException, CommunicationException {
+		/**
+		 * FIXME method is not complete !
+		 */
 		throw new UnsupportedOperationException();
 	}
 
 	public List loadMonitoredElements(List ids) throws DatabaseException, CommunicationException {
-		throw new UnsupportedOperationException();
+		try {
+			Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+			int i = 0;
+			for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+				Identifier id = (Identifier) it.next();
+				identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+			}
+			MonitoredElement_Transferable[] transferables = this.server
+					.transmitMonitoredElements(identifier_Transferables,
+									accessIdentifierTransferable);
+			List list = new ArrayList(transferables.length);
+			for (int j = 0; j < transferables.length; j++) {
+				list.add(new MonitoredElement(transferables[j]));
+			}
+			return list;
+		} catch (CreateObjectException e) {
+			throw new RetrieveObjectException(e);
+		} catch (AMFICOMRemoteException e) {
+			throw new CommunicationException(e);
+		}
 	}
 
 	public List loadPorts(List ids) throws DatabaseException, CommunicationException {
+		/**
+		 * FIXME method is not complete !
+		 */
 		throw new UnsupportedOperationException();
 	}
 
 	public List loadPortTypes(List ids) throws DatabaseException, CommunicationException {
+		/**
+		 * FIXME method is not complete !
+		 */
 		throw new UnsupportedOperationException();
 	}
 
@@ -169,10 +282,16 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
 	}
 
 	public List loadTransmissionPaths(List ids) throws DatabaseException, CommunicationException {
+		/**
+		 * FIXME method is not complete !
+		 */
 		throw new UnsupportedOperationException();
 	}
 
 	public List loadUsers(List ids) throws DatabaseException, CommunicationException {
+		/**
+		 * FIXME method is not complete !
+		 */
 		throw new UnsupportedOperationException();
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerTestCase.java,v 1.5 2004/09/22 08:08:06 bob Exp $
+ * $Id: CMServerTestCase.java,v 1.6 2004/09/22 10:59:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/09/22 08:08:06 $
+ * @version $Revision: 1.6 $, $Date: 2004/09/22 10:59:00 $
  * @author $Author: bob $
  * @module module
  */
@@ -119,6 +119,7 @@ public class CMServerTestCase extends TestCase {
 			accessIdentifier_Transferable.session_id = (Identifier_Transferable) id.getTransferable();
 			
 			ClientMeasurementObjectLoader.setAccessIdentifierTransferable(accessIdentifier_Transferable);
+			ClientConfigurationObjectLoader.setAccessIdentifierTransferable(accessIdentifier_Transferable);
 
 		} catch (UserException ue) {
 			ue.printStackTrace();
@@ -175,7 +176,7 @@ public class CMServerTestCase extends TestCase {
 				+ (time1 - time0) + " ms");
 	}
 
-	public void _testTransmitTestsAndMeasurements() throws AMFICOMRemoteException, CreateObjectException {
+	public void testTransmitTestsAndMeasurements() throws AMFICOMRemoteException, CreateObjectException {
 		long time0 = System.currentTimeMillis();
 		// 2 month ago
 		Date start = new Date(System.currentTimeMillis() - 1000 * 60 * 60 * 24 * 31 * 2);
