@@ -1,5 +1,5 @@
 /*
- * $Id: ByteArray.java,v 1.9 2005/03/17 08:54:19 arseniy Exp $
+ * $Id: ByteArray.java,v 1.10 2005/03/17 10:12:50 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -79,8 +79,8 @@ public class ByteArray {
 				linkedlist.add(new Integer(dis.readInt()));
 		}
 		catch (Exception e) {
-			System.err.println("Exception while converting byte array to int array: " + e.getMessage()
-					+ ", length of byte array == " + this.bar.length);
+			System.err.println("Exception while converting byte array to int array: " + e.getMessage() //$NON-NLS-1$
+					+ ", length of byte array == " + this.bar.length); //$NON-NLS-1$
 		}
 		Integer[] ii = new Integer[linkedlist.size()];
 		ii = (Integer[]) linkedlist.toArray(ii);
@@ -111,8 +111,8 @@ public class ByteArray {
 				linkedlist.add(new Double(dis.readDouble()));
 		}
 		catch (Exception e) {
-			System.err.println("Exception while converting byte array to double array: " + e.getMessage()
-					+ ", length of byte array == " + this.bar.length);
+			System.err.println("Exception while converting byte array to double array: " + e.getMessage() //$NON-NLS-1$
+					+ ", length of byte array == " + this.bar.length); //$NON-NLS-1$
 			e.printStackTrace();
 		}
 		Double[] d = new Double[linkedlist.size()];
@@ -138,8 +138,8 @@ public class ByteArray {
 				c.add(dis.readUTF());
 		}
 		catch (Exception ioe) {
-			System.err.println("Exception while converting byte array to string array: " + ioe.getMessage()
-					+ ", length of byte array == " + this.bar.length);
+			System.err.println("Exception while converting byte array to string array: " + ioe.getMessage() //$NON-NLS-1$
+					+ ", length of byte array == " + this.bar.length); //$NON-NLS-1$
 			ioe.printStackTrace();
 		}
 		return (String[]) c.toArray(new String[c.size()]);
@@ -171,7 +171,7 @@ public class ByteArray {
 		}
 		catch (IOException ioe) {
 			// IOExceptions are never thrown in ByteArrayOutputStream.write()
-			System.err.println("Exception while converting int to byte array -- " + ioe.getMessage());
+			System.err.println("Exception while converting int to byte array -- " + ioe.getMessage()); //$NON-NLS-1$
 			ioe.printStackTrace();
 		}
 		return baos.toByteArray();
@@ -185,7 +185,7 @@ public class ByteArray {
 		}
 		catch (IOException ioe) {
 			// IOExceptions are never thrown in ByteArrayOutputStream.write()
-			System.err.println("Exception while converting long to byte array -- " + ioe.getMessage());
+			System.err.println("Exception while converting long to byte array -- " + ioe.getMessage()); //$NON-NLS-1$
 			ioe.printStackTrace();
 		}
 		return baos.toByteArray();
@@ -199,7 +199,7 @@ public class ByteArray {
 		}
 		catch (IOException ioe) {
 			// IOExceptions are never thrown in ByteArrayOutputStream.write()
-			System.err.println("Exception while converting double to byte array -- " + ioe.getMessage());
+			System.err.println("Exception while converting double to byte array -- " + ioe.getMessage()); //$NON-NLS-1$
 			ioe.printStackTrace();
 		}
 		return baos.toByteArray();
@@ -214,7 +214,7 @@ public class ByteArray {
 		}
 		catch (IOException ioe) {
 			// IOExceptions are never thrown in ByteArrayOutputStream.write()
-			System.err.println("Exception while converting double array to byte array -- " + ioe.getMessage());
+			System.err.println("Exception while converting double array to byte array -- " + ioe.getMessage()); //$NON-NLS-1$
 			ioe.printStackTrace();
 		}
 		return baos.toByteArray();
@@ -229,7 +229,7 @@ public class ByteArray {
 		}
 		catch (IOException ioe) {
 			// IOExceptions are never thrown in ByteArrayOutputStream.write()
-			System.err.println("Exception while converting string to byte array -- " + ioe.getMessage());
+			System.err.println("Exception while converting string to byte array -- " + ioe.getMessage()); //$NON-NLS-1$
 			ioe.printStackTrace();
 		}
 		return baos.toByteArray();
@@ -245,7 +245,7 @@ public class ByteArray {
 		}
 		catch (IOException ioe) {
 			// IOExceptions are never thrown in ByteArrayOutputStream.write()
-			System.err.println("Exception while converting string array to byte array -- " + ioe.getMessage());
+			System.err.println("Exception while converting string array to byte array -- " + ioe.getMessage()); //$NON-NLS-1$
 			ioe.printStackTrace();
 		}
 		return baos.toByteArray();

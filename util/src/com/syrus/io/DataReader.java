@@ -1,5 +1,5 @@
 /*
- * $Id: DataReader.java,v 1.7 2005/03/16 16:29:26 arseniy Exp $
+ * $Id: DataReader.java,v 1.8 2005/03/17 10:12:49 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,8 @@ package com.syrus.io;
 import java.io.*;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/03/16 16:29:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/03/17 10:12:49 $
+ * @author $Author: bass $
  * @module util
  */
 public abstract class DataReader extends BellcoreStructure {
@@ -29,7 +29,7 @@ public abstract class DataReader extends BellcoreStructure {
 			fis.read(data);
 		}
 		catch (IOException ex) {
-			System.err.println("Exception -- " + ex.getMessage());
+			System.err.println("Exception -- " + ex.getMessage()); //$NON-NLS-1$
 			ex.printStackTrace();
 		}
 		return data;

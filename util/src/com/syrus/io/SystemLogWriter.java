@@ -1,5 +1,5 @@
 /*
- * $Id: SystemLogWriter.java,v 1.4 2005/03/16 16:29:26 arseniy Exp $
+ * $Id: SystemLogWriter.java,v 1.5 2005/03/17 10:12:49 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,24 +23,24 @@ public class SystemLogWriter {
 
 	static {
 		try {
-			fos = new FileOutputStream(".\\client.log", true);
+			fos = new FileOutputStream(".\\client.log", true); //$NON-NLS-1$
 //			pwr = new PrintWriter(fos);
 			pstr = new PrintStream(fos);
 			System.setOut(pstr);
 		}
 		catch (Exception e) {
-			System.err.println("COULD NOT CREATE CLIENT LOG FILE: " + e.getMessage());
+			System.err.println("COULD NOT CREATE CLIENT LOG FILE: " + e.getMessage()); //$NON-NLS-1$
 			e.printStackTrace();
 		}
 		try {
-			System.out.println("");
-			System.out.println("-------------------------------------------------------");
-			System.out.println("started " + sdf.format(new Date(System.currentTimeMillis())));
-			System.out.println("-------------------------------------------------------");
-			System.out.println("");
+			System.out.println(""); //$NON-NLS-1$
+			System.out.println("-------------------------------------------------------"); //$NON-NLS-1$
+			System.out.println("started " + sdf.format(new Date(System.currentTimeMillis()))); //$NON-NLS-1$
+			System.out.println("-------------------------------------------------------"); //$NON-NLS-1$
+			System.out.println(""); //$NON-NLS-1$
 		}
 		catch (Exception e) {
-			System.err.println("COULD NOT WRITE CLIENT LOG FILE: " + e.getMessage());
+			System.err.println("COULD NOT WRITE CLIENT LOG FILE: " + e.getMessage()); //$NON-NLS-1$
 			e.printStackTrace();
 		}
 	}
@@ -60,22 +60,22 @@ public class SystemLogWriter {
 
 	public static void closeLog() {
 		try {
-			System.out.println("");
-			System.out.println("-------------------------------------------------------");
-			System.out.println("closed " + sdf.format(new Date(System.currentTimeMillis())));
-			System.out.println("-------------------------------------------------------");
-			System.out.println("");
+			System.out.println(""); //$NON-NLS-1$
+			System.out.println("-------------------------------------------------------"); //$NON-NLS-1$
+			System.out.println("closed " + sdf.format(new Date(System.currentTimeMillis()))); //$NON-NLS-1$
+			System.out.println("-------------------------------------------------------"); //$NON-NLS-1$
+			System.out.println(""); //$NON-NLS-1$
 			System.out.close();
 			try {
 				fos.close();
 			}
 			catch (IOException ioe) {
-				System.err.println("Exception: " + ioe.getMessage());
+				System.err.println("Exception: " + ioe.getMessage()); //$NON-NLS-1$
 				ioe.printStackTrace();
 			}
 		}
 		catch (Exception e) {
-			System.err.println("Exception: " + e.getMessage());
+			System.err.println("Exception: " + e.getMessage()); //$NON-NLS-1$
 			e.printStackTrace();
 		}
 	}

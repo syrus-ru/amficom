@@ -1,5 +1,5 @@
 /*
- * $Id: TextWriter.java,v 1.6 2005/03/16 16:29:26 arseniy Exp $
+ * $Id: TextWriter.java,v 1.7 2005/03/17 10:12:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintWriter;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/03/16 16:29:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/03/17 10:12:50 $
+ * @author $Author: bass $
  * @module util
  */
 public class TextWriter {
@@ -51,33 +51,33 @@ public class TextWriter {
 //	}
 
 	private int writeData2() {
-		String str = "";
+		String str = ""; //$NON-NLS-1$
 		int temp;
 		double step;
 		double gi;
 
 		gi = this.bs.fxdParams.gi / 100000d; // коэфф преломления
-		this.pw.println("Optical module name: " + this.bs.supParams.omid);
-		this.pw.println("Wavelength: " + String.valueOf(this.bs.fxdParams.aw / 10) + " nm");
-		this.pw.println("Index of refraction: " + String.valueOf(gi));
-		this.pw.println("Pulse width: " + String.valueOf(this.bs.fxdParams.pwu[0]) + " ns");
-		this.pw.println("Number of points: " + String.valueOf(this.bs.fxdParams.nppw[0]));
-		this.pw.println("Number of averages: " + String.valueOf(this.bs.fxdParams.nav));
-		this.pw.println("Range: "
+		this.pw.println("Optical module name: " + this.bs.supParams.omid); //$NON-NLS-1$
+		this.pw.println("Wavelength: " + String.valueOf(this.bs.fxdParams.aw / 10) + " nm"); //$NON-NLS-1$ //$NON-NLS-2$
+		this.pw.println("Index of refraction: " + String.valueOf(gi)); //$NON-NLS-1$
+		this.pw.println("Pulse width: " + String.valueOf(this.bs.fxdParams.pwu[0]) + " ns"); //$NON-NLS-1$ //$NON-NLS-2$
+		this.pw.println("Number of points: " + String.valueOf(this.bs.fxdParams.nppw[0])); //$NON-NLS-1$
+		this.pw.println("Number of averages: " + String.valueOf(this.bs.fxdParams.nav)); //$NON-NLS-1$
+		this.pw.println("Range: " //$NON-NLS-1$
 				+ String.valueOf((int) ((this.bs.fxdParams.ar - this.bs.fxdParams.ao) * 0.03d / gi))
-				+ " "
+				+ " " //$NON-NLS-1$
 				+ this.bs.fxdParams.ud);
 //		pw.println("Data spacing: " + String.valueOf(2 * ((double)(bs.fxdParams.DS[0]) / 1000000f)));
 
 		for (int i = 0; i < this.bs.dataPts.tsf; i++) {
 			step = this.bs.fxdParams.ds[0] * 0.03d / gi / 10000d;
 			for (int j = 0; j < this.bs.dataPts.tps[i]; j++) {
-				if (this.bs.fxdParams.ud.equalsIgnoreCase("km"))
+				if (this.bs.fxdParams.ud.equalsIgnoreCase("km")) //$NON-NLS-1$
 					temp = (int) ((step * j) * 10000);
 				else
 					temp = (int) ((step * j) * 10);
 				str = String.valueOf(temp / 10f);
-				str += "\t";
+				str += "\t"; //$NON-NLS-1$
 				str += String.valueOf((65535 - this.bs.dataPts.dsf[i][j]) / 1000f);
 				this.pw.println(str);
 			}

@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreStructure.java,v 1.11 2005/03/16 16:29:25 arseniy Exp $
+ * $Id: BellcoreStructure.java,v 1.12 2005/03/17 10:12:49 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,20 +11,20 @@ package com.syrus.io;
 import java.util.Date;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/03/16 16:29:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/03/17 10:12:49 $
+ * @author $Author: bass $
  * @module util
  */
 public class BellcoreStructure {
-	protected static final String FIELD_NAME_MAP = "Map";
-	protected static final String FIELD_NAME_GENPARAMS = "GenParams";
-	protected static final String FIELD_NAME_SUPPARAMS = "SupParams";
-	protected static final String FIELD_NAME_FXDPARAMS = "FxdParams";
-	protected static final String FIELD_NAME_KEYEVENTS = "KeyEvents";
-	protected static final String FIELD_NAME_LNKPARAMS = "LnkParams";
-	protected static final String FIELD_NAME_DATAPTS = "DataPts";
-	protected static final String FIELD_NAME_CKSUM = "Cksum";
-	protected static final String FIELD_NAME_HP_MINI_SPECIAL = "HPMiniSpecial";
+	protected static final String FIELD_NAME_MAP = "Map"; //$NON-NLS-1$
+	protected static final String FIELD_NAME_GENPARAMS = "GenParams"; //$NON-NLS-1$
+	protected static final String FIELD_NAME_SUPPARAMS = "SupParams"; //$NON-NLS-1$
+	protected static final String FIELD_NAME_FXDPARAMS = "FxdParams"; //$NON-NLS-1$
+	protected static final String FIELD_NAME_KEYEVENTS = "KeyEvents"; //$NON-NLS-1$
+	protected static final String FIELD_NAME_LNKPARAMS = "LnkParams"; //$NON-NLS-1$
+	protected static final String FIELD_NAME_DATAPTS = "DataPts"; //$NON-NLS-1$
+	protected static final String FIELD_NAME_CKSUM = "Cksum"; //$NON-NLS-1$
+	protected static final String FIELD_NAME_HP_MINI_SPECIAL = "HPMiniSpecial"; //$NON-NLS-1$
 
 	static final int MAP = 1;
 	static final int GENPARAMS = 2;

@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreWriter.java,v 1.6 2005/03/16 16:29:26 arseniy Exp $
+ * $Id: BellcoreWriter.java,v 1.7 2005/03/17 10:12:49 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import java.io.*;
 import java.nio.*;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/03/16 16:29:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/03/17 10:12:49 $
+ * @author $Author: bass $
  * @module util
  */
 public class BellcoreWriter {
@@ -32,31 +32,31 @@ public class BellcoreWriter {
 		int i = 1;
 		int j = 0;
 		while (i < bs1.map.nb) {
-			if (bs1.map.bId[i].equals("GenParams")) {
+			if (bs1.map.bId[i].equals(BellcoreStructure.FIELD_NAME_GENPARAMS)) {
 				this.writeGenParams(i++);
 			}
 			else
-				if (bs1.map.bId[i].equals("SupParams")) {
+				if (bs1.map.bId[i].equals(BellcoreStructure.FIELD_NAME_SUPPARAMS)) {
 					this.writeSupParams(i++);
 				}
 				else
-					if (bs1.map.bId[i].equals("FxdParams")) {
+					if (bs1.map.bId[i].equals(BellcoreStructure.FIELD_NAME_FXDPARAMS)) {
 						this.writeFxdParams(i++);
 					}
 					else
-						if (bs1.map.bId[i].equals("KeyEvents")) {
+						if (bs1.map.bId[i].equals(BellcoreStructure.FIELD_NAME_KEYEVENTS)) {
 							this.writeKeyEvents(i++);
 						}
 						else
-							if (bs1.map.bId[i].equals("LnkParams")) {
+							if (bs1.map.bId[i].equals(BellcoreStructure.FIELD_NAME_LNKPARAMS)) {
 								this.writeLnkParams(i++);
 							}
 							else
-								if (bs1.map.bId[i].equals("DataPts")) {
+								if (bs1.map.bId[i].equals(BellcoreStructure.FIELD_NAME_DATAPTS)) {
 									this.writeDataPts(i++);
 								}
 								else
-									if (bs1.map.bId[i].equals("Cksum")) {
+									if (bs1.map.bId[i].equals(BellcoreStructure.FIELD_NAME_CKSUM)) {
 										this.writeCksum(i++);
 									}
 									else
@@ -64,7 +64,7 @@ public class BellcoreWriter {
 											this.writeSpecial(j++, i++);
 										}
 										else
-											System.out.println("Unknown block!");
+											System.out.println("Unknown block!"); //$NON-NLS-1$
 		}
 
 		this.data = new byte[this.baos.size()];
@@ -85,7 +85,7 @@ public class BellcoreWriter {
 			}
 		}
 		catch (IOException e) {
-			System.out.println("IO Error writing Map");
+			System.out.println("IO Error writing Map"); //$NON-NLS-1$
 			return 0;
 		}
 		return 1;
@@ -110,7 +110,7 @@ public class BellcoreWriter {
 			this.idos.writeIString(this.bs.genParams.cmt);
 		}
 		catch (IOException e) {
-			System.out.println("IO Error writing GenParams");
+			System.out.println("IO Error writing GenParams"); //$NON-NLS-1$
 			return 0;
 		}
 		return 1;
@@ -129,7 +129,7 @@ public class BellcoreWriter {
 			this.idos.writeIString(this.bs.supParams.ot);
 		}
 		catch (IOException e) {
-			System.out.println("IO Error writing SupParams");
+			System.out.println("IO Error writing SupParams"); //$NON-NLS-1$
 			return 0;
 		}
 		return 1;
@@ -164,7 +164,7 @@ public class BellcoreWriter {
 			this.idos.writeIUnsignedShort(this.bs.fxdParams.et);
 		}
 		catch (IOException e) {
-			System.out.println("IO Error writing FxdParams");
+			System.out.println("IO Error writing FxdParams"); //$NON-NLS-1$
 			return 0;
 		}
 		return 1;
@@ -196,7 +196,7 @@ public class BellcoreWriter {
 			this.idos.writeIInt(this.bs.keyEvents.rlmp[1]);
 		}
 		catch (IOException e) {
-			System.out.println("IO Error writing KeyEvents");
+			System.out.println("IO Error writing KeyEvents"); //$NON-NLS-1$
 			return 0;
 		}
 		return 1;
@@ -225,7 +225,7 @@ public class BellcoreWriter {
 			}
 		}
 		catch (IOException e) {
-			System.out.println("IO Error writing LnkParams");
+			System.out.println("IO Error writing LnkParams"); //$NON-NLS-1$
 			return 0;
 		}
 		return 1;
@@ -245,7 +245,7 @@ public class BellcoreWriter {
 			}
 		}
 		catch (IOException e) {
-			System.out.println("IO Error writing DataPts");
+			System.out.println("IO Error writing DataPts"); //$NON-NLS-1$
 			return 0;
 		}
 		return 1;
@@ -259,7 +259,7 @@ public class BellcoreWriter {
 				this.idos.writeByte(this.bs.special[j].specData[i]);
 		}
 		catch (IOException e) {
-			System.out.println("IO Error writing Special Data");
+			System.out.println("IO Error writing Special Data"); //$NON-NLS-1$
 			return 0;
 		}
 		return 1;
