@@ -107,13 +107,11 @@ class MyThread extends Thread
 			else
 			if(toolName.equals("com.syrus.AMFICOM.Client.Schedule.Schedule"))
 			{
-				LangModelSchedule.initialize();
-				new com.syrus.AMFICOM.Client.Schedule.Schedule(new DefaultScheduleApplicationModelFactory());
+				new com.syrus.AMFICOM.Client.Schedule.Schedule();
 			}
 			else
 			if(toolName.equals("com.syrus.AMFICOM.Client.Survey.Survey"))
 			{
-				LangModelSchedule.initialize();
 				new com.syrus.AMFICOM.Client.Survey.Survey(new DefaultSurveyApplicationModelFactory());
 			}
 			else

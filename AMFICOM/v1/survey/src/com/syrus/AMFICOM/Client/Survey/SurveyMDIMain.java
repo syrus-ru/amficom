@@ -57,7 +57,6 @@ import com.syrus.AMFICOM.Client.General.Model.DefaultAlarmApplicationModelFactor
 import com.syrus.AMFICOM.Client.General.Model.DefaultModelApplicationModelFactory;
 import com.syrus.AMFICOM.Client.General.Model.DefaultPredictionApplicationModelFactory;
 import com.syrus.AMFICOM.Client.General.Model.DefaultResultApplicationModelFactory;
-import com.syrus.AMFICOM.Client.General.Model.DefaultScheduleApplicationModelFactory;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapSurveyISMApplicationModelFactory;
 import com.syrus.AMFICOM.Client.General.Model.ReflectometryAnalyseApplicationModelFactory;
@@ -289,8 +288,7 @@ public class SurveyMDIMain extends JFrame implements OperationListener {
 						desktopPane, "Навигатор объектов", aContext));
 
 		aModel.setCommand("menuEvaluateScheduler", new OpenSchedulerCommand(
-				Environment.the_dispatcher, aContext,
-				new DefaultScheduleApplicationModelFactory()));
+				Environment.the_dispatcher, aContext));
 		//		aModel.setCommand("menuEvaluateRequest", new
 		// TestRequestCommand(aContext));
 

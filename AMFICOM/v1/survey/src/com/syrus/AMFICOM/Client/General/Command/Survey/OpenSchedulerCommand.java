@@ -19,17 +19,15 @@ public class OpenSchedulerCommand extends VoidCommand
 {
 	private Dispatcher dispatcher;
 	ApplicationContext aContext;
-	ApplicationModelFactory factory;
 
 	public OpenSchedulerCommand()
 	{
 	}
 
-	public OpenSchedulerCommand(Dispatcher dispatcher, ApplicationContext aContext, ApplicationModelFactory factory)
+	public OpenSchedulerCommand(Dispatcher dispatcher, ApplicationContext aContext)
 	{
 		this.dispatcher = dispatcher;
 		this.aContext = aContext;
-		this.factory = factory;
 	}
 
 	public void setParameter(String field, Object value)
@@ -53,7 +51,7 @@ public class OpenSchedulerCommand extends VoidCommand
 
 	public Object clone()
 	{
-		return new OpenSchedulerCommand(dispatcher, aContext, factory);
+		return new OpenSchedulerCommand(dispatcher, aContext);
 	}
 
 	public void execute()
@@ -64,17 +62,17 @@ public class OpenSchedulerCommand extends VoidCommand
 		{
 			return;
 		}
-
+/*
 		ApplicationContext aC = new ApplicationContext();
 		aC.setApplicationModel(factory.create());
 		aC.setConnectionInterface(aContext.getConnectionInterface());
 		aC.setSessionInterface(aContext.getSessionInterface());
 		aC.setDataSourceInterface(aC.getApplicationModel().getDataSource(aContext.getSessionInterface()));
 		aC.setDispatcher(dispatcher);
-
+*/
         System.out.println("Starting Scheduler window");
 
-		new com.syrus.AMFICOM.Client.Schedule.Schedule(new DefaultScheduleApplicationModelFactory());
+		new com.syrus.AMFICOM.Client.Schedule.Schedule();
 /*
 		try
 		{
