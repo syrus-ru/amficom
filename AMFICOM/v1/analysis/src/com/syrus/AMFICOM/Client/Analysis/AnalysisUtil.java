@@ -180,7 +180,7 @@ public class AnalysisUtil
 				inParameterTypes,
 				new ArrayList(0),
 				new ArrayList(0),
-				outParameterTypes
+				outParameterTypes,
 				new ArrayList(0)); //@todo: Temporal fix
 		}
 		catch(CreateObjectException e)
