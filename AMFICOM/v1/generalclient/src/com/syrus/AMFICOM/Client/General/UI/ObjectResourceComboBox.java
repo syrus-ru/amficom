@@ -1,6 +1,5 @@
 package com.syrus.AMFICOM.Client.General.UI;
 
-
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;

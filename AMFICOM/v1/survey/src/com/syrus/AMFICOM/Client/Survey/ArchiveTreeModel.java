@@ -2,9 +2,14 @@ package com.syrus.AMFICOM.Client.Survey;
 
 import java.text.*;
 import java.awt.*;
-import java.util.*;
-
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Date;
+
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.UI.*;
@@ -142,12 +147,12 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 
 				if(me.element_type.equals("path"))
 				{
-					if(Pool.getHash(SchemePath.typ) != null)
+          Map map = Pool.getMap(SchemePath.typ);
+					if(map != null)
 					{
-						Enumeration enum1 = Pool.getHash(SchemePath.typ).elements();
-						for(; enum1.hasMoreElements();)
+						for(Iterator it = map.values().iterator(); it.hasNext();)
 						{
-							SchemePath sp = (SchemePath )enum1.nextElement();
+							SchemePath sp = (SchemePath )it.next();
 							if(sp.path_id.equals(me.element_id))
 							{
 								new SurveyDataSourceImage(dsi).GetModelingsForSP(sp.getId());
@@ -244,9 +249,9 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 		return null;
 	}
 
-	public Vector getChildNodes(ObjectResourceTreeNode node)
+	public List getChildNodes(ObjectResourceTreeNode node)
 	{
-		Vector vec = new Vector();
+		List vec = new ArrayList();
 		if(node.getObject() instanceof String)
 		{
 			String s = (String )node.getObject();
@@ -403,15 +408,15 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 				/**
 				 * FIXME remove this fucking vector, which will be indicate existance at pool SchemePath
 				 */
-				Vector schvec = new Vector();
+				List schvec = new ArrayList();
 				if(me.element_type.equals("path"))
 				{
-					if(Pool.getHash(SchemePath.typ) != null)
+          Map map = Pool.getMap(SchemePath.typ);
+					if(map != null)
 					{
-						Enumeration enum1 = Pool.getHash(SchemePath.typ).elements();
-						for(; enum1.hasMoreElements();)
+						for(Iterator it = map.values().iterator(); it.hasNext();)
 						{
-							SchemePath sp = (SchemePath )enum1.nextElement();
+							SchemePath sp = (SchemePath )it.next();
 							if(sp.path_id.equals(me.element_id))
 								schvec.add(sp.getId());
 						}
@@ -671,12 +676,12 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 	Test findTestForEvaluation(Evaluation eval)
 	{
 		Test t;
-		Hashtable ht = Pool.getHash(Test.TYPE);
+		Map ht = Pool.getMap(Test.TYPE);
 		if(ht == null)
 			return null;
-		for(Enumeration enum = ht.elements(); enum.hasMoreElements();)
+		for(Iterator it = ht.values().iterator(); it.hasNext();)
 		{
-			t = (Test )enum.nextElement();
+			t = (Test )it.next();
 			if(t.getEvaluationId().equals(eval.getId()))
 				return t;
 		}

@@ -1,9 +1,13 @@
 package com.syrus.AMFICOM.Client.Test;
 
 import java.awt.*;
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ArrayList;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Iterator;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Filter.*;
@@ -114,10 +118,10 @@ public class ObserverTreeModel extends ObjectResourceTreeModel
 				{
 					if(Pool.getHash(SchemePath.typ) != null)
 					{
-						Enumeration enum1 = Pool.getHash(SchemePath.typ).elements();
-						for(; enum1.hasMoreElements();)
+            Map map = Pool.getMap(SchemePath.typ);
+						for(Iterator it = map.values().iterator(); it.hasNext();)
 						{
-							SchemePath sp = (SchemePath )enum1.nextElement();
+							SchemePath sp = (SchemePath )it.next();
 							if(sp.path_id.equals(me.element_id))
 							{
 								new SurveyDataSourceImage(this.dsi).GetModelingsForSP(sp.getId());
@@ -215,9 +219,9 @@ public class ObserverTreeModel extends ObjectResourceTreeModel
 		return null;
 	}
 
-	public Vector getChildNodes(ObjectResourceTreeNode node)
+	public List getChildNodes(ObjectResourceTreeNode node)
 	{
-		Vector vec = new Vector();
+		List vec = new ArrayList();
 		if(node.getObject() instanceof String)
 		{
 			String s = (String )node.getObject();
@@ -359,15 +363,15 @@ public class ObserverTreeModel extends ObjectResourceTreeModel
 				ObjectResourceTreeNode parent = (ObjectResourceTreeNode )node.getParent();
 				MonitoredElement me = (MonitoredElement )parent.getObject();
 
-				Vector schvec = new Vector();
+				List schvec = new ArrayList();
 				if(me.element_type.equals("path"))
 				{
-					if(Pool.getHash(SchemePath.typ) != null)
+          Map map = Pool.getMap(SchemePath.typ);
+					if(map != null)
 					{
-						Enumeration enum1 = Pool.getHash(SchemePath.typ).elements();
-						for(; enum1.hasMoreElements();)
+						for(Iterator it = map.values().iterator(); it.hasNext();)
 						{
-							SchemePath sp = (SchemePath )enum1.nextElement();
+							SchemePath sp = (SchemePath )it.next();
 							if(sp.path_id.equals(me.element_id))
 								schvec.add(sp.getId());
 						}

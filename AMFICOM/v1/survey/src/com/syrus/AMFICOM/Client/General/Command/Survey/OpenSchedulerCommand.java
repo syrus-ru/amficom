@@ -4,6 +4,7 @@ import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
+import com.syrus.AMFICOM.Client.Schedule.Schedule;
 
 public class OpenSchedulerCommand extends VoidCommand
 {
@@ -63,7 +64,7 @@ public class OpenSchedulerCommand extends VoidCommand
 */
         System.out.println("Starting Scheduler window");
 
-		new com.syrus.AMFICOM.Client.Schedule.Schedule();
+		new Schedule();
 /*
 		try
 		{
