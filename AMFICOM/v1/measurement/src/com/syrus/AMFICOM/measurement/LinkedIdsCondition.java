@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.5 2004/10/08 12:17:06 bob Exp $
+ * $Id: LinkedIdsCondition.java,v 1.6 2004/10/11 13:45:01 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,43 +25,64 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.LinkedIdsCondition_Transferable;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/10/08 12:17:06 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/11 13:45:01 $
  * @author $Author: bob $
  * @module measurement_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
 
-	private Domain			domain;
+	private static LinkedIdsCondition	instance = null;
+	private static boolean			initialized	= false;
+	private static Object			lock		= new Object();
 
-	private static final Short	MEASUREMENT_SHORT	= new Short(ObjectEntities.MEASUREMENT_ENTITY_CODE);
-	private static final Short	RESULT_SHORT		= new Short(ObjectEntities.RESULT_ENTITY_CODE);
-	private static final Short	MEASUREMENTTYPE_SHORT	= new Short(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
-	private Short			entityCode;
+	private Domain				domain;
 
-	private List			linkedIds;
+	private static final Short		ANALYSIS_SHORT		= new Short(ObjectEntities.ANALYSIS_ENTITY_CODE);
+	private static final Short		EVALUATION_SHORT	= new Short(
+											ObjectEntities.EVALUATION_ENTITY_CODE);
+	private static final Short		MEASUREMENT_SHORT	= new Short(
+											ObjectEntities.MEASUREMENT_ENTITY_CODE);
+	private static final Short		RESULT_SHORT		= new Short(ObjectEntities.RESULT_ENTITY_CODE);
+	private static final Short		MEASUREMENTTYPE_SHORT	= new Short(
+											ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
+	private static final Short		MS_SHORT		= new Short(ObjectEntities.MS_ENTITY_CODE);
+
+	private Short				entityCode;
+
+	private List				linkedIds;
+	private Identifier			identifier;
+
+	private LinkedIdsCondition() {
+		// empty
+	}
+
+	public static LinkedIdsCondition getInstance() {
+		if (!initialized) {
+			synchronized (lock) {
+				if (!initialized && instance == null)
+					instance = new LinkedIdsCondition();
+			}
+			synchronized (lock) {
+				initialized = true;
+			}
+		}
+		return instance;
+	}
 
 	public LinkedIdsCondition(LinkedIdsCondition_Transferable transferable) throws DatabaseException,
 			CommunicationException {
 		this.domain = (Domain) ConfigurationStorableObjectPool
 				.getStorableObject(new Identifier(transferable.domain_id), true);
-		this.linkedIds = new ArrayList(transferable.linked_ids.length);
-		for (int i = 0; i < transferable.linked_ids.length; i++) {
-			this.linkedIds.add(new Identifier(transferable.linked_ids[i]));
+		if (transferable.linked_ids.length == 1) {
+			this.identifier = new Identifier(transferable.linked_ids[0]);
+		} else {
+			this.linkedIds = new ArrayList(transferable.linked_ids.length);
+			for (int i = 0; i < transferable.linked_ids.length; i++) {
+				this.linkedIds.add(new Identifier(transferable.linked_ids[i]));
+			}
 		}
 
-		switch (transferable.entity_code) {
-			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
-				this.entityCode = MEASUREMENT_SHORT;
-				break;
-			case ObjectEntities.RESULT_ENTITY_CODE:
-				this.entityCode = RESULT_SHORT;
-				break;
-			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
-				this.entityCode = MEASUREMENTTYPE_SHORT;
-				break;
-			default:
-				this.entityCode = null;
-		}
+		setEntityCode(transferable.entity_code);
 	}
 
 	public LinkedIdsCondition(List linkedIds, short entityCode) {
@@ -73,6 +94,15 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		this.entityCode = entityCode;
 	}
 
+	public LinkedIdsCondition(Identifier identifier, Short entityCode) {
+		this.identifier = identifier;
+		this.entityCode = entityCode;
+	}
+
+	public LinkedIdsCondition(Identifier identifier, short entityCode) {
+		this(identifier, new Short(entityCode));
+	}
+
 	public Domain getDomain() {
 		return this.domain;
 	}
@@ -81,29 +111,105 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		return this.entityCode;
 	}
 
+	/**
+	 * @return <code>true</code>
+	 *         <ul>
+	 *         <li>if {@link entityCode}is {@link Analysis}for all
+	 *         analyses for CriteriaSet identifier in linkedIds;</li>
+	 *         <li>if {@link entityCode}is {@link Evaluation}for all
+	 *         analyses for ThresholdSet identifier in linkedIds;</li>
+	 *         <li>if {@link entityCode}is {@link Measurement}for all
+	 *         measurements for Test identifier in linkedIds;</li>
+	 *         <li>if {@link entityCode}is {@link Result}for all results
+	 *         for Measurement identifier in linkedIds;</li>
+	 *         <li>if {@link entityCode}is {@link MeasurementType}for all
+	 *         results for Measurement identifier in linkedIds;</li>
+	 *         <li>if {@link entityCode}is {@link MeasurementSetup}for
+	 *         all measurement setups for MonitoredElement identifier in
+	 *         linkedIds;</li>
+	 *         </ul>
+	 */
 	public boolean isConditionTrue(Object object) throws ApplicationException {
 		boolean condition = false;
 		switch (this.entityCode.shortValue()) {
-			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
-				if (object instanceof Measurement) {
-					Measurement measurement = (Measurement) object;
-					for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
-						Identifier testId = (Identifier) it.next();
-						if (measurement.getTestId().equals(testId)) {
+			case ObjectEntities.ANALYSIS_ENTITY_CODE:
+				if (object instanceof Analysis) {
+					Analysis analysis = (Analysis) object;
+					Identifier id = analysis.getCriteriaSet().getId();
+					if (this.linkedIds == null) {
+						Identifier criteriaSetId = this.identifier;
+						if (criteriaSetId.equals(id)) {
 							condition = true;
 							break;
+						}
+					} else {
+						for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
+							Identifier criteriaSetId = (Identifier) it.next();
+							if (criteriaSetId.equals(id)) {
+								condition = true;
+								break;
+							}
+						}
+					}
+				}
+				break;
+			case ObjectEntities.EVALUATION_ENTITY_CODE:
+				if (object instanceof Evaluation) {
+					Evaluation evaluation = (Evaluation) object;
+					Identifier id = evaluation.getThresholdSet().getId();
+					if (this.linkedIds == null) {
+						Identifier thresholdSetId = this.identifier;
+						if (thresholdSetId.equals(id)) {
+							condition = true;
+							break;
+						}
+					} else {
+						for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
+							Identifier thresholdSetId = (Identifier) it.next();
+							if (thresholdSetId.equals(id)) {
+								condition = true;
+								break;
+							}
+						}
+					}
+				}
+				break;
+			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
+				if (object instanceof Measurement) {
+					Identifier testId = ((Measurement) object).getTestId();
+					if (this.linkedIds == null) {
+						Identifier id = this.identifier;
+						if (id.equals(testId)) {
+							condition = true;
+							break;
+						}
+					} else {
+						for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
+							Identifier id = (Identifier) it.next();
+							if (testId.equals(id)) {
+								condition = true;
+								break;
+							}
 						}
 					}
 				}
 				break;
 			case ObjectEntities.RESULT_ENTITY_CODE:
 				if (object instanceof Result) {
-					Result result = (Result) object;
-					for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
-						Identifier measurementId = (Identifier) it.next();
-						if (result.getMeasurement().getId().equals(measurementId)) {
+					Result resultMeasurementId = (Result) object;
+					if (this.linkedIds == null) {
+						Identifier id = this.identifier;
+						if (id.equals(resultMeasurementId)) {
 							condition = true;
 							break;
+						}
+					} else {
+						for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
+							Identifier measurementId = (Identifier) it.next();
+							if (measurementId.equals(resultMeasurementId)) {
+								condition = true;
+								break;
+							}
 						}
 					}
 				}
@@ -117,13 +223,48 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 								.next();
 						Identifier id2 = measurementPortType.getId();
 						if (!condition) {
-							for (Iterator iter = this.linkedIds.iterator(); iter.hasNext();) {
-								Identifier id = (Identifier) iter.next();
-								if (id2.equals(id)) {
+							if (this.linkedIds == null) {
+								Identifier id = this.identifier;
+								if (id.equals(id2)) {
 									condition = true;
 									break;
 								}
+							} else {
+								for (Iterator iter = this.linkedIds.iterator(); iter
+										.hasNext();) {
+									Identifier id = (Identifier) iter.next();
+									if (id2.equals(id)) {
+										condition = true;
+										break;
+									}
 
+								}
+							}
+						}
+					}
+				}
+				break;
+			case ObjectEntities.MS_ENTITY_CODE:
+				if (object instanceof MeasurementSetup) {
+					MeasurementSetup measurementSetup = (MeasurementSetup) object;
+					for (Iterator it = measurementSetup.getMonitoredElementIds().iterator(); it
+							.hasNext();) {
+						Identifier id2 = (Identifier) it.next();
+						if (!condition) {
+							if (this.linkedIds == null) {
+								if (this.identifier.equals(id2)) {
+									condition = true;
+									break;
+								}
+							} else {
+								for (Iterator iter = this.linkedIds.iterator(); iter
+										.hasNext();) {
+									Identifier id = (Identifier) iter.next();
+									if (id.equals(id2)) {
+										condition = true;
+										break;
+									}
+								}
 							}
 						}
 					}
@@ -140,11 +281,25 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		this.domain = domain;
 	}
 
-	public void setEntityCode(Short entityCode) {
-		switch (this.entityCode.shortValue()) {
+	public void setEntityCode(short entityCode) {
+		switch (entityCode) {
+			case ObjectEntities.ANALYSIS_ENTITY_CODE:
+				this.entityCode = ANALYSIS_SHORT;
+				break;
+			case ObjectEntities.EVALUATION_ENTITY_CODE:
+				this.entityCode = EVALUATION_SHORT;
+				break;
 			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
+				this.entityCode = MEASUREMENT_SHORT;
+				break;
+			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
+				this.entityCode = MEASUREMENTTYPE_SHORT;
+				break;
+			case ObjectEntities.MS_ENTITY_CODE:
+				this.entityCode = MS_SHORT;
+				break;
 			case ObjectEntities.RESULT_ENTITY_CODE:
-				this.entityCode = entityCode;
+				this.entityCode = RESULT_SHORT;
 				break;
 			default:
 				throw new UnsupportedOperationException("entityCode is unknown for this condition");
@@ -152,8 +307,13 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 
 	}
 
+	public void setEntityCode(Short entityCode) {
+		this.setEntityCode(entityCode.shortValue());
+	}
+
 	public void setLinkedIds(List linkedIds) {
 		this.linkedIds = linkedIds;
+		this.identifier = null;
 	}
 
 	public Object getTransferable() {
@@ -162,32 +322,41 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 
 		short s = this.entityCode.shortValue();
 		switch (s) {
+			case ObjectEntities.ANALYSIS_ENTITY_CODE:
+			case ObjectEntities.EVALUATION_ENTITY_CODE:
 			case ObjectEntities.MEASUREMENT_ENTITY_CODE:
 			case ObjectEntities.RESULT_ENTITY_CODE:
 			case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
+			case ObjectEntities.MS_ENTITY_CODE:
 				break;
 			default:
 				throw new UnsupportedOperationException("entityCode is unknown");
 		}
 
 		LinkedIdsCondition_Transferable transferable = new LinkedIdsCondition_Transferable();
-		Identifier_Transferable[] testId_Transferable = new Identifier_Transferable[this.linkedIds.size()];
-		int i = 0;
+		Identifier_Transferable[] linkedId_Transferable;
+		if (this.linkedIds != null) {
+			linkedId_Transferable = new Identifier_Transferable[this.linkedIds.size()];
+			int i = 0;
 
-		for (Iterator it = this.linkedIds.iterator(); it.hasNext(); i++) {
-			Identifier id = (Identifier) it.next();
-			testId_Transferable[i] = (Identifier_Transferable) id.getTransferable();
+			for (Iterator it = this.linkedIds.iterator(); it.hasNext(); i++) {
+				Identifier id = (Identifier) it.next();
+				linkedId_Transferable[i] = (Identifier_Transferable) id.getTransferable();
+			}
+		} else {
+			linkedId_Transferable = new Identifier_Transferable[1];
+			linkedId_Transferable[0] = (Identifier_Transferable) this.identifier.getTransferable();
 		}
 
 		transferable.domain_id = (Identifier_Transferable) this.domain.getId().getTransferable();
-		transferable.linked_ids = testId_Transferable;
+		transferable.linked_ids = linkedId_Transferable;
 		transferable.entity_code = s;
 
 		return transferable;
 	}
 
-	public List getTestIds() {
-		if (this.entityCode.equals(MEASUREMENT_SHORT))
+	public List getCriteriaSetIds() {
+		if (this.entityCode.equals(EVALUATION_SHORT))
 			return this.linkedIds;
 		return null;
 	}
@@ -204,4 +373,24 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 		return null;
 	}
 
+	public List getTestIds() {
+		if (this.entityCode.equals(MEASUREMENT_SHORT))
+			return this.linkedIds;
+		return null;
+	}
+
+	public List getThresholdSetIds() {
+		if (this.entityCode.equals(EVALUATION_SHORT))
+			return this.linkedIds;
+		return null;
+	}
+
+	public Identifier getIdentifier() {
+		return this.identifier;
+	}
+
+	public void setIdentifier(Identifier identifier) {
+		this.identifier = identifier;
+		this.linkedIds = null;
+	}
 }
