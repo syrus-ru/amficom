@@ -561,8 +561,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		// remove tests
 		if (unsavedTest != null) {
 			java.util.List deleteTests = new ArrayList();
-			Map _unsavedTest = new HashMap(unsavedTest);
-			for (Iterator it = _unsavedTest.keySet().iterator(); it.hasNext();) {
+			for (Iterator it = unsavedTest.keySet().iterator(); it.hasNext();) {
 				Object key = it.next();
 				Test test = (Test) unsavedTest.get(key);
 				if (test.getDeleted() != 0) {
@@ -574,7 +573,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 					// testRequest:" + treq.getId());
 					treq.removeTest(test);
 					Pool.remove(Test.TYPE, testId);
-					unsavedTest.remove(key);
+					it.remove();
 				}
 
 			}
