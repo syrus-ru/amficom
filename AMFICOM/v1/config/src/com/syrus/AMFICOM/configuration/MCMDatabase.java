@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.39 2004/12/10 16:07:30 bob Exp $
+ * $Id: MCMDatabase.java,v 1.40 2004/12/20 14:02:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -42,7 +43,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2004/12/10 16:07:30 $
+ * @version $Revision: 1.40 $, $Date: 2004/12/20 14:02:41 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -54,7 +55,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 	public static final String COLUMN_USER_ID = "user_id";
 	public static final String COLUMN_SERVER_ID = "server_id";
 	// tcp_port NUMBER(5,0),
-	public static final String COLUMN_TCP_PORT  		= "tcp_port";
+//	public static final String COLUMN_TCP_PORT  		= "tcp_port";
 	//public static final String COLUMN_LOCATION = "location";
 	//public static final String COLUMN_HOSTNAME = "hostname";
 	private static String columns;
@@ -77,8 +78,8 @@ public class MCMDatabase extends StorableObjectDatabase {
 				+ COLUMN_NAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
 				+ COLUMN_USER_ID + COMMA
-				+ COLUMN_SERVER_ID + COMMA
-				+ COLUMN_TCP_PORT;
+				+ COLUMN_SERVER_ID ;
+//				+ COMMA	+ COLUMN_TCP_PORT;
 		}
 		return columns;
 	}
@@ -90,7 +91,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
-					+ QUESTION + COMMA
+//					+ QUESTION + COMMA
 					+ QUESTION;
     	}
 		return updateMultiplySQLValues;
@@ -154,8 +155,9 @@ public class MCMDatabase extends StorableObjectDatabase {
 						  DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
 						  DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
 						  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_USER_ID),
-						  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_SERVER_ID),
-						  resultSet.getShort(COLUMN_TCP_PORT));
+						  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_SERVER_ID)
+//						  , resultSet.getShort(COLUMN_TCP_PORT)
+						  );
 		
 		return mcm;
 	}
@@ -406,6 +408,36 @@ public class MCMDatabase extends StorableObjectDatabase {
         
         return list;
     }
+	
+	private List retrieveByKISs(List kisIds) throws RetrieveObjectException, IllegalDataException{
+		if (kisIds == null || kisIds.isEmpty())
+			return Collections.EMPTY_LIST;
+		
+		StringBuffer sql = new StringBuffer(
+			COLUMN_ID + SQL_IN + OPEN_BRACKET + 
+				SQL_SELECT + KISDatabase.COLUMN_MCM_ID + SQL_FROM
+				+ ObjectEntities.KIS_ENTITY + SQL_WHERE	+ COLUMN_ID + SQL_IN + OPEN_BRACKET);
+		int i = 1;
+		for (Iterator it = kisIds.iterator(); it.hasNext(); i++) {
+			Identifier kidId = (Identifier) it.next();
+			sql.append(DatabaseIdentifier.toSQLString(kidId));
+			if (it.hasNext()) {
+				if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+					sql.append(COMMA);
+				else {
+					sql.append(CLOSE_BRACKET);
+					sql.append(SQL_OR);
+					sql.append(COLUMN_ID);
+					sql.append(SQL_IN);
+					sql.append(OPEN_BRACKET);
+				}
+			}
+		}
+		sql.append(CLOSE_BRACKET);
+		sql.append(CLOSE_BRACKET);
+		
+		return this.retrieveByIds(null, sql.toString());
+	}
 
 	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
 			IllegalDataException {
@@ -413,6 +445,12 @@ public class MCMDatabase extends StorableObjectDatabase {
 		if (condition instanceof DomainCondition){
 			DomainCondition domainCondition = (DomainCondition)condition;
 			list = this.retrieveButIdsByDomain(ids, domainCondition.getDomain());
+		} else if (condition instanceof LinkedIdsCondition){
+			LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
+			List kisIds = linkedIdsCondition.getLinkedIds();
+			if (kisIds == null)
+				kisIds = Collections.singletonList(linkedIdsCondition.getIdentifier());
+			list = this.retrieveByKISs(kisIds);
 		} else {
 			Log.errorMessage(this.getEnityName() + "Database.retrieveByCondition | Unknown condition class: " + condition.getClass().getName());
 			list = this.retrieveButIds(ids);
