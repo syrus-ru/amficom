@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadDatabase.java,v 1.7 2005/02/03 08:37:00 bob Exp $
+ * $Id: CableThreadDatabase.java,v 1.8 2005/02/03 14:38:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/03 08:37:00 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/02/03 14:38:06 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public class CableThreadDatabase extends StorableObjectDatabase  {
@@ -55,8 +55,8 @@ public class CableThreadDatabase extends StorableObjectDatabase  {
             columns = super.getColumns(mode) + COMMA
                 + DomainMember.COLUMN_DOMAIN_ID + COMMA
                 + StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
-                + CableThreadWrapper.COLUMN_NAME + COMMA
-                + CableThreadWrapper.COLUMN_DESCRIPTION;
+                + StorableObjectWrapper.COLUMN_NAME + COMMA
+                + StorableObjectWrapper.COLUMN_DESCRIPTION;
         }
         return columns;
     }
@@ -110,8 +110,8 @@ public class CableThreadDatabase extends StorableObjectDatabase  {
             cableThread = new CableThread(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, null, null,
                                        null, null);            
         }
-        String name = DatabaseString.fromQuerySubString(resultSet.getString(CableThreadWrapper.COLUMN_NAME));
-        String description = DatabaseString.fromQuerySubString(resultSet.getString(CableThreadWrapper.COLUMN_DESCRIPTION));        
+        String name = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME));
+        String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));        
         CableThreadType cableThreadType;
         try {
             cableThreadType = (CableThreadType)ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.40 2005/02/03 08:37:01 bob Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.41 2005/02/03 14:38:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,8 +46,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/02/03 08:37:01 $
- * @author $Author: bob $
+ * @version $Revision: 1.41 $, $Date: 2005/02/03 14:38:06 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -80,9 +80,9 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-				+ TransmissionPathWrapper.COLUMN_TYPE_ID + COMMA
-				+ TransmissionPathWrapper.COLUMN_NAME + COMMA
-				+ TransmissionPathWrapper.COLUMN_DESCRIPTION + COMMA
+				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
+				+ StorableObjectWrapper.COLUMN_NAME + COMMA
+				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ TransmissionPathWrapper.COLUMN_START_PORT_ID + COMMA
 				+ TransmissionPathWrapper.COLUMN_FINISH_PORT_ID;		
 		}
@@ -155,12 +155,12 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 								null,
 								null) :
 				this.fromStorableObject(storableObject);
-		String name = DatabaseString.fromQuerySubString(resultSet.getString(TransmissionPathWrapper.COLUMN_NAME));
-		String description = DatabaseString.fromQuerySubString(resultSet.getString(TransmissionPathWrapper.COLUMN_DESCRIPTION));
+		String name = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME));
+		String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
 
 		TransmissionPathType type;
 		try {
-			type = (TransmissionPathType)ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, TransmissionPathWrapper.COLUMN_TYPE_ID), true);
+			type = (TransmissionPathType)ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);

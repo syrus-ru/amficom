@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.54 2005/02/03 08:37:00 bob Exp $
+ * $Id: KISDatabase.java,v 1.55 2005/02/03 14:38:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,8 +46,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/02/03 08:37:00 $
- * @author $Author: bob $
+ * @version $Revision: 1.55 $, $Date: 2005/02/03 14:38:06 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -74,8 +74,8 @@ public class KISDatabase extends StorableObjectDatabase {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-				+ KISWrapper.COLUMN_NAME + COMMA
-				+ KISWrapper.COLUMN_DESCRIPTION + COMMA
+				+ StorableObjectWrapper.COLUMN_NAME + COMMA
+				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ KISWrapper.COLUMN_HOSTNAME + COMMA
 				+ KISWrapper.COLUMN_TCP_PORT + COMMA
 				+ KISWrapper.COLUMN_EQUIPMENT_ID + COMMA
@@ -162,8 +162,8 @@ public class KISDatabase extends StorableObjectDatabase {
 											DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 											DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 											DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
-											DatabaseString.fromQuerySubString(resultSet.getString(KISWrapper.COLUMN_NAME)),
-											DatabaseString.fromQuerySubString(resultSet.getString(KISWrapper.COLUMN_DESCRIPTION)),
+											DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
+											DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 											resultSet.getString(KISWrapper.COLUMN_HOSTNAME),
 											resultSet.getShort(KISWrapper.COLUMN_TCP_PORT),
 											DatabaseIdentifier.getIdentifier(resultSet, KISWrapper.COLUMN_EQUIPMENT_ID),

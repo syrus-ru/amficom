@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeDatabase.java,v 1.32 2005/02/03 08:37:00 bob Exp $
+ * $Id: EquipmentTypeDatabase.java,v 1.33 2005/02/03 14:38:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/02/03 08:37:00 $
- * @author $Author: bob $
+ * @version $Revision: 1.33 $, $Date: 2005/02/03 14:38:06 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -69,9 +69,9 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null){
 			columns = super.getColumns(mode) + COMMA
-				+ EquipmentTypeWrapper.COLUMN_CODENAME + COMMA
-				+ EquipmentTypeWrapper.COLUMN_DESCRIPTION + COMMA
-				+ EquipmentTypeWrapper.COLUMN_NAME + COMMA
+				+ StorableObjectWrapper.COLUMN_CODENAME + COMMA
+				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
+				+ StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ EquipmentTypeWrapper.COLUMN_MANUFACTURER + COMMA
 				+ EquipmentTypeWrapper.COLUMN_MANUFACTURER_CODE;
 		}
@@ -138,9 +138,9 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 											DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 											DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 											DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-											DatabaseString.fromQuerySubString(resultSet.getString(EquipmentTypeWrapper.COLUMN_CODENAME)),
-											DatabaseString.fromQuerySubString(resultSet.getString(EquipmentTypeWrapper.COLUMN_DESCRIPTION)),
-											DatabaseString.fromQuerySubString(resultSet.getString(EquipmentTypeWrapper.COLUMN_NAME)),
+											DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
+											DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
+											DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 											DatabaseString.fromQuerySubString(resultSet.getString(EquipmentTypeWrapper.COLUMN_MANUFACTURER)),
 											DatabaseString.fromQuerySubString(resultSet.getString(EquipmentTypeWrapper.COLUMN_MANUFACTURER_CODE)));
 

@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeDatabase.java,v 1.18 2005/02/03 08:37:00 bob Exp $
+ * $Id: LinkTypeDatabase.java,v 1.19 2005/02/03 14:38:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/02/03 08:37:00 $
- * @author $Author: bob $
+ * @version $Revision: 1.19 $, $Date: 2005/02/03 14:38:06 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -69,9 +69,9 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
-				+ LinkTypeWrapper.COLUMN_CODENAME + COMMA
-				+ LinkTypeWrapper.COLUMN_DESCRIPTION + COMMA
-				+ LinkTypeWrapper.COLUMN_NAME + COMMA
+				+ StorableObjectWrapper.COLUMN_CODENAME + COMMA
+				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
+				+ StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ LinkTypeWrapper.COLUMN_SORT + COMMA
 				+ LinkTypeWrapper.COLUMN_MANUFACTURER + COMMA
 				+ LinkTypeWrapper.COLUMN_MANUFACTURER_CODE + COMMA
@@ -147,9 +147,9 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 									DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),									
 									DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 									DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-									DatabaseString.fromQuerySubString(resultSet.getString(LinkTypeWrapper.COLUMN_CODENAME)),
-									DatabaseString.fromQuerySubString(resultSet.getString(LinkTypeWrapper.COLUMN_DESCRIPTION)),
-									DatabaseString.fromQuerySubString(resultSet.getString(LinkTypeWrapper.COLUMN_NAME)),
+									DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
+									DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
+									DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 									resultSet.getInt(LinkTypeWrapper.COLUMN_SORT),
 									DatabaseString.fromQuerySubString(resultSet.getString(LinkTypeWrapper.COLUMN_MANUFACTURER)),
 									DatabaseString.fromQuerySubString(resultSet.getString(LinkTypeWrapper.COLUMN_MANUFACTURER_CODE)),									

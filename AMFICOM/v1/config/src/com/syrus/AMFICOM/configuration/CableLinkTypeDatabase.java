@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeDatabase.java,v 1.9 2005/02/03 08:37:00 bob Exp $
+ * $Id: CableLinkTypeDatabase.java,v 1.10 2005/02/03 14:38:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/02/03 08:37:00 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/02/03 14:38:06 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public class CableLinkTypeDatabase extends StorableObjectDatabase {
@@ -76,9 +76,9 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
-				+ CableLinkTypeWrapper.COLUMN_CODENAME + COMMA
-				+ CableLinkTypeWrapper.COLUMN_DESCRIPTION + COMMA
-				+ CableLinkTypeWrapper.COLUMN_NAME + COMMA
+				+ StorableObjectWrapper.COLUMN_CODENAME + COMMA
+				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
+				+ StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ CableLinkTypeWrapper.COLUMN_SORT + COMMA
 				+ CableLinkTypeWrapper.COLUMN_MANUFACTURER + COMMA
 				+ CableLinkTypeWrapper.COLUMN_MANUFACTURER_CODE + COMMA
@@ -194,9 +194,9 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
 																	DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),                                    
 																	DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 																	DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
-																	DatabaseString.fromQuerySubString(resultSet.getString(CableLinkTypeWrapper.COLUMN_CODENAME)),
-																	DatabaseString.fromQuerySubString(resultSet.getString(CableLinkTypeWrapper.COLUMN_DESCRIPTION)),
-																	DatabaseString.fromQuerySubString(resultSet.getString(CableLinkTypeWrapper.COLUMN_NAME)),
+																	DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
+																	DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
+																	DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 																	resultSet.getInt(CableLinkTypeWrapper.COLUMN_SORT),
 																	DatabaseString.fromQuerySubString(resultSet.getString(CableLinkTypeWrapper.COLUMN_MANUFACTURER)),
 																	DatabaseString.fromQuerySubString(resultSet.getString(CableLinkTypeWrapper.COLUMN_MANUFACTURER_CODE)),                                   

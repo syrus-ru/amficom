@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.38 2005/02/03 08:37:01 bob Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.39 2005/02/03 14:38:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,8 +43,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/02/03 08:37:01 $
- * @author $Author: bob $
+ * @version $Revision: 1.39 $, $Date: 2005/02/03 14:38:06 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -70,7 +70,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-				+ MonitoredElementWrapper.COLUMN_NAME + COMMA
+				+ StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID + COMMA
 				+ MonitoredElementWrapper.COLUMN_SORT + COMMA
 				+ MonitoredElementWrapper.COLUMN_LOCAL_ADDRESS;
@@ -147,7 +147,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 											 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 											 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 											 DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
-											 DatabaseString.fromQuerySubString(resultSet.getString(MonitoredElementWrapper.COLUMN_NAME)),
+											 DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 											 DatabaseIdentifier.getIdentifier(resultSet, MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID),
 											 resultSet.getInt(MonitoredElementWrapper.COLUMN_SORT),
 											 DatabaseString.fromQuerySubString(resultSet.getString(MonitoredElementWrapper.COLUMN_LOCAL_ADDRESS)));
@@ -244,9 +244,9 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 				}
 		}
 		if (monitoredElementWithEquipmentList != null)
-			retrieveEquipmentIdsByOneQuery(monitoredElementWithEquipmentList);
+			this.retrieveEquipmentIdsByOneQuery(monitoredElementWithEquipmentList);
 		if (monitoredElementWithTransmissionPathList != null)
-			retrieveTransmissionPathListIdsByOneQuery(monitoredElementWithTransmissionPathList);
+			this.retrieveTransmissionPathListIdsByOneQuery(monitoredElementWithTransmissionPathList);
 	}
 
 	private void retrieveEquipmentIdsByOneQuery(List monitoredElementWithEquipmentList) throws RetrieveObjectException {

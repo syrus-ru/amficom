@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.34 2005/02/03 08:37:00 bob Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.35 2005/02/03 14:38:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/02/03 08:37:00 $
- * @author $Author: bob $
+ * @version $Revision: 1.35 $, $Date: 2005/02/03 14:38:06 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public class MeasurementPortDatabase extends StorableObjectDatabase {
@@ -60,9 +60,9 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
-				+ MeasurementPortWrapper.COLUMN_TYPE_ID + COMMA
-				+ MeasurementPortWrapper.COLUMN_NAME + COMMA
-				+ MeasurementPortWrapper.COLUMN_DESCRIPTION + COMMA
+				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
+				+ StorableObjectWrapper.COLUMN_NAME + COMMA
+				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ MeasurementPortWrapper.COLUMN_KIS_ID + COMMA
 				+ MeasurementPortWrapper.COLUMN_PORT_ID;
 		}
@@ -168,16 +168,16 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 		}
 		MeasurementPortType measurementPortType;
 		try {
-			Identifier measurementPortTypeId = DatabaseIdentifier.getIdentifier(resultSet, MeasurementPortWrapper.COLUMN_TYPE_ID);
+			Identifier measurementPortTypeId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID);
 			measurementPortType = (measurementPortTypeId != null) ? (MeasurementPortType)ConfigurationStorableObjectPool.getStorableObject(measurementPortTypeId, true) : null;
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
 
-		String name = DatabaseString.fromQuerySubString(resultSet.getString(MeasurementPortWrapper.COLUMN_NAME));
+		String name = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME));
 
-		String description = DatabaseString.fromQuerySubString(resultSet.getString(MeasurementPortWrapper.COLUMN_DESCRIPTION));
+		String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
 		measurementPort.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 											DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),								  
 											DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),

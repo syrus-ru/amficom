@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.23 2005/02/03 08:37:00 bob Exp $
+ * $Id: LinkDatabase.java,v 1.24 2005/02/03 14:38:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,8 +37,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/02/03 08:37:00 $
- * @author $Author: bob $
+ * @version $Revision: 1.24 $, $Date: 2005/02/03 14:38:06 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -68,10 +68,10 @@ public class LinkDatabase extends StorableObjectDatabase {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-				+ LinkWrapper.COLUMN_TYPE_ID + COMMA
+				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
 				+ LinkWrapper.COLUMN_SORT + COMMA
-				+ LinkWrapper.COLUMN_NAME + COMMA
-				+ LinkWrapper.COLUMN_DESCRIPTION + COMMA
+				+ StorableObjectWrapper.COLUMN_NAME + COMMA
+				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ LinkWrapper.COLUMN_INVENTORY_NO + COMMA
 				+ LinkWrapper.COLUMN_SUPPLIER + COMMA
 				+ LinkWrapper.COLUMN_SUPPLIER_CODE + COMMA
@@ -160,14 +160,14 @@ public class LinkDatabase extends StorableObjectDatabase {
 										0,
 										null);			
 		}
-		String name = DatabaseString.fromQuerySubString(resultSet.getString(LinkWrapper.COLUMN_NAME));
-		String description = DatabaseString.fromQuerySubString(resultSet.getString(LinkWrapper.COLUMN_DESCRIPTION));
+		String name = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME));
+		String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
 		String inventoryNo = DatabaseString.fromQuerySubString(resultSet.getString(LinkWrapper.COLUMN_INVENTORY_NO));
 		String supplier = DatabaseString.fromQuerySubString(resultSet.getString(LinkWrapper.COLUMN_SUPPLIER));
 		String supplierCode = DatabaseString.fromQuerySubString(resultSet.getString(LinkWrapper.COLUMN_SUPPLIER_CODE));
 		AbstractLinkType linkType;
 		try {
-			linkType = (AbstractLinkType)ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, LinkWrapper.COLUMN_TYPE_ID), true);
+			linkType = (AbstractLinkType) ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
