@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.39 2004/12/09 12:01:45 bob Exp $
+ * $Id: MeasurementType.java,v 1.40 2004/12/09 12:47:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2004/12/09 12:01:45 $
+ * @version $Revision: 1.40 $, $Date: 2004/12/09 12:47:20 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -133,23 +133,28 @@ public class MeasurementType extends ActionType {
 	 * @param description
 	 * @param inParameterTypes
 	 * @param outParameterTypes
+	 * @throws CreateObjectException
 	 */
 	public static MeasurementType createInstance(Identifier creatorId,
 												 String codename,
 												 String description,
 												 List inParameterTypes,
 												 List outParameterTypes,
-												 List measurementPortTypes) {
+												 List measurementPortTypes) throws CreateObjectException {
 		if (creatorId == null || codename == null || codename.length() == 0  || description == null)
 			throw new IllegalArgumentException("Argument is 'null'");		
 
-		return new MeasurementType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE),
-			creatorId,
-			codename,
-			description,
-			inParameterTypes,
-			outParameterTypes,
-			measurementPortTypes);
+		try {
+			return new MeasurementType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE),
+				creatorId,
+				codename,
+				description,
+				inParameterTypes,
+				outParameterTypes,
+				measurementPortTypes);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("MeasurementType.createInstance | cannot generate identifier ", e);
+		}
 	}
 	
 	public static MeasurementType getInstance(MeasurementType_Transferable mtt) throws CreateObjectException {

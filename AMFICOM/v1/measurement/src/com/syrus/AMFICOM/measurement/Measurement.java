@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.37 2004/12/09 12:01:45 bob Exp $
+ * $Id: Measurement.java,v 1.38 2004/12/09 12:47:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import java.util.List;
 import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -30,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2004/12/09 12:01:45 $
+ * @version $Revision: 1.38 $, $Date: 2004/12/09 12:47:20 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -231,15 +232,19 @@ public class Measurement extends Action {
 				monitoredElementId == null || setup == null || startTime == null || localAddress == null || testId == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
-		return new Measurement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_ENTITY_CODE),
-			creatorId,
-			type,
-			name,
-			monitoredElementId,
-			setup,
-			startTime,
-			localAddress,
-			testId);
+		try {
+			return new Measurement(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_ENTITY_CODE),
+				creatorId,
+				type,
+				name,
+				monitoredElementId,
+				setup,
+				startTime,
+				localAddress,
+				testId);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("Measurement.createInstance | cannot generate identifier ", e);
+		}
 	}
 
 	public Result createResult(Identifier creatorId,

@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.32 2004/12/09 12:01:45 bob Exp $
+ * $Id: ParameterType.java,v 1.33 2004/12/09 12:47:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -27,7 +28,7 @@ import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2004/12/09 12:01:45 $
+ * @version $Revision: 1.33 $, $Date: 2004/12/09 12:47:20 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -92,20 +93,25 @@ public class ParameterType extends StorableObjectType {
 	 * @param codename
 	 * @param description
 	 * @param name
+	 * @throws CreateObjectException
 	 */
 	public static ParameterType createInstance(Identifier creatorId,
 											   String codename,
 											   String description,
-											   String name) {
+											   String name) throws CreateObjectException {
 		if (creatorId == null || codename == null || codename.length() == 0 || description == null || name == null || name.length() == 0)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
-		return new ParameterType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
-			creatorId,
-			codename,
-			description,
-			name,
-			DataType._DATA_TYPE_DATA);
+		try {
+			return new ParameterType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
+				creatorId,
+				codename,
+				description,
+				name,
+				DataType._DATA_TYPE_DATA);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("ParameterType.createInstance | cannot generate identifier ", e);
+		}
 	}
 	
 	/**
@@ -115,21 +121,26 @@ public class ParameterType extends StorableObjectType {
 	 * @param description
 	 * @param name
 	 * @param sort {@link DataType}
+	 * @throws CreateObjectException
 	 */
 	public static ParameterType createInstance(Identifier creatorId,
 											   String codename,
 											   String description,
 											   String name,
-											   DataType sort) {
+											   DataType sort) throws CreateObjectException {
 		if (creatorId == null || codename == null || codename.length() == 0 || description == null || name == null || name.length() == 0 || sort == null)
 			throw new IllegalArgumentException("Argument is 'null'");		
 
-		return new ParameterType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
-						 creatorId,
-						 codename,
-						 description,
-						 name,
-						 sort.value());
+		try {
+			return new ParameterType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
+							 creatorId,
+							 codename,
+							 description,
+							 name,
+							 sort.value());
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("ParameterType.createInstance | cannot generate identifier ", e);
+		}
 	}
 
 	

@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.28 2004/12/09 12:01:45 bob Exp $
+ * $Id: Result.java,v 1.29 2004/12/09 12:47:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.util.List;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -30,7 +31,7 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/12/09 12:01:45 $
+ * @version $Revision: 1.29 $, $Date: 2004/12/09 12:47:20 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -221,35 +222,43 @@ public class Result extends StorableObject {
 										   Action action,
 										   ResultSort sort,
 										   AlarmLevel alarmLevel,
-										   SetParameter[] parameters) {
+										   SetParameter[] parameters) throws CreateObjectException {
 		if (creatorId == null || measurement == null || action == null || sort == null ||
 				alarmLevel == null || parameters == null || parameters.length == 0)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
-		return new Result(IdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_ENTITY_CODE),
-			creatorId,
-			measurement,
-			action,
-			sort.value(),
-			alarmLevel.value(),
-			parameters);
+		try {
+			return new Result(IdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_ENTITY_CODE),
+				creatorId,
+				measurement,
+				action,
+				sort.value(),
+				alarmLevel.value(),
+				parameters);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("Result.createInstance | cannot generate identifier ", e);
+		}
 	}
 	
 	protected static Result createInstance(Identifier creatorId,
 										   Modeling modeling,
 										   ResultSort sort,					
-										   SetParameter[] parameters) {
+										   SetParameter[] parameters) throws CreateObjectException {
 		if (creatorId == null || modeling == null || sort == null ||
 				parameters == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
-		return new Result(IdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_ENTITY_CODE),
-				creatorId,
-				null,
-				modeling,
-				sort.value(),
-				AlarmLevel._ALARM_LEVEL_NONE,
-				parameters);
+		try {
+			return new Result(IdentifierPool.getGeneratedIdentifier(ObjectEntities.RESULT_ENTITY_CODE),
+					creatorId,
+					null,
+					modeling,
+					sort.value(),
+					AlarmLevel._ALARM_LEVEL_NONE,
+					parameters);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("Result.createInstance | cannot generate identifier ", e);
+		}
 	}
 	
 	public List getDependencies() {		

@@ -1,5 +1,5 @@
 /*
- * $Id: Evaluation.java,v 1.34 2004/12/09 12:01:45 bob Exp $
+ * $Id: Evaluation.java,v 1.35 2004/12/09 12:47:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -27,7 +28,7 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/12/09 12:01:45 $
+ * @version $Revision: 1.35 $, $Date: 2004/12/09 12:47:20 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -163,15 +164,19 @@ public class Evaluation extends Action {
 	public static Evaluation createInstance(Identifier creatorId,
 											EvaluationType type,
 											Identifier monitoredElementId,
-											Set thresholdSet) {
+											Set thresholdSet) throws CreateObjectException {
 		if (creatorId == null || type == null || monitoredElementId == null || thresholdSet == null)
 			throw new IllegalArgumentException("Argument is 'null'");		
 
-		return new Evaluation(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVALUATION_ENTITY_CODE),
-			creatorId,
-			type,
-			monitoredElementId,
-			thresholdSet);
+		try {
+			return new Evaluation(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVALUATION_ENTITY_CODE),
+				creatorId,
+				type,
+				monitoredElementId,
+				thresholdSet);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("Evaluation.createInstance | cannot generate identifier ", e);
+		}
 	}
 	
 	public List getDependencies() {		

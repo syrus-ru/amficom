@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.39 2004/12/09 12:01:45 bob Exp $
+ * $Id: MeasurementSetup.java,v 1.40 2004/12/09 12:47:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import java.util.LinkedList;
 import java.util.List;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2004/12/09 12:01:45 $
+ * @version $Revision: 1.40 $, $Date: 2004/12/09 12:47:20 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -138,6 +139,7 @@ public class MeasurementSetup extends StorableObject {
 	 * @param description
 	 * @param measurementDuration
 	 * @param monitoredElementIds
+	 * @throws CreateObjectException
 	 */
 	public static MeasurementSetup createInstance(Identifier creatorId,
 												  Set parameterSet,
@@ -146,20 +148,24 @@ public class MeasurementSetup extends StorableObject {
 												  Set etalon,
 												  String description,
 												  long measurementDuration,
-												  List monitoredElementIds) {
+												  List monitoredElementIds) throws CreateObjectException {
 		
 		if (creatorId == null || description == null || parameterSet == null || monitoredElementIds == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 	
-		return new MeasurementSetup(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MS_ENTITY_CODE),
-			creatorId,
-			parameterSet,
-			criteriaSet,
-			thresholdSet,
-			etalon,
-			description,
-			measurementDuration,
-			monitoredElementIds);
+		try {
+			return new MeasurementSetup(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MS_ENTITY_CODE),
+				creatorId,
+				parameterSet,
+				criteriaSet,
+				thresholdSet,
+				etalon,
+				description,
+				measurementDuration,
+				monitoredElementIds);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("MeasurementSetup.createInstance | cannot generate identifier ", e);
+		}
 	}
 	
 	public static MeasurementSetup getInstance(MeasurementSetup_Transferable mst) throws CreateObjectException {

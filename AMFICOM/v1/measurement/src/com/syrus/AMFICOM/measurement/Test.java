@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.69 2004/12/09 12:01:45 bob Exp $
+ * $Id: Test.java,v 1.70 2004/12/09 12:47:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -45,7 +46,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2004/12/09 12:01:45 $
+ * @version $Revision: 1.70 $, $Date: 2004/12/09 12:47:20 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -168,6 +169,7 @@ public class Test extends StorableObject {
 	 * @param returnType
 	 * @param description
 	 * @param measurementSetupIds
+	 * @throws CreateObjectException
 	 */
 
 	public static Test createInstance(Identifier creatorId,
@@ -181,25 +183,29 @@ public class Test extends StorableObject {
 									  MonitoredElement monitoredElement,
 									  TestReturnType returnType,
 									  String description,
-									  List measurementSetupIds){
+									  List measurementSetupIds) throws CreateObjectException{
 		if (creatorId == null || startTime == null || endTime == null || 
 				temporalPattern == null || temporalType == null || measurementType == null ||
 				monitoredElement == null || returnType == null || description == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
-		return new Test(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEST_ENTITY_CODE),
-			creatorId,
-			startTime,
-			endTime,
-			temporalPattern,
-			temporalType.value(),
-			measurementType,
-			analysisType,
-			evaluationType,
-			monitoredElement,
-			returnType.value(),
-			description,
-			measurementSetupIds);
+		try {
+			return new Test(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEST_ENTITY_CODE),
+				creatorId,
+				startTime,
+				endTime,
+				temporalPattern,
+				temporalType.value(),
+				measurementType,
+				analysisType,
+				evaluationType,
+				monitoredElement,
+				returnType.value(),
+				description,
+				measurementSetupIds);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("Test.createInstance | cannot generate identifier ", e);
+		}
 		
 	}
 

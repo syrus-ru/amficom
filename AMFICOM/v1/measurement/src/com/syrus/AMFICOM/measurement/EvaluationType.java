@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.36 2004/12/09 12:01:45 bob Exp $
+ * $Id: EvaluationType.java,v 1.37 2004/12/09 12:47:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2004/12/09 12:01:45 $
+ * @version $Revision: 1.37 $, $Date: 2004/12/09 12:47:20 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -149,6 +149,7 @@ public class EvaluationType extends ActionType {
 	 * @param thresholdParameterTypes
 	 * @param etalonParameterTypes
 	 * @param outParameterTypes
+	 * @throws CreateObjectException
 	 */
 	public static EvaluationType createInstance(Identifier creatorId,
 												String codename,
@@ -156,18 +157,22 @@ public class EvaluationType extends ActionType {
 												List inParameterTypes,
 												List thresholdParameterTypes,
 												List etalonParameterTypes,
-												List outParameterTypes) {
+												List outParameterTypes) throws CreateObjectException {
 		if (creatorId == null || codename == null || codename.length() == 0 || description == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
-		return new EvaluationType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE),
-			creatorId,
-			codename,
-			description,
-			inParameterTypes,
-			thresholdParameterTypes,
-			etalonParameterTypes,
-			outParameterTypes);
+		try {
+			return new EvaluationType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE),
+				creatorId,
+				codename,
+				description,
+				inParameterTypes,
+				thresholdParameterTypes,
+				etalonParameterTypes,
+				outParameterTypes);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("EvaluationType.createInstance | cannot generate identifier ", e);
+		}
 	}
 	
 	public static EvaluationType getInstance(EvaluationType_Transferable ett) throws CreateObjectException {

@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.54 2004/12/09 12:01:45 bob Exp $
+ * $Id: TemporalPattern.java,v 1.55 2004/12/09 12:47:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -32,7 +33,7 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2004/12/09 12:01:45 $
+ * @version $Revision: 1.55 $, $Date: 2004/12/09 12:47:20 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -866,24 +867,33 @@ public class TemporalPattern extends StorableObject {
 	 * 
 	 * @param description
 	 * @param cronString
+	 * @throws CreateObjectException
 	 */
 	public static TemporalPattern createInstance(Identifier creatorId,
 							String description,
-							List cronString) {
+							List cronString) throws CreateObjectException {
 		if (creatorId == null || description == null || cronString == null )
 			throw new IllegalArgumentException("Argument is 'null'");
 
-		return new TemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE),
-			creatorId, description, cronString);
+		try {
+			return new TemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE),
+				creatorId, description, cronString);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("TemporalPattern.createInstance | cannot generate identifier ", e);
+		}
 	}
 
 	public static TemporalPattern createInstance(Identifier creatorId,
 							String description,
-							String[] cronStrings) {
+							String[] cronStrings) throws CreateObjectException {
 		if (creatorId == null || description == null || cronStrings == null )
 			throw new IllegalArgumentException("Argument is 'null'");
 
-		return new TemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE), creatorId, description, cronStrings);
+		try {
+			return new TemporalPattern(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE), creatorId, description, cronStrings);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("TemporalPattern.createInstance | cannot generate identifier ", e);
+		}
 	}
 
 	public short getEntityCode() {

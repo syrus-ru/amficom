@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.34 2004/12/09 12:01:45 bob Exp $
+ * $Id: Analysis.java,v 1.35 2004/12/09 12:47:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.util.List;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -27,7 +28,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/12/09 12:01:45 $
+ * @version $Revision: 1.35 $, $Date: 2004/12/09 12:47:20 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -149,11 +150,15 @@ public class Analysis extends Action {
 		if (creatorId == null || type == null || monitoredElementId == null || criteriaSet == null)
 			throw new IllegalArgumentException("Argument is 'null'");		
 
-		return new Analysis(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ANALYSIS_ENTITY_CODE),
-			creatorId,
-			type,
-			monitoredElementId,
-			criteriaSet);
+		try {
+			return new Analysis(IdentifierPool.getGeneratedIdentifier(ObjectEntities.ANALYSIS_ENTITY_CODE),
+				creatorId,
+				type,
+				monitoredElementId,
+				criteriaSet);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("Analysis.createInstance | cannot generate identifier ", e);
+		}
 	}
 	
 	public static Analysis getInstance(Analysis_Transferable at) throws CreateObjectException {

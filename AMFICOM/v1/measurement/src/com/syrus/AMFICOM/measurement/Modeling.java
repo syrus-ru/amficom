@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.18 2004/12/09 12:01:45 bob Exp $
+ * $Id: Modeling.java,v 1.19 2004/12/09 12:47:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/12/09 12:01:45 $
+ * @version $Revision: 1.19 $, $Date: 2004/12/09 12:47:20 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -87,6 +88,7 @@ public class Modeling extends Action {
 	
 	/**
 	 * create new instance for client
+	 * @throws CreateObjectException
 	 */
 
 	public static Modeling createInstance(Identifier creatorId,
@@ -94,18 +96,22 @@ public class Modeling extends Action {
 										  Identifier monitoredElementId,
 										  String name,
 										  Set argumentSet,
-										  ModelingSort sort){
+										  ModelingSort sort) throws CreateObjectException{
 		if (creatorId == null || schemePathId == null || monitoredElementId == null || 
 				name == null || argumentSet == null || sort == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
-		return new Modeling(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MODELING_ENTITY_CODE),
-			creatorId,
-			schemePathId,
-			monitoredElementId,
-			name,
-			argumentSet,
-			sort.value());
+		try {
+			return new Modeling(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MODELING_ENTITY_CODE),
+				creatorId,
+				schemePathId,
+				monitoredElementId,
+				name,
+				argumentSet,
+				sort.value());
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("Modeling.createInstance | cannot generate identifier ", e);
+		}
 		
 	}
 	

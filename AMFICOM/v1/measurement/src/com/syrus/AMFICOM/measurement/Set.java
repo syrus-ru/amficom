@@ -1,5 +1,5 @@
 /*
- * $Id: Set.java,v 1.35 2004/12/09 12:01:45 bob Exp $
+ * $Id: Set.java,v 1.36 2004/12/09 12:47:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -33,7 +34,7 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2004/12/09 12:01:45 $
+ * @version $Revision: 1.36 $, $Date: 2004/12/09 12:47:20 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -121,21 +122,26 @@ public class Set extends StorableObject {
 	 * @param description
 	 * @param parameters
 	 * @param monitoredElementIds
+	 * @throws CreateObjectException
 	 */
 	public static Set createInstance(Identifier creatorId,
 									 SetSort sort,
 									 String description,
 									 SetParameter[] parameters,
-									 List monitoredElementIds) {
+									 List monitoredElementIds) throws CreateObjectException {
 		if (creatorId == null || sort == null || description == null || parameters == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
-		return new Set(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SET_ENTITY_CODE),
-			creatorId,
-			sort.value(),
-			description,
-			parameters,
-			monitoredElementIds);
+		try {
+			return new Set(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SET_ENTITY_CODE),
+				creatorId,
+				sort.value(),
+				description,
+				parameters,
+				monitoredElementIds);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("Set.createInstance | cannot generate identifier ", e);
+		}
 	}
 	
 	public static Set getInstance(Set_Transferable st) throws CreateObjectException {
