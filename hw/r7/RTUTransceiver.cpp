@@ -321,7 +321,7 @@ void RTUTransceiver::initialize_OTAUs() {
 			printf("RTUTransceiver | Sending RTRV-HDR command to %s\n", com_port_id);
 			this->send_switch_command(this->com_ports[i], OTAU_COMMAND_HDR, strlen(OTAU_COMMAND_HDR), reply, reply_length);
 
-			this->otau_numbers[i] = search_number_of_OTAUs(reply, reply_length);
+			this->otau_numbers[i] = this->search_number_of_OTAUs(reply, reply_length);
 			printf ("RTUTransceiver | Found %u OTAUs at %s\n", this->otau_numbers[i], com_port_id);
 		}
 		else {
@@ -466,15 +466,15 @@ int RTUTransceiver::switch_OTAU(char* local_address, int la_length) {
 	int otau_port;
 
 	printf("RTUTransceiver | Getting new fiber address parameters...\n");
-	if (! parse_local_address(local_address, la_length, com_port,otau_id, otau_port))
+	if (! this->parse_local_address(local_address, la_length, com_port,otau_id, otau_port))
 		return 0;
 
 	if ((com_port <= 0) || (com_port > this->com_port_number)) {
-		printf ("RTUTransceiver | Incorrect value of COM port!\n");
+		printf ("RTUTransceiver | %d -- Incorrect value of COM port!\n", com_port);
 		return 0;
 	}
 	if ((otau_id < 0) || (otau_id > this->otau_numbers[com_port - 1])) {
-		printf ("RTUTransceiver | Incorrect value of OTAU ID!\n");
+		printf ("RTUTransceiver | %d -- Incorrect value of OTAU ID!\n", otau_id);
 		return 0;
 	}
 
@@ -501,12 +501,12 @@ int RTUTransceiver::switch_OTAU(char* local_address, int la_length) {
 	else
 		if ((10 < otau_id) && (otau_id < 100)) {
 			j += sprintf (mesgcomm + j, "%d", otau_id);
-	}
-	else {
-		printf ("RTUTransceiver | OTAU SID should be less than 100! Cannot switch OTAU\n");
-		delete[] mesgcomm;
-		return 0;
-	}
+		}
+		else {
+			printf ("RTUTransceiver | OTAU SID should be less than 100! Cannot switch OTAU\n");
+			delete[] mesgcomm;
+			return 0;
+		}
 
 	j += sprintf (mesgcomm + j, "%s", ":");
 
