@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsFrame.java,v 1.3 2004/09/29 15:11:26 krupenn Exp $
+ * $Id: MapElementsFrame.java,v 1.4 2004/10/01 16:34:37 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import javax.swing.JInternalFrame;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/09/29 15:11:26 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/01 16:34:37 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -41,7 +41,7 @@ public class MapElementsFrame extends JInternalFrame
 	implements OperationListener
 {
 	ApplicationContext aContext;
-	MapElementPanel panel = new MapElementPanel(null);
+	MapElementsPanel panel = new MapElementsPanel(null);
 
 	public MapElementsFrame()
 	{

@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementPanel.java,v 1.4 2004/09/29 15:11:26 krupenn Exp $
+ * $Id: MapElementsPanel.java,v 1.1 2004/10/01 16:33:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -60,12 +60,12 @@ import javax.swing.event.ListSelectionListener;
  * видов элементов и талица элементов с полями "Идентификатор" и "Название"
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/09/29 15:11:26 $
+ * @version $Revision: 1.1 $, $Date: 2004/10/01 16:33:00 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
  */
-public final class MapElementPanel extends JPanel
+public final class MapElementsPanel extends JPanel
 {
 	Map map;
 	MapView mapView;
@@ -99,7 +99,7 @@ public final class MapElementPanel extends JPanel
 
 	protected boolean performProcessing = true;
 	
-	public MapElementPanel(LogicalNetLayer logicalNetLayer)
+	public MapElementsPanel(LogicalNetLayer logicalNetLayer)
 	{
 		try
 		{
@@ -134,7 +134,7 @@ public final class MapElementPanel extends JPanel
 			}
 		});
 
-		typeComboBox.setRenderer(new MapElementPanelRenderer());
+		typeComboBox.setRenderer(new MapElementsPanel.MapElementPanelRenderer());
 
 		controller = SimpleMapElementController.getInstance();
 		model = new ObjectResourceTableModel(controller);
