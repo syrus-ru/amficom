@@ -90,7 +90,7 @@ module corba {
 		wstring message;
 	};
 
-	interface IdentifierGeneratorServer {
+	abstract interface IdentifierGeneratorServer {
 		Identifier_Transferable getGeneratedIdentifier(in wstring entity) raises (AMFICOMRemoteException);
 		IdentifierSeq_Transferable getGeneratedIdentifierRange(in wstring entity, in long size) raises (AMFICOMRemoteException);
 	};

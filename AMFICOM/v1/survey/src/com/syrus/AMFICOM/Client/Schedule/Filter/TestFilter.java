@@ -320,3 +320,4 @@ public class TestFilter extends ObjectResourceFilter {
 		return af;
 	}
 }
+

@@ -121,3 +121,4 @@ public class TestModel extends ObjectResourceModel {
 		return getColumnRenderer(colId);
 	}	
 }
+

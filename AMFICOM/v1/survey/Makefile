@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.2 2004/07/22 13:13:42 arseniy Exp $
+# $Id: Makefile,v 1.3 2004/08/04 17:41:25 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -22,11 +22,6 @@ $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 $(call checkenve,IDL2JAVA)
 
-
-tmp:
-	jikes +Pall -bootclasspath /usr/local/java/jre/lib/rt.jar \
-		-classpath $(AMFICOMCLASSPATH) \
-		$(SRCDIR)/com/syrus/AMFICOM/Client/General/Command/Survey/SurveySchemeOpenCommand.java
 
 $(LIBNAME): .mach .loc
 	$(JAR) -cf $@ \

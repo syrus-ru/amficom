@@ -148,7 +148,6 @@ module corba {
 		MONITOREDELEMENT_SORT_CABLEPORT
 	};
 
-
 	struct MonitoredElement_Transferable {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
 	  long long created;
@@ -159,14 +158,41 @@ module corba {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable kis_id;
+		MonitoredElementSort sort;
 		wstring local_address;
-/*
-		element_id:
-			port_id;
-			cable_port_id;
-			equipment_id;
-			link_id;
-			path_id;*/
+	};
+
+	struct KIS_Transferable	{
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
+	  long long created;
+	  long long modified;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
+
+		wstring name;
+		wstring description;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable mcm_id;
+
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable measurement_port_ids;
+	};
+
+
+///////////////////// Transmission Path ///////////////////
+	struct TransmissionPath_Transferable {
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
+	  long long created;
+	  long long modified;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
+	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
+
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable monitored_element_ids;
+
+		wstring name;
+		wstring description;
 	};
 
 ///////////////////////// Equipment ///////////////////////
@@ -184,30 +210,22 @@ module corba {
 	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
+		
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable monitored_element_ids;
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
+
 		wstring name;
 		wstring description;
-		wstring longitude;
-		wstring latitude;
-		wstring hw_serial;
-		wstring sw_serial;
-		wstring hw_version;
-		wstring sw_version;
-		wstring inventory_nr;
-		wstring manufacturer;
-		wstring manufacturer_code;
-		wstring supplier;
-		wstring supplier_code;
-		wstring eq_class;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable image_id;
+
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable port_ids;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable cable_port_ids;
-		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable special_port_ids;		
-		EquipmentSort sort;
+		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable special_port_ids;
 
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable mcm_id;
+		EquipmentSort sort;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable kis_id;
 	};
 
 	struct MCM_Transferable {
