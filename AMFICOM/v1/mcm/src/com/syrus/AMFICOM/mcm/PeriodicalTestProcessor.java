@@ -1,5 +1,5 @@
 /*
- * $Id: PeriodicalTestProcessor.java,v 1.34 2005/03/30 13:12:55 arseniy Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.35 2005/04/01 21:58:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,10 +12,12 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
@@ -23,7 +25,7 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/03/30 13:12:55 $
+ * @version $Revision: 1.35 $, $Date: 2005/04/01 21:58:32 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -66,7 +68,7 @@ public class PeriodicalTestProcessor extends TestProcessor {
 			else {
 				long start = System.currentTimeMillis();
 				if (start <= this.endTime) {
-					List times = this.temporalPattern.getTimes(start, Math.min(start + FRAME, this.endTime));
+					Set times = this.temporalPattern.getTimes(start, Math.min(start + FRAME, this.endTime));
 //--------
 					System.out.println("From " + (new Date(start)) + " to " + (new Date(Math.min(start + FRAME, this.endTime))));
 					for (Iterator it = times.iterator(); it.hasNext();)
@@ -95,7 +97,7 @@ public class PeriodicalTestProcessor extends TestProcessor {
 					if (this.currentTimeStamp.getTime() <= System.currentTimeMillis()) {
 
 						try {
-							measurement = super.test.createMeasurement(MeasurementControlModule.iAm.getUserId(), this.currentTimeStamp);
+							measurement = super.test.createMeasurement(SessionContext.getAccessIdentity().getUserId(), this.currentTimeStamp);
 							super.clearFalls();
 						}
 						catch (CreateObjectException coe) {

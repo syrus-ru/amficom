@@ -1,5 +1,5 @@
 /*
- * $Id: OnetimeTestProcessor.java,v 1.23 2005/03/30 13:12:55 arseniy Exp $
+ * $Id: OnetimeTestProcessor.java,v 1.24 2005/04/01 21:58:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,12 +11,13 @@ package com.syrus.AMFICOM.mcm;
 import java.util.Date;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/03/30 13:12:55 $
+ * @version $Revision: 1.24 $, $Date: 2005/04/01 21:58:32 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -45,7 +46,7 @@ public class OnetimeTestProcessor extends TestProcessor {
 
 					measurement = null;
 					try {
-						measurement = super.test.createMeasurement(MeasurementControlModule.iAm.getUserId(), this.startTime);
+						measurement = super.test.createMeasurement(SessionContext.getAccessIdentity().getUserId(), this.startTime);
 //						currentMeasurementStartTime = this.startTime.getTime();
 						super.clearFalls();
 					}
