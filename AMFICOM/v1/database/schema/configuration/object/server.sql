@@ -7,7 +7,7 @@ CREATE TABLE Server (
 --
  domain_id VARCHAR2(32),
 --
- type_id VARCHAR2(32) NOT NULL,
+ type_id VARCHAR2(32),
 --
  name VARCHAR2(64) NOT NULL,
  description VARCHAR2(256),

@@ -13,9 +13,6 @@ CREATE TABLE Equipment (
  description VARCHAR2(256),
  image_id VARCHAR2(32),
 --
- sort NUMBER(2) NOT NULL,
- kis_id VARCHAR2(32),
- --
  CONSTRAINT eqp_pk PRIMARY KEY (id),
  CONSTRAINT eqp_creator_fk FOREIGN KEY (creator_id)
   REFERENCES Users (id) ON DELETE CASCADE,
@@ -26,10 +23,7 @@ CREATE TABLE Equipment (
   REFERENCES Domain (id) ON DELETE CASCADE,
 --
  CONSTRAINT eqp_epqtype_fk FOREIGN KEY (type_id)
-  REFERENCES EquipmentType (id) ON DELETE CASCADE,
---
- CONSTRAINT eqp_kis_fk FOREIGN KEY (kis_id)
-  REFERENCES KIS (id) ON DELETE CASCADE
+  REFERENCES EquipmentType (id) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE equipment_seq ORDER;

@@ -1,13 +1,13 @@
 @@domain.sql
 @@server.sql
 @@mcm.sql
-@@kis.sql
 @@equipment.sql
 @@port.sql
 @@transmissionpath.sql
+@@characteristic.sql
+@@kis.sql
 @@measurementport.sql
 @@monitoredelement.sql
 @@equipmentmelink.sql
 @@transmissionpathmelink.sql
-@@characteristic.sql
 
