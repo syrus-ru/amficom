@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.45 2005/03/21 12:13:38 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.46 2005/03/21 16:16:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/03/21 12:13:38 $
+ * @version $Revision: 1.46 $, $Date: 2005/03/21 16:16:49 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -717,5 +717,14 @@ public abstract class StorableObjectPool {
 			final Short entityCode = (Short) it.next();
 			LRUMapSaver.save((LRUMap) this.objectPoolMap.get(entityCode), ObjectEntities.codeToString(entityCode));
 		}
+	}
+
+	protected void truncateObjectPoolImpl(final short entityCode) {
+		LRUMap objectPool = (LRUMap) this.objectPoolMap.get(new Short(entityCode));
+		if (objectPool instanceof StorableObjectResizableLRUMap)
+			((StorableObjectResizableLRUMap) objectPool).truncate(true);
+		else
+			Log.errorMessage("StorableObjectPool.truncateObjectPoolImpl | ERROR: Object pool class '" + objectPool.getClass().getName()
+					+ "' not 'StorableObjectResizableLRUMap' -- cannot truncate pool"); 
 	}
 }
