@@ -20,6 +20,7 @@ public class ObjectEntities {
 
 	/*	Configuration	*/
 	public static final String CHARACTERISTIC_ENTITY = "Characteristic";
+	public static final String PORT_ENTITY = "Port";
 	public static final String ME_ENTITY = "MonitoredElement";
 	public static final String KIS_ENTITY = "kis";
 
@@ -57,6 +58,7 @@ public class ObjectEntities {
 
 	/*	Configuration	257 -- 384*/
 	public static final short CHARACTERISTIC_CODE = 0x0101;
+	public static final short PORT_ENTITY_CODE = 0x0102;
 	public static final short ME_ENTITY_CODE = 0x0108;
 	public static final short KIS_ENTITY_CODE = 0x0109;
 
