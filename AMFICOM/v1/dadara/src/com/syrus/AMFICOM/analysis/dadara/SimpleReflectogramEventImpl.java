@@ -1,5 +1,5 @@
 /*
- * $Id: SimpleReflectogramEventImpl.java,v 1.4 2005/03/03 15:10:55 saa Exp $
+ * $Id: SimpleReflectogramEventImpl.java,v 1.5 2005/03/21 18:05:00 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,14 +7,13 @@
  */
 package com.syrus.AMFICOM.analysis.dadara;
 
-import java.awt.Event;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/03/03 15:10:55 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/21 18:05:00 $
  * @module
  */
 public class SimpleReflectogramEventImpl implements SimpleReflectogramEvent
