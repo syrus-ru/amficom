@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseString.java,v 1.6 2004/12/29 12:12:49 arseniy Exp $
+ * $Id: DatabaseString.java,v 1.7 2005/02/04 09:54:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/12/29 12:12:49 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/02/04 09:54:13 $
+ * @author $Author: bob $
  * @module util
  */
 public class DatabaseString {
@@ -22,7 +22,6 @@ public class DatabaseString {
 	}
 
 	/**
-	 * @deprecated use {@link #toQuerySubString(String, int)}
 	 * @param string string to sql query, null is also available
 	 * @return escape strings for sql query
 	 * @since j2sdk 1.4
