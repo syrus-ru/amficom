@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProperties.java,v 1.2 2005/03/04 08:05:49 bass Exp $
+ * $Id: ServerProperties.java,v 1.3 2005/03/16 16:29:26 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,18 @@
 
 package com.syrus.util.database;
 
-import com.syrus.util.Log;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import sqlj.runtime.ref.DefaultContext;
 
+import com.syrus.util.Log;
+
 /**
- * @version $Revision: 1.2 $, $Date: 2005/03/04 08:05:49 $
- * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/03/16 16:29:26 $
+ * @author $Author: arseniy $
  * @module util
  */
 public final class ServerProperties {

@@ -1,5 +1,5 @@
 /*
- * $Id: PreferencesManager.java,v 1.6 2005/03/04 08:05:49 bass Exp $
+ * $Id: PreferencesManager.java,v 1.7 2005/03/16 16:29:26 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 /**
  * @todo PREFS LOCATION: local or db
  *
- * @version $Revision: 1.6 $, $Date: 2005/03/04 08:05:49 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/03/16 16:29:26 $
+ * @author $Author: arseniy $
  * @module util
  */
 public final class PreferencesManager {
@@ -30,8 +30,10 @@ public final class PreferencesManager {
 	static {
 		try {
 			Class.forName(IIOPConnectionManager.class.getName());
-		} catch (final ClassNotFoundException cnfe) {
-			// empty
+		}
+		catch (final ClassNotFoundException cnfe) {
+			System.out.println("Cannot load class: " + cnfe.getMessage());
+			cnfe.printStackTrace();
 		}
 	}
 
@@ -63,17 +65,17 @@ public final class PreferencesManager {
 				preferences.put(key, properties.getProperty(key));
 			}
 			preferences.flush();
-		} catch (NullPointerException npe) {
-			/*
-			 * Stay silent if no property file found.
-			 */
-		} catch (IOException ioe) {
-			/*
-			 * Ditto.
-			 */
-		} catch (BackingStoreException bse) {
-			System.err.println("Preferences migration failed!"); //$NON-NLS-1$
-		}			
+		}
+		catch (NullPointerException npe) {
+			System.err.println("File " + fileName + " not found");
+		}
+		catch (IOException ioe) {
+			System.out.println("Cannot load class: " + ioe.getMessage());
+			ioe.printStackTrace();
+		}
+		catch (BackingStoreException bse) {
+			System.err.println("Preferences migration failed!");
+		}
 	}
 
 	private static DefaultMutableTreeNode getTreeNode(Preferences node) {

@@ -1,5 +1,5 @@
 /*
- * $Id: SystemLogWriter.java,v 1.3 2005/03/04 08:05:49 bass Exp $
+ * $Id: SystemLogWriter.java,v 1.4 2005/03/16 16:29:26 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,83 +8,75 @@
 
 package com.syrus.io;
 
-import java.io.*;
-import java.util.Date;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
-public class SystemLogWriter
-{
+public class SystemLogWriter {
 	static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm:ss"); //$NON-NLS-1$
 	static FileOutputStream fos;
 	static PrintStream pstr;
 	static PrintWriter pwr;
 
-	static
-	{
-		try
-		{
-			fos = new FileOutputStream(".\\client.log", true); //$NON-NLS-1$
+	static {
+		try {
+			fos = new FileOutputStream(".\\client.log", true);
 //			pwr = new PrintWriter(fos);
 			pstr = new PrintStream(fos);
 			System.setOut(pstr);
 		}
-		catch(Exception e)
-		{
-			System.out.println("COULD NOT CREATE CLIENT LOG FILE: " + e.getMessage()); //$NON-NLS-1$
+		catch (Exception e) {
+			System.err.println("COULD NOT CREATE CLIENT LOG FILE: " + e.getMessage());
 			e.printStackTrace();
 		}
-		try
-		{
-			System.out.println(""); //$NON-NLS-1$
-			System.out.println("-------------------------------------------------------"); //$NON-NLS-1$
-			System.out.println("started " + sdf.format(new Date(System.currentTimeMillis()))); //$NON-NLS-1$
-			System.out.println("-------------------------------------------------------"); //$NON-NLS-1$
-			System.out.println(""); //$NON-NLS-1$
+		try {
+			System.out.println("");
+			System.out.println("-------------------------------------------------------");
+			System.out.println("started " + sdf.format(new Date(System.currentTimeMillis())));
+			System.out.println("-------------------------------------------------------");
+			System.out.println("");
 		}
-		catch(Exception e)
-		{
-			System.out.println("COULD NOT WRITE CLIENT LOG FILE: " + e.getMessage()); //$NON-NLS-1$
+		catch (Exception e) {
+			System.err.println("COULD NOT WRITE CLIENT LOG FILE: " + e.getMessage());
 			e.printStackTrace();
 		}
 	}
 
-	private SystemLogWriter()
-	{
+	private SystemLogWriter() {
 		assert false;
 	}
 
 	private static boolean initiated = false;
-	
-	public static void initialize()
-	{
-		if(initiated)
+
+	public static void initialize() {
+		if (initiated)
 			return;
 
 		initiated = true;
 	}
 
-	public static void closeLog()
-	{
-		try
-		{
-			System.out.println(""); //$NON-NLS-1$
-			System.out.println("-------------------------------------------------------"); //$NON-NLS-1$
-			System.out.println("closed " + sdf.format(new Date(System.currentTimeMillis()))); //$NON-NLS-1$
-			System.out.println("-------------------------------------------------------"); //$NON-NLS-1$
-			System.out.println(""); //$NON-NLS-1$
+	public static void closeLog() {
+		try {
+			System.out.println("");
+			System.out.println("-------------------------------------------------------");
+			System.out.println("closed " + sdf.format(new Date(System.currentTimeMillis())));
+			System.out.println("-------------------------------------------------------");
+			System.out.println("");
 			System.out.close();
-			try
-			{
+			try {
 				fos.close();
 			}
-			catch(IOException ex)
-			{
-				// empty
+			catch (IOException ioe) {
+				System.err.println("Exception: " + ioe.getMessage());
+				ioe.printStackTrace();
 			}
 		}
-		catch(Exception e)
-		{
-			// empty
+		catch (Exception e) {
+			System.err.println("Exception: " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreStructure.java,v 1.10 2005/03/04 08:05:49 bass Exp $
+ * $Id: BellcoreStructure.java,v 1.11 2005/03/16 16:29:25 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,12 +11,21 @@ package com.syrus.io;
 import java.util.Date;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/03/04 08:05:49 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/03/16 16:29:25 $
+ * @author $Author: arseniy $
  * @module util
  */
-public class BellcoreStructure // extends ObjectResource
-{
+public class BellcoreStructure {
+	protected static final String FIELD_NAME_MAP = "Map";
+	protected static final String FIELD_NAME_GENPARAMS = "GenParams";
+	protected static final String FIELD_NAME_SUPPARAMS = "SupParams";
+	protected static final String FIELD_NAME_FXDPARAMS = "FxdParams";
+	protected static final String FIELD_NAME_KEYEVENTS = "KeyEvents";
+	protected static final String FIELD_NAME_LNKPARAMS = "LnkParams";
+	protected static final String FIELD_NAME_DATAPTS = "DataPts";
+	protected static final String FIELD_NAME_CKSUM = "Cksum";
+	protected static final String FIELD_NAME_HP_MINI_SPECIAL = "HPMiniSpecial";
+
 	static final int MAP = 1;
 	static final int GENPARAMS = 2;
 	static final int SUPPARAMS = 3;
@@ -27,7 +36,7 @@ public class BellcoreStructure // extends ObjectResource
 	static final int SPECIAL = 8;
 	static final int CKSUM = 9;
 
-	// ôëàã, ïîêàçûâàşùèé åñòü ëè â ôàéëå îïğåäåëåííîå ïîëå
+	//ÆÌÁÇ, ĞÏËÁÚÙ×ÁÀİÉÊ ÅÓÔØ ÌÉ × ÆÁÊÌÅ ÏĞÒÅÄÅÌÅÎÎÏÅ ĞÏÌÅ
 	private boolean hasMap = false;
 	private boolean hasGen = false;
 	private boolean hasSup = false;
@@ -36,14 +45,13 @@ public class BellcoreStructure // extends ObjectResource
 	private boolean hasLnk = false;
 	private boolean hasData = false;
 	/**
-	 * @todo Field is never read locally. 
+	 * @todo Field is never read locally.
 	 */
 	private boolean hasSpecial = false;
-	private int blocks = 0;          // îáùåå ÷èñëî ïîëåé
-	int specials = 0; // ÷èñëî ïîëåé specials (ìîæåò áûòü ïğîèçâîëüíûì)
+	private int blocks = 0; // ÏÂİÅÅ ŞÉÓÌÏ ĞÏÌÅÊ
+	int specials = 0; // ŞÉÓÌÏ ĞÏÌÅÊ specials (ÍÏÖÅÔ ÂÙÔØ ĞÒÏÉÚ×ÏÌØÎÙÍ)
 
-
-	// ıêçåìïëÿğû êëàññîâ, ïğåäñòàâëÿşùèõ ñîáîé ïîëÿ äàííûõ â ôîğìàòå bellcore
+	// ÜËÚÅÍĞÌÑÒÙ ËÌÁÓÓÏ×, ĞÒÅÄÓÔÁ×ÌÑÀİÉÈ ÓÏÂÏÊ ĞÏÌÑ ÄÁÎÎÙÈ × ÆÏÒÍÁÔÅ bellcore
 	Map map;
 	GenParams genParams;
 	SupParams supParams;
@@ -59,320 +67,333 @@ public class BellcoreStructure // extends ObjectResource
 	public String measurementId;
 	public String monitoredElementId;
 
-	void addField (int type)
-	{
-		switch (type)
-		{
-			case MAP:  // required
-				if (!this.hasMap) { this.map = new Map(); this.hasMap = true; this.blocks++; }
+	void addField(int type) {
+		switch (type) {
+			case MAP: // required
+				if (!this.hasMap) {
+					this.map = new Map();
+					this.hasMap = true;
+					this.blocks++;
+				}
 				break;
-			case GENPARAMS:  // required
-				if (!this.hasGen) { this.genParams = new GenParams(); this.hasGen = true; this.blocks++; }
+			case GENPARAMS: // required
+				if (!this.hasGen) {
+					this.genParams = new GenParams();
+					this.hasGen = true;
+					this.blocks++;
+				}
 				break;
-			case SUPPARAMS:  // required
-				if (!this.hasSup) { this.supParams = new SupParams(); this.hasSup = true; this.blocks++; }
+			case SUPPARAMS: // required
+				if (!this.hasSup) {
+					this.supParams = new SupParams();
+					this.hasSup = true;
+					this.blocks++;
+				}
 				break;
-			case FXDPARAMS:  // required
-				if (!this.hasFxd) { this.fxdParams = new FxdParams(); this.hasFxd = true; this.blocks++; }
+			case FXDPARAMS: // required
+				if (!this.hasFxd) {
+					this.fxdParams = new FxdParams();
+					this.hasFxd = true;
+					this.blocks++;
+				}
 				break;
 			case KEYEVENTS:
-				if (!this.hasKey) { this.keyEvents = new KeyEvents(); this.hasKey = true; this.blocks++; }
+				if (!this.hasKey) {
+					this.keyEvents = new KeyEvents();
+					this.hasKey = true;
+					this.blocks++;
+				}
 				break;
 			case LNKPARAMS:
-				if (!this.hasLnk) { this.lnkParams = new LnkParams(); this.hasLnk = true; this.blocks++; }
+				if (!this.hasLnk) {
+					this.lnkParams = new LnkParams();
+					this.hasLnk = true;
+					this.blocks++;
+				}
 				break;
 			case DATAPOINTS:
-				if (!this.hasData) { this.dataPts = new DataPts(); this.hasData = true; this.blocks++; }
+				if (!this.hasData) {
+					this.dataPts = new DataPts();
+					this.hasData = true;
+					this.blocks++;
+				}
 				break;
 			case SPECIAL:
-				this.special[this.specials++] = new Special(); this.hasSpecial = true; this.blocks++;
+				this.special[this.specials++] = new Special();
+				this.hasSpecial = true;
+				this.blocks++;
 				break;
 			case CKSUM: // required
-				if (!this.hasMap) { this.cksum = new Cksum();  this.blocks++; }
+				if (!this.hasMap) {
+					this.cksum = new Cksum();
+					this.blocks++;
+				}
 		}
 	}
 
-	//------------------ Map -------------------//
-	class Map
-	{
-		public int MRN = 0;          // Map Revision Number
-		public int MBS = 0;          // Map Block Size (in bytes)
-		public short NB = 1;         // Number of Blocks (including Map)
-														 // Block Info:
-		public String[] B_id;    // Block ID
-		public int[] B_rev;      // Block Revision Number
-		public int[] B_size;     // Block Size (in bytes)
+	// ------------------ Map -------------------//
+	class Map {
+		public int mrn = 0; // Map Revision Number
+		public int mbs = 0; // Map Block Size (in bytes)
+		public short nb = 1; // Number of Blocks (including Map)
+		// Block Info:
+		public String[] bId; // Block ID
+		public int[] bRev; // Block Revision Number
+		public int[] bSize; // Block Size (in bytes)
 
-		public int getSize()
-		{
+		public int getSize() {
 			int size = 8;
-			for (int i = 1; i < this.NB; i++)
-				size = size + this.B_id[i].length() + 7;
+			for (int i = 1; i < this.nb; i++)
+				size = size + this.bId[i].length() + 7;
 			return size;
 		}
 	}
 
-	//----------- General Parameters ------------//
-	class GenParams
-	{
-		public String LC = "EN";       // Language Code (2 bytes) //$NON-NLS-1$
-		public String CID = " ";       // Cable ID //$NON-NLS-1$
-		public String FID = " ";       // Fiber ID //$NON-NLS-1$
-		public short FT = 652;         // Fiber Type
-		public short NW = 1310;        // Nominal Wavelength
-		public String OL = " ";        // Originating Location //$NON-NLS-1$
-		public String TL = " ";        // Terminating Location //$NON-NLS-1$
-		public String CCD = " ";       // Cable Code //$NON-NLS-1$
-		public String CDF = "BC";      // Current Data Flag (2 bytes) //$NON-NLS-1$
-		public int UO = 0;             // User Offset
-		public int UOD = 0;            // User Offset Distance
-		public String OP = " ";        // Operator //$NON-NLS-1$
-		public String CMT = " ";       // Comment //$NON-NLS-1$
+	// ----------- General Parameters ------------//
+	class GenParams {
+		public String lc = "EN"; // Language Code (2 bytes) //$NON-NLS-1$
+		public String cid = " "; // Cable ID //$NON-NLS-1$
+		public String fid = " "; // Fiber ID //$NON-NLS-1$
+		public short ft = 652; // Fiber Type
+		public short nw = 1310; // Nominal Wavelength
+		public String ol = " "; // Originating Location //$NON-NLS-1$
+		public String tl = " "; // Terminating Location //$NON-NLS-1$
+		public String ccd = " "; // Cable Code //$NON-NLS-1$
+		public String cdf = "BC"; // Current Data Flag (2 bytes) //$NON-NLS-1$
+		public int uo = 0; // User Offset
+		public int uod = 0; // User Offset Distance
+		public String op = " "; // Operator //$NON-NLS-1$
+		public String cmt = " "; // Comment //$NON-NLS-1$
 
-		public int getSize()
-		{
-			return (10 + 7 + this.CID.length() + this.FID.length() + this.OL.length() + this.TL.length()// + 6
-						 + this.CCD.length() + this.OP.length() + this.CMT.length());
+		public int getSize() {
+			return (10
+					+ 7
+					+ this.cid.length()
+					+ this.fid.length()
+					+ this.ol.length()
+					+ this.tl.length()
+					//+ 6
+					+ this.ccd.length()
+					+ this.op.length() + this.cmt.length());
 		}
 	}
 
-	//----------- Supplier Parameters ------------//
-	class SupParams
-	{
-		public String SN = " ";          // Supplier Name //$NON-NLS-1$
-		public String MFID = " ";        // OTDR Mainframe ID //$NON-NLS-1$
-		public String OTDR = " ";        // OTDR Mainframe SerNum //$NON-NLS-1$
-		public String OMID = " ";        // Optical Module ID //$NON-NLS-1$
-		public String OMSN = " ";        // Optical Module SerNum //$NON-NLS-1$
-		public String SR = " ";          // Software Revision //$NON-NLS-1$
-		public String OT = " ";          // Other //$NON-NLS-1$
+	// ----------- Supplier Parameters ------------//
+	class SupParams {
+		public String sn = " "; // Supplier Name //$NON-NLS-1$
+		public String mfid = " "; // OTDR Mainframe ID //$NON-NLS-1$
+		public String otdr = " "; // OTDR Mainframe SerNum //$NON-NLS-1$
+		public String omid = " "; // Optical Module ID //$NON-NLS-1$
+		public String omsn = " "; // Optical Module SerNum //$NON-NLS-1$
+		public String sr = " "; // Software Revision //$NON-NLS-1$
+		public String ot = " "; // Other //$NON-NLS-1$
 
-		public int getSize()
-		{
-			return (7 + this.SN.length() + this.MFID.length() + this.OTDR.length() + this.OMID.length()
-						 + this.OMSN.length() + this.SR.length() + this.OT.length());
+		public int getSize() {
+			return (7
+					+ this.sn.length()
+					+ this.mfid.length()
+					+ this.otdr.length()
+					+ this.omid.length()
+					+ this.omsn.length()
+					+ this.sr.length() + this.ot.length());
 		}
 	}
 
-	//----------- Fixed Parameters ------------//
-	class FxdParams
-	{
-		public long DTS = 0;           // Date/Time Stamp (in ms)
-		public String UD = "km";          // Units of Distanse (2 bytes) //$NON-NLS-1$
-		public short AW = 13100;           // Actual Wavelength
-		public int AO = 0;             // Acquision Offset
-		public int AOD = 0;            // Acquision Offset Distance
-		public short TPW = 0;          // Total Number of Pulse Width Used
-		public short[] PWU;        // Pulse Width Used
-		public int[] DS;           // Data Spacing
-		public int[] NPPW;         // Number of Data Points for Each Pulse Width
-		public int GI = 146800;             // Group Index
-		public short BC = 800;           // Backscatter Coefficient
-		public int NAV;            // Number of Averages
-		public int AT;             // Averaging Time --- ??
-		public int AR;             // Acquision Range
-		public int ARD;            // Acquision Range Distance
-		public int FPO = 0;            // Front Panel Offset
-		public int NF = 40000;             // Noise Floor Level
-		public int NFSF = 1000;           // Noise Floor Scale Factor
-		public int PO = 0;             // Power Offset First Point
-		public int LT = 200;             // Loss Threshold
-		public int RT = 40000;             // Reflectance Threshold
-		public int ET = 3000;             // End-of-Fiber Threshold
-		public String TT = "ST";          // Trace Type -- ?? //$NON-NLS-1$
-		public int WC[] = new int[4]; // Window Coordinates
+	// ----------- Fixed Parameters ------------//
+	class FxdParams {
+		public long dts = 0; // Date/Time Stamp (in ms)
+		public String ud = "km"; // Units of Distanse (2 bytes) //$NON-NLS-1$
+		public short aw = 13100; // Actual Wavelength
+		public int ao = 0; // Acquision Offset
+		public int aod = 0; // Acquision Offset Distance
+		public short tpw = 0; // Total Number of Pulse Width Used
+		public short[] pwu; // Pulse Width Used
+		public int[] ds; // Data Spacing
+		public int[] nppw; // Number of Data Points for Each Pulse Width
+		public int gi = 146800; // Group Index
+		public short bc = 800; // Backscatter Coefficient
+		public int nav; // Number of Averages
+		public int at; // Averaging Time --- ??
+		public int ar; // Acquision Range
+		public int ard; // Acquision Range Distance
+		public int fpo = 0; // Front Panel Offset
+		public int nf = 40000; // Noise Floor Level
+		public int nfsf = 1000; // Noise Floor Scale Factor
+		public int po = 0; // Power Offset First Point
+		public int lt = 200; // Loss Threshold
+		public int rt = 40000; // Reflectance Threshold
+		public int et = 3000; // End-of-Fiber Threshold
+		public String tt = "ST"; // Trace Type -- ?? //$NON-NLS-1$
+		public int wc[] = new int[4]; // Window Coordinates
 
-		public int getSize()
-		{
-			return (44 + this.TPW * 10);
+		public int getSize() {
+			return (44 + this.tpw * 10);
 		}
 	}
 
-	//----------- Key Events ------------//
-	class KeyEvents
-	{
-		public short TNKE;         // Number of Key Events
-		public short[] EN;         // Event Number
-		public int[] EPT;          // Event Propagation Time
-		public short[] ACI;        // Attenuation Coefficient Lead-in-Fiber
-		public short[] EL;         // Event Loss
-		public int[] ER;           // Event Reflectance
-		public String[] EC;        // Event Code (6 bytes)
-		public String[] LMT;       // Loss Measurement Event (2bytes)
-		public String[] CMT;       // Comment
-		public int EEL = 0;            // End-to-End Loss
-		public int ELMP[] = new int[2]; // End-toEnd Marker Positions
-		public int ORL;            // Optical Return Loss
-		public int RLMP[] = new int[2]; // Optical Return Loss Marker Positions
+	// ----------- Key Events ------------//
+	class KeyEvents {
+		public short tnke; // Number of Key Events
+		public short[] en; // Event Number
+		public int[] ept; // Event Propagation Time
+		public short[] aci; // Attenuation Coefficient Lead-in-Fiber
+		public short[] el; // Event Loss
+		public int[] er; // Event Reflectance
+		public String[] ec; // Event Code (6 bytes)
+		public String[] lmt; // Loss Measurement Event (2bytes)
+		public String[] cmt; // Comment
+		public int eel = 0; // End-to-End Loss
+		public int elmp[] = new int[2]; // End-toEnd Marker Positions
+		public int orl; // Optical Return Loss
+		public int rlmp[] = new int[2]; // Optical Return Loss Marker Positions
 
-		public int getSize()
-		{
+		public int getSize() {
 			int size = 26;
-			for (int i = 0; i < this.TNKE; i++)
-					size = size + 22 + this.CMT[i].length() + 1;
+			for (int i = 0; i < this.tnke; i++)
+				size = size + 22 + this.cmt[i].length() + 1;
 			return size;
 		}
 	}
 
-	//----------- Link Parameters ------------//
-	class LnkParams
-	{
-		public short TNL;          // Total Number of Landmarks
-		public short[] LMN;        // Landmark Number
-		public String[] LMC;       // Landmark Code (2 bytes)
-		public int[] LML;          // Landmark Location
-		public short[] REN;        // Related Event Number
-		public int[][] GPA;        // GPS Info - longitude, latitude (2 ints)
-		public short[] FCI;        // Fiber Correction Factor Lead-in-Fiber
-		public int[] SMI;          // Stealth Marker Entering Landmark
-		public int[] SML;          // Stealth Marker Leaving Landmark
-		public String[] USML;      // Units of Stealth Marker Leaving Landmark (2 bytes)
-		public short[] MFDL;       // Mode Field Diameter Leaving Landmark
-		public String[] CMT;       // Comment
+	// ----------- Link Parameters ------------//
+	class LnkParams {
+		public short tnl; // Total Number of Landmarks
+		public short[] lmn; // Landmark Number
+		public String[] lmc; // Landmark Code (2 bytes)
+		public int[] lml; // Landmark Location
+		public short[] ren; // Related Event Number
+		public int[][] gpa; // GPS Info - longitude, latitude (2 ints)
+		public short[] fci; // Fiber Correction Factor Lead-in-Fiber
+		public int[] smi; // Stealth Marker Entering Landmark
+		public int[] sml; // Stealth Marker Leaving Landmark
+		public String[] usml; // Units of Stealth Marker Leaving Landmark (2 bytes)
+		public short[] mfdl; // Mode Field Diameter Leaving Landmark
+		public String[] cmt; // Comment
 
-		public int getSize()
-		{
+		public int getSize() {
 			int size = 2;
-			for (int i = 0; i < this.TNL; i++)
-					size = size + 32 + this.CMT[i].length() + 1;
+			for (int i = 0; i < this.tnl; i++)
+				size = size + 32 + this.cmt[i].length() + 1;
 			return size;
 		}
 	}
 
-	//----------- Data Points ------------//
-	class DataPts
-	{
-		public int TNDP;           // Number of Data Points
-		public short TSF;          // Total number Scale Factor Used
-		public int TPS[];          // Total Data Points Using Scale Factor i
-		public short SF[];         // Scale Factor i
-		public int DSF[][];        // Data
+	// ----------- Data Points ------------//
+	class DataPts {
+		public int tndp; // Number of Data Points
+		public short tsf; // Total number Scale Factor Used
+		public int tps[]; // Total Data Points Using Scale Factor i
+		public short sf[]; // Scale Factor i
+		public int dsf[][]; // Data
 
-		public int getSize()
-		{
-			int size = 6 + this.TSF * 6 + this.TNDP * 2;
-			//for (int i = 0; i < TSF; i++)
-				//	size += TPS[i] * 2;
+		public int getSize() {
+			int size = 6 + this.tsf * 6 + this.tndp * 2;
+			// for (int i = 0; i < tsf; i++)
+			// size += tps[i] * 2;
 			return size;
 		}
 	}
 
-	//----------- Checksum ------------//
-	class Cksum
-	{
-		public int CSM;            // Checksum
+	// ----------- Checksum ------------//
+	class Cksum {
+		public int csm; // Checksum
 
-		public int getSize()
-		{
+		public int getSize() {
 			return 2;
 		}
 	}
 
-	//----------- Special Field ------------//
-	class Special
-	{
-		//public int size;           // Size Of Special Field
-		public byte [] spec_data;  // Special Data Field
+	// ----------- Special Field ------------//
+	class Special {
+		// public int size; // Size Of Special Field
+		public byte[] specData; // Special Data Field
 
-		public int getSize()
-		{
-			return this.spec_data.length;
+		public int getSize() {
+			return this.specData.length;
 		}
 	}
 
-	public String getOpticalModuleId()
-	{
-		return this.supParams.OMID;
+	public String getOpticalModuleId() {
+		return this.supParams.omid;
 	}
 
-	public int getPulsewidth()
-	{
-		return this.fxdParams.PWU[0];
+	public int getPulsewidth() {
+		return this.fxdParams.pwu[0];
 	}
 
-	public int getAverages()
-	{
-		return this.fxdParams.NAV;
+	public int getAverages() {
+		return this.fxdParams.nav;
 	}
 
-	public double getBackscatter()
-	{
-		return -(double)this.fxdParams.BC / 10d;
+	public double getBackscatter() {
+		return -(double) this.fxdParams.bc / 10d;
 	}
 
-	public Date getDate()
-	{
-		return new Date(this.fxdParams.DTS * 1000);
+	public Date getDate() {
+		return new Date(this.fxdParams.dts * 1000);
 	}
 
-	public String getUnits()
-	{
-		return this.fxdParams.UD;
+	public String getUnits() {
+		return this.fxdParams.ud;
 	}
 
-	public int getWavelength()
-	{
-		return this.fxdParams.AW / 10;
+	public int getWavelength() {
+		return this.fxdParams.aw / 10;
 	}
 
-	public double getIOR()
-	{
-		return this.fxdParams.GI / 100000d;
+	public double getIOR() {
+		return this.fxdParams.gi / 100000d;
 	}
 
-	public double getResolution()
-	{
-		int n = this.dataPts.TNDP;
-		double res = (this.fxdParams.AR - this.fxdParams.AO) * 3d / ((double)n * (double)this.fxdParams.GI/1000d);
+	public double getResolution() {
+		int n = this.dataPts.tndp;
+		double res = (this.fxdParams.ar - this.fxdParams.ao) * 3d / ((double) n * (double) this.fxdParams.gi / 1000d);
 		if (getUnits().equals("km")) //$NON-NLS-1$
 			res *= 1000d;
 		return res;
 	}
 
-	public double getRange()
-	{
-		double range = (this.fxdParams.AR - this.fxdParams.AO) * 3d / this.fxdParams.GI * 1000;
+	public double getRange() {
+		double range = (this.fxdParams.ar - this.fxdParams.ao) * 3d / this.fxdParams.gi * 1000;
 		if (getUnits().equals("mt")) //$NON-NLS-1$
 			range /= 1000d;
 		return range;
 	}
 
-	public double[] getTraceData()
-	{
-		int n = this.dataPts.TNDP;
+	public double[] getTraceData() {
+		int n = this.dataPts.tndp;
 		double[] y = new double[n];
 
-		for (int i = 0; i < this.dataPts.TPS[0]; i++)
-			y[i] = (65535 - this.dataPts.DSF[0][i])/1000d;
+		for (int i = 0; i < this.dataPts.tps[0]; i++)
+			y[i] = (65535 - this.dataPts.dsf[0][i]) / 1000d;
 
 		correctReflectogramm(y);
 		return y;
 	}
 
-	private void correctReflectogramm(double []data)
-	{
+	private void correctReflectogramm(double[] data) {
 		int begin = 300;
-		if(begin > data.length / 2)
+		if (begin > data.length / 2)
 			begin = data.length / 2;
 
 		double min = data[begin];
 
-		for(int i = begin; i < data.length; i++)
-			if(data[i] < min)
+		for (int i = begin; i < data.length; i++)
+			if (data[i] < min)
 				min = data[i];
 
 		if (min != 0)
-			for(int i = 0; i < data.length; i++)
+			for (int i = 0; i < data.length; i++)
 				data[i] = data[i] - min;
 
-		for(int i = 0; i <= begin; i++)
-			if(data[i] < 0.)
+		for (int i = 0; i <= begin; i++)
+			if (data[i] < 0.)
 				data[i] = 0.;
 
-		if(data[0] > 0.001)
+		if (data[0] > 0.001)
 			data[0] = 0.;
 
-		if(data[1] < 0.001)
+		if (data[1] < 0.001)
 			data[1] = data[2] / 2.;
 	}
 }

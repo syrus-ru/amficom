@@ -1,5 +1,5 @@
 /*
- * $Id: TraceReader.java,v 1.6 2005/03/04 08:05:49 bass Exp $
+ * $Id: TraceReader.java,v 1.7 2005/03/16 16:29:26 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,17 +8,17 @@
 
 package com.syrus.io;
 
-import com.syrus.util.TraceDataReader;
 import java.io.File;
 import java.text.SimpleDateFormat;
 
+import com.syrus.util.TraceDataReader;
+
 /**
- * @version $Revision: 1.6 $, $Date: 2005/03/04 08:05:49 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/03/16 16:29:26 $
+ * @author $Author: arseniy $
  * @module util
  */
-public class TraceReader extends DataReader
-{
+public class TraceReader extends DataReader {
 	public static final int BELLCORE = 3;
 	public static final int LP = 6;
 	public static final int ANDO = 7;
@@ -27,57 +27,53 @@ public class TraceReader extends DataReader
 	public native int getTrace(String filename);
 
 	private byte[] raw = null;
-	private static boolean treader_loaded = false;
+	private static boolean treaderLoaded = false;
 
-	static
-	{
-		try
-		{
-			System.loadLibrary("Treader"); //$NON-NLS-1$
-			treader_loaded = true;
+	static {
+		try {
+			System.loadLibrary("Treader");
+			treaderLoaded = true;
 		}
-		catch (UnsatisfiedLinkError ex)
-		{
-			// do nothing
+		catch (UnsatisfiedLinkError ule) {
+			System.err.println("Cannot load library for TraceReader -- " + ule.getMessage());
+			ule.printStackTrace();
 		}
 
 	}
 
-	public BellcoreStructure getData(byte[] b)
-	{
-		return null;
+	public BellcoreStructure getData(byte[] b) {
+		throw new UnsupportedOperationException("Method not implemented");
+		//return null;
 	}
 
-	public BellcoreStructure getData(File f)
-	{
+	public BellcoreStructure getData(File f) {
 		BellcoreStructure bs = null;
-
-		if (f.getName().toLowerCase().endsWith(".sor")) // then Bellcore //$NON-NLS-1$
-		{
+		// then Bellcore
+		if (f.getName().toLowerCase().endsWith(".sor")) {
 			filetype = BELLCORE;
 			BellcoreReader br = new BellcoreReader();
 			bs = br.getData(f);
 		}
-		else if (f.getName().toLowerCase().endsWith(".tfw")) // then Wavetek //$NON-NLS-1$
-		{
-			filetype = WAVETEK;
-			WavetekReader wr = new WavetekReader();
-			bs = wr.getData(f);
-		}
-		else if ((this.raw = new TraceDataReader().getBellcoreData(f.getAbsolutePath())) != null)
-		{
-			bs = new BellcoreReader().getData(this.raw);
-			this.raw = null;
-		}
-		else if (treader_loaded && new TraceReader().getTrace(f.getAbsolutePath()) != 0)
-		{
-			bs = new BellcoreStructure();
-			bs = fill_bellcore(bs);
-		}
 		else
-		{
-			System.out.println("Error reading " + f.getAbsolutePath() + " Unknown format"); //$NON-NLS-1$ //$NON-NLS-2$
-		}
+			// then Wavetek
+			if (f.getName().toLowerCase().endsWith(".tfw")) {
+				filetype = WAVETEK;
+				WavetekReader wr = new WavetekReader();
+				bs = wr.getData(f);
+			}
+			else
+				if ((this.raw = new TraceDataReader().getBellcoreData(f.getAbsolutePath())) != null) {
+					bs = new BellcoreReader().getData(this.raw);
+					this.raw = null;
+				}
+				else
+					if (treaderLoaded && new TraceReader().getTrace(f.getAbsolutePath()) != 0) {
+						bs = new BellcoreStructure();
+						bs = fillBellcore(bs);
+					}
+					else {
+						System.out.println("Error reading " + f.getAbsolutePath() + " Unknown format");
+					}
 		return bs;
 	}
 
@@ -97,19 +93,19 @@ public class TraceReader extends DataReader
 	static int wavelength;
 	static double range;
 
-	private BellcoreStructure fill_bellcore(BellcoreStructure bs)
+	private BellcoreStructure fillBellcore(BellcoreStructure bs)
 	{
 		bs.addField(2);
-		bs.genParams.NW = (short)(actualwavelength/10);
+		bs.genParams.nw = (short)(actualwavelength/10);
 
 		bs.addField(3);
-		bs.supParams.OMID = id;
+		bs.supParams.omid = id;
 
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy hh:mm:ss"); //$NON-NLS-1$
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy hh:mm:ss");
 		long dt = 0;
 		try
 		{
-			dt = sdf.parse(date + " " + time).getTime() / 1000; //$NON-NLS-1$
+			dt = sdf.parse(date + " " + time).getTime() / 1000;
 		}
 		catch (java.text.ParseException ex)
 		{
@@ -117,86 +113,85 @@ public class TraceReader extends DataReader
 		}
 
 		bs.addField(4);
-		bs.fxdParams.DTS = dt;
-		bs.fxdParams.UD = "mt"; //$NON-NLS-1$
-		bs.fxdParams.AW = (short)(actualwavelength);
-		bs.fxdParams.TPW = 1;
-		bs.fxdParams.PWU = new short[1];
-		bs.fxdParams.DS = new int [1];
-		bs.fxdParams.NPPW = new int [1];
-		bs.fxdParams.PWU[0] = pulsewidth;
-		bs.fxdParams.DS[0] = (int)(resolution * groupindex / 3d * 100d * 10000d/*pionts*/ * 1000d/*meters*/);
-		bs.fxdParams.NPPW[0] = size;
-		bs.fxdParams.GI = (int)(groupindex * 100000);
-		bs.fxdParams.NAV = averages;
-		bs.fxdParams.AR = (int)(resolution * size * groupindex / 3d * 100d * 1000d/*meters*/);
+		bs.fxdParams.dts = dt;
+		bs.fxdParams.ud = "mt";
+		bs.fxdParams.aw = (short) (actualwavelength);
+		bs.fxdParams.tpw = 1;
+		bs.fxdParams.pwu = new short[1];
+		bs.fxdParams.ds = new int[1];
+		bs.fxdParams.nppw = new int[1];
+		bs.fxdParams.pwu[0] = pulsewidth;
+		bs.fxdParams.ds[0] = (int) (resolution * groupindex / 3d * 100d * 10000d/* pionts */* 1000d/* meters */);
+		bs.fxdParams.nppw[0] = size;
+		bs.fxdParams.gi = (int) (groupindex * 100000);
+		bs.fxdParams.nav = averages;
+		bs.fxdParams.ar = (int) (resolution * size * groupindex / 3d * 100d * 1000d/* meters */);
 		ByteArrayConverter bac = new ByteArrayConverter(data);
 
 		bs.addField(7);
-		bs.dataPts.TNDP = size;
-		bs.dataPts.TSF = 1;
-		bs.dataPts.TPS = new int [1];
-		bs.dataPts.SF = new short [1];
-		bs.dataPts.TPS[0] = size;
-		bs.dataPts.SF[0] = 1000;
-		bs.dataPts.DSF = new int[1][size];
+		bs.dataPts.tndp = size;
+		bs.dataPts.tsf = 1;
+		bs.dataPts.tps = new int[1];
+		bs.dataPts.sf = new short[1];
+		bs.dataPts.tps[0] = size;
+		bs.dataPts.sf[0] = 1000;
+		bs.dataPts.dsf = new int[1][size];
 
 		for (int i = 0; i < size; i++)
-			bs.dataPts.DSF[0][i] = bac.readIUnsignedShort(i*2);
+			bs.dataPts.dsf[0][i] = bac.readIUnsignedShort(i * 2);
 
-		bs.dataPts.DSF[0] = sort (bs.dataPts.DSF[0], filetype);
+		bs.dataPts.dsf[0] = sort(bs.dataPts.dsf[0], filetype);
 
 		bs.addField(9);
-		bs.cksum.CSM = 0;
+		bs.cksum.csm = 0;
 
 		bs.addField(1);
-		bs.map.MRN = 100;
-		bs.map.NB = 6;
+		bs.map.mrn = 100;
+		bs.map.nb = 6;
 
-		bs.map.B_id = new String[6];
-		bs.map.B_rev = new int[6];
-		bs.map.B_size = new int[6];
+		bs.map.bId = new String[6];
+		bs.map.bRev = new int[6];
+		bs.map.bSize = new int[6];
 
-		bs.map.B_id[0] = "Map"; //$NON-NLS-1$
-		bs.map.B_id[1] = "GenParams"; //$NON-NLS-1$
-		bs.map.B_id[2] = "SupParams"; //$NON-NLS-1$
-		bs.map.B_id[3] = "FxdParams"; //$NON-NLS-1$
-		bs.map.B_id[4] = "DataPts"; //$NON-NLS-1$
-		bs.map.B_id[5] = "Cksum"; //$NON-NLS-1$
+		bs.map.bId[0] = "Map"; //$NON-NLS-1$
+		bs.map.bId[1] = "GenParams"; //$NON-NLS-1$
+		bs.map.bId[2] = "SupParams"; //$NON-NLS-1$
+		bs.map.bId[3] = "FxdParams"; //$NON-NLS-1$
+		bs.map.bId[4] = "DataPts"; //$NON-NLS-1$
+		bs.map.bId[5] = "Cksum"; //$NON-NLS-1$
 		for (int i = 1; i < 6; i++)
-			bs.map.B_rev[i] = 100;
-		bs.map.B_size[1] = bs.genParams.getSize();
-		bs.map.B_size[2] = bs.supParams.getSize();
-		bs.map.B_size[3] = bs.fxdParams.getSize();
-		bs.map.B_size[4] = bs.dataPts.getSize();
-		bs.map.B_size[5] = bs.cksum.getSize();
-		bs.map.MBS = bs.map.getSize();
+			bs.map.bRev[i] = 100;
+		bs.map.bSize[1] = bs.genParams.getSize();
+		bs.map.bSize[2] = bs.supParams.getSize();
+		bs.map.bSize[3] = bs.fxdParams.getSize();
+		bs.map.bSize[4] = bs.dataPts.getSize();
+		bs.map.bSize[5] = bs.cksum.getSize();
+		bs.map.mbs = bs.map.getSize();
 
 		return bs;
 	}
 
-	int[] sort (int[] arr, int filetype1)
-	{
+	int[] sort(int[] arr, int filetype1) {
 		int min = arr[0];
 		int max = arr[0];
 
-		for (int i=0; i<arr.length; i++)
-		{
-			if (arr[i] > max) max = arr[i];
+		for (int i = 0; i < arr.length; i++) {
+			if (arr[i] > max)
+				max = arr[i];
 			else
-			if (arr[i] < min) min = arr[i];
+				if (arr[i] < min)
+					min = arr[i];
 		}
 
 		int delta = max - min;
 		double d2 = 40000d / delta;
-		if ((filetype1 == LP) && (delta < 40000))
-		{
-			for (int i=0; i<arr.length; i++)
-				arr[i] = (int)(arr[i] * d2);
-			max = (int)(max * d2);
-			min = (int)(min * d2);
+		if ((filetype1 == LP) && (delta < 40000)) {
+			for (int i = 0; i < arr.length; i++)
+				arr[i] = (int) (arr[i] * d2);
+			max = (int) (max * d2);
+			min = (int) (min * d2);
 		}
-		for (int i=0; i<arr.length; i++)
+		for (int i = 0; i < arr.length; i++)
 			arr[i] = max - arr[i];
 
 		return arr;

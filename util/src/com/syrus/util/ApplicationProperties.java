@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationProperties.java,v 1.4 2005/03/04 08:05:49 bass Exp $
+ * $Id: ApplicationProperties.java,v 1.5 2005/03/16 16:29:26 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,11 +31,11 @@ public class ApplicationProperties {
 			fis.close();
 		}
 		catch (FileNotFoundException fnfe) {
-			System.out.println("Cannot find file: " + fileName); //$NON-NLS-1$
+			System.err.println("Cannot find file: " + fileName); //$NON-NLS-1$
 			resourceBundle = null;
 		}
 		catch (IOException ioe) {
-			System.out.println("Exception while reading file " + fileName + ": " + ioe.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+			System.err.println("Exception while reading file " + fileName + ": " + ioe.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
 			ioe.printStackTrace();
 			resourceBundle = null;
 		}

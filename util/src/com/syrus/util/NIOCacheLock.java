@@ -1,5 +1,5 @@
 /*
- * $Id: NIOCacheLock.java,v 1.4 2005/03/04 08:05:49 bass Exp $
+ * $Id: NIOCacheLock.java,v 1.5 2005/03/16 16:29:26 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,11 @@ import java.io.*;
 import java.nio.channels.*;
 import java.util.*;
 
+/**
+ * @version $Revision: 1.5 $, $Date: 2005/03/16 16:29:26 $
+ * @author $Author: arseniy $
+ * @module util
+ */
 public class NIOCacheLock implements CacheLock {
 	Hashtable locks = new Hashtable();
 	Hashtable locks2 = new Hashtable();
@@ -38,46 +43,44 @@ public class NIOCacheLock implements CacheLock {
 				}
 			} 
 			catch (Exception ex) {
-				try
-				{
+				try {
 					fl.release();
 				}
-				catch (Exception ex2)
-				{
-					// empty
+				catch (Exception ex2) {
+					System.err.println("Exception: " + ex2.getMessage());
+					ex2.printStackTrace();
 				}
-//				ex.printStackTrace();
-			} 
+				// ex.printStackTrace();
+			}
 			return null;
 		}
 	}
 	
 	public CacheLockObject lockRead(String filename) {
-		synchronized(this) {
+		synchronized (this) {
 			FileLock fl = null;
 			try {
 				FileInputStream fis = new FileInputStream(filename);
 				FileChannel ch = fis.getChannel();
-	
-//				FileLock fl = ch.tryLock(0, Long.MAX_VALUE, true);
+
+				// FileLock fl = ch.tryLock(0, Long.MAX_VALUE, true);
 				fl = ch.lock(0L, Long.MAX_VALUE, true);
-				if(fl != null) {
+				if (fl != null) {
 					Entry e = new Entry(Entry.READ_LOCK, fl, filename, fis);
 					put(e);
 					return e;
 				}
 			}
 			catch (Exception ex) {
-				try
-				{
+				try {
 					fl.release();
 				}
-				catch (Exception ex2)
-				{
-					// empty
+				catch (Exception ex2) {
+					System.err.println("Exception: " + ex2.getMessage());
+					ex2.printStackTrace();
 				}
-//				ex.printStackTrace();
-			} 
+				// ex.printStackTrace();
+			}
 			return null;
 		}
 	}
@@ -99,7 +102,8 @@ public class NIOCacheLock implements CacheLock {
 				remove(e);
 			} 
 			catch (Exception ex) {
-//				ex.printStackTrace();
+				System.err.println("Exception: " + ex.getMessage());
+				ex.printStackTrace();
 			} 
 			return true;
 		}
@@ -120,7 +124,8 @@ public class NIOCacheLock implements CacheLock {
 				remove(e);
 			} 
 			catch (Exception ex) {
-//				ex.printStackTrace();
+				System.err.println("Exception: " + ex.getMessage());
+				ex.printStackTrace();
 			} 
 			return true;
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreReader.java,v 1.6 2005/03/04 08:05:49 bass Exp $
+ * $Id: BellcoreReader.java,v 1.7 2005/03/16 16:29:25 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,92 +8,99 @@
 
 package com.syrus.io;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/03/04 08:05:49 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/03/16 16:29:25 $
+ * @author $Author: arseniy $
  * @module util
  */
-public class BellcoreReader extends DataReader
-{
+public class BellcoreReader extends DataReader {
 	BellcoreStructure bs;
 	ByteArrayInputStream bais;
 	IntelDataInputStream idis;
 
 	private static final String IO_ERROR_MESSAGE = "I/O Error"; //$NON-NLS-1$
 
-	public BellcoreStructure getData (byte[] raw_data)
-	{
+	public BellcoreStructure getData(byte[] raw_data) {
 		if (raw_data.length < 50)
-			 return null;
+			return null;
 		this.bs = new BellcoreStructure();
 		this.bais = new ByteArrayInputStream(raw_data);
 		this.idis = new IntelDataInputStream(this.bais);
 
 		this.bs.addField(1);
-		read_map(); // ÷èòàåì êàðòó ôàéëà
+		this.readMap(); // ÞÉÔÁÅÍ ËÁÒÔÕ ÆÁÊÌÁ
 
-		for (int i = 1; i < this.bs.map.NB; i++) // àíàëèçèðóåì êàêèå áëîêè ïðèñóòñòâóþò
-																				// è ÷èòàåì èõ
+		// ÁÎÁÌÉÚÉÒÕÅÍ ËÁËÉÅ ÂÌÏËÉ ÐÒÉÓÕÔÓÔ×ÕÀÔ É ÞÉÔÁÅÍ ÉÈ
+		for (int i = 1; i < this.bs.map.nb; i++) {
 			{
-				if (this.bs.map.B_id[i].equals("GenParams")) //$NON-NLS-1$
-				{
-					this.bs.addField(2); read_genParams(i);
+				if (this.bs.map.bId[i].equals(BellcoreStructure.FIELD_NAME_GENPARAMS)) {
+					this.bs.addField(2);
+					this.readGenParams(i);
 				}
-				else if (this.bs.map.B_id[i].equals("SupParams")) //$NON-NLS-1$
-				{
-					this.bs.addField(3); read_supParams(i);
-				}
-				else if (this.bs.map.B_id[i].equals("FxdParams")) //$NON-NLS-1$
-				{
-					this.bs.addField(4); read_fxdParams(i);
-				}
-				else if (this.bs.map.B_id[i].equals("KeyEvents")) //$NON-NLS-1$
-				{
-					this.bs.addField(5); read_keyEvents(i);
-				}
-				else if (this.bs.map.B_id[i].equals("LnkParams")) //$NON-NLS-1$
-				{
-					this.bs.addField(6); read_lnkParams(i);
-				}
-				else if (this.bs.map.B_id[i].equals("DataPts")) //$NON-NLS-1$
-				{
-					this.bs.addField(7); read_dataPts(i);
-				}
-				else if (this.bs.map.B_id[i].equals("Cksum")) //$NON-NLS-1$
-				{
-					read_ckSum(i);
-				}
-				else if (this.bs.map.B_id[i].equals("HPMiniSpecial")) //$NON-NLS-1$
-				{
-					this.bs.addField(BellcoreStructure.SPECIAL); read_HPMiniSpecial(i);
-				}else
-				{
-					this.bs.addField(BellcoreStructure.SPECIAL); read_special(i);
-				}
+				else
+					if (this.bs.map.bId[i].equals(BellcoreStructure.FIELD_NAME_SUPPARAMS)) {
+						this.bs.addField(3);
+						this.readSupParams(i);
+					}
+					else
+						if (this.bs.map.bId[i].equals(BellcoreStructure.FIELD_NAME_FXDPARAMS)) {
+							this.bs.addField(4);
+							this.readFxdParams(i);
+						}
+						else
+							if (this.bs.map.bId[i].equals(BellcoreStructure.FIELD_NAME_KEYEVENTS)) {
+								this.bs.addField(5);
+								this.readKeyEvents(i);
+							}
+							else
+								if (this.bs.map.bId[i].equals(BellcoreStructure.FIELD_NAME_LNKPARAMS)) {
+									this.bs.addField(6);
+									this.readLnkParams(i);
+								}
+								else
+									if (this.bs.map.bId[i].equals(BellcoreStructure.FIELD_NAME_DATAPTS)) {
+										this.bs.addField(7);
+										this.readDataPts(i);
+									}
+									else
+										if (this.bs.map.bId[i].equals(BellcoreStructure.FIELD_NAME_CKSUM)) {
+											readCksum(i);
+										}
+										else
+											if (this.bs.map.bId[i].equals(BellcoreStructure.FIELD_NAME_HP_MINI_SPECIAL)) {
+												this.bs.addField(BellcoreStructure.SPECIAL);
+												this.readHPMiniSpecial(i);
+											}
+											else {
+												this.bs.addField(BellcoreStructure.SPECIAL);
+												this.readSpecial(i);
+											}
 			}
+		}
 
 		return this.bs;
 	}
 
-	int read_map()
+	private int readMap()
 	{
 		try
 		{
-			this.bs.map.MRN = this.idis.readIUnsignedShort();
-			this.bs.map.MBS = this.idis.readIInt();
-			this.bs.map.NB = this.idis.readIShort();
-			this.bs.map.B_id = new String[this.bs.map.NB + 32];
-			this.bs.map.B_rev = new int[this.bs.map.NB + 32];
-			this.bs.map.B_size = new int[this.bs.map.NB + 32];
+			this.bs.map.mrn = this.idis.readIUnsignedShort();
+			this.bs.map.mbs = this.idis.readIInt();
+			this.bs.map.nb = this.idis.readIShort();
+			this.bs.map.bId = new String[this.bs.map.nb + 32];
+			this.bs.map.bRev = new int[this.bs.map.nb + 32];
+			this.bs.map.bSize = new int[this.bs.map.nb + 32];
 			this.bs.special = new BellcoreStructure.Special[256];
 
-			for (int i = 1; i < this.bs.map.NB; i++)
+			for (int i = 1; i < this.bs.map.nb; i++)
 			{
-				this.bs.map.B_id[i] = this.idis.readIString();
-				this.bs.map.B_rev[i] = this.idis.readIUnsignedShort();
-				this.bs.map.B_size[i] = this.idis.readIInt();
+				this.bs.map.bId[i] = this.idis.readIString();
+				this.bs.map.bRev[i] = this.idis.readIUnsignedShort();
+				this.bs.map.bSize[i] = this.idis.readIInt();
 			}
 		}
 		catch (IOException ioe)
@@ -104,27 +111,27 @@ public class BellcoreReader extends DataReader
 		return 1;
 	}
 
-	int read_genParams(int n)
+	private int readGenParams(int n)
 	{
-		if (this.bs.map.B_size[n] == 0)
+		if (this.bs.map.bSize[n] == 0)
 			return 0;
 		try
 		{
-			this.bs.genParams.LC = String.valueOf(this.idis.readIChar());
-			this.bs.genParams.LC += this.idis.readIChar();
-			this.bs.genParams.CID = this.idis.readIString();
-			this.bs.genParams.FID = this.idis.readIString();
+			this.bs.genParams.lc = String.valueOf(this.idis.readIChar());
+			this.bs.genParams.lc += this.idis.readIChar();
+			this.bs.genParams.cid = this.idis.readIString();
+			this.bs.genParams.fid = this.idis.readIString();
 //    bs.genParams.FT = idis.readIShort();
-			this.bs.genParams.NW = this.idis.readIShort();
-			this.bs.genParams.OL = this.idis.readIString();
-			this.bs.genParams.TL = this.idis.readIString();
-			this.bs.genParams.CCD = this.idis.readIString();
-			this.bs.genParams.CDF = String.valueOf(this.idis.readIChar());
-			this.bs.genParams.CDF += this.idis.readIChar();
-			this.bs.genParams.UO = this.idis.readIInt();
+			this.bs.genParams.nw = this.idis.readIShort();
+			this.bs.genParams.ol = this.idis.readIString();
+			this.bs.genParams.tl = this.idis.readIString();
+			this.bs.genParams.ccd = this.idis.readIString();
+			this.bs.genParams.cdf = String.valueOf(this.idis.readIChar());
+			this.bs.genParams.cdf += this.idis.readIChar();
+			this.bs.genParams.uo = this.idis.readIInt();
 //		bs.genParams.UOD = idis.readIInt();
-			this.bs.genParams.OP = this.idis.readIString();
-			this.bs.genParams.CMT = this.idis.readIString();
+			this.bs.genParams.op = this.idis.readIString();
+			this.bs.genParams.cmt = this.idis.readIString();
 		}
 		catch (IOException ioe)
 		{
@@ -134,19 +141,19 @@ public class BellcoreReader extends DataReader
 		return 1;
 	}
 
-	int read_supParams(int n)
+	private int readSupParams(int n)
 	{
-		if (this.bs.map.B_size[n] == 0)
+		if (this.bs.map.bSize[n] == 0)
 			return 0;
 		try
 		{
-			this.bs.supParams.SN = this.idis.readIString();
-			this.bs.supParams.MFID = this.idis.readIString();
-			this.bs.supParams.OTDR = this.idis.readIString();
-			this.bs.supParams.OMID = this.idis.readIString();
-			this.bs.supParams.OMSN = this.idis.readIString();
-			this.bs.supParams.SR = this.idis.readIString();
-			this.bs.supParams.OT = this.idis.readIString();
+			this.bs.supParams.sn = this.idis.readIString();
+			this.bs.supParams.mfid = this.idis.readIString();
+			this.bs.supParams.otdr = this.idis.readIString();
+			this.bs.supParams.omid = this.idis.readIString();
+			this.bs.supParams.omsn = this.idis.readIString();
+			this.bs.supParams.sr = this.idis.readIString();
+			this.bs.supParams.ot = this.idis.readIString();
 		}
 		catch (IOException ioe)
 		{
@@ -156,38 +163,38 @@ public class BellcoreReader extends DataReader
 		return 1;
 	}
 
-	int read_fxdParams(int n)
+	private int readFxdParams(int n)
 	{
-	 if (this.bs.map.B_size[n] == 0)
+	 if (this.bs.map.bSize[n] == 0)
 			return 0;
 		try
 		{
-			this.bs.fxdParams.DTS = this.idis.readIUnsignedInt();
-			this.bs.fxdParams.UD = String.valueOf(this.idis.readIChar());
-			this.bs.fxdParams.UD += this.idis.readIChar();
-			this.bs.fxdParams.AW = this.idis.readIShort();
-			this.bs.fxdParams.AO = this.idis.readIInt();
-			this.bs.fxdParams.TPW = this.idis.readIShort();
-			this.bs.fxdParams.PWU = new short[this.bs.fxdParams.TPW];
-			this.bs.fxdParams.DS = new int[this.bs.fxdParams.TPW];
-			this.bs.fxdParams.NPPW = new int[this.bs.fxdParams.TPW];
-			for (int i = 0; i < this.bs.fxdParams.TPW; i++ )
-				this.bs.fxdParams.PWU[i] = this.idis.readIShort();
-			for (int i = 0; i < this.bs.fxdParams.TPW; i++ )
-				this.bs.fxdParams.DS[i] = this.idis.readIInt();
-			for (int i = 0; i < this.bs.fxdParams.TPW; i++ )
-				this.bs.fxdParams.NPPW[i] = this.idis.readIInt();
-			this.bs.fxdParams.GI = this.idis.readIInt();
-			this.bs.fxdParams.BC = this.idis.readIShort();
-			this.bs.fxdParams.NAV = this.idis.readIInt();
-			this.bs.fxdParams.AR = this.idis.readIInt();
-			this.bs.fxdParams.FPO = this.idis.readIInt();
-			this.bs.fxdParams.NF = this.idis.readIUnsignedShort();
-			this.bs.fxdParams.NFSF = this.idis.readIUnsignedShort();
-			this.bs.fxdParams.PO = this.idis.readIUnsignedShort();
-			this.bs.fxdParams.LT = this.idis.readIUnsignedShort();
-			this.bs.fxdParams.RT = this.idis.readIUnsignedShort();
-			this.bs.fxdParams.ET = this.idis.readIUnsignedShort();
+			this.bs.fxdParams.dts = this.idis.readIUnsignedInt();
+			this.bs.fxdParams.ud = String.valueOf(this.idis.readIChar());
+			this.bs.fxdParams.ud += this.idis.readIChar();
+			this.bs.fxdParams.aw = this.idis.readIShort();
+			this.bs.fxdParams.ao = this.idis.readIInt();
+			this.bs.fxdParams.tpw = this.idis.readIShort();
+			this.bs.fxdParams.pwu = new short[this.bs.fxdParams.tpw];
+			this.bs.fxdParams.ds = new int[this.bs.fxdParams.tpw];
+			this.bs.fxdParams.nppw = new int[this.bs.fxdParams.tpw];
+			for (int i = 0; i < this.bs.fxdParams.tpw; i++ )
+				this.bs.fxdParams.pwu[i] = this.idis.readIShort();
+			for (int i = 0; i < this.bs.fxdParams.tpw; i++ )
+				this.bs.fxdParams.ds[i] = this.idis.readIInt();
+			for (int i = 0; i < this.bs.fxdParams.tpw; i++ )
+				this.bs.fxdParams.nppw[i] = this.idis.readIInt();
+			this.bs.fxdParams.gi = this.idis.readIInt();
+			this.bs.fxdParams.bc = this.idis.readIShort();
+			this.bs.fxdParams.nav = this.idis.readIInt();
+			this.bs.fxdParams.ar = this.idis.readIInt();
+			this.bs.fxdParams.fpo = this.idis.readIInt();
+			this.bs.fxdParams.nf = this.idis.readIUnsignedShort();
+			this.bs.fxdParams.nfsf = this.idis.readIUnsignedShort();
+			this.bs.fxdParams.po = this.idis.readIUnsignedShort();
+			this.bs.fxdParams.lt = this.idis.readIUnsignedShort();
+			this.bs.fxdParams.rt = this.idis.readIUnsignedShort();
+			this.bs.fxdParams.et = this.idis.readIUnsignedShort();
 		}
 		catch (IOException ioe)
 		{
@@ -197,41 +204,41 @@ public class BellcoreReader extends DataReader
 		return 1;
 	}
 
-	int read_keyEvents(int n)
+	private int readKeyEvents(int n)
 	{
-		if (this.bs.map.B_size[n] == 0)
+		if (this.bs.map.bSize[n] == 0)
 			return 0;
 		try
 		{
-			this.bs.keyEvents.TNKE = this.idis.readIShort();
-			this.bs.keyEvents.EN = new short[this.bs.keyEvents.TNKE];
-			this.bs.keyEvents.EPT = new int[this.bs.keyEvents.TNKE];
-			this.bs.keyEvents.ACI = new short[this.bs.keyEvents.TNKE];
-			this.bs.keyEvents.EL = new short[this.bs.keyEvents.TNKE];
-			this.bs.keyEvents.ER = new int[this.bs.keyEvents.TNKE];
-			this.bs.keyEvents.EC = new String[this.bs.keyEvents.TNKE];
-			this.bs.keyEvents.LMT = new String[this.bs.keyEvents.TNKE];
-			this.bs.keyEvents.CMT = new String[this.bs.keyEvents.TNKE];
-			for (int i = 0; i < this.bs.keyEvents.TNKE; i++)
+			this.bs.keyEvents.tnke = this.idis.readIShort();
+			this.bs.keyEvents.en = new short[this.bs.keyEvents.tnke];
+			this.bs.keyEvents.ept = new int[this.bs.keyEvents.tnke];
+			this.bs.keyEvents.aci = new short[this.bs.keyEvents.tnke];
+			this.bs.keyEvents.el = new short[this.bs.keyEvents.tnke];
+			this.bs.keyEvents.er = new int[this.bs.keyEvents.tnke];
+			this.bs.keyEvents.ec = new String[this.bs.keyEvents.tnke];
+			this.bs.keyEvents.lmt = new String[this.bs.keyEvents.tnke];
+			this.bs.keyEvents.cmt = new String[this.bs.keyEvents.tnke];
+			for (int i = 0; i < this.bs.keyEvents.tnke; i++)
 			{
-				this.bs.keyEvents.EN[i] = this.idis.readIShort();
-				this.bs.keyEvents.EPT[i] = this.idis.readIInt();
-				this.bs.keyEvents.ACI[i] = this.idis.readIShort();
-				this.bs.keyEvents.EL[i] = this.idis.readIShort();
-				this.bs.keyEvents.ER[i] = this.idis.readIInt();
-				this.bs.keyEvents.EC[i] = String.valueOf(this.idis.readIChar());
+				this.bs.keyEvents.en[i] = this.idis.readIShort();
+				this.bs.keyEvents.ept[i] = this.idis.readIInt();
+				this.bs.keyEvents.aci[i] = this.idis.readIShort();
+				this.bs.keyEvents.el[i] = this.idis.readIShort();
+				this.bs.keyEvents.er[i] = this.idis.readIInt();
+				this.bs.keyEvents.ec[i] = String.valueOf(this.idis.readIChar());
 				for (int j = 1; j < 6; j++)
-					this.bs.keyEvents.EC[i] += this.idis.readIChar();
-				this.bs.keyEvents.LMT[i] = String.valueOf(this.idis.readIChar());
-				this.bs.keyEvents.LMT[i] += this.idis.readIChar();
-				this.bs.keyEvents.CMT[i] = this.idis.readIString();
+					this.bs.keyEvents.ec[i] += this.idis.readIChar();
+				this.bs.keyEvents.lmt[i] = String.valueOf(this.idis.readIChar());
+				this.bs.keyEvents.lmt[i] += this.idis.readIChar();
+				this.bs.keyEvents.cmt[i] = this.idis.readIString();
 			}
-			this.bs.keyEvents.EEL = this.idis.readIInt();
-			this.bs.keyEvents.ELMP[0] = this.idis.readIInt();
-			this.bs.keyEvents.ELMP[1] = this.idis.readIInt();
-			this.bs.keyEvents.ORL = this.idis.readIUnsignedShort();
-			this.bs.keyEvents.RLMP[0] = this.idis.readIInt();
-			this.bs.keyEvents.RLMP[1] = this.idis.readIInt();
+			this.bs.keyEvents.eel = this.idis.readIInt();
+			this.bs.keyEvents.elmp[0] = this.idis.readIInt();
+			this.bs.keyEvents.elmp[1] = this.idis.readIInt();
+			this.bs.keyEvents.orl = this.idis.readIUnsignedShort();
+			this.bs.keyEvents.rlmp[0] = this.idis.readIInt();
+			this.bs.keyEvents.rlmp[1] = this.idis.readIInt();
 		}
 		catch (IOException ioe)
 		{
@@ -241,40 +248,40 @@ public class BellcoreReader extends DataReader
 		return 1;
 	}
 
-	int read_lnkParams(int n)
+	private int readLnkParams(int n)
 	{
-		if (this.bs.map.B_size[n] == 0)
+		if (this.bs.map.bSize[n] == 0)
 			return 0;
 		try
 		{
-			this.bs.lnkParams.TNL = this.idis.readIShort();
-			this.bs.lnkParams.LMN = new short[this.bs.lnkParams.TNL];
-			this.bs.lnkParams.LMC = new String[this.bs.lnkParams.TNL];
-			this.bs.lnkParams.LML = new int[this.bs.lnkParams.TNL];
-			this.bs.lnkParams.REN = new short[this.bs.lnkParams.TNL];
-			this.bs.lnkParams.GPA = new int[this.bs.lnkParams.TNL][2];
-			this.bs.lnkParams.FCI = new short[this.bs.lnkParams.TNL];
-			this.bs.lnkParams.SMI = new int[this.bs.lnkParams.TNL];
-			this.bs.lnkParams.SML = new int[this.bs.lnkParams.TNL];
-			this.bs.lnkParams.USML = new String[this.bs.lnkParams.TNL];
-			this.bs.lnkParams.MFDL = new short[this.bs.lnkParams.TNL];
-			this.bs.lnkParams.CMT = new String[this.bs.lnkParams.TNL];
-			for (int i = 0; i < this.bs.lnkParams.TNL; i++)
+			this.bs.lnkParams.tnl = this.idis.readIShort();
+			this.bs.lnkParams.lmn = new short[this.bs.lnkParams.tnl];
+			this.bs.lnkParams.lmc = new String[this.bs.lnkParams.tnl];
+			this.bs.lnkParams.lml = new int[this.bs.lnkParams.tnl];
+			this.bs.lnkParams.ren = new short[this.bs.lnkParams.tnl];
+			this.bs.lnkParams.gpa = new int[this.bs.lnkParams.tnl][2];
+			this.bs.lnkParams.fci = new short[this.bs.lnkParams.tnl];
+			this.bs.lnkParams.smi = new int[this.bs.lnkParams.tnl];
+			this.bs.lnkParams.sml = new int[this.bs.lnkParams.tnl];
+			this.bs.lnkParams.usml = new String[this.bs.lnkParams.tnl];
+			this.bs.lnkParams.mfdl = new short[this.bs.lnkParams.tnl];
+			this.bs.lnkParams.cmt = new String[this.bs.lnkParams.tnl];
+			for (int i = 0; i < this.bs.lnkParams.tnl; i++)
 			{
-				this.bs.lnkParams.LMN[i] = this.idis.readIShort();
-				this.bs.lnkParams.LMC[i] = String.valueOf(this.idis.readIChar());
-				this.bs.lnkParams.LMC[i] += this.idis.readIChar();
-				this.bs.lnkParams.LML[i] = this.idis.readIInt();
-				this.bs.lnkParams.REN[i] = this.idis.readIShort();
-				this.bs.lnkParams.GPA[i][0] = this.idis.readIInt();
-				this.bs.lnkParams.GPA[i][1] = this.idis.readIInt();
-				this.bs.lnkParams.FCI[i] = this.idis.readIShort();
-				this.bs.lnkParams.SMI[i] = this.idis.readIInt();
-				this.bs.lnkParams.SML[i] = this.idis.readIInt();
-				this.bs.lnkParams.USML[i] = String.valueOf(this.idis.readIChar());
-				this.bs.lnkParams.USML[i] += this.idis.readIChar();
-				this.bs.lnkParams.MFDL[i] = this.idis.readIShort();
-				this.bs.lnkParams.CMT[i] = this.idis.readIString();
+				this.bs.lnkParams.lmn[i] = this.idis.readIShort();
+				this.bs.lnkParams.lmc[i] = String.valueOf(this.idis.readIChar());
+				this.bs.lnkParams.lmc[i] += this.idis.readIChar();
+				this.bs.lnkParams.lml[i] = this.idis.readIInt();
+				this.bs.lnkParams.ren[i] = this.idis.readIShort();
+				this.bs.lnkParams.gpa[i][0] = this.idis.readIInt();
+				this.bs.lnkParams.gpa[i][1] = this.idis.readIInt();
+				this.bs.lnkParams.fci[i] = this.idis.readIShort();
+				this.bs.lnkParams.smi[i] = this.idis.readIInt();
+				this.bs.lnkParams.sml[i] = this.idis.readIInt();
+				this.bs.lnkParams.usml[i] = String.valueOf(this.idis.readIChar());
+				this.bs.lnkParams.usml[i] += this.idis.readIChar();
+				this.bs.lnkParams.mfdl[i] = this.idis.readIShort();
+				this.bs.lnkParams.cmt[i] = this.idis.readIString();
 			}
 		}
 		catch (IOException ioe)
@@ -285,26 +292,26 @@ public class BellcoreReader extends DataReader
 		return 1;
 	}
 
-	int read_dataPts(int n)
+	private int readDataPts(int n)
 	{
-		if (this.bs.map.B_size[n] == 0)
+		if (this.bs.map.bSize[n] == 0)
 			return 0;
 		try
 		{
-			this.bs.dataPts.TNDP = this.idis.readIInt();
-			this.bs.dataPts.TSF = this.idis.readIShort();
+			this.bs.dataPts.tndp = this.idis.readIInt();
+			this.bs.dataPts.tsf = this.idis.readIShort();
 
-			this.bs.dataPts.TPS = new int[this.bs.dataPts.TSF];
-			this.bs.dataPts.SF = new short[this.bs.dataPts.TSF];
-			this.bs.dataPts.DSF = new int[this.bs.dataPts.TSF][this.bs.dataPts.TNDP];
+			this.bs.dataPts.tps = new int[this.bs.dataPts.tsf];
+			this.bs.dataPts.sf = new short[this.bs.dataPts.tsf];
+			this.bs.dataPts.dsf = new int[this.bs.dataPts.tsf][this.bs.dataPts.tndp];
 
-			for (int i = 0; i < this.bs.dataPts.TSF; i++)
+			for (int i = 0; i < this.bs.dataPts.tsf; i++)
 			{
-				this.bs.dataPts.TPS[i] = this.idis.readIInt();
-				this.bs.dataPts.SF[i] = this.idis.readIShort();
-				for (int j = 0; j < this.bs.dataPts.TPS[i]; j++)
+				this.bs.dataPts.tps[i] = this.idis.readIInt();
+				this.bs.dataPts.sf[i] = this.idis.readIShort();
+				for (int j = 0; j < this.bs.dataPts.tps[i]; j++)
 				{
-					this.bs.dataPts.DSF[i][j] = this.idis.readIUnsignedShort();
+					this.bs.dataPts.dsf[i][j] = this.idis.readIUnsignedShort();
 				}
 			}
 		}
@@ -320,42 +327,42 @@ public class BellcoreReader extends DataReader
 	 * @todo Parameter <code>n</code> is never read. Method is used only
 	 *       locally. Wouldn't it be wise to remove it?
 	 */
-	private int read_ckSum(final int n)
+	private int readCksum(final int n)
 	{
 		return 1;
 	}
 
-	int read_HPMiniSpecial(int n)
+	private int readHPMiniSpecial(int n)
 	{
-		if (read_special(n) == 0)
+		if (readSpecial(n) == 0)
 			return 0;
 		try
 		{
-			this.idis = new IntelDataInputStream(new ByteArrayInputStream(this.bs.special[this.bs.specials-1].spec_data));
+			this.idis = new IntelDataInputStream(new ByteArrayInputStream(this.bs.special[this.bs.specials-1].specData));
 
-			this.bs.fxdParams.UD = "mt"; //$NON-NLS-1$
-			this.bs.fxdParams.TPW = 1;
-			this.bs.fxdParams.PWU = new short[1];
-			this.bs.fxdParams.DS = new int [1];
-			this.bs.fxdParams.NPPW = new int [1];
+			this.bs.fxdParams.ud = "mt"; //$NON-NLS-1$
+			this.bs.fxdParams.tpw = 1;
+			this.bs.fxdParams.pwu = new short[1];
+			this.bs.fxdParams.ds = new int [1];
+			this.bs.fxdParams.nppw = new int [1];
 
 			this.idis.skipBytes(0x22a);
-			this.bs.fxdParams.PWU[0] = this.idis.readIShort();
-			this.bs.genParams.NW = this.idis.readIShort();
-			this.bs.fxdParams.AW = (short)(this.bs.genParams.NW * 10);
+			this.bs.fxdParams.pwu[0] = this.idis.readIShort();
+			this.bs.genParams.nw = this.idis.readIShort();
+			this.bs.fxdParams.aw = (short)(this.bs.genParams.nw * 10);
 
 			this.idis.skipBytes(0x8);
-			this.bs.fxdParams.GI = this.idis.readIInt();
+			this.bs.fxdParams.gi = this.idis.readIInt();
 
 			this.idis.skipBytes(0x4);
 			double resolution = this.idis.readIInt()/1000000.0; // â m
 
 			this.idis.skipBytes(0x1C);
-			this.bs.fxdParams.DTS = this.idis.readIInt();
+			this.bs.fxdParams.dts = this.idis.readIInt();
 
-			this.bs.fxdParams.DS[0] = (int) (resolution * this.bs.fxdParams.GI / 3d * 10d/*points*/);
-			this.bs.fxdParams.NPPW[0] = this.bs.dataPts.TNDP;
-			this.bs.fxdParams.AR = (int) (resolution * this.bs.dataPts.TNDP * this.bs.fxdParams.GI / (3d * 1000/*meters*/) );
+			this.bs.fxdParams.ds[0] = (int) (resolution * this.bs.fxdParams.gi / 3d * 10d/*points*/);
+			this.bs.fxdParams.nppw[0] = this.bs.dataPts.tndp;
+			this.bs.fxdParams.ar = (int) (resolution * this.bs.dataPts.tndp * this.bs.fxdParams.gi / (3d * 1000/*meters*/) );
 
 		}
 		catch (IOException ioe)
@@ -366,16 +373,16 @@ public class BellcoreReader extends DataReader
 		return 1;
 	}
 
-	int read_special(int n)
+	private int readSpecial(int n)
 	{
-		if (this.bs.map.B_size[n] == 0)
+		if (this.bs.map.bSize[n] == 0)
 			return 0;
 		try
 		{
 //			bs.special[bs.specials-1].getSize = bs.map.B_size[n];
-			this.bs.special[this.bs.specials-1].spec_data = new byte[this.bs.map.B_size[n]];
-			for (int i = 0; i < this.bs.map.B_size[n]; i++ )
-				this.bs.special[this.bs.specials-1].spec_data[i] = this.idis.readByte();
+			this.bs.special[this.bs.specials-1].specData = new byte[this.bs.map.bSize[n]];
+			for (int i = 0; i < this.bs.map.bSize[n]; i++ )
+				this.bs.special[this.bs.specials-1].specData[i] = this.idis.readByte();
 		}
 		catch (IOException ioe)
 		{
