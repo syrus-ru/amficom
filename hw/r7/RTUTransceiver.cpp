@@ -788,6 +788,8 @@ int RTUTransceiver::get_pulse_width_index(const int pulswd, const WORD otdr_card
 	if (max_pulse_widths > 0) {
 		DWORD* pulse_widths = new DWORD[MAX_PULSES];
 		QPOTDRGetAvailPulses(otdr_card, wave, pulse_widths);
+		for (unsigned int i = 0; i < max_pulse_widths; i++)
+			pulse_widths[i] = pulse_widths[i] >> 16;
 		ret = get_index_in_array((DWORD)pulswd, pulse_widths, max_pulse_widths);
 		delete[] pulse_widths;
 	}
