@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.10 2005/02/18 18:15:10 arseniy Exp $
+ * $Id: EventDatabase.java,v 1.11 2005/02/18 21:32:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,7 +46,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/02/18 18:15:10 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/18 21:32:21 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -108,8 +108,7 @@ public class EventDatabase extends StorableObjectDatabase {
 		return i;
 	}
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject)
-			throws IllegalDataException, UpdateObjectException {
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
 		Event event = this.fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ DatabaseIdentifier.toSQLString(event.getType().getId()) + COMMA

@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.28 2005/02/11 18:40:02 arseniy Exp $
+ * $Id: LinkDatabase.java,v 1.29 2005/02/18 21:30:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/02/11 18:40:02 $
+ * @version $Revision: 1.29 $, $Date: 2005/02/18 21:30:15 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -99,8 +99,7 @@ public class LinkDatabase extends StorableObjectDatabase {
 		return updateMultiplySQLValues;
 	}
 	
-	protected String getUpdateSingleSQLValues(StorableObject storableObject)
-			throws IllegalDataException, UpdateObjectException {
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
 		Link link = this.fromStorableObject(storableObject);
 		String inventoryNo = DatabaseString.toQuerySubString(link.getInventoryNo(), SIZE_INVENTORY_NO_COLUMN);
 		String supplier = DatabaseString.toQuerySubString(link.getSupplier(), SIZE_SUPPLIER_COLUMN);

@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.62 2005/02/18 18:13:26 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.63 2005/02/18 21:30:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/02/18 18:13:26 $
+ * @version $Revision: 1.63 $, $Date: 2005/02/18 21:30:47 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -79,8 +79,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		return updateMultiplySQLValues;
 	}	
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject)
-			throws IllegalDataException, UpdateObjectException {
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
 		Set set = this.fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ Integer.toString(set.getSort().value()) + COMMA

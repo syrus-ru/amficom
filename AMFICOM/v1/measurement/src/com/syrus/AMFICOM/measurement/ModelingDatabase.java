@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.27 2005/02/11 18:39:52 arseniy Exp $
+ * $Id: ModelingDatabase.java,v 1.28 2005/02/18 21:30:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/02/11 18:39:52 $
+ * @version $Revision: 1.28 $, $Date: 2005/02/18 21:30:46 $
  * @author $Author: arseniy $
  * @module module_name
  */
@@ -94,8 +94,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
 		return i;
 	}
 
-  protected String getUpdateSingleSQLValues(StorableObject storableObject)
-			throws IllegalDataException, UpdateObjectException {
+  protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
     Modeling modeling = this.fromStorableObject(storableObject);
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
 				+ DatabaseIdentifier.toSQLString(modeling.getType().getId()) + COMMA

@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.69 2005/02/18 18:12:24 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.70 2005/02/18 21:30:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -51,7 +51,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/02/18 18:12:24 $
+ * @version $Revision: 1.70 $, $Date: 2005/02/18 21:30:47 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -104,8 +104,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		return updateMultiplySQLValues;
 	}	
 	
-	protected String getUpdateSingleSQLValues(StorableObject storableObject)
-			throws IllegalDataException, UpdateObjectException {
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
 		Test test = this.fromStorableObject(storableObject);
 		Date startTime = test.getStartTime();
 		Date endTime = test.getEndTime();

@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.37 2005/02/11 18:40:02 arseniy Exp $
+ * $Id: PortTypeDatabase.java,v 1.38 2005/02/18 21:30:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/02/11 18:40:02 $
+ * @version $Revision: 1.38 $, $Date: 2005/02/18 21:30:15 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -79,8 +79,7 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 		return updateMultiplySQLValues;
 	}
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject)
-			throws IllegalDataException, UpdateObjectException {
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
 		PortType portType = this.fromStorableObject(storableObject);
 		return super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(portType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA

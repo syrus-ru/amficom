@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.39 2005/02/11 18:39:52 arseniy Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.40 2005/02/18 21:30:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/02/11 18:39:52 $
+ * @version $Revision: 1.40 $, $Date: 2005/02/18 21:30:47 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -76,8 +76,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 	}
 	
 	
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
-			UpdateObjectException {
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
 		throw new UnsupportedOperationException("Entity contain complex field");		
 	}	
 

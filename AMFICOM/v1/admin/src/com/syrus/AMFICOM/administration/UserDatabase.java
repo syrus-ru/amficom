@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.11 2005/02/11 18:40:09 arseniy Exp $
+ * $Id: UserDatabase.java,v 1.12 2005/02/18 21:29:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/02/11 18:40:09 $
+ * @version $Revision: 1.12 $, $Date: 2005/02/18 21:29:26 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -71,8 +71,7 @@ public class UserDatabase extends StorableObjectDatabase {
 		return updateMultiplySQLValues;
 	}	
 	
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
-			UpdateObjectException {
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
 		User user = this.fromStorableObject(storableObject);
 		return super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(user.getLogin(), SIZE_LOGIN_COLUMN) + APOSTOPHE + COMMA

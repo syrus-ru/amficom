@@ -1,5 +1,5 @@
 /*
- * $Id: EventSourceDatabase.java,v 1.4 2005/02/14 13:11:33 arseniy Exp $
+ * $Id: EventSourceDatabase.java,v 1.5 2005/02/18 21:32:21 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/14 13:11:33 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/18 21:32:21 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -133,7 +133,7 @@ public class EventSourceDatabase extends StorableObjectDatabase {
 		return i;
 	}
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException, UpdateObjectException {
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
 		EventSource eventSource = this.fromStorableObject(storableObject);
 		Identifier sourceEntityId = eventSource.getSourceEntityId();
 		short sourceEntityCode = sourceEntityId.getMajor();

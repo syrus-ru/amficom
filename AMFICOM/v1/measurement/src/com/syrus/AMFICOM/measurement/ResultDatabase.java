@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.66 2005/02/18 18:13:26 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.67 2005/02/18 21:30:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/02/18 18:13:26 $
+ * @version $Revision: 1.67 $, $Date: 2005/02/18 21:30:47 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -93,8 +93,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 		return updateMultiplySQLValues;
 	}
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject)
-			throws IllegalDataException, UpdateObjectException {
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
 		Result result = this.fromStorableObject(storableObject);
 		StringBuffer buffer = new StringBuffer(super.getUpdateSingleSQLValues(storableObject));
 		buffer.append(COMMA);

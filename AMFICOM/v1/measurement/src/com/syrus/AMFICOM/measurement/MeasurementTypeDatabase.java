@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.70 2005/02/18 18:13:26 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.71 2005/02/18 21:30:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/02/18 18:13:26 $
+ * @version $Revision: 1.71 $, $Date: 2005/02/18 21:30:46 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -82,8 +82,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		return updateMultiplySQLValues;
 	}
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject)
-			throws IllegalDataException, UpdateObjectException {
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
 		MeasurementType measurementType = this.fromStorableObject(storableObject);
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA 

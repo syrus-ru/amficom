@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.14 2005/02/11 18:40:09 arseniy Exp $
+ * $Id: DomainDatabase.java,v 1.15 2005/02/18 21:29:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/02/11 18:40:09 $
+ * @version $Revision: 1.15 $, $Date: 2005/02/18 21:29:26 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -75,8 +75,7 @@ public class DomainDatabase extends StorableObjectDatabase {
 		return updateMultiplySQLValues;
 	}
 	
-	protected String getUpdateSingleSQLValues(StorableObject storableObject)
-			throws IllegalDataException, UpdateObjectException {
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
 		Domain domain = this.fromStorableObject(storableObject);
 		Identifier domainId = domain.getDomainId();
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA

@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.47 2005/02/18 18:09:09 arseniy Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.48 2005/02/18 21:30:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/02/18 18:09:09 $
+ * @version $Revision: 1.48 $, $Date: 2005/02/18 21:30:15 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -83,8 +83,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		return updateMultiplySQLValues;
 	}
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
-			UpdateObjectException {
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
 		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 				+ DatabaseIdentifier.toSQLString(monitoredElement.getDomainId()) + COMMA + APOSTOPHE
@@ -470,10 +469,12 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		switch (updateKind) {
 			case UPDATE_FORCE:
 				super.checkAndUpdateEntity(storableObject, modifierId, true);
+				//super.checkAndUpdateEntities(Collections.singleton(storableObject), modifierId, true);
 				break;
 			case UPDATE_CHECK:
 			default:
 				super.checkAndUpdateEntity(storableObject, modifierId, false);
+				//super.checkAndUpdateEntities(Collections.singleton(storableObject), modifierId, false);
 				break;
 		}
 	}

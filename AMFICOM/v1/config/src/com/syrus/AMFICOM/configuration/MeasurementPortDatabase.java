@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.39 2005/02/11 18:40:02 arseniy Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.40 2005/02/18 21:30:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/02/11 18:40:02 $
+ * @version $Revision: 1.40 $, $Date: 2005/02/18 21:30:15 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -78,8 +78,7 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 		return updateMultiplySQLValues;
 	}
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject)
-			throws IllegalDataException, UpdateObjectException {
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
 		MeasurementPort measurementPort = this.fromStorableObject(storableObject);
 		Identifier typeId = measurementPort.getType().getId();
 		Identifier kisId = measurementPort.getKISId();

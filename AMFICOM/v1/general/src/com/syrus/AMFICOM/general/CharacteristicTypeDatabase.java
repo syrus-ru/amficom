@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.9 2005/02/11 18:40:16 arseniy Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.10 2005/02/18 21:28:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/02/11 18:40:16 $
+ * @version $Revision: 1.10 $, $Date: 2005/02/18 21:28:57 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -55,8 +55,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		return updateMultiplySQLValues;
 	}
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject)
-			throws IllegalDataException, UpdateObjectException {
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
 		CharacteristicType characteristicType = this.fromStorableObject(storableObject); 
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA 
 			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristicType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.67 2005/02/18 18:13:26 arseniy Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.68 2005/02/18 21:30:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/02/18 18:13:26 $
+ * @version $Revision: 1.68 $, $Date: 2005/02/18 21:30:46 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -79,8 +79,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		return updateMultiplySQLValues;
 	}
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject)
-			throws IllegalDataException, UpdateObjectException {
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
 		AnalysisType analysisType = this.fromStorableObject(storableObject);		
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA 
 			+ APOSTOPHE + DatabaseString.toQuerySubString(analysisType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA 

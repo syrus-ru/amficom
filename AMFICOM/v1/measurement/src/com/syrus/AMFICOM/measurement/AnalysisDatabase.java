@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.43 2005/02/11 18:39:52 arseniy Exp $
+ * $Id: AnalysisDatabase.java,v 1.44 2005/02/18 21:30:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/02/11 18:39:52 $
+ * @version $Revision: 1.44 $, $Date: 2005/02/18 21:30:46 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -77,8 +77,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 		return updateMultiplySQLValues;
 	}
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject)
-			throws IllegalDataException, UpdateObjectException {
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
 		Analysis analysis = this.fromStorableObject(storableObject);
 		Measurement measurement = analysis.getMeasurement();
 		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
