@@ -1,5 +1,5 @@
 /**
- * $Id: VoidCommand.java,v 1.5 2004/08/12 13:09:14 krupenn Exp $
+ * $Id: VoidCommand.java,v 1.6 2004/08/19 11:23:30 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,12 +18,12 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/08/12 13:09:14 $
+ * @version $Revision: 1.6 $, $Date: 2004/08/19 11:23:30 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
-public class VoidCommand implements Command
+public class VoidCommand implements Command, Cloneable
 {
 	protected int result = RESULT_UNSPECIFIED;
 
