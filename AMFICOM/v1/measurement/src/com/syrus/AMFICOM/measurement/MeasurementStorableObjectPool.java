@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.62 2005/01/19 20:52:56 arseniy Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.63 2005/02/03 15:01:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/01/19 20:52:56 $
+ * @version $Revision: 1.63 $, $Date: 2005/02/03 15:01:56 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -42,8 +42,8 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 	private static final int		EVALUATIONTYPE_OBJECT_POOL_SIZE		= 1;
 
 	private static final int		SET_OBJECT_POOL_SIZE			= 4;
-
-	private static final int		SETPARAMETER_OBJECT_POOL_SIZE		= 4;
+//
+//	private static final int		SETPARAMETER_OBJECT_POOL_SIZE		= 4;
 
 	private static final int		MODELING_OBJECT_POOL_SIZE		= 4;
 
@@ -58,8 +58,8 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 	private static final int		TEST_OBJECT_POOL_SIZE			= 2;
 
 	private static final int		RESULT_OBJECT_POOL_SIZE			= 4;
-
-	private static final int		RESULTPARAMETER_OBJECT_POOL_SIZE	= 4;
+//
+//	private static final int		RESULTPARAMETER_OBJECT_POOL_SIZE	= 4;
 
 	private static final int		TEMPORALPATTERN_OBJECT_POOL_SIZE	= 2;
 
