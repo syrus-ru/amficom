@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectType.java,v 1.12 2005/01/26 09:02:47 bob Exp $
+ * $Id: StorableObjectType.java,v 1.13 2005/02/03 14:26:18 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,16 +13,13 @@ import java.util.Date;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/01/26 09:02:47 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2005/02/03 14:26:18 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
 public abstract class StorableObjectType extends StorableObject {
 	static final long serialVersionUID = 6253817645176813979L;
-
-	public static final String COLUMN_CODENAME = "codename";
-	public static final String COLUMN_DESCRIPTION = "description";
 
 	protected String codename;
 	protected String description;
