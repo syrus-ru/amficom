@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorNewMapCommand.java,v 1.2 2004/10/15 14:09:21 krupenn Exp $
+ * $Id: MapEditorNewMapCommand.java,v 1.3 2004/10/18 07:39:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 
-import com.syrus.AMFICOM.Client.General.Model.MapConfigureApplicationModelFactory;
+import com.syrus.AMFICOM.Client.General.Model.MapMapEditorApplicationModelFactory;
 import com.syrus.AMFICOM.Client.Map.Command.Editor.ViewMapAllCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapNewCommand;
 import com.syrus.AMFICOM.Client.Map.Editor.MapEditorMainFrame;
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
  * модуле "Редактор топологических схем". При этом в модуле открываются все
  * окна (команда ViewMapAllCommand) и вызывается команда MapNewCommand
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/15 14:09:21 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/18 07:39:19 $
  * @module
  * @author $Author: krupenn $
  * @see MapNewCommand, ViewMapAllCommand
@@ -56,7 +56,7 @@ public class MapEditorNewMapCommand extends VoidCommand
 	
 		if(mmf == null)
 		{
-			new ViewMapAllCommand(mainFrame.getDesktop(), aContext, new MapEditorApplicationModelFactory()).execute();
+			new ViewMapAllCommand(mainFrame.getDesktop(), aContext, new MapMapEditorApplicationModelFactory()).execute();
 			mmf = mainFrame.getMapFrame();
 		}
 //		new MapViewNewCommand(mmf, aContext).execute();

@@ -4,16 +4,12 @@ src\com\syrus\AMFICOM\Client\General\Lang\LangModelMap.java
 src\com\syrus\AMFICOM\Client\General\Model\DefaultMapApplicationModelFactory.java
 src\com\syrus\AMFICOM\Client\General\Model\MapApplicationModel.java
 src\com\syrus\AMFICOM\Client\General\Model\MapApplicationModelFactory.java
-src\com\syrus\AMFICOM\Client\General\Model\MapConfigureApplicationModelFactory.java
-src\com\syrus\AMFICOM\Client\General\Model\MapConfigureISMApplicationModelFactory.java
-src\com\syrus\AMFICOM\Client\General\Model\MapConfigureNetApplicationModelFactory.java
 src\com\syrus\AMFICOM\Client\General\Model\MapMapEditorApplicationModelFactory.java
 src\com\syrus\AMFICOM\Client\General\Model\MapModelingApplicationModelFactory.java
 src\com\syrus\AMFICOM\Client\General\Model\MapOptimizeApplicationModelFactory.java
 src\com\syrus\AMFICOM\Client\General\Model\MapReportApplicationModelFactory.java
 src\com\syrus\AMFICOM\Client\General\Model\MapScheduleApplicationModelFactory.java
 src\com\syrus\AMFICOM\Client\General\Model\MapSUApplicationModelFactory.java
-src\com\syrus\AMFICOM\Client\General\Model\MapSurveyISMApplicationModelFactory.java
 src\com\syrus\AMFICOM\Client\General\Model\MapSurveyNetApplicationModelFactory.java
 src\com\syrus\AMFICOM\Client\Map\MapCoordinatesConverter.java
 src\com\syrus\AMFICOM\Client\Map\MapPropertiesManager.java

@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.10 2004/10/15 14:09:00 krupenn Exp $
+ * $Id: Map.java,v 1.11 2004/10/18 07:34:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,7 +35,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/10/15 14:09:00 $
+ * @version $Revision: 1.11 $, $Date: 2004/10/18 07:34:32 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -202,13 +202,13 @@ public final class Map extends StubResource implements Serializable
 		mc.createdBy = mc.userId;
 		mc.description = description;
 		mc.domainId = domainId;
-		mc.id = dataSource.GetUId(com.syrus.AMFICOM.Client.Resource.Map.Map.typ);
+		mc.id = dataSource.GetUId(Map.typ);
 		mc.modified = mc.created;
 		mc.modifiedBy = mc.userId;
 		mc.name = name + "(copy)";
 		mc.userId = dataSource.getSession().getUserId();
 
-		Pool.put(com.syrus.AMFICOM.Client.Resource.Map.Map.typ, mc.getId(), mc);
+		Pool.put(Map.typ, mc.getId(), mc);
 		Pool.put(MapPropertiesManager.MAP_CLONED_IDS, id, mc.getId());
 
 		mc.nodeLinks = new ArrayList();
@@ -471,7 +471,8 @@ public final class Map extends StubResource implements Serializable
 	}
 
 	/**
-	 * обновление локального содержимого объектов, содержащихся в контексте
+	 * обновление локального содержимого объектов, содержащихся в карте.
+	 * используется при загрузке из кэша
 	 */
 	public void updateFromPool()
 	{
@@ -685,7 +686,8 @@ public final class Map extends StubResource implements Serializable
 	}
 
 	/**
-	 * Получить список физических линий
+	 * Получить список физических линий, начинающихся или заканчивающихся
+	 * в узле node
 	 */
 	public List getPhysicalLinksAt(MapNodeElement node)
 	{
@@ -824,6 +826,9 @@ public final class Map extends StubResource implements Serializable
 		removedElements.add(ob);
 	}
 
+	/**
+	 * получить коллектор, в составе которого есть тоннель mple
+	 */
 	public MapPipePathElement getCollector(MapPhysicalLinkElement mple)
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getCollector(" + mple + ")");
@@ -857,7 +862,7 @@ public final class Map extends StubResource implements Serializable
 	}
 
 	/**
-	 * Получить список узлов
+	 * Получить список сетевых узлов
 	 */
 	public List getMapSiteNodeElements()
 	{
@@ -892,7 +897,7 @@ public final class Map extends StubResource implements Serializable
 	}
 
 	/**
-	 * Получить элемент узла по ID
+	 * Получить элемент сетевого узла по ID
 	 */
 	public MapSiteNodeElement getMapSiteNodeElement(String nodeId)
 	{
@@ -930,7 +935,7 @@ public final class Map extends StubResource implements Serializable
 	}
 
 	/**
-	 * Получить список всех олементов контекста карты
+	 * Получить список всех топологических элементов карты
 	 */
 	public List getAllElements()
 	{
@@ -969,29 +974,14 @@ public final class Map extends StubResource implements Serializable
 	}
 
 	/**
-	 * Получить список удаленных элементов
+	 * Получить список удаленных элементов.
+	 * Используется при сохранении в БД
 	 */
 	public LinkedList getRemovedElements()
 	{
 		return removedElements;
 	}
 
-	/**
-	 * Отменить выбор всем элементам
-	 */
-/*	 
-	public void deselectAll1()
-	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "deselectAll()");
-		
-		Iterator e = this.getAllElements().iterator();
-		while ( e.hasNext())
-		{
-			MapElement mapElement = (MapElement )e.next();
-			mapElement.setSelected(false);
-		}
-	}
-*/
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "writeObject(out)");
