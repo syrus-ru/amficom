@@ -119,4 +119,3 @@ void ResultSegment::parseSegment() {
 		this->parnumber = parcount;
 	}
 }
-

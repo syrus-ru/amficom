@@ -7,6 +7,7 @@
 
 #include <winsock.h>
 
+typedef __int64 long64;
 typedef unsigned int uint32_t;
 
 #endif
@@ -15,6 +16,7 @@ typedef unsigned int uint32_t;
 
 #ifdef __unix__
 
+typedef long long long64;
 #include <netinet/in.h>
 
 #endif
