@@ -60,7 +60,7 @@ public class SchemeLinkPane extends LinkPane
 		}
 		else
 		{
-			new MessageBox(LangModelConfig.String("err_incorrect_data_input")).show();
+			new MessageBox(LangModelConfig.getString("err_incorrect_data_input")).show();
 		}
 		return false;
 	}

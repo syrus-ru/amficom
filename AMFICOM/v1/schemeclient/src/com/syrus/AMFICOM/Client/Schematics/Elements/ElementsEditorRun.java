@@ -12,7 +12,6 @@ public class ElementsEditorRun
 	public static void main(String[] args)
 	{
 		Environment.initialize();
-		LangModelConfig.initialize();
 
 		try
 		{

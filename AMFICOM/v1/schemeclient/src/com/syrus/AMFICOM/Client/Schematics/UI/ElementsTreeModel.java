@@ -133,31 +133,31 @@ public class ElementsTreeModel extends ObjectResourceTreeModel
 			ObjectResource os;
 			if(s.equals("root"))
 			{
-				vec.add(new ObjectResourceTreeNode("configure", LangModelConfig.String("label_configuration"), true,
+				vec.add(new ObjectResourceTreeNode("configure", LangModelConfig.getString("label_configuration"), true,
 						new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
 				vec.add(new ObjectResourceTreeNode (MapProtoGroup.typ, "Компоненты сети", true,
 						new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
 			}
 			else if(s.equals("configure"))
 			{
-				vec.add(new ObjectResourceTreeNode("netdirectory", LangModelConfig.String("menuNetDirText"), true,
+				vec.add(new ObjectResourceTreeNode("netdirectory", LangModelConfig.getString("menuNetDirText"), true,
 						new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
-				vec.add(new ObjectResourceTreeNode("jdirectory", LangModelConfig.String("menuJDirText"), true,
+				vec.add(new ObjectResourceTreeNode("jdirectory", LangModelConfig.getString("menuJDirText"), true,
 						new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
 			}
 			else if(s.equals("netdirectory"))
 			{
-				vec.add(new ObjectResourceTreeNode(EquipmentType.typ, LangModelConfig.String("menuNetDirEquipmentText"), true));
-				vec.add(new ObjectResourceTreeNode(LinkType.typ, LangModelConfig.String("menuNetDirLinkText"), true));
-				vec.add(new ObjectResourceTreeNode(CableLinkType.typ, LangModelConfig.String("menuNetDirCableText"), true));
-				vec.add(new ObjectResourceTreeNode(PortType.typ, LangModelConfig.String("menuNetDirPortText"), true));
-				vec.add(new ObjectResourceTreeNode(CablePortType.typ, LangModelConfig.String("menuNetDirCablePortText"), true));
+				vec.add(new ObjectResourceTreeNode(EquipmentType.typ, LangModelConfig.getString("menuNetDirEquipmentText"), true));
+				vec.add(new ObjectResourceTreeNode(LinkType.typ, LangModelConfig.getString("menuNetDirLinkText"), true));
+				vec.add(new ObjectResourceTreeNode(CableLinkType.typ, LangModelConfig.getString("menuNetDirCableText"), true));
+				vec.add(new ObjectResourceTreeNode(PortType.typ, LangModelConfig.getString("menuNetDirPortText"), true));
+				vec.add(new ObjectResourceTreeNode(CablePortType.typ, LangModelConfig.getString("menuNetDirCablePortText"), true));
 			}
 			else if(s.equals("jdirectory"))
 			{
-				vec.add(new ObjectResourceTreeNode(KISType.typ, LangModelConfig.String("menuJDirKISText"), true));
-				vec.add(new ObjectResourceTreeNode(AccessPortType.typ, LangModelConfig.String("menuJDirAccessPointText"), true));
-				vec.add(new ObjectResourceTreeNode(TransmissionPathType.typ, LangModelConfig.String("menuJDirPathText"), true));
+				vec.add(new ObjectResourceTreeNode(KISType.typ, LangModelConfig.getString("menuJDirKISText"), true));
+				vec.add(new ObjectResourceTreeNode(AccessPortType.typ, LangModelConfig.getString("menuJDirAccessPointText"), true));
+				vec.add(new ObjectResourceTreeNode(TransmissionPathType.typ, LangModelConfig.getString("menuJDirPathText"), true));
 			}
 			else if(s.equals(EquipmentType.typ))
 			{

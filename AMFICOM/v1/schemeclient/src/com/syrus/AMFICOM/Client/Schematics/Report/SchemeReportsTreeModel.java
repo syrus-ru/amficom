@@ -118,7 +118,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 			{
 				ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
 					"EquipmentChars",
-					LangModelConfig.String("label_equipChars"),
+					LangModelConfig.getString("label_equipChars"),
 					true);
 
 				vec.add(ortn);
@@ -137,7 +137,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 			{
 				ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
 					"mufta",
-					LangModelConfig.String("mufta"),
+					LangModelConfig.getString("mufta"),
 					true);
 
 				vec.add(ortn);
@@ -145,7 +145,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 
 				ortn = new ObjectResourceTreeNode(
 					"switch",
-					LangModelConfig.String("switch"),
+					LangModelConfig.getString("switch"),
 					true);
 
 				vec.add(ortn);
@@ -153,7 +153,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 
 				ortn = new ObjectResourceTreeNode(
 					"cross",
-					LangModelConfig.String("cross"),
+					LangModelConfig.getString("cross"),
 					true);
 
 				vec.add(ortn);
@@ -161,7 +161,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 
 				ortn = new ObjectResourceTreeNode(
 					"multiplexor",
-					LangModelConfig.String("multiplexer"),
+					LangModelConfig.getString("multiplexer"),
 					true);
 
 				vec.add(ortn);
@@ -169,7 +169,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 
 				ortn = new ObjectResourceTreeNode(
 					"filter",
-					LangModelConfig.String("filter"),
+					LangModelConfig.getString("filter"),
 					true);
 
 				vec.add(ortn);
@@ -177,7 +177,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 
 				ortn = new ObjectResourceTreeNode(
 					"transmitter",
-					LangModelConfig.String("transmitter"),
+					LangModelConfig.getString("transmitter"),
 					true);
 
 				vec.add(ortn);
@@ -185,7 +185,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 
 				ortn = new ObjectResourceTreeNode(
 					"reciever",
-					LangModelConfig.String("reciever"), //поменять на receiver
+					LangModelConfig.getString("reciever"), //поменять на receiver
 					true);
 
 				vec.add(ortn);
@@ -193,7 +193,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 
 				ortn = new ObjectResourceTreeNode(
 					"tester",
-					LangModelConfig.String("tester"),
+					LangModelConfig.getString("tester"),
 					true);
 
 				vec.add(ortn);
