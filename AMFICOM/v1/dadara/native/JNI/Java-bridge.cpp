@@ -290,14 +290,16 @@ JNIEXPORT jobjectArray JNICALL Java_com_syrus_AMFICOM_analysis_dadara_ModelFunct
 	int key = keyj;
 	int xMin = xMinj;
 	int xMax = xMaxj;
-	int autoThresh = 1; // FIXME
+	int autoThresh = 0; // нормальный (полный) режим генерации порогов, неточное определение DY-порогов на сглаженных краях DX
 	assert(xMax >= xMin);
 	int N = xMax - xMin + 1;
+
+	// XXX: в Java нужны только TTDX
 
 	// создаем выходные массивы
 	jintArray jaX  = env->NewIntArray((jsize)N);
 	jintArray jaYL = env->NewIntArray((jsize)N);
-	jintArray jaYR = env->NewIntArray((jsize)N);
+	jintArray jaYR = env->NewIntArray((jsize)N); // этот вообще не используется...
 	assert(jaX && jaYL && jaYR);
 	jclass jintclass = env->GetObjectClass(jaX);
 	jobjectArray jaOut = env->NewObjectArray((jsize)3, jintclass, (jobject)0);
