@@ -1,9 +1,9 @@
 /*
- * $Id: ReportReceiver.java,v 1.3 2004/07/19 14:01:34 arseniy Exp $
+ * $Id: ReportReceiver.java,v 1.4 2004/07/21 08:18:10 arseniy Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright ї 2004 Syrus Systems.
+ * оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ.
+ * рТПЕЛФ: бнжйлпн.
  */
 
 package com.syrus.AMFICOM.agent;
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.server.measurement.Result;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/07/19 14:01:34 $
+ * @version $Revision: 1.4 $, $Date: 2004/07/21 08:18:10 $
  * @author $Author: arseniy $
  * @module agent_v1
  */

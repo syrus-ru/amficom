@@ -1,9 +1,9 @@
 /*
- * $Id: Agent.java,v 1.4 2004/07/20 12:54:10 arseniy Exp $
+ * $Id: Agent.java,v 1.5 2004/07/21 08:18:09 arseniy Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright ї 2004 Syrus Systems.
+ * оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ.
+ * рТПЕЛФ: бнжйлпн.
  */
 
 package com.syrus.AMFICOM.agent;
@@ -26,7 +26,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/07/20 12:54:10 $
+ * @version $Revision: 1.5 $, $Date: 2004/07/21 08:18:09 $
  * @author $Author: arseniy $
  * @module agent_v1
  */

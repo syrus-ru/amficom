@@ -1,9 +1,9 @@
 /*
- * $Id: ParametersDatabase.java,v 1.3 2004/07/19 14:01:34 arseniy Exp $
+ * $Id: ParametersDatabase.java,v 1.4 2004/07/21 08:18:10 arseniy Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Íàó÷íî-òåõíè÷åñêèé öåíòğ.
- * Ïğîåêò: ÀÌÔÈÊÎÌ.
+ * Copyright ¿ 2004 Syrus Systems.
+ * îÁÕŞÎÏ-ÔÅÈÎÉŞÅÓËÉÊ ÃÅÎÔÒ.
+ * ğÒÏÅËÔ: áíæéëïí.
  */
 
 package com.syrus.AMFICOM.agent;
@@ -12,7 +12,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/07/19 14:01:34 $
+ * @version $Revision: 1.4 $, $Date: 2004/07/21 08:18:10 $
  * @author $Author: arseniy $
  * @module agent_v1
  */
