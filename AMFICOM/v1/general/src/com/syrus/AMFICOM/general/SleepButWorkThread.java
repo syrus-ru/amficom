@@ -1,5 +1,5 @@
 /*
- * $Id: SleepButWorkThread.java,v 1.9 2004/12/10 12:52:33 arseniy Exp $
+ * $Id: SleepButWorkThread.java,v 1.10 2005/03/21 15:12:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.general;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/12/10 12:52:33 $
+ * @version $Revision: 1.10 $, $Date: 2005/03/21 15:12:05 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -40,7 +40,8 @@ public abstract class SleepButWorkThread extends Thread {
 	}
 	
 	protected void sleepCauseOfFall() {
-		if (this.fallsCounter < this.maxFalls) {
+		this.fallsCounter++;
+		if (this.fallsCounter <= this.maxFalls) {
 			Log.debugMessage("SleepButWorkThread | WARNING: the fall No." + this.fallsCounter + " of " + this.maxFalls  + " maximum -- sleeping on " + (int)(this.timeToSleep/1000) + " seconds", Log.DEBUGLEVEL05);
 			try {
 				sleep(this.timeToSleep);
@@ -48,11 +49,10 @@ public abstract class SleepButWorkThread extends Thread {
 			catch (InterruptedException ie) {
 				Log.errorException(ie);
 			}
-			this.fallsCounter ++;
 			this.timeToSleep = this.timeToSleep * TIME_MULTIPLIER;
 		}
 		else {
-			Log.errorMessage("SleepButWorkThread | Number of falls: " + this.fallsCounter + " reached maximum: " + this.maxFalls + ". Processing fall");
+			Log.errorMessage("SleepButWorkThread | Number of falls: " + this.fallsCounter + " exceeded maximum: " + this.maxFalls + ". Processing fall");
 			this.processFall();
 			this.clearFalls();
 		}
