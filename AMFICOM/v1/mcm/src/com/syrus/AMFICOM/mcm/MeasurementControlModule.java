@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.44 2004/11/24 16:40:41 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.45 2004/12/02 11:58:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2004/11/24 16:40:41 $
+ * @version $Revision: 1.45 $, $Date: 2004/12/02 11:58:06 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -325,8 +325,11 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	private static Result_Transferable[] createTransferables() {
 		Result_Transferable[] resultsT = new Result_Transferable[resultList.size()];
 		int i = 0;
-		for (Iterator it = resultList.iterator(); it.hasNext();)
-			resultsT[i] = (Result_Transferable)((Result)it.next()).getTransferable();
+		synchronized (resultList) {
+			for (Iterator it = resultList.iterator(); it.hasNext();)
+				resultsT[i++] = (Result_Transferable)((Result)it.next()).getTransferable();
+		}
+	
 		return resultsT;
 	}
 
