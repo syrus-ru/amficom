@@ -356,7 +356,12 @@ public static final String predict  = "PREDICT";
 		ObjectPermissionAttributes opa = null;
 		if(typ.equals(Domain.typ))
 		{
-			opa = ((Domain)Pool.get(typ, id)).opa;
+			Domain dom = (Domain)Pool.get(typ, id);
+			if(dom == null)
+			{
+				return true;
+			}
+			opa = dom.opa;
 		}
 		if(opa == null)
 		{
