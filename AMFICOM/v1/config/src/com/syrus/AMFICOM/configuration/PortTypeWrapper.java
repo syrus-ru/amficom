@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeWrapper.java,v 1.5 2005/02/03 08:37:01 bob Exp $
+ * $Id: PortTypeWrapper.java,v 1.6 2005/03/03 13:55:20 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,10 +13,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/03 08:37:01 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/03 13:55:20 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -30,7 +31,7 @@ public final class PortTypeWrapper implements StorableObjectWrapper {
 
 	private PortTypeWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_CHARACTERISTICS};
+		String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_SORT, COLUMN_CHARACTERISTICS};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
@@ -59,6 +60,8 @@ public final class PortTypeWrapper implements StorableObjectWrapper {
 				return type.getDescription();
 			if (key.equals(COLUMN_NAME))
 				return type.getName();
+			if (key.equals(COLUMN_SORT))
+				return new Integer(type.getSort().value());
 			if (key.equals(COLUMN_CHARACTERISTICS))
 				return type.getCharacteristics();
 		}
@@ -78,6 +81,8 @@ public final class PortTypeWrapper implements StorableObjectWrapper {
 				type.setDescription((String) value);
 			else if (key.equals(COLUMN_CODENAME))
 				type.setCodename((String) value);
+			else if (key.equals(COLUMN_SORT))
+				type.setSort(PortTypeSort.from_int(((Integer) value).intValue()));
 			else if (key.equals(COLUMN_CHARACTERISTICS))
 				type.setCharacteristics((List) value);
 		}
