@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.19 2005/01/26 15:38:41 arseniy Exp $
+ * $Id: ModelingDatabase.java,v 1.20 2005/01/28 10:28:31 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,17 +33,12 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/01/26 15:38:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/01/28 10:28:31 $
+ * @author $Author: bob $
  * @module module_name
  */
 
 public class ModelingDatabase extends StorableObjectDatabase {
-
-	public static final String COLUMN_TYPE_ID = "type_id";
-	public static final String COLUMN_MONITORED_ELEMENT_ID = "monitored_element_id";
-	public static final String COLUMN_ARGUMENT_SET_ID = "argument_set_id";
-	public static final String COLUMN_NAME = "name";
 
 	private static String columns;
 
@@ -67,10 +62,10 @@ public class ModelingDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
-				+ COLUMN_TYPE_ID + COMMA
-				+ COLUMN_MONITORED_ELEMENT_ID + COMMA
-				+ COLUMN_ARGUMENT_SET_ID + COMMA
-				+ COLUMN_NAME;
+				+ ModelingWrapper.COLUMN_TYPE_ID + COMMA
+				+ ModelingWrapper.COLUMN_MONITORED_ELEMENT_ID + COMMA
+				+ ModelingWrapper.COLUMN_ARGUMENT_SET_ID + COMMA
+				+ ModelingWrapper.COLUMN_NAME;
 		}
 		return columns;
 	}
@@ -121,8 +116,8 @@ public class ModelingDatabase extends StorableObjectDatabase {
 		ModelingType modelingType;
 		Set argumentSet;
 		try {
-			modelingType = (ModelingType)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TYPE_ID), true);
-			argumentSet = (Set)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ARGUMENT_SET_ID), true);
+			modelingType = (ModelingType)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, ModelingWrapper.COLUMN_TYPE_ID), true);
+			argumentSet = (Set)MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, ModelingWrapper.COLUMN_ARGUMENT_SET_ID), true);
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
@@ -133,8 +128,8 @@ public class ModelingDatabase extends StorableObjectDatabase {
 													DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 													DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 													modelingType,
-													DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MONITORED_ELEMENT_ID),
-													DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
+													DatabaseIdentifier.getIdentifier(resultSet, ModelingWrapper.COLUMN_MONITORED_ELEMENT_ID),
+													DatabaseString.fromQuerySubString(resultSet.getString(ModelingWrapper.COLUMN_NAME)),
 													argumentSet);
     return modeling;
 	}
@@ -192,7 +187,7 @@ public class ModelingDatabase extends StorableObjectDatabase {
 	public List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
 		List list = null;
 
-    String condition = COLUMN_MONITORED_ELEMENT_ID + SQL_IN
+    String condition = ModelingWrapper.COLUMN_MONITORED_ELEMENT_ID + SQL_IN
 				+ OPEN_BRACKET
 					+ SQL_SELECT
 					+ COLUMN_ID
