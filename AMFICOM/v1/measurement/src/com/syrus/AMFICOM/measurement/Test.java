@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.94 2005/03/30 15:36:18 arseniy Exp $
+ * $Id: Test.java,v 1.95 2005/03/30 15:36:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.94 $, $Date: 2005/03/30 15:36:18 $
+ * @version $Revision: 1.95 $, $Date: 2005/03/30 15:36:37 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -251,7 +251,8 @@ public class Test extends StorableObject {
 		this.status = tt.status.value();
 
 		try {
-			this.monitoredElement = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(new Identifier(tt.monitored_element_id), true);
+			this.monitoredElement = (MonitoredElement) ConfigurationStorableObjectPool.getStorableObject(new Identifier(tt.monitored_element_id),
+					true);
 		}
 		catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
