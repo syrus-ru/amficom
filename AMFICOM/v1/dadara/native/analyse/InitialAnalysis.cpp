@@ -169,7 +169,7 @@ return;
     }
     if(end !=-1 )
     { EventParams *ep = new EventParams;
-      ep->type = EventParams::REFLECTIVE;
+      ep->type = EventParams::DEADZONE;
       ep->begin = begin; ep->end = end;
       if(ep->end >= lastNonZeroPoint){ ep->end = lastNonZeroPoint-1;}
       //ep->gain = 0;  ep->gain_thr = 0;
@@ -225,7 +225,7 @@ void InitialAnalysis::SetConnectorParamsBySplashes( EventParams& ep, Splash& sp1
    double max = -1;
    int i;
    for(i=sp1.begin_conn_n ; i<sp1.end_conn_n; i++)
-   { double res = (f_wlet[i]-minimalConnector)/noise[i] - 1 ;
+   { double res = (f_wlet[i]-minimalConnector)/noise[i] - 1;
      if(max<res) max = res;
    }
    ep.R1 = max;
