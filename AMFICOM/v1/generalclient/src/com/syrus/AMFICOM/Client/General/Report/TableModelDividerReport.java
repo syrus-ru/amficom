@@ -16,20 +16,20 @@ import com.syrus.AMFICOM.Client.General.Report.*;
  * @version 1.0
  */
 
-public class EvaluationTableReport extends ReportData
+public class TableModelDividerReport extends ReportData
 {
-	public EvaluationTableReport(ObjectsReport report,
+	public TableModelDividerReport(ObjectsReport report,
 		int divisionsNumber) throws CreateReportException
 	{
-		tableModel = new EvaluationTableReportTableModel(divisionsNumber, report);
-		columnModel = new EvaluationTableReportTableColumnModel(divisionsNumber,
+		tableModel = new TMDRTableModel(divisionsNumber, report);
+		columnModel = new TMDRTableColumnModel(divisionsNumber,
 			tableModel.getColumnCount(),report);
 	}
 }
 
-class EvaluationTableReportTableColumnModel extends DividableTableColumnModel
+class TMDRTableColumnModel extends DividableTableColumnModel
 {
-	public EvaluationTableReportTableColumnModel(
+	public TMDRTableColumnModel(
 		int divisionsNumber,
 		int columnCount,
 		ObjectsReport report)
@@ -45,7 +45,7 @@ class EvaluationTableReportTableColumnModel extends DividableTableColumnModel
 	}
 }
 
-class EvaluationTableReportTableModel extends DividableTableModel
+class TMDRTableModel extends DividableTableModel
 {
 	private int width = 0;
 
@@ -55,7 +55,7 @@ class EvaluationTableReportTableModel extends DividableTableModel
 
 	private boolean viewColumnNames = false;
 
-	public EvaluationTableReportTableModel(int divisionsNumber,
+	public TMDRTableModel(int divisionsNumber,
 		ObjectsReport report) throws CreateReportException
 	{
 		super(divisionsNumber,
