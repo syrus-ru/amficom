@@ -1,13 +1,21 @@
 package com.syrus.AMFICOM.Client.Resource.ISMDirectory;
 
-import java.io.*;
-import java.util.*;
-
 import com.syrus.AMFICOM.CORBA.General.Characteristic_Transferable;
 import com.syrus.AMFICOM.CORBA.ISMDirectory.MeasurementPortType_Transferable;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
+import com.syrus.AMFICOM.Client.Resource.General.Characteristic;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
+import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
+import com.syrus.AMFICOM.Client.Resource.StubResource;
+
+import java.io.IOException;
+import java.io.Serializable;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class MeasurementPortType extends StubResource implements Serializable
 {

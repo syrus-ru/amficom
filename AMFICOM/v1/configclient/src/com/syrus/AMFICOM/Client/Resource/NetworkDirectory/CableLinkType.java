@@ -1,13 +1,21 @@
 package com.syrus.AMFICOM.Client.Resource.NetworkDirectory;
 
-import java.io.*;
-import java.util.*;
-
 import com.syrus.AMFICOM.CORBA.General.Characteristic_Transferable;
-import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
+import com.syrus.AMFICOM.CORBA.NetworkDirectory.CableLinkType_Transferable;
+import com.syrus.AMFICOM.CORBA.NetworkDirectory.CableTypeThread_Transferable;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
+import com.syrus.AMFICOM.Client.Resource.General.Characteristic;
+import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
+import com.syrus.AMFICOM.Client.Resource.StubResource;
+
+import java.io.IOException;
+import java.io.Serializable;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class CableLinkType extends StubResource implements Serializable
 {

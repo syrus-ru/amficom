@@ -1,11 +1,15 @@
 package com.syrus.AMFICOM.Client.Resource.Network;
 
-import java.util.*;
-import java.util.List;
+import com.syrus.AMFICOM.Client.Resource.General.Characteristic;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 
 import java.awt.Component;
 
-import com.syrus.AMFICOM.Client.Resource.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public abstract class CatalogElementModel extends ObjectResourceModel
 {

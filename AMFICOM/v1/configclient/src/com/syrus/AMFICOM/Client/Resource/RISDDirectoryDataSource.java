@@ -1,17 +1,42 @@
 package com.syrus.AMFICOM.Client.Resource;
 
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.General.*;
-import com.syrus.AMFICOM.CORBA.ISMDirectory.*;
-import com.syrus.AMFICOM.CORBA.Network.*;
-import com.syrus.AMFICOM.CORBA.NetworkDirectory.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.Resource.ISMDirectory.*;
-import com.syrus.AMFICOM.Client.Resource.Network.*;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
+import com.syrus.AMFICOM.CORBA.Constants;
+import com.syrus.AMFICOM.CORBA.General.CharacteristicTypeSeq_TransferableHolder;
+import com.syrus.AMFICOM.CORBA.General.CharacteristicType_Transferable;
+import com.syrus.AMFICOM.CORBA.General.ElementAttributeTypeSeq_TransferableHolder;
+import com.syrus.AMFICOM.CORBA.General.ElementAttributeType_Transferable;
+import com.syrus.AMFICOM.CORBA.ISMDirectory.KISTypeSeq_TransferableHolder;
+import com.syrus.AMFICOM.CORBA.ISMDirectory.KISType_Transferable;
+import com.syrus.AMFICOM.CORBA.ISMDirectory.MeasurementPortTypeSeq_TransferableHolder;
+import com.syrus.AMFICOM.CORBA.ISMDirectory.MeasurementPortType_Transferable;
+import com.syrus.AMFICOM.CORBA.ISMDirectory.TransmissionPathTypeSeq_TransferableHolder;
+import com.syrus.AMFICOM.CORBA.ISMDirectory.TransmissionPathType_Transferable;
+import com.syrus.AMFICOM.CORBA.NetworkDirectory.CableLinkTypeSeq_TransferableHolder;
+import com.syrus.AMFICOM.CORBA.NetworkDirectory.CableLinkType_Transferable;
+import com.syrus.AMFICOM.CORBA.NetworkDirectory.CablePortTypeSeq_TransferableHolder;
+import com.syrus.AMFICOM.CORBA.NetworkDirectory.CablePortType_Transferable;
+import com.syrus.AMFICOM.CORBA.NetworkDirectory.EquipmentTypeSeq_TransferableHolder;
+import com.syrus.AMFICOM.CORBA.NetworkDirectory.EquipmentType_Transferable;
+import com.syrus.AMFICOM.CORBA.NetworkDirectory.LinkTypeSeq_TransferableHolder;
+import com.syrus.AMFICOM.CORBA.NetworkDirectory.LinkType_Transferable;
+import com.syrus.AMFICOM.CORBA.NetworkDirectory.PortTypeSeq_TransferableHolder;
+import com.syrus.AMFICOM.CORBA.NetworkDirectory.PortType_Transferable;
+import com.syrus.AMFICOM.CORBA.Resource.ImageResourceSeq_TransferableHolder;
+import com.syrus.AMFICOM.CORBA.Resource.ImageResource_Transferable;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
+import com.syrus.AMFICOM.Client.General.SessionInterface;
+import com.syrus.AMFICOM.Client.Resource.General.CharacteristicType;
+import com.syrus.AMFICOM.Client.Resource.General.ElementAttributeType;
+import com.syrus.AMFICOM.Client.Resource.ISMDirectory.KISType;
+import com.syrus.AMFICOM.Client.Resource.ISMDirectory.MeasurementPortType;
+import com.syrus.AMFICOM.Client.Resource.ISMDirectory.TransmissionPathType;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CableLinkType;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CablePortType;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.LinkType;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.PortType;
 
-import java.util.*;
+import java.util.Vector;
 
 public class RISDDirectoryDataSource
 		extends RISDObjectDataSource
@@ -24,6 +49,51 @@ public class RISDDirectoryDataSource
 	public RISDDirectoryDataSource(SessionInterface si)
 	{
 		super(si);
+	}
+
+	public void LoadAttributeTypes(String[] ids)
+	{
+		if(getSession() == null)
+			return;
+		if(!getSession().isOpened())
+			return;
+
+		int i;
+		int ecode = 0;
+		int count;
+
+		ElementAttributeTypeSeq_TransferableHolder ath = new ElementAttributeTypeSeq_TransferableHolder();
+		ElementAttributeType_Transferable atypes[];
+		ElementAttributeType atype;
+
+		try
+		{
+			ecode = ((RISDSessionInfo )getSession()).ci.server.LoadStatedAttributeTypes(
+					((RISDSessionInfo )getSession()).accessIdentity, 
+					ids, 
+					ath);
+		}
+		catch (Exception ex)
+		{
+			System.err.print("Error getting attribute types: " + ex.getMessage());
+			ex.printStackTrace();
+			return;
+		}
+
+		if (ecode != Constants.ERROR_NO_ERROR)
+		{
+			System.out.println ("Failed LoadAttributeTypes! status = " + ecode);
+			return;
+		}
+
+		atypes = ath.value;
+		count = atypes.length;
+		System.out.println("...Done! " + count + " attribute type(s) fetched");
+			for (i = 0; i < count; i++)
+		{
+			atype = new ElementAttributeType(atypes[i]);
+			Pool.put(ElementAttributeType.typ, atype.getId(), atype);
+			}
 	}
 
 	public void LoadCharacteristicTypes(

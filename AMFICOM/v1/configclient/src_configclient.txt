@@ -9,9 +9,12 @@ src\com\syrus\AMFICOM\Client\Resource\Alarm\AlertingMessage.java
 src\com\syrus\AMFICOM\Client\Resource\Alarm\AlertingMessageUser.java
 src\com\syrus\AMFICOM\Client\Resource\Alarm\EventSourceType.java
 src\com\syrus\AMFICOM\Client\Resource\Alarm\Rule.java
+src\com\syrus\AMFICOM\Client\Resource\General\Characteristic.java
+src\com\syrus\AMFICOM\Client\Resource\General\CharacteristicType.java
+src\com\syrus\AMFICOM\Client\Resource\General\ElementAttribute.java
+src\com\syrus\AMFICOM\Client\Resource\General\ElementAttributeType.java
 src\com\syrus\AMFICOM\Client\Resource\ISM\KIS.java
 src\com\syrus\AMFICOM\Client\Resource\ISM\KISModel.java
-src\com\syrus\AMFICOM\Client\Resource\ISM\LengthContainer.java
 src\com\syrus\AMFICOM\Client\Resource\ISM\MeasurementPort.java
 src\com\syrus\AMFICOM\Client\Resource\ISM\MeasurementPortDisplayModel.java
 src\com\syrus\AMFICOM\Client\Resource\ISM\MeasurementPortModel.java
@@ -19,7 +22,6 @@ src\com\syrus\AMFICOM\Client\Resource\ISM\MonitoredElement.java
 src\com\syrus\AMFICOM\Client\Resource\ISM\MonitoredElementDisplayModel.java
 src\com\syrus\AMFICOM\Client\Resource\ISM\MonitoredElementModel.java
 src\com\syrus\AMFICOM\Client\Resource\ISM\TransmissionPath.java
-src\com\syrus\AMFICOM\Client\Resource\ISM\TransmissionPathDecompositor.java
 src\com\syrus\AMFICOM\Client\Resource\ISM\TransmissionPathDisplayModel.java
 src\com\syrus\AMFICOM\Client\Resource\ISM\TransmissionPathModel.java
 src\com\syrus\AMFICOM\Client\Resource\ISMDirectory\KISType.java
@@ -37,7 +39,6 @@ src\com\syrus\AMFICOM\Client\Resource\Network\CablePort.java
 src\com\syrus\AMFICOM\Client\Resource\Network\CablePortDisplayModel.java
 src\com\syrus\AMFICOM\Client\Resource\Network\CablePortModel.java
 src\com\syrus\AMFICOM\Client\Resource\Network\CatalogElementModel.java
-src\com\syrus\AMFICOM\Client\Resource\Network\Characteristic.java
 src\com\syrus\AMFICOM\Client\Resource\Network\Equipment.java
 src\com\syrus\AMFICOM\Client\Resource\Network\EquipmentDisplayModel.java
 src\com\syrus\AMFICOM\Client\Resource\Network\EquipmentModel.java
@@ -54,7 +55,6 @@ src\com\syrus\AMFICOM\Client\Resource\NetworkDirectory\CablePortType.java
 src\com\syrus\AMFICOM\Client\Resource\NetworkDirectory\CablePortTypeDisplayModel.java
 src\com\syrus\AMFICOM\Client\Resource\NetworkDirectory\CablePortTypeModel.java
 src\com\syrus\AMFICOM\Client\Resource\NetworkDirectory\CableTypeThread.java
-src\com\syrus\AMFICOM\Client\Resource\NetworkDirectory\CharacteristicType.java
 src\com\syrus\AMFICOM\Client\Resource\NetworkDirectory\EquipmentType.java
 src\com\syrus\AMFICOM\Client\Resource\NetworkDirectory\EquipmentTypeDisplayModel.java
 src\com\syrus\AMFICOM\Client\Resource\NetworkDirectory\EquipmentTypeModel.java
@@ -64,5 +64,3 @@ src\com\syrus\AMFICOM\Client\Resource\NetworkDirectory\LinkTypeModel.java
 src\com\syrus\AMFICOM\Client\Resource\NetworkDirectory\PortType.java
 src\com\syrus\AMFICOM\Client\Resource\NetworkDirectory\PortTypeDisplayModel.java
 src\com\syrus\AMFICOM\Client\Resource\NetworkDirectory\PortTypeModel.java
-src\com\syrus\AMFICOM\Client\Resource\Scheme\ElementAttribute.java
-src\com\syrus\AMFICOM\Client\Resource\SchemeDirectory\ElementAttributeType.java

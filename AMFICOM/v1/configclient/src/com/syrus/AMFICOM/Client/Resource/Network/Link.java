@@ -1,13 +1,19 @@
 package com.syrus.AMFICOM.Client.Resource.Network;
 
-import java.io.*;
-import java.util.*;
-
 import com.syrus.AMFICOM.CORBA.General.Characteristic_Transferable;
 import com.syrus.AMFICOM.CORBA.Network.Link_Transferable;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.General.Characteristic;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.LinkType;
+import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
+import com.syrus.AMFICOM.Client.Resource.StubResource;
+
+import java.io.IOException;
+import java.io.Serializable;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class Link extends StubResource implements Serializable
 {

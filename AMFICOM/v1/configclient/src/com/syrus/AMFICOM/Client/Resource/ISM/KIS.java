@@ -1,12 +1,15 @@
 package com.syrus.AMFICOM.Client.Resource.ISM;
 
-import java.io.Serializable;
-import java.util.*;
-
 import com.syrus.AMFICOM.CORBA.General.Characteristic_Transferable;
 import com.syrus.AMFICOM.CORBA.ISM.KIS_Transferable;
+import com.syrus.AMFICOM.Client.Resource.General.Characteristic;
 import com.syrus.AMFICOM.Client.Resource.StubResource;
-import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
+
+import java.io.Serializable;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class KIS extends StubResource implements Serializable
 {
