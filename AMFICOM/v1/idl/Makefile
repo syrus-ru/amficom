@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.2 2004/06/21 10:37:11 bass Exp $
+# $Id: Makefile,v 1.3 2004/06/21 11:58:54 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -196,6 +196,7 @@ $(LIBNAME_ALARM): .all
 
 $(LIBNAME_GENERAL): .all
 	$(JAR) cf $@ \
+		-C $(CLASSDIR) com/syrus/AMFICOM/general/corba \
 		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/Constant \
 		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/General \
 		-C $(CLASSDIR) com/syrus/AMFICOM/CORBA/Resource \
