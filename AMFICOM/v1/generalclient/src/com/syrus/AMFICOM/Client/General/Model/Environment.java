@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.19 2005/03/24 12:01:20 bob Exp $
+ * $Id: Environment.java,v 1.20 2005/03/24 12:16:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,32 +8,55 @@
 
 package com.syrus.AMFICOM.Client.General.Model;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.Insets;
+import java.awt.Toolkit;
+import java.awt.Window;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.logging.ConsoleHandler;
+import java.util.logging.FileHandler;
+import java.util.logging.Formatter;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.SimpleFormatter;
+import java.util.logging.XMLFormatter;
+
+import javax.swing.ImageIcon;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.LookAndFeel;
+import javax.swing.UIDefaults;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.metal.MetalLookAndFeel;
+import javax.swing.plaf.metal.MetalTheme;
+
 import com.incors.plaf.kunststoff.KunststoffLookAndFeel;
 import com.sun.java.swing.plaf.gtk.GTKLookAndFeel;
 import com.sun.java.swing.plaf.motif.MotifLookAndFeel;
 import com.sun.java.swing.plaf.windows.WindowsLookAndFeel;
-import com.syrus.AMFICOM.Client.General.*;
+import com.syrus.AMFICOM.Client.General.ConnectionInterface;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
+import com.syrus.AMFICOM.Client.General.SessionInterface;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.UI.AMFICOMMetalTheme;
+import com.syrus.AMFICOM.Client.General.UI.ModuleCodeDialog;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.io.IniFile;
-import java.awt.*;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-import java.util.logging.*;
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.plaf.metal.*;
 
 /**
  * Класс Environment используется для хранения общей для приложения информации.
  * 
  * @author $Author: bob $
- * @version $Revision: 1.19 $, $Date: 2005/03/24 12:01:20 $
+ * @version $Revision: 1.20 $, $Date: 2005/03/24 12:16:58 $
  * @module generalclient_v1
  */
 public final class Environment
@@ -258,15 +281,11 @@ public final class Environment
 		
 		UIDefaults defaults = UIManager.getLookAndFeelDefaults();
 		
-//		defaults.put("Panel.background", Color.WHITE);
 		defaults.put("Table.background", Color.WHITE);
 		defaults.put("Table.foreground", Color.BLACK);
 		defaults.put("Table.gridColor", Color.BLACK);
-		
+		defaults.put("Viewport.background", Color.WHITE);		
 		defaults.put(ResourceKeys.COLOR_GRAPHICS_BACKGROUND, Color.WHITE);
-
-		defaults.put(ResourceKeys.COLOR_IFRAME_BACKGROUND, Color.WHITE);		
-		
 	}
 
 	public static String getDomainId()
