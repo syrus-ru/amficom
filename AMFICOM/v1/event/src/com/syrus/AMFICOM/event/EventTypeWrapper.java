@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeWrapper.java,v 1.2 2005/02/03 14:50:21 arseniy Exp $
+ * $Id: EventTypeWrapper.java,v 1.3 2005/02/03 15:51:22 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,64 +7,97 @@
  */
 package com.syrus.AMFICOM.event;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/03 14:50:21 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/03 15:51:22 $
  * @author $Author: arseniy $
  * @module event_v1
  */
-public class EventTypeWrapper implements Wrapper {
+public class EventTypeWrapper implements StorableObjectWrapper {
+
+	public static final String LINK_FIELD_PARAMETER_TYPES = "parameter_types";
 
 	private static EventTypeWrapper instance;
 
 	private List keys;
 
-	public String getKey(int index) {
-		//TODO implement
-		return null;
+	private EventTypeWrapper() {
+		//	private constructor
+		String[] keysArray = new String[] {COLUMN_CODENAME, COLUMN_DESCRIPTION, LINK_FIELD_PARAMETER_TYPES};
+
+		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
+	}
+
+	public static EventTypeWrapper getInstance() {
+		if (instance == null)
+			instance = new EventTypeWrapper();
+		return instance;
 	}
 
 	public List getKeys() {
-		//TODO implement
+		return this.keys;
+	}
+
+	public String getName(final String key) {
+		/* there is no reason to rename it */
+		return key;
+	}
+
+	public Object getValue(final Object object, final String key) {
+		if (object instanceof EventType) {
+			EventType eventType = (EventType) object;
+			if (key.equals(COLUMN_CODENAME))
+				return eventType.getCodename();
+			if (key.equals(COLUMN_DESCRIPTION))
+				return eventType.getDescription();
+			if (key.equals(LINK_FIELD_PARAMETER_TYPES))
+				return eventType.getParameterTypes();
+		}
 		return null;
 	}
 
-	public String getName(String key) {
-		//TODO implement
-		return null;
+	public boolean isEditable(final String key) {
+		return false;
 	}
 
-	public Class getPropertyClass(String key) {
-		//TODO implement
-		return null;
+	public void setValue(Object object, final String key, final Object value) {
+		if (object instanceof EventType) {
+			EventType eventType = (EventType) object;
+			if (key.equals(COLUMN_CODENAME))
+				eventType.setCodename((String) value);
+			else
+				if (key.equals(COLUMN_DESCRIPTION))
+					eventType.setDescription((String) value);
+				else
+					if (key.equals(LINK_FIELD_PARAMETER_TYPES))
+						eventType.setParameterTypes((List) value);
+		}
+	}
+
+	public String getKey(final int index) {
+		return (String) this.keys.get(index);
 	}
 
 	public Object getPropertyValue(String key) {
-		//TODO implement
+		/* there is no properties */
 		return null;
 	}
 
 	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
-		//TODO implement
-
+		/* there is no properties */
 	}
 
-	public Object getValue(Object object, String key) {
-		//TODO implement
-		return null;
-	}
-
-	public boolean isEditable(String key) {
-		//TODO implement
-		return false;
-	}
-
-	public void setValue(Object object, String key, Object value) {
-		//TODO implement
-
+	public Class getPropertyClass(String key) {
+		if (key.equals(LINK_FIELD_PARAMETER_TYPES))
+			return List.class;
+		return String.class;
 	}
 
 }
