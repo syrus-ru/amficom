@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.69 2005/02/14 13:05:01 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.70 2005/02/18 18:13:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/02/14 13:05:01 $
+ * @version $Revision: 1.70 $, $Date: 2005/02/18 18:13:26 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -603,9 +603,12 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		}
 	}
 
-	public void delete(StorableObject storableObject) throws IllegalDataException {		
-		MeasurementType measurementType = this.fromStorableObject(storableObject);
-		String measurementTypeIdStr = DatabaseIdentifier.toSQLString(measurementType.getId());
+	public void delete(Identifier id) throws IllegalDataException {
+		if (id.getMajor() != ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE)
+			throw new IllegalDataException("MeasurementTypeDatabase.delete | Cannot delete object of code "
+					+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'");
+
+		String measurementTypeIdStr = DatabaseIdentifier.toSQLString(id);
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {

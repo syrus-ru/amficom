@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.61 2005/02/16 13:18:28 arseniy Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.62 2005/02/18 18:13:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/02/16 13:18:28 $
+ * @version $Revision: 1.62 $, $Date: 2005/02/18 18:13:26 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -457,9 +457,12 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void delete(StorableObject storableObject) throws IllegalDataException {
-		EvaluationType evaluationType = this.fromStorableObject(storableObject);
-		String evaluationTypeIdStr = DatabaseIdentifier.toSQLString(evaluationType.getId());
+	public void delete(Identifier id) throws IllegalDataException {
+		if (id.getMajor() != ObjectEntities.EVALUATIONTYPE_ENTITY_CODE)
+			throw new IllegalDataException("EvaluationTypeDatabase.delete | Cannot delete object of code "
+					+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'");
+
+		String evaluationTypeIdStr = DatabaseIdentifier.toSQLString(id);
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {

@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.65 2005/02/11 18:39:52 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.66 2005/02/18 18:13:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/02/11 18:39:52 $
+ * @version $Revision: 1.66 $, $Date: 2005/02/18 18:13:26 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -529,9 +529,12 @@ public class ResultDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void delete(StorableObject storableObject) throws IllegalDataException {
-		Result result = this.fromStorableObject(storableObject);
-		String resultIdStr = DatabaseIdentifier.toSQLString(result.getId());
+	public void delete(Identifier id) throws IllegalDataException {
+		if (id.getMajor() != ObjectEntities.RESULT_ENTITY_CODE)
+			throw new IllegalDataException("ResultDatabase.delete | Cannot delete object of code "
+					+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'");
+
+		String resultIdStr = DatabaseIdentifier.toSQLString(id);
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {

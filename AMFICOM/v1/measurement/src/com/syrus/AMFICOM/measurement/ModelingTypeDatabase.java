@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.17 2005/02/16 13:18:28 arseniy Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.18 2005/02/18 18:13:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/02/16 13:18:28 $
+ * @version $Revision: 1.18 $, $Date: 2005/02/18 18:13:26 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -406,9 +406,12 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void delete(StorableObject storableObject) throws IllegalDataException {
-		ModelingType modelingType = this.fromStorableObject(storableObject);
-		String modelingTypeIdStr = DatabaseIdentifier.toSQLString(modelingType.getId());
+	public void delete(Identifier id) throws IllegalDataException {
+		if (id.getMajor() != ObjectEntities.MODELINGTYPE_ENTITY_CODE)
+			throw new IllegalDataException("ModelingTypeDatabase.delete | Cannot delete object of code "
+					+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'");
+
+		String modelingTypeIdStr = DatabaseIdentifier.toSQLString(id);
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
