@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.25 2004/10/17 14:18:46 bob Exp $
+ * $Id: TestProcessor.java,v 1.26 2004/10/19 09:37:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/10/17 14:18:46 $
+ * @version $Revision: 1.26 $, $Date: 2004/10/19 09:37:12 $
  * @author $Author: bob $
  * @module mcm_v1
  */
@@ -63,32 +63,7 @@ public abstract class TestProcessor extends SleepButWorkThread {
 		try {
 			MeasurementPort mp = (MeasurementPort)ConfigurationStorableObjectPool.getStorableObject(this.test.getMonitoredElement().getMeasurementPortId(), true);
 			Identifier kisId = mp.getKISId();
-			
-			{
-				int fallsCounter = 0;
-				int maxFalls = ApplicationProperties.getInt("MaxFalls", MAX_FALLS);
-				int timeToSleep = ApplicationProperties.getInt("TickTime", TICK_TIME) * 1000;
-				
-				while (true){
-					Log.debugMessage("TestProcessor<init> | try resolve transceiver for kis '" + kisId.getIdentifierString() + "'" , Log.DEBUGLEVEL05);
-					this.transceiver = (Transceiver)MeasurementControlModule.transceivers.get(kisId);
-					if (this.transceiver == null){
-						if (fallsCounter < maxFalls) {
-							Log.debugMessage("TestProcessor<init> | WARNING: the fall No." + fallsCounter + " of " + maxFalls  + " maximum", Log.DEBUGLEVEL05);
-							try {
-								sleep(timeToSleep);
-							}
-							catch (InterruptedException ie) {
-								Log.errorException(ie);
-							}
-							fallsCounter ++;
-							timeToSleep = timeToSleep * 2;
-						} else break;						
-					}				
-					else break;
-				}
-			}
-			
+			this.transceiver = (Transceiver)MeasurementControlModule.transceivers.get(kisId);			
 			if (this.transceiver == null) {
 				Log.errorMessage("TestProcessor<init> | Cannot find transceiver for kis '" + kisId.toString() + "'");
 				this.abort();

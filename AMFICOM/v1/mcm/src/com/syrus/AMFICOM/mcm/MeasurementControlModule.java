@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.35 2004/10/17 14:18:46 bob Exp $
+ * $Id: MeasurementControlModule.java,v 1.36 2004/10/19 09:37:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2004/10/17 14:18:46 $
+ * @version $Revision: 1.36 $, $Date: 2004/10/19 09:37:12 $
  * @author $Author: bob $
  * @module mcm_v1
  */
@@ -195,7 +195,6 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 
 	private static void activateKISTransceivers()
 	{
-	  transceivers = new Hashtable();
 	  String hostName = null;
 		String port = ApplicationProperties.getString(KEY_TCP_PORT, String.valueOf(7500) );	
 		
@@ -211,28 +210,11 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			Log.errorMessage("Failed creating TCPServer at service " + hostName + ':' + port);
 			Log.errorException(e);
 		}
-/*
-    try
-    {
-      System.out.println("Loading mcmtransceiver library...");
-      
-      System.loadLibrary("mcmtransceiver");
-      
-      System.out.println("Succesfully loaded mcmtransceiver library");
-
-    }
-    catch (Throwable exc)
-    {
-	 Log.errorMessage("Failed to find mcmtransceiver library at " +
-                       System.getProperty("java.library.path"));
-    }
- */     
-
  
-//		List kisIds = iAm.getKISIds();
-//		transceivers = new Hashtable(kisIds.size());
-//		Identifier kisId;
-//		Transceiver transceiver;
+		List kisIds = iAm.getKISIds();
+		transceivers = new Hashtable(kisIds.size());
+		Identifier kisId;
+		Transceiver transceiver;
 //		synchronized (kisIds) {
 //			for (Iterator it = kisIds.iterator(); it.hasNext();) {
 //				kisId = (Identifier)it.next();
@@ -242,6 +224,46 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 //				Log.debugMessage("Started transceiver for kis '" + kisId.toString() + "'", Log.DEBUGLEVEL07);
 //			}
 //		}
+		
+		/**
+		 * TODO recast when kis'll be wait for connection from mcm 
+		 */
+		synchronized (kisIds){
+			for (Iterator it = kisIds.iterator(); it.hasNext();) {
+				kisId = (Identifier)it.next();
+				transceiver = (Transceiver)transceivers.get(kisId);
+				{
+					int fallsCounter = 0;
+					int maxFalls = ApplicationProperties.getInt("MaxFalls", MAX_FALLS);
+					int timeToSleep = ApplicationProperties.getInt("TickTime", TICK_TIME) * 1000;
+					
+					while (true){
+						Log.debugMessage("MeasurementControlModule.activateKISTransceivers | try activate transceiver for kis '" + kisId.getIdentifierString() + "'" , Log.DEBUGLEVEL05);
+						transceiver = (Transceiver)MeasurementControlModule.transceivers.get(kisId);
+						if (transceiver == null){
+							if (fallsCounter < maxFalls) {
+								Log.debugMessage("MeasurementControlModule.activateKISTransceivers | WARNING: the fall No." + fallsCounter + " of " + maxFalls  + " maximum", Log.DEBUGLEVEL05);
+								try {
+									sleep(timeToSleep);
+								}
+								catch (InterruptedException ie) {
+									Log.errorException(ie);
+								}
+								fallsCounter ++;
+								timeToSleep = timeToSleep * 2;
+							} else break;						
+						}				
+						else break;
+					}
+				}
+				if (transceiver == null){
+					Log.errorMessage("Cannot active KIS Transceiver for '" + kisId.getIdentifierString() + "'");
+					DatabaseConnection.closeConnection();
+					System.exit(-1);
+				}
+			}
+		}
+		
 	}
 
 	private static void prepareTestList() {
