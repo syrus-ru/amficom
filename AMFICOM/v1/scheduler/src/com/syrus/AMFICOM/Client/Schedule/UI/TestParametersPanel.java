@@ -27,6 +27,7 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
@@ -45,12 +46,12 @@ import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.AnalysisTypeController;
 import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.AMFICOM.measurement.EvaluationTypeController;
-import com.syrus.AMFICOM.measurement.LinkedIdsCondition;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementSetupController;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
@@ -98,7 +99,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 
 	String						currentParametersPanelName;
 
-	public TestParametersPanel(ApplicationContext aContext) {
+	public TestParametersPanel(final ApplicationContext aContext) {
 		this.aContext = aContext;
 
 		if (aContext != null) {
@@ -194,8 +195,10 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 					try {
 						TestParametersPanel.this.analysisComboBox.removeAll();
 
-						LinkedIdsCondition linkedIdsCondition = LinkedIdsCondition.getInstance();
-						linkedIdsCondition.setEntityCode(ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
+						LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition((List)null, ObjectEntities.ANALYSISTYPE_ENTITY_CODE);
+						RISDSessionInfo sessionInterface = (RISDSessionInfo) aContext.getSessionInterface();
+						linkedIdsCondition.setDomainId(sessionInterface.getDomainIdentifier());
+
 						{
 							Set criteriaSet = ts.getCriteriaSet();
 							if (criteriaSet != null) {
@@ -451,8 +454,7 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 			this.testSetups.removeAll();
 			this.testMap.clear();
 			if (this.meList != null) {
-				LinkedIdsCondition linkedIdsCondition = LinkedIdsCondition.getInstance();
-				linkedIdsCondition.setEntityCode(ObjectEntities.MS_ENTITY_CODE);
+				LinkedIdsCondition linkedIdsCondition;
 				{
 					List meIdList = new ArrayList(this.meList.size());
 					for (Iterator it = this.meList.iterator(); it.hasNext();) {
@@ -460,7 +462,9 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 						meIdList.add(me.getId());
 
 					}
-					linkedIdsCondition.setLinkedIds(meIdList);
+					linkedIdsCondition = new LinkedIdsCondition(meIdList, ObjectEntities.MS_ENTITY_CODE);
+					RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
+					linkedIdsCondition.setDomainId(sessionInterface.getDomainIdentifier());
 				}
 				List msList = MeasurementStorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition, true);
 				for (Iterator it = msList.iterator(); it.hasNext();) {

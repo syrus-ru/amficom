@@ -41,10 +41,10 @@ import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.StringFieldSort;
-import com.syrus.AMFICOM.measurement.LinkedIdsCondition;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
@@ -329,9 +329,9 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 	public void setPort(MeasurementPort port) {
 		try {
-			LinkedIdsCondition linkedIdsCondition = LinkedIdsCondition.getInstance();
-			linkedIdsCondition.setEntityCode(ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
-			linkedIdsCondition.setIdentifier(port.getId());
+			LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(port.getId(), ObjectEntities.CHARACTERISTIC_ENTITY_CODE);
+			RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
+			linkedIdsCondition.setDomainId(sessionInterface.getDomainIdentifier());
 
 			List characteristics = ConfigurationStorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition,
 																									true);

@@ -50,9 +50,9 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.measurement.DomainCondition;
-import com.syrus.AMFICOM.measurement.LinkedIdsCondition;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.Test;
@@ -101,13 +101,11 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 
 				//ElementsTreePanel.this.surveyDsi.getTestSetupByTestType(testType.getId());
 
-				LinkedIdsCondition condition = LinkedIdsCondition.getInstance();
+				
 				RISDSessionInfo sessionInterface = (RISDSessionInfo) aContext.getSessionInterface();
-				Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(sessionInterface
-						.getDomainIdentifier(), true);
-				condition.setDomain(domain);
-				condition.setEntityCode(ObjectEntities.MS_ENTITY_CODE);
-				condition.setIdentifier(measurementType.getId());
+				LinkedIdsCondition condition = new LinkedIdsCondition(measurementType.getId(), ObjectEntities.MS_ENTITY_CODE);
+				condition.setDomainId(sessionInterface
+					.getDomainIdentifier());
 
 				MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 				ObjectResourceTreeNode testTypeNode = new ObjectResourceTreeNode(measurementType, measurementType
@@ -126,9 +124,9 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 						}
 					}
 
-					LinkedIdsCondition linkedIdsCondition = LinkedIdsCondition.getInstance();
-					linkedIdsCondition.setLinkedIds(measurementPortTypeIds);
-					linkedIdsCondition.setEntityCode(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
+					LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(measurementPortTypeIds, ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
+					linkedIdsCondition.setDomainId(sessionInterface.getDomainIdentifier());
+
 					List measurementTypesFormeasurementPortType = MeasurementStorableObjectPool
 							.getStorableObjectsByCondition(linkedIdsCondition, true);
 					for (Iterator kisTypeIt = kisList.iterator(); kisTypeIt.hasNext();) {

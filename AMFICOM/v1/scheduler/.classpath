@@ -20,10 +20,11 @@
 	<classpathentry kind="src" path="/general_v1"/>
 	<classpathentry kind="src" path="/config_v1"/>
 	<classpathentry kind="src" path="/measurement_v1"/>
-	<classpathentry kind="src" path="/surveyresource_v1"/>
 	<classpathentry kind="src" path="/corbaportable_v1"/>
 	<classpathentry kind="src" path="/util"/>
 	<classpathentry kind="src" path="/idl_v1"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/mapview.jar"/>
+	<classpathentry kind="src" path="/surveyresource_v1"/>
+	<classpathentry kind="src" path="/event_v1"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

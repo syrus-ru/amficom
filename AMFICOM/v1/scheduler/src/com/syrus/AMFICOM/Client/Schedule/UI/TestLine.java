@@ -21,24 +21,21 @@ import java.util.Map;
 import javax.swing.JLabel;
 import javax.swing.Timer;
 
-import com.syrus.AMFICOM.CORBA.Constant.AlarmTypeConstants;
-import com.syrus.AMFICOM.CORBA.Survey.ElementaryTestAlarm;
+import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.TestUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Alarm.Alarm;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.measurement.LinkedIdsCondition;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
@@ -102,6 +99,7 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 
 	// Map <Identifier testId, List<TestTimeLine>>
 	private Map					measurements;
+	private ApplicationContext		aContext;
 
 	private class TestTimeLine implements Comparable {
 
@@ -118,7 +116,7 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 	}
 
 	public TestLine(ApplicationContext aContext, String title, long start, long end, int margin) {
-		// this.aContext = aContext;
+		this.aContext = aContext;
 		this.title = title;
 		this.start = start;
 		this.end = end;
@@ -250,17 +248,15 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 				// + ")");
 				this.unsavedTests.put(test.getId(), test);
 			}
-			this.timer.restart();
+			this.timer.restart();	
 			
-			if (this.measurements == null)
-				this.measurements = new HashMap();
 			
 		} else {
 			// System.out.println("selectedTest is NOT changed");
 			this.tests.put(test.getId(), test);
-			LinkedIdsCondition linkedIdsCondition = LinkedIdsCondition.getInstance();
-			linkedIdsCondition.setEntityCode(ObjectEntities.MEASUREMENT_ENTITY_CODE);
-			linkedIdsCondition.setIdentifier(test.getId());
+			LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(test.getId(), ObjectEntities.MEASUREMENT_ENTITY_CODE);
+			RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
+			linkedIdsCondition.setDomainId(sessionInterface.getDomainIdentifier());
 			try {
 				List measurements = MeasurementStorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition,
 					true);
@@ -282,7 +278,11 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 				SchedulerModel.showErrorMessage(this, e);
 			}
 		}
-
+		
+		if (this.measurements == null){
+			this.measurements = new HashMap();
+		}
+		
 		List measurementTestList = (List) this.measurements.get(test.getId());
 		if (measurementTestList == null) {
 			measurementTestList = new LinkedList();
@@ -330,6 +330,7 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 		} catch (ApplicationException ae) {
 			SchedulerModel.showErrorMessage(this, ae);
 		}
+		
 
 		if (this.allTests == null)
 			this.allTests = new ArrayList();
@@ -578,7 +579,10 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 		 */
 		// ElementaryTestAlarm[] testAlarms =
 		// selectedTest.getElementaryTestAlarms();
-		ElementaryTestAlarm[] testAlarms = new ElementaryTestAlarm[0];
+		/**
+		 * TODO remove when ok
+		 */
+//		ElementaryTestAlarm[] testAlarms = new ElementaryTestAlarm[0];
 
 		// switch (temporalType.value()) {
 		// case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
@@ -602,35 +606,39 @@ public class TestLine extends JLabel implements ActionListener, OperationListene
 			else
 				w = MINIMAL_WIDTH;
 
-			if (testAlarms.length > 0) {
-				for (int j = 0; j < testAlarms.length; j++) {
-					if (Math.abs(testAlarms[j].elementary_start_time - testTimeLine.startTime) < 1000 * 30) {
-						Alarm alarm = (Alarm) Pool.get(Alarm.typ, testAlarms[j].alarm_id);
-						if (alarm != null) {
-							// System.out.println("alarm.type_id:" +
-							// alarm.type_id);
-							if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_ALARM)) {
-								// System.out.println("ID_RTU_TEST_ALARM");
-								if ((this.selectedTest != null) && (this.selectedTest.getId().equals(test.getId())))
-									g.setColor(TestLine.COLOR_ALARM_SELECTED);
-								else
-									g.setColor(TestLine.COLOR_ALARM);
-							} else if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_WARNING)) {
-								// System.out.println("ID_RTU_TEST_WARNING");
-								if ((this.selectedTest != null) && (this.selectedTest.getId().equals(test.getId())))
-									g.setColor(TestLine.COLOR_WARNING_SELECTED);
-								else
-									g.setColor(TestLine.COLOR_WARNING);
-							}
-						}
+			/**
+			 * TODO remove when ok
+			 */
 
-					}
-					// System.out.println(
-					// (testAlarms[j].elementary_start_time-times[i]));
-
-					// alarm.
-				}
-			}
+//			if (testAlarms.length > 0) {
+//				for (int j = 0; j < testAlarms.length; j++) {
+//					if (Math.abs(testAlarms[j].elementary_start_time - testTimeLine.startTime) < 1000 * 30) {
+//						Alarm alarm = (Alarm) Pool.get(Alarm.typ, testAlarms[j].alarm_id);
+//						if (alarm != null) {
+//							// System.out.println("alarm.type_id:" +
+//							// alarm.type_id);
+//							if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_ALARM)) {
+//								// System.out.println("ID_RTU_TEST_ALARM");
+//								if ((this.selectedTest != null) && (this.selectedTest.getId().equals(test.getId())))
+//									g.setColor(TestLine.COLOR_ALARM_SELECTED);
+//								else
+//									g.setColor(TestLine.COLOR_ALARM);
+//							} else if (alarm.type_id.equals(AlarmTypeConstants.ID_RTU_TEST_WARNING)) {
+//								// System.out.println("ID_RTU_TEST_WARNING");
+//								if ((this.selectedTest != null) && (this.selectedTest.getId().equals(test.getId())))
+//									g.setColor(TestLine.COLOR_WARNING_SELECTED);
+//								else
+//									g.setColor(TestLine.COLOR_WARNING);
+//							}
+//						}
+//
+//					}
+//					// System.out.println(
+//					// (testAlarms[j].elementary_start_time-times[i]));
+//
+//					// alarm.
+//				}
+//			}
 			x = this.margin + (int) (this.scale * (testTimeLine.startTime - this.start));
 			Color mColor = g.getColor();
 			if (testTimeLine.haveMeasurement) {
