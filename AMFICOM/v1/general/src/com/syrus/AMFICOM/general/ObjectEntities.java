@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.9 2004/08/09 07:40:28 bob Exp $
+ * $Id: ObjectEntities.java,v 1.10 2004/08/09 07:49:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/08/09 07:40:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2004/08/09 07:49:09 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -90,4 +90,35 @@ public abstract class ObjectEntities {
 	public static final short RESULTPARAMETER_ENTITY_CODE = 0x0189;
 	public static final short TEMPORALPATTERN_ENTITY_CODE = 0x018A;
 
+	public static short getCodeForString(String entity) {
+		if (entity.equals(CHARACTERISTICTYPE_ENTITY)) return CHARACTERISTICTYPE_ENTITY_CODE;
+		else if (entity.equals(EQUIPMENTTYPE_ENTITY)) return EQUIPMENTTYPE_ENTITY_CODE;
+		else if (entity.equals(PARAMETERTYPE_ENTITY)) return PARAMETERTYPE_ENTITY_CODE;
+		else if (entity.equals(MEASUREMENTTYPE_ENTITY)) return MEASUREMENTTYPE_ENTITY_CODE;
+		else if (entity.equals(ANALYSISTYPE_ENTITY)) return ANALYSISTYPE_ENTITY_CODE;
+		else if (entity.equals(EVALUATIONTYPE_ENTITY)) return EVALUATIONTYPE_ENTITY_CODE;
+
+		else if (entity.equals(PERMATTR_ENTITY)) return PERMATTR_ENTITY_CODE;
+		else if (entity.equals(DOMAIN_ENTITY)) return DOMAIN_ENTITY_CODE;
+		else if (entity.equals(SERVER_ENTITY)) return SERVER_ENTITY_CODE;
+		else if (entity.equals(USER_ENTITY)) return USER_ENTITY_CODE;
+
+		else if (entity.equals(CHARACTERISTIC_ENTITY)) return CHARACTERISTIC_ENTITY_CODE;
+		else if (entity.equals(ME_ENTITY)) return ME_ENTITY_CODE;
+		else if (entity.equals(KIS_ENTITY)) return KIS_ENTITY_CODE;
+		else if (entity.equals(MCM_ENTITY)) return MCM_ENTITY_CODE;
+
+		else if (entity.equals(SET_ENTITY)) return SET_ENTITY_CODE;
+		else if (entity.equals(SETPARAMETER_ENTITY)) return SETPARAMETER_ENTITY_CODE;
+		else if (entity.equals(MS_ENTITY)) return MS_ENTITY_CODE;
+		else if (entity.equals(MEASUREMENT_ENTITY)) return MEASUREMENT_ENTITY_CODE;
+		else if (entity.equals(ANALYSIS_ENTITY)) return ANALYSIS_ENTITY_CODE;
+		else if (entity.equals(EVALUATION_ENTITY)) return EVALUATION_ENTITY_CODE;
+		else if (entity.equals(TEST_ENTITY)) return TEST_ENTITY_CODE;
+		else if (entity.equals(RESULT_ENTITY)) return RESULT_ENTITY_CODE;
+		else if (entity.equals(RESULTPARAMETER_ENTITY)) return RESULTPARAMETER_ENTITY_CODE;
+		else if (entity.equals(TEMPORALPATTERN_ENTITY)) return TEMPORALPATTERN_ENTITY_CODE;
+
+		else return UNKNOWN_ENTITY_CODE;
+	}
 }
