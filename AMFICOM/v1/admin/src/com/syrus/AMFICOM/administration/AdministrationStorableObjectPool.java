@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationStorableObjectPool.java,v 1.10 2005/02/24 14:59:46 arseniy Exp $
+ * $Id: AdministrationStorableObjectPool.java,v 1.11 2005/02/25 08:16:56 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/02/24 14:59:46 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/02/25 08:16:56 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
@@ -176,7 +176,7 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 //				loadedList = aObjectLoader.loadPermissionAttributes(ids);
 //				break;
 			default:
-				Log.errorMessage("ConfigurationStorableObjectPool.loadStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode.shortValue()) + "', entity code: " + entityCode);
+				Log.errorMessage("AdministrationStorableObjectPool.loadStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode.shortValue()) + "', entity code: " + entityCode);
 				loadedObjects = null;
 		}
 		return loadedObjects;
@@ -202,7 +202,7 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 //				loadedList = aObjectLoader.loadPermissionAttributessButIds(condition, ids);
 //				break;
 			default:				
-				Log.errorMessage("ConfigurationStorableObjectPool.loadStorableObjectsButIds | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
+				Log.errorMessage("AdministrationStorableObjectPool.loadStorableObjectsButIds | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
 				loadedObjects = null;
 		}
 		return loadedObjects;
