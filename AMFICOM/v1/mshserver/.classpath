@@ -5,5 +5,7 @@
 	<classpathentry kind="src" path="/config_v1"/>
 	<classpathentry kind="src" path="/general_v1"/>
 	<classpathentry kind="src" path="/measurement_v1"/>
+	<classpathentry kind="src" path="/map_v1"/>
+	<classpathentry kind="src" path="/util"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

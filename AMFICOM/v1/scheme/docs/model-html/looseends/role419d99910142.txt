@@ -1,2 +1,0 @@
-*
-						 * Getter returns only elements enclosed by this scheme element.
