@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPath.java,v 1.6 2005/02/25 13:45:05 krupenn Exp $
+ * $Id: MeasurementPath.java,v 1.7 2005/03/04 14:28:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,7 +44,7 @@ import java.util.ListIterator;
  * Элемент пути.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/02/25 13:45:05 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/04 14:28:27 $
  * @module mapviewclient_v1
  */
 public class MeasurementPath implements MapElement
@@ -455,7 +455,7 @@ public class MeasurementPath implements MapElement
 				}
 			}
 		}
-		return this.unsortedCablePaths;
+		return Collections.unmodifiableList(this.unsortedCablePaths);
 	}
 
 	/**
@@ -483,7 +483,7 @@ public class MeasurementPath implements MapElement
 	 */
 	public List getSortedNodeLinks()
 	{
-		return this.sortedNodeLinks;
+		return Collections.unmodifiableList(this.sortedNodeLinks);
 	}
 	
 	/**
@@ -492,7 +492,7 @@ public class MeasurementPath implements MapElement
 	 */
 	public List getSortedNodes()
 	{
-		return this.sortedNodes;
+		return Collections.unmodifiableList(this.sortedNodes);
 	}
 	
 	/**
@@ -501,7 +501,7 @@ public class MeasurementPath implements MapElement
 	 */
 	public List getSortedCablePaths()
 	{
-		return this.sortedCablePaths;
+		return Collections.unmodifiableList(this.sortedCablePaths);
 	}
 	
 	/**
