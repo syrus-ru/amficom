@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseString.java,v 1.7 2005/02/04 09:54:13 bob Exp $
+ * $Id: DatabaseString.java,v 1.8 2005/02/22 08:21:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/04 09:54:13 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/02/22 08:21:18 $
+ * @author $Author: bass $
  * @module util
  */
 public class DatabaseString {
@@ -22,24 +22,54 @@ public class DatabaseString {
 	}
 
 	/**
-	 * @param string string to sql query, null is also available
-	 * @return escape strings for sql query
+	 * @param string string to be made SQL query-ready, <code>null</code>s
+	 *               are also allowed.
+	 * @return original string with apostrophes (&apos;) escaped (i.&nbsp;e.
+	 *         an SQL query-ready string).
 	 * @since j2sdk 1.4
 	 */
-	public static String toQuerySubString(String string){
+	public static String toQuerySubString(final String string) {
+		/*
+		 * Avoid code copypasting! If switching implementation here,
+		 * then do the same below to avoid stack overflowing.
+		 */
+//*/
 		return (string != null) ? string.replaceAll("(')", "$1$1") : "";
+/*/
+		return (string != null)
+				? toQuerySubString(string, string.length())
+				: "";
+//*/
 	}
 
 	/**
-	 * @param string string to sql query, null is also available
+	 * Does the same as {@link #toQuerySubString(String)}, but processes
+	 * at most <code>length</code> chars (with <code>beginIndex</code> of
+	 * <code>0</code> and <code>endIndex</code> of <code>length - 1</code>).
+	 *
+	 * @param string string to be made SQL query-ready, <code>null</code>s
+	 *               are also allowed.
 	 * @param length maximum length to this string
-	 * @return escape strings for sql query
+	 * @return original string with apostrophes (&apos;) escaped (i.&nbsp;e.
+	 *         an SQL query-ready string).
 	 * @since j2sdk 1.4
 	 */
-	public static String toQuerySubString(String string, int length){
+	public static String toQuerySubString(final String string, final int length) {
+		/*
+		 * Avoid code copypasting! If switching implementation here,
+		 * then do the same above to avoid stack overflowing.
+		 */
+/*/
 		return (string != null) ? (
 				(string.length() > length) ? string.substring(0, length) : string
 						).replaceAll("(')", "$1$1") : "";
+/*/
+		return (string != null)
+				? toQuerySubString((string.length() > length)
+						? string.substring(0, length)
+						: string)
+				: "";
+//*/
 	}
 
 	/**
@@ -61,9 +91,12 @@ public class DatabaseString {
 	 * @return sql query without escape chars 
  	 * @since j2sdk 1.4
 	 */
-	public static String fromQuerySubString(String string){
+	public static String fromQuerySubString(final String string){
 		// we mustn't unescape from substring because of this work done in sql driver
-		// return (string != null) ? string.replaceAll("(')\\1", "$1") : null;
+/*/
+		return (string != null) ? string.replaceAll("(')\\1", "$1") : null;
+/*/
 		return string;
+//*/
 	}
 }
