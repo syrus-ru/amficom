@@ -7,6 +7,9 @@ REM general
 REM administration
 @@./administration/CREATE.sql
 
+REM resource
+@@./resource/CREATE.sql
+
 REM configuration
 @@./configuration/CREATE.sql
 
@@ -16,6 +19,8 @@ REM measurement
 REM map
 @@./map/CREATE.sql
 
+REM scheme
+@@./scheme/CREATE.sql
+
 REM mapview
 @@./mapview/CREATE.sql
-
