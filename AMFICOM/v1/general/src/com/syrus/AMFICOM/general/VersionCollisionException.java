@@ -1,5 +1,5 @@
 /*
- * $Id: VersionCollisionException.java,v 1.4 2004/08/23 20:47:57 arseniy Exp $
+ * $Id: VersionCollisionException.java,v 1.5 2005/02/10 18:53:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/08/23 20:47:57 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/10 18:53:13 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -17,26 +17,59 @@ package com.syrus.AMFICOM.general;
 public class VersionCollisionException extends ApplicationException {
 	static final long serialVersionUID = -3847337178607890353L;
 
+	private long desiredVersion;
+	private long actualVersion;
+
 	/**
+	 * 
 	 * @param message
+	 * @param desiredVersion
+	 * @param actualVersion
 	 */
-	public VersionCollisionException(String message) {
+	public VersionCollisionException(String message, long desiredVersion, long actualVersion) {
 		super(message);
+		this.desiredVersion = desiredVersion;
+		this.actualVersion = actualVersion;
 	}
 
 	/**
+	 * 
 	 * @param message
 	 * @param cause
+	 * @param desiredVersion
+	 * @param actualVersion
 	 */
-	public VersionCollisionException(String message, Throwable cause) {
+	public VersionCollisionException(String message, Throwable cause, long desiredVersion, long actualVersion) {
 		super(message, cause);
+		this.desiredVersion = desiredVersion;
+		this.actualVersion = actualVersion;
 	}
 
 	/**
+	 * 
 	 * @param cause
+	 * @param desiredVersion
+	 * @param actualVersion
 	 */
-	public VersionCollisionException(Throwable cause) {
+	public VersionCollisionException(Throwable cause, long desiredVersion, long actualVersion) {
 		super(cause);
+		this.desiredVersion = desiredVersion;
+		this.actualVersion = actualVersion;
 	}
 
+	/**
+	 * 
+	 * @return desired version
+	 */
+	public long getDesiredVersion() {
+		return this.desiredVersion;
+	}
+
+	/**
+	 * 
+	 * @return actual version
+	 */
+	public long getActualVersion() {
+		return this.actualVersion;
+	}
 }
