@@ -33,7 +33,7 @@ public class ProgressBar extends JPanel
 
 	public ProgressBar()
 	{
-		this.setSize(200, 18);
+		this.setSize(200, 15);
 		this.setPreferredSize(this.getSize());
 		this.setDoubleBuffered(true);
 

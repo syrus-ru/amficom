@@ -128,7 +128,14 @@ class StatusBarField
 
 public class StatusBarModel extends JPanel implements OperationListener
 {
-	public ProgressBar pbar = null;
+	public static String field_status = "status";
+	public static String field_server = "server";
+	public static String field_session = "session";
+	public static String field_user = "user";
+	public static String field_time = "time";
+
+	private ProgressBar pbar = new ProgressBar();
+	private boolean pbarEnabled = false;
 
 	StatusBarField fields[];
 	int field_num;
@@ -155,18 +162,6 @@ public class StatusBarModel extends JPanel implements OperationListener
 		}
 	}
 
-	public StatusBarModel(boolean withStatusBar)
-	{
-		this(0);
-
-		if (withStatusBar)
-		{
-//		pbar.setBorder(border);
-			pbar = new ProgressBar();
-			this.add(pbar, new XYConstraints(0, 0, -1, -1));
-		}
-	}
-
 	public StatusBarModel(int field_num)
 	{
 		this();
@@ -181,7 +176,7 @@ public class StatusBarModel extends JPanel implements OperationListener
 
 		int width = this.getWidth();
 		int f_width = width / field_num;
-		int f_start = 1;
+		int f_start = 0;
 
 		for(i = 0; i < field_num; i++)
 		{
@@ -283,7 +278,7 @@ public class StatusBarModel extends JPanel implements OperationListener
 
 		distribute();
 
-		if(field_id.equals("time"))
+		if(field_id.equals(StatusBarModel.field_time))
 		{
 			new MyTimeDisplay(fields[index]).start();
 		}
@@ -376,8 +371,8 @@ public class StatusBarModel extends JPanel implements OperationListener
 		int f_width = width / field_num;
 //		int f_start = 0;
 		int f_start = 0;
-		if (pbar != null)
-			f_start = pbar.getWidth();
+		if (pbarEnabled)
+			f_start = pbar.getWidth() + 3;
 
 		for(i = 0; i < field_num; i++)
 		{
@@ -526,21 +521,36 @@ public class StatusBarModel extends JPanel implements OperationListener
 		if(oe.getActionCommand().equals(StatusMessageEvent.type))
 		{
 			StatusMessageEvent sme = (StatusMessageEvent )oe;
-			setText("status", sme.getText());
+			setText(StatusBarModel.field_status, sme.getText());
 		}
 	}
 
 	public void enableProgressBar (boolean en)
 	{
-		if (pbar == null)
-			return;
-
 		if (en)
-			pbar.start("Идёт загрузка. Подождите.");
-		else
-			pbar.stop();
-	}
+		{
+			pbarEnabled = true;
+			this.distribute();
+			this.add(
+						pbar,
+						new XYConstraints(
+								3,
+								(this.getHeight() - pbar.getHeight()) / 2 + 2,
+								pbar.getWidth(),
+								pbar.getHeight()));
 
+			pbar.start("Идёт загрузка. Подождите.");
+		}
+		else
+		{
+			pbar.stop();
+
+			pbarEnabled = false;
+			this.distribute();
+
+			this.remove(pbar);
+		}
+	}
 }
 
 
