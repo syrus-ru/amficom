@@ -20,5 +20,6 @@ sqlj.properties
 .project
 .classpath
 .settings
+.nbattrs
 .nbintdb
 Makefile.inc
