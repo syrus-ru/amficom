@@ -4,6 +4,7 @@ lib
 *.deploy
 *.jpr
 *.jpx
+*.jar
 *.tar
 *.gz
 *.swp

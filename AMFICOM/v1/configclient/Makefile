@@ -67,34 +67,9 @@ $(call checkenve,ORACLE_HOME)
 $(call checkenve,IDL2JAVA)
 
 
-$(LIBNAME): mach client
+$(LIBNAME): client
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
-
-.PHONY:	mach
-mach:	.mach
-.mach:	corba $(CLASSDIR)
-	$(JAVAC) $(JAVAC_FLAGS) \
-		-classpath $(APPCLASSPATH):$(CLASSDIR) \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/ConfigurationDatabaseContext.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/Equipment.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/Equipment_Database.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredElement.java \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/MonitoredElement_Database.java
-
-.PHONY:	corba
-corba:	.corba
-.corba:	$(CLASSDIR)
-	$(IDL2JAVA) $(IDL2JAVA_FLAGS) \
-		$(IDLDIR)/configuration.idl
-	$(JAVAC) $(JAVAC_FLAGS) -nowarn \
-		-classpath $(APPCLASSPATH) \
-		-sourcepath $(SRCDIR) \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/corba/*.java
-	touch $@
-
-$(CLASSDIR):
-	mkdir -p $@
 
 .PHONY:	client
 client:	.client
@@ -105,20 +80,12 @@ client:	.client
 		$(shell find $(SRCDIR)/com/syrus/AMFICOM/Client -name '*.java')
 	touch $@
 
+$(CLASSDIR):
+	mkdir -p $@
+
 .PHONY:	clean
-clean:	cleanmach cleancorba cleanclient
+clean:	cleanclient
 	$(RM) -f $(LIBNAME)
-
-.PHONY:	cleanmach
-cleanmach:
-	$(RM) -rf $(CLASSDIR)/com/syrus/AMFICOM/configuration/*.class
-	$(RM) -f .mach
-
-.PHONY:	cleancorba
-cleancorba:
-	$(RM) -rf $(SRCDIR)/com/syrus/AMFICOM/configuration/corba
-	$(RM) -rf $(CLASSDIR)/com/syrus/AMFICOM/configuration/corba
-	$(RM) -f .corba
 
 .PHONY:	cleanclient
 cleanclient:
@@ -126,10 +93,3 @@ cleanclient:
 		$(foreach file, $(filter-out $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)') \
 		.client
 
-#### Archive ####
-.PHONY:	arch
-arch:
-	tar -czvf $(ARCHFILE) \
-		Makefile \
-		$(IDLDIR)/configuration.idl \
-		$(SRCDIR)/com/syrus/AMFICOM/configuration/*.java
