@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServerSetup.java,v 1.25 2005/01/17 08:25:07 bob Exp $
+ * $Id: MeasurementServerSetup.java,v 1.26 2005/01/19 20:57:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,18 +13,46 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.syrus.AMFICOM.general.GeneralDatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.IdentifierGenerator;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.ParameterTypeDatabase;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.MCM;
-import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.administration.User;
+import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.administration.corba.UserSort;
-import com.syrus.AMFICOM.configuration.*;
-import com.syrus.AMFICOM.configuration.corba.*;
-import com.syrus.AMFICOM.measurement.*;
-import com.syrus.AMFICOM.measurement.corba.*;
+import com.syrus.AMFICOM.configuration.Port;
+import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.configuration.MeasurementPortType;
+import com.syrus.AMFICOM.configuration.TransmissionPath;
+import com.syrus.AMFICOM.configuration.MeasurementPort;
+import com.syrus.AMFICOM.configuration.PortType;
+import com.syrus.AMFICOM.configuration.TransmissionPathType;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
+import com.syrus.AMFICOM.configuration.Equipment;
+import com.syrus.AMFICOM.configuration.KIS;
+import com.syrus.AMFICOM.configuration.corba.PortSort;
+import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
+import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
+import com.syrus.AMFICOM.measurement.MeasurementType;
+import com.syrus.AMFICOM.measurement.MeasurementSetup;
+import com.syrus.AMFICOM.measurement.AnalysisType;
+import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
+import com.syrus.AMFICOM.measurement.Test;
+import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
+import com.syrus.AMFICOM.measurement.TemporalPattern;
+import com.syrus.AMFICOM.measurement.SetParameter;
+import com.syrus.AMFICOM.measurement.Set;
+import com.syrus.AMFICOM.measurement.EvaluationType;
+import com.syrus.AMFICOM.measurement.MeasurementDatabaseContext;
+import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
+import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
+import com.syrus.AMFICOM.measurement.corba.TestReturnType;
+import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
+import com.syrus.AMFICOM.measurement.corba.SetSort;
 import com.syrus.AMFICOM.mserver.DatabaseContextSetup;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
@@ -33,8 +61,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/01/17 08:25:07 $
- * @author $Author: bob $
+ * @version $Revision: 1.26 $, $Date: 2005/01/19 20:57:34 $
+ * @author $Author: arseniy $
  * @module mserver_v1
  */
 
@@ -43,6 +71,9 @@ public final class MeasurementServerSetup {
 	public static final int DB_CONNECTION_TIMEOUT = 120;
 	public static final String DB_LOGIN_NAME = "amficom";
 
+	/**
+	 * @todo Use ParameterTypeCodenames
+	 */
 	public static final String CODENAME_REF_WVLEN = "ref_wvlen";
 	public static final String CODENAME_REF_TRCLEN = "ref_trclen";
 	public static final String CODENAME_REF_RES = "ref_res";
@@ -85,10 +116,10 @@ public final class MeasurementServerSetup {
 		PortType portType = createPortType(sysAdminId);
 
 		MeasurementPortType mPortType = createMeasurementPortType(sysAdminId);
-		        
-        TransmissionPathType transmissionPathType = createTransmissionPathType(sysAdminId);
-		
-        Identifier domainId = createDomain(sysAdminId);
+
+		TransmissionPathType transmissionPathType = createTransmissionPathType(sysAdminId);
+
+		Identifier domainId = createDomain(sysAdminId);
 
 
 		Identifier serverUserId = createUser(sysAdminId,
@@ -478,12 +509,13 @@ public final class MeasurementServerSetup {
 	}
 
 	private static void checkParameterTypes() {
+		ParameterTypeDatabase parameterTypeDatabase = (ParameterTypeDatabase)GeneralDatabaseContext.getParameterTypeDatabase();
 		AnalysisTypeDatabase analysisTypeDatabase = ((AnalysisTypeDatabase)MeasurementDatabaseContext.getAnalysisTypeDatabase());
 		EvaluationTypeDatabase evaluationTypeDatabase = ((EvaluationTypeDatabase)MeasurementDatabaseContext.getEvaluationTypeDatabase());
 		MeasurementTypeDatabase measurementTypeDatabase = ((MeasurementTypeDatabase)MeasurementDatabaseContext.getMeasurementTypeDatabase());
 
 		try {
-			List parameterTypes = ((ParameterTypeDatabase)(MeasurementDatabaseContext.getParameterTypeDatabase())).retrieveAll();
+			List parameterTypes = parameterTypeDatabase.retrieveAll();
 			ParameterType pt;
 			for (Iterator i = parameterTypes.iterator(); i.hasNext();) {
 				pt = (ParameterType)i.next();
@@ -630,7 +662,7 @@ public final class MeasurementServerSetup {
 	}
 
 	private static Set createParameterSet(Identifier creatorId, List monitoredElementIds) {
-		ParameterTypeDatabase parameterTypeDatabase = ((ParameterTypeDatabase)MeasurementDatabaseContext.getParameterTypeDatabase());
+		ParameterTypeDatabase parameterTypeDatabase = ((ParameterTypeDatabase)GeneralDatabaseContext.getParameterTypeDatabase());
 		
 		try {
 			ParameterType wvlenParam = parameterTypeDatabase.retrieveForCodename(CODENAME_REF_WVLEN);
@@ -668,7 +700,7 @@ public final class MeasurementServerSetup {
 	}
 
 	private static Set createCriteriaSet(Identifier creatorId, List monitoredElementIds) {
-		ParameterTypeDatabase parameterTypeDatabase = ((ParameterTypeDatabase)MeasurementDatabaseContext.getParameterTypeDatabase());
+		ParameterTypeDatabase parameterTypeDatabase = ((ParameterTypeDatabase)GeneralDatabaseContext.getParameterTypeDatabase());
 		try {
 			ParameterType tacticParam = parameterTypeDatabase.retrieveForCodename(CODENAME_DADARA_TACTIC);
 			ParameterType eventsizeParam = parameterTypeDatabase.retrieveForCodename(CODENAME_DADARA_EVENT_SIZE);
