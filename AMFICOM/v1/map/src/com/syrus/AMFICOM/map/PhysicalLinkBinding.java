@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkBinding.java,v 1.3 2005/01/18 06:22:21 bob Exp $
+ * $Id: PhysicalLinkBinding.java,v 1.4 2005/01/18 15:42:25 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,10 +22,9 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2005/01/18 06:22:21 $
- * @module
- * @author $Author: bob $
- * @see
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/01/18 15:42:25 $
+ * @module map_v1
  */
 public final class PhysicalLinkBinding 
 {

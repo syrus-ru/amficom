@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkState.java,v 1.2 2005/01/17 15:05:24 bob Exp $
+ * $Id: PhysicalLinkState.java,v 1.3 2005/01/18 15:42:25 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,10 +22,9 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2005/01/17 15:05:24 $
- * @module
- * @author $Author: bob $
- * @see
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/01/18 15:42:25 $
+ * @module map_v1
  */
 public class PhysicalLinkState extends MapElementState
 {

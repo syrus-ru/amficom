@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractNode.java,v 1.5 2005/01/17 10:54:58 bob Exp $
+ * $Id: AbstractNode.java,v 1.6 2005/01/18 15:42:25 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/01/17 10:54:58 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/01/18 15:42:25 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public abstract class AbstractNode 
@@ -39,12 +39,12 @@ public abstract class AbstractNode
 	protected String	description;
 
 	/**
-	 * @deprecated use {@link #location.getX()}
+	 * @deprecated use {@link #location location}.{@link DoublePoint#getX() getX()}
 	 */
 	protected double	longitude;
 
 	/**
-	 * @deprecated use {@link #location.getY()}
+	 * @deprecated use {@link #location location}.{@link DoublePoint#getY() getY()}
 	 */
 	protected double	latitude;
 
@@ -140,14 +140,14 @@ public abstract class AbstractNode
 	}
 
 	/**
-	 * @deprecated use {@link #getLocation().getY()}
+	 * @deprecated use {@link #location location}.{@link DoublePoint#getY() getY()}
 	 */
 	public double getLatitude() {
 		return this.location.getY();
 	}
 
 	/**
-	 * @deprecated use {@link #getLocation().getX()}
+	 * @deprecated use {@link #location location}.{@link DoublePoint#getX() getX()}
 	 */
 	public double getLongitude() {
 		return this.location.getX();

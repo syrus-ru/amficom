@@ -1,5 +1,5 @@
 /*
- * $Id: Mark.java,v 1.12 2005/01/17 15:05:24 bob Exp $
+ * $Id: Mark.java,v 1.13 2005/01/18 15:42:25 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/01/17 15:05:24 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2005/01/18 15:42:25 $
+ * @author $Author: bass $
  * @module map_v1
  */
 public class Mark extends AbstractNode implements Characterized {
@@ -358,9 +358,8 @@ public class Mark extends AbstractNode implements Characterized {
 			if(nl.equals(this.nodeLink)){
 				pathLength += this.getSizeInDoubleLt();
 				break;
-			} else {
-				pathLength += nl.getLengthLt();
 			}
+			pathLength += nl.getLengthLt();
 		}
 		return pathLength;
 	}
@@ -381,8 +380,7 @@ public class Mark extends AbstractNode implements Characterized {
 				pathLength += nl.getLengthLt() - this.getSizeInDoubleLt();
 				break;
 			}
-			else
-				pathLength += nl.getLengthLt();
+			pathLength += nl.getLengthLt();
 		}
 		return pathLength;
 	}
