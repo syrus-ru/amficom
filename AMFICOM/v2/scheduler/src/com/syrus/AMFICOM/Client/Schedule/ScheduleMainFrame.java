@@ -58,6 +58,8 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 	ElementsTreeFrame				treeFrame;
 
+	SaveParametersFrame				saveFrame;
+
 	public ScheduleMainFrame(ApplicationContext aContext) {
 		super();
 		setContext(aContext);
@@ -128,6 +130,9 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		treeFrame = new ElementsTreeFrame(aContext);
 		desktopPane.add(treeFrame);
 
+		saveFrame = new SaveParametersFrame(aContext);
+		desktopPane.add(saveFrame);
+
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Dimension frameSize = new Dimension(screenSize.width,
 				screenSize.height - 24);
@@ -143,11 +148,11 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		ApplicationModel aModel = aContext.getApplicationModel();
 
 		statusBar.distribute();
-//		statusBar.setWidth("status", 100);
-//		statusBar.setWidth("server", 250);
-//		statusBar.setWidth("session", 200);
-//		statusBar.setWidth("user", 100);
-//		statusBar.setWidth("time", 50);		
+		//		statusBar.setWidth("status", 100);
+		//		statusBar.setWidth("server", 250);
+		//		statusBar.setWidth("session", 200);
+		//		statusBar.setWidth("user", 100);
+		//		statusBar.setWidth("time", 50);
 		statusBar.setWidth("status", 300);
 		statusBar.setWidth("server", 250);
 		statusBar.setWidth("session", 200);
@@ -391,6 +396,7 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 		treeFrame.setVisible(true);
 		timeFrame.setVisible(true);
 		planFrame.setVisible(true);
+		saveFrame.setVisible(true);
 	}
 
 	public void setSessionOpened() {
@@ -398,8 +404,10 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 		DataSourceInterface dataSource = aContext.getDataSourceInterface();
 
-		aContext.getDispatcher().notify(
-				new StatusMessageEvent(LangModelSchedule.getString("statusBD")));
+		aContext.getDispatcher()
+				.notify(
+						new StatusMessageEvent(LangModelSchedule
+								.getString("statusBD")));
 		//		new SurveyDataSourceImage(dataSource).LoadParameterTypes();
 		//		new SurveyDataSourceImage(dataSource).LoadTestTypes();
 		//		new SurveyDataSourceImage(dataSource).LoadAnalysisTypes();
@@ -409,7 +417,10 @@ public class ScheduleMainFrame extends JFrame implements OperationListener {
 
 		new ConfigDataSourceImage(dataSource).LoadISM();
 		new SchemeDataSourceImage(dataSource).LoadISMDirectory();
-		new SurveyDataSourceImage(dataSource).LoadTestTypes();
+		SurveyDataSourceImage sdsi = new SurveyDataSourceImage(dataSource);
+		sdsi.LoadTestTypes();
+		sdsi.LoadAnalysisTypes();
+		sdsi.LoadEvaluationTypes();
 
 		aContext.getDispatcher().notify(
 				new StatusMessageEvent(LangModelSchedule
@@ -487,18 +498,21 @@ class ScheduleWindowArranger extends WindowArranger {
 		normalize(f.propsFrame);
 		normalize(f.treeFrame);
 		normalize(f.timeFrame);
+		normalize(f.saveFrame);
 
-		f.treeFrame.setSize(min_w, 3 * h / 4);
+		f.treeFrame.setSize(min_w, h / 2);
 		f.propsFrame.setSize(min_w, h / 4);
 		f.timeFrame.setSize(min_w, Math.max(330, h / 2));
-		f.paramsFrame.setSize(min_w, 3 * h / 4 - f.timeFrame.getHeight());
+		f.saveFrame.setSize(min_w, 3 * h / 4 - f.timeFrame.getHeight());
+		f.paramsFrame.setSize(min_w, h / 2);
 		f.planFrame.setSize(w - 2 * min_w, h / 4 + f.timeFrame.getHeight());
 
 		f.treeFrame.setLocation(0, 0);
 		f.planFrame.setLocation(min_w, 0);
 		f.propsFrame.setLocation(w - min_w, 0);
 		f.timeFrame.setLocation(w - min_w, h / 4);
-		f.paramsFrame.setLocation(w - min_w, h / 4 + f.timeFrame.getHeight());
+		f.saveFrame.setLocation(w - min_w, h / 4 + f.timeFrame.getHeight());
+		f.paramsFrame.setLocation(0, f.treeFrame.getHeight());
 
 	}
 }
