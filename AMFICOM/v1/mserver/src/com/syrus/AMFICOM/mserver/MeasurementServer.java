@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServer.java,v 1.22 2005/03/10 21:08:15 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.23 2005/03/15 16:29:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,15 +12,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.MCM;
 import com.syrus.AMFICOM.administration.Server;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.KIS;
-import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -40,7 +38,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/03/10 21:08:15 $
+ * @version $Revision: 1.23 $, $Date: 2005/03/15 16:29:10 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -259,25 +257,32 @@ public class MeasurementServer extends SleepButWorkThread {
 	
 	private static void fillMCMTestQueueMap() throws ApplicationException {
 		LinkedIdsCondition lic = new LinkedIdsCondition(mcmTestQueueMap.keySet(), ObjectEntities.TEST_ENTITY_CODE);
-		Collection tests = MeasurementStorableObjectPool.getStorableObjectsByCondition(lic, true);
+
+		Collection addedTestIds = new HashSet();
+		Identifier mcmId;
+		Map testQueue;
+		for (Iterator it = mcmTestQueueMap.keySet().iterator(); it.hasNext();) {
+			mcmId = (Identifier) it.next();
+			testQueue = (Map) mcmTestQueueMap.get(mcmId);
+			addedTestIds.add(mcmTestQueueMap.get(testQueue.keySet()));
+		}
+
+		Collection tests = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(addedTestIds, lic, true);
 
 		Test test;
-		MeasurementPort measurementPort;
-		KIS kis;
-		Identifier mcmId;
 		for (Iterator it = tests.iterator(); it.hasNext();) {
 			test = (Test) it.next();
-			measurementPort = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(test.getMonitoredElement().getMeasurementPortId(), true);
-			kis = (KIS) ConfigurationStorableObjectPool.getStorableObject(measurementPort.getKISId(), true);
-			mcmId = kis.getMCMId();
+			mcmId = test.getMCMId();
 
-			Map testQueue = (Map) mcmTestQueueMap.get(mcmId);
+			testQueue = (Map) mcmTestQueueMap.get(mcmId);
 			if (testQueue != null) {
 				Identifier testId = test.getId();
 				if (!testQueue.containsKey(testId)) {
 					Log.debugMessage("Adding test '" + testId + "' for MCM '" + mcmId + "'", Log.DEBUGLEVEL04);
 					testQueue.put(testId, test);
 				}
+				else
+					Log.errorMessage("Test '" + testId + "' already added to queue");
 			}
 			else
 				Log.errorMessage("Test queue for mcm id '" + mcmId + "' not found");
