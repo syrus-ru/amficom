@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.20 2004/12/23 12:44:29 bob Exp $
+ * $Id: LinkedIdsCondition.java,v 1.21 2004/12/24 10:02:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/12/23 12:44:29 $
+ * @version $Revision: 1.21 $, $Date: 2004/12/24 10:02:23 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -30,12 +30,12 @@ class LinkedIdsCondition extends com.syrus.AMFICOM.general.LinkedIdsCondition {
 	protected static final Short		MEASUREMENTTYPE_SHORT	= new Short(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
 	protected static final Short		MS_SHORT				= new Short(ObjectEntities.MS_ENTITY_CODE);
 	
-	public LinkedIdsCondition(List linkedIds, Short entityCode) {
+	private LinkedIdsCondition(List linkedIds, Short entityCode) {
 		this.linkedIds = linkedIds;
 		this.entityCode = entityCode;
 	}
 
-	public LinkedIdsCondition(Identifier identifier, Short entityCode) {
+	private LinkedIdsCondition(Identifier identifier, Short entityCode) {
 		this.identifier = identifier;
 		this.entityCode = entityCode;
 	}
