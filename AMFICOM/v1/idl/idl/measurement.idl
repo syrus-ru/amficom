@@ -1,5 +1,5 @@
 /*
- * $Id: measurement.idl,v 1.21 2004/10/04 13:24:36 bass Exp $
+ * $Id: measurement.idl,v 1.22 2004/10/05 11:42:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -331,13 +331,7 @@ module corba {
 			com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
 			com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable test_ids;
 	};
-
-	struct TestCondition_Transferable {
-			com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
-			long long start;
-			long long end;
-	};
-
+	
 	enum MeasurementSetupConditionSort {
 		MSC_SORT_MEASUREMENT_TYPE,
 		MSC_SORT_MONITORED_ELEMENT
@@ -346,6 +340,17 @@ module corba {
 	struct MeasurementSetupCondition_Transferable {
 			com::syrus::AMFICOM::general::corba::Identifier_Transferable object_id;
 			MeasurementSetupConditionSort sort;
+	};
+
+	struct ResultCondition_Transferable {
+			com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
+			com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable measurement_ids;
+	};
+
+	struct TestCondition_Transferable {
+			com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
+			long long start;
+			long long end;
 	};
 	
 };
