@@ -1,5 +1,5 @@
 /*
- * $Id: XMLAdministrationObjectLoader.java,v 1.5 2005/02/11 18:40:09 arseniy Exp $
+ * $Id: XMLAdministrationObjectLoader.java,v 1.6 2005/02/15 07:11:36 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/11 18:40:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/02/15 07:11:36 $
+ * @author $Author: bob $
  * @module admin_v1
  */
 public class XMLAdministrationObjectLoader implements AdministrationObjectLoader {
@@ -146,50 +146,50 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 
 	public void saveDomain(Domain domain, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObject(domain);
+		this.saveStorableObject(domain, force);
 		this.administrationXML.flush();
 	}
 
 	public void saveDomains(Collection collection, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(collection);
+		this.saveStorableObjects(collection, force);
 
 	}
 
 	public void saveMCM(MCM mcm, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObject(mcm);
+		this.saveStorableObject(mcm, force);
 		this.administrationXML.flush();
 
 	}
 
 	public void saveMCMs(Collection collection, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(collection);
+		this.saveStorableObjects(collection, force);
 
 	}
 
 	public void saveServer(Server server, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObject(server);
+		this.saveStorableObject(server, force);
 		this.administrationXML.flush();
 	}
 
 	public void saveServers(Collection collection, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(collection);
+		this.saveStorableObjects(collection, force);
 
 	}
 
 	public void saveUser(User user, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObject(user);
+		this.saveStorableObject(user, force);
 		this.administrationXML.flush();
 	}
 
 	public void saveUsers(Collection collection, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(collection);
+		this.saveStorableObjects(collection, force);
 
 	}
 
@@ -221,11 +221,11 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 
 	}
 
-	private void saveStorableObject(StorableObject storableObject) throws CommunicationException {
+	private void saveStorableObject(StorableObject storableObject, boolean force) throws CommunicationException {
 		Identifier id = storableObject.getId();
 		Identifier modifierId = SessionContext.getAccessIdentity().getUserId();
 		try {
-			this.administrationXML.updateObject(storableObject, modifierId);
+			this.administrationXML.updateObject(storableObject, force, modifierId);
 		} catch (UpdateObjectException e) {
 			throw new CommunicationException("XMLAdministrationObjectLoader.save"
 					+ ObjectEntities.codeToString(id.getMajor()) + " | caught " + e.getMessage(), e);
@@ -239,10 +239,10 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 
 	}
 
-	private void saveStorableObjects(Collection storableObjects) throws CommunicationException {
+	private void saveStorableObjects(Collection storableObjects, boolean force) throws CommunicationException {
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			StorableObject storableObject = (StorableObject) it.next();
-			this.saveStorableObject(storableObject);
+			this.saveStorableObject(storableObject, force);
 		}
 		this.administrationXML.flush();
 	}

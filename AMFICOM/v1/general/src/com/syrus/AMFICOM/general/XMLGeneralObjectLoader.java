@@ -1,5 +1,5 @@
 /*
- * $Id: XMLGeneralObjectLoader.java,v 1.9 2005/02/11 18:40:16 arseniy Exp $
+ * $Id: XMLGeneralObjectLoader.java,v 1.10 2005/02/15 07:11:32 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/02/11 18:40:16 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/02/15 07:11:32 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public final class XMLGeneralObjectLoader implements GeneralObjectLoader {
@@ -112,11 +112,11 @@ public final class XMLGeneralObjectLoader implements GeneralObjectLoader {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	private void saveStorableObject(StorableObject storableObject) throws CommunicationException {
+	private void saveStorableObject(StorableObject storableObject, boolean force) throws CommunicationException {
 		Identifier id = storableObject.getId();
 		Identifier modifierId = SessionContext.getAccessIdentity().getUserId();
 		try {
-			this.generalXML.updateObject(storableObject, modifierId);
+			this.generalXML.updateObject(storableObject, force, modifierId);
 		} catch (UpdateObjectException e) {
 			throw new CommunicationException("XMLGeneralObjectLoader.save" + ObjectEntities.codeToString(id.getMajor())
 					+ " | caught " + e.getMessage(), e);
@@ -132,43 +132,43 @@ public final class XMLGeneralObjectLoader implements GeneralObjectLoader {
 
 	public void saveParameterType(ParameterType parameterType, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
-		this.saveStorableObject(parameterType);
+		this.saveStorableObject(parameterType, force);
 		this.generalXML.flush();
 	}
 
 	public void saveCharacteristicType(CharacteristicType characteristicType, boolean force)
 			throws VersionCollisionException, DatabaseException, CommunicationException {
-		this.saveStorableObject(characteristicType);
+		this.saveStorableObject(characteristicType, force);
 		this.generalXML.flush();
 	}
 
 	public void saveCharacteristic(Characteristic characteristic, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException {
-		this.saveStorableObject(characteristic);
+		this.saveStorableObject(characteristic, force);
 		this.generalXML.flush();
 	}
 
-	private void saveStorableObjects(Collection storableObjects) throws CommunicationException {
+	private void saveStorableObjects(Collection storableObjects, boolean force) throws CommunicationException {
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			StorableObject storableObject = (StorableObject) it.next();
-			this.saveStorableObject(storableObject);
+			this.saveStorableObject(storableObject, force);
 		}
 		this.generalXML.flush();
 	}
 
 	public void saveParameterTypes(Collection collection, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(collection);
+		this.saveStorableObjects(collection, force);
 	}
 
 	public void saveCharacteristicTypes(Collection collection, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(collection);
+		this.saveStorableObjects(collection, force);
 	}
 
 	public void saveCharacteristics(Collection collection, boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		this.saveStorableObjects(collection);
+		this.saveStorableObjects(collection, force);
 	}
 
 	public Set refresh(Set storableObjects) throws CommunicationException, DatabaseException {

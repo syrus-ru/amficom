@@ -1,5 +1,5 @@
 /*
- * $Id: XMLMapObjectLoader.java,v 1.3 2005/02/14 10:30:56 bob Exp $
+ * $Id: XMLMapObjectLoader.java,v 1.4 2005/02/15 07:11:55 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/14 10:30:56 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/15 07:11:55 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -97,10 +97,10 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		}
 	}
 
-	private void saveStorableObject(StorableObject storableObject) throws CommunicationException {
+	private void saveStorableObject(StorableObject storableObject, boolean force) throws CommunicationException {
 		Identifier id = storableObject.getId();
 		try {
-			this.mapXML.updateObject(storableObject, SessionContext.getAccessIdentity().getUserId());
+			this.mapXML.updateObject(storableObject, force, SessionContext.getAccessIdentity().getUserId());
 		} catch (UpdateObjectException e) {
 			throw new CommunicationException("XMLMapObjectLoader.save"
 					+ ObjectEntities.codeToString(id.getMajor()) + " | caught " + e.getMessage(), e);
@@ -113,10 +113,10 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 		}
 	}
 
-	private void saveStorableObjects(Collection storableObjects) throws CommunicationException {
+	private void saveStorableObjects(Collection storableObjects, boolean force) throws CommunicationException {
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			StorableObject storableObject = (StorableObject) it.next();
-			this.saveStorableObject(storableObject);
+			this.saveStorableObject(storableObject, force);
 		}
 		this.mapXML.flush();
 	}
@@ -303,100 +303,100 @@ public final class XMLMapObjectLoader implements MapObjectLoader {
 
 	public void saveCollector(Collector collector, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
 	{
-		this.saveStorableObject(collector);
+		this.saveStorableObject(collector, force);
 		this.mapXML.flush();
 	}
 
 	public void saveMap(Map map, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
 	{
-		this.saveStorableObject(map);
+		this.saveStorableObject(map, force);
 		this.mapXML.flush();
 	}
 
 	public void saveMark(Mark mark, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
 	{
-		this.saveStorableObject(mark);
+		this.saveStorableObject(mark, force);
 		this.mapXML.flush();
 	}
 
 	public void saveNodeLink(NodeLink nodeLink, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
 	{
-		this.saveStorableObject(nodeLink);
+		this.saveStorableObject(nodeLink, force);
 		this.mapXML.flush();
 	}
 
 	public void savePhysicalLink(PhysicalLink physicalLink, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
 	{
-		this.saveStorableObject(physicalLink);
+		this.saveStorableObject(physicalLink, force);
 		this.mapXML.flush();
 	}
 
 	public void savePhysicalLinkType(PhysicalLinkType physicalLinkType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
 	{
-		this.saveStorableObject(physicalLinkType);
+		this.saveStorableObject(physicalLinkType, force);
 		this.mapXML.flush();
 	}
 
 	public void saveSiteNode(SiteNode siteNode, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
 	{
-		this.saveStorableObject(siteNode);
+		this.saveStorableObject(siteNode, force);
 		this.mapXML.flush();
 	}
 
 	public void saveSiteNodeType(SiteNodeType siteNodeType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
 	{
-		this.saveStorableObject(siteNodeType);
+		this.saveStorableObject(siteNodeType, force);
 		this.mapXML.flush();
 	}
 
 	public void saveTopologicalNode(TopologicalNode topologicalNode, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
 	{
-		this.saveStorableObject(topologicalNode);
+		this.saveStorableObject(topologicalNode, force);
 		this.mapXML.flush();
 	}
 
 	public void saveCollectors(Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
 	{
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, force);
 	}
 
 	public void saveMaps(Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
 	{
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, force);
 	}
 
 	public void saveMarks(Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
 	{
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, force);
 	}
 
 	public void saveNodeLinks(Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
 	{
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, force);
 	}
 
 	public void savePhysicalLinks(Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
 	{
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, force);
 	}
 
 	public void savePhysicalLinkTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
 	{
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, force);
 	}
 
 	public void saveSiteNodes(Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
 	{
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, force);
 	}
 
 	public void saveSiteNodeTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
 	{
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, force);
 	}
 
 	public void saveTopologicalNodes(Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException
 	{
-		this.saveStorableObjects(list);
+		this.saveStorableObjects(list, force);
 	}
 }
