@@ -1,18 +1,34 @@
 package com.syrus.AMFICOM.Client.Analysis;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.analysis.dadara.*;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.ParameterTypeCodenames;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.DataType;
+import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.StringFieldSort;
-import com.syrus.AMFICOM.measurement.*;
+import com.syrus.AMFICOM.measurement.AnalysisType;
+import com.syrus.AMFICOM.measurement.MeasurementSetup;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Set;
-import com.syrus.AMFICOM.general.StringFieldCondition;
+import com.syrus.AMFICOM.measurement.SetParameter;
 import com.syrus.AMFICOM.measurement.corba.SetSort;
-import com.syrus.io.*;
+import com.syrus.io.BellcoreReader;
+import com.syrus.io.BellcoreStructure;
+import com.syrus.io.BellcoreWriter;
 import com.syrus.util.ByteArray;
 
 /**
@@ -37,10 +53,11 @@ public class AnalysisUtil
 	}
 
 	public static ParameterType getParameterType(Identifier userId, String codename, DataType dataType){
-		StorableObjectCondition pTypeCondition = new StringFieldCondition(
+		StorableObjectCondition pTypeCondition = new TypicalCondition(
 				codename,
+				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
-				StringFieldSort.STRINGSORT_BASE);
+				StorableObjectWrapper.COLUMN_CODENAME);
 
 		ParameterType parameterType = null;
 		try	{
@@ -123,10 +140,12 @@ public class AnalysisUtil
 
 	public static AnalysisType getAnalysisType(Identifier userId, String codename)
 	{
-		StorableObjectCondition aTypeCondition = new StringFieldCondition(
+		StorableObjectCondition aTypeCondition =
+			new TypicalCondition(
 				codename,
+				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.ANALYSISTYPE_ENTITY_CODE,
-				StringFieldSort.STRINGSORT_BASE);
+				StorableObjectWrapper.COLUMN_CODENAME);			
 
 		try
 		{
