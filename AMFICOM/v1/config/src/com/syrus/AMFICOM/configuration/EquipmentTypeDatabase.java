@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeDatabase.java,v 1.16 2004/11/10 15:23:51 bob Exp $
+ * $Id: EquipmentTypeDatabase.java,v 1.17 2004/11/16 12:33:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/11/10 15:23:51 $
+ * @version $Revision: 1.17 $, $Date: 2004/11/16 12:33:17 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -115,21 +115,12 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		EquipmentType equipmentType = storableObject == null ? null : fromStorableObject(storableObject);
 		if (equipmentType == null){
-			/**
-			 * @todo when change DB Identifier model ,change getString() to getLong()
-			 */
-			equipmentType = new EquipmentType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null);			
+			equipmentType = new EquipmentType(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null);			
 		}
 		equipmentType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 									DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-									/**
-										* @todo when change DB Identifier model ,change getString() to getLong()
-										*/
-									new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-									/**
-										* @todo when change DB Identifier model ,change getString() to getLong()
-										*/
-									new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+									DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+									DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
 									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
 									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)));
@@ -195,7 +186,7 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
     }
 	
 	public void delete(EquipmentType equipmentType) {
-		String eqIdStr = equipmentType.getId().toSQLString();
+		String eqIdStr = DatabaseIdentifier.toSQLString(equipmentType.getId());
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
         try {

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathTypeDatabase.java,v 1.4 2004/11/10 15:23:51 bob Exp $
+ * $Id: TransmissionPathTypeDatabase.java,v 1.5 2004/11/16 12:33:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.sql.Statement;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/11/10 15:23:51 $
+ * @version $Revision: 1.5 $, $Date: 2004/11/16 12:33:17 $
  * @author $Author: bob $
  * @module module_name
  */
@@ -111,22 +111,13 @@ public class TransmissionPathTypeDatabase extends StorableObjectDatabase {
             StorableObject storableObject, ResultSet resultSet)
             throws IllegalDataException, RetrieveObjectException, SQLException {
         TransmissionPathType transmissionPathType = storableObject == null ? null : fromStorableObject(storableObject);
-        if (transmissionPathType == null){
-            /**
-             * @todo when change DB Identifier model ,change getString() to getLong()
-             */
-            transmissionPathType = new TransmissionPathType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null);            
+        if (transmissionPathType == null){            
+            transmissionPathType = new TransmissionPathType(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null);            
         }
         transmissionPathType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
                                     DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-                                    /**
-                                        * @todo when change DB Identifier model ,change getString() to getLong()
-                                        */
-                                    new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-                                    /**
-                                        * @todo when change DB Identifier model ,change getString() to getLong()
-                                        */
-                                    new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+									DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+                                    DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
                                     DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
                                     DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
                                     DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)));
@@ -191,7 +182,7 @@ public class TransmissionPathTypeDatabase extends StorableObjectDatabase {
     }
     
     public void delete(TransmissionPathType transmissionPathType) {
-        String transmissionPathIdStr = transmissionPathType.getId().toSQLString();
+        String transmissionPathIdStr = DatabaseIdentifier.toSQLString(transmissionPathType.getId());
         Statement statement = null;
         Connection connection = DatabaseConnection.getConnection();
         try {

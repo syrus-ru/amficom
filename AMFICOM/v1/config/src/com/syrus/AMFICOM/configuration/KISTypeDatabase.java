@@ -8,7 +8,7 @@ import java.sql.Statement;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -24,7 +24,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /*
- * $Id: KISTypeDatabase.java,v 1.5 2004/11/10 15:23:51 bob Exp $
+ * $Id: KISTypeDatabase.java,v 1.6 2004/11/16 12:33:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseString;
  */
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/11/10 15:23:51 $
+ * @version $Revision: 1.6 $, $Date: 2004/11/16 12:33:17 $
  * @author $Author: bob $
  * @module module_name
  */
@@ -113,21 +113,12 @@ public class KISTypeDatabase extends StorableObjectDatabase {
             throws IllegalDataException, RetrieveObjectException, SQLException {
         KISType kisType = storableObject == null ? null : fromStorableObject(storableObject);
         if (kisType == null){
-            /**
-             * @todo when change DB Identifier model ,change getString() to getLong()
-             */
-            kisType = new KISType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null);            
+            kisType = new KISType(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null);            
         }
         kisType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
                                     DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-                                    /**
-                                        * @todo when change DB Identifier model ,change getString() to getLong()
-                                        */
-                                    new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-                                    /**
-                                        * @todo when change DB Identifier model ,change getString() to getLong()
-                                        */
-                                    new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+                                    DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+                                    DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
                                     DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
                                     DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
                                     DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)));
@@ -192,7 +183,7 @@ public class KISTypeDatabase extends StorableObjectDatabase {
     }
     
     public void delete(KISType kisType) {
-        String kisIdStr = kisType.getId().toSQLString();
+        String kisIdStr = DatabaseIdentifier.toSQLString(kisType.getId());
         Statement statement = null;
         Connection connection = DatabaseConnection.getConnection();
         try {

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.25 2004/11/10 15:23:51 bob Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.26 2004/11/16 12:33:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -39,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/11/10 15:23:51 $
+ * @version $Revision: 1.26 $, $Date: 2004/11/16 12:33:17 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -108,12 +109,12 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 			UpdateObjectException {
 		TransmissionPath transmissionPath = fromStorableObject(storableObject);
 		return super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ transmissionPath.getDomainId().toSQLString() + COMMA
-            + transmissionPath.getType().getId().toSQLString() + COMMA
+			+ DatabaseIdentifier.toSQLString(transmissionPath.getDomainId()) + COMMA
+            + DatabaseIdentifier.toSQLString(transmissionPath.getType().getId()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(transmissionPath.getName()) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(transmissionPath.getDescription()) + APOSTOPHE + COMMA
-			+ transmissionPath.getStartPortId().toSQLString() + COMMA
-			+ transmissionPath.getFinishPortId().toSQLString();
+			+ DatabaseIdentifier.toSQLString(transmissionPath.getStartPortId()) + COMMA
+			+ DatabaseIdentifier.toSQLString(transmissionPath.getFinishPortId());
 	}
     
     protected int setEntityForPreparedStatement(StorableObject storableObject,
@@ -123,12 +124,12 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
         int i;
         try {
             i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
-            preparedStatement.setString( ++i, transmissionPath.getDomainId().getCode());
-            preparedStatement.setString( ++i, transmissionPath.getType().getId().getCode());            
+            DatabaseIdentifier.setIdentifier(preparedStatement, ++i, transmissionPath.getDomainId());
+            DatabaseIdentifier.setIdentifier(preparedStatement, ++i, transmissionPath.getType().getId());
             preparedStatement.setString( ++i, transmissionPath.getName());
             preparedStatement.setString( ++i, transmissionPath.getDescription());
-            preparedStatement.setString( ++i, transmissionPath.getStartPortId().toString());
-            preparedStatement.setString( ++i, transmissionPath.getFinishPortId().toSQLString());            
+            DatabaseIdentifier.setIdentifier(preparedStatement, ++i, transmissionPath.getStartPortId());
+            DatabaseIdentifier.setIdentifier(preparedStatement, ++i, transmissionPath.getFinishPortId());
         } catch (SQLException sqle) {
             throw new UpdateObjectException("KISDatabase." +
                     "setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
@@ -147,47 +148,33 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		TransmissionPath transmissionPath = (storableObject == null) ?
-				new TransmissionPath(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, null, null, null) :
+				new TransmissionPath(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null, null, null, null) :
 					fromStorableObject(storableObject);
 		String name = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME));
 		String description = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION));
 		
         TransmissionPathType type;
         try {
-            type = (TransmissionPathType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
+            type = (TransmissionPathType)ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TYPE_ID), true);
         }
         catch (ApplicationException ae) {
             throw new RetrieveObjectException(ae);
         }
         transmissionPath.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-						  DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),								  
-						  
-						  /**
-							* @todo when change DB Identifier model ,change getString() to getLong()
-							*/												
-						  new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-						  /**
-							* @todo when change DB Identifier model ,change getString() to getLong()
-							*/
-						  new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-						  /**
-							* @todo when change DB Identifier model ,change getString() to getLong()
-							*/
-						  new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),								  
-
+						  DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+						  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+						  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+						  DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
 						  (name != null) ? name : "",
 						  (description != null) ? description : "",
                           type,
-						  /**
-							* @todo when change DB Identifier model ,change getString() to getLong()
-							*/
-						  new Identifier(resultSet.getString(COLUMN_START_PORT_ID)),
-						  new Identifier(resultSet.getString(COLUMN_FINISH_PORT_ID)));
+						  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_START_PORT_ID),
+						  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_FINISH_PORT_ID));
 		return transmissionPath;
 	}
 
 	private void retrieveTransmissionPathMELink(TransmissionPath transmissionPath) throws RetrieveObjectException{
-		String tpIdStr = transmissionPath.getId().toSQLString();
+		String tpIdStr = DatabaseIdentifier.toSQLString(transmissionPath.getId());
 		String sql = SQL_SELECT
 			+ LINK_COLUMN_MONITORED_ELEMENT_ID
 			+ SQL_FROM + ObjectEntities.TRANSPATHMELINK_ENTITY
@@ -202,10 +189,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 			resultSet = statement.executeQuery(sql);
 			List meLink = new ArrayList();
 			while (resultSet.next()) {				
-				/**
-				* @todo when change DB Identifier model ,change getString() to getLong()
-				*/
-				Identifier meId = new Identifier(resultSet.getString(LINK_COLUMN_MONITORED_ELEMENT_ID));
+				Identifier meId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_MONITORED_ELEMENT_ID);
 				meLink.add(meId);				
 			}
 			transmissionPath.setMonitoredElementIds(meLink);
@@ -244,7 +228,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
         int i = 1;
         for (Iterator it = transmissionPaths.iterator(); it.hasNext();i++) {
             TransmissionPath transmissionPath = (TransmissionPath)it.next();
-            sql.append(transmissionPath.getId().toSQLString());
+            sql.append(DatabaseIdentifier.toSQLString(transmissionPath.getId()));
             if (it.hasNext()){
                 if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
                     sql.append(COMMA);
@@ -283,12 +267,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
                     throw new RetrieveObjectException(mesg);
                 }
                     
-                
-                /**
-                 * @todo when change DB Identifier model ,change getString() to
-                 *       getLong()
-                 */
-                Identifier meId = new Identifier(resultSet.getString(LINK_COLUMN_MONITORED_ELEMENT_ID));
+                Identifier meId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_MONITORED_ELEMENT_ID);
                 List meIds = (List)meIdMap.get(transmissionPath);
                 if (meIds == null){
                     meIds = new LinkedList();
@@ -368,12 +347,12 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 	}	
 
 	private void setModified(TransmissionPath transmissionPath) throws UpdateObjectException {		
-		String tpIdStr = transmissionPath.getId().toSQLString();
+		String tpIdStr = DatabaseIdentifier.toSQLString(transmissionPath.getId());
 		String sql = SQL_UPDATE
 			+ ObjectEntities.TRANSPATH_ENTITY
 			+ SQL_SET
 			+ COLUMN_MODIFIED + EQUALS + DatabaseDate.toUpdateSubString(transmissionPath.getModified()) + COMMA
-			+ COLUMN_MODIFIER_ID + EQUALS + transmissionPath.getModifierId().toSQLString()
+			+ COLUMN_MODIFIER_ID + EQUALS + DatabaseIdentifier.toSQLString(transmissionPath.getModifierId())
 			+ SQL_WHERE + COLUMN_ID + EQUALS + tpIdStr;
 
 		Statement statement = null;
@@ -435,7 +414,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
         List list = null;
         
-        String condition = DomainMember.COLUMN_DOMAIN_ID + EQUALS + domain.getId().toSQLString();
+        String condition = DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId());
         
         try {
             list = retrieveButIds(ids, condition);

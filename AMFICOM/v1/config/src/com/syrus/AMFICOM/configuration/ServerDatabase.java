@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.27 2004/11/15 13:50:27 bob Exp $
+ * $Id: ServerDatabase.java,v 1.28 2004/11/16 12:33:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,13 +13,14 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ArrayList;
 import java.util.Map;
 
+import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -29,14 +30,13 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
-import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/11/15 13:50:27 $
+ * @version $Revision: 1.28 $, $Date: 2004/11/16 12:33:17 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -92,10 +92,10 @@ public class ServerDatabase extends StorableObjectDatabase {
 			UpdateObjectException {
 		Server server = fromStorableObject(storableObject);
 		return super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ server.getDomainId().toSQLString() + COMMA
+			+ DatabaseIdentifier.toSQLString(server.getDomainId()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(server.getName()) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(server.getDescription()) + APOSTOPHE + COMMA
-			+ server.getUserId().toSQLString();
+			+ DatabaseIdentifier.toSQLString(server.getUserId());
 	}
 
 	
@@ -109,28 +109,16 @@ public class ServerDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Server server = (storableObject==null)?
-				new Server(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, null) :
+				new Server(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null, null) :
 					fromStorableObject(storableObject);
 		server.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 								DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-								/**
-									* @todo when change DB Identifier model ,change getString() to getLong()
-									*/
-								new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-								/**
-									* @todo when change DB Identifier model ,change getString() to getLong()
-									*/
-								new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-								/**
-									* @todo when change DB Identifier model ,change getString() to getLong()
-									*/
-								new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),													
+								DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+								DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+								DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),													
 								DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
 								DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),													
-								/**
-									* @todo when change DB Identifier model ,change getString() to getLong()
-									*/
-								new Identifier(resultSet.getString(COLUMN_USER_ID)));
+								DatabaseIdentifier.getIdentifier(resultSet, COLUMN_USER_ID));
 		return server;
 	}
 
@@ -139,16 +127,10 @@ public class ServerDatabase extends StorableObjectDatabase {
 		Server server = fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
 		try {
-			/**
-			  * @todo when change DB Identifier model ,change setString() to setLong()
-			  */
-			preparedStatement.setString(++i, server.getDomainId().getCode());
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, server.getDomainId());
 			preparedStatement.setString(++i, server.getName());
 			preparedStatement.setString(++i, server.getDescription());
-			/**
-			  * @todo when change DB Identifier model ,change setString() to setLong()
-			  */
-			preparedStatement.setString(++i, server.getUserId().getCode());
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, server.getUserId());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
@@ -169,7 +151,7 @@ public class ServerDatabase extends StorableObjectDatabase {
 	private List retrieveMCMIds(Server server) throws ObjectNotFoundException, RetrieveObjectException {
 		List mcmIds = new ArrayList();
 
-		String serverIdStr = server.getId().toSQLString();
+		String serverIdStr = DatabaseIdentifier.toSQLString(server.getId());
 		String sql = SQL_SELECT
 			+ COLUMN_ID
 			+ SQL_FROM + ObjectEntities.MCM_ENTITY
@@ -183,7 +165,7 @@ public class ServerDatabase extends StorableObjectDatabase {
 			Log.debugMessage("ServerDatabase.retrieveServer | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
-				mcmIds.add(new Identifier(resultSet.getString(COLUMN_ID)));
+				mcmIds.add(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID));
 			}
 		}
 		catch (SQLException sqle) {
@@ -267,7 +249,7 @@ public class ServerDatabase extends StorableObjectDatabase {
 	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
         List list = null;
         
-        String condition = DomainMember.COLUMN_DOMAIN_ID + EQUALS + domain.getId().toSQLString();
+        String condition = DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId());
         
         try {
             list = retrieveButIds(ids, condition);

@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.25 2004/11/10 15:23:51 bob Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.26 2004/11/16 12:33:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -38,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/11/10 15:23:51 $
+ * @version $Revision: 1.26 $, $Date: 2004/11/16 12:33:17 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -97,9 +98,9 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, UpdateObjectException {
 		MonitoredElement monitoredElement = fromStorableObject(storableObject);
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-				+ monitoredElement.getDomainId().toSQLString() + COMMA
+				+ DatabaseIdentifier.toSQLString(monitoredElement.getDomainId()) + COMMA
 				+ APOSTOPHE + DatabaseString.toQuerySubString(monitoredElement.getName()) + APOSTOPHE + COMMA
-				+ monitoredElement.getMeasurementPortId().toSQLString() + COMMA
+				+ DatabaseIdentifier.toSQLString(monitoredElement.getMeasurementPortId()) + COMMA
 				+ monitoredElement.getSort().value() + COMMA
 				+ APOSTOPHE + DatabaseString.toQuerySubString(monitoredElement.getLocalAddress()) + APOSTOPHE;
 		return sql;
@@ -112,9 +113,9 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		int i;
 		try {
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
-			preparedStatement.setString( ++i, monitoredElement.getDomainId().toString());
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, monitoredElement.getDomainId());
 			preparedStatement.setString( ++i, monitoredElement.getName());
-			preparedStatement.setString( ++i, monitoredElement.getMeasurementPortId().toString());
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, monitoredElement.getMeasurementPortId());
 			preparedStatement.setInt( ++i, monitoredElement.getSort().value());
 			preparedStatement.setString( ++i, monitoredElement.getLocalAddress());
 		}catch (SQLException sqle) {
@@ -136,34 +137,15 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		MonitoredElement monitoredElement = storableObject == null ? null : fromStorableObject(storableObject);
 		if (monitoredElement == null){
-			/**
-			 * @todo when change DB Identifier model ,change getString() to getLong()
-			 */
-			monitoredElement = new MonitoredElement(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, 0, null, null);			
+			monitoredElement = new MonitoredElement(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null, 0, null, null);			
 		}
 		monitoredElement.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 									   DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-									   /**
-										 * @todo when change DB Identifier model ,change getString() to
-										 *       getLong()
-										 */
-									   new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-									   /**
-										 * @todo when change DB Identifier model ,change getString() to
-										 *       getLong()
-										 */
-									   new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-									   /**
-										 * @todo when change DB Identifier model ,change getString() to
-										 *       getLong()
-										 */
-									   new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),
+									   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+									   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+									   DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
 									   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
-									   /**
-										 * @todo when change DB Identifier model ,change getString() to
-										 *       getLong()
-										 */
-									   new Identifier(resultSet.getString(COLUMN_MEASUREMENT_PORT_ID)),
+									   DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MEASUREMENT_PORT_ID),
 									   resultSet.getInt(COLUMN_SORT),
 									   DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_LOCAL_ADDRESS)));
 		return monitoredElement;
@@ -171,7 +153,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 
 	private void retrieveMonitoredDomainMemberIds(MonitoredElement monitoredElement) throws RetrieveObjectException {
 		List mdmIds = new ArrayList();
-		String meIdStr = monitoredElement.getId().toSQLString();
+		String meIdStr = DatabaseIdentifier.toSQLString(monitoredElement.getId());
 		int meSort = monitoredElement.getSort().value();
 		String column;
 		String sql;	{
@@ -216,10 +198,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 			Log.debugMessage("MonitoredElementDatabase.retrieveMonitoredDomainMemberIds | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
-				/**
-				* @todo when change DB Identifier model ,change getString() to getLong()
-				*/
-				mdmIds.add(new Identifier(resultSet.getString(column)));				
+				mdmIds.add(DatabaseIdentifier.getIdentifier(resultSet, column));				
 			}
 		}
 		catch (SQLException sqle) {
@@ -278,7 +257,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
         int i = 1;
         for (Iterator it = monitoredElementWithEquipmentList.iterator(); it.hasNext();i++) {
             MonitoredElement monitoredElement = (MonitoredElement)it.next();
-            sql.append(monitoredElement.getId().toSQLString());
+            sql.append(DatabaseIdentifier.toSQLString(monitoredElement.getId()));
             if (it.hasNext()){
                 if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
                     sql.append(COMMA);
@@ -315,14 +294,9 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
                 if (monitoredElement == null){
                     String mesg = "MonitoredElementDatabase.retrieveEquipmentIdsByOneQuery | Cannot found correspond result for '" + monitoredElemntId +"'" ;
                     throw new RetrieveObjectException(mesg);
-                }
-                    
+                }                    
                 
-                /**
-                 * @todo when change DB Identifier model ,change getString() to
-                 *       getLong()
-                 */
-                Identifier meId = new Identifier(resultSet.getString(LINK_COLUMN_EQUIPMENT_ID));
+                Identifier meId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_EQUIPMENT_ID);
                 List meIds = (List)meIdMap.get(monitoredElement);
                 if (meIds == null){
                     meIds = new LinkedList();
@@ -369,7 +343,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
         int i = 1;
         for (Iterator it = transmissionPathList.iterator(); it.hasNext();i++) {
             MonitoredElement monitoredElement = (MonitoredElement)it.next();
-            sql.append(monitoredElement.getId().toSQLString());
+            sql.append(DatabaseIdentifier.toSQLString(monitoredElement.getId()));
             if (it.hasNext()){
                 if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
                     sql.append(COMMA);
@@ -408,12 +382,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
                     throw new RetrieveObjectException(mesg);
                 }
                     
-                
-                /**
-                 * @todo when change DB Identifier model ,change getString() to
-                 *       getLong()
-                 */
-                Identifier tpId = new Identifier(resultSet.getString(LINK_COLUMN_TRANSMISSION_PATH_ID));
+                Identifier tpId = DatabaseIdentifier.getIdentifier(resultSet, LINK_COLUMN_TRANSMISSION_PATH_ID);
                 List tpIds = (List)tpIdMap.get(monitoredElement);
                 if (tpIds == null){
                     tpIds = new LinkedList();
@@ -477,7 +446,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 	
 	private void insertMonitoredDomainMemberIds(MonitoredElement monitoredElement) throws CreateObjectException {
 		List mdmIds = monitoredElement.getMonitoredDomainMemberIds();
-		String meIdCode = monitoredElement.getId().getCode();
+		Identifier meId = monitoredElement.getId();
 		int meSort = monitoredElement.getSort().value();
 
 		String sql; {
@@ -518,32 +487,21 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		}
 
 		PreparedStatement preparedStatement = null;
-		/**
-		 * @todo when change DB Identifier model ,change String to long
-		 */
-		String mdmIdCode = null;
+		Identifier mdmId = null;
 		Connection connection = DatabaseConnection.getConnection();
         try {
 			preparedStatement = connection.prepareStatement(sql);
 			for (Iterator it = mdmIds.iterator(); it.hasNext();) {
-				mdmIdCode = ((Identifier)it.next()).getCode();
-				/**
-				 * @todo when change DB Identifier model ,change setString() to
-				 *       setLong()
-				 */
-				preparedStatement.setString(1, mdmIdCode);
-				/**
-				 * @todo when change DB Identifier model ,change setString() to
-				 *       setLong()
-				 */
-				preparedStatement.setString(2, meIdCode);
-				Log.debugMessage("MonitoredElementDatabase.insertMonitoredDomainMemberIds | Inserting link for monitored element '" + meIdCode + "' and monitored domain member '" + mdmIdCode + "'", Log.DEBUGLEVEL09);
+				mdmId = (Identifier)it.next(); 
+				DatabaseIdentifier.setIdentifier(preparedStatement, 1, mdmId);
+				DatabaseIdentifier.setIdentifier(preparedStatement, 2, meId);
+				Log.debugMessage("MonitoredElementDatabase.insertMonitoredDomainMemberIds | Inserting link for monitored element '" + meId.getIdentifierString() + "' and monitored domain member '" + mdmId.getIdentifierString() + "'", Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 			connection.commit();
 		}
 		catch (SQLException sqle) {
-			String mesg = "MonitoredElementDatabase.insertMonitoredDomainMemberIds | Cannot insert link for monitored element '" + meIdCode + "' and monitored domain member '" + mdmIdCode + "'";
+			String mesg = "MonitoredElementDatabase.insertMonitoredDomainMemberIds | Cannot insert link for monitored element '" + meId.getIdentifierString() + "' and monitored domain member '" + mdmId.getIdentifierString() + "'";
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
@@ -598,7 +556,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
     }
 
 	public void delete(MonitoredElement monitoredElement) {
-		String meIdStr = monitoredElement.getId().toSQLString();
+		String meIdStr = DatabaseIdentifier.toSQLString(monitoredElement.getId());
 		int meSort = monitoredElement.getSort().value();
 		
 		String sql1; {
@@ -668,7 +626,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
         List list = null;
         
-        String condition = DomainMember.COLUMN_DOMAIN_ID + EQUALS + domain.getId().toSQLString();
+        String condition = DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId());
         
         try {
             list = retrieveButIds(ids, condition);

@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.19 2004/11/10 15:23:51 bob Exp $
+ * $Id: DomainDatabase.java,v 1.20 2004/11/16 12:33:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -31,7 +32,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/11/10 15:23:51 $
+ * @version $Revision: 1.20 $, $Date: 2004/11/16 12:33:17 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -77,9 +78,8 @@ public class DomainDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, UpdateObjectException {
 		Domain domain = fromStorableObject(storableObject);
 		Identifier domainId = domain.getDomainId();
-		String domainIdSubstr = (domainId != null) ? domainId.toSQLString() : Identifier.getNullSQLString();
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ domainIdSubstr + COMMA
+			+ DatabaseIdentifier.toSQLString(domainId) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(domain.getName()) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(domain.getDescription()) + APOSTOPHE;
 		return sql;
@@ -97,31 +97,16 @@ public class DomainDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Domain domain = storableObject == null ? null : fromStorableObject(storableObject);
 		if (domain == null){
-			/**
-			 * @todo when change DB Identifier model ,change getString() to getLong()
-			 */
-			domain = new Domain(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null);			
+			domain = new Domain(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null);			
 		}
-		/**
-		 * @todo when change DB Identifier model ,change getString() to getLong()
-		 */
-		String idCode = resultSet.getString(DomainMember.COLUMN_DOMAIN_ID);
+		Identifier id = DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID);
 		domain.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-												 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-												 /**
-													* @todo when change DB Identifier model ,change getString() to getLong()
-													*/
-												 new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-												 /**
-													* @todo when change DB Identifier model ,change getString() to getLong()
-													*/
-												 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-												 /**
-													* @todo when change DB Identifier model ,change getString() to getLong()
-													*/
-												 (idCode != null) ? (new Identifier(idCode)) : null,
-                                                 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
-                                                 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)));
+							 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+							 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+							 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+							 id,
+							 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
+							 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)));
 		
 		return domain;
 	}
@@ -130,12 +115,11 @@ public class DomainDatabase extends StorableObjectDatabase {
 			PreparedStatement preparedStatement) throws IllegalDataException,
 			UpdateObjectException {
 		Domain domain = fromStorableObject(storableObject);
-			Identifier domainId = domain.getDomainId();
-		String domainIdSubstr = (domainId != null) ? domainId.getCode() : "";
+		Identifier domainId = domain.getDomainId();
 		int i;
 		try {
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
-			preparedStatement.setString( ++i, domainIdSubstr);
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, domainId);
 			preparedStatement.setString( ++i, domain.getName());
 			preparedStatement.setString( ++i, domain.getDescription());
 		}catch (SQLException sqle) {
@@ -202,7 +186,7 @@ public class DomainDatabase extends StorableObjectDatabase {
 	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
         List list = null;
         
-        String condition = COLUMN_ID + EQUALS + domain.getId().toSQLString();
+        String condition = COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId());
         
         try {
             list = retrieveButIds(ids, condition);

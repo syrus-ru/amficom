@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.20 2004/11/10 15:23:51 bob Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.21 2004/11/16 12:33:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -34,7 +35,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/11/10 15:23:51 $
+ * @version $Revision: 1.21 $, $Date: 2004/11/16 12:33:17 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -92,13 +93,11 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 		Identifier kisId = measurementPort.getKISId();
 		Identifier portId = measurementPort.getPortId();
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-				+ ((typeId != null)?typeId.toSQLString():Identifier.getNullSQLString())
-				+ COMMA
+				+ DatabaseIdentifier.toSQLString(typeId) + COMMA
 				+ APOSTOPHE + DatabaseString.toQuerySubString(measurementPort.getName()) + APOSTOPHE	+ COMMA
 				+ APOSTOPHE + DatabaseString.toQuerySubString(measurementPort.getDescription()) + APOSTOPHE + COMMA
-				+ ((kisId != null)?kisId.toSQLString():Identifier.getNullSQLString()) 
-				+ COMMA
-				+ ((portId != null)?portId.toSQLString():Identifier.getNullSQLString());
+				+ DatabaseIdentifier.toSQLString(kisId)	+ COMMA
+				+ DatabaseIdentifier.toSQLString(portId);
 		return sql;
 	}
 	
@@ -112,11 +111,11 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 		int i;
 		try {
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
-			preparedStatement.setString( ++i, (typeId != null)?typeId.toString():"");
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, typeId);
 			preparedStatement.setString( ++i, measurementPort.getName());
 			preparedStatement.setString( ++i, measurementPort.getDescription());
-			preparedStatement.setString( ++i, (kisId != null)?kisId.toString():""); 
-			preparedStatement.setString( ++i, (portId != null)?portId.toString():"");
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, kisId);
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, portId);
 		}catch (SQLException sqle) {
 			throw new UpdateObjectException("MeasurmentPortDatabase." +
 					"setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
@@ -150,19 +149,13 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 			StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		MeasurementPort measurementPort = storableObject == null ? null : fromStorableObject(storableObject);
-		if (measurementPort == null){
-			/**
-			 * @todo when change DB Identifier model ,change getString() to getLong()
-			 */
-			measurementPort = new MeasurementPort(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, null, null);			
+		if (measurementPort == null){			
+			measurementPort = new MeasurementPort(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null, null, null);			
 		}
 		MeasurementPortType measurementPortType;
 		try {
-			/**
-			 * @todo when change DB Identifier model ,change String to long
-			 */
-			String measurementPortTypeIdCode = resultSet.getString(COLUMN_TYPE_ID);
-			measurementPortType = (measurementPortTypeIdCode != null) ? (MeasurementPortType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(measurementPortTypeIdCode), true) : null;
+			Identifier measurementPortTypeId = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TYPE_ID);
+			measurementPortType = (measurementPortTypeId != null) ? (MeasurementPortType)ConfigurationStorableObjectPool.getStorableObject(measurementPortTypeId, true) : null;
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
@@ -173,27 +166,13 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 		String description = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION));
 		measurementPort.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 						  DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),								  
-						  
-						  /**
-							* @todo when change DB Identifier model ,change getString() to getLong()
-							*/												
-						  new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-						  /**
-							* @todo when change DB Identifier model ,change getString() to getLong()
-							*/
-						  new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-						  
+						  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+						  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),						  
 						  measurementPortType,
 						  (name != null) ? name : "",
 						  (description != null) ? description : "",
-						  /**
-							* @todo when change DB Identifier model ,change getString() to getLong()
-							*/
-						  new Identifier(resultSet.getString(COLUMN_KIS_ID)),
-						  /**
-							* @todo when change DB Identifier model ,change getString() to getLong()
-							*/
-						  new Identifier(resultSet.getString(COLUMN_PORT_ID)));
+						  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_KIS_ID),
+						  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PORT_ID));
 		return measurementPort;
 	}
 	
@@ -255,7 +234,7 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
     }
 
 	public void delete(MeasurementPort measurementPort) {
-		String mpIdStr = measurementPort.getId().toSQLString();
+		String mpIdStr = DatabaseIdentifier.toSQLString(measurementPort.getId());
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
         try {
@@ -291,7 +270,7 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
         
         String condition = COLUMN_KIS_ID + SQL_IN + OPEN_BRACKET
 				+ SQL_SELECT + COLUMN_ID + SQL_FROM + ObjectEntities.KIS_ENTITY 
-				+ SQL_WHERE + DomainMember.COLUMN_DOMAIN_ID + EQUALS + domain.getId().toSQLString() 
+				+ SQL_WHERE + DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId()) 
 			+ CLOSE_BRACKET;
         
         try {

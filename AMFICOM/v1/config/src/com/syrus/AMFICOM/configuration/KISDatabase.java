@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.35 2004/11/16 11:00:35 arseniy Exp $
+ * $Id: KISDatabase.java,v 1.36 2004/11/16 12:33:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -38,8 +39,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2004/11/16 11:00:35 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.36 $, $Date: 2004/11/16 12:33:17 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -109,14 +110,14 @@ public class KISDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, UpdateObjectException {
 		KIS kis = fromStorableObject(storableObject);
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ kis.getDomainId().toSQLString() + COMMA
-	        + kis.getType().getId().toSQLString() + COMMA
+			+ DatabaseIdentifier.toSQLString(kis.getDomainId()) + COMMA
+	        + DatabaseIdentifier.toSQLString(kis.getType().getId()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(kis.getName()) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(kis.getDescription()) + APOSTOPHE + COMMA
 			+ APOSTOPHE + kis.getHostName() + APOSTOPHE + COMMA
 			+ kis.getTCPPort() + COMMA
-			+ kis.getEquipmentId().toSQLString() + COMMA
-			+ kis.getMCMId().toSQLString();
+			+ DatabaseIdentifier.toSQLString(kis.getEquipmentId()) + COMMA
+			+ DatabaseIdentifier.toSQLString(kis.getMCMId());
 		return sql;
 	}
 
@@ -153,10 +154,7 @@ public class KISDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		KIS kis = storableObject == null ? null : fromStorableObject(storableObject);
 		if (kis == null) {
-			/**
-			 * @todo when change DB Identifier model ,change getString() to getLong()
-			 */
-			kis = new KIS(new Identifier(resultSet.getString(COLUMN_ID)),
+			kis = new KIS(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 										null,
 										null,
 										null,
@@ -176,31 +174,16 @@ public class KISDatabase extends StorableObjectDatabase {
 		}
 		kis.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 											DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-											/**
-												* @todo when change DB Identifier model ,change getString() to getLong()
-												*/
-											new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-											/**
-												* @todo when change DB Identifier model ,change getString() to getLong()
-												*/
-											new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-											/**
-												* @todo when change DB Identifier model ,change getString() to getLong()
-												*/
-											new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),
+											DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+											DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+											DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
 											DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
 											DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
 											resultSet.getString(COLUMN_HOSTNAME),
 											resultSet.getShort(COLUMN_TCP_PORT),
 											kisType,
-											/**
-												* @todo when change DB Identifier model ,change getString() to getLong()
-												*/
-											new Identifier(resultSet.getString(COLUMN_EQUIPMENT_ID)),
-											/**
-												* @todo when change DB Identifier model ,change getString() to getLong()
-												*/
-											new Identifier(resultSet.getString(COLUMN_MCM_ID)));
+											DatabaseIdentifier.getIdentifier(resultSet, COLUMN_EQUIPMENT_ID),
+											DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MCM_ID));
 		
 		return kis;
 	}
@@ -208,7 +191,7 @@ public class KISDatabase extends StorableObjectDatabase {
 	private void retrieveKISMeasurementPortIds(KIS kis) throws RetrieveObjectException {
 		List measurementPortIds = new ArrayList();
 
-		String kisIdStr = kis.getId().toSQLString();
+		String kisIdStr = DatabaseIdentifier.toSQLString(kis.getId());
 		String sql = SQL_SELECT
 			+ COLUMN_ID
 			+ SQL_FROM + ObjectEntities.MEASUREMENTPORT_ENTITY
@@ -271,7 +254,7 @@ public class KISDatabase extends StorableObjectDatabase {
     int i = 1;
 		for (Iterator it = kiss.iterator(); it.hasNext();i++) {
 			KIS kis = (KIS)it.next();
-			sql.append(kis.getId().toSQLString());
+			sql.append(DatabaseIdentifier.toSQLString(kis.getId()));
 			if (it.hasNext()) {
 				if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
 					sql.append(COMMA);
@@ -310,11 +293,7 @@ public class KISDatabase extends StorableObjectDatabase {
 					throw new RetrieveObjectException(mesg);
 				}
 
-        /**
-          * @todo when change DB Identifier model ,change getString() to
-          *       getLong()
-          */
-				Identifier mpId = new Identifier(resultSet.getString(COLUMN_ID));
+				Identifier mpId = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID);
 				List mpIds = (List)mpIdMap.get(kis);
 				if (mpIds == null) {
 					mpIds = new LinkedList();
@@ -354,7 +333,7 @@ public class KISDatabase extends StorableObjectDatabase {
 	private List retrieveMonitoredElements(KIS kis) throws RetrieveObjectException {
 		List monitoredElements = new ArrayList();
 
-		String kisIdStr = kis.getId().toSQLString();
+		String kisIdStr = DatabaseIdentifier.toSQLString(kis.getId());
 		String sql = SQL_SELECT
 			+ COLUMN_ID
 			+ SQL_FROM + ObjectEntities.ME_ENTITY
@@ -374,7 +353,7 @@ public class KISDatabase extends StorableObjectDatabase {
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
 				try {
-					monitoredElements.add((MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_ID)), true));
+					monitoredElements.add((MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), true));
 				}
 				catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);
@@ -416,7 +395,7 @@ public class KISDatabase extends StorableObjectDatabase {
 		int i = 1;
 		for (Iterator it = kiss.iterator(); it.hasNext();i++) {
 			KIS kis = (KIS)it.next();
-			sql.append(kis.getId().toSQLString());
+			sql.append(DatabaseIdentifier.toSQLString(kis.getId()));
 			if (it.hasNext()) {
 				if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
 					sql.append(COMMA);
@@ -455,10 +434,7 @@ public class KISDatabase extends StorableObjectDatabase {
 					throw new RetrieveObjectException(mesg);
 				}
 
-        /**
-          * @todo when change DB Identifier model ,change getString() to getLong()
-          */
-				Identifier mpId = new Identifier(resultSet.getString(COLUMN_ID));
+				Identifier mpId = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID);
 				List mpIds = (List)mpIdMap.get(kis);
 				if (mpIds == null) {
 					mpIds = new LinkedList();
@@ -507,7 +483,6 @@ public class KISDatabase extends StorableObjectDatabase {
 
 	public void update(StorableObject storableObject, int updateKind, Object obj)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		//TODO Check this method on errors		
 		switch (updateKind) {
 		case UPDATE_FORCE:
 			super.checkAndUpdateEntity(storableObject, true);
@@ -521,7 +496,6 @@ public class KISDatabase extends StorableObjectDatabase {
 
 	public void update(List storableObjects, int updateKind, Object arg)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		//TODO Check this method on errors
 		switch (updateKind) {
 		case UPDATE_FORCE:
 			super.checkAndUpdateEntities(storableObjects, true);
@@ -534,7 +508,7 @@ public class KISDatabase extends StorableObjectDatabase {
 	}
 
 	public void delete(KIS kis) {
-		String kisIdStr = kis.getId().toSQLString();
+		String kisIdStr = DatabaseIdentifier.toSQLString(kis.getId());
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
 		try {
@@ -594,7 +568,7 @@ public class KISDatabase extends StorableObjectDatabase {
 	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
 		List list = null;
 
-		String condition = DomainMember.COLUMN_DOMAIN_ID + EQUALS + domain.getId().toSQLString();
+		String condition = DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId());
 
     try {
 			list = retrieveButIds(ids, condition);

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.37 2004/11/10 15:23:51 bob Exp $
+ * $Id: CharacteristicDatabase.java,v 1.38 2004/11/16 12:33:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,6 +23,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -38,7 +39,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2004/11/10 15:23:51 $
+ * @version $Revision: 1.38 $, $Date: 2004/11/16 12:33:17 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -102,14 +103,14 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		Characteristic characteristic = fromStorableObject(storableObject);
 		int sort = characteristic.getSort().value();
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ characteristic.getType().getId().toSQLString() + COMMA
+			+ DatabaseIdentifier.toSQLString(characteristic.getType().getId()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristic.getName()) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristic.getDescription()) + APOSTOPHE  + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(characteristic.getValue()) + APOSTOPHE + COMMA
 			+ (characteristic.isEditable()?"1":"0") + COMMA
 			+ (characteristic.isVisible()?"1":"0") + COMMA
 			+ sort + COMMA
-			+ characteristic.getCharacterizedId().toSQLString();
+			+ DatabaseIdentifier.toSQLString(characteristic.getCharacterizedId());
 			/**
 			 * check sort support
 			 */
@@ -123,14 +124,14 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		int i;
 		try {
 			i = super.setEntityForPreparedStatement(storableObject , preparedStatement);
-			preparedStatement.setString( ++i, characteristic.getType().getId().getCode());
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, characteristic.getType().getId());
 			preparedStatement.setString( ++i, characteristic.getName());
 			preparedStatement.setString( ++i, characteristic.getDescription());
 			preparedStatement.setString( ++i, characteristic.getValue());
 			preparedStatement.setInt( ++i, characteristic.isEditable()?'1':'0');
 			preparedStatement.setInt( ++i, characteristic.isVisible()?'1':'0');
 			preparedStatement.setInt( ++i, sort);
-			preparedStatement.setString( ++i, characteristic.getCharacterizedId().toSQLString());
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, characteristic.getCharacterizedId());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException("CharacteristicDatabase.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
@@ -153,33 +154,24 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet) throws RetrieveObjectException, SQLException, IllegalDataException {
 		Characteristic characteristic = storableObject == null ? null : fromStorableObject(storableObject); 
 		if (characteristic == null){
-			/**
-			 * @todo when change DB Identifier model ,change getString() to getLong()
-			 */
-			characteristic = new Characteristic(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null,
+			characteristic = new Characteristic(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null,
 										   0, null, null, false, false);			
 		}
 		
 		int sort = resultSet.getInt(COLUMN_SORT);
-		Identifier characterizedId = new Identifier(resultSet.getString(COLUMN_CHARACTERIZED_ID));
+		Identifier characterizedId = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CHARACTERIZED_ID);
 
 		CharacteristicType characteristicType;
 		try {
-			characteristicType = (CharacteristicType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
+			characteristicType = (CharacteristicType)ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TYPE_ID), true);
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
 		characteristic.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 									 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-									 /**
-									  * @todo when change DB Identifier model ,change getString() to getLong()
-									  */
-									 new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-									 /**
-									  * @todo when change DB Identifier model ,change getString() to getLong()
-									  */
-									 new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+									 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+									 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 									 characteristicType,
                                      DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
                                      DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
@@ -238,7 +230,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 	public List retrieveCharacteristics(Identifier characterizedId, CharacteristicSort sort) throws RetrieveObjectException, IllegalDataException {
 		List characteristics = new LinkedList();
 
-		String cdIdStr = characterizedId.toSQLString();
+		String cdIdStr = DatabaseIdentifier.toSQLString(characterizedId);
 		int sortValue = sort.value();
 		String sql;
 		{
@@ -295,7 +287,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
         int i = 1;
         for (Iterator it = list.iterator(); it.hasNext();i++) {
             StorableObject storableObject = (StorableObject)it.next();
-            buff.append(storableObject.getId().toSQLString());
+            buff.append(DatabaseIdentifier.toSQLString(storableObject.getId()));
             if (it.hasNext()){
                 if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
                     buff.append(COMMA);
@@ -321,10 +313,10 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
             Map characteristicMap = new HashMap();
             while (resultSet.next()) {
                 StorableObject storableObject = null;
-                String storableObjectId = resultSet.getString(COLUMN_CHARACTERIZED_ID);
+                Identifier storableObjectId = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CHARACTERIZED_ID);
                 for (Iterator it = list.iterator(); it.hasNext();) {
                     StorableObject storableObjectToCompare = (StorableObject) it.next();
-                    if (storableObjectToCompare.getId().getIdentifierString().equals(storableObjectId)){
+                    if (storableObjectToCompare.getId().equals(storableObjectId)){
                         storableObject = storableObjectToCompare;
                         break;
                     }                   
@@ -334,10 +326,6 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
                     String mesg = "CharacteristicDatabase.retrieveCharacteristicsByOneQuery | Cannot found correspond result for '" + storableObjectId +"'" ;
                     throw new RetrieveObjectException(mesg);
                 }
-                /**
-                 * @todo when change DB Identifier model ,change getString() to
-                 *       getLong()
-                 */
                 StorableObject characteristic = updateEntityFromResultSet(null, resultSet);
                 List characteristics = (List)characteristicMap.get(storableObject);
                 if (characteristics == null){

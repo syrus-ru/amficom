@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeDatabase.java,v 1.12 2004/11/10 15:23:51 bob Exp $
+ * $Id: MeasurementPortTypeDatabase.java,v 1.13 2004/11/16 12:33:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,22 +8,23 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.List;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import com.syrus.AMFICOM.general.Identifier;
+import java.sql.Statement;
+import java.util.List;
+
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
@@ -31,7 +32,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/11/10 15:23:51 $
+ * @version $Revision: 1.13 $, $Date: 2004/11/16 12:33:17 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -113,22 +114,13 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
 			StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		MeasurementPortType measurementPortType = storableObject == null ? null : fromStorableObject(storableObject);
-		if (measurementPortType == null){
-			/**
-			 * @todo when change DB Identifier model ,change getString() to getLong()
-			 */
-			measurementPortType = new MeasurementPortType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null);			
+		if (measurementPortType == null){			
+			measurementPortType = new MeasurementPortType(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null);			
 		}
 		measurementPortType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 											DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-											/**
-												* @todo when change DB Identifier model ,change getString() to getLong()
-												*/
-											new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-											/**
-												* @todo when change DB Identifier model ,change getString() to getLong()
-												*/
-											new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+											DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+											DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 											DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
 											DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
 											DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)));
@@ -191,7 +183,7 @@ public class MeasurementPortTypeDatabase extends StorableObjectDatabase {
     }
 	
 	public void delete(MeasurementPortType measurementPortType) {
-		String mtIdStr = measurementPortType.getId().toSQLString();
+		String mtIdStr = DatabaseIdentifier.toSQLString(measurementPortType.getId());
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
         try {

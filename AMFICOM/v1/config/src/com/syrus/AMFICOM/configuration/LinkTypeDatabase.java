@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeDatabase.java,v 1.4 2004/11/10 15:23:51 bob Exp $
+ * $Id: LinkTypeDatabase.java,v 1.5 2004/11/16 12:33:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,23 +8,23 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.List;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.List;
 
-import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/11/10 15:23:51 $
+ * @version $Revision: 1.5 $, $Date: 2004/11/16 12:33:17 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -98,7 +98,7 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 			+ linkType.getSort().value() + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getManufacturer()) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(linkType.getManufacturerCode()) + APOSTOPHE + COMMA
-			+ linkType.getImageId().toSQLString();
+			+ DatabaseIdentifier.toSQLString(linkType.getImageId());
 		return sql;
 	}
 	
@@ -126,7 +126,7 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 			preparedStatement.setInt( ++i, linkType.getSort().value());
 			preparedStatement.setString( ++i, linkType.getManufacturer());
 			preparedStatement.setString( ++i, linkType.getManufacturerCode());
-			preparedStatement.setString( ++i, linkType.getImageId().toString());
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, linkType.getImageId());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException("LinkDatabase." +
 					"setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
@@ -139,32 +139,20 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		LinkType linkType = storableObject == null ? null : fromStorableObject(storableObject);
 		if (linkType == null){
-			/**
-			 * @todo when change DB Identifier model ,change getString() to getLong()
-			 */
-			linkType = new LinkType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, 0,
+			linkType = new LinkType(DatabaseIdentifier.getIdentifier(resultSet,COLUMN_ID), null, null, null, null, 0,
 										 null, null, null);			
 		}
 		linkType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-									DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-									/**
-										* @todo when change DB Identifier model ,change getString() to getLong()
-										*/
-									new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-									/**
-										* @todo when change DB Identifier model ,change getString() to getLong()
-										*/
-									new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+									DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),									
+									DatabaseIdentifier.getIdentifier(resultSet,COLUMN_CREATOR_ID),
+									DatabaseIdentifier.getIdentifier(resultSet,COLUMN_MODIFIER_ID),
 									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
 									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
 									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
 									resultSet.getInt(COLUMN_SORT),
 									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_MANUFACTURER)),
-									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_MANUFACTURER_CODE)),
-									/**
-									* @todo when change DB Identifier model ,change getString() to getLong()
-									*/
-									new Identifier(resultSet.getString(COLUMN_IMAGE_ID)));
+									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_MANUFACTURER_CODE)),									
+									DatabaseIdentifier.getIdentifier(resultSet,COLUMN_IMAGE_ID));
 
 		
 		return linkType;
@@ -227,7 +215,7 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
     }
 	
 	public void delete(LinkType linkType) {
-		String ltIdStr = linkType.getId().toSQLString();
+		String ltIdStr = DatabaseIdentifier.toSQLString(linkType.getId());
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
         try {

@@ -1,5 +1,5 @@
 /*
- * $Id: PortDatabase.java,v 1.26 2004/11/10 15:23:51 bob Exp $
+ * $Id: PortDatabase.java,v 1.27 2004/11/16 12:33:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -33,7 +34,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/11/10 15:23:51 $
+ * @version $Revision: 1.27 $, $Date: 2004/11/16 12:33:17 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -110,15 +111,12 @@ public class PortDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Port port = (storableObject==null)?
-				new Port(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null, 0) :
+				new Port(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null, 0) :
 					fromStorableObject(storableObject);
 		PortType portType;
-		try {
-			/**
-			 * @todo when change DB Identifier model ,change String to long
-			 */
-			String portTypeIdCode = resultSet.getString(COLUMN_TYPE_ID);
-			portType = (portTypeIdCode != null) ? (PortType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(portTypeIdCode), true) : null;
+		try {			
+			Identifier portTypeId = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TYPE_ID);
+			portType = (portTypeId != null) ? (PortType)ConfigurationStorableObjectPool.getStorableObject(portTypeId, true) : null;
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
@@ -127,22 +125,11 @@ public class PortDatabase extends StorableObjectDatabase {
 		String description = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION));
 		port.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 						  DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),								  
-						  
-						  /**
-							* @todo when change DB Identifier model ,change getString() to getLong()
-							*/												
-						  new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-						  /**
-							* @todo when change DB Identifier model ,change getString() to getLong()
-							*/
-						  new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-						  
+						  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+						  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),						  
 						  portType,								  
 						  (description != null) ? description : "",
-						  /**
-							* @todo when change DB Identifier model ,change getString() to getLong()
-							*/
-						  new Identifier(resultSet.getString(COLUMN_EQUIPMENT_ID)),
+						  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_EQUIPMENT_ID),
 						  resultSet.getInt(COLUMN_SORT));
 		return port;
 	}
@@ -231,15 +218,9 @@ public class PortDatabase extends StorableObjectDatabase {
 
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
 		try {
-			/**
-			  * @todo when change DB Identifier model ,change setString() to setLong()
-			  */			
-			preparedStatement.setString(++i, (typeId != null)? typeId.getCode():"");
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, typeId);
 			preparedStatement.setString(++i, port.getDescription());
-			/**
-			  * @todo when change DB Identifier model ,change setString() to setLong()
-			  */			
-			preparedStatement.setString(++i, (equipmentId != null)? equipmentId.getCode():"");
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, equipmentId);
 			preparedStatement.setInt(++i, port.getSort());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
@@ -252,7 +233,7 @@ public class PortDatabase extends StorableObjectDatabase {
         
         String condition = COLUMN_EQUIPMENT_ID + SQL_IN + OPEN_BRACKET 
         	+ SQL_SELECT + COLUMN_ID + SQL_FROM + ObjectEntities.EQUIPMENT_ENTITY + SQL_WHERE 
-			+ DomainMember.COLUMN_DOMAIN_ID + EQUALS + domain.getId().toSQLString()
+			+ DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId())
         	+ CLOSE_BRACKET;
         
         try {

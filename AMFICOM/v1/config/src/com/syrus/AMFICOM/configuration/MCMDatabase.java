@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.29 2004/11/16 11:00:35 arseniy Exp $
+ * $Id: MCMDatabase.java,v 1.30 2004/11/16 12:33:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,6 +23,7 @@ import java.util.List;
 
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -41,8 +42,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/11/16 11:00:35 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.30 $, $Date: 2004/11/16 12:33:17 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -99,11 +100,11 @@ public class MCMDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException, UpdateObjectException {
 		MCM mcm = fromStorableObject(storableObject);
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ mcm.getDomainId().toSQLString() + COMMA
+			+ DatabaseIdentifier.toSQLString(mcm.getDomainId()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(mcm.getName()) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(mcm.getDescription()) + APOSTOPHE + COMMA
-			+ mcm.getUserId().toSQLString() + COMMA
-			+ mcm.getServerId().toSQLString(); 
+			+ DatabaseIdentifier.toSQLString(mcm.getUserId()) + COMMA
+			+ DatabaseIdentifier.toSQLString(mcm.getServerId()); 
 		return sql;
 	}
 
@@ -137,10 +138,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		MCM mcm = storableObject == null ? null : fromStorableObject(storableObject);
 		if (mcm == null){
-			/**
-			 * @todo when change DB Identifier model ,change getString() to getLong()
-			 */
-			mcm = new MCM(new Identifier(resultSet.getString(COLUMN_ID)),
+			mcm = new MCM(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
 																	 null,
 																	 null,
 																	 null,
@@ -150,37 +148,22 @@ public class MCMDatabase extends StorableObjectDatabase {
 																	 (short)0);			
 		}
 		mcm.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
-																											DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-																											/**
-																												* @todo when change DB Identifier model ,change getString() to getLong()
-																												*/
-																											new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-																											/**
-																												* @todo when change DB Identifier model ,change getString() to getLong()
-																												*/
-																											new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-																											/**
-																												* @todo when change DB Identifier model ,change getString() to getLong()
-																												*/
-																											new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),
-																											DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
-																											DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
-																											/**
-																												* @todo when change DB Identifier model ,change getString() to getLong()
-																												*/
-																											new Identifier(resultSet.getString(COLUMN_USER_ID)),
-																											/**
-																												* @todo when change DB Identifier model ,change getString() to getLong()
-																												*/
-																											new Identifier(resultSet.getString(COLUMN_SERVER_ID)),
-																											resultSet.getShort(COLUMN_TCP_PORT));
+						  DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+						  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+						  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+						  DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
+						  DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
+						  DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
+						  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_USER_ID),
+						  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_SERVER_ID),
+						  resultSet.getShort(COLUMN_TCP_PORT));
 		
 		return mcm;
 	}
 		
 	private void retrieveKISs(MCM mcm) throws RetrieveObjectException {
 		List kiss = new ArrayList();
-		String mcmIdStr = mcm.getId().toSQLString();
+		String mcmIdStr = DatabaseIdentifier.toSQLString(mcm.getId());
 		String sql = SQL_SELECT 
 			+ COLUMN_ID
 			+ SQL_FROM + ObjectEntities.KIS_ENTITY
@@ -239,7 +222,7 @@ public class MCMDatabase extends StorableObjectDatabase {
         int i = 1;
         for (Iterator it = mcms.iterator(); it.hasNext();i++) {
             MCM mcm = (MCM)it.next();
-            sql.append(mcm.getId().toSQLString());
+            sql.append(DatabaseIdentifier.toSQLString(mcm.getId()));
             if (it.hasNext()){
                 if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
                     sql.append(COMMA);
@@ -401,7 +384,7 @@ public class MCMDatabase extends StorableObjectDatabase {
 	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
         List list = null;
         
-        String condition = DomainMember.COLUMN_DOMAIN_ID + EQUALS + domain.getId().toSQLString();
+        String condition = DomainMember.COLUMN_DOMAIN_ID + EQUALS + DatabaseIdentifier.toSQLString(domain.getId());
         
         try {
             list = retrieveButIds(ids, condition);

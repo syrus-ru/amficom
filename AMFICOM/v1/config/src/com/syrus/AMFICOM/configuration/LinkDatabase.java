@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.5 2004/11/10 15:23:51 bob Exp $
+ * $Id: LinkDatabase.java,v 1.6 2004/11/16 12:33:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import java.util.List;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -32,7 +33,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/11/10 15:23:51 $
+ * @version $Revision: 1.6 $, $Date: 2004/11/16 12:33:17 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -120,15 +121,15 @@ public class LinkDatabase extends StorableObjectDatabase {
 		String color = DatabaseString.toQuerySubString(link.getColor());
 		String mark = DatabaseString.toQuerySubString(link.getMark());
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
-			+ link.getDomainId().toSQLString() + COMMA
-			+ link.getType().getId().toSQLString() + COMMA
+			+ DatabaseIdentifier.toSQLString(link.getDomainId()) + COMMA
+			+ DatabaseIdentifier.toSQLString(link.getType().getId()) + COMMA
 			+ link.getSort().value() + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(link.getName()) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(link.getDescription()) + APOSTOPHE + COMMA
 			+ APOSTOPHE + (inventoryNo != null ? inventoryNo : "") + APOSTOPHE + COMMA
 			+ APOSTOPHE + (supplier != null ? supplier : "") + APOSTOPHE + COMMA
 			+ APOSTOPHE + (supplierCode != null ? supplierCode : "") + APOSTOPHE + COMMA
-			+ (linkId != null ? linkId.toSQLString() : Identifier.getNullSQLString()) + COMMA
+			+ DatabaseIdentifier.toSQLString(linkId) + COMMA
 			+ APOSTOPHE + (color != null ? color : "") + APOSTOPHE + COMMA
 			+ APOSTOPHE + (mark != null ? mark : "") + APOSTOPHE;
 		return sql;
@@ -143,14 +144,14 @@ public class LinkDatabase extends StorableObjectDatabase {
 			i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
 			Identifier linkId = link.getLinkId();
 			preparedStatement.setString( ++i , link.getDomainId().getCode());
-			preparedStatement.setString( ++i, link.getType().getId().getCode());
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, link.getType().getId());
 			preparedStatement.setInt( ++i, link.getSort().value());
 			preparedStatement.setString( ++i, link.getName());
 			preparedStatement.setString( ++i, link.getDescription());
 			preparedStatement.setString( ++i, link.getInventoryNo());
 			preparedStatement.setString( ++i, link.getSupplier());
 			preparedStatement.setString( ++i, link.getSupplierCode());
-			preparedStatement.setString( ++i, (linkId != null ? linkId.getCode() : ""));
+			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, linkId);
 			preparedStatement.setString( ++i, link.getColor());
 			preparedStatement.setString( ++i, link.getMark());
 		} catch (SQLException sqle) {
@@ -164,11 +165,8 @@ public class LinkDatabase extends StorableObjectDatabase {
 			StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		Link link = storableObject == null ? null : fromStorableObject(storableObject);
-		if (link == null){
-			/**
-			 * @todo when change DB Identifier model ,change getString() to getLong()
-			 */
-			link = new Link(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null,
+		if (link == null){			
+			link = new Link(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null,
 									   null, null, null, null, null, 0, null, null, null);			
 		}
 		String name = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME));
@@ -178,25 +176,16 @@ public class LinkDatabase extends StorableObjectDatabase {
 		String supplierCode = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_SUPPLIER_CODE));
 		LinkType linkType;
 		try {
-			linkType = (LinkType)ConfigurationStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
+			linkType = (LinkType)ConfigurationStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TYPE_ID), true);
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
 		}
 		link.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 														DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-														/**
-															* @todo when change DB Identifier model ,change getString() to getLong()
-															*/
-														new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-														/**
-															* @todo when change DB Identifier model ,change getString() to getLong()
-															*/
-														new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-														/**
-															* @todo when change DB Identifier model ,change getString() to getLong()
-															*/
-														new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),
+														DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+														DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
+														DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
 														(name != null) ? name : "",
 														(description != null) ? description : "",
 														linkType,
@@ -204,10 +193,7 @@ public class LinkDatabase extends StorableObjectDatabase {
 														(supplier != null) ? supplier : "",
 														(supplierCode != null) ? supplierCode : "",
 														resultSet.getInt(COLUMN_SORT),
-														/**
-														* @todo when change DB Identifier model ,change getString() to getLong()
-														*/
-														new Identifier(resultSet.getString(COLUMN_LINK_ID)),
+														DatabaseIdentifier.getIdentifier(resultSet, COLUMN_LINK_ID),
 														DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_COLOR)),
 														DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_MARK)));
 
@@ -250,7 +236,6 @@ public class LinkDatabase extends StorableObjectDatabase {
 
 	public void update(StorableObject storableObject, int updateKind, Object obj)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		//TODO Check this method on errors		
 		switch (updateKind) {
 		case UPDATE_FORCE:
 			super.checkAndUpdateEntity(storableObject, true);
@@ -264,7 +249,6 @@ public class LinkDatabase extends StorableObjectDatabase {
 	
 	public void update(List storableObjects, int updateKind, Object arg)
 		throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		//TODO Check this method on errors
 		switch (updateKind) {
 		case UPDATE_FORCE:
 			super.checkAndUpdateEntities(storableObjects, true);

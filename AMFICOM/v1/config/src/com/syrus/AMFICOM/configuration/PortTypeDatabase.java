@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.17 2004/11/10 15:23:51 bob Exp $
+ * $Id: PortTypeDatabase.java,v 1.18 2004/11/16 12:33:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,28 +8,28 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import java.util.List;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
-import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/11/10 15:23:51 $
+ * @version $Revision: 1.18 $, $Date: 2004/11/16 12:33:17 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -94,18 +94,12 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException {
 		PortType portType = (storableObject==null)?
-				new PortType(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null):
+				new PortType(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, null):
 					fromStorableObject(storableObject);
 		portType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 								DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-								/**
-									* @todo when change DB Identifier model ,change getString() to getLong()
-									*/
-								new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-								/**
-									* @todo when change DB Identifier model ,change getString() to getLong()
-									*/
-								new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+								DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
+								DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 								DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
 								DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
 								DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)));
