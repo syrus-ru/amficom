@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapWindowCommand.java,v 1.2 2004/10/06 09:27:27 krupenn Exp $
+ * $Id: ViewMapWindowCommand.java,v 1.3 2004/10/19 10:41:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,18 +14,17 @@ package com.syrus.AMFICOM.Client.Map.Command.Editor;
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModelFactory;
 import com.syrus.AMFICOM.Client.General.UI.MessageBox;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapNewCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewNewCommand;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 
 import java.awt.Dimension;
@@ -37,7 +36,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/06 09:27:27 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/19 10:41:03 $
  * @module
  * @author $Author: krupenn $
  * @see

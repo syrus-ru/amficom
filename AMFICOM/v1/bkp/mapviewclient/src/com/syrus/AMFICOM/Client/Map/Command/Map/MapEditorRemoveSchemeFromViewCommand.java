@@ -1,20 +1,40 @@
+/**
+ * $Id: MapEditorRemoveSchemeFromViewCommand.java,v 1.3 2004/10/19 10:41:03 krupenn Exp $
+ *
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ Автоматизированный МногоФункциональный
+ *         Интеллектуальный Комплекс Объектного Мониторинга
+ *
+ * Платформа: java 1.4.1
+ */
+
 package com.syrus.AMFICOM.Client.Map.Command.Map;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
 
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-
 import javax.swing.JOptionPane;
 
+/**
+ * убрать из вида выбранную схему 
+ * 
+ * 
+ * 
+ * @version $Revision: 1.3 $, $Date: 2004/10/19 10:41:03 $
+ * @module
+ * @author $Author: krupenn $
+ * @see
+ */
 public class MapEditorRemoveSchemeFromViewCommand extends VoidCommand
 {
 	MapFrame mapFrame;

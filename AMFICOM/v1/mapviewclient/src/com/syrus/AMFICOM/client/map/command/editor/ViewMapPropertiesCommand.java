@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapPropertiesCommand.java,v 1.2 2004/09/29 15:14:38 krupenn Exp $
+ * $Id: ViewMapPropertiesCommand.java,v 1.3 2004/10/19 10:41:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,7 +14,6 @@ package com.syrus.AMFICOM.Client.Map.Command.Editor;
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-
 import com.syrus.AMFICOM.Client.Map.UI.MapPropertyFrame;
 
 import java.awt.Dimension;
@@ -26,7 +25,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/29 15:14:38 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/19 10:41:03 $
  * @module
  * @author $Author: krupenn $
  * @see

@@ -1,18 +1,38 @@
+/**
+ * $Id: MapViewNewCommand.java,v 1.4 2004/10/19 10:41:03 krupenn Exp $
+ *
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ Автоматизированный МногоФункциональный
+ *         Интеллектуальный Комплекс Объектного Мониторинга
+ *
+ * Платформа: java 1.4.1
+ */
+
 package com.syrus.AMFICOM.Client.Map.Command.Map;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 
+/**
+ * создать новый вид 
+ * 
+ * 
+ * 
+ * @version $Revision: 1.4 $, $Date: 2004/10/19 10:41:03 $
+ * @module
+ * @author $Author: krupenn $
+ * @see
+ */
 public class MapViewNewCommand extends VoidCommand
 {
 	ApplicationContext aContext;

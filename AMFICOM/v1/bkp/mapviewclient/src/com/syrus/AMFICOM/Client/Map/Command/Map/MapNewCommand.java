@@ -1,18 +1,38 @@
+/**
+ * $Id: MapNewCommand.java,v 1.6 2004/10/19 10:41:03 krupenn Exp $
+ *
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ Автоматизированный МногоФункциональный
+ *         Интеллектуальный Комплекс Объектного Мониторинга
+ *
+ * Платформа: java 1.4.1
+ */
+
 package com.syrus.AMFICOM.Client.Map.Command.Map;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 
+/**
+ * создание новой карты (Map). включает в себя создание нового вида
+ * 
+ * 
+ * 
+ * @version $Revision: 1.6 $, $Date: 2004/10/19 10:41:03 $
+ * @module
+ * @author $Author: krupenn $
+ * @see
+ */
 public class MapNewCommand extends VoidCommand
 {
 	ApplicationContext aContext;
@@ -52,29 +72,7 @@ public class MapNewCommand extends VoidCommand
 		mc.setId(aContext.getDataSource().GetUId(Map.typ));
 		mc.setDomainId(aContext.getSessionInterface().getDomainId());
 		mc.setUserId(aContext.getSessionInterface().getUserId());
-/*
-		ObjectResourcePropertiesDialog dialog = new ObjectResourcePropertiesDialog( 
-				Environment.getActiveWindow(), 
-				LangModel.getString("MapContextProperties"), 
-				true, 
-				mc,
-				com.syrus.AMFICOM.Client.Resource.Map.Map.getPropertyPane());
 
-		Dimension screenSize =  Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize =  dialog.getSize();
-
-		if (frameSize.height > screenSize.height)
-			frameSize.height = screenSize.height;
-		if (frameSize.width > screenSize.width)
-			frameSize.width = screenSize.width;
-		dialog.setLocation(
-				(screenSize.width - frameSize.width) / 2, 
-				(screenSize.height - frameSize.height) / 2);
-		dialog.setVisible(true);
-
-		if ( dialog.ifAccept())
-		{
-*/
 		Pool.put( mc.getTyp(), mc.getId(), mc);
 
 		mv = new MapView();
@@ -97,16 +95,6 @@ public class MapNewCommand extends VoidCommand
 				StatusMessageEvent.STATUS_MESSAGE,
 				LangModel.getString("Finished")));
 		setResult(Command.RESULT_OK);
-/*
-		}
-		else
-		{
-			aContext.getDispatcher().notify(new StatusMessageEvent(
-					StatusMessageEvent.STATUS_MESSAGE,
-					LangModel.getString("Aborted")));
-			setResult(Command.RESULT_CANCEL);
-		}
-*/
 	}
 
 }

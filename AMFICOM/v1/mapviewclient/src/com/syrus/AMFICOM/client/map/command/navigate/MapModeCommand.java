@@ -1,5 +1,5 @@
 /**
- * $Id: MapModeCommand.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: MapModeCommand.java,v 1.2 2004/10/19 10:41:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,7 +13,6 @@ package com.syrus.AMFICOM.Client.Map.Command.Navigate;
 
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
-
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 
 /**
@@ -21,7 +20,7 @@ import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/19 10:41:03 $
  * @module
  * @author $Author: krupenn $
  * @see

@@ -1,5 +1,5 @@
 /**
- * $Id: ShowNodesCommand.java,v 1.2 2004/10/01 16:36:26 krupenn Exp $
+ * $Id: ShowNodesCommand.java,v 1.3 2004/10/19 10:41:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,7 +14,6 @@ package com.syrus.AMFICOM.Client.Map.Command.Navigate;
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
-
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 
@@ -26,7 +25,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/01 16:36:26 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/19 10:41:03 $
  * @module
  * @author $Author: krupenn $
  * @see

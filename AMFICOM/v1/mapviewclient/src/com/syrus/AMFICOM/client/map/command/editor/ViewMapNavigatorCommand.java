@@ -1,9 +1,19 @@
+/**
+ * $Id: ViewMapNavigatorCommand.java,v 1.2 2004/10/19 10:41:03 krupenn Exp $
+ *
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ Автоматизированный МногоФункциональный
+ *         Интеллектуальный Комплекс Объектного Мониторинга
+ *
+ * Платформа: java 1.4.1
+ */
+
 package com.syrus.AMFICOM.Client.Map.Command.Editor;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.ViewNavigatorCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-
 import com.syrus.AMFICOM.Client.Map.UI.MapSchemeTreeFrame;
 import com.syrus.AMFICOM.Client.Map.UI.MapSchemeTreePanel;
 
@@ -14,6 +24,16 @@ import java.awt.Toolkit;
 import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
 
+/**
+ * отобразить окно привязки схем к карте 
+ * 
+ * 
+ * 
+ * @version $Revision: 1.2 $, $Date: 2004/10/19 10:41:03 $
+ * @module
+ * @author $Author: krupenn $
+ * @see
+ */
 public class ViewMapNavigatorCommand extends ViewNavigatorCommand
 {
 	public ApplicationContext aContext;
@@ -67,6 +87,7 @@ public class ViewMapNavigatorCommand extends ViewNavigatorCommand
 			}
 			catch(Exception ex)
 			{
+				// не окно карты
 			}
 		}
 

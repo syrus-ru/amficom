@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorOpenViewCommand.java,v 1.4 2004/10/18 07:39:19 krupenn Exp $
+ * $Id: MapEditorOpenViewCommand.java,v 1.5 2004/10/19 10:41:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,7 +14,6 @@ import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModelFactory;
-
 import com.syrus.AMFICOM.Client.General.Model.MapMapEditorApplicationModelFactory;
 import com.syrus.AMFICOM.Client.Map.Command.Map.MapViewOpenCommand;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
@@ -27,7 +26,7 @@ import javax.swing.JDesktopPane;
  * пользователь выбрал MapContext, открывается окно карты и сопутствующие окна
  * и MapContext передается в окно карты
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/18 07:39:19 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/19 10:41:03 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapOpenCommand

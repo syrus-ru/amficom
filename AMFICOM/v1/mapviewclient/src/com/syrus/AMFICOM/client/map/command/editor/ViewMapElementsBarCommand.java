@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapElementsBarCommand.java,v 1.3 2004/10/06 09:27:27 krupenn Exp $
+ * $Id: ViewMapElementsBarCommand.java,v 1.4 2004/10/19 10:41:03 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -14,7 +14,6 @@ package com.syrus.AMFICOM.Client.Map.Command.Editor;
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-
 import com.syrus.AMFICOM.Client.Map.UI.MapElementsBarFrame;
 import com.syrus.AMFICOM.Client.Resource.MapDataSourceImage;
 
@@ -28,7 +27,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/06 09:27:27 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/19 10:41:03 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -59,10 +58,7 @@ public class ViewMapElementsBarCommand extends VoidCommand
 		if(aContext.getDataSource() == null)
 			return;
 		
-//		if(Environment.getConnectionType().equalsIgnoreCase(Environment.CONNECTION_EMPTY))
-			new MapDataSourceImage(aContext.getDataSource()).loadProtoElements();
-//		else
-//			new MapDataSourceImage(new EmptyMapDataSource(aContext.getSessionInterface())).LoadProtoElements();
+		new MapDataSourceImage(aContext.getDataSource()).loadProtoElements();
 			
 		frame = null;
 		for(int i = 0; i < desktop.getComponents().length; i++)
@@ -76,6 +72,7 @@ public class ViewMapElementsBarCommand extends VoidCommand
 			}
 			catch(Exception ex)
 			{
+				// не окно карты
 			}
 		}
 
@@ -86,8 +83,6 @@ public class ViewMapElementsBarCommand extends VoidCommand
 			desktop.add(frame, JDesktopPane.PALETTE_LAYER);
 
 			Dimension dim = new Dimension(desktop.getWidth(), desktop.getHeight());
-//			frame.setLocation(dim.width * 4 / 5, 0);
-//			frame.setSize(dim.width / 5, dim.height / 4);
 			frame.setLocation(0, dim.height * 7 / 8);
 			frame.setSize(dim.width * 4 / 5, dim.height / 8);
 		}

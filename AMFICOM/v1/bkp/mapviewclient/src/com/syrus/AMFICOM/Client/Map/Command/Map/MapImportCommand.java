@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.5 2004/10/11 16:48:33 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.6 2004/10/19 10:41:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,16 +14,22 @@ import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Map.Command.ImportCommand;
+import com.syrus.AMFICOM.Client.General.Command.ImportCommand;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.Client.Resource.Map.*;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
+import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapMarkElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapPipePathElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-
 import com.syrus.AMFICOM.Client.Resource.ResourceUtil;
+
 import java.io.File;
 
 import java.util.Iterator;
@@ -36,7 +42,7 @@ import java.util.List;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/11 16:48:33 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/19 10:41:03 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see

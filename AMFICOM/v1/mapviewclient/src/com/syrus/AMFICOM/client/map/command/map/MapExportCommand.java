@@ -1,5 +1,5 @@
 /*
- * $Id: MapExportCommand.java,v 1.3 2004/10/05 12:55:58 krupenn Exp $
+ * $Id: MapExportCommand.java,v 1.4 2004/10/19 10:41:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,11 +11,11 @@
 package com.syrus.AMFICOM.Client.Map.Command.Map;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.Map.Command.ExportCommand;
+import com.syrus.AMFICOM.Client.General.Command.ExportCommand;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.Client.Resource.Map.*;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
+import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 import java.io.File;
@@ -28,7 +28,7 @@ import java.util.Iterator;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/05 12:55:58 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/19 10:41:03 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see

@@ -1,5 +1,5 @@
 /**
- * $Id: MeasureDistanceCommand.java,v 1.1 2004/09/16 10:39:53 krupenn Exp $
+ * $Id: MeasureDistanceCommand.java,v 1.2 2004/10/19 10:41:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,7 +13,6 @@ package com.syrus.AMFICOM.Client.Map.Command.Navigate;
 
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
-
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
 
@@ -24,7 +23,7 @@ import java.awt.Cursor;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/16 10:39:53 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/19 10:41:03 $
  * @module
  * @author $Author: krupenn $
  * @see

@@ -1,25 +1,32 @@
+/**
+ * $Id: MapEditorAddSchemeToViewCommand.java,v 1.3 2004/10/19 10:41:03 krupenn Exp $
+ *
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ Автоматизированный МногоФункциональный
+ *         Интеллектуальный Комплекс Объектного Мониторинга
+ *
+ * Платформа: java 1.4.1
+ */
+
 package com.syrus.AMFICOM.Client.Map.Command.Map;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceChooserDialog;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTableModel;
+import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
-import com.syrus.AMFICOM.Client.Resource.SchemeDataSourceImage;
 
-import com.syrus.AMFICOM.Client.General.Event.MapEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-
-import java.util.List;
-
+/**
+ * добавить в вид схему из списка
+ * 
+ * 
+ * 
+ * @version $Revision: 1.3 $, $Date: 2004/10/19 10:41:03 $
+ * @module
+ * @author $Author: krupenn $
+ * @see
+ */
 public class MapEditorAddSchemeToViewCommand extends VoidCommand
 {
 	MapFrame mapFrame;

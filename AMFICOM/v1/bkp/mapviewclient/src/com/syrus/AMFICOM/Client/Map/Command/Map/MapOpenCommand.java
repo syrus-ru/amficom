@@ -1,27 +1,47 @@
+/**
+ * $Id: MapOpenCommand.java,v 1.5 2004/10/19 10:41:03 krupenn Exp $
+ *
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ Автоматизированный МногоФункциональный
+ *         Интеллектуальный Комплекс Объектного Мониторинга
+ *
+ * Платформа: java 1.4.1
+ */
+
 package com.syrus.AMFICOM.Client.Map.Command.Map;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceChooserDialog;
 import com.syrus.AMFICOM.Client.Map.UI.MapController;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
+import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.MapDataSourceImage;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
-
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
+
 import java.util.List;
 
 import javax.swing.JDesktopPane;
 
+/**
+ * открыть карту. карта открывается в новом виде
+ * 
+ * 
+ * 
+ * @version $Revision: 1.5 $, $Date: 2004/10/19 10:41:03 $
+ * @module
+ * @author $Author: krupenn $
+ * @see
+ */
 public class MapOpenCommand extends VoidCommand
 {
 	MapFrame mapFrame;
@@ -71,7 +91,7 @@ public class MapOpenCommand extends VoidCommand
 
 		new MapDataSourceImage(dataSource).loadMaps();
 
-		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(com.syrus.AMFICOM.Client.Map.UI.MapController.getInstance(), Map.typ);
+		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(MapController.getInstance(), Map.typ);
 
 		mcd.setCanDelete(canDelete);
 

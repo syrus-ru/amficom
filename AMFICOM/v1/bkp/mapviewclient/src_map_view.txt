@@ -8,8 +8,6 @@ src\com\syrus\AMFICOM\Client\Map\MapState.java
 src\com\syrus\AMFICOM\Client\Map\NetMapViewer.java
 src\com\syrus\AMFICOM\Client\Map\SpatialLayer.java
 src\com\syrus\AMFICOM\Client\Map\SpatialObject.java
-src\com\syrus\AMFICOM\Client\Map\Command\ExportCommand.java
-src\com\syrus\AMFICOM\Client\Map\Command\ImportCommand.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\BindPhysicalNodeToSiteCommandBundle.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\BindUnboundLinkToPhysicalLinkCommandBundle.java
 src\com\syrus\AMFICOM\Client\Map\Command\Action\BindUnboundNodeToSiteCommandBundle.java
