@@ -40,6 +40,7 @@ private:
 	void cleanup_socket();
 	static int startup_WSA();
 	static void cleanup_WSA();
+	static void print_measurement_segment(MeasurementSegment* measurement_segment);
 
 	MeasurementQueueT* measurement_queue;
 	ResultQueueT* result_queue;

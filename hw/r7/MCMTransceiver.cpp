@@ -188,71 +188,7 @@ void* MCMTransceiver::run(void* args) {
 
 	return NULL;
 }
-/*
-void* MCMTransceiver::run(void* args) {
-	MCMTransceiver* mcmTransceiver = (MCMTransceiver*)args;
 
-	int r;
-	Segment* segment = NULL;
-	while (mcmTransceiver->running) {
-
-		if (mcmTransceiver->sockfd != SOCKET_INVALID) {
-
-			//Receiver part
-			r = receive_segment(mcmTransceiver->sockfd, mcmTransceiver->timewait, segment, 1);
-			if (r == 1) {
-				switch (segment->getType()) {
-					case SEGMENT_MEASUREMENT:
-						printf("MCMTransceiver | Received measurement segment -- adding to queue\n");
-						pthread_mutex_lock(mcmTransceiver->tmutex);
-						mcmTransceiver->measurement_queue->push_front((MeasurementSegment*)segment);
-						pthread_mutex_unlock(mcmTransceiver->tmutex);
-						break;
-					default:
-						printf("MCMTransceiver | Nothing to do with segment of type %d\n", segment->getType());
-				}
-			}
-			else {
-				if (r == 0)
-					printf("MCMTransceiver | Nothing received\n");
-				else {
-					printf("MCMTransceiver | receive returned error\n");
-					mcmTransceiver->cleanup_socket();
-				}
-			}
-
-			//Transmitter part
-			pthread_mutex_lock(mcmTransceiver->rmutex);
-			if (! mcmTransceiver->result_queue->empty()) {
-				segment = (Segment*)mcmTransceiver->result_queue->back();
-				mcmTransceiver->result_queue->pop_back();
-				pthread_mutex_unlock(mcmTransceiver->rmutex);
-				if (transmit_segment(mcmTransceiver->sockfd, segment)) {
-					printf("MCMTransceiver | Successfully transferred result segment\n");
-					delete (ResultSegment*)segment;
-				}
-				else {
-					printf("MCMTransceiver | Cannot transmit result segment -- pushing it back to queue\n");
-					pthread_mutex_lock(mcmTransceiver->rmutex);
-					mcmTransceiver->result_queue->push_back((ResultSegment*)segment);
-					pthread_mutex_unlock(mcmTransceiver->rmutex);
-				}
-			}//if (! mcmTransceiver->result_queue->empty())
-			else {
-				pthread_mutex_unlock(mcmTransceiver->rmutex);
-				printf("MCMTransceiver | No results in queue\n");
-			}
-
-		}//if (this->sockfd != SOCKET_INVALID)
-		else {
-			printf("MCMTrancseiver | local socket is invalid; trying to create a new one\n");
-			mcmTransceiver->sockfd = create_listening_socket(mcmTransceiver->port);
-		}//else if (this->sockfd != SOCKET_INVALID)
-	
-	}
-
-	return NULL;
-}*/
 //##########################################################################
 
 
@@ -262,6 +198,7 @@ void MCMTransceiver::process_segment(Segment* segment) const {
 		case SEGMENT_MEASUREMENT:
 			printf("MCMTransceiver | Received measurement segment -- adding to queue\n");
 			pthread_mutex_lock(this->tmutex);
+			print_measurement_segment((MeasurementSegment*) segment);
 			this->measurement_queue->push_front((MeasurementSegment*)segment);
 			pthread_mutex_unlock(this->tmutex);
 			break;
@@ -299,4 +236,40 @@ int MCMTransceiver::startup_WSA() {
 
 void MCMTransceiver::cleanup_WSA() {
 	WSACleanup();
+}
+
+void MCMTransceiver::print_measurement_segment(MeasurementSegment* measurement_segment) {
+	int i;
+/*
+	char* data = measurement_segment->getData();
+	unsigned int length = measurement_segment->getLength();
+	for (i = 0; i < length; i++)
+		printf("[%d] == %d\n", i, data[i]);
+*/
+	char* measurement_id = measurement_segment->getMeasurementId()->getData();
+	char* measurement_type_id = measurement_segment->getMeasurementTypeId()->getData();
+	char* local_address = measurement_segment->getLocalAddress()->getData();
+	unsigned int parnumber = measurement_segment->getParnumber();
+	printf("measurement_id: '%s'\nmeasurement_type_id: '%s'\nlocal_address: '%s'\nparnumber: %d\n",
+		measurement_id,
+		measurement_type_id,
+		local_address,
+		parnumber);
+
+	Parameter** parameters = measurement_segment->getParameters();
+	Parameter* par;
+	char* par_name;
+	char* par_value;
+	unsigned int value_size;
+	for (i = 0; i < parnumber; i++) {
+		par = parameters[i];
+		par_name = par->getName()->getData();
+		par_value = par->getValue()->getData();
+		value_size = par->getValue()->getLength();
+		printf("\tname: '%s'\n", par_name);
+		printf("\tvalue:");
+		for (int j = 0; j < value_size; j++)
+			printf(" %d", par_value[j]);
+		printf("\n");
+	}
 }
