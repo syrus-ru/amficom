@@ -1,5 +1,5 @@
 /**
- * $Id: MapNavigateEvent.java,v 1.7 2004/10/26 13:25:36 krupenn Exp $
+ * $Id: MapNavigateEvent.java,v 1.8 2004/12/22 15:53:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,13 +10,14 @@
 
 package com.syrus.AMFICOM.Client.General.Event;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.corba.IdentifierDefaultFactory;
 
 /**
- * Событие выделения/снятия выделения элемента(-ов) карты 
- * 
- * 
- * 
- * @version $Revision: 1.7 $, $Date: 2004/10/26 13:25:36 $
+ * Событие выделения/снятия выделения элемента(-ов) карты
+ *
+ *
+ *
+ * @version $Revision: 1.8 $, $Date: 2004/12/22 15:53:47 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -103,35 +104,35 @@ public class MapNavigateEvent extends MapEvent
 
 	/**
 	 * Идентификатор маркера
-	 */	
-	protected String markerId;
-	
+	 */
+	protected Identifier markerId;
+
 	/**
 	 * Относительные координаты маркера
 	 */
 	protected double distance;
 
 	/**
-	 * Идентификаторы схемного пути 
+	 * Идентификаторы схемного пути
 	 */
-    protected String schemePathId;
+		protected Identifier schemePathId;
 
 	/**
 	 * Идентификаторы исследуемого объекта
 	 */
-    protected Identifier meId;
-	
+		protected Identifier meId;
+
 	/**
 	 * Идентификатор схемной Линии
 	 */
-	protected String schemePathElementId;
-
-//    protected Object descriptor;
+	protected Identifier schemePathElementId;
 
 	/**
 	 * Декомпозитор пути измерений
 	 */
 	protected Object spd = null;
+	
+	private static IdentifierDefaultFactory identifierFactory = new IdentifierDefaultFactory();
 
 	public MapNavigateEvent(
 			Object source,
@@ -140,41 +141,41 @@ public class MapNavigateEvent extends MapEvent
 		super(source, MAP_NAVIGATE);
 		this.mapEventType = mapEventType;
 	}
-	
+
 	public MapNavigateEvent(
 			Object source,
 			int mapEventType,
-			String markerId,
+			Identifier markerId,
 			double distance,
-			String schemePathId,
+			com.syrus.AMFICOM.general.corba.Identifier schemePathId,
 			Identifier meId)
 	{
 		super(source, MAP_NAVIGATE);
-        this.markerId = markerId;
+		this.markerId = markerId;
 		this.distance = distance;
-        this.schemePathId = schemePathId;
-        this.meId = meId;
+		this.schemePathId = new Identifier(schemePathId.getTransferable());
+		this.meId = meId;
 	}
 
 	public MapNavigateEvent(
 			Object source,
 			int typ,
-			String markerId,
+			Identifier markerId,
 			double distance,
-			String schemePathId,
+			com.syrus.AMFICOM.general.corba.Identifier schemePathId,
 			Identifier meId,
-			String schemePathElementId)
+			com.syrus.AMFICOM.general.corba.Identifier schemePathElementId)
 	{
 		this(source, typ, markerId, distance, schemePathId, meId);
-        this.schemePathElementId = schemePathElementId;
+		this.schemePathElementId = new Identifier(schemePathElementId.getTransferable());
 	}
 
-	public void setMarkerId(String markerId)
+	public void setMarkerId(Identifier markerId)
 	{
 		this.markerId = markerId;
 	}
 
-	public String getMarkerId()
+	public Identifier getMarkerId()
 	{
 		return markerId;
 	}
@@ -189,14 +190,14 @@ public class MapNavigateEvent extends MapEvent
 		return distance;
 	}
 
-	public void setSchemePathId(String schemePathId)
+	public void setSchemePathId(com.syrus.AMFICOM.general.corba.Identifier schemePathId)
 	{
-		this.schemePathId = schemePathId;
+		this.schemePathId = new Identifier(schemePathId.getTransferable());
 	}
 
-	public String getSchemePathId()
+	public com.syrus.AMFICOM.general.corba.Identifier getSchemePathId()
 	{
-		return schemePathId;
+		return identifierFactory.newInstanceFromPrimitive(schemePathId.getMajor(), schemePathId.getMinor());
 	}
 
 	public void setMeId(Identifier meId)
@@ -209,14 +210,14 @@ public class MapNavigateEvent extends MapEvent
 		return meId;
 	}
 
-	public void setSchemePathElementId(String schemePathElementId)
+	public void setSchemePathElementId(com.syrus.AMFICOM.general.corba.Identifier schemePathElementId)
 	{
-		this.schemePathElementId = schemePathElementId;
+		this.schemePathElementId = new Identifier(schemePathElementId.getTransferable());
 	}
 
-	public String getSchemePathElementId()
+	public com.syrus.AMFICOM.general.corba.Identifier getSchemePathElementId()
 	{
-		return schemePathElementId;
+		return identifierFactory.newInstanceFromPrimitive(schemePathElementId.getMajor(), schemePathElementId.getMinor());
 	}
 /*
 	public void setDescriptor(Object descriptor)
@@ -303,5 +304,4 @@ public class MapNavigateEvent extends MapEvent
 	{
 		return mapEventType == MAP_ELEMENT_DESELECTED_EVENT;
 	}
-
 }
