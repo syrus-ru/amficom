@@ -149,6 +149,8 @@ mserver_v1	AMFICOM/v1/mserver
 cmserver_v1	AMFICOM/v1/cmserver
 #M	mshserver_v1	Map und Scheme Server
 mshserver_v1	AMFICOM/v1/mshserver
+#M	eserver_v1	Event Server
+eserver_v1	AMFICOM/v1/eserver
 #M	mapview_v1	Map View Module
 mapview_v1	AMFICOM/v1/mapview
 #M	mapviewclient_v1	Client Map View Module
