@@ -41,6 +41,10 @@ IDL2JAVAFLAGS = \
 
 
 $(LIBNAME): .mach
+	cp \
+		$(SRCDIR)/com/syrus/AMFICOM/resource/measurement.properties \
+		$(SRCDIR)/com/syrus/AMFICOM/resource/measurement_ru.properties \
+		$(CLASSDIR)/com/syrus/AMFICOM/resource/
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
 

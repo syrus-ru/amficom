@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.18 2004/08/18 18:09:24 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.19 2004/08/20 12:52:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,18 +18,20 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/08/18 18:09:24 $
+ * @version $Revision: 1.19 $, $Date: 2004/08/20 12:52:23 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public class MeasurementType extends ActionType {
-	private List inParameterTypeIds;
-	private List outParameterTypeIds;
+	private List inParameterTypes;
+	private List outParameterTypes;
 
 	private StorableObjectDatabase	measurementTypeDatabase;
 
@@ -43,6 +45,16 @@ public class MeasurementType extends ActionType {
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
+
+		try {
+			for (Iterator it = this.inParameterTypes.iterator(); it.hasNext();)
+				MeasurementStorableObjectPool.putStorableObject((ParameterType) it.next());
+			for (Iterator it = this.outParameterTypes.iterator(); it.hasNext();)
+				MeasurementStorableObjectPool.putStorableObject((ParameterType) it.next());
+		}
+		catch (IllegalObjectEntityException ioee) {
+			Log.errorException(ioee);
+		}
 	}
 
 	public MeasurementType(MeasurementType_Transferable mtt) throws CreateObjectException {
@@ -54,13 +66,13 @@ public class MeasurementType extends ActionType {
 					new String(mtt.codename),
 					new String(mtt.description));
 
-		this.inParameterTypeIds = new ArrayList(mtt.in_parameter_type_ids.length);
+		this.inParameterTypes = new ArrayList(mtt.in_parameter_type_ids.length);
 		for (int i = 0; i < mtt.in_parameter_type_ids.length; i++)
-			this.inParameterTypeIds.add(new Identifier(mtt.in_parameter_type_ids[i]));
+			this.inParameterTypes.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(mtt.in_parameter_type_ids[i]), true));
 
-		this.outParameterTypeIds = new ArrayList(mtt.out_parameter_type_ids.length);
+		this.outParameterTypes = new ArrayList(mtt.out_parameter_type_ids.length);
 		for (int i = 0; i < mtt.out_parameter_type_ids.length; i++)
-			this.outParameterTypeIds.add(new Identifier(mtt.out_parameter_type_ids[i]));
+			this.outParameterTypes.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(mtt.out_parameter_type_ids[i]), true));
 
 		this.measurementTypeDatabase = MeasurementDatabaseContext.measurementTypeDatabase;
 		try {
@@ -75,8 +87,8 @@ public class MeasurementType extends ActionType {
 													Identifier creatorId,
 													String codename,
 													String description,
-													List inParameterTypeIds,
-													List	outParameterTypeIds){
+													List inParameterTypes,
+													List	outParameterTypes){
 		super(id);
 		long time = System.currentTimeMillis();
 		super.created = new Date(time);
@@ -85,8 +97,8 @@ public class MeasurementType extends ActionType {
 		super.modifierId = creatorId;
 		super.codename = codename;
 		super.description = description;
-		this.inParameterTypeIds = inParameterTypeIds;
-		this.outParameterTypeIds = outParameterTypeIds;
+		this.inParameterTypes = inParameterTypes;
+		this.outParameterTypes = outParameterTypes;
 
 		super.currentVersion = super.getNextVersion();
 	}
@@ -97,34 +109,36 @@ public class MeasurementType extends ActionType {
 	 * @param creatorId
 	 * @param codename
 	 * @param description
-	 * @param inParameterTypeIds
-	 * @param outParameterTypeIds
+	 * @param inParameterTypes
+	 * @param outParameterTypes
 	 * @return
 	 */
 	public static MeasurementType createInstance(Identifier id,
 																							 Identifier creatorId,
 																							 String codename,
 																							 String description,
-																							 List inParameterTypeIds,
-																							 List	outParameterTypeIds) {
+																							 List inParameterTypes,
+																							 List	outParameterTypes) {
 		return new MeasurementType(id,
 															 creatorId,
 															 codename,
 															 description,
-															 inParameterTypeIds,
-															 outParameterTypeIds);
+															 inParameterTypes,
+															 outParameterTypes);
 	}
 
 	public Object getTransferable() {
-		Identifier_Transferable[] inParTypeIds = new Identifier_Transferable[this.inParameterTypeIds.size()];
-		int i = 0;
-		for (Iterator iterator = this.inParameterTypeIds.iterator(); iterator.hasNext();)
-			inParTypeIds[i++] = (Identifier_Transferable) ((Identifier) iterator.next()).getTransferable();
+		int i;
 
-		Identifier_Transferable[] outParTypeIds = new Identifier_Transferable[this.outParameterTypeIds.size()];
+		Identifier_Transferable[] inParTypeIds = new Identifier_Transferable[this.inParameterTypes.size()];
 		i = 0;
-		for (Iterator iterator = this.outParameterTypeIds.iterator(); iterator.hasNext();)
-			outParTypeIds[i++] = (Identifier_Transferable) ((Identifier) iterator.next()).getTransferable();
+		for (Iterator iterator = this.inParameterTypes.iterator(); iterator.hasNext();)
+			inParTypeIds[i++] = (Identifier_Transferable) ((ParameterType) iterator.next()).getId().getTransferable();
+
+		Identifier_Transferable[] outParTypeIds = new Identifier_Transferable[this.outParameterTypes.size()];
+		i = 0;
+		for (Iterator iterator = this.outParameterTypes.iterator(); iterator.hasNext();)
+			outParTypeIds[i++] = (Identifier_Transferable) ((ParameterType) iterator.next()).getId().getTransferable();
 
 		return new MeasurementType_Transferable((Identifier_Transferable)super.id.getTransferable(),
 																						super.created.getTime(),
@@ -137,12 +151,12 @@ public class MeasurementType extends ActionType {
 																						outParTypeIds);
 	}
 
-	public List getInParameterTypeIds() {
-		return this.inParameterTypeIds;
+	public List getInParameterTypes() {
+		return this.inParameterTypes;
 	}
 
-	public List getOutParameterTypeIds() {
-		return this.outParameterTypeIds;
+	public List getOutParameterTypes() {
+		return this.outParameterTypes;
 	}
 
 	protected synchronized void setAttributes(Date created,
@@ -159,25 +173,25 @@ public class MeasurementType extends ActionType {
 												description);
 	}
 
-	protected synchronized void setParameterTypeIds(List inParameterTypeIds,
-																									List outParameterTypeIds) {
-		this.inParameterTypeIds = inParameterTypeIds;
-		this.outParameterTypeIds = outParameterTypeIds;
+	protected synchronized void setParameterTypes(List inParameterTypes,
+																								List outParameterTypes) {
+		this.inParameterTypes = inParameterTypes;
+		this.outParameterTypes = outParameterTypes;
 	}
 	/**
-	 * client setter for inParameterTypeIds
-	 * @param inParameterTypeIds The inParameterTypeIds to set.
+	 * client setter for inParameterTypes
+	 * @param inParameterTypes The inParameterTypes to set.
 	 */
-	public void setInParameterTypeIds(List inParameterTypeIds) {
+	public void setInParameterTypes(List inParameterTypes) {
 		this.currentVersion = super.getNextVersion();
-		this.inParameterTypeIds = inParameterTypeIds;
+		this.inParameterTypes = inParameterTypes;
 	}
 	/**
-	 * client setter for outParameterTypeIds
-	 * @param outParameterTypeIds The outParameterTypeIds to set.
+	 * client setter for outParameterTypes
+	 * @param outParameterTypes The outParameterTypes to set.
 	 */
-	public void setOutParameterTypeIds(List outParameterTypeIds) {
+	public void setOutParameterTypes(List outParameterTypes) {
 		this.currentVersion = super.getNextVersion();
-		this.outParameterTypeIds = outParameterTypeIds;
+		this.outParameterTypes = outParameterTypes;
 	}
 }

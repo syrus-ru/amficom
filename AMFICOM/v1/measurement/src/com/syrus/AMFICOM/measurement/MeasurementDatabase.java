@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.13 2004/08/17 14:58:58 arseniy Exp $
+ * $Id: MeasurementDatabase.java,v 1.14 2004/08/20 12:52:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/08/17 14:58:58 $
+ * @version $Revision: 1.14 $, $Date: 2004/08/20 12:52:23 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -224,7 +224,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 			+ COLUMN_DURATION + COMMA
 			+ COLUMN_STATUS + COMMA
 			+ COLUMN_LOCAL_ADDRESS + COMMA
-			+ COLUMN_TEST_ID + COMMA
+			+ COLUMN_TEST_ID
 			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
 			+ measurementIdStr + COMMA
 			+ DatabaseDate.toUpdateSubString(measurement.getCreated()) + COMMA

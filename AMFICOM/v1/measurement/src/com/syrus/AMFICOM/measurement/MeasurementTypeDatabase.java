@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.15 2004/08/17 14:58:58 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.16 2004/08/20 12:52:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/08/17 14:58:58 $
+ * @version $Revision: 1.16 $, $Date: 2004/08/20 12:52:23 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -53,7 +53,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		MeasurementType measurementType = this.fromStorableObject(storableObject);
 		this.retrieveMeasurementType(measurementType);
-		this.retrieveParameterTypeIds(measurementType);
+		this.retrieveParameterTypes(measurementType);
 	}
 
 	private void retrieveMeasurementType(MeasurementType measurementType) throws ObjectNotFoundException, RetrieveObjectException {
@@ -77,13 +77,11 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 				measurementType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 																			DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 																			/**
-																			 * @todo when change DB Identifier model ,change getString() to
-																			 *       getLong()
+																			 * @todo when change DB Identifier model ,change getString() to getLong()
 																			 */																			
 																			new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
 																			/**
-																			 * @todo when change DB Identifier model ,change getString() to
-																			 *       getLong()
+																			 * @todo when change DB Identifier model ,change getString() to getLong()
 																			 */
 																			new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
 																			resultSet.getString(COLUMN_CODENAME),
@@ -110,9 +108,9 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		}
 	}
 
-	private void retrieveParameterTypeIds(MeasurementType measurementType) throws RetrieveObjectException {
-		List inParTypIds = new ArrayList();
-		List outParTypIds = new ArrayList();
+	private void retrieveParameterTypes(MeasurementType measurementType) throws RetrieveObjectException {
+		List inParTyps = new ArrayList();
+		List outParTyps = new ArrayList();
 
 		String measurementTypeIdStr = measurementType.getId().toSQLString();
 		String sql = SQL_SELECT
@@ -124,7 +122,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		ResultSet resultSet = null;
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage("MeasurementTypeDatabase.retrieveParameterTypeIds | Trying: " + sql, Log.DEBUGLEVEL05);
+			Log.debugMessage("MeasurementTypeDatabase.retrieveParameterType | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			String parameterMode;
 			/**
@@ -134,21 +132,20 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			while (resultSet.next()) {
 				parameterMode = resultSet.getString(LINK_COLUMN_PARAMETER_MODE);
 				/**
-				 * @todo when change DB Identifier model ,change getString() to
-				 *       getLong()
+				 * @todo when change DB Identifier model ,change getString() to getLong()
 				 */
 				parameterTypeIdCode = resultSet.getString(LINK_COLUMN_PARAMETER_TYPE_ID);
 				if (parameterMode.equals(MODE_IN))
-					inParTypIds.add(new Identifier(parameterTypeIdCode));
+					inParTyps.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(parameterTypeIdCode), true));
 				else
 					if (parameterMode.equals(MODE_OUT))
-						outParTypIds.add(new Identifier(parameterTypeIdCode));
+						outParTyps.add((ParameterType) MeasurementStorableObjectPool.getStorableObject(new Identifier(parameterTypeIdCode), true));
 					else
-						Log.errorMessage("MeasurementTypeDatabase.retrieveParameterTypeIds | ERROR: Unknown parameter mode for parameterTypeId " + parameterTypeIdCode);
+						Log.errorMessage("MeasurementTypeDatabase.retrieveParameterTypes | ERROR: Unknown parameter mode for parameterTypeId " + parameterTypeIdCode);
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementTypeDatabase.retrieveParameterTypeIds | Cannot retrieve parameter type ids for measurement type '" + measurementTypeIdStr + "' -- " + sqle.getMessage();
+			String mesg = "MeasurementTypeDatabase.retrieveParameterTypes | Cannot retrieve parameter type ids for measurement type '" + measurementTypeIdStr + "' -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -164,10 +161,10 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 				Log.errorException(sqle1);
 			}
 		}
-		((ArrayList)inParTypIds).trimToSize();
-		((ArrayList)outParTypIds).trimToSize();
-		measurementType.setParameterTypeIds(inParTypIds,
-																				outParTypIds);
+		((ArrayList)inParTyps).trimToSize();
+		((ArrayList)outParTyps).trimToSize();
+		measurementType.setParameterTypes(inParTyps,
+																			outParTyps);
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
@@ -182,7 +179,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		MeasurementType measurementType = this.fromStorableObject(storableObject);
 		try {
 			this.insertMeasurementType(measurementType);
-			this.insertParameterTypeIds(measurementType);
+			this.insertParameterTypes(measurementType);
 		}
 		catch (CreateObjectException e) {
 			try {
@@ -245,9 +242,9 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		}
 	}
 
-	private void insertParameterTypeIds(MeasurementType measurementType) throws CreateObjectException {
-		List inParTypIds = measurementType.getInParameterTypeIds();
-		List outParTypIds = measurementType.getOutParameterTypeIds();
+	private void insertParameterTypes(MeasurementType measurementType) throws CreateObjectException {
+		List inParTyps = measurementType.getInParameterTypes();
+		List outParTyps = measurementType.getOutParameterTypes();
 		/**
 		 * @todo when change DB Identifier model ,change String to long
 		 */
@@ -270,13 +267,13 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		String parameterMode = null;
 		try {
 			preparedStatement = connection.prepareStatement(sql);
-			for (Iterator iterator = inParTypIds.iterator(); iterator.hasNext();) {
+			for (Iterator iterator = inParTyps.iterator(); iterator.hasNext();) {
 				/**
 				 * @todo when change DB Identifier model ,change setString() to
 				 *       setLong()
 				 */
 				preparedStatement.setString(1, measurementTypeIdCode);
-				parameterTypeIdCode = ((Identifier)iterator.next()).getCode();
+				parameterTypeIdCode = ((ParameterType) iterator.next()).getId().getCode();
 				/**
 				 * @todo when change DB Identifier model ,change setString() to
 				 *       setLong()
@@ -284,16 +281,16 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 				preparedStatement.setString(2, parameterTypeIdCode);
 				parameterMode = MODE_IN;
 				preparedStatement.setString(3, parameterMode);
-				Log.debugMessage("MeasurementTypeDatabase.insertParameterTypeIds | Inserting parameter type " + parameterTypeIdCode + " of parameter mode '" + parameterMode + "' for measurement type " + measurementTypeIdCode, Log.DEBUGLEVEL05);
+				Log.debugMessage("MeasurementTypeDatabase.insertParameterTypes | Inserting parameter type " + parameterTypeIdCode + " of parameter mode '" + parameterMode + "' for measurement type " + measurementTypeIdCode, Log.DEBUGLEVEL05);
 				preparedStatement.executeUpdate();
 			}
-			for (Iterator iterator = outParTypIds.iterator(); iterator.hasNext();) {
+			for (Iterator iterator = outParTyps.iterator(); iterator.hasNext();) {
 				/**
 				 * @todo when change DB Identifier model ,change setString() to
 				 *       setLong()
 				 */
 				preparedStatement.setString(1, measurementTypeIdCode);
-				parameterTypeIdCode = ((Identifier)iterator.next()).getCode();
+				parameterTypeIdCode = ((ParameterType) iterator.next()).getId().getCode();
 				/**
 				 * @todo when change DB Identifier model ,change setString() to
 				 *       setLong()
@@ -301,12 +298,12 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 				preparedStatement.setString(2, parameterTypeIdCode);
 				parameterMode = MODE_OUT;
 				preparedStatement.setString(3, parameterMode);
-				Log.debugMessage("MeasurementTypeDatabase.insertParameterTypeIds | Inserting parameter type '" + parameterTypeIdCode + "' of parameter mode '" + parameterMode + "' for measurement type '" + measurementTypeIdCode + "'", Log.DEBUGLEVEL05);
+				Log.debugMessage("MeasurementTypeDatabase.insertParameterTypes | Inserting parameter type '" + parameterTypeIdCode + "' of parameter mode '" + parameterMode + "' for measurement type '" + measurementTypeIdCode + "'", Log.DEBUGLEVEL05);
 				preparedStatement.executeUpdate();
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "MeasurementTypeDatabase.insertParameterTypeIds | Cannot insert parameter type '" + parameterTypeIdCode + "' of parameter mode '" + parameterMode + "' for measurement type '" + measurementTypeIdCode + "' -- " + sqle.getMessage();
+			String mesg = "MeasurementTypeDatabase.insertParameterTypes | Cannot insert parameter type '" + parameterTypeIdCode + "' of parameter mode '" + parameterMode + "' for measurement type '" + measurementTypeIdCode + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
