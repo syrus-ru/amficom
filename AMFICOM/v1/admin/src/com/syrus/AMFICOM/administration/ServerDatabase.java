@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.20 2005/03/11 09:26:27 bob Exp $
+ * $Id: ServerDatabase.java,v 1.21 2005/03/31 15:59:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.CharacterizableDatabase;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
@@ -30,8 +30,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/03/11 09:26:27 $
- * @author $Author: bob $
+ * @version $Revision: 1.21 $, $Date: 2005/03/31 15:59:22 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -131,8 +131,8 @@ public class ServerDatabase extends CharacterizableDatabase {
 		}
 	}
 
-	private List retrieveMCMIds(Server server) throws RetrieveObjectException {
-		List mcmIds = new ArrayList();
+	private Set retrieveMCMIds(Server server) throws RetrieveObjectException {
+		Set mcmIds = new HashSet();
 
 		String serverIdStr = DatabaseIdentifier.toSQLString(server.getId());
 		String sql = SQL_SELECT

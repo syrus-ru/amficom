@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.10 2005/03/05 21:34:42 arseniy Exp $
+ * $Id: Server.java,v 1.11 2005/03/31 15:59:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.administration.corba.Server_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -33,7 +34,7 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/03/05 21:34:42 $
+ * @version $Revision: 1.11 $, $Date: 2005/03/31 15:59:22 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -126,9 +127,9 @@ public class Server extends DomainMember implements Characterizable {
 									   charIds);
 	}
 
-	public List retrieveMCMIds() throws ObjectNotFoundException, RetrieveObjectException {
+	public Set retrieveMCMIds() throws ObjectNotFoundException, RetrieveObjectException {
 		try {
-			return (List)this.serverDatabase.retrieveObject(this, RETRIEVE_MCM_IDS, null);
+			return (Set) this.serverDatabase.retrieveObject(this, RETRIEVE_MCM_IDS, null);
 		}
 		catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
