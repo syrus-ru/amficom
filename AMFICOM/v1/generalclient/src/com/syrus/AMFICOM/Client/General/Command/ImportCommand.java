@@ -1,5 +1,5 @@
 /*
- * $Id: ImportCommand.java,v 1.4 2005/01/14 09:33:42 krupenn Exp $
+ * $Id: ImportCommand.java,v 1.5 2005/01/21 13:55:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -37,7 +38,7 @@ import javax.swing.JOptionPane;
  * Класс $RCSfile: ImportCommand.java,v $ 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2005/01/14 09:33:42 $
+ * @version $Revision: 1.5 $, $Date: 2005/01/21 13:55:18 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -52,12 +53,12 @@ public abstract class ImportCommand extends VoidCommand
 	protected class ImportObject
 	{
 		public String type;
-		public Object[][] exportColumns;
+		public Map exportColumns;
 		
-		public ImportObject(String type, Object[][] exportColumns)
+		public ImportObject(String type, java.util.Map exportColumns)
 		{
 			this.type = type;
-			this.exportColumns = exportColumns;
+			this.exportColumns = new HashMap(exportColumns);
 		}
 	}
 
@@ -83,16 +84,20 @@ public abstract class ImportCommand extends VoidCommand
 		return clonedId;
 	}
 
+	private Map objectColumnList = new HashMap();
+
 	protected ImportObject readObject()
 	{
-		List objectColumnList = new LinkedList();
+		objectColumnList.clear();
+
 		String[] type = readType();
 		if(type == null)
 			return null;
 		while(true)
 		{
 			String[] s = getString();
-			Object[] o = new Object[2];
+			Object key;
+			Object value = null;
 			if(s == null)
 				break;
 			if(s[0].length() == 0)
@@ -103,7 +108,7 @@ public abstract class ImportCommand extends VoidCommand
 				return null;
 
 			s[0] = s[0].substring(1, s[0].length());
-			o[0] = s[0];
+			key = s[0];
 
 			if(s[0].indexOf("[") == 0)
 			{
@@ -126,21 +131,15 @@ public abstract class ImportCommand extends VoidCommand
 						return null;
 					arg.add(s2[0]);
 				}
-				o[1] = arg;
+				key = arg;
 			}
 			else
-				o[1] = s[1];
+				value = s[1];
 
-			objectColumnList.add(o);
+			if(value != null)
+				objectColumnList.put(key, value);
 		}
-		Object[][] retObj = new Object[objectColumnList.size()][];
-		int i = 0;
-		for(Iterator it = objectColumnList.iterator(); it.hasNext();)
-		{
-			Object[] s = (Object[] )it.next();
-			retObj[i++] = s;
-		}
-		return new ImportObject(type[0], retObj);
+		return new ImportObject(type[0], objectColumnList);
 	}
 	
 	private String[] readType()
