@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.36 2004/11/17 17:32:29 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.37 2004/11/18 14:07:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2004/11/17 17:32:29 $
+ * @version $Revision: 1.37 $, $Date: 2004/11/18 14:07:43 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -95,6 +95,7 @@ public class ConfigurationStorableObjectPool {
 		addObjectPool(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, size);
 		addObjectPool(ObjectEntities.ME_ENTITY_CODE, size);
 		
+		polulatePools();		
 	}
 
 	public static void init(ConfigurationObjectLoader cObjectLoader1) {
@@ -120,6 +121,8 @@ public class ConfigurationStorableObjectPool {
 		addObjectPool(ObjectEntities.KIS_ENTITY_CODE, KIS_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.MEASUREMENTPORT_ENTITY_CODE, MEASUREMENTPORT_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.ME_ENTITY_CODE, ME_OBJECT_POOL_SIZE);
+		
+		polulatePools();
 	}
 
 	/**
@@ -161,17 +164,7 @@ public class ConfigurationStorableObjectPool {
 				objectPoolMap.put(new Short(objectEntityCode), objectPool);
             } else
             	throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName()
-            			+ " must extends LRUMap");
-            List keys = LRUMapSaver.load(ObjectEntities.codeToString(objectEntityCode));
-            if (keys == null)
-                return;            
-            getStorableObjects(keys, true);
-        } catch (CommunicationException e) {
-            Log.errorException(e);
-            Log.errorMessage("ConfigurationStorableObjectPool.addObjectPool | Error: " + e.getMessage());
-        } catch (DatabaseException e) {
-            Log.errorException(e);
-            Log.errorMessage("ConfigurationStorableObjectPool.addObjectPool | Error: " + e.getMessage());
+            			+ " must extends LRUMap");            
         } catch (SecurityException e) {
 			throw new UnsupportedOperationException("CacheMapClass " + cacheMapClass.getName()
 					+ " SecurityException " + e.getMessage());
@@ -192,6 +185,35 @@ public class ConfigurationStorableObjectPool {
 					+ " InvocationTargetException " + e.getMessage());
 		}
 
+	}
+	
+	private static void polulatePools(){
+		try{
+			for (Iterator it = objectPoolMap.keySet().iterator(); it.hasNext();) {				
+				short objectEntityCode = ((Short) it.next()).shortValue();
+				LRUMap objectPool = (LRUMap) objectPoolMap.get(new Short(objectEntityCode));
+				Log.debugMessage("ConfigurationStorableObjectPool.polulatePools | available pool for '" 
+								 + ObjectEntities.codeToString(objectEntityCode) + "' , pool is "
+								 + ((objectPool == null) ? " null " : " not null"), Log.DEBUGLEVEL05);
+			}
+			for (Iterator it = objectPoolMap.keySet().iterator(); it.hasNext();) {
+				short objectEntityCode = ((Short) it.next()).shortValue();
+				List keys = LRUMapSaver.load(ObjectEntities.codeToString(objectEntityCode));
+		        if (keys != null){
+					for (Iterator iter = keys.iterator(); iter.hasNext();) {
+						Identifier id = (Identifier) iter.next();
+						Log.debugMessage("ConfigurationStorableObjectPool.polulatePools | id:: '" + id + "'", Log.DEBUGLEVEL05);
+					}
+		        	getStorableObjects(keys, true);
+		        }
+			}
+		} catch (CommunicationException e) {
+            Log.errorException(e);
+            Log.errorMessage("ConfigurationStorableObjectPool.polulatePools | Error: " + e.getMessage());
+        } catch (DatabaseException e) {
+            Log.errorException(e);
+            Log.errorMessage("ConfigurationStorableObjectPool.polulatePools | Error: " + e.getMessage());
+        }
 	}
     
     public static void refresh() throws DatabaseException, CommunicationException {        
@@ -281,23 +303,29 @@ public class ConfigurationStorableObjectPool {
 						if (list == null)
 							list = new LinkedList();
 						list.add(storableObject);
-					}
-				}
-				if (storableObject == null) {
-					Log
-							.errorMessage("ConfigurationStorableObjectPool.getStorableObjects | Cannot find object pool for objectId: '"
-									+ objectId.toString()
-									+ "' entity code: '"
-									+ objectEntityCode + "'");
-					if (useLoader) {
-						if (objectQueueMap == null)
-							objectQueueMap = new HashMap();
-						List objectQueue = (List) objectQueueMap.get(entityCode);
-						if (objectQueue == null) {
-							objectQueue = new LinkedList();
-							objectQueueMap.put(entityCode, objectQueue);
+					}				
+					if (storableObject != null) {
+						if (useLoader) {
+							if (objectQueueMap == null)
+								objectQueueMap = new HashMap();
+							List objectQueue = (List) objectQueueMap.get(entityCode);
+							if (objectQueue == null) {
+								objectQueue = new LinkedList();
+								objectQueueMap.put(entityCode, objectQueue);
+							}
+							objectQueue.add(objectId);
 						}
-						objectQueue.add(objectId);
+					} 
+				} else {
+					Log
+					.errorMessage("ConfigurationStorableObjectPool.getStorableObjects | Cannot find object pool for objectId: '"
+							+ objectId.toString()
+							+ "' entity code: '"
+							+ ObjectEntities.codeToString(objectEntityCode) + "'");
+					try{
+						throw new Exception();
+					}catch(Exception e){
+						e.printStackTrace();
 					}
 				}
 			}
