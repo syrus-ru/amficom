@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.10 2004/10/11 16:48:33 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.11 2004/10/15 14:09:21 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -37,6 +37,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
 import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
@@ -68,7 +69,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/10/11 16:48:33 $
+ * @version $Revision: 1.11 $, $Date: 2004/10/15 14:09:21 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -105,7 +106,9 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	 * событий следует провер€ть этот флаг, и если он равен false, то обработку
 	 * этого событи€ не производить.
 	 */
-	public boolean performProcessing = true;
+	protected boolean performProcessing = true;
+	
+	protected boolean doNotify = true;
 	
 	/**
 	 * “екущий элемент
@@ -754,8 +757,45 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	 */
 	public void operationPerformed(OperationEvent ae)
 	{
+		if(!performProcessing)
+			return;
+
 		if(ae.getActionCommand().equals(MapEvent.MAP_CHANGED))
 		{
+			List selectedElements = getMapView().getMap().getSelectedElements();
+			if(selectedElements.size() > 1)
+			{
+				MapSelection sel;
+				if(! (getCurrentMapElement() instanceof MapSelection))
+				{
+					sel = new MapSelection(this);
+					setCurrentMapElement(sel);
+					this.sendMapEvent(new MapEvent(getCurrentMapElement(), MapEvent.MAP_ELEMENT_SELECTED));
+				}
+				else
+					sel = (MapSelection )getCurrentMapElement();
+
+				sel.clear();
+				sel.addAll(selectedElements);
+			}
+			else
+			if(selectedElements.size() == 1)
+			{
+				if(getCurrentMapElement() instanceof MapSelection)
+				{
+					MapElement me = (MapElement )selectedElements.get(0);
+					setCurrentMapElement(me);
+					this.sendMapEvent(new MapEvent(me, MapEvent.MAP_ELEMENT_SELECTED));
+				}
+			}
+			else
+			{
+				if(getCurrentMapElement() instanceof MapSelection)
+				{
+					setCurrentMapElement(VoidMapElement.getInstance(getMapView()));
+					this.sendMapEvent(new MapEvent(getCurrentMapElement(), MapEvent.MAP_ELEMENT_SELECTED));
+				}
+			}
 			repaint();
 		}
 		else
@@ -1347,22 +1387,16 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "notifyMapEvent(" + mapElement + ")");
 
-		Dispatcher disp = getContext().getDispatcher();
-		if(disp != null)
+
+		if(doNotify)
 		{
-			performProcessing = false;
-/*
-			// разобратьс€, почему сообщение о пути посылаетс€ отдельно от остальных!!!
-			if(mapElement instanceof MapTransmissionPathElement)
+			Dispatcher disp = getContext().getDispatcher();
+			if(disp != null)
 			{
-				MapNavigateEvent mne = new MapNavigateEvent(mc, MapNavigateEvent.MAP_PATH_SELECTED_EVENT);
-				mne.mappathID = path.getId();
-				dispatcher.notify(mne);
+				performProcessing = false;
+				disp.notify(new MapNavigateEvent(mapElement, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
+				performProcessing = true;
 			}
-			else
-*/
-			disp.notify(new MapNavigateEvent(mapElement, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
-			performProcessing = true;
 		}
 	}
 
@@ -1609,7 +1643,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	public void deselectAll()
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "deselectAll()");
-		
+
 		Iterator e = getMapView().getAllElements().iterator();
 		while ( e.hasNext())
 		{
@@ -1639,6 +1673,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	 */	
 	public List getSelectedElements()
 	{
+/*
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getSelectedElements()");
 
 		List returnList = new LinkedList();
@@ -1653,6 +1688,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		}
 		
 		return returnList;
+*/
+		return getMapView().getMap().getSelectedElements();
 	}
 
 	/**
@@ -1935,6 +1972,22 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				LangModelMap.getString("Well"),
 				true,
 				"well",
+				"description");
+			Pool.put(MapNodeProtoElement.typ, mnpe.getId(), mnpe);
+		}
+
+		mnpe = (MapNodeProtoElement )Pool.get(MapNodeProtoElement.typ, MapNodeProtoElement.CABLE_INLET);
+		if(mnpe == null)
+		{
+			ImageCatalogue.add(
+				"cableinlet",
+				new ImageResource("cableinlet", "cableinlet", "images/cableinlet.gif"));
+
+			mnpe = new MapNodeProtoElement(
+				MapNodeProtoElement.WELL,
+				LangModelMap.getString("CableInlet"),
+				true,
+				"cableinlet",
 				"description");
 			Pool.put(MapNodeProtoElement.typ, mnpe.getId(), mnpe);
 		}

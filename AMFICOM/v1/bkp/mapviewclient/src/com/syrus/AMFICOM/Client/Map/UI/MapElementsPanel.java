@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsPanel.java,v 1.2 2004/10/04 16:04:43 krupenn Exp $
+ * $Id: MapElementsPanel.java,v 1.3 2004/10/15 14:09:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -57,7 +57,7 @@ import javax.swing.event.ListSelectionListener;
  * видов элементов и талица элементов с полями "Идентификатор" и "Название"
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/04 16:04:43 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/15 14:09:21 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -95,6 +95,8 @@ public final class MapElementsPanel extends JPanel
 	BorderLayout borderLayout2 = new BorderLayout();
 
 	protected boolean performProcessing = true;
+
+	protected boolean doNotify = true;
 	
 	public MapElementsPanel(LogicalNetLayer logicalNetLayer)
 	{
@@ -213,35 +215,42 @@ public final class MapElementsPanel extends JPanel
 				if(aContext != null)
 					disp = aContext.getDispatcher();
 
-				if(disp != null)
+				if(doNotify)
 				{
-					for(Iterator it = model.getContents().iterator(); it.hasNext();)
+					if(disp != null)
 					{
-						MapElement mapE = (MapElement )it.next();
-						performProcessing = false;
-						disp.notify(new MapNavigateEvent(mapE, MapNavigateEvent.MAP_ELEMENT_DESELECTED_EVENT));
-						performProcessing = true;
+						for(Iterator it = model.getContents().iterator(); it.hasNext();)
+						{
+							MapElement mapE = (MapElement )it.next();
+							performProcessing = false;
+							disp.notify(new MapNavigateEvent(mapE, MapNavigateEvent.MAP_ELEMENT_DESELECTED_EVENT));
+							performProcessing = true;
+						}
 					}
 				}
 
 				for (int i = 0; i < table.getSelectedRows().length; i++)
 				{
 					MapElement mapE = (MapElement )model.getObjectResource(table.getSelectedRows()[i]);
-					if(disp != null)
+
+					if(doNotify)
 					{
-						performProcessing = false;
-						disp.notify(new MapNavigateEvent(mapE, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
-						logicalNetLayer.notifySchemeEvent(mapE);
-						logicalNetLayer.notifyCatalogueEvent(mapE);
-						performProcessing = true;
+						if(disp != null)
+						{
+							performProcessing = false;
+							disp.notify(new MapNavigateEvent(mapE, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));
+							logicalNetLayer.notifySchemeEvent(mapE);
+							logicalNetLayer.notifyCatalogueEvent(mapE);
+							performProcessing = true;
+						}
 					}
 				}
 				mouseSelect = true;
 
-				if(disp != null)
+				if(doNotify)
 				{
-					disp.notify(new MapEvent(this, MapNavigateEvent.MAP_CHANGED));
-//			logicalNetLayer.repaint();
+					if(disp != null)
+						disp.notify(new MapEvent(this, MapNavigateEvent.MAP_CHANGED));
 				}
 			}
 		}
@@ -256,6 +265,7 @@ public final class MapElementsPanel extends JPanel
 		mouseSelect = false;
 		//Здесь очищаем выбранные элементы у табли
 		table.clearSelection();
+
 		mouseSelect = true;
 		String selection = (String )typeComboBox.getSelectedItem();
 		List dataSet = new LinkedList();
@@ -297,7 +307,7 @@ public final class MapElementsPanel extends JPanel
 			if(selection.equals(MapPhysicalLinkElement.typ))
 				dataSet = map.getPhysicalLinks();
 			else
-			if(selection.equals(com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement.typ))
+			if(selection.equals(MapMeasurementPathElement.typ))
 				dataSet = mapView.getMeasurementPaths();
 			else
 			if(selection.equals(MapPhysicalNodeElement.typ))
@@ -338,6 +348,7 @@ public final class MapElementsPanel extends JPanel
 		mouseSelect = false;
 		//Здесь очищаем выбранные элементы у табли
 		table.clearSelection();
+
 		List dataSet = model.getContents();
 		int i = 0;
 		for(Iterator it = dataSet.iterator(); it.hasNext();)

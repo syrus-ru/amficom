@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertyFrame.java,v 1.6 2004/10/11 16:48:33 krupenn Exp $
+ * $Id: MapPropertyFrame.java,v 1.7 2004/10/15 14:09:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,7 +40,7 @@ import javax.swing.event.TableModelListener;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/10/11 16:48:33 $
+ * @version $Revision: 1.7 $, $Date: 2004/10/15 14:09:21 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -57,6 +57,8 @@ public final class MapPropertyFrame extends JInternalFrame
 	ObjectResource or;
 
 	JScrollPane scrollPane = new JScrollPane();
+
+	private boolean doNotify = true;
 
 	public MapPropertyFrame(String title)
 	{
@@ -135,15 +137,20 @@ public final class MapPropertyFrame extends JInternalFrame
 			if(mne.isMapElementSelected())
 			{
 				ObjectResource me = (ObjectResource )mne.getSource();
+				doNotify = false;
 				setObjectResource(me);
+				doNotify = true;
 			}
 		}
 	}
 
 	public void tableChanged(TableModelEvent e)
 	{
-		Dispatcher disp = aContext.getDispatcher();
-		if(disp != null)
-			disp.notify(new MapEvent(this, MapEvent.MAP_CHANGED));
+		if(doNotify)
+		{
+			Dispatcher disp = aContext.getDispatcher();
+			if(disp != null)
+				disp.notify(new MapEvent(this, MapEvent.MAP_CHANGED));
+		}
 	}
 }

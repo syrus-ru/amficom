@@ -194,14 +194,14 @@ public final class MapSchemeTreePanel extends JPanel
 				MapView mv = (MapView )oe.getSource();
 				updateTree(mv);
 			}
-		if(oe.getActionCommand().equals(MapEvent.MAP_NAVIGATE))
-		{
-			MapNavigateEvent mne = (MapNavigateEvent )oe;
-			if(mne.isMapElementSelected())
-			{
-				ObjectResource me = (ObjectResource )mne.getSource();
-			}
-		}
+//		if(oe.getActionCommand().equals(MapEvent.MAP_NAVIGATE))
+//		{
+//			MapNavigateEvent mne = (MapNavigateEvent )oe;
+//			if(mne.isMapElementSelected())
+//			{
+//				ObjectResource me = (ObjectResource )mne.getSource();
+//			}
+//		}
 	}
 	
 	public void setPanel(UniTreePanel utp)

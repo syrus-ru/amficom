@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorOpenViewCommand.java,v 1.2 2004/10/06 09:27:27 krupenn Exp $
+ * $Id: MapEditorOpenViewCommand.java,v 1.3 2004/10/15 14:09:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,7 +27,7 @@ import javax.swing.JDesktopPane;
  * пользователь выбрал MapContext, открывается окно карты и сопутствующие окна
  * и MapContext передается в окно карты
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/06 09:27:27 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/15 14:09:21 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapOpenCommand
@@ -59,7 +59,7 @@ public class MapEditorOpenViewCommand extends VoidCommand
 
 	public void execute()
 	{
-		ApplicationModelFactory factory = new MapConfigureApplicationModelFactory();
+		ApplicationModelFactory factory = new MapEditorApplicationModelFactory();
 		ApplicationContext aC = new ApplicationContext();
 		aC.setApplicationModel(factory.create());
 		aC.setSessionInterface(aContext.getSessionInterface());

@@ -1,5 +1,5 @@
 /**
- * $Id: MapVoidElementStrategy.java,v 1.5 2004/10/06 14:11:56 krupenn Exp $
+ * $Id: MapVoidElementStrategy.java,v 1.6 2004/10/15 14:09:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,7 +40,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/06 14:11:56 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/15 14:09:21 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -192,7 +192,7 @@ public final class MapVoidElementStrategy implements  MapStrategy
 			logicalNetLayer.setCurrentMapElement(me);
 		}
 		else
-		if(selection.size() > 0)
+		if(selection.size() > 1)
 		{
 			MapSelection sel = new MapSelection(logicalNetLayer);
 			sel.addAll(selection);

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.8 2004/10/09 13:34:33 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.9 2004/10/15 14:09:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,15 +43,22 @@ import java.util.Map;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/10/09 13:34:33 $
+ * @version $Revision: 1.9 $, $Date: 2004/10/15 14:09:00 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
 public final class MapPropertiesManager 
 {
+	/**
+	 * Фаил откуда загружаются данные
+	 */
 	protected static IniFile iniFile;
-	protected static String iniFileName = "Map.properties";//Фаил откуда загружаются данные
+	protected static String iniFileName = "Map.properties";
+	
+	public static final String MAP_CLONED_IDS = "mapclonedids";
+
+	/** Список полей, которые должны быть в файле настроек */
 
 	protected static final String KEY_MAP_TYPE = "mapType";
 	protected static final String KEY_DATA_BASE_PATH = "dataBasePath";
@@ -61,6 +68,7 @@ public final class MapPropertiesManager
 	protected static final String KEY_LAST_ZOOM = "lastZoom";
 	protected static final String KEY_LAST_VIEW = "lastView";
 	protected static final String KEY_LAST_DIRECTORY = "lastDirectory";
+
 
 	public static final double DEFAULT_ZOOM = 1.0D;
 
@@ -111,15 +119,12 @@ public final class MapPropertiesManager
 	public static final Color DEFAULT_SECOND_SELECTION_COLOR = Color.RED;
 	public static final String DEFAULT_FONT_ID = "Arial_1_12";
 	public static final Font DEFAULT_FONT = new Font ("Arial", 1, 12);
-
 	public static final int DEFAULT_UNBOUND_THICKNESS = 4;
 	public static final Color DEFAULT_UNBOUND_LINK_COLOR = Color.PINK;
 	public static final Color DEFAULT_UNBOUND_LINK_POSITION_COLOR = Color.ORANGE;
 	public static final Color DEFAULT_UNBOUND_ELEMENT_COLOR = Color.MAGENTA;
 	public static final Color DEFAULT_CAN_BIND_COLOR = Color.CYAN;
-
 	public static final double DEFAULT_SPARE_LENGTH = 1.5D;
-
 	public static final int DEFAULT_MOUSE_TOLERANCY = 3;
 
 	/* display variables */
@@ -180,7 +185,14 @@ public final class MapPropertiesManager
 	 */
 	protected static boolean showLength = true;
 
+	/**
+	 * флаг отображения подписей к узлам
+	 */	
 	protected static boolean showNodesNames = false;
+
+	/**
+	 * флаг отображения подписей к линиям
+	 */	
 	protected static boolean showLinkNames = false;
 	
 	static
@@ -196,10 +208,16 @@ public final class MapPropertiesManager
 		}
 	}
 	
+	/**
+	 * приватный конструктор
+	 */
 	private MapPropertiesManager()
 	{
 	}
 
+	/**
+	 * получить имя класса, отображающего вид карты
+	 */
 	public static String getNetMapViewerClassName()
 	{
 		String viewerClass = "";
@@ -213,6 +231,10 @@ public final class MapPropertiesManager
 		return viewerClass;
 	}
 
+	/**
+	 * получить имя класса, реализующего подсоединение к данным ГИС
+	 * отображения географических объектов
+	 */
 	public static String getConnectionClassName()
 	{
 		String connectionClass = "";
@@ -283,7 +305,9 @@ public final class MapPropertiesManager
 		}
 	}
 
-	//Установить значения из инициализационного файла
+	/**
+	 * Установить значения из инициализационного файла
+	 */
 	protected static void setFromIniFile()
 	{
 		dataBasePath = iniFile.getValue(KEY_DATA_BASE_PATH);
@@ -300,6 +324,9 @@ public final class MapPropertiesManager
 		lastView = iniFile.getValue(KEY_LAST_VIEW);
 	}
 
+	/**
+	 * установить значения по умолчанию
+	 */
 	protected static void setDefaults()
 	{
 		mapType = OFX_TYPE;
@@ -308,6 +335,9 @@ public final class MapPropertiesManager
 		lastDirectory = ".";
 	}
 
+	/**
+	 * Сохранить текущие настройки отображения в файл
+	 */
 	public static void saveIniFile()
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call MapPropertiesManager.saveIniFile()");
@@ -323,11 +353,23 @@ public final class MapPropertiesManager
 	}
 
 	/** объекты, необходимые для отрисовки пиктограмм */
+
     private static Component component = new Component() {};
     private static MediaTracker tracker = new MediaTracker(component);
     private static int mediaTrackerID = 0;
 
+	/**
+	 * Кэш изображений элементов карты. Поскольку на карте может отображаться
+	 * довольно большое количество элементов с одинаковым рисунком, элементы
+	 * разделяют один объект рисунка. Оригинал немасштабированного рисунка
+	 * хранится для последующего его масштабирования
+	 */
 	private static Map originalImages = new HashMap();
+	
+	/**
+	 * Кэш масштабированных изображений элементов карты. Для того, чтобы
+	 * не плодились масштабированные изображения, они также хранятся в кэше
+	 */
 	private static Map scaledImages = new HashMap();
 
 	public static void setOriginalImage(String imageId, Image image)

@@ -1,5 +1,5 @@
 /*
- * Название: $Id: ControlsFrame.java,v 1.2 2004/10/04 16:04:43 krupenn Exp $
+ * Название: $Id: ControlsFrame.java,v 1.3 2004/10/15 14:09:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,7 +38,7 @@ import javax.swing.JTabbedPane;
  * 
  * 
  * 
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @author $Author: krupenn $
  * @see
  */
@@ -127,7 +127,7 @@ import javax.swing.JTabbedPane;
 		
 		//Когда окно становится видимым, проверить, есть ли видимое окно карты,
 		//и прицепиться к нему
-		MapFrame mmf = com.syrus.AMFICOM.Client.Map.UI.MapFrame.getMapMainFrame();
+		MapFrame mmf = MapFrame.getMapMainFrame();
 		if(mmf != null)
 			if(mmf.isVisible())
 				if(mmf.getParent().equals(this.getParent()))

@@ -1,5 +1,5 @@
 /**
- * $Id: MapLinkElement.java,v 1.9 2004/10/09 13:34:33 krupenn Exp $
+ * $Id: MapLinkElement.java,v 1.10 2004/10/15 14:09:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import java.util.HashMap;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/10/09 13:34:33 $
+ * @version $Revision: 1.10 $, $Date: 2004/10/15 14:09:00 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -145,6 +145,7 @@ public abstract class MapLinkElement extends StubResource implements MapElement
 	public void setSelected(boolean selected)
 	{
 		this.selected = selected;
+		getMap().setSelected(this, selected);
 	}
 
 	public Map getMap()

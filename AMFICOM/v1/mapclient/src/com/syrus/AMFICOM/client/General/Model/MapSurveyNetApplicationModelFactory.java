@@ -40,33 +40,6 @@ public class MapSurveyNetApplicationModelFactory
 		aModel.setUsable("mapModeLink", true);
 		aModel.setUsable("mapModePath", true);
 
-		aModel.setUsable("menuEditUndo", false);
-		aModel.setUsable("menuEditRedo", false);
-		aModel.setUsable("menuEditCut", false);
-		aModel.setUsable("menuEditCopy", false);
-		aModel.setUsable("menuEditPaste", false);
-		aModel.setUsable("menuEditSelect", false);
-
-		aModel.setUsable("menuViewNavigator", false);
-		aModel.setUsable("menuViewToolbar", false);
-		aModel.setUsable("menuViewRefresh", false);
-		aModel.setUsable("menuViewPanel", false);
-
-		aModel.setUsable("menuNavigateZoomSelection", false);
-		aModel.setUsable("menuNavigateZoomMap", false);
-		aModel.setUsable("menuNavigateCenterMap", false);
-		aModel.setUsable("menuNavigateCenterSelection", false);
-
-		aModel.setUsable("menuElementGroup", false);
-		aModel.setUsable("menuElementUngroup", false);
-		aModel.setUsable("menuElementAlign", false);
-
-		aModel.setUsable("menuHelpContents", false);
-		aModel.setUsable("menuHelpFind", false);
-		aModel.setUsable("menuelpTips", false);
-		aModel.setUsable("menuHelpCourse", false);
-		aModel.setUsable("menuHelpHelp", false);
-
 		return aModel;
 	}
 }

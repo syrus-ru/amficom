@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.9 2004/10/09 13:34:33 krupenn Exp $
+ * $Id: Map.java,v 1.10 2004/10/15 14:09:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,9 +13,8 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 import com.syrus.AMFICOM.CORBA.Map.Map_Transferable;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
-import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
@@ -36,7 +35,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/10/09 13:34:33 $
+ * @version $Revision: 1.10 $, $Date: 2004/10/15 14:09:00 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -68,11 +67,17 @@ public final class Map extends StubResource implements Serializable
 	protected long modified = 0;
 	protected String modifiedBy = "";
 
+	/** Вспомогательный список для загрузки с сервера */
 	protected ArrayList nodeIds = new ArrayList();
+	/** Вспомогательный список для загрузки с сервера */
 	protected ArrayList siteIds = new ArrayList();
+	/** Вспомогательный список для загрузки с сервера */
 	protected ArrayList nodelinkIds = new ArrayList();
+	/** Вспомогательный список для загрузки с сервера */
 	protected ArrayList linkIds = new ArrayList();
+	/** Вспомогательный список для загрузки с сервера */
 	protected ArrayList markIds = new ArrayList();
+	/** Вспомогательный список для загрузки с сервера */
 	protected ArrayList collectorIds = new ArrayList();
 
 	/** Вектор элементов наследников класса Node */
@@ -87,19 +92,30 @@ public final class Map extends StubResource implements Serializable
 	/** список удаленных элементов */
 	protected LinkedList removedElements = new LinkedList();
 	
-	protected boolean isOpened = false;
-	
 	/**
 	 * объект, осуществляющий преобразование топологических/экранных координат
 	 */
 	protected MapCoordinatesConverter converter;
 
+	/** Список выделенных объектов */
+	protected List selectedElements = new LinkedList();
+
+	/** 
+	 * массив параметров для экспорта. инициализируется только в случае
+	 * необходимости экспорта
+	 */
+	public static String[][] exportColumns = null;
+	
 	/**
 	 * Используется для создания нового контекста пользователем
 	 */
 	public Map()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "constructor call", getClass().getName(), "Map()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"constructor call", 
+				getClass().getName(), 
+				"Map()");
 		created = System.currentTimeMillis();
 
 		transferable = new Map_Transferable();
@@ -110,13 +126,19 @@ public final class Map extends StubResource implements Serializable
 	 */
 	public Map(Map_Transferable transferable)
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "constructor call", getClass().getName(), "Map(" + transferable + ")");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"constructor call", 
+				getClass().getName(), 
+				"Map(" + transferable + ")");
 		this.transferable = transferable;
 		this.setLocalFromTransferable();
 	}
 
-	public static String[][] exportColumns = null;
-
+	/**
+	 * Возвращает массив параметров, описывающих топологическюу схему,
+	 * который используется для экспорта
+	 */
 	public String[][] getExportColumns()
 	{
 		if(exportColumns == null)
@@ -132,9 +154,18 @@ public final class Map extends StubResource implements Serializable
 		
 		return exportColumns;
 	}
-	
+
+	/**
+	 * установить параметр топологический схемы по переданному значению.
+	 * используется при импорте
+	 */	
 	public void setColumn(String field, String value)
 	{
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"setColumn(" + field + ", "+ value + ")");
 		if(field.equals(COLUMN_ID))
 			this.setId(value);
 		else
@@ -147,17 +178,26 @@ public final class Map extends StubResource implements Serializable
 
 	/**
 	 * Клонирование объекта - оспользуется при сохранении контекста карты
-	 * под новым именем
+	 * под новым именем. При этом для сохранения ссылок на другие клонируемые
+	 * (или клонированные) объекты используется хранилище 
+	 * 		Pool.get(MapPropertiesManager.MAP_CLONED_IDS, id
+	 * в котором по ключу старого Id хранится Id нового клонированного объекта
 	 */
 	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "clone(" + dataSource + ")");
-		String clonedId = (String )Pool.get("mapclonedids", id);
-		if (clonedId != null)
-			return Pool.get(com.syrus.AMFICOM.Client.Resource.Map.Map.typ, clonedId);
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"clone(" + dataSource + ")");
 
-		Map mc = new Map();
+		String clonedId = (String )Pool.get(MapPropertiesManager.MAP_CLONED_IDS, id);
+
+		if (clonedId != null)
+			return Pool.get(Map.typ, clonedId);
+
+		Map mc = (Map )super.clone();
 
 		mc.createdBy = mc.userId;
 		mc.description = description;
@@ -169,7 +209,7 @@ public final class Map extends StubResource implements Serializable
 		mc.userId = dataSource.getSession().getUserId();
 
 		Pool.put(com.syrus.AMFICOM.Client.Resource.Map.Map.typ, mc.getId(), mc);
-		Pool.put("mapclonedids", id, mc.getId());
+		Pool.put(MapPropertiesManager.MAP_CLONED_IDS, id, mc.getId());
 
 		mc.nodeLinks = new ArrayList();
 		for(Iterator it = nodeLinks.iterator(); it.hasNext();)
@@ -187,30 +227,41 @@ public final class Map extends StubResource implements Serializable
 		for(Iterator it = collectors.iterator(); it.hasNext();)
 			mc.collectors.add(((MapElement)it.next()).clone(dataSource));
 			
-			
 		mc.markIds = new ArrayList();
 		for(Iterator it = markIds.iterator(); it.hasNext();)
-			mc.markIds.add(Pool.get("mapclonedids", (String )it.next()));
+			mc.markIds.add(Pool.get(
+					MapPropertiesManager.MAP_CLONED_IDS, 
+					(String )it.next()));
 			
 		mc.nodelinkIds = new ArrayList();
 		for(Iterator it = nodelinkIds.iterator(); it.hasNext();)
-			mc.nodelinkIds.add(Pool.get("mapclonedids", (String )it.next()));
+			mc.nodelinkIds.add(Pool.get(
+					MapPropertiesManager.MAP_CLONED_IDS, 
+					(String )it.next()));
 			
 		mc.nodeIds = new ArrayList();
 		for(Iterator it = nodeIds.iterator(); it.hasNext();)
-			mc.nodeIds.add(Pool.get("mapclonedids", (String )it.next()));
+			mc.nodeIds.add(Pool.get(
+					MapPropertiesManager.MAP_CLONED_IDS, 
+					(String )it.next()));
 			
 		mc.siteIds = new ArrayList();
 		for(Iterator it = siteIds.iterator(); it.hasNext();)
-			mc.siteIds.add(Pool.get("mapclonedids", (String )it.next()));
+			mc.siteIds.add(Pool.get(
+					MapPropertiesManager.MAP_CLONED_IDS, 
+					(String )it.next()));
 			
 		mc.linkIds = new ArrayList();
 		for(Iterator it = linkIds.iterator(); it.hasNext();)
-			mc.linkIds.add(Pool.get("mapclonedids", (String )it.next()));
+			mc.linkIds.add(Pool.get(
+					MapPropertiesManager.MAP_CLONED_IDS, 
+					(String )it.next()));
 			
 		mc.collectorIds = new ArrayList();
 		for(Iterator it = collectorIds.iterator(); it.hasNext();)
-			mc.collectorIds.add(Pool.get("mapclonedids", (String )it.next()));
+			mc.collectorIds.add(Pool.get(
+					MapPropertiesManager.MAP_CLONED_IDS, 
+					(String )it.next()));
 			
 		return mc;
 	}
@@ -220,7 +271,11 @@ public final class Map extends StubResource implements Serializable
 	 */
 	public void setLocalFromTransferable()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setLocalFromTransferable()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"setLocalFromTransferable()");
 		int i;
 		int count;
 
@@ -272,7 +327,11 @@ public final class Map extends StubResource implements Serializable
 	 */
 	public void setTransferableFromLocal()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setTransferableFromLocal()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"setTransferableFromLocal()");
 		
 		ObjectResource os;
 
@@ -292,11 +351,11 @@ public final class Map extends StubResource implements Serializable
 		for(Iterator it = nodes.iterator(); it.hasNext();)
 		{
 			os = (ObjectResource )it.next();
-			if(os.getTyp().equals("mapnodeelement"))
+			if(os.getTyp().equals(MapPhysicalNodeElement.typ))
 				nodeIds.add(os.getId());
-			if(os.getTyp().equals("mapequipmentelement"))
+			if(os.getTyp().equals(MapSiteNodeElement.typ))
 				siteIds.add(os.getId());
-			if(os.getTyp().equals("mapmarkelement"))
+			if(os.getTyp().equals(MapMarkElement.typ))
 				markIds.add(os.getId());
 		}
 		transferable.nodeIds = (String [])nodeIds.toArray(new String[nodeIds.size()]);
@@ -310,7 +369,8 @@ public final class Map extends StubResource implements Serializable
 			os = (ObjectResource )it.next();
 			nodelinkIds.add(os.getId());
 		}
-		transferable.nodeLinkIds = (String [])nodelinkIds.toArray(new String[nodelinkIds.size()]);
+		transferable.nodeLinkIds = (String [])nodelinkIds.toArray(
+				new String[nodelinkIds.size()]);
 
 		linkIds = new ArrayList();
 		for(Iterator it = physicalLinks.iterator(); it.hasNext();)
@@ -318,7 +378,8 @@ public final class Map extends StubResource implements Serializable
 			os = (ObjectResource)it.next();
 			linkIds.add(os.getId());
 		}
-		transferable.physicalLinkIds = (String [])linkIds.toArray(new String[linkIds.size()]);
+		transferable.physicalLinkIds = (String [])linkIds.toArray(
+				new String[linkIds.size()]);
 
 		collectorIds = new ArrayList();
 		for(Iterator it = collectors.iterator(); it.hasNext();)
@@ -326,20 +387,15 @@ public final class Map extends StubResource implements Serializable
 			os = (ObjectResource)it.next();
 			collectorIds.add(os.getId());
 		}
-		transferable.collectorIds = (String [])collectorIds.toArray(new String[collectorIds.size()]);
+		transferable.collectorIds = (String [])collectorIds.toArray(
+				new String[collectorIds.size()]);
 	}
 
-	/**
-	 * 
-	 */
 	public String getTyp()
 	{
 		return typ;
 	}
 
-	/**
-	 * геттер
-	 */
 	public String getName()
 	{
 		return name;
@@ -350,9 +406,6 @@ public final class Map extends StubResource implements Serializable
 		this.name = name;
 	}
 
-	/**
-	 * геттер
-	 */
 	public String getId()
 	{
 		return id;
@@ -363,9 +416,6 @@ public final class Map extends StubResource implements Serializable
 		this.id = id;
 	}
 
-	/**
-	 * геттер
-	 */
 	public String getDomainId()
 	{
 		return domainId;
@@ -381,9 +431,6 @@ public final class Map extends StubResource implements Serializable
 		this.userId = userId;
 	}
 	
-	/**
-	 * геттер
-	 */
 	public long getModified()
 	{
 		return modified;
@@ -395,7 +442,11 @@ public final class Map extends StubResource implements Serializable
 	 */
 	public void updateLocalFromTransferable()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "updateLocalFromTransferable()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"updateLocalFromTransferable()");
 		
 		nodes = new ArrayList();
 
@@ -424,7 +475,11 @@ public final class Map extends StubResource implements Serializable
 	 */
 	public void updateFromPool()
 	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "updateFromPool()");
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"updateFromPool()");
 		
 		for(Iterator it = nodes.iterator(); it.hasNext();)
 		{
@@ -456,43 +511,12 @@ public final class Map extends StubResource implements Serializable
 		return transferable;
 	}
 
-	/**
-	 * получить модель объекта
-	 */
-	public ObjectResourceModel getModel()
-	{
-		return null;//new MapModel(this);
-	}
-
 	private static final String PROPERTY_PANE_CLASS_NAME = 
 			"com.syrus.AMFICOM.Client.Map.Props.MapPanel";
 
 	public static String getPropertyPaneClassName()
 	{
 		return PROPERTY_PANE_CLASS_NAME;
-	}
-
-	/**
-	 * получить модель отображения в таблице
-	 */
-	public static ObjectResourceDisplayModel getDefaultDisplayModel()
-	{
-		return null;//new MapDisplayModel();
-	}
-
-	/**
-	 * флаг того, что контекст открыт в окне карты
-	 */
-	public boolean isOpened()
-	{
-		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "isOpened()");
-		
-		return this.isOpened;
-	}
-	
-	public void setOpened(boolean opened)
-	{
-		this.isOpened = opened;
 	}
 
 	public MapCoordinatesConverter getConverter()
@@ -552,6 +576,7 @@ public final class Map extends StubResource implements Serializable
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "removeNode(" + ob + ")");
 		
+		ob.setSelected(false);
 		nodes.remove(ob);
 		if(ob instanceof MapPhysicalNodeElement)
 			nodeIds.remove(ob.getId());
@@ -606,6 +631,7 @@ public final class Map extends StubResource implements Serializable
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "removeNodeLink(" + ob + ")");
 		
 		nodeLinks.remove(ob);
+		ob.setSelected(false);
 		nodelinkIds.remove(ob.getId());
 		ob.setRemoved(true);
 		removedElements.add(ob);
@@ -708,6 +734,7 @@ public final class Map extends StubResource implements Serializable
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "removePhysicalLink(" + ob + ")");
 		
 		physicalLinks.remove(ob);
+		ob.setSelected(false);
 		linkIds.remove(ob.getId());
 		ob.setRemoved(true);
 		removedElements.add(ob);
@@ -791,6 +818,7 @@ public final class Map extends StubResource implements Serializable
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "removeCollector(" + ob + ")");
 		
 		collectors.remove(ob);
+		ob.setSelected(false);
 		collectorIds.remove(ob.getId());
 		ob.setRemoved(true);
 		removedElements.add(ob);
@@ -1010,9 +1038,6 @@ public final class Map extends StubResource implements Serializable
 	
 		removedElements = new LinkedList();
 	
-//		deleted_nodesIds = new LinkedList();
-//		deleted_nodeLinksIds = new LinkedList();
-//		deleted_physicalLinksIds = new LinkedList();
 		this.updateFromPool();
 //		Pool.put("serverimage", getId(), this);
 	}
@@ -1041,4 +1066,22 @@ public final class Map extends StubResource implements Serializable
 		return created;
 	}
 	
+	public List getSelectedElements()
+	{
+		return selectedElements;
+	}
+	
+	public void clearSelection()
+	{
+		selectedElements.clear();
+	}
+	
+	public void setSelected(MapElement me, boolean selected)
+	{
+		if(selected)
+			selectedElements.add(me);
+		else
+			selectedElements.remove(me);
+	}
+
 }

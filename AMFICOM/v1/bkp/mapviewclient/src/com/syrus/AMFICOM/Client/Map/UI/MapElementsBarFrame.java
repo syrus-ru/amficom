@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsBarFrame.java,v 1.2 2004/10/04 16:04:43 krupenn Exp $
+ * $Id: MapElementsBarFrame.java,v 1.3 2004/10/15 14:09:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import javax.swing.JInternalFrame;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/04 16:04:43 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/15 14:09:21 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -65,8 +65,6 @@ public class MapElementsBarFrame extends JInternalFrame implements OperationList
 			if(this.aContext.getDispatcher() != null)
 			{
 				Dispatcher disp = this.aContext.getDispatcher();
-//				disp.unregister(this, MapEvent.MAP_VIEW_SELECTED);
-//				disp.unregister(this, MapEvent.MAP_VIEW_DESELECTED);
 			}
 		this.aContext = aContext;
 		panel.setContext(aContext);
@@ -75,8 +73,6 @@ public class MapElementsBarFrame extends JInternalFrame implements OperationList
 		Dispatcher disp = aContext.getDispatcher();
 		if(disp == null)
 			return;
-//		disp.register(this, MapEvent.MAP_VIEW_SELECTED);
-//		disp.register(this, MapEvent.MAP_VIEW_DESELECTED);
 	}
 
 	private void jbInit()

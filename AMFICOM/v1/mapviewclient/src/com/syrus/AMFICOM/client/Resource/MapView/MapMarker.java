@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarker.java,v 1.9 2004/10/06 09:27:28 krupenn Exp $
+ * $Id: MapMarker.java,v 1.10 2004/10/15 14:09:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -63,7 +63,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/10/06 09:27:28 $
+ * @version $Revision: 1.10 $, $Date: 2004/10/15 14:09:21 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -326,6 +326,7 @@ public class MapMarker extends MapNodeElement implements MapElement
 	public void setSelected(boolean selected)
 	{
 		this.selected = selected;
+		getMap().setSelected(this, selected);
 	}
 
 	public String getId()

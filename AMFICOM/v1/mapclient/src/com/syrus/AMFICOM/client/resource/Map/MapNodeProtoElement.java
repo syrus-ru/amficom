@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeProtoElement.java,v 1.7 2004/10/06 09:27:38 krupenn Exp $
+ * $Id: MapNodeProtoElement.java,v 1.8 2004/10/15 14:09:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/10/06 09:27:38 $
+ * @version $Revision: 1.8 $, $Date: 2004/10/15 14:09:00 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -50,6 +50,7 @@ public final class MapNodeProtoElement
 	public static final String ATS = "ats";
 	public static final String BUILDING = "building";
 	public static final String UNBOUND = "unbound";
+	public static final String CABLE_INLET = "cableinlet";
 
 	protected MapNodeProtoElement_Transferable transferable;
 

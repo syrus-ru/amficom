@@ -91,13 +91,13 @@ public final class MapLinkPane extends JPanel implements ObjectResourcePropertie
 		if(gPanel.modify()
 			&& bPanel.modify())
 		{
-			Dispatcher disp  = aContext.getDispatcher();
-			if(disp != null)
-				for(Iterator it = bPanel.getUnboundElements().iterator(); it.hasNext();)
-				{
-					SchemeCableLink scl = (SchemeCableLink )it.next();
-					disp.notify(new MapEvent(scl, MapEvent.MAP_ELEMENT_CHANGED));
-				}
+//			Dispatcher disp  = aContext.getDispatcher();
+//			if(disp != null)
+//				for(Iterator it = bPanel.getUnboundElements().iterator(); it.hasNext();)
+//				{
+//					SchemeCableLink scl = (SchemeCableLink )it.next();
+//					disp.notify(new MapEvent(scl, MapEvent.MAP_ELEMENT_CHANGED));
+//				}
 			return true;
 		}
 		return false;

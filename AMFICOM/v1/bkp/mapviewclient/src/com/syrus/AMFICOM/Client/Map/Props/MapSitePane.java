@@ -80,13 +80,13 @@ public final class MapSitePane extends JPanel implements ObjectResourcePropertie
 		if(gPanel.modify()
 			&& bPanel.modify())
 		{
-			Dispatcher disp  = aContext.getDispatcher();
-			if(disp != null)
-				for(Iterator it = bPanel.getUnboundElements().iterator(); it.hasNext();)
-				{
-					SchemeElement se = (SchemeElement )it.next();
-					disp.notify(new MapEvent(se, MapEvent.MAP_ELEMENT_CHANGED));
-				}
+//			Dispatcher disp  = aContext.getDispatcher();
+//			if(disp != null)
+//				for(Iterator it = bPanel.getUnboundElements().iterator(); it.hasNext();)
+//				{
+//					SchemeElement se = (SchemeElement )it.next();
+//					disp.notify(new MapEvent(se, MapEvent.MAP_ELEMENT_CHANGED));
+//				}
 			return true;
 		}
 		return false;

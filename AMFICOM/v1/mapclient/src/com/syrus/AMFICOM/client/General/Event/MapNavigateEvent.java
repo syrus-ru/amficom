@@ -1,5 +1,5 @@
 /**
- * $Id: MapNavigateEvent.java,v 1.3 2004/10/09 13:34:33 krupenn Exp $
+ * $Id: MapNavigateEvent.java,v 1.4 2004/10/15 14:09:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,99 +15,139 @@ package com.syrus.AMFICOM.Client.General.Event;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/09 13:34:33 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/15 14:09:00 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
  */
 public class MapNavigateEvent extends MapEvent
 {
-	protected boolean mapMarkerCreated = false;
-	protected boolean mapMarkerDeleted = false;
-	protected boolean mapMarkerMoved = false;
-	protected boolean mapMarkerSelected = false;
-	protected boolean mapMarkerDeselected = false;
-
-	protected boolean dataMarkerCreated = false;
-	protected boolean dataMarkerDeleted = false;
-	protected boolean dataMarkerMoved = false;
-	protected boolean dataMarkerSelected = false;
-	protected boolean dataMarkerDeselected = false;
-
-	protected boolean dataEventMarkerCreated = false;
-	protected boolean dataEventMarkerDeleted = false;
-
-	protected boolean dataAlarmMarkerCreated = false;
-	protected boolean dataAlarmMarkerDeleted = false;
-
-	protected boolean mapPathSelected = false;
-	protected boolean mapElementSelected = false;
-
-	protected boolean mapPathDeselected = false;
-	protected boolean mapElementDeselected = false;
-
-	protected boolean mapPropertySelected = false;
-
+	/**
+	 * Пользователь создал маркер
+	 * @param markerId
+	 * @param distance
+	 * @param spd
+	 */
 	public static final long MAP_MARKER_CREATED_EVENT = 0x00000001;
-	public static final long MAP_MARKER_DELETED_EVENT = 0x00000004;
-	public static final long MAP_MARKER_MOVED_EVENT = 0x00000002;
-	public static final long MAP_MARKER_SELECTED_EVENT = 0x00000008;
-    public static final long MAP_MARKER_DESELECTED_EVENT = 0x00000010;
-
-	public static final long DATA_MARKER_CREATED_EVENT = 0x00000040;
-	public static final long DATA_MARKER_DELETED_EVENT = 0x00000080;
+	/**
+	 * Пользователь удалил маркер
+	 * @param markerId
+	 */
+	public static final long MAP_MARKER_DELETED_EVENT = 0x00000002;
+	/**
+	 * Пользователь передвинул маркер
+	 * @param markerId
+	 * @param distance
+	 */
+	public static final long MAP_MARKER_MOVED_EVENT = 0x00000004;
+	/**
+	 * Маркер был создан вне карты (например, в окне рефлектограмм)
+	 * @param markerId
+	 * @param distance
+	 */
+	public static final long DATA_MARKER_CREATED_EVENT = 0x00000008;
+	/**
+	 * Маркер был удален вне карты (например, в окне рефлектограмм)
+	 * @param markerId
+	 */
+	public static final long DATA_MARKER_DELETED_EVENT = 0x00000010;
+	/**
+	 * @param markerId
+	 * @param distance
+	 * Маркер был передвинут вне карты (например, в окне рефлектограмм)
+	 */
 	public static final long DATA_MARKER_MOVED_EVENT = 0x00000020;
-	public static final long DATA_MARKER_SELECTED_EVENT = 0x00000100;
-	public static final long DATA_MARKER_DESELECTED_EVENT = 0x00000200;
+	/**
+	 * Маркер события был создан вне карты (например, в окне рефлектограмм)
+	 * @param markerId
+	 * @param distance
+	 */
+	public static final long DATA_EVENTMARKER_CREATED_EVENT = 0x00000040;
+	/**
+	 * Маркер события был удален вне карты (например, в окне рефлектограмм)
+	 * @param markerId
+	 */
+	public static final long DATA_EVENTMARKER_DELETED_EVENT = 0x00000080;
+	/**
+	 * Маркер сигнала тревоги был создан вне карты (например, в окне рефлектограмм)
+	 * @param markerId
+	 * @param distance
+	 */
+	public static final long DATA_ALARMMARKER_CREATED_EVENT = 0x00000100;
+	/**
+	 * Маркер сигнала тревоги был удален вне карты (например, в окне рефлектограмм)
+	 * @param markerId
+	 */
+	public static final long DATA_ALARMMARKER_DELETED_EVENT = 0x00000200;
+	/**
+	 * Элемент выделен
+	 * @param source
+	 */
+	public static final long MAP_ELEMENT_SELECTED_EVENT = 0x00000400;
+	/**
+	 * Снято выбеление элемента
+	 * @param source
+	 */
+	public static final long MAP_ELEMENT_DESELECTED_EVENT = 0x00000800;
 
-	public static final long DATA_EVENTMARKER_CREATED_EVENT = 0x00000041;
-	public static final long DATA_EVENTMARKER_DELETED_EVENT = 0x00000042;
+	/**
+	 * Тип события
+	 */
+	protected long mapEventType;
 
-	public static final long DATA_ALARMMARKER_CREATED_EVENT = 0x00000043;
-	public static final long DATA_ALARMMARKER_DELETED_EVENT = 0x00000044;
-
-	public static final long MAP_PATH_SELECTED_EVENT = 0x00008000;
-	public static final long MAP_ELEMENT_SELECTED_EVENT = 0x00000014;
-
-	public static final long MAP_PATH_DESELECTED_EVENT = 0x00200000;
-	public static final long MAP_ELEMENT_DESELECTED_EVENT = 0x00000015;
-
-	public static final long MAP_PROPERTY_SELECTED_EVENT = 0x00000013;
-
+	/**
+	 * Идентификатор маркера
+	 */	
 	protected String markerId;
+	
+	/**
+	 * Относительные координаты маркера
+	 */
 	protected double distance;
 
-    protected String mapPathId;
+	/**
+	 * Идентификаторы схемного пути 
+	 */
+    protected String schemePathId;
+
+	/**
+	 * Идентификаторы исследуемого объекта
+	 */
     protected String meId;
-    protected String linkId;
+	
+	/**
+	 * Идентификатор схемной Линии
+	 */
+	protected String schemeLinkId;
 
-    protected Object descriptor;
+//    protected Object descriptor;
 
+	/**
+	 * Декомпозитор пути измерений
+	 */
 	protected Object spd = null;
 
 	public MapNavigateEvent(
 			Object source,
-			long typ)
+			long mapEventType)
 	{
 		super(source, MAP_NAVIGATE);
-		this.setTyp(typ);
+		this.mapEventType = mapEventType;
 	}
 	
 	public MapNavigateEvent(
 			Object source,
-			long typ,
+			long mapEventType,
 			String markerId,
 			double distance,
-			String mapPathId,
+			String schemePathId,
 			String meId)
 	{
 		super(source, MAP_NAVIGATE);
         this.markerId = markerId;
 		this.distance = distance;
-        this.mapPathId = mapPathId;
+        this.schemePathId = schemePathId;
         this.meId = meId;
-
-		this.setTyp(typ);
 	}
 
 	public MapNavigateEvent(
@@ -117,256 +157,140 @@ public class MapNavigateEvent extends MapEvent
 			double distance,
 			String schemePathId,
 			String meId,
-			String linkId)
+			String schemeLinkId)
 	{
 		this(source, typ, markerId, distance, schemePathId, meId);
-        this.linkId = linkId;
+        this.schemeLinkId = schemeLinkId;
 	}
-
-	private void setTyp(long typ)
-	{
-		if((typ == MAP_MARKER_CREATED_EVENT))
-			mapMarkerCreated = true;
-		if((typ == MAP_MARKER_DELETED_EVENT))
-			mapMarkerDeleted = true;
-		if((typ == MAP_MARKER_MOVED_EVENT))
-			mapMarkerMoved = true;
-		if((typ == MAP_MARKER_SELECTED_EVENT))
-			mapMarkerSelected = true;
-		if((typ == MAP_MARKER_DESELECTED_EVENT))
-			mapMarkerDeselected = true;
-
-		if((typ == DATA_MARKER_CREATED_EVENT))
-			dataMarkerCreated = true;
-		if((typ == DATA_MARKER_DELETED_EVENT))
-			dataMarkerDeleted = true;
-		if((typ == DATA_MARKER_MOVED_EVENT))
-			dataMarkerMoved = true;
-		if((typ == DATA_MARKER_SELECTED_EVENT))
-			dataMarkerSelected = true;
-		if((typ == DATA_MARKER_DESELECTED_EVENT))
-			dataMarkerDeselected = true;
-
-		if((typ == DATA_EVENTMARKER_CREATED_EVENT))
-			dataEventMarkerCreated = true;
-		if((typ == DATA_EVENTMARKER_DELETED_EVENT))
-			dataEventMarkerDeleted = true;
-
-		if((typ == DATA_ALARMMARKER_CREATED_EVENT))
-			dataAlarmMarkerCreated = true;
-		if((typ == DATA_ALARMMARKER_DELETED_EVENT))
-			dataAlarmMarkerDeleted = true;
-
-		if((typ == MAP_PATH_SELECTED_EVENT))
-			mapPathSelected = true;
-		if((typ == MAP_ELEMENT_SELECTED_EVENT))
-			mapElementSelected = true;
-			
-		if((typ == MAP_PATH_DESELECTED_EVENT))
-			mapPathDeselected = true;
-		if((typ == MAP_ELEMENT_DESELECTED_EVENT))
-			mapElementDeselected = true;
-
-		if((typ == MAP_PROPERTY_SELECTED_EVENT))
-			mapPropertySelected = true;
-	}
-
 
 	public void setMarkerId(String markerId)
 	{
 		this.markerId = markerId;
 	}
 
-
 	public String getMarkerId()
 	{
 		return markerId;
 	}
-
 
 	public void setDistance(double distance)
 	{
 		this.distance = distance;
 	}
 
-
 	public double getDistance()
 	{
 		return distance;
 	}
 
-
-	public void setMapPathId(String mapPathId)
+	public void setSchemePathId(String schemePathId)
 	{
-		this.mapPathId = mapPathId;
+		this.schemePathId = schemePathId;
 	}
 
-
-	public String getMapPathId()
+	public String getSchemePathId()
 	{
-		return mapPathId;
+		return schemePathId;
 	}
-
 
 	public void setMeId(String meId)
 	{
 		this.meId = meId;
 	}
 
-
 	public String getMeId()
 	{
 		return meId;
 	}
 
-
-	public void setLinkId(String linkId)
+	public void setSchemeLinkId(String schemeLinkId)
 	{
-		this.linkId = linkId;
+		this.schemeLinkId = schemeLinkId;
 	}
 
-
-	public String getLinkId()
+	public String getSchemeLinkId()
 	{
-		return linkId;
+		return schemeLinkId;
 	}
-
-
+/*
 	public void setDescriptor(Object descriptor)
 	{
 		this.descriptor = descriptor;
 	}
 
-
 	public Object getDescriptor()
 	{
 		return descriptor;
 	}
-
-
+*/
 	public void setSchemePathDecompositor(Object spd)
 	{
 		this.spd = spd;
 	}
-
 
 	public Object getSchemePathDecompositor()
 	{
 		return spd;
 	}
 
-
 	public boolean isMapMarkerCreated()
 	{
-		return mapMarkerCreated;
+		return mapEventType == MAP_MARKER_CREATED_EVENT;
 	}
-
 
 	public boolean isMapMarkerDeleted()
 	{
-		return mapMarkerDeleted;
+		return mapEventType == MAP_MARKER_DELETED_EVENT;
 	}
-
 
 	public boolean isMapMarkerMoved()
 	{
-		return mapMarkerMoved;
+		return mapEventType == MAP_MARKER_MOVED_EVENT;
 	}
-
-
-	public boolean isMapMarkerSelected()
-	{
-		return mapMarkerSelected;
-	}
-
-
-	public boolean isMapMarkerDeselected()
-	{
-		return mapMarkerDeselected;
-	}
-
 
 	public boolean isDataMarkerCreated()
 	{
-		return dataMarkerCreated;
+		return mapEventType == DATA_MARKER_CREATED_EVENT;
 	}
-
 
 	public boolean isDataMarkerDeleted()
 	{
-		return dataMarkerDeleted;
+		return mapEventType == DATA_MARKER_DELETED_EVENT;
 	}
-
 
 	public boolean isDataMarkerMoved()
 	{
-		return dataMarkerMoved;
+		return mapEventType == DATA_MARKER_MOVED_EVENT;
 	}
-
-
-	public boolean isDataMarkerSelected()
-	{
-		return dataMarkerSelected;
-	}
-
-
-	public boolean isDataMarkerDeselected()
-	{
-		return dataMarkerDeselected;
-	}
-
 
 	public boolean isDataEventMarkerCreated()
 	{
-		return dataEventMarkerCreated;
+		return mapEventType == DATA_EVENTMARKER_CREATED_EVENT;
 	}
-
 
 	public boolean isDataEventMarkerDeleted()
 	{
-		return dataEventMarkerDeleted;
+		return mapEventType == DATA_EVENTMARKER_DELETED_EVENT;
 	}
-
 
 	public boolean isDataAlarmMarkerCreated()
 	{
-		return dataAlarmMarkerCreated;
+		return mapEventType == DATA_ALARMMARKER_CREATED_EVENT;
 	}
-
 
 	public boolean isDataAlarmMarkerDeleted()
 	{
-		return dataAlarmMarkerDeleted;
+		return mapEventType == DATA_ALARMMARKER_DELETED_EVENT;
 	}
-
-
-	public boolean isMapPathSelected()
-	{
-		return mapPathSelected;
-	}
-
 
 	public boolean isMapElementSelected()
 	{
-		return mapElementSelected;
+		return mapEventType == MAP_ELEMENT_SELECTED_EVENT;
 	}
-
-
-	public boolean isMapPathDeselected()
-	{
-		return mapPathDeselected;
-	}
-
 
 	public boolean isMapElementDeselected()
 	{
-		return mapElementDeselected;
-	}
-
-
-	public boolean isMapPropertySelected()
-	{
-		return mapPropertySelected;
+		return mapEventType == MAP_ELEMENT_DESELECTED_EVENT;
 	}
 
 }

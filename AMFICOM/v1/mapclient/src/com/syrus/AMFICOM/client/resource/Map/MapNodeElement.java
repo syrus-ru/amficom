@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeElement.java,v 1.12 2004/10/09 13:34:33 krupenn Exp $
+ * $Id: MapNodeElement.java,v 1.13 2004/10/15 14:09:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2004/10/09 13:34:33 $
+ * @version $Revision: 1.13 $, $Date: 2004/10/15 14:09:00 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -205,6 +205,7 @@ public abstract class MapNodeElement extends StubResource
 	public void setSelected(boolean selected)
 	{
 		this.selected = selected;
+		getMap().setSelected(this, selected);
 	}
 
 	public String getId()

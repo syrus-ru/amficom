@@ -1,5 +1,5 @@
 /**
- * $Id: MapEvent.java,v 1.4 2004/10/11 15:24:52 krupenn Exp $
+ * $Id: MapEvent.java,v 1.5 2004/10/15 14:09:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,7 +15,7 @@ package com.syrus.AMFICOM.Client.General.Event;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/11 15:24:52 $
+ * @version $Revision: 1.5 $, $Date: 2004/10/15 14:09:00 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -25,8 +25,6 @@ public class MapEvent extends OperationEvent
 	/** открыто окно карты */
 	public static final String MAP_FRAME_SHOWN = "mapframeshownevent";
 
-	/** карта открыта */
-//	public static final String MAP_VIEW_OPENED = "mapviewopenedevent";
 	/** карта закрыта */
 	public static final String MAP_VIEW_CLOSED = "mapviewclosedevent";
 	/** окно с картой активировано */

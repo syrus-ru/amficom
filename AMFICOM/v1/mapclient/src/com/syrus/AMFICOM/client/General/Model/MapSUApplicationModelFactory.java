@@ -41,33 +41,6 @@ public class MapSUApplicationModelFactory
 		aModel.setUsable("mapModeLink", true);
 		aModel.setUsable("mapModePath", true);
 
-		aModel.setUsable("menuEditUndo", true);
-		aModel.setUsable("menuEditRedo", true);
-		aModel.setUsable("menuEditCut", true);
-		aModel.setUsable("menuEditCopy", true);
-		aModel.setUsable("menuEditPaste", true);
-		aModel.setUsable("menuEditSelect", true);
-
-		aModel.setUsable("menuViewNavigator", true);
-		aModel.setUsable("menuViewToolbar", true);
-		aModel.setUsable("menuViewRefresh", true);
-		aModel.setUsable("menuViewPanel", true);
-
-		aModel.setUsable("menuNavigateZoomSelection", true);
-		aModel.setUsable("menuNavigateZoomMap", true);
-		aModel.setUsable("menuNavigateCenterMap", true);
-		aModel.setUsable("menuNavigateCenterSelection", true);
-
-		aModel.setUsable("menuElementGroup", true);
-		aModel.setUsable("menuElementUngroup", true);
-		aModel.setUsable("menuElementAlign", true);
-
-		aModel.setUsable("menuHelpContents", true);
-		aModel.setUsable("menuHelpFind", true);
-		aModel.setUsable("menuelpTips", true);
-		aModel.setUsable("menuHelpCourse", true);
-		aModel.setUsable("menuHelpHelp", true);
-
 		return aModel;
 	}
 }

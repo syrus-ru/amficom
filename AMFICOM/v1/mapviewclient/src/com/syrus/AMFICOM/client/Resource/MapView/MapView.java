@@ -1,5 +1,5 @@
 /**
- * $Id: MapView.java,v 1.12 2004/10/14 15:39:05 krupenn Exp $
+ * $Id: MapView.java,v 1.13 2004/10/15 14:09:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -55,7 +55,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2004/10/14 15:39:05 $
+ * @version $Revision: 1.13 $, $Date: 2004/10/15 14:09:21 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -830,6 +830,7 @@ public final class MapView extends StubResource
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "removeCablePath(" + ob + ")");
 
 		cablePaths.remove(ob);
+		ob.setSelected(false);
 //		removedElements.add(ob);
 	}
 
@@ -903,6 +904,7 @@ public final class MapView extends StubResource
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "removeTransmissionPath(" + ob + ")");
 
 		measurementPaths.remove(ob);
+		ob.setSelected(false);
 //		removedElements.add(ob);
 	}
 
