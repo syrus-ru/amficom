@@ -1,5 +1,5 @@
 /*
- * $Id: Map.java,v 1.6 2004/12/16 10:35:05 bob Exp $
+ * $Id: Map.java,v 1.7 2004/12/20 12:36:01 krupenn Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ.
@@ -8,17 +8,13 @@
 
 package com.syrus.AMFICOM.map;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -26,9 +22,18 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Map_Transferable;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
 /**
- * @version $Revision: 1.6 $, $Date: 2004/12/16 10:35:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2004/12/20 12:36:01 $
+ * @author $Author: krupenn $
  * @module map_v1
  */
 public class Map extends StorableObject {
@@ -52,6 +57,11 @@ public class Map extends StorableObject {
 
 	private StorableObjectDatabase	mapDatabase;
 
+	protected transient Set selectedElements = new HashSet();
+
+	protected transient List allElements = new LinkedList();
+	protected transient List nodeElements = new LinkedList();
+
 	public Map(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
@@ -72,40 +82,58 @@ public class Map extends StorableObject {
 			this.domainId = new Identifier(mt.domain_id); 
 				
 			this.siteNodes = new ArrayList(mt.siteNodeIds.length);
-			ArrayList siteNodeIds = new ArrayList(mt.siteNodeIds.length);
 			for (int i = 0; i < mt.siteNodeIds.length; i++)
-				siteNodeIds.add(new Identifier(mt.siteNodeIds[i]));
-			this.siteNodes.addAll(MapStorableObjectPool.getStorableObjects(siteNodeIds, true));
+			{
+				Identifier ide = new Identifier(mt.siteNodeIds[i]);
+				SiteNode sn = (SiteNode )MapStorableObjectPool.getStorableObject(ide, true);
+				sn.setMap(this);
+				this.siteNodes.add(sn);
+			}
 			
 			this.topologicalNodes = new ArrayList(mt.topologicalNodeIds.length);
-			ArrayList topologicalNodeIds = new ArrayList(mt.topologicalNodeIds.length);
 			for (int i = 0; i < mt.topologicalNodeIds.length; i++)
-				topologicalNodeIds.add(new Identifier(mt.topologicalNodeIds[i]));
-			this.topologicalNodes.addAll(MapStorableObjectPool.getStorableObjects(topologicalNodeIds, true));
+			{
+				Identifier ide = new Identifier(mt.topologicalNodeIds[i]);
+				TopologicalNode tn = (TopologicalNode )MapStorableObjectPool.getStorableObject(ide, true);
+				tn.setMap(this);
+				this.topologicalNodes.add(tn);
+			}
 
 			this.nodeLinks = new ArrayList(mt.nodeLinkIds.length);
-			ArrayList nodeLinkIds = new ArrayList(mt.nodeLinkIds.length);
 			for (int i = 0; i < mt.nodeLinkIds.length; i++)
-				nodeLinkIds.add(new Identifier(mt.nodeLinkIds[i]));
-			this.nodeLinks.addAll(MapStorableObjectPool.getStorableObjects(nodeLinkIds, true));
+			{
+				Identifier ide = new Identifier(mt.nodeLinkIds[i]);
+				NodeLink nl = (NodeLink )MapStorableObjectPool.getStorableObject(ide, true);
+				nl.setMap(this);
+				this.nodeLinks.add(nl);
+			}
 
 			this.physicalLinks = new ArrayList(mt.physicalLinkIds.length);
-			ArrayList physicalNodeLinkIds = new ArrayList(mt.physicalLinkIds.length);
 			for (int i = 0; i < mt.physicalLinkIds.length; i++)
-				physicalNodeLinkIds.add(new Identifier(mt.physicalLinkIds[i]));
-			this.physicalLinks.addAll(MapStorableObjectPool.getStorableObjects(physicalNodeLinkIds, true));
+			{
+				Identifier ide = new Identifier(mt.physicalLinkIds[i]);
+				PhysicalLink pl = (PhysicalLink )MapStorableObjectPool.getStorableObject(ide, true);
+				pl.setMap(this);
+				this.physicalLinks.add(pl);
+			}
 			
 			this.marks = new ArrayList(mt.markIds.length);
-			ArrayList markIds = new ArrayList(mt.markIds.length);
 			for (int i = 0; i < mt.markIds.length; i++)
-				markIds.add(new Identifier(mt.markIds[i]));
-			this.marks.addAll(MapStorableObjectPool.getStorableObjects(markIds, true));
+			{
+				Identifier ide = new Identifier(mt.markIds[i]);
+				Mark mark = (Mark )MapStorableObjectPool.getStorableObject(ide, true);
+				mark.setMap(this);
+				this.marks.add(mark);
+			}
 			
 			this.collectors = new ArrayList(mt.collectorIds.length);
-			ArrayList collectorIds = new ArrayList(mt.collectorIds.length);
 			for (int i = 0; i < mt.collectorIds.length; i++)
-				collectorIds.add(new Identifier(mt.collectorIds[i]));
-			this.collectors.addAll(MapStorableObjectPool.getStorableObjects(collectorIds, true));
+			{
+				Identifier ide = new Identifier(mt.markIds[i]);
+				Collector col = (Collector )MapStorableObjectPool.getStorableObject(ide, true);
+				col.setMap(this);
+				this.collectors.add(col);
+			}
 
 		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
@@ -145,6 +173,25 @@ public class Map extends StorableObject {
 				this.mapDatabase.insert(this);
 		} catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
+		}
+	}
+
+	public static Map createInstance(
+			Identifier creatorId,
+			String name,
+			String description) 
+		throws CreateObjectException 
+	{
+		try 
+		{
+			return new Map(
+				IdentifierPool.getGeneratedIdentifier(ObjectEntities.MAP_ENTITY_CODE),
+				creatorId,
+				name,
+				description);
+		} catch (IllegalObjectEntityException e) 
+		{
+			throw new CreateObjectException("Map.createInstance | cannot generate identifier ", e);
 		}
 	}
 
@@ -335,4 +382,317 @@ public class Map extends StorableObject {
 			this.description = description;
 			this.domainId = domainId;
 	}
+
+	public List getNodes()
+	{
+		nodeElements.clear();
+		nodeElements.addAll(this.siteNodes);
+		nodeElements.addAll(this.topologicalNodes);
+		nodeElements.addAll(this.marks);
+		return nodeElements;
+	}
+
+	/**
+	 * Добавить новый MapNodeElement
+	 */
+	public void addNode(AbstractNode ob)
+	{
+		if(ob instanceof SiteNode)
+			siteNodes.add(ob);
+		else
+		if(ob instanceof TopologicalNode)
+			topologicalNodes.add(ob);
+		else
+		if(ob instanceof Mark)
+			marks.add(ob);
+		ob.setMap(this);
+		ob.setRemoved(false);
+		super.currentVersion = super.getNextVersion();
+	}
+
+	/**
+	 * Удалить MapNodeElement
+	 */
+	public void removeNode(AbstractNode ob)
+	{
+		ob.setSelected(false);
+		if(ob instanceof SiteNode)
+			siteNodes.remove(ob);
+		else
+		if(ob instanceof TopologicalNode)
+			topologicalNodes.remove(ob);
+		else
+		if(ob instanceof Mark)
+			marks.remove(ob);
+		ob.setRemoved(true);
+		super.currentVersion = super.getNextVersion();
+	}
+
+	/**
+	 * Получить элемент сетевого узла по ID
+	 */
+	public SiteNode getSiteNode(Identifier siteId)
+	{
+		Iterator e = this.getSiteNodes().iterator();
+		while (e.hasNext())
+		{
+			SiteNode msne = (SiteNode )e.next();
+
+			if ( msne.getId().equals(siteId))
+				return msne;
+		}
+		return null;
+	}
+
+	/**
+	 * Получить элемент сетевого узла по ID
+	 */
+	public TopologicalNode getTopologicalNode(Identifier topoId)
+	{
+		Iterator e = this.getTopologicalNodes().iterator();
+		while (e.hasNext())
+		{
+			TopologicalNode msne = (TopologicalNode )e.next();
+
+			if ( msne.getId().equals(topoId))
+				return msne;
+		}
+		return null;
+	}
+
+	/**
+	 * Получить элемент сетевого узла по ID
+	 */
+	public Mark getMark(Identifier markId)
+	{
+		Iterator e = this.getMarks().iterator();
+		while (e.hasNext())
+		{
+			Mark msne = (Mark )e.next();
+
+			if ( msne.getId().equals(markId))
+				return msne;
+		}
+		return null;
+	}
+
+	/**
+	 * Получить точечный объект по ID
+	 */
+	public AbstractNode getNode(Identifier nodeId)
+	{
+		AbstractNode node = getSiteNode(nodeId);
+		if(node == null)
+			node = getTopologicalNode(nodeId);
+		if(node == null)
+			node = getMark(nodeId);
+		return null;
+	}
+
+	public void addCollector(Collector ob)
+	{
+		collectors.add(ob);
+		ob.setMap(this);
+		ob.setRemoved(false);
+		super.currentVersion = super.getNextVersion();
+	}
+
+	public void removeCollector(Collector ob)
+	{
+		ob.setSelected(false);
+		collectors.remove(ob);
+		ob.setRemoved(true);
+		super.currentVersion = super.getNextVersion();
+	}
+
+	/**
+	 * получить коллектор, в составе которого есть тоннель mple
+	 */
+	public Collector getCollector(PhysicalLink mple)
+	{
+		for(Iterator it = this.getCollectors().iterator(); it.hasNext();)
+		{
+			Collector cp = (Collector )it.next();
+			if(cp.getPhysicalLinks().contains(mple))
+				return cp;
+		}
+		return null;
+	}
+
+
+	/**
+	 * Получить список физических линий, начинающихся или заканчивающихся
+	 * в узле node
+	 */
+	public List getPhysicalLinksAt(AbstractNode node)
+	{
+		LinkedList returnNodeLink = new LinkedList();
+		Iterator e = this.getPhysicalLinks().iterator();
+
+		while (e.hasNext())
+		{
+			PhysicalLink link = (PhysicalLink )e.next();
+			if ( (link.getEndNode().equals(node)) 
+					|| (link.getStartNode().equals(node)))
+				returnNodeLink.add(link);
+		}
+		return returnNodeLink;
+	}
+
+	/**
+	 * Добавить новую физическую линию
+	 */
+	public void addPhysicalLink(PhysicalLink ob)
+	{
+		
+		physicalLinks.add(ob);
+		ob.setMap(this);
+		ob.setRemoved(false);
+		super.currentVersion = super.getNextVersion();
+	}
+
+	/**
+	 * Удалить физическую линию
+	 */
+	public void removePhysicalLink(PhysicalLink ob)
+	{
+		
+		ob.setSelected(false);
+		physicalLinks.remove(ob);
+		ob.setRemoved(true);
+		
+		Collector coll = getCollector(ob);
+		if(coll != null)
+			coll.removePhysicalLink(ob);
+		super.currentVersion = super.getNextVersion();
+	}
+
+	/**
+	 * Получение MapPhysicalLinkElement по его ID
+	 */
+	public PhysicalLink getPhysicalLink(Identifier plId)
+	{
+		Iterator e = this.getPhysicalLinks().iterator();
+
+		while (e.hasNext())
+		{
+			PhysicalLink physicalLink = (PhysicalLink )e.next();
+			if ( physicalLink.getId().equals( plId) )
+				return physicalLink;
+		}
+		return null;
+	}
+
+	/**
+	 * Получить MapPhysicalLinkElement по начальному и конечному узлам
+	 */
+	public PhysicalLink getPhysicalLink(AbstractNode start_node, AbstractNode end_node)
+	{
+		for(Iterator it = this.getPhysicalLinks().iterator(); it.hasNext();)
+		{
+			PhysicalLink link = (PhysicalLink )it.next();
+			if (((link.getStartNode().equals(start_node)) && (link.getEndNode().equals(end_node))) ||
+				((link.getStartNode().equals(end_node)) && (link.getEndNode().equals(start_node))) )
+			{
+				return link;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * добавить новый MapNodeLinkElement
+	 */
+	public void addNodeLink(NodeLink ob)
+	{
+		nodeLinks.add(ob);
+		ob.setMap(this);
+		ob.setRemoved(false);
+		super.currentVersion = super.getNextVersion();
+	}
+
+	/**
+	 * Удалить MapNodeLinkElement
+	 */
+	public void removeNodeLink(NodeLink ob)
+	{
+		ob.setSelected(false);
+		nodeLinks.remove(ob);
+		ob.setRemoved(true);
+		super.currentVersion = super.getNextVersion();
+	}
+
+	/**
+	 * Получение MapNodeLinkElement по его ID
+	 */
+	public NodeLink getNodeLink(Identifier nlId)
+	{
+		Iterator e = this.getNodeLinks().iterator();
+
+		while (e.hasNext())
+		{
+			NodeLink nodeLink = (NodeLink )e.next();
+			if ( nodeLink.getId().equals( nlId) )
+			{
+				return nodeLink;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Получить NodeLink по начальному и конечному узлам
+	 */
+	public NodeLink getNodeLink(AbstractNode start_node, AbstractNode end_node)
+	{
+		for(Iterator it = this.getNodeLinks().iterator(); it.hasNext();)
+		{
+			NodeLink link = (NodeLink )it.next();
+			if (((link.getStartNode().equals(start_node)) && (link.getEndNode().equals(end_node))) ||
+				((link.getStartNode().equals(end_node)) && (link.getEndNode().equals(start_node))) )
+			{
+				return link;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Получить список всех топологических элементов карты
+	 */
+	public List getAllElements()
+	{
+		allElements.clear();
+
+		allElements.addAll(this.marks);
+		allElements.addAll(this.topologicalNodes);
+		allElements.addAll(this.siteNodes);
+
+		allElements.addAll(this.nodeLinks);
+		allElements.addAll(this.physicalLinks);
+		allElements.addAll(this.collectors);
+
+		return Collections.unmodifiableList(allElements);
+	}
+
+
+	public Set getSelectedElements()
+	{
+		return selectedElements;
+	}
+	
+	public void clearSelection()
+	{
+		selectedElements.clear();
+	}
+	
+	public void setSelected(MapElement me, boolean selected)
+	{
+		if(selected)
+			selectedElements.add(me);
+		else
+			selectedElements.remove(me);
+	}
+
 }
+

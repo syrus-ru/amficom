@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeType.java,v 1.8 2004/12/16 10:35:05 bob Exp $
+ * $Id: SiteNodeType.java,v 1.9 2004/12/20 12:36:01 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,20 +8,16 @@
 
 package com.syrus.AMFICOM.map;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import com.syrus.AMFICOM.configuration.Characteristic;
 import com.syrus.AMFICOM.configuration.Characterized;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -29,12 +25,26 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
- * @version $Revision: 1.8 $, $Date: 2004/12/16 10:35:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2004/12/20 12:36:01 $
+ * @author $Author: krupenn $
  * @module map_v1
  */
 public class SiteNodeType extends StorableObjectType implements Characterized {
+
+	public static final String WELL = "well";
+	public static final String PIQUET = "piquet";
+	public static final String ATS = "ats";
+	public static final String BUILDING = "building";
+	public static final String UNBOUND = "unbound";
+	public static final String CABLE_INLET = "cableinlet";
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -47,8 +57,9 @@ public class SiteNodeType extends StorableObjectType implements Characterized {
 
 	private String					name;
 
-	private StorableObjectDatabase	siteNodeTypeDatabase;
 	private boolean					topological;
+
+	private StorableObjectDatabase	siteNodeTypeDatabase;
 
 	public SiteNodeType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -115,8 +126,47 @@ public class SiteNodeType extends StorableObjectType implements Characterized {
 		}
 	}
 
+	public static SiteNodeType createInstance(
+			final Identifier creatorId,
+			final String codename,
+			final String name,
+			final String description,
+			final Identifier imageId,
+			final boolean isTopological) 
+		throws CreateObjectException {
+		
+		if (creatorId == null || codename == null || name == null 
+				|| description == null || imageId == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+		
+		try {
+			return new SiteNodeType(
+				IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE),
+				creatorId,
+				codename,
+				name,
+				description,
+				imageId,
+				isTopological);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("SiteNodeType.createInstance | cannot generate identifier ", e);
+		}
+	}
+
 	public List getCharacteristics() {
 		return  Collections.unmodifiableList(this.characteristics);
+	}
+
+	public void addCharacteristic(Characteristic ch)
+	{
+		this.characteristics.add(ch);
+		super.currentVersion = super.getNextVersion();
+	}
+
+	public void removeCharacteristic(Characteristic ch)
+	{
+		this.characteristics.remove(ch);
+		super.currentVersion = super.getNextVersion();
 	}
 
 	public List getDependencies() {

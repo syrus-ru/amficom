@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkType.java,v 1.9 2004/12/16 10:35:05 bob Exp $
+ * $Id: PhysicalLinkType.java,v 1.10 2004/12/20 12:36:01 krupenn Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ.
@@ -7,13 +7,6 @@
  */
 
 package com.syrus.AMFICOM.map;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 import com.syrus.AMFICOM.configuration.Characteristic;
 import com.syrus.AMFICOM.configuration.Characterized;
@@ -32,12 +25,23 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.PhysicalLinkType_Transferable;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
- * @version $Revision: 1.9 $, $Date: 2004/12/16 10:35:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2004/12/20 12:36:01 $
+ * @author $Author: krupenn $
  * @module map_v1
  */
 public class PhysicalLinkType extends StorableObjectType implements Characterized {
+
+	public static final String TUNNEL = "tunnel";
+	public static final String COLLECTOR = "collector";
+	public static final String UNBOUND = "cable";
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -46,9 +50,20 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 
 	private List					characteristics;
 
+	/**
+	 * @deprecated does not belong to any domain
+	 */
 	private Identifier				domainId;
 
 	private String					name;
+
+	/**
+	 * Размерность тоннеля.
+	 * Для тоннеля обозначает размерность матрицы труб в разрезе,
+	 * для участка коллектора - число полок и мест на полках
+	 * @todo добавить сохранение в БД
+	 */
+	private IntDimension 			bindingDimension;
 
 	private StorableObjectDatabase	physicalLinkTypeDatabase;
 	
@@ -85,7 +100,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 						   final String codename,
 						   final String name,
 						   final String description,
-						   final Identifier domainId) {
+						   final IntDimension bindingDimension) {
 		super(id);
 		long time = System.currentTimeMillis();
 		super.created = new Date(time);
@@ -95,7 +110,8 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 		super.codename = codename;
 		this.name = name;
 		this.description = description;
-		this.domainId = domainId;
+		this.domainId = null;
+		this.bindingDimension = new IntDimension(bindingDimension.width, bindingDimension.height);
 
 		this.characteristics = new LinkedList();
 
@@ -113,14 +129,15 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 			throw new CreateObjectException(e.getMessage(), e);
 		}
 	}
-	
-	public static PhysicalLinkType createInstance(final Identifier creatorId,
-		   final String codename,
-		   final String name,
-		   final String description,
-		   final Identifier domainId) throws CreateObjectException {
+
+	public static PhysicalLinkType createInstance(
+			final Identifier creatorId,
+			final String codename,
+			final String name,
+			final String description,
+			final IntDimension bindingDimension) throws CreateObjectException {
 		
-		if (creatorId == null || codename == null || name == null || description == null || domainId == null)
+		if (creatorId == null || codename == null || name == null || description == null || bindingDimension == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try {
@@ -129,7 +146,7 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 				codename,
 				name,
 				description,
-				domainId);
+				bindingDimension);
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("PhysicalLinkType.createInstance | cannot generate identifier ", e);
 		}
@@ -139,6 +156,18 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 		return  Collections.unmodifiableList(this.characteristics);
 	}
 	
+	public void addCharacteristic(Characteristic ch)
+	{
+		this.characteristics.add(ch);
+		super.currentVersion = super.getNextVersion();
+	}
+
+	public void removeCharacteristic(Characteristic ch)
+	{
+		this.characteristics.remove(ch);
+		super.currentVersion = super.getNextVersion();
+	}
+
 	public List getDependencies() {
 		List dependencies = new LinkedList();
 		dependencies.add(this.domainId);
@@ -215,4 +244,19 @@ public class PhysicalLinkType extends StorableObjectType implements Characterize
 			this.name = name;
 			this.domainId = domainId;
 		}
+
+	public void setBindingDimension(IntDimension bindingDimension)
+	{
+		this.bindingDimension = new IntDimension(
+				bindingDimension.width, 
+				bindingDimension.height);
+		super.currentVersion = super.getNextVersion();
+	}
+
+
+	public IntDimension getBindingDimension()
+	{
+		return new IntDimension(bindingDimension);
+	}
+
 }

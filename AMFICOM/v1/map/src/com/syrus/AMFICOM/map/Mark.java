@@ -1,5 +1,5 @@
 /*
- * $Id: Mark.java,v 1.6 2004/12/16 10:35:05 bob Exp $
+ * $Id: Mark.java,v 1.7 2004/12/20 12:36:01 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,43 +8,42 @@
 
 package com.syrus.AMFICOM.map;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import com.syrus.AMFICOM.configuration.Characteristic;
 import com.syrus.AMFICOM.configuration.Characterized;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Mark_Transferable;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.ListIterator;
+
 /**
- * @version $Revision: 1.6 $, $Date: 2004/12/16 10:35:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2004/12/20 12:36:01 $
+ * @author $Author: krupenn $
  * @module map_v1
  */
-public class Mark extends StorableObject implements Characterized {
+public class Mark extends AbstractNode implements Characterized {
 
+	public static final String IMAGE_NAME = "mark";
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long	serialVersionUID	= 3258126938496186164L;
-	private String					name;
-	private String					description;
 
-	private double					longitude;
-	private double					latitude;
 	private PhysicalLink			physicalLink;
 
 	private double					distance;
@@ -53,9 +52,15 @@ public class Mark extends StorableObject implements Characterized {
 	private String					street;
 	private String					building;
 
-	private List					characteristics;
-
 	private StorableObjectDatabase	markDatabase;
+
+
+	protected transient double sizeInDoubleLt;
+
+	protected transient NodeLink nodeLink;
+
+	protected transient AbstractNode startNode;
+
 
 	public Mark(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -70,11 +75,11 @@ public class Mark extends StorableObject implements Characterized {
 
 	public Mark(Mark_Transferable mt) throws CreateObjectException {
 		super(mt.header);
-		this.name = mt.name;
-		this.description = mt.description;
+		super.name = mt.name;
+		super.description = mt.description;
 
-		this.longitude = mt.longitude;
-		this.latitude = mt.latitude;
+		super.location.x = mt.longitude;
+		super.location.y = mt.latitude;
 
 		this.distance = mt.distance;
 
@@ -86,11 +91,11 @@ public class Mark extends StorableObject implements Characterized {
 			this.physicalLink = (PhysicalLink) MapStorableObjectPool.getStorableObject(
 				new Identifier(mt.physicalLinkId), true);
 
-			this.characteristics = new ArrayList(mt.characteristicIds.length);
+			super.characteristics = new ArrayList(mt.characteristicIds.length);
 			ArrayList characteristicIds = new ArrayList(mt.characteristicIds.length);
 			for (int i = 0; i < mt.characteristicIds.length; i++)
 				characteristicIds.add(new Identifier(mt.characteristicIds[i]));
-			this.characteristics.addAll(ConfigurationStorableObjectPool.getStorableObjects(characteristicIds, true));
+			super.characteristics.addAll(ConfigurationStorableObjectPool.getStorableObjects(characteristicIds, true));
 		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
@@ -113,21 +118,23 @@ public class Mark extends StorableObject implements Characterized {
 		super.modified = new Date(time);
 		super.creatorId = creatorId;
 		super.modifierId = creatorId;
-		this.name = name;
-		this.description = description;
-		this.longitude = longitude;
-		this.latitude = latitude;		
+		super.name = name;
+		super.description = description;
+		super.location.x = longitude;
+		super.location.y = latitude;		
 		this.physicalLink = physicalLink;
 		this.distance = distance;
 		this.city = city;
 		this.street = street;
 		this.building = building;
 
-		this.characteristics = new LinkedList();
+		super.characteristics = new LinkedList();
 
 		super.currentVersion = super.getNextVersion();
 
 		this.markDatabase = MapDatabaseContext.getMarkDatabase();
+
+//		this.setIconName(IMAGE_NAME);
 	}
 
 	
@@ -138,6 +145,34 @@ public class Mark extends StorableObject implements Characterized {
 				this.markDatabase.insert(this);
 		} catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
+		}
+	}
+
+	public static Mark createInstance(
+			PhysicalLink link,
+			double len)
+		throws CreateObjectException 
+	{
+		if (link == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+		
+		try {
+			Identifier ide =
+				IdentifierPool.getGeneratedIdentifier(ObjectEntities.MARK_ENTITY_CODE);
+			return new Mark(
+				ide,
+				link.getMap().getCreatorId(),
+				ide.toString(),
+				"",
+				0.0D,
+				0.0D,
+				link,
+				len,
+				"",
+				"",
+				"");
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("Mark.createInstance | cannot generate identifier ", e);
 		}
 	}
 
@@ -157,29 +192,14 @@ public class Mark extends StorableObject implements Characterized {
 		return new Mark_Transferable(super.getHeaderTransferable(),
 						this.name,
 						this.description,
-						this.longitude,
-						this.latitude,
+						this.location.x,
+						this.location.y,
 						(Identifier_Transferable)this.physicalLink.getId().getTransferable(),
 						this.distance,
 						this.city,
 						this.street,
 						this.building,
 						charIds);
-	}
-	
-	public List getCharacteristics() {
-		return  Collections.unmodifiableList(this.characteristics);
-	}
-	
-	protected void setCharacteristics0(final List characteristics) {
-		this.characteristics.clear();
-		if (characteristics != null)
-			this.characteristics.addAll(characteristics);
-	}
-	
-	public void setCharacteristics(final List characteristics) {
-		this.setCharacteristics0(characteristics);
-		super.currentVersion = super.getNextVersion();
 	}
 	
 	public String getBuilding() {
@@ -200,48 +220,12 @@ public class Mark extends StorableObject implements Characterized {
 		super.currentVersion = super.getNextVersion();
 	}
 	
-	public String getDescription() {
-		return this.description;
-	}
-	
-	public void setDescription(String description) {
-		this.description = description;
-		super.currentVersion = super.getNextVersion();
-	}
-	
 	public double getDistance() {
 		return this.distance;
 	}
 	
 	public void setDistance(double distance) {
 		this.distance = distance;
-		super.currentVersion = super.getNextVersion();
-	}
-	
-	public double getLatitude() {
-		return this.latitude;
-	}
-	
-	public void setLatitude(double latitude) {
-		this.latitude = latitude;
-		super.currentVersion = super.getNextVersion();
-	}
-	
-	public double getLongitude() {
-		return this.longitude;
-	}
-	
-	public void setLongitude(double longitude) {
-		this.longitude = longitude;
-		super.currentVersion = super.getNextVersion();
-	}
-	
-	public String getName() {
-		return this.name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -263,31 +247,151 @@ public class Mark extends StorableObject implements Characterized {
 		super.currentVersion = super.getNextVersion();
 	}
 	
-	protected synchronized void setAttributes(Date created,
-											  Date modified,
-											  Identifier creatorId,
-											  Identifier modifierId,											  
-											  String name,
-											  String description,
-											  double longitude,
-											  double latitude,
-											  PhysicalLink physicalLink,
-											  double distance,
-											  String city,
-											  String street,
-											  String building) {
-			super.setAttributes(created,
-					modified,
-					creatorId,
-					modifierId);
-			this.name = name;
-			this.description = description;
-			this.longitude = longitude;
-			this.latitude = latitude;
-			this.physicalLink = physicalLink;
-			this.distance = distance;
-			this.city = city;
-			this.street = street;
-			this.building = building;					
+	protected synchronized void setAttributes(
+			Date created,
+			Date modified,
+			Identifier creatorId,
+			Identifier modifierId,											  
+			String name,
+			String description,
+			double longitude,
+			double latitude,
+			PhysicalLink physicalLink,
+			double distance,
+			String city,
+			String street,
+			String building) {
+		super.setAttributes(created,
+				modified,
+				creatorId,
+				modifierId);
+		super.name = name;
+		super.description = description;
+		super.location.x = longitude;
+		super.location.y = latitude;
+		this.physicalLink = physicalLink;
+		this.distance = distance;
+		this.city = city;
+		this.street = street;
+		this.building = building;					
+	}
+
+	public void setNodeLink(NodeLink nodeLink)
+	{
+		this.nodeLink = nodeLink;
+	}
+
+	public NodeLink getNodeLink()
+	{
+		return nodeLink;
+	}
+
+	public void setStartNode(AbstractNode startNode)
+	{
+		this.startNode = startNode;
+	}
+
+	public AbstractNode getStartNode()
+	{
+		return startNode;
+	}
+
+	public DoublePoint getLocation()
+	{
+		return new DoublePoint(location.x, location.y);
+	}
+
+	public void setLocation(DoublePoint location)
+	{
+		super.setLocation(location);
+		setDistance(this.getFromStartLengthLt());
+	}
+
+	public double getFromStartLengthLt()
+	{
+		getPhysicalLink().sortNodeLinks();
+
+		double pathLength = 0;
+		
+		for(Iterator it = getPhysicalLink().getNodeLinks().iterator(); it.hasNext();)
+		{
+			NodeLink nl = (NodeLink )it.next();
+			if(nl.equals(nodeLink))
+			{
+				pathLength += this.getSizeInDoubleLt();
+				break;
+			}
+			else
+			{
+				pathLength += nl.getLengthLt();
+			}
+		}
+		return pathLength;
+	}
+
+	public double getFromEndLengthLt()
+	{
+		getPhysicalLink().sortNodeLinks();
+
+		double pathLength = 0;
+		
+		ListIterator it = getPhysicalLink().getNodeLinks().listIterator(
+				getPhysicalLink().getNodeLinks().size());
+		while(it.hasPrevious())
+		{
+			NodeLink nl = (NodeLink )it.previous();
+			if(nl == nodeLink)
+			{
+				pathLength += nl.getLengthLt() - this.getSizeInDoubleLt();
+				break;
+			}
+			else
+				pathLength += nl.getLengthLt();
+		}
+		return pathLength;
+	}
+
+	public void setSizeInDoubleLt(double sizeInDoubleLt)
+	{
+		this.sizeInDoubleLt = sizeInDoubleLt;
+	}
+
+	public double getSizeInDoubleLt()
+	{
+		return sizeInDoubleLt;
+	}
+
+	public List getNodeLinks()
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	public NodeLink getOtherNodeLink(NodeLink nl)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	public List getPhysicalLinks()
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	public List getOppositeNodes()
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	public MapElementState getState()
+	{
+		return new NodeState(this);
+	}
+
+	public void revert(MapElementState state)
+	{
+		NodeState mnes = (NodeState)state;
+		setName(mnes.name);
+		setDescription(mnes.description);
+		setImageId(mnes.imageId);
+		setLocation(mnes.location);
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLink.java,v 1.9 2004/12/16 10:35:05 bob Exp $
+ * $Id: NodeLink.java,v 1.10 2004/12/20 12:36:01 krupenn Exp $
  *
  * Copyright ø 2004 Syrus Systems.
  * Ó¡’ﬁŒœ-‘≈»Œ…ﬁ≈”À…  √≈Œ‘“.
@@ -8,20 +8,18 @@
 
 package com.syrus.AMFICOM.map;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import com.syrus.AMFICOM.configuration.Characteristic;
 import com.syrus.AMFICOM.configuration.Characterized;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -29,12 +27,19 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.NodeLink_Transferable;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
- * @version $Revision: 1.9 $, $Date: 2004/12/16 10:35:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2004/12/20 12:36:01 $
+ * @author $Author: krupenn $
  * @module map_v1
  */
-public class NodeLink extends StorableObject implements Characterized {
+public class NodeLink extends StorableObject implements Characterized, MapElement {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -45,14 +50,23 @@ public class NodeLink extends StorableObject implements Characterized {
 
 	private PhysicalLink			physicalLink;
 
-	private AbstractNode					startNode;
-	private AbstractNode					endNode;
+	private AbstractNode			startNode;
+	private AbstractNode			endNode;
 
 	private double					length;
 
 	private List					characteristics;
 
 	private StorableObjectDatabase	nodeLinkDatabase;
+
+
+	protected transient Map map;
+
+	protected transient boolean selected = false;
+
+	protected transient boolean removed = false;
+
+	protected transient boolean alarmState = false;
 
 	public NodeLink(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -111,6 +125,8 @@ public class NodeLink extends StorableObject implements Characterized {
 		super.currentVersion = super.getNextVersion();
 
 		this.nodeLinkDatabase = MapDatabaseContext.getNodeLinkDatabase();
+
+		selected = false;
 	}
 
 	public void insert() throws CreateObjectException {
@@ -120,6 +136,30 @@ public class NodeLink extends StorableObject implements Characterized {
 				this.nodeLinkDatabase.insert(this);
 		} catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
+		}
+	}
+
+	public static NodeLink createInstance(
+			AbstractNode stNode, 
+			AbstractNode eNode) 
+		throws CreateObjectException 
+	{
+		if (stNode == null || eNode == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+		
+		try {
+			Identifier ide =
+				IdentifierPool.getGeneratedIdentifier(ObjectEntities.NODE_LINK_ENTITY_CODE);
+			return new NodeLink(
+				ide,
+				stNode.getMap().getCreatorId(),
+				ide.toString(),
+				null,
+				stNode,
+				eNode,
+				0.0D);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("Domain.createInstance | cannot generate identifier ", e);
 		}
 	}
 
@@ -152,6 +192,18 @@ public class NodeLink extends StorableObject implements Characterized {
 		return  Collections.unmodifiableList(this.characteristics);
 	}
 	
+	public void addCharacteristic(Characteristic ch)
+	{
+		this.characteristics.add(ch);
+		super.currentVersion = super.getNextVersion();
+	}
+
+	public void removeCharacteristic(Characteristic ch)
+	{
+		this.characteristics.remove(ch);
+		super.currentVersion = super.getNextVersion();
+	}
+
 	protected void setCharacteristics0(final List characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
@@ -196,6 +248,10 @@ public class NodeLink extends StorableObject implements Characterized {
 	
 	public void setPhysicalLink(PhysicalLink physicalLink) {
 		this.physicalLink = physicalLink;
+		if(getStartNode() instanceof TopologicalNode)
+			((TopologicalNode )getStartNode()).setPhysicalLink(physicalLink);
+		if(getEndNode() instanceof TopologicalNode)
+			((TopologicalNode )getEndNode()).setPhysicalLink(physicalLink);
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -227,4 +283,97 @@ public class NodeLink extends StorableObject implements Characterized {
 			this.endNode = endNode;
 			this.length = length;					
 	}
+
+	public AbstractNode getOtherNode(AbstractNode node)
+	{
+		if ( this.getEndNode().equals(node) )
+			return getStartNode();
+		if ( this.getStartNode().equals(node) )
+			return getEndNode();
+		return null;
+	}
+
+	public Map getMap()
+	{
+		return map;
+	}
+
+	public void setMap(Map map)
+	{
+		this.map = map;
+	}
+
+	public boolean isSelected()
+	{
+		return selected;
+	}
+
+	public void setSelected(boolean selected)
+	{
+		this.selected = selected;
+		getMap().setSelected(this, selected);
+	}
+
+	public void setAlarmState(boolean alarmState)
+	{
+		this.alarmState = alarmState;
+	}
+
+	public boolean getAlarmState()
+	{
+		return getPhysicalLink().getAlarmState();
+	}
+
+	public DoublePoint getLocation()
+	{
+		return new DoublePoint(
+			(getStartNode().getLocation().getX() + getEndNode().getLocation().getX()) / 2,
+			(getStartNode().getLocation().getY() + getEndNode().getLocation().getY()) / 2);
+	}
+
+	public MapElementState getState()
+	{
+		return new NodeLinkState(this);
+	}
+
+	public void revert(MapElementState state)
+	{
+		NodeLinkState mnles = (NodeLinkState)state;
+
+		this.setName(mnles.name);
+		this.setStartNode(mnles.startNode);
+		this.setEndNode(mnles.endNode);
+
+		try
+		{
+			setPhysicalLink((PhysicalLink )MapStorableObjectPool.getStorableObject(mnles.physicalLinkId, false));
+		}
+		catch (CommunicationException e)
+		{
+			e.printStackTrace();
+		}
+		catch (DatabaseException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	public boolean isRemoved()
+	{
+		return removed;
+	}
+	
+	public void setRemoved(boolean removed)
+	{
+		this.removed = removed;
+	}
+
+	/**
+	 * œÓÎÛ˜ËÚ¸ ÚÓÔÓÎÓ„Ë˜ÂÒÍÛ˛ ‰ÎËÌÌÛ NodeLink
+	 */
+	public double getLengthLt()
+	{
+		return getLength();
+	}
+
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: Collector.java,v 1.10 2004/12/16 10:35:05 bob Exp $
+ * $Id: Collector.java,v 1.11 2004/12/20 12:36:00 krupenn Exp $
  *
  * Copyright њ 2004 Syrus Systems.
  * оЅ’ёќѕ-‘≈»ќ…ё≈”Ћ…  √≈ќ‘“.
@@ -8,20 +8,16 @@
 
 package com.syrus.AMFICOM.map;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import com.syrus.AMFICOM.configuration.Characteristic;
 import com.syrus.AMFICOM.configuration.Characterized;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -29,12 +25,21 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.Collector_Transferable;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
- * @version $Revision: 1.10 $, $Date: 2004/12/16 10:35:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2004/12/20 12:36:00 $
+ * @author $Author: krupenn $
  * @module map_v1
  */
-public class Collector extends StorableObject implements Characterized {
+public class Collector 
+	extends StorableObject 
+	implements Characterized, MapElement {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -48,6 +53,14 @@ public class Collector extends StorableObject implements Characterized {
 	private List					characteristics;
 
 	private StorableObjectDatabase	collectorDatabase;
+
+	protected transient Map map;
+
+	protected transient boolean selected = false;
+
+	protected transient boolean removed = false;
+
+	protected transient boolean alarmState = false;
 
 	public Collector(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -114,6 +127,25 @@ public class Collector extends StorableObject implements Characterized {
 		}
 	}
 
+	public static Collector createInstance(
+			Map map,
+			String name)
+		throws CreateObjectException {
+
+		if (map == null || name == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+		
+		try {
+			return new Collector(
+				IdentifierPool.getGeneratedIdentifier(ObjectEntities.COLLECTOR_ENTITY_CODE),
+				map.getCreatorId(),
+				name,
+				"");
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("Domain.createInstance | cannot generate identifier ", e);
+		}
+	}
+
 	public List getDependencies() {
 		List dependencies = new LinkedList();
 		dependencies.addAll(this.physicalLinks);
@@ -142,6 +174,18 @@ public class Collector extends StorableObject implements Characterized {
 	public List getCharacteristics() {
 		return Collections.unmodifiableList(this.characteristics);
 	}	
+
+	public void addCharacteristic(Characteristic ch)
+	{
+		this.characteristics.add(ch);
+		super.currentVersion = super.getNextVersion();
+	}
+
+	public void removeCharacteristic(Characteristic ch)
+	{
+		this.characteristics.remove(ch);
+		super.currentVersion = super.getNextVersion();
+	}
 
 	protected void setCharacteristics0(final List characteristics) {
 		this.characteristics.clear();
@@ -199,5 +243,111 @@ public class Collector extends StorableObject implements Characterized {
 					modifierId);
 			this.name = name;
 			this.description = description;					
+	}
+
+	/**
+	 * ¬нимание! концевые точки линии не обновл€ютс€
+	 */
+	public void removePhysicalLink(PhysicalLink link)
+	{
+		this.physicalLinks.remove(link);
+		super.currentVersion = super.getNextVersion();
+	}
+
+	/**
+	 * ¬нимание! концевые точки линии не обновл€ютс€
+	 */
+	public void addPhysicalLink(PhysicalLink link)
+	{
+		this.physicalLinks.add(link);
+		super.currentVersion = super.getNextVersion();
+	}
+
+	public DoublePoint getLocation()
+	{
+		int count = 0;
+		DoublePoint point = new DoublePoint(0.0, 0.0);
+
+		for(Iterator it = getPhysicalLinks().iterator(); it.hasNext();)
+		{
+			PhysicalLink mle = (PhysicalLink )it.next();
+			DoublePoint an = mle.getLocation();
+			point.x += an.x;
+			point.y += an.y;
+			count ++;
+		}
+		point.x /= count;
+		point.y /= count;
+		
+		return point;
+	}
+
+	/**
+	 * ¬озвращает топологическую длинну в метрах
+	 */
+	public double getLengthLt()
+	{
+		double length = 0;
+		Iterator e = getPhysicalLinks().iterator();
+		while( e.hasNext())
+		{
+			PhysicalLink mle = (PhysicalLink )e.next();
+			length = length + mle.getLengthLt();
+		}
+		return length;
+	}
+
+	public boolean isRemoved()
+	{
+		return removed;
+	}
+	
+	public void setRemoved(boolean removed)
+	{
+		this.removed = removed;
+	}
+
+	public boolean isSelected()
+	{
+		return selected;
+	}
+
+	public void setSelected(boolean selected)
+	{
+		this.selected = selected;
+		getMap().setSelected(this, selected);
+	}
+
+	public Map getMap()
+	{
+		return map;
+	}
+
+	public void setMap(Map map)
+	{
+		this.map = map;
+	}
+
+	public void setAlarmState(boolean i)
+	{
+		alarmState = i;
+	}
+
+	public boolean getAlarmState()
+	{
+		return alarmState;
+	}
+
+	/**
+	 * получить текущее состо€ние
+	 */
+	public MapElementState getState()
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	public void revert(MapElementState state)
+	{
+		throw new UnsupportedOperationException();
 	}
 }

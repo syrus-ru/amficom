@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLink.java,v 1.9 2004/12/16 10:35:05 bob Exp $
+ * $Id: PhysicalLink.java,v 1.10 2004/12/20 12:36:01 krupenn Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * оБХЮОП-ФЕИОЙЮЕУЛЙК ГЕОФТ.
@@ -8,20 +8,18 @@
 
 package com.syrus.AMFICOM.map;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import com.syrus.AMFICOM.configuration.Characteristic;
 import com.syrus.AMFICOM.configuration.Characterized;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -31,12 +29,19 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
- * @version $Revision: 1.9 $, $Date: 2004/12/16 10:35:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2004/12/20 12:36:01 $
+ * @author $Author: krupenn $
  * @module map_v1
  */
-public class PhysicalLink extends StorableObject implements Characterized, TypedObject {
+public class PhysicalLink extends StorableObject implements Characterized, TypedObject, MapElement {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -48,8 +53,8 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 
 	private PhysicalLinkType		physicalLinkType;
 
-	private AbstractNode					startNode;
-	private AbstractNode					endNode;
+	private AbstractNode			startNode;
+	private AbstractNode			endNode;
 	private String					city;
 	private String					street;
 	private String					building;
@@ -65,6 +70,21 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	private List					characteristics;
 
 	private StorableObjectDatabase	physicalLinkDatabase;
+
+
+	protected transient Map map;
+
+	protected transient boolean selected = false;
+
+	protected transient boolean removed = false;
+
+	protected transient boolean alarmState = false;
+
+	protected transient PhysicalLinkBinding binding;
+
+	protected transient List sortedNodes = new LinkedList();
+
+	protected transient boolean nodeLinksSorted = false;
 
 	public PhysicalLink(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -111,6 +131,10 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
+
+		selected = false;
+		
+		binding = new PhysicalLinkBinding(new IntDimension((int )this.dimensionX, (int )this.dimensionY));
 	}
 
 	protected PhysicalLink(final Identifier id,
@@ -152,6 +176,10 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		super.currentVersion = super.getNextVersion();
 
 		this.physicalLinkDatabase = MapDatabaseContext.getPhysicalLinkDatabase();
+
+		selected = false;
+		
+		binding = new PhysicalLinkBinding(physicalLinkType.getBindingDimension());
 	}
 
 	public void insert() throws CreateObjectException {
@@ -161,6 +189,39 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 				this.physicalLinkDatabase.insert(this);
 		} catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
+		}
+	}
+
+	public static PhysicalLink createInstance(
+			AbstractNode stNode, 
+			AbstractNode eNode, 
+			PhysicalLinkType type)
+		throws CreateObjectException {
+
+		if (stNode == null || eNode == null
+				|| type == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+		
+		try {
+			Identifier ide =
+				IdentifierPool.getGeneratedIdentifier(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE);
+			return new PhysicalLink(
+				ide,
+				stNode.getMap().getCreatorId(),
+				ide.toString(),
+				"",
+				type,
+				stNode,
+				eNode,
+				"",
+				"",
+				"",
+				type.getBindingDimension().width,
+				type.getBindingDimension().height,
+				true,
+				true);
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("Domain.createInstance | cannot generate identifier ", e);
 		}
 	}
 
@@ -203,10 +264,27 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		return this.physicalLinkType;
 	}
 	
+	public void setType(StorableObjectType type) {
+		this.physicalLinkType = (PhysicalLinkType )type;
+		super.currentVersion = super.getNextVersion();
+	}
+
 	public List getCharacteristics() {
 		return  Collections.unmodifiableList(this.characteristics);
 	}
 	
+	public void addCharacteristic(Characteristic ch)
+	{
+		this.characteristics.add(ch);
+		super.currentVersion = super.getNextVersion();
+	}
+
+	public void removeCharacteristic(Characteristic ch)
+	{
+		this.characteristics.remove(ch);
+		super.currentVersion = super.getNextVersion();
+	}
+
 	protected void setCharacteristics0(final List characteristics) {
 		this.characteristics.clear();
 		if (characteristics != null)
@@ -269,6 +347,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	
 	public void setEndNode(AbstractNode endNode) {
 		this.endNode = endNode;
+		nodeLinksSorted = false;
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -298,6 +377,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 		this.nodeLinks.clear();
 		if (nodeLinks != null)
 			this.nodeLinks.addAll(nodeLinks);
+		nodeLinksSorted = false;
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -307,6 +387,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	
 	public void setStartNode(AbstractNode startNode) {
 		this.startNode = startNode;
+		nodeLinksSorted = false;
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -360,5 +441,281 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 			this.topToBottom = topToBottom;
 			this.startNode = startNode;
 			this.endNode = endNode;
+	}
+
+	public PhysicalLinkBinding getBinding()
+	{
+		return binding;
+	}
+
+	/**
+	 * Возвращяет топологическую длинну линии
+	 */
+	public double getLengthLt()
+	{
+		double returnValue = 0;
+		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
+		{
+			NodeLink nodeLink = (NodeLink )it.next();
+			returnValue += nodeLink.getLengthLt();
+		}
+		return returnValue;
+	}
+
+	/**
+	 * Внимание! концевые точки линии не обновляются
+	 */
+	public void removeNodeLink(NodeLink nodeLink)
+	{
+		nodeLinks.remove(nodeLink);
+		nodeLinksSorted = false;
+		super.currentVersion = super.getNextVersion();
+	}
+
+	/**
+	 * Внимание! концевые точки линии не обновляются
+	 */
+	public void addNodeLink(NodeLink addNodeLink)
+	{
+		nodeLinks.add(addNodeLink);
+		nodeLinksSorted = false;
+		super.currentVersion = super.getNextVersion();
+	}
+
+
+	public void clearNodeLinks()
+	{	
+		nodeLinks.clear();
+		nodeLinksSorted = false;
+		super.currentVersion = super.getNextVersion();
+	}
+
+	/**
+	 * Получить NodeLinks содержащие данный node в данном transmissionPath
+	 */
+	public java.util.List getNodeLinksAt(AbstractNode node)
+	{
+		LinkedList returnNodeLink = new LinkedList();
+		Iterator e = getNodeLinks().iterator();
+
+		while (e.hasNext())
+		{
+			NodeLink nodeLink = (NodeLink )e.next();
+			if ( (nodeLink.getEndNode().equals(node)) || (nodeLink.getStartNode().equals(node)))
+				returnNodeLink.add(nodeLink);
+		}
+		return returnNodeLink;
+	}
+
+	public NodeLink getStartNodeLink()
+	{
+		NodeLink startNodeLink = null;
+
+		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
+		{
+			startNodeLink = (NodeLink )it.next();
+			if(startNodeLink.getStartNode().equals(getStartNode())
+				|| startNodeLink.getEndNode().equals(getStartNode()))
+			{
+				break;
+			}
+		}
+		return startNodeLink;
+	}
+
+	public void sortNodes()
+	{
+		sortNodeLinks();
+	}
+	
+	public java.util.List getSortedNodes()
+	{
+		if(!nodeLinksSorted)
+			return null;
+		return sortedNodes;
+	}
+
+	public void sortNodeLinks()
+	{
+		if(!nodeLinksSorted)
+		{
+			AbstractNode smne = this.getStartNode();
+			NodeLink nl = null;
+			LinkedList vec = new LinkedList();
+			List nodevec = new LinkedList();
+			int count = getNodeLinks().size();
+			for (int i = 0; i < count; i++) 
+			{
+				nodevec.add(smne);
+
+				for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
+				{
+					NodeLink nodeLink = (NodeLink )it.next();
+
+					if(! nodeLink.equals(nl))
+					{
+						if(nodeLink.getStartNode().equals(smne))
+						{
+							vec.add(nodeLink);
+							it.remove();
+							smne = nodeLink.getEndNode();
+							nl = nodeLink;
+							break;
+						}
+						else
+						if(nodeLink.getEndNode().equals(smne))
+						{
+							vec.add(nodeLink);
+							it.remove();
+							smne = nodeLink.getStartNode();
+							nl = nodeLink;
+							break;
+						}
+					}
+				}
+			}
+			nodevec.add(this.getEndNode());
+			this.nodeLinks = vec;
+			nodeLinksSorted = true;
+			this.sortedNodes = nodevec;
+		}
+	}
+
+	public NodeLink nextNodeLink(NodeLink nl)
+	{
+		sortNodeLinks();
+		int index = getNodeLinks().indexOf(nl);
+		if(index == getNodeLinks().size() - 1)
+			return null;
+		else
+			return (NodeLink )getNodeLinks().get(index + 1);
+	}
+
+	public NodeLink previousNodeLink(NodeLink nl)
+	{
+		sortNodeLinks();
+		int index = getNodeLinks().indexOf(nl);
+		if(index == 0)
+			return null;
+		else
+			return (NodeLink )getNodeLinks().get(index - 1);
+	}
+
+	/**
+	 * Установить наличие сигнала тревоги
+	 */
+	public void setAlarmState(boolean i)
+	{
+		this.alarmState = alarmState;
+	}
+
+	/**
+	 * получить наличие сигнала тревоги
+	 */
+	public boolean getAlarmState()
+	{
+		return alarmState;
+	}
+
+	/**
+	 * получить флаг удаления элемента
+	 */
+	public boolean isRemoved()
+	{
+		return removed;
+	}
+	
+	/**
+	 * установить флаг удаления элемента
+	 */
+	public void setRemoved(boolean removed)
+	{
+		this.removed = removed;
+	}
+
+	public boolean isSelected()
+	{
+		return selected;
+	}
+
+	public void setSelected(boolean selected)
+	{
+		this.selected = selected;
+		getMap().setSelected(this, selected);
+	}
+
+	public Map getMap()
+	{
+		return map;
+	}
+
+	public void setMap(Map map)
+	{
+		this.map = map;
+	}
+
+	public AbstractNode getOtherNode(AbstractNode node)
+	{
+		if ( this.getEndNode().equals(node) )
+			return getStartNode();
+		if ( this.getStartNode().equals(node) )
+			return getEndNode();
+		return null;
+	}
+
+	public DoublePoint getLocation()
+	{
+		int count = 0;
+		DoublePoint point = new DoublePoint(0.0, 0.0);
+
+		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
+		{
+			NodeLink mnle = (NodeLink )it.next();
+			DoublePoint an = mnle.getLocation();
+			point.x += an.x;
+			point.y += an.y;
+			count ++;
+		}
+		point.x /= count;
+		point.y /= count;
+		
+		return point;
+	}
+
+	public MapElementState getState()
+	{
+		return new PhysicalLinkState(this);
+	}
+
+	public void revert(MapElementState state)
+	{
+		PhysicalLinkState mples = (PhysicalLinkState)state;
+
+		this.setName(mples.name);
+		this.setDescription(mples.description);
+		this.setStartNode(mples.startNode);
+		this.setEndNode(mples.endNode);
+
+		this.nodeLinks = new LinkedList();
+		for(Iterator it = mples.nodeLinks.iterator(); it.hasNext();)
+		{
+			NodeLink mnle = (NodeLink )it.next();
+			mnle.setPhysicalLink(this);
+			this.nodeLinks.add(mnle);
+		}
+		try
+		{
+			setType((PhysicalLinkType )(MapStorableObjectPool.getStorableObject(mples.mapProtoId, true)));
+		}
+		catch (CommunicationException e)
+		{
+			e.printStackTrace();
+		}
+		catch (DatabaseException e)
+		{
+			e.printStackTrace();
+		}
+		
+		nodeLinksSorted = false;
 	}
 }

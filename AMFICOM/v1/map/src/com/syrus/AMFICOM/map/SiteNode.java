@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNode.java,v 1.5 2004/12/16 10:35:05 bob Exp $
+ * $Id: SiteNode.java,v 1.6 2004/12/20 12:36:01 krupenn Exp $
  *
  * Copyright ø 2004 Syrus Systems.
  * Ó¡’ﬁŒœ-‘≈»Œ…ﬁ≈”À…  √≈Œ‘“.
@@ -8,18 +8,17 @@
 
 package com.syrus.AMFICOM.map;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
 import com.syrus.AMFICOM.configuration.Characteristic;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -28,9 +27,15 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
- * @version $Revision: 1.5 $, $Date: 2004/12/16 10:35:05 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2004/12/20 12:36:01 $
+ * @author $Author: krupenn $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject {
@@ -39,7 +44,6 @@ public class SiteNode extends AbstractNode implements TypedObject {
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long	serialVersionUID	= 3257567325699190835L;
-	private Identifier				imageId;
 	private SiteNodeType			type;
 
 	private String					city;
@@ -63,8 +67,8 @@ public class SiteNode extends AbstractNode implements TypedObject {
 		super(snt.header);
 		super.name = snt.name;
 		super.description = snt.description;
-		super.longitude = snt.longitude;
-		super.latitude = snt.latitude;
+		super.location.x = snt.longitude;
+		super.location.y = snt.latitude;
 		this.imageId = new Identifier(snt.imageId);		
 		this.city = snt.city;
 		this.street = snt.street;
@@ -105,8 +109,8 @@ public class SiteNode extends AbstractNode implements TypedObject {
 		this.type = type;
 		this.name = name;
 		this.description = description;
-		this.longitude = longitude;
-		this.latitude = latitude;
+		this.location.x = longitude;
+		this.location.y = latitude;
 		this.city = city;
 		this.street = steet;
 		this.building = building;
@@ -116,6 +120,8 @@ public class SiteNode extends AbstractNode implements TypedObject {
 		super.currentVersion = super.getNextVersion();
 
 		this.siteNodeDatabase = MapDatabaseContext.getSiteNodeDatabase();
+
+		selected = false;
 	}
 
 	public void insert() throws CreateObjectException {
@@ -125,6 +131,35 @@ public class SiteNode extends AbstractNode implements TypedObject {
 				this.siteNodeDatabase.insert(this);
 		} catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
+		}
+	}
+
+	public static SiteNode createInstance(
+			DoublePoint location,
+			Map map,
+			SiteNodeType pe)
+		throws CreateObjectException {
+
+		if (location == null || map == null || pe == null)
+			throw new IllegalArgumentException("Argument is 'null'");
+		
+		try {
+			Identifier ide =
+				IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE);
+			return new SiteNode(
+				ide,
+				map.getCreatorId(),
+				pe.getImageId(),
+				pe.getName(),
+				"",
+				pe,
+				location.x,
+				location.y,
+				"",
+				"",
+				"");
+		} catch (IllegalObjectEntityException e) {
+			throw new CreateObjectException("Domain.createInstance | cannot generate identifier ", e);
 		}
 	}
 
@@ -145,8 +180,8 @@ public class SiteNode extends AbstractNode implements TypedObject {
 		return new SiteNode_Transferable(super.getHeaderTransferable(), 
 							this.name,
 							this.description,
-							this.longitude,
-							this.latitude, 
+							this.location.x,
+							this.location.y, 
 							(Identifier_Transferable) this.imageId.getTransferable(),
 							(Identifier_Transferable) this.type.getId().getTransferable(),
 							this.city,
@@ -157,6 +192,12 @@ public class SiteNode extends AbstractNode implements TypedObject {
 
 	public StorableObjectType getType() {
 		return this.type;
+	}
+
+	public void setType(StorableObjectType type) {
+		this.type = (SiteNodeType )type;
+		setImageId(this.type.getImageId());
+		super.currentVersion = super.getNextVersion();
 	}
 
 	public String getBuilding() {
@@ -174,15 +215,6 @@ public class SiteNode extends AbstractNode implements TypedObject {
 	
 	public void setCity(String city) {
 		this.city = city;
-		super.currentVersion = super.getNextVersion();
-	}
-	
-	public Identifier getImageId() {
-		return this.imageId;
-	}
-	
-	public void setImageId(Identifier imageId) {
-		this.imageId = imageId;
 		super.currentVersion = super.getNextVersion();
 	}
 	
@@ -214,12 +246,44 @@ public class SiteNode extends AbstractNode implements TypedObject {
 					modifierId);
 			this.name = name;
 			this.description = description;
-			this.longitude = longitude;
-			this.latitude = latitude;
+			this.location.x = longitude;
+			this.location.y = latitude;
 			this.imageId = imageId;
 			this.type = type;
 			this.city = city;
 			this.street = street;
 			this.building = building;					
 	}
+
+	public MapElementState getState()
+	{
+		return new SiteNodeState(this);
+	}
+
+	/**
+	 * ‚ÓÒÒÚ‡ÌÓ‚ËÚ¸ ÒÓÒÚÓˇÌËÂ
+	 */
+	public void revert(MapElementState state)
+	{
+		SiteNodeState msnes = (SiteNodeState)state;
+		
+		setName(msnes.name);
+		setDescription(msnes.description);
+		setImageId(msnes.imageId);
+		setLocation(msnes.location);
+		
+		try
+		{
+			setType((SiteNodeType )(MapStorableObjectPool.getStorableObject(msnes.mapProtoId, true)));
+		}
+		catch (CommunicationException e)
+		{
+			e.printStackTrace();
+		}
+		catch (DatabaseException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
 }
