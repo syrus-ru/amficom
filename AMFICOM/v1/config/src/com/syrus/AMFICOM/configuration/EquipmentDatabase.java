@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.9 2004/08/06 14:51:12 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.10 2004/08/06 14:57:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/08/06 14:51:12 $
+ * @version $Revision: 1.10 $, $Date: 2004/08/06 14:57:59 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -204,11 +204,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		 * @todo when change DB Identifier model ,change String to long
 		 */
 		Identifier kisId = equipment.getKISId();
-
 		
-		/**
-		 * @TODO check for sql
-		 */
 		String sql = SQL_INSERT_INTO
 			+ ObjectEntities.SET_ENTITY
 			+ OPEN_BRACKET
@@ -226,15 +222,6 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 			+ COLUMN_KIS_ID
 			+ CLOSE_BRACKET
 			+ SQL_VALUES + OPEN_BRACKET
-//			+ eqIdStr + COMMA
-//			+ DatabaseDate.toUpdateSubString(equipment.getCreated()) + COMMA
-//			+ DatabaseDate.toUpdateSubString(equipment.getModified()) + COMMA
-//			+ equipment.getCreatorId().toSQLString() + COMMA
-//			+ equipment.getModifierId().toSQLString() + COMMA			
-//			+ equipment.getDomainId().toSQLString() + COMMA			
-//			+ equipment.getType().getId().toSQLString() + COMMA			
-//			+ Integer.toString(equipment.getSort().value()) + COMMA			
-//			+ APOSTOPHE + equipment.getDescription() + APOSTOPHE
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION + COMMA
