@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.5 2004/09/14 14:24:17 bob Exp $
+ * $Id: LRUMap.java,v 1.6 2004/09/16 09:51:52 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,9 +9,12 @@
 package com.syrus.util;
 
 import java.io.Serializable;
+import java.util.ConcurrentModificationException;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/09/14 14:24:17 $
+ * @version $Revision: 1.6 $, $Date: 2004/09/16 09:51:52 $
  * @author $Author: bob $
  * @module util
  */
@@ -22,6 +25,8 @@ public class LRUMap implements Serializable {
 	public static final int SIZE = 10;
 
 	protected Entry[] array;
+	
+	protected transient int modCount = 0;
 
 	public LRUMap() {
 		this (SIZE);
@@ -41,7 +46,12 @@ public class LRUMap implements Serializable {
 		}
 	}
 	
+    public Iterator iterator() {
+    	return new Itr();
+    }
+	
 	public synchronized Object put(Object key, Object value) {
+		this.modCount++;
 		Entry newEntry = new Entry(key, value);
 		Object ret = null;
 		if (this.array[this.array.length - 1] != null)
@@ -53,6 +63,7 @@ public class LRUMap implements Serializable {
 	}
 
 	public synchronized Object get(Object key) {
+		this.modCount++;
 		if (key != null) { 
 			Object ret = null;
 			for (int i = 0; i < this.array.length; i++)
@@ -64,6 +75,7 @@ public class LRUMap implements Serializable {
 	}
 
 	public synchronized Object remove(Object key) {
+		this.modCount++;
 		if (key != null) { 
 			Object ret = null;
 			for (int i = 0; i < this.array.length; i++)
@@ -95,4 +107,63 @@ public class LRUMap implements Serializable {
 				throw new IllegalArgumentException("Key is NULL");
 		}
 	}
+	
+    private class Itr implements Iterator {
+    	/**
+    	 * Index of element to be returned by subsequent call to next.
+    	 */
+    	int cursor = 0;
+
+    	/**
+    	 * Index of element returned by most recent call to next or
+    	 * previous.  Reset to -1 if this element is deleted by a call
+    	 * to remove.
+    	 */
+    	int lastRet = -1;
+
+    	/**
+    	 * The modCount value that the iterator believes that the backing
+    	 * List should have.  If this expectation is violated, the iterator
+    	 * has detected concurrent modification.
+    	 */
+    	int expectedModCount = LRUMap.this.modCount;
+
+    	public boolean hasNext() {
+    	    return this.cursor != LRUMap.this.array.length;
+    	}
+
+    	public Object next() {
+                checkForComodification();
+    	    try {
+    		Object next = LRUMap.this.array[this.cursor].value;
+    		this.lastRet = this.cursor++;
+    		return next;
+    	    } catch(IndexOutOfBoundsException e) {
+    		checkForComodification();
+    		throw new NoSuchElementException();
+    	    }
+    	}
+
+    	public void remove() {
+    	    if (this.lastRet == -1)
+    		throw new IllegalStateException();
+                checkForComodification();
+
+    	    try {
+    	    LRUMap.this.remove(LRUMap.this.array[this.cursor].key);
+    		if (this.lastRet < this.cursor)
+    		    this.cursor--;
+    		this.lastRet = -1;
+    		this.expectedModCount = LRUMap.this.modCount;
+    	    } catch(IndexOutOfBoundsException e) {
+    		throw new ConcurrentModificationException();
+    	    }
+    	}
+
+    	final void checkForComodification() {
+    	    if (LRUMap.this.modCount != this.expectedModCount)
+    		throw new ConcurrentModificationException();
+    	}
+    }
+
 }
