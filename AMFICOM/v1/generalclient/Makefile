@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.4 2004/06/22 10:27:11 arseniy Exp $
+# $Id: Makefile,v 1.5 2004/06/22 11:27:59 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -50,6 +50,7 @@ IDL2JAVAFLAGS = \
 	-H \
 	-no_bind \
 	-no_examples \
+	-no_tie \
 	-narrow_compliance \
 	-portable \
 	-root_dir $(SRCDIR) \
