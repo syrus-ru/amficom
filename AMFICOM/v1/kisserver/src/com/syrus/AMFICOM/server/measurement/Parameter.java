@@ -10,7 +10,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.AMFICOM.CORBA.Survey.ClientParameter_Transferable;
 import com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable;
 import com.syrus.AMFICOM.server.ResourcedbInterface;
-import com.syrus.util.Log;
+//import com.syrus.util.Log;
 
 public class Parameter {
   private String id;
@@ -29,7 +29,7 @@ public class Parameter {
     String query = "SELECT result_id, type_id, value"
       + " FROM amficom." + table_name
       + " WHERE id = '" + this.id + "'";
-		Log.debugMessage("Parameter.init | Trying: " + query, Log.DEBUGLEVEL05);
+//		Log.debugMessage("Parameter.init | Trying: " + query, Log.DEBUGLEVEL05);
     OracleResultSet rs = (OracleResultSet)st.executeQuery(query);
     if (!rs.next()) {
       String mesg = "No record in " + table_name + " with id '" + this.id + "'";
@@ -84,7 +84,7 @@ public class Parameter {
     String update = "INSERT INTO " + table_name
       + " (id, result_id, type_id, value)"
       + " VALUES ('" + this.id + "', '" + this.result_id + "', '" + this.type_id + "', EMPTY_BLOB())";
-		Log.debugMessage("Parameter.init | Trying: " + update, Log.DEBUGLEVEL05);
+//		Log.debugMessage("Parameter.init | Trying: " + update, Log.DEBUGLEVEL05);
     st.executeUpdate(update);
 		st.close();
     ByteArrayDatabase bdb  = new ByteArrayDatabase(this.value);
@@ -130,7 +130,7 @@ public class Parameter {
     String query = "SELECT id, type_id, value"
       + " FROM amficom." + table_name
       + " WHERE result_id = '" + result_id + "'";
-		Log.debugMessage("Parameter.retrieveParameters | Trying: " + query, Log.DEBUGLEVEL05);
+//		Log.debugMessage("Parameter.retrieveParameters | Trying: " + query, Log.DEBUGLEVEL05);
     OracleResultSet rs = (OracleResultSet)st.executeQuery(query);
     LinkedList llp = new LinkedList();
     while (rs.next())
@@ -141,7 +141,7 @@ public class Parameter {
                             ByteArrayDatabase.toByteArray(rs.getBLOB("value"))));
     rs.close();
 		st.close();
-		Log.debugMessage("Parameter.retrieveParameters | Retrieved " + llp.size() + " " + holder_sort + " parameters for result_id = '" + result_id + "'", Log.DEBUGLEVEL05);
+//		Log.debugMessage("Parameter.retrieveParameters | Retrieved " + llp.size() + " " + holder_sort + " parameters for result_id = '" + result_id + "'", Log.DEBUGLEVEL05);
     Parameter[] parameters = new Parameter[llp.size()];
     return (Parameter[])llp.toArray(parameters);
   }

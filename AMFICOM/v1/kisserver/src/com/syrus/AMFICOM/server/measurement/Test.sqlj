@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.server.measurement;
 
+import java.util.List;
 import java.util.LinkedList;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -454,6 +455,34 @@ public class Test extends Action {
 						WHERE id = :(this.id) };
 		#sql { COMMIT };
 	}
+//
+//	#sql private iterator ResultsIterator (String id,
+//																				 Timestamp elementary_start_time,
+//																				 String result_set_id,
+//																				 String user_id,
+//																				 String test_id,
+//																				 String analysis_id,
+//																				 String evaluation_id,
+//																				 String modeling_id);
+//
+//	public List getResults(String resultSort) throws SQLException {
+//		List results = new LinkedList();
+//		ResultIterator rIt;
+//		#sql rIt = { SELECT test_id,
+//												analysis_id,
+//												evaluation_id,
+//												modeling_id,
+//												result_type,
+//												elementary_start_time,
+//												user_id,
+//												result_set_id
+//									FROM amficom.results
+//									WHERE test_id = :(this.id) };
+//		while (rIt.next()) {
+//			results.add(new Result());
+//		}
+//	}
+
 
 	#sql private static iterator TestIdIterator (String id);
 

@@ -8,7 +8,7 @@ import oracle.jdbc.driver.OracleResultSet;
 import com.syrus.AMFICOM.CORBA.Survey.ClientParameter_Transferable;
 import com.syrus.AMFICOM.CORBA.KIS.Parameter_Transferable;
 import com.syrus.util.database.ByteArrayDatabase;
-import com.syrus.util.Log;
+//import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 public class SetParameter {
@@ -30,7 +30,7 @@ public class SetParameter {
 		String query = "SELECT set_id, type_id, value"
 			+ " FROM amficom." + table_name
 			+ " WHERE id = '" + this.id + "'";
-		Log.debugMessage("SetParameter.init | Trying: " + query, Log.DEBUGLEVEL05);
+//		Log.debugMessage("SetParameter.init | Trying: " + query, Log.DEBUGLEVEL05);
     OracleResultSet rs = (OracleResultSet)st.executeQuery(query);
     if (!rs.next()) {
       String mesg = "No record in " + table_name + " with id '" + this.id + "'";
@@ -78,7 +78,7 @@ public class SetParameter {
 		String str = "INSERT INTO amficom." + table_name
 			+ " (id, set_id, type_id, value)"
 	    + " VALUES ('" + this.id + "', '" + this.set_id + "', '" + this.type_id + "', EMPTY_BLOB())";
-		Log.debugMessage("SetParameter.init | Trying: " + str, Log.DEBUGLEVEL05);
+//		Log.debugMessage("SetParameter.init | Trying: " + str, Log.DEBUGLEVEL05);
 		st.executeUpdate(str);
 		st.close();
     ByteArrayDatabase bdb  = new ByteArrayDatabase(this.value);
@@ -136,7 +136,7 @@ public class SetParameter {
 		String query = "SELECT id, type_id, value"
       + " FROM amficom." + table_name
       + " WHERE set_id = '" + set_id + "'";
-		Log.debugMessage("SetParameter.retrieveParameters | Trying: " + query, Log.DEBUGLEVEL05);
+//		Log.debugMessage("SetParameter.retrieveParameters | Trying: " + query, Log.DEBUGLEVEL05);
     OracleResultSet rs = (OracleResultSet)st.executeQuery(query);
     LinkedList llsp = new LinkedList();
     while (rs.next())
@@ -148,7 +148,7 @@ public class SetParameter {
 																sort));
 		rs.close();
 		st.close();
-		Log.debugMessage("SetParameter.retrieveArguments | Retrieved " + llsp.size() + " " + table_name + " for set_id = '" + set_id + "'", Log.DEBUGLEVEL05);
+//		Log.debugMessage("SetParameter.retrieveArguments | Retrieved " + llsp.size() + " " + table_name + " for set_id = '" + set_id + "'", Log.DEBUGLEVEL05);
 		return (SetParameter[])llsp.toArray(new SetParameter[llsp.size()]);
 	}
 }
