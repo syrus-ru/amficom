@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.28 2004/10/07 14:10:01 bob Exp $
+ * $Id: configuration.idl,v 1.29 2004/10/08 07:26:12 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -112,7 +112,9 @@ module corba {
 		wstring description;
 	};
 	
-/////////////////////////////////// Domain ////////////////////////////////
+	typedef sequence <User_Transferable> UserSeq_Transferable;
+	
+	/////////////////////////////////// Domain ////////////////////////////////
 	struct Domain_Transferable {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
 	  long long created;
