@@ -1,4 +1,4 @@
-@@sett
+@@set
 @@setmelink
 @@setparameter
 @@measurementsetup

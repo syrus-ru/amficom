@@ -12,7 +12,7 @@ DROP TABLE MeasurementSetupMELink;
 DROP TABLE MeasurementSetup;
 DROP TABLE SetParameter;
 DROP TABLE SetMELink;
-DROP TABLE Sett;
+DROP TABLE "Set";
 
 DROP SEQUENCE temporalpattern_seq;
 DROP SEQUENCE resultparameter_seq;
@@ -24,4 +24,4 @@ DROP SEQUENCE analysis_seq;
 DROP SEQUENCE measurement_seq;
 DROP SEQUENCE measurementsetup_seq;
 DROP SEQUENCE setparameter_seq;
-DROP SEQUENCE sett_seq;
+DROP SEQUENCE set_seq;
