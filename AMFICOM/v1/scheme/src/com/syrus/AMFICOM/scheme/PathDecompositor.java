@@ -1,3 +1,11 @@
+/*
+ * $Id: PathDecompositor.java,v 1.2 2004/12/22 08:22:18 bass Exp $
+ *
+ * Copyright ¿ 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
+
 package com.syrus.AMFICOM.scheme;
 
 import java.util.*;
@@ -7,6 +15,11 @@ import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
 import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
 
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2004/12/22 08:22:18 $
+ * @module scheme_v1
+ */
 public class PathDecompositor
 {
 	private SchemePath sp;
@@ -23,18 +36,18 @@ public class PathDecompositor
 
 	public void setTotalOpticalLength(double newLength)
 	{
-		if (sp.links().length == 0)
+		if (this.sp.links().length == 0)
 			return;
 
 		setOpticalLength(
-				(PathElement)sp.links()[0],
-				(PathElement)sp.links()[sp.links().length - 1],
+				this.sp.links()[0],
+				this.sp.links()[this.sp.links().length - 1],
 				newLength);
 	}
 
 	public void setOpticalLength(PathElement startPE, PathElement endPE, double newLength)
 	{
-		List links = Arrays.asList(sp.links());
+		List links = Arrays.asList(this.sp.links());
 		int index = links.indexOf(startPE);
 		if (index == -1)
 			return;
@@ -64,10 +77,10 @@ public class PathDecompositor
 
 	public PathElement getPathElementByOpticalDistance(double opticalDistance)
 	{
-		if (sp.links().length == 0)
+		if (this.sp.links().length == 0)
 			return null;
 
-		List links = Arrays.asList(sp.links());
+		List links = Arrays.asList(this.sp.links());
 
 		double d = 0;
 		for(Iterator it = links.iterator(); it.hasNext();)
@@ -82,10 +95,10 @@ public class PathDecompositor
 
 	public PathElement getPathElementByPhysicalDistance(double physicalDistance)
 	{
-		if (sp.links().length == 0)
+		if (this.sp.links().length == 0)
 			return null;
 
-		List links = Arrays.asList(sp.links());
+		List links = Arrays.asList(this.sp.links());
 		double d = 0;
 		for(Iterator it = links.iterator(); it.hasNext();)
 		{
@@ -99,11 +112,11 @@ public class PathDecompositor
 
 	public double[] getOpticalDistanceFromStart(PathElement pathElement)
 	{
-		if (sp.links().length == 0)
+		if (this.sp.links().length == 0)
 			return null;
 
 		double tmp = 0;
-		List links = Arrays.asList(sp.links());
+		List links = Arrays.asList(this.sp.links());
 
 		for(Iterator it = links.iterator(); it.hasNext();)
 		{
@@ -120,11 +133,11 @@ public class PathDecompositor
 
 	public double[] getPhysicalDistanceFromStart(PathElement pathElement)
 	{
-		if (sp.links().length == 0)
+		if (this.sp.links().length == 0)
 			return null;
 
 		double tmp = 0;
-		List links = Arrays.asList(sp.links());
+		List links = Arrays.asList(this.sp.links());
 
 		for(Iterator it = links.iterator(); it.hasNext();)
 		{
@@ -143,15 +156,15 @@ public class PathDecompositor
 	{
 		double d = 0.0;
 		double d2 = 0.0;
-		for (int i = 0; i < sp.links().length; i++) {
-			double pl = SchemeUtils.getPhysicalLength(sp.links()[i]);
+		for (int i = 0; i < this.sp.links().length; i++) {
+			double pl = SchemeUtils.getPhysicalLength(this.sp.links()[i]);
 			if (d2 + pl < physicalDistance) {
 				d2 += pl;
-				d += SchemeUtils.getOpticalLength(sp.links()[i]);
+				d += SchemeUtils.getOpticalLength(this.sp.links()[i]);
 			}
 			else {
 				double diff = physicalDistance - d2;
-				d += diff * SchemeUtils.getKu(sp.links()[i]);
+				d += diff * SchemeUtils.getKu(this.sp.links()[i]);
 				break;
 			}
 		}
@@ -162,15 +175,15 @@ public class PathDecompositor
 	{
 		double d = 0.0;
 		double d2 = 0.0;
-		for (int i = 0; i < sp.links().length; i++) {
-			double ol = SchemeUtils.getOpticalLength(sp.links()[i]);
+		for (int i = 0; i < this.sp.links().length; i++) {
+			double ol = SchemeUtils.getOpticalLength(this.sp.links()[i]);
 			if (d + ol < opticalDistance) {
 				d += ol;
-				d2 += SchemeUtils.getPhysicalLength(sp.links()[i]);
+				d2 += SchemeUtils.getPhysicalLength(this.sp.links()[i]);
 			}
 			else {
 				double diff = opticalDistance - d;
-				d2 += diff / SchemeUtils.getKu(sp.links()[i]);
+				d2 += diff / SchemeUtils.getKu(this.sp.links()[i]);
 				break;
 			}
 		}
@@ -223,7 +236,7 @@ public class PathDecompositor
 */
 	public boolean hasPreviousPathElement(PathElement pe)
 	{
-		List links = Arrays.asList(sp.links());
+		List links = Arrays.asList(this.sp.links());
 		int index = links.indexOf(pe);
 		if (index > 0)
 			return true;
@@ -232,7 +245,7 @@ public class PathDecompositor
 
 	public PathElement getPreviousPathElement(PathElement pe)
 	{
-		List links = Arrays.asList(sp.links());
+		List links = Arrays.asList(this.sp.links());
 		int index = links.indexOf(pe);
 		if (index > 0)
 			return (PathElement)links.get(index - 1);
@@ -241,7 +254,7 @@ public class PathDecompositor
 
 	public boolean hasNextPathElement(PathElement pe)
 	{
-		List links = Arrays.asList(sp.links());
+		List links = Arrays.asList(this.sp.links());
 		int index = links.indexOf(pe);
 		if (index != -1 && index < links.size() - 2)
 			return true;
@@ -250,7 +263,7 @@ public class PathDecompositor
 
 	public PathElement getNextPathElement(PathElement pe)
 	{
-		List links = Arrays.asList(sp.links());
+		List links = Arrays.asList(this.sp.links());
 		int index = links.indexOf(pe);
 		if (index != -1 && index < links.size() - 2)
 			return (PathElement)links.get(index + 1);
@@ -262,7 +275,7 @@ public class PathDecompositor
 		if (pe.type() == Type.SCHEME_ELEMENT && hasOpticalPort(pe))
 			return pe;
 
-		List links = Arrays.asList(sp.links());
+		List links = Arrays.asList(this.sp.links());
 		int index = links.indexOf(pe);
 		if (index != -1)
 		{
@@ -281,7 +294,7 @@ public class PathDecompositor
 		if (pe.type() == Type.SCHEME_ELEMENT && hasOpticalPort(pe))
 			return pe;
 
-		List links = Arrays.asList(sp.links());
+		List links = Arrays.asList(this.sp.links());
 		int index = links.indexOf(pe);
 		if (index != -1)
 		{

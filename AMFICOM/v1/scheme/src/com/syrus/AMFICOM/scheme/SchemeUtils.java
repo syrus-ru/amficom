@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeUtils.java,v 1.4 2004/12/21 16:50:42 bass Exp $
+ * $Id: SchemeUtils.java,v 1.5 2004/12/22 08:22:18 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
  * Functionality will be partially moved to {@link PathElement}. 
  *
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2004/12/21 16:50:42 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/22 08:22:18 $
  * @module scheme_v1
  */
 public class SchemeUtils
@@ -232,8 +232,7 @@ public class SchemeUtils
 				{
 					if (inner.type().value() == com.syrus.AMFICOM.scheme.corba.SchemePackage.Type._CABLE_SUBNETWORK)
 						return inner_se;
-					else
-						return element;
+					return element;
 				}
 			}
 		}
@@ -252,10 +251,8 @@ public class SchemeUtils
 			}
 			return v;
 		}
-		else {
-			Scheme scheme = element.internalScheme();
-			return getAllTopLevelElements(scheme);
-		}
+		Scheme scheme = element.internalScheme();
+		return getAllTopLevelElements(scheme);
 	}
 
 	public static Collection getTopLevelElements(Scheme scheme)
