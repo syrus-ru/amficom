@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.65 2004/11/11 11:50:01 bob Exp $
+ * $Id: CMServerImpl.java,v 1.66 2004/11/17 09:43:55 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,8 +10,10 @@ package com.syrus.AMFICOM.cmserver;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import com.syrus.AMFICOM.configuration.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.configuration.Characteristic;
@@ -68,10 +70,12 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CompletionStatus;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.DomainCondition;
@@ -116,8 +120,8 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2004/11/11 11:50:01 $
- * @author $Author: bob $
+ * @version $Revision: 1.66 $, $Date: 2004/11/17 09:43:55 $
+ * @author $Author: max $
  * @module cmserver_v1
  */
 
@@ -5793,7 +5797,84 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
         }
     }
 
-
+    //  Refresh object from a pool    
+    public Identifier_Transferable[] transmitRefreshedConfigurationObjects(StorableObject_Transferable[] storableObjects_Transferables, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        try {
+            Map storableObjectMap = new HashMap();
+            for (int i = 0; i < storableObjects_Transferables.length; i++) {
+    			storableObjectMap.put(new Identifier(storableObjects_Transferables[i].id), storableObjects_Transferables[i]);           
+    		}
+            ConfigurationStorableObjectPool.refresh();
+            List storableObjects  = ConfigurationStorableObjectPool.getStorableObjects((List) storableObjectMap.values(), true);
+            for (Iterator it = storableObjects.iterator(); it.hasNext();) {
+    			StorableObject so = (StorableObject) it.next();            
+    			StorableObject_Transferable sot = (StorableObject_Transferable) storableObjectMap.get(so.getId());
+                //  Checking for confomity
+                Identifier sotCreatorId = new Identifier(sot.creator_id);
+                Identifier sotModifierId = new Identifier(sot.modifier_id);
+                if (!(sot.created == so.getCreated().getTime())
+                        && !(sot.modified == so.getModified().getTime()) 
+                        && !sotCreatorId.equals(so.getCreatorId())
+                        && !sotModifierId.equals(so.getModifierId())) {
+                    it.remove();
+                }           
+    		}
+            int i=0;
+            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[storableObjects.size()];
+            for (Iterator it = storableObjects.iterator(); it.hasNext(); i++) {
+    			StorableObject so = (StorableObject) it.next();
+                identifier_Transferables[i] = (Identifier_Transferable) so.getId().getTransferable(); 
+    		}        
+            return identifier_Transferables;
+        } catch (CommunicationException ce) {
+            Log.errorException(ce);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce
+            		.getMessage());
+        } catch (DatabaseException de) {
+            Log.errorException(de);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
+            		.getMessage());
+        }
+    }
+    
+    public Identifier_Transferable[] transmitRefreshedMeasurementObjects(StorableObject_Transferable[] storableObjects_Transferables, AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
+        try {
+            Map storableObjectMap = new HashMap();
+            for (int i = 0; i < storableObjects_Transferables.length; i++) {
+                storableObjectMap.put(new Identifier(storableObjects_Transferables[i].id), storableObjects_Transferables[i]);           
+            }
+            MeasurementStorableObjectPool.refresh();
+            List storableObjects  = MeasurementStorableObjectPool.getStorableObjects((List) storableObjectMap.values(), true);
+            for (Iterator it = storableObjects.iterator(); it.hasNext();) {
+                StorableObject so = (StorableObject) it.next();            
+                StorableObject_Transferable sot = (StorableObject_Transferable) storableObjectMap.get(so.getId());
+                //  Checking for confomity
+                Identifier sotCreatorId = new Identifier(sot.creator_id);
+                Identifier sotModifierId = new Identifier(sot.modifier_id);
+                if (!(sot.created == so.getCreated().getTime())
+                        && !(sot.modified == so.getModified().getTime()) 
+                        && !sotCreatorId.equals(so.getCreatorId())
+                        && !sotModifierId.equals(so.getModifierId())) {
+                    it.remove();
+                }           
+            }
+            int i=0;
+            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[storableObjects.size()];
+            for (Iterator it = storableObjects.iterator(); it.hasNext(); i++) {
+                StorableObject so = (StorableObject) it.next();
+                identifier_Transferables[i] = (Identifier_Transferable) so.getId().getTransferable(); 
+            }        
+            return identifier_Transferables;
+        } catch (CommunicationException ce) {
+            Log.errorException(ce);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce
+                    .getMessage());
+        } catch (DatabaseException de) {
+            Log.errorException(de);
+            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
+                    .getMessage());
+        }
+    }
 
 	///////////////////////////////////////// Identifier Generator
 	// ////////////////////////////////////////////////
@@ -5863,5 +5944,5 @@ public class CMServerImpl extends CMConfigurationMeasurementReceive {
 		}
 
 		return this.domainCondition;
-	}
+	}	
 }
