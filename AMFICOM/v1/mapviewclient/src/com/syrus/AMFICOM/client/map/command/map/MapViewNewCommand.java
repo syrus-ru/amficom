@@ -49,7 +49,7 @@ public class MapViewNewCommand extends VoidCommand
 
 		mv.setId(aContext.getDataSourceInterface().GetUId(MapView.typ));
 		mv.setDomainId(aContext.getSessionInterface().getDomainId());
-		mv.setName(LangModel.getString("New"));
+		mv.setName(LangModelMap.getString("New"));
 
 		Map mc = new Map();
 		mc.setId(aContext.getDataSourceInterface().GetUId(com.syrus.AMFICOM.Client.Resource.Map.Map.typ));

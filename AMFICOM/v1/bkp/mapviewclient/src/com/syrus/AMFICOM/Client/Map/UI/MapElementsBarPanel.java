@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementsBarPanel.java,v 1.2 2004/09/15 08:21:49 krupenn Exp $
+ * $Id: MapElementsBarPanel.java,v 1.3 2004/09/16 12:00:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import javax.swing.JPanel;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/15 08:21:49 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/16 12:00:43 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -73,11 +73,7 @@ public final class MapElementsBarPanel extends JPanel
 		for(Iterator it = elements.iterator(); it.hasNext();)
 		{
 			mpe = (MapNodeProtoElement )it.next();
-			ii = new ImageIcon(mpe.getImage().getScaledInstance(
-					ELEMENT_DIMENSION, 
-					ELEMENT_DIMENSION, 
-					Image.SCALE_SMOOTH));
-			mel = new MapElementLabel(ii, mpe);
+			mel = new MapElementLabel(mpe);
 			mel.setToolTipText( mpe.getName());
 			this.add(mel);
 		}

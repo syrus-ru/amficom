@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementLabel.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: MapElementLabel.java,v 1.2 2004/09/16 12:00:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,9 +11,11 @@
 
 package com.syrus.AMFICOM.Client.Map.UI;
 
+import com.syrus.AMFICOM.Client.Map.Popup.ProtoPopupMenu;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 
 import java.awt.Color;
+import java.awt.Image;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DnDConstants;
@@ -30,6 +32,7 @@ import java.awt.event.MouseListener;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 
@@ -39,7 +42,7 @@ import javax.swing.border.EtchedBorder;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/16 12:00:43 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -53,7 +56,7 @@ public class MapElementLabel extends JLabel
 {
 	DragSource dragSource = null;
 	protected int type;
-	MapNodeProtoElement sElement = null;
+	MapNodeProtoElement proto = null;
 	boolean enable = false;
 
 	protected Color defaultElementLineBorderColor = Color.gray;
@@ -63,9 +66,13 @@ public class MapElementLabel extends JLabel
 	Border normalBorder = new EtchedBorder(EtchedBorder.LOWERED, Color.gray, Color.gray);
 	Border selectedBorder = new EtchedBorder(EtchedBorder.LOWERED, Color.gray, Color.red);
 
-	public MapElementLabel(ImageIcon icon, MapNodeProtoElement sEl)
+	final static int ELEMENT_DIMENSION = 30;
+
+	public MapElementLabel(MapNodeProtoElement proto)
 	{
-		sElement = sEl;
+		this.proto = proto;
+		
+		updateIcon();
 	
 		dragSource = new DragSource();
 		dragSource.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_MOVE, this);
@@ -73,10 +80,19 @@ public class MapElementLabel extends JLabel
 		this.setBorder(normalBorder);
 		this.setHorizontalAlignment(SwingConstants.CENTER);
 		this.setHorizontalTextPosition(SwingConstants.CENTER);
-		this.setSize(icon.getIconWidth(),icon.getIconHeight());
-		this.setIcon(icon);
 		this.addMouseListener(this);
 		this.setEnabled(enable);
+	}
+
+	public void updateIcon()
+	{
+		ImageIcon icon = new ImageIcon(proto.getImage().getScaledInstance(
+				ELEMENT_DIMENSION, 
+				ELEMENT_DIMENSION, 
+				Image.SCALE_SMOOTH));
+		this.setSize(icon.getIconWidth(),icon.getIconHeight());
+		this.setIcon(icon);
+		this.updateUI();
 	}
 
 	public void dragDropEnd(DragSourceDropEvent dsde)
@@ -102,11 +118,19 @@ public class MapElementLabel extends JLabel
 	public void dragGestureRecognized( DragGestureEvent event)
 	{
 		if (enable)
-			dragSource.startDrag (event, DragSource.DefaultMoveDrop, sElement, this);
+			dragSource.startDrag (event, DragSource.DefaultMoveDrop, proto, this);
 	}
 
 	public void mouseClicked(MouseEvent e)
 	{
+		if(SwingUtilities.isRightMouseButton(e))
+		{
+			ProtoPopupMenu menu = ProtoPopupMenu.getInstance();
+			menu.setLogicalNetLayer(MapFrame.getMapMainFrame().getMapViewer().getLogicalNetLayer());
+			menu.setElementLabel(this);
+			menu.setMapElement(proto);
+			menu.show(this, e.getPoint().x, e.getPoint().y);
+		}
 	}
 
 	public void mouseEntered(MouseEvent e)
@@ -136,7 +160,7 @@ public class MapElementLabel extends JLabel
 		if (flavor.getHumanPresentableName() == "ElementLabel")
 		{
 //			System.out.println("The type is " + sElement.getType());
-			return sElement;
+			return proto;
 		}
 		return null;
 	}
@@ -157,7 +181,7 @@ public class MapElementLabel extends JLabel
 		System.out.println("support DataFlavor " + (flavor.getHumanPresentableName() == "ElementLabel"));
 		return (flavor.getHumanPresentableName() == "ElementLabel");
 	}
-
+/*
 	public Color getDefaultElementLineBorderColor ()
 	{
 		return defaultElementLineBorderColor;
@@ -187,7 +211,7 @@ public class MapElementLabel extends JLabel
 	{
 		mouseEnterLineBorederThickness = size;
 	}
-
+*/
 	public void setEnabled(boolean b)
 	{
 		enable = b;

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.2 2004/09/16 12:00:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import javax.swing.JPopupMenu;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/16 12:00:43 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -65,6 +65,9 @@ public abstract class MapPopupMenu extends JPopupMenu
 	protected void showProperties(MapElement me)
 	{
 		ObjectResourcePropertiesPane prop = MapPropsManager.getPropsPane(me);
+		if(prop == null)
+			return;
+		prop.setContext(logicalNetLayer.getContext());
 		ObjectResourcePropertiesDialog dialog = new ObjectResourcePropertiesDialog(
 				Environment.getActiveWindow(), 
 				LangModel.getString("Properties"), 

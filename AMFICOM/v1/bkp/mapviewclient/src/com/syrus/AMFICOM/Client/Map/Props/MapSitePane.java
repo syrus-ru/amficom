@@ -45,7 +45,7 @@ public class MapSitePane extends JPanel implements ObjectResourcePropertiesPane
 		return instance;
 	}
 
-	public MapSitePane(MapSiteNodeElement site)
+	private MapSitePane(MapSiteNodeElement site)
 	{
 		this();
 		setObjectResource(site);

@@ -6,6 +6,7 @@ import com.syrus.AMFICOM.Client.Map.Props.MapCablePathPane;
 import com.syrus.AMFICOM.Client.Map.Props.MapLinkPane;
 import com.syrus.AMFICOM.Client.Map.Props.MapSitePane;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
@@ -28,6 +29,8 @@ public final class MapPropsManager
 			MapLinkPane.getInstance());
 		propsMap.put(MapSiteNodeElement.class,
 			MapSitePane.getInstance());
+		propsMap.put(MapNodeProtoElement.class,
+			MapProtoPane.getInstance());
 //		propsMap.put(MapMarkElement.class,
 //		propsMap.put(MapNodeLinkElement.class,
 //		propsMap.put(MapPhysicalNodeElement.class,

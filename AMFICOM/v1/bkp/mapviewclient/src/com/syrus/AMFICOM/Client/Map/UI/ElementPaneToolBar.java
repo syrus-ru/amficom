@@ -1,5 +1,5 @@
 /**
- * $Id: ElementPaneToolBar.java,v 1.1 2004/09/13 12:33:42 krupenn Exp $
+ * $Id: ElementPaneToolBar.java,v 1.2 2004/09/16 12:00:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,7 +25,7 @@ import javax.swing.JPanel;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:42 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/16 12:00:43 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -74,7 +74,7 @@ public class ElementPaneToolBar extends JPanel
 					ELEMENT_DIMENSION, 
 					ELEMENT_DIMENSION, 
 					Image.SCALE_SMOOTH));
-			label = new MapElementLabel(icon, mpe);
+			label = new MapElementLabel(mpe);
 			label.setToolTipText(mpe.getName());
 			this.add(label);
 		}

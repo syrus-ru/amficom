@@ -43,6 +43,11 @@ public class MapLinkGeneralPanel extends JPanel implements ObjectResourcePropert
 	private GridBagLayout gridBagLayout2 = new GridBagLayout();
 
 	MapPhysicalLinkElement link;
+	private JLabel dimensionLabel = new JLabel();
+	private JPanel dimensionPanel = new JPanel();
+	private JLabel xLabel = new JLabel();
+	private JTextField mTextField = new JTextField();
+	private JTextField nTextField = new JTextField();
 
 	public MapLinkGeneralPanel()
 	{
@@ -68,14 +73,26 @@ public class MapLinkGeneralPanel extends JPanel implements ObjectResourcePropert
 		typeLabel.setText(LangModelMap.getString("Type"));
 		typeLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		descLabel.setText("Примечания");
+		addressLabel.setText(LangModelMap.getString("Address"));
+		addressLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+
+		dimensionLabel.setText(LangModelMap.getString("Dimension"));
+		dimensionLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
+
+		descLabel.setText(LangModelMap.getString("Description"));
 		descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
 		addressPanel.setLayout(gridBagLayout2);
 		cityLabel.setText(LangModelMap.getString("City"));
 		streetLabel.setText(LangModelMap.getString("Street"));
 		buildingLabel.setText(LangModelMap.getString("Building"));
-		addressLabel.setText(LangModelMap.getString("Address"));
+
+		xLabel.setText("X");
+		mTextField.setPreferredSize(new Dimension(60, 23));
+		nTextField.setPreferredSize(new Dimension(60, 23));
+		dimensionPanel.add(mTextField, null);
+		dimensionPanel.add(xLabel, null);
+		dimensionPanel.add(nTextField, null);
 
 		addressPanel.add(cityLabel, ReusedGridBagConstraints.get(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 5), 0, 0));
 		addressPanel.add(cityTextField, ReusedGridBagConstraints.get(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, null, 0, 0));
@@ -90,8 +107,10 @@ public class MapLinkGeneralPanel extends JPanel implements ObjectResourcePropert
 		this.add(typeComboBox, ReusedGridBagConstraints.get(1, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
 		this.add(addressLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
 		this.add(addressPanel, ReusedGridBagConstraints.get(1, 2, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, null, 0, 0));
-		this.add(descLabel, ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, null, 0, 0));
-		this.add(descTextArea, ReusedGridBagConstraints.get(1, 3, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
+		this.add(dimensionLabel, ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, null, 0, 0));
+		this.add(dimensionPanel, ReusedGridBagConstraints.get(1, 3, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, null, 0, 0));
+		this.add(descLabel, ReusedGridBagConstraints.get(0, 4, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, null, 0, 0));
+		this.add(descTextArea, ReusedGridBagConstraints.get(1, 4, 1, 1, 1.0, 1.0, GridBagConstraints.CENTER, GridBagConstraints.BOTH, null, 0, 0));
 	}
 
 	public ObjectResource getObjectResource()
@@ -144,6 +163,11 @@ public class MapLinkGeneralPanel extends JPanel implements ObjectResourcePropert
 			link.setCity(cityTextField.getText());
 			link.setStreet(streetTextField.getText());
 			link.setBuilding(buildingTextField.getText());
+			
+			int m = Integer.parseInt(mTextField.getText());
+			int n = Integer.parseInt(nTextField.getText());
+			
+			link.getBinding().setDimension(new Dimension(m, n));
 			return true;
 		} 
 		catch (Exception ex) 
