@@ -19,8 +19,8 @@ APPCLASSPATH := $(LIBDIR)/mcm_interface.jar:$(LIBDIR)/util.jar:$(LIBDIR)/general
 SOURCES := com/syrus/AMFICOM/mserver/DatabaseContextSetup.java \
 	com/syrus/AMFICOM/mserver/MServerMeasurementObjectLoader.java \
 	com/syrus/AMFICOM/mserver/MeasurementServer.java \
-	com/syrus/AMFICOM/mserver/MServerImplementation.java \
-	com/syrus/AMFICOM/setup/MeasurementServerSetup.java
+	com/syrus/AMFICOM/mserver/MServerImplementation.java
+#	com/syrus/AMFICOM/setup/MeasurementServerSetup.java
 
 
 all: $(LIBNAME) $(LIBNAME_INTERFACE)
