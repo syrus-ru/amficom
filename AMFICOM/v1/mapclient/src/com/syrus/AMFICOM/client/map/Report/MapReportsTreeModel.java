@@ -52,7 +52,7 @@ public class MapReportsTreeModel extends ObjectResourceTreeModel
 	{
 		return new ObjectResourceTreeNode(
 			"root",
-			LangModelReport.String("label_availableReports"),
+			LangModelReport.getString("label_availableReports"),
 			true);
 	}
 
@@ -95,7 +95,7 @@ public class MapReportsTreeModel extends ObjectResourceTreeModel
 			{
 				ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
 					"label_repTopologicalScheme",
-					LangModelReport.String("label_repTopologicalScheme"),
+					LangModelReport.getString("label_repTopologicalScheme"),
 					true);
 
 				vec.add(ortn);
@@ -337,22 +337,22 @@ public class MapReportsTreeModel extends ObjectResourceTreeModel
 		{
 			ObjectResourceTreeNode ortn;
 			ortn = new ObjectResourceTreeNode(MapEquipmentNodeElement.typ,
-				LangModelConfig.String("label_nodes"), true);
+				LangModelConfig.getString("label_nodes"), true);
 			vec.add(ortn);
 			registerSearchableNode(MapEquipmentNodeElement.typ, ortn);
 
 //				vec.add(new ObjectResourceTreeNode(MapKISNodeElement.typ, "Узлы с КИС", true));
 			ortn = new ObjectResourceTreeNode(MapPhysicalLinkElement.typ,
-				LangModelConfig.String("label_links"), true);
+				LangModelConfig.getString("label_links"), true);
 			vec.add(ortn);
 			registerSearchableNode(MapPhysicalLinkElement.typ, ortn);
 			ortn = new ObjectResourceTreeNode(MapPhysicalNodeElement.typ,
-				LangModelConfig.String(
+				LangModelConfig.getString(
 				"label_topologicalNodes"), true);
 			vec.add(ortn);
 			registerSearchableNode(MapPhysicalNodeElement.typ, ortn);
 			ortn = new ObjectResourceTreeNode(MapTransmissionPathElement.typ,
-				LangModelConfig.String(
+				LangModelConfig.getString(
 				"menuJCatPathText"), true);
 			vec.add(ortn);
 			registerSearchableNode(MapTransmissionPathElement.typ, ortn);
@@ -360,7 +360,7 @@ public class MapReportsTreeModel extends ObjectResourceTreeModel
 		else if (node.getObject()instanceof MapEquipmentNodeElement)
 		{
 			vec.add(new ObjectResourceTreeNode(MapPhysicalLinkElement.typ,
-				LangModelConfig.String(
+				LangModelConfig.getString(
 				"label_inputLinks"), true));
 		}
 		else if (node.getObject()instanceof MapPhysicalLinkElement)
@@ -374,14 +374,14 @@ public class MapReportsTreeModel extends ObjectResourceTreeModel
 		else if (node.getObject()instanceof Scheme)
 		{
 			vec.add(new ObjectResourceTreeNode(SchemeElement.typ,
-				LangModelConfig.String("label_nodes"), true));
+				LangModelConfig.getString("label_nodes"), true));
 			vec.add(new ObjectResourceTreeNode(SchemeLink.typ,
-				LangModelConfig.String("label_links"), true));
+				LangModelConfig.getString("label_links"), true));
 			vec.add(new ObjectResourceTreeNode(SchemeCableLink.typ,
-				LangModelConfig.String("label_cablelinks"),
+				LangModelConfig.getString("label_cablelinks"),
 				true));
 			vec.add(new ObjectResourceTreeNode(SchemePath.typ,
-				LangModelConfig.String("menuJCatPathText"), true));
+				LangModelConfig.getString("menuJCatPathText"), true));
 		}
 ///конец топологии
 

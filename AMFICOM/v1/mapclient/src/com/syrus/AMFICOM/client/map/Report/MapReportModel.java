@@ -38,7 +38,7 @@ public class MapReportModel extends ReportModel
 
 	public String getReportsName(ObjectsReport rp)
 	{
-		return LangModelReport.String(rp.field) + rp.reserveName;
+		return LangModelReport.getString(rp.field) + rp.reserveName;
 	}
 
 	public String getReportsReserveName(ObjectsReport rp)
