@@ -12,6 +12,8 @@ CompletionStatus.java
 DataType.java
 Describable.java
 ErrorCode.java
+IIdentifier.java
+IStorableObject.java
 Identifiable.java
 Identifier.java
 IdentifierGeneratorServer.java

@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.22 2004/11/23 09:23:55 bob Exp $
+# $Id: Makefile,v 1.23 2004/11/29 10:24:29 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -56,7 +56,8 @@ cleanmach:
 
 .PHONY:	cleancorba
 cleancorba:
-	cd $(SRCDIR)/com/syrus/AMFICOM/general/corba && $(RM) $(shell cat $(SRCDIR)/com/syrus/AMFICOM/general/corba/.cvsignore)
+	cd $(SRCDIR)/com/syrus/AMFICOM/general && $(RM) -r $(shell cat $(SRCDIR)/com/syrus/AMFICOM/general/.cvsignore)
+	cd $(SRCDIR)/com/syrus/AMFICOM/general/corba && $(RM) -r $(shell cat $(SRCDIR)/com/syrus/AMFICOM/general/corba/.cvsignore)
 	$(RM) -r $(SCRDIR)/com/syrus/AMFICOM/CORBA/General
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/general/corba
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/CORBA/General

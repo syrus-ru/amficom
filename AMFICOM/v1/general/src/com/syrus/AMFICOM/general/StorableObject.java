@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.14 2004/11/15 12:43:41 arseniy Exp $
+ * $Id: StorableObject.java,v 1.15 2004/11/29 10:24:29 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,22 +16,29 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/11/15 12:43:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2004/11/29 10:24:29 $
+ * @author $Author: bass $
  * @module general_v1
  */
+public abstract class StorableObject implements
+//		com.syrus.AMFICOM.general.corba.IStorableObject,
+		Identified,
+		TransferableObject,
+		Serializable {
+	private static final long serialVersionUID = -1720579921164397193L;
 
-public abstract class StorableObject implements Identified, TransferableObject, Serializable {
-	static final long serialVersionUID = -1720579921164397193L;
+	private static final String[] TRUNCATABLE_IDS = {
+		"IDL:com/syrus/AMFICOM/general/StorableObject:1.0"
+	};
 
-	protected Identifier	id;
-	protected Date			created;
-	protected Date			modified;
-	protected Identifier	creatorId;
-	protected Identifier	modifierId;
-	protected long			version			= 0;
-	protected long			currentVersion	= 0;
-	
+	protected Date created;
+	protected Identifier creatorId;
+	protected long currentVersion = 0;
+	protected Identifier id;
+	protected Date modified;
+	protected Identifier modifierId;
+	protected long version = 0;
+
 	protected StorableObject(Identifier id) {
 		this.id = id;
 	}
@@ -44,7 +51,7 @@ public abstract class StorableObject implements Identified, TransferableObject, 
 		this.modifierId = modifierId;
 		this.version = 0;
 	}
-	
+
 	protected StorableObject(StorableObject_Transferable transferable){
 		this.id = new Identifier(transferable.id);
 		this.created = new Date(transferable.created);
@@ -55,35 +62,76 @@ public abstract class StorableObject implements Identified, TransferableObject, 
 		this.currentVersion = this.version;
 	}
 
-	public Identifier getId() {
-		return this.id;
+	/**
+	 * @see org.omg.CORBA.portable.ValueBase#_truncatable_ids()
+	 */
+	public String[] _truncatable_ids() {
+		return TRUNCATABLE_IDS;
 	}
 
+	/**
+	 * @see java.util.JavaUtilIStorableObject#getCreated()
+	 */
 	public Date getCreated() {
 		return this.created;
 	}
 
-	public Date getModified() {
-		return this.modified;
-	}
-
+	/**
+	 * @see ComSyrusAmficomGeneralIStorableObject#getCreatorId()
+	 */
 	public Identifier getCreatorId() {
 		return this.creatorId;
 	}
 
+	/**
+	 * @see java.util.JavaUtilIStorableObject#getDependencies()
+	 */
+	public abstract List getDependencies();
+
+	/**
+	 * @see com.syrus.AMFICOM.general.corba.IStorableObject#getHeaderTransferable()
+	 */
+	public StorableObject_Transferable getHeaderTransferable() {
+		return new StorableObject_Transferable((Identifier_Transferable)this.id.getTransferable(),
+			this.created.getTime(),
+			this.modified.getTime(),
+			(Identifier_Transferable)this.creatorId.getTransferable(),
+			(Identifier_Transferable)this.modifierId.getTransferable(),
+			this.currentVersion);
+	}
+
+	/**
+	 * @see ComSyrusAmficomGeneralIStorableObject#getId()
+	 */
+	public Identifier getId() {
+		return this.id;
+	}
+
+	/**
+	 * @see java.util.JavaUtilIStorableObject#getModified()
+	 */
+	public Date getModified() {
+		return this.modified;
+	}
+
+	/**
+	 * @see ComSyrusAmficomGeneralIStorableObject#getModifierId()
+	 */
 	public Identifier getModifierId() {
 		return this.modifierId;
 	}
 
+	/**
+	 * @see com.syrus.AMFICOM.general.corba.IStorableObject#isChanged()
+	 */
 	public boolean isChanged() {
-		boolean result = (this.currentVersion != this.version);
 		/**
 		 * @todo: check version at DB, if object was deleted or DB version isn't
 		 *        equal local version throws VersionCollisionException
 		 */
-		return result;
+		return (this.currentVersion != this.version);
 	}
-	
+
 	protected long getNextVersion(){
 		/**
 		 * @todo recast to another getting modified version
@@ -96,16 +144,5 @@ public abstract class StorableObject implements Identified, TransferableObject, 
 		this.modified = modified;
 		this.creatorId = creatorId;
 		this.modifierId = modifierId;
-	}
-	
-	public abstract List getDependencies();
-	
-	public StorableObject_Transferable getHeaderTransferable(){
-		return new StorableObject_Transferable((Identifier_Transferable)this.id.getTransferable(),
-											   this.created.getTime(),
-											   this.modified.getTime(),
-											   (Identifier_Transferable)this.creatorId.getTransferable(),
-											   (Identifier_Transferable)this.modifierId.getTransferable(),
-											   this.currentVersion);
 	}
 }

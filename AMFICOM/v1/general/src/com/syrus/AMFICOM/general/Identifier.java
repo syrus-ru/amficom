@@ -1,5 +1,5 @@
 /*
- * $Id: Identifier.java,v 1.15 2004/11/22 14:47:24 bob Exp $
+ * $Id: Identifier.java,v 1.16 2004/11/29 10:24:29 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,19 +13,35 @@ import java.io.Serializable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/11/22 14:47:24 $
- * @author $Author: bob $
+ * @version $Revision: 1.16 $, $Date: 2004/11/29 10:24:29 $
+ * @author $Author: bass $
  * @module general_v1
  */
+public class Identifier implements
+//		com.syrus.AMFICOM.general.corba.IIdentifier,
+		Comparable,
+		Cloneable,
+		TransferableObject,
+		Serializable {
+	/**
+	 * @see com.syrus.AMFICOM.general.corba.IIdentifier#SEPARATOR
+	 */
+	public static final char SEPARATOR = '_';
 
-public class Identifier implements Comparable, Cloneable, TransferableObject, Serializable {
-	static final long serialVersionUID = 1721559813677093072L;
+	private static final long serialVersionUID = 1721559813677093072L;
 
-	public static final String SEPARATOR = "_";
+	private static final String[] TRUNCATABLE_IDS = {
+		"IDL:com/syrus/AMFICOM/general/Identifier:1.0"
+	};
+
+	private String identifierString;
 
 	private short major;
 	private long minor;
-	private String identifierString;
+
+	public Identifier(Identifier_Transferable id_t) {
+		this(id_t.identifier_string);
+	}
 
 	public Identifier(String identifierString) {
 		this.major = ObjectEntities.stringToCode(identifierString.substring(0, identifierString.indexOf(SEPARATOR)));
@@ -33,15 +49,18 @@ public class Identifier implements Comparable, Cloneable, TransferableObject, Se
 		this.identifierString = identifierString;
 	}
 
-	public Identifier(Identifier_Transferable id_t) {
-		this(id_t.identifier_string);
-	}
-
 	/*	Only for IdentifierGenerator	*/
 	protected Identifier(short major, long minor) {
 		this.major = major;
 		this.minor = minor;
 		this.identifierString = ObjectEntities.codeToString(this.major) + SEPARATOR + Long.toString(this.minor);
+	}
+
+	/**
+	 * @see org.omg.CORBA.portable.ValueBase#_truncatable_ids()
+	 */
+	public String[] _truncatable_ids() {
+		return TRUNCATABLE_IDS;
 	}
 
 	public Object clone() {
@@ -87,6 +106,31 @@ public class Identifier implements Comparable, Cloneable, TransferableObject, Se
 		return ret;
 	}
 
+	/**
+	 * @see com.syrus.AMFICOM.general.corba.IIdentifier#getIdentifierString()
+	 */
+	public String getIdentifierString() {
+		return this.identifierString; 
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.corba.IIdentifier#getMajor()
+	 */
+	public short getMajor() {
+		return this.major;
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.corba.IIdentifier#getMinor()
+	 */
+	public long getMinor() {
+		return this.minor;
+	}
+
+	public Object getTransferable() {
+		return new Identifier_Transferable(this.identifierString);
+	}
+
 	public int hashCode() {
 		int ret = 17;
 		ret = 37 * ret + this.major;
@@ -95,28 +139,14 @@ public class Identifier implements Comparable, Cloneable, TransferableObject, Se
 		return ret;
 	}
 
-	public Object getTransferable() {
-		return new Identifier_Transferable(this.identifierString);
-	}
-
-	public String getIdentifierString() {
-		return this.identifierString; 
-	}
-
-	public short getMajor() {
-		return this.major;
-	}
-
-	public long getMinor() {
-		return this.minor;
+	/**
+	 * @see com.syrus.AMFICOM.general.corba.IIdentifier#toHexString()
+	 */
+	public String toHexString() {
+		throw new UnsupportedOperationException();
 	}
 
 	public String toString() {
 		return this.identifierString;
 	}
-
-	public String toHexString() {
-		throw new UnsupportedOperationException();
-	}
-	
 }

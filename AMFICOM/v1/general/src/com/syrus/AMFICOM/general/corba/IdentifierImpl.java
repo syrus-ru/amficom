@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierImpl.java,v 1.2 2004/11/23 09:05:53 bass Exp $
+ * $Id: IdentifierImpl.java,v 1.3 2004/11/29 10:24:29 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,13 +15,13 @@ import java.io.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/11/23 09:05:53 $
+ * @version $Revision: 1.3 $, $Date: 2004/11/29 10:24:29 $
  * @module general_v1
  */
 final class IdentifierImpl extends Identifier implements Cloneable, Comparable {
-	private static final long serialVersionUID = 8435961337633429780L;
-
 	private static final ErrorHandler ERROR_HANDLER = ErrorHandler.getInstance();
+
+	private static final long serialVersionUID = 8435961337633429780L;
 
 /*/	// #ifdef NUMERIC_IDENTIFIER
 	private transient String thisIdentifierString = IDENTIFIER_STRING_UNINITIALIZED; 
@@ -37,11 +37,8 @@ final class IdentifierImpl extends Identifier implements Cloneable, Comparable {
 	IdentifierImpl() {
 	}
 
-	IdentifierImpl(final String identifierString) {
-		final int indexOfSeparator = identifierString.indexOf(SEPARATOR);
-		this.thisMajor = ObjectEntities.stringToCode(identifierString.substring(0, indexOfSeparator));
-		this.thisMinor = Long.parseLong(identifierString.substring(indexOfSeparator + 1));
-		this.thisIdentifierString = identifierString;
+	IdentifierImpl(final Identifier_Transferable id) {
+		this(id.identifier_string);
 	}
 
 	IdentifierImpl(final short major, final long minor) {
@@ -50,51 +47,16 @@ final class IdentifierImpl extends Identifier implements Cloneable, Comparable {
 		this.thisIdentifierString = ObjectEntities.codeToString(major) + SEPARATOR + minor;
 	}
 
-	public short major() {
-		if (this.thisMajor == MAJOR_UNINITIALIZED)
-			this.thisMajor = ObjectEntities.stringToCode(this.thisIdentifierString.substring(0, this.thisIdentifierString.indexOf(SEPARATOR)));
-		return this.thisMajor;
+	IdentifierImpl(final String identifierString) {
+		final int indexOfSeparator = identifierString.indexOf(SEPARATOR);
+		this.thisMajor = ObjectEntities.stringToCode(identifierString.substring(0, indexOfSeparator));
+		this.thisMinor = Long.parseLong(identifierString.substring(indexOfSeparator + 1));
+		this.thisIdentifierString = identifierString;
 	}
 
 	/**
-	 * Getter method whose only purpose is to pacify Vladimir Alexandrovich.
-	 * 
-	 * @see #major() 
+	 * @see Identifier#cloneInstance()
 	 */
-	public short getMajor() {
-		return major();
-	}
-
-	public long minor() {
-		if (this.thisMinor == MINOR_UNINITIALIZED)
-			this.thisMinor = Long.parseLong(this.thisIdentifierString.substring(this.thisIdentifierString.indexOf(SEPARATOR) + 1));
-		return this.thisMinor;
-	}
-
-	/**
-	 * Getter method whose only purpose is to pacify Vladimir Alexandrovich.
-	 * 
-	 * @see #minor()
-	 */
-	public long getMinor() {
-		return minor();
-	}
-
-	public String identifierString() {
-//		if (this.thisIdentifierString == IDENTIFIER_STRING_UNUNITIALIZED)
-//			this.thisIdentifierString = ObjectEntities.codeToString(this.thisMajor) + SEPARATOR + this.thisMinor;
-		return this.thisIdentifierString;
-	}
-
-	/**
-	 * Getter method whose only purpose is to pacify Vladimir Alexandrovich.
-	 * 
-	 * @see #identifierString()
-	 */
-	public String getIdentifierString() {
-		return identifierString();
-	}
-
 	public Identifier cloneInstance() {
 		try {
 			return (Identifier) this.clone();
@@ -104,14 +66,9 @@ final class IdentifierImpl extends Identifier implements Cloneable, Comparable {
 		}
 	}
 
-	protected Object clone() throws CloneNotSupportedException {
-		IdentifierImpl id = (IdentifierImpl) super.clone();
-		id.thisMajor = this.major();
-		id.thisMinor = this.minor();
-		id.thisIdentifierString = this.identifierString();
-		return id;
-	}
-
+	/**
+	 * @see Comparable#compareTo(Object)
+	 */
 	public int compareTo(final Object obj) {
 		if (obj instanceof IdentifierImpl) {
 			final IdentifierImpl that = (IdentifierImpl) obj;
@@ -142,6 +99,47 @@ final class IdentifierImpl extends Identifier implements Cloneable, Comparable {
 		return false;
 	}
 
+	/**
+	 * Getter method whose only purpose is to pacify Vladimir Alexandrovich.
+	 *
+	 * @see #identifierString()
+	 * @see IIdentifier#getIdentifierString()
+	 */
+	public String getIdentifierString() {
+		return identifierString();
+	}
+
+	/**
+	 * Getter method whose only purpose is to pacify Vladimir Alexandrovich.
+	 * 
+	 * @see #major()
+	 * @see IIdentifier#getMajor() 
+	 */
+	public short getMajor() {
+		return major();
+	}
+
+	/**
+	 * Getter method whose only purpose is to pacify Vladimir Alexandrovich.
+	 * 
+	 * @see #minor()
+	 * @see IIdentifier#getMinor()
+	 */
+	public long getMinor() {
+		return minor();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.corba.Identifier#getTransferable()
+	 */
+	public Identifier_Transferable getTransferable() {
+/*/		// #ifdef NUMERIC_IDENTIFIER
+		return new Identifier_Transferable(this.major(), this.minor());
+/*/		// #else // NUMERIC_IDENTIFIER
+		return new Identifier_Transferable(this.identifierString());
+//*/		// #endif // NUMERIC_IDENTIFIER
+	}
+
 	public int hashCode() {
 		final HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
 		hashCodeGenerator.addInt(this.major());
@@ -150,8 +148,44 @@ final class IdentifierImpl extends Identifier implements Cloneable, Comparable {
 		return hashCodeGenerator.getResult();
 	}
 
+	/**
+	 * @see Identifier#identifierString()
+	 */
+	public String identifierString() {
+//		if (this.thisIdentifierString == IDENTIFIER_STRING_UNUNITIALIZED)
+//			this.thisIdentifierString = ObjectEntities.codeToString(this.thisMajor) + SEPARATOR + this.thisMinor;
+		return this.thisIdentifierString;
+	}
+
+	public short major() {
+		if (this.thisMajor == MAJOR_UNINITIALIZED)
+			this.thisMajor = ObjectEntities.stringToCode(this.thisIdentifierString.substring(0, this.thisIdentifierString.indexOf(SEPARATOR)));
+		return this.thisMajor;
+	}
+
+	public long minor() {
+		if (this.thisMinor == MINOR_UNINITIALIZED)
+			this.thisMinor = Long.parseLong(this.thisIdentifierString.substring(this.thisIdentifierString.indexOf(SEPARATOR) + 1));
+		return this.thisMinor;
+	}
+
+	/**
+	 * @see IIdentifier#toHexString()
+	 */
+	public String toHexString() {
+		throw new UnsupportedOperationException();
+	}
+
 	public String toString() {
 		return this.identifierString();
+	}
+
+	protected Object clone() throws CloneNotSupportedException {
+		IdentifierImpl id = (IdentifierImpl) super.clone();
+		id.thisMajor = this.major();
+		id.thisMinor = this.minor();
+		id.thisIdentifierString = this.identifierString();
+		return id;
 	}
 
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
