@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.18 2004/09/03 10:52:14 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.19 2004/09/06 06:18:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/09/03 10:52:14 $
+ * @version $Revision: 1.19 $, $Date: 2004/09/06 06:18:55 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -63,6 +63,8 @@ public abstract class StorableObjectDatabase {
 	public static final String	SQL_UPDATE			= " UPDATE ";
 	public static final String	SQL_VALUES			= " VALUES ";
 	public static final String	SQL_WHERE			= " WHERE ";
+	
+	public static final int 	UPDATE_TOTAL 		= -1;
 
 	protected static Connection	connection;
 
@@ -91,6 +93,8 @@ public abstract class StorableObjectDatabase {
 	}
 
 	public abstract void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException;
+	
+	public abstract void insert(List storableObjects) throws IllegalDataException, CreateObjectException;
 
 	public abstract void retrieve(StorableObject storableObject) throws IllegalDataException,
 			ObjectNotFoundException, RetrieveObjectException;
@@ -101,6 +105,9 @@ public abstract class StorableObjectDatabase {
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException;
 
 	public abstract void update(StorableObject storableObject, int updateKind, Object arg)
+			throws IllegalDataException, UpdateObjectException;
+	
+	public abstract void update(List storableObjects, int updateKind, Object arg)
 			throws IllegalDataException, UpdateObjectException;
 
 	protected abstract String getEnityName();
@@ -264,7 +271,7 @@ public abstract class StorableObjectDatabase {
 					if (update){
 						localStorableObject.setAttributes(localStorableObject.getCreated(), new Date(System.currentTimeMillis()), 
 														  localStorableObject.getCreatorId(), localStorableObject.getModifierId());
-						updateEntity(localStorableObject);
+						update(localStorableObject, UPDATE_TOTAL, null);
 					} else{
 						String msg = getEnityName() + "Database.checkAndUpdateEntity | " + getEnityName() + " conflict version ";
 						throw new VersionCollisionException(msg);
