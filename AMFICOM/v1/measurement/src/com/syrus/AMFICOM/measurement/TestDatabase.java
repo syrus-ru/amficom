@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.43 2004/10/27 14:27:50 bob Exp $
+ * $Id: TestDatabase.java,v 1.44 2004/11/03 11:59:57 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,9 +16,12 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
@@ -48,8 +51,8 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2004/10/27 14:27:50 $
- * @author $Author: bob $
+ * @version $Revision: 1.44 $, $Date: 2004/11/03 11:59:57 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -329,6 +332,97 @@ public class TestDatabase extends StorableObjectDatabase {
 		else 
 			throw new RetrieveObjectException("TestDatabase.retrieveMeasurementSetupTestLinks | Measurement setup ids for test '" + testIdStr + "' not found.");
 	}
+    
+    private void retrieveMeasurementSetupTestLinksByOneQuery(List tests) throws RetrieveObjectException {
+    	if ((tests == null) || (tests.isEmpty()))
+            return;     
+        
+        StringBuffer sql = new StringBuffer(SQL_SELECT
+                + LINK_COLMN_MEASUREMENT_SETUP_ID + COMMA
+                + LINK_COLMN_TEST_ID
+                + SQL_FROM + ObjectEntities.MSTESTLINK_ENTITY
+                + SQL_WHERE + LINK_COLMN_TEST_ID
+                + SQL_IN + OPEN_BRACKET);
+        int i = 1;
+        for (Iterator it = tests.iterator(); it.hasNext();i++) {
+            Test test = (Test)it.next();
+            sql.append(test.getId().toSQLString());
+            if (it.hasNext()){
+                if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+                    sql.append(COMMA);
+                else {
+                    sql.append(CLOSE_BRACKET);
+                    sql.append(SQL_OR);
+                    sql.append(COLUMN_ID);
+                    sql.append(SQL_IN);
+                    sql.append(OPEN_BRACKET);
+                }                   
+            }
+        }
+        sql.append(CLOSE_BRACKET);
+        
+        Statement statement = null;
+        ResultSet resultSet = null;
+        Connection connection = DatabaseConnection.getConnection();
+        try {
+            statement = connection.createStatement();
+            Log.debugMessage("TestDatabase.retrieveMeasurementSetupTestLinksByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+            resultSet = statement.executeQuery(sql.toString());
+            Map msIdMap = new HashMap();
+            while (resultSet.next()) {
+                Test test = null;
+                String testId = resultSet.getString(LINK_COLMN_TEST_ID);
+                for (Iterator it = tests.iterator(); it.hasNext();) {
+                    Test testToCompare = (Test) it.next();
+                    if (testToCompare.getId().getIdentifierString().equals(testId)){
+                        test = testToCompare;
+                        break;
+                    }                   
+                }
+                
+                if (test == null){
+                    String mesg = "TestDatabase.retrieveMeasurementSetupTestLinksByOneQuery | Cannot found correspond result for '" + testId +"'" ;
+                    throw new RetrieveObjectException(mesg);
+                }
+                    
+                
+                /**
+                 * @todo when change DB Identifier model ,change getString() to
+                 *       getLong()
+                 */
+                Identifier msId = new Identifier(resultSet.getString(LINK_COLMN_MEASUREMENT_SETUP_ID));
+                List msIds = (List)msIdMap.get(test);
+                if (msIds == null){
+                    msIds = new LinkedList();
+                    msIdMap.put(test, msIds);
+                }               
+                msIds.add(msId);              
+            }
+            
+            for (Iterator iter = tests.iterator(); iter.hasNext();) {
+                Test test = (Test) iter.next();
+                List msIds = (List)msIdMap.get(test);
+                test.setMeasurementSetupIds(msIds);
+            }
+            
+        } catch (SQLException sqle) {
+            String mesg = "TestDatabase.retrieveMeasurementSetupTestLinksByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
+            throw new RetrieveObjectException(mesg, sqle);
+        } finally {
+            try {
+                if (statement != null)
+                    statement.close();
+                if (resultSet != null)
+                    resultSet.close();
+                statement = null;
+                resultSet = null;
+            } catch (SQLException sqle1) {
+                Log.errorException(sqle1);
+            } finally {
+                DatabaseConnection.closeConnection(connection);
+            }
+        }
+    }
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Test test = this.fromStorableObject(storableObject);
@@ -813,10 +907,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			list = retrieveByIdsOneQuery(null, condition);
 		else list = retrieveByIdsOneQuery(ids, condition);
 		
-		for(Iterator it=list.iterator();it.hasNext();){
-			Test test = (Test)it.next();
-			retrieveMeasurementSetupTestLinks(test);
-		}
+		retrieveMeasurementSetupTestLinksByOneQuery(list);	
 		
 		return list;
 	}	

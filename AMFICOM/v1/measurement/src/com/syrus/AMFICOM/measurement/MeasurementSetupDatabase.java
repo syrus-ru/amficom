@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.38 2004/11/02 13:39:40 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.39 2004/11/03 11:59:57 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,10 +14,17 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
+
+import oracle.sql.BLOB;
+
 import com.syrus.util.Log;
+import com.syrus.util.database.ByteArrayDatabase;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
@@ -38,8 +45,8 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2004/11/02 13:39:40 $
- * @author $Author: bob $
+ * @version $Revision: 1.39 $, $Date: 2004/11/03 11:59:57 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -490,6 +497,97 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		}
 		measurementSetup.setMonitoredElementIds(meIds);
 	}
+    
+    private void retrieveMeasurementSetupMELinksByOneQuery(List measurementSetups) throws RetrieveObjectException {
+    	if ((measurementSetups == null) || (measurementSetups.isEmpty()))
+            return;     
+        
+        StringBuffer sql = new StringBuffer(SQL_SELECT
+                + LINK_COLUMN_ME_ID + COMMA
+                + LINK_COLUMN_MEASUREMENT_SETUP_ID
+                + SQL_FROM + ObjectEntities.MSMELINK_ENTITY
+                + SQL_WHERE + LINK_COLUMN_MEASUREMENT_SETUP_ID
+                + SQL_IN + OPEN_BRACKET);
+        int i = 1;
+        for (Iterator it = measurementSetups.iterator(); it.hasNext();i++) {
+            MeasurementSetup measurementSetup = (MeasurementSetup)it.next();
+            sql.append(measurementSetup.getId().toSQLString());
+            if (it.hasNext()){
+                if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+                    sql.append(COMMA);
+                else {
+                    sql.append(CLOSE_BRACKET);
+                    sql.append(SQL_OR);
+                    sql.append(COLUMN_ID);
+                    sql.append(SQL_IN);
+                    sql.append(OPEN_BRACKET);
+                }                   
+            }
+        }
+        sql.append(CLOSE_BRACKET);
+        
+        Statement statement = null;
+        ResultSet resultSet = null;
+        Connection connection = DatabaseConnection.getConnection();
+        try {
+            statement = connection.createStatement();
+            Log.debugMessage("MeasurementSetupDatabase.retrieveMeasurementSetupMELinksByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
+            resultSet = statement.executeQuery(sql.toString());
+            Map meIdMap = new HashMap();
+            while (resultSet.next()) {
+                MeasurementSetup measurementSetup = null;
+                String measurementSetupId = resultSet.getString(LINK_COLUMN_MEASUREMENT_SETUP_ID);
+                for (Iterator it = measurementSetups.iterator(); it.hasNext();) {
+                    MeasurementSetup measurementSetupToCompare = (MeasurementSetup) it.next();
+                    if (measurementSetupToCompare.getId().getIdentifierString().equals(measurementSetupId)){
+                        measurementSetup = measurementSetupToCompare;
+                        break;
+                    }                   
+                }
+                
+                if (measurementSetup == null){
+                    String mesg = "MeasurementSetupDatabase.retrieveMeasurementSetupMELinksByOneQuery | Cannot found correspond result for '" + measurementSetupId +"'" ;
+                    throw new RetrieveObjectException(mesg);
+                }
+                    
+                
+                /**
+                 * @todo when change DB Identifier model ,change getString() to
+                 *       getLong()
+                 */
+                Identifier meId = new Identifier(resultSet.getString(LINK_COLUMN_ME_ID));
+                List meIds = (List)meIdMap.get(measurementSetup);
+                if (meIds == null){
+                    meIds = new LinkedList();
+                    meIdMap.put(measurementSetup, meIds);
+                }               
+                meIds.add(meId);              
+            }
+            
+            for (Iterator iter = measurementSetups.iterator(); iter.hasNext();) {
+                MeasurementSetup measurementSetup = (MeasurementSetup) iter.next();
+                List meIds = (List)meIdMap.get(measurementSetup);
+                measurementSetup.setMonitoredElementIds(meIds);
+            }
+            
+        } catch (SQLException sqle) {
+            String mesg = "ResultDatabase.retrieveResultParameters | Cannot retrieve parameters for result -- " + sqle.getMessage();
+            throw new RetrieveObjectException(mesg, sqle);
+        } finally {
+            try {
+                if (statement != null)
+                    statement.close();
+                if (resultSet != null)
+                    resultSet.close();
+                statement = null;
+                resultSet = null;
+            } catch (SQLException sqle1) {
+                Log.errorException(sqle1);
+            } finally {
+                DatabaseConnection.closeConnection(connection);
+            }
+        }
+    }
 
 	private void setModified(MeasurementSetup measurementSetup) throws UpdateObjectException {
 		String msIdStr = measurementSetup.getId().toString();
@@ -538,10 +636,8 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 			list = retrieveByIdsOneQuery(null, condition);
 		else list = retrieveByIdsOneQuery(ids, condition);
 		
-		for(Iterator it=list.iterator();it.hasNext();){
-			MeasurementSetup measurementSetup = (MeasurementSetup)it.next();
-			retrieveMeasurementSetupMELinks(measurementSetup);
-		}
+		retrieveMeasurementSetupMELinksByOneQuery(list);
+		
 		
 		return list;	
 	}
