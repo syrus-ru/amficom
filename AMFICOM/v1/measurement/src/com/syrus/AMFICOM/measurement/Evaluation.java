@@ -61,9 +61,9 @@ public class Evaluation extends Action {
 	private Evaluation(Identifier id,
 										 Identifier creatorId,
 										 Identifier typeId,
+										 Identifier monitoredElementId,
 										 Set thresholdSet,
-										 Set etalon,
-										 Identifier monitoredElementId) throws CreateObjectException {
+										 Set etalon) throws CreateObjectException {
 		super(id,
 					new Date(System.currentTimeMillis()),
 					new Date(System.currentTimeMillis()),
@@ -142,14 +142,14 @@ public class Evaluation extends Action {
 	public static Evaluation create(Identifier id,
 																	Identifier creatorId,
 																	Identifier typeId,
+																	Identifier monitoredElementId,
 																	Set thresholdSet,
-																	Set etalon,
-																	Identifier monitoredElementId) throws CreateObjectException {
+																	Set etalon) throws CreateObjectException {
 		return new Evaluation(id,
 													creatorId,
 													typeId,
+													monitoredElementId,
 													thresholdSet,
-													etalon,
-													monitoredElementId);
+													etalon);
 	}
 }

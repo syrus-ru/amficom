@@ -59,8 +59,8 @@ public class Analysis extends Action {
 	private Analysis(Identifier id,
 									 Identifier creatorId,
 									 Identifier typeId,
-									 Set criteriaSet,
-									 Identifier monitoredElementId) throws CreateObjectException {
+									 Identifier monitoredElementId,
+									 Set criteriaSet) throws CreateObjectException {
 		super(id,
 					new Date(System.currentTimeMillis()),
 					new Date(System.currentTimeMillis()),
@@ -131,12 +131,12 @@ public class Analysis extends Action {
 	public static Analysis create(Identifier id,
 																Identifier creatorId,
 																Identifier typeId,
-																Set criteriaSet,
-																Identifier monitoredElementId) throws CreateObjectException {
+																Identifier monitoredElementId,
+																Set criteriaSet) throws CreateObjectException {
 		return new Analysis(id,
 												creatorId,
 												typeId,
-												criteriaSet,
-												monitoredElementId);
+												monitoredElementId,
+												criteriaSet);
 	}
 }
