@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.3 2004/08/13 13:34:07 bob Exp $
+ * $Id: LRUMap.java,v 1.4 2004/08/14 13:03:34 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,8 @@ package com.syrus.util;
 import java.io.Serializable;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/08/13 13:34:07 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2004/08/14 13:03:34 $
+ * @author $Author: arseniy $
  * @module util
  */
 
@@ -35,7 +35,7 @@ public class LRUMap implements Serializable {
 			throw new IllegalArgumentException("Illegal capasity: " + capasity);
 	}
 
-	public Object put(Object key, Object value) {
+	public synchronized Object put(Object key, Object value) {
 		Entry newEntry = new Entry(key, value);
 		Object ret = null;
 		if (this.array[this.array.length - 1] != null)
@@ -46,7 +46,7 @@ public class LRUMap implements Serializable {
 		return ret;
 	}
 
-	public Object get(Object key) {
+	public synchronized Object get(Object key) {
 		if (key != null) { 
 			Object ret = null;
 			for (int i = 0; i < this.array.length; i++)
@@ -57,7 +57,7 @@ public class LRUMap implements Serializable {
 		throw new IllegalArgumentException("Key is NULL");
 	}
 
-	public Object remove(Object key) {
+	public synchronized Object remove(Object key) {
 		if (key != null) { 
 			Object ret = null;
 			for (int i = 0; i < this.array.length; i++)
