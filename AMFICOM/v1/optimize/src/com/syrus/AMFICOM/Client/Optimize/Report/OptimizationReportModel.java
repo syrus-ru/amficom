@@ -9,12 +9,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 
-import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
-import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
-import com.syrus.AMFICOM.Client.General.Report.ReportResultsTablePanel;
-import com.syrus.AMFICOM.Client.General.Report.RenderingObject;
-import com.syrus.AMFICOM.Client.General.Report.CreateReportException;
-import com.syrus.AMFICOM.Client.General.Report.ObjectResourceDivList;
+import com.syrus.AMFICOM.Client.General.Report.*;
 
 import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
 import com.syrus.AMFICOM.Client.Resource.Pool;
@@ -31,8 +26,6 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapContext;
 import javax.swing.JComponent;
 
 import java.util.Vector;
-
-import com.syrus.AMFICOM.Client.Analysis.Report.EvaluationTableReport;
 
 public class OptimizationReportModel extends APOReportModel
 {
@@ -314,10 +307,10 @@ public class OptimizationReportModel extends APOReportModel
 		else if (rp.field.equals(OptimizationReportModel.optimizationParams)
            ||rp.field.equals(OptimizationReportModel.solution))
 		{
-      EvaluationTableReport etr = new EvaluationTableReport(rp,divisionsNumber);
+      TableModelDivider tmd = new TableModelDivider(rp,divisionsNumber);
 			returnValue = new ReportResultsTablePanel(
-					etr.columnModel,
-					etr.tableModel,
+					tmd.columnModel,
+					tmd.tableModel,
 					rt.findROforReport(rp));
 		}
 
