@@ -9,10 +9,15 @@ IDLDIR=../idl_v1/idl
 HOST=mongol
 SERVICE_NAME=mongol
 
-APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/map.jar
 ###:$(LIBDIR)/servermisc.jar
 
 include ../tools/Makefile.inc
+
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/mshserver/*.java)
+
+APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/map.jar
+
+
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 $(call checkenve,IDLJ)
@@ -25,15 +30,13 @@ $(LIBNAME): .mach
 
 $(LIBNAME_INTERFACE):	.corba
 	$(JAR) -cf $@ \
-		-C $(CLASSDIR) com/syrus/AMFICOM/mshserver/corba/*.class
+		-C $(CLASSDIR) com
+
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
-		$(SRCDIR)/com/syrus/AMFICOM/mshserver/MSHDatabaseMapObjectLoader.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mshserver/MapSchemeServer.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mshserver/DatabaseContextSetup.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mshserver/MSHServerImpl.java
+		$(SOURCES)
 	touch $@
 
 .corba:	$(CLASSDIR)
