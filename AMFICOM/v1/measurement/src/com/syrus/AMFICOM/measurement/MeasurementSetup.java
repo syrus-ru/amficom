@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.46 2005/02/14 10:58:51 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.47 2005/02/24 09:42:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,29 +8,32 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
+
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/02/14 10:58:51 $
+ * @version $Revision: 1.47 $, $Date: 2005/02/24 09:42:42 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -56,14 +59,14 @@ public class MeasurementSetup extends StorableObject {
 	private Set etalon;
 	private String description;
 	private long measurementDuration;
-	private List monitoredElementIds;
+	private Collection monitoredElementIds;
 
 	private StorableObjectDatabase measurementSetupDatabase;
 
 	public MeasurementSetup(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.monitoredElementIds = new LinkedList();
+		this.monitoredElementIds = new HashSet();
 
 		this.measurementSetupDatabase = MeasurementDatabaseContext.measurementSetupDatabase;
 		try {
@@ -101,7 +104,7 @@ public class MeasurementSetup extends StorableObject {
 
 		this.description = new String(mst.description);
 		this.measurementDuration = mst.measurement_duration;
-		this.monitoredElementIds = new ArrayList(mst.monitored_element_ids.length);
+		this.monitoredElementIds = new HashSet(mst.monitored_element_ids.length);
 		for (int i = 0; i < mst.monitored_element_ids.length; i++)
 			this.monitoredElementIds.add(new Identifier(mst.monitored_element_ids[i]));
 
@@ -117,7 +120,7 @@ public class MeasurementSetup extends StorableObject {
 							   Set etalon,
 							   String description,
 							   long measurementDuration,
-							   List monitoredElementIds) {
+							   Collection monitoredElementIds) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -155,7 +158,7 @@ public class MeasurementSetup extends StorableObject {
 												  Set etalon,
 												  String description,
 												  long measurementDuration,
-												  List monitoredElementIds) throws CreateObjectException {
+												  Collection monitoredElementIds) throws CreateObjectException {
 		
 		if (creatorId == null || description == null || parameterSet == null || monitoredElementIds == null)
 			throw new IllegalArgumentException("Argument is 'null'");
@@ -222,8 +225,9 @@ public class MeasurementSetup extends StorableObject {
 
 	public Object getTransferable() {
 		Identifier_Transferable[] meIds = new Identifier_Transferable[this.monitoredElementIds.size()];
-		for (int i = 0; i < meIds.length; i++)
-			meIds[i] = (Identifier_Transferable) ((Identifier) this.monitoredElementIds.get(i)).getTransferable();
+		int i = 0;
+		for (Iterator it = this.monitoredElementIds.iterator(); it.hasNext(); i++)
+			meIds[i] = (Identifier_Transferable) ((Identifier) it.next()).getTransferable();
 
 		return new MeasurementSetup_Transferable(super.getHeaderTransferable(),
 												 (Identifier_Transferable) this.parameterSet.getId().getTransferable(),
@@ -263,8 +267,8 @@ public class MeasurementSetup extends StorableObject {
 		return this.measurementDuration;
 	}
 
-	public List getMonitoredElementIds() {
-		return Collections.unmodifiableList(this.monitoredElementIds);
+	public Collection getMonitoredElementIds() {
+		return Collections.unmodifiableCollection(this.monitoredElementIds);
 	}
 
 	public String[] getParameterTypeCodenames() {
@@ -307,22 +311,22 @@ public class MeasurementSetup extends StorableObject {
 		this.measurementDuration = measurementDuration;
 	}
 
-	protected synchronized void setMonitoredElementIds0(List monitoredElementIds) {
+	protected synchronized void setMonitoredElementIds0(Collection monitoredElementIds) {
 		this.monitoredElementIds.clear();
 		if (monitoredElementIds != null)
-	     	this.monitoredElementIds.addAll(monitoredElementIds);
+			this.monitoredElementIds.addAll(monitoredElementIds);
 	}
-	
-	public void setMonitoredElementIds(List monitoredElementIds) {
+
+	public void setMonitoredElementIds(Collection monitoredElementIds) {
 		this.setMonitoredElementIds0(monitoredElementIds);
-	    super.changed = true;
+		super.changed = true;
 	}
 
 	/**
 	 * client setter for criteriaSet
 	 * 
 	 * @param criteriaSet
-	 *            The criteriaSet to set.
+	 *          The criteriaSet to set.
 	 */
 	public void setCriteriaSet(Set criteriaSet) {
 		super.changed = true;
