@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.77 2005/02/03 19:57:14 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.78 2005/02/04 10:36:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2005/02/03 19:57:14 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.78 $, $Date: 2005/02/04 10:36:23 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -795,8 +795,10 @@ public abstract class StorableObjectDatabase {
 
 		DatabaseStorableObjectCondition databaseStorableObjectCondition = this.reflectDatabaseCondition(condition);
 		short conditionCode = databaseStorableObjectCondition.getEntityCode().shortValue();
-		if (ObjectEntities.stringToCode(this.getEnityName()) != conditionCode)
-			throw new IllegalDataException(this.getEnityName()
+		String enityName = this.getEnityName();
+		enityName = enityName.replaceAll("\"", "");
+		if (ObjectEntities.stringToCode(enityName) != conditionCode)
+			throw new IllegalDataException(enityName
 					+ "Database.retrieveByCondition | Uncompatible condition ("
 					+ ObjectEntities.codeToString(conditionCode) + ") and database (" + this.getEnityName()
 					+ ") classes");
