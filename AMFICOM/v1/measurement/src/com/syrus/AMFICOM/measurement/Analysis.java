@@ -139,12 +139,4 @@ public class Analysis extends Action {
 												criteriaSet,
 												monitoredElementId);
 	}
-	/**
-	 * client setter for criteriaSet
-	 * @param criteriaSet The criteriaSet to set.
-	 */
-	public void setCriteriaSet(Set criteriaSet) {
-		this.currentVersion = super.getNextVersion();
-		this.criteriaSet = criteriaSet;
-	}
 }

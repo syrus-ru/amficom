@@ -152,20 +152,4 @@ public class Evaluation extends Action {
 													etalon,
 													monitoredElementId);
 	}
-	/**
-	 * client setter for etalon
-	 * @param etalon The etalon to set.
-	 */
-	public void setEtalon(Set etalon) {
-		this.currentVersion = super.getNextVersion();
-		this.etalon = etalon;
-	}
-	/**
-	 * client setter for thresholdSet
-	 * @param thresholdSet The thresholdSet to set.
-	 */
-	public void setThresholdSet(Set thresholdSet) {
-		this.currentVersion = super.getNextVersion();
-		this.thresholdSet = thresholdSet;
-	}
 }
