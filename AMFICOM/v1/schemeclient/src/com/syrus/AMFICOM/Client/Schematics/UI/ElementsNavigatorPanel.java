@@ -10,7 +10,7 @@ import javax.swing.border.EtchedBorder;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
 import oracle.jdeveloper.layout.*;
@@ -19,6 +19,7 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 {
 	JButton delMapGroupButton;
 	JButton loadButton;
+	JButton refreshButton;
 	ApplicationContext aContext;
 	Dispatcher dispatcher;
 	ObjectResourceTreeModel model;
@@ -78,10 +79,25 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 			}
 		});
 
+		refreshButton = new JButton();
+		refreshButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/refresh.gif")));
+		refreshButton.setToolTipText("Обновить");
+		refreshButton.setPreferredSize(new Dimension(24, 24));
+		refreshButton.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+		refreshButton.setFocusPainted(false);
+		refreshButton.addActionListener(new ActionListener()
+		{
+			public void actionPerformed(ActionEvent ev)
+			{
+				refreshButton_actionPerformed();
+			}
+		});
+
 		JPanel toolBar = new JPanel();
 		toolBar.setLayout(new XYLayout());
 		toolBar.add(loadButton, new XYConstraints(0, 0, 24, 24));
-		toolBar.add(delMapGroupButton, new XYConstraints(24, 0, 24, 24));
+		toolBar.add(delMapGroupButton, new XYConstraints(25, 0, 24, 24));
+		toolBar.add(refreshButton, new XYConstraints(50, 0, 24, 24));
 		add(toolBar, BorderLayout.NORTH);
 
 		// TREE
@@ -158,6 +174,14 @@ public class ElementsNavigatorPanel extends JPanel implements OperationListener
 			Scheme scheme = (Scheme)selectedObject;
 			dispatcher.notify(new SchemeElementsEvent(this, scheme, SchemeElementsEvent.OPEN_SCHEME_EVENT));
 		}
+	}
+
+	void refreshButton_actionPerformed()
+	{
+		if (selectedObject instanceof ObjectResource)
+			dispatcher.notify(new TreeListSelectionEvent(((ObjectResource)selectedObject).getTyp(), TreeListSelectionEvent.REFRESH_EVENT));
+		else if (selectedObject instanceof String)
+			dispatcher.notify(new TreeListSelectionEvent((String)selectedObject, TreeListSelectionEvent.REFRESH_EVENT));
 	}
 
 	void delMapGroupButton_actionPerformed()
