@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.63 2005/02/04 14:20:22 bob Exp $
+ * $Id: TestDatabase.java,v 1.64 2005/02/04 14:23:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.KISWrapper;
 import com.syrus.AMFICOM.configuration.MeasurementPortWrapper;
@@ -52,8 +50,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/02/04 14:20:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.64 $, $Date: 2005/02/04 14:23:06 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 

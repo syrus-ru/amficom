@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultIdentifierGeneratorServer.java,v 1.1 2005/02/04 14:21:00 bob Exp $
+ * $Id: DefaultIdentifierGeneratorServer.java,v 1.2 2005/02/04 14:24:40 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,9 +17,9 @@ import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/04 14:21:00 $
- * @author $Author: bob $
- * @module tools
+ * @version $Revision: 1.2 $, $Date: 2005/02/04 14:24:40 $
+ * @author $Author: arseniy $
+ * @module general
  */
 public class DefaultIdentifierGeneratorServer implements IdentifierGeneratorServer {
 
