@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.6 2005/01/24 15:29:27 bob Exp $
+ * $Id: CharacteristicType.java,v 1.7 2005/01/25 08:44:29 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,17 +18,13 @@ import com.syrus.AMFICOM.general.corba.CharacteristicType_Transferable;
 import com.syrus.AMFICOM.general.corba.DataType;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/01/24 15:29:27 $
+ * @version $Revision: 1.7 $, $Date: 2005/01/25 08:44:29 $
  * @author $Author: bob $
  * @module general_v1
  */
 
 public class CharacteristicType extends StorableObjectType {
 	private static final long serialVersionUID = 6153350736368296076L;
-
-	public static final String COLUMN_DATA_TYPE = "type";
-	public static final String COLUMN_SORT = "sort";
-	private static Map exportColumns = null;
 
 	private int dataType;
 	private int sort;
@@ -162,17 +158,5 @@ public class CharacteristicType extends StorableObjectType {
 
 	public List getDependencies() {
 		return Collections.EMPTY_LIST;
-	}
-
-	public CharacteristicType (Map exportedColumns) {
-		super(exportedColumns);
-		this.dataType = Integer.parseInt((String)exportedColumns.get(COLUMN_DATA_TYPE));
-		this.sort = Integer.parseInt((String)exportedColumns.get(COLUMN_SORT));
-	}
-
-	public synchronized void exportColumns() {
-		super.exportColumns();
-		this.exportedColumns.put(COLUMN_DATA_TYPE, Integer.toString(this.dataType));
-		this.exportedColumns.put(COLUMN_SORT, Integer.toString(this.sort));
-	}
+	}	
 }

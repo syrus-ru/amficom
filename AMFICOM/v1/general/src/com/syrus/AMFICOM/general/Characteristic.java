@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.8 2005/01/24 15:29:27 bob Exp $
+ * $Id: Characteristic.java,v 1.9 2005/01/25 08:44:29 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,29 +11,19 @@ package com.syrus.AMFICOM.general;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/01/24 15:29:27 $
+ * @version $Revision: 1.9 $, $Date: 2005/01/25 08:44:29 $
  * @author $Author: bob $
  * @module general_v1
  */
 
 public class Characteristic extends StorableObject implements TypedObject {
 	private static final long serialVersionUID = -2746555753961778403L;
-
-	public static final String COLUMN_TYPE_ID = "type_id";
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_DESCRIPTION = "description";
-	public static final String COLUMN_SORT = "sort";
-	public static final String COLUMN_VALUE = "value";
-	public static final String COLUMN_CHARACTERIZED_ID = "characterized_id";
-	public static final String COLUMN_EDITABLE = "editable";
-	public static final String COLUMN_VISIBLE = "visible";
 
 	private CharacteristicType type;
 	private String name;
@@ -328,37 +318,5 @@ public class Characteristic extends StorableObject implements TypedObject {
 		dependencies.add(this.characterizedId);
 		dependencies.add(this.type);
 		return null;
-	}
-
-	public Characteristic (Map exportedColumns) throws CreateObjectException {
-		super(exportedColumns);
-
-		Identifier typeId = new Identifier((String)exportedColumns.get(COLUMN_TYPE_ID));
-		try {
-			this.type = (CharacteristicType)GeneralStorableObjectPool.getStorableObject(typeId, false);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-
-		this.name = (String)exportedColumns.get(COLUMN_NAME);
-		this.description = (String)exportedColumns.get(COLUMN_DESCRIPTION);
-		this.sort = Integer.parseInt((String)exportedColumns.get(COLUMN_SORT));
-		this.value = (String)exportedColumns.get(COLUMN_VALUE);
-		this.characterizedId = new Identifier((String)exportedColumns.get(COLUMN_CHARACTERIZED_ID));
-		this.editable = Boolean.getBoolean((String)exportedColumns.get(COLUMN_EDITABLE));
-		this.visible = Boolean.getBoolean((String)exportedColumns.get(COLUMN_VISIBLE));
-	}
-
-	public synchronized void exportColumns() {
-		super.exportColumns();
-		this.exportedColumns.put(COLUMN_TYPE_ID, this.type.getId().toString());
-		this.exportedColumns.put(COLUMN_NAME, this.name);
-		this.exportedColumns.put(COLUMN_DESCRIPTION, this.description);
-		this.exportedColumns.put(COLUMN_SORT, Integer.toString(this.sort));
-		this.exportedColumns.put(COLUMN_VALUE, this.value);
-		this.exportedColumns.put(COLUMN_CHARACTERIZED_ID, this.characterizedId.toString());
-		this.exportedColumns.put(COLUMN_EDITABLE, Boolean.toString(this.editable));
-		this.exportedColumns.put(COLUMN_VISIBLE, Boolean.toString(this.visible));
-	}
+	}	
 }
