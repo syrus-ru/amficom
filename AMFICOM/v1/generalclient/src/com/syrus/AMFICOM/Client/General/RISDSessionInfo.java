@@ -1,5 +1,5 @@
 /*
- * $Id: RISDSessionInfo.java,v 1.24 2005/02/16 13:38:54 stas Exp $
+ * $Id: RISDSessionInfo.java,v 1.25 2005/02/17 08:18:46 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -73,7 +73,7 @@ import com.syrus.util.prefs.IIOPConnectionManager;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.24 $, $Date: 2005/02/16 13:38:54 $
+ * @version $Revision: 1.25 $, $Date: 2005/02/17 08:18:46 $
  * @module generalclient_v1
  */
 public final class RISDSessionInfo extends SessionInterface {
@@ -323,8 +323,6 @@ public final class RISDSessionInfo extends SessionInterface {
 			final Class clazz = ClientLRUMap.class;
 			final int size = 200;
 
-			SessionContext.init(new AccessIdentity(this.accessIdentifier));
-
 //			ClientConfigurationObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
 			File configPath = new File("/catalog");
 			ConfigurationStorableObjectPool.init(new XMLConfigurationObjectLoader(configPath), clazz, size);
@@ -352,9 +350,6 @@ public final class RISDSessionInfo extends SessionInterface {
 				User user;
 				if (users.isEmpty()) {
 					user = User.createInstance(new Identifier("User_0"), "sys", UserSort.USER_SORT_REGULAR, "sysuser", "");	
-					AdministrationStorableObjectPool.putStorableObject(user);
-					AdministrationStorableObjectPool.flush(true);
-
 				}
 				else {
 					user = (User)users.iterator().next();
@@ -364,12 +359,33 @@ public final class RISDSessionInfo extends SessionInterface {
 				Domain domain;
 				if (domains.isEmpty()) {
 					domain = Domain.createInstance(user.getId(), new Identifier("Domain_0"), "LocalDomain", "");	
-					AdministrationStorableObjectPool.putStorableObject(domain);
-					AdministrationStorableObjectPool.flush(true);
 				}
 				else {
 					domain = (Domain)domains.iterator().next();
 				}
+				
+				this.domainId = domain.getId();
+				this.userId = user.getId();
+				this.LogonTime = System.currentTimeMillis();
+				this.accessIdentity = new AccessIdentity_Transferable(
+						this.LogonTime,
+						user.getName(),
+						this.userId.getIdentifierString(),
+						"Null_0",
+						this.domainId.getIdentifierString());
+				this.session_state = SESSION_OPENED;
+				this.accessIdentifier = new AccessIdentifier_Transferable(
+						this.LogonTime,
+						(Identifier_Transferable)this.domainId.getTransferable(),
+						(Identifier_Transferable)this.userId.getTransferable(),
+						new Identifier_Transferable("Null_0"));
+				
+				SessionContext.init(new AccessIdentity(this.accessIdentifier));
+				
+				AdministrationStorableObjectPool.putStorableObject(domain);
+				AdministrationStorableObjectPool.putStorableObject(user);
+				AdministrationStorableObjectPool.flush(true);
+
 				
 				condition = new EquivalentCondition(ObjectEntities.PARAMETERTYPE_ENTITY_CODE);
 				Collection paramaterTypes = GeneralStorableObjectPool.getStorableObjectsByCondition(condition, true);
@@ -427,25 +443,7 @@ public final class RISDSessionInfo extends SessionInterface {
 					GeneralStorableObjectPool.flush(true);
 				}
 
-				this.domainId = domain.getId();
-				this.userId = user.getId();
-				
-			this.LogonTime = System.currentTimeMillis();
-			this.session_state = SESSION_OPENED;
-			this.accessIdentity = new AccessIdentity_Transferable(
-					this.LogonTime,
-					user.getName(),
-					this.userId.getIdentifierString(),
-					"Null_0",
-					this.domainId.getIdentifierString());
-
-			this.accessIdentifier = new AccessIdentifier_Transferable(
-					this.LogonTime,
-					(Identifier_Transferable)this.domainId.getTransferable(),
-					(Identifier_Transferable)this.userId.getTransferable(),
-					new Identifier_Transferable("Null_0"));
-
-
+ 
 			System.err.println("domainId: " + this.accessIdentifier.domain_id.identifier_string);
 			System.err.println("sessionId: " + this.accessIdentifier.session_id.identifier_string);
 			System.err.println("started: " + new java.util.Date(this.accessIdentifier.started));
