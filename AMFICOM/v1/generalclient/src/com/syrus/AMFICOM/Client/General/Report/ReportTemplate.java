@@ -88,7 +88,9 @@ public class ReportTemplate extends ObjectResource implements Serializable
 	 * <p>Шаблон по схеме</p>
 	 */
 	static final public String rtt_Scheme = "rtt_Scheme";
-
+	/**
+	 * <p>Шаблон по топологии</p>
+	 */
 	static final public String rtt_Map = "rtt_Map";
 	/**
 	 * <p>Все шаблоны</p>

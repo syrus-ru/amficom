@@ -101,6 +101,8 @@ public class MapMDIMain extends JFrame implements OperationListener
 	JPanel statusBarPanel = new JPanel();
 	StatusBarModel statusBar = new StatusBarModel(0);
 	MapMenuBar menuBar = new MapMenuBar();
+  
+  CreateMapReportCommand cmrCommand = null;
 
 	public MapMainFrame mapFrame = null;
 
@@ -307,7 +309,8 @@ public class MapMDIMain extends JFrame implements OperationListener
 		aModel.setCommand("menuMapSaveAs", new MapMapSaveAsCommand(null, aContext));
 		aModel.setCommand("menuMapCatalogue", new MapCatalogueCommand(internal_dispatcher, desktopPane, aContext, new MapConfigureApplicationModelFactory()));
 
-		aModel.setCommand("menuReportOpen", new CreateMapReportCommand(aContext));
+    cmrCommand = new CreateMapReportCommand(aContext);
+		aModel.setCommand("menuReportOpen", cmrCommand);
 
 		aModel.add("menuHelpAbout", new HelpAboutCommand(this));
 
@@ -380,8 +383,10 @@ public class MapMDIMain extends JFrame implements OperationListener
 	{
 		if(ae.getActionCommand().equals("mapframeshownevent"))
 		{
-			mapFrame = (MapMainFrame )ae.getSource();
-
+			mapFrame = (MapMainFrame)ae.getSource();
+      
+      cmrCommand.setParameter(CreateMapReportCommand.MAP,mapFrame);
+      
 			ApplicationModel aModel = aContext.getApplicationModel();
 			if(aModel != null)
 			{
