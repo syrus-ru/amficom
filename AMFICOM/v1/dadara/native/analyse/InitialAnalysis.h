@@ -1,4 +1,4 @@
-#if !defined(AFX_INITIALANALYSIS_H__017F9246_0344_404F_8231_CC3B33AB54DA__INCLUDED_)
+  #if !defined(AFX_INITIALANALYSIS_H__017F9246_0344_404F_8231_CC3B33AB54DA__INCLUDED_)
 #define AFX_INITIALANALYSIS_H__017F9246_0344_404F_8231_CC3B33AB54DA__INCLUDED_
 
 #include <stdio.h>
@@ -105,25 +105,44 @@ private:
 //====================================================================================================
 class Splash
 { public:
- 	int begin; 		// начало всплеска (что превысило минимальный порог)
-	int end;        // конец всплеска (первое возвращение ниже порога)
-   	int begin_nonoise;  // то же , что и begin, но без добавления к порогу шума
-	int end_nonoise;
-    int sign; 		// "+1" если всплеск верх, "-1" если всплеск вниз
+	int begin_thr;		// первое пересечение минимального порога
+ 	int begin_thr_n;	// первое пересечение порога "минимум + шум"
+ 	int end_thr_n;
+    int end_thr;
 
-	double f_extr; 	// значение в точке экстремума
-    int x_extr; 	// положение точки эстремума
+	int begin_weld;		// первое пересечение сварочного порога
+ 	int begin_weld_n;	// первое пересечение порога "сварка + шум"
+ 	int end_weld_n;
+    int end_weld;
+
+
+	int begin_conn;		// пересечение коннекторного порога
+ 	int begin_conn_n;	// пересечение порога "коннектор + шум"
+ 	int end_conn_n;
+    int end_conn;
+
+    int sign; 		// "+1" если всплеск верх, "-1" если всплеск вниз
     double square;  // площадь под всплеском
 
-    Splash(int begin, int end, int begin_nonoise, int end_nonoise, int sign, double f_extr, int x_extr, double square)
-    {	this->begin 		= begin;
-		this->end 			= end;
-        this->begin_nonoise	= begin_nonoise;
-		this->end_nonoise	= end_nonoise;
-		this->sign 			= sign;
-		this->f_extr 		= f_extr;
-		this->x_extr 		= x_extr;
-        this->square		= square;
+	// инициализируем неопределёнными значениями ()
+    Splash()
+    {	begin_thr 		= -1;
+ 		begin_thr_n		= -1;
+    	end_thr 		= -1;
+ 		end_thr_n 		= -1;
+
+		begin_weld		= -1;
+ 		begin_weld_n	= -1;
+    	end_weld 		= -1;
+ 		end_weld_n 		= -1;
+
+		begin_conn 		= -1;
+ 		begin_conn_n 	= -1;
+    	end_conn 		= -1;
+ 		end_conn_n 		= -1;
+
+    	sign 			= 0;
+	   	square 			= -1;
     }
 };
 //====================================================================================================
