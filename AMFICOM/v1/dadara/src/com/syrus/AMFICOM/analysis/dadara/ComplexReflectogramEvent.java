@@ -1,5 +1,5 @@
 /*
- * $Id: ComplexReflectogramEvent.java,v 1.9 2005/03/05 11:47:32 saa Exp $
+ * $Id: ComplexReflectogramEvent.java,v 1.10 2005/03/11 18:09:38 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.9 $, $Date: 2005/03/05 11:47:32 $
+ * @version $Revision: 1.10 $, $Date: 2005/03/11 18:09:38 $
  * @module dadara
  * 
  * Класс предназначен для хранения расширенной информации о
@@ -76,13 +76,15 @@ public class ComplexReflectogramEvent implements SimpleReflectogramEvent
 	public static ComplexReflectogramEvent[] createEvents(SimpleReflectogramEvent[] se, ModelTrace mt)
 	{
 		ComplexReflectogramEvent[] ret = new ComplexReflectogramEvent[se.length];
+
 		// создаем события
 		for (int i = 0; i < ret.length; i++)
 			ret[i] = new ComplexReflectogramEvent(se[i], mt);
-		// корректируем mloss сварок (вычитаем средний наклон прямых)
+
+		// корректируем mloss сварок и коннекторов (вычитаем средний наклон прямых)
 		for (int i = 0; i < ret.length; i++)
 		{
-			if (ret[i].isSplice())
+			if (ret[i].isSplice() || ret[i].getEventType() == SimpleReflectogramEvent.REFLECTIVE)
 			{
 				// берем средний (из одного или двух) наклон смежных линейных
 				// событий, которые по длине больше этой сварки
@@ -93,14 +95,14 @@ public class ComplexReflectogramEvent implements SimpleReflectogramEvent
 					linCount++;
 					linAtt += ret[i - 1].mLoss / ret[i - 1].getLength();
 				}
-				if (i < ret.length && ret[i + 1].getLength() > ret[i].getLength())
+				if (i < ret.length - 1 && ret[i + 1].getLength() > ret[i].getLength())
 				{
 					linCount++;
 					linAtt += ret[i + 1].mLoss / ret[i + 1].getLength();
 				}
 				if (linCount > 0)
 					linAtt /= linCount;
-				ret[i].mLoss -= linAtt * ret[i].getLength(); 
+				ret[i].mLoss -= linAtt * ret[i].getLength();
 			}
 		}
 		return ret;
