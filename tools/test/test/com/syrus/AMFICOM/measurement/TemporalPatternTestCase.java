@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternTestCase.java,v 1.1 2004/08/16 14:23:50 bob Exp $
+ * $Id: TemporalPatternTestCase.java,v 1.2 2004/08/17 09:06:26 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.measurement.TemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/08/16 14:23:50 $
+ * @version $Revision: 1.2 $, $Date: 2004/08/17 09:06:26 $
  * @author $Author: bob $
  * @module tools
  */
@@ -63,7 +63,7 @@ public class TemporalPatternTestCase extends AbstractMesurementTestCase {
 
 		TemporalPattern temporalPattern3 = new TemporalPattern(temporalPattern2.getId());
 
-		assertEquals(temporalPattern2.getId(), temporalPattern3.getId());
+		assertEquals(temporalPattern2, temporalPattern3);
 
 		if (!list.isEmpty())
 			TemporalPatternDatabase.delete(temporalPattern);
