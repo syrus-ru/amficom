@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.10 2004/07/28 13:57:27 krupenn Exp $
+ * $Id: Environment.java,v 1.11 2004/07/29 13:26:14 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -58,7 +58,7 @@ import javax.swing.plaf.metal.MetalTheme;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/07/28 13:57:27 $
+ * @version $Revision: 1.11 $, $Date: 2004/07/29 13:26:14 $
  * @author $Author: krupenn $
  * @see
  */
@@ -100,7 +100,7 @@ public class Environment extends Singleton
 	private static boolean beep = false;
 
 	/** Look and feel */
-	private static final String FIELD_LOOK_AND_FEEL = "lookandfeel";
+	private static final String FIELD_LOOK_AND_FEEL = "lookAndFeel";
 
 	private static final String LOOK_AND_FEEL_GTK = "GTK";
 	private static final String LOOK_AND_FEEL_KUNSTSTOFF = "Kunststoff";
