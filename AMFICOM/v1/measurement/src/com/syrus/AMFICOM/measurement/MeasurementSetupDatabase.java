@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
@@ -274,7 +275,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		 * @todo when change DB Identifier model ,change String to long
 		 */
 		String msIdCode = measurementSetup.getId().getCode();
-		ArrayList meIds = measurementSetup.getMonitoredElementIds();
+		List meIds = measurementSetup.getMonitoredElementIds();
 		String sql = SQL_INSERT_INTO 
 				+ ObjectEntities.MSMELINK_ENTITY
 				+ OPEN_BRACKET

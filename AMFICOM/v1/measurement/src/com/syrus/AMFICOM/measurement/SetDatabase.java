@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+
 import oracle.sql.BLOB;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
@@ -312,7 +314,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		 * @todo when change DB Identifier model ,change String to long
 		 */
 		String setIdCode = set.getId().getCode();
-		ArrayList meIds = set.getMonitoredElementIds();
+		List meIds = set.getMonitoredElementIds();
 		String sql = SQL_INSERT_INTO 
 			+ ObjectEntities.SETMELINK_ENTITY
 			+ OPEN_BRACKET

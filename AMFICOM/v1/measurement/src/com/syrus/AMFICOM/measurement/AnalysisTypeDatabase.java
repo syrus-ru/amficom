@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -234,9 +235,9 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	}
 
 	private void insertParameterTypes(AnalysisType analysisType) throws CreateObjectException {
-		ArrayList inParTyps = analysisType.getInParameterTypes();
-		ArrayList criteriaParTyps = analysisType.getCriteriaParameterTypes();
-		ArrayList outParTyps = analysisType.getOutParameterTypes();
+		List inParTyps = analysisType.getInParameterTypes();
+		List criteriaParTyps = analysisType.getCriteriaParameterTypes();
+		List outParTyps = analysisType.getOutParameterTypes();
 		String analysisTypeIdCode = analysisType.getId().getCode();
 		String sql = "INSERT INTO " + ObjectEntities.ANATYPPARTYPLINK_ENTITY
 				+ " (analysisTypeId, parameterTypeId, parameterMode)" + " VALUES (?, ?, ?)";

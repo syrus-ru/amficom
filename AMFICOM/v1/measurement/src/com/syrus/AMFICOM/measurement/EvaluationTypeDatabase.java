@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -283,11 +284,11 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 
 	private void insertParameterTypes(EvaluationType evaluationType)
 			throws CreateObjectException {
-		ArrayList inParTyps = evaluationType.getInParameterTypes();
-		ArrayList thresholdParTyps = evaluationType
+		List inParTyps = evaluationType.getInParameterTypes();
+		List thresholdParTyps = evaluationType
 				.getThresholdParameterTypes();
-		ArrayList etalonParTyps = evaluationType.getEtalonParameterTypes();
-		ArrayList outParTyps = evaluationType.getOutParameterTypes();
+		List etalonParTyps = evaluationType.getEtalonParameterTypes();
+		List outParTyps = evaluationType.getOutParameterTypes();
 		/**
 		 * @todo when change DB Identifier model ,change String to long
 		 */
