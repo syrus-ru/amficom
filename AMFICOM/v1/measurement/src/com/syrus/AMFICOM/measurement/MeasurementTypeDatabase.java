@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.60 2005/02/03 14:57:22 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.61 2005/02/08 11:40:04 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,23 +22,20 @@ import java.util.Map;
 
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identified;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.StringFieldCondition;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
@@ -47,8 +44,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/02/03 14:57:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.61 $, $Date: 2005/02/08 11:40:04 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -705,7 +702,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			}
 		return i;
 		}
-	
+
 	private List retrieveButIdsByMeasurementPortType(List ids, List measurementPortTypes) throws RetrieveObjectException {
 		List list = null;
 
@@ -759,30 +756,4 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 			list = Collections.EMPTY_LIST;
 
 		return list;
-	}
-
-	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws IllegalDataException, RetrieveObjectException  {
-		List list = null;
-		if (condition instanceof LinkedIdsCondition) {
-			LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
-			list = this.retrieveButIdsByMeasurementPortType(ids, linkedIdsCondition.getLinkedIds());
-		}
-		else
-			if (condition instanceof StringFieldCondition) {
-				StringFieldCondition stringFieldCondition = (StringFieldCondition)condition;
-				try {
-					list = Collections.singletonList(this.retrieveForCodename(stringFieldCondition.getString()));
-				}
-				catch (ObjectNotFoundException e) {
-					String msg = getEnityName() + "Database.retrieveByCondition | object not found: " + e.getMessage();
-					throw new RetrieveObjectException(msg, e);
-				}
-			}
-			else {
-				Log.errorMessage(getEnityName() + "Database.retrieveByCondition | Unknown condition class: " + condition);
-				list = this.retrieveButIds(ids);
-			}
-
-		return list;
-	}
-}
+	}}

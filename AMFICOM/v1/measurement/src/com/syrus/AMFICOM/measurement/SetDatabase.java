@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.54 2005/02/03 14:57:22 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.55 2005/02/08 11:44:53 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,19 +24,17 @@ import oracle.sql.BLOB;
 
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.DomainMember;
-import com.syrus.AMFICOM.administration.DomainCondition;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
-import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -48,8 +46,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/02/03 14:57:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.55 $, $Date: 2005/02/08 11:44:53 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -733,20 +731,6 @@ public class SetDatabase extends StorableObjectDatabase {
 			Log.debugMessage("MeasurementDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
 		}
 
-		return list;
-	}
-
-	public List retrieveByCondition(List ids, StorableObjectCondition condition)
-			throws RetrieveObjectException, IllegalDataException {
-		List list = null;
-		if (condition instanceof DomainCondition) {
-			DomainCondition domainCondition = (DomainCondition)condition;
-			list = this.retrieveButIdsByDomain(ids, domainCondition.getDomain());
-		}
-		else {
-			Log.errorMessage("MeasurementDatabase.retrieveByCondition | Unknown condition class: " + condition);
-			list = this.retrieveButIds(ids);
-		}
 		return list;
 	}
 }

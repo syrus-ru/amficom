@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.58 2005/02/03 08:36:47 bob Exp $
+ * $Id: ResultDatabase.java,v 1.59 2005/02/08 11:44:26 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,19 +22,18 @@ import java.util.Map;
 
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.DomainMember;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
-import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identified;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -46,8 +45,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/02/03 08:36:47 $
- * @author $Author: bob $
+ * @version $Revision: 1.59 $, $Date: 2005/02/08 11:44:26 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -706,52 +705,21 @@ public class ResultDatabase extends StorableObjectDatabase {
 
 		return list;
 	}
-//
-//	private List retrieveButIdsByMeasurementAndSort(List ids, Identifier measurementId, ResultSort resultSort) throws RetrieveObjectException {
-//		List list = null;
-//
-//		String sql = COLUMN_MEASUREMENT_ID + EQUALS + DatabaseIdentifier.toSQLString(measurementId)
-//			+ SQL_AND + COLUMN_SORT + EQUALS + resultSort.value();
-//		
-//		try {
-//			list = retrieveButIds(ids, sql);
-//		}
-//		catch (IllegalDataException ide) {
-//			Log.debugMessage("ResultDatabase.retrieveButIdsByMeasurement | Error: " + ide.getMessage(),
-//						Log.DEBUGLEVEL09);
-//		}
-//		
-//		return list;
-//	}	
 
-	public List retrieveByCondition(List ids, StorableObjectCondition condition)
-			throws RetrieveObjectException, IllegalDataException {
-		throw new UnsupportedOperationException("Method not implemented");
-//	FIXME Write correct implementation
-//		List list;
-//		if (condition instanceof LinkedIdsCondition) {
-//			LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
-//			List measurementIds = linkedIdsCondition.getLinkedIds();
-//			if (measurementIds == null)
-//				measurementIds = Collections.singletonList(linkedIdsCondition.getIdentifier());
-//			list = this.retrieveButIdsByMeasurement(ids, measurementIds);
-//		}
-//		else
-//
-//			if (condition instanceof DomainCondition) { 
-//				DomainCondition domainCondition = (DomainCondition)condition;
-//				list = this.retrieveButIdsByDomain(ids, domainCondition.getDomain());
-//			}
-//			else
-//				if (condition instanceof ResultSortCondition) {
-//					ResultSortCondition resultSortCondition = (ResultSortCondition) condition;
-//					list = this.retrieveButIdsByMeasurementAndSort(ids, resultSortCondition.getMeasurementId(), resultSortCondition.getResultSort());
-//				}
-//				else {
-//					Log.errorMessage("ResultDatabase.retrieveByCondition | Unknown condition class: " + condition);
-//					list = this.retrieveButIds(ids);
-//				}
-//		return list;
-	}
+	private List retrieveButIdsByMeasurementAndSort(List ids, Identifier measurementId, ResultSort resultSort) throws RetrieveObjectException {
+		List list = null;
 
+		String sql = ResultWrapper.COLUMN_MEASUREMENT_ID + EQUALS + DatabaseIdentifier.toSQLString(measurementId)
+			+ SQL_AND + ResultWrapper.COLUMN_SORT + EQUALS + resultSort.value();
+		
+		try {
+			list = retrieveButIds(ids, sql);
+		}
+		catch (IllegalDataException ide) {
+			Log.debugMessage("ResultDatabase.retrieveButIdsByMeasurement | Error: " + ide.getMessage(),
+						Log.DEBUGLEVEL09);
+		}
+		
+		return list;
+	}	
 }

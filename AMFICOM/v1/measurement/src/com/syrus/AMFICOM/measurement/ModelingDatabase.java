@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.22 2005/02/03 14:57:22 arseniy Exp $
+ * $Id: ModelingDatabase.java,v 1.23 2005/02/08 11:41:14 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,29 +13,27 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.DomainMember;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
-import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.DomainMember;
-import com.syrus.AMFICOM.administration.DomainCondition;
-import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/02/03 14:57:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/02/08 11:41:14 $
+ * @author $Author: max $
  * @module module_name
  */
 
@@ -203,20 +201,6 @@ public class ModelingDatabase extends StorableObjectDatabase {
 			Log.debugMessage("EvaluationDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
 		}
 
-		return list;
-	}
-
-	public List retrieveByCondition(List ids, StorableObjectCondition condition)
-			throws RetrieveObjectException, IllegalDataException {
-		List list = null;
-		if (condition instanceof DomainCondition) {
-			DomainCondition domainCondition = (DomainCondition)condition;
-			list = this.retrieveButIdsByDomain(ids, domainCondition.getDomain());
-		}
-		else {
-			Log.errorMessage("ModelingDatabase.retrieveByCondition | Unknown condition class: " + condition);
-			list = this.retrieveButIds(ids);
-		}
 		return list;
 	}
 }
