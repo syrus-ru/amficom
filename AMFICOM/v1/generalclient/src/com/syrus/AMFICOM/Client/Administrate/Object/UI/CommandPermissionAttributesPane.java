@@ -1,19 +1,29 @@
+/*
+ * $Id: CommandPermissionAttributesPane.java,v 1.7 2004/09/27 13:21:00 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
 
-import java.awt.*;
-import java.util.*;
-
-import javax.swing.*;
-
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Object.*;
+import java.awt.*;
+import java.util.Date;
+import javax.swing.*;
 
-public class CommandPermissionAttributesPane extends PropertiesPanel
-{
-
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2004/09/27 13:21:00 $
+ * @module generalclient_v1
+ */
+public final class CommandPermissionAttributesPane extends JPanel implements ObjectResourcePropertiesPane {
+	private static CommandPermissionAttributesPane instance = null;
 
   CommandPermissionAttributes cpa;
   CommandPermissionAttributesPanel cpap =
@@ -25,30 +35,27 @@ public class CommandPermissionAttributesPane extends PropertiesPanel
   BorderLayout borderLayout1 = new BorderLayout();
   User user;
 
-  public CommandPermissionAttributesPane() {
-	 try
-	 {
+	/**
+	 * @deprecated Use {@link #getInstance()} instead.
+	 */
+	public CommandPermissionAttributesPane() {
 		jbInit();
-	 }
-	 catch(Exception ex) {
-		ex.printStackTrace();
-	 }
-  }
+	}
 
-  public CommandPermissionAttributesPane(CommandPermissionAttributes cpa)
-  {
-	 super();
-	 setObjectResource(cpa);
-  }
+	/**
+	 * @deprecated Use {@link #getInstance()} instead.
+	 */
+	public CommandPermissionAttributesPane(CommandPermissionAttributes cpa) {
+		super();
+		setObjectResource(cpa);
+	}
 
-  void jbInit() throws Exception
-  {
-	 this.setPreferredSize(new Dimension(500, 500));
-	 this.setLayout(borderLayout1);
-
-	 this.setBorder(BorderFactory.createRaisedBevelBorder());
-	 this.add(cpap, BorderLayout.CENTER);
-  }
+	private void jbInit() {
+		this.setPreferredSize(new Dimension(500, 500));
+		this.setLayout(borderLayout1);
+		this.setBorder(BorderFactory.createRaisedBevelBorder());
+		this.add(cpap, BorderLayout.CENTER);
+	}
 
   public boolean save()
   {
@@ -84,7 +91,7 @@ public class CommandPermissionAttributesPane extends PropertiesPanel
 
 	 updater.updateObjectResources(this.cpa, false);
 	 Pool.put(CommandPermissionAttributes.typ, cpa.id, cpa);
-	 this.aContext.getDataSourceInterface().SaveExec(cpa.id);
+	 this.aContext.getDataSource().SaveExec(cpa.id);
 
 	 this.setData(cpa);
 
@@ -154,4 +161,13 @@ public class CommandPermissionAttributesPane extends PropertiesPanel
 	 this.cpap.setVisible(key);
 	 repaint();
   }
+
+	public static CommandPermissionAttributesPane getInstance() {
+		if (instance == null)
+			synchronized (CommandPermissionAttributesPane.class) {
+				if (instance == null)
+					instance = new CommandPermissionAttributesPane();
+			}
+		return instance;
+	}
 }

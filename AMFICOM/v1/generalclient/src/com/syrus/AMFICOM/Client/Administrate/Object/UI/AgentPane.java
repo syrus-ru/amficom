@@ -1,5 +1,5 @@
 /*
- * $Id: AgentPane.java,v 1.2 2004/08/17 15:02:50 krupenn Exp $
+ * $Id: AgentPane.java,v 1.3 2004/09/27 13:22:58 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,29 +7,29 @@
  */
 
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
-import java.awt.*;
-import java.util.*;
 
-import javax.swing.*;
-
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Object.*;
-import com.syrus.AMFICOM.Client.Resource.System.*;
+import com.syrus.AMFICOM.Client.Resource.Object.User;
+import com.syrus.AMFICOM.Client.Resource.System.Agent;
+import java.awt.*;
+import java.util.Date;
+import javax.swing.*;
 
 /**
  * This class actually belongs to <tt>admin_v1</tt> module. It was
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2004/08/17 15:02:50 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2004/09/27 13:22:58 $
  * @module generalclient_v1
  */
-public class AgentPane extends PropertiesPanel
-{
+public final class AgentPane extends JPanel implements ObjectResourcePropertiesPane {
+	private static AgentPane instance = null;
+
   Agent agent;
 
   ApplicationContext aContext = new ApplicationContext();
@@ -40,35 +40,27 @@ public class AgentPane extends PropertiesPanel
 
   AgentPanel agentPanel = new AgentPanel();
 
-  public AgentPane()
-  {
-    try
-    {
-      jbInit();
-    }
-    catch(Exception ex) {
-      ex.printStackTrace();
-    }
-  }
+	/**
+	 * @deprecated Use {@link #getInstance()} instead.
+	 */
+	public AgentPane() {
+		jbInit();
+	}
 
-  public AgentPane(ObjectResource or)
-  {
-    this();
-    setObjectResource(or);
-  }
+	/**
+	 * @deprecated Use {@link #getInstance()} instead.
+	 */
+	public AgentPane(ObjectResource or) {
+		this();
+		setObjectResource(or);
+	}
 
-  void jbInit() throws Exception
-  {
-    this.setPreferredSize(new Dimension(500, 500));
-    this.setLayout(borderLayout1);
-
-    this.setBorder(BorderFactory.createRaisedBevelBorder());
-
-    this.add(agentPanel, BorderLayout.CENTER);
-//    this.add(pac, BorderLayout.SOUTH);
-  }
-
-
+	private void jbInit() {
+		this.setPreferredSize(new Dimension(500, 500));
+		this.setLayout(borderLayout1);
+		this.setBorder(BorderFactory.createRaisedBevelBorder());
+		this.add(agentPanel, BorderLayout.CENTER);
+	}
 
   public void setContext(ApplicationContext aContext)
   {
@@ -110,7 +102,7 @@ public class AgentPane extends PropertiesPanel
       return false;
 
    Pool.put(Agent.typ, agent.id, agent);
-    aContext.getDataSourceInterface().SaveAgent(agent.id);
+    aContext.getDataSource().SaveAgent(agent.id);
     return true;
   }
 
@@ -125,7 +117,7 @@ public class AgentPane extends PropertiesPanel
 
     if(!checker.checkCommand(Checker.createAgent))
       return false;
-    String id = aContext.getDataSourceInterface().GetUId(Agent.typ);
+    String id = aContext.getDataSource().GetUId(Agent.typ);
 
     agent = new Agent();
     agent.id = id;
@@ -164,7 +156,7 @@ public class AgentPane extends PropertiesPanel
     String []s = new String[1];
 
     s[0] = agent.id;
-    aContext.getDataSourceInterface().RemoveAgent(s);
+    aContext.getDataSource().RemoveAgent(s);
     Pool.remove(Agent.typ, agent.id);
 
     return true;
@@ -174,4 +166,17 @@ public class AgentPane extends PropertiesPanel
   {
     return  save();
   }
+
+	public boolean cancel() {
+		return false;
+	}
+
+	public static AgentPane getInstance() {
+		if (instance == null)
+			synchronized (AgentPane.class) {
+				if (instance == null)
+					instance = new AgentPane();
+			}
+		return instance;
+	}
 }

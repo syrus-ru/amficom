@@ -4,9 +4,9 @@ import com.syrus.AMFICOM.CORBA.Alarm.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/09/10 14:13:39 $
- * @author $Author: stas $
- * @module Survey
+ * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2004/09/27 13:24:31 $
+ * @module generalclient_v1
  *
  * @see MessageModel
  * @see com.syrus.AMFICOM.Client.Object.UI.MessageDisplayModel
@@ -24,9 +24,6 @@ public class Message extends StubResource
 
 	private final MessageModel messageModel = new MessageModel(this);
 
-	/**
-	 * @deprecated
-	 */
 	public Message()
 	{
 	}
@@ -107,11 +104,6 @@ public class Message extends StubResource
 
 	public void updateLocalFromTransferable()
 	{
-	}
-
-	public String getPropertyPaneClassName()
-	{
-		return "";
 	}
 
 	/**

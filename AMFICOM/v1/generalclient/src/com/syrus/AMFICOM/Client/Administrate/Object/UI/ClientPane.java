@@ -1,5 +1,5 @@
 /*
- * $Id: ClientPane.java,v 1.2 2004/08/17 15:02:50 krupenn Exp $
+ * $Id: ClientPane.java,v 1.3 2004/09/27 13:22:19 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,30 +7,30 @@
  */
 
 package com.syrus.AMFICOM.Client.Administrate.Object.UI;
-import java.awt.*;
-import java.util.*;
 
-import javax.swing.*;
-
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.Checker;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Object.*;
-import com.syrus.AMFICOM.Client.Resource.System.*;
+import com.syrus.AMFICOM.Client.Resource.Object.User;
+import com.syrus.AMFICOM.Client.Resource.System.Client;
+import java.awt.*;
+import java.util.Date;
+import javax.swing.*;
 
 /**
  * This class actually belongs to <tt>admin_v1</tt> module. It was
  * moved to <tt>generalclient_v1</tt> to resolve cross-module
  * dependencies between <tt>generalclient_v1</tt> and <tt>admin_1</tt>.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2004/08/17 15:02:50 $
+ * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2004/09/27 13:22:19 $
  * @module generalclient_v1
  */
-public class ClientPane  extends PropertiesPanel
-{
+public final class ClientPane extends JPanel implements ObjectResourcePropertiesPane {
+	private static ClientPane instance = null;
+
   Client client;
 
   ApplicationContext aContext = new ApplicationContext();
@@ -42,35 +42,27 @@ public class ClientPane  extends PropertiesPanel
 
   ClientPanel clientPanel = new ClientPanel();
 
-  public ClientPane()
-  {
-    try
-    {
-      jbInit();
-    }
-    catch(Exception ex) {
-      ex.printStackTrace();
-    }
-  }
+	/**
+	 * @deprecated Use {@link #getInstance()} instead.
+	 */
+	public ClientPane() {
+		jbInit();
+	}
 
-  public ClientPane(ObjectResource or)
-  {
-    this();
-    setObjectResource(or);
-  }
+	/**
+	 * @deprecated Use {@link #getInstance()} instead.
+	 */
+	public ClientPane(ObjectResource or) {
+		this();
+		setObjectResource(or);
+	}
 
-  void jbInit() throws Exception
-  {
-    this.setPreferredSize(new Dimension(500, 500));
-    this.setLayout(borderLayout1);
-
-    this.setBorder(BorderFactory.createRaisedBevelBorder());
-
-    this.add(clientPanel, BorderLayout.CENTER);
-//    this.add(pac, BorderLayout.SOUTH);
-  }
-
-
+	private void jbInit() {
+		this.setPreferredSize(new Dimension(500, 500));
+		this.setLayout(borderLayout1);
+		this.setBorder(BorderFactory.createRaisedBevelBorder());
+		this.add(clientPanel, BorderLayout.CENTER);
+	}
 
   public void setContext(ApplicationContext aContext)
   {
@@ -108,7 +100,7 @@ public class ClientPane  extends PropertiesPanel
       return false;
 
     Pool.put(Client.typ, client.id, client);
-    aContext.getDataSourceInterface().SaveClient(client.id);
+    aContext.getDataSource().SaveClient(client.id);
     return true;
   }
 
@@ -124,7 +116,7 @@ public class ClientPane  extends PropertiesPanel
 
     if(!checker.checkCommand(Checker.createClient))
       return false;
-    String id = aContext.getDataSourceInterface().GetUId(Client.typ);
+    String id = aContext.getDataSource().GetUId(Client.typ);
 
     client = new Client();
     client.id = id;
@@ -164,7 +156,7 @@ public class ClientPane  extends PropertiesPanel
     String []s = new String[1];
 
     s[0] = client.id;
-    aContext.getDataSourceInterface().RemoveClient(s);
+    aContext.getDataSource().RemoveClient(s);
     Pool.remove(Client.typ, client.id);
 
     return true;
@@ -174,4 +166,17 @@ public class ClientPane  extends PropertiesPanel
   {
     return save();
   }
+
+	public boolean cancel() {
+		return false;
+	}
+
+	public static ClientPane getInstance() {
+		if (instance == null)
+			synchronized (ClientPane.class) {
+				if (instance == null)
+					instance = new ClientPane();
+			}
+		return instance;
+	}
 }
