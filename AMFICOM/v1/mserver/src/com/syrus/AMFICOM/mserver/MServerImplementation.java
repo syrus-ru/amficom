@@ -1,5 +1,5 @@
 /*
- * $Id: MServerImplementation.java,v 1.37 2005/03/23 20:06:25 arseniy Exp $
+ * $Id: MServerImplementation.java,v 1.38 2005/03/23 20:41:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -99,7 +99,7 @@ import com.syrus.AMFICOM.mserver.corba.MServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/03/23 20:06:25 $
+ * @version $Revision: 1.38 $, $Date: 2005/03/23 20:41:39 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -972,10 +972,10 @@ public class MServerImplementation extends MServerPOA {
 				List idsList = new ArrayList(ids_Transferable.length);
 				for (int i = 0; i < ids_Transferable.length; i++)
 					idsList.add(new Identifier(ids_Transferable[i]));
-				collection = ConfigurationStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
+				collection = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(idsList, condition, true);
 			}
 			else
-				collection = ConfigurationStorableObjectPool.getStorableObjectsByCondition(condition, true);
+				collection = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 			MeasurementType_Transferable[] transferables = new MeasurementType_Transferable[collection.size()];
 			int i = 0;
