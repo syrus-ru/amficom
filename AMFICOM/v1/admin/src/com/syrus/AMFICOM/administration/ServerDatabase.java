@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.2 2005/01/17 08:27:27 bob Exp $
+ * $Id: ServerDatabase.java,v 1.3 2005/01/28 10:11:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/17 08:27:27 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/01/28 10:11:00 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -269,12 +269,14 @@ public class ServerDatabase extends StorableObjectDatabase {
 
 		if (list != null) {
 			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
-			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_SERVER);
-			for (Iterator iter = list.iterator(); iter.hasNext();) {
-				Server server = (Server) iter.next();
-				List characteristics = (List)characteristicMap.get(server);
-				server.setCharacteristics0(characteristics);
-			}
+			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list,
+					CharacteristicSort.CHARACTERISTIC_SORT_SERVER);
+			if (characteristicMap != null)
+				for (Iterator iter = list.iterator(); iter.hasNext();) {
+					Server server = (Server) iter.next();
+					List characteristics = (List) characteristicMap.get(server.getId());
+					server.setCharacteristics0(characteristics);
+				}
 		}
 		return list;
 	}

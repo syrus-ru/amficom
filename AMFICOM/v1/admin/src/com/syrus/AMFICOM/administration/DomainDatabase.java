@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.3 2005/01/24 10:43:40 bob Exp $
+ * $Id: DomainDatabase.java,v 1.4 2005/01/28 10:11:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,8 +37,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/01/24 10:43:40 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/01/28 10:11:00 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -211,11 +211,14 @@ public class DomainDatabase extends StorableObjectDatabase {
         
     if (retrivedDomains != null && !retrivedDomains.isEmpty()) {
 			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
-			Map storableObjectCharacteristics = characteristicDatabase.retrieveCharacteristicsByOneQuery(retrivedDomains, CharacteristicSort.CHARACTERISTIC_SORT_DOMAIN);
-			for (Iterator iter = storableObjectCharacteristics.keySet().iterator(); iter.hasNext();) {
-				Domain domain = (Domain) iter.next();
-				domain.setCharacteristics0((List)storableObjectCharacteristics.get(domain));				
-			}
+			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(retrivedDomains,
+					CharacteristicSort.CHARACTERISTIC_SORT_DOMAIN);
+			if (characteristicMap != null)
+				for (Iterator iter = retrivedDomains.iterator(); iter.hasNext();) {
+					Domain domain = (Domain) iter.next();
+					List characteristics = (List) characteristicMap.get(domain.getId());
+					domain.setCharacteristics0(characteristics);
+				}
 		}
 		return retrivedDomains;
 
