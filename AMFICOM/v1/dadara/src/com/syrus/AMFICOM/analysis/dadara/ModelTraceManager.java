@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.32 2005/03/28 13:50:14 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.33 2005/03/29 07:51:53 bob Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import java.util.LinkedList;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.32 $, $Date: 2005/03/28 13:50:14 $
+ * @author $Author: bob $
+ * @version $Revision: 1.33 $, $Date: 2005/03/29 07:51:53 $
  * @module
  */
 public class ModelTraceManager
@@ -520,7 +520,8 @@ public class ModelTraceManager
 		protected double	posY;
 		protected int		type;
 
-		protected AbstractThresholdHandle(int key, int posX, double posY, int type) {
+		protected AbstractThresholdHandle(int thId, Thresh[] thresh, int key, int posX, double posY, int type) {
+			this.th = thresh[thId];
 			this.key = key;
 			this.posX = posX;
 			this.posY = posY;
@@ -556,8 +557,7 @@ public class ModelTraceManager
 		private double dxFrac = 0; // сохраняем дробную часть dx 
 
 		protected ThresholdHandleDX(int thId, int key, int posX, double posY) {
-			super(key, posX, posY, Thresh.IS_KEY_UPPER[key] ? HORIZONTAL_LEFT_TYPE : HORIZONTAL_RIGHT_TYPE);
-			this.th = tDX[thId];
+			super(thId, tDX, key, posX, posY, Thresh.IS_KEY_UPPER[key] ? HORIZONTAL_LEFT_TYPE : HORIZONTAL_RIGHT_TYPE);
 			this.type = ((ThreshDX)this.th).isRise() ? (Thresh.IS_KEY_UPPER[key] ? HORIZONTAL_RIGHT_TYPE : HORIZONTAL_LEFT_TYPE) : this.type;
 		}
 		public void moveBy(double dx, double dy) // dy is ignored
@@ -580,11 +580,10 @@ public class ModelTraceManager
 
 		protected ThresholdHandleDY(int thId, int key, int posX, double posY)
 		{
-			super(key, posX, posY, Thresh.IS_KEY_UPPER[key] ? VERTICAL_UP_TYPE :  VERTICAL_DOWN_TYPE);
-			this.th = tDY[thId];
-			int posMin = th.xMin;
-			int posMax = th.xMax;
-			if (((ThreshDY)th).getTypeL() && thId > 0 && thId < tDY.length - 1)
+			super(thId, tDY, key, posX, posY, Thresh.IS_KEY_UPPER[key] ? VERTICAL_UP_TYPE :  VERTICAL_DOWN_TYPE);
+			int posMin = this.th.xMin;
+			int posMax = this.th.xMax;
+			if (((ThreshDY)this.th).getTypeL() && thId > 0 && thId < tDY.length - 1)
 			{
 				// уточняем положение точки привязки по ширине 98% максимума кривой
 				posMin = tDY[thId - 1].xMax;
@@ -616,9 +615,9 @@ public class ModelTraceManager
 					// XXX: срабатывание не гарантировано, но вроде обычно срабатывает.
 					// Если не сработает - это коснется только удобства GUI, но не функциональности.
 					if (yLVal >= yMax)
-						posMin = th.xMin;
+						posMin = this.th.xMin;
 					if (yRVal >= yMax)
-						posMax = th.xMax;
+						posMax = this.th.xMax;
 				}
 			}
 			if (posX < posMin)
@@ -643,10 +642,10 @@ public class ModelTraceManager
 	private ArrayList getAllThreshByNEvent(int nEvent)
 	{
 		ArrayList ret = new ArrayList();
-		for (int i = 0; i < tL.length; i++)
+		for (int i = 0; i < this.tL.length; i++)
 		{
-			if (tL[i].isRelevantToNEvent(nEvent))
-				ret.add(tL[i]);
+			if (this.tL[i].isRelevantToNEvent(nEvent))
+				ret.add(this.tL[i]);
 		}
 		return ret;
 	}
