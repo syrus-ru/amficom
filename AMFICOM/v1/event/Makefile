@@ -12,6 +12,7 @@ JIKESFLAGS = -target 1.2
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
+$(call checkenve,ORACLE_HOME)
 
 APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/util.jar
 
@@ -19,6 +20,7 @@ APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/util.jar
 SOURCES := com/syrus/AMFICOM/event/EventType.java \
 	com/syrus/AMFICOM/event/EventTypeDatabase.java \
 	com/syrus/AMFICOM/event/Event.java \
+	com/syrus/AMFICOM/event/EventDatabase.java \
 	com/syrus/AMFICOM/event/EventParameter.java
 
 
@@ -28,7 +30,7 @@ $(LIBNAME): .mach
 
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(CLASSDIR) \
+		-classpath $(APPCLASSPATH):$(JDBCCLASSPATH):$(CLASSDIR) \
 		$(addprefix $(SRCDIR)/,$(SOURCES))
 	touch $@
 
