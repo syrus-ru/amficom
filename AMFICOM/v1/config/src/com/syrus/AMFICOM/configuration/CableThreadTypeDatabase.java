@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeDatabase.java,v 1.22 2005/02/28 14:12:14 bob Exp $
+ * $Id: CableThreadTypeDatabase.java,v 1.23 2005/03/02 13:07:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/02/28 14:12:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.23 $, $Date: 2005/03/02 13:07:05 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -59,7 +59,7 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 				+ StorableObjectWrapper.COLUMN_CODENAME + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ StorableObjectWrapper.COLUMN_NAME + COMMA
-				+ CableThreadTypeWrapper.COLUMN_COLOR
+				+ CableThreadTypeWrapper.COLUMN_COLOR + COMMA
 				+ CableThreadTypeWrapper.COLUMN_LINK_TYPE_ID;
 		}
 		return super.getColumns(mode) + columns;
