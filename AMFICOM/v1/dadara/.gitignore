@@ -1,3 +1,4 @@
+clean.cmd
 *.obj
 *.exp
 *.o
