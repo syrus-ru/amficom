@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.16 2004/08/29 10:54:23 bob Exp $
+ * $Id: MonitoredElement.java,v 1.17 2004/08/30 14:39:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/08/29 10:54:23 $
+ * @version $Revision: 1.17 $, $Date: 2004/08/30 14:39:41 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -90,6 +90,8 @@ public class MonitoredElement extends DomainMember {
 		this.sort = sort;
 		this.localAddress = localAddress;
 		this.monitoredDomainMemberIds = monitoredDomainMemberIds;
+		
+		this.monitoredElementDatabase = ConfigurationDatabaseContext.monitoredElementDatabase;
 	}
 	
 	/**

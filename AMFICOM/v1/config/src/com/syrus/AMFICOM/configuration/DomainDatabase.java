@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.4 2004/08/29 10:54:23 bob Exp $
+ * $Id: DomainDatabase.java,v 1.5 2004/08/30 14:39:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/08/29 10:54:23 $
+ * @version $Revision: 1.5 $, $Date: 2004/08/30 14:39:41 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -47,7 +47,7 @@ public class DomainDatabase extends StorableObjectDatabase {
 	}
 	
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		CharacteristicDatabase characteristicDatabase = CharacteristicDatabase.getInstance();
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
 		Domain domain = this.fromStorableObject(storableObject);
 		this.retrieveDomain(domain);
 		domain.setCharacteristics(characteristicDatabase.retrieveCharacteristics(domain.getId(), CharacteristicSort.CHARACTERISTIC_SORT_DOMAIN));

@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.4 2004/08/29 10:54:24 bob Exp $
+ * $Id: PortType.java,v 1.5 2004/08/30 14:39:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.PortType_Transferable;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/08/29 10:54:24 $
+ * @version $Revision: 1.5 $, $Date: 2004/08/30 14:39:41 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -70,6 +70,8 @@ public class PortType extends StorableObjectType {
 				creatorId,
 				codename,
 				description);
+		
+		this.portTypeDatabase = ConfigurationDatabaseContext.portTypeDatabase;
 	}
 	
 	

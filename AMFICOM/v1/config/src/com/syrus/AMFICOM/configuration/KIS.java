@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.16 2004/08/29 10:54:23 bob Exp $
+ * $Id: KIS.java,v 1.17 2004/08/30 14:39:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/08/29 10:54:23 $
+ * @version $Revision: 1.17 $, $Date: 2004/08/30 14:39:41 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -94,6 +94,8 @@ public class KIS extends DomainMember {
 		this.equipmentId = equipmentId;
 		this.mcmId = mcmId;
 		this.measurementPortIds = new ArrayList();
+		
+		this.kisDatabase = ConfigurationDatabaseContext.kisDatabase;
 	}
 	
 	/**

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.10 2004/08/27 15:18:15 bob Exp $
+ * $Id: CharacteristicType.java,v 1.11 2004/08/30 14:39:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicType_Transferable;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/08/27 15:18:15 $
+ * @version $Revision: 1.11 $, $Date: 2004/08/30 14:39:41 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -83,6 +83,8 @@ public class CharacteristicType extends StorableObjectType {
 					this.dataType = dataType;
 					this.editable = editable;
 					this.visible = visible;
+					
+					this.characteristicTypeDatabase = ConfigurationDatabaseContext.characteristicTypeDatabase;
 	}
 	
 	/**

@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.6 2004/08/29 10:54:24 bob Exp $
+ * $Id: User.java,v 1.7 2004/08/30 14:39:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.configuration.corba.User_Transferable;
 import com.syrus.AMFICOM.configuration.corba.UserSort;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/08/29 10:54:24 $
+ * @version $Revision: 1.7 $, $Date: 2004/08/30 14:39:41 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -81,6 +81,8 @@ public class User extends StorableObject {
 		this.sort = sort;
 		this.name = name;
 		this.description = description;
+		
+		this.userDatabase = ConfigurationDatabaseContext.userDatabase;
 	}
 
 	public Object getTransferable() {

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.14 2004/08/29 10:54:24 bob Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.15 2004/08/30 14:39:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/08/29 10:54:24 $
+ * @version $Revision: 1.15 $, $Date: 2004/08/30 14:39:41 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -63,7 +63,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 	}
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		CharacteristicDatabase characteristicDatabase = CharacteristicDatabase.getInstance();
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
 		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
 		this.retrieveTransmissionPath(transmissionPath);
 		this.retrieveTransmissionPathMELink(transmissionPath);

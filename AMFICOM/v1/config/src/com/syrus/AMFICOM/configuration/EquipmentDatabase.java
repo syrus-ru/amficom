@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.27 2004/08/29 10:54:23 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.28 2004/08/30 14:39:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/08/29 10:54:23 $
+ * @version $Revision: 1.28 $, $Date: 2004/08/30 14:39:41 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -125,7 +125,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 
 	
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		CharacteristicDatabase characteristicDatabase = CharacteristicDatabase.getInstance();
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
 		Equipment equipment = this.fromStorableObject(storableObject);
 		this.retrieveEquipment(equipment);
 		this.retrieveEquipmentPortIds(equipment);

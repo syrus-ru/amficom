@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.17 2004/08/29 10:54:23 bob Exp $
+ * $Id: CharacteristicDatabase.java,v 1.18 2004/08/30 14:39:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/08/29 10:54:23 $
+ * @version $Revision: 1.18 $, $Date: 2004/08/30 14:39:41 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -59,21 +59,6 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
     public static final String COLUMN_TRANSMISSION_PATH_ID  = "transmission_path_id";
     // port_id VARCHAR2(32),
     public static final String COLUMN_PORT_ID  = "port_id";
-    
-    
-    private static CharacteristicDatabase instance;
-    
-    private CharacteristicDatabase(){
-    	// private constructor
-    }
-    
-    public static CharacteristicDatabase getInstance(){
-    	if (instance==null)
-    		instance = new CharacteristicDatabase();
-    	return instance;
-    }
-    
-
 
 	private Characteristic fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Characteristic)
