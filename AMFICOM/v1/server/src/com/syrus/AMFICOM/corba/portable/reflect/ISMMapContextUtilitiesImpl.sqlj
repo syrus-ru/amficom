@@ -1,0 +1,39 @@
+package com.syrus.AMFICOM.corba.portable.reflect;
+
+import com.syrus.AMFICOM.corba.portable.reflect.common.AbstractEventSourceUtilitiesImpl;
+import java.sql.SQLException;
+import sqlj.runtime.ExecutionContext;
+import sqlj.runtime.ref.DefaultContext;
+
+/**
+ * @version $Revision: 1.1.2.1 $, $Date: 2004/10/12 13:12:54 $
+ * @author $Author: bass $
+ */
+final class ISMMapContextUtilitiesImpl extends AbstractEventSourceUtilitiesImpl implements ISMMapContextUtilitiesOperations {
+	ISMMapContextUtilitiesImpl() {
+	}
+
+	protected String[] getIds(DefaultContext connCtx, ExecutionContext execCtx) throws SQLException {
+		throw new UnsupportedOperationException();
+	}
+
+	protected String getUUID(DefaultContext connCtx, ExecutionContext execCtx) throws SQLException {
+		String nextval;
+		if (connCtx == null) {
+			#sql {
+				SELECT amficom.ismmap_seq.nextval INTO :nextval FROM sys.dual
+			};
+		} else if (execCtx == null) {
+			#sql [connCtx] {
+				SELECT amficom.ismmap_seq.nextval INTO :nextval FROM sys.dual
+			};
+		} else {
+			#sql [connCtx, execCtx] {
+				SELECT amficom.ismmap_seq.nextval INTO :nextval FROM sys.dual
+			};
+		}
+		return ISMMapContextUtilities.UUID_PREFIX + nextval;
+	}
+
+	#sql final iterator IdIterator(String id);
+}
