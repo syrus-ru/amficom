@@ -1,7 +1,27 @@
 package com.syrus.AMFICOM.analysis.dadara;
 
-/*
+//*
 
+/**
+ * ReflectogramComparer
+ * 
+ * Сравнивает результаты анализа.
+ * Состоит из двух частей.
+ * 
+ * (1) нестатическая часть - пользователь создает объект
+ * класса ReflectogramComparer, дав на входе два массива
+ * ReflectogramEvent[] - один - пробные события, второй - эталонные.
+ * (Сама рефлектограмма пока не используется).
+ * Созданный объект находит соответствия событий, и после этого
+ * умеет отвечать на вопросы об изменении состава и параметров событий.
+ * 
+ * (2) статическая часть - сравнивает модельные кривые, построенные
+ * по ReflectogramEvent[] - MaxDeviation и пр.
+ * 
+ * @author $Author: saa $
+ * @version $Revision: 1.8 $, $Date: 2004/12/13 18:12:41 $
+ * @module analysis_v1
+ */
 public class ReflectogramComparer
 {
 	//private ReflectogramEvent[] hardAlarms;
@@ -57,18 +77,30 @@ public class ReflectogramComparer
 		}
 	}
 
+	public boolean isProbeEventNew(int probeId)
+	{
+		int etalonId = probe2etalon[probeId];
+		return etalonId == -1;
+	}
+
+	public boolean isEtalonEventLost(int etalonId)
+	{
+	    int probeId = etalon2probe[etalonId];
+	    return probeId == -1;
+	}
+
 	public int[] getNewEventsList()
 	{
 		// считаем число новых событий
 		int count = 0;
 		for (int i = 0; i < probe2etalon.length; i++)
-			if (probe2etalon[i] == -1)
+			if (isProbeEventNew(i))
 				count++;
 		// создаем и заполняем массив новых событий
 		int[] ret = new int[count];
 		count = 0;
 		for (int i = 0; i < probe2etalon.length; i++)
-			if (probe2etalon[i] == -1)
+			if (isEtalonEventLost(i))
 				ret[count++] = i;
 
 		return ret;
@@ -98,20 +130,20 @@ public class ReflectogramComparer
 			return a.getEventType() != b.getEventType();
 
 		case CHANGETYPE_NEW_OR_LOST:
-			return false; // пара событий уже дана
+			return false; // пара событий уже дана - значит изменения нет
 		}
 		// unknown criterion
 		return false;
 	}
 
 	// чтобы узнать, что событие изменилось,
-	// надо сначала проверить с критерием CHANGETYPE_NEW_OR_LOST
-	// в противном случае (для исчезнувшего события) ответ зависисит от реализации
+	// надо сначала проверить isEtalonEventLost.
+	// в противном случае ответ зависит от реализации
 	public boolean isEtalonEventChanged(int etalonId, int changeType, double changeThreshold)
 	{
 		int probeId = etalon2probe[etalonId];
 		if (probeId == -1) // событие исчезло
-			return true; // в случае CHANGETYPE_NEW_OR_LOST надо вернуть true, в прочих - все равно что
+			return true;
 
 		return eventsAreDifferent(
 			etalonEvents[etalonId],
@@ -121,8 +153,8 @@ public class ReflectogramComparer
 	}
 
 	// чтобы узнать, что событие изменилось,
-	// надо сначала проверить с критерием CHANGETYPE_NEW_OR_LOST
-	// в противном случае (для нового события) ответ зависисит от реализации
+	// надо сначала проверить isProbeEventNew.
+	// В противном случае - ошибка (для отладки)
 	public boolean isProbeEventChanged(int probeId, int changeType, double changeThreshold)
 	{
 		int etalonId = probe2etalon[probeId];
@@ -163,14 +195,14 @@ public class ReflectogramComparer
 		int[] ret = new int[X.length];
 		for (int i = 0; i < X.length; i++)
 		{
-			double bestDistance = 0.0;
+			double bestDistance = -1.0; // Stands for +inf
 			int bestJ = -1;
 			for (int j = 0; j < Y.length; j++)
 			{
 				if (eventsOverlaps(X[i], Y[j]))
 				{
 	                double distance = calcEventsDistance(X[i], Y[j]); 
-	                if (j == 0 || distance < bestDistance)
+	                if (bestDistance < 0 || distance < bestDistance)
 	                {
 	                    bestJ = j;
 	                    bestDistance = distance;
@@ -228,8 +260,10 @@ public class ReflectogramComparer
 	{
 		return getChangedProbeEventsList(data, etalon, CHANGETYPE_LOSS, threshold);
 	}
-
-	// OLD METHODS, just a copy-paste
+	
+	// Статические методы - для сверки модельных кривых, не вдаваясь в
+	// вопросы соответствия событий.
+	// OLD METHODS, with patches
 	//---------------------------------------------------------------------
 	//---------------------------------------------------------------------
 	//---------------------------------------------------------------------
@@ -254,7 +288,7 @@ public class ReflectogramComparer
 			}
 		}
 
-		return ret;
+		return Math.abs(ret);
 	}
 
 	//-----------------------------------------------------------------------------
@@ -269,7 +303,7 @@ public class ReflectogramComparer
 			{
 				double a1 = data[nEvent].refAmplitude(i);
 				double a2 = ReflectogramMath.getEventAmplitudeAt(i, etalon);
-				ret += (a1 - a2);
+				ret += Math.abs(a1 - a2);
 				norma++;
 			}
 		}
@@ -280,7 +314,7 @@ public class ReflectogramComparer
 	}
 
 	//-----------------------------------------------------------------------------
-	public static double getLoss(ReflectogramEvent[] etalon,
+	public static double getLossChange(ReflectogramEvent[] etalon,
 			ReflectogramEvent[] data, int nEvent)
 	{
 		if (data == null || etalon == null)
@@ -307,14 +341,14 @@ public class ReflectogramComparer
 	public static double getLocationDifference(ReflectogramEvent[] etalon,
 			ReflectogramEvent[] data, int nEvent)
 	{
-		int coord = data[nEvent].getMiddle();
-		ReflectogramEvent e = ReflectogramMath.getEvent(coord, etalon);
+		int coord1 = data[nEvent].getMiddle();
+		ReflectogramEvent e = ReflectogramMath.getEvent(coord1, etalon);
 		if (e == null)
 			return 0.;
 
 		int coord2 = e.getMiddle();
 
-		return coord - coord2;
+		return coord1 - coord2;
 	}
 
 	//-----------------------------------------------------------------------------
@@ -330,6 +364,7 @@ public class ReflectogramComparer
 		if (type != e.getEventType())
 			return 0.;
 
+		// XXX
 		//return 0.; // 
 		return data[nEvent].getWidth0() - e.getWidth0();
 	}
@@ -355,7 +390,7 @@ public class ReflectogramComparer
 				ret = a1 - a2;
 			}
 		}
-		return ret;
+		return Math.abs(ret);
 	}
 
 	//-----------------------------------------------------------------------------
@@ -396,7 +431,7 @@ public class ReflectogramComparer
 		{
 			a1 = ReflectogramMath.getEventAmplitudeAt(i, data);
 			a2 = ReflectogramMath.getEventAmplitudeAt(i, etalon);
-			ret += (a1 - a2);
+			ret += Math.abs(a1 - a2);
 			norma++;
 		}
 
