@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.53 2005/01/25 12:13:08 bob Exp $
+ * $Id: KIS.java,v 1.54 2005/01/26 13:25:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.administration.DomainMember;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/01/25 12:13:08 $
+ * @version $Revision: 1.54 $, $Date: 2005/01/26 13:25:34 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -323,4 +323,32 @@ public class KIS extends DomainMember implements Characterized {
 		this.setCharacteristics0(characteristics);
 		super.currentVersion = super.getNextVersion();
 	}	
+	/**
+	 * @param name The name to set.
+	 */
+	public void setName(String name) {
+		this.name = name;
+		super.currentVersion = super.getNextVersion();
+	}
+	/**
+	 * @param equipmentId The equipmentId to set.
+	 */
+	public void setEquipmentId(Identifier equipmentId) {
+		this.equipmentId = equipmentId;
+		super.currentVersion = super.getNextVersion();
+	}
+	/**
+	 * @param hostname The hostname to set.
+	 */
+	public void setHostName(String hostname) {
+		this.hostname = hostname;
+		super.currentVersion = super.getNextVersion();
+	}
+	/**
+	 * @param tcpPort The tcpPort to set.
+	 */
+	public void setTCPPort(short tcpPort) {
+		this.tcpPort = tcpPort;
+		super.currentVersion = super.getNextVersion();
+	}
 }

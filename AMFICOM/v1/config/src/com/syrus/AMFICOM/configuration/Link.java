@@ -1,5 +1,5 @@
 /*
- * $Id: Link.java,v 1.29 2005/01/25 12:13:08 bob Exp $
+ * $Id: Link.java,v 1.30 2005/01/26 13:25:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.configuration.corba.LinkSort;
 import com.syrus.AMFICOM.configuration.corba.Link_Transferable;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/01/25 12:13:08 $
+ * @version $Revision: 1.30 $, $Date: 2005/01/26 13:25:34 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -326,4 +326,53 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 		this.setCharacteristics0(characteristics);
 		super.currentVersion = super.getNextVersion();
 	}	
+	/**
+	 * @param name The name to set.
+	 */
+	public void setName(String name) {
+		this.name = name;
+		super.currentVersion = super.getNextVersion();
+	}
+	/**
+	 * @param sort The sort to set.
+	 */
+	public void setSort(LinkSort sort) {
+		this.sort = sort.value();
+		super.currentVersion = super.getNextVersion();
+	}
+	/**
+	 * @param supplier The supplier to set.
+	 */
+	public void setSupplier(String supplier) {
+		this.supplier = supplier;
+		super.currentVersion = super.getNextVersion();
+	}
+	/**
+	 * @param supplierCode The supplierCode to set.
+	 */
+	public void setSupplierCode(String supplierCode) {
+		this.supplierCode = supplierCode;
+		super.currentVersion = super.getNextVersion();
+	}
+	/**
+	 * @param type The type to set.
+	 */
+	public void setType(AbstractLinkType type) {
+		this.type = type;
+		super.currentVersion = super.getNextVersion();
+	}
+	/**
+	 * @param color The color to set.
+	 */
+	public void setColor(int color) {
+		this.color = color;
+		super.currentVersion = super.getNextVersion();
+	}
+	/**
+	 * @param mark The mark to set.
+	 */
+	public void setMark(String mark) {
+		this.mark = mark;
+		super.currentVersion = super.getNextVersion();
+	}
 }

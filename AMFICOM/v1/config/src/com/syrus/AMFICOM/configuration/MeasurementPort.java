@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.33 2005/01/14 18:07:08 arseniy Exp $
+ * $Id: MeasurementPort.java,v 1.34 2005/01/26 13:25:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/01/14 18:07:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.34 $, $Date: 2005/01/26 13:25:34 $
+ * @author $Author: bob $
  * @module config_v1
  */
 public class MeasurementPort extends StorableObject implements Characterized, TypedObject {
@@ -267,6 +267,20 @@ public class MeasurementPort extends StorableObject implements Characterized, Ty
 
 	public void setCharacteristics(final List characteristics) {
 		this.setCharacteristics0(characteristics);
+		super.currentVersion = super.getNextVersion();
+	}
+	/**
+	 * @param kisId The kisId to set.
+	 */
+	public void setKISId(Identifier kisId) {
+		this.kisId = kisId;
+		super.currentVersion = super.getNextVersion();
+	}
+	/**
+	 * @param portId The portId to set.
+	 */
+	public void setPortId(Identifier portId) {
+		this.portId = portId;
 		super.currentVersion = super.getNextVersion();
 	}
 }

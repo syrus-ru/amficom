@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.41 2005/01/25 12:13:08 bob Exp $
+ * $Id: TransmissionPath.java,v 1.42 2005/01/26 13:25:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 /**
- * @version $Revision: 1.41 $, $Date: 2005/01/25 12:13:08 $
+ * @version $Revision: 1.42 $, $Date: 2005/01/26 13:25:34 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -283,4 +283,33 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 		this.setCharacteristics0(characteristics);
 		super.currentVersion = super.getNextVersion();
 	}	
+	
+	/**
+	 * @param finishPortId The finishPortId to set.
+	 */
+	public void setFinishPortId(Identifier finishPortId) {
+		this.finishPortId = finishPortId;
+		super.currentVersion = super.getNextVersion();
+	}
+	/**
+	 * @param name The name to set.
+	 */
+	public void setName(String name) {
+		this.name = name;
+		super.currentVersion = super.getNextVersion();
+	}
+	/**
+	 * @param startPortId The startPortId to set.
+	 */
+	public void setStartPortId(Identifier startPortId) {
+		this.startPortId = startPortId;
+		super.currentVersion = super.getNextVersion();
+	}
+	/**
+	 * @param type The type to set.
+	 */
+	public void setType(TransmissionPathType type) {
+		this.type = type;
+		super.currentVersion = super.getNextVersion();
+	}
 }
