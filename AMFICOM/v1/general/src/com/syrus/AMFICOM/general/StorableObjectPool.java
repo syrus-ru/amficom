@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.51 2005/03/29 12:02:55 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.52 2005/03/29 16:53:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/03/29 12:02:55 $
+ * @version $Revision: 1.52 $, $Date: 2005/03/29 16:53:59 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -396,10 +396,9 @@ public abstract class StorableObjectPool {
 	 * @param useLoader
 	 * @throws ApplicationException
 	 */
-	protected Collection getStorableObjectsByConditionButIdsImpl(	final Collection ids,
-																	final StorableObjectCondition condition,
-																	final boolean useLoader)
-			throws ApplicationException {
+	protected Collection getStorableObjectsByConditionButIdsImpl(final Collection ids,
+			final StorableObjectCondition condition,
+			final boolean useLoader) throws ApplicationException {
 		assert ids != null : "Supply an empty list instead";
 		assert condition != null : "Supply EquivalentCondition instead";
 
