@@ -1,5 +1,5 @@
 /*
- * $Id: scheme-vt.idl,v 1.13 2004/12/21 16:32:18 bass Exp $
+ * $Id: scheme-vt.idl,v 1.14 2004/12/22 08:12:48 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -283,22 +283,24 @@ module com {
 
 						/**
 						 * Returns a scheme port this cable thread is attached to (within scheme
-							* device specified). The resulting port returned is either a source port
-							* or a target port.
+						 * device specified). The resulting port returned is either a source port
+						 * or a target port.
 						 *
 						 * @todo Transform to a condition.
 						 */
 						SchemePort getSchemePort(in SchemeDevice schemeDevice);
 						/**
 						 * Updates a scheme port this cable thread is attached to (within scheme
-							* device specified) with a new value. This scheme cable thread is
-							* disconnected from the original port and attached to the new one (both
-							* old and new ones are notified of this change). As a result, either a
-							* source scheme port or a target scheme port field is updated.
+						 * device specified) with a new value. This scheme cable thread is
+						 * disconnected from the original port and attached to the new one (both
+						 * old and new ones are notified of this change). As a result, either a
+						 * source scheme port or a target scheme port field is updated. No
+						 * <code>SchemeDevice</code> parameter is needed as <code>SchemePort</code>
+						 * already references it.
 						 *
 						 * @todo Transform to a condition.
 						 */
-						void setSchemePort(in SchemeDevice schemeDevice, in SchemePort schemePort);
+						void setSchemePort(in SchemePort schemePort);
 					};
 
 					typedef sequence<SchemeCableThread> SchemeCableThreadSeq;
