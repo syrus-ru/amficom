@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.13 2004/09/20 14:15:19 max Exp $
+ * $Id: DomainDatabase.java,v 1.14 2004/10/03 12:43:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,12 +24,13 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
+import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/09/20 14:15:19 $
- * @author $Author: max $
+ * @version $Revision: 1.14 $, $Date: 2004/10/03 12:43:06 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -210,6 +211,19 @@ public class DomainDatabase extends StorableObjectDatabase {
 		//return retriveByIdsPreparedStatement(ids);
 	}
 	
-	
+	public List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
+        List list = null;
+        
+        String condition = COLUMN_ID + EQUALS + domain.getId().toSQLString();
+        
+        try {
+            list = retrieveButIds(ids, condition);
+        }  catch (IllegalDataException ide) {           
+            Log.debugMessage("DomainDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
+        }
+        
+        return list;
+    }
+
 
 }

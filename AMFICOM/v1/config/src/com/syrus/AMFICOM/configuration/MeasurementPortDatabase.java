@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.16 2004/09/20 14:15:19 max Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.17 2004/10/03 12:43:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/09/20 14:15:19 $
- * @author $Author: max $
+ * @version $Revision: 1.17 $, $Date: 2004/10/03 12:43:06 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 public class MeasurementPortDatabase extends StorableObjectDatabase {
@@ -298,4 +298,21 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
             }
 		}
 	}
+	
+	public List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
+        List list = null;
+        
+        String condition = COLUMN_KIS_ID + SQL_IN + OPEN_BRACKET
+				+ SQL_SELECT + COLUMN_ID + SQL_FROM + ObjectEntities.KIS_ENTITY 
+				+ SQL_WHERE + DomainMember.COLUMN_DOMAIN_ID + EQUALS + domain.getId().toSQLString() 
+			+ CLOSE_BRACKET;
+        
+        try {
+            list = retrieveButIds(ids, condition);
+        }  catch (IllegalDataException ide) {           
+            Log.debugMessage("MeasurementPortDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
+        }
+        
+        return list;
+    }
 }

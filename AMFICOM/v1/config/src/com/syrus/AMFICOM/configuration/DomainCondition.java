@@ -1,5 +1,5 @@
 /*
- * $Id: DomainCondition.java,v 1.2 2004/10/03 10:21:24 bob Exp $
+ * $Id: DomainCondition.java,v 1.3 2004/10/03 12:43:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/10/03 10:21:24 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/03 12:43:06 $
  * @author $Author: bob $
  * @module config_v1
  */
@@ -85,8 +85,10 @@ public class DomainCondition implements StorableObjectCondition {
 //					condition = true;
 //					break;
 				case ObjectEntities.USER_ENTITY_CODE:
-					User user = (User)storableObject;
-				condition = true;
+					{
+						User user = (User)storableObject;
+						condition = true;
+					}
 					break;
 				case ObjectEntities.DOMAIN_ENTITY_CODE:
 					Domain domain2 = (Domain)storableObject;

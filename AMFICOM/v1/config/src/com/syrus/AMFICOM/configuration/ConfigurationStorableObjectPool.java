@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.14 2004/10/01 10:25:52 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.15 2004/10/03 12:43:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/10/01 10:25:52 $
+ * @version $Revision: 1.15 $, $Date: 2004/10/03 12:43:06 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -281,7 +281,7 @@ public class ConfigurationStorableObjectPool {
 					idsList.add(storableObject.getId());					
 				}
 				
-				loadedList = loadStorableObjectsButIds(condition.getEntityCode().shortValue(), idsList);
+				loadedList = loadStorableObjectsButIds(condition, idsList);
 			}
 			
 			for (Iterator it = list.iterator(); it.hasNext();) {
@@ -301,6 +301,7 @@ public class ConfigurationStorableObjectPool {
 
 		return list;
 	}
+
 
     
 	public static List getStorableObjectsByDomain(short entityCode, Domain domain) throws DatabaseException,
@@ -550,51 +551,52 @@ public class ConfigurationStorableObjectPool {
         return storableObjects;
     }
 
-	private static List loadStorableObjectsButIds(short entityCode, List ids) throws DatabaseException,
+	private static List loadStorableObjectsButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
 		CommunicationException {
 		List loadedList = null;
+		short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
 	        case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
-	            loadedList = cObjectLoader.loadCharacteristicTypesButIds(ids);
+	            loadedList = cObjectLoader.loadCharacteristicTypesButIds(condition, ids);
 	            break;
 	        case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
-	            loadedList = cObjectLoader.loadEquipmentTypesButIds(ids);
+	            loadedList = cObjectLoader.loadEquipmentTypesButIds(condition, ids);
 	            break;
 	        case ObjectEntities.PORTTYPE_ENTITY_CODE:
-	            loadedList = cObjectLoader.loadPortTypesButIds(ids);
+	            loadedList = cObjectLoader.loadPortTypesButIds(condition, ids);
 	            break;
 	        case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
-	            loadedList = cObjectLoader.loadMeasurementPortTypesButIds(ids);
+	            loadedList = cObjectLoader.loadMeasurementPortTypesButIds(condition, ids);
 	            break;
 	        case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-	            loadedList = cObjectLoader.loadCharacteristicsButIds(ids);
+	            loadedList = cObjectLoader.loadCharacteristicsButIds(condition, ids);
 	            break;
 	        case ObjectEntities.USER_ENTITY_CODE:
-	            loadedList = cObjectLoader.loadUsersButIds(ids);
+	            loadedList = cObjectLoader.loadUsersButIds(condition, ids);
 	            break;
 	        case ObjectEntities.DOMAIN_ENTITY_CODE:
-	            loadedList = cObjectLoader.loadDomainsButIds(ids);
+	            loadedList = cObjectLoader.loadDomainsButIds(condition, ids);
 	            break;
 	        case ObjectEntities.SERVER_ENTITY_CODE:
-	            loadedList = cObjectLoader.loadServersButIds(ids);
+	            loadedList = cObjectLoader.loadServersButIds(condition, ids);
 	            break;
 	        case ObjectEntities.MCM_ENTITY_CODE:
-	            loadedList = cObjectLoader.loadMCMsButIds(ids);
+	            loadedList = cObjectLoader.loadMCMsButIds(condition, ids);
 	            break;
 	        case ObjectEntities.EQUIPMENT_ENTITY_CODE:
-	            loadedList = cObjectLoader.loadEquipmentsButIds(ids);
+	            loadedList = cObjectLoader.loadEquipmentsButIds(condition, ids);
 	            break;
 	        case ObjectEntities.PORT_ENTITY_CODE:
-	            loadedList = cObjectLoader.loadPortsButIds(ids);
+	            loadedList = cObjectLoader.loadPortsButIds(condition, ids);
 	            break;
 	        case ObjectEntities.KIS_ENTITY_CODE:
-	            loadedList = cObjectLoader.loadKISsButIds(ids);
+	            loadedList = cObjectLoader.loadKISsButIds(condition, ids);
 	            break;
 	        case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
-	            loadedList = cObjectLoader.loadMeasurementPortsButIds(ids);
+	            loadedList = cObjectLoader.loadMeasurementPortsButIds(condition, ids);
 	            break;
 	        case ObjectEntities.ME_ENTITY_CODE:
-	            loadedList = cObjectLoader.loadMonitoredElementsButIds(ids);
+	            loadedList = cObjectLoader.loadMonitoredElementsButIds(condition, ids);
 	            break;
 			default:
 				Log.errorMessage("ConfigurationStorableObjectPool.loadStorableObjectsButIds | Unknown entity: "

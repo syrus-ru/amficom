@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationObjectLoader.java,v 1.11 2004/10/01 10:25:52 bob Exp $
+ * $Id: ConfigurationObjectLoader.java,v 1.12 2004/10/03 12:43:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,10 +13,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/10/01 10:25:52 $
+ * @version $Revision: 1.12 $, $Date: 2004/10/03 12:43:06 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -91,37 +92,37 @@ public interface ConfigurationObjectLoader {
 
     /* Load Configuration StorableObject but argument ids */
     
-    List loadCharacteristicTypesButIds(List ids) throws DatabaseException, CommunicationException;
+    List loadCharacteristicTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-    List loadEquipmentTypesButIds(List ids) throws DatabaseException, CommunicationException;
+    List loadEquipmentTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-    List loadPortTypesButIds(List ids) throws DatabaseException, CommunicationException;
+    List loadPortTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-    List loadMeasurementPortTypesButIds(List ids) throws DatabaseException, CommunicationException;
+    List loadMeasurementPortTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-    List loadCharacteristicsButIds(List ids) throws DatabaseException, CommunicationException;
+    List loadCharacteristicsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-//  PermissionAttributes loadPermissionAttributesButIds(List ids) throws DatabaseException, CommunicationException;
+//  PermissionAttributes loadPermissionAttributesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-    List loadUsersButIds(List ids) throws DatabaseException, CommunicationException;
+    List loadUsersButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-    List loadDomainsButIds(List ids) throws DatabaseException, CommunicationException;
+    List loadDomainsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-    List loadServersButIds(List ids) throws DatabaseException, CommunicationException;
+    List loadServersButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-    List loadMCMsButIds(List ids) throws DatabaseException, CommunicationException;
+    List loadMCMsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-    List loadEquipmentsButIds(List ids) throws DatabaseException, CommunicationException;
+    List loadEquipmentsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-    List loadPortsButIds(List ids) throws DatabaseException, CommunicationException;
+    List loadPortsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-    List loadTransmissionPathsButIds(List ids) throws DatabaseException, CommunicationException;
+    List loadTransmissionPathsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-    List loadKISsButIds(List ids) throws DatabaseException, CommunicationException;
+    List loadKISsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-    List loadMeasurementPortsButIds(List ids) throws DatabaseException, CommunicationException;
+    List loadMeasurementPortsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-    List loadMonitoredElementsButIds(List ids) throws DatabaseException, CommunicationException;
+    List loadMonitoredElementsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
     
 	public void saveCharacteristicType(CharacteristicType characteristicType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
