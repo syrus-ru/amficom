@@ -8,8 +8,8 @@
 	<classpathentry kind="src" path="/measurement_v1"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/servermisc.jar"/>
 	<classpathentry kind="src" path="test"/>
-	<classpathentry kind="var" path="ECLIPSE_HOME/plugins/org.junit_3.8.1/junit.jar"/>
 	<classpathentry kind="src" path="/mserver_v1"/>
 	<classpathentry kind="src" path="/mcm_v1"/>
+	<classpathentry kind="src" path="/admin_v1"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
