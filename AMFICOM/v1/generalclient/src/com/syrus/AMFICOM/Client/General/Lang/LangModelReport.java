@@ -3,7 +3,7 @@ package com.syrus.AMFICOM.Client.General.Lang;
 import java.text.*;
 import java.util.*;
 
-public class LangModelReport extends LangModel
+public class LangModelReport
 {
   static public Locale locale;
   static public String language;
@@ -12,7 +12,7 @@ public class LangModelReport extends LangModel
   static public DateFormatSymbols symbols;
   static public String resourceBundle;
 
-  public LangModelReport()
+  private LangModelReport()
   {
 	 symbols = new DateFormatSymbols(locale);
   }
