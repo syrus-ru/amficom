@@ -37,4 +37,4 @@ clean:
 	make -C An2 clean
 	make -C JNI clean
 	make -C BreakL clean
-	rm dadara.dll dadara.exp dadara.lib 
+	rm -f dadara.dll dadara.exp dadara.lib 

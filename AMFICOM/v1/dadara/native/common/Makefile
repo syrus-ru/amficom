@@ -9,8 +9,8 @@ OBJS= \
         mat-solve.$(OBJ_EXT) \
         MathRef.$(OBJ_EXT) \
         median.$(OBJ_EXT) \
-        rnd.$(OBJ_EXT)
-        prf-MSVC-rdtsc.$(OBJ_EXT)
+        rnd.$(OBJ_EXT) \
+	prf-MSVC-rdtsc.$(OBJ_EXT)
 #        prf-gen.$(OBJ_EXT)
 
 include ../Makefile.all
