@@ -1,9 +1,9 @@
 
 REM types
 
-@@./type/CREATE.sql
+@@measurement/type/CREATE.sql
 
 REM objects
 
-@@./object/CREATE.sql
+@@measurement/object/CREATE.sql
 

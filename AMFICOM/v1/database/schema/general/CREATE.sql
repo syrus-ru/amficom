@@ -1,3 +1,3 @@
-@@./dictionary/CREATE.sql
-@@./object/CREATE.sql
+@@general/dictionary/CREATE.sql
+@@general/object/CREATE.sql
 

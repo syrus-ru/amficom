@@ -1,2 +1,2 @@
-@@./object/DROP.sql
-@@./type/DROP.sql
+@@administration/object/DROP.sql
+@@administration/type/DROP.sql

@@ -1,8 +1,8 @@
 
 REM types
 
-@@./type/CREATE.sql
+@@configuration/type/CREATE.sql
 
 REM objects
 
-@@./object/CREATE.sql
+@@configuration/object/CREATE.sql

@@ -1,2 +1,2 @@
-@@./object/DROP.sql
-@@./type/DROP.sql
+@@measurement/object/DROP.sql
+@@measurement/type/DROP.sql
