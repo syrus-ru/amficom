@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Report;
 
+import com.syrus.AMFICOM.Client.General.Model.Environment;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.Date;
@@ -130,10 +131,9 @@ public class ReportBuilder
 				/**
 				 * @todo Set dialog's parent depending on app context.
 				 */
-				final JDialog jDialog = new JDialog();
-				jDialog.setModal(true);
+				final JDialog jDialog = new JDialog(Environment.getActiveWindow(),dialogTitle,true);
 				jDialog.setResizable(false);
-				jDialog.setTitle(dialogTitle);
+
 				((JPanel) (jDialog.getContentPane())).setPreferredSize(new Dimension(400, 0));
 				jDialog.pack();
 				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
