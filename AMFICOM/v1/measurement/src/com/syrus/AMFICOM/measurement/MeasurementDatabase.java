@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.21 2004/09/09 09:21:47 bob Exp $
+ * $Id: MeasurementDatabase.java,v 1.22 2004/09/10 06:18:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/09/09 09:21:47 $
+ * @version $Revision: 1.22 $, $Date: 2004/09/10 06:18:59 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -72,14 +72,14 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	protected String getUpdateColumns() {
 		if (this.updateColumns == null){
 			this.updateColumns = super.getUpdateColumns() + COMMA
-			+ COLUMN_TYPE_ID + COMMA
-			+ COLUMN_MONITORED_ELEMENT_ID + COMMA
-			+ COLUMN_SETUP_ID + COMMA
-			+ COLUMN_START_TIME + COMMA
-			+ COLUMN_DURATION + COMMA
-			+ COLUMN_STATUS + COMMA
-			+ COLUMN_LOCAL_ADDRESS + COMMA
-			+ COLUMN_TEST_ID;
+				+ COLUMN_TYPE_ID + COMMA
+				+ COLUMN_MONITORED_ELEMENT_ID + COMMA
+				+ COLUMN_SETUP_ID + COMMA
+				+ COLUMN_START_TIME + COMMA
+				+ COLUMN_DURATION + COMMA
+				+ COLUMN_STATUS + COMMA
+				+ COLUMN_LOCAL_ADDRESS + COMMA
+				+ COLUMN_TEST_ID;
 		}
 		return this.updateColumns;
 	}	
@@ -87,14 +87,14 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	protected String getUpdateMultiplySQLValues() {
 		if (this.updateMultiplySQLValues == null){
 			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION;
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION;
 		}
 		return this.updateMultiplySQLValues;
 	}
@@ -103,15 +103,15 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
 			UpdateObjectException {
 		Measurement measurement = fromStorableObject(storableObject);
-		String values = getUpdateSingleSQLValues(storableObject) + COMMA
-		+ measurement.getType().getId().toSQLString() + COMMA
-		+ measurement.getMonitoredElementId().toSQLString() + COMMA
-		+ measurement.getSetup().getId().toSQLString() + COMMA
-		+ DatabaseDate.toUpdateSubString(measurement.getStartTime()) + COMMA
-		+ Long.toString(measurement.getDuration()) + COMMA
-		+ Integer.toString(measurement.getStatus().value()) + COMMA
-		+ APOSTOPHE + measurement.getLocalAddress() + APOSTOPHE + COMMA
-		+ measurement.getTestId().toSQLString();
+		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
+			+ measurement.getType().getId().toSQLString() + COMMA
+			+ measurement.getMonitoredElementId().toSQLString() + COMMA
+			+ measurement.getSetup().getId().toSQLString() + COMMA
+			+ DatabaseDate.toUpdateSubString(measurement.getStartTime()) + COMMA
+			+ Long.toString(measurement.getDuration()) + COMMA
+			+ Integer.toString(measurement.getStatus().value()) + COMMA
+			+ APOSTOPHE + measurement.getLocalAddress() + APOSTOPHE + COMMA
+			+ measurement.getTestId().toSQLString();
 		return values;
 	}
 	
@@ -154,16 +154,16 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	
 	protected String retrieveQuery(String condition){
 		return super.retrieveQuery(condition) + COMMA
-		+ COLUMN_TYPE_ID + COMMA
-		+ COLUMN_MONITORED_ELEMENT_ID + COMMA
-		+ COLUMN_SETUP_ID + COMMA
-		+ DatabaseDate.toQuerySubString(COLUMN_START_TIME) + COMMA
-		+ COLUMN_DURATION + COMMA
-		+ COLUMN_STATUS + COMMA
-		+ COLUMN_LOCAL_ADDRESS + COMMA
-		+ COLUMN_TEST_ID
-		+ SQL_FROM + ObjectEntities.MEASUREMENT_ENTITY
-		+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
+			+ COLUMN_TYPE_ID + COMMA
+			+ COLUMN_MONITORED_ELEMENT_ID + COMMA
+			+ COLUMN_SETUP_ID + COMMA
+			+ DatabaseDate.toQuerySubString(COLUMN_START_TIME) + COMMA
+			+ COLUMN_DURATION + COMMA
+			+ COLUMN_STATUS + COMMA
+			+ COLUMN_LOCAL_ADDRESS + COMMA
+			+ COLUMN_TEST_ID
+			+ SQL_FROM + ObjectEntities.MEASUREMENT_ENTITY
+			+ ( ((condition == null) || (condition.length() == 0) ) ? "" : SQL_WHERE + condition);
 
 	}	
 	
