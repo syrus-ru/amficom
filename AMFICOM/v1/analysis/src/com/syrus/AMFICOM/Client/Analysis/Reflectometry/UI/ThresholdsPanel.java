@@ -70,15 +70,8 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 		currpos = mev.getPoint();
 		isRbutton = SwingUtilities.isRightMouseButton(mev);
 
-		/* TODO */
-		SimpleReflectogramEvent simpleEvent = this.et_mtm.getSimpleEvent(this.c_event);
-		
 		boolean allThresholds = this.isToPaintAllThresholds();
-		int currposF = (int) coord2indexF(this.currpos.x);
-		int mouseCouplingF = (int)coord2indexF(MOUSE_COUPLING);
-		
-		if (!allThresholds && !(simpleEvent.getBegin() <= currposF - mouseCouplingF  && currposF + mouseCouplingF <= simpleEvent.getEnd() ))
-			return;
+
 		// если это текущее событие - пытаемся "ухватить" (drag) порог
 		this.c_TH = this.et_mtm.getThresholdHandle(
 			coord2indexF(this.currpos.x), // we need float value, without rounding
@@ -86,10 +79,17 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 			MOUSE_COUPLING / this.scaleX,
 			MOUSE_COUPLING / this.scaleY,
 			0.5,
-			isRbutton ? 1 : 0);		
-		
-		
-		if (this.c_TH != null && (allThresholds || this.c_TH.isRelevantToNEvent(this.c_event))) {
+			isRbutton ? 1 : 0);
+
+		// если режим !allThresholds, игнорируем хватания за посторонние пороги
+		// @todo: это тоже не самая лучшая проверка.
+		if (c_TH != null && !allThresholds)
+		{
+			if (c_event < 0 || !c_TH.isRelevantToNEvent(c_event))
+				c_TH = null;
+		}
+
+		if (this.c_TH != null) {
 
 			switch (this.c_TH.getType()) {
 				case ThresholdHandle.HORIZONTAL_LEFT_TYPE:
