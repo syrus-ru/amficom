@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.3 2005/01/28 10:11:00 arseniy Exp $
+ * $Id: ServerDatabase.java,v 1.4 2005/02/01 11:37:01 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,23 +38,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/01/28 10:11:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/02/01 11:37:01 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
 public class ServerDatabase extends StorableObjectDatabase {
-
-	// description VARCHAR2(256),
-	public static final String COLUMN_DESCRIPTION   = "description";
-	// name VARCHAR2(64) NOT NULL,
-	public static final String COLUMN_NAME  = "name";
-	// type_id VARCHAR2(32) NOT NULL,
-	public static final String COLUMN_TYPE_ID       = "type_id";
-	// hostname VARCHAR2(64) NOT NULL,
-	public static final String COLUMN_HOSTNAME = "hostname";
-	// user_id VARCHAR2(32) NOT NULL,
-	public static final String COLUMN_USER_ID       = "user_id";
 
 	protected static final int SIZE_HOSTNAME_COLUMN = 64;
 
@@ -75,10 +64,10 @@ public class ServerDatabase extends StorableObjectDatabase {
 		if (columns == null){
 			columns = super.getColumns(mode) + COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-				+ COLUMN_NAME + COMMA
-				+ COLUMN_DESCRIPTION + COMMA
-				+ COLUMN_HOSTNAME + COMMA
-				+ COLUMN_USER_ID;		
+				+ ServerWrapper.COLUMN_NAME + COMMA
+				+ ServerWrapper.COLUMN_DESCRIPTION + COMMA
+				+ ServerWrapper.COLUMN_HOSTNAME + COMMA
+				+ ServerWrapper.COLUMN_USER_ID;		
 		}
 		return columns;
 	}	
@@ -129,10 +118,10 @@ public class ServerDatabase extends StorableObjectDatabase {
 								DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 								DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 								DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),													
-								DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
-								DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
-								DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_HOSTNAME)),
-								DatabaseIdentifier.getIdentifier(resultSet, COLUMN_USER_ID));
+								DatabaseString.fromQuerySubString(resultSet.getString(ServerWrapper.COLUMN_NAME)),
+								DatabaseString.fromQuerySubString(resultSet.getString(ServerWrapper.COLUMN_DESCRIPTION)),
+								DatabaseString.fromQuerySubString(resultSet.getString(ServerWrapper.COLUMN_HOSTNAME)),
+								DatabaseIdentifier.getIdentifier(resultSet, ServerWrapper.COLUMN_USER_ID));
 		return server;
 	}
 
@@ -171,7 +160,7 @@ public class ServerDatabase extends StorableObjectDatabase {
 		String sql = SQL_SELECT
 			+ COLUMN_ID
 			+ SQL_FROM + ObjectEntities.MCM_ENTITY
-			+ SQL_WHERE + MCMDatabase.COLUMN_SERVER_ID + EQUALS + serverIdStr;
+			+ SQL_WHERE + MCMWrapper.COLUMN_SERVER_ID + EQUALS + serverIdStr;
 
 		Statement statement = null;
 		ResultSet resultSet = null;

@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.2 2005/01/28 10:11:00 arseniy Exp $
+ * $Id: MCMDatabase.java,v 1.3 2005/02/01 11:37:01 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,19 +44,13 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/28 10:11:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/02/01 11:37:01 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
 public class MCMDatabase extends StorableObjectDatabase {
 
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_DESCRIPTION = "description";
-	public static final String COLUMN_USER_ID = "user_id";
-	public static final String COLUMN_SERVER_ID = "server_id";
-	//public static final String COLUMN_LOCATION = "location";
-	public static final String COLUMN_HOSTNAME = "hostname";
 	public static final String LINK_COLUMN_MCM_ID = "mcm_id";
 
 	protected static final int SIZE_HOSTNAME_COLUMN = 64;
@@ -78,11 +72,11 @@ public class MCMDatabase extends StorableObjectDatabase {
 		if (columns == null) {
     		columns = super.getColumns(mode) + COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-				+ COLUMN_NAME + COMMA
-				+ COLUMN_DESCRIPTION + COMMA
-				+ COLUMN_HOSTNAME + COMMA
-				+ COLUMN_USER_ID + COMMA
-				+ COLUMN_SERVER_ID;
+				+ MCMWrapper.COLUMN_NAME + COMMA
+				+ MCMWrapper.COLUMN_DESCRIPTION + COMMA
+				+ MCMWrapper.COLUMN_HOSTNAME + COMMA
+				+ MCMWrapper.COLUMN_USER_ID + COMMA
+				+ MCMWrapper.COLUMN_SERVER_ID;
 		}
 		return columns;
 	}
@@ -157,11 +151,11 @@ public class MCMDatabase extends StorableObjectDatabase {
 						  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 						  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 						  DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
-						  DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
-						  DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
-							DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_HOSTNAME)),
-						  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_USER_ID),
-						  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_SERVER_ID)
+						  DatabaseString.fromQuerySubString(resultSet.getString(MCMWrapper.COLUMN_NAME)),
+						  DatabaseString.fromQuerySubString(resultSet.getString(MCMWrapper.COLUMN_DESCRIPTION)),
+							DatabaseString.fromQuerySubString(resultSet.getString(MCMWrapper.COLUMN_HOSTNAME)),
+						  DatabaseIdentifier.getIdentifier(resultSet, MCMWrapper.COLUMN_USER_ID),
+						  DatabaseIdentifier.getIdentifier(resultSet, MCMWrapper.COLUMN_SERVER_ID)
 						  );
 		
 		return mcm;

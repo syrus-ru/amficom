@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.4 2005/01/28 10:11:00 arseniy Exp $
+ * $Id: DomainDatabase.java,v 1.5 2005/02/01 11:37:00 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,15 +37,12 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/01/28 10:11:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/02/01 11:37:00 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
 public class DomainDatabase extends StorableObjectDatabase {
-	public static final String COLUMN_NAME  = "name";
-	public static final String COLUMN_DESCRIPTION   = "description";
-
 	private static String columns;
 	private static String updateMultiplySQLValues;
 	
@@ -63,8 +60,8 @@ public class DomainDatabase extends StorableObjectDatabase {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
 			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-			+ COLUMN_NAME + COMMA
-			+ COLUMN_DESCRIPTION;
+			+ DomainWrapper.COLUMN_NAME + COMMA
+			+ DomainWrapper.COLUMN_DESCRIPTION;
 		}
 		return columns;
 	}
@@ -114,8 +111,8 @@ public class DomainDatabase extends StorableObjectDatabase {
 							 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 							 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 							 domainId,
-							 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
-							 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)));		
+							 DatabaseString.fromQuerySubString(resultSet.getString(DomainWrapper.COLUMN_NAME)),
+							 DatabaseString.fromQuerySubString(resultSet.getString(DomainWrapper.COLUMN_DESCRIPTION)));		
 		
         return domain;
 	}
@@ -243,7 +240,7 @@ public class DomainDatabase extends StorableObjectDatabase {
 	private List retrieveButIdsByName(List ids, String name) throws RetrieveObjectException {
 		List list = null;
 
-		String condition = COLUMN_NAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(name, SIZE_NAME_COLUMN) + APOSTOPHE;
+		String condition = DomainWrapper.COLUMN_NAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(name, SIZE_NAME_COLUMN) + APOSTOPHE;
 
 		try {
 				list = retrieveButIds(ids, condition);

@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.3 2005/01/31 11:00:47 bob Exp $
+ * $Id: UserDatabase.java,v 1.4 2005/02/01 11:37:01 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,23 +31,13 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/01/31 11:00:47 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/01 11:37:01 $
  * @author $Author: bob $
  * @module administration_v1
  */
 
 public class UserDatabase extends StorableObjectDatabase {
-	// table :: users
-	// description VARCHAR2(256),
-    public static final String COLUMN_DESCRIPTION   = "description";
-    // login VARCHAR2(32) NOT NULL,
-    public static final String COLUMN_LOGIN = "login";
-    // name VARCHAR2(64) not NULL,
-    public static final String COLUMN_NAME  = "name";
-    // sort NUMBER(2, 0) NOT NULL,
-    public static final String COLUMN_SORT  = "sort";
-    
-    private static String columns;
+	private static String columns;
     private static String updateMultiplySQLValues;
     private static final int SIZE_LOGIN_COLUMN = 32; 
     
@@ -64,10 +54,10 @@ public class UserDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {		
 		if (columns == null){
 			columns = super.getColumns(mode) + COMMA
-				+ COLUMN_LOGIN + COMMA
-				+ COLUMN_SORT + COMMA
-				+ COLUMN_NAME + COMMA
-				+ COLUMN_DESCRIPTION;		
+				+ UserWrapper.COLUMN_LOGIN + COMMA
+				+ UserWrapper.COLUMN_SORT + COMMA
+				+ UserWrapper.COLUMN_NAME + COMMA
+				+ UserWrapper.COLUMN_DESCRIPTION;		
 		}
 		return columns;
 	}	
@@ -107,10 +97,10 @@ public class UserDatabase extends StorableObjectDatabase {
 							DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 							DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 							DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),							
-							DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_LOGIN)),
-							resultSet.getInt(COLUMN_SORT),				
-							DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
-							DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)));
+							DatabaseString.fromQuerySubString(resultSet.getString(UserWrapper.COLUMN_LOGIN)),
+							resultSet.getInt(UserWrapper.COLUMN_SORT),				
+							DatabaseString.fromQuerySubString(resultSet.getString(UserWrapper.COLUMN_NAME)),
+							DatabaseString.fromQuerySubString(resultSet.getString(UserWrapper.COLUMN_DESCRIPTION)));
 		return user;
 	}
 
@@ -183,14 +173,14 @@ public class UserDatabase extends StorableObjectDatabase {
 	}
 	
 	private List retrieveByLogin(String login) throws RetrieveObjectException, IllegalDataException{
-		String condition = COLUMN_LOGIN + EQUALS 
+		String condition = UserWrapper.COLUMN_LOGIN + EQUALS 
 						+ APOSTOPHE + login + APOSTOPHE;
 		
 		return this.retrieveByIdsOneQuery(null, condition);
 	}
 	
 	private List retrieveByName(String name) throws RetrieveObjectException, IllegalDataException{
-		String condition = COLUMN_NAME + EQUALS 
+		String condition = UserWrapper.COLUMN_NAME + EQUALS 
 						+ APOSTOPHE + name + APOSTOPHE;
 		
 		return this.retrieveByIdsOneQuery(null, condition);
