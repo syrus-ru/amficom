@@ -3,8 +3,10 @@
 #include <stdlib.h> // qsort
 
 #include "../fit/sweep.h"
+#include "../common/prf.h"
+#include "../common/inf.h"
+
 #include "BreakL-fit.h"
-#include "../Common/prf.h"
 
 #define USE_CHI2BREAKL 1
 
@@ -265,7 +267,7 @@ void BreakL_Fit_int (ModelF &mf, double *data, int x_begin,
 	//fprintf(stdout, "BreakL_Fit: i0 %d x0 %d len %d q %d  e1 %g e2 %g mp %d lin %d; mf.nPars %d\n",
 	//	i_begin, x_begin, length, quick, error1, error2, maxpoints, linearOnly, mf.getNPars());
 
-	prf_b("BreakL_Fit_int: enter");
+	//prf_b("BreakL_Fit_int: enter");
 
 	if (length <= 1)
 	{
@@ -300,17 +302,25 @@ void BreakL_Fit_int (ModelF &mf, double *data, int x_begin,
 	{
 		//prf_b("BreakL_Fit_int: !linearOnly: init thresholds");
 
-		if (noise)
+		if (noise) // if noise is specified, ignore other agrs
 		{
 			for (i = 0; i < size; i++)
 				thresh[i] = noise[i];
 		}
-		else
+		else // noise not specified, generate it
 		{
-			for (i = 0; i < size; i++)
+			if (error2 == -HUGE) // -inf level of error2: do not waste time at log10(); this is important for performance
 			{
-				double v = (error2 - data[i]) / 5.0;
-				thresh[i] = log10(1.0 + pow(10.0, v)) * 5.0 + error1;
+				for (i = 0; i < size; i++)
+					thresh[i] = error1;
+			}
+			else
+			{
+				for (i = 0; i < size; i++)
+				{
+					double v = (error2 - data[i]) / 5.0;
+					thresh[i] = log10(1.0 + pow(10.0, v)) * 5.0 + error1;
+				}
 			}
 		}
 
@@ -355,23 +365,6 @@ void BreakL_Fit_int (ModelF &mf, double *data, int x_begin,
 					double acc = acc_xi2.a0 + acc_xi2.a1 * a + acc_xi2.a2 * a * a;
 					int count = i - i_prev + 1;
 
-					// XXX: двойной цикл - самая медленная часть алгоритма (~70% времени)
-					// сильно оптимизировать его не удается,
-					// но можно попробовать переделать алгоритм, чтобы
-					// не каждый раз проводить новую прямую,
-					// а сначала попробовать старую, с учетом её хи квадрат;
-					// или использовать разложение зависимости хи-квадрат
-					// от a в виде A a^2 + B a + C
-					/*int j;
-					for (j = i_prev; j <= i; j++)
-					{
-						double dif = a * (j - x0) + y0 - data[j];
-						double th = 
-							thresh[j] * th_mult // заданный порог
-							+ machineError;  // добавляем машинную погрешность
-						// усложненный критерий - на основе хи-квадрат
-						acc += dpow2(dif / th);
-					}*/
 					count -= 2;
 					if (count > 0)
 					{
@@ -396,7 +389,8 @@ void BreakL_Fit_int (ModelF &mf, double *data, int x_begin,
 						fail = 0; // прямая проведена по двум точкам
 #else
 //--------------------------
-					// XXX: двойной цикл - самая медленная часть алгоритма (~70% времени)
+					// двойной цикл - самая медленная часть алгоритма (~70% времени)
+					// Но сейчас он не используется
 					int j;
 					for (j = i_prev; j <= i; j++)
 					{
@@ -452,6 +446,7 @@ void BreakL_Fit_int (ModelF &mf, double *data, int x_begin,
 				break;
 			}
 		}
+		//prf_b("BreakL_Fit_int: left th_mult");
 		//fprintf(stderr, "BreakL_Fit: final th_mult %g, points %d maxpoints %d\n",
 		//	th_mult, nPts, maxpoints);
 		//fflush(stderr);
@@ -646,17 +641,17 @@ void BreakL_Fit_int (ModelF &mf, double *data, int x_begin,
 		improveBySweep(acc, ax, ay, nPts, linkFlags, linkData);
 	}
 
-	// сохраняем в mf (число звеньев уже должно совпалать с числом параметров)
+	// сохраняем в mf (число звеньев уже должно совпадать с числом параметров)
 	for (k = 0; k < nPts; k++)
 	{
 		mf[k * 2] = ax[k] + x_begin;
 		mf[k * 2 + 1] = ay[k];
 	}
 
-	//fprintf(stdout, "BreakL_Fit: done, nPts %d\n", nPts);
+	//fprintf(stdout, "BreakL_Fit_int: done, length %d nPts %d\n", length, nPts);
 	//fflush(stdout);
 
-	prf_b("BreakL_Fit_int: leaving");
+	//prf_b("BreakL_Fit_int: leaving");
 
 	delete[] ax;
 	delete[] ay;
@@ -664,16 +659,133 @@ void BreakL_Fit_int (ModelF &mf, double *data, int x_begin,
 
 	acc.dispose();
 }
+////////////////
+/*
+ * Фитировка ломаной, без расчета допустимой погрешности,
+ * раза в четыре быстрее, чем BreakL_Fit_int.
+ * Не поддерживает linkFlags/linkData
+ * mf - фитируемый объект,
+ * data - массив с данными (используются элементы [0] .. [length-1])
+ * x_begin - x-координата начала ломаной и массива
+ * length - число фитируемых точек
+ */
+void BreakL_Fit_maxSpeed (ModelF &mf, double *data, int x_begin, int length)
+{
+	//prf_b("BreakL_Fit_max: enter");
+
+	if (length <= 1)
+	{
+		mf.init(MF_ID_BREAKL, length * 2);
+		if (length)
+		{
+			mf[0] = x_begin;
+			mf[1] = data[0];
+		}
+		return;
+	}
+
+	int size = length;
+
+	double *ax = new double[size + 1]; // XXX: должно хватать и [size]
+	double *ay = new double[size + 1]; // XXX: -//-
+	assert(ax);
+	assert(ay);
+
+	int i;
+	int nPts;
+
+	//prf_b("BreakL_Fit_max: prep. acc");
+
+	ACC_Y acc;
+	acc.allocate(size + 1);
+	prepare_acc_stats(data, size, acc);
+
+	//prf_b("calc error");
+
+	// определяем уровень погрешности (машинная погрешность)
+	double error = 0;
+	for (i = 0; i < length; i++)
+	{
+		if (error < fabs(data[i]))
+			error = fabs(data[i]);
+	}
+	error = error * 1e-14 * 10 + 1e-300; // XXX
+
+	//prf_b("BreakL_Fit_max: draw BreakL");
+	{
+		int i_prev = 0;
+		double y0 = data[0]; // XXX
+		double aMax = data[1] - y0 + error;
+		double aMin = data[1] - y0 - error;
+		nPts = 0;
+		ax[nPts] = i_prev;
+		ay[nPts++] = y0;
+
+		for (i = 2; i <= size; i++)
+		{
+			if (i < size)
+			{
+				// проверяем, можно ли провести общую прямую через все точки i_prev..i
+				double aTMax = (data[i] - y0 + error) / (i - i_prev);
+				double aTMin = (data[i] - y0 - error) / (i - i_prev);
+				if (aMax > aTMax)
+					aMax = aTMax;
+				if (aMin < aTMin)
+					aMin = aTMin;
+				if (aMin <= aMax)
+					continue;
+			}
+
+			// прямую "продолжить" не удалось - заканчиваем предыдущую на i-1
+			// и начинаем новую прямую по i-1, i
+			i_prev = i - 1;
+			ax[nPts] = i_prev;
+			y0 = data[i_prev];
+			ay[nPts++] = y0;
+			if (i < size)
+			{
+				aMax = data[i] - y0 + error;
+				aMin = data[i] - y0 - error;
+			}
+		}
+	}
+
+	//prf_b("BreakL_Fit_max: draw BreakL done, saving");
+
+	mf.init(MF_ID_BREAKL, nPts * 2);
+	assert(mf.getNPars() == nPts * 2);
+
+	int k;
+	// сохраняем в mf (число звеньев уже должно совпадать с числом параметров)
+	for (k = 0; k < nPts; k++)
+	{
+		mf[k * 2] = ax[k] + x_begin;
+		mf[k * 2 + 1] = ay[k];
+	}
+
+	acc.dispose();
+
+	//prf_b("BreakL_Fit_max: leaving");
+
+	//fprintf(stdout, "BreakL_Fit_max: done, length %d nPts %d; error %g\n", length, nPts, error);
+	//fflush(stdout);
+
+	delete[] ax;
+	delete[] ay;
+}
+////////////////
+
+void BreakL_FitI (ModelF &mf, double *data0, int i0, int x0, int length)
+{
+	//prf_b("BreakL_FitI: enter");
+	//BreakL_Fit_int(mf, data0 + i0, x0, length, quick, 0.0, -HUGE, 0, 0, 0, 0, 0);
+	BreakL_Fit_maxSpeed(mf, data0 + i0, x0, length);
+	//prf_b("BreakL_FitI: leave");
+}
 
 void BreakL_FitL (ModelF &mf, double *data0, int i0, int x0, int length, int linkFlags, double *linkData)
 {
 	BreakL_Fit_int(mf, data0 + i0, x0, length, 0, 0.0, 0.0, 0, 1, linkFlags, linkData, 0);
-}
-
-void BreakL_FitI (ModelF &mf, double *data0, int i0, int x0, int length, int linkFlags, double *linkData,
-	int quick)
-{
-	BreakL_Fit_int(mf, data0 + i0, x0, length, quick, 0.0, -99, 0, 0, linkFlags, linkData, 0);
 }
 
 void BreakL_Fit  (ModelF &mf, double *data0, int i0, int x0, int length, int linkFlags, double *linkData,

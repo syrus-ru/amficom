@@ -48,6 +48,7 @@ static void enhance(double *data, int size, int width, int isUpper)
 
 // "размазывает" (для образования порога) BreakL
 // поддерживается только BreakL с не очень большими целочисленными X-координатами
+// используется только при ACXL-преобразовании
 void BreakL_Enh (ModelF &mf, int x0, int x1, int width, int isUpper)
 {
 	assert(mf.getID() == MF_ID_BREAKL);
@@ -97,7 +98,7 @@ void BreakL_Enh (ModelF &mf, int x0, int x1, int width, int isUpper)
 	enhance(tmp, len, width, isUpper);
 
 	// преобразуем к ломаной
-	BreakL_FitI (mf, tmp, width, x0, len - width, 0, 0, 1);
+	BreakL_FitI (mf, tmp, width, x0, len - width);
 
 	//fprintf(stderr, "BreakL_Enh: done, input N %d x0 %d x1 %d len %d, output N = %d\n",
 	//	N, x0, x1, len, mf.getNPars() / 2);
@@ -119,7 +120,7 @@ double *BreakLToArray(double *pars, int npars, int x0, int N) // N > 0, но [x0..
 
 void BreakLFromArray(ModelF &mf, int x0, int N, double *yarr)
 {
-	BreakL_FitI(mf, yarr, 0, x0, N, 0, 0, 1);
+	BreakL_FitI(mf, yarr, 0, x0, N);
 }
 
 struct XY
@@ -405,7 +406,7 @@ struct UPDATE_REGION
 // возвращаемое значение будет либо -1, либо найденным номером в массиве taX
 int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, int key, int dXCheckPosition)
 {
-	//prf_b("BreakL_ChangeByThresh: entered");
+	prf_b("BreakL_ChangeByThresh: entered");
 
 	const int thNpX = taX.getLength();
 	const int thNpY = taY.getLength();
@@ -445,7 +446,7 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, i
 		thY[j].typeL = taY.getTypeL(j);
 	}
 
-	//prf_b("BreakL_ChangeByThresh: add nodes");
+	prf_b("BreakL_ChangeByThresh: add nodes");
 
 	// добавляем узлы в точках начала и конца всех событий
 	// это изменяет mf
@@ -463,7 +464,7 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, i
 		BreakL_AddInternalNodesFromTempList(mf, thNpY * 2, nodeList);
 	}
 
-	//prf_b("BreakL_ChangeByThresh: process AL threshs");
+	prf_b("BreakL_ChangeByThresh: process AL threshs");
 
 	// process A and L threshs
 	{
@@ -531,7 +532,7 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, i
 		}
 	}
 
-	//prf_b("BreakL_ChangeByThresh: process DXLR threshd");
+	prf_b("BreakL_ChangeByThresh: process DXLR threshd");
 
 	int rcDXID = -1;
 
@@ -635,6 +636,7 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, i
 			//fprintf(stderr, "#6\n"); fflush(stderr);
 		}
 		// сохраняем в mf запланированные изменения
+		prf_b("BreakL_ChangeByThresh: committing DX thresholds");
 		int i;
 		for (i = 0; i < updateRegions.getLength(); i++)
 		{
@@ -646,7 +648,7 @@ int BreakL_ChangeByThresh (ModelF &mf, ThreshDXArray &taX, ThreshDYArray &taY, i
 		}
 	}
 
-	//prf_b("BreakL_ChangeByThresh: done");
+	prf_b("BreakL_ChangeByThresh: done");
 
 	//fflush(stderr);
 
