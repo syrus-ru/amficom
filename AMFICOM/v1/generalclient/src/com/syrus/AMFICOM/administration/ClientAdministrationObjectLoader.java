@@ -1,5 +1,5 @@
 /*
- * $Id: ClientAdministrationObjectLoader.java,v 1.9 2005/02/25 09:16:15 bob Exp $
+ * $Id: ClientAdministrationObjectLoader.java,v 1.10 2005/04/04 14:05:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,9 @@
 
 package com.syrus.AMFICOM.administration;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
@@ -36,7 +35,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/02/25 09:16:15 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/04 14:05:37 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -62,7 +61,7 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 		}
 	}
 
-	public void delete(Collection ids) throws IllegalDataException {
+	public void delete(Set ids) throws IllegalDataException {
 		Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
 		int i = 0;
 		for (Iterator it = ids.iterator(); it.hasNext(); i++) {
@@ -90,7 +89,7 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 		}
 	}
 
-	public Collection loadDomains(Collection ids) throws DatabaseException, CommunicationException {
+	public Set loadDomains(Set ids) throws DatabaseException, CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -100,11 +99,11 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 			}
 			Domain_Transferable[] transferables = this.cmserver.transmitDomains(identifierTransferables,
 				getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new Domain(transferables[j]));
+				set.add(new Domain(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (CreateObjectException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
@@ -112,7 +111,7 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 		}
 	}
 
-	public Collection loadDomainsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
+	public Set loadDomainsButIds(StorableObjectCondition condition, Set ids) throws DatabaseException,
 			CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
@@ -124,11 +123,11 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 			}
 			transferables = this.cmserver.transmitDomainsButIdsCondition(identifierTransferables,
 				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new Domain(transferables[j]));
+				set.add(new Domain(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (CreateObjectException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
@@ -149,7 +148,7 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 		}
 	}
 
-	public Collection loadMCMs(Collection ids) throws DatabaseException, CommunicationException {
+	public Set loadMCMs(Set ids) throws DatabaseException, CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -159,11 +158,11 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 			}
 			MCM_Transferable[] transferables = this.cmserver.transmitMCMs(identifierTransferables,
 				getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new MCM(transferables[j]));
+				set.add(new MCM(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (CreateObjectException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
@@ -171,7 +170,7 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 		}
 	}
 
-	public Collection loadMCMsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
+	public Set loadMCMsButIds(StorableObjectCondition condition, Set ids) throws DatabaseException,
 			CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
@@ -183,11 +182,11 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 			}
 			transferables = this.cmserver.transmitMCMsButIdsCondition(identifierTransferables,
 				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new MCM(transferables[j]));
+				set.add(new MCM(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (CreateObjectException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
@@ -208,7 +207,7 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 		}
 	}
 
-	public Collection loadServers(Collection ids) throws DatabaseException, CommunicationException {
+	public Set loadServers(Set ids) throws DatabaseException, CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -218,11 +217,11 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 			}
 			Server_Transferable[] transferables = this.cmserver.transmitServers(identifierTransferables,
 				getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new Server(transferables[j]));
+				set.add(new Server(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (CreateObjectException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
@@ -230,7 +229,7 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 		}
 	}
 
-	public Collection loadServersButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
+	public Set loadServersButIds(StorableObjectCondition condition, Set ids) throws DatabaseException,
 			CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
@@ -242,11 +241,11 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 			}
 			transferables = this.cmserver.transmitServersButIdsCondition(identifierTransferables,
 				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new Server(transferables[j]));
+				set.add(new Server(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (CreateObjectException e) {
 			throw new RetrieveObjectException(e);
 		} catch (AMFICOMRemoteException e) {
@@ -264,7 +263,7 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 		}
 	}
 
-	public Collection loadUsers(Collection ids) throws DatabaseException, CommunicationException {
+	public Set loadUsers(Set ids) throws DatabaseException, CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
 			int i = 0;
@@ -274,17 +273,17 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 			}
 			User_Transferable[] transferables = this.cmserver.transmitUsers(identifierTransferables,
 				getAccessIdentifierTransferable());
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new User(transferables[j]));
+				set.add(new User(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new CommunicationException(e);
 		}
 	}
 
-	public Collection loadUsersButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
+	public Set loadUsersButIds(StorableObjectCondition condition, Set ids) throws DatabaseException,
 			CommunicationException {
 		try {
 			Identifier_Transferable[] identifierTransferables = new Identifier_Transferable[ids.size()];
@@ -295,17 +294,17 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 			}
 			User_Transferable[] transferables = this.cmserver.transmitUsersButIdsCondition(identifierTransferables,
 				getAccessIdentifierTransferable(), StorableObjectConditionBuilder.getConditionTransferable(condition));
-			Collection list = new ArrayList(transferables.length);
+			Set set = new HashSet(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
-				list.add(new User(transferables[j]));
+				set.add(new User(transferables[j]));
 			}
-			return list;
+			return set;
 		} catch (AMFICOMRemoteException e) {
 			throw new CommunicationException(e);
 		}
 	}
 
-	public java.util.Set refresh(java.util.Set storableObjects) throws CommunicationException {
+	public java.util.Set refresh(Set storableObjects) throws CommunicationException {
 		try {
 			java.util.Set refreshedIds = new HashSet();
 			Identifier_Transferable[] identifier_Transferables;
@@ -329,7 +328,7 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 		}
 	}
 
-	private void updateStorableObjectHeader(Collection storableObjects, StorableObject_Transferable[] transferables) {
+	private void updateStorableObjectHeader(Set storableObjects, StorableObject_Transferable[] transferables) {
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			StorableObject storableObject = (StorableObject) it.next();
 			Identifier_Transferable id = (Identifier_Transferable) storableObject.getId().getTransferable();
@@ -355,14 +354,14 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 		}
 	}
 
-	public void saveDomains(Collection list, boolean force) throws VersionCollisionException, CommunicationException {
-		Domain_Transferable[] transferables = new Domain_Transferable[list.size()];
+	public void saveDomains(Set set, boolean force) throws VersionCollisionException, CommunicationException {
+		Domain_Transferable[] transferables = new Domain_Transferable[set.size()];
 		int i = 0;
-		for (Iterator it = list.iterator(); it.hasNext(); i++) {
+		for (Iterator it = set.iterator(); it.hasNext(); i++) {
 			transferables[i] = (Domain_Transferable) ((Domain) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(list, this.cmserver.receiveDomains(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(set, this.cmserver.receiveDomains(transferables, force, getAccessIdentifierTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientAdministrationObjectLoader.saveDomains ";
 
@@ -387,14 +386,14 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 		}
 	}
 
-	public void saveMCMs(Collection list, boolean force) throws VersionCollisionException, CommunicationException {
-		MCM_Transferable[] transferables = new MCM_Transferable[list.size()];
+	public void saveMCMs(Set set, boolean force) throws VersionCollisionException, CommunicationException {
+		MCM_Transferable[] transferables = new MCM_Transferable[set.size()];
 		int i = 0;
-		for (Iterator it = list.iterator(); it.hasNext(); i++) {
+		for (Iterator it = set.iterator(); it.hasNext(); i++) {
 			transferables[i] = (MCM_Transferable) ((MCM) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(list, this.cmserver.receiveMCMs(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(set, this.cmserver.receiveMCMs(transferables, force, getAccessIdentifierTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientAdministrationObjectLoader.saveMCMs ";
 
@@ -419,14 +418,14 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 		}
 	}
 
-	public void saveServers(Collection list, boolean force) throws VersionCollisionException, CommunicationException {
-		Server_Transferable[] transferables = new Server_Transferable[list.size()];
+	public void saveServers(Set set, boolean force) throws VersionCollisionException, CommunicationException {
+		Server_Transferable[] transferables = new Server_Transferable[set.size()];
 		int i = 0;
-		for (Iterator it = list.iterator(); it.hasNext(); i++) {
+		for (Iterator it = set.iterator(); it.hasNext(); i++) {
 			transferables[i] = (Server_Transferable) ((Server) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(list, this.cmserver.receiveServers(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(set, this.cmserver.receiveServers(transferables, force, getAccessIdentifierTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientAdministrationObjectLoader.saveServers ";
 
@@ -451,14 +450,14 @@ public class ClientAdministrationObjectLoader implements AdministrationObjectLoa
 		}
 	}
 
-	public void saveUsers(Collection list, boolean force) throws VersionCollisionException, CommunicationException {
-		User_Transferable[] transferables = new User_Transferable[list.size()];
+	public void saveUsers(Set set, boolean force) throws VersionCollisionException, CommunicationException {
+		User_Transferable[] transferables = new User_Transferable[set.size()];
 		int i = 0;
-		for (Iterator it = list.iterator(); it.hasNext(); i++) {
+		for (Iterator it = set.iterator(); it.hasNext(); i++) {
 			transferables[i] = (User_Transferable) ((User) it.next()).getTransferable();
 		}
 		try {
-			this.updateStorableObjectHeader(list, this.cmserver.receiveUsers(transferables, force, getAccessIdentifierTransferable()));
+			this.updateStorableObjectHeader(set, this.cmserver.receiveUsers(transferables, force, getAccessIdentifierTransferable()));
 		} catch (AMFICOMRemoteException e) {
 			String msg = "ClientAdministrationObjectLoader.saveUsers ";
 

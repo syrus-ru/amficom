@@ -1,14 +1,18 @@
-/*
-* $Id: EmptyClientMapObjectLoader.java,v 1.5 2005/03/16 13:40:57 bass Exp $
-*
-* Copyright © 2004 Syrus Systems.
-* Dept. of Science & Technology.
-* Project: AMFICOM.
-*/
+/*-
+ * $Id: EmptyClientMapObjectLoader.java,v 1.6 2005/04/04 14:05:37 bob Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
 package com.syrus.AMFICOM.map;
 
-import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -17,30 +21,21 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Set;
-
-
 /**
- * @version $Revision: 1.5 $, $Date: 2005/03/16 13:40:57 $
- * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/04/04 14:05:37 $
+ * @author $Author: bob $
  * @module generalclient_v1
  */
 public class EmptyClientMapObjectLoader implements MapObjectLoader {
 
-	private java.util.Map localHash = new HashMap();
+	private java.util.Map	localHash	= new HashMap();
 
 	public void delete(Identifier id) throws IllegalDataException {
 		this.localHash.remove(id);
 	}
 
-	public void delete(Collection ids) throws IllegalDataException {
-		for(Iterator it = ids.iterator(); it.hasNext();)
-		{
+	public void delete(Set ids) throws IllegalDataException {
+		for (Iterator it = ids.iterator(); it.hasNext();) {
 			this.localHash.remove(it.next());
 		}
 	}
@@ -49,235 +44,247 @@ public class EmptyClientMapObjectLoader implements MapObjectLoader {
 		return null;
 	}
 
-	public Collection loadCollectors(Collection ids) throws DatabaseException, CommunicationException {
-		return Collections.EMPTY_LIST;
+	public Set loadCollectors(Set ids) throws DatabaseException, CommunicationException {
+		return Collections.EMPTY_SET;
 	}
 
 	public Map loadMap(Identifier id) throws DatabaseException, CommunicationException {
-		return (Map )this.localHash.get(id);
+		return (Map) this.localHash.get(id);
 	}
 
-	public Collection loadMaps(Collection ids) throws DatabaseException, CommunicationException {
-		return Arrays.asList(this.localHash.values().toArray());
+	public Set loadMaps(Set ids) throws DatabaseException, CommunicationException {
+		return new HashSet(this.localHash.values());
 	}
 
 	public Mark loadMark(Identifier id) throws DatabaseException, CommunicationException {
 		return null;
 	}
 
-	public Collection loadMarks(Collection ids) throws DatabaseException, CommunicationException {
-		return Collections.EMPTY_LIST;
+	public Set loadMarks(Set ids) throws DatabaseException, CommunicationException {
+		return Collections.EMPTY_SET;
 	}
 
 	public NodeLink loadNodeLink(Identifier id) throws DatabaseException, CommunicationException {
 		return null;
 	}
 
-	public Collection loadNodeLinks(Collection ids) throws DatabaseException, CommunicationException {
-		return Collections.EMPTY_LIST;
+	public Set loadNodeLinks(Set ids) throws DatabaseException, CommunicationException {
+		return Collections.EMPTY_SET;
 	}
 
 	public PhysicalLink loadPhysicalLink(Identifier id) throws DatabaseException, CommunicationException {
 		return null;
 	}
 
-	public Collection loadPhysicalLinks(Collection ids) throws DatabaseException, CommunicationException {
-		return Collections.EMPTY_LIST;
+	public Set loadPhysicalLinks(Set ids) throws DatabaseException, CommunicationException {
+		return Collections.EMPTY_SET;
 	}
 
 	public PhysicalLinkType loadPhysicalLinkType(Identifier id) throws DatabaseException, CommunicationException {
 		return null;
 	}
 
-	public Collection loadPhysicalLinkTypes(Collection ids) throws DatabaseException, CommunicationException {
-		return Collections.EMPTY_LIST;
+	public Set loadPhysicalLinkTypes(Set ids) throws DatabaseException, CommunicationException {
+		return Collections.EMPTY_SET;
 	}
 
 	public SiteNode loadSiteNode(Identifier id) throws DatabaseException, CommunicationException {
 		return null;
 	}
 
-	public Collection loadSiteNodes(Collection ids) throws DatabaseException, CommunicationException {
-		return Collections.EMPTY_LIST;
+	public Set loadSiteNodes(Set ids) throws DatabaseException, CommunicationException {
+		return Collections.EMPTY_SET;
 	}
 
 	public SiteNodeType loadSiteNodeType(Identifier id) throws DatabaseException, CommunicationException {
 		return null;
 	}
 
-	public Collection loadSiteNodeTypes(Collection ids) throws DatabaseException, CommunicationException {
-		return Collections.EMPTY_LIST;
+	public Set loadSiteNodeTypes(Set ids) throws DatabaseException, CommunicationException {
+		return Collections.EMPTY_SET;
 	}
 
 	public TopologicalNode loadTopologicalNode(Identifier id) throws DatabaseException, CommunicationException {
 		return null;
 	}
 
-	public Collection loadTopologicalNodes(Collection ids) throws DatabaseException, CommunicationException {
-		return Collections.EMPTY_LIST;
+	public Set loadTopologicalNodes(Set ids) throws DatabaseException, CommunicationException {
+		return Collections.EMPTY_SET;
 	}
 
-	public Collection loadCollectorsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException {
-		return Collections.EMPTY_LIST;
+	public Set loadCollectorsButIds(StorableObjectCondition condition,
+									Set ids) throws DatabaseException, CommunicationException {
+		return Collections.EMPTY_SET;
 	}
 
-	public Collection loadMapsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException {
-		Collection objects = new LinkedList();
-		for(Iterator it = this.localHash.keySet().iterator(); it.hasNext();)
-		{
-			Identifier id = (Identifier)it.next();
-			if(!ids.contains(id))
+	public Set loadMapsButIds(	StorableObjectCondition condition,
+								Set ids) throws DatabaseException, CommunicationException {
+		Set objects = new HashSet();
+		for (Iterator it = this.localHash.keySet().iterator(); it.hasNext();) {
+			Identifier id = (Identifier) it.next();
+			if (!ids.contains(id))
 				objects.add(this.localHash.get(id));
 		}
 		return objects;
 	}
 
-	public Collection loadMarksButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException {
-		return Collections.EMPTY_LIST;
+	public Set loadMarksButIds(	StorableObjectCondition condition,
+								Set ids) throws DatabaseException, CommunicationException {
+		return Collections.EMPTY_SET;
 	}
 
-	public Collection loadNodeLinksButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException {
-		return Collections.EMPTY_LIST;
+	public Set loadNodeLinksButIds(	StorableObjectCondition condition,
+									Set ids) throws DatabaseException, CommunicationException {
+		return Collections.EMPTY_SET;
 	}
 
-	public Collection loadPhysicalLinksButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException {
-		return Collections.EMPTY_LIST;
+	public Set loadPhysicalLinksButIds(	StorableObjectCondition condition,
+										Set ids) throws DatabaseException, CommunicationException {
+		return Collections.EMPTY_SET;
 	}
 
-	public Collection loadPhysicalLinkTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException {
-		return Collections.EMPTY_LIST;
+	public Set loadPhysicalLinkTypesButIds(	StorableObjectCondition condition,
+											Set ids) throws DatabaseException, CommunicationException {
+		return Collections.EMPTY_SET;
 	}
 
-	public Collection loadSiteNodesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException {
-		return Collections.EMPTY_LIST;
+	public Set loadSiteNodesButIds(	StorableObjectCondition condition,
+									Set ids) throws DatabaseException, CommunicationException {
+		return Collections.EMPTY_SET;
 	}
 
-	public Collection loadSiteNodeTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException {
-		return Collections.EMPTY_LIST;
+	public Set loadSiteNodeTypesButIds(	StorableObjectCondition condition,
+										Set ids) throws DatabaseException, CommunicationException {
+		return Collections.EMPTY_SET;
 	}
 
-	public Collection loadTopologicalNodesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
-			CommunicationException {
-		return Collections.EMPTY_LIST;
+	public Set loadTopologicalNodesButIds(	StorableObjectCondition condition,
+											Set ids) throws DatabaseException, CommunicationException {
+		return Collections.EMPTY_SET;
 	}
 
 	public Set refresh(Set storableObjects) throws CommunicationException, DatabaseException {
 		return storableObjects;
 	}
 
-	public void saveCollector(Collector collector, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveCollector(	Collector collector,
+								boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		// empty
 	}
 
-	public void saveMap(Map map, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException {
+	public void saveMap(Map map,
+						boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
 		this.localHash.put(map.getId(), map);
 	}
 
-	public void saveMark(Mark mark, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveMark(	Mark mark,
+							boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
+		// empty
+
+	}
+
+	public void saveNodeLink(	NodeLink nodeLink,
+								boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		// empty
 
 	}
 
-	public void saveNodeLink(NodeLink nodeLink, boolean force) throws VersionCollisionException, DatabaseException,
+	public void savePhysicalLink(	PhysicalLink physicalLink,
+									boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		// empty
 
 	}
 
-	public void savePhysicalLink(PhysicalLink physicalLink, boolean force) throws VersionCollisionException,
-			DatabaseException, CommunicationException {
-		// empty
-
-	}
-	
-	public void savePhysicalLinkType(PhysicalLinkType physicalLinkType, boolean force)
-			throws VersionCollisionException, DatabaseException, CommunicationException {
-		// empty
-
-	}
-
-	public void saveSiteNode(SiteNode siteNode, boolean force) throws VersionCollisionException, DatabaseException,
+	public void savePhysicalLinkType(	PhysicalLinkType physicalLinkType,
+										boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		// empty
 
 	}
 
-	public void saveSiteNodeType(SiteNodeType siteNodeType, boolean force) throws VersionCollisionException,
-			DatabaseException, CommunicationException {
-		// empty
-
-	}
-
-	public void saveTopologicalNode(TopologicalNode topologicalNode, boolean force) throws VersionCollisionException,
-			DatabaseException, CommunicationException {
-		// empty
-
-	}
-
-	public void saveCollectors(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveSiteNode(	SiteNode siteNode,
+								boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		// empty
 
 	}
 
-	public void saveMaps(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveSiteNodeType(	SiteNodeType siteNodeType,
+									boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
-		for(Iterator it = list.iterator(); it.hasNext();)
-		{
-			Map map = (Map )it.next();
+		// empty
+
+	}
+
+	public void saveTopologicalNode(TopologicalNode topologicalNode,
+									boolean force) throws VersionCollisionException, DatabaseException,
+			CommunicationException {
+		// empty
+
+	}
+
+	public void saveCollectors(	Set set,
+								boolean force) throws VersionCollisionException, DatabaseException,
+			CommunicationException {
+		// empty
+
+	}
+
+	public void saveMaps(	Set set,
+							boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
+		for (Iterator it = set.iterator(); it.hasNext();) {
+			Map map = (Map) it.next();
 			this.localHash.put(map.getId(), map);
 		}
 
 	}
 
-	public void saveMarks(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveMarks(	Set set,
+							boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
+		// empty
+
+	}
+
+	public void saveNodeLinks(	Set set,
+								boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		// empty
 
 	}
 
-	public void saveNodeLinks(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void savePhysicalLinks(	Set set,
+									boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		// empty
 
 	}
 
-	public void savePhysicalLinks(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void savePhysicalLinkTypes(	Set set,
+										boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		// empty
 
 	}
 
-	public void savePhysicalLinkTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveSiteNodes(	Set set,
+								boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		// empty
 
 	}
 
-	public void saveSiteNodes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveSiteNodeTypes(	Set set,
+									boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		// empty
 
 	}
 
-	public void saveSiteNodeTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
-			CommunicationException {
-		// empty
-
-	}
-
-	public void saveTopologicalNodes(Collection list, boolean force) throws VersionCollisionException, DatabaseException,
+	public void saveTopologicalNodes(	Set set,
+										boolean force) throws VersionCollisionException, DatabaseException,
 			CommunicationException {
 		// empty
 

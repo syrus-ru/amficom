@@ -1,5 +1,5 @@
 /*
- * $Id: EmptyClientResourceObjectLoader.java,v 1.5 2005/02/25 07:07:47 bob Exp $
+ * $Id: EmptyClientResourceObjectLoader.java,v 1.6 2005/04/04 14:05:37 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.resource;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
@@ -19,7 +18,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/25 07:07:47 $
+ * @version $Revision: 1.6 $, $Date: 2005/04/04 14:05:37 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -29,13 +28,13 @@ public class EmptyClientResourceObjectLoader implements ResourceObjectLoader {
 		return null;
 	}
 
-	public Collection loadImageResources(Collection ids) throws ApplicationException {
-		return Collections.EMPTY_LIST;
+	public Set loadImageResources(Set ids) throws ApplicationException {
+		return Collections.EMPTY_SET;
 	}
 
-	public Collection loadImageResourcesButIds(	StorableObjectCondition condition,
-												Collection ids) throws ApplicationException {
-		return Collections.EMPTY_LIST;
+	public Set loadImageResourcesButIds(StorableObjectCondition condition,
+										Set ids) throws ApplicationException {
+		return Collections.EMPTY_SET;
 	}
 
 	public Set refresh(Set storableObjects) throws ApplicationException {
@@ -44,16 +43,20 @@ public class EmptyClientResourceObjectLoader implements ResourceObjectLoader {
 
 	public void saveImageResource(	AbstractImageResource abstractImageResource,
 									boolean force) throws ApplicationException {
+		// empty
 	}
 
-	public void saveImageResources(	Collection list,
+	public void saveImageResources(	Set set,
 									boolean force) throws ApplicationException {
+		// empty
 	}
 
 	public void delete(Identifier id) throws IllegalDataException {
+		// empty
 	}
 
-	public void delete(Collection ids) throws IllegalDataException {
+	public void delete(Set ids) throws IllegalDataException {
+		// empty
 	}
 
 }
