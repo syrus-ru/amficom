@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.20 2004/10/19 07:48:21 bob Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.21 2004/10/19 11:09:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,14 +8,8 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.MeasurementPortType;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -27,8 +21,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/10/19 07:48:21 $
- * @author $Author: bob $
+ * @version $Revision: 1.21 $, $Date: 2004/10/19 11:09:27 $
+ * @author $Author: bass $
  * @module measurement_v1
  */
 

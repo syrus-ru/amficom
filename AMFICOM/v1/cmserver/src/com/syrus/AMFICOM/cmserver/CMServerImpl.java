@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.49 2004/10/19 09:35:57 max Exp $
+ * $Id: CMServerImpl.java,v 1.50 2004/10/19 11:09:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -78,7 +78,6 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
@@ -139,8 +138,8 @@ import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2004/10/19 09:35:57 $
- * @author $Author: max $
+ * @version $Revision: 1.50 $, $Date: 2004/10/19 11:09:50 $
+ * @author $Author: bass $
  * @module cmserver_v1
  */
 
