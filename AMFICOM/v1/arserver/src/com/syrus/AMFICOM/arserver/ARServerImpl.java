@@ -1,5 +1,5 @@
 /*
- * $Id: ARServerImpl.java,v 1.7 2005/02/22 11:13:55 max Exp $
+ * $Id: ARServerImpl.java,v 1.8 2005/03/04 12:05:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -50,8 +50,8 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/22 11:13:55 $
- * @author $Author: max $
+ * @version $Revision: 1.8 $, $Date: 2005/03/04 12:05:00 $
+ * @author $Author: bass $
  * @module arserver_v1
  */
 public class ARServerImpl extends ARServerPOA {
@@ -90,18 +90,7 @@ public class ARServerImpl extends ARServerPOA {
 			throws AMFICOMRemoteException {
 		Identifier id = new Identifier(id_Transferable);
 		Log.debugMessage("ARServerImplementation.delete | trying to delete " + id, Log.DEBUGLEVEL03);
-		try {
-			ResourceStorableObjectPool.delete(id);
-        } catch (CommunicationException ce) {
-            Log.errorException(ce);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce
-                    .getMessage());
-        } catch (DatabaseException de) {
-            Log.errorException(de);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
-                    .getMessage());
-        }
-        
+		ResourceStorableObjectPool.delete(id);
 	}
 	
 	public void deleteList(Identifier_Transferable[] id_Transferables,
@@ -114,14 +103,6 @@ public class ARServerImpl extends ARServerPOA {
 		}
 		try {
         	ResourceStorableObjectPool.delete(idList);
-        } catch (CommunicationException ce) {
-            Log.errorException(ce);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ce
-                    .getMessage());
-        } catch (DatabaseException de) {
-            Log.errorException(de);
-            throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, de
-                    .getMessage());
         } catch (IllegalDataException e) {
         	 Log.errorException(e);
              throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e
@@ -162,10 +143,6 @@ public class ARServerImpl extends ARServerPOA {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE, CompletionStatus.COMPLETED_NO, e
 					.getMessage());
-		} catch (IllegalDataException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
-					CompletionStatus.COMPLETED_NO, e.getMessage());
 		} catch (IllegalObjectEntityException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(
@@ -229,11 +206,6 @@ public class ARServerImpl extends ARServerPOA {
 		} catch (UpdateObjectException e) {
 			Log.errorException(e);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_SAVE,
-					CompletionStatus.COMPLETED_NO, e.getMessage());
-		} catch (IllegalDataException e) {
-			Log.errorException(e);
-			throw new AMFICOMRemoteException(
-					ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
 					CompletionStatus.COMPLETED_NO, e.getMessage());
 		} catch (IllegalObjectEntityException e) {
 			Log.errorException(e);

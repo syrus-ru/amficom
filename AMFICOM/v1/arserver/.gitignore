@@ -6,3 +6,6 @@ rc
 cache
 orb.db
 classes
+.classpath
+.project
+.settings
