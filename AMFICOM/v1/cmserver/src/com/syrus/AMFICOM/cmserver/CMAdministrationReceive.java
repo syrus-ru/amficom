@@ -1,5 +1,5 @@
 /*
- * $Id: CMAdministrationReceive.java,v 1.3 2005/02/10 12:09:02 bob Exp $
+ * $Id: CMAdministrationReceive.java,v 1.4 2005/02/14 14:29:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,9 @@ import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
 import com.syrus.AMFICOM.administration.corba.Server_Transferable;
 import com.syrus.AMFICOM.administration.corba.User_Transferable;
-import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -37,8 +38,8 @@ import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/10 12:09:02 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/02/14 14:29:22 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 
@@ -51,11 +52,11 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		Log.debugMessage("CMAdministrationReceive.receiveUser | Received " + " user", Log.DEBUGLEVEL07);
 		try {
-			user_Transferable.header.modifier_id = accessIdentifier.user_id;
 			User user = new User(user_Transferable);
 			AdministrationStorableObjectPool.putStorableObject(user);
 			UserDatabase userDatabase = (UserDatabase) AdministrationDatabaseContext.getUserDatabase();
-			userDatabase.update(user, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			userDatabase.update(user, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK);
 			return user.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
@@ -87,13 +88,13 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 		List userList = new ArrayList(user_Transferables.length);
 		try {
 			for (int i = 0; i < user_Transferables.length; i++) {
-				user_Transferables[i].header.modifier_id = accessIdentifier.user_id;
 				User user = new User(user_Transferables[i]);
 				AdministrationStorableObjectPool.putStorableObject(user);
 				userList.add(user);
 			}
 			UserDatabase userDatabase = (UserDatabase) AdministrationDatabaseContext.getUserDatabase();
-			userDatabase.update(userList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);			
+			userDatabase.update(userList, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK);			
 			return super.getListHeaders(userList);
 		}
 		catch (UpdateObjectException e) {
@@ -123,11 +124,11 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		Log.debugMessage("CMAdministrationReceive.receiveDomain | Received " + " domain", Log.DEBUGLEVEL07);
 		try {
-			domain_Transferable.header.modifier_id = accessIdentifier.user_id;
 			Domain domain = new Domain(domain_Transferable);
 			AdministrationStorableObjectPool.putStorableObject(domain);
 			DomainDatabase domainDatabase = (DomainDatabase) AdministrationDatabaseContext.getDomainDatabase();
-			domainDatabase.update(domain, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			domainDatabase.update(domain, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK);
 			return domain.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
@@ -163,13 +164,13 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 		List domainList = new ArrayList(domain_Transferables.length);
 		try {
 			for (int i = 0; i < domain_Transferables.length; i++) {
-				domain_Transferables[i].header.modifier_id = accessIdentifier.user_id;
 				Domain domain = new Domain(domain_Transferables[i]);
 				AdministrationStorableObjectPool.putStorableObject(domain);
 				domainList.add(domain);
 			}
 			DomainDatabase domainDatabase = (DomainDatabase) AdministrationDatabaseContext.getDomainDatabase();
-			domainDatabase.update(domainList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);			
+			domainDatabase.update(domainList, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK);			
 			return super.getListHeaders(domainList);
 		}
 		catch (UpdateObjectException e) {
@@ -203,11 +204,11 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		Log.debugMessage("CMAdministrationReceive.receiveServer | Received " + " server", Log.DEBUGLEVEL07);
 		try {
-			server_Transferable.header.modifier_id = accessIdentifier.user_id;
 			Server server = new Server(server_Transferable);
 			AdministrationStorableObjectPool.putStorableObject(server);
 			ServerDatabase serverDatabase = (ServerDatabase) AdministrationDatabaseContext.getServerDatabase();
-			serverDatabase.update(server, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			serverDatabase.update(server, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK);
 			return server.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
@@ -243,13 +244,13 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 		List serverList = new ArrayList(server_Transferables.length);
 		try {
 			for (int i = 0; i < server_Transferables.length; i++) {
-				server_Transferables[i].header.modifier_id = accessIdentifier.user_id;
 				Server server = new Server(server_Transferables[i]);
 				AdministrationStorableObjectPool.putStorableObject(server);
 				serverList.add(server);
 			}
 			ServerDatabase serverDatabase = (ServerDatabase) AdministrationDatabaseContext.getServerDatabase();
-			serverDatabase.update(serverList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			serverDatabase.update(serverList, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK);
 			return super.getListHeaders(serverList);
 		}
 		catch (UpdateObjectException e) {
@@ -283,11 +284,11 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 									AccessIdentifier_Transferable accessIdentifier) throws AMFICOMRemoteException {
 		Log.debugMessage("CMAdministrationReceive.receiveMCM | Received " + " mcm", Log.DEBUGLEVEL07);
 		try {
-			mcm_Transferable.header.modifier_id = accessIdentifier.user_id;
 			MCM mcm = new MCM(mcm_Transferable);
 			AdministrationStorableObjectPool.putStorableObject(mcm);
 			MCMDatabase mcmDatabase = (MCMDatabase) AdministrationDatabaseContext.getMCMDatabase();
-			mcmDatabase.update(mcm, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			mcmDatabase.update(mcm, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK);
 			return mcm.getHeaderTransferable();
 		}
 		catch (UpdateObjectException e) {
@@ -323,13 +324,13 @@ public abstract class CMAdministrationReceive extends CMGeneralReceive {
 		List mcmList = new ArrayList(mcm_Transferables.length);
 		try {
 			for (int i = 0; i < mcm_Transferables.length; i++) {
-				mcm_Transferables[i].header.modifier_id = accessIdentifier.user_id;
 				MCM mcm = new MCM(mcm_Transferables[i]);
 				AdministrationStorableObjectPool.putStorableObject(mcm);
 				mcmList.add(mcm);
 			}
 			MCMDatabase mcmDatabase = (MCMDatabase) AdministrationDatabaseContext.getMCMDatabase();
-			mcmDatabase.update(mcmList, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);			
+			mcmDatabase.update(mcmList, new Identifier(accessIdentifier.user_id), force ? StorableObjectDatabase.UPDATE_FORCE
+					: StorableObjectDatabase.UPDATE_CHECK);			
 			return super.getListHeaders(mcmList);
 		}
 		catch (UpdateObjectException e) {
