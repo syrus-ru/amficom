@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.general;
 public abstract class ObjectEntities {
 	/*	Object Types	*/
 	public static final String PARAMETERTYPE_ENTITY = "ParameterType";
+	public static final String CHARACTERISTICTYPE_ENTITY = "CharacteriscticType";
 	public static final String MEASUREMENTTYPE_ENTITY = "MeasurementType";
 	public static final String MNTTYPPARTYPLINK_ENTITY = "MntTypParTypLink";
 	public static final String ANALYSISTYPE_ENTITY = "AnalysisType";
@@ -13,13 +14,14 @@ public abstract class ObjectEntities {
 	/*	Administration	*/
 	public static final String PERMATTR_ENTITY = "PermissionAttributes";
 	public static final String DOMAIN_ENTITY = "domain";
-	public static final String MCM_ENTITY = "mcm";
 	public static final String SERVER_ENTITY = "Server";
 	public static final String USER_ENTITY = "User";
 
 	/*	Configuration	*/
+	public static final String CHARACTERISTIC_ENTITY = "Characterisctic";
 	public static final String ME_ENTITY = "MonitoredElement";
 	public static final String KIS_ENTITY = "kis";
+	public static final String MCM_ENTITY = "mcm";
 
 	/*	Measurement	*/
 	public static final String SET_ENTITY = "Sett";
@@ -40,32 +42,34 @@ public abstract class ObjectEntities {
 	public static final short UNKNOWN_ENTITY_CODE = 0x0000;
 
 	/*	Object Types 1 -- 128	*/
-	public static final short PARAMETERTYPE_ENTITY_CODE = 0x0001;
-	public static final short MEASUREMENTTYPE_ENTITY_CODE = 0x0002;
-	public static final short ANALYSISTYPE_ENTITY_CODE = 0x0003;
-	public static final short EVALUATIONTYPE_ENTITY_CODE = 0x0004;
+	public static final short CHARACTERISTICTYPE_ENTITY_CODE = 0x0001;
+	public static final short PARAMETERTYPE_ENTITY_CODE = 0x0002;
+	public static final short MEASUREMENTTYPE_ENTITY_CODE = 0x0003;
+	public static final short ANALYSISTYPE_ENTITY_CODE = 0x0004;
+	public static final short EVALUATIONTYPE_ENTITY_CODE = 0x0005;
 
 	/*	Administration 129 -- 256	*/
 	public static final short PERMATTR_ENTITY_CODE = 0x0081;
 	public static final short DOMAIN_ENTITY_CODE = 0x0082;
-	public static final short MCM_ENTITY_CODE = 0x0083;
 	public static final short SERVER_ENTITY_CODE = 0x0084;
 	public static final short USER_ENTITY_CODE = 0x0085;
 
 	/*	Configuration	257 -- 384*/
-	public static final short ME_ENTITY_CODE = 0x0100;
-	public static final short KIS_ENTITY_CODE = 0x0101;
+	public static final short CHARACTERISTIC_ENTITY_CODE = 0x0101;
+	public static final short ME_ENTITY_CODE = 0x0102;
+	public static final short KIS_ENTITY_CODE = 0x0103;
+	public static final short MCM_ENTITY_CODE = 0x0104;
 
 	/*	Measurement 385 -- 512	*/
-	public static final short SET_ENTITY_CODE = 0x0180;
-	public static final short SETPARAMETER_ENTITY_CODE = 0x0181;
-	public static final short MS_ENTITY_CODE = 0x0182;
-	public static final short MEASUREMENT_ENTITY_CODE = 0x0183;
-	public static final short ANALYSIS_ENTITY_CODE = 0x0184;
-	public static final short EVALUATION_ENTITY_CODE = 0x0185;
-	public static final short TEST_ENTITY_CODE = 0x0186;
-	public static final short RESULT_ENTITY_CODE = 0x0187;
-	public static final short RESULTPARAMETER_ENTITY_CODE = 0x0188;
-	public static final short TEMPORALPATTERN_ENTITY_CODE = 0x0189;
+	public static final short SET_ENTITY_CODE = 0x0181;
+	public static final short SETPARAMETER_ENTITY_CODE = 0x0182;
+	public static final short MS_ENTITY_CODE = 0x0183;
+	public static final short MEASUREMENT_ENTITY_CODE = 0x0184;
+	public static final short ANALYSIS_ENTITY_CODE = 0x0185;
+	public static final short EVALUATION_ENTITY_CODE = 0x0186;
+	public static final short TEST_ENTITY_CODE = 0x0187;
+	public static final short RESULT_ENTITY_CODE = 0x0188;
+	public static final short RESULTPARAMETER_ENTITY_CODE = 0x0189;
+	public static final short TEMPORALPATTERN_ENTITY_CODE = 0x018A;
 
 }
