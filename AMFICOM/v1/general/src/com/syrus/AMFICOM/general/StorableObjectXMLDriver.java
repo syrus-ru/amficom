@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.14 2005/02/07 13:44:02 bob Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.15 2005/02/07 14:41:31 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.util.Log;
 /**
  * XML Driver for storable object package, one per package.
  * 
- * @version $Revision: 1.14 $, $Date: 2005/02/07 13:44:02 $
+ * @version $Revision: 1.15 $, $Date: 2005/02/07 14:41:31 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -163,8 +163,8 @@ public class StorableObjectXMLDriver {
 	}
 
 	private Object parse(Node node) throws IllegalDataException {
-		// Log.debugMessage("StorableObjectXMLDriver.parse | node name:" +
-		// node.getNodeName(), Log.INFO);
+//		Log.debugMessage("StorableObjectXMLDriver.parse | node name:" +
+//		node.getNodeName(), Log.INFO);
 		Object object = null;
 		NamedNodeMap attributes = node.getAttributes();
 		if (attributes == null)
@@ -176,7 +176,9 @@ public class StorableObjectXMLDriver {
 				NodeList childNodes = node.getChildNodes();
 				List list = new ArrayList(childNodes.getLength());
 				for (int i = 0; i < childNodes.getLength(); i++) {
-					list.add(this.parse(childNodes.item(i)));
+					Object object2 = this.parse(childNodes.item(i));
+					if (object2 != null)
+						list.add(object2);
 				}
 				object = list;
 			} else if (className.equals(Map.class.getName())) {
@@ -184,7 +186,9 @@ public class StorableObjectXMLDriver {
 				Map map = new HashMap(childNodes.getLength());
 				for (int i = 0; i < childNodes.getLength(); i++) {
 					Node node2 = childNodes.item(i);
-					map.put(node2.getNodeName(), this.parse(node2));
+					Object object2 = this.parse(node2);
+					if (object2 != null)
+						map.put(node2.getNodeName(), object2);
 				}
 				object = map;
 			} else {
