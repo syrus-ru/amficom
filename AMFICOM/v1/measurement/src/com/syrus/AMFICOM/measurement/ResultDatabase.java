@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.34 2004/11/01 14:08:21 bob Exp $
+ * $Id: ResultDatabase.java,v 1.35 2004/11/02 09:03:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/11/01 14:08:21 $
+ * @version $Revision: 1.35 $, $Date: 2004/11/02 09:03:22 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -888,14 +888,18 @@ public class ResultDatabase extends StorableObjectDatabase {
 				}
 			}
 			buffer.append(CLOSE_BRACKET);
-		}
 
-		try {
-			list = retrieveButIds(ids, buffer.toString());
-		} catch (IllegalDataException ide) {
-			Log.debugMessage("ResultDatabase.retrieveButIdsByMeasurement | Error: " + ide.getMessage(),
-						Log.DEBUGLEVEL09);
-		}
+			try {
+				Log.debugMessage("ResultDatabase.retrieveButIdsByMeasurement | Try additional condition: " + buffer.toString(),
+									Log.DEBUGLEVEL09);
+				list = retrieveButIds(ids, buffer.toString());
+			} catch (IllegalDataException ide) {
+				Log.debugMessage("ResultDatabase.retrieveButIdsByMeasurement | Error: " + ide.getMessage(),
+							Log.DEBUGLEVEL09);
+			}
+			
+		} else 
+			list = Collections.EMPTY_LIST;
 
 		return list;
 	}
@@ -904,7 +908,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 		List list = null;
 
 		String sql = COLUMN_MEASUREMENT_ID + EQUALS + measurementId.toSQLString()
-		+ SQL_AND + COLUMN_SORT + EQUALS + resultSort.value();
+			+ SQL_AND + COLUMN_SORT + EQUALS + resultSort.value();
 		
 		try{
 			list = retrieveButIds(ids, sql);
