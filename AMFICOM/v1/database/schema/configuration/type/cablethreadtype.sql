@@ -8,18 +8,16 @@ CREATE TABLE CableThreadType (
  codename VARCHAR2(32) NOT NULL,
  description VARCHAR2(256),
 --
- manufacturer VARCHAR2(64),
- manufacturer_code VARCHAR2(64),
  mark VARCHAR2(64),
  color VARCHAR2(32),
- cable_link_type_id VARCHAR2(32),
+ link_type_id VARCHAR2(32),
 --
  CONSTRAINT ctkptype_pk PRIMARY KEY (id),
  CONSTRAINT ctptype_creator_fk FOREIGN KEY (creator_id)
   REFERENCES Users (id) ON DELETE CASCADE,
  CONSTRAINT ctptype_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES Users (id) ON DELETE CASCADE
- CONSTRAINT ctptype_clinktype_fk FOREIGN KEY (cable_link_type_id)
+ CONSTRAINT ctptype_clinktype_fk FOREIGN KEY (link_type_id)
   REFERENCES LinkType (id) ON DELETE CASCADE
 );
 

@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.51 2004/11/19 12:15:06 bass Exp $
+ * $Id: configuration.idl,v 1.52 2004/11/23 09:46:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,6 +23,12 @@ module corba {
 //
 //		void getKIS() raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
 //	};
+
+#ifdef GENERAL_COMMON
+	abstract valuetype DomainMember {
+		attribute general::corba::Identifier domaiId;
+	};
+#endif // GENERAL_COMMON
 
 //////////////////// AccessIdentifier ///////////////////
 	struct AccessIdentifier_Transferable {
@@ -151,11 +157,9 @@ module corba {
 		
 		wstring codename;
 		wstring description;
-		wstring manufacturer;
-		wstring manufacturerCode;
 		wstring mark;
 		wstring color;
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable cable_link_type_id;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable link_type_id;
 	};
 
 	typedef CableThreadType_Transferable CableThreadType;
