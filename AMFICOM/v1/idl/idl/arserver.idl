@@ -1,0 +1,38 @@
+#ifndef ARSERVER_IDL
+#define ARSERVER_IDL
+
+#include <general.idl>
+#include <general.idl>
+
+module com {
+	module syrus {
+		module AMFICOM {
+			module arserver {
+				module corba {
+/////////////////////////////////////////// Delete Resources ////////////////////////////////////////////
+					void delete(in general::corba::Identifier_Transferable id_Transferable)
+						raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+					void deleteList(in general::corba::IdentifierSeq_Transferable id_Transferables)
+						raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+/////////////////////////////////////////// Recieve Resources ////////////////////////////////////////////
+					void receiveImage(in resource::corba::ImageResource_Transferable imageResource_Transferable,
+							in boolean force)						 		   
+						raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+					
+					void receiveImages(in resource::corba::ImageResourceSeq_Transferable imageResources_Transferable,
+							in boolean force)						 		   
+						raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+/////////////////////////////////////////// Transmit Resources ////////////////////////////////////////////
+					resource::corba::ImageResource_Transferable transmitImageResource(
+							in general::corba::Identifier_Transferable id_Transferable)
+						raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+
+					resource::corba::ImageResourceSeq_Transferable transmitImageResources(
+							in general::corba::IdentifierSeq_Transferable id_Transferables)
+						raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+				}
+			}
+		}
+	}
+}	
