@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeElement.java,v 1.14 2004/10/18 12:43:13 krupenn Exp $
+ * $Id: MapNodeElement.java,v 1.15 2004/10/18 15:21:50 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.14 $, $Date: 2004/10/18 12:43:13 $
+ * @version $Revision: 1.15 $, $Date: 2004/10/18 15:21:50 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -373,6 +373,48 @@ public abstract class MapNodeElement extends StubResource
 
 		return returnList;
 	}
+
+	/**
+	 * возвращает фрагмент линии, не равный переданному в параметре.
+	 * для топологического узла возвращает единственный противоположный,
+	 * для сетевого узла их может быть несколько, по этой причине метод
+	 * не должен использоваться и возвращает null
+	 */
+	public MapNodeLinkElement getOtherNodeLink(MapNodeLinkElement nl)
+	{
+		if(!this.getClass().equals(MapPhysicalNodeElement.class))
+		{
+			try
+			{
+				throw new Exception("dummy");
+			}
+			catch(Exception e)
+			{
+				Environment.log(
+						Environment.LOG_LEVEL_FINER, 
+						"current execution point with call stack:", 
+						null, 
+						null, 
+						e);
+			}
+
+			return null;
+		}
+
+		MapNodeLinkElement startNodeLink = null;
+		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
+			{
+				MapNodeLinkElement mnle = (MapNodeLinkElement )it.next();
+				if(nl != mnle)
+				{
+					startNodeLink = mnle;
+					break;
+				}
+			}
+			
+		return startNodeLink;
+	}
+
 
 	/**
 	 * Получить список PhysicalLink, начинающихся или заканчивающихся
