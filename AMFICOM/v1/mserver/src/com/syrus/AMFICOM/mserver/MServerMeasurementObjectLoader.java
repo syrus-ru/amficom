@@ -1,5 +1,5 @@
 /*
- * $Id: MServerMeasurementObjectLoader.java,v 1.6 2004/10/01 11:08:24 bob Exp $
+ * $Id: MServerMeasurementObjectLoader.java,v 1.7 2004/10/03 12:46:29 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
@@ -53,7 +54,7 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/10/01 11:08:24 $
+ * @version $Revision: 1.7 $, $Date: 2004/10/03 12:46:29 $
  * @author $Author: bob $
  * @module mserver_v1
  */
@@ -613,67 +614,67 @@ public class MServerMeasurementObjectLoader implements MeasurementObjectLoader {
 
 		/* Load Measurement StorableObject but argument ids */
 
-		public List loadParameterTypesButIds(List ids) throws DatabaseException, CommunicationException {
+		public List loadParameterTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
 			throw new UnsupportedOperationException("method isn't complete");
 		}
 
-		public List loadMeasurementTypesButIds(List ids) throws DatabaseException, CommunicationException {
+		public List loadMeasurementTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
 			throw new UnsupportedOperationException("method isn't complete");
 		}
 
-		public List loadAnalysisTypesButIds(List ids) throws DatabaseException, CommunicationException {
+		public List loadAnalysisTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
 			throw new UnsupportedOperationException("method isn't complete");
 		}
 
-		public List loadEvaluationTypesButIds(List ids) throws DatabaseException, CommunicationException {
+		public List loadEvaluationTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
 			throw new UnsupportedOperationException("method isn't complete");
 		}
 
-		public List loadSetsButIds(List ids) throws DatabaseException, CommunicationException {
+		public List loadSetsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
 			throw new UnsupportedOperationException("method isn't complete");
 		}
 
-		public List loadModelingsButIds(List ids) throws DatabaseException, CommunicationException {
+		public List loadModelingsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
 			throw new UnsupportedOperationException("method isn't complete");
 		}
 
-		public List loadMeasurementSetupsButIds(List ids) throws DatabaseException, CommunicationException {
+		public List loadMeasurementSetupsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
 			throw new UnsupportedOperationException("method isn't complete");
 		}
 
-		public List loadMeasurementsButIds(List ids) throws DatabaseException, CommunicationException {
+		public List loadMeasurementsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
 			throw new UnsupportedOperationException("method isn't complete");
 		}
 
-		public List loadAnalysesButIds(List ids) throws DatabaseException, CommunicationException {
+		public List loadAnalysesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
 			throw new UnsupportedOperationException("method isn't complete");
 		}
 
-		public List loadEvaluationsButIds(List ids) throws DatabaseException, CommunicationException {
+		public List loadEvaluationsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
 			throw new UnsupportedOperationException("method isn't complete");
 		}
 
-		public List loadTestsButIds(List ids) throws DatabaseException, CommunicationException {
+		public List loadTestsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
 			throw new UnsupportedOperationException("method isn't complete");
 		}
 
-		public List loadResultsButIds(List ids) throws DatabaseException, CommunicationException {
+		public List loadResultsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
 			throw new UnsupportedOperationException("method isn't complete");
 		}
 
-		public List loadTemporalPatternsButIds(List ids) throws DatabaseException, CommunicationException {
+		public List loadTemporalPatternsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
 //			 TODO method isn't complete
 			throw new UnsupportedOperationException("method isn't complete");
 		}

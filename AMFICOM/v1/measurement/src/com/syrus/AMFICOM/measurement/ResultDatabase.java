@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.23 2004/09/20 14:06:50 bob Exp $
+ * $Id: ResultDatabase.java,v 1.24 2004/10/03 12:42:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.ByteArrayDatabase;
+import com.syrus.AMFICOM.configuration.Domain;
+import com.syrus.AMFICOM.configuration.DomainMember;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -36,7 +38,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/09/20 14:06:50 $
+ * @version $Revision: 1.24 $, $Date: 2004/10/03 12:42:55 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -530,4 +532,23 @@ public class ResultDatabase extends StorableObjectDatabase {
 		return list;
 	}
 	
+	public List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
+        List list = null;
+        
+        String condition = COLUMN_MEASUREMENT_ID + SQL_IN + OPEN_BRACKET
+				+ SQL_SELECT + COLUMN_ID + SQL_FROM + ObjectEntities.MEASUREMENT_ENTITY
+				+ SQL_WHERE + MeasurementDatabase.COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
+                	+ SQL_SELECT + COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
+					+ DomainMember.COLUMN_DOMAIN_ID + EQUALS + domain.getId().toSQLString()
+					+ CLOSE_BRACKET
+			+ CLOSE_BRACKET;
+        
+        try {
+            list = retrieveButIds(ids, condition);
+        }  catch (IllegalDataException ide) {           
+            Log.debugMessage("MeasurementDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
+        }
+        
+        return list;
+    }
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.29 2004/09/20 14:06:50 bob Exp $
+ * $Id: SetDatabase.java,v 1.30 2004/10/03 12:42:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,8 @@ import java.util.Iterator;
 
 import oracle.sql.BLOB;
 
+import com.syrus.AMFICOM.configuration.Domain;
+import com.syrus.AMFICOM.configuration.DomainMember;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -36,7 +38,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2004/09/20 14:06:50 $
+ * @version $Revision: 1.30 $, $Date: 2004/10/03 12:42:55 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -639,4 +641,24 @@ public class SetDatabase extends StorableObjectDatabase {
 		
 		return list;
 	}
+	
+	public List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
+        List list = null;
+        
+        String condition = COLUMN_ID + SQL_IN + OPEN_BRACKET
+				+ SQL_SELECT + LINK_COLUMN_SET_ID + SQL_FROM + ObjectEntities.SETMELINK_ENTITY
+				+ SQL_WHERE + LINK_COLUMN_ME_ID + SQL_IN + OPEN_BRACKET
+                	+ SQL_SELECT + COLUMN_ID + SQL_FROM + ObjectEntities.ME_ENTITY + SQL_WHERE
+					+ DomainMember.COLUMN_DOMAIN_ID + EQUALS + domain.getId().toSQLString()
+					+ CLOSE_BRACKET
+			+ CLOSE_BRACKET;
+        
+        try {
+            list = retrieveButIds(ids, condition);
+        }  catch (IllegalDataException ide) {           
+            Log.debugMessage("MeasurementDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
+        }
+        
+        return list;
+    }
 }
