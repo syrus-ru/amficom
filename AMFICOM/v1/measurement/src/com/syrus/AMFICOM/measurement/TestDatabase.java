@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.17 2004/08/12 13:07:59 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.18 2004/08/13 13:56:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/08/12 13:07:59 $
+ * @version $Revision: 1.18 $, $Date: 2004/08/13 13:56:07 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -561,7 +561,53 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	
+	public static List retrieveTests(TestStatus status) throws RetrieveObjectException {
+		List tests = new ArrayList();
+
+		String sql = SQL_SELECT
+			+ COLUMN_ID
+			+ SQL_FROM + ObjectEntities.TEST_ENTITY
+			+ SQL_WHERE + COLUMN_STATUS + EQUALS + Integer.toString(status.value())
+			+ SQL_ORDER_BY + COLUMN_START_TIME + SQL_ASC;
+
+		Statement statement = null;
+		ResultSet resultSet = null;
+		try {
+			statement = connection.createStatement();
+			Log.debugMessage("TestDatabase.retrieveTestsForMCM | Trying: " + sql, Log.DEBUGLEVEL05);
+			resultSet = statement.executeQuery(sql);
+			while (resultSet.next()){
+				/**
+				  * @todo when change DB Identifier model, change getString() to getLong()
+				  */
+				try {
+					tests.add(new Test(new Identifier(resultSet.getString(COLUMN_ID))));
+				}
+				catch (ObjectNotFoundException onfe) {
+					Log.errorException(onfe);
+				}
+			}
+		}
+		catch (SQLException sqle) {
+			String mesg = "TestDatabase.retrieveTestsForMCM | Cannot retrieve test of status " + status.value();
+			throw new RetrieveObjectException(mesg, sqle);
+		}
+		finally {
+			try {
+				if (statement != null)
+					statement.close();
+				if (resultSet != null)
+					resultSet.close();
+				statement = null;
+				resultSet = null;
+			}
+			catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+		return tests;
+	}
+
 	public static List retrieveTestsForMCM(Identifier mcmId, TestStatus status) throws RetrieveObjectException {
 		List tests = new ArrayList();
 
@@ -607,7 +653,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			}
 		}
 		catch (SQLException sqle) {
-			String mesg = "TestDatabase.retrieveTestsForMCM | Cannot retrieve test for mcm " + mcmIdStr;
+			String mesg = "TestDatabase.retrieveTestsForMCM | Cannot retrieve test of status " + status.value() + " for mcm " + mcmIdStr;
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
