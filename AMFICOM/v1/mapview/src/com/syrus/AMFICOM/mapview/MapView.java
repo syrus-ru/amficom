@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.12 2005/03/04 14:29:23 krupenn Exp $
+* $Id: MapView.java,v 1.13 2005/03/04 19:17:32 bass Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -27,7 +27,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.corba.IdentifierDefaultFactory;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
@@ -52,8 +51,8 @@ import com.syrus.AMFICOM.scheme.corba.SchemePath;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/03/04 14:29:23 $
+ * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/03/04 19:17:32 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -111,10 +110,9 @@ public class MapView extends DomainMember {
 		this.scale = mvt.scale;
 		this.defaultScale = mvt.defaultScale;		
 
-		IdentifierDefaultFactory identifierDefaultFactory = new IdentifierDefaultFactory();
 		List schemeIds = new ArrayList(mvt.schemeIds.length);
-		for (int i = 0; i < mvt.schemeIds.length; i++) 
-			schemeIds.add(identifierDefaultFactory.newInstanceFromTransferable(mvt.schemeIds[i]));
+		for (int i = 0; i < mvt.schemeIds.length; i++)
+			schemeIds.add(new Identifier(mvt.schemeIds[i]));
 
 		Identifier mapId = new Identifier(mvt.mapId);
 		try{
@@ -207,7 +205,7 @@ public class MapView extends DomainMember {
 		int i = 0;
 		Identifier_Transferable[] schemeIdsTransferable = new Identifier_Transferable[this.schemes.size()];
 		for (Iterator iterator = this.schemes.iterator(); iterator.hasNext();)
-			schemeIdsTransferable[i++] = (((Scheme) iterator.next()).getId()).getTransferable();		
+			schemeIdsTransferable[i++] = (Identifier_Transferable) (((Scheme) iterator.next()).getId()).getTransferable();		
 
 		return new MapView_Transferable(super.getHeaderTransferable(),
 				(Identifier_Transferable)this.getDomainId().getTransferable(),
