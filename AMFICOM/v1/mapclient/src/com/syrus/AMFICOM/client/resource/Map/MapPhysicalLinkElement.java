@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalLinkElement.java,v 1.9 2004/09/16 10:37:49 krupenn Exp $
+ * $Id: MapPhysicalLinkElement.java,v 1.10 2004/09/17 11:38:44 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -47,7 +47,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/09/16 10:37:49 $
+ * @version $Revision: 1.10 $, $Date: 2004/09/17 11:38:44 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -104,6 +104,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	}
 
 	public Object clone(DataSourceInterface dataSource)
+		throws CloneNotSupportedException
 	{
 		String cloned_id = (String)Pool.get("mapclonedids", id);
 		if (cloned_id != null)
@@ -274,7 +275,19 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 
 	boolean isSelectionVisible()
 	{
-		return isSelected();
+		return isSelected() || selectionVisible;
+	}
+	
+	protected boolean selectionVisible = false;
+
+	public void paint(Graphics g, Stroke stroke, Color color, boolean selectionVisible)
+	{
+		this.selectionVisible = selectionVisible;
+		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
+		{
+			MapNodeLinkElement nodelink = (MapNodeLinkElement )it.next();
+			nodelink.paint(g, stroke, color);
+		}
 	}
 
 	public void paint(Graphics g)
@@ -289,94 +302,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 				stroke.getDashPhase());
 		Color color = getColor();
 
-		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
-		{
-			MapNodeLinkElement nodelink = (MapNodeLinkElement )it.next();
-			nodelink.paint(g, str, color);
-		}
-	}
-
-	/**
-	 * –исуем NodeLink взависимости от того выбрана она или нет
-	 * а так же если она выбрана выводим еЄ рамер
-	 */
-	public void paint1 (Graphics g)
-	{
-		MapCoordinatesConverter converter = getMap().getConverter();
-
-		Graphics2D p = (Graphics2D )g;
-		
-		BasicStroke stroke = (BasicStroke )this.getStroke();
-		Stroke str = new BasicStroke(
-				this.getLineSize(), 
-				stroke.getEndCap(), 
-				stroke.getLineJoin(), 
-				stroke.getMiterLimit(), 
-				stroke.getDashArray(), 
-				stroke.getDashPhase());
-
-		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
-		{
-			MapNodeLinkElement nodelink = (MapNodeLinkElement )it.next();
-
-			Point from = converter.convertMapToScreen( nodelink.startNode.getAnchor());
-			Point to = converter.convertMapToScreen( nodelink.endNode.getAnchor());
-
-			p.setStroke(str);
-			p.setColor(this.getColor());
-
-			if (this.getAlarmState())
-			{
-				if (MapPropertiesManager.isShowAlarmState() )
-					p.setColor(this.getAlarmedColor());
-				else
-					p.setColor(this.getColor());
-			}
-			else
-				p.setColor(this.getColor());
-
-			p.drawLine( from.x, from.y, to.x, to.y);
-			if ( isSelected())
-			{
-				p.setStroke(MapPropertiesManager.getSelectionStroke());
-
-				double l = 4;
-				double l1 = 6;
-				double cos_a = (from.y - to.y) 
-					/ Math.sqrt( 
-							(from.x - to.x) * (from.x - to.x) 
-							+ (from.y - to.y) * (from.y - to.y) );
-
-				double sin_a = (from.x - to.x) 
-					/ Math.sqrt( 
-							(from.x - to.x) * (from.x - to.x) 
-							+ (from.y - to.y) * (from.y - to.y) );
-
-				p.setColor(MapPropertiesManager.getFirstSelectionColor());
-				p.drawLine(
-						from.x + (int)(l * cos_a), 
-						from.y  - (int)(l * sin_a), 
-						to.x + (int)(l * cos_a), 
-						to.y - (int)(l * sin_a));
-				p.drawLine(
-						from.x - (int)(l * cos_a), 
-						from.y  + (int)(l * sin_a), 
-						to.x - (int)(l * cos_a), 
-						to.y + (int)(l * sin_a));
-
-				p.setColor(MapPropertiesManager.getSecondSelectionColor());
-				p.drawLine(
-						from.x + (int)(l1 * cos_a), 
-						from.y  - (int)(l1 * sin_a), 
-						to.x + (int)(l1 * cos_a), 
-						to.y - (int)(l1 * sin_a));
-				p.drawLine(
-						from.x - (int)(l1 * cos_a), 
-						from.y  + (int)(l1 * sin_a), 
-						to.x - (int)(l1 * cos_a), 
-						to.y + (int)(l1 * sin_a));
-			}
-		}
+		paint(g, str, color, false);
 	}
 
 	/**

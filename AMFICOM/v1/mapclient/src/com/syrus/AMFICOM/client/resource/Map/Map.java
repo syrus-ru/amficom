@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.2 2004/09/15 08:28:52 krupenn Exp $
+ * $Id: Map.java,v 1.3 2004/09/17 11:38:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/15 08:28:52 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/17 11:38:44 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -72,6 +72,7 @@ public final class Map extends StubResource implements Serializable
 	protected ArrayList nodelink_ids = new ArrayList();
 	protected ArrayList link_ids = new ArrayList();
 	protected ArrayList mark_ids = new ArrayList();
+	protected ArrayList collector_ids = new ArrayList();
 
 	/** Вектор элементов наследников класса Node */
 	protected ArrayList nodes = new ArrayList();
@@ -79,14 +80,12 @@ public final class Map extends StubResource implements Serializable
 	protected ArrayList nodeLinks = new ArrayList();
 	/** Вектор элементов типа physicalLinks */
 	protected ArrayList physicalLinks = new ArrayList();
+	/** Вектор элементов типа PipePaths */
+	protected ArrayList collectors = new ArrayList();
 
 	/** список удаленных элементов */
 	protected LinkedList removedElements = new LinkedList();
 	
-//	protected LinkedList deleted_nodes_ids = new LinkedList();
-//	protected LinkedList deleted_nodeLinks_ids = new LinkedList();
-//	protected LinkedList deleted_physicalLinks_ids = new LinkedList();
-
 	protected boolean isOpened = false;
 	
 	/**
@@ -120,6 +119,7 @@ public final class Map extends StubResource implements Serializable
 	 * под новым именем
 	 */
 	public Object clone(DataSourceInterface dataSource)
+		throws CloneNotSupportedException
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "clone(" + dataSource + ")");
 		String cloned_id = (String )Pool.get("mapclonedids", id);
@@ -151,6 +151,11 @@ public final class Map extends StubResource implements Serializable
 		mc.physicalLinks = new ArrayList();
 		for(Iterator it = physicalLinks.iterator(); it.hasNext();)
 			mc.physicalLinks.add((((MapElement)it.next()).clone(dataSource)));
+
+		mc.collectors = new ArrayList();
+		for(Iterator it = collectors.iterator(); it.hasNext();)
+			mc.collectors.add(((MapElement)it.next()).clone(dataSource));
+			
 			
 		mc.mark_ids = new ArrayList();
 		for(Iterator it = mark_ids.iterator(); it.hasNext();)
@@ -171,6 +176,10 @@ public final class Map extends StubResource implements Serializable
 		mc.link_ids = new ArrayList();
 		for(Iterator it = link_ids.iterator(); it.hasNext();)
 			mc.link_ids.add(Pool.get("mapclonedids", (String )it.next()));
+			
+		mc.collector_ids = new ArrayList();
+		for(Iterator it = collector_ids.iterator(); it.hasNext();)
+			mc.collector_ids.add(Pool.get("mapclonedids", (String )it.next()));
 			
 		return mc;
 	}
@@ -219,6 +228,11 @@ public final class Map extends StubResource implements Serializable
 		mark_ids = new ArrayList(count);
 		for(i = 0; i < count; i++)
 			mark_ids.add(transferable.markIds[i]);
+
+		count = transferable.collectorIds.length;
+		collector_ids = new ArrayList(count);
+		for(i = 0; i < count; i++)
+			collector_ids.add(transferable.collectorIds[i]);
 	}
 
 	/**
@@ -277,6 +291,14 @@ public final class Map extends StubResource implements Serializable
 			link_ids.add(os.getId());
 		}
 		transferable.physicalLinkIds = (String [])link_ids.toArray(new String[link_ids.size()]);
+
+		collector_ids = new ArrayList();
+		for(Iterator it = collectors.iterator(); it.hasNext();)
+		{
+			os = (ObjectResource)it.next();
+			collector_ids.add(os.getId());
+		}
+		transferable.collectorIds = (String [])collector_ids.toArray(new String[collector_ids.size()]);
 	}
 
 	/**
@@ -363,6 +385,10 @@ public final class Map extends StubResource implements Serializable
 		physicalLinks = new ArrayList();
 		for(Iterator it = link_ids.iterator(); it.hasNext();)
 			physicalLinks.add(Pool.get(MapPhysicalLinkElement.typ, (String)it.next()));
+
+		collectors = new ArrayList();
+		for(Iterator it = collector_ids.iterator(); it.hasNext();)
+			collectors.add(Pool.get(MapPipePathElement.typ, (String)it.next()));
 	}
 
 	/**
@@ -383,6 +409,11 @@ public final class Map extends StubResource implements Serializable
 			os.updateLocalFromTransferable();
 		}
 		for(Iterator it = physicalLinks.iterator(); it.hasNext();)
+		{
+			ObjectResource os = (ObjectResource )it.next();
+			os.updateLocalFromTransferable();
+		}
+		for(Iterator it = collectors.iterator(); it.hasNext();)
 		{
 			ObjectResource os = (ObjectResource )it.next();
 			os.updateLocalFromTransferable();
@@ -674,6 +705,50 @@ public final class Map extends StubResource implements Serializable
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Получение элементов - наследников класса Node
+	 */
+	public List getCollectors()
+	{
+		return collectors;
+	}
+
+	/**
+	 * Установить список элементов наследников класса Node
+	 */
+	public void setCollectors(List _collectors)
+	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setCollectors(" + _collectors + ")");
+
+		collectors.clear();
+		for(Iterator it = _collectors.iterator(); it.hasNext();)
+			collectors.add(it.next());
+	}
+
+	/**
+	 * Добавить новый MapNodeElement
+	 */
+	public void addCollector(MapPipePathElement ob)
+	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "addCollector(" + ob + ")");
+		
+		collectors.add(ob);
+		ob.setRemoved(false);
+		removedElements.remove(ob);
+	}
+
+	/**
+	 * Удалить MapNodeElement
+	 */
+	public void removeCollector(MapPipePathElement ob)
+	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "removeCollector(" + ob + ")");
+		
+		collectors.remove(ob);
+		ob.setRemoved(true);
+		removedElements.add(ob);
 	}
 
 	/**

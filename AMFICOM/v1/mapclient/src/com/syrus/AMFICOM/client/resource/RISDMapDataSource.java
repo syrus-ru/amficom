@@ -1,8 +1,6 @@
 package com.syrus.AMFICOM.Client.Resource;
 
 import com.syrus.AMFICOM.CORBA.Constants;
-import com.syrus.AMFICOM.CORBA.General.ElementAttributeTypeSeq_TransferableHolder;
-import com.syrus.AMFICOM.CORBA.General.ElementAttributeType_Transferable;
 import com.syrus.AMFICOM.CORBA.Map.MapLinkProtoElementSeq_TransferableHolder;
 import com.syrus.AMFICOM.CORBA.Map.MapLinkProtoElement_Transferable;
 import com.syrus.AMFICOM.CORBA.Map.MapMarkElementSeq_TransferableHolder;
@@ -15,6 +13,8 @@ import com.syrus.AMFICOM.CORBA.Map.MapPhysicalLinkElementSeq_TransferableHolder;
 import com.syrus.AMFICOM.CORBA.Map.MapPhysicalLinkElement_Transferable;
 import com.syrus.AMFICOM.CORBA.Map.MapPhysicalNodeElementSeq_TransferableHolder;
 import com.syrus.AMFICOM.CORBA.Map.MapPhysicalNodeElement_Transferable;
+import com.syrus.AMFICOM.CORBA.Map.MapPipePathElementSeq_TransferableHolder;
+import com.syrus.AMFICOM.CORBA.Map.MapPipePathElement_Transferable;
 import com.syrus.AMFICOM.CORBA.Map.MapSeq_TransferableHolder;
 import com.syrus.AMFICOM.CORBA.Map.MapSiteElementSeq_TransferableHolder;
 import com.syrus.AMFICOM.CORBA.Map.MapSiteElement_Transferable;
@@ -27,11 +27,6 @@ import com.syrus.AMFICOM.Client.Resource.DataSourceImage;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.ImageCatalogue;
 import com.syrus.AMFICOM.Client.Resource.ImageResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.RISDConfigDataSource;
-
-import com.syrus.AMFICOM.Client.Resource.General.ElementAttributeType;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapLinkProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapMarkElement;
@@ -39,7 +34,11 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapPipePathElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.RISDConfigDataSource;
 
 import java.util.ArrayList;
 import java.util.Enumeration;
@@ -475,6 +474,10 @@ public class RISDMapDataSource
 		MapPhysicalLinkElement_Transferable links[];
 		MapPhysicalLinkElement link;
 
+		MapPipePathElementSeq_TransferableHolder ch = new MapPipePathElementSeq_TransferableHolder();
+		MapPipePathElement_Transferable collectors[];
+		MapPipePathElement  collector;
+
 		Vector loaded_objects = new Vector();
 		ObjectResource or;
 
@@ -489,7 +492,8 @@ public class RISDMapDataSource
 					mrh, 
 					nh, 
 					nlh, 
-					lh);
+					lh,
+					ch);
 		}
 		catch (Exception ex)
 		{
@@ -571,6 +575,16 @@ public class RISDMapDataSource
 			loaded_objects.add(link);
 	    }
 
+		collectors = ch.value;
+		count = collectors.length;
+		System.out.println("...Done! " + count + " collector(s) fetched");
+	    for (i = 0; i < count; i++)
+		{
+			collector = new MapPipePathElement(collectors[i]);
+			Pool.put(MapPipePathElement.typ, collector.getId(), collector);
+			loaded_objects.add(collector);
+	    }
+
 		// update loaded objects
 		count = loaded_objects.size();
 	    for (i = 0; i < count; i++)
@@ -600,6 +614,7 @@ public class RISDMapDataSource
 		ArrayList mark_vec = new ArrayList();
 		ArrayList nodelink_vec = new ArrayList();
 		ArrayList link_vec = new ArrayList();
+		ArrayList collector_vec = new ArrayList();
 		ArrayList vec;
 
 		ImageResource_Transferable images[];
@@ -609,6 +624,7 @@ public class RISDMapDataSource
 		MapPhysicalNodeElement_Transferable nodes[];
 		MapNodeLinkElement_Transferable nodelinks[];
 		MapPhysicalLinkElement_Transferable links[];
+		MapPipePathElement_Transferable collectors[];
 
 		ImageResource image;
 		Map map;
@@ -617,6 +633,7 @@ public class RISDMapDataSource
 		MapPhysicalNodeElement node;
 		MapNodeLinkElement nodelink;
 		MapPhysicalLinkElement link;
+		MapPipePathElement collector;
 
 		maps = new Map_Transferable[mc_ids.length];
 		for(i = 0; i < mc_ids.length; i++)
@@ -651,6 +668,13 @@ public class RISDMapDataSource
 				os.setTransferableFromLocal();
 				link_vec.add(os.getTransferable());
 			}
+
+			for(Iterator it = mc.getCollectors().iterator(); it.hasNext();)
+			{
+				os = (ObjectResource )it.next();
+				os.setTransferableFromLocal();
+				collector_vec.add(os.getTransferable());
+			}
 		}
 	
 		nodes = (MapPhysicalNodeElement_Transferable [])
@@ -663,6 +687,8 @@ public class RISDMapDataSource
 			node_vec.toArray(new MapNodeLinkElement_Transferable[0]);
 		links = (MapPhysicalLinkElement_Transferable [])
 			node_vec.toArray(new MapPhysicalLinkElement_Transferable[0]);
+		collectors = (MapPipePathElement_Transferable [])
+			node_vec.toArray(new MapPipePathElement_Transferable[0]);
 
 		count = image_vec.size();
 		images = new ImageResource_Transferable[image_vec.size()];
@@ -684,7 +710,8 @@ public class RISDMapDataSource
 					marks,
 					nodes,
 					nodelinks,
-					links);
+					links,
+					collectors);
 		}
 		catch (Exception ex)
 		{
@@ -726,6 +753,7 @@ public class RISDMapDataSource
 					leer,
 					leer,
 					leer,
+					leer,
 					leer);
 		}
 		catch (Exception ex)
@@ -763,6 +791,7 @@ public class RISDMapDataSource
 		ArrayList mark_vec = new ArrayList();
 		ArrayList nodelink_vec = new ArrayList();
 		ArrayList link_vec = new ArrayList();
+		ArrayList collector_vec = new ArrayList();
 		List vec;
 
 		String maps[];
@@ -771,6 +800,7 @@ public class RISDMapDataSource
 		String nodes[];
 		String nodelinks[];
 		String links[];
+		String collectors[];
 
 		Map map;
 		MapSiteNodeElement site;
@@ -778,6 +808,7 @@ public class RISDMapDataSource
 		MapPhysicalNodeElement node;
 		MapNodeLinkElement nodelink;
 		MapPhysicalLinkElement link;
+		MapPipePathElement collector;
 
 		maps = new String[0];
 
@@ -795,12 +826,15 @@ public class RISDMapDataSource
 				nodelink_vec.add(os.getId());
 			if(os.getTyp().equals(MapPhysicalLinkElement.typ))
 				link_vec.add(os.getId());
+			if(os.getTyp().equals(MapPipePathElement.typ))
+				collector_vec.add(os.getId());
 		}
 		nodes = (String[] )node_vec.toArray(new String[node_vec.size()]);
 		sites = (String[] )site_vec.toArray(new String[site_vec.size()]);
 		marks = (String[] )mark_vec.toArray(new String[mark_vec.size()]);
 		nodelinks = (String[] )nodelink_vec.toArray(new String[nodelink_vec.size()]);
 		links = (String[] )link_vec.toArray(new String[link_vec.size()]);
+		collectors = (String[] )collector_vec.toArray(new String[collector_vec.size()]);
 
 		try
 		{
@@ -811,7 +845,8 @@ public class RISDMapDataSource
 					marks,
 					nodes,
 					nodelinks,
-					links);
+					links,
+					collectors);
 		}
 		catch (Exception ex)
 		{

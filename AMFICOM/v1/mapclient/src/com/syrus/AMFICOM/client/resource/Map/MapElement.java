@@ -1,5 +1,5 @@
 /**
- * $Id: MapElement.java,v 1.4 2004/09/13 12:02:01 krupenn Exp $
+ * $Id: MapElement.java,v 1.5 2004/09/17 11:38:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,7 +23,7 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/09/13 12:02:01 $
+ * @version $Revision: 1.5 $, $Date: 2004/09/17 11:38:44 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -106,7 +106,8 @@ public interface MapElement
 	/**
 	 * дублирование элемента
 	 */	
-	Object clone(DataSourceInterface dataSource);
+	Object clone(DataSourceInterface dataSource)
+		throws CloneNotSupportedException;
 	
 	/**
 	 * получить текущее состояние элемента

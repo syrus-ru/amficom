@@ -115,6 +115,7 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 	}
 
 	public Object clone(DataSourceInterface dataSource)
+		throws CloneNotSupportedException
 	{
 		String cloned_id = (String)Pool.get("mapclonedids", id);
 		if (cloned_id != null)

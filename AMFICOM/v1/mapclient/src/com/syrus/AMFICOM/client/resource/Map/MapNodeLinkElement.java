@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkElement.java,v 1.8 2004/09/16 10:37:49 krupenn Exp $
+ * $Id: MapNodeLinkElement.java,v 1.9 2004/09/17 11:38:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,7 +43,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/09/16 10:37:49 $
+ * @version $Revision: 1.9 $, $Date: 2004/09/17 11:38:44 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -91,6 +91,7 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 	}
 
 	public Object clone(DataSourceInterface dataSource)
+		throws CloneNotSupportedException
 	{
 		String cloned_id = (String)Pool.get("mapclonedids", id);
 		if (cloned_id != null)
