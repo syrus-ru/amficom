@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.13 2005/02/02 09:14:25 bob Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.14 2005/02/02 12:11:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -50,7 +50,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/02/02 09:14:25 $
+ * @version $Revision: 1.14 $, $Date: 2005/02/02 12:11:51 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -537,25 +537,10 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				Identifier id = (Identifier) it.next();
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
-			if (storableObjectCondition instanceof DomainCondition) {
-				transferables = this.server.transmitMeasurementsButIdsDomainCondition(identifierTransferables,
-					accessIdentifierTransferable, (DomainCondition_Transferable) storableObjectCondition
-							.getTransferable());
-			} else if (storableObjectCondition instanceof LinkedIdsCondition) {
-				transferables = this.server.transmitMeasurementsButIdsLinkedCondition(identifierTransferables,
-					accessIdentifierTransferable, (LinkedIdsCondition_Transferable) storableObjectCondition
-							.getTransferable());
-			} else {
-				transferables = this.server.transmitMeasurementsButIds(identifierTransferables,
-					accessIdentifierTransferable);
-				if (storableObjectCondition != null && !(storableObjectCondition instanceof DomainCondition)) {
-					Log
-							.errorMessage("ClientMeasurementObjectLoader.loadMeasurementsButIds | " + "Class '"
-									+ storableObjectCondition.getClass().getName()
-									+ "' is not instanse of LinkedIdsCondition ");
-				}
-
-			}
+			
+			transferables = this.server.transmitMeasurementsButIdsCondition(identifierTransferables,
+				accessIdentifierTransferable, (StorableObjectCondition_Transferable) storableObjectCondition
+						.getTransferable());
 			List list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new Measurement(transferables[j]));
@@ -622,20 +607,10 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				Identifier id = (Identifier) it.next();
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
-			if (storableObjectCondition instanceof DomainCondition) {
+			transferables = this.server.transmitModelingsButIdsCondition(identifierTransferables,
+				accessIdentifierTransferable, (StorableObjectCondition_Transferable) storableObjectCondition
+						.getTransferable());
 
-				transferables = this.server.transmitModelingsButIdsCondition(identifierTransferables,
-					accessIdentifierTransferable, (DomainCondition_Transferable) storableObjectCondition
-							.getTransferable());
-
-			} else {
-				transferables = this.server.transmitModelingsButIds(identifierTransferables,
-					accessIdentifierTransferable);
-				if (storableObjectCondition != null && !(storableObjectCondition instanceof DomainCondition)) {
-					Log.errorMessage("ClientMeasurementObjectLoader.loadModelingsButIds | " + "Class '"
-							+ storableObjectCondition.getClass().getName() + "' is not instanse of DomainCondition");
-				}
-			}
 			List list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
 				list.add(new Modeling(transferables[j]));
@@ -659,7 +634,8 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
 			transferables = this.server.transmitModelingTypesButIdsCondition(identifierTransferables,
-				(StorableObjectCondition_Transferable) condition.getTransferable(), accessIdentifierTransferable);
+				accessIdentifierTransferable,
+				(StorableObjectCondition_Transferable) condition.getTransferable());
 
 			List list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
@@ -825,24 +801,8 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 				Identifier id = (Identifier) it.next();
 				identifierTransferables[i] = (Identifier_Transferable) id.getTransferable();
 			}
-			if (condition instanceof DomainCondition) {
-
-				transferables = this.server.transmitResultsButIdsDomainCondition(identifierTransferables,
-					accessIdentifierTransferable, (DomainCondition_Transferable) condition.getTransferable());
-
-			} else if (condition instanceof LinkedIdsCondition) {
-				transferables = this.server.transmitResultsButIdsLinkedCondition(identifierTransferables,
-					accessIdentifierTransferable, (LinkedIdsCondition_Transferable) condition.getTransferable());
-
-			} else {
-				transferables = this.server
-						.transmitResultsButIds(identifierTransferables, accessIdentifierTransferable);
-
-				if (condition != null && !(condition instanceof DomainCondition)) {
-					Log.errorMessage("ClientMeasurementObjectLoader.loadResultsButIds | " + "Class '"
-							+ condition.getClass().getName() + "' is not instanse of DomainCondition");
-				}
-			}
+			transferables = this.server.transmitResultsButIdsCondition(identifierTransferables,
+				accessIdentifierTransferable, (StorableObjectCondition_Transferable) condition.getTransferable());
 
 			List list = new ArrayList(transferables.length);
 			for (int j = 0; j < transferables.length; j++) {
