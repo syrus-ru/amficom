@@ -1,5 +1,5 @@
 /*
- * $Id: measurement.idl,v 1.45 2004/12/28 13:51:06 arseniy Exp $
+ * $Id: measurement.idl,v 1.46 2004/12/28 13:55:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ module corba {
 		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
 		com::syrus::AMFICOM::general::corba::WString32 codename;
-		com::syrus::AMFICOM::general::corba::WString32 description;
+		com::syrus::AMFICOM::general::corba::WString256 description;
 
 		com::syrus::AMFICOM::general::corba::WString128 name;
 		com::syrus::AMFICOM::general::corba::DataType data_type;

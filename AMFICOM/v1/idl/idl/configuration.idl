@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.75 2004/12/28 13:51:06 arseniy Exp $
+ * $Id: configuration.idl,v 1.76 2004/12/28 13:55:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,8 +46,8 @@ module corba {
 	struct CharacteristicType_Transferable {
 		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
-		wstring codename;
-		wstring description;
+		com::syrus::AMFICOM::general::corba::WString32 codename;
+		com::syrus::AMFICOM::general::corba::WString256 description;
 		com::syrus::AMFICOM::general::corba::DataType data_type;
 		CharacteristicTypeSort sort;
 	};
@@ -389,7 +389,7 @@ module corba {
 		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
-		wstring description;
+		com::syrus::AMFICOM::general::corba::WString256 description;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable equipment_id;
 
 		PortSort sort;
