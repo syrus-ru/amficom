@@ -1,5 +1,5 @@
 /*
- * $Id: Mark.java,v 1.10 2005/01/13 15:14:00 krupenn Exp $
+ * $Id: Mark.java,v 1.11 2005/01/17 10:54:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,11 @@
 
 package com.syrus.AMFICOM.map;
 
-import com.syrus.AMFICOM.configuration.Characteristic;
-import com.syrus.AMFICOM.configuration.Characterized;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterized;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -33,8 +32,8 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/01/13 15:14:00 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.11 $, $Date: 2005/01/17 10:54:59 $
+ * @author $Author: bob $
  * @module map_v1
  */
 public class Mark extends AbstractNode implements Characterized {
@@ -112,7 +111,7 @@ public class Mark extends AbstractNode implements Characterized {
 			ArrayList characteristicIds = new ArrayList(mt.characteristicIds.length);
 			for (int i = 0; i < mt.characteristicIds.length; i++)
 				characteristicIds.add(new Identifier(mt.characteristicIds[i]));
-			super.characteristics.addAll(ConfigurationStorableObjectPool.getStorableObjects(characteristicIds, true));
+			super.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
 		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}

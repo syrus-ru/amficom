@@ -1,5 +1,5 @@
 /*
- * $Id: Collector.java,v 1.13 2005/01/13 15:13:59 krupenn Exp $
+ * $Id: Collector.java,v 1.14 2005/01/17 10:54:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,11 +8,11 @@
 
 package com.syrus.AMFICOM.map;
 
-import com.syrus.AMFICOM.configuration.Characteristic;
-import com.syrus.AMFICOM.configuration.Characterized;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterized;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -33,8 +33,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/01/13 15:13:59 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.14 $, $Date: 2005/01/17 10:54:58 $
+ * @author $Author: bob $
  * @module map_v1
  */
 public class Collector 
@@ -102,7 +102,7 @@ public class Collector
 			ArrayList characteristicIds = new ArrayList(mt.characteristicIds.length);
 			for (int i = 0; i < mt.characteristicIds.length; i++)
 				characteristicIds.add(new Identifier(mt.characteristicIds[i]));
-			this.characteristics.addAll(ConfigurationStorableObjectPool.getStorableObjects(characteristicIds, true));
+			this.characteristics.addAll(GeneralStorableObjectPool.getStorableObjects(characteristicIds, true));
 		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
@@ -190,15 +190,15 @@ public class Collector
 		return Collections.unmodifiableList(this.characteristics);
 	}	
 
-	public void addCharacteristic(Characteristic ch)
+	public void addCharacteristic(Characteristic characteristic)
 	{
-		this.characteristics.add(ch);
+		this.characteristics.add(characteristic);
 		super.currentVersion = super.getNextVersion();
 	}
 
-	public void removeCharacteristic(Characteristic ch)
+	public void removeCharacteristic(Characteristic characteristic)
 	{
-		this.characteristics.remove(ch);
+		this.characteristics.remove(characteristic);
 		super.currentVersion = super.getNextVersion();
 	}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapElement.java,v 1.2 2005/01/13 15:14:00 krupenn Exp $
+ * $Id: MapElement.java,v 1.3 2005/01/17 10:54:59 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,7 +11,7 @@
 
 package com.syrus.AMFICOM.map;
 
-import com.syrus.AMFICOM.configuration.Characteristic;
+import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Identifier;
 import java.util.List;
 
@@ -21,9 +21,9 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2005/01/13 15:14:00 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/17 10:54:59 $
  * @module
- * @author $Author: krupenn $
+ * @author $Author: bob $
  * @see
  */
 public interface MapElement 
@@ -88,9 +88,9 @@ public interface MapElement
 
 	List getCharacteristics();
 	
-	void addCharacteristic(Characteristic ch);
+	void addCharacteristic(Characteristic characteristic);
 
-	void removeCharacteristic(Characteristic ch);
+	void removeCharacteristic(Characteristic characteristic);
 
 	/**
 	 * Возвращает массив параметров, описывающих топологическюу схему,

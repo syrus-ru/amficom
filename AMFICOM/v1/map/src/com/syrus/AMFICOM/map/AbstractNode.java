@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractNode.java,v 1.4 2004/12/23 09:38:39 bob Exp $
+ * $Id: AbstractNode.java,v 1.5 2005/01/17 10:54:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,8 +8,8 @@
 
 package com.syrus.AMFICOM.map;
 
-import com.syrus.AMFICOM.configuration.Characteristic;
-import com.syrus.AMFICOM.configuration.Characterized;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterized;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
@@ -21,7 +21,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/12/23 09:38:39 $
+ * @version $Revision: 1.5 $, $Date: 2005/01/17 10:54:58 $
  * @author $Author: bob $
  * @module map_v1
  */
