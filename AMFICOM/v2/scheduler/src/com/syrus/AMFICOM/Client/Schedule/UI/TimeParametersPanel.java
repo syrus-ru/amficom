@@ -21,6 +21,10 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 	private class DayPanel extends TimePanelExt implements TimeStampFiller {
 
+		JList				list;
+
+		Vector				time	= new Vector();
+
 		//		private static final int DAYTYPE_ANY = 0;
 		//		private static final int DAYTYPE_REST = 2;
 		//		private static final int DAYTYPE_WORK = 1;
@@ -32,10 +36,6 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		 * todo set and fill dayType
 		 */
 		private AComboBox	dayType;
-
-		JList				list;
-
-		Vector				time	= new Vector();
 
 		protected DayPanel() {
 			super();
@@ -71,8 +71,8 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			removeButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-					time.remove(list.getSelectedIndex());
-					list.setListData(time);
+					DayPanel.this.time.remove(list.getSelectedIndex());
+					DayPanel.this.list.setListData(DayPanel.this.time);
 				}
 			});
 
@@ -96,7 +96,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			add(new JLabel("сут."), gbc);
 			gbc.gridx = 1;
 			gbc.gridy++;
-			addHorizontalSeparator();
+			addHorizontalSeparator(this, gbc);
 			{
 				JPanel panel = new JPanel(new GridBagLayout());
 				int prevGridY = gbc.gridy;
@@ -278,12 +278,12 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 	private class HourPanel extends TimePanelExt implements TimeStampFiller {
 
-		private JSpinner	hourSpin	= new JSpinner(new SpinnerNumberModel(
-												1, 1, 23, 1));
-
 		JList				list;
 
 		Vector				time		= new Vector();
+
+		private JSpinner	hourSpin	= new JSpinner(new SpinnerNumberModel(
+												1, 1, 23, 1));
 
 		protected HourPanel() {
 			super();
@@ -301,7 +301,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			add(new JLabel(I18N.getString("hours")), this.gbc);
 			this.gbc.gridx = 1;
 			this.gbc.gridy++;
-			addHorizontalSeparator();
+			addHorizontalSeparator(this, this.gbc);
 
 			this.list = new JList();
 			this.list.setListData(this.time);
@@ -619,10 +619,10 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 		JList				list;
 
+		Vector				time		= new Vector();
+
 		private JSpinner	monthSpin	= new JSpinner(new SpinnerNumberModel(
 												1, 1, 30, 1));
-
-		Vector				time		= new Vector();
 
 		protected MonthPanel() {
 			super();
@@ -644,7 +644,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			gbc.gridx = 1;
 			gbc.gridy++;
 			gbc.anchor = GridBagConstraints.LINE_START;
-			addHorizontalSeparator();
+			addHorizontalSeparator(this, this.gbc);
 
 			list = new JList();
 			list.setListData(time);
@@ -885,8 +885,6 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 	private class TimePanelExt extends JPanel {
 
-		protected Insets				addInsets	= new Insets(1, 1, 1, 3);
-
 		protected Insets				defaultInsets;
 
 		protected GridBagConstraints	gbc;
@@ -907,7 +905,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			gbc.gridy = 0;
 			gbc.gridheight = GridBagConstraints.REMAINDER;
 			JSeparator jsep = new JSeparator(SwingConstants.VERTICAL);
-			gbc.insets = addInsets;
+			gbc.insets = INSETS_1113;
 			jsep.setBorder(BorderFactory.createEtchedBorder());
 			add(jsep, gbc);
 			gbc.insets = defaultInsets;
@@ -937,7 +935,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		}
 
 		void addGlueLabel() {
-			/** 
+			/**
 			 * @todo fix without creating unnecessary JLabel()
 			 */
 			gbc.anchor = GridBagConstraints.PAGE_END;
@@ -946,14 +944,6 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			add(new JLabel(), gbc);
 		}
 
-		void addHorizontalSeparator() {
-			JSeparator jsep = new JSeparator();
-			gbc.insets = addInsets;
-			gbc.gridwidth = GridBagConstraints.REMAINDER;
-			jsep.setBorder(BorderFactory.createEtchedBorder());
-			add(jsep, gbc);
-			gbc.insets = defaultInsets;
-		}
 	}
 
 	//void apply() {
@@ -968,16 +958,16 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 	private class WeekPanel extends TimePanelExt implements TimeStampFiller {
 
+		JList						list;
+
+		Vector						time		= new Vector();
+
 		private JCheckBox[]			days;
 
 		//private Hashtable ht = new Hashtable();
 		private int[]				daysIds;
 
-		JList						list;
-
 		private SimpleDateFormat	sdf			= new SimpleDateFormat("E");
-
-		Vector						time		= new Vector();
 
 		private JSpinner			weekSpin	= new JSpinner(
 														new SpinnerNumberModel(
@@ -998,7 +988,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			add(new JLabel("нед."), gbc);
 			gbc.gridx = 1;
 			gbc.gridy++;
-			addHorizontalSeparator();
+			addHorizontalSeparator(this, this.gbc);
 			list = new JList();
 			list.setListData(time);
 			JScrollPane scroll = new JScrollPane(list);
@@ -1186,6 +1176,9 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 	protected static final Dimension	btn_size			= new Dimension(30,
 																	20);
 
+	protected final static Insets		INSETS_1113			= new Insets(1, 1,
+																	1, 3);
+
 	//public TestRequest treq;
 	//	private TestRequest treq;
 	private final static boolean		FULL_BUTTON_SET		= false;
@@ -1206,11 +1199,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 	private static final String			PERIODIC_WEEK_NAME	= "PERIODIC_WEEK";
 
-	private JRadioButton				alternateRadioButton;
-
 	JButton								applyButton;
-
-	private JRadioButton				continuosRadioButton;
 
 	JButton								createButton;
 
@@ -1240,6 +1229,16 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 	JRadioButton						oneRadioButton;
 
+	TimeStampFiller						tempPanel;
+
+	WeekPanel							weekPanel;
+
+	JRadioButton						weekRadioButton;
+
+	private JRadioButton				alternateRadioButton;
+
+	private JRadioButton				continuosRadioButton;
+
 	private JRadioButton				paramsRadioButton;
 
 	private JRadioButton				patternRadioButton;
@@ -1252,15 +1251,9 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 	private JRadioButton				synchroRadioButton;
 
-	TimeStampFiller						tempPanel;
-
 	private Test						test				= null;
 
 	private JList						timeStamps;
-
-	WeekPanel							weekPanel;
-
-	JRadioButton						weekRadioButton;
 
 	public TimeParametersPanel() {
 		try {
@@ -1280,7 +1273,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		}
 	}
 
-	/** 
+	/**
 	 * @todo only for testing mode
 	 */
 	public static void main(String[] args) {
@@ -1299,6 +1292,20 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		mainFrame.setVisible(true);
 	}
 
+	static void addHorizontalSeparator(JComponent component,
+			GridBagConstraints gbc) {
+		JSeparator jsep = new JSeparator();
+		Insets insetsOld = gbc.insets;
+		double weightY = gbc.weighty;
+		gbc.weighty = 0.0;
+		gbc.insets = INSETS_1113;
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		jsep.setBorder(BorderFactory.createEtchedBorder());
+		component.add(jsep, gbc);
+		gbc.insets = insetsOld;
+		gbc.weighty = weightY;
+	}
+
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
 		if (SchedulerModel.DEBUG_LEVEL >= 5)
@@ -1306,7 +1313,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 						+ commandName);
 		if (commandName.equalsIgnoreCase(SchedulerModel.COMMAND_DATA_REQUEST)) {
 			/**
-			 * @todo must send data edit in this form 
+			 * @todo must send data edit in this form
 			 */
 			TemporalPattern timeStamp = this.getTimeStamp();
 			if (timeStamp != null)
@@ -1425,7 +1432,8 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		/**
 		 * @todo fix Identifier for TemporalPettern
 		 */
-		TemporalPattern ts = new TemporalPattern(new Identifier(TemporalPattern.TYPE));
+		TemporalPattern ts = new TemporalPattern(new Identifier(
+				TemporalPattern.TYPE));
 
 		Calendar dateCal = Calendar.getInstance();
 		Calendar timeCal = Calendar.getInstance();
@@ -1558,14 +1566,9 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			add(box, gbc);
 		}
 
-		JSeparator jsep1 = new JSeparator();
-		gbc.insets = UIStorage.INSETS1010;
-		jsep1.setBorder(BorderFactory.createEtchedBorder());
-		gbc.gridx = 1;
-		gbc.gridy = 5;
-		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		add(jsep1, gbc);
-		gbc.insets = gbcInsetsDefault;
+		gbc.gridy++;
+
+		addHorizontalSeparator(this, gbc);
 
 		patternRadioButton = UIStorage.createRadioButton(I18N
 				.getString("UsePattern"), new AbstractAction() {
@@ -1702,17 +1705,13 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		group4.add(paramsRadioButton);
 
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
-		gbc.gridy = 6;
+		gbc.gridy++;
 		add(patternRadioButton, gbc);
-		gbc.gridy = 7;
+		gbc.gridy++;
 		add(paramsRadioButton, gbc);
 
-		JSeparator jsep2 = new JSeparator();
-		gbc.insets = UIStorage.INSETS1010;
-		gbc.gridy = 8;
-		jsep2.setBorder(BorderFactory.createEtchedBorder());
-		add(jsep2, gbc);
-		gbc.insets = gbcInsetsDefault;
+		gbc.gridy++;
+		addHorizontalSeparator(this, gbc);
 
 		continuosRadioButton = new JRadioButton(I18N.getString("Continual"));
 		continuosRadioButton.addItemListener(new ItemListener() {
@@ -1812,12 +1811,23 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 			add(paramPatternPanel, gbc);
 		}
 
-		JSeparator jsep3 = new JSeparator();
-		gbc.insets = UIStorage.INSETS1010;
-		jsep3.setBorder(BorderFactory.createEtchedBorder());
-		gbc.gridy++;
-		add(jsep3, gbc);
-		gbc.insets = gbcInsetsDefault;
+		//		JSeparator jsep3 = new JSeparator();
+		//		gbc.insets = UIStorage.INSETS1010;
+		//		jsep3.setBorder(BorderFactory.createEtchedBorder());
+		//		gbc.gridy++;
+		//		add(jsep3, gbc);
+		//		gbc.insets = gbcInsetsDefault;
+		{
+			double weightY = gbc.weighty;
+			JSeparator jsep2 = new JSeparator();
+			gbc.insets = UIStorage.INSETS1010;
+			gbc.gridy++;
+			gbc.weighty = 0.0;
+			jsep2.setBorder(BorderFactory.createEtchedBorder());
+			add(jsep2, gbc);
+			gbc.insets = gbcInsetsDefault;
+			gbc.weighty = weightY;
+		}
 
 		synchroRadioButton = new JRadioButton(I18N.getString("Together"));
 		alternateRadioButton = new JRadioButton(I18N.getString("InTurn"));
@@ -1831,13 +1841,15 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		gbc.gridy++;
 		add(alternateRadioButton, gbc);
 
-		JSeparator jsep4 = new JSeparator();
-		gbc.insets = UIStorage.INSETS1010;
-		gbc.gridheight = GridBagConstraints.RELATIVE;
-		jsep4.setBorder(BorderFactory.createEtchedBorder());
+		//		JSeparator jsep4 = new JSeparator();
+		//		gbc.insets = UIStorage.INSETS1010;
+		//		gbc.gridheight = GridBagConstraints.RELATIVE;
+		//		jsep4.setBorder(BorderFactory.createEtchedBorder());
+		//		gbc.gridy++;
+		//		add(jsep4, gbc);
+		//		gbc.insets = gbcInsetsDefault;
 		gbc.gridy++;
-		add(jsep4, gbc);
-		gbc.insets = gbcInsetsDefault;
+		addHorizontalSeparator(this, gbc);
 
 		{
 			applyButton = new JButton(I18N.getString("Apply"));
