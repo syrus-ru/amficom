@@ -1,5 +1,5 @@
 /**
- * $Id: OfxLogicalNetLayer.java,v 1.1 2004/12/01 16:53:11 krupenn Exp $
+ * $Id: OfxLogicalNetLayer.java,v 1.2 2004/12/07 17:07:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,6 +27,7 @@ import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.NetMapViewer;
 import com.syrus.AMFICOM.Client.Map.SpatialObject;
 
+import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
 import java.awt.Cursor;
 import java.awt.Graphics;
 import java.awt.Point;
@@ -47,7 +48,7 @@ import java.util.Vector;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/12/01 16:53:11 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/07 17:07:47 $
  * @module Ьфз_м2
  * @author $Author: krupenn $
  * @see
@@ -79,6 +80,7 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 
 	/**
 	 * Получить экранные координаты по географическим координатам
+	 * @deprecated
 	 */
 	public Point convertMapToScreen(Point2D.Double point)
 	{
@@ -86,19 +88,32 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 		return spatialLayer.convertLongLatToScreen(sdp);
 	}
 	
+	public Point convertMapToScreen(DoublePoint point)
+	{
+		SxDoublePoint sdp = new SxDoublePoint(point.x, point.y);
+		return spatialLayer.convertLongLatToScreen(sdp);
+	}
+	
 	/**
 	 * Получить географические координаты по экранным
+	 * @deprecated
 	 */
-	public Point2D.Double convertScreenToMap(Point point)
+	public Point2D.Double convertScreenToMap1(Point point)
 	{
 		SxDoublePoint sdp = spatialLayer.convertScreenToLongLat(point);
 		return new Point2D.Double(sdp.x, sdp.y);
 	}
 
+	public DoublePoint convertScreenToMap(Point point)
+	{
+		SxDoublePoint sdp = spatialLayer.convertScreenToLongLat(point);
+		return new DoublePoint(sdp.x, sdp.y);
+	}
+
 	public double convertScreenToMap(double screenDistance)
 	{
-		Point2D.Double p1 = convertScreenToMap(new Point(0, 0));
-		Point2D.Double p2 = convertScreenToMap(new Point((int )screenDistance, 0));
+		Point2D.Double p1 = convertScreenToMap1(new Point(0, 0));
+		Point2D.Double p2 = convertScreenToMap1(new Point((int )screenDistance, 0));
 		double d = distance(p1, p2);
 
 		return d;
@@ -112,6 +127,9 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 //		return d;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public Point2D.Double pointAtDistance(
 			Point2D.Double startPoint, 
 			Point2D.Double endPoint, 
@@ -126,18 +144,39 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 		return point;
 	}
 	
+	public DoublePoint pointAtDistance(
+			DoublePoint startPoint, 
+			DoublePoint endPoint, 
+			double dist)
+	{
+		DoublePoint point = new DoublePoint(startPoint.x, startPoint.y);
+		double len = distance(
+				startPoint, 
+				endPoint);
+		point.x += (endPoint.x - startPoint.x) / len * dist;
+		point.y += (endPoint.y - startPoint.y) / len * dist;
+		return point;
+	}
+	
 	/**
 	 * Получить дистанцию между двумя точками в географических координатах
 	 * Алгорита мычисления дастанции остается загадкой, так как не
 	 * был закомментирован его разработчиком
+	 * @deprecated
 	 */
 	public double distance(Point2D.Double from, Point2D.Double to)
 	{
 		return spatialViewer.distance(from.x, from.y, to.x, to.y);
 	}
 
+	public double distance(DoublePoint from, DoublePoint to)
+	{
+		return spatialViewer.distance(from.x, from.y, to.x, to.y);
+	}
+
 	/**
 	 * Установить центральную точку вида карты
+	 * @deprecated
 	 */
 	public void setCenter(Point2D.Double center)
 	{
@@ -150,12 +189,32 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 		spatialViewer.setCenter(center.x, center.y);
 	}
 
+	public void setCenter(DoublePoint center)
+	{
+		Environment.log(
+				Environment.LOG_LEVEL_FINER, 
+				"method call", 
+				getClass().getName(), 
+				"setCenter(" + center.x + ", " + center.y + ")");
+
+		spatialViewer.setCenter(center.x, center.y);
+	}
+
 	/**
 	 * Получить центральную точку вида карты
+	 * @deprecated
 	 */
-	public Point2D.Double getCenter()
+	public Point2D.Double getCenter1()
 	{
 		Point2D.Double center = new Point2D.Double(
+			spatialViewer.getCenter()[0],
+			spatialViewer.getCenter()[1]);
+		return center;
+	}
+
+	public DoublePoint getCenter()
+	{
+		DoublePoint center = new DoublePoint(
 			spatialViewer.getCenter()[0],
 			spatialViewer.getCenter()[1]);
 		return center;
@@ -286,8 +345,15 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 	/**
 	 * Приблизить вид выделенного участка карты (в координатах карты)
 	 * по координатам угловых точек
+	 * @deprecated
 	 */
 	public void zoomToBox(Point2D.Double from, Point2D.Double to)
+	{
+		spatialViewer.zoomToRect(from.x, from.y, to.x, to.y);
+		updateZoom();
+	}
+
+	public void zoomToBox(DoublePoint from, DoublePoint to)
 	{
 		spatialViewer.zoomToRect(from.x, from.y, to.x, to.y);
 		updateZoom();
