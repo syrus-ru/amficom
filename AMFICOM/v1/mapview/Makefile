@@ -5,7 +5,7 @@ ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
 
 IDLDIR=../idl_v1/idl
 
-APPCLASSPATH = $(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
+APPCLASSPATH = $(LIBDIR)/map.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/util.jar
 
 JAVACFLAGS = -source 1.3
 SUNJAVACFLAGS = -target 1.2
