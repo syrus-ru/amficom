@@ -1,5 +1,5 @@
 /**
- * $Id: OfxConnection.java,v 1.4 2005/02/22 14:45:17 krupenn Exp $
+ * $Id: OfxConnection.java,v 1.5 2005/02/22 17:54:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,7 +25,7 @@ import java.util.Vector;
 
 /**
  * Реализация соединения с хранилищем данных в формате SpatialFX.
- * @version $Revision: 1.4 $, $Date: 2005/02/22 14:45:17 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/22 17:54:16 $
  * @author $Author: krupenn $
  * @module spatialfx_v1
  */
@@ -109,7 +109,7 @@ public class OfxConnection extends MapConnection
 				"connect()");
 		
 		String sessionName = OFX_DATABASE_PREFIX + this.dataBasePath;
-		
+/*		
         SxProperties.singleton().setProperty("ofx.userName", this.dbUserName);
         SxProperties.singleton().setProperty("ofx.password", this.dbPassword);
         SxProperties.singleton().setProperty("ofx.domainDimension", "3");
@@ -120,7 +120,7 @@ public class OfxConnection extends MapConnection
         String dbURL = (String)sessionProperties.elementAt(3);
         String jdbcDriverClass = (String)sessionProperties.elementAt(4);
         String sdoAdminUserName = (String)sessionProperties.elementAt(5);
-/*
+
         if(OmUtil.isAFileDatabase(dbType)) 
 		{
             URL url = null;
@@ -140,7 +140,7 @@ public class OfxConnection extends MapConnection
                 return false;
             }
         }
-*/
+
         boolean result = false;
         try 
 		{
@@ -173,7 +173,7 @@ public class OfxConnection extends MapConnection
             System.out.println("Unable to open data tables; they do not exist.");
 			throw new MapConnectionException("Unable to open data tables; they do not exist.");
 		}
-
+*/
 		try
 		{
 			this.jMapViewer = new JMapViewer();
@@ -181,7 +181,7 @@ public class OfxConnection extends MapConnection
 			SxMapViewer anSxMapViewer = this.jMapViewer.getSxMapViewer();
 
 			if(!dbset)
-				this.jMapViewer.setDBName( dataBasePath);
+				this.jMapViewer.setDBName(sessionName);
 			this.jMapViewer.setMapName( dataBaseView);
 
 			try 
