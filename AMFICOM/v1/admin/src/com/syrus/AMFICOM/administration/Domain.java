@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.13 2005/04/01 10:31:51 bass Exp $
+ * $Id: Domain.java,v 1.14 2005/04/01 14:41:33 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.administration;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/04/01 10:31:51 $
- * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/04/01 14:41:33 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
@@ -19,6 +19,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -61,21 +63,8 @@ public class Domain extends DomainMember implements Characterizable {
 	}
 
 	public Domain(Domain_Transferable dt) throws CreateObjectException {
-		super(dt.header,
-			  (dt.domain_id.identifier_string.length() != 0) ? (new Identifier(dt.domain_id)) : null);
-		this.name = new String(dt.name);
-		this.description = new String(dt.description);
-
-		try {
-			this.characteristics = new HashSet(dt.characteristic_ids.length);
-			for (int i = 0; i < dt.characteristic_ids.length; i++)
-				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(dt.characteristic_ids[i]), true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-
 		this.domainDatabase = AdministrationDatabaseContext.getDomainDatabase();
+		this.fromTransferable(dt);
 	}
 
 	protected Domain(Identifier id,
@@ -99,6 +88,23 @@ public class Domain extends DomainMember implements Characterizable {
 		this.domainDatabase = AdministrationDatabaseContext.getDomainDatabase();
 	}
 
+	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+		Domain_Transferable dt = (Domain_Transferable)transferable;
+		super.fromTransferable(dt.header, (dt.domain_id.identifier_string.length() != 0) ? (new Identifier(dt.domain_id)) : null);
+		this.name = new String(dt.name);
+		this.description = new String(dt.description);
+
+		try {
+			this.characteristics = new HashSet(dt.characteristic_ids.length);
+			for (int i = 0; i < dt.characteristic_ids.length; i++)
+				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(dt.characteristic_ids[i]), true));
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+
+	}
+	
 	public Object getTransferable() {
 		int i = 0;
 

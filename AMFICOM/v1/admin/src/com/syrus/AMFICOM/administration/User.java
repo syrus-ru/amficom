@@ -1,5 +1,5 @@
 /*
- * $Id: User.java,v 1.8 2005/04/01 10:31:51 bass Exp $
+ * $Id: User.java,v 1.9 2005/04/01 14:41:33 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,8 @@ package com.syrus.AMFICOM.administration;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.corba.UserSort;
 import com.syrus.AMFICOM.administration.corba.User_Transferable;
@@ -24,10 +26,11 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/04/01 10:31:51 $
- * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/04/01 14:41:33 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
@@ -54,13 +57,12 @@ public class User extends StorableObject {
 	}
 
 	public User(User_Transferable ut) {
-		super(ut.header);
-		this.login = ut.login;
-		this.sort = ut.sort.value();
-		this.name = new String(ut.name);
-		this.description = new String(ut.description);
-
 		this.userDatabase = AdministrationDatabaseContext.getUserDatabase();
+		try {
+			this.fromTransferable(ut);
+		} catch (CreateObjectException e) {
+			Log.debugException(e, Log.WARNING);
+		}
 	}
 
 	protected User(Identifier id,
@@ -84,6 +86,16 @@ public class User extends StorableObject {
 		this.userDatabase = AdministrationDatabaseContext.getUserDatabase();
 	}
 
+	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+		User_Transferable ut = (User_Transferable) transferable;
+		super.fromTransferable(ut.header);
+		this.login = ut.login;
+		this.sort = ut.sort.value();
+		this.name = new String(ut.name);
+		this.description = new String(ut.description);
+
+	}
+	
 	public Object getTransferable() {
 		return new User_Transferable(super.getHeaderTransferable(),
 									 new String(this.login),

@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.13 2005/04/01 10:31:51 bass Exp $
+ * $Id: Server.java,v 1.14 2005/04/01 14:41:33 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.corba.Server_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -33,8 +35,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/04/01 10:31:51 $
- * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/04/01 14:41:33 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
@@ -66,23 +68,8 @@ public class Server extends DomainMember implements Characterizable {
 	}
 
 	public Server(Server_Transferable st) throws CreateObjectException {
-		super(st.header,
-			  new Identifier(st.domain_id));
-		this.name = new String(st.name);
-		this.description = new String(st.description);
-		this.hostname = new String(st.hostname);
-		this.userId = new Identifier(st.user_id);
-
-		try {
-			this.characteristics = new HashSet(st.characteristic_ids.length);
-			for (int i = 0; i < st.characteristic_ids.length; i++)
-				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(st.characteristic_ids[i]), true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-
 		this.serverDatabase = AdministrationDatabaseContext.getServerDatabase();
+		this.fromTransferable(st);	
 	}
 
 	protected Server(Identifier id,
@@ -110,6 +97,25 @@ public class Server extends DomainMember implements Characterizable {
 		this.serverDatabase = AdministrationDatabaseContext.getServerDatabase();
 	}
 
+	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+		Server_Transferable st = (Server_Transferable)transferable;
+		super.fromTransferable(st.header,
+			  new Identifier(st.domain_id));
+		this.name = new String(st.name);
+		this.description = new String(st.description);
+		this.hostname = new String(st.hostname);
+		this.userId = new Identifier(st.user_id);
+
+		try {
+			this.characteristics = new HashSet(st.characteristic_ids.length);
+			for (int i = 0; i < st.characteristic_ids.length; i++)
+				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(st.characteristic_ids[i]), true));
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+	}
+	
 	public Object getTransferable() {
 		int i = 0;
 

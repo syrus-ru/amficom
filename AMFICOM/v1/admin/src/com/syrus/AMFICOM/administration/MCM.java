@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.12 2005/04/01 10:31:51 bass Exp $
+ * $Id: MCM.java,v 1.13 2005/04/01 14:41:33 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+
+import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.administration.corba.MCM_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -32,8 +34,8 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/04/01 10:31:51 $
- * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/04/01 14:41:33 $
+ * @author $Author: bob $
  * @module administration_v1
  */
 
@@ -64,24 +66,8 @@ public class MCM extends DomainMember implements Characterizable {
 	}
 
 	public MCM(MCM_Transferable mt) throws CreateObjectException {
-		super(mt.header, new Identifier(mt.domain_id));
-
-		this.name = new String(mt.name);
-		this.description = new String(mt.description);
-		this.hostname = new String(mt.hostname);
-		this.userId = new Identifier(mt.user_id);
-		this.serverId = new Identifier(mt.server_id);
-
-		try {
-			this.characteristics = new HashSet(mt.characteristic_ids.length);
-			for (int i = 0; i < mt.characteristic_ids.length; i++)
-				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(mt.characteristic_ids[i]), true));
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException(ae);
-		}
-
 		this.mcmDatabase = AdministrationDatabaseContext.getMCMDatabase();
+		this.fromTransferable(mt);		
 	}
 
 	protected MCM(Identifier id,
@@ -111,6 +97,26 @@ public class MCM extends DomainMember implements Characterizable {
 		this.mcmDatabase = AdministrationDatabaseContext.getMCMDatabase();
 	}
 
+	protected void fromTransferable(IDLEntity transferable) throws CreateObjectException {
+		MCM_Transferable mt = (MCM_Transferable)transferable;
+		super.fromTransferable(mt.header, new Identifier(mt.domain_id));
+		this.name = new String(mt.name);
+		this.description = new String(mt.description);
+		this.hostname = new String(mt.hostname);
+		this.userId = new Identifier(mt.user_id);
+		this.serverId = new Identifier(mt.server_id);
+
+		try {
+			this.characteristics = new HashSet(mt.characteristic_ids.length);
+			for (int i = 0; i < mt.characteristic_ids.length; i++)
+				this.characteristics.add(GeneralStorableObjectPool.getStorableObject(new Identifier(mt.characteristic_ids[i]), true));
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+
+	}
+	
 	public Object getTransferable() {
 		int i = 0;
 		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];

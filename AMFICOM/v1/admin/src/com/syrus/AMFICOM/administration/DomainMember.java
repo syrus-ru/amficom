@@ -1,5 +1,5 @@
 /*
- * $Id: DomainMember.java,v 1.7 2005/03/28 16:03:58 bob Exp $
+ * $Id: DomainMember.java,v 1.8 2005/04/01 14:41:33 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,13 +9,16 @@
 package com.syrus.AMFICOM.administration;
 
 import java.util.Date;
+
+import org.omg.CORBA.portable.IDLEntity;
+
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/03/28 16:03:58 $
+ * @version $Revision: 1.8 $, $Date: 2005/04/01 14:41:33 $
  * @author $Author: bob $
  * @module administration_v1
  */
@@ -31,10 +34,8 @@ public abstract class DomainMember extends StorableObject {
 		super(id);
 	}
 
-	protected DomainMember(StorableObject_Transferable transferable,
-				 Identifier domainId) {
-		super(transferable);
-		this.domainId = domainId;
+	protected DomainMember() {
+		super();
 	}
 
 	protected DomainMember(final Identifier id,
@@ -45,6 +46,11 @@ public abstract class DomainMember extends StorableObject {
 			final long version,
 			final Identifier domainId) {
 		super(id, created, modified, creatorId, modifierId, version);
+		this.domainId = domainId;
+	}	
+
+	protected void fromTransferable(IDLEntity transferable, Identifier domainId) throws CreateObjectException {
+		super.fromTransferable(transferable);
 		this.domainId = domainId;
 	}
 

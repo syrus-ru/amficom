@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractCloneableDomainMember.java,v 1.2 2005/03/17 09:12:05 arseniy Exp $
+ * $Id: AbstractCloneableDomainMember.java,v 1.3 2005/04/01 14:41:33 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,15 +8,16 @@
 
 package com.syrus.AMFICOM.administration;
 
-import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
+import java.util.Date;
+
+import com.syrus.AMFICOM.general.CloneableStorableObject;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.util.Log;
-import java.util.*;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.2 $, $Date: 2005/03/17 09:12:05 $
+ * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/04/01 14:41:33 $
  * @module admin_v1
  */
 public abstract class AbstractCloneableDomainMember extends DomainMember
@@ -30,14 +31,8 @@ public abstract class AbstractCloneableDomainMember extends DomainMember
 		super(id);
 	}
 
-	/**
-	 * @param transferable
-	 * @param domainId
-	 */
-	protected AbstractCloneableDomainMember(
-			final StorableObject_Transferable transferable,
-			final Identifier domainId) {
-		super(transferable, domainId);
+	protected AbstractCloneableDomainMember() {
+		super();
 	}
 
 	/**
