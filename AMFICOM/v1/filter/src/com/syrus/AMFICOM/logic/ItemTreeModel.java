@@ -1,5 +1,5 @@
 /*-
- * $Id: ItemTreeModel.java,v 1.6 2005/03/28 07:44:21 bob Exp $
+ * $Id: ItemTreeModel.java,v 1.7 2005/03/28 15:11:18 bob Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/03/28 07:44:21 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/28 15:11:18 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter_v1
@@ -45,8 +45,7 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 	protected class SortList {
 
 		boolean	sorted	= false;
-		List	list	= null;
-		
+		List	list	= null;		
 		
 		public SortList() {
 			this.list = new LinkedList();
@@ -446,12 +445,12 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 			parent1 = this.root;
 		}
 		final Item parent = parent1;
-		SwingUtilities.invokeLater(new Runnable() {
-
-			public void run() {
+//		SwingUtilities.invokeLater(new Runnable() {
+//
+//			public void run() {
 				insertNodeInto(parent, child);
-			}
-		});
+//			}
+//		});
 	}
 
 	public void setParentPerformed(Item item, Item oldParent, Item newParent) {
