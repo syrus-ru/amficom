@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.29 2005/02/07 12:13:20 arseniy Exp $
+# $Id: Makefile,v 1.30 2005/02/07 15:24:43 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -70,7 +70,9 @@ install: $(LIBNAME)
 
 #### Test ####
 TESTDIR = test
-TESTSOURCES := com/syrus/AMFICOM/general/DefaultIdentifierGeneratorServer.java
+TESTSOURCES := com/syrus/AMFICOM/general/DefaultIdentifierGeneratorServer.java \
+		com/syrus/AMFICOM/general/CommonGeneralTest.java \
+		com/syrus/AMFICOM/general/TestParameterType.java
 JUNITCLASSPATH = /mnt/d/eclipse/3.1M4/plugins/org.junit_3.8.1/junit.jar
 
 .PHONY:	test

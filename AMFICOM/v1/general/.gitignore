@@ -22,3 +22,5 @@ SQLChecker.cache
 sqlj.properties
 doc
 javadoc.xml
+logs
+cache
