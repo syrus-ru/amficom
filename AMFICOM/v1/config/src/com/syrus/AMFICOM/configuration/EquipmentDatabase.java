@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.58 2005/01/26 15:09:21 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.59 2005/01/28 10:18:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,8 +46,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/01/26 15:09:21 $
- * @author $Author: bob $
+ * @version $Revision: 1.59 $, $Date: 2005/01/28 10:18:43 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -319,38 +319,28 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 			statement = connection.createStatement();
 			Log.debugMessage("EquipmentDatabase.retrieveEquipmentPortIdsByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
+
 			Map epIdMap = new HashMap();
+			Identifier equipmentId;
+			List epIds;
 			while (resultSet.next()) {
-				Equipment equipment = null;
-				Identifier equipmentId = DatabaseIdentifier.getIdentifier(resultSet, PortWrapper.COLUMN_EQUIPMENT_ID);
-				for (Iterator it = equipments.iterator(); it.hasNext();) {
-					Equipment equipmentToCompare = (Equipment) it.next();
-					if (equipmentToCompare.getId().equals(equipmentId)){
-						equipment = equipmentToCompare;
-						break;
-					}                   
+				equipmentId = DatabaseIdentifier.getIdentifier(resultSet, PortWrapper.COLUMN_EQUIPMENT_ID);
+				epIds = (List) epIdMap.get(equipmentId);
+				if (epIds == null) {
+					epIds = new LinkedList();
+					epIdMap.put(equipmentId, epIds);
 				}
-
-				if (equipment == null) {
-					String mesg = "EquipmentDatabase.retrieveEquipmentPortIdsByOneQuery | Cannot found correspond result for '" + equipmentId.getIdentifierString() +"'" ;
-					throw new RetrieveObjectException(mesg);
-				}                    
-
-				Identifier epId = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID);
-				List epIds = (List)epIdMap.get(equipment);
-				if (epIds == null){
-						epIds = new LinkedList();
-						epIdMap.put(equipment, epIds);
-				}               
-				epIds.add(epId);              
+				epIds.add(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID));
 			}
 
-			for (Iterator iter = equipments.iterator(); iter.hasNext();) {
-				Equipment equipment = (Equipment) iter.next();
-				List epIds = (List)epIdMap.get(equipment);
+			Equipment equipment;
+			for (Iterator it = equipments.iterator(); it.hasNext();) {
+				equipment = (Equipment) it.next();
+				equipmentId = equipment.getId();
+				epIds = (List) epIdMap.get(equipmentId);
+
 				equipment.setPortIds0(epIds);
 			}
-
 		}
 		catch (SQLException sqle) {
 			String mesg = "EquipmentDatabase.retrieveEquipmentPortIdsByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
@@ -520,16 +510,18 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 			list = this.retrieveByIdsOneQuery(ids, condition);
 
     if (list != null) {
-			retrieveEquipmentPortIdsByOneQuery(list);
-			retrieveEquipmentMEIdsByOneQuery(list); 
+			this.retrieveEquipmentPortIdsByOneQuery(list);
+			this.retrieveEquipmentMEIdsByOneQuery(list); 
 
-			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
-			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENT);
-			for (Iterator iter = list.iterator(); iter.hasNext();) {
-				Equipment equipment = (Equipment) iter.next();
-				List characteristics = (List)characteristicMap.get(equipment);
-				equipment.setCharacteristics0(characteristics);
-			}
+			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) (GeneralDatabaseContext.getCharacteristicDatabase());
+			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list,
+					CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENT);
+			if (characteristicMap != null)
+				for (Iterator iter = list.iterator(); iter.hasNext();) {
+					Equipment equipment = (Equipment) iter.next();
+					List characteristics = (List) characteristicMap.get(equipment.getId());
+					equipment.setCharacteristics0(characteristics);
+				}
 		}
 		return list;
 	}
