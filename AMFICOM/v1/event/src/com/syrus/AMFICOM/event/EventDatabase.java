@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.11 2005/02/18 21:32:21 arseniy Exp $
+ * $Id: EventDatabase.java,v 1.12 2005/02/19 20:33:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,7 +46,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/02/18 21:32:21 $
+ * @version $Revision: 1.12 $, $Date: 2005/02/19 20:33:52 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -94,17 +94,12 @@ public class EventDatabase extends StorableObjectDatabase {
 	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		Event event = this.fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		try {
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, event.getType().getId());
-			preparedStatement.setInt(++i, event.getStatus().value());
-			DatabaseString.setString(preparedStatement, ++i, event.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		}
-		catch (SQLException sqle) {
-			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, event.getType().getId());
+		preparedStatement.setInt(++i, event.getStatus().value());
+		DatabaseString.setString(preparedStatement, ++i, event.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		return i;
 	}
 

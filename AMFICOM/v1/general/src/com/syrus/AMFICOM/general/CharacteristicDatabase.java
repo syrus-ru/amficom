@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.17 2005/02/18 21:28:57 arseniy Exp $
+ * $Id: CharacteristicDatabase.java,v 1.18 2005/02/19 20:34:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/02/18 21:28:57 $
+ * @version $Revision: 1.18 $, $Date: 2005/02/19 20:34:37 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -92,24 +92,19 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject,
-			PreparedStatement preparedStatement, int mode) throws IllegalDataException, UpdateObjectException{
+			PreparedStatement preparedStatement, int mode) throws IllegalDataException, SQLException {
 		Characteristic characteristic = this.fromStorableObject(storableObject);
 		int sort = characteristic.getSort().value();
 		int i;
-		try {
-			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, characteristic.getType().getId());
-			DatabaseString.setString(preparedStatement, ++i, characteristic.getName(), SIZE_NAME_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, characteristic.getDescription(), SIZE_DESCRIPTION_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, characteristic.getValue(), SIZE_VALUE_COLUMN);
-			preparedStatement.setInt( ++i, characteristic.isEditable()? 1:0);
-			preparedStatement.setInt( ++i, characteristic.isVisible()? 1:0);
-			preparedStatement.setInt( ++i, sort);
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, characteristic.getCharacterizedId());
-		}
-		catch (SQLException sqle) {
-			throw new UpdateObjectException("CharacteristicDatabase.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, characteristic.getType().getId());
+		DatabaseString.setString(preparedStatement, ++i, characteristic.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, characteristic.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, characteristic.getValue(), SIZE_VALUE_COLUMN);
+		preparedStatement.setInt( ++i, characteristic.isEditable()? 1:0);
+		preparedStatement.setInt( ++i, characteristic.isVisible()? 1:0);
+		preparedStatement.setInt( ++i, sort);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, characteristic.getCharacterizedId());
 		return i;
 	}	
 

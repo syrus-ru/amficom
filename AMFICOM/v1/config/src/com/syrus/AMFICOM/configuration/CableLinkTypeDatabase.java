@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeDatabase.java,v 1.17 2005/02/18 21:30:15 arseniy Exp $
+ * $Id: CableLinkTypeDatabase.java,v 1.18 2005/02/19 20:34:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/02/18 21:30:15 $
+ * @version $Revision: 1.18 $, $Date: 2005/02/19 20:34:06 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -164,23 +164,17 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
 	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		CableLinkType cableLinkType = this.fromStorableObject(storableObject);
 		int i;
-		try {
-			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-			preparedStatement.setString( ++i, cableLinkType.getCodename());
-			preparedStatement.setString( ++i, cableLinkType.getDescription());
-			preparedStatement.setString( ++i, cableLinkType.getName());
-			preparedStatement.setInt( ++i, cableLinkType.getSort().value());
-			preparedStatement.setString( ++i, cableLinkType.getManufacturer());
-			preparedStatement.setString( ++i, cableLinkType.getManufacturerCode());
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, cableLinkType.getImageId());
-		}
-		catch (SQLException sqle) {
-			throw new UpdateObjectException("LinkDatabase." +
-							"setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
+		preparedStatement.setString( ++i, cableLinkType.getCodename());
+		preparedStatement.setString( ++i, cableLinkType.getDescription());
+		preparedStatement.setString( ++i, cableLinkType.getName());
+		preparedStatement.setInt( ++i, cableLinkType.getSort().value());
+		preparedStatement.setString( ++i, cableLinkType.getManufacturer());
+		preparedStatement.setString( ++i, cableLinkType.getManufacturerCode());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, cableLinkType.getImageId());
 		return i;
 	}
 

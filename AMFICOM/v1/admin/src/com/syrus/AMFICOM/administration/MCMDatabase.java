@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.13 2005/02/18 21:29:26 arseniy Exp $
+ * $Id: MCMDatabase.java,v 1.14 2005/02/19 20:34:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/02/18 21:29:26 $
+ * @version $Revision: 1.14 $, $Date: 2005/02/19 20:34:13 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -103,21 +103,16 @@ public class MCMDatabase extends StorableObjectDatabase {
 	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		MCM mcm = this.fromStorableObject(storableObject);
 		int i;
-		try {
-			i  = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mcm.getDomainId());
-			DatabaseString.setString(preparedStatement, ++i, mcm.getName(), SIZE_NAME_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, mcm.getDescription(), SIZE_DESCRIPTION_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, mcm.getHostName(), SIZE_HOSTNAME_COLUMN);
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mcm.getUserId());
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mcm.getServerId());
-		}
-		catch (SQLException sqle) {
-			throw new UpdateObjectException("MCMDatabase.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		i  = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mcm.getDomainId());
+		DatabaseString.setString(preparedStatement, ++i, mcm.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, mcm.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, mcm.getHostName(), SIZE_HOSTNAME_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mcm.getUserId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mcm.getServerId());
 		return i;
 	}	
 

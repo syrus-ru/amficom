@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.40 2005/02/18 21:30:15 arseniy Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.41 2005/02/19 20:34:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/02/18 21:30:15 $
+ * @version $Revision: 1.41 $, $Date: 2005/02/19 20:34:06 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -93,24 +93,18 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		MeasurementPort measurementPort = this.fromStorableObject(storableObject);
 		Identifier typeId = measurementPort.getType().getId();
 		Identifier kisId = measurementPort.getKISId();
 		Identifier portId = measurementPort.getPortId();
 		int i;
-		try {
-			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, typeId);
-			DatabaseString.setString(preparedStatement, ++i, measurementPort.getName(), SIZE_NAME_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, measurementPort.getDescription(), SIZE_DESCRIPTION_COLUMN);
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, kisId);
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, portId);
-		}
-		catch (SQLException sqle) {
-			throw new UpdateObjectException("MeasurmentPortDatabase." +
-					"setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, typeId);
+		DatabaseString.setString(preparedStatement, ++i, measurementPort.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, measurementPort.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, kisId);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, portId);
 		return i;
 	}
 

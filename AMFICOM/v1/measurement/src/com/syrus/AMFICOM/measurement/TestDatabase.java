@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.70 2005/02/18 21:30:47 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.71 2005/02/19 20:33:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -51,7 +51,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/02/18 21:30:47 $
+ * @version $Revision: 1.71 $, $Date: 2005/02/19 20:33:58 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -135,7 +135,7 @@ public class TestDatabase extends StorableObjectDatabase {
 	}
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		
 		Test test = this.fromStorableObject(storableObject);
 		Date startTime = test.getStartTime();
@@ -144,21 +144,17 @@ public class TestDatabase extends StorableObjectDatabase {
 		AnalysisType analysisType = test.getAnalysisType();
 		EvaluationType evaluationType = test.getEvaluationType();
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		try {			
-			preparedStatement.setInt(++i, test.getTemporalType().value());
-			preparedStatement.setTimestamp(++i, (startTime != null) ? (new Timestamp(startTime.getTime())) : null);
-			preparedStatement.setTimestamp(++i, (endTime != null) ? (new Timestamp(endTime.getTime())) : null);
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (temporalPattern != null) ? temporalPattern.getId() : null);
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, test.getMeasurementType().getId());
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (analysisType != null) ? analysisType.getId() : null);
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (evaluationType != null) ? evaluationType.getId() : null);
-			preparedStatement.setInt(++i, test.getStatus().value());
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, test.getMonitoredElement().getId());
-			preparedStatement.setInt(++i, test.getReturnType().value());
-			DatabaseString.setString(preparedStatement, ++i, test.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		} catch (SQLException sqle) {
-			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		preparedStatement.setInt(++i, test.getTemporalType().value());
+		preparedStatement.setTimestamp(++i, (startTime != null) ? (new Timestamp(startTime.getTime())) : null);
+		preparedStatement.setTimestamp(++i, (endTime != null) ? (new Timestamp(endTime.getTime())) : null);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (temporalPattern != null) ? temporalPattern.getId() : null);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, test.getMeasurementType().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (analysisType != null) ? analysisType.getId() : null);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (evaluationType != null) ? evaluationType.getId() : null);
+		preparedStatement.setInt(++i, test.getStatus().value());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, test.getMonitoredElement().getId());
+		preparedStatement.setInt(++i, test.getReturnType().value());
+		DatabaseString.setString(preparedStatement, ++i, test.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		return i;
 	}
 	

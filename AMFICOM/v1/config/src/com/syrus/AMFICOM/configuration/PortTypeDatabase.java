@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.38 2005/02/18 21:30:15 arseniy Exp $
+ * $Id: PortTypeDatabase.java,v 1.39 2005/02/19 20:34:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/02/18 21:30:15 $
+ * @version $Revision: 1.39 $, $Date: 2005/02/19 20:34:06 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -214,18 +214,13 @@ public class PortTypeDatabase extends StorableObjectDatabase {
 	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		PortType portType = this.fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		try {			
-			DatabaseString.setString(preparedStatement, ++i, portType.getCodename(), SIZE_CODENAME_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, portType.getDescription(), SIZE_DESCRIPTION_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, portType.getName(), SIZE_NAME_COLUMN);
-			preparedStatement.setInt( ++i, portType.getSort().value());
-		}
-		catch (SQLException sqle) {
-			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		DatabaseString.setString(preparedStatement, ++i, portType.getCodename(), SIZE_CODENAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, portType.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, portType.getName(), SIZE_NAME_COLUMN);
+		preparedStatement.setInt( ++i, portType.getSort().value());
 		return i;	
 	}
 }

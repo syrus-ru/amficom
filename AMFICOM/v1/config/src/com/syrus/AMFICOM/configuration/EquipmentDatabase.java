@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.69 2005/02/18 21:30:15 arseniy Exp $
+ * $Id: EquipmentDatabase.java,v 1.70 2005/02/19 20:34:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/02/18 21:30:15 $
+ * @version $Revision: 1.70 $, $Date: 2005/02/19 20:34:06 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -150,30 +150,24 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		Equipment equipment = this.fromStorableObject(storableObject);
 		int i;
-		try {
-			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, equipment.getDomainId());
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, equipment.getType().getId());
-			DatabaseString.setString(preparedStatement, ++i, equipment.getName(), SIZE_NAME_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, equipment.getDescription(), SIZE_DESCRIPTION_COLUMN);
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, equipment.getImageId());
-			DatabaseString.setString(preparedStatement, ++i, equipment.getSupplier(), SIZE_SUPPLIER_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, equipment.getSupplierCode(), SIZE_SUPPLIER_CODE_COLUMN);
-			preparedStatement.setFloat(++i, equipment.getLatitude());
-			preparedStatement.setFloat(++i, equipment.getLongitude());
-			DatabaseString.setString(preparedStatement, ++i, equipment.getHwSerial(), SIZE_HW_SERIAL_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, equipment.getHwVersion(), SIZE_HW_VERSION_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, equipment.getSwSerial(), SIZE_SW_SERIAL_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, equipment.getSwVersion(), SIZE_SW_VERSION_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, equipment.getInventoryNumber(), SIZE_INVENTOY_NUMBER_COLUMN);
-		}
-		catch (SQLException sqle) {
-			throw new UpdateObjectException("EquipmentDatabase." +
-				"setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, equipment.getDomainId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, equipment.getType().getId());
+		DatabaseString.setString(preparedStatement, ++i, equipment.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, equipment.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, equipment.getImageId());
+		DatabaseString.setString(preparedStatement, ++i, equipment.getSupplier(), SIZE_SUPPLIER_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, equipment.getSupplierCode(), SIZE_SUPPLIER_CODE_COLUMN);
+		preparedStatement.setFloat(++i, equipment.getLatitude());
+		preparedStatement.setFloat(++i, equipment.getLongitude());
+		DatabaseString.setString(preparedStatement, ++i, equipment.getHwSerial(), SIZE_HW_SERIAL_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, equipment.getHwVersion(), SIZE_HW_VERSION_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, equipment.getSwSerial(), SIZE_SW_SERIAL_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, equipment.getSwVersion(), SIZE_SW_VERSION_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, equipment.getInventoryNumber(), SIZE_INVENTOY_NUMBER_COLUMN);
 		return i;
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.19 2005/02/18 21:30:47 arseniy Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.20 2005/02/19 20:33:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/02/18 21:30:47 $
+ * @version $Revision: 1.20 $, $Date: 2005/02/19 20:33:58 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -81,16 +81,11 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		ModelingType modelingType = this.fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		try {
-			DatabaseString.setString(preparedStatement, ++i, modelingType.getCodename(), SIZE_CODENAME_COLUMN); 
-			DatabaseString.setString(preparedStatement, ++i, modelingType.getDescription(), SIZE_DESCRIPTION_COLUMN); 
-		}
-		catch (SQLException sqle) {
-			throw new UpdateObjectException(this.getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		DatabaseString.setString(preparedStatement, ++i, modelingType.getCodename(), SIZE_CODENAME_COLUMN); 
+		DatabaseString.setString(preparedStatement, ++i, modelingType.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		return i;
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.71 2005/02/18 21:30:46 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.72 2005/02/19 20:33:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2005/02/18 21:30:46 $
+ * @version $Revision: 1.72 $, $Date: 2005/02/19 20:33:58 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -680,16 +680,11 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		MeasurementType measurementType = this.fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-			try {				
-				DatabaseString.setString(preparedStatement, ++i, measurementType.getCodename(), SIZE_CODENAME_COLUMN);
-				DatabaseString.setString(preparedStatement, ++i, measurementType.getDescription(), SIZE_DESCRIPTION_COLUMN);
-			}
-			catch (SQLException sqle) {
-				throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-			}
+			DatabaseString.setString(preparedStatement, ++i, measurementType.getCodename(), SIZE_CODENAME_COLUMN);
+			DatabaseString.setString(preparedStatement, ++i, measurementType.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		return i;
 		}
 

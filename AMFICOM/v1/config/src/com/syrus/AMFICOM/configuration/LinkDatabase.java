@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.29 2005/02/18 21:30:15 arseniy Exp $
+ * $Id: LinkDatabase.java,v 1.30 2005/02/19 20:34:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/02/18 21:30:15 $
+ * @version $Revision: 1.30 $, $Date: 2005/02/19 20:34:06 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -120,25 +120,20 @@ public class LinkDatabase extends StorableObjectDatabase {
 	}
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		Link link = this.fromStorableObject(storableObject);
 		int i;
-		try {
-			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, link.getDomainId());
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, link.getType().getId());
-			preparedStatement.setInt( ++i, link.getSort().value());
-			preparedStatement.setString( ++i, link.getName());
-			preparedStatement.setString( ++i, link.getDescription());
-			preparedStatement.setString( ++i, link.getInventoryNo());
-			preparedStatement.setString( ++i, link.getSupplier());
-			preparedStatement.setString( ++i, link.getSupplierCode());
-			preparedStatement.setInt( ++i, link.getColor());
-			preparedStatement.setString( ++i, link.getMark());
-		}
-		catch (SQLException sqle) {
-			throw new UpdateObjectException("LinkDatabase." + "setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, link.getDomainId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, link.getType().getId());
+		preparedStatement.setInt( ++i, link.getSort().value());
+		preparedStatement.setString( ++i, link.getName());
+		preparedStatement.setString( ++i, link.getDescription());
+		preparedStatement.setString( ++i, link.getInventoryNo());
+		preparedStatement.setString( ++i, link.getSupplier());
+		preparedStatement.setString( ++i, link.getSupplierCode());
+		preparedStatement.setInt( ++i, link.getColor());
+		preparedStatement.setString( ++i, link.getMark());
 		return i;
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.40 2005/02/18 21:30:47 arseniy Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.41 2005/02/19 20:33:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/02/18 21:30:47 $
+ * @version $Revision: 1.41 $, $Date: 2005/02/19 20:33:58 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -139,31 +139,24 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 	}
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		TemporalPattern temporalPattern = this.fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		try {
-			preparedStatement.setString(++i, temporalPattern.getDescription());
-			((OraclePreparedStatement)preparedStatement).setORAData(++i, new CronStringArray(temporalPattern.getCronStrings()));
-		} catch (SQLException sqle) {
-			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+
+		preparedStatement.setString(++i, temporalPattern.getDescription());
+		((OraclePreparedStatement) preparedStatement).setORAData(++i, new CronStringArray(temporalPattern.getCronStrings()));
 		return i;
 	}	
-	
+
 	private void insertTemporalPattern(TemporalPattern temporalPattern) throws CreateObjectException {
 		String tpIdCode = DatabaseIdentifier.toSQLString(temporalPattern.getId());
 		
 		PreparedStatement preparedStatement = null;
 		try {			
 			preparedStatement = insertTemporalPatternPreparedStatement();
-			setEntityForPreparedStatement(temporalPattern, preparedStatement, MODE_INSERT);
+			this.setEntityForPreparedStatement(temporalPattern, preparedStatement, MODE_INSERT);
 			Log.debugMessage("TemporalPatternDatabase.insertTemporalPattern | Inserting temporal pattern " + tpIdCode, Log.DEBUGLEVEL09);
 			preparedStatement.executeUpdate();
-		}
-		catch (UpdateObjectException uoe){
-			String mesg = "TemporalPatternDatabase.insertTemporalPattern | Cannot insert temporal pattern '" + tpIdCode + "' -- " + uoe.getMessage();
-			throw new CreateObjectException(mesg, uoe);
 		}
 		catch (IllegalDataException ide){
 			String mesg = "TemporalPatternDatabase.insertTemporalPattern | Cannot insert temporal pattern '" + tpIdCode + "' -- " + ide.getMessage();

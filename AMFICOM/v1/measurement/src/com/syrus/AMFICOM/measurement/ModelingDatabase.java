@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.28 2005/02/18 21:30:46 arseniy Exp $
+ * $Id: ModelingDatabase.java,v 1.29 2005/02/19 20:33:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/02/18 21:30:46 $
+ * @version $Revision: 1.29 $, $Date: 2005/02/19 20:33:58 $
  * @author $Author: arseniy $
  * @module module_name
  */
@@ -79,18 +79,13 @@ public class ModelingDatabase extends StorableObjectDatabase {
 	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		Modeling modeling = this.fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		try {
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, modeling.getType().getId());
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, modeling.getMonitoredElementId());
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, modeling.getArgumentSet().getId());
-			DatabaseString.setString(preparedStatement, ++i, modeling.getName(), SIZE_NAME_COLUMN);
-		}
-		catch (SQLException sqle) {
-			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, modeling.getType().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, modeling.getMonitoredElementId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, modeling.getArgumentSet().getId());
+		DatabaseString.setString(preparedStatement, ++i, modeling.getName(), SIZE_NAME_COLUMN);
 		return i;
 	}
 

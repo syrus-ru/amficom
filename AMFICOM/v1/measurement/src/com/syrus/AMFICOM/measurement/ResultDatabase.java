@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.67 2005/02/18 21:30:47 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.68 2005/02/19 20:33:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/02/18 21:30:47 $
+ * @version $Revision: 1.68 $, $Date: 2005/02/19 20:33:58 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -147,46 +147,40 @@ public class ResultDatabase extends StorableObjectDatabase {
 	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		Result result = this.fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		try {
-			int resultSort = result.getSort().value();
-			switch (resultSort) {
-				case ResultSort._RESULT_SORT_MEASUREMENT:					
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, result.getAction().getId());
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					break;
-				case ResultSort._RESULT_SORT_ANALYSIS:
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, result.getAction().getId());
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					break;
-				case ResultSort._RESULT_SORT_EVALUATION:
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, result.getAction().getId());
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					break;
-				case ResultSort._RESULT_SORT_MODELING:
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);					
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, result.getAction().getId());
-					break;
-				default:
-					Log.errorMessage("ResultDatabase.insertResult | Illegal sort: " + resultSort
-							+ " of result '" + result.getId().getIdentifierString() + "'");
-			}
-			preparedStatement.setInt(++i, result.getSort().value());
+		int resultSort = result.getSort().value();
+		switch (resultSort) {
+			case ResultSort._RESULT_SORT_MEASUREMENT:					
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, result.getAction().getId());
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				break;
+			case ResultSort._RESULT_SORT_ANALYSIS:
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, result.getAction().getId());
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				break;
+			case ResultSort._RESULT_SORT_EVALUATION:
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, result.getAction().getId());
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				break;
+			case ResultSort._RESULT_SORT_MODELING:
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);					
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, result.getAction().getId());
+				break;
+			default:
+				Log.errorMessage("ResultDatabase.insertResult | Illegal sort: " + resultSort
+						+ " of result '" + result.getId().getIdentifierString() + "'");
 		}
-		catch (SQLException sqle) {
-			throw new UpdateObjectException(getEnityName()
-					+ "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		preparedStatement.setInt(++i, result.getSort().value());
 		return i;
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.60 2005/02/18 21:30:15 arseniy Exp $
+ * $Id: KISDatabase.java,v 1.61 2005/02/19 20:34:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/02/18 21:30:15 $
+ * @version $Revision: 1.61 $, $Date: 2005/02/19 20:34:06 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -118,24 +118,19 @@ public class KISDatabase extends StorableObjectDatabase {
 	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		KIS kis = this.fromStorableObject(storableObject);
 		int i;
-		try {
-			Identifier equipmentId = kis.getEquipmentId();
-			Identifier mcmId = kis.getMCMId();
-			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, kis.getDomainId());
-			DatabaseString.setString(preparedStatement, ++i, kis.getName(), SIZE_NAME_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, kis.getDescription(), SIZE_DESCRIPTION_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, kis.getHostName(), SIZE_HOSTNAME_COLUMN);
-			preparedStatement.setInt( ++i, kis.getTCPPort());
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, equipmentId);
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mcmId);
-		}
-		catch (SQLException sqle) {
-			throw new UpdateObjectException("KISDatabase." + "setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		Identifier equipmentId = kis.getEquipmentId();
+		Identifier mcmId = kis.getMCMId();
+		i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, kis.getDomainId());
+		DatabaseString.setString(preparedStatement, ++i, kis.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, kis.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, kis.getHostName(), SIZE_HOSTNAME_COLUMN);
+		preparedStatement.setInt( ++i, kis.getTCPPort());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, equipmentId);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, mcmId);
 		return i;
 	}
 

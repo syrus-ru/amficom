@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.63 2005/02/18 21:30:46 arseniy Exp $
+ * $Id: MeasurementDatabase.java,v 1.64 2005/02/19 20:33:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/02/18 21:30:46 $
+ * @version $Revision: 1.64 $, $Date: 2005/02/19 20:33:58 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -109,23 +109,18 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		Measurement measurement = this.fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		try {
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, measurement.getType().getId());
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, measurement.getMonitoredElementId());
-			DatabaseString.setString(preparedStatement, ++i, measurement.getName(), SIZE_NAME_COLUMN); 
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, measurement.getSetup().getId());
-			preparedStatement.setTimestamp(++i, new Timestamp(measurement.getStartTime().getTime()));
-			preparedStatement.setLong(++i, measurement.getDuration());
-			preparedStatement.setInt(++i, measurement.getStatus().value());
-			DatabaseString.setString(preparedStatement, ++i, measurement.getLocalAddress(), SIZE_LOCAL_ADDRESS_COLUMN);
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, measurement.getTestId());
-		}
-		catch (SQLException sqle) {
-			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, measurement.getType().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, measurement.getMonitoredElementId());
+		DatabaseString.setString(preparedStatement, ++i, measurement.getName(), SIZE_NAME_COLUMN); 
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, measurement.getSetup().getId());
+		preparedStatement.setTimestamp(++i, new Timestamp(measurement.getStartTime().getTime()));
+		preparedStatement.setLong(++i, measurement.getDuration());
+		preparedStatement.setInt(++i, measurement.getStatus().value());
+		DatabaseString.setString(preparedStatement, ++i, measurement.getLocalAddress(), SIZE_LOCAL_ADDRESS_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, measurement.getTestId());
 		return i;
 	}
 

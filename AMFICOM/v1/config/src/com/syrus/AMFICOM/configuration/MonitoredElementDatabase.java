@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.48 2005/02/18 21:30:15 arseniy Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.49 2005/02/19 20:34:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/02/18 21:30:15 $
+ * @version $Revision: 1.49 $, $Date: 2005/02/19 20:34:06 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -97,21 +97,16 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject,
 												PreparedStatement preparedStatement,
-												int mode) throws IllegalDataException, UpdateObjectException {
+												int mode) throws IllegalDataException, SQLException {
 		MonitoredElement monitoredElement = this.fromStorableObject(storableObject);
 		int i;
-		try {
-			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, monitoredElement.getDomainId());
-			DatabaseString.setString(preparedStatement, ++i, monitoredElement.getName(), SIZE_NAME_COLUMN);
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, monitoredElement.getMeasurementPortId());
-			preparedStatement.setInt(++i, monitoredElement.getSort().value());
-			DatabaseString.setString(preparedStatement, ++i, monitoredElement.getLocalAddress(),
-				SIZE_LOCAL_ADDRESS_COLUMN);
-		} catch (SQLException sqle) {
-			throw new UpdateObjectException("MeasurmentPortTypeDatabase." + "setEntityForPreparedStatement | Error "
-					+ sqle.getMessage(), sqle);
-		}
+		i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, monitoredElement.getDomainId());
+		DatabaseString.setString(preparedStatement, ++i, monitoredElement.getName(), SIZE_NAME_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, monitoredElement.getMeasurementPortId());
+		preparedStatement.setInt(++i, monitoredElement.getSort().value());
+		DatabaseString.setString(preparedStatement, ++i, monitoredElement.getLocalAddress(),
+			SIZE_LOCAL_ADDRESS_COLUMN);
 		return i;
 	}
 

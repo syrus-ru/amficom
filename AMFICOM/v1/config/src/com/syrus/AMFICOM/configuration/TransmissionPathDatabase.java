@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.47 2005/02/18 21:30:15 arseniy Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.48 2005/02/19 20:34:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/02/18 21:30:15 $
+ * @version $Revision: 1.48 $, $Date: 2005/02/19 20:34:06 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -102,22 +102,17 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject,
 												PreparedStatement preparedStatement,
-												int mode) throws IllegalDataException, UpdateObjectException {
+												int mode) throws IllegalDataException, SQLException {
 		TransmissionPath transmissionPath = this.fromStorableObject(storableObject);
 		int i;
-		try {
-			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, transmissionPath.getDomainId());
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, transmissionPath.getType().getId());
-			DatabaseString.setString(preparedStatement, ++i, transmissionPath.getName(), SIZE_NAME_COLUMN);
-			DatabaseString
-					.setString(preparedStatement, ++i, transmissionPath.getDescription(), SIZE_DESCRIPTION_COLUMN);
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, transmissionPath.getStartPortId());
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, transmissionPath.getFinishPortId());
-		} catch (SQLException sqle) {
-			throw new UpdateObjectException("KISDatabase." + "setEntityForPreparedStatement | Error "
-					+ sqle.getMessage(), sqle);
-		}
+		i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, transmissionPath.getDomainId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, transmissionPath.getType().getId());
+		DatabaseString.setString(preparedStatement, ++i, transmissionPath.getName(), SIZE_NAME_COLUMN);
+		DatabaseString
+				.setString(preparedStatement, ++i, transmissionPath.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, transmissionPath.getStartPortId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, transmissionPath.getFinishPortId());
 		return i;
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.12 2005/02/18 21:29:26 arseniy Exp $
+ * $Id: UserDatabase.java,v 1.13 2005/02/19 20:34:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/02/18 21:29:26 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/19 20:34:13 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -113,17 +113,13 @@ public class UserDatabase extends StorableObjectDatabase {
 	
 	
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement,int mode)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		User user = this.fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		try {			
-			DatabaseString.setString(preparedStatement, ++i, user.getLogin(), SIZE_LOGIN_COLUMN);
-			preparedStatement.setInt(++i, user.getSort().value());
-			DatabaseString.setString(preparedStatement, ++i, user.getName(), SIZE_NAME_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, user.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		} catch (SQLException sqle) {
-			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		DatabaseString.setString(preparedStatement, ++i, user.getLogin(), SIZE_LOGIN_COLUMN);
+		preparedStatement.setInt(++i, user.getSort().value());
+		DatabaseString.setString(preparedStatement, ++i, user.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, user.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		return i;
 	}
 	

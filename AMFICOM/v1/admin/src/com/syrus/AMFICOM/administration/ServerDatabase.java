@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.12 2005/02/18 21:29:26 arseniy Exp $
+ * $Id: ServerDatabase.java,v 1.13 2005/02/19 20:34:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/02/18 21:29:26 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/19 20:34:13 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -129,19 +129,14 @@ public class ServerDatabase extends StorableObjectDatabase {
 	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-		throws IllegalDataException, UpdateObjectException {
+		throws IllegalDataException, SQLException {
 		Server server = this.fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		try {
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, server.getDomainId());
-			DatabaseString.setString(preparedStatement, ++i, server.getName(), SIZE_NAME_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, server.getDescription(), SIZE_DESCRIPTION_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, server.getHostName(), SIZE_HOSTNAME_COLUMN);
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, server.getUserId());
-		}
-		catch (SQLException sqle) {
-			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, server.getDomainId());
+		DatabaseString.setString(preparedStatement, ++i, server.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, server.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, server.getHostName(), SIZE_HOSTNAME_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, server.getUserId());
 		return i;
 	}
 

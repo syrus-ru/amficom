@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeDatabase.java,v 1.24 2005/02/18 21:30:15 arseniy Exp $
+ * $Id: LinkTypeDatabase.java,v 1.25 2005/02/19 20:34:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/02/18 21:30:15 $
+ * @version $Revision: 1.25 $, $Date: 2005/02/19 20:34:06 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -109,23 +109,17 @@ public class LinkTypeDatabase extends StorableObjectDatabase {
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject,
 			PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		LinkType linkType = this.fromStorableObject(storableObject);
 		int i;
-		try {
-			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-			preparedStatement.setString( ++i, linkType.getCodename());
-			preparedStatement.setString( ++i, linkType.getDescription());
-			preparedStatement.setString( ++i, linkType.getName());
-			preparedStatement.setInt( ++i, linkType.getSort().value());
-			preparedStatement.setString( ++i, linkType.getManufacturer());
-			preparedStatement.setString( ++i, linkType.getManufacturerCode());
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, linkType.getImageId());
-		}
-		catch (SQLException sqle) {
-			throw new UpdateObjectException("LinkDatabase." +
-					"setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
+		preparedStatement.setString( ++i, linkType.getCodename());
+		preparedStatement.setString( ++i, linkType.getDescription());
+		preparedStatement.setString( ++i, linkType.getName());
+		preparedStatement.setInt( ++i, linkType.getSort().value());
+		preparedStatement.setString( ++i, linkType.getManufacturer());
+		preparedStatement.setString( ++i, linkType.getManufacturerCode());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, linkType.getImageId());
 		return i;
 	}
 

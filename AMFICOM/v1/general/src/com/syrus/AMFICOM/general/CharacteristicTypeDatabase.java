@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.10 2005/02/18 21:28:57 arseniy Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.11 2005/02/19 20:34:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/02/18 21:28:57 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/19 20:34:37 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -67,19 +67,14 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject,
 			PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		CharacteristicType characteristicType = this.fromStorableObject(storableObject); 
 		int i;
-		try {
-			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-			DatabaseString.setString(preparedStatement, ++i, characteristicType.getCodename(), SIZE_CODENAME_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, characteristicType.getDescription(), SIZE_DESCRIPTION_COLUMN);
-			preparedStatement.setInt( ++i, characteristicType.getDataType().value());
-			preparedStatement.setInt( ++i, characteristicType.getSort().value());
-		}
-		catch (SQLException sqle) {
-			throw new UpdateObjectException("CharacteristicTypeDatabase.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
+		DatabaseString.setString(preparedStatement, ++i, characteristicType.getCodename(), SIZE_CODENAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, characteristicType.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		preparedStatement.setInt( ++i, characteristicType.getDataType().value());
+		preparedStatement.setInt( ++i, characteristicType.getSort().value());
 		return i;
 	}
 

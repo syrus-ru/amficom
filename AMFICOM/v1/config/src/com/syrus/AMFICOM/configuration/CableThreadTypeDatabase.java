@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeDatabase.java,v 1.18 2005/02/18 21:30:15 arseniy Exp $
+ * $Id: CableThreadTypeDatabase.java,v 1.19 2005/02/19 20:34:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/02/18 21:30:15 $
+ * @version $Revision: 1.19 $, $Date: 2005/02/19 20:34:06 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -90,22 +90,16 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 		super.retrieveEntity(cableThreadType);
 	}
 	
-	protected int setEntityForPreparedStatement(StorableObject storableObject,
-			PreparedStatement preparedStatement, int mode) throws IllegalDataException,
-			UpdateObjectException {
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
+			throws IllegalDataException, SQLException {
 		CableThreadType cableThreadType = this.fromStorableObject(storableObject);
 		int i;
-		try {
-			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-			preparedStatement.setString( ++i, cableThreadType.getCodename());
-			preparedStatement.setString( ++i, cableThreadType.getDescription());
-            preparedStatement.setString( ++i, cableThreadType.getName());
-			preparedStatement.setInt( ++i, cableThreadType.getColor());
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, cableThreadType.getLinkType().getId());
-		} catch (SQLException sqle) {
-			throw new UpdateObjectException("CableThreadTypeDatabase." +
-					"setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
+		preparedStatement.setString(++i, cableThreadType.getCodename());
+		preparedStatement.setString(++i, cableThreadType.getDescription());
+		preparedStatement.setString(++i, cableThreadType.getName());
+		preparedStatement.setInt(++i, cableThreadType.getColor());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, cableThreadType.getLinkType().getId());
 		return i;
 	}
 	

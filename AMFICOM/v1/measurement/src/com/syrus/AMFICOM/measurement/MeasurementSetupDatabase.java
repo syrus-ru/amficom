@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.68 2005/02/18 21:30:46 arseniy Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.69 2005/02/19 20:33:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/02/18 21:30:46 $
+ * @version $Revision: 1.69 $, $Date: 2005/02/19 20:33:58 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -260,23 +260,18 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	
 	
 	protected int  setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		MeasurementSetup measurementSetup = this.fromStorableObject(storableObject);
 		Set criteriaSet = measurementSetup.getCriteriaSet();
 		Set thresholdSet = measurementSetup.getThresholdSet();
 		Set etalon = measurementSetup.getEtalon();
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		try {
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, measurementSetup.getParameterSet().getId()); 
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (criteriaSet != null) ? criteriaSet.getId() : null);
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (thresholdSet != null) ? thresholdSet.getId() : null);
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (etalon != null) ? etalon.getId() : null);
-			DatabaseString.setString(preparedStatement, ++i, measurementSetup.getDescription(), SIZE_DESCRIPTION_COLUMN);
-			preparedStatement.setLong(++i, measurementSetup.getMeasurementDuration());
-			
-		} catch (SQLException sqle) {
-			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, measurementSetup.getParameterSet().getId()); 
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (criteriaSet != null) ? criteriaSet.getId() : null);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (thresholdSet != null) ? thresholdSet.getId() : null);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (etalon != null) ? etalon.getId() : null);
+		DatabaseString.setString(preparedStatement, ++i, measurementSetup.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		preparedStatement.setLong(++i, measurementSetup.getMeasurementDuration());
 		return i;
 	}
 

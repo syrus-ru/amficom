@@ -1,5 +1,5 @@
 /*
- * $Id: EventSourceDatabase.java,v 1.5 2005/02/18 21:32:21 arseniy Exp $
+ * $Id: EventSourceDatabase.java,v 1.6 2005/02/19 20:33:52 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/18 21:32:21 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/19 20:33:52 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -74,61 +74,54 @@ public class EventSourceDatabase extends StorableObjectDatabase {
 	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException,
-				UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		EventSource eventSource = this.fromStorableObject(storableObject);
 		Identifier sourceEntityId = eventSource.getSourceEntityId();
 		short sourceEntityCode = sourceEntityId.getMajor();
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		try {
-			preparedStatement.setShort(++i, sourceEntityCode);
-			switch (sourceEntityCode) {
-				case ObjectEntities.MCM_ENTITY_CODE:
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, sourceEntityId);
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					break;
-				case ObjectEntities.PORT_ENTITY_CODE:
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, sourceEntityId);
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					break;
-				case ObjectEntities.EQUIPMENT_ENTITY_CODE:
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, sourceEntityId);
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					break;
-				case ObjectEntities.TRANSPATH_ENTITY_CODE:
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, sourceEntityId);
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					break;
-				case ObjectEntities.LINK_ENTITY_CODE:
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
-					DatabaseIdentifier.setIdentifier(preparedStatement, ++i, sourceEntityId);
-					break;
-				default:
-					throw new IllegalDataException("Event source for entity code "
-							+ sourceEntityCode
-							+ ", entity '"
-							+ ObjectEntities.codeToString(sourceEntityCode)
-							+ "' not implemented");
-			}
-		}
-		catch (SQLException sqle) {
-			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(),
-					sqle);
+		preparedStatement.setShort(++i, sourceEntityCode);
+		switch (sourceEntityCode) {
+			case ObjectEntities.MCM_ENTITY_CODE:
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, sourceEntityId);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				break;
+			case ObjectEntities.PORT_ENTITY_CODE:
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, sourceEntityId);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				break;
+			case ObjectEntities.EQUIPMENT_ENTITY_CODE:
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, sourceEntityId);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				break;
+			case ObjectEntities.TRANSPATH_ENTITY_CODE:
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, sourceEntityId);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				break;
+			case ObjectEntities.LINK_ENTITY_CODE:
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, null);
+				DatabaseIdentifier.setIdentifier(preparedStatement, ++i, sourceEntityId);
+				break;
+			default:
+				throw new IllegalDataException("Event source for entity code "
+						+ sourceEntityCode
+						+ ", entity '"
+						+ ObjectEntities.codeToString(sourceEntityCode)
+						+ "' not implemented");
 		}
 		return i;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.44 2005/02/18 21:30:46 arseniy Exp $
+ * $Id: AnalysisDatabase.java,v 1.45 2005/02/19 20:33:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/02/18 21:30:46 $
+ * @version $Revision: 1.45 $, $Date: 2005/02/19 20:33:58 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -89,19 +89,14 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		Analysis analysis = this.fromStorableObject(storableObject);
 		Measurement measurement = analysis.getMeasurement();
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		try {
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, analysis.getType().getId()); 
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, analysis.getMonitoredElementId());
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (measurement != null) ? measurement.getId() : null);
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, analysis.getCriteriaSet().getId());
-		}
-		catch (SQLException sqle) {
-			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, analysis.getType().getId()); 
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, analysis.getMonitoredElementId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, (measurement != null) ? measurement.getId() : null);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, analysis.getCriteriaSet().getId());
 		return i;
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeDatabase.java,v 1.38 2005/02/18 21:30:15 arseniy Exp $
+ * $Id: EquipmentTypeDatabase.java,v 1.39 2005/02/19 20:34:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/02/18 21:30:15 $
+ * @version $Revision: 1.39 $, $Date: 2005/02/19 20:34:06 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -104,21 +104,15 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		EquipmentType equipmentType = this.fromStorableObject(storableObject);
 		int i;
-		try {
-			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-			DatabaseString.setString(preparedStatement, ++i, equipmentType.getCodename(), SIZE_CODENAME_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, equipmentType.getDescription(), SIZE_DESCRIPTION_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, equipmentType.getName(), SIZE_NAME_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, equipmentType.getManufacturer(), SIZE_MANUFACTURER_COLUMN);
-			DatabaseString.setString(preparedStatement, ++i, equipmentType.getManufacturerCode(), SIZE_MANUFACTURER_CODE_COLUMN);
-		}
-		catch (SQLException sqle) {
-			throw new UpdateObjectException("EquipmentDatabase." +
-					"setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
+		DatabaseString.setString(preparedStatement, ++i, equipmentType.getCodename(), SIZE_CODENAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, equipmentType.getDescription(), SIZE_DESCRIPTION_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, equipmentType.getName(), SIZE_NAME_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, equipmentType.getManufacturer(), SIZE_MANUFACTURER_COLUMN);
+		DatabaseString.setString(preparedStatement, ++i, equipmentType.getManufacturerCode(), SIZE_MANUFACTURER_CODE_COLUMN);
 		return i;
 	}
 

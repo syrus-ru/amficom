@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.63 2005/02/18 21:30:47 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.64 2005/02/19 20:33:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/02/18 21:30:47 $
+ * @version $Revision: 1.64 $, $Date: 2005/02/19 20:33:58 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -88,16 +88,11 @@ public class SetDatabase extends StorableObjectDatabase {
 	}	
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException, UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		Set set = this.fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-		try {
-			preparedStatement.setInt(++i, set.getSort().value());
-			DatabaseString.setString(preparedStatement, ++i, set.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		}
-		catch (SQLException sqle) {
-			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		preparedStatement.setInt(++i, set.getSort().value());
+		DatabaseString.setString(preparedStatement, ++i, set.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		return i;
 	}
 

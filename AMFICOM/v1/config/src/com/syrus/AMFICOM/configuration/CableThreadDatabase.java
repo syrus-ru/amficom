@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadDatabase.java,v 1.14 2005/02/18 21:30:15 arseniy Exp $
+ * $Id: CableThreadDatabase.java,v 1.15 2005/02/19 20:34:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/02/18 21:30:15 $
+ * @version $Revision: 1.15 $, $Date: 2005/02/19 20:34:06 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -100,20 +100,14 @@ public class CableThreadDatabase extends StorableObjectDatabase  {
 	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
-			throws IllegalDataException,
-				UpdateObjectException {
+			throws IllegalDataException, SQLException {
 		CableThread cableThread = this.fromStorableObject(storableObject);
 		int i;
-		try {
-			i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, cableThread.getDomainId());
-			DatabaseIdentifier.setIdentifier(preparedStatement, ++i, cableThread.getType().getId());
-			preparedStatement.setString(++i, cableThread.getName());
-			preparedStatement.setString(++i, cableThread.getDescription());
-		}
-		catch (SQLException sqle) {
-			throw new UpdateObjectException("LinkDatabase." + "setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
-		}
+		i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, cableThread.getDomainId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++i, cableThread.getType().getId());
+		preparedStatement.setString(++i, cableThread.getName());
+		preparedStatement.setString(++i, cableThread.getDescription());
 		return i;
 	}
 
