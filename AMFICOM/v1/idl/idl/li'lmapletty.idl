@@ -1,5 +1,5 @@
 /*
- * $Id: li'lmapletty.idl,v 1.12 2004/12/20 09:56:03 bass Exp $
+ * $Id: li'lmapletty.idl,v 1.13 2004/12/20 16:44:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,10 +51,12 @@ module com {
 					struct PhysicalLinkType_Transferable {
 							general::corba::StorableObject_Transferable header;							
 
-							general::corba::Identifier_Transferable domain_id;
 							wstring codename;
 							wstring name;
 							wstring description;
+							
+							long dimensionX;
+							long dimensionY;
 							
 							general::corba::IdentifierSeq_Transferable characteristicIds;
 					};
@@ -191,8 +193,8 @@ module com {
 							wstring street;
 							wstring building;
 
-							long long dimensionX;
-							long long dimensionY;
+							long dimensionX;
+							long dimensionY;
 							
 							boolean leftToRight;
 							boolean topToBottom;
