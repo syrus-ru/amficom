@@ -46,48 +46,44 @@ public class KISDatabase extends StorableObjectDatabase {
 			Log.debugMessage("KISDatabase.retrieve | Trying: " + sql, Log.DEBUGLEVEL05);
 			resultSet = statement.executeQuery(sql);
 			if (resultSet.next()) {
-				kis.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED), DatabaseDate
-						.fromQuerySubString(resultSet, COLUMN_MODIFIED),
-				/**
-				 * @todo when change DB Identifier model ,change getString() to
-				 *       getLong()
-				 */
-				new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
-				/**
-				 * @todo when change DB Identifier model ,change getString() to
-				 *       getLong()
-				 */
-				new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-				/**
-				 * @todo when change DB Identifier model ,change getString() to
-				 *       getLong()
-				 */
-				new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),
-				new Identifier(resultSet.getString(EquipmentDatabase.COLUMN_TYPE_ID)),
-				resultSet.getString(EquipmentDatabase.COLUMN_NAME),
-				resultSet.getString(EquipmentDatabase.COLUMN_DESCRIPTION),
-				resultSet.getString(EquipmentDatabase.COLUMN_LATITUDE),
-				resultSet.getString(EquipmentDatabase.COLUMN_LONGITUDE),
-				resultSet.getString(EquipmentDatabase.COLUMN_HW_SERIAL),
-				resultSet.getString(EquipmentDatabase.COLUMN_SW_SERIAL),
-				resultSet.getString(EquipmentDatabase.COLUMN_HW_VERSION),
-				resultSet.getString(EquipmentDatabase.COLUMN_SW_VERSION),
-				resultSet.getString(EquipmentDatabase.COLUMN_INVENTORY_NUMBER),
-				resultSet.getString(EquipmentDatabase.COLUMN_MANUFACTURER),
-				resultSet.getString(EquipmentDatabase.COLUMN_MANUFACTURER_CODE),
-				resultSet.getString(EquipmentDatabase.COLUMN_SUPPLIER),
-				resultSet.getString(EquipmentDatabase.COLUMN_SUPPLIER_CODE),
-				resultSet.getString(EquipmentDatabase.COLUMN_EQCLASS),
-				/**
-				 * @todo when change DB Identifier model ,change getString() to
-				 *       getLong()
-				 */
-				new Identifier(resultSet.getString(EquipmentDatabase.COLUMN_IMAGE_ID)),
-				/**
-				 * @todo when change DB Identifier model ,change getString() to
-				 *       getLong()
-				 */
-				new Identifier(resultSet.getString(COLUMN_MCM_ID)));
+				EquipmentType equipmentType = (EquipmentType)ConfigurationObjectTypePool.getObjectType(new Identifier(resultSet.getString(EquipmentDatabase.COLUMN_TYPE_ID)));
+				kis.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+													DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
+													/**
+														* @todo when change DB Identifier model ,change getString() to getLong()
+														*/
+													new Identifier(resultSet.getString(COLUMN_CREATOR_ID)),
+													/**
+														* @todo when change DB Identifier model ,change getString() to getLong()
+														*/
+													new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
+													/**
+														* @todo when change DB Identifier model ,change getString() to getLong()
+														*/
+													new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),
+													equipmentType,
+													resultSet.getString(EquipmentDatabase.COLUMN_NAME),
+													resultSet.getString(EquipmentDatabase.COLUMN_DESCRIPTION),
+													resultSet.getString(EquipmentDatabase.COLUMN_LATITUDE),
+													resultSet.getString(EquipmentDatabase.COLUMN_LONGITUDE),
+													resultSet.getString(EquipmentDatabase.COLUMN_HW_SERIAL),
+													resultSet.getString(EquipmentDatabase.COLUMN_SW_SERIAL),
+													resultSet.getString(EquipmentDatabase.COLUMN_HW_VERSION),
+													resultSet.getString(EquipmentDatabase.COLUMN_SW_VERSION),
+													resultSet.getString(EquipmentDatabase.COLUMN_INVENTORY_NUMBER),
+													resultSet.getString(EquipmentDatabase.COLUMN_MANUFACTURER),
+													resultSet.getString(EquipmentDatabase.COLUMN_MANUFACTURER_CODE),
+													resultSet.getString(EquipmentDatabase.COLUMN_SUPPLIER),
+													resultSet.getString(EquipmentDatabase.COLUMN_SUPPLIER_CODE),
+													resultSet.getString(EquipmentDatabase.COLUMN_EQCLASS),
+													/**
+														* @todo when change DB Identifier model ,change getString() to getLong()
+														*/
+													new Identifier(resultSet.getString(EquipmentDatabase.COLUMN_IMAGE_ID)),
+													/**
+														* @todo when change DB Identifier model ,change getString() to getLong()
+														*/
+													new Identifier(resultSet.getString(COLUMN_MCM_ID)));
 			}
 			else
 				throw new ObjectNotFoundException("No such kis: " + mIdStr);

@@ -8,6 +8,7 @@ public abstract class ConfigurationDatabaseContext {
 	protected static StorableObjectDatabase portDatabase;
 	protected static StorableObjectDatabase monitoredElementDatabase;
 	protected static StorableObjectDatabase kisDatabase;
+	protected static StorableObjectDatabase equipmentTypeDatabase;
 	protected static StorableObjectDatabase mcmDatabase;
 
 	public static void init(StorableObjectDatabase characteristicDatabase1,
@@ -15,12 +16,14 @@ public abstract class ConfigurationDatabaseContext {
 													StorableObjectDatabase portDatabase1,
 													StorableObjectDatabase monitoredElementDatabase1,
 													StorableObjectDatabase kisDatabase1,
+													StorableObjectDatabase equipmentTypeDatabase1,
 													StorableObjectDatabase mcmDatabase1) {
 		characteristicDatabase = characteristicDatabase1;
 		characteristicTypeDatabase = characteristicTypeDatabase1;
 		portDatabase = portDatabase1;
 		monitoredElementDatabase = monitoredElementDatabase1;
 		kisDatabase = kisDatabase1;
+		equipmentTypeDatabase = equipmentTypeDatabase1;
 		mcmDatabase = mcmDatabase1;
 	}
 }

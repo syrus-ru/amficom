@@ -7,7 +7,7 @@ import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.configuration.corba.Equipment_Transferable;
 
 public abstract class Equipment extends DomainMember implements Characterized, TypedObject {
-	Identifier typeId;
+	EquipmentType type;
 	String name;
 	String description;
 	String latitude;
@@ -42,7 +42,7 @@ public abstract class Equipment extends DomainMember implements Characterized, T
 					new Identifier(et.creator_id),
 					new Identifier(et.modifier_id),
 					new Identifier(et.domain_id));
-		this.typeId = new Identifier(et.type_id);
+		this.type = (EquipmentType)ConfigurationObjectTypePool.getObjectType(new Identifier(et.type_id));
 		this.name = new String(et.name);
 		this.description = new String(et.description);
 		this.latitude = new String(et.latitude);
@@ -78,8 +78,8 @@ public abstract class Equipment extends DomainMember implements Characterized, T
 		this.sort = et.sort.value();
 	}
 
-	public Identifier getTypeId() {
-		return this.typeId;
+	public StorableObjectType getType() {
+		return this.type;
 	}
 
 	public String getName() {
@@ -172,7 +172,7 @@ public abstract class Equipment extends DomainMember implements Characterized, T
 																						Identifier creatorId,
 																						Identifier modifierId,
 																						Identifier domainId,
-																						Identifier typeId,
+																						EquipmentType type,
 																						String name,
 																						String description,
 																						String latitude,
@@ -194,7 +194,7 @@ public abstract class Equipment extends DomainMember implements Characterized, T
 												creatorId,
 												modifierId,
 												domainId);
-		this.typeId = typeId;
+		this.type = type;
 		this.name = name;
 		this.description = description;
 		this.latitude = latitude;

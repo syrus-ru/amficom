@@ -185,7 +185,7 @@ public class EquipmentDatabase {
 		buffer.append(StorableObjectDatabase.COMMA);
 		buffer.append(eq.getDomainId().toSQLString());			
 		buffer.append(StorableObjectDatabase.COMMA);
-		buffer.append(eq.getTypeId().toSQLString());
+		buffer.append(eq.getType().getId().toSQLString());
 		buffer.append(StorableObjectDatabase.COMMA);
 		buffer.append(StorableObjectDatabase.APOSTOPHE);
 		buffer.append(eq.getName());

@@ -82,11 +82,6 @@ public class MCMDatabase extends StorableObjectDatabase {
 													 *       getLong()
 													 */
 													 new Identifier(resultSet.getString(DomainMember.COLUMN_DOMAIN_ID)),
-													 /**
-													 * @todo when change DB Identifier model ,change getString() to
-													 *       getLong()
-													 */
-													 new Identifier(resultSet.getString(COLUMN_TYPE_ID)),
 													 resultSet.getString(COLUMN_NAME),
 													 resultSet.getString(COLUMN_DESCRIPTION),
 													 /**
@@ -220,7 +215,6 @@ public class MCMDatabase extends StorableObjectDatabase {
 			+ mcm.getCreatorId().toSQLString() + COMMA
 			+ mcm.getModifierId().toSQLString() + COMMA
 			+ mcm.getDomainId().toSQLString() + COMMA
-			+ mcm.getTypeId().toSQLString() + COMMA
 			+ APOSTOPHE + mcm.getName() + APOSTOPHE + COMMA
 			+ APOSTOPHE + mcm.getDescription() + APOSTOPHE + COMMA
 			+ mcm.getUserId().toSQLString() + COMMA

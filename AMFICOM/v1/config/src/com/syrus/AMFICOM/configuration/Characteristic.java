@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -14,7 +15,7 @@ import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 public class Characteristic extends StorableObject implements TypedObject {
-	private Identifier typeId;
+	private CharacteristicType type;
 	private String name;
 	private String description;
 	private int sort;
@@ -41,7 +42,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 					new Date(ct.modified),
 					new Identifier(ct.creator_id),
 					new Identifier(ct.modifier_id));
-		this.typeId = new Identifier(ct.type_id);
+		this.type = (CharacteristicType)ConfigurationObjectTypePool.getObjectType(new Identifier(ct.type_id));
 		this.name = new String(ct.name);
 		this.description = new String(ct.description);
 		this.sort = ct.sort.value();
@@ -63,7 +64,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 																					 super.modified.getTime(),
 																					 (Identifier_Transferable)super.creatorId.getTransferable(),
 																					 (Identifier_Transferable)super.modifierId.getTransferable(),
-																					 (Identifier_Transferable)this.typeId.getTransferable(),
+																					 (Identifier_Transferable)this.type.getId().getTransferable(),
 																					 new String(this.name),
 																					 new String(this.description),
 																					 CharacteristicSort.from_int(this.sort),
@@ -71,8 +72,8 @@ public class Characteristic extends StorableObject implements TypedObject {
 																					 (Identifier_Transferable)this.characterizedId.getTransferable());
 	}
 
-	public Identifier getTypeId() {
-		return this.typeId;
+	public StorableObjectType getType() {
+		return this.type;
 	}
 
 	public String getName() {
@@ -99,7 +100,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 																						Date modified,
 																						Identifier creatorId,
 																						Identifier modifierId,
-																						Identifier typeId,
+																						CharacteristicType type,
 																						String name,
 																						String description,
 																						int sort,
@@ -109,7 +110,7 @@ public class Characteristic extends StorableObject implements TypedObject {
 												modified,
 												creatorId,
 												modifierId);
-		this.typeId = typeId;
+		this.type = type;
 		this.name = name;
 		this.description = description;
 		this.sort = sort;

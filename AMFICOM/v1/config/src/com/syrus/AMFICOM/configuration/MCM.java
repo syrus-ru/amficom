@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ArrayList;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -15,8 +14,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
 
 
-public class MCM extends DomainMember implements Characterized, TypedObject {
-	private Identifier typeId;
+public class MCM extends DomainMember implements Characterized {
 	private String name;
 	private String description;
 	private Identifier userId;
@@ -48,7 +46,6 @@ public class MCM extends DomainMember implements Characterized, TypedObject {
 					new Identifier(mt.creator_id),
 					new Identifier(mt.modifier_id),
 					new Identifier(mt.domain_id));
-		this.typeId = new Identifier(mt.type_id);
 		this.name = new String(mt.name);
 		this.description = new String(mt.description);
 
@@ -82,15 +79,10 @@ public class MCM extends DomainMember implements Characterized, TypedObject {
 																(Identifier_Transferable)super.creatorId.getTransferable(),
 																(Identifier_Transferable)super.modifierId.getTransferable(),
 																(Identifier_Transferable)super.domainId.getTransferable(),
-																(Identifier_Transferable)this.typeId.getTransferable(),
 																new String(this.name),
 																new String(this.description),
 																charIds,
 																kisIds);
-	}
-
-	public Identifier getTypeId() {
-		return this.typeId;
 	}
 
 	public String getName() {
@@ -134,7 +126,6 @@ public class MCM extends DomainMember implements Characterized, TypedObject {
 																						Identifier creatorId,
 																						Identifier modifierId,
 																						Identifier domainId,
-																						Identifier typeId,
 																						String name,
 																						String description,
 																						Identifier userId,
@@ -146,7 +137,6 @@ public class MCM extends DomainMember implements Characterized, TypedObject {
 												creatorId,
 												modifierId,
 												domainId);
-		this.typeId = typeId;
 		this.name = name;
 		this.description = description;
 		this.userId = userId;

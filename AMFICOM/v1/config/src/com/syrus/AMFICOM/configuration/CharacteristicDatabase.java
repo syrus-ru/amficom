@@ -125,6 +125,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 						characterizedId = null;
 						Log.errorMessage("Unknown sort: " + sort + " for characteristic: " + cIdStr);
 				}
+				CharacteristicType characteristicType = (CharacteristicType)ConfigurationObjectTypePool.getObjectType(new Identifier(resultSet.getString(COLUMN_TYPE_ID)));
 				characteristic.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 																		 DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 																		 /**
@@ -141,7 +142,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 																			* @todo when change DB Identifier model ,change getString() to
 																			*       getLong()
 																			*/
-																		 new Identifier(resultSet.getString(COLUMN_TYPE_ID)),
+																		 characteristicType,
 																		 resultSet.getString(COLUMN_NAME),
 																		 resultSet.getString(COLUMN_DESCRIPTION),
 																		 sort,
@@ -257,7 +258,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			buffer.append(COMMA);
 			buffer.append(characteristic.getModifierId().toSQLString());
 			buffer.append(COMMA);
-			buffer.append(characteristic.getTypeId().toSQLString());
+			buffer.append(characteristic.getType().getId().toSQLString());
 			buffer.append(COMMA);
 			buffer.append(Integer.toString(sort));
 			buffer.append(COMMA);
