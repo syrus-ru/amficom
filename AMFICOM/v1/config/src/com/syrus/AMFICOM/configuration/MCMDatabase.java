@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.17 2004/09/09 07:00:38 max Exp $
+ * $Id: MCMDatabase.java,v 1.18 2004/09/09 11:00:09 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/09/09 07:00:38 $
+ * @version $Revision: 1.18 $, $Date: 2004/09/09 11:00:09 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -98,23 +98,23 @@ public class MCMDatabase extends StorableObjectDatabase {
 		return sql;
 	}
 	
-	protected void setEntityForPreparedStatement(StorableObject storableObject,
+	protected int setEntityForPreparedStatement(StorableObject storableObject,
 			PreparedStatement preparedStatement) throws IllegalDataException,
 			UpdateObjectException {
 		MCM mcm = fromStorableObject(storableObject);
-		String mcmIdStr = mcm.getId().getCode();
+		int i;
 		try {
-			super.setEntityForPreparedStatement(storableObject, preparedStatement);
-			preparedStatement.setString( 6, mcm.getDomainId().toString());
-			preparedStatement.setString( 7, mcm.getName());
-			preparedStatement.setString( 8, mcm.getDescription());
-			preparedStatement.setString( 9, mcm.getUserId().toString());
-			preparedStatement.setString( 10, mcm.getServerId().toString());
-			preparedStatement.setString( 11, mcmIdStr);
+			i  = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+			preparedStatement.setString( ++i, mcm.getDomainId().toString());
+			preparedStatement.setString( ++i, mcm.getName());
+			preparedStatement.setString( ++i, mcm.getDescription());
+			preparedStatement.setString( ++i, mcm.getUserId().toString());
+			preparedStatement.setString( ++i, mcm.getServerId().toString());
 		}catch (SQLException sqle) {
 			throw new UpdateObjectException("MCMDatabase." +
 					"setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
+		return i;
 	}	
 	
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {

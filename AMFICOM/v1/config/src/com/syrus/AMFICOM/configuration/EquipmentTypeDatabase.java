@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentTypeDatabase.java,v 1.8 2004/09/08 14:14:37 max Exp $
+ * $Id: EquipmentTypeDatabase.java,v 1.9 2004/09/09 11:00:09 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/09/08 14:14:37 $
+ * @version $Revision: 1.9 $, $Date: 2004/09/09 11:00:09 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -53,7 +53,7 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateMultiplySQLValues() {
 		if (this.updateMultiplySQLValues == null){
-			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues()
+			this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() + COMMA
 			+ QUESTION + COMMA
 			+ QUESTION;
 		}
@@ -62,7 +62,7 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 	
 	protected String getUpdateColumns() {
 		if (this.updateColumns == null){
-			this.updateColumns = super.getUpdateColumns()
+			this.updateColumns = super.getUpdateColumns() + COMMA
 				+ COLUMN_CODENAME + COMMA
 				+ COLUMN_DESCRIPTION;
 		}
@@ -72,7 +72,7 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
 		EquipmentType equipmentType = fromStorableObject(storableObject);
-		String sql = super.getUpdateSingleSQLValues(storableObject)
+		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + equipmentType.getCodename() + APOSTOPHE + COMMA
 			+ APOSTOPHE + equipmentType.getDescription() + APOSTOPHE;
 		return sql;
@@ -86,11 +86,11 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		EquipmentType equipmentType = this.fromStorableObject(storableObject);
-		this.retrieveEntity(equipmentType);
+		super.retrieveEntity(equipmentType);
 	}
 	
 	protected String retrieveQuery(String condition){
-		return super.retrieveQuery(condition)
+		return super.retrieveQuery(condition) + COMMA
 		+ COLUMN_CODENAME + COMMA
 		+ COLUMN_DESCRIPTION
 		+ SQL_FROM + ObjectEntities.EQUIPMENTTYPE_ENTITY
@@ -98,20 +98,20 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 
 	}
 	 
-	protected void setEntityForPreparedStatement(StorableObject storableObject,
+	protected int setEntityForPreparedStatement(StorableObject storableObject,
 			PreparedStatement preparedStatement) throws IllegalDataException,
 			UpdateObjectException {
 		EquipmentType equipmentType = fromStorableObject(storableObject);
-		String etIdStr = equipmentType.getId().getCode();
+		int i;
 		try {
-			super.setEntityForPreparedStatement(storableObject, preparedStatement);
-			preparedStatement.setString( 6, equipmentType.getCodename());
-			preparedStatement.setString( 7, equipmentType.getDescription());
-			preparedStatement.setString( 8, etIdStr);
+			i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+			preparedStatement.setString( ++i, equipmentType.getCodename());
+			preparedStatement.setString( ++i, equipmentType.getDescription());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException("EquipmentDatabase." +
 					"setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
+		return i;
 	}
 	
 	protected StorableObject updateEntityFromResultSet(
@@ -206,7 +206,7 @@ public class EquipmentTypeDatabase extends StorableObjectDatabase {
 	
 		
 	public List retrieveAll() throws IllegalDataException, RetrieveObjectException {		
-		return super.retriveByIdsOneQuery(null, null);
+		return this.retriveByIdsOneQuery(null, null);
 	}
 	
 	public void delete(EquipmentType equipmentType) {

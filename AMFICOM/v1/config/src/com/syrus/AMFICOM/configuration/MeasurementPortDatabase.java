@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.12 2004/09/09 07:00:38 max Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.13 2004/09/09 11:00:09 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/09/09 07:00:38 $
+ * @version $Revision: 1.13 $, $Date: 2004/09/09 11:00:09 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -105,27 +105,28 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 		return sql;
 	}
 	
-	protected void setEntityForPreparedStatement(StorableObject storableObject,
+	protected int setEntityForPreparedStatement(StorableObject storableObject,
 			PreparedStatement preparedStatement) throws IllegalDataException,
 			UpdateObjectException {
 		MeasurementPort measurementPort = fromStorableObject(storableObject);
-		String mpIdCode = measurementPort.getId().getCode();	
 		Identifier typeId = measurementPort.getType().getId();
 		Identifier kisId = measurementPort.getKISId();
 		Identifier portId = measurementPort.getPortId();
+		int i;
 		try {
-			super.setEntityForPreparedStatement(storableObject, preparedStatement);
-			preparedStatement.setString( 6, (typeId != null)?typeId.toString():"");
-			preparedStatement.setString( 7, measurementPort.getName());
-			preparedStatement.setString( 8, measurementPort.getDescription());
-			preparedStatement.setString( 9, (kisId != null)?kisId.toString():""); 
-			preparedStatement.setString( 10, (portId != null)?portId.toString():"");
-			preparedStatement.setString( 11, mpIdCode);
+			i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
+			preparedStatement.setString( ++i, (typeId != null)?typeId.toString():"");
+			preparedStatement.setString( ++i, measurementPort.getName());
+			preparedStatement.setString( ++i, measurementPort.getDescription());
+			preparedStatement.setString( ++i, (kisId != null)?kisId.toString():""); 
+			preparedStatement.setString( ++i, (portId != null)?portId.toString():"");
 		}catch (SQLException sqle) {
-			throw new UpdateObjectException("MCMDatabase." +
+			throw new UpdateObjectException("MeasurmentPortDatabase." +
 					"setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
+		return i;
 	}
+	
     private MeasurementPort fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MeasurementPort)
 			return (MeasurementPort)storableObject;
@@ -146,8 +147,6 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 			+ COLUMN_PORT_ID 
 			+ SQL_FROM + ObjectEntities.MEASUREMENTPORT_ENTITY
 			+ (((condition == null) || (condition.length() == 0)) ? "" : SQL_WHERE + condition);
-		
-
 	}
 	
 	public List retrieveByIds(List ids, String condition)
@@ -276,7 +275,7 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 	}
 	
 	public List retrieveAll() throws IllegalDataException, RetrieveObjectException {		
-		return super.retriveByIdsOneQuery(null,null);
+		return this.retriveByIdsOneQuery(null,null);
 	}
 
 	public void delete(MeasurementPort measurementPort) {
