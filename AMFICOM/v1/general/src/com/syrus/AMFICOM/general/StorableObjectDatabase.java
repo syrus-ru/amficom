@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.90 2005/02/10 18:52:50 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.91 2005/02/11 09:26:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.90 $, $Date: 2005/02/10 18:52:50 $
+ * @version $Revision: 1.91 $, $Date: 2005/02/11 09:26:41 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -823,21 +823,20 @@ public abstract class StorableObjectDatabase {
 		List updateObjects = null;
 		List updateObjectsIds = null;
 		List insertObjects = null;
-		StringBuffer lockUnavailableBuffer = null;
-		StringBuffer versionConllisionBuffer = null;
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			storableObject = (StorableObject) it.next();
 			id = storableObject.getId();
 			if (dbstorableObjectsMap.containsKey(id)) {
 
 				long deadtime = System.currentTimeMillis() + MAX_LOCK_TIMEOUT;
-				while (force && lockedObjectIds.contains(id) && System.currentTimeMillis() < deadtime)
+				while (force && lockedObjectIds.contains(id) && System.currentTimeMillis() < deadtime) {
 					try {
 						Thread.sleep(LOCK_TIME_WAIT);
 					}
 					catch (InterruptedException ie) {
 						Log.errorException(ie);
 					}
+				}
 
 				if (! lockedObjectIds.contains(id)) {
 					lockedObjectIds.add(id);
@@ -853,32 +852,19 @@ public abstract class StorableObjectDatabase {
 					}
 					else {
 						lockedObjectIds.remove(id);
-						if (versionConllisionBuffer == null) {
-							versionConllisionBuffer = new StringBuffer("StorableObjectDatabase.checkAndUpdateEntities | conflict version for '" + id + '\'');
-						}
-						else {
-							versionConllisionBuffer.append(", '");
-							versionConllisionBuffer.append(storableObject.getId().toString());	
-							versionConllisionBuffer.append('\'');
-						}
-						Log.errorMessage("StorableObjectDatabase.checkAndUpdateEntities | Cannot update " + this.getEnityName() + " '" + id + "' -- version collision");
+						if (updateObjectsIds != null)
+							lockedObjectIds.removeAll(updateObjectsIds);
+						throw new VersionCollisionException("Cannot update " + this.getEnityName() + " '" + id + "' -- version conflict",
+								currentVersion,
+								newVersion);
 					}
 				}
 				else {
-					if (lockUnavailableBuffer == null) {
-						lockUnavailableBuffer = new StringBuffer("StorableObjectDatabase.checkAndUpdateEntities | cannot obtain lock on '" + id + '\'');
-					}
-					else {
-						lockUnavailableBuffer.append(", '");
-						lockUnavailableBuffer.append(storableObject.getId().toString());	
-						lockUnavailableBuffer.append('\'');
-					}
-					Log.errorMessage("StorableObjectDatabase.checkAndUpdateEntities | Cannot obtain lock on object " + this.getEnityName() + " '" + id + "'");
+					if (updateObjectsIds != null)
+						lockedObjectIds.removeAll(updateObjectsIds);
+					throw new UpdateObjectException("Cannot obtain lock on object " + this.getEnityName() + " '" + id + "'");
 				}
 
-				if (updateObjects == null)
-					updateObjects = new LinkedList();
-				updateObjects.add(storableObject);
 			}
 			else {
 				if (insertObjects == null)
@@ -909,11 +895,6 @@ public abstract class StorableObjectDatabase {
 			}
 		}
 
-		if (versionConllisionBuffer != null)
-			throw new VersionCollisionException(versionConllisionBuffer.toString(), 0, 0);
-
-		if (lockUnavailableBuffer != null)
-			throw new UpdateObjectException(lockUnavailableBuffer.toString());
 	}
 
 	protected void updateEntity(StorableObject storableObject) throws IllegalDataException, UpdateObjectException {
