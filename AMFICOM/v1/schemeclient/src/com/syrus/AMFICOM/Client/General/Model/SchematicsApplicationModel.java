@@ -45,7 +45,7 @@ public class SchematicsApplicationModel extends ApplicationModel
 		add("menuPathAddEnd");
 		add("menuPathAddLink");
 		add("menuPathRemoveLink");
-		add("menuPathUpdateLink");
+		add("menuPathAutoCreate");
 		add("menuPathDelete");
 		add("menuPathCancel");
 

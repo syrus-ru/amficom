@@ -180,12 +180,13 @@ public class ElementsPanel extends UgoPanel
 				if (path != null)
 				{
 					getGraph().setSelectionCells(getGraph().getGraphResource().getPathElements(path));
-					getGraph().getGraphResource().currentPath = path;
+					getGraph().setCurrentPath(path);
 				}
 			}
 			else
 			{
-				getGraph().getGraphResource().currentPath = null;
+				if (getGraph().path_creation_mode != Constants.CREATING_PATH_MODE)
+					getGraph().setCurrentPath(null);
 			}
 			if (SchemeGraph.skip_notify)
 				return;
@@ -246,8 +247,8 @@ public class ElementsPanel extends UgoPanel
 			}
 			if (cpe.EDIT_PATH)
 			{
-				if (getGraph().getGraphResource().currentPath != null)
-					editing_path = new SchemePath(getGraph().getGraphResource().currentPath);
+				if (getGraph().getCurrentPath() != null)
+					editing_path = new SchemePath(getGraph().getCurrentPath());
 			}
 		}
 		if (ae.getActionCommand().equals(SchemeElementsEvent.type))

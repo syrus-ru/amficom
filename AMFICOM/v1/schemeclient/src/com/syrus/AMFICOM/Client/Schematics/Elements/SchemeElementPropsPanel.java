@@ -204,8 +204,8 @@ public class SchemeElementPropsPanel extends JPanel
 		titleTextField.setCaretPosition(0);
 		if (!element.proto_element_id.equals(""))
 			nameTextField.setText(((ObjectResource)Pool.get(ProtoElement.typ, element.proto_element_id)).getName());
-		else if (!element.scheme_id.equals(""))
-			nameTextField.setText(((ObjectResource)Pool.get(Scheme.typ, element.scheme_id)).getName());
+		else if (element.getInternalSchemeId().length() != 0)
+			nameTextField.setText(element.getInternalScheme().getName());
 		nameTextField.setCaretPosition(0);
 
 		descriptionTextArea.setText(element.description);

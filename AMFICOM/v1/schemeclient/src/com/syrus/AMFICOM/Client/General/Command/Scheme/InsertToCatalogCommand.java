@@ -171,7 +171,7 @@ public class InsertToCatalogCommand extends VoidCommand
 	{
 		if (pane.getPanel().getGraph().mode.equals(Constants.PATH_MODE))
 		{
-			SchemePath path = pane.getPanel().getGraph().getGraphResource().currentPath;
+			SchemePath path = pane.getPanel().getGraph().getCurrentPath();
 			if (path != null)
 			{
 				Object[] path_cells = pane.getPanel().getGraph().getGraphResource().getPathElements(path);
@@ -194,7 +194,7 @@ public class InsertToCatalogCommand extends VoidCommand
 			{
 				SchemeElement element = ( (DeviceGroup) cells[i]).getSchemeElement();
 				//saveEquipment(dataSource, element);
-				if (element.scheme_id.equals(""))
+				if (element.getInternalSchemeId().length() == 0)
 				{
 					elements_to_save.put(element.getId(), element);
 
@@ -217,7 +217,7 @@ public class InsertToCatalogCommand extends VoidCommand
 				}
 				else
 				{
-					Scheme inner_scheme = (Scheme) Pool.get(Scheme.typ, element.scheme_id);
+					Scheme inner_scheme = element.getInternalScheme();
 					SchemePanel virtual_panel = new SchemePanel(aContext);
 					virtual_panel.openScheme(inner_scheme);
 					findElementsToSave(virtual_panel.getGraph().getAll(),
@@ -383,7 +383,7 @@ public class InsertToCatalogCommand extends VoidCommand
 				TransmissionPathElement tpe = new TransmissionPathElement();
 				PathElement pe = (PathElement)it.next();
 				tpe.n = pe.n;
-				tpe.is_cable = pe.is_cable;
+				tpe.is_cable = pe.getType() == PathElement.CABLE_LINK;
 				tpe.link_id = (String)Pool.get("clonedids", pe.link_id);
 
 			//      SchemeLink link = (SchemeLink)Pool.get(SchemeLink.typ, pe.link_id);
@@ -672,7 +672,7 @@ public class InsertToCatalogCommand extends VoidCommand
 					saveLink(dataSource, link, link.getName());
 			}
 			//for (int i = 0; i < element.element_ids.size(); i++)
-			for (Iterator it = element.getChildElements().iterator(); it.hasNext();)
+			for (Iterator it = element.getAllChilds().iterator(); it.hasNext();)
 			{
 				SchemeElement el = (SchemeElement)it.next();
 			//{
@@ -812,7 +812,7 @@ public class InsertToCatalogCommand extends VoidCommand
 		//for (int i = 0; i < element.element_ids.size(); i++)
 		//{
 			//SchemeElement el = (SchemeElement)Pool.get(SchemeElement.typ, (String)element.element_ids.get(i));
-		for (Iterator it = element.getChildElements().iterator(); it.hasNext();)
+		for (Iterator it = element.getAllChilds().iterator(); it.hasNext();)
 		{
 			SchemeElement el = (SchemeElement)it.next();
 			if (getElementByPortId(el, port_id) != null)

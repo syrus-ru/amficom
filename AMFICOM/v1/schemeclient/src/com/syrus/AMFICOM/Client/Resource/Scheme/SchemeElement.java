@@ -19,7 +19,7 @@ public class SchemeElement extends StubResource
 		implements Transferable, Serializable
 {
 	public static final String typ = "schemeelement";
-	private static final long serialVersionUID = 01L;
+	private static final long serialVersionUID = 02L;
 	SchemeElement_Transferable transferable;
 
 	public String id = "";
@@ -27,7 +27,8 @@ public class SchemeElement extends StubResource
 	public String description = "";
 	public String equipment_id = "";
 	public String proto_element_id = "";
-	public String scheme_id = "";
+	private String internal_scheme_id = "";
+	private String scheme_id = "";
 
 	public Collection devices;
 	public Collection links;
@@ -74,7 +75,6 @@ public class SchemeElement extends StubResource
 
 		name = proto.name + " (" + id.substring(5, id.length()) + ")";
 		proto_element_id = proto.getId();
-		scheme_id = "";
 
 		EquipmentType eqt = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipment_type_id);
 		if (eqt != null)
@@ -129,6 +129,7 @@ public class SchemeElement extends StubResource
 		element.description = description;
 		element.equipment_id = equipment_id;
 		element.proto_element_id = proto_element_id;
+		element.internal_scheme_id = internal_scheme_id;
 		element.scheme_id = scheme_id;
 
 	/*	if (!scheme_id.equals(""))
@@ -165,6 +166,7 @@ public class SchemeElement extends StubResource
 		return element;
 	}
 
+
 	public String getTyp()
 	{
 		return typ;
@@ -198,23 +200,20 @@ public class SchemeElement extends StubResource
 
 	public Collection getChildElements()
 	{
-		if (scheme_id.equals(""))
+		HashSet v = new HashSet();
+		for (Iterator it = element_ids.iterator(); it.hasNext();)
 		{
-			HashSet v = new HashSet();
-			for (Iterator it = element_ids.iterator(); it.hasNext();)
-				v.add(Pool.get(SchemeElement.typ, (String)it.next()));
-			return v;
+			SchemeElement inner_se = (SchemeElement)Pool.get(SchemeElement.typ, (String)it.next());
+			for (Iterator it2 = inner_se.getAllChilds().iterator(); it2.hasNext(); )
+				v.add(it2.next());
+			v.add(inner_se);
 		}
-		else
-		{
-			Scheme scheme = (Scheme)Pool.get(Scheme.typ, scheme_id);
-			return scheme.getTopLevelElements();
-		}
+		return v;
 	}
 
 	public Collection getAllChilds()
 	{
-		if (scheme_id.equals(""))
+		if (internal_scheme_id.equals(""))
 		{
 			HashSet v = new HashSet();
 			for (Iterator it = element_ids.iterator(); it.hasNext();)
@@ -228,7 +227,7 @@ public class SchemeElement extends StubResource
 		}
 		else
 		{
-			Scheme scheme = (Scheme)Pool.get(Scheme.typ, scheme_id);
+			Scheme scheme = (Scheme)Pool.get(Scheme.typ, internal_scheme_id);
 			return scheme.getAllTopElements();
 		}
 	}
@@ -245,7 +244,7 @@ public class SchemeElement extends StubResource
 		description = transferable.description;
 		equipment_id = transferable.equipment_id;
 		proto_element_id = transferable.proto_element_id;
-		scheme_id = transferable.scheme_id;
+		internal_scheme_id = transferable.scheme_id;
 
 		devices = new ArrayList(transferable.devices.length);
 		links = new ArrayList(transferable.links.length);
@@ -273,7 +272,7 @@ public class SchemeElement extends StubResource
 		transferable.description = description;
 		transferable.equipment_id = equipment_id;
 		transferable.proto_element_id = proto_element_id;
-		transferable.scheme_id = scheme_id;
+		transferable.scheme_id = internal_scheme_id;
 
 		transferable.devices = new SchemeDevice_Transferable[devices.size()];
 		transferable.links = new SchemeLink_Transferable[links.size()];
@@ -379,7 +378,7 @@ public class SchemeElement extends StubResource
 		for(Iterator it = element_ids.iterator(); it.hasNext();)
 		{
 			SchemeElement se = (SchemeElement)Pool.get(SchemeElement.typ, (String)it.next());
-			if (se.scheme_id.length() == 0)
+			if (se.internal_scheme_id.length() == 0)
 			{
 				for (Iterator it2 = se.getAllElementsLinks().iterator(); it2.hasNext();)
 					ht.add(it2.next());
@@ -398,9 +397,9 @@ public class SchemeElement extends StubResource
 			ht.add(l);
 		}
 
-		if (!scheme_id.equals(""))
+		if (!internal_scheme_id.equals(""))
 		{
-			Scheme scheme = (Scheme)Pool.get(Scheme.typ, scheme_id);
+			Scheme scheme = (Scheme)Pool.get(Scheme.typ, internal_scheme_id);
 			for (Iterator it = scheme.getAllLinks().iterator(); it.hasNext();)
 				ht.add(it.next());
 		}
@@ -408,9 +407,9 @@ public class SchemeElement extends StubResource
 		for(Iterator it = element_ids.iterator(); it.hasNext();)
 		{
 			SchemeElement se = (SchemeElement )Pool.get(SchemeElement.typ, (String)it.next());
-			if (se.scheme_id.length() != 0)
+			if (se.internal_scheme_id.length() != 0)
 			{
-				Scheme inner_scheme = (Scheme)Pool.get(Scheme.typ, se.scheme_id);
+				Scheme inner_scheme = (Scheme)Pool.get(Scheme.typ, se.internal_scheme_id);
 				for (Iterator it2 = inner_scheme.getAllLinks().iterator(); it2.hasNext();)
 					ht.add(it2.next());
 			}
@@ -439,9 +438,9 @@ public class SchemeElement extends StubResource
 				return se;
 		}
 
-		if (scheme_id.length() != 0)// Search inner schemes
+		if (internal_scheme_id.length() != 0)// Search inner schemes
 		{
-			Scheme child_scheme = (Scheme)Pool.get(Scheme.typ, scheme_id);
+			Scheme child_scheme = (Scheme)Pool.get(Scheme.typ, internal_scheme_id);
 			SchemeElement el = child_scheme.getSchemeElementByCablePort(port_id);
 			if (el != null)
 				return el;
@@ -471,9 +470,9 @@ public class SchemeElement extends StubResource
 				return se;
 		}
 
-		if (scheme_id.length() != 0)// Search inner schemes
+		if (internal_scheme_id.length() != 0)// Search inner schemes
 		{
-			Scheme child_scheme = (Scheme)Pool.get(Scheme.typ, scheme_id);
+			Scheme child_scheme = (Scheme)Pool.get(Scheme.typ, internal_scheme_id);
 			SchemeElement el = child_scheme.getSchemeElementByPort(port_id);
 			if (el != null)
 				return el;
@@ -498,9 +497,9 @@ public class SchemeElement extends StubResource
 			if (el != null)
 				return el;
 		}
-		if (scheme_id.length() != 0)// Search inner schemes
+		if (internal_scheme_id.length() != 0)// Search inner schemes
 		{
-			Scheme child_scheme = (Scheme)Pool.get(Scheme.typ, scheme_id);
+			Scheme child_scheme = (Scheme)Pool.get(Scheme.typ, internal_scheme_id);
 			SchemeElement el = child_scheme.getSchemeElementByDevice(device_id);
 			if (el != null)
 				return el;
@@ -527,6 +526,7 @@ public class SchemeElement extends StubResource
 		out.writeObject(description);
 		out.writeObject(equipment_id);
 		out.writeObject(proto_element_id);
+		out.writeObject(internal_scheme_id);
 		out.writeObject(scheme_id);
 		out.writeObject(devices);
 		out.writeObject(links);
@@ -600,6 +600,7 @@ public class SchemeElement extends StubResource
 		description = (String )in.readObject();
 		equipment_id = (String )in.readObject();
 		proto_element_id = (String )in.readObject();
+		internal_scheme_id = (String )in.readObject();
 		scheme_id = (String )in.readObject();
 		devices = (Collection )in.readObject();
 		links = (Collection )in.readObject();
@@ -611,7 +612,7 @@ public class SchemeElement extends StubResource
 		ugo = (byte[] )in.readObject();
 
 		transferable = new SchemeElement_Transferable();
-	//	updateLocalFromTransferable();
+		updateLocalFromTransferable();
 	}
 
 	public void set_attribute(String a_id, String a_val)
@@ -650,6 +651,41 @@ public class SchemeElement extends StubResource
 		return (flavor.getHumanPresentableName().equals("SchemeElementLabel"));
 	}
 
+	public String getSchemeId()
+	{
+		return scheme_id;
+	}
+
+	public void setSchemeId(String scheme_id)
+	{
+		for (Iterator it = getChildElements().iterator(); it.hasNext();)
+		{
+			SchemeElement se = (SchemeElement)it.next();
+			se.scheme_id = scheme_id;
+		}
+		for (Iterator it = getAllElementsLinks().iterator(); it.hasNext();)
+		{
+			SchemeLink link = (SchemeLink)it.next();
+			link.setSchemeId(scheme_id);
+		}
+
+		this.scheme_id = scheme_id;
+	}
+
+	public String getInternalSchemeId()
+	{
+		return internal_scheme_id;
+	}
+
+	public void setInternalSchemeId(String scheme_id)
+	{
+		this.internal_scheme_id = scheme_id;
+	}
+
+	public Scheme getInternalScheme()
+	{
+		return (Scheme)Pool.get(Scheme.typ, getInternalSchemeId());
+	}
 }
 
 class SchemeElementModel extends ObjectResourceModel

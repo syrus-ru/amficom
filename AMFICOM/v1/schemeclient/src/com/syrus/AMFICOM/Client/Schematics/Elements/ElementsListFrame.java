@@ -1,16 +1,13 @@
 package com.syrus.AMFICOM.Client.Schematics.Elements;
 
-import java.util.ArrayList;
-
 import java.awt.*;
 import javax.swing.*;
 
-import com.syrus.AMFICOM.Client.General.Command.Scheme.PathBuilder;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Scheme.*;
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
@@ -18,15 +15,13 @@ import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
 public class ElementsListFrame extends JInternalFrame implements OperationListener
 {
 	Dispatcher dispatcher;
-	public static final int CREATING_PATH = 1;
-	public static final int NORMAL = 0;
 
 //	boolean editable_property = false;
 	boolean can_be_editable = true;
 	ApplicationContext aContext;
 
-	int mode = NORMAL;
 	PathPropsPanel pathpanel;
+	SchemePanel mainPathPanel;
 
 	public ElementsListFrame(ApplicationContext aContext, boolean can_be_editable)
 	{
@@ -70,108 +65,86 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 			CreatePathEvent ev = (CreatePathEvent)ae;
 			if (ev.CREATE_PATH)
 			{
-				SchemePanel panel = (SchemePanel)ae.getSource();
-				showPathCharacteristics(panel.getGraph().getGraphResource().currentPath, true);
-				mode = CREATING_PATH;
+				mainPathPanel = (SchemePanel)ae.getSource();
+				showPathCharacteristics(mainPathPanel.getGraph().getCurrentPath(), true);
+				SchemeGraph.path_creation_mode = Constants.CREATING_PATH_MODE;
 				pathpanel.setEditable(true);
 			}
 			if (ev.EDIT_PATH)
 			{
-				SchemePanel panel = (SchemePanel)ae.getSource();
-				showPathCharacteristics(panel.getGraph().getGraphResource().currentPath, true);
-				mode = CREATING_PATH;
+				mainPathPanel = (SchemePanel)ae.getSource();
+				showPathCharacteristics(mainPathPanel.getGraph().getCurrentPath(), true);
+				SchemeGraph.path_creation_mode = Constants.CREATING_PATH_MODE;
 				pathpanel.setEditable(true);
 			}
 			if (ev.CANCEL_PATH_CREATION)
 			{
-				if (mode == CREATING_PATH)
+				if (SchemeGraph.path_creation_mode == Constants.CREATING_PATH_MODE)
 				{
-					mode = NORMAL;
+					SchemeGraph.path_creation_mode = Constants.NORMAL;
 					pathpanel.undo();
 					pathpanel = null;
+					mainPathPanel = null;
 					showNoSelection();
 				}
 			}
 			if (ev.SAVE_PATH)
 			{
-				if (mode == CREATING_PATH)
+				if (SchemeGraph.path_creation_mode == Constants.CREATING_PATH_MODE)
 				{
-					//pathpanel.savePath(((SchemeGraph)ev.getSource()).scheme);
-					mode = NORMAL;
+
+					SchemePath path = pathpanel.path;
+					if (!MiscUtil.validName(path.name) ||
+							path.end_device_id.equals("") ||
+							path.start_device_id.equals("") ||
+							path.links.isEmpty())
+					{
+						String err = new String();
+						err += "Недостаточно данных для сохранения маршрута.\n";
+						err += "Необходимо ввести название, начальное и\n";
+						err += "конечное устройство и хотя бы одну связь.";
+						JOptionPane.showMessageDialog(Environment.getActiveWindow(), err, "Ошибка",
+								JOptionPane.OK_OPTION);
+						return;
+					}
+
+					Pool.put(SchemePath.typ, path.getId(), path);
+
+					mainPathPanel.insertPathToScheme(path);
+					mainPathPanel.getGraph().setGraphChanged(true);
+					SchemeGraph.path_creation_mode = Constants.NORMAL;
 					pathpanel = null;
+					mainPathPanel = null;
 					showNoSelection();
 				}
 			}
 			if (ev.ADD_LINK)
 			{
-				if (mode == CREATING_PATH)
+				if (SchemeGraph.path_creation_mode == Constants.CREATING_PATH_MODE)
 				{
-					if (!pathpanel.links_to_add.isEmpty())
-						pathpanel.addSelectedLinks();
-
-//		 Scheme scheme = (Scheme)Pool.get("currentscheme", "currentscheme");
-//		 PathBuilder.addLink(pathpanel.path.links, (SchemeLink)pathpanel.links_to_add.get(0));
-//		 int st_size = pathpanel.path.links.size();
-//			boolean res = PathBuilder.explore(scheme, pathpanel.path);
-//			int end_size = pathpanel.path.links.size();
-//			System.out.println("RES after add = " + res + "; " + (end_size - st_size) + " elements added!");
-//			System.out.println("last element = " + pathpanel.path.links.listIterator(pathpanel.path.links.size()).previous());
-//
-//			dispatcher.notify(new SchemeNavigateEvent(
-//					new SchemePath[] {pathpanel.path},
-//					SchemeNavigateEvent.SCHEME_PATH_SELECTED_EVENT));
-
-//          else if (pathpanel.setting_obj instanceof Scheme)
-//					{
-//						Scheme scheme = (Scheme)pathpanel.setting_obj;
-//						if (scheme.scheme_type.equals(Scheme.CABLESUBNETWORK))
-//						{
-//
-//						}
-//					}
+					if (pathpanel.element_to_add != null)
+						pathpanel.addSelectedElements();
 				}
 			}
 			if (ev.REMOVE_LINK)
 			{
-				if (mode == CREATING_PATH)
+				if (SchemeGraph.path_creation_mode == Constants.CREATING_PATH_MODE)
 				{
 					pathpanel.removeLink();
 				}
 			}
-			if (ev.UPDATE_LINK)
-			{
-				if (mode == CREATING_PATH)
-				{
-					pathpanel.updateLink();
-				}
-			}
 			if (ev.SET_START)
 			{
-				if (mode == CREATING_PATH)
+				if (SchemeGraph.path_creation_mode == Constants.CREATING_PATH_MODE)
 				{
-					if (pathpanel.device_to_add != null)
-					{
-						String id = pathpanel.device_to_add.getId();
-						pathpanel.setStartDevice(id);
-
-//					Scheme scheme = (Scheme)Pool.get("currentscheme", "currentscheme");
-//						boolean res = PathBuilder.explore(scheme, pathpanel.path);
-
-//					PathBuilder.addSchemeElement(pathpanel.path.links,
-//																			 (SchemeElement)Pool.get(SchemeElement.typ, id));
-//						System.out.println(res);
-					}
+					pathpanel.setStartDevice();
 				}
 			}
 			if (ev.SET_END)
 			{
-				if (mode == CREATING_PATH)
+				if (SchemeGraph.path_creation_mode == Constants.CREATING_PATH_MODE)
 				{
-					if (pathpanel.device_to_add != null)
-						pathpanel.setEndDevice(pathpanel.device_to_add.getId());
-
-//					Scheme scheme = (Scheme)Pool.get("currentscheme", "currentscheme");
-//					PathBuilder.explore(scheme, pathpanel.path);
+					pathpanel.setEndDevice();
 				}
 			}
 			if (ev.DELETE_PATH)
@@ -183,26 +156,16 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 		{
 			SchemeNavigateEvent ev = (SchemeNavigateEvent)ae;
 
-			if (mode == CREATING_PATH)
+			if (SchemeGraph.path_creation_mode == Constants.CREATING_PATH_MODE)
 			{
 				Object[] objs = (Object[])ae.getSource();
-				if (objs.length == 1 && objs[0] instanceof SchemeElement)
-					pathpanel.device_to_add = (SchemeElement)objs[0];
-				else
-					pathpanel.device_to_add = null;
 
-				for (int i = 0; i < objs.length; i++)
+				if (objs.length > 0)
 				{
-					if (objs[i] instanceof SchemeLink || objs[i] instanceof SchemeCableLink)
-					{
-						if (!pathpanel.links_to_add.contains(objs[i]))
-							pathpanel.links_to_add.add(objs[i]);
-					}
+					if (objs[0] instanceof SchemeLink || objs[0] instanceof SchemeCableLink || objs[0] instanceof SchemeElement)
+						pathpanel.element_to_add = (ObjectResource)objs[0];
 					else
-					{
-						pathpanel.links_to_add = new ArrayList();
-						break;
-					}
+						pathpanel.element_to_add = null;
 				}
 
 				if (ev.SCHEME_LINK_SELECTED)
@@ -217,6 +180,10 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 					if (links.length == 1)
 						pathpanel.selectLink(((SchemeCableLink[])links)[0].getId());
 				}
+				if (ev.SCHEME_PATH_SELECTED)
+				{
+					pathpanel.updatePathElements();
+				}
 				return;
 			}
 
@@ -227,9 +194,9 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 			if (ev.SCHEME_ELEMENT_SELECTED)
 			{
 				SchemeElement element = (SchemeElement)((Object[])ev.getSource())[0];
-				if (!element.scheme_id.equals(""))
+				if (element.getInternalSchemeId().length() != 0)
 				{
-					Scheme sc = (Scheme)Pool.get(Scheme.typ, element.scheme_id);
+					Scheme sc = element.getInternalScheme();
 					if (sc == null)
 						showNoSelection();
 					else
@@ -279,7 +246,7 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 		}
 		else if (ae.getActionCommand().equals(TreeDataSelectionEvent.type))
 		{
-			if (mode == CREATING_PATH)
+			if (SchemeGraph.path_creation_mode == Constants.CREATING_PATH_MODE)
 					return;
 			TreeDataSelectionEvent ev = (TreeDataSelectionEvent) ae;
 			if (ev.getDataClass() == null)

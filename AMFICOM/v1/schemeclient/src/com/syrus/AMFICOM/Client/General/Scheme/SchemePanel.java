@@ -250,6 +250,11 @@ public class SchemePanel extends ElementsPanel
 			proto.unpack();
 
 			SchemeElement scheme_el = new SchemeElement(proto, dataSource);
+			if (getGraph().getScheme() != null)
+				scheme_el.setSchemeId(getGraph().getScheme().getId());
+			else if (getGraph().getSchemeElement() != null)
+				scheme_el.setSchemeId(getGraph().getSchemeElement().getSchemeId());
+
 			scheme_el.unpack();
 
 			insertSchemeElement(scheme_el, proto.serializable_cell,	proto.serializable_ugo, p);
@@ -299,7 +304,8 @@ public class SchemePanel extends ElementsPanel
 				DeviceGroup group = (DeviceGroup)cells[0];
 
 				SchemeElement element = new SchemeElement(dataSource.GetUId(SchemeElement.typ));
-				element.scheme_id = sch.getId();
+				element.setInternalSchemeId(sch.getId());
+				element.setSchemeId(getGraph().getScheme().getId());
 				element.name = sch.getName();
 				element.description = sch.description;
 				getGraph().getScheme().elements.add(element);
@@ -316,278 +322,38 @@ public class SchemePanel extends ElementsPanel
 		}
 	}
 
-	public boolean removeAllPathsFromScheme()
+	public void removeAllPathsFromScheme()
 	{
-		getGraph().getScheme().paths = new ArrayList();
-//		for (Iterator it = scheme.paths.iterator(); it.hasNext();)
-//		{
-//			boolean b = removePathFromScheme((SchemePath)it.next());
-//			if (!b)
-//				return false;
-//		}
-		return true;
+		getGraph().getScheme().paths.clear();
 	}
 
 	public boolean updatePathsAtScheme(Collection paths)
 	{
-		boolean b = removeAllPathsFromScheme();
-		if (!b)
-		{
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка", "(1)Ошибка обновления путей на схеме " +
-																		getGraph().getScheme().getName(), JOptionPane.OK_OPTION);
-			return false;
-		}
+		removeAllPathsFromScheme();
 		for (Iterator it = paths.iterator(); it.hasNext();)
-		{
-			b = insertPathToScheme((SchemePath)it.next());
-			if (!b)
-			{
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Ошибка", "(2)Ошибка обновления путей на схеме " +
-																		getGraph().getScheme().getName(), JOptionPane.OK_OPTION);
-				return false;
-			}
-		}
+			insertPathToScheme((SchemePath)it.next());
 		return true;
 	}
 
-	public boolean removePathFromScheme(SchemePath path)
+	public void removePathFromScheme(SchemePath path)
 	{
 		getGraph().getScheme().paths.remove(path);
-
-/*		Iterator s_to_save;
-		Iterator se_to_save;
-
-		Hashtable lp = new Hashtable();
-		for (Iterator it = path.links.iterator(); it.hasNext();)
-		{
-			PathElement pe = (PathElement)it.next();
-			lp.put(pe.link_id, "");
-		}
-
-		//first of all find internal schemes to insert path
-		for (se_to_save = findSchemeElementsToInsertPath (scheme, lp).iterator(); se_to_save.hasNext();)
-		{
-			SchemeElement se = (SchemeElement)se_to_save.next();
-			insertPathToSchemeElement (se, lp);
-		}
-
-		for (s_to_save = findSchemeToInsertPath (scheme, lp).iterator(); s_to_save.hasNext();)
-		{
-			Scheme s = (Scheme)s_to_save.next();
-//			if (!s.equals(scheme))
-			boolean b = insertPathToScheme(s, lp);
-			if (!b)
-				return false;
-			//aContext.getDataSourceInterface().SaveScheme(s.getId());
-		}
-
-		for (Iterator it = s_to_save; it.hasNext();)
-		{
-			Scheme s = (Scheme)it.next();
-			schemes_to_save.add(s);
-		}*/
-		return true;
 	}
-/*
-	protected void insertPathToSchemeElement(SchemeElement se, Hashtable lp)
+
+	public void insertPathToScheme(SchemePath path)
 	{
-		ApplicationContext ac = new ApplicationContext();
-		ac.setDispatcher(new Dispatcher());
-		SchemePanel virtual_panel = new SchemePanel(ac);
-		virtual_panel.openSchemeElement(se);
-
-		SchemeGraph g = virtual_panel.getGraph();
-		Object[] cells = g.getAll();
-		for (int i = 0; i < cells.length; i++)
-		{
-			;
-			if (cells[i] instanceof DefaultCableLink)
-			{
-				DefaultCableLink clink = (DefaultCableLink)cells[i];
-				String p_id = (String)lp.get(clink.getSchemeCableLinkId());
-				if (p_id != null)
-					clink.setSchemePathId(p_id);
-			}
-			else if (cells[i] instanceof DefaultLink)
-			{
-				DefaultLink link = (DefaultLink)cells[i];
-				String p_id = (String)lp.get(link.getSchemeLinkId());
-				if (p_id != null)
-					link.setSchemePathId(p_id);
-			}
-		}
-
-		virtual_panel.updateSchemeElement();
-	}
-*/
-	/*
-	protected boolean insertPathToScheme(Scheme sc, Hashtable lp)
-	{
-		ApplicationContext ac = new ApplicationContext();
-		ac.setDispatcher(new Dispatcher());
-
-		SchemeGraph g;
-		SchemePanel virtual_panel;
-		if (sc.getId().equals(scheme.getId()))
-			virtual_panel = this;
-		else
-		{
-			virtual_panel = new SchemePanel(ac);
-			virtual_panel.openScheme(sc);
-		}
-		g = virtual_panel.getGraph();
-
-		Object[] cells = g.getAll();
-		for (int i = 0; i < cells.length; i++)
-		{
-			;
-			if (cells[i] instanceof DefaultCableLink)
-			{
-				DefaultCableLink clink = (DefaultCableLink)cells[i];
-				String p_id = (String)lp.get(clink.getSchemeCableLinkId());
-				if (p_id != null)
-					clink.setSchemePathId(p_id);
-			}
-			else if (cells[i] instanceof DefaultLink)
-			{
-				DefaultLink link = (DefaultLink)cells[i];
-				String p_id = (String)lp.get(link.getSchemeLinkId());
-				if (p_id != null)
-					link.setSchemePathId(p_id);
-			}
-		}
-		sc = virtual_panel.updateScheme();
-		if (sc == null)
-			return false;
-
-		return true;
-	}*/
-
-	public boolean insertPathToScheme(SchemePath path)
-	{
-		if (editing_path != null && editing_path.getId().equals(path.getId()))
-		{
-			boolean b = removePathFromScheme(editing_path);
-			editing_path = null;
-		}
-
 		if (!getGraph().getScheme().paths.contains(path))
 			getGraph().getScheme().paths.add(path);
-
-	/*	Hashtable lp = new Hashtable();
-		for (Iterator it = path.links.iterator(); it.hasNext();)
-		{
-			PathElement pe = (PathElement)it.next();
-			lp.put(pe.link_id, path.getId());
-		}
-
-		//first of all find internal schemes to insert path
-		for (Iterator it = findSchemeElementsToInsertPath (scheme, lp).iterator(); it.hasNext();)
-		{
-			SchemeElement se = (SchemeElement)it.next();
-			insertPathToSchemeElement (se, lp);
-		}
-
-		for (Iterator it = findSchemeToInsertPath (scheme, lp).iterator(); it.hasNext();)
-		{
-			Scheme s = (Scheme)it.next();
-//			if (!s.equals(scheme))
-			boolean b = insertPathToScheme(s, lp);
-			if (!b)
-				return false;
-//			aContext.getDataSourceInterface().SaveScheme(s.getId());
-			schemes_to_save.add(s);
-		}*/
-		return true;
-	}
-/*
-	protected Collection findSchemeToInsertPath (Scheme sc, Hashtable lp)
-	{
-		HashSet schemes_to_save = new HashSet();
-		for (int i = 0; i < sc.links.size(); i++)
-		{
-			String p_id = (String)lp.get(((SchemeLink)sc.links.get(i)).getId());
-			if (p_id != null)
-				schemes_to_save.add(sc);
-		}
-		for (int i = 0; i < sc.cablelinks.size(); i++)
-		{
-			String p_id = (String)lp.get(((SchemeCableLink)sc.cablelinks.get(i)).getId());
-			if (p_id != null)
-				schemes_to_save.add(sc);
-		}
-
-		for (int i = 0; i < sc.elements.size(); i++)
-		{
-			SchemeElement se = (SchemeElement)sc.elements.get(i);
-			if (!se.scheme_id.equals(""))
-			{
-				Scheme inner = (Scheme)Pool.get(Scheme.typ, se.scheme_id);
-				for (Iterator it = findSchemeToInsertPath (inner, lp).iterator(); it.hasNext();)
-				{
-					Scheme s = (Scheme)it.next();
-					schemes_to_save.add(s);
-				}
-			}
-		}
-		return schemes_to_save;
-	}
-*/
-/*	protected Collection findSchemeElementsToInsertPath (Scheme sc, Hashtable lp)
-	{
-		HashSet schemeelements_to_save = new HashSet();
-
-		for (int i = 0; i < sc.elements.size(); i++)
-		{
-			SchemeElement se = (SchemeElement)sc.elements.get(i);
-			if (!se.scheme_id.equals(""))
-			{
-				Scheme inner = (Scheme)Pool.get(Scheme.typ, se.scheme_id);
-				for (Iterator it = findSchemeElementsToInsertPath (inner, lp).iterator(); it.hasNext();)
-				{
-					SchemeElement s = (SchemeElement)it.next();
-					schemeelements_to_save.add(s);
-				}
-			}
-			else
-			{
-				for (int j = 0; j < se.links.size(); j++)
-				{
-					String p_id = (String)lp.get(((SchemeLink)se.links.get(j)).getId());
-					if (p_id != null)
-						schemeelements_to_save.add(se);
-				}
-
-				for (Iterator it = se.getAllChilds().iterator(); it.hasNext();)
-				{
-					SchemeElement child = (SchemeElement)it.next();
-					for (int j = 0; j < child.links.size(); j++)
-					{
-						String p_id = (String)lp.get(((SchemeLink)child.links.get(j)).getId());
-						if (p_id != null)
-							schemeelements_to_save.add(child);
-					}
-				}
-			}
-		}
-		return schemeelements_to_save;
-	}*/
-
-	public SchemePath getCurrentPath()
-	{
-		return getGraph().getGraphResource().currentPath;
+		editing_path = null;
 	}
 
-	public boolean removeCurrentPathFromScheme()
+	public void removeCurrentPathFromScheme()
 	{
-		if (getGraph().getGraphResource().currentPath != null)
+		if (getGraph().getCurrentPath() != null)
 		{
-			boolean b = removePathFromScheme(getGraph().getGraphResource().currentPath);
-			if (!b)
-				return false;
+			removePathFromScheme(getGraph().getCurrentPath());
 			getGraph().setSelectionCells(new Object[0]);
 		}
-		return true;
 	}
 
 	protected String[] getButtons()

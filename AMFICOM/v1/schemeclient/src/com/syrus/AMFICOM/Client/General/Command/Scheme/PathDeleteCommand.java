@@ -1,36 +1,40 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemePanel;
+import com.syrus.AMFICOM.Client.General.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 
 public class PathDeleteCommand extends VoidCommand
 {
 	ApplicationContext aContext;
-	SchemePanel panel;
+	SchemeTabbedPane pane;
 
-	public PathDeleteCommand(ApplicationContext aContext, SchemePanel panel)
+	public PathDeleteCommand(ApplicationContext aContext, SchemeTabbedPane pane)
 	{
 		this.aContext = aContext;
-		this.panel = panel;
+		this.pane = pane;
 	}
 
 	public Object clone()
 	{
-		return new PathDeleteCommand(aContext, panel);
+		return new PathDeleteCommand(aContext, pane);
 	}
 
 	public void execute()
 	{
-		SchemePath path = panel.getGraph().getGraphResource().currentPath;
-		aContext.getDispatcher().notify(new CreatePathEvent(panel,
+		SchemePath path = pane.getPanel().getGraph().getCurrentPath();
+		aContext.getDispatcher().notify(new CreatePathEvent(pane.getPanel(),
 				new SchemePath[] {path},
 				CreatePathEvent.DELETE_PATH_EVENT));
 
-		Pool.put(SchemePath.typ, path.getId(), path);
-		panel.removeCurrentPathFromScheme();
+		aContext.getDispatcher().notify(new TreeListSelectionEvent(Scheme.typ,
+			TreeListSelectionEvent.SELECT_EVENT + TreeListSelectionEvent.REFRESH_EVENT));
+
+
+//		Pool.put(SchemePath.typ, path.getId(), path);
+		((SchemePanel)pane.getPanel()).removeCurrentPathFromScheme();
 	}
 }

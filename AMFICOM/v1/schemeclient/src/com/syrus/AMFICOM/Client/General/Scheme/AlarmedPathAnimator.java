@@ -167,7 +167,7 @@ public class AlarmedPathAnimator// extends Thread implements Runnable
 				if (cells[i] instanceof DeviceGroup)
 				{
 					SchemeElement se = ((DeviceGroup)cells[i]).getSchemeElement();
-					if (se.scheme_id.equals(""))
+					if (se.getInternalSchemeId().length() == 0)
 					{
 						for (Iterator it = se.getAllElementsLinks().iterator(); it.hasNext();)
 						{
@@ -184,7 +184,7 @@ public class AlarmedPathAnimator// extends Thread implements Runnable
 					}
 					else
 					{
-						Scheme scheme = (Scheme)Pool.get(Scheme.typ, se.scheme_id);
+						Scheme scheme = se.getInternalScheme();
 						if (scheme.isSchemeContainsLink(alarmed_link_id) ||
 								scheme.isSchemeContainsCableLink(alarmed_link_id))
 						{

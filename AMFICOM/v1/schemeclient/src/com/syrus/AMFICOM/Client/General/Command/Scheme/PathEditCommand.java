@@ -3,27 +3,27 @@ package com.syrus.AMFICOM.Client.General.Command.Scheme;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Scheme.SchemePanel;
+import com.syrus.AMFICOM.Client.General.Scheme.*;
 
 public class PathEditCommand extends VoidCommand
 {
 	ApplicationContext aContext;
-	SchemePanel panel;
+	SchemeTabbedPane pane;
 
-	public PathEditCommand(ApplicationContext aContext, SchemePanel panel)
+	public PathEditCommand(ApplicationContext aContext, SchemeTabbedPane pane)
 	{
 		this.aContext = aContext;
-		this.panel = panel;
+		this.pane = pane;
 	}
 
 	public Object clone()
 	{
-		return new PathEditCommand(aContext, panel);
+		return new PathEditCommand(aContext, pane);
 	}
 
 	public void execute()
 	{
-		aContext.getDispatcher().notify(new CreatePathEvent(panel, null, CreatePathEvent.EDIT_PATH_EVENT));
+		aContext.getDispatcher().notify(new CreatePathEvent(pane.getPanel(), null, CreatePathEvent.EDIT_PATH_EVENT));
 	}
 }
 

@@ -8,6 +8,7 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
+import com.syrus.AMFICOM.Client.General.Command.Scheme.*;
 import com.syrus.AMFICOM.Client.General.Event.CreatePathEvent;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
@@ -24,7 +25,7 @@ public class PathPropsPanel extends JPanel
 	private JTextField compNameTextField = new JTextField();
 	private JTextField startDevTextField = new JTextField();
 	private JTextField endDevTextField = new JTextField();
-	ObjectResourceTablePane table = new ObjectResourceTablePane();
+//	ObjectResourceTablePane table = new ObjectResourceTablePane();
 	//JTable table = new JTable();
 
 	private String undoCompName;
@@ -35,11 +36,14 @@ public class PathPropsPanel extends JPanel
 	private Map undoPeOrder;
 	boolean skip_change = false;
 
-	public ArrayList links_to_add = new ArrayList();
-	public SchemeElement device_to_add;
+//	public ArrayList elements_to_add = new ArrayList();
+	ObjectResource element_to_add;
 
 	SchemePath path;
 	ApplicationContext aContext;
+
+	UniTreePanel utp;
+	JScrollPane scroll = new JScrollPane();
 
 	public PathPropsPanel(ApplicationContext aContext)
 	{
@@ -58,8 +62,8 @@ public class PathPropsPanel extends JPanel
 		JPanel classPanel = new JPanel(new BorderLayout());
 		JPanel compPanel = new JPanel(new BorderLayout());
 
-		JPanel cl1Panel = new JPanel(new BorderLayout());
 		JPanel cl2Panel = new JPanel(new BorderLayout());
+		JPanel cl1Panel = new JPanel(new BorderLayout());
 		JPanel co1Panel = new JPanel(new BorderLayout());
 		JPanel co2Panel = new JPanel(new BorderLayout());
 		JPanel co3Panel = new JPanel(new BorderLayout());
@@ -89,33 +93,13 @@ public class PathPropsPanel extends JPanel
 		manLabelPanel.setPreferredSize(new Dimension (60, 10));
 		manLabelPanel.add(new JLabel("Кон. устр."));
 
-
-		table.initialize(
-				new PathDisplayModel(),
-				new ArrayList());
-		table.setSorter(PathElement.getSorter());
-
-		table.getTable().getSelectionModel().addListSelectionListener(new MySelectionListener());
-		/*table.getTable().getModel().addTableModelListener(new TableModelListener()
-		{
-				public void tableChanged(TableModelEvent e)
-				{
-					if (e.getType() == TableModelEvent.UPDATE)
-					{
-						table_updated();
-					}
-				}
-		});*/
-
-		table.getViewport().setBackground(SystemColor.window);
-
 		cl1Panel.add(clLabelPanel, BorderLayout.WEST);
 		cl2Panel.add(linksLabelPanel, BorderLayout.WEST);
 		co1Panel.add(nameLabelPanel, BorderLayout.WEST);
 		co2Panel.add(descrLabelPanel, BorderLayout.WEST);
 		co3Panel.add(manLabelPanel, BorderLayout.WEST);
 		cl1Panel.add(typeComboBox, BorderLayout.CENTER);
-		cl2Panel.add(table, BorderLayout.CENTER);
+		cl2Panel.add(scroll, BorderLayout.CENTER);
 		co1Panel.add(compNameTextField, BorderLayout.CENTER);
 		co2Panel.add(startDevTextField, BorderLayout.CENTER);
 		co3Panel.add(endDevTextField, BorderLayout.CENTER);
@@ -157,9 +141,6 @@ public class PathPropsPanel extends JPanel
 					{}
 		});
 
-//		linksList.setPreferredSize(new Dimension (300, 80));
-//		table.setBorder(BorderFactory.createLoweredBevelBorder());
-		table.setAutoscrolls(true);
 	}
 
 	private void setDefaults()
@@ -177,27 +158,6 @@ public class PathPropsPanel extends JPanel
 		}
 	}
 
-	class MySelectionListener implements ListSelectionListener
-	{
-		public void valueChanged(ListSelectionEvent e) {
-			//Ignore extra messages.
-			if (e.getValueIsAdjusting()) return;
-
-			ListSelectionModel lsm = (ListSelectionModel)e.getSource();
-			if (lsm.isSelectionEmpty())
-			{
-				//no rows are selected
-			}
-			else
-			{
-				PathElement pe = (PathElement)table.getSelectedObject();
-				SchemeCableLink cl = (SchemeCableLink)Pool.get(SchemeCableLink.typ, pe.link_id);
-				aContext.getDispatcher().notify(new CreatePathEvent(this, new PathElement[] {pe},
-						CreatePathEvent.PE_SELECTED_EVENT));
-			}
-		}
-	}
-
 	public void setEditable(boolean b)
 	{
 		typeComboBox.setEnabled(b);
@@ -205,7 +165,7 @@ public class PathPropsPanel extends JPanel
 		compNameTextField.setEnabled(b);
 		endDevTextField.setEnabled(b);
 		startDevTextField.setEnabled(b);
-		table.getTable().setEnabled(b);
+//		table.getTable().setEnabled(b);
 	}
 
 	public void init(SchemePath path, DataSourceInterface dataSource)
@@ -243,7 +203,11 @@ public class PathPropsPanel extends JPanel
 
 		typeComboBox.setSelected(Pool.get(TransmissionPathType.typ, path.type_id));
 
-		table.setContents(path.links);
+		PathTreeModel model = new PathTreeModel(path);
+		utp = new UniTreePanel(aContext.getDispatcher(), aContext, model);
+		//utp.setBorder(BorderFactory.createLoweredBevelBorder());
+		utp.getTree().setRootVisible(false);
+		scroll.getViewport().add(utp, BorderLayout.CENTER);
 
 		undoCompName = path.getName();
 		undoEndDevId = path.end_device_id;
@@ -272,42 +236,9 @@ public class PathPropsPanel extends JPanel
 		path.type_id = tpt.getId();
 	}
 
-	public void updateLink()
-	{
-		PathElement pe = (PathElement)table.getSelectedObject();
-		if (pe != null)
-		{
-			if (!links_to_add.isEmpty())
-			{
-				Object obj = links_to_add.get(links_to_add.size()-1);
-
-				if (obj instanceof SchemeLink)
-				{
-					pe.link_id = ((SchemeLink)obj).getId();
-					pe.thread_id = "";
-					pe.is_cable = false;
-				}
-				else if (obj instanceof SchemeCableLink)
-				{
-					CableThreadSelectionDialog panel = new CableThreadSelectionDialog(aContext);
-					SchemeCableThread thread = panel.init((SchemeCableLink)obj);
-					if (thread != null)
-					{
-						pe.link_id = ((SchemeCableLink)obj).getId();
-						pe.thread_id = thread.getId();
-					}
-				}
-
-				table.setContents(path.links);
-				table.updateUI();
-
-				links_to_add = new ArrayList();
-			}
-		}
-	}
-
 	public void removeLink()
 	{
+		/*
 		PathElement pe = (PathElement)table.getSelectedObject();
 		if (pe != null)
 		{
@@ -339,111 +270,79 @@ public class PathPropsPanel extends JPanel
 			PathElement pe = (PathElement)path.links.get(i);
 			if (pe.link_id.equals(link_id))
 			{
-				table.setSelected(pe);
+//				table.setSelected(pe);
 				break;
 			}
 		}
 	}
 
-	public void addSelectedLinks()
+	public void addSelectedElements()
 	{
-		for (Iterator it = links_to_add.iterator(); it.hasNext();)
+		if (path.start_device_id.length() == 0)
 		{
-			Object obj = it.next();
-			if (obj instanceof SchemeLink)
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+																		"Не введено начальное устройство",
+																		"Ошибка",
+																		JOptionPane.OK_OPTION);
+			return;
+		}
+
+		if (element_to_add instanceof SchemeLink)
+			PathBuilder.addLink(path.links, (SchemeLink)element_to_add);
+		else if (element_to_add instanceof SchemeCableLink)
+			PathBuilder.addCableLink(path.links, (SchemeCableLink)element_to_add);
+		else if (element_to_add instanceof SchemeElement)
+			PathBuilder.addSchemeElement(path.links, (SchemeElement)element_to_add);
+
+//		table.setContents(path.links);
+//		table.updateUI();
+
+		updatePathElements();
+		element_to_add = null;
+	}
+
+	public void setStartDevice()
+	{
+		if (element_to_add instanceof SchemeElement)
+		{
+			SchemeElement se = (SchemeElement)element_to_add;
+			path.links.clear();
+			PathElement pe = PathBuilder.addSchemeElement(path.links, se);
+			if (pe != null)
 			{
-				addLink(((SchemeLink)obj).getId());
+				startDevTextField.setText(se.getName());
+				startDevTextField.setCaretPosition(0);
+				path.start_device_id = se.getId();
 			}
-			else if (obj instanceof SchemeCableLink)
+			updatePathElements();
+			element_to_add = null;
+		}
+	}
+
+	public void updatePathElements()
+	{
+		PathTreeModel model = new PathTreeModel(path);
+		utp.setModel(model);
+	}
+
+	public void setEndDevice()
+	{
+		if (element_to_add instanceof SchemeElement)
+		{
+			SchemeElement se = (SchemeElement)element_to_add;
+			if (se.getInternalSchemeId().length() != 0)
 			{
-				SchemeCableLink link = (SchemeCableLink)obj;
-				SchemeCableThread thread = null;
-				if (links_to_add.size() > 1)
-				{
-					if (link.cable_threads.size() > 0)
-						thread = (SchemeCableThread)link.cable_threads.iterator().next();
-				}
-				else
-				{
-					CableThreadSelectionDialog panel = new CableThreadSelectionDialog(aContext);
-					thread = panel.init(link);
-				}
-				if (thread != null)
-					addCableLink(link.getId(), thread.getId());
+				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+						"Конечным устройством не может быть схема", "Ошибка", JOptionPane.OK_OPTION);
+				return;
 			}
-		}
-		table.setContents(path.links);
-		table.updateUI();
-
-		links_to_add = new ArrayList();
-	}
-
-	public void addLink(String link_id)
-	{
-		PathElement pe = new PathElement();
-		pe.is_cable = false;
-		pe.n = path.links.size();
-		pe.link_id = link_id;
-		pe.thread_id = "";
-		path.links.add(pe);
-	}
-
-	public void addCableLink(String cable_id, String thread_id)
-	{
-		PathElement pe = new PathElement();
-		pe.is_cable = true;
-		pe.n = path.links.size();
-		pe.link_id = cable_id;
-		pe.thread_id = thread_id;
-		path.links.add(pe);
-	}
-
-	public void setStartDevice(String id)
-	{
-		String start = "";
-		SchemeElement st_dev = (SchemeElement)Pool.get(SchemeElement.typ, id);
-		if (!st_dev.scheme_id.equals(""))
-		{
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Начальным устройством не может быть схема", "Ошибка", JOptionPane.OK_OPTION);
-			return;
-		}
-		if (hasAccessPort(st_dev))
-		{
-			if (st_dev.equipment_id.equals(""))
-				start = st_dev.getName();
-			else
-				start = ((Equipment)Pool.get("kisequipment", st_dev.equipment_id)).getName();
-			startDevTextField.setText(start);
-			startDevTextField.setCaretPosition(0);
-			path.start_device_id = id;
-		}
-		else
-		{
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "У начального устройства должен быть тестовый порт\nс которого должен начинаться маршрут тестирования", "Ошибка", JOptionPane.OK_OPTION);
-			return;
+			endDevTextField.setText(se.getName());
+			endDevTextField.setCaretPosition(0);
+			path.end_device_id = se.getId();
+			element_to_add = null;
 		}
 	}
-
-	public void setEndDevice(String id)
-	{
-		String end = "";
-		SchemeElement end_dev = (SchemeElement)Pool.get(SchemeElement.typ, id);
-		if (!end_dev.scheme_id.equals(""))
-		{
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Начальным устройством не может быть схема", "Ошибка", JOptionPane.OK_OPTION);
-			return;
-		}
-
-		if (end_dev.equipment_id.equals(""))
-			end = end_dev.getName();
-		else
-			end = ((Equipment)Pool.get("kisequipment", end_dev.equipment_id)).getName();
-
-		endDevTextField.setText(end);
-		endDevTextField.setCaretPosition(0);
-		path.end_device_id = id;
-	}
-
+/*
 	boolean hasAccessPort (SchemeElement se)
 	{
 		for (Iterator it = se.devices.iterator(); it.hasNext();)
@@ -464,8 +363,8 @@ public class PathPropsPanel extends JPanel
 				return true;
 		}
 		return false;
-	}
-
+	}*/
+/*
 	boolean hasCablePort (ProtoElement proto)
 	{
 		for (Iterator it = proto.devices.iterator(); it.hasNext();)
@@ -482,7 +381,7 @@ public class PathPropsPanel extends JPanel
 				return true;
 		}
 		return false;
-	}
+	}*/
 
 	public void undo()
 	{
@@ -546,49 +445,117 @@ public class PathPropsPanel extends JPanel
 	}
 }
 
-class PathDisplayModel extends StubDisplayModel
+class PathTreeModel extends ObjectResourceTreeModel
 {
-	List cols;
-	public PathDisplayModel()
+	SchemePath path;
+	Scheme topScheme;
+
+	public PathTreeModel(SchemePath path)
 	{
-		super();
-		cols = new ArrayList(3);
-		cols.add("num");
-		cols.add("thread");
-		cols.add("cable");
+		this.path = path;
+		topScheme = (Scheme)Pool.get(Scheme.typ, path.getSchemeId());
 	}
 
-	public int getColumnSize(String col_id)
+	public ObjectResourceTreeNode getRoot()
 	{
-		if(col_id.equals("num"))
-			return 20;
-		if(col_id.equals("thread"))
-			return 100;
-		if(col_id.equals("cable"))
-			return 100;
-		return 100;
+		return new ObjectResourceTreeNode(
+				"root",
+				path.getName(),
+				true,
+				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif")));
 	}
 
-	public List getColumns()
+	public ImageIcon getNodeIcon(ObjectResourceTreeNode node)
 	{
-		return cols;
+		return null;
 	}
 
-	public String getColumnName(String col_id)
+	public Color getNodeTextColor(ObjectResourceTreeNode node)
 	{
-		if(col_id.equals("num"))
-			return "#";
-		if(col_id.equals("thread"))
-			return "Волокно";
-		if(col_id.equals("cable"))
-			return "Кабель";
-		return "";
+		return null;
 	}
 
-	public boolean isColumnEditable(String col_id)
+	public void nodeAfterSelected(ObjectResourceTreeNode node)
 	{
-		if (col_id.equals("num"))
-			return true;
-		return false;
 	}
+
+	public void nodeBeforeExpanded(ObjectResourceTreeNode node)
+	{
+	}
+
+	public Class getNodeChildClass(ObjectResourceTreeNode node)
+	{
+		if(node.getObject() instanceof String)
+		{
+			String s = (String )node.getObject();
+			return ObjectResource.class;
+		}
+		if(node.getObject() instanceof Scheme)
+			return ObjectResource.class;
+		return null;
+	}
+
+	public List getChildNodes(ObjectResourceTreeNode node)
+	{
+		List vec = new ArrayList();
+		if(node.getObject() instanceof String)
+		{
+			String s = (String )node.getObject();
+			if(s.equals("root"))
+			{
+				String cur_scheme_id = null;
+//				List scheme_ids = new ArrayList();
+				for (Iterator it = path.links.iterator(); it.hasNext();)
+				{
+					PathElement pe = (PathElement)it.next();
+					if (pe.scheme_id.equals(path.getSchemeId()))
+					{
+						cur_scheme_id = pe.scheme_id;
+						vec.add(new ObjectResourceTreeNode(pe, pe.getName(), true, true));
+					}
+					else if (!pe.scheme_id.equals(cur_scheme_id))
+					{
+						cur_scheme_id = pe.scheme_id;
+						if (cur_scheme_id.length() != 0)
+						{
+							Scheme scheme = (Scheme)Pool.get(Scheme.typ, cur_scheme_id);
+							vec.add(new ObjectResourceTreeNode(scheme, scheme.getName(), true, null));
+						}
+					}
+				}
+			}
+		}
+		else if (node.getObject() instanceof Scheme)
+		{
+			Scheme scheme = (Scheme)node.getObject();
+			for (Iterator it = path.links.iterator(); it.hasNext();)
+			{
+				PathElement pe = (PathElement)it.next();
+				if (pe.scheme_id.equals(scheme.getId()))
+					vec.add(new ObjectResourceTreeNode(pe, pe.getName(), true, true));
+			}
+		}
+		return vec;
+	}
+/*
+	ObjectResourceTreeNode addPathElement(PathElement pe)
+	{
+		if (pe.getType() == PathElement.SCHEME_ELEMENT)
+		{
+			SchemeElement se = (SchemeElement) Pool.get(SchemeElement.typ, pe.scheme_element_id);
+			return new ObjectResourceTreeNode(se, se.getName(), true, null);
+		}
+		else if (pe.getType() == PathElement.CABLE_LINK)
+		{
+			SchemeCableLink link = (SchemeCableLink) Pool.get(SchemeCableLink.typ, pe.link_id);
+			return new ObjectResourceTreeNode(link, link.getName(), true, null);
+		}
+		else if (pe.getType() == PathElement.LINK)
+		{
+			SchemeLink link = (SchemeLink) Pool.get(SchemeLink.typ, pe.link_id);
+			return new ObjectResourceTreeNode(link, link.getName(), true, null);
+		}
+		return null;
+	}*/
 }
+

@@ -453,12 +453,8 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 				for (Iterator it = parent.elements.iterator(); it.hasNext();)
 				{
 					SchemeElement el = (SchemeElement)it.next();
-					if (!el.scheme_id.equals(""))
-					{
-						Scheme sc = (Scheme)Pool.get(Scheme.typ, el.scheme_id);
-						if (sc != null)
-							ds.add(sc);
-					}
+					if (el.getInternalSchemeId().length() != 0)
+						ds.add(el.getInternalScheme());
 				}
 				if (ds.size() > 0)
 				{
@@ -482,7 +478,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 					for (Iterator it = scheme.elements.iterator(); it.hasNext();)
 					{
 						SchemeElement element = (SchemeElement)it.next();
-						if (element.scheme_id.equals(""))
+						if (element.getInternalSchemeId().length() == 0)
 							ds.add(element);
 					}
 				}
@@ -607,7 +603,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 					for (Iterator it = s.elements.iterator(); it.hasNext();)
 					{
 						SchemeElement el = (SchemeElement)it.next();
-						if (el.scheme_id.length() == 0)
+						if (el.getInternalSchemeId().length() == 0)
 						{
 							has_elements = true;
 							break;
@@ -616,7 +612,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 					for (Iterator it = s.elements.iterator(); it.hasNext();)
 					{
 						SchemeElement el = (SchemeElement)it.next();
-						if (el.scheme_id.length() != 0)
+						if (el.getInternalSchemeId().length() != 0)
 						{
 							has_schemes = true;
 							break;
@@ -637,13 +633,13 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 			else if(node.getObject() instanceof SchemeElement)
 			{
 				SchemeElement schel = (SchemeElement)node.getObject();
-				if (!schel.scheme_id.equals(""))
+				if (schel.getInternalSchemeId().length() != 0)
 				{
-					Scheme scheme = (Scheme)Pool.get(Scheme.typ, schel.scheme_id);
+					Scheme scheme = schel.getInternalScheme();
 					for (Iterator it = scheme.elements.iterator(); it.hasNext();)
 					{
 						SchemeElement element = (SchemeElement)it.next();
-						if (element.scheme_id.equals(""))
+						if (element.getInternalSchemeId().equals(""))
 							vec.add(new ObjectResourceTreeNode(element, element.getName(), true, true));
 						else
 							vec.add(new ObjectResourceTreeNode(element, element.getName(), true,

@@ -382,30 +382,68 @@ public class Scheme extends StubResource implements Serializable
 		for(Iterator it = elements_to_register.iterator(); it.hasNext();)
 		{
 			SchemeElement el = (SchemeElement)it.next();
+			////temporary
+			el.setSchemeId(getId());
+			//
 			Pool.put(SchemeElement.typ, el.getId(), el);
 			el.updateLocalFromTransferable();
 		}
 		for(Iterator it = elements.iterator(); it.hasNext();)
 		{
 			SchemeElement el = (SchemeElement)it.next();
+			////temporary
+			el.setSchemeId(getId());
+			//
 			Pool.put(SchemeElement.typ, el.getId(), el);
 			el.updateLocalFromTransferable();
 		}
 		for(Iterator it = cablelinks.iterator(); it.hasNext();)
 		{
 			SchemeCableLink link = (SchemeCableLink)it.next();
+			////temporary
+			link.setSchemeId(getId());
+/*			if (!scheme_type.equals(Scheme.CABLESUBNETWORK))
+			{
+				if (link.source_port_id.length() != 0)
+				{
+					SchemeElement se = getTopLevelElement(getSchemeElementByCablePort(link.source_port_id));
+					if (se.getInternalSchemeId().length() != 0)
+					{
+						Scheme source_scheme = se.getInternalScheme();
+						if (source_scheme.scheme_type.equals(Scheme.CABLESUBNETWORK))
+							link.setSchemeId(source_scheme.getId());
+					}
+				}
+				if (link.target_port_id.length() != 0)
+				{
+					SchemeElement se = getTopLevelElement(getSchemeElementByCablePort(link.target_port_id));
+					if (se.getInternalSchemeId().length() != 0)
+					{
+						Scheme target_scheme = se.getInternalScheme();
+						if (target_scheme.scheme_type.equals(Scheme.CABLESUBNETWORK))
+							link.setSchemeId(target_scheme.getId());
+					}
+				}
+			}*/
+			//
 			Pool.put(SchemeCableLink.typ, link.getId(), link);
 			link.updateLocalFromTransferable();
 		}
 		for(Iterator it = links.iterator(); it.hasNext();)
 		{
 			SchemeLink link = (SchemeLink)it.next();
+			////temporary
+			link.setSchemeId(getId());
+			//
 			Pool.put(SchemeLink.typ, link.getId(), link);
 			link.updateLocalFromTransferable();
 		}
 		for(Iterator it = paths.iterator(); it.hasNext();)
 		{
 			SchemePath path = (SchemePath)it.next();
+			////temporary
+			path.setSchemeId(getId());
+			//
 			Pool.put(SchemePath.typ, path.getId(), path);
 			path.updateLocalFromTransferable();
 		}
@@ -460,12 +498,12 @@ public class Scheme extends StubResource implements Serializable
 		}
 		catch (StackOverflowError e)
 		{
-			System.err.println("Error packing scheme: " + e.toString() + "retry...");
+			System.err.println(e.toString() + " packing scheme: retry...");
 			return null;
 		}
 		catch (Exception e)
 		{
-			System.err.println("Exception packing scheme: " + e.toString() + "retry...");
+			System.err.println(e.toString() + " packing scheme: retry...");
 			return null;
 		}
 	}
@@ -603,16 +641,16 @@ public class Scheme extends StubResource implements Serializable
 		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
 			SchemeElement el = (SchemeElement)it.next();
-			if (!el.scheme_id.equals(""))
+			if (el.getInternalSchemeId().length() != 0)
 			{
-				Scheme scheme = (Scheme)Pool.get(Scheme.typ, el.scheme_id);
+				Scheme scheme = el.getInternalScheme();
 				for (Iterator inner = scheme.getAllLinks().iterator(); inner.hasNext();)
 					ht.add(inner.next());
 			}
 		}
 		return ht;
 	}
-
+/*
 	public Scheme getSchemeBySchemeElement(String scheme_element_id)
 	{
 		for (Iterator it = elements.iterator(); it.hasNext();)
@@ -625,7 +663,7 @@ public class Scheme extends StubResource implements Serializable
 		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
 			SchemeElement el = (SchemeElement)it.next();
-			if (el.scheme_id.equals(""))
+			if (el.getInternalSchemeId().length() == 0)
 			{
 				for (Iterator it2 = el.getChildElements().iterator(); it2.hasNext();)
 				{
@@ -639,16 +677,16 @@ public class Scheme extends StubResource implements Serializable
 		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
 			SchemeElement el = (SchemeElement)it.next();
-			if (!el.scheme_id.equals(""))
+			if (el.getInternalSchemeId().length() != 0)
 			{
-				Scheme sch = (Scheme)Pool.get(Scheme.typ, el.scheme_id);
+				Scheme sch = el.getInternalScheme();
 				Scheme found = sch.getSchemeBySchemeElement(scheme_element_id);
 				if (found != null)
 					return found;
 			}
 		}
 		return null;
-	}
+	}*/
 
 	public Scheme getSchemeByLink(String link_id)
 	{
@@ -662,7 +700,7 @@ public class Scheme extends StubResource implements Serializable
 		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
 			SchemeElement el = (SchemeElement)it.next();
-			if (el.scheme_id.equals(""))
+			if (el.getInternalSchemeId().length() == 0)
 			{
 				for (Iterator it2 = el.getAllElementsLinks().iterator(); it2.hasNext();)
 				{
@@ -676,9 +714,9 @@ public class Scheme extends StubResource implements Serializable
 		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
 			SchemeElement el = (SchemeElement)it.next();
-			if (!el.scheme_id.equals(""))
+			if (el.getInternalSchemeId().length() != 0)
 			{
-				Scheme sch = (Scheme)Pool.get(Scheme.typ, el.scheme_id);
+				Scheme sch = el.getInternalScheme();
 				Scheme found = sch.getSchemeByLink (link_id);
 				if (found != null)
 					return found;
@@ -699,9 +737,9 @@ public class Scheme extends StubResource implements Serializable
 		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
 			SchemeElement el = (SchemeElement)it.next();
-			if (!el.scheme_id.equals(""))
+			if (el.getInternalSchemeId().length() != 0)
 			{
-				Scheme sch = (Scheme)Pool.get(Scheme.typ, el.scheme_id);
+				Scheme sch = el.getInternalScheme();
 				Scheme found = sch.getSchemeByCableLink (cable_link_id);
 				if (found != null)
 					return found;
@@ -720,14 +758,14 @@ public class Scheme extends StubResource implements Serializable
 		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
 			SchemeElement el = (SchemeElement)it.next();
-			if (el.scheme_id.equals(""))
+			if (el.getInternalSchemeId().length() == 0)
 			{
 				for (Iterator it2 = el.getAllElementsLinks().iterator(); it2.hasNext();)
 					ht.add(it2.next());
 			}
 			else
 			{
-				Scheme scheme = (Scheme)Pool.get(Scheme.typ, el.scheme_id);
+				Scheme scheme = el.getInternalScheme();
 				for (Iterator inner = scheme.getAllLinks().iterator(); inner.hasNext();)
 					ht.add(inner.next());
 			}
@@ -745,9 +783,9 @@ public class Scheme extends StubResource implements Serializable
 		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
 			SchemeElement el = (SchemeElement)it.next();
-			if (!el.scheme_id.equals(""))
+			if (el.getInternalSchemeId().length() != 0)
 			{
-				Scheme scheme = (Scheme)Pool.get(Scheme.typ, el.scheme_id);
+				Scheme scheme = el.getInternalScheme();
 				for (Iterator inner = scheme.getAllCableLinks().iterator(); inner.hasNext();)
 				{
 					SchemeCableLink l = (SchemeCableLink)inner.next();
@@ -795,11 +833,11 @@ public class Scheme extends StubResource implements Serializable
 		for(Iterator it = elements.iterator(); it.hasNext();)
 		{
 			SchemeElement el = (SchemeElement)it.next();
-			if (el.scheme_id.equals(""))
+			if (el.getInternalSchemeId().length() == 0)
 				ht.add(el);
 			else
 			{
-				Scheme scheme = (Scheme)Pool.get(Scheme.typ, el.scheme_id);
+				Scheme scheme = el.getInternalScheme();
 				if(scheme.scheme_type.equals(Scheme.CABLESUBNETWORK))
 				{
 					for (Iterator inner = scheme.getTopologicalElements().iterator(); inner.hasNext();)
@@ -821,9 +859,9 @@ public class Scheme extends StubResource implements Serializable
 		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
 			SchemeElement el = (SchemeElement)it.next();
-			if (el.scheme_id != null && !el.scheme_id.equals(""))
+			if (el.getInternalSchemeId().length() != 0)
 			{
-				Scheme scheme = (Scheme)Pool.get(Scheme.typ, el.scheme_id);
+				Scheme scheme = (Scheme)el.getInternalScheme();
 				if(scheme.scheme_type.equals(Scheme.CABLESUBNETWORK))
 				{
 					for (Iterator inner = scheme.getTopologicalCableLinks().iterator(); inner.hasNext();)
@@ -842,9 +880,9 @@ public class Scheme extends StubResource implements Serializable
 		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
 			SchemeElement el = (SchemeElement)it.next();
-			if (el.scheme_id != null && !el.scheme_id.equals(""))
+			if (el.getInternalSchemeId().length() != 0)
 			{
-				Scheme scheme = (Scheme)Pool.get(Scheme.typ, el.scheme_id);
+				Scheme scheme = (Scheme)el.getInternalScheme();
 				if(scheme.scheme_type.equals(Scheme.CABLESUBNETWORK))
 				{
 					for (Iterator inner = scheme.getTopologicalPaths().iterator(); inner.hasNext();)
@@ -862,11 +900,11 @@ public class Scheme extends StubResource implements Serializable
 		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
 			SchemeElement el = (SchemeElement)it.next();
-			if (el.scheme_id.equals(""))
+			if (el.getInternalSchemeId().length() == 0)
 				ht.add(el);
 			else
 			{
-				Scheme scheme = (Scheme)Pool.get(Scheme.typ, el.scheme_id);
+				Scheme scheme = (Scheme)el.getInternalScheme();
 				for (Iterator inner = scheme.getTopLevelElements().iterator(); inner.hasNext();)
 					ht.add(inner.next());
 			}
@@ -886,9 +924,9 @@ public class Scheme extends StubResource implements Serializable
 		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
 			SchemeElement element = (SchemeElement)it.next();
-			if (element.scheme_id.length() != 0)
+			if (element.getInternalSchemeId().length() != 0)
 			{
-				Scheme inner_scheme = (Scheme)Pool.get(Scheme.typ, element.scheme_id);
+				Scheme inner_scheme = element.getInternalScheme();
 				SchemeElement el = inner_scheme.getSchemeElement(element_id);
 				if (el != null)
 					return el;
@@ -942,7 +980,7 @@ public class Scheme extends StubResource implements Serializable
 		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
 			SchemeElement element = (SchemeElement)it.next();
-			if (element.scheme_id.equals(""))
+			if (element.getInternalSchemeId().length() == 0)
 			{
 				for (Iterator it2 = element.getAllElementsLinks().iterator(); it2.hasNext();)
 				{
@@ -953,7 +991,7 @@ public class Scheme extends StubResource implements Serializable
 			}
 			else
 			{
-				Scheme inner = (Scheme)Pool.get(Scheme.typ, element.scheme_id);
+				Scheme inner = element.getInternalScheme();
 				return inner.isSchemeContainsLink(link_id);
 			}
 		}
@@ -972,9 +1010,9 @@ public class Scheme extends StubResource implements Serializable
 		for (Iterator it = elements.iterator(); it.hasNext();)
 		{
 			SchemeElement element = (SchemeElement)it.next();
-			if (!element.scheme_id.equals(""))
+			if (element.getInternalSchemeId().length() != 0)
 			{
-				Scheme inner = (Scheme)Pool.get(Scheme.typ, element.scheme_id);
+				Scheme inner = element.getInternalScheme();
 				return inner.isSchemeContainsCableLink(cable_link_id);
 			}
 		}
@@ -1003,9 +1041,9 @@ public class Scheme extends StubResource implements Serializable
 	public SchemeElement getTopLevelNonSchemeElement(SchemeElement se)
 	{
 		SchemeElement element = getTopLevelElement(se);
-		if (element.scheme_id.length() != 0)
+		if (element.getInternalSchemeId().length() != 0)
 		{
-			Scheme inner = (Scheme)Pool.get(Scheme.typ, element.scheme_id);
+			Scheme inner = element.getInternalScheme();
 			return inner.getTopLevelNonSchemeElement(se);
 		}
 		else
@@ -1025,7 +1063,7 @@ public class Scheme extends StubResource implements Serializable
 		for(Iterator it = elements.iterator(); it.hasNext();) // Search inner elements
 		{
 			SchemeElement element = (SchemeElement)it.next();
-			if (element.scheme_id.length() == 0)
+			if (element.getInternalSchemeId().length() == 0)
 			{
 				for (Iterator it2 = element.getAllChilds().iterator(); it2.hasNext();)
 				{
@@ -1039,9 +1077,9 @@ public class Scheme extends StubResource implements Serializable
 		for (Iterator it = elements.iterator(); it.hasNext();)  // Search inner schemes
 		{
 			SchemeElement element = (SchemeElement)it.next();
-			if (element.scheme_id.length() != 0)
+			if (element.getInternalSchemeId().length() != 0)
 			{
-				Scheme inner = (Scheme)Pool.get(Scheme.typ, element.scheme_id);
+				Scheme inner = element.getInternalScheme();
 				SchemeElement inner_se = inner.getTopLevelElement(se);
 				if (inner_se != null)
 				{
@@ -1068,7 +1106,7 @@ public class Scheme extends StubResource implements Serializable
 		for (Iterator it = elements.iterator(); it.hasNext();) // Search inner elements
 		{
 			SchemeElement element = (SchemeElement)it.next();
-			if (element.scheme_id.length() == 0)
+			if (element.getInternalSchemeId().length() == 0)
 			{
 				for (Iterator it2 = element.getAllChilds().iterator(); it2.hasNext();)
 				{
@@ -1082,9 +1120,9 @@ public class Scheme extends StubResource implements Serializable
 		for (Iterator it = elements.iterator(); it.hasNext();)  // Search inner schemes
 		{
 			SchemeElement element = (SchemeElement)it.next();
-			if (element.scheme_id.length() != 0)
+			if (element.getInternalSchemeId().length() != 0)
 			{
-				Scheme inner = (Scheme)Pool.get(Scheme.typ, element.scheme_id);
+				Scheme inner = element.getInternalScheme();
 				SchemeElement inner_se = inner.getTopLevelElement(se);
 				if (inner_se != null)
 					return element;

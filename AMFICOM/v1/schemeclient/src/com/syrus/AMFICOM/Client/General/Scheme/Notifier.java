@@ -107,7 +107,7 @@ public class Notifier
 				else if (obj instanceof DefaultLink)
 				{
 					SchemeLink link = ((DefaultLink)obj).getSchemeLink();
-					if (graph.mode.equals(Constants.LINK_MODE))
+					if (graph.mode.equals(Constants.LINK_MODE) || SchemeGraph.path_creation_mode == Constants.CREATING_PATH_MODE)
 					{
 						selectedObjects = new SchemeLink[1];
 						selectedObjects[0] = link;
@@ -130,7 +130,7 @@ public class Notifier
 				else if (obj instanceof DefaultCableLink)
 				{
 					SchemeCableLink link = ((DefaultCableLink)obj).getSchemeCableLink();
-					if (graph.mode.equals(Constants.LINK_MODE))
+					if (graph.mode.equals(Constants.LINK_MODE) || SchemeGraph.path_creation_mode == Constants.CREATING_PATH_MODE)
 					{
 						selectedObjects = new SchemeCableLink[1];
 						selectedObjects[0] = link;
@@ -271,7 +271,8 @@ public class Notifier
 			{
 				System.out.println("SchemeElement: " + o[i].getId());
 				System.out.println("\t proto_id = \"" + o[i].proto_element_id + "\"");
-				System.out.println("\t scheme_id = \"" + o[i].scheme_id + "\"");
+				System.out.println("\t internal_scheme_id = \"" + o[i].getInternalSchemeId() + "\"");
+				System.out.println("\t scheme_id = \"" + o[i].getSchemeId() + "\"");
 				System.out.println("\t equipment_id = \"" + o[i].equipment_id + "\"");
 				System.out.print("\t device_id =");
 				for (Iterator it = o[i].devices.iterator(); it.hasNext();)

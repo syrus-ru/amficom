@@ -53,7 +53,10 @@ public class Constants
 	public static final String separator = "separator";
 	public static final String backgroundSize = "backgroundSize";
 
-	public static final String PATH_MODE = "pathMode";
-	public static final String LINK_MODE = "linkMode";
+	public static final int CREATING_PATH_MODE = 3;
+	public static final int NORMAL = 0;
+
+	public static final String PATH_MODE = "pathmode";
+	public static final String LINK_MODE = "linkmode";
 }
 

@@ -6,6 +6,7 @@ import java.awt.event.*;
 import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeSaveCommand;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 
@@ -32,7 +33,9 @@ public class SchemeTabbedPane extends ElementsTabbedPane
 					{
 						public void actionPerformed(ActionEvent ae)
 						{
-							removePanel(getPanel());
+							aContext.getDispatcher().notify(new SchemeElementsEvent(
+									this, getPanel().getGraph().getScheme(), SchemeElementsEvent.CLOSE_SCHEME_EVENT));
+//							removePanel(getPanel());
 						}
 					});
 					close.setText("Закрыть \"" + tabs.getTitleAt(tabs.getSelectedIndex()) + "\"");

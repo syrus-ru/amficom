@@ -219,16 +219,18 @@ public class SchemeEditorMainFrame extends JFrame
 		aModel.setCommand("menuSchemeExport", new SchemeToFileCommand(Environment.the_dispatcher, aContext));
 		aModel.setCommand("menuSchemeImport", new SchemeFromFileCommand(Environment.the_dispatcher, aContext));
 
-		aModel.setCommand("menuPathNew", new PathNewCommand(aContext, epanel));
-		aModel.setCommand("menuPathEdit", new PathEditCommand(aContext, epanel));
-		aModel.setCommand("menuPathAddStart", new PathSetStartCommand(aContext, scheme_graph));
-		aModel.setCommand("menuPathAddEnd", new PathSetEndCommand(aContext, scheme_graph));
-		aModel.setCommand("menuPathAddLink", new PathAddLinkCommand(aContext, scheme_graph));
+		aModel.setCommand("menuPathNew", new PathNewCommand(aContext, schemeTab));
+		aModel.setCommand("menuPathEdit", new PathEditCommand(aContext, schemeTab));
+		aModel.setCommand("menuPathAddStart", new PathSetStartCommand(aContext, schemeTab));
+		aModel.setCommand("menuPathAddEnd", new PathSetEndCommand(aContext, schemeTab));
+		aModel.setCommand("menuPathAddLink", new PathAddLinkCommand(aContext, schemeTab));
+
 		aModel.setCommand("menuPathRemoveLink", new PathRemoveLinkCommand(aContext, scheme_graph));
-		aModel.setCommand("menuPathUpdateLink", new PathUpdateLinkCommand(aContext, scheme_graph));
-		aModel.setCommand("menuPathSave", new PathSaveCommand(aContext, epanel));
-		aModel.setCommand("menuPathCancel", new PathCancelCommand(aContext, scheme_graph));
-		aModel.setCommand("menuPathDelete", new PathDeleteCommand(aContext, epanel));
+		aModel.setCommand("menuPathAutoCreate", new PathAutoCreateCommand(aContext, schemeTab.getPanel()));
+
+		aModel.setCommand("menuPathSave", new PathSaveCommand(aContext, schemeTab));
+		aModel.setCommand("menuPathCancel", new PathCancelCommand(aContext, schemeTab));
+		aModel.setCommand("menuPathDelete", new PathDeleteCommand(aContext, schemeTab));
 
 		CreateSchemeReportCommand rc = new CreateSchemeReportCommand(aContext);
 		for (Iterator it = graphs.iterator(); it.hasNext();)
@@ -404,6 +406,8 @@ public class SchemeEditorMainFrame extends JFrame
 				aModel.setEnabled("menuPathAddEnd", true);
 				aModel.setEnabled("menuPathAddLink", true);
 				aModel.setEnabled("menuPathCancel", true);
+				aModel.setEnabled("menuPathAutoCreate", true);
+				aModel.getCommand("menuPathAutoCreate").setParameter("panel", schemeTab.getPanel());
 				aModel.fireModelChanged("");
 			}
 			if (cpe.CANCEL_PATH_CREATION || cpe.SAVE_PATH)
@@ -414,7 +418,7 @@ public class SchemeEditorMainFrame extends JFrame
 				aModel.setEnabled("menuPathAddEnd", false);
 				aModel.setEnabled("menuPathAddLink", false);
 				aModel.setEnabled("menuPathRemoveLink", false);
-				aModel.setEnabled("menuPathUpdateLink", false);
+				aModel.setEnabled("menuPathAutoCreate", false);
 				aModel.setEnabled("menuPathCancel", false);
 				aModel.fireModelChanged("");
 			}
@@ -424,7 +428,6 @@ public class SchemeEditorMainFrame extends JFrame
 				if (aModel.isEnabled("menuPathCancel"))
 				{
 					aModel.setEnabled("menuPathRemoveLink", true);
-					aModel.setEnabled("menuPathUpdateLink", true);
 					aModel.fireModelChanged("");
 				}
 			}
@@ -434,7 +437,6 @@ public class SchemeEditorMainFrame extends JFrame
 				if (aModel.isEnabled("menuPathCancel"))
 				{
 					aModel.setEnabled("menuPathRemoveLink", false);
-					aModel.setEnabled("menuPathUpdateLink", false);
 					aModel.fireModelChanged("");
 				}
 			}
@@ -449,7 +451,7 @@ public class SchemeEditorMainFrame extends JFrame
 				aModel.setEnabled("menuPathDelete", true);
 				aModel.fireModelChanged("");
 			}
-			if (sne.SCHEME_ALL_DESELECTED || sne.SCHEME_PATH_DESELECTED)
+			else
 			{
 				ApplicationModel aModel = aContext.getApplicationModel();
 				aModel.setEnabled("menuPathEdit", false);

@@ -41,7 +41,7 @@ public class SchemeEditorMenuBar extends JMenuBar implements ApplicationModelLis
 	JMenuItem menuPathAddEnd = new JMenuItem();
 	JMenuItem menuPathAddLink = new JMenuItem();
 	JMenuItem menuPathRemoveLink = new JMenuItem();
-	JMenuItem menuPathUpdateLink = new JMenuItem();
+	JMenuItem menuPathAutoCreate = new JMenuItem();
 
 	JMenu menuReport = new JMenu();
 	JMenuItem menuReportCreate = new JMenuItem();
@@ -173,9 +173,9 @@ public class SchemeEditorMenuBar extends JMenuBar implements ApplicationModelLis
 		menuPathRemoveLink.setName("menuPathRemoveLink");
 		menuPathRemoveLink.setText(LangModelSchematics.getString("menuPathRemoveLink"));
 		menuPathRemoveLink.addActionListener(actionAdapter);
-		menuPathUpdateLink.setName("menuPathUpdateLink");
-		menuPathUpdateLink.setText(LangModelSchematics.getString("menuPathUpdateLink"));
-		menuPathUpdateLink.addActionListener(actionAdapter);
+		menuPathAutoCreate.setName("menuPathAutoCreate");
+		menuPathAutoCreate.setText(LangModelSchematics.getString("menuPathAutoCreate"));
+		menuPathAutoCreate.addActionListener(actionAdapter);
 		menuPathSave.setName("menuPathSave");
 		menuPathSave.setText(LangModelSchematics.getString("menuPathSave"));
 		menuPathSave.addActionListener(actionAdapter);
@@ -199,7 +199,8 @@ public class SchemeEditorMenuBar extends JMenuBar implements ApplicationModelLis
 		menuPath.addSeparator();
 		menuPath.add(menuPathAddLink);
 		menuPath.add(menuPathRemoveLink);
-		menuPath.add(menuPathUpdateLink);
+		menuPath.addSeparator();
+		menuPath.add(menuPathAutoCreate);
 
 		menuReport.setName("menuReport");
 		menuReport.setText(LangModelSchematics.getString("menuReport"));
@@ -298,8 +299,8 @@ public class SchemeEditorMenuBar extends JMenuBar implements ApplicationModelLis
 		menuPathAddLink.setEnabled(aModel.isEnabled("menuPathAddLink"));
 		menuPathRemoveLink.setVisible(aModel.isVisible("menuPathRemoveLink"));
 		menuPathRemoveLink.setEnabled(aModel.isEnabled("menuPathRemoveLink"));
-		menuPathUpdateLink.setVisible(aModel.isVisible("menuPathUpdateLink"));
-		menuPathUpdateLink.setEnabled(aModel.isEnabled("menuPathUpdateLink"));
+		menuPathAutoCreate.setVisible(aModel.isVisible("menuPathAutoCreate"));
+		menuPathAutoCreate.setEnabled(aModel.isEnabled("menuPathAutoCreate"));
 		menuPathSave.setVisible(aModel.isVisible("menuPathSave"));
 		menuPathSave.setEnabled(aModel.isEnabled("menuPathSave"));
 		menuPathCancel.setVisible(aModel.isVisible("menuPathCancel"));

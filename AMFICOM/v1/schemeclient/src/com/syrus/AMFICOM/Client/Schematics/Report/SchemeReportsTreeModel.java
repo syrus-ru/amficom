@@ -348,7 +348,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 			for (Iterator it = scheme.elements.iterator(); it.hasNext(); )
 			{
 				SchemeElement element = (SchemeElement)it.next();
-				if (element.scheme_id.equals(""))
+				if (element.getInternalSchemeId().length() == 0)
 				{
 					ObjectsReport rep = new ObjectsReport(new
 						EquipFeaturesReportModel(),
@@ -398,7 +398,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 						true);
 					try
 					{
-						or.setReserve(element.scheme_id);
+						or.setReserve(element.getInternalSchemeId());
 					}
 					catch(Exception exc)
 					{}
@@ -499,14 +499,14 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 		else if (node.getObject()instanceof SchemeElement)
 		{
 			SchemeElement schel = (SchemeElement) node.getObject();
-			if (!schel.scheme_id.equals(""))
+			if (schel.getInternalSchemeId().length() != 0)
 			{
-				Scheme scheme = (Scheme) Pool.get(Scheme.typ, schel.scheme_id);
+				Scheme scheme = schel.getInternalScheme();
 				for (Iterator it = scheme.elements.iterator(); it.hasNext(); )
 				{
 					SchemeElement element = (SchemeElement)it.next();
 
-					if (element.scheme_id.equals(""))
+					if (element.getInternalSchemeId().length() == 0)
 					{
 						ObjectsReport rep = new ObjectsReport(new
 							EquipFeaturesReportModel(),

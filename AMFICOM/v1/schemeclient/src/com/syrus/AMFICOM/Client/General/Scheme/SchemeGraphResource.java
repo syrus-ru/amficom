@@ -19,12 +19,22 @@ public class SchemeGraphResource
 	SchemeGraph graph;
 	Scheme scheme;
 	SchemeElement schemeelement;
-	public SchemePath currentPath;
+	private SchemePath currentPath;
 
 	public SchemeGraphResource(SchemeGraph graph)
 	{
 		this.graph = graph;
 //		this.aContext = aContext;
+	}
+
+	void setCurrentPath(SchemePath path)
+	{
+		this.currentPath = path;
+	}
+
+	SchemePath getCurrentPath()
+	{
+		return currentPath;
 	}
 
 //	public void init_module()

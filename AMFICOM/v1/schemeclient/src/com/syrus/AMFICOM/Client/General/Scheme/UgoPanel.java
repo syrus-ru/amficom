@@ -54,7 +54,16 @@ public class UgoPanel extends JPanel
 			e.printStackTrace();
 		}
 
-		init_module();
+		setContext(aContext);
+	}
+
+	public void setContext(ApplicationContext aContext)
+	{
+		if (aContext != null)
+		{
+			this.aContext = aContext;
+			init_module();
+		}
 	}
 
 	public void init_module()

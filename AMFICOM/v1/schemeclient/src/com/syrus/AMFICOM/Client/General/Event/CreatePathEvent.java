@@ -6,7 +6,6 @@ public class CreatePathEvent extends OperationEvent
 	public boolean EDIT_PATH = false;
 	public boolean ADD_LINK = false;
 	public boolean REMOVE_LINK = false;
-	public boolean UPDATE_LINK = false;
 	public boolean SET_START = false;
 	public boolean SET_END = false;
 	public boolean CANCEL_PATH_CREATION = false;
@@ -24,7 +23,6 @@ public class CreatePathEvent extends OperationEvent
 	public static final long DELETE_PATH_EVENT = 0x00000080;
 	public static final long REMOVE_LINK_EVENT = 0x00000100;
 	public static final long PE_SELECTED_EVENT = 0x00000200;
-	public static final long UPDATE_LINK_EVENT = 0x00000400;
 
 	public long change_type;
 	public Object[] cells;
@@ -45,8 +43,7 @@ public class CreatePathEvent extends OperationEvent
 			ADD_LINK = true;
 		if((type & REMOVE_LINK_EVENT) != 0)
 			REMOVE_LINK = true;
-	if((type & UPDATE_LINK_EVENT) != 0)
-		UPDATE_LINK = true;
+
 		if((type & SET_START_EVENT) != 0)
 			SET_START = true;
 		if((type & SET_END_EVENT) != 0)

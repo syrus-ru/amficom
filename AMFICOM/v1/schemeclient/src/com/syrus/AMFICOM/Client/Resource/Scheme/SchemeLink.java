@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.Client.Schematics.UI.SchemeLinkPane;
 public class SchemeLink extends StubResource implements Serializable
 {
 	public static final String typ = "schemelink";
-	private static final long serialVersionUID = 01L;
+	private static final long serialVersionUID = 02L;
 	public SchemeLink_Transferable transferable;
 
 	public String id = "";
@@ -22,6 +22,7 @@ public class SchemeLink extends StubResource implements Serializable
 	public String target_port_id = "";
 	public String link_id = "";
 	public String link_type_id = "";
+	private String scheme_id = "";
 
 	public double optical_length = 0;
 	public double physical_length = 0;
@@ -231,6 +232,16 @@ public class SchemeLink extends StubResource implements Serializable
 		}
 	}
 
+	public String getSchemeId()
+	{
+		return scheme_id;
+	}
+
+	public void setSchemeId(String scheme_id)
+	{
+		this.scheme_id = scheme_id;
+	}
+
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
 		out.writeObject(id);
@@ -239,6 +250,7 @@ public class SchemeLink extends StubResource implements Serializable
 		out.writeObject(target_port_id);
 		out.writeObject(link_id);
 		out.writeObject(link_type_id);
+		out.writeObject(scheme_id);
 		out.writeDouble(optical_length);
 		out.writeDouble(physical_length);
 		out.writeObject(attributes);
@@ -253,6 +265,7 @@ public class SchemeLink extends StubResource implements Serializable
 		target_port_id = (String )in.readObject();
 		link_id = (String )in.readObject();
 		link_type_id = (String )in.readObject();
+		scheme_id = (String )in.readObject();
 		optical_length = in.readDouble();
 		physical_length = in.readDouble();
 		attributes = (Map )in.readObject();

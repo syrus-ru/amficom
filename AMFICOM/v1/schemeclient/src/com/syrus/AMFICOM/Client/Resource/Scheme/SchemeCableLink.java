@@ -18,7 +18,7 @@ public class SchemeCableLink extends StubResource
 {
 	public static final String typ = "schemecablelink";
 	public static final char delimeter = ':';
-	private static final long serialVersionUID = 01L;
+	private static final long serialVersionUID = 02L;
 	public SchemeCableLink_Transferable transferable;
 
 	public String id = "";
@@ -27,6 +27,7 @@ public class SchemeCableLink extends StubResource
 	public String target_port_id = "";
 	public String cable_link_id = "";
 	public String cable_link_type_id = "";
+	private String scheme_id = "";
 
 	public double optical_length = 0;
 	public double physical_length = 0;
@@ -193,11 +194,6 @@ public class SchemeCableLink extends StubResource
 
 	public void updateLocalFromTransferable()
 	{
-		for (Iterator it = cable_threads.iterator(); it.hasNext();)
-		{
-			SchemeCableThread thread = (SchemeCableThread)it.next();
-			thread.cable_link_id = id;
-		}
 	}
 
 	public Object clone(DataSourceInterface dataSource)
@@ -256,6 +252,7 @@ public class SchemeCableLink extends StubResource
 		out.writeObject(target_port_id);
 		out.writeObject(cable_link_id);
 		out.writeObject(cable_link_type_id);
+		out.writeObject(scheme_id);
 		out.writeObject(cable_threads);
 		out.writeDouble(optical_length);
 		out.writeDouble(physical_length);
@@ -271,6 +268,7 @@ public class SchemeCableLink extends StubResource
 		target_port_id = (String )in.readObject();
 		cable_link_id = (String )in.readObject();
 		cable_link_type_id = (String )in.readObject();
+		scheme_id = (String )in.readObject();
 		cable_threads = (Collection )in.readObject();
 		optical_length = in.readDouble();
 		physical_length = in.readDouble();
@@ -323,6 +321,16 @@ public class SchemeCableLink extends StubResource
 			if (link != null)
 				link.optical_length = d;
 		}
+	}
+
+	public String getSchemeId()
+	{
+		return scheme_id;
+	}
+
+	public void setSchemeId(String scheme_id)
+	{
+		this.scheme_id = scheme_id;
 	}
 
 //////////////////////////////////////////////////

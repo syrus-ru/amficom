@@ -25,6 +25,7 @@ public class SchemePath extends StubResource
 	public String type_id = "";
 	public String start_device_id = "";
 	public String end_device_id = "";
+	private String scheme_id = "";
 
 	public Map attributes;
 	public List links;
@@ -169,12 +170,12 @@ public class SchemePath extends StubResource
 		for (Iterator it = links.iterator(); it.hasNext();)
 		{
 			PathElement pe = (PathElement)it.next();
-			if (pe.is_cable)
+			if (pe.type == PathElement.CABLE_LINK)
 			{
 				SchemeCableLink link = (SchemeCableLink)Pool.get(SchemeCableLink.typ, pe.link_id);
 				length += link.physical_length;
 			}
-			else
+			else if (pe.type == PathElement.LINK)
 			{
 				SchemeLink link = (SchemeLink)Pool.get(SchemeLink.typ, pe.link_id);
 				length += link.physical_length;
@@ -189,12 +190,12 @@ public class SchemePath extends StubResource
 		for (Iterator it = links.iterator(); it.hasNext();)
 		{
 			PathElement pe = (PathElement)it.next();
-			if (pe.is_cable)
+			if (pe.type == PathElement.CABLE_LINK)
 			{
 				SchemeCableLink link = (SchemeCableLink)Pool.get(SchemeCableLink.typ, pe.link_id);
 				length += link.optical_length;
 			}
-			else
+			else if (pe.type == PathElement.LINK)
 			{
 				SchemeLink link = (SchemeLink)Pool.get(SchemeLink.typ, pe.link_id);
 				length += link.optical_length;
@@ -254,6 +255,16 @@ public class SchemePath extends StubResource
 
 	public void updateLocalFromTransferable()
 	{
+	}
+
+	public String getSchemeId()
+	{
+		return scheme_id;
+	}
+
+	public void setSchemeId(String scheme_id)
+	{
+		this.scheme_id = scheme_id;
 	}
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException

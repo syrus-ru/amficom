@@ -14,7 +14,6 @@ import com.jgraph.pad.GPGraph.*;
 import com.jgraph.plaf.GraphUI;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
 
@@ -25,6 +24,7 @@ public class SchemeGraph extends GPGraph
 	Dispatcher dispatcher;
 	ApplicationContext aContext;
 	public String mode = Constants.LINK_MODE;
+	public static int path_creation_mode = Constants.NORMAL;
 
 	protected boolean show_grid_at_actual_size = false;
 	protected boolean border_visible = false;
@@ -49,11 +49,20 @@ public class SchemeGraph extends GPGraph
 	public SchemeGraph(GraphModel model, GraphLayoutCache view, ApplicationContext aContext)
 	{
 		super(model, view);
-		this.aContext = aContext;
-		graphResource = new SchemeGraphResource(this);
 
+		graphResource = new SchemeGraphResource(this);
 		setMarqueeHandler(new ShemeMarqueeHandler());
-		init_module();
+
+		setContext(aContext);
+	}
+
+	public void setContext(ApplicationContext aContext)
+	{
+		if (aContext != null)
+		{
+			this.aContext = aContext;
+			init_module();
+		}
 	}
 
 	void init_module()
@@ -85,6 +94,17 @@ public class SchemeGraph extends GPGraph
 	{
 		return getGraphResource().schemeelement;
 	}
+
+	public void setCurrentPath(SchemePath path)
+	{
+		getGraphResource().setCurrentPath(path);
+	}
+
+	public SchemePath getCurrentPath()
+	{
+		return getGraphResource().getCurrentPath();
+	}
+
 
 
 	public void setGraphChanged(boolean b)
@@ -231,7 +251,7 @@ public class SchemeGraph extends GPGraph
 
 	public void selectionNotify()
 	{
-		if (skip_notify)
+		if (dispatcher == null || skip_notify)
 			return;
 
 		skip_notify = true;
@@ -684,7 +704,47 @@ public class SchemeGraph extends GPGraph
 								port,
 								fromScreen(new Point(start)),
 								fromScreen(new Point(current)));
+
+						boolean inserted = false;
 						getScheme().cablelinks.add(link);
+						if (!getScheme().scheme_type.equals(Scheme.CABLESUBNETWORK))
+						{
+							if (link.source_port_id.length() != 0)
+							{
+								SchemeElement se = getScheme().getTopLevelElement(
+										getScheme().getSchemeElementByCablePort(link.source_port_id));
+								if (se.getInternalSchemeId().length() != 0)
+								{
+									Scheme source_scheme = se.getInternalScheme();
+									if (source_scheme.scheme_type.equals(Scheme.CABLESUBNETWORK))
+									{
+										link.setSchemeId(source_scheme.getId());
+//										source_scheme.cablelinks.add(link);
+										inserted = true;
+									}
+								}
+							}
+							if (!inserted && link.target_port_id.length() != 0)
+							{
+								SchemeElement se = getScheme().getTopLevelElement(
+										getScheme().getSchemeElementByCablePort(link.target_port_id));
+								if (se.getInternalSchemeId().length() != 0)
+								{
+									Scheme target_scheme = se.getInternalScheme();
+									if (target_scheme.scheme_type.equals(Scheme.CABLESUBNETWORK))
+									{
+										link.setSchemeId(target_scheme.getId());
+//										target_scheme.cablelinks.add(link);
+										inserted = true;
+									}
+								}
+							}
+						}
+						if (!inserted)
+						{
+							link.setSchemeId(getScheme().getId());
+//							getScheme().cablelinks.add(link);
+						}
 
 						event.consume();
 						reinit();
@@ -701,9 +761,15 @@ public class SchemeGraph extends GPGraph
 								fromScreen(new Point(current)));
 
 						if (getScheme() != null)
+						{
 							getScheme().links.add(link);
-						if (getSchemeElement() != null)
+							link.setSchemeId(getScheme().getId());
+						}
+						else if (getSchemeElement() != null)
+						{
 							getSchemeElement().links.add(link);
+							link.setSchemeId(getSchemeElement().getSchemeId());
+						}
 
 						event.consume();
 						reinit();

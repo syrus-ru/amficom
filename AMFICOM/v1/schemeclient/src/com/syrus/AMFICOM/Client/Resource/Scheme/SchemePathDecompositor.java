@@ -234,7 +234,7 @@ public class SchemePathDecompositor
 
 		for(int i = 0; i < pe.length; i++) // count through all of the Path Elements
 		{
-			if(pe[i].is_cable) // CABLE LINK
+			if(pe[i].type == PathElement.CABLE_LINK) // CABLE LINK
 			{
 				SchemeCableLink schemeCableLink =
 						(SchemeCableLink)Pool.get(SchemeCableLink.typ, pe[i].link_id);
@@ -251,7 +251,7 @@ public class SchemePathDecompositor
 
 				vec.add(lc);
 			}
-			else               // simple link
+			else if (pe[i].type == PathElement.LINK)              // simple link
 			{
 				SchemeLink schemeLink =
 						(SchemeLink)Pool.get(SchemeLink.typ, pe[i].link_id);
