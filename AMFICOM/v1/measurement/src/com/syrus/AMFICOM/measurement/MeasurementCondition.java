@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementCondition.java,v 1.2 2004/10/01 14:01:15 bob Exp $
+ * $Id: MeasurementCondition.java,v 1.3 2004/10/05 11:41:18 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementCondition_Transferable;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/10/01 14:01:15 $
+ * @version $Revision: 1.3 $, $Date: 2004/10/05 11:41:18 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -58,7 +58,7 @@ public class MeasurementCondition implements StorableObjectCondition {
 
 	public boolean isConditionTrue(Object object) throws ApplicationException {
 		boolean condition = false;
-		if (object instanceof Test) {
+		if (object instanceof Measurement) {
 			Measurement measurement = (Measurement)object;
 			for (Iterator it = this.testIds.iterator(); it.hasNext();) {
 				Identifier testId = (Identifier) it.next();
