@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.1 2005/01/14 18:05:13 arseniy Exp $
+ * $Id: DomainDatabase.java,v 1.2 2005/01/21 16:27:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/01/14 18:05:13 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/21 16:27:09 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -59,7 +59,7 @@ public class DomainDatabase extends StorableObjectDatabase {
 	}
 	
 	protected String getColumns(int mode) {
-		if (columns == null){
+		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
 			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
 			+ COLUMN_NAME + COMMA

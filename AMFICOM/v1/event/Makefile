@@ -1,11 +1,9 @@
 MODULE_NAME = event_v1
 
-LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
-ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
+LIBNAME := $(subst _v1,,$(MODULE_NAME)).jar
+ARCHFILE := $(subst _v1,,$(MODULE_NAME)).tar.gz
 
-IDLDIR=../idl_v1/idl
-
-APPCLASSPATH = $(LIBDIR)/general.jar:$(LIBDIR)/util.jar
+IDLDIR = ../idl_v1/idl
 
 JAVACFLAGS = -source 1.3
 SUNJAVACFLAGS = -target 1.2
@@ -14,6 +12,8 @@ JIKESFLAGS = -target 1.2
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
+
+APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/util.jar
 
 
 SOURCES := com/syrus/AMFICOM/event/EventType.java \
