@@ -1,10 +1,10 @@
 #
-# $Id: Makefile,v 1.1 2004/07/06 06:47:09 bass Exp $
+# $Id: Makefile,v 1.2 2004/07/06 06:57:52 bass Exp $
 #
 # vim:set ft=make:
 #
 
-MODULE_NAME = admin
+MODULE_NAME = admin_v1
 
 LIBNAME = administrate.jar
 
