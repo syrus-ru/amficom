@@ -86,7 +86,7 @@ public class SchemeEditorMainFrame extends JFrame
 
 		setContentPane(mainPanel);
 		setResizable(true);
-		setTitle(LangModelSchematics.String("SchemeEditorTitle"));
+		setTitle(LangModelSchematics.getString("SchemeEditorTitle"));
 		setJMenuBar(menuBar);
 
 		mainPanel.setLayout(new BorderLayout());
@@ -116,13 +116,13 @@ public class SchemeEditorMainFrame extends JFrame
 		//epanel = new SchemePanelNoEdition(aContext);
 		epanel = new SchemePanel(aContext);
 		editorFrame = new PrimarySchemeEditorFrame(aContext, epanel);
-		editorFrame.setTitle(LangModelSchematics.String("schemeMainTitle"));
+		editorFrame.setTitle(LangModelSchematics.getString("schemeMainTitle"));
 		desktopPane.add(editorFrame);
 
 		upanel = new UgoPanel(aContext);
 		upanel.setUgoInsertable(false);
 		ugoFrame = new SchemeViewerFrame(aContext, upanel);
-		ugoFrame.setTitle(LangModelSchematics.String("elementsUGOTitle"));
+		ugoFrame.setTitle(LangModelSchematics.getString("elementsUGOTitle"));
 		desktopPane.add(ugoFrame);
 
 		scheme_graph = epanel.getGraph();
@@ -141,7 +141,7 @@ public class SchemeEditorMainFrame extends JFrame
 		treeFrame.setResizable(true);
 		treeFrame.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
 		treeFrame.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
-		treeFrame.setTitle(LangModelSchematics.String("treeFrameTitle"));
+		treeFrame.setTitle(LangModelSchematics.getString("treeFrameTitle"));
 		treeFrame.getContentPane().setLayout(new BorderLayout());
 		desktopPane.add(treeFrame);
 
@@ -163,11 +163,11 @@ public class SchemeEditorMainFrame extends JFrame
 		statusBar.setWidth("user", 100);
 		statusBar.setWidth("time", 50);
 
-		statusBar.setText("status", LangModel.String("statusReady"));
-		statusBar.setText("server", LangModel.String("statusNoConnection"));
-		statusBar.setText("session", LangModel.String("statusNoSession"));
-		statusBar.setText("user", LangModel.String("statusNoUser"));
-		statusBar.setText("domain", LangModel.String("statusNoDomain"));
+		statusBar.setText("status", LangModel.getString("statusReady"));
+		statusBar.setText("server", LangModel.getString("statusNoConnection"));
+		statusBar.setText("session", LangModel.getString("statusNoSession"));
+		statusBar.setText("user", LangModel.getString("statusNoUser"));
+		statusBar.setText("domain", LangModel.getString("statusNoDomain"));
 		statusBar.setText("time", " ");
 		statusBar.organize();
 
@@ -291,7 +291,7 @@ public class SchemeEditorMainFrame extends JFrame
 		aModel.setVisible("menuSchemeExport", false);
 		aModel.setVisible("menuSchemeImport", false);
 
-		statusBar.setText("domain", LangModel.String("statusNoDomain"));
+		statusBar.setText("domain", LangModel.getString("statusNoDomain"));
 	}
 
 	public Dispatcher getInternalDispatcher()
@@ -315,7 +315,7 @@ public class SchemeEditorMainFrame extends JFrame
 
 					setSessionOpened();
 
-					statusBar.setText("status", LangModel.String("statusReady"));
+					statusBar.setText("status", LangModel.getString("statusReady"));
 					statusBar.setText("session", sdf.format(new Date(aContext.getSessionInterface().getLogonTime())));
 					statusBar.setText("user", aContext.getSessionInterface().getUser());
 				}
@@ -327,9 +327,9 @@ public class SchemeEditorMainFrame extends JFrame
 				{
 					aContext.setDataSourceInterface(null);
 					setSessionClosed();
-					statusBar.setText("status", LangModel.String("statusReady"));
-					statusBar.setText("session", LangModel.String("statusNoSession"));
-					statusBar.setText("user", LangModel.String("statusNoUser"));
+					statusBar.setText("status", LangModel.getString("statusReady"));
+					statusBar.setText("session", LangModel.getString("statusNoSession"));
+					statusBar.setText("user", LangModel.getString("statusNoUser"));
 				}
 			}
 			if(cce.CONNECTION_OPENED)
@@ -338,7 +338,7 @@ public class SchemeEditorMainFrame extends JFrame
 				if(aContext.getConnectionInterface().equals(cci))
 				{
 					setConnectionOpened();
-					statusBar.setText("status", LangModel.String("statusReady"));
+					statusBar.setText("status", LangModel.getString("statusReady"));
 					statusBar.setText("server", aContext.getConnectionInterface().getServiceURL());
 				}
 			}
@@ -347,8 +347,8 @@ public class SchemeEditorMainFrame extends JFrame
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
 				if(aContext.getConnectionInterface().equals(cci))
 				{
-					statusBar.setText("status", LangModel.String("statusDisconnected"));
-					statusBar.setText("server", LangModel.String("statusNoConnection"));
+					statusBar.setText("status", LangModel.getString("statusDisconnected"));
+					statusBar.setText("server", LangModel.getString("statusNoConnection"));
 					setConnectionClosed();
 				}
 			}
@@ -357,8 +357,8 @@ public class SchemeEditorMainFrame extends JFrame
 				ConnectionInterface cci = (ConnectionInterface)cce.getSource();
 				if(aContext.getConnectionInterface().equals(cci))
 				{
-					statusBar.setText("status", LangModel.String("statusError"));
-					statusBar.setText("server", LangModel.String("statusConnectionError"));
+					statusBar.setText("status", LangModel.getString("statusError"));
+					statusBar.setText("server", LangModel.getString("statusConnectionError"));
 					setConnectionFailed();
 				}
 			}

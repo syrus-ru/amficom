@@ -63,27 +63,27 @@ public class ElementsEditorMenuBar extends JMenuBar implements ApplicationModelL
 		ElementsEditorMenuBar_this_actionAdapter actionAdapter =
 		new ElementsEditorMenuBar_this_actionAdapter(this);
 
-		menuSession.setText(LangModel.Text("menuSession"));
+		menuSession.setText(LangModel.getString("menuSession"));
 		menuSession.setName("menuSession");
-		menuSessionNew.setText(LangModel.Text("menuSessionNew"));
+		menuSessionNew.setText(LangModel.getString("menuSessionNew"));
 		menuSessionNew.setName("menuSessionNew");
 		menuSessionNew.addActionListener(actionAdapter);
-		menuSessionClose.setText(LangModel.Text("menuSessionClose"));
+		menuSessionClose.setText(LangModel.getString("menuSessionClose"));
 		menuSessionClose.setName("menuSessionClose");
 		menuSessionClose.addActionListener(actionAdapter);
-		menuSessionOptions.setText(LangModel.Text("menuSessionOptions"));
+		menuSessionOptions.setText(LangModel.getString("menuSessionOptions"));
 		menuSessionOptions.setName("menuSessionOptions");
 		menuSessionOptions.addActionListener(actionAdapter);
-		menuSessionConnection.setText(LangModel.Text("menuSessionConnection"));
+		menuSessionConnection.setText(LangModel.getString("menuSessionConnection"));
 		menuSessionConnection.setName("menuSessionConnection");
 		menuSessionConnection.addActionListener(actionAdapter);
-		menuSessionChangePassword.setText(LangModel.Text("menuSessionChangePassword"));
+		menuSessionChangePassword.setText(LangModel.getString("menuSessionChangePassword"));
 		menuSessionChangePassword.setName("menuSessionChangePassword");
 		menuSessionChangePassword.addActionListener(actionAdapter);
-		menuSessionDomain.setText(LangModel.Text("menuSessionDomain"));
+		menuSessionDomain.setText(LangModel.getString("menuSessionDomain"));
 		menuSessionDomain.setName("menuSessionDomain");
 		menuSessionDomain.addActionListener(actionAdapter);
-		menuExit.setText(LangModel.Text("menuExit"));
+		menuExit.setText(LangModel.getString("menuExit"));
 		menuExit.setName("menuExit");
 		menuExit.addActionListener(actionAdapter);
 
@@ -98,39 +98,39 @@ public class ElementsEditorMenuBar extends JMenuBar implements ApplicationModelL
 		menuSession.addSeparator();
 		menuSession.add(menuExit);
 
-		menuComponent.setText(LangModelSchematics.Text("menuComponent"));
+		menuComponent.setText(LangModelSchematics.getString("menuComponent"));
 		menuComponent.setName("menuComponent");
-		menuComponentNew.setText(LangModelSchematics.Text("menuComponentNew"));
+		menuComponentNew.setText(LangModelSchematics.getString("menuComponentNew"));
 		menuComponentNew.setName("menuComponentNew");
 		menuComponentNew.addActionListener(actionAdapter);
-		menuComponentSave.setText(LangModelSchematics.Text("menuComponentSave"));
+		menuComponentSave.setText(LangModelSchematics.getString("menuComponentSave"));
 		menuComponentSave.setName("menuComponentSave");
 		menuComponentSave.addActionListener(actionAdapter);
 
 		menuComponent.add(menuComponentNew);
 		menuComponent.add(menuComponentSave);
 
-		menuWindow.setText(LangModelSchematics.Text("menuWindow"));
+		menuWindow.setText(LangModelSchematics.getString("menuWindow"));
 		menuWindow.setName("menuWindow");
-		menuWindowArrange.setText(LangModelSchematics.Text("menuWindowArrange"));
+		menuWindowArrange.setText(LangModelSchematics.getString("menuWindowArrange"));
 		menuWindowArrange.setName("menuWindowArrange");
 		menuWindowArrange.addActionListener(actionAdapter);
-		menuWindowTree.setText(LangModelSchematics.Text("menuWindowTree"));
+		menuWindowTree.setText(LangModelSchematics.getString("menuWindowTree"));
 		menuWindowTree.setName("menuWindowTree");
 		menuWindowTree.addActionListener(actionAdapter);
-		menuWindowScheme.setText(LangModelSchematics.Text("menuWindowElements"));
+		menuWindowScheme.setText(LangModelSchematics.getString("menuWindowElements"));
 		menuWindowScheme.setName("menuWindowScheme");
 		menuWindowScheme.addActionListener(actionAdapter);
-		menuWindowCatalog.setText(LangModelSchematics.Text("menuWindowCatalog"));
+		menuWindowCatalog.setText(LangModelSchematics.getString("menuWindowCatalog"));
 		menuWindowCatalog.setName("menuWindowCatalog");
 		menuWindowCatalog.addActionListener(actionAdapter);
-		menuWindowUgo.setText(LangModelSchematics.Text("menuWindowUgo"));
+		menuWindowUgo.setText(LangModelSchematics.getString("menuWindowUgo"));
 		menuWindowUgo.setName("menuWindowUgo");
 		menuWindowUgo.addActionListener(actionAdapter);
-		menuWindowProps.setText(LangModelSchematics.Text("menuWindowProps"));
+		menuWindowProps.setText(LangModelSchematics.getString("menuWindowProps"));
 		menuWindowProps.setName("menuWindowProps");
 		menuWindowProps.addActionListener(actionAdapter);
-		menuWindowList.setText(LangModelSchematics.Text("menuWindowList"));
+		menuWindowList.setText(LangModelSchematics.getString("menuWindowList"));
 		menuWindowList.setName("menuWindowList");
 		menuWindowList.addActionListener(actionAdapter);
 

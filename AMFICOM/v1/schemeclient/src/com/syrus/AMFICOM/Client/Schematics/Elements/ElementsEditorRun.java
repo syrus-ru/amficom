@@ -13,7 +13,6 @@ public class ElementsEditorRun
 	{
 		Environment.initialize();
 		LangModelConfig.initialize();
-		LangModelSchematics.initialize();
 
 		try
 		{

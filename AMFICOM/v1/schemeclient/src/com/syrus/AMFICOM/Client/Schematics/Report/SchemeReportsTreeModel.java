@@ -15,7 +15,6 @@ import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelConfig;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
-import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
@@ -54,10 +53,6 @@ import com.syrus.AMFICOM.Client.Configure.Report.EquipFeaturesReportModel;
 import com.syrus.AMFICOM.Client.Schematics.Report.SchemeReportModel;
 
 import com.syrus.AMFICOM.Client.Map.Report.MapReportModel;
-import com.syrus.AMFICOM.Client.Optimize.Report.OptimizationReportModel;
-import com.syrus.AMFICOM.Client.Analysis.Report.EvaluationReportModel;
-import com.syrus.AMFICOM.Client.Analysis.Report.SurveyReportModel;
-import com.syrus.AMFICOM.Client.Analysis.Report.AnalysisReportModel;
 import com.syrus.AMFICOM.Client.Prediction.Report.PredictionReportModel;
 import com.syrus.AMFICOM.Client.Model.Report.ModelingReportModel;
 
@@ -78,7 +73,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 	{
 		return new ObjectResourceTreeNode(
 			"root",
-			LangModelReport.String("label_availableReports"),
+			LangModelReport.getString("label_availableReports"),
 			true);
 	}
 
@@ -131,7 +126,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 
 				ortn = new ObjectResourceTreeNode(
 					"label_repPhysicalScheme",
-					LangModelReport.String("label_repPhysicalScheme"),
+					LangModelReport.getString("label_repPhysicalScheme"),
 					true);
 
 				vec.add(ortn);
@@ -281,7 +276,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 					for (Enumeration en = ht.elements(); en.hasMoreElements(); )
 					{
 						String type = (String) en.nextElement();
-						String name = LangModelSchematics.String(type);
+						String name = LangModelSchematics.getString(type);
 						if (type.equals(""))
 							name = "Ñץולא";
 
@@ -358,7 +353,7 @@ public class SchemeReportsTreeModel extends ObjectResourceTreeModel
 
 						ObjectResourceTreeNode ortn = new ObjectResourceTreeNode(
 							curReport,
-							LangModelReport.String(curReport.view_type),
+							LangModelReport.getString(curReport.view_type),
 							true,
 							new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 							"images/new.gif").getScaledInstance(16, 16,

@@ -13,7 +13,6 @@ public class SchemeEditorRun
 	{
 		Environment.initialize();
 		LangModelConfig.initialize();
-		LangModelSchematics.initialize();
 
 		try
 		{

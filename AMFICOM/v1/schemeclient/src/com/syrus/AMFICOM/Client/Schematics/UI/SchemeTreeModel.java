@@ -240,7 +240,7 @@ public class SchemeTreeModel extends ObjectResourceTreeModel
 					for (Enumeration en = ht.elements(); en.hasMoreElements();)
 					{
 						String type = (String)en.nextElement();
-						vec.add(new ObjectResourceTreeNode (type, LangModelSchematics.String(type), true,
+						vec.add(new ObjectResourceTreeNode (type, LangModelSchematics.getString(type), true,
 								new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/folder.gif"))));
 					}
 				}

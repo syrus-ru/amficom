@@ -54,7 +54,7 @@ public class SchemeEditorToolBar extends JToolBar implements ApplicationModelLis
 																			.getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		sessionOpen.setMaximumSize(buttonSize);
 		sessionOpen.setPreferredSize(buttonSize);
-		sessionOpen.setToolTipText(LangModel.ToolTip("menuSessionNew"));
+		sessionOpen.setToolTipText(LangModel.getString("menuSessionNew"));
 		sessionOpen.setName("menuSessionNew");
 		sessionOpen.addActionListener(actionAdapter);
 
@@ -62,7 +62,7 @@ public class SchemeEditorToolBar extends JToolBar implements ApplicationModelLis
 																			.getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		schemeNew.setMaximumSize(buttonSize);
 		schemeNew.setPreferredSize(buttonSize);
-		schemeNew.setToolTipText(LangModelSchematics.ToolTip("menuSchemeNew"));
+		schemeNew.setToolTipText(LangModelSchematics.getString("menuSchemeNew"));
 		schemeNew.setName("menuSchemeNew");
 		schemeNew.addActionListener(actionAdapter);
 
@@ -70,7 +70,7 @@ public class SchemeEditorToolBar extends JToolBar implements ApplicationModelLis
 																			.getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		schemeSave.setMaximumSize(buttonSize);
 		schemeSave.setPreferredSize(buttonSize);
-		schemeSave.setToolTipText(LangModelSchematics.ToolTip("menuSchemeSave"));
+		schemeSave.setToolTipText(LangModelSchematics.getString("menuSchemeSave"));
 		schemeSave.setName("menuSchemeSave");
 		schemeSave.addActionListener(actionAdapter);
 
@@ -78,7 +78,7 @@ public class SchemeEditorToolBar extends JToolBar implements ApplicationModelLis
 																			.getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		schemeLoad.setMaximumSize(buttonSize);
 		schemeLoad.setPreferredSize(buttonSize);
-		schemeLoad.setToolTipText(LangModelSchematics.ToolTip("menuSchemeLoad"));
+		schemeLoad.setToolTipText(LangModelSchematics.getString("menuSchemeLoad"));
 		schemeLoad.setName("menuSchemeLoad");
 		schemeLoad.addActionListener(actionAdapter);
 
@@ -86,7 +86,7 @@ public class SchemeEditorToolBar extends JToolBar implements ApplicationModelLis
 																		 .getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		catalog.setMaximumSize(buttonSize);
 		catalog.setPreferredSize(buttonSize);
-		catalog.setToolTipText(LangModelSchematics.ToolTip("menuInsertToCatalog"));
+		catalog.setToolTipText(LangModelSchematics.getString("menuInsertToCatalog"));
 		catalog.setName("menuInsertToCatalog");
 		catalog.addActionListener(actionAdapter);
 

@@ -32,7 +32,6 @@ public class ElementsEditor
 	{
 		Environment.initialize();
 		LangModelConfig.initialize();
-		LangModelSchematics.initialize();
 
 		try
 		{

@@ -46,9 +46,9 @@ public class SchemePropsPanel extends JPanel
 
 	static String[] scheme_type_names = new String[]
 	{
-		LangModelSchematics.String(Scheme.NETWORK),
-		LangModelSchematics.String(Scheme.CABLESUBNETWORK),
-		LangModelSchematics.String(Scheme.BUILDING),
+		LangModelSchematics.getString(Scheme.NETWORK),
+		LangModelSchematics.getString(Scheme.CABLESUBNETWORK),
+		LangModelSchematics.getString(Scheme.BUILDING),
 //		Scheme.FLOOR,
 //		Scheme.ROOM,
 //		Scheme.RACK,

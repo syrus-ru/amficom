@@ -31,12 +31,12 @@ public class SchemeReportModel extends APOReportModel
 
 	public String getObjectsName()
 	{
-		return LangModelReport.String("label_repPhysicalScheme");
+		return LangModelReport.getString("label_repPhysicalScheme");
 	}
 
 	public String getReportsName(ObjectsReport rp)
 	{
-		String return_value = this.getObjectsName() + ":" + LangModelReport.String(rp.field);
+		String return_value = this.getObjectsName() + ":" + LangModelReport.getString(rp.field);
 		if (rp.reserveName != null)
 			return_value += rp.reserveName;
 
@@ -45,7 +45,7 @@ public class SchemeReportModel extends APOReportModel
 
 	public String getLangForField(String field)
 	{
-		return LangModelReport.String(field);
+		return LangModelReport.getString(field);
 	}
 
 	public String getReportsReserveName(ObjectsReport rp)

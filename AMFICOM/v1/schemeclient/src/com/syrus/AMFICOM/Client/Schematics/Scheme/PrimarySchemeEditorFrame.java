@@ -27,9 +27,9 @@ public class PrimarySchemeEditorFrame extends //SchemeViewerFrame
 				if (sch.getName().equals(""))
 				{
 					if (panel instanceof SchemePanel)
-						setTitle(LangModelSchematics.String("schemeMainTitle"));
+						setTitle(LangModelSchematics.getString("schemeMainTitle"));
 					else
-						setTitle(LangModelSchematics.String("elementsUGOTitle"));
+						setTitle(LangModelSchematics.getString("elementsUGOTitle"));
 				}
 				else
 					setTitle(sch.getName());
@@ -46,9 +46,9 @@ public class PrimarySchemeEditorFrame extends //SchemeViewerFrame
 	{
 		panel.scheme = new Scheme();
 		if (panel instanceof SchemePanel)
-			setTitle(LangModelSchematics.String("schemeMainTitle"));
+			setTitle(LangModelSchematics.getString("schemeMainTitle"));
 		else
-			setTitle(LangModelSchematics.String("elementsUGOTitle"));
+			setTitle(LangModelSchematics.getString("elementsUGOTitle"));
 	}
 
 	/*

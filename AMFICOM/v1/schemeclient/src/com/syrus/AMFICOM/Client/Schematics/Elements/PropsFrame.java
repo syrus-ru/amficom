@@ -63,7 +63,7 @@ public class PropsFrame extends JInternalFrame
 	private void jbInit() throws Exception
 	{
 		setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
-		setTitle(LangModelSchematics.String("characteristicsTitle"));
+		setTitle(LangModelSchematics.getString("characteristicsTitle"));
 		toolBar = new PropsADToolBar(aContext);
 		this.setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
 		this.setResizable(true);

@@ -53,7 +53,7 @@ public class ElementsEditorToolBar extends JToolBar implements ApplicationModelL
 																			.getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		sessionOpen.setMaximumSize(buttonSize);
 		sessionOpen.setPreferredSize(buttonSize);
-		sessionOpen.setToolTipText(LangModel.ToolTip("menuSessionNew"));
+		sessionOpen.setToolTipText(LangModel.getString("menuSessionNew"));
 		sessionOpen.setName("menuSessionNew");
 		sessionOpen.addActionListener(actionAdapter);
 
@@ -61,7 +61,7 @@ public class ElementsEditorToolBar extends JToolBar implements ApplicationModelL
 																			.getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		componentNew.setMaximumSize(buttonSize);
 		componentNew.setPreferredSize(buttonSize);
-		componentNew.setToolTipText(LangModelSchematics.ToolTip("menuComponentNew"));
+		componentNew.setToolTipText(LangModelSchematics.getString("menuComponentNew"));
 		componentNew.setName("menuComponentNew");
 		componentNew.addActionListener(actionAdapter);
 
@@ -69,7 +69,7 @@ public class ElementsEditorToolBar extends JToolBar implements ApplicationModelL
 																			.getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		componentSave.setMaximumSize(buttonSize);
 		componentSave.setPreferredSize(buttonSize);
-		componentSave.setToolTipText(LangModelSchematics.ToolTip("menuComponentSave"));
+		componentSave.setToolTipText(LangModelSchematics.getString("menuComponentSave"));
 		componentSave.setName("menuComponentSave");
 		componentSave.addActionListener(actionAdapter);
 

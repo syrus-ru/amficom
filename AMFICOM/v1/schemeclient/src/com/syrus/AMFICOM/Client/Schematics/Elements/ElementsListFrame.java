@@ -71,7 +71,7 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setIconifiable(true);
-		this.setTitle(LangModelSchematics.String("elementsListTitle"));
+		this.setTitle(LangModelSchematics.getString("elementsListTitle"));
 		this.setMinimumSize(new Dimension(200, 150));
 		showNoSelection();
 	}

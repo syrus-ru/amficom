@@ -219,7 +219,7 @@ class SaveDialog extends JDialog
 		panel = new SchemePropsPanel(aContext, dispatcher, show_ugo);
 		panel.schemeNameTextField.setText(name);
 		panel.schemeDescrTextArea.setText(scheme.description);
-		panel.schemeTypeComboBox.setSelectedItem(LangModelSchematics.String(scheme.scheme_type));
+		panel.schemeTypeComboBox.setSelectedItem(LangModelSchematics.getString(scheme.scheme_type));
 	//	panel.init(graph.scheme, aContext.getDataSourceInterface());
 		getContentPane().setLayout(new BorderLayout());
 		getContentPane().add(panel, BorderLayout.CENTER);
