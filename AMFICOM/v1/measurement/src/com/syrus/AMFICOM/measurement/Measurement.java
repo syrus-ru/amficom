@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.45 2005/01/27 15:49:39 bob Exp $
+ * $Id: Measurement.java,v 1.46 2005/01/27 15:59:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/01/27 15:49:39 $
- * @author $Author: bob $
+ * @version $Revision: 1.46 $, $Date: 2005/01/27 15:59:00 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -271,15 +271,6 @@ public class Measurement extends Action {
 				ResultSort.RESULT_SORT_MEASUREMENT,
 				resultParameters);
 	}
-
-//	public Result retrieveResult(ResultSort resultSort) throws RetrieveObjectException, ObjectNotFoundException {
-//		try {
-//			return (Result)this.measurementDatabase.retrieveObject(this, RETRIEVE_RESULT, resultSort);
-//		}
-//		catch (IllegalDataException e) {
-//			throw new RetrieveObjectException(e.getMessage(), e);
-//		}
-//	}
 
 	public String getName() {
 		return this.name;
