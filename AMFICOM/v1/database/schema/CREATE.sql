@@ -18,3 +18,6 @@ REM mapletty
 
 @@./mapletty/CREATE.sql
 
+REM mapview
+@@./mapview/CREATE.sql
+
