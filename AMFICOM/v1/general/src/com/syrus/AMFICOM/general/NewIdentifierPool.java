@@ -1,5 +1,5 @@
 /*
- * $Id: NewIdentifierPool.java,v 1.2 2004/07/21 13:33:11 arseniy Exp $
+ * $Id: NewIdentifierPool.java,v 1.3 2004/07/21 18:47:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.util.Log;
  
 public class NewIdentifierPool {
 	public static final int DEFAULT_ENTITY_POOL_SIZE = 10;
-	public static final int MAX_ENTITY_POOL_SIZE = 10;
+	public static final int MAX_ENTITY_POOL_SIZE = 50;
 
 	private static Map entityIdentifierPools;
 	private static IdentifierGeneratorServer igServer;
