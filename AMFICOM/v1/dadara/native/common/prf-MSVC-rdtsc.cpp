@@ -159,15 +159,15 @@ void prf_print(FILE *f) // f == 0 is default (stdout)
 #if USE_clock && !USE_rdtsc
 	char *head = "count   ticks   %time   name";
 	char *line = "-----   -----   -----   ----";
-	char *form = "%5d   %5d   %4.1f%%   %s\n";
+	char *form = "%5d   %5d   %4.1f%%   %s%s\n";
 #elif USE_clock && USE_rdtsc
 	char *head = "count   ticks   %tick    rdtsc    %rdtsc   name";
 	char *line = "-----   -----   -----   -------   ------   ----";
-	char *form = "%5d   %5d   %4.1f%%   %7.2f   %5.2f%%   %s\n";
+	char *form = "%5d   %5d   %4.1f%%   %7.2f   %5.2f%%   %s%s\n";
 #elif !USE_clock && USE_rdtsc
 	char *head = "count    rdtsc    %rdtsc   name";
 	char *line = "-----   -------   ------   ----";
-	char *form = "%5d   %7.2f   %5.2f%%   %s\n";
+	char *form = "%5d   %7.2f   %5.2f%%   %s%s\n";
 #endif
 
 	fprintf (f, "profiler statistics:\n");
@@ -197,6 +197,7 @@ void prf_print(FILE *f) // f == 0 is default (stdout)
 				pdata[i].total_time_64 / rdtsc_divisor,
 				total64 ? pdata[i].total_time_64 * 99.0 / total64 : 0,
 #endif
+				cur_id == i ? "--> " : "", // если какой-то блок еще не завершился, помечаем его
 				pdata[i].id);
 		}
 
