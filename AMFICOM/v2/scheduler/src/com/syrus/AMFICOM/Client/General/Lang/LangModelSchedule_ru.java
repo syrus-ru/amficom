@@ -21,45 +21,43 @@ public class LangModelSchedule_ru extends LangModelSchedule
 		{ "menuSessionUndoText", "Отменить изменения" },
 		{ "menuExitText", "Выход" },
 
-/*
-		{ "menuViewText", "Вид" },
-		{ "menuViewPlanText", "План-график тестов" },
-		{ "menuViewTableText", "Таблица" },
-		{ "menuViewTreeText", "Объекты тестирования" },
-		{ "menuViewTimeText", "Временные параметры" },
-		{ "menuViewParamText", "Параметры измерения" },
-		{ "menuViewSaveText", "Задание на тестирование" },
-		{ "menuViewSchemeText", "Физическая схема сети" },
-		{ "menuViewMapText", "Топологическая схема сети" },
-		{ "menuViewAllText", "Разместить окна" },
-
-		{ "menuHelpText", "Помощь" },
-		{ "menuHelpContentsText", "Содержание" },
-		{ "menuHelpFindText", "Поиск темы" },
-		{ "menuHelpTipsText", "Контекстные подсказки" },
-		{ "menuHelpStartText", "Знакомство с системой" },
-		{ "menuHelpCourseText", "Курс подготовки" },
-		{ "menuHelpHelpText", "Использование помощи" },
-		{ "menuHelpSupportText", "Служба поддержки" },
-		{ "menuHelpLicenseText", "Лицензия" },
-		{ "menuHelpAboutText", "О программе" },
-
-		{ "menuOmeTimeTest", "Одноразовое тестирование"},
-		{ "menuTimeTableTest", "Тестирование по расписанию"},
-		{ "menuPeriodicalTest", "Периодическое тестирование"},
-		{ "menuAddTest", "Добавить тест"},
-		{ "menuRefresh", "Обновить тесты"},
-		{ "menuSaveTest", "Сохранить новые тесты"},
-		{ "menuKISChoise1", "Один КИС"},
-		{ "menuKISChoise2", "Все КИСы"},
-		{ "menuOriginalTest", "Обычное тестирование"},
-		{ "menuExtendedTest", "Расширенное тестирование"},
-		{ "menuFilterTest", "Фильтрация выводимых тестов"},
-
-		{ "menuParametersTesting", "Параметры тестирования"},
-		{ "menuOperationsTesting", "Операции с тестами"},
-		{ "menuTypeTesting", "Вид тестирования"},
-*/
+//		{ "menuViewText", "Вид" },
+//		{ "menuViewPlanText", "План-график тестов" },
+//		{ "menuViewTableText", "Таблица" },
+//		{ "menuViewTreeText", "Объекты тестирования" },
+//		{ "menuViewTimeText", "Временные параметры" },
+//		{ "menuViewParamText", "Параметры измерения" },
+//		{ "menuViewSaveText", "Задание на тестирование" },
+//		{ "menuViewSchemeText", "Физическая схема сети" },
+//		{ "menuViewMapText", "Топологическая схема сети" },
+//		{ "menuViewAllText", "Разместить окна" },
+//
+//		{ "menuHelpText", "Помощь" },
+//		{ "menuHelpContentsText", "Содержание" },
+//		{ "menuHelpFindText", "Поиск темы" },
+//		{ "menuHelpTipsText", "Контекстные подсказки" },
+//		{ "menuHelpStartText", "Знакомство с системой" },
+//		{ "menuHelpCourseText", "Курс подготовки" },
+//		{ "menuHelpHelpText", "Использование помощи" },
+//		{ "menuHelpSupportText", "Служба поддержки" },
+//		{ "menuHelpLicenseText", "Лицензия" },
+//		{ "menuHelpAboutText", "О программе" },
+//
+//		{ "menuOmeTimeTest", "Одноразовое тестирование"},
+//		{ "menuTimeTableTest", "Тестирование по расписанию"},
+//		{ "menuPeriodicalTest", "Периодическое тестирование"},
+//		{ "menuAddTest", "Добавить тест"},
+//		{ "menuRefresh", "Обновить тесты"},
+//		{ "menuSaveTest", "Сохранить новые тесты"},
+//		{ "menuKISChoise1", "Один КИС"},
+//		{ "menuKISChoise2", "Все КИСы"},
+//		{ "menuOriginalTest", "Обычное тестирование"},
+//		{ "menuExtendedTest", "Расширенное тестирование"},
+//		{ "menuFilterTest", "Фильтрация выводимых тестов"},
+//
+//		{ "menuParametersTesting", "Параметры тестирования"},
+//		{ "menuOperationsTesting", "Операции с тестами"},
+//		{ "menuTypeTesting", "Вид тестирования"},
 // Menu tooltips
 		{ "menuSessionToolTip", "Сессия" },
 		{ "menuSessionNewToolTip", "Новая сессия" },
@@ -79,27 +77,26 @@ public class LangModelSchedule_ru extends LangModelSchedule
 		{ "CurrentTimeButtonToolTip", "Текущее время"},
 
 
-/*
-		{ "menuViewAllToolTip", "Разместить окна" },
+//		{ "menuViewAllToolTip", "Разместить окна" },
+//
+//		{ "menuViewToolTip", "Вид" },
+//		{ "menuViewNavigatorToolTip", "Навигатор объектов" },
+//		{ "menuViewMessagesToolTip", "Окно диагностических сообщений" },
+//		{ "menuViewToolbarToolTip", "Панель инструментов" },
+//		{ "menuViewRefreshToolTip", "Обновить информацию" },
+//		{ "menuViewCatalogueToolTip", "Каталог операций" },
+//
+//		{ "menuHelpToolTip", "Помощь" },
+//		{ "menuHelpContentsToolTip", "Содержание" },
+//		{ "menuHelpFindToolTip", "Поиск темы" },
+//		{ "menuHelpTipsToolTip", "Контекстные подсказки" },
+//		{ "menuHelpStartToolTip", "Знакомство с системой" },
+//		{ "menuHelpCourseToolTip", "Курс подготовки" },
+//		{ "menuHelpHelpToolTip", "Использование помощи" },
+//		{ "menuHelpSupportToolTip", "Служба поддержки" },
+//		{ "menuHelpLicenseTooltip", "Лицензия" },
+//		{ "menuHelpAboutToolTip", "О программе" },
 
-		{ "menuViewToolTip", "Вид" },
-		{ "menuViewNavigatorToolTip", "Навигатор объектов" },
-		{ "menuViewMessagesToolTip", "Окно диагностических сообщений" },
-		{ "menuViewToolbarToolTip", "Панель инструментов" },
-		{ "menuViewRefreshToolTip", "Обновить информацию" },
-		{ "menuViewCatalogueToolTip", "Каталог операций" },
-
-		{ "menuHelpToolTip", "Помощь" },
-		{ "menuHelpContentsToolTip", "Содержание" },
-		{ "menuHelpFindToolTip", "Поиск темы" },
-		{ "menuHelpTipsToolTip", "Контекстные подсказки" },
-		{ "menuHelpStartToolTip", "Знакомство с системой" },
-		{ "menuHelpCourseToolTip", "Курс подготовки" },
-		{ "menuHelpHelpToolTip", "Использование помощи" },
-		{ "menuHelpSupportToolTip", "Служба поддержки" },
-		{ "menuHelpLicenseTooltip", "Лицензия" },
-		{ "menuHelpAboutToolTip", "О программе" },
-*/
 
 		{ "10 min", "10 минут" },
 		{ "1 hour", "1 час" },
@@ -111,7 +108,10 @@ public class LangModelSchedule_ru extends LangModelSchedule
 // Status Strings
 		{ "statusBD", "Подгрузка БД" },
 		{ "statusBDFinish", "Подгрузка БД завершена" },
-
+		{ "statusTestRefresh", "Обновление тестов из БД" },
+		{ "statusTestRefreshFinish", "Обновление тестов из БД завершено" },
+		{ "statusTestSave", "Сохранение новых тестов в БД" },
+		{ "statusTestSaveFinish", "Сохранение новых тестов в БД завершено" },
 		{ "statusNoConnection", "Нет соединения" },
 		{ "statusConnectionError", "Ошибка соединения!" },
 
@@ -123,18 +123,17 @@ public class LangModelSchedule_ru extends LangModelSchedule
 // Windows titles
 		{ "AppTitle", "Планирование АМФИКОМ" },
 
-/*
-		{ "MyPlanTitle", "План-график"},
-		{ "MyTableTitle", "Состояние и характеристики тестов"},
-		{ "MyTreeTitle", "Объекты тестирования"},
-		{ "MyTimeTitle", "Временные параметры теста"},
-		{ "MySaveTitle", "Задание теста"},
-		{ "MySchemeTitle", "Физическая схема сети"},
-		{ "MyMapTitle", "Топологическая схема сети"},
-		{ "MyParamTitle", "Измерительные параметры теста"},
-		{ "MyExtendedTitle", "Расширенное тестирование"},
-		{ "MyFiltrationTitle", "Фильтрация тестов"},
-*/
+
+//		{ "MyPlanTitle", "План-график"},
+//		{ "MyTableTitle", "Состояние и характеристики тестов"},
+//		{ "MyTreeTitle", "Объекты тестирования"},
+//		{ "MyTimeTitle", "Временные параметры теста"},
+//		{ "MySaveTitle", "Задание теста"},
+//		{ "MySchemeTitle", "Физическая схема сети"},
+//		{ "MyMapTitle", "Топологическая схема сети"},
+//		{ "MyParamTitle", "Измерительные параметры теста"},
+//		{ "MyExtendedTitle", "Расширенное тестирование"},
+//		{ "MyFiltrationTitle", "Фильтрация тестов"},
 
 // Label strings
 		
@@ -222,31 +221,31 @@ public class LangModelSchedule_ru extends LangModelSchedule
 
 // Error messages
 
-/*		{ "errorTitleChangePassword", "Ошибка изменения" },
-		{ "errorTitleOpenSession", "Ошибка входа" },
+//		{ "errorTitleChangePassword", "Ошибка изменения" },
+//		{ "errorTitleOpenSession", "Ошибка входа" },
+//
+//		{ "errorWrongName", "Неверно введено имя пользователя" },
+//		{ "errorWrongPassword", "Неверно введен пароль" },
+//		{ "errorWrongPassword2", "Новый пароль второй раз введен ошибочно" },
+//		{ "errorWrongLogin", "Проверьте имя пользователя и пароль" },
+//		{ "errorWrongTest", "Ошибка задания теста" },
+//		{ "errorWrongTestObjects", "Неверно выбраны объекты тестирования!" },
+//		{ "errorWrongTestTime", "Время окончания меньше времени начала теста!" },
 
-		{ "errorWrongName", "Неверно введено имя пользователя" },
-		{ "errorWrongPassword", "Неверно введен пароль" },
-		{ "errorWrongPassword2", "Новый пароль второй раз введен ошибочно" },
-		{ "errorWrongLogin", "Проверьте имя пользователя и пароль" },
-		{ "errorWrongTest", "Ошибка задания теста" },
-		{ "errorWrongTestObjects", "Неверно выбраны объекты тестирования!" },
-		{ "errorWrongTestTime", "Время окончания меньше времени начала теста!" },
-*/
-		};
+	};
 
 	public LangModelSchedule_ru()
 	{
-		symbols.setEras(new String [] {"н.э.","до н.э."});
-		symbols.setMonths(new String [] {"январь","февраль", "март",
-				"апрель", "май", "июнь", "июль", "август", "сентябрь",
-				"октябрь", "ноябрь", "декабрь"});
-		symbols.setShortMonths(new String [] {"янв", "фев", "мар", "апр",
-				"май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"});
-//		symbols.setWeekDays(new String [] {"понедельник", "вторник",
-//				"среда", "четверг", "пятница", "суббота", "воскресенье"} );
-//		symbols.setShortWeekDays(new String [] {"пн", "вт", "ср", "чт",
-//				"пт", "сб", "вс"} );
+//		symbols.setEras(new String [] {"н.э.","до н.э."});
+//		symbols.setMonths(new String [] {"январь","февраль", "март",
+//				"апрель", "май", "июнь", "июль", "август", "сентябрь",
+//				"октябрь", "ноябрь", "декабрь"});
+//		symbols.setShortMonths(new String [] {"янв", "фев", "мар", "апр",
+//				"май", "июн", "июл", "авг", "сен", "окт", "ноя", "дек"});
+////		symbols.setWeekDays(new String [] {"понедельник", "вторник",
+////				"среда", "четверг", "пятница", "суббота", "воскресенье"} );
+////		symbols.setShortWeekDays(new String [] {"пн", "вт", "ср", "чт",
+////				"пт", "сб", "вс"} );
 	}
 
 	public Object[][] getContents()
