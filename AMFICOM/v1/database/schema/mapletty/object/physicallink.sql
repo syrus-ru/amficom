@@ -14,6 +14,8 @@ CREATE TABLE PhysicalLink (
  dimension_x NUMBER(12),
  dimension_y NUMBER(12),
  topLeft NUMBER(1),
+ start_node_id VARCHAR2(32),
+ end_node_id VARCHAR2(32),
 --
  CONSTRAINT phlink_pk PRIMARY KEY (id),
  CONSTRAINT phlink_creator_fk FOREIGN KEY (creator_id)
