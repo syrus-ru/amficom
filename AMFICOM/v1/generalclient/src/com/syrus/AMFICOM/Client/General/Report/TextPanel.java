@@ -1,22 +1,21 @@
-package com.syrus.AMFICOM.Client.General.Report;
-
-import java.awt.Dimension;
-import java.awt.BorderLayout;
-
-import java.awt.Graphics;
-import javax.swing.JScrollPane;
-import javax.swing.JTextPane;
-
-/**
- * <p>Title: </p>
- * <p>Description: Испольуется для реализации всех таблиц -
- * элементов шаблона</p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: Syrus Systems</p>
- * @author Песковский Пётр
- * @version 1.0
+/*
+ * $Id: TextPanel.java,v 1.4 2004/09/27 07:47:07 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
  */
 
+package com.syrus.AMFICOM.Client.General.Report;
+
+import java.awt.Graphics;
+import javax.swing.*;
+
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2004/09/27 07:47:07 $
+ * @module generalclient_v1
+ */
 public class TextPanel extends JScrollPane
 {
 	public JTextPane dataPane = null;
