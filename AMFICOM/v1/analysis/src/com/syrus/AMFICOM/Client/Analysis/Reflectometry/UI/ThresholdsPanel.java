@@ -247,6 +247,13 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 			     : AnalysisResourceKeys.COLOR_WARNING_THRESHOLD));
 			// XXX: нет draw_joint_of_two_model_curves
 			ModelTrace thresholdMT = et_mtm.getThresholdMT(key);
+			// FIXME: debug code
+			if (sre != null)
+			{
+				sre = et_mtm.getEventRangeOnThresholdCurve(nEvent, key);
+				if (sre == null)
+					return;
+			}
 			drawModelCurve(g, thresholdMT, sre);
 		}
 	}
