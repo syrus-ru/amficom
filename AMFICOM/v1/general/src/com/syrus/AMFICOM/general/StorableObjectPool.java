@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.33 2005/02/22 11:10:10 bob Exp $
+ * $Id: StorableObjectPool.java,v 1.34 2005/02/22 12:01:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/02/22 11:10:10 $
+ * @version $Revision: 1.34 $, $Date: 2005/02/22 12:01:54 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -56,7 +56,7 @@ public abstract class StorableObjectPool {
 
 	public StorableObjectPool(short selfGroupCode, final Class cacheMapClass) {
 		this.selfGroupCode = selfGroupCode;
-		this.selfGroupName = ObjectGroupEntities.codeToString(this.selfGroupCode);
+		this.selfGroupName = ObjectGroupEntities.codeToString(this.selfGroupCode).replaceAll("Group$", "");
 		this.cacheMapClass = cacheMapClass;		
 	}
 
