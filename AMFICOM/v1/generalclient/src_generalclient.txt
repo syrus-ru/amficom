@@ -209,6 +209,9 @@ src/com/syrus/AMFICOM/Client/Object/ui/JAlertingMessageDialog.java
 src/com/syrus/AMFICOM/Client/Object/ui/JAlertingMessageTableCellRenderer.java
 src/com/syrus/AMFICOM/Client/Object/ui/JAlertingMessageTableHeaderRenderer.java
 src/com/syrus/AMFICOM/Client/Object/ui/JAlertingMessageTableModel.java
+src/com/syrus/AMFICOM/Client/General/Report/AMTReport.java
+src/com/syrus/AMFICOM/Client/General/Report/AMTReportPanel.java
+src/com/syrus/AMFICOM/Client/General/Report/AMTReportTable.java
 src/com/syrus/AMFICOM/Client/General/Report/APOReportModel.java
 src/com/syrus/AMFICOM/Client/General/Report/ChartFrame.java
 src/com/syrus/AMFICOM/Client/General/Report/CreateReportException.java
