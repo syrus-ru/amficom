@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.23 2004/09/09 06:46:36 bob Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.24 2004/09/09 09:21:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/09/09 06:46:36 $
+ * @version $Revision: 1.24 $, $Date: 2004/09/09 09:21:47 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -249,21 +249,17 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	}
 	
 	
-	protected void setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
 			throws IllegalDataException, UpdateObjectException {
 		ParameterType parameterType = fromStorableObject(storableObject);
-		super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
 		try {			
-			preparedStatement.setString(6, parameterType.getCodename());
-			preparedStatement.setString(7, parameterType.getDescription());
-			preparedStatement.setString(8, parameterType.getName());
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(9, parameterType.getId().getCode());
+			preparedStatement.setString(++i, parameterType.getCodename());
+			preparedStatement.setString(++i, parameterType.getDescription());
+			preparedStatement.setString(++i, parameterType.getName());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
-
+		return i;
 	}
 }

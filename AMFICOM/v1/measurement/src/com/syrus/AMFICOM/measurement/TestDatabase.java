@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.33 2004/09/08 10:59:13 bob Exp $
+ * $Id: TestDatabase.java,v 1.34 2004/09/09 09:21:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2004/09/08 10:59:13 $
+ * @version $Revision: 1.34 $, $Date: 2004/09/09 09:21:47 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -135,55 +135,47 @@ public class TestDatabase extends StorableObjectDatabase {
 	}
 	
 	
-	protected void setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
 			throws IllegalDataException, UpdateObjectException {
 		
 		Test test = fromStorableObject(storableObject);
-		/**
-		 * @todo when change DB Identifier model ,change String to long
-		 */
-		String testIdCode = test.getId().getCode();
 		Date startTime = test.getStartTime();
 		Date endTime = test.getEndTime();
 		TemporalPattern temporalPattern = test.getTemporalPattern();		
 		AnalysisType analysisType = test.getAnalysisType();
 		EvaluationType evaluationType = test.getEvaluationType();
-		super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
 		try {			
-			preparedStatement.setInt(6, test.getTemporalType().value());
-			preparedStatement.setTimestamp(7, (startTime != null) ? (new Timestamp(startTime.getTime())) : null);
-			preparedStatement.setTimestamp(8, (endTime != null) ? (new Timestamp(endTime.getTime())) : null);
+			preparedStatement.setInt(++i, test.getTemporalType().value());
+			preparedStatement.setTimestamp(++i, (startTime != null) ? (new Timestamp(startTime.getTime())) : null);
+			preparedStatement.setTimestamp(++i, (endTime != null) ? (new Timestamp(endTime.getTime())) : null);
 			/**
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */
-			preparedStatement.setString(9, (temporalPattern != null) ? temporalPattern.getId().getCode() : "");
+			preparedStatement.setString(++i, (temporalPattern != null) ? temporalPattern.getId().getCode() : "");
 			/**
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */
-			preparedStatement.setString(10, test.getMeasurementType().getId().getCode());
+			preparedStatement.setString(++i, test.getMeasurementType().getId().getCode());
 			/**
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */
-			preparedStatement.setString(11, (analysisType != null) ? analysisType.getId().getCode() : "");
+			preparedStatement.setString(++i, (analysisType != null) ? analysisType.getId().getCode() : "");
 			/**
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */
-			preparedStatement.setString(12, (evaluationType != null) ? evaluationType.getId().getCode() : "");
-			preparedStatement.setInt(13, test.getStatus().value());
+			preparedStatement.setString(++i, (evaluationType != null) ? evaluationType.getId().getCode() : "");
+			preparedStatement.setInt(++i, test.getStatus().value());
 			/**
 			  * @todo when change DB Identifier model ,change setString() to setLong()
 			  */
-			preparedStatement.setString(14, test.getMonitoredElement().getId().getCode());
-			preparedStatement.setInt(15, test.getReturnType().value());
-			preparedStatement.setString(16, test.getDescription());
-			/**
-			  * @todo when change DB Identifier model ,change setString() to setLong()
-			  */
-			preparedStatement.setString(17, testIdCode);
+			preparedStatement.setString(++i, test.getMonitoredElement().getId().getCode());
+			preparedStatement.setInt(++i, test.getReturnType().value());
+			preparedStatement.setString(++i, test.getDescription());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
-
+		return i;
 	}
 	
 	private Test fromStorableObject(StorableObject storableObject) throws IllegalDataException {

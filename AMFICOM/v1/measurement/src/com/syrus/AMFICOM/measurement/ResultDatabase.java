@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.20 2004/09/08 10:59:13 bob Exp $
+ * $Id: ResultDatabase.java,v 1.21 2004/09/09 09:21:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/09/08 10:59:13 $
+ * @version $Revision: 1.21 $, $Date: 2004/09/09 09:21:47 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -141,56 +141,56 @@ public class ResultDatabase extends StorableObjectDatabase {
 			return buffer.toString();
 	}
 	
-	protected void setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
 			throws IllegalDataException, UpdateObjectException {
 		Result result = fromStorableObject(storableObject);
-		super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
 		try {
 			/**
 			 * @todo when change DB Identifier model ,change setString() to setLong()
 			 */
-			preparedStatement.setString(6, result.getMeasurement().getId().getCode());
+			preparedStatement.setString(++i, result.getMeasurement().getId().getCode());
 			int resultSort = result.getSort().value();
 			switch (resultSort) {
 				case ResultSort._RESULT_SORT_MEASUREMENT:	
 					/**
 					 * @todo when change DB Identifier model ,change setString() to setLong()
 					 */
-					preparedStatement.setString(7, "");
+					preparedStatement.setString(++i, "");
 					/**
 					 * @todo when change DB Identifier model ,change setString() to setLong()
 					 */
-					preparedStatement.setString(8, "");
+					preparedStatement.setString(++i, "");
 					break;
 				case ResultSort._RESULT_SORT_ANALYSIS:
 					/**
 					 * @todo when change DB Identifier model ,change setString() to setLong()
 					 */
-					preparedStatement.setString(7, result.getAction().getId().getCode());
+					preparedStatement.setString(++i, result.getAction().getId().getCode());
 					/**
 					 * @todo when change DB Identifier model ,change setString() to setLong()
 					 */
-					preparedStatement.setString(8, "");
+					preparedStatement.setString(++i, "");
 					break;
 				case ResultSort._RESULT_SORT_EVALUATION:				
 					/**
 					 * @todo when change DB Identifier model ,change setString() to setLong()
 					 */				
-					preparedStatement.setString(7, "");
+					preparedStatement.setString(++i, "");
 					/**
 					 * @todo when change DB Identifier model ,change setString() to setLong()
 					 */
-					preparedStatement.setString(8, result.getAction().getId().getCode());
+					preparedStatement.setString(++i, result.getAction().getId().getCode());
 					break;
 				default:
 					Log.errorMessage("ResultDatabase.insertResult | Illegal sort: " + resultSort + " of result '" + result.getId().getCode() + "'");
 			}
-			preparedStatement.setInt(9, result.getSort().value());
-			preparedStatement.setInt(10, result.getAlarmLevel().value());
-			preparedStatement.setString(11, result.getId().getCode());
+			preparedStatement.setInt(++i, result.getSort().value());
+			preparedStatement.setInt(++i, result.getAlarmLevel().value());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
+		return i;
 	}
 
 	private Result fromStorableObject(StorableObject storableObject) throws IllegalDataException {

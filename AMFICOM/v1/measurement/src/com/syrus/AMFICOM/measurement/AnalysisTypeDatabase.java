@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.27 2004/09/09 06:42:39 bob Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.28 2004/09/09 09:21:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/09/09 06:42:39 $
+ * @version $Revision: 1.28 $, $Date: 2004/09/09 09:21:47 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -447,19 +447,16 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	}	
 	
 	
-	protected void setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
 			throws IllegalDataException, UpdateObjectException {
 		AnalysisType analysisType = fromStorableObject(storableObject);
-		super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
 		try {
-			preparedStatement.setString(6, analysisType.getCodename());
-			preparedStatement.setString(7, analysisType.getDescription());
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(8, analysisType.getId().getCode());
+			preparedStatement.setString(++i, analysisType.getCodename());
+			preparedStatement.setString(++i, analysisType.getDescription());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
+		return i;
 	}
 }

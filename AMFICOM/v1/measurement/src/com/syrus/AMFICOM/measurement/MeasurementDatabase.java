@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.20 2004/09/08 10:59:12 bob Exp $
+ * $Id: MeasurementDatabase.java,v 1.21 2004/09/09 09:21:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2004/09/08 10:59:12 $
+ * @version $Revision: 1.21 $, $Date: 2004/09/09 09:21:47 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -116,39 +116,35 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 	}
 	
 	
-	protected void setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
 			throws IllegalDataException, UpdateObjectException {
 		Measurement measurement = fromStorableObject(storableObject);
-		super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
 		try {			
 			/**
 			 * @todo when change DB Identifier model ,change setString() to setLong()
 			 */
-			preparedStatement.setString(6, measurement.getType().getId().getCode()); 
+			preparedStatement.setString(++i, measurement.getType().getId().getCode()); 
 			/**
 			 * @todo when change DB Identifier model ,change setString() to setLong()
 			 */
-			preparedStatement.setString(7, measurement.getMonitoredElementId().getCode()); 
+			preparedStatement.setString(++i, measurement.getMonitoredElementId().getCode()); 
 			/**
 			 * @todo when change DB Identifier model ,change setString() to setLong()
 			 */
-			preparedStatement.setString(8, measurement.getSetup().getId().getCode());
-			preparedStatement.setTimestamp(9, new Timestamp(measurement.getStartTime().getTime()));
-			preparedStatement.setLong(10, measurement.getDuration());
-			preparedStatement.setInt(11, measurement.getStatus().value());
-			preparedStatement.setString(12, measurement.getLocalAddress());
+			preparedStatement.setString(++i, measurement.getSetup().getId().getCode());
+			preparedStatement.setTimestamp(++i, new Timestamp(measurement.getStartTime().getTime()));
+			preparedStatement.setLong(++i, measurement.getDuration());
+			preparedStatement.setInt(++i, measurement.getStatus().value());
+			preparedStatement.setString(++i, measurement.getLocalAddress());
 			/**
 			 * @todo when change DB Identifier model ,change setString() to setLong()
 			 */
-			preparedStatement.setString(13, measurement.getTestId().getCode());
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(14, measurement.getId().getCode());
+			preparedStatement.setString(++i, measurement.getTestId().getCode());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
-
+		return i;
 	}
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {

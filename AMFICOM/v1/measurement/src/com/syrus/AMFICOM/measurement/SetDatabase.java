@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.26 2004/09/09 06:46:36 bob Exp $
+ * $Id: SetDatabase.java,v 1.27 2004/09/09 09:21:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.database.ByteArrayDatabase;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/09/09 06:46:36 $
+ * @version $Revision: 1.27 $, $Date: 2004/09/09 09:21:47 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -90,21 +90,17 @@ public class SetDatabase extends StorableObjectDatabase {
 	}
 	
 	
-	protected void setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
 			throws IllegalDataException, UpdateObjectException {
 		Set set = fromStorableObject(storableObject);
-		super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
 		try {
-			preparedStatement.setInt(6, set.getSort().value());
-			preparedStatement.setString(7, set.getDescription());
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(8, set.getId().getCode());
+			preparedStatement.setInt(++i, set.getSort().value());
+			preparedStatement.setString(++i, set.getDescription());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
-
+		return i;
 	}
 
 	private Set fromStorableObject(StorableObject storableObject) throws IllegalDataException {

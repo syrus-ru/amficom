@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.21 2004/09/09 06:42:39 bob Exp $
+ * $Id: AnalysisDatabase.java,v 1.22 2004/09/09 09:21:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/09/09 06:42:39 $
+ * @version $Revision: 1.22 $, $Date: 2004/09/09 09:21:47 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -83,30 +83,27 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 	}
 	
 	
-	protected void setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
 			throws IllegalDataException, UpdateObjectException {
 		Analysis analysis = fromStorableObject(storableObject);
-		super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
 		try {
 			/**
 			 * @todo when change DB Identifier model ,change setString() to setLong()
 			 */
-			preparedStatement.setString(6, analysis.getType().getId().getCode()); 
+			preparedStatement.setString(++i, analysis.getType().getId().getCode()); 
 			/**
 			 * @todo when change DB Identifier model ,change setString() to setLong()
 			 */
-			preparedStatement.setString(7, analysis.getMonitoredElementId().getCode()); 
+			preparedStatement.setString(++i, analysis.getMonitoredElementId().getCode()); 
 			/**
 			 * @todo when change DB Identifier model ,change setString() to setLong()
 			 */
-			preparedStatement.setString(8, analysis.getCriteriaSet().getId().getCode());
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(9, analysis.getId().getCode());
+			preparedStatement.setString(++i, analysis.getCriteriaSet().getId().getCode());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
+		return i;
 	}
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,

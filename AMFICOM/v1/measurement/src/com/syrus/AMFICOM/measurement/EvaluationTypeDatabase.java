@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.24 2004/09/09 06:46:36 bob Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.25 2004/09/09 09:21:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/09/09 06:46:36 $
+ * @version $Revision: 1.25 $, $Date: 2004/09/09 09:21:47 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -88,22 +88,17 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 	}	
 
 	
-	protected void setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
 			throws IllegalDataException, UpdateObjectException {
 		EvaluationType evaluationType = fromStorableObject(storableObject);
-		super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
 		try {
-			preparedStatement.setString(6, evaluationType.getCodename()); 
-			preparedStatement.setString(7, evaluationType.getDescription()); 
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(8, evaluationType.getId().getCode());
+			preparedStatement.setString(++i, evaluationType.getCodename()); 
+			preparedStatement.setString(++i, evaluationType.getDescription()); 
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
-
-
+		return i;
 	}
 	
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,

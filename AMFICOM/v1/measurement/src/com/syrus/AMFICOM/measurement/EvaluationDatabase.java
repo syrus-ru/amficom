@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationDatabase.java,v 1.17 2004/09/08 10:59:12 bob Exp $
+ * $Id: EvaluationDatabase.java,v 1.18 2004/09/09 09:21:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/09/08 10:59:12 $
+ * @version $Revision: 1.18 $, $Date: 2004/09/09 09:21:47 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -105,30 +105,27 @@ public class EvaluationDatabase extends StorableObjectDatabase {
 		return values;
 	}	
 
-	protected void setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
 			throws IllegalDataException, UpdateObjectException {
 		Evaluation evaluation = fromStorableObject(storableObject);
-		super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
 		try {
 			/**
 			 * @todo when change DB Identifier model ,change setString() to setLong()
 			 */
-			preparedStatement.setString(6, evaluation.getType().getId().getCode()); 
+			preparedStatement.setString(++i, evaluation.getType().getId().getCode()); 
 			/**
 			 * @todo when change DB Identifier model ,change setString() to setLong()
 			 */
-			preparedStatement.setString(7, evaluation.getMonitoredElementId().getCode()); 
+			preparedStatement.setString(++i, evaluation.getMonitoredElementId().getCode()); 
 			/**
 			 * @todo when change DB Identifier model ,change setString() to setLong()
 			 */
-			preparedStatement.setString(8, evaluation.getThresholdSet().getId().getCode());
-			/**
-			 * @todo when change DB Identifier model ,change setString() to setLong()
-			 */
-			preparedStatement.setString(9, evaluation.getId().getCode());
+			preparedStatement.setString(++i, evaluation.getThresholdSet().getId().getCode());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
+		return i;
 	}
 	
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)

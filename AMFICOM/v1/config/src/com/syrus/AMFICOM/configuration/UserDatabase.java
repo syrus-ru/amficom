@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.12 2004/09/08 12:03:23 bob Exp $
+ * $Id: UserDatabase.java,v 1.13 2004/09/09 09:26:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/09/08 12:03:23 $
+ * @version $Revision: 1.13 $, $Date: 2004/09/09 09:26:15 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -141,22 +141,19 @@ public class UserDatabase extends StorableObjectDatabase {
 	}	
 	
 	
-	protected void setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
 			throws IllegalDataException, UpdateObjectException {
 		User user = fromStorableObject(storableObject);
-		super.setEntityForPreparedStatement(storableObject, preparedStatement);
+		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
 		try {			
-			preparedStatement.setString(6, user.getLogin());
-			preparedStatement.setInt(7, user.getSort().value());
-			preparedStatement.setString(8, user.getName());
-			preparedStatement.setString(9, user.getDescription());
-			/**
-			  * @todo when change DB Identifier model ,change setString() to setLong()
-			  */
-			preparedStatement.setString(10, user.getId().getCode());
+			preparedStatement.setString(++i, user.getLogin());
+			preparedStatement.setInt(++i, user.getSort().value());
+			preparedStatement.setString(++i, user.getName());
+			preparedStatement.setString(++i, user.getDescription());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
+		return i;
 	}
 	
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
