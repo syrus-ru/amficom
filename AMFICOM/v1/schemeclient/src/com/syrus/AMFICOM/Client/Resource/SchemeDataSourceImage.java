@@ -40,24 +40,20 @@
 
 package com.syrus.AMFICOM.Client.Resource;
 
-import java.util.*;
-import java.util.zip.*;
-import java.io.*;
+import java.util.Vector;
 
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.CORBA.General.*;
-import com.syrus.AMFICOM.CORBA.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.*;
-import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
+import com.syrus.AMFICOM.CORBA.Resource.ResourceDescriptor_Transferable;
 import com.syrus.AMFICOM.Client.Resource.ISMDirectory.*;
+import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
+import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
+import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.*;
 
 public class SchemeDataSourceImage extends DataSourceImage
 {
 	protected SchemeDataSourceImage()
 	{
 	}
-	
+
 	public SchemeDataSourceImage(DataSourceInterface di)
 	{
 		super(di);
@@ -79,7 +75,7 @@ public class SchemeDataSourceImage extends DataSourceImage
 			save("imageresource", ImageCatalogue.hash);
 		}
 	}
-	
+
 	public void LoadNetDirectory()
 	{
 		ResourceDescriptor_Transferable[] desc1 = GetDescriptors(PortType.typ);
@@ -108,11 +104,11 @@ public class SchemeDataSourceImage extends DataSourceImage
 		Vector ids4 = filter(CablePortType.typ, desc4, true);
 		Vector ids5 = filter(CableLinkType.typ, desc5, true);
 		Vector ids6 = filter(CharacteristicType.typ, desc6, true);
-		
-		if(	ids1.size() > 0 || 
-			ids2.size() > 0 || 
-			ids3.size() > 0 || 
-			ids4.size() > 0 || 
+
+		if(	ids1.size() > 0 ||
+			ids2.size() > 0 ||
+			ids3.size() > 0 ||
+			ids4.size() > 0 ||
 			ids5.size() > 0 ||
 			ids6.size() > 0)
 
@@ -157,7 +153,7 @@ public class SchemeDataSourceImage extends DataSourceImage
 
 	public void LoadSchemes()
 	{
-		ResourceDescriptor_Transferable[] desc = GetDescriptors("scheme");
+		ResourceDescriptor_Transferable[] desc = GetDomainDescriptors(Scheme.typ);
 
 //		Pool.removeHash("scheme");
 //		Pool.removeHash("schemeelement");
@@ -190,6 +186,6 @@ public class SchemeDataSourceImage extends DataSourceImage
 			save(ElementAttributeType.typ);
 		}
 	}
-	
+
 }
 
