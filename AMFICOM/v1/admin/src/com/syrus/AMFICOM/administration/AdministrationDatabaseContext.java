@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationDatabaseContext.java,v 1.2 2005/01/18 15:15:59 bass Exp $
+ * $Id: AdministrationDatabaseContext.java,v 1.3 2005/02/04 12:05:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,11 +8,12 @@
 
 package com.syrus.AMFICOM.administration;
 
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/18 15:15:59 $
- * @author $Author: bass $
+ * @version $Revision: 1.3 $, $Date: 2005/02/04 12:05:31 $
+ * @author $Author: arseniy $
  * @todo Declare all fields private as<ol>
  *       <li>they have public accessors; and</li>
  *       <li>there's {@link #init(StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase)}
@@ -37,6 +38,30 @@ public final class AdministrationDatabaseContext {
 		domainDatabase = domainDatabase1;
 		serverDatabase = serverDatabase1;
 		mcmDatabase = mcmDatabase1;
+	}
+
+	public static StorableObjectDatabase getDatabase(short entityCode) {
+		switch (entityCode) {
+
+			case ObjectEntities.USER_ENTITY_CODE:
+				return userDatabase;
+
+			case ObjectEntities.DOMAIN_ENTITY_CODE:
+				return domainDatabase;
+
+			case ObjectEntities.SERVER_ENTITY_CODE:
+				return serverDatabase;
+
+			case ObjectEntities.MCM_ENTITY_CODE:
+				return mcmDatabase;
+
+//			case ObjectEntities.PERMATTR_ENTITY_CODE:
+//			database = AdministrationDatabaseContext.getPermissionAttributesDatabase();
+//			break;
+
+			default:
+				return null;
+		}
 	}
 
 	public static StorableObjectDatabase getUserDatabase() {

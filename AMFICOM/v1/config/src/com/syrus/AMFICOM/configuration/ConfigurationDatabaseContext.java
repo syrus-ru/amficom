@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationDatabaseContext.java,v 1.38 2005/02/03 14:43:43 arseniy Exp $
+ * $Id: ConfigurationDatabaseContext.java,v 1.39 2005/02/04 12:02:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,10 +8,11 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/02/03 14:43:43 $
+ * @version $Revision: 1.39 $, $Date: 2005/02/04 12:02:44 $
  * @author $Author: arseniy $
  * @todo Declare all fields private as<ol>
  *       <li>they have public accessors; and</li>
@@ -35,7 +36,7 @@ public final class ConfigurationDatabaseContext {
 	protected static StorableObjectDatabase monitoredElementDatabase;
 	protected static StorableObjectDatabase linkDatabase;
 	protected static StorableObjectDatabase cableThreadDatabase;
-    
+
 	private ConfigurationDatabaseContext() {
 		// private constructor 
 	}
@@ -103,6 +104,59 @@ public final class ConfigurationDatabaseContext {
 
 	}
 
+	public static StorableObjectDatabase getDatabase(short entityCode) {
+		switch (entityCode) {
+
+			case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
+				return equipmentTypeDatabase;
+
+			case ObjectEntities.PORTTYPE_ENTITY_CODE:
+				return portTypeDatabase;
+
+			case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
+				return measurementPortTypeDatabase;
+
+			case ObjectEntities.LINKTYPE_ENTITY_CODE:
+				return linkTypeDatabase;
+
+			case ObjectEntities.CABLELINKTYPE_ENTITY_CODE:
+				return cableLinkTypeDatabase;
+
+			case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
+				return cableThreadTypeDatabase;
+
+			case ObjectEntities.EQUIPMENT_ENTITY_CODE:
+				return equipmentDatabase;
+
+			case ObjectEntities.PORT_ENTITY_CODE:
+				return portDatabase;
+
+			case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
+				return measurementPortDatabase;
+
+			case ObjectEntities.TRANSPATH_ENTITY_CODE:
+				return transmissionPathDatabase;
+
+			case ObjectEntities.TRANSPATHTYPE_ENTITY_CODE:
+				return transmissionPathTypeDatabase;
+
+			case ObjectEntities.KIS_ENTITY_CODE:
+				return kisDatabase;
+
+			case ObjectEntities.ME_ENTITY_CODE:
+				return monitoredElementDatabase;
+
+			case ObjectEntities.LINK_ENTITY_CODE:
+				return linkDatabase;
+
+			case ObjectEntities.CABLETHREAD_ENTITY_CODE:
+				return cableThreadDatabase;
+
+			default:
+				return null;
+		}
+	}
+
 	public static StorableObjectDatabase getEquipmentDatabase() {
 		return equipmentDatabase;
 	}
@@ -118,22 +172,22 @@ public final class ConfigurationDatabaseContext {
 	public static StorableObjectDatabase getLinkDatabase() {
 		return linkDatabase;
 	}
-    
-    public static StorableObjectDatabase getCableThreadDatabase() {
-        return cableThreadDatabase;
-    }
 
-	public static StorableObjectDatabase getCableThreadTypeDatabase(){
+	public static StorableObjectDatabase getCableThreadDatabase() {
+		return cableThreadDatabase;
+	}
+
+	public static StorableObjectDatabase getCableThreadTypeDatabase() {
 		return cableThreadTypeDatabase;
 	}
 
 	public static StorableObjectDatabase getLinkTypeDatabase() {
 		return linkTypeDatabase;
 	}
-    
-    public static StorableObjectDatabase getCableLinkTypeDatabase() {
-        return cableLinkTypeDatabase;
-    }
+
+	public static StorableObjectDatabase getCableLinkTypeDatabase() {
+		return cableLinkTypeDatabase;
+	}
 
 	public static StorableObjectDatabase getMeasurementPortDatabase() {
 		return measurementPortDatabase;
