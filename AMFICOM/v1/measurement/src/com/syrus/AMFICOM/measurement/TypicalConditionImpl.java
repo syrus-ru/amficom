@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalConditionImpl.java,v 1.9 2005/03/24 12:16:10 arseniy Exp $
+ * $Id: TypicalConditionImpl.java,v 1.10 2005/04/02 15:01:54 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.util.Collection;
 import java.util.Date;
 
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -18,7 +17,7 @@ import com.syrus.AMFICOM.general.corba.TypicalSort;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/03/24 12:16:10 $
+ * @version $Revision: 1.10 $, $Date: 2005/04/02 15:01:54 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -93,11 +92,11 @@ class TypicalConditionImpl extends TypicalCondition {
 		
 	}
 
-	public boolean isNeedMore(Collection collection) {
+	public boolean isNeedMore(java.util.Set set) {
 		boolean more = true;
 
 		if (this.type == TypicalSort._TYPE_STRING && this.operation == OperationSort._OPERATION_EQUALS)
-			if (collection != null && !collection.isEmpty())
+			if (set != null && !set.isEmpty())
 				more = false;
 
 		return more;
