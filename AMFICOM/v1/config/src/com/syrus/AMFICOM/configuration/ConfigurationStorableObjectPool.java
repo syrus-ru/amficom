@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.58 2005/02/08 09:27:20 arseniy Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.59 2005/02/09 11:17:20 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/02/08 09:27:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.59 $, $Date: 2005/02/09 11:17:20 $
+ * @author $Author: max $
  * @module config_v1
  */
 
@@ -37,6 +37,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 	private static final int			OBJECT_POOL_MAP_SIZE			= 16;		/* Number of entities */
 
 	private static final int			CABLETHREADTYPE_OBJECT_POOL_SIZE	= 4;
+	private static final int			CABLELINKTYPE_OBJECT_POOL_SIZE	= 4;
 	private static final int			EQUIPMENTTYPE_OBJECT_POOL_SIZE		= 1;
 	private static final int			LINKTYPE_OBJECT_POOL_SIZE	= 2;
 	// private static final int			KISTYPE_OBJECT_POOL_SIZE		= 1;
@@ -71,6 +72,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		cObjectLoader = cObjectLoader1;
 
 		instance.addObjectPool(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.CABLELINKTYPE_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE, size);
 		// instance.addObjectPool(ObjectEntities.KISTYPE_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.LINKTYPE_ENTITY_CODE, size);
@@ -96,6 +98,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		cObjectLoader = cObjectLoader1;
 
 		instance.addObjectPool(ObjectEntities.CABLETHREADTYPE_ENTITY_CODE, CABLETHREADTYPE_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.CABLELINKTYPE_ENTITY_CODE, CABLELINKTYPE_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE, EQUIPMENTTYPE_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.LINKTYPE_ENTITY_CODE, LINKTYPE_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.PORTTYPE_ENTITY_CODE, PORTTYPE_OBJECT_POOL_SIZE);
@@ -164,6 +167,9 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 			case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
 				storableObject = cObjectLoader.loadCableThreadType(objectId);
 				break;
+			case ObjectEntities.CABLELINKTYPE_ENTITY_CODE:
+				storableObject = cObjectLoader.loadCableLinkType(objectId);
+				break;
 			case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
 				storableObject = cObjectLoader.loadEquipmentType(objectId);
 				break;
@@ -209,6 +215,9 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		switch (entityCode.shortValue()) {
 				case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
 					loadedList = cObjectLoader.loadCableThreadTypes(ids);
+					break;
+				case ObjectEntities.CABLELINKTYPE_ENTITY_CODE:
+					loadedList = cObjectLoader.loadCableLinkTypes(ids);
 					break;
 				case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
 					loadedList = cObjectLoader.loadEquipmentTypes(ids);
@@ -257,6 +266,9 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		switch (entityCode) {
 				case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
 					loadedList = cObjectLoader.loadCableThreadTypesButIds(condition, ids);
+					break;
+				case ObjectEntities.CABLELINKTYPE_ENTITY_CODE:
+					loadedList = cObjectLoader.loadCableLinkTypesButIds(condition, ids);
 					break;
 				case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
 					loadedList = cObjectLoader.loadEquipmentTypesButIds(condition, ids);
@@ -309,6 +321,12 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 						cObjectLoader.saveCableThreadType((CableThreadType) list.get(0), force);
 					else
 						cObjectLoader.saveCableThreadTypes(list, force);
+					break;
+				case ObjectEntities.CABLELINKTYPE_ENTITY_CODE:
+					if (alone)
+						cObjectLoader.saveCableLinkType((CableLinkType) list.get(0), force);
+					else
+						cObjectLoader.saveCableLinkTypes(list, force);
 					break;
 				case ObjectEntities.EQUIPMENTTYPE_ENTITY_CODE:
 					if (alone)
