@@ -1,65 +1,53 @@
-package com.syrus.AMFICOM.Client.General.Filter;
-
-import java.awt.BorderLayout;
-import java.awt.Toolkit;
-import java.awt.Image;
-
-import java.util.List;
-import javax.swing.JInternalFrame;
-import javax.swing.JFrame;
-import javax.swing.ImageIcon;
-import javax.swing.event.InternalFrameEvent;
-
-
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilterPane;
-import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
-import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-
-import com.syrus.AMFICOM.Client.Resource.DataSet;
-
-
-/**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2003</p>
- * <p>Company: </p>
- * @author unascribed
- * @version 1.0
+/*
+ * $Id: SetRestrictionsWindow.java,v 1.9 2004/09/27 10:06:55 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
  */
 
+package com.syrus.AMFICOM.Client.General.Filter;
+
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Lang.LangModel;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import java.awt.*;
+import java.util.List;
+import javax.swing.*;
+import javax.swing.event.InternalFrameEvent;
+
+/**
+ * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2004/09/27 10:06:55 $
+ * @module generalclient_v1
+ */
 public class SetRestrictionsWindow extends JInternalFrame
 {
-  public static String ev_lsWindowCreated = "ev_lsWindowCreated";
+	public static String ev_lsWindowCreated = "ev_lsWindowCreated";
 
-  public ObjectResourceFilterPane orfp = null;
+	public ObjectResourceFilterPane orfp = null;
 
-  private ObjectResourceFilter orf = null;
-  private List dataset = null;
-  private ApplicationContext aContext = null;
-//  private JFrame ownerWindow = null;
+	private ObjectResourceFilter orf = null;
 
-  public SetRestrictionsWindow(
+	private List dataset = null;
+
+	private ApplicationContext aContext = null;
+
+	public SetRestrictionsWindow(
 		ObjectResourceFilter orf,
 		List data,
 		ApplicationContext aC,
 		JFrame ownerWindow)
-  {
-	 try
-	 {
+	{
 		this.orf = orf;
 		this.aContext = aC;
 		this.dataset = data;
 		jbInit();
-	 }
-	 catch(Exception e)
-	 {
-		e.printStackTrace();
-	 }
-  }
-  private void jbInit() throws Exception
-  {
-	 this.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+	}
+
+	private void jbInit()
+	{
+		this.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 		 "images/main/report_mini.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 
 	 this.addInternalFrameListener(new javax.swing.event.InternalFrameAdapter()
@@ -81,8 +69,8 @@ public class SetRestrictionsWindow extends JInternalFrame
 	 this.getContentPane().add(orfp, BorderLayout.CENTER);
   }
 
-  public void closeSchemeWindow()
-  {
-	 this.orfp.logicSchemeWindow.dispose();
-  }
+	public void closeSchemeWindow()
+	{
+		this.orfp.logicSchemeWindow.dispose();
+	}
 }
