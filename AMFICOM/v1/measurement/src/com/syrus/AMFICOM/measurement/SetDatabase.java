@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.23 2004/08/29 11:47:05 bob Exp $
+ * $Id: SetDatabase.java,v 1.24 2004/09/07 15:20:44 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.LinkedList;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,12 +27,13 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.ByteArrayDatabase;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/08/29 11:47:05 $
+ * @version $Revision: 1.24 $, $Date: 2004/09/07 15:20:44 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -47,6 +48,88 @@ public class SetDatabase extends StorableObjectDatabase {
 	public static final String LINK_COLUMN_VALUE	= "value";
 	
     public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
+    
+	private String updateColumns;
+	private String updateMultiplySQLValues;   
+    
+	protected String getEnityName() {		
+		return "Set";
+	}
+	
+	protected String getTableName() {
+		return ObjectEntities.SET_ENTITY;
+	}
+	
+	protected String getUpdateColumns() {
+		if (this.updateColumns == null){
+			this.updateColumns = COLUMN_ID + COMMA
+				+ COLUMN_CREATED + COMMA
+				+ COLUMN_MODIFIED + COMMA
+				+ COLUMN_CREATOR_ID + COMMA
+				+ COLUMN_MODIFIER_ID + COMMA
+				+ COLUMN_SORT  + COMMA
+				+ COLUMN_DESCRIPTION;
+		}
+		return this.updateColumns;
+	}
+	
+	
+	protected String getUpdateMultiplySQLValues() {
+		if (this.updateMultiplySQLValues == null){
+			this.updateMultiplySQLValues = QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION  + COMMA
+				+ QUESTION;
+		}
+		return this.updateMultiplySQLValues;
+	}	
+	
+	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
+			UpdateObjectException {
+		Set set = fromStorableObject(storableObject);
+		String values = DatabaseDate.toUpdateSubString(set.getCreated()) + COMMA
+		+ DatabaseDate.toUpdateSubString(set.getModified()) + COMMA
+		+ set.getCreatorId().toSQLString() + COMMA
+		+ set.getModifierId().toSQLString() + COMMA
+		+ Integer.toString(set.getSort().value()) + COMMA
+		+ APOSTOPHE + set.getDescription() + APOSTOPHE;
+		return values;
+	}
+	
+	
+	protected void setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement)
+			throws IllegalDataException, UpdateObjectException {
+		Set set = fromStorableObject(storableObject);
+		try {
+			/**
+			 * @todo when change DB Identifier model ,change setString() to setLong()
+			 */
+			preparedStatement.setString(1, set.getId().getCode());
+			preparedStatement.setTimestamp(2, new Timestamp(set.getCreated().getTime()));
+			preparedStatement.setTimestamp(3, new Timestamp(set.getModified().getTime()));
+			/**
+			 * @todo when change DB Identifier model ,change setString() to setLong()
+			 */
+			preparedStatement.setString(4, set.getCreatorId().getCode());
+			/**
+			 * @todo when change DB Identifier model ,change setString() to setLong()
+			 */
+			preparedStatement.setString(5, set.getModifierId().getCode());
+
+			preparedStatement.setInt(6, set.getSort().value());
+			preparedStatement.setString(7, set.getDescription());
+			/**
+			 * @todo when change DB Identifier model ,change setString() to setLong()
+			 */
+			preparedStatement.setString(8, set.getId().getCode());
+		} catch (SQLException sqle) {
+			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
+		}
+
+	}
 
 	private Set fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof Set)
@@ -56,12 +139,12 @@ public class SetDatabase extends StorableObjectDatabase {
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Set set = this.fromStorableObject(storableObject);
-		this.retrieveSet(set);
+		this.retrieveEntity(set);
 		this.retrieveSetParameters(set);
 		this.retrieveSetMELinks(set);
 	}
 	
-	private String retrieveSetQuery(String condition){
+	protected String retrieveQuery(String condition){
 		return SQL_SELECT
 		+ COLUMN_ID + COMMA
 		+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
@@ -76,16 +159,18 @@ public class SetDatabase extends StorableObjectDatabase {
 
 	}
 	
-	private Set updateSetFromResultSet(Set set, ResultSet resultSet) throws SQLException{
-		Set set1 = set;
+	
+	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
+			throws IllegalDataException, RetrieveObjectException, SQLException {
+		Set set = fromStorableObject(storableObject);
 		if (set == null){
 			/**
 			 * @todo when change DB Identifier model ,change getString() to getLong()
 			 */
-			set1 = new Set(new Identifier(resultSet.getString(COLUMN_ID)), null, 0, null, null, null);
+			set = new Set(new Identifier(resultSet.getString(COLUMN_ID)), null, 0, null, null, null);
 		}
 		String description = resultSet.getString(COLUMN_DESCRIPTION);
-		set1.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+		set.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 											DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 											/**
 												* @todo when change DB Identifier model ,change getString() to getLong()
@@ -98,42 +183,9 @@ public class SetDatabase extends StorableObjectDatabase {
 											resultSet.getInt(COLUMN_SORT),
 											(description != null) ? description : "");
 
-		return set1;
+		return set;
 	}
 
-
-	private void retrieveSet(Set set) throws ObjectNotFoundException, RetrieveObjectException {
-		String setIdStr = set.getId().toSQLString();
-		String sql = retrieveSetQuery(COLUMN_ID	+ EQUALS + setIdStr);
-		Statement statement = null;
-		ResultSet resultSet = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("SetDatabase.retrieveSet | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			if (resultSet.next()) 
-				updateSetFromResultSet(set,resultSet);
-			else
-				throw new ObjectNotFoundException("No such set: " + setIdStr);
-		}
-		catch (SQLException sqle) {
-			String mesg = "SetDatabase.retrieveSet | Cannot retrieve set '" + setIdStr + "' -- " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-	}
 
 	private void retrieveSetParameters(Set set) throws RetrieveObjectException {
 		List parameters = new ArrayList();
@@ -251,7 +303,7 @@ public class SetDatabase extends StorableObjectDatabase {
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		Set set = this.fromStorableObject(storableObject);
 		try {
-			this.insertSet(set);
+			this.insertEntity(set);
 			this.insertSetParameters(set);
 			this.insertSetMELinks(set);
 		}
@@ -260,50 +312,15 @@ public class SetDatabase extends StorableObjectDatabase {
 			throw coe;
 		}
 	}
+	
+	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
+		insertEntities(storableObjects);
+		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
+			Set set = (Set) it.next();
+			this.insertSetParameters(set);
+			this.insertSetMELinks(set);			
+		}
 
-	private void insertSet(Set set) throws CreateObjectException {
-		String setIdStr = set.getId().toSQLString();
-		String sql = SQL_INSERT_INTO
-			+ ObjectEntities.SET_ENTITY
-			+ OPEN_BRACKET
-			+ COLUMN_ID + COMMA
-			+ COLUMN_CREATED + COMMA
-			+ COLUMN_MODIFIED + COMMA
-			+ COLUMN_CREATOR_ID + COMMA
-			+ COLUMN_MODIFIER_ID + COMMA
-			+ COLUMN_SORT  + COMMA
-			+ COLUMN_DESCRIPTION
-			+ CLOSE_BRACKET
-			+ SQL_VALUES + OPEN_BRACKET
-			+ setIdStr + COMMA
-			+ DatabaseDate.toUpdateSubString(set.getCreated()) + COMMA
-			+ DatabaseDate.toUpdateSubString(set.getModified()) + COMMA
-			+ set.getCreatorId().toSQLString() + COMMA
-			+ set.getModifierId().toSQLString() + COMMA
-			+ Integer.toString(set.getSort().value()) + COMMA
-			+ APOSTOPHE + set.getDescription() + APOSTOPHE
-			+ CLOSE_BRACKET;
-		Statement statement = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("SetDatabase.insertSet | Trying: " + sql, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql);
-			connection.commit();
-		}
-		catch (SQLException sqle) {
-			String mesg = "SetDatabase.insertSet | Cannot insert set '" + setIdStr + "' -- " + sqle.getMessage();
-			throw new CreateObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				statement = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
 	}
 
 	private void insertSetParameters(Set set) throws CreateObjectException {
@@ -425,7 +442,7 @@ public class SetDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, UpdateObjectException {
+	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		Set set = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case Set.UPDATE_ATTACH_ME:
@@ -436,7 +453,40 @@ public class SetDatabase extends StorableObjectDatabase {
 				this.deleteMEAttachment(set, (Identifier)obj);
 				this.setModified(set);
 				break;
+			case UPDATE_CHECK:
+				super.checkAndUpdateEntity(storableObject, false);
+				break;
+			case UPDATE_FORCE:					
 			default:
+				super.checkAndUpdateEntity(storableObject, true);		
+				return;
+		}
+	}
+	
+	
+	public void update(List storableObjects, int updateKind, Object obj) throws IllegalDataException,
+			VersionCollisionException, UpdateObjectException {		
+		switch (updateKind) {
+			case Set.UPDATE_ATTACH_ME:
+				for (Iterator it = storableObjects.iterator(); it.hasNext();) {
+					Set set = (Set) it.next();
+					this.createMEAttachment(set, (Identifier)obj);
+					this.setModified(set);
+				}
+				break;
+			case Set.UPDATE_DETACH_ME:
+				for (Iterator it = storableObjects.iterator(); it.hasNext();) {
+					Set set = (Set) it.next();
+					this.deleteMEAttachment(set, (Identifier)obj);
+					this.setModified(set);
+				}
+				break;
+			case UPDATE_CHECK:
+				super.checkAndUpdateEntities(storableObjects, false);
+				break;
+			case UPDATE_FORCE:					
+			default:
+				super.checkAndUpdateEntities(storableObjects, true);		
 				return;
 		}
 	}
@@ -581,130 +631,26 @@ public class SetDatabase extends StorableObjectDatabase {
 		}
 	}
 	
-	public List retrieveAll() throws RetrieveObjectException {
-		return retriveByIdsOneQuery(null);
+	public List retrieveAll() throws  IllegalDataException,RetrieveObjectException {
+		return retrieveByIds(null, null);
 	}
 
-	public List retrieveByIds(List ids) throws RetrieveObjectException {
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.general.StorableObjectDatabase#retrieveByIds(java.util.List, java.lang.String)
+	 */
+	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
+		List list = null; 
 		if ((ids == null) || (ids.isEmpty()))
-			return retriveByIdsOneQuery(null);
-		return retriveByIdsOneQuery(ids);	
-		//return retriveByIdsPreparedStatement(ids);
-	}
-	
-	private List retriveByIdsOneQuery(List ids) throws RetrieveObjectException {
-		List result = new LinkedList();
-		String sql;
-		{
-			String condition = null;
-			if (ids!=null){
-				StringBuffer buffer = new StringBuffer(COLUMN_ID);
-				int idsLength = ids.size();
-				if (idsLength == 1){
-					buffer.append(EQUALS);
-					buffer.append(((Identifier)ids.iterator().next()).toSQLString());
-				} else{
-					buffer.append(SQL_IN);
-					buffer.append(OPEN_BRACKET);
-					
-					int i = 1;
-					for(Iterator it=ids.iterator();it.hasNext();i++){
-						Identifier id = (Identifier)it.next();
-						buffer.append(id.toSQLString());
-						if (i < idsLength)
-							buffer.append(COMMA);
-					}
-					
-					buffer.append(CLOSE_BRACKET);
-					condition = buffer.toString();
-				}
-			}
-			sql = retrieveSetQuery(condition);
+			list = retriveByIdsOneQuery(null, condition);
+		else list = retriveByIdsOneQuery(ids, condition);
+		
+		for(Iterator it=list.iterator();it.hasNext();){
+			Set set = (Set)it.next();
+			this.retrieveSetParameters(set);
+			this.retrieveSetMELinks(set);
 		}
 		
-		Statement statement = null;
-		ResultSet resultSet = null;
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("SetDatabase.retriveByIdsOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			while (resultSet.next()){
-				result.add(updateSetFromResultSet(null, resultSet));
-			}
-		}
-		catch (SQLException sqle) {
-			String mesg = "SetDatabase.retriveByIdsOneQuery | Cannot execute query " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-		return result;
-	}
-	
-	private List retriveByIdsPreparedStatement(List ids) throws RetrieveObjectException {
-		List result = new LinkedList();
-		String sql;
-		{
-			
-			int idsLength = ids.size();
-			if (idsLength == 1){
-				return retriveByIdsOneQuery(ids);
-			}
-			StringBuffer buffer = new StringBuffer(COLUMN_ID);
-			buffer.append(EQUALS);							
-			buffer.append(QUESTION);
-			
-			sql =retrieveSetQuery(buffer.toString());
-		}
-			
-		PreparedStatement stmt = null;
-		ResultSet resultSet = null;
-		try {
-			stmt = connection.prepareStatement(sql.toString());
-			for(Iterator it = ids.iterator();it.hasNext();){
-				Identifier id = (Identifier)it.next(); 
-				/**
-				 * @todo when change DB Identifier model ,change setString() to setLong()
-				 */
-				String idStr = id.getIdentifierString();
-				stmt.setString(1, idStr);
-				resultSet = stmt.executeQuery();
-				if (resultSet.next()){
-					result.add(updateSetFromResultSet(null, resultSet));
-				} else{
-					Log.errorMessage("SetDatabase.retriveByIdsPreparedStatement | No such set: " + idStr);									
-				}
-				
-			}
-		}catch (SQLException sqle) {
-			String mesg = "SetDatabase.retriveByIdsPreparedStatement | Cannot retrieve set " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (stmt != null)
-					stmt.close();
-				if (stmt != null)
-					stmt.close();
-				stmt = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}			
-		
-		return result;
+		return list;
 	}
 }

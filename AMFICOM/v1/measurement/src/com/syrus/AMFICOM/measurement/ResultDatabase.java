@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.18 2004/09/06 14:33:12 bob Exp $
+ * $Id: ResultDatabase.java,v 1.19 2004/09/07 15:20:44 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/09/06 14:33:12 $
+ * @version $Revision: 1.19 $, $Date: 2004/09/07 15:20:44 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -334,7 +334,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 	}
 
 	
-	private void retrieveResult(Result result) throws ObjectNotFoundException, RetrieveObjectException {
+	private void retrieveResult(Result result) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		String resultIdStr = result.getId().toSQLString();
 		String sql = retrieveQuery(COLUMN_ID + EQUALS + resultIdStr);
 		Statement statement = null;
@@ -343,8 +343,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 			statement = connection.createStatement();
 			Log.debugMessage("ResultDatabase.retrieveResult | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
-			if (resultSet.next()) {
-			}
+			if (resultSet.next()) 
+				updateEntityFromResultSet(result, resultSet);
 			else
 				throw new ObjectNotFoundException("No such result: " + resultIdStr);
 		}
