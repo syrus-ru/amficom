@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.65 2005/03/23 13:06:21 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.66 2005/03/23 18:09:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -24,6 +25,7 @@ import com.syrus.AMFICOM.administration.MCM;
 import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.KIS;
+import com.syrus.AMFICOM.general.AccessIdentity;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -34,6 +36,7 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -55,7 +58,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/03/23 13:06:21 $
+ * @version $Revision: 1.66 $, $Date: 2005/03/23 18:09:16 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -161,6 +164,12 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			Log.errorException(e);
 			System.exit(-1);
 		}
+
+		/*	Activate session context*/
+		SessionContext.init(new AccessIdentity(new Date(System.currentTimeMillis()),
+				iAm.getDomainId(),
+				iAm.getUserId(),
+				null));
 
 		/*	Create CORBA server with servant(s)	*/
 		activateCORBAServer();
@@ -272,7 +281,7 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	private static void activateCORBAServer() {
 		/*	Create local CORBA server end activate servant*/
 		try {
-			Server server = (Server)AdministrationStorableObjectPool.getStorableObject(iAm.getServerId(), true);
+			Server server = (Server) AdministrationStorableObjectPool.getStorableObject(iAm.getServerId(), true);
 	
 			corbaServer = new CORBAServer(server.getHostName());
 			corbaServer.activateServant(new MCMImplementation(), iAm.getId().toString());
