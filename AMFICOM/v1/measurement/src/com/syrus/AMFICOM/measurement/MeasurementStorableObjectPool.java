@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.12 2004/09/16 12:54:38 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.13 2004/09/16 13:16:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/09/16 12:54:38 $
+ * @version $Revision: 1.13 $, $Date: 2004/09/16 13:16:07 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -182,9 +182,6 @@ public class MeasurementStorableObjectPool {
 
 	public static List getStorableObjectsByDomain(short entityCode, Domain domain) throws DatabaseException, CommunicationException {
 		List list = null;
-		/**
-		 * TODO method isn't complete
-		 */
 		LRUMap objectPool = (LRUMap)objectPoolMap.get(new Short(entityCode));
 		if (objectPool != null){
 			list = new LinkedList();
@@ -204,7 +201,7 @@ public class MeasurementStorableObjectPool {
 										for(Iterator iter = meList.iterator();iter.hasNext();){
 											Identifier id = (Identifier)iter.next();
 											MonitoredElement me = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(id, true);
-											if (me.getDomainId().equals(domain)){
+											if (me.getDomainId().equals(domain.getId())){
 												// here we can simple add set to list, 
 												// but must put element to start of LRU 
 												Object obj = objectPool.get(set.getId());
@@ -224,7 +221,7 @@ public class MeasurementStorableObjectPool {
 										for(Iterator iter = meList.iterator();iter.hasNext();){
 											Identifier id = (Identifier)iter.next();
 											MonitoredElement me = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(id, true);
-											if (me.getDomainId().equals(domain)){
+											if (me.getDomainId().equals(domain.getId())){
 												// here we can simple add measurementSetup to list, 
 												// but must put element to start of LRU 
 												Object obj = objectPool.get(measurementSetup.getId());
@@ -240,7 +237,7 @@ public class MeasurementStorableObjectPool {
 								Analysis analysis = (Analysis)storableObject;
 								{
 									MonitoredElement me = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(analysis.getMonitoredElementId(), true);
-									if (me.getDomainId().equals(domain)){
+									if (me.getDomainId().equals(domain.getId())){
 										// here we can simple add analysis to list, 
 										// but must put element to start of LRU 
 										Object obj = objectPool.get(analysis.getId());
@@ -252,7 +249,7 @@ public class MeasurementStorableObjectPool {
 								Evaluation evaluation = (Evaluation)storableObject;
 								{
 									MonitoredElement me = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(evaluation.getMonitoredElementId(), true);
-									if (me.getDomainId().equals(domain)){
+									if (me.getDomainId().equals(domain.getId())){
 										// here we can simple add evaluation to list, 
 										// but must put element to start of LRU 
 										Object obj = objectPool.get(evaluation.getId());
@@ -264,7 +261,7 @@ public class MeasurementStorableObjectPool {
 								Measurement measurement = (Measurement)storableObject;
 								{
 									MonitoredElement me = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(measurement.getMonitoredElementId(), true);
-									if (me.getDomainId().equals(domain)){
+									if (me.getDomainId().equals(domain.getId())){
 										// here we can simple add measurement to list, 
 										// but must put element to start of LRU 
 										Object obj = objectPool.get(measurement.getId());
@@ -276,7 +273,7 @@ public class MeasurementStorableObjectPool {
 								Test test = (Test)storableObject;
 								{
 									MonitoredElement me = test.getMonitoredElement();
-									if (me.getDomainId().equals(domain)){
+									if (me.getDomainId().equals(domain.getId())){
 										// here we can simple add test to list, 
 										// but must put element to start of LRU 
 										Object obj = objectPool.get(test.getId());
@@ -289,7 +286,7 @@ public class MeasurementStorableObjectPool {
 								Measurement measurement2 = result.getMeasurement();
 								{
 									MonitoredElement me = (MonitoredElement)ConfigurationStorableObjectPool.getStorableObject(measurement2.getMonitoredElementId(), true);
-									if (me.getDomainId().equals(domain)){
+									if (me.getDomainId().equals(domain.getId())){
 										// here we can simple add result to list, 
 										// but must put element to start of LRU 
 										Object obj = objectPool.get(result.getId());
@@ -315,9 +312,24 @@ public class MeasurementStorableObjectPool {
 	
 	public static List getTestsByTimeRange(Domain domain, Date start, Date end){
 		List list = null;
-		/**
-		 * TODO method isn't complete
-		 */
+		LRUMap objectPool = (LRUMap)objectPoolMap.get(new Short(ObjectEntities.TEST_ENTITY_CODE));
+		if (objectPool != null){
+			list = new LinkedList();
+			for (Iterator it = objectPool.iterator(); it.hasNext();) {
+				Test test = (Test) it.next();
+				if ((test.getStartTime().getTime() >= start.getTime()) &&
+					(test.getEndTime().getTime() <= end.getTime()) &&
+					( (domain == null) || 
+							( 
+									(domain != null) && 
+									test.getMonitoredElement().getDomainId().equals(domain.getId())
+							) 
+					) ){
+						list.add(test);					
+					}
+				}
+		}	
+					
 		return list;
 	}
 
