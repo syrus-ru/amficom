@@ -30,16 +30,16 @@ AMFICOM_v2	&idl\
 		&general\
 		&administration\
 		&configuration\
-		&measurement
+		&measurement\
+		&scheduler
 
 idl_v2		AMFICOM/v2/idl
 general_v2	AMFICOM/v2/general
 admin_v2	AMFICOM/v2/administration
 config_v2	AMFICOM/v2/configuration
 measurement_v2	AMFICOM/v2/measurement
-
+scheduler_v2	AMFICOM/v2/scheduler
 mcm_v2		AMFICOM/v2/mcm
-
 database_v2	AMFICOM/v2/database
 
 
