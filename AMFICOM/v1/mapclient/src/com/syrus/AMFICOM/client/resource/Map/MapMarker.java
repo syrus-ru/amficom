@@ -1178,14 +1178,14 @@ public class MapMarker extends ObjectResource implements MapElement
 		double nodeLinkLength =  Math.sqrt( 
 				(endNodeX - startNodeX) * (endNodeX - startNodeX) +
 				(endNodeY - startNodeY) * (endNodeY - startNodeY) );
-
+/*
 		double thisX = lnl.convertLongLatToScreen(anchor).x;
 		double thisY = lnl.convertLongLatToScreen(anchor).y;
 
 		double lengthFromStartNode = Math.sqrt( 
 			(thisX - startNodeX) * (thisX - startNodeX) +
 			(thisY - startNodeY) * (thisY - startNodeY) );
-
+*/
 		double cos_b = (endNodeY - startNodeY) / nodeLinkLength;
 
 		double sin_b = (endNodeX - startNodeX) / nodeLinkLength;

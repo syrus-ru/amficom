@@ -47,6 +47,9 @@ import com.syrus.AMFICOM.Client.Map.MapSchemeTreeFrame;
 import com.syrus.AMFICOM.Client.Resource.ConfigDataSourceImage;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Map.MapContext;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
+import com.syrus.AMFICOM.Client.General.Scheme.*;
+import com.syrus.AMFICOM.Client.Schematics.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.MapDataSourceImage;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.SchemeDataSourceImage;
@@ -68,6 +71,7 @@ import java.util.Date;
 import javax.swing.BorderFactory;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -414,6 +418,34 @@ public class MapMDIMain extends JFrame implements OperationListener
 			aModel.fireModelChanged("");
 			setTitle(LangModelConfig.getString("MapTitle"));
 		}
+		else
+		if (ae.getActionCommand().equals("mapaddschemeelementevent"))
+		{
+			MapMainFrame fr = (MapMainFrame )Pool.get("environment", "mapmainframe");
+			if(fr != null)
+				if(fr.getParent() != null)
+					if(fr.getParent().equals(desktopPane))
+					{
+						String se_id = (String)ae.getSource();
+						SchemeElement se = (SchemeElement)Pool.get(SchemeElement.typ, se_id);
+						se.unpack();
+
+						SchemePanelNoEdition panel = new SchemePanelNoEdition(aContext);
+						panel.setGraphSize(new Dimension());
+						SchemeViewerFrame frame = new SchemeViewerFrame(aContext, panel);
+						frame.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
+						frame.setTitle(se.getName());
+						desktopPane.add(frame);
+
+						Dimension dim = desktopPane.getSize();
+
+						frame.setLocation(0, 0);
+						frame.setSize(dim.width * 4 / 5, dim.height);
+						frame.setVisible(true);
+						frame.toFront();
+						panel.openSchemeElement(se);
+					}
+        }
 		else 
 		if(ae.getActionCommand().equals("contextchange"))
 		{
