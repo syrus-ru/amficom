@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceKeys.java,v 1.4 2005/03/23 10:18:42 bob Exp $
+ * $Id: ResourceKeys.java,v 1.5 2005/03/24 12:01:20 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,24 +9,28 @@
 package com.syrus.AMFICOM.Client.Resource;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/03/23 10:18:42 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/24 12:01:20 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module generalclient_v1
  */
 public interface ResourceKeys {
 
-	String	SIMPLE_DATE_FORMAT		= "simpleDateFormat";
+	String	SIMPLE_DATE_FORMAT			= "simpleDateFormat";
 
-	String	INSETS_NULL				= "insets.null";
+	String	COLOR_GRAPHICS_BACKGROUND	= "graphicsBackgroundColor";
 
-	String	TABLE_NO_FOCUS_BORDER	= "Table.nofocusBorder";
+	String	COLOR_IFRAME_BACKGROUND		= "innerFrameBackgroundColor";
 
-	String	SIZE_BUTTON				= "Button.size";
+	String	INSETS_NULL					= "insets.null";
 
-	String	ICON_OPEN_SESSION		= "com.syrus.AMFICOM.icon.general.opensession";
-	String	ICON_GENERAL			= "com.syrus.AMFICOM.icon.general";
-	String	ICON_OPEN_FILE			= "com.syrus.AMFICOM.icon.general.openfile";
-	String	ICON_ADD_FILE			= "com.syrus.AMFICOM.icon.general.addfile";
-	String	ICON_REMOVE_FILE		= "com.syrus.AMFICOM.icon.general.removefile";
+	String	TABLE_NO_FOCUS_BORDER		= "Table.nofocusBorder";
+
+	String	SIZE_BUTTON					= "Button.size";
+
+	String	ICON_OPEN_SESSION			= "com.syrus.AMFICOM.icon.general.opensession";
+	String	ICON_GENERAL				= "com.syrus.AMFICOM.icon.general";
+	String	ICON_OPEN_FILE				= "com.syrus.AMFICOM.icon.general.openfile";
+	String	ICON_ADD_FILE				= "com.syrus.AMFICOM.icon.general.addfile";
+	String	ICON_REMOVE_FILE			= "com.syrus.AMFICOM.icon.general.removefile";
 }

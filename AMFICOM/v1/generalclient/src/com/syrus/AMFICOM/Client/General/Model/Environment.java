@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.18 2005/03/23 10:19:00 bob Exp $
+ * $Id: Environment.java,v 1.19 2005/03/24 12:01:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,6 +23,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.ResourceBundle;
 import java.util.logging.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -32,7 +33,7 @@ import javax.swing.plaf.metal.*;
  * Класс Environment используется для хранения общей для приложения информации.
  * 
  * @author $Author: bob $
- * @version $Revision: 1.18 $, $Date: 2005/03/23 10:19:00 $
+ * @version $Revision: 1.19 $, $Date: 2005/03/24 12:01:20 $
  * @module generalclient_v1
  */
 public final class Environment
@@ -158,8 +159,19 @@ public final class Environment
 	public static final Level LOG_LEVEL_FINER = Level.FINER;
 	public static final Level LOG_LEVEL_FINEST = Level.FINEST;
 
+	private static LookAndFeel lookAndFeel2;
+	
 	static
 	{
+		
+		JFrame.setDefaultLookAndFeelDecorated(true);
+		JDialog.setDefaultLookAndFeelDecorated(true);
+		MetalTheme metalTheme = new AMFICOMMetalTheme();
+		MetalLookAndFeel.setCurrentTheme(metalTheme);
+		KunststoffLookAndFeel.setCurrentTheme(metalTheme);
+		
+		
+		
 		// load values from properties file
 		try
 		{
@@ -167,6 +179,15 @@ public final class Environment
 			connection = iniFile.getValue(FIELD_CONNECTION);
 			checkRun = iniFile.getValue(FIELD_RUN);
 			lookAndFeel = iniFile.getValue(FIELD_LOOK_AND_FEEL);
+			
+			lookAndFeel2 = getLookAndFeel2();
+			try {
+				UIManager.setLookAndFeel(lookAndFeel2);
+			} catch (UnsupportedLookAndFeelException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
 			domainId = iniFile.getValue(FIELD_DOMAIN);
 			if(domainId == null || domainId.length() == 0)
 			{
@@ -234,6 +255,18 @@ public final class Environment
 				return new Dimension(24, 24);
 			}
 		});
+		
+		UIDefaults defaults = UIManager.getLookAndFeelDefaults();
+		
+//		defaults.put("Panel.background", Color.WHITE);
+		defaults.put("Table.background", Color.WHITE);
+		defaults.put("Table.foreground", Color.BLACK);
+		defaults.put("Table.gridColor", Color.BLACK);
+		
+		defaults.put(ResourceKeys.COLOR_GRAPHICS_BACKGROUND, Color.WHITE);
+
+		defaults.put(ResourceKeys.COLOR_IFRAME_BACKGROUND, Color.WHITE);		
+		
 	}
 
 	public static String getDomainId()
@@ -404,26 +437,23 @@ public final class Environment
 	{
 	}
 
-	static
-	{
-		JFrame.setDefaultLookAndFeelDecorated(true);
-		JDialog.setDefaultLookAndFeelDecorated(true);
-		MetalTheme metalTheme = new AMFICOMMetalTheme();
-		MetalLookAndFeel.setCurrentTheme(metalTheme);
-		KunststoffLookAndFeel.setCurrentTheme(metalTheme);
+	
+	/**
+	 * @deprecated look and feel setups at start self
+	 * @return look and feel
+	 */
+	public static LookAndFeel getLookAndFeel() {
+		return lookAndFeel2;
 	}
-
-	public static LookAndFeel getLookAndFeel()
-	{
-		try
-		{
+	
+	private static LookAndFeel getLookAndFeel2() {
+		try {
 			LookAndFeel plaf = null;
 			if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_METAL))
 				plaf = (LookAndFeel) (MetalLookAndFeel.class.newInstance());
 			else if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_KUNSTSTOFF)
-				|| lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_KUNSTSTOFF_SHORT))
-				plaf = (LookAndFeel)
-					(KunststoffLookAndFeel.class.newInstance());
+					|| lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_KUNSTSTOFF_SHORT))
+				plaf = (LookAndFeel) (KunststoffLookAndFeel.class.newInstance());
 			else if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_WINDOWS))
 				plaf = (LookAndFeel) (WindowsLookAndFeel.class.newInstance());
 			else if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_MOTIF))
@@ -434,15 +464,10 @@ public final class Environment
 				return getDefaultLookAndFeel();
 			if (plaf.isSupportedLookAndFeel())
 				return plaf;
-			else
-				return getDefaultLookAndFeel();
-		}
-		catch (IllegalAccessException iae)
-		{
 			return getDefaultLookAndFeel();
-		}
-		catch (InstantiationException ie)
-		{
+		} catch (IllegalAccessException iae) {
+			return getDefaultLookAndFeel();
+		} catch (InstantiationException ie) {
 			return getDefaultLookAndFeel();
 		}
 	}
