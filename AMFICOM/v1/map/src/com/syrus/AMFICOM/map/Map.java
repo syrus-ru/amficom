@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.16 2005/02/02 14:48:45 krupenn Exp $
+ * $Id: Map.java,v 1.17 2005/02/02 15:17:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,7 +41,7 @@ import java.util.Set;
  * линиях, коллекторов (объединяющих в себе линии).
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/02/02 14:48:45 $
+ * @version $Revision: 1.17 $, $Date: 2005/02/02 15:17:13 $
  * @module map_v1
  */
 public class Map extends StorableObject {
@@ -696,7 +696,7 @@ public class Map extends StorableObject {
 	 * Получить фрагмент линии по концевым узлам.
 	 * @param startNode один концевой узел
 	 * @param endNode другой концевой узел
-	 * @return 
+	 * @return фрагмент линии
 	 */
 	public NodeLink getNodeLink(AbstractNode startNode, AbstractNode endNode) {
 		for (Iterator it = this.getNodeLinks().iterator(); it.hasNext();) {

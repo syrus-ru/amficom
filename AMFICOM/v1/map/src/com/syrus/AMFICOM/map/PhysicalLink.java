@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLink.java,v 1.22 2005/02/02 14:48:45 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.23 2005/02/02 15:17:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -50,7 +50,7 @@ import java.util.List;
  * тоннель (<code>{@link PhysicalLinkType#TUNNEL}</code>) 
  * и коллектор (<code>{@link PhysicalLinkType#COLLECTOR}</code>).
  * @author $Author: krupenn $
- * @version $Revision: 1.22 $, $Date: 2005/02/02 14:48:45 $
+ * @version $Revision: 1.23 $, $Date: 2005/02/02 15:17:13 $
  * @module map_v1
  */
 public class PhysicalLink extends StorableObject implements Characterized, TypedObject, MapElement {
@@ -551,7 +551,7 @@ public class PhysicalLink extends StorableObject implements Characterized, Typed
 	/**
 	 * Получить объект, описывающий привязку кабелей ({@link SchemeCableLink})
 	 * к линии.
-	 * @return 
+	 * @return привязка
 	 */
 	public PhysicalLinkBinding getBinding()
 	{
