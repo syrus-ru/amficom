@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.6 2004/12/27 11:24:55 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.7 2004/12/27 13:40:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/12/27 11:24:55 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2004/12/27 13:40:28 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -320,7 +320,7 @@ public abstract class StorableObjectPool {
 
 	protected abstract List loadStorableObjectsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
 
-	protected void polulatePools() {
+	protected void populatePools() {
 		try {
 			for (Iterator it = this.objectPoolMap.keySet().iterator(); it.hasNext();) {
 				short objectEntityCode = ((Short) it.next()).shortValue();
