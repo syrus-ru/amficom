@@ -1,5 +1,5 @@
 /*
- * $Id: Link.java,v 1.18 2004/12/09 16:12:48 arseniy Exp $
+ * $Id: Link.java,v 1.19 2004/12/15 12:28:33 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/12/09 16:12:48 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.19 $, $Date: 2004/12/15 12:28:33 $
+ * @author $Author: max $
  * @module config_v1
  */
 public class Link extends DomainMember implements Characterized, TypedObject {
@@ -47,7 +47,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 	private int sort;
 	
 	private String mark;
-	private String color;
+	private int color;
 	
 	private List characteristics;
 	
@@ -105,7 +105,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 				  String supplier,
 				  String supplierCode,
 				  int sort,
-				  String color,
+				  int color,
 				  String mark) {
 		super(id,
 					new Date(System.currentTimeMillis()),
@@ -141,11 +141,11 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 									  String supplier,
 									  String supplierCode,
 									  LinkSort sort,
-									  String color,
+									  int color,
 									  String mark) throws CreateObjectException{
 		if (creatorId == null || domainId == null || name == null || description == null || 
 				type == null || inventoryNo == null || supplier == null || supplierCode == null ||
-				sort == null || color == null || mark == null)
+				sort == null || mark == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
@@ -207,7 +207,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 									 this.inventoryNo,
 									 this.supplier,
 									 this.supplierCode,				
-									 (this.color != null) ? this.color : "",
+									 this.color,
 									 (this.mark != null) ? this.mark : "",
                                      charIds);
 	}
@@ -224,7 +224,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 												String supplier,
 												String supplierCode,
 												int sort,
-												String color,
+												int color,
 												String mark) {
 			super.setAttributes(created,
 					modified,
@@ -279,7 +279,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 		return LinkSort.from_int(this.sort);
 	}
 				
-	public String getColor(){
+	public int getColor(){
 		return this.color;		
 	}
 	

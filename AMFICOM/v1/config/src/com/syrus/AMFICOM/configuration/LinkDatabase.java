@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.16 2004/12/14 12:53:35 max Exp $
+ * $Id: LinkDatabase.java,v 1.17 2004/12/15 12:28:41 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/12/14 12:53:35 $
+ * @version $Revision: 1.17 $, $Date: 2004/12/15 12:28:41 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -56,7 +56,7 @@ public class LinkDatabase extends StorableObjectDatabase {
     // supplier_code VARCHAR2(64),
     private static final int SIZE_SUPPLIER_CODE_COLUMN  = 64;
     public static final String COLUMN_SUPPLIER_CODE = "supplier_code";
-    // color VARCHAR(32),
+    // color NUMBER(38),
     public static final String COLUMN_COLOR = "color";
     // mark VARCHAR(32),
     private static final int SIZE_MARK_COLUMN  = 32;
@@ -117,7 +117,6 @@ public class LinkDatabase extends StorableObjectDatabase {
 		String inventoryNo = DatabaseString.toQuerySubString(link.getInventoryNo(), SIZE_INVENTORY_NO_COLUMN);
 		String supplier = DatabaseString.toQuerySubString(link.getSupplier(), SIZE_SUPPLIER_COLUMN);
 		String supplierCode = DatabaseString.toQuerySubString(link.getSupplierCode(), SIZE_SUPPLIER_CODE_COLUMN);
-		String color = DatabaseString.toQuerySubString(link.getColor());
 		String mark = DatabaseString.toQuerySubString(link.getMark(),SIZE_MARK_COLUMN);
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ DatabaseIdentifier.toSQLString(link.getDomainId()) + COMMA
@@ -128,7 +127,7 @@ public class LinkDatabase extends StorableObjectDatabase {
 			+ APOSTOPHE + (inventoryNo != null ? inventoryNo : "") + APOSTOPHE + COMMA
 			+ APOSTOPHE + (supplier != null ? supplier : "") + APOSTOPHE + COMMA
 			+ APOSTOPHE + (supplierCode != null ? supplierCode : "") + APOSTOPHE + COMMA
-			+ APOSTOPHE + (color != null ? color : "") + APOSTOPHE + COMMA
+			+ APOSTOPHE + link.getColor() + APOSTOPHE + COMMA
 			+ APOSTOPHE + (mark != null ? mark : "") + APOSTOPHE;
 		return sql;
 	}
@@ -148,7 +147,7 @@ public class LinkDatabase extends StorableObjectDatabase {
 			preparedStatement.setString( ++i, link.getInventoryNo());
 			preparedStatement.setString( ++i, link.getSupplier());
 			preparedStatement.setString( ++i, link.getSupplierCode());
-			preparedStatement.setString( ++i, link.getColor());
+			preparedStatement.setInt( ++i, link.getColor());
 			preparedStatement.setString( ++i, link.getMark());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException("LinkDatabase." +
@@ -163,7 +162,7 @@ public class LinkDatabase extends StorableObjectDatabase {
 		Link link = storableObject == null ? null : fromStorableObject(storableObject);
 		if (link == null){			
 			link = new Link(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null,
-									   null, null, null, null, null, 0, null, null);			
+									   null, null, null, null, null, 0, 0, null);			
 		}
 		String name = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME));
 		String description = DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION));
@@ -189,7 +188,7 @@ public class LinkDatabase extends StorableObjectDatabase {
 														(supplier != null) ? supplier : "",
 														(supplierCode != null) ? supplierCode : "",
 														resultSet.getInt(COLUMN_SORT),
-														DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_COLOR)),
+														resultSet.getInt(COLUMN_COLOR),
 														DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_MARK)));
 
 		
