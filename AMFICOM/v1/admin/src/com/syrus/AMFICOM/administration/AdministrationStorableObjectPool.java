@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationStorableObjectPool.java,v 1.5 2005/02/11 15:35:32 arseniy Exp $
+ * $Id: AdministrationStorableObjectPool.java,v 1.6 2005/02/11 16:30:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/11 15:35:32 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/11 16:30:14 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -119,16 +119,16 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 		return instance.getStorableObjectImpl(objectId, useLoader);
 	}
 
-	public static List getStorableObjects(List objectIds, boolean useLoader) throws DatabaseException, CommunicationException {
+	public static Collection getStorableObjects(Collection objectIds, boolean useLoader) throws DatabaseException, CommunicationException {
 		return instance.getStorableObjectsImpl(objectIds, useLoader);
 	}
 
-	public static List getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader)
+	public static Collection getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader)
 			throws ApplicationException {
 		return instance.getStorableObjectsByConditionImpl(condition, useLoader);
 	}
 
-	public static List getStorableObjectsByConditionButIds(Collection ids,
+	public static Collection getStorableObjectsByConditionButIds(Collection ids,
 								StorableObjectCondition condition,
 								boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
@@ -159,7 +159,7 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 		return storableObject;
 	}
 
-	protected List loadStorableObjects(Short entityCode, Collection ids) throws DatabaseException, CommunicationException {
+	protected Collection loadStorableObjects(Short entityCode, Collection ids) throws DatabaseException, CommunicationException {
 		List loadedList = null;
 		switch (entityCode.shortValue()) {
 			case ObjectEntities.USER_ENTITY_CODE:
@@ -184,7 +184,7 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 		return loadedList;
 	}
 
-	protected List loadStorableObjectsButIds(StorableObjectCondition condition, Collection ids)
+	protected Collection loadStorableObjectsButIds(StorableObjectCondition condition, Collection ids)
 			throws DatabaseException, CommunicationException {
 		List loadedList = null;
 		short entityCode = condition.getEntityCode().shortValue();
