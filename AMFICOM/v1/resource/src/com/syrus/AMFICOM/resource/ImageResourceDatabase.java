@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.3 2005/01/14 11:14:03 bass Exp $
+ * $Id: ImageResourceDatabase.java,v 1.4 2005/01/17 17:13:04 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,11 +37,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/01/14 11:14:03 $
+ * @author $Author: max $
+ * @version $Revision: 1.4 $, $Date: 2005/01/17 17:13:04 $
  * @module resource_v1
  */
-final class ImageResourceDatabase extends StorableObjectDatabase {
+
+public final class ImageResourceDatabase extends StorableObjectDatabase {
 	// table :: ImageResource
 	/**
 	 * Shadowing is ok, as this table does have codename 256 chars long.
