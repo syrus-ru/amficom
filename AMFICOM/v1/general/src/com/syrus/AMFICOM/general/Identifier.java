@@ -7,12 +7,12 @@ public class Identifier implements Comparable, Cloneable, TransferableObject {
 
 	private String major;
 	private long minor;
-	private String identifier_string;
+	private String identifierString;
 
-	public Identifier(String identifier_string) {
-		this.major = identifier_string.substring(0, identifier_string.indexOf(SEPARATOR));
-		this.minor = Long.parseLong(identifier_string.substring(identifier_string.indexOf(SEPARATOR) + 1));
-		this.identifier_string = identifier_string;
+	public Identifier(String identifierString) {
+		this.major = identifierString.substring(0, identifierString.indexOf(SEPARATOR));
+		this.minor = Long.parseLong(identifierString.substring(identifierString.indexOf(SEPARATOR) + 1));
+		this.identifierString = identifierString;
 	}
 
 	public Identifier(Identifier_Transferable id_t) {
@@ -22,11 +22,11 @@ public class Identifier implements Comparable, Cloneable, TransferableObject {
 	protected Identifier(String major, long minor) {
 		this.major = major;
 		this.minor = minor;
-		this.identifier_string = this.major + SEPARATOR + Long.toString(this.minor);
+		this.identifierString = this.major + SEPARATOR + Long.toString(this.minor);
 	}
 
 	public Object clone() {
-		return new Identifier(this.identifier_string);
+		return new Identifier(this.identifierString);
 	}
 
 	public int compareTo(Object obj) {
@@ -51,7 +51,7 @@ public class Identifier implements Comparable, Cloneable, TransferableObject {
 
 	public boolean equals(Object obj) {
 		if(obj instanceof Identifier)
-			return ((Identifier)obj).getIdentifierString().equals(this.identifier_string);
+			return ((Identifier)obj).getIdentifierString().equals(this.identifierString);
 		else
 			return false;
 	}
@@ -60,16 +60,16 @@ public class Identifier implements Comparable, Cloneable, TransferableObject {
 		int ret = 17;
 		ret = 37 * ret + this.major.hashCode();
 		ret = 37 * ret + (int)(this.minor ^ (this.minor >>> 32));
-		ret = 37 * ret + this.identifier_string.hashCode();
+		ret = 37 * ret + this.identifierString.hashCode();
 		return ret;
 	}
 
 	public Object getTransferable() {
-		return new Identifier_Transferable(this.identifier_string);
+		return new Identifier_Transferable(this.identifierString);
 	}
 
 	public String getIdentifierString() {
-		return this.identifier_string; 
+		return this.identifierString; 
 	}
 
 	public String getMajor() {
@@ -81,7 +81,7 @@ public class Identifier implements Comparable, Cloneable, TransferableObject {
 	}
 
 	public String toString() {
-		return this.identifier_string;
+		return this.identifierString;
 	}
 
 	public String toHexString() {
@@ -89,11 +89,11 @@ public class Identifier implements Comparable, Cloneable, TransferableObject {
 	}
 
 	public String toSQLString() {
-		return "'" + this.identifier_string + "'";
+		return "'" + this.identifierString + "'";
 	}
 
 	public String getCode() {
-		return this.identifier_string;
+		return this.identifierString;
 	}
 
 	public static String getNullSQLString() {

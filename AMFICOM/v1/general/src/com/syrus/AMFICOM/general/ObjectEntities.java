@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.general;
 
-public interface ObjectEntities {
+public abstract class ObjectEntities {
 	/*	Object Types	*/
 	public static final String PARAMETERTYPE_ENTITY = "ParameterType";
 	public static final String MEASUREMENTTYPE_ENTITY = "MeasurementType";

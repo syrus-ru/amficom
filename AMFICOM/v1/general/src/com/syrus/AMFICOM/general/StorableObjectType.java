@@ -8,8 +8,6 @@ public abstract class StorableObjectType extends StorableObject {
 
 	public StorableObjectType(Identifier id) {
 		super(id);
-		this.codename = null;
-		this.description = null;
 	}
 
 	public StorableObjectType(Identifier id,

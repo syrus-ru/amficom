@@ -9,9 +9,8 @@ lib
 *.swp
 *.tar
 *.gz
-.idl
-.sqlj
-.all
+.corba
+.mach
 SQLChecker.cache
 sqlj.properties
 .classpath
