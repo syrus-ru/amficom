@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementServer.java,v 1.15 2004/10/21 06:35:04 bob Exp $
+ * $Id: ClientMeasurementServer.java,v 1.16 2004/11/12 12:21:04 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,10 +20,12 @@ import org.omg.PortableServer.POAHelper;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.cmserver.corba.CMServerPOATie;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.NewIdentifierPool;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.AMFICOM.mserver.corba.MServerHelper;
 import com.syrus.util.Application;
@@ -33,7 +35,7 @@ import com.syrus.util.corba.JavaSoftORBUtil;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/10/21 06:35:04 $
+ * @version $Revision: 1.16 $, $Date: 2004/11/12 12:21:04 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -223,6 +225,10 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 
 	protected synchronized void shutdown() {/* !! Need synchronization */
 		this.running = false;
+		Log.debugMessage("ClientMeasurementServer.shutdown | serialize ConfigurationStorableObjectPool" , Log.DEBUGLEVEL03);
+		ConfigurationStorableObjectPool.serializePool();
+		Log.debugMessage("ClientMeasurementServer.shutdown | serialize MeasurementStorableObjectPool" , Log.DEBUGLEVEL03);
+		MeasurementStorableObjectPool.serializePool();
 	}
 
 	public void run() {
