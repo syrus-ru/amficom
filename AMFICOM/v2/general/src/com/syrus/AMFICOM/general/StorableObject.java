@@ -10,7 +10,7 @@ public abstract class StorableObject implements TransferableObject {
 	protected Identifier creator_id;
 	protected Identifier modifier_id;
 
-	public StorableObject(Identifier id) {
+	protected StorableObject(Identifier id) {
 		this.id = id;
 	}
 
