@@ -1,10 +1,10 @@
 #
-# $Id: Makefile,v 1.4 2004/12/17 15:07:49 bass Exp $
+# $Id: Makefile,v 1.5 2004/12/21 09:42:41 cvsadmin Exp $
 #
 # vim:set ft=make:
 #
 
-MODULE_NAME = schemecommon_v1
+MODULE_NAME = scheme_v1
 
 IDLDIR=../idl_v1/idl
 
