@@ -55,7 +55,8 @@ $(LIBNAME_INTERFACE):	.corba
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/mserver/DatabaseContextSetup.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mserver/MeasurementServer.java \
-		$(SRCDIR)/com/syrus/AMFICOM/mserver/MServerImplementation.java
+		$(SRCDIR)/com/syrus/AMFICOM/mserver/MServerImplementation.java \
+		$(SRCDIR)/com/syrus/AMFICOM/setup/MeasurementServerSetup.java
 	touch $@
 
 .corba:	$(CLASSDIR)
