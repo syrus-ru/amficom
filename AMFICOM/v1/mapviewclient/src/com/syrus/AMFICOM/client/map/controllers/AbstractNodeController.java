@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractNodeController.java,v 1.1 2004/12/24 15:42:12 krupenn Exp $
+ * $Id: AbstractNodeController.java,v 1.2 2005/02/02 15:17:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,74 +28,101 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 
 import java.util.HashMap;
-import com.syrus.AMFICOM.Client.Map.Controllers.MapElementController;
 
 /**
- * элемент карты - узел 
- * 
- * 
- * 
- * @version $Revision: 1.1 $, $Date: 2004/12/24 15:42:12 $
- * @module
+ * Контроллер узла.
  * @author $Author: krupenn $
- * @see
+ * @version $Revision: 1.2 $, $Date: 2005/02/02 15:17:52 $
+ * @module mapviewclient_v1
  */
 public abstract class AbstractNodeController implements MapElementController
 {
-	/** Размер пиктограммы поумолчанию */
+	/** Размер пиктограммы поумолчанию. */
 	public static final Rectangle DEFAULT_BOUNDS = new Rectangle(14, 14);
-	/** минимальный размер элемента */
+	/** Минимальный размер элемента. */
 	public static final Rectangle MIN_BOUNDS = new Rectangle(6, 6);
-	/** максимальный размер элемента */
+	/** Максимальный размер элемента. */
 	public static final Rectangle MAX_BOUNDS = new Rectangle(40, 40);
-	/** коэффициент масштабирования пиктограммы по умолчанию */
+	/** Коэффициент масштабирования пиктограммы по умолчанию. */
 	public static final double DEFAULT_SCALE_COEFFICIENT = 1.0;
-	/** пиктограмма по умолчанию */	
+	/** Пиктограмма по умолчанию. */	
 	public static final String DEFAULT_IMAGE = "images/pc.gif";
 
-	protected LogicalNetLayer lnl;
+	/**
+	 * Логический слой.
+	 */
+	protected LogicalNetLayer logcalNetLayer;
 
-	/** Размер пиктограммы в экранных координатах */
+	/** Размер пиктограммы в экранных координатах. */
 	protected static java.util.Map boundsContainer = new HashMap();
 
+	/**
+	 * Временный объект кординат центра эемента. Используется для определения
+	 * вхождения центра элемента в область.
+	 */
 	protected static Point2D.Double anchorContainer = new Point2D.Double(0.0D, 0.0D);
 
+	/**
+	 * Временный объект области поиска. Используется для определения
+	 * вхождения центра элемента в видимую область.
+	 */
 	protected static Rectangle searchBounds = new Rectangle();
 
-	public void setLogicalNetLayer(LogicalNetLayer lnl)
+	/**
+	 * {@inheritDoc}
+	 */
+	public void setLogicalNetLayer(LogicalNetLayer logcalNetLayer)
 	{
-		this.lnl = lnl;
+		this.logcalNetLayer = logcalNetLayer;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public LogicalNetLayer getLogicalNetLayer()
 	{
-		return lnl;
+		return logcalNetLayer;
 	}
 
+	/**
+	 * Получить размер пиктограммы поумолчанию.
+	 * @return размер пиктограммы поумолчанию
+	 */
 	public Rectangle getDefaultBounds()
 	{
 		return DEFAULT_BOUNDS;
 	}
 	
+	/**
+	 * Получить минимальный размер элемента.
+	 * @return минимальный размер элемента
+	 */
 	public Rectangle getMinBounds()
 	{
 		return MIN_BOUNDS;
 	}
 	
+	/**
+	 * Получить максимальный размер элемента.
+	 * @return максимальный размер элемента
+	 */
 	public Rectangle getMaxBounds()
 	{
 		return MAX_BOUNDS;
 	}
 
 	/**
-	 * установить коэффициент масштабирования пиктограммы.
-	 * при этом обновляются границы элемента
+	 * Установить коэффициент масштабирования пиктограммы.
+	 * При этом обновляются границы элемента.
+	 * @param mapElement элемент карты
 	 */
-	public void updateScaleCoefficient(MapElement me)
+	public void updateScaleCoefficient(MapElement mapElement)
 	{
-		if(!(me instanceof AbstractNode))
+		if(!(mapElement instanceof AbstractNode))
+		{
 			return;
-		AbstractNode node = (AbstractNode)me;
+		}
+		AbstractNode node = (AbstractNode )mapElement;
 
 		double scaleCoefficient = getLogicalNetLayer().getDefaultScale() 
 				/ getLogicalNetLayer().getCurrentScale();
@@ -120,7 +147,11 @@ public abstract class AbstractNodeController implements MapElementController
 	}
 	
 	/**
-	 * получить границы элемента
+	 * Пполучить границы элемента. Поскольку вызов метода осуществляется
+	 * довольно часто при перерисовке карты, границы хранятся в
+	 * хэш-таблице.
+	 * @param node узел
+	 * @return границы пиктограммы
 	 */
 	public Rectangle getBounds(AbstractNode node)
 	{
@@ -134,7 +165,9 @@ public abstract class AbstractNodeController implements MapElementController
 	}
 
 	/**
-	 * установить границы элемента
+	 * Установить границы элемента.
+	 * @param node узел
+	 * @param rect границы пиктограммы
 	 */
 	public void setBounds(AbstractNode node, Rectangle rect)
 	{
@@ -142,35 +175,54 @@ public abstract class AbstractNodeController implements MapElementController
 	}
 
 	/**
-	 * получить пиктограмму элемента
+	 * Получить пиктограмму элемента.
+	 * @param node узел
+	 * @return пиктограмма
 	 */
 	public Image getImage(AbstractNode node)
 	{
 		return MapPropertiesManager.getScaledImage(node.getImageId());
 	}
 	
+	/**
+	 * Получить пиктограмму элемента при наличии сигнала тревоги.
+	 * @param node узел
+	 * @return пиктограмма
+	 */
 	public Image getAlarmedImage(AbstractNode node)
 	{
 		return getImage(node);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean isElementVisible(MapElement me, Rectangle2D.Double visibleBounds)
 	{
 		if(!(me instanceof AbstractNode))
+		{
 			return false;
+		}
 		AbstractNode node = (AbstractNode)me;
 		anchorContainer.setLocation(node.getLocation().getX(), node.getLocation().getY());
 		return visibleBounds.contains(anchorContainer);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
 	{
 		if(!(me instanceof AbstractNode))
+		{
 			return;
+		}
 		AbstractNode node = (AbstractNode)me;
 
 		if(!isElementVisible(node, visibleBounds))
+		{
 			return;
+		}
 		
 		MapCoordinatesConverter converter = getLogicalNetLayer();
 		
@@ -222,10 +274,15 @@ public abstract class AbstractNodeController implements MapElementController
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean isMouseOnElement(MapElement me, Point currentMousePoint)
 	{
 		if(!(me instanceof AbstractNode))
+		{
 			return false;
+		}
 
 		AbstractNode node = (AbstractNode)me;
 
@@ -247,10 +304,15 @@ public abstract class AbstractNodeController implements MapElementController
 		return false;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public String getToolTipText(MapElement me)
 	{
 		if(!(me instanceof AbstractNode))
+		{
 			return null;
+		}
 
 		AbstractNode node = (AbstractNode )me;
 

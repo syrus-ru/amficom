@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.5 2005/02/02 08:58:10 krupenn Exp $
+ * $Id: AbstractLinkController.java,v 1.6 2005/02/02 15:17:52 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import java.util.List;
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/02/02 08:58:10 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/02 15:17:52 $
  * @module mapviewclient_v1
  */
 public abstract class AbstractLinkController implements MapElementController
@@ -74,13 +74,19 @@ public abstract class AbstractLinkController implements MapElementController
 		return logicalNetLayer;
 	}
 
-	public abstract boolean isSelectionVisible(MapElement me);
+	/**
+	 * Определить, видна ли рамка выделения элемента карты.
+	 * @param mapElement элемент карты
+	 * @return флаг видимости рамки выделения
+	 */
+	public abstract boolean isSelectionVisible(MapElement mapElement);
 
 	/**
-	 * 
-	 * @param userId
-	 * @param codename
-	 * @return 
+	 * Найти тип атрибута по кодовому имени. Если такого типа
+	 * не найдено, создать новый.
+	 * @param userId пользователь
+	 * @param codename кодовое имя
+	 * @return тип атрибута
 	 */
 	public static CharacteristicType getCharacteristicType(
 			Identifier userId, 
@@ -102,7 +108,9 @@ public abstract class AbstractLinkController implements MapElementController
 			{
 				CharacteristicType type = (CharacteristicType )it.next();
 				if (type.getCodename().equals(codename))
+				{
 					return type;
+				}
 			}
 		}
 		catch(ApplicationException ex)
@@ -129,15 +137,23 @@ public abstract class AbstractLinkController implements MapElementController
 		}
 	}
 
+	/**
+	 * Найти атрибут элемента карты по типу.
+	 * @param mapElement элемент карты
+	 * @param cType тип атрибута
+	 * @return атрибут
+	 */
 	public static Characteristic getCharacteristic(
-			MapElement me, 
+			MapElement mapElement, 
 			CharacteristicType cType)
 	{
-		for(Iterator it = me.getCharacteristics().iterator(); it.hasNext();)
+		for(Iterator it = mapElement.getCharacteristics().iterator(); it.hasNext();)
 		{
 			Characteristic ch = (Characteristic )it.next();
 			if(ch.getType().equals(cType))
+			{
 				return ch;
+			}
 		}
 		return null;
 	}
@@ -149,12 +165,12 @@ public abstract class AbstractLinkController implements MapElementController
 	 * @param mapElement элемент карты
 	 * @param size толщина линии
 	 */
-	public void setLineSize (MapElement link, int size)
+	public void setLineSize (MapElement mapElement, int size)
 	{
 		CharacteristicType cType = getCharacteristicType(
 				getLogicalNetLayer().getUserId(), 
 				ATTRIBUTE_THICKNESS);
-		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
+		Characteristic ea = (Characteristic )getCharacteristic(mapElement, cType);
 		if(ea == null)
 		{
 			try
@@ -166,10 +182,10 @@ public abstract class AbstractLinkController implements MapElementController
 						"",
 						CharacteristicTypeSort._CHARACTERISTICTYPESORT_VISUAL,
 						"",
-						link.getId(),
+						mapElement.getId(),
 						true,
 						true);
-				link.addCharacteristic(ea);
+				mapElement.addCharacteristic(ea);
 			}
 			catch (CreateObjectException e)
 			{
@@ -195,7 +211,9 @@ public abstract class AbstractLinkController implements MapElementController
 				ATTRIBUTE_THICKNESS);
 		Characteristic ea = (Characteristic )getCharacteristic(mapElement, cType);
 		if(ea == null)
+		{
 			return MapPropertiesManager.getThickness();
+		}
 		return Integer.parseInt(ea.getValue());
 	}
 
@@ -252,7 +270,9 @@ public abstract class AbstractLinkController implements MapElementController
 				ATTRIBUTE_STYLE);
 		Characteristic ea = (Characteristic )getCharacteristic(mapElement, cType);
 		if(ea == null)
+		{
 			return MapPropertiesManager.getStyle();
+		}
 		return ea.getValue();
 	}
 
@@ -271,8 +291,9 @@ public abstract class AbstractLinkController implements MapElementController
 				ATTRIBUTE_STYLE);
 		Characteristic ea = (Characteristic )getCharacteristic(mapElement, cType);
 		if(ea == null)
+		{
 			return MapPropertiesManager.getStroke();
-
+		}
 		return LineComboBox.getStrokeByType(ea.getValue());
 	}
 
@@ -329,7 +350,9 @@ public abstract class AbstractLinkController implements MapElementController
 				ATTRIBUTE_COLOR);
 		Characteristic ea = (Characteristic )getCharacteristic(mapElement, cType);
 		if(ea == null)
+		{
 			return MapPropertiesManager.getColor();
+		}
 		return new Color(Integer.parseInt(ea.getValue()));
 	}
 
@@ -379,14 +402,16 @@ public abstract class AbstractLinkController implements MapElementController
 	 * @param mapElement элемент карты
 	 * @return цвет
 	 */
-	public Color getAlarmedColor(MapElement link)
+	public Color getAlarmedColor(MapElement mapElement)
 	{
 		CharacteristicType cType = getCharacteristicType(
 				getLogicalNetLayer().getUserId(), 
 				ATTRIBUTE_ALARMED_COLOR);
-		Characteristic ea = (Characteristic )getCharacteristic(link, cType);
+		Characteristic ea = (Characteristic )getCharacteristic(mapElement, cType);
 		if(ea == null)
+		{
 			return MapPropertiesManager.getAlarmedColor();
+		}
 		return new Color(Integer.parseInt(ea.getValue()));
 	}
 
@@ -443,7 +468,9 @@ public abstract class AbstractLinkController implements MapElementController
 				ATTRIBUTE_ALARMED_THICKNESS);
 		Characteristic ea = (Characteristic )getCharacteristic(mapElement, cType);
 		if(ea == null)
+		{
 			return MapPropertiesManager.getAlarmedThickness();
+		}
 		return Integer.parseInt(ea.getValue());
 	}
 }
