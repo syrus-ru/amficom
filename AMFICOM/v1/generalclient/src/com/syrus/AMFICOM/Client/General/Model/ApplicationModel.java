@@ -1,5 +1,5 @@
 /**
- * $Id: ApplicationModel.java,v 1.5 2004/07/28 12:26:15 krupenn Exp $
+ * $Id: ApplicationModel.java,v 1.6 2004/07/28 12:56:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,7 +26,7 @@ import java.util.Hashtable;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/07/28 12:26:15 $
+ * @version $Revision: 1.6 $, $Date: 2004/07/28 12:56:22 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -39,7 +39,7 @@ public class ApplicationModel
 	 * конструктора без параметров нет, так как элемент определяется 
 	 * идентификатором
 	 * 
-	 * @version $Revision: 1.5 $, $Date: 2004/07/28 12:26:15 $
+	 * @version $Revision: 1.6 $, $Date: 2004/07/28 12:56:22 $
 	 * @module
 	 * @author $Author: krupenn $
 	 * @see
@@ -270,7 +270,7 @@ public class ApplicationModel
 
 	/**
 	 * установить флаг "выбран" для элемента
-	 * @deprecated use {@link setSelected(name, true)}
+	 * @deprecated use {@link #setSelected(String, boolean) setSelected(name, true)}
 	 */
 	public void select(String name)
 	{
@@ -279,7 +279,7 @@ public class ApplicationModel
 
 	/**
 	 * снять флаг "выбран" для элемента
-	 * @deprecated use {@link setSelected(name, false)}
+	 * @deprecated use {@link #setSelected(String, boolean) setSelected(name, false)}
 	 */
 	public void deselect(String name)
 	{
@@ -299,7 +299,7 @@ public class ApplicationModel
 
 	/**
 	 * установить флаг "разрешенный" для элемента
-	 * @deprecated use {@link setEnabled(name, true)}
+	 * @deprecated use {@link #setEnabled(String, boolean) setEnabled(name, true)}
 	 */
 	public void enable(String name)
 	{
@@ -308,7 +308,7 @@ public class ApplicationModel
 
 	/**
 	 * снять флаг "разрешенный" для элемента
-	 * @deprecated use {@link setEnabled(name, false)}
+	 * @deprecated use {@link #setEnabled(String, boolean) setEnabled(name, false)}
 	 */
 	public void disable(String name)
 	{
@@ -328,7 +328,7 @@ public class ApplicationModel
 
 	/**
 	 * установить флаг "видимый" для элемента
-	 * @deprecated use {@see setVisible(name, true)}
+	 * @deprecated use {@see #setVisible(String, boolean) setVisible(name, true)}
 	 */
 	public void show(String name)
 	{
@@ -337,7 +337,7 @@ public class ApplicationModel
 
 	/**
 	 * снять флаг "видимый" для элемента
-	 * @deprecated use {@link setVisible(name, false)}
+	 * @deprecated use {@link #setVisible(String, boolean) setVisible(name, false)}
 	 */
 	public void hide(String name)
 	{
