@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalLinkElement.java,v 1.27 2004/11/02 17:00:53 krupenn Exp $
+ * $Id: MapPhysicalLinkElement.java,v 1.28 2004/11/10 15:58:30 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -46,7 +46,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.27 $, $Date: 2004/11/02 17:00:53 $
+ * @version $Revision: 1.28 $, $Date: 2004/11/10 15:58:30 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -614,18 +614,20 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 
 	public MapNodeLinkElement nextNodeLink(MapNodeLinkElement nl)
 	{
+		sortNodeLinks();
 		int index = getNodeLinks().indexOf(nl);
 		if(index == getNodeLinks().size() - 1)
-			return nl;
+			return null;
 		else
 			return (MapNodeLinkElement )getNodeLinks().get(index + 1);
 	}
 
 	public MapNodeLinkElement previousNodeLink(MapNodeLinkElement nl)
 	{
+		sortNodeLinks();
 		int index = getNodeLinks().indexOf(nl);
 		if(index == 0)
-			return nl;
+			return null;
 		else
 			return (MapNodeLinkElement )getNodeLinks().get(index - 1);
 	}

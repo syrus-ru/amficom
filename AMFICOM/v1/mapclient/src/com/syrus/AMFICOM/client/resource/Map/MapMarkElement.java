@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkElement.java,v 1.17 2004/10/29 15:00:06 krupenn Exp $
+ * $Id: MapMarkElement.java,v 1.18 2004/11/10 15:58:30 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.17 $, $Date: 2004/10/29 15:00:06 $
+ * @version $Revision: 1.18 $, $Date: 2004/11/10 15:58:30 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -72,6 +72,7 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 	protected double distance = 0.0;
 
 	protected MapNodeLinkElement nodeLink;
+	protected MapNodeElement startNode;
 
 	protected MapPhysicalLinkElement link;
 
@@ -342,46 +343,70 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 	/**
 	 * Передвинуть в точку на заданной расстоянии от начала
 	 */
-	public void moveToFromStartLt(double distance)
+	public void moveToFromStartLt(double topologicalDistance)
 	{
 		MapCoordinatesConverter converter = this.getMap().getConverter();
 
-		this.distance = distance;
-		
 		link.sortNodeLinks();
+		
+		startNode = link.getStartNode();
 
-		if ( distance > link.getLengthLt())
+		if ( topologicalDistance > link.getLengthLt())
 		{
-			this.moveToFromStartLt(link.getLengthLt());
-			return;
+			topologicalDistance = link.getLengthLt();
 		}
 
-		double path = 0;
+		this.distance = topologicalDistance;
+
+		double cumulativeDistance = 0;
 		
 		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();)
 		{
 			nodeLink = (MapNodeLinkElement )it.next();
 			nodeLink.updateLengthLt();
-			if(path + nodeLink.getLengthLt() > distance)
+			if(cumulativeDistance + nodeLink.getLengthLt() > topologicalDistance)
+			{
+				adjustPosition(converter.convertMapToScreen(
+						topologicalDistance - cumulativeDistance));
 				break;
-			else
-				path += nodeLink.getLengthLt();
+			}
+
+			cumulativeDistance += nodeLink.getLengthLt();
+			startNode = nodeLink.getOtherNode(startNode);
 		}
 		
-		path = distance - path;
+	}
 
-		nodeLink.calcScreenSlope();
-		double cosB = nodeLink.getScreenCos();
-		double sinB = nodeLink.getScreenSin();
-		
-		Point2D.Double dsp = nodeLink.getStartNode().getAnchor();
-		Point sp = converter.convertMapToScreen(dsp);
+	/**
+	 * adjust marker position accurding to topological distance relative
+	 * to current node link (which comprises startNode and endNode)
+	 * 
+	 */
+	public void adjustPosition(double screenDistance)
+	{
+		MapCoordinatesConverter converter = getMap().getConverter();
 
-		this.setAnchor(
-			converter.convertScreenToMap(
-				new Point(
-					(int)Math.round(sp.x + cosB * path),
-					(int)Math.round(sp.y + sinB * path) ) ) );
+		Point sp = converter.convertMapToScreen(startNode.getAnchor());
+	
+		double startNodeX = sp.x;
+		double startNodeY = sp.y;
+
+		Point ep = converter.convertMapToScreen(nodeLink.getOtherNode(startNode).getAnchor());
+
+		double endNodeX = ep.x;
+		double endNodeY = ep.y;
+
+		double nodeLinkLength =  Math.sqrt( 
+				(endNodeX - startNodeX) * (endNodeX - startNodeX) +
+				(endNodeY - startNodeY) * (endNodeY - startNodeY) );
+
+		double sinB = (endNodeY - startNodeY) / nodeLinkLength;
+
+		double cosB = (endNodeX - startNodeX) / nodeLinkLength;
+
+		setAnchor(converter.convertScreenToMap(new Point(
+			(int )Math.round(startNodeX + cosB * screenDistance),
+			(int )Math.round(startNodeY + sinB * screenDistance) ) ) );
 	}
 
 	public String[][] getExportColumns()
@@ -485,5 +510,17 @@ public final class MapMarkElement extends MapNodeElement implements Serializable
 	public MapPhysicalLinkElement getLink()
 	{
 		return link;
+	}
+
+
+	public void setStartNode(MapNodeElement startNode)
+	{
+		this.startNode = startNode;
+	}
+
+
+	public MapNodeElement getStartNode()
+	{
+		return startNode;
 	}
 }

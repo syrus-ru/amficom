@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.9 2004/10/15 14:09:00 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.10 2004/11/10 15:58:30 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,6 +26,7 @@ import java.awt.MediaTracker;
 import java.awt.SystemColor;
 import java.awt.geom.Point2D;
 
+import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,7 +44,7 @@ import java.util.Map;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/10/15 14:09:00 $
+ * @version $Revision: 1.10 $, $Date: 2004/11/10 15:58:30 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -195,6 +196,9 @@ public final class MapPropertiesManager
 	 */	
 	protected static boolean showLinkNames = false;
 	
+	private static NumberFormat distanceFormat;
+	private static NumberFormat coordinatesFormat;
+	
 	static
 	{
 		try
@@ -206,6 +210,16 @@ public final class MapPropertiesManager
 		{
 			MapPropertiesManager.setDefaults();
 		}
+
+		coordinatesFormat = NumberFormat.getNumberInstance();
+		coordinatesFormat.setMaximumFractionDigits(4);
+		coordinatesFormat.setMinimumFractionDigits(4);
+		coordinatesFormat.setMinimumIntegerDigits(1);
+
+		distanceFormat = NumberFormat.getNumberInstance();
+		distanceFormat.setMaximumFractionDigits(1);
+		distanceFormat.setMinimumFractionDigits(1);
+		distanceFormat.setMinimumIntegerDigits(1);
 	}
 	
 	/**
@@ -882,5 +896,17 @@ public final class MapPropertiesManager
 	public static String getLastDirectory()
 	{
 		return lastDirectory;
+	}
+
+
+	public static NumberFormat getDistanceFormat()
+	{
+		return distanceFormat;
+	}
+
+
+	public static NumberFormat getCoordinatesFormat()
+	{
+		return coordinatesFormat;
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkElement.java,v 1.20 2004/11/01 15:39:46 krupenn Exp $
+ * $Id: MapNodeLinkElement.java,v 1.21 2004/11/10 15:58:30 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,7 +40,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.20 $, $Date: 2004/11/01 15:39:46 $
+ * @version $Revision: 1.21 $, $Date: 2004/11/10 15:58:30 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -261,7 +261,7 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 		{
 			int fontHeight = g.getFontMetrics().getHeight();
 			String text = 
-					getSizeAsString() 
+					MapPropertiesManager.getDistanceFormat().format(getLengthLt()) 
 					+ " " 
 					+ MapPropertiesManager.getMetric();
 			int textWidth = g.getFontMetrics().stringWidth(text);
@@ -462,20 +462,6 @@ public final class MapNodeLinkElement extends MapLinkElement implements Serializ
 	public Rectangle getLabelBox()
 	{
 		return labelBox;
-	}
-
-	/**
-	 * Возвращяет длинну линии с одной цифрой после запятой
-	 */
-	public String getSizeAsString()
-	{
-		double d = getLengthLt();
-
-		double d100 = d * 10;
-		int i = (int )d100;
-		double retd = (double )i;
-
-		return String.valueOf(retd / 10.0);
 	}
 
 	/**

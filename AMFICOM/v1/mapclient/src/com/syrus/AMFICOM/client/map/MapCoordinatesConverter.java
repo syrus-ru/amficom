@@ -1,5 +1,5 @@
 /**
- * $Id: MapCoordinatesConverter.java,v 1.2 2004/10/15 14:09:00 krupenn Exp $
+ * $Id: MapCoordinatesConverter.java,v 1.3 2004/11/10 15:58:30 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,7 +19,7 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/10/15 14:09:00 $
+ * @version $Revision: 1.3 $, $Date: 2004/11/10 15:58:30 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -42,7 +42,21 @@ public interface MapCoordinatesConverter
 	 * @return 
 	 */
 	Point2D.Double convertScreenToMap(Point point);
+
+	/**
+	 * перевести экранную дистанцию в географическую
+	 * @param screenDistance
+	 * @return 
+	 */
+	double convertScreenToMap(double screenDistance);
 	
+	/**
+	 * перевести географическую дистанцию в экранную
+	 * @param topologicalDistance
+	 * @return 
+	 */
+	double convertMapToScreen(double topologicalDistance);
+
 	/**
 	 * найти расстояние между двумя точками в географической системе координат
 	 * @param from
