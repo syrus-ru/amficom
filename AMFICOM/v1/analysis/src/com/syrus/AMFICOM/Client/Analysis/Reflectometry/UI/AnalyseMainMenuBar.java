@@ -161,7 +161,7 @@ public class AnalyseMainMenuBar extends JMenuBar implements ApplicationModelList
 		menuFileSaveAll.addActionListener(actionAdapter);
 		menuFileSaveAs.setText(LangModelAnalyse.getString("menuFileSaveAs"));
 		menuFileSaveAs.setName("menuFileSaveAs");
-		menuFileSaveAsText.setText(LangModelAnalyse.getString("menuFileSaveAsText"));
+		menuFileSaveAsText.setText(LangModelAnalyse.getString("menuFileSaveAsTextFile"));
 		menuFileSaveAsText.setName("menuFileSaveAsText");
 		menuFileSaveAsText.addActionListener(actionAdapter);
 		menuFileClose.setText(LangModelAnalyse.getString("menuFileClose"));
