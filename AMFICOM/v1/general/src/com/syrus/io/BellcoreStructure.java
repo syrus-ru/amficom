@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreStructure.java,v 1.5 2004/11/01 15:32:45 max Exp $
+ * $Id: BellcoreStructure.java,v 1.6 2004/11/02 09:09:44 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,8 @@ import java.util.Date;
 import com.syrus.AMFICOM.general.Identifier;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/11/01 15:32:45 $
- * @author $Author: max $
+ * @version $Revision: 1.6 $, $Date: 2004/11/02 09:09:44 $
+ * @author $Author: stas $
  * @module general_v1
  */
 public class BellcoreStructure // extends ObjectResource
@@ -322,12 +322,18 @@ public class BellcoreStructure // extends ObjectResource
 	public double getResolution()
 	{
 		int n = this.dataPts.TNDP;
-		return (this.fxdParams.AR - this.fxdParams.AO) * 3d / ((double)n * (double)this.fxdParams.GI/1000d);
+		double res = (this.fxdParams.AR - this.fxdParams.AO) * 3d / ((double)n * (double)this.fxdParams.GI/1000d);
+		if (getUnits().equals("km"))
+			res *= 1000d;
+		return res;
 	}
 
 	public double getRange()
 	{
-		return (double)(fxdParams.AR - fxdParams.AO) * 3d / (double)fxdParams.GI * 1000;
+		double range = (double)(fxdParams.AR - fxdParams.AO) * 3d / (double)fxdParams.GI * 1000;
+		if (getUnits().equals("mt"))
+			range /= 1000d;
+		return range;
 	}
 
 	public double[] getTraceData()
