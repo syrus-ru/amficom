@@ -80,7 +80,7 @@ interface AMFICOM
 // *
 	long Logon(
 			in wstring username,	// им€ пользовател€
-			in General::OctetSequence password,	// пароль пользовател€
+			in General::octetSeq password,	// пароль пользовател€
 			in wstring category,	// цель соединени€ с –»—ƒ
 			out Admin::AccessIdentity_Transferable accessIdentity)
 									// идентификатор сессии
@@ -98,8 +98,8 @@ interface AMFICOM
 
 	long ChangePassword(
 			in Admin::AccessIdentity_Transferable accessIdentity,
-			in General::OctetSequence oldpassword,	// пароль пользовател€
-			in General::OctetSequence newpassword)	// новый пароль пользовател€
+			in General::octetSeq oldpassword,	// пароль пользовател€
+			in General::octetSeq newpassword)	// новый пароль пользовател€
 		raises (General::AMFICOMRemoteException);
 
 //////////////////////////////////////////////////////////////////////////////

@@ -161,8 +161,8 @@ module Scheme
 
 		wstring symbol_id;
 		wstring label;
-		General::OctetSequence ugocell;
-		General::OctetSequence schemecell;
+		General::octetSeq ugocell;
+		General::octetSeq schemecell;
 		ElementAttributeSeq_Transferable attributes;
 	};
 	typedef sequence <SchemeProtoElement_Transferable> SchemeProtoElementSeq_Transferable;
@@ -181,8 +181,8 @@ module Scheme
 		boolean is_scheme;
 
 		wstring description;
-		General::OctetSequence ugocell;
-		General::OctetSequence schemecell;
+		General::octetSeq ugocell;
+		General::octetSeq schemecell;
 		ElementAttributeSeq_Transferable attributes;
 	};
 	typedef sequence <SchemeElement_Transferable> SchemeElementSeq_Transferable;
@@ -207,12 +207,12 @@ module Scheme
 
 		wstring symbol_id;
 		wstring label;
-		General::OctetSequence ugocell;
-		General::OctetSequence schemecell;
+		General::octetSeq ugocell;
+		General::octetSeq schemecell;
 
 		long width;
 		long height;
-		General::OctetSequence clonez;
+		General::octetSeq clonez;
 	};
 	typedef sequence <Scheme_Transferable> SchemeSeq_Transferable;
 

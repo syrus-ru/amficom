@@ -54,7 +54,7 @@ module Resource
 		wstring source_string;
 
 		wstring filename;				// only one of these
-		General::OctetSequence image;	// should be valid
+		General::octetSeq image;	// should be valid
 	};
 	typedef sequence <ImageResource_Transferable> ImageResourceSeq_Transferable;
 
@@ -78,7 +78,7 @@ module Resource
 //		wstring id;
 		wstring resource_typ;
 //		long long modified;
-		General::OctetSequence logic_scheme;
+		General::octetSeq logic_scheme;
 	};
 	typedef sequence <Filter_Transferable> FilterSeq_Transferable;
 

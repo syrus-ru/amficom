@@ -45,7 +45,7 @@ module CORBA
 
 module General
 {
-	typedef sequence <octet> OctetSequence;
+	typedef sequence <octet> octetSeq;
 	typedef sequence <wstring> wstringSeq;
 	typedef sequence <long> longSeq;
    	typedef sequence <double> doubleSeq;

@@ -130,7 +130,7 @@ module Admin
 		wstring owner_id;
 
 		wstring login;
-		General::OctetSequence password;
+		General::octetSeq password;
 		long long password_expiry;
 
 		long long last_login;
