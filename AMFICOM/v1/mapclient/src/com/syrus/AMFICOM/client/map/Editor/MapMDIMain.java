@@ -274,6 +274,7 @@ public class MapMDIMain extends JFrame implements OperationListener
 		internal_dispatcher.register(this, "mapframeshownevent");
 		internal_dispatcher.register(this, "mapselectevent");
 		internal_dispatcher.register(this, "mapcloseevent");
+		internal_dispatcher.register(this, "mapaddschemeelementevent");
 
 		setDefaultModel(aModel);
 
