@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.32 2005/03/29 17:04:42 arseniy Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.33 2005/03/30 11:42:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/03/29 17:04:42 $
+ * @version $Revision: 1.33 $, $Date: 2005/03/30 11:42:28 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -286,10 +286,17 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			return objects;
 
 		Collection loadedObjects = new HashSet();
+		Identifier_Transferable[] loadIdsT = null;
+		try {
+			loadIdsT = Identifier.createTransferables(loadIds);
+		}
+		catch (IllegalDataException ide) {
+			//Never
+			Log.errorException(ide);
+		}
 
 		Identifier mcmId;
 		com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
-		Identifier_Transferable[] loadIdsT = Identifier.createTransferables(loadIds);
 		Collection mcmLoadedObjects;
 		for (Iterator it = ClientMeasurementServer.mcmRefs.keySet().iterator(); it.hasNext() && !loadIds.isEmpty();) {
 			mcmId = (Identifier) it.next();
@@ -312,7 +319,13 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 					}
 
 					if (!loadIds.isEmpty())
-						loadIdsT = Identifier.createTransferables(loadIds);
+						try {
+							loadIdsT = Identifier.createTransferables(loadIds);
+						}
+						catch (IllegalDataException ide) {
+							//Never
+							Log.errorException(ide);
+						}
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -375,10 +388,17 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			return objects;
 
 		Collection loadedObjects = new HashSet();
+		Identifier_Transferable[] loadIdsT = null;
+		try {
+			loadIdsT = Identifier.createTransferables(loadIds);
+		}
+		catch (IllegalDataException ide) {
+			//Never
+			Log.errorException(ide);
+		}
 
 		Identifier mcmId;
 		com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
-		Identifier_Transferable[] loadIdsT = Identifier.createTransferables(loadIds);
 		Collection mcmLoadedObjects;
 		for (Iterator it = ClientMeasurementServer.mcmRefs.keySet().iterator(); it.hasNext() && !loadIds.isEmpty();) {
 			mcmId = (Identifier) it.next();
@@ -401,7 +421,13 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 					}
 
 					if (!loadIds.isEmpty())
-						loadIdsT = Identifier.createTransferables(loadIds);
+						try {
+							loadIdsT = Identifier.createTransferables(loadIds);
+						}
+					catch (IllegalDataException ide) {
+						//Never
+						Log.errorException(ide);
+					}
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -464,10 +490,17 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			return objects;
 
 		Collection loadedObjects = new HashSet();
+		Identifier_Transferable[] loadIdsT = null;
+		try {
+			loadIdsT = Identifier.createTransferables(loadIds);
+		}
+		catch (IllegalDataException ide) {
+			//Never
+			Log.errorException(ide);
+		}
 
 		Identifier mcmId;
 		com.syrus.AMFICOM.mcm.corba.MCM mcmRef;
-		Identifier_Transferable[] loadIdsT = Identifier.createTransferables(loadIds);
 		Collection mcmLoadedObjects;
 		for (Iterator it = ClientMeasurementServer.mcmRefs.keySet().iterator(); it.hasNext() && !loadIds.isEmpty();) {
 			mcmId = (Identifier) it.next();
@@ -490,7 +523,13 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 					}
 
 					if (!loadIds.isEmpty())
-						loadIdsT = Identifier.createTransferables(loadIds);
+						try {
+							loadIdsT = Identifier.createTransferables(loadIds);
+						}
+						catch (IllegalDataException ide) {
+							//Never
+							Log.errorException(ide);
+						}
 				}
 				catch (org.omg.CORBA.SystemException se) {
 					Log.errorException(se);
@@ -553,7 +592,14 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			loadButIds.add(id);
 		}
 
-		Identifier_Transferable[] loadButIdsT = Identifier.createTransferables(loadButIds);
+		Identifier_Transferable[] loadButIdsT = null;
+		try {
+			loadButIdsT = Identifier.createTransferables(loadButIds);
+		}
+		catch (IllegalDataException ide) {
+			//Never
+			Log.errorException(ide);
+		}
 
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
 
@@ -638,7 +684,14 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			loadButIds.add(id);
 		}
 
-		Identifier_Transferable[] loadButIdsT = Identifier.createTransferables(loadButIds);
+		Identifier_Transferable[] loadButIdsT = null;
+		try {
+			loadButIdsT = Identifier.createTransferables(loadButIds);
+		}
+		catch (IllegalDataException ide) {
+			//Never
+			Log.errorException(ide);
+		}
 
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
 
@@ -723,7 +776,14 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 			loadButIds.add(id);
 		}
 
-		Identifier_Transferable[] loadButIdsT = Identifier.createTransferables(loadButIds);
+		Identifier_Transferable[] loadButIdsT = null;
+		try {
+			loadButIdsT = Identifier.createTransferables(loadButIds);
+		}
+		catch (IllegalDataException ide) {
+			//Never
+			Log.errorException(ide);
+		}
 
 		StorableObjectCondition_Transferable conditionT = StorableObjectConditionBuilder.getConditionTransferable(condition);
 
