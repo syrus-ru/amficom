@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServerSetup.java,v 1.8 2004/08/22 18:58:07 arseniy Exp $
+ * $Id: MeasurementServerSetup.java,v 1.9 2004/08/27 12:12:52 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/08/22 18:58:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2004/08/27 12:12:52 $
+ * @author $Author: bob $
  * @module mserver_v1
  */
 
@@ -456,15 +456,19 @@ public class MeasurementServerSetup {
 	}
 
 	private static void checkParameterTypes() {
+		AnalysisTypeDatabase analysisTypeDatabase = ((AnalysisTypeDatabase)MeasurementDatabaseContext.getAnalysisTypeDatabase());
+		EvaluationTypeDatabase evaluationTypeDatabase = ((EvaluationTypeDatabase)MeasurementDatabaseContext.getEvaluationTypeDatabase());
+		MeasurementTypeDatabase measurementTypeDatabase = ((MeasurementTypeDatabase)MeasurementDatabaseContext.getMeasurementTypeDatabase());
+
 		try {
-			List parameterTypes = ParameterTypeDatabase.retrieveAll();
+			List parameterTypes = ((ParameterTypeDatabase)(MeasurementDatabaseContext.getParameterTypeDatabase())).retrieveAll();
 			ParameterType pt;
 			for (Iterator i = parameterTypes.iterator(); i.hasNext();) {
 				pt = (ParameterType)i.next();
 				System.out.println("id: " + pt.getId() + ", codename: " + pt.getCodename() + ", name: " + pt.getName());
 			}
 
-			List measurementTypes = MeasurementTypeDatabase.retrieveAll();
+			List measurementTypes = measurementTypeDatabase.retrieveAll();
 			MeasurementType mt;
 			for (Iterator i = measurementTypes.iterator(); i.hasNext();) {
 				mt = (MeasurementType)i.next();
@@ -475,7 +479,7 @@ public class MeasurementServerSetup {
 				}
 			}
 
-			List analysisTypes = AnalysisTypeDatabase.retrieveAll();
+			List analysisTypes = analysisTypeDatabase.retrieveAll();
 			AnalysisType at;
 			for (Iterator i = analysisTypes.iterator(); i.hasNext();) {
 				at = (AnalysisType)i.next();
@@ -486,7 +490,7 @@ public class MeasurementServerSetup {
 				}
 			}
 
-			List evaluationTypes = EvaluationTypeDatabase.retrieveAll();
+			List evaluationTypes = evaluationTypeDatabase.retrieveAll();
 			EvaluationType et;
 			for (Iterator i = evaluationTypes.iterator(); i.hasNext();) {
 				et = (EvaluationType)i.next();
@@ -612,13 +616,15 @@ public class MeasurementServerSetup {
 	}
 
 	private static Set createParameterSet(Identifier creatorId, List monitoredElementIds) {
+		ParameterTypeDatabase parameterTypeDatabase = ((ParameterTypeDatabase)MeasurementDatabaseContext.getParameterTypeDatabase());
+		
 		try {
-			ParameterType wvlenParam = ParameterTypeDatabase.retrieveForCodename(CODENAME_REF_WVLEN);
-			ParameterType trclenParam = ParameterTypeDatabase.retrieveForCodename(CODENAME_REF_TRCLEN);
-			ParameterType resParam = ParameterTypeDatabase.retrieveForCodename(CODENAME_REF_RES);
-			ParameterType pulswdParam = ParameterTypeDatabase.retrieveForCodename(CODENAME_REF_PULSWD);
-			ParameterType iorParam = ParameterTypeDatabase.retrieveForCodename(CODENAME_REF_IOR);
-			ParameterType scansParam = ParameterTypeDatabase.retrieveForCodename(CODENAME_REF_SCANS);
+			ParameterType wvlenParam = parameterTypeDatabase.retrieveForCodename(CODENAME_REF_WVLEN);
+			ParameterType trclenParam = parameterTypeDatabase.retrieveForCodename(CODENAME_REF_TRCLEN);
+			ParameterType resParam = parameterTypeDatabase.retrieveForCodename(CODENAME_REF_RES);
+			ParameterType pulswdParam = parameterTypeDatabase.retrieveForCodename(CODENAME_REF_PULSWD);
+			ParameterType iorParam = parameterTypeDatabase.retrieveForCodename(CODENAME_REF_IOR);
+			ParameterType scansParam = parameterTypeDatabase.retrieveForCodename(CODENAME_REF_SCANS);
 
 			SetParameter[] params = new SetParameter[6];
 			Identifier paramId;
@@ -657,16 +663,17 @@ public class MeasurementServerSetup {
 	}
 
 	private static Set createCriteriaSet(Identifier creatorId, List monitoredElementIds) {
+		ParameterTypeDatabase parameterTypeDatabase = ((ParameterTypeDatabase)MeasurementDatabaseContext.getParameterTypeDatabase());
 		try {
-			ParameterType tacticParam = ParameterTypeDatabase.retrieveForCodename(CODENAME_DADARA_TACTIC);
-			ParameterType eventsizeParam = ParameterTypeDatabase.retrieveForCodename(CODENAME_DADARA_EVENT_SIZE);
-			ParameterType connfallParam = ParameterTypeDatabase.retrieveForCodename(CODENAME_DADARA_CONN_FALL_PARAMS);
-			ParameterType minlevelParam = ParameterTypeDatabase.retrieveForCodename(CODENAME_DADARA_MIN_LEVEL);
-			ParameterType maxlevelnoiseParam = ParameterTypeDatabase.retrieveForCodename(CODENAME_DADARA_MAX_LEVEL_NOISE);
-			ParameterType minlevelendParam = ParameterTypeDatabase.retrieveForCodename(CODENAME_DADARA_MIN_LEVEL_TO_FIND_END);
-			ParameterType minweldParam = ParameterTypeDatabase.retrieveForCodename(CODENAME_DADARA_MIN_WELD);
-			ParameterType minconnectorParam = ParameterTypeDatabase.retrieveForCodename(CODENAME_DADARA_MIN_CONNECTOR);
-			ParameterType strategyParam = ParameterTypeDatabase.retrieveForCodename(CODENAME_DADARA_STRATEGY);
+			ParameterType tacticParam = parameterTypeDatabase.retrieveForCodename(CODENAME_DADARA_TACTIC);
+			ParameterType eventsizeParam = parameterTypeDatabase.retrieveForCodename(CODENAME_DADARA_EVENT_SIZE);
+			ParameterType connfallParam = parameterTypeDatabase.retrieveForCodename(CODENAME_DADARA_CONN_FALL_PARAMS);
+			ParameterType minlevelParam = parameterTypeDatabase.retrieveForCodename(CODENAME_DADARA_MIN_LEVEL);
+			ParameterType maxlevelnoiseParam = parameterTypeDatabase.retrieveForCodename(CODENAME_DADARA_MAX_LEVEL_NOISE);
+			ParameterType minlevelendParam = parameterTypeDatabase.retrieveForCodename(CODENAME_DADARA_MIN_LEVEL_TO_FIND_END);
+			ParameterType minweldParam = parameterTypeDatabase.retrieveForCodename(CODENAME_DADARA_MIN_WELD);
+			ParameterType minconnectorParam = parameterTypeDatabase.retrieveForCodename(CODENAME_DADARA_MIN_CONNECTOR);
+			ParameterType strategyParam = parameterTypeDatabase.retrieveForCodename(CODENAME_DADARA_STRATEGY);
 
 			SetParameter[] params = new SetParameter[9];
 			Identifier paramId;
@@ -760,12 +767,15 @@ public class MeasurementServerSetup {
 	private static Test createOnetimeTest(Identifier creatorId,
 																				MonitoredElement monitoredElement,
 																				List measurementSetupIds) {
+		AnalysisTypeDatabase analysisTypeDatabase = ((AnalysisTypeDatabase)MeasurementDatabaseContext.getAnalysisTypeDatabase());
+		EvaluationTypeDatabase evaluationTypeDatabase = ((EvaluationTypeDatabase)MeasurementDatabaseContext.getEvaluationTypeDatabase());
+		MeasurementTypeDatabase measurementTypeDatabase = ((MeasurementTypeDatabase)MeasurementDatabaseContext.getMeasurementTypeDatabase());
 		try {
 			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.TEST_ENTITY_CODE);
 
-			MeasurementType measurementType = MeasurementTypeDatabase.retrieveForCodename(CODENAME_MEASUREMENT_TYPE_REFLECTOMETRY);
-			AnalysisType analysisType = AnalysisTypeDatabase.retrieveForCodename(CODENAME_ANALYSIS_TYPE_DADARA);
-			EvaluationType evaluationType = EvaluationTypeDatabase.retrieveForCodename(CODENAME_EVALUATION_TYPE_DADARA);
+			MeasurementType measurementType = measurementTypeDatabase.retrieveForCodename(CODENAME_MEASUREMENT_TYPE_REFLECTOMETRY);
+			AnalysisType analysisType = analysisTypeDatabase.retrieveForCodename(CODENAME_ANALYSIS_TYPE_DADARA);
+			EvaluationType evaluationType = evaluationTypeDatabase.retrieveForCodename(CODENAME_EVALUATION_TYPE_DADARA);
 
 			Test test = Test.createInstance(id,
 																			creatorId,
@@ -793,12 +803,15 @@ public class MeasurementServerSetup {
 																					 TemporalPattern temporalPattern,
 																					 MonitoredElement monitoredElement,
 																					 List measurementSetupIds) {
+		AnalysisTypeDatabase analysisTypeDatabase = ((AnalysisTypeDatabase)MeasurementDatabaseContext.getAnalysisTypeDatabase());
+		EvaluationTypeDatabase evaluationTypeDatabase = ((EvaluationTypeDatabase)MeasurementDatabaseContext.getEvaluationTypeDatabase());
+		MeasurementTypeDatabase measurementTypeDatabase = ((MeasurementTypeDatabase)MeasurementDatabaseContext.getMeasurementTypeDatabase());
 		try {
 			Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.TEST_ENTITY_CODE);
 
-			MeasurementType measurementType = MeasurementTypeDatabase.retrieveForCodename(CODENAME_MEASUREMENT_TYPE_REFLECTOMETRY);
-			AnalysisType analysisType = AnalysisTypeDatabase.retrieveForCodename(CODENAME_ANALYSIS_TYPE_DADARA);
-			EvaluationType evaluationType = EvaluationTypeDatabase.retrieveForCodename(CODENAME_EVALUATION_TYPE_DADARA);
+			MeasurementType measurementType = measurementTypeDatabase.retrieveForCodename(CODENAME_MEASUREMENT_TYPE_REFLECTOMETRY);
+			AnalysisType analysisType = analysisTypeDatabase.retrieveForCodename(CODENAME_ANALYSIS_TYPE_DADARA);
+			EvaluationType evaluationType = evaluationTypeDatabase.retrieveForCodename(CODENAME_EVALUATION_TYPE_DADARA);
 
 			Test test = Test.createInstance(id,
 																			creatorId,
