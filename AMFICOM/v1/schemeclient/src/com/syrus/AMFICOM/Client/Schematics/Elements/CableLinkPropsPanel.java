@@ -403,7 +403,7 @@ public class CableLinkPropsPanel extends JPanel
 					CableThreadType type = (CableThreadType)it.next();
 					newct.setCableThreadType(type);
 					newct.setName(String.valueOf(j));
-					newct.schemeCablelink(links[0]);
+					newct.setParentSchemeCableLink(links[0]);
 				}
 			}
 		}

@@ -116,7 +116,7 @@ public class DevicePropsPanel extends JPanel
 			{
 				SchemeCableThread thread = ports[i].getSchemeCableThread();
 				if (thread != null)
-					schemeCables.add(thread.schemeCablelink());
+					schemeCables.add(thread.getParentSchemeCableLink());
 			}
 			for (Iterator it = schemeCables.iterator(); it.hasNext();)
 			{

@@ -9,7 +9,7 @@ import com.jgraph.graph.DefaultEdge;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
-import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
+import com.syrus.AMFICOM.scheme.corba.PathElementType;
 
 public class AlarmedPathAnimator// extends Thread implements Runnable
 {
@@ -128,12 +128,12 @@ public class AlarmedPathAnimator// extends Thread implements Runnable
 		Object[] cells = panel.getGraph().getAll();
 		List edges_to_paint = new LinkedList();
 
-		if (alarmedPE.type().equals(Type.SCHEME_CABLE_LINK))
+		if (alarmedPE.getPathElementType().equals(PathElementType.SCHEME_CABLE_LINK))
 		{
 				for (int i = 0; i < cells.length; i++) {
 					if (cells[i] instanceof DefaultCableLink) {
 						SchemeCableLink sl = ((DefaultCableLink)cells[i]).getSchemeCableLink();
-						if (sl.equals(alarmedPE.abstractSchemeElement())) {
+						if (sl.equals(alarmedPE.getAbstractSchemeElement())) {
 							edges_to_paint.add(cells[i]);
 							sl.setAlarmed(true);
 							return edges_to_paint.toArray();
@@ -145,7 +145,7 @@ public class AlarmedPathAnimator// extends Thread implements Runnable
 						SchemeElement se = ((DeviceGroup)cells[i]).getSchemeElement();
 						if (se.getScheme() != null) {
 							Scheme scheme = se.getScheme();
-							if (SchemeUtils.isSchemeContainsCableLink(scheme, alarmedPE.abstractSchemeElement().getId())) {
+							if (SchemeUtils.isSchemeContainsCableLink(scheme, alarmedPE.getAbstractSchemeElement().getId())) {
 								for (Enumeration e = ((DeviceGroup)cells[i]).children(); e.hasMoreElements(); )
 									edges_to_paint.add(e.nextElement());
 								se.setAlarmed(true);
@@ -157,12 +157,12 @@ public class AlarmedPathAnimator// extends Thread implements Runnable
 					}
 				}
 		}
-		else if (alarmedPE.type().equals(Type.SCHEME_LINK))
+		else if (alarmedPE.getPathElementType().equals(PathElementType.SCHEME_LINK))
 		{
 				for (int i = 0; i < cells.length; i++) {
 					if (cells[i] instanceof DefaultLink) {
 						SchemeLink sl = ((DefaultLink)cells[i]).getSchemeLink();
-						if (sl.equals(alarmedPE.abstractSchemeElement())) {
+						if (sl.equals(alarmedPE.getAbstractSchemeElement())) {
 							edges_to_paint.add(cells[i]);
 							sl.setAlarmed(true);
 							return edges_to_paint.toArray();
@@ -173,7 +173,7 @@ public class AlarmedPathAnimator// extends Thread implements Runnable
 					if (cells[i] instanceof DeviceGroup) {
 						SchemeElement se = ((DeviceGroup)cells[i]).getSchemeElement();
 						if (se.getScheme() == null) {
-							if (SchemeUtils.isSchemeElementContainsLink(se, alarmedPE.abstractSchemeElement().getId())) {
+							if (SchemeUtils.isSchemeElementContainsLink(se, alarmedPE.getAbstractSchemeElement().getId())) {
 									for (Enumeration e = ((DeviceGroup)cells[i]).children(); e.hasMoreElements(); )
 										edges_to_paint.add(e.nextElement());
 									se.setAlarmed(true);
@@ -184,7 +184,7 @@ public class AlarmedPathAnimator// extends Thread implements Runnable
 						}
 						else {
 							Scheme scheme = se.getScheme();
-							if (SchemeUtils.isSchemeContainsLink(scheme, alarmedPE.abstractSchemeElement().getId())) {
+							if (SchemeUtils.isSchemeContainsLink(scheme, alarmedPE.getAbstractSchemeElement().getId())) {
 								for (Enumeration e = ((DeviceGroup)cells[i]).children(); e.hasMoreElements(); )
 									edges_to_paint.add(e.nextElement());
 								se.setAlarmed(true);
@@ -196,12 +196,12 @@ public class AlarmedPathAnimator// extends Thread implements Runnable
 					}
 				}
 		}
-		else if (alarmedPE.type().equals(Type.SCHEME_ELEMENT))
+		else if (alarmedPE.getPathElementType().equals(PathElementType.SCHEME_ELEMENT))
 		{
 				for (int i = 0; i < cells.length; i++) {
 					if (cells[i] instanceof DeviceGroup) {
 						SchemeElement se = ((DeviceGroup)cells[i]).getSchemeElement();
-						if (se.equals(alarmedPE.abstractSchemeElement())) {
+						if (se.equals(alarmedPE.getAbstractSchemeElement())) {
 							edges_to_paint.add(cells[i]);
 							se.setAlarmed(true);
 							return edges_to_paint.toArray();
@@ -212,7 +212,7 @@ public class AlarmedPathAnimator// extends Thread implements Runnable
 					if (cells[i] instanceof DeviceGroup) {
 						SchemeElement se = ((DeviceGroup)cells[i]).getSchemeElement();
 						if (se.getScheme() == null) {
-							if (SchemeUtils.isSchemeElementContainsElement(se, (SchemeElement)alarmedPE.abstractSchemeElement())) {
+							if (SchemeUtils.isSchemeElementContainsElement(se, (SchemeElement)alarmedPE.getAbstractSchemeElement())) {
 									for (Enumeration e = ((DeviceGroup)cells[i]).children(); e.hasMoreElements(); )
 										edges_to_paint.add(e.nextElement());
 									se.setAlarmed(true);
@@ -223,7 +223,7 @@ public class AlarmedPathAnimator// extends Thread implements Runnable
 						}
 						else {
 							Scheme scheme = se.getScheme();
-							if (SchemeUtils.isSchemeContainsElement(scheme, (SchemeElement)alarmedPE.abstractSchemeElement())) {
+							if (SchemeUtils.isSchemeContainsElement(scheme, (SchemeElement)alarmedPE.getAbstractSchemeElement())) {
 								for (Enumeration e = ((DeviceGroup)cells[i]).children(); e.hasMoreElements(); )
 									edges_to_paint.add(e.nextElement());
 								se.setAlarmed(true);

@@ -236,7 +236,7 @@ public class PathPropsPanel extends JPanel
 		for (int i = 0 ; i < path.links().length; i++)
 		{
 			PathElement pe = path.links()[i];
-			undoPeOrder.put(pe.abstractSchemeElement(), new Integer(pe.sequentialNumber()));
+			undoPeOrder.put(pe.getAbstractSchemeElement(), new Integer(pe.getSequentialNumber()));
 			undoPathLinks.add(pe);
 		}
 		updateUI();
@@ -361,7 +361,7 @@ public class PathPropsPanel extends JPanel
 		for (int i = 0; i < pes.length; i++ )
 		{
 			pes[i] = (PathElement)it.next();
-			pes[i].sequentialNumber(((Integer)undoPeOrder.get(pes[i].abstractSchemeElement())).intValue());
+			pes[i].setSequentialNumber(((Integer)undoPeOrder.get(pes[i].getAbstractSchemeElement())).intValue());
 		}
 		path.links(pes);
 	}

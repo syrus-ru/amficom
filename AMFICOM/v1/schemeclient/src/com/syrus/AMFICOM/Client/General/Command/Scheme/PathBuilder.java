@@ -9,8 +9,8 @@ import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
+import com.syrus.AMFICOM.scheme.corba.*;
 import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
-import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
 import com.syrus.util.Log;
 
 public class PathBuilder
@@ -39,7 +39,7 @@ public class PathBuilder
 		while(true)
 		{
 			PathElement pe = (PathElement)pes.listIterator(pes.size()).previous();
-			if (pe.endAbstractSchemePort() == null)
+			if (pe.getEndAbstractSchemePort() == null)
 			{
 				if (state == PathBuilder.MULTIPLE_PORTS)
 					JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Через элемент " +
@@ -51,11 +51,11 @@ public class PathBuilder
 				return false;
 			}
 
-			if (pe.type() == Type.SCHEME_ELEMENT)
+			if (pe.getPathElementType() == PathElementType.SCHEME_ELEMENT)
 			{
 				PathElement newPE = null;
 //				SchemeElement se = (SchemeElement)pe.abstractSchemeElement();
-				AbstractSchemePort port = pe.endAbstractSchemePort();
+				AbstractSchemePort port = pe.getEndAbstractSchemePort();
 				if (port instanceof SchemePort)
 				{
 					SchemeLink link = ((SchemePort)port).getSchemeLink();
@@ -70,7 +70,7 @@ public class PathBuilder
 					if (clink == null)
 						return false;
 					newPE = addCableLink(pes, cport, clink,
-							((SchemePort)pe.startAbstractSchemePort()).getSchemeCableThread());
+							((SchemePort)pe.getStartAbstractSchemePort()).getSchemeCableThread());
 				}
 				if (newPE == null)
 					return false;
@@ -78,7 +78,7 @@ public class PathBuilder
 			else
 			{
 				PathElement newPE = null;
-				AbstractSchemePort port = pe.endAbstractSchemePort();
+				AbstractSchemePort port = pe.getEndAbstractSchemePort();
 				if (port != null)
 				{
 					SchemeElement se = SchemeUtils.getSchemeElementByDevice(scheme, port.getParentSchemeDevice());
@@ -100,14 +100,14 @@ public class PathBuilder
 		while(true)
 		{
 			PathElement pe = (PathElement)pes.listIterator(pes.size()).previous();
-			if (pe.endAbstractSchemePort() == null)
+			if (pe.getEndAbstractSchemePort() == null)
 				return false;
 
-			if (pe.type() == Type.SCHEME_ELEMENT)
+			if (pe.getPathElementType() == PathElementType.SCHEME_ELEMENT)
 			{
 				PathElement newPE = null;
 //				SchemeElement se = (SchemeElement)pe.abstractSchemeElement();
-				AbstractSchemePort port = pe.endAbstractSchemePort();
+				AbstractSchemePort port = pe.getEndAbstractSchemePort();
 				if (port instanceof SchemePort)
 				{
 					SchemeLink link = ((SchemePort)port).getSchemeLink();
@@ -122,7 +122,7 @@ public class PathBuilder
 					if (clink == null)
 						return false;
 					newPE = addCableLink(pes, cport, clink,
-							((SchemePort)pe.startAbstractSchemePort()).getSchemeCableThread());
+							((SchemePort)pe.getStartAbstractSchemePort()).getSchemeCableThread());
 				}
 				if (newPE == null)
 					return false;
@@ -130,7 +130,7 @@ public class PathBuilder
 			else
 			{
 				PathElement newPE = null;
-				AbstractSchemePort port = pe.endAbstractSchemePort();
+				AbstractSchemePort port = pe.getEndAbstractSchemePort();
 				if (port != null)
 				{
 					SchemeElement se = SchemeUtils.getSchemeElementByDevice(scheme_element, port.getParentSchemeDevice());
@@ -162,14 +162,14 @@ public class PathBuilder
 		while(true)
 		{
 			PathElement pe = (PathElement)links.listIterator(links.size()).previous();
-			if (pe.abstractSchemeElement().equals(path.endDevice()))
+			if (pe.getAbstractSchemeElement().equals(path.endDevice()))
 			{
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 						"Построение пути успешно завершено", "Сообшение", JOptionPane.INFORMATION_MESSAGE);
 				return true;
 			}
 
-			if (pe.endAbstractSchemePort() == null)
+			if (pe.getEndAbstractSchemePort() == null)
 			{
 				if (state == PathBuilder.MULTIPLE_PORTS)
 					JOptionPane.showMessageDialog(Environment.getActiveWindow(),
@@ -182,11 +182,11 @@ public class PathBuilder
 			}
 
 
-			if (pe.type() == Type.SCHEME_ELEMENT)
+			if (pe.getPathElementType() == PathElementType.SCHEME_ELEMENT)
 			{
 				PathElement newPE = null;
 //				SchemeElement se = (SchemeElement)pe.abstractSchemeElement();
-				AbstractSchemePort port = pe.endAbstractSchemePort();
+				AbstractSchemePort port = pe.getEndAbstractSchemePort();
 				if (port instanceof SchemePort)
 				{
 					SchemeLink link = ((SchemePort)port).getSchemeLink();
@@ -201,7 +201,7 @@ public class PathBuilder
 					if (clink == null)
 						return false;
 					newPE = addCableLink(links, cport, clink,
-							((SchemePort)pe.startAbstractSchemePort()).getSchemeCableThread());
+							((SchemePort)pe.getStartAbstractSchemePort()).getSchemeCableThread());
 				}
 				if (newPE == null)
 					return false;
@@ -209,7 +209,7 @@ public class PathBuilder
 			else
 			{
 				PathElement newPE = null;
-				AbstractSchemePort port = pe.endAbstractSchemePort();
+				AbstractSchemePort port = pe.getEndAbstractSchemePort();
 				if (port != null)
 				{
 					SchemeElement se = SchemeUtils.getSchemeElementByDevice(scheme, port.getParentSchemeDevice());
@@ -244,22 +244,21 @@ public class PathBuilder
 			PathElement pe = (PathElement)lit.previous();
 
 			try {
-				newPE = PathElement.createInstance(creatorId);
+				newPE = PathElement.createInstance(creatorId, PathElementType.SCHEME_ELEMENT);
 			} 
 			catch (CreateObjectException e) {
 				Log.errorMessage("Can't create PathElement object " + e.getMessage());
 				return null;
 			}
-			newPE.type(Type.SCHEME_ELEMENT);
-			newPE.abstractSchemeElement(se);
-			newPE.scheme(se.getParentScheme());
-			newPE.sequentialNumber(pe.sequentialNumber() + 1);
-			newPE.startAbstractSchemePort(pe.endAbstractSchemePort());
+			newPE.setAbstractSchemeElement(se);
+			newPE.setParentScheme(se.getParentScheme());
+			newPE.setSequentialNumber(pe.getSequentialNumber() + 1);
+			newPE.setStartAbstractSchemePort(pe.getEndAbstractSchemePort());
 
-			if (pe.type() == Type.SCHEME_LINK)
+			if (pe.getPathElementType() == PathElementType.SCHEME_LINK)
 			{
 //				SchemeLink link = (SchemeLink)pe.abstractSchemeElement();
-				SchemePort startPort = (SchemePort)pe.endAbstractSchemePort();
+				SchemePort startPort = (SchemePort)pe.getEndAbstractSchemePort();
 				if (!SchemeUtils.isSchemeElementContainsPort(se, startPort)) //нет общих портов
 					return null;
 				// searching for ports with opposite direction
@@ -279,7 +278,7 @@ public class PathBuilder
 				if (ports.size() == 0)
 				{
 					if (cports.size() == 1) // if the only cable port with opposite direction
-						newPE.endAbstractSchemePort((SchemeCablePort)cports.get(0));
+						newPE.setEndAbstractSchemePort((SchemeCablePort)cports.get(0));
 					else //searching what thread start port routed with
 					{
 						SchemeCableThread thread = startPort.getSchemeCableThread();
@@ -287,21 +286,21 @@ public class PathBuilder
 						{
 							SchemeCablePort port = getCablePortByThread(cports, thread);
 							if (port != null)
-								newPE.endAbstractSchemePort(port);
+								newPE.setEndAbstractSchemePort(port);
 						}
 					}
 				}
 				// the only port with opposite direction
 				else if (ports.size() == 1 && cports.size() == 0)
-					newPE.endAbstractSchemePort((SchemePort)ports.get(0));
+					newPE.setEndAbstractSchemePort((SchemePort)ports.get(0));
 				else if (ports.size() > 1)
 					state = MULTIPLE_PORTS;
 				// else we couldn't go further
 			}
-			else if (pe.type() == Type.SCHEME_CABLE_LINK)
+			else if (pe.getPathElementType() == PathElementType.SCHEME_CABLE_LINK)
 			{
 //				SchemeCableLink link = (SchemeCableLink)pe.abstractSchemeElement();
-				SchemeCablePort startPort = (SchemeCablePort)pe.endAbstractSchemePort();
+				SchemeCablePort startPort = (SchemeCablePort)pe.getEndAbstractSchemePort();
 				if (!SchemeUtils.isSchemeElementContainsPort(se, startPort)) //нет общих портов
 					return null;
 				// searching for ports with opposite direction
@@ -321,14 +320,14 @@ public class PathBuilder
 				// must be the only cable port with opposite direction
 				if (ports.size() == 0 && cports.size() == 1)
 				{
-					newPE.endAbstractSchemePort((SchemeCablePort)cports.get(0));
+					newPE.setEndAbstractSchemePort((SchemeCablePort)cports.get(0));
 				}
 				// or any positive number of ports
 				else if (ports.size() > 0 && cports.size() == 0)
 				{
-					SchemePort port = pe.schemeCableThread().getSchemePort(dev);
+					SchemePort port = pe.getSchemeCableThread().getSchemePort(dev);
 					if (port != null)
-						newPE.endAbstractSchemePort(port);
+						newPE.setEndAbstractSchemePort(port);
 				}
 			}
 			else
@@ -360,18 +359,17 @@ public class PathBuilder
 				return null;
 			}
 			try {
-				newPE = PathElement.createInstance(creatorId);
+				newPE = PathElement.createInstance(creatorId, PathElementType.SCHEME_ELEMENT);
 			} 
 			catch (CreateObjectException e) {
 				Log.errorMessage("Can't create PathElement object " + e.getMessage());
 				return null;
 			}
-			newPE.type(Type.SCHEME_ELEMENT);
-			newPE.abstractSchemeElement(se);
-			newPE.scheme(se.getParentScheme());
-			newPE.sequentialNumber(1);
+			newPE.setAbstractSchemeElement(se);
+			newPE.setParentScheme(se.getParentScheme());
+			newPE.setSequentialNumber(1);
 			if (accessPorts == 1)
-				newPE.endAbstractSchemePort(port);
+				newPE.setEndAbstractSchemePort(port);
 		}
 		if (newPE != null)
 			pes.add(newPE);
@@ -384,17 +382,17 @@ public class PathBuilder
 		if (lit.hasPrevious())
 		{
 			PathElement pe = (PathElement)lit.previous();
-			if (pe.type() == Type.SCHEME_ELEMENT)
+			if (pe.getPathElementType() == PathElementType.SCHEME_ELEMENT)
 			{
-				SchemeElement se = (SchemeElement)pe.abstractSchemeElement();
+				SchemeElement se = (SchemeElement)pe.getAbstractSchemeElement();
 
 				//если у предыдущего эл-та проставлен endPortId, ищем по нему
-				if (pe.endAbstractSchemePort() != null)
+				if (pe.getEndAbstractSchemePort() != null)
 				{
 					for (Iterator it = SchemeUtils.getPorts(se).iterator(); it.hasNext();)
 					{
 						SchemePort port = (SchemePort)it.next();
-						if (port.equals(pe.endAbstractSchemePort()))
+						if (port.equals(pe.getEndAbstractSchemePort()))
 							return addLink(pes, port, link);
 					}
 				}
@@ -406,7 +404,7 @@ public class PathBuilder
 						if (port.equals(link.getSourceSchemePort()) ||
 								port.equals(link.getTargetSchemePort()))
 						{
-							pe.endAbstractSchemePort(port);
+							pe.setEndAbstractSchemePort(port);
 							return addLink(pes, port, link);
 						}
 					}
@@ -421,30 +419,29 @@ public class PathBuilder
 		int number = 0;
 		ListIterator it = pes.listIterator(pes.size());
 		if (it.hasPrevious())
-			number = ((PathElement)it.previous()).sequentialNumber() + 1;
+			number = ((PathElement)it.previous()).getSequentialNumber() + 1;
 
 		PathElement newPE;
 		try {
-			newPE = PathElement.createInstance(creatorId);
+			newPE = PathElement.createInstance(creatorId, PathElementType.SCHEME_LINK);
 		} 
 		catch (CreateObjectException e) {
 			Log.errorMessage("Can't create PathElement object " + e.getMessage());
 			return null;
 		}
-		newPE.type(Type.SCHEME_LINK);
-		newPE.abstractSchemeElement(link);
-		newPE.scheme(link.getParentScheme());
-		newPE.sequentialNumber(number);
+		newPE.setAbstractSchemeElement(link);
+		newPE.setParentScheme(link.getParentScheme());
+		newPE.setSequentialNumber(number);
 
 		if (port.equals(link.getSourceSchemePort()))
 		{
-			newPE.startAbstractSchemePort(link.getSourceSchemePort());
-			newPE.endAbstractSchemePort(link.getTargetSchemePort());
+			newPE.setStartAbstractSchemePort(link.getSourceSchemePort());
+			newPE.setEndAbstractSchemePort(link.getTargetSchemePort());
 		}
 		else if (port.equals(link.getTargetSchemePort()))
 		{
-			newPE.startAbstractSchemePort(link.getTargetSchemePort());
-			newPE.endAbstractSchemePort(link.getSourceSchemePort());
+			newPE.setStartAbstractSchemePort(link.getTargetSchemePort());
+			newPE.setEndAbstractSchemePort(link.getSourceSchemePort());
 		}
 		else //нет общих портов
 			return null;
@@ -459,20 +456,20 @@ public class PathBuilder
 		if (lit.hasPrevious())
 		{
 			PathElement pe = (PathElement)lit.previous();
-			if (pe.type() == Type.SCHEME_ELEMENT)
+			if (pe.getPathElementType() == PathElementType.SCHEME_ELEMENT)
 			{
-				SchemeElement se = (SchemeElement)pe.abstractSchemeElement();
+				SchemeElement se = (SchemeElement)pe.getAbstractSchemeElement();
 				//если у предыдущего эл-та проставлен endPortId, ищем по нему
-				if (pe.endAbstractSchemePort() != null)
+				if (pe.getEndAbstractSchemePort() != null)
 				{
 					for (Iterator it = SchemeUtils.getCablePorts(se).iterator(); it.hasNext();)
 					{
 						SchemeCablePort port = (SchemeCablePort)it.next();
-						if (port.equals(pe.endAbstractSchemePort()))
+						if (port.equals(pe.getEndAbstractSchemePort()))
 						{
-							if (pe.startAbstractSchemePort() instanceof SchemePort)
+							if (pe.getStartAbstractSchemePort() instanceof SchemePort)
 							{
-								SchemePort startPort = (SchemePort)pe.startAbstractSchemePort();
+								SchemePort startPort = (SchemePort)pe.getStartAbstractSchemePort();
 								return addCableLink(pes, port, link, startPort.getSchemeCableThread());
 							}
 						}
@@ -486,10 +483,10 @@ public class PathBuilder
 						if (port.equals(link.getSourceSchemeCablePort()) ||
 								port.equals(link.getTargetSchemeCablePort()))
 						{
-							pe.endAbstractSchemePort(port);
-							if (pe.startAbstractSchemePort() instanceof SchemePort)
+							pe.setEndAbstractSchemePort(port);
+							if (pe.getStartAbstractSchemePort() instanceof SchemePort)
 							{
-								SchemePort startPort = (SchemePort)pe.startAbstractSchemePort();
+								SchemePort startPort = (SchemePort)pe.getStartAbstractSchemePort();
 								return addCableLink(pes, port, link, startPort.getSchemeCableThread());
 							}
 						}
@@ -514,31 +511,30 @@ public class PathBuilder
 		int number = 0;
 		ListIterator it = pes.listIterator(pes.size());
 		if (it.hasPrevious())
-			number = ((PathElement)it.previous()).sequentialNumber() + 1;
+			number = ((PathElement)it.previous()).getSequentialNumber() + 1;
 
 		PathElement newPE;
 		try {
-			newPE = PathElement.createInstance(creatorId);
+			newPE = PathElement.createInstance(creatorId, PathElementType.SCHEME_CABLE_LINK);
 		} 
 		catch (CreateObjectException e) {
 			Log.errorMessage("Can't create PathElement object " + e.getMessage());
 			return null;
 		}
-		newPE.type(Type.SCHEME_CABLE_LINK);
-		newPE.abstractSchemeElement(link);
-		newPE.schemeCableThread(thread);
-		newPE.scheme(link.getParentScheme());
-		newPE.sequentialNumber(number);
+		newPE.setAbstractSchemeElement(link);
+		newPE.setSchemeCableThread(thread);
+		newPE.setParentScheme(link.getParentScheme());
+		newPE.setSequentialNumber(number);
 
 		if (port.equals(link.getSourceSchemeCablePort()))
 		{
-			newPE.startAbstractSchemePort(link.getSourceSchemeCablePort());
-			newPE.endAbstractSchemePort(link.getTargetSchemeCablePort());
+			newPE.setStartAbstractSchemePort(link.getSourceSchemeCablePort());
+			newPE.setEndAbstractSchemePort(link.getTargetSchemeCablePort());
 		}
 		else if (port.equals(link.getTargetSchemeCablePort()))
 		{
-			newPE.startAbstractSchemePort(link.getTargetSchemeCablePort());
-			newPE.endAbstractSchemePort(link.getSourceSchemeCablePort());
+			newPE.setStartAbstractSchemePort(link.getTargetSchemeCablePort());
+			newPE.setEndAbstractSchemePort(link.getSourceSchemeCablePort());
 		}
 		else //нет общих портов
 			return null;

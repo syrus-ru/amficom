@@ -42,7 +42,7 @@ public class SchemeGraphResource
 		PathElement[] pes = path.links();
 		ArrayList links = new ArrayList(pes.length);
 		for (int i = 0; i < pes.length; i++)
-			links.add(pes[i].abstractSchemeElement());
+			links.add(pes[i].getAbstractSchemeElement());
 
 		for (int i = 0; i < cells.length; i++)
 		{
