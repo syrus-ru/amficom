@@ -26,7 +26,7 @@ public class SchemeLink extends StubResource implements Serializable
 	public double optical_length = 0;
 	public double physical_length = 0;
 
-	public Map attributes = new HashMap();
+	public Map attributes;
 
 	public boolean alarmed = false;
 
@@ -40,6 +40,7 @@ public class SchemeLink extends StubResource implements Serializable
 	{
 		this.id = id;
 		transferable = new SchemeLink_Transferable();
+		attributes = new HashMap();
 	}
 
 	public String getTyp()

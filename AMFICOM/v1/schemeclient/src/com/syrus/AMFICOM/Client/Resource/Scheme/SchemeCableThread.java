@@ -17,7 +17,7 @@ public class SchemeCableThread extends StubResource implements Serializable
 	public String link_type_id = "";
 	public String thread_id = "";
 
-	public Map attributes = new HashMap();
+	public Map attributes;
 
 	public SchemeCableThread(SchemeCableThread_Transferable transferable)
 	{
@@ -29,6 +29,7 @@ public class SchemeCableThread extends StubResource implements Serializable
 	{
 		this.id = id;
 		transferable = new SchemeCableThread_Transferable();
+		attributes = new HashMap();
 	}
 
 	public String getTyp()

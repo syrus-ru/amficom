@@ -45,7 +45,7 @@ public class DirectoryToFile
 	public static final String ports_dir = "resources/ports/";
 	public static final String devices_dir = "resources/devices/";
 
-	public DirectoryToFile()
+	private DirectoryToFile()
 	{
 	}
 

@@ -11,6 +11,7 @@ import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.EquipmentType;
 
 public class ProtoElementDisplayModel extends StubDisplayModel
 {
+	static TextFieldEditor r = new TextFieldEditor();
 	ApplicationContext aContext = new ApplicationContext();
 	List cols;
 
@@ -36,37 +37,42 @@ public class ProtoElementDisplayModel extends StubDisplayModel
 
 	public String getColumnName(String col_id)
 	{
-	 if(col_id.equals("id"))
-		return LangModelConfig.getString("label_id");
-	 if(col_id.equals("name"))
-		return LangModelConfig.getString("label_name");
-	 if(col_id.equals("eq_class_id"))
-		return LangModelConfig.getString("port_class");
-	 return "";
+		if(col_id.equals("id"))
+			return LangModelConfig.getString("label_id");
+		if(col_id.equals("name"))
+			return LangModelConfig.getString("label_name");
+		if(col_id.equals("eq_class_id"))
+			return LangModelConfig.getString("port_class");
+		return "";
 	}
 
 	public int getColumnSize(String col_id)
 	{
-	 if(col_id.equals("id"))
-		return 100;
-	 if(col_id.equals("name"))
-		return 100;
-	 if(col_id.equals("eq_class_id"))
-		return 100;
+//	 if(col_id.equals("id"))
+//		return 100;
+//	 if(col_id.equals("name"))
+//		return 100;
+//	 if(col_id.equals("eq_class_id"))
+//		return 100;
 	 return 100;
 	}
 
 	public PropertyRenderer getColumnRenderer(ObjectResource or, String col_id)
 	{
-	 ProtoElement proto = (ProtoElement)or  ;
-	 EquipmentType eqType = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipment_type_id);
-	 if(col_id.equals("id"))
-		return new TextFieldEditor(proto.getId());
-	 if(col_id.equals("name"))
-		return new TextFieldEditor(proto.getName());
-	 if(col_id.equals("eq_class_id"))
-		return new TextFieldEditor(eqType.eq_class);
-	 return null;
+		ProtoElement proto = (ProtoElement)or;
+
+		if(col_id.equals("id"))
+			r.setText(proto.getId());
+		else if(col_id.equals("name"))
+			r.setText(proto.getName());
+		else if(col_id.equals("eq_class_id"))
+		{
+			EquipmentType eqType = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipment_type_id);
+			r.setText(eqType.eq_class);
+		}
+		else
+			return null;
+	 return r;
 	}
 
 	public PropertyEditor getColumnEditor(ObjectResource or, String col_id)

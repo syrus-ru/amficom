@@ -23,12 +23,14 @@ public class SchemeCablePort extends StubResource implements Serializable
 	public String access_port_type_id = "";
 	public String direction_type = "";
 
-	public Map attributes = new HashMap();
+	public Map attributes;
 
 	public SchemeCablePort(SchemeCablePort_Transferable transferable)
 	{
 		this.transferable = transferable;
 		setLocalFromTransferable();
+
+		attributes = new HashMap();
 	}
 
 	public SchemeCablePort(String id)

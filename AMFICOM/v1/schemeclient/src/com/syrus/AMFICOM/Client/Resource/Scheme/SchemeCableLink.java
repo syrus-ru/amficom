@@ -30,8 +30,8 @@ public class SchemeCableLink extends StubResource
 	public double optical_length = 0;
 	public double physical_length = 0;
 
-	public Collection cable_threads = new ArrayList();
-	public Map attributes = new HashMap();
+	public Collection cable_threads;
+	public Map attributes;
 
 	public MapPhysicalLinkProtoElement mplpe = null;
 
@@ -47,6 +47,9 @@ public class SchemeCableLink extends StubResource
 	{
 		this.id = id;
 		transferable = new SchemeCableLink_Transferable();
+
+		cable_threads = new ArrayList();
+		attributes = new HashMap();
 	}
 
 	public String getTyp()
@@ -131,6 +134,7 @@ public class SchemeCableLink extends StubResource
 		for (int i = 0; i < transferable.cable_threads.length; i++)
 			cable_threads.add(new SchemeCableThread(transferable.cable_threads[i]));
 
+		attributes = new HashMap();
 		for(int i = 0; i < transferable.attributes.length; i++)
 			attributes.put(transferable.attributes[i].type_id, new ElementAttribute(transferable.attributes[i]));
 	}
@@ -209,7 +213,6 @@ public class SchemeCableLink extends StubResource
 			target_port.cable_link_id = link.getId();
 		}
 
-		link.cable_threads = new ArrayList(cable_threads.size());
 		for (Iterator it = cable_threads.iterator(); it.hasNext();)
 			link.cable_threads.add(((SchemeCableThread)it.next()).clone(dataSource));
 

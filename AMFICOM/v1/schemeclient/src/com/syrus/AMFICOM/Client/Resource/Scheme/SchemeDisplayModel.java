@@ -12,6 +12,8 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 public class SchemeDisplayModel extends StubDisplayModel
 {
+	static SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy hh:mm:ss");
+	static TextFieldEditor r = new TextFieldEditor();
 	List cols;
 
 	public SchemeDisplayModel()
@@ -55,33 +57,26 @@ public class SchemeDisplayModel extends StubDisplayModel
 		if (!(o instanceof Scheme))
 			return null;
 		Scheme scheme = (Scheme)o;
-		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy hh:mm:ss");
 
 		if(col_id.equals("id"))
-			return new TextFieldEditor(scheme.getId());
-		if(col_id.equals("name"))
-			return new TextFieldEditor(scheme.getName());
-		if(col_id.equals("created"))
-			return new TextFieldEditor(sdf.format(new Date(scheme.created)));
-		if(col_id.equals("created_by"))
-			return new TextFieldEditor(scheme.created_by);
-		if(col_id.equals("description"))
-			return new TextFieldEditor(scheme.description);
-		return null;
+			r.setText(scheme.getId());
+		else if(col_id.equals("name"))
+			r.setText(scheme.getName());
+		else if(col_id.equals("created"))
+			r.setText(sdf.format(new Date(scheme.created)));
+		else if(col_id.equals("created_by"))
+			r.setText(scheme.created_by);
+		else if(col_id.equals("description"))
+			r.setText(scheme.description);
+		else
+			return null;
+		return r;
 	}
 
 	public boolean isColumnEditable(String col_id)
 	{
-		if(col_id.equals("id"))
-			return false;
 		if(col_id.equals("name"))
 			return true;
-		if(col_id.equals("created"))
-			return false;
-		if(col_id.equals("created_by"))
-			return false;
-		if(col_id.equals("description"))
-			return false;
 		return false;
 	}
 
@@ -92,16 +87,16 @@ public class SchemeDisplayModel extends StubDisplayModel
 
 	public int getColumnSize(String col_id)
 	{
-		if(col_id.equals("id"))
-			return 100;
-		if(col_id.equals("name"))
-			return 100;
-		if(col_id.equals("created"))
-			return 100;
-		if(col_id.equals("created_by"))
-			return 100;
-		if(col_id.equals("description"))
-			return 100;
+//		if(col_id.equals("id"))
+//			return 100;
+//		if(col_id.equals("name"))
+//			return 100;
+//		if(col_id.equals("created"))
+//			return 100;
+//		if(col_id.equals("created_by"))
+//			return 100;
+//		if(col_id.equals("description"))
+//			return 100;
 		return 100;
 	}
 

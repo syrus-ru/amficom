@@ -23,7 +23,7 @@ public class SchemePort extends StubResource implements Serializable
 	public String link_id = "";
 	public String direction_type = "";
 
-	public Map attributes = new HashMap();
+	public Map attributes;
 
 	public SchemePort(SchemePort_Transferable transferable)
 	{
@@ -35,6 +35,7 @@ public class SchemePort extends StubResource implements Serializable
 	{
 		this.id = id;
 		transferable = new SchemePort_Transferable();
+		attributes = new HashMap();
 	}
 
 	public String getTyp()
