@@ -70,3 +70,5 @@ admin	admin
 map	map
 #M	config	Configuring module
 config	config
+#M	jdbc	Client-side JDBC connection stub
+jdbc	jdbc
