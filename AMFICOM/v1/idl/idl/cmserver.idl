@@ -863,7 +863,7 @@ module corba {
 		com::syrus::AMFICOM::measurement::corba::TestSeq_Transferable transmitTestsButIdsCondition(
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
-			in com::syrus::AMFICOM::measurement::corba::TestCondition_Transferable testCondition)
+			in com::syrus::AMFICOM::measurement::corba::TemporalCondition_Transferable temporalCondition_Transferable)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);	
 		
 				
