@@ -38,3 +38,7 @@ configuration	AMFICOM/v2/configuration
 measurement	AMFICOM/v2/measurement
 
 mcm		AMFICOM/v2/mcm
+
+AMFICOMv1	&kisserver
+
+kisserver	AMFICOM/v1/kisserver
