@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.22 2004/09/29 06:14:05 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.23 2004/09/30 10:06:01 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/09/29 06:14:05 $
+ * @version $Revision: 1.23 $, $Date: 2004/09/30 10:06:01 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -287,7 +287,7 @@ public class MeasurementStorableObjectPool {
 		return list;
 	}
 
-public static List getStorableObjectsByDomain(short entityCode,
+	public static List getStorableObjectsByDomain(short entityCode,
 			Domain domain) throws DatabaseException, CommunicationException {
 		List list = null;
 		LRUMap objectPool = (LRUMap) objectPoolMap.get(new Short(entityCode));
@@ -470,7 +470,9 @@ public static List getStorableObjectsByDomain(short entityCode,
 			}
 		}
 		return list;
-	}	public static List getTestsByTimeRange(Domain domain, Date start, Date end) {
+	}	
+	
+	public static List getTestsByTimeRange(Domain domain, Date start, Date end) {
 		List list = null;
 		LRUMap objectPool = (LRUMap) objectPoolMap.get(new Short(ObjectEntities.TEST_ENTITY_CODE));
 		if (objectPool != null) {
@@ -738,6 +740,25 @@ public static List getStorableObjectsByDomain(short entityCode,
 
 				}
 			}
+		}
+	}
+	
+	
+	public static void cleanChangedStorableObject(Short entityCode){
+		LRUMap objectPool = (LRUMap) objectPoolMap.get(entityCode);
+		if (objectPool != null){
+			for(Iterator poolIt = objectPool.iterator();poolIt.hasNext();){
+				StorableObject storableObject = (StorableObject)poolIt.next();
+				if (storableObject.isChanged())
+					poolIt.remove();				
+			}
+		}
+	}
+	
+	public static void cleanChangedStorableObjects(){
+		for (Iterator it = objectPoolMap.keySet().iterator(); it.hasNext();) {
+			Short entityCode = (Short) it.next();
+			cleanChangedStorableObject(entityCode);
 		}
 	}
 }
