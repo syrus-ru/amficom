@@ -1,5 +1,5 @@
 /*
- * $Id: OracleAlarmReceiverMap.sqlj,v 1.1.2.4 2004/09/09 11:35:21 bass Exp $
+ * $Id: OracleAlarmReceiverMap.sqlj,v 1.1.2.5 2004/09/14 12:41:46 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,14 +12,14 @@ import com.syrus.AMFICOM.CORBA.*;
 import com.syrus.AMFICOM.CORBA.Admin.AccessIdentity_Transferable;
 import com.syrus.AMFICOM.CORBA.Constants;
 import com.syrus.AMFICOM.CORBA.General.AMFICOMRemoteException;
-import com.syrus.util.corba.AuroraORBUtil;
+import com.syrus.util.corba.JavaSoftORBUtil;
 import java.io.UnsupportedEncodingException;
 import java.sql.*;
 import org.omg.CORBA.SystemException;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2004/09/09 11:35:21 $
+ * @version $Revision: 1.1.2.5 $, $Date: 2004/09/14 12:41:46 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -151,7 +151,7 @@ final class OracleAlarmReceiverMap {
 					ior = new String(b);
 				}
 
-				returnValue = AMFICOMClientHelper.narrow(AuroraORBUtil.getInstance().getORB().string_to_object(ior));
+				returnValue = AMFICOMClientHelper.narrow(JavaSoftORBUtil.getInstance().getORB().string_to_object(ior));
 			} catch (NullPointerException npe) {
 				/*
 				 * BLOB stored in the database is null.

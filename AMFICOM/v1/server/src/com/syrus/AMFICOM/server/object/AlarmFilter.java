@@ -1,5 +1,5 @@
 /*
- * $Id: AlarmFilter.java,v 1.1.2.3 2004/09/09 11:35:20 bass Exp $
+ * $Id: AlarmFilter.java,v 1.1.2.4 2004/09/14 12:40:34 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import java.sql.*;
 import java.util.*;
 
 /**
- * @version $Revision: 1.1.2.3 $, $Date: 2004/09/09 11:35:20 $
+ * @version $Revision: 1.1.2.4 $, $Date: 2004/09/14 12:40:34 $
  * @author $Author: bass $
  * @module server_v1
  */
@@ -62,7 +62,8 @@ final class AlarmFilter implements Filter {
 					 */
 					Connection conn = null;
 					try {
-						conn = AMFICOMImpl.DATA_SOURCE.getConnection();
+						conn = AmficomImpl.DATA_SOURCE.getConnection();
+						conn.setAutoCommit(false);
 						return ((new MonitoredElement(conn, Test.retrieveTestForEvaluation(((Evaluation) (new Result((new Event(eventId)).getDescriptor())).getAction()).getId()).getTransferable().monitored_element_id)).getName().indexOf(substring) != -1);
 					} finally {
 						if (conn != null)
@@ -84,10 +85,16 @@ final class AlarmFilter implements Filter {
 								/**
 								 * @todo See comment above.
 								 */
-								Connection conn = AMFICOMImpl.DATA_SOURCE.getConnection();
-								if ((new MonitoredElement(conn, Test.retrieveTestForEvaluation(((Evaluation) ((new Result((new Event(alarm.getEventId())).getDescriptor())).getAction())).getId()).getTransferable().monitored_element_id)).getId().equals(down_mte2.id) && (down_mte2.state == 2))
-									result = true;
-								conn.close();
+								Connection conn = null;
+								try {
+									conn = AmficomImpl.DATA_SOURCE.getConnection();
+									conn.setAutoCommit(false);
+									if ((new MonitoredElement(conn, Test.retrieveTestForEvaluation(((Evaluation) ((new Result((new Event(alarm.getEventId())).getDescriptor())).getAction())).getId()).getTransferable().monitored_element_id)).getId().equals(down_mte2.id) && (down_mte2.state == 2))
+										result = true;
+								} finally {
+									if (conn != null)
+										conn.close();
+								}
 							}
 						}
 					}

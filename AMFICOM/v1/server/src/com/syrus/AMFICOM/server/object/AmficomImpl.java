@@ -1,5 +1,5 @@
 /*
- * $Id: AMFICOMImpl.java,v 1.1.2.4 2004/09/09 11:35:20 bass Exp $
+ * $Id: AmficomImpl.java,v 1.1.2.1 2004/09/14 12:41:46 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,7 @@
 
 package com.syrus.AMFICOM.server.object;
 
-import com.syrus.AMFICOM.CORBA.AMFICOMClient;
+import com.syrus.AMFICOM.CORBA.*;
 import com.syrus.AMFICOM.CORBA.Admin.*;
 import com.syrus.AMFICOM.CORBA.Alarm.*;
 import com.syrus.AMFICOM.CORBA.Constants;
@@ -22,49 +22,22 @@ import com.syrus.AMFICOM.CORBA.Report.*;
 import com.syrus.AMFICOM.CORBA.Resource.*;
 import com.syrus.AMFICOM.CORBA.Scheme.*;
 import com.syrus.AMFICOM.CORBA.Survey.*;
-import com.syrus.AMFICOM.CORBA.*;
-import com.syrus.AMFICOM.server.*;
+import com.syrus.AMFICOM.server.ResourcedbInterface;
 import com.syrus.AMFICOM.server.event.AlarmType;
 import com.syrus.AMFICOM.server.measurement.*;
-import com.syrus.util.database.DatabaseConnection;
-import java.sql.*;
+import com.syrus.AMFICOM.server.prefs.JdbcConnectionManager;
+import java.sql.Connection;
 import java.util.*;
 import javax.sql.DataSource;
 import org.omg.CORBA.*;
-import org.omg.CORBA.StringHolder;
-import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.1.2.4 $, $Date: 2004/09/09 11:35:20 $
+ * @version $Revision: 1.1.2.1 $, $Date: 2004/09/14 12:41:46 $
  * @author $Author: bass $
  * @module server_v1
  */
-public abstract class AMFICOMImpl extends _AMFICOMImplBase {
-	static final DataSource DATA_SOURCE = null; 
-
-	static  {
-		try {
-			final Connection conn = DATA_SOURCE.getConnection();
-			Runtime.getRuntime().addShutdownHook(new Thread() {
-				public void run() {
-					try {
-						System.err.print("Closing the default connection... ");
-						conn.close();
-						System.err.println("done.");
-					} catch (SQLException sqle) {
-						System.err.println("failed.");
-						sqle.printStackTrace();
-					}
-				}
-			});
-			DefaultContext.setDefaultContext(new DefaultContext(conn));
-			DatabaseConnection.setConnection(conn);
-		} catch (SQLException sqle) {
-			System.err.println("Error occured during server initialization... exiting.");
-			sqle.printStackTrace();
-			System.exit(-1);
-		}
-	}
+public final class AmficomImpl implements AMFICOMOperations {
+	static final DataSource DATA_SOURCE = JdbcConnectionManager.getDataSource();
 
 	/**
 	 * Открыть новую сессию взаимодействия оператора ИСМ с РИСД и провести
@@ -110,6 +83,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbGeneral.login(conn, username, password, ior, accessIdentity);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -138,6 +112,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
 				AMFICOMdbGeneral.logout(conn, accessIdentity);
 				return Constants.ERROR_NO_ERROR;
@@ -164,6 +139,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
 				AMFICOMdbGeneral.getLoggedUserIds(conn, accessIdentity, userIds);
 				return Constants.ERROR_NO_ERROR;
@@ -191,6 +167,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
 				AMFICOMdbGeneral.changePassword(conn, accessIdentity, oldPassword, newPassword);
 				return Constants.ERROR_NO_ERROR;
@@ -223,6 +200,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
 				imageResourceSeq.value = new ImageResource_Transferable[0];
 				ObjectdbInterfaceLoad.loadDomains(conn, domainSeq);
@@ -260,6 +238,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
 				ObjectdbInterfaceLoad.loadCategories(conn, operatorCategorySeq, operatorCategoryIds);
 				ObjectdbInterfaceLoad.loadGroups(conn, operatorGroupSeq, operatorGroupIds);
@@ -290,6 +269,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
 				imageResourceSeq.value = new ImageResource_Transferable[0];
 				ObjectdbInterfaceLoad.loadDomains(conn, domainSeq);
@@ -318,6 +298,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
 				ObjectdbInterfaceLoad.loadExecs(conn, commandPermissionAttributesSeq);
 				return Constants.ERROR_NO_ERROR;
@@ -350,6 +331,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
 				ResourcedbInterface.setImages(conn, imageResourceSeq);
 				ObjectdbInterfaceSave.saveDomains(conn, domainSeq);
@@ -387,6 +369,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
 				ObjectdbInterfaceRemove.removeDomains(conn, domainIdSeq);
 				ObjectdbInterfaceRemove.removeCategories(conn, operatorCategoryIdSeq);
@@ -420,6 +403,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
 				AdmindbInterfaceLoad.loadServers(conn, serverSeq);
 				AdmindbInterfaceLoad.loadClients(conn, clientSeq);
@@ -453,6 +437,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
 				AdmindbInterfaceLoad.loadServers(conn, serverSeq, serverIdSeq);
 				AdmindbInterfaceLoad.loadClients(conn, clientSeq, clientIdSeq);
@@ -483,6 +468,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
 				AdmindbInterfaceSave.saveServers(conn, serverSeq);
 				AdmindbInterfaceSave.saveClients(conn, clientSeq);
@@ -513,6 +499,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
 				AdmindbInterfaceRemove.removeServers(conn, serverIdSeq);
 				AdmindbInterfaceRemove.removeClients(conn, clientIdSeq);
@@ -549,6 +536,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
 				Vector mapIdList = new Vector();
 				Collection imageResourceIds = new LinkedList();
@@ -591,6 +579,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
 				Vector mapIdList = new Vector();
 				Collection imageResourceIds = new LinkedList();
@@ -637,6 +626,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
 				Vector mapIds = new Vector();
 				Collection imageResourceIds = new LinkedList();
@@ -693,6 +683,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
 				Vector mapIds = new Vector();
 				Collection imageResourceIds = new LinkedList();
@@ -737,6 +728,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.saveMaps(conn, accessIdentity, imageseq, mapseq, equipmentseq, kisseq, markseq, nodeseq, nodelinkseq, linkseq, pathseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -756,6 +748,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.removeMaps(conn, accessIdentity, mapseq, equipmentseq, kisseq, markseq, nodeseq, nodelinkseq, linkseq, pathseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -775,6 +768,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.saveJMaps(conn, accessIdentity, imageseq, mapseq, kisseq, nodeseq, nodelinkseq, linkseq, pathseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -794,6 +788,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.removeJMaps(conn, accessIdentity, mapseq, kisseq, nodeseq, nodelinkseq, linkseq, pathseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -813,6 +808,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getMapProtoElements(conn, accessIdentity, imageseq, groupseq, protoseq, linkseq, pathseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -832,6 +828,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getStatedMapProtoElements(conn, accessIdentity, group_ids, element_ids, link_ids, path_ids, imageseq, groupseq, protoseq, linkseq, pathseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -851,6 +848,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.saveMapProtoElements(conn, accessIdentity, images, groups, protos);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -870,6 +868,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.removeMapProtoElements(conn, accessIdentity, group_ids, proto_ids);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -889,6 +888,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getSchemeProtoElements(conn, accessIdentity, imageseq, elementseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -908,6 +908,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getStatedSchemeProtoElements(conn, accessIdentity, ids, imageseq, elementseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -927,6 +928,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.saveSchemeProtoElements(conn, accessIdentity, images, elementseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -946,6 +948,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.removeSchemeProtoElements(conn, accessIdentity, element_ids);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -965,6 +968,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getSchemes(conn, accessIdentity, imageseq, elementseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -984,6 +988,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getStatedSchemes(conn, accessIdentity, ids, imageseq, elementseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1003,6 +1008,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.saveSchemes(conn, accessIdentity, images, elementseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1022,6 +1028,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.removeSchemes(conn, accessIdentity, scheme_ids, scheme_path_ids, scheme_link_ids, scheme_element_ids);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1041,6 +1048,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.loadAttributeTypes(conn, accessIdentity, attrseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1060,6 +1068,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.loadStatedAttributeTypes(conn, accessIdentity, ids, attrseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1079,6 +1088,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.reloadAttributes(conn, accessIdentity, map_ids, attrseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1098,6 +1108,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.reloadISMAttributes(conn, accessIdentity, ism_map_ids, attrseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1131,6 +1142,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getAlarms(conn, accessIdentity, alarmseq, eventsourceseq, eventseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1150,6 +1162,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getStatedAlarms(conn, accessIdentity, ids, alarmseq, eventsourceseq, eventseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1169,6 +1182,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getStatedAlarmsFiltered(conn, accessIdentity, ids, filter, alarmseq, eventsourceseq, eventseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1188,6 +1202,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getMessages(conn, accessIdentity, messageseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1207,6 +1222,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.setAlarm(conn, accessIdentity, alarm);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1226,6 +1242,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.deleteAlarm(conn, accessIdentity, alarm_id);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1245,6 +1262,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				SurveydbInterfaceSave.setUserAlarm(conn, accessIdentity, sourceId, descriptor);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1264,6 +1282,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getAlarmIdsForMonitoredElement(conn, accessIdentity, me_id, alarmids);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1283,6 +1302,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.loadMaintenanceData(conn, accessIdentity, est, am, amu);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1302,6 +1322,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.saveMaintenanceData(conn, accessIdentity, am, amu);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1321,6 +1342,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.removeMaintenanceData(conn, accessIdentity, amu_id);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1340,6 +1362,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
 				id.value = ResourcedbInterface.getUid(conn, type);
 				return Constants.ERROR_NO_ERROR;
@@ -1360,6 +1383,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getResourceDescriptors(conn, accessIdentity, type, desc);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1379,6 +1403,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getResourceDescriptor(conn, accessIdentity, type, id, desc);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1398,6 +1423,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getResourceDescriptorsByIds(conn, accessIdentity, type, ids, desc);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1417,6 +1443,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getResultDescriptorsByIds(conn, accessIdentity, ids, desc);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1436,6 +1463,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getDomainResourceDescriptors(conn, accessIdentity, type, desc);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1455,6 +1483,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
 				Collection imageResources = ResourcedbInterface.getImages(conn, Arrays.asList(ids));
 				imageResourceSeq.value = (ImageResource_Transferable[]) (imageResources.toArray(new ImageResource_Transferable[imageResources.size()]));
@@ -1476,6 +1505,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.loadNetDirectory(conn, accessIdentity, porttypes, equipmenttypes, linktypes, tporttypes, characteristictypes, cableporttypes, cablelinktypes);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1495,6 +1525,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.loadISMDirectory(conn, accessIdentity, kistypes, aporttypes, pathtypes);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1514,6 +1545,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.loadStatedNetDirectory(conn, accessIdentity, pt_ids, eqt_ids, lt_ids, cht_ids, cpt_ids, clt_ids, porttypes, equipmenttypes, linktypes, tporttypes, characteristictypes, cableporttypes, cablelinktypes);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1533,6 +1565,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.loadStatedISMDirectory(conn, accessIdentity, kis_ids, aport_ids, path_ids, kistypes, aporttypes, pathtypes);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1552,6 +1585,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.removeNetDirectory(conn, accessIdentity, pt_ids, cpt_ids, eqt_ids, lt_ids, clt_ids);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1571,6 +1605,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.removeISMDirectory(conn, accessIdentity, kst_ids, apt_ids, tpt_ids);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1590,6 +1625,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.saveNetDirectory(conn, accessIdentity, porttypes, equipmenttypes, linktypes, tporttypes, characteristictypes, cableporttypes, cablelinktypes);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1609,6 +1645,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.saveISMDirectory(conn, accessIdentity, kistypes, aporttypes, pathtypes);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1628,6 +1665,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.loadNet(conn, accessIdentity, ports, cports, equipments, links, clinks, testports);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1647,6 +1685,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.loadStatedNet(conn, accessIdentity, p_ids, cp_ids, eq_ids, l_ids, cl_ids, ports, cports, equipments, links, clinks, testports);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1666,6 +1705,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.loadISM(conn, accessIdentity, ports, cports, kiss, links, clinks, mes, paths, accessports);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1685,6 +1725,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.loadStatedISM(conn, accessIdentity, p_ids, cp_ids, k_ids, l_ids, cl_ids, me_ids, t_ids, ap_ids, ports, cports, kiss, links, clinks, mes, paths, accessports);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1704,6 +1745,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.saveNet(conn, accessIdentity, ports, cports, equipments, links, clinks, testports);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1723,6 +1765,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.saveISM(conn, accessIdentity, ports, cports, kiss, links, clinks, mes, paths, accessports);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1742,6 +1785,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.removeNet(conn, accessIdentity, p_ids, cp_ids, eq_ids, l_ids, cl_ids);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1761,6 +1805,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.removeISM(conn, accessIdentity, p_ids, cp_ids, ks_ids, l_ids, cl_ids, me_ids, t_ids, ap_ids);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1780,6 +1825,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getResults(conn, accessIdentity, resultseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1799,6 +1845,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getStatedResults(conn, accessIdentity, ids, resultseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1818,6 +1865,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getRequests(conn, accessIdentity, treqseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1837,6 +1885,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getTests(conn, accessIdentity, testseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1856,6 +1905,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getStatedTests(conn, accessIdentity, ids, testseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1875,6 +1925,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getTestIdsInDiapazon(conn, accessIdentity, start_time, end_time, desc);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1894,6 +1945,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getTestIdsForMonitoredElement(conn, accessIdentity, me_id, testids);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1913,6 +1965,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getAnalysis(conn, accessIdentity, analysisseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1932,6 +1985,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getAnalysisIdsForMonitoredElement(conn, accessIdentity, me_id, analysisids);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1951,6 +2005,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getModelings(conn, accessIdentity, modelingseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1970,6 +2025,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getModelingIdsForSchemePath(conn, accessIdentity, scheme_path_id, modelingids);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -1989,6 +2045,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getEvaluations(conn, accessIdentity, evaluationseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2008,6 +2065,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getEvaluationIdsForMonitoredElement(conn, accessIdentity, me_id, evaluationids);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2027,6 +2085,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getRequestTests(conn, accessIdentity, request_id, testseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2046,6 +2105,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				TestDatadbInterfaceLoad.getAlarmedTests(conn, accessIdentity, resourceDescriptorSeq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2065,6 +2125,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				TestDatadbInterfaceSave.requestTest(conn, accessIdentity, clientTestRequest, clientTestSeq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2084,6 +2145,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.queryResource(conn, accessIdentity, parameter_id, kis_id, parameter_type_id);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2103,6 +2165,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.removeTests(conn, accessIdentity, testids);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2122,6 +2185,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.updateTests(conn, accessIdentity, testseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2141,6 +2205,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getLastResult(conn, accessIdentity, me_id, result);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2160,6 +2225,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getTestResults(conn, accessIdentity, test_id, results);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2179,6 +2245,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getAnalysisResults(conn, accessIdentity, analysis_id, results);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2198,6 +2265,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				return AMFICOMdbInterface.getStatisticsAnalysisResults(conn, accessIdentity, monitored_element_id, start_time, end_time);
 			} finally {
 				if (conn != null)
@@ -2216,6 +2284,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				return AMFICOMdbInterface.getStatisticsAnalysisResultsByTS(conn, accessIdentity, monitored_element_id, start_time, end_time, test_setup_id);
 			} finally {
 				if (conn != null)
@@ -2234,6 +2303,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getModelingResult(conn, accessIdentity, modeling_id, result);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2253,6 +2323,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getEvaluationResults(conn, accessIdentity, evaluation_id, results);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2272,6 +2343,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getLastResultId(conn, accessIdentity, me_id, result);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2291,6 +2363,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getTestResultIds(conn, accessIdentity, test_id, results);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2310,6 +2383,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getAnalysisResultIds(conn, accessIdentity, analysis_id, results);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2329,6 +2403,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getModelingResultId(conn, accessIdentity, modeling_id, result);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2348,6 +2423,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getEvaluationResultIds(conn, accessIdentity, evaluation_id, results);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2367,6 +2443,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getResult(conn, accessIdentity, result_id, result);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2386,6 +2463,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.saveAnalysis(conn, accessIdentity, analysis, result);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2405,6 +2483,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.saveModeling(conn, accessIdentity, modeling, result);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2424,6 +2503,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.saveEvaluation(conn, accessIdentity, evaluation, result);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2443,6 +2523,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getResultSets(conn, accessIdentity, resultsets);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2462,6 +2543,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getStatedResultSets(conn, accessIdentity, ids, resultsets);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2481,6 +2563,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getResultSetResultIds(conn, accessIdentity, result_id, result_ids);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2500,6 +2583,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getResultSetResultMEIds(conn, accessIdentity, result_id, me_id, result_ids);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2519,6 +2603,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.loadGlobalParameterTypes(conn, accessIdentity, params);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2538,6 +2623,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.loadGlobalParameterTypes(conn, accessIdentity, ids, params);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2557,6 +2643,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.loadTestTypes(conn, accessIdentity, ttypeseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2576,6 +2663,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.loadTestTypes(conn, accessIdentity, ids, ttypeseq);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2595,6 +2683,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.loadAnalysisTypes(conn, accessIdentity, atypes);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2614,6 +2703,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.loadAnalysisTypes(conn, accessIdentity, ids, atypes);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2633,6 +2723,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.loadEvaluationTypes(conn, accessIdentity, etypes);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2652,6 +2743,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.loadEvaluationTypes(conn, accessIdentity, ids, etypes);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2671,6 +2763,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.loadModelingTypes(conn, accessIdentity, mtypes);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2690,6 +2783,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.loadModelingTypes(conn, accessIdentity, ids, mtypes);
 				return Constants.ERROR_NO_ERROR;
 			} finally {
@@ -2955,6 +3049,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				return AMFICOMdbInterface.createTestSetup(conn, accessIdentity, test_setup_t);
 			} finally {
 				if (conn != null)
@@ -3065,6 +3160,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				return AMFICOMdbInterface.createTestArgumentSet(conn, accessIdentity, arg_set_t);
 			} finally {
 				if (conn != null)
@@ -3114,6 +3210,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				return AMFICOMdbInterface.createCriteriaSet(conn, accessIdentity, criteria_set_t);
 			} finally {
 				if (conn != null)
@@ -3176,6 +3273,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				return AMFICOMdbInterface.createThresholdSet(conn, accessIdentity, th_set_t);
 			} finally {
 				if (conn != null)
@@ -3238,6 +3336,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 			  	return AMFICOMdbInterface.createEtalon(conn, accessIdentity, e_t);
 			} finally {
 				if (conn != null)
@@ -3308,6 +3407,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.saveReportTemplates(conn, accessIdentity, rts);
 				return "";
 			} finally {
@@ -3327,6 +3427,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.getStatedReportTemplates(conn, accessIdentity, ids, reportTemplates);
 			} finally {
 				if (conn != null)
@@ -3345,6 +3446,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.removeReportTemplates(conn, accessIdentity, reportTemplate_ids);
 			} finally {
 				if (conn != null)
@@ -3363,6 +3465,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.saveSchemeOptimizeInfo(conn, accessIdentity, soi);
 				return "";
 			} finally {
@@ -3382,6 +3485,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				return AMFICOMdbInterface.getSchemeOptimizeInfo(conn, accessIdentity);
 			} finally {
 				if (conn != null)
@@ -3400,6 +3504,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.removeSchemeOptimizeInfo(conn, accessIdentity, soi_ids);
 			} finally {
 				if (conn != null)
@@ -3418,6 +3523,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbInterface.saveSchemeMonitoringSolutions(conn, accessIdentity, sol);
 				return "";
 			} finally {
@@ -3437,6 +3543,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				return AMFICOMdbInterface.getSchemeMonitoringSolutions(conn, accessIdentity);
 			} finally {
 				if (conn != null)
@@ -3455,6 +3562,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				AMFICOMdbGeneral.checkUserPrivileges(conn, accessIdentity);
 				for (int i = 0; i < sol_ids.length; i++)
 					(new SchemeMonitoringSolution(conn, sol_ids[i])).delete(conn);
@@ -3479,6 +3587,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				OracleAlarmReceiverMap.put(conn, accessIdentity, cli);
 			} finally {
 				if (conn != null)
@@ -3500,6 +3609,7 @@ public abstract class AMFICOMImpl extends _AMFICOMImplBase {
 			Connection conn = null;
 			try {
 				conn = DATA_SOURCE.getConnection();
+				conn.setAutoCommit(false);
 				OracleAlarmReceiverMap.remove(conn, accessIdentity);
 			} finally {
 				if (conn != null)
