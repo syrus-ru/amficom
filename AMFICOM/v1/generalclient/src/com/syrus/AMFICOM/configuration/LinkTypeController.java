@@ -19,9 +19,7 @@ public final class LinkTypeController implements ObjectResourceController {
 
 	private LinkTypeController() {
 		// empty private constructor
-		String[] keysArray = new String[] { COLUMN_ID, COLUMN_CREATED, COLUMN_CREATOR_ID, COLUMN_MODIFIED,
-				COLUMN_MODIFIER_ID, COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_NAME, COLUMN_SORT, COLUMN_MANUFACTURER,
-				COLUMN_MANUFACTURER_CODE, COLUMN_IMAGE_ID, COLUMN_CHARACTERISTICS};
+		String[] keysArray = new String[] { COLUMN_NAME };
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
