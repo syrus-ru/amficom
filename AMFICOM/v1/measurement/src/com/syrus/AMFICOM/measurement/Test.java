@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.74 2005/01/26 15:38:41 arseniy Exp $
+ * $Id: Test.java,v 1.75 2005/01/28 08:20:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,8 +45,8 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2005/01/26 15:38:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.75 $, $Date: 2005/01/28 08:20:43 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -284,6 +284,11 @@ public class Test extends StorableObject {
 	public Date getEndTime() {
 		return this.timeStamps.endTime;
 	}
+	
+	public void setEndTime(Date endTime) {
+		this.timeStamps.endTime = endTime;
+		this.currentVersion = super.getNextVersion();
+	}
 
 	public EvaluationType getEvaluationType() {
 		return this.evaluationType;
@@ -311,6 +316,11 @@ public class Test extends StorableObject {
 
 	public Date getStartTime() {
 		return this.timeStamps.startTime;
+	}
+	
+	public void setStartTime(Date startTime) {
+		this.timeStamps.startTime = startTime;
+		this.currentVersion = super.getNextVersion();
 	}
 
 	public TestStatus getStatus() {
@@ -393,7 +403,7 @@ public class Test extends StorableObject {
 	/**
 	 * @param evaluationType The evaluationTypeId to set.
 	 */
-	public void setEvaluationTypeId(EvaluationType evaluationType) {
+	public void setEvaluationType(EvaluationType evaluationType) {
 		this.currentVersion = super.getNextVersion();
 		this.evaluationType = evaluationType;
 	}
@@ -510,6 +520,11 @@ public class Test extends StorableObject {
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
 		}
+	}
+	
+	public void setMeasurementSetupIds(List measurementSetupIds) {
+		this.setMeasurementSetupIds0(measurementSetupIds);
+		this.currentVersion = super.getNextVersion();
 	}
 	
 	public int hashCode() {
