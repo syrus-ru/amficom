@@ -8,30 +8,42 @@ package com.syrus.AMFICOM.Client.Schedule.UI;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.*;
-import java.io.*;
-import java.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
 
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
+import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
+import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.TestUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.UI.AComboBox;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.Client.Scheduler.General.*;
+import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.configuration.Characteristic;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
-import com.syrus.AMFICOM.configuration.corba.StringFieldSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.corba.StringFieldSort;
 import com.syrus.AMFICOM.measurement.LinkedIdsCondition;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
@@ -228,8 +240,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 						throw new IllegalArgumentException(LangModelSchedule.getString("wave_length_is_not_set"));
 					byteArray = new ByteArray(Integer.parseInt(waveStr));
 
-					Identifier paramId = IdentifierPool.generateId(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-					params[0] = new SetParameter(paramId, wvlenParam, byteArray.getBytes());
+					params[0] = SetParameter.createInstance(wvlenParam, byteArray.getBytes());
 
 					Object distance = this.maxDistanceComboBox.getSelectedItem();
 					if (distance == null)
@@ -240,8 +251,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 						throw new IllegalArgumentException(LangModelSchedule.getString("distance_is_not_set"));
 					byteArray = new ByteArray(Double.parseDouble(distanceStr));
 
-					paramId = IdentifierPool.generateId(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-					params[1] = new SetParameter(paramId, trclenParam, byteArray.getBytes());
+					params[1] = SetParameter.createInstance(trclenParam, byteArray.getBytes());
 
 					Object resolution = this.resolutionComboBox.getSelectedItem();
 					if (resolution == null)
@@ -251,8 +261,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 						throw new IllegalArgumentException(LangModelSchedule.getString("resolution_is_not_set"));
 					byteArray = new ByteArray(Double.parseDouble(resolutionStr));
 
-					paramId = IdentifierPool.generateId(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-					params[2] = new SetParameter(paramId, resParam, byteArray.getBytes());
+					params[2] = SetParameter.createInstance(resParam, byteArray.getBytes());
 
 					Object pulse = this.pulseWidthComboBox.getSelectedItem();
 					if (pulse == null)
@@ -263,8 +272,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 					byteArray = new ByteArray(Long.parseLong(pulseStr));
 
-					paramId = IdentifierPool.generateId(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-					params[3] = new SetParameter(paramId, pulswdParam, byteArray.getBytes());
+					params[3] = SetParameter.createInstance(pulswdParam, byteArray.getBytes());
 
 					String refract = this.refractTextField.getText();
 					if ((refract == null) || (refract.length() == 0))
@@ -272,8 +280,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 								.getString("index_of_refraction_is_not_set")); //$NON-NLS-1$
 					byteArray = new ByteArray(Double.parseDouble(refract));
 
-					paramId = IdentifierPool.generateId(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-					params[4] = new SetParameter(paramId, iorParam, byteArray.getBytes());
+					params[4] = SetParameter.createInstance(iorParam, byteArray.getBytes());
 
 					Object average = this.averageQuantityComboBox.getSelectedItem();
 					if (average == null)
@@ -284,12 +291,10 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 					byteArray = new ByteArray(Double.parseDouble(averageStr));
 
-					paramId = IdentifierPool.generateId(ObjectEntities.SETPARAMETER_ENTITY_CODE);
-					params[5] = new SetParameter(paramId, scansParam, byteArray.getBytes());
+					params[5] = SetParameter.createInstance(scansParam, byteArray.getBytes());
 
 					RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
-					Identifier id = IdentifierPool.generateId(ObjectEntities.SET_ENTITY_CODE);
-					set = Set.createInstance(id, sessionInterface.getUserIdentifier(),
+					set = Set.createInstance(sessionInterface.getUserIdentifier(),
 												SetSort.SET_SORT_MEASUREMENT_PARAMETERS, "Set created by Scheduler",
 												params, Collections.singletonList(this.meId));
 					MeasurementStorableObjectPool.putStorableObject(set);

@@ -38,9 +38,9 @@ import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -545,14 +545,16 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		if (measurementSetupIds == null) {
 			Set set = (Set) this.receiveData.get(ObjectEntities.SET_ENTITY);
 			RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
-			MeasurementSetup mSetup = MeasurementSetup.createInstance(IdentifierPool
-					.generateId(ObjectEntities.MS_ENTITY_CODE), sessionInterface.getUserIdentifier(), set, null, null,
+			try {
+			MeasurementSetup mSetup = MeasurementSetup.createInstance(sessionInterface.getUserIdentifier(), set, null, null,
 																		null, "created by Scheduler", 1000 * 60 * 10,
 																		Collections.singletonList(me.getId()));
 			measurementSetupIds = Collections.singletonList(mSetup.getId());
-			try {
+			
 				MeasurementStorableObjectPool.putStorableObject(mSetup);
 			} catch (IllegalObjectEntityException e) {
+				Log.debugException(e, Log.DEBUGLEVEL05);
+			} catch (CreateObjectException e) {
 				Log.debugException(e, Log.DEBUGLEVEL05);
 			}
 		}
@@ -567,14 +569,15 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 		TemporalPattern temporalPattern = this.receiveTestTimeStamps.getTemporalPattern();
 
 		if (test == null) {
-			Identifier id = IdentifierPool.generateId(ObjectEntities.TEST_ENTITY_CODE);
-			test = Test.createInstance(id, modifierId, startTime, endTime, temporalPattern, temporalType,
+			try {
+			test = Test.createInstance(modifierId, startTime, endTime, temporalPattern, temporalType,
 										measurementType, analysisType, evaluationType, me, this.returnType,
 										ConstStorage.SIMPLE_DATE_FORMAT.format(startTime), measurementSetupIds);
-
-			try {
+			
 				MeasurementStorableObjectPool.putStorableObject(test);
 			} catch (IllegalObjectEntityException e) {
+				Log.errorException(e);
+			} catch (CreateObjectException e) {
 				Log.errorException(e);
 			}
 

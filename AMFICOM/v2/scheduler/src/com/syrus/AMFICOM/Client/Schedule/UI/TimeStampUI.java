@@ -10,6 +10,7 @@ import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.TemporalPattern.TimeLine;
 
@@ -99,20 +100,23 @@ public class TimeStampUI {
 		checkButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				TemporalPattern pattern = TemporalPattern.createInstance(null, null, null,
-
-				new String[] { getTemplate()});
-				String description;
-				int type = JOptionPane.INFORMATION_MESSAGE;
 				try {
-					description = pattern.toString();
-				} catch (IllegalArgumentException iae) {
-					description = LangModelSchedule.getString("Some paremeters are not set.");
-					type = JOptionPane.ERROR_MESSAGE;
-				}
+					TemporalPattern pattern = TemporalPattern.createInstance(null, null, new String[] { getTemplate()});
+					String description;
+					int type = JOptionPane.INFORMATION_MESSAGE;
+					try {
+						description = pattern.toString();
+					} catch (IllegalArgumentException iae) {
+						description = LangModelSchedule.getString("Some paremeters are not set.");
+						type = JOptionPane.ERROR_MESSAGE;
+					}
 
-				pattern = null;
-				JOptionPane.showMessageDialog(duringDayPanel, description, null, type);
+					pattern = null;
+					JOptionPane.showMessageDialog(duringDayPanel, description, null, type);
+
+				} catch (CreateObjectException e1) {
+					e1.printStackTrace();
+				}
 			}
 		});
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
@@ -399,89 +403,94 @@ public class TimeStampUI {
 
 	public static void main(String[] args) {
 
-		final TemporalPattern timeStamp = TemporalPattern.createInstance(null, null, null, new LinkedList());
+		final TemporalPattern timeStamp;
 		//Calendar c = Calendar.getInstance();
-		//timeStamp.setStartPeriod(c.getTimeInMillis());
-		//timeStamp.setEndPeriod(c.getTimeInMillis() + 1000 * 60 * 60 *
-		// 5);
-		timeStamp.addTemplate("*/20 0-9 */2 2,5 0,6"); //$NON-NLS-1$
-		timeStamp.addTemplate("*/20 * * * *");
-		//timeStamp.addTemplate("*/10 * * * *");
-
-		final JFrame frame = new JFrame();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		//		java.util.List descriptions = new LinkedList();
-		JList list = new JList(new DefaultListModel());
-		DefaultListModel model = (DefaultListModel) list.getModel();
-		for (Iterator it = timeStamp.getTimeLines().iterator(); it.hasNext();) {
-			TimeLine timeLine = (TimeLine) it.next();
-			//			descriptions.add(timeLine.getDescription());
-			model.addElement(timeLine);
-		}
-		//		JList list = new JList(descriptions.toArray());
-		JScrollPane scrollPane = new JScrollPane(list);
-
-		final TimeStampUI demo = new TimeStampUI();
-		list.addMouseListener(new MouseListener() {
-
-			public void mouseClicked(MouseEvent e) {
-				final JList jlist = (JList) e.getSource();
-				TimeLine timeLine = (TimeLine) jlist.getSelectedValue();
-				//JFrame mainFrame = demo.getTimeLineEditor();
-				final String template = timeLine.getTemplate();
-				JSplitPane pane = demo.getPane();
-				demo.setTimeLine(timeLine);
-				int result = JOptionPane.showConfirmDialog(frame, pane, "Time Line", JOptionPane.OK_CANCEL_OPTION);
-				if (result == JOptionPane.OK_OPTION) {
-					System.out.println("was:" + template);
-					timeStamp.removeTemplate(template);
-					String template2 = demo.getTemplate();
-					System.out.println("now:" + template2);
-					timeStamp.addTemplate(template2);
-					DefaultListModel model = (DefaultListModel) jlist.getModel();
-					model.removeAllElements();
-					for (Iterator it = timeStamp.getTimeLines().iterator(); it.hasNext();) {
-						TimeLine timeLine2 = (TimeLine) it.next();
-						model.addElement(timeLine2);
+		try {
+			timeStamp = TemporalPattern.createInstance(null, null, new LinkedList());
+		
+			// 5);
+			timeStamp.addTemplate("*/20 0-9 */2 2,5 0,6"); //$NON-NLS-1$
+			timeStamp.addTemplate("*/20 * * * *");
+			//timeStamp.addTemplate("*/10 * * * *");
+	
+			final JFrame frame = new JFrame();
+			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			//		java.util.List descriptions = new LinkedList();
+			JList list = new JList(new DefaultListModel());
+			DefaultListModel model = (DefaultListModel) list.getModel();
+			for (Iterator it = timeStamp.getTimeLines().iterator(); it.hasNext();) {
+				TimeLine timeLine = (TimeLine) it.next();
+				//			descriptions.add(timeLine.getDescription());
+				model.addElement(timeLine);
+			}
+			
+			//		JList list = new JList(descriptions.toArray());
+			JScrollPane scrollPane = new JScrollPane(list);
+	
+			final TimeStampUI demo = new TimeStampUI();
+			list.addMouseListener(new MouseListener() {
+	
+				public void mouseClicked(MouseEvent e) {
+					final JList jlist = (JList) e.getSource();
+					TimeLine timeLine = (TimeLine) jlist.getSelectedValue();
+					//JFrame mainFrame = demo.getTimeLineEditor();
+					final String template = timeLine.getTemplate();
+					JSplitPane pane = demo.getPane();
+					demo.setTimeLine(timeLine);
+					int result = JOptionPane.showConfirmDialog(frame, pane, "Time Line", JOptionPane.OK_CANCEL_OPTION);
+					if (result == JOptionPane.OK_OPTION) {
+						System.out.println("was:" + template);
+						timeStamp.removeTemplate(template);
+						String template2 = demo.getTemplate();
+						System.out.println("now:" + template2);
+						timeStamp.addTemplate(template2);
+						DefaultListModel model = (DefaultListModel) jlist.getModel();
+						model.removeAllElements();
+						for (Iterator it = timeStamp.getTimeLines().iterator(); it.hasNext();) {
+							TimeLine timeLine2 = (TimeLine) it.next();
+							model.addElement(timeLine2);
+						}
+	
 					}
-
+	
 				}
-
-			}
-
-			public void mouseEntered(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			public void mouseExited(MouseEvent e) {
-				// TODO Auto-generated method stub
-
-			}
-
-			public void mousePressed(MouseEvent e) {
-				this.mouseClicked(e);
-
-			}
-
-			public void mouseReleased(MouseEvent e) {
-				this.mouseClicked(e);
-			}
-		});
-		frame.getContentPane().add(scrollPane);
-		frame.pack();
-		frame.setVisible(true);
-
-		//		TimeStampUI demo = new TimeStampUI();
-		//		JFrame mainFrame = demo.getTimeLineEditor();
-		//		demo.setTimeLine((TimeLine)
-		// timeStamp.getTimeLines().iterator().next());
-		//		mainFrame.addWindowListener(new WindowAdapter() {
-		//
-		//			public void windowClosing(WindowEvent e) {
-		//				System.exit(0);
-		//			}
-		//		});
+	
+				public void mouseEntered(MouseEvent e) {
+					// TODO Auto-generated method stub
+	
+				}
+	
+				public void mouseExited(MouseEvent e) {
+					// TODO Auto-generated method stub
+	
+				}
+	
+				public void mousePressed(MouseEvent e) {
+					this.mouseClicked(e);
+	
+				}
+	
+				public void mouseReleased(MouseEvent e) {
+					this.mouseClicked(e);
+				}
+			});
+			frame.getContentPane().add(scrollPane);
+			frame.pack();
+			frame.setVisible(true);
+	
+			//		TimeStampUI demo = new TimeStampUI();
+			//		JFrame mainFrame = demo.getTimeLineEditor();
+			//		demo.setTimeLine((TimeLine)
+			// timeStamp.getTimeLines().iterator().next());
+			//		mainFrame.addWindowListener(new WindowAdapter() {
+			//
+			//			public void windowClosing(WindowEvent e) {
+			//				System.exit(0);
+			//			}
+			//		});
+		} catch (CreateObjectException e1) {
+			e1.printStackTrace();
+		}
 
 	}
 

@@ -60,6 +60,7 @@ import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.client_.general.ui_.ObjList;
 import com.syrus.AMFICOM.client_.general.ui_.ObjListModel;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.measurement.DomainCondition;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
@@ -314,17 +315,23 @@ public class TimeParametersFrame extends JInternalFrame implements OperationList
 						/**
 						 * FIXME !!! create id and so on
 						 */
-						TemporalPattern temporalPattern = TemporalPattern.createInstance(null, null, null,
-																							new LinkedList());
-						temporalPattern.addTemplate(template);
-						TimeParametersPanel.this.temporalPatterns.add(temporalPattern);
+						try {
+							TemporalPattern temporalPattern = TemporalPattern.createInstance(null, null,
+																								new LinkedList());
+							temporalPattern.addTemplate(template);
+							TimeParametersPanel.this.temporalPatterns.add(temporalPattern);
 
-						//							timeStamp.addTemplate(template2);
-						DefaultListModel model = (DefaultListModel) TimeParametersPanel.this.timeStamps.getModel();
-						model.removeAllElements();
-						for (Iterator it = TimeParametersPanel.this.temporalPatterns.iterator(); it.hasNext();) {
-							TemporalPattern timeLine2 = (TemporalPattern) it.next();
-							model.addElement(timeLine2);
+							//							timeStamp.addTemplate(template2);
+							DefaultListModel model = (DefaultListModel) TimeParametersPanel.this.timeStamps.getModel();
+							model.removeAllElements();
+							for (Iterator it = TimeParametersPanel.this.temporalPatterns.iterator(); it.hasNext();) {
+								TemporalPattern timeLine2 = (TemporalPattern) it.next();
+								model.addElement(timeLine2);
+							}
+
+						} catch (CreateObjectException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
 						}
 
 					}
