@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.41 2004/11/11 09:15:51 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.42 2004/11/11 10:58:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2004/11/11 09:15:51 $
+ * @version $Revision: 1.42 $, $Date: 2004/11/11 10:58:06 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -315,7 +315,10 @@ public abstract class StorableObjectDatabase {
 
 	protected String retrieveQuery(final String condition){
 		StringBuffer buffer = new StringBuffer(SQL_SELECT);
-		buffer.append(this.getColumns());
+		String columns = this.getColumns();
+		columns = columns.replaceFirst(COLUMN_CREATED, DatabaseDate.toQuerySubString(COLUMN_CREATED));
+		columns = columns.replaceFirst(COLUMN_MODIFIED, DatabaseDate.toQuerySubString(COLUMN_MODIFIED));
+		buffer.append(columns);
 		buffer.append(SQL_FROM);
 		buffer.append(this.getEnityName());
 		if (condition != null && condition.trim().length() > 0){
