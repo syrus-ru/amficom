@@ -88,7 +88,7 @@ public class DevicePropsPanel extends JPanel
 							box.setSelectedItem("");
 							table.setRowSelectionInterval(i, i);
 							SchemePort port = (SchemePort)getObjectResource(i, 0);
-							port.schemeCableThread(null);
+							port.setSchemeCableThread(null);
 						}
 					}
 					for (int i = 0; i < getRowCount(); i++)
@@ -99,7 +99,7 @@ public class DevicePropsPanel extends JPanel
 						{
 							table.setRowSelectionInterval(i, i);
 							SchemePort port = (SchemePort)getObjectResource(i, 0);
-							port.schemeCableThread((SchemeCableThread)box.getSelectedItem());
+							port.setSchemeCableThread((SchemeCableThread)box.getSelectedItem());
 						}
 					}
 				}
@@ -114,7 +114,7 @@ public class DevicePropsPanel extends JPanel
 
 			for (int i = 0; i < ports.length; i++)
 			{
-				SchemeCableThread thread = ports[i].schemeCableThread();
+				SchemeCableThread thread = ports[i].getSchemeCableThread();
 				if (thread != null)
 					schemeCables.add(thread.schemeCablelink());
 			}
@@ -131,7 +131,7 @@ public class DevicePropsPanel extends JPanel
 			{
 				data[i][0] = ports[i];
 
-				SchemeCableThread thread = ports[i].schemeCableThread();
+				SchemeCableThread thread = ports[i].getSchemeCableThread();
 				ObjComboBox box = new ObjComboBox(
 								SchemeCableThreadController.getInstance(),
 								StorableObjectWrapper.COLUMN_NAME);

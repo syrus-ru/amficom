@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.configuration.corba.*;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.*;
-import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortPackage.DirectionType;
+import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
@@ -788,7 +788,7 @@ class CreateTopLevelElementAction extends AbstractAction
 				if (bpcs[i].isCablePort())
 				{
 					SchemeCablePort port = bpcs[i].getSchemeCablePort();
-					if (port.directionType().equals(DirectionType._IN))
+					if (port.getAbstractSchemePortDirectionType().equals(AbstractSchemePortDirectionType._IN))
 						blockports_in.add(bpcs[i]);
 					else
 						blockports_out.add(bpcs[i]);
@@ -796,7 +796,7 @@ class CreateTopLevelElementAction extends AbstractAction
 				else
 				{
 					SchemePort port = bpcs[i].getSchemePort();
-					if (port.directionType().equals(DirectionType._IN))
+					if (port.getAbstractSchemePortDirectionType().equals(AbstractSchemePortDirectionType._IN))
 						blockports_in.add(bpcs[i]);
 					else
 						blockports_out.add(bpcs[i]);
@@ -1177,7 +1177,7 @@ class CreateTopLevelSchemeAction extends AbstractAction
 			if (bpcs[i].isCablePort())
 			{
 			SchemeCablePort port = bpcs[i].getSchemeCablePort();
-			if (port.directionType().equals(DirectionType._IN))
+			if (port.getAbstractSchemePortDirectionType().equals(AbstractSchemePortDirectionType._IN))
 				blockports_in.add(bpcs[i]);
 			else
 				blockports_out.add(bpcs[i]);
@@ -1185,7 +1185,7 @@ class CreateTopLevelSchemeAction extends AbstractAction
 		else
 		{
 			SchemePort port = bpcs[i].getSchemePort();
-			if (port.directionType().equals(DirectionType._IN))
+			if (port.getAbstractSchemePortDirectionType().equals(AbstractSchemePortDirectionType._IN))
 				blockports_in.add(bpcs[i]);
 			else
 				blockports_out.add(bpcs[i]);
@@ -1418,7 +1418,7 @@ class CreateBlockPortAction extends AbstractAction
 				return;
 
 			Rectangle _bounds = graph.getCellBounds(cell);
-			if (sport.directionType().equals(DirectionType._IN))
+			if (sport.getAbstractSchemePortDirectionType().equals(AbstractSchemePortDirectionType._IN))
 				bounds = new Rectangle(
 						new Point(_bounds.x - 6*grid, _bounds.y - 2),
 						new Dimension(grid*3, _bounds.height + 4));
@@ -1446,7 +1446,7 @@ class CreateBlockPortAction extends AbstractAction
 				return;
 
 			Rectangle _bounds = graph.getCellBounds(cell);
-			if (scport.directionType().equals(DirectionType._IN))
+			if (scport.getAbstractSchemePortDirectionType().equals(AbstractSchemePortDirectionType._IN))
 				bounds = new Rectangle(
 						new Point(_bounds.x - 6*grid, _bounds.y - 2),
 						new Dimension(grid*3, _bounds.height + 4));

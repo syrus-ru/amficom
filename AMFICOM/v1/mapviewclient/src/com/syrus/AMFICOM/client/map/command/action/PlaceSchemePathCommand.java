@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemePathCommand.java,v 1.13 2005/03/16 12:54:57 bass Exp $
+ * $Id: PlaceSchemePathCommand.java,v 1.14 2005/03/25 10:12:22 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
  * (drag/drop), в точке point (в экранных координатах)
  * 
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/03/16 12:54:57 $
+ * @version $Revision: 1.14 $, $Date: 2005/03/25 10:12:22 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemePathCommand extends MapActionCommandBundle
@@ -98,8 +98,8 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 						break;
 					case Type._SCHEME_LINK:
 						SchemeLink schemeLink = (SchemeLink )pe.abstractSchemeElement();
-						SchemeElement startSchemeElement = SchemeUtils.getSchemeElementByDevice(scheme, schemeLink.sourceSchemePort().schemeDevice());
-						SchemeElement endSchemeElement = SchemeUtils.getSchemeElementByDevice(scheme, schemeLink.targetSchemePort().schemeDevice());
+						SchemeElement startSchemeElement = SchemeUtils.getSchemeElementByDevice(scheme, schemeLink.sourceSchemePort().getParentSchemeDevice());
+						SchemeElement endSchemeElement = SchemeUtils.getSchemeElementByDevice(scheme, schemeLink.targetSchemePort().getParentSchemeDevice());
 						SiteNode startSite = this.mapView.findElement(startSchemeElement);
 						SiteNode endSite = this.mapView.findElement(endSchemeElement);
 						if(startSite.equals(endSite))

@@ -15,7 +15,7 @@ import com.jgraph.pad.ImageCell;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 
-import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortPackage.DirectionType;
+import com.syrus.AMFICOM.scheme.corba.AbstractSchemePortDirectionType;
 import com.syrus.AMFICOM.scheme.*;
 import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.Identifier;
@@ -340,13 +340,13 @@ public class GraphActions
 		{
 			if (isPort)
 			{
-				visualPort = addVisualPort(graph, "", new Rectangle(p.x - 6, p.y - 3, 7, 7), dev, DirectionType._OUT);
+				visualPort = addVisualPort(graph, "", new Rectangle(p.x - 6, p.y - 3, 7, 7), dev, AbstractSchemePortDirectionType._OUT);
 				Arrays.asList(dev.getSchemeDevice().getSchemePortsAsArray()).add(((PortCell)visualPort).getSchemePort());
 				((PortCell)visualPort).getSchemePort().setName(name);
 			}
 			else
 			{
-				visualPort = addVisualCablePort(graph, "", new Rectangle(p.x - 6, p.y - 3, 7, 7), dev, DirectionType._OUT);
+				visualPort = addVisualCablePort(graph, "", new Rectangle(p.x - 6, p.y - 3, 7, 7), dev, AbstractSchemePortDirectionType._OUT);
 				Arrays.asList(dev.getSchemeDevice().getSchemeCablePortsAsArray()).add(((CablePortCell)visualPort).getSchemeCablePort());
 				((CablePortCell)visualPort).getSchemeCablePort().setName(name);
 			}
@@ -359,13 +359,13 @@ public class GraphActions
 		{
 			if (isPort)
 			{
-				visualPort = addVisualPort(graph, "", new Rectangle(p.x, p.y - 3, 7, 7), dev, DirectionType._IN);
+				visualPort = addVisualPort(graph, "", new Rectangle(p.x, p.y - 3, 7, 7), dev, AbstractSchemePortDirectionType._IN);
 				Arrays.asList(dev.getSchemeDevice().getSchemePortsAsArray()).add(((PortCell)visualPort).getSchemePort());
 				((PortCell)visualPort).getSchemePort().setName(name);
 			}
 			else
 			{
-				visualPort = addVisualCablePort(graph, "", new Rectangle(p.x, p.y - 3, 7, 7), dev, DirectionType._IN);
+				visualPort = addVisualCablePort(graph, "", new Rectangle(p.x, p.y - 3, 7, 7), dev, AbstractSchemePortDirectionType._IN);
 				Arrays.asList(dev.getSchemeDevice().getSchemeCablePortsAsArray()).add(((CablePortCell)visualPort).getSchemeCablePort());
 				((CablePortCell)visualPort).getSchemeCablePort().setName(name);
 			}
@@ -408,7 +408,7 @@ public class GraphActions
 		return visualPort;
 	}
 
-	static PortCell addVisualPort(SchemeGraph graph, Object userObject, Rectangle bounds, DeviceCell dev, DirectionType direction)
+	static PortCell addVisualPort(SchemeGraph graph, Object userObject, Rectangle bounds, DeviceCell dev, AbstractSchemePortDirectionType direction)
 	{
 		Map viewMap = new HashMap();
 		Map map;
@@ -416,8 +416,8 @@ public class GraphActions
 		// Create Vertex
 		PortCell cell = new PortCell(userObject);
 		SchemePort sp = SchemePort.createInstance();
-		sp.directionType(direction);
-		sp.schemeDevice(dev.getSchemeDevice());
+		sp.setAbstractSchemePortDirectionType(direction);
+		sp.setParentSchemeDevice(dev.getSchemeDevice());
 		cell.setSchemePortId(sp.getId());
 
 		map = GraphConstants.createMap();
@@ -443,7 +443,7 @@ public class GraphActions
 		return cell;
 	}
 
-	static CablePortCell addVisualCablePort(SchemeGraph graph, Object userObject, Rectangle bounds, DeviceCell dev, DirectionType direction)
+	static CablePortCell addVisualCablePort(SchemeGraph graph, Object userObject, Rectangle bounds, DeviceCell dev, AbstractSchemePortDirectionType direction)
 	{
 		Map viewMap = new HashMap();
 		Map map;
@@ -451,8 +451,8 @@ public class GraphActions
 		// Create Vertex
 		CablePortCell cell = new CablePortCell(userObject);
 		SchemeCablePort scp = SchemeCablePort.createInstance();
-		scp.schemeDevice(dev.getSchemeDevice());
-		scp.directionType(direction);
+		scp.setParentSchemeDevice(dev.getSchemeDevice());
+		scp.setAbstractSchemePortDirectionType(direction);
 		cell.setSchemeCablePortId(scp.getId());
 
 		map = GraphConstants.createMap();
@@ -785,7 +785,7 @@ public class GraphActions
 				}
 				else if (cells[i] instanceof PortCell)
 				{
-					if (((PortCell)cells[i]).getSchemePort().directionType().equals(DirectionType._OUT))
+					if (((PortCell)cells[i]).getSchemePort().getAbstractSchemePortDirectionType().equals(AbstractSchemePortDirectionType._OUT))
 					{
 						bounds.x = ((bounds.x / grid) + 1) * grid - 6;
 						bounds.y = ((bounds.y / grid) + 1) * grid - 3;
@@ -798,7 +798,7 @@ public class GraphActions
 				}
 				else if (cells[i] instanceof CablePortCell)
 				{
-					if (((CablePortCell)cells[i]).getSchemeCablePort().directionType().equals(DirectionType._OUT))
+					if (((CablePortCell)cells[i]).getSchemeCablePort().getAbstractSchemePortDirectionType().equals(AbstractSchemePortDirectionType._OUT))
 					{
 						bounds.x = ((bounds.x / grid) + 1) * grid - 6;
 						bounds.y = ((bounds.y / grid) + 1) * grid - 3;
@@ -1207,16 +1207,16 @@ public class GraphActions
 			return false;
 		}
 
-		if (sp.schemeLink() != null && !sp.schemeLink().equals(sl))
+		if (sp.getSchemeLink() != null && !sp.getSchemeLink().equals(sl))
 		{
-			String message = "К порту " + sp.getName() + " уже подключена линия связи " + sp.schemeLink().getName() + ".\n";
+			String message = "К порту " + sp.getName() + " уже подключена линия связи " + sp.getSchemeLink().getName() + ".\n";
 			message += "Изменить подключенную линию на " + sl.getName() + "?";
 				//int res = JOptionPane.showConfirmDialog(Environment.getActiveWindow(), message, "Подтверждение", JOptionPane.YES_NO_OPTION);
 				//if (res == JOptionPane.NO_OPTION)
 				//	return false;
 		}
 
-		sp.schemeLink(sl);
+		sp.setSchemeLink(sl);
 		if (is_source)
 			sl.sourceSchemePort(sp);
 		else
@@ -1254,7 +1254,7 @@ public class GraphActions
 		}
 		if (sp != null)
 		{
-			sp.schemeLink(null);
+			sp.setSchemeLink(null);
 			PortType pt = sp.getPortType();
 			if (pt == null)
 				GraphActions.setObjectBackColor(graph, sp, Color.red);
@@ -1277,9 +1277,9 @@ public class GraphActions
 			System.err.println("GraphActions.connectSchemeCableLink() link not found " + link.getSchemeCableLinkId());
 			return false;
 		}
-		if (sp.schemeCableLink() != null && !sp.schemeCableLink().equals(sl))
+		if (sp.getSchemeCableLink() != null && !sp.getSchemeCableLink().equals(sl))
 		{
-			String message = "К порту " + sp.getName() + " уже подключена линия связи " + sp.schemeCableLink().getName() + ".\n";
+			String message = "К порту " + sp.getName() + " уже подключена линия связи " + sp.getSchemeCableLink().getName() + ".\n";
 			message += "Изменить подключенную линию на " + sl.getName() + "?";
 
 				//int res = JOptionPane.showConfirmDialog(Environment.getActiveWindow(), message, "Предупреждение", JOptionPane.YES_NO_OPTION);
@@ -1287,7 +1287,7 @@ public class GraphActions
 					//return false;
 		}
 
-		sp.schemeCableLink(sl);
+		sp.setSchemeCableLink(sl);
 		if (is_source)
 			sl.sourceSchemeCablePort(sp);
 		else
@@ -1322,7 +1322,7 @@ public class GraphActions
 			sl.targetSchemeCablePort(null);
 		}
 
-		sp.schemeCableLink(null);
+		sp.setSchemeCableLink(null);
 		PortType pt = sp.getPortType();
 		if (pt == null)
 				GraphActions.setObjectBackColor(graph, sp, Color.red);

@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPath.java,v 1.10 2005/03/16 12:53:21 bass Exp $
+ * $Id: MeasurementPath.java,v 1.11 2005/03/25 10:12:23 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,7 +41,7 @@ import java.util.ListIterator;
  * Элемент пути.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/03/16 12:53:21 $
+ * @version $Revision: 1.11 $, $Date: 2005/03/25 10:12:23 $
  * @module mapviewclient_v1
  */
 public class MeasurementPath implements MapElement
@@ -429,8 +429,8 @@ public class MeasurementPath implements MapElement
 						break;
 					case Type._SCHEME_LINK:
 						SchemeLink link = (SchemeLink )pe.abstractSchemeElement();
-						SchemeElement sse = SchemeUtils.getSchemeElementByDevice(this.scheme, link.sourceSchemePort().schemeDevice());
-						SchemeElement ese = SchemeUtils.getSchemeElementByDevice(this.scheme, link.targetSchemePort().schemeDevice());
+						SchemeElement sse = SchemeUtils.getSchemeElementByDevice(this.scheme, link.sourceSchemePort().getParentSchemeDevice());
+						SchemeElement ese = SchemeUtils.getSchemeElementByDevice(this.scheme, link.targetSchemePort().getParentSchemeDevice());
 						SiteNode ssite = this.mapView.findElement(sse);
 						SiteNode esite = this.mapView.findElement(ese);
 						if(ssite == esite)

@@ -289,7 +289,7 @@ public class UgoPanel extends JPanel
 						for (int j = 0; j < ports.length; j++)
 							if (ports[j].equals(port))
 							{
-								if (port.abstractSchemeLink() == null)
+								if (port.getAbstractSchemeLink() == null)
 									non_connected_ports.add(cells[i]);
 								else
 									connected_ports.add(cells[i]);
@@ -316,7 +316,7 @@ public class UgoPanel extends JPanel
 					for (int j = 0; j < ports.length; j++)
 						if (ports[j].equals(port))
 						{
-						if (port.abstractSchemeLink() == null)
+						if (port.getAbstractSchemeLink() == null)
 							non_connected_ports.add(cells[i]);
 						else
 							connected_ports.add(cells[i]);

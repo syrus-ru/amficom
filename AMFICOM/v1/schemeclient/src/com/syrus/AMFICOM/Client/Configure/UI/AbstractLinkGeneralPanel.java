@@ -240,12 +240,12 @@ public abstract class AbstractLinkGeneralPanel extends GeneralPanel {
 		this.optLengthField.setText(String.valueOf(this.link.opticalLength()));
 
 		AbstractSchemePort sport = this.link.sourceAbstractSchemePort();
-		SchemeDevice sdev = sport.schemeDevice();
+		SchemeDevice sdev = sport.getParentSchemeDevice();
 		this.startEquipmentBox.setText(sdev.getName());
 		this.startEquipmentPortBox.setText(sport.getName());
 
 		AbstractSchemePort eport = this.link.targetAbstractSchemePort();
-		SchemeDevice edev = eport.schemeDevice();
+		SchemeDevice edev = eport.getParentSchemeDevice();
 		this.endEquipmentBox.setText(edev.getName());
 		this.startEquipmentPortBox.setText(eport.getName());
 

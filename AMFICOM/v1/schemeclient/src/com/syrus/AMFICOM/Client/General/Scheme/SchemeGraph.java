@@ -858,7 +858,7 @@ public class SchemeGraph extends GPGraph
 							if (link.sourceSchemeCablePort() != null)
 							{
 								SchemeElement se = SchemeUtils.getSchemeElementByDevice(
-										getScheme(), link.sourceSchemeCablePort().schemeDevice());
+										getScheme(), link.sourceSchemeCablePort().getParentSchemeDevice());
 								if (se.getScheme() != null)
 								{
 									Scheme source_scheme = se.getScheme();
@@ -873,7 +873,7 @@ public class SchemeGraph extends GPGraph
 							if (!inserted && link.targetSchemeCablePort() != null)
 							{
 								SchemeElement se = SchemeUtils.getSchemeElementByDevice(
-										getScheme(), link.targetSchemeCablePort().schemeDevice());
+										getScheme(), link.targetSchemeCablePort().getParentSchemeDevice());
 								if (se.getScheme() != null)
 								{
 									Scheme target_scheme = se.getScheme();

@@ -87,7 +87,7 @@ public final class SchemePortController implements ObjectResourceController
 			else if (key.equals(COLUMN_NAME))
 				result = port.getName();
 			else if (key.equals(COLUMN_DIRECTION))
-				result = Integer.toString(port.directionType().value());
+				result = Integer.toString(port.getAbstractSchemePortDirectionType().value());
 			else if (key.equals(COLUMN_MEASUREMENT_PORT_ID))
 				result = port.getMeasurementPort().getId().getIdentifierString();
 			else if (key.equals(COLUMN_MEASUREMENT_PORT_TYPE_ID))
@@ -97,11 +97,11 @@ public final class SchemePortController implements ObjectResourceController
 			else if (key.equals(COLUMN_PORT_TYPE_ID))
 				result = port.getPortType().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SCHEME_LINK_ID))
-				result = port.schemeLink().getId().getIdentifierString();
+				result = port.getSchemeLink().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SCHEME_CABLE_THREAD_ID))
-				result = port.schemeCableThread().getId().getIdentifierString();
+				result = port.getSchemeCableThread().getId().getIdentifierString();
 			else if (key.equals(COLUMN_SCHEME_DEVICE_ID))
-				result = port.schemeDevice().getId().getIdentifierString();
+				result = port.getParentSchemeDevice().getId().getIdentifierString();
 			else if (key.equals(COLUMN_CHARACTERISTICS)) {
 				List res = new ArrayList(port.getCharacteristics().size());
 				for (Iterator it = port.getCharacteristics().iterator(); it.hasNext(); ) {

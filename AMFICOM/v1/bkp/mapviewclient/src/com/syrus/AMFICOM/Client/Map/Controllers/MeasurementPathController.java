@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPathController.java,v 1.11 2005/03/17 12:56:19 bass Exp $
+ * $Id: MeasurementPathController.java,v 1.12 2005/03/25 10:12:22 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
 /**
  * Контроллер топологическиго пути.
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/03/17 12:56:19 $
+ * @version $Revision: 1.12 $, $Date: 2005/03/25 10:12:22 $
  * @module mapviewclient_v1
  */
 public final class MeasurementPathController extends AbstractLinkController
@@ -260,8 +260,8 @@ public final class MeasurementPathController extends AbstractLinkController
 				break;
 			case Type._SCHEME_LINK:
 				SchemeLink link = (SchemeLink )pe.abstractSchemeElement();
-				SchemeElement sse = SchemeUtils.getSchemeElementByDevice(path.getSchemePath().scheme(), link.sourceSchemePort().schemeDevice());
-				SchemeElement ese = SchemeUtils.getSchemeElementByDevice(path.getSchemePath().scheme(), link.targetSchemePort().schemeDevice());
+				SchemeElement sse = SchemeUtils.getSchemeElementByDevice(path.getSchemePath().scheme(), link.sourceSchemePort().getParentSchemeDevice());
+				SchemeElement ese = SchemeUtils.getSchemeElementByDevice(path.getSchemePath().scheme(), link.targetSchemePort().getParentSchemeDevice());
 				SiteNode ssite = mapView.findElement(sse);
 				SiteNode esite = mapView.findElement(ese);
 				if(ssite != null && ssite.equals(esite))
