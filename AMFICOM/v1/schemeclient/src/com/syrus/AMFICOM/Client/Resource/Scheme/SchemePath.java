@@ -308,7 +308,25 @@ class SchemePathModel extends ObjectResourceModel
 		if(col_id.equals("id"))
 			return sp.getId();
 		if(col_id.equals("full_path"))
-			return sp.getName();
+    {
+      String s = "";
+      String id = "", name = "";
+      s += ((SchemeElement)Pool.get( SchemeElement.typ, sp.start_device_id)).name;
+      PathElement pe;
+      for( Iterator links = sp.links.iterator();  links.hasNext();)
+      { pe = (PathElement) links.next();
+        id = pe.link_id;
+        name = pe.getName();
+        if(! links.hasNext())  
+        { // в конце стрелочку не ставим (если это последдний элемент, то выход)
+          s += name;
+          break;
+        }	
+        s += name + "->";
+      }
+    
+			return s;
+    }
 		if(col_id.equals("name"))
 			return sp.getName();
 		return "";
