@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewStorableObjectPool.java,v 1.3 2005/02/08 14:07:57 bob Exp $
+ * $Id: MapViewStorableObjectPool.java,v 1.4 2005/02/18 14:29:31 bob Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * ѕвиапр-жейпкаехмкл зепжф.
@@ -8,9 +8,9 @@
 
 package com.syrus.AMFICOM.mapview;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Hashtable;
-import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/08 14:07:57 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/18 14:29:31 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -108,17 +108,17 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 		return instance.getStorableObjectImpl(objectId, useLoader);
 	}
 
-	public static List getStorableObjects(List objectIds, boolean useLoader) throws DatabaseException,
+	public static Collection getStorableObjects(Collection objectIds, boolean useLoader) throws DatabaseException,
 			CommunicationException {
 		return instance.getStorableObjectsImpl(objectIds, useLoader);
 	}
 
-	public static List getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader)
+	public static Collection getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader)
 			throws ApplicationException {
 		return instance.getStorableObjectsByConditionImpl(condition, useLoader);
 	}
 
-	public static List getStorableObjectsByConditionButIds(	List ids,
+	public static Collection getStorableObjectsByConditionButIds(	Collection ids,
 															StorableObjectCondition condition,
 															boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
@@ -138,8 +138,8 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 		return storableObject;
 	}
 
-	protected List loadStorableObjects(Short entityCode, List ids) throws DatabaseException, CommunicationException {
-		List storableObjects;
+	protected Collection loadStorableObjects(Short entityCode, Collection ids) throws DatabaseException, CommunicationException {
+		Collection storableObjects;
 		switch (entityCode.shortValue()) {
 			case ObjectEntities.MAPVIEW_ENTITY_CODE:
 				storableObjects = mvObjectLoader.loadMapViews(ids);
@@ -151,33 +151,33 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 		return storableObjects;
 	}
 
-	protected List loadStorableObjectsButIds(StorableObjectCondition condition, List ids) throws DatabaseException,
+	protected Collection loadStorableObjectsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
-		List loadedList = null;
+		Collection loadedCollection = null;
 		short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
 			case ObjectEntities.MAP_ENTITY_CODE:
-				loadedList  = mvObjectLoader.loadMapViewsButIds(condition, ids);
+				loadedCollection  = mvObjectLoader.loadMapViewsButIds(condition, ids);
 				break;
 			default:
 				Log.errorMessage("MapViewStorableObjectPool.loadStorableObjectsButIds | Unknown entity: "
 						+ ObjectEntities.codeToString(entityCode));
-				loadedList = null;
+				loadedCollection = null;
 		}
-		return loadedList;
+		return loadedCollection;
 	}
 
-	protected void saveStorableObjects(short code, List list, boolean force) throws VersionCollisionException,
+	protected void saveStorableObjects(short code, Collection collection, boolean force) throws VersionCollisionException,
 			DatabaseException, CommunicationException, IllegalDataException {
-		if (!list.isEmpty()) {
-			boolean alone = (list.size() == 1);
+		if (!collection.isEmpty()) {
+			boolean alone = (collection.size() == 1);
 
 			switch (code) {
 				case ObjectEntities.MAPVIEW_ENTITY_CODE:
 					if (alone)
-						mvObjectLoader.saveMapView((MapView)list.get(0), force);
+						mvObjectLoader.saveMapView((MapView)collection.iterator().next(), force);
 					else
-						mvObjectLoader.saveMapViews(list, force);
+						mvObjectLoader.saveMapViews(collection, force);
 					break;
 				default:
 					Log.errorMessage("MapViewStorableObjectPool.saveStorableObjects | Unknown Unknown entity : '"
@@ -208,7 +208,7 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 	 	mvObjectLoader.delete(id);
 	}
 
-	protected void deleteStorableObjects(List ids) throws DatabaseException, CommunicationException {
+	protected void deleteStorableObjects(Collection ids) throws DatabaseException, CommunicationException {
 		mvObjectLoader.delete(ids);
 	}
 
@@ -216,7 +216,7 @@ public final class MapViewStorableObjectPool extends StorableObjectPool {
 		instance.deleteImpl(id);
 	}
 
-	public static void delete(List ids) throws DatabaseException, CommunicationException, IllegalDataException {
+	public static void delete(Collection ids) throws DatabaseException, CommunicationException, IllegalDataException {
 		instance.deleteImpl(ids);
 	}
 
