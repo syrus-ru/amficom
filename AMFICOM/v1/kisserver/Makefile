@@ -1,79 +1,18 @@
 #
-# $Id: Makefile,v 1.4 2004/06/21 11:16:58 bass Exp $
+# $Id: Makefile,v 1.5 2004/07/06 13:42:51 bass Exp $
 #
 # vim:set ft=make:
 #
 
 MODULE_NAME = kisserver_v1
-MODULE_VERSION = $(shell date +%Y%m%d)
-
-USER = AMFICOM
-PASSWORD = amficom
-HOST = RESEARCH
-SERVICE_NAME = SHAITAN
 
 LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
 
-SRC_SUFFIXES = \
-	.java \
-	.generated.java
-
-CLASS_SUFFIXES = \
-	.class \
-	$$%.class \
-	_SJProfile0.class \
-	_SJProfileKeys.class
-
-IDLDIR = idl
-SRCDIR = src
-CLASSDIR = classes
-ifeq ($(shell hostname -s),bass)
-LIBDIR = lib
-else
-LIBDIR = ../lib
-endif
-ENCODING = windows-1251
-JAVACFLAGS = -source 1.3 -sourcepath $(SRCDIR) -deprecation -g -O
+JAVACFLAGS = -source 1.3
 SUNJAVACFLAGS = -target 1.2
-JIKESFLAGS = \
-	-target 1.2 \
-	-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar \
-	+E \
-	+P \
-	+Pmodifier-order \
-	+Predundant-modifiers \
-	+Pno-switchcheck \
-	+Pnaming-convention \
-	+T=8
-IDL2JAVAFLAGS = \
-	-C \
-	-H \
-	-no_bind \
-	-no_examples \
-	-narrow_compliance \
-	-portable \
-	-root_dir $(SRCDIR) \
-	-strict \
-	-no_toString
-SQLJFLAGS = \
-	-cache=true \
-	-checkfilename=true \
-	-checksource=true \
-	-codegen=iso \
-	-compile=true \
-	-compiler-encoding-flag=true \
-	-explain=true \
-	-linemap=true \
-	-parse=both \
-	-password "$(PASSWORD)" \
-	-profile=true \
-	-ser2class=true \
-	-status=false \
-	-url "jdbc:oracle:oci:@(DESCRIPTION=(ADDRESS_LIST=(ADDRESS=(PROTOCOL=TCP)(HOST=$(HOST))(PORT=1521)))(CONNECT_DATA=(SERVICE_NAME=$(SERVICE_NAME))))" \
-	-user "$(USER)" \
-	-warn=all
+JIKESFLAGS = -target 1.2
 
-include Makefile.inc
+include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 $(call checkenve,IDL2JAVA)
@@ -88,8 +27,6 @@ all: .all
 	$(JAVAC) \
 		$(JAVACFLAGS) \
 		-classpath $(AMFICOMCLASSPATH)$(AURORACLASSPATH):$(VBJCLASSPATH):$(JDBCCLASSPATH):$(SQLJCLASSPATH):$(CLASSDIR) \
-		-d $(CLASSDIR) \
-		-encoding $(ENCODING) \
 	 	$(shell find $(SRCDIR) -name '*.java')
 	touch $@
 
@@ -112,12 +49,10 @@ idlclean:
 sqlj: .sqlj
 
 .sqlj: $(CLASSDIR)
-	echo "sqlj.compiler-executable=$(JAVAC) $(JAVACFLAGS)" > sqlj.properties
+	echo "sqlj.compiler-executable=$(JAVAC) $(JAVACFLAGS) -sourcepath $(SRCDIR)" > sqlj.properties
 	$(SQLJ) \
 		$(SQLJFLAGS) \
 		-classpath $(AMFICOMCLASSPATH)$(JDBCCLASSPATH):$(SQLJCLASSPATH):$(CLASSDIR) \
-		-d $(CLASSDIR) \
-		-encoding $(ENCODING) \
 		$(SRCDIR)/com/syrus/AMFICOM/server/event/Alarm.sqlj \
 		$(SRCDIR)/com/syrus/AMFICOM/server/event/AlarmType.sqlj \
 		$(SRCDIR)/com/syrus/AMFICOM/server/event/Alerting.sqlj \
