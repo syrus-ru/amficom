@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.13 2004/09/30 13:52:59 max Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.14 2004/10/04 05:40:11 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/09/30 13:52:59 $
+ * @version $Revision: 1.14 $, $Date: 2004/10/04 05:40:11 $
  * @author $Author: max $
  * @module cmserver_v1
  */
@@ -252,12 +252,49 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 	}
 
 	public List loadAnalyses(List ids) throws DatabaseException, CommunicationException {
-		/**
-		 * FIXME method is not complete !
-		 */
-
-		throw new UnsupportedOperationException();
+        try {
+            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            int i = 0;
+            for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+                Identifier id = (Identifier) it.next();
+                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+            }
+            Analysis_Transferable[] transferables = this.server
+                    .transmitAnalyses(identifier_Transferables, accessIdentifierTransferable);
+            List list = new ArrayList(transferables.length);
+            for (int j = 0; j < transferables.length; j++) {
+                list.add(new Analysis(transferables[j]));
+            }
+            return list;
+        } catch (CreateObjectException e) {
+            throw new RetrieveObjectException(e);
+        } catch (AMFICOMRemoteException e) {
+            throw new CommunicationException(e);
+        }
 	}
+    
+    public List loadAnalysesButIds(List ids) throws DatabaseException,
+            CommunicationException {
+        try {
+            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            int i = 0;
+            for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+                Identifier id = (Identifier) it.next();
+                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+            }
+            Analysis_Transferable[] transferables = this.server
+                    .transmitAnalysesButIds(identifier_Transferables, accessIdentifierTransferable);
+            List list = new ArrayList(transferables.length);
+            for (int j = 0; j < transferables.length; j++) {
+                list.add(new Analysis(transferables[j]));
+            }
+            return list;
+        } catch (CreateObjectException e) {
+            throw new RetrieveObjectException(e);
+        } catch (AMFICOMRemoteException e) {
+            throw new CommunicationException(e);
+        }
+    }
 
 	public List loadAnalysisTypes(List ids) throws DatabaseException, CommunicationException {
 		try {
@@ -280,6 +317,29 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			throw new CommunicationException(e);
 		}
 	}
+    
+    public List loadAnalysisTypesButIds(List ids) throws DatabaseException,
+            CommunicationException {
+        try {
+            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            int i = 0;
+            for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+                Identifier id = (Identifier) it.next();
+                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+            }
+            AnalysisType_Transferable[] transferables = this.server
+                    .transmitAnalysisTypesButIds(identifier_Transferables, accessIdentifierTransferable);
+            List list = new ArrayList(transferables.length);
+            for (int j = 0; j < transferables.length; j++) {
+                list.add(new AnalysisType(transferables[j]));
+            }
+            return list;
+        } catch (CreateObjectException e) {
+            throw new RetrieveObjectException(e);
+        } catch (AMFICOMRemoteException e) {
+            throw new CommunicationException(e);
+        }
+    }
 
 	public List loadEvaluations(List ids) throws DatabaseException, CommunicationException {
 		/**
@@ -287,6 +347,13 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 		 */
 		throw new UnsupportedOperationException();
 	}
+    
+    public List loadEvaluationsButIds(List ids) throws DatabaseException, CommunicationException {
+        /**
+         * FIXME method is not complete !
+         */
+        throw new UnsupportedOperationException();
+    }
 
 	public List loadEvaluationTypes(List ids) throws DatabaseException, CommunicationException {
 		try {
@@ -309,6 +376,28 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			throw new CommunicationException(e);
 		}
 	}
+    
+    public List loadEvaluationTypesButIds(List ids) throws DatabaseException, CommunicationException {
+        try {
+            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            int i = 0;
+            for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+                Identifier id = (Identifier) it.next();
+                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+            }
+            EvaluationType_Transferable[] transferables = this.server
+                    .transmitEvaluationTypesButIds(identifier_Transferables, accessIdentifierTransferable);
+            List list = new ArrayList(transferables.length);
+            for (int j = 0; j < transferables.length; j++) {
+                list.add(new EvaluationType(transferables[j]));
+            }
+            return list;
+        } catch (CreateObjectException e) {
+            throw new RetrieveObjectException(e);
+        } catch (AMFICOMRemoteException e) {
+            throw new CommunicationException(e);
+        }
+    }
 
 	public List loadMeasurements(List ids) throws DatabaseException, CommunicationException {
 		try {
@@ -331,6 +420,28 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			throw new CommunicationException(e);
 		}
 	}
+    
+    public List loadMeasurementsButIds(List ids) throws DatabaseException, CommunicationException {
+        try {
+            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            int i = 0;
+            for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+                Identifier id = (Identifier) it.next();
+                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+            }
+            Measurement_Transferable[] transferables = this.server
+                    .transmitMeasurementsButIds(identifier_Transferables, accessIdentifierTransferable);
+            List list = new ArrayList(transferables.length);
+            for (int j = 0; j < transferables.length; j++) {
+                list.add(new Measurement(transferables[j]));
+            }
+            return list;
+        } catch (CreateObjectException e) {
+            throw new RetrieveObjectException(e);
+        } catch (AMFICOMRemoteException e) {
+            throw new CommunicationException(e);
+        }
+    }
 
 	public List loadModelings(List ids) throws DatabaseException, CommunicationException {
 		try {
@@ -354,6 +465,29 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			throw new CommunicationException(e);
 		}
 	}
+    
+    public List loadModelingsButIds(List ids) throws DatabaseException, CommunicationException {
+        try {
+            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            int i = 0;
+            for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+                Identifier id = (Identifier) it.next();
+                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+            }
+            Modeling_Transferable[] transferables = this.server
+                    .transmitModelingsButIds(identifier_Transferables,
+                                    accessIdentifierTransferable);
+            List list = new ArrayList(transferables.length);
+            for (int j = 0; j < transferables.length; j++) {
+                list.add(new Modeling(transferables[j]));
+            }
+            return list;
+        } catch (CreateObjectException e) {
+            throw new RetrieveObjectException(e);
+        } catch (AMFICOMRemoteException e) {
+            throw new CommunicationException(e);
+        }
+    }
 	
 	public List loadMeasurementSetups(List ids) throws DatabaseException, CommunicationException {
 		try {
@@ -377,6 +511,29 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			throw new CommunicationException(e);
 		}
 	}
+    
+    public List loadMeasurementSetupsButIds(List ids) throws DatabaseException, CommunicationException {
+        try {
+            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            int i = 0;
+            for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+                Identifier id = (Identifier) it.next();
+                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+            }
+            MeasurementSetup_Transferable[] transferables = this.server
+                    .transmitMeasurementSetupsButIds(identifier_Transferables,
+                                    accessIdentifierTransferable);
+            List list = new ArrayList(transferables.length);
+            for (int j = 0; j < transferables.length; j++) {
+                list.add(new MeasurementSetup(transferables[j]));
+            }
+            return list;
+        } catch (CreateObjectException e) {
+            throw new RetrieveObjectException(e);
+        } catch (AMFICOMRemoteException e) {
+            throw new CommunicationException(e);
+        }
+    }
 
 	public List loadMeasurementTypes(List ids) throws DatabaseException, CommunicationException {
 		try {
@@ -400,6 +557,29 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			throw new CommunicationException(e);
 		}
 	}
+    
+    public List loadMeasurementTypesButIds(List ids) throws DatabaseException, CommunicationException {
+        try {
+            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            int i = 0;
+            for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+                Identifier id = (Identifier) it.next();
+                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+            }
+            MeasurementType_Transferable[] transferables = this.server
+                    .transmitMeasurementTypesButIds(identifier_Transferables,
+                                    accessIdentifierTransferable);
+            List list = new ArrayList(transferables.length);
+            for (int j = 0; j < transferables.length; j++) {
+                list.add(new MeasurementType(transferables[j]));
+            }
+            return list;
+        } catch (CreateObjectException e) {
+            throw new RetrieveObjectException(e);
+        } catch (AMFICOMRemoteException e) {
+            throw new CommunicationException(e);
+        }
+    }
 
 	public List loadParameterTypes(List ids) throws DatabaseException, CommunicationException {
 		try {
@@ -422,6 +602,28 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			throw new CommunicationException(e);
 		}
 	}
+    
+    public List loadParameterTypesButIds(List ids) throws DatabaseException, CommunicationException {
+        try {
+            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            int i = 0;
+            for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+                Identifier id = (Identifier) it.next();
+                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+            }
+            ParameterType_Transferable[] transferables = this.server
+                    .transmitParameterTypesButIds(identifier_Transferables, accessIdentifierTransferable);
+            List list = new ArrayList(transferables.length);
+            for (int j = 0; j < transferables.length; j++) {
+                list.add(new ParameterType(transferables[j]));
+            }
+            return list;
+        } catch (CreateObjectException e) {
+            throw new RetrieveObjectException(e);
+        } catch (AMFICOMRemoteException e) {
+            throw new CommunicationException(e);
+        }
+    }
 
 	public List loadResults(List ids) throws DatabaseException, CommunicationException {
 		try {
@@ -444,6 +646,28 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			throw new CommunicationException(e);
 		}
 	}
+    
+    public List loadResultsButIds(List ids) throws DatabaseException, CommunicationException {
+        try {
+            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            int i = 0;
+            for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+                Identifier id = (Identifier) it.next();
+                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+            }
+            Result_Transferable[] transferables = this.server.transmitResultsButIds(identifier_Transferables,
+                                            accessIdentifierTransferable);
+            List list = new ArrayList(transferables.length);
+            for (int j = 0; j < transferables.length; j++) {
+                list.add(new Result(transferables[j]));
+            }
+            return list;
+        } catch (CreateObjectException e) {
+            throw new RetrieveObjectException(e);
+        } catch (AMFICOMRemoteException e) {
+            throw new CommunicationException(e);
+        }
+    }
 
 	public List loadSets(List ids) throws DatabaseException, CommunicationException {
 		try {
@@ -466,6 +690,28 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			throw new CommunicationException(e);
 		}
 	}
+    
+    public List loadSetsButIds(List ids) throws DatabaseException, CommunicationException {
+        try {
+            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            int i = 0;
+            for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+                Identifier id = (Identifier) it.next();
+                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+            }
+            Set_Transferable[] transferables = this.server.transmitSetsButIds(identifier_Transferables,
+                                            accessIdentifierTransferable);
+            List list = new ArrayList(transferables.length);
+            for (int j = 0; j < transferables.length; j++) {
+                list.add(new Set(transferables[j]));
+            }
+            return list;
+        } catch (CreateObjectException e) {
+            throw new RetrieveObjectException(e);
+        } catch (AMFICOMRemoteException e) {
+            throw new CommunicationException(e);
+        }
+    }
 
 	public List loadTemporalPatterns(List ids) throws DatabaseException, CommunicationException {
 		try {
@@ -489,6 +735,29 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			throw new CommunicationException(e);
 		}
 	}
+    
+    public List loadTemporalPatternsButIds(List ids) throws DatabaseException, CommunicationException {
+        try {
+            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            int i = 0;
+            for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+                Identifier id = (Identifier) it.next();
+                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+            }
+            TemporalPattern_Transferable[] transferables = this.server
+                    .transmitTemporalPatternsButIds(identifier_Transferables,
+                                    accessIdentifierTransferable);
+            List list = new ArrayList(transferables.length);
+            for (int j = 0; j < transferables.length; j++) {
+                list.add(new TemporalPattern(transferables[j]));
+            }
+            return list;
+        } catch (CreateObjectException e) {
+            throw new RetrieveObjectException(e);
+        } catch (AMFICOMRemoteException e) {
+            throw new CommunicationException(e);
+        }
+    }
 
 	public List loadTests(List ids) throws DatabaseException, CommunicationException {
 		try {
@@ -511,6 +780,28 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
 			throw new CommunicationException(e);
 		}
 	}
+    
+    public List loadTestsButIds(List ids) throws DatabaseException, CommunicationException {
+        try {
+            Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            int i = 0;
+            for (Iterator it = ids.iterator(); it.hasNext(); i++) {
+                Identifier id = (Identifier) it.next();
+                identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
+            }
+            Test_Transferable[] transferables = this.server.transmitTestsButIds(identifier_Transferables,
+                                            accessIdentifierTransferable);
+            List list = new ArrayList(transferables.length);
+            for (int j = 0; j < transferables.length; j++) {
+                list.add(new Test(transferables[j]));
+            }
+            return list;
+        } catch (CreateObjectException e) {
+            throw new RetrieveObjectException(e);
+        } catch (AMFICOMRemoteException e) {
+            throw new CommunicationException(e);
+        }
+    }
     
     public void saveMeasurementType(MeasurementType measurementType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException{
 //    TODO auto generated stub        
