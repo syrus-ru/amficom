@@ -2,17 +2,14 @@ OUT := tracedata.a
 OUTSO := libtracedata.so
 
 CXX := g++#-3.4.1
-CXXFLAGS := -W -Wall
-
-CC := gcc#-3.4.1
-CFLAGS := -W -Wall
+CXXFLAGS := -W -Wall -Wno-unused-parameter
 
 CPPFLAGS := -I$(JAVA_HOME)/include -I$(JAVA_HOME)/include/linux
 
 AR := ar
 ARFLAGS := rcsv
 
-#OBJS=TraceReader.o \
+#OBJS := TraceReader.o \
 	T5.o \
 	crc32.o \
 	util.o \
