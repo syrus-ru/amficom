@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.50 2004/11/19 10:12:10 bob Exp $
+ * $Id: configuration.idl,v 1.51 2004/11/19 12:15:06 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -141,6 +141,11 @@ module corba {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable image_id;
 	};
 
+	typedef LinkType_Transferable LinkType;
+	typedef sequence<LinkType> LinkTypeSeq;
+	typedef LinkType_Transferable CableLinkType;
+	typedef sequence<CableLinkType> CableLinkTypeSeq;
+
 	struct CableThreadType_Transferable {
 		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 		
@@ -152,7 +157,10 @@ module corba {
 		wstring color;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable cable_link_type_id;
 	};
-	
+
+	typedef CableThreadType_Transferable CableThreadType;
+	typedef sequence<CableThreadType> CableThreadTypeSeq;
+
 	union AbstractLinkType_Transferable switch (AbstractLinkTypeSort) {
 		case LINK_TYPE:
 			LinkType_Transferable linkType;
@@ -164,7 +172,7 @@ module corba {
 	
 	typedef sequence <AbstractLinkType_Transferable> AbstractLinkTypeSeq_Transferable;	
 	typedef AbstractLinkType_Transferable AbstractLinkType;	
-	typedef sequence <AbstractLinkType> AbstractLinkTypeSeq;	
+	typedef sequence<AbstractLinkType> AbstractLinkTypeSeq;	
 
 //////////////////////////////////// User /////////////////////////////////
 	enum UserSort {
