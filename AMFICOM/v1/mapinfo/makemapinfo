@@ -29,11 +29,10 @@ JAR=jar
 COMPILER=$(JAVAC)
 
 TARGET=$(LIB)\mapinfoimpl.jar
-TARGET_CLASS_LIST=src_mapinfo.txt
 TARGET_SRC=$(LIBSRC)\mapinfosource.jar
 
 SERVERCP=$(LIB)\corbaportable.jar;$(LIB)\corba.jar
-CLIENTCP=$(LIB)\util.jar;$(LIB)\filter.jar;$(LIB)\configuration.jar;$(LIB)\general.jar;$(LIB)\generalclient.jar;$(LIB)\administrate.jar;$(LIB)\configureclient.jar;$(LIB)\mapclient.jar;$(LIB)\mapviewclient.jar;$(LIB)\scheme.jar
+CLIENTCP=$(LIB)\util.jar;$(LIB)\filter.jar;$(LIB)\configuration.jar;$(LIB)\general.jar;$(LIB)\generalclient.jar;$(LIB)\administrate.jar;$(LIB)\configureclient.jar;$(LIB)\map.jar;$(LIB)\mapview.jar;$(LIB)\mapclient.jar;$(LIB)\mapviewclient.jar;$(LIB)\scheme.jar
 
 LAYOUTCP=$(EXTLIB)\layout.jar;$(EXTLIB)\kunststoff.jar
 SPATIALCP=$(EXTLIB)\ofx.spatialfx.jar
@@ -55,7 +54,7 @@ impl:
 	$(COMPILER) -d $(CLASSES) \
 		-classpath $(CLASSPATH) \
 		-sourcepath $(SRC) \
-		@$(TARGET_CLASS_LIST)
+		$(SRC)\com\syrus\AMFICOM\Client\Map\Mapinfo\*.java
 
 clean:
 	rm -rf $(CLASSES)\com
