@@ -231,6 +231,8 @@ else
 		JComponent returnValue = null;
 
 		Vector reportObjects = getReportObjects(rt, rp,aContext.getDataSourceInterface());
+		if (reportObjects.size() == 0)
+			throw new CreateReportException (rp.getName(),CreateReportException.cantImplement);
 
 		ObjectResourceReportModel model = (ObjectResourceReportModel) rp.model;
 		if (rp.view_type.equals(ObjectResourceReportModel.rt_statistics))
