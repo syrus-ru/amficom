@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.15 2005/02/07 12:13:20 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.16 2005/02/07 13:42:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/02/07 12:13:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/02/07 13:42:40 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -222,7 +222,7 @@ public abstract class StorableObjectPool {
 				return storableObject;
 			}
 
-			Log.errorMessage("StorableObjectPool.getStorableObjectImpl | Cannot find object pool for objectId: '" + objectId.toString() + "' entity code: '" + objectEntityCode + "'");
+			Log.errorMessage("StorableObjectPool.getStorableObjectImpl | Cannot find object pool for objectId: '" + objectId.toString() + "' entity code: '" + ObjectEntities.codeToString(objectEntityCode) + "'");
 			for (Iterator it = this.objectPoolMap.keySet().iterator(); it.hasNext();) {
 				final Short entityCode = (Short) it.next();
 				Log.debugMessage("StorableObjectPool.getStorableObjectImpl | available "
@@ -537,6 +537,11 @@ public abstract class StorableObjectPool {
 					final Object dependency = dependencyIterator.next();
 					Identifier id;
 					StorableObject stObj;
+					if (dependency == null) {
+						String msg = "StorableObjectPool.save | Illegal dependencies Object: 'null'";
+						Log.errorMessage(msg);
+						continue;
+					}
 					if (dependency instanceof StorableObject) {
 						stObj = (StorableObject) dependency;
 						id = stObj.getId();
@@ -547,8 +552,10 @@ public abstract class StorableObjectPool {
 							stObj = this.getStorableObjectImpl(id, true);
 						}
 						else {
-							throw new IllegalDataException("StorableObjectPool.save | Illegal dependencies Object: "
-									+ dependency.getClass().getName());
+							String msg = "StorableObjectPool.save | Illegal dependencies Object: "
+								+ (dependency == null ? "'null'" : dependency.getClass().getName());
+							Log.errorMessage(msg);
+							throw new IllegalDataException(msg);
 						}
 
 					final Short entityCode = new Short(id.getMajor());
@@ -559,7 +566,7 @@ public abstract class StorableObjectPool {
 						if (group.shortValue() != this.selfGroupCode) {
 							if (this.flushedGroup.get(group) == null)
 								/* set that flush for this group wan't invoke */
-								this.flushedGroup.put(group, Boolean.FALSE);
+								this.flushedGroup.put(group, Boolean.TRUE);
 						}
 						else {
 							depList = new LinkedList();
