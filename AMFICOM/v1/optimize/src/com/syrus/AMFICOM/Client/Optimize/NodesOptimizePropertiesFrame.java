@@ -72,4 +72,8 @@ public class NodesOptimizePropertiesFrame extends JInternalFrame implements Oper
 		}
 	}
 	//-------------------------------------------------------------------------------------
+  public OptimizeElementPanel getNodesOptimizePanel()
+  {
+    return panel;
+  }
 }

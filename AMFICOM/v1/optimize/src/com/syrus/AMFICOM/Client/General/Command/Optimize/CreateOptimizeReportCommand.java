@@ -48,17 +48,32 @@ public class CreateOptimizeReportCommand extends VoidCommand
 
     AMTReport aReport = new AMTReport();
     
-		aReport.addRecord(OptimizationReportModel.sourceData,null);
+//		aReport.addRecord(OptimizationReportModel.sourceData,null);
 		aReport.addRecord(SchemeReportModel.scheme,null);
 		aReport.addRecord(MapReportModel.rep_topology,null);
-		aReport.addRecord(OptimizationReportModel.equipFeatures,null);
-		aReport.addRecord(OptimizationReportModel.optimizeResults,null);
-		aReport.addRecord(OptimizationReportModel.cost,null);
+//		aReport.addRecord(OptimizationReportModel.equipFeatures,null);
+//		aReport.addRecord(OptimizationReportModel.optimizeResults,null);
+//		aReport.addRecord(OptimizationReportModel.cost,null);
 
-		aReport.addRecord(OptimizationReportModel.iterationsHistory,null);
-		aReport.addRecord(OptimizationReportModel.optimizationParams,null);
-		aReport.addRecord(OptimizationReportModel.solution,null);
-		aReport.addRecord(OptimizationReportModel.nodesOptimizeProperties,null);
+    if (mainFrame.iterHistFrame != null)
+    	aReport.addRecord(
+        OptimizationReportModel.iterationsHistory,
+        mainFrame.iterHistFrame.getItHistPanel());
+
+    if (mainFrame.paramsFrame != null)        
+      aReport.addRecord(
+        OptimizationReportModel.optimizationParams,
+        mainFrame.paramsFrame.getTableModelForReport());
+
+    if (mainFrame.solutionFrame != null)                
+      aReport.addRecord(
+        OptimizationReportModel.solution,
+        mainFrame.solutionFrame.getTableModelForReport());
+    
+    if (mainFrame.nodesModeFrame != null)                
+      aReport.addRecord(
+        OptimizationReportModel.nodesOptimizeProperties,
+        mainFrame.nodesModeFrame.getNodesOptimizePanel());
       
 		new OpenTypedTemplateCommand(aContext, ReportTemplate.rtt_Optimization,
 																 aReport).execute();

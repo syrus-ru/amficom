@@ -8,6 +8,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelOptimize;
 
 import javax.swing.*;
 import java.awt.*;
+import javax.swing.table.TableModel;
 
 // окно в котором выводятся параметры оптимизации, которые можно в этом окне менять
 //-------------------------------------------------------------------------------------------------------------
@@ -96,7 +97,6 @@ public class OpticalOptimizationParamsFrame extends JInternalFrame
 		jTable_params.getColumnModel().getColumn(1).setPreferredWidth(70); //во втором столбце небольшие числа => его ширина не должна быть большой
 		jTable_params.updateUI();
 	}
-	//-----------------------------------------------------------------------------------------------------------
 }
 //=============================================================================================================
 class EventTableModel extends FixedSizeEditableTableModel
