@@ -27,7 +27,8 @@
 #include "../common/median.h"
 #include "../common/prf.h"
 
-#include <stdio.h>
+#define prf_b(x) ((void)0)
+#define prf_e() ((void)0)
 
 // Для отбрасывания участков, где точность определяется 0.001дБ-представлением
 const double prec0 = 0.001 * 1.5;
@@ -145,7 +146,7 @@ void findNoiseArray(double *data, double *outNoise, int size, int len2)
 	//if (len2 > size)
 	//	len2 = size;
 
-	//prf_b("findNoiseArray: enter");
+	prf_b("findNoiseArray: enter");
 
 	const int width = NETTESTWIDTH;
 	// mlen должно получиться четным
@@ -164,7 +165,7 @@ void findNoiseArray(double *data, double *outNoise, int size, int len2)
 
 	double levelPrec0 = log2add(prec0) - 1; // XXX
 
-	//prf_b("findNoiseArray: log2add");
+	prf_b("findNoiseArray: log2add");
 
 	int i;
 	const int effSize = size < len2 + mlen - mofs ? size : len2 + mlen - mofs;
@@ -174,7 +175,7 @@ void findNoiseArray(double *data, double *outNoise, int size, int len2)
 		out[i] = log2add(data[i]);
 
 	// начальная оценка уровня шума
-	//prf_b("findNoiseArray: first estimation");
+	prf_b("findNoiseArray: first estimation");
 	for (i = 0; i < effSize - mlen + nsam; i++)
 	{
 		// строго говоря, I2+I0-2I1 - это не то совсем что нам нужно,
@@ -187,7 +188,7 @@ void findNoiseArray(double *data, double *outNoise, int size, int len2)
 	}
 
 	// усреднение
-	//prf_b("findNoiseArray: averaging");
+	prf_b("findNoiseArray: averaging");
 	i = 0;
 	while(i < effSize - mlen)
 	{
@@ -210,7 +211,7 @@ void findNoiseArray(double *data, double *outNoise, int size, int len2)
 		i += step;
 #else	// приближенный метод - выводим одно и то же число, пока
 		// медиана лежит в пределах +- delta от ее начального значения
-		double delta = dv * 0.1; // погрешность, ~ 0.1
+		double delta = dv * 0.05; // погрешность, ~ 0.05; быстродействие не страдает и при ~ 0.01
 		double vL = dv - delta;
 		double vH = dv + delta;
 		int c1 = 0, c2 = 0; // c1 - число значений ниже vL; c2 - число значений выше vH
@@ -233,10 +234,15 @@ void findNoiseArray(double *data, double *outNoise, int size, int len2)
 			else if (temp[i + nsam] > vH)
 				c2++;
 			i++;
-		} while (i < effSize - mlen && c1 <= M && c2 <= (nsam - M));
+		}
+#if 0	// учитываем и увеличение, и уменьшение уровня шума
+		while (i < effSize - mlen && c1 <= M && c2 <= (nsam - M));
+#else	// учитываем только уменьшение уровня шума (все равно далее строится кумул. минимум)
+		while (i < effSize - mlen && c1 <= M);
+#endif
 #endif
 	}
-	//prf_b("findNoiseArray: expand & process");
+	prf_b("findNoiseArray: expand & process");
 
     // расширяем до краев массива - влево
 	for (i = 0; i < mofs; i++)
@@ -251,7 +257,7 @@ void findNoiseArray(double *data, double *outNoise, int size, int len2)
 
     // делаем поправку на начало рефлектограммы
     {
-		// ищем абс. макс. усредненной р/г
+		// ищем абс. макс. р/г
         double vMax = data[0];
         for (i = 0; i < len2; i++)
         {
@@ -270,12 +276,12 @@ void findNoiseArray(double *data, double *outNoise, int size, int len2)
 			out[i] = out[i - 1];
 	}
 
-	//prf_b("findNoiseArray: dB2dy");
+	prf_b("findNoiseArray: dB2dy");
 	// формируем выходной массив
 	for (i = 0; i < len2; i++)
 		outNoise[i] = dB2dy(data[i], out[i]);
 
-	//prf_b("findNoiseArray: done");
+	prf_b("findNoiseArray: done");
 
 	delete[] temp;
 	delete[] out;
