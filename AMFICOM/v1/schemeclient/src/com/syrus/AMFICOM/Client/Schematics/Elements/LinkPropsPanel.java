@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.LinkType;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeLink;
-import com.syrus.AMFICOM.Client.Schematics.UI.PopupNameFrame;
+import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
 
 public class LinkPropsPanel extends JPanel
 {

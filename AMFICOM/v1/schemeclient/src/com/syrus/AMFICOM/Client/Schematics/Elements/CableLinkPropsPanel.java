@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import com.syrus.AMFICOM.Client.Schematics.UI.PopupNameFrame;
+import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
 
 public class CableLinkPropsPanel extends JPanel
 {

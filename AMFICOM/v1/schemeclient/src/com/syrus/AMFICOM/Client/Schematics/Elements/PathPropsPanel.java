@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.Client.Resource.ISMDirectory.TransmissionPathType;
 import com.syrus.AMFICOM.Client.Resource.Network.Equipment;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
-import com.syrus.AMFICOM.Client.Schematics.UI.PopupNameFrame;
+import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
 
 public class PathPropsPanel extends JPanel
 {

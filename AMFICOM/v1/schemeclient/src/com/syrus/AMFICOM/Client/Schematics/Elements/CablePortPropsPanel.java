@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.CablePortType;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCablePort;
 import com.syrus.AMFICOM.Client.General.UI.AComboBox;
-import com.syrus.AMFICOM.Client.Schematics.UI.PopupNameFrame;
+import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
 
 public class CablePortPropsPanel extends JPanel
 {

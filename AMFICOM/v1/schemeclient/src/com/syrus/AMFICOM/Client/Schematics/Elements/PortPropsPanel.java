@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.Client.Resource.ISMDirectory.AccessPortType;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.PortType;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePort;
 import com.syrus.AMFICOM.Client.General.UI.AComboBox;
-import com.syrus.AMFICOM.Client.Schematics.UI.PopupNameFrame;
+import com.syrus.AMFICOM.Client.General.UI.PopupNameFrame;
 
 public class PortPropsPanel extends JPanel
 {
