@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractItem.java,v 1.4 2005/03/24 08:04:57 bob Exp $
+ * $Id: AbstractItem.java,v 1.5 2005/03/24 08:19:29 bass Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import java.util.List;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/03/24 08:04:57 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/03/24 08:19:29 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module filter_v1
  */
@@ -86,7 +86,7 @@ public abstract class AbstractItem implements Item {
 		if (this.children.contains(childItem))
 			return;
 
-		if (this.isService() || childItem.allowsParents()) {
+		if (this.isService() || childItem.canHaveParent()) {
 			this.children.add(childItem);
 			childItem.setParent(this);
 		} else {

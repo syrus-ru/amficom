@@ -1,7 +1,7 @@
 /*-
- * $Id: Item.java,v 1.5 2005/03/24 08:04:57 bob Exp $
+ * $Id: Item.java,v 1.6 2005/03/24 08:19:29 bass Exp $
  *
- * Copyright © 2005 Syrus Systems.
+ * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
@@ -12,19 +12,27 @@ import java.util.List;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/03/24 08:04:57 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/03/24 08:19:29 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module filter_v1
  */
 public interface Item {
 	
 	int getMaxChildrenCount();
-	
-	boolean allowsParents();
-	
-	boolean allowsChildren();
-	
+
+	/**
+	 * @return <code>true</code> if this <code>Item</code> can have a
+	 *         parent <code>Item</code>, <code>false</code> otherwise.
+	 */
+	boolean canHaveParent();
+
+	/**
+	 * @return <code>true</code> if this <code>Item</code> can have
+	 *         child <code>Item</code>s, <code>false</code> otherwise.
+	 */
+	boolean canHaveChildren();
+
 	String getName();
 	
 	Object getObject();

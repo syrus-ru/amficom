@@ -25,11 +25,11 @@ public class ServiceItem extends AbstractItem {
 		return Integer.MAX_VALUE;
 	}
 
-	public boolean allowsParents() {
+	public boolean canHaveParent() {
 		return true;
 	}
 	
-	public boolean allowsChildren() {
+	public boolean canHaveChildren() {
 		return true;
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: ViewItem.java,v 1.9 2005/03/24 08:04:57 bob Exp $
+ * $Id: ViewItem.java,v 1.10 2005/03/24 08:19:29 bass Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/03/24 08:04:57 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/03/24 08:19:29 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module filter_v1
  */
@@ -158,12 +158,12 @@ public class ViewItem extends AbstractItem implements Item {
 		return count;
 	}
 
-	public boolean allowsParents() {
-		return this.sourceItem.allowsParents();
+	public boolean canHaveParent() {
+		return this.sourceItem.canHaveParent();
 	}
 
-	public boolean allowsChildren() {
-		return this.sourceItem.allowsChildren();
+	public boolean canHaveChildren() {
+		return this.sourceItem.canHaveChildren();
 	}
 	
 	public int getMaxChildrenCount() {
