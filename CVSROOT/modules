@@ -154,6 +154,8 @@ dbscheme_v1	AMFICOM/v1/dbscheme
 mapinfo_v1	AMFICOM/v1/mapinfo
 #M	spatialfx_v1	SpatialFX-dependent Implementation
 spatialfx_v1	AMFICOM/v1/spatialfx
+#DADARA module for modeling functions, analysis, etc
+dadara		AMFICOM/v1/dadara
 
 akp		hw/akp
 trc		hw/trc
@@ -167,6 +169,4 @@ r7		hw/r7
 tools		tools
 util		util
 
-#DADARA module for modeling functions, analysis, etc
-dadara		dadara
 
