@@ -5,12 +5,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.util.Map;
 
-import com.jgraph.JGraph;
-import com.jgraph.graph.CellMapper;
-import com.jgraph.graph.CellViewRenderer;
-import com.jgraph.graph.GraphConstants;
+import com.jgraph.*;
+import com.jgraph.graph.*;
 import com.jgraph.pad.EllipseView;
-//import com.jgraph.pad.EllipseView$EllipseRenderer;
 
 class DefaultPortView extends EllipseView
 {

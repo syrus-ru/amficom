@@ -8,12 +8,7 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
 
-import com.jgraph.graph.DefaultEdge;
-import com.jgraph.graph.DefaultPort;
-import com.jgraph.graph.Edge;
-import com.jgraph.graph.EdgeView;
-import com.jgraph.graph.GraphConstants;
-import com.jgraph.graph.PortView;
+import com.jgraph.graph.*;
 
 public class DefaultCableLink extends DefaultEdge
 {

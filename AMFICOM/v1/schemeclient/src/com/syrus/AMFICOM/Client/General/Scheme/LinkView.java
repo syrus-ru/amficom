@@ -7,16 +7,8 @@ import java.awt.event.MouseEvent;
 import java.util.Map;
 
 import com.jgraph.JGraph;
-import com.jgraph.graph.CellHandle;
-import com.jgraph.graph.CellMapper;
-import com.jgraph.graph.CellViewRenderer;
-import com.jgraph.graph.EdgeRenderer;
-import com.jgraph.graph.EdgeView;
+import com.jgraph.graph.*;
 //import com.jgraph.graph.EdgeView$EdgeHandle;
-import com.jgraph.graph.GraphConstants;
-import com.jgraph.graph.GraphContext;
-import com.jgraph.graph.Port;
-import com.jgraph.graph.PortView;
 
 public class LinkView extends EdgeView
 {

@@ -44,16 +44,8 @@ import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeLink;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePort;
 
-import com.jgraph.graph.CellView;
-import com.jgraph.graph.ConnectionSet;
-import com.jgraph.graph.DefaultEdge;
-import com.jgraph.graph.DefaultGraphCell;
-import com.jgraph.graph.DefaultGraphModel;
-import com.jgraph.graph.DefaultPort;
-import com.jgraph.graph.GraphConstants;
-import com.jgraph.graph.Port;
-import com.jgraph.graph.PortView;
-import com.jgraph.pad.ImageCell;
+import com.jgraph.graph.*;
+import com.jgraph.pad.*;
 
 public class GraphActions
 {

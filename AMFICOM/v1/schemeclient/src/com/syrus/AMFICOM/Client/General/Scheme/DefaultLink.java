@@ -8,12 +8,7 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeLink;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
 
-import com.jgraph.graph.DefaultEdge;
-import com.jgraph.graph.DefaultPort;
-import com.jgraph.graph.Edge;
-import com.jgraph.graph.EdgeView;
-import com.jgraph.graph.GraphConstants;
-import com.jgraph.graph.PortView;
+import com.jgraph.graph.*;
 
 public class DefaultLink extends DefaultEdge
 {
@@ -53,7 +48,7 @@ public class DefaultLink extends DefaultEdge
 		target = port;
 	}
 
-	public Edge.Routing getRouting()
+	public DefaultEdge.Routing getRouting()
 	{
 		return routing;
 	}
@@ -91,7 +86,7 @@ public class DefaultLink extends DefaultEdge
 		}
 	}
 */
-	public class LinkRouting implements Edge.Routing
+	public class LinkRouting implements DefaultEdge.Routing
 	{
 		private static final long serialVersionUID = 01L;
 

@@ -468,27 +468,27 @@ public class SchemeGraph extends GPGraph
 
 			if (p != null)
 			{
-				Point setpoint = snap(p);
-				Rectangle rect;
-				CellView[] cv = getGraphLayoutCache().getMapping(cloned_cells);
-				//CellView[] cv2 = getGraphLayoutCache().getAllDescendants(cv);
-				CellView topcv = cv[0];
-				for (int i = 0; i < cv.length; i++)
-					if (cv[i] instanceof DeviceView)
-					{
-						topcv = cv[i];
-						break;
-					}
-				if (topcv instanceof SchemeVertexView)
-					rect = ((SchemeVertexView)topcv).getPureBounds();
-				else
-					rect = topcv.getBounds();
-
-				p = snap(new Point((int)(p.x / (2 * getScale()) - rect.x / 2), (int)(p.y / (2 * getScale()) - rect.y / 2)));
-				//getGraphLayoutCache().update(getGraphLayoutCache().getAllDescendants(cv));
-				getGraphLayoutCache().setRememberCellViews(false);
-				getGraphLayoutCache().translateViews(cv, p.x, p.y);
-				getGraphLayoutCache().update(cv);
+//				Point setpoint = snap(p);
+//				Rectangle rect;
+//				CellView[] cv = getGraphLayoutCache().getMapping(cloned_cells);
+//				//CellView[] cv2 = getGraphLayoutCache().getAllDescendants(cv);
+//				CellView topcv = cv[0];
+//				for (int i = 0; i < cv.length; i++)
+//					if (cv[i] instanceof DeviceView)
+//					{
+//						topcv = cv[i];
+//						break;
+//					}
+//				if (topcv instanceof SchemeVertexView)
+//					rect = ((SchemeVertexView)topcv).getPureBounds();
+//				else
+//					rect = topcv.getBounds();
+//
+//				p = snap(new Point((int)(p.x / (2 * getScale()) - rect.x / 2), (int)(p.y / (2 * getScale()) - rect.y / 2)));
+//				//getGraphLayoutCache().update(getGraphLayoutCache().getAllDescendants(cv));
+//				getGraphLayoutCache().setRememberCellViews(false);
+//				getGraphLayoutCache().translateViews(cv, p.x, p.y);
+//				getGraphLayoutCache().update(cv);
 			}
 
 			return clones;
