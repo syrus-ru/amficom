@@ -207,7 +207,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 	}
 
 	public static final String		ACCESSPORT_NAME_REFLECTOMETER	= "reflectometeringnt"; //$NON-NLS-1$
-	private ApplicationContext		aContext;
+//	private ApplicationContext		aContext;
 
 	private JButton					delMapGroupButton;
 	private Dispatcher				dispatcher;
@@ -221,7 +221,7 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 	private UniTreePanel			utp;
 
 	public ElementsTreePanel(ApplicationContext aContext) {
-		this.aContext = aContext;
+//		this.aContext = aContext;
 		this.dispatcher = aContext.getDispatcher();
 		this.model = new TestsTreeModel(aContext);
 
