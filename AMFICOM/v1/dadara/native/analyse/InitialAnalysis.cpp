@@ -120,7 +120,7 @@ void InitialAnalysis::performAnalysis()
       splashes.disposeAll(); // очищаем массив ArrList
     } // удаляем пустой массив splashes
 
-    deleteAllEventsAfterLastConnector();// если ни одного коннектора не будет найдено, то удалятся все события  
+    deleteAllEventsAfterLastConnector();// если ни одного коннектора не будет найдено, то удалятся все события
     correctAllConnectorsFronts(data);
     excludeShortLinesBetweenConnectors(data, wlet_width);
     correctAllSpliceCoords();// поскольку уточнение двигает соседние события, то к этому моменту динейные участки должы уже существовать ( поэтому вызов после addLinearPartsBetweenEvents() )
@@ -131,41 +131,74 @@ void InitialAnalysis::performAnalysis()
 void InitialAnalysis::findEventsBySplashes(ArrList& splashes)
 {   double mc = minimalConnector;
     double mw = minimalWeld;
-    for(int i=0; i<splashes.getLength()-1; i++)
-	{   Splash &sp1 = *(Splash*)splashes[i];
-        Splash &sp2 = *(Splash*)splashes[i+1];
-    	double dist = sp2.begin - sp1.end;
+//* мёртвую зону ищём  чуть иначе
+	int shift = 0;
+	int begin = -1;
+	int end = -1;
+ 	if( splashes.getLength() <=2 )
+return;
+	Splash* sp1 = (Splash*)splashes[0];
+    Splash* sp2;
+    if(sp1->sign<0)
+    { begin = 0;
+      end  = sp1->end_thr;
+    }
+    else
+    { for(;;)
+      {	sp1 = (Splash*)splashes[shift];
+        sp2 = (Splash*)splashes[shift+1];
+        shift++;
+        if(sp2->sign<0)
+        { begin = sp1->begin_thr;
+          end = sp2->end_thr;
+      break;
+        }
+      }
+    }
+    if(end !=-1 )
+    { EventParams *ep = new EventParams;
+      ep->type = EventParams::REFLECTIVE;
+      ep->begin = begin; ep->end = end;
+      if(ep->end >= lastNonZeroPoint){ ep->end = lastNonZeroPoint-1;}
+      ep->gain = 0;  ep->gain_thr = 0;
+      events->add(ep);
+    }
+//* ищем остальные коннекторы
+    for(int i = shift+1; i<splashes.getLength()-1; i++)
+	{   sp1 = (Splash*)splashes[i];
+        sp2 = (Splash*)splashes[i+1];
+    	double dist = sp2->begin_thr - sp1->end_thr;
 		// отмечаем , что найден новый коннектор
         if( dist<reflectiveSize*2			// если всплески близко
-        	&& (sp1.sign>0 && sp2.sign<0)   // первый положительный, а второй - отрицательный
-            && ( (sp1.square/sp2.square>0.1 && sp1.square/sp2.square<2.0) || events->getLength()==0) // всплески должны быть сравнимы (первый коннектор это мёртвая зона)
-			&& ( sp1.f_extr>mc+noise[sp1.x_extr] ) // если из двух сосоедних всплесков первый  превышает порог коннектора, то это коннектор
-            //&& ( sp1.f_extr>mc+noise[sp1.x_extr] && -sp2.f_extr>mc+noise[sp2.x_extr] ) // если из двух сосоедних всплесков хотя бы один превышает порог коннектора, то это коннектор
+        	&& (sp1->sign>0 && sp2->sign<0) // первый положительный, а второй - отрицательный
+            //&& ( (sp1.square/sp2.square>0.1 && sp1.square/sp2.square<2.0) || events->getLength()==0) // всплески должны быть сравнимы (первый коннектор это мёртвая зона)
+			&& ( sp1->begin_conn_n !=-1 )
+
           )
         {   EventParams *ep = new EventParams;
-            SetConnectorParamsBySplashes((EventParams&)*ep, sp1, sp2 );
+            SetConnectorParamsBySplashes((EventParams&)*ep, (Splash&)*sp1, (Splash&)*sp2 );
 		    events->add(ep);
             i++;// потому что коннектор состоит из двух всплесков
         }
-        else if( fabs(sp1.f_extr) > mw+noise[sp1.x_extr] )
+        else if( sp1->begin_weld_n != -1) //сварка
         {	EventParams *ep = new EventParams;
-			SetSpliceParamsBySplash( (EventParams&)*ep, sp1 );
+			SetSpliceParamsBySplash( (EventParams&)*ep, (Splash&)*sp1 );
             events->add(ep);
         }
     }
 }
 // -------------------------------------------------------------------------------------------------
-// к этому мменту мы предполагаем, что свёртка f_wlet сделана для вейвлета шириной wlet_width и не менялась 
+// к этому мменту мы предполагаем, что свёртка f_wlet сделана для вейвлета шириной wlet_width и не менялась
 void InitialAnalysis::SetSpliceParamsBySplash( EventParams& ep, Splash& sp)
-{   if(sp.f_extr>0) 	{ ep.type = EventParams::GAIN;}
-    else 				{ ep.type = EventParams::LOSS;}
-    ep.begin = sp.begin_nonoise-1;
-    if(ep.begin<0){ep.begin=0;}
-    ep.end = sp.end_nonoise+1;
+{   if(sp.sign>0) { ep.type = EventParams::GAIN; }
+    else 		  { ep.type = EventParams::LOSS; }
+    ep.begin = sp.begin_weld;
+    ep.end = sp.end_weld+1;
     if(ep.end>=lastNonZeroPoint){ep.end = lastNonZeroPoint-1;}
+    if(ep.begin<0){ep.begin=0;}
     // ищем площадь
-    int l = max(sp.begin_nonoise, sp.begin - wlet_width);
-    int r = min(sp.end_nonoise, sp.end + wlet_width);
+    int l = max(sp.begin_thr, sp.begin_thr - wlet_width);
+    int r = min(sp.end_thr, sp.end_thr + wlet_width);
 	double alpha = 1./wlet_width;// пока так, потом посчитаем иначе
     double sum=0;
     for(int i=l; i<=r; i++)
@@ -176,81 +209,96 @@ void InitialAnalysis::SetSpliceParamsBySplash( EventParams& ep, Splash& sp)
 // -------------------------------------------------------------------------------------------------
 void InitialAnalysis::SetConnectorParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2 )
 {  ep.type = EventParams::REFLECTIVE;
-   ep.begin = sp1.begin_nonoise;
+   ep.begin = sp1.begin_thr;
    if(ep.begin<0){ep.begin=0;}
-   ep.end = sp2.end_nonoise;
-   if(ep.end>=lastNonZeroPoint){ep.end = lastNonZeroPoint;}  
+   ep.end = sp2.end_thr;
+   if(ep.end>=lastNonZeroPoint){ep.end = lastNonZeroPoint;}
 }
 // -------------------------------------------------------------------------------------------------
+// ВАЖНО: Считаем, что minimalThreshold < minimalWeld < minimalConnector
 void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
 {   //minimalThreshold,	//минимальный уровень события
 	//minimalWeld,		//минимальный уровень неотражательного события
 	//minimalConnector,	//минимальный уровень отражательного события
-    int n = 0;
-    for(int i=0; i<lastNonZeroPoint; i++)
+    for(int i=1; i<lastNonZeroPoint; i++)// 1 т.к. i-1
     {   if(fabs(f_wlet[i])<=minimalThreshold)
      continue;
-        int begin_nonoise = i;// запомнминаем, в каком месте мы пересекли порог срабатывания
-        int sign = f_wlet[i]>0 ? 1 : -1;
-        int i_extr = i;
-        double f_extr = f_wlet[i_extr];
-        double area = 0;
+		Splash& spl = (Splash&)(*(new Splash()));// раз уж пересекли хотя бы один порог, то объект уже должен быть создан;
+        spl.begin_thr = i;
+		int sign, sign_cur;
+   		if(f_wlet[i]>0) { sign = 1;}
+        else            { sign = -1;}
         for(  ; i<lastNonZeroPoint; i++)
-        {  	if( f_wlet[i]*sign <= minimalThreshold)// не fabs, так как sign учитывает возможность того, что функция может перескочить через коридор
-        break;
-      		// считаем площадь
-            area += fabs(f_wlet[i]); // поскольку потом будем считать отношение, то считаем с точностью до произвольного множителя
-            // ищем экстремум
-			if( f_wlet[i]*sign > f_extr*sign )
-        	{	i_extr = i;
-            	f_extr = f_wlet[i_extr];
+        {   if(f_wlet[i]>0) { sign_cur = 1;}
+	        else            { sign_cur = -1;}
+        	// минимальные на рост
+        	if( fabs(f_wlet[i])>= minimalThreshold+noise[i] && spl.begin_thr_n == -1)
+            {	spl.begin_thr_n = i-1;
             }
+            if( spl.begin_thr_n != -1 && spl.end_thr_n == -1
+            	&& ( fabs(f_wlet[i])<= minimalThreshold+noise[i] || sign_cur!=sign || i==lastNonZeroPoint-1)
+	          )
+            {	spl.end_thr_n = i;
+            }
+			// сварочные
+            if( fabs(f_wlet[i])>= minimalWeld && spl.begin_weld == -1)
+            {	spl.begin_weld = i-1;
+            }
+            if( spl.begin_weld != -1 && spl.end_weld == -1
+            	&& ( fabs(f_wlet[i])<= minimalWeld || sign_cur!=sign || i==lastNonZeroPoint-1)
+              )
+            {	spl.end_weld = i;
+            }
+            if( fabs(f_wlet[i])>= minimalWeld+noise[i] && spl.begin_weld_n == -1)
+            {	spl.begin_weld_n = i-1;
+            }
+            if( spl.begin_weld_n != -1 && spl.end_weld_n == -1
+            	&& (fabs(f_wlet[i])<= minimalWeld+noise[i] || sign_cur!=sign || i==lastNonZeroPoint-1)
+              )
+            {	spl.end_weld_n = i;
+            }
+            // коннекторные
+            if( fabs(f_wlet[i])>= minimalConnector && spl.begin_conn == -1)
+            {	spl.begin_conn = i-1;
+            }
+            if( spl.begin_conn != -1 && spl.end_conn == -1
+            	&& ( fabs(f_wlet[i])<= minimalConnector || sign_cur!=sign || i==lastNonZeroPoint-1)
+              )
+            {	spl.end_conn = i;
+            }
+            if( fabs(f_wlet[i])>= minimalConnector+noise[i] && spl.begin_conn_n == -1)
+            {	spl.begin_conn_n = i-1;
+            }
+            if( spl.begin_conn_n != -1 && spl.end_conn_n == -1
+            	&& (fabs(f_wlet[i])<= minimalConnector+noise[i] || sign_cur!=sign || i==lastNonZeroPoint-1)
+              )
+            {	spl.end_conn_n = i;
+            }
+			// минимальные на спад
+            if( fabs(f_wlet[i])<=minimalThreshold || sign_cur!=sign || i==lastNonZeroPoint-1)
+        	{	spl.end_thr = i;
+     	break;
+     		}
         }
-        int end_nonoise = i-1;
+		spl.sign = sign;
+        // считаем площадь
+
+        spl.begin_thr--;
+        if(spl.begin_thr < spl.end_thr)// begin>end только если образ так и не пересёк ни разу верхний порог
+        {   splashes.add(&spl);
+        }
 #ifdef debug_lines
-        xs[cou] = begin_nonoise*delta_x; xe[cou] = begin_nonoise*delta_x; ys[cou] = -minimalConnector*2; ye[cou] = minimalConnector*2; cou++;
-        xs[cou] = end_nonoise*delta_x; xe[cou] = end_nonoise*delta_x;     ys[cou] = -minimalConnector*2; ye[cou] = minimalConnector*2; col[cou]= 0xFFFFFF; cou++;
+        //xs[cou] = begin*delta_x; xe[cou] = begin_nonoise*delta_x; ys[cou] = -minimalConnector*2; ye[cou] = minimalConnector*2; cou++;
+        //xs[cou] = end_nonoise*delta_x; xe[cou] = end_nonoise*delta_x;     ys[cou] = -minimalConnector*2; ye[cou] = minimalConnector*2; col[cou]= 0xFFFFFF; cou++;
+        // отображаем пороги
+        xs[cou] = 0; ys[cou] =  minimalThreshold; xe[cou] = lastNonZeroPoint*delta_x; ye[cou] =  minimalThreshold; col[cou] = 0x004444; cou++;
+        xs[cou] = 0; ys[cou] = -minimalThreshold; xe[cou] = lastNonZeroPoint*delta_x; ye[cou] = -minimalThreshold; col[cou] = 0x004444; cou++;
+        xs[cou] = 0; ys[cou] =  minimalWeld; 	  xe[cou] = lastNonZeroPoint*delta_x; ye[cou] =  minimalWeld;      col[cou] = 0x009999; cou++;
+        xs[cou] = 0; ys[cou] = -minimalWeld; 	  xe[cou] = lastNonZeroPoint*delta_x; ye[cou] = -minimalWeld;	   col[cou] = 0x009999; cou++;
+        xs[cou] = 0; ys[cou] =  minimalConnector; xe[cou] = lastNonZeroPoint*delta_x; ye[cou] =  minimalConnector; col[cou] = 0x00FFFF; cou++;
+        xs[cou] = 0; ys[cou] = -minimalConnector; xe[cou] = lastNonZeroPoint*delta_x; ye[cou] = -minimalConnector; col[cou] = 0x00FFFF; cou++;
 #endif
-		// выясняем другие пороги у данного события (область превышения уровня "порога+шум" может лежать только внутри области пересечения порога)
-        // при этом если образ пересекает несколько раз верхний порог, то это всё-раво считается за одно событие
-        int j;
-        for(j=begin_nonoise; j<end_nonoise; j++)
-        { if(fabs(f_wlet[j])>=minimalThreshold+noise[j])
-       	break;
-        }
-		int begin = j;
-        for(j=end_nonoise; j<begin_nonoise; j--)
-        { if(fabs(f_wlet[j])>=minimalThreshold+noise[j])
-       	break;
-        }
-        int end=j;
-        if(begin<0){ begin = 0;}
-        if(end>lastNonZeroPoint){ end = lastNonZeroPoint;}
-        if(begin < end)// begin>end только если образ так и не пересёк ни разу верхний порог
-        {   Splash* splash;
-            // первый всплеск обязан быть вверх и большим, а то мы не распознаем мёртвую зону
-        	if(n==0 && sign<0 )
-        	{	splash = new Splash(0, begin, 0, begin, -sign, 2*minimalConnector, begin/2, area);
-            }
-            else if (n==0 && sign>0 && f_extr<=minimalConnector)
-            {	splash = new Splash(begin, end, begin_nonoise, end_nonoise, sign, 2*minimalConnector, i_extr, area);
-            }
-        	else 
-            {	splash = new Splash(begin, end, begin_nonoise, end_nonoise, sign, f_extr, i_extr, area);
-            }
-        	splashes.add(splash);
-            n++;
-        }
-    }
-#ifdef debug_lines
-    // отображаем пороги
-    xs[cou] = 0; ys[cou] =  minimalThreshold; xe[cou] = lastNonZeroPoint*delta_x; ye[cou] =  minimalThreshold; col[cou] = 0x004444; cou++;
-    xs[cou] = 0; ys[cou] = -minimalThreshold; xe[cou] = lastNonZeroPoint*delta_x; ye[cou] = -minimalThreshold; col[cou] = 0x004444; cou++;
-    xs[cou] = 0; ys[cou] =  minimalWeld; 	  xe[cou] = lastNonZeroPoint*delta_x; ye[cou] =  minimalWeld;      col[cou] = 0x009999; cou++;
-    xs[cou] = 0; ys[cou] = -minimalWeld; 	  xe[cou] = lastNonZeroPoint*delta_x; ye[cou] = -minimalWeld;	   col[cou] = 0x009999; cou++;
-	xs[cou] = 0; ys[cou] =  minimalConnector; xe[cou] = lastNonZeroPoint*delta_x; ye[cou] =  minimalConnector; col[cou] = 0x00FFFF; cou++;
-    xs[cou] = 0; ys[cou] = -minimalConnector; xe[cou] = lastNonZeroPoint*delta_x; ye[cou] = -minimalConnector; col[cou] = 0x00FFFF; cou++;
-#endif
+	}
 }
 // -------------------------------------------------------------------------------------------------
 void InitialAnalysis::calcAverageFactor(double* fw, int scale, double norma1)
@@ -399,15 +447,15 @@ void InitialAnalysis::correctAllSpliceCoords()
 // ф-я ПОРТИТ вейвлет образ !  (так как использует тот же массив для хранения образа на другом масштабе)
 // Уточнение может только сужать сварки, но никак не расширять
 void InitialAnalysis::correctSpliceCoords(int n)
-{   EventParams* ev_lp = (EventParams*)(*events)[n];
+{	EventParams* ev_lp = (EventParams*)(*events)[n];
     EventParams& ev = *ev_lp;
 	// если это не сварка, то выход
-    if( !( ev.type == EventParams::GAIN || ev.type == EventParams::LOSS) )
+    if( !(ev.type == EventParams::GAIN || ev.type == EventParams::LOSS) )
 return;
 	//prf_b("correctSpliceCoords: enter");
 	const double noise_factor = 0;  // 0 , если мы не учитываем шум в пределах событий
     const double angle_factor = 1.8; // расширения светового конуса для защиты от низкочастотных помех на больших масштабах
-	const double factor = 1.1; // множитель геометрической прогрессии
+	const double factor = 1.2; // множитель геометрической прогрессии
 	const int nscale = 20; // количество разных масштабов
 	int width = wlet_width; // frame-width: ширина окна (относительно границы события), в котором мы проводим дополнительный анализ
 	int w_l = ev.begin, w_r = ev.end; // w_l - wavelet_left: границы вейвлет-образа на текущем масштабе
@@ -419,7 +467,7 @@ return;
 #endif
     // анализируем при разныех масштабах
 	for(int step=0; step<=nscale; step++)
-    {   width = (int )(wlet_width/pow(factor,step));// чтобы не накапливать ошибки
+    {   width = (int)(width/factor);//(int )(wlet_width/pow(factor,step) +0.5);// чтобы не накапливать ошибки
     	if(width<=1)
     break;
 		//prf_b("correctSpliceCoords: getWLetNorma");
@@ -586,7 +634,7 @@ void InitialAnalysis::verifyResults()
 {	int prevEnd = 0;
 	for(int i=0; i<events->getLength(); i++)
     {	EventParams& ev = *(EventParams*)(*events)[i];
-///*//#ifndef debug_VCL
+//*//#ifndef debug_VCL
 		assert(ev.begin >= 0);
 		assert(ev.end < lastNonZeroPoint);
 		assert(ev.end >= ev.begin);
