@@ -1,7 +1,15 @@
-#ifndef _CONFIGURATION_IDL_
-#define _CONFIGURATION_IDL_
+/*
+ * $Id: configuration.idl,v 1.27 2004/10/04 13:24:36 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
-#include <general.idl>
+#ifndef CONFIGURATION_IDL
+#define CONFIGURATION_IDL
+
+#include "general.idl"
 
 module com {
 module syrus {

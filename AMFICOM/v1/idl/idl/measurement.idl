@@ -1,8 +1,16 @@
-#ifndef _MEASUREMENT_IDL_
-#define	_MEASUREMENT_IDL_
+/*
+ * $Id: measurement.idl,v 1.21 2004/10/04 13:24:36 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 
-#include <general.idl>
-#include <event.idl>
+#ifndef MEASUREMENT_IDL
+#define	MEASUREMENT_IDL
+
+#include "event.idl"
+#include "general.idl"
 
 module com {
 module syrus {
