@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.9 2005/02/18 14:29:11 bob Exp $
+* $Id: MapView.java,v 1.10 2005/03/01 14:12:56 bass Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -52,8 +52,8 @@ import java.util.List;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: bob $
- * @version $Revision: 1.9 $, $Date: 2005/02/18 14:29:11 $
+ * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/03/01 14:12:56 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -210,7 +210,7 @@ public class MapView extends StorableObject {
 		int i = 0;
 		Identifier_Transferable[] schemeIdsTransferable = new Identifier_Transferable[this.schemes.size()];
 		for (Iterator iterator = this.schemes.iterator(); iterator.hasNext();)
-			schemeIdsTransferable[i++] = (((Scheme) iterator.next()).id()).transferable();		
+			schemeIdsTransferable[i++] = (((Scheme) iterator.next()).getId()).getTransferable();		
 
 		return new MapView_Transferable(super.getHeaderTransferable(),
 				(Identifier_Transferable)this.domainId.getTransferable(),

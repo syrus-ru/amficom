@@ -1,5 +1,5 @@
 /**
- * $Id: MapNavigateEvent.java,v 1.14 2005/02/09 11:40:52 krupenn Exp $
+ * $Id: MapNavigateEvent.java,v 1.15 2005/03/01 14:13:28 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,9 +18,9 @@ import com.syrus.AMFICOM.general.corba.IdentifierDefaultFactory;
  *
  *
  *
- * @version $Revision: 1.14 $, $Date: 2005/02/09 11:40:52 $
+ * @version $Revision: 1.15 $, $Date: 2005/03/01 14:13:28 $
  * @module mapclient_v2
- * @author $Author: krupenn $
+ * @author $Author: bass $
  */
 public class MapNavigateEvent extends MapEvent
 {
@@ -152,7 +152,7 @@ public class MapNavigateEvent extends MapEvent
 		super(source, MAP_NAVIGATE);
 		this.markerId = markerId;
 		this.distance = distance;
-		this.schemePathId = new Identifier(schemePathId.transferable());
+		this.schemePathId = new Identifier(schemePathId.getTransferable());
 		this.meId = meId;
 	}
 
@@ -166,7 +166,7 @@ public class MapNavigateEvent extends MapEvent
 			com.syrus.AMFICOM.general.corba.Identifier schemePathElementId)
 	{
 		this(source, typ, markerId, distance, schemePathId, meId);
-		this.schemePathElementId = new Identifier(schemePathElementId.transferable());
+		this.schemePathElementId = new Identifier(schemePathElementId.getTransferable());
 	}
 
 	public void setMarkerId(Identifier markerId)
@@ -191,7 +191,7 @@ public class MapNavigateEvent extends MapEvent
 
 	public void setSchemePathId(com.syrus.AMFICOM.general.corba.Identifier schemePathId)
 	{
-		this.schemePathId = new Identifier(schemePathId.transferable());
+		this.schemePathId = new Identifier(schemePathId.getTransferable());
 	}
 
 	public com.syrus.AMFICOM.general.corba.Identifier getSchemePathId()
@@ -213,7 +213,7 @@ public class MapNavigateEvent extends MapEvent
 
 	public void setSchemePathElementId(com.syrus.AMFICOM.general.corba.Identifier schemePathElementId)
 	{
-		this.schemePathElementId = new Identifier(schemePathElementId.transferable());
+		this.schemePathElementId = new Identifier(schemePathElementId.getTransferable());
 	}
 
 	public com.syrus.AMFICOM.general.corba.Identifier getSchemePathElementId()

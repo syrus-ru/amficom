@@ -1,5 +1,5 @@
 /**
- * $Id: MarkerController.java,v 1.12 2005/02/28 14:35:57 bass Exp $
+ * $Id: MarkerController.java,v 1.13 2005/03/01 14:13:55 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,7 +44,7 @@ import javax.swing.ImageIcon;
 /**
  * Контроллер маркера.
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/02/28 14:35:57 $
+ * @version $Revision: 1.13 $, $Date: 2005/03/01 14:13:55 $
  * @module mapviewclient_v1
  */
 public class MarkerController extends AbstractNodeController
@@ -644,7 +644,7 @@ public class MarkerController extends AbstractNodeController
 				MapNavigateEvent.MAP_MARKER_CREATED_EVENT,
 				marker.getId(),
 				getFromStartLengthLf(marker),
-				marker.getMeasurementPath().getSchemePath().id(),
+				marker.getMeasurementPath().getSchemePath().getId(),
 				marker.getMeId()));
 	}
 
@@ -660,7 +660,7 @@ public class MarkerController extends AbstractNodeController
 				MapNavigateEvent.MAP_MARKER_DELETED_EVENT,
 				marker.getId(),
 				0.0D,
-				marker.getMeasurementPath().getSchemePath().id(),
+				marker.getMeasurementPath().getSchemePath().getId(),
 				marker.getMeId()) );
 	}
 
@@ -676,7 +676,7 @@ public class MarkerController extends AbstractNodeController
 				MapNavigateEvent.MAP_MARKER_MOVED_EVENT,
 				marker.getId(),
 				getFromStartLengthLo(marker),
-				marker.getMeasurementPath().getSchemePath().id(),
+				marker.getMeasurementPath().getSchemePath().getId(),
 				marker.getMeId()) );
 	}
 

@@ -84,7 +84,7 @@ public final class SchemeController implements ObjectResourceController
 		{
 			try
 			{
-				Identifier id = new Identifier(sc.creatorId().transferable());
+				Identifier id = new Identifier(sc.getCreatorId().getTransferable());
 				result = (User )AdministrationStorableObjectPool.getStorableObject(id, false);
 			}
 			catch (Exception e)
@@ -95,12 +95,12 @@ public final class SchemeController implements ObjectResourceController
 		else
 		if (key.equals(KEY_CREATED))
 		{
-			result = sdf.format(new Date(sc.created()));
+			result = sdf.format(new Date(sc.getCreated()));
 		}
 		else
 		if (key.equals(KEY_MODIFIED))
 		{
-			result = sdf.format(new Date(sc.modified()));
+			result = sdf.format(new Date(sc.getModified()));
 		}
 		return result;
 	}

@@ -1,5 +1,5 @@
 /*
-* $Id: MapViewDatabase.java,v 1.9 2005/02/28 14:12:25 bob Exp $
+* $Id: MapViewDatabase.java,v 1.10 2005/03/01 14:12:56 bass Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -46,8 +46,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/02/28 14:12:25 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/03/01 14:12:56 $
+ * @author $Author: bass $
  * @module mapview_v1
  */
 public class MapViewDatabase extends StorableObjectDatabase {
@@ -285,7 +285,7 @@ public class MapViewDatabase extends StorableObjectDatabase {
 	
 	        Collection linkedObjectIds = new ArrayList(linkedObjectList.size());
 	        for (Iterator it = linkedObjectList.iterator(); it.hasNext();) 
-	            linkedObjectIds.add(((Scheme) it.next()).id());
+	            linkedObjectIds.add(((Scheme) it.next()).getId());
 	        
 	        mapIdLinkedObjectIds.put(mapView.getId(), linkedObjectIds);
 		}
@@ -344,7 +344,7 @@ public class MapViewDatabase extends StorableObjectDatabase {
 			Identifier mapViewId = (Identifier) mvIter.next();
 			Collection schemes = (Collection)linkedObjectIds.get(mapViewId);
 			for (Iterator it = schemes.iterator(); it.hasNext(); i++) {
-				com.syrus.AMFICOM.general.corba.Identifier id = ((Scheme) it.next()).id();
+				com.syrus.AMFICOM.general.corba.Identifier id = ((Scheme) it.next()).getId();
 	
 				linkBuffer.append(DatabaseIdentifier.toSQLString(id));
 				if (it.hasNext()) {
