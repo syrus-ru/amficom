@@ -1,5 +1,5 @@
 /*
- * $Id: Thresh.java,v 1.4 2005/03/14 10:10:54 saa Exp $
+ * $Id: Thresh.java,v 1.5 2005/03/15 13:40:21 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,15 +13,15 @@ import java.io.IOException;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/03/14 10:10:54 $
+ * @version $Revision: 1.5 $, $Date: 2005/03/15 13:40:21 $
  * @module
  */
 
 // поля изменяются также через JNI-методы ModelFunction
 public abstract class Thresh
 {
-	protected final static boolean[] IS_KEY_UPPER = new boolean[] { true, true, false, false }; // используется в native-коде
-	protected final static boolean[] IS_KEY_HARD = new boolean[] { false, true, false, true };
+	public final static boolean[] IS_KEY_UPPER = new boolean[] { true, true, false, false }; // используется в native-коде
+	public final static boolean[] IS_KEY_HARD = new boolean[] { false, true, false, true };
 	protected final static int[] CONJ_KEY = new int[] { 2, 3, 0, 1 }; // upper <-> lower - парный key для данного
 	protected final static int[] LIMIT_KEY = new int[] { 1, 1, 3, 3 }; // key параметра, ограничивающим данный (self если ограничения нет)
 	protected final static int[] FORCEMOVE_KEY = new int[] { 0, 0, 2, 2 }; // key параметра, который принудительно двигается вместе с данным (self если принуждения нет)
