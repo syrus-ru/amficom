@@ -31,7 +31,11 @@ import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.ListIterator;
 import javax.swing.*;
 import javax.swing.tree.*;
 import javax.swing.event.*;
@@ -82,13 +86,13 @@ public class UniTreePanel extends JPanel
 /*
 		root = otm.getRoot();
 		otm.nodeBeforeExpanded(root);
-		Vector vec = otm.getChildNodes(root);
+		List vec = otm.getChildNodes(root);
 		for (int i = 0; i < vec.size(); i++)
 		{
 			ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) vec.elementAt(i);
 			root.add(tn);
 			otm.nodeBeforeExpanded(tn);
-			Vector vect = otm.getChildNodes(tn);
+			List vect = otm.getChildNodes(tn);
 			for (int k = 0; k < vect.size(); k++)
 			{
 				ObjectResourceTreeNode rtn = (ObjectResourceTreeNode ) vect.elementAt(k);
@@ -97,7 +101,7 @@ public class UniTreePanel extends JPanel
 		}
 		tm = new DefaultTreeModel(root);
 */
-		tree = new JTree(new Vector());
+		tree = new JTree(new Hashtable());
 		tree.setRootVisible(true);
 		tree.addTreeWillExpandListener(new javax.swing.event.TreeWillExpandListener() {
 			public void treeWillExpand(TreeExpansionEvent e) throws ExpandVetoException {
@@ -143,12 +147,14 @@ public class UniTreePanel extends JPanel
 		root = otm.getRoot();
 		this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		otm.nodeBeforeExpanded(root);
-		Vector vec1 = otm.getChildNodes(root);
+		List vec1 = otm.getChildNodes(root);
 		this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		root.removeAllChildren();
-		for (int i = 0; i < vec1.size(); i++)
-		{
-			ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) vec1.elementAt(i);
+    
+    ListIterator lIt = vec1.listIterator();
+    for (; lIt.hasNext();)
+    {
+      ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) lIt.next();
 			root.add(tn);
 			if(!tn.isFinal())
 				tn.add(new ObjectResourceTreeNode("", "", true));
@@ -183,16 +189,17 @@ public class UniTreePanel extends JPanel
 					this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 					orte.removeAllChildren();
 					otm.nodeBeforeExpanded(orte);
-					Vector vec = otm.getChildNodes(orte);
+					List vec = otm.getChildNodes(orte);
 					this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 					if (vec.size() == 0)
 					{
 						orte.isFinal = true;
 					}
-					Enumeration en = vec.elements();
-					for (; en.hasMoreElements();)
+          
+          ListIterator lIt = vec.listIterator();
+					for (; lIt.hasNext();)
 					{
-						ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) en.nextElement();
+						ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) lIt.next();
 						orte.add(tn);
 						if (tn.getObject().equals(o))
 						{
@@ -263,15 +270,18 @@ public class UniTreePanel extends JPanel
 				}
 				else if ( (select_event.search == true) && (select_event.searchAll == false) )
 				{
-					Vector vec = otm.getSearchableNodes(o);
-					int i = 0;
-					while (i < vec.size())
+					List vec = otm.getSearchableNodes(o);
+
+          ListIterator lIt = vec.listIterator();
+					for (; lIt.hasNext();)
 					{
-						if (setNodeSelection((ObjectResourceTreeNode )vec.elementAt(i), o))
+						ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) lIt.next();
+
+						if (setNodeSelection(tn, o))
 							break;
-						i++;
 					}
-					if (i == vec.size() || vec.size() == 0)
+
+					if (!lIt.hasNext() || !lIt.hasPrevious())
 					{
 						dispatcher.notify(new TreeListSelectionEvent(o, TreeListSelectionEvent.SELECT_EVENT));
 					}
@@ -294,7 +304,7 @@ public class UniTreePanel extends JPanel
 						this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 						orte.removeAllChildren();
 						otm.nodeBeforeExpanded(orte);
-						Vector vec = otm.getChildNodes(orte);
+						List vec = otm.getChildNodes(orte);
 						this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 						if (vec.size() == 0)
 						{
@@ -305,10 +315,10 @@ public class UniTreePanel extends JPanel
 							orte.isFinal = false;
 						}
 
-						Enumeration enum = vec.elements();
-						for(; enum.hasMoreElements();)
-						{
-							ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) enum.nextElement();
+            ListIterator lIt = vec.listIterator();
+            for (; lIt.hasNext();)
+            {
+              ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) lIt.next();
 							orte.add(tn);
 							if (tn.getObject().equals(o))
 							{
@@ -347,7 +357,7 @@ public class UniTreePanel extends JPanel
 		if (node == null)
 			return;
 
-		java.util.List res = new ArrayList();
+		List res = new ArrayList();
 		Class cl = null;
 		//DataSet data = new DataSet();
 		ObjectResourceCatalogActionModel orcam = null;
@@ -368,16 +378,18 @@ public class UniTreePanel extends JPanel
 						this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 						node.removeAllChildren();
 						otm.nodeBeforeExpanded(node);
-						Vector vec = otm.getChildNodes(node);
+						List vec = otm.getChildNodes(node);
 						this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 						if (vec.size() == 0)
 						{
 							node.isFinal = true;
 						}
-						Enumeration en = vec.elements();
-						for (; en.hasMoreElements();)
-						{
-							ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) en.nextElement();
+
+            ListIterator lIt = vec.listIterator();
+            for (; lIt.hasNext();)
+            {
+              ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) lIt.next();
+            
 							node.add(tn);
 							if(!tn.isFinal())
 								tn.add(new ObjectResourceTreeNode("", "", true));
@@ -463,16 +475,17 @@ public class UniTreePanel extends JPanel
 				this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 				orte.removeAllChildren();
 				otm.nodeBeforeExpanded(orte);
-				Vector vec = otm.getChildNodes(orte);
+				List vec = otm.getChildNodes(orte);
 				this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 				if (vec.size() == 0)
 				{
 					orte.isFinal = true;
 				}
-				Enumeration en = vec.elements();
-				for (; en.hasMoreElements();)
-				{
-					ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) en.nextElement();
+
+        ListIterator lIt = vec.listIterator();
+        for (; lIt.hasNext();)
+        {
+          ObjectResourceTreeNode tn = (ObjectResourceTreeNode ) lIt.next();
 					orte.add(tn);
 					if(!tn.isFinal())
 						tn.add(new ObjectResourceTreeNode("", "", true));
@@ -499,16 +512,17 @@ public class UniTreePanel extends JPanel
 			this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			tn.removeAllChildren();
 			otm.nodeBeforeExpanded(tn);
-			Vector vec = otm.getChildNodes(tn);
+			List vec = otm.getChildNodes(tn);
 			this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 			if (vec.size() == 0)
 			{
 				tn.isFinal = true;
 			}
-			Enumeration en = vec.elements();
-			for (; en.hasMoreElements();)
-			{
-				ObjectResourceTreeNode tnn = (ObjectResourceTreeNode ) en.nextElement();
+      
+      ListIterator lIt = vec.listIterator();
+      for (; lIt.hasNext();)
+      {
+        ObjectResourceTreeNode tnn = (ObjectResourceTreeNode ) lIt.next();
 				tn.add(tnn);
 				if(!tnn.isFinal())
 					tnn.add(new ObjectResourceTreeNode("", "", true));
@@ -518,9 +532,9 @@ public class UniTreePanel extends JPanel
 					oooo = recure_tree_exp(tnn, o);
 					if (oooo != null)
 					{
-						for(; en.hasMoreElements();)
+						for(; lIt.hasNext();)
 						{
-							ObjectResourceTreeNode temp = ((ObjectResourceTreeNode ) en.nextElement());
+							ObjectResourceTreeNode temp = ((ObjectResourceTreeNode ) lIt.next());
 							tn.add(temp);
 							if(!temp.isFinal())
 								temp.add(new ObjectResourceTreeNode("", "", true));
@@ -531,9 +545,9 @@ public class UniTreePanel extends JPanel
 				else
 				{
 					oooo = tnn;
-					for(; en.hasMoreElements();)
+					for(; lIt.hasNext();)
 					{
-						ObjectResourceTreeNode temp = ((ObjectResourceTreeNode ) en.nextElement());
+						ObjectResourceTreeNode temp = ((ObjectResourceTreeNode ) lIt.next());
 						tn.add(temp);
 						if(!temp.isFinal())
 							temp.add(new ObjectResourceTreeNode("", "", true));
