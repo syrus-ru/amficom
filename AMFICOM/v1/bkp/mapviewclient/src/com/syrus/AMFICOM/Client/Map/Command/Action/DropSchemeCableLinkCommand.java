@@ -1,5 +1,5 @@
 /**
- * $Id: DropSchemeCableLinkCommand.java,v 1.3 2004/09/29 15:13:27 krupenn Exp $
+ * $Id: DropSchemeCableLinkCommand.java,v 1.4 2004/10/01 16:35:50 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import java.util.Iterator;
  * Разместить элемент типа mpe на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.3 $, $Date: 2004/09/29 15:13:27 $
+ * @version $Revision: 1.4 $, $Date: 2004/10/01 16:35:50 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -99,7 +99,9 @@ public class DropSchemeCableLinkCommand extends MapActionCommandBundle
 		startNode = mne[0];
 		endNode = mne[1];
 		
-		cablePath = createCablePath(scl, startNode, endNode);
+		cablePath = mapView.findCablePath(scl);
+		if(cablePath == null)
+			cablePath = createCablePath(scl, startNode, endNode);
 
 		scl.channelingItems = sortCCIS(startNode, endNode, scl.channelingItems);
 		List ccis = (List )scl.channelingItems;
