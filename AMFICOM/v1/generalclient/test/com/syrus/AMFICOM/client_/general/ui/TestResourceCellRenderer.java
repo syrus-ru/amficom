@@ -5,7 +5,7 @@ import java.awt.Color;
 
 import javax.swing.JTable;
 
-import com.syrus.AMFICOM.CORBA.General.TestStatus;
+import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.client_.general.ui_.AbstractLabelCellRenderer;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.client_.resource.TestResource;

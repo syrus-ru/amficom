@@ -1,5 +1,5 @@
 /*
- * $Id: TestResourceComboBoxTest.java,v 1.3 2004/10/06 14:48:18 bob Exp $
+ * $Id: TestResourceComboBoxTest.java,v 1.4 2004/12/23 12:52:33 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,15 +16,15 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import com.syrus.AMFICOM.CORBA.General.TestStatus;
+import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.client_.general.ui_.ObjListModel;
 import com.syrus.AMFICOM.client_.resource.TestResource;
 import com.syrus.AMFICOM.client_.resource.TestResourceController;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.3 $, $Date: 2004/10/06 14:48:18 $
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2004/12/23 12:52:33 $
  * @module general_v1
  */
 public class TestResourceComboBoxTest {

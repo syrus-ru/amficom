@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.syrus.AMFICOM.CORBA.General.TestStatus;
+import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.client_.general.ui.MLabel;
 
 /**

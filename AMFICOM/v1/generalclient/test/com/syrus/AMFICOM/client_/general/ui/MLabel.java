@@ -13,7 +13,7 @@ import java.awt.Graphics;
 
 import javax.swing.JLabel;
 
-import com.syrus.AMFICOM.CORBA.General.TestStatus;
+import com.syrus.AMFICOM.measurement.corba.TestStatus;
 
 /**
  * @author Vladimir Dolzhenko

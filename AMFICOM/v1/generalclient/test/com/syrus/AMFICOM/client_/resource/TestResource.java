@@ -1,7 +1,7 @@
 
 package com.syrus.AMFICOM.client_.resource;
 
-import com.syrus.AMFICOM.CORBA.General.TestStatus;
+import com.syrus.AMFICOM.measurement.corba.TestStatus;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Object.ObjectPermissionAttributes;
