@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.61 2005/02/03 14:38:06 arseniy Exp $
+ * $Id: EquipmentDatabase.java,v 1.62 2005/02/03 20:18:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,7 +47,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/02/03 14:38:06 $
+ * @version $Revision: 1.62 $, $Date: 2005/02/03 20:18:52 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -367,18 +367,24 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 
 	private void retrieveEquipmentMEIdsByOneQuery(List equipments) throws RetrieveObjectException, IllegalDataException {
 		if ((equipments == null) || (equipments.isEmpty()))
-			return;     
+			return;
 
-    Map map = super.retrieveLinkedEntities(equipments, ObjectEntities.EQUIPMENTMELINK_ENTITY, LINK_COLUMN_EQUIPMENT_ID, LINK_COLUMN_MONITORED_ELEMENT_ID);
-		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
-			Equipment equipment = (Equipment) it.next();
-			List meIds = (List)map.get(equipment);
+		Map linkedEntityIdsMap = this.retrieveLinkedEntityIds(equipments,
+				ObjectEntities.EQUIPMENTMELINK_ENTITY,
+				LINK_COLUMN_EQUIPMENT_ID,
+				LINK_COLUMN_MONITORED_ELEMENT_ID);
+		Equipment equipment;
+		List meIds;
+		for (Iterator it = equipments.iterator(); it.hasNext();) {
+			equipment = (Equipment) it.next();
+			meIds = (List) linkedEntityIdsMap.get(equipment.getId());
+
 			equipment.setMonitoredElementIds0(meIds);
-		}        
+		}
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-//		Equipment equipment = this.fromStorableObject(storableObject);
+		Equipment equipment = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				return null;
