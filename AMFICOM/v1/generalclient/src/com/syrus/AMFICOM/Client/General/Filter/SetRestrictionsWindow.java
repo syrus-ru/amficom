@@ -59,7 +59,7 @@ public class SetRestrictionsWindow extends JInternalFrame
   private void jbInit() throws Exception
   {
 	 this.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-		 "images/general.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		 "images/main/report_mini.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 
 	 this.addInternalFrameListener(new javax.swing.event.InternalFrameAdapter()
 	 {

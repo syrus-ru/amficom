@@ -135,7 +135,7 @@ public class ReportMDIMain extends JFrame implements OperationListener
 		}
 
 		desktopPane.setBackground(SystemColor.control.darker().darker());
-		this.setIconImage(Toolkit.getDefaultToolkit().getImage("images/general.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH));
+		this.setIconImage(Toolkit.getDefaultToolkit().getImage("images/main/report_mini.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH));
 
 		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 		setContentPane(mainPanel);
@@ -537,7 +537,7 @@ public class ReportMDIMain extends JFrame implements OperationListener
 			desktopPane.add(layoutScrollPane);
 			layoutScrollPane.setTitle(LangModelReport.getString("label_templateScheme"));
 			layoutScrollPane.setFrameIcon(
-					new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+					new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/report_mini.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 
 
 			if ((layoutWOCPanel.reportTemplate.size.width + selectReportsPaneMinSize)

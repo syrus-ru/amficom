@@ -142,7 +142,7 @@ public class SelectReportsPanel extends JInternalFrame implements
 		this.setVisible(true);
 		this.setTitle(LangModelReport.getString("label_availableReports"));
 		this.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-			"images/general.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+			"images/main/report_mini.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		this.setSize(new Dimension(280, -1));
 
 		reportsTreePanel =
