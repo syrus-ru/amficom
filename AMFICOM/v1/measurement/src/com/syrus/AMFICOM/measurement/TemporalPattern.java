@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.34 2004/08/24 14:14:42 bob Exp $
+ * $Id: TemporalPattern.java,v 1.35 2004/08/25 05:17:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/08/24 14:14:42 $
+ * @version $Revision: 1.35 $, $Date: 2004/08/25 05:17:55 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -389,10 +389,8 @@ public class TemporalPattern extends StorableObject {
 																	+ ", "
 																	+ new Date(
 																			this.endPeriod));
-												if ((this.startPeriod
-														- MINUTE_LONG <= mTime)
-														&& (mTime <= this.endPeriod
-																+ MINUTE_LONG)) {
+												if ((this.startPeriod <= mTime)
+														&& (mTime <= this.endPeriod)) {
 													if (this.dateList == null)
 														this.dateList = new LinkedList();
 													this.dateList

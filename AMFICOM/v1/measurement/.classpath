@@ -6,6 +6,5 @@
 	<classpathentry kind="var" path="ORACLE_HOME/jdbc/lib/classes12.jar"/>
 	<classpathentry kind="src" path="/config_v1"/>
 	<classpathentry kind="src" path="/util"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/util.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
