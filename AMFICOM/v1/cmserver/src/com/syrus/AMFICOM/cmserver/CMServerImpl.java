@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.27 2004/10/03 13:18:21 bob Exp $
+ * $Id: CMServerImpl.java,v 1.28 2004/10/04 05:49:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,14 +14,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServerOperations;
-import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Domain;
-import com.syrus.AMFICOM.configuration.DomainDatabase;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.AMFICOM.configuration.MonitoredElementDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
-import com.syrus.AMFICOM.configuration.TransmissionPathDatabase;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Domain_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
@@ -91,7 +87,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/10/03 13:18:21 $
+ * @version $Revision: 1.28 $, $Date: 2004/10/04 05:49:58 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -1167,11 +1163,15 @@ public class CMServerImpl implements CMServerOperations {
 							AccessIdentifier_Transferable accessIdentifier)
 			throws AMFICOMRemoteException {
 		List idsList = new ArrayList();
+
 		Log.debugMessage("CMServerImpl.transmitDomains | requiere "
 				+ (identifier_Transferables.length == 0 ? "all" : Integer
 						.toString(identifier_Transferables.length)) + " item(s)",
 					Log.DEBUGLEVEL07);
 		try {
+			Identifier domainId = new Identifier(accessIdentifier.domain_id);
+			Domain domain = (Domain) ConfigurationStorableObjectPool.getStorableObject(domainId, true);
+
 			List domainList = null;
 			if (identifier_Transferables.length > 0) {
 				for (int i = 0; i < identifier_Transferables.length; i++)
@@ -1179,26 +1179,15 @@ public class CMServerImpl implements CMServerOperations {
 				domainList = ConfigurationStorableObjectPool.getStorableObjects(idsList, true);
 			}
 
-			if (domainList == null) {
+			if (domainList == null) 
 				domainList = ConfigurationStorableObjectPool
-						.getStorableObjectsByDomain(ObjectEntities.DOMAIN_ENTITY_CODE, null);
-
-			}
-
-			DomainDatabase database = (DomainDatabase) ConfigurationDatabaseContext.getDomainDatabase();
-
-			List list = database.retrieveButIds(domainList);
-			for (Iterator it = list.iterator(); it.hasNext();) {
-				Domain domain = (Domain) it.next();
-				ConfigurationStorableObjectPool.putStorableObject(domain);
-				domainList.add(domain);
-			}
+				.getStorableObjectsByCondition(getCDomainCondition(domain, ObjectEntities.DOMAIN_ENTITY_CODE), true);
 
 			int i = 0;
 			Domain_Transferable[] transferables = new Domain_Transferable[domainList.size()];
 			for (Iterator it = domainList.iterator(); it.hasNext(); i++) {
-				Domain domain = (Domain) it.next();
-				transferables[i] = (Domain_Transferable) domain.getTransferable();
+				Domain domain2 = (Domain) it.next();
+				transferables[i] = (Domain_Transferable) domain2.getTransferable();
 
 			}
 
@@ -1227,6 +1216,9 @@ public class CMServerImpl implements CMServerOperations {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee
 					.getMessage());
+		} catch (ApplicationException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
 		}
 	}
 
@@ -1249,18 +1241,10 @@ public class CMServerImpl implements CMServerOperations {
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
 				list = ConfigurationStorableObjectPool.getStorableObjects(idsList, true);
-			} else {
+			} else 				
 				list = ConfigurationStorableObjectPool
-						.getStorableObjectsByDomain(ObjectEntities.ME_ENTITY_CODE, domain);
-				MonitoredElementDatabase database = (MonitoredElementDatabase) ConfigurationDatabaseContext
-						.getMonitoredElementDatabase();
-				List listFromDatabase = database.retrieveButIds(list);
-				for (Iterator it = listFromDatabase.iterator(); it.hasNext();) {
-					MonitoredElement monitoredElement = (MonitoredElement) it.next();
-					ConfigurationStorableObjectPool.putStorableObject(monitoredElement);
-					list.add(monitoredElement);
-				}
-			}
+						.getStorableObjectsByCondition(getCDomainCondition(domain, ObjectEntities.ME_ENTITY_CODE), true);
+			
 
 			MonitoredElement_Transferable[] transferables = new MonitoredElement_Transferable[list.size()];
 
@@ -1296,6 +1280,9 @@ public class CMServerImpl implements CMServerOperations {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee
 					.getMessage());
+		} catch (ApplicationException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
 		}
 	}
 
@@ -1318,18 +1305,9 @@ public class CMServerImpl implements CMServerOperations {
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
 				list = ConfigurationStorableObjectPool.getStorableObjects(idsList, true);
-			} else {
-				list = ConfigurationStorableObjectPool
-						.getStorableObjectsByDomain(ObjectEntities.ME_ENTITY_CODE, domain);
-				TransmissionPathDatabase database = (TransmissionPathDatabase) ConfigurationDatabaseContext
-						.getTransmissionPathDatabase();
-				List listFromDatabase = database.retrieveButIds(list);
-				for (Iterator it = listFromDatabase.iterator(); it.hasNext();) {
-					TransmissionPath transmissionPath = (TransmissionPath) it.next();
-					ConfigurationStorableObjectPool.putStorableObject(transmissionPath);
-					list.add(transmissionPath);
-				}
-			}
+			} else 
+				list = list = ConfigurationStorableObjectPool
+					.getStorableObjectsByCondition(getCDomainCondition(domain, ObjectEntities.TRANSPATH_ENTITY_CODE), true);				
 
 			TransmissionPath_Transferable[] transferables = new TransmissionPath_Transferable[list.size()];
 
@@ -1365,6 +1343,9 @@ public class CMServerImpl implements CMServerOperations {
 			Log.errorException(ioee);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, ioee
 					.getMessage());
+		} catch (ApplicationException e) {
+			Log.errorException(e);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE, CompletionStatus.COMPLETED_NO, e.getMessage());
 		}
 	}
 
@@ -1812,8 +1793,7 @@ public class CMServerImpl implements CMServerOperations {
 					+ (testIds.length == 0 ? "all" : Integer.toString(testIds.length))
 					+ " test(s) in domain: " + domainId.toString(), Log.DEBUGLEVEL07);
 			List list;
-			MeasurementDatabase database = (MeasurementDatabase) MeasurementDatabaseContext
-					.getMeasurementDatabase();
+
 			if (testIds.length > 0) {
 				List testIdList = new ArrayList(testIds.length);
 				for (int i = 0; i < testIds.length; i++)
