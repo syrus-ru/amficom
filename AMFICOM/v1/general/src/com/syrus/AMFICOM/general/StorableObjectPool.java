@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.55 2005/03/31 16:27:13 bob Exp $
+ * $Id: StorableObjectPool.java,v 1.56 2005/04/01 08:45:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/03/31 16:27:13 $
- * @author $Author: bob $
+ * @version $Revision: 1.56 $, $Date: 2005/04/01 08:45:04 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -313,9 +313,8 @@ public abstract class StorableObjectPool {
 		return getStorableObjectOfGroup(id, false, groupCode);
 	}
 
-	protected static StorableObject getStorableObjectOfGroup(	Identifier id,
-																boolean useLoader,
-																short groupCode) throws ApplicationException {
+	protected static StorableObject getStorableObjectOfGroup(Identifier id, boolean useLoader, short groupCode)
+			throws ApplicationException {
 		final String groupName = ObjectGroupEntities.codeToString(groupCode).replaceAll("Group$", "");
 		String className = "com.syrus.AMFICOM." + groupName.toLowerCase() + "." + groupName + "StorableObjectPool";
 		Class clazz;
@@ -323,21 +322,26 @@ public abstract class StorableObjectPool {
 		StorableObject storableObject = null;
 		try {
 			clazz = Class.forName(className);
-			Method getStorableObjectMethod = clazz.getDeclaredMethod("getStorableObject", new Class[] {
-					Identifier.class, boolean.class});
-			storableObject = (StorableObject) getStorableObjectMethod.invoke(null, new Object[] { id,
+			Method getStorableObjectMethod = clazz.getDeclaredMethod("getStorableObject", new Class[] {Identifier.class, boolean.class});
+			storableObject = (StorableObject) getStorableObjectMethod.invoke(null, new Object[] {id,
 					useLoader ? Boolean.TRUE : Boolean.FALSE});
-		} catch (ClassNotFoundException e) {
+		}
+		catch (ClassNotFoundException e) {
 			Log.errorException(e);
-		} catch (SecurityException e) {
+		}
+		catch (SecurityException e) {
 			Log.errorException(e);
-		} catch (NoSuchMethodException e) {
+		}
+		catch (NoSuchMethodException e) {
 			Log.errorException(e);
-		} catch (IllegalArgumentException e) {
+		}
+		catch (IllegalArgumentException e) {
 			Log.errorException(e);
-		} catch (IllegalAccessException e) {
+		}
+		catch (IllegalAccessException e) {
 			Log.errorException(e);
-		} catch (InvocationTargetException e) {
+		}
+		catch (InvocationTargetException e) {
 			Throwable cause = e.getCause();
 			if (cause instanceof ApplicationException)
 				throw (ApplicationException) cause;
@@ -460,22 +464,21 @@ public abstract class StorableObjectPool {
 		return soSet;
 	}
 
-	protected Set getStorableObjectsByConditionImpl(	final StorableObjectCondition condition,
-															final boolean useLoader) throws ApplicationException {
+	protected Set getStorableObjectsByConditionImpl(final StorableObjectCondition condition, final boolean useLoader)
+			throws ApplicationException {
 		return this.getStorableObjectsByConditionButIdsImpl(Collections.EMPTY_SET, condition, useLoader);
 	}
 
 	/**
 	 * @param objectIds
-	 *            list of pure java identifiers.
+	 *          list of pure java identifiers.
 	 * @param useLoader
 	 * @throws DatabaseException
 	 * @throws CommunicationException
 	 * @todo Check references within workspace, convert a run time warning (if
 	 *       objectIds is null) into a run time error.
 	 */
-	protected Set getStorableObjectsImpl(final Set objectIds,
-												final boolean useLoader) throws ApplicationException {
+	protected Set getStorableObjectsImpl(final Set objectIds, final boolean useLoader) throws ApplicationException {
 		Set list = null;
 		Map objectQueueMap = null;
 		if (objectIds != null) {
@@ -506,18 +509,17 @@ public abstract class StorableObjectPool {
 						}
 						objectQueue.add(objectId);
 					}
-				} else {
-					Log
-							.errorMessage(this.selfGroupName
-									+ "StorableObjectPool.getStorableObjectsImpl | Cannot find object pool for objectId: '"
-									+ objectId.toString() + "', entity code: '"
-									+ ObjectEntities.codeToString(entityCode) + "'");
+				}
+				else {
+					Log.errorMessage(this.selfGroupName
+							+ "StorableObjectPool.getStorableObjectsImpl | Cannot find object pool for objectId: '"
+							+ objectId.toString() + "', entity code: '" + ObjectEntities.codeToString(entityCode) + "'");
 				}
 			}
 
-		} else {
-			Log.errorMessage(this.selfGroupName
-					+ "StorableObjectPool.getStorableObjectsImpl | NULL list of identifiers supplied");
+		}
+		else {
+			Log.errorMessage(this.selfGroupName + "StorableObjectPool.getStorableObjectsImpl | NULL list of identifiers supplied");
 		}
 
 		if (objectQueueMap != null) {
@@ -543,7 +545,8 @@ public abstract class StorableObjectPool {
 							this.putStorableObjectImpl(storableObject);
 							list.add(storableObject);
 						}
-					} catch (IllegalObjectEntityException ioee) {
+					}
+					catch (IllegalObjectEntityException ioee) {
 						Log.errorException(ioee);
 					}
 				}
@@ -555,11 +558,10 @@ public abstract class StorableObjectPool {
 
 	protected abstract StorableObject loadStorableObject(final Identifier objectId) throws ApplicationException;
 
-	protected abstract Set loadStorableObjects(	final Short entityCode,
-												final Set ids) throws ApplicationException;
+	protected abstract Set loadStorableObjects(final Short entityCode, final Set ids) throws ApplicationException;
 
-	protected abstract Set loadStorableObjectsButIds(	final StorableObjectCondition condition,
-														final Set ids) throws ApplicationException;
+	protected abstract Set loadStorableObjectsButIds(final StorableObjectCondition condition, final Set ids)
+			throws ApplicationException;
 
 	protected void populatePools() {
 		try {
