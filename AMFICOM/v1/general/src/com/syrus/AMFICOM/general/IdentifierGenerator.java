@@ -11,14 +11,11 @@ public class IdentifierGenerator {
 	
 	private IdentifierGenerator() {
 	}
-
+	
 	public static synchronized Identifier generateIdentifier(short entityCode) throws IllegalObjectEntityException, IdentifierGenerationException {
-		if (entityCode != ObjectEntities.UNKNOWN_ENTITY_CODE) {
-			short major = generateMajor(entityCode);
-			long minor = generateMinor(entityCode);
-			return new Identifier(major, minor);
-		}
-		throw new IllegalObjectEntityException("Unknown entity code suplied", IllegalObjectEntityException.UNKNOWN_ENTITY_CODE);
+		short major = generateMajor(entityCode);
+		long minor = generateMinor(entityCode);
+		return new Identifier(major, minor);
 	}
 
 	public static synchronized Identifier[] generateIdentifierRange(short entityCode, int rangeSize) throws IllegalObjectEntityException, IdentifierGenerationException {
@@ -33,7 +30,9 @@ public class IdentifierGenerator {
 	}
 
 	private static short generateMajor(short entityCode) throws IllegalObjectEntityException {
-		return entityCode;
+		if (ObjectEntities.codeIsValid(entityCode))
+			return entityCode;
+		throw new IllegalObjectEntityException("Illegal or unknown entity code supplied: " + entityCode, IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
 
 	private static long generateMinor(short entityCode) throws IdentifierGenerationException {

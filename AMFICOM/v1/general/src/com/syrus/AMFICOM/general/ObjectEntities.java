@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.34 2004/12/07 11:50:40 bob Exp $
+ * $Id: ObjectEntities.java,v 1.35 2004/12/09 11:51:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/12/07 11:50:40 $
- * @author $Author: bob $
+ * @version $Revision: 1.35 $, $Date: 2004/12/09 11:51:49 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public final class ObjectEntities {
@@ -286,36 +286,21 @@ public final class ObjectEntities {
 		else if (entity.equals(TEMPORALPATTERN_ENTITY)) return TEMPORALPATTERN_ENTITY_CODE;
 		else if (entity.equals(MODELING_ENTITY)) return MODELING_ENTITY_CODE;
 
-		else if (entity.equals(CABLE_CHANNELING_ITEM_ENTITY))
-			return CABLE_CHANNELING_ITEM_ENTITY_CODE;
-		else if (entity.equals(PATH_ELEMENT_ENTITY))
-			return PATH_ELEMENT_ENTITY_CODE;
-		else if (entity.equals(SCHEME_ENTITY))
-			return SCHEME_ENTITY_CODE;
-		else if (entity.equals(SCHEME_CABLE_LINK_ENTITY))
-			return SCHEME_CABLE_LINK_ENTITY_CODE;
-		else if (entity.equals(SCHEME_CABLE_PORT_ENTITY))
-			return SCHEME_CABLE_PORT_ENTITY_CODE;
-		else if (entity.equals(SCHEME_CABLE_THREAD_ENTITY))
-			return SCHEME_CABLE_THREAD_ENTITY_CODE;
-		else if (entity.equals(SCHEME_DEVICE_ENTITY))
-			return SCHEME_DEVICE_ENTITY_CODE;
-		else if (entity.equals(SCHEME_ELEMENT_ENTITY))
-			return SCHEME_ELEMENT_ENTITY_CODE;
-		else if (entity.equals(SCHEME_LINK_ENTITY))
-			return SCHEME_LINK_ENTITY_CODE;
-		else if (entity.equals(SCHEME_MONITORING_SOLUTION_ENTITY))
-			return SCHEME_MONITORING_SOLUTION_ENTITY_CODE;
-		else if (entity.equals(SCHEME_OPTIMIZE_INFO_ENTITY))
-			return SCHEME_OPTIMIZE_INFO_ENTITY_CODE;
-		else if (entity.equals(SCHEME_PATH_ENTITY))
-			return SCHEME_PATH_ENTITY_CODE;
-		else if (entity.equals(SCHEME_PORT_ENTITY))
-			return SCHEME_PORT_ENTITY_CODE;
-		else if (entity.equals(SCHEME_PROTO_ELEMENT_ENTITY))
-			return SCHEME_PROTO_ELEMENT_ENTITY_CODE;
-		else if (entity.equals(SCHEME_PROTO_GROUP_ENTITY))
-			return SCHEME_PROTO_GROUP_ENTITY_CODE;
+		else if (entity.equals(CABLE_CHANNELING_ITEM_ENTITY)) return CABLE_CHANNELING_ITEM_ENTITY_CODE;
+		else if (entity.equals(PATH_ELEMENT_ENTITY)) return PATH_ELEMENT_ENTITY_CODE;
+		else if (entity.equals(SCHEME_ENTITY)) return SCHEME_ENTITY_CODE;
+		else if (entity.equals(SCHEME_CABLE_LINK_ENTITY)) return SCHEME_CABLE_LINK_ENTITY_CODE;
+		else if (entity.equals(SCHEME_CABLE_PORT_ENTITY)) return SCHEME_CABLE_PORT_ENTITY_CODE;
+		else if (entity.equals(SCHEME_CABLE_THREAD_ENTITY)) return SCHEME_CABLE_THREAD_ENTITY_CODE;
+		else if (entity.equals(SCHEME_DEVICE_ENTITY)) return SCHEME_DEVICE_ENTITY_CODE;
+		else if (entity.equals(SCHEME_ELEMENT_ENTITY)) return SCHEME_ELEMENT_ENTITY_CODE;
+		else if (entity.equals(SCHEME_LINK_ENTITY)) return SCHEME_LINK_ENTITY_CODE;
+		else if (entity.equals(SCHEME_MONITORING_SOLUTION_ENTITY)) return SCHEME_MONITORING_SOLUTION_ENTITY_CODE;
+		else if (entity.equals(SCHEME_OPTIMIZE_INFO_ENTITY)) return SCHEME_OPTIMIZE_INFO_ENTITY_CODE;
+		else if (entity.equals(SCHEME_PATH_ENTITY)) return SCHEME_PATH_ENTITY_CODE;
+		else if (entity.equals(SCHEME_PORT_ENTITY)) return SCHEME_PORT_ENTITY_CODE;
+		else if (entity.equals(SCHEME_PROTO_ELEMENT_ENTITY)) return SCHEME_PROTO_ELEMENT_ENTITY_CODE;
+		else if (entity.equals(SCHEME_PROTO_GROUP_ENTITY)) return SCHEME_PROTO_GROUP_ENTITY_CODE;
 
 		else if (entity.equals(SITE_NODE_ENTITY)) return SITE_NODE_ENTITY_CODE;
 		else if (entity.equals(TOPOLOGICAL_NODE_ENTITY)) return TOPOLOGICAL_NODE_ENTITY_CODE;
@@ -325,11 +310,9 @@ public final class ObjectEntities {
 		else if (entity.equals(COLLECTOR_ENTITY)) return COLLECTOR_ENTITY_CODE;
 		else if (entity.equals(MAP_ENTITY)) return MAP_ENTITY_CODE;
 
-		else if (entity.equals(IMAGE_RESOURCE_ENTITY))
-			return IMAGE_RESOURCE_ENTITY_CODE;
+		else if (entity.equals(IMAGE_RESOURCE_ENTITY)) return IMAGE_RESOURCE_ENTITY_CODE;
 
-		else if (entity.equals(UPDIKE_ENTITY))
-			return UPDIKE_ENTITY_CODE;
+		else if (entity.equals(UPDIKE_ENTITY)) return UPDIKE_ENTITY_CODE;
 
 		else return UNKNOWN_ENTITY_CODE;
 	}
@@ -476,5 +459,9 @@ public final class ObjectEntities {
 			default:
 				return null;
 		}
+	}
+	
+	public static boolean codeIsValid(final short code) {
+		return (codeToString(code) != null);
 	}
 }

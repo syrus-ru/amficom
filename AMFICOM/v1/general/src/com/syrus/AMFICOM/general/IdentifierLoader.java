@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierLoader.java,v 1.3 2004/11/03 16:47:10 bob Exp $
+ * $Id: IdentifierLoader.java,v 1.4 2004/12/09 11:51:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,20 +17,20 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/11/03 16:47:10 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2004/12/09 11:51:49 $
+ * @author $Author: arseniy $
  * @module module
  */
 public class IdentifierLoader extends SleepButWorkThread {
+	private static final long TIME_TO_SLEEP = 200;
 
-	private IdentifierGeneratorServer	server;
-	private Fifo		idPool;
-	private short		entityCode;
-	private static int	timeToSleep	= 200;
+	private IdentifierGeneratorServer	igServer;
+	private Fifo idPool;
+	private short entityCode;
 
-	public IdentifierLoader(IdentifierGeneratorServer server, Fifo idPool, short entityCode) {
-		super(timeToSleep);
-		this.server = server;
+	public IdentifierLoader(IdentifierGeneratorServer igServer, Fifo idPool, short entityCode) {
+		super(TIME_TO_SLEEP);
+		this.igServer = igServer;
 		this.idPool = idPool;
 		this.entityCode = entityCode;
 	}
@@ -48,11 +48,10 @@ public class IdentifierLoader extends SleepButWorkThread {
 		while (generatedIdentifierRange == null) {
 			try {
 				int size = this.idPool.capacity() - this.idPool.getNumber();
-				generatedIdentifierRange = this.server.getGeneratedIdentifierRange(this.entityCode,
-													size);
-				Log.debugMessage("IdentifierLoader.run | fetched " + generatedIdentifierRange.length + " identifiers for "
-						+ ObjectEntities.codeToString(this.entityCode), Log.DEBUGLEVEL10);
-			} catch (AMFICOMRemoteException e) {
+				generatedIdentifierRange = this.igServer.getGeneratedIdentifierRange(this.entityCode, size);
+				Log.debugMessage("IdentifierLoader.run | fetched " + generatedIdentifierRange.length + " identifiers for " + ObjectEntities.codeToString(this.entityCode), Log.DEBUGLEVEL10);
+			}
+			catch (AMFICOMRemoteException e) {
 				Log.errorMessage(e.getMessage());
 				sleepCauseOfFall();
 			}
