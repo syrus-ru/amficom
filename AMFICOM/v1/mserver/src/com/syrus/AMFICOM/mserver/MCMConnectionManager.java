@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConnectionManager.java,v 1.3 2005/04/04 12:37:58 arseniy Exp $
+ * $Id: MCMConnectionManager.java,v 1.4 2005/04/05 12:17:40 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,9 +16,6 @@ import java.util.Set;
 
 import org.omg.CORBA.SystemException;
 
-import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
-import com.syrus.AMFICOM.administration.Server;
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -28,59 +25,52 @@ import com.syrus.AMFICOM.mcm.corba.MCMHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/04 12:37:58 $
+ * @version $Revision: 1.4 $, $Date: 2005/04/05 12:17:40 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
 public class MCMConnectionManager extends Thread {
 	private CORBAServer corbaServer;
-	private Identifier serverId;
 	private long mcmCheckTimeout;
 
-	private Set mcmIds;	//Set <Identifier mcmId>
 	private Map mcmRefsMap;	//Map <Identifier mcmId, com.syrus.AMFICOM.mcm.corba.MCM mcmRef>
 	private Set disconnectedMCMIds;	//Set <Identifier mcmId>
 
-	public MCMConnectionManager(CORBAServer corbaServer, Identifier serverId, long mcmCheckTimeout) {
+	public MCMConnectionManager(CORBAServer corbaServer, long mcmCheckTimeout) {
 		assert corbaServer != null : "corbaServer is NULL";
-		assert serverId != null : "server id is NULL";
 		assert mcmCheckTimeout >= 10 * 60 * 1000 : "Too low timeToSleep"; //not less then 10 min
 
 		this.corbaServer = corbaServer;
-		this.serverId = serverId;
 		this.mcmCheckTimeout = mcmCheckTimeout;
 
-		this.mcmIds = Collections.synchronizedSet(new HashSet());
-		this.retrieveMCMIds();
 		this.mcmRefsMap = Collections.synchronizedMap(new HashMap());
 		this.disconnectedMCMIds = Collections.synchronizedSet(new HashSet());
 	}
 
 	public void run() {
+		Set mcmIds;
 		Identifier mcmId;
 		MCM mcmRef;
 		while (true) {
-			this.retrieveMCMIds();
-
-			synchronized (this.mcmIds) {
-				for (Iterator it = this.mcmIds.iterator(); it.hasNext();) {
-					mcmId = (Identifier) it.next();
-					mcmRef = (MCM) this.mcmRefsMap.get(mcmId);
-
-					if (mcmRef != null) {
-						try {
-							mcmRef.ping((byte) 0);
-						}
-						catch (SystemException se) {
-							Log.errorException(se);
-							this.activateMCMReferenceWithId(mcmId);
-						}
+			mcmIds = MeasurementServer.getMCMIds();
+			
+			for (Iterator it = mcmIds.iterator(); it.hasNext();) {
+				mcmId = (Identifier) it.next();
+				mcmRef = (MCM) this.mcmRefsMap.get(mcmId);
+				
+				if (mcmRef != null) {
+					try {
+						mcmRef.ping((byte) 0);
 					}
-					else {
+					catch (SystemException se) {
+						Log.errorException(se);
 						this.activateMCMReferenceWithId(mcmId);
 					}
-
 				}
+				else {
+					this.activateMCMReferenceWithId(mcmId);
+				}
+				
 			}
 
 			try {
@@ -93,17 +83,7 @@ public class MCMConnectionManager extends Thread {
 		}
 	}
 
-	public Set getMCMIds() {
-		return Collections.unmodifiableSet(this.mcmIds);
-	}
-
-	public MCM getVerifiedMCMReference(Identifier mcmId) throws CommunicationException, IllegalDataException {
-		if (!this.mcmIds.contains(mcmId)) {
-			this.retrieveMCMIds();
-			if (!this.mcmIds.contains(mcmId))
-				throw new IllegalDataException("MCM '" + mcmId + "' not registered for server '" + this.serverId + "'");
-		}
-
+	protected MCM getVerifiedMCMReference(Identifier mcmId) throws CommunicationException, IllegalDataException {
 		MCM mcmRef = (MCM) this.mcmRefsMap.get(mcmId);
 
 		if (mcmRef == null)
@@ -118,19 +98,6 @@ public class MCMConnectionManager extends Thread {
 		}
 
 		return mcmRef;
-	}
-
-	private void retrieveMCMIds() {
-		try {
-			Server server = (Server) AdministrationStorableObjectPool.getStorableObject(this.serverId, true);
-			Set mcmIds1 = server.retrieveMCMIds();
-
-			this.mcmIds.clear();
-			this.mcmIds.addAll(mcmIds1);
-		}
-		catch (ApplicationException ae) {
-			Log.errorException(ae);
-		}
 	}
 
 	private MCM activateAndGet(Identifier mcmId) throws CommunicationException {
