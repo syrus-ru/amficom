@@ -1,5 +1,5 @@
 /*
- * $Id: administration.idl,v 1.3 2005/01/19 20:38:48 arseniy Exp $
+ * $Id: administration.idl,v 1.4 2005/03/05 21:16:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -81,7 +81,6 @@ module corba {
 		general::corba::Identifier_Transferable user_id;
 		general::corba::Identifier_Transferable server_id;
 		general::corba::IdentifierSeq_Transferable characteristic_ids;
-		general::corba::IdentifierSeq_Transferable kis_ids;
 	};
 	
 	typedef sequence <MCM_Transferable> MCMSeq_Transferable;
