@@ -8,13 +8,13 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
-//import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
+import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
-public class Characteristic extends StorableObject  {
+public class Characteristic extends StorableObject {
 	private Identifier type_id;
-//	private int sort;
 	private String name;
 	private String description;
+	private int sort;
 	private String value;
 
 	private StorableObject_Database characteristicDatabase;
@@ -38,9 +38,9 @@ public class Characteristic extends StorableObject  {
 					new Identifier(ct.creator_id),
 					new Identifier(ct.modifier_id));
 		this.type_id = new Identifier(ct.type_id);
-//		this.sort = ct.sort.value();
 		this.name = new String(ct.name);
 		this.description = new String(ct.description);
+		this.sort = ct.sort.value();
 		this.value = new String(ct.value);
 
 		this.characteristicDatabase = ConfigurationDatabaseContext.characteristicDatabase;
@@ -59,19 +59,15 @@ public class Characteristic extends StorableObject  {
 																					 (Identifier_Transferable)super.creator_id.getTransferable(),
 																					 (Identifier_Transferable)super.modifier_id.getTransferable(),
 																					 (Identifier_Transferable)this.type_id.getTransferable(),
-//																					 CharacteristicSort.from_int(this.sort),
 																					 new String(this.name),
 																					 new String(this.description),
+																					 CharacteristicSort.from_int(this.sort),
 																					 new String(this.value));
 	}
 
 	public Identifier getTypeId() {
 		return this.type_id;
 	}
-//
-//	public CharacteristicSort getSort() {
-//		return CharacteristicSort.from_int(this.sort);
-//	}
 
 	public String getName() {
 		return this.name;
@@ -79,6 +75,10 @@ public class Characteristic extends StorableObject  {
 
 	public String getDescription() {
 		return this.description;
+	}
+
+	public CharacteristicSort getSort() {
+		return CharacteristicSort.from_int(this.sort);
 	}
 
 	public String getValue() {
@@ -90,18 +90,18 @@ public class Characteristic extends StorableObject  {
 																						Identifier creator_id,
 																						Identifier modifier_id,
 																						Identifier type_id,
-//																						int sort,
 																						String name,
 																						String description,
+																						int sort,
 																						String value) {
 		super.setAttributes(created,
 												modified,
 												creator_id,
 												modifier_id);
 		this.type_id = type_id;
-//		this.sort = sort;
 		this.name = name;
 		this.description = description;
+		this.sort = sort;
 		this.value = value;
 	}
 }

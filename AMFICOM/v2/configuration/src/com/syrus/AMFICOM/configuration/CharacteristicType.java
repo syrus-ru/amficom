@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicType_Transferable;
 
-public class CharacteristicType extends StorableObjectType  {
+public class CharacteristicType extends StorableObjectType {
 	private int data_type;
 	private boolean is_editable;
 	private boolean is_visible;

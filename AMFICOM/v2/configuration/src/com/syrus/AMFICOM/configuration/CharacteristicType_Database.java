@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObject_Database;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
-public class CharacteristicType_Database extends StorableObject_Database  {
+public class CharacteristicType_Database extends StorableObject_Database {
 
 	private CharacteristicType fromStorableObject(StorableObject storableObject) throws Exception {
 		if (storableObject instanceof CharacteristicType)
@@ -54,6 +54,8 @@ public class CharacteristicType_Database extends StorableObject_Database  {
 																				 resultSet.getInt("data_type"),
 																				 (resultSet.getInt("is_editable") == 0)?false:true,
 																				 (resultSet.getInt("is_visible") == 0)?false:true);
+			else
+				throw new Exception("No such characteristic type: " + ct_id_str);
 		}
 		catch (SQLException sqle) {
 			String mesg = "CharacteristicType_Database.retrieve | Cannot retrieve characteristic type " + ct_id_str;
