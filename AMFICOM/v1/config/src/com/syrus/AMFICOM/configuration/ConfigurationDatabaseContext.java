@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationDatabaseContext.java,v 1.33 2004/12/10 09:07:59 max Exp $
+ * $Id: ConfigurationDatabaseContext.java,v 1.34 2004/12/10 10:08:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,8 @@ package com.syrus.AMFICOM.configuration;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2004/12/10 09:07:59 $
- * @author $Author: max $
+ * @version $Revision: 1.34 $, $Date: 2004/12/10 10:08:04 $
+ * @author $Author: arseniy $
  * @todo Declare all fields private as<ol>
  *       <li>they have public accessors; and</li>
  *       <li>there's {@link #init(StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase, StorableObjectDatabase)}
@@ -26,7 +26,7 @@ public final class ConfigurationDatabaseContext {
 	protected static StorableObjectDatabase measurementPortTypeDatabase;
 	protected static StorableObjectDatabase linkTypeDatabase;
 	protected static StorableObjectDatabase cableLinkTypeDatabase;
-    protected static StorableObjectDatabase cableThreadTypeDatabase;
+	protected static StorableObjectDatabase cableThreadTypeDatabase;
 	protected static StorableObjectDatabase transmissionPathTypeDatabase;
 	protected static StorableObjectDatabase characteristicDatabase;
 	protected static StorableObjectDatabase userDatabase;
@@ -40,7 +40,7 @@ public final class ConfigurationDatabaseContext {
 	protected static StorableObjectDatabase kisDatabase;
 	protected static StorableObjectDatabase monitoredElementDatabase;
 	protected static StorableObjectDatabase linkDatabase;
-    protected static StorableObjectDatabase cableThreadDatabase;
+	protected static StorableObjectDatabase cableThreadDatabase;
     
 	private ConfigurationDatabaseContext() {
 		// private constructor 
@@ -51,7 +51,7 @@ public final class ConfigurationDatabaseContext {
 			final StorableObjectDatabase portTypeDatabase,
 			final StorableObjectDatabase measurementPortTypeDatabase,
 			final StorableObjectDatabase linkTypeDatabase,
-            final StorableObjectDatabase cableLinkTypeDatabase,
+			final StorableObjectDatabase cableLinkTypeDatabase,
 			final StorableObjectDatabase cableThreadTypeDatabase,
 			final StorableObjectDatabase characteristicDatabase,
 			final StorableObjectDatabase userDatabase,
@@ -66,14 +66,14 @@ public final class ConfigurationDatabaseContext {
 			final StorableObjectDatabase kisDatabase,
 			final StorableObjectDatabase monitoredElementDatabase,
 			final StorableObjectDatabase linkDatabase,
-            final StorableObjectDatabase cableThreadDatabase) {
+			final StorableObjectDatabase cableThreadDatabase) {
 		ConfigurationDatabaseContext.characteristicTypeDatabase = characteristicTypeDatabase;
 		ConfigurationDatabaseContext.equipmentTypeDatabase = equipmentTypeDatabase;
 		ConfigurationDatabaseContext.portTypeDatabase = portTypeDatabase;
 		ConfigurationDatabaseContext.measurementPortTypeDatabase = measurementPortTypeDatabase;
 		ConfigurationDatabaseContext.linkTypeDatabase = linkTypeDatabase;
 		ConfigurationDatabaseContext.cableLinkTypeDatabase = cableLinkTypeDatabase;
-        ConfigurationDatabaseContext.cableThreadTypeDatabase = cableThreadTypeDatabase;
+		ConfigurationDatabaseContext.cableThreadTypeDatabase = cableThreadTypeDatabase;
 		ConfigurationDatabaseContext.characteristicDatabase = characteristicDatabase;
 		ConfigurationDatabaseContext.userDatabase = userDatabase;
 		ConfigurationDatabaseContext.domainDatabase = domainDatabase;
@@ -87,7 +87,7 @@ public final class ConfigurationDatabaseContext {
 		ConfigurationDatabaseContext.kisDatabase = kisDatabase;
 		ConfigurationDatabaseContext.monitoredElementDatabase = monitoredElementDatabase;
 		ConfigurationDatabaseContext.linkDatabase = linkDatabase;
-        ConfigurationDatabaseContext.cableThreadDatabase = cableThreadDatabase;
+		ConfigurationDatabaseContext.cableThreadDatabase = cableThreadDatabase;
 	}
 
 	public static StorableObjectDatabase getCharacteristicDatabase() {
