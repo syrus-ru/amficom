@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.inc,v 1.13 2004/07/23 11:11:01 bass Exp $
+# $Id: Makefile.inc,v 1.14 2004/08/05 10:29:37 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -194,7 +194,7 @@ JAVACFLAGS := $(JAVACFLAGS) $(JIKESFLAGS)
 endif
 endif
 
-JAR = $(call pathsearch,jar-3.3.1$(exesuffix))
+JAR = $(call pathsearch,jar-3.4.1$(exesuffix))
 ifeq ($(JAR),)
 JAR = $(call pathsearch,jar$(exesuffix))
 endif
