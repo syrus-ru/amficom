@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.14 2005/02/19 20:34:13 arseniy Exp $
+ * $Id: MCMDatabase.java,v 1.15 2005/02/24 09:07:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/02/19 20:34:13 $
+ * @version $Revision: 1.15 $, $Date: 2005/02/24 09:07:19 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -199,75 +199,23 @@ public class MCMDatabase extends StorableObjectDatabase {
     if ((mcms == null) || (mcms.isEmpty()))
 			return;     
 
-    StringBuffer sql = new StringBuffer(SQL_SELECT
-                + StorableObjectWrapper.COLUMN_ID + COMMA
-                + MCMWrapper.LINK_COLUMN_MCM_ID
-                + SQL_FROM + ObjectEntities.KIS_ENTITY
-                + SQL_WHERE + MCMWrapper.LINK_COLUMN_MCM_ID
-                + SQL_IN + OPEN_BRACKET);
-		int i = 1;
-		for (Iterator it = mcms.iterator(); it.hasNext(); i++) {
-			MCM mcm = (MCM)it.next();
-			sql.append(DatabaseIdentifier.toSQLString(mcm.getId()));
-			if (it.hasNext()) {
-				if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-					sql.append(COMMA);
-				else {
-					sql.append(CLOSE_BRACKET);
-					sql.append(SQL_OR);
-					sql.append(MCMWrapper.LINK_COLUMN_MCM_ID);
-					sql.append(SQL_IN);
-					sql.append(OPEN_BRACKET);
-				}
-			}
+    Map kisIdsMap = null;
+    try {
+			kisIdsMap = this.retrieveLinkedEntityIds(mcms, ObjectEntities.KIS_ENTITY, MCMWrapper.LINK_COLUMN_MCM_ID, StorableObjectWrapper.COLUMN_ID);
 		}
-		sql.append(CLOSE_BRACKET);
-
-    Statement statement = null;
-		ResultSet resultSet = null;
-		Connection connection = DatabaseConnection.getConnection();
-		try {
-			statement = connection.createStatement();
-			Log.debugMessage("MCMDatabase.retrieveKISIdsByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql.toString());
-			Map kisMap = new HashMap();
-
-			while (resultSet.next()) {
-				Identifier mcmId = DatabaseIdentifier.getIdentifier(resultSet, MCMWrapper.LINK_COLUMN_MCM_ID);
-				List kisIds = (List)kisMap.get(mcmId);
-				if (kisIds == null) {
-					kisIds = new LinkedList();
-					kisMap.put(mcmId, kisIds);
-				}
-				kisIds.add(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID));
-			}
-			
-			for (Iterator it = mcms.iterator(); it.hasNext();) {
-				MCM mcm = (MCM)it.next();
-				List kisIds = (List)kisMap.get(mcm.getId());
-
-				mcm.setKISIds0(kisIds);
-			}
+		catch (IllegalDataException e) {
+			throw new RetrieveObjectException(e);
 		}
-		catch (SQLException sqle) {
-			String mesg = "MCMDatabase.retrieveKISIdsByOneQuery | Cannot retrieve parameters for result -- " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-			finally {
-				DatabaseConnection.releaseConnection(connection);
-			}
+
+		MCM mcm;
+		Identifier mcmId;
+		Collection kisIds;
+		for (Iterator it = mcms.iterator(); it.hasNext();) {
+			mcm = (MCM) it.next();
+			mcmId = mcm.getId();
+			kisIds = (Collection) kisIdsMap.get(mcmId);
+
+			mcm.setKISIds0(kisIds);
 		}
 	}
 
