@@ -9,6 +9,8 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 
 public class SchemeEditorRun
 {
+	private static final String			BUNDLE_NAME			= "com.syrus.AMFICOM.Client.General.Lang.schematics";
+
 	public static void main(String[] args)
 	{
 		Environment.initialize();

@@ -7,6 +7,8 @@ import java.util.Vector;
 
 public class LangModelAnalyse extends LangModel
 {
+	private static final String			BUNDLE_NAME			= "com.syrus.AMFICOM.Client.General.Lang.analysis";
+
 	static public Locale locale;
 	static public String language;
 	static public String country;

@@ -49,6 +49,8 @@ import com.syrus.AMFICOM.Client.General.Lang.*;
 
 public class LangModelConfig extends LangModel
 {
+	private static final String			BUNDLE_NAME			= "com.syrus.AMFICOM.Client.General.Lang.config";
+
 	public static Locale locale;
 	public static String language;
 	public static String country;
@@ -62,4 +64,3 @@ public class LangModelConfig extends LangModel
 	}
 }
 
- 
