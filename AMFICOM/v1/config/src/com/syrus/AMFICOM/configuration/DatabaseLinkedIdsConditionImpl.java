@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.7 2005/03/15 14:32:25 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.8 2005/03/23 19:06:13 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,10 +13,11 @@ import com.syrus.AMFICOM.general.AbstractDatabaseLinkedIdsCondition;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/03/15 14:32:25 $
+ * @version $Revision: 1.8 $, $Date: 2005/03/23 19:06:13 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -36,7 +37,15 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				query = super.getQuery(DomainMember.COLUMN_DOMAIN_ID);
 				break;
 			case ObjectEntities.TRANSPATH_ENTITY_CODE:
-				query = super.getQuery(DomainMember.COLUMN_DOMAIN_ID);
+				switch (super.condition.getLinkedEntityCode()) {
+					case ObjectEntities.PORT_ENTITY_CODE:
+						query = super.getQuery(TransmissionPathWrapper.COLUMN_START_PORT_ID)
+								+ StorableObjectDatabase.SQL_OR
+								+ super.getQuery(TransmissionPathWrapper.COLUMN_FINISH_PORT_ID);
+						break;
+					default:
+						query = super.getQuery(DomainMember.COLUMN_DOMAIN_ID);
+				}
 				break;
 			case ObjectEntities.KIS_ENTITY_CODE:
 				switch (super.condition.getLinkedEntityCode()) {

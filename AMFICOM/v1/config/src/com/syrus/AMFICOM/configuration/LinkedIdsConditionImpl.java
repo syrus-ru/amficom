@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.10 2005/03/23 18:03:28 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.11 2005/03/23 19:06:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/03/23 18:03:28 $
+ * @version $Revision: 1.11 $, $Date: 2005/03/23 19:06:13 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -70,7 +70,15 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 				domainMember = (Equipment) object;
 				break;
 			case ObjectEntities.TRANSPATH_ENTITY_CODE:
-				domainMember = (TransmissionPath) object;
+				TransmissionPath transmissionPath = (TransmissionPath) object;
+				switch (this.linkedEntityCode) {
+					case ObjectEntities.PORT_ENTITY_CODE:
+						condition = super.conditionTest(transmissionPath.getStartPortId())
+								|| super.conditionTest(transmissionPath.getFinishPortId());
+						break;
+					default:
+						domainMember = transmissionPath;
+				}
 				break;
 			case ObjectEntities.KIS_ENTITY_CODE:
 				KIS kis = (KIS) object;
