@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.15 2004/08/30 14:39:41 bob Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.16 2004/08/31 15:33:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/08/30 14:39:41 $
+ * @version $Revision: 1.16 $, $Date: 2004/08/31 15:33:22 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -387,7 +387,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		}
 	}
 	
-	public static List retrieveAll() throws RetrieveObjectException {
+	public List retrieveAll() throws RetrieveObjectException {
 		List transPaths = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
 		String sql = SQL_SELECT
 				+ COLUMN_ID
@@ -425,7 +425,7 @@ public class TransmissionPathDatabase extends StorableObjectDatabase {
 		return transPaths;
 	}
 
-	public static void delete(TransmissionPath transmissionPath) {
+	public void delete(TransmissionPath transmissionPath) {
 		String tpIdStr = transmissionPath.getId().toSQLString();
 		Statement statement = null;
 		try {
