@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.16 2004/12/03 19:13:35 bass Exp $
+ * $Id: StorableObject.java,v 1.17 2004/12/08 08:49:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/12/03 19:13:35 $
+ * @version $Revision: 1.17 $, $Date: 2004/12/08 08:49:35 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -76,9 +76,6 @@ public abstract class StorableObject implements
 		return this.created;
 	}
 
-	/**
-	 * @see ComSyrusAmficomGeneralIStorableObject#getCreatorId()
-	 */
 	public Identifier getCreatorId() {
 		return this.creatorId;
 	}
@@ -100,9 +97,6 @@ public abstract class StorableObject implements
 			this.currentVersion);
 	}
 
-	/**
-	 * @see ComSyrusAmficomGeneralIStorableObject#getId()
-	 */
 	public Identifier getId() {
 		return this.id;
 	}
@@ -114,9 +108,6 @@ public abstract class StorableObject implements
 		return this.modified;
 	}
 
-	/**
-	 * @see ComSyrusAmficomGeneralIStorableObject#getModifierId()
-	 */
 	public Identifier getModifierId() {
 		return this.modifierId;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: Identifier.java,v 1.16 2004/11/29 10:24:29 bass Exp $
+ * $Id: Identifier.java,v 1.17 2004/12/08 08:49:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,12 +13,11 @@ import java.io.Serializable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2004/11/29 10:24:29 $
+ * @version $Revision: 1.17 $, $Date: 2004/12/08 08:49:35 $
  * @author $Author: bass $
  * @module general_v1
  */
 public class Identifier implements
-//		com.syrus.AMFICOM.general.corba.IIdentifier,
 		Comparable,
 		Cloneable,
 		TransferableObject,
@@ -29,10 +28,6 @@ public class Identifier implements
 	public static final char SEPARATOR = '_';
 
 	private static final long serialVersionUID = 1721559813677093072L;
-
-	private static final String[] TRUNCATABLE_IDS = {
-		"IDL:com/syrus/AMFICOM/general/Identifier:1.0"
-	};
 
 	private String identifierString;
 
@@ -54,13 +49,6 @@ public class Identifier implements
 		this.major = major;
 		this.minor = minor;
 		this.identifierString = ObjectEntities.codeToString(this.major) + SEPARATOR + Long.toString(this.minor);
-	}
-
-	/**
-	 * @see org.omg.CORBA.portable.ValueBase#_truncatable_ids()
-	 */
-	public String[] _truncatable_ids() {
-		return TRUNCATABLE_IDS;
 	}
 
 	public Object clone() {
