@@ -1,5 +1,5 @@
 /*
- * $Id: EventStorableObjectPool.java,v 1.2 2005/02/02 15:09:13 arseniy Exp $
+ * $Id: EventStorableObjectPool.java,v 1.3 2005/02/07 11:59:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/02 15:09:13 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/07 11:59:04 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -35,9 +35,9 @@ public class EventStorableObjectPool extends StorableObjectPool {
 	private static final int OBJECT_POOL_MAP_SIZE = 4;		/* Number of entities  */
 
 	private static final int EVENTTYPE_OBJECT_POOL_SIZE = 2;
-	private static final int ALARMTYPE_OBJECT_POOL_SIZE = 2;
+//	private static final int ALARMTYPE_OBJECT_POOL_SIZE = 2;
 	private static final int EVENT_OBJECT_POOL_SIZE = 10;
-	private static final int ALARM_OBJECT_POOL_SIZE = 10;
+//	private static final int ALARM_OBJECT_POOL_SIZE = 10;
 
 	private static EventObjectLoader	eObjectLoader;
 	private static EventStorableObjectPool instance;
@@ -78,10 +78,10 @@ public class EventStorableObjectPool extends StorableObjectPool {
 		eObjectLoader = eObjectLoader1;
 
 		instance.addObjectPool(ObjectEntities.EVENTTYPE_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.ALARMTYPE_ENTITY_CODE, size);
+//		instance.addObjectPool(ObjectEntities.ALARMTYPE_ENTITY_CODE, size);
 
 		instance.addObjectPool(ObjectEntities.EVENT_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.ALARM_ENTITY_CODE, size);
+//		instance.addObjectPool(ObjectEntities.ALARM_ENTITY_CODE, size);
 
 		instance.populatePools();
 	}
@@ -95,10 +95,10 @@ public class EventStorableObjectPool extends StorableObjectPool {
 		eObjectLoader = eObjectLoader1;
 
 		instance.addObjectPool(ObjectEntities.EVENTTYPE_ENTITY_CODE, EVENTTYPE_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.ALARMTYPE_ENTITY_CODE, ALARMTYPE_OBJECT_POOL_SIZE);
+//		instance.addObjectPool(ObjectEntities.ALARMTYPE_ENTITY_CODE, ALARMTYPE_OBJECT_POOL_SIZE);
 
 		instance.addObjectPool(ObjectEntities.EVENT_ENTITY_CODE, EVENT_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.ALARM_ENTITY_CODE, ALARM_OBJECT_POOL_SIZE);
+//		instance.addObjectPool(ObjectEntities.ALARM_ENTITY_CODE, ALARM_OBJECT_POOL_SIZE);
 
 		instance.populatePools();
 	}
