@@ -53,6 +53,8 @@ public class ThresholdsSelectionFrame extends ATableFrame
 	JScrollPane scrollPane = new JScrollPane();
 	JViewport viewport = new JViewport();
 	JToolBar jToolBar1 = new JToolBar();
+	
+	private ThresholdTableModel tModelEmpty;
 
 	public ThresholdsSelectionFrame(Dispatcher dispatcher)
 	{
@@ -89,7 +91,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		this.setIconifiable(true);
 		this.setTitle(LangModelAnalyse.getString("thresholdsTableTitle"));
 
-		ThresholdTableModel tModelEmpty = new ThresholdTableModel( // FIXME - переделать
+		this.tModelEmpty = new ThresholdTableModel( // FIXME - переделать
 			new String[] { LangModelAnalyse.getString("thresholdsKey") },
 			new String[] {
 					LangModelAnalyse.getString("thresholdsUpWarning"),
@@ -99,7 +101,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 			new int[] { },
 			null
 		);
-		jTable = new ATable(tModelEmpty);
+		jTable = new ATable(this.tModelEmpty);
 		
 		JButton nalysisInitialButton = new JButton();
 		JButton analysisDefaultsButton = new JButton();
@@ -292,9 +294,12 @@ public class ThresholdsSelectionFrame extends ATableFrame
 			RefChangeEvent rce = (RefChangeEvent)ae;
 			if (rce.CLOSE)
 			{
-				String id = (String)(rce.getSource());
-				if (id.equals("all"))
+				String id = (String) (rce.getSource());
+				if (id.equals("all")) {
 					this.mtm = null;
+					/* TODO set empty model */
+					this.jTable.setModel(this.tModelEmpty);
+				}
 			}
 		}
 		if(ae.getActionCommand().equals(RefUpdateEvent.typ))
