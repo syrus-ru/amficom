@@ -1,5 +1,5 @@
 /*
- * $Id: RISDSessionInfo.java,v 1.28 2005/03/23 17:29:03 bob Exp $
+ * $Id: RISDSessionInfo.java,v 1.29 2005/04/04 07:29:44 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -53,10 +53,11 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ParameterTypeCodenames;
 import com.syrus.AMFICOM.general.SessionContext;
+import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
 import com.syrus.AMFICOM.general.XMLGeneralObjectLoader;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.AccessIdentifier_Transferable;
+import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.EmptyClientMapObjectLoader;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
@@ -68,13 +69,12 @@ import com.syrus.AMFICOM.measurement.XMLMeasurementObjectLoader;
 import com.syrus.AMFICOM.resource.EmptyClientResourceObjectLoader;
 import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
 import com.syrus.io.Rewriter;
-import com.syrus.util.ClientLRUMap;
 import com.syrus.util.corba.JavaSoftORBUtil;
 import com.syrus.util.prefs.IIOPConnectionManager;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.28 $, $Date: 2005/03/23 17:29:03 $
+ * @version $Revision: 1.29 $, $Date: 2005/04/04 07:29:44 $
  * @module generalclient_v1
  */
 public final class RISDSessionInfo extends SessionInterface {
@@ -277,9 +277,10 @@ public final class RISDSessionInfo extends SessionInterface {
 				new Identifier_Transferable("Null_0"));
 			this.domainId = new Identifier(this.accessIdentifier.domain_id);
 			this.userId = new Identifier(this.accessIdentifier.user_id);
-			final Class clazz = ClientLRUMap.class;
+			final Class clazz = StorableObjectResizableLRUMap.class;
 			final int size = 200;
-			SessionContext.init(new AccessIdentity(this.accessIdentifier));
+			/* TODO really hostname can be 'null' ? */
+			SessionContext.init(new AccessIdentity(this.accessIdentifier), null);
 			//			ClientConfigurationObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
 			ConfigurationStorableObjectPool.init(new ClientConfigurationObjectLoader(cmServer), clazz, size);
 			//			ClientMeasurementObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
@@ -313,7 +314,7 @@ public final class RISDSessionInfo extends SessionInterface {
 	
 	private SessionInterface openLocalSession() {
 		
-			final Class clazz = ClientLRUMap.class;
+			final Class clazz = StorableObjectResizableLRUMap.class;
 			final int size = 200;
 
 //			ClientConfigurationObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
@@ -373,7 +374,8 @@ public final class RISDSessionInfo extends SessionInterface {
 						(Identifier_Transferable)this.userId.getTransferable(),
 						new Identifier_Transferable("Null_0"));
 				
-				SessionContext.init(new AccessIdentity(this.accessIdentifier));
+				/* TODO really hostname can be 'null' ? */
+				SessionContext.init(new AccessIdentity(this.accessIdentifier), null);
 				
 				AdministrationStorableObjectPool.putStorableObject(domain);
 				AdministrationStorableObjectPool.putStorableObject(user);
