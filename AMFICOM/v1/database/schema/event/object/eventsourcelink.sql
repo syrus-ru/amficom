@@ -6,5 +6,5 @@ CREATE TABLE EventSourceLink (
  CONSTRAINT evsrclnk_event_fk FOREIGN KEY (event_id)
   REFERENCES Event (id) ON DELETE CASCADE,
  CONSTRAINT evsrclnk_evsrc_fk FOREIGN KEY (source_id)
-  REFERENCES Event (id) ON DELETE CASCADE
+  REFERENCES EventSource (id) ON DELETE CASCADE
 );

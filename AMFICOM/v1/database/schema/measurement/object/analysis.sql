@@ -23,7 +23,7 @@ CREATE TABLE Analysis (
  CONSTRAINT ana_me_fk FOREIGN KEY (monitored_element_id)
   REFERENCES MonitoredElement (id) ON DELETE CASCADE,
  CONSTRAINT ana_mnt_fk FOREIGN KEY (measurement_id)
-  REFERENCES Measurement (id) ON DELETE CASCEDE,
+  REFERENCES Measurement (id) ON DELETE CASCADE,
 --
  CONSTRAINT ana_criset_fk FOREIGN KEY (criteria_set_id)
   REFERENCES "Set" (id) ON DELETE CASCADE

@@ -24,7 +24,7 @@ CREATE TABLE Evaluation (
  CONSTRAINT eva_me_fk FOREIGN KEY (monitored_element_id)
   REFERENCES MonitoredElement (id) ON DELETE CASCADE,
  CONSTRAINT eva_mnt_fk FOREIGN KEY (measurement_id)
-  REFERENCES Measurement (id) ON DELETE CASCEDE,
+  REFERENCES Measurement (id) ON DELETE CASCADE,
 --
  CONSTRAINT eva_thrset_fk FOREIGN KEY (threshold_set_id)
   REFERENCES "Set" (id) ON DELETE CASCADE,
