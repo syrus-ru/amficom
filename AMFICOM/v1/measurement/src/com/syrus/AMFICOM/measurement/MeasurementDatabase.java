@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.31 2004/10/25 14:56:33 bob Exp $
+ * $Id: MeasurementDatabase.java,v 1.32 2004/10/26 14:48:45 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2004/10/25 14:56:33 $
+ * @version $Revision: 1.32 $, $Date: 2004/10/26 14:48:45 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -403,8 +403,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
         List list = null;
         
         StringBuffer buffer = new StringBuffer();
-        int idsLength = testIds.size();
-        if ((testIds != null) && (idsLength > 0)){
+        if ((testIds != null) && (!testIds.isEmpty())){
         	buffer.append(COLUMN_TEST_ID);
         	buffer.append(SQL_IN);
         	buffer.append(OPEN_BRACKET);
