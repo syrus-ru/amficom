@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeType.java,v 1.2 2004/11/26 09:24:36 bob Exp $
+ * $Id: SiteNodeType.java,v 1.3 2004/11/28 14:34:48 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/11/26 09:24:36 $
+ * @version $Revision: 1.3 $, $Date: 2004/11/28 14:34:48 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -72,7 +72,7 @@ public class SiteNodeType extends StorableObjectType implements Characterized {
 			for (int i = 0; i < sntt.characteristicIds.length; i++)
 				characteristicIds.add(new Identifier(sntt.characteristicIds[i]));
 
-			this.characteristics = ConfigurationStorableObjectPool.getStorableObjects(characteristicIds, true);
+			this.characteristics.addAll(ConfigurationStorableObjectPool.getStorableObjects(characteristicIds, true));
 		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}

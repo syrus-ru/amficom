@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNode.java,v 1.1 2004/11/26 09:23:37 bob Exp $
+ * $Id: SiteNode.java,v 1.2 2004/11/28 14:34:48 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.SiteNode_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/11/26 09:23:37 $
+ * @version $Revision: 1.2 $, $Date: 2004/11/28 14:34:48 $
  * @author $Author: bob $
  * @module map_v1
  */
@@ -78,7 +78,7 @@ public class SiteNode extends Node implements TypedObject {
 			for (int i = 0; i < snt.characteristicIds.length; i++)
 				characteristicIds.add(new Identifier(snt.characteristicIds[i]));
 
-			this.characteristics = ConfigurationStorableObjectPool.getStorableObjects(characteristicIds, true);
+			this.characteristics.addAll(ConfigurationStorableObjectPool.getStorableObjects(characteristicIds, true));
 		} catch (ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
@@ -119,17 +119,17 @@ public class SiteNode extends Node implements TypedObject {
 	}
 
 	public static SiteNode getInstance(SiteNode_Transferable sntt) throws CreateObjectException {
-		SiteNode siteNodeType = new SiteNode(sntt);
+		SiteNode siteNode = new SiteNode(sntt);
 
-		siteNodeType.siteNodeDatabase = MapDatabaseContext.siteNodeDatabase;
+		siteNode.siteNodeDatabase = MapDatabaseContext.siteNodeDatabase;
 		try {
-			if (siteNodeType.siteNodeDatabase != null)
-				siteNodeType.siteNodeDatabase.insert(siteNodeType);
+			if (siteNode.siteNodeDatabase != null)
+				siteNode.siteNodeDatabase.insert(siteNode);
 		} catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
 
-		return siteNodeType;
+		return siteNode;
 	}
 
 	public List getDependencies() {
