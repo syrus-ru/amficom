@@ -1,5 +1,5 @@
 /*
- * $Id: ARServerImpl.java,v 1.2 2005/01/17 16:54:21 max Exp $
+ * $Id: ARServerImpl.java,v 1.3 2005/01/19 07:50:12 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,9 +11,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.arserver.corba.ARServerPOA;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.StringFieldCondition;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -46,7 +46,7 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/17 16:54:21 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/19 07:50:12 $
  * @author $Author: max $
  * @module arserver_v1
  */
