@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path=""/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="/Survey"/>
+	<classpathentry kind="src" path="/filter_v1"/>
+	<classpathentry kind="src" path="/generalclient_v1"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/configure.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/ServerInterface_General.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/util.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/map.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/administrate.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/ServerInterface_Survey.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/analysis.jar"/>
+	<classpathentry kind="var" path="ORACLE_HOME/lib/jdev-rt.zip"/>
+	<classpathentry kind="output" path=""/>
+</classpath>
