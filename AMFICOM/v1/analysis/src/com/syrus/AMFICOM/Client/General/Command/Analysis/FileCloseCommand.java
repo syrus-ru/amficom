@@ -37,7 +37,7 @@ public class FileCloseCommand extends VoidCommand
 
 	public void execute()
 	{
-		if(false) // fixme
+		if(false) // FIXME: security bypass??
 		try
 		{
 			this.checker = new Checker(this.aContext.getSessionInterface());
