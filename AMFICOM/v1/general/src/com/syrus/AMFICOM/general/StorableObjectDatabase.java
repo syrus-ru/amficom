@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.22 2004/09/09 08:53:47 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.23 2004/09/09 09:01:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/09/09 08:53:47 $
+ * @version $Revision: 1.23 $, $Date: 2004/09/09 09:01:47 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -583,10 +583,30 @@ public abstract class StorableObjectDatabase {
 	
 	protected void updateEntity(StorableObject storableObject) throws IllegalDataException, UpdateObjectException {
 		String storableObjectIdStr = storableObject.getId().toSQLString();
-		String sql = SQL_UPDATE + this.getTableName() + SQL_SET + OPEN_BRACKET + this.getUpdateColumns()
-				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET + storableObjectIdStr + COMMA
-				+ this.getUpdateSingleSQLValues(storableObject) + CLOSE_BRACKET 
-				+ SQL_WHERE + COLUMN_ID + EQUALS + storableObjectIdStr;
+		
+		String[] columns = this.getUpdateColumns().split(COMMA);
+		String[] values = this.getUpdateSingleSQLValues(storableObject).split(COMMA);
+		if (columns.length != values.length)
+			throw new UpdateObjectException(this.getEnityName() + "Database.updateEntities | Count of columns ('"+columns.length+"') is not equals count of values ('"+values.length+"')");
+		String sql = null;
+		{
+			StringBuffer buffer = new StringBuffer(SQL_UPDATE);
+			buffer.append(this.getTableName());
+			buffer.append(SQL_SET);
+			for(int i=0;i<columns.length;i++){
+				buffer.append(columns[i]);
+				buffer.append(EQUALS);
+				buffer.append(values[i]);
+				if (i<columns.length-1)
+					buffer.append(COMMA);
+			}
+			buffer.append(SQL_WHERE);
+			buffer.append(COLUMN_ID);
+			buffer.append(EQUALS);
+			buffer.append(storableObjectIdStr);
+			sql = buffer.toString();
+		}
+		
 		Statement statement = null;
 		try {
 			statement = connection.createStatement();
@@ -620,10 +640,28 @@ public abstract class StorableObjectDatabase {
 			return;
 		}
 
-		String sql = SQL_UPDATE + this.getTableName() + SQL_SET + OPEN_BRACKET + this.getUpdateColumns()
-				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET + this.getUpdateMultiplySQLValues()
-				+ CLOSE_BRACKET
-				+ SQL_WHERE + COLUMN_ID + EQUALS + QUESTION;
+		String[] columns = this.getUpdateColumns().split(COMMA);
+		String[] values = this.getUpdateMultiplySQLValues().split(COMMA);
+		if (columns.length != values.length)
+			throw new UpdateObjectException(this.getEnityName() + "Database.updateEntities | Count of columns ('"+columns.length+"') is not equals count of values ('"+values.length+"')");
+		String sql = null;
+		{
+			StringBuffer buffer = new StringBuffer(SQL_UPDATE);
+			buffer.append(this.getTableName());
+			buffer.append(SQL_SET);
+			for(int i=0;i<columns.length;i++){
+				buffer.append(columns[i]);
+				buffer.append(EQUALS);
+				buffer.append(values[i]);
+				if (i<columns.length-1)
+					buffer.append(COMMA);
+			}
+			buffer.append(SQL_WHERE);
+			buffer.append(COLUMN_ID);
+			buffer.append(EQUALS);
+			buffer.append(QUESTION);
+			sql = buffer.toString();
+		}
 		PreparedStatement preparedStatement = null;
 		String storableObjectIdCode = null;
 		try {
