@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.11 2004/09/30 09:07:21 max Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.12 2004/09/30 11:06:43 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.measurement.corba.TemporalPattern_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/09/30 09:07:21 $
+ * @version $Revision: 1.12 $, $Date: 2004/09/30 11:06:43 $
  * @author $Author: max $
  * @module cmserver_v1
  */
@@ -740,7 +740,7 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
              throw new CommunicationException(msg, e);       
          }
      }
-
+     
      public void saveTests(List tests, boolean force) throws DatabaseException, CommunicationException, VersionCollisionException{
          Test_Transferable[] transferables = new Test_Transferable[tests.size()];
          int i=0;
