@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.42 2004/11/23 15:24:41 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.43 2004/11/23 16:19:46 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2004/11/23 15:24:41 $
- * @author $Author: bob $
+ * @version $Revision: 1.43 $, $Date: 2004/11/23 16:19:46 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -726,7 +726,7 @@ public class ConfigurationStorableObjectPool {
 					if (alone)
 						cObjectLoader
 						.saveCableThreadType(
-									(CharacteristicType) list
+									(CableThreadType) list
 											.get(0),
 									force);
 				else
@@ -875,6 +875,39 @@ public class ConfigurationStorableObjectPool {
 			cleanChangedStorableObject(entityCode);
 		}
 	}
+    
+    public static void delete(Identifier id) throws DatabaseException, CommunicationException {
+        Short entityCode = new Short(id.getMajor());
+        LRUMap lruMap = (LRUMap) objectPoolMap.get(entityCode);
+        lruMap.remove(id);
+        try {
+            cObjectLoader.delete(id);
+        } catch (DatabaseException e) {
+            Log.errorMessage("MeasurementStorableObjectPool.delete | DatabaseException: " + e.getMessage());
+            throw new DatabaseException("MeasurementStorableObjectPool.refresh", e);
+        } catch (CommunicationException e) {
+            Log.errorMessage("MeasurementStorableObjectPool.delete | CommunicationException: " + e.getMessage());
+            throw new CommunicationException("MeasurementStorableObjectPool.refresh", e);
+        }
+    }
+    
+    public static void delete(List ids) throws DatabaseException, CommunicationException {
+        for (Iterator it = ids.iterator(); it.hasNext();) {
+            Identifier id = (Identifier) it.next();
+            Short entityCode = new Short(id.getMajor());
+            LRUMap lruMap = (LRUMap) objectPoolMap.get(entityCode);
+            lruMap.remove(id);
+        }
+        try {
+            cObjectLoader.delete(ids);
+        } catch (DatabaseException e) {
+            Log.errorMessage("MeasurementStorableObjectPool.delete | DatabaseException: " + e.getMessage());
+            throw new DatabaseException("MeasurementStorableObjectPool.refresh", e);
+        } catch (CommunicationException e) {
+            Log.errorMessage("MeasurementStorableObjectPool.delete | CommunicationException: " + e.getMessage());
+            throw new CommunicationException("MeasurementStorableObjectPool.refresh", e);
+        }
+    }
 
 }
 
