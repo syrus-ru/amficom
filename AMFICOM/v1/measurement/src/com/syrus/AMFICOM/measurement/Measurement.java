@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.28 2004/10/07 14:27:08 bob Exp $
+ * $Id: Measurement.java,v 1.29 2004/10/12 08:00:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/10/07 14:27:08 $
+ * @version $Revision: 1.29 $, $Date: 2004/10/12 08:00:54 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -251,6 +251,14 @@ public class Measurement extends Action {
 																 ResultSort.RESULT_SORT_MEASUREMENT,
 																 alarmLevel,
 																 parameters);						
+	}
+	
+	/** 
+	 * @deprecated as unsupport method
+	 */
+	public Result createResult(Identifier id, Identifier creatorId, SetParameter[] parameters)
+			throws CreateObjectException {
+		throw new UnsupportedOperationException("method isn't support");
 	}
 
 	public Result retrieveResult(ResultSort resultSort) throws RetrieveObjectException, ObjectNotFoundException {

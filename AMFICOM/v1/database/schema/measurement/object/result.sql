@@ -8,6 +8,7 @@ CREATE TABLE Result (
  measurement_id VARCHAR2(32) NOT NULL,
  analysis_id VARCHAR2(32),
  evaluation_id VARCHAR2(32),
+ modeling_id VARCHAR2(32),
  sort NUMBER(2, 0) NOT NULL,
  alarm_level NUMBER(2, 0) NOT NULL,
 --
@@ -22,7 +23,10 @@ CREATE TABLE Result (
  CONSTRAINT res_ana_fk FOREIGN KEY (analysis_id)
   REFERENCES Analysis (id) ON DELETE CASCADE,
  CONSTRAINT res_eva_fk FOREIGN KEY (evaluation_id)
-  REFERENCES Evaluation (id) ON DELETE CASCADE
+  REFERENCES Evaluation (id) ON DELETE CASCADE,
+ CONSTRAINT res_mod_fk FOREIGN KEY (modeling_id)
+  REFERENCES Modeling (id) ON DELETE CASCADE
+
 );
 
 CREATE SEQUENCE result_seq ORDER;

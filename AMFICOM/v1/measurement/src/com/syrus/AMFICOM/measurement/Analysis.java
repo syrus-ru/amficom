@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.25 2004/10/06 15:45:15 max Exp $
+ * $Id: Analysis.java,v 1.26 2004/10/12 08:00:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/10/06 15:45:15 $
- * @author $Author: max $
+ * @version $Revision: 1.26 $, $Date: 2004/10/12 08:00:54 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -133,6 +133,14 @@ public class Analysis extends Action {
 																 ResultSort.RESULT_SORT_ANALYSIS,
 																 alarmLevel,
 																 parameters);
+	}
+	
+	/** 
+	 * @deprecated as unsupport method
+	 */
+	public Result createResult(Identifier id, Identifier creatorId, SetParameter[] parameters)
+			throws CreateObjectException {
+		throw new UnsupportedOperationException("method isn't support");
 	}
 
 	public static Analysis createInstance(Identifier id,

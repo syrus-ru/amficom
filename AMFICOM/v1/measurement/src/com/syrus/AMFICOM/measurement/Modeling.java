@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.4 2004/10/06 15:45:16 max Exp $
+ * $Id: Modeling.java,v 1.5 2004/10/12 08:00:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Date;
 
+import com.syrus.AMFICOM.event.corba.AlarmLevel;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -21,15 +22,16 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Modeling_Transferable;
+import com.syrus.AMFICOM.measurement.corba.ResultSort;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/10/06 15:45:16 $
- * @author $Author: max $
+ * @version $Revision: 1.5 $, $Date: 2004/10/12 08:00:54 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
-public class Modeling extends StorableObject {
+public class Modeling extends Action {
 	
 	private String name;
 	private Identifier meId;
@@ -86,14 +88,16 @@ public class Modeling extends StorableObject {
 										argumentSet);
 		
 	}
-
-
+	
 	public Modeling(Modeling_Transferable mt) throws CreateObjectException {
 			super(new Identifier(mt.id),
 					new Date(mt.created),
 					new Date(mt.modified),
 					new Identifier(mt.creator_id),
-					new Identifier(mt.modifier_id));
+					new Identifier(mt.modifier_id),
+					null,
+					new Identifier(mt.monitored_element_id)
+					);
 		this.name = mt.name;
 		this.meId = new Identifier(mt.monitored_element_id);
 		/**
@@ -126,6 +130,27 @@ public class Modeling extends StorableObject {
 		}
 		
 		return test;
+	}
+	
+	/** 
+	 * @deprecated as unsupport method
+	 */
+	public Result createResult(	Identifier id,
+								Identifier creatorId,
+								Measurement measurement,
+								AlarmLevel alarmLevel,
+								SetParameter[] parameters) throws CreateObjectException {
+		throw new UnsupportedOperationException("method isn't support");
+	}
+
+	public Result createResult(Identifier id,
+								 Identifier creatorId,		
+								 SetParameter[] parameters) throws CreateObjectException {
+		return Result.createInstance(id,
+												 creatorId,
+												 this,
+												 ResultSort.RESULT_SORT_MODELING,
+												 parameters);
 	}
 
 	public MeasurementType getMeasurementType() {

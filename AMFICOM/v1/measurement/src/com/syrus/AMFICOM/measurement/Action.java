@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.10 2004/07/27 15:52:25 arseniy Exp $
+ * $Id: Action.java,v 1.11 2004/10/12 08:00:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.event.corba.AlarmLevel;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/07/27 15:52:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2004/10/12 08:00:54 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -72,4 +72,9 @@ public abstract class Action extends StorableObject implements TypedObject {
 																			Measurement measurement,
 																			AlarmLevel alarmLevel,
 																			SetParameter[] parameters) throws CreateObjectException;
+	
+	public abstract Result createResult(Identifier id,
+										Identifier creatorId,
+										SetParameter[] parameters) throws CreateObjectException;
+
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.26 2004/10/11 14:17:05 bob Exp $
+ * $Id: ResultDatabase.java,v 1.27 2004/10/12 08:00:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/10/11 14:17:05 $
+ * @version $Revision: 1.27 $, $Date: 2004/10/12 08:00:54 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -52,6 +52,9 @@ public class ResultDatabase extends StorableObjectDatabase {
 	public static final String	COLUMN_ANALYSIS_ID	= "analysis_id";
 	//	 evaluationId VARCHAR2(32),
 	public static final String	COLUMN_EVALUATION_ID	= "evaluation_id";
+	//	 modelingId VARCHAR2(32),
+	public static final String	COLUMN_MODELING_ID	= "modeling_id";
+	
 	//	 sort NUMBER(2, 0) NOT NULL,
 	public static final String	COLUMN_SORT		= "sort";
 	//	 alarmLevel NUMBER(2, 0) NOT NULL,
@@ -81,6 +84,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 			buffer.append(COLUMN_ANALYSIS_ID);
 			buffer.append(COMMA);
 			buffer.append(COLUMN_EVALUATION_ID);
+			buffer.append(COMMA);			
+			buffer.append(COLUMN_MODELING_ID);
 			buffer.append(COMMA);
 			buffer.append(COLUMN_SORT);
 			buffer.append(COMMA);
@@ -101,6 +106,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 			buffer.append(QUESTION);
 			buffer.append(COMMA);
 			buffer.append(QUESTION);
+			buffer.append(COMMA);			
+			buffer.append(QUESTION);
 			buffer.append(COMMA);
 			buffer.append(QUESTION);
 			this.updateMultiplySQLValues = buffer.toString();
@@ -113,28 +120,47 @@ public class ResultDatabase extends StorableObjectDatabase {
 		Result result = fromStorableObject(storableObject);
 		StringBuffer buffer = new StringBuffer(super.getUpdateSingleSQLValues(storableObject));
 		buffer.append(COMMA);
-		buffer.append(result.getMeasurement().getId().toSQLString());
-		buffer.append(COMMA);
 		int resultSort = result.getSort().value();
 		switch (resultSort) {
 			case ResultSort._RESULT_SORT_MEASUREMENT:
+				buffer.append(result.getMeasurement().getId().toSQLString());
+				buffer.append(COMMA);				
+				buffer.append(Identifier.getNullSQLString());
+				buffer.append(COMMA);
 				buffer.append(Identifier.getNullSQLString());
 				buffer.append(COMMA);
 				buffer.append(Identifier.getNullSQLString());
 				buffer.append(COMMA);
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
+				buffer.append(result.getMeasurement().getId().toSQLString());
+				buffer.append(COMMA);				
 				buffer.append(result.getAction().getId().toSQLString());
+				buffer.append(COMMA);
+				buffer.append(Identifier.getNullSQLString());
 				buffer.append(COMMA);
 				buffer.append(Identifier.getNullSQLString());
 				buffer.append(COMMA);
 				break;
 			case ResultSort._RESULT_SORT_EVALUATION:
+				buffer.append(result.getMeasurement().getId().toSQLString());
+				buffer.append(COMMA);				
 				buffer.append(Identifier.getNullSQLString());
 				buffer.append(COMMA);
 				buffer.append(result.getAction().getId().toSQLString());
 				buffer.append(COMMA);
+				buffer.append(Identifier.getNullSQLString());
+				buffer.append(COMMA);
 				break;
+			case ResultSort._RESULT_SORT_MODELING:
+				buffer.append(Identifier.getNullSQLString());
+				buffer.append(COMMA);
+				buffer.append(Identifier.getNullSQLString());
+				buffer.append(COMMA);
+				buffer.append(Identifier.getNullSQLString());
+				buffer.append(COMMA);
+				buffer.append(result.getAction().getId().toSQLString());
+				buffer.append(COMMA);				
 			default:
 				Log.errorMessage("ResultDatabase.insertResult | Illegal sort: " + resultSort
 						+ " of result '" + result.getId().getCode() + "'");
@@ -150,14 +176,20 @@ public class ResultDatabase extends StorableObjectDatabase {
 		Result result = fromStorableObject(storableObject);
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement);
 		try {
-			/**
-			 * @todo when change DB Identifier model ,change
-			 *       setString() to setLong()
-			 */
-			preparedStatement.setString(++i, result.getMeasurement().getId().getCode());
 			int resultSort = result.getSort().value();
 			switch (resultSort) {
 				case ResultSort._RESULT_SORT_MEASUREMENT:
+					/**
+					 * @todo when change DB Identifier model ,change
+					 *       setString() to setLong()
+					 */
+					preparedStatement.setString(++i, result.getMeasurement().getId().getCode());
+					/**
+					 * @todo when change DB Identifier model
+					 *       ,change setString() to
+					 *       setLong()
+					 */
+					preparedStatement.setString(++i, "");
 					/**
 					 * @todo when change DB Identifier model
 					 *       ,change setString() to
@@ -173,6 +205,42 @@ public class ResultDatabase extends StorableObjectDatabase {
 					break;
 				case ResultSort._RESULT_SORT_ANALYSIS:
 					/**
+					 * @todo when change DB Identifier model ,change
+					 *       setString() to setLong()
+					 */
+					preparedStatement.setString(++i, result.getMeasurement().getId().getCode());
+					/**
+					 * @todo when change DB Identifier model
+					 *       ,change setString() to
+					 *       setLong()
+					 */
+					preparedStatement.setString(++i, result.getAction().getId().getCode());
+					/**
+					 * @todo when change DB Identifier model
+					 *       ,change setString() to
+					 *       setLong()
+					 */
+					preparedStatement.setString(++i, "");
+					/**
+					 * @todo when change DB Identifier model
+					 *       ,change setString() to
+					 *       setLong()
+					 */
+					preparedStatement.setString(++i, "");
+					break;
+				case ResultSort._RESULT_SORT_EVALUATION:
+					/**
+					 * @todo when change DB Identifier model ,change
+					 *       setString() to setLong()
+					 */
+					preparedStatement.setString(++i, result.getMeasurement().getId().getCode());
+					/**
+					 * @todo when change DB Identifier model
+					 *       ,change setString() to
+					 *       setLong()
+					 */
+					preparedStatement.setString(++i, "");
+					/**
 					 * @todo when change DB Identifier model
 					 *       ,change setString() to
 					 *       setLong()
@@ -185,7 +253,18 @@ public class ResultDatabase extends StorableObjectDatabase {
 					 */
 					preparedStatement.setString(++i, "");
 					break;
-				case ResultSort._RESULT_SORT_EVALUATION:
+				case ResultSort._RESULT_SORT_MODELING:
+					/**
+					 * @todo when change DB Identifier model ,change
+					 *       setString() to setLong()
+					 */
+					preparedStatement.setString(++i, "");
+					/**
+					 * @todo when change DB Identifier model
+					 *       ,change setString() to
+					 *       setLong()
+					 */
+					preparedStatement.setString(++i, "");
 					/**
 					 * @todo when change DB Identifier model
 					 *       ,change setString() to
@@ -228,7 +307,8 @@ public class ResultDatabase extends StorableObjectDatabase {
 
 	protected String retrieveQuery(String condition) {
 		return super.retrieveQuery(condition) + COMMA + COLUMN_MEASUREMENT_ID + COMMA + COLUMN_ANALYSIS_ID
-				+ COMMA + COLUMN_EVALUATION_ID + COMMA + COLUMN_SORT + COMMA + COLUMN_ALARM_LEVEL
+				+ COMMA + COLUMN_EVALUATION_ID + COMMA + COLUMN_MODELING_ID + COMMA + COLUMN_SORT + COMMA 
+				+ COLUMN_ALARM_LEVEL
 				+ SQL_FROM + ObjectEntities.RESULT_ENTITY
 				+ (((condition == null) || (condition.length() == 0)) ? "" : SQL_WHERE + condition);
 	}
@@ -242,18 +322,18 @@ public class ResultDatabase extends StorableObjectDatabase {
 		 * @todo when change DB Identifier model ,change getString() to
 		 *       getLong()
 		 */
-		Measurement measurement = null;
-		try {
-			measurement = (Measurement) MeasurementStorableObjectPool
-					.getStorableObject(new Identifier(resultSet.getString(COLUMN_MEASUREMENT_ID)),
-								true);
-		} catch (ApplicationException ae) {
-			throw new RetrieveObjectException(ae);
-		}
+		Measurement measurement = null;		
 		int resultSort = resultSet.getInt(COLUMN_SORT);
 		Action action = null;
 		switch (resultSort) {
 			case ResultSort._RESULT_SORT_MEASUREMENT:
+				try {
+					measurement = (Measurement) MeasurementStorableObjectPool
+							.getStorableObject(new Identifier(resultSet.getString(COLUMN_MEASUREMENT_ID)),
+										true);
+				} catch (ApplicationException ae) {
+					throw new RetrieveObjectException(ae);
+				}
 				action = measurement;
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
@@ -262,6 +342,10 @@ public class ResultDatabase extends StorableObjectDatabase {
 				 *       getString() to getLong()
 				 */
 				try {
+					measurement = (Measurement) MeasurementStorableObjectPool
+					.getStorableObject(new Identifier(resultSet.getString(COLUMN_MEASUREMENT_ID)),
+								true);
+
 					action = (Analysis) MeasurementStorableObjectPool
 							.getStorableObject(new Identifier(resultSet
 									.getString(COLUMN_ANALYSIS_ID)), true);
@@ -275,9 +359,21 @@ public class ResultDatabase extends StorableObjectDatabase {
 				 *       getString() to getLong()
 				 */
 				try {
+					measurement = (Measurement) MeasurementStorableObjectPool
+					.getStorableObject(new Identifier(resultSet.getString(COLUMN_MEASUREMENT_ID)),
+								true);
 					action = (Evaluation) MeasurementStorableObjectPool
 							.getStorableObject(new Identifier(resultSet
 									.getString(COLUMN_EVALUATION_ID)), true);
+				} catch (Exception e) {
+					throw new RetrieveObjectException(e);
+				}
+				break;
+			case ResultSort._RESULT_SORT_MODELING:
+				try {
+					action = (Modeling) MeasurementStorableObjectPool
+							.getStorableObject(new Identifier(resultSet
+									.getString(COLUMN_MODELING_ID)), true);
 				} catch (Exception e) {
 					throw new RetrieveObjectException(e);
 				}

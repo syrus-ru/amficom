@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.18 2004/10/06 15:45:16 max Exp $
+ * $Id: Result.java,v 1.19 2004/10/12 08:00:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.measurement.corba.Parameter_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/10/06 15:45:16 $
- * @author $Author: max $
+ * @version $Revision: 1.19 $, $Date: 2004/10/12 08:00:54 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -59,20 +59,21 @@ public class Result extends StorableObject {
 					new Identifier(rt.creator_id),
 					new Identifier(rt.modifier_id));
 
-		try {
-			this.measurement = (Measurement)MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.measurement_id), true);
-		}
-		catch (ApplicationException ae) {
-			throw new CreateObjectException("Cannot create result -- " + ae.getMessage(), ae);
-		}
 		this.sort = rt.sort.value();
 		this.alarmLevel = rt.alarm_level.value();
 		switch (this.sort) {
 			case ResultSort._RESULT_SORT_MEASUREMENT:
-				this.action = this.measurement;
+				try {
+					this.measurement = (Measurement)MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.measurement_id), true);
+				}
+				catch (ApplicationException ae) {
+					throw new CreateObjectException("Cannot create result -- " + ae.getMessage(), ae);
+				}
+				this.action = this.measurement;			
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
 				try {
+					this.measurement = (Measurement)MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.measurement_id), true);
 					this.action = (Analysis)MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.analysis_id), true);
 				}
 				catch (ApplicationException ae) {
@@ -81,12 +82,22 @@ public class Result extends StorableObject {
 				break;
 			case ResultSort._RESULT_SORT_EVALUATION:
 				try {
+					this.measurement = (Measurement)MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.measurement_id), true);
 					this.action = (Evaluation)MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.evaluation_id), true);
 				}
 				catch (ApplicationException ae) {
 					throw new CreateObjectException("Cannot create result -- " + ae.getMessage(), ae);
 				}
 				break;
+			case ResultSort._RESULT_SORT_MODELING:
+				try {
+					this.action = (Modeling)MeasurementStorableObjectPool.getStorableObject(new Identifier(rt.evaluation_id), true);
+				}
+				catch (ApplicationException ae) {
+					throw new CreateObjectException("Cannot create result -- " + ae.getMessage(), ae);
+				}
+				break;
+				
 			default:
 				Log.errorMessage("Result.init | Illegal sort: " + this.sort + " of result '" + super.id.toString() + "'");
 		}
@@ -150,9 +161,10 @@ public class Result extends StorableObject {
 																	 super.modified.getTime(),
 																	 (Identifier_Transferable)super.creatorId.getTransferable(),
 																	 (Identifier_Transferable)super.modifierId.getTransferable(),
-																	 (Identifier_Transferable)this.measurement.getId().getTransferable(),
+																	 (this.sort != ResultSort._RESULT_SORT_MODELING)?(Identifier_Transferable)this.measurement.getId().getTransferable():(new Identifier_Transferable("")),
 																	 (this.sort == ResultSort._RESULT_SORT_ANALYSIS)?(Identifier_Transferable)this.action.getId().getTransferable():(new Identifier_Transferable("")),
 																	 (this.sort == ResultSort._RESULT_SORT_EVALUATION)?(Identifier_Transferable)this.action.getId().getTransferable():(new Identifier_Transferable("")),
+																	 (this.sort == ResultSort._RESULT_SORT_MODELING)?(Identifier_Transferable)this.action.getId().getTransferable():(new Identifier_Transferable("")),
 																	 ResultSort.from_int(this.sort),
 																	 pts,
 																	 AlarmLevel.from_int(this.alarmLevel));
@@ -218,5 +230,20 @@ public class Result extends StorableObject {
 											sort.value(),
 											alarmLevel.value(),
 											parameters);
+	}
+	
+	protected static Result createInstance(Identifier id,
+											 Identifier creatorId,
+											 Modeling modeling,
+											 ResultSort sort,					
+											 SetParameter[] parameters) throws CreateObjectException {
+
+		return new Result(id,
+				creatorId,
+				null,
+				modeling,
+				sort.value(),
+				AlarmLevel._ALARM_LEVEL_NONE,
+				parameters);
 	}
 }
