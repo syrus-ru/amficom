@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.69 2005/02/19 20:33:58 arseniy Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.70 2005/02/24 09:43:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,9 +15,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -40,7 +38,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/02/19 20:33:58 $
+ * @version $Revision: 1.70 $, $Date: 2005/02/24 09:43:32 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -277,7 +275,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 
 	private void insertMeasurementSetupMELinks(MeasurementSetup measurementSetup) throws CreateObjectException {
 		Identifier msId = measurementSetup.getId();
-		List meIds = measurementSetup.getMonitoredElementIds();
+		Collection meIds = measurementSetup.getMonitoredElementIds();
 		String sql = SQL_INSERT_INTO 
 				+ ObjectEntities.MSMELINK_ENTITY + OPEN_BRACKET
 				+ MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID + COMMA 
@@ -401,124 +399,32 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	}
     
     private void retrieveMeasurementSetupMELinksByOneQuery(Collection measurementSetups) throws RetrieveObjectException {
-    	if ((measurementSetups == null) || (measurementSetups.isEmpty()))
-            return;     
-        
-        StringBuffer sql = new StringBuffer(SQL_SELECT
-                + MeasurementSetupWrapper.LINK_COLUMN_ME_ID + COMMA
-                + MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID
-                + SQL_FROM + ObjectEntities.MSMELINK_ENTITY
-                + SQL_WHERE + MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID
-                + SQL_IN + OPEN_BRACKET);
-        int i = 1;
-        for (Iterator it = measurementSetups.iterator(); it.hasNext();i++) {
-            MeasurementSetup measurementSetup = (MeasurementSetup)it.next();
-            sql.append(DatabaseIdentifier.toSQLString(measurementSetup.getId()));
-            if (it.hasNext()){
-                if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
-                    sql.append(COMMA);
-                else {
-                    sql.append(CLOSE_BRACKET);
-                    sql.append(SQL_OR);
-                    sql.append(MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID);
-                    sql.append(SQL_IN);
-                    sql.append(OPEN_BRACKET);
-                }                   
-            }
-        }
-        sql.append(CLOSE_BRACKET);
-        
-        Statement statement = null;
-        ResultSet resultSet = null;
-        Connection connection = DatabaseConnection.getConnection();
-        try {
-            statement = connection.createStatement();
-            Log.debugMessage("MeasurementSetupDatabase.retrieveMeasurementSetupMELinksByOneQuery | Trying: " + sql, Log.DEBUGLEVEL09);
-            resultSet = statement.executeQuery(sql.toString());
-            Map meIdMap = new HashMap();
-            while (resultSet.next()) {
-                MeasurementSetup measurementSetup = null;
-                Identifier measurementSetupId = DatabaseIdentifier.getIdentifier(resultSet, MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID);
-                for (Iterator it = measurementSetups.iterator(); it.hasNext();) {
-                    MeasurementSetup measurementSetupToCompare = (MeasurementSetup) it.next();
-                    if (measurementSetupToCompare.getId().equals(measurementSetupId)){
-                        measurementSetup = measurementSetupToCompare;
-                        break;
-                    }                   
-                }
-                
-                if (measurementSetup == null){
-                    String mesg = "MeasurementSetupDatabase.retrieveMeasurementSetupMELinksByOneQuery | Cannot found correspond result for '" + measurementSetupId +"'" ;
-                    throw new RetrieveObjectException(mesg);
-                }                    
-                
-                Identifier meId = DatabaseIdentifier.getIdentifier(resultSet, MeasurementSetupWrapper.LINK_COLUMN_ME_ID);
-                List meIds = (List)meIdMap.get(measurementSetup);
-                if (meIds == null){
-                    meIds = new LinkedList();
-                    meIdMap.put(measurementSetup, meIds);
-                }               
-                meIds.add(meId);              
-            }
-            
-            for (Iterator iter = measurementSetups.iterator(); iter.hasNext();) {
-                MeasurementSetup measurementSetup = (MeasurementSetup) iter.next();
-                List meIds = (List)meIdMap.get(measurementSetup);
-                measurementSetup.setMonitoredElementIds0(meIds);
-            }
-            
-        } catch (SQLException sqle) {
-            String mesg = "ResultDatabase.retrieveResultParameters | Cannot retrieve parameters for result -- " + sqle.getMessage();
-            throw new RetrieveObjectException(mesg, sqle);
-        } finally {
-            try {
-                if (statement != null)
-                    statement.close();
-                if (resultSet != null)
-                    resultSet.close();
-                statement = null;
-                resultSet = null;
-            } catch (SQLException sqle1) {
-                Log.errorException(sqle1);
-            } finally {
-                DatabaseConnection.releaseConnection(connection);
-            }
-        }
-    }
+		if ((measurementSetups == null) || (measurementSetups.isEmpty()))
+			return;
 
-	private void setModified(MeasurementSetup measurementSetup) throws UpdateObjectException {
-		String msIdStr = measurementSetup.getId().toString();
-		String sql = SQL_UPDATE
-				+ ObjectEntities.MS_ENTITY
-				+ SQL_SET
-				+ StorableObjectWrapper.COLUMN_MODIFIED + EQUALS + DatabaseDate.toUpdateSubString(measurementSetup.getModified()) + COMMA
-				+ StorableObjectWrapper.COLUMN_MODIFIER_ID + EQUALS + measurementSetup.getModifierId().toString()
-				+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + msIdStr;
-		Statement statement = null;
-		Connection connection = DatabaseConnection.getConnection();
+		Map meIdsMap = null;
 		try {
-			statement = connection.createStatement();
-			Log.debugMessage("MeasurementSetupDatabase.setModified | Trying: " + sql, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql);
+			meIdsMap = this.retrieveLinkedEntityIds(measurementSetups,
+					ObjectEntities.MSMELINK_ENTITY,
+					MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
+					MeasurementSetupWrapper.LINK_COLUMN_ME_ID);
 		}
-		catch (SQLException sqle) {
-			String mesg = "MeasurementSetupDatabase.setModified | Cannot set modified for measurement setup '"	+ msIdStr + "' -- " + sqle.getMessage();
-			throw new UpdateObjectException(mesg, sqle);
+		catch (IllegalDataException e) {
+			throw new RetrieveObjectException(e);
 		}
-		finally {
-			try {
-				if (statement != null)
-					statement.close();
-				statement = null;
-			}
-			catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			} finally{
-				DatabaseConnection.releaseConnection(connection);
-			}
+
+		MeasurementSetup measurementSetup;
+		Identifier msId;
+		Collection monitoredElementIds;
+		for (Iterator it = measurementSetups.iterator(); it.hasNext();) {
+			measurementSetup = (MeasurementSetup) it.next();
+			msId = measurementSetup.getId();
+			monitoredElementIds = (Collection) meIdsMap.get(msId);
+
+			measurementSetup.setMonitoredElementIds0(monitoredElementIds);
 		}
-	}	
-	
+	}
+
 	public Collection retrieveAll() throws RetrieveObjectException {
 		try{
 			return this.retrieveByIds(null, null);
