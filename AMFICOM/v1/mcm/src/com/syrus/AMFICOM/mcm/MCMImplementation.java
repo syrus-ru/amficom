@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImplementation.java,v 1.28 2005/03/31 16:02:34 arseniy Exp $
+ * $Id: MCMImplementation.java,v 1.29 2005/04/01 21:55:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,10 +8,10 @@
 
 package com.syrus.AMFICOM.mcm;
 
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/03/31 16:02:34 $
+ * @version $Revision: 1.29 $, $Date: 2005/04/01 21:55:42 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -158,9 +158,9 @@ public class MCMImplementation extends MCMPOA {
 
 	public Measurement_Transferable[] transmitMeasurements(Identifier_Transferable[] identifier_Transferables)
 			throws AMFICOMRemoteException {
-		Collection ids = Identifier.fromTransferables(identifier_Transferables);
+		Set ids = Identifier.fromTransferables(identifier_Transferables);
 
-		Collection objects = null;
+		Set objects = null;
 		try {
 			objects = MeasurementStorableObjectPool.getStorableObjects(ids, true);
 		}
@@ -180,9 +180,9 @@ public class MCMImplementation extends MCMPOA {
 
 	public Analysis_Transferable[] transmitAnalyses(Identifier_Transferable[] identifier_Transferables)
 			throws AMFICOMRemoteException {
-		Collection ids = Identifier.fromTransferables(identifier_Transferables);
+		Set ids = Identifier.fromTransferables(identifier_Transferables);
 
-		Collection objects = null;
+		Set objects = null;
 		try {
 			objects = MeasurementStorableObjectPool.getStorableObjects(ids, true);
 		}
@@ -202,9 +202,9 @@ public class MCMImplementation extends MCMPOA {
 
   public Evaluation_Transferable[] transmitEvaluations(Identifier_Transferable[] identifier_Transferables)
 			throws AMFICOMRemoteException {
-		Collection ids = Identifier.fromTransferables(identifier_Transferables);
+		Set ids = Identifier.fromTransferables(identifier_Transferables);
 
-		Collection objects = null;
+		Set objects = null;
 		try {
 			objects = MeasurementStorableObjectPool.getStorableObjects(ids, true);
 		}
@@ -224,7 +224,7 @@ public class MCMImplementation extends MCMPOA {
 
 	public Measurement_Transferable[] transmitMeasurementsButIdsByCondition(Identifier_Transferable[] identifier_Transferables,
 			StorableObjectCondition_Transferable storableObjectCondition_Transferable) throws AMFICOMRemoteException {
-		Collection objects = this.getObjectsButIdsCondition(identifier_Transferables, storableObjectCondition_Transferable);
+		Set objects = this.getObjectsButIdsCondition(identifier_Transferables, storableObjectCondition_Transferable);
 
 		Measurement_Transferable[] transferables = new Measurement_Transferable[objects.size()];
 		int i = 0;
@@ -238,7 +238,7 @@ public class MCMImplementation extends MCMPOA {
 
 	public Analysis_Transferable[] transmitAnalysesButIdsByCondition(Identifier_Transferable[] identifier_Transferables,
 			StorableObjectCondition_Transferable storableObjectCondition_Transferable) throws AMFICOMRemoteException {
-		Collection objects = this.getObjectsButIdsCondition(identifier_Transferables, storableObjectCondition_Transferable);
+		Set objects = this.getObjectsButIdsCondition(identifier_Transferables, storableObjectCondition_Transferable);
 
 		Analysis_Transferable[] transferables = new Analysis_Transferable[objects.size()];
 		int i = 0;
@@ -252,7 +252,7 @@ public class MCMImplementation extends MCMPOA {
 
 	public Evaluation_Transferable[] transmitEvaluationsButIdsByCondition(Identifier_Transferable[] identifier_Transferables,
 			StorableObjectCondition_Transferable storableObjectCondition_Transferable) throws AMFICOMRemoteException {
-		Collection objects = this.getObjectsButIdsCondition(identifier_Transferables, storableObjectCondition_Transferable);
+		Set objects = this.getObjectsButIdsCondition(identifier_Transferables, storableObjectCondition_Transferable);
 
 		Evaluation_Transferable[] transferables = new Evaluation_Transferable[objects.size()];
 		int i = 0;
@@ -264,9 +264,9 @@ public class MCMImplementation extends MCMPOA {
 		return transferables;
 	}
 
-  private Collection getObjectsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
+  private Set getObjectsButIdsCondition(Identifier_Transferable[] identifier_Transferables,
 			StorableObjectCondition_Transferable storableObjectCondition_Transferable) throws AMFICOMRemoteException {
-		Collection ids = Identifier.fromTransferables(identifier_Transferables);
+		Set ids = Identifier.fromTransferables(identifier_Transferables);
 
 		StorableObjectCondition condition = null;
 		try {
@@ -278,7 +278,7 @@ public class MCMImplementation extends MCMPOA {
 					"Cannot restore condition -- " + ide.getMessage());
 		}
 
-		Collection objects = null;
+		Set objects = null;
 		try {
 			objects = MeasurementStorableObjectPool.getStorableObjectsByConditionButIds(ids, condition, true);
 		}
