@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.51 2004/12/09 16:12:48 arseniy Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.52 2004/12/16 13:01:38 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2004/12/09 16:12:48 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.52 $, $Date: 2004/12/16 13:01:38 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -65,7 +65,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 		// singleton
 	}
 	
-	public ConfigurationStorableObjectPool(Class cacheMapClass){
+	private ConfigurationStorableObjectPool(Class cacheMapClass){
 		super(cacheMapClass);
 	}
 
