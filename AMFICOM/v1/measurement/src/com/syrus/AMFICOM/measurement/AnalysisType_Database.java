@@ -207,12 +207,11 @@ public class AnalysisType_Database extends StorableObject_Database {
 		}
 	}
 
-	private void insertParameterTypes(AnalysisType analysisType)
-			throws Exception {
+	private void insertParameterTypes(AnalysisType analysisType) throws Exception {
 		ArrayList in_par_typs = analysisType.getInParameterTypes();
 		ArrayList criteria_par_typs = analysisType.getCriteriaParameterTypes();
 		ArrayList out_par_typs = analysisType.getOutParameterTypes();
-		long analysis_type_id_code = analysisType.getId().getCode();
+		String analysis_type_id_code = analysisType.getId().getCode();
 		String sql = "INSERT INTO " + ObjectEntities.ANATYPPARTYPLINK_ENTITY
 				+ " (analysis_type_id, parameter_type_id, parameter_mode)"
 				+ " VALUES (?, ?, ?)";
@@ -222,7 +221,7 @@ public class AnalysisType_Database extends StorableObject_Database {
 		try {
 			preparedStatement = connection.prepareStatement(sql);
 			for (Iterator iterator = in_par_typs.iterator(); iterator.hasNext();) {
-				preparedStatement.setLong(1, analysis_type_id_code);
+				preparedStatement.setString(1, analysis_type_id_code);
 				parameter_type_id_code = ((Identifier) iterator.next())
 						.getCode();
 				preparedStatement.setLong(2, parameter_type_id_code);
