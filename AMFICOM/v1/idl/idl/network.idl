@@ -1,5 +1,15 @@
-#ifndef _network_idl_
-#define _network_idl_
+/*
+ * $Id: network.idl,v 1.10 2004/10/05 11:11:52 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
+#ifndef NETWORK_IDL
+#define NETWORK_IDL
+
+#include <streams.idl>
 
 #include "general.idl"
 
@@ -25,7 +35,9 @@ module Network
 		wstring localId;
 		wstring equipmentId;
 		wstring domainId;
+#ifndef SERVER
 		long long modified;
+#endif
 
 		General::CharacteristicSeq_Transferable characteristics;
 	};
@@ -42,7 +54,9 @@ module Network
 		wstring localId;
 		wstring equipmentId;
 		wstring domainId;
+#ifndef SERVER
 		long long modified;
+#endif
 
 		General::CharacteristicSeq_Transferable characteristics;
 	};
@@ -67,8 +81,10 @@ module Network
 		wstring manufacturerCode;
 		wstring supplier;
 		wstring supplierCode;
+#ifndef SERVER
 		wstring constructor;
 		wstring constructorCode;
+#endif
 
 		wstring eqClass;
 
@@ -76,8 +92,17 @@ module Network
 
 		wstring imageId;
 
+#ifdef SERVER
+		wstring agentId;
+		boolean is_kis;
+#endif
 		long long modified;
 
+#ifdef SERVER
+		::CORBA::WStringSeq port_ids;
+		::CORBA::WStringSeq cport_ids;
+		::CORBA::WStringSeq s_port_ids;
+#endif
 		General::CharacteristicSeq_Transferable characteristics;
 	};
 	typedef sequence <Equipment_Transferable> EquipmentSeq_Transferable;
@@ -95,10 +120,22 @@ module Network
 		wstring supplier;
 		wstring supplierCode;
 
+#ifdef SERVER
+		wstring link_class;
+		wstring image_id;
+		wstring start_equipment_id;
+		wstring start_port_id;
+		wstring end_equipment_id;
+		wstring end_port_id;
+#endif
 		wstring domainId;
 
 		long long modified;
 
+#ifdef SERVER
+		wstring physical_length;
+		wstring optical_length;
+#endif
 		General::CharacteristicSeq_Transferable characteristics;
 	};
 	typedef sequence <Link_Transferable> LinkSeq_Transferable;
@@ -125,15 +162,30 @@ module Network
 		wstring manufacturerCode;
 		wstring supplier;
 		wstring supplierCode;
+#ifdef SERVER
+		wstring link_class;
+#else
 		wstring constructor;
 		wstring constructorCode;
+#endif
 
 		wstring imageId;
 
+#ifdef SERVER
+		wstring start_equipment_id;
+		wstring start_port_id;
+		wstring end_equipment_id;
+		wstring end_port_id;
+#endif
 		wstring domainId;
 
 		long long modified;
 
+#ifdef SERVER
+		wstring physical_length;
+		wstring optical_length;
+		CableLinkThreadSeq_Transferable threads;
+#endif
 		General::CharacteristicSeq_Transferable characteristics;
 	};
 	typedef sequence <CableLink_Transferable> CableLinkSeq_Transferable;
@@ -145,10 +197,18 @@ module NetworkDirectory
 	{
 		wstring id;
 		wstring name;
+#ifdef SERVER
+		wstring codename;
+#endif
 		wstring description;
 		wstring manufacturer;
+#ifndef SERVER
 		wstring manufacturerCode;
+#endif
 		wstring eqClass;
+#ifdef SERVER
+		boolean is_holder;
+#endif
 
 		wstring imageId;
 		long long modified;
@@ -161,11 +221,21 @@ module NetworkDirectory
 	{
 		wstring id;
 		wstring name;
+#ifdef SERVER
+		wstring codename;
+#endif
 		wstring description;
+#ifdef SERVER
+		wstring year;
+		wstring body;
+		wstring standard;
+#endif
 		wstring interfaceId;
 		wstring pClass;
 
+#ifndef SERVER
 		wstring imageId;
+#endif
 		long long modified;
 
 		General::CharacteristicSeq_Transferable characteristics;
@@ -176,11 +246,21 @@ module NetworkDirectory
 	{
 		wstring id;
 		wstring name;
+#ifdef SERVER
+		wstring codename;
+#endif
 		wstring description;
+#ifdef SERVER
+		wstring year;
+		wstring body;
+		wstring standard;
+#endif
 		wstring interfaceId;
 		wstring pClass;
 
+#ifndef SERVER
 		wstring imageId;
+#endif
 		long long modified;
 
 		General::CharacteristicSeq_Transferable characteristics;
@@ -191,10 +271,20 @@ module NetworkDirectory
 	{
 		wstring id;
 		wstring name;
+#ifdef SERVER
+		wstring codename;
+#endif
 		wstring description;
+#ifdef SERVER
+		wstring year;
+		wstring standard;
+#endif
 		wstring linkClass;
 		wstring manufacturer;
 		wstring manufacturerCode;
+#ifdef SERVER
+		boolean is_holder;
+#endif
 
 		wstring imageId;
 		long long modified;
@@ -210,6 +300,9 @@ module NetworkDirectory
 		wstring color;
 		wstring mark;
 		wstring linkTypeId;
+#ifdef SERVER
+		General::CharacteristicSeq_Transferable characteristics;
+#endif
 	};
 	typedef sequence <CableTypeThread_Transferable> CableTypeThreadSeq_Transferable;
 
