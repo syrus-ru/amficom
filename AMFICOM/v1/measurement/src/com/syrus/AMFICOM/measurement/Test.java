@@ -167,8 +167,8 @@ public class Test extends StorableObject {
 	}
 
 	public Measurement createMeasurement(Identifier measurementId,
-																			 Date startTime,
-																			 Identifier creatorId) throws CreateObjectException {
+																			 Identifier creatorId,
+																			 Date startTime) throws CreateObjectException {
 		Measurement measurement = Measurement.create(measurementId,
 																								 creatorId,
 																								 this.measurementTypeId,
