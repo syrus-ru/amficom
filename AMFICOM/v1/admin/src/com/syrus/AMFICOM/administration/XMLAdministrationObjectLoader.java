@@ -1,5 +1,5 @@
 /*
- * $Id: XMLAdministrationObjectLoader.java,v 1.6 2005/02/15 07:11:36 bob Exp $
+ * $Id: XMLAdministrationObjectLoader.java,v 1.7 2005/02/15 08:59:33 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/15 07:11:36 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/15 08:59:33 $
  * @author $Author: bob $
  * @module admin_v1
  */
@@ -212,13 +212,12 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 		try {
 			return this.administrationXML.retrieveByCondition(ids, condition);
 		} catch (RetrieveObjectException e) {
-			throw new CommunicationException("XMLAdministrationObjectLoader.loadParameterTypesButIds | caught "
+			throw new CommunicationException("XMLAdministrationObjectLoader.loadStorableObjectButIds | caught "
 					+ e.getMessage(), e);
 		} catch (IllegalDataException e) {
-			throw new CommunicationException("XMLAdministrationObjectLoader.loadParameterTypesButIds | caught "
+			throw new CommunicationException("XMLAdministrationObjectLoader.loadStorableObjectButIds | caught "
 					+ e.getMessage(), e);
 		}
-
 	}
 
 	private void saveStorableObject(StorableObject storableObject, boolean force) throws CommunicationException {
@@ -236,7 +235,6 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 			throw new CommunicationException("XMLAdministrationObjectLoader.save"
 					+ ObjectEntities.codeToString(id.getMajor()) + " | caught " + e.getMessage(), e);
 		}
-
 	}
 
 	private void saveStorableObjects(Collection storableObjects, boolean force) throws CommunicationException {
