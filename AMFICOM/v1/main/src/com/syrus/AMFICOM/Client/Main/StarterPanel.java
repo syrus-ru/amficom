@@ -88,6 +88,13 @@ public class StarterPanel
 					new Color(142, 142, 142),
 					new Color(99, 99, 99));
 
+	protected static int ROW_OFFSET = 30;
+	protected static int ROW_INTERVAL = 100;
+	protected static int COL_COUNT = 5;
+	protected static int COL_OFFSET = 30;
+	protected static int COL_INTERVAL = 100;
+
+
 	public StarterPanel()
 	{
 		super();
@@ -112,7 +119,7 @@ public class StarterPanel
 		int img_siz = 48;
 		int btn_siz = 52;
 		Dimension buttonSize = new Dimension(btn_siz, btn_siz);
-
+		
 		this.setLayout(xYLayout1);
 
 		this.setPreferredSize(new Dimension(510, 300));
@@ -312,21 +319,7 @@ public class StarterPanel
 		labelReportBuilder.addMouseListener(this);
 		labelReportBuilder.setBorder(normalBorder);
 
-		add(labelAdmin, new XYConstraints(30, 30, -1, -1));
-		add(labelConfig, new XYConstraints(130, 30, -1, -1));
-		add(labelComponents, new XYConstraints(230, 30, -1, -1));
-		add(labelScheme, new XYConstraints(330, 30, -1, -1));
-		add(labelMap, new XYConstraints(430, 30, -1, -1));
-		add(labelTrace, new XYConstraints(30, 130, -1, -1));
-		add(labelModel, new XYConstraints(130, 130, -1, -1));
-		add(labelSchedule, new XYConstraints(230, 130, -1, -1));
-		add(labelMonitor, new XYConstraints(330, 130, -1, -1));
-		add(labelNorms, new XYConstraints(430, 130, -1, -1));
-		add(labelAnalyse, new XYConstraints(30, 230, -1, -1));
-		add(labelSurvey, new XYConstraints(130, 230, -1, -1));
-		add(labelMaintain, new XYConstraints(230, 230, -1, -1));
-		add(labelPrognosis, new XYConstraints(330, 230, -1, -1));
-		add(labelReportBuilder, new XYConstraints(430, 230, -1, -1));
+		addComponents();
 	}
 
 	public void mouseEntered(MouseEvent e)
@@ -353,7 +346,6 @@ public class StarterPanel
 		if(!e.getComponent().isEnabled())
 			return;
 		setCursor(Cursor.getDefaultCursor());
-//		System.out.println("mouse Press");
 		((JComponent)e.getComponent()).setBorder(
 				BorderFactory.createBevelBorder(
 						BevelBorder.LOWERED,
@@ -368,7 +360,6 @@ public class StarterPanel
 		if(!e.getComponent().isEnabled())
 			return;
 		setCursor(Cursor.getDefaultCursor());
-//		System.out.println("mouse ERelease");
 		((JComponent)e.getComponent()).setBorder(
 				BorderFactory.createBevelBorder(
 						BevelBorder.RAISED,
@@ -406,13 +397,20 @@ public class StarterPanel
 		int count = e.length;
 		int i;
 
-//		System.out.println("changed model in panel");
-
 		labelAdmin.setVisible(aModel.isVisible("menuToolsAdmin"));
 		labelAdmin.setEnabled(aModel.isEnabled("menuToolsAdmin"));
 
 		labelConfig.setVisible(aModel.isVisible("menuToolsConfig"));
 		labelConfig.setEnabled(aModel.isEnabled("menuToolsConfig"));
+
+		labelComponents.setVisible(aModel.isVisible("menuToolsComponents"));
+		labelComponents.setEnabled(aModel.isEnabled("menuToolsComponents"));
+
+		labelScheme.setVisible(aModel.isVisible("menuToolsScheme"));
+		labelScheme.setEnabled(aModel.isEnabled("menuToolsScheme"));
+
+		labelMap.setVisible(aModel.isVisible("menuToolsMap"));
+		labelMap.setEnabled(aModel.isEnabled("menuToolsMap"));
 
 		labelTrace.setVisible(aModel.isVisible("menuToolsTrace"));
 		labelTrace.setEnabled(aModel.isEnabled("menuToolsTrace"));
@@ -434,6 +432,114 @@ public class StarterPanel
 
 		labelNorms.setVisible(aModel.isVisible("menuToolsNorms"));
 		labelNorms.setEnabled(aModel.isEnabled("menuToolsNorms"));
+
+		labelMaintain.setVisible(aModel.isVisible("menuToolsMaintain"));
+		labelMaintain.setEnabled(aModel.isEnabled("menuToolsMaintain"));
+
+		labelPrognosis.setVisible(aModel.isVisible("menuToolsPrognosis"));
+		labelPrognosis.setEnabled(aModel.isEnabled("menuToolsPrognosis"));
+
+		labelReportBuilder.setVisible(aModel.isVisible("menuToolsReportBuilder"));
+		labelReportBuilder.setEnabled(aModel.isEnabled("menuToolsReportBuilder"));
+
+		addComponents();
+	}
+	
+	protected void addComponents()
+	{
+		this.removeAll();
+		
+		int counter = -1;
+		if(aModel.isVisible("menuToolsAdmin"))
+			add(labelAdmin, new XYConstraints(
+				ROW_OFFSET + (++counter % COL_COUNT) * ROW_INTERVAL, 
+				COL_OFFSET + (counter / COL_COUNT) * COL_INTERVAL , 
+				-1, 
+				-1));
+		if(aModel.isVisible("menuToolsConfig"))
+			add(labelConfig, new XYConstraints(
+				ROW_OFFSET + (++counter % COL_COUNT) * ROW_INTERVAL, 
+				COL_OFFSET + (counter / COL_COUNT) * COL_INTERVAL , 
+				-1, 
+				-1));
+		if(aModel.isVisible("menuToolsComponents"))
+			add(labelComponents, new XYConstraints(
+				ROW_OFFSET + (++counter % COL_COUNT) * ROW_INTERVAL, 
+				COL_OFFSET + (counter / COL_COUNT) * COL_INTERVAL , 
+				-1, 
+				-1));
+		if(aModel.isVisible("menuToolsScheme"))
+			add(labelScheme, new XYConstraints(
+				ROW_OFFSET + (++counter % COL_COUNT) * ROW_INTERVAL, 
+				COL_OFFSET + (counter / COL_COUNT) * COL_INTERVAL , 
+				-1, 
+				-1));
+		if(aModel.isVisible("menuToolsMap"))
+			add(labelMap, new XYConstraints(
+				ROW_OFFSET + (++counter % COL_COUNT) * ROW_INTERVAL, 
+				COL_OFFSET + (counter / COL_COUNT) * COL_INTERVAL , 
+				-1, 
+				-1));
+		if(aModel.isVisible("menuToolsTrace"))
+			add(labelTrace, new XYConstraints(
+				ROW_OFFSET + (++counter % COL_COUNT) * ROW_INTERVAL, 
+				COL_OFFSET + (counter / COL_COUNT) * COL_INTERVAL , 
+				-1, 
+				-1));
+		if(aModel.isVisible("menuToolsModel"))
+			add(labelModel, new XYConstraints(
+				ROW_OFFSET + (++counter % COL_COUNT) * ROW_INTERVAL, 
+				COL_OFFSET + (counter / COL_COUNT) * COL_INTERVAL , 
+				-1, 
+				-1));
+		if(aModel.isVisible("menuToolsSchedule"))
+			add(labelSchedule, new XYConstraints(
+				ROW_OFFSET + (++counter % COL_COUNT) * ROW_INTERVAL, 
+				COL_OFFSET + (counter / COL_COUNT) * COL_INTERVAL , 
+				-1, 
+				-1));
+		if(aModel.isVisible("menuToolsMonitor"))
+			add(labelMonitor, new XYConstraints(
+				ROW_OFFSET + (++counter % COL_COUNT) * ROW_INTERVAL, 
+				COL_OFFSET + (counter / COL_COUNT) * COL_INTERVAL , 
+				-1, 
+				-1));
+		if(aModel.isVisible("menuToolsNorms"))
+			add(labelNorms, new XYConstraints(
+				ROW_OFFSET + (++counter % COL_COUNT) * ROW_INTERVAL, 
+				COL_OFFSET + (counter / COL_COUNT) * COL_INTERVAL , 
+				-1, 
+				-1));
+		if(aModel.isVisible("menuToolsAnalyse"))
+			add(labelAnalyse, new XYConstraints(
+				ROW_OFFSET + (++counter % COL_COUNT) * ROW_INTERVAL, 
+				COL_OFFSET + (counter / COL_COUNT) * COL_INTERVAL , 
+				-1, 
+				-1));
+		if(aModel.isVisible("menuToolsSurvey"))
+			add(labelSurvey, new XYConstraints(
+				ROW_OFFSET + (++counter % COL_COUNT) * ROW_INTERVAL, 
+				COL_OFFSET + (counter / COL_COUNT) * COL_INTERVAL , 
+				-1, 
+				-1));
+		if(aModel.isVisible("menuToolsMaintain"))
+			add(labelMaintain, new XYConstraints(
+				ROW_OFFSET + (++counter % COL_COUNT) * ROW_INTERVAL, 
+				COL_OFFSET + (counter / COL_COUNT) * COL_INTERVAL , 
+				-1, 
+				-1));
+		if(aModel.isVisible("menuToolsPrognosis"))
+			add(labelPrognosis, new XYConstraints(
+				ROW_OFFSET + (++counter % COL_COUNT) * ROW_INTERVAL, 
+				COL_OFFSET + (counter / COL_COUNT) * COL_INTERVAL , 
+				-1, 
+				-1));
+		if(aModel.isVisible("menuToolsReportBuilder"))
+			add(labelReportBuilder, new XYConstraints(
+				ROW_OFFSET + (++counter % COL_COUNT) * ROW_INTERVAL, 
+				COL_OFFSET + (counter / COL_COUNT) * COL_INTERVAL , 
+				-1, 
+				-1));
 	}
 }
 

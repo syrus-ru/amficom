@@ -17,6 +17,8 @@ public class DefaultMainApplicationModelFactory
 		aModel.setUsable("menuSessionSave", false);
 		aModel.setUsable("menuSessionDomain", false);
 
+		aModel.setVisible("menuToolsConfig", false);
+
 		aModel.setUsable("menuHelpContents", false);
 		aModel.setUsable("menuHelpFind", false);
 		aModel.setUsable("menuelpTips", false);

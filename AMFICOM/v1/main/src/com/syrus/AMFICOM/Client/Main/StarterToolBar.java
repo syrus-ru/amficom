@@ -52,6 +52,7 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 	JToggleButton buttonViewPanel = new JToggleButton();
 	JButton buttonAdmin = new JButton();
 	JButton buttonConfig = new JButton();
+	JButton buttonComponents = new JButton();
 	JButton buttonScheme = new JButton();
 	JButton buttonMap = new JButton();
 	JButton buttonTrace = new JButton();
@@ -149,6 +150,18 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 		buttonConfig.setToolTipText(LangModelMain.ToolTip("menuToolsConfig"));
 		buttonConfig.setName("menuToolsConfig");
 		buttonConfig.addActionListener(actionAdapter);
+
+		buttonComponents = new JButton(new ImageIcon(
+			Toolkit.getDefaultToolkit().getImage("images/main/components_mini.gif").getScaledInstance(
+					img_siz,
+					img_siz,
+					Image.SCALE_DEFAULT)));
+		buttonComponents.setText("");
+		buttonComponents.setMaximumSize(buttonSize);
+		buttonComponents.setPreferredSize(buttonSize);
+		buttonComponents.setToolTipText(LangModelMain.ToolTip("menuToolsComponents"));
+		buttonComponents.setName("menuToolsComponents");
+		buttonComponents.addActionListener(actionAdapter);
 
 		buttonScheme = new JButton(new ImageIcon(
 			Toolkit.getDefaultToolkit().getImage("images/main/schematics_mini.gif").getScaledInstance(
@@ -313,6 +326,7 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 		addSeparator();
 		add(buttonAdmin);
 		add(buttonConfig);
+		add(buttonComponents);
 		add(buttonScheme);
 		add(buttonMap);
 		add(buttonTrace);
@@ -362,6 +376,9 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 		buttonConfig.setVisible(aModel.isVisible("menuToolsConfig"));
 		buttonConfig.setEnabled(aModel.isEnabled("menuToolsConfig"));
 
+		buttonComponents.setVisible(aModel.isVisible("menuToolsComponents"));
+		buttonComponents.setEnabled(aModel.isEnabled("menuToolsComponents"));
+
 		buttonScheme.setVisible(aModel.isVisible("menuToolsScheme"));
 		buttonScheme.setEnabled(aModel.isEnabled("menuToolsScheme"));
 
@@ -395,8 +412,8 @@ public class StarterToolBar extends JToolBar implements ApplicationModelListener
 		buttonPrognosis.setVisible(aModel.isVisible("menuToolsPrognosis"));
 		buttonPrognosis.setEnabled(aModel.isEnabled("menuToolsPrognosis"));
 
-		buttonReportBuilder.setVisible(aModel.isVisible("buttonReportBuilder"));
-		buttonReportBuilder.setEnabled(aModel.isEnabled("buttonReportBuilder"));
+		buttonReportBuilder.setVisible(aModel.isVisible("menuToolsReportBuilder"));
+		buttonReportBuilder.setEnabled(aModel.isEnabled("menuToolsReportBuilder"));
 
 		buttonHelp.setVisible(aModel.isVisible("menuHelpAbout"));
 		buttonHelp.setEnabled(aModel.isEnabled("menuHelpAbout"));
