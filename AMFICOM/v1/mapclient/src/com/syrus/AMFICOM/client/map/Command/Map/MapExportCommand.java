@@ -1,5 +1,5 @@
 /*
- * $Id: MapExportCommand.java,v 1.1.2.1 2004/09/24 10:55:35 krupenn Exp $
+ * $Id: MapExportCommand.java,v 1.1.2.2 2004/09/24 12:07:31 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import java.util.Iterator;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @version $Revision: 1.1.2.1 $, $Date: 2004/09/24 10:55:35 $
+ * @version $Revision: 1.1.2.2 $, $Date: 2004/09/24 12:07:31 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -176,7 +176,9 @@ public class MapExportCommand extends ExportCommand
 		exportColumns[0][1] = node.getId();
 		exportColumns[1][1] = node.getName();
 		exportColumns[2][1] = node.description;
-		exportColumns[3][1] = node.getPhysicalLinkID();
+		MapNodeLinkElement mnle = (MapNodeLinkElement )(node.getMapContext().getNodeLinksContainingNode(node).get(0));
+		MapPhysicalLinkElement mple = (MapPhysicalLinkElement )node.getMapContext().getPhysicalLinkbyNodeLink(mnle.getId());
+		exportColumns[3][1] = mple.getId();
 		exportColumns[4][1] = String.valueOf(node.getAnchor().x);
 		exportColumns[5][1] = String.valueOf(node.getAnchor().y);
 		exportColumns[6][1] = String.valueOf(node.isActive());
