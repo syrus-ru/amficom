@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNode.java,v 1.22 2005/02/24 15:47:38 bob Exp $
+ * $Id: SiteNode.java,v 1.23 2005/03/01 15:32:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -55,8 +55,8 @@ import com.syrus.AMFICOM.resource.ResourceStorableObjectPool;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по 
  * географическим параметрам. 
- * @author $Author: bob $
- * @version $Revision: 1.22 $, $Date: 2005/02/24 15:47:38 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.23 $, $Date: 2005/03/01 15:32:05 $
  * @module map_v1
  */
 public class SiteNode extends AbstractNode implements TypedObject {
@@ -222,46 +222,6 @@ public class SiteNode extends AbstractNode implements TypedObject {
 			"",
 			"",
 			"");		
-	}
-
-	public static SiteNode importInstance(
-			final Identifier id,
-			final Identifier creatorId,
-			final String name,
-			final String description,
-			final SiteNodeType type,
-			final double x,
-			final double y,
-			final String city,
-			final String building,
-			final String street)
-		throws CreateObjectException {
-
-		if (id == null 
-			|| creatorId == null 
-			|| name == null 
-			|| description == null 
-			|| type == null 
-			|| city == null 
-			|| street == null 
-			|| building == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-		
-		SiteNode siteNode = new SiteNode(
-				id,
-				creatorId,
-				0L,
-				type.getImageId(),
-				name,
-				description,
-				type,
-				x,
-				y,
-				city,
-				street,
-				building);
-		siteNode.changed = true;
-		return siteNode;
 	}
 
 	public List getDependencies() {
