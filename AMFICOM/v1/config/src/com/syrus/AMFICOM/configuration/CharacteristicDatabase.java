@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.21 2004/09/06 07:45:39 max Exp $
+ * $Id: CharacteristicDatabase.java,v 1.22 2004/09/06 11:36:22 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,10 +28,11 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2004/09/06 07:45:39 $
+ * @version $Revision: 1.22 $, $Date: 2004/09/06 11:36:22 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -481,6 +482,11 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		}
 	}
 
+	public void insert(List storableObjects) throws IllegalDataException,
+			CreateObjectException {
+		insertEntities(storableObjects);
+	}
+	
 	public void insert(StorableObject storableObject) throws IllegalDataException, CreateObjectException {
 		Characteristic characteristic = this.fromStorableObject(storableObject);
 		try {
@@ -505,11 +511,29 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, int update_kind, Object obj) throws IllegalDataException, UpdateObjectException {
-		Characteristic characteristic = this.fromStorableObject(storableObject);
-		switch (update_kind) {
+	public void update(StorableObject storableObject, int updateKind, Object obj)
+			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
+		switch (updateKind) {
+			case UPDATE_FORCE:
+				super.checkAndUpdateEntity(storableObject, true);
+				break;
+			case UPDATE_CHECK: 					
 			default:
-				return;
+				super.checkAndUpdateEntity(storableObject, false);
+				break;
+		}
+	}
+	
+	public void update(List storableObjects, int updateKind, Object arg)
+			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
+		switch (updateKind) {
+		case UPDATE_FORCE:
+			super.checkAndUpdateEntities(storableObjects, true);
+			break;
+		case UPDATE_CHECK: 					
+		default:
+			super.checkAndUpdateEntities(storableObjects, false);
+			break;
 		}
 	}
 	

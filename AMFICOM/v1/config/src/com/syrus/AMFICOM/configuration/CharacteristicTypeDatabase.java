@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.12 2004/09/06 07:45:39 max Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.13 2004/09/06 11:36:22 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,11 +23,12 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/09/06 07:45:39 $
+ * @version $Revision: 1.13 $, $Date: 2004/09/06 11:36:22 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -222,17 +223,39 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 			Log.errorException(sqle);
 		}
 	}
-
 	
+	public void insert(List storableObjects) throws IllegalDataException,
+			CreateObjectException {
+		super.insertEntities(storableObjects);
+	}
 
-	public void update(StorableObject storableObject, int update_kind, Object obj) throws IllegalDataException, UpdateObjectException {
-		CharacteristicType characteristicType = this.fromStorableObject(storableObject);
-		switch (update_kind) {
+	public void update(StorableObject storableObject, int updateKind, Object obj) 
+			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
+		switch (updateKind) {
+			case UPDATE_FORCE:
+				super.checkAndUpdateEntity(storableObject, true);
+				break;
+			case UPDATE_CHECK: 					
 			default:
-				return;
+				super.checkAndUpdateEntity(storableObject, false);
+				break;
 		}
 	}
 	
+	public void update(List storableObjects, int updateKind, Object arg)
+			throws IllegalDataException, VersionCollisionException,
+			UpdateObjectException {
+		switch (updateKind) {
+		case UPDATE_FORCE:
+			super.checkAndUpdateEntities(storableObjects, true);
+			break;
+		case UPDATE_CHECK: 					
+		default:
+			super.checkAndUpdateEntities(storableObjects, false);
+			break;
+		}
+	}
+
 	public List retrieveAll() throws IllegalDataException, RetrieveObjectException {		
 		return retriveByIdsOneQuery(null, null);
 	}
