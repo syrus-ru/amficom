@@ -1,5 +1,5 @@
 /*
- * $Id: VtStorableObjectPool.java,v 1.2 2005/02/28 14:21:03 bass Exp $
+ * $Id: VtStorableObjectPool.java,v 1.3 2005/03/01 13:59:25 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import java.util.*;
  * scheme objects.
  *
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/02/28 14:21:03 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/01 13:59:25 $
  * @module general_v1
  * @see StorableObjectPool
  */
@@ -45,7 +45,7 @@ public abstract class VtStorableObjectPool {
 	protected void deleteImpl(final List ids) throws DatabaseException, CommunicationException {
 		for (final Iterator iterator = ids.iterator(); iterator.hasNext();) {
 			final Identifier id = (Identifier) iterator.next();
-			((LRUMap) this.objectPoolMap.get(new Short(id.major()))).remove(id);
+			((LRUMap) this.objectPoolMap.get(new Short(id.getMajor()))).remove(id);
 		}
 		deleteStorableObjects(ids);
 	}
@@ -103,7 +103,7 @@ public abstract class VtStorableObjectPool {
 	}
 
 	protected void deleteImpl(final Identifier id) throws DatabaseException, CommunicationException {
-		((LRUMap) this.objectPoolMap.get(new Short(id.major()))).remove(id);
+		((LRUMap) this.objectPoolMap.get(new Short(id.getMajor()))).remove(id);
 		deleteStorableObject(id);
 	}
 
@@ -127,7 +127,7 @@ public abstract class VtStorableObjectPool {
 					final StorableObject storableObject = (StorableObject) objectPoolIterator.next();
 					if (storableObject.isChanged() && !list.contains(storableObject)) {
 						list.add(storableObject);
-						Log.debugMessage("VtStorableObjectPool.flushImpl | '" + storableObject.id() + "' is changed", Log.DEBUGLEVEL10);
+						Log.debugMessage("VtStorableObjectPool.flushImpl | '" + storableObject.getId() + "' is changed", Log.DEBUGLEVEL10);
 					}
 				}
 				save(list, force);
@@ -139,7 +139,7 @@ public abstract class VtStorableObjectPool {
 
 	protected StorableObject getStorableObjectImpl(final Identifier objectId, final boolean useLoader) throws DatabaseException, CommunicationException {
 		if (objectId != null) {
-			final short objectEntityCode = objectId.major();
+			final short objectEntityCode = objectId.getMajor();
 			final LRUMap objectPool = (LRUMap) this.objectPoolMap.get(new Short(objectEntityCode));
 			if (objectPool != null) {
 				StorableObject storableObject = (StorableObject) objectPool.get(objectId);
@@ -183,7 +183,7 @@ public abstract class VtStorableObjectPool {
 			storableObjectList = new LinkedList();
 			for (final Iterator objectPoolIterator = objectPool.iterator(); objectPoolIterator.hasNext();) {
 				final StorableObject storableObject = (StorableObject) objectPoolIterator.next();
-				if (!ids.contains(storableObject.id())
+				if (!ids.contains(storableObject.getId())
 						&& condition.isConditionTrue(storableObject))
 					storableObjectList.add(storableObject);
 			}
@@ -193,7 +193,7 @@ public abstract class VtStorableObjectPool {
 			if (useLoader && condition.isNeedMore(storableObjectList)) {
 				final List idList = new ArrayList(storableObjectList.size());
 				for (Iterator storableObjectIterator = storableObjectList.iterator(); storableObjectIterator.hasNext();)
-					idList.add(((StorableObject) storableObjectIterator.next()).id());
+					idList.add(((StorableObject) storableObjectIterator.next()).getId());
 
 				for (Iterator idIterator = ids.iterator(); idIterator.hasNext();)
 					idList.add(idIterator.next());
@@ -211,7 +211,7 @@ public abstract class VtStorableObjectPool {
 			if (loadedStorableObjectList != null)
 				for (final Iterator storableObjectIterator = loadedStorableObjectList.iterator(); storableObjectIterator.hasNext();) {
 					final StorableObject storableObject = (StorableObject) storableObjectIterator.next();
-					objectPool.put(storableObject.id(), storableObject);
+					objectPool.put(storableObject.getId(), storableObject);
 					storableObjectList.add(storableObject);
 				}
 		}
@@ -241,7 +241,7 @@ public abstract class VtStorableObjectPool {
 		if (objectIds != null) {
 			for (final Iterator objectIdIterator = objectIds.iterator(); objectIdIterator.hasNext();) {
 				final Identifier objectId = (Identifier) objectIdIterator.next();
-				final Short entityCode = new Short(objectId.major());
+				final Short entityCode = new Short(objectId.getMajor());
 				final LRUMap objectPool = (LRUMap) this.objectPoolMap.get(entityCode);
 				StorableObject storableObject = null;
 				if (objectPool != null) {
@@ -329,8 +329,8 @@ public abstract class VtStorableObjectPool {
 		if (storableObject == null)
 			return null;
 //*/
-		final Identifier objectId = storableObject.id();
-		final Short entityCode = new Short(objectId.major());
+		final Identifier objectId = storableObject.getId();
+		final Short entityCode = new Short(objectId.getMajor());
 		final LRUMap objectPool = (LRUMap) this.objectPoolMap.get(entityCode);
 		if (objectPool != null)
 			return (StorableObject) objectPool.put(objectId, storableObject);
@@ -401,9 +401,9 @@ public abstract class VtStorableObjectPool {
 			return true;
 
 		final Iterator storableObjectIterator = storableObjects.iterator();
-		final short entityCode = ((StorableObject) storableObjectIterator.next()).id().major();
+		final short entityCode = ((StorableObject) storableObjectIterator.next()).getId().getMajor();
 		while (storableObjectIterator.hasNext())
-			if (entityCode != ((StorableObject) storableObjectIterator.next()).id().major())
+			if (entityCode != ((StorableObject) storableObjectIterator.next()).getId().getMajor())
 				return false;
 		return true;
 	}
@@ -423,7 +423,7 @@ public abstract class VtStorableObjectPool {
 	protected short getEntityCodeOfStorableObjects(final List storableObjects) {
 		assert storableObjects.size() >= 1;
 
-		return ((StorableObject) storableObjects.iterator().next()).id().major();
+		return ((StorableObject) storableObjects.iterator().next()).getId().getMajor();
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.37 2005/02/28 14:21:03 bass Exp $
+ * $Id: StorableObject.java,v 1.38 2005/03/01 13:59:25 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/02/28 14:21:03 $
+ * @version $Revision: 1.38 $, $Date: 2005/03/01 13:59:25 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -103,14 +103,14 @@ public abstract class StorableObject implements Identified, TransferableObject, 
 //	public abstract void insert() throws CreateObjectException;
 
 	/**
-	 * @see com.syrus.AMFICOM.general.corba.StorableObject#created()
+	 * @see com.syrus.AMFICOM.general.corba.StorableObject#getCreated()
 	 */
 	public Date getCreated() {
 		return this.created;
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.corba.StorableObject#creatorId()
+	 * @see com.syrus.AMFICOM.general.corba.StorableObject#getCreatorId()
 	 */
 	public Identifier getCreatorId() {
 		return this.creatorId;
@@ -119,14 +119,14 @@ public abstract class StorableObject implements Identified, TransferableObject, 
 	/**
 	 * Will be overridden by descendants.
 	 *
-	 * @see com.syrus.AMFICOM.general.corba.StorableObject#dependencies()
+	 * @see com.syrus.AMFICOM.general.corba.StorableObject#getDependencies()
 	 */
 	public abstract List getDependencies();
 
 	/**
 	 * Returns structure to be transmitted via CORBA.
 	 *
-	 * @see com.syrus.AMFICOM.general.corba.StorableObject#dependencies()
+	 * @see com.syrus.AMFICOM.general.corba.StorableObject#getDependencies()
 	 */
 	public StorableObject_Transferable getHeaderTransferable() {
 		return new StorableObject_Transferable((Identifier_Transferable) this.id.getTransferable(),
@@ -151,29 +151,29 @@ public abstract class StorableObject implements Identified, TransferableObject, 
 
 	/**
 	 * @see Identified#getId()
-	 * @see com.syrus.AMFICOM.general.corba.Identifiable#id()
-	 * @see com.syrus.AMFICOM.general.corba.StorableObject#id()
+	 * @see com.syrus.AMFICOM.general.corba.Identifiable#getId()
+	 * @see com.syrus.AMFICOM.general.corba.StorableObject#getId()
 	 */
 	public Identifier getId() {
 		return this.id;
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.corba.StorableObject#modified()
+	 * @see com.syrus.AMFICOM.general.corba.StorableObject#getModified()
 	 */
 	public Date getModified() {
 		return this.modified;
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.corba.StorableObject#modifierId()
+	 * @see com.syrus.AMFICOM.general.corba.StorableObject#getModifierId()
 	 */
 	public Identifier getModifierId() {
 		return this.modifierId;
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.corba.StorableObject#version()
+	 * @see com.syrus.AMFICOM.general.corba.StorableObject#getVersion()
 	 */
 	public long getVersion() {
 		return this.version;

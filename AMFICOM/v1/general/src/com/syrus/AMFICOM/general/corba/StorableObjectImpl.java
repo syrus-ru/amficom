@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectImpl.java,v 1.8 2005/02/28 14:21:03 bass Exp $
+ * $Id: StorableObjectImpl.java,v 1.9 2005/03/01 13:59:24 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ package com.syrus.AMFICOM.general.corba;
  * {@link StorableObject} instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/02/28 14:21:03 $
+ * @version $Revision: 1.9 $, $Date: 2005/03/01 13:59:24 $
  * @module general_v1
  */
 final class StorableObjectImpl extends StorableObject implements Cloneable {
@@ -39,7 +39,7 @@ final class StorableObjectImpl extends StorableObject implements Cloneable {
 	 * @see com.syrus.AMFICOM.general.StorableObject#StorableObject(com.syrus.AMFICOM.general.Identifier)
 	 */
 	StorableObjectImpl(final Identifier id) {
-		this.thisId = id;
+		this.id = id;
 		this.changed = false;
 	}
 
@@ -55,12 +55,12 @@ final class StorableObjectImpl extends StorableObject implements Cloneable {
 	 * @see com.syrus.AMFICOM.general.StorableObject#StorableObject(com.syrus.AMFICOM.general.Identifier, java.util.Date, java.util.Date, com.syrus.AMFICOM.general.Identifier, com.syrus.AMFICOM.general.Identifier, long)
 	 */
 	StorableObjectImpl(final Identifier id, final long created, final long modified, final Identifier creatorId, final Identifier modifierId, final long version) {
-		this.thisId = id;
-		this.thisCreated = created;
-		this.thisModified = modified;
-		this.thisCreatorId = creatorId;
-		this.thisModifierId = modifierId;
-		this.thisVersion = version;
+		this.id = id;
+		this.created = created;
+		this.modified = modified;
+		this.creatorId = creatorId;
+		this.modifierId = modifierId;
+		this.version = version;
 	}
 
 	/**
@@ -79,53 +79,53 @@ final class StorableObjectImpl extends StorableObject implements Cloneable {
 	}
 
 	/**
-	 * @see StorableObject#created()
+	 * @see StorableObject#getCreated()
 	 * @see com.syrus.AMFICOM.general.StorableObject#getCreated()
 	 */
-	public long created() {
-		return this.thisCreated;
+	public long getCreated() {
+		return this.created;
 	}
 
 	/**
-	 * @see StorableObject#creatorId()
+	 * @see StorableObject#getCreatorId()
 	 * @see com.syrus.AMFICOM.general.StorableObject#getCreatorId()
 	 */
-	public Identifier creatorId() {
-		return this.thisCreatorId;
+	public Identifier getCreatorId() {
+		return this.creatorId;
 	}
 
 	/**
 	 * Can (and possibly will) be overridden by descendants.
 	 *
-	 * @see StorableObject#dependencies()
+	 * @see StorableObject#getDependencies()
 	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
 	 */
-	public Identifier[] dependencies() {
+	public Identifier[] getDependencies() {
 		return new Identifier[0];
 	}
 
 	/**
 	 * Returns structure to be transmitted via CORBA.
 	 *
-	 * @see StorableObject#headerTransferable()
+	 * @see StorableObject#getHeaderTransferable()
 	 * @see com.syrus.AMFICOM.general.StorableObject#getHeaderTransferable()
 	 */
-	public StorableObject_Transferable headerTransferable() {
-		return new StorableObject_Transferable(this.thisId.transferable(),
-				this.thisCreated,
-				this.thisModified,
-				this.thisCreatorId.transferable(),
-				this.thisModifierId.transferable(),
-				this.thisVersion);
+	public StorableObject_Transferable getHeaderTransferable() {
+		return new StorableObject_Transferable(this.id.getTransferable(),
+				this.created,
+				this.modified,
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version);
 	}
 
 	/**
-	 * @see Identifiable#id()
+	 * @see Identifiable#getId()
 	 * @see com.syrus.AMFICOM.general.Identified#getId()
 	 * @see com.syrus.AMFICOM.general.StorableObject#getId()
 	 */
-	public Identifier id() {
-		return this.thisId;
+	public Identifier getId() {
+		return this.id;
 	}
 
 	/**
@@ -140,19 +140,19 @@ final class StorableObjectImpl extends StorableObject implements Cloneable {
 	}
 
 	/**
-	 * @see StorableObject#modified()
+	 * @see StorableObject#getModified()
 	 * @see com.syrus.AMFICOM.general.StorableObject#getModified()
 	 */
-	public long modified() {
-		return this.thisModified;
+	public long getModified() {
+		return this.modified;
 	}
 
 	/**
-	 * @see StorableObject#modifierId()
+	 * @see StorableObject#getModifierId()
 	 * @see com.syrus.AMFICOM.general.StorableObject#getModifierId()
 	 */
-	public Identifier modifierId() {
-		return this.thisModifierId;
+	public Identifier getModifierId() {
+		return this.modifierId;
 	}
 
 	/**
@@ -165,29 +165,29 @@ final class StorableObjectImpl extends StorableObject implements Cloneable {
 	 * @see com.syrus.AMFICOM.general.StorableObject#setAttributes(java.util.Date, java.util.Date, com.syrus.AMFICOM.general.Identifier, com.syrus.AMFICOM.general.Identifier, long)
 	 */
 	public synchronized void setAttributes(final long created, final long modified, final Identifier creatorId, final Identifier modifierId, final long version) {
-		this.thisCreated = created;
-		this.thisModified = modified;
-		this.thisCreatorId = creatorId;
-		this.thisModifierId = modifierId;
-		this.thisVersion = version;
+		this.created = created;
+		this.modified = modified;
+		this.creatorId = creatorId;
+		this.modifierId = modifierId;
+		this.version = version;
 	}
 
 	/**
-	 * @param storableObjectFactory
+	 * @param invoker
 	 * @param changed
 	 * @see StorableObject#setChanged(StorableObjectFactory, boolean)
 	 */
-	public void setChanged(final StorableObjectFactory storableObjectFactory, final boolean changed) {
-		assert storableObjectFactory != null;
+	public void setChanged(final StorableObjectFactory invoker, final boolean changed) {
+		assert invoker != null;
 		this.changed = changed;
 	}
 
 	/**
-	 * @see StorableObject#version()
+	 * @see StorableObject#getVersion()
 	 * @see com.syrus.AMFICOM.general.StorableObject#getVersion()
 	 */
-	public long version() {
-		return this.thisVersion;
+	public long getVersion() {
+		return this.version;
 	}
 
 	/**
@@ -200,12 +200,12 @@ final class StorableObjectImpl extends StorableObject implements Cloneable {
 		 * @todo Later, for id property, generate a <b>new</b>
 		 *       identifier from the same sequence. 
 		 */
-		storableObject.thisId = this.thisId;
-		storableObject.thisCreated = this.thisCreated;
-		storableObject.thisModified = this.thisModified;
-		storableObject.thisCreatorId = this.thisCreatorId;
-		storableObject.thisModifierId = this.thisModifierId;
-		storableObject.thisVersion = this.thisVersion;
+		storableObject.id = this.id;
+		storableObject.created = this.created;
+		storableObject.modified = this.modified;
+		storableObject.creatorId = this.creatorId;
+		storableObject.modifierId = this.modifierId;
+		storableObject.version = this.version;
 		return storableObject;
 	}
 }

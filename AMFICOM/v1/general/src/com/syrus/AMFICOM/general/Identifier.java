@@ -1,5 +1,5 @@
 /*
- * $Id: Identifier.java,v 1.20 2005/02/28 14:21:03 bass Exp $
+ * $Id: Identifier.java,v 1.21 2005/03/01 13:59:24 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.20 $, $Date: 2005/02/28 14:21:03 $
+ * @version $Revision: 1.21 $, $Date: 2005/03/01 13:59:24 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -102,21 +102,21 @@ public class Identifier implements
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.corba.Identifier#identifierString()
+	 * @see com.syrus.AMFICOM.general.corba.Identifier#getIdentifierString()
 	 */
 	public String getIdentifierString() {
 		return this.identifierString; 
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.corba.Identifier#major()
+	 * @see com.syrus.AMFICOM.general.corba.Identifier#getMajor()
 	 */
 	public short getMajor() {
 		return this.major;
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.corba.Identifier#minor()
+	 * @see com.syrus.AMFICOM.general.corba.Identifier#getMinor()
 	 */
 	public long getMinor() {
 		return this.minor;
@@ -135,7 +135,7 @@ public class Identifier implements
 	}
 
 	/**
-	 * @see com.syrus.AMFICOM.general.corba.Identifier#hexString()
+	 * @see com.syrus.AMFICOM.general.corba.Identifier#toHexString()
 	 */
 	public String toHexString() {
 		throw new UnsupportedOperationException();

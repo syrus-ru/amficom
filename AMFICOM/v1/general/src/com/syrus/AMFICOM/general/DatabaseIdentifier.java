@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseIdentifier.java,v 1.5 2004/12/27 12:59:56 bass Exp $
+ * $Id: DatabaseIdentifier.java,v 1.6 2005/03/01 13:59:25 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import java.sql.SQLException;
  * DB Identifier wrapper.
  * Main purpose is to hide Identifier implementation and DB representation of it.
  *
- * @version $Revision: 1.5 $, $Date: 2004/12/27 12:59:56 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/01 13:59:25 $
  * @author $Author: bass $
  * @module general_v1
  */
@@ -47,7 +47,7 @@ public class DatabaseIdentifier {
 		 * @todo When changing DB Identifier model, change #setString() to
 		 *       #setLong()
 		 */
-		preparedStatement.setString(parameterIndex, id != null ? id.identifierString() : "");
+		preparedStatement.setString(parameterIndex, id != null ? id.getIdentifierString() : "");
 	}
 	
 	public static Identifier getIdentifier(final ResultSet resultSet, final String columnName) throws SQLException {
@@ -88,7 +88,7 @@ public class DatabaseIdentifier {
 	 */
 	public static String toSQLString(final com.syrus.AMFICOM.general.corba.Identifier id) {
 		return StorableObjectDatabase.APOSTOPHE
-			+ (id != null ? id.identifierString() : "")
+			+ (id != null ? id.getIdentifierString() : "")
 			+ StorableObjectDatabase.APOSTOPHE;
 	}
 

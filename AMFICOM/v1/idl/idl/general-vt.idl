@@ -1,5 +1,5 @@
 /*
- * $Id: general-vt.idl,v 1.9 2005/02/28 14:16:00 bass Exp $
+ * $Id: general-vt.idl,v 1.10 2005/03/01 13:58:23 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,24 +34,24 @@ module com {
 #endif // NUMERIC_IDENTIFIER
 
 #ifdef NUMERIC_IDENTIFIER
-						private short thisMajor;
-						private long long thisMinor;
+						private short major;
+						private long long minor;
 #else // NUMERIC_IDENTIFIER  
-						private string thisIdentifierString;
+						private string identifierString;
 #endif // NUMERIC_IDENTIFIER
 
-						readonly attribute short major;
-						readonly attribute long long minor;
-						readonly attribute string identifierString;
+						readonly attribute short getMajor;
+						readonly attribute long long getMinor;
+						readonly attribute string getIdentifierString;
 
 						/**
 						 * Utility method introduced to provide interoperability with native Java Identifier.
 						 */						
-						readonly attribute Identifier_Transferable transferable;
+						readonly attribute Identifier_Transferable getTransferable;
 						/**
 						 * Utility method introduced to provide interoperability with native Java Identifier.
 						 */						
-						readonly attribute string hexString;
+						readonly attribute string toHexString;
 
 						factory newInstanceFromString(in string identifierString);
 						factory newInstanceFromPrimitive(in short major, in long long minor);
@@ -61,7 +61,7 @@ module com {
 					typedef sequence<Identifier> IdentifierSeq;
 
 					abstract valuetype Identifiable {
-						readonly attribute Identifier id;
+						readonly attribute Identifier getId;
 					};
 
 					abstract valuetype Namable {
@@ -73,31 +73,31 @@ module com {
 					};
 
 					abstract valuetype IStorableObject: Identifiable {
-						readonly attribute long long created;
-						readonly attribute long long modified;
-						readonly attribute Identifier creatorId;
-						readonly attribute Identifier modifierId;
-						readonly attribute long long version;
+						readonly attribute long long getCreated;
+						readonly attribute long long getModified;
+						readonly attribute Identifier getCreatorId;
+						readonly attribute Identifier getModifierId;
+						readonly attribute long long getVersion;
 
 						readonly attribute boolean isChanged;
-						void setChanged(in StorableObjectFactory storableObjectFactory, in boolean changed);
-						readonly attribute StorableObject_Transferable headerTransferable;
+						void setChanged(in StorableObjectFactory invoker, in boolean changed);
+						readonly attribute StorableObject_Transferable getHeaderTransferable;
 						/**
 						 * Since dependencies may include both valuetyped and non-valuetyped storable
 						 * objects, they are returned as a sequence of valuetyped identifiers, as
 						 * valutyped and non-valuetyped ones can be easily converted into each other.
 						 */
-						readonly attribute IdentifierSeq dependencies;
+						readonly attribute IdentifierSeq getDependencies;
 					};
 
 					valuetype StorableObject: IStorableObject {
-						private Identifier thisId;
+						private Identifier id;
 
-						private long long thisCreated;
-						private long long thisModified;
-						private Identifier thisCreatorId;
-						private Identifier thisModifierId;
-						private long long thisVersion;
+						private long long created;
+						private long long modified;
+						private Identifier creatorId;
+						private Identifier modifierId;
+						private long long version;
 
 						StorableObject cloneInstance();
 

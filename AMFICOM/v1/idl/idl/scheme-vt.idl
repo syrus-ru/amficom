@@ -1,5 +1,5 @@
 /*
- * $Id: scheme-vt.idl,v 1.18 2005/02/28 14:16:00 bass Exp $
+ * $Id: scheme-vt.idl,v 1.19 2005/03/01 13:58:23 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -665,10 +665,6 @@ module com {
 							general::corba::Namable,
 							general::corba::Describable,
 							resource::SchemeSymbolContainer {
-						/**
-						 * @deprecated Use {@link #parentSchemeProtoGroup()} instead.
-						 */
-						readonly attribute SchemeProtoGroup parent;
 						readonly attribute SchemeProtoGroup parentSchemeProtoGroup;
 						/**
 						 * Transient attribute.

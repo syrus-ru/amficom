@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierImplTestCase.java,v 1.5 2005/02/25 12:56:45 bass Exp $
+ * $Id: IdentifierImplTestCase.java,v 1.6 2005/03/01 13:59:25 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import junit.framework.TestCase;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/02/25 12:56:45 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/01 13:59:25 $
  * @module general_v1
  */
 public class IdentifierImplTestCase extends TestCase {
@@ -38,8 +38,8 @@ public class IdentifierImplTestCase extends TestCase {
 		long minor = 1L;
 		Identifier id1 = factory.newInstanceFromString(ObjectEntities.ANALYSIS_ENTITY + Identifier.SEPARATOR + minor);
 		Identifier id2 = factory.newInstanceFromPrimitive(ObjectEntities.ANALYSIS_ENTITY_CODE, minor);
-		short id1Major = id1.major();
-		short id2Major = id2.major();
+		short id1Major = id1.getMajor();
+		short id2Major = id2.getMajor();
 		System.err.println(ObjectEntities.codeToString(id1Major));
 		System.err.println(ObjectEntities.codeToString(id2Major));
 		assertEquals(id1Major, id2Major);
@@ -50,8 +50,8 @@ public class IdentifierImplTestCase extends TestCase {
 		long minor = 1L;
 		Identifier id1 = factory.newInstanceFromString(ObjectEntities.ANALYSIS_ENTITY + Identifier.SEPARATOR + minor);
 		Identifier id2 = factory.newInstanceFromPrimitive(ObjectEntities.ANALYSIS_ENTITY_CODE, minor);
-		long id1Minor = id1.minor();
-		long id2Minor = id2.minor();
+		long id1Minor = id1.getMinor();
+		long id2Minor = id2.getMinor();
 		System.err.println(id1Minor);
 		System.err.println(id2Minor);
 		assertEquals(id1Minor, id2Minor);
@@ -62,8 +62,8 @@ public class IdentifierImplTestCase extends TestCase {
 		long minor = 1L;
 		Identifier id1 = factory.newInstanceFromString(ObjectEntities.ANALYSIS_ENTITY + Identifier.SEPARATOR + minor);
 		Identifier id2 = factory.newInstanceFromPrimitive(ObjectEntities.ANALYSIS_ENTITY_CODE, minor);
-		String id1IdentifierString = id1.identifierString();
-		String id2IdentifierString = id2.identifierString();
+		String id1IdentifierString = id1.getIdentifierString();
+		String id2IdentifierString = id2.getIdentifierString();
 		assertEquals(id1IdentifierString, id2IdentifierString);
 	}
 
