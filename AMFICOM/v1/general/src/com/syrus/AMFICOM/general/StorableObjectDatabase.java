@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.71 2005/01/26 15:17:25 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.72 2005/01/28 10:08:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2005/01/26 15:17:25 $
+ * @version $Revision: 1.72 $, $Date: 2005/01/28 10:08:05 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -46,6 +46,7 @@ public abstract class StorableObjectDatabase {
 	public static final String COLUMN_ID			= "id";
 	public static final String COLUMN_MODIFIED			= "modified";
 	public static final String COLUMN_MODIFIER_ID		= "modifier_id";
+	public static final String DOT				= " . ";
 	public static final String COMMA				= " , ";
 	public static final String EQUALS				= " = ";
 	public static final String NOT_EQUALS			= " <> ";
