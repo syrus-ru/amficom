@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.2 2004/09/27 06:50:11 bob Exp $
+ * $Id: ModelingDatabase.java,v 1.3 2004/09/27 07:57:25 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,17 +30,21 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/09/27 06:50:11 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/27 07:57:25 $
  * @author $Author: bob $
  * @module module_name
  */
 
 public class ModelingDatabase extends StorableObjectDatabase {
 
-    public static final String COLUMN_NAME =                "name";
-    public static final String COLUMN_ME_ID =           "monitored_element_id";
-    public static final String COLUMN_MEASUREMENT_TYPE_ID = "measurement_type_id";
-    public static final String COLUMN_ARGUMENT_SET_ID =     "argument_set_id";
+	// name VARCHAR(256),
+    public static final String COLUMN_NAME  = "name";  
+    // monitored_element_id VARCHAR2(32),
+    public static final String COLUMN_ME_ID  = "monitored_element_id";
+    // measurement_type_id VARCHAR2(32) NOT NULL,
+    public static final String COLUMN_MEASUREMENT_TYPE_ID   = "measurement_type_id";
+    //  argument_set_id VARCHAR2(32) NOT NULL,
+    public static final String COLUMN_ARGUMENT_SET_ID       = "argument_set_id";
     
     private String updateColumns;
     
@@ -140,21 +144,21 @@ public class ModelingDatabase extends StorableObjectDatabase {
                 new Modeling(new Identifier(resultSet.getString(COLUMN_ID)), null, null, null, null) : 
                     fromStorableObject(storableObject);
         MeasurementType measurementType;
-        Set criteriaSet;
+        Set argumentSet;
         try {
             /**
              * @todo when change DB Identifier model ,change getString() to getLong()
              */
-            measurementType = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_TYPE_ID)), true);
+            measurementType = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_MEASUREMENT_TYPE_ID)), true);
             /**
              * @todo when change DB Identifier model ,change getString() to getLong()
              */
-            criteriaSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_CRITERIA_SET_ID)), true);
+            argumentSet = (Set)MeasurementStorableObjectPool.getStorableObject(new Identifier(resultSet.getString(COLUMN_ARGUMENT_SET_ID)), true);
         }
         catch (ApplicationException ae) {
             throw new RetrieveObjectException(ae);
         }
-        Modeling.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
+        modeling.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
                                                      DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
                                                     /**
                                                      * @todo when change DB Identifier model ,change getString() to getLong()
@@ -164,12 +168,14 @@ public class ModelingDatabase extends StorableObjectDatabase {
                                                      * @todo when change DB Identifier model ,change getString() to getLong()
                                                      */
                                                      new Identifier(resultSet.getString(COLUMN_MODIFIER_ID)),
-                                                     measurementType,
-                                                    /**
-                                                     * @todo when change DB Identifier model ,change getString() to getLong()
-                                                     */
-                                                     new Identifier(resultSet.getString(COLUMN_MONITORED_ELEMENT_ID)),
-                                                     criteriaSet);      
+                                                     resultSet.getString(COLUMN_NAME),
+                                                     /**
+                                                      * @todo when change DB Identifier model ,change getString() to getLong()
+                                                      */
+                                                     new Identifier(resultSet.getString(COLUMN_ME_ID)),												 
+                                                     
+                                                     measurementType,													 
+                                                     argumentSet);      
         return modeling;
     }
 
