@@ -1125,6 +1125,11 @@ static double a_noiseSuppressionLength_BREAKL(double *pars, int npars)
 	return ret;
 }
 
+static double a_canLeftLink_true(double *, int)
+{
+	return 1.0;
+}
+
 static double f_GAUSS(double *pars, int, double x, double *, int)
 {
 	double A = pars[0];
@@ -1141,6 +1146,7 @@ static const char *an_width =		"width";
 static const char *an_weldStep =	"weldStep";
 static const char *an_fHeight =		"fHeight";
 static const char *an_noiseSuppressionLength = "noiseSuppressionLength";
+static const char *an_canLeftLink = "canLeftLink";
 
 // главная таблица модельных функций с фикс. числом параметров
 
@@ -1218,7 +1224,8 @@ static MF_MD funcs[] =
 		f_BREAKL, // функция
 		fc_BREAKL, // обработчик команд
 		{
-			{ an_noiseSuppressionLength, a_noiseSuppressionLength_BREAKL }
+			{ an_noiseSuppressionLength, a_noiseSuppressionLength_BREAKL },
+			{ an_canLeftLink, a_canLeftLink_true }
 		}
 	},
 

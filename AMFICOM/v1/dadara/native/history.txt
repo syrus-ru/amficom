@@ -1,5 +1,8 @@
 # CP: 1251
 
+	2004-12-17	saa
+* Поддержка аттрибута canLeftLink
+
 	2004-12-14	saa
 * Java-класс com.syrus.AMFICOM.analysis.AnalysisManager переименовался в CoreAnalysisManager
 
