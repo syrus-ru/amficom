@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.70 2005/02/24 14:59:59 arseniy Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.71 2005/03/18 17:28:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,44 +24,31 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/02/24 14:59:59 $
+ * @version $Revision: 1.71 $, $Date: 2005/03/18 17:28:06 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public class MeasurementStorableObjectPool extends StorableObjectPool {
 
-	private static final int		OBJECT_POOL_MAP_SIZE			= 14;		/* Number of entities  */
+	private static final int OBJECT_POOL_MAP_SIZE = 14; /* Number of entities */
 
-	private static final int		MEASUREMENTTYPE_OBJECT_POOL_SIZE	= 1;
+	private static final int MEASUREMENTTYPE_OBJECT_POOL_SIZE = 1;
+	private static final int ANALYSISTYPE_OBJECT_POOL_SIZE = 1;
+	private static final int EVALUATIONTYPE_OBJECT_POOL_SIZE = 1;
+	private static final int MODELINGTYPE_OBJECT_POOL_SIZE = 1;
 
-	private static final int		ANALYSISTYPE_OBJECT_POOL_SIZE		= 1;
+	private static final int SET_OBJECT_POOL_SIZE = 4;
+	private static final int MODELING_OBJECT_POOL_SIZE = 4;
+	private static final int MS_OBJECT_POOL_SIZE = 4;
+	private static final int MEASUREMENT_OBJECT_POOL_SIZE = 4;
+	private static final int ANALYSIS_OBJECT_POOL_SIZE = 4;
+	private static final int EVALUATION_OBJECT_POOL_SIZE = 4;
+	private static final int TEST_OBJECT_POOL_SIZE = 2;
+	private static final int RESULT_OBJECT_POOL_SIZE = 4;
+	private static final int TEMPORALPATTERN_OBJECT_POOL_SIZE = 2;
 
-	private static final int		EVALUATIONTYPE_OBJECT_POOL_SIZE		= 1;
-
-	private static final int		SET_OBJECT_POOL_SIZE			= 4;
-//
-//	private static final int		SETPARAMETER_OBJECT_POOL_SIZE		= 4;
-
-	private static final int		MODELING_OBJECT_POOL_SIZE		= 4;
-
-	private static final int		MS_OBJECT_POOL_SIZE			= 4;
-
-	private static final int		MEASUREMENT_OBJECT_POOL_SIZE		= 4;
-
-	private static final int		ANALYSIS_OBJECT_POOL_SIZE		= 4;
-
-	private static final int		EVALUATION_OBJECT_POOL_SIZE		= 4;
-
-	private static final int		TEST_OBJECT_POOL_SIZE			= 2;
-
-	private static final int		RESULT_OBJECT_POOL_SIZE			= 4;
-//
-//	private static final int		RESULTPARAMETER_OBJECT_POOL_SIZE	= 4;
-
-	private static final int		TEMPORALPATTERN_OBJECT_POOL_SIZE	= 2;
-
-	private static MeasurementObjectLoader	mObjectLoader;
+	private static MeasurementObjectLoader mObjectLoader;
 	private static MeasurementStorableObjectPool instance;
 
 	private MeasurementStorableObjectPool() {
@@ -69,27 +56,8 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		super(ObjectGroupEntities.MEASUREMENT_GROUP_CODE);
 	}
 
-	private MeasurementStorableObjectPool(Class cacheMapClass){
+	private MeasurementStorableObjectPool(Class cacheMapClass) {
 		super(ObjectGroupEntities.MEASUREMENT_GROUP_CODE, cacheMapClass);
-	}
-
-	/**
-	 * 
-	 * @param mObjectLoader1
-	 * @param cacheClass
-	 *                class must extend LRUMap
-	 * @param size
-	 */
-	public static void init(MeasurementObjectLoader mObjectLoader1, Class cacheClass, final int size) {
-		Class clazz = null;
-		try {
-			clazz = Class.forName(cacheClass.getName());
-			instance = new MeasurementStorableObjectPool(clazz);
-		}
-		catch (ClassNotFoundException e) {
-			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default");
-		}
-		init(mObjectLoader1, size);
 	}
 
 	public static void init(MeasurementObjectLoader mObjectLoader1, final int size) {
@@ -103,24 +71,25 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.ANALYSISTYPE_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.MODELINGTYPE_ENTITY_CODE, size);
 
 		instance.addObjectPool(ObjectEntities.SET_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.MODELING_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.MS_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.MEASUREMENT_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.ANALYSIS_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.EVALUATION_ENTITY_CODE, size);		
+		instance.addObjectPool(ObjectEntities.EVALUATION_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.TEST_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE, size);
 		instance.addObjectPool(ObjectEntities.RESULT_ENTITY_CODE, size);
-		
+
 		instance.populatePools();
 	}
 
 	public static void init(MeasurementObjectLoader mObjectLoader1) {
 		if (instance == null)
 			instance = new MeasurementStorableObjectPool();
-		
+
 		instance.objectPoolMap = Collections.synchronizedMap(new Hashtable(OBJECT_POOL_MAP_SIZE));
 
 		mObjectLoader = mObjectLoader1;
@@ -128,18 +97,45 @@ public class MeasurementStorableObjectPool extends StorableObjectPool {
 		instance.addObjectPool(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE, MEASUREMENTTYPE_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.ANALYSISTYPE_ENTITY_CODE, ANALYSISTYPE_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, EVALUATIONTYPE_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.MODELINGTYPE_ENTITY_CODE, MODELINGTYPE_OBJECT_POOL_SIZE);
 
 		instance.addObjectPool(ObjectEntities.SET_ENTITY_CODE, SET_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.MODELING_ENTITY_CODE, MODELING_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.MS_ENTITY_CODE, MS_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.MEASUREMENT_ENTITY_CODE, MEASUREMENT_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.ANALYSIS_ENTITY_CODE, ANALYSIS_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.EVALUATION_ENTITY_CODE, EVALUATION_OBJECT_POOL_SIZE);		
+		instance.addObjectPool(ObjectEntities.EVALUATION_ENTITY_CODE, EVALUATION_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.TEST_ENTITY_CODE, TEST_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE, TEMPORALPATTERN_OBJECT_POOL_SIZE);
 		instance.addObjectPool(ObjectEntities.RESULT_ENTITY_CODE, RESULT_OBJECT_POOL_SIZE);
-		
+
 		instance.populatePools();
+	}
+
+	public static void init(MeasurementObjectLoader mObjectLoader1, Class cacheClass, final int size) {
+		Class clazz = null;
+		try {
+			clazz = Class.forName(cacheClass.getName());
+			instance = new MeasurementStorableObjectPool(clazz);
+		}
+		catch (ClassNotFoundException e) {
+			Log.errorMessage("Cache class '" + cacheClass.getName() + "' cannot be found, use default");
+			instance = new MeasurementStorableObjectPool();
+		}
+		init(mObjectLoader1, size);
+	}
+
+	public static void init(MeasurementObjectLoader mObjectLoader1, Class cacheClass) {
+		Class clazz = null;
+		try {
+			clazz = Class.forName(cacheClass.getName());
+			instance = new MeasurementStorableObjectPool(clazz);
+		}
+		catch (ClassNotFoundException e) {
+			Log.errorMessage("Cache class '" + cacheClass.getName() + "' cannot be found, use default");
+			instance = new MeasurementStorableObjectPool();
+		}
+		init(mObjectLoader1);
 	}
 
   public static void refresh() throws ApplicationException {
