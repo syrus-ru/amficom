@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.10 2005/03/04 13:29:36 bass Exp $
+ * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.11 2005/03/05 21:31:51 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,10 @@
 
 package com.syrus.AMFICOM.general;
 
-import java.util.Collection;
-import java.util.Iterator;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/03/04 13:29:36 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/03/05 21:31:51 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public abstract class AbstractDatabaseLinkedIdsCondition implements DatabaseStorableObjectCondition {
@@ -36,38 +34,7 @@ public abstract class AbstractDatabaseLinkedIdsCondition implements DatabaseStor
 		StringBuffer buffer = new StringBuffer();
 		buffer.append(" 1=0 ");
 		buffer.append(StorableObjectDatabase.SQL_OR);
-		buffer.append(columnName);
-		buffer.append(StorableObjectDatabase.SQL_IN);
-		buffer.append(StorableObjectDatabase.OPEN_BRACKET);
-		int i = 1;
-		Collection ids = this.condition.getLinkedIds();
-		for (Iterator it = ids.iterator(); it.hasNext(); i++) {
-			Object object = it.next();
-			Identifier id = null;
-			if (object instanceof Identifier)
-				id = (Identifier) object;
-			else if (object instanceof Identifiable)
-				id = ((Identifiable) object).getId();
-			else
-				throw new IllegalDataException("AbstractDatabaseLinkedIdsCondition.getQuery | Object "
-						+ object.getClass().getName() + " isn't Identifier or Identifiable");
-
-			if (id != null) {
-				buffer.append(DatabaseIdentifier.toSQLString(id));
-				if (it.hasNext()) {
-					if (((i + 1) % StorableObjectDatabase.MAXIMUM_EXPRESSION_NUMBER != 0))
-						buffer.append(StorableObjectDatabase.COMMA);
-					else {
-						buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
-						buffer.append(StorableObjectDatabase.SQL_OR);
-						buffer.append(columnName);
-						buffer.append(StorableObjectDatabase.SQL_IN);
-						buffer.append(StorableObjectDatabase.OPEN_BRACKET);
-					}
-				}
-			}
-		}
-		buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
+		buffer.append(StorableObjectDatabase.idsEnumerationString(this.condition.getLinkedIds(), columnName, true));
 		return buffer.toString();
 	}
 
