@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.8 2005/03/23 14:56:39 bass Exp $
+ * $Id: SchemeTreeModel.java,v 1.9 2005/03/24 17:02:53 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/03/23 14:56:39 $
+ * @version $Revision: 1.9 $, $Date: 2005/03/24 17:02:53 $
  * @module schemeclient_v1
  */
 
@@ -369,8 +369,8 @@ public class SchemeTreeModel implements SOTreeDataModel {
 				List ds = new LinkedList();
 				for (int i = 0; i < parent.getSchemeElementsAsArray().length; i++) {
 					SchemeElement el = parent.getSchemeElementsAsArray()[i];
-					if (el.getInnerScheme() != null)
-						ds.add(el.getInnerScheme());
+					if (el.getScheme() != null)
+						ds.add(el.getScheme());
 				}
 				if (ds.size() > 0) {
 					for (Iterator it = ds.iterator(); it.hasNext();) {
@@ -387,7 +387,7 @@ public class SchemeTreeModel implements SOTreeDataModel {
 					Scheme scheme = (Scheme) parent;
 					for (int i = 0; i < scheme.getSchemeElementsAsArray().length; i++) {
 						SchemeElement element = scheme.getSchemeElementsAsArray()[i];
-						if (element.getInnerScheme() == null)
+						if (element.getScheme() == null)
 							ds.add(element);
 					}
 				} 
@@ -498,14 +498,14 @@ public class SchemeTreeModel implements SOTreeDataModel {
 					boolean has_elements = false;
 					for (int i = 0; i < s.getSchemeElementsAsArray().length; i++) {
 						SchemeElement el = s.getSchemeElementsAsArray()[i];
-						if (el.getInnerScheme() == null) {
+						if (el.getScheme() == null) {
 							has_elements = true;
 							break;
 						}
 					}
 					for (int i = 0; i < s.getSchemeElementsAsArray().length; i++) {
 						SchemeElement el = s.getSchemeElementsAsArray()[i];
-						if (el.getInnerScheme() != null) {
+						if (el.getScheme() != null) {
 							has_schemes = true;
 							break;
 						}
@@ -534,11 +534,11 @@ public class SchemeTreeModel implements SOTreeDataModel {
 			} 
 			else if (node.getUserObject() instanceof SchemeElement) {
 				SchemeElement schel = (SchemeElement) node.getUserObject();
-				if (schel.getInnerScheme() != null) {
-					Scheme scheme = schel.getInnerScheme();
+				if (schel.getScheme() != null) {
+					Scheme scheme = schel.getScheme();
 					for (int i = 0; i < scheme.getSchemeElementsAsArray().length; i++) {
 						SchemeElement element = scheme.getSchemeElementsAsArray()[i];
-						if (element.getInnerScheme() == null) {
+						if (element.getScheme() == null) {
 							if (!contents.contains(element))
 								node.add(new SOMutableNode(this, element, (element.getSchemeLinksAsArray().length != 0 || element.getSchemeElementsAsArray().length != 0)));
 						} 

@@ -337,7 +337,7 @@ public class PathPropsPanel extends JPanel
 		if (element_to_add instanceof SchemeElement)
 		{
 			SchemeElement se = (SchemeElement)element_to_add;
-			if (se.getInnerScheme() != null)
+			if (se.getScheme() != null)
 			{
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 						"Конечным устройством не может быть схема", "Ошибка", JOptionPane.OK_OPTION);

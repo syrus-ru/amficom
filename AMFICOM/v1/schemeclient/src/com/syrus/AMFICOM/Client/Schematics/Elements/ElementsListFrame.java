@@ -198,8 +198,8 @@ public class ElementsListFrame extends JInternalFrame implements OperationListen
 			if (ev.SCHEME_ELEMENT_SELECTED)
 			{
 				SchemeElement element = (SchemeElement)((Object[])ev.getSource())[0];
-				if (element.getInnerScheme() != null)
-					showSchemeCharacteristics(element.getInnerScheme(), can_be_editable); //&& ev.isEditable);
+				if (element.getScheme() != null)
+					showSchemeCharacteristics(element.getScheme(), can_be_editable); //&& ev.isEditable);
 				else
 					showSchemeElementCharacteristics(element, can_be_editable ); //&& ev.isEditable);
 			}

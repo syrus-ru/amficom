@@ -286,7 +286,7 @@ public class SchemePanel extends ElementsPanel
 			if (cells.length == 1 && cells[0] instanceof DeviceGroup)
 			{
 				SchemeElement element = SchemeElement.createInstance();
-				element.setInnerScheme(sch);
+				element.setScheme(sch);
 				element.setParentScheme(getGraph().getScheme());
 				element.setName(sch.getName());
 				element.setDescription(sch.getDescription());

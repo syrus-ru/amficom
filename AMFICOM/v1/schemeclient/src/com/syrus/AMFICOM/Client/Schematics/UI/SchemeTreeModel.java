@@ -358,8 +358,8 @@ public class SchemeTreeModel implements TreeDataModel
 				for (int i = 0; i < parent.getSchemeElementsAsArray().length; i++)
 				{
 					SchemeElement el = parent.getSchemeElementsAsArray()[i];
-					if (el.getInnerScheme() != null)
-						ds.add(el.getInnerScheme());
+					if (el.getScheme() != null)
+						ds.add(el.getScheme());
 				}
 				if (ds.size() > 0)
 				{
@@ -381,7 +381,7 @@ public class SchemeTreeModel implements TreeDataModel
 					for (int i = 0; i < scheme.getSchemeElementsAsArray().length; i++)
 					{
 						SchemeElement element = scheme.getSchemeElementsAsArray()[i];
-						if (element.getInnerScheme() == null)
+						if (element.getScheme() == null)
 							ds.add(element);
 					}
 				}
@@ -505,7 +505,7 @@ public class SchemeTreeModel implements TreeDataModel
 					for (int i = 0; i < s.getSchemeElementsAsArray().length; i++)
 					{
 						SchemeElement el = s.getSchemeElementsAsArray()[i];
-						if (el.getInnerScheme() == null)
+						if (el.getScheme() == null)
 						{
 							has_elements = true;
 							break;
@@ -514,7 +514,7 @@ public class SchemeTreeModel implements TreeDataModel
 					for (int i = 0; i < s.getSchemeElementsAsArray().length; i++)
 					{
 						SchemeElement el = s.getSchemeElementsAsArray()[i];
-						if (el.getInnerScheme() != null)
+						if (el.getScheme() != null)
 						{
 							has_schemes = true;
 							break;
@@ -535,13 +535,13 @@ public class SchemeTreeModel implements TreeDataModel
 			else if(node.getUserObject() instanceof SchemeElement)
 			{
 				SchemeElement schel = (SchemeElement)node.getUserObject();
-				if (schel.getInnerScheme() != null)
+				if (schel.getScheme() != null)
 				{
-					Scheme scheme = schel.getInnerScheme();
+					Scheme scheme = schel.getScheme();
 					for (int i = 0; i < scheme.getSchemeElementsAsArray().length; i++)
 					{
 						SchemeElement element = scheme.getSchemeElementsAsArray()[i];
-						if (element.getInnerScheme() == null)
+						if (element.getScheme() == null)
 						{
 							if (element.getSchemeLinksAsArray().length != 0 || element.getSchemeElementsAsArray().length != 0)
 								vec.add(new StorableObjectTreeNode(element, element.getName(), false));
@@ -549,7 +549,7 @@ public class SchemeTreeModel implements TreeDataModel
 								vec.add(new StorableObjectTreeNode(element, element.getName(), true));
 						}
 						else
-							vec.add(new StorableObjectTreeNode(element, element.getInnerScheme().getName(), 
+							vec.add(new StorableObjectTreeNode(element, element.getScheme().getName(), 
 									new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/scheme.gif")), false));
 					}
 				}

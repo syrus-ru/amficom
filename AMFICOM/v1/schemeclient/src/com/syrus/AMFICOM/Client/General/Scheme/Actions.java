@@ -392,7 +392,7 @@ class GroupSEAction extends AbstractAction
 				scheme_el = SchemeElement.createInstance();
 
 			group.setSchemeElementId(scheme_el.getId());
-			group.setSchemeId(scheme_el.getInnerScheme().getId());
+			group.setSchemeId(scheme_el.getScheme().getId());
 
 			if (graph.getScheme() != null)
 			{
@@ -866,8 +866,8 @@ class CreateTopLevelElementAction extends AbstractAction
 				else
 					ports.add(bpc.getSchemePort());
 			}
-			schemeDevice.schemeCablePorts((SchemeCablePort[])cablePorts.toArray(new SchemeCablePort[cablePorts.size()]));
-			schemeDevice.schemePorts((SchemePort[])ports.toArray(new SchemePort[ports.size()]));
+			schemeDevice.setSchemeCablePortsAsArray((SchemeCablePort[])cablePorts.toArray(new SchemeCablePort[cablePorts.size()]));
+			schemeDevice.setSchemePortsAsArray((SchemePort[])ports.toArray(new SchemePort[ports.size()]));
 
 			schemeProtoElement.addSchemeDevice(schemeDevice);
 			try {
