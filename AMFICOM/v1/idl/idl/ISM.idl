@@ -19,10 +19,10 @@ module ISM
 		wstring id;
 		wstring name;
 		wstring description;
-		wstring type_id;
+		wstring _typeId;
 
-		wstring equipment_id;
-		wstring mcm_id;
+		wstring equipmentId;
+		wstring mcmId;
 
 		General::CharacteristicSeq_Transferable characteristics;
 	};
@@ -33,11 +33,11 @@ module ISM
 	{
 		wstring id;
 		wstring name;
-		wstring type_id;
-		wstring port_id;
-		wstring kis_id;
-		wstring local_id;
-		wstring domain_id;
+		wstring _typeId;
+		wstring portId;
+		wstring kisId;
+		wstring localId;
+		wstring domainId;
 
 		General::CharacteristicSeq_Transferable characteristics;
 	};
@@ -47,21 +47,23 @@ module ISM
 	{
 		wstring id;
 		wstring name;
-		wstring domain_id;
+		wstring domainId;
 
 		long long modified;
+
+		General::CharacteristicSeq_Transferable characteristics;
 	};
 	typedef sequence <TransmissionPath_Transferable> TransmissionPathSeq_Transferable;
 
 	struct MonitoredElement_Transferable
 	{
 		wstring id;
-		wstring element_name;
-		wstring element_id;
-		wstring element_type;
-		wstring measurement_port_id;
-		wstring local_address;
-		wstring domain_id;
+		wstring elementName;
+		wstring elementId;
+		wstring elementType;
+		wstring measurementPortId;
+		wstring localAddress;
+		wstring domainId;
 
 		long long modified;
 	};
@@ -78,10 +80,10 @@ module ISMDirectory
 		wstring id;
 		wstring name;
 		wstring description;
-		wstring access_type;
+		wstring accessType;
 		long long modified;
 
-		General::wstringSeq test_type_ids;
+		General::wstringSeq testTypeIds;
 
 		General::CharacteristicSeq_Transferable characteristics;
 	};

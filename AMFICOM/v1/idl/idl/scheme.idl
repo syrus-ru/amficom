@@ -1,5 +1,5 @@
 /*
- * $Id: scheme.idl,v 1.5 2004/09/10 10:01:53 krupenn Exp $
+ * $Id: scheme.idl,v 1.6 2004/09/13 08:10:45 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,16 +28,16 @@ module Scheme
 	{
 		wstring id;
 		wstring name;
-		wstring device_id;
-		wstring link_id;
+		wstring deviceId;
+		wstring linkId;
 
-		wstring port_type_id;
-		wstring port_id;
+		wstring portTypeId;
+		wstring portId;
 
-		boolean is_access_port;
-		wstring access_port_type_id;
-		wstring access_port_id;
-		wstring direction_type;
+		wstring measurementPortTypeId;
+		wstring measurementPortId;
+		wstring directionType;
+
 		General::ElementAttributeSeq_Transferable attributes;
 	};
 	typedef sequence <SchemePort_Transferable> SchemePortSeq_Transferable;
@@ -46,25 +46,25 @@ module Scheme
 	{
 		wstring id;
 		wstring name;
-		wstring device_id;
-		wstring cable_link_id;
+		wstring deviceId;
+		wstring cableLinkId;
 
-		wstring cable_port_type_id;
-		wstring cable_port_id;
+		wstring cablePortTypeId;
+		wstring cablePortId;
 
-		boolean is_access_port;
-		wstring access_port_type_id;
-		wstring access_port_id;
-		wstring direction_type;
+		wstring measurementPortTypeId;
+		wstring measurementPortId;
+		wstring directionType;
+
 		General::ElementAttributeSeq_Transferable attributes;
 	};
 	typedef sequence <SchemeCablePort_Transferable> SchemeCablePortSeq_Transferable;
 
 	struct PortThreadMap_Transferable
 	{
-		wstring port_id;
-		wstring cable_link_id;
-		wstring thread_id;
+		wstring portId;
+		wstring cableLinkId;
+		wstring threadId;
 	};
 	typedef sequence <PortThreadMap_Transferable> PortThreadMapSeq_Transferable;
 
@@ -84,14 +84,14 @@ module Scheme
 	{
 		wstring id;
 		wstring name;
-		wstring source_port_id;
-		wstring target_port_id;
-		wstring link_type_id;
-		wstring link_id;
-		wstring physical_length;
-		wstring optical_length;
+		wstring sourcePortId;
+		wstring targetPortId;
+		wstring linkTypeId;
+		wstring linkId;
+		wstring physicalLength;
+		wstring opticalLength;
 		
-		wstring site_id;
+		wstring siteId;
 		
 		General::ElementAttributeSeq_Transferable attributes;
 	};
@@ -101,8 +101,8 @@ module Scheme
 	{
 		wstring id;
 		wstring name;
-		wstring link_type_id;
-		wstring thread_id;
+		wstring linkTypeId;
+		wstring threadId;
 		General::ElementAttributeSeq_Transferable attributes;
 	};
 	typedef sequence <SchemeCableThread_Transferable> SchemeCableThreadSeq_Transferable;
@@ -111,11 +111,11 @@ module Scheme
 	{
 		wstring id;
 		long n;
-		wstring start_site_id;
-		double start_spare;
-		wstring physical_link_id;
-		double end_spare;
-		wstring end_site_id;
+		wstring startSiteId;
+		double startSpare;
+		wstring physicalLinkId;
+		double endSpare;
+		wstring endSiteId;
 	};
 	typedef sequence <CableChannelingItem_Transferable> CableChannelingItemSeq_Transferable;
 
@@ -123,13 +123,14 @@ module Scheme
 	{
 		wstring id;
 		wstring name;
-		wstring source_port_id;
-		wstring target_port_id;
-		wstring cable_link_type_id;
-		wstring cable_link_id;
-		wstring physical_length;
-		wstring optical_length;
-		SchemeCableThreadSeq_Transferable cable_threads;
+		wstring sourcePortId;
+		wstring targetPortId;
+		wstring cableLinkTypeId;
+		wstring cableLinkId;
+		wstring physicalLength;
+		wstring opticalLength;
+		SchemeCableThreadSeq_Transferable cableThreads;
+
 		General::ElementAttributeSeq_Transferable attributes;
 		
 		CableChannelingItemSeq_Transferable channeling;
@@ -140,12 +141,11 @@ module Scheme
 	{
 		long n;
 		long type;
-		wstring link_id;
-		wstring thread_id;
-		wstring start_port_id;
-		wstring end_port_id;
-		wstring scheme_element_id;
-		wstring scheme_id;
+		wstring elementId;
+		wstring threadId;
+		wstring startPortId;
+		wstring endPortId;
+		wstring schemeId;
 	};
 	typedef sequence <PathElement_Transferable> PathElementSeq_Transferable;
 
@@ -153,13 +153,14 @@ module Scheme
 	{
 		wstring id;
 		wstring name;
-		wstring type_id;
-		wstring start_device_id;
-		wstring end_device_id;
+		wstring _typeId;
+		wstring startTeviceId;
+		wstring endDeviceId;
 
-		wstring path_id;
+		wstring pathId;
 
 		PathElementSeq_Transferable links;
+
 		General::ElementAttributeSeq_Transferable attributes;
 	};
 	typedef sequence <SchemePath_Transferable> SchemePathSeq_Transferable;
@@ -168,14 +169,14 @@ module Scheme
 	{
 		wstring id;
 		wstring name;
-		wstring equipment_type_id;
-		wstring domain_id;
+		wstring equipmentTypeId;
+		wstring domainId;
 		long long modified;
 		SchemeDeviceSeq_Transferable devices;
 		SchemeLinkSeq_Transferable links;
-		::CORBA::WStringSeq proto_element_ids;
+		::CORBA::WStringSeq protoElementIds;
 
-		wstring symbol_id;
+		wstring symbolId;
 		wstring label;
 		::CORBA::OctetSeq ugocell;
 		::CORBA::OctetSeq schemecell;
@@ -187,20 +188,19 @@ module Scheme
 	{
 		wstring id;
 		wstring name;
-		wstring proto_element_id;
-		wstring equipment_id;
+		wstring protoElementId;
+		wstring equipmentId;
 		SchemeDeviceSeq_Transferable devices;
 		SchemeLinkSeq_Transferable links;
-		::CORBA::WStringSeq element_ids;
+		::CORBA::WStringSeq elementIds;
 
-		wstring scheme_id;
-		boolean is_scheme;
+		wstring schemeId;
 
 		wstring description;
 		::CORBA::OctetSeq ugocell;
 		::CORBA::OctetSeq schemecell;
 
-		wstring site_id;
+		wstring siteId;
 		
 		General::ElementAttributeSeq_Transferable attributes;
 	};
@@ -210,7 +210,7 @@ module Scheme
 	{
 		wstring id;
 		wstring name;
-		wstring scheme_id;
+		wstring schemeId;
 		double price;
 		SchemePathSeq_Transferable paths;
 	};
@@ -220,21 +220,24 @@ module Scheme
 	{
 		wstring id;
 		wstring name;
-		wstring scheme_type;
+		wstring schemeType;
 		long long created;
 		long long modified;
-		wstring created_by;
-		wstring modified_by;
-		wstring owner_id;
-		wstring domain_id;
+		wstring createdBy;
+		wstring modifiedBy;
+		wstring ownerId;
+		wstring domainId;
 		wstring description;
+
 		SchemeElementSeq_Transferable elements;
 		SchemeLinkSeq_Transferable links;
-		SchemeCableLinkSeq_Transferable cable_links;
-		SchemeMonitoringSolution_Transferable solution;
-		::CORBA::WStringSeq element_ids;
+		SchemeCableLinkSeq_Transferable cableLinks;
 
-		wstring symbol_id;
+		SchemeMonitoringSolution_Transferable solution;
+
+		::CORBA::WStringSeq elementIds;
+
+		wstring symbolId;
 		wstring label;
 		::CORBA::OctetSeq ugocell;
 		::CORBA::OctetSeq schemecell;
@@ -243,7 +246,7 @@ module Scheme
 		long height;
 		::CORBA::OctetSeq clonez;
 		
-		wstring map_id;
+		wstring mapId;
 	};
 	typedef sequence <Scheme_Transferable> SchemeSeq_Transferable;
 
@@ -252,48 +255,48 @@ module Scheme
 		wstring id;
 		wstring name;
 		wstring description;
-		wstring symbol_id;
+		wstring symbolId;
 
-		wstring parent_id;
+		wstring parentId;
 
 		long long modified;
 
-		wstring pe_class;
-		boolean pe_is_kis;
+		wstring peClass;
+		boolean peIsKis;
 
-		::CORBA::WStringSeq group_ids;
-		::CORBA::WStringSeq pe_ids;
+		::CORBA::WStringSeq groupIds;
+		::CORBA::WStringSeq peIds;
 	};
 	typedef sequence <SchemeProtoGroup_Transferable> SchemeProtoGroupSeq_Transferable;
 
 	struct SchemeOptimizeInfo_Transferable
 	{
 		wstring id;
-		wstring scheme_id;
-		wstring solution_compact_id;// identifier for SchemeMonitoringSolution
+		wstring schemeId;
+		wstring solutionCompactId;// identifier for SchemeMonitoringSolution
 		wstring date;
 
-		long optimize_mode;
+		long optimizeMode;
 
 		double iterations;
 		double price;
 		double wavelength;
 									// optimization parameters
-		double len_margin;
-		double mutation_rate;
-		double mutation_degree;
-		double rtu_delete_prob;
-		double rtu_create_prob;
-		double nodes_splice_prob;
-		double nodes_cut_prob;
-		double survivor_rate;
+		double lenMargin;
+		double mutationRate;
+		double mutationDegree;
+		double rtuDeleteProb;
+		double rtuCreateProb;
+		double nodesSpliceProb;
+		double nodesCutProb;
+		double survivorRate;
 
-		::CORBA::DoubleSeq refl_prices;
-		::CORBA::WStringSeq refl_names;
-		::CORBA::DoubleSeq refl_ranges;
-		::CORBA::DoubleSeq switch_prices;
-		::CORBA::DoubleSeq switch_nports;
-		::CORBA::WStringSeq switch_names;
+		::CORBA::DoubleSeq reflPrices;
+		::CORBA::WStringSeq reflNames;
+		::CORBA::DoubleSeq reflRanges;
+		::CORBA::DoubleSeq switchPrices;
+		::CORBA::DoubleSeq switchNports;
+		::CORBA::WStringSeq switchNames;
 	};
 	typedef sequence <SchemeOptimizeInfo_Transferable> SchemeOptimizeInfoSeq_Transferable;
 };

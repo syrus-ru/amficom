@@ -19,13 +19,15 @@ module Network
 		wstring id;
 		wstring name;
 		wstring description;
-		wstring interface_id;
-		wstring address_id;
-		wstring local_id;
-		wstring type_id;
-		wstring equipment_id;
-		wstring domain_id;
+		wstring interfaceId;
+		wstring addressId;
+		wstring localId;
+		wstring _typeId;
+		wstring equipmentId;
+		wstring domainId;
 		long long modified;
+
+		General::CharacteristicSeq_Transferable characteristics;
 	};
 	typedef sequence <Port_Transferable> PortSeq_Transferable;
 
@@ -34,13 +36,15 @@ module Network
 		wstring id;
 		wstring name;
 		wstring description;
-		wstring interface_id;
-		wstring address_id;
-		wstring local_id;
-		wstring type_id;
-		wstring equipment_id;
-		wstring domain_id;
+		wstring interfaceId;
+		wstring addressId;
+		wstring localId;
+		wstring _typeId;
+		wstring equipmentId;
+		wstring domainId;
 		long long modified;
+
+		General::CharacteristicSeq_Transferable characteristics;
 	};
 	typedef sequence <CablePort_Transferable> CablePortSeq_Transferable;
 
@@ -49,25 +53,27 @@ module Network
 		wstring id;
 		wstring name;
 		wstring description;
-		wstring type_id;
+		wstring _typeId;
 
 		wstring longitude;
 		wstring latitude;
 
-		wstring hw_serial;
-		wstring sw_serial;
-		wstring hw_version;
-		wstring sw_version;
-		wstring inventory_nr;
+		wstring hwSerial;
+		wstring swSerial;
+		wstring hwVersion;
+		wstring swVersion;
+		wstring inventoryNr;
 		wstring manufacturer;
-		wstring manufacturer_code;
+		wstring manufacturerCode;
 		wstring supplier;
-		wstring supplier_code;
+		wstring supplierCode;
 
-		wstring eq_class;
+		wstring eqClass;
 
-		wstring domain_id;
+		wstring domainId;
 		long long modified;
+
+		General::CharacteristicSeq_Transferable characteristics;
 	};
 	typedef sequence <Equipment_Transferable> EquipmentSeq_Transferable;
 
@@ -75,18 +81,20 @@ module Network
 	{
 		wstring id;
 		wstring name;
-		wstring type_id;
+		wstring _typeId;
 		wstring description;
 
-		wstring inventory_nr;
+		wstring inventoryNr;
 		wstring manufacturer;
-		wstring manufacturer_code;
+		wstring manufacturerCode;
 		wstring supplier;
-		wstring supplier_code;
+		wstring supplierCode;
 
-		wstring domain_id;
+		wstring domainId;
 
 		long long modified;
+
+		General::CharacteristicSeq_Transferable characteristics;
 	};
 	typedef sequence <Link_Transferable> LinkSeq_Transferable;
 
@@ -96,7 +104,7 @@ module Network
 		wstring name;
 		wstring color;
 		wstring mark;
-		wstring link_type_id;
+		wstring linkTypeId;
 	};
 	typedef sequence <CableLinkThread_Transferable> CableLinkThreadSeq_Transferable;
 
@@ -104,20 +112,22 @@ module Network
 	{
 		wstring id;
 		wstring name;
-		wstring type_id;
+		wstring _typeId;
 		wstring description;
 
-		wstring inventory_nr;
+		wstring inventoryNr;
 		wstring manufacturer;
-		wstring manufacturer_code;
+		wstring manufacturerCode;
 		wstring supplier;
-		wstring supplier_code;
+		wstring supplierCode;
 
-		wstring image_id;
+		wstring imageId;
 
-		wstring domain_id;
+		wstring domainId;
 
 		long long modified;
+
+		General::CharacteristicSeq_Transferable characteristics;
 	};
 	typedef sequence <CableLink_Transferable> CableLinkSeq_Transferable;
 };
@@ -128,12 +138,11 @@ module NetworkDirectory
 	{
 		wstring id;
 		wstring name;
-		wstring codename;
 		wstring description;
 		wstring manufacturer;
-		wstring eq_class;
+		wstring eqClass;
 
-		wstring image_id;
+		wstring imageId;
 		long long modified;
 
 		General::CharacteristicSeq_Transferable characteristics;
@@ -144,13 +153,12 @@ module NetworkDirectory
 	{
 		wstring id;
 		wstring name;
-		wstring codename;
 		wstring description;
 		wstring year;
 		wstring body;
 		wstring standard;
-		wstring interface_id;
-		wstring p_class;
+		wstring interfaceId;
+		wstring pClass;
 		long long modified;
 
 		General::CharacteristicSeq_Transferable characteristics;
@@ -166,8 +174,8 @@ module NetworkDirectory
 		wstring year;
 		wstring body;
 		wstring standard;
-		wstring interface_id;
-		wstring p_class;
+		wstring interfaceId;
+		wstring pClass;
 		long long modified;
 
 		General::CharacteristicSeq_Transferable characteristics;
@@ -182,11 +190,11 @@ module NetworkDirectory
 		wstring description;
 		wstring year;
 		wstring standard;
-		wstring link_class;
+		wstring linkClass;
 		wstring manufacturer;
-		wstring manufacturer_code;
+		wstring manufacturerCode;
 
-		wstring image_id;
+		wstring imageId;
 		long long modified;
 
 		General::CharacteristicSeq_Transferable characteristics;
@@ -199,7 +207,7 @@ module NetworkDirectory
 		wstring name;
 		wstring color;
 		wstring mark;
-		wstring link_type_id;
+		wstring linkTypeId;
 	};
 	typedef sequence <CableTypeThread_Transferable> CableTypeThreadSeq_Transferable;
 
@@ -208,14 +216,14 @@ module NetworkDirectory
 		wstring id;
 		wstring name;
 		wstring codename;
-		wstring link_class;
+		wstring linkClass;
 		wstring manufacturer;
-		wstring manufacturer_code;
+		wstring manufacturerCode;
 
-		wstring image_id;
+		wstring imageId;
 		long long modified;
 
-		CableTypeThreadSeq_Transferable cable_threads;
+		CableTypeThreadSeq_Transferable cableThreads;
 
 		General::CharacteristicSeq_Transferable characteristics;
 	};
