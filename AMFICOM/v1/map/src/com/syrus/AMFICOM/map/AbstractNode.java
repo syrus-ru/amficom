@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractNode.java,v 1.11 2005/02/11 15:14:50 bob Exp $
+ * $Id: AbstractNode.java,v 1.12 2005/03/04 08:05:48 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,8 +27,8 @@ import java.util.List;
  * ({@link Map}). Узловой объект характеризуется наличием координат
  * ({@link #location}) и изображением ({@link #imageId}).
  * 
- * @author $Author: bob $
- * @version $Revision: 1.11 $, $Date: 2005/02/11 15:14:50 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.12 $, $Date: 2005/03/04 08:05:48 $
  * @module map_v1
  * @see SiteNode
  * @see TopologicalNode
@@ -171,8 +171,8 @@ public abstract class AbstractNode
 		this.location.setLocation(longitude, this.location.getY());
 	}
 
-	protected void setLatitude(double longitude) {
-		this.location.setLocation(longitude, this.location.getY());
+	protected void setLatitude(double latitude) {
+		this.location.setLocation(this.location.getX(), latitude);
 	}
 
 
