@@ -1,4 +1,5 @@
 OUT=akp.a
+
 OUTSO=libakp.so
 CPP=g++#-3.3.1
 CFLAGS=-O -Wall -W -finline-functions
