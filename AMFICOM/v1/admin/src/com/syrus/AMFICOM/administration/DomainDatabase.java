@@ -1,5 +1,5 @@
 /*
- * $Id: DomainDatabase.java,v 1.6 2005/02/03 08:36:54 bob Exp $
+ * $Id: DomainDatabase.java,v 1.7 2005/02/03 14:30:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/03 08:36:54 $
- * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/02/03 14:30:14 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -61,8 +61,8 @@ public class DomainDatabase extends StorableObjectDatabase {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
 			+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-			+ DomainWrapper.COLUMN_NAME + COMMA
-			+ DomainWrapper.COLUMN_DESCRIPTION;
+			+ StorableObjectWrapper.COLUMN_NAME + COMMA
+			+ StorableObjectWrapper.COLUMN_DESCRIPTION;
 		}
 		return columns;
 	}
@@ -112,8 +112,8 @@ public class DomainDatabase extends StorableObjectDatabase {
 							 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 							 DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 							 domainId,
-							 DatabaseString.fromQuerySubString(resultSet.getString(DomainWrapper.COLUMN_NAME)),
-							 DatabaseString.fromQuerySubString(resultSet.getString(DomainWrapper.COLUMN_DESCRIPTION)));		
+							 DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
+							 DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));		
 		
         return domain;
 	}
@@ -241,7 +241,7 @@ public class DomainDatabase extends StorableObjectDatabase {
 	private List retrieveButIdsByName(List ids, String name) throws RetrieveObjectException {
 		List list = null;
 
-		String condition = DomainWrapper.COLUMN_NAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(name, SIZE_NAME_COLUMN) + APOSTOPHE;
+		String condition = StorableObjectWrapper.COLUMN_NAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(name, SIZE_NAME_COLUMN) + APOSTOPHE;
 
 		try {
 				list = retrieveButIds(ids, condition);

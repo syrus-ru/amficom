@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.5 2005/02/03 08:36:54 bob Exp $
+ * $Id: UserDatabase.java,v 1.6 2005/02/03 14:30:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/03 08:36:54 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/02/03 14:30:14 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -57,8 +57,8 @@ public class UserDatabase extends StorableObjectDatabase {
 			columns = super.getColumns(mode) + COMMA
 				+ UserWrapper.COLUMN_LOGIN + COMMA
 				+ UserWrapper.COLUMN_SORT + COMMA
-				+ UserWrapper.COLUMN_NAME + COMMA
-				+ UserWrapper.COLUMN_DESCRIPTION;		
+				+ StorableObjectWrapper.COLUMN_NAME + COMMA
+				+ StorableObjectWrapper.COLUMN_DESCRIPTION;		
 		}
 		return columns;
 	}	
@@ -100,8 +100,8 @@ public class UserDatabase extends StorableObjectDatabase {
 							DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),							
 							DatabaseString.fromQuerySubString(resultSet.getString(UserWrapper.COLUMN_LOGIN)),
 							resultSet.getInt(UserWrapper.COLUMN_SORT),				
-							DatabaseString.fromQuerySubString(resultSet.getString(UserWrapper.COLUMN_NAME)),
-							DatabaseString.fromQuerySubString(resultSet.getString(UserWrapper.COLUMN_DESCRIPTION)));
+							DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
+							DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));
 		return user;
 	}
 
@@ -181,7 +181,7 @@ public class UserDatabase extends StorableObjectDatabase {
 	}
 	
 	private List retrieveByName(String name) throws RetrieveObjectException, IllegalDataException{
-		String condition = UserWrapper.COLUMN_NAME + EQUALS 
+		String condition = StorableObjectWrapper.COLUMN_NAME + EQUALS 
 						+ APOSTOPHE + name + APOSTOPHE;
 		
 		return this.retrieveByIdsOneQuery(null, condition);

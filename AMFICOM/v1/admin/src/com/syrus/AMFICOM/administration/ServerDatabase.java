@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.5 2005/02/03 08:36:54 bob Exp $
+ * $Id: ServerDatabase.java,v 1.6 2005/02/03 14:30:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/03 08:36:54 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/02/03 14:30:14 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -65,8 +65,8 @@ public class ServerDatabase extends StorableObjectDatabase {
 		if (columns == null){
 			columns = super.getColumns(mode) + COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-				+ ServerWrapper.COLUMN_NAME + COMMA
-				+ ServerWrapper.COLUMN_DESCRIPTION + COMMA
+				+ StorableObjectWrapper.COLUMN_NAME + COMMA
+				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ ServerWrapper.COLUMN_HOSTNAME + COMMA
 				+ ServerWrapper.COLUMN_USER_ID;		
 		}
@@ -119,8 +119,8 @@ public class ServerDatabase extends StorableObjectDatabase {
 								DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 								DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 								DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),													
-								DatabaseString.fromQuerySubString(resultSet.getString(ServerWrapper.COLUMN_NAME)),
-								DatabaseString.fromQuerySubString(resultSet.getString(ServerWrapper.COLUMN_DESCRIPTION)),
+								DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
+								DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 								DatabaseString.fromQuerySubString(resultSet.getString(ServerWrapper.COLUMN_HOSTNAME)),
 								DatabaseIdentifier.getIdentifier(resultSet, ServerWrapper.COLUMN_USER_ID));
 		return server;

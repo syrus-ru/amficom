@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.4 2005/02/03 08:36:54 bob Exp $
+ * $Id: MCMDatabase.java,v 1.5 2005/02/03 14:30:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,8 +45,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/03 08:36:54 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/02/03 14:30:14 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -73,8 +73,8 @@ public class MCMDatabase extends StorableObjectDatabase {
 		if (columns == null) {
     		columns = super.getColumns(mode) + COMMA
 				+ DomainMember.COLUMN_DOMAIN_ID + COMMA
-				+ MCMWrapper.COLUMN_NAME + COMMA
-				+ MCMWrapper.COLUMN_DESCRIPTION + COMMA
+				+ StorableObjectWrapper.COLUMN_NAME + COMMA
+				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ MCMWrapper.COLUMN_HOSTNAME + COMMA
 				+ MCMWrapper.COLUMN_USER_ID + COMMA
 				+ MCMWrapper.COLUMN_SERVER_ID;
@@ -152,8 +152,8 @@ public class MCMDatabase extends StorableObjectDatabase {
 						  DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 						  DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 						  DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
-						  DatabaseString.fromQuerySubString(resultSet.getString(MCMWrapper.COLUMN_NAME)),
-						  DatabaseString.fromQuerySubString(resultSet.getString(MCMWrapper.COLUMN_DESCRIPTION)),
+						  DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
+						  DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 							DatabaseString.fromQuerySubString(resultSet.getString(MCMWrapper.COLUMN_HOSTNAME)),
 						  DatabaseIdentifier.getIdentifier(resultSet, MCMWrapper.COLUMN_USER_ID),
 						  DatabaseIdentifier.getIdentifier(resultSet, MCMWrapper.COLUMN_SERVER_ID)
