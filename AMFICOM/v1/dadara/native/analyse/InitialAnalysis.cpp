@@ -160,11 +160,13 @@ void InitialAnalysis::SetSpliceParamsBySplash( EventParams& ep, Splash& sp)
 {   if(sp.f_extr>0) 	{ ep.type = EventParams::GAIN;}
     else 				{ ep.type = EventParams::LOSS;}
     ep.begin = sp.begin_nonoise-1;
+    if(ep.begin<0){ep.begin=0;}
     ep.end = sp.end_nonoise+1;
+    if(ep.end>=lastNonZeroPoint){ep.end = lastNonZeroPoint-1;}
     // ищем площадь
     int l = max(sp.begin_nonoise, sp.begin - wlet_width);
     int r = min(sp.end_nonoise, sp.end + wlet_width);
-	double alpha = 1./wlet_width;// пока так, потом посчитаем иначе  
+	double alpha = 1./wlet_width;// пока так, потом посчитаем иначе
     double sum=0;
     for(int i=l; i<=r; i++)
     {	sum += f_wlet[i];
@@ -175,13 +177,16 @@ void InitialAnalysis::SetSpliceParamsBySplash( EventParams& ep, Splash& sp)
 void InitialAnalysis::SetConnectorParamsBySplashes( EventParams& ep, Splash& sp1, Splash& sp2 )
 {  ep.type = EventParams::REFLECTIVE;
    ep.begin = sp1.begin_nonoise;
-   ep.end = sp2.end_nonoise;  
+   if(ep.begin<0){ep.begin=0;}
+   ep.end = sp2.end_nonoise;
+   if(ep.end>=lastNonZeroPoint){ep.end = lastNonZeroPoint;}  
 }
 // -------------------------------------------------------------------------------------------------
 void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
 {   //minimalThreshold,	//минимальный уровень события
 	//minimalWeld,		//минимальный уровень неотражательного события
 	//minimalConnector,	//минимальный уровень отражательного события
+    int n = 0;
     for(int i=0; i<lastNonZeroPoint; i++)
     {   if(fabs(f_wlet[i])<=minimalThreshold)
      continue;
@@ -222,8 +227,19 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
         if(begin<0){ begin = 0;}
         if(end>lastNonZeroPoint){ end = lastNonZeroPoint;}
         if(begin < end)// begin>end только если образ так и не пересёк ни разу верхний порог
-        {	Splash* splash = new Splash(begin, end, begin_nonoise, end_nonoise, sign, f_extr, i_extr, area);
+        {   Splash* splash;
+            // первый всплеск обязан быть вверх и большим, а то мы не распознаем мёртвую зону
+        	if(n==0 && sign<0 )
+        	{	splash = new Splash(0, begin, 0, begin, -sign, 2*minimalConnector, begin/2, area);
+            }
+            else if (n==0 && sign>0 && f_extr<=minimalConnector)
+            {	splash = new Splash(begin, end, begin_nonoise, end_nonoise, sign, 2*minimalConnector, i_extr, area);
+            }
+        	else 
+            {	splash = new Splash(begin, end, begin_nonoise, end_nonoise, sign, f_extr, i_extr, area);
+            }
         	splashes.add(splash);
+            n++;
         }
     }
 #ifdef debug_lines
@@ -238,8 +254,7 @@ void InitialAnalysis::findAllWletSplashes(double* f_wlet, ArrList& splashes)
 }
 // -------------------------------------------------------------------------------------------------
 void InitialAnalysis::calcAverageFactor(double* fw, int scale, double norma1)
-{
-	double f_wlet_avrg = calcWletMeanValue(fw, -0.5, 0, 500);
+{	double f_wlet_avrg = calcWletMeanValue(fw, -0.5, 0, 500);
 	average_factor = f_wlet_avrg * norma1 / getWLetNorma2(scale);
 }
 // -------------------------------------------------------------------------------------------------
@@ -321,7 +336,8 @@ double InitialAnalysis::calcWletMeanValue(double *fw, double from, double to, in
 void InitialAnalysis::correctAllConnectorsFronts(double *arr)
 {	if( events->getLength() < 2 )
 return;
-	for(int n=0; n<events->getLength(); n++)
+	// у первого коннектора ( мёртвой зоны) корректировать нечего (считаем, что перед мёртвой зоной ничего нет )
+	for(int n=1; n<events->getLength(); n++)
     {   EventParams* ev1 = (EventParams*)(*events)[n];
         if( ev1->type != EventParams::REFLECTIVE )// пока не дойдём до коннектора
     continue;
@@ -363,11 +379,10 @@ return;
         double ev1_beg_old = ev1->begin;
         ev1->begin = i_x - 1;
 		// правую границу события слева (если оно есть)тоже сдвигаем
-        if(n>0)
-        { EventParams* ev2 = (EventParams*)(*events)[n-1];
-          // двигаем только если границы "цепляются"
-          if(fabs(ev2->end - ev1_beg_old)<2){ ev2->end = ev1->begin; }
-        }
+        EventParams* ev2 = (EventParams*)(*events)[n-1];  // мы помим, что "for(int n=1...."
+        // двигаем только если границы "цепляются"
+        if(fabs(ev2->end - ev1_beg_old)<2){ ev2->end = ev1->begin; }// вместо <2, можно было просто проверить на равенство, но я почему-то так не сделал ...  
+
     }
 }
 //------------------------------------------------------------------------------------------------------------
@@ -571,15 +586,16 @@ void InitialAnalysis::verifyResults()
 {	int prevEnd = 0;
 	for(int i=0; i<events->getLength(); i++)
     {	EventParams& ev = *(EventParams*)(*events)[i];
-//#ifndef debug_VCL
+///*//#ifndef debug_VCL
 		assert(ev.begin >= 0);
 		assert(ev.end < lastNonZeroPoint);
 		assert(ev.end >= ev.begin);
 		assert(ev.end > ev.begin); // >, not just >=
 		assert(ev.begin == prevEnd || i == 0); // XXX
 //#else
-// сюда понатыкать брекпоинтов
-/*		if(!(ev.begin >= 0))
+/*/
+//сюда понатыкать брекпоинтов
+		if(!(ev.begin >= 0))
         { int o=0;}
 		if(!(ev.end < lastNonZeroPoint))
         { int o=0;}
@@ -589,7 +605,7 @@ void InitialAnalysis::verifyResults()
         { int o=0;}
 		if(!(ev.begin == prevEnd || i == 0)) // XXX
         { int o=0;}
-*/
+//*/
 //#endif
 		prevEnd = ev.end;
 
