@@ -101,9 +101,9 @@ public class AddTraceFromDatabaseCommand extends VoidCommand
 
 		if (res.getSort().equals(ResultSort.RESULT_SORT_MEASUREMENT))
 			bs.title = ((Measurement)res.getAction()).getName();
-		Heap.setAnyBSTraceByKey(bs.title, bs);
-
+		Heap.putSecondaryTraceByKey(bs.title, bs);
+		Heap.secondaryTraceOpened(bs.title, bs);
 		dispatcher.notify(new RefChangeEvent(bs.title,
-				RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
+			RefChangeEvent.SELECT_EVENT));
 	}
 }

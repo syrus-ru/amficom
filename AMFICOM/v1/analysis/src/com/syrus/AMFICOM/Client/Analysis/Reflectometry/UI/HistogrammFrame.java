@@ -5,7 +5,8 @@ import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.io.BellcoreStructure;
 
-public class HistogrammFrame extends ScalableFrame implements OperationListener
+public class HistogrammFrame extends ScalableFrame
+implements OperationListener, bsHashChangeListener
 {
 	Dispatcher dispatcher;
 	public HistogrammFrame(Dispatcher dispatcher)
@@ -37,30 +38,11 @@ public class HistogrammFrame extends ScalableFrame implements OperationListener
 	{
 		this.dispatcher = dispatcher;
 		dispatcher.register(this, RefChangeEvent.typ);
+		Heap.addBsHashListener(this);
 	}
 
 	public void operationPerformed(OperationEvent ae)
 	{
-		if(ae.getActionCommand().equals(RefChangeEvent.typ))
-		{
-			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.isOpen())
-			{
-				String id = (String)(rce.getSource());
-				addTrace (id);
-				setVisible(true);
-			}
-			if(rce.isClose())
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals("all"))
-				{
-					((ScalableLayeredPanel)panel).removeAllGraphPanels();
-					setVisible (false);
-				}
-			}
-		}
-
 	}
 
 	public void addTrace (String id)
@@ -83,5 +65,21 @@ public class HistogrammFrame extends ScalableFrame implements OperationListener
 
 			setVisible(true);
 		}
+	}
+
+	public void bsHashAdded(String key, BellcoreStructure bs)
+	{
+			addTrace (key);
+			setVisible(true);
+	}
+
+	public void bsHashRemoved(String key)
+	{
+	}
+
+	public void bsHashRemovedAll()
+	{
+		((ScalableLayeredPanel)panel).removeAllGraphPanels();
+		setVisible (false);
 	}
 }

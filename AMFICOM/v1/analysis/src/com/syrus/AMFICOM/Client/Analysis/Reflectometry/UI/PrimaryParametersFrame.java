@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.General.UI.ATable;
@@ -28,7 +29,7 @@ import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
 
 public class PrimaryParametersFrame extends ATableFrame
-implements OperationListener
+implements OperationListener, bsHashChangeListener
 {
 
 	private FixedSizeEditableTableModel tModel;
@@ -63,6 +64,7 @@ implements OperationListener
 	void init_module(Dispatcher dispatcher)
 	{
 		dispatcher.register(this, RefChangeEvent.typ);
+		Heap.addBsHashListener(this);
 	}
 
 	public void operationPerformed(OperationEvent ae)
@@ -70,27 +72,10 @@ implements OperationListener
 		if(ae.getActionCommand().equals(RefChangeEvent.typ))
 		{
 			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.isOpen())
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
-				{
-					setVisible(true);
-				}
-			}
 			if(rce.isEventSelect())
 			{
 				String id = (String)(rce.getSource());
 				updTableModel (id);
-			}
-			if(rce.isClose())
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals("all"))
-				{
-				//	tModel.clearTable();
-					setVisible(false);
-				}
 			}
 		}
 	}
@@ -185,5 +170,22 @@ implements OperationListener
 			bs.getBackscatter() + " " + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_DB),
 		}, 1);
 		jTable.updateUI();
+	}
+
+	public void bsHashAdded(String key, BellcoreStructure bs)
+	{
+		if (key.equals(RefUpdateEvent.PRIMARY_TRACE))
+		{
+			setVisible(true);
+		}
+	}
+
+	public void bsHashRemoved(String key)
+	{
+	}
+
+	public void bsHashRemovedAll()
+	{
+		setVisible(false);
 	}
 }

@@ -98,7 +98,8 @@ public class SaveTestSetupAsCommand extends VoidCommand
 
 		new SaveTestSetupCommand(aContext, type).execute();
 
-		aContext.getDispatcher().notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE,
-				RefChangeEvent.THRESHOLDS_CALC_EVENT));
+		// FIXME: зачем тут было это событие?
+//		aContext.getDispatcher().notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE,
+//				RefChangeEvent.THRESHOLDS_CALC_EVENT));
 	}
 }

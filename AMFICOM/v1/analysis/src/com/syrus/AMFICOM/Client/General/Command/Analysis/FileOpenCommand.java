@@ -156,14 +156,12 @@ public class FileOpenCommand extends VoidCommand
 			bs.title = activeRefId;
 			Heap.setBSPrimaryTrace(bs);
 			Heap.setActiveContextActivePathIDToEmptyString();
-
 			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-
 			new InitialAnalysisCommand().execute();
 			//new MinuitAnalyseCommand(dispatcher, RefUpdateEvent.PRIMARY_TRACE, aContext).execute();
+			Heap.primaryTraceOpened(bs);
 
-			dispatcher.notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE,
-											RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
+			dispatcher.notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE, RefChangeEvent.SELECT_EVENT));
 			dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE, RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
 			try
 			{

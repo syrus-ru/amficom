@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
@@ -40,7 +41,7 @@ import com.syrus.AMFICOM.client_.general.ui_.ADefaultTableCellRenderer;
 import com.syrus.io.BellcoreStructure;
 
 public class EventsFrame extends ATableFrame
-implements OperationListener
+implements OperationListener, bsHashChangeListener
 {
 	public static final String LINEAR = LangModelAnalyse.getString("eventTypeLinear");
 	public static final String CONNECTOR = LangModelAnalyse.getString("eventTypeReflective");
@@ -93,6 +94,7 @@ implements OperationListener
 		dispatcher.register(this, RefUpdateEvent.typ);
 		dispatcher.register(this, AnalyseApplicationModel.SELECT_NEXT_EVENT);
 		dispatcher.register(this, AnalyseApplicationModel.SELECT_PREVIOUS_EVENT);
+		Heap.addBsHashListener(this);
 	}
 
 	public void operationPerformed(OperationEvent ae)
@@ -101,43 +103,6 @@ implements OperationListener
 		if(actionCommand.equals(RefChangeEvent.typ))
 		{
 			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.isOpen())
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals(Heap.PRIMARY_TRACE_KEY))
-				{
-					this.data = Heap.getMTMByKey(Heap.PRIMARY_TRACE_KEY).getComplexEvents();
-					etalon = null;
-					setNoComparedWithEtalonColor();
-					if (Heap.getRefAnalysisByKey(id) != null)
-					{
-						RefAnalysis a = Heap.getRefAnalysisByKey(id);
-						BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
-						setTableModel(bs, a.events);
-						this.updateTableModel(0);
-					}
-					setVisible(true);
-				}
-			}
-			if(rce.isClose())
-			{
-				String id = (String)(rce.getSource());
-
-				if(id.equals(AnalysisUtil.ETALON))
-				{
-					etalon = null;
-					data = null;
-					setNoComparedWithEtalonColor();
-				}
-				if (id.equals("all"))
-				{
-					etalon = null;
-					data = null;
-					tModel.clearTable();
-					setNoComparedWithEtalonColor();
-					setVisible(false);
-				}
-			}
 			if(rce.isEtalonOpen())
 			{
 				String etId = (String)rce.getSource();
@@ -515,5 +480,44 @@ implements OperationListener
 			}
 			return result;
 		}
+	}
+
+
+	public void bsHashAdded(String key, BellcoreStructure bs)
+	{
+		if (key.equals(Heap.PRIMARY_TRACE_KEY))
+		{
+			this.data = Heap.getMTMByKey(Heap.PRIMARY_TRACE_KEY).getComplexEvents();
+			etalon = null;
+			setNoComparedWithEtalonColor();
+			if (Heap.getRefAnalysisByKey(Heap.PRIMARY_TRACE_KEY) != null)
+			{
+				RefAnalysis a = Heap.getRefAnalysisByKey(Heap.PRIMARY_TRACE_KEY);
+				setTableModel(bs, a.events);
+				this.updateTableModel(0);
+			}
+			setVisible(true);
+		}
+	}
+
+
+	public void bsHashRemoved(String key)
+	{
+		if(key.equals(AnalysisUtil.ETALON))
+		{
+			etalon = null;
+			data = null;
+			setNoComparedWithEtalonColor();
+		}
+	}
+
+
+	public void bsHashRemovedAll()
+	{
+		etalon = null;
+		data = null;
+		tModel.clearTable();
+		setNoComparedWithEtalonColor();
+		setVisible(false);
 	}
 }

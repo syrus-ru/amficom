@@ -1,13 +1,13 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
+import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 
 public class RemoveEtalonCommand extends VoidCommand
 {
-	private ApplicationContext aContext;
+	private ApplicationContext aContext; // FIXME: remove
 
 	public RemoveEtalonCommand(ApplicationContext aContext)
 	{
@@ -32,6 +32,7 @@ public class RemoveEtalonCommand extends VoidCommand
 
 	public void execute()
 	{
-		aContext.getDispatcher().notify(new RefChangeEvent(AnalysisUtil.ETALON, RefChangeEvent.CLOSE_EVENT));
+		Heap.notifyBsHashRemove(Heap.ETALON_TRACE_KEY);
+		// FIXME: кажется, тут еще неплохо бы кидать CLOSE_ETALON_EVENT
 	}
 }

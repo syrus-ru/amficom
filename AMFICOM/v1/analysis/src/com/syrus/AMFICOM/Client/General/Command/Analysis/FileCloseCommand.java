@@ -8,8 +8,8 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 
 public class FileCloseCommand extends VoidCommand
 {
-	private Dispatcher dispatcher;
-	private ApplicationContext aContext;
+	private Dispatcher dispatcher; // @todo: remove
+	private ApplicationContext aContext; // @todo: remove
 
 	public FileCloseCommand(Dispatcher dispatcher, ApplicationContext aContext)
 	{
@@ -47,6 +47,6 @@ public class FileCloseCommand extends VoidCommand
 		}
 
 		Heap.removeAllBS();
-		dispatcher.notify(new RefChangeEvent("all", RefChangeEvent.CLOSE_EVENT));
+		Heap.notifyBsHashRemoveAll();
 	}
 }

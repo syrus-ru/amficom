@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.UI.ATable;
 import com.syrus.AMFICOM.Client.General.UI.FixedSizeEditableTableModel;
@@ -37,7 +38,7 @@ import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
 import com.syrus.io.BellcoreStructure;
 
 public class OverallStatsFrame extends ATableFrame
-implements OperationListener
+implements OperationListener, bsHashChangeListener
 {
 	private FixedSizeEditableTableModel tModel;
 	private JTable jTable;
@@ -85,6 +86,7 @@ implements OperationListener
 	{
 		dispatcher.register(this, RefChangeEvent.typ);
 		dispatcher.register(this, RefUpdateEvent.typ);
+		Heap.addBsHashListener(this);
 	}
 
 	public void operationPerformed(OperationEvent ae)
@@ -92,38 +94,6 @@ implements OperationListener
 		if(ae.getActionCommand().equals(RefChangeEvent.typ))
 		{
 			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.isOpen())
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
-				{
-					updTableModel(id);
-					setVisible(true);
-					wctModel.clearTable();
-					tabbedPane.setSelectedIndex(0);
-					tabbedPane.setEnabledAt(1, false);
-				}
-			}
-			if(rce.isClose())
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals("all"))
-				{
-//					tModel.clearTable();
-					wctModel.clearTable();
-					tabbedPane.setSelectedIndex(0);
-					analysis_performed = false;
-					tabbedPane.setEnabledAt(1, false);
-					setVisible(false);
-				}
-				else if(id.equals(AnalysisUtil.ETALON))
-				{
-					wctModel.clearTable();
-					tabbedPane.setSelectedIndex(0);
-					etalon_loaded = false;
-					tabbedPane.setEnabledAt(1, false);
-				}
-			}
 
 			if(rce.isEtalonOpen())
 			{
@@ -310,6 +280,38 @@ implements OperationListener
 			String.valueOf(evNum)
 		}, 1);
 		jTable.updateUI();
+	}
+
+	public void bsHashAdded(String key, BellcoreStructure bs)
+	{
+		if (key.equals(RefUpdateEvent.PRIMARY_TRACE))
+		{
+			updTableModel(key);
+			setVisible(true);
+			wctModel.clearTable();
+			tabbedPane.setSelectedIndex(0);
+			tabbedPane.setEnabledAt(1, false);
+		}
+	}
+
+	public void bsHashRemoved(String key)
+	{
+		if(key.equals(AnalysisUtil.ETALON))
+		{
+			wctModel.clearTable();
+			tabbedPane.setSelectedIndex(0);
+			etalon_loaded = false;
+			tabbedPane.setEnabledAt(1, false);
+		}
+	}
+
+	public void bsHashRemovedAll()
+	{
+		wctModel.clearTable();
+		tabbedPane.setSelectedIndex(0);
+		analysis_performed = false;
+		tabbedPane.setEnabledAt(1, false);
+		setVisible(false);
 	}
 }
 

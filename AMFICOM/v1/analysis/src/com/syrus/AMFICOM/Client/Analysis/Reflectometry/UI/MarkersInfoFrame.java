@@ -11,7 +11,8 @@ import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.io.BellcoreStructure;
 
-public class MarkersInfoFrame extends JInternalFrame implements OperationListener
+public class MarkersInfoFrame extends JInternalFrame
+implements OperationListener, bsHashChangeListener
 {
 	private static StringBuffer km = new StringBuffer(" ").append(LangModelAnalyse.getString("km"));
 	private static StringBuffer mt = new StringBuffer(" ").append(LangModelAnalyse.getString("mt"));
@@ -55,36 +56,13 @@ public class MarkersInfoFrame extends JInternalFrame implements OperationListene
 
 	void init_module(Dispatcher dispatcher)
 	{
-		dispatcher.register(this, RefChangeEvent.typ);
+		//dispatcher.register(this, RefChangeEvent.typ);
 		dispatcher.register(this, RefUpdateEvent.typ);
+		Heap.addBsHashListener(this);
 	}
 
 	public void operationPerformed(OperationEvent ae)
 	{
-		if(ae.getActionCommand().equals(RefChangeEvent.typ))
-		{
-			RefChangeEvent rce = (RefChangeEvent)ae;
-			if (rce.isOpen())
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
-				{
-					bs = Heap.getAnyBSTraceByKey(id);
-					sigma = MathRef.calcSigma(bs.getWavelength(), bs.getPulsewidth());
-					setVisible(true);
-				}
-			}
-			if (rce.isClose())
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals("all"))
-				{
-//					tModel.clearTable();
-					setVisible(false);
-				}
-			}
-
-		}
 		if(ae.getActionCommand().equals(RefUpdateEvent.typ))
 		{
 			RefUpdateEvent rue = (RefUpdateEvent)ae;
@@ -209,5 +187,24 @@ public class MarkersInfoFrame extends JInternalFrame implements OperationListene
 			data[9] = dash;
 		tModel.updateColumn(data, 1);
 		jTable.updateUI();
+	}
+
+	public void bsHashAdded(String key, BellcoreStructure bs)
+	{
+		if (key.equals(RefUpdateEvent.PRIMARY_TRACE))
+		{
+			bs = Heap.getBSPrimaryTrace();
+			sigma = MathRef.calcSigma(bs.getWavelength(), bs.getPulsewidth());
+			setVisible(true);
+		}
+	}
+
+	public void bsHashRemoved(String key)
+	{
+	}
+
+	public void bsHashRemovedAll()
+	{
+		setVisible(false);
 	}
 }

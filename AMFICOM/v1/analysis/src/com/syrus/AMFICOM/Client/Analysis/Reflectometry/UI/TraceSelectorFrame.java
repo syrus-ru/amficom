@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
 
 public class TraceSelectorFrame extends JInternalFrame
-  implements OperationListener
+implements OperationListener, bsHashChangeListener
 {
 	protected static List traces = new ArrayList();
 	protected Dispatcher dispatcher;
@@ -54,6 +54,7 @@ public class TraceSelectorFrame extends JInternalFrame
 	{
 		this.dispatcher = dispatcher;
 		dispatcher.register(this, RefChangeEvent.typ);
+		Heap.addBsHashListener(this);
 	}
 
 	public void operationPerformed(OperationEvent ae)
@@ -61,7 +62,7 @@ public class TraceSelectorFrame extends JInternalFrame
 		if(ae.getActionCommand().equals(RefChangeEvent.typ))
 		{
 			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.isOpen() || rce.isEtalonOpen())
+			if(rce.isEtalonOpen())
 			{
 				String id = (String)(rce.getSource());
 				if (traces.contains(id))
@@ -85,25 +86,6 @@ public class TraceSelectorFrame extends JInternalFrame
 				if (selected != -1)
 					jTable.setRowSelectionInterval(selected, selected);
 				here = false;
-			}
-			if(rce.isClose())
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals("all"))
-				{
-					tModel.clearTable();
-					traces = new ArrayList();
-					setVisible(false);
-				}
-				else
-				{
-					int index = traces.indexOf(id);
-					if (index != -1)
-					{
-						tModel.removeRow(index);
-						traces.remove(id);
-					}
-				}
 			}
 		}
 	}
@@ -173,58 +155,89 @@ public class TraceSelectorFrame extends JInternalFrame
 		scrollPane.getViewport().add(jTable);
 	}
 
-			class DefaultTableModel extends AbstractTableModel {
-				final String[] columnNames = {"Element",
-																			"Color"};
-				final Object[][] data = {
-						{"DefaultElement", new Color(255, 255, 255)},
-						{"DefaultElement2", new Color(255, 255, 255)}
-						};
+	class DefaultTableModel extends AbstractTableModel {
+		final String[] columnNames = {"Element", "Color"};
+		final Object[][] data = {
+				{"DefaultElement", new Color(255, 255, 255)},
+				{"DefaultElement2", new Color(255, 255, 255)}
+				};
 
-				public int getColumnCount() {
-						return columnNames.length;
-				}
+		public int getColumnCount() {
+				return columnNames.length;
+		}
 
-				public int getRowCount() {
-						return data.length;
-				}
+		public int getRowCount() {
+				return data.length;
+		}
 
-				public String getColumnName(int col) {
-						return columnNames[col];
-				}
+		public String getColumnName(int col) {
+				return columnNames[col];
+		}
 
-				public Object getValueAt(int row, int col) {
-						return data[row][col];
-				}
+		public Object getValueAt(int row, int col) {
+				return data[row][col];
+		}
 
-				/*
-				 * JTable uses this method to determine the default renderer/
-				 * editor for each cell.  If we didn't implement this method,
-				 * then the last column would contain text ("true"/"false"),
-				 * rather than a check box.
-				 */
-				public Class getColumnClass(int c) {
-						return getValueAt(0, c).getClass();
-				}
+		/*
+		 * JTable uses this method to determine the default renderer/
+		 * editor for each cell.  If we didn't implement this method,
+		 * then the last column would contain text ("true"/"false"),
+		 * rather than a check box.
+		 */
+		public Class getColumnClass(int c) {
+				return getValueAt(0, c).getClass();
+		}
 
-				/*
-				 * Don't need to implement this method unless your table's
-				 * editable.
-				 */
-				public boolean isCellEditable(int row, int col) {
-						//Note that the data/cell address is constant,
-						//no matter where the cell appears onscreen.
-						if (col < 1) {
-								return false;
-						} else {
-								return true;
-						}
-				}
-
-				public void setValueAt(Object value, int row, int col) {
-						data[row][col] = value;
-						fireTableCellUpdated(row, col);
+		/*
+		 * Don't need to implement this method unless your table's
+		 * editable.
+		 */
+		public boolean isCellEditable(int row, int col) {
+				//Note that the data/cell address is constant,
+				//no matter where the cell appears onscreen.
+				if (col < 1) {
+						return false;
+				} else {
+						return true;
 				}
 		}
 
+		public void setValueAt(Object value, int row, int col) {
+				data[row][col] = value;
+				fireTableCellUpdated(row, col);
+		}
+	}
+	
+
+	public void bsHashAdded(String key, BellcoreStructure bs)
+	{
+		String id = key;
+		if (traces.contains(id))
+			return;
+
+		traces.add(id);
+
+		if (bs != null)
+			title = bs.title;
+
+		tModel.addRow(title, new Color[] {ColorManager.getColor(id)});
+		setVisible(true);
+	}
+
+	public void bsHashRemoved(String key)
+	{
+		int index = traces.indexOf(key);
+		if (index != -1)
+		{
+			tModel.removeRow(index);
+			traces.remove(key);
+		}
+	}
+
+	public void bsHashRemovedAll()
+	{
+		tModel.clearTable();
+		traces = new ArrayList();
+		setVisible(false);
+	}
 }

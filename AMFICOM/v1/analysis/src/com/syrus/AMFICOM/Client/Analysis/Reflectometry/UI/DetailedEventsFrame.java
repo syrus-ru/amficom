@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.client_.general.ui_.ADefaultTableCellRenderer;
 import com.syrus.io.BellcoreStructure;
 
 public class DetailedEventsFrame extends JInternalFrame
-	implements OperationListener
+implements OperationListener, bsHashChangeListener
 {
 	private ModelTraceManager etalonMTM;
 	private ModelTraceManager dataMTM;
@@ -81,6 +81,7 @@ public class DetailedEventsFrame extends JInternalFrame
 	{
 		dispatcher.register(this, RefChangeEvent.typ);
 		dispatcher.register(this, RefUpdateEvent.typ);
+		Heap.addBsHashListener(this);
 	}
 
 	private void makeAlignedDataMT()
@@ -97,41 +98,6 @@ public class DetailedEventsFrame extends JInternalFrame
 		if(ae.getActionCommand().equals(RefChangeEvent.typ))
 		{
 			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.isOpen())
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals(Heap.PRIMARY_TRACE_KEY))
-				{
-					alignedDataMT = null;
-					tabbedPane.setSelectedIndex(0);
-					tabbedPane.setEnabledAt(0, true);
-					tabbedPane.setEnabledAt(1, false);
-					setVisible(true);
-				}
-			}
-			if(rce.isClose())
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals("all"))
-				{
-					alignedDataMT = null;
-					ctModel.clearTable();
-					tabbedPane.setSelectedIndex(0);
-					tabbedPane.setEnabledAt(0, true);
-					analysis_performed = false;
-					tabbedPane.setEnabledAt(1, false);
-					setVisible(false);
-				}
-				else if(id.equals(AnalysisUtil.ETALON))
-				{
-					alignedDataMT = null;
-					ctModel.clearTable();
-					tabbedPane.setEnabledAt(0, true);
-					tabbedPane.setSelectedIndex(0);
-					etalon_loaded = false;
-					tabbedPane.setEnabledAt(1, false);
-				}
-			}
 			if(rce.isEtalonOpen())
 			{
 				etalonMTM = Heap.getMTMByKey(AnalysisUtil.ETALON);
@@ -556,6 +522,42 @@ public class DetailedEventsFrame extends JInternalFrame
 		jTable.getColumnModel().getColumn(0).setPreferredWidth(120);
 		jTable.getColumnModel().getColumn(1).setPreferredWidth(80);
 		jTable.updateUI();
+	}
+
+	public void bsHashAdded(String key, BellcoreStructure bs)
+	{
+		if (key.equals(Heap.PRIMARY_TRACE_KEY))
+		{
+			alignedDataMT = null;
+			tabbedPane.setSelectedIndex(0);
+			tabbedPane.setEnabledAt(0, true);
+			tabbedPane.setEnabledAt(1, false);
+			setVisible(true);
+		}
+	}
+
+	public void bsHashRemoved(String key)
+	{
+		if(key.equals(AnalysisUtil.ETALON))
+		{
+			alignedDataMT = null;
+			ctModel.clearTable();
+			tabbedPane.setEnabledAt(0, true);
+			tabbedPane.setSelectedIndex(0);
+			etalon_loaded = false;
+			tabbedPane.setEnabledAt(1, false);
+		}
+	}
+
+	public void bsHashRemovedAll()
+	{
+		alignedDataMT = null;
+		ctModel.clearTable();
+		tabbedPane.setSelectedIndex(0);
+		tabbedPane.setEnabledAt(0, true);
+		analysis_performed = false;
+		tabbedPane.setEnabledAt(1, false);
+		setVisible(false);
 	}
 }
 

@@ -14,12 +14,15 @@ import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
+import com.syrus.io.BellcoreStructure;
 
-public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel implements OperationListener
+public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel
+implements OperationListener, bsHashChangeListener
 {
 	public ThresholdsLayeredPanel(Dispatcher dispatcher)
 	{
@@ -49,6 +52,7 @@ public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel implements O
 	{
 		super.init_module(dispatcher);
 		dispatcher.register(this, RefChangeEvent.typ);
+		Heap.addBsHashListener(this);
 	}
 
 	public void operationPerformed(OperationEvent ae)
@@ -56,19 +60,6 @@ public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel implements O
 		if(ae.getActionCommand().equals(RefChangeEvent.typ))
 		{
 			RefChangeEvent rce = (RefChangeEvent)ae;
-			if (rce.isClose())
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals("all"))
-				{
-					for(int i=0; i<jLayeredPane.getComponentCount(); i++)
-					{
-						SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
-						if (panel instanceof ThresholdsPanel)
-							((ThresholdsPanel)panel).mtm = null;
-					}
-				}
-			}
 		}
 		if(ae.getActionCommand().equals(RefUpdateEvent.typ))
 		{
@@ -144,6 +135,24 @@ public class ThresholdsLayeredPanel extends TraceEventsLayeredPanel implements O
 	boolean hasShowThresholdButtonSelected()
 	{
 		return ((ThresholdsToolBar )toolbar).showThresholdButton.isSelected();
+	}
+
+	public void bsHashAdded(String key, BellcoreStructure bs)
+	{
+	}
+
+	public void bsHashRemoved(String key)
+	{
+	}
+
+	public void bsHashRemovedAll()
+	{
+		for(int i=0; i<jLayeredPane.getComponentCount(); i++)
+		{
+			SimpleGraphPanel panel = (SimpleGraphPanel)jLayeredPane.getComponent(i);
+			if (panel instanceof ThresholdsPanel)
+				((ThresholdsPanel)panel).mtm = null;
+		}
 	}
 }
 

@@ -23,9 +23,10 @@ import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.general.*;
+import com.syrus.io.BellcoreStructure;
 
 public class AnalyseMainFrameSimplified extends JFrame
-	implements OperationListener
+implements bsHashChangeListener, OperationListener
 {
 	public static final boolean DEBUG = System.getProperty("amficom.debug.nonstrict", "false").equals("true");
 
@@ -165,6 +166,7 @@ public class AnalyseMainFrameSimplified extends JFrame
 		aContext.setDispatcher(internal_dispatcher);
 		internal_dispatcher.register(this, RefChangeEvent.typ);
 		internal_dispatcher.register(this, "contextchange");
+		Heap.addBsHashListener(this);
 		Environment.getDispatcher().register(this, "contextchange");
 
 		aModel.setCommand("menuSessionNew", new SessionOpenCommand(Environment.getDispatcher(), aContext));
@@ -363,121 +365,10 @@ public class AnalyseMainFrameSimplified extends JFrame
 		{
 			ApplicationModel aModel = aContext.getApplicationModel();
 			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.isOpen())
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
-				{
-					aModel.setEnabled("menuFileSave", true);
-					aModel.setEnabled("menuFileSaveAll", true);
-					aModel.setEnabled("menuFileSaveAs", true);
-					aModel.setEnabled("menuFileSaveAsText", true);
-					aModel.setEnabled("menuFileClose", true);
-					aModel.setEnabled("menuFileAddCompare", true);
-
-					aModel.setEnabled("menuTraceDownloadEtalon", true);
-					aModel.setEnabled("menuTraceUpload", true);
-					aModel.setEnabled("menuTraceClose", true);
-					aModel.setEnabled("menuTraceCurrentMakeReference", true);
-					aModel.setEnabled("menuTraceReference", true);
-					aModel.setEnabled("menuTraceCurrent", true);
-					aModel.setEnabled("menuTraceAddCompare", true);
-					aModel.setEnabled("menuAnalyseUpload", true);
-
-					aModel.setEnabled("menuReportCreate", true);
-
-					aModel.setEnabled("menuWindowArrange", true);
-					aModel.setEnabled("menuWindowTraceSelector", true);
-					aModel.setEnabled("menuWindowPrimaryParameters", true);
-					aModel.setEnabled("menuWindowOverallStats", true);
-					aModel.setEnabled("menuWindowEvents", true);
-					aModel.setEnabled("menuWindowAnalysis", true);
-					aModel.setEnabled("menuWindowMarkersInfo", true);
-					aModel.setEnabled("menuWindowAnalysisSelection", true);
-
-					aModel.fireModelChanged("");
-
-					String name = Heap.getBSPrimaryTrace().title;
-					setTitle(LangModelAnalyse.getString("AnalyseTitle") + ": " + name);
-				}
-				else if (id.equals(Heap.REFERENCE_TRACE_KEY))
-				{
-					aModel.setEnabled("menuTraceReferenceMakeCurrent", true);
-					aModel.fireModelChanged(new String [] {"menuTraceReferenceMakeCurrent"});
-				}
-				else
-				{
-					aModel.setEnabled("menuTraceRemoveCompare", true);
-					aModel.setEnabled("menuFileRemoveCompare", true);
-					aModel.fireModelChanged(new String [] {"menuTraceRemoveCompare", "menuTraceRemoveCompare"});
-				}
-			}
 			if(rce.isEtalonOpen())
 			{
 				aModel.setEnabled("menuTraceCloseEtalon", true);
 				aModel.fireModelChanged(new String [] {"menuTraceCloseEtalon"});
-			}
-			if(rce.isClose())
-			{
-				String id = (String)(rce.getSource());
-				if (Heap.hasEmptyAllBSMap())
-				{
-					aModel.setEnabled("menuFileSave", false);
-					aModel.setEnabled("menuFileSaveAll", false);
-					aModel.setEnabled("menuFileSaveAs", false);
-					aModel.setEnabled("menuFileSaveAsText", false);
-					aModel.setEnabled("menuFileClose", false);
-					aModel.setEnabled("menuFileAddCompare", false);
-					aModel.setEnabled("menuFileRemoveCompare", false);
-
-					aModel.setEnabled("menuTraceDownloadEtalon", false);
-					aModel.setEnabled("menuTraceClose", false);
-					aModel.setEnabled("menuTraceCloseEtalon", false);
-					aModel.setEnabled("menuTraceCurrentMakeReference", false);
-					aModel.setEnabled("menuTraceAddCompare", false);
-					aModel.setEnabled("menuFileRemoveCompare", false);
-					aModel.setEnabled("menuTraceRemoveCompare", false);
-					aModel.setEnabled("menuTraceUpload", false);
-					aModel.setEnabled("menuTraceReference", false);
-					aModel.setEnabled("menuTraceCurrent", false);
-					aModel.setEnabled("menuAnalyseUpload", false);
-
-					aModel.setEnabled("menuReportCreate", false);
-
-					aModel.setEnabled("menuWindowArrange", false);
-					aModel.setEnabled("menuWindowTraceSelector", false);
-					aModel.setEnabled("menuWindowPrimaryParameters", false);
-					aModel.setEnabled("menuWindowOverallStats", false);
-					aModel.setEnabled("menuWindowEvents", false);
-					aModel.setEnabled("menuWindowAnalysis", false);
-					aModel.setEnabled("menuWindowMarkersInfo", false);
-					aModel.setEnabled("menuWindowAnalysisSelection", false);
-
-					aModel.fireModelChanged("");
-					setTitle(LangModelAnalyse.getString("AnalyseTitle"));
-				}
-				else
-				{
-					if (id.equals(Heap.REFERENCE_TRACE_KEY))
-					{
-						aModel.setEnabled("menuTraceReferenceMakeCurrent", false);
-						aModel.fireModelChanged(new String [] {"menuTraceReferenceMakeCurrent"});
-					}
-					Iterator it = Heap.getAllBSMap().keySet().iterator();
-					String nextId = (String)it.next();
-					if (nextId.equals(RefUpdateEvent.PRIMARY_TRACE))
-					{
-						if (!it.hasNext())
-						{
-							aModel.setEnabled("menuFileRemoveCompare", false);
-							aModel.setEnabled("menuTraceRemoveCompare", false);
-							aModel.fireModelChanged(new String [] {"menuTraceRemoveCompare", "menuFileRemoveCompare"});
-						}
-						else
-							nextId = (String)it.next();
-					}
-					internal_dispatcher.notify(new RefChangeEvent(nextId, RefChangeEvent.SELECT_EVENT));
-				}
 			}
 			if(rce.isEtalonClose())
 			{
@@ -658,6 +549,136 @@ public class AnalyseMainFrameSimplified extends JFrame
 			return;
 		}
 		super.processWindowEvent(e);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener#bsHashAdded(java.lang.String, com.syrus.io.BellcoreStructure)
+	 */
+	public void bsHashAdded(String key, BellcoreStructure bs)
+	{
+		ApplicationModel aModel = aContext.getApplicationModel();
+		String id = key;
+		if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
+		{
+			aModel.setEnabled("menuFileSave", true);
+			aModel.setEnabled("menuFileSaveAll", true);
+			aModel.setEnabled("menuFileSaveAs", true);
+			aModel.setEnabled("menuFileSaveAsText", true);
+			aModel.setEnabled("menuFileClose", true);
+			aModel.setEnabled("menuFileAddCompare", true);
+
+			aModel.setEnabled("menuTraceDownloadEtalon", true);
+			aModel.setEnabled("menuTraceUpload", true);
+			aModel.setEnabled("menuTraceClose", true);
+			aModel.setEnabled("menuTraceCurrentMakeReference", true);
+			aModel.setEnabled("menuTraceReference", true);
+			aModel.setEnabled("menuTraceCurrent", true);
+			aModel.setEnabled("menuTraceAddCompare", true);
+			aModel.setEnabled("menuAnalyseUpload", true);
+
+			aModel.setEnabled("menuReportCreate", true);
+
+			aModel.setEnabled("menuWindowArrange", true);
+			aModel.setEnabled("menuWindowTraceSelector", true);
+			aModel.setEnabled("menuWindowPrimaryParameters", true);
+			aModel.setEnabled("menuWindowOverallStats", true);
+			aModel.setEnabled("menuWindowEvents", true);
+			aModel.setEnabled("menuWindowAnalysis", true);
+			aModel.setEnabled("menuWindowMarkersInfo", true);
+			aModel.setEnabled("menuWindowAnalysisSelection", true);
+
+			aModel.fireModelChanged("");
+
+			String name = Heap.getBSPrimaryTrace().title;
+			setTitle(LangModelAnalyse.getString("AnalyseTitle") + ": " + name);
+		}
+		else if (id.equals(Heap.REFERENCE_TRACE_KEY))
+		{
+			aModel.setEnabled("menuTraceReferenceMakeCurrent", true);
+			aModel.fireModelChanged(new String [] {"menuTraceReferenceMakeCurrent"});
+		}
+		else
+		{
+			aModel.setEnabled("menuTraceRemoveCompare", true);
+			aModel.setEnabled("menuFileRemoveCompare", true);
+			aModel.fireModelChanged(new String [] {"menuTraceRemoveCompare", "menuTraceRemoveCompare"});
+	}
+	}
+
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener#bsHashRemoved(java.lang.String)
+	 */
+	public void bsHashRemoved(String key)
+	{
+		ApplicationModel aModel = aContext.getApplicationModel();
+		String id = key;
+		if (Heap.hasEmptyAllBSMap())
+		{
+			aModel.setEnabled("menuFileSave", false);
+			aModel.setEnabled("menuFileSaveAll", false);
+			aModel.setEnabled("menuFileSaveAs", false);
+			aModel.setEnabled("menuFileSaveAsText", false);
+			aModel.setEnabled("menuFileClose", false);
+			aModel.setEnabled("menuFileAddCompare", false);
+			aModel.setEnabled("menuFileRemoveCompare", false);
+
+			aModel.setEnabled("menuTraceDownloadEtalon", false);
+			aModel.setEnabled("menuTraceClose", false);
+			aModel.setEnabled("menuTraceCloseEtalon", false);
+			aModel.setEnabled("menuTraceCurrentMakeReference", false);
+			aModel.setEnabled("menuTraceAddCompare", false);
+			aModel.setEnabled("menuFileRemoveCompare", false);
+			aModel.setEnabled("menuTraceRemoveCompare", false);
+			aModel.setEnabled("menuTraceUpload", false);
+			aModel.setEnabled("menuTraceReference", false);
+			aModel.setEnabled("menuTraceCurrent", false);
+			aModel.setEnabled("menuAnalyseUpload", false);
+
+			aModel.setEnabled("menuReportCreate", false);
+
+			aModel.setEnabled("menuWindowArrange", false);
+			aModel.setEnabled("menuWindowTraceSelector", false);
+			aModel.setEnabled("menuWindowPrimaryParameters", false);
+			aModel.setEnabled("menuWindowOverallStats", false);
+			aModel.setEnabled("menuWindowEvents", false);
+			aModel.setEnabled("menuWindowAnalysis", false);
+			aModel.setEnabled("menuWindowMarkersInfo", false);
+			aModel.setEnabled("menuWindowAnalysisSelection", false);
+
+			aModel.fireModelChanged("");
+			setTitle(LangModelAnalyse.getString("AnalyseTitle"));
+		}
+		else
+		{
+			if (id.equals(Heap.REFERENCE_TRACE_KEY))
+			{
+				aModel.setEnabled("menuTraceReferenceMakeCurrent", false);
+				aModel.fireModelChanged(new String [] {"menuTraceReferenceMakeCurrent"});
+			}
+			Iterator it = Heap.getAllBSMap().keySet().iterator();
+			String nextId = (String)it.next();
+			if (nextId.equals(RefUpdateEvent.PRIMARY_TRACE))
+			{
+				if (!it.hasNext())
+				{
+					aModel.setEnabled("menuFileRemoveCompare", false);
+					aModel.setEnabled("menuTraceRemoveCompare", false);
+					aModel.fireModelChanged(new String [] {"menuTraceRemoveCompare", "menuFileRemoveCompare"});
+				}
+				else
+					nextId = (String)it.next();
+			}
+			internal_dispatcher.notify(new RefChangeEvent(nextId, RefChangeEvent.SELECT_EVENT));
+		}
+	}
+
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener#bsHashRemovedAll()
+	 */
+	public void bsHashRemovedAll()
+	{
+		// @todo Auto-generated method stub
+		
 	}
 }
 

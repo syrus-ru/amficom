@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalyseApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
@@ -40,9 +40,10 @@ import com.syrus.AMFICOM.Client.Resource.ResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager.ThreshEditor;
 import com.syrus.AMFICOM.client_.general.ui_.ADefaultTableCellRenderer;
+import com.syrus.io.BellcoreStructure;
 
 public class ThresholdsSelectionFrame extends ATableFrame
-	implements OperationListener
+implements OperationListener, bsHashChangeListener
 {
 	protected Dispatcher dispatcher;
 	JTable jTable;
@@ -307,20 +308,11 @@ public class ThresholdsSelectionFrame extends ATableFrame
 	{
 		this.dispatcher = dispatcher;
 		dispatcher.register(this, RefUpdateEvent.typ);
-		dispatcher.register(this, RefChangeEvent.typ);
+		//dispatcher.register(this, RefChangeEvent.typ);
+		Heap.addBsHashListener(this);
 	}
 
 	public void operationPerformed(OperationEvent ae) {
-		if (ae.getActionCommand().equals(RefChangeEvent.typ)) {
-			RefChangeEvent rce = (RefChangeEvent) ae;
-			if (rce.isClose()) {
-				String id = (String) (rce.getSource());
-				if (id.equals("all")) {
-					this.mtm = null;
-					this.jTable.setModel(this.tModelEmpty);
-				}
-			}
-		}
 		if (ae.getActionCommand().equals(RefUpdateEvent.typ)) {
 			RefUpdateEvent rue = (RefUpdateEvent) ae;
 			if (rue.thresholdsUpdated()) {
@@ -480,5 +472,19 @@ public class ThresholdsSelectionFrame extends ATableFrame
 		{
 			return columns[column];
 		}
+	}
+
+	public void bsHashAdded(String key, BellcoreStructure bs)
+	{
+	}
+
+	public void bsHashRemoved(String key)
+	{
+	}
+
+	public void bsHashRemovedAll()
+	{
+			this.mtm = null;
+			this.jTable.setModel(this.tModelEmpty);
 	}
 }

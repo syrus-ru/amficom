@@ -31,8 +31,10 @@ import com.syrus.AMFICOM.Client.General.Command.Analysis.MinuitAnalyseCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.PrimaryMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
@@ -45,7 +47,7 @@ import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.io.BellcoreStructure;
 
 public class AnalysisSelectionFrame extends ATableFrame
-implements OperationListener
+implements OperationListener, bsHashChangeListener, PrimaryMTMListener
 {
 	
 	static final Double[] ff =
@@ -105,94 +107,14 @@ implements OperationListener
 		this.dispatcher = dispatcher;
 		dispatcher.register(this, RefChangeEvent.typ);
 		dispatcher.register(this, RefUpdateEvent.typ);
+		Heap.addBsHashListener(this);
+		Heap.addPrimaryMTMListener(this);
 	}
 
 	public void operationPerformed(OperationEvent ae)
 	{
 		String actionCommand = ae.getActionCommand();
-		if(actionCommand.equals(RefChangeEvent.typ))
-		{
-			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.isOpen())
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
-				{
-					BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
-					if (bs.measurementId == null)
-						setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " (" + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN) + ')');
-					else
-					{
-//						try
-//						{
-//							Measurement m = (Measurement)MeasurementStorableObjectPool.getStorableObject(
-//												 new Identifier(bs.measurementId), true);
-							MeasurementSetup ms = Heap.getContextMeasurementSetup();
-							setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " ("
-								+ (ms == null ? LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN) : 
-									LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_PATTERN) + ':' + ms.getDescription()) + ')');
-//						}
-//						catch(ApplicationException ex)
-//						{
-//							System.err.println("Exception retrieving measurenent with " + bs.measurementId);
-//							ex.printStackTrace();
-//							return;
-//						}
-					}
-
-					double[] minuitParams = Heap.getMinuitAnalysisParams();
-					setDefaults(minuitParams);
-					setVisible(true);
-				}
-			}
-			if(rce.isThresholdsCalc())
-			{
-				String id = (String)(rce.getSource());
-
-				BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
-				if (bs.measurementId == null)
-					setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " (" + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN) + ')');
-				else
-				{
-//					try
-//					{
-//						Measurement m = (Measurement)MeasurementStorableObjectPool.getStorableObject(
-//											new Identifier(bs.measurementId), true);
-
-//						MeasurementSetup ms = m.getSetup();
-						MeasurementSetup ms = Heap.getContextMeasurementSetup();
-						setTitle(LangModelAnalyse.getString("analysisSelectionTitle")  + " ("
-							+ (ms == null ? LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN) : 
-								LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_PATTERN) + ':' + ms.getDescription()) + ')');
-
-						if (ms.getCriteriaSet() != null)
-						{
-							double[] minuitParams = Heap.getMinuitAnalysisParams();
-							setDefaults(minuitParams);
-						}
-//					}
-//					catch(ApplicationException ex)
-//					{
-//						System.err.println("Measurement not found. id = " + bs.measurementId);
-//						ex.printStackTrace();
-//						return;
-//					}
-				}
-			}
-			if(rce.isClose())
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals("all"))
-				{
-					jTable.setModel(new FixedSizeEditableTableModel(
-							new String[] { "" },
-							new String[] { "" },
-							new String[] { "" },
-							new int[] { }));
-					setVisible(false);
-				}
-			}
-		} else if (actionCommand.equals(RefUpdateEvent.typ)) {
+		if (actionCommand.equals(RefUpdateEvent.typ)) {
 			RefUpdateEvent refUpdateEvent = (RefUpdateEvent)ae;
 			if (refUpdateEvent.eventSelected()) {
 				this.selectedEventId = refUpdateEvent.getSource();
@@ -588,6 +510,73 @@ private class ModelParamsTableRenderer extends ADefaultTableCellRenderer
 
 		return  super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 	}
+}
+
+
+public void bsHashAdded(String key, BellcoreStructure bs)
+{
+	String id = key;
+	if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
+	{
+		if (bs.measurementId == null)
+			setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " (" + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN) + ')');
+		else
+		{
+				MeasurementSetup ms = Heap.getContextMeasurementSetup();
+				setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " ("
+					+ (ms == null ? LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN) : 
+						LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_PATTERN) + ':' + ms.getDescription()) + ')');
+		}
+
+		double[] minuitParams = Heap.getMinuitAnalysisParams();
+		setDefaults(minuitParams);
+		setVisible(true);
+	}
+}
+
+public void bsHashRemoved(String key)
+{
+}
+
+
+public void bsHashRemovedAll()
+{
+	jTable.setModel(new FixedSizeEditableTableModel(
+		new String[] { "" },
+		new String[] { "" },
+		new String[] { "" },
+		new int[] { }));
+setVisible(false);
+}
+
+
+public void primaryMTMCUpdated()
+{
+	BellcoreStructure bs = Heap.getBSPrimaryTrace();
+	if (bs.measurementId == null)
+		setTitle(LangModelAnalyse.getString("analysisSelectionTitle") + " (" + LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN) + ')');
+	else
+	{
+			MeasurementSetup ms = Heap.getContextMeasurementSetup();
+			setTitle(LangModelAnalyse.getString("analysisSelectionTitle")  + " ("
+				+ (ms == null ? LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_NO_PATTERN) : 
+					LangModelAnalyse.getString(AnalysisResourceKeys.TEXT_PATTERN) + ':' + ms.getDescription()) + ')');
+
+			if (ms.getCriteriaSet() != null)
+			{
+				double[] minuitParams = Heap.getMinuitAnalysisParams();
+				setDefaults(minuitParams);
+			}
+	}
+}
+
+/* (non-Javadoc)
+ * @see com.syrus.AMFICOM.Client.General.Event.PrimaryMTMListener#primaryMTMRemoved()
+ */
+public void primaryMTMRemoved()
+{
+	// @todo Auto-generated method stub
+	
 }
 
 }

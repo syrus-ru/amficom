@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.measurement.*;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.util.ByteArray;
 
-public class AnalysisFrame extends ScalableFrame implements OperationListener
+public class AnalysisFrame extends ScalableFrame implements OperationListener, bsHashChangeListener
 {
 	Dispatcher dispatcher;
 	public HashMap traces = new HashMap();
@@ -67,6 +67,7 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 	{
 		this.dispatcher = dispatcher;
 		dispatcher.register(this, RefChangeEvent.typ);
+		Heap.addBsHashListener(this);
 	}
 
 	public void operationPerformed(OperationEvent ae)
@@ -74,19 +75,6 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 		if(ae.getActionCommand().equals(RefChangeEvent.typ))
 		{
 			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.isOpen())
-			{
-				String id = (String)(rce.getSource());
-				addTrace (id);
-				setVisible(true);
-			}
-			if(rce.isClose())
-			{
-				String id = (String)(rce.getSource());
-				removeTrace(id);
-				if (id.equals("all"))
-					setVisible (false);
-			}
 			if (rce.isEtalonOpen())
 			{
 				String etId = (String)rce.getSource();
@@ -146,7 +134,7 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 		setVisible(true);
 	}
 
-	public void removeTrace (String id)
+	private void removeTrace (String id) // @todo: split to removeOneTrace and removeAllTraces
 	{
 		if (id.equals("all"))
 		{
@@ -247,5 +235,22 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 	{
 		SimpleGraphPanel epPanel = (SimpleGraphPanel)traces.get(etId);
 		panel.removeGraphPanel(epPanel);
+	}
+
+	public void bsHashAdded(String key, BellcoreStructure bs)
+	{
+		addTrace (key);
+		setVisible(true);
+	}
+
+	public void bsHashRemoved(String key)
+	{
+		removeTrace(key);
+	}
+
+	public void bsHashRemovedAll()
+	{
+		removeTrace("all");
+		setVisible (false);
 	}
 }

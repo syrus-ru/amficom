@@ -118,8 +118,8 @@ public class FileAddCommand extends VoidCommand
 			}
 			bs.title = chooser.getSelectedFile().getName();
 			Heap.putSecondaryTraceByKey(id, bs);
-			dispatcher.notify(new RefChangeEvent(id,
-											RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
+			Heap.secondaryTraceOpened(id, bs);
+			dispatcher.notify(new RefChangeEvent(id, RefChangeEvent.SELECT_EVENT));
 
 			try
 			{

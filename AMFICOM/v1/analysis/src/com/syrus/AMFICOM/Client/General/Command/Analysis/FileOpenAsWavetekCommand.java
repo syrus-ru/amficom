@@ -97,11 +97,10 @@ public class FileOpenAsWavetekCommand extends VoidCommand
 			bs.title = chooser.getSelectedFile().getName();
 			Heap.setBSPrimaryTrace(bs);
 			Heap.setActiveContextActivePathIDToEmptyString();
-
 			new InitialAnalysisCommand().execute();
+			Heap.primaryTraceOpened(bs);
 
-			dispatcher.notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE,
-											RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
+			dispatcher.notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE, RefChangeEvent.SELECT_EVENT));
 			dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE, RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
 
 			try

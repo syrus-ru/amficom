@@ -142,13 +142,14 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 				// FIXME: (is necessary??)
 				//mtmEvents.fixEventTypes(mtmEtalon, delta);
 			}
-	
+
+			Heap.primaryTraceOpened(bs);
 			dispatcher.notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE,
-				RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
-			
+				RefChangeEvent.SELECT_EVENT));
+
 			dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE,
 				RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
-			
+
 			dispatcher.notify(new RefUpdateEvent(AnalysisUtil.ETALON,
 				RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
 		}

@@ -61,6 +61,7 @@ import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
 import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
@@ -75,9 +76,10 @@ import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.io.BellcoreStructure;
 
 public class ThresholdsMainFrame extends JFrame
-		implements OperationListener
+implements OperationListener, bsHashChangeListener
 {
 	public ApplicationContext aContext;
 	private Dispatcher internal_dispatcher = new Dispatcher();
@@ -230,6 +232,7 @@ public class ThresholdsMainFrame extends JFrame
 		aContext.setDispatcher(internal_dispatcher);
 		internal_dispatcher.register(this, RefChangeEvent.typ);
 		internal_dispatcher.register(this, "contextchange");
+		Heap.addBsHashListener(this);
 		Environment.getDispatcher().register(this, "contextchange");
 
 		aModel.setCommand("menuSessionNew", new SessionOpenCommand(Environment.getDispatcher(), aContext));
@@ -440,146 +443,10 @@ public class ThresholdsMainFrame extends JFrame
 		{
 			ApplicationModel aModel = aContext.getApplicationModel();
 			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.isOpen())
-			{
-				String id = (String)(rce.getSource());
-				if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
-				{
-					aModel.setEnabled("menuFileSave", true);
-					aModel.setEnabled("menuFileSaveAll", true);
-					aModel.setEnabled("menuFileSaveAs", true);
-					aModel.setEnabled("menuFileSaveAsText", true);
-					aModel.setEnabled("menuFileClose", true);
-					aModel.setEnabled("menuFileAddCompare", true);
-
-					aModel.setEnabled("menuTraceDownloadEtalon", true);
-					aModel.setEnabled("menuTraceUpload", true);
-					aModel.setEnabled("menuTraceClose", true);
-					aModel.setEnabled("menuTraceCurrentMakeReference", true);
-					aModel.setEnabled("menuTraceReference", true);
-					aModel.setEnabled("menuTraceCurrent", true);
-					aModel.setEnabled("menuTraceAddCompare", true);
-
-					aModel.setEnabled("menuCreateTestSetup", true);
-					aModel.setEnabled("menuSaveTestSetup", true);
-					aModel.setEnabled("menuSaveTestSetupAs", true);
-					aModel.setEnabled("menuLoadTestSetup", true);
-					aModel.setEnabled("menuAnalyseSaveCriteria", true);
-					aModel.setEnabled("menuSaveEtalon", true);
-					aModel.setEnabled("menuSaveThresholds", true);
-
-					aModel.setEnabled("menuReportCreate", true);
-
-					aModel.setEnabled("menuWindowArrange", true);
-					aModel.setEnabled("menuWindowTraceSelector", true);
-					aModel.setEnabled("menuWindowPrimaryParameters", true);
-					aModel.setEnabled("menuWindowOverallStats", true);
-					aModel.setEnabled("menuWindowEvents", true);
-					aModel.setEnabled("menuWindowDetailedEvents", true);
-					aModel.setEnabled("menuWindowAnalysis", true);
-					aModel.setEnabled("menuWindowMarkersInfo", true);
-					aModel.setEnabled("menuWindowAnalysisSelection", true);
-					aModel.setEnabled("menuWindowThresholdsSelection", true);
-					aModel.setEnabled("menuWindowThresholds", true);
-
-					aModel.fireModelChanged("");
-
-					String name = Heap.getBSPrimaryTrace().title;
-					setTitle(LangModelAnalyse.getString("ThresholdsTitle") + ": " + name);
-
-					thresholdsSelectionFrame.setVisible(true);
-				}
-				else if (id.equals(Heap.REFERENCE_TRACE_KEY))
-				{
-					aModel.setEnabled("menuTraceReferenceMakeCurrent", true);
-					aModel.fireModelChanged(new String [] {"menuTraceReferenceMakeCurrent"});
-				}
-				else
-				{
-					aModel.setEnabled("menuFileRemoveCompare", true);
-					aModel.setEnabled("menuTraceRemoveCompare", true);
-					aModel.fireModelChanged(new String [] {"menuFileRemoveCompare", "menuTraceRemoveCompare"});
-				}
-			}
 			if(rce.isEtalonOpen())
 			{
 				aModel.setEnabled("menuTraceCloseEtalon", true);
 				aModel.fireModelChanged(new String [] {"menuTraceCloseEtalon"});
-			}
-			if(rce.isClose())
-			{
-				String id = (String)(rce.getSource());
-				if (Heap.hasEmptyAllBSMap())
-				{
-					aModel.setEnabled("menuFileSave", false);
-					aModel.setEnabled("menuFileSaveAll", false);
-					aModel.setEnabled("menuFileSaveAs", false);
-					aModel.setEnabled("menuFileSaveAsText", false);
-					aModel.setEnabled("menuFileClose", false);
-					aModel.setEnabled("menuFileAddCompare", false);
-					aModel.setEnabled("menuFileRemoveCompare", false);
-
-					aModel.setEnabled("menuTraceDownloadEtalon", false);
-					aModel.setEnabled("menuTraceClose", false);
-					aModel.setEnabled("menuTraceCloseEtalon", false);
-					aModel.setEnabled("menuTraceCurrentMakeReference", false);
-					aModel.setEnabled("menuTraceAddCompare", false);
-					aModel.setEnabled("menuFileRemoveCompare", false);
-					aModel.setEnabled("menuTraceRemoveCompare", false);
-					aModel.setEnabled("menuTraceUpload", false);
-					aModel.setEnabled("menuTraceReference", false);
-					aModel.setEnabled("menuTraceCurrent", false);
-
-					aModel.setEnabled("menuCreateTestSetup", false);
-					aModel.setEnabled("menuSaveTestSetup", false);
-					aModel.setEnabled("menuSaveTestSetupAs", false);
-					aModel.setEnabled("menuLoadTestSetup", false);
-					aModel.setEnabled("menuAnalyseSaveCriteria", false);
-					aModel.setEnabled("menuSaveEtalon", false);
-					aModel.setEnabled("menuSaveThresholds", false);
-
-					aModel.setEnabled("menuReportCreate", false);
-
-					aModel.setEnabled("menuWindowArrange", false);
-					aModel.setEnabled("menuWindowTraceSelector", false);
-					aModel.setEnabled("menuWindowPrimaryParameters", false);
-					aModel.setEnabled("menuWindowOverallStats", false);
-					aModel.setEnabled("menuWindowEvents", false);
-					aModel.setEnabled("menuWindowDetailedEvents", false);
-					aModel.setEnabled("menuWindowAnalysis", false);
-					aModel.setEnabled("menuWindowMarkersInfo", false);
-					aModel.setEnabled("menuWindowAnalysisSelection", false);
-					aModel.setEnabled("menuWindowThresholdsSelection", false);
-					aModel.setEnabled("menuWindowThresholds", false);
-
-
-					aModel.fireModelChanged("");
-					setTitle(LangModelAnalyse.getString("ThresholdsTitle"));
-					//			thresholdsFrame.setVisible(false);
-					thresholdsSelectionFrame.setVisible(false);
-				}
-				else
-				{
-					if (id.equals(Heap.REFERENCE_TRACE_KEY))
-					{
-						aModel.setEnabled("menuTraceReferenceMakeCurrent", false);
-						aModel.fireModelChanged(new String [] {"menuTraceReferenceMakeCurrent"});
-					}
-					Iterator it = Heap.getAllBSMap().keySet().iterator();
-					String nextId = (String)it.next();
-					if (nextId.equals(RefUpdateEvent.PRIMARY_TRACE))
-					{
-						if (!it.hasNext())
-						{
-							aModel.setEnabled("menuFileRemoveCompare", false);
-							aModel.setEnabled("menuTraceRemoveCompare", false);
-							aModel.fireModelChanged(new String [] {"menuFileRemoveCompare", "menuTraceRemoveCompare"});
-						}
-						else
-							nextId = (String)it.next();
-					}
-					internal_dispatcher.notify(new RefChangeEvent(nextId, RefChangeEvent.SELECT_EVENT));
-				}
 			}
 			if(rce.isEtalonClose())
 			{
@@ -765,6 +632,148 @@ public class ThresholdsMainFrame extends JFrame
 			return;
 		}
 		super.processWindowEvent(e);
+	}
+
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener#bsHashAdded(java.lang.String, com.syrus.io.BellcoreStructure)
+	 */
+	public void bsHashAdded(String key, BellcoreStructure bs)
+	{
+		String id = key;
+		ApplicationModel aModel = aContext.getApplicationModel();
+		if (id.equals(RefUpdateEvent.PRIMARY_TRACE))
+		{
+			aModel.setEnabled("menuFileSave", true);
+			aModel.setEnabled("menuFileSaveAll", true);
+			aModel.setEnabled("menuFileSaveAs", true);
+			aModel.setEnabled("menuFileSaveAsText", true);
+			aModel.setEnabled("menuFileClose", true);
+			aModel.setEnabled("menuFileAddCompare", true);
+
+			aModel.setEnabled("menuTraceDownloadEtalon", true);
+			aModel.setEnabled("menuTraceUpload", true);
+			aModel.setEnabled("menuTraceClose", true);
+			aModel.setEnabled("menuTraceCurrentMakeReference", true);
+			aModel.setEnabled("menuTraceReference", true);
+			aModel.setEnabled("menuTraceCurrent", true);
+			aModel.setEnabled("menuTraceAddCompare", true);
+
+			aModel.setEnabled("menuCreateTestSetup", true);
+			aModel.setEnabled("menuSaveTestSetup", true);
+			aModel.setEnabled("menuSaveTestSetupAs", true);
+			aModel.setEnabled("menuLoadTestSetup", true);
+			aModel.setEnabled("menuAnalyseSaveCriteria", true);
+			aModel.setEnabled("menuSaveEtalon", true);
+			aModel.setEnabled("menuSaveThresholds", true);
+
+			aModel.setEnabled("menuReportCreate", true);
+
+			aModel.setEnabled("menuWindowArrange", true);
+			aModel.setEnabled("menuWindowTraceSelector", true);
+			aModel.setEnabled("menuWindowPrimaryParameters", true);
+			aModel.setEnabled("menuWindowOverallStats", true);
+			aModel.setEnabled("menuWindowEvents", true);
+			aModel.setEnabled("menuWindowDetailedEvents", true);
+			aModel.setEnabled("menuWindowAnalysis", true);
+			aModel.setEnabled("menuWindowMarkersInfo", true);
+			aModel.setEnabled("menuWindowAnalysisSelection", true);
+			aModel.setEnabled("menuWindowThresholdsSelection", true);
+			aModel.setEnabled("menuWindowThresholds", true);
+
+			aModel.fireModelChanged("");
+
+			String name = Heap.getBSPrimaryTrace().title;
+			setTitle(LangModelAnalyse.getString("ThresholdsTitle") + ": " + name);
+
+			thresholdsSelectionFrame.setVisible(true);
+		}
+		else if (id.equals(Heap.REFERENCE_TRACE_KEY))
+		{
+			aModel.setEnabled("menuTraceReferenceMakeCurrent", true);
+			aModel.fireModelChanged(new String [] {"menuTraceReferenceMakeCurrent"});
+		}
+		else
+		{
+			aModel.setEnabled("menuFileRemoveCompare", true);
+			aModel.setEnabled("menuTraceRemoveCompare", true);
+			aModel.fireModelChanged(new String [] {"menuFileRemoveCompare", "menuTraceRemoveCompare"});
+		}
+	}
+
+	public void bsHashRemoved(String key)
+	{
+		String id = key;
+		ApplicationModel aModel = aContext.getApplicationModel();
+		if (id.equals(Heap.REFERENCE_TRACE_KEY))
+		{
+			aModel.setEnabled("menuTraceReferenceMakeCurrent", false);
+			aModel.fireModelChanged(new String [] {"menuTraceReferenceMakeCurrent"});
+		}
+		Iterator it = Heap.getAllBSMap().keySet().iterator();
+		String nextId = (String)it.next();
+		if (nextId.equals(RefUpdateEvent.PRIMARY_TRACE))
+		{
+			if (!it.hasNext())
+			{
+				aModel.setEnabled("menuFileRemoveCompare", false);
+				aModel.setEnabled("menuTraceRemoveCompare", false);
+				aModel.fireModelChanged(new String [] {"menuFileRemoveCompare", "menuTraceRemoveCompare"});
+			}
+			else
+				nextId = (String)it.next();
+		}
+		internal_dispatcher.notify(new RefChangeEvent(nextId, RefChangeEvent.SELECT_EVENT));
+	}
+
+	public void bsHashRemovedAll()
+	{
+		ApplicationModel aModel = aContext.getApplicationModel();
+		aModel.setEnabled("menuFileSave", false);
+		aModel.setEnabled("menuFileSaveAll", false);
+		aModel.setEnabled("menuFileSaveAs", false);
+		aModel.setEnabled("menuFileSaveAsText", false);
+		aModel.setEnabled("menuFileClose", false);
+		aModel.setEnabled("menuFileAddCompare", false);
+		aModel.setEnabled("menuFileRemoveCompare", false);
+
+		aModel.setEnabled("menuTraceDownloadEtalon", false);
+		aModel.setEnabled("menuTraceClose", false);
+		aModel.setEnabled("menuTraceCloseEtalon", false);
+		aModel.setEnabled("menuTraceCurrentMakeReference", false);
+		aModel.setEnabled("menuTraceAddCompare", false);
+		aModel.setEnabled("menuFileRemoveCompare", false);
+		aModel.setEnabled("menuTraceRemoveCompare", false);
+		aModel.setEnabled("menuTraceUpload", false);
+		aModel.setEnabled("menuTraceReference", false);
+		aModel.setEnabled("menuTraceCurrent", false);
+
+		aModel.setEnabled("menuCreateTestSetup", false);
+		aModel.setEnabled("menuSaveTestSetup", false);
+		aModel.setEnabled("menuSaveTestSetupAs", false);
+		aModel.setEnabled("menuLoadTestSetup", false);
+		aModel.setEnabled("menuAnalyseSaveCriteria", false);
+		aModel.setEnabled("menuSaveEtalon", false);
+		aModel.setEnabled("menuSaveThresholds", false);
+
+		aModel.setEnabled("menuReportCreate", false);
+
+		aModel.setEnabled("menuWindowArrange", false);
+		aModel.setEnabled("menuWindowTraceSelector", false);
+		aModel.setEnabled("menuWindowPrimaryParameters", false);
+		aModel.setEnabled("menuWindowOverallStats", false);
+		aModel.setEnabled("menuWindowEvents", false);
+		aModel.setEnabled("menuWindowDetailedEvents", false);
+		aModel.setEnabled("menuWindowAnalysis", false);
+		aModel.setEnabled("menuWindowMarkersInfo", false);
+		aModel.setEnabled("menuWindowAnalysisSelection", false);
+		aModel.setEnabled("menuWindowThresholdsSelection", false);
+		aModel.setEnabled("menuWindowThresholds", false);
+
+
+		aModel.fireModelChanged("");
+		setTitle(LangModelAnalyse.getString("ThresholdsTitle"));
+		//			thresholdsFrame.setVisible(false);
+		thresholdsSelectionFrame.setVisible(false);
 	}
 }
 

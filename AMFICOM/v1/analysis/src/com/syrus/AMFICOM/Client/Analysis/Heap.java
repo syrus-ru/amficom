@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.2 2005/03/29 17:49:51 saa Exp $
+ * $Id: Heap.java,v 1.3 2005/03/31 16:58:27 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,16 @@
 
 package com.syrus.AMFICOM.Client.Analysis;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 
 import com.syrus.AMFICOM.Client.Analysis.UI.ReflectogrammLoadDialog;
+import com.syrus.AMFICOM.Client.General.Event.PrimaryMTMListener;
+import com.syrus.AMFICOM.Client.General.Event.bsHashChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.PrimaryTraceListener;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.RefAnalysis;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
@@ -24,7 +30,7 @@ import com.syrus.io.BellcoreStructure;
  * использование остальных методов работы с BS
  * 
  * @author $Author: saa $
- * @version $Revision: 1.2 $, $Date: 2005/03/29 17:49:51 $
+ * @version $Revision: 1.3 $, $Date: 2005/03/31 16:58:27 $
  * @module
  */
 public class Heap
@@ -188,5 +194,126 @@ public class Heap
 	public static boolean hasEventParamsForTrace(String key) // XXX
 	{
 		return getMTMByKey(key) != null; // XXX
+	}
+	
+	// dispatcher stuff
+
+	private static LinkedList bsHashChangedListeners = new LinkedList();
+	private static LinkedList primaryTraceListeners = new LinkedList();
+	private static LinkedList primaryMTMListeners = new LinkedList();
+
+	// XXX: change each notify method to private as soon as bsHash will become private
+
+	// NB: if the primary trace is opened, then there are
+	// two events generated:
+	// notifyBsHashAdd -> bsHashAdded() and
+	// notifyPrimaryTraceChanged -> primaryTraceCUpdated()
+	public static void notifyBsHashAdd(String key, BellcoreStructure bs)
+	{
+		for (Iterator it = bsHashChangedListeners.iterator(); it.hasNext(); )
+			((bsHashChangeListener)it.next()).bsHashAdded(key, bs);
+	}
+	public static void notifyBsHashRemove(String key) // primary trace всегда останется
+	{
+		for (Iterator it = bsHashChangedListeners.iterator(); it.hasNext(); )
+			((bsHashChangeListener)it.next()).bsHashRemoved(key);
+	}
+	public static void notifyBsHashRemoveAll() // закрыть и primary trace, и все остальные
+	{
+		for (Iterator it = bsHashChangedListeners.iterator(); it.hasNext(); )
+			((bsHashChangeListener)it.next()).bsHashRemovedAll();
+	}
+	public static void notifyPrimaryTraceChanged()
+	{
+		for (Iterator it = primaryTraceListeners.iterator(); it.hasNext(); )
+		{
+			if (bsHash.containsKey(PRIMARY_TRACE_KEY))
+				((PrimaryTraceListener)it.next()).primaryTraceCUpdated();
+			else
+				((PrimaryTraceListener)it.next()).primaryTraceRemoved();
+		}
+	}
+	public static void notifyPrimaryTraceOpened()
+	{
+		for (Iterator it = primaryTraceListeners.iterator(); it.hasNext(); )
+			((PrimaryTraceListener)it.next()).primaryTraceCUpdated();
+	}
+	public static void notifyPrimaryTraceClosed()
+	{
+		for (Iterator it = primaryTraceListeners.iterator(); it.hasNext(); )
+			((PrimaryTraceListener)it.next()).primaryTraceRemoved();
+	}
+	public static void notifyPrimaryMTMChanged()
+	{
+		for (Iterator it = primaryMTMListeners.iterator(); it.hasNext(); )
+		{
+			if (MTMHash.containsKey(PRIMARY_TRACE_KEY))
+				((PrimaryMTMListener)it.next()).primaryMTMCUpdated();
+			else
+				((PrimaryMTMListener)it.next()).primaryMTMRemoved();
+		}
+	}
+
+	private static void addListener(Collection c, Object listener)
+	{
+		if (!c.contains(listener))
+			c.add(listener);
+	}
+	private static void removeListener(Collection c, Object listener)
+	{
+		if (c.contains(listener))
+			c.remove(listener);
+	}
+
+	public static void addBsHashListener(bsHashChangeListener listener)
+	{
+		addListener(bsHashChangedListeners, listener);
+	}
+	public static void removeBsHashListener(bsHashChangeListener listener)
+	{
+		removeListener(bsHashChangedListeners, listener);
+	}
+	public static void addPrimaryTraceListener(PrimaryTraceListener listener)
+	{
+		addListener(primaryTraceListeners, listener);
+	}
+	public static void removePrimaryTraceListener(PrimaryTraceListener listener)
+	{
+		removeListener(primaryTraceListeners, listener);
+	}
+	public static void addPrimaryMTMListener(PrimaryMTMListener listener)
+	{
+		addListener(primaryMTMListeners, listener);
+	}
+	public static void removePrimaryMTMListener(PrimaryMTMListener listener)
+	{
+		removeListener(primaryMTMListeners, listener);
+	}
+
+	public static void primaryTraceOpened(BellcoreStructure bs)
+	{
+		notifyBsHashAdd(PRIMARY_TRACE_KEY, bs);
+		notifyPrimaryTraceOpened();
+	}
+	public static void secondaryTraceOpened(String key, BellcoreStructure bs)
+	{
+		notifyBsHashAdd(key, bs);
+	}
+	public static void traceClosed(String key)
+	{
+		notifyBsHashRemove(key);
+		if (key.equals(PRIMARY_TRACE_KEY))
+			notifyPrimaryTraceClosed();
+	}
+	public static void traceOpened(String key, BellcoreStructure bs)
+	{
+		notifyBsHashAdd(key, bs);
+		if (key.equals(PRIMARY_TRACE_KEY))
+			notifyPrimaryTraceOpened();
+	}
+	// FIXME: реализовать корректно - через etalonMTM 
+	public static void etalonMTMUpdated(String key)
+	{
+		notifyPrimaryMTMChanged();
 	}
 }

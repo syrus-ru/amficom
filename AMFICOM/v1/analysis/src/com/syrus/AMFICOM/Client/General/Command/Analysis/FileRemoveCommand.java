@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrameSimplified;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
@@ -42,19 +43,22 @@ public class FileRemoveCommand extends VoidCommand
 
 	public void execute()
 	{
-		try
+		if (!AnalyseMainFrameSimplified.DEBUG) // XXX: saa: security bypass
 		{
-			new Checker(this.aContext.getSessionInterface());
-		}
-		catch (NullPointerException ex)
-		{
-			System.out.println("Application context and/or user are not defined");
-			return;
+			try
+			{
+				new Checker(this.aContext.getSessionInterface());
+			}
+			catch (NullPointerException ex)
+			{
+				System.out.println("Application context and/or user are not defined");
+				return;
+			}
 		}
 
 		if (!activeRefId.equals(AnalysisUtil.ETALON))
 			Heap.removeAnyBSByName(activeRefId); // XXX: was Pool.remove(bs);
-		dispatcher.notify(new RefChangeEvent(activeRefId, RefChangeEvent.CLOSE_EVENT));
-		dispatcher.notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE, RefChangeEvent.SELECT_EVENT));
+		Heap.traceClosed(activeRefId);
+		dispatcher.notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE, RefChangeEvent.SELECT_EVENT)); // XXX - PRIMARY TRACE уже может не существовать! разве так можно?
 	}
 }

@@ -13,7 +13,8 @@ import com.syrus.AMFICOM.measurement.*;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.util.ByteArray;
 
-public class ThresholdsFrame extends SimpleResizableFrame implements OperationListener
+public class ThresholdsFrame extends SimpleResizableFrame
+implements OperationListener, bsHashChangeListener
 {
 	private Dispatcher dispatcher;
 	Map traces = new HashMap();
@@ -50,6 +51,7 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 		bellcoreTraces = new HashMap();
 		Heap.setBsBellCoreMap(bellcoreTraces);
 		dispatcher.register(this, RefChangeEvent.typ);
+		Heap.addBsHashListener(this);
 	}
 
 	public void operationPerformed(OperationEvent ae)
@@ -57,19 +59,6 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 		if(ae.getActionCommand().equals(RefChangeEvent.typ))
 		{
 			RefChangeEvent rce = (RefChangeEvent)ae;
-			if(rce.isOpen())
-			{
-				String id = (String)(rce.getSource());
-				addTrace (id);
-				setVisible(true);
-			}
-			if(rce.isClose())
-			{
-				String id = (String)(rce.getSource());
-				removeTrace(id);
-				if (id.equals("all"))
-					setVisible (false);
-			}
 			if (rce.isEtalonOpen())
 			{
 				String etId = (String)rce.getSource();
@@ -211,5 +200,22 @@ public class ThresholdsFrame extends SimpleResizableFrame implements OperationLi
 	public Map getBellcoreTraces()
 	{
 			return bellcoreTraces;
+	}
+
+	public void bsHashAdded(String key, BellcoreStructure bs)
+	{
+		addTrace (key);
+		setVisible(true);
+	}
+
+	public void bsHashRemoved(String key)
+	{
+		removeTrace(key);
+	}
+
+	public void bsHashRemovedAll()
+	{
+		removeTrace("all");
+		setVisible (false);
 	}
 }
