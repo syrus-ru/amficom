@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseMeasurementObjectLoader.java,v 1.9 2004/10/03 12:42:55 bob Exp $
+ * $Id: DatabaseMeasurementObjectLoader.java,v 1.10 2004/10/04 10:22:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2004/10/03 12:42:55 $
+ * @version $Revision: 1.10 $, $Date: 2004/10/04 10:22:17 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -357,7 +357,14 @@ public class DatabaseMeasurementObjectLoader implements MeasurementObjectLoader 
 		MeasurementSetupDatabase database = (MeasurementSetupDatabase)MeasurementDatabaseContext.getMeasurementSetupDatabase();
 		List list = null;
 		try {
-		    list = database.retrieveButIds(ids);
+			if (condition instanceof MeasurementSetupCondition){
+				MeasurementSetupCondition measurementSetupCondition = (MeasurementSetupCondition)condition;
+				database.retrieveButIdsByMeasurementType(ids, measurementSetupCondition.getMeasurementType());
+			}
+			else{
+				Log.errorMessage("DatabaseMeasumentObjectLoader.loadMeasurementSetupsButIds | Unknown condition class: " + condition.getClass().getName());
+				list = database.retrieveButIds(ids);
+			}
 		} catch (IllegalDataException e) {
 		    Log.errorMessage("DatabaseMeasumentObjectLoader.loadMeasurementSetupsButIds | Illegal Storable Object: " + e.getMessage());
 		    throw new DatabaseException("DatabaseMeasumentObjectLoader.loadMeasurementSetupsButIds | Illegal Storable Object: " + e.getMessage());

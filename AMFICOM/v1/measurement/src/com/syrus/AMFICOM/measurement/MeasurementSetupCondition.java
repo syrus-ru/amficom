@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupCondition.java,v 1.1 2004/10/04 10:11:16 bob Exp $
+ * $Id: MeasurementSetupCondition.java,v 1.2 2004/10/04 10:22:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetupCondition_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/10/04 10:11:16 $
+ * @version $Revision: 1.2 $, $Date: 2004/10/04 10:22:17 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -94,4 +94,11 @@ public class MeasurementSetupCondition implements StorableObjectCondition {
 				.getId().getTransferable());
 	}
 
+	public MeasurementType getMeasurementType() {
+		return this.measurementType;
+	}
+	
+	public void setMeasurementType(MeasurementType measurementType) {
+		this.measurementType = measurementType;
+	}
 }
