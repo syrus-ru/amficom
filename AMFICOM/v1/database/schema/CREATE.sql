@@ -1,20 +1,20 @@
 REM users
-REM @@./users/CREATE.sql
+@@./users/CREATE.sql
 
 REM general
-REM @@./general/CREATE.sql
+@@./general/CREATE.sql
 
 REM administration
-REM @@./administration/CREATE.sql
+@@./administration/CREATE.sql
 
 REM configuration
-REM @@./configuration/CREATE.sql
+@@./configuration/CREATE.sql
 
 REM measurement
-REM @@./measurement/CREATE.sql
+@@./measurement/CREATE.sql
 
 REM map
-REM @@./map/CREATE.sql
+@@./map/CREATE.sql
 
 REM mapview
 @@./mapview/CREATE.sql
