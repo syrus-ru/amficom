@@ -9,6 +9,7 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.dadara.*;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager.ThresholdHandle;
 
 public class ThresholdsPanel extends ReflectogramEventsPanel
 {
@@ -67,10 +68,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 
 		startpos = mev.getPoint();
 		currpos = mev.getPoint();
-		if (SwingUtilities.isRightMouseButton(mev))
-			isRbutton = true;
-		else
-			isRbutton = false;
+		isRbutton = SwingUtilities.isRightMouseButton(mev);
 
 		/* TODO */
 		SimpleReflectogramEvent simpleEvent = this.et_mtm.getSimpleEvent(this.c_event);
@@ -89,8 +87,24 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 			0.5,
 			isRbutton ? 1 : 0);		
 		
+		
 		if (this.c_TH != null && (allThresholds || this.c_TH.isRelevantToNEvent(this.c_event))) {
 
+			switch (this.c_TH.getType()) {
+				case ThresholdHandle.HORIZONTAL_LEFT_TYPE:
+					this.setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
+					break;
+				case ThresholdHandle.HORIZONTAL_RIGHT_TYPE:
+					this.setCursor(Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR));
+					break;
+				case ThresholdHandle.VERTICAL_UP_TYPE:
+					this.setCursor(Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
+					break;
+				case ThresholdHandle.VERTICAL_DOWN_TYPE:
+					this.setCursor(Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR));
+					break;
+
+			} 
 			// перемещаем мышь в точку захвата
 			try
 			{
