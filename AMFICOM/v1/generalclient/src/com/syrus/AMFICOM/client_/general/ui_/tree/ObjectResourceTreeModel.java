@@ -1,11 +1,11 @@
-package com.syrus.AMFICOM.Client.General.UI;
+package com.syrus.AMFICOM.client_.general.ui_.tree;
 
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.ArrayList;
-import java.util.Map;
 
-import java.awt.*;
+import java.awt.Color;
+
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceCatalogActionModel;
 import com.syrus.AMFICOM.client_.general.ui_.*;
 
 public abstract class ObjectResourceTreeModel
