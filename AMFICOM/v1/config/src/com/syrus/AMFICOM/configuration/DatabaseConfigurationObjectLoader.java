@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConfigurationObjectLoader.java,v 1.23 2004/11/23 16:18:48 max Exp $
+ * $Id: DatabaseConfigurationObjectLoader.java,v 1.24 2004/11/24 08:48:55 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2004/11/23 16:18:48 $
+ * @version $Revision: 1.24 $, $Date: 2004/11/24 08:48:55 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -789,25 +789,6 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		catch (VersionCollisionException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMeasurementPortType | VersionCollisionException: " + e.getMessage());
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveMeasurementPortType | VersionCollisionException: " + e.getMessage());
-		}
-	}
-
-	public void saveKISType(KISType kisType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
-		KISTypeDatabase database = (KISTypeDatabase)ConfigurationDatabaseContext.getKISTypeDatabase();
-		try {
-			database.update(kisType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
-		}
-		catch (UpdateObjectException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveKISType | UpdateObjectException: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveKISType | UpdateObjectException: " + e.getMessage());
-		}
-		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveKISType | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveKISType | Illegal Storable Object: " + e.getMessage());
-		}
-		catch (VersionCollisionException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveKISType | VersionCollisionException: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveKISType | VersionCollisionException: " + e.getMessage());
 		}
 	}
 
