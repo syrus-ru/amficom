@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.111 2005/02/28 15:29:22 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.112 2005/03/01 16:37:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.111 $, $Date: 2005/02/28 15:29:22 $
+ * @version $Revision: 1.112 $, $Date: 2005/03/01 16:37:03 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -665,6 +665,9 @@ public abstract class StorableObjectDatabase {
 	 */
 	private void insertLinkedEntityIds(Map idLinkedObjectIdsMap, String tableName, String idColumnName, String linkedIdColumnName)
 			throws CreateObjectException {
+		if (idLinkedObjectIdsMap == null || idLinkedObjectIdsMap.isEmpty())
+			return;
+
 		String sql = SQL_INSERT_INTO + tableName + OPEN_BRACKET
 				+ idColumnName + COMMA
 				+ linkedIdColumnName
@@ -1288,6 +1291,9 @@ public abstract class StorableObjectDatabase {
 
 	private void deleteLinkedEntityIds(Map idLinkedObjectIdsMap, String tableName, String idColumnName, String linkedIdColumnName)
 			throws IllegalDataException {
+		if (idLinkedObjectIdsMap == null || idLinkedObjectIdsMap.isEmpty())
+			return;
+
 		StringBuffer sql = new StringBuffer(SQL_DELETE_FROM + tableName + SQL_WHERE + "1=0");
 
 		Identifier id;
@@ -1306,7 +1312,7 @@ public abstract class StorableObjectDatabase {
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			statement = connection.createStatement();
-			Log.debugMessage(this.getEnityName() + "Database.deleteLinedEntityIds | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage(this.getEnityName() + "Database.deleteLinkedEntityIds | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql.toString());
 			connection.commit();
 		}
