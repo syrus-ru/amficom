@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeStorableObjectPool.java,v 1.2 2004/11/24 15:27:09 bass Exp $
+ * $Id: SchemeStorableObjectPool.java,v 1.3 2004/12/09 15:08:01 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,31 @@ import com.syrus.AMFICOM.general.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/11/24 15:27:09 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/09 15:08:01 $
  * @module schemecommon_v1
  */
-public class SchemeStorableObjectPool {
+public final class SchemeStorableObjectPool {
 	private SchemeStorableObjectPool() {
+	}
+
+	public static void cleanChangedStorableObject(final Short entityCode) {
+		throw new UnsupportedOperationException();
+	}
+
+	public static void cleanChangedStorableObjects() {
+		throw new UnsupportedOperationException();
+	}
+
+	public static void delete(final Identifier id) throws DatabaseException, CommunicationException {
+		throw new UnsupportedOperationException();
+	}
+
+	public static void delete(final List ids) throws DatabaseException, CommunicationException {
+		throw new UnsupportedOperationException();
+	}
+
+	public static void flush(final boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException {
+		throw new UnsupportedOperationException();
 	}
 
 	public static StorableObject getStorableObject(final Identifier objectId, final boolean useLoader)
@@ -42,8 +62,28 @@ public class SchemeStorableObjectPool {
 		throw new UnsupportedOperationException();
 	}
 
+//	public static void init(final SchemeObjectLoader schemeObjectLoader) {
+//		throw new UnsupportedOperationException();
+//	}
+
+//	public static void init(final SchemeObjectLoader schemeObjectLoader, final Class cacheClass, final int size) {
+//		throw new UnsupportedOperationException();
+//	}
+
+//	public static void init(final SchemeObjectLoader schemeObjectLoader, final int size) {
+//		throw new UnsupportedOperationException();
+//	}
+
 	public static StorableObject putStorableObject(final StorableObject storableObject)
 			throws IllegalObjectEntityException {
+		throw new UnsupportedOperationException();
+	}
+
+	public static void refresh() throws DatabaseException, CommunicationException {
+		throw new UnsupportedOperationException();
+	}
+
+	public static void serializePool() {
 		throw new UnsupportedOperationException();
 	}
 }
