@@ -2,7 +2,7 @@
 // Copyright (c) Syrus Systems 2000 Syrus Systems
 package com.syrus.AMFICOM.Client.Schedule;
 
-import com.syrus.AMFICOM.Client.Configure.Map.*;
+import com.syrus.AMFICOM.Client.Map.*;
 import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Command.*;
 import com.syrus.AMFICOM.Client.General.Command.Schedule.*;
