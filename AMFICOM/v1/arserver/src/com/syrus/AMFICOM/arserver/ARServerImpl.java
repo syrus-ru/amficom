@@ -1,5 +1,5 @@
 /*
- * $Id: ARServerImpl.java,v 1.3 2005/01/19 07:50:12 max Exp $
+ * $Id: ARServerImpl.java,v 1.4 2005/01/21 06:49:08 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,8 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IdentifierGenerationException;
+import com.syrus.AMFICOM.general.IdentifierGenerator;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -46,7 +48,7 @@ import com.syrus.AMFICOM.resource.corba.ImageResource_TransferablePackage.ImageR
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/01/19 07:50:12 $
+ * @version $Revision: 1.4 $, $Date: 2005/01/21 06:49:08 $
  * @author $Author: max $
  * @module arserver_v1
  */
@@ -393,6 +395,64 @@ public class ARServerImpl extends ARServerPOA {
 			Log.errorException(t);
 			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE,
 					CompletionStatus.COMPLETED_NO, t.getMessage());
+		}
+	}
+	
+	public Identifier_Transferable getGeneratedIdentifier(short entityCode) throws AMFICOMRemoteException {
+		try {
+			Log.debugMessage("ARServerImpl.getGeneratedIdentifier | generate new Identifer for "
+					+ ObjectEntities.codeToString(entityCode), Log.DEBUGLEVEL07);
+			Identifier identifier = IdentifierGenerator.generateIdentifier(entityCode);
+			return (Identifier_Transferable) identifier.getTransferable();
+		} catch (IllegalObjectEntityException ioee) {
+			Log.errorException(ioee);
+			throw new AMFICOMRemoteException(
+								ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
+								CompletionStatus.COMPLETED_NO,
+								"Illegal object entity: '"
+										+ ObjectEntities
+												.codeToString(entityCode)
+										+ "'");
+		} catch (IdentifierGenerationException ige) {
+			Log.errorException(ige);
+			throw new AMFICOMRemoteException(
+								ErrorCode.ERROR_RETRIEVE,
+								CompletionStatus.COMPLETED_NO,
+								"Cannot create major/minor entries of identifier for entity: '"
+										+ ObjectEntities
+												.codeToString(entityCode)
+										+ "' -- " + ige.getMessage());
+		}
+	}
+	
+	public Identifier_Transferable[] getGeneratedIdentifierRange(
+			short entityCode, int size) throws AMFICOMRemoteException {
+		Log.debugMessage(
+				"ARServerImpl.getGeneratedIdentifierRange | generate new Identifer range "
+						+ size + " for "
+						+ ObjectEntities.codeToString(entityCode),
+				Log.DEBUGLEVEL07);
+		try {
+			Identifier[] identifiers = IdentifierGenerator
+					.generateIdentifierRange(entityCode, size);
+			Identifier_Transferable[] identifiersT = new Identifier_Transferable[identifiers.length];
+			for (int i = 0; i < identifiersT.length; i++)
+				identifiersT[i] = (Identifier_Transferable) identifiers[i]
+						.getTransferable();
+			return identifiersT;
+		} catch (IllegalObjectEntityException ioee) {
+			Log.errorException(ioee);
+			throw new AMFICOMRemoteException(
+					ErrorCode.ERROR_ILLEGAL_OBJECT_ENTITY,
+					CompletionStatus.COMPLETED_NO, "Illegal object entity: '"
+							+ ObjectEntities.codeToString(entityCode) + "'");
+		} catch (IdentifierGenerationException ige) {
+			Log.errorException(ige);
+			throw new AMFICOMRemoteException(ErrorCode.ERROR_RETRIEVE,
+					CompletionStatus.COMPLETED_NO,
+					"Cannot create major/minor entries of identifier for entity: '"
+							+ ObjectEntities.codeToString(entityCode) + "' -- "
+							+ ige.getMessage());
 		}
 	}
 	
