@@ -1,5 +1,5 @@
 /*
- * $Id: MapStorableObjectPool.java,v 1.2 2004/12/02 12:10:27 bob Exp $
+ * $Id: MapStorableObjectPool.java,v 1.3 2004/12/07 08:21:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,48 +26,29 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/12/02 12:10:27 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/07 08:21:02 $
  * @author $Author: bob $
  * @module measurement_v1
  */
 
 public final class MapStorableObjectPool extends StorableObjectPool {
 
-	private static final int				OBJECT_POOL_MAP_SIZE				= 14;	/*
-																						 * Number
-																						 * of
-																						 * entities
-																						 */
+	private static final int				OBJECT_POOL_MAP_SIZE				= 50;		/*
+																							 * Number
+																							 * of
+																							 * entities
+																							 */
 
-	private static final int				PARAMETERTYPE_OBJECT_POOL_SIZE		= 9;
+	private static final int				SITE_NODE_OBJECT_POOL_SIZE			= 200;
+	private static final int				TOPOLOGICAL_NODE_OBJECT_POOL_SIZE	= 200;
+	private static final int				NODE_LINK_OBJECT_POOL_SIZE			= 100;
+	private static final int				MARK_OBJECT_POOL_SIZE				= 50;
+	private static final int				PHYSICAL_LINK_OBJECT_POOL_SIZE		= 100;
+	private static final int				COLLECTOR_OBJECT_POOL_SIZE			= 50;
+	private static final int				MAP_OBJECT_POOL_SIZE				= 3;
 
-	private static final int				MEASUREMENTTYPE_OBJECT_POOL_SIZE	= 1;
-
-	private static final int				ANALYSISTYPE_OBJECT_POOL_SIZE		= 1;
-
-	private static final int				EVALUATIONTYPE_OBJECT_POOL_SIZE		= 1;
-
-	private static final int				SET_OBJECT_POOL_SIZE				= 4;
-
-	private static final int				SETPARAMETER_OBJECT_POOL_SIZE		= 4;
-
-	private static final int				MODELING_OBJECT_POOL_SIZE			= 4;
-
-	private static final int				MS_OBJECT_POOL_SIZE					= 4;
-
-	private static final int				MEASUREMENT_OBJECT_POOL_SIZE		= 4;
-
-	private static final int				ANALYSIS_OBJECT_POOL_SIZE			= 4;
-
-	private static final int				EVALUATION_OBJECT_POOL_SIZE			= 4;
-
-	private static final int				TEST_OBJECT_POOL_SIZE				= 2;
-
-	private static final int				RESULT_OBJECT_POOL_SIZE				= 4;
-
-	private static final int				RESULTPARAMETER_OBJECT_POOL_SIZE	= 4;
-
-	private static final int				TEMPORALPATTERN_OBJECT_POOL_SIZE	= 2;
+	private static final short				SITE_NODE_TYPE_OBJECT_POOL_SIZE			= 10;
+	private static final short				PHYSICAL_LINK_TYPE_OBJECT_POOL_SIZE		= 10;
 
 	private static MapObjectLoader			mObjectLoader;
 	private static MapStorableObjectPool	instance;
@@ -106,20 +87,15 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 
 		mObjectLoader = mObjectLoader1;
 
-		instance.addObjectPool(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.ANALYSISTYPE_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, size);
-
-		instance.addObjectPool(ObjectEntities.SET_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.MODELING_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.MS_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.MEASUREMENT_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.ANALYSIS_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.EVALUATION_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.TEST_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE, size);
-		instance.addObjectPool(ObjectEntities.RESULT_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.SITE_NODE_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.NODE_LINK_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.MARK_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.COLLECTOR_ENTITY_CODE, size);
+		instance.addObjectPool(ObjectEntities.MAP_ENTITY_CODE, size);
 
 		instance.polulatePools();
 	}
@@ -131,20 +107,15 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 		instance.objectPoolMap = Collections.synchronizedMap(new Hashtable(OBJECT_POOL_MAP_SIZE));
 		mObjectLoader = mObjectLoader1;
 
-		instance.addObjectPool(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, PARAMETERTYPE_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE, MEASUREMENTTYPE_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.ANALYSISTYPE_ENTITY_CODE, ANALYSISTYPE_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, EVALUATIONTYPE_OBJECT_POOL_SIZE);
-
-		instance.addObjectPool(ObjectEntities.SET_ENTITY_CODE, SET_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.MODELING_ENTITY_CODE, MODELING_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.MS_ENTITY_CODE, MS_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.MEASUREMENT_ENTITY_CODE, MEASUREMENT_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.ANALYSIS_ENTITY_CODE, ANALYSIS_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.EVALUATION_ENTITY_CODE, EVALUATION_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.TEST_ENTITY_CODE, TEST_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE, TEMPORALPATTERN_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.RESULT_ENTITY_CODE, RESULT_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE, SITE_NODE_TYPE_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE, PHYSICAL_LINK_TYPE_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.SITE_NODE_ENTITY_CODE, SITE_NODE_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE, TOPOLOGICAL_NODE_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.NODE_LINK_ENTITY_CODE, NODE_LINK_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.MARK_ENTITY_CODE, MARK_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE, PHYSICAL_LINK_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.COLLECTOR_ENTITY_CODE, COLLECTOR_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.MAP_ENTITY_CODE, MAP_OBJECT_POOL_SIZE);
 
 		instance.polulatePools();
 	}
@@ -155,9 +126,7 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 
 	protected java.util.Set refreshStorableObjects(java.util.Set storableObjects) throws CommunicationException,
 			DatabaseException {
-		// TODO implement method
-		// return mObjectLoader.refresh(storableObjects);
-		return null;
+		return mObjectLoader.refresh(storableObjects);
 	}
 
 	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader) throws DatabaseException,
@@ -184,46 +153,33 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 	protected StorableObject loadStorableObject(Identifier objectId) throws DatabaseException, CommunicationException {
 		StorableObject storableObject;
 		switch (objectId.getMajor()) {
-			// TODO implement method
-			// case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-			// storableObject = mObjectLoader.loadParameterType(objectId);
-			// break;
-			// case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
-			// storableObject = mObjectLoader.loadMapType(objectId);
-			// break;
-			// case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
-			// storableObject = mObjectLoader.loadAnalysisType(objectId);
-			// break;
-			// case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
-			// storableObject = mObjectLoader.loadEvaluationType(objectId);
-			// break;
-			// case ObjectEntities.SET_ENTITY_CODE:
-			// storableObject = mObjectLoader.loadSet(objectId);
-			// break;
-			// case ObjectEntities.MODELING_ENTITY_CODE:
-			// storableObject = mObjectLoader.loadModeling(objectId);
-			// break;
-			// case ObjectEntities.MS_ENTITY_CODE:
-			// storableObject = mObjectLoader.loadMapSetup(objectId);
-			// break;
-			// case ObjectEntities.ANALYSIS_ENTITY_CODE:
-			// storableObject = mObjectLoader.loadAnalysis(objectId);
-			// break;
-			// case ObjectEntities.EVALUATION_ENTITY_CODE:
-			// storableObject = mObjectLoader.loadEvaluation(objectId);
-			// break;
-			// case ObjectEntities.MEASUREMENT_ENTITY_CODE:
-			// storableObject = mObjectLoader.loadMap(objectId);
-			// break;
-			// case ObjectEntities.TEST_ENTITY_CODE:
-			// storableObject = mObjectLoader.loadTest(objectId);
-			// break;
-			// case ObjectEntities.RESULT_ENTITY_CODE:
-			// storableObject = mObjectLoader.loadResult(objectId);
-			// break;
-			// case ObjectEntities.TEMPORALPATTERN_ENTITY_CODE:
-			// storableObject = mObjectLoader.loadTemporalPattern(objectId);
-			// break;
+			case ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE:
+				storableObject = mObjectLoader.loadSiteNodeType(objectId);
+				break;
+			case ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE:
+				storableObject = mObjectLoader.loadPhysicalLinkType(objectId);
+				break;
+			case ObjectEntities.SITE_NODE_ENTITY_CODE:
+				storableObject = mObjectLoader.loadSiteNode(objectId);
+				break;
+			case ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE:
+				storableObject = mObjectLoader.loadTopologicalNode(objectId);
+				break;
+			case ObjectEntities.NODE_LINK_ENTITY_CODE:
+				storableObject = mObjectLoader.loadNodeLink(objectId);
+				break;
+			case ObjectEntities.MARK_ENTITY_CODE:
+				storableObject = mObjectLoader.loadMark(objectId);
+				break;
+			case ObjectEntities.PHYSICAL_LINK_ENTITY_CODE:
+				storableObject = mObjectLoader.loadPhysicalLink(objectId);
+				break;
+			case ObjectEntities.COLLECTOR_ENTITY_CODE:
+				storableObject = mObjectLoader.loadCollector(objectId);
+				break;
+			case ObjectEntities.MAP_ENTITY_CODE:
+				storableObject = mObjectLoader.loadMap(objectId);
+				break;		
 			default:
 				Log.errorMessage("MapStorableObjectPool.loadStorableObject | Unknown entity: "
 						+ ObjectEntities.codeToString(objectId.getMajor()));
@@ -235,46 +191,33 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 	protected List loadStorableObjects(Short entityCode, List ids) throws DatabaseException, CommunicationException {
 		List storableObjects;
 		switch (entityCode.shortValue()) {
-			// TODO implement method
-			// case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-			// storableObjects = mObjectLoader.loadParameterTypes(ids);
-			// break;
-			// case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
-			// storableObjects = mObjectLoader.loadMapTypes(ids);
-			// break;
-			// case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
-			// storableObjects = mObjectLoader.loadAnalysisTypes(ids);
-			// break;
-			// case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
-			// storableObjects = mObjectLoader.loadEvaluationTypes(ids);
-			// break;
-			// case ObjectEntities.SET_ENTITY_CODE:
-			// storableObjects = mObjectLoader.loadSets(ids);
-			// break;
-			// case ObjectEntities.MODELING_ENTITY_CODE:
-			// storableObjects = mObjectLoader.loadModelings(ids);
-			// break;
-			// case ObjectEntities.MS_ENTITY_CODE:
-			// storableObjects = mObjectLoader.loadMapSetups(ids);
-			// break;
-			// case ObjectEntities.ANALYSIS_ENTITY_CODE:
-			// storableObjects = mObjectLoader.loadAnalyses(ids);
-			// break;
-			// case ObjectEntities.EVALUATION_ENTITY_CODE:
-			// storableObjects = mObjectLoader.loadEvaluations(ids);
-			// break;
-			// case ObjectEntities.MEASUREMENT_ENTITY_CODE:
-			// storableObjects = mObjectLoader.loadMaps(ids);
-			// break;
-			// case ObjectEntities.TEST_ENTITY_CODE:
-			// storableObjects = mObjectLoader.loadTests(ids);
-			// break;
-			// case ObjectEntities.RESULT_ENTITY_CODE:
-			// storableObjects = mObjectLoader.loadResults(ids);
-			// break;
-			// case ObjectEntities.TEMPORALPATTERN_ENTITY_CODE:
-			// storableObjects = mObjectLoader.loadTemporalPatterns(ids);
-			// break;
+			case ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE:
+				storableObjects = mObjectLoader.loadSiteNodeTypes(ids);
+				break;
+			case ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE:
+				storableObjects = mObjectLoader.loadPhysicalLinkTypes(ids);
+				break;
+			case ObjectEntities.SITE_NODE_ENTITY_CODE:
+				storableObjects = mObjectLoader.loadSiteNodes(ids);
+				break;
+			case ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE:
+				storableObjects = mObjectLoader.loadTopologicalNodes(ids);
+				break;
+			case ObjectEntities.NODE_LINK_ENTITY_CODE:
+				storableObjects = mObjectLoader.loadNodeLinks(ids);
+				break;
+			case ObjectEntities.MARK_ENTITY_CODE:
+				storableObjects = mObjectLoader.loadMarks(ids);
+				break;
+			case ObjectEntities.PHYSICAL_LINK_ENTITY_CODE:
+				storableObjects = mObjectLoader.loadPhysicalLinks(ids);
+				break;
+			case ObjectEntities.COLLECTOR_ENTITY_CODE:
+				storableObjects = mObjectLoader.loadCollectors(ids);
+				break;
+			case ObjectEntities.MAP_ENTITY_CODE:
+				storableObjects = mObjectLoader.loadMaps(ids);
+				break;
 			default:
 				Log.errorMessage("MapStorableObjectPool.loadStorableObjects | Unknown entityCode : " + entityCode);
 				storableObjects = null;
@@ -287,50 +230,33 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 		List loadedList = null;
 		short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
-			// TODO implement method
-			// case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-			// loadedList = mObjectLoader.loadParameterTypesButIds(condition,
-			// ids);
-			// break;
-			// case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
-			// loadedList = mObjectLoader.loadMapTypesButIds(condition, ids);
-			// break;
-			// case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
-			// loadedList = mObjectLoader.loadAnalysisTypesButIds(condition,
-			// ids);
-			// break;
-			// case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
-			// loadedList = mObjectLoader.loadEvaluationTypesButIds(condition,
-			// ids);
-			// break;
-			// case ObjectEntities.SET_ENTITY_CODE:
-			// loadedList = mObjectLoader.loadSetsButIds(condition, ids);
-			// break;
-			// case ObjectEntities.MODELING_ENTITY_CODE:
-			// loadedList = mObjectLoader.loadModelingsButIds(condition, ids);
-			// break;
-			// case ObjectEntities.MS_ENTITY_CODE:
-			// loadedList = mObjectLoader.loadMapSetupsButIds(condition, ids);
-			// break;
-			// case ObjectEntities.ANALYSIS_ENTITY_CODE:
-			// loadedList = mObjectLoader.loadAnalysesButIds(condition, ids);
-			// break;
-			// case ObjectEntities.EVALUATION_ENTITY_CODE:
-			// loadedList = mObjectLoader.loadEvaluationsButIds(condition, ids);
-			// break;
-			// case ObjectEntities.MEASUREMENT_ENTITY_CODE:
-			// loadedList = mObjectLoader.loadMapsButIds(condition, ids);
-			// break;
-			// case ObjectEntities.TEST_ENTITY_CODE:
-			// loadedList = mObjectLoader.loadTestsButIds(condition, ids);
-			// break;
-			// case ObjectEntities.RESULT_ENTITY_CODE:
-			// loadedList = mObjectLoader.loadResultsButIds(condition, ids);
-			// break;
-			// case ObjectEntities.TEMPORALPATTERN_ENTITY_CODE:
-			// loadedList = mObjectLoader.loadTemporalPatternsButIds(condition,
-			// ids);
-			// break;
+			case ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE:
+				loadedList  = mObjectLoader.loadSiteNodeTypesButIds(condition, ids);
+				break;
+			case ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE:
+				loadedList  = mObjectLoader.loadPhysicalLinkTypesButIds(condition, ids);
+				break;
+			case ObjectEntities.SITE_NODE_ENTITY_CODE:
+				loadedList  = mObjectLoader.loadSiteNodesButIds(condition, ids);
+				break;
+			case ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE:
+				loadedList  = mObjectLoader.loadTopologicalNodesButIds(condition, ids);
+				break;
+			case ObjectEntities.NODE_LINK_ENTITY_CODE:
+				loadedList  = mObjectLoader.loadNodeLinksButIds(condition, ids);
+				break;
+			case ObjectEntities.MARK_ENTITY_CODE:
+				loadedList  = mObjectLoader.loadMarksButIds(condition, ids);
+				break;
+			case ObjectEntities.PHYSICAL_LINK_ENTITY_CODE:
+				loadedList  = mObjectLoader.loadPhysicalLinksButIds(condition, ids);
+				break;
+			case ObjectEntities.COLLECTOR_ENTITY_CODE:
+				loadedList  = mObjectLoader.loadCollectorsButIds(condition, ids);
+				break;
+			case ObjectEntities.MAP_ENTITY_CODE:
+				loadedList  = mObjectLoader.loadMapsButIds(condition, ids);
+				break;
 			default:
 				Log.errorMessage("MapStorableObjectPool.loadStorableObjectsButIds | Unknown entity: "
 						+ ObjectEntities.codeToString(entityCode));
@@ -344,84 +270,61 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 		if (!list.isEmpty()) {
 			boolean alone = (list.size() == 1);
 
-			switch (code) {
-				// TODO implement method
-				// case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-				// if (alone)
-				// mObjectLoader.saveParameterType((ParameterType)list.get(0),
-				// force);
-				// else
-				// mObjectLoader.saveParameterTypes(list, force);
-				// break;
-				// case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
-				// if (alone)
-				// mObjectLoader.saveMapType((MapType)list.get(0), force);
-				// else
-				// mObjectLoader.saveMapTypes(list, force);
-				// break;
-				// case ObjectEntities.ANALYSISTYPE_ENTITY_CODE:
-				// if (alone)
-				// mObjectLoader.saveAnalysisType((AnalysisType)list.get(0),
-				// force);
-				// else
-				// mObjectLoader.saveAnalysisTypes(list, force);
-				// break;
-				// case ObjectEntities.EVALUATIONTYPE_ENTITY_CODE:
-				// if (alone)
-				// mObjectLoader.saveEvaluationType((EvaluationType)list.get(0),
-				// force);
-				// else
-				// mObjectLoader.saveEvaluationTypes(list, force);
-				// break;
-				// case ObjectEntities.SET_ENTITY_CODE:
-				// if (alone)
-				// mObjectLoader.saveSet((Set)list.get(0), force);
-				// else
-				// mObjectLoader.saveSets(list, force);
-				// break;
-				// case ObjectEntities.MS_ENTITY_CODE:
-				// if (alone)
-				// mObjectLoader.saveMapSetup((MapSetup)list.get(0), force);
-				// else
-				// mObjectLoader.saveMapSetups(list, force);
-				// break;
-				// case ObjectEntities.ANALYSIS_ENTITY_CODE:
-				// if (alone)
-				// mObjectLoader.saveAnalysis((Analysis)list.get(0), force);
-				// else
-				// mObjectLoader.saveAnalyses(list, force);
-				// break;
-				// case ObjectEntities.EVALUATION_ENTITY_CODE:
-				// if (alone)
-				// mObjectLoader.saveEvaluation((Evaluation)list.get(0), force);
-				// else
-				// mObjectLoader.saveEvaluations(list, force);
-				// break;
-				// case ObjectEntities.MEASUREMENT_ENTITY_CODE:
-				// if (alone)
-				// mObjectLoader.saveMap((Map)list.get(0), force);
-				// else
-				// mObjectLoader.saveMaps(list, force);
-				// break;
-				// case ObjectEntities.TEST_ENTITY_CODE:
-				// if (alone)
-				// mObjectLoader.saveTest((Test)list.get(0), force);
-				// else
-				// mObjectLoader.saveTests(list, force);
-				// break;
-				// case ObjectEntities.RESULT_ENTITY_CODE:
-				// if (alone)
-				// mObjectLoader.saveResult((Result)list.get(0), force);
-				// else
-				// mObjectLoader.saveResults(list, force);
-				// break;
-				// case ObjectEntities.TEMPORALPATTERN_ENTITY_CODE:
-				// if (alone)
-				// mObjectLoader.saveTemporalPattern((TemporalPattern)list.get(0),
-				// force);
-				// else
-				// mObjectLoader.saveTemporalPatterns(list, force);
-				// break;
+			switch (code) {				
+				case ObjectEntities.SITE_NODE_TYPE_ENTITY_CODE:
+					if (alone)
+						mObjectLoader.saveSiteNodeType((SiteNodeType)list.get(0), force);
+					else
+						mObjectLoader.saveSiteNodeTypes(list, force);
+					break;
+				case ObjectEntities.PHYSICAL_LINK_TYPE_ENTITY_CODE:
+					if (alone)
+						mObjectLoader.savePhysicalLinkType((PhysicalLinkType) list.get(0), force);
+					else
+						mObjectLoader.savePhysicalLinkTypes(list, force);
+					break;
+				case ObjectEntities.SITE_NODE_ENTITY_CODE:
+					if (alone)
+						mObjectLoader.saveSiteNode((SiteNode)list.get(0), force);
+					else
+						mObjectLoader.saveSiteNodes(list, force);
+					break;
+				case ObjectEntities.TOPOLOGICAL_NODE_ENTITY_CODE:
+					if (alone)
+						mObjectLoader.saveTopologicalNode((TopologicalNode) list.get(0), force);
+					else
+						mObjectLoader.saveTopologicalNodes(list, force);
+					break;
+				case ObjectEntities.NODE_LINK_ENTITY_CODE:
+					if (alone)
+						mObjectLoader.saveNodeLink((NodeLink)list.get(0), force);
+					else
+						mObjectLoader.saveNodeLinks(list, force);
+					break;
+				case ObjectEntities.MARK_ENTITY_CODE:
+					if (alone)
+						mObjectLoader.saveMark((Mark)list.get(0), force);
+					else
+						mObjectLoader.saveMarks(list, force);
+					break;
+				case ObjectEntities.PHYSICAL_LINK_ENTITY_CODE:
+					if (alone)
+						mObjectLoader.savePhysicalLink((PhysicalLink)list.get(0), force);
+					else
+						mObjectLoader.savePhysicalLinks(list, force);
+					break;
+				case ObjectEntities.COLLECTOR_ENTITY_CODE:
+					if (alone)
+						mObjectLoader.saveCollector((Collector)list.get(0), force);
+					else
+						mObjectLoader.saveCollectors(list, force);
+					break;
+				case ObjectEntities.MAP_ENTITY_CODE:
+					if (alone)
+						mObjectLoader.saveMap((Map)list.get(0), force);
+					else
+						mObjectLoader.saveMaps(list, force);
+					break;
 				default:
 					Log.errorMessage("MapStorableObjectPool.saveStorableObjects | Unknown Unknown entity : '"
 							+ ObjectEntities.codeToString(code) + "'");
@@ -448,41 +351,11 @@ public final class MapStorableObjectPool extends StorableObjectPool {
 	}
 
 	protected void deleteStorableObject(Identifier id) throws DatabaseException, CommunicationException {
-		// TODO implement method
-
-		// try {
-		// mObjectLoader.delete(id);
-		// } catch (DatabaseException e) {
-		// Log.errorMessage("MapStorableObjectPool.deleteStorableObject |
-		// DatabaseException: " + e.getMessage());
-		// throw new
-		// DatabaseException("MapStorableObjectPool.deleteStorableObject", e);
-		// } catch (CommunicationException e) {
-		// Log.errorMessage("MapStorableObjectPool.deleteStorableObject |
-		// CommunicationException: " + e.getMessage());
-		// throw new
-		// CommunicationException("MapStorableObjectPool.deleteStorableObject",
-		// e);
-		// }
+	 	mObjectLoader.delete(id);
 	}
 
 	protected void deleteStorableObjects(List ids) throws DatabaseException, CommunicationException {
-		// TODO implement method
-		// try {
-		//			
-		// mObjectLoader.delete(ids);
-		// } catch (DatabaseException e) {
-		// Log.errorMessage("MapStorableObjectPool.deleteStorableObjects |
-		// DatabaseException: " + e.getMessage());
-		// throw new
-		// DatabaseException("MapStorableObjectPool.deleteStorableObjects", e);
-		// } catch (CommunicationException e) {
-		// Log.errorMessage("MapStorableObjectPool.deleteStorableObjects |
-		// CommunicationException: " + e.getMessage());
-		// throw new
-		// CommunicationException("MapStorableObjectPool.deleteStorableObjects",
-		// e);
-		// }
+		mObjectLoader.delete(ids);
 	}
 
 	public static void delete(Identifier id) throws DatabaseException, CommunicationException {
