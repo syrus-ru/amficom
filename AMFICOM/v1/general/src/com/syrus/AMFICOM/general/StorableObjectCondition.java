@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectCondition.java,v 1.5 2005/02/03 14:56:29 bob Exp $
+ * $Id: StorableObjectCondition.java,v 1.6 2005/02/11 15:53:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,11 +7,11 @@
  */
 package com.syrus.AMFICOM.general;
 
-import java.util.List;
+import java.util.Collection;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/03 14:56:29 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/11 15:53:32 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -26,9 +26,9 @@ public interface StorableObjectCondition extends TransferableObject {
 	 * @param list objects present in the local pool.
 	 * @return true if certain objects need to be loaded, false otherwise.
 	 * @throws ApplicationException
-	 * @see StorableObjectPool#getStorableObjectsByConditionButIdsImpl(List, StorableObjectCondition, boolean)
+	 * @see StorableObjectPool#getStorableObjectsByConditionButIdsImpl(Collection, StorableObjectCondition, boolean)
 	 */
-	boolean isNeedMore(List list) throws ApplicationException;
+	boolean isNeedMore(Collection list) throws ApplicationException;
 
 	Short getEntityCode();
 	

@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.22 2005/02/11 15:35:16 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.23 2005/02/11 15:53:32 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/02/11 15:35:16 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/02/11 15:53:32 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public abstract class StorableObjectPool {
@@ -249,27 +249,27 @@ public abstract class StorableObjectPool {
 	 * @param useLoader
 	 * @throws ApplicationException
 	 */
-	protected List getStorableObjectsByConditionButIdsImpl(final Collection ids,
+	protected Collection getStorableObjectsByConditionButIdsImpl(final Collection ids,
 			final StorableObjectCondition condition,
 			final boolean useLoader) throws ApplicationException {
 		assert ids != null : "Supply an empty list instead...";
 
-		List list = null;
+		Collection collection = null;
 		LRUMap objectPool = (LRUMap) this.objectPoolMap.get(condition.getEntityCode());
 		if (objectPool != null) {
-			list = new LinkedList();
+			collection = new LinkedList();
 			for (Iterator it = objectPool.iterator(); it.hasNext();) {
 				StorableObject storableObject = (StorableObject) it.next();
 				if (!ids.contains(storableObject.getId())
 						&& condition.isConditionTrue(storableObject))
-					list.add(storableObject);
+					collection.add(storableObject);
 			}
 
-			List loadedList = null;
+			Collection loadedList = null;
 
-			if (useLoader && condition.isNeedMore(list)) {
-				List idsList = new ArrayList(list.size());
-				for (Iterator iter = list.iterator(); iter.hasNext();) {
+			if (useLoader && condition.isNeedMore(collection)) {
+				List idsList = new ArrayList(collection.size());
+				for (Iterator iter = collection.iterator(); iter.hasNext();) {
 					StorableObject storableObject = (StorableObject) iter.next();
 					idsList.add(storableObject.getId());
 				}
@@ -286,7 +286,7 @@ public abstract class StorableObjectPool {
 			 * This block is only needed in order for LRUMap to
 			 * rehash itself.
 			 */
-			for (Iterator it = list.iterator(); it.hasNext();) {
+			for (Iterator it = collection.iterator(); it.hasNext();) {
 				StorableObject storableObject = (StorableObject) it.next();
 				objectPool.get(storableObject);
 			}
@@ -295,19 +295,19 @@ public abstract class StorableObjectPool {
 				for (Iterator it = loadedList.iterator(); it.hasNext();) {
 					StorableObject storableObject = (StorableObject) it.next();
 					objectPool.put(storableObject.getId(), storableObject);
-					list.add(storableObject);
+					collection.add(storableObject);
 				}
 			}
 
 		}
 
-		if (list == null)
-			list = Collections.EMPTY_LIST;
+		if (collection == null)
+			collection = Collections.EMPTY_LIST;
 
-		return list;
+		return collection;
 	}
 
-	protected List getStorableObjectsByConditionImpl(final StorableObjectCondition condition, final boolean useLoader)
+	protected Collection getStorableObjectsByConditionImpl(final StorableObjectCondition condition, final boolean useLoader)
 			throws ApplicationException {
 		return this.getStorableObjectsByConditionButIdsImpl(Collections.EMPTY_LIST, condition, useLoader);
 	}
@@ -366,7 +366,7 @@ public abstract class StorableObjectPool {
 			for (Iterator it = objectQueueMap.keySet().iterator(); it.hasNext();) {
 				Short entityCode = (Short) it.next();
 				List objectQueue = (List) objectQueueMap.get(entityCode);
-				List storableObjects = this.loadStorableObjects(entityCode, objectQueue);
+				Collection storableObjects = this.loadStorableObjects(entityCode, objectQueue);
 				if (storableObjects != null) {
 					try {
 						for (Iterator iter = storableObjects.iterator(); iter.hasNext();) {
@@ -389,9 +389,9 @@ public abstract class StorableObjectPool {
 
 	protected abstract StorableObject loadStorableObject(final Identifier objectId) throws DatabaseException, CommunicationException;
 
-	protected abstract List loadStorableObjects(final Short entityCode, final Collection ids) throws DatabaseException, CommunicationException;
+	protected abstract Collection loadStorableObjects(final Short entityCode, final Collection ids) throws DatabaseException, CommunicationException;
 
-	protected abstract List loadStorableObjectsButIds(final StorableObjectCondition condition, final Collection ids) throws DatabaseException, CommunicationException;
+	protected abstract Collection loadStorableObjectsButIds(final StorableObjectCondition condition, final Collection ids) throws DatabaseException, CommunicationException;
 
 	protected void populatePools() {
 		try {
