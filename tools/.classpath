@@ -8,6 +8,13 @@
 	<classpathentry kind="var" path="PMD_HOME/lib/xercesImpl-2.0.2.jar"/>
 	<classpathentry kind="var" path="PMD_HOME/lib/xmlParserAPIs-2.0.2.jar"/>
 	<classpathentry kind="var" path="ANT_HOME/lib/ant.jar"/>
-	<classpathentry kind="var" path="PMD_HOME/lib/pmd-1.8.jar"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="src" path="/config_v1"/>
+	<classpathentry kind="src" path="/general_v1"/>
+	<classpathentry kind="src" path="/measurement_v1"/>
+	<classpathentry kind="src" path="/mserver_v1"/>
+	<classpathentry kind="var" path="PMD_HOME/lib/pmd-1.9.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/servermisc.jar"/>
+	<classpathentry kind="src" path="/util"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
