@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.27 2004/11/23 12:19:32 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.28 2004/11/23 12:27:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,12 +9,12 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/11/23 12:19:32 $
+ * @version $Revision: 1.28 $, $Date: 2004/11/23 12:27:55 $
  * @author $Author: arseniy $
  * @module general_v1
  */
 
-public abstract class ObjectEntities {
+public class ObjectEntities {
 	/*	Object Types	*/
 	public static final String CHARACTERISTICTYPE_ENTITY = "CharacteristicType";
 	public static final String EQUIPMENTTYPE_ENTITY = "EquipmentType";
@@ -116,6 +116,9 @@ public abstract class ObjectEntities {
 	public static final short RESULTPARAMETER_ENTITY_CODE = 0x0189;
 	public static final short TEMPORALPATTERN_ENTITY_CODE = 0x018A;
 	public static final short MODELING_ENTITY_CODE = 0x018B;
+
+	private ObjectEntities() {
+	}
 
 	public static short stringToCode(String entity) {
 		/**
