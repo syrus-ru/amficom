@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.19 2005/03/04 08:05:49 bass Exp $
+ * $Id: LRUMap.java,v 1.20 2005/03/16 09:55:42 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/03/04 08:05:49 $
- * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2005/03/16 09:55:42 $
+ * @author $Author: arseniy $
  * @module util
  */
 
@@ -101,6 +101,16 @@ public class LRUMap implements Serializable {
 			return ret;
 		}
 		throw new IllegalArgumentException("Key is NULL"); //$NON-NLS-1$
+	}
+
+	public synchronized boolean containsKey(Object key) {
+		if (key != null) {
+			for (int i = 0; i < this.array.length; i++)
+				if (this.array[i] != null && key.equals(this.array[i].key))
+					return true;
+			return false;
+		}
+		throw new IllegalArgumentException("Key is NULL");
 	}
 
 	public synchronized Object remove(Object key) {
