@@ -20,11 +20,7 @@ public class AnalysisType_Database extends StorableObject_Database {
 	public static final String	MODE_OUT			= "OUT";
 
 	public static final String	COLUMN_CODENAME		= "codename";
-	public static final String	COLUMN_DESCRIPTION	= "description";
-	
-	private ArrayList in_par_typs;
-	private ArrayList criteria_par_typs;
-	private ArrayList out_par_typs;
+	public static final String	COLUMN_DESCRIPTION	= "description";	
 
 	private AnalysisType fromStorableObject(StorableObject storableObject) throws Exception {
 		if (storableObject instanceof AnalysisType)
@@ -97,15 +93,9 @@ public class AnalysisType_Database extends StorableObject_Database {
 	}
 
 	private void retrieveParameterTypes(AnalysisType analysisType) throws Exception {	
-		if (this.in_par_typs==null)
-			this.in_par_typs = new ArrayList();
-		else this.in_par_typs.clear();
-		if (this.criteria_par_typs==null)
-			this.criteria_par_typs = new ArrayList();
-		else this.criteria_par_typs.clear();		
-		if (this.out_par_typs==null)
-			this.out_par_typs = new ArrayList();
-		else this.out_par_typs.clear();
+		ArrayList in_par_typs = new ArrayList();
+		ArrayList criteria_par_typs = new ArrayList();
+		ArrayList out_par_typs = new ArrayList();
 		
 		String analysis_type_id_str = analysisType.getId().toSQLString();
 		String sql;
@@ -137,11 +127,11 @@ public class AnalysisType_Database extends StorableObject_Database {
 				parameter_mode = resultSet.getString("parameter_mode");
 				parameter_type_id_code = resultSet.getString("parameter_type_id");
 				if (parameter_mode.equals(MODE_IN))
-					this.in_par_typs.add(new Identifier(parameter_type_id_code));
+					in_par_typs.add(new Identifier(parameter_type_id_code));
 				else if (parameter_mode.equals(MODE_CRITERION))
-					this.criteria_par_typs.add(new Identifier(parameter_type_id_code));
+					criteria_par_typs.add(new Identifier(parameter_type_id_code));
 				else if (parameter_mode.equals(MODE_OUT))
-					this.out_par_typs.add(new Identifier(parameter_type_id_code));
+					out_par_typs.add(new Identifier(parameter_type_id_code));
 				else
 					Log
 							.errorMessage("AnalysisType_Database.retrieveParameterTypes | ERROR: Unknown parameter mode for parameter_type_id "
@@ -160,10 +150,10 @@ public class AnalysisType_Database extends StorableObject_Database {
 			} catch (SQLException sqle1) {
 			}
 		}
-		this.in_par_typs.trimToSize();
-		this.criteria_par_typs.trimToSize();
-		this.out_par_typs.trimToSize();
-		analysisType.setParameterTypes(this.in_par_typs, this.criteria_par_typs, this.out_par_typs);
+		in_par_typs.trimToSize();
+		criteria_par_typs.trimToSize();
+		out_par_typs.trimToSize();
+		analysisType.setParameterTypes(in_par_typs, criteria_par_typs, out_par_typs);
 	}
 
 	public Object retrieveObject(StorableObject storableObject, int retrieve_kind, Object arg) throws Exception {

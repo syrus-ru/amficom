@@ -111,12 +111,13 @@ public class EvaluationType_Database extends StorableObject_Database {
 	}
 
 	private void retrieveParameterTypes(EvaluationType evaluationType)
-			throws Exception {
-		ArrayList in_par_typs = new ArrayList();
-		ArrayList threshold_par_typs = new ArrayList();
-		ArrayList etalon_par_typs = new ArrayList();
-		ArrayList out_par_typs = new ArrayList();
+			throws Exception {	
 
+		 ArrayList in_par_typs = new ArrayList();
+		 ArrayList threshold_par_typs = new ArrayList();
+		 ArrayList etalon_par_typs = new ArrayList();
+		 ArrayList out_par_typs = new ArrayList();
+		
 		String evaluation_type_id_str = evaluationType.getId().toSQLString();
 		String sql;
 		{
