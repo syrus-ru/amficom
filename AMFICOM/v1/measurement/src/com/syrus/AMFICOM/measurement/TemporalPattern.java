@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPattern.java,v 1.33 2004/08/24 12:55:19 arseniy Exp $
+ * $Id: TemporalPattern.java,v 1.34 2004/08/24 14:14:42 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2004/08/24 12:55:19 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.34 $, $Date: 2004/08/24 14:14:42 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -278,7 +278,7 @@ public class TemporalPattern extends StorableObject {
 			//calendar.setTimeInMillis(startPeriod);
 			//calendar.set(Calendar.SECOND, 0);
 			Calendar c = Calendar.getInstance();
-			c.set(Calendar.MINUTE, 41);
+			//c.set(Calendar.MINUTE, 41);
 			long backTime = c.getTimeInMillis();
 			if (DEBUG) {
 				System.out.println("startPeriod:" //$NON-NLS-1$
@@ -349,32 +349,50 @@ public class TemporalPattern extends StorableObject {
 													System.out
 															.println(" \t* minute:"
 																	+ this.minutes.host[mm]);
-//												System.out
-//														.println("backHTime:"
-//																+ new Date(
-//																		backHTime)
-//																+ "\t"
-//																+ new Date(
-//																		this.startPeriod)
-//																+ ", "
-//																+ new Date(
-//																		this.endPeriod));
+												//												System.out
+												//														.println("backHTime:"
+												//																+
+												// new
+												// Date(
+												//																		backHTime)
+												//																+
+												// "\t"
+												//																+
+												// new
+												// Date(
+												//																		this.startPeriod)
+												//																+ ",
+												// "
+												//																+
+												// new
+												// Date(
+												//																		this.endPeriod));
 												c
 														.setTimeInMillis(backHTime);
 												c
 														.set(
 															Calendar.MINUTE,
 															this.minutes.host[mm]);
+												c.set(Calendar.SECOND,
+													0);
+
 												mTime = c
 														.getTimeInMillis();
+												if (DEBUG)
+													System.out
+															.println(">"
+																	+ new Date(
+																			mTime)
+																	+ "\t"
+																	+ new Date(
+																			this.startPeriod)
+																	+ ", "
+																	+ new Date(
+																			this.endPeriod));
 												if ((this.startPeriod
 														- MINUTE_LONG <= mTime)
 														&& (mTime <= this.endPeriod
 																+ MINUTE_LONG)) {
-													c
-															.set(
-																Calendar.SECOND,
-																0);
 													if (this.dateList == null)
 														this.dateList = new LinkedList();
 													this.dateList
