@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConfigurationObjectLoader.java,v 1.22 2004/11/23 15:24:41 bob Exp $
+ * $Id: DatabaseConfigurationObjectLoader.java,v 1.23 2004/11/23 16:18:48 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/11/23 15:24:41 $
- * @author $Author: bob $
+ * @version $Revision: 1.23 $, $Date: 2004/11/23 16:18:48 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -792,23 +792,44 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveCableThreadType(CharacteristicType characteristicType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
-		CableThreadTypeDatabase database = (CableThreadTypeDatabase)ConfigurationDatabaseContext.getCableThreadTypeDatabase();
+	public void saveKISType(KISType kisType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
+		KISTypeDatabase database = (KISTypeDatabase)ConfigurationDatabaseContext.getKISTypeDatabase();
 		try {
-			database.update(characteristicType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			database.update(kisType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
 		}
 		catch (UpdateObjectException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCableThreadType | UpdateObjectException: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCableThreadType | UpdateObjectException: " + e.getMessage());
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveKISType | UpdateObjectException: " + e.getMessage());
+			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveKISType | UpdateObjectException: " + e.getMessage());
 		}
 		catch (IllegalDataException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCableThreadType | Illegal Storable Object: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCableThreadType | Illegal Storable Object: " + e.getMessage());
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveKISType | Illegal Storable Object: " + e.getMessage());
+			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveKISType | Illegal Storable Object: " + e.getMessage());
 		}
 		catch (VersionCollisionException e) {
-			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCableThreadType | VersionCollisionException: " + e.getMessage());
-			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCableThreadType | VersionCollisionException: " + e.getMessage());
+			Log.errorMessage("DatabaseConfigurationObjectLoader.saveKISType | VersionCollisionException: " + e.getMessage());
+			throw new DatabaseException("DatabaseConfigurationObjectLoader.saveKISType | VersionCollisionException: " + e.getMessage());
 		}
+	}
+
+	public void saveCableThreadType(CableThreadType cableThreadType,
+			boolean force) throws VersionCollisionException, DatabaseException,
+			CommunicationException {
+		CableThreadTypeDatabase database = (CableThreadTypeDatabase)ConfigurationDatabaseContext.getCableThreadTypeDatabase();
+        try {
+            database.update(cableThreadType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+        }
+        catch (UpdateObjectException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveCableThreadType | UpdateObjectException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCableThreadType | UpdateObjectException: " + e.getMessage());
+        }
+        catch (IllegalDataException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveCableThreadType | Illegal Storable Object: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCableThreadType | Illegal Storable Object: " + e.getMessage());
+        }
+        catch (VersionCollisionException e) {
+            Log.errorMessage("DatabaseConfigurationObjectLoader.saveCableThreadType | VersionCollisionException: " + e.getMessage());
+            throw new DatabaseException("DatabaseConfigurationObjectLoader.saveCableThreadType | VersionCollisionException: " + e.getMessage());
+        }
 	}
 
 	public void saveCharacteristic(Characteristic characteristic, boolean force) throws DatabaseException, CommunicationException {
