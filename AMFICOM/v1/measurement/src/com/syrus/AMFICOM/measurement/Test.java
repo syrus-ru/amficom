@@ -304,8 +304,7 @@ public class Test extends StorableObject {
 																 msIds);
 	}
 
-	public List retrieveMeasurementsOrderByStartTime(MeasurementStatus measurementStatus)
-			throws RetrieveObjectException, ObjectNotFoundException {
+	public List retrieveMeasurementsOrderByStartTime(MeasurementStatus measurementStatus)	throws RetrieveObjectException, ObjectNotFoundException {
 		try {
 			return (List)this.testDatabase.retrieveObject(this, RETRIEVE_MEASUREMENTS, measurementStatus);
 		}
