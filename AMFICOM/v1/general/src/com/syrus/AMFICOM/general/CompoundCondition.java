@@ -1,5 +1,5 @@
 /*
-* $Id: CompoundCondition.java,v 1.7 2005/02/02 08:34:31 max Exp $
+* $Id: CompoundCondition.java,v 1.8 2005/02/03 14:56:50 bob Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.util.corba.JavaSoftORBUtil;
  * Compound condition such as (A & B), (A | B) , (A ^ B)
  * where A and B is conditions (they can be also compound condition too)
  *  
- * @version $Revision: 1.7 $, $Date: 2005/02/02 08:34:31 $
- * @author $Author: max $
+ * @version $Revision: 1.8 $, $Date: 2005/02/03 14:56:50 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public class CompoundCondition implements StorableObjectCondition {
@@ -113,11 +113,11 @@ public class CompoundCondition implements StorableObjectCondition {
 	}
 
 	public Short getEntityCode() {
-		return this.entityCode;
+		return this.firstCondition.getEntityCode();
 	}
 
 	public void setEntityCode(Short entityCode) {
-		this.entityCode = entityCode;
+		throw new UnsupportedOperationException();
 	}
 
 	public Object getTransferable() {
