@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementServer.java,v 1.1 2004/09/20 09:42:33 bob Exp $
+ * $Id: ClientMeasurementServer.java,v 1.2 2004/09/20 12:20:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,6 @@ import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
-import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.corba.JavaSoftORBUtil;
 import java.net.InetAddress;
 import org.omg.CORBA.*;
@@ -24,7 +23,7 @@ import org.omg.CosNaming.NamingContextPackage.AlreadyBound;
 import org.omg.PortableServer.*;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/09/20 09:42:33 $
+ * @version $Revision: 1.2 $, $Date: 2004/09/20 12:20:55 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -39,10 +38,13 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 
 	/* CORBA server */
 	private static CORBAServer	corbaServer;
+	
+	private boolean running;
 
 	public ClientMeasurementServer() {
 		super(ApplicationProperties.getInt(KEY_TICK_TIME, TICK_TIME) * 1000, ApplicationProperties
 				.getInt(KEY_MAX_FALLS, MAX_FALLS));
+		this.running = true;
 	}
 
 	public static void main(String[] args) {
@@ -53,6 +55,17 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 	private static void startup() {
 		/* Create CORBA server with servant(s) */
 		activateCORBAServer();
+		
+		/*	Start main loop	*/
+		final ClientMeasurementServer clientMeasurementServer = new ClientMeasurementServer();
+		clientMeasurementServer.start();
+		
+		/*	Add shutdown hook	*/
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				clientMeasurementServer.shutdown();
+			}
+		});
 	}
 
 	private static void activateCORBAServer() {
@@ -80,14 +93,11 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 
 			CMServer server = (new CMServerPOATie(new CMServerImpl(), rootPOA))._this(orb);
 			NameComponent serverPath[] = rootNamingCtx.to_name("CMServer");
-			childNamingCtx.rebind(serverPath, server);
-			
-			childNamingCtx.unbind(serverPath);
-			rootNamingCtx.unbind(childPath);
+			childNamingCtx.rebind(serverPath, server);		
 			
 		} catch (Exception e) {
 			Log.errorException(e);
-			DatabaseConnection.closeConnection();
+			System.err.println(e);
 			System.exit(-1);
 		}
 	}
@@ -121,7 +131,7 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 			
 		} catch (Exception e) {
 			Log.errorException(e);
-			DatabaseConnection.closeConnection();
+			System.err.println(e);
 			System.exit(-1);
 		}
 	}
@@ -134,5 +144,22 @@ public class ClientMeasurementServer extends SleepButWorkThread {
 				Log.errorMessage("processError | Unknown error code: " + super.fallCode);
 		}
 		super.clearFalls();
+	}
+	
+	protected void shutdown() {/*!!	Need synchronization	*/
+		this.running = false;
+	}
+	
+	public void run() {
+		while (this.running) {
+			System.out.print(".");
+			try {
+				sleep(super.initialTimeToSleep);
+			}
+			catch (InterruptedException ie) {
+				Log.errorException(ie);
+			}
+		}
+		stopCORBAServer();
 	}
 }
