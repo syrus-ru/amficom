@@ -1,5 +1,5 @@
 /*
- * $Id: Test.java,v 1.28 2004/08/16 14:22:05 bob Exp $
+ * $Id: Test.java,v 1.29 2004/08/16 16:09:09 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,6 +12,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import com.syrus.util.HashCodeGenerator;
 import com.syrus.util.Log;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -34,7 +36,7 @@ import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.Co
 import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2004/08/16 14:22:05 $
+ * @version $Revision: 1.29 $, $Date: 2004/08/16 16:09:09 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -117,6 +119,16 @@ public class Test extends StorableObject {
 					Log.errorMessage("TestTimeStamps | Illegal discriminator: " + discriminator);
 			}
 			return ttst;
+		}
+		
+		
+		public int hashCode() {
+			HashCodeGenerator codeGenerator = new HashCodeGenerator();
+			codeGenerator.addInt(this.discriminator);
+			codeGenerator.addObject(this.startTime);
+			codeGenerator.addObject(this.endTime);
+			codeGenerator.addObject(this.temporalPatternId);
+			return codeGenerator.getResult();
 		}
 	}
 
@@ -517,20 +529,59 @@ public class Test extends StorableObject {
 	}
 	
 	
+	public int hashCode() {
+		HashCodeGenerator codeGenerator = new HashCodeGenerator();
+		codeGenerator.addObject(this.id);
+		codeGenerator.addInt(this.timeStamps.hashCode());
+		/**
+		 * FIXME fix for analysisType.hashCode when it'd be made.
+		 */
+		codeGenerator.addObject(this.analysisType.getId());
+		/**
+		 * FIXME fix for evaluationType.hashCode when it'd be made.
+		 */
+		codeGenerator.addObject(this.evaluationType.getId());
+		/**
+		 * FIXME fix for measurementType.hashCode when it'd be made.
+		 */
+		codeGenerator.addObject(this.measurementType.getId());
+		/**
+		 * FIXME fix for monitoredElement.hashCode when it'd be made.
+		 */
+		codeGenerator.addObject(this.monitoredElement.getId());
+		/**
+		 * FIXME fix for mainMeasurementSetup.hashCode when it'd be made.
+		 */
+		codeGenerator.addObject(this.mainMeasurementSetup.getId());
+
+		codeGenerator.addObjectArray(this.measurementSetupIds.toArray());
+		codeGenerator.addInt(this.returnType);
+		codeGenerator.addInt(this.status);		
+		codeGenerator.addObject(this.description);
+		return codeGenerator.getResult();
+	}
+	
 	public boolean equals(Object obj) {
-		boolean equals = false;
-		if (obj instanceof Test){
-			Test test = (Test)obj;
-			/**
-			 * FIXME compare all elements 
-			 */
-			if ((test.getId().equals(getId())) &&
+		boolean equals = (this == obj);
+		
+		if ((!equals) && (obj instanceof Test)){
+			Test test = (Test)obj;			
+			if (	(test.getId().equals(getId())) &&
 					(test.getStartTime().equals(getStartTime())) &&
-					(test.getEndTime().equals(getEndTime())) &&
+					( ((test.getEndTime() == null) && (getEndTime() == null) ) 
+							|| (test.getEndTime().equals(getEndTime())) ) &&
 					(test.getTemporalType().equals(getTemporalType())) &&
-					( (test.getTemporalPatternId()==null)&&(getTemporalPatternId()==null) 
-							|| (test.getTemporalPatternId().equals(getTemporalPatternId())))
-							// &&
+					( ((test.getTemporalPatternId()==null) && (getTemporalPatternId() == null)) 
+							|| (test.getTemporalPatternId().equals(getTemporalPatternId())) ) &&
+					( ((test.getAnalysisType()==null) && (getAnalysisType() == null)) 
+								|| (test.getAnalysisType().equals(getAnalysisType())) ) &&
+					( ((test.getEvaluationType()==null) && (getEvaluationType() == null)) 
+								|| (test.getEvaluationType().equals(getEvaluationType())) ) &&
+					(test.getMeasurementType().equals(getMeasurementType())) &&
+					(test.getMonitoredElement().equals(getMonitoredElement())) &&
+					(test.getMeasurementSetupIds().equals(getMeasurementSetupIds())) &&
+					(test.getReturnType().equals(getReturnType())) && 
+					(test.getStatus().equals(test.getStatus()))
 					)
 					equals = true;
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.19 2004/08/16 14:22:05 bob Exp $
+ * $Id: TestDatabase.java,v 1.20 2004/08/16 16:09:09 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
 import com.syrus.AMFICOM.configuration.KISDatabase;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2004/08/16 14:22:05 $
+ * @version $Revision: 1.20 $, $Date: 2004/08/16 16:09:09 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -676,10 +676,23 @@ public class TestDatabase extends StorableObjectDatabase {
 	}
 	
 	public static List retrieveAll() throws RetrieveObjectException {
+		return retrieveAll(null);
+	}
+	
+	public static List retrieveAll(String condition) throws RetrieveObjectException {
 		List tests = new ArrayList(CHARACTER_NUMBER_OF_RECORDS);
-		String sql = SQL_SELECT
-				+ COLUMN_ID
-				+ SQL_FROM + ObjectEntities.TEST_ENTITY;
+		String sql;
+		{
+			StringBuffer buffer = new StringBuffer(SQL_SELECT);
+			buffer.append(COLUMN_ID);
+			buffer.append(SQL_FROM);
+			buffer.append(ObjectEntities.TEST_ENTITY);
+			if ((condition!=null)&&(condition.length()>0)){
+				buffer.append(SQL_WHERE);
+				buffer.append(condition);
+			}
+			sql = buffer.toString();
+		}
 		Statement statement = null;
 		ResultSet resultSet = null;
 		try {
