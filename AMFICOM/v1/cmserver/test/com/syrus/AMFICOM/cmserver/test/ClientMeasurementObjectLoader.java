@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.17 2004/10/05 14:29:20 max Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.18 2004/10/06 15:45:56 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.DomainCondition;
 import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.EvaluationType;
+import com.syrus.AMFICOM.measurement.LinkedIdsCondition;
 import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.MeasurementCondition;
 import com.syrus.AMFICOM.measurement.MeasurementObjectLoader;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementSetupCondition;
@@ -49,7 +49,7 @@ import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Analysis_Transferable;
 import com.syrus.AMFICOM.measurement.corba.EvaluationType_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
-import com.syrus.AMFICOM.measurement.corba.MeasurementCondition_Transferable;
+import com.syrus.AMFICOM.measurement.corba.LinkedIdsCondition_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetupCondition_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
@@ -64,7 +64,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2004/10/05 14:29:20 $
+ * @version $Revision: 1.18 $, $Date: 2004/10/06 15:45:56 $
  * @author $Author: max $
  * @module cmserver_v1
  */
@@ -520,11 +520,11 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
                         .transmitMeasurementsButIdsDomainCondition(identifier_Transferables,
                                                                    accessIdentifierTransferable,
                                                                    (DomainCondition_Transferable)storableObjectCondition.getTransferable());
-            } else if (storableObjectCondition instanceof MeasurementCondition) {
+            } else if (storableObjectCondition instanceof LinkedIdsCondition) {
                 transferables = this.server
-                        .transmitMeasurementsButIdsMeasurementCondition(identifier_Transferables,
+                        .transmitMeasurementsButIdsLinkedCondition(identifier_Transferables,
                                             accessIdentifierTransferable,
-                                            (MeasurementCondition_Transferable)storableObjectCondition.getTransferable());
+                                            (LinkedIdsCondition_Transferable) storableObjectCondition.getTransferable());
             } else {
                 transferables = this.server
                         .transmitMeasurementsButIds(identifier_Transferables,
@@ -793,12 +793,21 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
                 identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
             }
             if (storableObjectCondition instanceof DomainCondition) {
-                transferables = this.server.transmitResultsButIds(identifier_Transferables,
-                                                                  accessIdentifierTransferable);
+                
+                transferables = this.server.transmitResultsButIdsDomainCondition(identifier_Transferables,
+                                                                                 accessIdentifierTransferable,
+                                                                                 (DomainCondition_Transferable) storableObjectCondition.getTransferable());
+            
+            } else if (storableObjectCondition instanceof LinkedIdsCondition) {
+            
+                transferables = this.server.transmitResultsButIdsLinkedCondition(identifier_Transferables,
+                                                                                 accessIdentifierTransferable,
+                                                                                 (LinkedIdsCondition_Transferable) storableObjectCondition.getTransferable());
+        
             } else {
-                transferables = this.server.transmitResultsButIdsCondition(identifier_Transferables,
-                                                                  accessIdentifierTransferable,
-                                                                  (DomainCondition_Transferable) storableObjectCondition.getTransferable());
+                transferables = this.server.transmitResultsButIds(identifier_Transferables,
+                        accessIdentifierTransferable);
+                
                 if (storableObjectCondition != null && !(storableObjectCondition instanceof DomainCondition)) {
                     Log.errorMessage("ClientMeasurementObjectLoader.loadResultsButIds | " +
                             "Class '" + storableObjectCondition.getClass().getName() + "' is not instanse of DomainCondition");

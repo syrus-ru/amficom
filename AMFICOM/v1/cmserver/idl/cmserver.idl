@@ -353,10 +353,16 @@ module corba {
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
 			
-		com::syrus::AMFICOM::measurement::corba::MeasurementSeq_Transferable transmitMeasurementsButIdsCondition(
+		com::syrus::AMFICOM::measurement::corba::MeasurementSeq_Transferable transmitMeasurementsButIdsLinkedCondition(
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
 			in com::syrus::AMFICOM::measurement::corba::LinkedIdsCondition_Transferable linkedIdsCondition_Transferable)			
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+			
+		com::syrus::AMFICOM::measurement::corba::MeasurementSeq_Transferable transmitMeasurementsButIdsDomainCondition(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
+			in com::syrus::AMFICOM::configuration::corba::DomainCondition_Transferable domainCondition)			
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
 			
 		com::syrus::AMFICOM::measurement::corba::MeasurementSetupSeq_Transferable transmitMeasurementSetups(
@@ -385,7 +391,13 @@ module corba {
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier)
 			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
 			
-		com::syrus::AMFICOM::measurement::corba::ResultSeq_Transferable transmitResultsButIdsCondition(
+		com::syrus::AMFICOM::measurement::corba::ResultSeq_Transferable transmitResultsButIdsDomainCondition(
+			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
+			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
+			in com::syrus::AMFICOM::configuration::corba::DomainCondition_Transferable domainCondition)
+			raises (com::syrus::AMFICOM::general::corba::AMFICOMRemoteException);
+		
+		com::syrus::AMFICOM::measurement::corba::ResultSeq_Transferable transmitResultsButIdsLinkedCondition(
 			in com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable ids,
 			in com::syrus::AMFICOM::configuration::corba::AccessIdentifier_Transferable accessIdentifier,
 			in com::syrus::AMFICOM::measurement::corba::LinkedIdsCondition_Transferable linkedIdsCondition_Transferable)
