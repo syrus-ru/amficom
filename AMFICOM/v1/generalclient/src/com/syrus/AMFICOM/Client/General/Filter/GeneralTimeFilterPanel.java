@@ -132,7 +132,7 @@ public class GeneralTimeFilterPanel extends FilterPanel
 		cal2 = Calendar.getInstance();
 		cal2.setTime((Date)hiTimeSpin.getValue());
 
-		cal1.set(Calendar.HOUR_OF_DAY,cal2.HOUR_OF_DAY);
+		cal1.set(Calendar.HOUR_OF_DAY,cal2.get(Calendar.HOUR_OF_DAY));
 		cal1.set(Calendar.MINUTE,cal2.MINUTE);
 
 		String toDate = String.valueOf(cal1.getTime().getTime());
