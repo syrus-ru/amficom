@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.34 2004/12/09 16:12:48 arseniy Exp $
+ * $Id: Characteristic.java,v 1.35 2004/12/15 13:13:20 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.configuration.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/12/09 16:12:48 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.35 $, $Date: 2004/12/15 13:13:20 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 
@@ -299,6 +299,9 @@ public class Characteristic extends StorableObject implements TypedObject {
                 break;
             case ObjectEntities.LINKTYPE_ENTITY_CODE:
                 csort = CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE;
+                break;
+            case ObjectEntities.CABLE_LINKTYPE_ENTITY_CODE:
+                csort = CharacteristicSort.CHARACTERISTIC_SORT_CABLELINKTYPE;
                 break;
 			default:
 				throw new IllegalDataException("Unknown characterized entity, id: '" + id.getIdentifierString() + '\'');
