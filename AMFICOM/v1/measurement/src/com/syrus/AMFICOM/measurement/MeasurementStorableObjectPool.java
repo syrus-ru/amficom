@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.48 2004/11/17 13:02:54 max Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.49 2004/11/17 13:40:02 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2004/11/17 13:02:54 $
- * @author $Author: max $
+ * @version $Revision: 1.49 $, $Date: 2004/11/17 13:40:02 $
+ * @author $Author: bob $
  * @module measurement_v1
  */
 
@@ -107,6 +107,8 @@ public class MeasurementStorableObjectPool {
 	public static void init(MeasurementObjectLoader mObjectLoader1, final int size) {
 		objectPoolMap = Collections.synchronizedMap(new Hashtable(size));
 
+		mObjectLoader = mObjectLoader1;
+
 		addObjectPool(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, size);
 		addObjectPool(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE, size);
 		addObjectPool(ObjectEntities.ANALYSISTYPE_ENTITY_CODE, size);
@@ -121,12 +123,12 @@ public class MeasurementStorableObjectPool {
 		addObjectPool(ObjectEntities.TEST_ENTITY_CODE, size);
 		addObjectPool(ObjectEntities.RESULT_ENTITY_CODE, size);
 		addObjectPool(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE, size);
-
-		mObjectLoader = mObjectLoader1;
 	}
 
 	public static void init(MeasurementObjectLoader mObjectLoader1) {
 		objectPoolMap = Collections.synchronizedMap(new Hashtable(OBJECT_POOL_MAP_SIZE));
+
+		mObjectLoader = mObjectLoader1;
 
 		addObjectPool(ObjectEntities.PARAMETERTYPE_ENTITY_CODE, PARAMETERTYPE_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE, MEASUREMENTTYPE_OBJECT_POOL_SIZE);
@@ -142,8 +144,6 @@ public class MeasurementStorableObjectPool {
 		addObjectPool(ObjectEntities.TEST_ENTITY_CODE, TEST_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.RESULT_ENTITY_CODE, RESULT_OBJECT_POOL_SIZE);
 		addObjectPool(ObjectEntities.TEMPORALPATTERN_ENTITY_CODE, TEMPORALPATTERN_OBJECT_POOL_SIZE);
-
-		mObjectLoader = mObjectLoader1;
 	}
     
     public static void serializePool() {
