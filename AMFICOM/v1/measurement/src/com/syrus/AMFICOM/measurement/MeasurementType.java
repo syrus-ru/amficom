@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.26 2004/10/07 13:55:54 bob Exp $
+ * $Id: MeasurementType.java,v 1.27 2004/10/13 07:24:03 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -28,7 +29,7 @@ import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2004/10/07 13:55:54 $
+ * @version $Revision: 1.27 $, $Date: 2004/10/13 07:24:03 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -57,7 +58,7 @@ public class MeasurementType extends ActionType {
 			for (Iterator it = this.outParameterTypes.iterator(); it.hasNext();)
 				MeasurementStorableObjectPool.putStorableObject((ParameterType) it.next());
 			for (Iterator it = this.measurementPortTypes.iterator(); it.hasNext();)
-				MeasurementStorableObjectPool.putStorableObject((MeasurementPortType) it.next());
+				ConfigurationStorableObjectPool.putStorableObject((MeasurementPortType) it.next());
 		}
 		catch (IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
