@@ -11,12 +11,12 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.ISM.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
 
-public class TestParametersFrame
-	extends JInternalFrame
-	implements OperationListener {
-	private ApplicationContext aContext;
-	private Dispatcher dispatcher;
-	private TestParametersPanel panel;
+public class TestParametersFrame extends JInternalFrame implements
+		OperationListener {
+
+	private ApplicationContext	aContext;
+	private Dispatcher			dispatcher;
+	private TestParametersPanel	panel;
 
 	public TestParametersFrame(ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -30,9 +30,7 @@ public class TestParametersFrame
 
 	private void jbInit() throws Exception {
 		setTitle("Измерительные параметры");
-		setFrameIcon(
-			new ImageIcon(
-				Toolkit.getDefaultToolkit().getImage("images/general.gif")));
+		setFrameIcon(UIUtil.GENERAL_ICON);
 		setResizable(true);
 		setClosable(true);
 		setIconifiable(true);
@@ -44,7 +42,8 @@ public class TestParametersFrame
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
 		this.dispatcher.register(this, TestUpdateEvent.typ);
-		this.dispatcher.register(this, TestParametersPanel.COMMAND_CHANGE_PORT_TYPE);
+		this.dispatcher.register(this,
+				TestParametersPanel.COMMAND_CHANGE_PORT_TYPE);
 	}
 
 	public void operationPerformed(OperationEvent ae) {
@@ -59,41 +58,36 @@ public class TestParametersFrame
 				for (Enumeration e = ports.elements(); e.hasMoreElements();) {
 					AccessPort port = (AccessPort) e.nextElement();
 					//System.out.println("portId:" + port.type_id);
-					if (port
-						.type_id
-						.equals(
-							ElementsTreePanel.ACCESSPORT_NAME_REFLECTOMETER)) {
+					if (port.type_id
+							.equals(ElementsTreePanel.ACCESSPORT_NAME_REFLECTOMETER)) {
 						if (!panel
-							.isParameterPanelExists(
-								ReflectometryTestPanel.PANEL_NAME)) {
-							dispatcher.notify(
-								new OperationEvent(
-									new ReflectometryTestPanel(aContext, test),
-									0,
-									TestParametersPanel
-										.COMMAND_ADD_PARAM_PANEL));
+								.isParameterPanelExists(ReflectometryTestPanel.PANEL_NAME)) {
+							dispatcher
+									.notify(new OperationEvent(
+											new ReflectometryTestPanel(
+													aContext, test),
+											0,
+											TestParametersPanel.COMMAND_ADD_PARAM_PANEL));
 						}
 					}
 				}
 
 				panel.setTest(test);
-			} else {}
-		} else if (
-			commandName.equals(TestParametersPanel.COMMAND_CHANGE_PORT_TYPE)) {
+			} else {
+			}
+		} else if (commandName
+				.equals(TestParametersPanel.COMMAND_CHANGE_PORT_TYPE)) {
 			String portTypeId = (String) obj;
 			if (portTypeId
-				.equals(ElementsTreePanel.ACCESSPORT_NAME_REFLECTOMETER)) {
+					.equals(ElementsTreePanel.ACCESSPORT_NAME_REFLECTOMETER)) {
 				if (!panel
-					.isParameterPanelExists(
-						ReflectometryTestPanel.PANEL_NAME)) {
-					dispatcher.notify(
-						new OperationEvent(
-							new ReflectometryTestPanel(aContext),
-							0,
+						.isParameterPanelExists(ReflectometryTestPanel.PANEL_NAME)) {
+					dispatcher.notify(new OperationEvent(
+							new ReflectometryTestPanel(aContext), 0,
 							TestParametersPanel.COMMAND_ADD_PARAM_PANEL));
 				}
 			}
 
-		}		
+		}
 	}
 }

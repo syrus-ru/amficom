@@ -74,6 +74,11 @@ final public class UIUtil {
 																	.getDefaultToolkit()
 																	.getImage(
 																			"images/pathmode.gif"));
+	public static final Icon	REFRESH_ICON		= new ImageIcon(
+															Toolkit
+																	.getDefaultToolkit()
+																	.getImage(
+																			"images/refresh.gif"));
 
 	public static final Cursor	WAIT_CURSOR			= new Cursor(
 															Cursor.WAIT_CURSOR);
@@ -83,9 +88,11 @@ final public class UIUtil {
 
 	public static final Cursor	CROSS_HAIR_CURSOR	= new Cursor(
 															Cursor.CROSSHAIR_CURSOR);
-	
-	public static final Font ARIAL_12_FONT = new Font("Arial", Font.PLAIN, 12);
-	public static final Font MONOSPACED_14_FONT = new Font("Monospaced", Font.BOLD, 14);
+
+	public static final Font	ARIAL_12_FONT		= new Font("Arial",
+															Font.PLAIN, 12);
+	public static final Font	MONOSPACED_14_FONT	= new Font("Monospaced",
+															Font.BOLD, 14);
 
 	/**
 	 * create Icon with size 16x16 , and draw String on it

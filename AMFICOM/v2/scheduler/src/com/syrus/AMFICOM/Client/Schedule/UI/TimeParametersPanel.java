@@ -28,7 +28,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 	//	private ApplicationContext aContext;
 
-	Dispatcher					dispatcher;
+	Dispatcher							dispatcher;
 
 	private static final String			PARAM_PANEL_NAME	= "PARAM_PANEL";
 
@@ -60,7 +60,7 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 	private JRadioButton				paramsRadioButton;
 
-	JRadioButton				oneRadioButton;
+	JRadioButton						oneRadioButton;
 
 	private JRadioButton				continuosRadioButton;
 
@@ -68,21 +68,21 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 
 	JRadioButton						hourRadioButton;
 
-	JRadioButton				minuteRadioButton;
+	JRadioButton						minuteRadioButton;
 
-	JRadioButton				dayRadioButton;
+	JRadioButton						dayRadioButton;
 
-	JRadioButton				weekRadioButton;
+	JRadioButton						weekRadioButton;
 
-	JRadioButton				monthRadioButton;
+	JRadioButton						monthRadioButton;
 
 	private JRadioButton				synchroRadioButton;
 
 	private JRadioButton				alternateRadioButton;
 
-	JButton						createButton;
+	JButton								createButton;
 
-	JButton						applyButton;
+	JButton								applyButton;
 
 	MinutePanel							minPanel;
 
@@ -657,13 +657,11 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 	private void enableTestStatus() {
 		TestStatus status = test.status;
 		switch (status.value()) {
-			case TestStatus._TEST_STATUS_COMPLETED:
-			// break; // because of the same action
-			case TestStatus._TEST_STATUS_PROCESSING:
-				setAllRadioButtonEnabled(false);
-				break;
 			case TestStatus._TEST_STATUS_SCHEDULED:
 				setAllRadioButtonEnabled(true);
+				break;
+			default:
+				setAllRadioButtonEnabled(false);
 				break;
 		}
 	}
@@ -884,9 +882,9 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		private JSpinner	hourSpin	= new JSpinner(new SpinnerNumberModel(
 												1, 1, 23, 1));
 
-		JList		list;
+		JList				list;
 
-		Vector		time		= new Vector();
+		Vector				time		= new Vector();
 
 		protected HourPanel() {
 			super();
@@ -1044,9 +1042,9 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 															new SpinnerNumberModel(
 																	1, 1, 30, 1));
 
-		Vector				time			= new Vector();
+		Vector						time			= new Vector();
 
-		JList				list;
+		JList						list;
 
 		/**
 		 * todo set and fill dayType
@@ -1298,14 +1296,14 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 														new SpinnerNumberModel(
 																1, 1, 4, 1));
 
-		Vector				time		= new Vector();
+		Vector						time		= new Vector();
 
 		private JCheckBox[]			days;
 
 		//private Hashtable ht = new Hashtable();
 		private int[]				daysIds;
 
-		JList				list;
+		JList						list;
 
 		private SimpleDateFormat	sdf			= new SimpleDateFormat("E");
 
@@ -1511,11 +1509,11 @@ public class TimeParametersPanel extends JPanel implements OperationListener {
 		private JSpinner	monthSpin	= new JSpinner(new SpinnerNumberModel(
 												1, 1, 30, 1));
 
-		Vector		time		= new Vector();
+		Vector				time		= new Vector();
 
 		Vector				days		= new Vector();
 
-		JList		list;
+		JList				list;
 
 		JList				dayList;
 

@@ -3,10 +3,15 @@ package com.syrus.AMFICOM.Client.Schedule.UI;
 import java.awt.*;
 import java.util.*;
 import java.awt.event.*;
+
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.Result.*;
+import com.syrus.AMFICOM.Client.Resource.Test.*;
 import com.syrus.AMFICOM.Client.Schedule.ScheduleMainFrame;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.*;
@@ -28,10 +33,12 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 	//	public static final String COMMAND_REMOVE_PARAM_FRAME =
 	// "RemoveParamFrame";
 	//	public static final String COMMAND_REMOVE_3A_FRAME = "Remove3aFrame";
-
+	public static final boolean		DEBUG						= true;
 	public static final String		COMMAND_CHANGE_PARAM_PANEL	= "ChangeParamPanel";
 	public static final String		COMMAND_ADD_PARAM_PANEL		= "AddParamPanel";
 	public static final String		COMMAND_CHANGE_PORT_TYPE	= "ChangePortType";
+	public static final String		COMMAND_CHANGE_TEST_TYPE	= "ChangeTestType";
+	public static final String		COMMAND_CHANGE_ME_TYPE		= "ChangeMEType";
 	//public static final String COMMAND_ADD_PARAM_PANEL = "ParamPanel";
 	public static final String		TEST_TYPE_TRACE_AND_ANALYSE	= "trace_and_analyse";
 	public static final String		TEST_TYPE_VOICE_ANALYSE		= "voice_analyse";
@@ -42,7 +49,15 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 	private ApplicationContext		aContext;
 
 	private JRadioButton			patternRadioButton;
-	private JRadioButton			paramsRadioButton;
+	JRadioButton					paramsRadioButton;
+
+	JCheckBox						useAnalysisBox;
+	ObjectResourceComboBox			analysisComboBox			= new ObjectResourceComboBox(
+																		AnalysisType.typ,
+																		true);
+	ObjectResourceComboBox			evaluationComboBox			= new ObjectResourceComboBox(
+																		EvaluationType.typ,
+																		true);
 
 	final JPanel					switchPanel					= new JPanel(
 																		new CardLayout());
@@ -50,15 +65,18 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 	//	private HashMap objMap = new HashMap();
 	//	private String testTypeId;
 	//	private String meId;
-	private ObjectResourceListBox	testSetups;
+
+	ObjectResourceListBox			testSetups;
+	private HashMap					testMap;
 
 	private static final String		PATTERN_PANEL_NAME			= "PATTERN_PANEL";
 
 	private HashMap					testPanels					= new HashMap();
 
-//	private Test					test;
+	private Test					test;
 
 	private SurveyDataSourceImage	surveyDsi;
+	private HashMap					parameters;
 
 	String							currentParametersPanelName;
 
@@ -85,7 +103,10 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 
 	public TestParametersPanel(ApplicationContext aContext) {
 		this.aContext = aContext;
-		initModule(aContext.getDispatcher());
+
+		if (aContext != null) {
+			initModule(aContext.getDispatcher());
+		}
 		try {
 			jbInit();
 		} catch (Exception e) {
@@ -127,6 +148,8 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		this.dispatcher.register(this, TestRequestFrame.COMMAND_DATA_REQUEST);
 		this.dispatcher.register(this, COMMAND_CHANGE_PARAM_PANEL);
 		this.dispatcher.register(this, COMMAND_ADD_PARAM_PANEL);
+		this.dispatcher.register(this, COMMAND_CHANGE_TEST_TYPE);
+		this.dispatcher.register(this, COMMAND_CHANGE_ME_TYPE);
 	}
 
 	private void jbInit() throws Exception {
@@ -164,11 +187,79 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		JPanel parametersPanel = new JPanel(new GridBagLayout());
 		parametersPanel.setBorder(BorderFactory.createEtchedBorder());
 
-		JPanel patternPanel = new JPanel(new BorderLayout());
+		JPanel patternPanel = new JPanel(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.fill = GridBagConstraints.BOTH;
+		gbc.weightx = 1.0;
+		gbc.weighty = 0.0;
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		patternPanel.setBorder(BorderFactory.createEtchedBorder());
+		useAnalysisBox = new JCheckBox(LangModelSchedule
+				.getString("performAnalys"), true);
+		patternPanel.add(useAnalysisBox, gbc);
+		final JLabel analysisLabel = new JLabel(LangModelSchedule
+				.getString("labelMakeAnalysis"));
+		patternPanel.add(analysisLabel, gbc);
+		patternPanel.add(analysisComboBox, gbc);
+		final JLabel evaluationLabel = new JLabel(LangModelSchedule
+				.getString("labelMakeEvalAnalysis"));
+		patternPanel.add(evaluationLabel, gbc);
+		patternPanel.add(evaluationComboBox, gbc);
+		testMap = new HashMap();
 		testSetups = new ObjectResourceListBox();
+		testSetups.addListSelectionListener(new ListSelectionListener() {
+
+			public void valueChanged(ListSelectionEvent e) {
+				//if (e.getStateChange() == ItemEvent.SELECTED) {
+				TestSetup ts = (TestSetup) testSetups
+						.getSelectedObjectResource();
+				if (ts != null) {
+					useAnalysisBox.setEnabled(true);
+					//System.out.println("obj:"+obj.getClass().getName());
+					// System.out.println(">" + ts.id + "\t" +
+					// ts.analysis_type_id
+					//							+ "\t" + ts.evaluation_type_id);
+					DataSet dsAnalysis = new DataSet();
+					dsAnalysis.add((ObjectResource) Pool.get(AnalysisType.typ,
+							ts.analysis_type_id));
+
+					DataSet dsEvaluation = new DataSet();
+					dsEvaluation.add((ObjectResource) Pool.get(
+							EvaluationType.typ, ts.evaluation_type_id));
+					analysisComboBox.setContents(dsAnalysis.elements(), true);
+					evaluationComboBox.setContents(dsEvaluation.elements(),
+							true);
+				} else {
+					paramsRadioButton.doClick();
+				}
+			}
+			//}
+			});
 		JScrollPane scroll = new JScrollPane(testSetups);
-		patternPanel.add(scroll, BorderLayout.CENTER);
+		gbc.weighty = 1.0;
+		patternPanel.add(scroll, gbc);
+
+		useAnalysisBox.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				JCheckBox checkBox = (JCheckBox) e.getSource();
+				boolean enable = checkBox.isSelected();
+				analysisLabel.setEnabled(enable);
+				analysisComboBox.setEnabled(enable);
+				evaluationLabel.setEnabled(enable);
+				evaluationComboBox.setEnabled(enable);
+				//				if (enable) {
+				//					TestSetup ts = (TestSetup) testSetups
+				//							.getSelectedObjectResource();
+				//					
+				//
+				//				}
+
+			}
+		});
+		// it's for set enabled status for analysisComboBox & evaluationComboBox
+		useAnalysisBox.doClick();
+		useAnalysisBox.setEnabled(testSetups.getModel().getSize() > 0);
 
 		//switchPanel.add(parametersPanel, PARAMETERS_PANEL_NAME);
 		switchPanel.add(patternPanel, PATTERN_PANEL_NAME);
@@ -179,40 +270,65 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 	}
 
 	public void setTest(Test test) {
-//		this.test = test;
+		this.test = test;
 		testSetups.removeAll();
-		DataSourceInterface dsi = aContext.getDataSourceInterface();
 		String meid = test.monitored_element_id;
 		String testtypeid = test.test_type_id;
-		if (surveyDsi == null) surveyDsi = new SurveyDataSourceImage(dsi);
+		if (surveyDsi == null)
+				surveyDsi = new SurveyDataSourceImage(aContext
+						.getDataSourceInterface());
 		String[] ts_me = surveyDsi.getTestSetupByME(meid);
 		String[] ts_tt = surveyDsi.getTestSetupByTestType(testtypeid);
 		for (int i = 0; i < ts_me.length; i++) {
+			//System.out.println("ts_me:" + ts_me[i]);
 			TestSetup ts = (TestSetup) Pool.get(TestSetup.typ, ts_me[i]);
-			testSetups.add(ts);
+			//testSetups.add(ts);
+			testMap.put(ts.id, ts);
 		}
 		for (int i = 0; i < ts_tt.length; i++) {
+			//System.out.println("ts_tt:" + ts_tt[i]);
 			TestSetup ts = (TestSetup) Pool.get(TestSetup.typ, ts_tt[i]);
-			testSetups.add(ts);
+			//testSetups.add(ts);
+			testMap.put(ts.id, ts);
 		}
-
-		boolean selected = false;
-		TestSetup testsetup = (TestSetup) Pool.get(TestSetup.typ,
-				test.test_setup_id);
-		if (testsetup != null) {
-			//orList.setSelected(testsetup);
-			testSetups.setSelected(testsetup);
-			selected = true;
-		}
-		if (selected)
-			patternRadioButton.doClick();
-		else
-			paramsRadioButton.doClick();
+		//		updateTestSetupList();
+		//
+		//		boolean selected = false;
+		//		TestSetup testsetup = (TestSetup) Pool.get(TestSetup.typ,
+		//				test.test_setup_id);
+		//		if (testsetup != null) {
+		//			//orList.setSelected(testsetup);
+		//			System.out.println("selected:" + testsetup.id);
+		//			testSetups.setSelected(testsetup);
+		//			selected = true;
+		//		}
+		//		if (selected)
+		//			patternRadioButton.doClick();
+		//		else
+		//			paramsRadioButton.doClick();
+		//		useAnalysisBox.setEnabled(testSetups.getModel().getSize() > 0);
+		System.out.println("end of setTest");
 	}
 
-	public TestSetup getParameters() {
+	private void getParameters() {
+		if (parameters == null) parameters = new HashMap();
 		TestSetup ts = (TestSetup) testSetups.getSelectedObjectResource();
-		return ts;
+		parameters.put(TestSetup.typ, ts);
+		EvaluationType evaluationType = null;
+		AnalysisType analysisType = null;
+		//DataSourceInterface dsi = aContext.getDataSourceInterface();
+		if (useAnalysisBox.isSelected()) {
+			/**
+			 * @todo neeed to put  evaluation and analysis
+			 */
+			evaluationType = (EvaluationType) evaluationComboBox
+					.getSelectedObjectResource();
+			analysisType = (AnalysisType) analysisComboBox
+					.getSelectedObjectResource();
+
+		}
+		parameters.put(EvaluationType.typ, evaluationType);
+		parameters.put(AnalysisType.typ, analysisType);
 	}
 
 	public void operationPerformed(OperationEvent ae) {
@@ -230,11 +346,28 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 						TestRequestFrame.DATA_ID_PARAMETERS,
 						TestRequestFrame.COMMAND_SEND_DATA));
 			} else if (patternRadioButton.isSelected()) {
-				TestSetup ts = this.getParameters();
-				if (ts != null)
-						dispatcher.notify(new OperationEvent(ts,
-								TestRequestFrame.DATA_ID_PARAMETERS_PATTERN,
+				this.getParameters();
+				TestSetup ts = (TestSetup) parameters.get(TestSetup.typ);
+				AnalysisType analysisType = (AnalysisType) parameters
+						.get(AnalysisType.typ);
+				EvaluationType evaluationType = (EvaluationType) parameters
+						.get(EvaluationType.typ);
+				dispatcher.notify(new OperationEvent((ts == null) ? (Object) ""
+						: (Object) ts,
+						TestRequestFrame.DATA_ID_PARAMETERS_PATTERN,
+						TestRequestFrame.COMMAND_SEND_DATA));
+				if (analysisType != null)
+						dispatcher.notify(new OperationEvent(
+								(analysisType == null) ? (Object) ""
+										: (Object) analysisType,
+								TestRequestFrame.DATA_ID_PARAMETERS_ANALYSIS,
 								TestRequestFrame.COMMAND_SEND_DATA));
+				dispatcher.notify(new OperationEvent(
+						(evaluationType == null) ? (Object) ""
+								: (Object) evaluationType,
+						TestRequestFrame.DATA_ID_PARAMETERS_EVALUATION,
+						TestRequestFrame.COMMAND_SEND_DATA));
+
 			}
 
 		} else if (commandName.equals(COMMAND_CHANGE_PARAM_PANEL)) {
@@ -253,9 +386,95 @@ public class TestParametersPanel extends JPanel implements OperationListener {
 		} else if (commandName.equals(TestUpdateEvent.typ)) {
 			TestUpdateEvent tue = (TestUpdateEvent) ae;
 			setTest(tue.test);
+		} else if (commandName.equals(COMMAND_CHANGE_TEST_TYPE)) {
+			String testtypeid = obj.toString();
+			//testSetups.removeAll();
+			if (surveyDsi == null)
+					surveyDsi = new SurveyDataSourceImage(aContext
+							.getDataSourceInterface());
+			String[] ts_tt = surveyDsi.getTestSetupByTestType(testtypeid);
+			for (int i = 0; i < ts_tt.length; i++) {
+				//System.out.println(">" + ts_tt[i]);
+				TestSetup ts = (TestSetup) Pool.get(TestSetup.typ, ts_tt[i]);
+				//System.out.println("ts:" + ts.id);
+				//testSetups.add(ts);
+				testMap.put(ts.id, ts);
+			}
+			updateTestSetupList();
+
+		} else if (commandName.equals(COMMAND_CHANGE_ME_TYPE)) {
+			String meid = (String) obj;
+			//			DataSourceInterface dsi = aContext.getDataSourceInterface();
+			if (surveyDsi == null)
+					surveyDsi = new SurveyDataSourceImage(aContext
+							.getDataSourceInterface());
+			String[] ts_me = surveyDsi.getTestSetupByME(meid);
+			for (int i = 0; i < ts_me.length; i++) {
+				TestSetup ts = (TestSetup) Pool.get(TestSetup.typ, ts_me[i]);
+				//testSetups.add(ts);
+				testMap.put(ts.id, ts);
+			}
+			updateTestSetupList();
 		}
 
 		aModel.fireModelChanged("");
+	}
+
+	private void updateTestSetupList() {
+		System.out.println("updateTestSetupList");
+		//TestSetup selectedTs = (TestSetup)
+		// testSetups.getSelectedObjectResource();
+		testSetups.removeAll();
+		for (Iterator it = testMap.values().iterator(); it.hasNext();) {
+			TestSetup ts = (TestSetup) it.next();
+			testSetups.add(ts);
+		}
+		//testSetups.setSelected(selectedTs);
+		if (test != null) {
+			System.out.println("test.test_setup_id:" + test.test_setup_id);
+			TestSetup testsetup = (TestSetup) Pool.get(TestSetup.typ,
+					test.test_setup_id);
+			if (testsetup != null) {
+				//orList.setSelected(testsetup);
+				System.out.println("selected:" + testsetup.id);
+				testSetups.setSelected(testsetup);
+				patternRadioButton.doClick();
+
+				if ((test.evalution != null) || (test.analysis != null)) {
+					if (!useAnalysisBox.isSelected()) useAnalysisBox.doClick();
+				}
+				if (test.evalution != null) {
+					System.out.println("test.evalution isn't null");
+					selectComboBox(evaluationComboBox, test.evalution.type_id);
+				}
+				if (test.analysis != null) {
+					System.out.println("test.analysis isn't null");
+					selectComboBox(analysisComboBox, test.analysis.type_id);
+				}
+
+			}
+		}
+	}
+
+	private void selectComboBox(ObjectResourceComboBox cb, String value) {
+		for (int i = 0; i < cb.getItemCount(); i++) {
+			Object obj = cb.getItemAt(i);
+			String id = null;
+			System.out.println("obj:" + obj.getClass().getName());
+			if (obj instanceof AnalysisType) {
+				id = ((AnalysisType) obj).id;
+			} else if (obj instanceof EvaluationType) {
+				id = ((EvaluationType) obj).id;
+			}
+			if (id != null) {
+				System.out.println("id:" + id);
+				if (id.equals(value)) {
+					cb.setSelectedIndex(i);
+					System.out.println("selected " + i);
+					break;
+				}
+			}
+		}
 	}
 
 }

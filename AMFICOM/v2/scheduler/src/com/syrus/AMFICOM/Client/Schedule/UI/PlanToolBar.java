@@ -33,6 +33,7 @@ class PlanToolBar extends JPanel {
 
 	public PlanToolBar(ApplicationContext aContext, PlanPanel panel) {
 		//		this.aContext = aContext;
+		if (aContext!=null){}
 		this.panel = panel;
 
 		try {
@@ -141,10 +142,9 @@ class PlanToolBar extends JPanel {
 		box.add(Box.createHorizontalStrut(10));
 		box.add(applyButton);
 
-		applyButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-				"images/refresh.gif")));
+		applyButton.setIcon(UIUtil.REFRESH_ICON);
 		applyButton.setToolTipText(LangModelSchedule
-				.getComponentToolTip("apply"));
+				.getComponentToolTip("ApplyButton"));
 
 		box.add(Box.createHorizontalGlue());
 		box.add(zoomInButton);
