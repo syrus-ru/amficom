@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNode.java,v 1.8 2004/12/23 16:34:26 krupenn Exp $
+ * $Id: SiteNode.java,v 1.9 2004/12/23 16:44:16 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/12/23 16:34:26 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/23 16:44:16 $
  * @author $Author: krupenn $
  * @module map_v1
  */
@@ -168,31 +168,18 @@ public class SiteNode extends AbstractNode implements TypedObject {
 	public static SiteNode createInstance(
 			final Identifier creatorId,
 			final DoublePoint location,
-			final Map map,
 			final SiteNodeType type)
 		throws CreateObjectException {
 
-		if (location == null || map == null || type == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-		
-		try {
-			Identifier ide =
-				IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITE_NODE_ENTITY_CODE);
-			return new SiteNode(
-				ide,
-				creatorId,
-				type.getImageId(),
-				type.getName(),
-				"",
-				type,
-				location.getX(),
-				location.getY(),
-				"",
-				"",
-				"");
-		} catch (IllegalObjectEntityException e) {
-			throw new CreateObjectException("SiteNode.createInstance | cannot generate identifier ", e);
-		}
+		return SiteNode.createInstance(
+			creatorId,
+			type.getName(),
+			"",
+			type,
+			location,
+			"",
+			"",
+			"");
 	}
 
 	public static SiteNode importInstance(
