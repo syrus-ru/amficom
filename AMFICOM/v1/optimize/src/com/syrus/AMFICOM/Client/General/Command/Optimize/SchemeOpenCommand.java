@@ -9,8 +9,6 @@ import com.syrus.AMFICOM.Client.Optimize.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.General.Checker;
-import com.syrus.AMFICOM.Client.Schematics.Elements.*;
-import com.syrus.AMFICOM.Client.Schematics.Elements.ElementsListFrame;//окно свойств элемента
 
 
 // команда "открыть физическую схему сети" (загрузить с сервера)

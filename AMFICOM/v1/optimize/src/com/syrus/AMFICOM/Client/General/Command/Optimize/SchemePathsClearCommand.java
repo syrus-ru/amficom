@@ -72,7 +72,7 @@ public class SchemePathsClearCommand extends VoidCommand
     mdiMain.ribsModeFrame.repaint();//перерисовать обновлённые значения
 
     mdiMain.optimizerContext.solution = new Solution();//создать пустое решение
-    dispatcher.notify(new OperationEvent(this, 0, "solution_overwrite_event"));//прописать пустое решение поверх
+    this.dispatcher.notify(new OperationEvent(this, 0, "solution_overwrite_event"));//прописать пустое решение поверх
     mdiMain.aContext.getDispatcher().notify(new StatusMessageEvent("схема очищена"));
     System.out.println("SchemePathsClearCommand.execute() - done");
   }

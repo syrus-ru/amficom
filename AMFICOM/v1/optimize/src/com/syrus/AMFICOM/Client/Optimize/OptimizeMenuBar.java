@@ -93,183 +93,183 @@ public class OptimizeMenuBar extends JMenuBar	implements ApplicationModelListene
 	private void jbInit() throws Exception
 	{	OptimizeMenuBar_this_actionAdapter actionAdapter = new OptimizeMenuBar_this_actionAdapter(this);
 
-		menuSession.setText(LangModel.Text("menuSession"));
+		menuSession.setText(LangModel.getString("menuSession"));
 		menuSession.setName("menuSession");
-//		System.out.println(LangModelOptimize.Text("menuSession"));
-		menuSessionNew.setText(LangModel.Text("menuSessionNew"));
+//		System.out.println(LangModelOptimize.getString("menuSession"));
+		menuSessionNew.setText(LangModel.getString("menuSessionNew"));
 		menuSessionNew.setName("menuSessionNew");
 		menuSessionNew.addActionListener(actionAdapter);
-		menuSessionClose.setText(LangModel.Text("menuSessionClose"));
+		menuSessionClose.setText(LangModel.getString("menuSessionClose"));
 		menuSessionClose.setName("menuSessionClose");
 		menuSessionClose.addActionListener(actionAdapter);
-		menuSessionOptions.setText(LangModel.Text("menuSessionOptions"));
+		menuSessionOptions.setText(LangModel.getString("menuSessionOptions"));
 		menuSessionOptions.setName("menuSessionOptions");
 		menuSessionOptions.addActionListener(actionAdapter);
-		menuSessionConnection.setText(LangModel.Text("menuSessionConnection"));
+		menuSessionConnection.setText(LangModel.getString("menuSessionConnection"));
 		menuSessionConnection.setName("menuSessionConnection");
 		menuSessionConnection.addActionListener(actionAdapter);
 		menuSessionChangePassword.setText(
 
-		LangModel.Text("menuSessionChangePassword"));
+		LangModel.getString("menuSessionChangePassword"));
 		menuSessionChangePassword.setName("menuSessionChangePassword");
 		menuSessionChangePassword.addActionListener(actionAdapter);
-		menuSessionSave.setText(LangModel.Text("menuSessionSave"));
+		menuSessionSave.setText(LangModel.getString("menuSessionSave"));
 		menuSessionSave.setName("menuSessionSave");
 		menuSessionSave.addActionListener(actionAdapter);
-		menuSessionUndo.setText(LangModel.Text("menuSessionUndo"));
+		menuSessionUndo.setText(LangModel.getString("menuSessionUndo"));
 		menuSessionUndo.setName("menuSessionUndo");
 		menuSessionUndo.addActionListener(actionAdapter);
-		menuSessionDomain.setText(LangModel.Text("menuSessionDomain"));
+		menuSessionDomain.setText(LangModel.getString("menuSessionDomain"));
 		menuSessionDomain.setName("menuSessionDomain");
 		menuSessionDomain.addActionListener(actionAdapter);
-		menuExit.setText(LangModel.Text("menuExit"));
+		menuExit.setText(LangModel.getString("menuExit"));
 		menuExit.setName("menuExit");
 		menuExit.addActionListener(actionAdapter);
 
-		menuScheme.setText(LangModelOptimize.Text("menuScheme"));
+		menuScheme.setText(LangModelOptimize.getString("menuSchemeText"));
 		menuScheme.setName("menuScheme");
-		menuMapOpen.setText(LangModelOptimize.Text("menuMapOpen"));
+		menuMapOpen.setText(LangModelOptimize.getString("menuMapOpenText"));
 		menuMapOpen.setName("menuMapOpen");
 		menuMapOpen.addActionListener(actionAdapter);
-		menuSchemeOpen.setText(LangModelOptimize.Text("menuSchemeOpen"));
+		menuSchemeOpen.setText(LangModelOptimize.getString("menuSchemeOpenText"));
 		menuSchemeOpen.setName("menuSchemeOpen");
 		menuSchemeOpen.addActionListener(actionAdapter);
-		menuSchemeSave.setText(LangModelOptimize.Text("menuSchemeSave"));
+		menuSchemeSave.setText(LangModelOptimize.getString("menuSchemeSaveText"));
 		menuSchemeSave.setName("menuSchemeSave");
     menuSchemeSave.addActionListener(actionAdapter);
-    menuSchemeSaveAs.setText(LangModelOptimize.Text("menuSchemeSaveAs"));
+    menuSchemeSaveAs.setText(LangModelOptimize.getString("menuSchemeSaveAsText"));
 		menuSchemeSaveAs.setName("menuSchemeSaveAs");
 		menuSchemeSaveAs.addActionListener(actionAdapter);
-    menuLoadSm.setText(LangModelOptimize.Text("menuLoadSm"));
+    menuLoadSm.setText(LangModelOptimize.getString("menuLoadSmText"));
     menuLoadSm.setName("menuLoadSm");
     menuLoadSm.addActionListener(actionAdapter);
-    menuClearScheme.setText(LangModelOptimize.Text("menuClearScheme"));
+    menuClearScheme.setText(LangModelOptimize.getString("menuClearSchemeText"));
     menuClearScheme.setName("menuClearScheme");
     menuClearScheme.addActionListener(actionAdapter);
-		menuSchemeClose.setText(LangModelOptimize.Text("menuSchemeClose"));
+		menuSchemeClose.setText(LangModelOptimize.getString("menuSchemeCloseText"));
 		menuSchemeClose.setName("menuSchemeClose");
 		menuSchemeClose.addActionListener(actionAdapter);
 
-		menuView.setText(LangModelOptimize.Text("menuView"));
+		menuView.setText(LangModelOptimize.getString("menuViewText"));
 		menuView.setName("menuView");
 
-		menuViewMap.setText(LangModelOptimize.Text("menuViewMap"));
+		menuViewMap.setText(LangModelOptimize.getString("menuViewMapText"));
 		menuViewMap.setName("menuViewMap");
 		menuViewMap.addActionListener(actionAdapter);
 
-		menuViewScheme.setText(LangModelOptimize.Text("menuViewScheme"));
+		menuViewScheme.setText(LangModelOptimize.getString("menuViewSchemeText"));
 		menuViewScheme.setName("menuViewScheme");
 		menuViewScheme.addActionListener(actionAdapter);
 
-		menuViewGraph.setText(LangModelOptimize.Text("menuViewGraph"));
+		menuViewGraph.setText(LangModelOptimize.getString("menuViewGraphText"));
 		menuViewGraph.setName("menuViewGraph");
 		menuViewGraph.addActionListener(actionAdapter);
 
-		menuViewMapElProperties.setText(LangModelOptimize.Text("menuViewMapElProperties"));
+		menuViewMapElProperties.setText(LangModelOptimize.getString("menuViewMapElPropertiesText"));
 		menuViewMapElProperties.setName("menuViewMapElProperties");
 		menuViewMapElProperties.addActionListener(actionAdapter);
 
-    menuViewSchElProperties.setText(LangModelOptimize.Text("menuViewSchElProperties"));
+    menuViewSchElProperties.setText(LangModelOptimize.getString("menuViewSchElPropertiesText"));
     menuViewSchElProperties.setName("menuViewSchElProperties");
     menuViewSchElProperties.addActionListener(actionAdapter);
 
-		menuViewSolution.setText(LangModelOptimize.Text("menuViewSolution"));
+		menuViewSolution.setText(LangModelOptimize.getString("menuViewSolutionText"));
 		menuViewSolution.setName("menuViewSolution");
 		menuViewSolution.addActionListener(actionAdapter);
 
-		menuViewKIS.setText(LangModelOptimize.Text("menuViewKIS"));
+		menuViewKIS.setText(LangModelOptimize.getString("menuViewKISText"));
 		menuViewKIS.setName("menuViewKIS");
 		menuViewKIS.addActionListener(actionAdapter);
 
-		menuViewMode.setText(LangModelOptimize.Text("menuViewMode"));
+		menuViewMode.setText(LangModelOptimize.getString("menuViewModeText"));
 		menuViewMode.setName("menuViewMode");
 		menuViewMode.addActionListener(actionAdapter);
 
-		menuViewParams.setText(LangModelOptimize.Text("menuViewParams"));
+		menuViewParams.setText(LangModelOptimize.getString("menuViewParamsText"));
 		menuViewParams.setName("menuViewParams");
 		menuViewParams.addActionListener(actionAdapter);
 
-		//menuViewOptions.setText(LangModelOptimize.Text("menuViewOptions"));
+		//menuViewOptions.setText(LangModelOptimize.getString("menuViewOptionsText"));
 		//menuViewOptions.setName("menuViewOptions");
 		//menuViewOptions.addActionListener(actionAdapter);
 
-		menuViewShowall.setText(LangModelOptimize.Text("menuViewShowall"));
+		menuViewShowall.setText(LangModelOptimize.getString("menuViewShowallText"));
 		menuViewShowall.setName("menuViewShowall");
 		menuViewShowall.addActionListener(actionAdapter);
 
 
-		menuOptimize.setText(LangModelOptimize.Text("menuOptimize"));
+		menuOptimize.setText(LangModelOptimize.getString("menuOptimizeText"));
 		menuOptimize.setName("menuOptimize");
-    menuOptimizeCriteria.setText(LangModelOptimize.Text("menuOptimizeCriteria"));
+    menuOptimizeCriteria.setText(LangModelOptimize.getString("menuOptimizeCriteriaText"));
     menuOptimizeCriteria.setName("menuOptimizeCriteria");
     menuOptimizeCriteria.addActionListener(actionAdapter);
-    menuOptimizeCriteriaPrice.setText(LangModelOptimize.Text("menuOptimizeCriteriaPrice"));
+    menuOptimizeCriteriaPrice.setText(LangModelOptimize.getString("menuOptimizeCriteriaPriceText"));
     menuOptimizeCriteriaPrice.setName("menuOptimizeCriteriaPrice");
     menuOptimizeCriteriaPrice.addActionListener(actionAdapter);
-		menuOptimizeCriteriaPriceLoad.setText(LangModelOptimize.Text("menuOptimizeCriteriaPriceLoad"));
+		menuOptimizeCriteriaPriceLoad.setText(LangModelOptimize.getString("menuOptimizeCriteriaPriceLoadText"));
     menuOptimizeCriteriaPriceLoad.setName("menuOptimizeCriteriaPriceLoad");
     menuOptimizeCriteriaPriceLoad.addActionListener(actionAdapter);
-    menuOptimizeCriteriaPriceSave.setText(LangModelOptimize.Text("menuOptimizeCriteriaPriceSave"));
+    menuOptimizeCriteriaPriceSave.setText(LangModelOptimize.getString("menuOptimizeCriteriaPriceSaveText"));
     menuOptimizeCriteriaPriceSave.setName("menuOptimizeCriteriaPriceSave");
     menuOptimizeCriteriaPriceSave.addActionListener(actionAdapter);
-    menuOptimizeCriteriaPriceSaveas.setText(LangModelOptimize.Text("menuOptimizeCriteriaPriceSaveas"));
+    menuOptimizeCriteriaPriceSaveas.setText(LangModelOptimize.getString("menuOptimizeCriteriaPriceSaveasText"));
     menuOptimizeCriteriaPriceSaveas.setName("menuOptimizeCriteriaPriceSaveas");
     menuOptimizeCriteriaPriceSaveas.addActionListener(actionAdapter);
-    menuOptimizeCriteriaPriceClose.setText(LangModelOptimize.Text("menuOptimizeCriteriaPriceClose"));
+    menuOptimizeCriteriaPriceClose.setText(LangModelOptimize.getString("menuOptimizeCriteriaPriceCloseText"));
     menuOptimizeCriteriaPriceClose.setName("menuOptimizeCriteriaPriceClose");
     menuOptimizeCriteriaPriceClose.addActionListener(actionAdapter);
 
-    menuOptimizeMode.setText(LangModelOptimize.Text("menuOptimizeMode"));
+    menuOptimizeMode.setText(LangModelOptimize.getString("menuOptimizeModeText"));
     menuOptimizeMode.setName("menuOptimizeMode");
     menuOptimizeMode.addActionListener(actionAdapter);
-    menuOptimizeModeUnidirect.setText(LangModelOptimize.Text("menuOptimizeModeUnidirect"));
+    menuOptimizeModeUnidirect.setText(LangModelOptimize.getString("menuOptimizeModeUnidirectText"));
     menuOptimizeModeUnidirect.setName("menuOptimizeModeUnidirect");
     menuOptimizeModeUnidirect.addActionListener(actionAdapter);
-    menuOptimizeModeBidirect.setText(LangModelOptimize.Text("menuOptimizeModeBidirect"));
+    menuOptimizeModeBidirect.setText(LangModelOptimize.getString("menuOptimizeModeBidirectText"));
     menuOptimizeModeBidirect.setName("menuOptimizeModeBidirect");
     menuOptimizeModeBidirect.addActionListener(actionAdapter);
 
-    menuOptimizeStart.setText(LangModelOptimize.Text("menuOptimizeStart"));
+    menuOptimizeStart.setText(LangModelOptimize.getString("menuOptimizeStartText"));
     menuOptimizeStart.setName("menuOptimizeStart");
 		menuOptimizeStart.addActionListener(actionAdapter);
-		menuOptimizeStop.setText(LangModelOptimize.Text("menuOptimizeStop"));
+		menuOptimizeStop.setText(LangModelOptimize.getString("menuOptimizeStopText"));
 		menuOptimizeStop.setName("menuOptimizeStop");
 		menuOptimizeStop.addActionListener(actionAdapter);
 
-		//menuOptimizeAuto.setText(LangModelOptimize.Text("menuOptimizeAuto"));
+		//menuOptimizeAuto.setText(LangModelOptimize.getString("menuOptimizeAuto"));
 		//menuOptimizeAuto.setName("menuOptimizeAuto");
 		//menuOptimizeAuto.addActionListener(actionAdapter);
-		//menuOptimizeNext.setText(LangModelOptimize.Text("menuOptimizeNext"));
+		//menuOptimizeNext.setText(LangModelOptimize.getString("menuOptimizeNext"));
 		//menuOptimizeNext.setName("menuOptimizeNext");
 		//menuOptimizeNext.addActionListener(actionAdapter);
 
-		menuHelp.setText(LangModelOptimize.Text("menuHelp"));
+		menuHelp.setText(LangModelOptimize.getString("menuHelpText"));
 		menuHelp.setName("menuHelp");
-		menuHelpContents.setText(LangModelOptimize.Text("menuHelpContents"));
+		menuHelpContents.setText(LangModelOptimize.getString("menuHelpContentsText"));
 		menuHelpContents.setName("menuHelpContents");
 		menuHelpContents.addActionListener(actionAdapter);
-		menuHelpFind.setText(LangModelOptimize.Text("menuHelpFind"));
+		menuHelpFind.setText(LangModelOptimize.getString("menuHelpFindText"));
 		menuHelpFind.setName("menuHelpFind");
 		menuHelpFind.addActionListener(actionAdapter);
-		menuHelpTips.setText(LangModelOptimize.Text("menuHelpTips"));
+		menuHelpTips.setText(LangModelOptimize.getString("menuHelpTipsText"));
 		menuHelpTips.setName("menuHelpTips");
 		menuHelpTips.addActionListener(actionAdapter);
-		menuHelpStart.setText(LangModelOptimize.Text("menuHelpStart"));
+		menuHelpStart.setText(LangModelOptimize.getString("menuHelpStartText"));
 		menuHelpStart.setName("menuHelpStart");
 		menuHelpStart.addActionListener(actionAdapter);
-		menuHelpCourse.setText(LangModelOptimize.Text("menuHelpCourse"));
+		menuHelpCourse.setText(LangModelOptimize.getString("menuHelpCourseText"));
 		menuHelpCourse.setName("menuHelpCourse");
 		menuHelpCourse.addActionListener(actionAdapter);
-		menuHelpHelp.setText(LangModelOptimize.Text("menuHelpHelp"));
+		menuHelpHelp.setText(LangModelOptimize.getString("menuHelpHelpText"));
 		menuHelpHelp.setName("menuHelpHelp");
 		menuHelpHelp.addActionListener(actionAdapter);
-		menuHelpSupport.setText(LangModelOptimize.Text("menuHelpSupport"));
+		menuHelpSupport.setText(LangModelOptimize.getString("menuHelpSupportText"));
 		menuHelpSupport.setName("menuHelpSupport");
 		menuHelpSupport.addActionListener(actionAdapter);
-		menuHelpLicense.setText(LangModelOptimize.Text("menuHelpLicense"));
+		menuHelpLicense.setText(LangModelOptimize.getString("menuHelpLicenseText"));
 		menuHelpLicense.setName("menuHelpLicense");
 		menuHelpLicense.addActionListener(actionAdapter);
-		menuHelpAbout.setText(LangModelOptimize.Text("menuHelpAbout"));
+		menuHelpAbout.setText(LangModelOptimize.getString("menuHelpAboutText"));
 		menuHelpAbout.setName("menuHelpAbout");
 		menuHelpAbout.addActionListener(actionAdapter);
 

@@ -3,15 +3,12 @@ package com.syrus.AMFICOM.Client.General.Lang;
 import java.text.DateFormatSymbols;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.Vector;
 import java.util.MissingResourceException;
 
 public class LangModelOptimize
 {
-	private static final String BUNDLE_NAME =
-		"com.syrus.AMFICOM.Client.General.Lang.optimize";
-	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle
-		.getBundle(BUNDLE_NAME);
+	private static final String BUNDLE_NAME = 	"com.syrus.AMFICOM.Client.General.Lang.optimize";
+	private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle .getBundle(BUNDLE_NAME);
 
 	static public Locale locale;
 	static public String language;
@@ -44,10 +41,7 @@ public class LangModelOptimize
 			{
 				try
 				{
-					throw new Exception("key '"
-											  + keyName + "Text"
-											  + "' "
-											  + "not found");
+					throw new Exception("key '" + keyName + "Text"  + "' "	  + "not found");
 				}
 				catch (Exception exc)
 				{

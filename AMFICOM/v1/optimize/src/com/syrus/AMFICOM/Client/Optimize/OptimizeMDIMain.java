@@ -103,7 +103,7 @@ public class OptimizeMDIMain extends JFrame implements OperationListener
       Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
       setSize(dim.width, dim.height - 24);// 24 - размер таскбара винды
       setLocation(0,0);
-      this.setTitle(LangModelOptimize.String("AppTitle"));
+      this.setTitle(LangModelOptimize.getString("AppTitle"));
       this.addComponentListener(new OptimizeMDIMain_this_componentAdapter(this));
       this.addWindowListener(new java.awt.event.WindowAdapter()
       { public void windowClosing(WindowEvent e)

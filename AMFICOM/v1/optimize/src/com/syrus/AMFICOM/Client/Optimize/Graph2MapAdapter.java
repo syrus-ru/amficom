@@ -1,26 +1,18 @@
 package com.syrus.AMFICOM.Client.Optimize;
 
-import java.util.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Map.*;
-
 import com.syrus.AMFICOM.Client.General.Event.*;
-
-import com.ofx.geometry.*;
-import com.syrus.AMFICOM.Client.General.Command.Optimize.*;
 
 //---------------------------------------------------------------------------------------------------------------
 // переводит граф из формата, с которым работает Dll в формат, с которым работает карта
 public class Graph2MapAdapter
 {
-	private ISMMapContext ismMapContext;
+	//private ISMMapContext ismMapContext;
 	private OptimizeMDIMain mdiMain;
 	private Dispatcher dispatcher;
 	//-----------------------------------------------------------------------------------------------------------
 	public Graph2MapAdapter(OptimizeMDIMain mdiMain)
 	{  this.mdiMain = mdiMain;
-		 ismMapContext = mdiMain.ismMapContext;// ismMapContext создаётся тогда же, когда и mdiMain
+		// ismMapContext = mdiMain.ismMapContext;// ismMapContext создаётся тогда же, когда и mdiMain
 		 this.dispatcher = mdiMain.getInternalDispatcher();
 	}
 	//-----------------------------------------------------------------------------------------------------------

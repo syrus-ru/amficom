@@ -62,7 +62,7 @@ public class Map2GraphAdapter
        setNodesAttributes();// устанавливаем атрибуты вершины ( можно или нет в вершинах размещать КИС )
        // если дошли до этого места, то значит граф создан
        ( (OpticalOptimizerContext)mdiMain.optimizerContext).graph_set = 1;
-       System.out.println("Graph created: nnodes = " + g.nodes.size() + " nribs = " + g.ribs.size());
+       System.out.println("Graph created: nnodes = " + this.g.nodes.size() + " nribs = " + this.g.ribs.size());
     }//try
     catch(NumberFormatException nfex)
     {  System.err.println("Type cast error in the function of network uploading.");

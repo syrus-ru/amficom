@@ -29,8 +29,8 @@ public class OptimizeRun
     {
       e.printStackTrace();
     }
-    LangModelOptimize.initialize();
-    LangModelSchematics.initialize();
+    //  LangModelOptimize.initialize();
+    // LangModelSchematics.initialize();
     new Optimize(new DefaultOptimizeApplicationModelFactory());
   }
   //-------------------------------------------------------------------------------------------------------------

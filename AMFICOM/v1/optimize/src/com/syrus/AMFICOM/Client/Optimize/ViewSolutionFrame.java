@@ -7,8 +7,6 @@ import java.beans.*;//дл€ PropertyChangeListener
 
 import javax.swing.*;
 import javax.swing.event.*;
-import java.util.*;
-
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Optimize.UI.*;
@@ -18,7 +16,6 @@ import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
-import com.syrus.AMFICOM.Client.General.Command.Optimize.*;
 
 // ‘рейм, в нЄм таблица. ѕри изменении ширины фрэйма, мен€етс€ высота €чеек так, чтобы весь текст в них влезал полностью
 //================================================================================================================
@@ -40,8 +37,8 @@ public class ViewSolutionFrame extends JInternalFrame implements ActionListener,
 		try
 		{  this.dispatcher = mdiMain.getInternalDispatcher();
 			 this.mdiMain = mdiMain;
-			 dispatcher.register(this, "scheme_updated_event");
-			 dispatcher.register(this, SchemeNavigateEvent.type);
+			 this.dispatcher.register(this, "scheme_updated_event");
+			 this.dispatcher.register(this, SchemeNavigateEvent.type);
 
 			 jbInit();
 			 place();
@@ -53,7 +50,7 @@ public class ViewSolutionFrame extends JInternalFrame implements ActionListener,
 	//-------------------------------------------------------------------------------------------------------------
 	//автопозиционирование и авторазмер
 	public void place()
-	{		Dimension dim = mdiMain.scrollPane.getSize();
+	{		Dimension dim = this.mdiMain.scrollPane.getSize();
 			int width = (int)(dim.width*(1-0.22-0.22)), height = dim.height/5;
 			setBounds( 0, dim.height-height, width, height );
 			setVisible(true);
@@ -77,35 +74,35 @@ public class ViewSolutionFrame extends JInternalFrame implements ActionListener,
 		this.setResizable(true);
 		this.getContentPane().add(tablePane, BorderLayout.CENTER);
 
-		tablePane.initialize( new OptimizeSolveDisplayModel(), new DataSet());
-		tablePane.setRenderer(solutionRenderer);
-		this.getContentPane().add(tablePane, BorderLayout.CENTER);
-		tablePane.getTable().getColumnModel().getColumn(0).addPropertyChangeListener(this); // отлавливаем изменени€ ширины фрэйма (а значит и ширины €чейки таблицы )
-		tablePane.addListSelectionListener(this);// отлавливаем клики по строкам таблицы
+		this.tablePane.initialize( new OptimizeSolveDisplayModel(), new DataSet());
+		tablePane.setRenderer(this.solutionRenderer);
+		this.getContentPane().add(this.tablePane, BorderLayout.CENTER);
+		this.tablePane.getTable().getColumnModel().getColumn(0).addPropertyChangeListener(this); // отлавливаем изменени€ ширины фрэйма (а значит и ширины €чейки таблицы )
+		this.tablePane.addListSelectionListener(this);// отлавливаем клики по строкам таблицы
 
-    solutionRenderer.setUnilinks(mdiMain.optimizerContext.unilinks); // список линков, имена которых надо брать в скобки
+    this.solutionRenderer.setUnilinks(this.mdiMain.optimizerContext.unilinks); // список линков, имена которых надо брать в скобки
     UpdateTable();
 	}
 	//-------------------------------------------------------------------------------------------------------------
 	 // вывести в таблицу переданное ей решение
 	void UpdateTable()
 	{
-		if(mdiMain.scheme == null)
+		if(this.mdiMain.scheme == null)
 		{ System.err.println("ViewSolutionFrame.UpdateTable(): scheme=null. Update aborting...");
 	return;
 		}
-    solutionRenderer.setOptimizeMode( mdiMain.optimizerContext.optimize_mode ); // передать установленный режим оптимизации
-    DataSet dataSet = new DataSet(mdiMain.scheme.paths);
+    this.solutionRenderer.setOptimizeMode( this.mdiMain.optimizerContext.optimize_mode ); // передать установленный режим оптимизации
+    DataSet dataSet = new DataSet(this.mdiMain.scheme.paths);
     if(dataSet.size() != 0)
-		{ tablePane.setContents(dataSet);
+		{ this.tablePane.setContents(dataSet);
     }
-    else { ((ObjectResourceTableModel)tablePane.getTable().getModel()).clearTable(); }
-    tablePane.updateUI();
-    has_been_updated = true;
+    else { ((ObjectResourceTableModel)this.tablePane.getTable().getModel()).clearTable(); }
+    this.tablePane.updateUI();
+    this.has_been_updated = true;
 	}
 	//-------------------------------------------------------------------------------------------------------------
 	public void ClearTable()
-	{ tablePane.setContents(new DataSet());
+	{ this.tablePane.setContents(new DataSet());
 	}
 	//-------------------------------------------------------------------------------------------------------------
 	// при получении stopevent обновл€ем содержимое таблицы текущим списком путей
@@ -119,15 +116,15 @@ public class ViewSolutionFrame extends JInternalFrame implements ActionListener,
 		if(ae.getActionCommand().equals(SchemeNavigateEvent.type))
 		{	SchemeNavigateEvent sne = (SchemeNavigateEvent)ae;
 			if(sne.SCHEME_PATH_SELECTED)
-			{	 if(has_been_updated)//если маршрут уже был передана в таблицу, то просим таблицу подсветить путь
+			{	 if(this.has_been_updated)//если маршрут уже был передана в таблицу, то просим таблицу подсветить путь
          { SchemePath[] path = (SchemePath[] )sne.getSource();
-           tablePane.setSelected(path[0]);
+           this.tablePane.setSelected(path[0]);
          }
 			}
 		}
 	}
 	//-------------------------------------------------------------------------------------------------------------
-	public void actionPerformed(ActionEvent ae){};
+	public void actionPerformed(ActionEvent ae){}
 	//-------------------------------------------------------------------------------------------------------------
 	// handle any width changes in the table
 	public void propertyChange(PropertyChangeEvent e)
@@ -140,7 +137,7 @@ public class ViewSolutionFrame extends JInternalFrame implements ActionListener,
 	// update all the row heights to fit the cell contents of column 1
 	private void refreshTableRows()
 	{	// get the current width of column 1
-		JTable table = tablePane.getTable();
+		JTable table = this.tablePane.getTable();
 		int col = 0;
 		int width = table.getColumnModel().getColumn(col).getWidth();
 		// total number of rows in the table
@@ -167,20 +164,26 @@ public class ViewSolutionFrame extends JInternalFrame implements ActionListener,
 	 try
 	 {
 		//System.out.println("List value " + e.getFirstIndex() + " to " + e.getLastIndex());
-		ObjectResource obj_selected = (ObjectResource) tablePane.getSelectedObject();
+		ObjectResource obj_selected = (ObjectResource) this.tablePane.getSelectedObject();
 
-		ObjectResource obj_deselected = (ObjectResource) tablePane.getObjectAt(e.getFirstIndex());
-		if( obj_deselected.equals(obj_selected) )
-		{	obj_deselected = (ObjectResource) tablePane.getObjectAt(e.getLastIndex());
+		if( this.tablePane.getContents().size() == 0 )  // если таблица с решением пуста то снимаем все выделени€ на схеме
+		{ this.dispatcher.notify(new SchemeNavigateEvent(new SchemePath[0],
+														 SchemeNavigateEvent. SCHEME_ALL_DESELECTED_EVENT) );
 		}
-
-		if(obj_deselected != null)
-		{	dispatcher.notify(new SchemeNavigateEvent(new SchemePath[]{(SchemePath)obj_deselected},
-																										SchemeNavigateEvent.SCHEME_PATH_DESELECTED_EVENT) );
-		}
-		if(obj_selected != null)
-		{	dispatcher.notify(new SchemeNavigateEvent(new SchemePath[]{(SchemePath)obj_selected},
-																										SchemeNavigateEvent.SCHEME_PATH_SELECTED_EVENT) );
+		else
+		{  ObjectResource obj_deselected = (ObjectResource) this.tablePane.getObjectAt(e.getFirstIndex());
+			if( obj_deselected.equals(obj_selected) )
+			{	obj_deselected = (ObjectResource) this.tablePane.getObjectAt(e.getLastIndex());
+			}
+			
+			if(obj_deselected != null)
+			{	this.dispatcher.notify(new SchemeNavigateEvent(new SchemePath[]{(SchemePath)obj_deselected},
+																											SchemeNavigateEvent. SCHEME_PATH_DESELECTED_EVENT) );
+			}
+			if(obj_selected != null)
+			{	this.dispatcher.notify(new SchemeNavigateEvent(new SchemePath[]{(SchemePath)obj_selected},
+																											SchemeNavigateEvent.SCHEME_PATH_SELECTED_EVENT) );
+			}
 		}
 	 }
 	 catch (Exception ex)
@@ -197,7 +200,7 @@ public class ViewSolutionFrame extends JInternalFrame implements ActionListener,
 				this.name = name;
 		}
 		public String getName()
-		{		return name;
+		{		return this.name;
 		}
 	}
 //================================================================================================================
