@@ -5,23 +5,39 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
 import com.syrus.util.Log;
-import com.syrus.AMFICOM.general.*;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
-import com.syrus.AMFICOM.measurement.corba.*;
-import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.*;
+import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
+import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_Transferable;
+import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
+import com.syrus.AMFICOM.measurement.corba.TestStatus;
+import com.syrus.AMFICOM.measurement.corba.MeasurementStatus;
+import com.syrus.AMFICOM.measurement.corba.TestReturnType;
+import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.ContinuousTestTimeStamps;
+import com.syrus.AMFICOM.measurement.corba.TestTimeStamps_TransferablePackage.PeriodicalTestTimeStamps;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.KIS;
 
 public class Test extends StorableObject {
 
 	private class TestTimeStamps {
-		Date		endTime;
-		Date		startTime;
-		Identifier	temporalPatternId;
+		Date endTime;
+		Date startTime;
+		Identifier temporalPatternId;
 
 		private int	discriminator;
 
-		TestTimeStamps(int temporalType, Date startTime, Date endTime, Identifier ptTemplateId) {
+		TestTimeStamps(int temporalType,
+									 Date startTime,
+									 Date endTime,
+									 Identifier temporalPatternId) {
 			this.discriminator = temporalType;
 			switch (temporalType) {
 				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
@@ -32,11 +48,12 @@ public class Test extends StorableObject {
 				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
 					this.startTime = startTime;
 					this.endTime = endTime;
-					this.temporalPatternId = ptTemplateId;
+					this.temporalPatternId = temporalPatternId;
 					break;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
 					this.startTime = startTime;
 					this.endTime = endTime;
+					this.temporalPatternId = null;
 					break;
 			}
 		}
@@ -70,12 +87,13 @@ public class Test extends StorableObject {
 					ttst.start_time(this.startTime.getTime());
 					break;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
-					ttst.ptts(new PeriodicalTestTimeStamps(this.startTime.getTime(), this.endTime.getTime(),
-															(Identifier_Transferable) this.temporalPatternId
-																	.getTransferable()));
+					ttst.ptts(new PeriodicalTestTimeStamps(this.startTime.getTime(),
+																								 this.endTime.getTime(),
+																								 (Identifier_Transferable)this.temporalPatternId.getTransferable()));
 					break;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
-					ttst.ctts(new ContinuousTestTimeStamps(this.startTime.getTime(), this.endTime.getTime()));
+					ttst.ctts(new ContinuousTestTimeStamps(this.startTime.getTime(),
+																								 this.endTime.getTime()));
 					break;
 			}
 			return ttst;
@@ -85,22 +103,23 @@ public class Test extends StorableObject {
 	protected static final int		RETRIEVE_MEASUREMENTS	= 1;
 	protected static final int		UPDATE_MODIFIED			= 2;
 	protected static final int		UPDATE_STATUS			= 1;
-	
-	private Identifier				analysisTypeId;
-	private String					description;
-	private Identifier				evaluationTypeId;
-	private KIS						kis;
-	private MeasurementSetup		mainMeasurementSetup;
-	private List					measurementSetupIds;
-	private Identifier				measurementTypeId;
-	private MonitoredElement		monitoredElement;
-	private int						returnType;
-	private int						status;
-	private Identifier				temporalPatternId;
-	private int						temporalType;
+
+	private int temporalType;
+	private TestTimeStamps timeStamps;
+	private Identifier measurementTypeId;
+	private Identifier analysisTypeId;
+	private Identifier evaluationTypeId;
+	private int status;
+	private MonitoredElement monitoredElement;
+	private int	returnType;
+	private String description;
+	private List measurementSetupIds;
+
+	private KIS kis;
+	private MeasurementSetup mainMeasurementSetup;
 	
 	private StorableObjectDatabase	testDatabase;
-	private TestTimeStamps			timeStamps;
+	
 
 	public Test(Identifier id) throws RetrieveObjectException {
 		super(id);
@@ -114,8 +133,11 @@ public class Test extends StorableObject {
 	}
 
 	public Test(Test_Transferable tt) throws CreateObjectException {
-		super(new Identifier(tt.id), new Date(tt.created), new Date(tt.modified), new Identifier(tt.creator_id),
-				new Identifier(tt.modifier_id));
+		super(new Identifier(tt.id),
+					new Date(tt.created),
+					new Date(tt.modified),
+					new Identifier(tt.creator_id),
+					new Identifier(tt.modifier_id));
 		this.temporalType = tt.temporal_type.value();
 		this.timeStamps = new TestTimeStamps(tt.time_stamps);
 		this.measurementTypeId = new Identifier(tt.measurement_type_id);
@@ -123,8 +145,7 @@ public class Test extends StorableObject {
 		 * @todo when change DB Identifier model ,change identifier_string to
 		 *       identifier_code
 		 */
-		this.analysisTypeId = (tt.analysis_type_id.identifier_string != null) ? (new Identifier(tt.analysis_type_id))
-				: null;
+		this.analysisTypeId = (tt.analysis_type_id.identifier_string != null) ? (new Identifier(tt.analysis_type_id)) : null;
 		/**
 		 * @todo when change DB Identifier model ,change identifier_string to
 		 *       identifier_code
@@ -202,29 +223,33 @@ public class Test extends StorableObject {
 	 * @param temporalPatternId
 	 * @param temporalType
 	 */
-	public Test( Identifier				id,
-				 Identifier				analysisTypeId,
-				 String					description,
-				 Identifier				evaluationTypeId,				 
-				 MeasurementSetup		mainMeasurementSetup,
-				 Identifier				measurementTypeId,
-				 MonitoredElement		monitoredElement,
-				 TestReturnType			returnType,
-				 TestStatus				status,
-				 Identifier				temporalPatternId,
-				 TestTemporalType		temporalType){
-		//super(PoolId.getId(ObjectEntities.TEST_ENTITY));
+	public Test(Identifier id,
+							Date startTime,
+							Date endTime,
+							Identifier temporalPatternId,
+							TestTemporalType temporalType,
+							Identifier measurementTypeId,
+							Identifier analysisTypeId,
+							Identifier evaluationTypeId,
+							MonitoredElement monitoredElement,
+							TestReturnType returnType,
+							String description,
+							List measurementSetupIds){
 		super(id);
-		setAnalysisTypeId(analysisTypeId);
-		setDescription(description);
-		setEvaluationTypeId(evaluationTypeId);
-		this.mainMeasurementSetup = mainMeasurementSetup;
-		setMeasurementTypeId(measurementTypeId);
-		setMonitoredElement(monitoredElement);
-		setReturnType(returnType);
-		setStatus(status);
-		setTemporalPatternId(temporalPatternId);
-		setTemporalType(temporalType);		
+		this.temporalType = temporalType.value();
+		this.timeStamps = new TestTimeStamps(this.temporalType,
+																				 startTime,
+																				 endTime,
+																				 temporalPatternId);
+		this.measurementTypeId = measurementTypeId;
+		this.analysisTypeId = analysisTypeId;
+		this.evaluationTypeId = evaluationTypeId;
+		this.monitoredElement = monitoredElement;
+		this.returnType = returnType.value();
+		this.description = description;
+		this.measurementSetupIds = measurementSetupIds;
+
+		this.status = TestStatus._TEST_STATUS_SCHEDULED;
 	}
 
 
@@ -260,7 +285,7 @@ public class Test extends StorableObject {
 		return this.monitoredElement;
 	}
 
-	public Identifier getPTTemplateId() {
+	public Identifier getTemporalPatternId() {
 		return this.timeStamps.temporalPatternId;
 	}
 
@@ -274,10 +299,6 @@ public class Test extends StorableObject {
 
 	public TestStatus getStatus() {
 		return TestStatus.from_int(this.status);
-	}
-
-	public Identifier getTemporalPatternId() {
-		return this.temporalPatternId;
 	}
 
 	public TestTemporalType getTemporalType() {
@@ -296,7 +317,6 @@ public class Test extends StorableObject {
 																 (Identifier_Transferable)super.modifierId.getTransferable(),
 																 TestTemporalType.from_int(this.temporalType),
 																 this.timeStamps.getTransferable(),
-																 (Identifier_Transferable)this.temporalPatternId.getTransferable(),
 																 (Identifier_Transferable)this.measurementTypeId.getTransferable(),
 																 (this.analysisTypeId != null) ? (Identifier_Transferable)this.analysisTypeId.getTransferable() : null,
 																 (this.evaluationTypeId != null) ? (Identifier_Transferable)this.evaluationTypeId.getTransferable() : null,
@@ -392,7 +412,7 @@ public class Test extends StorableObject {
 	 */
 	public void setTemporalPatternId(Identifier temporalPatternId) {
 		this.currentVersion = super.getNextVersion();
-		this.temporalPatternId = temporalPatternId;
+		this.timeStamps.temporalPatternId = temporalPatternId;
 	}
 	/**
 	 * @param temporalType The temporalType to set.
@@ -422,8 +442,10 @@ public class Test extends StorableObject {
 												creatorId,
 												modifierId);
 		this.temporalType = temporalType;
-		this.temporalPatternId = temporalPatternId;
-		this.timeStamps = new TestTimeStamps(temporalType, startTime, endTime, temporalPatternId);
+		this.timeStamps = new TestTimeStamps(temporalType,
+																				 startTime,
+																				 endTime,
+																				 temporalPatternId);
 
 		this.measurementTypeId = measurementTypeId;
 		this.analysisTypeId = analysisTypeId;
