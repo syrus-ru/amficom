@@ -1,5 +1,5 @@
 /**
- * $Id: MapVoidElementStrategy.java,v 1.9 2004/11/11 18:09:29 krupenn Exp $
+ * $Id: MapVoidElementStrategy.java,v 1.10 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,7 +38,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/11/11 18:09:29 $
+ * @version $Revision: 1.10 $, $Date: 2004/12/07 17:05:54 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -137,7 +137,7 @@ public final class MapVoidElementStrategy implements  MapStrategy
 			MapNodeElement node = (MapNodeElement )e.next();
 //			if(node.isVisible(visibleBounds))
 			{
-				Point p = logicalNetLayer.convertMapToScreen(node.getAnchor());
+				Point p = logicalNetLayer.convertMapToScreen(node.getLocation());
 	
 				if (selectionRect.contains(p))
 					node.setSelected(true);
@@ -157,10 +157,10 @@ public final class MapVoidElementStrategy implements  MapStrategy
 				if (
 					selectionRect.contains(
 						logicalNetLayer.convertMapToScreen(
-							nodeLink.getStartNode().getAnchor())) 
+							nodeLink.getStartNode().getLocation())) 
 					&& selectionRect.contains(
 						logicalNetLayer.convertMapToScreen(
-							nodeLink.getEndNode().getAnchor())))
+							nodeLink.getEndNode().getLocation())))
 				{
 					nodeLink.setSelected(true);
 				}
@@ -183,11 +183,11 @@ public final class MapVoidElementStrategy implements  MapStrategy
 					if (! (
 						selectionRect.contains(
 							logicalNetLayer.convertMapToScreen(
-								nodeLink.getStartNode().getAnchor())) 
+								nodeLink.getStartNode().getLocation())) 
 						&& selectionRect.contains(
 							logicalNetLayer.convertMapToScreen(
-								nodeLink.getEndNode().getAnchor()))))
-					{
+								nodeLink.getEndNode().getLocation()))))
+					{ 
 						select = false;
 					}
 				}

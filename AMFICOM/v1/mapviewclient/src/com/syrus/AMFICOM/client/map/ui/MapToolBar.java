@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.10 2004/12/01 10:55:32 krupenn Exp $
+ * $Id: MapToolBar.java,v 1.11 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -45,7 +46,7 @@ import java.awt.event.KeyEvent;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/12/01 10:55:32 $
+ * @version $Revision: 1.11 $, $Date: 2004/12/07 17:05:54 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -356,7 +357,7 @@ public final class MapToolBar extends JToolBar
 							double lon = Double.parseDouble(longitudeField.getText());
 							double lat = Double.parseDouble(latitudeTextField.getText());
 							getLogicalNetLayer().setCenter(
-								new Point2D.Double(lat, lon));
+								new DoublePoint(lat, lon));
 						}
 						catch(Exception ex)
 						{

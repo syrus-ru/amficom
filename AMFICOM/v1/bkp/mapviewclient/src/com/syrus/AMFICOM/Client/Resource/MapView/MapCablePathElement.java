@@ -1,5 +1,5 @@
 /**
- * $Id: MapCablePathElement.java,v 1.18 2004/11/01 15:40:10 krupenn Exp $
+ * $Id: MapCablePathElement.java,v 1.19 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ package com.syrus.AMFICOM.Client.Resource.MapView;
 
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
@@ -46,7 +47,7 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.18 $, $Date: 2004/11/01 15:40:10 $
+ * @version $Revision: 1.19 $, $Date: 2004/12/07 17:05:54 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -89,8 +90,8 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 	{
 		this.mapView = mapView;
 
-		this.id = id;
-		this.name = schemeCableLink.getName();
+		this.setId(id);
+		this.setName(schemeCableLink.getName());
 		if(mapView != null)
 		{
 			mapViewId = mapView.getId();
@@ -98,8 +99,8 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 			if(map != null)
 				mapId = map.getId();
 		}
-		startNode = stNode;
-		endNode = eNode;
+		this.setStartNode(stNode);
+		this.setEndNode(eNode);
 		attributes = new HashMap();
 		
 		binding = new MapCablePathBinding(this);
@@ -117,6 +118,9 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		return this.mapView;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public Object clone(DataSourceInterface dataSource)
 	{
 /*
@@ -163,15 +167,24 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 	}
 
 	//этот класс используется для востановления данных из базы
+	/**
+	 * @deprecated
+	 */
 	public void setLocalFromTransferable()
 	{
 	}
 
 	//этот класс используется для отпрвки данных в базу
+	/**
+	 * @deprecated
+	 */
 	public void setTransferableFromLocal()
 	{
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public String getTyp()
 	{
 		return typ;
@@ -198,6 +211,9 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 	}
 
 	//Используется для загрузкт данных из базы
+	/**
+	 * @deprecated
+	 */
 	public void updateLocalFromTransferable()
 	{
 		this.startNode = (MapNodeElement )
@@ -225,7 +241,7 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 	public void setSchemeCableLink(SchemeCableLink schemeCableLink)
 	{
 		this.schemeCableLink = schemeCableLink;
-		this.name = schemeCableLink.getName();
+		this.setName(schemeCableLink.getName());
 	}
 
 	public SchemeCableLink getSchemeCableLink()
@@ -245,6 +261,9 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		nodeLinksSorted = false;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public boolean isSelectionVisible()
 	{
 		boolean isv = isSelected();
@@ -264,6 +283,9 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 //		return isSelected() || getMapView().getMeasurementPaths(this).isSelectionVisible();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public boolean isVisible(Rectangle2D.Double visibleBounds)
 	{
 		boolean vis = false;
@@ -279,6 +301,9 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		return vis;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void paint(Graphics g, Rectangle2D.Double visibleBounds, Stroke stroke, Color color, boolean selectionVisible)
 	{
 		if(!isVisible(visibleBounds))
@@ -291,6 +316,9 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		}
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void paint(Graphics g, Rectangle2D.Double visibleBounds)
 	{
 		if(!isVisible(visibleBounds))
@@ -309,6 +337,9 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		paint(g, visibleBounds, str, color, isSelectionVisible());
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public boolean isMouseOnThisObject(Point currentMousePoint)
 	{
 		for(Iterator it = getLinks().iterator(); it.hasNext();)
@@ -320,6 +351,9 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		return false;
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	public Object getTransferable()
 	{
 		return null;
@@ -359,6 +393,9 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		schemeCableLink.setOpticalLength(len);
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public double getDistanceFromStartLt(Point pt)
 	{
 		double distance = 0.0;
@@ -369,8 +406,8 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 			MapNodeLinkElement mnle = (MapNodeLinkElement )it.next();
 			if(mnle.isMouseOnThisObject(pt))
 			{
-				Point2D.Double dpoint = getMap().getConverter().convertScreenToMap(pt);
-				distance += getMap().getConverter().distance(dpoint, node.getAnchor());
+				DoublePoint dpoint = getMap().getConverter().convertScreenToMap(pt);
+				distance += getMap().getConverter().distance(dpoint, node.getLocation());
 				break;
 			}
 			else
@@ -403,6 +440,7 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 	/**
 	 * Возвращяет длинну линии пересчитанную на коэффициент топологической 
 	 * привязки
+	 * @deprecated
 	 */
 	public double getDistanceFromStartLf(Point pt)
 	{
@@ -637,6 +675,9 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		}
 	}
 
+	/**
+	 * @deprecated
+	 */
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
 		out.writeObject(id);
@@ -652,6 +693,9 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 		out.writeObject(attributes);
 	}
 
+	/**
+	 * @deprecated
+	 */
 	private void readObject(java.io.ObjectInputStream in)
 			throws IOException, ClassNotFoundException
 	{
@@ -670,6 +714,7 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 
 	/**
 	 * Получить толщину линии
+	 * @deprecated
 	 */
 	public int getLineSize ()
 	{
@@ -678,6 +723,7 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 
 	/**
 	 * Получить вид линии
+	 * @deprecated
 	 */
 	public String getStyle ()
 	{
@@ -686,6 +732,7 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 
 	/**
 	 * Получить стиль линии
+	 * @deprecated
 	 */
 	public Stroke getStroke ()
 	{
@@ -694,6 +741,7 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 
 	/**
 	 * Получить цвет
+	 * @deprecated
 	 */
 	public Color getColor()
 	{
@@ -702,6 +750,7 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 
 	/**
 	 * получить цвет при наличии сигнала тревоги
+	 * @deprecated
 	 */
 	public Color getAlarmedColor()
 	{
@@ -710,6 +759,7 @@ public class MapCablePathElement extends MapLinkElement implements Serializable
 
 	/**
 	 * получить толщину линии при наличи сигнала тревоги
+	 * @deprecated
 	 */
 	public int getAlarmedLineSize ()
 	{

@@ -10,6 +10,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.Map.MapLinkProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
+import com.syrus.AMFICOM.Client.Resource.Map.PhysicalLinkController;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
@@ -71,6 +72,8 @@ public final class MapPhysicalLinkPropertiesController
 		Object result = null;
 		MapPhysicalLinkElement link = (MapPhysicalLinkElement )object;
 
+		PhysicalLinkController plc = (PhysicalLinkController )PhysicalLinkController.getInstance();
+
 		if (key.equals(PROPERTY_NAME))
 		{
 			result = link.getName();
@@ -101,17 +104,17 @@ public final class MapPhysicalLinkPropertiesController
 		else
 		if (key.equals(PROPERTY_COLOR))
 		{
-			result = link.getColor();
+			result = plc.getColor(link);
 		}
 		else
 		if (key.equals(PROPERTY_STYLE))
 		{
-			result = link.getStyle();
+			result = plc.getStyle(link);
 		}
 		else
 		if (key.equals(PROPERTY_THICKNESS))
 		{
-			result = String.valueOf(link.getLineSize());
+			result = String.valueOf(plc.getLineSize(link));
 		}
 
 		return result;

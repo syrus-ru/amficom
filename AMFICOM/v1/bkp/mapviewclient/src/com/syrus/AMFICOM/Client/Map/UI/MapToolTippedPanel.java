@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolTippedPanel.java,v 1.1 2004/09/13 12:33:43 krupenn Exp $
+ * $Id: MapToolTippedPanel.java,v 1.2 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,7 @@ import javax.swing.JToolTip;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:43 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/07 17:05:54 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -114,8 +114,7 @@ public class MapToolTippedPanel extends JComponent
 			MapElement me = parent.getLogicalNetLayer().getMapElementAtPoint(
 					parent.getLogicalNetLayer().getCurrentPoint());
 //			System.out.println("tooltip created! " + me.getToolTipText());
-			return me.getToolTipText();
-			
+			return parent.getLogicalNetLayer().getMapViewController().getController(me).getToolTipText(me);
 		} 
 		catch (Exception ex) 
 		{
@@ -130,7 +129,7 @@ public class MapToolTippedPanel extends JComponent
  * возникающих событий мыши родительскому объекту
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:43 $
+ * @version $Revision: 1.2 $, $Date: 2004/12/07 17:05:54 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see

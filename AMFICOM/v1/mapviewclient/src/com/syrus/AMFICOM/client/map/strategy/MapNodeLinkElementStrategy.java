@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkElementStrategy.java,v 1.3 2004/10/19 11:48:28 krupenn Exp $
+ * $Id: MapNodeLinkElementStrategy.java,v 1.4 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/19 11:48:28 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/07 17:05:54 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -79,6 +79,7 @@ public final class MapNodeLinkElementStrategy implements  MapStrategy
 		{
 			if(mouseMode == MapState.MOUSE_PRESSED)
 			{
+				nodeLink.setSelected(true);
 				if ((actionMode == MapState.SELECT_ACTION_MODE))
 				{
 					MapElement mel = logicalNetLayer.getCurrentMapElement();
@@ -106,8 +107,8 @@ public final class MapNodeLinkElementStrategy implements  MapStrategy
 				if (actionMode != MapState.MOVE_ACTION_MODE)
 				{
 					logicalNetLayer.deselectAll();
+					nodeLink.setSelected(true);
 				}
-				nodeLink.setSelected(true);
 			}
 		}
 

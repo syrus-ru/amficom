@@ -1,5 +1,5 @@
 /**
- * $Id: CreateUnboundNodeCommandAtomic.java,v 1.3 2004/11/16 17:31:17 krupenn Exp $
+ * $Id: CreateUnboundNodeCommandAtomic.java,v 1.4 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -13,9 +13,11 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.UnboundNodeController;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
 
@@ -25,7 +27,7 @@ import java.awt.geom.Point2D;
  * –азместить сетевой элемент на карте. используетс€ при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.3 $, $Date: 2004/11/16 17:31:17 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/07 17:05:54 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -45,11 +47,11 @@ public class CreateUnboundNodeCommandAtomic extends MapActionCommand
 	 * географическа€ точка, в которой создаетс€ новый топологический узел.
 	 * может инициализироватьс€ по point
 	 */
-	Point2D.Double coordinatePoint = null;
+	DoublePoint coordinatePoint = null;
 
 	public CreateUnboundNodeCommandAtomic(
 			SchemeElement se,
-			Point2D.Double dpoint)
+			DoublePoint dpoint)
 	{
 		super(MapActionCommand.ACTION_DRAW_NODE);
 		this.se = se;
@@ -76,15 +78,18 @@ public class CreateUnboundNodeCommandAtomic extends MapActionCommand
 		DataSourceInterface dataSource = aContext.getDataSource();
 	
 		map = logicalNetLayer.getMapView().getMap();
-		
+
 		// создать новый узел
 		unbound = new MapUnboundNodeElement(
 			se,
 			dataSource.GetUId(MapSiteNodeElement.typ),
 			coordinatePoint,
 			map,
-			logicalNetLayer.getDefaultScale() / logicalNetLayer.getCurrentScale(),
 			logicalNetLayer.getUnboundProto());
+	
+		UnboundNodeController unc = (UnboundNodeController )getLogicalNetLayer().getMapViewController().getController(unbound);
+
+		unc.updateScaleCoefficient(unbound);
 	
 		Pool.put(MapSiteNodeElement.typ, unbound.getId(), unbound);
 		map.addNode(unbound);

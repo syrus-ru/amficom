@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.17 2004/12/01 10:55:32 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.18 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -49,7 +49,6 @@ import java.awt.Toolkit;
 
 import java.util.LinkedList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -60,7 +59,7 @@ import javax.swing.JPopupMenu;
  * 
  * 
  * 
- * @version $Revision: 1.17 $, $Date: 2004/12/01 10:55:32 $
+ * @version $Revision: 1.18 $, $Date: 2004/12/07 17:05:54 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -361,7 +360,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 		if(unbound.isRemoved())
 			return;
 
-		CreateSiteCommandAtomic command = new CreateSiteCommandAtomic(proto, unbound.getAnchor());
+		CreateSiteCommandAtomic command = new CreateSiteCommandAtomic(proto, unbound.getLocation());
 		command.setLogicalNetLayer(logicalNetLayer);
 		getLogicalNetLayer().getCommandList().add(command);
 		getLogicalNetLayer().getCommandList().execute();

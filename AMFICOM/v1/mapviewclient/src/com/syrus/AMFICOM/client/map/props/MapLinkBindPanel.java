@@ -6,6 +6,7 @@ import com.syrus.AMFICOM.Client.General.UI.ObjectResourceListBox;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.Command.Action.CreateUnboundLinkCommandBundle;
+import com.syrus.AMFICOM.Client.Resource.Map.IntPoint;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkBinding;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
@@ -276,7 +277,7 @@ public final class MapLinkBindPanel extends JPanel implements ObjectResourceProp
 	public void bind(ObjectResource or)
 	{
 		MapPhysicalLinkBinding binding = link.getBinding();
-		Point pt = tunnelLayout.getActiveCoordinates();
+		IntPoint pt = tunnelLayout.getActiveCoordinates();
 		if(pt != null)
 		{
 			binding.bind(or, pt.x, pt.y);

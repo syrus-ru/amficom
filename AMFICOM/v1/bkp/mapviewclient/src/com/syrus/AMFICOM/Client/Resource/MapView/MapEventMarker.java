@@ -30,7 +30,7 @@ public class MapEventMarker extends MapMarker
 		super(id, mapView, len, path, meId);
 
 		this.setImageId(IMAGE_NAME);
-		this.name = LangModelMap.getString("Event");
+		this.setName(LangModelMap.getString("Event"));
 	}
 
 	public String getToolTipText()

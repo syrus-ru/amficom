@@ -1,5 +1,5 @@
 /**
- * $Id: MapView.java,v 1.21 2004/11/24 08:20:35 krupenn Exp $
+ * $Id: MapView.java,v 1.22 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemeElementCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.UnPlaceSchemePathCommand;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
@@ -59,7 +60,7 @@ import java.io.Serializable;
  * 
  * 
  * 
- * @version $Revision: 1.21 $, $Date: 2004/11/24 08:20:35 $
+ * @version $Revision: 1.22 $, $Date: 2004/12/07 17:05:54 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -408,6 +409,7 @@ public final class MapView extends StubResource implements Serializable
 	}
 	/**
 	 * Установить центральную точку вида карты
+	 * @deprecated
 	 */
 	public void setCenter(Point2D.Double center)
 	{
@@ -415,12 +417,24 @@ public final class MapView extends StubResource implements Serializable
 		latitude = center.y;
 	}
 
+	public void setCenter(DoublePoint center)
+	{
+		longitude = center.x;
+		latitude = center.y;
+	}
+
 	/**
 	 * Получить центральную точку вида карты
+	 * @deprecated
 	 */
-	public Point2D.Double getCenter()
+	public Point2D.Double getCenter1()
 	{
 		return new Point2D.Double(longitude, latitude);
+	}
+
+	public DoublePoint getCenter()
+	{
+		return new DoublePoint(longitude, latitude);
 	}
 
 	/**
@@ -494,7 +508,7 @@ public final class MapView extends StubResource implements Serializable
 			{
 				placeElement(
 					schemeElement, 
-					new Point2D.Double(
+					new DoublePoint(
 						schemeElement.getLong(), 
 						schemeElement.getLat()));
 			}
@@ -629,7 +643,7 @@ public final class MapView extends StubResource implements Serializable
 	/**
 	 * Разместить элемент на карте.
 	 */
-	public void placeElement(SchemeElement se, Point2D.Double point)
+	public void placeElement(SchemeElement se, DoublePoint point)
 	{
 		PlaceSchemeElementCommand cmd = new PlaceSchemeElementCommand(se, point);
 		cmd.setLogicalNetLayer(logicalNetLayer);

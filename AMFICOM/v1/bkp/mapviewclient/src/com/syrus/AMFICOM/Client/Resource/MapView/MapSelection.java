@@ -1,5 +1,5 @@
 /**
- * $Id: MapSelection.java,v 1.10 2004/10/26 13:32:01 krupenn Exp $
+ * $Id: MapSelection.java,v 1.11 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/10/26 13:32:01 $
+ * @version $Revision: 1.11 $, $Date: 2004/12/07 17:05:54 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -42,7 +42,11 @@ public final class MapSelection extends StubResource
 {
 	protected List elements = new LinkedList();
 
+	/**
+	 * @deprecated
+	 */
 	protected Point2D.Double anchor = new Point2D.Double(0, 0);
+	protected DoublePoint location = new DoublePoint(0, 0);
 	
 	protected Map map;
 	
@@ -107,11 +111,23 @@ public final class MapSelection extends StubResource
 		recalcType();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public Point2D.Double getAnchor()
 	{
 		return anchor;
 	}
 
+
+	public DoublePoint getLocation()
+	{
+		return location;
+	}
+
+	/**
+	 * @deprecated
+	 */
 	protected void recalcAnchor()
 	{
 		MapElement me;
@@ -127,6 +143,23 @@ public final class MapSelection extends StubResource
 		}
 		anchor.x /= elements.size();
 		anchor.y /= elements.size();
+	}
+
+	protected void recalcLocation()
+	{
+		MapElement me;
+		location.x = 0.0D;
+		location.y = 0.0D;
+		for(Iterator it = elements.iterator(); it.hasNext();)
+		{
+			me = (MapElement )it.next();
+			DoublePoint pt = me.getLocation();
+
+			location.x += pt.x;
+			location.y += pt.y;
+		}
+		location.x /= elements.size();
+		location.y /= elements.size();
 	}
 
 	private void recalcType()
@@ -158,7 +191,14 @@ public final class MapSelection extends StubResource
 		}
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void setAnchor(Point2D.Double aAnchor)
+	{
+	}
+
+	public void setLocation(DoublePoint aLocation)
 	{
 	}
 

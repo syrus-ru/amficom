@@ -81,12 +81,12 @@ public final class MapMarkerPropertiesController
 		else
 		if (key.equals(PROPERTY_LATITUDE))
 		{
-			result = MapPropertiesManager.getCoordinatesFormat().format(marker.getAnchor().x);
+			result = MapPropertiesManager.getCoordinatesFormat().format(marker.getLocation().x);
 		}
 		else
 		if (key.equals(PROPERTY_LONGITUDE))
 		{
-			result = MapPropertiesManager.getCoordinatesFormat().format(marker.getAnchor().y);
+			result = MapPropertiesManager.getCoordinatesFormat().format(marker.getLocation().y);
 		}
 		else
 		if (key.equals(PROPERTY_DISTANCE))

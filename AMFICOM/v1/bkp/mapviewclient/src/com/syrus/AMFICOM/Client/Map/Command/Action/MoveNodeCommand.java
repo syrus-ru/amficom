@@ -1,5 +1,5 @@
 /**
- * $Id: MoveNodeCommand.java,v 1.3 2004/10/19 10:07:43 krupenn Exp $
+ * $Id: MoveNodeCommand.java,v 1.4 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -13,6 +13,7 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 
 import java.awt.geom.Point2D;
@@ -22,7 +23,7 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/19 10:07:43 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/07 17:05:54 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -32,7 +33,7 @@ public class MoveNodeCommand extends MapActionCommand
 	/**
 	 * начальна€ позици€ перемещаемого элемента
 	 */
-	Point2D.Double anchor;
+	DoublePoint location;
 
 	/**
 	 * абсолютное смещение по оси абсцисс
@@ -55,7 +56,7 @@ public class MoveNodeCommand extends MapActionCommand
 		this.node = node;
 
 		// запомнить начальное положение
-		anchor = node.getAnchor();
+		location = node.getLocation();
 	}
 
 	public void setParameter(String field, Object value)
@@ -87,11 +88,11 @@ public class MoveNodeCommand extends MapActionCommand
 				getClass().getName(), 
 				"execute()");
 		
-		node.setAnchor(new Point2D.Double(anchor.x + deltaX, anchor.y + deltaY));
+		node.setLocation(new DoublePoint(location.x + deltaX, location.y + deltaY));
 	}
 	
 	public void undo()
 	{
-		node.setAnchor(anchor);
+		node.setLocation(location);
 	}
 }

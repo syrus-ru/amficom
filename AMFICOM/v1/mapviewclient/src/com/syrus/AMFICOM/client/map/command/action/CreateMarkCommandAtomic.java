@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkCommandAtomic.java,v 1.3 2004/11/16 17:31:17 krupenn Exp $
+ * $Id: CreateMarkCommandAtomic.java,v 1.4 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -12,6 +12,9 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
+import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
+import com.syrus.AMFICOM.Client.Resource.Map.MarkController;
+import com.syrus.AMFICOM.Client.Resource.Map.NodeLinkController;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
@@ -30,7 +33,7 @@ import java.util.Iterator;
 /**
  *  оманда создани€ метки на линии
  * 
- * @version $Revision: 1.3 $, $Date: 2004/11/16 17:31:17 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/07 17:05:54 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -82,24 +85,25 @@ public class CreateMarkCommandAtomic extends MapActionCommand
 		
 		map = logicalNetLayer.getMapView().getMap();
 
-//		Point2D.Double coordinatePoint = logicalNetLayer.convertScreenToMap(point);
-		
 		link.sortNodeLinks();
 		distance = 0.0;
 		MapNodeElement node = link.getStartNode();
+
 		for(Iterator it = link.getNodeLinks().iterator(); it.hasNext();)
 		{
 			MapNodeLinkElement mnle = (MapNodeLinkElement )it.next();
-				
-			if(mnle.isMouseOnThisObject(point))
+
+			NodeLinkController nlc = (NodeLinkController )getLogicalNetLayer().getMapViewController().getController(mnle);
+
+			if(nlc.isMouseOnElement(mnle, point))
 			{
-				Point2D.Double dpoint = logicalNetLayer.convertScreenToMap(point);
-				distance += logicalNetLayer.distance(node.getAnchor(), dpoint);
+				DoublePoint dpoint = logicalNetLayer.convertScreenToMap(point);
+				distance += logicalNetLayer.distance(node.getLocation(), dpoint);
 				break;
 			}
 			else
 			{
-				mnle.updateLengthLt();
+				nlc.updateLengthLt(mnle);
 				distance += mnle.getLengthLt();
 			}
 
@@ -118,7 +122,9 @@ public class CreateMarkCommandAtomic extends MapActionCommand
 		Pool.put(MapMarkElement.typ, mark.getId(), mark);
 		map.addNode(mark);
 
-		mark.setScaleCoefficient(logicalNetLayer.getDefaultScale() / logicalNetLayer.getCurrentScale());
+		MarkController mc = (MarkController )getLogicalNetLayer().getMapViewController().getController(mark);
+
+		mc.updateScaleCoefficient(mark);
 		
 		// операци€ закончена - оповестить слушателей
 		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));

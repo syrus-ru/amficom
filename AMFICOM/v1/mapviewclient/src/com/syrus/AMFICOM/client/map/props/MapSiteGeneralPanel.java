@@ -8,8 +8,10 @@ import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.Client.Resource.Map.SiteNodeController;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 import java.awt.Dimension;
@@ -147,9 +149,9 @@ public class MapSiteGeneralPanel extends JPanel implements ObjectResourcePropert
 			descTextArea.setText(site.getDescription());
 
 			longTextField.setEnabled(true);
-			longTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(site.getAnchor().x));
+			longTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(site.getLocation().x));
 			latTextField.setEnabled(true);
-			latTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(site.getAnchor().y));
+			latTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(site.getLocation().y));
 
 			cityTextField.setText(site.getCity());
 			streetTextField.setText(site.getStreet());
@@ -171,14 +173,16 @@ public class MapSiteGeneralPanel extends JPanel implements ObjectResourcePropert
 			
 			LogicalNetLayer lnl = (LogicalNetLayer )(site.getMap().getConverter());
 			
-			site.setScaleCoefficient(lnl.getDefaultScale() / lnl.getCurrentScale());
+			SiteNodeController snc = (SiteNodeController )lnl.getMapViewController().getController(site);
+			snc.updateScaleCoefficient(site);
+//			site.setScaleCoefficient(lnl.getDefaultScale() / lnl.getCurrentScale());
 
 			try 
 			{
 				double x = Double.parseDouble(longTextField.getText());
 				double y = Double.parseDouble(latTextField.getText());
 				
-				site.setAnchor(new Point2D.Double(x, y));
+				site.setLocation(new DoublePoint(x, y));
 			} 
 			catch (NumberFormatException ex) 
 			{

@@ -1,5 +1,5 @@
 /**
- * $Id: MapDropTargetListener.java,v 1.6 2004/12/01 10:55:32 krupenn Exp $
+ * $Id: MapDropTargetListener.java,v 1.7 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,7 +43,7 @@ import javax.swing.JOptionPane;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/12/01 10:55:32 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/07 17:05:54 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -131,7 +131,7 @@ public final class MapDropTargetListener implements DropTargetListener
 			{
 				logicalNetLayer.deselectAll();
 				site.setSelected(true);
-				Point pt = logicalNetLayer.convertMapToScreen(site.getAnchor());
+				Point pt = logicalNetLayer.convertMapToScreen(site.getLocation());
 				MoveSelectionCommandBundle cmd = new MoveSelectionCommandBundle(pt);
 				cmd.setLogicalNetLayer(logicalNetLayer);
 				cmd.setParameter(MoveSelectionCommandBundle.END_POINT, point);

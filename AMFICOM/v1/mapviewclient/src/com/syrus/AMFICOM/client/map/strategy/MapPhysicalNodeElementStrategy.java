@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElementStrategy.java,v 1.7 2004/11/16 17:31:17 krupenn Exp $
+ * $Id: MapPhysicalNodeElementStrategy.java,v 1.8 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.Client.Resource.Map.SiteNodeController;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
@@ -42,7 +43,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/11/16 17:31:17 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/07 17:05:54 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -144,11 +145,16 @@ public final class MapPhysicalNodeElementStrategy implements  MapStrategy
 					}
 
 					node.setCanBind(false);
+					
+
 					for(Iterator it = logicalNetLayer.getMapView().getMap().getMapSiteNodeElements().iterator(); it.hasNext();)
 					{
 						MapSiteNodeElement sit = (MapSiteNodeElement )it.next();
+
+						SiteNodeController snc = (SiteNodeController )logicalNetLayer.getMapViewController().getController(sit);
+
 						if(!(sit instanceof MapUnboundNodeElement))
-							if(sit.isMouseOnThisObject(point))
+							if(snc.isMouseOnElement(sit, point))
 							{
 								node.setCanBind(true);
 								break;
@@ -188,8 +194,9 @@ public final class MapPhysicalNodeElementStrategy implements  MapStrategy
 							for(Iterator it = logicalNetLayer.getMapView().getMap().getMapSiteNodeElements().iterator(); it.hasNext();)
 							{
 								MapSiteNodeElement site = (MapSiteNodeElement )it.next();
+								SiteNodeController snc = (SiteNodeController )logicalNetLayer.getMapViewController().getController(site);
 								if(!(site instanceof MapUnboundNodeElement))
-									if(site.isMouseOnThisObject(point))
+									if(snc.isMouseOnElement(site, point))
 									{
 										command = new BindPhysicalNodeToSiteCommandBundle(node, site);
 										((BindPhysicalNodeToSiteCommandBundle )command).setLogicalNetLayer(logicalNetLayer);

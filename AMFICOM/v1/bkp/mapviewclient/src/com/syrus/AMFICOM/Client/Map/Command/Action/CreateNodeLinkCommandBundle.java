@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandBundle.java,v 1.4 2004/11/18 14:14:03 krupenn Exp $
+ * $Id: CreateNodeLinkCommandBundle.java,v 1.5 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,7 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElementState;
@@ -37,7 +38,7 @@ import java.util.LinkedList;
  * данная команда
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/11/18 14:14:03 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/07 17:05:54 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -97,7 +98,7 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 		MapPhysicalLinkElement physicalLink = null;
 		MapNodeLinkElement nodeLink = null;
 
-		Point2D.Double mapEndPoint = logicalNetLayer.convertScreenToMap(endPoint);
+		DoublePoint mapEndPoint = logicalNetLayer.convertScreenToMap(endPoint);
 
 		// если в конечной точке уже есть элемент, проверяем, какой это узел
 		if ( curElementAtPoint != null

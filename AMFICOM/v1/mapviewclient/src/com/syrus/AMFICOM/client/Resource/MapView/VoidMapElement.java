@@ -1,5 +1,5 @@
 /**
- * $Id: VoidMapElement.java,v 1.6 2004/10/26 13:32:01 krupenn Exp $
+ * $Id: VoidMapElement.java,v 1.7 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,7 @@
 package com.syrus.AMFICOM.Client.Resource.MapView;
 
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElementState;
@@ -28,7 +29,7 @@ import java.awt.geom.Rectangle2D;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/10/26 13:32:01 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/07 17:05:54 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -121,7 +122,15 @@ public final class VoidMapElement extends StubResource implements MapElement
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public Point2D.Double getAnchor()
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	public DoublePoint getLocation()
 	{
 		throw new UnsupportedOperationException();
 	}

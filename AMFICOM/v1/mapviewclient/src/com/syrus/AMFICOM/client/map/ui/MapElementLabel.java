@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementLabel.java,v 1.2 2004/09/16 12:00:43 krupenn Exp $
+ * $Id: MapElementLabel.java,v 1.3 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,7 @@ package com.syrus.AMFICOM.Client.Map.UI;
 import com.syrus.AMFICOM.Client.Map.Popup.ProtoPopupMenu;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 
+import com.syrus.AMFICOM.Client.Resource.Map.NodeTypeController;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.datatransfer.DataFlavor;
@@ -42,7 +43,7 @@ import javax.swing.border.EtchedBorder;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/16 12:00:43 $
+ * @version $Revision: 1.3 $, $Date: 2004/12/07 17:05:54 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -57,6 +58,7 @@ public class MapElementLabel extends JLabel
 	DragSource dragSource = null;
 	protected int type;
 	MapNodeProtoElement proto = null;
+	NodeTypeController ntc;
 	boolean enable = false;
 
 	protected Color defaultElementLineBorderColor = Color.gray;
@@ -71,6 +73,13 @@ public class MapElementLabel extends JLabel
 	public MapElementLabel(MapNodeProtoElement proto)
 	{
 		this.proto = proto;
+		this.ntc = (NodeTypeController )NodeTypeController.getInstance();
+//		this.ntc = (NodeTypeController )MapFrame
+//			.getMapMainFrame()
+//				.getMapViewer()
+//					.getLogicalNetLayer()
+//						.getMapViewController()
+//							.getController(proto);
 		
 		updateIcon();
 	
@@ -86,7 +95,7 @@ public class MapElementLabel extends JLabel
 
 	public void updateIcon()
 	{
-		ImageIcon icon = new ImageIcon(proto.getImage().getScaledInstance(
+		ImageIcon icon = new ImageIcon(ntc.getImage(proto).getScaledInstance(
 				ELEMENT_DIMENSION, 
 				ELEMENT_DIMENSION, 
 				Image.SCALE_SMOOTH));

@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundNodeElement.java,v 1.5 2004/11/01 15:40:10 krupenn Exp $
+ * $Id: MapUnboundNodeElement.java,v 1.6 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ package com.syrus.AMFICOM.Client.Resource.MapView;
 
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
@@ -32,7 +33,7 @@ import java.io.Serializable;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/11/01 15:40:10 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/07 17:05:54 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -43,19 +44,33 @@ public class MapUnboundNodeElement extends MapSiteNodeElement implements Seriali
 	
 	protected boolean canBind = false;
 
+	/**
+	 * @deprecated
+	 */
 	public MapUnboundNodeElement(
 		SchemeElement schemeElement,
 		String id,
 		Point2D.Double anchor,
 		Map map,
-		double coef,
 		MapNodeProtoElement pe)
 	{
-		super(id, anchor, map, coef, pe);
+		super(id, anchor, map, pe);
 
 		setSchemeElement(schemeElement);
 	}
 	
+	public MapUnboundNodeElement(
+		SchemeElement schemeElement,
+		String id,
+		DoublePoint location,
+		Map map,
+		MapNodeProtoElement pe)
+	{
+		super(id, location, map, pe);
+
+		setSchemeElement(schemeElement);
+	}
+
 	public void setCanBind(boolean canBind)
 	{
 		this.canBind = canBind;
@@ -66,6 +81,9 @@ public class MapUnboundNodeElement extends MapSiteNodeElement implements Seriali
 		return this.canBind;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void paint(Graphics g, Rectangle2D.Double visibleBounds)
 	{
 		if(!isVisible(visibleBounds))

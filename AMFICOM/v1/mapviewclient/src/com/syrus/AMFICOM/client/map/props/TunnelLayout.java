@@ -11,6 +11,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Scheme.GraphActions;
 import com.syrus.AMFICOM.Client.General.Scheme.SchemeGraph;
 import com.syrus.AMFICOM.Client.General.Scheme.UgoPanel;
+import com.syrus.AMFICOM.Client.Resource.Map.IntPoint;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkBinding;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
@@ -34,7 +35,7 @@ public class TunnelLayout implements OperationListener
 	
 	EllipseCell[][] cells;
 
-	Point activeCoordinates = null;
+	IntPoint activeCoordinates = null;
 	
 	MapLinkBindPanel parent;
 
@@ -92,7 +93,7 @@ public class TunnelLayout implements OperationListener
 							for (int j = 0; j < n && !found; j++) 
 								if(cells[i][j].equals(cell))
 								{
-									activeCoordinates = new Point(i, j);
+									activeCoordinates = new IntPoint(i, j);
 									found = true;
 									parent.cableBindingSelected(i, j);
 								}
@@ -149,14 +150,14 @@ public class TunnelLayout implements OperationListener
 			panel.getGraph().setSelectionCell(cells[activeCoordinates.x][activeCoordinates.y]);
 	}
 	
-	public void setActiveCoordinates(Point activeCoordinates)
+	public void setActiveCoordinates(IntPoint activeCoordinates)
 	{
 		removeSelection();
 		this.activeCoordinates = activeCoordinates;
 		panel.getGraph().setSelectionCell(cells[activeCoordinates.x][activeCoordinates.y]);
 	}
 	
-	public Point getActiveCoordinates()
+	public IntPoint getActiveCoordinates()
 	{
 		return activeCoordinates;
 	}

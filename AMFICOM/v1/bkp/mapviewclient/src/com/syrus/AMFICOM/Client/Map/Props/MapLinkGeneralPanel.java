@@ -6,6 +6,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
+import com.syrus.AMFICOM.Client.Resource.Map.IntDimension;
 import com.syrus.AMFICOM.Client.Resource.Map.MapLinkProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
@@ -194,8 +195,8 @@ public class MapLinkGeneralPanel extends JPanel implements ObjectResourcePropert
 			
 			int m = Integer.parseInt(mTextField.getText());
 			int n = Integer.parseInt(nTextField.getText());
-			if(!link.getBinding().getDimension().equals(new Dimension(m, n)))
-				link.getBinding().setDimension(new Dimension(m, n));
+			if(!link.getBinding().getDimension().equals(new IntDimension(m, n)))
+				link.getBinding().setDimension(new IntDimension(m, n));
 			return true;
 		} 
 		catch (Exception ex) 

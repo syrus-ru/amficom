@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarker.java,v 1.18 2004/11/24 08:20:35 krupenn Exp $
+ * $Id: MapMarker.java,v 1.19 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
 import com.syrus.AMFICOM.Client.Map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElementState;
@@ -64,7 +65,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.18 $, $Date: 2004/11/24 08:20:35 $
+ * @version $Revision: 1.19 $, $Date: 2004/12/07 17:05:54 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -73,12 +74,25 @@ import javax.swing.ImageIcon;
 public class MapMarker extends MapNodeElement
 {
 	private static final long serialVersionUID = 02L;
+	
+	/**
+	 * @deprecated
+	 */
 	public static final String typ = "mapmarker";
 
 	/** Размер пиктограммы маркера */
+	/**
+	 * @deprecated
+	 */
 	public static final Rectangle DEFAULT_BOUNDS = new Rectangle(20, 20);
 	
+	/**
+	 * @deprecated
+	 */
 	public static final String IMAGE_NAME = "marker";
+	/**
+	 * @deprecated
+	 */
 	public static final String IMAGE_PATH = "images/marker.gif";
 
 	protected Identifier meId;
@@ -113,6 +127,7 @@ public class MapMarker extends MapNodeElement
 	 * @param mnle
 	 * @param topologicalDistance
 	 * @param path
+	 * @deprecated
 	 */
 	public MapMarker(
 			String id, 
@@ -129,6 +144,23 @@ public class MapMarker extends MapNodeElement
 		this.endNode = endNode;
 		this.nodeLink = mnle;
 		setAnchor(dpoint);
+	}
+
+	public MapMarker(
+			String id, 
+			MapView mapView,
+			MapNodeElement startNode,
+			MapNodeElement endNode,
+			MapNodeLinkElement mnle,
+			MapMeasurementPathElement path,
+			DoublePoint dpoint)
+	{
+		this(id, mapView, 0.0, path, path.getMonitoredElementId());
+		
+		this.startNode = startNode;
+		this.endNode = endNode;
+		this.nodeLink = mnle;
+		setLocation(dpoint);
 	}
 
 	/**
@@ -171,24 +203,42 @@ public class MapMarker extends MapNodeElement
 		moveToFromStartLo(opticalDistance);
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public Rectangle getDefaultBounds()
 	{
 		return DEFAULT_BOUNDS;
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	public Object clone(DataSourceInterface dataSource)
 	{
 		throw new UnsupportedOperationException();
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	public String getTyp()
 	{
 		return typ;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void setAnchor(Point2D.Double aAnchor)
 	{
 		super.setAnchor(aAnchor);
+		distance = this.getFromStartLengthLo();
+	}
+
+	public void setLocation(DoublePoint aLocation)
+	{
+		super.setLocation(aLocation);
 		distance = this.getFromStartLengthLo();
 	}
 
@@ -506,8 +556,8 @@ public class MapMarker extends MapNodeElement
 	 */
 	public double startToThis()
 	{
-		Point2D.Double from = startNode.getAnchor();
-		Point2D.Double to = getAnchor();
+		DoublePoint from = startNode.getLocation();
+		DoublePoint to = getLocation();
 
 		MapCoordinatesConverter converter = getMap().getConverter();
 		return converter.distance(from, to);
@@ -520,8 +570,8 @@ public class MapMarker extends MapNodeElement
 	 */
 	public double endToThis()
 	{
-		Point2D.Double from = endNode.getAnchor();
-		Point2D.Double to = getAnchor();
+		DoublePoint from = endNode.getLocation();
+		DoublePoint to = getLocation();
 
 		MapCoordinatesConverter converter = getMap().getConverter();
 		return converter.distance(from, to);
@@ -856,7 +906,7 @@ public class MapMarker extends MapNodeElement
 
 		double cosB = (endNodeX - startNodeX) / nodeLinkLength;
 
-		setAnchor(converter.convertScreenToMap(new Point(
+		setAnchor(converter.convertScreenToMap1(new Point(
 			(int )Math.round(startNodeX + cosB * screenDistance),
 			(int )Math.round(startNodeY + sinB * screenDistance) ) ) );
 	}

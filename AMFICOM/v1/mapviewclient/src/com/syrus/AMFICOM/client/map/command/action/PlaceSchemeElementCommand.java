@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeElementCommand.java,v 1.5 2004/11/01 15:40:10 krupenn Exp $
+ * $Id: PlaceSchemeElementCommand.java,v 1.6 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
+import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
@@ -30,7 +31,7 @@ import java.awt.geom.Point2D;
  * Разместить c[tvysq элемент на карте в соответствии с привязкой
  * или по координатам
  * 
- * @version $Revision: 1.5 $, $Date: 2004/11/01 15:40:10 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/07 17:05:54 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -62,11 +63,11 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 	/**
 	 * географическая точка, в которой размещается элемент
 	 */
-	Point2D.Double coordinatePoint = null;
+	DoublePoint coordinatePoint = null;
 
 	public PlaceSchemeElementCommand(
 			SchemeElement se,
-			Point2D.Double dpoint)
+			DoublePoint dpoint)
 	{
 		this.se = se;
 		this.coordinatePoint = dpoint;

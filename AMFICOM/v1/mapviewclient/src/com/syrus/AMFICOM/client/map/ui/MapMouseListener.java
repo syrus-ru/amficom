@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.14 2004/12/01 10:55:32 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.15 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,11 +23,14 @@ import com.syrus.AMFICOM.Client.Map.Popup.MapPopupMenu;
 import com.syrus.AMFICOM.Client.Map.Popup.MapPopupMenuManager;
 import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategy;
 import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategyManager;
+import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapElementController;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.Client.Resource.Map.NodeLinkController;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
 import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
@@ -50,7 +53,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.14 $, $Date: 2004/12/01 10:55:32 $
+ * @version $Revision: 1.15 $, $Date: 2004/12/07 17:05:54 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -140,14 +143,15 @@ public final class MapMouseListener implements MouseListener
 							MapNodeElement node = (MapNodeElement )logicalNetLayer.getCurrentMapElement();
 							MapNodeLinkElement nodelink = logicalNetLayer.getEditedNodeLink(me.getPoint());
 							if(nodelink != null)
-								if(nodelink.getStartNode() == node
-									|| nodelink.getEndNode() == node)
+								if(nodelink.getStartNode().equals(node)
+									|| nodelink.getEndNode().equals(node))
 							{
 								if(this.sizeEditBox != null)
 									if(this.sizeEditBox.isVisible())
 										return;
 								sizeEditBox = new MapNodeLinkSizeField(logicalNetLayer, nodelink, node);
-								Rectangle rect = nodelink.getLabelBox();
+								NodeLinkController nlc = (NodeLinkController )logicalNetLayer.getMapViewController().getController(nodelink);
+								Rectangle rect = nlc.getLabelBox(nodelink);
 								sizeEditBox.setBounds(rect.x, rect.y, rect.width + 3, rect.height + 3);
 								sizeEditBox.setText(MapPropertiesManager.getDistanceFormat().format(nodelink.getLengthLt()));
 								sizeEditBox.setSelectionStart(0);
@@ -170,13 +174,14 @@ public final class MapMouseListener implements MouseListener
 
 					MapElement mapElement = logicalNetLayer.getMapElementAtPoint(me.getPoint());
 					MapElement curElement = logicalNetLayer.getCurrentMapElement();
+					MapElementController mec = logicalNetLayer.getMapViewController().getController(curElement);
 					if(curElement instanceof MapSelection)
 					{
 						mapElement = curElement;
 					}
 					else
 					if(!(curElement instanceof VoidMapElement) 
-						&& curElement.isMouseOnThisObject(me.getPoint()))
+						&& mec.isMouseOnElement(curElement, me.getPoint()))
 					{
 						mapElement = curElement;
 					}
@@ -261,8 +266,8 @@ public final class MapMouseListener implements MouseListener
 			{
 				case MapState.MEASURE_DISTANCE :
 
-					Point2D.Double sp = logicalNetLayer.convertScreenToMap(logicalNetLayer.getStartPoint());
-					Point2D.Double ep = logicalNetLayer.convertScreenToMap(me.getPoint());
+					DoublePoint sp = logicalNetLayer.convertScreenToMap(logicalNetLayer.getStartPoint());
+					DoublePoint ep = logicalNetLayer.convertScreenToMap(me.getPoint());
 
 					double distance = logicalNetLayer.distance(sp, ep);
 
@@ -284,7 +289,7 @@ public final class MapMouseListener implements MouseListener
 					logicalNetLayer.repaint(false);
 					break;
 				case MapState.ZOOM_TO_POINT :
-					Point2D.Double pp = logicalNetLayer.convertScreenToMap(me.getPoint());
+					DoublePoint pp = logicalNetLayer.convertScreenToMap(me.getPoint());
 
 					logicalNetLayer.setCenter(pp);
 					logicalNetLayer.zoomIn();
@@ -333,10 +338,10 @@ public final class MapMouseListener implements MouseListener
 							logicalNetLayer.getCenter());
 					break;
 				case MapState.MOVE_HAND:
-					Point2D.Double center = logicalNetLayer.getCenter();
+					DoublePoint center = logicalNetLayer.getCenter();
 
-					Point2D.Double p1 = logicalNetLayer.convertScreenToMap(logicalNetLayer.getStartPoint());
-					Point2D.Double p2 = logicalNetLayer.convertScreenToMap(me.getPoint());
+					DoublePoint p1 = logicalNetLayer.convertScreenToMap(logicalNetLayer.getStartPoint());
+					DoublePoint p2 = logicalNetLayer.convertScreenToMap(me.getPoint());
 					double dx = p1.x - p2.x;
 					double dy = p1.y - p2.y;
 

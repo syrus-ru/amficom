@@ -1,5 +1,5 @@
 /**
- * $Id: MoveSelectionCommandBundle.java,v 1.4 2004/10/20 10:14:39 krupenn Exp $
+ * $Id: MoveSelectionCommandBundle.java,v 1.5 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
 import com.syrus.AMFICOM.Client.Resource.Map.MapMarkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 
@@ -27,7 +28,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/20 10:14:39 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/07 17:05:54 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -130,8 +131,8 @@ public class MoveSelectionCommandBundle extends MapActionCommandBundle
 	 */
 	protected void setShift()
 	{
-		Point2D.Double sp = logicalNetLayer.convertScreenToMap(startPoint);
-		Point2D.Double ep = logicalNetLayer.convertScreenToMap(endPoint);
+		DoublePoint sp = logicalNetLayer.convertScreenToMap(startPoint);
+		DoublePoint ep = logicalNetLayer.convertScreenToMap(endPoint);
 		deltaX = ep.getX() - sp.getX();
 		deltaY = ep.getY() - sp.getY();
 	}

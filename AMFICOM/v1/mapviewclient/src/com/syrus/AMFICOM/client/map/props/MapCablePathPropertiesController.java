@@ -9,6 +9,7 @@ package com.syrus.AMFICOM.Client.Map.Props;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.CableController;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 
@@ -81,6 +82,8 @@ public final class MapCablePathPropertiesController
 	{
 		Object result = null;
 		MapCablePathElement path = (MapCablePathElement )object;
+		
+		CableController cc = CableController.getInstance();
 
 		if (key.equals(PROPERTY_NAME))
 		{
@@ -122,17 +125,17 @@ public final class MapCablePathPropertiesController
 		else
 		if (key.equals(PROPERTY_COLOR))
 		{
-			result = path.getColor();
+			result = cc.getColor(path);
 		}
 		else
 		if (key.equals(PROPERTY_STYLE))
 		{
-			result = path.getStyle();
+			result = cc.getStyle(path);
 		}
 		else
 		if (key.equals(PROPERTY_THICKNESS))
 		{
-			result = String.valueOf(path.getLineSize());
+			result = String.valueOf(cc.getLineSize(path));
 		}
 
 		return result;

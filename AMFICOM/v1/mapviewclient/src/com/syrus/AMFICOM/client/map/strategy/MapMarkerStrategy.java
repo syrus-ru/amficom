@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkerStrategy.java,v 1.8 2004/11/10 16:00:54 krupenn Exp $
+ * $Id: MapMarkerStrategy.java,v 1.9 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/11/10 16:00:54 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/07 17:05:54 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -119,10 +119,10 @@ public final class MapMarkerStrategy implements  MapStrategy
 					//Рисование о пределение координат маркера происходит путм проецирования координат
 					//курсора на линию на которой маркер находится
 
-					Point anchorPoint = converter.convertMapToScreen(marker.getAnchor());
+					Point anchorPoint = converter.convertMapToScreen(marker.getLocation());
 					
-					Point start = converter.convertMapToScreen(sn.getAnchor());
-					Point end = converter.convertMapToScreen(en.getAnchor());
+					Point start = converter.convertMapToScreen(sn.getLocation());
+					Point end = converter.convertMapToScreen(en.getLocation());
 					
 					double lengthFromStartNode;
 					
@@ -144,8 +144,8 @@ public final class MapMarkerStrategy implements  MapStrategy
 							marker.setStartNode(sn);
 							marker.setEndNode(en);
 	
-							start = converter.convertMapToScreen(sn.getAnchor());
-							end = converter.convertMapToScreen(en.getAnchor());
+							start = converter.convertMapToScreen(sn.getLocation());
+							end = converter.convertMapToScreen(en.getLocation());
 							
 							md = new MotionDescriptor(start, end, anchorPoint, point);
 
@@ -172,8 +172,8 @@ public final class MapMarkerStrategy implements  MapStrategy
 							marker.setStartNode(sn);
 							marker.setEndNode(en);
 	
-							start = converter.convertMapToScreen(sn.getAnchor());
-							end = converter.convertMapToScreen(en.getAnchor());
+							start = converter.convertMapToScreen(sn.getLocation());
+							end = converter.convertMapToScreen(en.getLocation());
 
 							md = new MotionDescriptor(start, end, anchorPoint, point);
 

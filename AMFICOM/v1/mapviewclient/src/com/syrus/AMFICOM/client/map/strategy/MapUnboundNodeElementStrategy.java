@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundNodeElementStrategy.java,v 1.6 2004/10/20 12:38:40 krupenn Exp $
+ * $Id: MapUnboundNodeElementStrategy.java,v 1.7 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.Client.Resource.Map.SiteNodeController;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
 
@@ -36,7 +37,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/10/20 12:38:40 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/07 17:05:54 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -130,11 +131,13 @@ public final class MapUnboundNodeElementStrategy implements  MapStrategy
 				}//if (actionMode == MapState.MOVE_ACTION_MODE)
 
 				unbound.setCanBind(false);
+				
 				for(Iterator it = logicalNetLayer.getMapView().getMap().getMapSiteNodeElements().iterator(); it.hasNext();)
 				{
 					MapSiteNodeElement sit = (MapSiteNodeElement )it.next();
+					SiteNodeController snc = (SiteNodeController )logicalNetLayer.getMapViewController().getController(sit);
 					if(!(sit instanceof MapUnboundNodeElement))
-						if(sit.isMouseOnThisObject(point))
+						if(snc.isMouseOnElement(sit, point))
 						{
 							unbound.setCanBind(true);
 							break;
@@ -163,8 +166,9 @@ public final class MapUnboundNodeElementStrategy implements  MapStrategy
 						for(Iterator it = logicalNetLayer.getMapView().getMap().getMapSiteNodeElements().iterator(); it.hasNext();)
 						{
 							MapSiteNodeElement site = (MapSiteNodeElement )it.next();
+							SiteNodeController snc = (SiteNodeController )logicalNetLayer.getMapViewController().getController(site);
 							if(!(site instanceof MapUnboundNodeElement))
-								if(site.isMouseOnThisObject(point))
+								if(snc.isMouseOnElement(site, point))
 								{
 									command = new BindUnboundNodeToSiteCommandBundle(unbound, site);
 									((BindUnboundNodeToSiteCommandBundle)command).setLogicalNetLayer(logicalNetLayer);

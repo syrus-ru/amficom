@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.12 2004/11/16 17:31:17 krupenn Exp $
+ * $Id: MapFrame.java,v 1.13 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,6 +42,7 @@ import com.syrus.AMFICOM.Client.Map.MapConnection;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.Client.Map.NetMapViewer;
+import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 
@@ -70,7 +71,7 @@ import javax.swing.event.InternalFrameEvent;
  * 
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2004/11/16 17:31:17 $
+ * @version $Revision: 1.13 $, $Date: 2004/12/07 17:05:54 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -340,7 +341,7 @@ public class MapFrame extends JInternalFrame
 		else
 		if(ae.getActionCommand().equals(MapEvent.MAP_VIEW_CENTER_CHANGED))
 		{
-			Point2D.Double p = (Point2D.Double )ae.getSource();
+			DoublePoint p = (DoublePoint )ae.getSource();
 			mapToolBar.showLatLong(p.x, p.y);
 		}
 		else
@@ -452,7 +453,7 @@ public class MapFrame extends JInternalFrame
 		if(map.isChanged())
 		{
 			String message = "Объект " + map.getName() 
-				+ " [" + LangModel.getString("node" + Map.typ) + "] "
+				+ " [" + LangModelMap.getString("nodemap") + "] "
 				+ "изменен. Сохранить?";
 				
 			String title = "Сохранение объекта";

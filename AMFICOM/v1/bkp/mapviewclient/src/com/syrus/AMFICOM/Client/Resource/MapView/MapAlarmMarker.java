@@ -40,7 +40,7 @@ public class MapAlarmMarker extends MapMarker
 		super(id, mapView, len, path, meId);
 
 		this.setImageId(IMAGE_NAME);
-		this.name = LangModelMap.getString("Alarm");
+		this.setName(LangModelMap.getString("Alarm"));
 	}
 
 	public String getToolTipText()

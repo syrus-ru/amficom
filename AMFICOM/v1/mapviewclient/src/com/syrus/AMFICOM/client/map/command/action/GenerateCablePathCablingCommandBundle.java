@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateCablePathCablingCommandBundle.java,v 1.8 2004/10/27 15:46:24 krupenn Exp $
+ * $Id: GenerateCablePathCablingCommandBundle.java,v 1.9 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,7 +35,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/10/27 15:46:24 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/07 17:05:54 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -145,7 +145,7 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 			CreateSiteCommandAtomic command = 
 					new CreateSiteCommandAtomic(
 						proto, 
-						site.getAnchor());
+						site.getLocation());
 			command.setLogicalNetLayer(logicalNetLayer);
 			command.execute();
 			super.add(command);

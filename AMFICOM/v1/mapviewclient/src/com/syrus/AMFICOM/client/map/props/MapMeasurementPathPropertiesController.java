@@ -10,6 +10,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
+import com.syrus.AMFICOM.Client.Resource.MapView.MeasurementPathController;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 
 import java.util.ArrayList;
@@ -70,61 +71,70 @@ public final class MapMeasurementPathPropertiesController
 	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
-		MapMeasurementPathElement path = (MapMeasurementPathElement )object;
-
-		if (key.equals(PROPERTY_NAME))
+		try
 		{
-			result = path.getName();
+			MapMeasurementPathElement path = (MapMeasurementPathElement )object;
+			
+			MeasurementPathController mpc = MeasurementPathController.getInstance();
+	
+			if (key.equals(PROPERTY_NAME))
+			{
+				result = path.getName();
+			}
+			else
+			if (key.equals(PROPERTY_SCHEME_PATH_ID))
+			{
+				// remove .getName()
+				result = path.getSchemePath().getName();
+			}
+			else
+			if (key.equals(PROPERTY_TOPOLOGICAL_LENGTH))
+			{
+				result = MapPropertiesManager.getDistanceFormat().format(path.getLengthLt());
+			}
+			else
+			if (key.equals(PROPERTY_OPTICAL_LENGTH))
+			{
+				result = MapPropertiesManager.getDistanceFormat().format(path.getLengthLo());
+			}
+			else
+			if (key.equals(PROPERTY_PHYSICAL_LENGTH))
+			{
+				result = MapPropertiesManager.getDistanceFormat().format(path.getLengthLf());
+			}
+			else
+			if (key.equals(PROPERTY_START_NODE_ID))
+			{
+				//remove .getName()
+				result = path.getStartNode().getName();
+			}
+			else
+			if (key.equals(PROPERTY_END_NODE_ID))
+			{
+				// remove .getName()
+				result = path.getEndNode().getName();
+			}
+			else
+			if (key.equals(PROPERTY_COLOR))
+			{
+				result = mpc.getColor(path);
+			}
+			else
+			if (key.equals(PROPERTY_STYLE))
+			{
+				result = mpc.getStyle(path);
+			}
+			else
+			if (key.equals(PROPERTY_THICKNESS))
+			{
+				result = String.valueOf(mpc.getLineSize(path));
+			}
 		}
-		else
-		if (key.equals(PROPERTY_SCHEME_PATH_ID))
+		catch(Exception e)
 		{
-			// remove .getName()
-			result = path.getSchemePath().getName();
+			e.printStackTrace();
+			result = "";
 		}
-		else
-		if (key.equals(PROPERTY_TOPOLOGICAL_LENGTH))
-		{
-			result = MapPropertiesManager.getDistanceFormat().format(path.getLengthLt());
-		}
-		else
-		if (key.equals(PROPERTY_OPTICAL_LENGTH))
-		{
-			result = MapPropertiesManager.getDistanceFormat().format(path.getLengthLo());
-		}
-		else
-		if (key.equals(PROPERTY_PHYSICAL_LENGTH))
-		{
-			result = MapPropertiesManager.getDistanceFormat().format(path.getLengthLf());
-		}
-		else
-		if (key.equals(PROPERTY_START_NODE_ID))
-		{
-			//remove .getName()
-			result = path.getStartNode().getName();
-		}
-		else
-		if (key.equals(PROPERTY_END_NODE_ID))
-		{
-			// remove .getName()
-			result = path.getEndNode().getName();
-		}
-		else
-		if (key.equals(PROPERTY_COLOR))
-		{
-			result = path.getColor();
-		}
-		else
-		if (key.equals(PROPERTY_STYLE))
-		{
-			result = path.getStyle();
-		}
-		else
-		if (key.equals(PROPERTY_THICKNESS))
-		{
-			result = String.valueOf(path.getLineSize());
-		}
-
 		return result;
 	}
 

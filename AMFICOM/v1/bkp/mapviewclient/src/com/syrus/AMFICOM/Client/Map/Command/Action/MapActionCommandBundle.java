@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommandBundle.java,v 1.9 2004/10/26 13:32:01 krupenn Exp $
+ * $Id: MapActionCommandBundle.java,v 1.10 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,7 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 import com.syrus.AMFICOM.Client.General.Command.CommandBundle;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElementState;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
@@ -41,7 +42,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/10/26 13:32:01 $
+ * @version $Revision: 1.10 $, $Date: 2004/12/07 17:05:54 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -79,7 +80,7 @@ public class MapActionCommandBundle extends CommandBundle
 	/**
 	 * Создается сетевой узел
 	 */
-	protected MapSiteNodeElement createSite(Point2D.Double point,  MapNodeProtoElement proto)
+	protected MapSiteNodeElement createSite(DoublePoint point,  MapNodeProtoElement proto)
 	{
 		CreateSiteCommandAtomic cmd = new CreateSiteCommandAtomic(proto, point);
 		cmd.setLogicalNetLayer(logicalNetLayer);
@@ -91,7 +92,7 @@ public class MapActionCommandBundle extends CommandBundle
 	/**
 	 * Создается непривязанный элемент
 	 */
-	protected MapUnboundNodeElement createUnboundNode(Point2D.Double point, SchemeElement se)
+	protected MapUnboundNodeElement createUnboundNode(DoublePoint point, SchemeElement se)
 	{
 		CreateUnboundNodeCommandAtomic cmd = new CreateUnboundNodeCommandAtomic(se, point);
 		cmd.setLogicalNetLayer(logicalNetLayer);
@@ -103,7 +104,7 @@ public class MapActionCommandBundle extends CommandBundle
 	/**
 	 * Создается топологический конечный узел в неактивном состоянии
 	 */
-	protected MapPhysicalNodeElement createPhysicalNode(Point2D.Double point)
+	protected MapPhysicalNodeElement createPhysicalNode(DoublePoint point)
 	{
 		CreatePhysicalNodeCommandAtomic cmd = new CreatePhysicalNodeCommandAtomic(point);
 		cmd.setLogicalNetLayer(logicalNetLayer);

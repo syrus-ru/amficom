@@ -8,6 +8,7 @@ package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 
@@ -74,12 +75,12 @@ public final class MapPhysicalNodePropertiesController
 		else
 		if (key.equals(PROPERTY_LATITUDE))
 		{
-			result = MapPropertiesManager.getCoordinatesFormat().format(node.getAnchor().x);
+			result = MapPropertiesManager.getCoordinatesFormat().format(node.getLocation().x);
 		}
 		else
 		if (key.equals(PROPERTY_LONGITUDE))
 		{
-			result = MapPropertiesManager.getCoordinatesFormat().format(node.getAnchor().y);
+			result = MapPropertiesManager.getCoordinatesFormat().format(node.getLocation().y);
 		}
 		else
 		if (key.equals(PROPERTY_PHYSICAL_LINK_ID))
@@ -109,9 +110,9 @@ public final class MapPhysicalNodePropertiesController
 		{
 			try
 			{
-				Point2D.Double pt = node.getAnchor();
+				DoublePoint pt = node.getLocation();
 				pt.x = Double.parseDouble((String )value);
-				node.setAnchor(pt);
+				node.setLocation(pt);
 			}
 			catch(NumberFormatException e)
 			{
@@ -123,9 +124,9 @@ public final class MapPhysicalNodePropertiesController
 		{
 			try
 			{
-				Point2D.Double pt = node.getAnchor();
+				DoublePoint pt = node.getLocation();
 				pt.y = Double.parseDouble((String )value);
-				node.setAnchor(pt);
+				node.setLocation(pt);
 			}
 			catch(NumberFormatException e)
 			{

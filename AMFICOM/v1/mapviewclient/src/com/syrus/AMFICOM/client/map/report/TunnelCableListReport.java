@@ -6,6 +6,7 @@ import com.syrus.AMFICOM.Client.General.Report.DividableTableColumnModel;
 import com.syrus.AMFICOM.Client.General.Report.DividableTableModel;
 import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
 import com.syrus.AMFICOM.Client.General.Report.ReportData;
+import com.syrus.AMFICOM.Client.Resource.Map.IntPoint;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPipePathElement;
@@ -109,7 +110,7 @@ class TunnelCableListReportTableModel extends DividableTableModel
       // Имя колодца/узла      
       tableData[0][tdIterator] = cableLink.getName();
       // Информация о тоннеле - строка типа Тоннель тон.1, место N, L = xxx
-      Point binding = physicalLink.getBinding().getBinding(cableLink);
+      IntPoint binding = physicalLink.getBinding().getBinding(cableLink);
       tableData[1][tdIterator++] =
         Integer.toString(binding.x) + ":" + Integer.toString(binding.y);
     }

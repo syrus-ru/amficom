@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.5 2004/11/12 19:09:54 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.6 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,8 +13,10 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
+import com.syrus.AMFICOM.Client.Resource.Map.TopologicalNodeController;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
 import java.awt.geom.Point2D;
@@ -25,7 +27,7 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/11/12 19:09:54 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/07 17:05:54 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -36,9 +38,9 @@ public class CreatePhysicalNodeCommandAtomic extends MapActionCommand
 	MapPhysicalNodeElement node;
 	
 	/** географические координаты узла */
-	Point2D.Double point;
+	DoublePoint point;
 	
-	public CreatePhysicalNodeCommandAtomic(Point2D.Double point)
+	public CreatePhysicalNodeCommandAtomic(DoublePoint point)
 	{
 		super(MapActionCommand.ACTION_DRAW_NODE);
 		this.point = point;
@@ -58,20 +60,20 @@ public class CreatePhysicalNodeCommandAtomic extends MapActionCommand
 				"execute()");
 
 		DataSourceInterface dataSource = aContext.getDataSource();
-
+		
 		node = new MapPhysicalNodeElement(
 				dataSource.GetUId( MapPhysicalNodeElement.typ),
 				null,
 				point,
-				logicalNetLayer.getMapView().getMap(),
-				MapNodeElement.DEFAULT_BOUNDS);
+				logicalNetLayer.getMapView().getMap());
 
 		Pool.put(MapPhysicalNodeElement.typ, node.getId(), node);
 
+		TopologicalNodeController tnc = (TopologicalNodeController )getLogicalNetLayer().getMapViewController().getController(node);
+
 		// установить коэффициент для масштабирования изображения
 		// в соответствии с текущим масштабом отображения карты
-		node.setScaleCoefficient(
-				logicalNetLayer.getDefaultScale() / logicalNetLayer.getCurrentScale());
+		tnc.updateScaleCoefficient(node);
 
 		// по умолчанию топологиеский узел не активен
 		node.setActive(false);

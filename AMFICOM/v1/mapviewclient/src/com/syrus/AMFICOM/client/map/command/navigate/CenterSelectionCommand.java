@@ -1,5 +1,5 @@
 /**
- * $Id: CenterSelectionCommand.java,v 1.5 2004/12/01 10:55:32 krupenn Exp $
+ * $Id: CenterSelectionCommand.java,v 1.6 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,7 @@ package com.syrus.AMFICOM.Client.Map.Command.Navigate;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 
 import java.awt.geom.Point2D;
@@ -26,7 +27,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/12/01 10:55:32 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/07 17:05:54 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -62,14 +63,14 @@ public class CenterSelectionCommand extends VoidCommand
 		MapElement me;
 
 		int count = 0;
-		Point2D.Double point = new Point2D.Double(0.0, 0.0);
+		DoublePoint point = new DoublePoint(0.0, 0.0);
 
 		for(Iterator it = logicalNetLayer.getMapView().getMap().getNodes().iterator(); it.hasNext();)
 		{
 			me = (MapElement )it.next();
 			if(me.isSelected())
 			{
-				Point2D.Double an = me.getAnchor();
+				DoublePoint an = me.getLocation();
 				point.x += an.x;
 				point.y += an.y;
 				count ++;
@@ -81,7 +82,7 @@ public class CenterSelectionCommand extends VoidCommand
 			me = (MapElement )it.next();
 			if(me.isSelected())
 			{
-				Point2D.Double an = me.getAnchor();
+				DoublePoint an = me.getLocation();
 				point.x += an.x;
 				point.y += an.y;
 				count ++;
@@ -93,7 +94,7 @@ public class CenterSelectionCommand extends VoidCommand
 			me = (MapElement )it.next();
 			if(me.isSelected())
 			{
-				Point2D.Double an = me.getAnchor();
+				DoublePoint an = me.getLocation();
 				point.x += an.x;
 				point.y += an.y;
 				count ++;
@@ -105,7 +106,7 @@ public class CenterSelectionCommand extends VoidCommand
 			me = (MapElement )it.next();
 			if(me.isSelected())
 			{
-				Point2D.Double an = me.getAnchor();
+				DoublePoint an = me.getLocation();
 				point.x += an.x;
 				point.y += an.y;
 				count ++;
@@ -117,7 +118,7 @@ public class CenterSelectionCommand extends VoidCommand
 			me = (MapElement )it.next();
 			if(me.isSelected())
 			{
-				Point2D.Double an = me.getAnchor();
+				DoublePoint an = me.getLocation();
 				point.x += an.x;
 				point.y += an.y;
 				count ++;
@@ -129,7 +130,7 @@ public class CenterSelectionCommand extends VoidCommand
 			me = (MapElement )it.next();
 			if(me.isSelected())
 			{
-				Point2D.Double an = me.getAnchor();
+				DoublePoint an = me.getLocation();
 				point.x += an.x;
 				point.y += an.y;
 				count ++;

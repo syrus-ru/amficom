@@ -8,6 +8,7 @@ package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
@@ -83,12 +84,12 @@ public final class MapSiteNodePropertiesController
 		else
 		if (key.equals(PROPERTY_LATITUDE))
 		{
-			result = MapPropertiesManager.getCoordinatesFormat().format(site.getAnchor().x);
+			result = MapPropertiesManager.getCoordinatesFormat().format(site.getLocation().x);
 		}
 		else
 		if (key.equals(PROPERTY_LONGITUDE))
 		{
-			result = MapPropertiesManager.getCoordinatesFormat().format(site.getAnchor().y);
+			result = MapPropertiesManager.getCoordinatesFormat().format(site.getLocation().y);
 		}
 
 		return result;
@@ -121,9 +122,9 @@ public final class MapSiteNodePropertiesController
 		{
 			try
 			{
-				Point2D.Double pt = site.getAnchor();
+				DoublePoint pt = site.getLocation();
 				pt.x = Double.parseDouble((String )value);
-				site.setAnchor(pt);
+				site.setLocation(pt);
 			}
 			catch(NumberFormatException e)
 			{
@@ -135,9 +136,9 @@ public final class MapSiteNodePropertiesController
 		{
 			try
 			{
-				Point2D.Double pt = site.getAnchor();
+				DoublePoint pt = site.getLocation();
 				pt.y = Double.parseDouble((String )value);
-				site.setAnchor(pt);
+				site.setLocation(pt);
 			}
 			catch(NumberFormatException e)
 			{

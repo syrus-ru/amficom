@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkerCommandAtomic.java,v 1.4 2004/11/16 17:31:17 krupenn Exp $
+ * $Id: CreateMarkerCommandAtomic.java,v 1.5 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,9 +12,12 @@ package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
+import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
+import com.syrus.AMFICOM.Client.Resource.Map.NodeLinkController;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.Client.Resource.MapView.MarkerController;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
@@ -34,7 +37,7 @@ import java.util.List;
 /**
  * Команда создания метки на линии
  * 
- * @version $Revision: 1.4 $, $Date: 2004/11/16 17:31:17 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/07 17:05:54 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -86,8 +89,6 @@ public class CreateMarkerCommandAtomic extends MapActionCommand
 		
 		mapView = logicalNetLayer.getMapView();
 
-//		Point2D.Double coordinatePoint = logicalNetLayer.convertScreenToMap(point);
-		
 		MapNodeElement node = path.getStartNode();
 		path.sortPathElements();
 		List nodeLinks = path.getSortedNodeLinks();
@@ -95,9 +96,11 @@ public class CreateMarkerCommandAtomic extends MapActionCommand
 		{
 			MapNodeLinkElement mnle = (MapNodeLinkElement )it.next();
 				
-			if(mnle.isMouseOnThisObject(point))
+			NodeLinkController nlc = (NodeLinkController )getLogicalNetLayer().getMapViewController().getController(mnle);
+
+			if(nlc.isMouseOnElement(mnle, point))
 			{
-				Point2D.Double dpoint = logicalNetLayer.convertScreenToMap(point);
+				DoublePoint dpoint = logicalNetLayer.convertScreenToMap(point);
 
 				marker = new MapMarker(
 						aContext.getDataSource().GetUId(MapMarker.typ),
@@ -111,7 +114,9 @@ public class CreateMarkerCommandAtomic extends MapActionCommand
 				Pool.put(MapMarker.typ, marker.getId(), marker);
 				mapView.addMarker(marker);
 				
-				marker.setScaleCoefficient(logicalNetLayer.getDefaultScale() / logicalNetLayer.getCurrentScale());
+				MarkerController mc = (MarkerController )getLogicalNetLayer().getMapViewController().getController(marker);
+
+				mc.updateScaleCoefficient(marker);
 				
 				marker.notifyMarkerCreated();
 				
@@ -119,7 +124,7 @@ public class CreateMarkerCommandAtomic extends MapActionCommand
 			}
 			else
 			{
-				mnle.updateLengthLt();
+				nlc.updateLengthLt(mnle);
 			}
 
 			node = mnle.getOtherNode(node);

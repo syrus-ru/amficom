@@ -7,6 +7,7 @@ import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceListBox;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.Client.Resource.Map.DoublePoint;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
@@ -192,7 +193,7 @@ public class MapViewPanel extends JPanel implements ObjectResourcePropertiesPane
 				double x = Double.parseDouble(longTextField.getText());
 				double y = Double.parseDouble(longTextField.getText());
 				
-				view.setCenter(new Point2D.Double(x, y));
+				view.setCenter(new DoublePoint(x, y));
 
 				double s = Double.parseDouble(scaleTextField.getText());
 				

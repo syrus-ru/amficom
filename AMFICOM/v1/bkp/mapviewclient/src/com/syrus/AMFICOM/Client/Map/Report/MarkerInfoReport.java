@@ -6,6 +6,7 @@ import com.syrus.AMFICOM.Client.General.Report.DividableTableColumnModel;
 import com.syrus.AMFICOM.Client.General.Report.DividableTableModel;
 import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
 import com.syrus.AMFICOM.Client.General.Report.ReportData;
+import com.syrus.AMFICOM.Client.Resource.Map.IntPoint;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
@@ -131,14 +132,14 @@ class MarkerInfoReportTableModel extends DividableTableModel
       tableData[0][curCCI] = LangModelMap.getString("mapcollectorposit");
     }
     
-    Point binding = physicalLink.getBinding().getBinding(cableLink);
+    IntPoint binding = physicalLink.getBinding().getBinding(cableLink);
     tableData[1][curCCI++] =
       Integer.toString(binding.x) + ":" + Integer.toString(binding.y);
   
     tableData[0][curCCI] = LangModelMap.getString("geographicCoords");
     tableData[1][curCCI++] =
-      Double.toString(marker.getAnchor().x) + ":" +
-      Double.toString(marker.getAnchor().y);
+      Double.toString(marker.getLocation().x) + ":" +
+      Double.toString(marker.getLocation().y);
 	}
 
   private String getSiteFullName(Map map,String id)

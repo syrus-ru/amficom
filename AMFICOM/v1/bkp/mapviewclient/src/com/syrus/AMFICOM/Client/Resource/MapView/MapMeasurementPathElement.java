@@ -1,5 +1,5 @@
 /**
- * $Id: MapMeasurementPathElement.java,v 1.12 2004/11/02 17:01:24 krupenn Exp $
+ * $Id: MapMeasurementPathElement.java,v 1.13 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -54,7 +54,7 @@ import java.util.ListIterator;
  * 
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2004/11/02 17:01:24 $
+ * @version $Revision: 1.13 $, $Date: 2004/12/07 17:05:54 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -96,8 +96,8 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 	{
 		this.mapView = mapView;
 
-		this.id = id;
-		this.name = schemePath.getName();
+		this.setId(id);
+		this.setName(schemePath.getName());
 		if(mapView != null)
 		{
 			mapViewId = mapView.getId();
@@ -105,8 +105,8 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 			if(map != null)
 				mapId = map.getId();
 		}
-		startNode = stNode;
-		endNode = eNode;
+		setStartNode(stNode);
+		setEndNode(eNode);
 		attributes = new HashMap();
 		
 		setSchemePath(schemePath);
@@ -123,17 +123,26 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 	}
 
 	//этот класс используется для востановления данных из базы
+	/**
+	 * @deprecated
+	 */
 	public void setLocalFromTransferable()
 	{
 		throw new UnsupportedOperationException();
 	}
 
 	//этот класс используется для отпрвки данных в базу
+	/**
+	 * @deprecated
+	 */
 	public void setTransferableFromLocal()
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public String getTyp()
 	{
 		return typ;
@@ -160,6 +169,9 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 	}
 
 	//Используется для загрузкт данных из базы
+	/**
+	 * @deprecated
+	 */
 	public void updateLocalFromTransferable()
 	{
 		this.startNode = (MapNodeElement )
@@ -195,11 +207,17 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 		return schemePath;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public boolean isSelectionVisible()
 	{
 		return isSelected();
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public boolean isVisible(Rectangle2D.Double visibleBounds)
 	{
 		boolean vis = false;
@@ -215,6 +233,9 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 		return vis;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void paint(Graphics g, Rectangle2D.Double visibleBounds, Stroke stroke, Color color, boolean selectionVisible)
 	{
 		if(!isVisible(visibleBounds))
@@ -227,6 +248,9 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 		}
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public void paint(Graphics g, Rectangle2D.Double visibleBounds)
 	{
 		if(!isVisible(visibleBounds))
@@ -245,6 +269,9 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 		paint(g, visibleBounds, str, color, isSelectionVisible());
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public boolean isMouseOnThisObject(Point currentMousePoint)
 	{
 		for(Iterator it = getSortedCablePaths().iterator(); it.hasNext();)
@@ -256,6 +283,9 @@ public class MapMeasurementPathElement extends MapLinkElement implements Seriali
 		return false;
 	}
 	
+	/**
+	 * @deprecated
+	 */
 	public Object getTransferable()
 	{
 		return null;

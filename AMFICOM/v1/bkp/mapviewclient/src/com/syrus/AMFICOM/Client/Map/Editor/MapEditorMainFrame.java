@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.9 2004/11/16 17:31:17 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.10 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -98,7 +98,7 @@ import javax.swing.JViewport;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2004/11/16 17:31:17 $
+ * @version $Revision: 1.10 $, $Date: 2004/12/07 17:05:54 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -659,7 +659,7 @@ public class MapEditorMainFrame extends JFrame
 			if(cce.CONNECTION_CHANGING)
 			{
 				statusBar.setText(
-						StatusBarModel.field_status, 
+						StatusBarModel.FIELD_STATUS, 
 						LangModel.getString("statusConnecting"));
 			}
 //			if(cce.CONNECTION_CHANGED)
@@ -855,7 +855,8 @@ public class MapEditorMainFrame extends JFrame
 		}
 		if (e.getID() == WindowEvent.WINDOW_CLOSING)
 		{
-			getMapFrame().saveConfig();
+			if(getMapFrame() != null)
+				getMapFrame().saveConfig();
 			Command closeCommand = aContext.getApplicationModel().getCommand("menuExit");
 			this.setContext(null);
 			closeCommand.execute();

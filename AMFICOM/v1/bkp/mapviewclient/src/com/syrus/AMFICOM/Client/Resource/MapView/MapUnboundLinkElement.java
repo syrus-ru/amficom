@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundLinkElement.java,v 1.7 2004/10/19 11:48:28 krupenn Exp $
+ * $Id: MapUnboundLinkElement.java,v 1.8 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -29,7 +29,7 @@ import java.io.Serializable;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/10/19 11:48:28 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/07 17:05:54 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -58,6 +58,9 @@ public class MapUnboundLinkElement extends MapPhysicalLinkElement implements Ser
 		return PROPERTY_PANE_CLASS_NAME;
 	}
 
+	/**
+	 * @deprecated
+	 */
 	public boolean isSelectionVisible()
 	{
 		return isSelected() || cablePath.isSelectionVisible();
@@ -66,6 +69,7 @@ public class MapUnboundLinkElement extends MapPhysicalLinkElement implements Ser
 	/**
 	 * –исуем NodeLink взависимости от того выбрана она или нет
 	 * а так же если она выбрана выводим еЄ рамер
+	 * @deprecated
 	 */
 	public void paint(Graphics g, Rectangle2D.Double visibleBounds)
 	{

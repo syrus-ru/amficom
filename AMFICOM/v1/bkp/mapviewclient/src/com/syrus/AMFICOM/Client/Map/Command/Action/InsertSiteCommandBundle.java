@@ -1,5 +1,5 @@
 /**
- * $Id: InsertSiteCommandBundle.java,v 1.3 2004/11/01 15:40:10 krupenn Exp $
+ * $Id: InsertSiteCommandBundle.java,v 1.4 2004/12/07 17:05:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPipePathElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
+import com.syrus.AMFICOM.Client.Resource.Map.SiteNodeController;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
@@ -31,7 +32,7 @@ import java.util.Iterator;
 /**
  * вставить сетевой узел вместо топологического узла
  * 
- * @version $Revision: 1.3 $, $Date: 2004/11/01 15:40:10 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/07 17:05:54 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -92,12 +93,13 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle
 		
 		// создать новый узел
 		site = super.createSite(
-				node.getAnchor(),
+				node.getLocation(),
 				proto);
 		site.setName(node.getName());
-		site.setScaleCoefficient(
-				logicalNetLayer.getDefaultScale() 
-				/ logicalNetLayer.getCurrentScale());
+		
+		SiteNodeController snc = (SiteNodeController )getLogicalNetLayer().getMapViewController().getController(site);
+		
+		snc.updateScaleCoefficient(site);
 
 		// обновить концевые узлы фрагментов
 		for(Iterator it = node.getNodeLinks().iterator(); it.hasNext();)
