@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectPool.java,v 1.12 2005/01/26 15:17:25 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.13 2005/02/03 19:54:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/01/26 15:17:25 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/03 19:54:35 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -354,12 +354,12 @@ public abstract class StorableObjectPool {
 			for (Iterator it = objectQueueMap.keySet().iterator(); it.hasNext();) {
 				Short entityCode = (Short) it.next();
 				List objectQueue = (List) objectQueueMap.get(entityCode);
-				List storableObjects = loadStorableObjects(entityCode, objectQueue);
+				List storableObjects = this.loadStorableObjects(entityCode, objectQueue);
 				if (storableObjects != null) {
 					try {
 						for (Iterator iter = storableObjects.iterator(); iter.hasNext();) {
 							StorableObject storableObject = (StorableObject) iter.next();
-							putStorableObjectImpl(storableObject);
+							this.putStorableObjectImpl(storableObject);
 							list.add(storableObject);
 						}
 					}
