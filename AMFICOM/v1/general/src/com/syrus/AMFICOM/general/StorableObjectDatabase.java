@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.134 2005/04/01 06:34:57 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.135 2005/04/02 17:11:15 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.134 $, $Date: 2005/04/01 06:34:57 $
- * @author $Author: bob $
+ * @version $Revision: 1.135 $, $Date: 2005/04/02 17:11:15 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -685,7 +685,7 @@ public abstract class StorableObjectDatabase {
 					DatabaseIdentifier.setIdentifier(preparedStatement, 1, id);
 					DatabaseIdentifier.setIdentifier(preparedStatement, 2, linkedId);
 					Log.debugMessage(this.getEnityName() + "Database.insertLinkedEntityIds | Inserting linked entity  '"
-							+ linkedId + "' for " + id, Log.DEBUGLEVEL09);
+							+ linkedId + "' for '" + id + "'", Log.DEBUGLEVEL09);
 					preparedStatement.executeUpdate();
 				}
 			}
