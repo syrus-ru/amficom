@@ -3,6 +3,9 @@ package com.syrus.AMFICOM.Client.General.Report;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 
+import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
+import com.syrus.AMFICOM.Client.General.Filter.LogicScheme;
+
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.Pool;
@@ -11,11 +14,15 @@ import com.syrus.AMFICOM.CORBA.Report.FirmedTextPane_Transferable;
 import com.syrus.AMFICOM.CORBA.Report.ImagePane_Transferable;
 import com.syrus.AMFICOM.CORBA.Report.RenderingObject_Transferable;
 import com.syrus.AMFICOM.CORBA.Report.ReportTemplate_Transferable;
+import com.syrus.AMFICOM.CORBA.Resource.Filter_Transferable;
+
+import com.syrus.AMFICOM.filter.LogicSchemeBase;
 
 import java.io.Serializable;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.io.File;
 import java.io.IOException;
@@ -250,6 +257,7 @@ public class ReportTemplate extends ObjectResource implements Serializable
 		this.objectRenderers = new Vector();
 		this.labels = new Vector();
 		this.images = new Vector();
+		this.objectResourceFilters = new Vector();
 
 		for (int i = 0; i < this.transferable.renderingObjects.length; i++)
 		{
@@ -278,6 +286,29 @@ public class ReportTemplate extends ObjectResource implements Serializable
 			this.images.add(curImage);
 		}
 
+		//Перекачиваем фильтры
+		for (int i = 0; i < transferable.filters.length; i++)
+		{
+			Filter_Transferable ft = (Filter_Transferable)transferable.filters[i];
+
+			try
+			{
+				ObjectResourceFilter curFilter =
+					(ObjectResourceFilter) Class.forName(ft.resource_typ).newInstance();
+
+				ByteArrayInputStream bais = new ByteArrayInputStream(ft.logic_scheme);
+				ObjectInputStream ois = new ObjectInputStream(bais);
+				curFilter.logicScheme.readObject(ois);
+				ois.close();
+				bais.close();
+
+				this.objectResourceFilters.add(curFilter);
+			}
+			catch (Exception exc)
+			{
+				System.out.println("Error reading filter ReportModel object!!!");
+			}
+		}
 	}
 
 	public void setTransferableFromLocal()
@@ -291,12 +322,9 @@ public class ReportTemplate extends ObjectResource implements Serializable
 		this.transferable.template_type = this.templateType;
 		this.transferable.description = this.description;
 
-		int labelCount = this.labels.size();
-		int orCount = this.objectRenderers.size();
-		int imageCount = this.images.size();
-
-		transferable.renderingObjects = new RenderingObject_Transferable[orCount];
 		// Перекачиваем объекты
+		int orCount = this.objectRenderers.size();
+		transferable.renderingObjects = new RenderingObject_Transferable[orCount];
 		for (int i = 0; i < orCount; i++)
 		{
 			RenderingObject curRO = (RenderingObject) this.objectRenderers.get(i);
@@ -308,6 +336,7 @@ public class ReportTemplate extends ObjectResource implements Serializable
 				ObjectOutputStream oos = new ObjectOutputStream(baos);
 				oos.writeObject(curRO.getReportToRender());
 				oos.flush();
+				oos.close();
 				baos.flush();
 				baos.close();
 				reportBytes = baos.toByteArray();
@@ -328,8 +357,9 @@ public class ReportTemplate extends ObjectResource implements Serializable
 					curRO.getTableDivisionsNumber());
 		}
 
-		transferable.firmedTextPanes = new FirmedTextPane_Transferable[labelCount];
 		// Перекачиваем надписи
+		int labelCount = this.labels.size();
+		transferable.firmedTextPanes = new FirmedTextPane_Transferable[labelCount];
 		for (int i = 0; i < labelCount; i++)
 		{
 			FirmedTextPane curLabel = (FirmedTextPane) this.labels.get(i);
@@ -356,9 +386,9 @@ public class ReportTemplate extends ObjectResource implements Serializable
 					curLabel.distanceY);
 		}
 
-
-		transferable.imagePanes = new ImagePane_Transferable[imageCount];
 		// Перекачиваем рисунки
+		int imageCount = this.images.size();
+		transferable.imagePanes = new ImagePane_Transferable[imageCount];
 		for (int i = 0; i < imageCount; i++)
 		{
 			ImagePanel curImage = (ImagePanel) this.images.get(i);
@@ -383,8 +413,34 @@ public class ReportTemplate extends ObjectResource implements Serializable
 					imageData);
 		}
 
+		//Перекачиваем фильтры
+		int filterCount = this.objectResourceFilters.size();
+		transferable.filters = new Filter_Transferable[filterCount];
 
-		//Перекачиваем фильтры...
+		for (int i = 0; i < filterCount; i++)
+		{
+			ObjectResourceFilter curFilter = (ObjectResourceFilter) this.objectResourceFilters.get(i);
+
+			byte[] lsBytes = null;
+			try
+			{
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				ObjectOutputStream oos = new ObjectOutputStream(baos);
+				((LogicSchemeBase)(curFilter.logicScheme)).writeObject(oos);
+				oos.flush();
+				oos.close();
+				baos.flush();
+				baos.close();
+				lsBytes = baos.toByteArray();
+			}
+			catch(Exception ex)
+			{
+				ex.printStackTrace();
+			}
+
+			transferable.filters[i] =
+				new Filter_Transferable(curFilter.getId(),curFilter.resource_typ,lsBytes);
+		}
 	}
 
 	public void updateLocalFromTransferable()
@@ -404,6 +460,7 @@ public class ReportTemplate extends ObjectResource implements Serializable
 		int labelCount = this.labels.size();
 		int orCount = this.objectRenderers.size();
 		int imagesCount = this.images.size();
+		int filtersCount = this.objectResourceFilters.size();
 		//Иициализируем массивы из transferable
 		//для объектов
 
@@ -468,6 +525,17 @@ public class ReportTemplate extends ObjectResource implements Serializable
 			out.writeInt(curImage.getHeight());
 
 			out.writeObject(curImage.fileName);
+		}
+
+		// Перекачиваем фильтры
+		out.writeInt(filtersCount);
+		for (int i = 0; i < filtersCount; i++)
+		{
+			ObjectResourceFilter curFilter =
+				(ObjectResourceFilter) this.objectResourceFilters.get(i);
+
+			out.writeObject(curFilter.resource_typ);
+			out.writeObject(curFilter.logicScheme);
 		}
 	}
 
@@ -579,6 +647,25 @@ public class ReportTemplate extends ObjectResource implements Serializable
 			this.images.add(curImage);
 		}
 
+		// Перекачиваем фильтры
+		int filtersCount = in.readInt();
+		for (int i = 0; i < filtersCount; i++)
+		{
+			String resource_typ = (String) in.readObject();
+			try
+			{
+				ObjectResourceFilter curFilter =
+					(ObjectResourceFilter) Class.forName(resource_typ).newInstance();
+
+				curFilter.logicScheme.readObject(in);
+
+				this.objectResourceFilters.add(curFilter);
+			}
+			catch (Exception exc)
+			{
+				System.out.println("Error reading ReportModel object!!!");
+			}
+		}
 	}
 
 	/**

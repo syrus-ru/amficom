@@ -17,9 +17,9 @@ import com.syrus.AMFICOM.Client.Resource.Alarm.*;
 import com.syrus.AMFICOM.Client.General.*;
 import com.syrus.AMFICOM.Client.General.Filter.*;
 
-public class RISDSurveyDataSource 
+public class RISDSurveyDataSource
 		extends RISDResultDataSource
-		implements DataSourceInterface 
+		implements DataSourceInterface
 {
 	protected RISDSurveyDataSource()
 	{
@@ -83,33 +83,33 @@ public class RISDSurveyDataSource
 		count = alarms.length;
 		if(count != 0)
 			System.out.println("...Done! " + count + " alarm(s) fetched");
-	    for (i = 0; i < count; i++)
+		 for (i = 0; i < count; i++)
 		{
 			alarm = new Alarm(alarms[i]);
 			Pool.put("alarm", alarm.getId(), alarm);
 //			Pool.putName("alarm", alarm.getId(), alarm.getName());
-	    }
+		 }
 
 		events = eh.value;
 		count = events.length;
 		if(count != 0)
 			System.out.println("...Done! " + count + " event(s) fetched");
-	    for (i = 0; i < count; i++)
+		 for (i = 0; i < count; i++)
 		{
 			event = new SystemEvent(events[i]);
 			Pool.put("event", event.getId(), event);
 //			Pool.putName("event", event.getId(), event.getName());
-	    }
+		 }
 
 		eventsources = esh.value;
 		count = eventsources.length;
 //		System.out.println("...Done! " + count + " eventsource(s) fetched");
-	    for (i = 0; i < count; i++)
+		 for (i = 0; i < count; i++)
 		{
 			eventsource = new EventSource(eventsources[i]);
 			Pool.put("eventsource", eventsource.getId(), eventsource);
 //			Pool.putName("eventsource", eventsource.getId(), eventsource.getName());
-	    }
+		 }
 	}
 
 	public void GetAlarms(String[] ids)
@@ -153,34 +153,34 @@ public class RISDSurveyDataSource
 		count = alarms.length;
 		if(count != 0)
 			System.out.println("...Done! " + count + " alarm(s) fetched");
-	    for (i = 0; i < count; i++)
+		 for (i = 0; i < count; i++)
 		{
 			alarm = new Alarm(alarms[i]);
 			Pool.put("alarm", alarm.getId(), alarm);
 //			Pool.putName("alarm", alarm.getId(), alarm.getName());
-	    }
+		 }
 
 		events = eh.value;
 		count = events.length;
 		if(count != 0)
 			System.out.println("...Done! " + count + " event(s) fetched");
-	    for (i = 0; i < count; i++)
+		 for (i = 0; i < count; i++)
 		{
 			event = new SystemEvent(events[i]);
 			Pool.put("event", event.getId(), event);
 //			Pool.putName("event", event.getId(), event.getName());
-	    }
+		 }
 
 		eventsources = esh.value;
 		count = eventsources.length;
 		if(count != 0)
 			System.out.println("...Done! " + count + " eventsource(s) fetched");
-	    for (i = 0; i < count; i++)
+		 for (i = 0; i < count; i++)
 		{
 			eventsource = new EventSource(eventsources[i]);
 			Pool.put("eventsource", eventsource.getId(), eventsource);
 //			Pool.putName("eventsource", eventsource.getId(), eventsource.getName());
-	    }
+		 }
 	}
 
 	public void GetAlarms(String[] ids, String filter_id)
@@ -195,7 +195,7 @@ public class RISDSurveyDataSource
 			GetAlarms(ids);
 			return;
 		}
-	
+
 		ObjectResourceFilter orfilter = (ObjectResourceFilter )Pool.get("filter", filter_id);
 		if(orfilter == null)
 		{
@@ -208,7 +208,7 @@ public class RISDSurveyDataSource
 		{
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 			ObjectOutputStream oos = new ObjectOutputStream(baos);
-			orfilter.writeObject(oos);
+			orfilter.logicScheme.writeObject(oos);
 			oos.flush();
 			logic_scheme = baos.toByteArray();
 		}
@@ -217,24 +217,24 @@ public class RISDSurveyDataSource
 			e.printStackTrace();
 		}
 		Filter_Transferable filter = new Filter_Transferable();
-		filter.resource_typ = "alarm";
+		filter.resource_typ = orfilter.resource_typ;
 		filter.logic_scheme = logic_scheme;
 		filter.id = "";
 
 //test
 /*
-            com.syrus.AMFICOM.filter.LogicScheme_yo ls = new com.syrus.AMFICOM.filter.LogicScheme_yo(new com.syrus.AMFICOM.server.AlarmFilter());
+				com.syrus.AMFICOM.filter.LogicScheme_yo ls = new com.syrus.AMFICOM.filter.LogicScheme_yo(new com.syrus.AMFICOM.server.AlarmFilter());
 
-            try
-            {
-		        ByteArrayInputStream bis = new ByteArrayInputStream(logic_scheme);
-    		    ObjectInputStream in = new ObjectInputStream(bis);
-        	    ls.readObject(in);
-            }
-            catch(Exception ex)
-            {
-            	System.out.println("cannot read logic");
-            }
+				try
+				{
+				  ByteArrayInputStream bis = new ByteArrayInputStream(logic_scheme);
+				 ObjectInputStream in = new ObjectInputStream(bis);
+				 ls.readObject(in);
+				}
+				catch(Exception ex)
+				{
+					System.out.println("cannot read logic");
+				}
 */
 /// test finish
 
@@ -272,34 +272,34 @@ public class RISDSurveyDataSource
 		count = alarms.length;
 		if(count != 0)
 			System.out.println("...Done! " + count + " alarm(s) fetched");
-	    for (i = 0; i < count; i++)
+		 for (i = 0; i < count; i++)
 		{
 			alarm = new Alarm(alarms[i]);
 			Pool.put("alarm", alarm.getId(), alarm);
 //			Pool.putName("alarm", alarm.getId(), alarm.getName());
-	    }
+		 }
 
 		events = eh.value;
 		count = events.length;
 		if(count != 0)
 			System.out.println("...Done! " + count + " event(s) fetched");
-	    for (i = 0; i < count; i++)
+		 for (i = 0; i < count; i++)
 		{
 			event = new SystemEvent(events[i]);
 			Pool.put("event", event.getId(), event);
 //			Pool.putName("event", event.getId(), event.getName());
-	    }
+		 }
 
 		eventsources = esh.value;
 		count = eventsources.length;
 		if(count != 0)
 			System.out.println("...Done! " + count + " eventsource(s) fetched");
-	    for (i = 0; i < count; i++)
+		 for (i = 0; i < count; i++)
 		{
 			eventsource = new EventSource(eventsources[i]);
 			Pool.put("eventsource", eventsource.getId(), eventsource);
 //			Pool.putName("eventsource", eventsource.getId(), eventsource.getName());
-	    }
+		 }
 	}
 
 	public void SetAlarm(String alarm_id)

@@ -12,7 +12,8 @@ import com.syrus.AMFICOM.filter.*;
 
 public abstract class ObjectResourceFilter implements Filter
 {
-	public LogicScheme logicScheme = new LogicScheme(this);
+	public LogicScheme logicScheme = null;
+	public String resource_typ = "";
 //	public Vector criteria = new Vector();
 
 	String id = "";
@@ -22,6 +23,7 @@ public abstract class ObjectResourceFilter implements Filter
 	public ObjectResourceFilter()
 	{
 		id = "filter" + System.currentTimeMillis();
+		this.logicScheme = new LogicScheme(this);
 	}
 
 	public ObjectResourceFilter(LogicScheme ls)
@@ -117,17 +119,5 @@ public abstract class ObjectResourceFilter implements Filter
 */
 		}
 		return ds;
-	}
-
-	public void writeObject(java.io.ObjectOutputStream out)
-		throws IOException
-	{
-		logicScheme.writeObject(out);
-	}
-
-	void readObject(java.io.ObjectInputStream in)
-			throws IOException, ClassNotFoundException
-	{
-//		logicScheme = new LogicScheme(this);
 	}
 }

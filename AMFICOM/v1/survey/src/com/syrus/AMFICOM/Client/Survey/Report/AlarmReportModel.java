@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.Client.Survey.Report;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
+
 import com.syrus.AMFICOM.Client.General.Report.ReportTemplate;
 import com.syrus.AMFICOM.Client.General.Report.ObjectsReport;
 import com.syrus.AMFICOM.Client.General.Report.ObjectResourceReportModel;
@@ -12,6 +13,7 @@ import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.SurveyDataSourceImage;
 
 import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
+import com.syrus.AMFICOM.Client.General.Filter.LogicScheme;
 import com.syrus.AMFICOM.Client.Survey.Alarm.Filter.AlarmFilter;
 
 import javax.swing.JPanel;
@@ -43,7 +45,7 @@ public class AlarmReportModel extends ObjectResourceReportModel
 */
 	public String getObjectsName()
 	{
-		return LangModelSurvey.String("label_alarm");
+		return LangModelSurvey.getString("Report_by_alarm_signals");
 	}
 
 	/**
@@ -86,18 +88,18 @@ public class AlarmReportModel extends ObjectResourceReportModel
 	{
 		Vector result = new Vector();
 
-		result.add(LangModelSurvey.String("alarm_Source"));
-		result.add(LangModelSurvey.String("alarm_Monitoredelement"));
-		result.add(LangModelSurvey.String("alarm_Type"));
-		result.add(LangModelSurvey.String("alarm_Status"));
-		result.add(LangModelSurvey.String("alarm_Time"));
+		result.add(LangModelSurvey.getString("Event_source"));
+		result.add(LangModelSurvey.getString("Monitored_element"));
+		result.add(LangModelSurvey.getString("Event_type"));
+		result.add(LangModelSurvey.getString("Status"));
+		result.add(LangModelSurvey.getString("Event_occurence_time"));
 
-		result.add(LangModelSurvey.String("alarm_Assigned"));
-		result.add(LangModelSurvey.String("alarm_Fixed_when"));
-		result.add(LangModelSurvey.String("alarm_Assigned_to"));
-		result.add(LangModelSurvey.String("alarm_Fixed_by"));
+		result.add(LangModelSurvey.getString("Execution_start"));
+		result.add(LangModelSurvey.getString("Execution_finish"));
+		result.add(LangModelSurvey.getString("Chief_executor"));
+		result.add(LangModelSurvey.getString("Executor"));
 
-		result.add(LangModelSurvey.String("alarm_Comments"));
+		result.add(LangModelSurvey.getString("Comments"));
 
 		return result;
 	}
@@ -222,11 +224,13 @@ public class AlarmReportModel extends ObjectResourceReportModel
 		{
 			ObjectResourceFilter curORF = (ObjectResourceFilter) filters.get(i);
 			if (curORF instanceof AlarmFilter)
+			{
+				loadRequiredObjects(dsi,null,rt);
 				return curORF;
+			}
 		}
 
 		AlarmFilter af = new AlarmFilter();
-
 		loadRequiredObjects(dsi,null,rt);
 
 		rt.objectResourceFilters.add(af);

@@ -59,9 +59,9 @@ public class ReportBuilder
 
 //		aContext.getDispatcher().notify(new OperationEvent("",0,ReportBuilder.ev_startProgressBar));
 
-		ReportBuilder.invokeAsynchronously(new Runnable() {
+/*		ReportBuilder.invokeAsynchronously(new Runnable() {
 			public void run()
-			{
+			{*/
 				System.out.println(new Date(System.currentTimeMillis()).toString() +
 										 " " + "Getting data from server...");
 
@@ -77,9 +77,9 @@ public class ReportBuilder
 										 " " + "...done!");
 
 				aContext.getDispatcher().notify(new OperationEvent("",0,ReportBuilder.ev_stopProgressBar));
-			}
+/*			}
 		},
-		"Идёт загрузка. Пожалуйста, подождите.");
+		"Идёт загрузка. Пожалуйста, подождите.");*/
 	}
 
 	/**

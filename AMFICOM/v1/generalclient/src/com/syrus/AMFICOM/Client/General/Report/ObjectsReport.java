@@ -125,6 +125,7 @@ public class ObjectsReport extends ObjectResource
 
 		out.writeObject(this.field);
 		out.writeObject(this.view_type);
+		out.writeBoolean(this.isToBeFilledImmediately);
 
 		out.writeObject(this.reserve);
 	}
@@ -144,6 +145,8 @@ public class ObjectsReport extends ObjectResource
 
 		this.field = (String) in.readObject();
 		this.view_type = (String) in.readObject();
+		this.isToBeFilledImmediately = in.readBoolean();
+
 		this.reserve = in.readObject();
 	}
 }
