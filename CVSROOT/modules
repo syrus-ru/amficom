@@ -85,6 +85,8 @@ survey_v1	AMFICOM/v1/survey
 analysis_v1	AMFICOM/v1/analysis
 #M	modeling_v1	Modeling module
 modeling_v1	AMFICOM/v1/modeling
+#M	measurement_v1	Measurement module
+measurement_v1	AMFICOM/v1/measurement
 #M	prediction_v1	Prediction module
 prediction_v1	AMFICOM/v1/prediction
 #M	scheme_v1	Scheme module
