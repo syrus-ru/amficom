@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralStorableObjectPool.java,v 1.7 2005/02/11 16:09:06 bob Exp $
+ * $Id: GeneralStorableObjectPool.java,v 1.8 2005/02/11 18:40:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import java.util.Set;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/11 16:09:06 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/02/11 18:40:16 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -138,68 +138,68 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 	}
 
 	protected Collection loadStorableObjects(Short entityCode, Collection ids) throws DatabaseException, CommunicationException {
-		Collection loadedCollection = null;
+		Collection loadedObjects = null;
 		switch (entityCode.shortValue()) {
 			case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-				loadedCollection = gObjectLoader.loadParameterTypes(ids);
+				loadedObjects = gObjectLoader.loadParameterTypes(ids);
 				break;
 			case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
-				loadedCollection = gObjectLoader.loadCharacteristicTypes(ids);
+				loadedObjects = gObjectLoader.loadCharacteristicTypes(ids);
 				break;
 			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-				loadedCollection = gObjectLoader.loadCharacteristics(ids);
+				loadedObjects = gObjectLoader.loadCharacteristics(ids);
 				break;
 			default:
 				Log.errorMessage("GeneralStorableObjectPool.loadStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode.shortValue()) + "', entity code: " + entityCode);
-				loadedCollection = null;
+				loadedObjects = null;
 		}
-		return loadedCollection;
+		return loadedObjects;
 	}
 
 	protected Collection loadStorableObjectsButIds(StorableObjectCondition condition, Collection ids)
 			throws DatabaseException, CommunicationException {
-		Collection loadedCollection = null;
+		Collection loadedObjects = null;
 		short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
 			case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-				loadedCollection = gObjectLoader.loadParameterTypesButIds(condition, ids);
+				loadedObjects = gObjectLoader.loadParameterTypesButIds(condition, ids);
 				break;
 			case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
-				loadedCollection = gObjectLoader.loadCharacteristicTypesButIds(condition, ids);
+				loadedObjects = gObjectLoader.loadCharacteristicTypesButIds(condition, ids);
 				break;
 			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-				loadedCollection = gObjectLoader.loadCharacteristicsButIds(condition, ids);
+				loadedObjects = gObjectLoader.loadCharacteristicsButIds(condition, ids);
 				break;
 			default:				
 				Log.errorMessage("GeneralStorableObjectPool.loadStorableObjectsButIds | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
-				loadedCollection = null;
+				loadedObjects = null;
 		}
-		return loadedCollection;
+		return loadedObjects;
 	}
 
 	//public static void save()
 
-	protected void saveStorableObjects(short code, Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException {
-		if (!list.isEmpty()) {
-			boolean alone = (list.size() == 1);
+	protected void saveStorableObjects(short code, Collection objects, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException {
+		if (!objects.isEmpty()) {
+			boolean alone = (objects.size() == 1);
 			switch (code) {
 				case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
 					if (alone)
-						gObjectLoader.saveParameterType((ParameterType)list.iterator().next(), force);
+						gObjectLoader.saveParameterType((ParameterType)objects.iterator().next(), force);
 					else 
-						gObjectLoader.saveParameterTypes(list, force);
+						gObjectLoader.saveParameterTypes(objects, force);
 					break;
 				case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
 					if (alone)
-						gObjectLoader.saveCharacteristicType((CharacteristicType) list.iterator().next(), force);
+						gObjectLoader.saveCharacteristicType((CharacteristicType) objects.iterator().next(), force);
 					else
-						gObjectLoader.saveCharacteristicTypes(list, force);
+						gObjectLoader.saveCharacteristicTypes(objects, force);
 					break;
 				case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
 					if (alone)
-						gObjectLoader.saveCharacteristic((Characteristic) list.iterator().next(), force);
+						gObjectLoader.saveCharacteristic((Characteristic) objects.iterator().next(), force);
 					else
-						gObjectLoader.saveCharacteristics(list, force);
+						gObjectLoader.saveCharacteristics(objects, force);
 					break;
 				default:
 					Log.errorMessage("GeneralStorableObjectPool.saveStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(code) + "', entity code: " + code);

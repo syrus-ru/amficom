@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationStorableObjectPool.java,v 1.6 2005/02/11 16:30:14 arseniy Exp $
+ * $Id: AdministrationStorableObjectPool.java,v 1.7 2005/02/11 18:40:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.administration;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -28,7 +27,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/11 16:30:14 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/11 18:40:09 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -160,55 +159,55 @@ public final class AdministrationStorableObjectPool extends StorableObjectPool {
 	}
 
 	protected Collection loadStorableObjects(Short entityCode, Collection ids) throws DatabaseException, CommunicationException {
-		List loadedList = null;
+		Collection loadedObjects = null;
 		switch (entityCode.shortValue()) {
 			case ObjectEntities.USER_ENTITY_CODE:
-				loadedList = aObjectLoader.loadUsers(ids);
+				loadedObjects = aObjectLoader.loadUsers(ids);
 				break;
 			case ObjectEntities.DOMAIN_ENTITY_CODE:
-				loadedList = aObjectLoader.loadDomains(ids);
+				loadedObjects = aObjectLoader.loadDomains(ids);
 				break;
 			case ObjectEntities.SERVER_ENTITY_CODE:
-				loadedList = aObjectLoader.loadServers(ids);
+				loadedObjects = aObjectLoader.loadServers(ids);
 				break;
 			case ObjectEntities.MCM_ENTITY_CODE:
-				loadedList = aObjectLoader.loadMCMs(ids);
+				loadedObjects = aObjectLoader.loadMCMs(ids);
 				break;
 //			case ObjectEntities.PERMATTR_ENTITY_CODE:
 //				loadedList = aObjectLoader.loadPermissionAttributes(ids);
 //				break;
 			default:
 				Log.errorMessage("ConfigurationStorableObjectPool.loadStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode.shortValue()) + "', entity code: " + entityCode);
-				loadedList = null;
+				loadedObjects = null;
 		}
-		return loadedList;
+		return loadedObjects;
 	}
 
 	protected Collection loadStorableObjectsButIds(StorableObjectCondition condition, Collection ids)
 			throws DatabaseException, CommunicationException {
-		List loadedList = null;
+		Collection loadedObjects = null;
 		short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
 			case ObjectEntities.USER_ENTITY_CODE:
-				loadedList = aObjectLoader.loadUsersButIds(condition, ids);
+				loadedObjects = aObjectLoader.loadUsersButIds(condition, ids);
 				break;
 			case ObjectEntities.DOMAIN_ENTITY_CODE:
-				loadedList = aObjectLoader.loadDomainsButIds(condition, ids);
+				loadedObjects = aObjectLoader.loadDomainsButIds(condition, ids);
 				break;
 			case ObjectEntities.SERVER_ENTITY_CODE:
-				loadedList = aObjectLoader.loadServersButIds(condition, ids);
+				loadedObjects = aObjectLoader.loadServersButIds(condition, ids);
 				break;
 			case ObjectEntities.MCM_ENTITY_CODE:
-				loadedList = aObjectLoader.loadMCMsButIds(condition, ids);
+				loadedObjects = aObjectLoader.loadMCMsButIds(condition, ids);
 				break;
 //			case ObjectEntities.PERMATTR_ENTITY_CODE:
 //				loadedList = aObjectLoader.loadPermissionAttributessButIds(condition, ids);
 //				break;
 			default:				
 				Log.errorMessage("ConfigurationStorableObjectPool.loadStorableObjectsButIds | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
-				loadedList = null;
+				loadedObjects = null;
 		}
-		return loadedList;
+		return loadedObjects;
 	}
 
 	//public static void save()

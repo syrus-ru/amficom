@@ -1,5 +1,5 @@
 /*
- * $Id: EventStorableObjectPool.java,v 1.6 2005/02/08 20:31:06 arseniy Exp $
+ * $Id: EventStorableObjectPool.java,v 1.7 2005/02/11 18:42:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.event;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.List;
@@ -26,7 +27,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/08 20:31:06 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/11 18:42:17 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -118,15 +119,15 @@ public class EventStorableObjectPool extends StorableObjectPool {
 		return instance.getStorableObjectImpl(objectId, useLoader);
 	}
 
-	public static List getStorableObjects(List objectIds, boolean useLoader) throws DatabaseException, CommunicationException {
+	public static Collection getStorableObjects(Collection objectIds, boolean useLoader) throws DatabaseException, CommunicationException {
 		return instance.getStorableObjectsImpl(objectIds, useLoader);
 	}
 
-	public static List getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
+	public static Collection getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectsByConditionImpl(condition, useLoader);
 	}
 
-	public static List getStorableObjectsByConditionButIds(List ids, StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
+	public static Collection getStorableObjectsByConditionButIds(Collection ids, StorableObjectCondition condition, boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
 	}
 
@@ -155,8 +156,8 @@ public class EventStorableObjectPool extends StorableObjectPool {
 		return storableObject;
 	}
 
-	protected List loadStorableObjects(Short entityCode, List ids) throws DatabaseException, CommunicationException {
-		List storableObjects;
+	protected Collection loadStorableObjects(Short entityCode, Collection ids) throws DatabaseException, CommunicationException {
+		Collection storableObjects;
 		switch (entityCode.shortValue()) {
 			case ObjectEntities.EVENTTYPE_ENTITY_CODE:
 				storableObjects = eObjectLoader.loadEventTypes(ids);
@@ -180,66 +181,66 @@ public class EventStorableObjectPool extends StorableObjectPool {
 		return storableObjects;
 	}
 
-	protected List loadStorableObjectsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
-		List loadedList = null;
+	protected Collection loadStorableObjectsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
+		Collection loadedObjects = null;
 		short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
 			case ObjectEntities.EVENTTYPE_ENTITY_CODE:
-				loadedList = eObjectLoader.loadEventTypesButIds(condition, ids);
+				loadedObjects = eObjectLoader.loadEventTypesButIds(condition, ids);
 				break;
 //			case ObjectEntities.ALARMTYPE_ENTITY_CODE:
-//				loadedList = eObjectLoader.loadAlarmTypesButIds(condition, ids);
+//				loadedObjects = eObjectLoader.loadAlarmTypesButIds(condition, ids);
 //				break;
 			case ObjectEntities.EVENT_ENTITY_CODE:
-				loadedList = eObjectLoader.loadEventsButIds(condition, ids);
+				loadedObjects = eObjectLoader.loadEventsButIds(condition, ids);
 				break;
 			case ObjectEntities.EVENTSOURCE_ENTITY_CODE:
-				loadedList = eObjectLoader.loadEventSourcesButIds(condition, ids);
+				loadedObjects = eObjectLoader.loadEventSourcesButIds(condition, ids);
 				break;
 //			case ObjectEntities.ALARM_ENTITY_CODE:
-//				loadedList = eObjectLoader.loadAlarmsButIds(condition, ids);
+//				loadedObjects = eObjectLoader.loadAlarmsButIds(condition, ids);
 //				break;
 			default:
 				Log.errorMessage("EventStorableObjectPool.loadStorableObjectsButIds | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
-				loadedList = null;
+				loadedObjects = null;
 		}
-		return loadedList;
+		return loadedObjects;
 	}
 
-	protected void saveStorableObjects(short code, List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException {
-		if (!list.isEmpty()) {
-			boolean alone = (list.size() == 1);
+	protected void saveStorableObjects(short code, Collection storableObjects, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException {
+		if (!storableObjects.isEmpty()) {
+			boolean alone = (storableObjects.size() == 1);
 
 			switch (code) {
 				case ObjectEntities.EVENTTYPE_ENTITY_CODE:
 					if (alone)
-						eObjectLoader.saveEventType((EventType)list.get(0), force);
+						eObjectLoader.saveEventType((EventType)storableObjects.iterator().next(), force);
 					else 
-						eObjectLoader.saveEventTypes(list, force);
+						eObjectLoader.saveEventTypes(storableObjects, force);
 					break;
 //				case ObjectEntities.ALARMTYPE_ENTITY_CODE:
 //					if (alone)
-//						eObjectLoader.saveAlarmType((AlarmType)list.get(0), force);
+//						eObjectLoader.saveAlarmType((AlarmType)storableObjects.iterator().next(), force);
 //					else 
-//						eObjectLoader.saveAlarmTypes(list, force);
+//						eObjectLoader.saveAlarmTypes(storableObjects, force);
 //					break;
 				case ObjectEntities.EVENT_ENTITY_CODE:
 					if (alone)
-						eObjectLoader.saveEvent((Event)list.get(0), force);
+						eObjectLoader.saveEvent((Event)storableObjects.iterator().next(), force);
 					else 
-						eObjectLoader.saveEvents(list, force);
+						eObjectLoader.saveEvents(storableObjects, force);
 					break;
 				case ObjectEntities.EVENTSOURCE_ENTITY_CODE:
 					if (alone)
-						eObjectLoader.saveEventSource((EventSource)list.get(0), force);
+						eObjectLoader.saveEventSource((EventSource)storableObjects.iterator().next(), force);
 					else 
-						eObjectLoader.saveEventSources(list, force);
+						eObjectLoader.saveEventSources(storableObjects, force);
 					break;
 //				case ObjectEntities.ALARM_ENTITY_CODE:
 //					if (alone)
-//						eObjectLoader.saveAlarm((Alarm)list.get(0), force);
+//						eObjectLoader.saveAlarm((Alarm)storableObjects.iterator().next(), force);
 //					else 
-//						eObjectLoader.saveAlarms(list, force);
+//						eObjectLoader.saveAlarms(storableObjects, force);
 //					break;
 				default:
 					Log.errorMessage("EventStorableObjectPool.saveStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(code) + "', entity code: " + code);
@@ -268,7 +269,7 @@ public class EventStorableObjectPool extends StorableObjectPool {
 		instance.deleteImpl(id);
 	}
 
-	public static void delete(List objects) throws DatabaseException, CommunicationException, IllegalDataException {
+	public static void delete(Collection objects) throws DatabaseException, CommunicationException, IllegalDataException {
 		instance.deleteImpl(objects);
 	}
 
@@ -286,7 +287,7 @@ public class EventStorableObjectPool extends StorableObjectPool {
 		}
 	}
 
-	protected void deleteStorableObjects(List objects) throws DatabaseException, CommunicationException, IllegalDataException {
+	protected void deleteStorableObjects(Collection objects) throws DatabaseException, CommunicationException, IllegalDataException {
 		try {
 			eObjectLoader.delete(objects);
 		}

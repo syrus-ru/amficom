@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.10 2005/02/11 15:35:32 arseniy Exp $
+ * $Id: ServerDatabase.java,v 1.11 2005/02/11 18:40:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/02/11 15:35:32 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/11 18:40:09 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -253,25 +253,25 @@ public class ServerDatabase extends StorableObjectDatabase {
 		characteristicDatabase.updateCharacteristics(storableObjects);
 	}	
 
-	public List retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
-		List list = null; 
+	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
+		Collection objects = null; 
 		if ((ids == null) || (ids.isEmpty()))
-			list = this.retrieveByIdsOneQuery(null, condition);
+			objects = this.retrieveByIdsOneQuery(null, condition);
 		else
-			list = this.retrieveByIdsOneQuery(ids, condition);
+			objects = this.retrieveByIdsOneQuery(ids, condition);
 
-		if (list != null) {
+		if (objects != null) {
 			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
-			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list,
+			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(objects,
 					CharacteristicSort.CHARACTERISTIC_SORT_SERVER);
 			if (characteristicMap != null)
-				for (Iterator iter = list.iterator(); iter.hasNext();) {
+				for (Iterator iter = objects.iterator(); iter.hasNext();) {
 					Server server = (Server) iter.next();
 					List characteristics = (List) characteristicMap.get(server.getId());
 					server.setCharacteristics0(characteristics);
 				}
 		}
-		return list;
+		return objects;
 	}
 
 //	private List retrieveButIdsByDomain(Collection ids, Domain domain) throws RetrieveObjectException {

@@ -14,7 +14,7 @@ include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 
-APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/util.jar
+APPCLASSPATH := $(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
 
 
 SOURCES := com/syrus/AMFICOM/event/EventDatabaseContext.java \
@@ -76,10 +76,15 @@ cleancorba:
 install: $(LIBNAME)
 	$(CP) $(LIBNAME) $(LIBDIR)
 
+
 #### Test ####
+
 TESTDIR = test
 TESTSOURCES := com/syrus/AMFICOM/event/CommonEventTest.java \
-	com/syrus/AMFICOM/event/TestEventType.java
+	com/syrus/AMFICOM/event/TestEventType.java \
+	com/syrus/AMFICOM/event/TestEventSource.java \
+	com/syrus/AMFICOM/event/TestEvent.java
+
 JUNITCLASSPATH = /mnt/d/eclipse/3.1M4/plugins/org.junit_3.8.1/junit.jar
 
 .PHONY:	test
@@ -92,7 +97,9 @@ test: $(LIBNAME)
 cleantest:
 	$(RM) $(addprefix $(CLASSDIR)/,$(subst .java,*.class,$(TESTSOURCES)))
 
+
 #### Archive ####
+
 .PHONY:	arch
 arch:
 	tar -czvf $(ARCHFILE) \

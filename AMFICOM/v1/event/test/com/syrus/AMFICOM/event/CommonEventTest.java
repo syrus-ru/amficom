@@ -1,5 +1,5 @@
 /*
- * $Id: CommonEventTest.java,v 1.2 2005/02/08 20:27:30 arseniy Exp $
+ * $Id: CommonEventTest.java,v 1.3 2005/02/11 18:42:17 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,33 @@
  */
 package com.syrus.AMFICOM.event;
 
+import javax.security.auth.login.Configuration;
+
+import com.syrus.AMFICOM.administration.AdministrationDatabaseContext;
+import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
+import com.syrus.AMFICOM.administration.DatabaseAdministrationObjectLoader;
+import com.syrus.AMFICOM.administration.DomainDatabase;
+import com.syrus.AMFICOM.administration.MCMDatabase;
+import com.syrus.AMFICOM.administration.ServerDatabase;
+import com.syrus.AMFICOM.administration.UserDatabase;
+import com.syrus.AMFICOM.configuration.CableLinkTypeDatabase;
+import com.syrus.AMFICOM.configuration.CableThreadDatabase;
+import com.syrus.AMFICOM.configuration.CableThreadTypeDatabase;
+import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
+import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
+import com.syrus.AMFICOM.configuration.DatabaseConfigurationObjectLoader;
+import com.syrus.AMFICOM.configuration.EquipmentDatabase;
+import com.syrus.AMFICOM.configuration.EquipmentTypeDatabase;
+import com.syrus.AMFICOM.configuration.KISDatabase;
+import com.syrus.AMFICOM.configuration.LinkDatabase;
+import com.syrus.AMFICOM.configuration.LinkTypeDatabase;
+import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
+import com.syrus.AMFICOM.configuration.MeasurementPortTypeDatabase;
+import com.syrus.AMFICOM.configuration.MonitoredElementDatabase;
+import com.syrus.AMFICOM.configuration.PortDatabase;
+import com.syrus.AMFICOM.configuration.PortTypeDatabase;
+import com.syrus.AMFICOM.configuration.TransmissionPathDatabase;
+import com.syrus.AMFICOM.configuration.TransmissionPathTypeDatabase;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CharacteristicTypeDatabase;
 import com.syrus.AMFICOM.general.DatabaseGeneralObjectLoader;
@@ -26,7 +53,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/08 20:27:30 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/11 18:42:17 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -88,11 +115,32 @@ public class CommonEventTest extends TestCase {
 
 	private static void initDatabaseContext() {
 		GeneralDatabaseContext.init(new ParameterTypeDatabase(), new CharacteristicTypeDatabase(), new CharacteristicDatabase());
+		AdministrationDatabaseContext.init(new UserDatabase(),
+				new DomainDatabase(),
+				new ServerDatabase(),
+				new MCMDatabase());
+		ConfigurationDatabaseContext.init(new EquipmentTypeDatabase(),
+				new PortTypeDatabase(),
+				new MeasurementPortTypeDatabase(),
+				new LinkTypeDatabase(),
+				new CableLinkTypeDatabase(),
+				new CableThreadTypeDatabase(),
+				new EquipmentDatabase(),
+				new PortDatabase(),
+				new MeasurementPortDatabase(),
+				new TransmissionPathDatabase(),
+				new TransmissionPathTypeDatabase(),
+				new KISDatabase(),
+				new MonitoredElementDatabase(),
+				new LinkDatabase(),
+				new CableThreadDatabase());
 		EventDatabaseContext.init(new EventTypeDatabase(), new EventDatabase(), new EventSourceDatabase());
 	}
 
 	private static void initStorableObjectPools() {
 		GeneralStorableObjectPool.init(new DatabaseGeneralObjectLoader());
+		AdministrationStorableObjectPool.init(new DatabaseAdministrationObjectLoader());
+		ConfigurationStorableObjectPool.init(new DatabaseConfigurationObjectLoader());
 		EventStorableObjectPool.init(new DatabaseEventObjectLoader());
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: UserDatabase.java,v 1.10 2005/02/11 15:35:32 arseniy Exp $
+ * $Id: UserDatabase.java,v 1.11 2005/02/11 18:40:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.List;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
@@ -30,7 +29,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/02/11 15:35:32 $
+ * @version $Revision: 1.11 $, $Date: 2005/02/11 18:40:09 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -166,7 +165,7 @@ public class UserDatabase extends StorableObjectDatabase {
 		
 	}	
 
-	public List retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
+	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
 			return this.retrieveByIdsOneQuery(null, condition);
 		return this.retrieveByIdsOneQuery(ids, condition);

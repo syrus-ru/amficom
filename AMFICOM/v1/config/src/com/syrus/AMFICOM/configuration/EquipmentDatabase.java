@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.67 2005/02/11 16:31:20 arseniy Exp $
+ * $Id: EquipmentDatabase.java,v 1.68 2005/02/11 18:40:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -45,7 +45,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/02/11 16:31:20 $
+ * @version $Revision: 1.68 $, $Date: 2005/02/11 18:40:02 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -285,7 +285,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		equipment.setPortIds0(portIds);
 	}
 
-	private void retrieveEquipmentPortIdsByOneQuery(List equipments) throws RetrieveObjectException {
+	private void retrieveEquipmentPortIdsByOneQuery(Collection equipments) throws RetrieveObjectException {
 		if ((equipments == null) || (equipments.isEmpty()))
 			return;     
 
@@ -365,7 +365,7 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void retrieveEquipmentMEIdsByOneQuery(List equipments) throws RetrieveObjectException, IllegalDataException {
+	private void retrieveEquipmentMEIdsByOneQuery(Collection equipments) throws RetrieveObjectException, IllegalDataException {
 		if ((equipments == null) || (equipments.isEmpty()))
 			return;
 
@@ -496,40 +496,40 @@ public class EquipmentDatabase extends StorableObjectDatabase {
 		}
 	}
 */
-	public List retrieveAll() throws RetrieveObjectException {
-		List list = null;
+	public Collection retrieveAll() throws RetrieveObjectException {
+		Collection objects = null;
 		try {
-			list = this.retrieveByIds(null, null);
+			objects = this.retrieveByIds(null, null);
 		}
 		catch (IllegalDataException ide) {           
 			Log.debugMessage("EquipmentDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
 			throw new RetrieveObjectException(ide);
 		}
-		return list;
+		return objects;
 	}
 
-	public List retrieveByIds(Collection ids, String condition)
+	public Collection retrieveByIds(Collection ids, String condition)
 			throws IllegalDataException, RetrieveObjectException {
-		List list = null;
+		Collection objects = null;
 		if ((ids == null) || (ids.isEmpty()))
-			list = this.retrieveByIdsOneQuery(null, condition);
+			objects = this.retrieveByIdsOneQuery(null, condition);
 		else
-			list = this.retrieveByIdsOneQuery(ids, condition);
+			objects = this.retrieveByIdsOneQuery(ids, condition);
 
-    if (list != null) {
-			this.retrieveEquipmentPortIdsByOneQuery(list);
-			this.retrieveEquipmentMEIdsByOneQuery(list); 
+    if (objects != null) {
+			this.retrieveEquipmentPortIdsByOneQuery(objects);
+			this.retrieveEquipmentMEIdsByOneQuery(objects); 
 
 			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) (GeneralDatabaseContext.getCharacteristicDatabase());
-			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list,
+			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(objects,
 					CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENT);
 			if (characteristicMap != null)
-				for (Iterator iter = list.iterator(); iter.hasNext();) {
+				for (Iterator iter = objects.iterator(); iter.hasNext();) {
 					Equipment equipment = (Equipment) iter.next();
 					List characteristics = (List) characteristicMap.get(equipment.getId());
 					equipment.setCharacteristics0(characteristics);
 				}
 		}
-		return list;
+		return objects;
 	}
 }

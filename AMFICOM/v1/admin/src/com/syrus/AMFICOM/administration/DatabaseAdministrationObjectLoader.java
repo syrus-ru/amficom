@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseAdministrationObjectLoader.java,v 1.11 2005/02/11 15:35:32 arseniy Exp $
+ * $Id: DatabaseAdministrationObjectLoader.java,v 1.12 2005/02/11 18:40:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,7 +30,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/02/11 15:35:32 $
+ * @version $Revision: 1.12 $, $Date: 2005/02/11 18:40:09 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -63,60 +62,60 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 
 	// for multiple objects
 
-	public List loadUsers(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadUsers(Collection ids) throws DatabaseException, CommunicationException {
 		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.userDatabase;
-		List list = null;
+		Collection collection = null;
 		try {
-			list = database.retrieveByIds(ids, null);
+			collection = database.retrieveByIds(ids, null);
 		}
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.loadUsers | Illegal Storable Object: " + e.getMessage();
 			Log.errorMessage(mesg);
 			throw new DatabaseException(mesg, e);
 		}
-		return list;
+		return collection;
 	}
 
-	public List loadDomains(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadDomains(Collection ids) throws DatabaseException, CommunicationException {
 		DomainDatabase database = (DomainDatabase) AdministrationDatabaseContext.domainDatabase;
-		List list = null;
+		Collection collection = null;
 		try {
-			list = database.retrieveByIds(ids, null);
+			collection = database.retrieveByIds(ids, null);
 		}
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.loadDomains | Illegal Storable Object: " + e.getMessage();
 			Log.errorMessage(mesg);
 			throw new DatabaseException(mesg, e);
 		}
-		return list;
+		return collection;
 	}
 
-	public List loadServers(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadServers(Collection ids) throws DatabaseException, CommunicationException {
 		ServerDatabase database = (ServerDatabase) AdministrationDatabaseContext.serverDatabase;
-		List list = null;
+		Collection collection = null;
 		try {
-			list = database.retrieveByIds(ids, null);
+			collection = database.retrieveByIds(ids, null);
 		}
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.loadDomains | Illegal Storable Object: " + e.getMessage();
 			Log.errorMessage(mesg);
 			throw new DatabaseException(mesg, e);
 		}
-		return list;
+		return collection;
 	}
 
-	public List loadMCMs(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadMCMs(Collection ids) throws DatabaseException, CommunicationException {
 		MCMDatabase database = (MCMDatabase) AdministrationDatabaseContext.mcmDatabase;
-		List list = null;
+		Collection collection = null;
 		try {
-			list = database.retrieveByIds(ids, null);
+			collection = database.retrieveByIds(ids, null);
 		}
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.loadMCMs | Illegal Storable Object: " + e.getMessage();
 			Log.errorMessage(mesg);
 			throw new DatabaseException(mesg, e);
 		}
-		return list;
+		return collection;
 	}
 
 	//  public PermissionAttributes loadPermissionAttributes(Identifier id) throws DatabaseException, CommunicationException {
@@ -129,60 +128,60 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 
 
 
-	public List loadUsersButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadUsersButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.userDatabase;
-		List list = null;
+		Collection collection = null;
 		try {
-			list = database.retrieveByCondition(ids, condition);
+			collection = database.retrieveByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.loadUsersButIds | Illegal Storable Object: " + e.getMessage();
 			Log.errorMessage(mesg);
 			throw new DatabaseException(mesg, e);
 		}
-		return list;
+		return collection;
 	}
 
-	public List loadDomainsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadDomainsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 		DomainDatabase database = (DomainDatabase) AdministrationDatabaseContext.domainDatabase;
-		List list = null;
+		Collection collection = null;
 		try {
-			list = database.retrieveByCondition(ids, condition);
+			collection = database.retrieveByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.loadDomainsButIds | Illegal Storable Object: " + e.getMessage();
 			Log.errorMessage(mesg);
 			throw new DatabaseException(mesg, e);
 		}
-		return list;
+		return collection;
 	}
 
-	public List loadServersButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadServersButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 		ServerDatabase database = (ServerDatabase) AdministrationDatabaseContext.serverDatabase;
-		List list = null;
+		Collection collection = null;
 		try {
-			list = database.retrieveByCondition(ids, condition);
+			collection = database.retrieveByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.loadDomainsButIds | Illegal Storable Object: " + e.getMessage();
 			Log.errorMessage(mesg);
 			throw new DatabaseException(mesg, e);
 		}
-		return list;
+		return collection;
 	}
 
-	public List loadMCMsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadMCMsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 		MCMDatabase database = (MCMDatabase) AdministrationDatabaseContext.mcmDatabase;
-		List list = null;
+		Collection collection = null;
 		try {
-			list = database.retrieveByCondition(ids, condition);
+			collection = database.retrieveByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.loadMCMsButIds | Illegal Storable Object: " + e.getMessage();
 			Log.errorMessage(mesg);
 			throw new DatabaseException(mesg, e);
 		}
-		return list;
+		return collection;
 	}
 
 	//  public PermissionAttributes loadPermissionAttributesButIds(Identifier id) throws DatabaseException, CommunicationException {
@@ -430,18 +429,18 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 							+ object.getClass().getName()
 							+ " isn't Identifier or Identified");
 			Short entityCode = new Short(identifier.getMajor());
-			List list = (List) map.get(entityCode);
-			if (list == null) {
-				list = new LinkedList();
-				map.put(entityCode, list);
+			Collection collection = (Collection) map.get(entityCode);
+			if (collection == null) {
+				collection = new LinkedList();
+				map.put(entityCode, collection);
 			}
-			list.add(object);
+			collection.add(object);
 		}
 
 		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
 			Short entityCode = (Short) it.next();
-			List list = (List) map.get(entityCode);
-			this.delete(null, list);
+			Collection collection = (Collection) map.get(entityCode);
+			this.delete(null, collection);
 		}
 	}
 

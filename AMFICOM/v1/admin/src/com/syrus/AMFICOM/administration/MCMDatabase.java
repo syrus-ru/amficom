@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.11 2005/02/11 15:35:32 arseniy Exp $
+ * $Id: MCMDatabase.java,v 1.12 2005/02/11 18:40:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/02/11 15:35:32 $
+ * @version $Revision: 1.12 $, $Date: 2005/02/11 18:40:09 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -339,27 +339,27 @@ public class MCMDatabase extends StorableObjectDatabase {
 		characteristicDatabase.updateCharacteristics(storableObjects);
 	}
 
-	public List retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
-		List list = null;
+	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
+		Collection objects = null;
 		if ((ids == null) || (ids.isEmpty()))
-			list = this.retrieveByIdsOneQuery(null, condition);
+			objects = this.retrieveByIdsOneQuery(null, condition);
 		else 
-			list = this.retrieveByIdsOneQuery(ids, condition);
+			objects = this.retrieveByIdsOneQuery(ids, condition);
 
-    if (list != null) {
-			this.retrieveKISIdsByOneQuery(list);
+    if (objects != null) {
+			this.retrieveKISIdsByOneQuery(objects);
 
       CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
-			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list,
+			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(objects,
 					CharacteristicSort.CHARACTERISTIC_SORT_MCM);
 			if (characteristicMap != null)
-				for (Iterator iter = list.iterator(); iter.hasNext();) {
+				for (Iterator iter = objects.iterator(); iter.hasNext();) {
 					MCM mcm = (MCM) iter.next();
 					List characteristics = (List) characteristicMap.get(mcm.getId());
 					mcm.setCharacteristics0(characteristics);
 				}
 		}
-		return list;	
+		return objects;	
 		//return retriveByIdsPreparedStatement(ids);
 	}
 

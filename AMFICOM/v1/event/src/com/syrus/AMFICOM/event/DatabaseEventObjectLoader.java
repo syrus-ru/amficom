@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseEventObjectLoader.java,v 1.4 2005/02/08 20:11:20 arseniy Exp $
+ * $Id: DatabaseEventObjectLoader.java,v 1.5 2005/02/11 18:42:17 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,7 @@
  */
 package com.syrus.AMFICOM.event;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -20,6 +21,7 @@ import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identified;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.SessionContext;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -28,7 +30,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/08 20:11:20 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/11 18:42:17 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -48,91 +50,91 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 
 
 
-	public List loadEventTypes(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadEventTypes(Collection ids) throws DatabaseException, CommunicationException {
 		EventTypeDatabase eventTypeDatabase = (EventTypeDatabase) EventDatabaseContext.eventTypeDatabase;
-		List list = null;
+		Collection collection = null;
 		try {
-			list = eventTypeDatabase.retrieveByIds(ids, null);
+			collection = eventTypeDatabase.retrieveByIds(ids, null);
 		}
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseEventObjectLoader.loadEventTypes | Illegal Storable Object: " + e.getMessage();
 			Log.errorMessage(mesg);
 			throw new DatabaseException(mesg, e);
 		}
-		return list;
+		return collection;
 	}
 
-	public List loadEvents(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadEvents(Collection ids) throws DatabaseException, CommunicationException {
 		EventDatabase eventDatabase = (EventDatabase) EventDatabaseContext.eventDatabase;
-		List list = null;
+		Collection collection = null;
 		try {
-			list = eventDatabase.retrieveByIds(ids, null);
+			collection = eventDatabase.retrieveByIds(ids, null);
 		}
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseEventObjectLoader.loadEvents | Illegal Storable Object: " + e.getMessage();
 			Log.errorMessage(mesg);
 			throw new DatabaseException(mesg, e);
 		}
-		return list;
+		return collection;
 	}
 
-	public List loadEventSources(List ids) throws DatabaseException, CommunicationException {
+	public Collection loadEventSources(Collection ids) throws DatabaseException, CommunicationException {
 		EventSourceDatabase eventSourceDatabase = (EventSourceDatabase) EventDatabaseContext.eventSourceDatabase;
-		List list = null;
+		Collection collection = null;
 		try {
-			list = eventSourceDatabase.retrieveByIds(ids, null);
+			collection = eventSourceDatabase.retrieveByIds(ids, null);
 		}
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseEventObjectLoader.loadEventSources | Illegal Storable Object: " + e.getMessage();
 			Log.errorMessage(mesg);
 			throw new DatabaseException(mesg, e);
 		}
-		return list;
+		return collection;
 	}
 
 
 
 
-	public List loadEventTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public Collection loadEventTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 		EventTypeDatabase eventTypeDatabase = (EventTypeDatabase) EventDatabaseContext.eventTypeDatabase;
-		List list = null;
+		Collection collection = null;
 		try {
-			list = eventTypeDatabase.retrieveByCondition(ids, condition);
+			collection = eventTypeDatabase.retrieveByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseEventObjectLoader.loadEventTypesButIds | Illegal Storable Object: " + e.getMessage();
 			Log.errorMessage(mesg);
 			throw new DatabaseException(mesg, e);
 		}
-		return list;
+		return collection;
 	}
 
-	public List loadEventsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public Collection loadEventsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 		EventDatabase eventDatabase = (EventDatabase) EventDatabaseContext.eventDatabase;
-		List list = null;
+		Collection collection = null;
 		try {
-			list = eventDatabase.retrieveByCondition(ids, condition);
+			collection = eventDatabase.retrieveByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseEventObjectLoader.loadEventsButIds | Illegal Storable Object: " + e.getMessage();
 			Log.errorMessage(mesg);
 			throw new DatabaseException(mesg, e);
 		}
-		return list;
+		return collection;
 	}
 
-	public List loadEventSourcesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException {
+	public Collection loadEventSourcesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 		EventSourceDatabase eventSourceDatabase = (EventSourceDatabase) EventDatabaseContext.eventSourceDatabase;
-		List list = null;
+		Collection collection = null;
 		try {
-			list = eventSourceDatabase.retrieveByCondition(ids, condition);
+			collection = eventSourceDatabase.retrieveByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseEventObjectLoader.loadEventSourcesButIds | Illegal Storable Object: " + e.getMessage();
 			Log.errorMessage(mesg);
 			throw new DatabaseException(mesg, e);
 		}
-		return list;
+		return collection;
 	}
 
 
@@ -144,7 +146,7 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 				CommunicationException {
 		EventTypeDatabase eventTypeDatabase = (EventTypeDatabase) EventDatabaseContext.eventTypeDatabase;
 		try {
-			eventTypeDatabase.update(eventType, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			eventTypeDatabase.update(eventType, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			String mesg = "DatabaseEventObjectLoader.saveEventType | UpdateObjectException: " + e.getMessage();
@@ -166,7 +168,7 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 	public void saveEvent(Event event, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
 		EventDatabase eventDatabase = (EventDatabase) EventDatabaseContext.eventDatabase;
 		try {
-			eventDatabase.update(event, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			eventDatabase.update(event, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			String mesg = "DatabaseEventObjectLoader.saveEvent | UpdateObjectException: " + e.getMessage();
@@ -188,7 +190,7 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 	public void saveEventSource(EventSource eventSource, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
 		EventSourceDatabase eventSourceDatabase = (EventSourceDatabase) EventDatabaseContext.eventSourceDatabase;
 		try {
-			eventSourceDatabase.update(eventSource, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			eventSourceDatabase.update(eventSource, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			String mesg = "DatabaseEventObjectLoader.saveEventSource | UpdateObjectException: " + e.getMessage();
@@ -210,13 +212,13 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 
 
 
-	public void saveEventTypes(List list, boolean force)
+	public void saveEventTypes(Collection collection, boolean force)
 			throws VersionCollisionException,
 				DatabaseException,
 				CommunicationException {
 		EventTypeDatabase eventTypeDatabase = (EventTypeDatabase) EventDatabaseContext.eventTypeDatabase;
 		try {
-			eventTypeDatabase.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			eventTypeDatabase.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			String mesg = "DatabaseEventObjectLoader.saveEventTypes | UpdateObjectException: " + e.getMessage();
@@ -235,10 +237,10 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 		}
 	}
 
-	public void saveEvents(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
+	public void saveEvents(Collection collection, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
 		EventDatabase eventDatabase = (EventDatabase) EventDatabaseContext.eventDatabase;
 		try {
-			eventDatabase.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			eventDatabase.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			String mesg = "DatabaseEventObjectLoader.saveEvents | UpdateObjectException: " + e.getMessage();
@@ -257,10 +259,10 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 		}
 	}
 
-	public void saveEventSources(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
+	public void saveEventSources(Collection collection, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
 		EventSourceDatabase eventSourceDatabase = (EventSourceDatabase) EventDatabaseContext.eventSourceDatabase;
 		try {
-			eventSourceDatabase.update(list, force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK, null);
+			eventSourceDatabase.update(collection, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			String mesg = "DatabaseEventObjectLoader.saveEventSources | UpdateObjectException: " + e.getMessage();
@@ -309,7 +311,7 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 		this.delete(id, null);
 	}
 
-	public void delete(List objects) throws CommunicationException, DatabaseException, IllegalDataException {
+	public void delete(Collection objects) throws CommunicationException, DatabaseException, IllegalDataException {
 		if (objects == null || objects.isEmpty())
 			return;
 		/**
@@ -348,7 +350,7 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 		}
 	}
 
-	private void delete(Identifier id, List objects) throws DatabaseException {
+	private void delete(Identifier id, Collection objects) throws DatabaseException {
 		short entityCode = (id != null) ? id.getMajor() : 0;
 		if (id == null) {
 			if (objects.isEmpty())

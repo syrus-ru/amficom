@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.14 2005/02/11 15:35:16 arseniy Exp $
+ * $Id: CharacteristicDatabase.java,v 1.15 2005/02/11 18:40:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/02/11 15:35:16 $
+ * @version $Revision: 1.15 $, $Date: 2005/02/11 18:40:16 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -337,7 +337,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public List retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
+	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
 			return this.retrieveByIdsOneQuery(null, condition);
 		return this.retrieveByIdsOneQuery(ids, condition);	

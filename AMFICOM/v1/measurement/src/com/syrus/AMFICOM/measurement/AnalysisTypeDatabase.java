@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.63 2005/02/11 16:31:48 bob Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.64 2005/02/11 18:39:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/02/11 16:31:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.64 $, $Date: 2005/02/11 18:39:52 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -186,7 +186,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 																	 outParTyps);
 	}
 
-	private void retrieveParameterTypesByOneQuery(List analysisTypes) throws RetrieveObjectException {
+	private void retrieveParameterTypesByOneQuery(Collection analysisTypes) throws RetrieveObjectException {
 		if ((analysisTypes == null) || (analysisTypes.isEmpty()))
 			return;
 
@@ -490,21 +490,21 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 	}
 
 	public AnalysisType retrieveForCodename(String codename) throws ObjectNotFoundException, RetrieveObjectException {
-		List list = null;
+		Collection objects = null;
 		try {
-			list = this.retrieveByIds(null, StorableObjectWrapper.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
+			objects = this.retrieveByIds(null, StorableObjectWrapper.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
 		}
 		catch (IllegalDataException ide) {				
 			throw new RetrieveObjectException(ide);
 		}
 
-		if ((list == null) || (list.isEmpty()))
+		if ((objects == null) || (objects.isEmpty()))
 			throw new ObjectNotFoundException("No analysis type with codename: '" + codename + "'");
 
-		return (AnalysisType) list.get(0);
+		return (AnalysisType) objects.iterator().next();
 	}
 
-	public List retrieveAll() throws RetrieveObjectException {
+	public Collection retrieveAll() throws RetrieveObjectException {
 		try {
 			return this.retrieveByIds(null, null);
 		}
@@ -513,16 +513,16 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public List retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
-		List list = null; 
+	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
+		Collection objects = null; 
 		if ((ids == null) || (ids.isEmpty()))
-			list = this.retrieveByIdsOneQuery(null, condition);
+			objects = this.retrieveByIdsOneQuery(null, condition);
 		else
-			list = this.retrieveByIdsOneQuery(ids, condition);
+			objects = this.retrieveByIdsOneQuery(ids, condition);
 
-		this.retrieveParameterTypesByOneQuery(list);
+		this.retrieveParameterTypesByOneQuery(objects);
 
-		return list;
+		return objects;
 	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)

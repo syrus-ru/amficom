@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseConfigurationObjectLoader.java,v 1.36 2005/02/11 16:02:55 bob Exp $
+ * $Id: DatabaseConfigurationObjectLoader.java,v 1.37 2005/02/11 18:40:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/02/11 16:02:55 $
- * @author $Author: bob $
+ * @version $Revision: 1.37 $, $Date: 2005/02/11 18:40:02 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -105,206 +105,206 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 
 	public Collection loadEquipmentTypes(Collection ids) throws DatabaseException, CommunicationException {
 		EquipmentTypeDatabase database = (EquipmentTypeDatabase) ConfigurationDatabaseContext.equipmentTypeDatabase;
-		Collection list = null;
+		Collection objects = null;
 		try {
-			list = database.retrieveByIds(ids, null);
+			objects = database.retrieveByIds(ids, null);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadEquipmentTypes | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadEquipmentTypes | Illegal Storable Object: "
 					+ e.getMessage());
 		}
-		return list;
+		return objects;
 	}
 
 	public Collection loadPortTypes(Collection ids) throws DatabaseException, CommunicationException {
 		PortTypeDatabase database = (PortTypeDatabase) ConfigurationDatabaseContext.portTypeDatabase;
-		Collection list = null;
+		Collection objects = null;
 		try {
-			list = database.retrieveByIds(ids, null);
+			objects = database.retrieveByIds(ids, null);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadPortTypes | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadPortTypes | Illegal Storable Object: " + e.getMessage());
 		}
-		return list;
+		return objects;
 	}
 
 	public Collection loadMeasurementPortTypes(Collection ids) throws DatabaseException, CommunicationException {
 		MeasurementPortTypeDatabase database = (MeasurementPortTypeDatabase) ConfigurationDatabaseContext.measurementPortTypeDatabase;
-		Collection list = null;
+		Collection objects = null;
 		try {
-			list = database.retrieveByIds(ids, null);
+			objects = database.retrieveByIds(ids, null);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadMeasurementPortTypes | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadMeasurementPortTypes | Illegal Storable Object: "
 					+ e.getMessage());
 		}
-		return list;
+		return objects;
 	}
 
 	public Collection loadLinkTypes(Collection ids) throws DatabaseException, CommunicationException {
 		LinkTypeDatabase database = (LinkTypeDatabase) ConfigurationDatabaseContext.linkTypeDatabase;
-		Collection list = null;
+		Collection objects = null;
 		try {
-			list = database.retrieveByIds(ids, null);
+			objects = database.retrieveByIds(ids, null);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadLinkType | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadLinkTypes | Illegal Storable Object: " + e.getMessage());
 		}
-		return list;
+		return objects;
 	}
 
 	public Collection loadCableLinkTypes(Collection ids) throws DatabaseException, CommunicationException {
 		CableLinkTypeDatabase database = (CableLinkTypeDatabase) ConfigurationDatabaseContext.cableLinkTypeDatabase;
-		Collection list = null;
+		Collection objects = null;
 		try {
-			list = database.retrieveByIds(ids, null);
+			objects = database.retrieveByIds(ids, null);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadCableLinkTypes | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadCableLinkTypes | Illegal Storable Object: "
 					+ e.getMessage());
 		}
-		return list;
+		return objects;
 	}
 
 	public Collection loadCableThreadTypes(Collection ids) throws DatabaseException, CommunicationException {
 		CableThreadTypeDatabase database = (CableThreadTypeDatabase) ConfigurationDatabaseContext.cableThreadTypeDatabase;
-		Collection list = null;
+		Collection objects = null;
 		try {
-			list = database.retrieveByIds(ids, null);
+			objects = database.retrieveByIds(ids, null);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadCharacteristicTypes | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadCharacteristicTypes | Illegal Storable Object: "
 					+ e.getMessage());
 		}
-		return list;
+		return objects;
 	}
 
 	public Collection loadEquipments(Collection ids) throws DatabaseException, CommunicationException {
 		EquipmentDatabase database = (EquipmentDatabase) ConfigurationDatabaseContext.equipmentDatabase;
-		Collection list = null;
+		Collection objects = null;
 		try {
-			list = database.retrieveByIds(ids, null);
+			objects = database.retrieveByIds(ids, null);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadEquipments | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadEquipments | Illegal Storable Object: " + e.getMessage());
 		}
-		return list;
+		return objects;
 	}
 
 	public Collection loadPorts(Collection ids) throws DatabaseException, CommunicationException {
 		PortDatabase database = (PortDatabase) ConfigurationDatabaseContext.portDatabase;
-		Collection list = null;
+		Collection objects = null;
 		try {
-			list = database.retrieveByIds(ids, null);
+			objects = database.retrieveByIds(ids, null);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadPorts | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadPorts | Illegal Storable Object: " + e.getMessage());
 		}
-		return list;
+		return objects;
 	}
 
 	public Collection loadMeasurementPorts(Collection ids) throws DatabaseException, CommunicationException {
 		MeasurementPortDatabase database = (MeasurementPortDatabase) ConfigurationDatabaseContext.measurementPortDatabase;
-		Collection list = null;
+		Collection objects = null;
 		try {
-			list = database.retrieveByIds(ids, null);
+			objects = database.retrieveByIds(ids, null);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadMeasurementPorts | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadMeasurementPorts | Illegal Storable Object: "
 					+ e.getMessage());
 		}
-		return list;
+		return objects;
 	}
 
 	public Collection loadTransmissionPaths(Collection ids) throws DatabaseException, CommunicationException {
 		TransmissionPathDatabase database = (TransmissionPathDatabase) ConfigurationDatabaseContext.transmissionPathDatabase;
-		Collection list = null;
+		Collection objects = null;
 		try {
-			list = database.retrieveByIds(ids, null);
+			objects = database.retrieveByIds(ids, null);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadTransmissionPaths | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadTransmissionPaths | Illegal Storable Object: "
 					+ e.getMessage());
 		}
-		return list;
+		return objects;
 	}
 
 	public Collection loadTransmissionPathTypes(Collection ids) throws DatabaseException, CommunicationException {
 		TransmissionPathTypeDatabase database = (TransmissionPathTypeDatabase) ConfigurationDatabaseContext.transmissionPathTypeDatabase;
-		Collection list = null;
+		Collection objects = null;
 		try {
-			list = database.retrieveByIds(ids, null);
+			objects = database.retrieveByIds(ids, null);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadTransmissionPathTypes | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadTransmissionPathTypes | Illegal Storable Object: "
 					+ e.getMessage());
 		}
-		return list;
+		return objects;
 	}
 
 	public Collection loadKISs(Collection ids) throws DatabaseException, CommunicationException {
 		KISDatabase database = (KISDatabase) ConfigurationDatabaseContext.kisDatabase;
-		Collection list = null;
+		Collection objects = null;
 		try {
-			list = database.retrieveByIds(ids, null);
+			objects = database.retrieveByIds(ids, null);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadKISs | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadKISs | Illegal Storable Object: " + e.getMessage());
 		}
-		return list;
+		return objects;
 	}
 
 	public Collection loadMonitoredElements(Collection ids) throws DatabaseException, CommunicationException {
 		MonitoredElementDatabase database = (MonitoredElementDatabase) ConfigurationDatabaseContext.monitoredElementDatabase;
-		Collection list = null;
+		Collection objects = null;
 		try {
-			list = database.retrieveByIds(ids, null);
+			objects = database.retrieveByIds(ids, null);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadMonitoredElements | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadMonitoredElements | Illegal Storable Object: "
 					+ e.getMessage());
 		}
-		return list;
+		return objects;
 	}
 
 	public Collection loadLinks(Collection ids) throws DatabaseException, CommunicationException {
 		LinkDatabase database = (LinkDatabase) ConfigurationDatabaseContext.linkDatabase;
-		Collection list = null;
+		Collection objects = null;
 		try {
-			list = database.retrieveByIds(ids, null);
+			objects = database.retrieveByIds(ids, null);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadLinks | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadLinks | Illegal Storable Object: " + e.getMessage());
 		}
-		return list;
+		return objects;
 	}
 
 	public Collection loadCableThreads(Collection ids) throws DatabaseException, CommunicationException {
 		CableThreadDatabase database = (CableThreadDatabase) ConfigurationDatabaseContext.cableThreadDatabase;
-		Collection list = null;
+		Collection objects = null;
 		try {
-			list = database.retrieveByIds(ids, null);
+			objects = database.retrieveByIds(ids, null);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadCableThreads | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadCableThreads | Illegal Storable Object: "
 					+ e.getMessage());
 		}
-		return list;
+		return objects;
 	}
 
 
@@ -314,32 +314,32 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 			throws DatabaseException,
 				CommunicationException {
 		CableLinkTypeDatabase database = (CableLinkTypeDatabase) ConfigurationDatabaseContext.cableLinkTypeDatabase;
-		Collection list = null;
+		Collection objects = null;
 		try {
-			list = database.retrieveByCondition(ids, condition);
+			objects = database.retrieveByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadCableLinkTypesButIds | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadCableLinkTypesButIds | Illegal Storable Object: "
 					+ e.getMessage());
 		}
-		return list;
+		return objects;
 	}
 
 	public Collection loadCableThreadsButIds(StorableObjectCondition condition, Collection ids)
 			throws DatabaseException,
 				CommunicationException {
 		CableThreadDatabase database = (CableThreadDatabase) ConfigurationDatabaseContext.cableThreadDatabase;
-		Collection list = null;
+		Collection objects = null;
 		try {
-			list = database.retrieveByCondition(ids, condition);
+			objects = database.retrieveByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadCableThreadsButIds | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadCableThreadsButIds | Illegal Storable Object: "
 					+ e.getMessage());
 		}
-		return list;
+		return objects;
 	}
 
 	/* Load Configuration StorableObject but argument ids */
@@ -348,9 +348,9 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 			throws DatabaseException,
 				CommunicationException {
 		CableThreadTypeDatabase database = (CableThreadTypeDatabase) ConfigurationDatabaseContext.cableThreadTypeDatabase;
-		Collection list = null;
+		Collection objects = null;
 		try {
-			list = database.retrieveByCondition(ids, condition);
+			objects = database.retrieveByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadCableThreadTypesButIds | Illegal Storable Object: "
@@ -358,87 +358,87 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadCableThreadTypesButIds | Illegal Storable Object: "
 					+ e.getMessage());
 		}
-		return list;
+		return objects;
 	}
 
 	public Collection loadEquipmentsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 		EquipmentDatabase database = (EquipmentDatabase) ConfigurationDatabaseContext.equipmentDatabase;
-		Collection list = null;
+		Collection objects = null;
 		try {
-			list = database.retrieveByCondition(ids, condition);
+			objects = database.retrieveByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadEquipmentsButIds | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadEquipmentsButIds | Illegal Storable Object: "
 					+ e.getMessage());
 		}
-		return list;
+		return objects;
 	}
 
 	public Collection loadEquipmentTypesButIds(StorableObjectCondition condition, Collection ids)
 			throws DatabaseException,
 				CommunicationException {
 		EquipmentTypeDatabase database = (EquipmentTypeDatabase) ConfigurationDatabaseContext.equipmentTypeDatabase;
-		Collection list = null;
+		Collection objects = null;
 		try {
-			list = database.retrieveByCondition(ids, condition);
+			objects = database.retrieveByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadEquipmentTypesButIds | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadEquipmentTypesButIds | Illegal Storable Object: "
 					+ e.getMessage());
 		}
-		return list;
+		return objects;
 	}
 
 	public Collection loadKISsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 		KISDatabase database = (KISDatabase) ConfigurationDatabaseContext.kisDatabase;
-		Collection list = null;
+		Collection objects = null;
 		try {
-			list = database.retrieveByCondition(ids, condition);
+			objects = database.retrieveByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadKISsButIds | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadKISsButIds | Illegal Storable Object: " + e.getMessage());
 		}
-		return list;
+		return objects;
 	}
 
 	public Collection loadLinksButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 		LinkDatabase database = (LinkDatabase) ConfigurationDatabaseContext.linkDatabase;
-		Collection list = null;
+		Collection objects = null;
 		try {
-			list = database.retrieveByCondition(ids, condition);
+			objects = database.retrieveByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadLinksButIds | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadLinksButIds | Illegal Storable Object: "
 					+ e.getMessage());
 		}
-		return list;
+		return objects;
 	}
 
 	public Collection loadLinkTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 		LinkTypeDatabase database = (LinkTypeDatabase) ConfigurationDatabaseContext.linkTypeDatabase;
-		Collection list = null;
+		Collection objects = null;
 		try {
-			list = database.retrieveByCondition(ids, condition);
+			objects = database.retrieveByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadLinkTypesButIds | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadLinkTypesButIds | Illegal Storable Object: "
 					+ e.getMessage());
 		}
-		return list;
+		return objects;
 	}
 
 	public Collection loadMeasurementPortsButIds(StorableObjectCondition condition, Collection ids)
 			throws DatabaseException,
 				CommunicationException {
 		MeasurementPortDatabase database = (MeasurementPortDatabase) ConfigurationDatabaseContext.measurementPortDatabase;
-		Collection list = null;
+		Collection objects = null;
 		try {
-			list = database.retrieveByCondition(ids, condition);
+			objects = database.retrieveByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadMeasurementPortsButIds | Illegal Storable Object: "
@@ -446,16 +446,16 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadMeasurementPortsButIds | Illegal Storable Object: "
 					+ e.getMessage());
 		}
-		return list;
+		return objects;
 	}
 
 	public Collection loadMeasurementPortTypesButIds(StorableObjectCondition condition, Collection ids)
 			throws DatabaseException,
 				CommunicationException {
 		MeasurementPortTypeDatabase database = (MeasurementPortTypeDatabase) ConfigurationDatabaseContext.measurementPortTypeDatabase;
-		Collection list = null;
+		Collection objects = null;
 		try {
-			list = database.retrieveByCondition(ids, condition);
+			objects = database.retrieveByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadMeasurementPortTypesButIds | Illegal Storable Object: "
@@ -463,16 +463,16 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadMeasurementPortTypesButIds | Illegal Storable Object: "
 					+ e.getMessage());
 		}
-		return list;
+		return objects;
 	}
 
 	public Collection loadMonitoredElementsButIds(StorableObjectCondition condition, Collection ids)
 			throws DatabaseException,
 				CommunicationException {
 		MonitoredElementDatabase database = (MonitoredElementDatabase) ConfigurationDatabaseContext.monitoredElementDatabase;
-		Collection list = null;
+		Collection objects = null;
 		try {
-			list = database.retrieveByCondition(ids, condition);
+			objects = database.retrieveByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadMonitoredElementsButIds | Illegal Storable Object: "
@@ -480,44 +480,44 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadMonitoredElementsButIds | Illegal Storable Object: "
 					+ e.getMessage());
 		}
-		return list;
+		return objects;
 	}
 
 	public Collection loadPortsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 		PortDatabase database = (PortDatabase) ConfigurationDatabaseContext.portDatabase;
-		Collection list = null;
+		Collection objects = null;
 		try {
-			list = database.retrieveByCondition(ids, condition);
+			objects = database.retrieveByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadPortsButIds | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadPortsButIds | Illegal Storable Object: "
 					+ e.getMessage());
 		}
-		return list;
+		return objects;
 	}
 
 	public Collection loadPortTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException {
 		PortTypeDatabase database = (PortTypeDatabase) ConfigurationDatabaseContext.portTypeDatabase;
-		Collection list = null;
+		Collection objects = null;
 		try {
-			list = database.retrieveByCondition(ids, condition);
+			objects = database.retrieveByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadPortTypesButIds | Illegal Storable Object: " + e.getMessage());
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadPortTypesButIds | Illegal Storable Object: "
 					+ e.getMessage());
 		}
-		return list;
+		return objects;
 	}
 
 	public Collection loadTransmissionPathsButIds(StorableObjectCondition condition, Collection ids)
 			throws DatabaseException,
 				CommunicationException {
 		TransmissionPathDatabase database = (TransmissionPathDatabase) ConfigurationDatabaseContext.transmissionPathDatabase;
-		Collection list = null;
+		Collection objects = null;
 		try {
-			list = database.retrieveByCondition(ids, condition);
+			objects = database.retrieveByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadTransmissionPathsButIds | Illegal Storable Object: "
@@ -525,16 +525,16 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadTransmissionPathsButIds | Illegal Storable Object: "
 					+ e.getMessage());
 		}
-		return list;
+		return objects;
 	}
 
 	public Collection loadTransmissionPathTypesButIds(StorableObjectCondition condition, Collection ids)
 			throws DatabaseException,
 				CommunicationException {
 		TransmissionPathTypeDatabase database = (TransmissionPathTypeDatabase) ConfigurationDatabaseContext.transmissionPathTypeDatabase;
-		Collection list = null;
+		Collection objects = null;
 		try {
-			list = database.retrieveByCondition(ids, condition);
+			objects = database.retrieveByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.loadTransmissionPathTypesButIds | Illegal Storable Object: "
@@ -542,7 +542,7 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 			throw new DatabaseException("DatabaseConfigurationObjectLoader.loadTransmissionPathTypesButIds | Illegal Storable Object: "
 					+ e.getMessage());
 		}
-		return list;
+		return objects;
 	}
 
 //$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -893,13 +893,13 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 //############################################################################
 
 
-	public void saveCableLinkTypes(Collection list, boolean force)
+	public void saveCableLinkTypes(Collection objects, boolean force)
 			throws VersionCollisionException,
 				DatabaseException,
 				CommunicationException {
 		StorableObjectDatabase database = ConfigurationDatabaseContext.cableLinkTypeDatabase;
 		try {
-			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCableLinkTypes | UpdateObjectException: " + e.getMessage());
@@ -918,13 +918,13 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveCableThreads(Collection list, boolean force)
+	public void saveCableThreads(Collection objects, boolean force)
 			throws VersionCollisionException,
 				DatabaseException,
 				CommunicationException {
 		StorableObjectDatabase database = ConfigurationDatabaseContext.cableThreadDatabase;
 		try {
-			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCableThreads | UpdateObjectException: " + e.getMessage());
@@ -942,10 +942,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveCableThreadTypes(Collection list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveCableThreadTypes(Collection objects, boolean force) throws DatabaseException, CommunicationException {
 		CableThreadTypeDatabase database = (CableThreadTypeDatabase) ConfigurationDatabaseContext.cableThreadTypeDatabase;
 		try {
-			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveCableThreadTypes | UpdateObjectException: " + e.getMessage());
@@ -964,10 +964,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveEquipments(Collection list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveEquipments(Collection objects, boolean force) throws DatabaseException, CommunicationException {
 		EquipmentDatabase database = (EquipmentDatabase) ConfigurationDatabaseContext.equipmentDatabase;
 		try {
-			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveEquipments | UpdateObjectException: " + e.getMessage());
@@ -984,10 +984,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveEquipmentTypes(Collection list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveEquipmentTypes(Collection objects, boolean force) throws DatabaseException, CommunicationException {
 		EquipmentTypeDatabase database = (EquipmentTypeDatabase) ConfigurationDatabaseContext.equipmentTypeDatabase;
 		try {
-			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveEquipmentTypes | UpdateObjectException: " + e.getMessage());
@@ -1006,10 +1006,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveKISs(Collection list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveKISs(Collection objects, boolean force) throws DatabaseException, CommunicationException {
 		KISDatabase database = (KISDatabase) ConfigurationDatabaseContext.kisDatabase;
 		try {
-			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveKISs | UpdateObjectException: " + e.getMessage());
@@ -1025,10 +1025,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveLinks(Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
+	public void saveLinks(Collection objects, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
 		LinkDatabase database = (LinkDatabase) ConfigurationDatabaseContext.linkDatabase;
 		try {
-			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveLinks | UpdateObjectException: " + e.getMessage());
@@ -1044,10 +1044,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveLinkTypes(Collection list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
+	public void saveLinkTypes(Collection objects, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException {
 		LinkTypeDatabase database = (LinkTypeDatabase) ConfigurationDatabaseContext.linkTypeDatabase;
 		try {
-			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveLinkTypes | UpdateObjectException: " + e.getMessage());
@@ -1064,10 +1064,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveMeasurementPorts(Collection list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveMeasurementPorts(Collection objects, boolean force) throws DatabaseException, CommunicationException {
 		MeasurementPortDatabase database = (MeasurementPortDatabase) ConfigurationDatabaseContext.measurementPortDatabase;
 		try {
-			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMeasurementPorts | UpdateObjectException: " + e.getMessage());
@@ -1086,10 +1086,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveMeasurementPortTypes(Collection list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveMeasurementPortTypes(Collection objects, boolean force) throws DatabaseException, CommunicationException {
 		MeasurementPortTypeDatabase database = (MeasurementPortTypeDatabase) ConfigurationDatabaseContext.measurementPortTypeDatabase;
 		try {
-			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMeasurementPortTypes | UpdateObjectException: " + e.getMessage());
@@ -1109,10 +1109,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveMonitoredElements(Collection list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveMonitoredElements(Collection objects, boolean force) throws DatabaseException, CommunicationException {
 		MonitoredElementDatabase database = (MonitoredElementDatabase) ConfigurationDatabaseContext.monitoredElementDatabase;
 		try {
-			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveMonitoredElements | UpdateObjectException: " + e.getMessage());
@@ -1131,10 +1131,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void savePorts(Collection list, boolean force) throws DatabaseException, CommunicationException {
+	public void savePorts(Collection objects, boolean force) throws DatabaseException, CommunicationException {
 		PortDatabase database = (PortDatabase) ConfigurationDatabaseContext.portDatabase;
 		try {
-			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.savePorts | UpdateObjectException: " + e.getMessage());
@@ -1150,10 +1150,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void savePortTypes(Collection list, boolean force) throws DatabaseException, CommunicationException {
+	public void savePortTypes(Collection objects, boolean force) throws DatabaseException, CommunicationException {
 		PortTypeDatabase database = (PortTypeDatabase) ConfigurationDatabaseContext.portTypeDatabase;
 		try {
-			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.savePortTypes | UpdateObjectException: " + e.getMessage());
@@ -1170,10 +1170,10 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveTransmissionPaths(Collection list, boolean force) throws DatabaseException, CommunicationException {
+	public void saveTransmissionPaths(Collection objects, boolean force) throws DatabaseException, CommunicationException {
 		TransmissionPathDatabase database = (TransmissionPathDatabase) ConfigurationDatabaseContext.transmissionPathDatabase;
 		try {
-			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveTransmissionPaths | UpdateObjectException: " + e.getMessage());
@@ -1192,13 +1192,13 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 		}
 	}
 
-	public void saveTransmissionPathTypes(Collection list, boolean force)
+	public void saveTransmissionPathTypes(Collection objects, boolean force)
 			throws VersionCollisionException,
 				DatabaseException,
 				CommunicationException {
 		TransmissionPathTypeDatabase database = (TransmissionPathTypeDatabase) ConfigurationDatabaseContext.transmissionPathTypeDatabase;
 		try {
-			database.update(list, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
+			database.update(objects, SessionContext.getAccessIdentity().getUserId(), force ? StorableObjectDatabase.UPDATE_FORCE : StorableObjectDatabase.UPDATE_CHECK);
 		}
 		catch (UpdateObjectException e) {
 			Log.errorMessage("DatabaseConfigurationObjectLoader.saveTransmissionPathTypes | UpdateObjectException: " + e.getMessage());
@@ -1272,18 +1272,18 @@ public class DatabaseConfigurationObjectLoader implements ConfigurationObjectLoa
 							+ object.getClass().getName()
 							+ " isn't Identifier or Identified");
 			Short entityCode = new Short(identifier.getMajor());
-			Collection list = (Collection) map.get(entityCode);
-			if (list == null) {
-				list = new LinkedList();
-				map.put(entityCode, list);
+			Collection collection = (Collection) map.get(entityCode);
+			if (collection == null) {
+				collection = new LinkedList();
+				map.put(entityCode, collection);
 			}
-			list.add(object);
+			collection.add(object);
 		}
 
 		for (Iterator it = map.keySet().iterator(); it.hasNext();) {
 			Short entityCode = (Short) it.next();
-			Collection list = (Collection) map.get(entityCode);
-			this.delete(null, list);
+			Collection collection = (Collection) map.get(entityCode);
+			this.delete(null, collection);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: AdministrationObjectLoader.java,v 1.5 2005/02/11 15:35:32 arseniy Exp $
+ * $Id: AdministrationObjectLoader.java,v 1.6 2005/02/11 18:40:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.administration;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -20,7 +19,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/11 15:35:32 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/11 18:40:09 $
  * @author $Author: arseniy $
  * @module administration_v1
  */
@@ -40,26 +39,26 @@ public interface AdministrationObjectLoader {
 
     // this block for multiple objects
 
-	List loadUsers(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadUsers(Collection ids) throws DatabaseException, CommunicationException;
 
-	List loadDomains(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadDomains(Collection ids) throws DatabaseException, CommunicationException;
 
-	List loadServers(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadServers(Collection ids) throws DatabaseException, CommunicationException;
 
-	List loadMCMs(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadMCMs(Collection ids) throws DatabaseException, CommunicationException;
 
 //  PermissionAttributes loadPermissionAttributes(Collection ids) throws DatabaseException, CommunicationException;
 
 
     /* Load StorableObject but argument ids */
 
-	List loadUsersButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadUsersButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
 
-	List loadDomainsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadDomainsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
 
-	List loadServersButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadServersButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
 
-	List loadMCMsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadMCMsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
 
 //  PermissionAttributes loadPermissionAttributesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
 

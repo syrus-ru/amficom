@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.8 2005/02/11 15:35:16 arseniy Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.9 2005/02/11 18:40:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,14 +12,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.List;
 
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/11 15:35:16 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/11 18:40:16 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -168,19 +167,19 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public List retrieveAll() throws RetrieveObjectException {
-		List list = null;
+	public Collection retrieveAll() throws RetrieveObjectException {
+		Collection collection = null;
 		try {
-			list = this.retrieveByIds(null, null);
+			collection = this.retrieveByIds(null, null);
 		}
 		catch (IllegalDataException ide) {
 			Log.debugMessage("CharacteristicTypeDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
 			throw new RetrieveObjectException(ide);
 		}
-		return list;
+		return collection;
 	}
 
-	public List retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
+	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
 			return this.retrieveByIdsOneQuery(null, condition);
 		return this.retrieveByIdsOneQuery(ids, condition);	
@@ -191,19 +190,19 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	 * @deprecated use {@link StorableObjectDatabase.retrieveByCondion} and {@link TypicalCondition}
 	 */
 	public CharacteristicType retrieveForCodename(String codename) throws ObjectNotFoundException , RetrieveObjectException {		
-		List list = null;
+		Collection collection = null;
 
 		try {
-			list = this.retrieveByIds( null , StorableObjectWrapper.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
+			collection = this.retrieveByIds( null , StorableObjectWrapper.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
 		}
 		catch (IllegalDataException ide) {				
 			throw new RetrieveObjectException(ide);
 		}
 
-		if ((list == null) || (list.isEmpty()))
+		if ((collection == null) || (collection.isEmpty()))
 				throw new ObjectNotFoundException("No characteristic type with codename: '" + codename + "'");
 
-		return (CharacteristicType) list.get(0);
+		return (CharacteristicType) collection.iterator().next();
 	}
 
 }

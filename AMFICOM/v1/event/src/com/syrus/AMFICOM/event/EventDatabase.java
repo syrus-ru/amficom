@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.7 2005/02/08 20:23:52 arseniy Exp $
+ * $Id: EventDatabase.java,v 1.8 2005/02/11 18:42:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -46,7 +47,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/08 20:23:52 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/11 18:42:17 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -154,7 +155,7 @@ public class EventDatabase extends StorableObjectDatabase {
 		return event;
 	}
 
-	private void retrieveEventParametersByOneQuery(List events) throws RetrieveObjectException {
+	private void retrieveEventParametersByOneQuery(Collection events) throws RetrieveObjectException {
     if ((events == null) || (events.isEmpty()))
 			return;
 
@@ -169,7 +170,7 @@ public class EventDatabase extends StorableObjectDatabase {
   			+ SQL_FROM + ObjectEntities.EVENTPARAMETER_ENTITY
   			+ SQL_WHERE);
     try {
-			sql.append(this.idsInListString(events, EventWrapper.LINK_COLUMN_EVENT_ID));
+			sql.append(this.idsEnumerationString(events, EventWrapper.LINK_COLUMN_EVENT_ID, true));
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e);
@@ -263,7 +264,7 @@ public class EventDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void retrieveEventSourceIdsByOneQuery(List events) throws RetrieveObjectException, IllegalDataException {
+	private void retrieveEventSourceIdsByOneQuery(Collection events) throws RetrieveObjectException, IllegalDataException {
 		if ((events == null) || (events.isEmpty()))
 			return;
 
@@ -306,7 +307,7 @@ public class EventDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			Event event = (Event) it.next();
@@ -408,7 +409,7 @@ public class EventDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void updateEventSources(List events) throws IllegalDataException, UpdateObjectException {
+	private void updateEventSources(Collection events) throws IllegalDataException, UpdateObjectException {
 		if (events == null || events.isEmpty())
 			return;
 
@@ -425,48 +426,43 @@ public class EventDatabase extends StorableObjectDatabase {
 				EventWrapper.LINK_COLUMN_SOURCE_ID);
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		Event event = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(storableObject, false);
+				super.checkAndUpdateEntity(storableObject, modifierId, false);
 				break;
 			case UPDATE_FORCE:					
 			default:
-				super.checkAndUpdateEntity(storableObject, true);		
+				super.checkAndUpdateEntity(storableObject, modifierId, true);		
 				return;
 		}
 	}
 
-	public void update(List storableObjects, int updateKind, Object arg)
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntities(storableObjects, false);
+				super.checkAndUpdateEntities(storableObjects, modifierId, false);
 				break;
 			case UPDATE_FORCE:					
 			default:
-				super.checkAndUpdateEntities(storableObjects, true);		
+				super.checkAndUpdateEntities(storableObjects, modifierId, true);		
 				return;
 		}
 	}
 
-	public List retrieveByIds(List ids, String conditions) throws IllegalDataException, RetrieveObjectException {
-		List list = null; 
+	public Collection retrieveByIds(Collection ids, String conditions) throws IllegalDataException, RetrieveObjectException {
+		Collection collection = null; 
 		if ((ids == null) || (ids.isEmpty()))
-			list = this.retrieveByIdsOneQuery(null, conditions);
+			collection = this.retrieveByIdsOneQuery(null, conditions);
 		else
-			list = this.retrieveByIdsOneQuery(ids, conditions);
+			collection = this.retrieveByIdsOneQuery(ids, conditions);
 
-		this.retrieveEventParametersByOneQuery(list);
-		this.retrieveEventSourceIdsByOneQuery(list);
+		this.retrieveEventParametersByOneQuery(collection);
+		this.retrieveEventSourceIdsByOneQuery(collection);
 
-		return list;
-	}
-
-	public List retrieveByCondition(List ids, StorableObjectCondition condition)
-			throws RetrieveObjectException, IllegalDataException {
-		throw new UnsupportedOperationException("Not implemented");
+		return collection;
 	}
 
 	public void delete(StorableObject storableObject) throws IllegalDataException {

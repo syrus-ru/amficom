@@ -1,5 +1,5 @@
 /*
- * $Id: XMLGeneralObjectLoader.java,v 1.8 2005/02/11 15:35:16 arseniy Exp $
+ * $Id: XMLGeneralObjectLoader.java,v 1.9 2005/02/11 18:40:16 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/02/11 15:35:16 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/11 18:40:16 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -57,7 +57,7 @@ public final class XMLGeneralObjectLoader implements GeneralObjectLoader {
 		return (Characteristic) this.loadStorableObject(id);
 	}
 
-	public List loadParameterTypes(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadParameterTypes(Collection ids) throws DatabaseException, CommunicationException {
 		List list = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
@@ -66,7 +66,7 @@ public final class XMLGeneralObjectLoader implements GeneralObjectLoader {
 		return list;
 	}
 
-	public List loadCharacteristicTypes(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadCharacteristicTypes(Collection ids) throws DatabaseException, CommunicationException {
 		List list = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
@@ -75,7 +75,7 @@ public final class XMLGeneralObjectLoader implements GeneralObjectLoader {
 		return list;
 	}
 
-	public List loadCharacteristics(Collection ids) throws DatabaseException, CommunicationException {
+	public Collection loadCharacteristics(Collection ids) throws DatabaseException, CommunicationException {
 		List list = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
@@ -84,7 +84,7 @@ public final class XMLGeneralObjectLoader implements GeneralObjectLoader {
 		return list;
 	}
 
-	private List loadStorableObjectButIds(StorableObjectCondition condition, Collection ids) throws CommunicationException {
+	private Collection loadStorableObjectButIds(StorableObjectCondition condition, Collection ids) throws CommunicationException {
 		try {
 			return this.generalXML.retrieveByCondition(ids, condition);
 		} catch (RetrieveObjectException e) {
@@ -97,17 +97,17 @@ public final class XMLGeneralObjectLoader implements GeneralObjectLoader {
 
 	}
 
-	public List loadParameterTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
+	public Collection loadParameterTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public List loadCharacteristicTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
+	public Collection loadCharacteristicTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
 
-	public List loadCharacteristicsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
+	public Collection loadCharacteristicsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeDatabase.java,v 1.16 2005/02/11 16:02:55 bob Exp $
+ * $Id: CableThreadTypeDatabase.java,v 1.17 2005/02/11 18:40:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -32,8 +31,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/02/11 16:02:55 $
- * @author $Author: bob $
+ * @version $Revision: 1.17 $, $Date: 2005/02/11 18:40:02 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -187,22 +186,22 @@ public class CableThreadTypeDatabase extends StorableObjectDatabase {
 	}
 	
 		
-	public List retrieveAll() throws RetrieveObjectException {
-        List list = null;
-        try {
-            list = this.retrieveByIds(null, null);
-        }  catch (IllegalDataException ide) {           
-            Log.debugMessage("CableThreadTypeDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
-            throw new RetrieveObjectException(ide);
-        }
-        return list;
-    }
-	
-	public List retrieveByIds(Collection ids, String condition) 
-			throws IllegalDataException, RetrieveObjectException {
+	public Collection retrieveAll() throws RetrieveObjectException {
+		Collection objects = null;
+		try {
+			objects = this.retrieveByIds(null, null);
+		}
+		catch (IllegalDataException ide) {
+			Log.debugMessage("CableThreadTypeDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
+			throw new RetrieveObjectException(ide);
+		}
+		return objects;
+	}
+
+	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
 			return this.retrieveByIdsOneQuery(null, condition);
-		return this.retrieveByIdsOneQuery(ids, condition);	
+		return this.retrieveByIdsOneQuery(ids, condition);
 		//return retriveByIdsPreparedStatement(ids);
 	}	
 

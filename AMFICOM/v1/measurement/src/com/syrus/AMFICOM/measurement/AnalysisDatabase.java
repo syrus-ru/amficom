@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.42 2005/02/11 16:31:48 bob Exp $
+ * $Id: AnalysisDatabase.java,v 1.43 2005/02/11 18:39:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -30,8 +29,8 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/02/11 16:31:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.43 $, $Date: 2005/02/11 18:39:52 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -186,7 +185,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public List retrieveByIds(Collection ids, String conditions) throws IllegalDataException, RetrieveObjectException {
+	public Collection retrieveByIds(Collection ids, String conditions) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
 			return this.retrieveByIdsOneQuery(null, conditions);
 		return this.retrieveByIdsOneQuery(ids, conditions);	

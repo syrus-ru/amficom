@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.67 2005/02/11 16:31:48 bob Exp $
+ * $Id: TestDatabase.java,v 1.68 2005/02/11 18:39:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -51,8 +51,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/02/11 16:31:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.68 $, $Date: 2005/02/11 18:39:52 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -265,7 +265,7 @@ public class TestDatabase extends StorableObjectDatabase {
 			throw new RetrieveObjectException("TestDatabase.retrieveMeasurementSetupTestLinks | Measurement setup ids for test '" + testIdStr + "' not found.");
 	}
     
-    private void retrieveMeasurementSetupTestLinksByOneQuery(List tests) throws RetrieveObjectException {
+    private void retrieveMeasurementSetupTestLinksByOneQuery(Collection tests) throws RetrieveObjectException {
     	if ((tests == null) || (tests.isEmpty()))
             return;     
         
@@ -664,7 +664,7 @@ public class TestDatabase extends StorableObjectDatabase {
 		}
 
 	}
-
+/*
 	private void updateStatus(Test test) throws UpdateObjectException {
 		String testIdStr = DatabaseIdentifier.toSQLString(test.getId());
 		String sql = SQL_UPDATE + ObjectEntities.TEST_ENTITY
@@ -731,20 +731,20 @@ public class TestDatabase extends StorableObjectDatabase {
 			}
 		}
 	}
-
-	public List retrieveTests(TestStatus status) throws RetrieveObjectException {
-		List list = null;
+*/
+	public Collection retrieveTests(TestStatus status) throws RetrieveObjectException {
+		Collection objects = null;
 		try{
-			list = this.retrieveByIds(null, TestWrapper.COLUMN_STATUS + EQUALS + Integer.toString(status.value())
+			objects = this.retrieveByIds(null, TestWrapper.COLUMN_STATUS + EQUALS + Integer.toString(status.value())
 									+ SQL_ORDER_BY + TestWrapper.COLUMN_START_TIME + SQL_ASC);
 		}
 		catch(IllegalDataException ide) {
 			Log.debugMessage("TestDatabase.retrieveTests | Trying: " + ide, Log.DEBUGLEVEL09);
 		}
-		return list;
+		return objects;
 	}
 
-	public List retrieveTestsForMCM(Identifier mcmId, TestStatus status) throws RetrieveObjectException {
+	public Collection retrieveTestsForMCM(Identifier mcmId, TestStatus status) throws RetrieveObjectException {
 		
 		String mcmIdStr = DatabaseIdentifier.toSQLString(mcmId);
 		String condition = TestWrapper.COLUMN_MONITORED_ELEMENT_ID + SQL_IN + OPEN_BRACKET
@@ -766,41 +766,41 @@ public class TestDatabase extends StorableObjectDatabase {
 				+ SQL_AND + TestWrapper.COLUMN_STATUS + EQUALS + Integer.toString(status.value())
 			+ SQL_ORDER_BY + TestWrapper.COLUMN_START_TIME + SQL_ASC;		
 
-		List list = null;
+		Collection objects = null;
 		
 		try {
-			list = this.retrieveByIds(null, condition);
+			objects = this.retrieveByIds(null, condition);
 		}
 		catch (IllegalDataException ide) {			
 			Log.debugMessage("TestDatabase.retrieveTestsForMCM | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
 		}
 		
-		return list;
+		return objects;
 	}
 	
-	public List retrieveAll() throws RetrieveObjectException {
-		List list = null;
+	public Collection retrieveAll() throws RetrieveObjectException {
+		Collection objects = null;
 		
 		try {
-			list = this.retrieveByIds(null, null);
+			objects = this.retrieveByIds(null, null);
 		}
 		catch (IllegalDataException ide) {			
 			Log.debugMessage("TestDatabase.retrieveAll | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
 		}
 		
-		return list;
+		return objects;
 	}
 
-	public List retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
-		List list = null; 
+	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
+		Collection objects = null; 
 		if ((ids == null) || (ids.isEmpty()))
-			list = this.retrieveByIdsOneQuery(null, condition);
+			objects = this.retrieveByIdsOneQuery(null, condition);
 		else
-			list = this.retrieveByIdsOneQuery(ids, condition);
+			objects = this.retrieveByIdsOneQuery(ids, condition);
 		
-		retrieveMeasurementSetupTestLinksByOneQuery(list);	
+		this.retrieveMeasurementSetupTestLinksByOneQuery(objects);	
 		
-		return list;
+		return objects;
 	}
 	
 	public void delete(Identifier id) throws IllegalDataException {

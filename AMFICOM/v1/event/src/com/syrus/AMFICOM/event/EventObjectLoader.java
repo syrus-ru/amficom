@@ -1,5 +1,5 @@
 /*
- * $Id: EventObjectLoader.java,v 1.4 2005/02/08 20:11:20 arseniy Exp $
+ * $Id: EventObjectLoader.java,v 1.5 2005/02/11 18:42:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,17 +8,17 @@
 
 package com.syrus.AMFICOM.event;
 
-import java.util.List;
+import java.util.Collection;
 
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/08 20:11:20 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/11 18:42:17 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -36,26 +36,26 @@ public interface EventObjectLoader {
 //	Alarm loadAlarm(Identifier id) throws DatabaseException, CommunicationException;
 
 
-	List loadEventTypes(List ids) throws DatabaseException, CommunicationException;
+	Collection loadEventTypes(Collection ids) throws DatabaseException, CommunicationException;
 
-//	List loadAlarmTypes(List ids) throws DatabaseException, CommunicationException;
+//	Collection loadAlarmTypes(Collection ids) throws DatabaseException, CommunicationException;
 
-	List loadEvents(List ids) throws DatabaseException, CommunicationException;
+	Collection loadEvents(Collection ids) throws DatabaseException, CommunicationException;
 
-	List loadEventSources(List ids) throws DatabaseException, CommunicationException;
+	Collection loadEventSources(Collection ids) throws DatabaseException, CommunicationException;
 
-//	List loadAlarms(List ids) throws DatabaseException, CommunicationException;
+//	Collection loadAlarms(Collection ids) throws DatabaseException, CommunicationException;
 
 
-	List loadEventTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
+	Collection loadEventTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
 
-//	List loadAlarmTypesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
+//	Collection loadAlarmTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
 
-	List loadEventsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
+	Collection loadEventsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
 
-	List loadEventSourcesButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
+	Collection loadEventSourcesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
 
-//	List loadAlarmsButIds(StorableObjectCondition condition, List ids) throws DatabaseException, CommunicationException;
+//	Collection loadAlarmsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
 
 
 	void saveEventType(EventType eventType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
@@ -69,15 +69,15 @@ public interface EventObjectLoader {
 //	void saveAlarm(Alarm alarm, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 
-	void saveEventTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveEventTypes(Collection collection, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-//	void saveAlarmTypes(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+//	void saveAlarmTypes(Collection collection, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveEvents(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveEvents(Collection collection, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-	void saveEventSources(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+	void saveEventSources(Collection collection, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
-//	void saveAlarms(List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
+//	void saveAlarms(Collection collection, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
 
 	java.util.Set refresh(java.util.Set storableObjects) throws CommunicationException, DatabaseException;
@@ -85,5 +85,5 @@ public interface EventObjectLoader {
 
 	void delete(Identifier id) throws CommunicationException, DatabaseException;
 
-	void delete(List objects) throws CommunicationException, DatabaseException, IllegalDataException;
+	void delete(Collection objects) throws CommunicationException, DatabaseException, IllegalDataException;
 }

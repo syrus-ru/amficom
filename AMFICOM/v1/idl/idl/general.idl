@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.56 2005/02/11 09:11:10 bob Exp $
+ * $Id: general.idl,v 1.57 2005/02/11 18:41:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -82,7 +82,13 @@ module corba {
 		CompletionStatus completion_status;
 		wstring message;
 	};
-
+/*
+	exception RemoteVersionCollisionException {
+		long long desiredVersion;
+		long long actualVersion;
+		wstring message;
+	};
+*/
 //////////////////// AccessIdentifier ///////////////////
 	struct AccessIdentifier_Transferable {
 		long long started;

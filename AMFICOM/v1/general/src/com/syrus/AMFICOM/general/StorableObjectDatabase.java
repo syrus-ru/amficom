@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.95 2005/02/11 15:35:16 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.96 2005/02/11 18:40:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.95 $, $Date: 2005/02/11 15:35:16 $
+ * @version $Revision: 1.96 $, $Date: 2005/02/11 18:40:16 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -327,7 +327,7 @@ public abstract class StorableObjectDatabase {
 
 	public abstract void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException;
 
-	public abstract List retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException;
+	public abstract Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException;
 
 	public abstract Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException;
@@ -379,7 +379,7 @@ public abstract class StorableObjectDatabase {
 	 * @throws IllegalDataException
 	 * @throws RetrieveObjectException
 	 */
-	public List retrieveButIds(Collection ids) throws IllegalDataException, RetrieveObjectException {
+	public Collection retrieveButIds(Collection ids) throws IllegalDataException, RetrieveObjectException {
 		return this.retrieveButIds(ids, null);
 	}
 
@@ -390,7 +390,7 @@ public abstract class StorableObjectDatabase {
 	 * @throws IllegalDataException
 	 * @throws RetrieveObjectException
 	 */
-	protected List retrieveButIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
+	protected Collection retrieveButIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		StringBuffer stringBuffer = this.idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, false);
 		if ((condition != null) && (condition.length() > 0)) {
 			if (stringBuffer.length() != 0)
@@ -401,7 +401,7 @@ public abstract class StorableObjectDatabase {
 		return this.retrieveByIds(null, stringBuffer.toString());
 	}
 
-	public final List retrieveByCondition(Collection ids, StorableObjectCondition condition)
+	public final Collection retrieveByCondition(Collection ids, StorableObjectCondition condition)
 			throws RetrieveObjectException, IllegalDataException {
 
 		DatabaseStorableObjectCondition databaseStorableObjectCondition = this.reflectDatabaseCondition(condition);
@@ -416,8 +416,8 @@ public abstract class StorableObjectDatabase {
 					+ this.getEnityName()
 					+ ") classes");
 		String conditionQuery = databaseStorableObjectCondition.getSQLQuery();
-		List list = this.retrieveButIds(ids, conditionQuery);
-		return list;
+		Collection collection = this.retrieveButIds(ids, conditionQuery);
+		return collection;
 	}
 
 	/**
@@ -427,7 +427,7 @@ public abstract class StorableObjectDatabase {
 	 * @throws IllegalDataException
 	 * @throws RetrieveObjectException
 	 */
-	protected List retrieveByIdsOneQuery(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
+	protected Collection retrieveByIdsOneQuery(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		List storableObjects = new LinkedList();
 
 		StringBuffer stringBuffer = new StringBuffer("1=1");
@@ -835,7 +835,7 @@ public abstract class StorableObjectDatabase {
 				storableObjectIds.add(id);
 		}
 
-		List dbstorableObjects = null;
+		Collection dbstorableObjects = null;
 		try {
 			dbstorableObjects = this.retrieveByIds(storableObjectIds, null);
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralObjectLoader.java,v 1.6 2005/02/11 15:35:16 arseniy Exp $
+ * $Id: GeneralObjectLoader.java,v 1.7 2005/02/11 18:40:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,11 +9,10 @@
 package com.syrus.AMFICOM.general;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/11 15:35:16 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/11 18:40:16 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -27,20 +26,20 @@ public interface GeneralObjectLoader {
 	Characteristic loadCharacteristic(Identifier id) throws DatabaseException, CommunicationException;
 
 
-	List loadParameterTypes(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadParameterTypes(Collection ids) throws DatabaseException, CommunicationException;
 
-	List loadCharacteristicTypes(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadCharacteristicTypes(Collection ids) throws DatabaseException, CommunicationException;
 
-	List loadCharacteristics(Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadCharacteristics(Collection ids) throws DatabaseException, CommunicationException;
 
 
     /* Load Configuration StorableObject but argument ids */
 
-	List loadParameterTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadParameterTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
 
-	List loadCharacteristicTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadCharacteristicTypesButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
 
-	List loadCharacteristicsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
+	Collection loadCharacteristicsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException, CommunicationException;
 
 
 	void saveParameterType(ParameterType parameterType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.38 2005/02/11 16:02:55 bob Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.39 2005/02/11 18:40:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/02/11 16:02:55 $
- * @author $Author: bob $
+ * @version $Revision: 1.39 $, $Date: 2005/02/11 18:40:02 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public class MeasurementPortDatabase extends StorableObjectDatabase {
@@ -128,27 +128,27 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 		measurementPort.setCharacteristics0(characteristicDatabase.retrieveCharacteristics(measurementPort.getId(), CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORT));
 	}
 
-	public List retrieveByIds(Collection ids, String condition)
+	public Collection retrieveByIds(Collection ids, String condition)
 			throws IllegalDataException, RetrieveObjectException {
-		List list = null;
+		Collection objects = null;
 		if ((ids == null) || (ids.isEmpty()))
-			list = this.retrieveByIdsOneQuery(null, condition);
+			objects = this.retrieveByIdsOneQuery(null, condition);
 		else
-			list = this.retrieveByIdsOneQuery(ids, condition);
+			objects = this.retrieveByIdsOneQuery(ids, condition);
 
-    if (list != null) {
+    if (objects != null) {
 			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) (GeneralDatabaseContext.getCharacteristicDatabase());
-			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list,
+			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(objects,
 					CharacteristicSort.CHARACTERISTIC_SORT_MEASUREMENTPORT);
 			if (characteristicMap != null)
-				for (Iterator iter = list.iterator(); iter.hasNext();) {
+				for (Iterator iter = objects.iterator(); iter.hasNext();) {
 					MeasurementPort measurementPort = (MeasurementPort) iter.next();
 					List characteristics = (List) characteristicMap.get(measurementPort.getId());
 					measurementPort.setCharacteristics0(characteristics);
 				}
 		}
 
-    return list;
+    return objects;
 	}
 
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
@@ -252,15 +252,15 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
 		characteristicDatabase.updateCharacteristics(storableObjects);
 	}
 
-	public List retrieveAll() throws RetrieveObjectException {
-		List list = null;
+	public Collection retrieveAll() throws RetrieveObjectException {
+		Collection objects = null;
 		try {
-			list = this.retrieveByIds(null, null);
+			objects = this.retrieveByIds(null, null);
 		}
 		catch (IllegalDataException ide) {           
 			Log.debugMessage("MeasurementPortDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
 			throw new RetrieveObjectException(ide);
 		}
-		return list;
+		return objects;
 	}
 }

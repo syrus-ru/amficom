@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.44 2005/02/11 16:02:55 bob Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.45 2005/02/11 18:40:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/02/11 16:02:55 $
- * @author $Author: bob $
+ * @version $Revision: 1.45 $, $Date: 2005/02/11 18:40:02 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -217,7 +217,7 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		monitoredElement.setMonitoredDomainMemberIds(mdmIds);
 	}
 
-	private void retrieveMonitoredDomainMemberIdsByOneQuery(List monitoredElements) throws RetrieveObjectException {
+	private void retrieveMonitoredDomainMemberIdsByOneQuery(Collection monitoredElements) throws RetrieveObjectException {
 		Map sortedMonitoredElements = new HashMap();
 		List monitoredElementsOneSort;
 		Integer meSort;
@@ -465,15 +465,15 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public List retrieveAll() throws RetrieveObjectException {
-		List list = null;
+	public Collection retrieveAll() throws RetrieveObjectException {
+		Collection objects = null;
 		try {
-			list = this.retrieveByIds(null, null);
+			objects = this.retrieveByIds(null, null);
 		} catch (IllegalDataException ide) {
 			Log.debugMessage("MonitoredElementDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
 			throw new RetrieveObjectException(ide);
 		}
-		return list;
+		return objects;
 	}
 
 	public void delete(StorableObject storableObject) throws IllegalDataException {
@@ -530,15 +530,15 @@ public class MonitoredElementDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public List retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
-		List list = null;
+	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
+		Collection objects = null;
 		if ((ids == null) || (ids.isEmpty()))
-			list = this.retrieveByIdsOneQuery(null, condition);
+			objects = this.retrieveByIdsOneQuery(null, condition);
 		else
-			list = this.retrieveByIdsOneQuery(ids, condition);
+			objects = this.retrieveByIdsOneQuery(ids, condition);
 
-		this.retrieveMonitoredDomainMemberIdsByOneQuery(list);
+		this.retrieveMonitoredDomainMemberIdsByOneQuery(objects);
 
-		return list;
+		return objects;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: EventSourceDatabase.java,v 1.2 2005/02/08 20:31:06 arseniy Exp $
+ * $Id: EventSourceDatabase.java,v 1.3 2005/02/11 18:42:17 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.event;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -27,7 +28,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/08 20:31:06 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/11 18:42:17 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -44,11 +45,11 @@ public class EventSourceDatabase extends StorableObjectDatabase {
 	protected String getColumns(int mode) {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
-				+ EventSourceWrapper.COLUMN_SOURCE_ENTITY_CODE
-				+ EventSourceWrapper.COLUMN_MCM_ID
-				+ EventSourceWrapper.COLUMN_PORT_ID
-				+ EventSourceWrapper.COLUMN_EQUIPMENT_ID
-				+ EventSourceWrapper.COLUMN_TRANSMISSION_PATH_ID
+				+ EventSourceWrapper.COLUMN_SOURCE_ENTITY_CODE + COMMA
+				+ EventSourceWrapper.COLUMN_MCM_ID + COMMA
+				+ EventSourceWrapper.COLUMN_PORT_ID + COMMA
+				+ EventSourceWrapper.COLUMN_EQUIPMENT_ID + COMMA
+				+ EventSourceWrapper.COLUMN_TRANSMISSION_PATH_ID + COMMA
 				+ EventSourceWrapper.COLUMN_LINK_ID;
 		}
 		return columns;
@@ -270,43 +271,43 @@ public class EventSourceDatabase extends StorableObjectDatabase {
 		this.insertEntity(eventSource);
 	}
 
-	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 	}
 
-	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
+	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
 			return this.retrieveByIdsOneQuery(null, condition);
 
 		return this.retrieveByIdsOneQuery(ids, condition);
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object arg)
+	public void update(StorableObject storableObject, Identifier modifierId , int updateKind)
 			throws IllegalDataException,
 				VersionCollisionException,
 				UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(storableObject, false);
+				super.checkAndUpdateEntity(storableObject, modifierId, false);
 				break;
 			case UPDATE_FORCE:
 			default:
-				super.checkAndUpdateEntity(storableObject, true);
+				super.checkAndUpdateEntity(storableObject, modifierId, true);
 				return;
 		}
 	}
 
-	public void update(List storableObjects, int updateKind, Object arg)
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
 			throws IllegalDataException,
 				VersionCollisionException,
 				UpdateObjectException {
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntities(storableObjects, false);
+				super.checkAndUpdateEntities(storableObjects, modifierId, false);
 				break;
 			case UPDATE_FORCE:					
 			default:
-				super.checkAndUpdateEntities(storableObjects, true);		
+				super.checkAndUpdateEntities(storableObjects, modifierId, true);		
 			return;
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.26 2005/02/11 16:31:48 bob Exp $
+ * $Id: ModelingDatabase.java,v 1.27 2005/02/11 18:39:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,10 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.List;
 
-import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
@@ -29,13 +26,12 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/02/11 16:31:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.27 $, $Date: 2005/02/11 18:39:52 $
+ * @author $Author: arseniy $
  * @module module_name
  */
 
@@ -179,15 +175,15 @@ public class ModelingDatabase extends StorableObjectDatabase {
 		}
 	}
 
-  public List retrieveByIds(Collection ids, String conditions) throws IllegalDataException, RetrieveObjectException {
+  public Collection retrieveByIds(Collection ids, String conditions) throws IllegalDataException, RetrieveObjectException {
 		if ((ids == null) || (ids.isEmpty()))
 			return this.retrieveByIdsOneQuery(null, conditions);
 		return this.retrieveByIdsOneQuery(ids, conditions);  
 		//return retriveByIdsPreparedStatement(ids, conditions);
 	}
-
-	public List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {
-		List list = null;
+/*
+	public Collection retrieveButIdsByDomain(Collection ids, Domain domain) throws RetrieveObjectException {
+		Collection objects = null;
 
     String condition = ModelingWrapper.COLUMN_MONITORED_ELEMENT_ID + SQL_IN
 				+ OPEN_BRACKET
@@ -198,12 +194,13 @@ public class ModelingDatabase extends StorableObjectDatabase {
 				+ CLOSE_BRACKET;
 
     try {
-			list = retrieveButIds(ids, condition);
+			objects = retrieveButIds(ids, condition);
 		}
 		catch (IllegalDataException ide) {
 			Log.debugMessage("EvaluationDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
 		}
 
-		return list;
+		return objects;
 	}
+	*/
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.64 2005/02/11 16:31:48 bob Exp $
+ * $Id: ResultDatabase.java,v 1.65 2005/02/11 18:39:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,8 +43,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/02/11 16:31:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.65 $, $Date: 2005/02/11 18:39:52 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -321,7 +321,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 	 * @param results
 	 * @throws RetrieveObjectException
 	 */
-	private void retrieveResultParametersByOneQuery(List results) throws RetrieveObjectException {
+	private void retrieveResultParametersByOneQuery(Collection results) throws RetrieveObjectException {
 		if ((results == null) || (results.isEmpty()))
 			return;		
 		
@@ -560,15 +560,15 @@ public class ResultDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public List retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
-		List list = null;
+	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
+		Collection objects = null;
 		if ((ids == null) || (ids.isEmpty()))
-			list = this.retrieveByIdsOneQuery(null, condition);
+			objects = this.retrieveByIdsOneQuery(null, condition);
 		else
-			list = this.retrieveByIdsOneQuery(ids, condition);
+			objects = this.retrieveByIdsOneQuery(ids, condition);
 
-		this.retrieveResultParametersByOneQuery(list);
-		return list;
+		this.retrieveResultParametersByOneQuery(objects);
+		return objects;
 	}
 
 //	private List retrieveButIdsByDomain(List ids, Domain domain) throws RetrieveObjectException {

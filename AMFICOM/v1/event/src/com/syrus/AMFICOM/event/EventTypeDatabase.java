@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.7 2005/02/07 14:20:20 arseniy Exp $
+ * $Id: EventTypeDatabase.java,v 1.8 2005/02/11 18:42:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -40,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/02/07 14:20:20 $
+ * @version $Revision: 1.8 $, $Date: 2005/02/11 18:42:17 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -161,7 +162,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		eventType.setParameterTypes(parTyps);
 	}
 
-	private void retrieveParameterTypesByOneQuery(List eventTypes) throws RetrieveObjectException {
+	private void retrieveParameterTypesByOneQuery(Collection eventTypes) throws RetrieveObjectException {
 		if ((eventTypes == null) || (eventTypes.isEmpty()))
 			return;
 
@@ -171,7 +172,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 				+ SQL_FROM + ObjectEntities.EVENTTYPPARTYPLINK_ENTITY
 				+ SQL_WHERE);
 		try {
-			sql.append(this.idsInListString(eventTypes, LINK_COLUMN_EVENT_TYPE_ID));
+			sql.append(this.idsEnumerationString(eventTypes, LINK_COLUMN_EVENT_TYPE_ID, true));
 		}
 		catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e);
@@ -250,7 +251,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		this.insertParameterTypes(eventType);
 	}
 
-	public void insert(List storableObjects) throws IllegalDataException, CreateObjectException {
+	public void insert(Collection storableObjects) throws IllegalDataException, CreateObjectException {
 		this.insertEntities(storableObjects);
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			EventType eventType = this.fromStorableObject((StorableObject)it.next());
@@ -315,28 +316,28 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
+	public void update(StorableObject storableObject, Identifier modifierId, int updateKind) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
 //		EventType eventType = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntity(storableObject, false);
+				super.checkAndUpdateEntity(storableObject, modifierId, false);
 				break;
 			case UPDATE_FORCE:					
 			default:
-				super.checkAndUpdateEntity(storableObject, true);		
+				super.checkAndUpdateEntity(storableObject, modifierId, true);		
 				return;
 		}
 	}
 
-	public void update(List storableObjects, int updateKind, Object arg)
+	public void update(Collection storableObjects, Identifier modifierId, int updateKind)
 			throws IllegalDataException, VersionCollisionException, UpdateObjectException {		
 		switch (updateKind) {
 			case UPDATE_CHECK:
-				super.checkAndUpdateEntities(storableObjects, false);
+				super.checkAndUpdateEntities(storableObjects, modifierId, false);
 				break;
 			case UPDATE_FORCE:					
 			default:
-				super.checkAndUpdateEntities(storableObjects, true);		
+				super.checkAndUpdateEntities(storableObjects, modifierId, true);		
 				return;
 		}
 	}
@@ -381,15 +382,15 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void delete(List objects) throws IllegalDataException {
+	public void delete(Collection objects) throws IllegalDataException {
 		StringBuffer sql1 = new StringBuffer(SQL_DELETE_FROM
 				+ ObjectEntities.EVENTTYPPARTYPLINK_ENTITY
 				+ SQL_WHERE);
-		sql1.append(this.idsInListString(objects, LINK_COLUMN_EVENT_TYPE_ID));
+		sql1.append(this.idsEnumerationString(objects, LINK_COLUMN_EVENT_TYPE_ID, true));
 		StringBuffer sql2 = new StringBuffer(SQL_DELETE_FROM
 				+ ObjectEntities.EVENTTYPE_ENTITY
 				+ SQL_WHERE);
-		sql2.append(this.idsInListString(objects, StorableObjectWrapper.COLUMN_ID));
+		sql2.append(this.idsEnumerationString(objects, StorableObjectWrapper.COLUMN_ID, true));
 
 		Statement statement = null;
 		Connection connection = DatabaseConnection.getConnection();
@@ -431,21 +432,21 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 	 * @throws RetrieveObjectException
 	 */
 	public EventType retrieveForCodename(String codename) throws ObjectNotFoundException, RetrieveObjectException {
-		List list = null;
+		Collection collection = null;
 		try {
-			list = this.retrieveByIds(null, StorableObjectWrapper.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
+			collection = this.retrieveByIds(null, StorableObjectWrapper.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
 		}
 		catch (IllegalDataException ide) {				
 			throw new RetrieveObjectException(ide);
 		}
 
-		if ((list == null) || (list.isEmpty()))
+		if ((collection == null) || (collection.isEmpty()))
 			throw new ObjectNotFoundException("No event  type with codename: '" + codename + "'");
 
-		return (EventType) list.get(0);
+		return (EventType) collection.iterator().next();
 	}
 
-	public List retrieveAll() throws RetrieveObjectException {
+	public Collection retrieveAll() throws RetrieveObjectException {
 		try {
 			return this.retrieveByIds(null, null);
 		}
@@ -454,16 +455,16 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public List retrieveByIds(List ids, String condition) throws IllegalDataException, RetrieveObjectException {
-		List list = null; 
+	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
+		Collection collection = null; 
 		if ((ids == null) || (ids.isEmpty()))
-			list = this.retrieveByIdsOneQuery(null, condition);
+			collection = this.retrieveByIdsOneQuery(null, condition);
 		else
-			list = this.retrieveByIdsOneQuery(ids, condition);
+			collection = this.retrieveByIdsOneQuery(ids, condition);
 
-		this.retrieveParameterTypesByOneQuery(list);
+		this.retrieveParameterTypesByOneQuery(collection);
 
-		return list;		
+		return collection;		
 	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)

@@ -1,5 +1,5 @@
 /*
- * $Id: KISDatabase.java,v 1.58 2005/02/11 16:02:55 bob Exp $
+ * $Id: KISDatabase.java,v 1.59 2005/02/11 18:40:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,8 +44,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/02/11 16:02:55 $
- * @author $Author: bob $
+ * @version $Revision: 1.59 $, $Date: 2005/02/11 18:40:02 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -225,7 +225,7 @@ public class KISDatabase extends StorableObjectDatabase {
 		}
 	}
 
-  private void retrieveKISMeasurementPortIdsByOneQuery(List kiss) throws RetrieveObjectException {
+  private void retrieveKISMeasurementPortIdsByOneQuery(Collection kiss) throws RetrieveObjectException {
   	if ((kiss == null) || (kiss.isEmpty()))
 			return;     
 
@@ -489,39 +489,39 @@ public class KISDatabase extends StorableObjectDatabase {
 		characteristicDatabase.updateCharacteristics(storableObjects);
 	}
 
-	public List retrieveAll() throws RetrieveObjectException {
-		List list = null;
+	public Collection retrieveAll() throws RetrieveObjectException {
+		Collection objects = null;
 		try {
-			list = this.retrieveByIds(null, null);
+			objects = this.retrieveByIds(null, null);
 		}
 		catch (IllegalDataException ide) {
 			Log.debugMessage("KISDatabase.retrieveAll | Trying: " + ide, Log.DEBUGLEVEL09);
 			throw new RetrieveObjectException(ide);
 		}
-		return list;
+		return objects;
 	}
 
-	public List retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
-		List list = null;
+	public Collection retrieveByIds(Collection ids, String condition) throws IllegalDataException, RetrieveObjectException {
+		Collection objects = null;
 		if ((ids == null) || (ids.isEmpty()))
-			list = this.retrieveByIdsOneQuery(null, condition);
+			objects = this.retrieveByIdsOneQuery(null, condition);
 		else
-			list = this.retrieveByIdsOneQuery(ids, condition);
+			objects = this.retrieveByIdsOneQuery(ids, condition);
 
-		if (list != null && !list.isEmpty()) {
-			this.retrieveKISMeasurementPortIdsByOneQuery(list);
+		if (objects != null && !objects.isEmpty()) {
+			this.retrieveKISMeasurementPortIdsByOneQuery(objects);
 			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) (GeneralDatabaseContext.getCharacteristicDatabase());
-			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list,
+			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(objects,
 					CharacteristicSort.CHARACTERISTIC_SORT_KIS);
 			if (characteristicMap != null)
-				for (Iterator iter = list.iterator(); iter.hasNext();) {
+				for (Iterator iter = objects.iterator(); iter.hasNext();) {
 					KIS kis = (KIS) iter.next();
 					List characteristics = (List) characteristicMap.get(kis.getId());
 					kis.setCharacteristics0(characteristics);
 				}
 		}
         
-		return list;
+		return objects;
 	}
 
 }

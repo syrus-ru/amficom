@@ -1,5 +1,5 @@
 /*
- * $Id: XMLAdministrationObjectLoader.java,v 1.4 2005/02/11 15:35:32 arseniy Exp $
+ * $Id: XMLAdministrationObjectLoader.java,v 1.5 2005/02/11 18:40:09 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/11 15:35:32 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/11 18:40:09 $
  * @author $Author: arseniy $
  * @module admin_v1
  */
@@ -71,16 +71,16 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 		return (Domain) this.loadStorableObject(id);
 	}
 
-	public List loadDomains(Collection ids) throws DatabaseException, CommunicationException {
-		List list = new ArrayList(ids.size());
+	public Collection loadDomains(Collection ids) throws DatabaseException, CommunicationException {
+		Collection objects = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
-			list.add(this.loadStorableObject(id));
+			objects.add(this.loadStorableObject(id));
 		}
-		return list;
+		return objects;
 	}
 
-	public List loadDomainsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
+	public Collection loadDomainsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
@@ -89,16 +89,16 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 		return (MCM) this.loadStorableObject(id);
 	}
 
-	public List loadMCMs(Collection ids) throws DatabaseException, CommunicationException {
-		List list = new ArrayList(ids.size());
+	public Collection loadMCMs(Collection ids) throws DatabaseException, CommunicationException {
+		Collection objects = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
-			list.add(this.loadStorableObject(id));
+			objects.add(this.loadStorableObject(id));
 		}
-		return list;
+		return objects;
 	}
 
-	public List loadMCMsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
+	public Collection loadMCMsButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
@@ -107,16 +107,16 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 		return (Server) this.loadStorableObject(id);
 	}
 
-	public List loadServers(Collection ids) throws DatabaseException, CommunicationException {
-		List list = new ArrayList(ids.size());
+	public Collection loadServers(Collection ids) throws DatabaseException, CommunicationException {
+		Collection objects = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
-			list.add(this.loadStorableObject(id));
+			objects.add(this.loadStorableObject(id));
 		}
-		return list;
+		return objects;
 	}
 
-	public List loadServersButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
+	public Collection loadServersButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
@@ -125,16 +125,16 @@ public class XMLAdministrationObjectLoader implements AdministrationObjectLoader
 		return (User) this.loadStorableObject(id);
 	}
 
-	public List loadUsers(Collection ids) throws DatabaseException, CommunicationException {
-		List list = new ArrayList(ids.size());
+	public Collection loadUsers(Collection ids) throws DatabaseException, CommunicationException {
+		Collection objects = new ArrayList(ids.size());
 		for (Iterator it = ids.iterator(); it.hasNext();) {
 			Identifier id = (Identifier) it.next();
-			list.add(this.loadStorableObject(id));
+			objects.add(this.loadStorableObject(id));
 		}
-		return list;
+		return objects;
 	}
 
-	public List loadUsersButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
+	public Collection loadUsersButIds(StorableObjectCondition condition, Collection ids) throws DatabaseException,
 			CommunicationException {
 		return this.loadStorableObjectButIds(condition, ids);
 	}
