@@ -36,35 +36,13 @@
 
 package com.syrus.AMFICOM.Client.Resource.Scheme;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.io.*;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Vector;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.GZIPOutputStream;
+import java.util.*;
+import java.util.zip.*;
 
-import javax.swing.JOptionPane;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-
+import com.syrus.AMFICOM.CORBA.Scheme.*;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import com.syrus.AMFICOM.CORBA.Scheme.SchemeCableLink_Transferable;
-import com.syrus.AMFICOM.CORBA.Scheme.SchemeElement_Transferable;
-import com.syrus.AMFICOM.CORBA.Scheme.SchemeLink_Transferable;
-import com.syrus.AMFICOM.CORBA.Scheme.SchemePath_Transferable;
-import com.syrus.AMFICOM.CORBA.Scheme.Scheme_Transferable;
-import com.syrus.AMFICOM.Client.Schematics.UI.*;
+import com.syrus.AMFICOM.Client.Resource.*;
 
 public class Scheme extends ObjectResource implements Serializable
 {
