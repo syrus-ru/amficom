@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.13 2005/02/24 09:16:06 bob Exp $
+ * $Id: LinkedIdsCondition.java,v 1.14 2005/02/25 09:35:02 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,7 +65,7 @@ import com.syrus.util.Log;
  * </ul>
  * 
  * @author $Author: bob $
- * @version $Revision: 1.13 $, $Date: 2005/02/24 09:16:06 $
+ * @version $Revision: 1.14 $, $Date: 2005/02/25 09:35:02 $
  * @module general_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -362,20 +362,25 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	public boolean conditionTest(Collection params, Collection links) {
 		if (params != null) {
 			for (Iterator it = params.iterator(); it.hasNext();) {
-				Identified identified = (Identified) it.next();
-				Identifier id2 = identified.getId();
-				for (Iterator iter = links.iterator(); iter.hasNext();) {
-					Identifier id = null;
-					Object object = iter.next();
-					if (object instanceof Identifier)
-						id = (Identifier)object;
-					else if (object instanceof Identified)
-						id = ((Identified)object).getId();
-					if (id2.equals(id)) {
-						return true;
-						
-					}
-				}								
+				Object object = it.next();
+				Identifier id = null;
+				if (object instanceof Identifier)
+					id = (Identifier)object;
+				else if (object instanceof Identified)
+					id = ((Identified)object).getId();				
+				if (id != null)
+					for (Iterator iterator = links.iterator(); iterator.hasNext();) {
+						Identifier id2 = null;
+						object = iterator.next();
+						if (object instanceof Identifier)
+							id2 = (Identifier)object;
+						else if (object instanceof Identified)
+							id2 = ((Identified)object).getId();
+						if (id.equals(id2)) {
+							return true;
+							
+						}
+					}								
 			}
 		}
 		return false;
