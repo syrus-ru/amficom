@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.15 2005/02/11 15:35:16 arseniy Exp $
+ * $Id: StorableObjectXML.java,v 1.16 2005/02/14 15:35:16 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import java.util.Map;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  * 
- * @version $Revision: 1.15 $, $Date: 2005/02/11 15:35:16 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/02/14 15:35:16 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public class StorableObjectXML {
@@ -145,7 +145,6 @@ public class StorableObjectXML {
 			if (!shortClassName.equals(ObjectEntities.codeToString(id.getMajor())))
 				objectMap.put(CLASSNAME, shortClassName);
 		}
-		// TODO check versions, update version, modifierId
 		objectMap.put(StorableObjectWrapper.COLUMN_ID, id);
 		objectMap.put(StorableObjectWrapper.COLUMN_CREATED, storableObject.getCreated());
 		objectMap.put(StorableObjectWrapper.COLUMN_MODIFIED, storableObject.getModified());
