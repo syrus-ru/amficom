@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.22 2004/08/17 18:20:39 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.23 2004/08/18 18:10:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,10 @@ import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.NewIdentifierPool;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.configuration.MCM;
+import com.syrus.AMFICOM.configuration.*;
+import com.syrus.AMFICOM.configuration.corba.*;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.AMFICOM.measurement.Result;
@@ -43,12 +45,24 @@ import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 //import com.syrus.AMFICOM.measurement.corba.AnalysisType_Transferable;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/08/17 18:20:39 $
+ * @version $Revision: 1.23 $, $Date: 2004/08/18 18:10:46 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
 
 public class MeasurementControlModule extends SleepButWorkThread {
+	public static final String APPLICATION_NAME = "mcm";
+
+	public static final String KEY_ID = "ID";
+	public static final String KEY_DB_HOST_NAME = "DBHostName";
+	public static final String KEY_DB_SID = "DBSID";
+	public static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
+	public static final String KEY_DB_LOGIN_NAME = "DBLoginName";
+	public static final String KEY_SETUP_SERVER_ID = "SetupServerID";
+	public static final String KEY_TICK_TIME = "TickTime";
+	public static final String KEY_MAX_FALLS = "MaxFalls";
+	public static final String KEY_FORWARD_PROCESSING = "ForwardProcessing";
+
 	public static final String ID = "mcm_1";
 	public static final String DB_SID = "amficom";
 	public static final int DB_CONNECTION_TIMEOUT = 120;
@@ -87,14 +101,22 @@ public class MeasurementControlModule extends SleepButWorkThread {
 	private List resultsToRemove;
 
 	public MeasurementControlModule() {
-		super(ApplicationProperties.getInt("TickTime", TICK_TIME) * 1000, ApplicationProperties.getInt("MaxFalls", MAX_FALLS));
-		this.forwardProcessing = ApplicationProperties.getInt("ForwardProcessing", FORWARD_PROCESSING)*1000;
+		super(ApplicationProperties.getInt(KEY_TICK_TIME, TICK_TIME) * 1000, ApplicationProperties.getInt(KEY_MAX_FALLS, MAX_FALLS));
+		this.forwardProcessing = ApplicationProperties.getInt(KEY_FORWARD_PROCESSING, FORWARD_PROCESSING)*1000;
 		this.running = true;
 	}
 
 	public static void main(String[] args) {
-		Application.init("mcm");
+		Application.init(APPLICATION_NAME);
 
+		/*	If flag -setup is specified run in setup mode (exit after all)*/
+		if (args.length > 0 && args[0].equals("-setup"))
+			setup();
+		else
+			normalStartup();
+	}
+
+	private static void normalStartup() {
 		/*	Establish connection with database	*/
 		establishDatabaseConnection();
 
@@ -105,14 +127,9 @@ public class MeasurementControlModule extends SleepButWorkThread {
 		/*	Load object types*/
 		DatabaseContextSetup.initObjectPools();
 
-		/*	If flag -setup is specified run in setup mode (exit after all)*/
-		if (args.length > 0 && args[0].equals("-setup")) {
-			setup();
-		}
-
 		/*	Retrieve information abot myself*/
 		try {
-			iAm = new MCM(new Identifier(ApplicationProperties.getString("ID", ID)));
+			iAm = new MCM(new Identifier(ApplicationProperties.getString(KEY_ID, ID)));
 		}
 		catch (Exception e) {
 			Log.errorException(e);
@@ -137,24 +154,24 @@ public class MeasurementControlModule extends SleepButWorkThread {
 
 		/*	Initialize pool of Identifiers*/
 		NewIdentifierPool.init(mServerRef);
-//
-//		/*	Start main loop	*/
-//		final MeasurementControlModule measurementControlModule = new MeasurementControlModule();
-//		measurementControlModule.start();
-//
-//		/*	Add shutdown hook	*/
-//		Runtime.getRuntime().addShutdownHook(new Thread() {
-//			public void run() {
-//				measurementControlModule.shutdown();
-//			}
-//		});
+
+		/*	Start main loop	*/
+		final MeasurementControlModule measurementControlModule = new MeasurementControlModule();
+		measurementControlModule.start();
+
+		/*	Add shutdown hook	*/
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {
+				measurementControlModule.shutdown();
+			}
+		});
 	}
 
 	private static void establishDatabaseConnection() {
-		String dbHostName = ApplicationProperties.getString("DBHostName", Application.getInternetAddress());
-		String dbSid = ApplicationProperties.getString("DBSID", DB_SID);
-		long dbConnTimeout = ApplicationProperties.getInt("DBConnectionTimeout", DB_CONNECTION_TIMEOUT)*1000;
-		String dbLoginName = ApplicationProperties.getString("DBLoginName", DB_LOGIN_NAME);
+		String dbHostName = ApplicationProperties.getString(KEY_DB_HOST_NAME, Application.getInternetAddress());
+		String dbSid = ApplicationProperties.getString(KEY_DB_SID, DB_SID);
+		long dbConnTimeout = ApplicationProperties.getInt(KEY_DB_CONNECTION_TIMEOUT, DB_CONNECTION_TIMEOUT)*1000;
+		String dbLoginName = ApplicationProperties.getString(KEY_DB_LOGIN_NAME, DB_LOGIN_NAME);
 		try {
 			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout, dbLoginName);
 		}
@@ -224,6 +241,7 @@ public class MeasurementControlModule extends SleepButWorkThread {
 		}
 		catch (Exception e) {
 			Log.errorException(e);
+			DatabaseConnection.closeConnection();
 			System.exit(-1);
 		}
 	}
@@ -388,8 +406,167 @@ public class MeasurementControlModule extends SleepButWorkThread {
 		this.running = false;
 		DatabaseConnection.closeConnection();
 	}
-	
+
+
 	private static void setup() {
-		
+		String setupServerId = ApplicationProperties.getString(KEY_SETUP_SERVER_ID, null);
+		if (setupServerId == null) {
+			Log.errorMessage("Cannot find key '" + KEY_SETUP_SERVER_ID + "' in file " + ApplicationProperties.getFileName());
+			System.exit(-1);
+		}
+
+		activateCORBASetupServer();
+		activateSetupServerReference(setupServerId);
+
+		/*	Establish connection with database	*/
+		establishDatabaseConnection();
+
+		/*	Initialize object drivers
+		 * 	for work with database*/
+		DatabaseContextSetup.initDatabaseContext();
+
+		/*	Load object types*/
+		DatabaseContextSetup.initObjectPools();
+
+		Identifier id;
+		User user;
+		Domain domain;
+		Server server;
+		MCM mcm;
+
+		id = new Identifier(ApplicationProperties.getString(KEY_ID, ID));
+		MCM_Transferable mcmT = null;
+		try {
+			Log.debugMessage("Fetching MCM '" + id + "' from server", Log.DEBUGLEVEL05);
+			mcmT = mServerRef.transmitMCM((Identifier_Transferable)id.getTransferable());
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			DatabaseConnection.closeConnection();
+			System.exit(-1);
+		}
+
+
+		id = new Identifier(mcmT.domain_id);
+		Domain_Transferable domainT = null;
+		try {
+			Log.debugMessage("Fetching domain '" + id + "' (mcm domain) from server", Log.DEBUGLEVEL05);
+			domainT = mServerRef.transmitDomain((Identifier_Transferable)id.getTransferable());
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			DatabaseConnection.closeConnection();
+			System.exit(-1);
+		}
+
+		id = new Identifier(domainT.creator_id);
+		Log.debugMessage("Getting user '" + id + "' (domain creator)", Log.DEBUGLEVEL05);
+		user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
+
+		id = new Identifier(domainT.modifier_id);
+		Log.debugMessage("Getting user '" + id + "' (domain modifier)", Log.DEBUGLEVEL05);
+		user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
+
+		id = new Identifier(domainT.id);
+		Log.debugMessage("Getting domain '" + id + "' ", Log.DEBUGLEVEL05);
+		domain = (Domain)ConfigurationStorableObjectPool.getStorableObject(id, true);
+
+
+		id = new Identifier(mcmT.server_id);
+		Server_Transferable serverT = null;
+		try {
+			Log.debugMessage("Fetching server '" + id + "' (mcm server) from server", Log.DEBUGLEVEL05);
+			serverT = mServerRef.transmitServer((Identifier_Transferable)id.getTransferable());
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			DatabaseConnection.closeConnection();
+			System.exit(-1);
+		}
+
+		id = new Identifier(serverT.creator_id);
+		Log.debugMessage("Getting user '" + id + "' (server creator)", Log.DEBUGLEVEL05);
+		user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
+
+		id = new Identifier(serverT.modifier_id);
+		Log.debugMessage("Getting user '" + id + "' (server modifier)", Log.DEBUGLEVEL05);
+		user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
+
+		id = new Identifier(serverT.user_id);
+		Log.debugMessage("Getting user '" + id + "' (server user)", Log.DEBUGLEVEL05);
+		user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
+
+		id = new Identifier(serverT.id);
+		Log.debugMessage("Getting server '" + id + "' ", Log.DEBUGLEVEL05);
+		server = (Server)ConfigurationStorableObjectPool.getStorableObject(id, true);
+
+
+		id = new Identifier(mcmT.creator_id);
+		Log.debugMessage("Getting user '" + id + "' (mcm creator)", Log.DEBUGLEVEL05);
+		user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
+
+		id = new Identifier(mcmT.modifier_id);
+		Log.debugMessage("Getting user '" + id + "' (mcm modifier)", Log.DEBUGLEVEL05);
+		user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
+
+		id = new Identifier(mcmT.user_id);
+		Log.debugMessage("Getting user '" + id + "' (mcm user)", Log.DEBUGLEVEL05);
+		user = (User)ConfigurationStorableObjectPool.getStorableObject(id, true);
+
+		id = new Identifier(mcmT.id);
+		Log.debugMessage("Getting MCM '" + id + "' ", Log.DEBUGLEVEL05);
+		mcm = (MCM)ConfigurationStorableObjectPool.getStorableObject(id, true);
+
+
+		for (int i = 0; i < mcmT.kis_ids.length; i++) {
+			try {
+				KIS_Transferable kisT = mServerRef.transmitKIS(mcmT.kis_ids[i]);
+				Equipment_Transferable eqT = mServerRef.transmitEquipment(kisT.equipment_id);
+				Equipment equipment = (Equipment)ConfigurationStorableObjectPool.getStorableObject(new Identifier(eqT.id), true);
+				for (int j = 0; j < eqT.port_ids.length; j++)
+					ConfigurationStorableObjectPool.getStorableObject(new Identifier(eqT.port_ids[j]), true);
+
+				KIS kis = (KIS)ConfigurationStorableObjectPool.getStorableObject(new Identifier(kisT.id), true);
+
+				for (int j = 0; j < kisT.measurement_port_ids.length; j++)
+					ConfigurationStorableObjectPool.getStorableObject(new Identifier(kisT.measurement_port_ids[j]), true);
+
+				MonitoredElement_Transferable[] mesT = mServerRef.transmitKISMonitoredElements(kisT.id);
+				for (int j = 0; j < mesT.length; j++)
+					ConfigurationStorableObjectPool.getStorableObject(new Identifier(mesT[j].id), true);
+			}
+			catch (Exception e) {
+				Log.errorException(e);
+				DatabaseConnection.closeConnection();
+				System.exit(-1);
+			}
+		}
+
+
+		/*	Close database connection*/
+		DatabaseConnection.closeConnection();
 	}
+
+	private static void activateCORBASetupServer() {
+		/*	Create local CORBA server*/
+		try {
+			corbaServer = new CORBAServer();
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			System.exit(-1);
+		}
+	}
+
+	private static void activateSetupServerReference(String setupServerId) {
+		/*	Obtain reference to setup server	*/
+		try {
+			mServerRef = MServerHelper.narrow(corbaServer.resolveReference(setupServerId));
+		}
+		catch (CommunicationException ce) {
+			Log.errorException(ce);
+			System.exit(-1);
+		}
+	}
+
 }
