@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.18 2005/03/03 15:58:30 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.19 2005/03/04 16:40:52 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.18 $, $Date: 2005/03/03 15:58:30 $
+ * @version $Revision: 1.19 $, $Date: 2005/03/04 16:40:52 $
  * @module
  */
 
@@ -40,9 +40,12 @@ public class CoreAnalysisManager
 	 * @param minWeld минимальное отраж. событие
 	 * @param minConnector минимальное неотр. событие
 	 * @param minEnd мин. уровень конца (пока не используется?)
-	 * @param reflSize хар. размер отраж. события (в точках) - определяе
+	 * @param reflSize хар. размер отраж. события (в точках) - влияет на макс. длину коннектора 
 	 * @param nReflSize хар. размер неотраж. события (в точках)
-	 * @param noiseDB уровень шума по 1 сигма, в абс. дБ; может быть null - тогда будет найден автоматически
+	 * @param traceLength длина рефлектограммы до конца волокна,
+	 * может быть 0, тогда будет найдена автоматически
+	 * @param noiseDB уровень шума по 1 сигма, в абс. дБ;
+	 * может быть null - тогда будет найден автоматически
 	 * @return массив событий
 	 */
 	private static native SimpleReflectogramEventImpl[] analyse3(
@@ -54,6 +57,7 @@ public class CoreAnalysisManager
 			double minEnd,
 			int reflSize,
 			int nReflSize,
+			int traceLength,
 			double[] noiseDB);
 
 	/**
@@ -80,7 +84,24 @@ public class CoreAnalysisManager
 	 */
 	private static native double nCalcNoise3s(double[] y);
 
-	private static native double[] nCalcNoiseArray(double[] y);
+	/**
+	 * Вычисляет уровень шума в виде "ожидаемая амплитуда флуктуаций по
+	 * уровню 1 сигма". 
+	 * @param y входная рефлектограмма
+	 * @param lenght длина, на которой пользователя интересует
+	 * уровень шума, или 0, если шум нужен на всей y.length
+	 * @return массив [length > 0 ? length : y.length]
+	 */
+	private static native double[] nCalcNoiseArray(double[] y, int lenght);
+	
+	/**
+	 * Метод определяет длину рефлектограммы "до конца волокна".
+	 * Алгоритм определения довольно прост, тип поиска "первого нуля",
+	 * но его все равно имеет смысл вынести в native-код
+	 * @param y Входная рефлектограмма
+	 * @return длина до "первого нуля" или по другому критерию
+	 */
+	private static native int nCalcTraceLength(double[] y);
 
 	/**
 	 * Оценка уровня шума по кривой рефлектограммы.
@@ -88,14 +109,15 @@ public class CoreAnalysisManager
 	 * предварительного IA анализа (ev). Не исключено, что после
 	 * определения шума будет сделан уточненный IA.
 	 * @param y  Входная кривая рефлектограммы в дБ.
+	 * @param length Длина волокна, > 0
 	 * @param ev (Опционально) предварительные данные IA. Если не null,
 	 *   то могут использоваться, а могут не использоваться.
 	 *   Если null, то не используются.
-	 * @return относительная величина шума (дБ) по уровню 3 сигма  
+	 * @return относительная величина шума (дБ) по уровню 3 сигма, длина массива length  
 	 */
-	private static double[] calcNoiseArray(double[] y, SimpleReflectogramEvent[] ev)
+	private static double[] calcNoiseArray(double[] y, int length, SimpleReflectogramEvent[] ev)
 	{
-		double[] ret = nCalcNoiseArray(y);
+		double[] ret = nCalcNoiseArray(y, 0);
 		for (int i = 0; i < ret.length; i++)
 			ret[i] *= 3.0;
 		return ret;
@@ -187,20 +209,23 @@ public class CoreAnalysisManager
 
 		System.out.println("reflSize="+reflSize+"; nReflSize="+nReflSize);
 
+		// определяем рабочую длину до конца волокна
+		int traceLength = calcTraceLength(y);
+
 		long t1 = System.currentTimeMillis();
+
 		// определяем уровень шума для фитировки
-		// @todo: ни для анализа, ни для фитировки не нужен ур. шума на
-		// всей длине р/г, поэтому, для ускорения работы,
-		// к этому моменту уже надо бы знать длину до конца волокна
-		double[] noiseArray = calcNoiseArray(y, null);
+		double[] noiseArray = calcNoiseArray(y, traceLength, null);
 
 		long t2 = System.currentTimeMillis();
+
 		// формирование событий
 		SimpleReflectogramEventImpl[] se = analyse3(y, deltaX,
 				pars[0], pars[1], pars[2], pars[3],
-				reflSize, nReflSize, noiseArray);
+				reflSize, nReflSize, traceLength, noiseArray);
 
-		int traceLength = se.length > 0
+		// теперь уточняем длину рефлектограммы по концу последнего события
+		traceLength = se.length > 0
 			? se[se.length - 1].getEnd() + 1
 			: 0;
 
@@ -214,11 +239,14 @@ public class CoreAnalysisManager
 //			ep[i].setDefaultThreshold(bs, bellcoreTraces);
 
 		long t5 = System.currentTimeMillis();
-		System.out.println("makeAnalysis: getData: " + (t1-t0) + "; noiseArray:" + (t2-t1) + "; IA: " + (t3-t2) + "; fit: " + (t4-t3) + "; postProcess: " + (t5-t4));
+		System.out.println("makeAnalysis: getDataAndLength: " + (t1-t0) + "; noiseArray:" + (t2-t1) + "; IA: " + (t3-t2) + "; fit: " + (t4-t3) + "; postProcess: " + (t5-t4));
 
 		return new ModelTraceManager(se, mf, deltaX);
 	}
 
+	/**
+	 * @deprecated
+	 */
 	// Определяет уровень шума в р/г -- старый метод
 	public static double calcNoise3s(double[] y)
 	{
@@ -252,5 +280,15 @@ public class CoreAnalysisManager
 		int iLMin = ReflectogramMath.getArrayMinIndex(arr, 0, iMax);
 		int iRMin = ReflectogramMath.getArrayMinIndex(arr, iMax, N - 1);
 		return new int[] {evBegin + iLMin, evBegin + iMax, evBegin + iRMin};
+	}
+	
+	/**
+	 * See specification of {@link #nCalcTraceLength(double[])}
+	 * @param y Рефлектограмма
+	 * @return длина до конца волокна
+	 */
+	public static int calcTraceLength(double[] y)
+	{
+		return nCalcTraceLength(y);
 	}
 }

@@ -19,6 +19,7 @@
 #include "../fit/ModelF-fit.h"
 #include "../BreakL/BreakL-fit.h"
 
+#include "../An2/findLength.h"
 #include "../An2/findNoise.h"
 
 #include "../common/com_syrus_AMFICOM_analysis_dadara_ModelFunction.h"
@@ -661,7 +662,7 @@ JNIEXPORT jdouble JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_nC
 }
 
 JNIEXPORT jdoubleArray JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_nCalcNoiseArray
-  (JNIEnv *env, jclass cls, jdoubleArray inArr)
+  (JNIEnv *env, jclass cls, jdoubleArray inArr, jint length)
 {
 	// get input J array, create output J array, get output J array
 	double *yy;
@@ -676,8 +677,11 @@ JNIEXPORT jdoubleArray JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManag
 	assert(outArr);
 	get_arr(env, outArr, &noise);
 
+	if (length <= 0 || length > size)
+		length = size;
+
 	// process
-	findNoiseArray(yy, noise, size, size);
+	findNoiseArray(yy, noise, size, length);
 
 	// release arrays
 	release_arr(env, inArr, yy);
@@ -752,6 +756,27 @@ JNIEXPORT jdouble JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_nM
 	// we assume binary compatibility of double and jdouble
 	double ret = destroyAndGetMedian(gist, nsam, pos);
 	delete[] gist;
+
+	return ret;
+}
+
+/*
+ * Class:     com_syrus_AMFICOM_analysis_CoreAnalysisManager
+ * Method:    nCalcTraceLength
+ * Signature: ([D)I
+ */
+JNIEXPORT jint JNICALL Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_nCalcTraceLength
+  (JNIEnv *env, jclass cls, jdoubleArray y)
+{
+	// get J array
+	double *yy;
+	int size = get_arr(env, y, &yy);
+
+	// process
+	int ret = findReflectogramLength(yy, size);
+
+	// release J array
+	release_arr(env, y, yy);
 
 	return ret;
 }

@@ -22,214 +22,12 @@
 	#endif
 	FILE* dbg_stream;
 #endif
-/*
-JNIEXPORT jobjectArray JNICALL 
-Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse2(
-	JNIEnv* env,
-	jclass obj,
-	jint waveletType,             //type of the WaveLet transformation applied.
-	jdoubleArray y,               //the refl. itself
-	jdouble delta_x,              //dx
-	jdouble connFallParams,       // Param. to descr. the behav. of conn. at fall
-	jdouble min_level,            // ?
-	jdouble max_level_noise,      // ?
-	jdouble min_level_to_find_end,// ? 
-	jdouble min_weld,             // ?
-	jdouble min_connector,
-	jdoubleArray ret_meanAttenuation,
-	jint reflectiveSize, 
-	jint nonReflectiveSize)
-{
-	prf_b("analyse2() - enter");
-#ifdef DEBUG_DADARA_ANALYSE
 
-	#ifdef _WIN32
-		dbg_stream = fopen(DEBUG_DADARA_WIN_LOGF, "a");
-		if (dbg_stream == 0)
-			dbg_stream = stderr;
-		setvbuf(dbg_stream, 0, 0, _IONBF); // no buffering
-		fprintf (dbg_stream, "# logfile opened in AnalysisManager_analyse\n");
-	#else
-		timeval tv;
-		gettimeofday(&tv, NULL);
-		tm* t = localtime(&tv.tv_sec);
-		const int size = 64; // was: 9 + 6 + 1 + 14 + 1 + 3 + 1 ...
-		char* filename = new char[size];
-		sprintf(filename, ".//logs//%04d%02d%02d%02d%02d%02d-dadara-analyse.log", 1900 + t->tm_year, 1 + t->tm_mon, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec);
-		filename[size - 1] = 0;
-		dbg_stream = fopen(filename, "a");
-		delete[] filename;
-		if (dbg_stream == 0)
-			dbg_stream = stderr;
-	#endif
-
-	fprintf (dbg_stream, "\t""waveletType %d\n", (int)waveletType);
-	fprintf (dbg_stream, "\t""delta_x %g\n", (double)delta_x);
-	fprintf (dbg_stream, "\t""connFallParams %g\n", (double)connFallParams);
-	fprintf (dbg_stream, "\t""min_level %g\n", (double)min_level);
-	fprintf (dbg_stream, "\t""max_level_noise %g\n", (double)max_level_noise);
-	fprintf (dbg_stream, "\t""min_level_to_find_end %g\n", (double)min_level_to_find_end);
-	fprintf (dbg_stream, "\t""min_weld %g\n", (double)min_weld);
-	fprintf (dbg_stream, "\t""min_connector %g\n", (double)min_connector);
-	//fprintf (dbg_stream, "\t""strategy %d\n", (int)strategy);
-#endif
-
-	// берем в JNI массив y-значений (его надо будет потом освободить)
-	double* data    = (double*)env->GetDoubleArrayElements(y, NULL);
-	jsize sz = env->GetArrayLength(y);
-	int data_l = sz;
-
-#ifdef DEBUG_DADARA_ANALYSE
-	fprintf (dbg_stream, "\tsz %d\n", (int)sz);
-	if (0)
-	{
-		int i;
-		for (i=0; i<sz; i++) fprintf (dbg_stream, "%g ", (double)data[i]);
-		fprintf (dbg_stream, "\n");
-	}
-#endif
-
-	// корректируем параметры
-	if (min_level <= 0.01)
-		min_level =  0.01;		// typ. 0.04
-	if (max_level_noise < 0.05)
-		max_level_noise = 0.05;
-	if (max_level_noise > 5.)
-		max_level_noise = 5.;	// typ. 2.0  (input was=5)
-	if (connFallParams > 0.49)
-		connFallParams = 0.49;	// typ. 0.3
-	if (connFallParams < 0.001)
-		connFallParams = 0.001;
-	if (min_weld < 0.01)
-		min_weld = 0.01;		// typ. 0.4
-	if (min_connector < 0.05)
-		min_connector = 0.05;	// typ. 0.2
-	if (min_level_to_find_end < 1.)
-		min_level_to_find_end = 1.; //  typ. 6.0
-
-#ifdef DEBUG_DADARA_ANALYSE
-	fprintf(dbg_stream, "#0\n");
-#endif
-
-	prf_b("analyse2() - starting IA");
-
-	// FIXIT: InitialAnalysis changes input array.
-	// The original analyse() code both changed input array and used JNI_ABORT, so the result is undeterminable.
-	// If it was not expected to change anything in Java arrays, then it should make a local copy. -- FIXIT
-	InitialAnalysis *ia = new InitialAnalysis(data, 
-		data_l,
-		delta_x, 
-		min_level, 
-		min_weld, 
-		min_connector, 
-		min_level_to_find_end,
-		max_level_noise,
-		waveletType,
-		connFallParams,
-		reflectiveSize, 
-		nonReflectiveSize);
-
-	prf_b("analyse2() - processing IA results");
-
-#ifdef DEBUG_DADARA_ANALYSE
-	fprintf(dbg_stream, "#1\n");
-#endif
-
-	ArrList& ev = ia->getEvents();
-	// No mem leakage 'cause ep data is owned by IA and will be deleted when deleting IA
-
-#ifdef DEBUG_DADARA_ANALYSE
-	fprintf(dbg_stream, "#2\n");
-#endif
-
-	int nEvents = ev.getLength();
-
-#ifdef DEBUG_DADARA_ANALYSE
-	fprintf( dbg_stream, "ia->getEventsCount = %d\n", nEvents);
-#endif
-
-	// convert EventParams to EventP
-	EventP *re = new EventP[nEvents];
-	assert (re);
-	int i;
-
-#ifdef DEBUG_DADARA_ANALYSE
-	fprintf( dbg_stream, "# re = %p\n", re);
-#endif
-
-	for (i = 0; i < nEvents; i++)
-	{
-		EPold2EPnew((EventParams*)ev[i], re[i], delta_x);
-		assert(re[i].begin >= 0);
-		assert(re[i].end < sz);
-		
-		{
-			fprintf(stderr, "event %d begin %d end %d type %d\n", i,re[i].begin, re[i].end, re[i].gentype);
-			fflush(stderr);
-		}
-//		assert(re[i].end >= re[i].begin);
-//		assert(re[i].end > re[i].begin); // >, not just >=
-		if (i)
-		{
-			assert(re[i].begin == re[i-1].end);
-		}
-
-#ifdef DEBUG_DADARA_ANALYSE
-		fprintf (dbg_stream, "event [%d]: begin %d end %d gentype %d mf.ID %d\n", i, re[i].begin, re[i].end, re[i].gentype, re[i].mf.getID());
-		int k;
-		for (k = 0; k < re[i].mf.getNPars(); k++)
-			fprintf(dbg_stream, "\t""pars[%d]: %g\n", k, re[i].mf[k]);
-
-		fprintf (dbg_stream, "\t""Y0 %g\n", re[i].mf.calcFun(re[i].begin));
-		fprintf (dbg_stream, "\t""Y1 %g\n", re[i].mf.calcFun(re[i].end));
-#endif
-	}
-
-	prf_b("analyse2() - sending to JNI");
-
-#ifdef DEBUG_DADARA_ANALYSE
-	fprintf( dbg_stream, "# converted to Cnew\n");
-	jobjectArray ret_obj = EventP_C2J_arr(env, re, nEvents, dbg_stream);
-	fprintf( dbg_stream, "# converted to Java, ret_obj = %p\n", ret_obj);
-#else
-	jobjectArray ret_obj = EventP_C2J_arr(env, re, nEvents, 0);
-#endif
-
-	delete[] re;
-
-#ifdef DEBUG_DADARA_ANALYSE
-	fprintf( dbg_stream, "# re freed\n");
-#endif
-
-	// send to JNI
-
-	delete ia;
-
-#ifdef DEBUG_DADARA_ANALYSE
-	fprintf( dbg_stream, "returning to java %d events\n", nEvents);
-#endif
-
-	// FIXME - ret_meanAttenuation is not used anymore
-
-//ќсвобождение массивов в Java Native Interface
-	(env)->ReleaseDoubleArrayElements(y,data,JNI_ABORT);
-
-#ifdef DEBUG_DADARA_ANALYSE
-	fprintf( dbg_stream, "# logfile closed\n");
-	if (dbg_stream != stderr && dbg_stream != stdout)
-		fclose( dbg_stream );
-#endif
-
-	prf_e();
-
-	return ret_obj;
-}
-*/
 
 /*
  * Class:     com_syrus_AMFICOM_analysis_CoreAnalysisManager
  * Method:    analyse3
- * Signature: ([DDDDDDII[D)[Lcom/syrus/AMFICOM/analysis/dadara/SimpleReflectogramEventImpl;
+ * Signature: ([DDDDDDIII[D)[Lcom/syrus/AMFICOM/analysis/dadara/SimpleReflectogramEventImpl;
  */
 JNIEXPORT jobjectArray JNICALL
 Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse3(
@@ -243,7 +41,8 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse3(
 	jdouble min_level_to_find_end,
 	jint reflectiveSize,
 	jint nonReflectiveSize,
-	jdoubleArray noise)
+	jint traceLength,
+	jdoubleArray noiseObj)
 {
 	prf_b("analyse3() - enter");
 
@@ -251,6 +50,19 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse3(
 	double* data    = (double*)env->GetDoubleArrayElements(y, NULL);
 	jsize sz = env->GetArrayLength(y);
 	int data_l = sz;
+
+	if (traceLength > sz)
+		traceLength = sz;
+	if (traceLength < 0)
+		traceLength = 0;
+
+	// берем в JNI массив noise, если он задан
+	double* noiseData = noiseObj ? (double*)env->GetDoubleArrayElements(noiseObj, NULL)
+		: 0;
+	jsize noiseL = noiseObj ? env->GetArrayLength(noiseObj) : 0;
+
+	if (noiseL < traceLength)
+		noiseL = 0;
 
 	// корректируем параметры
 	if (min_level < 0.01)
@@ -276,7 +88,9 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse3(
 		0,
 		0,
 		reflectiveSize, 
-		nonReflectiveSize);
+		nonReflectiveSize,
+		traceLength,
+		noiseData);
 
 	prf_b("analyse3() - processing IA results");
 
@@ -312,6 +126,8 @@ Java_com_syrus_AMFICOM_analysis_CoreAnalysisManager_analyse3(
 
 //ќсвобождение массивов в Java Native Interface
 	(env)->ReleaseDoubleArrayElements(y,data,JNI_ABORT);
+	if (noiseObj)
+		(env)->ReleaseDoubleArrayElements(noiseObj, noiseData,JNI_ABORT);
 
 	prf_e();
 
