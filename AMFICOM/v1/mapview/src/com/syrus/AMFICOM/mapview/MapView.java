@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.19 2005/04/04 13:32:07 bass Exp $
+* $Id: MapView.java,v 1.20 2005/04/05 12:46:20 max Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -50,8 +50,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/04/04 13:32:07 $
+ * @author $Author: max $
+ * @version $Revision: 1.20 $, $Date: 2005/04/05 12:46:20 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -99,33 +99,7 @@ public class MapView extends DomainMember {
 	}
 
 	public MapView(MapView_Transferable mvt) throws CreateObjectException {
-		super(mvt.header, new Identifier(mvt.domain_id));
-
-		this.name = mvt.name;
-		this.description = mvt.description;
-		
-		this.longitude = mvt.longitude;
-		this.latitude = mvt.latitude;
-		this.scale = mvt.scale;
-		this.defaultScale = mvt.defaultScale;		
-
-		Set schemeIds = new HashSet(mvt.schemeIds.length);
-		for (int i = 0; i < mvt.schemeIds.length; i++)
-			schemeIds.add(new Identifier(mvt.schemeIds[i]));
-
-		Identifier mapId = new Identifier(mvt.mapId);
-		try{
-			this.map = (Map) MapStorableObjectPool.getStorableObject(mapId, true);
-		}catch(ApplicationException ae){
-			throw new CreateObjectException("MapView.<init> | cannot get map " + mapId.toString(), ae);
-		}			
-		
-		try{
-			this.schemes = SchemeStorableObjectPool.getStorableObjects(schemeIds, true);
-		}catch(ApplicationException ae){
-			throw new CreateObjectException("MapView.<init> | cannot get schemes ", ae);
-		}			
-
+		fromTransferable(mvt);
 	}
 
 	protected MapView(final Identifier id, 
@@ -189,6 +163,38 @@ public class MapView extends DomainMember {
 			return mapView;
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("MapView.createInstance | cannot generate identifier ", e);
+		}
+	}
+	
+	protected void fromTransferable(IDLEntity transferable)
+			throws CreateObjectException {
+		
+		MapView_Transferable mvt = (MapView_Transferable) transferable;
+		super.fromTransferable(mvt.header, new Identifier(mvt.domain_id));
+
+		this.name = mvt.name;
+		this.description = mvt.description;
+		
+		this.longitude = mvt.longitude;
+		this.latitude = mvt.latitude;
+		this.scale = mvt.scale;
+		this.defaultScale = mvt.defaultScale;		
+
+		Set schemeIds = new HashSet(mvt.schemeIds.length);
+		for (int i = 0; i < mvt.schemeIds.length; i++)
+			schemeIds.add(new Identifier(mvt.schemeIds[i]));
+
+		Identifier mapId = new Identifier(mvt.mapId);
+		try{
+			this.map = (Map) MapStorableObjectPool.getStorableObject(mapId, true);
+		}catch(ApplicationException ae){
+			throw new CreateObjectException("MapView.<init> | cannot get map " + mapId.toString(), ae);
+		}			
+		
+		try{
+			this.schemes = SchemeStorableObjectPool.getStorableObjects(schemeIds, true);
+		}catch(ApplicationException ae){
+			throw new CreateObjectException("MapView.<init> | cannot get schemes ", ae);
 		}
 	}
 
