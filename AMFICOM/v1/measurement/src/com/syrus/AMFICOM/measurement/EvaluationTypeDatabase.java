@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.30 2004/10/27 14:27:50 bob Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.31 2004/11/02 07:36:38 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2004/10/27 14:27:50 $
- * @author $Author: bob $
+ * @version $Revision: 1.31 $, $Date: 2004/11/02 07:36:38 $
+ * @author $Author: max $
  * @module measurement_v1
  */
 
@@ -465,10 +465,20 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
         String condition = new String();        
         StringBuffer tresholds = new StringBuffer();
         
-        for (Iterator it = thresholdSetIds.iterator(); it.hasNext();) {
+        int i=1;
+        for (Iterator it = thresholdSetIds.iterator(); it.hasNext();i++) {
             tresholds.append (( (Identifier) it.next() ).getIdentifierString());            
-            if (it.hasNext())
-                tresholds.append(COMMA);            
+            if (it.hasNext()){
+                if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+                    tresholds.append(COMMA);
+                else {
+                    tresholds.append(CLOSE_BRACKET);
+                    tresholds.append(SQL_OR);
+                    tresholds.append(COLUMN_ID);
+                    tresholds.append(SQL_IN);
+                    tresholds.append(OPEN_BRACKET);
+                }                   
+            }            
         }
         
         condition = PARAMETER_TYPE_ID + SQL_IN + OPEN_BRACKET +
