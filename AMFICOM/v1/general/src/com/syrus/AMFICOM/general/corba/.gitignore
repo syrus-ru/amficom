@@ -22,3 +22,5 @@ NameResolver.java
 StorableObject.java
 ElementAttribute.java
 StringFieldSort.java
+CharacteristicSort.java
+CharacteristicTypeSort.java

@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectEntities.java,v 1.41 2005/01/13 11:08:52 bass Exp $
+ * $Id: ObjectEntities.java,v 1.42 2005/01/13 14:16:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,16 +9,17 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/01/13 11:08:52 $
- * @author $Author: bass $
+ * @version $Revision: 1.42 $, $Date: 2005/01/13 14:16:11 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 public final class ObjectEntities {
 	/*	Object Types	*/
+	public static final String CHARACTERISTICTYPE_ENTITY = "CharacteristicType";
+
 	public static final String EVENTTYPE_ENTITY = "EventType";
 	public static final String ALARMTYPE_ENTITY = "AlarmType";
 
-	public static final String CHARACTERISTICTYPE_ENTITY = "CharacteristicType";
 	public static final String EQUIPMENTTYPE_ENTITY = "EquipmentType";
 	public static final String PORTTYPE_ENTITY = "PortType";
 	public static final String MEASUREMENTPORTTYPE_ENTITY = "MeasurementPortType";
@@ -42,19 +43,21 @@ public final class ObjectEntities {
 	public static final String SITE_NODE_TYPE_ENTITY = "SiteNodeType";
 	public static final String PHYSICAL_LINK_TYPE_ENTITY = "PhysicalLinkType";
 
+	/*	General */
+	public static final String CHARACTERISTIC_ENTITY = "Characteristic";
+
 	/*	Event	*/
 	public static final String EVENT_ENTITY = "Event";
 	public static final String ALARM_ENTITY = "Alarm";
 
 	/*	Administration	*/
-
-	/*	Configuration	*/
-	public static final String CHARACTERISTIC_ENTITY = "Characteristic";
-	public static final String PERMATTR_ENTITY = "PermissionAttributes";
 	public static final String USER_ENTITY = "Users";
 	public static final String DOMAIN_ENTITY = "Domain";
 	public static final String SERVER_ENTITY = "Server";
 	public static final String MCM_ENTITY = "MCM";
+	public static final String PERMATTR_ENTITY = "PermissionAttributes";
+
+	/*	Configuration	*/
 	public static final String EQUIPMENT_ENTITY = "Equipment";
 	public static final String EQUIPMENTMELINK_ENTITY = "EquipmentMELink";
 	public static final String PORT_ENTITY = "Port";
@@ -64,7 +67,7 @@ public final class ObjectEntities {
 	public static final String MEASUREMENTPORT_ENTITY = "MeasurementPort";
 	public static final String ME_ENTITY = "MonitoredElement";
 	public static final String LINK_ENTITY = "Link";
-    public static final String CABLE_THREAD_ENTITY = "CableThread";
+	public static final String CABLE_THREAD_ENTITY = "CableThread";
 
 	/*	Measurement	*/
 	public static final String SET_ENTITY = "Sett";
@@ -129,148 +132,159 @@ public final class ObjectEntities {
 	 */
 
 	/*
-	 * Event:				65-96		(0x0041-0x0060)
-	 * Event Types:	97-128	(0x0061-0x0080)
+	 * General:				65-96		(0x0041-0x0060)
+	 * General Types:	97-128	(0x0061-0x0080)
 	 */
-	public static final short EVENT_MIN_ENTITY_CODE = 0x0041;
+	public static final short GENERAL_MIN_ENTITY_CODE = 0x0041;
+
+	public static final short CHARACTERISTIC_ENTITY_CODE = GENERAL_MIN_ENTITY_CODE;
+	
+	public static final short CHARACTERISTICTYPE_ENTITY_CODE = 0x0061;
+
+	public static final short GENERAL_MAX_ENTITY_CODE = 0x0080;
+
+	/*
+	 * Event:				129-192 (0x0081-0x00C0)
+	 * Event Types:	193-256 (0x00C1-0x0100)
+	 */
+	public static final short EVENT_MIN_ENTITY_CODE = 0x0081;
 
 	public static final short EVENT_ENTITY_CODE = EVENT_MIN_ENTITY_CODE;
-	public static final short ALARM_ENTITY_CODE = 0x0042;
+	public static final short ALARM_ENTITY_CODE = 0x0082;
 
-	public static final short EVENTTYPE_ENTITY_CODE = 0x0061;
-	public static final short ALARMTYPE_ENTITY_CODE = 0x0062;
+	public static final short EVENTTYPE_ENTITY_CODE = 0x00C1;
+	public static final short ALARMTYPE_ENTITY_CODE = 0x00C2;
 
-	public static final short EVENT_MAX_ENTITY_CODE = 0x0080;
-
-	/*
-	 * Administration:       129-192 (0x0081-0x00C0)
-	 * Administration Types: 193-256 (0x00C1-0x0100)
-	 */
-	public static final short ADMINISTRATION_MIN_ENTITY_CODE = 0x0081;
-
-	public static final short ADMINISTRATION_MAX_ENTITY_CODE = 0x0100;
+	public static final short EVENT_MAX_ENTITY_CODE = 0x0100;
 
 	/*
-	 * Configuration:       257-320 (0x0101-0x0140)
-	 * Configuration Types: 321-384 (0x0141-0x0180)
+	 * Administration:       257-320 (0x0101-0x0140)
+	 * Administration Types: 321-384 (0x0141-0x0180)
 	 */
-	public static final short CONFIGURATION_MIN_ENTITY_CODE = 0x0101;
+	public static final short ADMINISTRATION_MIN_ENTITY_CODE = 0x0101;
 
-	public static final short CHARACTERISTIC_ENTITY_CODE = CONFIGURATION_MIN_ENTITY_CODE;
-	public static final short PERMATTR_ENTITY_CODE = 0x0102;
-	public static final short USER_ENTITY_CODE = 0x0103;
-	public static final short DOMAIN_ENTITY_CODE = 0x0104;
-	public static final short SERVER_ENTITY_CODE = 0x0105;
-	public static final short MCM_ENTITY_CODE = 0x0106;
-	public static final short EQUIPMENT_ENTITY_CODE = 0x0107;
-	public static final short PORT_ENTITY_CODE = 0x0108;
-	public static final short TRANSPATH_ENTITY_CODE = 0x0109;
-	public static final short KIS_ENTITY_CODE = 0x010A;
-	public static final short MEASUREMENTPORT_ENTITY_CODE = 0x010B;
-	public static final short ME_ENTITY_CODE = 0x010C;
-	public static final short LINK_ENTITY_CODE = 0x010D;
-	public static final short CABLE_THREAD_ENTITY_CODE = 0x010E;    
+	public static final short USER_ENTITY_CODE = ADMINISTRATION_MIN_ENTITY_CODE;
+	public static final short DOMAIN_ENTITY_CODE = 0x0102;
+	public static final short SERVER_ENTITY_CODE = 0x0103;
+	public static final short MCM_ENTITY_CODE = 0x0104;
+	public static final short PERMATTR_ENTITY_CODE = 0x0105;
 
-	public static final short CHARACTERISTICTYPE_ENTITY_CODE = 0x0141;
-	public static final short EQUIPMENTTYPE_ENTITY_CODE = 0x0142;
-	public static final short PORTTYPE_ENTITY_CODE = 0x0143;
-	public static final short MEASUREMENTPORTTYPE_ENTITY_CODE = 0x0144;
-	public static final short LINKTYPE_ENTITY_CODE = 0x0145;
-    //	public static final short KISTYPE_ENTITY_CODE = 0x0146;
-	public static final short TRANSPATHTYPE_ENTITY_CODE = 0x0147;
-	public static final short CABLETHREADTYPE_ENTITY_CODE = 0x0148;
-	public static final short CABLE_LINKTYPE_ENTITY_CODE = 0x0149;
+	public static final short ADMINISTRATION_MAX_ENTITY_CODE = 0x0180;
+
+	/*
+	 * Configuration:       385-448 (0x0181-0x01C0)
+	 * Configuration Types: 449-512 (0x01C1-0x0200)
+	 */
+	public static final short CONFIGURATION_MIN_ENTITY_CODE = 0x0181;
+
+	public static final short EQUIPMENT_ENTITY_CODE = CONFIGURATION_MIN_ENTITY_CODE;
+	public static final short PORT_ENTITY_CODE = 0x0182;
+	public static final short TRANSPATH_ENTITY_CODE = 0x0183;
+	public static final short KIS_ENTITY_CODE = 0x0184;
+	public static final short MEASUREMENTPORT_ENTITY_CODE = 0x0185;
+	public static final short ME_ENTITY_CODE = 0x0186;
+	public static final short LINK_ENTITY_CODE = 0x0187;
+	public static final short CABLE_THREAD_ENTITY_CODE = 0x0188;    
+
+	public static final short EQUIPMENTTYPE_ENTITY_CODE = 0x01C1;
+	public static final short PORTTYPE_ENTITY_CODE = 0x01C2;
+	public static final short MEASUREMENTPORTTYPE_ENTITY_CODE = 0x01C3;
+	public static final short LINKTYPE_ENTITY_CODE = 0x01C4;
+  //	public static final short KISTYPE_ENTITY_CODE = 0x01C5;
+	public static final short TRANSPATHTYPE_ENTITY_CODE = 0x01C6;
+	public static final short CABLETHREADTYPE_ENTITY_CODE = 0x01C7;
+	public static final short CABLE_LINKTYPE_ENTITY_CODE = 0x01C8;
     
-	public static final short CONFIGURATION_MAX_ENTITY_CODE = 0x0180;
+	public static final short CONFIGURATION_MAX_ENTITY_CODE = 0x0200;
 
 	/*
-	 * Measurement:       385-448 (0x0181-0x01C0)
-	 * Measurement Types: 449-512 (0x01C1-0x0200)
+	 * Measurement:       513-576 (0x0201-0x0240)
+	 * Measurement Types: 577-640 (0x0241-0x0280)
 	 */
-	public static final short MEASUREMENT_MIN_ENTITY_CODE = 0x0181;
+	public static final short MEASUREMENT_MIN_ENTITY_CODE = 0x0201;
 
 	public static final short SET_ENTITY_CODE = MEASUREMENT_MIN_ENTITY_CODE;
-	public static final short SETPARAMETER_ENTITY_CODE = 0x0182;
-	public static final short MS_ENTITY_CODE = 0x0183;
-	public static final short MEASUREMENT_ENTITY_CODE = 0x0184;
-	public static final short ANALYSIS_ENTITY_CODE = 0x0185;
-	public static final short EVALUATION_ENTITY_CODE = 0x0186;
-	public static final short TEST_ENTITY_CODE = 0x0187;
-	public static final short RESULT_ENTITY_CODE = 0x0188;
-	public static final short RESULTPARAMETER_ENTITY_CODE = 0x0189;
-	public static final short TEMPORALPATTERN_ENTITY_CODE = 0x018A;
-	public static final short MODELING_ENTITY_CODE = 0x018B;
+	public static final short SETPARAMETER_ENTITY_CODE = 0x0202;
+	public static final short MS_ENTITY_CODE = 0x0203;
+	public static final short MEASUREMENT_ENTITY_CODE = 0x0204;
+	public static final short ANALYSIS_ENTITY_CODE = 0x0205;
+	public static final short EVALUATION_ENTITY_CODE = 0x0206;
+	public static final short TEST_ENTITY_CODE = 0x0207;
+	public static final short RESULT_ENTITY_CODE = 0x0208;
+	public static final short RESULTPARAMETER_ENTITY_CODE = 0x0209;
+	public static final short TEMPORALPATTERN_ENTITY_CODE = 0x020A;
+	public static final short MODELING_ENTITY_CODE = 0x020B;
 
-	public static final short PARAMETERTYPE_ENTITY_CODE = 0x01C1;
-	public static final short MEASUREMENTTYPE_ENTITY_CODE = 0x01C2;
-	public static final short ANALYSISTYPE_ENTITY_CODE = 0x01C3;
-	public static final short EVALUATIONTYPE_ENTITY_CODE = 0x01C4;
-	public static final short MODELINGTYPE_ENTITY_CODE = 0x01C5;
+	public static final short PARAMETERTYPE_ENTITY_CODE = 0x0241;
+	public static final short MEASUREMENTTYPE_ENTITY_CODE = 0x0242;
+	public static final short ANALYSISTYPE_ENTITY_CODE = 0x0243;
+	public static final short EVALUATIONTYPE_ENTITY_CODE = 0x0244;
+	public static final short MODELINGTYPE_ENTITY_CODE = 0x0245;
 
-	public static final short MEASUREMENT_MAX_ENTITY_CODE = 0x0200;
+	public static final short MEASUREMENT_MAX_ENTITY_CODE = 0x0280;
 
 	/*
-	 * Scheme:       513-576 (0x0201-0x0240)
-	 * Scheme Types: 577-640 (0x0241-0x0280)
+	 * Scheme:       641-704 (0x0281-0x02C0)
+	 * Scheme Types: 705-768 (0x02C1-0x0300)
 	 */
-	public static final short SCHEME_MIN_ENTITY_CODE = 0x0201;
+	public static final short SCHEME_MIN_ENTITY_CODE = 0x0281;
 
 	public static final short CABLE_CHANNELING_ITEM_ENTITY_CODE = SCHEME_MIN_ENTITY_CODE;
-	public static final short PATH_ELEMENT_ENTITY_CODE = 0x0202;
-	public static final short SCHEME_ENTITY_CODE = 0x0203;
-	public static final short SCHEME_CABLE_LINK_ENTITY_CODE = 0x0204;
-	public static final short SCHEME_CABLE_PORT_ENTITY_CODE = 0x0205;
-	public static final short SCHEME_CABLE_THREAD_ENTITY_CODE = 0x0206;
-	public static final short SCHEME_DEVICE_ENTITY_CODE = 0x0207;
-	public static final short SCHEME_ELEMENT_ENTITY_CODE = 0x0208;
-	public static final short SCHEME_LINK_ENTITY_CODE = 0x0209;
-	public static final short SCHEME_MONITORING_SOLUTION_ENTITY_CODE = 0x020A;
-	public static final short SCHEME_OPTIMIZE_INFO_ENTITY_CODE = 0x020B;
-	public static final short SCHEME_PATH_ENTITY_CODE = 0x020C;
-	public static final short SCHEME_PORT_ENTITY_CODE = 0x020D;
-	public static final short SCHEME_PROTO_ELEMENT_ENTITY_CODE = 0x020E;
-	public static final short SCHEME_PROTO_GROUP_ENTITY_CODE = 0x020F;
+	public static final short PATH_ELEMENT_ENTITY_CODE = 0x0282;
+	public static final short SCHEME_ENTITY_CODE = 0x0283;
+	public static final short SCHEME_CABLE_LINK_ENTITY_CODE = 0x0284;
+	public static final short SCHEME_CABLE_PORT_ENTITY_CODE = 0x0285;
+	public static final short SCHEME_CABLE_THREAD_ENTITY_CODE = 0x0286;
+	public static final short SCHEME_DEVICE_ENTITY_CODE = 0x0287;
+	public static final short SCHEME_ELEMENT_ENTITY_CODE = 0x0288;
+	public static final short SCHEME_LINK_ENTITY_CODE = 0x0289;
+	public static final short SCHEME_MONITORING_SOLUTION_ENTITY_CODE = 0x028A;
+	public static final short SCHEME_OPTIMIZE_INFO_ENTITY_CODE = 0x028B;
+	public static final short SCHEME_PATH_ENTITY_CODE = 0x028C;
+	public static final short SCHEME_PORT_ENTITY_CODE = 0x028D;
+	public static final short SCHEME_PROTO_ELEMENT_ENTITY_CODE = 0x028E;
+	public static final short SCHEME_PROTO_GROUP_ENTITY_CODE = 0x028F;
 
-	public static final short SCHEME_MAX_ENTITY_CODE = 0x0280;
+	public static final short SCHEME_MAX_ENTITY_CODE = 0x0300;
 
 	/*
-	 * Map:       641-704 (0x0281-0x02C0)
-	 * Map Types: 705-768 (0x02C1-0x0300)
+	 * Map:       769-832 (0x0301-0x0340)
+	 * Map Types: 833-896 (0x0341-0x0380)
 	 */
-	public static final short MAP_MIN_ENTITY_CODE = 0x0281;
+	public static final short MAP_MIN_ENTITY_CODE = 0x0301;
 
 	public static final short SITE_NODE_ENTITY_CODE = MAP_MIN_ENTITY_CODE;
-	public static final short TOPOLOGICAL_NODE_ENTITY_CODE = 0x0282;
-	public static final short NODE_LINK_ENTITY_CODE = 0x0283;
-	public static final short MARK_ENTITY_CODE = 0x0284;
-	public static final short PHYSICAL_LINK_ENTITY_CODE = 0x0285;
-	public static final short COLLECTOR_ENTITY_CODE = 0x0286;
-	public static final short MAP_ENTITY_CODE = 0x0287;
+	public static final short TOPOLOGICAL_NODE_ENTITY_CODE = 0x0302;
+	public static final short NODE_LINK_ENTITY_CODE = 0x0303;
+	public static final short MARK_ENTITY_CODE = 0x0304;
+	public static final short PHYSICAL_LINK_ENTITY_CODE = 0x0305;
+	public static final short COLLECTOR_ENTITY_CODE = 0x0306;
+	public static final short MAP_ENTITY_CODE = 0x0307;
 
-	public static final short SITE_NODE_TYPE_ENTITY_CODE = 0x02C1;
-	public static final short PHYSICAL_LINK_TYPE_ENTITY_CODE = 0x02C2;
+	public static final short SITE_NODE_TYPE_ENTITY_CODE = 0x0341;
+	public static final short PHYSICAL_LINK_TYPE_ENTITY_CODE = 0x0342;
 
-	public static final short MAP_MAX_ENTITY_CODE = 0x0300;
+	public static final short MAP_MAX_ENTITY_CODE = 0x0380;
 	
 	/*
-	 * Resource:       769-832 (0x0301-0x0340)
-	 * Resource Types: 833-896 (0x0341-0x0380)
+	 * Resource:       897-960 (0x0381-0x03C0)
+	 * Resource Types: 961-1024(0x03C1-0x0400)
 	 */
-	public static final short RESOURCE_MIN_ENTITY_CODE = 0x0301;
+	public static final short RESOURCE_MIN_ENTITY_CODE = 0x0381;
 
 	public static final short IMAGE_RESOURCE_ENTITY_CODE = RESOURCE_MIN_ENTITY_CODE;
 
-	public static final short RESOURCE_MAX_ENTITY_CODE = 0x0380;
+	public static final short RESOURCE_MAX_ENTITY_CODE = 0x0400;
 	
 	/*
-	 * MapView:        897-960 (0x0381-0x03C0)
-	 * MapView Types:  961-1024(0x03C1-0x0400)
+	 * MapView:        1025-1088(0x0401-0x0440)
+	 * MapView Types:  1089-1152(0x0441-0x0480)
 	 */
-	public static final short MAPVIEW_MIN_ENTITY_CODE = 0x381;
+	public static final short MAPVIEW_MIN_ENTITY_CODE = 0x0401;
 	
 	public static final short MAPVIEW_ENTITY_CODE = MAPVIEW_MIN_ENTITY_CODE;
 	
-	public static final short MAPVIEW_MAX_ENTITY_CODE = 0x400;
+	public static final short MAPVIEW_MAX_ENTITY_CODE = 0x0480;
 
 
 	/*
@@ -286,10 +300,11 @@ public final class ObjectEntities {
 		/**
 		 * TODO recast using Trove Collections
 		 */
-		if (entity.equals(EVENTTYPE_ENTITY)) return EVENTTYPE_ENTITY_CODE;
+		if (entity.equals(CHARACTERISTICTYPE_ENTITY)) return CHARACTERISTICTYPE_ENTITY_CODE;
+
+		else if (entity.equals(EVENTTYPE_ENTITY)) return EVENTTYPE_ENTITY_CODE;
 		else if (entity.equals(ALARMTYPE_ENTITY)) return ALARMTYPE_ENTITY_CODE;
 	
-		else if (entity.equals(CHARACTERISTICTYPE_ENTITY)) return CHARACTERISTICTYPE_ENTITY_CODE;
 		else if (entity.equals(EQUIPMENTTYPE_ENTITY)) return EQUIPMENTTYPE_ENTITY_CODE;
 		else if (entity.equals(PORTTYPE_ENTITY)) return PORTTYPE_ENTITY_CODE;
 		else if (entity.equals(MEASUREMENTPORTTYPE_ENTITY)) return MEASUREMENTPORTTYPE_ENTITY_CODE;
@@ -306,15 +321,17 @@ public final class ObjectEntities {
 		else if (entity.equals(SITE_NODE_TYPE_ENTITY)) return SITE_NODE_TYPE_ENTITY_CODE;
 		else if (entity.equals(PHYSICAL_LINK_TYPE_ENTITY)) return PHYSICAL_LINK_TYPE_ENTITY_CODE;
 
+		else if (entity.equals(CHARACTERISTIC_ENTITY)) return CHARACTERISTIC_ENTITY_CODE;
+
 		else if (entity.equals(EVENT_ENTITY)) return EVENT_ENTITY_CODE;
 		else if (entity.equals(ALARM_ENTITY)) return ALARM_ENTITY_CODE;
 
-		else if (entity.equals(CHARACTERISTIC_ENTITY)) return CHARACTERISTIC_ENTITY_CODE;
-		else if (entity.equals(PERMATTR_ENTITY)) return PERMATTR_ENTITY_CODE;
 		else if (entity.equals(USER_ENTITY)) return USER_ENTITY_CODE;
 		else if (entity.equals(DOMAIN_ENTITY)) return DOMAIN_ENTITY_CODE;
 		else if (entity.equals(SERVER_ENTITY)) return SERVER_ENTITY_CODE;
 		else if (entity.equals(MCM_ENTITY)) return MCM_ENTITY_CODE;
+		else if (entity.equals(PERMATTR_ENTITY)) return PERMATTR_ENTITY_CODE;
+
 		else if (entity.equals(EQUIPMENT_ENTITY)) return EQUIPMENT_ENTITY_CODE;
 		else if (entity.equals(PORT_ENTITY)) return PORT_ENTITY_CODE;
 		else if (entity.equals(TRANSPATH_ENTITY)) return TRANSPATH_ENTITY_CODE;
@@ -376,13 +393,14 @@ public final class ObjectEntities {
 		 * TODO recast using Trove Collections
 		 */
 		switch (code) {
+			case CHARACTERISTICTYPE_ENTITY_CODE:
+				return CHARACTERISTICTYPE_ENTITY;
+
 			case EVENTTYPE_ENTITY_CODE:
 				return EVENTTYPE_ENTITY;
 			case ALARMTYPE_ENTITY_CODE:
 				return ALARMTYPE_ENTITY;
 
-			case CHARACTERISTICTYPE_ENTITY_CODE:
-				return CHARACTERISTICTYPE_ENTITY;
 			case EQUIPMENTTYPE_ENTITY_CODE:
 				return EQUIPMENTTYPE_ENTITY;
 			case PORTTYPE_ENTITY_CODE:
@@ -412,15 +430,14 @@ public final class ObjectEntities {
 			case PHYSICAL_LINK_TYPE_ENTITY_CODE:
 				return PHYSICAL_LINK_TYPE_ENTITY;
 
+			case CHARACTERISTIC_ENTITY_CODE:
+				return CHARACTERISTIC_ENTITY;
+
 			case EVENT_ENTITY_CODE:
 				return EVENT_ENTITY;
 			case ALARM_ENTITY_CODE:
 				return ALARM_ENTITY;
 
-			case CHARACTERISTIC_ENTITY_CODE:
-				return CHARACTERISTIC_ENTITY;
-			case PERMATTR_ENTITY_CODE:
-				return PERMATTR_ENTITY;
 			case USER_ENTITY_CODE:
 				return USER_ENTITY;
 			case DOMAIN_ENTITY_CODE:
@@ -429,6 +446,9 @@ public final class ObjectEntities {
 				return SERVER_ENTITY;
 			case MCM_ENTITY_CODE:
 				return MCM_ENTITY;
+			case PERMATTR_ENTITY_CODE:
+				return PERMATTR_ENTITY;
+
 			case EQUIPMENT_ENTITY_CODE:
 				return EQUIPMENT_ENTITY;
 			case PORT_ENTITY_CODE:

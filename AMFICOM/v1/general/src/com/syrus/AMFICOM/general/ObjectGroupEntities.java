@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectGroupEntities.java,v 1.8 2004/12/24 18:25:10 arseniy Exp $
+ * $Id: ObjectGroupEntities.java,v 1.9 2005/01/13 14:16:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,13 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/12/24 18:25:10 $
+ * @version $Revision: 1.9 $, $Date: 2005/01/13 14:16:11 $
  * @author $Author: arseniy $
  * @module general_v1
  */
 public final class ObjectGroupEntities {
 	//  Group Types
+	public static final String GENERAL_GROUP = "GeneralGroup";
 	public static final String EVENT_GROUP = "EventGroup";
 	public static final String ADMINISTRATION_GROUP = "AdministrationGroup";
 	public static final String CONFIGURATION_GROUP = "ConfigurationGroup";
@@ -25,14 +26,15 @@ public final class ObjectGroupEntities {
     
 	//  Group Codes
 	public static final short UNKNOWN_GROUP_CODE = 0x0000;
-	public static final short EVENT_GROUP_CODE = 0x0001;
-	public static final short ADMINISTRATION_GROUP_CODE = 0x0002;
-	public static final short CONFIGURATION_GROUP_CODE = 0x0003;
-	public static final short MEASUREMENT_GROUP_CODE = 0x0004;
-	public static final short SCHEME_GROUP_CODE = 0x0005;
-	public static final short MAP_GROUP_CODE = 0x0006;
-	public static final short RESOURCE_GROUP_CODE = 0x0007;
-	public static final short MAPVIEW_GROUP_CODE = 0x0008;
+	public static final short GENERAL_GROUP_CODE = 0x0001;
+	public static final short EVENT_GROUP_CODE = 0x0002;
+	public static final short ADMINISTRATION_GROUP_CODE = 0x0003;
+	public static final short CONFIGURATION_GROUP_CODE = 0x0004;
+	public static final short MEASUREMENT_GROUP_CODE = 0x0005;
+	public static final short SCHEME_GROUP_CODE = 0x0006;
+	public static final short MAP_GROUP_CODE = 0x0007;
+	public static final short RESOURCE_GROUP_CODE = 0x0008;
+	public static final short MAPVIEW_GROUP_CODE = 0x0009;
 
 	private ObjectGroupEntities() {
 		// singleton constructor
@@ -40,7 +42,9 @@ public final class ObjectGroupEntities {
 
 	public static short stringToCode(final String groupString) {
 		// recast using Trove Collections
-		if (groupString.equals(EVENT_GROUP))
+		if (groupString.equals(GENERAL_GROUP))
+			return GENERAL_GROUP_CODE;
+		else if (groupString.equals(EVENT_GROUP))
 			return EVENT_GROUP_CODE;
 		else if (groupString.equals(ADMINISTRATION_GROUP))
 			return ADMINISTRATION_GROUP_CODE;
@@ -62,6 +66,8 @@ public final class ObjectGroupEntities {
 	public static String codeToString(final short groupCode) {
 		// recast using Trove Collections
 		switch (groupCode) {
+			case GENERAL_GROUP_CODE:
+				return GENERAL_GROUP;
 			case EVENT_GROUP_CODE:
 				return EVENT_GROUP;
 			case ADMINISTRATION_GROUP_CODE:
@@ -80,7 +86,7 @@ public final class ObjectGroupEntities {
 				return MAPVIEW_GROUP;
 			case UNKNOWN_GROUP_CODE:
 			default:
-				return null;        
+				return null;
 		}
 	}
 
@@ -89,6 +95,16 @@ public final class ObjectGroupEntities {
 	 * code is not only within the valid range, but also refers to a valid
 	 * entity name.  
 	 */
+	public static boolean isInGeneralGroup(final short entityCode) {
+		assert ObjectEntities.codeToString(entityCode) != null;
+		return entityCode >= ObjectEntities.GENERAL_MIN_ENTITY_CODE
+			&& entityCode <= ObjectEntities.GENERAL_MAX_ENTITY_CODE;
+	}
+
+	public static boolean isInGeneralGroup(final String entityName) {
+		return isInGeneralGroup(ObjectEntities.stringToCode(entityName));
+	}
+
 	public static boolean isInEventGroup(final short entityCode) {
 		assert ObjectEntities.codeToString(entityCode) != null;
 		return entityCode >= ObjectEntities.EVENT_MIN_ENTITY_CODE
@@ -170,7 +186,9 @@ public final class ObjectGroupEntities {
 	}
 
 	public static short getGroupCode(final short entityCode) {
-		if (isInEventGroup(entityCode))
+		if (isInGeneralGroup(entityCode))
+			return GENERAL_GROUP_CODE;
+		else if (isInEventGroup(entityCode))
 			return EVENT_GROUP_CODE;
 		else if (isInAdministrationGroup(entityCode))
 			return ADMINISTRATION_GROUP_CODE;
