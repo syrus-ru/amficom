@@ -1,5 +1,5 @@
 /*
- * $Id: measurement.idl,v 1.32 2004/10/13 12:55:28 bob Exp $
+ * $Id: measurement.idl,v 1.33 2004/10/18 11:43:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,15 @@ module corba {
 
 ////////////////////////// Type ///////////////////////////
 
+	enum ParameterTypeSort{
+		PARAMETERTYPE_DATA,
+		PARAMETERTYPE_SHORT,
+		PARAMETERTYPE_INTEGER,
+		PARAMETERTYPE_LONG,
+		PARAMETERTYPE_DOUBLE,
+		PARAMETERTYPE_STRING
+	};
+	
 	struct ParameterType_Transferable {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
 		long long created;
@@ -31,6 +40,7 @@ module corba {
 		wstring description;
 
 		wstring name;
+		ParameterTypeSort sort;
 	};	
 	typedef sequence <ParameterType_Transferable> ParameterTypeSeq_Transferable;
 
@@ -124,6 +134,11 @@ module corba {
 	typedef sequence <Set_Transferable> SetSeq_Transferable;
 
 /////////////////// Modeling /////////////////////
+	enum ModelingSort{
+		MODELINGSORT_MODELING,
+		MODELINGSORT_PREDICTION
+	};
+
 	struct Modeling_Transferable {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
 		long long created;
@@ -132,9 +147,11 @@ module corba {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
 		
 		wstring name;
-		wstring scheme_path_id;		
+		wstring scheme_path_id;
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable monitored_element_id;
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable measurement_type_id;
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable argument_set_id;		
+		com::syrus::AMFICOM::general::corba::Identifier_Transferable argument_set_id;
+		ModelingSort sort;				
 	};
 	
 	typedef sequence <Modeling_Transferable> ModelingSeq_Transferable;
