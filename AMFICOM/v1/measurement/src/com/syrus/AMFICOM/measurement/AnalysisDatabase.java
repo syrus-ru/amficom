@@ -6,7 +6,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -18,21 +22,20 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 	public static final String	COLUMN_CRITERIA_SET_ID		= "criteriaSetId";
 
 	private Analysis fromStorableObject(StorableObject storableObject)
-			throws Exception {
+			throws IllegalDataException {
 		if (storableObject instanceof Analysis)
 			return (Analysis) storableObject;
-		else
-			throw new Exception(
+	throw new IllegalDataException(
 					"AnalysisDatabase.fromStorableObject | Illegal Storable Object: "
 							+ storableObject.getClass().getName());
 	}
 
-	public void retrieve(StorableObject storableObject) throws Exception {
+	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Analysis analysis = this.fromStorableObject(storableObject);
 		this.retrieveAnalysis(analysis);
 	}
 
-	private void retrieveAnalysis(Analysis analysis) throws Exception {
+	private void retrieveAnalysis(Analysis analysis) throws ObjectNotFoundException, RetrieveObjectException {
 		String analysisIdStr = analysis.getId().toSQLString();
 		String sql;
 		{
@@ -95,11 +98,11 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 								.getString(COLUMN_MONITORED_ELEMENT_ID)),
 						criteriaSet);
 			} else
-				throw new Exception("No such analysis: " + analysisIdStr);
+				throw new ObjectNotFoundException("No such analysis: " + analysisIdStr);
 		} catch (SQLException sqle) {
 			String mesg = "AnalysisDatabase.retrieve | Cannot retrieve analysis "
 					+ analysisIdStr;
-			throw new Exception(mesg, sqle);
+			throw new RetrieveObjectException(mesg, sqle);
 		} finally {
 			try {
 				if (statement != null) statement.close();
@@ -107,12 +110,13 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 				statement = null;
 				resultSet = null;
 			} catch (SQLException sqle1) {
+//				 nothing yet.
 			}
 		}
 	}
 
 	public Object retrieveObject(StorableObject storableObject,
-			int retrieveKind, Object arg) throws Exception {
+			int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		Analysis analysis = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
@@ -120,11 +124,11 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void insert(StorableObject storableObject) throws Exception {
+	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
 		Analysis analysis = this.fromStorableObject(storableObject);
 		try {
 			this.insertAnalysis(analysis);
-		} catch (Exception e) {
+		} catch (CreateObjectException e) {
 			try {
 				connection.rollback();
 			} catch (SQLException sqle) {
@@ -141,7 +145,7 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void insertAnalysis(Analysis analysis) throws Exception {
+	private void insertAnalysis(Analysis analysis) throws CreateObjectException {
 		String analysisIdStr = analysis.getId().toSQLString();
 		String sql;
 		{
@@ -194,18 +198,19 @@ public class AnalysisDatabase extends StorableObjectDatabase {
 		} catch (SQLException sqle) {
 			String mesg = "AnalysisDatabase.insert | Cannot insert analysis "
 					+ analysisIdStr;
-			throw new Exception(mesg, sqle);
+			throw new CreateObjectException(mesg, sqle);
 		} finally {
 			try {
 				if (statement != null) statement.close();
 				statement = null;
 			} catch (SQLException sqle1) {
+				// nothing yet.
 			}
 		}
 	}
 
 	public void update(StorableObject storableObject, int updateKind,
-			Object obj) throws Exception {
+			Object obj) throws IllegalDataException, CreateObjectException {
 		Analysis analysis = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			default:

@@ -8,7 +8,11 @@ import oracle.jdbc.driver.OracleResultSet;
 import oracle.jdbc.driver.OraclePreparedStatement;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -18,19 +22,18 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 	public static final String COLUMN_DESCRIPTION 	= "description";
 	public static final String COLUMN_VALUE 		= "value";
 
-	private TemporalPattern fromStorableObject(StorableObject storableObject) throws Exception {
+	private TemporalPattern fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof TemporalPattern)
 			return (TemporalPattern)storableObject;
-		else
-			throw new Exception("TemporalPatternDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
+		throw new IllegalDataException("TemporalPatternDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
 	}
 
-	public void retrieve(StorableObject storableObject) throws Exception {
+	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		TemporalPattern temporalPattern = this.fromStorableObject(storableObject);
 		this.retrieveTemporalPattern(temporalPattern);
 	}
 
-	private void retrieveTemporalPattern(TemporalPattern temporalPattern) throws Exception {
+	private void retrieveTemporalPattern(TemporalPattern temporalPattern) throws ObjectNotFoundException, RetrieveObjectException {
 		String tpIdStr = temporalPattern.getId().toSQLString();
 		String sql = SQL_SELECT
 			+ DatabaseDate.toQuerySubString(COLUMN_CREATED) + COMMA 
@@ -57,11 +60,11 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 												cronStrings);
 			}
 			else
-				throw new Exception("No such temporal pattern: " + tpIdStr);
+				throw new ObjectNotFoundException("No such temporal pattern: " + tpIdStr);
 		}
 		catch (SQLException sqle) {
 			String mesg = "TemporalPatternDatabase.retrieveTemporalPattern | Cannot retrieve temporal pattern " + tpIdStr;
-			throw new Exception(mesg, sqle);
+			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -76,7 +79,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws Exception {
+	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws ObjectNotFoundException, RetrieveObjectException, IllegalDataException {
 		TemporalPattern temporalPattern = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
@@ -84,12 +87,12 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void insert(StorableObject storableObject) throws Exception {
+	public void insert(StorableObject storableObject) throws CreateObjectException , IllegalDataException {
 		TemporalPattern temporalPattern = this.fromStorableObject(storableObject);
 		try {
 			this.insertTemporalPattern(temporalPattern);
 		}
-		catch (Exception e) {
+		catch (CreateObjectException e) {
 			try {
 				connection.rollback();
 			}
@@ -108,7 +111,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	private void insertTemporalPattern(TemporalPattern temporalPattern) throws Exception {
+	private void insertTemporalPattern(TemporalPattern temporalPattern) throws CreateObjectException {
 		String tpIdCode = temporalPattern.getId().getCode();
 		String sql = SQL_INSERT_INTO + ObjectEntities.TEMPORALPATTERN_ENTITY + CLOSE_BRACKET
 			+ COLUMN_ID + COMMA
@@ -143,7 +146,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		}
 		catch (SQLException sqle) {
 			String mesg = "TemporalPatternDatabase.insertTemporalPattern | Cannot insert temporal pattern " + tpIdCode;
-			throw new Exception(mesg, sqle);
+			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {
 			try {
@@ -155,7 +158,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		}
 	}
 
-	public void update(StorableObject storableObject, int updateKind, Object arg) throws Exception {
+	public void update(StorableObject storableObject, int updateKind, Object arg) throws IllegalDataException, CreateObjectException {
 		TemporalPattern temporalPattern = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			default:

@@ -12,6 +12,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -615,15 +617,15 @@ public class TemporalPattern extends StorableObject {
 	private long[]					times;
 	private Date[]					timesDate;
 
-	public TemporalPattern(Identifier id) throws RetrieveObjectException {
+	public TemporalPattern(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
-
 		this.temporalPatternDatabase = MeasurementDatabaseContext.temporalPatternDatabase;
-		try {
+		try{
 			this.temporalPatternDatabase.retrieve(this);
-		} catch (Exception e) {
-			throw new RetrieveObjectException(e.getMessage(), e);
+		}catch (IllegalDataException ide){
+			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
+		
 	}
 
 	public TemporalPattern(TemporalPattern_Transferable tpt) throws CreateObjectException {
@@ -640,7 +642,7 @@ public class TemporalPattern extends StorableObject {
 		this.temporalPatternDatabase = MeasurementDatabaseContext.temporalPatternDatabase;
 		try {
 			this.temporalPatternDatabase.insert(this);
-		} catch (Exception e) {
+		} catch (IllegalDataException e) {
 			throw new CreateObjectException(e.getMessage(), e);
 		}
 	}
