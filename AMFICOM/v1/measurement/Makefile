@@ -16,6 +16,7 @@ JIKESFLAGS = -target 1.2
 
 JPUB = $(ORACLE_HOME)/bin/jpub
 JPUB_FLAGS = \
+	-compile=false \
 	-J-classpath $(JDBCCLASSPATH):$(SQLJCLASSPATH) \
 	-user=amficom/amficom \
 	-url=jdbc:oracle:thin:@$(HOST):1521:$(SERVICE_NAME) \
