@@ -59,16 +59,13 @@ public abstract class ObjectEntities {
 	/*	Measurement 385 -- 512	*/
 	public static final short SET_ENTITY_CODE = 0x0180;
 	public static final short SETPARAMETER_ENTITY_CODE = 0x0181;
-	public static final short SETMELINK_ENTITY_CODE = 0x0182;
-	public static final short MS_ENTITY_CODE = 0x0183;
-	public static final short MSMELINK_ENTITY_CODE = 0x0184;
-	public static final short MEASUREMENT_ENTITY_CODE = 0x0185;
-	public static final short ANALYSIS_ENTITY_CODE = 0x0186;
-	public static final short EVALUATION_ENTITY_CODE = 0x0187;
-	public static final short TEST_ENTITY_CODE = 0x0188;
-	public static final short MSTESTLINK_ENTITY_CODE = 0x0189;
-	public static final short RESULT_ENTITY_CODE = 0x018A;
-	public static final short RESULTPARAMETER_ENTITY_CODE = 0x018B;
-	public static final short TEMPORALPATTERN_ENTITY_CODE = 0x018C;
+	public static final short MS_ENTITY_CODE = 0x0182;
+	public static final short MEASUREMENT_ENTITY_CODE = 0x0183;
+	public static final short ANALYSIS_ENTITY_CODE = 0x0184;
+	public static final short EVALUATION_ENTITY_CODE = 0x0185;
+	public static final short TEST_ENTITY_CODE = 0x0186;
+	public static final short RESULT_ENTITY_CODE = 0x0187;
+	public static final short RESULTPARAMETER_ENTITY_CODE = 0x0188;
+	public static final short TEMPORALPATTERN_ENTITY_CODE = 0x0189;
 
 }
