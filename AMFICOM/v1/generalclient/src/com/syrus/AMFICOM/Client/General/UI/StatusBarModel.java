@@ -147,8 +147,6 @@ public class StatusBarModel extends JPanel implements OperationListener
 	StatusBarField dragging_sbf;
 	StatusBarField right_sbf;
 
-	Dispatcher disp = null;
-
 	public StatusBarModel()
 	{
 		super();
@@ -185,12 +183,24 @@ public class StatusBarModel extends JPanel implements OperationListener
 		}
 	}
 
+	public void removeDispatcher(Dispatcher disp)
+	{
+		if(disp != null)
+			disp.register(this, StatusMessageEvent.type);
+	}
+
+	/**
+	 * @deprecated use {@link addDispatcher}
+	 */
 	public void setDispatcher(Dispatcher disp)
 	{
-//		if(disp != null)
-//			disp.unregister(this, StatusMessageEvent.type);
-		this.disp = disp;
-		disp.register(this, StatusMessageEvent.type);
+		addDispatcher(disp);
+	}
+	
+	public void addDispatcher(Dispatcher disp)
+	{
+		if(disp != null)
+			disp.register(this, StatusMessageEvent.type);
 	}
 
 	public void setText(int index, String text)
