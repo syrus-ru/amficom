@@ -30,10 +30,19 @@ CREATE OR REPLACE TYPE TimeStampArray AS TABLE OF DATE
 
 CREATE TABLE PTTemporalTemplate (
  id NUMBER(20, 0),
- description VARCHAR2(256),
  created DATE NOT NULL,
+ modified DATE NOT NULL,
+ creator_id NUMBER(20, 0) NOT NULL,
+ modifier_id NUMBER(20, 0) NOT NULL,
+
+ description VARCHAR2(256),
  value TemporalTemplate,
- CONSTRAINT pttt_pk PRIMARY KEY(id) ENABLE
+
+ CONSTRAINT pttt_pk PRIMARY KEY(id) ENABLE,
+ CONSTRAINT pttt_creator_fk FOREIGN KEY (creator_id)
+  REFERENCES Users (id) ON DELETE CASCADE ENABLE,
+ CONSTRAINT pttt_modifier_fk FOREIGN KEY (modifier_id)
+  REFERENCES Users (id) ON DELETE CASCADE ENABLE,
 ) 
  NESTED TABLE value.day_times STORE AS day_times_tab 
  NESTED TABLE value.dates STORE AS dates_tab;

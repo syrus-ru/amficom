@@ -4,6 +4,7 @@ CREATE TABLE Equipment (
  modified DATE NOT NULL,
  creator_id NUMBER(20, 0) NOT NULL,
  modifier_id NUMBER(20, 0) NOT NULL,
+
  domain_id NUMBER(20, 0),
 
  type_id NUMBER(20, 0) NOT NULL,
@@ -29,6 +30,7 @@ CREATE TABLE Equipment (
   REFERENCES Users (id) ON DELETE CASCADE ENABLE,
  CONSTRAINT eqp_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES Users (id) ON DELETE CASCADE ENABLE,
+
  CONSTRAINT eqp_domain_fk FOREIGN KEY (domain_id)
   REFERENCES Domain (id) ON DELETE CASCADE ENABLE,
 
