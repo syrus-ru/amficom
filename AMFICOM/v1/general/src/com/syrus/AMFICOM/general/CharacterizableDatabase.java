@@ -1,11 +1,16 @@
-/*
- * $Id: CharacterizableDatabase.java,v 1.2 2005/03/10 15:18:40 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
- * АМФИКОМ.
+/*-
+ * $Id: CharacterizableDatabase.java,v 1.3 2005/03/23 14:59:22 bass Exp $
+ *
+ * Copyright © 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.general;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -14,8 +19,8 @@ import java.util.Map;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/03/10 15:18:40 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/03/23 14:59:22 $
+ * @author $Author: bass $
  * @module general_v1
  */
 public abstract class CharacterizableDatabase extends StorableObjectDatabase {
@@ -93,6 +98,8 @@ public abstract class CharacterizableDatabase extends StorableObjectDatabase {
 			characterizable = this.fromStorableObject((StorableObject) it.next());
 			characterizableId = characterizable.getId();
 			orderedCharacteristics = (Collection) orderedCharacteristicsMap.get(characterizableId);
+			if (orderedCharacteristics == null)
+				orderedCharacteristics = Collections.EMPTY_SET;
 
 			characterizable.setCharacteristics0(orderedCharacteristics);
 		}
