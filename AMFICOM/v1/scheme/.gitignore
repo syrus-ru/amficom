@@ -4,3 +4,11 @@ classes
 .settings
 test
 .corba
+.mach
+*.swp
+*.tar
+*.gz
+*.jpr
+*.jpx
+*.zip
+*.rar
