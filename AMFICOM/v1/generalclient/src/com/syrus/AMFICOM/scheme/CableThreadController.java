@@ -1,33 +1,32 @@
-package com.syrus.AMFICOM.configuration;
+package com.syrus.AMFICOM.scheme;
 
 import java.util.*;
 
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.scheme.corba.SchemeCableThread;
 
-public final class PortTypeController implements ObjectResourceController
+public final class CableThreadController implements ObjectResourceController
 {
 	public static final String KEY_NAME = "name";
-	public static final String KEY_DESCRIPTION = "description";
 
-	private static PortTypeController instance;
+	private static CableThreadController instance;
 
 	private List keys;
 
-	private PortTypeController()
+	private CableThreadController()
 	{
 		// empty private constructor
 		String[] keysArray = new String[] {
-				KEY_NAME,
-				KEY_DESCRIPTION
+				KEY_NAME
 		};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
 
-	public static PortTypeController getInstance()
+	public static CableThreadController getInstance()
 	{
 		if (instance == null)
-			instance = new PortTypeController();
+			instance = new CableThreadController();
 		return instance;
 	}
 
@@ -41,21 +40,17 @@ public final class PortTypeController implements ObjectResourceController
 		String name = null;
 		if (key.equals(KEY_NAME))
 			name = "Название";
-		if (key.equals(KEY_DESCRIPTION))
-			name = "Описание";
 		return name;
 	}
 
 	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
-		if (object instanceof PortType)
+		if (object instanceof SchemeCableThread)
 		{
-			PortType type = (PortType)object;
+			SchemeCableThread thread = (SchemeCableThread)object;
 			if (key.equals(KEY_NAME))
-				result = type.getName();
-			if (key.equals(KEY_DESCRIPTION))
-				result = type.getDescription();
+				result = thread.getName();
 		}
 		return result;
 	}

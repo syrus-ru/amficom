@@ -2,18 +2,18 @@ package com.syrus.AMFICOM.configuration;
 
 import java.util.*;
 
-import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.client_.resource.*;
 
-public final class PortTypeController implements ObjectResourceController
+public final class DomainController implements ObjectResourceController
 {
 	public static final String KEY_NAME = "name";
 	public static final String KEY_DESCRIPTION = "description";
 
-	private static PortTypeController instance;
+	private static DomainController instance;
 
 	private List keys;
 
-	private PortTypeController()
+	private DomainController()
 	{
 		// empty private constructor
 		String[] keysArray = new String[] {
@@ -24,10 +24,10 @@ public final class PortTypeController implements ObjectResourceController
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
 
-	public static PortTypeController getInstance()
+	public static DomainController getInstance()
 	{
 		if (instance == null)
-			instance = new PortTypeController();
+			instance = new DomainController();
 		return instance;
 	}
 
@@ -49,13 +49,13 @@ public final class PortTypeController implements ObjectResourceController
 	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
-		if (object instanceof PortType)
+		if (object instanceof Domain)
 		{
-			PortType type = (PortType)object;
+			Domain domain = (Domain)object;
 			if (key.equals(KEY_NAME))
-				result = type.getName();
+				result = domain.getName();
 			if (key.equals(KEY_DESCRIPTION))
-				result = type.getDescription();
+				result = domain.getDescription();
 		}
 		return result;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: ObjComboBox.java,v 1.5 2004/11/16 08:08:11 stas Exp $
+ * $Id: ObjComboBox.java,v 1.6 2004/11/19 10:15:26 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2004/11/16 08:08:11 $
+ * @version $Revision: 1.6 $, $Date: 2004/11/19 10:15:26 $
  * @module generalclient_v1
  */
 public class ObjComboBox extends AComboBox {
@@ -45,8 +45,12 @@ public class ObjComboBox extends AComboBox {
 		super.setSelectedItem(fieldByObject);
 	}
 
-	public void setContents(Collection objects) {
-		model.removeAllElements();
-		model.addElements(objects);
+	public void removeAll() {
+		super.removeAll();
+		this.model.removeAllElements();
+	}
+
+	public void addElements(Collection objects) {
+		this.model.addElements(objects);
 	}
 }

@@ -1,33 +1,34 @@
-package com.syrus.AMFICOM.configuration;
+package com.syrus.AMFICOM.scheme;
 
 import java.util.*;
 
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.scheme.corba.PathElement;
 
-public final class PortTypeController implements ObjectResourceController
+public final class PathElementController implements ObjectResourceController
 {
 	public static final String KEY_NAME = "name";
-	public static final String KEY_DESCRIPTION = "description";
+	public static final String KEY_SEQUENTIAL_NUMBER = "number";
 
-	private static PortTypeController instance;
+	private static PathElementController instance;
 
 	private List keys;
 
-	private PortTypeController()
+	private PathElementController()
 	{
 		// empty private constructor
 		String[] keysArray = new String[] {
 				KEY_NAME,
-				KEY_DESCRIPTION
+				KEY_SEQUENTIAL_NUMBER
 		};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
 
-	public static PortTypeController getInstance()
+	public static PathElementController getInstance()
 	{
 		if (instance == null)
-			instance = new PortTypeController();
+			instance = new PathElementController();
 		return instance;
 	}
 
@@ -41,21 +42,24 @@ public final class PortTypeController implements ObjectResourceController
 		String name = null;
 		if (key.equals(KEY_NAME))
 			name = "Название";
-		if (key.equals(KEY_DESCRIPTION))
-			name = "Описание";
+		if (key.equals(KEY_SEQUENTIAL_NUMBER))
+			name = "№";
 		return name;
 	}
 
 	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
-		if (object instanceof PortType)
+		if (object instanceof PathElement)
 		{
-			PortType type = (PortType)object;
+			PathElement pe = (PathElement)object;
 			if (key.equals(KEY_NAME))
-				result = type.getName();
-			if (key.equals(KEY_DESCRIPTION))
-				result = type.getDescription();
+				/**
+				 * @todo insert pe.getName();
+				 */
+				result = "";
+			if (key.equals(KEY_SEQUENTIAL_NUMBER))
+				result = new Integer(pe.getSequentialNumber());
 		}
 		return result;
 	}
@@ -90,3 +94,5 @@ public final class PortTypeController implements ObjectResourceController
 		return clazz;
 	}
 }
+
+

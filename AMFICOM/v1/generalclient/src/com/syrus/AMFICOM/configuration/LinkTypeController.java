@@ -1,32 +1,33 @@
-package com.syrus.AMFICOM.scheme;
+package com.syrus.AMFICOM.configuration;
 
 import java.util.*;
 
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
-import com.syrus.AMFICOM.scheme.corba.SchemePort;
 
-public final class SchemePortController implements ObjectResourceController
+public final class LinkTypeController implements ObjectResourceController
 {
 	public static final String KEY_NAME = "name";
+	public static final String KEY_DESCRIPTION = "description";
 
-	private static SchemePortController instance;
+	private static LinkTypeController instance;
 
 	private List keys;
 
-	private SchemePortController()
+	private LinkTypeController()
 	{
 		// empty private constructor
 		String[] keysArray = new String[] {
-				KEY_NAME
+				KEY_NAME,
+				KEY_DESCRIPTION
 		};
 
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
 
-	public static SchemePortController getInstance()
+	public static LinkTypeController getInstance()
 	{
 		if (instance == null)
-			instance = new SchemePortController();
+			instance = new LinkTypeController();
 		return instance;
 	}
 
@@ -40,17 +41,21 @@ public final class SchemePortController implements ObjectResourceController
 		String name = null;
 		if (key.equals(KEY_NAME))
 			name = "Название";
+		if (key.equals(KEY_DESCRIPTION))
+			name = "Описание";
 		return name;
 	}
 
 	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
-		if (object instanceof SchemePort)
+		if (object instanceof LinkType)
 		{
-			SchemePort port = (SchemePort)object;
+			LinkType type = (LinkType)object;
 			if (key.equals(KEY_NAME))
-				result = port.getName();
+				result = type.getName();
+			if (key.equals(KEY_DESCRIPTION))
+				result = type.getDescription();
 		}
 		return result;
 	}

@@ -4,16 +4,16 @@ import java.util.*;
 
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
-public final class PortTypeController implements ObjectResourceController
+public final class MeasurementPortTypeController implements ObjectResourceController
 {
 	public static final String KEY_NAME = "name";
 	public static final String KEY_DESCRIPTION = "description";
 
-	private static PortTypeController instance;
+	private static MeasurementPortTypeController instance;
 
 	private List keys;
 
-	private PortTypeController()
+	private MeasurementPortTypeController()
 	{
 		// empty private constructor
 		String[] keysArray = new String[] {
@@ -24,10 +24,10 @@ public final class PortTypeController implements ObjectResourceController
 		this.keys = Collections.unmodifiableList(new ArrayList(Arrays.asList(keysArray)));
 	}
 
-	public static PortTypeController getInstance()
+	public static MeasurementPortTypeController getInstance()
 	{
 		if (instance == null)
-			instance = new PortTypeController();
+			instance = new MeasurementPortTypeController();
 		return instance;
 	}
 
@@ -49,9 +49,9 @@ public final class PortTypeController implements ObjectResourceController
 	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
-		if (object instanceof PortType)
+		if (object instanceof MeasurementPortType)
 		{
-			PortType type = (PortType)object;
+			MeasurementPortType type = (MeasurementPortType)object;
 			if (key.equals(KEY_NAME))
 				result = type.getName();
 			if (key.equals(KEY_DESCRIPTION))
