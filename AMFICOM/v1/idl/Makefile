@@ -1,7 +1,7 @@
 #
-# $Id: Makefile,v 1.11 2004/09/09 13:57:27 bass Exp $
+# $Id: Makefile,v 1.12 2004/10/12 07:39:01 bass Exp $
 #
-# vim:set ft=make:
+# vim:ft=make:
 #
 
 MODULE_NAME = idl_v1
@@ -45,19 +45,19 @@ all: .all
 idl: .idl
 
 .idl: $(SRCDIR) $(CLASSDIR)
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/AMFICOM.idl
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/ISM.idl
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/admin.idl
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/alarm.idl
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/client.idl
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/constants.idl
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/general.idl
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/map.idl
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/network.idl
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/report.idl
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/resource.idl
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/scheme.idl
-	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/survey.idl
+	$(IDLJ) $(IDLJFLAGS) -DSERVER $(IDLDIR)/AMFICOM.idl
+	$(IDLJ) $(IDLJFLAGS) -DSERVER $(IDLDIR)/ISM.idl
+	$(IDLJ) $(IDLJFLAGS) -DSERVER $(IDLDIR)/admin.idl
+	$(IDLJ) $(IDLJFLAGS) -DSERVER $(IDLDIR)/alarm.idl
+	$(IDLJ) $(IDLJFLAGS) -DSERVER $(IDLDIR)/client.idl
+	$(IDLJ) $(IDLJFLAGS) -DSERVER $(IDLDIR)/constants.idl
+	$(IDLJ) $(IDLJFLAGS) -DSERVER $(IDLDIR)/general.idl
+	$(IDLJ) $(IDLJFLAGS) -DSERVER $(IDLDIR)/map.idl
+	$(IDLJ) $(IDLJFLAGS) -DSERVER $(IDLDIR)/network.idl
+	$(IDLJ) $(IDLJFLAGS) -DSERVER $(IDLDIR)/report.idl
+	$(IDLJ) $(IDLJFLAGS) -DSERVER $(IDLDIR)/resource.idl
+	$(IDLJ) $(IDLJFLAGS) -DSERVER $(IDLDIR)/scheme.idl
+	$(IDLJ) $(IDLJFLAGS) -DSERVER $(IDLDIR)/survey.idl
 	touch $@
 
 .PHONY: idlclean
