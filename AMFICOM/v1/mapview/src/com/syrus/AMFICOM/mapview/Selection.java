@@ -1,5 +1,5 @@
 /**
- * $Id: Selection.java,v 1.1 2005/02/01 09:28:17 krupenn Exp $
+ * $Id: Selection.java,v 1.2 2005/02/01 15:11:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,13 +24,12 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import com.syrus.AMFICOM.mapview.UnboundLink;
 
 /**
  * Набор выбранных элементов.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.1 $, $Date: 2005/02/01 09:28:17 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/01 15:11:28 $
  * @module mapviewclient_v1
  * @todo copy/paste, properties
  */
@@ -73,25 +72,43 @@ public final class Selection
 	 */
 	private boolean physicalLinkSelection = true;
 
+	/**
+	 * Конструктор
+	 * @param map топологическая схема
+	 */
 	public Selection(Map map)
 	{
 		this.map = map;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean isRemoved()
 	{
 		return false;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setRemoved(boolean removed)
 	{
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is transient 
+	 */
 	public void setAlarmState(boolean alarmState)
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is transient 
+	 */
 	public boolean getAlarmState()
 	{
 		throw new UnsupportedOperationException();
@@ -188,11 +205,19 @@ public final class Selection
 	{
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is transient 
+	 */
 	public boolean isSelected()
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is transient 
+	 */
 	public MapElementState getState()
 	{
 		throw new UnsupportedOperationException();
@@ -202,12 +227,11 @@ public final class Selection
 	{
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is transient 
+	 */
 	public Identifier getId()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	public void setId(Identifier id)
 	{
 		throw new UnsupportedOperationException();
 	}
@@ -217,31 +241,53 @@ public final class Selection
 		return "selection";
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is transient 
+	 */
 	public void setName(String name)
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is transient 
+	 */
 	public List getCharacteristics() 
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is transient 
+	 */
 	public void addCharacteristic(Characteristic ch)
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is transient 
+	 */
 	public void removeCharacteristic(Characteristic ch)
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public Map getMap()
 	{
 		return map;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	public void setMap(Map map)
 	{
 		this.map = map;
@@ -254,11 +300,18 @@ public final class Selection
 		return PROPERTY_PANE_CLASS_NAME;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public String getToolTipText()
 	{
 		return getName();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is transient 
+	 */
 	public void revert(MapElementState state)
 	{
 		throw new UnsupportedOperationException();
@@ -305,6 +358,10 @@ public final class Selection
 		return unboundCableSelection;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is transient 
+	 */
 	public java.util.Map getExportMap()
 	{
 		throw new UnsupportedOperationException();

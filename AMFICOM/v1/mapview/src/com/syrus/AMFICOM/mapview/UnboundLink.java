@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundLink.java,v 1.1 2005/02/01 09:28:17 krupenn Exp $
+ * $Id: UnboundLink.java,v 1.2 2005/02/01 15:11:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import java.util.List;
  * {@link CablePath} в случае, когда кабель не привязан на каком-либо участке 
  * между узлами.
  * @author $Author: krupenn $
- * @version $Revision: 1.1 $, $Date: 2005/02/01 09:28:17 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/01 15:11:29 $
  * @module mapviewclient_v1
  */
 public class UnboundLink extends PhysicalLink
@@ -91,21 +91,41 @@ public class UnboundLink extends PhysicalLink
 
 ////////////////////////////////////////////////////////////////////////////////
 
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is not storable 
+	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
+	 */
 	public void insert() throws CreateObjectException
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is not storable 
+	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
+	 */
 	public List getDependencies()
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is not storable 
+	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
+	 */
 	public StorableObject_Transferable getHeaderTransferable()
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is not storable 
+	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
+	 */
 	public Object getTransferable()
 	{
 		throw new UnsupportedOperationException();

@@ -1,5 +1,5 @@
 /**
- * $Id: Marker.java,v 1.2 2005/02/01 14:34:23 krupenn Exp $
+ * $Id: Marker.java,v 1.3 2005/02/01 15:11:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,14 +23,11 @@ import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.PathDecompositor;
 
 import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
-import com.syrus.AMFICOM.mapview.MeasurementPath;
-import com.syrus.AMFICOM.mapview.CablePath;
 
 /**
  * Название: Маркер связывания оптической дистанции Lo, полученной      * 
@@ -53,7 +50,7 @@ import com.syrus.AMFICOM.mapview.CablePath;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2005/02/01 14:34:23 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/01 15:11:28 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -382,49 +379,6 @@ public class Marker extends AbstractNode
 		return meId;
 	}
 
-	public MapElementState getState()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	public void revert(MapElementState state)
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	public String[][] getExportColumns()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	public void setColumn(String field, String value)
-	{
-		throw new UnsupportedOperationException();
-	}
-
-////////////////////////////////////////////////////////////////////////////////
-
-	public void insert() throws CreateObjectException
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	public List getDependencies()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	public StorableObject_Transferable getHeaderTransferable()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-	public Object getTransferable()
-	{
-		throw new UnsupportedOperationException();
-	}
-
-
 	public void setDistance(double distance)
 	{
 		this.distance = distance;
@@ -436,8 +390,74 @@ public class Marker extends AbstractNode
 		return distance;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is transient 
+	 */
+	public MapElementState getState()
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is transient 
+	 */
+	public void revert(MapElementState state)
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is transient 
+	 */
 	public java.util.Map getExportMap()
 	{
 		throw new UnsupportedOperationException();
 	}
+
+////////////////////////////////////////////////////////////////////////////////
+
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is not storable 
+	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
+	 */
+	public void insert() throws CreateObjectException
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is not storable 
+	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
+	 */
+	public List getDependencies()
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is not storable 
+	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
+	 */
+	public StorableObject_Transferable getHeaderTransferable()
+	{
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is not storable 
+	 * (unlike {@link com.syrus.AMFICOM.general.StorableObject})
+	 */
+	public Object getTransferable()
+	{
+		throw new UnsupportedOperationException();
+	}
+
+
 }

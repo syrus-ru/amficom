@@ -1,5 +1,5 @@
 /**
- * $Id: CablePath.java,v 1.1 2005/02/01 09:28:17 krupenn Exp $
+ * $Id: CablePath.java,v 1.2 2005/02/01 15:11:28 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -26,7 +26,6 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 
@@ -39,7 +38,7 @@ import java.util.ListIterator;
 /**
  * Ёлемент кабельного пути. ќписывает прив€зку кабел€ к топологическим лини€м.
  * @author $Author: krupenn $
- * @version $Revision: 1.1 $, $Date: 2005/02/01 09:28:17 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/01 15:11:28 $
  * @module mapviewclient_v1
  */
 public class CablePath implements MapElement
@@ -276,6 +275,7 @@ public class CablePath implements MapElement
 
 	/**
 	 * {@inheritDoc}
+	 * Suppress since this class is transient 
 	 */
 	public void setLocation(DoublePoint location)
 	{
@@ -649,6 +649,7 @@ public class CablePath implements MapElement
 
 	/**
 	 * {@inheritDoc}
+	 * Suppress since this class is transient 
 	 */
 	public MapElementState getState()
 	{
@@ -657,6 +658,7 @@ public class CablePath implements MapElement
 
 	/**
 	 * {@inheritDoc}
+	 * Suppress since this class is transient 
 	 */
 	public void revert(MapElementState state)
 	{
@@ -665,6 +667,7 @@ public class CablePath implements MapElement
 
 	/**
 	 * {@inheritDoc}
+	 * Suppress since this class is transient 
 	 */
 	public java.util.Map getExportMap()
 	{

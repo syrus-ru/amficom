@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPath.java,v 1.3 2005/02/01 14:34:23 krupenn Exp $
+ * $Id: MeasurementPath.java,v 1.4 2005/02/01 15:11:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,7 +25,6 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.scheme.corba.PathElement;
 import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
@@ -45,7 +44,7 @@ import java.util.ListIterator;
  * Элемент пути.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/02/01 14:34:23 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/01 15:11:28 $
  * @module mapviewclient_v1
  */
 public class MeasurementPath implements MapElement
@@ -341,6 +340,7 @@ public class MeasurementPath implements MapElement
 						SiteNode site = mapView.findElement(se);
 						if(site != null)
 						{
+							//TODO think if link to 'site' is needed for mPath
 		//					mPath.addCablePath(site);
 						}
 						break;
@@ -352,6 +352,7 @@ public class MeasurementPath implements MapElement
 						SiteNode esite = mapView.findElement(ese);
 						if(ssite == esite)
 						{
+							//TODO think if link to 'link' is needed for mPath
 		//					mPath.addCablePath(ssite);
 						}
 						break;
@@ -461,6 +462,7 @@ public class MeasurementPath implements MapElement
 
 	/**
 	 * {@inheritDoc}
+	 * Suppress since this class is transient 
 	 */
 	public MapElementState getState()
 	{
@@ -469,6 +471,7 @@ public class MeasurementPath implements MapElement
 
 	/**
 	 * {@inheritDoc}
+	 * Suppress since this class is transient 
 	 */
 	public void revert(MapElementState state)
 	{
@@ -477,6 +480,7 @@ public class MeasurementPath implements MapElement
 
 	/**
 	 * {@inheritDoc}
+	 * Suppress since this class is transient 
 	 */
 	public java.util.Map getExportMap()
 	{

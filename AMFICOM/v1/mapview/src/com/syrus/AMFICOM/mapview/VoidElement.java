@@ -1,5 +1,5 @@
 /**
- * $Id: VoidElement.java,v 1.1 2005/02/01 09:28:17 krupenn Exp $
+ * $Id: VoidElement.java,v 1.2 2005/02/01 15:11:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,7 +25,7 @@ import java.util.List;
  * Пустой элемент.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.1 $, $Date: 2005/02/01 09:28:17 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/01 15:11:29 $
  * @module mapviewclient_v1
  */
 public final class VoidElement implements MapElement 
@@ -72,86 +72,145 @@ public final class VoidElement implements MapElement
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is transient 
+	 */
 	public MapElementState getState()
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is transient 
+	 */
 	public void setSelected(boolean selected)
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is transient 
+	 */
 	public void setAlarmState(boolean alarmState)
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is transient 
+	 */
 	public boolean getAlarmState()
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is transient 
+	 */
 	public Identifier getId()
 	{
 		throw new UnsupportedOperationException();
 	}
 
-	public void setId(Identifier id)
-	{
-		throw new UnsupportedOperationException();
-	}
-
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is transient 
+	 */
 	public String getName()
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is transient 
+	 */
 	public void setName(String name)
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is transient 
+	 */
 	public DoublePoint getLocation()
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is transient 
+	 */
 	public void setMap(Map mc)
 	{
 		throw new UnsupportedOperationException();
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is transient 
+	 */
 	public List getCharacteristics() 
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is transient 
+	 */
 	public void addCharacteristic(Characteristic ch)
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is transient 
+	 */
 	public void removeCharacteristic(Characteristic ch)
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is transient 
+	 */
 	public void revert(MapElementState state)
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is transient 
+	 */
 	public boolean isRemoved()
 	{
 		throw new UnsupportedOperationException();
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is transient 
+	 */
 	public void setRemoved(boolean removed)
 	{
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * Suppress since this class is transient 
+	 */
 	public java.util.Map getExportMap()
 	{
 		throw new UnsupportedOperationException();
