@@ -14,7 +14,9 @@ load_corba.bat
 SQLChecker.cache
 sqlj.properties
 .all
+.classpath
 .idl
+.project
 .xtra
 .sqlj
 .settings
