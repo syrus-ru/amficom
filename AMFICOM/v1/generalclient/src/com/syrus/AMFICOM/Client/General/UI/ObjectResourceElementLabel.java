@@ -33,21 +33,20 @@ public class ObjectResourceElementLabel extends JLabel
 		dragSource = new DragSource();
 		dragSource.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_MOVE, this);
 
-		if(or instanceof String)
-			;//this.setText((String )or);
-		else
-		{
-			ObjectResource orr = (ObjectResource )or;
-			;//this.setText(orr.getName());
-		}
 		this.setText(name);
-		this.setIcon(myIcon);
+
+		if (myIcon != null)
+			this.setIcon(myIcon);
+
 		this.setEnabled(enable);
 		this.setOpaque(false);
 	}
 
 	public Image getImage()
 	{
+		if (myIcon == null)
+			return null;
+
 		return myIcon.getImage();
 	}
 

@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.Cursor;
+import java.awt.BorderLayout;
 
 import java.awt.List;
 import java.awt.Point;
@@ -459,46 +460,69 @@ class AvailableReportsTreeRenderer implements TreeCellRenderer
 		this.reportTemplate = reportTemplate;
 	}
 
-	public Component getTreeCellRendererComponent(JTree tree, Object value,
-																 boolean selected,
-																 boolean expanded, boolean leaf,
-																 int row, boolean hasFocus)
+	public Component getTreeCellRendererComponent(
+		JTree tree,
+		Object value,
+		boolean selected,
+		boolean expanded, boolean leaf,
+		int row, boolean hasFocus)
 	{
 		ObjectResourceTreeNode node = (ObjectResourceTreeNode) value;
 
-		JLabel newLabel = new JLabel();
-		newLabel.setText(node.getName());
+/*		JPanel curPanel = null;
+		JLabel curLabel = null;
+		if (node.getComponent() instanceof JPanel)
+		{
+			curPanel = (JPanel) node.getComponent();
+			curLabel = (JLabel) curPanel.getComponent(0);
+		}
+		else
+		{
+			curLabel = (JLabel) node.getComponent();
+			if (curLabel == null)
+				curLabel = new JLabel(node.getName());
+
+			curPanel = new JPanel();
+			curPanel.setLayout(new BorderLayout());
+			curPanel.add(curLabel,BorderLayout.CENTER);
+
+			node.setComponent(curPanel);
+		}*/
+
+		node.setForeground(Color.black);
+		node.setBackground(Color.white);
 
 		if (node.getObject()instanceof ObjectResourceReportModel)
-			newLabel.setForeground(Color.MAGENTA);
+			node.setForeground(Color.MAGENTA);
 
 		if (node.getObject()instanceof ObjectsReport)
 		{
-			newLabel = (JLabel) node.getComponent();
-
 			ObjectsReport rep = (ObjectsReport) node.getObject();
 
 			if (rep.field.equals(SchemeReportModel.scheme))
-				newLabel.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+				node.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 					"images/scheme.gif")));
 			else
 			{
 				if (rep.model.isTableReport(rep))
-					newLabel.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().
+					node.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().
 															 getImage(
 						"images/table_report.gif")));
 
 				else
-					newLabel.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().
+					node.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().
 															 getImage(
 						"images/graph_report.gif")));
 			}
-			newLabel.setForeground(new Color(0, 150, 0));
+			node.setForeground(new Color(0, 150, 0));
 		}
 
 		if ((tree.getSelectionPath() != null) &&
 			 node.equals(tree.getSelectionPath().getLastPathComponent()))
-			newLabel.setForeground(Color.blue);
+		{
+			node.setForeground(Color.white);
+			node.setBackground(Color.blue);
+		}
 
 		if ((node.getParent() != null) &&
 			 ((ObjectResourceTreeNode) node.getParent()).getObject()instanceof
@@ -513,14 +537,14 @@ class AvailableReportsTreeRenderer implements TreeCellRenderer
 			{
 				Vector columns = (Vector) curReport.getReserve();
 				if (!columns.contains((String) node.getObject()))
-					newLabel.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().
+					node.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().
 															 getImage(
 						"images/unselect.gif").getScaledInstance(
 						10,
 						10,
 						Image.SCALE_DEFAULT)));
 				else
-					newLabel.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().
+					node.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().
 															 getImage(
 						"images/selectall.gif").getScaledInstance(
 						10,
@@ -528,6 +552,6 @@ class AvailableReportsTreeRenderer implements TreeCellRenderer
 						Image.SCALE_DEFAULT)));
 			}
 		}
-		return newLabel;
+		return node.getComponent();
 	}
 }

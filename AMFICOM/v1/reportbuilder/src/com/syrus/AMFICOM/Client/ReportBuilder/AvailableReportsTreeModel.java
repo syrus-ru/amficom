@@ -79,7 +79,7 @@ public class AvailableReportsTreeModel extends ObjectResourceTreeModel
 		return new ObjectResourceTreeNode(
 			"root",
 			LangModelReport.String("label_availableReports"),
-true);
+			true);
 	}
 
 	public ImageIcon getNodeIcon(ObjectResourceTreeNode node)

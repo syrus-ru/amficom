@@ -26,7 +26,7 @@ public class ObjectResourceTreeRenderer extends DefaultTreeCellRenderer
 		try
 		{
 			ObjectResourceTreeNode ortn = (ObjectResourceTreeNode )value;
-			Component renderer;
+/*			Component renderer;
 
 			renderer = ortn.getComponent();
 			if (renderer != null)
@@ -43,21 +43,22 @@ public class ObjectResourceTreeRenderer extends DefaultTreeCellRenderer
 				this.setText(ortn.getName());
 				this.setIcon(null);
 				renderer = this;
-			}
+			}*/
+
 			if (!selected)
 			{
-				renderer.setForeground(tree.getForeground());
-	//			renderer.setBackground(tree.getBackground());
+				ortn.setForeground(tree.getForeground());
+				ortn.setBackground(tree.getBackground());
 				//this.setText("<html><P bgcolor=\"white\">" + ortn.getName() +"</P>");
 			}
 			else
 			{
-				renderer.setForeground(new Color(0, 0, 255));
-	//			renderer.setBackground(new Color(0, 0, 255));
+				ortn.setForeground(Color.white);
+				ortn.setBackground(Color.blue);
 				//this.setText("<html><P bgcolor=\"black\">" + ortn.getName() +"</P>");
 			}
 	//		Container cont = renderer.getParent();
-			return renderer;
+			return ortn.getComponent();
 		}
 		catch(Exception ex)
 		{
@@ -70,7 +71,7 @@ public class ObjectResourceTreeRenderer extends DefaultTreeCellRenderer
 					row,
 					hasFocus);
 		}
-		
+
 	}
 
 }

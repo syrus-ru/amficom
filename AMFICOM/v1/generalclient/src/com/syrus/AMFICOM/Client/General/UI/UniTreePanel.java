@@ -9,12 +9,12 @@ registerSearchableNode(String criteria, ObjectResourceTreeNode tn).
 
 Например, при добавлении в дерево группы этот метод будет вызываться так:
 
-        ortn = new ObjectResourceTreeNode(
-                                OperatorGroup.typ,
-                                "Группы",
-                                true);
-        vec.add(ortn);
-        registerSearchableNode(OperatorGroup.typ, ortn);
+		  ortn = new ObjectResourceTreeNode(
+										  OperatorGroup.typ,
+										  "Группы",
+										  true);
+		  vec.add(ortn);
+		  registerSearchableNode(OperatorGroup.typ, ortn);
 
 
 Если группа добавляется в дочернюю ветвь (например, список групп в
@@ -140,7 +140,7 @@ public class UniTreePanel extends JPanel
 			return;
 		}
 		this.otm = otm;
-		root = otm.getRoot();		
+		root = otm.getRoot();
 		this.setCursor(new Cursor(Cursor.WAIT_CURSOR));
 		otm.nodeBeforeExpanded(root);
 		Vector vec1 = otm.getChildNodes(root);
@@ -236,7 +236,7 @@ public class UniTreePanel extends JPanel
 			if(select_event.SELECT)
 			{
 				if (send_event)
-				   return;
+					return;
 				Object o = ev.getSource();
 
 				if ( (select_event.search == true) && (select_event.searchAll == true) )
@@ -268,7 +268,7 @@ public class UniTreePanel extends JPanel
 					while (i < vec.size())
 					{
 						if (setNodeSelection((ObjectResourceTreeNode )vec.elementAt(i), o))
-						   break;
+							break;
 						i++;
 					}
 					if (i == vec.size() || vec.size() == 0)
@@ -425,7 +425,7 @@ public class UniTreePanel extends JPanel
 				Object oo = enum.nextElement();
 				if (((ObjectResourceTreeNode)oo).getObject() instanceof ObjectResource)
 				{
-				   res.add( ((ObjectResourceTreeNode)oo).getObject() );
+					res.add( ((ObjectResourceTreeNode)oo).getObject() );
 				}
 			}
 //					if (res.isEmpty())
@@ -561,7 +561,7 @@ public class UniTreePanel extends JPanel
 				}
 			}
 		}
-	   return oooo;
+		return oooo;
 	}
 
 	public void dragGestureRecognized( DragGestureEvent event)
@@ -573,7 +573,7 @@ public class UniTreePanel extends JPanel
 		ObjectResourceTreeNode ortn = (ObjectResourceTreeNode )tp.getLastPathComponent();
 		if(ortn.isDragDropEnabled())
 		{
-			ObjectResourceElementLabel orel = (ObjectResourceElementLabel )ortn.getComponent();
+			ObjectResourceElementLabel orel = ortn.getElementLabel();
 			if(orel != null)
 				orel.dragGestureRecognized(event);
 //			else
@@ -619,6 +619,6 @@ public class UniTreePanel extends JPanel
 				break;
 			}
 		}
-	   return oooo;
+		return oooo;
 	}*/
 }
