@@ -4,6 +4,7 @@
 classes
 docs
 lib
+test
 .corba
 .mach
 *.swp
