@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.6 2005/02/01 11:33:57 krupenn Exp $
+* $Id: MapView.java,v 1.7 2005/02/01 14:34:23 krupenn Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -7,29 +7,6 @@
 */
 
 package com.syrus.AMFICOM.mapview;
-
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.AMFICOM.configuration.TransmissionPath;
-import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
-import com.syrus.AMFICOM.map.AbstractNode;
-import com.syrus.AMFICOM.map.DoublePoint;
-import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.NodeLink;
-import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.scheme.SchemeUtils;
-import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
-import com.syrus.AMFICOM.scheme.corba.SchemeElement;
-import com.syrus.AMFICOM.scheme.corba.SchemePath;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -44,11 +21,28 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.IdentifierDefaultFactory;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
+import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.corba.MapView_Transferable;
 import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
+import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
+import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.corba.SchemeElement;
+import com.syrus.AMFICOM.scheme.corba.SchemePath;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Класс используется для хранения объектов, отображаемых на 
@@ -58,7 +52,7 @@ import com.syrus.AMFICOM.scheme.corba.Scheme;
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
  * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/02/01 11:33:57 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/01 14:34:23 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -836,43 +830,6 @@ public class MapView extends StorableObject {
 			}
 		}
 		return returnVector;
-	}
-
-	/**
-	 * Получить топологический путь по идентификатору измерительного элемента.
-	 * @param meId идентификатор измерительного элемента
-	 * @return топологический путь
-	 * @throws com.syrus.AMFICOM.general.CommunicationException 
-	 *  см. {@link ConfigurationStorableObjectPool#getStorableObject(Identifier, boolean)}
-	 * @throws com.syrus.AMFICOM.general.DatabaseException
-	 *  см. {@link ConfigurationStorableObjectPool#getStorableObject(Identifier, boolean)}
-	 */
-	public MeasurementPath getMeasurementPathByMonitoredElementId(Identifier meId)
-		throws CommunicationException, DatabaseException
-	{
-		MeasurementPath path = null;
-		MonitoredElement me = (MonitoredElement )
-			ConfigurationStorableObjectPool.getStorableObject(meId, true);
-		if(me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH))
-		{
-			Identifier tpId = (Identifier )(me.getMonitoredDomainMemberIds().get(0));
-			TransmissionPath tp = (TransmissionPath )
-				ConfigurationStorableObjectPool.getStorableObject(tpId, true);
-			if(tp != null)
-			{
-				for(Iterator it = getMeasurementPaths().iterator(); it.hasNext();)
-				{
-					MeasurementPath mp = (MeasurementPath)it.next();
-					if(mp.getSchemePath().pathImpl().equals(tp))
-					{
-						path = mp;
-						break;
-					}
-				}
-			}
-		}
-
-		return path;
 	}
 
 	/**

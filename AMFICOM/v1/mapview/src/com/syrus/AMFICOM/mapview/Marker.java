@@ -1,5 +1,5 @@
 /**
- * $Id: Marker.java,v 1.1 2005/02/01 09:28:17 krupenn Exp $
+ * $Id: Marker.java,v 1.2 2005/02/01 14:34:23 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -53,7 +53,7 @@ import com.syrus.AMFICOM.mapview.CablePath;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2005/02/01 09:28:17 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/01 14:34:23 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -94,9 +94,10 @@ public class Marker extends AbstractNode
 			AbstractNode endNode,
 			NodeLink mnle,
 			MeasurementPath path,
+			Identifier monitoredElementId,
 			DoublePoint dpoint)
 	{
-		this(id, mapView, 0.0, path, path.getMonitoredElementId(), String.valueOf(id.getMinor()));
+		this(id, mapView, 0.0, path, monitoredElementId, String.valueOf(id.getMinor()));
 		
 		this.startNode = startNode;
 		this.endNode = endNode;
@@ -110,6 +111,7 @@ public class Marker extends AbstractNode
 			AbstractNode endNode,
 			NodeLink mnle,
 			MeasurementPath path,
+			Identifier monitoredElementId,
 			DoublePoint dpoint)
 		throws CreateObjectException 
 	{
@@ -128,6 +130,7 @@ public class Marker extends AbstractNode
 				endNode,
 				mnle,
 				path,
+				monitoredElementId,
 				dpoint);
 		}
 		catch (IllegalObjectEntityException e)

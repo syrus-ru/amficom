@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPath.java,v 1.2 2005/02/01 11:33:57 krupenn Exp $
+ * $Id: MeasurementPath.java,v 1.3 2005/02/01 14:34:23 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,13 +11,8 @@
 
 package com.syrus.AMFICOM.mapview;
 
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -50,7 +45,7 @@ import java.util.ListIterator;
  * Элемент пути.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2005/02/01 11:33:57 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/01 14:34:23 $
  * @module mapviewclient_v1
  */
 public class MeasurementPath implements MapElement
@@ -444,44 +439,6 @@ public class MeasurementPath implements MapElement
 			sortedNodes.remove(node);
 		}
 		sortedNodes.add(node);
-	}
-
-	public Identifier getMonitoredElementId()
-	{
-		Identifier meid = null;
-		MonitoredElement me = getMonitoredElement();
-		if(me != null)
-			meid = me.getId();
-		return meid;
-	}
-
-	public MonitoredElement getMonitoredElement()
-	{
-		MonitoredElement me = null;
-		try
-		{
-			TransmissionPath tp = getSchemePath().pathImpl();
-
-			me = (MonitoredElement )
-				ConfigurationStorableObjectPool.getStorableObject(
-						(Identifier )(tp.getMonitoredElementIds().get(0)), 
-						true);
-
-		}
-		catch (CommunicationException e)
-		{
-			e.printStackTrace();
-		}
-		catch (DatabaseException e)
-		{
-			e.printStackTrace();
-		}
-		catch(Exception e)
-		{
-			e.printStackTrace();
-		}
-
-		return me;
 	}
 
 	public NodeLink nextNodeLink(NodeLink nl)
