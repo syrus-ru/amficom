@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.12 2004/08/20 12:53:15 arseniy Exp $
+ * $Id: CharacteristicDatabase.java,v 1.13 2004/08/20 12:55:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/08/20 12:53:15 $
+ * @version $Revision: 1.13 $, $Date: 2004/08/20 12:55:35 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -445,7 +445,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 					buffer.append(COLUMN_PORT_ID);
 					break;
 				default:
-					throw new RetrieveObjectException("Unknown sort: " + sort + " for characteristic: " + cIdStr);
+					throw new RetrieveObjectException("Unknown sort: " + sort + " for characterized: " + cdIdStr);
 			}
 			buffer.append(EQUALS);
 			buffer.append(cdIdStr);
