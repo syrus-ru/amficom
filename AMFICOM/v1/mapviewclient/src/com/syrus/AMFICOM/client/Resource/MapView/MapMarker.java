@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarker.java,v 1.15 2004/10/29 14:59:52 krupenn Exp $
+ * $Id: MapMarker.java,v 1.16 2004/11/10 16:00:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -64,7 +64,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.15 $, $Date: 2004/10/29 14:59:52 $
+ * @version $Revision: 1.16 $, $Date: 2004/11/10 16:00:55 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -320,8 +320,8 @@ public class MapMarker extends MapNodeElement
 */
 //		return anchor;
 //	}
-
-	public MapMarker.MotionDescriptor getMotionDescriptor(Point point)
+/*
+	public MotionDescriptor getMotionDescriptor(Point point)
 	{
 		MapCoordinatesConverter converter = getMap().getConverter();
 
@@ -363,15 +363,13 @@ public class MapMarker extends MapNodeElement
 
 		lengthFromStartNode = lengthFromStartNode + cosA * lengthThisToMousePoint;
 		
-		return new MapMarker.MotionDescriptor(
-				cosB,
-				sinB,
-				lengthThisToMousePoint,
-				cosA,
-				lengthFromStartNode,
-				nodeLinkLength);
+		return new MotionDescriptor(
+			converter.convertMapToScreen(startNode.getAnchor()),
+			converter.convertMapToScreen(endNode.getAnchor()),
+			converter.convertMapToScreen(getAnchor()),
+			point);
 	}
-
+*/
 	public double getFromStartLengthLt()
 	{
 		double path_length = 0;
@@ -792,6 +790,8 @@ public class MapMarker extends MapNodeElement
 	 */
 	public void setRelativeToCablePath(double physicalDistance)
 	{
+		MapCoordinatesConverter converter = this.getMap().getConverter();
+
 		double kd = cpath.getKd();
 		double topologicalDistance = physicalDistance / kd;
 		double cumulativeDistance = 0.0;
@@ -810,7 +810,8 @@ public class MapMarker extends MapNodeElement
 				nodeLink = nl;
 				startNode = sn;
 				endNode = nl.getOtherNode(sn);
-				adjustPosition(topologicalDistance - cumulativeDistance);
+				adjustPosition(converter.convertMapToScreen(
+						topologicalDistance - cumulativeDistance));
 				break;
 			}
 			else
@@ -826,7 +827,7 @@ public class MapMarker extends MapNodeElement
 	 * to current node link (which comprises startNode and endNode)
 	 * 
 	 */
-	public void adjustPosition(double topologicalDistance)
+	public void adjustPosition(double screenDistance)
 	{
 		MapCoordinatesConverter converter = getMap().getConverter();
 
@@ -849,8 +850,8 @@ public class MapMarker extends MapNodeElement
 		double cosB = (endNodeX - startNodeX) / nodeLinkLength;
 
 		setAnchor(converter.convertScreenToMap(new Point(
-			(int )Math.round(startNodeX + cosB * topologicalDistance),
-			(int )Math.round(startNodeY + sinB * topologicalDistance) ) ) );
+			(int )Math.round(startNodeX + cosB * screenDistance),
+			(int )Math.round(startNodeY + sinB * screenDistance) ) ) );
 	}
 
 
@@ -914,33 +915,6 @@ public class MapMarker extends MapNodeElement
 	{
 		this.spd = spd;
 	}
-
-	class MotionDescriptor
-	{
-		double cos_b;
-		double sin_b;
-		double lengthThisToMousePoint;
-		double cos_a;
-		double lengthFromStartNode;
-		double nodeLinkLength;
-
-		public MotionDescriptor(
-				double cb, 
-				double sb, 
-				double lt, 
-				double ca, 
-				double lf, 
-				double nl)
-		{
-			cos_b = cb;
-			sin_b = sb;
-			lengthThisToMousePoint = lt;
-			cos_a = ca;
-			lengthFromStartNode = lf;
-			nodeLinkLength = nl;
-		}
-	}
-
 
 	public void setNodeLink(MapNodeLinkElement nodeLink)
 	{

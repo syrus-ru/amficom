@@ -7,13 +7,22 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
+import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 
+import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Iterator;
 
 public final class MapCablePathPropertiesController 
 		implements MapElementPropertiesController 
@@ -22,12 +31,15 @@ public final class MapCablePathPropertiesController
 	private static MapCablePathPropertiesController instance;
 
 	private List keys;
+	
+	private Map schemeCableLinks = new HashMap();
+	private Map nodes = new HashMap();
 
 	private MapCablePathPropertiesController() 
 	{
 		String[] keysArray = new String[] { 
 				PROPERTY_NAME,
-				PROPERTY_PHYSICAL_LINK_ID,
+				PROPERTY_SCHEME_CABLE_ID,
 				PROPERTY_TOPOLOGICAL_LENGTH,
 				PROPERTY_OPTICAL_LENGTH,
 				PROPERTY_PHYSICAL_LENGTH,
@@ -75,34 +87,37 @@ public final class MapCablePathPropertiesController
 			result = path.getName();
 		}
 		else
-		if (key.equals(PROPERTY_PHYSICAL_LINK_ID))
+		if (key.equals(PROPERTY_SCHEME_CABLE_ID))
 		{
-			result = path.getSchemeCableLink();
+			// remove .getName
+			result = path.getSchemeCableLink().getName();
 		}
 		else
 		if (key.equals(PROPERTY_TOPOLOGICAL_LENGTH))
 		{
-			result = String.valueOf(MiscUtil.fourdigits(path.getLengthLt()));
+			result = MapPropertiesManager.getDistanceFormat().format(path.getLengthLt());
 		}
 		else
 		if (key.equals(PROPERTY_OPTICAL_LENGTH))
 		{
-			result = String.valueOf(MiscUtil.fourdigits(path.getLengthLo()));
+			result = MapPropertiesManager.getDistanceFormat().format(path.getLengthLo());
 		}
 		else
 		if (key.equals(PROPERTY_PHYSICAL_LENGTH))
 		{
-			result = String.valueOf(MiscUtil.fourdigits(path.getLengthLf()));
+			result = MapPropertiesManager.getDistanceFormat().format(path.getLengthLf());
 		}
 		else
 		if (key.equals(PROPERTY_START_NODE_ID))
 		{
-			result = path.getStartNode();
+			// remove .getName
+			result = path.getStartNode().getName();
 		}
 		else
 		if (key.equals(PROPERTY_END_NODE_ID))
 		{
-			result = path.getEndNode();
+			// remove .getName
+			result = path.getEndNode().getName();
 		}
 		else
 		if (key.equals(PROPERTY_COLOR))
@@ -172,6 +187,40 @@ public final class MapCablePathPropertiesController
 		return result;
 	}
 
+	public Object getPropertyValue(Object object, final String key) 
+	{
+		Object result = "";
+		if (key.equals(PROPERTY_SCHEME_CABLE_ID))
+		{
+			schemeCableLinks.clear();
+			MapCablePathElement cpath = (MapCablePathElement )object;
+			for(Iterator it = cpath.getMapView().getSchemes().iterator(); it.hasNext();)
+			{
+				Scheme scheme = (Scheme )it.next();
+				for(Iterator it2 = scheme.getAllCableLinks().iterator(); it2.hasNext();)
+				{
+					SchemeCableLink scl = (SchemeCableLink )it2.next();
+					schemeCableLinks.put(new ObjectResourceLabel(scl), scl);
+				}
+			}
+			result = schemeCableLinks;
+		}
+		else
+		if (key.equals(PROPERTY_START_NODE_ID)
+			|| key.equals(PROPERTY_END_NODE_ID))
+		{
+			nodes.clear();
+			MapCablePathElement cpath = (MapCablePathElement )object;
+			for(Iterator it = cpath.getMap().getMapSiteNodeElements().iterator(); it.hasNext();)
+			{
+				MapNodeElement node = (MapNodeElement )it.next();
+				nodes.put(new ObjectResourceLabel(node), node);
+			}
+			result = nodes;
+		}
+		return result;
+	}
+
 	public void setPropertyValue(String key, Object objectKey, Object objectValue) 
 	{
 	}
@@ -179,6 +228,38 @@ public final class MapCablePathPropertiesController
 	public Class getPropertyClass(String key) 
 	{
 		Class clazz = String.class;
+		if (key.equals(PROPERTY_NAME))
+			clazz = String.class;
+		else
+		if (key.equals(PROPERTY_SCHEME_CABLE_ID))
+			clazz = String.class;
+//			clazz = SchemeCableLink.class;
+		else
+		if (key.equals(PROPERTY_TOPOLOGICAL_LENGTH))
+			clazz = String.class;
+		else
+		if (key.equals(PROPERTY_OPTICAL_LENGTH))
+			clazz = String.class;
+		else
+		if (key.equals(PROPERTY_PHYSICAL_LENGTH))
+			clazz = String.class;
+		else
+		if (key.equals(PROPERTY_START_NODE_ID))
+			clazz = String.class;
+//			clazz = MapNodeElement.class;
+		else
+		if (key.equals(PROPERTY_END_NODE_ID))
+			clazz = String.class;
+//			clazz = MapNodeElement.class;
+		else
+		if (key.equals(PROPERTY_COLOR))
+			clazz = Color.class;
+		else
+		if (key.equals(PROPERTY_STYLE))
+			clazz = BasicStroke.class;
+		else
+		if (key.equals(PROPERTY_THICKNESS))
+			clazz = String.class;
 		return clazz;
 	}
 

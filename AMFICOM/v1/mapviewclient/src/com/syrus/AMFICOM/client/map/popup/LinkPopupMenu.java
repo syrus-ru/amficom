@@ -11,6 +11,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.MapPipePathElement;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.awt.image.BufferedImage;
 import java.util.LinkedList;
 import java.util.List;
 

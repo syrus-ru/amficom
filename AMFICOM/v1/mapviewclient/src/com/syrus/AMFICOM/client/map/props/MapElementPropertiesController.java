@@ -2,6 +2,7 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesController;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
 public interface MapElementPropertiesController
 	extends ObjectResourcePropertiesController
@@ -15,6 +16,8 @@ public interface MapElementPropertiesController
 	String PROPERTY_MODIFIED = "Modified";
 	String PROPERTY_MODIFIED_BY = "Modified_by";
 	String PROPERTY_SITE_ID = "Site_id";	
+	String PROPERTY_SCHEME_CABLE_ID = "Scheme_cable_id";	
+	String PROPERTY_SCHEME_PATH_ID = "Scheme_path_id";	
 	String PROPERTY_COLLECTOR_ID = "Collector_id";	
 	String PROPERTY_PATH_ID = "Path_id";	
 	String PROPERTY_PHYSICAL_LINK_ID = "Physical_link_id";	

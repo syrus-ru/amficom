@@ -35,6 +35,16 @@ public class MapInfoLogicalNetLayer extends LogicalNetLayer
 		return null;
 	}
 
+	public double convertScreenToMap(double screenDistance)
+	{
+		return 0.0D;
+	}
+	
+	public double convertMapToScreen(double topologicalDistance)
+	{
+		return 0.0D;
+	}
+
 	/**
 	 * Получить дистанцию между двумя точками в экранных координатах
 	 */

@@ -7,6 +7,7 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
@@ -28,7 +29,7 @@ public final class MapMeasurementPathPropertiesController
 	{
 		String[] keysArray = new String[] { 
 				PROPERTY_NAME,
-				PROPERTY_PHYSICAL_LINK_ID,
+				PROPERTY_SCHEME_PATH_ID,
 				PROPERTY_TOPOLOGICAL_LENGTH,
 				PROPERTY_OPTICAL_LENGTH,
 				PROPERTY_PHYSICAL_LENGTH,
@@ -76,34 +77,37 @@ public final class MapMeasurementPathPropertiesController
 			result = path.getName();
 		}
 		else
-		if (key.equals(PROPERTY_PHYSICAL_LINK_ID))
+		if (key.equals(PROPERTY_SCHEME_PATH_ID))
 		{
-			result = path.getSchemePath();
+			// remove .getName()
+			result = path.getSchemePath().getName();
 		}
 		else
 		if (key.equals(PROPERTY_TOPOLOGICAL_LENGTH))
 		{
-			result = String.valueOf(MiscUtil.fourdigits(path.getLengthLt()));
+			result = MapPropertiesManager.getDistanceFormat().format(path.getLengthLt());
 		}
 		else
 		if (key.equals(PROPERTY_OPTICAL_LENGTH))
 		{
-			result = String.valueOf(MiscUtil.fourdigits(path.getLengthLo()));
+			result = MapPropertiesManager.getDistanceFormat().format(path.getLengthLo());
 		}
 		else
 		if (key.equals(PROPERTY_PHYSICAL_LENGTH))
 		{
-			result = String.valueOf(MiscUtil.fourdigits(path.getLengthLf()));
+			result = MapPropertiesManager.getDistanceFormat().format(path.getLengthLf());
 		}
 		else
 		if (key.equals(PROPERTY_START_NODE_ID))
 		{
-			result = path.getStartNode();
+			//remove .getName()
+			result = path.getStartNode().getName();
 		}
 		else
 		if (key.equals(PROPERTY_END_NODE_ID))
 		{
-			result = path.getEndNode();
+			// remove .getName()
+			result = path.getEndNode().getName();
 		}
 		else
 		if (key.equals(PROPERTY_COLOR))

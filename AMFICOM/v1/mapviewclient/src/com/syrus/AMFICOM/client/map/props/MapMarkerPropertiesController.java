@@ -8,6 +8,7 @@ package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
@@ -80,22 +81,23 @@ public final class MapMarkerPropertiesController
 		else
 		if (key.equals(PROPERTY_LATITUDE))
 		{
-			result = String.valueOf(MiscUtil.fourdigits(marker.getAnchor().x));
+			result = MapPropertiesManager.getCoordinatesFormat().format(marker.getAnchor().x);
 		}
 		else
 		if (key.equals(PROPERTY_LONGITUDE))
 		{
-			result = String.valueOf(MiscUtil.fourdigits(marker.getAnchor().y));
+			result = MapPropertiesManager.getCoordinatesFormat().format(marker.getAnchor().y);
 		}
 		else
 		if (key.equals(PROPERTY_DISTANCE))
 		{
-			result = String.valueOf(MiscUtil.fourdigits(marker.getFromStartLengthLf()));
+			result = MapPropertiesManager.getDistanceFormat().format(marker.getFromStartLengthLf());
 		}
 		else
 		if (key.equals(PROPERTY_PATH_ID))
 		{
-			result = marker.getMeasurementPath();
+			// remove .getName()
+			result = marker.getMeasurementPath().getName();
 		}
 
 		return result;

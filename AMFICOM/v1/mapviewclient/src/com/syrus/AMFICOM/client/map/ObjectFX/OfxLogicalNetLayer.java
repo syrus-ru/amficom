@@ -1,5 +1,5 @@
 /**
- * $Id: OfxLogicalNetLayer.java,v 1.3 2004/10/19 11:48:27 krupenn Exp $
+ * $Id: OfxLogicalNetLayer.java,v 1.4 2004/11/10 16:00:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,7 @@
 
 package com.syrus.AMFICOM.Client.Map.ObjectFX;
 
+import com.ofx.component.MapViewer;
 import com.ofx.geometry.SxDoublePoint;
 import com.ofx.geometry.SxRectangle;
 import com.ofx.mapViewer.SxMapLayer;
@@ -42,7 +43,7 @@ import java.util.Vector;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/19 11:48:27 $
+ * @version $Revision: 1.4 $, $Date: 2004/11/10 16:00:54 $
  * @module Ьфз_м2
  * @author $Author: krupenn $
  * @see
@@ -90,13 +91,41 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 		return new Point2D.Double(sdp.x, sdp.y);
 	}
 
+	public double convertScreenToMap(double screenDistance)
+	{
+		Point2D.Double p1 = convertScreenToMap(new Point(0, 0));
+		Point2D.Double p2 = convertScreenToMap(new Point((int )screenDistance, 0));
+		double d = distance(p1, p2);
+
+		double d2 = screenDistance * spatialViewer.getScale();
+
+		return d2;
+	}
+	
+	public double convertMapToScreen(double topologicalDistance)
+	{
+		double d = topologicalDistance / spatialViewer.getScale();
+
+		return d;
+
+//		Point p1 = convertMapToScreen(new Point2D.Double(0, 0));
+//		Point p2 = convertMapToScreen(new Point2D.Double(topologicalDistance, 0));
+//		double length = Math.sqrt(
+//			(p2.x - p1.x) * (p2.x - p1.x) +
+//			(p2.y - p1.y) * (p2.y - p1.y) );
+//		
+//		return length;
+	}
+
 	/**
-	 * Получить дистанцию между двумя точками в экранных координатах
+	 * Получить дистанцию между двумя точками в географических координатах
 	 * Алгорита мычисления дастанции остается загадкой, так как не
 	 * был закомментирован его разработчиком
 	 */
 	public double distance(Point2D.Double from, Point2D.Double to)
 	{
+		return spatialViewer.distance(from.x, from.y, to.x, to.y);
+/*
 		double a1 = from.x * 3.14 / 180;
 		double a2 = from.y * 3.14 / 180;
 		double b1 = to.x * 3.14 / 180;
@@ -104,9 +133,7 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 
 		double r = 6400000;
 
-		double d;
-
-		d = r * Math.sqrt(
+		double d = r * Math.sqrt(
 			( Math.cos(a1) * Math.cos(a2) - Math.cos(b1) * Math.cos(b2)) *
 			( Math.cos(a1) * Math.cos(a2) - Math.cos(b1) * Math.cos(b2)) +
 
@@ -116,6 +143,7 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 			( Math.sin(a2) - Math.sin(b2)) * ( Math.sin(a2) - Math.sin(b2)) );
 
 		return d;
+*/
 	}
 
 	/**
@@ -146,6 +174,7 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 	public Rectangle2D.Double getVisibleBounds()
 	{
 		SxRectangle sxRect = spatialViewer.getMapCanvas().getGroundRect();
+		sxRect = spatialViewer.convertDBToLatLong(sxRect);
 		Rectangle2D.Double rect = new Rectangle2D.Double(
 			sxRect.getBottomLeft().x,
 			sxRect.getBottomLeft().y,
@@ -294,6 +323,8 @@ public class OfxLogicalNetLayer extends LogicalNetLayer
 		
 		OfxNetMapViewer snmv = (OfxNetMapViewer)mapViewer;
 		this.spatialViewer = snmv.getJMapViewer().getSxMapViewer();
+		System.out.println("Units " + this.spatialViewer.getUnits());
+		this.spatialViewer.setUnits(MapViewer.METERS);
 	}
 
 	public SxMapViewer getSpatialMapViewer()

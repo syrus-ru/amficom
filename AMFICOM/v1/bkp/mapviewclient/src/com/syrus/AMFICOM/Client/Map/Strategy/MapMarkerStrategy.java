@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkerStrategy.java,v 1.7 2004/11/01 15:40:10 krupenn Exp $
+ * $Id: MapMarkerStrategy.java,v 1.8 2004/11/10 16:00:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MotionDescriptor;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
 
 import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
@@ -33,7 +34,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/11/01 15:40:10 $
+ * @version $Revision: 1.8 $, $Date: 2004/11/10 16:00:54 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -115,50 +116,25 @@ public final class MapMarkerStrategy implements  MapStrategy
 					MapNodeElement sn = marker.getStartNode();
 					MapNodeElement en = marker.getEndNode();
 
-//					MapMarker.MotionDescriptor md = marker.getMotionDescriptor(point);
+					//Рисование о пределение координат маркера происходит путм проецирования координат
+					//курсора на линию на которой маркер находится
 
 					Point anchorPoint = converter.convertMapToScreen(marker.getAnchor());
 					
 					Point start = converter.convertMapToScreen(sn.getAnchor());
 					Point end = converter.convertMapToScreen(en.getAnchor());
-
-					double lengthFromStartNode = Math.sqrt( 
-							(anchorPoint.x - start.x) * (anchorPoint.x - start.x) +
-							(anchorPoint.y - start.y) * (anchorPoint.y - start.y) );
 					
-					double nodeLinkLength = Math.sqrt( 
-							(end.x - start.x) * (end.x - start.x) +
-							(end.y - start.y) * (end.y - start.y) );
+					double lengthFromStartNode;
+					
+					MotionDescriptor md = new MotionDescriptor(start, end, anchorPoint, point);
 
-					double lengthThisToMousePoint = Math.sqrt( 
-							(point.x - anchorPoint.x) * (point.x - anchorPoint.x) +
-							(point.y - anchorPoint.y) * (point.y - anchorPoint.y) );
+					lengthFromStartNode = md.lengthFromStartNode;
 
-					// calculate cos of an angle between nodelink and mouse motion vector
-
-					// motion vector angle
-//					double gamma = Math.atan2(
-//							(point.x - anchorPoint.x), 
-//							(point.y - anchorPoint.y));
-
-					// nodelink angle
-//					double betta = Math.atan2(
-//							(end.x - start.x), 
-//							(end.y - start.y));
-
-//					double cosA = Math.cos(gamma - betta);
-
-					double cosA = ( (end.x - start.x) * (point.x - anchorPoint.x)
-							+ (end.y - start.y) * (point.y - anchorPoint.y) ) 
-						/ (nodeLinkLength * lengthThisToMousePoint);
-
-					lengthFromStartNode = lengthFromStartNode + cosA * lengthThisToMousePoint;
-
-					while(lengthFromStartNode > nodeLinkLength)
+					while(lengthFromStartNode > md.nodeLinkLength)
 					{
 						nodeLink = marker.nextNodeLink();
 						if(nodeLink == null)
-							lengthFromStartNode = nodeLinkLength;
+							lengthFromStartNode = md.nodeLinkLength;
 						else
 						{
 							sn = en;
@@ -168,14 +144,18 @@ public final class MapMarkerStrategy implements  MapStrategy
 							marker.setStartNode(sn);
 							marker.setEndNode(en);
 	
-							lengthFromStartNode -= nodeLinkLength;
-
 							start = converter.convertMapToScreen(sn.getAnchor());
 							end = converter.convertMapToScreen(en.getAnchor());
+							
+							md = new MotionDescriptor(start, end, anchorPoint, point);
 
-							nodeLinkLength = Math.sqrt( 
-									(end.x - start.x) * (end.x - start.x) +
-									(end.y - start.y) * (end.y - start.y) );
+							lengthFromStartNode = md.lengthFromStartNode;
+							
+							if(lengthFromStartNode < 0)
+							{
+								lengthFromStartNode = 0;
+								break;
+							}
 						}
 					}
 					while(lengthFromStartNode < 0)
@@ -195,11 +175,15 @@ public final class MapMarkerStrategy implements  MapStrategy
 							start = converter.convertMapToScreen(sn.getAnchor());
 							end = converter.convertMapToScreen(en.getAnchor());
 
-							nodeLinkLength = Math.sqrt( 
-									(end.x - start.x) * (end.x - start.x) +
-									(end.y - start.y) * (end.y - start.y) );
+							md = new MotionDescriptor(start, end, anchorPoint, point);
 
-							lengthFromStartNode += nodeLinkLength;
+							lengthFromStartNode = md.lengthFromStartNode;
+							
+							if(lengthFromStartNode > md.nodeLinkLength)
+							{
+								lengthFromStartNode = md.nodeLinkLength;
+								break;
+							}
 						}
 					}
 

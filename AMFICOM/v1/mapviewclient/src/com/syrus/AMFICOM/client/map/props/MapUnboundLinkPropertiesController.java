@@ -7,6 +7,7 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 
@@ -27,7 +28,7 @@ public final class MapUnboundLinkPropertiesController
 	{
 		String[] keysArray = new String[] { 
 				PROPERTY_NAME,
-				PROPERTY_PHYSICAL_LINK_ID,
+				PROPERTY_SCHEME_CABLE_ID,
 				PROPERTY_TOPOLOGICAL_LENGTH,
 				PROPERTY_START_NODE_ID,
 				PROPERTY_END_NODE_ID };
@@ -70,24 +71,27 @@ public final class MapUnboundLinkPropertiesController
 			result = link.getName();
 		}
 		else
-		if (key.equals(PROPERTY_PHYSICAL_LINK_ID))
+		if (key.equals(PROPERTY_SCHEME_CABLE_ID))
 		{
-			result = link.getCablePath();
+			// remove .getName()
+			result = link.getCablePath().getName();
 		}
 		else
 		if (key.equals(PROPERTY_TOPOLOGICAL_LENGTH))
 		{
-			result = String.valueOf(MiscUtil.fourdigits(link.getLengthLt()));
+			result = MapPropertiesManager.getDistanceFormat().format(link.getLengthLt());
 		}
 		else
 		if (key.equals(PROPERTY_START_NODE_ID))
 		{
-			result = link.getStartNode();
+			// remove .getName()
+			result = link.getStartNode().getName();
 		}
 		else
 		if (key.equals(PROPERTY_END_NODE_ID))
 		{
-			result = link.getEndNode();
+			// remove .getName()
+			result = link.getEndNode().getName();
 		}
 
 		return result;

@@ -7,6 +7,7 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.Map.MapLinkProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPhysicalLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
@@ -77,22 +78,25 @@ public final class MapPhysicalLinkPropertiesController
 		else
 		if (key.equals(PROPERTY_PROTO_ID))
 		{
-			result = Pool.get(MapLinkProtoElement.typ, link.getMapProtoId());
+			// remove .getName()
+			result = ((MapLinkProtoElement )Pool.get(MapLinkProtoElement.typ, link.getMapProtoId())).getName();
 		}
 		else
 		if (key.equals(PROPERTY_TOPOLOGICAL_LENGTH))
 		{
-			result = String.valueOf(MiscUtil.fourdigits(link.getLengthLt()));
+			result = MapPropertiesManager.getDistanceFormat().format(link.getLengthLt());
 		}
 		else
 		if (key.equals(PROPERTY_START_NODE_ID))
 		{
-			result = link.getStartNode();
+			// remove .getName()
+			result = link.getStartNode().getName();
 		}
 		else
 		if (key.equals(PROPERTY_END_NODE_ID))
 		{
-			result = link.getEndNode();
+			// remove .getName()
+			result = link.getEndNode().getName();
 		}
 		else
 		if (key.equals(PROPERTY_COLOR))

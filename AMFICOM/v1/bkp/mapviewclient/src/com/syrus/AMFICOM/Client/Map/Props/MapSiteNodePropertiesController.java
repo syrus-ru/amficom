@@ -7,6 +7,7 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
@@ -76,17 +77,18 @@ public final class MapSiteNodePropertiesController
 		else
 		if (key.equals(PROPERTY_PROTO_ID))
 		{
-			result = Pool.get(MapNodeProtoElement.typ, site.getMapProtoId());
+			// remove .getName()
+			result = ((MapNodeProtoElement )Pool.get(MapNodeProtoElement.typ, site.getMapProtoId())).getName();
 		}
 		else
 		if (key.equals(PROPERTY_LATITUDE))
 		{
-			result = String.valueOf(MiscUtil.fourdigits(site.getAnchor().x));
+			result = MapPropertiesManager.getCoordinatesFormat().format(site.getAnchor().x);
 		}
 		else
 		if (key.equals(PROPERTY_LONGITUDE))
 		{
-			result = String.valueOf(MiscUtil.fourdigits(site.getAnchor().y));
+			result = MapPropertiesManager.getCoordinatesFormat().format(site.getAnchor().y);
 		}
 
 		return result;

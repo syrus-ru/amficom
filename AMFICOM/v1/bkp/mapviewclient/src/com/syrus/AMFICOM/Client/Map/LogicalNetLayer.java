@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.19 2004/11/01 15:40:10 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.20 2004/11/10 16:00:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -83,7 +83,7 @@ import java.util.Set;
  * 
  * 
  * 
- * @version $Revision: 1.19 $, $Date: 2004/11/01 15:40:10 $
+ * @version $Revision: 1.20 $, $Date: 2004/11/10 16:00:54 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -1122,56 +1122,6 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				repaint();
 			}
 		}
-/*
-		if(ae.getActionCommand().equals(CatalogNavigateEvent.type))
-			if(lnl().performProcessing)
-		{
-			CatalogNavigateEvent cne = (CatalogNavigateEvent )ae;
-
-			if(cne.CATALOG_EQUIPMENT_SELECTED)
-			{
-//				System.out.println("CATALOG_EQUIPMENT_SELECTED");
-			}
-
-			if(cne.CATALOG_PATH_SELECTED)
-			{
-//				System.out.println("CATALOG_PATH_SELECTED");
-				TransmissionPath[] tps = (TransmissionPath[] )cne.getSource();
-				for(Iterator it = lnl().getMap().getTransmissionPath().iterator(); it.hasNext();)
-				{
-					MapTransmissionPathElement mappath = (MapTransmissionPathElement )it.next();
-					if(mappath.PATH_ID != null && !mappath.PATH_ID.equals(""))
-					{
-						SchemePath sp = (SchemePath )Pool.get(SchemePath.typ, mappath.PATH_ID);
-						if(sp != null && sp.path_id != null && !sp.path_id.equals(""))
-							for(int i = 0; i < tps.length; i++)
-								if(sp.path_id.equals(tps[i].getId()))
-									mappath.select();
-					}
-				}
-			}
-
-			if(cne.CATALOG_CABLE_LINK_SELECTED)
-			{
-//				System.out.println("CATALOG_CABLE_LINK_SELECTED");
-				CableLink[] cs = (CableLink[] )cne.getSource();
-				for(Iterator it = lnl().getMap().getPhysicalLinks().iterator(); it.hasNext();)
-				{
-					MapPhysicalLinkElement link = (MapPhysicalLinkElement )it.next();
-					if(link.LINK_ID != null && !link.LINK_ID.equals(""))
-					{
-						SchemeCableLink scl = (SchemeCableLink )Pool.get(SchemeCableLink.typ, link.LINK_ID);
-						if(scl.cable_link_id != null && !scl.cable_link_id.equals(""))
-							for(int i = 0; i < cs.length; i++)
-								if(scl.cable_link_id.equals(cs[i].getId()))
-									link.select();
-					}
-				}
-			}
-			lnl().postDirtyEvent();
-			lnl().postPaintEvent();
-		}
-*/
 	}
 
 	public void sendMapEvent(MapEvent me)

@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkElementStrategy.java,v 1.6 2004/10/29 14:59:52 krupenn Exp $
+ * $Id: MapMarkElementStrategy.java,v 1.7 2004/11/10 16:00:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,6 +21,9 @@ import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.Client.Resource.Map.Map;
 import com.syrus.AMFICOM.Client.Resource.Map.MapElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapMarkElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapNodeElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
+import com.syrus.AMFICOM.Client.Resource.Map.MotionDescriptor;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
 
 import java.awt.Point;
@@ -33,7 +36,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/10/29 14:59:52 $
+ * @version $Revision: 1.7 $, $Date: 2004/11/10 16:00:54 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -118,58 +121,80 @@ public final class MapMarkElementStrategy implements  MapStrategy
 				if (aContext.getApplicationModel().isEnabled(
 						MapApplicationModel.ACTION_EDIT_MAP))
 				{
-//						mark.link.setSelected(true);
-
-//						moveToFromStart(distance);
+					MapNodeLinkElement nodeLink = mark.getNodeLink();
+					MapNodeElement sn = mark.getStartNode();
+					MapNodeElement en = nodeLink.getOtherNode(sn);
 
 					//Рисование о пределение координат маркера происходит путм проецирования координат
 					//курсора на линию на которой маркер находится
 
 					Point anchorPoint = converter.convertMapToScreen(mark.getAnchor());
 					
-					Point start = converter.convertMapToScreen(mark.getNodeLink().getStartNode().getAnchor());
-					Point end = converter.convertMapToScreen(mark.getNodeLink().getEndNode().getAnchor());
+					Point start = converter.convertMapToScreen(sn.getAnchor());
+					Point end = converter.convertMapToScreen(en.getAnchor());
 
-					double lengthFromStartNode = mark.getSizeInDoubleLt();
+					double lengthFromStartNode;
 					
-					mark.getNodeLink().updateLengthLt();
-					double nodeLinkLength =  mark.getNodeLink().getLengthLt();
-					mark.getNodeLink().calcScreenSlope();
-					double cosB = mark.getNodeLink().getScreenCos();
-					double sinB = mark.getNodeLink().getScreenSin();
+					MotionDescriptor md = new MotionDescriptor(start, end, anchorPoint, point);
 
-					double lengthThisToMousePoint = Math.sqrt( 
-							(point.x - anchorPoint.x) * (point.x - anchorPoint.x) +
-							(point.y - anchorPoint.y) * (point.y - anchorPoint.y) );
+					lengthFromStartNode = md.lengthFromStartNode;
 
-					double cosA = 
-						( 	(end.x - start.x) * (point.x - anchorPoint.y)
-							+ (end.y - start.y) * (point.y - anchorPoint.y) ) 
-						/ (nodeLinkLength * lengthThisToMousePoint);
-
-					lengthFromStartNode = lengthFromStartNode + cosA * lengthThisToMousePoint;
-
-					if ( lengthFromStartNode > nodeLinkLength )
+					while(lengthFromStartNode > md.nodeLinkLength)
 					{
-						mark.setNodeLink(mark.getLink().nextNodeLink(mark.getNodeLink()));
-						lengthFromStartNode -= nodeLinkLength;
+						nodeLink = mark.getLink().nextNodeLink(nodeLink);
+						if(nodeLink == null)
+							lengthFromStartNode = md.nodeLinkLength;
+						else
+						{
+							sn = en;
+							en = nodeLink.getOtherNode(sn);
+	
+							mark.setNodeLink(nodeLink);
+							mark.setStartNode(sn);
+
+							start = converter.convertMapToScreen(sn.getAnchor());
+							end = converter.convertMapToScreen(en.getAnchor());
+
+							md = new MotionDescriptor(start, end, anchorPoint, point);
+
+							lengthFromStartNode = md.lengthFromStartNode;
+							
+							if(lengthFromStartNode < 0)
+							{
+								lengthFromStartNode = 0;
+								break;
+							}
+						}
 					}
-					else
-					if ( lengthFromStartNode < 0 )
+					while(lengthFromStartNode < 0)
 					{
-						mark.setNodeLink(mark.getLink().previousNodeLink(mark.getNodeLink()));
-						mark.getNodeLink().updateLengthLt();
-						lengthFromStartNode += mark.getNodeLink().getLengthLt();
+						nodeLink = mark.getLink().previousNodeLink(mark.getNodeLink());
+						if(nodeLink == null)
+							lengthFromStartNode = 0;
+						else
+						{
+							en = sn;
+							sn = nodeLink.getOtherNode(en);
+	
+							mark.setNodeLink(nodeLink);
+							mark.setStartNode(sn);
+	
+							start = converter.convertMapToScreen(sn.getAnchor());
+							end = converter.convertMapToScreen(en.getAnchor());
+
+							md = new MotionDescriptor(start, end, anchorPoint, point);
+
+							lengthFromStartNode = md.lengthFromStartNode;
+							
+							if(lengthFromStartNode > md.nodeLinkLength)
+							{
+								lengthFromStartNode = md.nodeLinkLength;
+								break;
+							}
+						}
 					}
 
-					mark.setAnchor(
-						converter.convertScreenToMap(
-							new Point(
-								(int)Math.round(start.x + cosB * ( lengthFromStartNode )),
-								(int)Math.round(start.y + sinB * ( lengthFromStartNode )) 
-							) 
-						) 
-					);
+					mark.adjustPosition(lengthFromStartNode);
 				}
 			}//MapState.MOUSE_DRAGGED
 			else

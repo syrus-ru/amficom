@@ -7,6 +7,7 @@ import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Map.MapSiteNodeElement;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
@@ -146,9 +147,9 @@ public class MapSiteGeneralPanel extends JPanel implements ObjectResourcePropert
 			descTextArea.setText(site.getDescription());
 
 			longTextField.setEnabled(true);
-			longTextField.setText(String.valueOf(site.getAnchor().x));
+			longTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(site.getAnchor().x));
 			latTextField.setEnabled(true);
-			latTextField.setText(String.valueOf(site.getAnchor().y));
+			latTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(site.getAnchor().y));
 
 			cityTextField.setText(site.getCity());
 			streetTextField.setText(site.getStreet());

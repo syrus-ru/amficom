@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.1 2004/09/13 12:33:41 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.2 2004/11/10 16:00:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,7 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 
 import java.awt.Component;
 
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 import javax.swing.JComponent;
@@ -29,7 +30,7 @@ import javax.swing.JComponent;
  * 
  * 
  * 
- * @version $Revision: 1.1 $, $Date: 2004/09/13 12:33:41 $
+ * @version $Revision: 1.2 $, $Date: 2004/11/10 16:00:54 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see SpatialNetMapViewer, MapInfoNetMapViewer
@@ -66,6 +67,17 @@ public abstract class NetMapViewer
 	 * Получить графический компонент, в котором отображается картография
 	 */
 	public abstract JComponent getVisualComponent();
+
+	public BufferedImage getMapShot()
+	{
+		JComponent component = getVisualComponent();
+		int width = component.getWidth();
+		int height = component.getHeight();
+		BufferedImage bim = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
+		component.paint(bim.getGraphics());
+		
+		return bim;
+	}
 
 	/**
 	 * Инициализация класса отображения картографии. Базовое действие - 

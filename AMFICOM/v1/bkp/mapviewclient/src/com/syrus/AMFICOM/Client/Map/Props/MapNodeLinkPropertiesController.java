@@ -7,6 +7,7 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.Map.MapNodeLinkElement;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 
@@ -72,22 +73,25 @@ public final class MapNodeLinkPropertiesController
 		else
 		if (key.equals(PROPERTY_TOPOLOGICAL_LENGTH))
 		{
-			result = String.valueOf(MiscUtil.fourdigits(nodeLink.getLengthLt()));
+			result = MapPropertiesManager.getDistanceFormat().format(nodeLink.getLengthLt());
 		}
 		else
 		if (key.equals(PROPERTY_START_NODE_ID))
 		{
-			result = nodeLink.getStartNode();
+			// remove .getName()
+			result = nodeLink.getStartNode().getName();
 		}
 		else
 		if (key.equals(PROPERTY_END_NODE_ID))
 		{
-			result = nodeLink.getEndNode();
+			// remove .getName()
+			result = nodeLink.getEndNode().getName();
 		}
 		else
 		if (key.equals(PROPERTY_PHYSICAL_LINK_ID))
 		{
-			result = nodeLink.getMap().getPhysicalLink(nodeLink.getPhysicalLinkId());
+			// remove .getName()
+			result = nodeLink.getMap().getPhysicalLink(nodeLink.getPhysicalLinkId()).getName();
 		}
 
 		return result;

@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.5 2004/10/26 13:32:01 krupenn Exp $
+ * $Id: MapToolBar.java,v 1.6 2004/11/10 16:00:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationModelListener;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,7 +37,7 @@ import oracle.jdeveloper.layout.XYLayout;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/26 13:32:01 $
+ * @version $Revision: 1.6 $, $Date: 2004/11/10 16:00:55 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -109,10 +110,8 @@ public final class MapToolBar extends JToolBar
 	{
 		try
 		{
-			java.text.DecimalFormat df2 = new java.text.DecimalFormat("###,##0.0000");
-
-			latitudeTextField.setText(df2.format(latitude));
-			longitudeField.setText(df2.format(longitude));
+			latitudeTextField.setText(MapPropertiesManager.getCoordinatesFormat().format(latitude));
+			longitudeField.setText(MapPropertiesManager.getCoordinatesFormat().format(longitude));
 		}
 		catch(Exception e)
 		{

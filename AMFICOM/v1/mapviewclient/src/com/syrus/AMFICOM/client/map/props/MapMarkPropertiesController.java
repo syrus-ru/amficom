@@ -7,6 +7,7 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.Map.MapMarkElement;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 
@@ -73,17 +74,18 @@ public final class MapMarkPropertiesController
 		else
 		if (key.equals(PROPERTY_LATITUDE))
 		{
-			result = String.valueOf(MiscUtil.fourdigits(mark.getAnchor().x));
+			result = MapPropertiesManager.getCoordinatesFormat().format(mark.getAnchor().x);
 		}
 		else
 		if (key.equals(PROPERTY_LONGITUDE))
 		{
-			result = String.valueOf(MiscUtil.fourdigits(mark.getAnchor().y));
+			result = MapPropertiesManager.getCoordinatesFormat().format(mark.getAnchor().y);
 		}
 		else
 		if (key.equals(PROPERTY_PHYSICAL_LINK_ID))
 		{
-			result = mark.getLink();
+			// remove .getName()
+			result = mark.getLink().getName();
 		}
 
 		return result;

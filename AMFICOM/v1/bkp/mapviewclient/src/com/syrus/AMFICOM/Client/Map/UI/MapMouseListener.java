@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.10 2004/11/01 15:40:10 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.11 2004/11/10 16:00:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.Client.Map.Popup.MapPopupMenu;
 import com.syrus.AMFICOM.Client.Map.Popup.MapPopupMenuManager;
@@ -47,7 +48,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/11/01 15:40:10 $
+ * @version $Revision: 1.11 $, $Date: 2004/11/10 16:00:54 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -126,7 +127,7 @@ public final class MapMouseListener implements MouseListener
 								sizeEditBox = new MapNodeLinkSizeField(logicalNetLayer, nodelink, node);
 								Rectangle rect = nodelink.getLabelBox();
 								sizeEditBox.setBounds(rect.x, rect.y, rect.width + 3, rect.height + 3);
-								sizeEditBox.setText(nodelink.getSizeAsString());
+								sizeEditBox.setText(MapPropertiesManager.getDistanceFormat().format(nodelink.getLengthLt()));
 								sizeEditBox.setSelectionStart(0);
 								sizeEditBox.setSelectionEnd(sizeEditBox.getText().length());
 								sizeEditBox.selectAll();
@@ -238,7 +239,9 @@ public final class MapMouseListener implements MouseListener
 
 					JOptionPane.showMessageDialog(
 							Environment.getActiveWindow(),
-							LangModelMap.getString("Distance") + " = " + String.valueOf(MiscUtil.fourdigits(distance)),
+							LangModelMap.getString("Distance") 
+								+ " = " 
+								+ MapPropertiesManager.getDistanceFormat().format(distance),
 							LangModelMap.getString("MeasureDistance"),
 							JOptionPane.PLAIN_MESSAGE);
 

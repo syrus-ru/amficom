@@ -4,6 +4,7 @@ import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Event.OperationListener;
+import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
@@ -15,6 +16,9 @@ import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
+import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
 import com.syrus.AMFICOM.Client.Resource.SchemeDataSourceImage;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
 
@@ -33,9 +37,11 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.tree.TreePath;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 
 public final class MapSchemeTreePanel extends JPanel 
-		implements OperationListener
+		implements OperationListener, TreeSelectionListener
 {
 	UniTreePanel treePanel = null;
 	MapSchemeTreeModel model = null;
@@ -61,6 +67,8 @@ public final class MapSchemeTreePanel extends JPanel
 	public final static int btnSize = 24;
 
 	static final Dimension buttonSize = new Dimension(btnSize, btnSize);
+	
+	private MapView mapView = null;
 
 	public MapSchemeTreePanel()
 	{
@@ -204,10 +212,16 @@ public final class MapSchemeTreePanel extends JPanel
 	public void setPanel(UniTreePanel utp)
 	{
 		if(treePanel != null)
+		{
 			scroll.getViewport().remove(treePanel);
+			treePanel.getTree().removeTreeSelectionListener(this);
+		}
 		treePanel = utp;
 		if(treePanel != null)
+		{
 			scroll.getViewport().add(treePanel);
+			treePanel.getTree().addTreeSelectionListener(this);
+		}
 	}
 
 	protected void initTree()
@@ -218,6 +232,7 @@ public final class MapSchemeTreePanel extends JPanel
 
 	public void updateTree(MapView mv)
 	{
+		mapView = mv;
 		model.setMapView(mv);
 		treePanel.setModel(model);
 	}
@@ -330,5 +345,45 @@ public final class MapSchemeTreePanel extends JPanel
 	
 	private void removeFromView()
 	{
+	}
+
+	public void valueChanged(TreeSelectionEvent e)
+	{
+		ObjectResourceTreeNode node = (ObjectResourceTreeNode )e.getPath().getLastPathComponent();
+		Object sel = null;
+		long msgType = 0;
+		if(node.getObject() instanceof SchemeCableLink)
+		{
+			sel = new SchemeCableLink[] { (SchemeCableLink )node.getObject() };
+			msgType = SchemeNavigateEvent.SCHEME_CABLE_LINK_SELECTED_EVENT;
+		}
+		else
+		if(node.getObject() instanceof SchemeElement)
+		{
+			sel = new SchemeElement[] { (SchemeElement )node.getObject() };
+			msgType = SchemeNavigateEvent.SCHEME_ELEMENT_SELECTED_EVENT;
+		}
+		else
+		if(node.getObject() instanceof SchemePath)
+		{
+			sel = new SchemePath[] { (SchemePath )node.getObject() };
+			msgType = SchemeNavigateEvent.SCHEME_PATH_SELECTED_EVENT;
+		}
+		if(sel != null)
+		{
+			Dispatcher disp = aContext.getDispatcher();
+			if(disp != null)
+			{
+				if(mapView != null)
+				{
+					mapView.deselectAll();
+					disp.notify(new MapEvent(this, MapEvent.SELECTION_CHANGED));
+				}
+
+				disp.notify(new SchemeNavigateEvent(
+						sel, 
+						msgType));
+			}
+		}
 	}
 }

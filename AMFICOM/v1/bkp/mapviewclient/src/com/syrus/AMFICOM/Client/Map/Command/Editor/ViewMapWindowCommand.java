@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapWindowCommand.java,v 1.5 2004/10/20 10:14:39 krupenn Exp $
+ * $Id: ViewMapWindowCommand.java,v 1.6 2004/11/10 16:00:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import javax.swing.JDesktopPane;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/20 10:14:39 $
+ * @version $Revision: 1.6 $, $Date: 2004/11/10 16:00:54 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -144,6 +144,7 @@ public class ViewMapWindowCommand extends VoidCommand
 		Dimension dim = desktop.getSize();
 		frame.setLocation(0, 0);
 		frame.setSize(dim.width * 4 / 5, dim.height * 7 / 8);
+		mv.setLogicalNetLayer(frame.getMapViewer().getLogicalNetLayer());
 		frame.setMapView(mv);
 		frame.show();
 		dispatcher.notify(new MapEvent(frame, MapEvent.MAP_FRAME_SHOWN));

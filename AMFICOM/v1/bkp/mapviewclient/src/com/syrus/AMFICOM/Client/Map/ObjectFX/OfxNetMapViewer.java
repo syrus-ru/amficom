@@ -1,5 +1,5 @@
 /**
- * $Id: OfxNetMapViewer.java,v 1.4 2004/10/19 11:48:27 krupenn Exp $
+ * $Id: OfxNetMapViewer.java,v 1.5 2004/11/10 16:00:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,12 +11,15 @@
 
 package com.syrus.AMFICOM.Client.Map.ObjectFX;
 
+import com.ofx.base.SxConstant;
 import com.ofx.base.SxEnvironment;
 import com.ofx.component.swing.JMapViewer;
+import com.ofx.mapViewer.SxClassLayer;
 import com.ofx.mapViewer.SxMapLayerInterface;
 import com.ofx.mapViewer.SxMapViewer;
 import com.ofx.mapViewer.SxMarkerLayer;
 
+import com.ofx.repository.SxClass;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapConnection;
@@ -49,7 +52,7 @@ import javax.swing.ToolTipManager;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/10/19 11:48:27 $
+ * @version $Revision: 1.5 $, $Date: 2004/11/10 16:00:54 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -208,6 +211,7 @@ public class OfxNetMapViewer extends NetMapViewer
 			jMapViewer.setMapName( dataBaseView);
 
 			anSxMapViewer.addLayer( "Network layer", lnl.spatialLayer);
+			
 			try 
 			{
 				SxMarkerLayer markerLayer = (SxMarkerLayer) 

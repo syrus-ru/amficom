@@ -7,6 +7,7 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Resource.Map.MapPipePathElement;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 
@@ -69,7 +70,7 @@ public final class MapCollectorPropertiesController
 		else
 		if (key.equals(PROPERTY_TOPOLOGICAL_LENGTH))
 		{
-			result = String.valueOf(MiscUtil.fourdigits(path.getLengthLt()));
+			result = MapPropertiesManager.getDistanceFormat().format(path.getLengthLt());
 		}
 		return result;
 	}
