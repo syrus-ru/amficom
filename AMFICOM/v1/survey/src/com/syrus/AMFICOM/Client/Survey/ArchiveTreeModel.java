@@ -142,7 +142,6 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 
 				if(me.element_type.equals("path"))
 				{
-					Vector schvec = new Vector();
 					if(Pool.getHash(SchemePath.typ) != null)
 					{
 						Enumeration enum1 = Pool.getHash(SchemePath.typ).elements();
@@ -255,11 +254,11 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 			{
 				if (Pool.getHash(MonitoredElement.typ) != null)
 				{
-					List dSet = new DataSet(Pool.getHash(MonitoredElement.typ));
+					List dSet = Pool.getList(MonitoredElement.typ);
 
-					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
+					ObjectResourceFilter filter = new ObjectResourceDomainFilter(this.dsi.getSession().getDomainId());
 					dSet = filter.filter(dSet);
-					ObjectResourceSorter sorter = MonitoredElement.getDefaultSorter();
+					ObjectResourceSorter sorter = StubResource.getDefaultSorter();
 					sorter.setDataSet(dSet);
 					dSet = sorter.default_sort();
 
@@ -279,18 +278,15 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 			if(s.equals("result") || s.equals("alarm"))
 			{
 				ObjectResourceTreeNode parent = (ObjectResourceTreeNode )node.getParent();//get TestSetup
-				TestSetup ts = (TestSetup )parent.getObject();
-
 				ObjectResourceTreeNode parent1 = (ObjectResourceTreeNode )parent.getParent();//get "Шаблон"
 				ObjectResourceTreeNode parent2 = (ObjectResourceTreeNode )parent1.getParent();//get MonitoredElement
 				MonitoredElement me = (MonitoredElement )parent2.getObject();
 
-				if (Pool.getHash(ResultSet.typ) != null)
+				if (Pool.getHash(ResultSet.TYPE) != null)
 				{
-					List dSet = new DataSet(Pool.getHash(ResultSet.typ));
-//					Enumeration enum = Pool.getHash(ResultSet.typ).elements();
+					List dSet = Pool.getList(ResultSet.TYPE);
 
-					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
+					ObjectResourceFilter filter = new ObjectResourceDomainFilter(this.dsi.getSession().getDomainId());
 					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = ResultSet.getDefaultSorter();
 					sorter.setDataSet(dSet);
@@ -315,16 +311,16 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 
 				String[] ids = (String[] )node.getParameter();
 
-				List dSet = new DataSet();
+				List dSet = new ArrayList();
 
 				for(int i = 0; i <ids.length; i++)
 				{
-					TestSetup ts = (TestSetup )Pool.get(TestSetup.typ, ids[i]);
+					TestSetup ts = (TestSetup )Pool.get(TestSetup.TYPE, ids[i]);
 					if(ts != null)
 						dSet.add(ts);
 				}
 
-				ObjectResourceSorter sorter = TestSetup.getDefaultSorter();
+				ObjectResourceSorter sorter = StubResource.getDefaultSorter();
 				sorter.setDataSet(dSet);
 				dSet = sorter.default_sort();
 
@@ -349,9 +345,9 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 				ObjectResourceTreeNode menode = (ObjectResourceTreeNode )parent3.getParent();// get MonitoredElement
 				MonitoredElement me = (MonitoredElement )menode.getObject();
 
-				if (Pool.getHash(Test.typ) != null)
+				if (Pool.getHash(Test.TYPE) != null)
 				{
-					List dSet = new DataSet(Pool.getHash(Test.typ));
+					List dSet = Pool.getList(Test.TYPE);
 //					Enumeration enum = Pool.getHash(Test.typ).elements();
 
 					ObjectResourceSorter sorter = Test.getDefaultSorter();
@@ -380,19 +376,17 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 				ObjectResourceTreeNode parent = (ObjectResourceTreeNode )node.getParent();
 				MonitoredElement me = (MonitoredElement )parent.getObject();
 
-				if (Pool.getHash(Analysis.typ) != null)
+				if (Pool.getHash(Analysis.TYPE) != null)
 				{
-					List dSet = new DataSet(Pool.getHash(Analysis.typ));
-//					Enumeration enum = Pool.getHash(Analysis.typ).elements();
-
-					ObjectResourceSorter sorter = Analysis.getDefaultSorter();
+					List dSet = Pool.getList(Analysis.TYPE);
+					ObjectResourceSorter sorter = StubResource.getDefaultSorter();
 					sorter.setDataSet(dSet);
 					dSet = sorter.default_sort();
 
 					for(Iterator it = dSet.iterator(); it.hasNext();)
 					{
 						Analysis anal = (Analysis )it.next();
-						if(anal.monitored_element_id.equals(me.getId()) && !anal.user_id.equals(""))
+						if(anal.getMonitoredElementId().equals(me.getId()) && anal.getUserId().length()>0)
 						{
 							ObjectResourceTreeNode n = new ObjectResourceTreeNode(anal, anal.getName(), true, true);
 							vec.add(n);
@@ -406,6 +400,9 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 				ObjectResourceTreeNode parent = (ObjectResourceTreeNode )node.getParent();
 				MonitoredElement me = (MonitoredElement )parent.getObject();
 
+				/**
+				 * FIXME remove this fucking vector, which will be indicate existance at pool SchemePath
+				 */
 				Vector schvec = new Vector();
 				if(me.element_type.equals("path"))
 				{
@@ -421,25 +418,25 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 					}
 				}
 
-				if (Pool.getHash(Modeling.typ) != null)
+				if (Pool.getHash(Modeling.TYPE) != null)
 				{
-					List dSet = new DataSet(Pool.getHash(Modeling.typ));
+					List dSet = Pool.getList(Modeling.TYPE);
 //					Enumeration enum = Pool.getHash(Modeling.typ).elements();
 
-					ObjectResourceSorter sorter = Modeling.getDefaultSorter();
+					ObjectResourceSorter sorter = StubResource.getDefaultSorter();
 					sorter.setDataSet(dSet);
 					dSet = sorter.default_sort();
 
 					for(Iterator it = dSet.iterator(); it.hasNext();)
 					{
 						Modeling mod = (Modeling )it.next();
-						if(schvec.contains(mod.scheme_path_id))
+						if(schvec.contains(mod.getSchemePathId()))
 						{
 							ImageIcon ii = null;
-							if(mod.type_id.equals("dadara"))
+							if(mod.getTypeId().equals("dadara"))
 								ii = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/model_mini.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH));
 							else
-							if(mod.type_id.equals("optprognosis"))
+							if(mod.getTypeId().equals("optprognosis"))
 								ii = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/prognosis_mini.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH));
 
 							ObjectResourceTreeNode n;
@@ -486,7 +483,7 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 
 				if(parent.getObject().equals("result"))
 				{
-					Date ts = new Date(rs.start_time);
+					Date ts = new Date(rs.getStartTime());					
 					ts.setHours(0);
 					ts.setMinutes(0);
 					ts.setSeconds(0);
@@ -514,7 +511,7 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 						ts.getDate());
 					int start_date = ts.getDate();
 					int end_date = calendar.getActualMaximum(Calendar.DATE);
-					for(long d = ts.getTime(); d <= rs.end_time; d+= day_duration)
+					for(long d = ts.getTime(); d <= rs.getEndTime(); d+= day_duration)
 //					for(long d = rs.start_time; d <= rs.end_time; d+= day_duration)
 					{
 						Date rset_ts = new Date(d);
@@ -540,14 +537,14 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 
 					String[] r_ids = (String[] )parent1.getParameter();
 
-					List dSet = new DataSet();
+					List dSet = new ArrayList();
 
 					for(int i = 0; i < r_ids.length; i++)
 					{
 						Alarm alarm = (Alarm )Pool.get(Alarm.typ, r_ids[i]);
 						if(alarm != null)
-							if(		alarm.generated >= rs.start_time &&
-									alarm.generated < rs.end_time)
+							if(		alarm.generated >= rs.getStartTime() &&
+									alarm.generated < rs.getEndTime())
 							{
 								Evaluation eval = alarm.getEvaluation();
 								Test test = findTestForEvaluation(eval);
@@ -590,20 +587,19 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 
 				ObjectResourceTreeNode parent3 = (ObjectResourceTreeNode )tsetupnode.getParent();// get "Шаблон"
 				ObjectResourceTreeNode menode = (ObjectResourceTreeNode )parent3.getParent();// get MonitoredElement
-				MonitoredElement me = (MonitoredElement )menode.getObject();
 
 				String[] r_ids = (String[] )rsetnode.getParameter();
 
-				List dSet = new DataSet();
+				List dSet = new ArrayList();
 
 				for(int i = 0; i < r_ids.length; i++)
 				{
-					Result res = (Result )Pool.get(Result.typ, r_ids[i]);
+					Result res = (Result )Pool.get(Result.TYPE, r_ids[i]);
 					if(res != null)
-						if(		res.elementary_start_time >= start_time &&
-								res.elementary_start_time < end_time)
+						if(		res.getElementaryStartTime() >= start_time &&
+								res.getElementaryStartTime() < end_time)
 						{
-							Test test = (Test )Pool.get(Test.typ, res.action_id);
+							Test test = (Test )Pool.get(Test.TYPE, res.getActionId());
 							if(test != null)
 								if(test.getTestSetupId().equals(tsetup.getId()))
 									dSet.add(res);
@@ -637,11 +633,11 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 			{
 				Test ts = (Test )node.getObject();
 
-				List dSet = new DataSet();
+				List dSet = new ArrayList();
 
 				for(int i = 0; i < ts.getResultIds().length; i++)
 				{
-					Result res = (Result )Pool.get(Result.typ, ts.getResultIds()[i]);
+					Result res = (Result )Pool.get(Result.TYPE, ts.getResultIds()[i]);
 					if(res != null)
 						dSet.add(res);
 				}
@@ -675,7 +671,7 @@ public class ArchiveTreeModel extends ObjectResourceTreeModel
 	Test findTestForEvaluation(Evaluation eval)
 	{
 		Test t;
-		Hashtable ht = Pool.getHash(Test.typ);
+		Hashtable ht = Pool.getHash(Test.TYPE);
 		if(ht == null)
 			return null;
 		for(Enumeration enum = ht.elements(); enum.hasMoreElements();)

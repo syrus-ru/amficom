@@ -71,20 +71,20 @@ public class ObserverTreeModel extends ObjectResourceTreeModel
 			String s = (String )node.getObject();
 			if(s.equals("root"))
 			{
-				new ConfigDataSourceImage(dsi).LoadISM();
+				new ConfigDataSourceImage(this.dsi).LoadISM();
 //				dsi.LoadISM();
 			}
 			else
 			if(s.equals("result"))
 			{
-				new SurveyDataSourceImage(dsi).LoadResultSets();
+				new SurveyDataSourceImage(this.dsi).LoadResultSets();
 			}
 			else
 			if(s.equals("alarm"))
 			{
 				ObjectResourceTreeNode parent = (ObjectResourceTreeNode )node.getParent();
 				MonitoredElement me = (MonitoredElement )parent.getObject();
-				String ids[] = new SurveyDataSourceImage(dsi).GetAlarmsForME(me.getId());
+				String ids[] = new SurveyDataSourceImage(this.dsi).GetAlarmsForME(me.getId());
 /*
 				String ids[] = dsi.GetAlarmsForME(me.getId());
 //				new SurveyDataSourceImage(dsi).GetAlarms(ids);
@@ -97,7 +97,7 @@ public class ObserverTreeModel extends ObjectResourceTreeModel
 			{
 				ObjectResourceTreeNode parent = (ObjectResourceTreeNode )node.getParent();
 				MonitoredElement me = (MonitoredElement )parent.getObject();
-				new SurveyDataSourceImage(dsi).GetAnalysisForME(me.getId());
+				new SurveyDataSourceImage(this.dsi).GetAnalysisForME(me.getId());
 /*
 				String ids[] = dsi.GetAnalysisForME(me.getId());
 				for(int i = 0; i < ids.length; i++)
@@ -112,7 +112,6 @@ public class ObserverTreeModel extends ObjectResourceTreeModel
 
 				if(me.element_type.equals("path"))
 				{
-					Vector schvec = new Vector();
 					if(Pool.getHash(SchemePath.typ) != null)
 					{
 						Enumeration enum1 = Pool.getHash(SchemePath.typ).elements();
@@ -121,7 +120,7 @@ public class ObserverTreeModel extends ObjectResourceTreeModel
 							SchemePath sp = (SchemePath )enum1.nextElement();
 							if(sp.path_id.equals(me.element_id))
 							{
-								new SurveyDataSourceImage(dsi).GetModelingsForSP(sp.getId());
+								new SurveyDataSourceImage(this.dsi).GetModelingsForSP(sp.getId());
 /*
 								String ids[] = dsi.GetModelingsForSP(sp.getId());
 								for(int i = 0; i < ids.length; i++)
@@ -138,7 +137,7 @@ public class ObserverTreeModel extends ObjectResourceTreeModel
 				ObjectResourceTreeNode parent = (ObjectResourceTreeNode )node.getParent();
 				MonitoredElement me = (MonitoredElement )parent.getObject();
 
-				new SurveyDataSourceImage(dsi).GetTestsForME(me.getId());
+				new SurveyDataSourceImage(this.dsi).GetTestsForME(me.getId());
 /*
 				String ids[] = dsi.GetTestsForME(me.getId());
 				new SurveyDataSourceImage(dsi).GetTests(ids);
@@ -156,7 +155,7 @@ public class ObserverTreeModel extends ObjectResourceTreeModel
 
 				MonitoredElement me = (MonitoredElement )parent2.getObject();
 
-				String[] r_ids = new SurveyDataSourceImage(dsi).LoadResultSetResultIds(rs.getId(), me.getId());
+				String[] r_ids = new SurveyDataSourceImage(this.dsi).LoadResultSetResultIds(rs.getId(), me.getId());
 /*
 				String[] r_ids = dsi.LoadResultSetResultIds(rs.getId(),me.getId());
 				for(int i = 0; i < r_ids.length; i++)
@@ -170,7 +169,7 @@ public class ObserverTreeModel extends ObjectResourceTreeModel
 			{
 				Test ts = (Test )node.getObject();
 
-				new SurveyDataSourceImage(dsi).GetTestResult(ts.getId());
+				new SurveyDataSourceImage(this.dsi).GetTestResult(ts.getId());
 /*
 				for(int i = 0; i < ts.result_ids.length; i++)
 					dsi.GetResult(ts.result_ids[i]);
@@ -226,11 +225,11 @@ public class ObserverTreeModel extends ObjectResourceTreeModel
 			{
 				if (Pool.getHash(MonitoredElement.typ) != null)
 				{
-					List dSet = new DataSet(Pool.getHash(MonitoredElement.typ));
+					List dSet = Pool.getList(MonitoredElement.typ);
 
-					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
+					ObjectResourceFilter filter = new ObjectResourceDomainFilter(this.dsi.getSession().getDomainId());
 					dSet = filter.filter(dSet);
-					ObjectResourceSorter sorter = MonitoredElement.getDefaultSorter();
+					ObjectResourceSorter sorter = StubResource.getDefaultSorter();
 					sorter.setDataSet(dSet);
 					dSet = sorter.default_sort();
 
@@ -252,12 +251,12 @@ public class ObserverTreeModel extends ObjectResourceTreeModel
 				ObjectResourceTreeNode parent = (ObjectResourceTreeNode )node.getParent();
 				MonitoredElement me = (MonitoredElement )parent.getObject();
 
-				if (Pool.getHash(ResultSet.typ) != null)
+				if (Pool.getHash(ResultSet.TYPE) != null)
 				{
-					List dSet = new DataSet(Pool.getHash(ResultSet.typ));
+					List dSet = Pool.getList(ResultSet.TYPE);
 //					Enumeration enum = Pool.getHash(ResultSet.typ).elements();
 
-					ObjectResourceFilter filter = new ObjectResourceDomainFilter(dsi.getSession().getDomainId());
+					ObjectResourceFilter filter = new ObjectResourceDomainFilter(this.dsi.getSession().getDomainId());
 					dSet = filter.filter(dSet);
 					ObjectResourceSorter sorter = ResultSet.getDefaultSorter();
 					sorter.setDataSet(dSet);
@@ -279,7 +278,7 @@ public class ObserverTreeModel extends ObjectResourceTreeModel
 			{
 				String[] ids = (String[] )node.getParameter();
 
-				List dSet = new DataSet();
+				List dSet = new ArrayList();
 
 				for(int i = 0; i <ids.length; i++)
 				{
@@ -310,11 +309,10 @@ public class ObserverTreeModel extends ObjectResourceTreeModel
 				ObjectResourceTreeNode parent = (ObjectResourceTreeNode )node.getParent();
 				MonitoredElement me = (MonitoredElement )parent.getObject();
 
-				if (Pool.getHash(Test.typ) != null)
+				if (Pool.getHash(Test.TYPE) != null)
 				{
-					List dSet = new DataSet(Pool.getHash(Test.typ));
-//					Enumeration enum = Pool.getHash(Test.typ).elements();
-
+					List dSet = Pool.getList(Test.TYPE);
+					
 					ObjectResourceSorter sorter = Test.getDefaultSorter();
 					sorter.setDataSet(dSet);
 					dSet = sorter.default_sort();
@@ -336,19 +334,18 @@ public class ObserverTreeModel extends ObjectResourceTreeModel
 				ObjectResourceTreeNode parent = (ObjectResourceTreeNode )node.getParent();
 				MonitoredElement me = (MonitoredElement )parent.getObject();
 
-				if (Pool.getHash(Analysis.typ) != null)
+				if (Pool.getHash(Analysis.TYPE) != null)
 				{
-					List dSet = new DataSet(Pool.getHash(Analysis.typ));
-//					Enumeration enum = Pool.getHash(Analysis.typ).elements();
+					List dSet = Pool.getList(Analysis.TYPE);
 
-					ObjectResourceSorter sorter = Analysis.getDefaultSorter();
+					ObjectResourceSorter sorter = StubResource.getDefaultSorter();
 					sorter.setDataSet(dSet);
 					dSet = sorter.default_sort();
 
 					for(Iterator it = dSet.iterator(); it.hasNext();)
 					{
 						Analysis anal = (Analysis )it.next();
-						if(anal.monitored_element_id.equals(me.getId()) && !anal.user_id.equals(""))
+						if(anal.getMonitoredElementId().equals(me.getId()) && anal.getUserId().length()>0)
 						{
 							ObjectResourceTreeNode n = new ObjectResourceTreeNode(anal, anal.getName(), true, true);
 							vec.add(n);
@@ -377,25 +374,24 @@ public class ObserverTreeModel extends ObjectResourceTreeModel
 					}
 				}
 
-				if (Pool.getHash(Modeling.typ) != null)
+				if (Pool.getHash(Modeling.TYPE) != null)
 				{
-					List dSet = new DataSet(Pool.getHash(Modeling.typ));
-//					Enumeration enum = Pool.getHash(Modeling.typ).elements();
+					List dSet = Pool.getList(Modeling.TYPE);
 
-					ObjectResourceSorter sorter = Modeling.getDefaultSorter();
+					ObjectResourceSorter sorter = StubResource.getDefaultSorter();
 					sorter.setDataSet(dSet);
 					dSet = sorter.default_sort();
 
 					for(Iterator it = dSet.iterator(); it.hasNext();)
 					{
 						Modeling mod = (Modeling )it.next();
-						if(schvec.contains(mod.scheme_path_id))
+						if(schvec.contains(mod.getSchemePathId()))
 						{
 							ImageIcon ii = null;
-							if(mod.type_id.equals("dadara"))
+							if(mod.getTypeId().equals("dadara"))
 								ii = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/model_mini.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH));
 							else
-							if(mod.type_id.equals("optprognosis"))
+							if(mod.getTypeId().equals("optprognosis"))
 								ii = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/prognosis_mini.gif").getScaledInstance(15, 15, Image.SCALE_SMOOTH));
 
 							ObjectResourceTreeNode n;
@@ -440,11 +436,11 @@ public class ObserverTreeModel extends ObjectResourceTreeModel
 
 				String[] r_ids = (String[] )node.getParameter();
 
-				List dSet = new DataSet();
+				List dSet = new ArrayList();
 
 				for(int i = 0; i <r_ids.length; i++)
 				{
-					Result res = (Result )Pool.get(Result.typ, r_ids[i]);
+					Result res = (Result )Pool.get(Result.TYPE, r_ids[i]);
 					if(res != null)
 						dSet.add(res);
 				}
@@ -470,11 +466,11 @@ public class ObserverTreeModel extends ObjectResourceTreeModel
 			{
 				Test ts = (Test )node.getObject();
 
-				List dSet = new DataSet();
+				List dSet = new ArrayList();
 
 				for(int i = 0; i < ts.getResultIds().length; i++)
 				{
-					Result res = (Result )Pool.get(Result.typ, ts.getResultIds()[i]);
+					Result res = (Result )Pool.get(Result.TYPE, ts.getResultIds()[i]);
 					if(res != null)
 						dSet.add(res);
 				}

@@ -1,6 +1,5 @@
 package com.syrus.AMFICOM.Client.Survey.Report;
 
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSurvey;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 
@@ -12,12 +11,10 @@ import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.SurveyDataSourceImage;
 
 import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
-import com.syrus.AMFICOM.Client.General.Filter.LogicScheme;
 import com.syrus.AMFICOM.Client.Survey.Alarm.Filter.AlarmFilter;
 
-import java.util.Enumeration;
-import javax.swing.JPanel;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -33,6 +30,12 @@ import java.util.Iterator;
 
 public class AlarmReportModel extends ObjectResourceReportModel
 {
+	
+	private List objectColumnIDs;
+	private List objectColumnNames;
+	private List objectColumnSizes;
+	private Hashtable availableViews;
+	
 	/**
 	 * Возвращает название модели
 */
@@ -65,142 +68,149 @@ public class AlarmReportModel extends ObjectResourceReportModel
 	}
 
 	//По ним информация будет доставаться из Pool'а
-	public Vector getAllObjectColumnIDs()
+	public List getAllObjectColumnIDs()
 	{
-		Vector result = new Vector();
-		result.add("source_name");
-		result.add("monitored_element_id");
-		result.add("type_id");
-		result.add("status");
-		result.add("generated");
+		if (this.objectColumnIDs==null){			
+		this.objectColumnIDs = new ArrayList();
+		this.objectColumnIDs.add("source_name");
+		this.objectColumnIDs.add("monitored_element_id");
+		this.objectColumnIDs.add("type_id");
+		this.objectColumnIDs.add("status");
+		this.objectColumnIDs.add("generated");
 
-		result.add("assigned");
-		result.add("fixed_when");
-		result.add("assigned_to");
-		result.add("fixed_by");
+		this.objectColumnIDs.add("assigned");
+		this.objectColumnIDs.add("fixed_when");
+		this.objectColumnIDs.add("assigned_to");
+		this.objectColumnIDs.add("fixed_by");
 
-		result.add("comments");
+		this.objectColumnIDs.add("comments");
+		}
 
-		return result;
+		return this.objectColumnIDs;
 	}
 
 	//По этим строкам имена достанутся из LangModelReport
-	public Vector getAllObjectColumnNames()
+	public List getAllObjectColumnNames()
 	{
-		Vector result = new Vector();
+		if (this.objectColumnNames==null){
+			this.objectColumnNames = new ArrayList();
+			this.objectColumnNames.add(LangModelSurvey.getString("Event_source"));
+			this.objectColumnNames.add(LangModelSurvey.getString("Monitored_element"));
+			this.objectColumnNames.add(LangModelSurvey.getString("Event_type"));
+			this.objectColumnNames.add(LangModelSurvey.getString("Status"));
+			this.objectColumnNames.add(LangModelSurvey.getString("time"));
 
-		result.add(LangModelSurvey.getString("Event_source"));
-		result.add(LangModelSurvey.getString("Monitored_element"));
-		result.add(LangModelSurvey.getString("Event_type"));
-		result.add(LangModelSurvey.getString("Status"));
-		result.add(LangModelSurvey.getString("time"));
+			this.objectColumnNames.add(LangModelSurvey.getString("Execution_start"));
+			this.objectColumnNames.add(LangModelSurvey.getString("Execution_finish"));
+			this.objectColumnNames.add(LangModelSurvey.getString("Chief_executor"));
+			this.objectColumnNames.add(LangModelSurvey.getString("Executor"));
 
-		result.add(LangModelSurvey.getString("Execution_start"));
-		result.add(LangModelSurvey.getString("Execution_finish"));
-		result.add(LangModelSurvey.getString("Chief_executor"));
-		result.add(LangModelSurvey.getString("Executor"));
+			this.objectColumnNames.add(LangModelSurvey.getString("Comments"));
+		}  
 
-		result.add(LangModelSurvey.getString("Comments"));
-
-		return result;
+		return this.objectColumnNames;
 	}
 
-	public Vector getAllObjectColumnSizes()
+	public List getAllObjectColumnSizes()
 	{
-		Vector result = new Vector();
-		result.add(new Integer(100));
-		result.add(new Integer(100));
-		result.add(new Integer(60));
-		result.add(new Integer(60));
-		result.add(new Integer(60));
+		if (this.objectColumnSizes==null){
+			this.objectColumnSizes = new ArrayList();
+			this.objectColumnSizes.add(new Integer(100));
+			this.objectColumnSizes.add(new Integer(100));
+			this.objectColumnSizes.add(new Integer(60));
+			this.objectColumnSizes.add(new Integer(60));
+			this.objectColumnSizes.add(new Integer(60));
+	
+			this.objectColumnSizes.add(new Integer(60));
+			this.objectColumnSizes.add(new Integer(60));
+			this.objectColumnSizes.add(new Integer(100));
+			this.objectColumnSizes.add(new Integer(100));
+	
+			this.objectColumnSizes.add(new Integer(100));
+		}
 
-		result.add(new Integer(60));
-		result.add(new Integer(60));
-		result.add(new Integer(100));
-		result.add(new Integer(100));
-
-		result.add(new Integer(100));
-
-		return result;
+		return this.objectColumnSizes;
 	}
 
 	public Hashtable getAvailableViews()
 	{
-		Hashtable result = new Hashtable();
+		if (this.availableViews==null){
+			this.availableViews = new Hashtable();
+			
+			ArrayList typesForField = new ArrayList();
+			typesForField.add(ObjectResourceReportModel.rt_statistics);
+			typesForField.add(ObjectResourceReportModel.rt_pieChart);
+			typesForField.add(ObjectResourceReportModel.rt_pie2DChart);
+			typesForField.add(ObjectResourceReportModel.rt_barChart);
+			typesForField.add(ObjectResourceReportModel.rt_bar2DChart);
+			this.availableViews.put("source_name", typesForField);
+	
+			typesForField = new ArrayList();
+			typesForField.add(ObjectResourceReportModel.rt_statistics);
+			typesForField.add(ObjectResourceReportModel.rt_pieChart);
+			typesForField.add(ObjectResourceReportModel.rt_pie2DChart);
+			typesForField.add(ObjectResourceReportModel.rt_barChart);
+			typesForField.add(ObjectResourceReportModel.rt_bar2DChart);
+			this.availableViews.put("monitored_element_id", typesForField);
+	
+			typesForField = new ArrayList();
+			typesForField.add(ObjectResourceReportModel.rt_statistics);
+			typesForField.add(ObjectResourceReportModel.rt_pieChart);
+			typesForField.add(ObjectResourceReportModel.rt_pie2DChart);
+			typesForField.add(ObjectResourceReportModel.rt_barChart);
+			typesForField.add(ObjectResourceReportModel.rt_bar2DChart);
+			this.availableViews.put("type_id", typesForField);
+	
+			typesForField = new ArrayList();
+			typesForField.add(ObjectResourceReportModel.rt_timefunction);
+			typesForField.add(ObjectResourceReportModel.rt_gistogram);
+			this.availableViews.put("generated", typesForField);
+	
+			typesForField = new ArrayList();
+			typesForField.add(ObjectResourceReportModel.rt_statistics);
+			typesForField.add(ObjectResourceReportModel.rt_pieChart);
+			typesForField.add(ObjectResourceReportModel.rt_pie2DChart);
+			typesForField.add(ObjectResourceReportModel.rt_barChart);
+			typesForField.add(ObjectResourceReportModel.rt_bar2DChart);
+			this.availableViews.put("status", typesForField);
+	
+			typesForField = new ArrayList();
+			typesForField.add(ObjectResourceReportModel.rt_statistics);
+			typesForField.add(ObjectResourceReportModel.rt_pieChart);
+			typesForField.add(ObjectResourceReportModel.rt_pie2DChart);
+			typesForField.add(ObjectResourceReportModel.rt_barChart);
+			typesForField.add(ObjectResourceReportModel.rt_bar2DChart);
+			this.availableViews.put("assigned", typesForField);
+	
+			typesForField = new ArrayList();
+			typesForField.add(ObjectResourceReportModel.rt_statistics);
+			typesForField.add(ObjectResourceReportModel.rt_pieChart);
+			typesForField.add(ObjectResourceReportModel.rt_pie2DChart);
+			typesForField.add(ObjectResourceReportModel.rt_barChart);
+			typesForField.add(ObjectResourceReportModel.rt_bar2DChart);
+			this.availableViews.put("assigned_to", typesForField);
+	
+			typesForField = new ArrayList();
+			typesForField.add(ObjectResourceReportModel.rt_statistics);
+			typesForField.add(ObjectResourceReportModel.rt_pieChart);
+			typesForField.add(ObjectResourceReportModel.rt_pie2DChart);
+			typesForField.add(ObjectResourceReportModel.rt_barChart);
+			typesForField.add(ObjectResourceReportModel.rt_bar2DChart);
+			this.availableViews.put("fixed_when", typesForField);
+	
+			typesForField = new ArrayList();
+			typesForField.add(ObjectResourceReportModel.rt_statistics);
+			typesForField.add(ObjectResourceReportModel.rt_pieChart);
+			typesForField.add(ObjectResourceReportModel.rt_pie2DChart);
+			typesForField.add(ObjectResourceReportModel.rt_barChart);
+			typesForField.add(ObjectResourceReportModel.rt_bar2DChart);
+			this.availableViews.put("fixed_by", typesForField);
+	
+			typesForField = new ArrayList();
+			this.availableViews.put("comments", typesForField);
+		}
 
-		Vector typesForField = new Vector();
-		typesForField.add(ObjectResourceReportModel.rt_statistics);
-		typesForField.add(ObjectResourceReportModel.rt_pieChart);
-		typesForField.add(ObjectResourceReportModel.rt_pie2DChart);
-		typesForField.add(ObjectResourceReportModel.rt_barChart);
-		typesForField.add(ObjectResourceReportModel.rt_bar2DChart);
-		result.put("source_name", typesForField);
-
-		typesForField = new Vector();
-		typesForField.add(ObjectResourceReportModel.rt_statistics);
-		typesForField.add(ObjectResourceReportModel.rt_pieChart);
-		typesForField.add(ObjectResourceReportModel.rt_pie2DChart);
-		typesForField.add(ObjectResourceReportModel.rt_barChart);
-		typesForField.add(ObjectResourceReportModel.rt_bar2DChart);
-		result.put("monitored_element_id", typesForField);
-
-		typesForField = new Vector();
-		typesForField.add(ObjectResourceReportModel.rt_statistics);
-		typesForField.add(ObjectResourceReportModel.rt_pieChart);
-		typesForField.add(ObjectResourceReportModel.rt_pie2DChart);
-		typesForField.add(ObjectResourceReportModel.rt_barChart);
-		typesForField.add(ObjectResourceReportModel.rt_bar2DChart);
-		result.put("type_id", typesForField);
-
-		typesForField = new Vector();
-		typesForField.add(ObjectResourceReportModel.rt_timefunction);
-		typesForField.add(ObjectResourceReportModel.rt_gistogram);
-		result.put("generated", typesForField);
-
-		typesForField = new Vector();
-		typesForField.add(ObjectResourceReportModel.rt_statistics);
-		typesForField.add(ObjectResourceReportModel.rt_pieChart);
-		typesForField.add(ObjectResourceReportModel.rt_pie2DChart);
-		typesForField.add(ObjectResourceReportModel.rt_barChart);
-		typesForField.add(ObjectResourceReportModel.rt_bar2DChart);
-		result.put("status", typesForField);
-
-		typesForField = new Vector();
-		typesForField.add(ObjectResourceReportModel.rt_statistics);
-		typesForField.add(ObjectResourceReportModel.rt_pieChart);
-		typesForField.add(ObjectResourceReportModel.rt_pie2DChart);
-		typesForField.add(ObjectResourceReportModel.rt_barChart);
-		typesForField.add(ObjectResourceReportModel.rt_bar2DChart);
-		result.put("assigned", typesForField);
-
-		typesForField = new Vector();
-		typesForField.add(ObjectResourceReportModel.rt_statistics);
-		typesForField.add(ObjectResourceReportModel.rt_pieChart);
-		typesForField.add(ObjectResourceReportModel.rt_pie2DChart);
-		typesForField.add(ObjectResourceReportModel.rt_barChart);
-		typesForField.add(ObjectResourceReportModel.rt_bar2DChart);
-		result.put("assigned_to", typesForField);
-
-		typesForField = new Vector();
-		typesForField.add(ObjectResourceReportModel.rt_statistics);
-		typesForField.add(ObjectResourceReportModel.rt_pieChart);
-		typesForField.add(ObjectResourceReportModel.rt_pie2DChart);
-		typesForField.add(ObjectResourceReportModel.rt_barChart);
-		typesForField.add(ObjectResourceReportModel.rt_bar2DChart);
-		result.put("fixed_when", typesForField);
-
-		typesForField = new Vector();
-		typesForField.add(ObjectResourceReportModel.rt_statistics);
-		typesForField.add(ObjectResourceReportModel.rt_pieChart);
-		typesForField.add(ObjectResourceReportModel.rt_pie2DChart);
-		typesForField.add(ObjectResourceReportModel.rt_barChart);
-		typesForField.add(ObjectResourceReportModel.rt_bar2DChart);
-		result.put("fixed_by", typesForField);
-
-		typesForField = new Vector();
-		result.put("comments", typesForField);
-
-		return result;
+		return this.availableViews;
 	}
 
 	public void loadRequiredObjects(
@@ -219,11 +229,11 @@ public class AlarmReportModel extends ObjectResourceReportModel
 	public ObjectResourceFilter findORFilterforModel(
 		  ReportTemplate rt,DataSourceInterface dsi)
 	{
-		Vector filters = rt.objectResourceFilters;
+		List filters = rt.objectResourceFilters;
 
-		for (int i = 0; i < filters.size(); i++)
+		for (Iterator it=filters.iterator();it.hasNext();)
 		{
-			ObjectResourceFilter curORF = (ObjectResourceFilter) filters.get(i);
+			ObjectResourceFilter curORF = (ObjectResourceFilter)it.next();
 			if (curORF instanceof AlarmFilter)
 			{
 				loadRequiredObjects(dsi,null,rt);
@@ -264,35 +274,39 @@ public class AlarmReportModel extends ObjectResourceReportModel
 
 		if (rp.view_type.equals(ObjectResourceReportModel.rt_objectsReport))
 		{
-			String returnValue =
-				orrm.getObjectsName() + ":" +
-				LangModelReport.getString(rp.view_type) + ":" +
-				LangModelReport.getString("label_byFields");
+			StringBuffer returnValue = new StringBuffer(orrm.getObjectsName());
+			returnValue.append(":");
+			returnValue.append(LangModelReport.getString(rp.view_type));
+			returnValue.append(":");
+			returnValue.append(LangModelReport.getString("label_byFields"));
 
 			Vector fieldList = (Vector) rp.getReserve();
 			int listRenderSize = (fieldList.size() > 2) ? 3 : fieldList.size();
 			for (int i = 0; i < listRenderSize; i++)
 			{
-				returnValue +=
-					(String) orrm.getColumnNamebyID((String) fieldList.get(i));
+				returnValue.append(orrm.getColumnNamebyID((String) fieldList.get(i)));
 				if (i != fieldList.size() - 1)
-					returnValue += ", ";
+					returnValue.append(", ");
 			}
-			if (listRenderSize != fieldList.size())
-				returnValue +=
-					(LangModelReport.getString("label_more") +
-					Integer.toString(fieldList.size() - listRenderSize) + ")");
+			if (listRenderSize != fieldList.size()){
+				returnValue.append(LangModelReport.getString("label_more"));
+				returnValue.append(Integer.toString(fieldList.size() - listRenderSize));
+				returnValue.append(")");
+			}
 
-			return returnValue;
+			return returnValue.toString();
 		}
 
-		String resultString = orrm.getObjectsName();
-		if (!rp.field.equals(""))
-			resultString = resultString + ":" + orrm.getColumnNamebyID(rp.field);
-		if (!rp.view_type.equals(""))
-			resultString = resultString + ":"
-				+ LangModelReport.getString(rp.view_type);
-		return resultString;
+		StringBuffer resultString = new StringBuffer(orrm.getObjectsName());
+		if (rp.field.length()>0){
+			resultString.append(":");
+			resultString.append(orrm.getColumnNamebyID(rp.field));
+		}
+		if (rp.view_type.length()>0){			
+			resultString.append(":");
+			resultString.append(LangModelReport.getString(rp.view_type));
+		}
+		return resultString.toString();
 	}
 }
 
