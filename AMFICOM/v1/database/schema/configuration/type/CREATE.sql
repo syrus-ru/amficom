@@ -4,4 +4,6 @@
 @@measurementporttype.sql
 @@mcmtype.sql
 @@characteristictype.sql
+@@kistype.sql
 @@linktype.sql
+@@link.sql
