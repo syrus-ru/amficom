@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.75 2005/02/03 14:44:09 max Exp $
+ * $Id: StorableObjectDatabase.java,v 1.76 2005/02/03 14:57:26 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,8 @@
 
 package com.syrus.AMFICOM.general;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -31,8 +33,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2005/02/03 14:44:09 $
- * @author $Author: max $
+ * @version $Revision: 1.76 $, $Date: 2005/02/03 14:57:26 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -747,7 +749,61 @@ public abstract class StorableObjectDatabase {
 		return retrieveButIds(ids, null);
 	}
 	
-	public abstract List retrieveByCondition(List ids, StorableObjectCondition condition)  throws RetrieveObjectException, IllegalDataException;
+	private DatabaseStorableObjectCondition reflectDatabaseCondition(StorableObjectCondition condition)
+			throws IllegalDataException {
+		DatabaseStorableObjectCondition databaseStorableObjectCondition = null;
+		String className = condition.getClass().getName();
+		int lastPoint = className.lastIndexOf('.');
+		String dbClassName = className.substring(0, lastPoint + 1) + "Database" + className.substring(lastPoint + 1);
+		// System.out.println("dbClassName:" + dbClassName);
+		try {
+			Class clazz = Class.forName(dbClassName);
+			Constructor constructor = clazz.getConstructor(new Class[] { condition.getClass()});
+			constructor.setAccessible(true);
+			databaseStorableObjectCondition = (DatabaseStorableObjectCondition) constructor
+					.newInstance(new Object[] { condition});
+		} catch (ClassNotFoundException e) {
+			String msg = this.getEnityName() + "Database.reflectDatabaseCondition | Class " + dbClassName //$NON-NLS-1$
+					+ " not found on the classpath";
+			throw new IllegalDataException(msg, e);
+		} catch (SecurityException e) {
+			String msg = this.getEnityName() + "Database.reflectDatabaseCondition | Caught " + e.getMessage();
+			throw new IllegalDataException(msg, e);
+		} catch (NoSuchMethodException e) {
+			String msg = this.getEnityName() + "Database.reflectDatabaseCondition | Class  " + dbClassName
+					+ " haven't constructor (" + className + ")";
+			throw new IllegalDataException(msg, e);
+		} catch (IllegalArgumentException e) {
+			String msg = this.getEnityName() + "Database.reflectDatabaseCondition | Class  " + dbClassName
+					+ " haven't constructor (" + className + ")";
+			throw new IllegalDataException(msg, e);
+		} catch (InstantiationException e) {
+			String msg = this.getEnityName() + "Database.reflectDatabaseCondition | Caught " + e.getMessage();
+			throw new IllegalDataException(msg, e);
+		} catch (IllegalAccessException e) {
+			String msg = this.getEnityName() + "Database.reflectDatabaseCondition | Caught " + e.getMessage();
+			throw new IllegalDataException(msg, e);
+		} catch (InvocationTargetException e) {
+			String msg = this.getEnityName() + "Database.reflectDatabaseCondition | Caught " + e.getMessage();
+			throw new IllegalDataException(msg, e);
+		}
+		return databaseStorableObjectCondition;
+	}
+
+	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
+			IllegalDataException {
+
+		DatabaseStorableObjectCondition databaseStorableObjectCondition = this.reflectDatabaseCondition(condition);
+		short conditionCode = databaseStorableObjectCondition.getEntityCode().shortValue();
+		if (ObjectEntities.stringToCode(this.getEnityName()) != conditionCode)
+			throw new IllegalDataException(this.getEnityName()
+					+ "Database.retrieveByCondition | Uncompatible condition ("
+					+ ObjectEntities.codeToString(conditionCode) + ") and database (" + this.getEnityName()
+					+ ") classes");
+		String conditionQuery = databaseStorableObjectCondition.getSQLQuery();
+		List list = retrieveButIds(ids, conditionQuery);
+		return list;
+	}
 	
 	/**
 	 * retrive storable objects by additional condition and identifiers not in ids   
