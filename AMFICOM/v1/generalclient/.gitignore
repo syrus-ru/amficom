@@ -13,3 +13,4 @@ classes
 SQLChecker.cache
 sqlj.properties
 Makefile.inc
+.settings
