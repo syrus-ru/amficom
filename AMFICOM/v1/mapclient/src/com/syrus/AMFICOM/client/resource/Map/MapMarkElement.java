@@ -4,10 +4,10 @@ import com.ofx.geometry.SxDoublePoint;
 
 import com.syrus.AMFICOM.CORBA.Map.MapMarkElement_Transferable;
 import com.syrus.AMFICOM.CORBA.Scheme.ElementAttribute_Transferable;
-import com.syrus.AMFICOM.Client.Configure.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Configure.Map.Strategy.MapStrategy;
-import com.syrus.AMFICOM.Client.Configure.Map.Strategy.VoidStrategy;
-import com.syrus.AMFICOM.Client.Configure.Map.UI.Display.MapMarkElementDisplayModel;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategy;
+import com.syrus.AMFICOM.Client.Map.Strategy.VoidStrategy;
+import com.syrus.AMFICOM.Client.Map.UI.Display.MapMarkElementDisplayModel;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.DEF;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
@@ -30,7 +30,7 @@ import java.io.Serializable;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.*;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -650,11 +650,11 @@ public class MapMarkElement extends MapNodeElement implements Serializable
 	public Vector getNodeLinksContainingNode(MapNodeElement myNode)
 	{
 		Vector returnNodeLink = new Vector();
-		Enumeration e = mapContext.getNodeLinksInPhysicalLink( link.getId()).elements();
+		Iterator e = mapContext.getNodeLinksInPhysicalLink(link.getId()).iterator();
 
-		while (e.hasMoreElements())
+		while (e.hasNext())
 		{
-			MapNodeLinkElement myNodeLink = (MapNodeLinkElement)e.nextElement();
+			MapNodeLinkElement myNodeLink = (MapNodeLinkElement )e.next();
 
 			if ( (myNodeLink.endNode == myNode) || (myNodeLink.startNode == myNode))
 			{

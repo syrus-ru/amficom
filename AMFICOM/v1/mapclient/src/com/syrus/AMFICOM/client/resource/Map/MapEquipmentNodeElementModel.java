@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.Client.Resource.Map;
 
+import java.util.List;
 import javax.swing.*;
 import com.ofx.geometry.SxDoublePoint;
 import java.awt.*;
@@ -15,10 +16,10 @@ import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.*;
 
-import com.syrus.AMFICOM.Client.Configure.Map.*;
-import com.syrus.AMFICOM.Client.Configure.Map.UI.*;
-import com.syrus.AMFICOM.Client.Configure.Map.Popup.*;
-import com.syrus.AMFICOM.Client.Configure.Map.Strategy.*;
+import com.syrus.AMFICOM.Client.Map.*;
+import com.syrus.AMFICOM.Client.Map.UI.*;
+import com.syrus.AMFICOM.Client.Map.Popup.*;
+import com.syrus.AMFICOM.Client.Map.Strategy.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 
 //A0A
@@ -51,9 +52,9 @@ public class MapEquipmentNodeElementModel extends MapNodeElementModel
 			if(col_id.equals("element_id"))
 				return node.element_id;
 			if(col_id.equals("longitude"))
-				return String.valueOf(MyUtil.fourdigits(node.getAnchor().x));
+				return String.valueOf(MiscUtil.fourdigits(node.getAnchor().x));
 			if(col_id.equals("latitude"))
-				return String.valueOf(MyUtil.fourdigits(node.getAnchor().y));
+				return String.valueOf(MiscUtil.fourdigits(node.getAnchor().y));
 			if(col_id.equals("optimizeattribute"))
 				return node.optimizerAttribute;
 		}
@@ -104,6 +105,7 @@ public class MapEquipmentNodeElementModel extends MapNodeElementModel
 			if(node.type_id.equals("map_scheme_proto"))
 			{
 				ObjectResourceComboBox orcb = new ObjectResourceComboBox(MapProtoElement.typ);
+				orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
 				Hashtable h = new Hashtable();
 				MapProtoElement mpe = (MapProtoElement )Pool.get(MapProtoElement.typ, node.type_id);
 				h.put((String )mpe.getId(), mpe);
@@ -112,6 +114,7 @@ public class MapEquipmentNodeElementModel extends MapNodeElementModel
 				return orcb;
 			}
 			ObjectResourceComboBox orcb = new ObjectResourceComboBox(ProtoElement.typ);
+			orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
 			Hashtable h = new Hashtable();
 			MapProtoElement mpe = (MapProtoElement )Pool.get(MapProtoElement.typ, node.type_id);
 			for(int i = 0; i < mpe.pe_ids.size(); i++)
@@ -132,6 +135,7 @@ public class MapEquipmentNodeElementModel extends MapNodeElementModel
 			{
 				Scheme scheme = (Scheme )Pool.get(Scheme.typ, node.getMapContext().scheme_id);
 				ObjectResourceComboBox orcb =  new ObjectResourceComboBox(SchemeElement.typ, node.element_id);
+				orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
 				Hashtable ht = Pool.getHash(SchemeElement.typ);
 				Hashtable ht2 = new Hashtable();
 				for(Enumeration enum = ht.elements(); enum.hasMoreElements();)
@@ -146,6 +150,7 @@ public class MapEquipmentNodeElementModel extends MapNodeElementModel
 			}
 			Scheme scheme = (Scheme )Pool.get(Scheme.typ, node.getMapContext().scheme_id);
 			ObjectResourceComboBox orcb =  new ObjectResourceComboBox(SchemeElement.typ, node.element_id);
+			orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
 			Hashtable ht = Pool.getHash(SchemeElement.typ);
 			Hashtable ht2 = new Hashtable();
 			for(Enumeration enum = ht.elements(); enum.hasMoreElements();)
@@ -161,9 +166,9 @@ public class MapEquipmentNodeElementModel extends MapNodeElementModel
 			return orcb;
 		}
 		if(col_id.equals("longitude"))
-			return new TextFieldEditor( String.valueOf(MyUtil.fourdigits(node.getAnchor().x)) );
+			return new TextFieldEditor( String.valueOf(MiscUtil.fourdigits(node.getAnchor().x)) );
 		if(col_id.equals("latitude"))
-			return new TextFieldEditor( String.valueOf(MyUtil.fourdigits(node.getAnchor().y)) );
+			return new TextFieldEditor( String.valueOf(MiscUtil.fourdigits(node.getAnchor().y)) );
 		return null;
 	}
 
@@ -176,11 +181,9 @@ public class MapEquipmentNodeElementModel extends MapNodeElementModel
 	{
 		return new MapEquipmentPane(node);
 	}
-	
-	public Vector getPropertyColumns()
+
+	List cols = new LinkedList();
 	{
-		Vector cols = new Vector();
-		Vector cols2 = super.getPropertyColumns();
 //		cols.add("id");
 		cols.add("name");
 //		cols.add("owner_id");
@@ -188,8 +191,16 @@ public class MapEquipmentNodeElementModel extends MapNodeElementModel
 		cols.add("element_id");
 		cols.add("longitude");
 		cols.add("latitude");
-		cols.addAll(cols2);
-		return cols;
+	}
+	
+	public List getPropertyColumns()
+	{
+		List retcol = new LinkedList();
+		List cols2 = super.getPropertyColumns();
+
+		retcol.addAll(cols);
+		retcol.addAll(cols2);
+		return retcol;
 	}
 	public String getPropertyName(String col_id)
 	{

@@ -1,16 +1,10 @@
 package com.syrus.AMFICOM.Client.General.Command.Map;
 
-import java.awt.*;
-import javax.swing.*;
-import java.util.Vector;
+import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import com.syrus.AMFICOM.Client.Map.MapMainFrame;
+import com.syrus.AMFICOM.Client.Map.MapOptionsDialog;
 
-import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Map.*;
-import com.syrus.AMFICOM.Client.Configure.*;
-import com.syrus.AMFICOM.Client.Configure.Map.*;
-import com.syrus.AMFICOM.Client.General.Command.*;
+import java.util.Vector;
 
 
 //A0A

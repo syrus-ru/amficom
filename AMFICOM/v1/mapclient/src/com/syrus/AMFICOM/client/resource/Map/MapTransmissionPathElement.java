@@ -4,13 +4,13 @@ import com.ofx.geometry.SxDoublePoint;
 
 import com.syrus.AMFICOM.CORBA.Map.MapPathElement_Transferable;
 import com.syrus.AMFICOM.CORBA.Scheme.ElementAttribute_Transferable;
-import com.syrus.AMFICOM.Client.Configure.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Configure.Map.Popup.TransmissionPathPopupMenu;
-import com.syrus.AMFICOM.Client.Configure.Map.Strategy.MapStrategy;
-import com.syrus.AMFICOM.Client.Configure.Map.Strategy.VoidStrategy;
-import com.syrus.AMFICOM.Client.Configure.Map.UI.Display.MapTransmissionPathElementDisplayModel;
-import com.syrus.AMFICOM.Client.Configure.Map.UI.MapPathGeneralPanel;
-import com.syrus.AMFICOM.Client.Configure.Map.UI.MapPathPane;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.Popup.TransmissionPathPopupMenu;
+import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategy;
+import com.syrus.AMFICOM.Client.Map.Strategy.VoidStrategy;
+import com.syrus.AMFICOM.Client.Map.UI.Display.MapTransmissionPathElementDisplayModel;
+import com.syrus.AMFICOM.Client.Map.UI.MapPathGeneralPanel;
+import com.syrus.AMFICOM.Client.Map.UI.MapPathPane;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.DEF;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
@@ -33,7 +33,7 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.io.Serializable;
 
-import java.util.Enumeration;
+import java.util.*;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -86,8 +86,6 @@ public class MapTransmissionPathElement extends MapLinkElement implements Serial
 		name = myID;
 		if(mapContext != null)
 			mapContextID = mapContext.id;
-		if(mapContext instanceof ISMMapContext)
-			ism_map_id = ((ISMMapContext)mapContext).ISM_id;
 		startNode = stNode;
 		endNode = eNode;
 		attributes = new Hashtable();
@@ -223,13 +221,9 @@ public class MapTransmissionPathElement extends MapLinkElement implements Serial
 	{
 		this.startNode = (MapNodeElement)Pool.get("mapequipmentelement", startNode_id);
 		if(this.startNode == null)
-			this.startNode = (MapNodeElement)Pool.get("mapkiselement", startNode_id);
-		if(this.startNode == null)
 			this.startNode = (MapNodeElement)Pool.get("mapnodeelement", startNode_id);
 
 		this.endNode = (MapNodeElement)Pool.get("mapequipmentelement", endNode_id);
-		if(this.endNode == null)
-			this.endNode = (MapNodeElement)Pool.get("mapkiselement", endNode_id);
 		if(this.endNode == null)
 			this.endNode = (MapNodeElement)Pool.get("mapnodeelement", endNode_id);
 		this.mapContext = (MapContext)Pool.get("mapcontext", this.mapContextID);
@@ -266,22 +260,18 @@ public class MapTransmissionPathElement extends MapLinkElement implements Serial
 				stroke.getMiterLimit(), 
 				stroke.getDashArray(), 
 				stroke.getDashPhase());
-//		p.setStroke( str);
 
-		Enumeration e = getMapContext().getNodeLinksInTransmissionPath( getId()).elements();
+		Iterator e = getMapContext().getNodeLinksInTransmissionPath( getId()).iterator();
 
-		while ( e.hasMoreElements())
+		while ( e.hasNext())
 		{
-			MapNodeLinkElement nodeLinlElement = (MapNodeLinkElement) e.nextElement();
-      //  nodeLinlElement.paint( g, getTransmissionPathStroke().basicStroke, getTransmissionPathColor().color);
+			MapNodeLinkElement nodeLinkElement = (MapNodeLinkElement )e.next();
 
-			Point from = getLogicalNetLayer().convertMapToScreen(nodeLinlElement.startNode.getAnchor());
-			Point to = getLogicalNetLayer().convertMapToScreen(nodeLinlElement.endNode.getAnchor());
+			Point from = getLogicalNetLayer().convertMapToScreen(nodeLinkElement.startNode.getAnchor());
+			Point to = getLogicalNetLayer().convertMapToScreen(nodeLinkElement.endNode.getAnchor());
 
-//			Graphics2D p = (Graphics2D)g;
-			p.setStroke( str);
-
-			p.setColor( this.getColor());
+			p.setStroke(str);
+			p.setColor(this.getColor());
 
 			if (this.getAlarmState())
 			{
@@ -298,33 +288,24 @@ public class MapTransmissionPathElement extends MapLinkElement implements Serial
 			if (isSelected())
 			{
 				p.setStroke(DEF.selected_stroke);
-/*
-				new BasicStroke( 
-						1,
-						BasicStroke.CAP_BUTT,
-						BasicStroke.JOIN_BEVEL,
-						(float)0.0,
-						new float[] {5, 5},
-						(float)0.0));
-*/
+
 				double l = 4;
 				double l1 = 6;
-				double cos_a = (from.y - to.y)/
-					Math.sqrt( (from.x - to.x)*(from.x - to.x) + (from.y - to.y)*(from.y - to.y) );
+				double cos_a = (from.y - to.y) /
+					Math.sqrt( (from.x - to.x) * (from.x - to.x) + (from.y - to.y) * (from.y - to.y) );
 
-				double sin_a = (from.x - to.x)/
-					Math.sqrt( (from.x - to.x)*(from.x - to.x) + (from.y - to.y)*(from.y - to.y) );
+				double sin_a = (from.x - to.x) /
+					Math.sqrt( (from.x - to.x) * (from.x - to.x) + (from.y - to.y) * (from.y - to.y) );
 
 				p.setColor(Color.black);
-				p.drawLine(from.x + (int)(l * cos_a), from.y  - (int)(l * sin_a), to.x + (int)(l * cos_a), to.y - (int)(l * sin_a));
-				p.drawLine(from.x - (int)(l * cos_a), from.y  + (int)(l * sin_a), to.x - (int)(l * cos_a), to.y + (int)(l * sin_a));
+				p.drawLine(from.x + (int )(l * cos_a), from.y  - (int )(l * sin_a), to.x + (int )(l * cos_a), to.y - (int )(l * sin_a));
+				p.drawLine(from.x - (int )(l * cos_a), from.y  + (int )(l * sin_a), to.x - (int )(l * cos_a), to.y + (int )(l * sin_a));
 
 				p.setColor(Color.red);
-				p.drawLine(from.x + (int)(l1 * cos_a), from.y  - (int)(l1 * sin_a), to.x + (int)(l1 * cos_a), to.y - (int)(l1 * sin_a));
-				p.drawLine(from.x - (int)(l1 * cos_a), from.y  + (int)(l1 * sin_a), to.x - (int)(l1 * cos_a), to.y + (int)(l1 * sin_a));
+				p.drawLine(from.x + (int )(l1 * cos_a), from.y  - (int )(l1 * sin_a), to.x + (int )(l1 * cos_a), to.y - (int )(l1 * sin_a));
+				p.drawLine(from.x - (int )(l1 * cos_a), from.y  + (int )(l1 * sin_a), to.x - (int )(l1 * cos_a), to.y + (int )(l1 * sin_a));
 			}
 
-	  //JOptionPane.showMessageDialog(this.getLogicalNetLayer().mapMainFrame, "!!!!!!!!!!!!!!!!!!!!!!! ");
 		}
 		p.setStroke(rem_str);
 	}
@@ -386,10 +367,10 @@ public class MapTransmissionPathElement extends MapLinkElement implements Serial
 	public double getSizeInDoubleLt()
 	{
 		double length = 0;
-		Enumeration e = getMapContext().getNodeLinksInTransmissionPath(getId()).elements();
-		while( e.hasMoreElements())
+		Iterator e = getMapContext().getNodeLinksInTransmissionPath(getId()).iterator();
+		while( e.hasNext())
 		{
-			MapNodeLinkElement nodeLink = (MapNodeLinkElement) e.nextElement();
+			MapNodeLinkElement nodeLink = (MapNodeLinkElement) e.next();
 			length = length + nodeLink.getSizeInDoubleLt();
 		}
 		return length;
@@ -407,10 +388,10 @@ public class MapTransmissionPathElement extends MapLinkElement implements Serial
 	public double getSizeInDoubleLf1()
 	{
 		double length = 0;
-		Enumeration e = getMapContext().getNodeLinksInTransmissionPath(getId()).elements();
-		while( e.hasMoreElements())
+		Iterator e = getMapContext().getNodeLinksInTransmissionPath(getId()).iterator();
+		while( e.hasNext())
 		{
-			MapNodeLinkElement nodeLink = (MapNodeLinkElement) e.nextElement();
+			MapNodeLinkElement nodeLink = (MapNodeLinkElement) e.next();
 			length = length + nodeLink.getSizeInDoubleLf();
 		}
 		return length;
@@ -574,89 +555,6 @@ public class MapTransmissionPathElement extends MapLinkElement implements Serial
 				vec.add(link);
 				
 			}
-			this.sortedLinks = vec;
-			linksSorted = true;
-		}
-		return sortedLinks;
-	}
-
-	public Vector sortNodeLinks1()
-	{
-		if(!nodeLinksSorted)
-		{
-			MapNodeElement smne = this.startNode;
-			Vector vec = new Vector();
-			Vector nodevec = new Vector();
-			Vector nodelinks = getMapContext().getNodeLinksInTransmissionPath(getId());
-
-			System.out.print("Sorting path node links (total " + nodelinks.size() + ")");
-			while(!smne.equals(this.endNode))
-			{
-				nodevec.add(smne);
-				Enumeration e = nodelinks.elements();
-				while( e.hasMoreElements())
-				{
-					MapNodeLinkElement nodeLink = (MapNodeLinkElement) e.nextElement();
-					if(nodeLink.startNode.equals(smne))
-					{
-						vec.add(nodeLink);
-						nodelinks.remove(nodeLink);
-						smne = nodeLink.endNode;
-						break;
-					}
-					else
-					if(nodeLink.endNode.equals(smne))
-					{
-						vec.add(nodeLink);
-						nodelinks.remove(nodeLink);
-						smne = nodeLink.startNode;
-						break;
-					}
-				}
-				System.out.print(".");
-			}
-			System.out.println("ready!");
-			nodevec.add(this.endNode);
-			this.sortedNodeLinks = vec;
-			nodeLinksSorted = true;
-			this.sortedNodes = nodevec;
-		}
-		return sortedNodeLinks;
-	}
-
-	public Vector sortPhysicalLinks1()
-	{
-		if(!linksSorted)
-		{
-			MapNodeElement smne = this.startNode;
-			Vector vec = new Vector();
-			Vector links = getMapContext().getPhysicalLinksInTransmissiionPath(getId());
-			System.out.print("Sorting path links (total " + links.size() + ")");
-			while(!smne.equals(this.endNode))
-			{
-				Enumeration e = links.elements();
-				while( e.hasMoreElements())
-				{
-					MapPhysicalLinkElement link = (MapPhysicalLinkElement )e.nextElement();
-					if(link.startNode.equals(smne))
-					{
-						vec.add(link);
-						links.remove(link);
-						smne = link.endNode;
-						break;
-					}
-					else
-					if(link.endNode.equals(smne))
-					{
-						vec.add(link);
-						links.remove(link);
-						smne = link.startNode;
-						break;
-					}
-				}
-				System.out.print(".");
-			}
-			System.out.println("ready!");
 			this.sortedLinks = vec;
 			linksSorted = true;
 		}

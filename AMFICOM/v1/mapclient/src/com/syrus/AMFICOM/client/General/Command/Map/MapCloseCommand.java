@@ -1,22 +1,36 @@
+/*
+ * $Id: MapCloseCommand.java,v 1.4 2004/07/14 07:25:04 krupenn Exp $
+ *
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ
+ *
+ * Платформа: java 1.4.1
+*/
+
 package com.syrus.AMFICOM.Client.General.Command.Map;
 
-import java.awt.*;
-import javax.swing.*;
+import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.Map.MapMainFrame;
+
 import java.util.Vector;
 
-import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Map.*;
-import com.syrus.AMFICOM.Client.Configure.*;
-import com.syrus.AMFICOM.Client.Configure.Map.*;
-import com.syrus.AMFICOM.Client.General.Command.*;
-
-
-//A0A
+/**
+ * Класс $RCSfile: MapCloseCommand.java,v $ используется для закрытия карты при сохранении на экране
+ * самого окна карты. При этом в азголовке окна отображается информация о том,
+ * что активной карты нет, и карта центрируется по умолчанию
+ * 
+ * @version $Revision: 1.4 $, $Date: 2004/07/14 07:25:04 $
+ * @module map_v2
+ * @author $Author: krupenn $
+ * @see
+ */
 public class MapCloseCommand extends VoidCommand
 {
-	Object parameter;
+	/**
+	 * окно карты
+	 */
 	MapMainFrame mapFrame;
 
 	public MapCloseCommand()
@@ -26,7 +40,6 @@ public class MapCloseCommand extends VoidCommand
 	public MapCloseCommand(MapMainFrame myMapFrame)
 	{
 		this.mapFrame = myMapFrame;
-		this.parameter = parameter;
 	}
 
 	public Object clone()
@@ -36,8 +49,10 @@ public class MapCloseCommand extends VoidCommand
 
 	public void execute()
 	{
+		if(mapFrame == null)
+			return;
         System.out.println("Closing new map context");
-        mapFrame.setMapContext( null);
+        mapFrame.setMapContext(null);
 
         MapMainFrame.iniFile.setValue( "last_long", String.valueOf( mapFrame.myMapViewer.getCenter()[0])  );
         MapMainFrame.iniFile.setValue( "last_lat", String.valueOf( mapFrame.myMapViewer.getCenter()[1]) );
@@ -46,7 +61,7 @@ public class MapCloseCommand extends VoidCommand
         {
 			System.out.println("Params saved");
         }
-        mapFrame.setTitle( LangModelMap.String("AppTitle"));
+        mapFrame.setTitle( LangModelMap.getString("AppTitle"));
 
          // mapFrame.setTitle( mapFrame.getTitle() + " - " + mapFrame.mapPanel.myMapViewer.lnlgetMapContext().name);
 	}

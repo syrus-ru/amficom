@@ -1,41 +1,75 @@
+/*
+ * $Id: MapSaveAsCommand.java,v 1.6 2004/08/20 07:22:04 peskovsky Exp $
+ *
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ
+ *
+ * Платформа: java 1.4.1
+*/
+
 package com.syrus.AMFICOM.Client.General.Command.Map;
 
-import java.awt.*;
-import javax.swing.*;
-import com.syrus.AMFICOM.CORBA.Map.*;
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.General.Lang.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Map.*;
-import com.syrus.AMFICOM.Client.Resource.Scheme.*;
-import com.syrus.AMFICOM.Client.Configure.Map.*;
-import com.syrus.AMFICOM.Client.General.Command.*;
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.Map.MapMainFrame;
+import com.syrus.AMFICOM.Client.Map.UI.NewMapContextDialog;
+import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.Map.MapContext;
+import com.syrus.AMFICOM.Client.Resource.Pool;
+import com.syrus.AMFICOM.Client.Resource.Scheme.Scheme;
 
-import com.syrus.AMFICOM.Client.Configure.Map.UI.*;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 
-//A0A
+import java.util.HashMap;
+
+import javax.swing.JDesktopPane;
+
+/**
+ * Класс $RCSfile: MapSaveAsCommand.java,v $ используется для сохранения топологической схемы с новым
+ * именем
+ * 
+ * 
+ * 
+ * @version $Revision: 1.6 $, $Date: 2004/08/20 07:22:04 $
+ * @module map_v2
+ * @author $Author: peskovsky $
+ * @see
+ */
 public class MapSaveAsCommand extends VoidCommand
 {
 	MapMainFrame mapFrame;
     ApplicationContext aContext;
-    JDesktopPane desktop;
 
 	public MapSaveAsCommand()
 	{
 	}
 
-	public MapSaveAsCommand(JDesktopPane desktop, MapMainFrame myMapFrame, ApplicationContext aContext)
+	/**
+	 * 
+	 * @param paramName comments
+	 * @exception Exception comments
+	 */
+	public MapSaveAsCommand(MapMainFrame myMapFrame, ApplicationContext aContext)
 	{
-		this.desktop = desktop;
 		this.mapFrame = myMapFrame;
 		this.aContext = aContext;
 	}
 
+	/**
+	 * @deprecated
+	 */
+	public MapSaveAsCommand(JDesktopPane desktop, MapMainFrame myMapFrame, ApplicationContext aContext)
+	{
+		this(myMapFrame, aContext);
+	}
+
 	public Object clone()
 	{
-		return new MapSaveAsCommand(desktop, mapFrame, aContext);
+		return new MapSaveAsCommand(mapFrame, aContext);
 	}
 
 	public void execute()
@@ -96,15 +130,15 @@ public class MapSaveAsCommand extends VoidCommand
 					return;
 				}
 
-				Pool.putHash("schemeclonedids", scheme.clones);
+				Pool.putMap("schemeclonedids", new HashMap(scheme.clones));
 			}
 			
 			mc2 = (MapContext )mc.clone(dataSource);
 
 			if(!mc2.scheme_id.equals(mc.scheme_id))
 			{
-				Pool.removeHash("schemeclonedids");
-				Pool.removeHash("mapclonedids");
+				Pool.removeMap("schemeclonedids");
+				Pool.removeMap("mapclonedids");
 			}
 
 			Pool.put( mc2.getTyp(), mc2.getId(), mc2);
@@ -113,7 +147,7 @@ public class MapSaveAsCommand extends VoidCommand
 			if (mapFrame != null)
 			{
 				mapFrame.setMapContext(mc2);
-				mapFrame.setTitle( LangModelMap.String("AppTitle") + " - "
+				mapFrame.setTitle( LangModelMap.getString("AppTitle") + " - "
 												 + mapFrame.lnl().getMapContext().name);
 			}
 			aContext.getDispatcher().notify(new StatusMessageEvent("Схема успешно сохранена"));

@@ -1,16 +1,30 @@
 package com.syrus.AMFICOM.Client.Resource.Scheme;
 
+import com.syrus.AMFICOM.Client.Resource.StubResource;
+import java.awt.*;
 import java.io.*;
 import java.util.*;
 
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.CORBA.Scheme.MapProtoGroup_Transferable;
+import com.syrus.AMFICOM.CORBA.Map.MapProtoElement_Transferable;
+import com.syrus.AMFICOM.CORBA.Scheme.ElementAttribute_Transferable;
+import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
+import com.syrus.AMFICOM.Client.General.UI.PropertyEditor;
+import com.syrus.AMFICOM.Client.General.UI.PropertyRenderer;
+import com.syrus.AMFICOM.Client.General.UI.StubDisplayModel;
+import com.syrus.AMFICOM.Client.General.UI.TextFieldEditor;
+import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.MyDataFlavor;
+import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
+import com.syrus.AMFICOM.Client.Resource.Scheme.ElementAttribute;
+import java.util.List;
 
-public class MapProtoGroup extends ObjectResource implements Serializable
+public class MapProtoGroup extends StubResource implements Serializable
 {
 	private static final long serialVersionUID = 01L;
 	MapProtoGroup_Transferable transferable;
-	
+
 	public static final String typ = "mapprotogroup";
 
 	public String id = "";
@@ -33,9 +47,9 @@ public class MapProtoGroup extends ObjectResource implements Serializable
 
 	public void setLocalFromTransferable()
 	{
-        this.id = transferable.id;
-        this.name = transferable.name;
-        this.parent_id = transferable.parent_id;
+				this.id = transferable.id;
+				this.name = transferable.name;
+				this.parent_id = transferable.parent_id;
 		this.modified = transferable.modified;
 
 		this.group_ids = new Vector();
@@ -51,18 +65,18 @@ public class MapProtoGroup extends ObjectResource implements Serializable
 	{
 		int l;
 		int i;
-		
-        transferable.id = id;
-        transferable.name = name;
+
+				transferable.id = id;
+				transferable.name = name;
 		transferable.parent_id = parent_id;
 		transferable.modified = modified;
 
-        l = this.group_ids.size();
+				l = this.group_ids.size();
 		transferable.group_ids = new String[l];
 		for (i = 0; i < group_ids.size(); i++)
 			transferable.group_ids[i] = (String )group_ids.get(i);
 
-        l = this.mapproto_ids.size();
+				l = this.mapproto_ids.size();
 		transferable.mapproto_ids = new String[l];
 		for (i = 0; i < mapproto_ids.size(); i++)
 			transferable.mapproto_ids[i] = (String )mapproto_ids.get(i);
@@ -92,11 +106,21 @@ public class MapProtoGroup extends ObjectResource implements Serializable
 		return modified;
 	}
 
+	public ObjectResourceModel getModel()
+	{
+		return new MapProtoGroupModel(this);
+	}
+
+	public static ObjectResourceDisplayModel getDefaultDisplayModel()
+	{
+		return new MapProtoGroupDisplayModel();
+	}
+
 	public String getDomainId()
 	{
 		return "sysdomain";
 	}
-	
+
 	public Object getTransferable()
 	{
 		return transferable;
@@ -125,5 +149,97 @@ public class MapProtoGroup extends ObjectResource implements Serializable
 
 		transferable = new MapProtoGroup_Transferable();
 	}
+}
 
+class MapProtoGroupModel extends ObjectResourceModel
+{
+	MapProtoGroup mapproto;
+
+	public MapProtoGroupModel(MapProtoGroup mapproto)
+	{
+		this.mapproto = mapproto;
+	}
+
+	public String getColumnValue(String col_id)
+	{
+		String s = "";
+		try
+		{
+			if(col_id.equals("name"))
+				s = mapproto.getName();
+		}
+		catch(Exception e)
+		{
+			System.out.println("error gettin field value - Scheme");
+			s = "";
+		}
+		return s;
+	}
+}
+
+class MapProtoGroupDisplayModel extends StubDisplayModel
+{
+	public PropertyEditor getColumnEditor(ObjectResource o, String col_id)
+	{
+		if (!(o instanceof MapProtoGroup))
+			return null;
+		MapProtoGroup mapproto = (MapProtoGroup)o;
+
+		if(col_id.equals("name"))
+			return new TextFieldEditor(mapproto.getName());
+		return null;
+	}
+
+	public String getColumnName (String col_id)
+	{
+		String s = "";
+		if(col_id.equals("name"))
+			s = "Название";
+		return s;
+	}
+
+	public PropertyRenderer getColumnRenderer(ObjectResource o, String col_id)
+	{
+		if (!(o instanceof MapProtoGroup))
+			return null;
+		MapProtoGroup mapproto = (MapProtoGroup)o;
+
+		if(col_id.equals("name"))
+			return new TextFieldEditor(mapproto.getName());
+		return null;
+	}
+
+	public boolean isColumnEditable(String col_id)
+	{
+		if(col_id.equals("name"))
+			return true;
+		return false;
+	}
+
+	List cols = new LinkedList();
+	{
+		cols.add("name");
+	}
+	
+	public List getColumns()
+	{
+		return cols;
+	}
+
+	public int getColumnSize(String col_id)
+	{
+		if(col_id.equals("name"))
+			return 100;
+		return 100;
+	}
+
+	public Color getColumnColor (ObjectResource o, String col_id)
+	{
+		return Color.white;
+	}
+
+	public boolean isColumnColored (String col_id)
+	{
+		return false;
+	}
 }

@@ -1,43 +1,53 @@
+/*
+ * $Id: MapContext.java,v 1.6 2004/08/17 11:09:02 krupenn Exp $
+ *
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ
+ *
+ * Платформа: java 1.4.1
+*/
+
 package com.syrus.AMFICOM.Client.Resource.Map;
 
-import com.syrus.AMFICOM.CORBA.Map.MapContext_Transferable;
-import com.syrus.AMFICOM.Client.Configure.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Configure.Map.UI.Display.MapContextDisplayModel;
-import com.syrus.AMFICOM.Client.Configure.Map.UI.MapContextPane;
-import com.syrus.AMFICOM.Client.General.Event.CatalogNavigateEvent;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
-import com.syrus.AMFICOM.Client.General.Event.SchemeNavigateEvent;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
-import com.syrus.AMFICOM.Client.General.UI.PropertiesPanel;
-import com.syrus.AMFICOM.Client.Resource.ISM.TransmissionPath;
-import com.syrus.AMFICOM.Client.Resource.Network.CableLink;
-import com.syrus.AMFICOM.Client.Resource.Network.Equipment;
-import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
-import com.syrus.AMFICOM.Client.Resource.Pool;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeCableLink;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemeElement;
-import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
+import com.syrus.AMFICOM.CORBA.Map.*;
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import com.syrus.AMFICOM.Client.General.UI.*;
+import com.syrus.AMFICOM.Client.Map.*;
+import com.syrus.AMFICOM.Client.Map.UI.*;
+import com.syrus.AMFICOM.Client.Map.UI.Display.*;
 import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.Resource.ISM.*;
+import com.syrus.AMFICOM.Client.Resource.Network.*;
+import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 
-import java.awt.Point;
+import java.awt.*;
 
-import java.io.IOException;
-import java.io.Serializable;
+import java.io.*;
 
-import java.util.Enumeration;
-import java.util.Vector;
+import java.util.*;
 
-import javax.swing.JTable;
+import javax.swing.*;
 
-//Данный класс используется для описания содержимого карты (её элементов и свойств)
-
-public class MapContext extends ObjectResource implements Serializable
+/**
+ * Класс $RCSfile: MapContext.java,v $ используется для описания контекста карты (её элементов и свойств)
+ * Контекст содержит в себе информацию об узлах, колодцах, развязках, местах
+ * пролегания кабелей. Контекст карты является каркасом для прокладки
+ * топологической схемы сети (MapScheme)
+ * 
+ * 
+ * @version $Revision: 1.6 $, $Date: 2004/08/17 11:09:02 $
+ * @module map_v2
+ * @author $Author: krupenn $
+ * @see
+ */
+public class MapContext extends StubResource implements Serializable
 {
-	private static final long serialVersionUID = 01L;
+	private static final long serialVersionUID = 02L;
 	public MapContext_Transferable transferable;
 	static final public String typ = "mapcontext";
+	
 	// В maptoolbar есть есть кнопки которые устанавливают значения этих полей
 	// какие элементы показываьб на карте
 	static final public int SHOW_NODE_LINK = 1;//Показывать nodeLink
@@ -61,31 +71,29 @@ public class MapContext extends ObjectResource implements Serializable
 
 	public String scheme_id = "";
 
-	Vector node_ids = new Vector();
-	Vector equipment_ids = new Vector();
-	Vector kis_ids = new Vector();
-	Vector nodelink_ids = new Vector();
-	Vector link_ids = new Vector();
-	Vector path_ids = new Vector();
-	Vector mark_ids = new Vector();
+	ArrayList node_ids = new ArrayList();
+	ArrayList equipment_ids = new ArrayList();
+	ArrayList nodelink_ids = new ArrayList();
+	ArrayList link_ids = new ArrayList();
+	ArrayList path_ids = new ArrayList();
+	ArrayList mark_ids = new ArrayList();
 
-	protected Vector nodes = new Vector();//Вектор элементов наследников класса Node
-	public Vector markers = new Vector();//Вектор маркеров
-	protected Vector nodeLinks = new Vector();//Вектор элементов типа NodeLinks
-	protected Vector physicalLinks = new Vector();//Вектор элементов типа physicalLinks
-	protected Vector transmissionPath = new Vector();//Вектор элементов типа physicalLinks
+	protected ArrayList nodes = new ArrayList();//Вектор элементов наследников класса Node
+	public ArrayList markers = new ArrayList();//Вектор маркеров
+	protected ArrayList nodeLinks = new ArrayList();//Вектор элементов типа NodeLinks
+	protected ArrayList physicalLinks = new ArrayList();//Вектор элементов типа physicalLinks
+	protected ArrayList transmissionPath = new ArrayList();//Вектор элементов типа physicalLinks
 
-	Vector removedElements = new Vector();
+	LinkedList removedElements = new LinkedList();
 
-	Vector deleted_nodes_ids = new Vector();
-	Vector deleted_nodeLinks_ids = new Vector();
-	Vector deleted_physicalLinks_ids = new Vector();
-	Vector deleted_transmissionPath_ids = new Vector();
+	LinkedList deleted_nodes_ids = new LinkedList();
+	LinkedList deleted_nodeLinks_ids = new LinkedList();
+	LinkedList deleted_physicalLinks_ids = new LinkedList();
+	LinkedList deleted_transmissionPath_ids = new LinkedList();
 
 	protected boolean showPhysicalNodeElement;//Флаг видимости PhysicalNodeElement
 	public int linkState = SHOW_PHYSICALLINK;//Перменная показывающая что сейчас отображать
 
-//A0A
 	public double defaultScale = 0.00001;
 	public double currentScale = 0.00001;
 
@@ -99,8 +107,13 @@ public class MapContext extends ObjectResource implements Serializable
 	protected MapElement curMapElement = null;//Текущий элемент
 	LogicalNetLayer logicalNetLayer = null;
 
+	/**
+	 * 
+	 * @param logical comments
+	 */
 	public MapContext(LogicalNetLayer logical)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "constructor call", getClass().getName(), "MapContext(" + logical + ")");
 		setLogicalNetLayer(logical);
 		showPhysicalNodeElement = true;
 		created = System.currentTimeMillis();
@@ -108,8 +121,12 @@ public class MapContext extends ObjectResource implements Serializable
 		transferable = new MapContext_Transferable();
 	}
 
+	/**
+	 * constructor
+	 */
 	public MapContext()
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "constructor call", getClass().getName(), "MapContext()");
 		setLogicalNetLayer(null);
 		showPhysicalNodeElement = true;
 		created = System.currentTimeMillis();
@@ -117,15 +134,23 @@ public class MapContext extends ObjectResource implements Serializable
 		transferable = new MapContext_Transferable();
 	}
 
-//Испольуется для создания элимента при визове из базы данных
+	/**
+	 * Используется для создания элемента при подгрузке из базы данных
+	 */
 	public MapContext(MapContext_Transferable transferable)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "constructor call", getClass().getName(), "MapContext(" + transferable + ")");
 		this.transferable = transferable;
 		setLocalFromTransferable();
 	}
 
+	/**
+	 * Клонирование объекта - оспользуется при сохранении контекста карты
+	 * под новым именем
+	 */
 	public Object clone(DataSourceInterface dataSource)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "clone(" + dataSource + ")");
 		String cloned_id = (String)Pool.get("mapclonedids", id);
 		if (cloned_id != null)
 			return Pool.get(MapContext.typ, cloned_id);
@@ -153,42 +178,39 @@ public class MapContext extends ObjectResource implements Serializable
 		Pool.put(MapContext.typ, mc.getId(), mc);
 		Pool.put("mapclonedids", id, mc.getId());
 
-		mc.markers = new Vector();
+		mc.markers = new ArrayList();
 //		mc.markers = new Vector(markers.size());
 //		for (int i = 0; i < markers.size(); i++)
 //			mc.markers.add(((MapElement)markers.get(i)).clone(dataSource));
-		mc.nodeLinks = new Vector(nodeLinks.size());
+		mc.nodeLinks = new ArrayList(nodeLinks.size());
 		for (int i = 0; i < nodeLinks.size(); i++)
 			mc.nodeLinks.add(((MapElement)nodeLinks.get(i)).clone(dataSource));
-		mc.nodes = new Vector(nodes.size());
+		mc.nodes = new ArrayList(nodes.size());
 		for (int i = 0; i < nodes.size(); i++)
 			mc.nodes.add(((MapElement)nodes.get(i)).clone(dataSource));
-		mc.physicalLinks = new Vector(physicalLinks.size());
+		mc.physicalLinks = new ArrayList(physicalLinks.size());
 		for (int i = 0; i < physicalLinks.size(); i++)
 			mc.physicalLinks.add(((MapElement)physicalLinks.get(i)).clone(dataSource));
-		mc.transmissionPath = new Vector(transmissionPath.size());
+		mc.transmissionPath = new ArrayList(transmissionPath.size());
 		for (int i = 0; i < transmissionPath.size(); i++)
 			mc.transmissionPath.add(((MapElement)transmissionPath.get(i)).clone(dataSource));
 		
-		mc.mark_ids = new Vector(mark_ids.size());
+		mc.mark_ids = new ArrayList(mark_ids.size());
 		for (int i = 0; i < mark_ids.size(); i++)
 			mc.mark_ids.add(Pool.get("mapclonedids", (String )mark_ids.get(i)));
-		mc.nodelink_ids = new Vector(nodelink_ids.size());
+		mc.nodelink_ids = new ArrayList(nodelink_ids.size());
 		for (int i = 0; i < nodelink_ids.size(); i++)
 			mc.nodelink_ids.add(Pool.get("mapclonedids", (String )nodelink_ids.get(i)));
-		mc.node_ids = new Vector(node_ids.size());
+		mc.node_ids = new ArrayList(node_ids.size());
 		for (int i = 0; i < node_ids.size(); i++)
 			mc.node_ids.add(Pool.get("mapclonedids", (String )node_ids.get(i)));
-		mc.equipment_ids = new Vector(equipment_ids.size());
+		mc.equipment_ids = new ArrayList(equipment_ids.size());
 		for (int i = 0; i < equipment_ids.size(); i++)
 			mc.equipment_ids.add(Pool.get("mapclonedids", (String )equipment_ids.get(i)));
-		mc.kis_ids = new Vector(kis_ids.size());
-		for (int i = 0; i < kis_ids.size(); i++)
-			mc.kis_ids.add(Pool.get("mapclonedids", (String )kis_ids.get(i)));
-		mc.link_ids = new Vector(link_ids.size());
+		mc.link_ids = new ArrayList(link_ids.size());
 		for (int i = 0; i < link_ids.size(); i++)
 			mc.link_ids.add(Pool.get("mapclonedids", (String )link_ids.get(i)));
-		mc.path_ids = new Vector(path_ids.size());
+		mc.path_ids = new ArrayList(path_ids.size());
 		for (int i = 0; i < path_ids.size(); i++)
 			mc.path_ids.add(Pool.get("mapclonedids", (String )path_ids.get(i)));
 
@@ -204,10 +226,12 @@ public class MapContext extends ObjectResource implements Serializable
 		return mc;
 	}
 	
-//Устанавливаем переменные класса из базы данных
+	/**
+	 * Восстановление локальных переменных класса при подгрузке из базы данных
+	 */
 	public void setLocalFromTransferable()
 	{
-		int l;
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setLocalFromTransferable()");
 		int i;
 		int count;
 
@@ -234,45 +258,44 @@ public class MapContext extends ObjectResource implements Serializable
 		defaultScale = transferable.defaultZoomFactor;
 
 		count = transferable.node_ids.length;
-		node_ids = new Vector(count);
+		node_ids = new ArrayList(count);
 		for(i = 0; i < count; i++)
-		node_ids.add(transferable.node_ids[i]);
+			node_ids.add(transferable.node_ids[i]);
 
 		count = transferable.equipment_ids.length;
-		equipment_ids = new Vector(count);
+		equipment_ids = new ArrayList(count);
 		for(i = 0; i < count; i++)
 			equipment_ids.add(transferable.equipment_ids[i]);
 
-		count = transferable.kis_ids.length;
-		kis_ids = new Vector(count);
-		for(i = 0; i < count; i++)
-			kis_ids.add(transferable.kis_ids[i]);
-
 		count = transferable.nodeLink_ids.length;
-		nodelink_ids = new Vector(count);
+		nodelink_ids = new ArrayList(count);
 		for(i = 0; i < count; i++)
 			nodelink_ids.add(transferable.nodeLink_ids[i]);
 
 		count = transferable.physicalLink_ids.length;
-		link_ids = new Vector(count);
+		link_ids = new ArrayList(count);
 		for(i = 0; i < count; i++)
 			link_ids.add(transferable.physicalLink_ids[i]);
 
 		count = transferable.path_ids.length;
-		path_ids = new Vector(count);
+		path_ids = new ArrayList(count);
 		for(i = 0; i < count; i++)
 			path_ids.add(transferable.path_ids[i]);
 
 		count = transferable.mark_ids.length;
-		mark_ids = new Vector(count);
+		mark_ids = new ArrayList(count);
 		for(i = 0; i < count; i++)
 			mark_ids.add(transferable.mark_ids[i]);
 	}
 
-//Передаём переменные в transferable которая используется для передачи их в базу данных
+	/**
+	 * Установка полей в transferable по значениям локальных переменных
+	 * для сохранения в базе данных
+	 */
 	public void setTransferableFromLocal()
 	{
-		int l;
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setTransferableFromLocal()");
+		
 		int i;
 		int count;
 		ObjectResource os;
@@ -284,8 +307,6 @@ public class MapContext extends ObjectResource implements Serializable
 		transferable.domain_id = domain_id;
 		transferable.description = description;
 		transferable.showPhysicalNodeElement = showPhysicalNodeElement;
-//		transferable.zoomFactor = zoomFactor;
-//		transferable.defaultZoomFactor = defaultZoomFactor;
 		transferable.zoomFactor = currentScale;
 		transferable.defaultZoomFactor = defaultScale;
 		transferable.modified = System.currentTimeMillis();
@@ -296,13 +317,10 @@ public class MapContext extends ObjectResource implements Serializable
 
 		transferable.longitude = String.valueOf(longitude);
 		transferable.latitude = String.valueOf(latitude);
-//		transferable.longitude = String.valueOf( logicalNetLayer.viewer.getCenter()[0]);
-//		transferable.latitude = String.valueOf( logicalNetLayer.viewer.getCenter()[1]);
 
-		node_ids = new Vector();
-		kis_ids = new Vector();
-		equipment_ids = new Vector();
-		mark_ids = new Vector();
+		node_ids = new ArrayList();
+		equipment_ids = new ArrayList();
+		mark_ids = new ArrayList();
 
 		count = nodes.size();
 		for(i = 0; i < count; i++)
@@ -312,108 +330,112 @@ public class MapContext extends ObjectResource implements Serializable
 				node_ids.add(os.getId());
 			if(os.getTyp().equals("mapequipmentelement"))
 				equipment_ids.add(os.getId());
-			if(os.getTyp().equals("mapkiselement"))
-				kis_ids.add(os.getId());
 			if(os.getTyp().equals("mapmarkelement"))
 				mark_ids.add(os.getId());
 		}
-		transferable.node_ids = new String[node_ids.size()];
-		node_ids.copyInto(transferable.node_ids);
-		transferable.equipment_ids = new String[equipment_ids.size()];
-		equipment_ids.copyInto(transferable.equipment_ids);
-		transferable.kis_ids = new String[kis_ids.size()];
-		kis_ids.copyInto(transferable.kis_ids);
-		transferable.mark_ids = new String[mark_ids.size()];
-		mark_ids.copyInto(transferable.mark_ids);
+		transferable.node_ids = (String [])node_ids.toArray(new String[node_ids.size()]);
+		transferable.equipment_ids = (String [])equipment_ids.toArray(new String[equipment_ids.size()]);
+		transferable.kis_ids = new String[0];
+		transferable.mark_ids = (String [])mark_ids.toArray(new String[mark_ids.size()]);
 
-		count = nodeLinks.size();
-		nodelink_ids = new Vector();
-		for(i = 0; i < count; i++)
+		nodelink_ids = new ArrayList();
+		
+		for(Iterator it = nodeLinks.iterator(); it.hasNext();)
 		{
-			os = (ObjectResource)nodeLinks.get(i);
+			os = (ObjectResource )it.next();
 			nodelink_ids.add(os.getId());
 		}
-		transferable.nodeLink_ids = new String[nodelink_ids.size()];
-		nodelink_ids.copyInto(transferable.nodeLink_ids);
+		transferable.nodeLink_ids = (String [])nodelink_ids.toArray(new String[nodelink_ids.size()]);
 
-		count = physicalLinks.size();
-		link_ids = new Vector();
-		for(i = 0; i < count; i++)
+		link_ids = new ArrayList();
+		for(Iterator it = physicalLinks.iterator(); it.hasNext();)
 		{
-			os = (ObjectResource)physicalLinks.get(i);
+			os = (ObjectResource)it.next();
 			link_ids.add(os.getId());
 		}
-		transferable.physicalLink_ids = new String[link_ids.size()];
-		link_ids.copyInto(transferable.physicalLink_ids);
+		transferable.physicalLink_ids = (String [])link_ids.toArray(new String[link_ids.size()]);
 
-		count = transmissionPath.size();
-		path_ids = new Vector();
-		for(i = 0; i < count; i++)
+		path_ids = new ArrayList();
+		for(Iterator it = transmissionPath.iterator(); it.hasNext();)
 		{
-			os = (ObjectResource)transmissionPath.get(i);
+			os = (ObjectResource)it.next();
 			path_ids.add(os.getId());
 		}
-		transferable.path_ids = new String[path_ids.size()];
-		path_ids.copyInto(transferable.path_ids);
+		transferable.path_ids = (String [])path_ids.toArray(new String[path_ids.size()]);
 	}
 
+	/**
+	 * 
+	 */
 	public String getTyp()
 	{
 		return typ;
 	}
 
+	/**
+	 * геттер
+	 */
 	public String getName()
 	{
 		return name;
 	}
 
+	/**
+	 * геттер
+	 */
 	public String getId()
 	{
 		return id;
 	}
 
+	/**
+	 * геттер
+	 */
 	public String getDomainId()
 	{
 		return domain_id;
 	}
 	
+	/**
+	 * геттер
+	 */
 	public long getModified()
 	{
 		return modified;
 	}
 
-//Используется для для загрузки элементов в класс
-//при востановлении класса из базы данных
+	/**
+	 * Используется для обновления содержимого локальных переменных по 
+	 * значениям, полученным из transferable
+	 */
 	public void updateLocalFromTransferable()
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "updateLocalFromTransferable()");
+		
 		int l;
 		int i;
 
 		l = node_ids.size();
-		nodes = new Vector();
+		nodes = new ArrayList();
 		for(i = 0; i < l; i++)
-		nodes.add(Pool.get("mapnodeelement", (String)node_ids.get(i)));
+			nodes.add(Pool.get("mapnodeelement", (String)node_ids.get(i)));
 
 		l = equipment_ids.size();
-		for(i = 0; i	 < l; i++)
+		for(i = 0; i < l; i++)
 			nodes.add(Pool.get("mapequipmentelement", (String)equipment_ids.get(i)));
 
-		l = kis_ids.size();
-		for(i = 0; i	 < l; i++)
-			nodes.add(Pool.get("mapkiselement", (String)kis_ids.get(i)));
-
 		l = nodelink_ids.size();
-		nodeLinks = new Vector();
+		nodeLinks = new ArrayList();
 		for(i = 0; i < l; i++)
 			nodeLinks.add(Pool.get("mapnodelinkelement", (String)nodelink_ids.get(i)));
 
 		l = link_ids.size();
-		physicalLinks = new Vector();
+		physicalLinks = new ArrayList();
 		for(i = 0; i < l; i++)
 			physicalLinks.add(Pool.get("maplinkelement", (String)link_ids.get(i)));
 
 		l = path_ids.size();
-		transmissionPath = new Vector();
+		transmissionPath = new ArrayList();
 		for(i = 0; i < l; i++)
 			transmissionPath.add(Pool.get("mappathelement", (String)path_ids.get(i)));
 
@@ -422,8 +444,13 @@ public class MapContext extends ObjectResource implements Serializable
 			nodes.add(Pool.get("mapmarkelement", (String)mark_ids.get(i)));
 	}
 
+	/**
+	 * обновление локального содержимого объектов, содержащихся в контексте
+	 */
 	public void updateFromPool()
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "updateFromPool()");
+		
 		int i;
 		
 		for(i = 0; i < nodes.size(); i++)
@@ -448,35 +475,60 @@ public class MapContext extends ObjectResource implements Serializable
 		}
 	}
 
+	/**
+	 * получить объект для сохранения в базе данных
+	 */
 	public Object getTransferable()
 	{
 		return transferable;
 	}
 
+	/**
+	 * получить модель объекта
+	 */
 	public ObjectResourceModel getModel()
 	{
 		return new MapContextModel(this);
 	}
 
+	/**
+	 * получить панель свойств
+	 */
 	public static PropertiesPanel getPropertyPane()
 	{
 		return new MapContextPane();
 	}
 
+	/**
+	 * получить модель отображения в таблице
+	 */
 	public static ObjectResourceDisplayModel getDefaultDisplayModel()
 	{
 		return new MapContextDisplayModel();
 	}
 
+	/**
+	 * флаг того, что контекст открыт в окне карты
+	 */
 	public boolean isOpened()
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "isOpened()");
+		
 		return (logicalNetLayer != null);
 	}
 
+	/**
+	 * установить ссылку на класс логической схемы, что соответствует открытию 
+	 * контекста в окне карты
+	 */
 	public void setLogicalNetLayer(LogicalNetLayer logical)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setLogicalNetLayer(" + logical + ")");
+		
 		logicalNetLayer = logical;
-		curMapElement = new VoidMapElement(getLogicalNetLayer());//Поумолчанию текущий элемент Void
+
+		//Поумолчанию текущий элемент Void
+		curMapElement = new VoidMapElement(getLogicalNetLayer());
 
 		if(logicalNetLayer != null)
 		{
@@ -490,58 +542,82 @@ public class MapContext extends ObjectResource implements Serializable
 
 	}
 	
-//Установить флаг видимости PhysicalNodeElement
+	/**
+	 * Установить флаг видимости PhysicalNodeElement
+	 */
 	public void setPhysicalNodeElementVisibility(boolean visibility)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setPhysicalNodeElementVisibility(" + visibility + ")");
+		
 		showPhysicalNodeElement = visibility;
 	}
 
-//Получение флага видимости PhysicalNodeElement
+	/**
+	 * Получение флага видимости PhysicalNodeElement
+	 */
 	public boolean isPhysicalNodeElementVisible()
 	{
 		return showPhysicalNodeElement;
 	}
 
-//Получение вектора элементов наследников класса Node
-	public Vector getNodes()
+	/**
+	 * Получение элементов - наследников класса Node
+	 */
+	public ArrayList getNodes()
 	{
 		return nodes;
 	}
 
-//Установить вектор элементов наследников класса Node
-	public void setNodes (Vector myNodes)
+	/**
+	 * Установить список элементов наследников класса Node
+	 */
+	public void setNodes (ArrayList myNodes)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setNodes(" + myNodes + ")");
 		nodes = myNodes;
 	}
 
-//Добавить MapNodeElement
+	/**
+	 * Добавить новый MapNodeElement
+	 */
 	public void addNode(MapNodeElement ob)
 	{
-		nodes.add( ob);
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "addNode(" + ob + ")");
+		
+		nodes.add(ob);
 	}
 
-//Удалить MapNodeElement
+	/**
+	 * Удалить MapNodeElement
+	 */
 	public void removeNode(MapNodeElement ob)
 	{
-		nodes.removeElement( ob);
-//		deleted_nodes_ids.add(ob.getId());
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "removeNode(" + ob + ")");
+		
+		nodes.remove(ob);
 		removedElements.add(ob);
 	}
 
-//Получение вектора элементов типа NodeLinks
-	public Vector getNodeLinks()
+	/**
+	 * Получение список элементов типа NodeLinks
+	 */
+	public ArrayList getNodeLinks()
 	{
 		return nodeLinks;
 	}
 
-//Получение MapNodeLinkElement по его ID
+	/**
+	 * Получение MapNodeLinkElement по его ID
+	 */
 	public MapNodeLinkElement getNodeLink(String mapNodeLinkElementID)
 	{
-		Enumeration e = getNodeLinks().elements();
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getNodeLink(" + mapNodeLinkElementID + ")");
+		
+		Iterator e = getNodeLinks().iterator();
 
-		while (e.hasMoreElements())
+		while (e.hasNext())
 		{
-			MapNodeLinkElement nodeLink = (MapNodeLinkElement)e.nextElement();
+			MapNodeLinkElement nodeLink = (MapNodeLinkElement)e.next();
 			if ( nodeLink.getId().equals( mapNodeLinkElementID) )
 			{
 				return nodeLink;
@@ -550,14 +626,18 @@ public class MapContext extends ObjectResource implements Serializable
 		return null;
 	}
 
-//Получение MapPhysicalLinkElement по его ID
+	/**
+	 * Получение MapPhysicalLinkElement по его ID
+	 */
 	public MapPhysicalLinkElement getPhysicalLink(String mapPhysicalLinkElementID)
 	{
-		Enumeration e = this.getPhysicalLinks().elements();
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getPhysicalLink(" + mapPhysicalLinkElementID + ")");
+		
+		Iterator e = this.getPhysicalLinks().iterator();
 
-		while (e.hasMoreElements())
+		while (e.hasNext())
 		{
-			MapPhysicalLinkElement physicalLink = (MapPhysicalLinkElement)e.nextElement();
+			MapPhysicalLinkElement physicalLink = (MapPhysicalLinkElement)e.next();
 			if ( physicalLink.getId().equals( mapPhysicalLinkElementID) )
 			{
 				return physicalLink;
@@ -566,34 +646,49 @@ public class MapContext extends ObjectResource implements Serializable
 		return null;
 	}
 
-//Установить вектор элементов типа NodeLinks
-	public void setNodeLinks (Vector myNodeLinks)
+	/**
+	 * Установить список элементов типа NodeLinks
+	 */
+	public void setNodeLinks (ArrayList myNodeLinks)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setNodeLinks(" + myNodeLinks + ")");
+		
 		nodeLinks = myNodeLinks;
 	}
 
-//добавить MapNodeLinkElement
+	/**
+	 * добавить новый MapNodeLinkElement
+	 */
 	public void addNodeLink(MapNodeLinkElement ob)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "addNodeLink(" + ob + ")");
+		
 		nodeLinks.add( ob);
 	}
 
-//Удалить MapNodeLinkElement
+	/**
+	 * Удалить MapNodeLinkElement
+	 */
 	public void removeNodeLink(MapNodeLinkElement ob)
 	{
-		nodeLinks.removeElement( ob);
-//		deleted_nodeLinks_ids.add(ob.getId());
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "removeNodeLink(" + ob + ")");
+		
+		nodeLinks.remove(ob);
 		removedElements.add(ob);
 	}
 
-//Проверка того, что хотя бы один элемент выбран
+	/**
+	 * Проверка того, что хотя бы один элемент выбран
+	 */
 	public boolean isSelectionEmpty()
 	{
-		Enumeration e = this.getAllElements().elements();
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "isSelectionEmpty()");
+		
+		Iterator e = this.getAllElements().iterator();
 
-		while (e.hasMoreElements())
+		while (e.hasNext())
 		{
-			MapElement curElement = (MapElement)e.nextElement();
+			MapElement curElement = (MapElement )e.next();
 			if (curElement.isSelected())
 			{
 				return false;
@@ -602,10 +697,13 @@ public class MapContext extends ObjectResource implements Serializable
 		return true;
 	}
 
-
-//Установить текущий элемент по коордитате на карте
+	/**
+	 * Установить текущий элемент по координате на карте
+	 */
 	public void setCurrentMapElement (Point myPoint)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setCurrentMapElement(" + myPoint + ")");
+		
 		//Здесь пробегаемся по всем элементам и если на каком-нибудь из них курсор
 		//то устанавливаем его текущим элементом
 		for (int i = 0;i < markers.size(); i++)
@@ -617,11 +715,11 @@ public class MapContext extends ObjectResource implements Serializable
 				return;
 			}
 		}
-//A0A
-		Enumeration e = getAllElements().elements();
-		while (e.hasMoreElements())
+
+		Iterator e = getAllElements().iterator();
+		while (e.hasNext())
 		{
-			MapElement mapElement = (MapElement)e.nextElement();
+			MapElement mapElement = (MapElement )e.next();
 			if (mapElement.isMouseOnThisObject(myPoint))
 			{
 				if ( mapElement instanceof MapNodeElement)
@@ -642,7 +740,7 @@ public class MapContext extends ObjectResource implements Serializable
 
 					if ( linkState == MapContext.SHOW_PHYSICALLINK)
 					{
-						curMapElement = getPhysicalLinkbyNodeLink( mapElement.getId());
+						curMapElement = getPhysicalLinkbyNodeLink(mapElement.getId());
 						notifySchemeEvent(curMapElement);
 						notifyCatalogueEvent(curMapElement);
 						return;
@@ -652,14 +750,16 @@ public class MapContext extends ObjectResource implements Serializable
 					{
 						Dispatcher dispatcher = logicalNetLayer.mapMainFrame.aContext.getDispatcher();
 
-						Enumeration e1 = getTransmissionPathByNodeLink( mapElement.getId()).elements();
-						while( e1.hasMoreElements())
+						Iterator e1 = getTransmissionPathByNodeLink(mapElement.getId()).iterator();
+						while( e1.hasNext())
 						{
-							MapTransmissionPathElement path = (MapTransmissionPathElement)e1.nextElement();
+							MapTransmissionPathElement path = (MapTransmissionPathElement )e1.next();
 							path.select();
 
 							this.logicalNetLayer.perform_processing = false;
-							MapNavigateEvent mne = new MapNavigateEvent(this, MapNavigateEvent.MAP_PATH_SELECTED_EVENT);
+							MapNavigateEvent mne = new MapNavigateEvent(
+									this, 
+									MapNavigateEvent.MAP_PATH_SELECTED_EVENT);
 							mne.mappathID = path.getId();
 							dispatcher.notify(mne);
 							this.logicalNetLayer.perform_processing = true;
@@ -681,14 +781,18 @@ public class MapContext extends ObjectResource implements Serializable
 		curMapElement = new VoidMapElement(this.getLogicalNetLayer());
 	}
 
-//Установить текущий элемент по коордитате на карте
+	/**
+	 * Получить MapNodeLinkElement, для которого булет произволиться
+	 * редактирование длины, по коордитате на карте
+	 */
 	public MapNodeLinkElement getEditedNodeLink(Point myPoint)
 	{
-
-		Enumeration e = this.nodeLinks.elements();
-		while (e.hasMoreElements())
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getEditedNodeLink(" + myPoint + ")");
+		
+		Iterator e = this.nodeLinks.iterator();
+		while (e.hasNext())
 		{
-			MapNodeLinkElement mapElement = (MapNodeLinkElement)e.nextElement();
+			MapNodeLinkElement mapElement = (MapNodeLinkElement )e.next();
 			if (mapElement.isMouseOnThisObjectsLabel(myPoint))
 			{
 				return mapElement;
@@ -697,8 +801,13 @@ public class MapContext extends ObjectResource implements Serializable
 		return null;
 	}
 
+	/**
+	 * Генерация сообщеия о выборке элемента карты
+	 */
 	public void notifySchemeEvent(MapElement mapElement)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "notifySchemeEvent(" + mapElement + ")");
+		
 		SchemeNavigateEvent sne;
 		Dispatcher dispatcher = logicalNetLayer.mapMainFrame.aContext.getDispatcher();
 		try 
@@ -759,8 +868,13 @@ public class MapContext extends ObjectResource implements Serializable
 		catch (Exception ex){ } 
 	}
 
+	/**
+	 * Генерация сообщения о выборке элемента каталога
+	 */
 	public void notifyCatalogueEvent(MapElement mapElement)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "notifyCatalogueEvent(" + mapElement + ")");
+		
 		CatalogNavigateEvent cne;
 		Dispatcher dispatcher = logicalNetLayer.mapMainFrame.aContext.getDispatcher();
 		try 
@@ -828,26 +942,36 @@ public class MapContext extends ObjectResource implements Serializable
 		catch (Exception ex){ } 
 	}
 
-
-//Получить текущий элемент
+	/**
+	 * Получить текущий выбранный элемент
+	 */
 	public MapElement getCurrentMapElement()
 	{
 		return curMapElement;
 	}
 
+	/**
+	 * Установить текущий выбранный элемент
+	 */
 	public void setCurrent(MapElement curMapElement)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setCurrent(" + curMapElement + ")");
+		
 		this.curMapElement = curMapElement;
 	}
 
-//Получить текущий элемент по коордитате на карте
+	/**
+	 * Получить текущий элемент по коордитате на карте
+	 */
 	public MapElement getCurrentMapElement(Point myPoint)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getCurrentMapElement(" + myPoint + ")");
+		
 		MapElement curME = new VoidMapElement(this.getLogicalNetLayer());
-		Enumeration e = getAllElements().elements();
-		while (e.hasMoreElements())
+		Iterator e = getAllElements().iterator();
+		while (e.hasNext())
 		{
-			MapElement mapElement = (MapElement)e.nextElement();
+			MapElement mapElement = (MapElement )e.next();
 			if ( mapElement.isMouseOnThisObject(myPoint))
 			{
 				if ( mapElement instanceof MapNodeLinkElement)
@@ -867,10 +991,10 @@ public class MapContext extends ObjectResource implements Serializable
 
 					if ( linkState == MapContext.SHOW_TRANSMISSION_PATH)
 					{
-						Enumeration e1 = getTransmissionPathByNodeLink( mapElement.getId()).elements();
-						if( e1.hasMoreElements())
+						Iterator e1 = getTransmissionPathByNodeLink(mapElement.getId()).iterator();
+						if( e1.hasNext())
 						{
-							MapTransmissionPathElement path = (MapTransmissionPathElement)e1.nextElement();
+							MapTransmissionPathElement path = (MapTransmissionPathElement )e1.next();
 
 							curME = path;
 							break;
@@ -885,55 +1009,65 @@ public class MapContext extends ObjectResource implements Serializable
 		return curME;
 	}
 
-//Получить NodeLinks содержащие заданный Node
-	public Vector getNodeLinksContainingNode(MapNodeElement myNode)
+	/**
+	 * Получить список NodeLinks, содержащих заданный Node
+	 */
+	public LinkedList getNodeLinksContainingNode(MapNodeElement myNode)
 	{
-		Vector returnNodeLink = new Vector();
-		Enumeration e = nodeLinks.elements();
-
-		while (e.hasMoreElements())
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getNodeLinksContainingNode(" + myNode + ")");
+		
+		LinkedList returnNodeLink = new LinkedList();
+		for(Iterator it = nodeLinks.iterator(); it.hasNext();)
 		{
-			MapNodeLinkElement myNodeLink = (MapNodeLinkElement)e.nextElement();
-//Если один из концов является данным myNode то добавляем его в вектор
+			MapNodeLinkElement myNodeLink = (MapNodeLinkElement )it.next();
+			
+			//Если один из концов является данным myNode то добавляем его в вектор
 			if ( (myNodeLink.endNode == myNode) || (myNodeLink.startNode == myNode))
 			{
 				returnNodeLink.add(myNodeLink);
 			}
-
 		}
 
 		return returnNodeLink;
 	}
 
-//Получить PhysicalLink содержащие заданный Node
-	public Vector getPhysicalLinksContainingNode(MapNodeElement myNode)
+//
+	/**
+	 * Получить список PhysicalLink, содержащих заданный Node
+	 */
+	public LinkedList getPhysicalLinksContainingNode(MapNodeElement myNode)
 	{
-		Vector returnPhysicalLink = new Vector();
-		Enumeration e = this.physicalLinks.elements();
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getPhysicalLinksContainingNode(" + myNode + ")");
+		
+		LinkedList returnPhysicalLink = new LinkedList();
 
-		while (e.hasMoreElements())
+		for(Iterator it = physicalLinks.iterator(); it.hasNext();)
 		{
-			MapPhysicalLinkElement myPhysicalLink = (MapPhysicalLinkElement)e.nextElement();
-//Если один из концов является данным myNode то добавляем его в вектор
+			MapPhysicalLinkElement myPhysicalLink = (MapPhysicalLinkElement )it.next();
+			
+			//Если один из концов является данным myNode то добавляем его в вектор
 			if ( (myPhysicalLink.endNode == myNode) || (myPhysicalLink.startNode == myNode) )
 			{
 				returnPhysicalLink.add( myPhysicalLink);
 			}
-
 		}
 
 		return returnPhysicalLink;
 	}
 
-//Получить NodeLinks содержащиеся в PhysicalLink по physicalLinkID
-	public Vector getNodeLinksInPhysicalLink(String physicalLinkID)
+	/**
+	 * Получить список NodeLinks, содержащихся в PhysicalLink по physicalLinkID
+	 */
+	public LinkedList getNodeLinksInPhysicalLink(String physicalLinkID)
 	{
-		Vector returnNodeLink = new Vector();
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getNodeLinksInPhysicalLink(" + physicalLinkID + ")");
+		
+		LinkedList returnNodeLink = new LinkedList();
 
-		Enumeration e = physicalLinks.elements();
-		while (e.hasMoreElements())
+		Iterator e = physicalLinks.iterator();
+		while (e.hasNext())
 		{
-			MapPhysicalLinkElement myPhysicalLink = (MapPhysicalLinkElement)e.nextElement();
+			MapPhysicalLinkElement myPhysicalLink = (MapPhysicalLinkElement)e.next();
 
 			if ( myPhysicalLink.getId().equals(physicalLinkID) )
 			{
@@ -952,31 +1086,38 @@ public class MapContext extends ObjectResource implements Serializable
 		return returnNodeLink;
 	}
 
-//Получить NodeLinks содержащиеся в TransmissionPath по pathID
-	public Vector getNodeLinksInTransmissionPath(String pathID)
+	/**
+	 * Получить список NodeLinks, содержащиеся в TransmissionPath, по pathID
+	 */
+	public LinkedList getNodeLinksInTransmissionPath(String pathID)
 	{
-		Vector returnNodeLink = new Vector();
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getNodeLinksInTransmissionPath(" + pathID + ")");
+		
+		LinkedList returnNodeLink = new LinkedList();
 		MapTransmissionPathElement transmissionPath = getMapTransmissionPathElement(pathID);
 
-		Enumeration e = transmissionPath.physicalLink_ids.elements();
-		while( e.hasMoreElements())
+		Iterator e = transmissionPath.physicalLink_ids.iterator();
+		while( e.hasNext())
 		{
-			String physicalLinkID = (String)e.nextElement();
-			/// returnNodeLink.
+			String physicalLinkID = (String )e.next();
 			returnNodeLink.addAll(getNodeLinksInPhysicalLink(physicalLinkID));
 		}
 		return returnNodeLink;
 	}
 
-//Получить вектор Node противоположных у элемета NodeLink по заданному Node
-	public Vector getOtherNodeOfNodeLinksContainingNode(MapNodeElement myNode)
+	/**
+	 * Получить вектор Node противоположных у элемета NodeLink по заданному Node
+	 */
+	public LinkedList getOtherNodeOfNodeLinksContainingNode(MapNodeElement myNode)
 	{
-		Enumeration e = getNodeLinksContainingNode(myNode).elements();
-		Vector returnNodeLink = new Vector();
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getOtherNodeOfNodeLinksContainingNode(" + myNode + ")");
+		
+		Iterator e = getNodeLinksContainingNode(myNode).iterator();
+		LinkedList returnNodeLink = new LinkedList();
 
-		while (e.hasMoreElements())
+		while (e.hasNext())
 		{
-			MapNodeLinkElement myNodeLink = (MapNodeLinkElement)e.nextElement();
+			MapNodeLinkElement myNodeLink = (MapNodeLinkElement )e.next();
 
 			if ( myNodeLink.endNode == myNode )
 			{
@@ -991,9 +1132,13 @@ public class MapContext extends ObjectResource implements Serializable
 		return returnNodeLink;
 	}
 
-//Получить другой конец NodeLink по заданному NodeElement
+	/**
+	 * Получить другой конец NodeLink по заданному NodeElement
+	 */
 	public MapNodeElement getOtherNodeOfNodeLink(MapNodeLinkElement myNodeLink, MapNodeElement myNode)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getOtherNodeOfNodeLink(" + myNodeLink + ", " + myNode + ")");
+		
 
 		if ( myNodeLink.endNode == myNode )
 		{
@@ -1006,9 +1151,13 @@ public class MapContext extends ObjectResource implements Serializable
 		return null;
 	}
 
-//Получить другой конец PhysicalLink по заданному NodeElement
+	/**
+	 * Получить другой конец PhysicalLink по заданному NodeElement
+	 */
 	public MapNodeElement getOtherNodeOfPhysicalLink(MapPhysicalLinkElement myPhysicalLink, MapNodeElement myNode)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getOtherNodeOfPhysicalLink(" + myPhysicalLink + ", " + myNode + ")");
+		
 
 		if ( myPhysicalLink.endNode == myNode )
 		{
@@ -1021,85 +1170,127 @@ public class MapContext extends ObjectResource implements Serializable
 		return null;
 	}
 
-
-//Отменитьe выбор всем элементам
+	/**
+	 * Отменить выбор всем элементам
+	 */
 	public void deselectAll()
 	{
-		Enumeration e = getAllElements().elements();
-		while ( e.hasMoreElements())
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "deselectAll()");
+		
+		Iterator e = getAllElements().iterator();
+		while ( e.hasNext())
 		{
-			MapElement mapElement = (MapElement)e.nextElement();
+			MapElement mapElement = (MapElement)e.next();
 			mapElement.deselect();
 		}
 	}
 
-//Выбрать всё
+//
+	/**
+	 * Выбрать все элеметны
+	 */
 	public void selectAll()
 	{
-		Enumeration e = this.getAllElements().elements();
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "selectAll()");
+		
+		Iterator e = this.getAllElements().iterator();
 
-		while(e.hasMoreElements())
+		while(e.hasNext())
 		{
-			MapElement curElement = (MapElement)e.nextElement();
+			MapElement curElement = (MapElement)e.next();
 			curElement.select();
 		}
 	}
 
-	public void initColumnSizes(JTable table)
+	/**
+	 * Установпить список физических линий
+	 */
+	public void setPhysicalLinks(ArrayList vec)
 	{
-	}
-
-	public void setPhysicalLinks(Vector vec)
-	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setPhysicalLinks(" + vec + ")");
+		
 		physicalLinks = vec;
 	}
 
-	public Vector getPhysicalLinks()
+	/**
+	 * Получить список физических линий
+	 */
+	public ArrayList getPhysicalLinks()
 	{
 		return physicalLinks;
 	}
 
+	/**
+	 * Добавить новую физическую линию
+	 */
 	public void addPhysicalLink(MapPhysicalLinkElement ob)
 	{
-		physicalLinks.add( ob);
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "addPhysicalLink(" + ob + ")");
+		
+		physicalLinks.add(ob);
 	}
 
+	/**
+	 * Удалить физическую линию
+	 */
 	public void removePhysicalLink(MapPhysicalLinkElement ob)
 	{
-		physicalLinks.removeElement( ob);
-//		deleted_physicalLinks_ids.add( ob.getId());
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "removePhysicalLink(" + ob + ")");
+		
+		physicalLinks.remove(ob);
 		removedElements.add(ob);
 	}
 
-	public void setTransmissionPath(Vector vec)
+	/**
+	 * Установить 
+	 */
+	public void setTransmissionPath(ArrayList vec)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setTransmissionPath(" + vec + ")");
+		
 		transmissionPath = vec;
 	}
 
-	public Vector getTransmissionPath()
+	/**
+	 * Получить список путей тестирования
+	 */
+	public ArrayList getTransmissionPath()
 	{
 		return transmissionPath;
 	}
 
+	/**
+	 * Добавить новый путь тестирования
+	 */
 	public void addTransmissionPath(MapTransmissionPathElement ob)
 	{
-		transmissionPath.add( ob);
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "addTransmissionPath(" + ob + ")");
+		
+		transmissionPath.add(ob);
 	}
 
+	/**
+	 * Удалить путь тестирования
+	 */
 	public void removeTransmissionPath(MapTransmissionPathElement ob)
 	{
-		transmissionPath.removeElement( ob);
-//		deleted_transmissionPath_ids.add( ob.getId());
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "removeTransmissionPath(" + ob + ")");
+		
+		transmissionPath.remove(ob);
 		removedElements.add(ob);
 	}
 
-//Получить MapPhysicalLinkElement по NodeLink который он содержит
+	/**
+	 * Получить MapPhysicalLinkElement по NodeLink который он содержит
+	 */
 	public MapPhysicalLinkElement getPhysicalLinkbyNodeLink(String nodeLinkElementID)
 	{
-		Enumeration e = getPhysicalLinks().elements();
-		while (e.hasMoreElements())
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getPhysicalLinkbyNodeLink(" + nodeLinkElementID + ")");
+		
+		Iterator e = getPhysicalLinks().iterator();
+		while (e.hasNext())
 		{
-			MapPhysicalLinkElement physicalLink = (MapPhysicalLinkElement)e.nextElement();
+			MapPhysicalLinkElement physicalLink = (MapPhysicalLinkElement )e.next();
 			if ( physicalLink.nodeLink_ids.contains(nodeLinkElementID) )
 			{
 				return physicalLink;
@@ -1108,15 +1299,20 @@ public class MapContext extends ObjectResource implements Serializable
 		return null;
 	}
 
-//Получить вектор TransmissionPath элементов, которые содержат MapPhysicalLinkElement, по physicalLinkID
-	public Vector getTransmissionPathByPhysicalLink(String physicalLinkID)
+	/**
+	 * Получить вектор TransmissionPath элементов, которые содержат
+	 * MapPhysicalLinkElement, по physicalLinkID
+	 */
+	public LinkedList getTransmissionPathByPhysicalLink(String physicalLinkID)
 	{
-		Vector returnVector = new Vector();;
-		Enumeration e = getTransmissionPath().elements();
-		while (e.hasMoreElements())
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getTransmissionPathByPhysicalLink(" + physicalLinkID + ")");
+		
+		LinkedList returnVector = new LinkedList();;
+		Iterator e = getTransmissionPath().iterator();
+		while (e.hasNext())
 		{
-			MapTransmissionPathElement transmissionPath = (MapTransmissionPathElement)e.nextElement();
-			if ( transmissionPath.physicalLink_ids.contains( physicalLinkID) )
+			MapTransmissionPathElement transmissionPath = (MapTransmissionPathElement )e.next();
+			if ( transmissionPath.physicalLink_ids.contains(physicalLinkID) )
 			{
 				returnVector.add(transmissionPath);
 			}
@@ -1124,29 +1320,42 @@ public class MapContext extends ObjectResource implements Serializable
 		return returnVector;
 	}
 
-	//Получить вектор TransmissionPath элементов, которые содержат MapNodeLinkElement, по nodeLinkID
-
-	public Vector getTransmissionPathByNodeLink(String nodeLinkID)
+	/**
+	 * Получить список TransmissionPath элементов, которые содержат 
+	 * MapNodeLinkElement, по nodeLinkID
+	 */
+	public LinkedList getTransmissionPathByNodeLink(String nodeLinkID)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getTransmissionPathByNodeLink(" + nodeLinkID + ")");
+		
 		return getTransmissionPathByPhysicalLink(
 				getPhysicalLinkbyNodeLink(nodeLinkID).getId());
 	}
 
+	/**
+	 * Установить значения долготы, широты
+	 */
 	public void setLongLat( double longit, double latit)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setLongLat(" + longit + ", " + latit + ")");
+		
 		longitude = longit;
 		latitude = latit;
 	}
 
-//A0A
+	/**
+	 * Удалить путь тестирования, содержащий физическую линию
+	 */
 	public void deleteTranmissionPath( String physicalLinkID)
 	{
-
-		Enumeration e = getTransmissionPath().elements();
-		while (e.hasMoreElements())
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "deleteTranmissionPath(" + physicalLinkID + ")");
+		
+		Iterator e = getTransmissionPath().iterator();
+		while (e.hasNext())
 		{
-			MapTransmissionPathElement transmissionPath = (MapTransmissionPathElement)e.nextElement();
-			if ( transmissionPath.physicalLink_ids.contains( physicalLinkID) )
+			MapTransmissionPathElement transmissionPath = 
+					(MapTransmissionPathElement )e.next();
+			if (transmissionPath.physicalLink_ids.contains(physicalLinkID))
 			{
 				this.removeTransmissionPath(transmissionPath);
 			}
@@ -1154,50 +1363,44 @@ public class MapContext extends ObjectResource implements Serializable
 
 	}
 
+	/**
+	 * Получить ссылку на слой логической сети
+	 */
 	public LogicalNetLayer getLogicalNetLayer()
 	{
 		return logicalNetLayer;
 	}
 
-//"Это функция используется для востанивления класса из базы данных
-	public void createFromPool( LogicalNetLayer logical)
+	/**
+	 * используется для востанивления класса из базы данных
+	 */
+	public void createFromPool(LogicalNetLayer logical)
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "createFromPool(" + logical + ")");
+		
 		logicalNetLayer = logical;
 		curMapElement = new VoidMapElement(getLogicalNetLayer());
 		showPhysicalNodeElement = true;
-//		created = System.currentTimeMillis();
-//    logicalNetLayer.getMapViewer().setZoomFactor( zoomFactor);
+
 	    logicalNetLayer.getMapViewer().setScale( currentScale);
 		zoom(currentScale);
 
 		logicalNetLayer.viewer.setCenter(longitude, latitude);
 	}
 
-//A0A
-	public Vector getMapKISNodeElements()
+	/**
+	 * Получить список топологических узлов
+	 */
+	public LinkedList getMapPhysicalNodeElements()
 	{
-		Vector returnVector = new Vector();
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getMapPhysicalNodeElements()");
+		
+		LinkedList returnVector = new LinkedList();
 
-		Enumeration e = nodes.elements();
-		while (e.hasMoreElements())
+		Iterator e = nodes.iterator();
+		while (e.hasNext())
 		{
-			MapElement mapElement = (MapElement)e.nextElement();
-			if ( mapElement instanceof MapKISNodeElement)
-			{
-				returnVector.add( mapElement);
-			}
-		}
-		return returnVector;
-	}
-
-	public Vector getMapPhysicalNodeElements()
-	{
-		Vector returnVector = new Vector();
-
-		Enumeration e = nodes.elements();
-		while (e.hasMoreElements())
-		{
-			MapElement mapElement = (MapElement)e.nextElement();
+			MapElement mapElement = (MapElement)e.next();
 			if ( mapElement instanceof MapPhysicalNodeElement)
 			{
 				returnVector.add( mapElement);
@@ -1206,30 +1409,18 @@ public class MapContext extends ObjectResource implements Serializable
 		return returnVector;
 	}
 
-//A0A
-	public MapKISNodeElement getMapKISNodeElement(String myID)
-	{
-		Enumeration e = getMapKISNodeElements().elements();
-		while (e.hasMoreElements())
-		{
-			MapKISNodeElement myMapKISNodeElement = (MapKISNodeElement)e.nextElement();
-
-			if ( myMapKISNodeElement.getId().equals(myID))
-			{
-				return myMapKISNodeElement;
-			}
-		}
-		return null;
-	}
-
-//A0A
+	/**
+	 * Получить пкуть тестирования по ID
+	 */
 	public MapTransmissionPathElement getMapTransmissionPathElement(String myID)
 	{
-
-		Enumeration e = getTransmissionPath().elements();
-		while (e.hasMoreElements())
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getMapTransmissionPathElement(" + myID + ")");
+		
+		Iterator e = getTransmissionPath().iterator();
+		while (e.hasNext())
 		{
-			MapTransmissionPathElement myMapTransmissionPathElement = (MapTransmissionPathElement)e.nextElement();
+			MapTransmissionPathElement myMapTransmissionPathElement = 
+				(MapTransmissionPathElement )e.next();
 
 			if ( myMapTransmissionPathElement.getId().equals(myID))
 			{
@@ -1239,15 +1430,19 @@ public class MapContext extends ObjectResource implements Serializable
 		return null;
 	}
 
-//A0A
-	public Vector getMapEquipmentNodeElements()
+	/**
+	 * Получить список узлов
+	 */
+	public LinkedList getMapEquipmentNodeElements()
 	{
-		Vector returnVector = new Vector();
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getMapEquipmentNodeElements()");
+		
+		LinkedList returnVector = new LinkedList();
 
-		Enumeration e = nodes.elements();
-		while (e.hasMoreElements())
+		Iterator e = nodes.iterator();
+		while (e.hasNext())
 		{
-			MapElement mapElement = (MapElement)e.nextElement();
+			MapElement mapElement = (MapElement )e.next();
 			if ( mapElement instanceof MapEquipmentNodeElement)
 			{
 				returnVector.add( mapElement);
@@ -1256,14 +1451,19 @@ public class MapContext extends ObjectResource implements Serializable
 		return returnVector;
 	}
 
-	public Vector getMapMarkElements()
+	/**
+	 * Получить список меток
+	 */
+	public LinkedList getMapMarkElements()
 	{
-		Vector returnVector = new Vector();
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getMapMarkElements()");
+		
+		LinkedList returnVector = new LinkedList();
 
-		Enumeration e = nodes.elements();
-		while (e.hasMoreElements())
+		Iterator e = nodes.iterator();
+		while (e.hasNext())
 		{
-			MapElement mapElement = (MapElement)e.nextElement();
+			MapElement mapElement = (MapElement)e.next();
 			if ( mapElement instanceof MapMarkElement)
 			{
 				returnVector.add( mapElement);
@@ -1272,14 +1472,18 @@ public class MapContext extends ObjectResource implements Serializable
 		return returnVector;
 	}
 
-//A0A
+	/**
+	 * Получить элемент узла по ID
+	 */
 	public MapEquipmentNodeElement getMapEquipmentNodeElement(String myID)
 	{
-
-		Enumeration e = getMapEquipmentNodeElements().elements();
-		while (e.hasMoreElements())
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getMapEquipmentNodeElement(" + myID + ")");
+		
+		Iterator e = getMapEquipmentNodeElements().iterator();
+		while (e.hasNext())
 		{
-			MapEquipmentNodeElement myMapEquipmentNodeElement = (MapEquipmentNodeElement)e.nextElement();
+			MapEquipmentNodeElement myMapEquipmentNodeElement = 
+				(MapEquipmentNodeElement )e.next();
 
 			if ( myMapEquipmentNodeElement.getId().equals(myID))
 			{
@@ -1289,178 +1493,186 @@ public class MapContext extends ObjectResource implements Serializable
 		return null;
 	}
 
-//A0A
-	public Vector getAllElements()
+	/**
+	 * Получить список всех олементов контекста карты
+	 */
+	public LinkedList getAllElements()
 	{
-		Vector returnVector = new Vector();
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getAllElements()");
+		
+		LinkedList returnVector = new LinkedList();
 
-		Enumeration e = nodes.elements();
-		while (e.hasMoreElements())
+		Iterator e = nodes.iterator();
+		while (e.hasNext())
 		{
-			MapElement mapElement = (MapElement)e.nextElement();
+			MapElement mapElement = (MapElement )e.next();
 			returnVector.add( mapElement);
 		}
 
-		e = nodeLinks.elements();
-		while (e.hasMoreElements())
+		e = nodeLinks.iterator();
+		while (e.hasNext())
 		{
-			MapElement mapElement = (MapElement)e.nextElement();
+			MapElement mapElement = (MapElement )e.next();
 			returnVector.add( mapElement);
 		}
 
-		e = physicalLinks.elements();
-		while (e.hasMoreElements())
+		e = physicalLinks.iterator();
+		while (e.hasNext())
 		{
-			MapElement mapElement = (MapElement)e.nextElement();
+			MapElement mapElement = (MapElement )e.next();
 			returnVector.add( mapElement);
 		}
 
-		e = transmissionPath.elements();
-		while (e.hasMoreElements())
+		e = transmissionPath.iterator();
+		while (e.hasNext())
 		{
-			MapElement mapElement = (MapElement)e.nextElement();
+			MapElement mapElement = (MapElement )e.next();
 			returnVector.add( mapElement);
 		}
 
-		e = markers.elements();
-		while (e.hasMoreElements())
+		e = markers.iterator();
+		while (e.hasNext())
 		{
-			MapElement mapElement = (MapElement)e.nextElement();
+			MapElement mapElement = (MapElement )e.next();
 			returnVector.add( mapElement);
 		}
 		return returnVector;
 	}
 
-//A0A
+	/**
+	 * Получить маркер по ID
+	 */
 	public MapMarker getMarker(String markerID)
 	{
-		Enumeration e = markers.elements();
-		while( e.hasMoreElements())
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getMarker(" + markerID + ")");
+		
+		Iterator e = markers.iterator();
+		while( e.hasNext())
 		{
-			MapMarker marker = (MapMarker)e.nextElement();
+			MapMarker marker = (MapMarker )e.next();
 			if ( marker.getId().equals(markerID))
-		 return marker;
-
+				return marker;
 		}
 		return null;
 	}
 
+	/**
+	 * Удалить все маркеры
+	 */
 	public void removeMarkers()
 	{
-		markers.removeAllElements();
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "removeMarkers()");
+		
+		markers.clear();
 	}
 
-//A0A
-	public Vector getRemovedElements()
+	/**
+	 * Получить список удаленных элементов
+	 */
+	public LinkedList getRemovedElements()
 	{
 		return removedElements;
 	}
 
+	/**
+	 * Приблизить вид карты со стандартным коэффициентом
+	 */
 	public void zoomIn()
 	{
-//		System.out.println("--- " + getLogicalNetLayer().getMapViewer().getScale());
-
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "zoomIn()");
+		
 		getLogicalNetLayer().viewer.zoomIn();
 		currentScale = logicalNetLayer.viewer.getScale();
 
 		updateZoom();
 	}
 
+	/**
+	 * При изменении масштаба отображения карты необходимо обновить
+	 * масштаб отображения всех объектов на карте
+	 */
 	public void updateZoom()
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "updateZoom()");
+		
 		double sF = defaultScale / currentScale;
 
-		Enumeration en =  getNodes().elements();
-		while (en.hasMoreElements())
+		Iterator en =  getNodes().iterator();
+		while (en.hasNext())
 		{
-			MapNodeElement curNode = (MapNodeElement)en.nextElement();
+			MapNodeElement curNode = (MapNodeElement )en.next();
 			curNode.setScaleCoefficient(sF);
 			curNode.setImageID(curNode.getImageID());
 		}
 	}
 
-//A0A
+	/**
+	 * Установить заданный масштаб вида карты
+	 */
 	public void zoom(double scale)
 	{
-//		getLogicalNetLayer().getMapViewer().zoomIn(scale);
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "zoom(" + scale + ")");
+		
 		currentScale = scale;
 
 		updateZoom();
 	}
 
-//A0A
+	/**
+	 * Отдалить вид карты со стандартным коэффициентом
+	 */
 	public void zoomOut()
 	{
-//		System.out.println("--- " + getLogicalNetLayer().getMapViewer().getScale());
-
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "zoomOut()");
+		
 		getLogicalNetLayer().viewer.zoomOut();
 		currentScale = logicalNetLayer.viewer.getScale();
 
 		updateZoom();
 	}
 
-	public Vector getPhysicalLinksInTransmissiionPath(String pathID)
+	/**
+	 * Полцчить список физических линий в составе пути тестирования начиная 
+	 * с начала
+	 */
+	public LinkedList getPhysicalLinksInTransmissiionPath(String pathID)
 	{
-		Vector returnLinkVector = new Vector();
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getPhysicalLinksInTransmissiionPath(" + pathID + ")");
+		
+		LinkedList returnLinkVector = new LinkedList();
 		MapTransmissionPathElement transmissionPath = getMapTransmissionPathElement(pathID);
-		Enumeration e = transmissionPath.physicalLink_ids.elements();
-		while( e.hasMoreElements())
+		Iterator e = transmissionPath.physicalLink_ids.iterator();
+		while(e.hasNext())
 		{
-			String physicalLinkID = (String)e.nextElement();
-			MapPhysicalLinkElement bufferPhysLink = (MapPhysicalLinkElement)getPhysicalLink(physicalLinkID);
+			String physicalLinkID = (String )e.next();
+			MapPhysicalLinkElement bufferPhysLink = 
+				(MapPhysicalLinkElement )getPhysicalLink(physicalLinkID);
 
 			returnLinkVector.add(bufferPhysLink);
 		}
 		return returnLinkVector;
 	}
 
-//Возвращает упорядоченный набор PhysicalLink в TransmissionPath начиная с начала
-	public Vector getPhysicalLinksInTransmissiionPath1(String pathID)
+	/**
+	 * Возвращает упорядоченный набор Equipment в TransmissionPath начиная 
+	 * с начала
+	 */
+	public LinkedList getEquipmentElemenetsInTansPath(String pathID)
 	{
-		Vector returnLinkVector = new Vector();
-
-		MapTransmissionPathElement transPath = getMapTransmissionPathElement(pathID);
-		MapNodeElement bufferNode = transPath.startNode;
-		MapPhysicalLinkElement bufferPhysLink = (MapPhysicalLinkElement)getPhysicalLinksContainingNode(bufferNode).get(0);
-
-		returnLinkVector.add(bufferPhysLink);
-		bufferNode = getOtherNodeOfPhysicalLink(bufferPhysLink, bufferNode);
-
-		while (bufferNode != transPath.endNode)
-		{
-			for (int i = 0; i < getPhysicalLinksContainingNode(bufferNode).size();i++)
-			{
-				MapPhysicalLinkElement buffer2Link =
-						(MapPhysicalLinkElement)getPhysicalLinksContainingNode(bufferNode).get(i);
-
-				if (transPath.physicalLink_ids.contains(buffer2Link.getId()) &&
-					buffer2Link != bufferPhysLink)
-				{
-					bufferPhysLink = buffer2Link;
-					returnLinkVector.add(bufferPhysLink);
-
-					i = getPhysicalLinksContainingNode(bufferNode).size();//exit from while
-				}
-			}
-
-			bufferNode = getOtherNodeOfPhysicalLink(bufferPhysLink, bufferNode);
-		}
-		return returnLinkVector;
-	}
-
-	public Vector getEquipKISElemenetsInTansPath(String pathID)
-	{
-		Vector returnNodeVector = new Vector();
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getEquipmentElemenetsInTansPath(" + pathID + ")");
+		
+		LinkedList returnNodeVector = new LinkedList();
 
 		MapTransmissionPathElement transmissionPath = getMapTransmissionPathElement(pathID);
 		MapNodeElement bufferNode = transmissionPath.startNode;
 		returnNodeVector.add(bufferNode);
 
-		Enumeration e = transmissionPath.physicalLink_ids.elements();
-		while( e.hasMoreElements())
+		Iterator e = transmissionPath.physicalLink_ids.iterator();
+		while( e.hasNext())
 		{
-			String physicalLinkID = (String)e.nextElement();
-			MapPhysicalLinkElement bufferPhysLink = (MapPhysicalLinkElement)getPhysicalLink(physicalLinkID);
+			String physicalLinkID = (String )e.next();
+			MapPhysicalLinkElement bufferPhysLink = 
+				(MapPhysicalLinkElement )getPhysicalLink(physicalLinkID);
 			bufferNode = bufferPhysLink.endNode;
 
 			returnNodeVector.add(bufferNode);
@@ -1468,60 +1680,32 @@ public class MapContext extends ObjectResource implements Serializable
 		return returnNodeVector;
 	}
 
-//Возвращает упорядоченный набор Equip & KIS в TransmissionPath начиная с начала
-	public Vector getEquipKISElemenetsInTansPath1(String pathID)
-	{
-		Vector returnNodeVector = new Vector();
-
-		MapTransmissionPathElement transPath = getMapTransmissionPathElement(pathID);
-		MapNodeElement bufferNode = transPath.startNode;
-		MapPhysicalLinkElement bufferPhysLink = (MapPhysicalLinkElement)getPhysicalLinksContainingNode(bufferNode).get(0);
-
-		returnNodeVector.add(bufferNode);
-
-		bufferNode = getOtherNodeOfPhysicalLink(bufferPhysLink, bufferNode);
-
-		while (bufferNode != transPath.endNode)
-		{
-			for (int i = 0; i < getPhysicalLinksContainingNode(bufferNode).size();i++)
-			{
-				MapPhysicalLinkElement buffer2Link =
-						(MapPhysicalLinkElement)getPhysicalLinksContainingNode(bufferNode).get(i);
-
-				if (transPath.physicalLink_ids.contains(buffer2Link.getId()) &&
-					buffer2Link != bufferPhysLink)
-				{
-					bufferPhysLink = buffer2Link;
-					i = getPhysicalLinksContainingNode(bufferNode).size();//exit from while
-				}
-			}
-
-			returnNodeVector.add(bufferNode);
-			bufferNode = getOtherNodeOfPhysicalLink(bufferPhysLink, bufferNode);
-		}
-
-		returnNodeVector.add(bufferNode);
-		return returnNodeVector;
-	}
-
-//A0A
+	/**
+	 * Получить точечный объект по ID
+	 */
 	public MapNodeElement getNode(String nodeID)
 	{
-		for (int i = 0; i < getNodes().size();i++)
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getNode(" + nodeID + ")");
+		
+		for(Iterator it = getNodes().iterator(); it.hasNext();)
 		{
-			MapNodeElement node = (MapNodeElement)getNodes().get(i);
+			MapNodeElement node = (MapNodeElement )it.next();
 			if ( node.getId().equals(nodeID ) )
 				return node;
 		}
 		return null;
 	}
 
-//A0A
+	/**
+	 * Получить NodeLink по начальному и конечному узлам
+	 */
 	public MapNodeLinkElement getNodeLink(MapNodeElement start_node, MapNodeElement end_node)
 	{
-		for(int i = 0;i < getNodeLinks().size();i++)
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getNodeLink(" + start_node + ", " + end_node + ")");
+		
+		for(Iterator it = getNodeLinks().iterator(); it.hasNext();)
 		{
-			MapNodeLinkElement link = (MapNodeLinkElement)getNodeLinks().get(i);
+			MapNodeLinkElement link = (MapNodeLinkElement )it.next();
 			if (((link.startNode == start_node) && (link.endNode == end_node)) ||
 				((link.startNode == end_node) && (link.endNode == start_node)) )
 			{
@@ -1531,12 +1715,16 @@ public class MapContext extends ObjectResource implements Serializable
 		return null;
 	}
 
-//A0A
+	/**
+	 * Получить MapPhysicalLinkElement по начальному и конечному узлам
+	 */
 	public MapPhysicalLinkElement getPhysicalLink(MapNodeElement start_node, MapNodeElement end_node)
 	{
-		for(int i = 0;i < getNodeLinks().size();i++)
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getPhysicalLink(" + start_node + ", " + end_node + ")");
+		
+		for(Iterator it = getPhysicalLinks().iterator(); it.hasNext();)
 		{
-			MapPhysicalLinkElement link = (MapPhysicalLinkElement)getPhysicalLinks().get(i);
+			MapPhysicalLinkElement link = (MapPhysicalLinkElement)it.next();
 			if (((link.startNode == start_node) && (link.endNode == end_node)) ||
 				((link.startNode == end_node) && (link.endNode == start_node)) )
 			{
@@ -1548,6 +1736,8 @@ public class MapContext extends ObjectResource implements Serializable
 
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "writeObject(out)");
+		
 		out.writeObject(id);
 		out.writeObject(name);
 		out.writeObject(description);
@@ -1570,12 +1760,13 @@ public class MapContext extends ObjectResource implements Serializable
 		out.writeInt(linkState);
 		out.writeDouble(currentScale);
 		out.writeDouble(defaultScale);
-//		out.writeDouble(standartScale);
 	}
 
 	private void readObject(java.io.ObjectInputStream in)
 			throws IOException, ClassNotFoundException
 	{
+		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "readObject(in)");
+		
 		id = (String )in.readObject();
 		name = (String )in.readObject();
 		description = (String )in.readObject();
@@ -1589,33 +1780,31 @@ public class MapContext extends ObjectResource implements Serializable
 		modified = in.readLong();
 		modified_by = (String )in.readObject();
 		scheme_id = (String )in.readObject();
-		nodes = (Vector )in.readObject();
-		nodeLinks = (Vector )in.readObject();
-		physicalLinks = (Vector )in.readObject();
-		transmissionPath = (Vector )in.readObject();
-		markers = (Vector )in.readObject();
+		nodes = (ArrayList )in.readObject();
+		nodeLinks = (ArrayList )in.readObject();
+		physicalLinks = (ArrayList )in.readObject();
+		transmissionPath = (ArrayList )in.readObject();
+		markers = (ArrayList )in.readObject();
 		showPhysicalNodeElement = in.readBoolean();
 		linkState = in.readInt();
 		currentScale = in.readDouble();
 		defaultScale = in.readDouble();
-//		standartScale = in.readDouble();
 
 		transferable = new MapContext_Transferable();
 
-    node_ids = new Vector();
-    equipment_ids = new Vector();
-    kis_ids = new Vector();
-    nodelink_ids = new Vector();
-    link_ids = new Vector();
-    path_ids = new Vector();
-    mark_ids = new Vector();
-
-    removedElements = new Vector();
-
-    deleted_nodes_ids = new Vector();
-    deleted_nodeLinks_ids = new Vector();
-    deleted_physicalLinks_ids = new Vector();
-    deleted_transmissionPath_ids = new Vector();
+		node_ids = new ArrayList();
+		equipment_ids = new ArrayList();
+		nodelink_ids = new ArrayList();
+		link_ids = new ArrayList();
+		path_ids = new ArrayList();
+		mark_ids = new ArrayList();
+	
+		removedElements = new LinkedList();
+	
+		deleted_nodes_ids = new LinkedList();
+		deleted_nodeLinks_ids = new LinkedList();
+		deleted_physicalLinks_ids = new LinkedList();
+		deleted_transmissionPath_ids = new LinkedList();
 
 		curMapElement = new VoidMapElement();//Поумолчанию текущий элемент Void
 

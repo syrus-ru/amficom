@@ -101,7 +101,7 @@ class MapLinkFeaturesTableModel extends DividableTableModel
 		if (obj != null)
 		{
 			name = obj.name;
-			visualType = LangModelConfig.String("label_link");
+			visualType = LangModelConfig.getString("label_link");
 			scLink = (SchemeCableLink) Pool.get(SchemeCableLink.typ,obj.LINK_ID);
 /*			if (scLink != null)
 			{
@@ -118,16 +118,16 @@ class MapLinkFeaturesTableModel extends DividableTableModel
 
 		length = 0;
 
-		firstColumn.add(LangModelReport.String("label_equipClass"));
+		firstColumn.add(LangModelReport.getString("label_equipClass"));
 		secondColumn.add(visualType);
 
-		firstColumn.add(LangModelReport.String("label_equipName"));
+		firstColumn.add(LangModelReport.getString("label_equipName"));
 		secondColumn.add(name);
 
 /*		firstColumn.add("");
 		secondColumn.add("");
 
-		firstColumn.add(LangModelReport.String("label_equipChars"));
+		firstColumn.add(LangModelReport.getString("label_equipChars"));
 		secondColumn.add("");*/
 
 //		length += 3;

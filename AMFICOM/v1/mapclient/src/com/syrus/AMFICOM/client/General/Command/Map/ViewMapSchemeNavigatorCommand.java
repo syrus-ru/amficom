@@ -1,16 +1,17 @@
 package com.syrus.AMFICOM.Client.General.Command.Map;
 
-import java.awt.*;
+import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
+import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.Map.MapSchemeTreeFrame;
+import com.syrus.AMFICOM.Client.Map.MapSchemeTreePanel;
 
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 
-import com.syrus.AMFICOM.Client.Configure.Map.*;
-import com.syrus.AMFICOM.Client.General.Command.*;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Model.*;
-import com.syrus.AMFICOM.Client.General.UI.*;
-import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.Map.*;
+import javax.swing.ImageIcon;
+import javax.swing.JDesktopPane;
 
 public class ViewMapSchemeNavigatorCommand extends VoidCommand
 {

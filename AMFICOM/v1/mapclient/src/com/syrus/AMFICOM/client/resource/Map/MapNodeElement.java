@@ -2,9 +2,9 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 
 import com.ofx.geometry.SxDoublePoint;
 
-import com.syrus.AMFICOM.Client.Configure.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Configure.Map.Strategy.MapStrategy;
-import com.syrus.AMFICOM.Client.Configure.Map.Strategy.VoidStrategy;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategy;
+import com.syrus.AMFICOM.Client.Map.Strategy.VoidStrategy;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.Resource.ImageCatalogue;
@@ -13,6 +13,7 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Scheme.PathElement;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
 
+import com.syrus.AMFICOM.Client.Resource.StubResource;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -28,7 +29,7 @@ import java.util.Hashtable;
 
 import javax.swing.ImageIcon;
 
-public abstract class MapNodeElement extends ObjectResource
+public abstract class MapNodeElement extends StubResource
     implements MapElement 
 {
 	protected MapContext mapContext;
@@ -303,7 +304,7 @@ public abstract class MapNodeElement extends ObjectResource
 	{
 		String s1 = getName();
 
-		return s1 + " [" + LangModel.String("node" + getTyp()) + "]";
+		return s1 + " [" + LangModel.getString("node" + getTyp()) + "]";
 	}
 
 //¬озвращ€ет длинну линий внутри данного узла,

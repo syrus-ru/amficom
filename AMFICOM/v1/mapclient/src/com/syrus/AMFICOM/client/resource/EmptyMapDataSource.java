@@ -195,7 +195,7 @@ public class EmptyMapDataSource
 		MapEquipmentNodeElement equipment;
 		MapKISElementSeq_TransferableHolder kh = new MapKISElementSeq_TransferableHolder();
 		MapKISElement_Transferable kiss[];
-		MapKISNodeElement kis;
+
 		MapPhysicalNodeElementSeq_TransferableHolder nh = new MapPhysicalNodeElementSeq_TransferableHolder();
 		MapPhysicalNodeElement_Transferable nodes[];
 		MapPhysicalNodeElement node;
@@ -332,7 +332,7 @@ public class EmptyMapDataSource
 			return;
 		if(!si.isOpened())
 			return;
-
+/*
 		int i;
 		int ecode = 0;
 		int count;
@@ -436,7 +436,7 @@ public class EmptyMapDataSource
 			os.setTransferableFromLocal();
 			images[i] = (ImageResource_Transferable )os.getTransferable();
 		}
-/*
+
 		try
 		{
 			ecode = si.ci.server.SaveMaps(

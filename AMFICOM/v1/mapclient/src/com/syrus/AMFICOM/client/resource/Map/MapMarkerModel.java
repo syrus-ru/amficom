@@ -3,7 +3,7 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
 import com.syrus.AMFICOM.Client.General.UI.TextFieldEditor;
-import com.syrus.AMFICOM.Client.Resource.MyUtil;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.Client.Resource.ObjectResourceModel;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.ElementAttribute;
@@ -11,6 +11,7 @@ import com.syrus.AMFICOM.Client.Resource.Scheme.ElementAttribute;
 import java.awt.Component;
 
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
@@ -110,17 +111,17 @@ public class MapMarkerModel extends ObjectResourceModel
 			if(col_id.equals("typ"))
 				return marker.getTyp();
 			if(col_id.equals("type_id"))
-				return LangModel.String("node" + marker.getTyp());
+				return LangModel.getString("node" + marker.getTyp());
 			if(col_id.equals("path"))
 				return marker.path_id;
 			if(col_id.equals("longitude"))
-				return String.valueOf(MyUtil.fourdigits(marker.getAnchor().x)) ;
+				return String.valueOf(MiscUtil.fourdigits(marker.getAnchor().x)) ;
 			if(col_id.equals("latitude"))
-				return String.valueOf(MyUtil.fourdigits(marker.getAnchor().y));
+				return String.valueOf(MiscUtil.fourdigits(marker.getAnchor().y));
 			if(col_id.equals("Length_1"))
-				return String.valueOf(MyUtil.fourdigits(marker.getFromStartLengthLf()));
+				return String.valueOf(MiscUtil.fourdigits(marker.getFromStartLengthLf()));
 			if(col_id.equals("Length_2"))
-				return String.valueOf(MyUtil.fourdigits(marker.getFromEndLengthLf()));
+				return String.valueOf(MiscUtil.fourdigits(marker.getFromEndLengthLf()));
 		}
 		catch(Exception e)
 		{
@@ -163,15 +164,23 @@ public class MapMarkerModel extends ObjectResourceModel
 		if(col_id.equals("name"))
 			return new TextFieldEditor(marker.name);
 		if(col_id.equals("owner_id"))
-			return new ObjectResourceComboBox("user", marker.owner_id);
+		{
+			ObjectResourceComboBox orcb = new ObjectResourceComboBox("user", marker.owner_id);
+			orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
+			return orcb;
+		}
 		if(col_id.equals("typ"))
 			return new TextFieldEditor( marker.getTyp() );
 		if(col_id.equals("path_id"))
-			return new ObjectResourceComboBox(MapTransmissionPathElement.typ, marker.path_id);
+		{
+			ObjectResourceComboBox orcb = new ObjectResourceComboBox(MapTransmissionPathElement.typ, marker.path_id);
+			orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
+			return orcb;
+		}
 		if(col_id.equals("longitude"))
-			return new TextFieldEditor( String.valueOf(MyUtil.fourdigits(marker.getAnchor().x)) );
+			return new TextFieldEditor( String.valueOf(MiscUtil.fourdigits(marker.getAnchor().x)) );
 		if(col_id.equals("latitude"))
-			return new TextFieldEditor( String.valueOf(MyUtil.fourdigits(marker.getAnchor().y)) );
+			return new TextFieldEditor( String.valueOf(MiscUtil.fourdigits(marker.getAnchor().y)) );
 		if(col_id.equals("Length_1"))
 			return new TextFieldEditor( String.valueOf((int)marker.getFromStartLengthLf()) );
 		if(col_id.equals("Length_2"))
@@ -185,10 +194,10 @@ public class MapMarkerModel extends ObjectResourceModel
 	}
 
 	
-	public Vector getPropertyColumns()
+	public List getPropertyColumns()
 	{
 //		System.out.println("marker prop cols");
-		Vector cols = getColumns();//new Hashtable();
+		List cols = getColumns();//new Hashtable();
 		for(Enumeration enum = marker.attributes.elements(); enum.hasMoreElements();)
 		{
 			ElementAttribute ea = (ElementAttribute )enum.nextElement();

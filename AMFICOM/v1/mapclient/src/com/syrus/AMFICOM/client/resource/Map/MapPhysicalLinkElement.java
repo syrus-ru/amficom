@@ -4,12 +4,12 @@ import com.ofx.geometry.SxDoublePoint;
 
 import com.syrus.AMFICOM.CORBA.Map.MapPhysicalLinkElement_Transferable;
 import com.syrus.AMFICOM.CORBA.Scheme.ElementAttribute_Transferable;
-import com.syrus.AMFICOM.Client.Configure.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Configure.Map.Popup.PhysicalLinkPopupMenu;
-import com.syrus.AMFICOM.Client.Configure.Map.Strategy.MapStrategy;
-import com.syrus.AMFICOM.Client.Configure.Map.Strategy.VoidStrategy;
-import com.syrus.AMFICOM.Client.Configure.Map.UI.Display.MapPhysicalLinkElementDisplayModel;
-import com.syrus.AMFICOM.Client.Configure.Map.UI.MapLinkPane;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.Popup.PhysicalLinkPopupMenu;
+import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategy;
+import com.syrus.AMFICOM.Client.Map.Strategy.VoidStrategy;
+import com.syrus.AMFICOM.Client.Map.UI.Display.MapPhysicalLinkElementDisplayModel;
+import com.syrus.AMFICOM.Client.Map.UI.MapLinkPane;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.DEF;
@@ -34,12 +34,13 @@ import java.io.Serializable;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.*;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
+import java.util.Iterator;
 
 //A0A
 public class MapPhysicalLinkElement extends MapLinkElement implements Serializable
@@ -52,8 +53,8 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	public Vector nodeLink_ids = new Vector();
 	public MapPhysicalLinkElement_Transferable transferable;
 
-	public MapNodeElement startNode;
-	public MapNodeElement endNode;
+//	public MapNodeElement startNode;
+//	public MapNodeElement endNode;
 	protected boolean selected = false;
 	public String LINK_ID = "";
 	public String link_type_id = "";
@@ -88,9 +89,6 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 			mapContextID = mapContext.id;
 		startNode = stNode;
 		endNode = eNode;
-		if(mapContext != null)
-			if(mapContext instanceof ISMMapContext)
-			  ism_map_id = ((ISMMapContext)mapContext).ISM_id;
 		selected = false;
 
 		transferable = new MapPhysicalLinkElement_Transferable();
@@ -238,13 +236,9 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	{
 		this.startNode = (MapNodeElement)Pool.get("mapequipmentelement", startNode_id);
 		if(this.startNode == null)
-			this.startNode = (MapNodeElement)Pool.get("mapkiselement", startNode_id);
-		if(this.startNode == null)
 			this.startNode = (MapNodeElement)Pool.get("mapnodeelement", startNode_id);
 
 		this.endNode = (MapNodeElement)Pool.get("mapequipmentelement", endNode_id);
-		if(this.endNode == null)
-			this.endNode = (MapNodeElement)Pool.get("mapkiselement", endNode_id);
 		if(this.endNode == null)
 			this.endNode = (MapNodeElement)Pool.get("mapnodeelement", endNode_id);
 		this.mapContext = (MapContext)Pool.get("mapcontext", this.mapContextID);
@@ -270,12 +264,12 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 //			MapNodeElement smne = (MapNodeElement )getMapContext().getNode(startNode_id);
 			MapNodeLinkElement snle = (MapNodeLinkElement )getMapContext().getNodeLinksInPhysicalLink(getId()).get(0);
 			MapNodeElement smne = snle.startNode;
-			s2 =  ":\n" + "   от " + smne.getName() + " [" + LangModel.String("node" + smne.getTyp()) + "]";
+			s2 =  ":\n" + "   от " + smne.getName() + " [" + LangModel.getString("node" + smne.getTyp()) + "]";
 //			MapNodeElement emne = (MapNodeElement )getMapContext().getNode(endNode_id);
 			MapNodeLinkElement enle = (MapNodeLinkElement )getMapContext().getNodeLinksInPhysicalLink(getId()).get(
 					getMapContext().getNodeLinksInPhysicalLink(getId()).size() - 1);
 			MapNodeElement emne = enle.endNode;
-			s3 = "\n" + "   до " + emne.getName() + " [" + LangModel.String("node" + emne.getTyp()) + "]";
+			s3 = "\n" + "   до " + emne.getName() + " [" + LangModel.getString("node" + emne.getTyp()) + "]";
 		}
 		catch(Exception e)
 		{
@@ -303,10 +297,10 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		p.setStroke( str);
 		p.setColor( this.getColor());
 
-		Enumeration e = mapContext.getNodeLinksInPhysicalLink( this.getId() ).elements();
-		while (e.hasMoreElements())
+		Iterator e = mapContext.getNodeLinksInPhysicalLink( this.getId() ).iterator();
+		while (e.hasNext())
 		{
-			MapNodeLinkElement myNodeLink = (MapNodeLinkElement)e.nextElement();
+			MapNodeLinkElement myNodeLink = (MapNodeLinkElement)e.next();
 
 			Point from = getLogicalNetLayer().convertMapToScreen(myNodeLink.startNode.getAnchor());
 			Point to = getLogicalNetLayer().convertMapToScreen(myNodeLink.endNode.getAnchor());
@@ -350,12 +344,11 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		int a;
 		if(!selected)
 			a = 0;
-		//A0A
-		Vector nodeLinksVector = getMapContext().getNodeLinksInPhysicalLink( this.getId());
-		Enumeration e = nodeLinksVector.elements();
-		while ( e.hasMoreElements())
+		
+		LinkedList nodeLinksVector = getMapContext().getNodeLinksInPhysicalLink( this.getId());
+		for(Iterator it = nodeLinksVector.iterator(); it.hasNext();)
 		{
-			MapNodeLinkElement nodelink = (MapNodeLinkElement)e.nextElement();
+			MapNodeLinkElement nodelink = (MapNodeLinkElement)it.next();
 
 			Point from = getLogicalNetLayer().convertMapToScreen( nodelink.startNode.getAnchor());
 			Point to = getLogicalNetLayer().convertMapToScreen( nodelink.endNode.getAnchor());
@@ -377,15 +370,7 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 			if ( isSelected())
 			{
 				p.setStroke(DEF.selected_stroke);
-/*
-				new BasicStroke( 
-						1,
-                        BasicStroke.CAP_BUTT,
-                        BasicStroke.JOIN_BEVEL,
-                        (float)0.0,
-                        new float[] {5, 5},
-                        (float)0.0));
-*/
+
 				double l = 4;
 				double l1 = 6;
 				double cos_a = (from.y - to.y)/
@@ -414,11 +399,9 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 	public double getSizeInDoubleLt()
 	{
 		double returnValue = 0;
-		Vector vec = getMapContext().getNodeLinksInPhysicalLink( getId());
-		Enumeration e = vec.elements();
-		while ( e.hasMoreElements())
+		for(Iterator it = getMapContext().getNodeLinksInPhysicalLink(getId()).iterator(); it.hasNext();)
 		{
-			MapNodeLinkElement nodeLink = (MapNodeLinkElement)e.nextElement();
+			MapNodeLinkElement nodeLink = (MapNodeLinkElement )it.next();
 			returnValue += nodeLink.getSizeInDoubleLt();
 		}
 		return returnValue;
@@ -571,10 +554,9 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 		Vector vec = new Vector();
 		SxDoublePoint pts[];
 
-		for(Enumeration enum = getMapContext().getNodeLinksInPhysicalLink(getId()).elements();
-			enum.hasMoreElements();)
+		for(Iterator it = getMapContext().getNodeLinksInPhysicalLink(getId()).iterator(); it.hasNext();)
 		{
-			MapNodeLinkElement mnle = (MapNodeLinkElement )enum.nextElement();
+			MapNodeLinkElement mnle = (MapNodeLinkElement )it.next();
 			vec.add(mnle.getAnchor());
 		}
 
@@ -605,15 +587,15 @@ public class MapPhysicalLinkElement extends MapLinkElement implements Serializab
 			MapNodeElement smne = this.startNode;
 			Vector vec = new Vector();
 			Vector nodevec = new Vector();
-			Vector nodelinks = getMapContext().getNodeLinksInPhysicalLink(getId());
+			LinkedList nodelinks = getMapContext().getNodeLinksInPhysicalLink(getId());
 			while(!smne.equals(this.endNode))
 			{
 				nodevec.add(smne);
 
-				Enumeration e = nodelinks.elements();
-				while( e.hasMoreElements())
+				for(Iterator it = nodelinks.iterator(); it.hasNext();)
 				{
-					MapNodeLinkElement nodeLink = (MapNodeLinkElement) e.nextElement();
+					MapNodeLinkElement nodeLink = (MapNodeLinkElement )it.next();
+
 					if(nodeLink.startNode.equals(smne))
 					{
 						vec.add(nodeLink);

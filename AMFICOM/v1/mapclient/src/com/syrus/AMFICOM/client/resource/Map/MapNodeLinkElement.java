@@ -4,11 +4,11 @@ import com.ofx.geometry.SxDoublePoint;
 
 import com.syrus.AMFICOM.CORBA.Map.MapNodeLinkElement_Transferable;
 import com.syrus.AMFICOM.CORBA.Scheme.ElementAttribute_Transferable;
-import com.syrus.AMFICOM.Client.Configure.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Configure.Map.Strategy.AddPhysicalNodeElementStrategy;
-import com.syrus.AMFICOM.Client.Configure.Map.Strategy.MapStrategy;
-import com.syrus.AMFICOM.Client.Configure.Map.Strategy.VoidStrategy;
-import com.syrus.AMFICOM.Client.Configure.Map.UI.Display.MapNodeLinkElementDisplayModel;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.Strategy.AddPhysicalNodeElementStrategy;
+import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategy;
+import com.syrus.AMFICOM.Client.Map.Strategy.VoidStrategy;
+import com.syrus.AMFICOM.Client.Map.UI.Display.MapNodeLinkElementDisplayModel;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.DEF;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
@@ -76,9 +76,6 @@ public class MapNodeLinkElement extends MapLinkElement implements Serializable
 			mapContextID = mapContext.id;
 		startNode = stNode;
 		endNode = eNode;
-		if(mapContext != null)
-			if(mapContext instanceof ISMMapContext)
-				ism_map_id = ((ISMMapContext)mapContext).ISM_id;
 		attributes = new Hashtable();
 
 		selected = false;
@@ -186,13 +183,9 @@ public class MapNodeLinkElement extends MapLinkElement implements Serializable
 	{
 		this.startNode = (MapNodeElement)Pool.get("mapequipmentelement", startNode_id);
 		if(this.startNode == null)
-			this.startNode = (MapNodeElement)Pool.get("mapkiselement", startNode_id);
-		if(this.startNode == null)
 			this.startNode = (MapNodeElement)Pool.get("mapnodeelement", startNode_id);
 
 		this.endNode = (MapNodeElement)Pool.get("mapequipmentelement", endNode_id);
-		if(this.endNode == null)
-			this.endNode = (MapNodeElement)Pool.get("mapkiselement", endNode_id);
 		if(this.endNode == null)
 			this.endNode = (MapNodeElement)Pool.get("mapnodeelement", endNode_id);
 

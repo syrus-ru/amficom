@@ -5,29 +5,39 @@ EXTLIB=d:\lib91
 ORACLE_HOME=d:\oracle\ora91
 SRC=$(HOME)\src
 CLASSES=$(HOME)\classes
+JAVA_HOME=d:\java\j2sdk1.4.1_03
+
+JIKES= d:\java\jikes-1.21\bin\jikes.exe
+JIKESFLAGS= \
+	-bootclasspath $(JAVA_HOME)/jre/lib/rt.jar \
+	-deprecation \
+	+E \
+	+DR=$(CLASSES)\_dependencies.txt \
+	+F \
+	+P \
+	+Peffective-java \
+	+Pmodifier-order \
+	+Predundant-modifiers \
+	+Pno-switchcheck \
+	+Pnaming-convention \
+	+T=4
 
 JAVAC=javac
 JAR=jar
 
+#COMPILER=$(JIKES) $(JIKESFLAGS)
+COMPILER=$(JAVAC)
+
+
 TARGET=$(LIB)\map.jar
+TARGET_RUN=$(LIB)\run\maprun.jar
 TARGET_CLASS_LIST=src_map.txt
 TARGET_SRC=$(LIBSRC)\mapsource.jar
 
-LIBNAME_OBJECT=$(LIB)\ServerObjectInterface.jar
-LIBNAME_ADMIN=$(LIB)\ServerInterface_Admin.jar
-LIBNAME_ALARM=$(LIB)\ServerInterface_Alarm.jar
-LIBNAME_GENERAL=$(LIB)\ServerInterface_General.jar
-LIBNAME_ISM=$(LIB)\ServerInterface_ISM.jar
-LIBNAME_MAP=$(LIB)\ServerInterface_Map.jar
-LIBNAME_NETWORK=$(LIB)\ServerInterface_Network.jar
-LIBNAME_REPORT=$(LIB)\ServerInterface_Report.jar
-LIBNAME_SCHEME=$(LIB)\ServerInterface_Scheme.jar
-LIBNAME_SURVEY=$(LIB)\ServerInterface_Survey.jar
+SERVERCP=$(LIB)\corba.jar
+CLIENTCP=$(LIB)\util.jar;$(LIB)\generalclient.jar;$(LIB)\administrate.jar;$(LIB)\configureclient.jar;$(LIB)\scheme.jar;$(LIB)\localize.jar;$(LIB)\corba_portable.jar;$(LIB)\corba_portable_client.jar;$(LIB)\filter.jar
 
-SERVERCP=$(LIBNAME_ADMIN);$(LIBNAME_ALARM);$(LIBNAME_GENERAL);$(LIBNAME_ISM);$(LIBNAME_MAP);$(LIBNAME_NETWORK);$(LIBNAME_REPORT);$(LIBNAME_SCHEME);$(LIBNAME_SURVEY);$(LIBNAME_OBJECT)
-CLIENTCP=$(LIB)\io.jar;$(LIB)\util.jar;$(LIB)\general.jar;$(LIB)\main.jar;$(LIB)\administrate.jar;$(LIB)\configure.jar;$(LIB)\map.jar;$(LIB)\model.jar;$(LIB)\survey.jar;$(LIB)\analysis.jar;$(LIB)\optimize.jar;$(LIB)\schedule.jar;$(LIB)\scheme.jar;$(LIB)\histoAnalysis.jar;$(LIB)\prognosis.jar;$(LIB)\localize.jar;$(LIB)\dadara.jar;$(LIB)\report.jar;$(LIB)\reportBuilder.jar;$(LIB)\mail.jar;$(LIB)\corba_portable.jar;$(LIB)\corba_portable_client.jar;$(LIB)\alerting.jar;$(LIB)\filter.jar;$(LIB)\prefs.jar
-
-ORBCP=$(EXTLIB)\aurora.zip;$(EXTLIB)\aurora_client_orbindep.jar;$(EXTLIB)\aurora_client_orbdep.jar
+ORBCP=$(EXTLIB)\aurora_client_orbindep.jar;$(EXTLIB)\aurora_client_orbdep.jar
 VBJCP=$(ORACLE_HOME)\lib\vbjorb.jar;$(ORACLE_HOME)\lib\vbjapp.jar
 LAYOUTCP=$(EXTLIB)\layout.jar;$(EXTLIB)\kunststoff.jar
 SPATIALCP=$(EXTLIB)\ofx.spatialfx.jar
@@ -37,18 +47,24 @@ JGRAPHCP=$(EXTLIB)\jgraphpad.jar
 
 .PHONY:	$(TARGET)
 
-$(TARGET):	impl jar
+$(TARGET):	clean impl loc jar
 
 jar:
 	$(JAR) -cf $(TARGET) -C $(CLASSES) com
+	$(JAR) -cf $(TARGET_RUN) -C $(CLASSES) com\syrus\AMFICOM\Client\Map\Editor\MapEditorRun.class
 	$(JAR) -cf $(TARGET_SRC) -C $(SRC) com
 
 impl:
-	$(JAVAC) -d $(CLASSES) \
-		-classpath $(SERVERCP);$(CLIENTCP);$(LAYOUTCP);$(SPATIALCP);$(REPORTCP);$(JGRAPHCP);$(VBJCP):$(ORBCP) \
+	$(COMPILER) -d $(CLASSES) \
+		-classpath $(SERVERCP);$(CLIENTCP);$(LAYOUTCP);$(SPATIALCP);$(REPORTCP);$(JGRAPHCP);$(VBJCP);$(ORBCP) \
 		-sourcepath $(SRC) \
 		@$(TARGET_CLASS_LIST)
 
+loc:
+	copy /y \
+		src\com\syrus\AMFICOM\Client\General\Lang\map_ru.properties \
+		$(CLASSES)\com\syrus\AMFICOM\Client\General\Lang
+
 clean:
-	rd /s /q $(CLASSES)\com
-	del /f /q $(TARGET)
+	rm -rf $(CLASSES)\com
+	rm -f $(TARGET) $(TARGET_SRC)

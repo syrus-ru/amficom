@@ -39,6 +39,9 @@ public class MapEditorApplicationModel extends ApplicationModel
 		add("menuMapOptions");
 		add("menuMapCatalogue");
 
+		add("menuReport");
+		add("menuReportOpen");
+
 		add("menuHelp");
 		add("menuHelpContents");
 		add("menuHelpFind");
@@ -55,10 +58,10 @@ public class MapEditorApplicationModel extends ApplicationModel
 	{
 		String connection = Environment.getConnectionType();
 		if(connection.equals("RISD"))
-			return new RISDConfigDataSource(si);
+			return new RISDMapDataSource(si);
 		else
 		if(connection.equals("Empty"))
-			return new EmptyConfigDataSource(si);
+			return new EmptyMapDataSource(si);
 		return null;
 	}
 }

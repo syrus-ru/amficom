@@ -1,15 +1,17 @@
 package com.syrus.AMFICOM.Client.Resource.Map;
 
-import com.syrus.AMFICOM.Client.Configure.Map.Popup.PhysicalNodeElementPopupMenu;
+import com.syrus.AMFICOM.Client.Map.Popup.PhysicalNodeElementPopupMenu;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceComboBox;
 import com.syrus.AMFICOM.Client.General.UI.TextFieldEditor;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
-import com.syrus.AMFICOM.Client.Resource.MyUtil;
+import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.Client.Resource.Scheme.ElementAttribute;
 
 import java.awt.Component;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
@@ -38,11 +40,11 @@ public class MapPhysicalNodeElementModel extends MapNodeElementModel
 			if(col_id.equals("typ"))
 				return node.getTyp();
 			if(col_id.equals("longitude"))
-				return String.valueOf(MyUtil.fourdigits(node.getAnchor().x)) ;
+				return String.valueOf(MiscUtil.fourdigits(node.getAnchor().x)) ;
 			if(col_id.equals("latitude"))
-				return String.valueOf(MyUtil.fourdigits(node.getAnchor().y));
+				return String.valueOf(MiscUtil.fourdigits(node.getAnchor().y));
 			if(col_id.equals("type_id"))
-				return LangModel.String("node" + MapPhysicalNodeElement.typ);
+				return LangModel.getString("node" + MapPhysicalNodeElement.typ);
 		}
 		catch(Exception e)
 		{
@@ -79,13 +81,17 @@ public class MapPhysicalNodeElementModel extends MapNodeElementModel
 		if(col_id.equals("name"))
 			return new TextFieldEditor(node.name);
 		if(col_id.equals("owner_id"))
-			return new ObjectResourceComboBox("user", node.owner_id);
+		{
+			ObjectResourceComboBox orcb = new ObjectResourceComboBox("user", node.owner_id);
+			orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
+			return orcb;
+		}
 		if(col_id.equals("typ"))
 			return new TextFieldEditor( node.getTyp() );
 		if(col_id.equals("longitude"))
-			return new TextFieldEditor( String.valueOf(MyUtil.fourdigits(node.getAnchor().x)) );
+			return new TextFieldEditor( String.valueOf(MiscUtil.fourdigits(node.getAnchor().x)) );
 		if(col_id.equals("latitude"))
-			return new TextFieldEditor( String.valueOf(MyUtil.fourdigits(node.getAnchor().y)) );
+			return new TextFieldEditor( String.valueOf(MiscUtil.fourdigits(node.getAnchor().y)) );
 		return null;
 	}
 
@@ -94,15 +100,20 @@ public class MapPhysicalNodeElementModel extends MapNodeElementModel
 		return getColumnRenderer(col_id);
 	}
 
-	public Vector getPropertyColumns()
+	List cols = new LinkedList();
 	{
-		Vector cols = new Vector();
-		Vector cols2 = super.getPropertyColumns();
 //		cols.add("id");
 		cols.add("name");
 		cols.add("longitude");
 		cols.add("latitude");
-		cols.addAll(cols2);
+	}
+	
+	public List getPropertyColumns()
+	{
+		List retcols = new LinkedList();
+		List cols2 = super.getPropertyColumns();
+		retcols.addAll(cols);
+		retcols.addAll(cols2);
 		return cols;
 	}
 	public String getPropertyName(String col_id)

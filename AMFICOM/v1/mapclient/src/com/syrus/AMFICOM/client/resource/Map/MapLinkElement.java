@@ -2,13 +2,14 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 
 import com.ofx.geometry.SxDoublePoint;
 
-import com.syrus.AMFICOM.Client.Configure.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.UI.DEF;
 import com.syrus.AMFICOM.Client.General.UI.LineComboBox;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.Client.Resource.Scheme.ElementAttribute;
 
+import com.syrus.AMFICOM.Client.Resource.StubResource;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Stroke;
@@ -16,7 +17,7 @@ import java.awt.Stroke;
 import java.util.Hashtable;
 
 //A0A
-public abstract class MapLinkElement extends ObjectResource implements MapElement 
+public abstract class MapLinkElement extends StubResource implements MapElement 
 {
 	public String id = "";
 	public String name = "";
@@ -98,10 +99,10 @@ public abstract class MapLinkElement extends ObjectResource implements MapElemen
 		{
 //			MapNodeElement smne = (MapNodeElement )getMapContext().getNode(startNode_id);
 			MapNodeElement smne = startNode;
-			s2 =  ":\n" + "   от " + smne.getName() + " [" + LangModel.String("node" + smne.getTyp()) + "]";
+			s2 =  ":\n" + "   от " + smne.getName() + " [" + LangModel.getString("node" + smne.getTyp()) + "]";
 //			MapNodeElement emne = (MapNodeElement )getMapContext().getNode(endNode_id);
 			MapNodeElement emne = endNode;
-			s3 = "\n" + "   до " + emne.getName() + " [" + LangModel.String("node" + emne.getTyp()) + "]";
+			s3 = "\n" + "   до " + emne.getName() + " [" + LangModel.getString("node" + emne.getTyp()) + "]";
 		}
 		catch(Exception e)
 		{

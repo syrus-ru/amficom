@@ -4,6 +4,7 @@ import com.ofx.geometry.SxDoublePoint;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
@@ -14,13 +15,13 @@ import com.syrus.AMFICOM.CORBA.Map.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.CORBA.Scheme.*;
-import com.syrus.AMFICOM.Client.Configure.Map.*;
+import com.syrus.AMFICOM.Client.Map.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.General.UI.TrueFalseComboBox;
-import com.syrus.AMFICOM.Client.Configure.Map.Strategy.*;
-import com.syrus.AMFICOM.Client.Configure.Map.Popup.*;
-import com.syrus.AMFICOM.Client.Configure.Map.UI.*;
-import com.syrus.AMFICOM.Client.Configure.Map.UI.MapPathGeneralPanel;
+import com.syrus.AMFICOM.Client.Map.Strategy.*;
+import com.syrus.AMFICOM.Client.Map.Popup.*;
+import com.syrus.AMFICOM.Client.Map.UI.*;
+import com.syrus.AMFICOM.Client.Map.UI.MapPathGeneralPanel;
 
 //A0A
 public class MapTransmissionPathElementModel extends MapLinkElementModel
@@ -82,7 +83,7 @@ public class MapTransmissionPathElementModel extends MapLinkElementModel
 					(MapTransmissionPathProtoElement )Pool.get(
 							MapTransmissionPathProtoElement.typ,
 							path.type_id);
-			path.attributes = ResourceUtil.copyAttributes(null, mppe.attributes);
+			path.attributes = (Hashtable )ResourceUtil.copyAttributes1(null, mppe.attributes);
 	//		type_id = (String )mppe.ID;
 		}
 		if(col_id.equals("path_id"))
@@ -96,7 +97,11 @@ public class MapTransmissionPathElementModel extends MapLinkElementModel
 		if(col_id.equals("name"))
 			return new TextFieldEditor(path.name);
 		if(col_id.equals("type_id"))
-			return new ObjectResourceComboBox("mappathproto", path.type_id);
+		{
+			ObjectResourceComboBox orcb = new ObjectResourceComboBox("mappathproto", path.type_id);
+			orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
+			return orcb;
+		}
 		if(col_id.equals("path_id"))
 		{
 			MapTransmissionPathProtoElement mtppe =
@@ -108,6 +113,7 @@ public class MapTransmissionPathElementModel extends MapLinkElementModel
 
 			Scheme scheme = (Scheme )Pool.get(Scheme.typ, path.getMapContext().scheme_id);
 			ObjectResourceComboBox orcb =  new ObjectResourceComboBox(SchemePath.typ, path.PATH_ID);
+			orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
 			Hashtable ht = Pool.getHash(SchemePath.typ);
 			Hashtable ht2 = new Hashtable();
 			for(Enumeration enum = ht.elements(); enum.hasMoreElements();)
@@ -124,19 +130,24 @@ public class MapTransmissionPathElementModel extends MapLinkElementModel
 		}
 //			return new TextFieldEditor(path.PATH_ID);
 		if(col_id.equals("owner_id"))
-			return new ObjectResourceComboBox("user", path.owner_id);
+		{
+			ObjectResourceComboBox orcb = new ObjectResourceComboBox("user", path.owner_id);
+			orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
+			return orcb;
+		}
 		if(col_id.equals("length"))
-			return new TextFieldEditor(String.valueOf( MyUtil.fourdigits(path.getSizeInDoubleLt())));
+			return new TextFieldEditor(String.valueOf( MiscUtil.fourdigits(path.getSizeInDoubleLt())));
 		if(col_id.equals("startnode"))
 		{
 			MapContext mc = (MapContext )Pool.get(MapContext.typ, path.mapContextID);
 			Hashtable ht2 = new Hashtable();
-			for(Enumeration enum = mc.getNodes().elements(); enum.hasMoreElements();)
+			for(Iterator it = mc.getNodes().iterator(); it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource )enum.nextElement();
+				ObjectResource or = (ObjectResource )it.next();
 				ht2.put(or.getId(), or);
 			}
 			ObjectResourceComboBox orcb =  new ObjectResourceComboBox(ht2, path.startNode_id);
+			orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
 //			orcb.setContents(ht2, true);
 //			orcb.setSelected(path.startNode);
 			return orcb;
@@ -145,12 +156,13 @@ public class MapTransmissionPathElementModel extends MapLinkElementModel
 		{
 			MapContext mc = (MapContext )Pool.get(MapContext.typ, path.mapContextID);
 			Hashtable ht2 = new Hashtable();
-			for(Enumeration enum = mc.getNodes().elements(); enum.hasMoreElements();)
+			for(Iterator it = mc.getNodes().iterator(); it.hasNext();)
 			{
-				ObjectResource or = (ObjectResource )enum.nextElement();
+				ObjectResource or = (ObjectResource )it.next();
 				ht2.put(or.getId(), or);
 			}
 			ObjectResourceComboBox orcb =  new ObjectResourceComboBox(ht2, path.endNode_id);
+			orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
 //			orcb.setContents(ht2, true);
 //			orcb.setSelected(path.endNode);
 			return orcb;
@@ -163,10 +175,8 @@ public class MapTransmissionPathElementModel extends MapLinkElementModel
 		return getColumnRenderer(col_id);
 	}
 
-	public Vector getPropertyColumns()
+	List cols = new LinkedList();
 	{
-		Vector cols = new Vector();
-		Vector cols2 = super.getPropertyColumns();
 //		cols.add("id");
 		cols.add("name");
 		cols.add("length");
@@ -177,8 +187,15 @@ public class MapTransmissionPathElementModel extends MapLinkElementModel
 		cols.add("path_id");
 		cols.add("startnode");
 		cols.add("endnode");
-		cols.addAll(cols2);
-		return cols;
+	}	
+
+	public List getPropertyColumns()
+	{
+		List retcols = new LinkedList();
+		List cols2 = super.getPropertyColumns();
+		retcols.addAll(cols);
+		retcols.addAll(cols2);
+		return retcols;
 	}
 
 	public String getPropertyName(String col_id)
@@ -219,10 +236,10 @@ public class MapTransmissionPathElementModel extends MapLinkElementModel
 		double length = 0;
 		double d1;
 		String l1;
-		Enumeration e = path.getMapContext().getPhysicalLinksInTransmissiionPath(path.getId()).elements();
-		while( e.hasMoreElements())
+		Iterator e = path.getMapContext().getPhysicalLinksInTransmissiionPath(path.getId()).iterator();
+		while( e.hasNext())
 		{
-			MapPhysicalLinkElement link = (MapPhysicalLinkElement )e.nextElement();
+			MapPhysicalLinkElement link = (MapPhysicalLinkElement )e.next();
 			l1 = link.getModel().getPropertyValue("physical_length");
 			try
 			{
@@ -251,10 +268,10 @@ public class MapTransmissionPathElementModel extends MapLinkElementModel
 		double length = 0;
 		double d1;
 		String l1;
-		Enumeration e = path.getMapContext().getPhysicalLinksInTransmissiionPath(path.getId()).elements();
-		while( e.hasMoreElements())
+		Iterator e = path.getMapContext().getPhysicalLinksInTransmissiionPath(path.getId()).iterator();
+		while( e.hasNext())
 		{
-			MapPhysicalLinkElement link = (MapPhysicalLinkElement )e.nextElement();
+			MapPhysicalLinkElement link = (MapPhysicalLinkElement )e.next();
 			l1 = link.getModel().getPropertyValue("optical_length");
 //			length = length + Double.parseDouble(l1);
 			try

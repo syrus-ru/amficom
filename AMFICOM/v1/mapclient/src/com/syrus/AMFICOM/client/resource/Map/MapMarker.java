@@ -52,10 +52,10 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 
 import com.ofx.geometry.SxDoublePoint;
 
-import com.syrus.AMFICOM.Client.Configure.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Configure.Map.Strategy.MapStrategy;
-import com.syrus.AMFICOM.Client.Configure.Map.Strategy.VoidStrategy;
-import com.syrus.AMFICOM.Client.Configure.Map.UI.Display.MapMarkerDisplayModel;
+import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
+import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategy;
+import com.syrus.AMFICOM.Client.Map.Strategy.VoidStrategy;
+import com.syrus.AMFICOM.Client.Map.UI.Display.MapMarkerDisplayModel;
 import com.syrus.AMFICOM.Client.General.Event.MapNavigateEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceDisplayModel;
@@ -68,6 +68,7 @@ import com.syrus.AMFICOM.Client.Resource.Scheme.PathElement;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePath;
 import com.syrus.AMFICOM.Client.Resource.Scheme.SchemePathDecompositor;
 
+import com.syrus.AMFICOM.Client.Resource.StubResource;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -86,7 +87,7 @@ import javax.swing.JFrame;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 
-public class MapMarker extends ObjectResource implements MapElement
+public class MapMarker extends StubResource implements MapElement
 {
 	static final public String typ = "mapmarker";
 
@@ -1178,14 +1179,14 @@ public class MapMarker extends ObjectResource implements MapElement
 		double nodeLinkLength =  Math.sqrt( 
 				(endNodeX - startNodeX) * (endNodeX - startNodeX) +
 				(endNodeY - startNodeY) * (endNodeY - startNodeY) );
-
+/*
 		double thisX = lnl.convertLongLatToScreen(anchor).x;
 		double thisY = lnl.convertLongLatToScreen(anchor).y;
 
 		double lengthFromStartNode = Math.sqrt( 
 			(thisX - startNodeX) * (thisX - startNodeX) +
 			(thisY - startNodeY) * (thisY - startNodeY) );
-
+*/
 		double cos_b = (endNodeY - startNodeY) / nodeLinkLength;
 
 		double sin_b = (endNodeX - startNodeX) / nodeLinkLength;

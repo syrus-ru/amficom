@@ -3,10 +3,10 @@ package com.syrus.AMFICOM.Client.Resource.Map;
 import com.ofx.geometry.*;
 import com.syrus.AMFICOM.CORBA.Map.*;
 import com.syrus.AMFICOM.CORBA.Scheme.*;
-import com.syrus.AMFICOM.Client.Configure.Map.*;
-import com.syrus.AMFICOM.Client.Configure.Map.UI.*;
-import com.syrus.AMFICOM.Client.Configure.Map.Popup.*;
-import com.syrus.AMFICOM.Client.Configure.Map.Strategy.*;
+import com.syrus.AMFICOM.Client.Map.*;
+import com.syrus.AMFICOM.Client.Map.UI.*;
+import com.syrus.AMFICOM.Client.Map.Popup.*;
+import com.syrus.AMFICOM.Client.Map.Strategy.*;
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.Network.*;
@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.Client.General.UI.TrueFalseComboBox;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.table.*;
@@ -45,7 +46,7 @@ public class MapPhysicalLinkElementModel extends MapLinkElementModel
 				return link.LINK_ID;
 //				return Pool.getName(SchemeCableLink.typ, link.LINK_ID);
 			if(col_id.equals("length"))
-				return String.valueOf( MyUtil.fourdigits(link.getSizeInDoubleLt()));
+				return String.valueOf( MiscUtil.fourdigits(link.getSizeInDoubleLt()));
 		}
 		catch(Exception e)
 		{
@@ -69,7 +70,7 @@ public class MapPhysicalLinkElementModel extends MapLinkElementModel
 					(MapPhysicalLinkProtoElement )Pool.get(
 							MapPhysicalLinkProtoElement.typ,
 							link.type_id);
-			link.attributes = ResourceUtil.copyAttributes(null, mplpe.attributes);
+			link.attributes = (Hashtable )ResourceUtil.copyAttributes1(null, mplpe.attributes);
 		}
 		if(col_id.equals("link_id"))
 		{
@@ -88,9 +89,17 @@ public class MapPhysicalLinkElementModel extends MapLinkElementModel
 	//		if(col_id.equals("codename"))
 	//			return new JTextField(codename);
 		if(col_id.equals("owner_id"))
-			return new ObjectResourceComboBox("user", link.owner_id);
+		{
+			ObjectResourceComboBox orcb = new ObjectResourceComboBox("user", link.owner_id);
+			orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
+			return orcb;
+		}
 		if(col_id.equals("type_id"))
-			return new ObjectResourceComboBox("maplinkproto", link.type_id);
+		{
+			ObjectResourceComboBox orcb = new ObjectResourceComboBox("maplinkproto", link.type_id);
+			orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
+			return orcb;
+		}
 		if(col_id.equals("link_id"))
 		{
 			MapPhysicalLinkProtoElement mplpe =
@@ -102,6 +111,7 @@ public class MapPhysicalLinkElementModel extends MapLinkElementModel
 
 			Scheme scheme = (Scheme )Pool.get(Scheme.typ, link.getMapContext().scheme_id);
 			ObjectResourceComboBox orcb =  new ObjectResourceComboBox(SchemeCableLink.typ, link.LINK_ID);
+			orcb.setFontSize(ObjectResourceComboBox.SMALL_FONT);
 			Hashtable ht = Pool.getHash(SchemeCableLink.typ);
 			Hashtable ht2 = new Hashtable();
 			for(Enumeration enum = ht.elements(); enum.hasMoreElements();)
@@ -129,10 +139,8 @@ public class MapPhysicalLinkElementModel extends MapLinkElementModel
 		return new MapLinkPane(link);
 	}
 
-	public Vector getPropertyColumns()
+	List cols = new LinkedList();
 	{
-		Vector cols = new Vector();
-		Vector cols2 = super.getPropertyColumns();
 //		cols.add("id");
 		cols.add("name");
 		cols.add("length");
@@ -141,8 +149,15 @@ public class MapPhysicalLinkElementModel extends MapLinkElementModel
 //		cols.add("owner_id");
 		cols.add("type_id");
 		cols.add("link_id");
-		cols.addAll(cols2);
-		return cols;
+	}
+
+	public List getPropertyColumns()
+	{
+		List retcols = new LinkedList();
+		List cols2 = super.getPropertyColumns();
+		retcols.addAll(cols);
+		retcols.addAll(cols2);
+		return retcols;
 	}
 
 	public String getPropertyName(String col_id)

@@ -524,54 +524,6 @@ public class RISDMapDataSource
 	    }
 	}
 
-	public void LoadJMapDescriptors()
-	{
-		if(si == null)
-			return;
-		if(!si.isOpened())
-			return;
-
-		LoadMapDescriptors();
-
-		System.out.println("LoadJMapDescriptors:");
-
-		int i;
-		int ecode = 0;
-		int count;
-		ISMMapContextSeq_TransferableHolder mh = new ISMMapContextSeq_TransferableHolder();
-		ISMMapContext_Transferable maps[];
-		ISMMapContext mc;
-/*
-		try
-		{
-			ecode = si.ci.server.GetJMapDescriptors(si.accessIdentity, mh);
-		}
-		catch (Exception ex)
-		{
-			System.err.print("Error getting ism map descriptors: " + ex.getMessage());
-			ex.printStackTrace();
-			return;
-		}
-
-		if (ecode != Constants.ERROR_NO_ERROR)
-		{
-			System.out.println ("Failed GetJMapDescriptors! status = " + ecode);
-			return;
-		}
-*/
-		maps = mh.value;
-		count = maps.length;
-		System.out.println("...Done! " + count + " ism map(s) fetched");
-
-	    for (i = 0; i < count; i++)
-		{
-			MapContext mapc = (MapContext )Pool.get("mapcontext", maps[i].map_id);
-			mc = new ISMMapContext(maps[i], (MapContext_Transferable )(mapc.getTransferable()));
-			Pool.put("ismmapcontext", mc.getId(), mc);
-//			Pool.putName("ismmapcontext", mc.getId(), mc.getName());
-	    }
-	}
-
 	public void LoadMaps()
 	{
 		if(si == null)
@@ -595,7 +547,7 @@ public class RISDMapDataSource
 		MapEquipmentNodeElement equipment;
 		MapElementSeq_TransferableHolder kh = new MapElementSeq_TransferableHolder();
 		MapElement_Transferable kiss[];
-		MapKISNodeElement kis;
+
 
 		MapMarkElementSeq_TransferableHolder mrh = new MapMarkElementSeq_TransferableHolder();
 		MapMarkElement_Transferable marks[];
@@ -677,7 +629,7 @@ public class RISDMapDataSource
 //			Pool.putName("mapequipmentelement", equipment.getId(), equipment.getName());
 			loaded_objects.add(equipment);
 	    }
-
+/*
 		kiss = kh.value;
 		count = kiss.length;
 		System.out.println("...Done! " + count + " kis(s) fetched");
@@ -688,7 +640,7 @@ public class RISDMapDataSource
 //			Pool.putName("mapkiselement", kis.getId(), kis.getName());
 			loaded_objects.add(kis);
 	    }
-		
+*/		
 
 		marks = mrh.value;
 		count = marks.length;
@@ -764,178 +716,6 @@ public class RISDMapDataSource
 			LoadMap((String )ids.get(i));
 	}
 
-	public void LoadJMaps()
-	{
-		if(si == null)
-			return;
-		if(!si.isOpened())
-			return;
-
-		LoadMaps();
-
-		System.out.println("LoadJMaps:");
-
-		int i;
-		int ecode = 0;
-		int count;
-		ImageResourceSeq_TransferableHolder ih = new ImageResourceSeq_TransferableHolder();
-		ImageResource_Transferable images[];
-		ImageResource image;
-		ISMMapContextSeq_TransferableHolder mh = new ISMMapContextSeq_TransferableHolder();
-		ISMMapContext_Transferable maps[];
-		ISMMapContext mc;
-		MapKISElementSeq_TransferableHolder kh = new MapKISElementSeq_TransferableHolder();
-		MapKISElement_Transferable kiss[];
-		MapKISNodeElement kis;
-
-		MapPhysicalNodeElementSeq_TransferableHolder nh = new MapPhysicalNodeElementSeq_TransferableHolder();
-		MapPhysicalNodeElement_Transferable nodes[];
-		MapPhysicalNodeElement node;
-		MapNodeLinkElementSeq_TransferableHolder nlh = new MapNodeLinkElementSeq_TransferableHolder();
-		MapNodeLinkElement_Transferable nodelinks[];
-		MapNodeLinkElement nodelink;
-		MapPhysicalLinkElementSeq_TransferableHolder lh = new MapPhysicalLinkElementSeq_TransferableHolder();
-		MapPhysicalLinkElement_Transferable links[];
-		MapPhysicalLinkElement link;
-		MapPathElementSeq_TransferableHolder ph = new MapPathElementSeq_TransferableHolder();
-		MapPathElement_Transferable paths[];
-		MapTransmissionPathElement path;
-
-		Vector loaded_objects = new Vector();
-		ObjectResource or;
-
-		try
-		{
-			ecode = si.ci.server.GetJMaps(si.accessIdentity, ih, mh, kh, nh, nlh, lh, ph);
-		}
-		catch (Exception ex)
-		{
-			System.err.print("Error getting maps: " + ex.getMessage());
-			ex.printStackTrace();
-			return;
-		}
-
-		if (ecode != Constants.ERROR_NO_ERROR)
-		{
-			System.out.println ("Failed GetMaps! status = " + ecode);
-			return;
-		}
-
-/*
-		images = ih.value;
-		count = images.length;
-		System.out.println("...Done! " + count + " image(s) fetched");
-	    for (i = 0; i < count; i++)
-		{
-			image = new ImageResource(images[i]);
-			ImageCatalogue.add(image.getId(), image);
-	    }
-*/
-		maps = mh.value;
-		count = maps.length;
-		System.out.println("...Done! " + count + " map(s) fetched");
-	    for (i = 0; i < count; i++)
-		{
-			MapContext mapc = (MapContext )Pool.get("mapcontext", maps[i].map_id);
-			mc = new ISMMapContext(maps[i], (MapContext_Transferable )(mapc.getTransferable()));
-
-//			mc = new ISMMapContext(maps[i]);
-//			mc.setNetMapContext(mapc);
-			mc.setNetMapContextFromTransferable(mapc);
-
-//			Pool.put("mapcontext", maps[i].map_id, mc);
-			Pool.put("ismmapcontext", mc.getId(), mc);
-//			Pool.putName("ismmapcontext", mc.getId(), mc.getName());
-			loaded_objects.add(mc);
-	    }
-/*
-		kiss = kh.value;
-		count = kiss.length;
-		System.out.println("...Done! " + count + " kis(s) fetched");
-	    for (i = 0; i < count; i++)
-		{
-			kis = new MapKISNodeElement(kiss[i]);
-			Pool.put("mapkiselement", kis.getId(), kis);
-//			Pool.putName("mapkiselement", kis.getId(), kis.getName());
-			loaded_objects.add(kis);
-	    }
-*/		
-/*
-		cps = ch.value;
-		count = cps.length;
-		System.out.println("...Done! " + count + " connection point(s) fetched");
-	    for (i = 0; i < count; i++)
-		{
-			cp = new MapConnectionPoint(cps[i]);
-			Pool.put("mapconnectionpointelement", cp.getId(), cp);
-//			Pool.putName("mapconnectionpointelement", cp.getId(), cp.getName());
-			loaded_objects.add(cp);
-	    }
-*/
-		nodes = nh.value;
-		count = nodes.length;
-		System.out.println("...Done! " + count + " node(s) fetched");
-	    for (i = 0; i < count; i++)
-		{
-			node = new MapPhysicalNodeElement(nodes[i]);
-			Pool.put("mapnodeelement", node.getId(), node);
-//			Pool.putName("mapnodeelement", node.getId(), node.getName());
-			loaded_objects.add(node);
-	    }
-
-		nodelinks = nlh.value;
-		count = nodelinks.length;
-		System.out.println("...Done! " + count + " nodelink(s) fetched");
-	    for (i = 0; i < count; i++)
-		{
-			nodelink = new MapNodeLinkElement(nodelinks[i]);
-			Pool.put("mapnodelinkelement", nodelink.getId(), nodelink);
-//			Pool.putName("mapnodelinkelement", nodelink.getId(), nodelink.getName());
-			loaded_objects.add(nodelink);
-	    }
-
-		links = lh.value;
-		count = links.length;
-		System.out.println("...Done! " + count + " link(s) fetched");
-	    for (i = 0; i < count; i++)
-		{
-			link = new MapPhysicalLinkElement(links[i]);
-			Pool.put("maplinkelement", link.getId(), link);
-//			Pool.putName("maplinkelement", link.getId(), link.getName());
-			loaded_objects.add(link);
-	    }
-
-		paths = ph.value;
-		count = paths.length;
-		System.out.println("...Done! " + count + " path(s) fetched");
-	    for (i = 0; i < count; i++)
-		{
-			path = new MapTransmissionPathElement(paths[i]);
-			Pool.put("mappathelement", path.getId(), path);
-//			Pool.putName("mappathelement", path.getId(), path.getName());
-			loaded_objects.add(path);
-	    }
-
-		// update loaded objects
-		count = loaded_objects.size();
-	    for (i = 0; i < count; i++)
-		{
-			or = (ObjectResource )loaded_objects.get(i);
-			or.updateLocalFromTransferable();
-		}
-	}
-
-	public void LoadJMaps(Vector ids)
-	{
-		if(si == null)
-			return;
-		if(!si.isOpened())
-			return;
-
-		for(int i = 0; i < ids.size(); i++)
-			LoadJMap((String )ids.get(i));
-	}
-
 	public void LoadMap(String map_id)
 	{
 		if(si == null)
@@ -959,7 +739,6 @@ public class RISDMapDataSource
 		MapEquipmentNodeElement equipment;
 		MapElementSeq_TransferableHolder kh = new MapElementSeq_TransferableHolder();
 		MapElement_Transferable kiss[];
-		MapKISNodeElement kis;
 
 		MapMarkElementSeq_TransferableHolder mrh = new MapMarkElementSeq_TransferableHolder();
 		MapMarkElement_Transferable marks[];
@@ -1036,20 +815,12 @@ public class RISDMapDataSource
 	    for (i = 0; i < count; i++)
 		{
 			SchemeElement se = (SchemeElement )Pool.get(SchemeElement .typ, equipments[i].element_id);
-			if(equipments[i].has_kis)
-			{
-				kis = new MapKISNodeElement(equipments[i]);
-				Pool.put("mapkiselement", kis.getId(), kis);
-				loaded_objects.add(kis);
-			}
-			else
-			{
-				equipment = new MapEquipmentNodeElement(equipments[i]);
-				Pool.put("mapequipmentelement", equipment.getId(), equipment);
-				loaded_objects.add(equipment);
-			}
-	    }
 
+			equipment = new MapEquipmentNodeElement(equipments[i]);
+			Pool.put("mapequipmentelement", equipment.getId(), equipment);
+			loaded_objects.add(equipment);
+	    }
+/*
 		kiss = kh.value;
 		count = kiss.length;
 		System.out.println("...Done! " + count + " kis(s) fetched");
@@ -1059,7 +830,7 @@ public class RISDMapDataSource
 			Pool.put("mapkiselement", kis.getId(), kis);
 			loaded_objects.add(kis);
 	    }
-		
+*/		
 		marks = mrh.value;
 		count = marks.length;
 		System.out.println("...Done! " + count + " mark(s) fetched");
@@ -1119,200 +890,6 @@ public class RISDMapDataSource
 		}
 	}
 
-	public void LoadJMap(String map_id)
-	{
-		if(si == null)
-			return;
-		if(!si.isOpened())
-			return;
-
-		ISMMapContext jmc = (ISMMapContext )Pool.get("ismmapcontext", map_id);
-		LoadMap(jmc.ISM_map_id);
-
-		System.out.println("LoadJMap: " + map_id);
-
-		int i;
-		int ecode = 0;
-		int count;
-		ImageResourceSeq_TransferableHolder ih = new ImageResourceSeq_TransferableHolder();
-		ImageResource_Transferable images[];
-		ImageResource image;
-		ISMMapContextSeq_TransferableHolder mh = new ISMMapContextSeq_TransferableHolder();
-		ISMMapContext_Transferable maps[];
-		ISMMapContext mc;
-		MapKISElementSeq_TransferableHolder kh = new MapKISElementSeq_TransferableHolder();
-		MapKISElement_Transferable kiss[];
-		MapKISNodeElement kis;
-
-		MapPhysicalNodeElementSeq_TransferableHolder nh = new MapPhysicalNodeElementSeq_TransferableHolder();
-		MapPhysicalNodeElement_Transferable nodes[];
-		MapPhysicalNodeElement node;
-		MapNodeLinkElementSeq_TransferableHolder nlh = new MapNodeLinkElementSeq_TransferableHolder();
-		MapNodeLinkElement_Transferable nodelinks[];
-		MapNodeLinkElement nodelink;
-		MapPhysicalLinkElementSeq_TransferableHolder lh = new MapPhysicalLinkElementSeq_TransferableHolder();
-		MapPhysicalLinkElement_Transferable links[];
-		MapPhysicalLinkElement link;
-		MapPathElementSeq_TransferableHolder ph = new MapPathElementSeq_TransferableHolder();
-		MapPathElement_Transferable paths[];
-		MapTransmissionPathElement path;
-
-		Vector loaded_objects = new Vector();
-		ObjectResource or;
-
-		try
-		{
-			ecode = si.ci.server.GetJMap(si.accessIdentity, map_id, ih, mh, kh, nh, nlh, lh, ph);
-		}
-		catch (Exception ex)
-		{
-			System.err.print("Error getting J maps: " + ex.getMessage());
-			ex.printStackTrace();
-			return;
-		}
-
-		if (ecode != Constants.ERROR_NO_ERROR)
-		{
-			System.out.println ("Failed GetMaps! status = " + ecode);
-			return;
-		}
-
-/*
-		images = ih.value;
-		count = images.length;
-		System.out.println("...Done! " + count + " image(s) fetched");
-	    for (i = 0; i < count; i++)
-		{
-			image = new ImageResource(images[i]);
-			ImageCatalogue.add(image.getId(), image);
-	    }
-*/
-		maps = mh.value;
-		count = maps.length;
-		System.out.println("...Done! " + count + " map(s) fetched");
-	    for (i = 0; i < count; i++)
-		{
-			MapContext mapc = (MapContext )Pool.get("mapcontext", maps[i].map_id);
-			mc = new ISMMapContext(maps[i], (MapContext_Transferable )(mapc.getTransferable()));
-
-//			mc = new ISMMapContext(maps[i]);
-//			mc.setNetMapContext(mapc);
-			mc.setNetMapContextFromTransferable(mapc);
-
-//			Pool.put("mapcontext", maps[i].map_id, mc);
-			Pool.put("ismmapcontext", mc.getId(), mc);
-//			Pool.putName("ismmapcontext", mc.getId(), mc.getName());
-			loaded_objects.add(mc);
-	    }
-/*
-		kiss = kh.value;
-		count = kiss.length;
-		System.out.println("...Done! " + count + " kis(s) fetched");
-	    for (i = 0; i < count; i++)
-		{
-			kis = new MapKISNodeElement(kiss[i]);
-			Pool.put("mapkiselement", kis.getId(), kis);
-//			Pool.putName("mapkiselement", kis.getId(), kis.getName());
-			loaded_objects.add(kis);
-	    }
-*/
-		nodes = nh.value;
-		count = nodes.length;
-		System.out.println("...Done! " + count + " node(s) fetched");
-	    for (i = 0; i < count; i++)
-		{
-			node = new MapPhysicalNodeElement(nodes[i]);
-			Pool.put("mapnodeelement", node.getId(), node);
-//			Pool.putName("mapnodeelement", node.getId(), node.getName());
-			loaded_objects.add(node);
-	    }
-
-		nodelinks = nlh.value;
-		count = nodelinks.length;
-		System.out.println("...Done! " + count + " nodelink(s) fetched");
-	    for (i = 0; i < count; i++)
-		{
-			nodelink = new MapNodeLinkElement(nodelinks[i]);
-			Pool.put("mapnodelinkelement", nodelink.getId(), nodelink);
-//			Pool.putName("mapnodelinkelement", nodelink.getId(), nodelink.getName());
-			loaded_objects.add(nodelink);
-	    }
-
-		links = lh.value;
-		count = links.length;
-		System.out.println("...Done! " + count + " link(s) fetched");
-	    for (i = 0; i < count; i++)
-		{
-			link = new MapPhysicalLinkElement(links[i]);
-			Pool.put("maplinkelement", link.getId(), link);
-//			Pool.putName("maplinkelement", link.getId(), link.getName());
-			loaded_objects.add(link);
-	    }
-
-		paths = ph.value;
-		count = paths.length;
-		System.out.println("...Done! " + count + " path(s) fetched");
-	    for (i = 0; i < count; i++)
-		{
-			path = new MapTransmissionPathElement(paths[i]);
-			Pool.put("mappathelement", path.getId(), path);
-//			Pool.putName("mappathelement", path.getId(), path.getName());
-			loaded_objects.add(path);
-	    }
-
-		// update loaded objects
-		count = loaded_objects.size();
-	    for (i = 0; i < count; i++)
-		{
-			or = (ObjectResource )loaded_objects.get(i);
-			or.updateLocalFromTransferable();
-		}
-	}
-
-	public Vector getNodeConnectionPoints(String element_id)
-	{
-/*
-		System.out.println("getNodeConnectionPoints:");
-	
-		int ecode = 0;
-		int count;
-		int i;
-		MapConnectionPointElementSeq_TransferableHolder ch = new MapConnectionPointElementSeq_TransferableHolder();
-		MapConnectionPointElement_Transferable cps[];
-//		MapConnectionPoint cp;
-		Vector vec = new Vector();
-		try
-		{
-			ecode = si.ci.server.GetConnectionPoints(si.accessIdentity, element_id, ch);
-		}
-		catch (Exception ex)
-		{
-			System.err.print("Error getting maps: " + ex.getMessage());
-			ex.printStackTrace();
-			return vec;
-		}
-
-		if (ecode != Constants.ERROR_NO_ERROR)
-		{
-			System.out.println ("Failed GetMaps! status = " + ecode);
-			return vec;
-		}
-
-		cps = ch.value;
-		count = cps.length;
-		System.out.println("...Done! " + count + " connection point(s) fetched");
-	    for (i = 0; i < count; i++)
-		{
-			cp = new MapConnectionPoint(cps[i]);
-			Pool.put("mapconnectionpointelement", cp.getId(), cp);
-//			Pool.putName("mapconnectionpointelement", cp.getId(), cp.getName());
-			vec.add(cp);
-	    }
-		return vec;
-*/
-		return null;
-	}
-
 	public void SaveMap(String mc_id)
 	{
 		MapContext mc = (MapContext )Pool.get("mapcontext", mc_id);
@@ -1330,11 +907,11 @@ public class RISDMapDataSource
 		ObjectResource os;
 
 		Hashtable image_vec = new Hashtable();
-		Vector equipment_vec;
-		Vector kis_vec;
-		Vector node_vec;
-		Vector mark_vec;
-		Vector vec;
+		ArrayList equipment_vec;
+		ArrayList kis_vec;
+		ArrayList node_vec;
+		ArrayList mark_vec;
+		ArrayList vec;
 
 		ImageResource_Transferable images[];
 		MapContext_Transferable maps[];
@@ -1349,7 +926,6 @@ public class RISDMapDataSource
 		ImageResource image;
 		MapContext map;
 		MapEquipmentNodeElement equipment;
-		MapKISNodeElement kis;
 		MapMarkElement mark;
 		MapPhysicalNodeElement node;
 		MapNodeLinkElement nodelink;
@@ -1360,34 +936,30 @@ public class RISDMapDataSource
 		mc.setTransferableFromLocal();
 		maps[0] = (MapContext_Transferable )mc.getTransferable();
 
-		node_vec = new Vector();
-		mark_vec = new Vector();
-		kis_vec = new Vector();
-		equipment_vec = new Vector();
+		node_vec = new ArrayList();
+		mark_vec = new ArrayList();
+		kis_vec = new ArrayList();
+		equipment_vec = new ArrayList();
 
-		vec = mc.getNodes();
-		count = vec.size();
-		for(i = 0; i < count; i++)
+		for(Iterator it = mc.getNodes().iterator(); it.hasNext();)
 		{
-			os = (ObjectResource )vec.get(i);
+			os = (ObjectResource )it.next();
 			os.setTransferableFromLocal();
 			if(os.getTyp().equals("mapnodeelement"))
 				node_vec.add(os.getTransferable());
-			if(os.getTyp().equals("mapkiselement"))
-				kis_vec.add(os.getTransferable());
 			if(os.getTyp().equals("mapequipmentelement"))
 				equipment_vec.add(os.getTransferable());
 			if(os.getTyp().equals("mapmarkelement"))
 				mark_vec.add(os.getTransferable());
 		}
-		nodes = new MapPhysicalNodeElement_Transferable[node_vec.size()];
-		node_vec.copyInto(nodes);
-		kiss = new MapElement_Transferable[kis_vec.size()];
-		kis_vec.copyInto(kiss);
-		equipments = new MapElement_Transferable[equipment_vec.size()];
-		equipment_vec.copyInto(equipments);
-		marks = new MapMarkElement_Transferable[mark_vec.size()];
-		mark_vec.copyInto(marks);
+		nodes = (MapPhysicalNodeElement_Transferable [])
+			node_vec.toArray(new MapPhysicalNodeElement_Transferable[0]);
+		kiss = (MapElement_Transferable [])
+			kis_vec.toArray(new MapElement_Transferable[0]);
+		equipments = (MapElement_Transferable [])
+			equipment_vec.toArray(new MapElement_Transferable[0]);
+		marks = (MapMarkElement_Transferable [])
+			mark_vec.toArray(new MapMarkElement_Transferable[0]);
 
 		vec = mc.getNodeLinks();
 		count = vec.size();
@@ -1399,29 +971,28 @@ public class RISDMapDataSource
 			nodelinks[i] = (MapNodeLinkElement_Transferable )os.getTransferable();
 		}
 
-		vec = mc.getPhysicalLinks();
-		count = vec.size();
-		links = new MapPhysicalLinkElement_Transferable[count];
-		for(i = 0; i < count; i++)
+		links = new MapPhysicalLinkElement_Transferable[mc.getPhysicalLinks().size()];
+		i = 0;
+		for(Iterator it = mc.getPhysicalLinks().iterator(); it.hasNext(); i++)
 		{
-			os = (ObjectResource )vec.get(i);
+			os = (ObjectResource )it.next();
 			os.setTransferableFromLocal();
 			links[i] = (MapPhysicalLinkElement_Transferable )os.getTransferable();
 		}
-
-		vec = mc.getTransmissionPath();
-		count = vec.size();
-		paths = new MapPathElement_Transferable[count];
-		for(i = 0; i < count; i++)
+	
+		paths = new MapPathElement_Transferable[mc.getTransmissionPath().size()];
+		i = 0;
+		for(Iterator it = mc.getTransmissionPath().iterator(); it.hasNext(); i++)
 		{
-			os = (ObjectResource )vec.get(i);
+			os = (ObjectResource )it.next();
 			os.setTransferableFromLocal();
 			paths[i] = (MapPathElement_Transferable )os.getTransferable();
 		}
 
 		count = image_vec.size();
 		images = new ImageResource_Transferable[image_vec.size()];
-		for(Enumeration enum = image_vec.elements(); enum.hasMoreElements();)
+		i = 0;
+		for(Enumeration enum = image_vec.elements(); enum.hasMoreElements(); i++)
 		{
 			os = (ObjectResource )enum.nextElement();
 			os.setTransferableFromLocal();
@@ -1445,168 +1016,6 @@ public class RISDMapDataSource
 		catch (Exception ex)
 		{
 			System.err.print("Error saving map: " + ex.getMessage());
-			ex.printStackTrace();
-			return;
-		}
-
-		if (ecode != Constants.ERROR_NO_ERROR)
-		{
-			System.out.println ("Failed SaveMap! status = " + ecode);
-			return;
-		}
-	}
-
-	public void SaveJMap(String mc_id)
-	{
-		ISMMapContext mc = (ISMMapContext )Pool.get("ismmapcontext", mc_id);
-
-		if(si == null)
-			return;
-		if(!si.isOpened())
-			return;
-
-//		SaveMap(mc.ISM_map_id);
-		
-		System.out.println("SaveJMap:");
-
-		int i;
-		int ecode = 0;
-		int count;
-		ObjectResource os;
-
-		Hashtable image_vec = new Hashtable();
-		Vector kis_vec;
-		Vector node_vec;
-//		Vector cp_vec;
-		Vector vec;
-		Vector nodelink_vec;
-		Vector link_vec;
-
-		ImageResource_Transferable images[];
-		ISMMapContext_Transferable maps[];
-		MapKISElement_Transferable kiss[];
-//		MapConnectionPointElement_Transferable cps[];
-		MapPhysicalNodeElement_Transferable nodes[];
-		MapNodeLinkElement_Transferable nodelinks[];
-		MapPhysicalLinkElement_Transferable links[];
-		MapPathElement_Transferable paths[];
-
-		ImageResource image;
-		ISMMapContext map;
-		MapKISNodeElement kis;
-//		MapConnectionPoint cp;
-		MapPhysicalNodeElement node;
-		MapNodeLinkElement nodelink;
-		MapPhysicalLinkElement link;
-		MapTransmissionPathElement path;
-
-		maps = new ISMMapContext_Transferable[1];
-		mc.setTransferableFromLocal();
-		maps[0] = (ISMMapContext_Transferable )mc.getTransferable();
-
-//		cp_vec = new Vector();
-		kis_vec = new Vector();
-		node_vec = new Vector();
-		nodelink_vec = new Vector();
-		link_vec = new Vector();
-
-		vec = mc.getNodes();
-		count = vec.size();
-		for(i = 0; i < count; i++)
-		{
-			os = (ObjectResource )vec.get(i);
-			os.setTransferableFromLocal();
-			if(os.getTyp().equals("mapnodeelement"))
-			{
-				node = (MapPhysicalNodeElement )os;
-				if(node.ism_map_id.equals(mc_id))
-					node_vec.add(os.getTransferable());
-			}
-			if(os.getTyp().equals("mapkiselement"))
-			{
-				kis_vec.add(os.getTransferable());
-				kis = (MapKISNodeElement )os;
-/*
-				for(Enumeration e = kis.connectionPoints.getVectorOfPorts().elements(); e.hasMoreElements();)
-				{
-					cp = (MapConnectionPoint )e.nextElement();
-					cp.setTransferableFromLocal();
-					cp_vec.add(cp.getTransferable());
-				}
-*/
-			}
-		}
-		nodes = new MapPhysicalNodeElement_Transferable[node_vec.size()];
-		node_vec.copyInto(nodes);
-		kiss = new MapKISElement_Transferable[kis_vec.size()];
-		kis_vec.copyInto(kiss);
-//		cps = new MapConnectionPointElement_Transferable[cp_vec.size()];
-//		cp_vec.copyInto(cps);
-
-		vec = mc.getNodeLinks();
-		count = vec.size();
-		for(i = 0; i < count; i++)
-		{
-			nodelink = (MapNodeLinkElement )vec.get(i);
-			if(nodelink.ism_map_id.equals(mc_id))
-			{
-				nodelink.setTransferableFromLocal();
-//				nodelinks[i] = (MapNodeLinkElement_Transferable )nodelink.getTransferable();
-				nodelink_vec.add(nodelink.getTransferable());
-			}
-		}
-		nodelinks = new MapNodeLinkElement_Transferable[nodelink_vec.size()];
-		nodelink_vec.copyInto(nodelinks);
-
-		vec = mc.getPhysicalLinks();
-		count = vec.size();
-		for(i = 0; i < count; i++)
-		{
-			link = (MapPhysicalLinkElement )vec.get(i);
-			if(link.ism_map_id.equals(mc_id))
-			{
-				link.setTransferableFromLocal();
-//				links[i] = (MapPhysicalLinkElement_Transferable )link.getTransferable();
-				link_vec.add(link.getTransferable());
-			}
-		}
-		links = new MapPhysicalLinkElement_Transferable[link_vec.size()];
-		link_vec.copyInto(links);
-
-		vec = mc.getTransmissionPath();
-		count = vec.size();
-		paths = new MapPathElement_Transferable[count];
-		for(i = 0; i < count; i++)
-		{
-			os = (ObjectResource )vec.get(i);
-			os.setTransferableFromLocal();
-			paths[i] = (MapPathElement_Transferable )os.getTransferable();
-		}
-
-		count = image_vec.size();
-		images = new ImageResource_Transferable[image_vec.size()];
-		for(Enumeration enum = image_vec.elements(); enum.hasMoreElements();)
-		{
-			os = (ObjectResource )enum.nextElement();
-			os.setTransferableFromLocal();
-			images[i] = (ImageResource_Transferable )os.getTransferable();
-		}
-
-		try
-		{
-			ecode = si.ci.server.SaveJMaps(
-					si.accessIdentity,
-					images,
-					maps,
-					kiss,
-					nodes,
-					nodelinks,
-					links,
-					paths);
-		}
-		catch (Exception ex)
-		{
-			System.err.print("Error saving ISM map: " + ex.getMessage());
 			ex.printStackTrace();
 			return;
 		}
@@ -1679,60 +1088,6 @@ public class RISDMapDataSource
 
 	}
 
-	public void ReloadJAttributes(String mc_id)
-	{
-		if(si == null)
-			return;
-		if(!si.isOpened())
-			return;
-
-		ISMMapContext mc = (ISMMapContext )Pool.get("ismmapcontext", mc_id);
-		int ecode = 0;
-		int count;
-		int i;
-
-		ReloadAttributes(mc.ISM_map_id);
-
-//		System.out.println("ReloadJAttributes:");
-		
-		String[] maps = new String[1];
-		maps[0] = mc.getId();
-
-		ElementAttributeSeq_TransferableHolder ah = new ElementAttributeSeq_TransferableHolder();
-		ElementAttribute_Transferable eas[];
-		ElementAttribute ea;
-
-		try
-		{
-			ecode = si.ci.server.ReloadISMAttributes(
-					si.accessIdentity,
-					maps,
-					ah);
-		}
-		catch (Exception ex)
-		{
-			System.err.print("Error ReloadJAttributes: " + ex.getMessage());
-			ex.printStackTrace();
-			return;
-		}
-
-		if (ecode != Constants.ERROR_NO_ERROR)
-		{
-			System.out.println ("Failed ReloadJAttributes! status = " + ecode);
-			return;
-		}
-
-		eas = ah.value;
-		count = eas.length;
-//		System.out.println("...Done! " + count + " element attribute(s) fetched");
-	    for (i = 0; i < count; i++)
-		{
-			ea = new ElementAttribute(eas[i]);
-			Pool.put("attribute", ea.getId(), ea);
-//			Pool.putName("attribute", ea.getId(), ea.getName());
-	    }
-	}
-
 	public void RemoveMap(String mc_id)
 	{
 		MapContext mc = (MapContext )Pool.get("mapcontext", mc_id);
@@ -1800,7 +1155,7 @@ public class RISDMapDataSource
 		Vector nodelink_vec;
 		Vector link_vec;
 		Vector path_vec;
-		Vector vec;
+		LinkedList vec;
 
 		String maps[];
 		String equipments[];
@@ -1813,7 +1168,6 @@ public class RISDMapDataSource
 
 		MapContext map;
 		MapEquipmentNodeElement equipment;
-		MapKISNodeElement kis;
 		MapMarkElement mark;
 		MapPhysicalNodeElement node;
 		MapNodeLinkElement nodelink;
@@ -1837,8 +1191,6 @@ public class RISDMapDataSource
 			os = (ObjectResource )vec.get(i);
 			if(os.getTyp().equals("mapnodeelement"))
 				node_vec.add(os.getId());
-			if(os.getTyp().equals("mapkiselement"))
-				kis_vec.add(os.getId());
 			if(os.getTyp().equals("mapequipmentelement"))
 				equipment_vec.add(os.getId());
 			if(os.getTyp().equals("mapmarkelement"))
@@ -1892,178 +1244,5 @@ public class RISDMapDataSource
 		}
 	}
 
-	public void RemoveJMap(String mc_id)
-	{
-		ISMMapContext mc = (ISMMapContext )Pool.get("ismmapcontext", mc_id);
 
-		if(si == null)
-			return;
-		if(!si.isOpened())
-			return;
-
-		System.out.println("RemoveJMap:");
-
-		int ecode = 0;
-
-		String[] maps = new String[1];
-		maps[0] = mc.getId();
-		String[] leer = new String[0];
-
-		try
-		{
-			ecode = si.ci.server.RemoveJMaps(
-					si.accessIdentity,
-					maps,
-					leer,
-					leer,
-					leer,
-					leer,
-					leer);
-		}
-		catch (Exception ex)
-		{
-			System.err.print("Error removing ism map: " + ex.getMessage());
-			ex.printStackTrace();
-			return;
-		}
-
-		if (ecode != Constants.ERROR_NO_ERROR)
-		{
-			System.out.println ("Failed RemoveJMap! status = " + ecode);
-			return;
-		}
-	}
-
-	public void RemoveFromJMap(String mc_id)
-	{
-		ISMMapContext mc = (ISMMapContext )Pool.get("ismmapcontext", mc_id);
-
-		if(si == null)
-			return;
-		if(!si.isOpened())
-			return;
-
-		System.out.println("RemoveFromJMap:");
-
-		int i;
-		int ecode = 0;
-		int count;
-		ObjectResource os;
-
-		Vector kis_vec;
-		Vector node_vec;
-		Vector cp_vec;
-		Vector nodelink_vec;
-		Vector link_vec;
-		Vector path_vec;
-		Vector vec;
-
-		String maps[];
-		String kiss[];
-		String cps[];
-		String nodes[];
-		String nodelinks[];
-		String links[];
-		String paths[];
-
-		MapContext map;
-		MapKISNodeElement kis;
-//		MapConnectionPoint cp;
-		MapPhysicalNodeElement node;
-		MapNodeLinkElement nodelink;
-		MapPhysicalLinkElement link;
-		MapTransmissionPathElement path;
-
-		maps = new String[0];
-
-		node_vec = new Vector();
-		cp_vec = new Vector();
-		kis_vec = new Vector();
-		nodelink_vec = new Vector();
-		link_vec = new Vector();
-		path_vec = new Vector();
-
-		vec = mc.getRemovedElements();
-		count = vec.size();
-		for(i = 0; i < count; i++)
-		{
-			os = (ObjectResource )vec.get(i);
-			if(os.getTyp().equals("mapkiselement"))
-			{
-				kis_vec.add(os.getId());
-				kis = (MapKISNodeElement )os;
-/*
-				for(Enumeration e = kis.connectionPoints.getVectorOfPorts().elements(); e.hasMoreElements();)
-				{
-					cp = (MapConnectionPoint )e.nextElement();
-					cp_vec.add(cp.getId());
-				}
-*/
-			}
-			if(os.getTyp().equals("mapnodeelement"))
-			{
-				node = (MapPhysicalNodeElement )os;
-				if(node.ism_map_id.equals(mc_id))
-					node_vec.add(node.getId());
-			}
-			if(os.getTyp().equals("mapnodelinkelement"))
-			{
-				nodelink = (MapNodeLinkElement )os;
-				if(nodelink.ism_map_id.equals(mc_id))
-					nodelink_vec.add(nodelink.getId());
-			}
-			if(os.getTyp().equals("maplinkelement"))
-			{
-				link = (MapPhysicalLinkElement )os;
-				if(link.ism_map_id.equals(mc_id))
-					link_vec.add(link.getId());
-			}
-/*
-			if(os.getTyp().equals("mapconnectionpointelement"))
-			{
-				cp_vec.add(os.getId());
-			}
-*/
-			if(os.getTyp().equals("mappathelement"))
-			{
-				path_vec.add(os.getId());
-			}
-		}
-		nodes = new String[node_vec.size()];
-		node_vec.copyInto(nodes);
-		kiss = new String[kis_vec.size()];
-		kis_vec.copyInto(kiss);
-		cps = new String[cp_vec.size()];
-		cp_vec.copyInto(cps);
-		nodelinks = new String[nodelink_vec.size()];
-		nodelink_vec.copyInto(nodelinks);
-		links = new String[link_vec.size()];
-		link_vec.copyInto(links);
-		paths = new String[path_vec.size()];
-		path_vec.copyInto(paths);
-
-		try
-		{
-			ecode = si.ci.server.RemoveJMaps(
-					si.accessIdentity,
-					maps,
-					kiss,
-					nodes,
-					nodelinks,
-					links,
-					paths);
-		}
-		catch (Exception ex)
-		{
-			System.err.print("Error removing from ism map: " + ex.getMessage());
-			ex.printStackTrace();
-			return;
-		}
-
-		if (ecode != Constants.ERROR_NO_ERROR)
-		{
-			System.out.println ("Failed RemoveFromJMap! status = " + ecode);
-			return;
-		}
-	}
 }

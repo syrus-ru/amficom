@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.Client.Resource.Optimize;
 
+import com.syrus.AMFICOM.Client.Resource.StubResource;
 import java.util.*;
 import com.syrus.AMFICOM.CORBA.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
@@ -22,7 +23,7 @@ import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 // класс хранит только информацию о топологии решения (берёт его из класса Scheme)
 // дополнительная информация ( цены оборудования, список оборудования и т.п.) -  в классе InfoToStore
 //==========================================================================================================
-public class SolutionCompact extends ObjectResource
+public class SolutionCompact extends StubResource
 { public String id = "";
   public String name = "";
   public String created = "";// время создания
