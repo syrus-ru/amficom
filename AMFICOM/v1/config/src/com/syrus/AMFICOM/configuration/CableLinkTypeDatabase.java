@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeDatabase.java,v 1.7 2005/01/26 15:09:21 bob Exp $
+ * $Id: CableLinkTypeDatabase.java,v 1.8 2005/01/28 10:15:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/01/26 15:09:21 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/01/28 10:15:55 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public class CableLinkTypeDatabase extends StorableObjectDatabase {
@@ -113,7 +113,7 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
 			Map cableLinkTypeIdCableThreadTypeIds = super.retrieveLinkedEntities(storableObjects, CABLE_LINK_TYPE_LINK, LINK_COLUMN_CABLE_LINK_TYPE_ID, LINK_COLUMN_CABLE_THREAD_TYPE_ID);
 			for (Iterator it = cableLinkTypeIdCableThreadTypeIds.keySet().iterator(); it.hasNext();) {
 				CableLinkType cableLinkType = (CableLinkType) it.next();
-				List cableLinkTypeIds = (List)cableLinkTypeIdCableThreadTypeIds.get(cableLinkType);
+				List cableLinkTypeIds = (List) cableLinkTypeIdCableThreadTypeIds.get(cableLinkType);
 				cableLinkType.setCableThreadTypes0(ConfigurationStorableObjectPool.getStorableObjects(cableLinkTypeIds, true));               
 			}
 		}
@@ -150,7 +150,7 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
 		CableLinkType cableLinkType = this.fromStorableObject(storableObject);
 		super.retrieveEntity(cableLinkType);
 		this.retrieveCableThreadTypes(Collections.singletonList(cableLinkType));
-		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
+		CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase) (GeneralDatabaseContext.getCharacteristicDatabase());
 		cableLinkType.setCharacteristics0(characteristicDatabase.retrieveCharacteristics(cableLinkType.getId(), CharacteristicSort.CHARACTERISTIC_SORT_CABLELINKTYPE));
 	}
 
@@ -289,9 +289,17 @@ public class CableLinkTypeDatabase extends StorableObjectDatabase {
 			list = this.retrieveByIdsOneQuery(ids, condition);
 
 		if (list != null) {
-			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
-			characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE);
 			this.retrieveCableThreadTypes(list);
+
+			CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(GeneralDatabaseContext.getCharacteristicDatabase());
+			Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list,
+					CharacteristicSort.CHARACTERISTIC_SORT_LINKTYPE);
+			if (characteristicMap != null)
+				for (Iterator it = list.iterator(); it.hasNext();) {
+					CableLinkType cableLinkType = (CableLinkType) it.next();
+					List characteristics = (List) characteristicMap.get(cableLinkType.getId());
+					cableLinkType.setCharacteristics0(characteristics);
+				}
 		}
 		return list;
 	}
