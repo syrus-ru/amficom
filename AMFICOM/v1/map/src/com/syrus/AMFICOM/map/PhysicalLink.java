@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLink.java,v 1.38 2005/04/01 11:40:53 bob Exp $
+ * $Id: PhysicalLink.java,v 1.39 2005/04/01 12:07:21 bob Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -53,7 +53,7 @@ import com.syrus.AMFICOM.map.corba.PhysicalLink_Transferable;
  * тоннель (<code>{@link PhysicalLinkType#TUNNEL}</code>) 
  * и коллектор (<code>{@link PhysicalLinkType#COLLECTOR}</code>).
  * @author $Author: bob $
- * @version $Revision: 1.38 $, $Date: 2005/04/01 11:40:53 $
+ * @version $Revision: 1.39 $, $Date: 2005/04/01 12:07:21 $
  * @module map_v1
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -430,7 +430,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	public SortedSet getNodeLinks() {
 		if (this.nodeLinks == null || this.nodeLinks.isEmpty())
 			this.nodeLinks = findNodeLinks();
-		return (SortedSet) Collections.unmodifiableSet(this.nodeLinks);
+		return Collections.unmodifiableSortedSet(this.nodeLinks);
 	}
 
 	public void setNodeLinks(final List nodeLinks) {
