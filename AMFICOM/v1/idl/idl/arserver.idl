@@ -1,11 +1,3 @@
-/*
- * $Id: arserver.idl,v 1.6 2005/02/22 10:23:25 max Exp $
- *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
- */
-
 #ifndef ARSERVER_IDL
 #define ARSERVER_IDL
 
