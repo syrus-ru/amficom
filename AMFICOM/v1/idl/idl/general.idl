@@ -1,5 +1,5 @@
 /*
- * $Id: general.idl,v 1.50 2005/01/20 15:08:51 bob Exp $
+ * $Id: general.idl,v 1.51 2005/01/21 08:22:58 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -267,10 +267,15 @@ module corba {
 	
 	struct TypicalCondition_Transferable {
 		short	entity_code;
+		WString256 key;
 		WString256 value;
 		WString256 otherValue;		
 		TypicalSort type;		
 		OperationSort operation; 
+	};
+	
+	struct EquivalentCondition_Transferable {
+		short	entity_code;
 	};
 };
 };
