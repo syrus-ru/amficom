@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.Client.Schedule.ScheduleMainFrame;
 public class ElementsTreePanel extends JPanel implements OperationListener {
 
 	public static final String		ACCESSPORT_NAME_REFLECTOMETER	= "reflectometeringnt";
-
+	
 	private JButton					delMapGroupButton;
 
 	private JButton					loadButton;
@@ -399,6 +399,10 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 				if (node.getObject().equals("root")) ret = TestType.class;
 			} else if (obj instanceof TestType) {
 				//System.out.println("testType:" + ((TestType) obj).name);
+				TestType testType = (TestType)obj;
+				//System.out.println("testType.id:"+testType.id);
+				dispatcher.notify(new OperationEvent(testType.id, 0,
+						TestParametersPanel.COMMAND_CHANGE_TEST_TYPE));
 				ret = KIS.class;
 			} else if (obj instanceof KIS) {
 				KIS kis = (KIS) obj;
@@ -417,7 +421,18 @@ public class ElementsTreePanel extends JPanel implements OperationListener {
 				ret = MonitoredElement.class;
 				dispatcher.notify(new OperationEvent(port.type_id, 0,
 						TestParametersPanel.COMMAND_CHANGE_PORT_TYPE));
-			}
+
+				Vector vec = this.getChildNodes(node);
+				for (int i = 0; i < vec.size(); i++) {
+					ObjectResourceTreeNode n = (ObjectResourceTreeNode) vec.get(i);
+					Object o = n.getObject();
+					MonitoredElement me = (MonitoredElement)o;
+					dispatcher.notify(new OperationEvent(me.id, 0,
+							TestParametersPanel.COMMAND_CHANGE_ME_TYPE));
+				
+				}				
+				
+			} 
 			return ret;
 		}
 
