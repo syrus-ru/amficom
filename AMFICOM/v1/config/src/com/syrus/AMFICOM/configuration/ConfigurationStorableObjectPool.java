@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.55 2004/12/27 14:42:34 arseniy Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.56 2004/12/27 21:01:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2004/12/27 14:42:34 $
+ * @version $Revision: 1.56 $, $Date: 2004/12/27 21:01:43 $
  * @author $Author: arseniy $
  * @module configuration_v1
  */
@@ -150,16 +150,15 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 			Log.errorMessage("Cache class '" + cacheClass.getName() +"' cannot be found, use default");
 		}
 		init(cObjectLoader1, size);
-	}    
+	}
 
-    
-    public static void refresh() throws DatabaseException, CommunicationException {        
-    	instance.refreshImpl();
-    }
-    
-    protected Set refreshStorableObjects(Set storableObjects) throws CommunicationException, DatabaseException{
-    	return cObjectLoader.refresh(storableObjects);
-    }
+	public static void refresh() throws DatabaseException, CommunicationException {
+		instance.refreshImpl();
+	}
+
+  protected Set refreshStorableObjects(Set storableObjects) throws CommunicationException, DatabaseException{
+		return cObjectLoader.refresh(storableObjects);
+	}
 
 	public static StorableObject getStorableObject(Identifier objectId, boolean useLoader) throws DatabaseException, CommunicationException {
 		return instance.getStorableObjectImpl(objectId, useLoader);
@@ -179,9 +178,8 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 								boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
 	}
-	
-	protected StorableObject loadStorableObject(Identifier objectId) throws DatabaseException,
-			CommunicationException {
+
+	protected StorableObject loadStorableObject(Identifier objectId) throws DatabaseException, CommunicationException {
 		StorableObject storableObject;
 		switch (objectId.getMajor()) {
 			case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
@@ -243,14 +241,13 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 				storableObject = cObjectLoader.loadMonitoredElement(objectId);
 				break;
 			default:
-				Log.errorMessage("ConfigurationStorableObjectPool.loadStorableObject | Unknown entity: " + ObjectEntities.codeToString(objectId.getMajor()));
+				Log.errorMessage("ConfigurationStorableObjectPool.loadStorableObject | Unknown entity: '" + ObjectEntities.codeToString(objectId.getMajor()) + "', entity code: " + objectId.getMajor());
 				storableObject = null;
 		}
 		return storableObject;
 	}
 
-	protected List loadStorableObjects(Short entityCode, List ids) throws DatabaseException,
-			CommunicationException {
+	protected List loadStorableObjects(Short entityCode, List ids) throws DatabaseException, CommunicationException {
 		List loadedList = null;
 		switch (entityCode.shortValue()) {
 				case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
@@ -312,10 +309,8 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 					loadedList = cObjectLoader.loadMonitoredElements(ids);
 					break;
 			default:
-				Log
-						.errorMessage("ConfigurationStorableObjectPool.loadStorableObjects | Unknown entityCode : "
-								+ entityCode);
-			loadedList = null;
+				Log.errorMessage("ConfigurationStorableObjectPool.loadStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode.shortValue()) + "', entity code: " + entityCode);
+				loadedList = null;
 		}
 		return loadedList;
 	}
@@ -384,34 +379,24 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 					loadedList = cObjectLoader.loadMonitoredElementsButIds(condition, ids);
 					break;
 			default:				
-				Log
-						.errorMessage("ConfigurationStorableObjectPool.loadStorableObjectsButIds | Unknown entity: "
-								+ ObjectEntities.codeToString(entityCode));
+				Log.errorMessage("ConfigurationStorableObjectPool.loadStorableObjectsButIds | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
 				loadedList = null;
 		}
 		return loadedList;
 	}
-	
-	public static StorableObject putStorableObject(StorableObject storableObject)
-			throws IllegalObjectEntityException {
-		return instance.putStorableObjectImpl(storableObject);
-	}
-	
-	public static void flush(boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException{		 
-		instance.flushImpl(force);
-	}
-	
+
 	//public static void save()
-	
-	protected void saveStorableObjects(short code, List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException{
-		if (!list.isEmpty()){
-			boolean alone = (list.size()==1);
+
+	protected void saveStorableObjects(short code, List list, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException {
+		if (!list.isEmpty()) {
+			boolean alone = (list.size() == 1);
 			switch (code) {
 				case ObjectEntities.CABLETHREADTYPE_ENTITY_CODE:
 					if (alone)
 						cObjectLoader.saveCableThreadType((CableThreadType) list.get(0), force);
-				else
-					cObjectLoader.saveCableThreadTypes(list, force);
+					else
+						cObjectLoader.saveCableThreadTypes(list, force);
+					break;
 				case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
 					if (alone)
 						cObjectLoader.saveCharacteristicType((CharacteristicType) list.get(0), force);
@@ -438,18 +423,13 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 					break;
 				case ObjectEntities.MEASUREMENTPORTTYPE_ENTITY_CODE:
 					if (alone)
-						cObjectLoader
-								.saveMeasurementPortType(
-												(MeasurementPortType) list
-														.get(0),
-												force);
+						cObjectLoader.saveMeasurementPortType((MeasurementPortType) list.get(0), force);
 					else
 						cObjectLoader.saveMeasurementPortTypes(list, force);
 					break;
 				case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
 					if (alone)
-						cObjectLoader.saveCharacteristic((Characteristic) list
-								.get(0), force);
+						cObjectLoader.saveCharacteristic((Characteristic) list.get(0), force);
 					else
 						cObjectLoader.saveCharacteristics(list, force);
 					break;
@@ -479,8 +459,7 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 					break;
 				case ObjectEntities.EQUIPMENT_ENTITY_CODE:
 					if (alone)
-						cObjectLoader.saveEquipment((Equipment) list.get(0),
-										force);
+						cObjectLoader.saveEquipment((Equipment) list.get(0), force);
 					else
 						cObjectLoader.saveEquipments(list, force);
 					break;
@@ -504,34 +483,31 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 					break;
 				case ObjectEntities.MEASUREMENTPORT_ENTITY_CODE:
 					if (alone)
-						cObjectLoader
-								.saveMeasurementPort(
-											(MeasurementPort) list
-													.get(0),
-											force);
+						cObjectLoader.saveMeasurementPort((MeasurementPort) list.get(0), force);
 					else
 						cObjectLoader.saveMeasurementPorts(list, force);
 					break;
 				case ObjectEntities.ME_ENTITY_CODE:
 					if (alone)
-						cObjectLoader
-								.saveMonitoredElement(
-											(MonitoredElement) list
-													.get(0),
-											force);
+						cObjectLoader.saveMonitoredElement((MonitoredElement) list.get(0), force);
 					else
 						cObjectLoader.saveMonitoredElements(list, force);
 					break;
 
 				default:
-					Log
-							.errorMessage("ConfigurationStorableObjectPool.saveStorableObjects | Unknown entity : '"
-									+ ObjectEntities.codeToString(code) + "'");
+					Log.errorMessage("ConfigurationStorableObjectPool.saveStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(code) + "', entity code: " + code);
 			}
 
 		}
 	}
 
+	public static StorableObject putStorableObject(StorableObject storableObject) throws IllegalObjectEntityException {
+		return instance.putStorableObjectImpl(storableObject);
+	}
+
+	public static void flush(boolean force) throws VersionCollisionException, DatabaseException, CommunicationException, IllegalDataException{		 
+		instance.flushImpl(force);
+	}
 
 	public static void cleanChangedStorableObject(Short entityCode) {
 		instance.cleanChangedStorableObjectImpl(entityCode);
@@ -540,42 +516,45 @@ public final class ConfigurationStorableObjectPool extends StorableObjectPool {
 	public static void cleanChangedStorableObjects() {
 		instance.cleanChangedStorableObjectsImpl();
 	}
-    
-    public static void delete(Identifier id) throws DatabaseException, CommunicationException {
-        instance.deleteImpl(id);
-    }
-    
-    public static void delete(List ids) throws DatabaseException, CommunicationException {
-        instance.deleteImpl(ids);
-    }
-    
+
+	public static void delete(Identifier id) throws DatabaseException, CommunicationException {
+		instance.deleteImpl(id);
+	}
+
+	public static void delete(List ids) throws DatabaseException, CommunicationException {
+		instance.deleteImpl(ids);
+	}
+
 	protected void deleteStorableObject(Identifier id) throws DatabaseException, CommunicationException {
 		try {
-            cObjectLoader.delete(id);
-        } catch (DatabaseException e) {
-            Log.errorMessage("ConfigurationStorableObjectPool.deleteStorableObject | DatabaseException: " + e.getMessage());
-            throw new DatabaseException("ConfigurationStorableObjectPool.deleteStorableObject", e);
-        } catch (CommunicationException e) {
-            Log.errorMessage("ConfigurationStorableObjectPool.deleteStorableObject | CommunicationException: " + e.getMessage());
-            throw new CommunicationException("ConfigurationStorableObjectPool.deleteStorableObject", e);
-        }
+			cObjectLoader.delete(id);
+		}
+		catch (DatabaseException e) {
+			Log.errorMessage("ConfigurationStorableObjectPool.deleteStorableObject | DatabaseException: " + e.getMessage());
+			throw new DatabaseException("ConfigurationStorableObjectPool.deleteStorableObject", e);
+		}
+		catch (CommunicationException e) {
+			Log.errorMessage("ConfigurationStorableObjectPool.deleteStorableObject | CommunicationException: " + e.getMessage());
+			throw new CommunicationException("ConfigurationStorableObjectPool.deleteStorableObject", e);
+		}
 	}
 	
 	protected void deleteStorableObjects(List ids) throws DatabaseException, CommunicationException {
 		try {
-            cObjectLoader.delete(ids);
-        } catch (DatabaseException e) {
-            Log.errorMessage("ConfigurationStorableObjectPool.deleteStorableObjects | DatabaseException: " + e.getMessage());
-            throw new DatabaseException("ConfigurationStorableObjectPool.deleteStorableObjects", e);
-        } catch (CommunicationException e) {
-            Log.errorMessage("ConfigurationStorableObjectPool.deleteStorableObjects | CommunicationException: " + e.getMessage());
-            throw new CommunicationException("ConfigurationStorableObjectPool.deleteStorableObjects", e);
-        }
+			cObjectLoader.delete(ids);
+		}
+		catch (DatabaseException e) {
+			Log.errorMessage("ConfigurationStorableObjectPool.deleteStorableObjects | DatabaseException: " + e.getMessage());
+			throw new DatabaseException("ConfigurationStorableObjectPool.deleteStorableObjects", e);
+		}
+		catch (CommunicationException e) {
+			Log.errorMessage("ConfigurationStorableObjectPool.deleteStorableObjects | CommunicationException: " + e.getMessage());
+			throw new CommunicationException("ConfigurationStorableObjectPool.deleteStorableObjects", e);
+		}
 	}
-	
-	public static void serializePool(){
-    	instance.serializePoolImpl();
-    }
+
+	public static void serializePool() {
+		instance.serializePoolImpl();
+	}
 
 }
-
