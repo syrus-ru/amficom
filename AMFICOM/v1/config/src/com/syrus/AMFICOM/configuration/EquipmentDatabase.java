@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.81 2005/03/11 10:17:12 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.82 2005/03/23 18:16:36 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.81 $, $Date: 2005/03/11 10:17:12 $
- * @author $Author: bob $
+ * @version $Revision: 1.82 $, $Date: 2005/03/23 18:16:36 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -118,8 +118,8 @@ public class EquipmentDatabase extends CharacterizableDatabase {
 			+ DatabaseIdentifier.toSQLString(equipment.getImageId()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(equipment.getSupplier(), SIZE_SUPPLIER_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(equipment.getSupplierCode(), SIZE_SUPPLIER_CODE_COLUMN) + APOSTOPHE + COMMA
-			+ APOSTOPHE + equipment.getLatitude() + APOSTOPHE + COMMA
-			+ APOSTOPHE + equipment.getLongitude() + APOSTOPHE + COMMA
+			+ equipment.getLatitude() + COMMA
+			+ equipment.getLongitude() + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(equipment.getHwSerial(), SIZE_HW_SERIAL_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(equipment.getHwVersion(), SIZE_HW_VERSION_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(equipment.getSwSerial(), SIZE_SW_SERIAL_COLUMN) + APOSTOPHE + COMMA
