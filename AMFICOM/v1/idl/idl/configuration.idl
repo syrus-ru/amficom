@@ -1,5 +1,5 @@
 /*
- * $Id: configuration.idl,v 1.42 2004/10/27 08:24:32 max Exp $
+ * $Id: configuration.idl,v 1.43 2004/11/12 10:24:54 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,11 +44,7 @@ module corba {
 	
 
 	struct CharacteristicType_Transferable {
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
-	  long long created;
-	  long long modified;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
 		wstring codename;
 		wstring description;
@@ -60,11 +56,7 @@ module corba {
 
 /////////////////////// EquipmentType /////////////////////
 	struct EquipmentType_Transferable {
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
-	  long long created;
-	  long long modified;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
 		wstring codename;
 		wstring description;
@@ -75,11 +67,7 @@ module corba {
 
 /////////////////////// KISType /////////////////////
 	struct KISType_Transferable {
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
-	  long long created;
-	  long long modified;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
 		wstring codename;
 		wstring description;
@@ -90,11 +78,7 @@ module corba {
 	
 /////////////////////// TransmissionPathType /////////////////////
 	struct TransmissionPathType_Transferable {
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
-	  long long created;
-	  long long modified;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
 		wstring codename;
 		wstring description;
@@ -105,11 +89,7 @@ module corba {
 	
 /////////////////////// PortType /////////////////////
 	struct PortType_Transferable {
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
-	  long long created;
-	  long long modified;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
 		wstring codename;
 		wstring description;
@@ -119,11 +99,7 @@ module corba {
 	typedef sequence <PortType_Transferable> PortTypeSeq_Transferable;
 
 	struct MeasurementPortType_Transferable {
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
-	  long long created;
-	  long long modified;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
 		wstring codename;
 		wstring description;
@@ -138,11 +114,7 @@ module corba {
 	};
 	
 	struct LinkType_Transferable{
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
-	  long long created;
-	  long long modified;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 	  
 	  wstring codename;
 	  wstring description;
@@ -164,11 +136,7 @@ module corba {
 	};
 
 	struct User_Transferable {
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
-	  long long created;
-	  long long modified;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 	
 		wstring login;
 		UserSort sort;
@@ -180,11 +148,7 @@ module corba {
 	
 	/////////////////////////////////// Domain ////////////////////////////////
 	struct Domain_Transferable {
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
-	  long long created;
-	  long long modified;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
 
@@ -198,11 +162,7 @@ module corba {
 
 /////////////////////////////////// Server ////////////////////////////////
 	struct Server_Transferable {
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
-	  long long created;
-	  long long modified;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
 
@@ -217,11 +177,7 @@ module corba {
 	
 //////////////////////////////////// MCM //////////////////////////////////
 	struct MCM_Transferable {
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
-	  long long created;
-	  long long modified;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
 
@@ -252,11 +208,7 @@ module corba {
 	};
 
 	struct Characteristic_Transferable {
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
-	  long long created;
-	  long long modified;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
 		wstring name;
@@ -273,11 +225,7 @@ module corba {
 
 ///////////////////////// Equipment ///////////////////////
 	struct Equipment_Transferable	{
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
-	  long long created;
-	  long long modified;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
 
@@ -298,11 +246,7 @@ module corba {
 
 ///////////////////// Transmission Path ///////////////////
 	struct TransmissionPath_Transferable {
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
-	  long long created;
-	  long long modified;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
 
@@ -328,11 +272,7 @@ module corba {
 	};
 
 	struct Port_Transferable {
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
-	  long long created;
-	  long long modified;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
 		wstring description;
@@ -346,11 +286,7 @@ module corba {
 
 //////////////////////////////// KIS ////////////////////////////////
 	struct KIS_Transferable	{
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
-	  long long created;
-	  long long modified;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
 
@@ -367,11 +303,7 @@ module corba {
 
 ////////////////////////// MeasurementPort ///////////////////////////
 	struct MeasurementPort_Transferable {
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
-	  long long created;
-	  long long modified;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable type_id;
 		wstring name;
@@ -393,11 +325,7 @@ module corba {
 	};
 
 	struct MonitoredElement_Transferable {
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
-	  long long created;
-	  long long modified;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
-	  com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
 		
@@ -419,11 +347,7 @@ module corba {
 	};
 
 	struct Link_Transferable {
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
-	  	long long created;
-	  	long long modified;
-		com::syrus::AMFICOM::general::corba::Identifier_Transferable creator_id;
-	  	com::syrus::AMFICOM::general::corba::Identifier_Transferable modifier_id;
+		com::syrus::AMFICOM::general::corba::StorableObject_Transferable header;
 
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable domain_id;
 		
