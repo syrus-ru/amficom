@@ -18,7 +18,7 @@ import java.util.Map;
 
 import com.syrus.AMFICOM.CORBA.General.TestStatus;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.client.general.ui.MLabel;
+import com.syrus.AMFICOM.client_.general.ui.MLabel;
 
 /**
  * @author Vladimir Dolzhenko

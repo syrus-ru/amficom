@@ -1,5 +1,5 @@
 
-package com.syrus.AMFICOM.client.resource;
+package com.syrus.AMFICOM.client_.resource;
 
 import com.syrus.AMFICOM.CORBA.General.TestStatus;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;

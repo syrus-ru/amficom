@@ -4,7 +4,7 @@
  * 
  */
 
-package com.syrus.AMFICOM.client.general.ui;
+package com.syrus.AMFICOM.client_.general.ui;
 
 import java.awt.Color;
 import java.awt.Font;

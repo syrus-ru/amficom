@@ -7,10 +7,10 @@ import javax.swing.JTable;
 
 import com.syrus.AMFICOM.CORBA.General.TestStatus;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
-import com.syrus.AMFICOM.client.general.ui_.AbstractLabelCellRenderer;
-import com.syrus.AMFICOM.client.resource.ObjectResourceController;
-import com.syrus.AMFICOM.client.resource.TestResource;
-import com.syrus.AMFICOM.client.resource.TestResourceController;
+import com.syrus.AMFICOM.client_.general.ui_.AbstractLabelCellRenderer;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
+import com.syrus.AMFICOM.client_.resource.TestResource;
+import com.syrus.AMFICOM.client_.resource.TestResourceController;
 
 /**
  * @author Vladimir Dolzhenko

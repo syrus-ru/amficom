@@ -17,9 +17,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import com.syrus.AMFICOM.CORBA.General.TestStatus;
-import com.syrus.AMFICOM.client.general.ui_.ObjectResourceTable;
-import com.syrus.AMFICOM.client.resource.TestResource;
-import com.syrus.AMFICOM.client.resource.TestResourceController;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
+import com.syrus.AMFICOM.client_.resource.TestResource;
+import com.syrus.AMFICOM.client_.resource.TestResourceController;
 
 /**
  * @author Vladimir Dolzhenko
