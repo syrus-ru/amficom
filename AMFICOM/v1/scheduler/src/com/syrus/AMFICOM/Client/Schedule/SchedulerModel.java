@@ -17,7 +17,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
@@ -30,16 +29,13 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeModel;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
 import com.syrus.AMFICOM.Client.Resource.RISDDataSource;
-import com.syrus.AMFICOM.Client.Schedule.UI.ElementsTreePanel;
 import com.syrus.AMFICOM.Client.Schedule.item.KISItem;
 import com.syrus.AMFICOM.Client.Schedule.item.MeasurementPortItem;
 import com.syrus.AMFICOM.Client.Schedule.item.MeasurementTypeItem;
 import com.syrus.AMFICOM.Client.Schedule.item.MonitoredElementItem;
-import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
@@ -82,7 +78,8 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	public static final String			COMMAND_CHANGE_PARAM_PANEL		= "ChangeParamPanel";		//$NON-NLS-1$
 	public static final String			COMMAND_CHANGE_PORT_TYPE		= "ChangePortType";		//$NON-NLS-1$
 	public static final String			COMMAND_CHANGE_STATUSBAR_STATE	= "ChangeStatusBarState";
-//	public static final String			COMMAND_CHANGE_TEST_TYPE		= "ChangeTestType";		//$NON-NLS-1$
+	// public static final String COMMAND_CHANGE_TEST_TYPE = "ChangeTestType";
+	// //$NON-NLS-1$
 	public static final String			COMMAND_CLEAN					= "Clean";
 
 	// private static final boolean CREATE_ALLOW = true;
@@ -108,7 +105,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	private MeasurementSetupEditor		measurementSetupEditor;
 	private ReturnTypeEditor			returnTypeEditor;
 	private TestTemporalStampsEditor	testTemporalStampsEditor;
-	private ElementsViewer elementsViewer;
+	private ElementsViewer				elementsViewer;
 	private TestsEditor[]				testsEditors					= new TestsEditor[0];
 	private TestEditor[]				testEditors						= new TestEditor[0];
 
@@ -249,7 +246,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			// this.monitoredElementEditor.setMonitoredElementEditors(monitoredElements);
 
 			Collection measurementTypeItems = new ArrayList(measurementTypes.size());
-			
+
 			LinkedIdsCondition measurementPortCondition = null;
 
 			List measurementPortTypeIds = new LinkedList();
@@ -258,8 +255,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 			for (Iterator kisIterator = kiss.iterator(); kisIterator.hasNext();) {
 				KIS kis = (KIS) kisIterator.next();
 				if (measurementPortCondition == null)
-					measurementPortCondition = new LinkedIdsCondition(
-																		kis.getId(),
+					measurementPortCondition = new LinkedIdsCondition(kis.getId(),
 																		ObjectEntities.MEASUREMENTPORT_ENTITY_CODE);
 				else
 					measurementPortCondition.setLinkedId(kis.getId());
@@ -273,43 +269,46 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 					MeasurementPortType measurementPortType = (MeasurementPortType) measurementPort.getType();
 					measurementPortTypeIds.add(measurementPortType.getId());
 				}
-				
+
 				LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(
 																				measurementPortTypeIds,
 																				ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE);
 
 				Collection measurementTypesFormeasurementPortType = MeasurementStorableObjectPool
 						.getStorableObjectsByCondition(linkedIdsCondition, true);
-				
+
 				kisMeasurementTypes.put(kis, measurementTypesFormeasurementPortType);
 			}
-			
+
 			for (Iterator iter = measurementTypes.iterator(); iter.hasNext();) {
 				MeasurementType measurementType = (MeasurementType) iter.next();
 				MeasurementTypeItem measurementTypeItem = new MeasurementTypeItem(measurementType);
 				measurementTypeItems.add(measurementTypeItem);
 				for (Iterator iterator = kisMeasurementTypes.keySet().iterator(); iterator.hasNext();) {
 					KIS kis = (KIS) iterator.next();
-					Collection measurementTypesFormeasurementPortType = (Collection)kisMeasurementTypes.get(kis);
+					Collection measurementTypesFormeasurementPortType = (Collection) kisMeasurementTypes.get(kis);
 					if (measurementTypesFormeasurementPortType.contains(measurementType)) {
 						KISItem kisItem = new KISItem(kis);
 						measurementTypeItem.addChild(kisItem);
-						Collection measurementPort = (Collection)kisMeasurementPorts.get(kis);
-						for (Iterator measurementPortIterator = measurementPort.iterator(); measurementPortIterator.hasNext();) {
+						Collection measurementPort = (Collection) kisMeasurementPorts.get(kis);
+						for (Iterator measurementPortIterator = measurementPort.iterator(); measurementPortIterator
+								.hasNext();) {
 							MeasurementPort measurementPort2 = (MeasurementPort) measurementPortIterator.next();
 							MeasurementPortItem measurementPortItem = new MeasurementPortItem(measurementPort2);
 							kisItem.addChild(measurementPortItem);
-							for (Iterator monitoredElementIterator = monitoredElements.iterator(); monitoredElementIterator.hasNext();) {
+							for (Iterator monitoredElementIterator = monitoredElements.iterator(); monitoredElementIterator
+									.hasNext();) {
 								MonitoredElement monitoredElement = (MonitoredElement) monitoredElementIterator.next();
 								if (monitoredElement.getMeasurementPortId().equals(measurementPort2.getId())) {
-									MonitoredElementItem monitoredElementItem = new MonitoredElementItem(monitoredElement);
+									MonitoredElementItem monitoredElementItem = new MonitoredElementItem(
+																											monitoredElement);
 									measurementPortItem.addChild(monitoredElementItem);
 								}
 							}
 						}
 					}
 				}
-				
+
 			}
 			this.elementsViewer.setElements(measurementTypeItems);
 			// this.measurementTypeEditor.setMeasurementTypes(measurementTypes);
@@ -487,6 +486,8 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 
 			Collection measurementSetupIds;
 			if (this.measurementSetup == null) {
+				if (this.set == null)
+					return;
 				RISDSessionInfo sessionInterface = (RISDSessionInfo) this.aContext.getSessionInterface();
 				try {
 					this.measurementSetup = MeasurementSetup.createInstance(sessionInterface.getUserIdentifier(),
@@ -524,10 +525,11 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 				this.tests.add(test);
 			} else {
 				test.setAttributes(test.getCreated(), new Date(System.currentTimeMillis()), test.getCreatorId(),
-					modifierId, test.getVersion(), temporalType.value(), startTime, endTime, temporalPattern.getId(),
-					this.measurementType.getId(), this.analysisType.getId(), this.evaluationType.getId(), test
-							.getStatus().value(), this.monitoredElement, this.returnType.value(),
-					ConstStorage.SIMPLE_DATE_FORMAT.format(startTime));
+					modifierId, test.getVersion(), temporalType.value(), startTime, endTime, temporalPattern == null
+							? null : temporalPattern.getId(), this.measurementType.getId(), this.analysisType == null
+							? null : this.analysisType.getId(), this.evaluationType == null ? null
+							: this.evaluationType.getId(), test.getStatus().value(), this.monitoredElement,
+					this.returnType.value(), ConstStorage.SIMPLE_DATE_FORMAT.format(startTime));
 			}
 			try {
 				MeasurementStorableObjectPool.putStorableObject(test);
@@ -622,7 +624,7 @@ public class SchedulerModel extends ApplicationModel implements OperationListene
 	public void setReturnTypeEditor(ReturnTypeEditor returnTypeEditor) {
 		this.returnTypeEditor = returnTypeEditor;
 	}
-	
+
 	public void setElementsViewer(ElementsViewer elementsViewer) {
 		this.elementsViewer = elementsViewer;
 	}

@@ -42,14 +42,10 @@ public class TestParametersFrame extends JInternalFrame implements OperationList
 
 	private void initModule(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
-//		this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TEST);
-//		this.dispatcher.register(this, SchedulerModel.COMMAND_REFRESH_TESTS);
 		this.dispatcher.register(this, SchedulerModel.COMMAND_CHANGE_PORT_TYPE);
 	}
 
 	public void unregisterDispatcher() {
-//		this.dispatcher.unregister(this, SchedulerModel.COMMAND_REFRESH_TEST);
-//		this.dispatcher.unregister(this, SchedulerModel.COMMAND_REFRESH_TESTS);
 		this.dispatcher.unregister(this, SchedulerModel.COMMAND_CHANGE_PORT_TYPE);
 		this.panel.unregisterDispatcher();
 	}
@@ -57,32 +53,10 @@ public class TestParametersFrame extends JInternalFrame implements OperationList
 	public void operationPerformed(OperationEvent ae) {
 		String commandName = ae.getActionCommand();
 		Object obj = ae.getSource();
-//		if (commandName.equals(SchedulerModel.COMMAND_REFRESH_TEST)
-//				|| commandName.equals(SchedulerModel.COMMAND_REFRESH_TESTS)) {
-//			Test test = this.schedulerModel.getSelectedTest();
-//			if (test != null) {
-//				try {
-//					MeasurementPort port = (MeasurementPort) ConfigurationStorableObjectPool.getStorableObject(test
-//							.getMonitoredElement().getMeasurementPortId(), true);
-//					if (((MeasurementPortType) port.getType()).getCodename().equals(
-//						ElementsTreePanel.ACCESSPORT_NAME_REFLECTOMETER)) {
-//						if (!this.panel.isParameterPanelExists(ReflectometryTestPanel.PANEL_NAME)) {
-//							this.dispatcher.notify(new OperationEvent(new ReflectometryTestPanel(this.aContext, port,
-//																									test), 0,
-//																		SchedulerModel.COMMAND_ADD_PARAM_PANEL));
-//						}
-//					}
-//				} catch (ApplicationException e) {
-//					SchedulerModel.showErrorMessage(this.panel, e);
-//				}
-//
-//				this.panel.setTest(test);
-//			}
-//		} else 
 		if (commandName.equals(SchedulerModel.COMMAND_CHANGE_PORT_TYPE)) {
 			MeasurementPort port = (MeasurementPort) obj;
 			if (((MeasurementPortType) port.getType()).getCodename().equals(
-				ElementsTreePanel.ACCESSPORT_NAME_REFLECTOMETER)) {
+				ElementsTreeFrame.ACCESSPORT_NAME_REFLECTOMETER)) {
 				if (!this.panel.isParameterPanelExists(ReflectometryTestPanel.PANEL_NAME)) {
 					this.dispatcher.notify(new OperationEvent(new ReflectometryTestPanel(this.aContext, port), 0,
 																SchedulerModel.COMMAND_ADD_PARAM_PANEL));

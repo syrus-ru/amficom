@@ -323,7 +323,7 @@ public class TestParametersPanel extends JPanel implements OperationListener, Me
 				JOptionPane
 						.showMessageDialog(
 							this,
-							LangModelSchedule.getString("Do_not_choose_measurement_pattern"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
+							LangModelSchedule.getString("Have_not_choosen_measurement_pattern"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
 							JOptionPane.OK_OPTION);
 				return null;
 			}

@@ -299,12 +299,7 @@ public class PlanPanel extends JList implements TestsEditor, ActionListener {
 	}
 	
 	
-	public void actionPerformed(ActionEvent e) {
-		
-		for (Iterator it = this.testLines.values().iterator(); it.hasNext();) {
-			TestLine testLine = (TestLine) it.next();
-			testLine.flashUnsavedTest();			
-		}		
+	public void actionPerformed(ActionEvent e) {		
 		this.revalidate();
 		this.repaint();
 	}

@@ -55,6 +55,8 @@ import com.syrus.AMFICOM.client_.general.ui_.ObjList;
 import com.syrus.AMFICOM.client_.general.ui_.ObjListModel;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.AMFICOM.measurement.TemporalPatternController;
 import com.syrus.AMFICOM.measurement.TestTemporalStamps;
@@ -263,12 +265,12 @@ public class TimeParametersFrame extends JInternalFrame {
 							RISDSessionInfo sessionInterface = (RISDSessionInfo) TimeParametersPanel.this.aContext
 									.getSessionInterface();
 							TemporalPattern temporalPattern = TemporalPattern.createInstance(sessionInterface
-									.getUserIdentifier(), null, new LinkedList());
+									.getUserIdentifier(), template, new LinkedList());
 							temporalPattern.addTemplate(template);
 							TimeParametersPanel.this.temporalPatterns.add(temporalPattern);
-
+							MeasurementStorableObjectPool.putStorableObject(temporalPattern);
 							// timeStamp.addTemplate(template2);
-							DefaultListModel model = (DefaultListModel) TimeParametersPanel.this.timeStamps.getModel();
+							ObjListModel model = (ObjListModel) TimeParametersPanel.this.timeStamps.getModel();
 							model.removeAllElements();
 							for (Iterator it = TimeParametersPanel.this.temporalPatterns.iterator(); it.hasNext();) {
 								TemporalPattern timeLine2 = (TemporalPattern) it.next();
@@ -278,6 +280,8 @@ public class TimeParametersFrame extends JInternalFrame {
 						} catch (CreateObjectException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
+						} catch (IllegalObjectEntityException ioee) {
+							SchedulerModel.showErrorMessage(TimeParametersPanel.this, ioee);
 						}
 
 					}

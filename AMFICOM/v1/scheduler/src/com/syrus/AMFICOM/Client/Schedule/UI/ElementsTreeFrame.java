@@ -16,7 +16,6 @@ import com.syrus.AMFICOM.Client.General.Command.Command;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.UI.ObjectResourceTreeNode;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.ElementsViewer;
 import com.syrus.AMFICOM.Client.Schedule.KISEditor;
@@ -51,6 +50,8 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 	private SelectionListener	selectionListener;
 
 	ApplicationContext			aContext;
+	
+	public static final String	ACCESSPORT_NAME_REFLECTOMETER	= "MeasurementPortTypeReflectometry";	//$NON-NLS-1$
 
 	public ElementsTreeFrame(ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -80,7 +81,7 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 					Item item = (Item) nodeObject;
 					Object object = item.getObject();
 					if (object.getClass().equals(clazz))
-						return object;					
+						return object;
 				}
 			}
 		}
@@ -145,11 +146,7 @@ public class ElementsTreeFrame extends JInternalFrame implements KISEditor, Moni
 					for (Iterator it = items.iterator(); it.hasNext();) {
 						ElementItem item = (ElementItem) it.next();
 						Object object = item.getObject();
-						if (object instanceof MeasurementType) {
-							MeasurementType measurementType = (MeasurementType) object;
-							dispatcher.notify(new OperationEvent(measurementType.getId(), 0,
-																	SchedulerModel.COMMAND_CHANGE_TEST_TYPE));
-						} else if (object instanceof MeasurementPort) {
+						if (object instanceof MeasurementPort) {
 							MeasurementPort port = (MeasurementPort) object;
 							dispatcher.notify(new OperationEvent(port, 0, SchedulerModel.COMMAND_CHANGE_PORT_TYPE));
 

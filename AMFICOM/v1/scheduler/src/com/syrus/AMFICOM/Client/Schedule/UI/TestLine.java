@@ -189,15 +189,6 @@ public class TestLine extends JLabel implements TestsEditor, TestEditor {
 		this.acquireTests();
 	}
 
-	public void flashUnsavedTest() {
-		if ((this.isVisible()) && (!this.unsavedTests.isEmpty())) {
-//			Graphics g = this.getGraphics();
-//			paintFlash(g);
-//			repaint();
-		}
-
-	}
-	
 	private void paintFlash(Graphics g) {
 		if (g != null) {
 			this.flash = !this.flash;
