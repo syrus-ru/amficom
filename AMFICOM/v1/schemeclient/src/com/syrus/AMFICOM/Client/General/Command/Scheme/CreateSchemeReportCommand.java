@@ -31,7 +31,7 @@ public class CreateSchemeReportCommand extends VoidCommand
 		CreateSchemeReportCommand rc = new CreateSchemeReportCommand(aContext);
 		for (Iterator it = panels.iterator(); it.hasNext();)
 		{
-			SchemePanelNoEdition rf = (SchemePanelNoEdition)it.next();
+			UgoPanel rf = (UgoPanel)it.next();
 			rc.setParameter(PANEL, rf);
 		}
 		rc.type = type;
@@ -40,7 +40,7 @@ public class CreateSchemeReportCommand extends VoidCommand
 
 	public void setParameter(String key, Object value)
 	{
-		if (key.equals(PANEL) && value instanceof SchemePanelNoEdition)
+		if (key.equals(PANEL) && value instanceof UgoPanel)
 		{
 			panels.add(value);
 		}
@@ -55,7 +55,7 @@ public class CreateSchemeReportCommand extends VoidCommand
 		AMTReport report = new AMTReport();
 		for (Iterator it = panels.iterator(); it.hasNext();)
 		{
-			SchemePanelNoEdition rf = (SchemePanelNoEdition)it.next();
+			UgoPanel rf = (UgoPanel)it.next();
 			report.addReportPanel(rf.getReportTitle(), rf);
 		}
 
