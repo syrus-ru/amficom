@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.22 2005/01/21 08:05:29 arseniy Exp $
+ * $Id: StorableObject.java,v 1.23 2005/01/25 08:50:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,26 +11,17 @@ package com.syrus.AMFICOM.general;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Collections;
 
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/01/21 08:05:29 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/01/25 08:50:07 $
+ * @author $Author: bob $
  * @module general_v1
  */
 public abstract class StorableObject implements Identified, TransferableObject, Serializable {
 	private static final long serialVersionUID = -1720579921164397193L;
-
-	public static final String COLUMN_ID = "id";
-	public static final String COLUMN_CREATED = "created";
-	public static final String COLUMN_CREATOR_ID = "creator_id";
-	public static final String COLUMN_MODIFIED = "modified";
-	public static final String COLUMN_MODIFIER_ID = "modifier_id";
 
 	protected Identifier id;
 	protected Date created;
@@ -40,8 +31,6 @@ public abstract class StorableObject implements Identified, TransferableObject, 
 
 	protected long currentVersion;
 	protected long version;
-
-	protected Map exportedColumns;
 
 	protected StorableObject(Identifier id) {
 		this.id = id;
@@ -137,32 +126,5 @@ public abstract class StorableObject implements Identified, TransferableObject, 
 		this.modified = modified;
 		this.creatorId = creatorId;
 		this.modifierId = modifierId;
-	}
-
-	protected StorableObject (Map exportedColumns) {
-		if (exportedColumns == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-
-		this.id = new Identifier((String)exportedColumns.get(COLUMN_ID));
-		this.created = new Date(Long.parseLong((String)exportedColumns.get(COLUMN_CREATED)));
-		this.modified = new Date(Long.parseLong((String)exportedColumns.get(COLUMN_MODIFIED)));
-		this.creatorId = new Identifier((String)exportedColumns.get(COLUMN_CREATOR_ID));
-		this.modifierId = new Identifier((String)exportedColumns.get(COLUMN_MODIFIER_ID));
-		this.exportedColumns = exportedColumns;
-	}
-
-	protected void exportColumns() {
-		if (this.exportedColumns == null) {
-			this.exportedColumns = new HashMap();
-		}
-		this.exportedColumns.put(COLUMN_ID, this.id.toString());
-		this.exportedColumns.put(COLUMN_CREATED, Long.toString(this.created.getTime()));
-		this.exportedColumns.put(COLUMN_MODIFIED, Long.toString(this.modified.getTime()));
-		this.exportedColumns.put(COLUMN_CREATOR_ID, this.creatorId.toString());
-		this.exportedColumns.put(COLUMN_MODIFIER_ID, this.modifierId.toString());
-	}
-
-	public Map getExportedColumns() {
-		return Collections.unmodifiableMap(this.exportedColumns);
-	}
+	}	
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectType.java,v 1.10 2005/01/24 15:29:27 bob Exp $
+ * $Id: StorableObjectType.java,v 1.11 2005/01/25 08:50:07 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,12 +9,11 @@
 package com.syrus.AMFICOM.general;
 
 import java.util.Date;
-import java.util.Map;
 
 import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/01/24 15:29:27 $
+ * @version $Revision: 1.11 $, $Date: 2005/01/25 08:50:07 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -89,17 +88,5 @@ public abstract class StorableObjectType extends StorableObject {
 							modifier_id);
 		this.codename = codename;
 		this.description = description;
-	}
-
-	protected StorableObjectType (Map exportedColumns) {
-		super(exportedColumns);
-		this.codename = (String)exportedColumns.get(COLUMN_CODENAME);
-		this.description = (String)exportedColumns.get(COLUMN_DESCRIPTION);
-	}
-
-	protected void exportColumns() {
-		super.exportColumns();
-		this.exportedColumns.put(COLUMN_CODENAME, this.codename);
-		this.exportedColumns.put(COLUMN_DESCRIPTION, this.description);
 	}
 }
