@@ -93,7 +93,7 @@ public class SchemeMonitoringSolution
 		
     	#sql { delete
             from SCHEMEMONITORINGSOLUTION
-            wher id = :id
+            where id = :id
         };
     	#sql { commit };
     }
@@ -178,7 +178,7 @@ public class SchemeMonitoringSolution
 
     	#sql { delete
             from PATHSINSOLUTION
-            wher solution_id = :id
+            where solution_id = :id
         };
 	}
 

@@ -40,12 +40,28 @@ public class AMFICOMServer
 	static boolean measuretraffic = true;
 
 	protected AlarmReceiverMap alarmReceiverMap;
+	
+	protected ServerTrafficReporter thisReporter;
+	static protected ServerTrafficReporter theReporter;
+
+	{
+		if(measuretraffic)
+		{
+			theReporter = new ServerTrafficReporter("d:\\traffic.log");
+		}
+	}
 
 	public AMFICOMServer()
-	{
+	{ 
 //		System.out.println("()AMFICOMServer()");
+		String st = getClass().getName() + "@" + Integer.toHexString(hashCode());
+		st = st.substring(st.lastIndexOf(".") + 1);
+		st = "d:\\log\\" + st + ".log";
 		if(measuretraffic)
-			ServerTrafficReporter.startLog();
+		{
+			theReporter.startLog();
+			thisReporter = new ServerTrafficReporter(st);
+		}
 	}
 
 	protected void finalize()
@@ -53,7 +69,10 @@ public class AMFICOMServer
 	{
 //		System.out.println("()finalize()");
 		if(measuretraffic)
-			ServerTrafficReporter.stopLog();
+		{
+			theReporter.stopLog();
+			thisReporter.stopLog();
+		}
 		super.finalize();
 	}
 
@@ -82,10 +101,12 @@ public class AMFICOMServer
 		{
 		if(measuretraffic)
 		{
-			ServerTrafficReporter.fnReport(((_AMFICOMImplBase )_self)._methods()[_method_id].method_name);
+			theReporter.fnReport(((_AMFICOMImplBase )_self)._methods()[_method_id].method_name);
+			((AMFICOMServer )_self).thisReporter.fnReport(((_AMFICOMImplBase )_self)._methods()[_method_id].method_name);
 			strs.set(_input);
 //			System.out.println("()fnInReport(" + strs.length + ")");
-			ServerTrafficReporter.fnInReport("IN:  ", strs.length);
+			theReporter.fnInReport("IN:  ", strs.length);
+			((AMFICOMServer )_self).thisReporter.fnInReport("IN:  ", strs.length);
 			starttm = System.currentTimeMillis();
 		}
 
@@ -96,9 +117,13 @@ public class AMFICOMServer
 			endtm = System.currentTimeMillis();
 			strs.set(_output);
 //			System.out.println("()fnOutReport(" + strs.length + ")");
-			ServerTrafficReporter.fnOutReport("OUT: ", strs.length);
-			ServerTrafficReporter.fnStrReport("elapsed time: " + String.valueOf(starttm - endtm) + " ms");
-			ServerTrafficReporter.fnReportEnd();
+			theReporter.fnOutReport("OUT: ", strs.length);
+			((AMFICOMServer )_self).thisReporter.fnOutReport("OUT: ", strs.length);
+
+			((AMFICOMServer )_self).thisReporter.fnStrReport("elapsed time: " + String.valueOf(endtm - starttm) + " ms");
+
+			theReporter.fnReportEnd();
+			((AMFICOMServer )_self).thisReporter.fnReportEnd();
 		}
 		}
 
@@ -154,9 +179,9 @@ public class AMFICOMServer
 	{
 		if(measuretraffic)
 		{
-			ServerTrafficReporter.fnReport("GetLoggedUserIds");
+			theReporter.fnReport("GetLoggedUserIds");
 			AccessIdentity_TransferableHelper.write(strs.reset(), accessIdentity);
-			ServerTrafficReporter.fnInReport("accessIdentity", strs.length);
+			theReporter.fnInReport("accessIdentity", strs.length);
 		}
 
 		int retcode =
@@ -165,8 +190,8 @@ public class AMFICOMServer
 		if(measuretraffic)
 		{
 			wstringSeqHelper.write(strs.reset(), userids.value);
-			ServerTrafficReporter.fnOutReport("userids", strs.length);
-			ServerTrafficReporter.fnReportEnd();
+			theReporter.fnOutReport("userids", strs.length);
+			theReporter.fnReportEnd();
 		}
 		return retcode;
 	}
@@ -479,10 +504,10 @@ public class AMFICOMServer
 	{
 		if(measuretraffic)
 		{
-			ServerTrafficReporter.fnReport("GetMaps");
+			theReporter.fnReport("GetMaps");
 			AccessIdentity_TransferableHelper.write(strs.reset(), accessIdentity);
-			ServerTrafficReporter.fnInReport("accessIdentity", strs.length);
-			ServerTrafficReporter.fnInReport("map_id", 2 * map_id.length());
+			theReporter.fnInReport("accessIdentity", strs.length);
+			theReporter.fnInReport("map_id", 2 * map_id.length());
 		}
 
 		int retcode = dbInterface.GetMap(
@@ -501,24 +526,24 @@ public class AMFICOMServer
 		if(measuretraffic)
 		{
 			ImageResourceSeq_TransferableHelper.write(strs.reset(), imageseq.value);
-			ServerTrafficReporter.fnOutReport("imageseq", strs.length);
+			theReporter.fnOutReport("imageseq", strs.length);
 			MapContextSeq_TransferableHelper.write(strs.reset(), mapseq.value);
-			ServerTrafficReporter.fnOutReport("mapseq", strs.length);
+			theReporter.fnOutReport("mapseq", strs.length);
 			MapElementSeq_TransferableHelper.write(strs.reset(), equipmentseq.value);
-			ServerTrafficReporter.fnOutReport("equipmentseq", strs.length);
+			theReporter.fnOutReport("equipmentseq", strs.length);
 			MapElementSeq_TransferableHelper.write(strs.reset(), kisseq.value);
-			ServerTrafficReporter.fnOutReport("kisseq", strs.length);
+			theReporter.fnOutReport("kisseq", strs.length);
 			MapMarkElementSeq_TransferableHelper.write(strs.reset(), markseq.value);
-			ServerTrafficReporter.fnOutReport("markseq", strs.length);
+			theReporter.fnOutReport("markseq", strs.length);
 			MapPhysicalNodeElementSeq_TransferableHelper.write(strs.reset(), nodeseq.value);
-			ServerTrafficReporter.fnOutReport("nodeseq", strs.length);
+			theReporter.fnOutReport("nodeseq", strs.length);
 			MapNodeLinkElementSeq_TransferableHelper.write(strs.reset(), nodelinkseq.value);
-			ServerTrafficReporter.fnOutReport("nodelinkseq", strs.length);
+			theReporter.fnOutReport("nodelinkseq", strs.length);
 			MapPhysicalLinkElementSeq_TransferableHelper.write(strs.reset(), linkseq.value);
-			ServerTrafficReporter.fnOutReport("linkseq", strs.length);
+			theReporter.fnOutReport("linkseq", strs.length);
 			MapPathElementSeq_TransferableHelper.write(strs.reset(), pathseq.value);
-			ServerTrafficReporter.fnOutReport("pathseq", strs.length);
-			ServerTrafficReporter.fnReportEnd();
+			theReporter.fnOutReport("pathseq", strs.length);
+			theReporter.fnReportEnd();
 		}
 
 		return retcode;

@@ -341,7 +341,7 @@ public class SchemeOptimizeInfo extends Object
     {
     	#sql { delete
             from SCHEMEOPTIMIZEINFO
-            wher id = :id
+            where id = :id
         };
     	#sql { commit };
     }

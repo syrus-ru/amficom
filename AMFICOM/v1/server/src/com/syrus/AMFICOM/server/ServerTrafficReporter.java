@@ -7,16 +7,24 @@ import java.text.SimpleDateFormat;
 public final class ServerTrafficReporter
 {
 	static public SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy HH:mm:ss");
-	static FileOutputStream fos;
-	static PrintWriter pstr;
+	FileOutputStream fos;
+	PrintWriter pstr;
 
-	static boolean firstin;
-	static boolean firstout;
+	boolean firstin;
+	boolean firstout;
 
-	static int incount;
-	static int outcount;
-
-	public static void startLog()
+	int incount;
+	int outcount;
+	
+	String fname = "d:\\traffic.log";
+	
+	public ServerTrafficReporter(String fn)
+	{
+		fname = fn;
+		startLog();
+	}
+	
+	public void startLog()
 	{
 		openLog();
 		try
@@ -35,16 +43,14 @@ public final class ServerTrafficReporter
 		closeLog();
 	}
 
-	public static void openLog()
+	public void openLog()
 	{
 
-//	static
-//  	{
 		try
 		{
 //			System.out.println("OPEN TRAFFIC LOG FILE ");
-//			oracle.aurora.rdbms.security.PolicyTableManager.grant("AMFICOM","SYS:java.io.FilePermission","d:\\traffic.log","write");
-			fos = new FileOutputStream("d:\\traffic.log", true);
+//			oracle.aurora.rdbms.security.PolicyTableManager.grant("AMFICOM","SYS:java.io.FilePermission",fname,"write");
+			fos = new FileOutputStream(fname, true);
 			pstr = new PrintWriter(fos);
 		}
 		catch(Exception e)
@@ -58,7 +64,7 @@ public final class ServerTrafficReporter
 	{
 	}
 
-	static public void fnReport(String fnname)
+	public void fnReport(String fnname)
 	{
 		openLog();
 		firstin = true;
@@ -78,24 +84,27 @@ public final class ServerTrafficReporter
 		closeLog();
 	}
 
-	static public void fnInReport(String paramname, Object obj)
+	public void fnInReport(String paramname, Object obj)
 	{
 		int count = 0;
 		fnInReport(paramname, count);
 	}
 
-	static public void fnStrReport(String text)
+	public void fnStrReport(String text)
 	{
+		openLog();
 		try
 		{
 			pstr.println("		" + text);
 		}
 		catch(Exception e)
 		{
+			System.out.println("		" + text);
 		}
+		closeLog();
 	}
 
-	static public void fnInReport(String paramname, int count)
+	public void fnInReport(String paramname, int count)
 	{
 		openLog();
 		incount += count;
@@ -103,26 +112,26 @@ public final class ServerTrafficReporter
 		{
 			if(firstin)
 				pstr.println("	in parameters:");
-			pstr.println("		" + paramname + " --- " + count);
+			pstr.println("		" + paramname + " " + count);
 		}
 		catch(Exception e)
 		{
 			if(firstin)
 				System.out.println("	in parameters:");
-			System.out.println("		" + paramname + " --- " + count);
+			System.out.println("		" + paramname + " " + count);
 		}
 		if(firstin)
 			firstin = false;
 		closeLog();
 	}
 
-	static public void fnOutReport(String paramname, Object obj)
+	public void fnOutReport(String paramname, Object obj)
 	{
 		int count = 0;
 		fnOutReport(paramname, count);
 	}
 
-	static public void fnOutReport(String paramname, int count)
+	public void fnOutReport(String paramname, int count)
 	{
 		openLog();
 		outcount += count;
@@ -132,7 +141,7 @@ public final class ServerTrafficReporter
 				pstr.println("	in total			" + incount);
 			if(firstout)
 				pstr.println("	out parameters:");
-			pstr.println("		" + paramname + " --- " + count);
+			pstr.println("		" + paramname + " " + count);
 		}
 		catch(Exception e)
 		{
@@ -140,7 +149,7 @@ public final class ServerTrafficReporter
 				System.out.println("	in total			" + incount);
 			if(firstout)
 				System.out.println("	out parameters:");
-			System.out.println("		" + paramname + " --- " + count);
+			System.out.println("		" + paramname + " " + count);
 		}
 		if(!firstin)
 			firstin = true;
@@ -149,7 +158,7 @@ public final class ServerTrafficReporter
 		closeLog();
 	}
 
-	static public void fnReportEnd()
+	public void fnReportEnd()
 	{
 		openLog();
 		try
@@ -176,7 +185,7 @@ public final class ServerTrafficReporter
 		closeLog();
 	}
 
-	static public void stopLog()
+	public void stopLog()
 	{
 		openLog();
 		try
@@ -194,7 +203,7 @@ public final class ServerTrafficReporter
 		closeLog();
 	}
 
-	static public void closeLog()
+	public void closeLog()
 	{
 		try
 		{
