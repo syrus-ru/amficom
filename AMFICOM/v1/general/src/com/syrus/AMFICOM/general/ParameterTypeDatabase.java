@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.5 2005/02/03 14:27:00 arseniy Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.6 2005/02/07 08:51:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,28 +11,15 @@ package com.syrus.AMFICOM.general;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.DataType;
-import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/03 14:27:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/02/07 08:51:30 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -109,7 +96,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 
 	
 	public Object retrieveObject(StorableObject storableObject, int retrieveKind, Object arg) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		ParameterType parameterType = this.fromStorableObject(storableObject);
+//		ParameterType parameterType = this.fromStorableObject(storableObject);
 		switch (retrieveKind) {
 			default:
 				return null;
@@ -127,7 +114,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	}	
 
 	public void update(StorableObject storableObject, int updateKind, Object obj) throws IllegalDataException, VersionCollisionException, UpdateObjectException {
-		ParameterType parameterType = this.fromStorableObject(storableObject);
+//		ParameterType parameterType = this.fromStorableObject(storableObject);
 		switch (updateKind) {
 			case UPDATE_CHECK:
 				super.checkAndUpdateEntity(storableObject, false);
@@ -153,6 +140,9 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 		}
 	}
 
+	/**
+	 * @deprecated use {@link StorableObjectDatabase.retrieveByCondion} and {@link TypicalCondition}
+	 */
 	public ParameterType retrieveForCodename(String codename) throws ObjectNotFoundException , RetrieveObjectException {		
 		List list = null;
 		
@@ -198,26 +188,6 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}
 		return i;
-	}	
-
-	public List retrieveByCondition(List ids, StorableObjectCondition condition)
-			throws RetrieveObjectException, IllegalDataException {
-		List list = null;
-		if (condition instanceof StringFieldCondition) {
-			StringFieldCondition stringFieldCondition = (StringFieldCondition)condition;
-			try {
-				ParameterType type = this.retrieveForCodename(stringFieldCondition.getString());
-				list = Collections.singletonList(type);
-			}
-			catch(ObjectNotFoundException e) {
-				String msg = getEnityName() + "Database.retrieveByCondition | Cannot found object with codename '" + stringFieldCondition.getString() + "'";
-				throw new RetrieveObjectException(msg, e);
-			}
-		}
-		else {
-			Log.errorMessage(getEnityName() + "Database.retrieveByCondition | Unknown condition class: " + condition);
-			list = this.retrieveButIds(ids);
-		}
-		return list;
 	}
+	
 }
