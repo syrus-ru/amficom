@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.63 2005/03/05 21:37:24 arseniy Exp $
+ * $Id: KIS.java,v 1.64 2005/03/16 12:49:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,7 @@ import java.util.List;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.configuration.corba.KIS_Transferable;
+import com.syrus.AMFICOM.general.*;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -33,14 +34,15 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/03/05 21:37:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.64 $, $Date: 2005/03/16 12:49:10 $
+ * @author $Author: bass $
  * @module config_v1
  */
 
-public class KIS extends DomainMember implements Characterizable {
+public final class KIS extends DomainMember implements Characterizable {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -306,5 +308,22 @@ public class KIS extends DomainMember implements Characterizable {
 	public void setTCPPort(final short tcpPort) {
 		this.tcpPort = tcpPort;
 		super.changed = true;
+	}
+
+	/**
+	 * @return <code>Collection&lt;MeasurementPort&gt;</code>
+	 */
+	public Collection getMeasurementPorts() {
+		try {
+			return ConfigurationStorableObjectPool
+					.getStorableObjectsByCondition(
+							new LinkedIdsCondition(
+									this.id,
+									ObjectEntities.MEASUREMENTPORT_ENTITY_CODE),
+							true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, Log.SEVERE);
+			return Collections.EMPTY_LIST;
+		}
 	}
 }
