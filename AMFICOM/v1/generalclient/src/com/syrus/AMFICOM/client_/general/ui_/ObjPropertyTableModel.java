@@ -10,7 +10,7 @@ import java.util.Map;
 import javax.swing.table.AbstractTableModel;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/12/30 12:32:57 $
+ * @version $Revision: 1.4 $, $Date: 2005/01/11 16:39:52 $
  * @author $Author: krupenn $
  * @module generalclient_v1
  */
@@ -104,7 +104,7 @@ public class ObjPropertyTableModel extends AbstractTableModel {
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		String key = this.controller.getKey(rowIndex);
 		if (columnIndex == 0)
-			return key;
+			return this.controller.getName(key);
 		Object obj = this.controller.getValue(this.object, key);
 
 		if (this.controller.getPropertyValue(key) instanceof Map) {
