@@ -1,17 +1,19 @@
+/*
+ * $Id: ReportBuilder.java,v 1.9 2004/09/27 08:58:38 bass Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ
+ */
+
 package com.syrus.AMFICOM.Client.General.Report;
 
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-import java.util.Date;
-
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-import javax.swing.JDialog;
-
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.Event.OperationEvent;
 import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
+import com.syrus.AMFICOM.Client.General.Model.*;
+import java.awt.*;
+import java.util.Date;
+import javax.swing.*;
 
 /**
  * <p>Title: </p>
@@ -19,10 +21,11 @@ import com.syrus.AMFICOM.Client.General.Filter.ObjectResourceFilter;
  *    а также оптимально подгружает данные с сервера.</p>
  * <p>Copyright: Copyright (c) 2004</p>
  * <p>Company: Syrus Systems</p>
- * @author Песковский Пётр
- * @version 1.0
+ * 
+ * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2004/09/27 08:58:38 $
+ * @module generalclient_v1
  */
-
 public class ReportBuilder
 {
 	static public String ev_startProgressBar = "ev_startProgressBar";
@@ -64,7 +67,7 @@ public class ReportBuilder
 					ObjectsReport curReport =
 						((RenderingObject) rt.objectRenderers.get(i)).getReportToRender();
 
-					curReport.model.loadRequiredObjects(aContext.getDataSourceInterface(), curReport, rt);
+					curReport.model.loadRequiredObjects(aContext.getDataSource(), curReport, rt);
 				}
 
 				System.out.println(new Date(System.currentTimeMillis()).toString() +

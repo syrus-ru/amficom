@@ -1,5 +1,5 @@
 /*
- * $Id: SelectReportsPanel.java,v 1.9 2004/09/27 08:26:24 bass Exp $
+ * $Id: SelectReportsPanel.java,v 1.10 2004/09/27 09:02:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,6 @@ import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Filter.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelReport;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Report.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -26,7 +25,7 @@ import oracle.jdeveloper.layout.XYLayout;
  * Панель для отображения дерева доступных отчётов.
  * 
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2004/09/27 08:26:24 $
+ * @version $Revision: 1.10 $, $Date: 2004/09/27 09:02:12 $
  * @module generalclient_v1
  */
 public class SelectReportsPanel extends JInternalFrame implements
