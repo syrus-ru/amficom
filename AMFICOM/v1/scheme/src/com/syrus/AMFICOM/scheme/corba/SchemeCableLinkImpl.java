@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeCableLinkImpl.java,v 1.2 2004/11/24 10:03:58 bass Exp $
+ * $Id: SchemeCableLinkImpl.java,v 1.3 2004/11/24 13:05:02 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,15 +9,16 @@
 package com.syrus.AMFICOM.scheme.corba;
 
 import com.syrus.AMFICOM.configuration.corba.*;
+import com.syrus.AMFICOM.configuration.*;
 import com.syrus.AMFICOM.general.corba.Identifier;
 import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/11/24 10:03:58 $
+ * @version $Revision: 1.3 $, $Date: 2004/11/24 13:05:02 $
  * @module schemecommon_v1
  */
-final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
+public final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
 	private static final ErrorHandler ERROR_HANDLER = ErrorHandler.getInstance();
 
 	SchemeCableLinkImpl() {
@@ -27,11 +28,31 @@ final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
 		this.thisId = id;
 	}
 
+	/**
+	 * @see #abstractLinkTypeImpl()
+	 */
 	public AbstractLinkType_Transferable abstractLinkType() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void abstractLinkType(AbstractLinkType_Transferable abstractLinkType) {
+	/**
+	 * @see #abstractLinkTypeImpl(AbstractLinkType) 
+	 */
+	public void abstractLinkType(final AbstractLinkType_Transferable abstractLinkType) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see #abstractLinkType()
+	 */
+	public AbstractLinkType abstractLinkTypeImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see #abstractLinkType(AbstractLinkType_Transferable)
+	 */
+	public void abstractLinkTypeImpl(final AbstractLinkType abstractLinkType) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -47,20 +68,59 @@ final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @see #cableLinkTypeImpl()
+	 */
 	public LinkType_Transferable cableLinkType() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void cableLinkType(LinkType_Transferable cableLinkType) {
+	/**
+	 * @see #cableLinkTypeImpl(LinkType)
+	 */
+	public void cableLinkType(final LinkType_Transferable cableLinkType) {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @see #cableLinkType() 
+	 */
+	public LinkType cableLinkTypeImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see #cableLinkType(LinkType_Transferable)
+	 */
+	public void cableLinkTypeImpl(final LinkType cableLinkType) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see #characteristicsImpl()
+	 */
 	public Characteristic_Transferable[] characteristics() {
 		throw new UnsupportedOperationException();
 	}
 
-	public void characteristics(
-			Characteristic_Transferable[] characteristics) {
+	/**
+	 * @see #characteristicsImpl(Characteristic[])
+	 */
+	public void characteristics(final Characteristic_Transferable characteristics[]) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see #characteristics()
+	 */
+	public Characteristic[] characteristicsImpl() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see #characteristics(Characteristic_Transferable[])
+	 */
+	public void characteristicsImpl(final Characteristic characteristics[]) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -89,7 +149,17 @@ final class SchemeCableLinkImpl extends SchemeCableLink implements Cloneable {
 		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @see #linkImpl()
+	 */
 	public Link_Transferable link() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see #link()
+	 */
+	public Link linkImpl() {
 		throw new UnsupportedOperationException();
 	}
 
