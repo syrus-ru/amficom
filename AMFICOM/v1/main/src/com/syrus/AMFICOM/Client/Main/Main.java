@@ -87,7 +87,6 @@ public class Main
 			e.printStackTrace();
 		}
 
-		LangModelMain.initialize();
 		new Main(new DefaultMainApplicationModelFactory());
 	}
 
