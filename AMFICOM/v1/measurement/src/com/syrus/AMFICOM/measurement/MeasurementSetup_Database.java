@@ -185,16 +185,13 @@ public class MeasurementSetup_Database extends StorableObject_Database {
 		String ms_id_str = measurementSetup.getId().toSQLString();
 		Set criteriaSet = measurementSetup.getCriteriaSet();
 		Set thresholdSet = measurementSetup.getThresholdSet();
-		Set etalon = measurementSetup.getEtalon();
-		/**
-		 * @todo is '0' correct for criteriaSet|thresholdSet|etalon == null ???
-		 */
+		Set etalon = measurementSetup.getEtalon();		
 		String criteria_set_id_substr = (criteriaSet != null) ? (criteriaSet
-				.getId().toSQLString()) : "'0'";
+				.getId().toSQLString()) : Identifier.getNullSQLString();
 		String threshold_set_id_substr = (thresholdSet != null) ? (thresholdSet
-				.getId().toSQLString()) : "'0'";
+				.getId().toSQLString()) : Identifier.getNullSQLString();
 		String etalon_id_substr = (etalon != null) ? (etalon.getId()
-				.toSQLString()) : "'0'";
+				.toSQLString()) : Identifier.getNullSQLString();
 		String sql;
 		{
 			StringBuffer buffer = new StringBuffer(SQL_INSERT_INTO);

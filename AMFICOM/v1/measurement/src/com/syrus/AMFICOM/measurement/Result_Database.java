@@ -240,32 +240,20 @@ public class Result_Database extends StorableObject_Database {
 			buffer.append(COMMA);
 		int result_sort = result.getSort().value();
 		switch (result_sort) {
-			case ResultSort._RESULT_SORT_MEASUREMENT:
-				/**
-				 * @todo when change DB Identifier model ,change '' to 0
-				 */
-				buffer.append("''");
-				buffer.append(COMMA);
-				/**
-				 * @todo when change DB Identifier model ,change '' to 0
-				 */
-				buffer.append("''");
+			case ResultSort._RESULT_SORT_MEASUREMENT:				
+				buffer.append(Identifier.getNullSQLString());
+				buffer.append(COMMA);				
+				buffer.append(Identifier.getNullSQLString());
 				buffer.append(COMMA);
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
 				buffer.append(result.getAction().getId().toSQLString());
-				buffer.append(COMMA);
-				/**
-				 * @todo when change DB Identifier model ,change "" to 0
-				 */
-				buffer.append("''");
+				buffer.append(COMMA);				
+				buffer.append(Identifier.getNullSQLString());
 				buffer.append(COMMA);
 				break;
-			case ResultSort._RESULT_SORT_EVALUATION:
-				/**
-				 * @todo when change DB Identifier model ,change '' to 0
-				 */
-				buffer.append("''");
+			case ResultSort._RESULT_SORT_EVALUATION:				
+				buffer.append(Identifier.getNullSQLString());
 				buffer.append(COMMA);
 				buffer.append(result.getAction().getId().toSQLString());
 				buffer.append(COMMA);
