@@ -1,5 +1,5 @@
 /*
- * $Id: ObjectResourceCatalogPanel.java,v 1.1 2004/10/26 08:18:29 stas Exp $
+ * $Id: ObjectResourceCatalogPanel.java,v 1.2 2005/01/31 09:22:29 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,12 +22,13 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.*;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
+import com.syrus.AMFICOM.general.CharacteristicTypeController;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import oracle.jdeveloper.layout.XYConstraints;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2004/10/26 08:18:29 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/31 09:22:29 $
  * @module generalclient_v1
  */
 public class ObjectResourceCatalogPanel extends JPanel implements OperationListener
@@ -53,7 +54,8 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 	private JPanel jPanel = new JPanel();
 	private JScrollPane propScrollPane;
 	private JTabbedPane jTabbedPane = new JTabbedPane();
-	private ObjectResourceTableModel model = new ObjectResourceTableModel(null);
+	private ObjectResourceTableModel model = new ObjectResourceTableModel(
+			 CharacteristicTypeController.getInstance());
 	private ObjectResourceTable table = new ObjectResourceTable(model);
 	private ObjectResourcePropertiesPane propPane = new GeneralPanel();
 	private ObjectResourceFilterPane filterPane = new ObjectResourceFilterPane();
@@ -100,11 +102,10 @@ public class ObjectResourceCatalogPanel extends JPanel implements OperationListe
 
 	private boolean sendEvent = false;
 
-	public ObjectResourceCatalogPanel(ApplicationContext aContext)
+	public ObjectResourceCatalogPanel()
 	{
 		jbInit();
 		Environment.getDispatcher().register(this, ContextChangeEvent.type);
-		setContext(aContext);
 	}
 
 	public void setContents(List dataSet)

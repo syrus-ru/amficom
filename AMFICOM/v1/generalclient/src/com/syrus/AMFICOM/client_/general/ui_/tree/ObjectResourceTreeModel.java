@@ -6,6 +6,7 @@ import java.util.List;
 import java.awt.Color;
 
 import com.syrus.AMFICOM.Client.General.UI.ObjectResourceCatalogActionModel;
+import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 import com.syrus.AMFICOM.client_.general.ui_.*;
 
 public abstract class ObjectResourceTreeModel
@@ -13,6 +14,7 @@ public abstract class ObjectResourceTreeModel
 	public abstract ObjectResourceTreeNode getRoot();
 	public abstract List getChildNodes(ObjectResourceTreeNode node);
 	public abstract Class getNodeChildClass(ObjectResourceTreeNode node);
+	public abstract ObjectResourceController getNodeChildController(ObjectResourceTreeNode node);
 
 //	public abstract ImageIcon getNodeIcon(ObjectResourceTreeNode node);
 	public abstract Color getNodeTextColor(ObjectResourceTreeNode node);
