@@ -1,5 +1,5 @@
 /*
- * $Id: SetDatabase.java,v 1.76 2005/03/05 21:37:32 arseniy Exp $
+ * $Id: SetDatabase.java,v 1.77 2005/03/10 12:52:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.76 $, $Date: 2005/03/05 21:37:32 $
+ * @version $Revision: 1.77 $, $Date: 2005/03/10 12:52:09 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -144,7 +144,7 @@ public class SetDatabase extends StorableObjectDatabase {
 			ParameterType parameterType;
 			while (resultSet.next()) {
 				try {
-					parameterType = (ParameterType) MeasurementStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
+					parameterType = (ParameterType) GeneralStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID), true);
 				}
 				catch (ApplicationException ae) {
 					throw new RetrieveObjectException(ae);

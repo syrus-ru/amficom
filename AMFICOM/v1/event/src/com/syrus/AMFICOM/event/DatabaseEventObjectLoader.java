@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseEventObjectLoader.java,v 1.9 2005/03/04 13:30:58 bass Exp $
+ * $Id: DatabaseEventObjectLoader.java,v 1.10 2005/03/10 12:54:34 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/03/04 13:30:58 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/03/10 12:54:34 $
+ * @author $Author: arseniy $
  * @module event_v1
  */
 public class DatabaseEventObjectLoader implements EventObjectLoader {
@@ -96,7 +96,7 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 		EventTypeDatabase eventTypeDatabase = (EventTypeDatabase) EventDatabaseContext.eventTypeDatabase;
 		Collection collection = null;
 		try {
-			collection = eventTypeDatabase.retrieveByCondition(ids, condition);
+			collection = eventTypeDatabase.retrieveButIdsByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseEventObjectLoader.loadEventTypesButIds | Illegal Storable Object: " + e.getMessage();
@@ -110,7 +110,7 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 		EventDatabase eventDatabase = (EventDatabase) EventDatabaseContext.eventDatabase;
 		Collection collection = null;
 		try {
-			collection = eventDatabase.retrieveByCondition(ids, condition);
+			collection = eventDatabase.retrieveButIdsByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseEventObjectLoader.loadEventsButIds | Illegal Storable Object: " + e.getMessage();
@@ -124,7 +124,7 @@ public class DatabaseEventObjectLoader implements EventObjectLoader {
 		EventSourceDatabase eventSourceDatabase = (EventSourceDatabase) EventDatabaseContext.eventSourceDatabase;
 		Collection collection = null;
 		try {
-			collection = eventSourceDatabase.retrieveByCondition(ids, condition);
+			collection = eventSourceDatabase.retrieveButIdsByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseEventObjectLoader.loadEventSourcesButIds | Illegal Storable Object: " + e.getMessage();

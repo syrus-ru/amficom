@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementServerSetup.java,v 1.28 2005/02/18 18:16:00 arseniy Exp $
+ * $Id: MeasurementServerSetup.java,v 1.29 2005/03/10 12:52:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -70,7 +70,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/02/18 18:16:00 $
+ * @version $Revision: 1.29 $, $Date: 2005/03/10 12:52:46 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -527,7 +527,7 @@ public final class MeasurementServerSetup {
 				}
 			}
 
-			Collection analysisTypes = analysisTypeDatabase.retrieveByCondition(null, new EquivalentCondition(ObjectEntities.ANALYSISTYPE_ENTITY_CODE));
+			Collection analysisTypes = analysisTypeDatabase.retrieveButIdsByCondition(null, new EquivalentCondition(ObjectEntities.ANALYSISTYPE_ENTITY_CODE));
 			AnalysisType at;
 			for (Iterator i = analysisTypes.iterator(); i.hasNext();) {
 				at = (AnalysisType) i.next();
@@ -653,22 +653,22 @@ public final class MeasurementServerSetup {
 
 		try {
 			TypicalCondition tc = new TypicalCondition(ParameterTypeCodenames.TRACE_WAVELENGTH, OperationSort.OPERATION_EQUALS, ObjectEntities.PARAMETERTYPE_ENTITY_CODE, StorableObjectWrapper.COLUMN_CODENAME);
-			ParameterType wvlenParam = (ParameterType) parameterTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+			ParameterType wvlenParam = (ParameterType) parameterTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
 
 			tc = new TypicalCondition(ParameterTypeCodenames.TRACE_LENGTH, OperationSort.OPERATION_EQUALS, ObjectEntities.PARAMETERTYPE_ENTITY_CODE, StorableObjectWrapper.COLUMN_CODENAME);
-			ParameterType trclenParam = (ParameterType) parameterTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+			ParameterType trclenParam = (ParameterType) parameterTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
 			
 			tc = new TypicalCondition(ParameterTypeCodenames.TRACE_RESOLUTION, OperationSort.OPERATION_EQUALS, ObjectEntities.PARAMETERTYPE_ENTITY_CODE, StorableObjectWrapper.COLUMN_CODENAME);
-			ParameterType resParam = (ParameterType) parameterTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+			ParameterType resParam = (ParameterType) parameterTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
 			
 			tc = new TypicalCondition(ParameterTypeCodenames.TRACE_PULSE_WIDTH, OperationSort.OPERATION_EQUALS, ObjectEntities.PARAMETERTYPE_ENTITY_CODE, StorableObjectWrapper.COLUMN_CODENAME);
-			ParameterType pulswdParam = (ParameterType) parameterTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+			ParameterType pulswdParam = (ParameterType) parameterTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
 			
 			tc = new TypicalCondition(ParameterTypeCodenames.TRACE_INDEX_OF_REFRACTION, OperationSort.OPERATION_EQUALS, ObjectEntities.PARAMETERTYPE_ENTITY_CODE, StorableObjectWrapper.COLUMN_CODENAME);
-			ParameterType iorParam = (ParameterType) parameterTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+			ParameterType iorParam = (ParameterType) parameterTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
 			
 			tc = new TypicalCondition(ParameterTypeCodenames.TRACE_AVERAGE_COUNT, OperationSort.OPERATION_EQUALS, ObjectEntities.PARAMETERTYPE_ENTITY_CODE, StorableObjectWrapper.COLUMN_CODENAME);
-			ParameterType scansParam = (ParameterType) parameterTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+			ParameterType scansParam = (ParameterType) parameterTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
 
 			SetParameter[] params = new SetParameter[6];
 			params[0] = SetParameter.createInstance(wvlenParam, new ByteArray((int) 1625).getBytes());
@@ -704,55 +704,55 @@ public final class MeasurementServerSetup {
 					OperationSort.OPERATION_EQUALS,
 					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME);
-			ParameterType tacticParam = (ParameterType) parameterTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+			ParameterType tacticParam = (ParameterType) parameterTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
 
 			tc = new TypicalCondition(ParameterTypeCodenames.EVENT_SIZE,
 					OperationSort.OPERATION_EQUALS,
 					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME);
-			ParameterType eventsizeParam = (ParameterType) parameterTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+			ParameterType eventsizeParam = (ParameterType) parameterTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
 
 			tc = new TypicalCondition(ParameterTypeCodenames.CONNECTOR_FORM_FACTOR,
 					OperationSort.OPERATION_EQUALS,
 					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME);
-			ParameterType connfallParam = (ParameterType) parameterTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+			ParameterType connfallParam = (ParameterType) parameterTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
 
 			tc = new TypicalCondition(ParameterTypeCodenames.MIN_EVENT_LEVEL,
 					OperationSort.OPERATION_EQUALS,
 					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME);
-			ParameterType minlevelParam = (ParameterType) parameterTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+			ParameterType minlevelParam = (ParameterType) parameterTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
 
 			tc = new TypicalCondition(ParameterTypeCodenames.MAX_NOISE_LEVEL,
 					OperationSort.OPERATION_EQUALS,
 					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME);
-			ParameterType maxlevelnoiseParam = (ParameterType) parameterTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+			ParameterType maxlevelnoiseParam = (ParameterType) parameterTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
 
 			tc = new TypicalCondition(ParameterTypeCodenames.MIN_END_LEVEL,
 					OperationSort.OPERATION_EQUALS,
 					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME);
-			ParameterType minlevelendParam = (ParameterType) parameterTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+			ParameterType minlevelendParam = (ParameterType) parameterTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
 
 			tc = new TypicalCondition(ParameterTypeCodenames.MIN_SPLICE,
 					OperationSort.OPERATION_EQUALS,
 					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME);
-			ParameterType minweldParam = (ParameterType) parameterTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+			ParameterType minweldParam = (ParameterType) parameterTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
 
 			tc = new TypicalCondition(ParameterTypeCodenames.MIN_CONNECTOR,
 					OperationSort.OPERATION_EQUALS,
 					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME);
-			ParameterType minconnectorParam = (ParameterType) parameterTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+			ParameterType minconnectorParam = (ParameterType) parameterTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
 
 			tc = new TypicalCondition(ParameterTypeCodenames.STRATEGY,
 					OperationSort.OPERATION_EQUALS,
 					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME);
-			ParameterType strategyParam = (ParameterType) parameterTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+			ParameterType strategyParam = (ParameterType) parameterTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
 
 			SetParameter[] params = new SetParameter[9];
 			params[0] = SetParameter.createInstance(tacticParam, new ByteArray((int) 1).getBytes());
@@ -831,13 +831,13 @@ public final class MeasurementServerSetup {
 		MeasurementTypeDatabase measurementTypeDatabase = ((MeasurementTypeDatabase) MeasurementDatabaseContext.getMeasurementTypeDatabase());
 		try {
 			TypicalCondition tc = new TypicalCondition(MeasurementType.CODENAME_REFLECTOMETRY, OperationSort.OPERATION_EQUALS, ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE, StorableObjectWrapper.COLUMN_CODENAME);
-			MeasurementType measurementType = (MeasurementType) measurementTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+			MeasurementType measurementType = (MeasurementType) measurementTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
 
 			tc = new TypicalCondition(AnalysisType.CODENAME_DADARA, OperationSort.OPERATION_EQUALS, ObjectEntities.ANALYSISTYPE_ENTITY_CODE, StorableObjectWrapper.COLUMN_CODENAME);
-			AnalysisType analysisType = (AnalysisType) analysisTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+			AnalysisType analysisType = (AnalysisType) analysisTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
 
 			tc = new TypicalCondition(EvaluationType.CODENAME_DADARA, OperationSort.OPERATION_EQUALS, ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, StorableObjectWrapper.COLUMN_CODENAME);
-			EvaluationType evaluationType = (EvaluationType) evaluationTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+			EvaluationType evaluationType = (EvaluationType) evaluationTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
 
 			Test test = Test.createInstance(creatorId,
 					new Date(System.currentTimeMillis()),
@@ -869,13 +869,13 @@ public final class MeasurementServerSetup {
 		MeasurementTypeDatabase measurementTypeDatabase = ((MeasurementTypeDatabase) MeasurementDatabaseContext.getMeasurementTypeDatabase());
 		try {
 			TypicalCondition tc = new TypicalCondition(MeasurementType.CODENAME_REFLECTOMETRY, OperationSort.OPERATION_EQUALS, ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE, StorableObjectWrapper.COLUMN_CODENAME);
-			MeasurementType measurementType = (MeasurementType) measurementTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+			MeasurementType measurementType = (MeasurementType) measurementTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
 
 			tc = new TypicalCondition(AnalysisType.CODENAME_DADARA, OperationSort.OPERATION_EQUALS, ObjectEntities.ANALYSISTYPE_ENTITY_CODE, StorableObjectWrapper.COLUMN_CODENAME);
-			AnalysisType analysisType = (AnalysisType) analysisTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+			AnalysisType analysisType = (AnalysisType) analysisTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
 
 			tc = new TypicalCondition(EvaluationType.CODENAME_DADARA, OperationSort.OPERATION_EQUALS, ObjectEntities.EVALUATIONTYPE_ENTITY_CODE, StorableObjectWrapper.COLUMN_CODENAME);
-			EvaluationType evaluationType = (EvaluationType) evaluationTypeDatabase.retrieveByCondition(null, tc).iterator().next();
+			EvaluationType evaluationType = (EvaluationType) evaluationTypeDatabase.retrieveButIdsByCondition(null, tc).iterator().next();
 
 			Test test = Test.createInstance(creatorId,
 					new Date(System.currentTimeMillis()),

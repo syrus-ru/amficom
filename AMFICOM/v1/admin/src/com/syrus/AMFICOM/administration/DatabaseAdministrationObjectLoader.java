@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseAdministrationObjectLoader.java,v 1.16 2005/03/04 13:30:41 bass Exp $
+ * $Id: DatabaseAdministrationObjectLoader.java,v 1.17 2005/03/10 12:51:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/03/04 13:30:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2005/03/10 12:51:52 $
+ * @author $Author: arseniy $
  * @module administration_v1
  */
 
@@ -130,7 +130,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		UserDatabase database = (UserDatabase) AdministrationDatabaseContext.userDatabase;
 		Collection collection = null;
 		try {
-			collection = database.retrieveByCondition(ids, condition);
+			collection = database.retrieveButIdsByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.loadUsersButIds | Illegal Storable Object: " + e.getMessage();
@@ -144,7 +144,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		DomainDatabase database = (DomainDatabase) AdministrationDatabaseContext.domainDatabase;
 		Collection collection = null;
 		try {
-			collection = database.retrieveByCondition(ids, condition);
+			collection = database.retrieveButIdsByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.loadDomainsButIds | Illegal Storable Object: " + e.getMessage();
@@ -158,7 +158,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		ServerDatabase database = (ServerDatabase) AdministrationDatabaseContext.serverDatabase;
 		Collection collection = null;
 		try {
-			collection = database.retrieveByCondition(ids, condition);
+			collection = database.retrieveButIdsByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.loadDomainsButIds | Illegal Storable Object: " + e.getMessage();
@@ -172,7 +172,7 @@ public class DatabaseAdministrationObjectLoader implements AdministrationObjectL
 		MCMDatabase database = (MCMDatabase) AdministrationDatabaseContext.mcmDatabase;
 		Collection collection = null;
 		try {
-			collection = database.retrieveByCondition(ids, condition);
+			collection = database.retrieveButIdsByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			String mesg = "DatabaseAdministrationObjectLoader.loadMCMsButIds | Illegal Storable Object: " + e.getMessage();

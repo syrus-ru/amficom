@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeDatabase.java,v 1.17 2005/03/05 09:56:46 arseniy Exp $
+ * $Id: CharacteristicTypeDatabase.java,v 1.18 2005/03/10 12:51:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/03/05 09:56:46 $
+ * @version $Revision: 1.18 $, $Date: 2005/03/10 12:51:46 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -155,7 +155,7 @@ public class CharacteristicTypeDatabase extends StorableObjectDatabase {
 	}	
 
 	/**
-	 * @deprecated use {@link StorableObjectDatabase#retrieveByCondition(Collection, StorableObjectCondition)} and {@link TypicalCondition}
+	 * @deprecated use {@link StorableObjectDatabase#retrieveButIdsByCondition(Collection, StorableObjectCondition)} and {@link TypicalCondition}
 	 */
 	public CharacteristicType retrieveForCodename(String codename) throws ObjectNotFoundException , RetrieveObjectException {		
 		Collection collection = null;

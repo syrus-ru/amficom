@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.69 2005/03/05 09:58:22 arseniy Exp $
+ * $Id: MeasurementDatabase.java,v 1.70 2005/03/10 12:52:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/03/05 09:58:22 $
+ * @version $Revision: 1.70 $, $Date: 2005/03/10 12:52:09 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -91,7 +91,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
 		Measurement measurement = this.fromStorableObject(storableObject);
-		String values = super.getUpdateSingleSQLValues(storableObject) + COMMA
+		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ DatabaseIdentifier.toSQLString(measurement.getType().getId()) + COMMA
 			+ DatabaseIdentifier.toSQLString(measurement.getMonitoredElementId()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(measurement.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA
@@ -101,7 +101,7 @@ public class MeasurementDatabase extends StorableObjectDatabase {
 			+ Integer.toString(measurement.getStatus().value()) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(measurement.getLocalAddress(), SIZE_LOCAL_ADDRESS_COLUMN) + APOSTOPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(measurement.getTestId());
-		return values;
+		return sql;
 	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)

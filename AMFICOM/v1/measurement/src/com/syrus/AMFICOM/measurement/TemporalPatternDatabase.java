@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternDatabase.java,v 1.46 2005/03/05 09:58:23 arseniy Exp $
+ * $Id: TemporalPatternDatabase.java,v 1.47 2005/03/10 12:52:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,13 +33,13 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/03/05 09:58:23 $
+ * @version $Revision: 1.47 $, $Date: 2005/03/10 12:52:09 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public class TemporalPatternDatabase extends StorableObjectDatabase {
-	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
+	private static final String CRONSTRINGARRAY_TYPE_NAME = "CronStringArray";
 
 	private TemporalPattern fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof TemporalPattern)
@@ -55,7 +55,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 	}
 	
 	protected String getColumns(int mode) {
-		if (columns == null){
+		if (columns == null) {
 			columns = COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
 				+ TemporalPatternWrapper.COLUMN_VALUE;
@@ -71,10 +71,28 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		}
 		return updateMultipleSQLValues;
 	}
-	
-	
+
+	private StringBuffer getUpdateCronStringArray(TemporalPattern temporalPattern) {
+		String[] cronStrings = temporalPattern.getCronStrings();
+		StringBuffer stringBuffer = new StringBuffer(CRONSTRINGARRAY_TYPE_NAME + OPEN_BRACKET);
+		for (int i = 0; i < cronStrings.length; i++) {
+			stringBuffer.append(APOSTOPHE);
+			stringBuffer.append(cronStrings[i]);
+			stringBuffer.append(APOSTOPHE);
+			if (i != cronStrings.length -1)
+				stringBuffer.append(COMMA);
+		}
+		stringBuffer.append(CLOSE_BRACKET);
+		
+		return stringBuffer;
+	}
+
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException {
-		throw new UnsupportedOperationException("Entity contain complex field");		
+		TemporalPattern temporalPattern = this.fromStorableObject(storableObject);
+		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
+				+ APOSTOPHE + DatabaseString.toQuerySubString(temporalPattern.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
+				+ this.getUpdateCronStringArray(temporalPattern);
+		return sql;
 	}	
 
 	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
@@ -87,7 +105,8 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		TemporalPattern temporalPattern = (storableObject == null) ?
 				new TemporalPattern(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), null, 0L, null, null):
 				this.fromStorableObject(storableObject);
-		String[] cronStrings = ((CronStringArray)(((OracleResultSet)resultSet).getORAData(TemporalPatternWrapper.COLUMN_VALUE, CronStringArray.getORADataFactory()))).getArray();
+		String[] cronStrings = ((CronStringArray) (((OracleResultSet) resultSet).getORAData(TemporalPatternWrapper.COLUMN_VALUE,
+				CronStringArray.getORADataFactory()))).getArray();
 		temporalPattern.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 									  DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 									  DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
@@ -150,7 +169,7 @@ public class TemporalPatternDatabase extends StorableObjectDatabase {
 		
 		PreparedStatement preparedStatement = null;
 		try {			
-			preparedStatement = insertTemporalPatternPreparedStatement();
+			preparedStatement = this.insertTemporalPatternPreparedStatement();
 			this.setEntityForPreparedStatement(temporalPattern, preparedStatement, MODE_INSERT);
 			Log.debugMessage("TemporalPatternDatabase.insertTemporalPattern | Inserting temporal pattern " + tpIdCode, Log.DEBUGLEVEL09);
 			preparedStatement.executeUpdate();

@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.26 2005/02/15 15:08:26 arseniy Exp $
+ * $Id: KISReport.java,v 1.27 2005/03/10 12:52:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/02/15 15:08:26 $
+ * @version $Revision: 1.27 $, $Date: 2005/03/10 12:52:25 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -89,7 +89,7 @@ public class KISReport {
 					OperationSort.OPERATION_EQUALS,
 					ObjectEntities.PARAMETERTYPE_ENTITY_CODE,
 					StorableObjectWrapper.COLUMN_CODENAME);
-			Collection collection = parameterTypeDatabase.retrieveByCondition(null, tc);
+			Collection collection = parameterTypeDatabase.retrieveButIdsByCondition(null, tc);
 			if (collection != null || !collection.isEmpty()) {
 				ParameterType parameterType = (ParameterType) collection.iterator().next();
 				Identifier id = parameterType.getId();

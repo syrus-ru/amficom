@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerMeasurementObjectLoader.java,v 1.26 2005/02/25 09:16:07 bob Exp $
+ * $Id: CMServerMeasurementObjectLoader.java,v 1.27 2005/03/10 12:52:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -48,8 +48,8 @@ import com.syrus.AMFICOM.measurement.corba.Evaluation_Transferable;
 import com.syrus.AMFICOM.measurement.corba.Measurement_Transferable;
 import com.syrus.util.Log;
 /**
- * @version $Revision: 1.26 $, $Date: 2005/02/25 09:16:07 $
- * @author $Author: bob $
+ * @version $Revision: 1.27 $, $Date: 2005/03/10 12:52:52 $
+ * @author $Author: arseniy $
  * @module cmserver_v1
  */
 //TODO For one-objects loads do 'update' instead of 'insert'
@@ -394,7 +394,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		Measurement_Transferable[] measurementTransferables;
 
 		try {
-			list = database.retrieveByCondition(ids2, condition);
+			list = database.retrieveButIdsByCondition(ids2, condition);
 			for (Iterator it = list.iterator(); it.hasNext();) {
 				ids2.add( ((Measurement)it.next()).getId() );
 			}
@@ -467,7 +467,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		Analysis_Transferable[] analysesTransferables;
 
 		try {
-			list = database.retrieveByCondition(ids2, condition);
+			list = database.retrieveButIdsByCondition(ids2, condition);
 			for (Iterator it = list.iterator(); it.hasNext();) {
 					ids2.add( ((Analysis)it.next()).getId() );
 			}
@@ -514,7 +514,7 @@ public final class CMServerMeasurementObjectLoader extends DatabaseMeasurementOb
 		Evaluation_Transferable[] evaluationTransferables;
 		
 		try {
-			list = database.retrieveByCondition(ids2, condition);
+			list = database.retrieveButIdsByCondition(ids2, condition);
 			for (Iterator it = list.iterator(); it.hasNext();) {
 				ids2.add( ((Evaluation)it.next()).getId() );
 			}

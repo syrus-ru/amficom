@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseGeneralObjectLoader.java,v 1.14 2005/03/04 13:29:36 bass Exp $
+ * $Id: DatabaseGeneralObjectLoader.java,v 1.15 2005/03/10 12:51:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,8 +19,8 @@ import java.util.Set;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/03/04 13:29:36 $
- * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/03/10 12:51:46 $
+ * @author $Author: arseniy $
  * @module general_v1
  */
 
@@ -93,7 +93,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		ParameterTypeDatabase database = (ParameterTypeDatabase) GeneralDatabaseContext.parameterTypeDatabase;
 		Collection collection = null;
 		try {
-			collection = database.retrieveByCondition(ids, condition);
+			collection = database.retrieveButIdsByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseGeneralObjectLoader.loadParameterTypesButIds | Illegal Storable Object: " + e.getMessage());
@@ -108,7 +108,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		CharacteristicTypeDatabase database = (CharacteristicTypeDatabase) GeneralDatabaseContext.getCharacteristicTypeDatabase();
 		Collection collection = null;
 		try {
-			collection = database.retrieveByCondition(ids, condition);
+			collection = database.retrieveButIdsByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseGeneralObjectLoader.loadCharacteristicTypesButIds | Illegal Storable Object: " + e.getMessage());
@@ -123,7 +123,7 @@ public class DatabaseGeneralObjectLoader implements GeneralObjectLoader {
 		CharacteristicDatabase database = (CharacteristicDatabase) GeneralDatabaseContext.getCharacteristicDatabase();
 		Collection collection = null;
 		try {
-			collection = database.retrieveByCondition(ids, condition);
+			collection = database.retrieveButIdsByCondition(ids, condition);
 		}
 		catch (IllegalDataException e) {
 			Log.errorMessage("DatabaseGeneralObjectLoader.loadCharacteristicsButIds | Illegal Storable Object: " + e.getMessage());
