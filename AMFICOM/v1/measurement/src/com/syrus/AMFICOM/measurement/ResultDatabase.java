@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.32 2004/10/27 09:39:25 bob Exp $
+ * $Id: ResultDatabase.java,v 1.33 2004/11/01 11:01:49 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,9 +9,11 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
@@ -41,7 +43,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.measurement.corba.ResultSort;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2004/10/27 09:39:25 $
+ * @version $Revision: 1.33 $, $Date: 2004/11/01 11:01:49 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -304,7 +306,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 			RetrieveObjectException {
 		Result result = this.fromStorableObject(storableObject);
 		this.retrieveEntity(result);
-		this.retrieveResultParameters(Collections.singletonList(result));
+		this.retrieveResultParametersByOneQuery(Collections.singletonList(result));
 	}
 
 	protected String retrieveQuery(String condition) {
@@ -470,13 +472,12 @@ public class ResultDatabase extends StorableObjectDatabase {
 		result.setParameters((SetParameter[]) parameters.toArray(new SetParameter[parameters.size()]));
 	}
 
-	/**
-	 * @deprecated untested, have an bug
+	/**	 
 	 * @param results
 	 * @throws RetrieveObjectException
 	 */
 	private void retrieveResultParametersByOneQuery(List results) throws RetrieveObjectException {
-		List parameters = new LinkedList();
+		//List parameters = new LinkedList();
 
 		
 		StringBuffer sql = new StringBuffer(SQL_SELECT + COLUMN_ID + COMMA 
@@ -502,6 +503,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 			resultSet = statement.executeQuery(sql.toString());
 			SetParameter parameter;
 			ParameterType parameterType;
+			Map resultParametersMap = new HashMap();
 			while (resultSet.next()) {
 				Result result = null;
 				String resultId = resultSet.getString(LINK_COLUMN_RESULT_ID);
@@ -547,9 +549,20 @@ public class ResultDatabase extends StorableObjectDatabase {
 				 */
 				parameterType, ByteArrayDatabase.toByteArray((BLOB) resultSet
 						.getBlob(LINK_COLUMN_VALUE)));
-				parameters.add(parameter);
+				List parameters = (List)resultParametersMap.get(result);
+				if (parameters == null){
+					parameters = new LinkedList();
+					resultParametersMap.put(result, parameters);
+				}				
+				parameters.add(parameter);				
+			}
+			
+			for (Iterator iter = results.iterator(); iter.hasNext();) {
+				Result result = (Result) iter.next();
+				List parameters = (List)resultParametersMap.get(result);
 				result.setParameters((SetParameter[]) parameters.toArray(new SetParameter[parameters.size()]));
 			}
+			
 		} catch (SQLException sqle) {
 			String mesg = "ResultDatabase.retrieveResultParameters | Cannot retrieve parameters for result -- " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
@@ -798,11 +811,7 @@ public class ResultDatabase extends StorableObjectDatabase {
 		else
 			list = retrieveByIdsOneQuery(ids, condition);
 
-		for (Iterator it = list.iterator(); it.hasNext();) {
-			Result result = (Result) it.next();
-			retrieveResultParameters(result);			
-		}
-		// retrieveResultParametersByOneQuery(list);
+		retrieveResultParametersByOneQuery(list);
 		// retrieveResultParameters(list);
 		return list;
 	}
