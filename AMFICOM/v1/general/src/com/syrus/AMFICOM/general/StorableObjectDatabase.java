@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectDatabase.java,v 1.93 2005/02/11 10:34:56 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.94 2005/02/11 13:30:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.93 $, $Date: 2005/02/11 10:34:56 $
+ * @version $Revision: 1.94 $, $Date: 2005/02/11 13:30:55 $
  * @author $Author: arseniy $
  * @module general_v1
  */
@@ -246,18 +246,41 @@ public abstract class StorableObjectDatabase {
 				+ SQL_FROM + this.getEnityName()
 				+ SQL_WHERE + "1=0");
 		StorableObject storableObject;
+		Identifier id;
+		List refreshObjectIds = new LinkedList();
 		for (Iterator it = storableObjects.iterator(); it.hasNext();) {
 			storableObject = (StorableObject) it.next();
-			stringBuffer.append(SQL_OR);
-			stringBuffer.append(OPEN_BRACKET);
-			stringBuffer.append(StorableObjectWrapper.COLUMN_ID);
-			stringBuffer.append(EQUALS);
-			stringBuffer.append(DatabaseIdentifier.toSQLString(storableObject.getId()));
-			stringBuffer.append(SQL_AND);
-			stringBuffer.append(StorableObjectWrapper.COLUMN_VERSION);
-			stringBuffer.append(NOT_EQUALS);
-			stringBuffer.append(storableObject.getVersion());
-			stringBuffer.append(CLOSE_BRACKET);
+			id = storableObject.getId();
+			
+			long deadtime = System.currentTimeMillis() + MAX_LOCK_TIMEOUT;
+			while (lockedObjectIds.contains(id) && System.currentTimeMillis() < deadtime) {
+				try {
+					Thread.sleep(LOCK_TIME_WAIT);
+				}
+				catch (InterruptedException ie) {
+					Log.errorException(ie);
+				}
+			}
+
+			if (! lockedObjectIds.contains(id)) {
+				lockedObjectIds.add(id);
+				refreshObjectIds.add(id);
+
+				stringBuffer.append(SQL_OR);
+				stringBuffer.append(OPEN_BRACKET);
+				stringBuffer.append(StorableObjectWrapper.COLUMN_ID);
+				stringBuffer.append(EQUALS);
+				stringBuffer.append(DatabaseIdentifier.toSQLString(id));
+				stringBuffer.append(SQL_AND);
+				stringBuffer.append(StorableObjectWrapper.COLUMN_VERSION);
+				stringBuffer.append(NOT_EQUALS);
+				stringBuffer.append(storableObject.getVersion());
+				stringBuffer.append(CLOSE_BRACKET);
+			}
+			else {
+				lockedObjectIds.removeAll(refreshObjectIds);
+				throw new RetrieveObjectException("Cannot obtain lock on object " + this.getEnityName() + " '" + id + "'");
+			}
 		}
 		String sql = stringBuffer.toString();
 
@@ -276,6 +299,8 @@ public abstract class StorableObjectDatabase {
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
+			lockedObjectIds.removeAll(refreshObjectIds);
+
 			try {
 				if (statement != null)
 					statement.close();
