@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.24 2004/09/08 14:14:37 max Exp $
+ * $Id: CharacteristicDatabase.java,v 1.25 2004/09/08 16:34:37 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2004/09/08 14:14:37 $
+ * @version $Revision: 1.25 $, $Date: 2004/09/08 16:34:37 $
  * @author $Author: max $
  * @module configuration_v1
  */
@@ -62,8 +62,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
     public static final String COLUMN_PORT_ID  = "port_id";
     
     private String updateColumns;
-    
-    private String updateMultiplySQLValues;
+       private String updateMultiplySQLValues;
     
     protected String getEnityName() {
 		return "Characteristic";

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortDatabase.java,v 1.10 2004/08/30 09:53:43 bob Exp $
+ * $Id: MeasurementPortDatabase.java,v 1.11 2004/09/08 16:34:37 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/08/30 09:53:43 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2004/09/08 16:34:37 $
+ * @author $Author: max $
  * @module configuration_v1
  */
 public class MeasurementPortDatabase extends StorableObjectDatabase {
@@ -51,7 +51,81 @@ public class MeasurementPortDatabase extends StorableObjectDatabase {
     
     public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
     
-	private MeasurementPort fromStorableObject(StorableObject storableObject) throws IllegalDataException {
+    private String updateColumns;
+	private String updateMultiplySQLValues;
+	
+    protected String getEnityName() {
+		return "MeasurementPort";
+	}
+	
+	protected String getTableName() {
+		return ObjectEntities.MEASUREMENTPORT_ENTITY;
+	}
+	
+	protected String getUpdateColumns() {
+		if (this.updateColumns == null){
+    		this.updateColumns = super.getUpdateColumns()
+				+ COLUMN_TYPE_ID + COMMA
+				+ COLUMN_NAME + COMMA
+				+ COLUMN_DESCRIPTION + COMMA
+				+ COLUMN_KIS_ID + COMMA
+				+ COLUMN_PORT_ID;
+		}
+		return this.updateColumns; 
+	}
+	
+	protected String getUpdateMultiplySQLValues() {
+		if (this.updateMultiplySQLValues == null){
+    		this.updateMultiplySQLValues = super.getUpdateMultiplySQLValues() 
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION;
+    	}
+		return this.updateMultiplySQLValues;
+	}
+	
+	protected String getUpdateSingleSQLValues(StorableObject storableObject)
+			throws IllegalDataException, UpdateObjectException {
+		// TODO Auto-generated method stub
+		MeasurementPort measurementPort = fromStorableObject(storableObject);
+		Identifier typeId = measurementPort.getType().getId();
+		Identifier kisId = measurementPort.getKISId();
+		Identifier portId = measurementPort.getPortId();
+		String sql = super.getUpdateSingleSQLValues(storableObject)
+				+ ((typeId != null)?typeId.toSQLString():Identifier.getNullSQLString())
+				+ COMMA
+				+ APOSTOPHE + measurementPort.getName() + APOSTOPHE	+ COMMA
+				+ APOSTOPHE + measurementPort.getDescription() + APOSTOPHE + COMMA
+				+ ((kisId != null)?kisId.toSQLString():Identifier.getNullSQLString()) 
+				+ COMMA
+				+ ((portId != null)?portId.toSQLString():Identifier.getNullSQLString());
+		return sql;
+	}
+	
+	protected void setEntityForPreparedStatement(StorableObject storableObject,
+			PreparedStatement preparedStatement) throws IllegalDataException,
+			UpdateObjectException {
+		MeasurementPort measurementPort = fromStorableObject(storableObject);
+		String mpIdCode = measurementPort.getId().getCode();	
+		Identifier typeId = measurementPort.getType().getId();
+		Identifier kisId = measurementPort.getKISId();
+		Identifier portId = measurementPort.getPortId();
+		try {
+			super.setEntityForPreparedStatement(storableObject, preparedStatement);
+			preparedStatement.setString( 6, (typeId != null)?typeId.toString():"");
+			preparedStatement.setString( 7, measurementPort.getName());
+			preparedStatement.setString( 8, measurementPort.getDescription());
+			preparedStatement.setString( 9, (kisId != null)?kisId.toString():""); 
+			preparedStatement.setString( 10, (portId != null)?portId.toString():"");
+			preparedStatement.setString( 11, mpIdCode);
+		}catch (SQLException sqle) {
+			throw new UpdateObjectException("MCMDatabase." +
+					"setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
+		}
+	}
+    private MeasurementPort fromStorableObject(StorableObject storableObject) throws IllegalDataException {
 		if (storableObject instanceof MeasurementPort)
 			return (MeasurementPort)storableObject;
 		throw new IllegalDataException("MeasurementPortDatabase.fromStorableObject | Illegal Storable Object: " + storableObject.getClass().getName());
