@@ -37,8 +37,19 @@ $(LIBNAME): .mach
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(JDBCCLASSPATH):$(CLASSDIR) \
+		$(SRCDIR)/com/syrus/AMFICOM/map/MapStorableObjectPool.java \
+		$(SRCDIR)/com/syrus/AMFICOM/map/MapObjectLoader.java \
 		$(SRCDIR)/com/syrus/AMFICOM/map/MapDatabaseContext.java \
-		$(SRCDIR)/com/syrus/AMFICOM/map/SiteNodeType.java 
+		$(SRCDIR)/com/syrus/AMFICOM/map/SiteNodeType.java \
+		$(SRCDIR)/com/syrus/AMFICOM/map/SiteNode.java \
+		$(SRCDIR)/com/syrus/AMFICOM/map/PhysicalLinkType.java \
+		$(SRCDIR)/com/syrus/AMFICOM/map/TopologicalNode.java \
+		$(SRCDIR)/com/syrus/AMFICOM/map/NodeLink.java \
+		$(SRCDIR)/com/syrus/AMFICOM/map/Mark.java \
+		$(SRCDIR)/com/syrus/AMFICOM/map/PhysicalLink.java \
+		$(SRCDIR)/com/syrus/AMFICOM/map/Collector.java \
+		$(SRCDIR)/com/syrus/AMFICOM/map/Map.java \
+		$(SRCDIR)/com/syrus/AMFICOM/map/Node.java
 	touch $@
 
 .corba:	$(CLASSDIR)

@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeType.java,v 1.1 2004/11/24 12:30:24 bob Exp $
+ * $Id: SiteNodeType.java,v 1.2 2004/11/26 09:24:36 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,9 +10,12 @@ package com.syrus.AMFICOM.map;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.syrus.AMFICOM.configuration.Characteristic;
+import com.syrus.AMFICOM.configuration.Characterized;
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -22,21 +25,22 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.map.corba.SiteNodeType_Transferable;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/11/24 12:30:24 $
+ * @version $Revision: 1.2 $, $Date: 2004/11/26 09:24:36 $
  * @author $Author: bob $
  * @module map_v1
  */
-public class SiteNodeType extends StorableObjectType {
+public class SiteNodeType extends StorableObjectType implements Characterized {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
-	private static final long	serialVersionUID	= 4050767082851217457L;
+	private static final long	serialVersionUID	= 3690481316080464696L;
+
 	private List					characteristics;
-	private String					description;
 
 	private Identifier				imageId;
 
@@ -75,12 +79,12 @@ public class SiteNodeType extends StorableObjectType {
 	}
 
 	protected SiteNodeType(final Identifier id,
-						   final Identifier creatorId,
-						   final String codename,
-						   final String name,
-						   final String description,
-						   final Identifier imageId,
-						   final boolean topological) {
+			final Identifier creatorId,
+			final String codename,
+			final String name,
+			final String description,
+			final Identifier imageId,
+			final boolean topological) {
 		super(id);
 		long time = System.currentTimeMillis();
 		super.created = new Date(time);
@@ -88,8 +92,8 @@ public class SiteNodeType extends StorableObjectType {
 		super.creatorId = creatorId;
 		super.modifierId = creatorId;
 		super.codename = codename;
+		super.description = description;
 		this.name = name;
-		this.description = description;
 		this.imageId = imageId;
 		this.topological = topological;
 
@@ -118,14 +122,11 @@ public class SiteNodeType extends StorableObjectType {
 		return this.characteristics;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.syrus.AMFICOM.general.StorableObject#getDependencies()
-	 */
 	public List getDependencies() {
-		// TODO Auto-generated method stub
-		return null;
+		List dependencies = new LinkedList();
+		dependencies.add(this.imageId);
+		dependencies.addAll(this.characteristics);
+		return dependencies;
 	}
 
 	public String getDescription() {
@@ -140,14 +141,14 @@ public class SiteNodeType extends StorableObjectType {
 		return this.name;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
-	 */
 	public Object getTransferable() {
-		// TODO Auto-generated method stub
-		return null;
+		int i = 0;
+		Identifier_Transferable[] charIds = new Identifier_Transferable[this.characteristics.size()];
+		for (Iterator iterator = this.characteristics.iterator(); iterator.hasNext();)
+			charIds[i++] = (Identifier_Transferable) ((Characteristic) iterator.next()).getId().getTransferable();
+		return new SiteNodeType_Transferable(super.getHeaderTransferable(), this.codename, this.name, this.description,
+												(Identifier_Transferable) this.imageId.getTransferable(),
+												this.topological, charIds);
 	}
 
 	public boolean isTopological() {
@@ -162,7 +163,7 @@ public class SiteNodeType extends StorableObjectType {
 	}
 
 	public void setDescription(final String description) {
-		this.description = description;
+		super.description = description;
 		super.currentVersion = super.getNextVersion();
 	}
 
