@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.25 2004/11/16 15:54:37 bob Exp $
+ * $Id: MonitoredElement.java,v 1.26 2004/11/25 15:41:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/11/16 15:54:37 $
+ * @version $Revision: 1.26 $, $Date: 2004/11/25 15:41:11 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -44,6 +44,7 @@ public class MonitoredElement extends DomainMember {
 	public MonitoredElement(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
+		this.monitoredDomainMemberIds = new LinkedList();
 		this.monitoredElementDatabase = ConfigurationDatabaseContext.monitoredElementDatabase;
 		try {
 			this.monitoredElementDatabase.retrieve(this);
@@ -85,7 +86,9 @@ public class MonitoredElement extends DomainMember {
 		this.measurementPortId = measurementPortId;
 		this.sort = sort;
 		this.localAddress = localAddress;
-		this.monitoredDomainMemberIds = monitoredDomainMemberIds;
+		if (monitoredDomainMemberIds != null)
+			this.monitoredDomainMemberIds = monitoredDomainMemberIds;
+		else this.monitoredDomainMemberIds = new LinkedList();
 		
 		this.monitoredElementDatabase = ConfigurationDatabaseContext.monitoredElementDatabase;
 	}
@@ -189,7 +192,10 @@ public class MonitoredElement extends DomainMember {
 	}
 
 	protected synchronized void setMonitoredDomainMemberIds(List monitoredDomainMemberIds) {
-		this.monitoredDomainMemberIds = monitoredDomainMemberIds;
+		this.monitoredDomainMemberIds.clear();
+	     if (monitoredDomainMemberIds != null)
+	     	this.monitoredDomainMemberIds.addAll(monitoredDomainMemberIds);
+	     super.currentVersion = super.getNextVersion();
 	}
 	
 	public String getName() {

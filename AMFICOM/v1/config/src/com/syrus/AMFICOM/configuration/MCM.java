@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.27 2004/11/16 11:00:35 arseniy Exp $
+ * $Id: MCM.java,v 1.28 2004/11/25 15:41:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MCM_Transferable;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2004/11/16 11:00:35 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.28 $, $Date: 2004/11/25 15:41:11 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -47,6 +47,8 @@ public class MCM extends DomainMember implements Characterized {
 	public MCM(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
+		this.kiss = new LinkedList();
+		this.characteristics = new LinkedList();
 		this.mcmDatabase = ConfigurationDatabaseContext.mcmDatabase;
 		try {
 			this.mcmDatabase.retrieve(this);
@@ -176,7 +178,10 @@ public class MCM extends DomainMember implements Characterized {
 	}
 
 	public void setCharacteristics(List characteristics) {
-		this.characteristics = characteristics;
+		 this.characteristics.clear();
+	     if (characteristics != null)
+	     	this.characteristics.addAll(characteristics);
+	     super.currentVersion = super.getNextVersion();
 	}
 
 	public List getKISs() {
@@ -224,7 +229,10 @@ public class MCM extends DomainMember implements Characterized {
 	}
 
 	protected synchronized void setKISs(List kiss) {
-		this.kiss = kiss;
+		this.kiss.clear();
+		if (kiss != null)
+			this.kiss.addAll(kiss);
+		super.currentVersion = super.getNextVersion();
 	}
 	
 	public List getDependencies() {

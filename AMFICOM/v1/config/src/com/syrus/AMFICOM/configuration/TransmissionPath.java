@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.23 2004/11/15 15:30:54 bob Exp $
+ * $Id: TransmissionPath.java,v 1.24 2004/11/25 15:41:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 /**
- * @version $Revision: 1.23 $, $Date: 2004/11/15 15:30:54 $
+ * @version $Revision: 1.24 $, $Date: 2004/11/25 15:41:11 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -49,6 +49,8 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 	public TransmissionPath(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 		
+		this.characteristics = new LinkedList();
+		this.monitoredElementIds = new LinkedList();
 		this.transmissionPathDatabase = ConfigurationDatabaseContext.transmissionPathDatabase;
 		try {
 			this.transmissionPathDatabase.retrieve(this);
@@ -78,8 +80,8 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 		this.startPortId = startPortId;
 		this.finishPortId = finishPortId;
 		
-		this.characteristics = new ArrayList();
-		super.monitoredElementIds = new ArrayList();
+		this.characteristics = new LinkedList();
+		super.monitoredElementIds = new LinkedList();
 		
 		this.transmissionPathDatabase = ConfigurationDatabaseContext.transmissionPathDatabase;
 	}
@@ -210,7 +212,10 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 	 * @param characteristicIds The characteristicIds to set.
 	 */
 	public void setCharacteristics(List characteristics) {
-		this.characteristics = characteristics;
+		this.characteristics.clear();
+	     if (characteristics != null)
+	     	this.characteristics.addAll(characteristics);
+	     super.currentVersion = super.getNextVersion();
 	}
 	
 	protected synchronized void setAttributes(Date created,

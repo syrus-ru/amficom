@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.13 2004/11/25 08:37:39 max Exp $
+ * $Id: MeasurementPortType.java,v 1.14 2004/11/25 15:41:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.configuration;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -25,8 +26,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MeasurementPortType_Transferable;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2004/11/25 08:37:39 $
- * @author $Author: max $
+ * @version $Revision: 1.14 $, $Date: 2004/11/25 15:41:11 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -40,6 +41,7 @@ public class MeasurementPortType extends StorableObjectType {
 	public MeasurementPortType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
+		this.characteristics = new LinkedList();
 		this.measurementPortTypeDatabase = ConfigurationDatabaseContext.measurementPortTypeDatabase;
 		try {
 			this.measurementPortTypeDatabase.retrieve(this);
@@ -77,7 +79,7 @@ public class MeasurementPortType extends StorableObjectType {
 				  codename,
 				  description);				
 			this.name = name;
-            this.characteristics = new ArrayList();
+            this.characteristics = new LinkedList();
 			this.measurementPortTypeDatabase = ConfigurationDatabaseContext.measurementPortTypeDatabase;
 	}
 	

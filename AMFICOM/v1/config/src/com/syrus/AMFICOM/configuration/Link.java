@@ -1,5 +1,5 @@
 /*
- * $Id: Link.java,v 1.11 2004/11/25 08:37:39 max Exp $
+ * $Id: Link.java,v 1.12 2004/11/25 15:41:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/11/25 08:37:39 $
- * @author $Author: max $
+ * @version $Revision: 1.12 $, $Date: 2004/11/25 15:41:11 $
+ * @author $Author: bob $
  * @module config_v1
  */
 public class Link extends DomainMember implements Characterized, TypedObject {
@@ -54,6 +54,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 	public Link(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
+		this.characteristics = new LinkedList();
 		this.linkDatabase = ConfigurationDatabaseContext.linkDatabase;
 		try {
 			this.linkDatabase.retrieve(this);
@@ -133,7 +134,7 @@ public class Link extends DomainMember implements Characterized, TypedObject {
 		this.linkId = linkId;
 		this.color = color;
 		this.mark = mark;
-		this.characteristics = new ArrayList();
+		this.characteristics = new LinkedList();
 		this.linkDatabase = ConfigurationDatabaseContext.linkDatabase;
 	}
 	

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.6 2004/11/25 08:37:39 max Exp $
+ * $Id: TransmissionPathType.java,v 1.7 2004/11/25 15:41:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.configuration;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.configuration.corba.TransmissionPathType_Transferable;
@@ -24,8 +25,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/11/25 08:37:39 $
- * @author $Author: max $
+ * @version $Revision: 1.7 $, $Date: 2004/11/25 15:41:11 $
+ * @author $Author: bob $
  * @module module_name
  */
 
@@ -39,6 +40,7 @@ public class TransmissionPathType extends StorableObjectType {
     
     public TransmissionPathType(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
         super(id);
+        this.characteristics = new LinkedList();
         this.transmissionPathTypeDatabase = ConfigurationDatabaseContext.transmissionPathTypeDatabase;
         try {
             this.transmissionPathTypeDatabase.retrieve(this);
@@ -74,7 +76,7 @@ public class TransmissionPathType extends StorableObjectType {
                 codename,
                 description);
         this.name = name;
-        this.characteristics = new ArrayList();
+        this.characteristics = new LinkedList();
         this.transmissionPathTypeDatabase = ConfigurationDatabaseContext.transmissionPathTypeDatabase;
     }
     /**

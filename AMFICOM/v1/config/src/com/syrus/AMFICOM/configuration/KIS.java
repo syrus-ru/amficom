@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.34 2004/11/25 08:37:39 max Exp $
+ * $Id: KIS.java,v 1.35 2004/11/25 15:41:11 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/11/25 08:37:39 $
- * @author $Author: max $
+ * @version $Revision: 1.35 $, $Date: 2004/11/25 15:41:11 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -52,6 +52,8 @@ public class KIS extends DomainMember {
 	public KIS(Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
 
+		this.measurementPortIds = new LinkedList();
+		this.characteristics = new LinkedList();
 		this.kisDatabase = ConfigurationDatabaseContext.kisDatabase;
 		try {
 			this.kisDatabase.retrieve(this);
@@ -107,8 +109,8 @@ public class KIS extends DomainMember {
 		this.tcpPort = tcpPort;
 		this.equipmentId = equipmentId;
 		this.mcmId = mcmId;
-		this.measurementPortIds = new ArrayList();
-		this.characteristics = new ArrayList();
+		this.measurementPortIds = new LinkedList();
+		this.characteristics = new LinkedList();
 		this.kisDatabase = ConfigurationDatabaseContext.kisDatabase;
 	}
 
@@ -248,7 +250,10 @@ public class KIS extends DomainMember {
 	}
 
 	protected synchronized void setMeasurementPortIds(List measurementPortIds) {
-		this.measurementPortIds = measurementPortIds;
+		this.measurementPortIds.clear();
+        if (measurementPortIds != null)
+                this.measurementPortIds.addAll(measurementPortIds);
+        super.currentVersion = super.getNextVersion();
 	}
 	
 	public List getDependencies() {
