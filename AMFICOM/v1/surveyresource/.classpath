@@ -19,5 +19,6 @@
 	<classpathentry kind="src" path="/config_v1"/>
 	<classpathentry kind="src" path="/measurement_v1"/>
 	<classpathentry kind="src" path="/general_v1"/>
+	<classpathentry kind="src" path="/admin_v1"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
