@@ -81,10 +81,6 @@ public class NewMapViewCommand extends VoidCommand
 		Vector panelElements = new Vector();
 		setMapProtoElements(panelElements);
 		
-//        setMapEquipmentElements(panelElements);
-//        setMapKISElements(panelElements);
-				/*MapMainFrame */
-
 		frame = (MapMainFrame )Pool.get("environment", "mapmainframe");
 		if(frame == null)
 		{
@@ -112,11 +108,11 @@ public class NewMapViewCommand extends VoidCommand
 					return;
 				}
 			}
-		}
+		}//if(frame.isVisible())
 		else
 		{
 			JDesktopPane dt = (JDesktopPane )frame.getParent();
-			if(dt != null)// && !frame.getParent().equals(dt))
+			if(dt != null)
 			{
 				dt.remove(frame);
 			}
@@ -131,43 +127,6 @@ public class NewMapViewCommand extends VoidCommand
 			return;
 		}
 
-/*
-		frame = null;
-		for(int i = 0; i < desktop.getComponents().length; i++)
-		{
-			try
-			{
-				MapMainFrame comp = (MapMainFrame )desktop.getComponent(i);
-				// уже есть окно карты
-				frame = comp;
-				break;
-			}
-			catch(Exception ex)
-			{
-			}
-		}
-
-		if(frame == null)
-		{
-			MapMainFrame mmf = (MapMainFrame )Pool.get("environment", "mapmainframe");
-			if(mmf != null)
-			{
-				MessageBox mb = new MessageBox("Ќевозможно открыть второе окно топологической схемы!");
-				return;
-			}
-			frame = new MapMainFrame(panelElements, aC);
-			desktop.add(frame);
-			Dimension dim = desktop.getSize();
-			frame.setLocation(0, 0);
-			frame.setSize(dim.width * 4 / 5, dim.height);
-
-			Pool.put("environment", "mapmainframe", frame);
-		}
-		frame.show();
-
-
-		dispatcher.notify(new OperationEvent(frame, 0, "mapframeshownevent"));
-*/
 	}
 
 	private void setMapProtoElements(Vector panelElements)
@@ -182,31 +141,4 @@ public class NewMapViewCommand extends VoidCommand
 				panelElements.add(mpe);
 		}
 	}
-
-	private void setMapEquipmentElements(Vector panelElements)
-	{
-	Hashtable hash;
-	hash = Pool.getHash("mapprotoelement");
-	if(hash != null)
-		for(Enumeration enum = hash.elements(); enum.hasMoreElements();)
-		{
-			MapProtoElement mpe = (MapProtoElement )enum.nextElement();
-			if(!mpe.pe_is_kis)
-				panelElements.add(mpe);
-		}
-	}
-
-	private void setMapKISElements(Vector panelElements)
-	{
-	Hashtable hash;
-	hash = Pool.getHash("mapprotoelement");
-	if(hash != null)
-		for(Enumeration enum = hash.elements(); enum.hasMoreElements();)
-		{
-			MapProtoElement mpe = (MapProtoElement )enum.nextElement();
-			if(mpe.pe_is_kis)
-				panelElements.add(mpe);
-		}
-	}
-
 }
