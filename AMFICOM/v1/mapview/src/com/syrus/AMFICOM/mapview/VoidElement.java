@@ -1,5 +1,5 @@
 /**
- * $Id: VoidElement.java,v 1.3 2005/02/02 15:17:30 krupenn Exp $
+ * $Id: VoidElement.java,v 1.4 2005/02/09 15:14:37 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,7 +25,7 @@ import java.util.List;
  * Пустой элемент.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/02/02 15:17:30 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/09 15:14:37 $
  * @module mapviewclient_v1
  */
 public final class VoidElement implements MapElement 
@@ -44,7 +44,7 @@ public final class VoidElement implements MapElement
 	 * Protected constructor.
 	 */
 	protected VoidElement()
-	{
+	{//empty
 	}
 
 	/**

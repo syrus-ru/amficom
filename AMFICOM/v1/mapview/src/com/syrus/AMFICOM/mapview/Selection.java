@@ -1,5 +1,5 @@
 /**
- * $Id: Selection.java,v 1.3 2005/02/02 15:17:30 krupenn Exp $
+ * $Id: Selection.java,v 1.4 2005/02/09 15:14:37 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import java.util.List;
  * Набор выбранных элементов.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/02/02 15:17:30 $
+ * @version $Revision: 1.4 $, $Date: 2005/02/09 15:14:37 $
  * @module mapviewclient_v1
  * @todo copy/paste, properties
  */
@@ -103,7 +103,7 @@ public final class Selection
 	 * {@inheritDoc}
 	 */
 	public void setRemoved(boolean removed)
-	{
+	{// cannot be removed
 	}
 
 	/**
@@ -259,7 +259,7 @@ public final class Selection
 	 * {@inheritDoc}
 	 */
 	public void setSelected(boolean selected)
-	{
+	{// cannnot be selected
 	}
 
 	/**
