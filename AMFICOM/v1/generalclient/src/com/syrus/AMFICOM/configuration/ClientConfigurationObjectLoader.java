@@ -1,5 +1,5 @@
 /*
- * $Id: ClientConfigurationObjectLoader.java,v 1.2 2004/11/15 13:32:36 bob Exp $
+ * $Id: ClientConfigurationObjectLoader.java,v 1.3 2004/11/17 09:41:00 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,10 @@
 package com.syrus.AMFICOM.configuration;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
 import com.syrus.AMFICOM.configuration.Characteristic;
@@ -62,19 +64,21 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.ErrorCode;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.general.corba.StorableObject_Transferable;
 import com.syrus.AMFICOM.measurement.DomainCondition;
 import com.syrus.AMFICOM.measurement.StringFieldCondition;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/11/15 13:32:36 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2004/11/17 09:41:00 $
+ * @author $Author: max $
  * @module generalclient_v1
  */
 
@@ -2029,6 +2033,29 @@ public final class ClientConfigurationObjectLoader implements ConfigurationObjec
             throw new CommunicationException(e);
         }
     }
+
+	public Set refresh(Set storableObjects) throws CommunicationException {
+		
+        try {
+            Set refreshedIds = new HashSet();
+            Identifier_Transferable[] identifier_Transferables;
+            StorableObject_Transferable[] storableObject_Transferables = new StorableObject_Transferable[storableObjects.size()];
+            int i = 0;
+            for (Iterator it = storableObjects.iterator(); it.hasNext(); i++) {
+    			StorableObject storableObject = (StorableObject) it.next();
+    			storableObject_Transferables[i] = storableObject.getHeaderTransferable();
+    		}
+    		identifier_Transferables = this.server.transmitRefreshedConfigurationObjects(storableObject_Transferables, accessIdentifierTransferable); 
+            
+            for (int j = 0; j < identifier_Transferables.length; j++) {
+				refreshedIds.add(new Identifier(identifier_Transferables[j]));
+			}
+            
+            return refreshedIds;
+        } catch (AMFICOMRemoteException e ) {
+        	throw new CommunicationException(e);
+        }
+	}
 
 
 }
