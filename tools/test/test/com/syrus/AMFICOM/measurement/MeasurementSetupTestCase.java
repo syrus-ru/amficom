@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupTestCase.java,v 1.6 2004/10/29 07:30:48 bob Exp $
+ * $Id: MeasurementSetupTestCase.java,v 1.7 2004/11/11 12:15:38 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package test.com.syrus.AMFICOM.measurement;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,7 +40,7 @@ import com.syrus.AMFICOM.measurement.SetDatabase;
 import com.syrus.AMFICOM.measurement.corba.MeasurementSetup_Transferable;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/10/29 07:30:48 $
+ * @version $Revision: 1.7 $, $Date: 2004/11/11 12:15:38 $
  * @author $Author: bob $
  * @module tools
  */
@@ -60,7 +61,7 @@ public class MeasurementSetupTestCase extends AbstractMesurementTestCase {
 		return suiteWrapper(MeasurementSetupTestCase.class);
 	}
 
-	public void testCreation() throws IdentifierGenerationException, IllegalObjectEntityException,
+	public void _testCreation() throws IdentifierGenerationException, IllegalObjectEntityException,
 			CreateObjectException, RetrieveObjectException, ObjectNotFoundException {
 
 		MeasurementSetupDatabase measurementSetupDatabase = (MeasurementSetupDatabase) MeasurementDatabaseContext
@@ -90,8 +91,8 @@ public class MeasurementSetupTestCase extends AbstractMesurementTestCase {
 		Identifier measurementSetupId = IdentifierGenerator.generateIdentifier(ObjectEntities.MS_ENTITY_CODE);
 
 		MeasurementSetup mSetup = MeasurementSetup.createInstance(measurementSetupId, creatorId, set, null, null, null,
-										"created by MeasurementSetupTestCase",
-										1000 * 60 * 10, monitoredElementIds);
+																	"created by MeasurementSetupTestCase",
+																	1000 * 60 * 10, monitoredElementIds);
 
 		MeasurementSetup mSetup2 = MeasurementSetup.getInstance((MeasurementSetup_Transferable) mSetup
 				.getTransferable());
@@ -139,14 +140,14 @@ public class MeasurementSetupTestCase extends AbstractMesurementTestCase {
 		Identifier id = IdentifierGenerator.generateIdentifier(ObjectEntities.MS_ENTITY_CODE);
 
 		MeasurementSetup mSetup1 = MeasurementSetup.createInstance(id, creatorId, set, null, null, null,
-										"created by MeasurementSetupTestCase",
-										1000 * 60 * 10, monitoredElementIds);
+																	"created by MeasurementSetupTestCase",
+																	1000 * 60 * 10, monitoredElementIds);
 
 		id = IdentifierGenerator.generateIdentifier(ObjectEntities.MS_ENTITY_CODE);
 
 		MeasurementSetup mSetup2 = MeasurementSetup.createInstance(id, creatorId, set, null, null, null,
-										"created by MeasurementSetupTestCase",
-										1000 * 60 * 10, monitoredElementIds);
+																	"created by MeasurementSetupTestCase",
+																	1000 * 60 * 10, monitoredElementIds);
 
 		List measurementSetupList = new LinkedList();
 		measurementSetupList.add(mSetup1);
@@ -155,8 +156,7 @@ public class MeasurementSetupTestCase extends AbstractMesurementTestCase {
 		boolean versionCollision = false;
 
 		try {
-			measurementSetupDatabase
-					.update(measurementSetupList, StorableObjectDatabase.UPDATE_CHECK, null);
+			measurementSetupDatabase.update(measurementSetupList, StorableObjectDatabase.UPDATE_CHECK, null);
 		} catch (VersionCollisionException e) {
 			versionCollision = true;
 		}
@@ -177,8 +177,7 @@ public class MeasurementSetupTestCase extends AbstractMesurementTestCase {
 		mSetup2.setDescription("newOneDesc2");
 
 		try {
-			measurementSetupDatabase
-					.update(measurementSetupList, StorableObjectDatabase.UPDATE_CHECK, null);
+			measurementSetupDatabase.update(measurementSetupList, StorableObjectDatabase.UPDATE_CHECK, null);
 		} catch (VersionCollisionException e) {
 			versionCollision = true;
 		}
@@ -189,8 +188,7 @@ public class MeasurementSetupTestCase extends AbstractMesurementTestCase {
 		versionCollision = false;
 
 		try {
-			measurementSetupDatabase.update(measurementSetupList2, StorableObjectDatabase.UPDATE_CHECK,
-							null);
+			measurementSetupDatabase.update(measurementSetupList2, StorableObjectDatabase.UPDATE_CHECK, null);
 		} catch (VersionCollisionException vce) {
 			versionCollision = true;
 		}
@@ -208,7 +206,43 @@ public class MeasurementSetupTestCase extends AbstractMesurementTestCase {
 
 	}
 
-	public void testRetriveAll() throws RetrieveObjectException, ObjectNotFoundException {
+	public void testRetriveAndCheckUpdate() throws RetrieveObjectException, UpdateObjectException, IllegalDataException, ObjectNotFoundException {
+		MeasurementSetupDatabase measurementSetupDatabase = (MeasurementSetupDatabase) MeasurementDatabaseContext
+				.getMeasurementSetupDatabase();
+		List list = measurementSetupDatabase.retrieveAll();
+		if (list.isEmpty())
+			fail("must be at less one measurement setup at db");
+
+		MeasurementSetup measurementSetup1 = (MeasurementSetup) list.get(0);
+		measurementSetup1.setDescription("modified " + (new Date(System.currentTimeMillis())).toString());
+
+		MeasurementSetup measurementSetup2 = new MeasurementSetup(measurementSetup1.getId()); 
+
+		boolean versionCollision = false;
+		try {
+			measurementSetupDatabase.update(Collections.singletonList(measurementSetup1), StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (VersionCollisionException e) {
+			versionCollision = true;
+		}
+
+		if (versionCollision)
+			fail("VersionCollision occur, but dont");
+
+		versionCollision = false;
+
+		measurementSetup1.setDescription("remodified " + (new Date(System.currentTimeMillis())).toString());
+
+		try {
+			measurementSetupDatabase.update(Collections.singletonList(measurementSetup2), StorableObjectDatabase.UPDATE_CHECK, null);
+		} catch (VersionCollisionException vce) {
+			versionCollision = true;
+		}
+
+		if (!versionCollision)
+			fail("VersionCollision must be occur");
+	}
+
+	public void _testRetriveAll() throws RetrieveObjectException, ObjectNotFoundException {
 		MeasurementSetupDatabase measurementSetupDatabase = (MeasurementSetupDatabase) MeasurementDatabaseContext
 				.getMeasurementSetupDatabase();
 		List list = measurementSetupDatabase.retrieveAll();
