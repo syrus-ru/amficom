@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalConditionUI.java,v 1.12 2005/03/25 16:35:01 bob Exp $
+ * $Id: LogicalConditionUI.java,v 1.13 2005/03/28 07:45:07 bob Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,14 +23,16 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.ScrollPaneConstants;
 
+import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.LogicalItem;
 import com.syrus.AMFICOM.logic.LogicalSchemeUI;
 import com.syrus.AMFICOM.logic.LogicalTreeUI;
+import com.syrus.AMFICOM.logic.Populatable;
 import com.syrus.AMFICOM.logic.ServiceItem;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/03/25 16:35:01 $
+ * @version $Revision: 1.13 $, $Date: 2005/03/28 07:45:07 $
  * @author $Author: bob $
  * @module filter_v1
  */
@@ -62,7 +64,8 @@ public class LogicalConditionUI {
 		panel.setMinimumSize(dimension);
 		panel.setPreferredSize(dimension);
 
-		this.logicalSchemeUI = new LogicalSchemeUI(this.getRootItem());
+		final Item rootItem2 = this.getRootItem();
+		this.logicalSchemeUI = new LogicalSchemeUI(rootItem2);
 
 		final LogicalSchemeUI logicalSchemeUI = this.logicalSchemeUI;
 
@@ -86,6 +89,19 @@ public class LogicalConditionUI {
 				logicalSchemeUI.addItem(new LogicalItem(LogicalItem.OR));
 			}
 		});
+		
+		JButton populateButton = new JButton("Populate");
+
+		populateButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				if (rootItem2 instanceof Populatable) {
+					Populatable populatable = (Populatable) rootItem2;
+					populatable.populate();
+				}
+			}
+		});
+		
 
 		JButton deleteButton = new JButton("delete");
 		deleteButton.addActionListener(new ActionListener() {
@@ -113,6 +129,7 @@ public class LogicalConditionUI {
 		box1.add(andButton);
 		box1.add(orButton);
 		box1.add(Box.createGlue());
+		box1.add(populateButton);
 
 		Box box2 = new Box(BoxLayout.X_AXIS);
 		box2.add(deleteButton);
@@ -154,41 +171,50 @@ public class LogicalConditionUI {
 		}
 		splitPane.setOneTouchExpandable(false);
 		splitPane.setResizeWeight(0.2);
-		this.populateRootItem();
+//		this.populateRootItem();
 		return splitPane;
 	}
 
-	private void populateRootItem() {
-		LogicalItem result = new LogicalItem(LogicalItem.ROOT);
-		this.rootItem.addChild(result);
-
-		LogicalItem andOperator0 = new LogicalItem(LogicalItem.AND);
-
-		LogicalItem andOperator1 = new LogicalItem(LogicalItem.AND);
-		andOperator0.addChild(andOperator1);
-		LogicalItem andOperator2 = new LogicalItem(LogicalItem.AND);
-		LogicalItem andOperator3 = new LogicalItem(LogicalItem.AND);
-		andOperator1.addChild(andOperator2);
-		andOperator1.addChild(andOperator3);
-		//LogicalItem condition1 = new LogicalItem();
-		//LogicalItem condition2 = new LogicalItem(LogicalItem.CONDITION, "TectCondition2");
-		//andOperator0.addChild(condition1);
-		//andOperator0.addChild(condition2);
-		result.addChild(andOperator0);
-
-		LogicalItem andOperator4 = new LogicalItem(LogicalItem.AND);
-		andOperator0.addChild(andOperator4);
-		LogicalItem andOperator5 = new LogicalItem(LogicalItem.AND);
-		LogicalItem andOperator6 = new LogicalItem(LogicalItem.AND);
-		LogicalItem andOperator7 = new LogicalItem(LogicalItem.AND);
-		andOperator4.addChild(andOperator5);
-		andOperator4.addChild(andOperator6);
-		andOperator4.addChild(andOperator7);
-	}
+	
 
 	private Item getRootItem() {
 		if (this.rootItem == null) {
-			this.rootItem = new ServiceItem();			
+			this.rootItem = new ServiceItem();		
+			
+			((ServiceItem)this.rootItem).setChildrenFactory(new ChildrenFactory(){
+				public void populate(Item item) {
+					LogicalItem result = new LogicalItem(LogicalItem.ROOT);
+
+					item.addChild(result);
+
+					LogicalItem andOperator0 = new LogicalItem(LogicalItem.AND);
+
+					LogicalItem andOperator1 = new LogicalItem(LogicalItem.AND);
+					andOperator0.addChild(andOperator1);
+					LogicalItem andOperator2 = new LogicalItem(LogicalItem.AND);
+					LogicalItem andOperator3 = new LogicalItem(LogicalItem.AND);
+					andOperator1.addChild(andOperator2);
+					andOperator1.addChild(andOperator3);
+					//LogicalItem condition1 = new LogicalItem();
+					//LogicalItem condition2 = new LogicalItem(LogicalItem.CONDITION, "TectCondition2");
+					//andOperator0.addChild(condition1);
+					//andOperator0.addChild(condition2);
+					result.addChild(andOperator0);
+
+					LogicalItem andOperator4 = new LogicalItem(LogicalItem.AND);
+					andOperator0.addChild(andOperator4);
+					LogicalItem andOperator5 = new LogicalItem(LogicalItem.AND);
+					LogicalItem andOperator6 = new LogicalItem(LogicalItem.AND);
+					LogicalItem andOperator7 = new LogicalItem(LogicalItem.AND);
+					andOperator4.addChild(andOperator5);
+					andOperator4.addChild(andOperator6);
+					andOperator4.addChild(andOperator7);
+
+					
+				}
+			}
+					
+					);
 		}
 		return this.rootItem;
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: ItemTreeModel.java,v 1.5 2005/03/25 16:35:01 bob Exp $
+ * $Id: ItemTreeModel.java,v 1.6 2005/03/28 07:44:21 bob Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/03/25 16:35:01 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/28 07:44:21 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter_v1
@@ -46,11 +46,18 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 
 		boolean	sorted	= false;
 		List	list	= null;
+		
+		
+		public SortList() {
+			this.list = new LinkedList();
+		}
 	}
 
 	private List						listeners;
 	private Item						root;
 	private Map							parentSortedChildren	= new HashMap();
+
+	private boolean						allwaysSort				= true;
 
 	private static NameItemComparator	nameItemComparator;
 
@@ -93,8 +100,7 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 	protected synchronized List getChildren(Object parent) {
 		SortList sortList = (SortList) this.parentSortedChildren.get(parent);
 		if (sortList == null) {
-			sortList = new SortList();
-			sortList.list = new LinkedList();
+			sortList = new SortList();			
 			this.parentSortedChildren.put(parent, sortList);
 		}
 		if (!sortList.sorted) {
@@ -102,18 +108,23 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 			sortList.list.addAll(((Item) parent).getChildren());
 			for (Iterator it = sortList.list.iterator(); it.hasNext();) {
 				Item item = (Item) it.next();
+				System.out.println("getChildren | parent " + parent + ", child " + item);
 				if (item.isService()) {
 					it.remove();
 				}
 			}
-			Collections.sort(sortList.list, getNameItemComparator());
+			if (this.allwaysSort) {
+				Collections.sort(sortList.list, getNameItemComparator());
+			}
 			sortList.sorted = true;
 		}
 		return sortList.list;
 	}
 
 	public Object getChild(Object parent, int index) {
-		return this.getChildren(parent).get(index);
+		Object object = this.getChildren(parent).get(index);
+//		System.out.println("parent " + parent + ", child at " + index + " is " + object);
+		return object;
 	}
 
 	public int getChildCount(Object parent) {
@@ -130,7 +141,7 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 	}
 
 	public boolean isLeaf(Object node) {
-		return !((Item)node).canHaveChildren();
+		return !((Item) node).canHaveChildren();
 	}
 
 	public void valueForPathChanged(TreePath path, Object newValue) {
@@ -147,15 +158,16 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 	protected void insertNodeInto(Item parent, Item child) {
 		int childCount = this.getChildCount(parent);
 		int[] newIndexs = new int[1];
-		Object[] objects = new Object[] {child};
+		Object[] objects = new Object[] { child};
 		for (int i = 0; i < childCount; i++) {
 			if (this.getChild(parent, i).equals(child)) {
 				newIndexs[0] = i;
-//				System.out.println("found");
+				 System.out.println("found insert index");
 				break;
 			}
-		}		
-//		System.out.println("insert " + child.getName() + " to " + parent.getName() + " [ " + newIndexs[0] + " ] ");
+		}
+		 System.out.println("insert " + child.getName() + " to " +
+		 parent.getName() + " [ " + newIndexs[0] + " ] ");
 		nodesWereInserted(parent, objects, newIndexs);
 	}
 
@@ -170,6 +182,7 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 		for (int i = 0; i < childCount; i++) {
 			if (this.getChild(parent, i).equals(child)) {
 				childIndex[0] = i;
+				 System.out.println("found remove index");
 				break;
 			}
 		}
@@ -178,6 +191,8 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 			sortList.sorted = false;
 		}
 		Object[] removedArray = new Object[] { child};
+		 System.out.println("delete " + child.getName() + " from " +
+		 parent.getName() + " [ " + childIndex[0] + " ] ");
 		nodesWereRemoved(parent, childIndex, removedArray);
 	}
 
@@ -261,6 +276,39 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 			fireTreeNodesInserted(this, getPathToRoot(node), childIndices, newChildren);
 		}
 	}
+	
+	protected void sortChildren(Item parent){
+		if (this.listeners != null && parent != null) {
+			
+			List children2 = parent.getChildren();
+			for (Iterator it = children2.iterator(); it.hasNext();) {
+				Item item = (Item) it.next();
+				this.sortChildren(item);
+			}
+			
+			int childCount = this.getChildCount(parent);
+			int[] childIndices = new int[childCount];
+			Object[] children = new Object[childCount];
+			for(int i=0;i<childCount;i++){
+				childIndices[i] = i;
+				children[i] = this.getChild(parent, i);
+			}
+
+			this.fireTreeNodesRemoved(this, getPathToRoot(parent), childIndices, children);
+			
+			SortList sortList = (SortList) this.parentSortedChildren.get(parent);
+			if (sortList != null) {
+				sortList.sorted = false;
+			}
+			
+			for(int i=0;i<childCount;i++){
+				childIndices[i] = i;
+				children[i] = this.getChild(parent, i);
+			}
+			
+			this.fireTreeNodesInserted(this, getPathToRoot(parent), childIndices, children);
+		}
+	}
 
 	/**
 	 * Notifies all listeners that have registered interest for notification on
@@ -287,7 +335,7 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 			listener.treeNodesInserted(e);
 		}
 	}
-
+	
 	/**
 	 * Invoke this method after you've removed some TreeNodes from node.
 	 * childIndices should be the index of the removed elements and must be
@@ -398,26 +446,49 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 			parent1 = this.root;
 		}
 		final Item parent = parent1;
-			SwingUtilities.invokeLater(new Runnable() {
+		SwingUtilities.invokeLater(new Runnable() {
 
-				public void run() {
-					insertNodeInto(parent, child);
-				}
-			});
+			public void run() {
+				insertNodeInto(parent, child);
+			}
+		});
 	}
-	
-	public void setParentPerformed(Item item, Item oldParent, Item newParent) {		
-		if (oldParent!=null) {
+
+	public void setParentPerformed(Item item, Item oldParent, Item newParent) {
+		System.out.println(this.getClass().getName()+ ".setParentPerformed | item:" + item + ", oldParent:" + oldParent + ", newParent:" + newParent);
+		if (oldParent != null) {
 			removeNodeFromParent(oldParent, item);
 		}
 		if (newParent != null) {
+			if (newParent instanceof AbstractItem) {
+				AbstractItem abstractItem = (AbstractItem) newParent;
+				abstractItem.print(0);
+			}
 			addItem(newParent, item);
 		} else {
-			this.parentSortedChildren.remove(oldParent);			
+			this.parentSortedChildren.remove(oldParent);
 		}
 	}
 
-	public ItemListener getItemListener() {		
+	public ItemListener getItemListener() {
 		return this;
 	}
+
+	/**
+	 * @return Returns the allwaysSort.
+	 */
+	public boolean isAllwaysSort() {
+		return this.allwaysSort;
+	}
+
+	/**
+	 * @param allwaysSort
+	 *            The allwaysSort to set.
+	 */
+	public void setAllwaysSort(boolean allwaysSort) {
+		this.allwaysSort = allwaysSort;
+		if (allwaysSort)
+			this.sortChildren(this.root);		
+	}
+
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractItem.java,v 1.8 2005/03/25 16:35:01 bob Exp $
+ * $Id: AbstractItem.java,v 1.9 2005/03/28 07:47:12 bob Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.logic;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -17,7 +16,7 @@ import java.util.List;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/03/25 16:35:01 $
+ * @version $Revision: 1.9 $, $Date: 2005/03/28 07:47:12 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter_v1
@@ -76,8 +75,8 @@ public abstract class AbstractItem implements Item {
 	}
 
 	public void addChild(Item childItem) {
-		Log.debugMessage("AbstractItem.addChild | this.name: " + this.getName() + '(' + this.getClass().getName() + ')' + " \n\t name: "
-				+ childItem.getName()+ '(' + childItem.getClass().getName() + ')', Log.FINEST);
+		Log.debugMessage("AbstractItem.addChild | this.name: " + this.toString() + " \n\t name: "
+				+ childItem.toString(), Log.FINEST);
 		
 		if (!this.canHaveChildren())
 			throw new UnsupportedOperationException("Item " + this.getName() + " can not have children.");
@@ -97,7 +96,7 @@ public abstract class AbstractItem implements Item {
 				childItem.setParent(this);
 			}
 		} else {
-			throw new UnsupportedOperationException("Parent for " + childItem.getName() + " isn't allow.");
+			throw new UnsupportedOperationException("Parent for " + childItem.toString() + " isn't allow.");
 		}
 	}
 
@@ -106,8 +105,8 @@ public abstract class AbstractItem implements Item {
 	}
 
 	public void setParent(Item parent) {
-		Log.debugMessage("AbstractItem.setParent | name:" + this.getName() + '(' + this.getClass().getName() + ')' +"\n\tparent:"
-				+ (parent == null ? "'null'" : parent.getName() + '(' + this.getClass().getName() + ')'), Log.FINEST);
+		Log.debugMessage("AbstractItem.setParent | name:" + this.toString() +"\n\tparent:"
+				+ (parent == null ? "'null'" : parent.toString()), Log.FINEST);
 
 		Item oldParent = this.parent;
 		/* yeah, really compare reference */
@@ -127,24 +126,26 @@ public abstract class AbstractItem implements Item {
 			if (!children2.isEmpty() && children2.contains(this))
 				this.parent.addChild(this);
 		}
-
-		this.fireParentChanged(this, oldParent, this.parent);
+		
+		Item notNullParent = this.parent == null ? oldParent : this.parent;
+		this.fireParentChanged(this, oldParent, this.parent, notNullParent);
 	}
 	
-	protected void fireParentChanged(Item item, Item oldParent, Item newParent) {
+	protected void fireParentChanged(Item item, Item oldParent, Item newParent, Item oldSourceParent) {
 		for (int i = 0; i < this.listener.length; i++) {
 			this.listener[i].setParentPerformed( item, oldParent, newParent);
-			Log.debugMessage(this.getClass().getName() + " " + this.getName() + " listener[" + i + "].setParentPerformed | item:" + item.getName()
-				+ ", oldParent:" + (oldParent == null ? "'null'" : oldParent.getName())
-				+ ", newParent:" + (newParent == null ? "'null'" : newParent.getName()), Log.FINEST);
+			Log.debugMessage(this.toString() + " listener[" + i + "(" + this.listener[i].getClass().getName() + ")" + "].setParentPerformed | item:" + item.toString()
+				+ ", oldParent:" + (oldParent == null ? "'null'" : oldParent.toString())
+				+ ", newParent:" + (newParent == null ? "'null'" : newParent.toString()), Log.FINEST);
 		}
-		Item nonNullParent = this.parent == null ? oldParent : this.parent;
 		/* yeah, really compare reference */
-		if (nonNullParent == this)
+//		if (thisParent == this)
+//			return;
+		if (this.parent == null && oldSourceParent == this)
 			return;
-		if (nonNullParent instanceof AbstractItem) {
-			AbstractItem abstractItem = (AbstractItem) nonNullParent;
-			abstractItem.fireParentChanged(item, oldParent, newParent);
+		if (oldSourceParent instanceof AbstractItem) {
+			AbstractItem abstractItem = (AbstractItem) oldSourceParent;
+			abstractItem.fireParentChanged(item, oldParent, newParent, oldSourceParent.getParent());
 		}
 	}
 
@@ -167,5 +168,12 @@ public abstract class AbstractItem implements Item {
 				}
 			}
 		}
+	}
+	
+	public String toString() {
+		String className = this.getClass().getName();
+		int lastDotIndex = className.lastIndexOf('.');
+		className = lastDotIndex >=0 ? className.substring(lastDotIndex + 1) : className;
+		return this.getName() + '{' + className + '}';
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalSchemeUI.java,v 1.17 2005/03/25 16:35:02 bob Exp $
+ * $Id: LogicalSchemeUI.java,v 1.18 2005/03/28 07:44:32 bob Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,13 +27,14 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/03/25 16:35:02 $
+ * @version $Revision: 1.18 $, $Date: 2005/03/28 07:44:32 $
  * @author $Author: bob $
  * @module filter_v1
  */
@@ -49,7 +50,7 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 	static final Color			ITEM_BG_COLOR		= new Color(220, 220, 220);
 	static final Color			TEXT_COLOR			= Color.BLACK;
 
-	Collection					items;
+	private Set					items;
 
 	static final int			SELECT_AREA			= 10;
 	static final int			EDGE_THICK			= 20;
@@ -73,7 +74,7 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 
 	private ViewItem			preSelectedItem;
 
-	private Collection			selectedItems;
+	private Set			selectedItems;
 
 	private ViewItem			firstSelectedLineItem;
 	private ViewItem			secondSelectedLineItem;
@@ -120,7 +121,7 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 
 		this.selectedItems = new HashSet();
 
-		this.items = new LinkedList();
+		this.items = new HashSet();
 		this.addItem(rootItem, false, false);
 		this.newItem = null;
 		
@@ -147,7 +148,13 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 									Item newParent) {
 		if (newParent != null) {
 			if (!(item instanceof ViewItem)) {
-				addItem(item, false, false);
+				if (newParent != null) {
+					addItem(item, false, false);
+				} else {
+					ViewItem viewItem = (ViewItem) ViewItem.item2ItemViewMap.get(item);
+					this.items.remove(viewItem);
+				}
+					
 			}
 		}
 
@@ -173,6 +180,7 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 		if (this.regularStroke == null) this.regularStroke = new BasicStroke(1.0f);
 
 		this.arrange();
+		this.newItem = null;
 	}
 
 	public void paint(Graphics g) {
@@ -504,8 +512,7 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 		}
 	}
 
-	public void deleteSelectedItems() {
-
+	public synchronized void deleteSelectedItems() {
 		if (this.selectedItem != null) {
 			/* TODO: perfomance problem */
 			List list = new ArrayList(this.selectedItems);
@@ -523,24 +530,31 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 			
 			for (Iterator iterator = moveToRoot.iterator(); iterator.hasNext();) {
 				ViewItem item2 = (ViewItem) iterator.next();
+				list.remove(item2);
+				/* TODO what the problem ? why not adding child when setParent performed ? */
+				this.rootServiceItem.addChild(item2);
 				item2.setParent(this.rootServiceItem);
 			}
 			
 			for (Iterator it = list.iterator(); it.hasNext();) {
 				ViewItem item = (ViewItem) it.next();
+				this.items.remove(item);
 				item.setParent(null);
 //				for (int i = 0; i < this.addDeleteItems.length; i++) {
 //					this.addDeleteItems[i].deleteItem(item.getSourceItem());
-//				}
-				this.items.remove(item);
+//				}				
 
 			}
 
+
 			this.selectedItem = null;
+			this.newItem = null;
 			this.selectedItems.clear();
 			this.repaint();
 		} else {
 			if (this.firstSelectedLineItem != null && this.secondSelectedLineItem != null) {
+				/* TODO what the problem ? why not adding child when setParent performed ? */
+				this.rootServiceItem.addChild(this.secondSelectedLineItem);
 				this.secondSelectedLineItem.setParent(this.rootServiceItem);
 				this.repaint();
 			}
@@ -558,13 +572,14 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 		} else {
 			this.newItem = (ViewItem) ViewItem.item2ItemViewMap.get(item);
 			if (this.newItem == null) {
-				this.newItem = new ViewItem(item);
-				if (this.fontMetrics != null) {
-				this.newItem.setWidth(this.fontMetrics.stringWidth(this.newItem.getName()) + 2 * this.fontXOffset);
-				this.newItem.setHeight((int) (1.5 * this.fontMetrics.getHeight()));
-				}
+				this.newItem = new ViewItem(item);				
 			}
 		}
+		
+		if (this.fontMetrics != null) {
+			this.newItem.setWidth(this.fontMetrics.stringWidth(this.newItem.getName()) + 2 * this.fontXOffset);
+			this.newItem.setHeight((int) (1.5 * this.fontMetrics.getHeight()));
+			}
 		
 		ViewItem parent2 = (ViewItem) this.newItem.getParent();
 		Item parent3 = item.getParent();
