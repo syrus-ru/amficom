@@ -1,5 +1,5 @@
 /*
- * $Id: Identifier.java,v 1.14 2004/11/22 12:41:26 bass Exp $
+ * $Id: Identifier.java,v 1.15 2004/11/22 14:47:24 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,8 @@ import java.io.Serializable;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/11/22 12:41:26 $
- * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2004/11/22 14:47:24 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -26,11 +26,9 @@ public class Identifier implements Comparable, Cloneable, TransferableObject, Se
 	private short major;
 	private long minor;
 	private String identifierString;
-	private String majorString;
 
 	public Identifier(String identifierString) {
-		this.majorString = identifierString.substring(0, identifierString.indexOf(SEPARATOR));
-		this.major = ObjectEntities.stringToCode(this.majorString);
+		this.major = ObjectEntities.stringToCode(identifierString.substring(0, identifierString.indexOf(SEPARATOR)));
 		this.minor = Long.parseLong(identifierString.substring(identifierString.indexOf(SEPARATOR) + 1));
 		this.identifierString = identifierString;
 	}
@@ -39,20 +37,11 @@ public class Identifier implements Comparable, Cloneable, TransferableObject, Se
 		this(id_t.identifier_string);
 	}
 
-//	/*	Only for IdentifierGenerator	*/
-//	protected Identifier(String majorString, long minor) {
-//		this.major = ObjectEntities.codeForString(majorString);
-//		this.majorString = majorString;
-//		this.minor = minor;
-//		this.identifierString = this.majorString + SEPARATOR + Long.toString(this.minor);
-//	}
-
 	/*	Only for IdentifierGenerator	*/
 	protected Identifier(short major, long minor) {
 		this.major = major;
 		this.minor = minor;
-		this.majorString = ObjectEntities.codeToString(this.major);
-		this.identifierString = this.majorString + SEPARATOR + Long.toString(this.minor);
+		this.identifierString = ObjectEntities.codeToString(this.major) + SEPARATOR + Long.toString(this.minor);
 	}
 
 	public Object clone() {
@@ -64,7 +53,6 @@ public class Identifier implements Comparable, Cloneable, TransferableObject, Se
 			e.printStackTrace();
 		}
 		id.major = this.major;
-		id.majorString = new String(this.majorString);
 		id.identifierString = new String(this.identifierString);
 		return id;
 	}
@@ -91,9 +79,12 @@ public class Identifier implements Comparable, Cloneable, TransferableObject, Se
 	}
 
 	public boolean equals(Object obj) {
-		if(obj instanceof Identifier)
-			return ((Identifier)obj).getIdentifierString().equals(this.identifierString);
-		return false;
+		boolean ret = false;
+		if(obj instanceof Identifier){
+			Identifier that = (Identifier) obj;
+			ret = ((that.major == this.major) && (that.minor == this.minor));
+		}
+		return ret;
 	}
 
 	public int hashCode() {
@@ -101,7 +92,6 @@ public class Identifier implements Comparable, Cloneable, TransferableObject, Se
 		ret = 37 * ret + this.major;
 		ret = 37 * ret + (int)(this.minor ^ (this.minor >>> 32));
 		ret = 37 * ret + this.identifierString.hashCode();
-		ret = 37 * ret + this.majorString.hashCode();
 		return ret;
 	}
 
@@ -119,13 +109,6 @@ public class Identifier implements Comparable, Cloneable, TransferableObject, Se
 
 	public long getMinor() {
 		return this.minor;
-	}
-	
-	/**
-	 * @deprecated use {@link #getMajor()} and {@link ObjectEntities#codeToString(short)}
-	 */
-	public String getObjectEntity() {
-		return this.majorString;
 	}
 
 	public String toString() {
