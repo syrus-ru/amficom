@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementStorableObjectPool.java,v 1.32 2004/10/19 11:37:14 bob Exp $
+ * $Id: MeasurementStorableObjectPool.java,v 1.33 2004/10/21 05:27:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2004/10/19 11:37:14 $
+ * @version $Revision: 1.33 $, $Date: 2004/10/21 05:27:53 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -282,6 +282,9 @@ public class MeasurementStorableObjectPool {
 				}
 			}
 		}
+		
+		if (list == null)
+			list = Collections.EMPTY_LIST;
 
 		return list;
 	}
@@ -330,6 +333,9 @@ public class MeasurementStorableObjectPool {
 			}
 
 		}
+
+		if (list == null)
+			list = Collections.EMPTY_LIST;
 
 		return list;
 	}
@@ -382,6 +388,9 @@ public class MeasurementStorableObjectPool {
 			}
 
 		}
+
+		if (list == null)
+			list = Collections.EMPTY_LIST;
 
 		return list;
 	}
