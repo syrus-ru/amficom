@@ -145,6 +145,17 @@ module corba {
 		measurement::corba::EvaluationType_Transferable transmitEvaluationType(in general::corba::Identifier_Transferable id)
 			raises (general::corba::AMFICOMRemoteException);
 
+
+
+		measurement::corba::Measurement_Transferable transmitMeasurement(in general::corba::Identifier_Transferable id)
+			raises (general::corba::AMFICOMRemoteException);
+
+		measurement::corba::Analysis_Transferable transmitAnalysis(in general::corba::Identifier_Transferable id)
+			raises (general::corba::AMFICOMRemoteException);
+
+		measurement::corba::Evaluation_Transferable transmitEvaluation(in general::corba::Identifier_Transferable id)
+			raises (general::corba::AMFICOMRemoteException);
+
 		measurement::corba::Set_Transferable transmitSet(in general::corba::Identifier_Transferable id)
 			raises (general::corba::AMFICOMRemoteException);
 
@@ -157,6 +168,36 @@ module corba {
 		measurement::corba::TemporalPattern_Transferable transmitTemporalPattern(in general::corba::Identifier_Transferable id)
 			raises (general::corba::AMFICOMRemoteException);
 
+
+
+		
+		measurement::corba::MeasurementSeq_Transferable transmitMeasurements(in general::corba::IdentifierSeq_Transferable ids)
+			raises (general::corba::AMFICOMRemoteException);
+		
+		measurement::corba::AnalysisSeq_Transferable transmitAnalyses(in general::corba::IdentifierSeq_Transferable ids)
+			raises (general::corba::AMFICOMRemoteException);
+		
+		measurement::corba::EvaluationSeq_Transferable transmitEvaluations(in general::corba::IdentifierSeq_Transferable ids)
+			raises (general::corba::AMFICOMRemoteException);
+
+
+
+
+		measurement::corba::MeasurementSeq_Transferable transmitMeasurementsButIdsByCondition(
+				in general::corba::IdentifierSeq_Transferable ids,
+				in general::corba::StorableObjectCondition_Transferable storableObjectCondition_Transferable)
+			raises (general::corba::AMFICOMRemoteException);
+
+		measurement::corba::AnalysisSeq_Transferable transmitAnalysesButIdsByCondition(
+				in general::corba::IdentifierSeq_Transferable ids,
+				in general::corba::StorableObjectCondition_Transferable storableObjectCondition_Transferable)
+			raises (general::corba::AMFICOMRemoteException);
+
+		measurement::corba::EvaluationSeq_Transferable transmitEvaluationsButIdsByCondition(
+				in general::corba::IdentifierSeq_Transferable ids,
+				in general::corba::StorableObjectCondition_Transferable storableObjectCondition_Transferable)
+			raises (general::corba::AMFICOMRemoteException);
+		
 
 
 
@@ -179,17 +220,16 @@ module corba {
 
 
 		void updateTestStatus(in general::corba::Identifier_Transferable test_id,
-			in measurement::corba::TestStatus status,
-			in general::corba::Identifier_Transferable mcm_id);
+						in measurement::corba::TestStatus status,
+						in general::corba::Identifier_Transferable mcm_id);
 
 		void updateTestsStatus(in general::corba::IdentifierSeq_Transferable test_ids,
-			in measurement::corba::TestStatus status,
-			in general::corba::Identifier_Transferable mcm_id);
+						in measurement::corba::TestStatus status,
+						in general::corba::Identifier_Transferable mcm_id);
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-		void ping(in long i)
-			raises (general::corba::AMFICOMRemoteException);
+		void ping(in octet i);
 	};
 
 };
