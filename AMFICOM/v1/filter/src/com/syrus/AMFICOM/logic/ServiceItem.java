@@ -6,11 +6,14 @@
 package com.syrus.AMFICOM.logic;
 
 
-public class ServiceItem extends AbstractItem {
+public class ServiceItem extends AbstractItem implements Populatable {
 
 	private static int	serviceCount	= 0;
 	private String		name;
 	private Object		object;
+	
+	private ChildrenFactory childrenFactory;
+	private boolean populated = false;
 
 	public ServiceItem() {
 		this.name = "service" + (serviceCount++);
@@ -54,6 +57,21 @@ public class ServiceItem extends AbstractItem {
 
 	public boolean isService() {
 		return true;
+	}
+
+	
+	/**
+	 * @param childrenFactory The childrenFactory to set.
+	 */
+	public void setChildrenFactory(ChildrenFactory childrenFactory) {
+		this.childrenFactory = childrenFactory;
+	}
+	
+	public void populate() {
+		if (!this.populated) {
+			this.childrenFactory.populate(this);
+			this.populated = true;
+		}
 	}
 
 }
