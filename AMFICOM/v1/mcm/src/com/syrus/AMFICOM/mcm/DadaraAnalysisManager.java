@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.22 2005/01/19 20:56:53 arseniy Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.23 2005/03/15 13:51:34 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,230 @@
 
 package com.syrus.AMFICOM.mcm;
 
+/**
+ * @version $Revision: 1.23 $, $Date: 2005/03/15 13:51:34 $
+ * @author $Author: saa $
+ * @module mcm_v1
+ */
+
+//*
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
+import com.syrus.AMFICOM.analysis.dadara.ModelFunction;
+import com.syrus.AMFICOM.analysis.dadara.ModelTrace;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceComparer;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceImplMF;
+import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
+import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.OperationSort;
+import com.syrus.AMFICOM.measurement.Analysis;
+import com.syrus.AMFICOM.measurement.Evaluation;
+import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.measurement.Set;
+import com.syrus.AMFICOM.measurement.SetParameter;
+import com.syrus.io.BellcoreReader;
+import com.syrus.io.BellcoreStructure;
+import com.syrus.util.ByteArray;
+
+public class DadaraAnalysisManager implements AnalysisManager, EvaluationManager
+{
+	// input SetParameters codenames
+	public static final String CODENAME_REFLECTOGRAMMA = "reflectogramma";
+	public static final String CODENAME_DADARA_ETALON_MTM_MT_SE = "dadara_etalon_mtm_mt_se";
+	public static final String CODENAME_DADARA_ETALON_MTM_THRESH = "dadara_etalon_mtm_thresh";
+
+	// output SetParameters codenames
+	public static final String CODENAME_DADARA_TRACELENGTH = "tracelength";
+	public static final String CODENAME_DARARA_MODELFUNCTION = "modelfunction";
+	public static final String CODENAME_DARARA_SIMPLEEVENTS = "simpleevents";
+	public static final String CODENAME_ALARMS = "alarms";
+
+	private Map parameters;	//Map <String codename, SetParameter parameter>
+
+	public DadaraAnalysisManager(Result measurementResult,
+			Analysis analysis, // ?
+			Evaluation evaluation, // ?
+			Set etalon) throws AnalysisException
+	{
+		parameters = new HashMap();
+		this.addSetParameters(measurementResult.getParameters());
+		this.addSetParameters(analysis.getCriteriaSet().getParameters());
+		this.addSetParameters(evaluation.getThresholdSet().getParameters());
+		this.addSetParameters(etalon.getParameters());
+	}
+
+	private void addSetParameters(SetParameter[] setParameters) throws AnalysisException {
+		for (int i = 0; i < setParameters.length; i++)
+			this.addParameter(setParameters[i]);
+	}
+
+	private void addParameter(SetParameter parameter) throws AnalysisException {
+		String codename = parameter.getType().getCodename();
+		if (codename != null) {
+			if (! this.parameters.containsKey(codename))
+				this.parameters.put(codename, parameter.getValue());
+			else
+				throw new AnalysisException("Parameter of codename '" + codename + "' already loaded");
+		}
+		throw new AnalysisException("Codename of parameter: '" + parameter.getId() + "' is NULL");
+	}
+
+	private byte[] getParameter(String codename) throws AnalysisException
+	{
+		byte[] rawData = (byte[])this.parameters.get(codename);
+		if (rawData == null)
+			throw new AnalysisException("Cannot get parameter of codename '" + codename + "'");
+		return rawData;
+	}
+
+	// this will be used when IA will be added
+	private ByteArray getParBA(String codename) throws AnalysisException
+	{
+		byte[] rawData = getParameter(codename);
+		return new ByteArray(rawData);
+	}
+
+	private ModelTraceManager obtainEtalonMTM()
+		throws AnalysisException
+	{
+		// read etalon r/g and its thresholds
+		byte[] etalonData = getParameter(CODENAME_DADARA_ETALON_MTM_MT_SE);
+		byte[] threshData = getParameter(CODENAME_DADARA_ETALON_MTM_THRESH);
+		ModelTraceManager mtm = ModelTraceManager.eventsAndTraceFromByteArray(etalonData);
+		mtm.setThresholdsFromByteArray(threshData);
+		return mtm;
+	}
+
+	public SetParameter[] analyse() throws AnalysisException
+	{
+		// output alarms; only 0 or 1 at present version
+		List alarmList = new ArrayList();
+
+		// output parameters (not SetParameter[] yet)
+		Map outParameters = new HashMap();	//Map <String codename, byte[] rawData>
+
+		// Получаем рефлектограмму
+		BellcoreStructure bs = (new BellcoreReader()).getData(getParameter(CODENAME_REFLECTOGRAMMA));
+		//double deltaX = bs.getResolution();
+		double[] y = bs.getTraceData();
+
+		// Определяем длину до ухода р/г в шум
+		int traceLength = CoreAnalysisManager.calcTraceLength(y);
+
+		// Получаем эталонный MTM (пороговые кривые и события)
+		ModelTraceManager etMTM = obtainEtalonMTM();
+
+		// сравниваем длину с началом последнего события в эталоне
+		int etMinLength = etMTM.getSimpleEvent(etMTM.getNEvents() - 1).getBegin();
+		boolean testLengthFailed = traceLength < etMinLength;
+
+		// в любом случае - определение шума и фитировка
+		double[] noise = CoreAnalysisManager.calcNoiseArray(y, traceLength);
+		ModelFunction mf = CoreAnalysisManager.fitTrace(y, traceLength, noise);
+
+		// добавляем к результатам анализа найденную длину р/г и фитированную кривую
+		outParameters.put(CODENAME_DADARA_TRACELENGTH, ByteArray.toByteArray(traceLength));
+		outParameters.put(CODENAME_DARARA_MODELFUNCTION, mf.toByteArray());
+
+		// проверяем, если ли выход за пределы масок
+		ModelTrace mt = new ModelTraceImplMF(mf, traceLength);
+		ReflectogramAlarm alarm = ModelTraceComparer.compare(mt, etMTM);
+
+		if (testLengthFailed) // если был обнаружен обрыв
+		{
+			// если был выход за HARD порог масок,
+			// то в качестве начального аларма используем этот аларм (нас интересует его начало)
+			// если HARD пороги не нарушены - игнорируем SOFT пороги и создаем новый аларм
+			if (alarm == null || alarm.level < ReflectogramAlarm.LEVEL_HARD)
+			{
+				alarm = new ReflectogramAlarm();
+				alarm.level = ReflectogramAlarm.LEVEL_HARD;
+				alarm.pointCoord = traceLength;
+			}
+			// устанавливаем тип аларма := "обрыв"
+			alarm.alarmType = ReflectogramAlarm.TYPE_LINEBREAK;
+			// уточняем начальную дистанцию аларма на случай, если HARD-пороги сработали позднее ухода в шум
+			alarm.pointCoord = Math.min(alarm.pointCoord, traceLength);
+			// конечная дистанция аларма := конец эталонной р/г (но не более длины р/г)
+			alarm.endPointCoord = Math.min(y.length, etMinLength);
+			// Теперь начало аларма указывает либо
+			// на точку выхода за пределы HARD порогов (если такой выход произошел),
+			// либо на "lastNonZeroPoint", если HARD порог так ничего и не дал.
+
+			// XXX - если HARD порог не сработал, то получится дистанция ухода р/г в шум - заметно больше, чем дистанция обрыва.
+			// XXX - если HARD порог сработал, то сгенерированное событие может быть неправильно отнесено к любому HARD-выходу за маски.
+
+			alarmList.add(alarm);
+		}
+		else // обрыв не обнаружен
+		{
+			// @todo: IA - пока не делаем
+//			getParBA(ParameterTypeCodenames.MIN_EVENT_LEVEL).toDouble();
+//			getParBA(ParameterTypeCodenames.MIN_SPLICE).toDouble();
+//			getParBA(ParameterTypeCodenames.MIN_CONNECTOR).toDouble();
+//			getParBA(ParameterTypeCodenames.MIN_END_LEVEL).toDouble();
+
+			if (alarm != null)
+			{
+				alarm.alarmType = ReflectogramAlarm.TYPE_OUTOFMASK;
+				alarmList.add(alarm);
+			}
+		}
+
+		// добавляем алармы в результаты анализа
+		ReflectogramAlarm[] alarms = (ReflectogramAlarm[] )alarmList.toArray(new ReflectogramAlarm[alarmList.size()]);
+		outParameters.put(CODENAME_ALARMS, ReflectogramAlarm.alarmsToByteArray(alarms));
+
+		// формируем результаты анализа
+		java.util.Set outKeys = outParameters.keySet();
+		SetParameter[] ret = new SetParameter[outKeys.size()];
+		int i;
+		Iterator it;
+		for (i = 0, it = outKeys.iterator(); it.hasNext(); i++)
+		{
+			Object key = it.next();
+			ParameterType pt = null;
+			try {
+				// @todo: join all ParameterType retrieves in a single requiest
+				TypicalCondition tc = new TypicalCondition((String )key,
+					OperationSort.OPERATION_EQUALS,
+					new Short(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
+					StorableObjectWrapper.COLUMN_CODENAME);
+				pt = (ParameterType )GeneralStorableObjectPool.getStorableObjectsByCondition(tc, true);
+			}
+			catch (ApplicationException ae) {
+				throw new AnalysisException("Cannot find parameter type of codename: '" + key + "' -- " + ae.getMessage(), ae);
+			}
+			try {
+				ret[i] = SetParameter.createInstance(pt, (byte[] )outParameters.get(key));
+			}
+			catch (CreateObjectException e) {
+				throw new AnalysisException("Cannot create parameter -- " + e.getMessage(), e);
+			}
+		}
+		return ret;
+	}
+
+	public SetParameter[] evaluate() throws EvaluationException
+	{
+		// do nothing
+		return new SetParameter[0];
+	}
+}
+
+/*/
 import java.util.Map;
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +244,6 @@ import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.ParameterTypeDatabase;
 import com.syrus.AMFICOM.general.ParameterTypeCodenames;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.Threshold;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramComparer;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramAlarm;
@@ -30,7 +253,6 @@ import com.syrus.AMFICOM.measurement.Set;
 import com.syrus.AMFICOM.measurement.Analysis;
 import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.Result;
-import com.syrus.AMFICOM.event.corba.AlarmLevel;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.io.BellcoreReader;
 import com.syrus.util.ByteArray;
@@ -40,20 +262,11 @@ import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.io.FileOutputStream;
 
-/**
- * @version $Revision: 1.22 $, $Date: 2005/01/19 20:56:53 $
- * @author $Author: arseniy $
- * @module mcm_v1
- */
-
 public class DadaraAnalysisManager implements AnalysisManager, EvaluationManager {
-/**
- * @todo Use ParameterTypeCodenames
- */
+ // @todo Use ParameterTypeCodenames
 	public static final String CODENAME_REFLECTOGRAMMA = "reflectogramma";
 //	public static final String CODENAME_DADARA_TACTIC = "ref_uselinear";
 //	public static final String CODENAME_DADARA_EVENT_SIZE = "ref_eventsize";
-//	public static final String CODENAME_DADARA_CONN_FALL_PARAMS = "ref_conn_fall_params";
 //	public static final String CODENAME_DADARA_MIN_LEVEL = "ref_min_level";
 //	public static final String CODENAME_DADARA_MAX_LEVEL_NOISE = "ref_max_level_noise";
 //	public static final String CODENAME_DADARA_MIN_LEVEL_TO_FIND_END = "ref_min_level_to_find_end";
@@ -467,3 +680,4 @@ catch (IOException ioe) {
 		}
 	}
 }
+//*/
