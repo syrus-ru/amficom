@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeWrapper.java,v 1.4 2005/02/14 11:16:45 arseniy Exp $
+ * $Id: EvaluationTypeWrapper.java,v 1.5 2005/02/28 15:30:07 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,13 +10,14 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/14 11:16:45 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/28 15:30:07 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -86,13 +87,13 @@ public class EvaluationTypeWrapper implements StorableObjectWrapper {
 			else if (key.equals(COLUMN_DESCRIPTION))
 				evaluationType.setDescription((String) value);
 			else if (key.equals(MODE_IN))
-				evaluationType.setInParameterTypes((List) value);
+				evaluationType.setInParameterTypes((Collection) value);
 			else if (key.equals(MODE_OUT))
-				evaluationType.setOutParameterTypes((List) value);
+				evaluationType.setOutParameterTypes((Collection) value);
 			else if (key.equals(MODE_THRESHOLD))
-				evaluationType.setThresholdParameterTypes((List) value);
+				evaluationType.setThresholdParameterTypes((Collection) value);
 			else if (key.equals(MODE_ETALON))
-				evaluationType.setEtalonParameterTypes((List) value);
+				evaluationType.setEtalonParameterTypes((Collection) value);
 		}
 	}
 

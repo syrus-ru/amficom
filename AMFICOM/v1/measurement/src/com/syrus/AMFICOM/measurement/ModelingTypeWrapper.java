@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeWrapper.java,v 1.4 2005/02/14 11:16:45 arseniy Exp $
+ * $Id: ModelingTypeWrapper.java,v 1.5 2005/02/28 15:30:07 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,13 +10,14 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/02/14 11:16:45 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/28 15:30:07 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -79,9 +80,9 @@ public class ModelingTypeWrapper implements StorableObjectWrapper {
 			else if (key.equals(COLUMN_DESCRIPTION))
 				modelingType.setDescription((String) value);
 			else if (key.equals(MODE_IN))
-				modelingType.setInParameterTypes((List) value);
+				modelingType.setInParameterTypes((Collection) value);
 			else if (key.equals(MODE_OUT))
-				modelingType.setOutParameterTypes((List) value);
+				modelingType.setOutParameterTypes((Collection) value);
 		}
 	}
 

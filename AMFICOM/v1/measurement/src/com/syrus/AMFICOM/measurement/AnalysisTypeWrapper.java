@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeWrapper.java,v 1.6 2005/02/14 11:16:45 arseniy Exp $
+ * $Id: AnalysisTypeWrapper.java,v 1.7 2005/02/28 15:30:07 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,13 +10,14 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/14 11:16:45 $
+ * @version $Revision: 1.7 $, $Date: 2005/02/28 15:30:07 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -86,13 +87,13 @@ public class AnalysisTypeWrapper implements StorableObjectWrapper {
 			else if (key.equals(COLUMN_DESCRIPTION))
 				analysisType.setDescription((String) value);
 			else if (key.equals(MODE_IN))
-				analysisType.setInParameterTypes((List) value);
+				analysisType.setInParameterTypes((Collection) value);
 			else if (key.equals(MODE_OUT))
-				analysisType.setOutParameterTypes((List) value);
+				analysisType.setOutParameterTypes((Collection) value);
 			else if (key.equals(MODE_CRITERION))
-				analysisType.setCriteriaParameterTypes((List) value);
+				analysisType.setCriteriaParameterTypes((Collection) value);
 			else if (key.equals(MODE_ETALON))
-				analysisType.setEtalonParameterTypes((List) value);
+				analysisType.setEtalonParameterTypes((Collection) value);
 		}
 	}
 
