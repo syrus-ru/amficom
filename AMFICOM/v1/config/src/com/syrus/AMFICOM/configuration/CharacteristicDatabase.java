@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.46 2004/12/03 18:53:08 bob Exp $
+ * $Id: CharacteristicDatabase.java,v 1.47 2004/12/03 19:03:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.AMFICOM.configuration.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2004/12/03 18:53:08 $
+ * @version $Revision: 1.47 $, $Date: 2004/12/03 19:03:51 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -277,7 +277,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		return characteristics;
 	}
     
-    public void retrieveCharacteristicsByOneQuery(List list, CharacteristicSort sort) throws RetrieveObjectException, IllegalDataException {
+    public Map retrieveCharacteristicsByOneQuery(List list, CharacteristicSort sort) throws RetrieveObjectException, IllegalDataException {
         
         int sortValue = sort.value();
         String sql;
@@ -341,11 +341,12 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
                 characteristics.add(characteristic);              
             }
             
-            for (Iterator it = characteristicMap.keySet().iterator(); it.hasNext();) {
-				Characterized characterized = (Characterized) it.next();
-				List characteristics = (List)characteristicMap.get(characterized);
-				characterized.setCharacteristics(characteristics);				
-			}
+//            for (Iterator it = characteristicMap.keySet().iterator(); it.hasNext();) {
+//				Characterized characterized = (Characterized) it.next();
+//				List characteristics = (List)characteristicMap.get(characterized);
+//				characterized.setCharacteristics(characteristics);				
+//			}
+            return characteristicMap;
             
         } catch (SQLException sqle) {
             String mesg = "CharacteristicDatabase.retrieveCharacteristicsByOneQuery | Cannot retrieve characteristics for characterized object -- " + sqle.getMessage();

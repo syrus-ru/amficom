@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.48 2004/12/03 18:57:14 max Exp $
+ * $Id: EquipmentDatabase.java,v 1.49 2004/12/03 19:03:51 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2004/12/03 18:57:14 $
- * @author $Author: max $
+ * @version $Revision: 1.49 $, $Date: 2004/12/03 19:03:51 $
+ * @author $Author: bob $
  * @module configuration_v1
  */
 
@@ -587,7 +587,12 @@ public class EquipmentDatabase extends StorableObjectDatabase {
             retrieveEquipmentMEIdsByOneQuery(list); 
             
             CharacteristicDatabase characteristicDatabase = (CharacteristicDatabase)(ConfigurationDatabaseContext.characteristicDatabase);
-            characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENT);            
+            Map characteristicMap = characteristicDatabase.retrieveCharacteristicsByOneQuery(list, CharacteristicSort.CHARACTERISTIC_SORT_EQUIPMENT);
+            for (Iterator iter = list.iterator(); iter.hasNext();) {
+                Equipment equipment = (Equipment) iter.next();
+                List characteristics = (List)characteristicMap.get(equipment);
+                equipment.setCharacteristics(characteristics);
+            }
         }
 		return list;
 	}
