@@ -1,5 +1,5 @@
 /*
- * $Id: MCMConfigurationObjectLoader.java,v 1.11 2004/10/29 10:14:50 max Exp $
+ * $Id: MCMConfigurationObjectLoader.java,v 1.12 2004/11/17 09:31:10 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -64,7 +64,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2004/10/29 10:14:50 $
+ * @version $Revision: 1.12 $, $Date: 2004/11/17 09:31:10 $
  * @author $Author: max $
  * @module mcm_v1
  */
@@ -1227,7 +1227,12 @@ public final class MCMConfigurationObjectLoader implements ConfigurationObjectLo
         return list;
 	}
 	
-	public void saveCharacteristicType(CharacteristicType characteristicType, boolean force) throws DatabaseException, CommunicationException {
+    public java.util.Set refresh(java.util.Set s) {
+//       TODO method isn't complete
+        throw new UnsupportedOperationException("method isn't complete");
+    }
+    
+    public void saveCharacteristicType(CharacteristicType characteristicType, boolean force) throws DatabaseException, CommunicationException {
 //		 TODO method isn't complete
 		throw new UnsupportedOperationException("method isn't complete");
 		}
