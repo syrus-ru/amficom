@@ -53,6 +53,9 @@ module corba {
 		wstring codename;
 		wstring description;
 	};
+	
+	typedef sequence <EquipmentType_Transferable> EquipmentTypeSeq_Transferable;
+	
 /////////////////////// PortType /////////////////////
 	struct PortType_Transferable {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
@@ -64,6 +67,8 @@ module corba {
 		wstring codename;
 		wstring description;
 	};
+	
+	typedef sequence <PortType_Transferable> PortTypeSeq_Transferable;
 
 	struct MeasurementPortType_Transferable {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
@@ -76,7 +81,7 @@ module corba {
 		wstring description;
 	};
 
-
+	typedef sequence <MeasurementPortType_Transferable> MeasurementPortTypeSeq_Transferable;
 
 //////////////////////////////////// User /////////////////////////////////
 	enum UserSort {
@@ -98,7 +103,7 @@ module corba {
 		wstring name;
 		wstring description;
 	};
-
+	
 /////////////////////////////////// Domain ////////////////////////////////
 	struct Domain_Transferable {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable id;
@@ -114,6 +119,8 @@ module corba {
 		
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
 	};
+	
+	typedef sequence <Domain_Transferable> DomainSeq_Transferable;
 
 /////////////////////////////////// Server ////////////////////////////////
 	struct Server_Transferable {
@@ -148,7 +155,7 @@ module corba {
 		com::syrus::AMFICOM::general::corba::Identifier_Transferable server_id;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable kis_ids;
-	};
+	};	
 
 ////////////////////// Characteristic /////////////////////
 	enum CharacteristicSort {
@@ -204,6 +211,8 @@ module corba {
 
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
 	};
+	
+	typedef sequence <Equipment_Transferable> EquipmentSeq_Transferable;
 
 ///////////////////// Transmission Path ///////////////////
 	struct TransmissionPath_Transferable {
@@ -226,6 +235,8 @@ module corba {
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable characteristic_ids;
 
 	};
+	
+	typedef sequence <TransmissionPath_Transferable> TransmissionPathSeq_Transferable;
 
 /////////////////////////////// Port ////////////////////////////////
 	enum PortSort {
@@ -267,6 +278,8 @@ module corba {
 
 		com::syrus::AMFICOM::general::corba::IdentifierSeq_Transferable measurement_port_ids;
 	};
+	
+	typedef sequence <KIS_Transferable> KISSeq_Transferable;
 
 ////////////////////////// MeasurementPort ///////////////////////////
 	struct MeasurementPort_Transferable {
