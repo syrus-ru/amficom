@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeImageResource.java,v 1.9 2004/12/21 10:37:42 arseniy Exp $
+ * $Id: SchemeImageResource.java,v 1.10 2005/01/26 08:59:22 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import java.util.*;
 import java.util.zip.*;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.9 $, $Date: 2004/12/21 10:37:42 $
+ * @author $Author: max $
+ * @version $Revision: 1.10 $, $Date: 2005/01/26 08:59:22 $
  * @module resource_v1
  */
 public final class SchemeImageResource extends AbstractImageResource {
@@ -148,18 +148,25 @@ public final class SchemeImageResource extends AbstractImageResource {
 		this.data = safeUnpack(image);
 	}
 
+	/**
+	 * If return is put prior to finally clause, an underlying gzip output stream is not flushed.
+	 * @param data
+	 * @return byte[]
+	 * @throws IOException
+	 */
 	private byte[] pack(final List data) throws IOException {
 		ObjectOutputStream out = null;
+		ByteArrayOutputStream subOut = null;
 		try {
-			final ByteArrayOutputStream subOut = new ByteArrayOutputStream();
+			subOut = new ByteArrayOutputStream();
 			out = new ObjectOutputStream(new GZIPOutputStream(subOut));
 			out.writeObject(data);
 			out.flush();
-			return subOut.toByteArray();
 		} finally {
 			if (out != null)
 				out.close();
 		}
+		return subOut.toByteArray();
 	}
 
 	/**
