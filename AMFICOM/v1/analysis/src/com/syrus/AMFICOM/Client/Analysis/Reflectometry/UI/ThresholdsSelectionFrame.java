@@ -29,7 +29,6 @@ public class ThresholdsSelectionFrame extends ATableFrame
 
 	private Threshold[] init_Threshs;
 	protected int current_ev = -1;
-	private boolean selected_there = false;
 
 	JPanel mainPanel = new JPanel();
 	JScrollPane scrollPane = new JScrollPane();
@@ -256,10 +255,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 				//if (id.equals("primarytrace"))
 				{
 					mtm = (ModelTraceManager )Pool.get(ModelTraceManager.CODENAME, id);
-					
-					selected_there = true;
 					updThresholds();
-					selected_there = false;
 				}
 			}
 			if(rue.analysisPerformed())
@@ -279,10 +275,7 @@ public class ThresholdsSelectionFrame extends ATableFrame
 						// --- тут была попытка сохранить пороги при
 						// замене списка событий, и, в принципе, ее можно бы
 						// доделать, если только она будет делать что-то осмысленное
-
-						selected_there = true;
 						updThresholds();
-						selected_there = false;
 					}
 				}
 			}
@@ -296,16 +289,12 @@ public class ThresholdsSelectionFrame extends ATableFrame
 					    System.out.println("Warning: current_ev out of range");
 					    current_ev = 0;
 					}
-					selected_there = true;
 					updThresholds();
-					selected_there = false;
 				}
 			}
 			if(rue.thresholdChanged())
 			{
-				selected_there = true;
 				updThresholds();
-				selected_there = false;
 			}
 		}
 	}
