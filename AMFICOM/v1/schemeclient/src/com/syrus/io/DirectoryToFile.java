@@ -4,45 +4,47 @@ import java.io.*;
 import java.util.*;
 
 import com.syrus.AMFICOM.Client.Resource.*;
-import com.syrus.AMFICOM.Client.Resource.ISMDirectory.AccessPortType;
-import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
+import com.syrus.AMFICOM.Client.Resource.ISMDirectory.MeasurementPortType;
+import com.syrus.AMFICOM.Client.Resource.General.Characteristic;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
 import com.syrus.AMFICOM.Client.Resource.SchemeDirectory.ProtoElement;
 
 public class DirectoryToFile
 {
-	public static final String type_dir = "resources/types/";
-	public static final String eq_type = "equipment";
-	public static final String link_type = "link";
-	public static final String cable_link_type = "cablelink";
-	public static final String port_type = "port";
-	public static final String cable_port_type = "cableport";
-	public static final String testport_type = "testport";
-	public static final String accessport_type = "accessport";
-	public static final String characteristic_type = "characteristic";
+}
+/*
+	public static final String typeDir = "resources/types/";
+	public static final String eqType = "equipment";
+	public static final String linkType = "link";
+	public static final String cableLinkType = "cablelink";
+	public static final String portType = "port";
+	public static final String cablePortType = "cableport";
+	public static final String testportType = "testport";
+	public static final String accessportType = "accessport";
+	public static final String characteristicType = "characteristic";
 	public static final String ext = ".txt";
 
-	public static final String proto_dir = "resources/proto/";
-	public static final String proto_scheme_dir = "resources/proto/proto_cell/";
-	public static final String proto_ugo_dir = "resources/proto/proto_ugo/";
-	public static final String proto_image_dir = "resources/proto/img/";
-	public static final String proto_type = "equipment";
-	public static final String map_proto_name = "SchemeProtoGroup";
-	public static final String map_proto_group_name = "SchemeProtoGroup";
+	public static final String protoDir = "resources/proto/";
+	public static final String proto_schemeDir = "resources/proto/protoCell/";
+	public static final String proto_ugoDir = "resources/proto/proto_ugo/";
+	public static final String protoImageDir = "resources/proto/img/";
+	public static final String protoType = "equipment";
+	public static final String mapProto_name = "SchemeProtoGroup";
+	public static final String mapProto_group_name = "SchemeProtoGroup";
 
-	public static final String scheme_dir = "resources/scheme/";
-	public static final String scheme_cell_dir = "resources/scheme/scheme_cell/";
-	public static final String scheme_ugo_dir = "resources/scheme/scheme_ugo/";
+	public static final String schemeDir = "resources/scheme/";
+	public static final String schemeCellDir = "resources/scheme/schemeCell/";
+	public static final String scheme_ugoDir = "resources/scheme/scheme_ugo/";
 	public static final String scheme_name = "scheme";
-	public static final String scheme_element_name = "elements";
-	public static final String scheme_element_cell_dir = "resources/scheme/elements_cell/";
-	public static final String scheme_element_ugo_dir = "resources/scheme/elements_ugo/";
-	public static final String scheme_path_name = "path";
+	public static final String schemeElement_name = "elements";
+	public static final String schemeElementCellDir = "resources/scheme/elementsCell/";
+	public static final String schemeElement_ugoDir = "resources/scheme/elements_ugo/";
+	public static final String schemePath_name = "path";
 
-	public static final String links_dir = "resources/links/";
-	public static final String ports_dir = "resources/ports/";
-	public static final String devices_dir = "resources/devices/";
+	public static final String linksDir = "resources/links/";
+	public static final String portsDir = "resources/ports/";
+	public static final String devicesDir = "resources/devices/";
 
 	private DirectoryToFile()
 	{
@@ -96,7 +98,7 @@ public class DirectoryToFile
 			for (Iterator it = scheme.elements.iterator(); it.hasNext();)
 			{
 				SchemeElement se = (SchemeElement)it.next();
-				if (se.scheme_id.equals("") && !se.element_ids.isEmpty())
+				if (se.schemeId.equals("") && !se.elementIds.isEmpty())
 				{
 					for (Iterator it2 = se.getAllChilds().iterator(); it2.hasNext();)
 					{
@@ -106,7 +108,7 @@ public class DirectoryToFile
 				}
 			}
 		}
-*/
+/
 		System.out.println("Writing types...");
 		writeTypes();
 		System.out.println("Writing devices...");
@@ -117,7 +119,7 @@ public class DirectoryToFile
 		writeCablePorts();
 		System.out.println("Writing links...");
 		writeLinks();
-		System.out.println("Writing cable_links...");
+		System.out.println("Writing cableLinks...");
 		writeCableLinks();
 		System.out.println("Writing protos...");
 		writeProtoElements();
@@ -135,7 +137,7 @@ public class DirectoryToFile
 
 	protected static void writeTypes()
 	{
-		new File (type_dir).mkdirs();
+		new File (typeDir).mkdirs();
 		Map Map;
 
 		// *******************************************************************
@@ -143,27 +145,27 @@ public class DirectoryToFile
 		// *******************************************************************
 		if (Pool.getMap(EquipmentType.typ) != null)
 		{
-			Map eqt_classes = new HashMap();
+			Map eqtClasses = new HashMap();
 			for(Iterator it = Pool.getMap(EquipmentType.typ).values().iterator(); it.hasNext();)
 			{
 				EquipmentType eqt = (EquipmentType )it.next();
-				eqt_classes.put(eqt.eq_class, eqt.eq_class);
+				eqtClasses.put(eqt.eqClass, eqt.eqClass);
 			}
-			for(Iterator eqt_classes_el = eqt_classes.values().iterator(); eqt_classes_el.hasNext(); )
+			for(Iterator eqtClassesEl = eqtClasses.values().iterator(); eqtClassesEl.hasNext(); )
 			{
-				String eqt_class = (String)eqt_classes_el.next();
+				String eqtClass = (String)eqtClassesEl.next();
 
 				List vec = new ArrayList();
 				Map hash = new HashMap();
 				for(Iterator it = Pool.getMap(EquipmentType.typ).values().iterator(); it.hasNext();)
 				{
 					EquipmentType eqt = (EquipmentType)it.next();
-					if (eqt.eq_class.equals(eqt_class))
+					if (eqt.eqClass.equals(eqtClass))
 						vec.add(eqt);
 				}
 					try
 					{
-						File f = new File(type_dir + eq_type + eqt_class + ext);
+						File f = new File(typeDir + eqType + eqtClass + ext);
 						if (f.exists())
 							f.delete();
 						f.createNewFile();
@@ -182,13 +184,11 @@ public class DirectoryToFile
 							EquipmentType eqt = (EquipmentType)it.next();
 							pw.println ("@name " + eqt.getName());
 							pw.println ("@id " + eqt.getId());
-							pw.println ("@eq_class " + eqt.eq_class);
-							pw.println ("@codename " + eqt.codename);
+							pw.println ("@eqClass " + eqt.eqClass);
 							pw.println ("@description " + eqt.description);
-							pw.println ("@image_id " + eqt.image_id);
-							pw.println ("@is_holder " + eqt.is_holder);
+							pw.println ("@imageId " + eqt.imageId);
 							pw.println ("@manufacturer " + eqt.manufacturer);
-							pw.println ("@manufacturer_code " + eqt.manufacturer_code);
+							pw.println ("@manufacturerCode " + eqt.manufacturerCode);
 							pw.println ("@characteristics ");
 							for (Iterator cit = eqt.characteristics.values().iterator(); cit.hasNext();)
 							{
@@ -202,7 +202,7 @@ public class DirectoryToFile
 						pw.close();
 						osw.close();
 						fos.close();
-						System.out.println(counter + " EquipmentTypes of " +  eqt_class + " class written");
+						System.out.println(counter + " EquipmentTypes of " +  eqtClass + " class written");
 					}
 					catch (Exception ex)
 					{
@@ -218,7 +218,7 @@ public class DirectoryToFile
 		{
 			try
 			{
-				File f = new File(type_dir + port_type + ext);
+				File f = new File(typeDir + portType + ext);
 				if (f.exists())
 					f.delete();
 				f.createNewFile();
@@ -237,12 +237,9 @@ public class DirectoryToFile
 					PortType pt = (PortType)it.next();
 					pw.println ("@name " + pt.getName());
 					pw.println ("@id " + pt.getId());
-					pw.println ("@p_class " + pt.p_class);
-					pw.println ("@codename " + pt.codename);
+					pw.println ("@pClass " + pt.pClass);
 					pw.println ("@description " + pt.description);
-					pw.println ("@body " + pt.body);
-					pw.println ("@interface_id " + pt.interface_id);
-					pw.println ("@standard " + pt.standard);
+					pw.println ("@interfaceId " + pt.interfaceId);
 					pw.println ("@characteristics ");
 					for (Iterator cit = pt.characteristics.values().iterator(); cit.hasNext();)
 					{
@@ -270,7 +267,7 @@ public class DirectoryToFile
 		{
 			try
 			{
-				File f = new File(type_dir + testport_type + ext);
+				File f = new File(typeDir + testportType + ext);
 				if (f.exists())
 					f.delete();
 				f.createNewFile();
@@ -289,7 +286,7 @@ public class DirectoryToFile
 					pw.println ("@name " + tpt.getName());
 					pw.println ("@id " + tpt.getId());
 					pw.println ("@description " + tpt.description);
-					pw.println ("@port_type_id " + tpt.port_type_id);
+					pw.println ("@portTypeId " + tpt.portTypeId);
 					pw.println ("@characteristics ");
 					for (Iterator cit = tpt.characteristics.values().iterator(); cit.hasNext();)
 					{
@@ -318,7 +315,7 @@ public class DirectoryToFile
 		{
 			try
 			{
-				File f = new File(type_dir + accessport_type + ext);
+				File f = new File(typeDir + accessportType + ext);
 				if (f.exists())
 					f.delete();
 				f.createNewFile();
@@ -337,7 +334,7 @@ public class DirectoryToFile
 					pw.println ("@name " + apt.getName());
 					pw.println ("@id " + apt.getId());
 					pw.println ("@description " + apt.description);
-					pw.println ("@access_type " + apt.access_type);
+					pw.println ("@accessType " + apt.accessType);
 					pw.println ("@characteristics ");
 					for (Iterator cit = apt.characteristics.values().iterator(); cit.hasNext();)
 					{
@@ -345,10 +342,10 @@ public class DirectoryToFile
 						pw.println(ch.type_id + " " + ch.value);
 					}
 					pw.println ("@end of characteristics");
-					pw.println ("@test_type_ids = ");
-					for (Iterator tit = apt.test_type_ids.iterator(); tit.hasNext();)
+					pw.println ("@testTypeIds = ");
+					for (Iterator tit = apt.testTypeIds.iterator(); tit.hasNext();)
 						pw.println((String)tit.next());
-					pw.println ("@end of test_type_ids");
+					pw.println ("@end of testTypeIds");
 					pw.println();
 					counter++;
 				}
@@ -369,7 +366,7 @@ public class DirectoryToFile
 		{
 			try
 			{
-				File f = new File(type_dir + link_type + ext);
+				File f = new File(typeDir + linkType + ext);
 				if (f.exists())
 					f.delete();
 				f.createNewFile();
@@ -387,15 +384,11 @@ public class DirectoryToFile
 					LinkType lt = (LinkType)it.next();
 					pw.println ("@name " + lt.getName());
 					pw.println ("@id " + lt.getId());
-					pw.println ("@codename " + lt.codename);
 					pw.println ("@description " + lt.description);
-					pw.println ("@image_id " + lt.image_id);
-					pw.println ("@is_holder " + lt.is_holder);
-					pw.println ("@link_class " + lt.link_class);
+					pw.println ("@imageId " + lt.imageId);
+					pw.println ("@linkClass " + lt.linkClass);
 					pw.println ("@manufacturer " + lt.manufacturer);
-					pw.println ("@manufacturer_code " + lt.manufacturer_code);
-					pw.println ("@standard " + lt.standard);
-					pw.println ("@year " + lt.year);
+					pw.println ("@manufacturerCode " + lt.manufacturerCode);
 					pw.println ("@characteristics ");
 					for (Iterator cit = lt.characteristics.values().iterator(); cit.hasNext();)
 					{
@@ -424,7 +417,7 @@ public class DirectoryToFile
 		{
 			try
 			{
-				File f = new File(type_dir + cable_link_type + ext);
+				File f = new File(typeDir + cableLinkType + ext);
 				if (f.exists())
 					f.delete();
 				f.createNewFile();
@@ -442,15 +435,11 @@ public class DirectoryToFile
 					CableLinkType lt = (CableLinkType)it.next();
 					pw.println ("@name " + lt.getName());
 					pw.println ("@id " + lt.getId());
-					pw.println ("@codename " + lt.codename);
 					pw.println ("@description " + lt.description);
-					pw.println ("@image_id " + lt.image_id);
-					pw.println ("@is_holder " + lt.is_holder);
-					pw.println ("@link_class " + lt.link_class);
+					pw.println ("@imageId " + lt.imageId);
+					pw.println ("@linkClass " + lt.linkClass);
 					pw.println ("@manufacturer " + lt.manufacturer);
-					pw.println ("@manufacturer_code " + lt.manufacturer_code);
-					pw.println ("@standard " + lt.standard);
-					pw.println ("@year " + lt.year);
+					pw.println ("@manufacturerCode " + lt.manufacturerCode);
 					pw.println ("@characteristics ");
 					for (Iterator cit = lt.characteristics.values().iterator(); cit.hasNext();)
 					{
@@ -478,28 +467,28 @@ public class DirectoryToFile
 		// *******************************************************************
 		if (Pool.getMap(CharacteristicType.typ) != null)
 		{
-			Map cht_classes = new HashMap();
+			Map chtClasses = new HashMap();
 			for(Iterator it = Pool.getMap(CharacteristicType.typ).values().iterator(); it.hasNext();)
 			{
 				CharacteristicType cht = (CharacteristicType)it.next();
-				cht_classes.put(cht.ch_class, cht.ch_class);
+				chtClasses.put(cht.chClass, cht.chClass);
 			}
 
-			for(Iterator cht_classes_el = cht_classes.values().iterator(); cht_classes_el.hasNext(); )
+			for(Iterator chtClassesEl = chtClasses.values().iterator(); chtClassesEl.hasNext(); )
 			{
-				String cht_class = (String)cht_classes_el.next();
+				String chtClass = (String)chtClassesEl.next();
 
 				List vec = new ArrayList();
 				Map hash = new HashMap();
 				for(Iterator it = Pool.getMap(CharacteristicType.typ).values().iterator(); it.hasNext();)
 				{
 					CharacteristicType cht = (CharacteristicType)it.next();
-					if (cht.ch_class.equals(cht_class))
+					if (cht.chClass.equals(chtClass))
 						vec.add(cht);
 				}
 					try
 					{
-						File f = new File(type_dir + characteristic_type + cht_class + ext);
+						File f = new File(typeDir + characteristicType + chtClass + ext);
 						if (f.exists())
 							f.delete();
 						f.createNewFile();
@@ -519,15 +508,15 @@ public class DirectoryToFile
 							pw.println ("@name " + ch.getName());
 							pw.println ("@id " + ch.getId());
 							pw.println ("@description " + ch.description);
-							pw.println ("@ch_class " + ch.ch_class);
-							pw.println ("@value_type_id " + ch.value_type_id);
+							pw.println ("@chClass " + ch.chClass);
+							pw.println ("@valueTypeId " + ch.valueTypeId);
 							pw.println();
 							counter++;
 						}
 						pw.close();
 						osw.close();
 						fos.close();
-						System.out.println(counter + " CharacteristicTypes of " + cht_class + " class written");
+						System.out.println(counter + " CharacteristicTypes of " + chtClass + " class written");
 					}
 					catch (Exception ex)
 					{
@@ -541,13 +530,13 @@ public class DirectoryToFile
 	protected static void writeDevices()
 	{
 		SchemeDevice device;
-		new File (devices_dir).mkdirs();
+		new File (devicesDir).mkdirs();
 
 		if (Pool.getMap(SchemeDevice.typ) != null)
 		{
 			try
 			{
-				File f = new File(devices_dir + eq_type + ext);
+				File f = new File(devicesDir + eqType + ext);
 				if (f.exists())
 					f.delete();
 				f.createNewFile();
@@ -594,13 +583,13 @@ public class DirectoryToFile
 	protected static void writePorts()
 	{
 		SchemePort port;
-		new File (ports_dir).mkdirs();
+		new File (portsDir).mkdirs();
 
 		if (Pool.getMap(SchemePort.typ) != null)
 		{
 			try
 			{
-				File f = new File(ports_dir + port_type + ext);
+				File f = new File(portsDir + portType + ext);
 				if (f.exists())
 					f.delete();
 				f.createNewFile();
@@ -619,12 +608,11 @@ public class DirectoryToFile
 					port = (SchemePort)it.next();
 					pw.println ("@name " + port.getName());
 					pw.println ("@id " + port.getId());
-					pw.println ("@port_type_id " + port.port_type_id);
-					pw.println ("@link_id " + port.link_id);
-					pw.println ("@device_id " + port.device_id);
-					pw.println ("@is_access_port " + String.valueOf(port.is_access_port));
-					pw.println ("@access_port_type_id " + port.access_port_type_id);
-					pw.println ("@direction_type " + port.direction_type);
+					pw.println ("@portTypeId " + port.portTypeId);
+					pw.println ("@linkId " + port.linkId);
+					pw.println ("@deviceId " + port.deviceId);
+					pw.println ("@accessPortTypeId " + port.measurementPortTypeId);
+					pw.println ("@directionType " + port.directionType);
 					pw.println ();
 					counter++;
 				}
@@ -643,13 +631,13 @@ public class DirectoryToFile
 	protected static void writeCablePorts()
 	{
 		SchemeCablePort port;
-		new File (ports_dir).mkdirs();
+		new File (portsDir).mkdirs();
 
 		if (Pool.getMap(SchemeCablePort.typ) != null)
 		{
 			try
 			{
-				File f = new File(ports_dir + cable_port_type + ext);
+				File f = new File(portsDir + cablePortType + ext);
 				if (f.exists())
 					f.delete();
 				f.createNewFile();
@@ -668,12 +656,11 @@ public class DirectoryToFile
 					port = (SchemeCablePort)it.next();
 					pw.println ("@name " + port.getName());
 					pw.println ("@id " + port.getId());
-					pw.println ("@cable_port_type_id " + port.cable_port_type_id);
-					pw.println ("@cable_link_id " + port.cable_link_id);
-					pw.println ("@device_id " + port.device_id);
-					pw.println ("@is_access_port " + String.valueOf(port.is_access_port));
-					pw.println ("@access_port_type_id " + port.access_port_type_id);
-					pw.println ("@direction_type " + port.direction_type);
+					pw.println ("@cablePortTypeId " + port.cablePortTypeId);
+					pw.println ("@cableLinkId " + port.cableLinkId);
+					pw.println ("@deviceId " + port.deviceId);
+					pw.println ("@accessPortTypeId " + port.measurementPortTypeId);
+					pw.println ("@directionType " + port.directionType);
 					pw.println ();
 					counter++;
 				}
@@ -692,13 +679,13 @@ public class DirectoryToFile
 	protected static void writeLinks()
 	{
 		SchemeLink link;
-		new File (links_dir).mkdirs();
+		new File (linksDir).mkdirs();
 
 		if (Pool.getMap(SchemeLink.typ) != null)
 		{
 			try
 			{
-				File f = new File(links_dir + link_type + ext);
+				File f = new File(linksDir + linkType + ext);
 				if (f.exists())
 					f.delete();
 				f.createNewFile();
@@ -717,11 +704,11 @@ public class DirectoryToFile
 					link = (SchemeLink)it.next();
 					pw.println ("@name " + link.getName());
 					pw.println ("@id " + link.getId());
-					pw.println ("@link_type_id " + link.link_type_id);
-					pw.println ("@source_port_id " + link.source_port_id);
-					pw.println ("@target_port_id " + link.target_port_id);
-					pw.println ("@optical_length " + String.valueOf(link.optical_length));
-					pw.println ("@physical_length " + String.valueOf(link.physical_length));
+					pw.println ("@linkTypeId " + link.linkTypeId);
+					pw.println ("@sourcePortId " + link.sourcePortId);
+					pw.println ("@targetPortId " + link.targetPortId);
+					pw.println ("@opticalLength " + String.valueOf(link.opticalLength));
+					pw.println ("@physicalLength " + String.valueOf(link.physicalLength));
 					pw.println ();
 					counter++;
 				}
@@ -740,13 +727,13 @@ public class DirectoryToFile
 	protected static void writeCableLinks()
 	{
 		SchemeCableLink link;
-		new File (links_dir).mkdirs();
+		new File (linksDir).mkdirs();
 
 		if (Pool.getMap(SchemeCableLink.typ) != null)
 		{
 			try
 			{
-				File f = new File(links_dir + cable_link_type + ext);
+				File f = new File(linksDir + cableLinkType + ext);
 				if (f.exists())
 					f.delete();
 				f.createNewFile();
@@ -765,20 +752,20 @@ public class DirectoryToFile
 					link = (SchemeCableLink)it.next();
 					pw.println ("@name " + link.getName());
 					pw.println ("@id " + link.getId());
-					pw.println ("@cable_link_type_id " + link.cable_link_type_id);
-					pw.println ("@source_port_id " + link.source_port_id);
-					pw.println ("@target_port_id " + link.target_port_id);
-					pw.println ("@optical_length " + String.valueOf(link.optical_length));
-					pw.println ("@physical_length " + String.valueOf(link.physical_length));
-					pw.println ("@cable_threads ");
-					for (Iterator tit = link.cable_threads.iterator(); tit.hasNext();)
+					pw.println ("@cableLinkTypeId " + link.cableLinkTypeId);
+					pw.println ("@sourcePortId " + link.sourcePortId);
+					pw.println ("@targetPortId " + link.targetPortId);
+					pw.println ("@opticalLength " + String.valueOf(link.opticalLength));
+					pw.println ("@physicalLength " + String.valueOf(link.physicalLength));
+					pw.println ("@cableThreads ");
+					for (Iterator tit = link.cableThreads.iterator(); tit.hasNext();)
 					{
 						SchemeCableThread thread = (SchemeCableThread)tit.next();
 						pw.println (thread.getId());
 						pw.println (thread.getName());
-						pw.println (thread.link_type_id);
+						pw.println (thread.linkTypeId);
 					}
-					pw.println ("@end of cable_threads");
+					pw.println ("@end of cableThreads");
 					pw.println ();
 					counter++;
 				}
@@ -798,34 +785,34 @@ public class DirectoryToFile
 	{
 		ProtoElement proto;
 		EquipmentType type;
-		new File (proto_dir).mkdirs();
-		new File (proto_scheme_dir).mkdirs();
-		new File (proto_ugo_dir).mkdirs();
+		new File (protoDir).mkdirs();
+		new File (proto_schemeDir).mkdirs();
+		new File (proto_ugoDir).mkdirs();
 
 		if (Pool.getMap(ProtoElement.typ) != null)
 		{
-			Map proto_classes = new HashMap();
+			Map protoClasses = new HashMap();
 			for(Iterator it = Pool.getMap(ProtoElement.typ).values().iterator(); it.hasNext();)
 			{
 				proto = (ProtoElement)it.next();
-				type = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipment_type_id);
-				proto_classes.put(type.eq_class, type.eq_class);
+				type = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipmentTypeId);
+				protoClasses.put(type.eqClass, type.eqClass);
 			}
-			for(Iterator proto_classes_el = proto_classes.values().iterator(); proto_classes_el.hasNext(); )
+			for(Iterator protoClassesEl = protoClasses.values().iterator(); protoClassesEl.hasNext(); )
 			{
-				String proto_class = (String)proto_classes_el.next();
+				String protoClass = (String)protoClassesEl.next();
 
 				List vec = new ArrayList();
 				for(Iterator it = Pool.getMap(ProtoElement.typ).values().iterator(); it.hasNext();)
 				{
 					proto = (ProtoElement)it.next();
-					type = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipment_type_id);
-					if (type.eq_class.equals(proto_class))
+					type = (EquipmentType)Pool.get(EquipmentType.typ, proto.equipmentTypeId);
+					if (type.eqClass.equals(protoClass))
 						vec.add(proto);
 				}
 				try
 				{
-					File f = new File(proto_dir + proto_type + proto_class + ext);
+					File f = new File(protoDir + protoType + protoClass + ext);
 					if (f.exists())
 						f.delete();
 					f.createNewFile();
@@ -844,7 +831,7 @@ public class DirectoryToFile
 						proto = (ProtoElement)pit.next();
 						pw.println ("@name " + proto.getName());
 						pw.println ("@id " + proto.getId());
-						pw.println ("@equipment_type_id " + proto.equipment_type_id);
+						pw.println ("@equipmentTypeId " + proto.equipmentTypeId);
 						pw.println ("@devices ");
 						for (Iterator it = proto.devices.iterator(); it.hasNext();)
 							pw.println (((SchemeDevice)it.next()).getId());
@@ -854,17 +841,17 @@ public class DirectoryToFile
 							pw.println (((SchemeLink)it.next()).getId());
 						pw.println ("@end of links");
 						pw.println ("@protoelements ");
-						for (Iterator it = proto.protoelement_ids.iterator(); it.hasNext();)
+						for (Iterator it = proto.protoelementIds.iterator(); it.hasNext();)
 							pw.println (it.next());
 						pw.println ("@end of protoelements");
-						if (new File(proto_scheme_dir+proto.getId()).exists())
-							pw.println ("@schemecell " + proto_scheme_dir+proto.getId());
-						else if (writeVisualElement(proto_scheme_dir+proto.getId(), proto.schemecell))
-							pw.println ("@schemecell " + proto_scheme_dir+proto.getId());
-						if (new File(proto_ugo_dir+proto.getId()).exists())
-							pw.println ("@ugocell " + proto_ugo_dir+proto.getId());
-						else if (writeVisualElement(proto_ugo_dir+proto.getId(), proto.ugo))
-							pw.println ("@ugocell " + proto_ugo_dir+proto.getId());
+						if (new File(proto_schemeDir+proto.getId()).exists())
+							pw.println ("@schemecell " + proto_schemeDir+proto.getId());
+						else if (writeVisualElement(proto_schemeDir+proto.getId(), proto.schemecell))
+							pw.println ("@schemecell " + proto_schemeDir+proto.getId());
+						if (new File(proto_ugoDir+proto.getId()).exists())
+							pw.println ("@ugocell " + proto_ugoDir+proto.getId());
+						else if (writeVisualElement(proto_ugoDir+proto.getId(), proto.ugo))
+							pw.println ("@ugocell " + proto_ugoDir+proto.getId());
 
 						pw.println();
 						counter++;
@@ -872,7 +859,7 @@ public class DirectoryToFile
 					pw.close();
 					osw.close();
 					fos.close();
-					System.out.println(counter + " ProtoElements of " + proto_class + " class written");
+					System.out.println(counter + " ProtoElements of " + protoClass + " class written");
 				}
 				catch (Exception ex)
 				{
@@ -884,15 +871,15 @@ public class DirectoryToFile
 
 	protected static void writeSchemeProtoGroups()
 	{
-	/*	SchemeProtoGroup map_proto;
-		new File (proto_dir).mkdirs();
-		new File (proto_image_dir).mkdirs();
+	/*	SchemeProtoGroup mapProto;
+		new File (protoDir).mkdirs();
+		new File (protoImageDir).mkdirs();
 
 		if (Pool.getMap(SchemeProtoGroup.typ) != null)
 		{
 			try
 			{
-				File f = new File(proto_dir + map_proto_name + ext);
+				File f = new File(protoDir + mapProto_name + ext);
 				if (f.exists())
 					f.delete();
 				f.createNewFile();
@@ -908,24 +895,24 @@ public class DirectoryToFile
 
 				for(Iterator it = Pool.getMap(SchemeProtoGroup.typ).values().iterator(); it.hasNext();)
 				{
-					map_proto = (SchemeProtoGroup)it.next();
-					pw.println ("@id " + map_proto.getId());
-					pw.println ("@name " + map_proto.getName());
-					pw.println ("@description " + map_proto.description);
-					pw.println ("@symbol_id " + map_proto.getImageID());
-					pw.println ("@pe_class " + map_proto.pe_class);
-					pw.println ("@pe_is_kis " + map_proto.pe_is_kis);
-					pw.println ("@is_visual " + map_proto.is_visual);
-					pw.println ("@is_topological " + map_proto.is_topological);
+					mapProto = (SchemeProtoGroup)it.next();
+					pw.println ("@id " + mapProto.getId());
+					pw.println ("@name " + mapProto.getName());
+					pw.println ("@description " + mapProto.description);
+					pw.println ("@symbolId " + mapProto.getImageID());
+					pw.println ("@peClass " + mapProto.peClass);
+					pw.println ("@peIs_kis " + mapProto.peIs_kis);
+					pw.println ("@is_visual " + mapProto.is_visual);
+					pw.println ("@isTopological " + mapProto.isTopological);
 
-					ImageResource imr = ImageCatalogue.get(map_proto.getImageID());
+					ImageResource imr = ImageCatalogue.get(mapProto.getImageID());
 					ByteArrayOutputStream baos = new ByteArrayOutputStream();
 					ObjectOutputStream out = new ObjectOutputStream(baos);
 					out.writeObject(imr);
-					writeVisualElement(proto_image_dir + map_proto.getId(), baos.toByteArray());
+					writeVisualElement(protoImageDir + mapProto.getId(), baos.toByteArray());
 
 					pw.println ("@protoelements ");
-					for (Iterator pit = map_proto.pe_ids.iterator(); pit.hasNext();)
+					for (Iterator pit = mapProto.peIds.iterator(); pit.hasNext();)
 						pw.println ((String)pit.next());
 					pw.println ("@end of protoelements");
 					pw.println ();
@@ -940,20 +927,20 @@ public class DirectoryToFile
 			{
 				ex.printStackTrace();
 			}
-		}*/
+		}/
 	}
 /*
 	protected static void writeSchemeProtoGroups()
 	{
-		SchemeProtoGroup map_proto;
-		new File (proto_dir).mkdirs();
-		new File (proto_image_dir).mkdirs();
+		SchemeProtoGroup mapProto;
+		new File (protoDir).mkdirs();
+		new File (protoImageDir).mkdirs();
 
 		if (Pool.getMap(SchemeProtoGroup.typ) != null)
 		{
 			try
 			{
-				File f = new File(proto_dir + map_proto_group_name + ext);
+				File f = new File(protoDir + mapProto_group_name + ext);
 				if (f.exists())
 					f.delete();
 				f.createNewFile();
@@ -969,16 +956,16 @@ public class DirectoryToFile
 
 				for(Iterator it = Pool.getMap(SchemeProtoGroup.typ).values().iterator(); it.hasNext();)
 				{
-					map_proto = (SchemeProtoGroup)it.next();
-					pw.println ("@id " + map_proto.getId());
-					pw.println ("@name " + map_proto.getName());
-					pw.println ("@parent_id " + map_proto.parent_id);
+					mapProto = (SchemeProtoGroup)it.next();
+					pw.println ("@id " + mapProto.getId());
+					pw.println ("@name " + mapProto.getName());
+					pw.println ("@parentId " + mapProto.parentId);
 					pw.println ("@groups ");
-					for (Iterator git = map_proto.group_ids.iterator(); git.hasNext();)
+					for (Iterator git = mapProto.groupIds.iterator(); git.hasNext();)
 						pw.println ((String)git.next());
 					pw.println ("@end of groups");
 					pw.println ("@mapprotos ");
-					for (Iterator mit = map_proto.mapproto_ids.iterator(); mit.hasNext();)
+					for (Iterator mit = mapProto.mapprotoIds.iterator(); mit.hasNext();)
 						pw.println ((String)mit.next());
 					pw.println ("@end of mapprotos");
 
@@ -996,19 +983,19 @@ public class DirectoryToFile
 			}
 		}
 	}
-*/
+/
 	protected static void writeScheme()
 	{
 		Scheme scheme;
-		new File (scheme_dir).mkdirs();
-		new File (scheme_cell_dir).mkdirs();
-		new File (scheme_ugo_dir).mkdirs();
+		new File (schemeDir).mkdirs();
+		new File (schemeCellDir).mkdirs();
+		new File (scheme_ugoDir).mkdirs();
 
 		if (Pool.getMap(Scheme.typ) != null)
 		{
 			try
 			{
-				File f = new File(scheme_dir + scheme_name + ext);
+				File f = new File(schemeDir + scheme_name + ext);
 				if (f.exists())
 					f.delete();
 				f.createNewFile();
@@ -1028,10 +1015,11 @@ public class DirectoryToFile
 					pw.println ("@id " + scheme.getId());
 					pw.println ("@name " + scheme.getName());
 					pw.println ("@created " + String.valueOf(scheme.created));
-					pw.println ("@created_by " + scheme.created_by);
+					pw.println ("@createdBy " + scheme.createdBy);
 					pw.println ("@description " + scheme.description);
-					pw.println ("@domain_id " + scheme.domain_id);
-					pw.println ("@owner_id " + scheme.owner_id);
+					pw.println ("@domainId " + scheme.domainId);
+					pw.println ("@ownerId " + scheme.ownerId);
+					pw.println ("@solution " + scheme.solution.getId());
 					pw.println ("@cablelinks ");
 					for (Iterator it = scheme.cablelinks.iterator(); it.hasNext();)
 						pw.println (((SchemeCableLink)it.next()).getId());
@@ -1044,10 +1032,10 @@ public class DirectoryToFile
 					for (Iterator it = scheme.elements.iterator(); it.hasNext();)
 						pw.println (((SchemeElement)it.next()).getId());
 					pw.println ("@end of elements");
-					pw.println ("@paths ");
-					for (Iterator it = scheme.paths.iterator(); it.hasNext();)
-						pw.println (((SchemePath)it.next()).getId());
-					pw.println ("@end of paths");
+//					pw.println ("@paths ");
+//					for (Iterator it = scheme.paths.iterator(); it.hasNext();)
+//						pw.println (((SchemePath)it.next()).getId());
+//					pw.println ("@end of paths");
 					pw.println ("@clones ");
 					for (Iterator it = scheme.clones.keySet().iterator(); it.hasNext();)
 					{
@@ -1055,17 +1043,17 @@ public class DirectoryToFile
 						pw.println (id + " " + (String)scheme.clones.get(id));
 					}
 					pw.println ("@end of clones");
-		/*if (new File(scheme_cell_dir+scheme.getId()).exists())
-		 pw.println ("@schemecell " + scheme_cell_dir+scheme.getId());
-		else*/
+		/*if (new File(schemeCellDir+scheme.getId()).exists())
+		 pw.println ("@schemecell " + schemeCellDir+scheme.getId());
+		else/
 					pw.println ("@width " + String.valueOf(scheme.width));
 		pw.println ("@height " + String.valueOf(scheme.height));
-		pw.println ("@scheme_type " + scheme.scheme_type);
+		pw.println ("@schemeType " + scheme.schemeType);
 
-		if (writeVisualElement(scheme_cell_dir+scheme.getId(), scheme.schemecell))
-			pw.println ("@schemecell " + scheme_cell_dir+scheme.getId());
-		if (writeVisualElement(scheme_ugo_dir+scheme.getId(), scheme.ugo))
-			pw.println ("@ugocell " + scheme_ugo_dir+scheme.getId());
+		if (writeVisualElement(schemeCellDir+scheme.getId(), scheme.schemecell))
+			pw.println ("@schemecell " + schemeCellDir+scheme.getId());
+		if (writeVisualElement(scheme_ugoDir+scheme.getId(), scheme.ugo))
+			pw.println ("@ugocell " + scheme_ugoDir+scheme.getId());
 
 
 
@@ -1087,14 +1075,14 @@ public class DirectoryToFile
 	protected static void writeSchemeElements()
 	{
 		SchemeElement el;
-		new File (scheme_element_cell_dir).mkdirs();
-		new File (scheme_element_ugo_dir).mkdirs();
+		new File (schemeElementCellDir).mkdirs();
+		new File (schemeElement_ugoDir).mkdirs();
 
 		if (Pool.getMap(SchemeElement.typ) != null)
 		{
 			try
 			{
-				File f = new File(scheme_dir + scheme_element_name + ext);
+				File f = new File(schemeDir + schemeElement_name + ext);
 				if (f.exists())
 					f.delete();
 				f.createNewFile();
@@ -1113,15 +1101,15 @@ public class DirectoryToFile
 					el = (SchemeElement)sit.next();
 					pw.println ("@id " + el.getId());
 					pw.println ("@name " + el.getName());
-					//   pw.println ("@equipment_id " + el.equipment_id);
-					pw.println ("@proto_element_id " + el.proto_element_id);
+					//   pw.println ("@equipmentId " + el.equipmentId);
+					pw.println ("@protoElementId " + el.protoElementId);
 
 					pw.println ("@devices ");
 					for (Iterator it = el.devices.iterator(); it.hasNext();)
 						pw.println (((SchemeDevice)it.next()).getId());
 					pw.println ("@end of devices");
 					pw.println ("@elements ");
-					//for (Enumeration e = el.element_ids.elements(); e.hasMoreElements();)
+					//for (Enumeration e = el.elementIds.elements(); e.hasMoreElements();)
 					for (Iterator it = el.getChildElements().iterator(); it.hasNext();)
 						pw.println (((SchemeElement)it.next()).getId());
 					pw.println ("@end of elements");
@@ -1129,13 +1117,13 @@ public class DirectoryToFile
 					for (Iterator it = el.links.iterator(); it.hasNext();)
 						pw.println (((SchemeLink)it.next()).getId());
 					pw.println ("@end of links");
-/*				if (new File(scheme_element_dir+el.getId()).exists())
-		 pw.println ("@schemecell " + scheme_element_dir + el.getId());
-		else */
-					if (writeVisualElement(scheme_element_cell_dir+el.getId(), el.schemecell))
-						pw.println ("@schemecell " + scheme_element_cell_dir+el.getId());
-					if (writeVisualElement(scheme_element_ugo_dir+el.getId(), el.ugo))
-						pw.println ("@ugocell " + scheme_element_ugo_dir+el.getId());
+/*				if (new File(schemeElementDir+el.getId()).exists())
+		 pw.println ("@schemecell " + schemeElementDir + el.getId());
+		else /
+					if (writeVisualElement(schemeElementCellDir+el.getId(), el.schemecell))
+						pw.println ("@schemecell " + schemeElementCellDir+el.getId());
+					if (writeVisualElement(schemeElement_ugoDir+el.getId(), el.ugo))
+						pw.println ("@ugocell " + schemeElement_ugoDir+el.getId());
 
 					pw.println ();
 					counter++;
@@ -1155,13 +1143,13 @@ public class DirectoryToFile
 	protected static void writeSchemePaths()
 	{
 		SchemePath path;
-		new File (scheme_dir).mkdirs();
+		new File (schemeDir).mkdirs();
 
 		if (Pool.getMap(SchemePath.typ) != null)
 		{
 			try
 			{
-				File f = new File(scheme_dir + scheme_path_name + ext);
+				File f = new File(schemeDir + schemePath_name + ext);
 				if (f.exists())
 					f.delete();
 				f.createNewFile();
@@ -1180,19 +1168,19 @@ public class DirectoryToFile
 					path = (SchemePath)it.next();
 					pw.println ("@id " + path.getId());
 					pw.println ("@name " + path.getName());
-					pw.println ("@start_device_id " + path.start_device_id);
-					pw.println ("@end_device_id " + path.end_device_id);
-					pw.println ("@type_id " + path.type_id);
+					pw.println ("@startDeviceId " + path.startDeviceId);
+					pw.println ("@endDeviceId " + path.endDeviceId);
+					pw.println ("@typeId " + path.typeId);
 					pw.println ("@pathelements ");
 					for (Iterator lit = path.links.iterator(); lit.hasNext();)
 					{
 						PathElement pe = (PathElement)lit.next();
 						pw.println (String.valueOf(pe.n));
-						pw.println (String.valueOf(pe.getType()));
-						pw.println (pe.getObjectId());
-						pw.println (pe.thread_id);
-						pw.println (pe.start_port_id);
-						pw.println (pe.end_port_id);
+						pw.println (String.valueOf(pe.isCable));
+						pw.println (pe.linkId);
+						pw.println (pe.threadId);
+						pw.println (pe.startPortId);
+						pw.println (pe.endPortId);
 					}
 					pw.println ("@end of pathelements");
 					pw.println ();
@@ -1251,7 +1239,7 @@ public class DirectoryToFile
 	///////////////////////////////////////////////////////////////////////////
 	protected static void readTypes()
 	{
-		File[] files = new File(type_dir).listFiles();
+		File[] files = new File(typeDir).listFiles();
 		if (files == null)
 			return;
 		for (int i = 0; i < files.length; i++)
@@ -1259,7 +1247,7 @@ public class DirectoryToFile
 			Map h = new HashMap();
 			String filename = files[i].getName();
 			System.out.println("loading..." + filename);
-			if (filename.startsWith(eq_type) && !files[i].isDirectory())
+			if (filename.startsWith(eqType) && !files[i].isDirectory())
 			{
 				h = Pool.getMap(EquipmentType.typ);
 				if (h == null)
@@ -1269,31 +1257,31 @@ public class DirectoryToFile
 				}
 				h.putAll(loadEquipmentTypes(files[i]));
 			}
-			else if (filename.startsWith(link_type) && !files[i].isDirectory())
+			else if (filename.startsWith(linkType) && !files[i].isDirectory())
 			{
 				Pool.putMap(LinkType.typ, loadLinkTypes(files[i]));
 			}
-			else if (filename.startsWith(cable_link_type) && !files[i].isDirectory())
+			else if (filename.startsWith(cableLinkType) && !files[i].isDirectory())
 			{
 				Pool.putMap(CableLinkType.typ, loadCableLinkTypes(files[i]));
 			}
-			else if (filename.startsWith(port_type) && !files[i].isDirectory())
+			else if (filename.startsWith(portType) && !files[i].isDirectory())
 			{
 				Pool.putMap(PortType.typ, loadPortTypes(files[i]));
 			}
-			else if (filename.startsWith(cable_port_type) && !files[i].isDirectory())
+			else if (filename.startsWith(cablePortType) && !files[i].isDirectory())
 			{
 				Pool.putMap(CablePortType.typ, loadCablePortTypes(files[i]));
 			}
-			else if (filename.startsWith(testport_type) && !files[i].isDirectory())
+			else if (filename.startsWith(testportType) && !files[i].isDirectory())
 			{
 				Pool.putMap(TestPortType.typ, loadTestPortTypes(files[i]));
 			}
-			else if (filename.startsWith(accessport_type) && !files[i].isDirectory())
+			else if (filename.startsWith(accessportType) && !files[i].isDirectory())
 			{
 				Pool.putMap(AccessPortType.typ, loadAccessPortTypes(files[i]));
 			}
-			else if (filename.startsWith(characteristic_type) && !files[i].isDirectory())
+			else if (filename.startsWith(characteristicType) && !files[i].isDirectory())
 			{
 				h = Pool.getMap(CharacteristicType.typ);
 				if (h == null)
@@ -1331,20 +1319,16 @@ public class DirectoryToFile
 					eqt.id = s[1];
 					h.put(eqt.id, eqt);
 				}
-				else if (s[0].equals("@codename"))
-					eqt.codename = s[1];
 				else if (s[0].equals("@description"))
 					eqt.description = s[1];
-				else if (s[0].equals("@eq_class"))
-					eqt.eq_class = s[1];
-				else if (s[0].equals("@image_id"))
-					eqt.image_id = s[1];
-				else if (s[0].equals("@is_holder"))
-					eqt.is_holder = Boolean.valueOf(s[1]).booleanValue();
+				else if (s[0].equals("@eqClass"))
+					eqt.eqClass = s[1];
+				else if (s[0].equals("@imageId"))
+					eqt.imageId = s[1];
 				else if (s[0].equals("@manufacturer"))
 					eqt.manufacturer = s[1];
-				else if (s[0].equals("@manufacturer_code"))
-					eqt.manufacturer_code = s[1];
+				else if (s[0].equals("@manufacturerCode"))
+					eqt.manufacturerCode = s[1];
 				else if (s[0].equals("@characteristics"))
 				{
 					eqt.characteristics = new HashMap();
@@ -1402,24 +1386,16 @@ public class DirectoryToFile
 					lt.id = s[1];
 					h.put(lt.id, lt);
 				}
-				else if (s[0].equals("@codename"))
-					lt.codename = s[1];
 				else if (s[0].equals("@description"))
 					lt.description = s[1];
-				else if (s[0].equals("@image_id"))
-					lt.image_id = s[1];
-				else if (s[0].equals("@is_holder"))
-					lt.is_holder = Boolean.valueOf(s[1]).booleanValue();
-				else if (s[0].equals("@link_class"))
-					lt.link_class = s[1];
+				else if (s[0].equals("@imageId"))
+					lt.imageId = s[1];
+				else if (s[0].equals("@linkClass"))
+					lt.linkClass = s[1];
 				else if (s[0].equals("@manufacturer"))
 					lt.manufacturer = s[1];
-				else if (s[0].equals("@manufacturer_code"))
-					lt.manufacturer_code = s[1];
-				else if (s[0].equals("@standard"))
-					lt.standard = s[1];
-				else if (s[0].equals("@year"))
-					lt.year = s[1];
+				else if (s[0].equals("@manufacturerCode"))
+					lt.manufacturerCode = s[1];
 				else if (s[0].equals("@characteristics"))
 				{
 					lt.characteristics = new HashMap();
@@ -1477,24 +1453,16 @@ public class DirectoryToFile
 					lt.id = s[1];
 					h.put(lt.id, lt);
 				}
-				else if (s[0].equals("@codename"))
-					lt.codename = s[1];
 				else if (s[0].equals("@description"))
 					lt.description = s[1];
-				else if (s[0].equals("@image_id"))
-					lt.image_id = s[1];
-				else if (s[0].equals("@is_holder"))
-					lt.is_holder = Boolean.valueOf(s[1]).booleanValue();
-				else if (s[0].equals("@link_class"))
-					lt.link_class = s[1];
+				else if (s[0].equals("@imageId"))
+					lt.imageId = s[1];
+				else if (s[0].equals("@linkClass"))
+					lt.linkClass = s[1];
 				else if (s[0].equals("@manufacturer"))
 					lt.manufacturer = s[1];
-				else if (s[0].equals("@manufacturer_code"))
-					lt.manufacturer_code = s[1];
-				else if (s[0].equals("@standard"))
-					lt.standard = s[1];
-				else if (s[0].equals("@year"))
-					lt.year = s[1];
+				else if (s[0].equals("@manufacturerCode"))
+					lt.manufacturerCode = s[1];
 				else if (s[0].equals("@characteristics"))
 				{
 					lt.characteristics = new HashMap();
@@ -1553,18 +1521,12 @@ public class DirectoryToFile
 					pt.id = s[1];
 					h.put(pt.id, pt);
 				}
-				else if (s[0].equals("@p_class"))
-					pt.p_class = s[1];
-				else if (s[0].equals("@codename"))
-					pt.codename = s[1];
+				else if (s[0].equals("@pClass"))
+					pt.pClass = s[1];
 				else if (s[0].equals("@description"))
 					pt.description = s[1];
-				else if (s[0].equals("@body"))
-					pt.body = s[1];
-				else if (s[0].equals("@interface_id"))
-					pt.interface_id = s[1];
-				else if (s[0].equals("@standard"))
-					pt.standard = s[1];
+				else if (s[0].equals("@interfaceId"))
+					pt.interfaceId = s[1];
 				else if (s[0].equals("@characteristics"))
 				{
 					pt.characteristics = new HashMap();
@@ -1622,16 +1584,10 @@ public class DirectoryToFile
 					cpt.id = s[1];
 					h.put(cpt.id, cpt);
 				}
-				else if (s[0].equals("@codename"))
-					cpt.codename = s[1];
 				else if (s[0].equals("@description"))
 					cpt.description = s[1];
-				else if (s[0].equals("@body"))
-					cpt.body = s[1];
-				else if (s[0].equals("@interface_id"))
-					cpt.interface_id = s[1];
-				else if (s[0].equals("@standard"))
-					cpt.standard = s[1];
+				else if (s[0].equals("@interfaceId"))
+					cpt.interfaceId = s[1];
 				else if (s[0].equals("@characteristics"))
 				{
 					cpt.characteristics = new HashMap();
@@ -1691,8 +1647,8 @@ public class DirectoryToFile
 				}
 				else if (s[0].equals("@description"))
 					tpt.description = s[1];
-				else if (s[0].equals("@port_type_id"))
-					tpt.port_type_id = s[1];
+				else if (s[0].equals("@portTypeId"))
+					tpt.portTypeId = s[1];
 				else if (s[0].equals("@characteristics"))
 				{
 					tpt.characteristics = new HashMap();
@@ -1752,8 +1708,8 @@ public class DirectoryToFile
 				}
 				else if (s[0].equals("@description"))
 					apt.description = s[1];
-				else if (s[0].equals("@access_type"))
-					apt.access_type = s[1];
+				else if (s[0].equals("@accessType"))
+					apt.accessType = s[1];
 				else if (s[0].equals("@characteristics"))
 				{
 					apt.characteristics = new HashMap();
@@ -1813,10 +1769,10 @@ public class DirectoryToFile
 				}
 				else if (s[0].equals("@description"))
 					ch.description = s[1];
-				else if (s[0].equals("@ch_class"))
-					ch.ch_class = s[1];
-				else if (s[0].equals("@value_type_id"))
-					ch.value_type_id = s[1];
+				else if (s[0].equals("@chClass"))
+					ch.chClass = s[1];
+				else if (s[0].equals("@valueTypeId"))
+					ch.valueTypeId = s[1];
 			}
 			isr.close();
 			fis.close();
@@ -1831,14 +1787,14 @@ public class DirectoryToFile
 
 	protected static void readPorts()
 	{
-		File[] files = new File(ports_dir).listFiles();
+		File[] files = new File(portsDir).listFiles();
 		if (files == null)
 			return;
 		for (int i = 0; i < files.length; i++)
 		{
 			Map h = new HashMap();
 			String filename = files[i].getName();
-			if (filename.startsWith(port_type) && !files[i].isDirectory())
+			if (filename.startsWith(portType) && !files[i].isDirectory())
 			{
 				try
 				{
@@ -1862,18 +1818,16 @@ public class DirectoryToFile
 							port.id = s[1];
 							h.put(port.id, port);
 						}
-						else if (s[0].equals("@port_type_id"))
-							port.port_type_id = s[1];
-						else if (s[0].equals("@link_id"))
-							port.link_id = s[1];
-						else if (s[0].equals("@device_id"))
-							port.device_id = s[1];
-						else if (s[0].equals("@is_access_port"))
-							port.is_access_port = Boolean.getBoolean(s[1]);
-						else if (s[0].equals("@access_port_type_id"))
-							port.access_port_type_id = s[1];
-						else if (s[0].equals("@direction_type"))
-							port.direction_type = s[1];
+						else if (s[0].equals("@portTypeId"))
+							port.portTypeId = s[1];
+						else if (s[0].equals("@linkId"))
+							port.linkId = s[1];
+						else if (s[0].equals("@deviceId"))
+							port.deviceId = s[1];
+						else if (s[0].equals("@accessPortTypeId"))
+							port.measurementPortTypeId = s[1];
+						else if (s[0].equals("@directionType"))
+							port.directionType = s[1];
 					}
 					isr.close();
 					fis.close();
@@ -1894,14 +1848,14 @@ public class DirectoryToFile
 
 	protected static void readCablePorts()
 	{
-		File[] files = new File(ports_dir).listFiles();
+		File[] files = new File(portsDir).listFiles();
 		if (files == null)
 			return;
 		for (int i = 0; i < files.length; i++)
 		{
 			Map h = new HashMap();
 			String filename = files[i].getName();
-			if (filename.startsWith(cable_port_type) && !files[i].isDirectory())
+			if (filename.startsWith(cablePortType) && !files[i].isDirectory())
 			{
 				try
 				{
@@ -1925,18 +1879,16 @@ public class DirectoryToFile
 							port.id = s[1];
 							h.put(port.id, port);
 						}
-						else if (s[0].equals("@cable_port_type_id"))
-							port.cable_port_type_id = s[1];
-						else if (s[0].equals("@cable_link_id"))
-							port.cable_link_id = s[1];
-						else if (s[0].equals("@device_id"))
-							port.device_id = s[1];
-						else if (s[0].equals("@is_access_port"))
-							port.is_access_port = Boolean.getBoolean(s[1]);
-						else if (s[0].equals("@access_port_type_id"))
-							port.access_port_type_id = s[1];
-						else if (s[0].equals("@direction_type"))
-							port.direction_type = s[1];
+						else if (s[0].equals("@cablePortTypeId"))
+							port.cablePortTypeId = s[1];
+						else if (s[0].equals("@cableLinkId"))
+							port.cableLinkId = s[1];
+						else if (s[0].equals("@deviceId"))
+							port.deviceId = s[1];
+						else if (s[0].equals("@accessPortTypeId"))
+							port.measurementPortTypeId = s[1];
+						else if (s[0].equals("@directionType"))
+							port.directionType = s[1];
 					}
 					isr.close();
 					fis.close();
@@ -1957,14 +1909,14 @@ public class DirectoryToFile
 
 	protected static void readLinks()
 	{
-		File[] files = new File(links_dir).listFiles();
+		File[] files = new File(linksDir).listFiles();
 		if (files == null)
 			return;
 		for (int i = 0; i < files.length; i++)
 		{
 			Map h = new HashMap();
 			String filename = files[i].getName();
-			if (filename.startsWith(link_type) && !files[i].isDirectory())
+			if (filename.startsWith(linkType) && !files[i].isDirectory())
 			{
 				try
 				{
@@ -1988,16 +1940,16 @@ public class DirectoryToFile
 							link.id = s[1];
 							h.put(link.id, link);
 						}
-						else if (s[0].equals("@link_type_id"))
-							link.link_type_id = s[1];
-						else if (s[0].equals("@source_port_id"))
-							link.source_port_id = s[1];
-						else if (s[0].equals("@target_port_id"))
-							link.target_port_id = s[1];
-						else if (s[0].equals("@optical_length"))
-							link.optical_length = Double.parseDouble(s[1]);
-						else if (s[0].equals("@physical_length"))
-							link.physical_length = Double.parseDouble(s[1]);
+						else if (s[0].equals("@linkTypeId"))
+							link.linkTypeId = s[1];
+						else if (s[0].equals("@sourcePortId"))
+							link.sourcePortId = s[1];
+						else if (s[0].equals("@targetPortId"))
+							link.targetPortId = s[1];
+						else if (s[0].equals("@opticalLength"))
+							link.opticalLength = Double.parseDouble(s[1]);
+						else if (s[0].equals("@physicalLength"))
+							link.physicalLength = Double.parseDouble(s[1]);
 					}
 					isr.close();
 					fis.close();
@@ -2018,14 +1970,14 @@ public class DirectoryToFile
 
 	protected static void readCableLinks()
 	{
-		File[] files = new File(links_dir).listFiles();
+		File[] files = new File(linksDir).listFiles();
 		if (files == null)
 			return;
 		for (int i = 0; i < files.length; i++)
 		{
 			Map h = new HashMap();
 			String filename = files[i].getName();
-			if (filename.startsWith(cable_link_type) && !files[i].isDirectory())
+			if (filename.startsWith(cableLinkType) && !files[i].isDirectory())
 			{
 				try
 				{
@@ -2049,19 +2001,19 @@ public class DirectoryToFile
 							link.id = s[1];
 							h.put(link.id, link);
 						}
-						else if (s[0].equals("@cable_link_type_id"))
-							link.cable_link_type_id = s[1];
-						else if (s[0].equals("@source_port_id"))
-							link.source_port_id = s[1];
-						else if (s[0].equals("@target_port_id"))
-							link.target_port_id = s[1];
-						else if (s[0].equals("@optical_length"))
-							link.optical_length = Double.parseDouble(s[1]);
-						else if (s[0].equals("@physical_length"))
-							link.physical_length = Double.parseDouble(s[1]);
-						else if (s[0].equals("@cable_threads"))
+						else if (s[0].equals("@cableLinkTypeId"))
+							link.cableLinkTypeId = s[1];
+						else if (s[0].equals("@sourcePortId"))
+							link.sourcePortId = s[1];
+						else if (s[0].equals("@targetPortId"))
+							link.targetPortId = s[1];
+						else if (s[0].equals("@opticalLength"))
+							link.opticalLength = Double.parseDouble(s[1]);
+						else if (s[0].equals("@physicalLength"))
+							link.physicalLength = Double.parseDouble(s[1]);
+						else if (s[0].equals("@cableThreads"))
 						{
-							link.cable_threads = new ArrayList();
+							link.cableThreads = new ArrayList();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
@@ -2070,8 +2022,8 @@ public class DirectoryToFile
 								s = analyseString(isr.readASCIIString());
 								thread.name = s[0];
 								s = analyseString(isr.readASCIIString());
-								thread.link_type_id = s[0];
-								link.cable_threads.add(thread);
+								thread.linkTypeId = s[0];
+								link.cableThreads.add(thread);
 								s = analyseString(isr.readASCIIString());
 							}
 						}
@@ -2095,14 +2047,14 @@ public class DirectoryToFile
 
 	protected static void readDevices()
 	{
-		File[] files = new File(devices_dir).listFiles();
+		File[] files = new File(devicesDir).listFiles();
 		if (files == null)
 			return;
 		for (int i = 0; i < files.length; i++)
 		{
 			Map h = new HashMap();
 			String filename = files[i].getName();
-			if (filename.startsWith(eq_type) && !files[i].isDirectory())
+			if (filename.startsWith(eqType) && !files[i].isDirectory())
 			{
 				try
 				{
@@ -2173,14 +2125,14 @@ public class DirectoryToFile
 
 	protected static void readProtoElements()
 	{
-		File[] files = new File(proto_dir).listFiles();
+		File[] files = new File(protoDir).listFiles();
 		if (files == null)
 			return;
 		for (int i = 0; i < files.length; i++)
 		{
 			Map h = new HashMap();
 			String filename = files[i].getName();
-			if (filename.startsWith(proto_type) && !files[i].isDirectory())
+			if (filename.startsWith(protoType) && !files[i].isDirectory())
 			{
 				try
 				{
@@ -2204,8 +2156,8 @@ public class DirectoryToFile
 							proto.id = s[1];
 							h.put(proto.id, proto);
 						}
-						else if (s[0].equals("@equipment_type_id"))
-							proto.equipment_type_id = s[1];
+						else if (s[0].equals("@equipmentTypeId"))
+							proto.equipmentTypeId = s[1];
 						else if (s[0].equals("@devices"))
 						{
 							proto.devices = new ArrayList();
@@ -2234,11 +2186,11 @@ public class DirectoryToFile
 						}
 						else if (s[0].equals("@protoelements"))
 						{
-							proto.protoelement_ids = new ArrayList();
+							proto.protoelementIds = new ArrayList();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
-								proto.protoelement_ids.add(s[0]);
+								proto.protoelementIds.add(s[0]);
 								s = analyseString(isr.readASCIIString());
 							}
 						}
@@ -2271,30 +2223,30 @@ public class DirectoryToFile
 
 	protected static void readMapProto()
 	{
-/*		File[] files = new File(proto_dir).listFiles();
+		File[] files = new File(protoDir).listFiles();
 		if (files == null)
 			return;
 		for (int i = 0; i < files.length; i++)
 		{
 			Map h = new HashMap();
 			String filename = files[i].getName();
-			if (filename.startsWith(map_proto_name) && !files[i].isDirectory())
+			if (filename.startsWith(mapProto_name) && !files[i].isDirectory())
 			{
 				try
 				{
 					FileInputStream fis = new FileInputStream(files[i]);
 					IntelStreamReader isr = new IntelStreamReader(fis, "UTF-16");
 
-					if (!getType(isr).equals(SchemeProtoGroup.typ))
+					if (!getType(isr).equals(MapProtoElement.typ))
 						return;
 
-					SchemeProtoGroup mapproto = new SchemeProtoGroup();
+					MapProtoElement mapproto = new MapProtoElement();
 					h = new HashMap();
 					while (isr.ready())
 					{
 						String[] s = analyseString(isr.readASCIIString());
 						if (s[0].equals(""))
-							mapproto = new SchemeProtoGroup();
+							mapproto = new MapProtoElement();
 						else if (s[0].equals("@name"))
 							mapproto.name = s[1];
 						else if (s[0].equals("@id"))
@@ -2304,11 +2256,11 @@ public class DirectoryToFile
 						}
 						else if (s[0].equals("@description"))
 							mapproto.description = s[1];
-						else if (s[0].equals("@symbol_id"))
+						else if (s[0].equals("@symbolId"))
 						{
 							try
 							{
-								byte[] b = readVisualElement(proto_image_dir + mapproto.getId());
+								byte[] b = readVisualElement(protoImageDir + mapproto.getId());
 								ByteArrayInputStream bais = new ByteArrayInputStream(b);
 								ObjectInputStream in = new ObjectInputStream(bais);
 								ImageResource imr = null;
@@ -2323,31 +2275,31 @@ public class DirectoryToFile
 
 							mapproto.setImageID(s[1]);
 						}
-						else if (s[0].equals("@pe_class"))
-							mapproto.pe_class = s[1];
-						else if (s[0].equals("@pe_is_kis"))
-							mapproto.pe_is_kis = Boolean.valueOf(s[1]).booleanValue();
+						else if (s[0].equals("@peClass"))
+							mapproto.peClass = s[1];
+						else if (s[0].equals("@peIs_kis"))
+							mapproto.peIs_kis = Boolean.valueOf(s[1]).booleanValue();
 						else if (s[0].equals("@is_visual"))
 							mapproto.is_visual = Boolean.valueOf(s[1]).booleanValue();
-						else if (s[0].equals("@is_topological"))
-							mapproto.is_topological = Boolean.valueOf(s[1]).booleanValue();
+						else if (s[0].equals("@isTopological"))
+							mapproto.isTopological = Boolean.valueOf(s[1]).booleanValue();
 
 						else if (s[0].equals("@protoelements"))
 						{
-							mapproto.pe_ids = new Vector();
+							mapproto.peIds = new Vector();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
-								mapproto.pe_ids.add(s[0]);
+								mapproto.peIds.add(s[0]);
 								s = analyseString(isr.readASCIIString());
 							}
 						}
 					}
 					isr.close();
 					fis.close();
-					Map old = Pool.getMap(SchemeProtoGroup.typ);
+					Map old = Pool.getMap(MapProtoElement.typ);
 					if (old == null)
-						Pool.putMap(SchemeProtoGroup.typ, h);
+						Pool.putMap(MapProtoElement.typ, h);
 					else
 						old.putAll(h);
 				}
@@ -2357,35 +2309,35 @@ public class DirectoryToFile
 					return;
 				}
 			}
-		}*/
+		}
 	}
 
-	protected static void readSchemeProtoGroups()
+	protected static void readMapProtoGroups()
 	{
-		File[] files = new File(proto_dir).listFiles();
+		File[] files = new File(protoDir).listFiles();
 		if (files == null)
 			return;
 		for (int i = 0; i < files.length; i++)
 		{
 			Map h = new HashMap();
 			String filename = files[i].getName();
-			if (filename.startsWith(map_proto_group_name) && !files[i].isDirectory())
+			if (filename.startsWith(mapProto_group_name) && !files[i].isDirectory())
 			{
 				try
 				{
 					FileInputStream fis = new FileInputStream(files[i]);
 					IntelStreamReader isr = new IntelStreamReader(fis, "UTF-16");
 
-					if (!getType(isr).equals(SchemeProtoGroup.typ))
+					if (!getType(isr).equals(MapProtoGroup.typ))
 						return;
 
-					SchemeProtoGroup mapproto = new SchemeProtoGroup();
+					MapProtoGroup mapproto = new MapProtoGroup();
 					h = new HashMap();
 					while (isr.ready())
 					{
 						String[] s = analyseString(isr.readASCIIString());
 						if (s[0].equals(""))
-							mapproto = new SchemeProtoGroup();
+							mapproto = new MapProtoGroup();
 						else if (s[0].equals("@name"))
 							mapproto.name = s[1];
 						else if (s[0].equals("@id"))
@@ -2393,33 +2345,34 @@ public class DirectoryToFile
 							mapproto.id = s[1];
 							h.put(mapproto.id, mapproto);
 						}
-						else if (s[0].equals("@parent_id"))
-							mapproto.parent_id = s[1];
+						else if (s[0].equals("@parentId"))
+							mapproto.parentId = s[1];
 						else if (s[0].equals("@groups"))
 						{
-							mapproto.group_ids = new Vector();
+							mapproto.groupIds = new Vector();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
-								mapproto.group_ids.add(s[0]);
+								mapproto.groupIds.add(s[0]);
 								s = analyseString(isr.readASCIIString());
 							}
 						}
 						else if (s[0].equals("@mapprotos"))
 						{
+							mapproto.mapprotoIds = new Vector();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
-								mapproto.getProtoIds().add(s[0]);
+								mapproto.mapprotoIds.add(s[0]);
 								s = analyseString(isr.readASCIIString());
 							}
 						}
 					}
 					isr.close();
 					fis.close();
-					Map old = Pool.getMap(SchemeProtoGroup.typ);
+					Map old = Pool.getMap(MapProtoGroup.typ);
 					if (old == null)
-						Pool.putMap(SchemeProtoGroup.typ, h);
+						Pool.putMap(MapProtoGroup.typ, h);
 					else
 						old.putAll(h);
 				}
@@ -2434,7 +2387,7 @@ public class DirectoryToFile
 
 	protected static void readScheme()
 	{
-		File[] files = new File(scheme_dir).listFiles();
+		File[] files = new File(schemeDir).listFiles();
 		if (files == null)
 			return;
 		for (int i = 0; i < files.length; i++)
@@ -2467,14 +2420,16 @@ public class DirectoryToFile
 						}
 						else if (s[0].equals("@created"))
 							scheme.created = Long.parseLong(s[1]);
-						else if (s[0].equals("@created_by"))
-							scheme.created_by = s[1];
+						else if (s[0].equals("@createdBy"))
+							scheme.createdBy = s[1];
 						else if (s[0].equals("@description"))
 							scheme.description = s[1];
-						else if (s[0].equals("@domain_id"))
-							scheme.domain_id = s[1];
-						else if (s[0].equals("@owner_id"))
-							scheme.owner_id = s[1];
+						else if (s[0].equals("@domainId"))
+							scheme.domainId = s[1];
+						else if (s[0].equals("@ownerId"))
+							scheme.ownerId = s[1];
+						else if (s[0].equals("@solution"))
+							scheme.solution = (SolutionCompact)Pool.get(SolutionCompact.typ, s[1]);
 						else if (s[0].equals("@cablelinks"))
 						{
 							scheme.cablelinks = new ArrayList();
@@ -2516,19 +2471,19 @@ public class DirectoryToFile
 								s = analyseString(isr.readASCIIString());
 							}
 						}
-						else if (s[0].equals("@paths"))
-						{
-							scheme.paths = new ArrayList();
-							s = analyseString(isr.readASCIIString());
-							while (!s[0].startsWith("@end"))
-							{
-								SchemePath path = (SchemePath)Pool.get(SchemePath.typ, s[0]);
-								if (path == null)
-									System.out.println("Error while reading scheme " + scheme.getId() + ". Path " + s[0]+ " not found ");
-								scheme.paths.add(path);
-								s = analyseString(isr.readASCIIString());
-							}
-						}
+//						else if (s[0].equals("@paths"))
+//						{
+//							scheme.paths = new ArrayList();
+//							s = analyseString(isr.readASCIIString());
+//							while (!s[0].startsWith("@end"))
+//							{
+//								SchemePath path = (SchemePath)Pool.get(SchemePath.typ, s[0]);
+//								if (path == null)
+//									System.out.println("Error while reading scheme " + scheme.getId() + ". Path " + s[0]+ " not found ");
+//								scheme.paths.add(path);
+//								s = analyseString(isr.readASCIIString());
+//							}
+//						}
 						else if (s[0].equals("@clones"))
 						{
 							scheme.clones = new HashMap();
@@ -2543,8 +2498,8 @@ public class DirectoryToFile
 							scheme.width = Integer.parseInt(s[1]);
 						else if (s[0].equals("@height"))
 							scheme.height = Integer.parseInt(s[1]);
-						else if (s[0].equals("@scheme_type"))
-							scheme.scheme_type = s[1];
+						else if (s[0].equals("@schemeType"))
+							scheme.schemeType = s[1];
 						else if (s[0].equals("@schemecell"))
 						{
 							scheme.schemecell = readVisualElement(s[1]);
@@ -2573,14 +2528,14 @@ public class DirectoryToFile
 
 	protected static void readSchemeElements()
 	{
-		File[] files = new File(scheme_dir).listFiles();
+		File[] files = new File(schemeDir).listFiles();
 		if (files == null)
 			return;
 		for (int i = 0; i < files.length; i++)
 		{
 			Map h = new HashMap();
 			String filename = files[i].getName();
-			if (filename.startsWith(scheme_element_name) && !files[i].isDirectory())
+			if (filename.startsWith(schemeElement_name) && !files[i].isDirectory())
 			{
 				try
 				{
@@ -2604,10 +2559,10 @@ public class DirectoryToFile
 							se.id = s[1];
 							h.put(se.id, se);
 						}
-						else if (s[0].equals("@equipment_id"))
-							se.equipment_id = s[1];
-						else if (s[0].equals("@proto_element_id"))
-							se.proto_element_id = s[1];
+						else if (s[0].equals("@equipmentId"))
+							se.equipmentId = s[1];
+						else if (s[0].equals("@protoElementId"))
+							se.protoElementId = s[1];
 
 						else if (s[0].equals("@devices"))
 						{
@@ -2624,11 +2579,11 @@ public class DirectoryToFile
 						}
 						else if (s[0].equals("@elements"))
 						{
-							se.element_ids = new ArrayList();
+							se.elementIds = new ArrayList();
 							s = analyseString(isr.readASCIIString());
 							while (!s[0].startsWith("@end"))
 							{
-								se.element_ids.add(s[0]);
+								se.elementIds.add(s[0]);
 								s = analyseString(isr.readASCIIString());
 							}
 						}
@@ -2673,14 +2628,14 @@ public class DirectoryToFile
 
 	protected static void readSchemePaths()
 	{
-		File[] files = new File(scheme_dir).listFiles();
+		File[] files = new File(schemeDir).listFiles();
 		if (files == null)
 			return;
 		for (int i = 0; i < files.length; i++)
 		{
 			Map h = new HashMap();
 			String filename = files[i].getName();
-			if (filename.startsWith(scheme_path_name) && !files[i].isDirectory())
+			if (filename.startsWith(schemePath_name) && !files[i].isDirectory())
 			{
 				try
 				{
@@ -2704,12 +2659,12 @@ public class DirectoryToFile
 							path.id = s[1];
 							h.put(path.id, path);
 						}
-						else if (s[0].equals("@start_device_id"))
-							path.start_device_id = s[1];
-						else if (s[0].equals("@end_device_id"))
-							path.end_device_id = s[1];
-						else if (s[0].equals("@type_id"))
-							path.type_id = s[1];
+						else if (s[0].equals("@startDeviceId"))
+							path.startDeviceId = s[1];
+						else if (s[0].equals("@endDeviceId"))
+							path.endDeviceId = s[1];
+						else if (s[0].equals("@typeId"))
+							path.typeId = s[1];
 						else if (s[0].equals("@pathelements"))
 						{
 							path.links = new ArrayList();
@@ -2719,15 +2674,15 @@ public class DirectoryToFile
 								PathElement pe = new PathElement();
 								pe.n = Integer.parseInt(s[0]);
 								s = analyseString(isr.readASCIIString());
-								pe.setType(Integer.valueOf(s[0]).intValue());
+								pe.isCable = Boolean.valueOf(s[0]).booleanValue();
 								s = analyseString(isr.readASCIIString());
-								pe.setObject(pe.getType(), s[0]);
+								pe.linkId = s[0];
 								s = analyseString(isr.readASCIIString());
-								pe.thread_id = s[0];
+								pe.threadId = s[0];
 								s = analyseString(isr.readASCIIString());
-//								pe.start_port_id = s[0];
+//								pe.startPortId = s[0];
 								s = analyseString(isr.readASCIIString());
-//								pe.end_port_id = s[0];
+//								pe.endPortId = s[0];
 								path.links.add(pe);
 								s = analyseString(isr.readASCIIString());
 							}
@@ -2789,3 +2744,4 @@ public class DirectoryToFile
 	}
 }
 
+*/

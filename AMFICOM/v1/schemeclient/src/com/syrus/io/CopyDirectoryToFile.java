@@ -1,10 +1,11 @@
-package com.syrus.io;
+/*package com.syrus.io;
 
 import java.io.*;
 import java.util.*;
 
 import com.syrus.AMFICOM.Client.Resource.*;
 import com.syrus.AMFICOM.Client.Resource.ISMDirectory.AccessPortType;
+import com.syrus.AMFICOM.Client.Resource.Map.MapProtoElement;
 import com.syrus.AMFICOM.Client.Resource.Network.Characteristic;
 import com.syrus.AMFICOM.Client.Resource.NetworkDirectory.*;
 import com.syrus.AMFICOM.Client.Resource.Scheme.*;
@@ -1055,7 +1056,7 @@ public class CopyDirectoryToFile
 
 	protected static void readMapProto(DataSourceInterface dataSource)
 	{
-	/*	File[] files = new File(proto_dir).listFiles();
+		File[] files = new File(proto_dir).listFiles();
 		if (files == null)
 			return;
 		for (int i = 0; i < files.length; i++)
@@ -1069,16 +1070,16 @@ public class CopyDirectoryToFile
 					FileInputStream fis = new FileInputStream(files[i]);
 					IntelStreamReader isr = new IntelStreamReader(fis, "UTF-16");
 
-					if (!getType(isr).equals(SchemeProtoGroup.typ))
+					if (!getType(isr).equals(MapProtoElement.typ))
 						return;
 
-					SchemeProtoGroup mapproto = new SchemeProtoGroup();
+					MapProtoElement mapproto = new MapProtoElement();
 					h = new HashMap();
 					while (isr.ready())
 					{
 						String[] s = analyseString(isr.readASCIIString());
 						if (s[0].equals(""))
-							mapproto = new SchemeProtoGroup();
+							mapproto = new MapProtoElement();
 						else if (s[0].equals("@name"))
 							mapproto.name = s[1];
 						else if (s[0].equals("@id"))
@@ -1086,7 +1087,7 @@ public class CopyDirectoryToFile
 							String new_id = (String)Pool.get("cl_ids", s[1]);
 							if (new_id == null)
 							{
-								new_id = dataSource.GetUId(SchemeProtoGroup.typ);
+								new_id = dataSource.GetUId(MapProtoElement.typ);
 								Pool.put("cl_ids", s[1], new_id);
 							}
 							mapproto.id = new_id;
@@ -1117,9 +1118,9 @@ public class CopyDirectoryToFile
 					}
 					isr.close();
 					fis.close();
-					Map old = Pool.getMap(SchemeProtoGroup.typ);
+					Map old = Pool.getMap(MapProtoElement.typ);
 					if (old == null)
-						Pool.putMap(SchemeProtoGroup.typ, h);
+						Pool.putMap(MapProtoElement.typ, h);
 					else
 						old.putAll(h);
 				}
@@ -1129,7 +1130,7 @@ public class CopyDirectoryToFile
 					return;
 				}
 			}
-		}*/
+		}
 	}
 
 	protected static void readScheme(DataSourceInterface dataSource)
@@ -1181,6 +1182,8 @@ public class CopyDirectoryToFile
 							scheme.domain_id = s[1];
 						else if (s[0].equals("@owner_id"))
 							scheme.owner_id = s[1];
+						else if (s[0].equals("@solution"))
+							scheme.solution = (SolutionCompact)Pool.get(SolutionCompact.typ, s[1]);
 						else if (s[0].equals("@cablelinks"))
 						{
 							scheme.cablelinks = new Vector();
@@ -1201,16 +1204,16 @@ public class CopyDirectoryToFile
 								s = analyseString(isr.readASCIIString());
 							}
 						}
-						else if (s[0].equals("@paths"))
-						{
-							scheme.paths = new ArrayList();
-							s = analyseString(isr.readASCIIString());
-							while (!s[0].startsWith("@end"))
-							{
-								scheme.paths.add((SchemePath)Pool.get(SchemePath.typ, s[0]));
-								s = analyseString(isr.readASCIIString());
-							}
-						}
+//						else if (s[0].equals("@paths"))
+//						{
+//							scheme.paths = new ArrayList();
+//							s = analyseString(isr.readASCIIString());
+//							while (!s[0].startsWith("@end"))
+//							{
+//								scheme.paths.add((SchemePath)Pool.get(SchemePath.typ, s[0]));
+//								s = analyseString(isr.readASCIIString());
+//							}
+//						}
 						else if (s[0].equals("@schemecell"))
 						{
 							scheme.schemecell = readVisualElement(s[1]);
@@ -1310,7 +1313,7 @@ public class CopyDirectoryToFile
 /*						else if (s[0].equals("@schemecell"))
 						{
 							se.schemecell = readVisualElement(s[1]);
-						}*/
+						}/
 					}
 					isr.close();
 					fis.close();
@@ -1383,9 +1386,9 @@ public class CopyDirectoryToFile
 								PathElement pe = new PathElement();
 								pe.n = Integer.parseInt(s[0]);
 								s = analyseString(isr.readASCIIString());
-								pe.setType(Integer.valueOf(s[0]).intValue());
+								pe.is_cable = Boolean.valueOf(s[0]).booleanValue();
 								s = analyseString(isr.readASCIIString());
-								pe.setObject(pe.getType(), s[0]);
+								pe.link_id = s[0];
 								s = analyseString(isr.readASCIIString());
 								pe.thread_id = s[0];
 								path.links.add(pe);
@@ -1449,3 +1452,4 @@ public class CopyDirectoryToFile
 	}
 }
 
+*/
