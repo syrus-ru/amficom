@@ -14,6 +14,11 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.administration.corba.Domain_Transferable;
 
 public class Domain extends DomainMember {
+	private String name;
+	private String description;
+	private Identifier owner_id;
+	private ArrayList domain_ids;
+	
 
 	public Domain() {
 	}
