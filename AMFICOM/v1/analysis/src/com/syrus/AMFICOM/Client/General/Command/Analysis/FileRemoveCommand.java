@@ -6,15 +6,12 @@ import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.io.BellcoreStructure;
 
 public class FileRemoveCommand extends VoidCommand
 {
 	private Dispatcher dispatcher;
 	private String activeRefId;
-	private BellcoreStructure bs;
 	private ApplicationContext aContext;
-	private Checker checker;
 
 	public FileRemoveCommand(Dispatcher dispatcher, String activeRefId,
 													 ApplicationContext aContext)
@@ -47,10 +44,7 @@ public class FileRemoveCommand extends VoidCommand
 	{
 		try
 		{
-			this.checker = new Checker(this.aContext.getSessionInterface());
-		/*
-			The code for administrating should be placed here
-		*/
+			new Checker(this.aContext.getSessionInterface());
 		}
 		catch (NullPointerException ex)
 		{
@@ -58,11 +52,8 @@ public class FileRemoveCommand extends VoidCommand
 			return;
 		}
 
-
-		bs = Heap.getAnyBSTraceByKey(activeRefId);
 		if (!activeRefId.equals(AnalysisUtil.ETALON))
 			Heap.removeAnyBSByName(activeRefId); // XXX: was Pool.remove(bs);
-		bs = null;
 		dispatcher.notify(new RefChangeEvent(activeRefId, RefChangeEvent.CLOSE_EVENT));
 		dispatcher.notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE, RefChangeEvent.SELECT_EVENT));
 	}

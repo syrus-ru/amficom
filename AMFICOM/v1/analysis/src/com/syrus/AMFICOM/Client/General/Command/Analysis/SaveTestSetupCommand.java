@@ -20,26 +20,24 @@ public class SaveTestSetupCommand extends VoidCommand
 	public static final long ETALON = 0x00000002;
 	public static final long THRESHOLDS = 0x00000004;
 
-	ApplicationContext aContext;
-	String traceid;
+	private ApplicationContext aContext;
 
-	long type;
+	private long type;
 
-	public SaveTestSetupCommand(ApplicationContext aContext, String id, long type)
+	public SaveTestSetupCommand(ApplicationContext aContext, long type)
 	{
 		this.aContext = aContext;
-		this.traceid = id;
 		this.type = type;
 	}
 
 	public Object clone()
 	{
-		return new SaveTestSetupCommand(aContext, traceid, type);
+		return new SaveTestSetupCommand(aContext, type);
 	}
 
 	public void execute()
 	{
-		BellcoreStructure bs = Heap.getAnyBSTraceByKey(traceid);
+		BellcoreStructure bs = Heap.getBSPrimaryTrace();
 		if (bs == null)
 		{
 			JOptionPane.showMessageDialog(
@@ -83,7 +81,7 @@ public class SaveTestSetupCommand extends VoidCommand
 
 		if ((type & ETALON) != 0 || (type & THRESHOLDS) != 0)
 		{
-			ModelTraceManager mtm = Heap.getMTMByKey(traceid);
+			ModelTraceManager mtm = Heap.getMTMByKey(Heap.PRIMARY_TRACE_KEY);
 			if (mtm == null)
 			{
 				JOptionPane.showMessageDialog(

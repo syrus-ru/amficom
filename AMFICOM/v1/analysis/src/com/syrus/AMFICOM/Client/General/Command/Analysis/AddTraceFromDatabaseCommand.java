@@ -15,8 +15,8 @@ import com.syrus.io.*;
 
 public class AddTraceFromDatabaseCommand extends VoidCommand
 {
-	Dispatcher dispatcher;
-	ApplicationContext aContext;
+	private Dispatcher dispatcher;
+	private ApplicationContext aContext;
 	private Checker checker;
 
 

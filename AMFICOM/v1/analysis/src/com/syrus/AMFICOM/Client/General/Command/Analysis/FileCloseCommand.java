@@ -10,8 +10,6 @@ public class FileCloseCommand extends VoidCommand
 {
 	private Dispatcher dispatcher;
 	private ApplicationContext aContext;
-	private Checker checker;
-
 
 	public FileCloseCommand(Dispatcher dispatcher, ApplicationContext aContext)
 	{
@@ -40,10 +38,7 @@ public class FileCloseCommand extends VoidCommand
 		if(false) // FIXME: security bypass??
 		try
 		{
-			this.checker = new Checker(this.aContext.getSessionInterface());
-		/*
-			The code for administrating should be placed here
-		*/
+			new Checker(this.aContext.getSessionInterface());
 		}
 		catch (NullPointerException ex)
 		{

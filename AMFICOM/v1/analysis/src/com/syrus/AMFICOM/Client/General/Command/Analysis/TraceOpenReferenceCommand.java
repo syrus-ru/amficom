@@ -16,9 +16,7 @@ import com.syrus.io.*;
 public class TraceOpenReferenceCommand extends VoidCommand
 {
 	private Dispatcher dispatcher;
-	private BellcoreStructure bs;
 	private ApplicationContext aContext;
-	private Checker checker;
 	private String propertiesFileName = "analysis.properties";
 
 	public TraceOpenReferenceCommand(Dispatcher dispatcher, ApplicationContext aContext)
@@ -47,7 +45,7 @@ public class TraceOpenReferenceCommand extends VoidCommand
 	{
 		try
 		{
-			this.checker = new Checker(this.aContext.getSessionInterface());
+			Checker checker = new Checker(this.aContext.getSessionInterface());
 			if(!checker.checkCommand(Checker.loadReferenceTrace))
 			{
 				return;
@@ -77,6 +75,7 @@ public class TraceOpenReferenceCommand extends VoidCommand
 		{
 			String id = chooser.getSelectedFile().getAbsolutePath().toLowerCase();
 			TraceReader tr = new TraceReader();
+			BellcoreStructure bs;
 			bs = tr.getData(chooser.getSelectedFile());
 			if (bs == null)
 			{

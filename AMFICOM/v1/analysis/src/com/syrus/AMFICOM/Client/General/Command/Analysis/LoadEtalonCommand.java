@@ -6,7 +6,6 @@ import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.measurement.*;
@@ -14,7 +13,7 @@ import com.syrus.io.BellcoreStructure;
 
 public class LoadEtalonCommand extends VoidCommand
 {
-	ApplicationContext aContext;
+	private ApplicationContext aContext;
 
 	public LoadEtalonCommand(ApplicationContext aContext)
 	{

@@ -11,13 +11,6 @@ import com.syrus.AMFICOM.analysis.dadara.*;
 import com.syrus.io.BellcoreStructure;
 
 public class InitialAnalysisCommand extends VoidCommand {
-	private static final String OT_analysisparameters = "analysisparameters";
-	private static final String OID_minuitanalysis = "minuitanalysis";
-	private static final String OID_minuitinitials = "minuitinitials";
-	private static final String OID_minuitdefaults = "minuitdefaults";
-
-	public InitialAnalysisCommand() {
-	}
 
 	public void execute()
 	{

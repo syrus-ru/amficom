@@ -249,13 +249,13 @@ public class ThresholdsMainFrame extends JFrame
 		aModel.setCommand("menuFileAddCompare",new FileAddCommand(internal_dispatcher, aContext));
 		aModel.setCommand("menuFileRemoveCompare", new FileRemoveCommand(internal_dispatcher, null, aContext));
 
-		aModel.setCommand("menuAnalyseUpload", new SaveAnalysisCommand(internal_dispatcher, aContext, RefUpdateEvent.PRIMARY_TRACE));
-		aModel.setCommand("menuSaveTestSetup", new SaveTestSetupCommand(aContext, RefUpdateEvent.PRIMARY_TRACE,
+		aModel.setCommand("menuAnalyseUpload", new SaveAnalysisCommand(aContext));
+		aModel.setCommand("menuSaveTestSetup", new SaveTestSetupCommand(aContext,
 				SaveTestSetupCommand.CRITERIA + SaveTestSetupCommand.ETALON + SaveTestSetupCommand.THRESHOLDS));
-		aModel.setCommand("menuSaveTestSetupAs", new SaveTestSetupAsCommand(aContext, RefUpdateEvent.PRIMARY_TRACE,
+		aModel.setCommand("menuSaveTestSetupAs", new SaveTestSetupAsCommand(aContext,
 				SaveTestSetupCommand.CRITERIA + SaveTestSetupCommand.ETALON + SaveTestSetupCommand.THRESHOLDS));
-		aModel.setCommand("menuCreateTestSetup", new CreateTestSetupCommand(aContext, RefUpdateEvent.PRIMARY_TRACE));
-		aModel.setCommand("menuLoadTestSetup", new LoadTestSetupCommand(aContext, RefUpdateEvent.PRIMARY_TRACE));
+		aModel.setCommand("menuCreateTestSetup", new CreateTestSetupCommand(aContext));
+		aModel.setCommand("menuLoadTestSetup", new LoadTestSetupCommand(aContext));
 
 		aModel.setCommand("menuTraceDownload", new LoadTraceFromDatabaseCommand(internal_dispatcher, aContext));
 		aModel.setCommand("menuTraceDownloadEtalon", new LoadEtalonCommand(aContext));

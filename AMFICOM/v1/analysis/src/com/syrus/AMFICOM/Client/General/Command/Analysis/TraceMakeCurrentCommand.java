@@ -10,10 +10,7 @@ import com.syrus.io.BellcoreStructure;
 public class TraceMakeCurrentCommand extends VoidCommand
 {
 	private Dispatcher dispatcher;
-	private BellcoreStructure bs;
 	private ApplicationContext aContext;
-	private Checker checker;
-
 
 	public TraceMakeCurrentCommand(Dispatcher dispatcher, ApplicationContext aContext)
 	{
@@ -41,10 +38,7 @@ public class TraceMakeCurrentCommand extends VoidCommand
 	{
 		try
 		{
-			this.checker = new Checker(this.aContext.getSessionInterface());
-		/*
-			The code for administrating should be placed here
-		*/
+			new Checker(this.aContext.getSessionInterface());
 		}
 		catch (NullPointerException ex)
 		{
@@ -52,7 +46,7 @@ public class TraceMakeCurrentCommand extends VoidCommand
 			return;
 		}
 
-		bs = Heap.getBSReferenceTrace();
+		BellcoreStructure bs = Heap.getBSReferenceTrace();
 		new FileRemoveCommand(dispatcher, Heap.REFERENCE_TRACE_KEY, aContext).execute();
 		new FileRemoveCommand(dispatcher, RefUpdateEvent.PRIMARY_TRACE, aContext).execute();
 		Heap.setBSPrimaryTrace(bs);

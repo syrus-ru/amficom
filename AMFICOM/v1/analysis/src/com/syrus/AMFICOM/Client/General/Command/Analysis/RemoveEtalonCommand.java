@@ -7,7 +7,7 @@ import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 
 public class RemoveEtalonCommand extends VoidCommand
 {
-	ApplicationContext aContext;
+	private ApplicationContext aContext;
 
 	public RemoveEtalonCommand(ApplicationContext aContext)
 	{

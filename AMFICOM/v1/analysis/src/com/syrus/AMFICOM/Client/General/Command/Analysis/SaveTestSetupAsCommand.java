@@ -17,26 +17,23 @@ import com.syrus.io.BellcoreStructure;
 
 public class SaveTestSetupAsCommand extends VoidCommand
 {
-	ApplicationContext aContext;
-	String traceid;
+	private ApplicationContext aContext;
+	private long type;
 
-	long type;
-
-	public SaveTestSetupAsCommand(ApplicationContext aContext, String id, long type)
+	public SaveTestSetupAsCommand(ApplicationContext aContext, long type)
 	{
 		this.aContext = aContext;
-		this.traceid = id;
 		this.type = type;
 	}
 
 	public Object clone()
 	{
-		return new SaveTestSetupAsCommand(aContext, traceid, type);
+		return new SaveTestSetupAsCommand(aContext, type);
 	}
 
 	public void execute()
 	{
-		BellcoreStructure bs = Heap.getAnyBSTraceByKey(traceid);
+		BellcoreStructure bs = Heap.getBSPrimaryTrace();
 		if (bs == null)
 		{
 			JOptionPane.showMessageDialog(
@@ -66,7 +63,7 @@ public class SaveTestSetupAsCommand extends VoidCommand
 
 		if (((type & SaveTestSetupCommand.ETALON) != 0 ||
 				 (type & SaveTestSetupCommand.THRESHOLDS) != 0) &&
-				 !Heap.hasEventParamsForTrace(traceid))
+				 !Heap.hasEventParamsForPrimaryTrace())
 		{
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
@@ -75,14 +72,14 @@ public class SaveTestSetupAsCommand extends VoidCommand
 			return;
 		}
 
-		CreateTestSetupCommand command = new CreateTestSetupCommand(aContext, RefUpdateEvent.PRIMARY_TRACE);
+		CreateTestSetupCommand command = new CreateTestSetupCommand(aContext);
 		command.execute();
 		MeasurementSetup newms = Heap.getContextMeasurementSetup();
 		if (newms == null)
 			return;
 
 		Identifier userId = new Identifier(((RISDSessionInfo)aContext.getSessionInterface()).getAccessIdentifier().user_id);
-		ModelTraceManager mtm = Heap.getMTMByKey(traceid);
+		ModelTraceManager mtm = Heap.getMTMByKey(Heap.PRIMARY_TRACE_KEY);
 		newms.setCriteriaSet(AnalysisUtil.createCriteriaSetFromParams(
 				userId,
 				newms.getMonitoredElementIds()));
@@ -99,7 +96,7 @@ public class SaveTestSetupAsCommand extends VoidCommand
 					mtm));
 		}
 
-		new SaveTestSetupCommand(aContext, traceid, type).execute();
+		new SaveTestSetupCommand(aContext, type).execute();
 
 		aContext.getDispatcher().notify(new RefChangeEvent(RefUpdateEvent.PRIMARY_TRACE,
 				RefChangeEvent.THRESHOLDS_CALC_EVENT));

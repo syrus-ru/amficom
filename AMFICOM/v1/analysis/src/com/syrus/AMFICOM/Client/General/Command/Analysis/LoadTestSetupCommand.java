@@ -16,23 +16,21 @@ import com.syrus.io.BellcoreStructure;
 
 public class LoadTestSetupCommand extends VoidCommand
 {
-	ApplicationContext aContext;
-	String traceid;
+	private ApplicationContext aContext;
 
-	public LoadTestSetupCommand(ApplicationContext aContext, String id)
+	public LoadTestSetupCommand(ApplicationContext aContext)
 	{
 		this.aContext = aContext;
-		this.traceid = id;
 	}
 
 	public Object clone()
 	{
-		return new LoadTestSetupCommand(aContext, traceid);
+		return new LoadTestSetupCommand(aContext);
 	}
 
 	public void execute()
 	{
-		BellcoreStructure bs = Heap.getAnyBSTraceByKey(traceid);
+		BellcoreStructure bs = Heap.getBSPrimaryTrace();
 		if (bs == null || bs.monitoredElementId == null)
 		{
 			JOptionPane.showMessageDialog(

@@ -18,9 +18,7 @@ import com.syrus.io.*;
 public class FileOpenAsBellcoreCommand extends VoidCommand
 {
 	private Dispatcher dispatcher;
-	private BellcoreStructure bs;
 	private ApplicationContext aContext;
-	private Checker checker;
 	private String propertiesFileName = "analysis.properties";
 
 	public FileOpenAsBellcoreCommand(Dispatcher dispatcher, ApplicationContext aContext)
@@ -49,7 +47,7 @@ public class FileOpenAsBellcoreCommand extends VoidCommand
 	{
 		try
 		{
-			this.checker = new Checker(this.aContext.getSessionInterface());
+			Checker checker = new Checker(this.aContext.getSessionInterface());
 			if(!checker.checkCommand(Checker.openReflectogrammFile))
 			{
 				return;
@@ -81,7 +79,7 @@ public class FileOpenAsBellcoreCommand extends VoidCommand
 		{
 			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 			BellcoreReader br = new BellcoreReader();
-			bs = br.getData(chooser.getSelectedFile());
+			BellcoreStructure bs = br.getData(chooser.getSelectedFile());
 			if (bs == null)
 			{
 				JOptionPane.showMessageDialog (Environment.getActiveWindow(),

@@ -6,7 +6,6 @@ import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.analysis.dadara.*;
@@ -17,29 +16,21 @@ import com.syrus.io.*;
 
 public class SaveAnalysisCommand extends VoidCommand
 {
-	private Dispatcher dispatcher;
-	ApplicationContext aContext;
-	String traceid;
+	private ApplicationContext aContext;
 
-	public SaveAnalysisCommand()
+	public SaveAnalysisCommand(ApplicationContext aContext)
 	{
-	}
-
-	public SaveAnalysisCommand(Dispatcher dispatcher, ApplicationContext aContext, String id)
-	{
-		this.dispatcher = dispatcher;
 		this.aContext = aContext;
-		this.traceid = id;
 	}
 
 	public Object clone()
 	{
-		return new SaveAnalysisCommand(dispatcher, aContext, traceid);
+		return new SaveAnalysisCommand(aContext);
 	}
 
 	public void execute()
 	{
-		BellcoreStructure bs = Heap.getAnyBSTraceByKey(traceid);
+		BellcoreStructure bs = Heap.getBSPrimaryTrace();
 		if (bs.monitoredElementId == null)
 		{
 			JOptionPane.showMessageDialog(
@@ -57,8 +48,8 @@ public class SaveAnalysisCommand extends VoidCommand
 			return;
 		}
 
-		RefAnalysis refanalysis = Heap.getRefAnalysisByKey(traceid);
-		ModelTraceManager mtm = Heap.getMTMByKey(traceid);
+		RefAnalysis refanalysis = Heap.getRefAnalysisByKey(Heap.PRIMARY_TRACE_KEY);
+		ModelTraceManager mtm = Heap.getMTMByKey(Heap.PRIMARY_TRACE_KEY);
 
 		Measurement m = null;
 		try

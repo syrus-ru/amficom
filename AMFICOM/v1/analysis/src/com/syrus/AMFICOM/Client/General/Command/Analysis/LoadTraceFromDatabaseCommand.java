@@ -18,9 +18,8 @@ import com.syrus.io.*;
 
 public class LoadTraceFromDatabaseCommand extends VoidCommand
 {
-	Dispatcher dispatcher;
-	ApplicationContext aContext;
-	private Checker checker;
+	private Dispatcher dispatcher;
+	private ApplicationContext aContext;
 
 	public LoadTraceFromDatabaseCommand(Dispatcher dispatcher, ApplicationContext aContext)
 	{
@@ -56,7 +55,7 @@ public class LoadTraceFromDatabaseCommand extends VoidCommand
 	{
 		try
 		{
-			this.checker = new Checker(this.aContext.getSessionInterface());
+			Checker checker = new Checker(this.aContext.getSessionInterface());
 			if(!checker.checkCommand(Checker.loadReflectogrammFromDB))
 			{
 				return;

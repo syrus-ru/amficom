@@ -375,7 +375,7 @@ public class AnalysisSelectionFrame extends ATableFrame
 		minuitParams[7] = ((Integer)getDoubleValueAt(jTable.getValueAt(7, 1), 7)).doubleValue();
 
 		Heap.setMinuitAnalysisParams(minuitParams);
-		new MinuitAnalyseCommand(dispatcher, RefUpdateEvent.PRIMARY_TRACE, aContext).execute();
+		new MinuitAnalyseCommand(dispatcher, aContext).execute();
 		dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE, RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
 		dispatcher.notify(new RefUpdateEvent(RefUpdateEvent.PRIMARY_TRACE, RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
 		if (this.selectedEventId != null) {

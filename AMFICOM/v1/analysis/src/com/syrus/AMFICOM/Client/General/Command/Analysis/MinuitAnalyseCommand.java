@@ -18,18 +18,11 @@ import com.syrus.io.BellcoreStructure;
 public class MinuitAnalyseCommand extends VoidCommand
 {
 	private Dispatcher dispatcher;
-	private String id;
 	private ApplicationContext aContext;
-	private static final String OT_analysisparameters = "analysisparameters";
-	private static final String OID_minuitanalysis = "minuitanalysis";
-	private static final String OID_minuitinitials = "minuitinitials";
-	private static final String OID_minuitdefaults = "minuitdefaults";
 
-	public MinuitAnalyseCommand(Dispatcher dispatcher, String id,
-															ApplicationContext aContext)
+	public MinuitAnalyseCommand(Dispatcher dispatcher, ApplicationContext aContext)
 	{
 		this.dispatcher = dispatcher;
-		this.id = id;
 		this.aContext = aContext;
 	}
 
@@ -49,13 +42,13 @@ public class MinuitAnalyseCommand extends VoidCommand
 
 	public Object clone()
 	{
-		return new MinuitAnalyseCommand(dispatcher, id, aContext);
+		return new MinuitAnalyseCommand(dispatcher, aContext);
 	}
 
 	public void execute()
 	{
 		long t0 = System.currentTimeMillis();
-		BellcoreStructure bs = Heap.getAnyBSTraceByKey(id);
+		BellcoreStructure bs = Heap.getBSPrimaryTrace();
 		if (bs != null)
 		{
 			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
@@ -88,9 +81,9 @@ public class MinuitAnalyseCommand extends VoidCommand
 			a.decode(y, mtm);
 	  //System.out.println("MinuitAnalysis.execute(): decode complete at dt/ms " + (System.currentTimeMillis()-t0));
 
-			Heap.setRefAnalysisByKey(id, a);
+			Heap.setRefAnalysisByKey(Heap.PRIMARY_TRACE_KEY, a);
 
-			Heap.setMTMByKey(id, mtm);
+			Heap.setMTMByKey(Heap.PRIMARY_TRACE_KEY, mtm);
 
 			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 	  //System.out.println("MinuitAnalysis.execute(): pool & Cursor complete at dt/ms " + (System.currentTimeMillis()-t0));

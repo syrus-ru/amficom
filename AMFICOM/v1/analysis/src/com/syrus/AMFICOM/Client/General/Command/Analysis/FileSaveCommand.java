@@ -17,9 +17,7 @@ import com.syrus.io.*;
 public class FileSaveCommand extends VoidCommand
 {
 	private Dispatcher dispatcher;
-	private BellcoreStructure bs;
 	private ApplicationContext aContext;
-	private Checker checker;
 	private String propertiesFileName = "analysis.properties";
 
 	public FileSaveCommand(Dispatcher dispatcher, ApplicationContext aContext)
@@ -50,7 +48,7 @@ public class FileSaveCommand extends VoidCommand
 		{
 			try
 			{
-				this.checker = new Checker(this.aContext.getSessionInterface());
+				Checker checker = new Checker(this.aContext.getSessionInterface());
 				if(!checker.checkCommand(Checker.saveReflectogrammFile))
 				{
 					return;
@@ -79,7 +77,7 @@ public class FileSaveCommand extends VoidCommand
 		int returnVal = chooser.showSaveDialog(null);
 		if(returnVal == JFileChooser.APPROVE_OPTION)
 		{
-			bs = Heap.getBSPrimaryTrace();
+			BellcoreStructure bs = Heap.getBSPrimaryTrace();
 			try
 			{
 				FileOutputStream fos = new FileOutputStream(chooser.getSelectedFile());

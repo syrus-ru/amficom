@@ -2,9 +2,7 @@ package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.Client.Analysis.AnalysisUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.AnalyseMainFrameSimplified;
 import com.syrus.AMFICOM.Client.General.RISDSessionInfo;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
@@ -16,23 +14,21 @@ import com.syrus.io.BellcoreStructure;
 
 public class CreateTestSetupCommand extends VoidCommand
 {
-	ApplicationContext aContext;
-	String traceid;
+	private ApplicationContext aContext;
 
-	public CreateTestSetupCommand(ApplicationContext aContext, String id)
+	public CreateTestSetupCommand(ApplicationContext aContext)
 	{
 		this.aContext = aContext;
-		this.traceid = id;
 	}
 
 	public Object clone()
 	{
-		return new CreateTestSetupCommand(aContext, traceid);
+		return new CreateTestSetupCommand(aContext);
 	}
 
 	public void execute()
 	{
-		BellcoreStructure bs = Heap.getAnyBSTraceByKey(traceid);
+		BellcoreStructure bs = Heap.getBSPrimaryTrace();
 		if (bs == null)
 			return;
 
@@ -89,7 +85,7 @@ public class CreateTestSetupCommand extends VoidCommand
 		// будем считать status == OK, если в Heap.ContextMeasurementSetup != null
 		Heap.setContextMeasurementSetup(measurementSetup);
 
-		aContext.getDispatcher().notify(new RefChangeEvent(traceid,
+		aContext.getDispatcher().notify(new RefChangeEvent(Heap.PRIMARY_TRACE_KEY,
 				RefChangeEvent.THRESHOLDS_CALC_EVENT));
 	}
 }

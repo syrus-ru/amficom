@@ -9,7 +9,6 @@ import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
 import com.syrus.io.*;
@@ -17,9 +16,7 @@ import com.syrus.io.*;
 public class FileSaveAsTextCommand extends VoidCommand
 {
 	private Dispatcher dispatcher;
-	private BellcoreStructure bs;
 	private ApplicationContext aContext;
-	private Checker checker;
 	private String propertiesFileName = "analysis.properties";
 
 	public FileSaveAsTextCommand(Dispatcher dispatcher, ApplicationContext aContext)
@@ -48,7 +45,7 @@ public class FileSaveAsTextCommand extends VoidCommand
 	{
 		try
 		{
-			this.checker = new Checker(this.aContext.getSessionInterface());
+			Checker checker = new Checker(this.aContext.getSessionInterface());
 			if(!checker.checkCommand(Checker.saveReflectogrammFile))
 			{
 				return;
@@ -76,7 +73,7 @@ public class FileSaveAsTextCommand extends VoidCommand
 		int returnVal = chooser.showSaveDialog(null);
 		if(returnVal == JFileChooser.APPROVE_OPTION)
 		{
-			bs = Heap.getBSPrimaryTrace();
+			BellcoreStructure bs = Heap.getBSPrimaryTrace();
 			try
 			{
 				FileOutputStream fos = new FileOutputStream(chooser.getSelectedFile());

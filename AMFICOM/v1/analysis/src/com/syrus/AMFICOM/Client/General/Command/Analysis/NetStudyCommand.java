@@ -5,10 +5,6 @@ import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 
 public class NetStudyCommand extends VoidCommand
 {
-	public NetStudyCommand()
-	{
-	}
-
 	public Object clone()
 	{
 		return new NetStudyCommand();

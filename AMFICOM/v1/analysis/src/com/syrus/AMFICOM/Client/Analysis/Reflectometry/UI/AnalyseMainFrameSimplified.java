@@ -185,7 +185,7 @@ public class AnalyseMainFrameSimplified extends JFrame
 		aModel.setCommand("menuFileAddCompare",new FileAddCommand(internal_dispatcher, aContext));
 		aModel.setCommand("menuFileRemoveCompare", new FileRemoveCommand(internal_dispatcher, null, aContext));
 
-		aModel.setCommand("menuAnalyseUpload", new SaveAnalysisCommand(internal_dispatcher, aContext, RefUpdateEvent.PRIMARY_TRACE));
+		aModel.setCommand("menuAnalyseUpload", new SaveAnalysisCommand(aContext));
 		aModel.setCommand("menuTraceDownload", new LoadTraceFromDatabaseCommand(internal_dispatcher, aContext));
 		aModel.setCommand("menuTraceDownloadEtalon", new LoadEtalonCommand(aContext));
 		aModel.setCommand("menuTraceAddCompare", new AddTraceFromDatabaseCommand(internal_dispatcher, aContext));
