@@ -171,6 +171,7 @@ public class EmptyMapViewDataSource
 		scheme = new Scheme();
 		scheme.cablelinks.add(clink);
 		scheme.links.add(link);
+		scheme.solution.paths.add(path);
 		scheme.created = System.currentTimeMillis();
 		scheme.modified = System.currentTimeMillis();
 		scheme.createdBy = getSession().getUserId();

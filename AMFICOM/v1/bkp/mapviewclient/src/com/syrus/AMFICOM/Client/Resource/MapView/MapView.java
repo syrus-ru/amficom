@@ -1,5 +1,5 @@
 /**
- * $Id: MapView.java,v 1.5 2004/09/23 10:07:15 krupenn Exp $
+ * $Id: MapView.java,v 1.6 2004/09/29 15:18:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -55,7 +55,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/09/23 10:07:15 $
+ * @version $Revision: 1.6 $, $Date: 2004/09/29 15:18:39 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -787,7 +787,7 @@ public final class MapView extends StubResource
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getCablePaths(" + mple + ")");
 		
-		LinkedList returnVector = new LinkedList();;
+		LinkedList returnVector = new LinkedList();
 		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
 		{
 			MapCablePathElement cp = (MapCablePathElement)it.next();
@@ -801,7 +801,7 @@ public final class MapView extends StubResource
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getCablePaths(" + mne + ")");
 
-		LinkedList returnVector = new LinkedList();;
+		LinkedList returnVector = new LinkedList();
 		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
 		{
 			MapCablePathElement cp = (MapCablePathElement)it.next();
@@ -816,7 +816,7 @@ public final class MapView extends StubResource
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getCablePaths(" + mnle + ")");
 
-		LinkedList returnVector = new LinkedList();;
+		LinkedList returnVector = new LinkedList();
 		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
 		{
 			MapCablePathElement cp = (MapCablePathElement)it.next();
@@ -860,7 +860,7 @@ public final class MapView extends StubResource
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getPaths(" + mple + ")");
 		
-		LinkedList returnVector = new LinkedList();;
+		LinkedList returnVector = new LinkedList();
 		for(Iterator it = getMeasurementPaths().iterator(); it.hasNext();)
 		{
 			MapMeasurementPathElement mp = (MapMeasurementPathElement )it.next();
@@ -881,7 +881,7 @@ public final class MapView extends StubResource
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getPaths(" + mne + ")");
 
-		LinkedList returnVector = new LinkedList();;
+		LinkedList returnVector = new LinkedList();
 		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
 		{
 			MapMeasurementPathElement mp = (MapMeasurementPathElement )it.next();
@@ -903,7 +903,7 @@ public final class MapView extends StubResource
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getPaths(" + mnle + ")");
 
-		LinkedList returnVector = new LinkedList();;
+		LinkedList returnVector = new LinkedList();
 		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
 		{
 			MapMeasurementPathElement mp = (MapMeasurementPathElement )it.next();
