@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.41 2004/11/16 13:15:56 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.42 2004/11/17 17:07:51 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2004/11/16 13:15:56 $
+ * @version $Revision: 1.42 $, $Date: 2004/11/17 17:07:51 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -59,6 +59,8 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	public static final String KEY_MAX_FALLS = "MaxFalls";
 	public static final String KEY_TICK_TIME = "TickTime";
 	public static final String KEY_FORWARD_PROCESSING = "ForwardProcessing";
+	public static final String KEY_KIS_TICK_TIME = "KISTickTime";
+	public static final String KEY_KIS_MAX_FALLS = "KISMaxFalls";
 
 	public static final String ID = "mcm_1";
 	public static final String DB_SID = "amficom";
@@ -66,6 +68,8 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 	public static final String DB_LOGIN_NAME = "amficom";
 	public static final int TICK_TIME = 5;
 	public static final int FORWARD_PROCESSING = 2;
+	public static final int KIS_TICK_TIME = 1;
+	public static final int KIS_MAX_FALLS = 10;
 
 	/*	Error codes for method processFall()	(remove results, ...)*/
 	public static final int FALL_CODE_RECEIVE_RESULTS = 1;
@@ -93,6 +97,8 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 
 	/*	Reference to Transmission Manager*/
 	protected static TransmissionManager transmissionManager;
+
+	protected static KISConnectionManager kisConnectionManager;
 
 	private long forwardProcessing;
 	private boolean running;
@@ -389,7 +395,6 @@ public final class MeasurementControlModule extends SleepButWorkThread {
 			default:
 				Log.errorMessage("processError | Unknown error code: " + super.fallCode);
 		}
-		super.clearFalls();
 	}
 	
 	private void removeResults() {

@@ -10,7 +10,7 @@ void init ()
 void closeExt (SOCKET connected_socket)
 {
   if ( close ( connected_socket ) )
-    cout << errno << "Îøèáêà âûçîâà close";
+    cout << errno << "ïÛÉÂËÁ ×ÙÚÏ×Á close";
 }
 
 void exitConnection(int code)
@@ -23,3 +23,4 @@ void bzero(void * b, int n)
   memset (b,0,n);
 }
 #endif
+

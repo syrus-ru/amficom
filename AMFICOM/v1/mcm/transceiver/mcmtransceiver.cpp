@@ -9,15 +9,13 @@
 
 #include <string.h>
 #include <stdlib.h>
-#include <iostream.h>
 
-#include "com_syrus_AMFICOM_mcm_Transceiver.h"
+#include "com_syrus_AMFICOM_mcm_TransmissionManager.h"
 #include "protocoldefs.h"
 #include "ByteArray.h"
 #include "Parameter.h"
 #include "MeasurementSegment.h"
 #include "ResultSegment.h"
-#include "etcp.h"
 
 //const unsigned int MAXLENTASK = 256;
 //const unsigned int MAXLENREPORT = 34000;//6000;
@@ -25,21 +23,18 @@
 //const char* FIFOROOTPATH = "/tmp";
 
 JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_transmit(JNIEnv *env,
-									jobject obj,
-									jint serv_socket,
-									jstring jmeasurement_id,
-									jstring jmeasurement_type_codename,
-									jstring jlocal_address,
-									jobjectArray jparameter_type_codenames,
-									jobjectArray jparameter_values) {
+								jobject obj,
+								jint serv_socket,
+								jstring jmeasurement_id,
+								jstring jmeasurement_type_codename,
+								jstring jlocal_address,
+								jobjectArray jparameter_type_codenames,
+								jobjectArray jparameter_values) {
 										
 	unsigned int l;
 	char* buffer;
 	const char* jbuffer;
 
-//	fprintf(stdout, "(native - agent - Transmit)  Enter.\n");
-//	fflush(stdout);
-	
 //measurement_id
 	l = env->GetStringUTFLength(jmeasurement_id);
 	buffer = new char[l];
@@ -97,18 +92,13 @@ JNIEXPORT jboolean JNICALL Java_com_syrus_AMFICOM_mcm_Transceiver_transmit(JNIEn
 									parameters);
 
 	unsigned int length = measurementSegment->getLength();
-
-//	fprintf(stdout, "(native - agent - Transmit)  #10\n");
-//	fflush(stdout);
-
 	char* arr = new char[length + INTSIZE];
 	memcpy(arr, (char*)&length, INTSIZE);
 	memcpy(arr + INTSIZE, measurementSegment->getData(), length);
 
 	delete measurementSegment;
 
-	fprintf(stdout, "(native - agent - transmit) Transmitting array of length: %d\n", length);
-	fflush(stdout);
+	printf("(native - agent - transmit) Transmitting array of length: %d\n", length);
 
 	if (sendNBytesToTCP(serv_socket, arr, length + INTSIZE, 0) != length + INTSIZE)
 	{

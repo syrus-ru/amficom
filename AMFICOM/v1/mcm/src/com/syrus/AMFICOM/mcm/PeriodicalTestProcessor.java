@@ -1,5 +1,5 @@
 /*
- * $Id: PeriodicalTestProcessor.java,v 1.25 2004/11/17 08:22:23 bob Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.26 2004/11/17 17:07:51 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.measurement.TemporalPattern;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2004/11/17 08:22:23 $
- * @author $Author: bob $
+ * @version $Revision: 1.26 $, $Date: 2004/11/17 17:07:51 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -182,7 +182,6 @@ public class PeriodicalTestProcessor extends TestProcessor {
 			default:
 				Log.errorMessage("processError | Unknown error code: " + super.fallCode);
 		}
-		super.clearFalls();
 	}
 
 	private void continueWithNextMeasurement() {

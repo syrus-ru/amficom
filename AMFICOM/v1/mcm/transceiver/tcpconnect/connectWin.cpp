@@ -10,16 +10,16 @@ void init ()
   WSAStartup (MAKEWORD(2,2),&wsadata);
 }
 
-//Функция переводит адрес из char в unsigned long,
-//при этом осуществляя проверку адреса на легитимность
+//жХОЛГЙС РЕТЕЧПДЙФ БДТЕУ ЙЪ char Ч unsigned long,
+//РТЙ ЬФПН ПУХЭЕУФЧМСС РТПЧЕТЛХ БДТЕУБ ОБ МЕЗЙФЙНОПУФШ
 int inet_aton (char * cp, in_addr * pin)
 {
   int rc;
 
   rc = inet_addr(cp);
-  //Просто inet_addr(...) вернёт INADDR_NONE (0xffffffff)
-  //в случае неверного адреса - то же, что и для
-  //broadcoast адреса.
+  //рТПУФП inet_addr(...) ЧЕТОЈФ INADDR_NONE (0xffffffff)
+  //Ч УМХЮБЕ ОЕЧЕТОПЗП БДТЕУБ - ФП ЦЕ, ЮФП Й ДМС
+  //broadcoast БДТЕУБ.
   if (rc == -1 && strcmp (cp,"255.255.255.255"))
     return 1;
 
@@ -30,7 +30,7 @@ int inet_aton (char * cp, in_addr * pin)
 void closeExt (SOCKET connected_socket)
 {
   if ( closesocket ( connected_socket ) )
-    cout << errno << "Ошибка вызова close";
+    cout << errno << "пЫЙВЛБ ЧЩЪПЧБ close";
 }
 
 void exitConnection(int code)
@@ -44,3 +44,4 @@ void bzero(void * b, int n)
   memset (b,0,n);
 }
 #endif
+

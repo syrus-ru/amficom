@@ -1,24 +1,24 @@
 #include "etcp.h"
 
 /**
-*	Функция по имени хоста(IP-адресу) и имени службы
-*	(или номеру порта + протоколу) заполняет струтуру
-*	для описания удалённого хоста - sockaddr_in.
+*	жХОЛГЙС РП ЙНЕОЙ ИПУФБ(IP-БДТЕУХ) Й ЙНЕОЙ УМХЦВЩ
+*	(ЙМЙ ОПНЕТХ РПТФБ + РТПФПЛПМХ) ЪБРПМОСЕФ УФТХФХТХ
+*	ДМС ПРЙУБОЙС ХДБМЈООПЗП ИПУФБ - sockaddr_in.
 */
 void set_address (char * hostName, char * serviceName,
                   sockaddr_in * sap, char * protocol)
 {
-  bzero(sap,sizeof(*sap)); //Обнуляем структуру
+  bzero(sap,sizeof(*sap)); //пВОХМСЕН УФТХЛФХТХ
   
-  sap->sin_family = AF_INET; //Адресное пространство - Internet
+  sap->sin_family = AF_INET; //бДТЕУОПЕ РТПУФТБОУФЧП - Internet
 
   if (hostName != NULL)
   {
     if (inet_aton(hostName,&sap->sin_addr))
-	//адрес легитимен, успешно переведён, положен в поле 
-	//адреса структуры sockaddr_in.
+	//БДТЕУ МЕЗЙФЙНЕО, ХУРЕЫОП РЕТЕЧЕДЈО, РПМПЦЕО Ч РПМЕ 
+	//БДТЕУБ УФТХЛФХТЩ sockaddr_in.
     {
-	//Пытаемся преобразовать имя хоста в IP-адрес
+	//рЩФБЕНУС РТЕПВТБЪПЧБФШ ЙНС ИПУФБ Ч IP-БДТЕУ
       hostent * hostInfo = gethostbyname(hostName);
       if (hostInfo == NULL)
         printf ("Unknown host ",hostName);
@@ -27,20 +27,20 @@ void set_address (char * hostName, char * serviceName,
     }
   }
   else
-	//Работа с любым сетевым интерфейсом
+	//тБВПФБ У МАВЩН УЕФЕЧЩН ЙОФЕТЖЕКУПН
 	sap->sin_addr.s_addr = htonl(INADDR_ANY);
 
-  //Получаем с помощью strtol(...) числовое значение порта
-  //(должно заканчиваться на '\0')
+  //рПМХЮБЕН У РПНПЭША strtol(...) ЮЙУМПЧПЕ ЪОБЮЕОЙЕ РПТФБ
+  //(ДПМЦОП ЪБЛБОЮЙЧБФШУС ОБ '\0')
   char * endptr;  
   short port = strtol (serviceName,&endptr,0);
 
   if (*endptr == '\0')
-    sap->sin_port = htons(port);//Преобразуем в big-endian порядок
+    sap->sin_port = htons(port);//рТЕПВТБЪХЕН Ч big-endian РПТСДПЛ
   else
   {
-	//Если это не порт, считаем что это символическое имя службы
-	//(например в etc/services такая строка klmn 767/udp)
+	//еУМЙ ЬФП ОЕ РПТФ, УЮЙФБЕН ЮФП ЬФП УЙНЧПМЙЮЕУЛПЕ ЙНС УМХЦВЩ
+	//(ОБРТЙНЕТ Ч etc/services ФБЛБС УФТПЛБ klmn 767/udp)
     servent * sp = getservbyname (serviceName,protocol);
     if (sp == NULL)
       printf ("unknown service: ",serviceName);
@@ -49,16 +49,16 @@ void set_address (char * hostName, char * serviceName,
 }
 
 /**
-* Возвращает для указанных имен хоста и службы
-* прослушивающий сокет.
+* чПЪЧТБЭБЕФ ДМС ХЛБЪБООЩИ ЙНЕО ИПУФБ Й УМХЦВЩ
+* РТПУМХЫЙЧБАЭЙК УПЛЕФ.
 */
 SOCKET tcp_server (char * hostName,char * serviceName)
 {
-  //Заполняем структуру sockaddr
+  //ъБРПМОСЕН УФТХЛФХТХ sockaddr
   sockaddr_in server_peer;
   set_address (hostName,serviceName,&server_peer,"tcp");
 
-  //Просим у системы сокет для логического соединения.
+  //рТПУЙН Х УЙУФЕНЩ УПЛЕФ ДМС МПЗЙЮЕУЛПЗП УПЕДЙОЕОЙС.
   SOCKET listened_socket = socket(AF_INET,SOCK_STREAM,0);
 
   if (listened_socket == INVALID_SOCKET)
@@ -67,8 +67,8 @@ SOCKET tcp_server (char * hostName,char * serviceName)
     return -1;
   }
 
-  //Разрешаем TCP задать сокету привязку к уже
-  //используемому порту - обязательно для сервера.
+  //тБЪТЕЫБЕН TCP ЪБДБФШ УПЛЕФХ РТЙЧСЪЛХ Л ХЦЕ
+  //ЙУРПМШЪХЕНПНХ РПТФХ - ПВСЪБФЕМШОП ДМС УЕТЧЕТБ.
   const int on = 1;
   if (setsockopt (listened_socket,
                   SOL_SOCKET,
@@ -79,7 +79,7 @@ SOCKET tcp_server (char * hostName,char * serviceName)
     printf ("Error calling setsockopt!\n");
     return -1;
   }
-  //Привязываем адрес интерфейса и номер порта к прослушивающему сокету
+  //рТЙЧСЪЩЧБЕН БДТЕУ ЙОФЕТЖЕКУБ Й ОПНЕТ РПТФБ Л РТПУМХЫЙЧБАЭЕНХ УПЛЕФХ
   int testValue =
 	  bind(listened_socket, (struct sockaddr *)&server_peer,sizeof(server_peer));
   if (testValue != 0)
@@ -88,7 +88,7 @@ SOCKET tcp_server (char * hostName,char * serviceName)
     return -1;
   }
 
-  //Помечаем сокет как прослушиваемый, 5 - число ожидающих в очереди соединений
+  //рПНЕЮБЕН УПЛЕФ ЛБЛ РТПУМХЫЙЧБЕНЩК, 5 - ЮЙУМП ПЦЙДБАЭЙИ Ч ПЮЕТЕДЙ УПЕДЙОЕОЙК
   testValue = listen(listened_socket, 5);
   if (testValue != 0)
   {
@@ -167,3 +167,4 @@ int sendNBytesToTCP (SOCKET s, char * buff, int size, int flags)
 
 	return bytesSent;
 }
+

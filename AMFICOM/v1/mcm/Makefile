@@ -90,27 +90,26 @@ $(CLASSDIR):
 
 .PHONY:	clean
 clean:	cleanmach cleancorba cleanhead
-	rm -f $(LIBNAME) $(LIBNAME_INTERFACE)
+	$(RM) -f $(LIBNAME) $(LIBNAME_INTERFACE)
 
 .PHONY:	cleanmach
 cleanmach:
-	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/mcm/*.class
-	rm -f .mach
+	$(RM) -rf $(CLASSDIR)/com/syrus/AMFICOM/mcm/*.class
+	$(RM) -f .mach
 
 .PHONY:	cleanhead
 cleanhead:
 	$(RM) -f \
-		$(TRANSCEIVER_DIR)/com_syrus_AMFICOM_mcm_Transceiver.h \
-		$(TRANSCEIVER_DIR)/com_syrus_AMFICOM_mcm_TCPServer.h \
-		$(DADARA_DIR)/com_syrus_AMFICOM_mcm_DadaraAnalysisManager.h \
-		.head
+		$(TRANSCEIVER_DIR)/com_syrus_AMFICOM_mcm_TransmissionManager.h \
+		$(DADARA_DIR)/com_syrus_AMFICOM_mcm_DadaraAnalysisManager.h
+	$(RM) -f .head
 	
 
 .PHONY:	cleancorba
 cleancorba:
-	rm -rf $(SRCDIR)/com/syrus/AMFICOM/mcm/corba
-	rm -rf $(CLASSDIR)/com/syrus/AMFICOM/mcm/corba
-	rm -f .corba
+	$(RM) -rf $(SRCDIR)/com/syrus/AMFICOM/mcm/corba
+	$(RM) -rf $(CLASSDIR)/com/syrus/AMFICOM/mcm/corba
+	$(RM) -f .corba
 
 #### Archive ####
 .PHONY:	arch

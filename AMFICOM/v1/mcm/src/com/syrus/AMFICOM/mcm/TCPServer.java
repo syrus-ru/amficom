@@ -18,9 +18,8 @@ public class TCPServer extends SleepButWorkThread {
 	private boolean			active			= true;
 
 	public TCPServer(String hostName, String serviceName) throws UnknownServiceException  {
-		super(ApplicationProperties.getInt(MeasurementControlModule.KEY_TICK_TIME, 
-										   MeasurementControlModule.TICK_TIME) * 1000, 
-										   ApplicationProperties.getInt(MeasurementControlModule.KEY_MAX_FALLS, MAX_FALLS));
+		super(ApplicationProperties.getInt(MeasurementControlModule.KEY_TICK_TIME, MeasurementControlModule.TICK_TIME) * 1000, 
+					ApplicationProperties.getInt(MeasurementControlModule.KEY_MAX_FALLS, MAX_FALLS));
 		this.listeningSocket = this.getListeningSocket(hostName, serviceName);
 		if (this.listeningSocket <= 0) {
 			Log.errorMessage("Can't create listening socket for service (port) " + serviceName + "!");
@@ -102,7 +101,6 @@ public class TCPServer extends SleepButWorkThread {
 	
 	protected void processFall() {
 		Log.errorMessage("TCPServer.processFall | fallCode:" + super.fallCode);
-		clearFalls();
 	}
 
 	public native void shutdownServer(int[] serverSockets);

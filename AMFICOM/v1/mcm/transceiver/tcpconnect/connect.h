@@ -32,3 +32,4 @@ void closeExt (SOCKET connected_socket);
 void exitConnection(int code);
 
 #endif
+
