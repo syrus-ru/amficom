@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementObjectLoader.java,v 1.8 2004/09/28 14:46:11 bob Exp $
+ * $Id: MeasurementObjectLoader.java,v 1.9 2004/10/01 08:15:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2004/09/28 14:46:11 $
+ * @version $Revision: 1.9 $, $Date: 2004/10/01 08:15:12 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -74,6 +74,34 @@ public interface MeasurementObjectLoader {
 	List loadResults(List ids) throws DatabaseException, CommunicationException;
 
 	List loadTemporalPatterns(List ids) throws DatabaseException, CommunicationException;
+	
+	/* Load Measurement StorableObject but argument ids */
+	
+	List loadParameterTypesButIds(List ids) throws DatabaseException, CommunicationException;
+
+	List loadMeasurementTypesButIds(List ids) throws DatabaseException, CommunicationException;
+
+	List loadAnalysisTypesButIds(List ids) throws DatabaseException, CommunicationException;
+
+	List loadEvaluationTypesButIds(List ids) throws DatabaseException, CommunicationException;
+
+	List loadSetsButIds(List ids) throws DatabaseException, CommunicationException;
+	
+	List loadModelingsButIds(List ids) throws DatabaseException, CommunicationException;
+
+	List loadMeasurementSetupsButIds(List ids) throws DatabaseException, CommunicationException;
+
+	List loadMeasurementsButIds(List ids) throws DatabaseException, CommunicationException;
+
+	List loadAnalysesButIds(List ids) throws DatabaseException, CommunicationException;
+
+	List loadEvaluationsButIds(List ids) throws DatabaseException, CommunicationException;
+
+	List loadTestsButIds(List ids) throws DatabaseException, CommunicationException;
+
+	List loadResultsButIds(List ids) throws DatabaseException, CommunicationException;
+
+	List loadTemporalPatternsButIds(List ids) throws DatabaseException, CommunicationException;
 	
 	public void saveParameterType(ParameterType parameterType, boolean force) throws VersionCollisionException, DatabaseException, CommunicationException;
 
