@@ -16,3 +16,5 @@ sqlj.properties
 .all
 .idl
 .sqlj
+.project
+.classpath
