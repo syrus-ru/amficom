@@ -1,6 +1,9 @@
-/*
- * $Id: SchemePath.java,v 1.5 2005/03/25 13:24:52 bass Exp $ Copyright ¿ 2004
- * Syrus Systems. Dept. of Science & Technology. Project: AMFICOM.
+/*-
+ * $Id: SchemePath.java,v 1.6 2005/03/25 18:00:37 bass Exp $
+ *
+ * Copyright ¿ 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.scheme;
@@ -11,8 +14,10 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import java.util.*;
 
 /**
+ * #14 in hierarchy.
+ *
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/03/25 13:24:52 $
+ * @version $Revision: 1.6 $, $Date: 2005/03/25 18:00:37 $
  * @module scheme_v1
  */
 public final class SchemePath extends AbstractCloneableStorableObject implements

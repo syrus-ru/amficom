@@ -1,5 +1,5 @@
 /*
- * $Id: PathDecomposer.java,v 1.3 2005/03/17 09:40:22 bass Exp $
+ * $Id: PathDecomposer.java,v 1.4 2005/03/25 18:00:37 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,12 +10,12 @@ package com.syrus.AMFICOM.scheme;
 
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
-import com.syrus.AMFICOM.scheme.corba.PathElementPackage.Type;
+import com.syrus.AMFICOM.scheme.corba.PathElementType;
 import java.util.*;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/03/17 09:40:22 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/25 18:00:37 $
  * @todo Move to corba subpackage.
  * @module scheme_v1
  */
@@ -217,7 +217,7 @@ public final class PathDecomposer {
 	 */
 	public PathElement getPreviousNode(PathElement pathElement)
 	{
-		if (pathElement.type() == Type.SCHEME_ELEMENT && hasOpticalPort(pathElement))
+		if (pathElement.getPathElementType() == PathElementType.SCHEME_ELEMENT && hasOpticalPort(pathElement))
 			return pathElement;
 
 		List links = Arrays.asList(this.schemePath.links());
@@ -227,7 +227,7 @@ public final class PathDecomposer {
 			for (ListIterator it = links.listIterator(index); it.hasPrevious();)
 			{
 				pathElement = (PathElement)it.previous();
-				if (pathElement.type() == Type.SCHEME_ELEMENT && hasOpticalPort(pathElement))
+				if (pathElement.getPathElementType() == PathElementType.SCHEME_ELEMENT && hasOpticalPort(pathElement))
 					return pathElement;
 			}
 		}
@@ -239,7 +239,7 @@ public final class PathDecomposer {
 	 * @todo Make formal parameter final: parameters shouldn't be reassigned.
 	 */
 	public PathElement getNextNode(PathElement pathElement) {
-		if (pathElement.type() == Type.SCHEME_ELEMENT && hasOpticalPort(pathElement))
+		if (pathElement.getPathElementType() == PathElementType.SCHEME_ELEMENT && hasOpticalPort(pathElement))
 			return pathElement;
 
 		List links = Arrays.asList(this.schemePath.links());
@@ -247,7 +247,7 @@ public final class PathDecomposer {
 		if (index != -1) {
 			for (ListIterator it = links.listIterator(index); it.hasNext();) {
 				pathElement = (PathElement)it.next();
-				if (pathElement.type() == Type.SCHEME_ELEMENT && hasOpticalPort(pathElement))
+				if (pathElement.getPathElementType() == PathElementType.SCHEME_ELEMENT && hasOpticalPort(pathElement))
 					return pathElement;
 			}
 		}
@@ -256,13 +256,13 @@ public final class PathDecomposer {
 
 	private boolean hasOpticalPort(final PathElement pathElement)
 	{
-		AbstractSchemePort port = pathElement.startAbstractSchemePort();
+		AbstractSchemePort port = pathElement.getStartAbstractSchemePort();
 		if (port instanceof SchemePort) {
 			PortType ptype = ((SchemePort)port).getPortType();
 			if (ptype.getSort().equals(PortTypeSort.PORTTYPESORT_OPTICAL))
 				return true;
 		}
-		port = pathElement.endAbstractSchemePort();
+		port = pathElement.getEndAbstractSchemePort();
 		if (port instanceof SchemePort) {
 			PortType ptype = ((SchemePort)port).getPortType();
 			if (ptype.getSort().equals(PortTypeSort.PORTTYPESORT_OPTICAL))

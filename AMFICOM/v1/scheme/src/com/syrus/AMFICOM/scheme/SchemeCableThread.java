@@ -1,6 +1,9 @@
-/*
- * $Id: SchemeCableThread.java,v 1.6 2005/03/25 13:24:52 bass Exp $ Copyright ¿
- * 2004 Syrus Systems. Dept. of Science & Technology. Project: AMFICOM.
+/*-
+ * $Id: SchemeCableThread.java,v 1.7 2005/03/25 18:00:37 bass Exp $
+ *
+ * Copyright ¿ 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.scheme;
@@ -11,8 +14,10 @@ import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import java.util.*;
 
 /**
+ * #12 in hierarchy.
+ *
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/03/25 13:24:52 $
+ * @version $Revision: 1.7 $, $Date: 2005/03/25 18:00:37 $
  * @module scheme_v1
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -21,19 +26,19 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 
 	protected Identifier cableThreadTypeId = null;
 
-	protected Identifier characteristicIds[] = null;
-
-	protected Identifier schemeCableLinkId = null;
-
 	protected Identifier sourceSchemePortId = null;
 
 	protected Identifier targetSchemePortId = null;
+
+	protected Identifier threadId = null;
+
+	private Collection characteristics;
 
 	private String description;
 
 	private String name;
 
-	protected Identifier threadId = null;
+	private Identifier parentSchemeCableLinkId;
 
 	/**
 	 * @param id
@@ -57,6 +62,32 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * @deprecated Use {@link #createInstance(Identifier)}instead.
+	 */
+	public static SchemeCableThread createInstance() {
+		throw new UnsupportedOperationException();
+	}
+
+	public static SchemeCableThread createInstance(
+			final Identifier creatorId)
+			throws CreateObjectException {
+		assert creatorId != null;
+		try {
+			final Date created = new Date();
+			final SchemeCableThread schemeCableThread = new SchemeCableThread(
+					IdentifierPool
+							.getGeneratedIdentifier(ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE),
+					created, created, creatorId, creatorId,
+					0L);
+			schemeCableThread.changed = true;
+			return schemeCableThread;
+		} catch (final IllegalObjectEntityException ioee) {
+			throw new CreateObjectException(
+					"SchemeCableThread.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
+		}
+	}
+
+	/**
 	 * @param characteristic
 	 * @see com.syrus.AMFICOM.general.Characterizable#addCharacteristic(Characteristic)
 	 */
@@ -64,14 +95,16 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		throw new UnsupportedOperationException();
 	}
 
-	public CableThreadType getCableThreadType() {
-		throw new UnsupportedOperationException();
+	public Object clone() {
+		final SchemeCableThread schemeCableThread = (SchemeCableThread) super
+				.clone();
+		/**
+		 * @todo Update the newly created object.
+		 */
+		return schemeCableThread;
 	}
 
-	/**
-	 * @param newCableThreadTypeImpl
-	 */
-	public void setCableThreadType(CableThreadType newCableThreadTypeImpl) {
+	public CableThreadType getCableThreadType() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -97,6 +130,26 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * @see Describable#getDescription()
+	 */
+	public String getDescription() {
+		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.description;
+	}
+
+	/**
+	 * @see Namable#getName()
+	 */
+	public String getName() {
+		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
+		return this.name;
+	}
+
+	public SchemeCableLink getParentSchemeCableLink() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * @param schemeDevice
 	 */
 	public SchemePort getSchemePort(final SchemeDevice schemeDevice) {
@@ -117,6 +170,25 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 					"This scheme cable thread is in no way connected to the scheme device specified."); //$NON-NLS-1$
 	}
 
+	public SchemePort getSourceSchemePort() {
+		throw new UnsupportedOperationException();
+	}
+
+	public SchemePort getTargetSchemePort() {
+		throw new UnsupportedOperationException();
+	}
+
+	public Link getThread() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
+	 */
+	public Object getTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
 	/**
 	 * @param characteristic
 	 * @see com.syrus.AMFICOM.general.Characterizable#removeCharacteristic(Characteristic)
@@ -125,15 +197,10 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		throw new UnsupportedOperationException();
 	}
 
-	public SchemeCableLink schemeCablelink() {
-		throw new UnsupportedOperationException();
-	}
-
 	/**
-	 * @param newSchemeCablelink
-	 * @see com.syrus.AMFICOM.scheme.SchemeCableThread#schemeCablelink(com.syrus.AMFICOM.scheme.SchemeCableLink)
+	 * @param newCableThreadTypeImpl
 	 */
-	public void schemeCablelink(SchemeCableLink newSchemeCablelink) {
+	public void setCableThreadType(CableThreadType newCableThreadTypeImpl) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -154,86 +221,6 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @param schemePort
-	 * @see SchemeCableThread#setSchemePort(SchemePort)
-	 */
-	public void setSchemePort(final SchemePort schemePort) {
-		/**
-		 * @todo Update w/o notification.
-		 */
-		throw new UnsupportedOperationException();
-	}
-
-	public SchemePort getSourceSchemePort() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void setSourceSchemePort(final SchemePort sourceSchemePort) {
-		throw new UnsupportedOperationException();
-	}
-
-	public SchemePort getTargetSchemePort() {
-		throw new UnsupportedOperationException();
-	}
-
-	public void setTargetSchemePort(final SchemePort targetSchemePort) {
-		throw new UnsupportedOperationException();
-	}
-
-	public Link getThread() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
-	 * @param newThreadImpl
-	 */
-	public void setThread(Link newThreadImpl) {
-		throw new UnsupportedOperationException();
-	}
-
-	public Object clone() {
-		final SchemeCableThread schemeCableThread = (SchemeCableThread) super
-				.clone();
-		/**
-		 * @todo Update the newly created object.
-		 */
-		return schemeCableThread;
-	}
-
-	/**
-	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable()
-	 */
-	public Object getTransferable() {
-		throw new UnsupportedOperationException();
-	}
-
-	public static SchemeCableThread createInstance(
-			final Identifier creatorId)
-			throws CreateObjectException {
-		assert creatorId != null;
-		try {
-			final Date created = new Date();
-			final SchemeCableThread schemeCableThread = new SchemeCableThread(
-					IdentifierPool
-							.getGeneratedIdentifier(ObjectEntities.SCHEME_CABLE_THREAD_ENTITY_CODE),
-					created, created, creatorId, creatorId,
-					0L);
-			schemeCableThread.changed = true;
-			return schemeCableThread;
-		} catch (final IllegalObjectEntityException ioee) {
-			throw new CreateObjectException(
-					"SchemeCableThread.createInstance | cannot generate identifier ", ioee); //$NON-NLS-1$
-		}
-	}
-
-	/**
-	 * @deprecated Use {@link #createInstance(Identifier)}instead.
-	 */
-	public static SchemeCableThread createInstance() {
-		throw new UnsupportedOperationException();
-	}
-
-	/**
 	 * @see Describable#setDescription(String)
 	 */
 	public void setDescription(final String description) {
@@ -243,14 +230,6 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 			return;
 		this.description = description;
 		this.changed = true;
-	}
-
-	/**
-	 * @see Describable#getDescription()
-	 */
-	public String getDescription() {
-		assert this.description != null : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		return this.description;
 	}
 
 	/**
@@ -265,11 +244,33 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		this.changed = true;
 	}
 
+	public void setParentSchemeCableLink(final SchemeCableLink parentSchemeCableLink) {
+		throw new UnsupportedOperationException();
+	}
+
 	/**
-	 * @see Namable#getName()
+	 * @param schemePort
+	 * @see SchemeCableThread#setSchemePort(SchemePort)
 	 */
-	public String getName() {
-		assert this.name != null && this.name.length() != 0 : ErrorMessages.OBJECT_NOT_INITIALIZED;
-		return this.name;
+	public void setSchemePort(final SchemePort schemePort) {
+		/**
+		 * @todo Update w/o notification.
+		 */
+		throw new UnsupportedOperationException();
+	}
+
+	public void setSourceSchemePort(final SchemePort sourceSchemePort) {
+		throw new UnsupportedOperationException();
+	}
+
+	public void setTargetSchemePort(final SchemePort targetSchemePort) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param newThreadImpl
+	 */
+	public void setThread(Link newThreadImpl) {
+		throw new UnsupportedOperationException();
 	}
 }

@@ -1,6 +1,9 @@
-/*
- * $Id: CableChannelingItem.java,v 1.3 2005/03/17 18:17:27 bass Exp $ Copyright ¿
- * 2004 Syrus Systems. Dept. of Science & Technology. Project: AMFICOM.
+/*-
+ * $Id: CableChannelingItem.java,v 1.4 2005/03/25 18:00:37 bass Exp $
+ *
+ * Copyright ¿ 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.scheme;
@@ -10,8 +13,10 @@ import com.syrus.AMFICOM.map.*;
 import java.util.*;
 
 /**
+ * #13 in hierarchy.
+ *
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/03/17 18:17:27 $
+ * @version $Revision: 1.4 $, $Date: 2005/03/25 18:00:37 $
  * @module scheme_v1
  */
 public final class CableChannelingItem extends AbstractCloneableStorableObject
