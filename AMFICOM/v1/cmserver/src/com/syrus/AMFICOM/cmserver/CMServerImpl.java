@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.10 2004/09/20 09:02:39 bob Exp $
+ * $Id: CMServerImpl.java,v 1.11 2004/09/21 05:42:23 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -61,7 +61,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2004/09/20 09:02:39 $
+ * @version $Revision: 1.11 $, $Date: 2004/09/21 05:42:23 $
  * @author $Author: bob $
  * @module cmserver_v1
  */
@@ -379,9 +379,10 @@ public class CMServerImpl implements CMServerOperations {
 			}
 
 			int i = 0;
-			Domain_Transferable[] idsTransfefableArray = new Domain_Transferable[domainList.size()];			
+			Domain_Transferable[] idsTransfefableArray = new Domain_Transferable[domainList.size()];
 			for (Iterator it = domainList.iterator(); it.hasNext(); i++) {
-				idsTransfefableArray[i] = (Domain_Transferable) it.next();
+				Domain domain = (Domain) it.next();
+				idsTransfefableArray[i] = (Domain_Transferable) domain.getTransferable();
 
 			}
 
@@ -682,9 +683,9 @@ public class CMServerImpl implements CMServerOperations {
 					Set set = (Set) it.next();
 					MeasurementStorableObjectPool.putStorableObject(set);
 					list.add(set);
-				}			
+				}
 			}
-			
+
 			Set_Transferable[] transferables = new Set_Transferable[list.size()];
 			int i = 0;
 			for (Iterator it = list.iterator(); it.hasNext(); i++) {
@@ -730,20 +731,20 @@ public class CMServerImpl implements CMServerOperations {
 					idsList.add(new Identifier(identifier_Transferables[i]));
 
 				list = MeasurementStorableObjectPool.getStorableObjects(idsList, true);
-				
+
 			} else {
 				list = MeasurementStorableObjectPool
 						.getStorableObjectsByDomain(ObjectEntities.TEST_ENTITY_CODE, domain);
 				TestDatabase database = (TestDatabase) MeasurementDatabaseContext.getSetDatabase();
-				List listFromDatabase = database.retrieveButIds(list);				
+				List listFromDatabase = database.retrieveButIds(list);
 				for (Iterator it = listFromDatabase.iterator(); it.hasNext();) {
 					Test test = (Test) it.next();
 					MeasurementStorableObjectPool.putStorableObject(test);
 					list.add(test);
-				}	
+				}
 
 			}
-			
+
 			Test_Transferable[] transferables = new Test_Transferable[list.size()];
 			int i = 0;
 			for (Iterator it = list.iterator(); it.hasNext(); i++) {
