@@ -1,5 +1,5 @@
 /*
- * $Id: TextWriter.java,v 1.3 2004/11/22 14:03:42 stas Exp $
+ * $Id: TextWriter.java,v 1.4 2004/12/08 13:30:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,9 +11,9 @@ package com.syrus.io;
 import java.io.*;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2004/11/22 14:03:42 $
- * @author $Author: stas $
- * @module general_v1
+ * @version $Revision: 1.4 $, $Date: 2004/12/08 13:30:01 $
+ * @author $Author: bass $
+ * @module util
  */
 public class TextWriter
 {
@@ -61,29 +61,29 @@ public class TextWriter
 		double step;
 		double gi;
 
-		gi = ((double)bs.fxdParams.GI / 100000d); // коэфф преломления
+		gi = bs.fxdParams.GI / 100000d; // коэфф преломления
 		pw.println("Optical module name: " + bs.supParams.OMID);
 		pw.println("Wavelength: " + String.valueOf(bs.fxdParams.AW / 10) + " nm");
 		pw.println("Index of refraction: " + String.valueOf(gi));
 		pw.println("Pulse width: " + String.valueOf(bs.fxdParams.PWU[0]) + " ns");
 		pw.println("Number of points: " + String.valueOf(bs.fxdParams.NPPW[0]));
 		pw.println("Number of averages: " + String.valueOf(bs.fxdParams.NAV));
-		pw.println("Range: " + String.valueOf((int)((float)(bs.fxdParams.AR - bs.fxdParams.AO) * 0.03d / gi))
+		pw.println("Range: " + String.valueOf((int)((bs.fxdParams.AR - bs.fxdParams.AO) * 0.03d / gi))
 			+ " " + bs.fxdParams.UD);
 //    pw.println("Data spacing: " + String.valueOf(2 * ((double)(bs.fxdParams.DS[0]) / 1000000f)));
 
 		for (int i = 0; i < bs.dataPts.TSF; i++)
 			{
-				step = (((double) bs.fxdParams.DS[0] * 0.03d) / gi) / 10000d;
+				step = bs.fxdParams.DS[0] * 0.03d / gi / 10000d;
 				for (int j = 0; j < bs.dataPts.TPS[i]; j++)
 				{
 					if (bs.fxdParams.UD.equalsIgnoreCase("km"))
 						temp = (int)((step * j) * 10000);
 					else
 						temp = (int)((step * j) * 10);
-					str = String.valueOf ((float)temp / 10f);
+					str = String.valueOf (temp / 10f);
 					str += "\t";
-					str += String.valueOf ((float)(65535 - bs.dataPts.DSF[i][j])/1000f);
+					str += String.valueOf ((65535 - bs.dataPts.DSF[i][j])/1000f);
 					pw.println(str);
 				}
 				pw.println();
