@@ -6,9 +6,6 @@ import java.awt.Toolkit;
 import java.awt.GridBagConstraints;
 import java.util.Date;
 
-/*import oracle.jdeveloper.layout.XYConstraints;
-import oracle.jdeveloper.layout.XYLayout;*/
-
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
