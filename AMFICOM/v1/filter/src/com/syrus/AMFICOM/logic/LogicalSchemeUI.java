@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalSchemeUI.java,v 1.14 2005/03/24 09:09:36 bob Exp $
+ * $Id: LogicalSchemeUI.java,v 1.15 2005/03/24 11:40:57 bob Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/03/24 09:09:36 $
+ * @version $Revision: 1.15 $, $Date: 2005/03/24 11:40:57 $
  * @author $Author: bob $
  * @module filter_v1
  */
@@ -372,6 +372,8 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 		if (this.items != null) {
 			for (Iterator it = this.items.iterator(); it.hasNext();) {
 				ViewItem item2 = (ViewItem) it.next();
+				if (item2.isService())
+					continue;
 				if (item2.x - SELECT_AREA <= pointX && pointX <= item2.x + item2.getWidth() + SELECT_AREA
 						&& item2.y - SELECT_AREA <= pointY && pointY <= item2.y + item2.getHeight() + SELECT_AREA) {
 					item = item2;
