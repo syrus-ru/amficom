@@ -1,4 +1,5 @@
 classes
+test
 .mach
 .head
 clean.cmd
@@ -26,3 +27,4 @@ clean.cmd
 .classpath
 .project
 logs
+.settings
