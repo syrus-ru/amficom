@@ -1,5 +1,5 @@
 /*
- * $Id: TestEventType.java,v 1.2 2005/02/08 12:02:59 arseniy Exp $
+ * $Id: TestEventType.java,v 1.3 2005/02/08 20:27:30 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.corba.OperationSort;
 import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.CompoundConditionSort;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/08 12:02:59 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/08 20:27:30 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -59,11 +59,11 @@ public class TestEventType extends CommonEventTest {
 		String codename = EventType.CODENAME_MEASUREMENT_ALARM;
 		String description = "Measurement alarms";
 
-		TypicalCondition tc1 = new TypicalCondition(ParameterTypeCodenames.MAX_NOISE_LEVEL,
+		TypicalCondition tc1 = new TypicalCondition(ParameterTypeCodenames.ALARM_STATUS,
 				OperationSort.OPERATION_EQUALS,
 				new Short(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
 				StorableObjectWrapper.COLUMN_CODENAME);
-		TypicalCondition tc2 = new TypicalCondition(ParameterTypeCodenames.TRACE_INDEX_OF_REFRACTION,
+		TypicalCondition tc2 = new TypicalCondition(ParameterTypeCodenames.HZ_CHO,
 				OperationSort.OPERATION_EQUALS,
 				new Short(ObjectEntities.PARAMETERTYPE_ENTITY_CODE),
 				StorableObjectWrapper.COLUMN_CODENAME);
@@ -111,15 +111,24 @@ public class TestEventType extends CommonEventTest {
 	}
 
 //	public void testDelete() throws ApplicationException {
-//		TypicalCondition tc = new TypicalCondition(EventType.CODENAME_MEASUREMENT_ALARM, OperationSort.OPERATION_EQUALS, new Short(ObjectEntities.EVENTTYPE_ENTITY_CODE), StorableObjectWrapper.COLUMN_CODENAME);
+//		TypicalCondition tc = new TypicalCondition(EventType.CODENAME_MEASUREMENT_ALARM,
+//				OperationSort.OPERATION_EQUALS,
+//				new Short(ObjectEntities.EVENTTYPE_ENTITY_CODE),
+//				StorableObjectWrapper.COLUMN_CODENAME);
 //		List eventTypes = EventStorableObjectPool.getStorableObjectsByCondition(tc, true);
-//		List eventTypeIds = new LinkedList();
+//
 //		EventType eventType;
+//		List parameterTypes;
+//		ParameterType parameterType;
 //		for (Iterator it = eventTypes.iterator(); it.hasNext();) {
 //			eventType = (EventType) it.next();
-//			System.out.println("Event Type id '" + eventType.getId());
-//			eventTypeIds.add(eventType.getId());
+//			System.out.println("Event Type id: '" + eventType.getId() + "' codename: '" + eventType.getCodename() + "'");
+//			parameterTypes = eventType.getParameterTypes();
+//			for (Iterator it1 = parameterTypes.iterator(); it1.hasNext();) {
+//				parameterType = (ParameterType) it1.next();
+//				System.out.println("\tParameter Type id: '" + parameterType.getId() + "' codename: '" + parameterType.getCodename() + "'");
+//			}
 //		}
-//		EventStorableObjectPool.delete(eventTypeIds);
-	}
+//		EventStorableObjectPool.delete(eventTypes);
+//	}
 }

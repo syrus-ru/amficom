@@ -1,5 +1,5 @@
 /*
- * $Id: CommonEventTest.java,v 1.1 2005/02/07 12:00:58 arseniy Exp $
+ * $Id: CommonEventTest.java,v 1.2 2005/02/08 20:27:30 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/07 12:00:58 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/08 20:27:30 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -88,7 +88,7 @@ public class CommonEventTest extends TestCase {
 
 	private static void initDatabaseContext() {
 		GeneralDatabaseContext.init(new ParameterTypeDatabase(), new CharacteristicTypeDatabase(), new CharacteristicDatabase());
-		EventDatabaseContext.init(new EventTypeDatabase(), new EventDatabase());
+		EventDatabaseContext.init(new EventTypeDatabase(), new EventDatabase(), new EventSourceDatabase());
 	}
 
 	private static void initStorableObjectPools() {

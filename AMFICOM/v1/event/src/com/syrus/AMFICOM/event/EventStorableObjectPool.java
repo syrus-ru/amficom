@@ -1,5 +1,5 @@
 /*
- * $Id: EventStorableObjectPool.java,v 1.5 2005/02/08 20:11:20 arseniy Exp $
+ * $Id: EventStorableObjectPool.java,v 1.6 2005/02/08 20:31:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/08 20:11:20 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/08 20:31:06 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -100,7 +100,7 @@ public class EventStorableObjectPool extends StorableObjectPool {
 //		instance.addObjectPool(ObjectEntities.ALARMTYPE_ENTITY_CODE, ALARMTYPE_OBJECT_POOL_SIZE);
 
 		instance.addObjectPool(ObjectEntities.EVENT_ENTITY_CODE, EVENT_OBJECT_POOL_SIZE);
-		instance.addObjectPool(ObjectEntities.EVENTSOURCE_ENTITY_CODE, EVENT_OBJECT_POOL_SIZE);
+		instance.addObjectPool(ObjectEntities.EVENTSOURCE_ENTITY_CODE, EVENTSOURCE_OBJECT_POOL_SIZE);
 //		instance.addObjectPool(ObjectEntities.ALARM_ENTITY_CODE, ALARM_OBJECT_POOL_SIZE);
 
 		instance.populatePools();

@@ -1,5 +1,5 @@
 /*
- * $Id: EventSourceDatabase.java,v 1.1 2005/02/08 20:08:19 arseniy Exp $
+ * $Id: EventSourceDatabase.java,v 1.2 2005/02/08 20:31:06 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,10 +25,9 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.VersionCollisionException;
 import com.syrus.util.database.DatabaseDate;
-import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/02/08 20:08:19 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/08 20:31:06 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -78,7 +77,7 @@ public class EventSourceDatabase extends StorableObjectDatabase {
 			throws IllegalDataException,
 				UpdateObjectException {
 		EventSource eventSource = this.fromStorableObject(storableObject);
-		Identifier sourceEntityId = eventSource.getEntityId();
+		Identifier sourceEntityId = eventSource.getSourceEntityId();
 		short sourceEntityCode = sourceEntityId.getMajor();
 		int i = super.setEntityForPreparedStatement(storableObject, preparedStatement, mode);
 		try {
@@ -136,7 +135,7 @@ public class EventSourceDatabase extends StorableObjectDatabase {
 
 	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException, UpdateObjectException {
 		EventSource eventSource = this.fromStorableObject(storableObject);
-		Identifier sourceEntityId = eventSource.getEntityId();
+		Identifier sourceEntityId = eventSource.getSourceEntityId();
 		short sourceEntityCode = sourceEntityId.getMajor();
 		StringBuffer buffer = new StringBuffer(super.getUpdateSingleSQLValues(storableObject)
 				+ COMMA
