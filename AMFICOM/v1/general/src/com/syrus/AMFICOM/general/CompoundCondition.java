@@ -1,5 +1,5 @@
 /*
- * $Id: CompoundCondition.java,v 1.12 2005/02/07 09:06:23 bob Exp $
+ * $Id: CompoundCondition.java,v 1.13 2005/02/11 16:09:06 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Collection;
 
 import org.omg.CORBA.Any;
 import org.omg.CORBA.ORB;
@@ -27,7 +27,7 @@ import com.syrus.util.corba.JavaSoftORBUtil;
  * Compound condition such as (A & B), (A | B) , (A ^ B) where A and B is
  * conditions (they can be also compound condition too)
  * 
- * @version $Revision: 1.12 $, $Date: 2005/02/07 09:06:23 $
+ * @version $Revision: 1.13 $, $Date: 2005/02/11 16:09:06 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -114,9 +114,9 @@ public class CompoundCondition implements StorableObjectCondition {
 		return result;
 	}
 
-	public boolean isNeedMore(List list) throws ApplicationException {
-		boolean firstResult = this.firstCondition.isNeedMore(list);
-		boolean secondResult = this.secondCondition.isNeedMore(list);
+	public boolean isNeedMore(Collection collection) throws ApplicationException {
+		boolean firstResult = this.firstCondition.isNeedMore(collection);
+		boolean secondResult = this.secondCondition.isNeedMore(collection);
 		return doCompare(firstResult, secondResult);
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.8 2005/02/08 11:07:10 bob Exp $
+ * $Id: TypicalCondition.java,v 1.9 2005/02/11 16:09:06 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.general;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -119,7 +120,7 @@ import com.syrus.util.Log;
  * 
  * </ul>
  * 
- * @version $Revision: 1.8 $, $Date: 2005/02/08 11:07:10 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/11 16:09:06 $
  * @author $Author: bob $
  * @module general_v1
  */
@@ -812,12 +813,12 @@ public class TypicalCondition implements StorableObjectCondition {
 	}
 
 	/**
-	 * @param list
+	 * @param collection
 	 * @throws ApplicationException
-	 * @see StorableObjectCondition#isNeedMore(List)
+	 * @see StorableObjectCondition#isNeedMore(Collection)
 	 */
-	public boolean isNeedMore(List list) throws ApplicationException {
-		return this.delegate.isNeedMore(list);
+	public boolean isNeedMore(Collection collection) throws ApplicationException {
+		return this.delegate.isNeedMore(collection);
 	}
 
 	/**

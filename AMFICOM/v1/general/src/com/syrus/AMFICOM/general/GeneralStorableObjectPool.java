@@ -1,5 +1,5 @@
 /*
- * $Id: GeneralStorableObjectPool.java,v 1.6 2005/02/11 15:35:16 arseniy Exp $
+ * $Id: GeneralStorableObjectPool.java,v 1.7 2005/02/11 16:09:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,14 +11,13 @@ package com.syrus.AMFICOM.general;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Set;
 
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/02/11 15:35:16 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/02/11 16:09:06 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -104,16 +103,16 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		return instance.getStorableObjectImpl(objectId, useLoader);
 	}
 
-	public static List getStorableObjects(Collection objectIds, boolean useLoader) throws DatabaseException, CommunicationException {
+	public static Collection getStorableObjects(Collection objectIds, boolean useLoader) throws DatabaseException, CommunicationException {
 		return instance.getStorableObjectsImpl(objectIds, useLoader);
 	}
 
-	public static List getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader)
+	public static Collection getStorableObjectsByCondition(StorableObjectCondition condition, boolean useLoader)
 			throws ApplicationException {
 		return instance.getStorableObjectsByConditionImpl(condition, useLoader);
 	}
 
-	public static List getStorableObjectsByConditionButIds(Collection ids,
+	public static Collection getStorableObjectsByConditionButIds(Collection ids,
 												StorableObjectCondition condition,
 												boolean useLoader) throws ApplicationException {
 		return instance.getStorableObjectsByConditionButIdsImpl(ids, condition, useLoader);
@@ -138,44 +137,44 @@ public final class GeneralStorableObjectPool extends StorableObjectPool {
 		return storableObject;
 	}
 
-	protected List loadStorableObjects(Short entityCode, Collection ids) throws DatabaseException, CommunicationException {
-		List loadedList = null;
+	protected Collection loadStorableObjects(Short entityCode, Collection ids) throws DatabaseException, CommunicationException {
+		Collection loadedCollection = null;
 		switch (entityCode.shortValue()) {
 			case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-				loadedList = gObjectLoader.loadParameterTypes(ids);
+				loadedCollection = gObjectLoader.loadParameterTypes(ids);
 				break;
 			case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
-				loadedList = gObjectLoader.loadCharacteristicTypes(ids);
+				loadedCollection = gObjectLoader.loadCharacteristicTypes(ids);
 				break;
 			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-				loadedList = gObjectLoader.loadCharacteristics(ids);
+				loadedCollection = gObjectLoader.loadCharacteristics(ids);
 				break;
 			default:
 				Log.errorMessage("GeneralStorableObjectPool.loadStorableObjects | Unknown entity: '" + ObjectEntities.codeToString(entityCode.shortValue()) + "', entity code: " + entityCode);
-				loadedList = null;
+				loadedCollection = null;
 		}
-		return loadedList;
+		return loadedCollection;
 	}
 
-	protected List loadStorableObjectsButIds(StorableObjectCondition condition, Collection ids)
+	protected Collection loadStorableObjectsButIds(StorableObjectCondition condition, Collection ids)
 			throws DatabaseException, CommunicationException {
-		List loadedList = null;
+		Collection loadedCollection = null;
 		short entityCode = condition.getEntityCode().shortValue();
 		switch (entityCode) {
 			case ObjectEntities.PARAMETERTYPE_ENTITY_CODE:
-				loadedList = gObjectLoader.loadParameterTypesButIds(condition, ids);
+				loadedCollection = gObjectLoader.loadParameterTypesButIds(condition, ids);
 				break;
 			case ObjectEntities.CHARACTERISTICTYPE_ENTITY_CODE:
-				loadedList = gObjectLoader.loadCharacteristicTypesButIds(condition, ids);
+				loadedCollection = gObjectLoader.loadCharacteristicTypesButIds(condition, ids);
 				break;
 			case ObjectEntities.CHARACTERISTIC_ENTITY_CODE:
-				loadedList = gObjectLoader.loadCharacteristicsButIds(condition, ids);
+				loadedCollection = gObjectLoader.loadCharacteristicsButIds(condition, ids);
 				break;
 			default:				
 				Log.errorMessage("GeneralStorableObjectPool.loadStorableObjectsButIds | Unknown entity: '" + ObjectEntities.codeToString(entityCode) + "', entity code: " + entityCode);
-				loadedList = null;
+				loadedCollection = null;
 		}
-		return loadedList;
+		return loadedCollection;
 	}
 
 	//public static void save()

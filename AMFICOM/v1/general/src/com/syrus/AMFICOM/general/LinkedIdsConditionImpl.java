@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsConditionImpl.java,v 1.3 2005/02/10 08:38:47 max Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.4 2005/02/11 16:09:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,12 +8,13 @@
 
 package com.syrus.AMFICOM.general;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/02/10 08:38:47 $
- * @author $Author: max $
+ * @version $Revision: 1.4 $, $Date: 2005/02/11 16:09:06 $
+ * @author $Author: bob $
  * @module general_v1
  */
 class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -62,7 +63,7 @@ class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		}
 	}
 
-	public boolean isNeedMore(List list) {		
+	public boolean isNeedMore(Collection list) {		
 		return true;
 	}	
 }

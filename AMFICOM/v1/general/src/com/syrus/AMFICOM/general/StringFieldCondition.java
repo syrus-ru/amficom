@@ -1,5 +1,5 @@
 /*
- * $Id: StringFieldCondition.java,v 1.8 2005/02/07 09:06:23 bob Exp $
+ * $Id: StringFieldCondition.java,v 1.9 2005/02/11 16:09:06 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import java.util.*;
  * <li>It must override {@link #isConditionTrue(Object)}.</li></ul> 
  *
  * @author $Author: bob $
- * @version $Revision: 1.8 $, $Date: 2005/02/07 09:06:23 $
+ * @version $Revision: 1.9 $, $Date: 2005/02/11 16:09:06 $
  * @module general_v1
  */
 public class StringFieldCondition implements StorableObjectCondition {
@@ -224,13 +224,13 @@ public class StringFieldCondition implements StorableObjectCondition {
 	}
 
 	/**
-	 * @param list
+	 * @param collection
 	 * @throws ApplicationException
 	 * @see StorableObjectCondition#isNeedMore(List)
 	 */
-	public final boolean isNeedMore(final List list) throws ApplicationException {
-		if (list != null)
-			for (Iterator iterator = list.iterator(); iterator.hasNext();)
+	public final boolean isNeedMore(final Collection collection) throws ApplicationException {
+		if (collection != null)
+			for (Iterator iterator = collection.iterator(); iterator.hasNext();)
 				if (isConditionTrue(iterator.next()))
 					return false;
 		return true;

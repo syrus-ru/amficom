@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.11 2005/02/08 14:40:45 bob Exp $
+ * $Id: LinkedIdsCondition.java,v 1.12 2005/02/11 16:09:06 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.general;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -62,11 +63,11 @@ import com.syrus.util.Log;
  * 
  * </li>
  * <li>It must override {@link #isConditionTrue(Object)},
- * {@link #isNeedMore(List)}and {@link #setEntityCode(Short)}.</li>
+ * {@link #isNeedMore(Collection)}and {@link #setEntityCode(Short)}.</li>
  * </ul>
  * 
  * @author $Author: bob $
- * @version $Revision: 1.11 $, $Date: 2005/02/08 14:40:45 $
+ * @version $Revision: 1.12 $, $Date: 2005/02/11 16:09:06 $
  * @module general_v1
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -314,7 +315,7 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	 * @throws ApplicationException
 	 * @see StorableObjectCondition#isNeedMore(List)
 	 */
-	public boolean isNeedMore(final List list) throws ApplicationException {
+	public boolean isNeedMore(final Collection list) throws ApplicationException {
 		return this.delegate.isNeedMore(list);
 	}
 

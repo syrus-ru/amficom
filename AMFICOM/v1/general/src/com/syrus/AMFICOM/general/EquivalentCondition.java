@@ -1,5 +1,5 @@
 /*
-* $Id: EquivalentCondition.java,v 1.1 2005/01/21 08:21:41 bob Exp $
+* $Id: EquivalentCondition.java,v 1.2 2005/02/11 16:09:06 bob Exp $
 *
 * Copyright ø 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,7 +8,7 @@
 
 package com.syrus.AMFICOM.general;
 
-import java.util.List;
+import java.util.Collection;
 
 import com.syrus.AMFICOM.general.corba.EquivalentCondition_Transferable;
 
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.corba.EquivalentCondition_Transferable;
 /**
  * Equivalent (identical, allways true) condition
  * written with especial cynicism
- * @version $Revision: 1.1 $, $Date: 2005/01/21 08:21:41 $
+ * @version $Revision: 1.2 $, $Date: 2005/02/11 16:09:06 $
  * @author ÷÷œ‘ $Author: bob $
  * @module general_v1
  */
@@ -40,7 +40,7 @@ public class EquivalentCondition implements StorableObjectCondition {
 		return true;
 	}
 
-	public boolean isNeedMore(List list) throws ApplicationException {
+	public boolean isNeedMore(Collection collection) throws ApplicationException {
 		return true;
 	}
 	
