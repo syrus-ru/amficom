@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.15 2004/08/11 10:59:55 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.16 2004/08/11 13:10:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.measurement.corba.MeasurementType_Transferable;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2004/08/11 10:59:55 $
+ * @version $Revision: 1.16 $, $Date: 2004/08/11 13:10:17 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -106,7 +106,7 @@ public class MeasurementType extends ActionType {
 																							 String codename,
 																							 String description,
 																							 List inParameterTypeIds,
-																							 List	outParameterTypeIds){
+																							 List	outParameterTypeIds) {
 		return new MeasurementType(id,
 															 creatorId,
 															 codename,

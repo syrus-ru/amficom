@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.14 2004/08/11 10:59:55 arseniy Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.15 2004/08/11 13:10:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2004/08/11 10:59:55 $
+ * @version $Revision: 1.15 $, $Date: 2004/08/11 13:10:17 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -232,8 +232,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 			+ analysisTypeIdStr + COMMA
 			+ DatabaseDate.toUpdateSubString(analysisType.getCreated()) + COMMA
 			+ DatabaseDate.toUpdateSubString(analysisType.getModified()) + COMMA
-			+ analysisType.getCreatorId().toString() + COMMA 
-			+ analysisType.getModifierId().toString() + COMMA
+			+ analysisType.getCreatorId().toSQLString() + COMMA 
+			+ analysisType.getModifierId().toSQLString() + COMMA
 			+ APOSTOPHE + analysisType.getCodename() + APOSTOPHE + COMMA 
 			+ APOSTOPHE + analysisType.getDescription() + APOSTOPHE
 			+ CLOSE_BRACKET;

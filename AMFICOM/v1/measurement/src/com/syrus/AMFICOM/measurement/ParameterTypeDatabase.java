@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.12 2004/08/10 19:05:19 arseniy Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.13 2004/08/11 13:10:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2004/08/10 19:05:19 $
+ * @version $Revision: 1.13 $, $Date: 2004/08/11 13:10:17 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -155,8 +155,8 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 			+ parameterTypeIdStr + COMMA
 			+ DatabaseDate.toUpdateSubString(parameterType.getCreated()) + COMMA
 			+ DatabaseDate.toUpdateSubString(parameterType.getModified()) + COMMA
-			+ parameterType.getCreatorId().toString() + COMMA
-			+ parameterType.getModifierId().toString() + COMMA
+			+ parameterType.getCreatorId().toSQLString() + COMMA
+			+ parameterType.getModifierId().toSQLString() + COMMA
 			+ APOSTOPHE + parameterType.getCodename() + APOSTOPHE + COMMA
 			+ APOSTOPHE + parameterType.getDescription() + APOSTOPHE + COMMA
 			+ APOSTOPHE + parameterType.getName() + APOSTOPHE
