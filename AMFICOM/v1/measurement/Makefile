@@ -63,7 +63,7 @@ $(LIBNAME): mach
 
 .PHONY:	mach
 mach:	.mach
-.mach:	corba ora $(CLASSDIR)
+.mach:	.corba .ora $(CLASSDIR)
 	$(JAVAC) $(JAVAC_FLAGS) \
 		-classpath $(APPCLASSPATH):$(ORACLECLASSPATH):$(CLASSDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/measurement/MeasurementDatabaseContext.java \
