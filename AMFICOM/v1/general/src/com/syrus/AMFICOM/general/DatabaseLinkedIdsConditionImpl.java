@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.2 2005/02/08 13:56:53 max Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.3 2005/02/09 11:07:05 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/02/08 13:56:53 $
+ * @version $Revision: 1.3 $, $Date: 2005/02/09 11:07:05 $
  * @author $Author: max $
  * @module general_v1
  */
@@ -27,6 +27,11 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 				break;
 		}
 		return columnName;
+	}
+	
+	public String getSQLQuery() throws IllegalDataException {
+		// TODO: implement this method 
+		return null;
 	}
 
 }
