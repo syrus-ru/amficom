@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.17 2005/03/28 08:25:13 bass Exp $
+* $Id: MapView.java,v 1.18 2005/04/01 13:08:48 bob Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -12,9 +12,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -48,8 +50,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/03/28 08:25:13 $
+ * @author $Author: bob $
+ * @version $Revision: 1.18 $, $Date: 2005/04/01 13:08:48 $
  * @module mapview_v1
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -72,18 +74,18 @@ public class MapView extends DomainMember {
 	/**
 	 *  List&lt;{@link com.syrus.AMFICOM.scheme.Scheme}&gt;
 	 */
-	private List schemes;
+	private Set schemes;
 
 	private StorableObjectDatabase	mapViewDatabase;
 
 	/** Список кабелей. */
-	protected transient List cablePaths = new LinkedList();
+	protected transient Set cablePaths = new HashSet();
 	
 	/** Список измерительных путей. */
-	protected transient List measurementPaths = new LinkedList();
+	protected transient Set measurementPaths = new HashSet();
 	
 	/** Список маркеров. */
-	protected transient List markers = new LinkedList();
+	protected transient Set markers = new HashSet();
 
 	public MapView(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -152,7 +154,7 @@ public class MapView extends DomainMember {
 		this.defaultScale = defaultScale;
 		this.map = map;
 
-		this.schemes = new LinkedList();
+		this.schemes = new HashSet();
 
 		this.mapViewDatabase = MapViewDatabaseContext.getMapViewDatabase();
 	}	
@@ -190,8 +192,8 @@ public class MapView extends DomainMember {
 		}
 	}
 
-	public List getDependencies() {
-		List dependencies = new LinkedList();
+	public Set getDependencies() {
+		Set dependencies = new HashSet();
 		dependencies.add(this.getDomainId());
 		dependencies.add(this.map);
 		dependencies.addAll(this.schemes);		
@@ -220,8 +222,8 @@ public class MapView extends DomainMember {
 	 * Получить список схем.
 	 * @return список схем
 	 */
-	public List getSchemes() {
-		return  Collections.unmodifiableList(this.schemes);
+	public Set getSchemes() {
+		return  Collections.unmodifiableSet(this.schemes);
 	}
 	
 	public void addScheme(Scheme scheme)
@@ -601,9 +603,9 @@ public class MapView extends DomainMember {
 	 * Получить список топологических кабелей.
 	 * @return список топологических кабелей
 	 */
-	public List getCablePaths()
+	public Set getCablePaths()
 	{
-		return Collections.unmodifiableList(this.cablePaths);
+		return Collections.unmodifiableSet(this.cablePaths);
 	}
 
 	/**
@@ -684,9 +686,9 @@ public class MapView extends DomainMember {
 	 * Получить список путей тестирования.
 	 * @return список путей тестирования
 	 */
-	public List getMeasurementPaths()
+	public Set getMeasurementPaths()
 	{
-		return Collections.unmodifiableList(this.measurementPaths);
+		return Collections.unmodifiableSet(this.measurementPaths);
 	}
 
 	/**
@@ -825,9 +827,9 @@ public class MapView extends DomainMember {
 	 * Получить все маркеры.
 	 * @return список маркеров
 	 */
-	public List getMarkers()
+	public Set getMarkers()
 	{
-		return Collections.unmodifiableList(this.markers);
+		return Collections.unmodifiableSet(this.markers);
 	}
 
 	/**

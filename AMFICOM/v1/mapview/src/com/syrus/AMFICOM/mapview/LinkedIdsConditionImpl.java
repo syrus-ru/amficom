@@ -1,5 +1,5 @@
 /**
- * $Id: LinkedIdsConditionImpl.java,v 1.2 2005/03/24 14:00:28 bob Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.3 2005/04/01 13:08:48 bob Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,9 +9,9 @@
 
 package com.syrus.AMFICOM.mapview;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
 import com.syrus.AMFICOM.administration.Domain;
@@ -22,19 +22,19 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @author $Author: bob $
  * @module map_v1
  */
 class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCondition {
 
-	private LinkedIdsConditionImpl(Collection linkedIds, Short entityCode) {
+	private LinkedIdsConditionImpl(Set linkedIds, Short entityCode) {
 		this.linkedIds = linkedIds;
 		this.entityCode = entityCode;
 	}
 
 	private LinkedIdsConditionImpl(Identifier identifier, Short entityCode) {
-		this.linkedIds = Collections.singletonList(identifier);
+		this.linkedIds = Collections.singleton(identifier);
 		this.entityCode = entityCode;
 	}
 
@@ -87,7 +87,7 @@ class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsConditio
 		}
 	}
 
-	public boolean isNeedMore(Collection collection) {
+	public boolean isNeedMore(Set collection) {
 		return true;
 	}
 }
