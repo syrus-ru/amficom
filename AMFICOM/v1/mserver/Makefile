@@ -8,7 +8,7 @@ INCIDLDIR=../idl_v1/idl
 HOST=mongol
 SERVICE_NAME=mongol
 
-APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar
+APPCLASSPATH = $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/servermisc.jar
 
 IDL2JAVAFLAGS = -strict -I$(INCIDLDIR)
 
@@ -25,7 +25,7 @@ $(LIBNAME): .mach
 .mach:	.corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(CLASSDIR) \
-		$(SRCDIR)/com/syrus/AMFICOM/mserver/DatabaseContextSetup.java
+		$(SRCDIR)/com/syrus/AMFICOM/mserver/DatabaseContextSetup.java \
 		$(SRCDIR)/com/syrus/AMFICOM/mserver/MServerImplementation.java
 	touch $@
 
@@ -33,7 +33,7 @@ $(LIBNAME): .mach
 	$(IDL2JAVA) $(IDL2JAVAFLAGS) \
 		$(IDLDIR)/mserver.idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
-		-classpath $(APPCLASSPATH):$(VBJCLASSPATH) \
+		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/mserver/corba/*.java
 	touch $@
