@@ -10,16 +10,12 @@ _*Stub.java
 AMFICOMRemoteException.java
 CompletionStatus.java
 DataType.java
-Describable.java
 ErrorCode.java
 IIdentifier.java
-IStorableObject.java
 Identifiable.java
 Identifier.java
 IdentifierGeneratorServer.java
-Namable.java
 NameResolver.java
-StorableObject.java
 ElementAttribute.java
 StringFieldSort.java
 CharacteristicSort.java

@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectImpl.java,v 1.10 2005/03/04 13:29:36 bass Exp $
+ * $Id: StorableObjectImpl.java,v 1.11 2005/03/04 19:13:37 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,16 @@
 
 package com.syrus.AMFICOM.general.corba;
 
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+
 /**
  * This class is never used directly, it was provided just in order for source
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link StorableObject} instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/03/04 13:29:36 $
+ * @version $Revision: 1.11 $, $Date: 2005/03/04 19:13:37 $
  * @module general_v1
  */
 final class StorableObjectImpl extends StorableObject implements Cloneable {
@@ -111,11 +114,11 @@ final class StorableObjectImpl extends StorableObject implements Cloneable {
 	 * @see com.syrus.AMFICOM.general.StorableObject#getHeaderTransferable()
 	 */
 	public StorableObject_Transferable getHeaderTransferable() {
-		return new StorableObject_Transferable(this.id.getTransferable(),
+		return new StorableObject_Transferable((Identifier_Transferable) this.id.getTransferable(),
 				this.created,
 				this.modified,
-				this.creatorId.getTransferable(),
-				this.modifierId.getTransferable(),
+				(Identifier_Transferable) this.creatorId.getTransferable(),
+				(Identifier_Transferable) this.modifierId.getTransferable(),
 				this.version);
 	}
 
