@@ -1,5 +1,5 @@
 /*-
- * $Id: ArchiveChildrenFactory.java,v 1.1 2005/03/31 16:03:02 bob Exp $
+ * $Id: ArchiveChildrenFactory.java,v 1.2 2005/04/04 07:20:20 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,14 +9,15 @@
 package com.syrus.AMFICOM.Client.Analysis.UI;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.UIManager;
 
@@ -49,7 +50,7 @@ import com.syrus.AMFICOM.scheme.SchemeStorableObjectPool;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/03/31 16:03:02 $
+ * @version $Revision: 1.2 $, $Date: 2005/04/04 07:20:20 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module analysis_v1
@@ -271,7 +272,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 			LinkedIdsCondition condition = new LinkedIdsCondition(test.getId(), ObjectEntities.MEASUREMENT_ENTITY_CODE);
 			try {
 				Collection measurements = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
-				List measurementIds = new LinkedList();
+				Set measurementIds = new HashSet();
 				for (Iterator it = measurements.iterator(); it.hasNext();) {
 					Measurement measurement = (Measurement) it.next();
 					measurementIds.add(measurement.getId());

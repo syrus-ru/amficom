@@ -1,10 +1,10 @@
 package com.syrus.AMFICOM.Client.Analysis;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -156,11 +156,11 @@ public class AnalysisUtil
 			ex.printStackTrace();
 		}
 
-		List inParameterTypes = new ArrayList();
+		java.util.Set inParameterTypes = new HashSet();
 		ParameterType ptype = getParameterType(userId, ParameterTypeCodenames.REFLECTOGRAMMA, DataType.DATA_TYPE_RAW);
 		inParameterTypes.add(ptype);
 
-		List outParameterTypes = new ArrayList();
+		java.util.Set outParameterTypes = new HashSet();
 		ptype = getParameterType(userId, ParameterTypeCodenames.TRACE_EVENTS, DataType.DATA_TYPE_RAW);
 		outParameterTypes.add(ptype);
 
@@ -171,10 +171,10 @@ public class AnalysisUtil
 				codename,
 				"",
 				inParameterTypes,
-				new ArrayList(0),
-				new ArrayList(0),
+				Collections.EMPTY_SET,
+				Collections.EMPTY_SET,
 				outParameterTypes,
-				new ArrayList(0)); //@todo: Temporal fix
+				Collections.EMPTY_SET); //@todo: Temporal fix
 		}
 		catch(CreateObjectException e)
 		{
@@ -271,7 +271,7 @@ public class AnalysisUtil
 		}
 	}
 
-	public static Set createCriteriaSetFromParams(Identifier userId, Collection meIds)
+	public static Set createCriteriaSetFromParams(Identifier userId, java.util.Set meIds)
 	{
 		SetParameter[] params = new SetParameter[8];
 
@@ -334,7 +334,7 @@ public class AnalysisUtil
 
 	}
 
-	public static Set createEtalon(Identifier userId, Collection meIds, ModelTraceManager mtm)
+	public static Set createEtalon(Identifier userId, java.util.Set meIds, ModelTraceManager mtm)
 	{
 		try
 		{
@@ -367,7 +367,7 @@ public class AnalysisUtil
 		}
 	}
 
-	public static Set createThresholdSet(Identifier userId, Collection meIds, ModelTraceManager mtm)
+	public static Set createThresholdSet(Identifier userId, java.util.Set meIds, ModelTraceManager mtm)
 	{
 		SetParameter[] params = new SetParameter[2];
 
