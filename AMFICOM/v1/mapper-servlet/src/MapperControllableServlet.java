@@ -1,20 +1,9 @@
-/**
- * <p>Title: MapperControllableServlet</p>
- * <p>Description: Servlet to provide control over MapJ from client machine</p>
- * <p>Copyright: Copyright (c) 2004</p>
- * <p>Company: Syrus Systems</p>
- * @author Peskovsky Peter
- * @version 1.0
- */
-
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import java.awt.Color;
 
 import java.io.IOException;
@@ -37,11 +26,9 @@ import com.mapinfo.mapxtreme.client.MapXtremeImageRenderer;
 import com.mapinfo.xmlprot.mxtj.ImageRequestComposer;
 
 /**
- * This is a simple example of an HTTP Map Servlet that extends the HttpServlet
- * class and contains MapJ objects.  This servlet is designed to send
- * map images down to an applet (MapperClientApplet.java).
- *
- * @see javax.servlet.http.HttpServlet , com.mapinfo.mapj.MapJ
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.3 $, $Date: 2005/02/02 13:51:03 $
+ * @module mapper-servlet
  */
 public class MapperControllableServlet
 	extends HttpServlet
@@ -50,33 +37,37 @@ public class MapperControllableServlet
 	// Or you can specify this value using an init parameter called 'mappath'.
 	// Include a path separator at the end.
 
-	private static String m_mapPath = "E:\\Map\\Mif";
+	private static String mapPath = "E:\\Map\\Mif"; //$NON-NLS-1$
 
 	// TODO: Specify the path & name of desired map definition to load.
 	// Or you can specify this value using an init parameter called 'filetoload'.
-	private static String m_fileToLoad = "E:\\Map\\Mif\\mif.mdf";
+	private static String fileToLoad = "E:\\Map\\Mif\\mif.mdf"; //$NON-NLS-1$
 
 	// TODO: Specify the URL of the MapXtremeServlet that will
 	// service our mapping requests.
 	// Or you can specify this value using an init parameter called 'mapxtremeurl'.
-	private static String m_mxtURL =
-		"http://localhost:8081/mapxtreme45/servlet/mapxtreme";
+	private static String mapXtremeURL =
+		"http://localhost:8081/mapxtreme45/servlet/mapxtreme"; //$NON-NLS-1$
 
 	// TODO (optional): Set m_debug to true if you want error messages to include
 	// debugging information, or false otherwise.  Or you can set this variable
 	// by setting a 'debug' init parameter to 'true'.
 	private boolean toDebug = false;
 
-	private MapJ myMap = null;
+	private MapJ mapJObject = null;
 
 	// Define constants to control various rendering options
 	public static final int NUM_OF_COLORS = 256;
 	public static final Color BACKGROUND_COLOR = Color.blue;
 
-	public static final String INVALID_PARAMETERS = "invalid_params";
-	public static final String NO_PARAMETERS = "no_params";
-	public static final String MAP_EXCEPTION = "map_exception";
+	public static final String ERROR_INVALID_PARAMETERS = "invalid_params"; //$NON-NLS-1$
+	public static final String ERROR_NO_PARAMETERS = "no_params"; //$NON-NLS-1$
+	public static final String ERROR_MAP_EXCEPTION = "map_exception"; //$NON-NLS-1$
 
+	public static final String INIT_PARAM_MAPPATH = "mappath"; //$NON-NLS-1$
+	public static final String INIT_PARAM_FILETOLOAD = "filetoload"; //$NON-NLS-1$
+	public static final String INIT_PARAM_MAPXTREME_URL = "mapxtremeurl"; //$NON-NLS-1$
+	public static final String INIT_PARAM_TODEBUG = "toDebug"; //$NON-NLS-1$	
 	/**
 	 * This method initializes the servlet and then reads and sets
 	 * initialization parameters
@@ -99,35 +90,35 @@ public class MapperControllableServlet
 		// If the servlet set-up has provided initialization parameters,
 		// use those parameters to override the hard-coded values
 		// declared above.
-		String strParam = getInitParameter("mappath");
+		String strParam = getInitParameter(INIT_PARAM_MAPPATH);
 		if (strParam != null)
 		{
-			m_mapPath = strParam;
+			mapPath = strParam;
 		}
 
-		strParam = getInitParameter("filetoload");
+		strParam = getInitParameter(INIT_PARAM_FILETOLOAD);
 		if (strParam != null)
 		{
-			m_fileToLoad = strParam;
+			fileToLoad = strParam;
 		}
 
-		strParam = getInitParameter("mapxtremeurl");
+		strParam = getInitParameter(INIT_PARAM_MAPXTREME_URL);
 		if (strParam != null && strParam.length() > 0)
 		{
-			m_mxtURL = strParam;
+			mapXtremeURL = strParam;
 		}
 
-		strParam = getInitParameter("toDebug");
+		strParam = getInitParameter(INIT_PARAM_TODEBUG);
 		if (strParam != null)
 		{
-			toDebug = true;
+			this.toDebug = true;
 		}
 
 		log("Using servlet parameters:");
-		log("mapPath: " + m_mapPath);
-		log("fileToLoad: " + m_fileToLoad);
-		log("mapxtremeurl: " + m_mxtURL);
-		log("toDebug: " + Boolean.toString(toDebug));
+		log(INIT_PARAM_MAPPATH + "mapPath: " + mapPath);
+		log(INIT_PARAM_FILETOLOAD + ": " + fileToLoad);
+		log(INIT_PARAM_MAPXTREME_URL + ": " + mapXtremeURL);
+		log(INIT_PARAM_TODEBUG + ": " + Boolean.toString(this.toDebug));
 	}
 
 	/**
@@ -146,16 +137,16 @@ public class MapperControllableServlet
 	 */
 
 	public void service(HttpServletRequest req, HttpServletResponse resp) throws
-		ServletException, IOException
+		IOException
 	{
 		// Draw the map and encode the URL
 		log("MCS - Got URL..." + req.getRequestURI());
 		log("MCS - Creating ObjectOutputStream...");
 		ObjectOutputStream oos = new ObjectOutputStream(resp.getOutputStream());
 
-		if (myMap == null)
+		if (this.mapJObject == null)
 		{
-			myMap = initMapJ();
+			this.mapJObject = this.initMapJ();
 		}
 
 		try
@@ -170,10 +161,10 @@ public class MapperControllableServlet
 
 			log("MCS - Setting device bounds");
 
-			myMap.setDeviceBounds(new DoubleRect(0, 0, width, height));
+			this.mapJObject.setDeviceBounds(new DoubleRect(0, 0, width, height));
 			if (! ( (width > 0) && (height > 0)))
 			{
-				writeNLogError(MapperControllableServlet.INVALID_PARAMETERS, oos);
+				writeNLogError(MapperControllableServlet.ERROR_INVALID_PARAMETERS, oos);
 				return;
 			}
 
@@ -223,12 +214,12 @@ public class MapperControllableServlet
 
 		catch (NullPointerException npExc)
 		{
-			writeNLogError(MapperControllableServlet.NO_PARAMETERS, oos);
+			writeNLogError(MapperControllableServlet.ERROR_NO_PARAMETERS, oos);
 			return;
 		}
 		catch (NumberFormatException nfException)
 		{
-			writeNLogError(MapperControllableServlet.INVALID_PARAMETERS, oos);
+			writeNLogError(MapperControllableServlet.ERROR_INVALID_PARAMETERS, oos);
 			return;
 		}
 	}
@@ -242,9 +233,10 @@ public class MapperControllableServlet
 	}
 
 	/**
-	 *  This establishes communications with the MapXtreme Java
-	 *  servlet and then loads the map definition. A fully initialized MapJ
-	 *  object is returned.
+	 * Создаёт объект MapJ и загружает картографические данные. 
+	 * @return Готовый к использованию объект MapJ для работы с
+	 *  картографическими данными
+	 * @throws IOException
 	 */
 	public MapJ initMapJ() throws IOException
 	{
@@ -256,20 +248,20 @@ public class MapperControllableServlet
 		try
 		{
 			log("MCS - Loading geoset...");
-			if (m_fileToLoad.endsWith(".gst"))
+			if (fileToLoad.endsWith(".gst"))
 			{
-				myMap.loadGeoset(m_fileToLoad, m_mapPath, null);
-				log("MCS - Geoset " + m_fileToLoad + " has been loaded.");
+				myMap.loadGeoset(fileToLoad, mapPath, null);
+				log("MCS - Geoset " + fileToLoad + " has been loaded.");
 			}
 			else
 			{
-				myMap.loadMapDefinition(m_fileToLoad);
-				log("MCS - Map definition " + m_fileToLoad + " has been loaded.");
+				myMap.loadMapDefinition(fileToLoad);
+				log("MCS - Map definition " + fileToLoad + " has been loaded.");
 			}
 		}
 		catch (IOException e)
 		{
-			log("MCS - Can't load geoset: " + m_fileToLoad);
+			log("MCS - Can't load geoset: " + fileToLoad);
 			throw e;
 		}
 		
@@ -282,13 +274,14 @@ public class MapperControllableServlet
 
 	/**
 	 * Установить центральную точку вида карты
+	 * @param center Топологические координаты центральной точки
 	 */
 	public void setCenter(DoublePoint center)
 	{
 		System.out.println("Set center (" + center.x + ", " + center.y + ")");
 		try
 		{
-			myMap.setCenter(new com.mapinfo.util.DoublePoint(center.x, center.y));
+			this.mapJObject.setCenter(new com.mapinfo.util.DoublePoint(center.x, center.y));
 		}
 		catch (Exception e)
 		{
@@ -298,6 +291,7 @@ public class MapperControllableServlet
 
 	/**
 	 * Установить заданный масштаб вида карты
+	 * @param scale Массштаб для карты
 	 */
 	public void setScale(double scale)
 	{
@@ -305,7 +299,7 @@ public class MapperControllableServlet
 		try
 		{
 			if (scale != 0.0D)
-				myMap.setZoom(scale);
+				this.mapJObject.setZoom(scale);
 		}
 		catch (Exception e)
 		{
@@ -314,9 +308,9 @@ public class MapperControllableServlet
 	}
 
 	/**
-	 * Устанавливает видимость для слоя
-	 * @param layerName
-	 * @param visible
+	 * @param layerIndex Индекс слоя, которому устанавливаются параметры видимости
+	 * @param layerVisible Видимость слоя
+	 * @param layerLabelsVisible Видимость надписей данного слоя
 	 */
 	public void setLayerVisibility(
 		int layerIndex,
@@ -325,7 +319,7 @@ public class MapperControllableServlet
 	{
 		try
 		{
-			FeatureLayer layer = (FeatureLayer)this.myMap.getLayers().get(
+			FeatureLayer layer = (FeatureLayer)this.mapJObject.getLayers().get(
 				layerIndex, LayerType.FEATURE);
 			layer.setEnabled(layerVisible);
 			layer.setAutoLabel(layerLabelsVisible);
@@ -336,14 +330,18 @@ public class MapperControllableServlet
 		}
 	}
 
+	/**
+	 * Отображает карту и записывает её в поток данных
+	 * @param os 
+	 */
 	public void writeMap(ObjectOutputStream os)
 	{
 		// Set up the renderer for this mapJ
 		try
 		{
-			MapXtremeImageRenderer rr = new MapXtremeImageRenderer(m_mxtURL);
+			MapXtremeImageRenderer rr = new MapXtremeImageRenderer(mapXtremeURL);
 			rr.render(ImageRequestComposer.create(
-				myMap, NUM_OF_COLORS, BACKGROUND_COLOR, "image/gif"));
+				this.mapJObject, NUM_OF_COLORS, BACKGROUND_COLOR, "image/gif"));
 
 			//Output the map
 			rr.toStream(os);
@@ -356,7 +354,7 @@ public class MapperControllableServlet
 
 	public void log(String msg)
 	{
-		if (!toDebug)
+		if (!this.toDebug)
 			return;
 
 		try
@@ -367,6 +365,7 @@ public class MapperControllableServlet
 		}
 		catch (IOException exc)
 		{
+			//Ошибка при выводе логов
 		}
 	}
 

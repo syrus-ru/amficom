@@ -1,14 +1,8 @@
-
-
 /**
- * <p>Title: </p>
- * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2004</p>
- * <p>Company: </p>
- * @author not attributable
- * @version 1.0
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.2 $, $Date: 2005/02/02 13:51:03 $
+ * @module mapper-servlet
  */
-
 public class ServletCommandNames
 {
 	public static final String WIDTH = "width";
