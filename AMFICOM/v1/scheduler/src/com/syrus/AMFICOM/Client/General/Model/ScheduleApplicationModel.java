@@ -1,7 +1,9 @@
 package com.syrus.AMFICOM.Client.General.Model;
 
-import com.syrus.AMFICOM.Client.General.*;
-import com.syrus.AMFICOM.Client.Resource.*;
+import com.syrus.AMFICOM.Client.General.SessionInterface;
+import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Resource.EmptySurveyDataSource;
+import com.syrus.AMFICOM.Client.Resource.RISDSurveyDataSource;
 
 public class ScheduleApplicationModel extends ApplicationModel
 {
@@ -19,31 +21,6 @@ public class ScheduleApplicationModel extends ApplicationModel
 		add("menuSessionUndo");
 		add("menuSessionDomain");
 		add("menuExit");
-
-		add("menuView");
-		add("menuViewPlan");
-		add("menuViewTable");
-		add("menuViewTree");
-		add("menuViewTime");
-		add("menuViewParam");
-		add("menuViewSave");
-		add("menuViewScheme");
-		add("menuViewMap");
-		add("menuViewAll");
-
-		add("menuHelp");
-		add("menuHelpContents");
-		add("menuHelpFind");
-		add("menuHelpTips");
-		add("menuHelpStart");
-		add("menuHelpCourse");
-		add("menuHelpHelp");
-		add("menuHelpSupport");
-		add("menuHelpLicense");
-		add("menuHelpAbout");
-
-		add("mapActionViewProperties");
-		add("mapActionEditProperties");
 	}
 
 	public DataSourceInterface getDataSource(SessionInterface si)
@@ -58,4 +35,3 @@ public class ScheduleApplicationModel extends ApplicationModel
 	}
 
 }
-
