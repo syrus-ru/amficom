@@ -1,5 +1,5 @@
 /*
- * $Id: ResourcedbInterfaceTestCase.java,v 1.1 2004/08/20 13:54:21 bass Exp $
+ * $Id: ResourcedbInterfaceTestCase.java,v 1.2 2004/09/09 11:32:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ public class ResourcedbInterfaceTestCase extends TestCase {
 
 	public void testGetImage1() throws SQLException {
 		System.out.println("Fetching an existing image...");
-		assertNotNull(ResourcedbInterface.getImage("OTAU_proto"));
+		assertNotNull(ResourcedbInterface.getImage(JDBCConnectionManager.getConn(), "OTAU_proto"));
 	}
 
 	public void testGetImage2() throws SQLException {
@@ -59,19 +59,9 @@ public class ResourcedbInterfaceTestCase extends TestCase {
 		}
 	}
 
-	public void testLoadImage1() {
-		System.out.println("Fetching an existing image via loadImage()...");
-		assertNotNull(ResourcedbInterface.loadImage("OTAU_proto"));
-	}
-
-	public void testLoadImage2() {
-		System.out.println("Fetching a nonexistent image via loadImage() (an exception stack trace will be dumped)...");
-		assertNull(ResourcedbInterface.loadImage("3.14159265358979323846"));
-	}
-
 	public void testGetImages1() throws SQLException {
 		long l = System.currentTimeMillis();
-		Collection imageResources = ResourcedbInterface.getImages(FETCH_SIZE);
+		Collection imageResources = ResourcedbInterface.getImages(JDBCConnectionManager.getConn(), FETCH_SIZE);
 		System.out.println("testGetImages1(): " + ((System.currentTimeMillis() - l) / 1000d) + " second(s)...");
 		System.out.println("testGetImages1(): count: " + imageResources.size());
 	}
@@ -87,7 +77,7 @@ public class ResourcedbInterfaceTestCase extends TestCase {
 		resultSet.close();
 		stmt.close();
 		long l = System.currentTimeMillis();
-		Collection imageResources = ResourcedbInterface.getImages(imageResourceIds);
+		Collection imageResources = ResourcedbInterface.getImages(JDBCConnectionManager.getConn(), imageResourceIds);
 		System.out.println("testGetImages2(): " + ((System.currentTimeMillis() - l) / 1000d) + " second(s)...");
 		System.out.println("testGetImages2(): count: " + imageResources.size());
 	}
@@ -103,7 +93,7 @@ public class ResourcedbInterfaceTestCase extends TestCase {
 		resultSet.close();
 		stmt.close();
 		long l = System.currentTimeMillis();
-		Collection imageResources = ResourcedbInterface.getImagesStd(imageResourceIds);
+		Collection imageResources = ResourcedbInterface.getImagesStd(JDBCConnectionManager.getConn(), imageResourceIds);
 		System.out.println("testGetImagesStd(): " + ((System.currentTimeMillis() - l) / 1000d) + " second(s)...");
 		System.out.println("testGetImagesStd(): count: " + imageResources.size());
 	}

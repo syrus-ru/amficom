@@ -1,5 +1,5 @@
 /*
- * $Id: ResourcedbInterface.java,v 1.2 2004/08/27 08:19:19 bass Exp $
+ * $Id: ResourcedbInterface.java,v 1.3 2004/09/09 11:32:40 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,19 +8,17 @@
 
 package com.syrus.AMFICOM.server;
 
-import com.syrus.AMFICOM.CORBA.Constants;
-import com.syrus.AMFICOM.CORBA.Resource.*;
+import com.syrus.AMFICOM.CORBA.Resource.ImageResource_Transferable;
 import com.syrus.util.database.JdbcBlobManager;
 import java.sql.*;
 import java.util.*;
-import sqlj.runtime.ref.DefaultContext;
 
 /**
  * All methods which don't accept {@link Connection} as their first argument
  * will be removed.
- *
+ * 
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2004/08/27 08:19:19 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/09 11:32:40 $
  * @module servermisc_v1
  * @todo Dispose of duplicate string literals. 
  */
@@ -29,8 +27,8 @@ public final class ResourcedbInterface {
 
 	/**
 	 * Declared public as
-	 * {@link com.syrus.AMFICOM.server.object.AMFICOMdbInterface#getDomainResourceDescriptors(String, String)}
-	 * uses these.
+	 * {@link com.syrus.AMFICOM.server.object.AMFICOMdbInterface} uses
+	 * these.
 	 */
 	public static final String DESC_IDS[] = {
 		"accessport", "ACCESSPORTS", "",
@@ -221,16 +219,13 @@ public final class ResourcedbInterface {
 	 */
 	private static final int MAXIMUM_EXPRESSION_NUMBER = 1000;
 
-	private static final Connection CONN
-		= DefaultContext.getDefaultContext().getConnection();
-
 	private ResourcedbInterface() {
 	}
 
 	/**
-	 * @deprecated 
+	 * @param conn the database connection to use.
 	 */
-	public static String getUid(String type) throws SQLException {
+	public static String getUid(final Connection conn, String type) throws SQLException {
 		Statement stmt = null;
 		ResultSet resultSet = null;
 		try {
@@ -242,7 +237,7 @@ public final class ResourcedbInterface {
 					sequenceName = SEQ_IDS[i + 2];
 					break;
 				}
-			stmt = CONN.createStatement();
+			stmt = conn.createStatement();
 			resultSet = stmt.executeQuery("SELECT amficom." + sequenceName + ".nextval FROM sys.dual");
 			if (resultSet.next())
 				return identifierBase + SEPARATOR + String.valueOf(resultSet.getInt("nextval"));
@@ -260,28 +255,17 @@ public final class ResourcedbInterface {
 	}
 
 	/**
-	 * Just a stub per se; will be rewritten.
+	 * @param conn the database connection to use.
 	 */
-	public static String getUid(Connection conn, String type) throws SQLException {
-		return getUid(type);
-	}
-
-	/**
-	 * @deprecated 
-	 */
-	public static ImageResource_Transferable getImage(String imageResourceId) throws SQLException {
+	public static ImageResource_Transferable getImage(final Connection conn, String imageResourceId) throws SQLException {
 		try {
 			Collection imageResourceIds = new LinkedList();
 			imageResourceIds.add(imageResourceId);
-			return (ImageResource_Transferable) (getImages(imageResourceIds).iterator().next());
+			return (ImageResource_Transferable) (getImages(conn, imageResourceIds).iterator().next());
 		} catch (NoSuchElementException nsee) {
 			nsee.printStackTrace();
 			return null;
 		}
-	}
-
-	public static ImageResource_Transferable getImage(Connection conn, String imageResourceId) throws SQLException {
-		return getImage(imageResourceId);
 	}
 
 	/**
@@ -289,31 +273,27 @@ public final class ResourcedbInterface {
 	 * stored, which may cause some overhead. This behaviour should be
 	 * changed for optimal performance.
 	 *
-	 * @deprecated 
+	 * @param conn the database connection to use.
 	 */
-	public static void setImage(String imageResourceId, byte data[]) throws SQLException {
-		JdbcBlobManager.setData(CONN, COLUMN_NAME_IMG, TABLE_NAME_IMAGERESOURCES, ID_EQUALS + imageResourceId + '\'', data);
-	}
-
-	public static void setImage(Connection conn, String imageResourceId, byte data[]) throws SQLException {
-		setImage(imageResourceId, data);
+	public static void setImage(final Connection conn, String imageResourceId, byte data[]) throws SQLException {
+		JdbcBlobManager.setData(conn, COLUMN_NAME_IMG, TABLE_NAME_IMAGERESOURCES, ID_EQUALS + imageResourceId + '\'', data);
 	}
 
 	/**
 	 * Implicitly issues <code>COMMIT</code> immediately after data is
 	 * stored, which may cause some overhead. This behaviour should be
 	 * changed for optimal performance.
-	 * 
-	 * @deprecated 
+	 *
+	 * @param conn the database connection to use.
 	 */
-	public static String setImage(byte data[]) throws SQLException {
+	public static String setImage(final Connection conn, byte data[]) throws SQLException {
 		Statement stmt = null;
 		ResultSet resultSet = null;
 		try {
-			String imageResourceId = getUId("imageresource");
-			stmt = CONN.createStatement();
+			String imageResourceId = getUid(conn, "imageresource");
+			stmt = conn.createStatement();
 			stmt.executeUpdate("INSERT INTO amficom.imageresources (id, name, codename, filename, source_string, img) VALUES ('" + imageResourceId + "', 'bytes', 'bytes', '', 'bytes', empty_blob())");
-			setImage(imageResourceId, data);
+			setImage(conn, imageResourceId, data);
 			return imageResourceId;
 		} finally {
 			try {
@@ -324,10 +304,6 @@ public final class ResourcedbInterface {
 					stmt.close();
 			}
 		}
-	}
-
-	public static String setImage(Connection conn, byte data[]) throws SQLException {
-		return setImage(data);
 	}
 
 	/**
@@ -351,11 +327,11 @@ public final class ResourcedbInterface {
 	 * underlying database connection. It's desired for best performance
 	 * that this property be <code>false</code>.</p>
 	 *
+	 * @param conn the database connection to use.
 	 * @param imageResourceSeq an array of images to be saved.
 	 * @throws SQLException if a database error occurs.
-	 * @deprecated 
 	 */
-	public static void setImages(ImageResource_Transferable imageResourceSeq[]) throws SQLException {
+	public static void setImages(final Connection conn, ImageResource_Transferable imageResourceSeq[]) throws SQLException {
 		if (imageResourceSeq == null)
 			return;
 
@@ -399,14 +375,14 @@ public final class ResourcedbInterface {
 			Statement stmt2 = null;
 			ResultSet resultSet = null;
 			try {
-				stmt1 = CONN.createStatement();
-				stmt2 = CONN.createStatement();
+				stmt1 = conn.createStatement();
+				stmt2 = conn.createStatement();
 				resultSet = stmt1.executeQuery(sql1.toString());
 				if (!resultSet.next())
 					stmt2.executeUpdate(sql2.toString());
 				if (!imageResource.source_string.equals(SOURCE_STRING_FILE))
-					JdbcBlobManager.setData(CONN, COLUMN_NAME_IMG, TABLE_NAME_IMAGERESOURCES, ID_EQUALS + imageResource.id + '\'', false, imageResource.image);
-				CONN.commit();
+					JdbcBlobManager.setData(conn, COLUMN_NAME_IMG, TABLE_NAME_IMAGERESOURCES, ID_EQUALS + imageResource.id + '\'', false, imageResource.image);
+				conn.commit();
 			} finally {
 				try {
 					if (resultSet != null)
@@ -430,8 +406,8 @@ public final class ResourcedbInterface {
 			PreparedStatement stmt1 = null;
 			PreparedStatement stmt2 = null;
 			try {
-				stmt1 = CONN.prepareStatement(sql1.toString());
-				stmt2 = CONN.prepareStatement(sql2.toString());
+				stmt1 = conn.prepareStatement(sql1.toString());
+				stmt2 = conn.prepareStatement(sql2.toString());
 				for (int i = 0; i < imageResourceSeqLength; i++) {
 					ImageResource_Transferable imageResource = imageResourceSeq[i];
 					stmt1.setString(1, imageResource.id);
@@ -447,13 +423,13 @@ public final class ResourcedbInterface {
 							stmt2.executeUpdate();
 						}
 						if (!imageResource.source_string.equals(SOURCE_STRING_FILE))
-							JdbcBlobManager.setData(CONN, COLUMN_NAME_IMG, TABLE_NAME_IMAGERESOURCES, ID_EQUALS + imageResource.id + '\'', false, imageResource.image);
+							JdbcBlobManager.setData(conn, COLUMN_NAME_IMG, TABLE_NAME_IMAGERESOURCES, ID_EQUALS + imageResource.id + '\'', false, imageResource.image);
 					} finally {
 						if (resultSet != null)
 							resultSet.close();
 					}
 				}
-				CONN.commit();
+				conn.commit();
 			} finally {
 				try {
 					if (stmt1 != null)
@@ -466,31 +442,23 @@ public final class ResourcedbInterface {
 		}
 	}
 
-	public static void setImages(Connection conn, ImageResource_Transferable imageResourceSeq[]) throws SQLException {
-		setImages(imageResourceSeq);
+	/**
+	 * @param conn the database connection to use.
+	 */
+	public static Collection getImages(final Connection conn) throws SQLException {
+		return getImages(conn, Integer.MAX_VALUE);
 	}
 
 	/**
-	 * @deprecated 
+	 * @param conn the database connection to use.
 	 */
-	public static Collection getImages() throws SQLException {
-		return getImages(Integer.MAX_VALUE);
-	}
-
-	public static Collection getImages(Connection conn) throws SQLException {
-		return getImages();
-	}
-
-	/**
-	 * @deprecated 
-	 */
-	public static Collection getImages(final int fetchSize) throws SQLException {
+	public static Collection getImages(final Connection conn, final int fetchSize) throws SQLException {
 		Statement stmt = null;
 		ResultSet resultSet = null;
 		try {
 			Collection imageResources = new LinkedList();
 
-			stmt = CONN.createStatement();
+			stmt = conn.createStatement();
 
 			StringBuffer sql = new StringBuffer("SELECT id, name, ");
 			sql.append(COLUMN_NAME_SOURCE_STRING);
@@ -520,21 +488,17 @@ public final class ResourcedbInterface {
 		}
 	}
 
-	public static Collection getImages(Connection conn, final int fetchSize) throws SQLException {
-		return getImages(fetchSize);
-	}
-
 	/**
 	 * Returns a collection (actually a {@link LinkedList}) of images
 	 * fetched by their identifiers. It is assumed that
 	 * <code>imageResourceIds</code> contains no duplicate elements.
 	 *
+	 * @param conn the database connection to use.
 	 * @param imageResourceIds identifiers of images to be fetched.
 	 * @return a collection of images.
 	 * @throws SQLException if a database error occurs.
-	 * @deprecated 
 	 */
-	public static Collection getImages(final Collection imageResourceIds) throws SQLException {
+	public static Collection getImages(final Connection conn, final Collection imageResourceIds) throws SQLException {
 		if (imageResourceIds == null)
 			return new LinkedList();
 
@@ -575,15 +539,15 @@ public final class ResourcedbInterface {
 					c2.add(iterator.next());
 			}
 			
-			Collection imageResources = getImages(c1);
-			imageResources.addAll(getImages(c2));
+			Collection imageResources = getImages(conn, c1);
+			imageResources.addAll(getImages(conn, c2));
 			return imageResources;
 		}
 
 		Statement stmt = null;
 		ResultSet resultSet = null;
 		try {
-			stmt = CONN.createStatement();
+			stmt = conn.createStatement();
 			resultSet = stmt.executeQuery(sql.toString());
 			Collection imageResources = new LinkedList();
 			while (resultSet.next()) {
@@ -605,22 +569,18 @@ public final class ResourcedbInterface {
 		}
 	}
 
-	public static Collection getImages(Connection conn, final Collection imageResourceIds) throws SQLException {
-		return getImages(imageResourceIds);
-	}
-
 	/**
-	 * Does the same as {@link #getImages(Collection)}, using a different
+	 * Does the same as {@link #getImages(Connection, Collection)}, using a different
 	 * (less tricky) SQL query. This method is slightly slower (24 seconds
 	 * vs. 18 seconds for a 1000-element table), but is not removed as it
 	 * uses a more standard approach.
 	 * 
+	 * @param conn the database connection to use.
 	 * @param imageResourceIds identifiers of images to be fetched.
 	 * @return a collection of images.
 	 * @throws SQLException if a database error occurs.
-	 * @deprecated 
 	 */
-	public static Collection getImagesStd(final Collection imageResourceIds) throws SQLException {
+	public static Collection getImagesStd(final Connection conn, final Collection imageResourceIds) throws SQLException {
 		Collection imageResources = new LinkedList();
 
 		if (imageResourceIds == null)
@@ -645,7 +605,7 @@ public final class ResourcedbInterface {
 			Statement stmt = null;
 			ResultSet resultSet = null;
 			try {
-				stmt = CONN.createStatement();
+				stmt = conn.createStatement();
 				resultSet = stmt.executeQuery(sql.toString());
 				if (resultSet.next()) {
 					String sourceString = resultSet.getString(COLUMN_NAME_SOURCE_STRING);
@@ -668,7 +628,7 @@ public final class ResourcedbInterface {
 			sql.append("= ?");
 			PreparedStatement stmt = null;
 			try {
-				stmt = CONN.prepareStatement(sql.toString());
+				stmt = conn.prepareStatement(sql.toString());
 				for (Iterator iterator = imageResourceIds.iterator(); iterator.hasNext();) {
 					stmt.setString(1, (String) iterator.next());
 					ResultSet resultSet = null;
@@ -691,85 +651,6 @@ public final class ResourcedbInterface {
 				if (stmt != null)
 					stmt.close();
 			}
-		}
-	}
-
-	public static Collection getImagesStd(Connection conn, final Collection imageResourceIds) throws SQLException {
-		return getImagesStd(imageResourceIds);
-	}
-
-	/**
-	 * @deprecated Use {@link #getUid(String)} instead.
-	 */
-	public static String getUId(String type) {
-		try {
-			return getUid(type);
-		} catch (SQLException sqle) {
-			sqle.printStackTrace();
-			return type + System.currentTimeMillis();
-		}
-	}
-
-	/**
-	 * @deprecated Use {@link #getImage(String)} instead.
-	 */
-	public static ImageResource_Transferable loadImage(String imageResourceId) {
-		try {
-			return getImage(imageResourceId);
-		} catch (SQLException sqle) {
-			return null;
-		}
-	}
-
-	/**
-	 * @deprecated Use {@link #getImages(Collection)} instead.
-	 */
-	public static int loadImages(final ImageResourceSeq_TransferableHolder imageResourceSeq, final Collection imageResourceIds) {
-		try {
-			Collection imageResources = getImages(imageResourceIds);
-			imageResourceSeq.value = (ImageResource_Transferable[]) (imageResources.toArray(new ImageResource_Transferable[imageResources.size()]));
-			return Constants.ERROR_NO_ERROR;
-		} catch (SQLException sqle) {
-			sqle.printStackTrace();
-			return Constants.ERROR_LOADING;
-		}
-	}
-
-	/**
-	 * @deprecated Use {@link #setImage(byte[])} instead.
-	 */
-	public static String saveImage(byte data[]) {
-		try {
-			return setImage(data);
-		} catch (SQLException sqle) {
-			sqle.printStackTrace();
-			return null;
-		}
-	}
-
-	/**
-	 * @deprecated Use {@link #setImages(ImageResource_Transferable[])} instead.
-	 */
-	public static int saveImages(ImageResource_Transferable imageResourceSeq[]) {
-		try {
-			setImages(imageResourceSeq);
-			return Constants.ERROR_NO_ERROR;
-		} catch (SQLException sqle) {
-			sqle.printStackTrace();
-			return Constants.ERROR_SAVING;
-		}
-	}
-
-	/**
-	 * @deprecated Use {@link #setImage(String, byte[])}
-	 */
-	public static int updateImage(String imageResourceId, byte data[]) {
-		try {
-			setImage(imageResourceId, data);
-			return Constants.ERROR_NO_ERROR;
-		} catch (SQLException sqle) {
-			sqle.printStackTrace();
-			return Constants.ERROR_UPDATING;
 		}
 	}
 }
