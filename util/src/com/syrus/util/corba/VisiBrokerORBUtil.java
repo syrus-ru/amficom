@@ -1,5 +1,5 @@
 /*
- * $Id: VisiBrokerORBUtil.java,v 1.2 2004/06/01 14:09:15 bass Exp $
+ * $Id: VisiBrokerORBUtil.java,v 1.3 2004/07/30 10:40:58 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,7 @@ import java.util.Properties;
 import org.omg.CORBA.ORB;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/06/01 14:09:15 $
+ * @version $Revision: 1.3 $, $Date: 2004/07/30 10:40:58 $
  * @author $Author: bass $
  * @module util
  */
@@ -27,23 +27,23 @@ public class VisiBrokerORBUtil extends ORBUtil {
 	}
 
 	synchronized void initORB() {
-		if (orb != null)
+		if (this.orb != null)
 			return;
 		Properties properties = new Properties();
 		properties.put("org.omg.CORBA.ORBClass",
 			"com.visigenic.vbroker.orb.ORB");
 		properties.put("org.omg.CORBA.ORBSingletonClass",
 			"com.visigenic.vbroker.orb.ORB");
-		orb = ORB.init(new String[0], properties);
+		this.orb = ORB.init(new String[0], properties);
 	}
 
 	synchronized void initORBSingleton() {
-		if (orbSingleton != null)
+		if (this.orbSingleton != null)
 			return;
 		System.setProperty("org.omg.CORBA.ORBClass",
 			"com.visigenic.vbroker.orb.ORB");
 		System.setProperty("org.omg.CORBA.ORBSingletonClass",
 			"com.visigenic.vbroker.orb.ORB");
-		orbSingleton = ORB.init();
+		this.orbSingleton = ORB.init();
 	}
 }

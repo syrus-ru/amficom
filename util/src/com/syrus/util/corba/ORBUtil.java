@@ -1,5 +1,5 @@
 /*
- * $Id: ORBUtil.java,v 1.2 2004/06/01 14:09:15 bass Exp $
+ * $Id: ORBUtil.java,v 1.3 2004/07/30 10:40:58 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ package com.syrus.util.corba;
 import org.omg.CORBA.ORB;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2004/06/01 14:09:15 $
+ * @version $Revision: 1.3 $, $Date: 2004/07/30 10:40:58 $
  * @author $Author: bass $
  * @module util
  */
@@ -24,17 +24,17 @@ public abstract class ORBUtil {
 	}
 
 	public final ORB getORB() {
-		if (orb == null)
+		if (this.orb == null)
 			initORB();
-		return orb;
+		return this.orb;
 	}
 
 	abstract void initORB();
 
 	public final ORB getORBSingleton() {
-		if (orbSingleton == null)
+		if (this.orbSingleton == null)
 			initORBSingleton();
-		return orbSingleton;
+		return this.orbSingleton;
 	}
 
 	abstract void initORBSingleton();
