@@ -4,18 +4,19 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.Mark;
 
-import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
-import com.syrus.AMFICOM.Client.Resource.MapView.MarkerController;
+import com.syrus.AMFICOM.Client.Map.mapview.Marker;
+import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
+import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 
 public final class MarkerPopupMenu extends MapPopupMenu 
 {
 	private JMenuItem removeMenuItem = new JMenuItem();
 	
-	private MapMarker marker;
+	private Marker marker;
 	
 	private static MarkerPopupMenu instance = new MarkerPopupMenu();
 
@@ -39,7 +40,7 @@ public final class MarkerPopupMenu extends MapPopupMenu
 	
 	public void setElement(Object me)
 	{
-		this.marker = (MapMarker )me;
+		this.marker = (Marker)me;
 	}
 
 	private void jbInit()
@@ -59,7 +60,7 @@ public final class MarkerPopupMenu extends MapPopupMenu
 	{
 		super.removeMapElement(marker);
 		
-		MarkerController mc = (MarkerController )getLogicalNetLayer().getMapViewController().getController(marker);
+		MarkerController mc = (MarkerController)getLogicalNetLayer().getMapViewController().getController(marker);
 		mc.notifyMarkerDeleted(marker);
 
 		getLogicalNetLayer().repaint(false);

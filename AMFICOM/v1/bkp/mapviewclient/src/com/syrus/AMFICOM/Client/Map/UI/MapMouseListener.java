@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.17 2004/12/23 16:57:59 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.18 2004/12/24 15:42:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,14 +25,14 @@ import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategy;
 import com.syrus.AMFICOM.Client.Map.Strategy.MapStrategyManager;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElementController;
+import com.syrus.AMFICOM.Client.Map.Controllers.MapElementController;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Resource.Map.NodeLinkController;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
-import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
+import com.syrus.AMFICOM.Client.Map.Controllers.NodeLinkController;
+import com.syrus.AMFICOM.Client.Map.mapview.Selection;
+import com.syrus.AMFICOM.Client.Map.mapview.VoidElement;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 
 import java.awt.Cursor;
@@ -44,6 +44,7 @@ import java.awt.geom.Point2D;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
+import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 
 /**
  * Обработчик мыши в окне карты. При обработке смотрится состояние
@@ -53,7 +54,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.17 $, $Date: 2004/12/23 16:57:59 $
+ * @version $Revision: 1.18 $, $Date: 2004/12/24 15:42:13 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -129,7 +130,7 @@ public final class MapMouseListener implements MouseListener
 					else
 					{
 						logicalNetLayer.setCurrentMapElement(
-							VoidMapElement.getInstance(
+							com.syrus.AMFICOM.Client.Map.mapview.VoidElement.getInstance(
 								logicalNetLayer.getMapView() ) );
 					}
 					break;
@@ -150,7 +151,7 @@ public final class MapMouseListener implements MouseListener
 									if(this.sizeEditBox.isVisible())
 										return;
 								sizeEditBox = new MapNodeLinkSizeField(logicalNetLayer, nodelink, node);
-								NodeLinkController nlc = (NodeLinkController )logicalNetLayer.getMapViewController().getController(nodelink);
+								NodeLinkController nlc = (NodeLinkController)logicalNetLayer.getMapViewController().getController(nodelink);
 								Rectangle rect = nlc.getLabelBox(nodelink);
 								sizeEditBox.setBounds(rect.x, rect.y, rect.width + 3, rect.height + 3);
 								sizeEditBox.setText(MapPropertiesManager.getDistanceFormat().format(nodelink.getLengthLt()));
@@ -175,12 +176,12 @@ public final class MapMouseListener implements MouseListener
 					MapElement mapElement = logicalNetLayer.getMapElementAtPoint(me.getPoint());
 					MapElement curElement = logicalNetLayer.getCurrentMapElement();
 					MapElementController mec = logicalNetLayer.getMapViewController().getController(curElement);
-					if(curElement instanceof MapSelection)
+					if(curElement instanceof Selection)
 					{
 						mapElement = curElement;
 					}
 					else
-					if(!(curElement instanceof VoidMapElement) 
+					if(!(curElement instanceof VoidElement) 
 						&& mec.isMouseOnElement(curElement, me.getPoint()))
 					{
 						mapElement = curElement;

@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkElementStrategy.java,v 1.5 2004/12/22 16:38:41 krupenn Exp $
+ * $Id: MapNodeLinkElementStrategy.java,v 1.6 2004/12/24 15:42:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
+import com.syrus.AMFICOM.Client.Map.mapview.Selection;
 
 import java.awt.event.MouseEvent;
 
@@ -30,7 +30,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/12/22 16:38:41 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/24 15:42:13 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -83,14 +83,14 @@ public final class MapNodeLinkElementStrategy implements  MapStrategy
 				if ((actionMode == MapState.SELECT_ACTION_MODE))
 				{
 					MapElement mel = logicalNetLayer.getCurrentMapElement();
-					if(mel instanceof MapSelection)
+					if(mel instanceof Selection)
 					{
-						MapSelection sel = (MapSelection )mel;
+						Selection sel = (Selection)mel;
 						sel.add(nodeLink);
 					}
 					else
 					{
-						MapSelection sel = new MapSelection(logicalNetLayer);
+						Selection sel = new Selection(logicalNetLayer);
 						sel.addAll(logicalNetLayer.getSelectedElements());
 						logicalNetLayer.setCurrentMapElement(sel);
 					}

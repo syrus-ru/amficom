@@ -13,7 +13,7 @@ import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Resource.Map.SiteNodeController;
+import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;

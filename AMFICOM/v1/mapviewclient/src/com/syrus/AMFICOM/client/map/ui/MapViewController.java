@@ -99,7 +99,7 @@ public final class MapViewController implements ObjectResourceController
 		{
 			try
 			{
-				result = ConfigurationStorableObjectPool.getStorableObject(view.getCreatedBy(), false);
+				result = ConfigurationStorableObjectPool.getStorableObject(view.getCreatorId(), false);
 			}
 			catch (CommunicationException e)
 			{
@@ -113,12 +113,12 @@ public final class MapViewController implements ObjectResourceController
 		else
 		if (key.equals(KEY_CREATED))
 		{
-			result = sdf.format(new Date(view.getCreated()));
+			result = sdf.format(view.getCreated());
 		}
 		else
 		if (key.equals(KEY_MODIFIED))
 		{
-			result = sdf.format(new Date(view.getModified()));
+			result = sdf.format(view.getModified());
 		}
 		return result;
 	}

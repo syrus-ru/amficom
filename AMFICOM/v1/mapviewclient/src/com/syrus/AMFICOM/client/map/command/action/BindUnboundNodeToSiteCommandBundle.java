@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.8 2004/12/22 16:38:39 krupenn Exp $
+ * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.9 2004/12/24 15:42:11 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -18,9 +18,9 @@ import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundNode;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 
@@ -32,7 +32,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/12/22 16:38:39 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/24 15:42:11 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -42,7 +42,7 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 	/**
 	 * прив€зываемый элемент
 	 */
-	MapUnboundNodeElement unbound;
+	UnboundNode unbound;
 	
 	/**
 	 * узел
@@ -55,7 +55,7 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 	Map map;
 
 	public BindUnboundNodeToSiteCommandBundle(
-			MapUnboundNodeElement unbound, 
+			UnboundNode unbound, 
 			SiteNode site)
 	{
 		this.unbound = unbound;
@@ -79,7 +79,7 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 		// обновл€ютс€ концевые узлы кабельных путей
 		for(Iterator it = cablePaths.iterator(); it.hasNext();)
 		{
-			MapCablePathElement cp = (MapCablePathElement )it.next();
+			CablePath cp = (CablePath)it.next();
 			if(cp.getEndNode().equals(unbound))
 				cp.setEndNode(site);
 			if(cp.getStartNode().equals(unbound))

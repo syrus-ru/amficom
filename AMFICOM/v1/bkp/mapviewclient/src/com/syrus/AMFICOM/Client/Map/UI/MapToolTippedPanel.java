@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolTippedPanel.java,v 1.3 2004/12/22 16:38:42 krupenn Exp $
+ * $Id: MapToolTippedPanel.java,v 1.4 2004/12/24 15:42:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,6 +23,8 @@ import java.awt.event.MouseMotionListener;
 
 import javax.swing.JComponent;
 import javax.swing.JToolTip;
+import com.syrus.AMFICOM.Client.Map.Controllers.MapElementController;
+import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 
 /**
  * Класс используется для отображения всплывающих подсказок. Для этого
@@ -34,7 +36,7 @@ import javax.swing.JToolTip;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/12/22 16:38:42 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/24 15:42:13 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -129,7 +131,7 @@ public class MapToolTippedPanel extends JComponent
  * возникающих событий мыши родительскому объекту
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/12/22 16:38:42 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/24 15:42:13 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see

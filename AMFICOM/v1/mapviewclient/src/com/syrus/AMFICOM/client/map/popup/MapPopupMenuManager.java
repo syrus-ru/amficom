@@ -6,13 +6,13 @@ import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.Client.Map.mapview.Marker;
+import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
+import com.syrus.AMFICOM.Client.Map.mapview.Selection;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundNode;
+import com.syrus.AMFICOM.Client.Map.mapview.VoidElement;
 
 import java.util.HashMap;
 
@@ -26,7 +26,7 @@ public final class MapPopupMenuManager
 
 	static
 	{
-		popupMap.put(MapCablePathElement.class,
+		popupMap.put(com.syrus.AMFICOM.Client.Map.mapview.CablePath.class,
 			CablePathPopupMenu.getInstance());
 		popupMap.put(com.syrus.AMFICOM.map.PhysicalLink.class,
 			LinkPopupMenu.getInstance());
@@ -36,19 +36,19 @@ public final class MapPopupMenuManager
 			NodeLinkPopupMenu.getInstance());
 		popupMap.put(com.syrus.AMFICOM.map.TopologicalNode.class,
 			NodePopupMenu.getInstance());
-		popupMap.put(MapSelection.class,
+		popupMap.put(com.syrus.AMFICOM.Client.Map.mapview.Selection.class,
 			SelectionPopupMenu.getInstance());
 		popupMap.put(com.syrus.AMFICOM.map.SiteNode.class,
 			SitePopupMenu.getInstance());
-		popupMap.put(MapUnboundNodeElement.class,
+		popupMap.put(com.syrus.AMFICOM.Client.Map.mapview.UnboundNode.class,
 			UnboundPopupMenu.getInstance());
-		popupMap.put(MapUnboundLinkElement.class,
+		popupMap.put(com.syrus.AMFICOM.Client.Map.mapview.UnboundLink.class,
 			UnboundLinkPopupMenu.getInstance());
-		popupMap.put(VoidMapElement.class,
+		popupMap.put(com.syrus.AMFICOM.Client.Map.mapview.VoidElement.class,
 			VoidElementPopupMenu.getInstance());
-		popupMap.put(MapMarker.class,
+		popupMap.put(com.syrus.AMFICOM.Client.Map.mapview.Marker.class,
 			MarkerPopupMenu.getInstance());
-		popupMap.put(MapMeasurementPathElement.class,
+		popupMap.put(com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath.class,
 			MeasurementPathPopupMenu.getInstance());
 	}
 	

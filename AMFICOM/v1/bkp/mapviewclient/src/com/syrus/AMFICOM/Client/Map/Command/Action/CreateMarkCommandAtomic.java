@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkCommandAtomic.java,v 1.6 2004/12/23 16:57:59 krupenn Exp $
+ * $Id: CreateMarkCommandAtomic.java,v 1.7 2004/12/24 15:42:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.DoublePoint;
-import com.syrus.AMFICOM.Client.Resource.Map.MarkController;
-import com.syrus.AMFICOM.Client.Resource.Map.NodeLinkController;
+import com.syrus.AMFICOM.Client.Map.Controllers.MarkController;
+import com.syrus.AMFICOM.Client.Map.Controllers.NodeLinkController;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
 import com.syrus.AMFICOM.Client.General.Event.MapEvent;
@@ -31,11 +31,12 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 
 import java.util.Iterator;
+import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 
 /**
  * Команда создания метки на линии
  * 
- * @version $Revision: 1.6 $, $Date: 2004/12/23 16:57:59 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/24 15:42:11 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -95,7 +96,7 @@ public class CreateMarkCommandAtomic extends MapActionCommand
 		{
 			NodeLink mnle = (NodeLink)it.next();
 
-			NodeLinkController nlc = (NodeLinkController )getLogicalNetLayer().getMapViewController().getController(mnle);
+			NodeLinkController nlc = (NodeLinkController)getLogicalNetLayer().getMapViewController().getController(mnle);
 
 			if(nlc.isMouseOnElement(mnle, point))
 			{
@@ -129,7 +130,7 @@ public class CreateMarkCommandAtomic extends MapActionCommand
 
 		map.addNode(mark);
 
-		MarkController mc = (MarkController )getLogicalNetLayer().getMapViewController().getController(mark);
+		MarkController mc = (MarkController)getLogicalNetLayer().getMapViewController().getController(mark);
 
 		mc.updateScaleCoefficient(mark);
 		

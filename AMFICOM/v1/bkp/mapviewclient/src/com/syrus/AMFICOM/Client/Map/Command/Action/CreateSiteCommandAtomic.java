@@ -1,5 +1,5 @@
 /**
- * $Id: CreateSiteCommandAtomic.java,v 1.7 2004/12/23 16:57:59 krupenn Exp $
+ * $Id: CreateSiteCommandAtomic.java,v 1.8 2004/12/24 15:42:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,17 +21,18 @@ import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Resource.Map.SiteNodeController;
+import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
+import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 
 /**
  * Разместить сетевой элемент на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.7 $, $Date: 2004/12/23 16:57:59 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/24 15:42:11 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -114,7 +115,7 @@ public class CreateSiteCommandAtomic extends MapActionCommand
 			e.printStackTrace();
 		}
 
-		SiteNodeController snc = (SiteNodeController )getLogicalNetLayer().getMapViewController().getController(site);
+		SiteNodeController snc = (SiteNodeController)getLogicalNetLayer().getMapViewController().getController(site);
 		
 		snc.updateScaleCoefficient(site);
 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapView.java,v 1.25 2004/12/23 16:58:00 krupenn Exp $
+ * $Id: MapView.java,v 1.26 2004/12/24 15:42:14 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,8 +23,10 @@ import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
+import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.MonitoredElementSort;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
@@ -38,9 +40,14 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.scheme.corba.*;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import com.syrus.AMFICOM.Client.Map.mapview.Marker;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundNode;
 
 /**
  * Класс используется для хранения объектов, отображаемых на 
@@ -51,7 +58,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.25 $, $Date: 2004/12/23 16:58:00 $
+ * @version $Revision: 1.26 $, $Date: 2004/12/24 15:42:14 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -60,20 +67,8 @@ public final class MapView
 {
 	private static final long serialVersionUID = 01L;
 
-	protected Identifier id;
-	protected String name = "Без названия";
-	protected String description;
-	protected Identifier domainId;
-	protected long created;
-	protected long modified;
-	protected Identifier createdBy;
-	protected Identifier modifiedBy;
+	private com.syrus.AMFICOM.mapview.MapView mapViewStorable;
 
-	protected List schemeIds = new LinkedList();
-	protected double scale = 0.00001;
-	protected double longitude = 0.0;
-	protected double latitude = 0.0;
-	
 	protected LogicalNetLayer logicalNetLayer = null;
 	
 	protected boolean isOpened = false;
@@ -85,36 +80,53 @@ public final class MapView
 
 	protected List cablePaths = new LinkedList();
 	protected List measurementPaths = new LinkedList();
-	/** Вектор маркеров */
 	protected List markers = new LinkedList();
 
 	/**
 	 * 
 	 * @param logical comments
 	 */
-	public MapView(LogicalNetLayer logical)
+	public MapView(LogicalNetLayer logical, Map map)
+		throws CreateObjectException
 	{
 		Environment.log(
 				Environment.LOG_LEVEL_FINER, 
 				"constructor call", 
 				getClass().getName(), 
 				"MapView(" + logical + ")");
+
+		AccessIdentifier_Transferable ait = 
+			logical.getContext().getSessionInterface().getAccessIdentifier();
+		Identifier creatorId = new Identifier(ait.user_id);
+		Identifier domainId =  new Identifier(ait.domain_id);
+
+		mapViewStorable = com.syrus.AMFICOM.mapview.MapView.createInstance(
+			creatorId,
+			domainId,
+			"Без названия",
+			"",
+			0.0D,
+			0.0D,
+			1.0D,
+			1.0D,
+			map.getId());
+
 		setLogicalNetLayer(logical);
-		created = System.currentTimeMillis();
 	}
 
 	/**
 	 * constructor
 	 */
-	public MapView()
+	public MapView(com.syrus.AMFICOM.mapview.MapView mapViewStorable)
 	{
 		Environment.log(
 				Environment.LOG_LEVEL_FINER, 
 				"constructor call", 
 				getClass().getName(), 
 				"MapView()");
+				
+		this.mapViewStorable = mapViewStorable;
 		setLogicalNetLayer(null);
-		created = System.currentTimeMillis();
 	}
 
 	/**
@@ -122,12 +134,12 @@ public final class MapView
 	 */
 	public String getName()
 	{
-		return name;
+		return mapViewStorable.getName();
 	}
 	
-	public void setName(String name )
+	public void setName(String name)
 	{
-		this.name = name;
+		mapViewStorable.setName(name);
 	}
 	
 	/**
@@ -135,33 +147,33 @@ public final class MapView
 	 */
 	public Identifier getId()
 	{
-		return id;
+		return mapViewStorable.getId();
 	}
 	
-	public void setId(Identifier id)
-	{
-		this.id = id;
-	}
+//	public void setId(Identifier id)
+//	{
+//		mapViewStorable.setId(id);
+//	}
 
 	/**
 	 * геттер
 	 */
 	public Identifier getDomainId()
 	{
-		return domainId;
+		return mapViewStorable.getDomainId();
 	}
 	
 	public void setDomainId(Identifier domainId)
 	{
-		this.domainId = domainId;
+		mapViewStorable.setDomainId(domainId);
 	}
 	
 	/**
 	 * геттер
 	 */
-	public long getModified()
+	public Date getModified()
 	{
-		return modified;
+		return mapViewStorable.getModified();
 	}
 
 	public Map getMap()
@@ -172,6 +184,7 @@ public final class MapView
 	public void setMap(Map mc)
 	{
 		this.map = mc;
+		mapViewStorable.setMapId(mc.getId());
 	}
 	
 	public List getSchemes()
@@ -214,7 +227,7 @@ public final class MapView
 	 */
 	public double getScale()
 	{
-		return scale;
+		return mapViewStorable.getScale();
 	}
 	
 	/**
@@ -222,30 +235,30 @@ public final class MapView
 	 */
 	public void setScale(double scale)
 	{
-		this.scale = scale;
+		mapViewStorable.setScale(scale);
 	}
 	
 	/**
 	 * Установить значения долготы, широты
 	 */
-	public void setLongLat( double longit, double latit)
+	public void setLongLat( double longitude, double latitude)
 	{
 		Environment.log(
 				Environment.LOG_LEVEL_FINER, 
 				"method call", 
 				getClass().getName(), 
-				"setLongLat(" + longit + ", " + latit + ")");
-		
-		longitude = longit;
-		latitude = latit;
+				"setLongLat(" + longitude + ", " + latitude + ")");
+
+		mapViewStorable.setLongitude(longitude);
+		mapViewStorable.setLatitude(latitude);
 	}
 	/**
 	 * Установить центральную точку вида карты
 	 */
 	public void setCenter(DoublePoint center)
 	{
-		longitude = center.getX();
-		latitude = center.getY();
+		mapViewStorable.setLongitude(center.getX());
+		mapViewStorable.setLatitude(center.getY());
 	}
 
 	/**
@@ -253,7 +266,9 @@ public final class MapView
 	 */
 	public DoublePoint getCenter()
 	{
-		return new DoublePoint(longitude, latitude);
+		return new DoublePoint(
+			mapViewStorable.getLongitude(),
+			mapViewStorable.getLatitude());
 	}
 
 	/**
@@ -272,17 +287,12 @@ public final class MapView
 
 		if(logicalNetLayer != null)
 		{
-			longitude = logicalNetLayer.getCenter().getX();
-			latitude = logicalNetLayer.getCenter().getY();
+			mapViewStorable.setLongitude(logicalNetLayer.getCenter().getX());
+			mapViewStorable.setLatitude(logicalNetLayer.getCenter().getY());
 
-			scale = logicalNetLayer.getScale();
+			mapViewStorable.setScale(logicalNetLayer.getScale());
 
 			revert();
-
-//			if(map != null)
-//			{
-//				map.setConverter(logicalNetLayer);
-//			}
 		}
 	}
 
@@ -297,6 +307,7 @@ public final class MapView
 	public void addScheme(Scheme sch)
 	{
 		this.schemes.add(sch);
+//		mapViewStorable.addSchemeId(sch.id());
 		scanElements(sch);
 	}
 
@@ -352,7 +363,7 @@ public final class MapView
 	public void scanCable(SchemeCableLink schemeCableLink)
 	{
 		SiteNode[] mne = getSideNodes(schemeCableLink);
-		MapCablePathElement cp = findCablePath(schemeCableLink);
+		CablePath cp = findCablePath(schemeCableLink);
 		if(cp == null)
 		{
 			if(mne[0] != null && mne[1] != null)
@@ -386,7 +397,7 @@ public final class MapView
 	public void scanPath(SchemePath schemePath)
 	{
 		SiteNode[] mne = getSideNodes(schemePath);
-		MapMeasurementPathElement mp = findMeasurementPath(schemePath);
+		MeasurementPath mp = findMeasurementPath(schemePath);
 		if(mp == null)
 		{
 			if(mne[0] != null && mne[1] != null)
@@ -422,7 +433,7 @@ public final class MapView
 		for(Iterator it = schemePaths.iterator(); it.hasNext();)
 		{
 			SchemePath path = (SchemePath )it.next();
-			MapMeasurementPathElement mp = findMeasurementPath(path);
+			MeasurementPath mp = findMeasurementPath(path);
 			if(mp != null)
 			{
 				unplaceElement(mp);
@@ -436,7 +447,7 @@ public final class MapView
 		for(Iterator it = schemeCables.iterator(); it.hasNext();)
 		{
 			SchemeCableLink scl = (SchemeCableLink )it.next();
-			MapCablePathElement cp = findCablePath(scl);
+			CablePath cp = findCablePath(scl);
 			if(cp != null)
 			{
 				unplaceElement(cp);
@@ -453,7 +464,7 @@ public final class MapView
 			SiteNode site = findElement(se);
 			if(site != null)
 			{
-				if(site instanceof MapUnboundNodeElement)
+				if(site instanceof UnboundNode)
 				{
 					RemoveNodeCommandAtomic cmd = new RemoveNodeCommandAtomic(site);
 					cmd.setLogicalNetLayer(logicalNetLayer);
@@ -488,7 +499,7 @@ public final class MapView
 		cmd.execute();
 	}
 	
-	public void unplaceElement(MapCablePathElement cp)
+	public void unplaceElement(CablePath cp)
 	{
 		UnPlaceSchemeCableLinkCommand cmd = new UnPlaceSchemeCableLinkCommand(cp);
 		cmd.setLogicalNetLayer(logicalNetLayer);
@@ -506,7 +517,7 @@ public final class MapView
 		cmd.execute();
 	}
 
-	public void unplaceElement(MapMeasurementPathElement mp)
+	public void unplaceElement(MeasurementPath mp)
 	{
 		UnPlaceSchemePathCommand cmd = new UnPlaceSchemePathCommand(mp);
 		cmd.setLogicalNetLayer(logicalNetLayer);
@@ -521,7 +532,7 @@ public final class MapView
 	 * @param mcpe
 	 * @param scl
 	 */
-	public void correctStartEndNodes(MapCablePathElement mcpe, SchemeCableLink scl)
+	public void correctStartEndNodes(CablePath mcpe, SchemeCableLink scl)
 	{
 		SiteNode[] mne = getSideNodes(scl);
 		if(mne[0] != null && mne[1] != null)
@@ -626,8 +637,8 @@ public final class MapView
 		for(Iterator it = getMap().getSiteNodes().iterator(); it.hasNext();)
 		{
 			SiteNode node = (SiteNode )it.next();
-			if(node instanceof MapUnboundNodeElement)
-				if(((MapUnboundNodeElement)node).getSchemeElement().equals(se))
+			if(node instanceof UnboundNode)
+				if(((UnboundNode)node).getSchemeElement().equals(se))
 					return node;
 			if(se.siteNodeImpl() != null
 				&& se.siteNodeImpl().equals(node))
@@ -639,23 +650,23 @@ public final class MapView
 	/**
 	 * Найти элемент с идентификатором id на карте.
 	 */
-	public MapCablePathElement findCablePath(SchemeCableLink scl)
+	public CablePath findCablePath(SchemeCableLink scl)
 	{
 
 		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
 		{
-			MapCablePathElement cp = (MapCablePathElement)it.next();
+			CablePath cp = (CablePath)it.next();
 			if(cp.getSchemeCableLink().equals(scl))
 					return cp;
 		}
 		return null;
 	}
 
-	public MapMeasurementPathElement findMeasurementPath(SchemePath path)
+	public MeasurementPath findMeasurementPath(SchemePath path)
 	{
 		for(Iterator it = getMeasurementPaths().iterator(); it.hasNext();)
 		{
-			MapMeasurementPathElement mp = (MapMeasurementPathElement )it.next();
+			MeasurementPath mp = (MeasurementPath)it.next();
 			if(mp.getSchemePath().equals(path))
 				return mp;
 		}
@@ -673,7 +684,7 @@ public final class MapView
 	/**
 	 * Добавить новый путь тестирования
 	 */
-	public void addCablePath(MapCablePathElement ob)
+	public void addCablePath(CablePath ob)
 	{
 		Environment.log(
 				Environment.LOG_LEVEL_FINER, 
@@ -687,7 +698,7 @@ public final class MapView
 	/**
 	 * Удалить путь тестирования
 	 */
-	public void removeCablePath(MapCablePathElement ob)
+	public void removeCablePath(CablePath ob)
 	{
 		Environment.log(
 				Environment.LOG_LEVEL_FINER, 
@@ -711,7 +722,7 @@ public final class MapView
 		LinkedList returnVector = new LinkedList();
 		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
 		{
-			MapCablePathElement cp = (MapCablePathElement)it.next();
+			CablePath cp = (CablePath)it.next();
 			if(cp.getLinks().contains(mple))
 				returnVector.add(cp);
 		}
@@ -729,7 +740,7 @@ public final class MapView
 		LinkedList returnVector = new LinkedList();
 		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
 		{
-			MapCablePathElement cp = (MapCablePathElement)it.next();
+			CablePath cp = (CablePath)it.next();
 			cp.sortNodes();
 			if(cp.getSortedNodes().contains(mne))
 				returnVector.add(cp);
@@ -748,7 +759,7 @@ public final class MapView
 		LinkedList returnVector = new LinkedList();
 		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
 		{
-			MapCablePathElement cp = (MapCablePathElement)it.next();
+			CablePath cp = (CablePath)it.next();
 			cp.sortNodeLinks();
 			if(cp.getSortedNodeLinks().contains(mnle))
 				returnVector.add(cp);
@@ -767,7 +778,7 @@ public final class MapView
 	/**
 	 * Добавить новый путь тестирования
 	 */
-	public void addMeasurementPath(MapMeasurementPathElement ob)
+	public void addMeasurementPath(MeasurementPath ob)
 	{
 		Environment.log(
 				Environment.LOG_LEVEL_FINER, 
@@ -781,7 +792,7 @@ public final class MapView
 	/**
 	 * Удалить путь тестирования
 	 */
-	public void removeMeasurementPath(MapMeasurementPathElement ob)
+	public void removeMeasurementPath(MeasurementPath ob)
 	{
 		Environment.log(
 				Environment.LOG_LEVEL_FINER, 
@@ -791,10 +802,9 @@ public final class MapView
 
 		measurementPaths.remove(ob);
 		ob.setSelected(false);
-//		removedElements.add(ob);
 	}
 
-	public List getMeasurementPaths(MapCablePathElement cpath)
+	public List getMeasurementPaths(CablePath cpath)
 	{
 		Environment.log(
 				Environment.LOG_LEVEL_FINER, 
@@ -805,7 +815,7 @@ public final class MapView
 		LinkedList returnVector = new LinkedList();
 		for(Iterator it = getMeasurementPaths().iterator(); it.hasNext();)
 		{
-			MapMeasurementPathElement mp = (MapMeasurementPathElement )it.next();
+			MeasurementPath mp = (MeasurementPath)it.next();
 			if(mp.getSortedCablePaths().contains(cpath))
 				returnVector.add(mp);
 		}
@@ -823,10 +833,10 @@ public final class MapView
 		LinkedList returnVector = new LinkedList();
 		for(Iterator it = getMeasurementPaths().iterator(); it.hasNext();)
 		{
-			MapMeasurementPathElement mp = (MapMeasurementPathElement )it.next();
+			MeasurementPath mp = (MeasurementPath)it.next();
 			for(Iterator it2 = mp.getSortedCablePaths().iterator(); it2.hasNext();)
 			{
-				MapCablePathElement cp = (MapCablePathElement)it2.next();
+				CablePath cp = (CablePath)it2.next();
 				if(cp.getLinks().contains(mple))
 				{
 					returnVector.add(mp);
@@ -848,10 +858,10 @@ public final class MapView
 		LinkedList returnVector = new LinkedList();
 		for(Iterator it = getCablePaths().iterator(); it.hasNext();)
 		{
-			MapMeasurementPathElement mp = (MapMeasurementPathElement )it.next();
+			MeasurementPath mp = (MeasurementPath)it.next();
 			for(Iterator it2 = mp.getSortedCablePaths().iterator(); it2.hasNext();)
 			{
-				MapCablePathElement cp = (MapCablePathElement)it2.next();
+				CablePath cp = (CablePath)it2.next();
 				cp.sortNodes();
 				if(cp.getSortedNodes().contains(mne))
 				{
@@ -874,10 +884,10 @@ public final class MapView
 		LinkedList returnVector = new LinkedList();
 		for(Iterator it = getMeasurementPaths().iterator(); it.hasNext();)
 		{
-			MapMeasurementPathElement mp = (MapMeasurementPathElement )it.next();
+			MeasurementPath mp = (MeasurementPath)it.next();
 			for(Iterator it2 = mp.getSortedCablePaths().iterator(); it2.hasNext();)
 			{
-				MapCablePathElement cp = (MapCablePathElement)it2.next();
+				CablePath cp = (CablePath)it2.next();
 				cp.sortNodeLinks();
 				if(cp.getSortedNodeLinks().contains(mnle))
 				{
@@ -889,9 +899,9 @@ public final class MapView
 		return returnVector;
 	}
 
-	public MapMeasurementPathElement getMeasurementPathByMonitoredElementId(Identifier meId)
+	public MeasurementPath getMeasurementPathByMonitoredElementId(Identifier meId)
 	{
-		MapMeasurementPathElement path = null;
+		MeasurementPath path = null;
 		try
 		{
 			MonitoredElement me = (MonitoredElement )
@@ -905,7 +915,7 @@ public final class MapView
 				{
 					for(Iterator it = getMeasurementPaths().iterator(); it.hasNext();)
 					{
-						MapMeasurementPathElement mp = (MapMeasurementPathElement )it.next();
+						MeasurementPath mp = (MeasurementPath)it.next();
 						if(mp.getSchemePath().pathImpl().equals(tp))
 						{
 							path = mp;
@@ -942,7 +952,7 @@ public final class MapView
 	/**
 	 * Удалить путь тестирования
 	 */
-	public void removeMarker(MapMarker ob)
+	public void removeMarker(Marker ob)
 	{
 		Environment.log(
 				Environment.LOG_LEVEL_FINER, 
@@ -972,7 +982,7 @@ public final class MapView
 	/**
 	 * Добавить новый путь тестирования
 	 */
-	public void addMarker(MapMarker ob)
+	public void addMarker(Marker ob)
 	{
 		Environment.log(
 				Environment.LOG_LEVEL_FINER, 
@@ -987,7 +997,7 @@ public final class MapView
 	/**
 	 * Получить маркер по ID
 	 */
-	public MapMarker getMarker(Identifier markerID)
+	public Marker getMarker(Identifier markerID)
 	{
 		Environment.log(
 				Environment.LOG_LEVEL_FINER, 
@@ -998,7 +1008,7 @@ public final class MapView
 		Iterator e = markers.iterator();
 		while( e.hasNext())
 		{
-			MapMarker marker = (MapMarker)e.next();
+			Marker marker = (Marker)e.next();
 			if ( marker.getId().equals(markerID))
 				return marker;
 		}
@@ -1074,36 +1084,30 @@ public final class MapView
 	}
 	public void setDescription(String description)
 	{
-		this.description = description;
+		mapViewStorable.setDescription(description);
 	}
 
 
 	public String getDescription()
 	{
-		return description;
+		return mapViewStorable.getDescription();
 	}
 
-	public Identifier getCreatedBy()
+	public Identifier getCreatorId()
 	{
-		return createdBy;
-	}
-
-
-	public long getCreated()
-	{
-		return created;
+		return mapViewStorable.getCreatorId();
 	}
 
 
-	public void setChanged(boolean changed)
+	public Date getCreated()
 	{
-		this.changed = changed;
+		return mapViewStorable.getCreated();
 	}
 
 
 	public boolean isChanged()
 	{
-		return changed;
+		return mapViewStorable.isChanged();
 	}
 
 /* from SiteNode

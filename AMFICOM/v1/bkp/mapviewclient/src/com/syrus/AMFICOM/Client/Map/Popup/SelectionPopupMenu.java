@@ -8,10 +8,10 @@ import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.map.Collector;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.Client.Map.mapview.Selection;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundNode;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -35,7 +35,7 @@ public final class SelectionPopupMenu extends MapPopupMenu
 	
 	private static SelectionPopupMenu instance = new SelectionPopupMenu();
 	
-	MapSelection selection;	
+	Selection selection;	
 
 	private SelectionPopupMenu()
 	{
@@ -52,7 +52,7 @@ public final class SelectionPopupMenu extends MapPopupMenu
 	
 	public void setElement(Object me)
 	{
-		this.selection = (MapSelection )me;
+		this.selection = (Selection)me;
 
 		insertSiteMenuItem.setVisible(selection.isPhysicalNodeSelection());
 		generateMenuItem.setVisible(selection.isUnboundSelection());
@@ -172,7 +172,7 @@ public final class SelectionPopupMenu extends MapPopupMenu
 			for(Iterator it = selection.getElements().iterator(); it.hasNext();)
 			{
 				MapElement me = (MapElement)it.next();
-				if(me instanceof MapUnboundNodeElement)
+				if(me instanceof UnboundNode)
 				{
 					nodesToBind.add(me);
 					it.remove();
@@ -183,7 +183,7 @@ public final class SelectionPopupMenu extends MapPopupMenu
 			{
 				for(Iterator it = nodesToBind.iterator(); it.hasNext();)
 				{
-					MapUnboundNodeElement un = (MapUnboundNodeElement )it.next();
+					UnboundNode un = (UnboundNode)it.next();
 					super.convertUnboundNodeToSite(un, proto);
 				}
 			}
@@ -192,9 +192,9 @@ public final class SelectionPopupMenu extends MapPopupMenu
 			for(Iterator it = selection.getElements().iterator(); it.hasNext();)
 			{
 				MapElement me = (MapElement)it.next();
-				if(me instanceof MapCablePathElement)
+				if(me instanceof CablePath)
 				{
-					MapCablePathElement path = (MapCablePathElement )me;
+					CablePath path = (CablePath)me;
 					if(!alreadyBound.contains(path))
 					{
 						super.generatePathCabling(path, proto);
@@ -202,9 +202,9 @@ public final class SelectionPopupMenu extends MapPopupMenu
 					}
 				}
 				else
-				if(me instanceof MapUnboundLinkElement)
+				if(me instanceof UnboundLink)
 				{
-					MapCablePathElement path = ((MapUnboundLinkElement )me).getCablePath();
+					CablePath path = ((UnboundLink)me).getCablePath();
 					if(!alreadyBound.contains(path))
 					{
 						super.generatePathCabling(path, proto);

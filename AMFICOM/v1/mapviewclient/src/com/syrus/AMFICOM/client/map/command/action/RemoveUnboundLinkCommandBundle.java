@@ -1,5 +1,5 @@
 /**
- * $Id: RemoveUnboundLinkCommandBundle.java,v 1.3 2004/10/19 10:07:43 krupenn Exp $
+ * $Id: RemoveUnboundLinkCommandBundle.java,v 1.4 2004/12/24 15:42:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,7 +12,7 @@
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
 
 /**
  * удаление непривязанно линии из карты, включая элементы, из
@@ -20,21 +20,21 @@ import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2004/10/19 10:07:43 $
+ * @version $Revision: 1.4 $, $Date: 2004/12/24 15:42:12 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
 public class RemoveUnboundLinkCommandBundle extends MapActionCommandBundle
 {
-	MapUnboundLinkElement unbound;
+	UnboundLink unbound;
 	
-	public RemoveUnboundLinkCommandBundle(MapUnboundLinkElement unbound)
+	public RemoveUnboundLinkCommandBundle(UnboundLink unbound)
 	{
 		this.unbound = unbound;
 	}
 	
-	public MapUnboundLinkElement getUnbound()
+	public UnboundLink getUnbound()
 	{
 		return unbound;
 	}

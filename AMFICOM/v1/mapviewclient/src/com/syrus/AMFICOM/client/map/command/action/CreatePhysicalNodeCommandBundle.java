@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandBundle.java,v 1.7 2004/12/23 16:57:59 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandBundle.java,v 1.8 2004/12/24 15:42:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import java.awt.geom.Point2D;
  * два других фрагмента, разделенные новывм топологичсеским узлом. Команда
  * состоит из последовательности атомарных действий
  * 
- * @version $Revision: 1.7 $, $Date: 2004/12/23 16:57:59 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/24 15:42:11 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -74,7 +74,7 @@ public class CreatePhysicalNodeCommandBundle extends MapActionCommandBundle
 		PhysicalLink physicalLink = nodeLink.getPhysicalLink();
 	
 		// создать новый активный топологический узел
-		TopologicalNode node = createPhysicalNode(coordinatePoint);
+		TopologicalNode node = super.createPhysicalNode(physicalLink, coordinatePoint);
 		changePhysicalNodeActivity(node, true);
 
 		// взять начальный и конечный узлы фрагмента

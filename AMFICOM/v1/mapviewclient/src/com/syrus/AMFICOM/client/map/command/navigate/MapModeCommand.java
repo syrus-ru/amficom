@@ -1,5 +1,5 @@
 /**
- * $Id: MapModeCommand.java,v 1.6 2004/12/01 10:55:32 krupenn Exp $
+ * $Id: MapModeCommand.java,v 1.7 2004/12/24 15:42:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationModel;
 import com.syrus.AMFICOM.Client.General.Model.MapApplicationModel;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
+import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
 import java.util.Iterator;
 
 /**
@@ -23,7 +23,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/12/01 10:55:32 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/24 15:42:12 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -73,8 +73,8 @@ public class MapModeCommand extends VoidCommand
 				{
 					for(Iterator it = logicalNetLayer.getMapView().getMeasurementPaths().iterator(); it.hasNext();)
 					{
-						MapMeasurementPathElement mpath = 
-							(MapMeasurementPathElement )it.next();
+						MeasurementPath mpath = 
+							(MeasurementPath)it.next();
 						mpath.sortPathElements();
 					}
 				}

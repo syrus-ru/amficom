@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementLabel.java,v 1.4 2004/12/22 16:38:42 krupenn Exp $
+ * $Id: MapElementLabel.java,v 1.5 2004/12/24 15:42:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.Client.Map.Popup.ProtoPopupMenu;
 import com.syrus.AMFICOM.map.SiteNodeType;
 
-import com.syrus.AMFICOM.Client.Resource.Map.NodeTypeController;
+import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.datatransfer.DataFlavor;
@@ -44,7 +44,7 @@ import javax.swing.border.EtchedBorder;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/12/22 16:38:42 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/24 15:42:13 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -76,7 +76,7 @@ public class MapElementLabel extends JLabel
 	public MapElementLabel(SiteNodeType proto)
 	{
 		this.proto = proto;
-		this.ntc = (NodeTypeController )NodeTypeController.getInstance();
+		this.ntc = (NodeTypeController)com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController.getInstance();
 //		this.ntc = (NodeTypeController )MapFrame
 //			.getMapMainFrame()
 //				.getMapViewer()

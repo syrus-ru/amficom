@@ -8,7 +8,7 @@ import com.syrus.AMFICOM.Client.Map.UI.SimpleMapElementController;
 import com.syrus.AMFICOM.client_.general.ui_.ObjComboBox;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 
 import java.awt.Dimension;
@@ -33,7 +33,7 @@ public class MapCablePathGeneralPanel
 	private JLabel descLabel = new JLabel();
 	private JTextArea descTextArea = new JTextArea();
 
-	MapCablePathElement path;
+	CablePath path;
 
 	private LogicalNetLayer lnl;
 
@@ -96,7 +96,7 @@ public class MapCablePathGeneralPanel
 
 	public void setObject(Object objectResource)
 	{
-		path = (MapCablePathElement)objectResource;
+		path = (CablePath)objectResource;
 		
 		cableComboBox.removeAll();
 		

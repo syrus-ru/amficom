@@ -1,5 +1,5 @@
 /**
- * $Id: CreateCablePathCommandAtomic.java,v 1.5 2004/12/22 16:38:39 krupenn Exp $
+ * $Id: CreateCablePathCommandAtomic.java,v 1.6 2004/12/24 15:42:11 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.map.AbstractNode;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/12/22 16:38:39 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/24 15:42:11 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 public class CreateCablePathCommandAtomic extends MapActionCommand
 {
 	/** кабельный путь */
-	MapCablePathElement cp;
+	CablePath cp;
 	
 	/** кабель */
 	SchemeCableLink scl;
@@ -57,7 +57,7 @@ public class CreateCablePathCommandAtomic extends MapActionCommand
 		this.endNode = endNode;
 	}
 	
-	public MapCablePathElement getPath()
+	public CablePath getPath()
 	{
 		return cp;
 	}
@@ -74,7 +74,7 @@ public class CreateCablePathCommandAtomic extends MapActionCommand
 		
 		try
 		{
-			cp = new MapCablePathElement(
+			cp = new CablePath(
 					scl,
 					IdentifierPool.getGeneratedIdentifier(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE),
 					startNode, 

@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateCablePathCablingCommandBundle.java,v 1.10 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: GenerateCablePathCablingCommandBundle.java,v 1.11 2004/12/24 15:42:11 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -18,9 +18,9 @@ import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundNode;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 
 import java.util.Iterator;
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkBinding;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.11 $, $Date: 2004/12/24 15:42:11 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -46,7 +46,7 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 	/**
 	 * ”дал€емый узел
 	 */
-	MapCablePathElement path;
+	CablePath path;
 	
 	/**
 	 * тип узлов дл€ генерации вместо неприв€занных элементов
@@ -61,7 +61,7 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 	Map map;
 
 	public GenerateCablePathCablingCommandBundle(
-			MapCablePathElement path, 
+			CablePath path, 
 			SiteNodeType proto)
 	{
 		this.path = path;
@@ -109,10 +109,10 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 			endsite = this.checkSite(endsite);
 
 			// если неприв€занна€ лини€, генерировать тоннель
-			if(link instanceof MapUnboundLinkElement)
+			if(link instanceof UnboundLink)
 			{
 				path.removeLink(link);
-				MapUnboundLinkElement un = (MapUnboundLinkElement )link;
+				UnboundLink un = (UnboundLink)link;
 				super.removePhysicalLink(un);
 
 				link = super.createPhysicalLink(startsite, endsite);
@@ -141,7 +141,7 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 	private SiteNode checkSite(SiteNode site)
 	{
 		SiteNode site2 = site;
-		if(site instanceof MapUnboundNodeElement)
+		if(site instanceof UnboundNode)
 		{
 			CreateSiteCommandAtomic command = 
 					new CreateSiteCommandAtomic(
@@ -155,7 +155,7 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 	
 			BindUnboundNodeToSiteCommandBundle command2 = 
 					new BindUnboundNodeToSiteCommandBundle(
-						(MapUnboundNodeElement )site, 
+						(UnboundNode)site, 
 						site2);
 			command2.setLogicalNetLayer(logicalNetLayer);
 			command2.execute();

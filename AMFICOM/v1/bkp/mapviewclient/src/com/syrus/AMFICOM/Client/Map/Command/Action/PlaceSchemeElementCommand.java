@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeElementCommand.java,v 1.7 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: PlaceSchemeElementCommand.java,v 1.8 2004/12/24 15:42:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundNode;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
@@ -31,7 +31,7 @@ import java.awt.geom.Point2D;
  * Разместить c[tvysq элемент на карте в соответствии с привязкой
  * или по координатам
  * 
- * @version $Revision: 1.7 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/24 15:42:12 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -46,7 +46,7 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 	/**
 	 * созданный непривязанный элемент
 	 */
-	MapUnboundNodeElement unbound = null;
+	UnboundNode unbound = null;
 	
 	/**
 	 * размещаемый схемный элемент
@@ -107,7 +107,7 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 			MapElement me = logicalNetLayer.getMapElementAtPoint(point);
 			
 			if(me instanceof SiteNode
-				&& !(me instanceof MapUnboundNodeElement))
+				&& !(me instanceof UnboundNode))
 			{
 				site = (SiteNode )me;
 				se.siteNodeImpl(site);

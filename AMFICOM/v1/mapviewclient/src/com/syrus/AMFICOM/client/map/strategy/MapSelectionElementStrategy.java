@@ -1,5 +1,5 @@
 /**
- * $Id: MapSelectionElementStrategy.java,v 1.6 2004/12/22 16:38:41 krupenn Exp $
+ * $Id: MapSelectionElementStrategy.java,v 1.7 2004/12/24 15:42:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,13 +25,15 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 
 import javax.swing.SwingUtilities;
+import com.syrus.AMFICOM.Client.Map.mapview.Selection;
+import com.syrus.AMFICOM.Client.Map.mapview.VoidElement;
 
 /**
  * Стратегия управления топологическим узлом
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2004/12/22 16:38:41 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/24 15:42:13 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -41,7 +43,7 @@ public final class MapSelectionElementStrategy implements  MapStrategy
 	LogicalNetLayer logicalNetLayer;
 	ApplicationContext aContext;
 
-	MapSelection sel;
+	Selection sel;
 	Command command;
 
 	private static MapSelectionElementStrategy instance = new MapSelectionElementStrategy();
@@ -57,7 +59,7 @@ public final class MapSelectionElementStrategy implements  MapStrategy
 	
 	public void setMapElement(MapElement me)
 	{
-		this.sel = (MapSelection )me;
+		this.sel = (Selection)me;
 	}
 
 	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
@@ -85,7 +87,7 @@ public final class MapSelectionElementStrategy implements  MapStrategy
 			{
 				if ((actionMode == MapState.SELECT_ACTION_MODE))
 				{
-					if(mel instanceof VoidMapElement)
+					if(mel instanceof VoidElement)
 					{
 						logicalNetLayer.deselectAll();
 						logicalNetLayer.setCurrentMapElement(mel);
@@ -99,7 +101,7 @@ public final class MapSelectionElementStrategy implements  MapStrategy
 							if(sel.getElements().size() == 0)
 							{
 								logicalNetLayer.setCurrentMapElement(
-										VoidMapElement.getInstance(
+										com.syrus.AMFICOM.Client.Map.mapview.VoidElement.getInstance(
 												logicalNetLayer.getMapView()));
 							}
 							else
@@ -118,7 +120,7 @@ public final class MapSelectionElementStrategy implements  MapStrategy
 				}
 				else
 				{
-					if(mel instanceof VoidMapElement)
+					if(mel instanceof VoidElement)
 					{
 						logicalNetLayer.deselectAll();
 						logicalNetLayer.setCurrentMapElement(mel);

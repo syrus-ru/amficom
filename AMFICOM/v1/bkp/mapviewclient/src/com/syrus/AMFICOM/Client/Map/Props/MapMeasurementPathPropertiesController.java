@@ -8,9 +8,9 @@ package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MeasurementPathController;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
+import com.syrus.AMFICOM.Client.Map.Controllers.MeasurementPathController;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 
 import java.util.ArrayList;
@@ -74,9 +74,9 @@ public final class MapMeasurementPathPropertiesController
 		Object result = null;
 		try
 		{
-			MapMeasurementPathElement path = (MapMeasurementPathElement )object;
+			MeasurementPath path = (MeasurementPath)object;
 			
-			MeasurementPathController mpc = (MeasurementPathController )MeasurementPathController.getInstance();
+			MeasurementPathController mpc = (MeasurementPathController)com.syrus.AMFICOM.Client.Map.Controllers.MeasurementPathController.getInstance();
 	
 			if (key.equals(PROPERTY_NAME))
 			{
@@ -148,7 +148,7 @@ public final class MapMeasurementPathPropertiesController
 
 	public void setValue(Object object, final String key, final Object value)
 	{
-		MapCablePathElement path = (MapCablePathElement )object;
+		CablePath path = (CablePath)object;
 
 		if (key.equals(PROPERTY_NAME))
 		{

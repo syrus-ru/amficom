@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteSelectionCommand.java,v 1.10 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: DeleteSelectionCommand.java,v 1.11 2004/12/24 15:42:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,10 +21,10 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
-import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
+import com.syrus.AMFICOM.Client.Map.mapview.VoidElement;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -35,7 +35,7 @@ import java.util.LinkedList;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.11 $, $Date: 2004/12/24 15:42:11 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -78,14 +78,14 @@ public class DeleteSelectionCommand extends MapActionCommandBundle
 			{
 				NodeLink nodeLink = (NodeLink)me;
 				PhysicalLink link = nodeLink.getPhysicalLink();
-				if(!(link instanceof MapUnboundLinkElement))
+				if(!(link instanceof UnboundLink))
 					nodeLinksToDelete.add(nodeLink);
 			}
 			else
 			if(me instanceof PhysicalLink
 				&& showMode == MapState.SHOW_PHYSICAL_LINK)
 			{
-				if(! (me instanceof MapUnboundLinkElement))
+				if(! (me instanceof UnboundLink))
 					linksToDelete.add(me);
 			}
 		}
@@ -204,7 +204,7 @@ public class DeleteSelectionCommand extends MapActionCommandBundle
 		{
 //			removeCablePath((MapCablePathElement )e.next());
 			UnPlaceSchemeCableLinkCommand command = new UnPlaceSchemeCableLinkCommand(
-					(MapCablePathElement )e.next());
+					(CablePath)e.next());
 			command.setLogicalNetLayer(logicalNetLayer);
 			command.execute();
 		}
@@ -234,7 +234,7 @@ public class DeleteSelectionCommand extends MapActionCommandBundle
 		// выполнить все команды в списке
 		super.execute();
 
-		MapElement mapElement = VoidMapElement.getInstance(logicalNetLayer.getMapView());
+		MapElement mapElement = com.syrus.AMFICOM.Client.Map.mapview.VoidElement.getInstance(logicalNetLayer.getMapView());
 
 		logicalNetLayer.setCurrentMapElement(mapElement);
 		logicalNetLayer.sendMapEvent(new MapNavigateEvent(mapElement, MapNavigateEvent.MAP_ELEMENT_SELECTED_EVENT));

@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.11 2004/12/23 16:57:59 krupenn Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.12 2004/12/24 15:42:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,10 +22,10 @@ import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.Client.Map.mapview.Marker;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundNode;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 
 import java.util.Iterator;
@@ -38,7 +38,7 @@ import java.util.List;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/12/23 16:57:59 $
+ * @version $Revision: 1.12 $, $Date: 2004/12/24 15:42:11 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -76,7 +76,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		// необходимо проверить все кабельные пути, включающие его
 		for(Iterator it = mapView.getCablePaths(node).iterator(); it.hasNext();)
 		{
-			MapCablePathElement cpath = (MapCablePathElement )it.next();
+			CablePath cpath = (CablePath)it.next();
 			
 			// если удаляемый узел содержит привязку концевого элемента
 			// кабельного пути, кабельный путь убирается с карты
@@ -114,7 +114,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 				cpath.removeLink(right);
 
 				// вместо них создается новая непривязанная
-				MapUnboundLinkElement unbound = 
+				UnboundLink unbound = 
 					super.createUnboundLinkWithNodeLink(
 						left.getOtherNode(node),
 						right.getOtherNode(node));
@@ -123,15 +123,15 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 
 				// если "левая" была непмривязанной, она удаляется (вместе 
 				// со своими фрагментами
-				if(left instanceof MapUnboundLinkElement)
+				if(left instanceof UnboundLink)
 				{
-					super.removeUnboundLink((MapUnboundLinkElement )left);
+					super.removeUnboundLink((UnboundLink)left);
 				}
 				// если "правая" была непмривязанной, она удаляется (вместе 
 				// со своими фрагментами
-				if(right instanceof MapUnboundLinkElement)
+				if(right instanceof UnboundLink)
 				{
-					super.removeUnboundLink((MapUnboundLinkElement )right);
+					super.removeUnboundLink((UnboundLink)right);
 				}
 			}
 		}
@@ -146,7 +146,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 			NodeLink nodeLink = (NodeLink)e.next();
 			PhysicalLink physicalLink = nodeLink.getPhysicalLink();
 					
-			if(physicalLink instanceof MapUnboundLinkElement)
+			if(physicalLink instanceof UnboundLink)
 			{
 				// данный случай обработан в предыдущем цикле
 				// (непривязанная линия удалена)
@@ -350,7 +350,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 	 * при этом с карты убираются все кабельные пути, содержащие 
 	 * удаляемый элемент
 	 */
-	protected void deleteUnbound(MapUnboundNodeElement unbound)
+	protected void deleteUnbound(UnboundNode unbound)
 	{
 		if ( !getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_BINDING))
 			return;
@@ -365,7 +365,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		
 		for(Iterator it = cablePaths.iterator(); it.hasNext();)
 		{
-			MapCablePathElement cpath = (MapCablePathElement )it.next();
+			CablePath cpath = (CablePath)it.next();
 			super.removeCablePathLinks(cpath);
 			super.removeCablePath(cpath);
 		}
@@ -385,7 +385,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 	/**
 	 * Удалить маркер
 	 */
-	public void deleteMarker(MapMarker node)
+	public void deleteMarker(Marker node)
 	{
 		if ( !getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_USE_MARKER))
 			return;
@@ -410,9 +410,9 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		map = logicalNetLayer.getMapView().getMap();
 		
 		//В зависимости от того какого типа node и от флагов разрешения удаляем
-		if ( node instanceof MapUnboundNodeElement)
+		if ( node instanceof UnboundNode)
 		{
-			this.deleteUnbound((MapUnboundNodeElement )node);
+			this.deleteUnbound((UnboundNode)node);
 		}
 		else
 		if ( node instanceof SiteNode)
@@ -430,9 +430,9 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 			this.deleteMark((Mark)node);
 		}
 		else
-		if ( node instanceof MapMarker)
+		if ( node instanceof Marker)
 		{
-			this.deleteMarker((MapMarker )node);
+			this.deleteMarker((Marker)node);
 		}
 
 		logicalNetLayer.sendMapEvent(new MapEvent(this, MapEvent.MAP_CHANGED));

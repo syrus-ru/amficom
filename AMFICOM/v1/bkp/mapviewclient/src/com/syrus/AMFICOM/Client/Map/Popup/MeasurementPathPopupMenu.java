@@ -9,7 +9,7 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.Collector;
 
-import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
+import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -23,7 +23,7 @@ public final class MeasurementPathPopupMenu extends MapPopupMenu
 	private JMenuItem propertiesMenuItem = new JMenuItem();
 	private JMenuItem addMarkerMenuItem = new JMenuItem();
 
-	private MapMeasurementPathElement path;
+	private MeasurementPath path;
 	
 	private static MeasurementPathPopupMenu instance = new MeasurementPathPopupMenu();
 
@@ -47,7 +47,7 @@ public final class MeasurementPathPopupMenu extends MapPopupMenu
 	
 	public void setElement(Object me)
 	{
-		this.path = (MapMeasurementPathElement )me;
+		this.path = (MeasurementPath)me;
 
 		addMarkerMenuItem.setVisible(
 			getLogicalNetLayer().getContext().getApplicationModel().isEnabled(

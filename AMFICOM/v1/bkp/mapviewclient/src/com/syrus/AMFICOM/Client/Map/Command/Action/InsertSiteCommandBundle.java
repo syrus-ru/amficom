@@ -1,5 +1,5 @@
 /**
- * $Id: InsertSiteCommandBundle.java,v 1.5 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: InsertSiteCommandBundle.java,v 1.6 2004/12/24 15:42:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,18 +22,19 @@ import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Resource.Map.SiteNodeController;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
+import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 
 import java.util.Iterator;
 import com.syrus.AMFICOM.map.PhysicalLinkBinding;
+import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 
 /**
  * вставить сетевой узел вместо топологического узла
  * 
- * @version $Revision: 1.5 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/24 15:42:11 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -98,7 +99,7 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle
 				proto);
 		site.setName(node.getName());
 		
-		SiteNodeController snc = (SiteNodeController )getLogicalNetLayer().getMapViewController().getController(site);
+		SiteNodeController snc = (SiteNodeController)getLogicalNetLayer().getMapViewController().getController(site);
 		
 		snc.updateScaleCoefficient(site);
 
@@ -132,7 +133,7 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle
 		// на две части
 		if(node.isActive())
 		{
-			if(link instanceof MapUnboundLinkElement)
+			if(link instanceof UnboundLink)
 				newLink = super.createUnboundLink(link.getStartNode(), site);
 			else
 				newLink = super.createPhysicalLink(link.getStartNode(), site);
@@ -205,10 +206,10 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle
 			// и добавить новую линию
 			for(Iterator it = mapView.getCablePaths(link).iterator(); it.hasNext();)
 			{
-				MapCablePathElement cpath = (MapCablePathElement )it.next();
+				CablePath cpath = (CablePath)it.next();
 				cpath.addLink(newLink);
-				if(newLink instanceof MapUnboundLinkElement)
-					((MapUnboundLinkElement )newLink).setCablePath(cpath);
+				if(newLink instanceof UnboundLink)
+					((UnboundLink)newLink).setCablePath(cpath);
 				else
 					newLink.getBinding().add(cpath);
 			}

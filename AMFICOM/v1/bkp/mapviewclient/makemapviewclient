@@ -48,7 +48,7 @@ TARGET_SRC=$(LIBSRC)\mapviewclientsource.jar
 TARGET_JAVADOC=$(LIBDOC)\mapviewdoc.jar
 
 SERVERCP=$(LIB)\corbaportable.jar;$(LIB)\corba.jar
-CLIENTCP=$(LIB)\util.jar;$(LIB)\filter.jar;$(LIB)\configuration.jar;$(LIB)\general.jar;$(LIB)\generalclient.jar;$(LIB)\administrate.jar;$(LIB)\configureclient.jar;$(LIB)\map.jar;$(LIB)\mapclient.jar;$(LIB)\schemecommon.jar;$(LIB)\scheme.jar;$(LIB)\resource.jar;$(LIB)\measurement.jar
+CLIENTCP=$(LIB)\util.jar;$(LIB)\filter.jar;$(LIB)\configuration.jar;$(LIB)\general.jar;$(LIB)\generalclient.jar;$(LIB)\administrate.jar;$(LIB)\configureclient.jar;$(LIB)\map.jar;$(LIB)\mapclient.jar;$(LIB)\schemecommon.jar;$(LIB)\scheme.jar;$(LIB)\resource.jar;$(LIB)\measurement.jar;$(LIB)\mapview.jar
 
 LAYOUTCP=$(EXTLIB)\layout.jar;$(EXTLIB)\kunststoff.jar
 SPATIALCP=$(EXTLIB)\ofx.spatialfx.jar

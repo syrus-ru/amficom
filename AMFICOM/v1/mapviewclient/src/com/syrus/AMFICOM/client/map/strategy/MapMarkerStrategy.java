@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkerStrategy.java,v 1.11 2004/12/22 16:38:41 krupenn Exp $
+ * $Id: MapMarkerStrategy.java,v 1.12 2004/12/24 15:42:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,20 +22,21 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.Client.Map.UI.MotionDescriptor;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
+import com.syrus.AMFICOM.Client.Map.mapview.Marker;
 
-import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
-import com.syrus.AMFICOM.Client.Resource.MapView.MarkerController;
+import com.syrus.AMFICOM.Client.Map.mapview.Selection;
+import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import javax.swing.SwingUtilities;
+import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 
 /**
  * Стратегия управления маркером
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2004/12/22 16:38:41 $
+ * @version $Revision: 1.12 $, $Date: 2004/12/24 15:42:13 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -45,7 +46,7 @@ public final class MapMarkerStrategy implements  MapStrategy
 	LogicalNetLayer logicalNetLayer;
 	ApplicationContext aContext;
 
-	MapMarker marker;
+	Marker marker;
 
 	private static MapMarkerStrategy instance = new MapMarkerStrategy();
 
@@ -60,7 +61,7 @@ public final class MapMarkerStrategy implements  MapStrategy
 	
 	public void setMapElement(MapElement me)
 	{
-		this.marker = (MapMarker )me;
+		this.marker = (Marker)me;
 	}
 
 	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
@@ -76,7 +77,7 @@ public final class MapMarkerStrategy implements  MapStrategy
 		MapState mapState = logicalNetLayer.getMapState();
 		Map map = marker.getMap();
 		
-		MarkerController mc = (MarkerController )logicalNetLayer.getMapViewController().getController(marker);
+		MarkerController mc = (MarkerController)logicalNetLayer.getMapViewController().getController(marker);
 
 		MapCoordinatesConverter converter = logicalNetLayer;
 
@@ -92,7 +93,7 @@ public final class MapMarkerStrategy implements  MapStrategy
 				if ((actionMode == MapState.SELECT_ACTION_MODE))
 				{
 					MapElement mel = logicalNetLayer.getCurrentMapElement();
-					if(mel instanceof MapSelection)
+					if(mel instanceof Selection)
 					{
 					}
 					else

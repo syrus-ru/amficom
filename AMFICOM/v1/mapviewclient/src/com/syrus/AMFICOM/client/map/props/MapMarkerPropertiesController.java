@@ -9,8 +9,8 @@ package com.syrus.AMFICOM.Client.Map.Props;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
-import com.syrus.AMFICOM.Client.Resource.MapView.MarkerController;
+import com.syrus.AMFICOM.Client.Map.mapview.Marker;
+import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
 
 public final class MapMarkerPropertiesController 
 		implements MapElementPropertiesController 
@@ -69,9 +70,9 @@ public final class MapMarkerPropertiesController
 	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
-		MapMarker marker = (MapMarker )object;
+		Marker marker = (Marker)object;
 		
-		MarkerController mc = (MarkerController )MarkerController.getInstance();
+		MarkerController mc = (MarkerController)com.syrus.AMFICOM.Client.Map.Controllers.MarkerController.getInstance();
 
 		if (key.equals(PROPERTY_NAME))
 		{
@@ -117,9 +118,9 @@ public final class MapMarkerPropertiesController
 
 	public void setValue(Object object, final String key, final Object value)
 	{
-		MapMarker marker = (MapMarker )object;
+		Marker marker = (Marker)object;
 
-		MarkerController mc = (MarkerController )MarkerController.getInstance();
+		MarkerController mc = (MarkerController)com.syrus.AMFICOM.Client.Map.Controllers.MarkerController.getInstance();
 
 		if (key.equals(PROPERTY_DISTANCE))
 		{

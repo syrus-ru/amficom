@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
-import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
+import com.syrus.AMFICOM.Client.Map.mapview.VoidElement;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -147,9 +147,9 @@ public class MapViewPanel
 
 	public void setObject(Object objectResource)
 	{
-		if(objectResource instanceof VoidMapElement)
+		if(objectResource instanceof VoidElement)
 		{
-			view = ((VoidMapElement )objectResource).getMapView();
+			view = ((VoidElement)objectResource).getMapView();
 		}
 		else
 			view = (MapView )objectResource;

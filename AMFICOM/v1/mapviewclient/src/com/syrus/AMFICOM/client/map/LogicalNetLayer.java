@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.28 2004/12/23 16:57:59 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.29 2004/12/24 15:42:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.Client.Map.Command.Action.MoveNodeCommand;
 import com.syrus.AMFICOM.Client.Map.Command.Action.MoveSelectionCommandBundle;
 import com.syrus.AMFICOM.Client.Resource.ImageCatalogue;
 import com.syrus.AMFICOM.Client.Resource.ImageResource;
-import com.syrus.AMFICOM.Client.Resource.Map.AbstractNodeController;
-import com.syrus.AMFICOM.Client.Resource.Map.NodeTypeController;
+import com.syrus.AMFICOM.Client.Map.Controllers.AbstractNodeController;
+import com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -38,10 +38,10 @@ import com.syrus.AMFICOM.general.StringFieldCondition;
 import com.syrus.AMFICOM.general.corba.StringFieldSort;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.IntDimension;
-import com.syrus.AMFICOM.Client.Resource.Map.LinkTypeController;
+import com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.Map.MapElementController;
+import com.syrus.AMFICOM.Client.Map.Controllers.MapElementController;
 import com.syrus.AMFICOM.map.MapStorableObjectPool;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.Mark;
@@ -51,18 +51,18 @@ import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Resource.Map.NodeLinkController;
-import com.syrus.AMFICOM.Client.Resource.Map.SiteNodeController;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapAlarmMarker;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapEventMarker;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
+import com.syrus.AMFICOM.Client.Map.Controllers.NodeLinkController;
+import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
+import com.syrus.AMFICOM.Client.Map.mapview.AlarmMarker;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.Client.Map.mapview.EventMarker;
+import com.syrus.AMFICOM.Client.Map.mapview.Marker;
+import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
+import com.syrus.AMFICOM.Client.Map.mapview.Selection;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapViewController;
-import com.syrus.AMFICOM.Client.Resource.MapView.MarkerController;
-import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
+import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
+import com.syrus.AMFICOM.Client.Map.Controllers.MarkerController;
+import com.syrus.AMFICOM.Client.Map.mapview.VoidElement;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.scheme.PathDecompositor;
 import com.syrus.AMFICOM.scheme.corba.*;
@@ -102,7 +102,7 @@ import javax.swing.ImageIcon;
  * 
  * 
  * 
- * @version $Revision: 1.28 $, $Date: 2004/12/23 16:57:59 $
+ * @version $Revision: 1.29 $, $Date: 2004/12/24 15:42:11 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -317,7 +317,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			while (en.hasNext())
 			{
 				AbstractNode curNode = (AbstractNode)en.next();
-				((AbstractNodeController )getMapViewController().getController(curNode)).updateScaleCoefficient(curNode);
+				((AbstractNodeController)getMapViewController().getController(curNode)).updateScaleCoefficient(curNode);
 //				curNode.setScaleCoefficient(sF);
 			}
 		}
@@ -396,7 +396,14 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 
 		if(mapView == null)
 		{
-			this.mapView = new MapView();
+			try
+			{
+				this.mapView = new MapView(this, null);
+			}
+			catch (CreateObjectException e)
+			{
+				
+			}
 		}
 		else
 		{
@@ -422,7 +429,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		this.mapView.setLogicalNetLayer(this);
 
 		//Поумолчанию текущий элемент Void
-		currentMapElement = VoidMapElement.getInstance(this.mapView);
+		currentMapElement = com.syrus.AMFICOM.Client.Map.mapview.VoidElement.getInstance(this.mapView);
 
 		commandList.flush();
 
@@ -444,7 +451,14 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	{
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "setMap(" + map + ")");
 		
-		setMapView(new MapView());
+		try
+		{
+			setMapView(new MapView(this, map));
+		}
+		catch (CreateObjectException e)
+		{
+			
+		}
 		getMapView().setMap(map);
 	}
 
@@ -641,8 +655,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			elementsToDisplay.addAll(getMapView().getMap().getPhysicalLinks());
 			for(Iterator it = getMapView().getMeasurementPaths().iterator(); it.hasNext();)
 			{
-				MapMeasurementPathElement mpath = 
-					(MapMeasurementPathElement )it.next();
+				MeasurementPath mpath = 
+					(MeasurementPath)it.next();
 
 				getMapViewController().getController(mpath).paint(mpath, g, visibleBounds);
 				
@@ -650,8 +664,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				// use once sorted cable links
 				for(Iterator it2 = mpath.getSortedCablePaths().iterator(); it2.hasNext();)
 				{
-					MapCablePathElement cpath = 
-						(MapCablePathElement )it2.next();
+					CablePath cpath = 
+						(CablePath)it2.next();
 					elementsToDisplay.removeAll(cpath.getLinks());
 				}
 			}
@@ -669,8 +683,8 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			elementsToDisplay.addAll(getMapView().getMap().getPhysicalLinks());
 			for(Iterator it = getMapView().getCablePaths().iterator(); it.hasNext();)
 			{
-				MapCablePathElement cpath = 
-					(MapCablePathElement )it.next();
+				CablePath cpath = 
+					(CablePath)it.next();
 				getMapViewController().getController(cpath).paint(cpath, g, visibleBounds);
 //				cpath.paint(g, visibleBounds);
 				elementsToDisplay.removeAll(cpath.getLinks());
@@ -831,14 +845,14 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			Set selectedElements = getMapView().getMap().getSelectedElements();
 			if(selectedElements.size() > 1)
 			{
-				MapSelection sel;
-				if(! (getCurrentMapElement() instanceof MapSelection))
+				Selection sel;
+				if(! (getCurrentMapElement() instanceof Selection))
 				{
-					sel = new MapSelection(this);
+					sel = new Selection(this);
 					setCurrentMapElement(sel);
 				}
 				else
-					sel = (MapSelection )getCurrentMapElement();
+					sel = (Selection)getCurrentMapElement();
 
 				sel.clear();
 				sel.addAll(selectedElements);
@@ -859,7 +873,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			{
 //				if(getCurrentMapElement() instanceof MapSelection)
 //				{
-					setCurrentMapElement(VoidMapElement.getInstance(getMapView()));
+					setCurrentMapElement(com.syrus.AMFICOM.Client.Map.mapview.VoidElement.getInstance(getMapView()));
 					this.sendMapEvent(new MapEvent(getCurrentMapElement(), MapEvent.MAP_ELEMENT_SELECTED));
 //				}
 			}
@@ -881,16 +895,16 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				getMapView().scanPaths(((SchemeCableLink )me).scheme());
 			}
 			else
-			if(me instanceof MapCablePathElement)
+			if(me instanceof CablePath)
 			{
-				getMapView().scanCable(((MapCablePathElement )me).getSchemeCableLink());
-				getMapView().scanPaths(((MapCablePathElement )me).getSchemeCableLink().scheme());
+				getMapView().scanCable(((CablePath)me).getSchemeCableLink());
+				getMapView().scanPaths(((CablePath)me).getSchemeCableLink().scheme());
 			}
 			else
 			if(me instanceof SiteNode)
 			{
 				SiteNode site = (SiteNode)me;
-				SiteNodeController snc = (SiteNodeController )getMapViewController().getController(site);
+				SiteNodeController snc = (SiteNodeController)getMapViewController().getController(site);
 				snc.updateScaleCoefficient(site);
 			}
 
@@ -904,11 +918,11 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			//Здесь принимаюттся собитыя по создению и управлению маркером
 			if(mne.isDataMarkerCreated())
 			{
-				MapMeasurementPathElement path = mapView.getMeasurementPathByMonitoredElementId(mne.getMeId());
+				MeasurementPath path = mapView.getMeasurementPathByMonitoredElementId(mne.getMeId());
 
 				if(path != null)
 				{
-					MapMarker marker = new MapMarker(
+					Marker marker = new Marker(
 						mne.getMarkerId(),
 	                    getMapView(),
 						mne.getDistance(),
@@ -916,18 +930,18 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 						mne.getMeId());
 					getMapView().addMarker(marker);
 
-					MarkerController mc = (MarkerController )getMapViewController().getController(marker);
+					MarkerController mc = (MarkerController)getMapViewController().getController(marker);
 					mc.moveToFromStartLo(marker, mne.getDistance());
 				}
 			}
 			else
 			if(mne.isDataEventMarkerCreated())
 			{
-				MapMeasurementPathElement path = mapView.getMeasurementPathByMonitoredElementId(mne.getMeId());
+				MeasurementPath path = mapView.getMeasurementPathByMonitoredElementId(mne.getMeId());
 
 				if(path != null)
 				{
-					MapEventMarker marker = new MapEventMarker(
+					EventMarker marker = new EventMarker(
 						mne.getMarkerId(),
 	                    getMapView(),
 						mne.getDistance(),
@@ -936,7 +950,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 //					marker.descriptor = mne.descriptor;
 					getMapView().addMarker(marker);
 
-					MarkerController mc = (MarkerController )getMapViewController().getController(marker);
+					MarkerController mc = (MarkerController)getMapViewController().getController(marker);
 
 					mc.moveToFromStartLo(marker, mne.getDistance());
 				}
@@ -944,16 +958,16 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			else
 			if(mne.isDataAlarmMarkerCreated())
 			{
-				MapMeasurementPathElement path = mapView.getMeasurementPathByMonitoredElementId(mne.getMeId());
+				MeasurementPath path = mapView.getMeasurementPathByMonitoredElementId(mne.getMeId());
 
-				MapAlarmMarker marker = null;
+				AlarmMarker marker = null;
 				if(path != null)
 				{
 					for(Iterator it = getMapView().getMarkers().iterator(); it.hasNext();)
 					{
 						try
 						{
-							marker = (MapAlarmMarker )it.next();
+							marker = (AlarmMarker)it.next();
 							if(marker.getMeasurementPath().equals(path))
 								break;
 							marker = null;
@@ -964,7 +978,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					}
 					if(marker == null)
 					{
-						marker = new MapAlarmMarker(
+						marker = new AlarmMarker(
 							mne.getMarkerId(),
 							getMapView(),
 							mne.getDistance(),
@@ -978,7 +992,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 						marker.setId(mne.getMarkerId());
 					}
 
-					MarkerController mc = (MarkerController )getMapViewController().getController(marker);
+					MarkerController mc = (MarkerController)getMapViewController().getController(marker);
 
 					mc.moveToFromStartLo(marker, mne.getDistance());
 				}
@@ -1006,13 +1020,13 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			else
 			if(mne.isDataMarkerMoved())
 			{
-				MapMarker marker = getMapView().getMarker(mne.getMarkerId());
+				Marker marker = getMapView().getMarker(mne.getMarkerId());
 				if(marker != null)
 				{
 					if(marker.getPathDecompositor() == null)
 						marker.setPathDecompositor((PathDecompositor )mne.getSchemePathDecompositor());
 
-					MarkerController mc = (MarkerController )getMapViewController().getController(marker);
+					MarkerController mc = (MarkerController)getMapViewController().getController(marker);
 
 					mc.moveToFromStartLo(marker, mne.getDistance());
 				}
@@ -1020,26 +1034,26 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			else
 			if(mne.isDataMarkerSelected())
 			{
-				MapMarker marker = getMapView().getMarker(mne.getMarkerId());
+				Marker marker = getMapView().getMarker(mne.getMarkerId());
 				if(marker != null)
 					marker.setSelected(true);
 			}
 			else
 			if(mne.isDataMarkerDeselected())
 			{
-				MapMarker marker = getMapView().getMarker(mne.getMarkerId());
+				Marker marker = getMapView().getMarker(mne.getMarkerId());
 				if(marker != null)
 					marker.setSelected(false);
 			}
 			else
 			if(mne.isDataMarkerDeleted())
 			{
-				MapMarker marker = getMapView().getMarker(mne.getMarkerId());
+				Marker marker = getMapView().getMarker(mne.getMarkerId());
 				if(marker != null)
 					getMapView().removeMarker(marker);
-				if(marker instanceof MapAlarmMarker)
+				if(marker instanceof AlarmMarker)
 				{
-					MapAlarmMarker amarker = (MapAlarmMarker )marker;
+					AlarmMarker amarker = (AlarmMarker)marker;
 /*
 					MapPhysicalLinkElement link = findMapLinkByCableLink(marker.link_id);
 					if(link != null)
@@ -1137,7 +1151,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					
 					for(int i = 0; i < sps.length; i++)
 					{
-						MapMeasurementPathElement mmp = getMapView().findMeasurementPath(sps[i]);
+						MeasurementPath mmp = getMapView().findMeasurementPath(sps[i]);
 						if(mmp != null)
 							mmp.setSelected(true);
 					}
@@ -1148,7 +1162,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					SchemeCableLink[] scs = (SchemeCableLink[] )sne.getSource();
 					for(int i = 0; i < scs.length; i++)
 					{
-						MapCablePathElement mcp = getMapView().findCablePath(scs[i]);
+						CablePath mcp = getMapView().findCablePath(scs[i]);
 						if(mcp != null)
 							mcp.setSelected(true);
 					}
@@ -1172,7 +1186,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 	
 					for(int i = 0; i < sps.length; i++)
 					{
-						MapMeasurementPathElement mmp = getMapView().findMeasurementPath(sps[i]);
+						MeasurementPath mmp = getMapView().findMeasurementPath(sps[i]);
 						if(mmp != null)
 							mmp.setSelected(false);
 					}
@@ -1183,7 +1197,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 					SchemeCableLink[] scs = (SchemeCableLink[] )sne.getSource();
 					for(int i = 0; i < scs.length; i++)
 					{
-						MapCablePathElement mcp = getMapView().findCablePath(scs[i]);
+						CablePath mcp = getMapView().findCablePath(scs[i]);
 						if(mcp != null)
 							mcp.setSelected(false);
 					}
@@ -1349,7 +1363,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 			}
 		}
 
-		if(curMapElement instanceof VoidMapElement)
+		if(curMapElement instanceof VoidElement)
 			return;
 		curMapElement.setSelected(true);
 		notifyMapEvent(currentMapElement);
@@ -1364,7 +1378,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getMapElementAtPoint(" + point + ")");
 		
 		int showMode = getMapState().getShowMode();
-		MapElement curME = VoidMapElement.getInstance(this.getMapView());
+		MapElement curME = com.syrus.AMFICOM.Client.Map.mapview.VoidElement.getInstance(this.getMapView());
 
 		Rectangle2D.Double visibleBounds = this.getVisibleBounds();
 		
@@ -1401,7 +1415,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 						Iterator it = mapView.getCablePaths((NodeLink)mapElement).iterator();
 						if(it.hasNext())
 						{
-							curME = (MapCablePathElement)it.next();
+							curME = (CablePath)it.next();
 						}
 						else
 						{
@@ -1414,7 +1428,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 						Iterator it = mapView.getMeasurementPaths((NodeLink)mapElement).iterator();
 						if(it.hasNext())
 						{
-							curME = (MapMeasurementPathElement )it.next();
+							curME = (MeasurementPath)it.next();
 						}
 						else
 						{
@@ -1430,7 +1444,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 						Iterator it = mapView.getCablePaths((PhysicalLink)mapElement).iterator();
 						if(it.hasNext())
 						{
-							curME = (MapCablePathElement)it.next();
+							curME = (CablePath)it.next();
 						}
 					}
 					else
@@ -1439,7 +1453,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 						Iterator it = mapView.getMeasurementPaths((PhysicalLink)mapElement).iterator();
 						if(it.hasNext())
 						{
-							curME = (MapMeasurementPathElement )it.next();
+							curME = (MeasurementPath)it.next();
 						}
 					}
 				}
@@ -1540,7 +1554,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		{
 			NodeLink mapElement = (NodeLink)e.next();
 			if(nlc == null)
-				nlc = (NodeLinkController )getMapViewController().getController(mapElement);
+				nlc = (NodeLinkController)getMapViewController().getController(mapElement);
 			if (nlc.isMouseOnThisObjectsLabel(mapElement, point))
 			{
 				return mapElement;
@@ -1556,7 +1570,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 		MoveNodeCommand cmd = new MoveNodeCommand(node);
 		cmd.setLogicalNetLayer(this);
 		
-		((NodeLinkController )getMapViewController().getController(nodelink))
+		((NodeLinkController)getMapViewController().getController(nodelink))
 			.setSizeFrom(nodelink, node, dist);
 //		nodelink.setSizeFrom(node, dist);
 
@@ -1699,7 +1713,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				codename,
 				LangModelMap.getString(codename + "Type"),
 				"",
-				getImageId(codename, NodeTypeController.getImageFileName(codename)),
+				getImageId(codename, com.syrus.AMFICOM.Client.Map.Controllers.NodeTypeController.getImageFileName(codename)),
 				true);
 		}
 		catch (Exception e)
@@ -1735,7 +1749,7 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 
 		try
 		{
-			LinkTypeController ltc = (LinkTypeController )LinkTypeController.getInstance();
+			LinkTypeController ltc = (LinkTypeController)com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController.getInstance();
 			ltc.setLogicalNetLayer(this);
 
 			PhysicalLinkType pType = PhysicalLinkType.createInstance(
@@ -1743,10 +1757,10 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 				codename,
 				LangModelMap.getString(codename + "Type"),
 				"",
-				LinkTypeController.getBindDimension(codename));
+				com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController.getBindDimension(codename));
 
-			ltc.setLineSize(pType, LinkTypeController.getLineThickness(codename));
-			ltc.setColor(pType, LinkTypeController.getLineColor(codename));
+			ltc.setLineSize(pType, com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController.getLineThickness(codename));
+			ltc.setColor(pType, com.syrus.AMFICOM.Client.Map.Controllers.LinkTypeController.getLineColor(codename));
 			return pType;
 		}
 		catch (Exception e)
@@ -1827,6 +1841,6 @@ public abstract class LogicalNetLayer implements MapCoordinatesConverter
 
 	public MapViewController getMapViewController()
 	{
-		return MapViewController.getInstance(this);
+		return com.syrus.AMFICOM.Client.Map.Controllers.MapViewController.getInstance(this);
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: MapNewCommand.java,v 1.10 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: MapNewCommand.java,v 1.11 2004/12/24 15:42:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.map.MapStorableObjectPool;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.11 $, $Date: 2004/12/24 15:42:12 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -82,7 +82,7 @@ public class MapNewCommand extends VoidCommand
 		mc.setDomainId(
 				new Identifier(aContext.getSessionInterface().getAccessIdentifier().domain_id));
 
-		mv = new MapView();
+		mv = new MapView(null);
 
 		mv.setName(LangModelMap.getString("New"));
 

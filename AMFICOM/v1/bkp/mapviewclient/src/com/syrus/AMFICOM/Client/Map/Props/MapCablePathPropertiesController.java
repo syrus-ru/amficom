@@ -9,8 +9,8 @@ package com.syrus.AMFICOM.Client.Map.Props;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.map.AbstractNode;
-import com.syrus.AMFICOM.Client.Resource.MapView.CableController;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
+import com.syrus.AMFICOM.Client.Map.Controllers.CableController;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 
 import com.syrus.AMFICOM.scheme.SchemeUtils;
@@ -82,9 +82,9 @@ public final class MapCablePathPropertiesController
 	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
-		MapCablePathElement path = (MapCablePathElement )object;
+		CablePath path = (CablePath)object;
 		
-		CableController cc = (CableController )CableController.getInstance();
+		CableController cc = (CableController)com.syrus.AMFICOM.Client.Map.Controllers.CableController.getInstance();
 
 		if (key.equals(PROPERTY_NAME))
 		{
@@ -155,7 +155,7 @@ public final class MapCablePathPropertiesController
 
 	public void setValue(Object object, final String key, final Object value)
 	{
-		MapCablePathElement path = (MapCablePathElement )object;
+		CablePath path = (CablePath)object;
 
 		if (key.equals(PROPERTY_NAME))
 		{
@@ -197,7 +197,7 @@ public final class MapCablePathPropertiesController
 		if (key.equals(PROPERTY_SCHEME_CABLE_ID))
 		{
 			schemeCableLinks.clear();
-			MapCablePathElement cpath = (MapCablePathElement )object;
+			CablePath cpath = (CablePath)object;
 			for(Iterator it = cpath.getMapView().getSchemes().iterator(); it.hasNext();)
 			{
 				Scheme scheme = (Scheme )it.next();
@@ -214,7 +214,7 @@ public final class MapCablePathPropertiesController
 			|| key.equals(PROPERTY_END_NODE_ID))
 		{
 			nodes.clear();
-			MapCablePathElement cpath = (MapCablePathElement )object;
+			CablePath cpath = (CablePath)object;
 			for(Iterator it = cpath.getMap().getSiteNodes().iterator(); it.hasNext();)
 			{
 				AbstractNode node = (AbstractNode)it.next();

@@ -6,15 +6,16 @@ import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapAlarmMarker;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapEventMarker;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
+import com.syrus.AMFICOM.Client.Map.mapview.AlarmMarker;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.Client.Map.mapview.EventMarker;
+import com.syrus.AMFICOM.Client.Map.mapview.Marker;
+import com.syrus.AMFICOM.Client.Map.mapview.Selection;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundNode;
+import com.syrus.AMFICOM.Client.Map.mapview.VoidElement;
 
 import java.util.HashMap;
+import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
 
 public final class MapStrategyManager 
 {
@@ -26,19 +27,19 @@ public final class MapStrategyManager
 
 	static
 	{
-		strategyMap.put(MapAlarmMarker.class,
+		strategyMap.put(com.syrus.AMFICOM.Client.Map.mapview.AlarmMarker.class,
 			MapAlarmMarkerStrategy.getInstance());
-		strategyMap.put(MapCablePathElement.class,
+		strategyMap.put(com.syrus.AMFICOM.Client.Map.mapview.CablePath.class,
 			MapCablePathElementStrategy.getInstance());
-		strategyMap.put(MapEventMarker.class,
+		strategyMap.put(com.syrus.AMFICOM.Client.Map.mapview.EventMarker.class,
 			MapEventMarkerStrategy.getInstance());
 		strategyMap.put(com.syrus.AMFICOM.map.Mark.class,
 			MapMarkElementStrategy.getInstance());
 		strategyMap.put(com.syrus.AMFICOM.map.NodeLink.class,
 			MapNodeLinkElementStrategy.getInstance());
-		strategyMap.put(MapMarker.class,
+		strategyMap.put(com.syrus.AMFICOM.Client.Map.mapview.Marker.class,
 			MapMarkerStrategy.getInstance());
-		strategyMap.put(com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement.class,
+		strategyMap.put(com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath.class,
 			MapPathElementStrategy.getInstance());
 		strategyMap.put(com.syrus.AMFICOM.map.PhysicalLink.class,
 			MapPhysicalLinkElementStrategy.getInstance());
@@ -46,11 +47,11 @@ public final class MapStrategyManager
 			MapPhysicalNodeElementStrategy.getInstance());
 		strategyMap.put(com.syrus.AMFICOM.map.SiteNode.class,
 			MapSiteNodeElementStrategy.getInstance());
-		strategyMap.put(MapUnboundNodeElement.class,
+		strategyMap.put(com.syrus.AMFICOM.Client.Map.mapview.UnboundNode.class,
 			MapUnboundNodeElementStrategy.getInstance());
-		strategyMap.put(VoidMapElement.class,
+		strategyMap.put(com.syrus.AMFICOM.Client.Map.mapview.VoidElement.class,
 			MapVoidElementStrategy.getInstance());
-		strategyMap.put(MapSelection.class,
+		strategyMap.put(com.syrus.AMFICOM.Client.Map.mapview.Selection.class,
 			MapSelectionElementStrategy.getInstance());
 	}
 	

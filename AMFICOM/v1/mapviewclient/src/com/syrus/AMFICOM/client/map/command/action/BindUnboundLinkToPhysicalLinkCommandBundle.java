@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundLinkToPhysicalLinkCommandBundle.java,v 1.4 2004/12/22 16:38:39 krupenn Exp $
+ * $Id: BindUnboundLinkToPhysicalLinkCommandBundle.java,v 1.5 2004/12/24 15:42:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.Client.General.Event.MapEvent;
 import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.map.PhysicalLinkBinding;
 
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkBinding;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/12/22 16:38:39 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/24 15:42:11 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -36,7 +36,7 @@ public class BindUnboundLinkToPhysicalLinkCommandBundle extends MapActionCommand
 	/**
 	 * привязываемая линия
 	 */
-	MapUnboundLinkElement unbound;
+	UnboundLink unbound;
 	
 	/**
 	 * тоннель
@@ -49,7 +49,7 @@ public class BindUnboundLinkToPhysicalLinkCommandBundle extends MapActionCommand
 	Map map;
 
 	public BindUnboundLinkToPhysicalLinkCommandBundle(
-		MapUnboundLinkElement unbound, 
+		UnboundLink unbound, 
 		PhysicalLink link)
 	{
 		this.unbound = unbound;
@@ -71,7 +71,7 @@ public class BindUnboundLinkToPhysicalLinkCommandBundle extends MapActionCommand
 		super.removeUnboundLink(unbound);
 		
 		// одновляется информация о привязке кабульного пути
-		MapCablePathElement cp = unbound.getCablePath();
+		CablePath cp = unbound.getCablePath();
 		cp.removeLink(unbound);
 		cp.addLink(link);
 		link.getBinding().add(cp);

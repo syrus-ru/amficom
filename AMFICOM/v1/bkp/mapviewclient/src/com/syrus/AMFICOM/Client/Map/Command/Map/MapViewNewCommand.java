@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewNewCommand.java,v 1.8 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: MapViewNewCommand.java,v 1.9 2004/12/24 15:42:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/24 15:42:12 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -61,7 +61,7 @@ public class MapViewNewCommand extends VoidCommand
 				new StatusMessageEvent(
 					StatusMessageEvent.STATUS_MESSAGE,
 					LangModelMap.getString("MapNew")));
-		mv = new MapView();
+		mv = new MapView(null);
 
 		mv.setName(LangModelMap.getString("New"));
 

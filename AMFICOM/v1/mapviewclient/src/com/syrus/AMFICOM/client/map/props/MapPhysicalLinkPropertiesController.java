@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.MapPropertiesManager;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.Client.Resource.Map.PhysicalLinkController;
+import com.syrus.AMFICOM.Client.Map.Controllers.PhysicalLinkController;
 import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
@@ -73,7 +73,7 @@ public final class MapPhysicalLinkPropertiesController
 		Object result = null;
 		PhysicalLink link = (PhysicalLink)object;
 
-		PhysicalLinkController plc = (PhysicalLinkController )PhysicalLinkController.getInstance();
+		PhysicalLinkController plc = (PhysicalLinkController)com.syrus.AMFICOM.Client.Map.Controllers.PhysicalLinkController.getInstance();
 
 		if (key.equals(PROPERTY_NAME))
 		{

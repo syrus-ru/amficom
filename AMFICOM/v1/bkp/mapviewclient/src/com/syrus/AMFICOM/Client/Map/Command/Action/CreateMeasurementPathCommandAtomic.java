@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMeasurementPathCommandAtomic.java,v 1.4 2004/12/22 16:38:39 krupenn Exp $
+ * $Id: CreateMeasurementPathCommandAtomic.java,v 1.5 2004/12/24 15:42:11 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.map.AbstractNode;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.scheme.corba.SchemePath;
 
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemePath;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/12/22 16:38:39 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/24 15:42:11 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.scheme.corba.SchemePath;
 public class CreateMeasurementPathCommandAtomic extends MapActionCommand
 {
 	/** создаваемый измерительный путь */
-	MapMeasurementPathElement mp;
+	MeasurementPath mp;
 	
 	/** схемный путь */
 	SchemePath path;
@@ -57,7 +57,7 @@ public class CreateMeasurementPathCommandAtomic extends MapActionCommand
 		this.endNode = endNode;
 	}
 	
-	public MapMeasurementPathElement getPath()
+	public MeasurementPath getPath()
 	{
 		return mp;
 	}
@@ -73,7 +73,7 @@ public class CreateMeasurementPathCommandAtomic extends MapActionCommand
 		
 		try
 		{
-			mp = new MapMeasurementPathElement(
+			mp = new MeasurementPath(
 					path,
 					IdentifierPool.getGeneratedIdentifier(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE),
 					startNode, 

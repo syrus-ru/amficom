@@ -9,12 +9,12 @@ import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapMarker;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.Client.Map.mapview.Marker;
+import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
+import com.syrus.AMFICOM.Client.Map.mapview.Selection;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
+import com.syrus.AMFICOM.Client.Map.mapview.VoidElement;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesController;
 
 import java.util.HashMap;
@@ -31,7 +31,7 @@ public final class MapPropsManager
 
 	static
 	{
-		propsMap.put(MapCablePathElement.class,
+		propsMap.put(com.syrus.AMFICOM.Client.Map.mapview.CablePath.class,
 			MapCablePathPane.getInstance());
 		propsMap.put(com.syrus.AMFICOM.map.PhysicalLink.class,
 			MapLinkPane.getInstance());
@@ -39,7 +39,7 @@ public final class MapPropsManager
 			MapSitePane.getInstance());
 		propsMap.put(com.syrus.AMFICOM.map.SiteNodeType.class,
 			MapProtoPane.getInstance());
-		propsMap.put(VoidMapElement.class,
+		propsMap.put(com.syrus.AMFICOM.Client.Map.mapview.VoidElement.class,
 			MapViewPanel.getInstance());
 
 		propsCtlMap.put(com.syrus.AMFICOM.map.TopologicalNode.class,
@@ -52,19 +52,19 @@ public final class MapPropsManager
 			MapPhysicalLinkPropertiesController.getInstance());
 		propsCtlMap.put(com.syrus.AMFICOM.map.Mark.class,
 			MapMarkPropertiesController.getInstance());
-		propsCtlMap.put(VoidMapElement.class,
+		propsCtlMap.put(com.syrus.AMFICOM.Client.Map.mapview.VoidElement.class,
 			MapVoidElementPropertiesController.getInstance());
-		propsCtlMap.put(MapCablePathElement.class,
+		propsCtlMap.put(com.syrus.AMFICOM.Client.Map.mapview.CablePath.class,
 			MapCablePathPropertiesController.getInstance());
-		propsCtlMap.put(MapMeasurementPathElement.class,
+		propsCtlMap.put(com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath.class,
 			MapMeasurementPathPropertiesController.getInstance());
 		propsCtlMap.put(com.syrus.AMFICOM.map.Collector.class,
 			MapCollectorPropertiesController.getInstance());
-		propsCtlMap.put(MapMarker.class,
+		propsCtlMap.put(com.syrus.AMFICOM.Client.Map.mapview.Marker.class,
 			MapMarkerPropertiesController.getInstance());
-		propsCtlMap.put(MapUnboundLinkElement.class,
+		propsCtlMap.put(com.syrus.AMFICOM.Client.Map.mapview.UnboundLink.class,
 			MapUnboundLinkPropertiesController.getInstance());
-		propsCtlMap.put(MapSelection.class,
+		propsCtlMap.put(com.syrus.AMFICOM.Client.Map.mapview.Selection.class,
 			MapSelectionPropertiesController.getInstance());
 	}
 	

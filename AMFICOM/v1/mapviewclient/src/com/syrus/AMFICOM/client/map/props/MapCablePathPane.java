@@ -3,7 +3,7 @@ package com.syrus.AMFICOM.Client.Map.Props;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourcePropertiesPane;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
 
 import java.awt.BorderLayout;
 
@@ -19,7 +19,7 @@ public class MapCablePathPane
 	MapCablePathGeneralPanel gPanel = new MapCablePathGeneralPanel();
 	MapCablePathBindPanel bPanel = new MapCablePathBindPanel();
 
-	MapCablePathElement path;
+	CablePath path;
 
 	private LogicalNetLayer lnl;
 
@@ -45,7 +45,7 @@ public class MapCablePathPane
 		return instance;
 	}
 
-	public MapCablePathPane(MapCablePathElement path)
+	public MapCablePathPane(CablePath path)
 	{
 		this();
 		setObject(path);
@@ -81,7 +81,7 @@ public class MapCablePathPane
 
 	public void setObject(Object or)
 	{
-		this.path = (MapCablePathElement)or;
+		this.path = (CablePath)or;
 
 		gPanel.setObject(path);
 		bPanel.setObject(path);

@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundNodeElementStrategy.java,v 1.8 2004/12/22 16:38:42 krupenn Exp $
+ * $Id: MapUnboundNodeElementStrategy.java,v 1.9 2004/12/24 15:42:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,9 +21,9 @@ import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Resource.Map.SiteNodeController;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
+import com.syrus.AMFICOM.Client.Map.Controllers.SiteNodeController;
+import com.syrus.AMFICOM.Client.Map.mapview.Selection;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundNode;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
@@ -32,13 +32,14 @@ import java.util.Iterator;
 
 import javax.swing.SwingUtilities;
 import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 
 /**
  * Стратегия управления узлом
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/12/22 16:38:42 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/24 15:42:13 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -48,7 +49,7 @@ public final class MapUnboundNodeElementStrategy implements  MapStrategy
 	LogicalNetLayer logicalNetLayer;
 	ApplicationContext aContext;
 
-	MapUnboundNodeElement unbound;
+	UnboundNode unbound;
 	Command command;
 
 	private static MapUnboundNodeElementStrategy instance = new MapUnboundNodeElementStrategy();
@@ -64,7 +65,7 @@ public final class MapUnboundNodeElementStrategy implements  MapStrategy
 	
 	public void setMapElement(MapElement me)
 	{
-		this.unbound = (MapUnboundNodeElement )me;
+		this.unbound = (UnboundNode)me;
 	}
 
 	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
@@ -91,14 +92,14 @@ public final class MapUnboundNodeElementStrategy implements  MapStrategy
 				if ((actionMode == MapState.SELECT_ACTION_MODE))
 				{
 					MapElement mel = logicalNetLayer.getCurrentMapElement();
-					if(mel instanceof MapSelection)
+					if(mel instanceof Selection)
 					{
-						MapSelection sel = (MapSelection )mel;
+						Selection sel = (Selection)mel;
 						sel.add(unbound);
 					}
 					else
 					{
-						MapSelection sel = new MapSelection(logicalNetLayer);
+						Selection sel = new Selection(logicalNetLayer);
 						sel.addAll(logicalNetLayer.getSelectedElements());
 						logicalNetLayer.setCurrentMapElement(sel);
 					}
@@ -136,8 +137,8 @@ public final class MapUnboundNodeElementStrategy implements  MapStrategy
 				for(Iterator it = logicalNetLayer.getMapView().getMap().getSiteNodes().iterator(); it.hasNext();)
 				{
 					SiteNode sit = (SiteNode)it.next();
-					SiteNodeController snc = (SiteNodeController )logicalNetLayer.getMapViewController().getController(sit);
-					if(!(sit instanceof MapUnboundNodeElement))
+					SiteNodeController snc = (SiteNodeController)logicalNetLayer.getMapViewController().getController(sit);
+					if(!(sit instanceof UnboundNode))
 						if(snc.isMouseOnElement(sit, point))
 						{
 							unbound.setCanBind(true);
@@ -167,8 +168,8 @@ public final class MapUnboundNodeElementStrategy implements  MapStrategy
 						for(Iterator it = logicalNetLayer.getMapView().getMap().getSiteNodes().iterator(); it.hasNext();)
 						{
 							SiteNode site = (SiteNode)it.next();
-							SiteNodeController snc = (SiteNodeController )logicalNetLayer.getMapViewController().getController(site);
-							if(!(site instanceof MapUnboundNodeElement))
+							SiteNodeController snc = (SiteNodeController)logicalNetLayer.getMapViewController().getController(site);
+							if(!(site instanceof UnboundNode))
 								if(snc.isMouseOnElement(site, point))
 								{
 									command = new BindUnboundNodeToSiteCommandBundle(unbound, site);

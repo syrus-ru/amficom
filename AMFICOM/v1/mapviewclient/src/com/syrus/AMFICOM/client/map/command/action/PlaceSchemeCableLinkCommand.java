@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommand.java,v 1.8 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommand.java,v 1.9 2004/12/24 15:42:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkBinding;
 /**
  * Разместить кабель на карте.
  * 
- * @version $Revision: 1.8 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/24 15:42:11 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -49,7 +49,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 	/**
 	 * создаваемый кабельный путь
 	 */
-	MapCablePathElement cablePath = null;
+	CablePath cablePath = null;
 	
 	/**
 	 * размещаемый кабель
@@ -135,7 +135,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 			// создать на месте разрыва непроложенную линию из одного фрагмента
 			if(!exists)
 			{
-				MapUnboundLinkElement unbound = super.createUnboundLinkWithNodeLink(bufferStartSite, smsne);
+				UnboundLink unbound = super.createUnboundLinkWithNodeLink(bufferStartSite, smsne);
 				cablePath.addLink(unbound);
 				unbound.setCablePath(cablePath);
 
@@ -149,7 +149,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 				// если линия не существует, опустить данный элемент привязки
 				if(link == null)
 				{
-					MapUnboundLinkElement unbound = super.createUnboundLinkWithNodeLink(smsne, emsne);
+					UnboundLink unbound = super.createUnboundLinkWithNodeLink(smsne, emsne);
 					cablePath.addLink(unbound);
 					unbound.setCablePath(cablePath);
 				}
@@ -169,7 +169,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 		// линию от текущего до конечного узла
 		if(endNode != bufferStartSite)
 		{
-			MapUnboundLinkElement unbound = super.createUnboundLinkWithNodeLink(bufferStartSite, endNode);
+			UnboundLink unbound = super.createUnboundLinkWithNodeLink(bufferStartSite, endNode);
 			cablePath.addLink(unbound);
 			unbound.setCablePath(cablePath);
 		}

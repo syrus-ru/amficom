@@ -1,5 +1,5 @@
 /**
- * $Id: MoveMarkCommand.java,v 1.5 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: MoveMarkCommand.java,v 1.6 2004/12/24 15:42:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,8 +17,9 @@ import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Mark;
 
-import com.syrus.AMFICOM.Client.Resource.Map.MarkController;
+import com.syrus.AMFICOM.Client.Map.Controllers.MarkController;
 import java.awt.geom.Point2D;
+import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 
 /**
  * Команда перемещения метки. вызывает только функцию "обновить состояние 
@@ -26,7 +27,7 @@ import java.awt.geom.Point2D;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/24 15:42:11 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -82,7 +83,7 @@ public class MoveMarkCommand extends MapActionCommand
 				getClass().getName(), 
 				"execute()");
 
-		mc = (MarkController )logicalNetLayer.getMapViewController().getController(mark);
+		mc = (MarkController)logicalNetLayer.getMapViewController().getController(mark);
 
 		distance = mark.getDistance();
 		mc.moveToFromStartLt(mark, distance);

@@ -10,8 +10,8 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
 import com.syrus.AMFICOM.client_.resource.ObjectResourceController;
 
@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePathBinding;
 
 public final class CableBindingController implements ObjectResourceController 
 {
@@ -32,7 +33,7 @@ public final class CableBindingController implements ObjectResourceController
 
 	private List keys;
 	
-	MapCablePathElement cablePath;
+	CablePath cablePath;
 	Map map;
 
 	private CableBindingController() 
@@ -96,19 +97,19 @@ public final class CableBindingController implements ObjectResourceController
 			else
 			if (key.equals(KEY_START_SPARE))
 			{
-				result = (link instanceof MapUnboundLinkElement) ? "" : String.valueOf(cci.startSpare());
+				result = (link instanceof UnboundLink) ? "" : String.valueOf(cci.startSpare());
 			}
 			else
 			if (key.equals(KEY_LINK))
 			{
-				result = (link instanceof MapUnboundLinkElement) ? "" : link.getName();
+				result = (link instanceof UnboundLink) ? "" : link.getName();
 //				MapPhysicalLinkElement mle = (MapPhysicalLinkElement )map.getPhysicalLink(cci.physicalLinkId);
 //				result = (mle == null) ? "" : mle.getName();
 			}
 			else
 			if (key.equals(KEY_END_SPARE))
 			{
-				result = (link instanceof MapUnboundLinkElement) ? "" : String.valueOf(cci.endSpare());
+				result = (link instanceof UnboundLink) ? "" : String.valueOf(cci.endSpare());
 			}
 			else
 			if (key.equals(KEY_END_NODE))
@@ -173,13 +174,13 @@ public final class CableBindingController implements ObjectResourceController
 		return clazz;
 	}
 
-	public void setCablePath(MapCablePathElement cablePath)
+	public void setCablePath(CablePath cablePath)
 	{
 		this.cablePath = cablePath;
 		this.map = cablePath.getMap();
 	}
 
-	public MapCablePathElement getCablePath()
+	public CablePath getCablePath()
 	{
 		return cablePath;
 	}

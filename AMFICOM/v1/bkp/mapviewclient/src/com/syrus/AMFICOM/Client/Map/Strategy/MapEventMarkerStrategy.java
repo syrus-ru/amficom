@@ -1,5 +1,5 @@
 /**
- * $Id: MapEventMarkerStrategy.java,v 1.4 2004/12/22 16:38:41 krupenn Exp $
+ * $Id: MapEventMarkerStrategy.java,v 1.5 2004/12/24 15:42:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.Client.Map.MapState;
 import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapEventMarker;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
+import com.syrus.AMFICOM.Client.Map.mapview.EventMarker;
+import com.syrus.AMFICOM.Client.Map.mapview.Selection;
 
 import java.awt.event.MouseEvent;
 
@@ -28,7 +28,7 @@ import javax.swing.SwingUtilities;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2004/12/22 16:38:41 $
+ * @version $Revision: 1.5 $, $Date: 2004/12/24 15:42:12 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -38,7 +38,7 @@ public final class MapEventMarkerStrategy implements  MapStrategy
 	LogicalNetLayer logicalNetLayer;
 	ApplicationContext aContext;
 
-	MapEventMarker marker;
+	EventMarker marker;
 
 	private static MapEventMarkerStrategy instance = new MapEventMarkerStrategy();
 
@@ -53,7 +53,7 @@ public final class MapEventMarkerStrategy implements  MapStrategy
 	
 	public void setMapElement(MapElement me)
 	{
-		this.marker = (MapEventMarker )me;
+		this.marker = (EventMarker)me;
 	}
 
 	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
@@ -78,14 +78,14 @@ public final class MapEventMarkerStrategy implements  MapStrategy
 				if ((actionMode == MapState.SELECT_ACTION_MODE))
 				{
 					MapElement mel = logicalNetLayer.getCurrentMapElement();
-					if(mel instanceof MapSelection)
+					if(mel instanceof Selection)
 					{
-						MapSelection sel = (MapSelection )mel;
+						Selection sel = (Selection)mel;
 						sel.add(marker);
 					}
 					else
 					{
-						MapSelection sel = new MapSelection(logicalNetLayer);
+						Selection sel = new Selection(logicalNetLayer);
 						sel.addAll(logicalNetLayer.getSelectedElements());
 						logicalNetLayer.setCurrentMapElement(sel);
 					}

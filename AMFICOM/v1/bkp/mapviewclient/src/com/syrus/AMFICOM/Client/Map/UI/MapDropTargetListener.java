@@ -1,5 +1,5 @@
 /**
- * $Id: MapDropTargetListener.java,v 1.8 2004/12/22 16:38:42 krupenn Exp $
+ * $Id: MapDropTargetListener.java,v 1.9 2004/12/24 15:42:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.Client.Map.Command.Action.PlaceSchemeElementCommand;
 import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundNode;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.corba.SchemeElement;
@@ -43,7 +43,7 @@ import javax.swing.JOptionPane;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/12/22 16:38:42 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/24 15:42:13 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -127,7 +127,7 @@ public final class MapDropTargetListener implements DropTargetListener
 		SiteNode site = logicalNetLayer.getMapView().findElement(se);
 		if(site != null)
 		{
-			if(site instanceof MapUnboundNodeElement)
+			if(site instanceof UnboundNode)
 			{
 				logicalNetLayer.deselectAll();
 				site.setSelected(true);
@@ -154,7 +154,7 @@ public final class MapDropTargetListener implements DropTargetListener
 
 	protected void schemeCableLinkDropped(SchemeCableLink scl, Point point)
 	{
-		MapCablePathElement cp = logicalNetLayer.getMapView().findCablePath(scl);
+		CablePath cp = logicalNetLayer.getMapView().findCablePath(scl);
 		if(cp != null)
 		{
 			cp.setSelected(true);

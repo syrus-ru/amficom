@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemePathCommand.java,v 1.6 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: PlaceSchemePathCommand.java,v 1.7 2004/12/24 15:42:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,9 +16,9 @@ import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
@@ -33,7 +33,7 @@ import java.util.Iterator;
  * Разместить элемент типа mpe на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @version $Revision: 1.6 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.7 $, $Date: 2004/12/24 15:42:12 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -46,8 +46,8 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 	SiteNode startNode = null;
 	SiteNode endNode = null;
 
-	MapMeasurementPathElement mPath = null;
-	MapUnboundLinkElement unbound = null;
+	MeasurementPath mPath = null;
+	UnboundLink unbound = null;
 	NodeLink nodeLink;
 
 	SchemePath path = null;
@@ -116,7 +116,7 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 					break;
 				case Type._SCHEME_CABLE_LINK:
 					SchemeCableLink clink = (SchemeCableLink )pe.abstractSchemeElement();
-					MapCablePathElement cp = mapView.findCablePath(clink);
+					CablePath cp = mapView.findCablePath(clink);
 					if(cp != null)
 					{
 	//					mPath.addCablePath(cp);

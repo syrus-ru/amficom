@@ -1,5 +1,5 @@
 /**
- * $Id: DeletePhysicalLinkCommandBundle.java,v 1.5 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: DeletePhysicalLinkCommandBundle.java,v 1.6 2004/12/24 15:42:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.TopologicalNode;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
 
 import java.util.Iterator;
@@ -32,7 +32,7 @@ import java.util.List;
  * состоит из последовательности атомарных действий
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/24 15:42:11 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -102,10 +102,10 @@ public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle
 		// и прохождение по ней заменяется непривязанной связью
 		for(Iterator it = cablePathsToScan.iterator(); it.hasNext();)
 		{
-			MapCablePathElement cpath = (MapCablePathElement )it.next();
+			CablePath cpath = (CablePath)it.next();
 			
 			cpath.removeLink(link);
-			MapUnboundLinkElement unbound = super.createUnboundLinkWithNodeLink(
+			UnboundLink unbound = super.createUnboundLinkWithNodeLink(
 					link.getStartNode(),
 					link.getEndNode());
 			unbound.setCablePath(cpath);

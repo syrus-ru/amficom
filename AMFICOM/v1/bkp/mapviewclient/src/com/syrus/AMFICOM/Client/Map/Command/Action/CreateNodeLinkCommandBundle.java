@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandBundle.java,v 1.7 2004/12/23 16:57:59 krupenn Exp $
+ * $Id: CreateNodeLinkCommandBundle.java,v 1.8 2004/12/24 15:42:11 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -38,7 +38,7 @@ import java.util.LinkedList;
  * данна€ команда
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2004/12/23 16:57:59 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/24 15:42:11 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -104,18 +104,21 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 		if ( curElementAtPoint != null
 			&& curElementAtPoint instanceof AbstractNode)
 		{
-			endNode = (AbstractNode)curElementAtPoint;
+			endNode = (AbstractNode )curElementAtPoint;
 
 			// конечный элемент - топологический узел
 			if(endNode instanceof TopologicalNode)
 			{
-				TopologicalNode mpne = (TopologicalNode)endNode;
+				TopologicalNode mpne = (TopologicalNode )endNode;
 		
 				// если он активный, то есть находитс€ в середине другой линии,
 				// то в той же точке создаетс€ новый
 				if(mpne.isActive())
 				{
-					endNode = super.createPhysicalNode(mapEndPoint);
+					// node created with fake physicalLink
+					// should be later updated (e.g. through call to
+					// nodelink.setPhysicalLink or node.setPhysicalLink)
+					endNode = super.createPhysicalNode(mpne.getPhysicalLink(), mapEndPoint);
 				}
 				else
 				// если он - концевой дл€ линии, то замкнуть новый фрагмент

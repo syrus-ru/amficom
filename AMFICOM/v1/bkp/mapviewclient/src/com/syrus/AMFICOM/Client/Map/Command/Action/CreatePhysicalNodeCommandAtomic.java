@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.8 2004/12/23 16:57:59 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.9 2004/12/24 15:42:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,12 +17,14 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.TopologicalNode;
-import com.syrus.AMFICOM.Client.Resource.Map.TopologicalNodeController;
+import com.syrus.AMFICOM.Client.Map.Controllers.TopologicalNodeController;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
 import java.awt.geom.Point2D;
 import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 
 /**
  * создание топологического узла, внесение его в пул и на карту - 
@@ -30,7 +32,7 @@ import com.syrus.AMFICOM.map.Map;
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2004/12/23 16:57:59 $
+ * @version $Revision: 1.9 $, $Date: 2004/12/24 15:42:11 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -43,10 +45,23 @@ public class CreatePhysicalNodeCommandAtomic extends MapActionCommand
 	/** географические координаты узла */
 	DoublePoint point;
 	
+	PhysicalLink physicalLink;
+
+	public CreatePhysicalNodeCommandAtomic(PhysicalLink physicalLink, DoublePoint point)
+	{
+		super(MapActionCommand.ACTION_DRAW_NODE);
+		this.point = point;
+		this.physicalLink = physicalLink;
+	}
+	
+	/**
+	 * @deprecated
+	 */	
 	public CreatePhysicalNodeCommandAtomic(DoublePoint point)
 	{
 		super(MapActionCommand.ACTION_DRAW_NODE);
 		this.point = point;
+		this.physicalLink = null;
 	}
 	
 	public TopologicalNode getNode()
@@ -68,6 +83,7 @@ public class CreatePhysicalNodeCommandAtomic extends MapActionCommand
 		{
 			node = TopologicalNode.createInstance(
 				new Identifier(aContext.getSessionInterface().getAccessIdentifier().user_id),
+				physicalLink,
 				point);
 		}
 		catch (CreateObjectException e)
@@ -75,7 +91,7 @@ public class CreatePhysicalNodeCommandAtomic extends MapActionCommand
 			e.printStackTrace();
 		}
 
-		TopologicalNodeController tnc = (TopologicalNodeController )getLogicalNetLayer().getMapViewController().getController(node);
+		TopologicalNodeController tnc = (TopologicalNodeController)getLogicalNetLayer().getMapViewController().getController(node);
 
 		// установить коэффициент для масштабирования изображения
 		// в соответствии с текущим масштабом отображения карты

@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommandBundle.java,v 1.12 2004/12/23 16:57:59 krupenn Exp $
+ * $Id: MapActionCommandBundle.java,v 1.13 2004/12/24 15:42:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,10 +23,10 @@ import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundNode;
 import com.syrus.AMFICOM.scheme.corba.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.corba.SchemeElement;
 import com.syrus.AMFICOM.scheme.corba.SchemePath;
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkBinding;
  * 
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2004/12/23 16:57:59 $
+ * @version $Revision: 1.13 $, $Date: 2004/12/24 15:42:11 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -93,7 +93,7 @@ public class MapActionCommandBundle extends CommandBundle
 	/**
 	 * Создается непривязанный элемент
 	 */
-	protected MapUnboundNodeElement createUnboundNode(DoublePoint point, SchemeElement se)
+	protected UnboundNode createUnboundNode(DoublePoint point, SchemeElement se)
 	{
 		CreateUnboundNodeCommandAtomic cmd = new CreateUnboundNodeCommandAtomic(se, point);
 		cmd.setLogicalNetLayer(logicalNetLayer);
@@ -104,10 +104,23 @@ public class MapActionCommandBundle extends CommandBundle
 
 	/**
 	 * Создается топологический конечный узел в неактивном состоянии
+	 * @deprecated
 	 */
 	protected TopologicalNode createPhysicalNode(DoublePoint point)
 	{
 		CreatePhysicalNodeCommandAtomic cmd = new CreatePhysicalNodeCommandAtomic(point);
+		cmd.setLogicalNetLayer(logicalNetLayer);
+		cmd.execute();
+		add(cmd);
+		return cmd.getNode();
+	}
+
+	/**
+	 * Создается топологический конечный узел в неактивном состоянии
+	 */
+	protected TopologicalNode createPhysicalNode(PhysicalLink physicalLink, DoublePoint point)
+	{
+		CreatePhysicalNodeCommandAtomic cmd = new CreatePhysicalNodeCommandAtomic(physicalLink, point);
 		cmd.setLogicalNetLayer(logicalNetLayer);
 		cmd.execute();
 		add(cmd);
@@ -146,7 +159,7 @@ public class MapActionCommandBundle extends CommandBundle
 	/**
 	 * Создается кабельный путь
 	 */
-	protected MapCablePathElement createCablePath(
+	protected CablePath createCablePath(
 			SchemeCableLink scl,
 			AbstractNode startNode,
 			AbstractNode endNode)
@@ -161,7 +174,7 @@ public class MapActionCommandBundle extends CommandBundle
 	/**
 	 * Удаляется кабельный путь
 	 */
-	protected void removeCablePath(MapCablePathElement mcpe)
+	protected void removeCablePath(CablePath mcpe)
 	{
 		RemoveCablePathCommandAtomic cmd = new RemoveCablePathCommandAtomic(mcpe);
 		cmd.setLogicalNetLayer(logicalNetLayer);
@@ -172,7 +185,7 @@ public class MapActionCommandBundle extends CommandBundle
 	/**
 	 * Создается измерительный путь
 	 */
-	protected MapMeasurementPathElement createMeasurementPath(
+	protected MeasurementPath createMeasurementPath(
 			SchemePath path,
 			AbstractNode startNode,
 			AbstractNode endNode)
@@ -187,7 +200,7 @@ public class MapActionCommandBundle extends CommandBundle
 	/**
 	 * Удаляется измерительный путь
 	 */
-	protected void removeMeasurementPath(MapMeasurementPathElement mpe)
+	protected void removeMeasurementPath(MeasurementPath mpe)
 	{
 		RemoveMeasurementPathCommandAtomic cmd = new RemoveMeasurementPathCommandAtomic(mpe);
 		cmd.setLogicalNetLayer(logicalNetLayer);
@@ -198,7 +211,7 @@ public class MapActionCommandBundle extends CommandBundle
 	/**
 	 * Создается непривязанная линия
 	 */
-	protected MapUnboundLinkElement createUnboundLink(
+	protected UnboundLink createUnboundLink(
 			AbstractNode startNode,
 			AbstractNode endNode)
 	{
@@ -212,11 +225,11 @@ public class MapActionCommandBundle extends CommandBundle
 	/**
 	 * Создается непривязанная линия, состоящая из одного фрагмента
 	 */
-	protected MapUnboundLinkElement createUnboundLinkWithNodeLink(
+	protected UnboundLink createUnboundLinkWithNodeLink(
 			AbstractNode startNode,
 			AbstractNode endNode)
 	{
-		MapUnboundLinkElement unbound = this.createUnboundLink(startNode, endNode);
+		UnboundLink unbound = this.createUnboundLink(startNode, endNode);
 
 		NodeLink nodeLink = this.createNodeLink(unbound, startNode, endNode);
 		unbound.addNodeLink(nodeLink);
@@ -284,7 +297,7 @@ public class MapActionCommandBundle extends CommandBundle
 	 * удаляется непривязанная линия, включая ее внутренние
 	 * топологические узлы и фрагменты
 	 */
-	protected void removeUnboundLink(MapUnboundLinkElement link)
+	protected void removeUnboundLink(UnboundLink link)
 	{
 		this.removePhysicalLink(link);
 		link.sortNodes();
@@ -308,14 +321,14 @@ public class MapActionCommandBundle extends CommandBundle
 	 * удаляется информация о привязке кабеля. от тоннелей кабель
 	 * отвязывается, непривязанные линии удаляются
 	 */
-	protected void removeCablePathLinks(MapCablePathElement cablePath)
+	protected void removeCablePathLinks(CablePath cablePath)
 	{
 		for(Iterator it = cablePath.getLinks().iterator(); it.hasNext();)
 		{
 			PhysicalLink link = (PhysicalLink)it.next();
-			if(link instanceof MapUnboundLinkElement)
+			if(link instanceof UnboundLink)
 			{
-				this.removeUnboundLink((MapUnboundLinkElement )link);
+				this.removeUnboundLink((UnboundLink)link);
 			}
 			else
 			{
@@ -328,7 +341,7 @@ public class MapActionCommandBundle extends CommandBundle
 	/**
 	 * удаляется измерительный путь
 	 */
-	protected void removeMeasurementPathCables(MapMeasurementPathElement mPath)
+	protected void removeMeasurementPathCables(MeasurementPath mPath)
 	{
 //		mPath.clearCablePaths();
 	}

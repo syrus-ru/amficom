@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkElementStrategy.java,v 1.10 2004/12/22 16:38:41 krupenn Exp $
+ * $Id: MapMarkElementStrategy.java,v 1.11 2004/12/24 15:42:13 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -23,22 +23,23 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.Mark;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
-import com.syrus.AMFICOM.Client.Resource.Map.MarkController;
+import com.syrus.AMFICOM.Client.Map.Controllers.MarkController;
 import com.syrus.AMFICOM.Client.Map.UI.MotionDescriptor;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
+import com.syrus.AMFICOM.Client.Map.mapview.Selection;
 
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 
 import javax.swing.SwingUtilities;
 import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.Client.Map.Controllers.MapViewController;
 
 /**
  * —тратеги€ управлени€ метки на физической линии
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2004/12/22 16:38:41 $
+ * @version $Revision: 1.11 $, $Date: 2004/12/24 15:42:13 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -95,14 +96,14 @@ public final class MapMarkElementStrategy implements  MapStrategy
 				if ((actionMode == MapState.SELECT_ACTION_MODE))
 				{
 					MapElement mel = logicalNetLayer.getCurrentMapElement();
-					if(mel instanceof MapSelection)
+					if(mel instanceof Selection)
 					{
-						MapSelection sel = (MapSelection )mel;
+						Selection sel = (Selection)mel;
 						sel.add(mark);
 					}
 					else
 					{
-						MapSelection sel = new MapSelection(logicalNetLayer);
+						Selection sel = new Selection(logicalNetLayer);
 						sel.addAll(logicalNetLayer.getSelectedElements());
 						logicalNetLayer.setCurrentMapElement(sel);
 					}
@@ -196,7 +197,7 @@ public final class MapMarkElementStrategy implements  MapStrategy
 						}
 					}
 
-					MarkController mc = (MarkController )logicalNetLayer.getMapViewController().getController(mark);
+					MarkController mc = (MarkController)logicalNetLayer.getMapViewController().getController(mark);
 
 					mc.adjustPosition(mark, lengthFromStartNode);
 				}

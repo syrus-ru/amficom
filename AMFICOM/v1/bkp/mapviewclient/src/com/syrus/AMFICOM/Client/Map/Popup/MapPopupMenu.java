@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.20 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.21 2004/12/24 15:42:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -39,9 +39,9 @@ import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundNode;
 import com.syrus.AMFICOM.Client.Resource.ObjectResource;
 
 import java.awt.Dimension;
@@ -60,7 +60,7 @@ import javax.swing.JPopupMenu;
  * 
  * 
  * 
- * @version $Revision: 1.20 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.21 $, $Date: 2004/12/24 15:42:12 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see
@@ -194,7 +194,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 		for(Iterator it = getLogicalNetLayer().getMapView().getMap().getSiteNodes().iterator(); it.hasNext();)
 		{
 			SiteNode s = (SiteNode)it.next();
-			if(!( s instanceof MapUnboundNodeElement))
+			if(!( s instanceof UnboundNode))
 				list.add(s);
 		}
 		
@@ -217,7 +217,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 		return site;
 	}
 
-	protected PhysicalLink selectPhysicalLinkAt(MapUnboundLinkElement unbound)
+	protected PhysicalLink selectPhysicalLinkAt(UnboundLink unbound)
 	{
 		Map map = logicalNetLayer.getMapView().getMap();
 		
@@ -233,7 +233,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 		for(Iterator it = map.getPhysicalLinksAt(node2).iterator(); it.hasNext();)
 		{
 			PhysicalLink le = (PhysicalLink)it.next();
-			if(! (le instanceof MapUnboundLinkElement))
+			if(! (le instanceof UnboundLink))
 				if(list2.contains(le))
 					list.add(le);
 		}
@@ -357,7 +357,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 		getLogicalNetLayer().getCommandList().execute();
 	}
 
-	protected void convertUnboundNodeToSite(MapUnboundNodeElement unbound, SiteNodeType proto)
+	protected void convertUnboundNodeToSite(UnboundNode unbound, SiteNodeType proto)
 	{
 		if(unbound.isRemoved())
 			return;
@@ -377,7 +377,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 		getLogicalNetLayer().repaint(false);
 	}
 
-	protected void generatePathCabling(MapCablePathElement path, SiteNodeType proto)
+	protected void generatePathCabling(CablePath path, SiteNodeType proto)
 	{
 		GenerateCablePathCablingCommandBundle command = 
 				new GenerateCablePathCablingCommandBundle(path, proto);
@@ -388,7 +388,7 @@ public abstract class MapPopupMenu extends JPopupMenu
 		getLogicalNetLayer().repaint(false);
 	}
 	
-	protected void convertUnboundLinkToPhysicalLink(MapUnboundLinkElement unbound)
+	protected void convertUnboundLinkToPhysicalLink(UnboundLink unbound)
 	{
 		GenerateUnboundLinkCablingCommandBundle command = 
 				new GenerateUnboundLinkCablingCommandBundle(unbound);

@@ -4,9 +4,9 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Map.Command.Action.BindUnboundLinkToPhysicalLinkCommandBundle;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
 
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundNodeElement;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundNode;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -17,7 +17,7 @@ public class UnboundLinkPopupMenu extends MapPopupMenu
 	private JMenuItem bindMenuItem = new JMenuItem();
 	private JMenuItem generateMenuItem = new JMenuItem();
 
-	private MapUnboundLinkElement unbound;
+	private UnboundLink unbound;
 
 	private static UnboundLinkPopupMenu instance = new UnboundLinkPopupMenu();
 
@@ -41,9 +41,9 @@ public class UnboundLinkPopupMenu extends MapPopupMenu
 	
 	public void setElement(Object me)
 	{
-		this.unbound = (MapUnboundLinkElement )me;
-		generateMenuItem.setVisible( !(unbound.getStartNode() instanceof MapUnboundNodeElement)
-			&& !(unbound.getEndNode() instanceof MapUnboundNodeElement));
+		this.unbound = (UnboundLink)me;
+		generateMenuItem.setVisible( !(unbound.getStartNode() instanceof UnboundNode)
+			&& !(unbound.getEndNode() instanceof UnboundNode));
 	}
 
 	private void jbInit() 

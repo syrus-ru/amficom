@@ -7,7 +7,7 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapSelection;
+import com.syrus.AMFICOM.Client.Map.mapview.Selection;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,7 +58,7 @@ public final class MapSelectionPropertiesController
 	public Object getValue(final Object object, final String key)
 	{
 		Object result = null;
-		MapSelection selection = (MapSelection )object;
+		Selection selection = (Selection)object;
 
 		if (key.equals(PROPERTY_SELECTION_COUNT))
 		{

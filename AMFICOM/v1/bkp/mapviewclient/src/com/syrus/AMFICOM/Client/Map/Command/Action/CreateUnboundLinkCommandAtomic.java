@@ -1,5 +1,5 @@
 /**
- * $Id: CreateUnboundLinkCommandAtomic.java,v 1.5 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: CreateUnboundLinkCommandAtomic.java,v 1.6 2004/12/24 15:42:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
 /**
@@ -28,14 +28,14 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/24 15:42:11 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
 public class CreateUnboundLinkCommandAtomic extends MapActionCommand
 {
-	MapUnboundLinkElement link;
+	UnboundLink link;
 	
 	AbstractNode startNode;
 	AbstractNode endNode;
@@ -51,7 +51,7 @@ public class CreateUnboundLinkCommandAtomic extends MapActionCommand
 		this.endNode = endNode;
 	}
 	
-	public MapUnboundLinkElement getLink()
+	public UnboundLink getLink()
 	{
 		return link;
 	}
@@ -70,7 +70,7 @@ public class CreateUnboundLinkCommandAtomic extends MapActionCommand
 		
 		try
 		{
-			link = new MapUnboundLinkElement(
+			link = new UnboundLink(
 					IdentifierPool.getGeneratedIdentifier(ObjectEntities.PHYSICAL_LINK_ENTITY_CODE),
 					startNode, 
 					endNode, 

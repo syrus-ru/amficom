@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.Client.Map.Props;
 
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -44,7 +44,7 @@ public class SiteCrossingPanel extends JPanel
 
 	List tunnels = new LinkedList();
 	
-	MapCablePathElement cpath;
+	CablePath cpath;
 	
 	int index1 = -1;
 	int index2 = -1;
@@ -65,14 +65,14 @@ public class SiteCrossingPanel extends JPanel
 			for(Iterator it = site.getMap().getPhysicalLinksAt(site).iterator(); it.hasNext();)
 			{
 				Object tunnel = it.next();
-				if(!(tunnel instanceof MapUnboundLinkElement))
+				if(!(tunnel instanceof UnboundLink))
 					tunnels.add(tunnel);
 			}
 		}
 		repaint();
 	}
 
-	public void setCable(MapCablePathElement cpath)
+	public void setCable(CablePath cpath)
 	{
 		this.cpath = cpath;
 

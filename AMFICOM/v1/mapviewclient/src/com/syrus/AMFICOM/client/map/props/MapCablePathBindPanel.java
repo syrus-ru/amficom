@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTable;
 import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceTableModel;
@@ -42,6 +42,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.PhysicalLinkBinding;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePathBinding;
 
 public final class MapCablePathBindPanel
 		extends JPanel 
@@ -51,7 +52,7 @@ public final class MapCablePathBindPanel
 	private GridBagLayout gridBagLayout2 = new GridBagLayout();
 	private GridBagLayout gridBagLayout3 = new GridBagLayout();
 
-	private MapCablePathElement path;
+	private CablePath path;
 
 	private LogicalNetLayer lnl;
 	
@@ -307,7 +308,7 @@ public final class MapCablePathBindPanel
 
 	public void setObject(Object objectResource)
 	{
-		path = (MapCablePathElement )objectResource;
+		path = (CablePath)objectResource;
 
 		table.removeAll();
 		links = new LinkedList();
@@ -437,7 +438,7 @@ public final class MapCablePathBindPanel
 	{
 		PhysicalLink link = (PhysicalLink)model.getObject(table.getSelectedRow());
 		PhysicalLink previous = path.previousLink(link);
-		if(link instanceof MapUnboundLinkElement)
+		if(link instanceof UnboundLink)
 		{
 			if(link.getStartNode().equals(link.getEndNode()))
 			{
@@ -445,13 +446,13 @@ public final class MapCablePathBindPanel
 
 				RemoveUnboundLinkCommandBundle command = 
 						new RemoveUnboundLinkCommandBundle(
-							(MapUnboundLinkElement )link);
+							(UnboundLink)link);
 				command.setLogicalNetLayer(path.getMapView().getLogicalNetLayer());
 				command.execute();
 			}
 			else
 			if(previous != null
-				&& previous instanceof MapUnboundLinkElement)
+				&& previous instanceof UnboundLink)
 			{
 				CableChannelingItem cci = (CableChannelingItem )path.getBinding().get(link);
 				AbstractNode removedNode = cci.startSiteNodeImpl();
@@ -476,7 +477,7 @@ public final class MapCablePathBindPanel
 
 				RemoveUnboundLinkCommandBundle command = 
 						new RemoveUnboundLinkCommandBundle(
-							(MapUnboundLinkElement )link);
+							(UnboundLink)link);
 				command.setLogicalNetLayer(path.getMapView().getLogicalNetLayer());
 				command.execute();
 			}
@@ -492,7 +493,7 @@ public final class MapCablePathBindPanel
 			command.setLogicalNetLayer(path.getMapView().getLogicalNetLayer());
 			command.execute();
 
-			MapUnboundLinkElement unbound = command.getUnbound();
+			UnboundLink unbound = command.getUnbound();
 			unbound.setCablePath(path);
 			path.addLink(unbound);
 			link.getBinding().remove(path);
@@ -511,7 +512,7 @@ public final class MapCablePathBindPanel
 		command.setLogicalNetLayer(path.getMapView().getLogicalNetLayer());
 		command.execute();
 
-		MapUnboundLinkElement unbound = command.getUnbound();
+		UnboundLink unbound = command.getUnbound();
 		path.addLink(unbound);
 		unbound.setCablePath(path);
 
@@ -521,7 +522,7 @@ public final class MapCablePathBindPanel
 	
 	private void addLinkBinding(
 			PhysicalLink link, 
-			MapUnboundLinkElement unbound, 
+			UnboundLink unbound, 
 			AbstractNode fromSite)
 	{
 		if(link.getOtherNode(fromSite).equals(unbound.getOtherNode(fromSite)))
@@ -568,7 +569,7 @@ public final class MapCablePathBindPanel
 		{
 			selectedStartLink = (PhysicalLink )startLinkComboBox.getSelectedItem();
 			
-			MapUnboundLinkElement unbound = (MapUnboundLinkElement )path.nextLink(startLastBound);
+			UnboundLink unbound = (UnboundLink)path.nextLink(startLastBound);
 
 			if(unbound != null)
 				addLinkBinding(selectedStartLink, unbound, startNode);
@@ -585,7 +586,7 @@ public final class MapCablePathBindPanel
 			
 			if(!selectedEndLink.equals(selectedStartLink))
 			{
-				MapUnboundLinkElement unbound = (MapUnboundLinkElement )path.previousLink(endLastBound);
+				UnboundLink unbound = (UnboundLink)path.previousLink(endLastBound);
 
 				if(unbound != null)
 					addLinkBinding(selectedEndLink, unbound, endNode);

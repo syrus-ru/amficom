@@ -8,7 +8,7 @@ package com.syrus.AMFICOM.Client.Map.Props;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
-import com.syrus.AMFICOM.Client.Resource.MapView.VoidMapElement;
+import com.syrus.AMFICOM.Client.Map.mapview.VoidElement;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,7 +60,7 @@ public final class MapVoidElementPropertiesController
 	{
 		Object result = null;
 
-		VoidMapElement ve = (VoidMapElement )object;
+		VoidElement ve = (VoidElement)object;
 		MapView mapView = ve.getMapView();
 
 		if (key.equals(PROPERTY_NAME))
@@ -80,7 +80,7 @@ public final class MapVoidElementPropertiesController
 
 	public void setValue(Object object, final String key, final Object value)
 	{
-		VoidMapElement ve = (VoidMapElement )object;
+		VoidElement ve = (VoidElement)object;
 		MapView mapView = ve.getMapView();
 
 		if (key.equals(PROPERTY_NAME))

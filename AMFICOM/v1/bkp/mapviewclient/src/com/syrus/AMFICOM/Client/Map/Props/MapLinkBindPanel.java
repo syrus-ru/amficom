@@ -13,8 +13,8 @@ import com.syrus.AMFICOM.Client.Map.LogicalNetLayer;
 import com.syrus.AMFICOM.map.IntPoint;
 import com.syrus.AMFICOM.map.PhysicalLinkBinding;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapCablePathElement;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapUnboundLinkElement;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePath;
+import com.syrus.AMFICOM.Client.Map.mapview.UnboundLink;
 
 import com.syrus.AMFICOM.scheme.corba.CableChannelingItem;
 import java.awt.GridBagConstraints;
@@ -39,6 +39,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import com.syrus.AMFICOM.Client.Map.mapview.CablePathBinding;
 
 public final class MapLinkBindPanel
 		extends JPanel 
@@ -280,7 +281,7 @@ public final class MapLinkBindPanel
 					cableList.getSelectionModel().clearSelection();
 					for(Iterator it = list.iterator(); it.hasNext();)
 					{
-						MapCablePathElement cp = (MapCablePathElement )it.next();
+						CablePath cp = (CablePath)it.next();
 						IntPoint position = cp.getBindingPosition(link);
 						if(position.x == col
 							&& position.y == row)
@@ -301,7 +302,7 @@ public final class MapLinkBindPanel
 		if(pt != null)
 		{
 			binding.bind(or, pt.x, pt.y);
-			MapCablePathElement cp = (MapCablePathElement )or;
+			CablePath cp = (CablePath)or;
 			CableChannelingItem cci = (CableChannelingItem )(cp.getBinding().get(link));
 			cci.rowX(pt.x);
 			cci.placeY(pt.y);
@@ -325,7 +326,7 @@ public final class MapLinkBindPanel
 
 	public void unbind(Object or)
 	{
-		MapCablePathElement path = (MapCablePathElement )or;
+		CablePath path = (CablePath)or;
 
 		path.removeLink(link);
 
@@ -335,7 +336,7 @@ public final class MapLinkBindPanel
 		command.setLogicalNetLayer(path.getMapView().getLogicalNetLayer());
 		command.execute();
 
-		MapUnboundLinkElement unbound = command.getUnbound();
+		UnboundLink unbound = command.getUnbound();
 		unbound.setCablePath(path);
 		path.addLink(unbound);
 		link.getBinding().remove(path);

@@ -1,5 +1,5 @@
 /**
- * $Id: RemoveMeasurementPathCommandAtomic.java,v 1.5 2004/12/22 16:38:40 krupenn Exp $
+ * $Id: RemoveMeasurementPathCommandAtomic.java,v 1.6 2004/12/24 15:42:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,7 +12,7 @@
 package com.syrus.AMFICOM.Client.Map.Command.Action;
 
 import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.Resource.MapView.MapMeasurementPathElement;
+import com.syrus.AMFICOM.Client.Map.mapview.MeasurementPath;
 import com.syrus.AMFICOM.Client.Resource.Pool;
 
 /**
@@ -20,22 +20,22 @@ import com.syrus.AMFICOM.Client.Resource.Pool;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2004/12/22 16:38:40 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/24 15:42:12 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
 public class RemoveMeasurementPathCommandAtomic extends MapActionCommand
 {
-	MapMeasurementPathElement mp;
+	MeasurementPath mp;
 	
-	public RemoveMeasurementPathCommandAtomic(MapMeasurementPathElement mp)
+	public RemoveMeasurementPathCommandAtomic(MeasurementPath mp)
 	{
 		super(MapActionCommand.ACTION_DROP_LINE);
 		this.mp = mp;
 	}
 	
-	public MapMeasurementPathElement getPath()
+	public MeasurementPath getPath()
 	{
 		return mp;
 	}
