@@ -1,5 +1,5 @@
 /*
- * $Id: JDBCConnectionManager.java,v 1.4 2004/06/16 07:36:19 krupenn Exp $
+ * $Id: JDBCConnectionManager.java,v 1.5 2004/06/18 08:04:37 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import sqlj.runtime.ExecutionContext;
 import sqlj.runtime.ref.DefaultContext;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/06/16 07:36:19 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.5 $, $Date: 2004/06/18 08:04:37 $
+ * @author $Author: bass $
  * @module servermisc
  */
 public final class JDBCConnectionManager {
@@ -49,11 +49,16 @@ public final class JDBCConnectionManager {
 			DefaultContext.setDefaultContext(connCtx);
 			Runtime.getRuntime().addShutdownHook(new Thread() {
 				public void run() {
-					try {
-						execCtx.cancel();
-					} catch (SQLException sqle) {
-						sqle.printStackTrace();
-					}
+					/**
+					 * @todo As soon as migration to
+					 *       Oracle 10 is finished, uncomment
+					 *       the below lines.
+					 */
+//					try {
+//						execCtx.close();
+//					} catch (SQLException sqle) {
+//						sqle.printStackTrace();
+//					}
 					try {
 						connCtx.close();
 					} catch (SQLException sqle) {
