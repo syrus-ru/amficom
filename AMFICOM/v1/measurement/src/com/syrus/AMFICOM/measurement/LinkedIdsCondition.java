@@ -1,5 +1,5 @@
 /*
- * $Id: LinkedIdsCondition.java,v 1.22 2004/12/24 10:58:00 bob Exp $
+ * $Id: LinkedIdsCondition.java,v 1.23 2004/12/28 10:29:48 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -17,7 +18,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2004/12/24 10:58:00 $
+ * @version $Revision: 1.23 $, $Date: 2004/12/28 10:29:48 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -196,24 +197,88 @@ class LinkedIdsCondition extends com.syrus.AMFICOM.general.LinkedIdsCondition {
 			case ObjectEntities.MS_ENTITY_CODE:
 				if (object instanceof MeasurementSetup) {
 					MeasurementSetup measurementSetup = (MeasurementSetup) object;
-					for (Iterator it = measurementSetup.getMonitoredElementIds().iterator(); it.hasNext();) {
-						Identifier id2 = (Identifier) it.next();
-						if (!condition) {
-							if (this.linkedIds == null) {
-								if (this.identifier.equals(id2)) {
-									condition = true;
-									break;
-								}
-							} else {
-								for (Iterator iter = this.linkedIds.iterator(); iter.hasNext();) {
-									Identifier id = (Identifier) iter.next();
-									if (id.equals(id2)) {
-										condition = true;
-										break;
+					/* choose type of linked objects */
+					short entityCode = 0;
+					List objectList;
+					if (this.linkedIds != null){
+						for (Iterator it = this.linkedIds.iterator(); it.hasNext();) {
+							Identifier id = (Identifier) it.next();
+							if (entityCode == 0)
+								entityCode = id.getMajor();
+							else 
+								if (entityCode != id.getMajor())
+									throw new UnsupportedOperationException("LinkedIdsCondition.isConditionTrue | there some different entities : " 
+										+ ObjectEntities.codeToString(entityCode) + " and " + ObjectEntities.codeToString(id.getMajor()));
+						}
+						objectList = this.linkedIds;
+					} else{
+						/* work with simple identifier*/
+						entityCode = this.identifier.getMajor();
+						objectList = Collections.singletonList(this.identifier);
+					}
+					
+					 
+					
+					switch(entityCode){
+						case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
+						{
+							for (Iterator iter = objectList.iterator(); iter.hasNext();) {
+								Identifier id = (Identifier) iter.next();
+								MeasurementType measurementType = (MeasurementType)MeasurementStorableObjectPool.getStorableObject(id, true);
+								SetParameter[] setParameters = measurementSetup.getParameterSet().getParameters();
+								for (int i = 0; (i < setParameters.length) && (!condition); i++) {
+									ParameterType parameterType = (ParameterType) setParameters[i].getType();
+									List inParameterTypes = measurementType.getInParameterTypes();
+									for (Iterator it = inParameterTypes.iterator(); it.hasNext();) {
+										Object element = it.next();
+										if (element instanceof ParameterType) {
+											ParameterType parameterType2 = (ParameterType) element;
+											if (parameterType.getId().equals(parameterType2.getId())) {
+												condition = true;
+												break;
+											}
+										}	
 									}
+	
+									if (!condition) {
+										List outParameterTypes = measurementType.getOutParameterTypes();
+										for (Iterator it = outParameterTypes.iterator(); it.hasNext();) {
+											Object element = it.next();
+											if (element instanceof ParameterType) {
+												ParameterType parameterType2 = (ParameterType) element;
+												if (parameterType.getId()
+														.equals(parameterType2.getId())) {
+													condition = true;
+													break;
+												}
+											}
+	
+										}
+									}
+	
 								}
 							}
 						}
+							break;
+						case ObjectEntities.ME_ENTITY_CODE:
+							{
+								for (Iterator it = measurementSetup.getMonitoredElementIds().iterator(); it.hasNext();) {
+									Identifier id2 = (Identifier) it.next();
+									if (!condition) {										
+										for (Iterator iter = objectList.iterator(); iter.hasNext();) {
+											Identifier id = (Identifier) iter.next();
+											if (id.equals(id2)) {
+												condition = true;
+												break;
+											}
+										}										
+									}
+								}
+							}
+							break;
+						default:
+							throw new UnsupportedOperationException("LinkedIdsCondition.isConditionTrue | unknown linked entity : " 
+								+ ObjectEntities.codeToString(entityCode));
 					}
 				}
 				break;

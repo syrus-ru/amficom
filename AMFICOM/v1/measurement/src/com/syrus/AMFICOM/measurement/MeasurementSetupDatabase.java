@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.49 2004/12/24 12:52:00 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.50 2004/12/28 10:29:48 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,6 @@ import java.util.Map;
 
 import com.syrus.AMFICOM.configuration.Domain;
 import com.syrus.AMFICOM.configuration.DomainMember;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
@@ -44,7 +43,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2004/12/24 12:52:00 $
+ * @version $Revision: 1.50 $, $Date: 2004/12/28 10:29:48 $
  * @author $Author: bob $
  * @module measurement_v1
  */
@@ -577,15 +576,38 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		return list;
 	}
 
-	private List retrieveButIdsByMeasurementType(List ids, MeasurementType measurementType) throws RetrieveObjectException {
+	private List retrieveButIdsByMeasurementType(List ids, List measurementTypeIds) throws RetrieveObjectException {
 		List list = null;
+		
+		int i=1;
+		StringBuffer mtIdsStr = new StringBuffer();
+        for (Iterator it = measurementTypeIds.iterator(); it.hasNext();i++) {
+       		 Identifier id = (Identifier) it.next();
+       		 mtIdsStr.append( DatabaseIdentifier.toSQLString(id) );
+       		 if (it.hasNext()){
+	       		 if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+	       		 	mtIdsStr.append(COMMA);
+	       		 else {
+	                mtIdsStr.append(CLOSE_BRACKET);
+	                mtIdsStr.append(SQL_AND);
+                    mtIdsStr.append(NOT);
+                    mtIdsStr.append(SQL_IN);
+	                mtIdsStr.append(MeasurementTypeDatabase.LINK_COLUMN_MEASUREMENT_TYPE_ID);
+	                mtIdsStr.append(SQL_IN);
+	                mtIdsStr.append(OPEN_BRACKET);
+	       		 }  
+       		 }
+       	}
 		
 		String condition = COLUMN_PARAMETER_SET_ID + SQL_IN + OPEN_BRACKET		
 							+ SQL_SELECT + COLUMN_ID + SQL_FROM + ObjectEntities.SETPARAMETER_ENTITY
 							+ SQL_WHERE + StorableObjectDatabase.LINK_COLUMN_PARAMETER_TYPE_ID + SQL_IN + OPEN_BRACKET			
 								+ SQL_SELECT + StorableObjectDatabase.LINK_COLUMN_PARAMETER_TYPE_ID
 								+ SQL_FROM + ObjectEntities.MNTTYPPARTYPLINK_ENTITY + SQL_WHERE
-								+ MeasurementTypeDatabase.LINK_COLUMN_MEASUREMENT_TYPE_ID + EQUALS + DatabaseIdentifier.toSQLString(measurementType.getId())								
+								+ MeasurementTypeDatabase.LINK_COLUMN_MEASUREMENT_TYPE_ID 
+								+ OPEN_BRACKET
+								+ mtIdsStr.toString()
+								+ CLOSE_BRACKET
 							+ CLOSE_BRACKET							
 			+ CLOSE_BRACKET;
 		
@@ -599,18 +621,43 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 		return list;
 	}
 	
-	private List retrieveButIdsByMonitoredElement(List ids, MonitoredElement monitoredElement) throws RetrieveObjectException {
+	private List retrieveButIdsByMonitoredElement(List ids, List monitoredElementIds) throws RetrieveObjectException {
+		if (monitoredElementIds == null || monitoredElementIds.isEmpty())
+			return Collections.EMPTY_LIST;
 		List list = null;
 		
+		int i=1;
+		StringBuffer meIdsStr = new StringBuffer();
+        for (Iterator it = monitoredElementIds.iterator(); it.hasNext();i++) {
+       		 Identifier id = (Identifier) it.next();
+       		 meIdsStr.append( DatabaseIdentifier.toSQLString(id) );
+       		 if (it.hasNext()){
+	       		 if (((i+1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+	       		 	meIdsStr.append(COMMA);
+	       		 else {
+	                meIdsStr.append(CLOSE_BRACKET);
+	                meIdsStr.append(SQL_AND);
+                    meIdsStr.append(NOT);
+                    meIdsStr.append(SQL_IN);
+	                meIdsStr.append(LINK_COLUMN_ME_ID);
+	                meIdsStr.append(SQL_IN);
+	                meIdsStr.append(OPEN_BRACKET);
+	       		 }  
+       		 }
+       	}
+        
 		String condition = COLUMN_ID + SQL_IN + OPEN_BRACKET
 					+ SQL_SELECT + LINK_COLUMN_MEASUREMENT_SETUP_ID + ObjectEntities.MSMELINK_ENTITY
-					+ SQL_WHERE + LINK_COLUMN_ME_ID + EQUALS + DatabaseIdentifier.toSQLString(monitoredElement.getId())
+					+ SQL_WHERE + LINK_COLUMN_ME_ID + SQL_IN 
+					+ OPEN_BRACKET
+					+ meIdsStr.toString()
+					+ CLOSE_BRACKET
 				+ CLOSE_BRACKET;		
 		
 		try {
 			list = retrieveButIds(ids, condition);
 		}  catch (IllegalDataException ide) {			
-			Log.debugMessage("MeasurementSetupDatabase.retrieveButIdsByDomain | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
+			Log.debugMessage("MeasurementSetupDatabase.retrieveButIdsByMonitoredElement | Error: " + ide.getMessage(), Log.DEBUGLEVEL09);
 		}
 		
 		return list;
@@ -619,7 +666,6 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
     private List retrieveButIdMeasurementIds(List ids, List measurementIds) throws RetrieveObjectException, IllegalDataException {
     	
     	if (measurementIds != null && !measurementIds.isEmpty()){
-	        String condition = new String();
 	        StringBuffer measurementIdsStr = new StringBuffer();
 	        
 	       	int i=1;
@@ -641,7 +687,7 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	       		 }
 	       	}
 	        
-	        condition = COLUMN_ID + SQL_IN + OPEN_BRACKET	
+	        String condition = COLUMN_ID + SQL_IN + OPEN_BRACKET	
 	                        + SQL_SELECT + LINK_COLUMN_MEASUREMENT_SETUP_ID + SQL_FROM + ObjectEntities.MSMELINK_ENTITY
 	                        + SQL_WHERE + LINK_COLUMN_ME_ID + NOT + SQL_IN + OPEN_BRACKET + measurementIdsStr.toString() 
 	                        + CLOSE_BRACKET
@@ -654,21 +700,45 @@ public class MeasurementSetupDatabase extends StorableObjectDatabase {
 	public List retrieveByCondition(List ids, StorableObjectCondition condition) throws RetrieveObjectException,
 			IllegalDataException {
 		List list = null;
-		if (condition instanceof MeasurementSetupCondition){
-			MeasurementSetupCondition measurementSetupCondition = (MeasurementSetupCondition)condition;
-			MeasurementType measurementType = measurementSetupCondition.getMeasurementType();				
-			MonitoredElement monitoredElement = measurementSetupCondition.getMonitoredElement();
-			if (measurementType!=null)
-				list = this.retrieveButIdsByMeasurementType(ids, measurementType);
-			else if (monitoredElement != null)
-				list = this.retrieveButIdsByMonitoredElement(ids, monitoredElement);			
-        } else if ( condition instanceof LinkedIdsCondition ) {
+		if ( condition instanceof LinkedIdsCondition ) {
             LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)condition;
-            List linkedIds = linkedIdsCondition.getLinkedIds();
-            if (linkedIds == null){
-            	linkedIds = Collections.singletonList(linkedIdsCondition.getIdentifier());
-            }
-            list = this.retrieveButIdMeasurementIds(ids, linkedIds);
+            /* choose type of linked objects */
+			short entityCode = 0;
+			List objectList;
+			if (linkedIdsCondition.getLinkedIds() != null){
+				for (Iterator it = linkedIdsCondition.getLinkedIds().iterator(); it.hasNext();) {
+					Identifier id = (Identifier) it.next();
+					if (entityCode == 0)
+						entityCode = id.getMajor();
+					else 
+						if (entityCode != id.getMajor())
+							throw new UnsupportedOperationException("MeasurementSetupDatabase.retrieveByCondition | there some different entities : " 
+								+ ObjectEntities.codeToString(entityCode) + " and " + ObjectEntities.codeToString(id.getMajor()));
+				}
+				objectList = linkedIdsCondition.getLinkedIds();
+			} else{
+				/* work with simple identifier*/
+				entityCode = linkedIdsCondition.getIdentifier().getMajor();
+				objectList = Collections.singletonList(linkedIdsCondition.getIdentifier());
+			}
+			
+			switch(entityCode){
+				case ObjectEntities.MEASUREMENTTYPE_ENTITY_CODE:
+				{
+					list = this.retrieveButIdsByMeasurementType(ids, objectList);
+				}
+				break;
+				case ObjectEntities.ME_ENTITY_CODE:
+				{
+					list = this.retrieveButIdsByMonitoredElement(ids, objectList);
+				}
+				break;
+			default:
+				throw new UnsupportedOperationException("MeasurementSetupDatabase.retrieveByCondition | unknown linked entity : " 
+					+ ObjectEntities.codeToString(entityCode));
+			}
+            
+            list = this.retrieveButIdMeasurementIds(ids, objectList);
         } else {
 			Log.errorMessage("MeasurementSetupDatabase.retrieveByCondition | Unknown condition class: " + condition);
 			list = this.retrieveButIds(ids);
