@@ -1,5 +1,5 @@
 /*
-* $Id: CompoundCondition.java,v 1.4 2005/01/21 10:30:47 bob Exp $
+* $Id: CompoundCondition.java,v 1.5 2005/01/21 10:37:17 bob Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,11 +22,13 @@ import com.syrus.AMFICOM.general.corba.CompoundCondition_TransferablePackage.Com
 import com.syrus.util.corba.JavaSoftORBUtil;
 
 /**
+ * @todo:
+ * TODO: WARNING ! UNTESTED YET !
  * 
  * Compound condition such as (A & B), (A | B) , (A ^ B)
  * where A and B is conditions (they can be also compound condition too)
  *  
- * @version $Revision: 1.4 $, $Date: 2005/01/21 10:30:47 $
+ * @version $Revision: 1.5 $, $Date: 2005/01/21 10:37:17 $
  * @author $Author: bob $
  * @module general_v1
  */

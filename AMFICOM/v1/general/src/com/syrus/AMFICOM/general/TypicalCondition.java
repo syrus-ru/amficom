@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.2 2005/01/21 10:30:58 bob Exp $
+ * $Id: TypicalCondition.java,v 1.3 2005/01/21 10:37:17 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,9 @@ import com.syrus.AMFICOM.general.corba.TypicalSort;
 import com.syrus.util.Log;
 
 /**
+ * @todo:
+ * TODO: WARNING ! UNTESTED YET !
+ * 
  * If one needs to write a implementation for <code>TypicalCondition</code>
  * for a certain module (administration, configuration, etc.), the resulting
  * class must meet the following conditions:
@@ -108,7 +111,7 @@ import com.syrus.util.Log;
  * 
  * </ul>
  * 
- * @version $Revision: 1.2 $, $Date: 2005/01/21 10:30:58 $
+ * @version $Revision: 1.3 $, $Date: 2005/01/21 10:37:17 $
  * @author $Author: bob $
  * @module general_v1
  */
