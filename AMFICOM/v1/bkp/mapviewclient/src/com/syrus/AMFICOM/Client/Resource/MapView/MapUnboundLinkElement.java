@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundLinkElement.java,v 1.2 2004/09/18 13:57:52 krupenn Exp $
+ * $Id: MapUnboundLinkElement.java,v 1.3 2004/09/18 14:12:04 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -39,7 +39,7 @@ import java.util.Iterator;
  * 
  * 
  * 
- * @version $Revision: 1.2 $, $Date: 2004/09/18 13:57:52 $
+ * @version $Revision: 1.3 $, $Date: 2004/09/18 14:12:04 $
  * @module
  * @author $Author: krupenn $
  * @see
@@ -77,7 +77,8 @@ public class MapUnboundLinkElement extends MapPhysicalLinkElement implements Ser
 
 	boolean isSelectionVisible()
 	{
-		return isSelected() || cablePath.isSelected();
+//		return isSelected() || cablePath.isSelected();
+		return isSelected() || cablePath.isSelectionVisible();
 	}
 
 	/**
@@ -98,5 +99,6 @@ public class MapUnboundLinkElement extends MapPhysicalLinkElement implements Ser
 				stroke.getDashPhase());
 
 		paint(g, str, MapPropertiesManager.getUnboundLinkColor(), isSelectionVisible());
+//		paint(g, str, MapPropertiesManager.getUnboundLinkColor(), isSelected() || cablePath.isSelected());
 	}
 }
