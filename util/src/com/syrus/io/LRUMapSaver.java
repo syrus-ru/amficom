@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMapSaver.java,v 1.5 2004/11/22 13:24:04 arseniy Exp $
+ * $Id: LRUMapSaver.java,v 1.6 2004/12/20 13:45:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2004/11/22 13:24:04 $
+ * @version $Revision: 1.6 $, $Date: 2004/12/20 13:45:45 $
  * @author $Author: arseniy $
  * @module module_name
  */
@@ -31,7 +31,7 @@ public class LRUMapSaver {
 	private static final String KEY_CACHE_PATH = "CachePath";
 
 	private static final String DEFAULT_HOME = System.getProperty("user.home");
-	private static final String DEFAULT_CACHE_PATH = DEFAULT_HOME + "/logs";
+	private static final String DEFAULT_CACHE_PATH = DEFAULT_HOME + "/cache";
 
   private static String pathNameOfSaveDir;
 	private static File saveDir;   
