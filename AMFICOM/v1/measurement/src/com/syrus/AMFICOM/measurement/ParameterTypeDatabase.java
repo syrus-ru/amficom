@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.37 2004/12/10 16:24:51 bob Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.38 2004/12/24 09:44:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2004/12/10 16:24:51 $
- * @author $Author: bob $
+ * @version $Revision: 1.38 $, $Date: 2004/12/24 09:44:49 $
+ * @author $Author: arseniy $
  * @module measurement_v1
  */
 
@@ -41,7 +41,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	public static final String COLUMN_CODENAME = "codename";
 	public static final String COLUMN_DESCRIPTION = "description";	
 	public static final String COLUMN_NAME = "name";	
-	public static final String COLUMN_SORT = "sort";
+	public static final String COLUMN_DATA_TYPE = "data_type";
 	
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 15;
 	
@@ -58,7 +58,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 				+ COLUMN_CODENAME + COMMA
 				+ COLUMN_DESCRIPTION + COMMA
 				+ COLUMN_NAME + COMMA
-				+ COLUMN_SORT;
+				+ COLUMN_DATA_TYPE;
 		}
 		return columns;
 	}	
@@ -82,7 +82,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 			+ APOSTOPHE + DatabaseString.toQuerySubString(parameterType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(parameterType.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTOPHE + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(parameterType.getName(), SIZE_NAME_COLUMN) + APOSTOPHE + COMMA +
-			+ parameterType.getSort().value();
+			+ parameterType.getDataType().value();
 	}	
 
 	private ParameterType fromStorableObject(StorableObject storableObject) throws IllegalDataException {
@@ -108,7 +108,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
 									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
 									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
-									resultSet.getInt(COLUMN_SORT));
+									resultSet.getInt(COLUMN_DATA_TYPE));
 		return parameterType;
 	}
 
@@ -197,7 +197,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 			DatabaseString.setString(preparedStatement, ++i, parameterType.getCodename(), SIZE_CODENAME_COLUMN);
 			DatabaseString.setString(preparedStatement, ++i, parameterType.getDescription(), SIZE_DESCRIPTION_COLUMN);
 			DatabaseString.setString(preparedStatement, ++i, parameterType.getName(), SIZE_NAME_COLUMN);
-			preparedStatement.setInt(++i, parameterType.getSort().value());
+			preparedStatement.setInt(++i, parameterType.getDataType().value());
 		} catch (SQLException sqle) {
 			throw new UpdateObjectException(getEnityName() + "Database.setEntityForPreparedStatement | Error " + sqle.getMessage(), sqle);
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.34 2004/12/09 15:52:53 arseniy Exp $
+ * $Id: ParameterType.java,v 1.35 2004/12/24 09:44:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.measurement.corba.ParameterType_Transferable;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2004/12/09 15:52:53 $
+ * @version $Revision: 1.35 $, $Date: 2004/12/24 09:44:49 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -40,12 +40,12 @@ public class ParameterType extends StorableObjectType {
 	 */
 	private static final long	serialVersionUID	= 4050767108738528569L;
 	private String name;
-	private int sort;
+	private int dataType;
 
 	private StorableObjectDatabase parameterTypeDatabase;
 	
 	protected static final String ID_NAME = "name"+KEY_VALUE_SEPERATOR;
-	protected static final String ID_SORT = "sort"+KEY_VALUE_SEPERATOR;
+	protected static final String ID_DATA_TYPE = "data type"+KEY_VALUE_SEPERATOR;
 
 	public ParameterType(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -64,7 +64,7 @@ public class ParameterType extends StorableObjectType {
 			  new String(ptt.codename),
 			  new String(ptt.description));
 		this.name = new String(ptt.name);
-		this.sort = ptt.sort.value();
+		this.dataType = ptt.data_type.value();
 	}
 
 	protected ParameterType(Identifier id,
@@ -72,7 +72,7 @@ public class ParameterType extends StorableObjectType {
 							String codename,
 							String description,
 							String name,
-							int sort) {
+							int dataType) {
 		super(id);
 		long time = System.currentTimeMillis();
 		super.created = new Date(time);
@@ -82,7 +82,7 @@ public class ParameterType extends StorableObjectType {
 		super.codename = codename;
 		super.description = description;
 		this.name = name;
-		this.sort = sort;
+		this.dataType = dataType;
 		super.currentVersion = super.getNextVersion();
 		
 		this.parameterTypeDatabase = MeasurementDatabaseContext.parameterTypeDatabase;
@@ -121,15 +121,15 @@ public class ParameterType extends StorableObjectType {
 	 * @param codename
 	 * @param description
 	 * @param name
-	 * @param sort {@link DataType}
+	 * @param dataType {@link DataType}
 	 * @throws CreateObjectException
 	 */
 	public static ParameterType createInstance(Identifier creatorId,
 											   String codename,
 											   String description,
 											   String name,
-											   DataType sort) throws CreateObjectException {
-		if (creatorId == null || codename == null || codename.length() == 0 || description == null || name == null || name.length() == 0 || sort == null)
+											   DataType dataType) throws CreateObjectException {
+		if (creatorId == null || codename == null || codename.length() == 0 || description == null || name == null || name.length() == 0 || dataType == null)
 			throw new IllegalArgumentException("Argument is 'null'");		
 
 		try {
@@ -138,7 +138,7 @@ public class ParameterType extends StorableObjectType {
 							 codename,
 							 description,
 							 name,
-							 sort.value());
+							 dataType.value());
 		} catch (IllegalObjectEntityException e) {
 			throw new CreateObjectException("ParameterType.createInstance | cannot generate identifier ", e);
 		}
@@ -177,7 +177,7 @@ public class ParameterType extends StorableObjectType {
 											  new String(super.codename),
 											  (super.description != null) ? (new String(super.description)) : "",
 											  new String(this.name),
-											  DataType.from_int(this.sort));
+											  DataType.from_int(this.dataType));
 	}
 	
 
@@ -185,8 +185,8 @@ public class ParameterType extends StorableObjectType {
 		return this.name;
 	}
 	
-	public DataType getSort(){
-		return DataType.from_int(this.sort);
+	public DataType getDataType(){
+		return DataType.from_int(this.dataType);
 	}
 	
 	protected synchronized void setAttributes(Date created,
@@ -196,7 +196,7 @@ public class ParameterType extends StorableObjectType {
 											  String codename,
 											  String description,
 											  String name,
-											  int sort) {
+											  int dataType) {
 		super.setAttributes(created,
 			modified,
 			creatorId,
@@ -204,7 +204,7 @@ public class ParameterType extends StorableObjectType {
 			codename,
 			description);
 		this.name = name;
-		this.sort = sort;
+		this.dataType = dataType;
 	}
 	/**
 	 * client setter for name 
@@ -228,7 +228,7 @@ public class ParameterType extends StorableObjectType {
 				 (this.codename.equals(type.codename))&&
 				 (this.description.equals(type.description))&&
 				 (this.name.equals(type.name))&&
-				 (this.sort ==  type.sort))
+				 (this.dataType ==  type.dataType))
 				 equals = true;
 		}
 		return equals;
@@ -245,7 +245,7 @@ public class ParameterType extends StorableObjectType {
 		hashCodeGenerator.addObject(this.codename);
 		hashCodeGenerator.addObject(this.description);
 		hashCodeGenerator.addObject(this.name);
-		hashCodeGenerator.addInt(this.sort);
+		hashCodeGenerator.addInt(this.dataType);
 		int result = hashCodeGenerator.getResult();
 		hashCodeGenerator = null;
 		return result;
@@ -263,7 +263,7 @@ public class ParameterType extends StorableObjectType {
 					 + TypedObject.ID_CODENAME + this.codename+ EOSL
 					 + TypedObject.ID_DESCRIPTION + this.description + EOSL
 					 + ID_NAME + this.name + EOSL
-					 + ID_SORT + this.sort;
+					 + ID_DATA_TYPE + this.dataType;
 					 
 		return str;
 	}
