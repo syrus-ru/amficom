@@ -1,14 +1,12 @@
 MODULE_NAME = configuration_v1
 
-LIBNAME = $(subst _v1,,$(MODULE_NAME)).jar
-ARCHFILE = $(subst _v1,,$(MODULE_NAME)).tar.gz
+LIBNAME := $(subst _v1,,$(MODULE_NAME)).jar
+ARCHFILE := $(subst _v1,,$(MODULE_NAME)).tar.gz
 
-IDLDIR=../idl_v1/idl
+IDLDIR = ../idl_v1/idl
 
-APPCLASSPATH = $(LIBDIR)/administration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
-
-HOST=mongol
-SERVICE_NAME=mongol
+HOST = mongol
+SERVICE_NAME = mongol
 
 JAVACFLAGS = -source 1.3
 SUNJAVACFLAGS = -target 1.2
@@ -17,6 +15,9 @@ JIKESFLAGS = -target 1.2
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
+
+
+APPCLASSPATH := $(LIBDIR)/administration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
 
 
 SOURCES := com/syrus/AMFICOM/configuration/DatabaseConfigurationObjectLoader.java \

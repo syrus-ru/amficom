@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.36 2005/01/17 14:10:22 stas Exp $
+ * $Id: EquipmentType.java,v 1.37 2005/01/19 14:02:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.EquipmentType_Transferable;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/01/17 14:10:22 $
- * @author $Author: stas $
+ * @version $Revision: 1.37 $, $Date: 2005/01/19 14:02:32 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -258,12 +258,12 @@ public class EquipmentType extends StorableObjectType implements Characterized {
 		exportColumns.put(COLUMN_MANUFACTURER, getManufacturer());
 		exportColumns.put(COLUMN_MANUFACTURER_CODE, getManufacturerCode());
 
-		List characteristics = new ArrayList(getCharacteristics().size());
-		for (Iterator it = getCharacteristics().iterator(); it.hasNext(); ) {
+		List characts = new ArrayList(this.characteristics.size());
+		for (Iterator it = this.characteristics.iterator(); it.hasNext(); ) {
 			Characteristic ch = (Characteristic)it.next();
-			characteristics.add(ch.exportColumns());
+			characts.add(ch.exportColumns());
 		}
-		exportColumns.put(COLUMN_CHARACTERISTICS, characteristics);
+		exportColumns.put(COLUMN_CHARACTERISTICS, characts);
 
 		return exportColumns;
 	}

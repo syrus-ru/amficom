@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.38 2005/01/17 14:10:22 stas Exp $
+ * $Id: TransmissionPath.java,v 1.39 2005/01/19 14:02:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.TransmissionPath_Transferable;
 /**
- * @version $Revision: 1.38 $, $Date: 2005/01/17 14:10:22 $
- * @author $Author: stas $
+ * @version $Revision: 1.39 $, $Date: 2005/01/19 14:02:32 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -299,12 +299,12 @@ public class TransmissionPath extends MonitoredDomainMember implements Character
 		exportColumns.put(COLUMN_START_PORT_ID, getStartPortId());
 		exportColumns.put(COLUMN_FINISH_PORT_ID, getFinishPortId());
 
-		List characteristics = new ArrayList(getCharacteristics().size());
-		for (Iterator it = getCharacteristics().iterator(); it.hasNext(); ) {
+		List characts = new ArrayList(this.characteristics.size());
+		for (Iterator it = this.characteristics.iterator(); it.hasNext(); ) {
 			Characteristic ch = (Characteristic)it.next();
-			characteristics.add(ch.exportColumns());
+			characts.add(ch.exportColumns());
 		}
-		exportColumns.put(COLUMN_CHARACTERISTICS, characteristics);
+		exportColumns.put(COLUMN_CHARACTERISTICS, characts);
 
 		return exportColumns;
 	}

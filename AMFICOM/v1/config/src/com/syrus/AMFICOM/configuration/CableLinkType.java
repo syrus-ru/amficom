@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.8 2005/01/17 14:10:22 stas Exp $
+ * $Id: CableLinkType.java,v 1.9 2005/01/19 14:02:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/01/17 14:10:22 $
- * @author $Author: stas $
+ * @version $Revision: 1.9 $, $Date: 2005/01/19 14:02:32 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 public class CableLinkType extends AbstractLinkType implements Characterized {
@@ -299,18 +299,19 @@ public class CableLinkType extends AbstractLinkType implements Characterized {
 		exportColumns.put(COLUMN_MANUFACTURER_CODE, getManufacturerCode());
 		exportColumns.put(COLUMN_IMAGE_ID, getImageId());
 
-		List characteristics = new ArrayList(getCharacteristics().size());
-		for (Iterator it = getCharacteristics().iterator(); it.hasNext(); ) {
+		List characts = new ArrayList(this.characteristics.size());
+		for (Iterator it = this.characteristics.iterator(); it.hasNext(); ) {
 			Characteristic ch = (Characteristic)it.next();
-			characteristics.add(ch.exportColumns());
+			characts.add(ch.exportColumns());
 		}
-		exportColumns.put(COLUMN_CHARACTERISTICS, characteristics);
-		List cableThreadTypes = new ArrayList(getCableThreadTypes().size());
-		for (Iterator it = getCableThreadTypes().iterator(); it.hasNext(); ) {
+		exportColumns.put(COLUMN_CHARACTERISTICS, characts);
+
+		List ctTypes = new ArrayList(this.cableThreadTypes.size());
+		for (Iterator it = this.cableThreadTypes.iterator(); it.hasNext(); ) {
 			CableThreadType type = (CableThreadType)it.next();
-			characteristics.add(type.getId());
+			ctTypes.add(type.getId());
 		}
-		exportColumns.put(COLUMN_CABLE_THREAD_TYPES, cableThreadTypes);
+		exportColumns.put(COLUMN_CABLE_THREAD_TYPES, ctTypes);
 
 		return exportColumns;
 	}

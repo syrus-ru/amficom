@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.50 2005/01/17 14:10:22 stas Exp $
+ * $Id: KIS.java,v 1.51 2005/01/19 14:02:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 import com.syrus.AMFICOM.administration.DomainMember;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/01/17 14:10:22 $
- * @author $Author: stas $
+ * @version $Revision: 1.51 $, $Date: 2005/01/19 14:02:32 $
+ * @author $Author: arseniy $
  * @module config_v1
  */
 
@@ -340,12 +340,13 @@ public class KIS extends DomainMember implements Characterized {
 		exportColumns.put(COLUMN_HOSTNAME, getHostName());
 		exportColumns.put(COLUMN_TCP_PORT, String.valueOf(getTCPPort()));
 		exportColumns.put(COLUMN_MEASUREMENT_PORT_IDS, getMeasurementPortIds());
-		List characteristics = new ArrayList(getCharacteristics().size());
-		for (Iterator it = getCharacteristics().iterator(); it.hasNext(); ) {
+
+		List characts = new ArrayList(this.characteristics.size());
+		for (Iterator it = this.characteristics.iterator(); it.hasNext(); ) {
 			Characteristic ch = (Characteristic)it.next();
-			characteristics.add(ch.exportColumns());
+			characts.add(ch.exportColumns());
 		}
-		exportColumns.put(COLUMN_CHARACTERISTICS, characteristics);
+		exportColumns.put(COLUMN_CHARACTERISTICS, characts);
 
 		return exportColumns;
 	}
