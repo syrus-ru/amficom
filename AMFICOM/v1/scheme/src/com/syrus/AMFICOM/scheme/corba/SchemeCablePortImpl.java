@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeCablePortImpl.java,v 1.7 2004/12/21 15:35:01 bass Exp $
+ * $Id: SchemeCablePortImpl.java,v 1.8 2004/12/22 10:00:13 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.util.logging.ErrorHandler;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2004/12/21 15:35:01 $
+ * @version $Revision: 1.8 $, $Date: 2004/12/22 10:00:13 $
  * @module scheme_v1
  */
 final class SchemeCablePortImpl extends SchemeCablePort implements Cloneable {
@@ -37,6 +37,14 @@ final class SchemeCablePortImpl extends SchemeCablePort implements Cloneable {
 	 * @see com.syrus.AMFICOM.scheme.corba.AbstractSchemePort#abstractSchemeLink(com.syrus.AMFICOM.scheme.corba.AbstractSchemeLink)
 	 */
 	public void abstractSchemeLink(AbstractSchemeLink newAbstractSchemeLink) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param characteristic
+	 * @see com.syrus.AMFICOM.configuration.Characterizable#addCharacteristic(Characteristic)
+	 */
+	public void addCharacteristic(final Characteristic characteristic) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -255,6 +263,14 @@ final class SchemeCablePortImpl extends SchemeCablePort implements Cloneable {
 	 * @see com.syrus.AMFICOM.configuration.ComSyrusAmficomConfigurationAbstractSchemePort#portTypeImpl(com.syrus.AMFICOM.configuration.PortType)
 	 */
 	public void portTypeImpl(PortType newPortTypeImpl) {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @param characteristic
+	 * @see com.syrus.AMFICOM.configuration.Characterizable#removeCharacteristic(Characteristic)
+	 */
+	public void removeCharacteristic(final Characteristic characteristic) {
 		throw new UnsupportedOperationException();
 	}
 
