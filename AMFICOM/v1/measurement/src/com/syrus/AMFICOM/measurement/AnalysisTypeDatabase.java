@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.50 2005/01/19 20:52:56 arseniy Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.51 2005/01/20 15:45:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -42,24 +41,24 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/01/19 20:52:56 $
+ * @version $Revision: 1.51 $, $Date: 2005/01/20 15:45:28 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public class AnalysisTypeDatabase extends StorableObjectDatabase {	
 
-	public static final String	MODE_IN = "IN";
-	public static final String	MODE_CRITERION = "CRI";
-	public static final String	MODE_ETALON = "ETA";
-	public static final String	MODE_OUT = "OUT";
+	public static final String MODE_IN = "IN";
+	public static final String MODE_CRITERION = "CRI";
+	public static final String MODE_ETALON = "ETA";
+	public static final String MODE_OUT = "OUT";
 
-	public static final String	COLUMN_CODENAME = "codename";
-	public static final String	COLUMN_DESCRIPTION = "description";	
+	public static final String COLUMN_CODENAME = "codename";
+	public static final String COLUMN_DESCRIPTION = "description";	
 
-	public static final String	LINK_COLUMN_ANALYSIS_TYPE_ID = "analysis_type_id";
-	public static final String  PARAMETER_TYPE_ID = "parameter_type_id";
-	public static final String  PARAMETER_MODE = "parameter_mode";
+	public static final String LINK_COLUMN_ANALYSIS_TYPE_ID = "analysis_type_id";
+	public static final String PARAMETER_TYPE_ID = "parameter_type_id";
+	public static final String PARAMETER_MODE = "parameter_mode";
 
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
@@ -74,7 +73,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 
 	protected String getEnityName() {
 		return ObjectEntities.ANALYSISTYPE_ENTITY;
-	}	
+	}
 
 	protected String getColumns(int mode) {
 		if (columns == null) {
@@ -92,7 +91,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 				+ QUESTION;
 		}
 		return updateMultiplySQLValues;
-	}	
+	}
 
 	protected String getUpdateSingleSQLValues(StorableObject storableObject)
 			throws IllegalDataException, UpdateObjectException {
@@ -103,7 +102,8 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 		return sql;
 	}
 
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public void retrieve(StorableObject storableObject)
+			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		AnalysisType analysisType = this.fromStorableObject(storableObject);
 		super.retrieveEntity(analysisType);
 		this.retrieveParameterTypes(analysisType);
@@ -259,7 +259,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 					parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeId, true));
 					List inParameters = (List)inParametersMap.get(analysisTypeId);
 					if (inParameters == null) {
-						inParameters = new LinkedList();
+						inParameters = new ArrayList();
 						inParametersMap.put(analysisTypeId, inParameters);
 					}
 					inParameters.add(parameterType);
@@ -269,7 +269,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 						parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeId, true));
 						List criteriaParameters = (List)criteriaParametersMap.get(analysisTypeId);
 						if (criteriaParameters == null) {
-							criteriaParameters = new LinkedList();
+							criteriaParameters = new ArrayList();
 							criteriaParametersMap.put(analysisTypeId, criteriaParameters);
 						}
 						criteriaParameters.add(parameterType);
@@ -279,7 +279,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 							parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeId, true));
 							List etalonParameters = (List)etalonParametersMap.get(analysisTypeId);
 							if (etalonParameters == null) {
-								etalonParameters = new LinkedList();
+								etalonParameters = new ArrayList();
 								etalonParametersMap.put(analysisTypeId, etalonParameters);
 							}
 							etalonParameters.add(parameterType);
@@ -289,7 +289,7 @@ public class AnalysisTypeDatabase extends StorableObjectDatabase {
 								parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeId, true));
 								List outParameters = (List)outParametersMap.get(analysisTypeId);
 								if (outParameters == null) {
-									outParameters = new LinkedList();
+									outParameters = new ArrayList();
 									outParametersMap.put(analysisTypeId, outParameters);
 								}
 							}

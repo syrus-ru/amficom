@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.52 2005/01/19 20:52:56 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.53 2005/01/20 15:45:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +44,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/01/19 20:52:56 $
+ * @version $Revision: 1.53 $, $Date: 2005/01/20 15:45:28 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -53,16 +52,15 @@ import com.syrus.util.database.DatabaseString;
 public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	public static final String MODE_IN = "IN";
 	public static final String MODE_OUT = "OUT";
-	
-	public static final String	COLUMN_CODENAME = "codename";
-	public static final String	COLUMN_DESCRIPTION = "description";
-	
-	public static final String	LINK_COLUMN_MEASUREMENT_TYPE_ID = "measurement_type_id";
-	public static final String	LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID = "measurement_port_type_id";
-	
-	
+
+	public static final String COLUMN_CODENAME = "codename";
+	public static final String COLUMN_DESCRIPTION = "description";
+
+	public static final String LINK_COLUMN_MEASUREMENT_TYPE_ID = "measurement_type_id";
+	public static final String LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID = "measurement_port_type_id";
+
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
-	
+
 	private static String columns;
 	private static String updateMultiplySQLValues;
 	private static String measurementPortTypesByOneQuery;
@@ -75,16 +73,16 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	
 	protected String getEnityName() {
 		return ObjectEntities.MEASUREMENTTYPE_ENTITY;
-	}	
+	}
 	
 	protected String getColumns(int mode) {
-		if (columns == null){
+		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
 				+ COLUMN_CODENAME + COMMA 
 				+ COLUMN_DESCRIPTION;
 		}
 		return columns;
-	}	
+	}
 
 	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null) {
@@ -93,10 +91,10 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 				+ QUESTION;
 		}
 		return updateMultiplySQLValues;
-	}	
+	}
 
-	protected String getUpdateSingleSQLValues(StorableObject storableObject) throws IllegalDataException,
-			UpdateObjectException {
+	protected String getUpdateSingleSQLValues(StorableObject storableObject)
+			throws IllegalDataException, UpdateObjectException {
 		MeasurementType measurementType = this.fromStorableObject(storableObject);
 		String sql = super.getUpdateSingleSQLValues(storableObject) + COMMA
 			+ APOSTOPHE + DatabaseString.toQuerySubString(measurementType.getCodename(), SIZE_CODENAME_COLUMN) + APOSTOPHE + COMMA 
@@ -104,7 +102,8 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 		return sql;
 	}
 
-	public void retrieve(StorableObject storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
+	public void retrieve(StorableObject storableObject)
+			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		MeasurementType measurementType = this.fromStorableObject(storableObject);
 		this.retrieveEntity(measurementType);
 		this.retrieveParameterTypes(measurementType);
@@ -114,9 +113,14 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 	protected StorableObject updateEntityFromResultSet(StorableObject storableObject, ResultSet resultSet)
 		throws IllegalDataException, RetrieveObjectException, SQLException {
 		MeasurementType measurementType = (storableObject == null) ? 
-				new MeasurementType(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID), null, null, null, 
-									   null, null, null) : 
-					this.fromStorableObject(storableObject);
+				new MeasurementType(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID),
+														null,
+														null,
+														null,
+														null,
+														null,
+														null) : 
+				this.fromStorableObject(storableObject);
 		measurementType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, COLUMN_CREATED),
 									  DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 									  DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
@@ -249,7 +253,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 					parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeId, true));
 					List inParameters = (List)inParametersMap.get(measurementTypeId);
 					if (inParameters == null) {
-						inParameters = new LinkedList();
+						inParameters = new ArrayList();
 						inParametersMap.put(measurementTypeId, inParameters);
 					}               
 					inParameters.add(parameterType);
@@ -259,7 +263,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 						parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeId, true));
 						List outParameters = (List)outParametersMap.get(measurementTypeId);
 						if (outParameters == null) {
-							outParameters = new LinkedList();
+							outParameters = new ArrayList();
 							outParametersMap.put(measurementTypeId, outParameters);
 						}
 					}
@@ -419,7 +423,7 @@ public class MeasurementTypeDatabase extends StorableObjectDatabase  {
 				MeasurementPortType measurementPortType = (MeasurementPortType) ConfigurationStorableObjectPool.getStorableObject(measurementPortTypeId, true);
 				List measurementPortTypes = (List)measurementPortTypeMap.get(measurementTypeId);
 				if (measurementPortTypes == null) {
-					measurementPortTypes = new LinkedList();
+					measurementPortTypes = new ArrayList();
 					measurementPortTypeMap.put(measurementTypeId, measurementPortTypes);
 				}
 				measurementPortTypes.add(measurementPortType);

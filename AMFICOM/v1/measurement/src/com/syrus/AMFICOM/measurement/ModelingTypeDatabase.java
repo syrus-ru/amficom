@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.4 2005/01/19 20:52:56 arseniy Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.5 2005/01/20 15:45:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.sql.Connection;
@@ -42,24 +41,24 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/01/19 20:52:56 $
+ * @version $Revision: 1.5 $, $Date: 2005/01/20 15:45:28 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public class ModelingTypeDatabase extends StorableObjectDatabase {
-	public static final String	MODE_IN = "IN";
-	public static final String	MODE_OUT = "OUT";
+	public static final String MODE_IN = "IN";
+	public static final String MODE_OUT = "OUT";
 
-	public static final String	COLUMN_CODENAME = "codename";
-	public static final String	COLUMN_DESCRIPTION = "description";
+	public static final String COLUMN_CODENAME = "codename";
+	public static final String COLUMN_DESCRIPTION = "description";
 
-	public static final String	LINK_COLUMN_MODELING_TYPE_ID = "modeling_type_id";
+	public static final String LINK_COLUMN_MODELING_TYPE_ID = "modeling_type_id";
 
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
-  public static final String  PARAMETER_TYPE_ID = "parameter_type_id";
-	public static final String  PARAMETER_MODE = "parameter_mode";
+  public static final String PARAMETER_TYPE_ID = "parameter_type_id";
+	public static final String PARAMETER_MODE = "parameter_mode";
 
 	private static String columns;
 	private static String updateMultiplySQLValues;
@@ -72,7 +71,7 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 
 	protected String getEnityName() {
 		return ObjectEntities.MODELINGTYPE_ENTITY;
-	}	
+	}
 
 	protected String getColumns(int mode) {
 		if (columns == null) {
@@ -89,7 +88,7 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 			updateMultiplySQLValues = super.getUpdateMultiplySQLValues(mode) + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION;
-		}		
+		}
 		return updateMultiplySQLValues;
 	}
 
@@ -264,7 +263,7 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 					parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeIdCode, true));
 					List inParameters = (List)inParametersMap.get(modelingTypeId);
 					if (inParameters == null) {
-						inParameters = new LinkedList();
+						inParameters = new ArrayList();
 						inParametersMap.put(modelingTypeId, inParameters);
 					}
 					inParameters.add(parameterType);
@@ -274,7 +273,7 @@ public class ModelingTypeDatabase extends StorableObjectDatabase {
 						parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeIdCode, true));
 						List outParameters = (List)outParametersMap.get(modelingTypeId);
 						if (outParameters == null) {
-							outParameters = new LinkedList();
+							outParameters = new ArrayList();
 							outParametersMap.put(modelingTypeId, outParameters);
 						}
 					}

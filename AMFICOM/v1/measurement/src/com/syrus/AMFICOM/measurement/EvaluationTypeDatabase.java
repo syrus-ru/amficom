@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.46 2005/01/19 20:52:56 arseniy Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.47 2005/01/20 15:45:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.sql.Connection;
@@ -42,27 +41,27 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/01/19 20:52:56 $
+ * @version $Revision: 1.47 $, $Date: 2005/01/20 15:45:28 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public class EvaluationTypeDatabase extends StorableObjectDatabase {
 
-	public static final String	MODE_IN = "IN";
-	public static final String	MODE_THRESHOLD = "THS";
-	public static final String	MODE_ETALON = "ETA";
-	public static final String	MODE_OUT = "OUT";
+	public static final String MODE_IN = "IN";
+	public static final String MODE_THRESHOLD = "THS";
+	public static final String MODE_ETALON = "ETA";
+	public static final String MODE_OUT = "OUT";
 
-	public static final String	COLUMN_CODENAME = "codename";
-	public static final String	COLUMN_DESCRIPTION = "description";
+	public static final String COLUMN_CODENAME = "codename";
+	public static final String COLUMN_DESCRIPTION = "description";
 
-	public static final String	LINK_COLUMN_EVALUATION_TYPE_ID = "evaluation_type_id";
+	public static final String LINK_COLUMN_EVALUATION_TYPE_ID = "evaluation_type_id";
 
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 1;
 
-  public static final String  PARAMETER_TYPE_ID = "parameter_type_id";
-	public static final String  PARAMETER_MODE = "parameter_mode";
+  public static final String PARAMETER_TYPE_ID = "parameter_type_id";
+	public static final String PARAMETER_MODE = "parameter_mode";
 
 	private static String columns;
 	private static String updateMultiplySQLValues;
@@ -75,7 +74,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 
 	protected String getEnityName() {
 		return ObjectEntities.EVALUATIONTYPE_ENTITY;
-	}	
+	}
 
 	protected String getColumns(int mode) {
 		if (columns == null) {
@@ -85,7 +84,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 		}
 
 		return columns;
-	}	
+	}
 
 	protected String getUpdateMultiplySQLValues(int mode) {
 		if (updateMultiplySQLValues == null) {
@@ -94,7 +93,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 				+ QUESTION;
 		}		
 		return updateMultiplySQLValues;
-	}	
+	}
 
 	protected int setEntityForPreparedStatement(StorableObject storableObject, PreparedStatement preparedStatement, int mode)
 			throws IllegalDataException, UpdateObjectException {
@@ -276,7 +275,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 					parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeIdCode, true));
 					List inParameters = (List)inParametersMap.get(evaluationTypeId);
 					if (inParameters == null) {
-						inParameters = new LinkedList();
+						inParameters = new ArrayList();
 						inParametersMap.put(evaluationTypeId, inParameters);
 					}
 					inParameters.add(parameterType);
@@ -286,7 +285,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 						parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeIdCode, true));
 						List thresholdParameters = (List)thresholdParametersMap.get(evaluationTypeId);
 						if (thresholdParameters == null) {
-							thresholdParameters = new LinkedList();
+							thresholdParameters = new ArrayList();
 							thresholdParametersMap.put(evaluationTypeId, thresholdParameters);
 						}
 						thresholdParameters.add(parameterType);
@@ -296,7 +295,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 							parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeIdCode, true));
 							List etalonParameters = (List)etalonParametersMap.get(evaluationTypeId);
 							if (etalonParameters == null) {
-								etalonParameters = new LinkedList();
+								etalonParameters = new ArrayList();
 								etalonParametersMap.put(evaluationTypeId, etalonParameters);
 							}
 							etalonParameters.add(parameterType);
@@ -306,7 +305,7 @@ public class EvaluationTypeDatabase extends StorableObjectDatabase {
 								parameterType = ((ParameterType) MeasurementStorableObjectPool.getStorableObject(parameterTypeIdCode, true));
 								List outParameters = (List)outParametersMap.get(evaluationTypeId);
 								if (outParameters == null) {
-									outParameters = new LinkedList();
+									outParameters = new ArrayList();
 									outParametersMap.put(evaluationTypeId, outParameters);
 								}
 							}
