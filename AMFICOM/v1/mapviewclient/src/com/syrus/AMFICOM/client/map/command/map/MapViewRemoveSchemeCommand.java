@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorRemoveSchemeFromViewCommand.java,v 1.5 2005/01/21 13:49:27 krupenn Exp $
+ * $Id: MapViewRemoveSchemeCommand.java,v 1.1 2005/01/26 16:24:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,73 +18,72 @@ import com.syrus.AMFICOM.Client.General.Event.StatusMessageEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelMap;
 import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
 import com.syrus.AMFICOM.Client.Map.Command.MapDesktopCommand;
 import com.syrus.AMFICOM.Client.Map.UI.MapFrame;
-import com.syrus.AMFICOM.Client.Resource.DataSourceInterface;
+import com.syrus.AMFICOM.Client.Map.UI.SchemeController;
+import com.syrus.AMFICOM.Client.Resource.MapView.MapView;
+import com.syrus.AMFICOM.client_.general.ui_.ObjectResourceChooserDialog;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.scheme.corba.Scheme;
 
 import javax.swing.JDesktopPane;
-import javax.swing.JOptionPane;
 
 /**
  * убрать из вида выбранную схему 
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2005/01/21 13:49:27 $
+ * @version $Revision: 1.1 $, $Date: 2005/01/26 16:24:29 $
  * @module
  * @author $Author: krupenn $
  * @see
  */
-public class MapEditorRemoveSchemeFromViewCommand extends VoidCommand
+public class MapViewRemoveSchemeCommand extends VoidCommand
 {
 	JDesktopPane desktop;
 	ApplicationContext aContext;
-	Scheme sch;
 
-	public MapEditorRemoveSchemeFromViewCommand(JDesktopPane desktop, ApplicationContext aContext)
+	public MapViewRemoveSchemeCommand(JDesktopPane desktop, ApplicationContext aContext)
 	{
 		this.desktop = desktop;
 		this.aContext = aContext;
 	}
 	
-	public void setParameter(String key, Object val)
-	{
-		if(key.equals("scheme"))
-			sch = (Scheme )val;
-	}
-
 	public void execute()
 	{
-		if(sch == null)
-			return;
-
 		MapFrame mapFrame = MapDesktopCommand.findMapFrame(desktop);
-
+		
 		if(mapFrame == null)
+			return;
+	
+		MapView mapView = mapFrame.getMapView();
+	
+		if(mapView == null)
 			return;
 
 		aContext.getDispatcher().notify(new StatusMessageEvent(
 				StatusMessageEvent.STATUS_MESSAGE,
 				LangModelMap.getString("MapOpening")));
 
+		ObjectResourceChooserDialog mcd = new ObjectResourceChooserDialog(
+				SchemeController.getInstance(), 
+				ObjectEntities.SCHEME_ENTITY);
 
-		if(JOptionPane.showConfirmDialog(
-				Environment.getActiveWindow(),
-				"Убрать схему \'" + sch.name() + "\' из вида?",
-				"",
-				JOptionPane.NO_OPTION | JOptionPane.YES_OPTION,
-				JOptionPane.QUESTION_MESSAGE) == JOptionPane.NO_OPTION)
+		mcd.setContents(mapView.getSchemes());
+
+		mcd.setModal(true);
+		mcd.setVisible(true);
+		if(mcd.getReturnCode() != ObjectResourceChooserDialog.RET_OK)
 		{
 			aContext.getDispatcher().notify(new StatusMessageEvent(
 					StatusMessageEvent.STATUS_MESSAGE,
 					LangModel.getString("Aborted")));
-			setResult(Command.RESULT_CANCEL);
 			return;
 		}
 
-		mapFrame.getMapView().removeScheme(sch);
+		Scheme scheme = (Scheme )mcd.getReturnObject();
+
+		mapFrame.getMapView().removeScheme(scheme);
 		mapFrame.getContext().getDispatcher().notify(new MapEvent(
 				mapFrame.getMapView(),
 				MapEvent.MAP_VIEW_CHANGED));
