@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.33 2005/01/17 09:03:33 bob Exp $
+ * $Id: TestProcessor.java,v 1.34 2005/01/27 16:14:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,11 @@
 package com.syrus.AMFICOM.mcm;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.swing.Action;
 
 import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
@@ -18,10 +21,13 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
+import com.syrus.AMFICOM.measurement.ActionCondition;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
 import com.syrus.AMFICOM.measurement.Result;
@@ -33,8 +39,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/01/17 09:03:33 $
- * @author $Author: bob $
+ * @version $Revision: 1.34 $, $Date: 2005/01/27 16:14:31 $
+ * @author $Author: arseniy $
  * @module mcm_v1
  */
 
@@ -145,18 +151,63 @@ public abstract class TestProcessor extends SleepButWorkThread {
 						this.transceiver.addAcquiringMeasurement(lastMeasurement, this);
 						break;
 					case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRED:
-						measurementResult = lastMeasurement.retrieveResult(ResultSort.RESULT_SORT_MEASUREMENT);
-						this.addMeasurementResult(measurementResult);
+						try {
+							measurementResult = findMeasurementResult(lastMeasurement);
+						}
+						catch (ApplicationException ae) {
+							Log.errorException(ae);
+						}
+						if (measurementResult != null)
+							this.addMeasurementResult(measurementResult);
+						else
+							Log.errorMessage("TestProcessor.startWithProcessingTest | Cannot find result for measurement '"
+									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')");
 						break;
 					case MeasurementStatus._MEASUREMENT_STATUS_ANALYZED_OR_EVALUATED:
-						measurementResult = lastMeasurement.retrieveResult(ResultSort.RESULT_SORT_MEASUREMENT);
-						Result analysisResult = lastMeasurement.retrieveResult(ResultSort.RESULT_SORT_ANALYSIS);
-						Result evaluationResult = lastMeasurement.retrieveResult(ResultSort.RESULT_SORT_EVALUATION);
-						MeasurementControlModule.resultList.add(measurementResult);
+						try {
+							measurementResult = findMeasurementResult(lastMeasurement);
+						}
+						catch (ApplicationException ae) {
+							Log.errorException(ae);
+						}
+						if (measurementResult != null)
+							this.addMeasurementResult(measurementResult);
+						else
+							Log.errorMessage("TestProcessor.startWithProcessingTest | Cannot find result for measurement '"
+									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')");
+
+						Result analysisResult = null;
+						Result evaluationResult = null;
+						ActionCondition actionCondition = new ActionCondition(ObjectEntities.RESULT_ENTITY_CODE, lastMeasurement.getId());
+						List results = null;
+						try {
+							results = MeasurementStorableObjectPool.getStorableObjectsByCondition(actionCondition, true);
+						}
+						catch (ApplicationException ae) {
+							Log.errorException(ae);
+						}
+						if (results != null && results.size() > 0) {
+							Result result;
+							for (Iterator it = results.iterator(); it.hasNext();) {
+								result = (Result) it.next();
+								if (result.getSort().value() == ResultSort._RESULT_SORT_ANALYSIS)
+									analysisResult = result;
+								else
+									if (result.getSort().value() == ResultSort._RESULT_SORT_EVALUATION)
+										evaluationResult = result;
+							}
+						}
 						if (analysisResult != null)
 							MeasurementControlModule.resultList.add(analysisResult);
+						else
+							Log.errorMessage("TestProcessor.startWithProcessingTest | Cannot find analysis result for measurement '"
+									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')");
 						if (evaluationResult != null)
 							MeasurementControlModule.resultList.add(evaluationResult);
+						else
+							Log.errorMessage("TestProcessor.startWithProcessingTest | Cannot find evaluation result for measurement '"
+									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')");
+
 						lastMeasurement.updateStatus(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED,
 																				 MeasurementControlModule.iAm.getUserId());
 						break;
@@ -167,6 +218,12 @@ public abstract class TestProcessor extends SleepButWorkThread {
 				this.stopInit();
 			}
 		}
+	}
+
+	private static Result findMeasurementResult(Measurement measurement) throws ApplicationException {
+		LinkedIdsCondition condition = new LinkedIdsCondition(measurement.getId(), ObjectEntities.RESULT_ENTITY_CODE);
+		List measurementResults = MeasurementStorableObjectPool.getStorableObjectsByCondition(condition, true);
+		return (measurementResults != null && measurementResults.size() > 0) ? (Result) measurementResults.get(0) : null;
 	}
 
 	protected final void addMeasurementResult(Result result) {
