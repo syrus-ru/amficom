@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNode.java,v 1.4 2005/02/02 15:17:30 krupenn Exp $
+ * $Id: UnboundNode.java,v 1.5 2005/02/10 13:00:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import java.util.List;
  * ни к какому элементу топологической схемы.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/02/02 15:17:30 $
+ * @version $Revision: 1.5 $, $Date: 2005/02/10 13:00:42 $
  * @module mapviewclient_v1
  */
 public class UnboundNode extends SiteNode
@@ -63,7 +63,7 @@ public class UnboundNode extends SiteNode
 	 * @param id идентификатор непривязанного элемента
 	 * @param location географические координаты непривязанного элемента
 	 * @param map топологическая схема
-	 * @param pe тип элемента (должен быть {@link SiteNodeType#UNBOUND})
+	 * @param nodeType тип элемента (должен быть {@link SiteNodeType#UNBOUND})
 	 */
 	protected UnboundNode(
 		Identifier id,
@@ -71,15 +71,15 @@ public class UnboundNode extends SiteNode
 		SchemeElement schemeElement,
 		DoublePoint location,
 		Map map,
-		SiteNodeType pe)
+		SiteNodeType nodeType)
 	{
 		super(
 				id, 
 				creatorId, 
-				pe.getImageId(), 
-				pe.getName(), 
+				nodeType.getImageId(), 
+				nodeType.getName(), 
 				"", 
-				pe, 
+				nodeType, 
 				location.getX(),
 				location.getY(), 
 				"", 
@@ -93,11 +93,12 @@ public class UnboundNode extends SiteNode
 	/**
 	 * Создать новый непривязанный элемент.
 	 * Вызывается при дропе схемного элемента на окно карты
-	 * (см. {@link com.syrus.AMFICOM.Client.Map.UI.MapDropTargetListener#schemeElementDropped(SchemeElement, Point)}).
+	 * (см. com.syrus.AMFICOM.Client.Map.UI.MapDropTargetListener.schemeElementDropped(SchemeElement, Point)
+	 * в модуле mapviewclient_v1).
 	 * @param schemeElement элемент схемы
 	 * @param location географические координаты непривязанного элемента
 	 * @param map топологическая схема
-	 * @param pe тип элемента (должен быть {@link SiteNodeType#UNBOUND})
+	 * @param nodeType тип элемента (должен быть {@link SiteNodeType#UNBOUND})
 	 * @return новый непривязанный элемент
 	 * @throws com.syrus.AMFICOM.general.CreateObjectException
 	 * 	если невозможно получить новый идентификатор
@@ -107,10 +108,10 @@ public class UnboundNode extends SiteNode
 			SchemeElement schemeElement,
 			DoublePoint location,
 			Map map,
-			SiteNodeType pe)
+			SiteNodeType nodeType)
 		throws CreateObjectException 
 	{
-		if (schemeElement == null || map == null || location == null || pe == null)
+		if (schemeElement == null || map == null || location == null || nodeType == null)
 			throw new IllegalArgumentException("Argument is 'null'");
 		
 		try
@@ -124,7 +125,7 @@ public class UnboundNode extends SiteNode
 				schemeElement,
 				location,
 				map,
-				pe);
+				nodeType);
 		}
 		catch (IdentifierGenerationException e)
 		{
