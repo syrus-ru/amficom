@@ -21,10 +21,14 @@ import java.util.*;
 
 public class Alarm extends ObjectResource implements Serializable
 {
-
 	private static final long serialVersionUID = 01L;
 
 	public static final String typ = "alarm";
+
+	public static final String EVALUATION_ALARM_EVENT = "evaluationalarmevent";
+	public static final String TEST_ALARM_EVENT = "testalarmevent";
+	public static final String TEST_WARNING_EVENT = "testwarningevent";
+
 	public long assigned;
 	public String assigned_to;
 	public String comments;
@@ -126,14 +130,14 @@ public class Alarm extends ObjectResource implements Serializable
 		try
 		{
 			SystemEvent event = (SystemEvent )Pool.get(SystemEvent.typ, this.event_id);
-			if(event.type_id.equals("evaluationalarmevent"))
+			if(event.type_id.equals(EVALUATION_ALARM_EVENT))
 			{
 				Evaluation ev = (Evaluation )Pool.get(Evaluation.typ,
 						event.descriptor);
 				return ev;
-			} else
-				if(event.type_id.equals("testalarmevent")
-						|| event.type_id.equals("testwarningevent"))
+			}
+			else if(event.type_id.equals(TEST_ALARM_EVENT)
+					  || event.type_id.equals(TEST_WARNING_EVENT))
 				{
 					Test t = (Test )Pool.get(Test.typ, event.descriptor);
 					return t;
@@ -157,7 +161,7 @@ public class Alarm extends ObjectResource implements Serializable
 		try
 		{
 			SystemEvent event = (SystemEvent )Pool.get(SystemEvent.typ, event_id);
-			if(event.type_id.equals("evaluationalarmevent"))
+			if(event.type_id.equals(EVALUATION_ALARM_EVENT))
 			{
 				/*
 				 * Evaluation ev = (Evaluation )Pool.get("evaluation",
@@ -167,11 +171,11 @@ public class Alarm extends ObjectResource implements Serializable
 				 * (Test )Pool.get("test", result.test_id); return t;
 				 */
 				return null;
-			} else
-				if(event.type_id.equals("testalarmevent")
-						|| event.type_id.equals("testwarningevent"))
+			}
+			else if(event.type_id.equals(TEST_ALARM_EVENT)
+					  || event.type_id.equals(TEST_WARNING_EVENT))
 				{
-					Test t = (Test )Pool.get("test", event.descriptor);
+					Test t = (Test )Pool.get(Test.typ, event.descriptor);
 					return t;
 				}
 
@@ -218,12 +222,12 @@ public class Alarm extends ObjectResource implements Serializable
 		try
 		{
 			SystemEvent event = (SystemEvent )Pool.get(SystemEvent.typ, event_id);
-			if(event.type_id.equals("evaluationalarmevent"))
+			if(event.type_id.equals(EVALUATION_ALARM_EVENT))
 			{
 				return "";
-			} else
-				if(event.type_id.equals("testalarmevent")
-						|| event.type_id.equals("testwarningevent"))
+			}
+			else if(event.type_id.equals(TEST_ALARM_EVENT)
+					  || event.type_id.equals(TEST_WARNING_EVENT))
 				{
 					Result res = (Result )Pool
 							.get(Result.typ, event.descriptor);
@@ -269,8 +273,8 @@ public class Alarm extends ObjectResource implements Serializable
 	{
 		try
 		{
-			SystemEvent event = (SystemEvent )Pool.get("event", event_id);
-			if(event.type_id.equals("evaluationalarmevent"))
+			SystemEvent event = (SystemEvent )Pool.get(SystemEvent.typ, event_id);
+			if(event.type_id.equals(EVALUATION_ALARM_EVENT))
 			{
 				for(Enumeration enum = Pool.getHash(Result.typ).elements(); enum
 						.hasMoreElements();)
@@ -281,11 +285,11 @@ public class Alarm extends ObjectResource implements Serializable
 						return r;
 				}
 				return null;
-			} else
-				if(event.type_id.equals("testalarmevent")
-						|| event.type_id.equals("testwarningevent"))
+			}
+			else if(event.type_id.equals(TEST_ALARM_EVENT)
+					  || event.type_id.equals(TEST_WARNING_EVENT))
 				{
-					for(Enumeration enum = Pool.getHash("result").elements(); enum
+					for(Enumeration enum = Pool.getHash(Result.typ).elements(); enum
 							.hasMoreElements();)
 					{
 						Result r = (Result )enum.nextElement();
@@ -309,7 +313,7 @@ public class Alarm extends ObjectResource implements Serializable
 	{
 		try
 		{
-			SystemEvent event = (SystemEvent )Pool.get("event", event_id);
+			SystemEvent event = (SystemEvent )Pool.get(SystemEvent.typ, event_id);
 			if(event != null)
 				return event.source_id;
 		} catch(Exception ex)
@@ -323,23 +327,23 @@ public class Alarm extends ObjectResource implements Serializable
 	{
 		try
 		{
-			SystemEvent event = (SystemEvent )Pool.get("event", event_id);
-			if(event.type_id.equals("evaluationalarmevent"))
+			SystemEvent event = (SystemEvent )Pool.get(SystemEvent.typ, event_id);
+			if(event.type_id.equals(EVALUATION_ALARM_EVENT))
 			{
 				//				Evaluation ev = (Evaluation) Pool.get("evaluation",
 				//						event.descriptor);
-				//				
+				//
 				//				 Result result = (Result )Pool.get("result", ev.result_id);
 				//				  if(!result.result_type.equals("test")) return null; Test t =
 				// (Test
 				//				  )Pool.get("test", result.test_id); return t;
-				//				 
+				//
 				return null;
-			} else
-				if(event.type_id.equals("testalarmevent")
-						|| event.type_id.equals("testwarningevent"))
+			}
+			else if(event.type_id.equals(TEST_ALARM_EVENT)
+					  || event.type_id.equals(TEST_WARNING_EVENT))
 				{
-					Test t = (Test )Pool.get("test", event.descriptor);
+					Test t = (Test )Pool.get(Test.typ, event.descriptor);
 					return t;
 				}
 
