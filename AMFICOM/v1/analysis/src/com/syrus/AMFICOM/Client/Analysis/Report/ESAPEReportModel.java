@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI.ScaledGraphPanel;
 import javax.swing.JComponent;
 
 import java.util.Vector;
+import java.util.Iterator;
 import java.util.Hashtable;
 import java.awt.Dimension;
 
@@ -151,15 +152,14 @@ abstract public class ESAPEReportModel extends APOReportModel
 			 || rt.templateType.equals(ReportTemplate.rtt_Survey))
 		{
 			AMTReport aReport = (AMTReport) data;
-			for (int i = 0; i < rt.objectRenderers.size(); i++)
+			for (Iterator it = rt.objectRenderers.iterator(); it.hasNext();)
 			{
-				RenderingObject curRenderer = (RenderingObject) rt.objectRenderers.
-					get(i);
+				RenderingObject curRenderer = (RenderingObject)it.next();
 				String itsTableTitle = curRenderer.getReportToRender().field;
 
-				for (int j = 0; j < aReport.tables.size(); j++)
+				for (Iterator it2 = aReport.tables.iterator(); it2.hasNext();)
 				{
-					AMTReportTable curTable = (AMTReportTable) aReport.tables.get(j);
+					AMTReportTable curTable = (AMTReportTable)it2.next();
 					if (curTable.title.equals(getLangForField(itsTableTitle)))
 					{
 						try
@@ -175,9 +175,9 @@ abstract public class ESAPEReportModel extends APOReportModel
 				if (curRenderer.getReportToRender().getReserve() != null)
 					continue;
 
-				for (int j = 0; j < aReport.panels.size(); j++)
+				for (Iterator it2 = aReport.panels.iterator(); it2.hasNext();)
 				{
-					AMTReportPanel curPanel = (AMTReportPanel) aReport.panels.get(j);
+					AMTReportPanel curPanel = (AMTReportPanel)it2.next();
 					if (curPanel.title.equals(getLangForField(itsTableTitle)))
 					{
 						try

@@ -1,18 +1,18 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
-import javax.swing.JFileChooser;
+import java.io.*;
+import java.util.Properties;
+
+import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import com.syrus.io.BellcoreStructure;
-import com.syrus.io.IniFile;
-import com.syrus.io.TraceReader;
+import com.syrus.io.*;
 
 public class TraceOpenReferenceCommand extends VoidCommand
 {
@@ -20,6 +20,7 @@ public class TraceOpenReferenceCommand extends VoidCommand
 	private BellcoreStructure bs;
 	private ApplicationContext aContext;
 	private Checker checker;
+	private String propertiesFileName = "analysis.properties";
 
 	public TraceOpenReferenceCommand(Dispatcher dispatcher, ApplicationContext aContext)
 	{
@@ -59,10 +60,18 @@ public class TraceOpenReferenceCommand extends VoidCommand
 			return;
 		}
 
+		Properties properties = new Properties();
+		String lastDir = "";
+		try
+		{
+			properties.load(new FileInputStream(propertiesFileName));
+			lastDir = properties.getProperty("lastdir");
+		}
+		catch (IOException ex)
+		{
+		}
 
-		IniFile ini = (IniFile)Pool.get("inifile", "analyse");
-
-		JFileChooser chooser = new JFileChooser(ini.getValue("lastdir"));
+		JFileChooser chooser = new JFileChooser(lastDir);
 		chooser.addChoosableFileFilter(new ChoosableFileFilter("sor", "Bellcore"));
 		int returnVal = chooser.showOpenDialog(null);
 		if(returnVal == JFileChooser.APPROVE_OPTION)
@@ -86,7 +95,14 @@ public class TraceOpenReferenceCommand extends VoidCommand
 			Pool.put("bellcorestructure", "referencetrace", bs);
 			dispatcher.notify(new RefChangeEvent("referencetrace",
 											RefChangeEvent.OPEN_EVENT));
-			ini.setValue("lastdir", chooser.getSelectedFile().getParent().toLowerCase());
+			try
+			{
+				properties.setProperty("lastdir", chooser.getSelectedFile().getParent().toLowerCase());
+				properties.store(new FileOutputStream(propertiesFileName), null);
+			}
+			catch (IOException ex)
+			{
+			}
 		}
 	}
 }

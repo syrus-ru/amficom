@@ -53,18 +53,7 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 //		super.updateEvents(ep);
 
 		if (ep != null)
-		{/*
-			if (this.thresholds != null && this.thresholds.length <= ep.length)
-			{
-				for (int i = 0; i < this.thresholds.length; i++)
-				{
-					Threshold t = this.thresholds[i].getThreshold();
-					t.setReflectogramEvent(ep[i]);
-					ep[i].setThreshold(t);
-				}
-			}
-*/
-
+		{
 			//WorkWithReflectoEventsArray.shiftDataToEtalon(ep, super.ep);
 			this.et_ep = ep;
 
@@ -72,8 +61,6 @@ public class ThresholdsPanel extends ReflectogramEventsPanel
 
 			if (c_event >= ep.length)
 				c_event = ep.length - 1;
-
-
 		}
 	}
 

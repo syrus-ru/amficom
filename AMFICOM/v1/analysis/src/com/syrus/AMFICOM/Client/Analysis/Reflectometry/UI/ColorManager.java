@@ -1,15 +1,11 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.Color;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Iterator;
-import com.syrus.io.IniFile;
+import java.io.*;
+import java.util.*;
 
 public class ColorManager
 {
-	private static boolean initialized = false;
-
 	static class Col
 	{
 		String name;
@@ -21,8 +17,9 @@ public class ColorManager
 			this.color = color;
 		}
 	}
+	private static String propertiesFileName = "colors.properties";
+	private static Properties properties;
 
-	static IniFile ini;
 	static Hashtable traceColorTable = new Hashtable(25);  //список всех доступных цветов
 																												 //в виде (IDцвета, ЦВЕТ)
 	static Hashtable freeTraceColors	= new Hashtable(7);  //список цветов не занятых трассами
@@ -75,20 +72,8 @@ public class ColorManager
 		new Col ("trace5", new Color (128, 128, 0)),
 	};
 
-	private static void initialyze()
+	static
 	{
-		Iterator keys;
-		String key;
-
-		try
-		{
-			ini = new IniFile("colors.ini");
-		}
-		catch (java.io.IOException ex)
-		{
-			ex.printStackTrace();
-		}
-
 		// забиваем дефолтные значения.
 		for (int i=0; i<defaultcolors.length; i++)
 			traceColorTable.put(defaultcolors[i].name, defaultcolors[i].color);
@@ -97,27 +82,33 @@ public class ColorManager
 		for (int i=0; i<traceanalysiscolors.length; i++)
 			traceColorTable.put(traceanalysiscolors[i].name, traceanalysiscolors[i].color);
 
-		// если в инишнике есть другие значения - пишем их вместо дефолтных
-		keys = ini.getKeys().iterator();
-		while (keys.hasNext())
+		properties = new Properties();
+		String lastDir = "";
+		try
 		{
-			key = (String)keys.next();
-			if ((ini.getValue(key) != null) && (ini.getValue(key) != ""))
-				traceColorTable.put(key, new Color(Integer.parseInt(ini.getValue(key))));
+			properties.load(new FileInputStream(propertiesFileName));
+			String key;
+			String value;
+			// если в инишнике есть другие значения - пишем их вместо дефолтных
+			Enumeration keys = properties.keys();
+			while (keys.hasMoreElements())
+			{
+				key = (String)keys.nextElement();
+				value = properties.getProperty(key);
+				if (value.length() != 0)
+					traceColorTable.put(key, new Color(Integer.parseInt(value)));
+			}
 		}
-
+		catch (IOException ex)
+		{
+		}
 		// забиваем в freeTraceColors доступные цвета для рефлектограмм
 		for (int i=0; i<tracecolors.length; i++)
 			freeTraceColors.put(tracecolors[i].name, traceColorTable.get(tracecolors[i].name));
-
-		initialized = true;
 	}
 
 	static public Color getColor(String id)
 	{
-		if (!initialized)
-			initialyze();
-
 		if (id.equals("random"))
 			return new Color ((float)Math.random(), (float)Math.random(), (float)Math.random());
 
@@ -191,9 +182,6 @@ public class ColorManager
 
 	public static void setColor(String id, Color newColor)
 	{
-		if (!initialized)
-			initialyze();
-
 		if (traceColorTable.containsKey(id))
 			traceColorTable.put(id, newColor);
 		if (freeTraceColors.containsKey(id))
@@ -202,30 +190,29 @@ public class ColorManager
 
 	public static void resetToDefaults()
 	{
-		if (!initialized)
-			initialyze();
-
 		for (int i=0; i<defaultcolors.length; i++)
 			traceColorTable.put(defaultcolors[i].name, defaultcolors[i].color);
 		for (int i=0; i<traceanalysiscolors.length; i++)
 			traceColorTable.put(traceanalysiscolors[i].name, traceanalysiscolors[i].color);
-
 		for (int i=0; i<tracecolors.length; i++)
 			freeTraceColors.put(tracecolors[i].name, tracecolors[i].color);
 	}
 
 	public static void saveIni()
 	{
-		if (!initialized)
-			initialyze();
-
 		Enumeration keys = traceColorTable.keys();
 		String key;
-		while (keys.hasMoreElements())
+		try
 		{
-			key = (String)keys.nextElement();
-			ini.setValue(key, String.valueOf(((Color)traceColorTable.get(key)).getRGB()));
+			while (keys.hasMoreElements())
+			{
+				key = (String)keys.nextElement();
+				properties.setProperty(key, String.valueOf(((Color)traceColorTable.get(key)).getRGB()));
+			}
+			properties.store(new FileOutputStream(propertiesFileName), null);
 		}
-		ini.saveKeys();
+		catch (IOException ex)
+		{
+		}
 	}
 }

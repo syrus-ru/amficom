@@ -1,29 +1,19 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
 import java.awt.Cursor;
+import java.io.*;
+import java.util.Properties;
 
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import com.syrus.io.BellcoreStructure;
-import com.syrus.io.IniFile;
-import com.syrus.io.TraceReader;
-
-import com.syrus.AMFICOM.analysis.dadara.*;
-import java.io.*;
 import com.syrus.io.*;
-import com.syrus.util.*;
 
 public class FileOpenCommand extends VoidCommand
 {
@@ -31,7 +21,7 @@ public class FileOpenCommand extends VoidCommand
 	private BellcoreStructure bs;
 	private ApplicationContext aContext;
 	private Checker checker;
-
+	private String propertiesFileName = "analysis.properties";
 
 	public FileOpenCommand(Dispatcher dispatcher, ApplicationContext aContext)
 	{
@@ -71,12 +61,18 @@ public class FileOpenCommand extends VoidCommand
 			return;
 		}
 
-		IniFile ini = (IniFile)Pool.get("inifile", "analyse");
-		JFileChooser chooser;
-		if (ini != null)
-			chooser = new JFileChooser(ini.getValue("lastdir"));
-		else
-			chooser = new JFileChooser();
+		Properties properties = new Properties();
+		String lastDir = "";
+		try
+		{
+			properties.load(new FileInputStream(propertiesFileName));
+			lastDir = properties.getProperty("lastdir");
+		}
+		catch (IOException ex)
+		{
+		}
+
+		JFileChooser chooser = new JFileChooser(lastDir);
 		chooser.addChoosableFileFilter(new ChoosableFileFilter("sor", "Bellcore GR-196-CORE "));
 		chooser.addChoosableFileFilter(new ChoosableFileFilter(new String[] {"dat", "ref", "trc"}, "NetTest / Laser Precision "));
 		chooser.addChoosableFileFilter(new ChoosableFileFilter("tfw", "Acterna / Wavetek "));
@@ -184,7 +180,14 @@ public class FileOpenCommand extends VoidCommand
 //			dispatcher.notify(new RefUpdateEvent("etalon",
 //											RefUpdateEvent.THRESHOLDS_UPDATED_EVENT));
 
-			ini.setValue("lastdir", chooser.getSelectedFile().getParent().toLowerCase());
+			try
+			{
+				properties.setProperty("lastdir", chooser.getSelectedFile().getParent().toLowerCase());
+				properties.store(new FileOutputStream(propertiesFileName), null);
+			}
+			catch (IOException ex)
+			{
+			}
 
 			Environment.getActiveWindow().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}

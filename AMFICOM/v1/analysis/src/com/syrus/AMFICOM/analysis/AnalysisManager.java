@@ -1,16 +1,16 @@
 package com.syrus.AMFICOM.analysis;
 
-import com.syrus.AMFICOM.Client.Resource.Pool;
+import java.io.*;
+import java.util.Properties;
 
-import com.syrus.AMFICOM.analysis.dadara.MathRef;
+import com.syrus.AMFICOM.Client.Resource.Pool;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramEvent;
-import com.syrus.io.IniFile;
 
 public class AnalysisManager
 {
-	IniFile ini;
 	double[] minuitParams;
 	double[] minuitInitialParams;
+	private String propertiesFileName = "analysis.properties";
 
 	private static native double[] gauss(
 			double[] y,
@@ -163,27 +163,23 @@ public class AnalysisManager
 
 	public AnalysisManager()
 	{
-		try
-		{
-			ini = new IniFile("parameters.ini");
-		}
-		catch (java.io.IOException ex)
-		{
-			ex.printStackTrace();
-		}
 		Pool.put("analysisparameters", "minuitdefaults", defaultMinuitParams);
 
-		String temp = ini.getValue("correlation");
-		if (temp != null)
+		Properties properties = new Properties();
+		try
 		{
+			properties.load(new FileInputStream(propertiesFileName));
+			String temp = properties.getProperty("parameters");
 			minuitParams = decompose (temp, defaultMinuitParams);
-			Pool.put("analysisparameters", "minuitanalysis", minuitParams);
 		}
-		else
+		catch (IOException ex)
 		{
 			minuitParams = new double [defaultMinuitParams.length];
 			for (int i = 0; i < defaultMinuitParams.length; i++)
 				minuitParams[i] = defaultMinuitParams[i];
+		}
+		finally
+		{
 			Pool.put("analysisparameters", "minuitanalysis", minuitParams);
 		}
 
@@ -197,8 +193,16 @@ public class AnalysisManager
 	{
 		minuitParams = (double[])Pool.get("analysisparameters", "minuitanalysis");
 		String type = (String)Pool.get("analysisparameters", "analysisdefaulttype");
-		ini.setValue("correlation", compose(minuitParams));
-		ini.saveKeys();
+		Properties properties = new Properties();
+		try
+		{
+			properties.load(new FileInputStream(propertiesFileName));
+			properties.setProperty("parameters", compose(minuitParams));
+			properties.store(new FileOutputStream(propertiesFileName), null);
+		}
+		catch (IOException ex)
+		{
+		}
 	}
 
 	private double[] decompose (String val, double[] defaults)

@@ -72,7 +72,6 @@ import com.syrus.AMFICOM.Client.Resource.SurveyDataSourceImage;
 
 import com.syrus.AMFICOM.analysis.AnalysisManager;
 import com.syrus.io.BellcoreStructure;
-import com.syrus.io.IniFile;
 
 public class ThresholdsMainFrame extends JFrame
 		implements OperationListener
@@ -206,9 +205,6 @@ public class ThresholdsMainFrame extends JFrame
 		Dimension frameSize = new Dimension (screenSize.width, screenSize.height - 24);
 		setSize(frameSize);
 		setLocation(0, 0);
-
-		IniFile ini = new IniFile("analyse.ini");
-		Pool.put("inifile", "analyse", ini);
 	}
 
 	public void init_module()
@@ -498,20 +494,17 @@ public class ThresholdsMainFrame extends JFrame
 					setTitle(LangModelAnalyse.getString("ThresholdsTitle") + ": " + name);
 
 					thresholdsSelectionFrame.setVisible(true);
-					addPrimaryTrace(id);
 				}
 				else if (id.equals("referencetrace"))
 				{
 					aModel.setEnabled("menuTraceReferenceMakeCurrent", true);
 					aModel.fireModelChanged(new String [] {"menuTraceReferenceMakeCurrent"});
-					addTrace(id);
 				}
 				else
 				{
 					aModel.setEnabled("menuFileRemoveCompare", true);
 					aModel.setEnabled("menuTraceRemoveCompare", true);
 					aModel.fireModelChanged(new String [] {"menuFileRemoveCompare", "menuTraceRemoveCompare"});
-					addTrace(id);
 				}
 			}
 			if(rce.OPEN_ETALON)
@@ -730,37 +723,6 @@ public class ThresholdsMainFrame extends JFrame
 		statusBar.setText("domain", LangModel.getString("statusNoDomain"));
 	}
 
-	void addPrimaryTrace(String id)
-	{
-		/*
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
-		double delta_x = (double)(bs.fxdParams.AR - bs.fxdParams.AO) * 3d /
-		((double)bs.dataPts.TNDP * (double)bs.fxdParams.GI/1000d);
-
-	double[] y = new double[bs.dataPts.TNDP];
-
-	for (int i = 0; i < bs.dataPts.TPS[0]; i++)
-	 y[i] = (double)(65535 - bs.dataPts.DSF[0][i])/1000d;*/
-
-	}
-
-	void addTrace(String id)
-	{
-		/*
-		BellcoreStructure bs = (BellcoreStructure)Pool.get("bellcorestructure", id);
-		double delta_x = (double)(bs.fxdParams.AR - bs.fxdParams.AO) * 3d /
-		((double)bs.dataPts.TNDP * (double)bs.fxdParams.GI/1000d);
-
-	double[] y = new double[bs.dataPts.TNDP];
-
-	for (int i = 0; i < bs.dataPts.TPS[0]; i++)
-	 y[i]  = (double)(65535 - bs.dataPts.DSF[0][i])/1000d;*/
-
-//		thresholdsFrame.addGraph(new SimpleGraphPanel(y, delta_x), id);
-//		thresholdsFrame.updScales();
-	}
-
-
 	void this_componentShown(ComponentEvent e)
 	{
 		init_module();
@@ -793,7 +755,6 @@ public class ThresholdsMainFrame extends JFrame
 		}
 		if (e.getID() == WindowEvent.WINDOW_CLOSING)
 		{
-			((IniFile)Pool.get("inifile", "analyse")).saveKeys();
 			ColorManager.saveIni();
 			aManager.saveIni();
 			internal_dispatcher.unregister(this, "contextchange");

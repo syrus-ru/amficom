@@ -68,7 +68,6 @@ import com.syrus.AMFICOM.Client.Resource.SurveyDataSourceImage;
 
 import com.syrus.AMFICOM.analysis.AnalysisManager;
 import com.syrus.io.BellcoreStructure;
-import com.syrus.io.IniFile;
 
 public class AnalyseMainFrameSimplified extends JFrame
 																				implements OperationListener
@@ -187,9 +186,6 @@ public class AnalyseMainFrameSimplified extends JFrame
 		Dimension frameSize = new Dimension (screenSize.width, screenSize.height - 24);
 		setSize(frameSize);
 		setLocation(0, 0);
-
-		IniFile ini = new IniFile("analyse.ini");
-		Pool.put("inifile", "analyse", ini);
 	}
 
 	public void init_module()
@@ -698,7 +694,6 @@ public class AnalyseMainFrameSimplified extends JFrame
 		}
 		if (e.getID() == WindowEvent.WINDOW_CLOSING)
 		{
-			((IniFile)Pool.get("inifile", "analyse")).saveKeys();
 			ColorManager.saveIni();
 			aManager.saveIni();
 			internal_dispatcher.unregister(this, "contextchange");

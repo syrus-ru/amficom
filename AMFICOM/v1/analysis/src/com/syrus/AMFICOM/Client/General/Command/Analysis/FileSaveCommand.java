@@ -1,20 +1,18 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
-import java.io.FileOutputStream;
+import java.io.*;
+import java.util.Properties;
 
-import javax.swing.JFileChooser;
+import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
+import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
+import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import com.syrus.io.BellcoreStructure;
-import com.syrus.io.BellcoreWriter;
-import com.syrus.io.IniFile;
+import com.syrus.io.*;
 
 public class FileSaveCommand extends VoidCommand
 {
@@ -22,6 +20,7 @@ public class FileSaveCommand extends VoidCommand
 	private BellcoreStructure bs;
 	private ApplicationContext aContext;
 	private Checker checker;
+	private String propertiesFileName = "analysis.properties";
 
 	public FileSaveCommand(Dispatcher dispatcher, ApplicationContext aContext)
 	{
@@ -61,21 +60,18 @@ public class FileSaveCommand extends VoidCommand
 			return;
 		}
 
-
-		String dir;
-		IniFile ini = null;
+		Properties properties = new Properties();
+		String lastDir = "";
 		try
 		{
-			ini = new IniFile("analyse.ini");
-			dir = ini.getValue("lastdir");
+			properties.load(new FileInputStream(propertiesFileName));
+			lastDir = properties.getProperty("lastdir");
 		}
-		catch (java.io.IOException ex)
+		catch (IOException ex)
 		{
-			System.out.println("Error reading ini file: analyse.ini");
-			dir = "c:\\";
 		}
 
-		JFileChooser chooser = new JFileChooser(dir);
+		JFileChooser chooser = new JFileChooser(lastDir);
 		chooser.addChoosableFileFilter(new ChoosableFileFilter("sor", "Bellcore"));
 		int returnVal = chooser.showSaveDialog(null);
 		if(returnVal == JFileChooser.APPROVE_OPTION)
@@ -95,8 +91,20 @@ public class FileSaveCommand extends VoidCommand
 					dispatcher.notify(new RefChangeEvent("primarytrace",
 																RefChangeEvent.SAVE_EVENT + RefChangeEvent.SELECT_EVENT));
 				}
+
+				try
+				{
+					properties.setProperty("lastdir", chooser.getSelectedFile().getParent().toLowerCase());
+					properties.store(new FileOutputStream(propertiesFileName), null);
+				}
+				catch (IOException ex)
+				{
+				}
 			}
-			catch (Exception x){x.printStackTrace();}
+			catch (IOException ex)
+			{
+				ex.printStackTrace();
+			}
 		}
 	}
 }

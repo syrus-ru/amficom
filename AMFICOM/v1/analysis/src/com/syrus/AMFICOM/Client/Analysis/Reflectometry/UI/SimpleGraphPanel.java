@@ -94,14 +94,8 @@ public class SimpleGraphPanel extends JPanel
 	{
 		g.setColor(traceColor);
 
-/*		for (int i= Math.max(0, -start); i< Math.min (end + 1, y.length) - start - 1; i++)
-			g.drawLine((int)(i*scale_x+1), (int)((max_y - y[i+start] - top) * scale_y - 1),
-								 (int)(i*scale_x+1), (int)((max_y - y[i+start] - top) * scale_y - 1));
-*/
 		for (int i= Math.max(0, -start); i< Math.min (end + 1, y.length) - start - 1; i++)
-//			g.drawLine((int)(i*scale_x+1), (int)((max_y - y[i+start] - top) * scale_y - 1),
-//								 (int)((i+1)*scale_x+1), (int)((max_y - y[i+start+1] - top) * scale_y - 1));
-		g.drawLine((int)(i*scale_x+1), (int)((max_y - y[i+start] - top) * scale_y),
+			g.drawLine((int)(i*scale_x+1), (int)((max_y - y[i+start] - top) * scale_y),
 								 (int)((i+1)*scale_x+1), (int)((max_y - y[i+start+1] - top) * scale_y));
 	}
 

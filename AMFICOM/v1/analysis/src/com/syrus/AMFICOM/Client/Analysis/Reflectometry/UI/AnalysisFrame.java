@@ -225,36 +225,4 @@ public class AnalysisFrame extends ScalableFrame implements OperationListener
 		SimpleGraphPanel epPanel = (SimpleGraphPanel)traces.get(et_id);
 		panel.removeGraphPanel(epPanel);
 	}
-
-
-/*
-	void createEPPanel (int n, double delta_x, String id, Color color)
-	{
-		ReflectogramEventsPanel oldpanel = (ReflectogramEventsPanel)traces.get(id);
-		if (oldpanel != null)
-		{
-			((ScalableLayeredPanel)panel).removeGraphPanel(oldpanel);
-			traces.remove(id);
-		}
-
-		ReflectogramEventsPanel epPanel;
-		ReflectogramEvent[] ep = (ReflectogramEvent[])Pool.get("eventparams", id);
-		if (ep != null)
-		{
-			double[] y = new double[n];
-			for (int i = 0; i < ep.length; i++)
-			{
-				for (int j = ep[i].begin; j <= ep[i].end && j < n; j++)
-					y[j] = ep[i].refAmpl(j)[0];
-			}
-			epPanel = new ReflectogramEventsPanel(panel, dispatcher, y, delta_x);
-			epPanel.updateEvents(ep);
-			epPanel.draw_modeled = false;
-			epPanel.setColorModel(cMan, id);
-			((ScalableLayeredPanel)panel).addGraphPanel(epPanel);
-			traces.put(id, epPanel);
-			panel.updScale2fit();
-		}
-	}
-*/
 }

@@ -1,22 +1,19 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
+import java.awt.Cursor;
+import java.io.*;
+import java.util.Properties;
+
+import javax.swing.*;
 
 import com.syrus.AMFICOM.Client.General.Checker;
 import com.syrus.AMFICOM.Client.General.Command.VoidCommand;
-import com.syrus.AMFICOM.Client.General.Event.Dispatcher;
-import com.syrus.AMFICOM.Client.General.Event.RefChangeEvent;
-import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
+import com.syrus.AMFICOM.Client.General.Event.*;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.Client.General.Model.ApplicationContext;
-import com.syrus.AMFICOM.Client.General.Model.Environment;
+import com.syrus.AMFICOM.Client.General.Model.*;
 import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
 import com.syrus.AMFICOM.Client.Resource.Pool;
-
-import com.syrus.io.BellcoreStructure;
-import com.syrus.io.IniFile;
-import com.syrus.io.WavetekReader;
+import com.syrus.io.*;
 
 public class FileOpenAsWavetekCommand extends VoidCommand
 {
@@ -24,6 +21,7 @@ public class FileOpenAsWavetekCommand extends VoidCommand
 	private BellcoreStructure bs;
 	private ApplicationContext aContext;
 	private Checker checker;
+	private String propertiesFileName = "analysis.properties";
 
 	public FileOpenAsWavetekCommand(Dispatcher dispatcher, ApplicationContext aContext)
 	{
@@ -63,15 +61,25 @@ public class FileOpenAsWavetekCommand extends VoidCommand
 			return;
 		}
 
-		IniFile ini = (IniFile)Pool.get("inifile", "analyse");
+		Properties properties = new Properties();
+		String lastDir = "";
+		try
+		{
+			properties.load(new FileInputStream(propertiesFileName));
+			lastDir = properties.getProperty("lastdir");
+		}
+		catch (IOException ex)
+		{
+		}
 
-		JFileChooser chooser = new JFileChooser(ini.getValue("lastdir"));
+		JFileChooser chooser = new JFileChooser(lastDir);
 		chooser.addChoosableFileFilter(new ChoosableFileFilter("tfw", "Wavetek"));
 		String[] traces = {"tfw"};
 		chooser.addChoosableFileFilter(new ChoosableFileFilter(traces, "Wavetek Traces"));
 		int returnVal = chooser.showOpenDialog(Environment.getActiveWindow());
 		if(returnVal == JFileChooser.APPROVE_OPTION)
 		{
+			Environment.getActiveWindow().setCursor(new Cursor(Cursor.WAIT_CURSOR));
 			WavetekReader wr = new WavetekReader();
 			bs = wr.getData(chooser.getSelectedFile());
 			if (bs == null)
@@ -98,7 +106,16 @@ public class FileOpenAsWavetekCommand extends VoidCommand
 			dispatcher.notify(new RefChangeEvent("primarytrace",
 											RefChangeEvent.OPEN_EVENT + RefChangeEvent.SELECT_EVENT));
 			dispatcher.notify(new RefUpdateEvent("primarytrace", RefUpdateEvent.ANALYSIS_PERFORMED_EVENT));
-			ini.setValue("lastdir", chooser.getSelectedFile().getParent().toLowerCase());
+
+			try
+			{
+				properties.setProperty("lastdir", chooser.getSelectedFile().getParent().toLowerCase());
+				properties.store(new FileOutputStream(propertiesFileName), null);
+			}
+			catch (IOException ex)
+			{
+			}
+			Environment.getActiveWindow().setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 		}
 	}
 }
