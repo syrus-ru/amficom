@@ -1,5 +1,5 @@
 /*
- * $Id: Characteristic.java,v 1.7 2005/01/21 08:05:29 arseniy Exp $
+ * $Id: Characteristic.java,v 1.8 2005/01/24 15:29:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.corba.Characteristic_Transferable;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/01/21 08:05:29 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/01/24 15:29:27 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
@@ -179,26 +179,50 @@ public class Characteristic extends StorableObject implements TypedObject {
 	public boolean isVisible() {
 		return this.visible;
 	}
+	
+	protected void setEditable0(boolean editable) {
+		this.editable = editable;
+	}
+
+	protected void setVisible0(boolean visible) {
+		this.visible = visible;
+	}
 
 	public StorableObjectType getType() {
 		return this.type;
 	}
+	
+	protected void setType0(CharacteristicType type) {
+		this.type = type;
+	}
 
 	public String getName() {
 		return this.name;
+	}
+	
+	protected void setName0(String name) {
+		this.name = name;
 	}
 
 	public String getDescription() {
 		return this.description;
 	}
 
-	public void setDescription(String description){
+	protected void setDescription0(String description){
 		this.description = description;
+	}
+	
+	public void setDescription(String description){
+		this.setDescription0(description);
 		super.currentVersion = super.getNextVersion();
 	}
 
 	public CharacteristicSort getSort() {
 		return CharacteristicSort.from_int(this.sort);
+	}
+	
+	protected void setSort0(CharacteristicSort sort) {
+		this.sort = sort.value(); 
 	}
 
 	public String getValue() {
@@ -207,6 +231,10 @@ public class Characteristic extends StorableObject implements TypedObject {
 
 	public Identifier getCharacterizedId() {
 		return this.characterizedId;
+	}
+	
+	protected void setCharacterizedId0(Identifier characterizedId) {
+		this.characterizedId = characterizedId;
 	}
 
 	protected synchronized void setAttributes(Date created,

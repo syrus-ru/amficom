@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.2 2005/01/20 09:57:52 arseniy Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.3 2005/01/24 15:29:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,17 +31,12 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/01/20 09:57:52 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/01/24 15:29:27 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
 public class ParameterTypeDatabase extends StorableObjectDatabase  {
-	
-	public static final String COLUMN_CODENAME = "codename";
-	public static final String COLUMN_DESCRIPTION = "description";	
-	public static final String COLUMN_NAME = "name";	
-	public static final String COLUMN_DATA_TYPE = "data_type";
 	
 	public static final int CHARACTER_NUMBER_OF_RECORDS = 15;
 	
@@ -55,10 +50,10 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 	protected String getColumns(int mode) {
 		if (columns == null){
 			columns = super.getColumns(mode) + COMMA
-				+ COLUMN_CODENAME + COMMA
-				+ COLUMN_DESCRIPTION + COMMA
-				+ COLUMN_NAME + COMMA
-				+ COLUMN_DATA_TYPE;
+				+ ParameterTypeWrapper.COLUMN_CODENAME + COMMA
+				+ ParameterTypeWrapper.COLUMN_DESCRIPTION + COMMA
+				+ ParameterTypeWrapper.COLUMN_NAME + COMMA
+				+ ParameterTypeWrapper.COLUMN_DATA_TYPE;
 		}
 		return columns;
 	}	
@@ -105,10 +100,10 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 									DatabaseDate.fromQuerySubString(resultSet, COLUMN_MODIFIED),
 									DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 									DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
-									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_CODENAME)),
-									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
-									DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
-									resultSet.getInt(COLUMN_DATA_TYPE));
+									DatabaseString.fromQuerySubString(resultSet.getString(ParameterTypeWrapper.COLUMN_CODENAME)),
+									DatabaseString.fromQuerySubString(resultSet.getString(ParameterTypeWrapper.COLUMN_DESCRIPTION)),
+									DatabaseString.fromQuerySubString(resultSet.getString(ParameterTypeWrapper.COLUMN_NAME)),
+									resultSet.getInt(ParameterTypeWrapper.COLUMN_DATA_TYPE));
 		return parameterType;
 	}
 
@@ -162,7 +157,7 @@ public class ParameterTypeDatabase extends StorableObjectDatabase  {
 		List list = null;
 		
 		try {
-			list = this.retrieveByIds( null , COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
+			list = this.retrieveByIds( null , ParameterTypeWrapper.COLUMN_CODENAME + EQUALS + APOSTOPHE + DatabaseString.toQuerySubString(codename, SIZE_CODENAME_COLUMN) + APOSTOPHE);
 		}
 		catch (IllegalDataException ide) {				
 			throw new RetrieveObjectException(ide);

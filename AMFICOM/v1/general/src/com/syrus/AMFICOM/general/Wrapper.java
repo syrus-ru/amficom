@@ -1,5 +1,5 @@
 /*
-* $Id: Wrapper.java,v 1.1 2005/01/24 08:06:49 bob Exp $
+* $Id: Wrapper.java,v 1.2 2005/01/24 15:29:27 bob Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import java.util.List;
  * using a static method <code>getInstance()</code>. 
  *
  * @author $Author: bob $
- * @version $Revision: 1.1 $, $Date: 2005/01/24 08:06:49 $
+ * @version $Revision: 1.2 $, $Date: 2005/01/24 15:29:27 $
  * @see <a href = "http://bass.science.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter Java&raquo; by Bruce A. Tate</a>
  * @module general_v1
  */
@@ -91,7 +91,10 @@ public interface Wrapper {
 
 	/**
 	 * Model value witch linked to entity key.
-	 * @param objectResource Model
+	 * 
+	 * Base wrapper for StorableObject must describes all class stucture including id, creator, modifier, created, modified  
+	 * 
+	 * @param Object object
 	 * @param key entity key
 	 * @return
 	 */
@@ -110,7 +113,9 @@ public interface Wrapper {
 	/**
 	 * Sets the value for Model entity.
 	 *
-	 * @param objectResource Model
+	 * Base wrapper for StorableObject must describes all class stucture BUT id, creator, modifier, created, modified
+	 *
+	 * @param Object object
 	 * @param key entity key
 	 * @param value value, which will be assigned to Model
 	 */

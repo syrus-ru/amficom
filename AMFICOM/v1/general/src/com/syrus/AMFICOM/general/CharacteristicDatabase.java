@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.3 2005/01/21 08:05:29 arseniy Exp $
+ * $Id: CharacteristicDatabase.java,v 1.4 2005/01/24 15:29:27 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,48 +27,32 @@ import com.syrus.util.database.DatabaseString;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/01/21 08:05:29 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/01/24 15:29:27 $
+ * @author $Author: bob $
  * @module general_v1
  */
 
 public class CharacteristicDatabase extends StorableObjectDatabase {
-	// table :: Characteristic
-	// type_id VARCHAR2(32) NOT NULL,
-	public static final String COLUMN_TYPE_ID = "type_id";
-	// name VARCHAR2(64) NOT NULL,
-	public static final String COLUMN_NAME = "name";
-	// description VARCHAR2(256),
-	public static final String COLUMN_DESCRIPTION = "description";
-	// sort NUMBER(2) NOT NULL,
-	public static final String COLUMN_SORT = "sort";
-	// value VARCHAR2(256),
-	public static final String COLUMN_VALUE = "value";
-	//  characterized_id VARCHAR2(32),
-	public static final String COLUMN_CHARACTERIZED_ID = "characterized_id";
-	public static final String COLUMN_EDITABLE = "editable";
-	public static final String COLUMN_VISIBLE = "visible";
-
 	private static final int SIZE_VALUE_COLUMN = 256;
 
 	private static String columns;
 	private static String updateMultiplySQLValues;
 
-  protected String getEnityName() {
+	protected String getEnityName() {
 		return ObjectEntities.CHARACTERISTIC_ENTITY;
 	}
 
 	protected String getColumns(int mode) {
 		if (columns == null) {
 			columns = super.getColumns(mode) + COMMA
-				+ COLUMN_TYPE_ID + COMMA
-			+ COLUMN_NAME + COMMA
-			+ COLUMN_DESCRIPTION + COMMA
-			+ COLUMN_VALUE + COMMA
-			+ COLUMN_EDITABLE + COMMA
-			+ COLUMN_VISIBLE + COMMA
-			+ COLUMN_SORT +	COMMA
-			+ COLUMN_CHARACTERIZED_ID;
+				+ CharacteristicWrapper.COLUMN_TYPE_ID + COMMA
+			+ CharacteristicWrapper.COLUMN_NAME + COMMA
+			+ CharacteristicWrapper.COLUMN_DESCRIPTION + COMMA
+			+ CharacteristicWrapper.COLUMN_VALUE + COMMA
+			+ CharacteristicWrapper.COLUMN_EDITABLE + COMMA
+			+ CharacteristicWrapper.COLUMN_VISIBLE + COMMA
+			+ CharacteristicWrapper.COLUMN_SORT +	COMMA
+			+ CharacteristicWrapper.COLUMN_CHARACTERIZED_ID;
 		}
 		return columns;
 	}
@@ -154,12 +138,12 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 																false);			
 		}
 
-		int sort = resultSet.getInt(COLUMN_SORT);
-		Identifier characterizedId = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CHARACTERIZED_ID);
+		int sort = resultSet.getInt(CharacteristicWrapper.COLUMN_SORT);
+		Identifier characterizedId = DatabaseIdentifier.getIdentifier(resultSet, CharacteristicWrapper.COLUMN_CHARACTERIZED_ID);
 
 		CharacteristicType characteristicType;
 		try {
-			characteristicType = (CharacteristicType)GeneralStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, COLUMN_TYPE_ID), true);
+			characteristicType = (CharacteristicType)GeneralStorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, CharacteristicWrapper.COLUMN_TYPE_ID), true);
 		}
 		catch (ApplicationException ae) {
 			throw new RetrieveObjectException(ae);
@@ -169,13 +153,13 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 									 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 									 DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 									 characteristicType,
-									 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
-									 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
+									 DatabaseString.fromQuerySubString(resultSet.getString(CharacteristicWrapper.COLUMN_NAME)),
+									 DatabaseString.fromQuerySubString(resultSet.getString(CharacteristicWrapper.COLUMN_DESCRIPTION)),
 									 sort,
-									 DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_VALUE)),
+									 DatabaseString.fromQuerySubString(resultSet.getString(CharacteristicWrapper.COLUMN_VALUE)),
 									 characterizedId,
-									 (resultSet.getInt(COLUMN_EDITABLE) == 0) ? false : true,
-									 (resultSet.getInt(COLUMN_VISIBLE) == 0) ? false : true);
+									 (resultSet.getInt(CharacteristicWrapper.COLUMN_EDITABLE) == 0) ? false : true,
+									 (resultSet.getInt(CharacteristicWrapper.COLUMN_VISIBLE) == 0) ? false : true);
 		return characteristic;
 	}
 
@@ -229,11 +213,11 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 		int sortValue = sort.value();
 		String sql;
 		{
-			StringBuffer buffer = new StringBuffer(COLUMN_SORT);
+			StringBuffer buffer = new StringBuffer(CharacteristicWrapper.COLUMN_SORT);
 			buffer.append(EQUALS);
 			buffer.append(sortValue);
 			buffer.append(SQL_AND);
-			buffer.append(COLUMN_CHARACTERIZED_ID);
+			buffer.append(CharacteristicWrapper.COLUMN_CHARACTERIZED_ID);
 			buffer.append(EQUALS);
 			buffer.append(cdIdStr);
 			sql = retrieveQuery(buffer.toString());
@@ -275,9 +259,9 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 	public Map retrieveCharacteristicsByOneQuery(List list, CharacteristicSort sort) throws RetrieveObjectException, IllegalDataException {
 		int sortValue = sort.value();
 		String sql;
-		StringBuffer buff = new StringBuffer(COLUMN_SORT
+		StringBuffer buff = new StringBuffer(CharacteristicWrapper.COLUMN_SORT
 							+ EQUALS + sortValue
-							+ SQL_AND + COLUMN_CHARACTERIZED_ID
+							+ SQL_AND + CharacteristicWrapper.COLUMN_CHARACTERIZED_ID
 							+ SQL_IN + OPEN_BRACKET);
 		int i = 1;
 		for (Iterator it = list.iterator(); it.hasNext();i++) {
@@ -294,7 +278,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 				else {
 					buff.append(CLOSE_BRACKET);
 					buff.append(SQL_OR);
-					buff.append(COLUMN_CHARACTERIZED_ID);
+					buff.append(CharacteristicWrapper.COLUMN_CHARACTERIZED_ID);
 					buff.append(SQL_IN);
 					buff.append(OPEN_BRACKET);
 				}                   
@@ -313,7 +297,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 			Map characteristicMap = new HashMap();
 			while (resultSet.next()) {
 				StorableObject storableObject = null;
-				Identifier storableObjectId = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CHARACTERIZED_ID);
+				Identifier storableObjectId = DatabaseIdentifier.getIdentifier(resultSet, CharacteristicWrapper.COLUMN_CHARACTERIZED_ID);
 				for (Iterator it = list.iterator(); it.hasNext();) {
 					StorableObject storableObjectToCompare = (StorableObject) it.next();
 					if (storableObjectToCompare.getId().equals(storableObjectId)){
@@ -406,7 +390,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
     Map databaseIdCharacteristics = new HashMap();
 		String sql;
 		StringBuffer buff = new StringBuffer();
-		buff.append(COLUMN_CHARACTERIZED_ID);
+		buff.append(CharacteristicWrapper.COLUMN_CHARACTERIZED_ID);
 		buff.append(EQUALS);
 		buff.append(APOSTOPHE);
 		buff.append(storableObject.getId());
@@ -482,7 +466,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 
     // creating sql query. This query gets all Characteristics whose characterized_id contained in storableObjects
 		StringBuffer buff = new StringBuffer();
-		buff.append(COLUMN_CHARACTERIZED_ID);
+		buff.append(CharacteristicWrapper.COLUMN_CHARACTERIZED_ID);
 		buff.append(SQL_IN);
 		buff.append(OPEN_BRACKET);
 		int i = 0;
@@ -497,7 +481,7 @@ public class CharacteristicDatabase extends StorableObjectDatabase {
 				else {
 					buff.append(CLOSE_BRACKET);
 					buff.append(SQL_OR);
-					buff.append(COLUMN_CHARACTERIZED_ID);
+					buff.append(CharacteristicWrapper.COLUMN_CHARACTERIZED_ID);
 					buff.append(SQL_IN);
 					buff.append(OPEN_BRACKET);
 				}                   
