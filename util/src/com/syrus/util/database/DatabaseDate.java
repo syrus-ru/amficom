@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 
 public class DatabaseDate {
 	
-	public static SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMdd HHmmss");
+	public static final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMdd HHmmss");
 	
 	private DatabaseDate() {
 		// private constuctor

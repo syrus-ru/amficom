@@ -1,5 +1,5 @@
 /*
- * $Id: HashCodeGenerator.java,v 1.5 2004/10/08 10:35:13 bob Exp $
+ * $Id: HashCodeGenerator.java,v 1.6 2004/10/27 12:20:17 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import java.util.Date;
  * HashCodeGenerator methods have got from Effective Java: Programming Language
  * Guide by Joshua Bloch
  * 
- * @version $Revision: 1.5 $, $Date: 2004/10/08 10:35:13 $
+ * @version $Revision: 1.6 $, $Date: 2004/10/27 12:20:17 $
  * @author $Author: bob $
  * @module util
  */

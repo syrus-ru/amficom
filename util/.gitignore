@@ -13,7 +13,6 @@ misc
 nbproject
 sqlj.properties
 temp
-test
 *.deploy
 *.gz
 *.jar
