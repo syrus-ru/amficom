@@ -1,5 +1,5 @@
 /*
- * $Id: Event.java,v 1.9 2005/02/28 15:31:47 arseniy Exp $
+ * $Id: Event.java,v 1.10 2005/03/01 16:46:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.event;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -18,7 +17,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.event.corba.EventParameter_Transferable;
-import com.syrus.AMFICOM.event.corba.EventStatus;
 import com.syrus.AMFICOM.event.corba.Event_Transferable;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -36,7 +34,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.Identifier_Transferable;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/02/28 15:31:47 $
+ * @version $Revision: 1.10 $, $Date: 2005/03/01 16:46:31 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -47,7 +45,6 @@ public class Event extends StorableObject implements TypedObject {
 	protected static final int UPDATE_STATUS = 1;
 
 	private EventType type;
-	private int status;
 	private String description;
 
 	private Collection eventParameters;	//Collection <EventParameter>
@@ -57,7 +54,7 @@ public class Event extends StorableObject implements TypedObject {
 
 	public Event(Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
-		this.eventParameters = new ArrayList();
+		this.eventParameters = new HashSet();
 		this.eventSourceIds = new HashSet();
 
 		this.eventDatabase = EventDatabaseContext.eventDatabase;
@@ -79,12 +76,16 @@ public class Event extends StorableObject implements TypedObject {
 			throw new CreateObjectException(ae);
 		}
 
-		this.status = et.status.value();
 		this.description = new String(et.description);
 
-		this.eventParameters = new ArrayList(et.parameters.length);
-		for (int i = 0; i < et.parameters.length; i++)
-			this.eventParameters.add(new EventParameter(et.parameters[i]));
+		this.eventParameters = new HashSet(et.parameters.length);
+		try {
+			for (int i = 0; i < et.parameters.length; i++)
+				this.eventParameters.add(new EventParameter(et.parameters[i]));
+		}
+		catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
 
 		this.eventSourceIds = new HashSet(et.event_source_ids.length);
 		for (int i = 0; i < et.event_source_ids.length; i++)
@@ -107,10 +108,9 @@ public class Event extends StorableObject implements TypedObject {
 				creatorId,
 				version);
 		this.type = type;
-		this.status = EventStatus._EVENT_STATUS_GENERATED;
 		this.description = description;
 
-		this.eventParameters = new ArrayList(eventParameters.size());
+		this.eventParameters = new HashSet(eventParameters.size());
 		this.setEventParameters0(eventParameters);
 		
 		this.eventSourceIds = new HashSet(eventSourceIds.size());
@@ -166,7 +166,6 @@ public class Event extends StorableObject implements TypedObject {
 
 		return new Event_Transferable(super.getHeaderTransferable(),
 				(Identifier_Transferable) this.type.getId().getTransferable(),
-				EventStatus.from_int(this.status),
 				this.description,
 				ept,
 				esIdsT);
@@ -174,10 +173,6 @@ public class Event extends StorableObject implements TypedObject {
 
 	public StorableObjectType getType() {
 		return this.type;
-	}
-
-	public EventStatus getStatus() {
-		return EventStatus.from_int(this.status);
 	}
 
 	public String getDescription() {
@@ -198,7 +193,6 @@ public class Event extends StorableObject implements TypedObject {
 																	Identifier modifierId,
 																  long version,
 																	EventType type,
-																	int status,
 																	String description) {
 		super.setAttributes(created,
 				modified,
@@ -206,7 +200,6 @@ public class Event extends StorableObject implements TypedObject {
 				modifierId,
 				version);
 		this.type = type;
-		this.status = status;
 		this.description = description;
 	}
 
@@ -228,15 +221,6 @@ public class Event extends StorableObject implements TypedObject {
 	 */
 	public void setType(EventType type) {
 		this.type = type;
-		super.changed = true;
-	}
-
-	/**
-	 * Set new status
-	 * @param status
-	 */
-	public void setStatus(EventStatus status) {
-		this.status = status.value();
 		super.changed = true;
 	}
 
@@ -271,7 +255,9 @@ public class Event extends StorableObject implements TypedObject {
 		List dependencies = new LinkedList();
 
 		dependencies.add(this.type);
-		dependencies.addAll(this.eventParameters);
+
+		for (Iterator it = this.eventParameters.iterator(); it.hasNext();)
+			dependencies.add(((EventParameter) it.next()).getType());
 
 		return dependencies;
 	}
