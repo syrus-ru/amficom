@@ -1,5 +1,5 @@
 /*
- * $Id: ConfigurationStorableObjectPool.java,v 1.37 2004/11/18 14:07:43 bob Exp $
+ * $Id: ConfigurationStorableObjectPool.java,v 1.38 2004/11/18 14:53:10 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2004/11/18 14:07:43 $
+ * @version $Revision: 1.38 $, $Date: 2004/11/18 14:53:10 $
  * @author $Author: bob $
  * @module configuration_v1
  */
@@ -189,23 +189,11 @@ public class ConfigurationStorableObjectPool {
 	
 	private static void polulatePools(){
 		try{
-			for (Iterator it = objectPoolMap.keySet().iterator(); it.hasNext();) {				
-				short objectEntityCode = ((Short) it.next()).shortValue();
-				LRUMap objectPool = (LRUMap) objectPoolMap.get(new Short(objectEntityCode));
-				Log.debugMessage("ConfigurationStorableObjectPool.polulatePools | available pool for '" 
-								 + ObjectEntities.codeToString(objectEntityCode) + "' , pool is "
-								 + ((objectPool == null) ? " null " : " not null"), Log.DEBUGLEVEL05);
-			}
 			for (Iterator it = objectPoolMap.keySet().iterator(); it.hasNext();) {
 				short objectEntityCode = ((Short) it.next()).shortValue();
 				List keys = LRUMapSaver.load(ObjectEntities.codeToString(objectEntityCode));
-		        if (keys != null){
-					for (Iterator iter = keys.iterator(); iter.hasNext();) {
-						Identifier id = (Identifier) iter.next();
-						Log.debugMessage("ConfigurationStorableObjectPool.polulatePools | id:: '" + id + "'", Log.DEBUGLEVEL05);
-					}
-		        	getStorableObjects(keys, true);
-		        }
+		        if (keys != null)
+		        	getStorableObjects(keys, true);		        
 			}
 		} catch (CommunicationException e) {
             Log.errorException(e);
@@ -304,8 +292,7 @@ public class ConfigurationStorableObjectPool {
 							list = new LinkedList();
 						list.add(storableObject);
 					}				
-					if (storableObject != null) {
-						if (useLoader) {
+					if (storableObject == null && useLoader) {
 							if (objectQueueMap == null)
 								objectQueueMap = new HashMap();
 							List objectQueue = (List) objectQueueMap.get(entityCode);
@@ -314,19 +301,13 @@ public class ConfigurationStorableObjectPool {
 								objectQueueMap.put(entityCode, objectQueue);
 							}
 							objectQueue.add(objectId);
-						}
-					} 
+					}					
 				} else {
 					Log
 					.errorMessage("ConfigurationStorableObjectPool.getStorableObjects | Cannot find object pool for objectId: '"
 							+ objectId.toString()
 							+ "' entity code: '"
-							+ ObjectEntities.codeToString(objectEntityCode) + "'");
-					try{
-						throw new Exception();
-					}catch(Exception e){
-						e.printStackTrace();
-					}
+							+ ObjectEntities.codeToString(objectEntityCode) + "'");					
 				}
 			}
 
