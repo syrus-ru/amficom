@@ -17,16 +17,6 @@ JIKESFLAGS = -target 1.2
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
-$(call checkenve,IDL2JAVA)
-
-
-IDL2JAVA=$(JAVA_HOME)/bin/idlj
-IDL2JAVAFLAGS = \
-	-fall \
-	-i $(IDLDIR) \
-	-td $(SRCDIR) \
-	-v
-
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
@@ -76,8 +66,7 @@ $(LIBNAME): .mach
 	touch $@
 
 .corba:	$(CLASSDIR)
-	$(IDL2JAVA) $(IDL2JAVAFLAGS) \
-		$(IDLDIR)/configuration.idl
+	$(IDLJ) $(IDLJFLAGS) $(IDLDIR)/configuration.idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
 		-classpath $(APPCLASSPATH) \
 		-sourcepath $(SRCDIR) \
