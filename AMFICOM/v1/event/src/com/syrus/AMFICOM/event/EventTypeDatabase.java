@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.5 2005/02/03 14:49:53 arseniy Exp $
+ * $Id: EventTypeDatabase.java,v 1.6 2005/02/07 11:56:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/02/03 14:49:53 $
+ * @version $Revision: 1.6 $, $Date: 2005/02/07 11:56:16 $
  * @author $Author: arseniy $
  * @module event_v1
  */
@@ -276,7 +276,7 @@ public class EventTypeDatabase extends StorableObjectDatabase {
 		Connection connection = DatabaseConnection.getConnection();
 		try {
 			String sql = SQL_INSERT_INTO
-			+ ObjectEntities.MNTTYPPARTYPLINK_ENTITY + OPEN_BRACKET
+			+ ObjectEntities.EVENTTYPPARTYPLINK_ENTITY + OPEN_BRACKET
 			+ LINK_COLUMN_EVENT_TYPE_ID + COMMA
 			+ StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID
 			+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
