@@ -1,5 +1,5 @@
 /**
- * $Id: MapSiteNodeElement.java,v 1.16 2004/12/23 16:35:17 krupenn Exp $
+ * $Id: MapSiteNodeElement.java,v 1.17 2005/01/14 10:27:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,110 +11,21 @@
 
 package com.syrus.AMFICOM.Client.Resource.Map;
 
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseException;
-import com.syrus.AMFICOM.map.DoublePoint;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.map.MapStorableObjectPool;
-import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.map.SiteNodeType;
 
 /**
  * уэел 
  * 
  * 
  * 
- * @version $Revision: 1.16 $, $Date: 2004/12/23 16:35:17 $
+ * @version $Revision: 1.17 $, $Date: 2005/01/14 10:27:00 $
  * @module
  * @author $Author: krupenn $
  * @see
  * @deprecated
  */
-public class MapSiteNodeElement extends SiteNode
+public abstract class MapSiteNodeElement 
 {
-	private static final long serialVersionUID = 02L;
 
-	public static final String COLUMN_ID = "id";
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_DESCRIPTION = "description";
-	public static final String COLUMN_X = "x";
-	public static final String COLUMN_Y = "y";
-	public static final String COLUMN_PROTO_ID = "proto_id";	
-	public static final String COLUMN_CITY = "city";	
-	public static final String COLUMN_STREET = "street";	
-	public static final String COLUMN_BUILDING = "building";	
-	public static final String COLUMN_COEF = "coef";
-	public static final String COLUMN_IMAGE_ID = "image_id";
-
-
-	protected static Object[][] exportColumns = null;
-
-	private static final String PROPERTY_PANE_CLASS_NAME = 
-			"com.syrus.AMFICOM.Client.Map.Props.MapSitePane";
-
-	public MapSiteNodeElement()
-		throws ObjectNotFoundException, RetrieveObjectException
-	{
-		super(new Identifier("sitenode"));
-		selected = false;
-//		setIconName("pc");
-	}
-
-	public MapSiteNodeElement(
-		DoublePoint location,
-		Map map,
-		SiteNodeType pe)
-		throws ObjectNotFoundException, RetrieveObjectException
-	{
-		super(new Identifier("sitenode"));
-
-		setName(pe.getName());
-		this.setMap(map);
-
-		this.setName(id.toString());
-		this.setType(pe);
-		this.setDescription("");
-		setLocation(location);
-
-		setImageId(pe.getImageId());
-		selected = false;
-	}
-/*
-	public void setMapProtoId(Identifier mapProtoId)
-	{
-		try
-		{
-			MapNodeProtoElement proto = (MapNodeProtoElement )(MapStorableObjectPool.getStorableObject(mapProtoId, true));
-			setProto(proto);
-		}
-		catch (CommunicationException e)
-		{
-			
-		}
-		catch (DatabaseException e)
-		{
-			
-		}
-	}
-*/
-	public void setProto(MapNodeProtoElement proto)
-	{
-		super.setType(proto);
-	}
-
-	public MapNodeProtoElement getProto()
-	{
-		return (MapNodeProtoElement )super.getType();
-	}
-
-	public static String getPropertyPaneClassName()
-	{
-		return PROPERTY_PANE_CLASS_NAME;
-	}
-	
 /*	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
 	{

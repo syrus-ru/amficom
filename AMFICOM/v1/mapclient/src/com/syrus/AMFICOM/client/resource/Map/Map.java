@@ -1,5 +1,5 @@
 /**
- * $Id: Map.java,v 1.22 2004/12/23 16:35:17 krupenn Exp $
+ * $Id: Map.java,v 1.23 2005/01/14 10:26:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,12 +10,6 @@
 
 package com.syrus.AMFICOM.Client.Resource.Map;
 
-import com.syrus.AMFICOM.map.MapElement;
-
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import java.io.Serializable;
 
 /**
  * Класс используется для хранения и информации по канализационной
@@ -23,87 +17,15 @@ import java.io.Serializable;
  * 
  * 
  * 
- * @version $Revision: 1.22 $, $Date: 2004/12/23 16:35:17 $
+ * @version $Revision: 1.23 $, $Date: 2005/01/14 10:26:59 $
  * @module
  * @author $Author: krupenn $
  * @see
  * @deprecated
  */
-public final class Map extends com.syrus.AMFICOM.map.Map implements Serializable
+public abstract class Map
 {
-	private static final long serialVersionUID = 02L;
 
-	public static final String COLUMN_ID = "id";
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_DESCRIPTION = "description";
-	public static final String COLUMN_USER_ID = "user_id";
-	public static final String COLUMN_CREATED = "created";
-	public static final String COLUMN_CREATED_BY = "created_by";
-	public static final String COLUMN_MODIFIED = "modified";
-	public static final String COLUMN_MODIFIED_BY = "modified_by";
-	
-	/** 
-	 * массив параметров для экспорта. инициализируется только в случае
-	 * необходимости экспорта
-	 */
-	public static String[][] exportColumns = null;
-	
-	/**
-	 * Используется для создания нового контекста пользователем
-	 */
-	public Map()
-		throws ObjectNotFoundException, RetrieveObjectException
-	{
-		super(new Identifier("map"));
-//		Environment.log(
-//				Environment.LOG_LEVEL_FINER, 
-//				"constructor call", 
-//				getClass().getName(), 
-//				"Map()");
-	}
-
-	private static final String PROPERTY_PANE_CLASS_NAME = 
-			"com.syrus.AMFICOM.Client.Map.Props.MapPanel";
-
-	public static String getPropertyPaneClassName()
-	{
-		return PROPERTY_PANE_CLASS_NAME;
-	}
-
-/*
-	public String[][] getExportColumns()
-	{
-		if(exportColumns == null)
-		{
-			exportColumns = new String[3][2];
-			exportColumns[0][0] = COLUMN_ID;
-			exportColumns[1][0] = COLUMN_NAME;
-			exportColumns[2][0] = COLUMN_DESCRIPTION;
-		}
-		exportColumns[0][1] = getId();
-		exportColumns[1][1] = getName();
-		exportColumns[2][1] = getDescription();
-		
-		return exportColumns;
-	}
-
-	public void setColumn(String field, String value)
-	{
-		Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"setColumn(" + field + ", "+ value + ")");
-		if(field.equals(COLUMN_ID))
-			this.setId(value);
-		else
-		if(field.equals(COLUMN_NAME))
-			this.setName(value);
-		else
-		if(field.equals(COLUMN_DESCRIPTION))
-			this.setDescription(value);
-	}
-*/
 	/**
 	 * Клонирование объекта - оспользуется при сохранении контекста карты
 	 * под новым именем. При этом для сохранения ссылок на другие клонируемые

@@ -1,13 +1,8 @@
 src\com\syrus\AMFICOM\Client\General\Event\MapEvent.java
 src\com\syrus\AMFICOM\Client\General\Event\MapNavigateEvent.java
 src\com\syrus\AMFICOM\Client\General\Lang\LangModelMap.java
-src\com\syrus\AMFICOM\Client\Resource\EmptyMapDataSource.java
-src\com\syrus\AMFICOM\Client\Resource\MapDataSourceImage.java
 src\com\syrus\AMFICOM\Client\Resource\Map\Map.java
-src\com\syrus\AMFICOM\Client\Resource\Map\MapLinkProtoElement.java
-src\com\syrus\AMFICOM\Client\Resource\Map\MapMarkElement.java
 src\com\syrus\AMFICOM\Client\Resource\Map\MapNodeLinkElement.java
-src\com\syrus\AMFICOM\Client\Resource\Map\MapNodeProtoElement.java
 src\com\syrus\AMFICOM\Client\Resource\Map\MapPhysicalLinkElement.java
 src\com\syrus\AMFICOM\Client\Resource\Map\MapPhysicalNodeElement.java
 src\com\syrus\AMFICOM\Client\Resource\Map\MapPipePathElement.java

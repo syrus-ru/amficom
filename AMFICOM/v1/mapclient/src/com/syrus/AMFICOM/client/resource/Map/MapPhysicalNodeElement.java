@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElement.java,v 1.20 2004/12/23 16:35:17 krupenn Exp $
+ * $Id: MapPhysicalNodeElement.java,v 1.21 2005/01/14 10:27:00 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -11,73 +11,21 @@
 
 package com.syrus.AMFICOM.Client.Resource.Map;
 
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.map.DoublePoint;
-import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.TopologicalNode;
 
 /**
  * топологический узел 
  * 
  * 
  * 
- * @version $Revision: 1.20 $, $Date: 2004/12/23 16:35:17 $
+ * @version $Revision: 1.21 $, $Date: 2005/01/14 10:27:00 $
  * @module
  * @author $Author: krupenn $
  * @see
  * @deprecated
  */
-public final class MapPhysicalNodeElement extends TopologicalNode
+public abstract class MapPhysicalNodeElement
 {
-	private static final long serialVersionUID = 02L;
 
-	public static final String COLUMN_ID = "id";
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_DESCRIPTION = "description";
-	public static final String COLUMN_PHYSICAL_LINK_ID = "physical_link_id";
-	public static final String COLUMN_X = "x";
-	public static final String COLUMN_Y = "y";
-	public static final String COLUMN_ACTIVE = "active";
-
-
-	protected static String[][] exportColumns = null;
-
-
-	private static final String PROPERTY_PANE_CLASS_NAME = "";
-
-	public MapPhysicalNodeElement()
-		throws ObjectNotFoundException, RetrieveObjectException
-	{
-		super(new Identifier("topologicalnode"));
-//		setIconName(CLOSED_NODE);
-
-		selected = false;
-	}
-
-	public MapPhysicalNodeElement (
-			PhysicalLink physicalLink, 
-			DoublePoint location,
-            Map map)
-		throws ObjectNotFoundException, RetrieveObjectException
-	{
-		super(new Identifier("topologicalnode"));
-		this.setMap(map);
-		this.setName(getId().toString());
-		setLocation(location);
-//		setIconName(CLOSED_NODE);
-		setPhysicalLink(physicalLink);
-
-		selected = false;
-
-	}
-
-	public static String getPropertyPaneClassName()
-	{
-		return PROPERTY_PANE_CLASS_NAME;
-	}
-	
 /*	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
 	{
@@ -114,34 +62,5 @@ public final class MapPhysicalNodeElement extends TopologicalNode
 		return mpne;
 	}
 */
-/*
-	public void setIconName(String iconName)
-	{
-		try 
-		{
-			StringFieldCondition condition = new StringFieldCondition(
-					String.valueOf(ImageResourceSort._BYTES),
-					ObjectEntities.IMAGE_RESOURCE_ENTITY_CODE,
-					StringFieldSort.STRINGSORT_INTEGER);
-			List bitMaps = ResourceStorableObjectPool.getStorableObjectsByCondition(
-					condition, 
-					true);
 
-			for (Iterator it = bitMaps.iterator(); it.hasNext(); ) 
-			{
-				BitmapImageResource ir = (BitmapImageResource )it.next();
-				ImageIcon icon = new ImageIcon(ir.getImage().getScaledInstance(
-						30, 
-						30, 
-						Image.SCALE_SMOOTH));
-				ImagesPanelLabel ipl = new ImagesPanelLabel(disp, icon, ir);
-				imagesPanel.add(ipl);
-			}
-		}
-		catch (ApplicationException ex) 
-		{
-			ex.printStackTrace();
-		}
-	}
-*/	
 }

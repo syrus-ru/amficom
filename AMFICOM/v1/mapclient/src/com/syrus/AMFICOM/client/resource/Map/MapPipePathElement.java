@@ -1,5 +1,5 @@
 /**
- * $Id: MapPipePathElement.java,v 1.14 2004/12/23 16:35:17 krupenn Exp $
+ * $Id: MapPipePathElement.java,v 1.15 2005/01/14 10:27:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,92 +11,20 @@
 
 package com.syrus.AMFICOM.Client.Resource.Map;
 
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.map.Collector;
 
 /**
  * коллектор. 
  * 
  * 
  * 
- * @version $Revision: 1.14 $, $Date: 2004/12/23 16:35:17 $
+ * @version $Revision: 1.15 $, $Date: 2005/01/14 10:27:00 $
  * @module
  * @author $Author: krupenn $
  * @see
  * @deprecated
  */
-public class MapPipePathElement extends Collector
+public abstract class MapPipePathElement 
 {
-	private static final long serialVersionUID = 02L;
-
-	public static final String COLUMN_ID = "id";	
-	public static final String COLUMN_NAME = "name";	
-	public static final String COLUMN_DESCRIPTION = "description";	
-	public static final String COLUMN_LINKS = "links";	
-
-	public static Object[][] exportColumns = null;
-
-	public MapPipePathElement()
-		throws ObjectNotFoundException, RetrieveObjectException
-	{
-		super(new Identifier("collector"));
-	}
-
-	public MapPipePathElement(
-			String name,
-			Map map)
-		throws ObjectNotFoundException, RetrieveObjectException
-	{
-		super(new Identifier("collector"));
-		this.setName(name);
-		this.setMap(map);
-	}
-	
-/*
-	public String[][] getExportColumns()
-	{
-		if(exportColumns == null)
-		{
-			exportColumns = new String[4][2];
-			exportColumns[0][0] = COLUMN_ID;
-			exportColumns[1][0] = COLUMN_NAME;
-			exportColumns[2][0] = COLUMN_DESCRIPTION;
-			exportColumns[3][0] = COLUMN_LINKS;
-		}
-		exportColumns[0][1] = getId().toString();
-		exportColumns[1][1] = getName();
-		exportColumns[2][1] = getDescription();
-		exportColumns[3][1] = "";
-		for(Iterator it = getPhysicalLinks().iterator(); it.hasNext();)
-		{
-			MapPhysicalLinkElement mple = (MapPhysicalLinkElement )it.next();
-			exportColumns[3][1] += mple.getId() + " ";
-		}
-
-		return exportColumns;
-	}
-	
-	public void setColumn(String field, String value)
-	{
-		if(field.equals(COLUMN_ID))
-			setId(new Identifier(value));
-		else
-		if(field.equals(COLUMN_NAME))
-			setName(value);
-		else
-		if(field.equals(COLUMN_DESCRIPTION))
-			setDescription(value);
-		else
-		if(field.equals(COLUMN_LINKS))
-		{
-			physicalLinkIds.clear();
-			for(Iterator it = ResourceUtil.parseStrings(value).iterator(); it.hasNext();)
-				physicalLinkIds.add(it.next());
-		}
-	}
-*/	
 
 /*	public Object clone(DataSourceInterface dataSource)
 		throws CloneNotSupportedException
