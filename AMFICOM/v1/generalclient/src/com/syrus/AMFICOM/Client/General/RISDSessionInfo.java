@@ -1,5 +1,5 @@
 /*
- * $Id: RISDSessionInfo.java,v 1.17 2005/01/21 14:51:18 krupenn Exp $
+ * $Id: RISDSessionInfo.java,v 1.18 2005/01/24 16:49:31 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,8 @@ import com.syrus.AMFICOM.corba.portable.client.Client;
 import com.syrus.AMFICOM.corba.portable.client.ClientImpl;
 import com.syrus.AMFICOM.corba.portable.client.ClientPOATie;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.ClientGeneralObjectLoader;
+import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LocalIdentifierGeneratorServer;
@@ -53,7 +55,7 @@ import org.omg.PortableServer.POAManagerPackage.AdapterInactive;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/01/21 14:51:18 $
+ * @version $Revision: 1.18 $, $Date: 2005/01/24 16:49:31 $
  * @module generalclient_v1
  */
 public final class RISDSessionInfo extends SessionInterface {
@@ -166,6 +168,14 @@ public final class RISDSessionInfo extends SessionInterface {
 			 */
 			try {
 				ecode = ci.getServer().Logon(getUser(), Rewriter.write(getPassword()), ior, accessIdentityHolder);
+			} catch (com.syrus.AMFICOM.CORBA.General.AMFICOMRemoteException e) {
+				System.err.println("Error " + e.message);
+				e.printStackTrace();
+				/*
+				 * Another unsuccessful return point after client activation.
+				 */
+				clientShutdown(true);
+				return null;
 			} catch (Exception e) {
 				System.err.println("Error " + e.getMessage());
 				e.printStackTrace();
@@ -231,14 +241,17 @@ public final class RISDSessionInfo extends SessionInterface {
 			ClientAdministrationObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
 			AdministrationStorableObjectPool.init(new ClientAdministrationObjectLoader(cmServer), clazz, size);
 
+			ClientGeneralObjectLoader.setAccessIdentifierTransferable(this.accessIdentifier);
+			GeneralStorableObjectPool.init(new ClientGeneralObjectLoader(cmServer), clazz, size);
+
 			MapStorableObjectPool.init(new EmptyClientMapObjectLoader(), clazz, size);
 
 			MapViewStorableObjectPool.init(new EmptyClientMapViewObjectLoader(), clazz, size);
 
 			ResourceStorableObjectPool.init(new EmptyClientResourceObjectLoader(), clazz, size);
 
-			IdentifierPool.init(cmServer);
-//			IdentifierPool.init(new LocalIdentifierGeneratorServer());
+//			IdentifierPool.init(cmServer);
+			IdentifierPool.init(new LocalIdentifierGeneratorServer());
 
 			System.err.println("domainId: " + this.accessIdentifier.domain_id.identifier_string);
 			System.err.println("sessionId: " + this.accessIdentifier.session_id.identifier_string);
