@@ -1,5 +1,5 @@
 /*
- * $Id: ClientMeasurementObjectLoader.java,v 1.18 2004/10/06 15:45:56 max Exp $
+ * $Id: ClientMeasurementObjectLoader.java,v 1.19 2004/10/13 10:31:22 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,10 +13,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.syrus.AMFICOM.cmserver.corba.CMServer;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.corba.AccessIdentifier_Transferable;
 import com.syrus.AMFICOM.configuration.corba.DomainCondition_Transferable;
-import com.syrus.AMFICOM.configuration.corba.MonitoredElement_Transferable;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -64,7 +62,7 @@ import com.syrus.AMFICOM.measurement.corba.Test_Transferable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2004/10/06 15:45:56 $
+ * @version $Revision: 1.19 $, $Date: 2004/10/13 10:31:22 $
  * @author $Author: max $
  * @module cmserver_v1
  */
@@ -361,13 +359,25 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
             CommunicationException {
         try {
             Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            AnalysisType_Transferable[] transferables;
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
                 identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
             }
-            AnalysisType_Transferable[] transferables = this.server
-                    .transmitAnalysisTypesButIds(identifier_Transferables, accessIdentifierTransferable);
+            if (storableObjectCondition instanceof LinkedIdsCondition) {
+                
+                transferables = this.server
+                .transmitAnalysisTypesButIdsCondition(identifier_Transferables, accessIdentifierTransferable,
+                                         (LinkedIdsCondition_Transferable) storableObjectCondition.getTransferable());                
+            } else {
+                transferables = this.server
+                        .transmitAnalysisTypesButIds(identifier_Transferables, accessIdentifierTransferable);
+                if (storableObjectCondition != null && !(storableObjectCondition instanceof LinkedIdsCondition)) {
+                    Log.errorMessage("ClientMeasurementObjectLoader.loadAnalysisTypesButIds | " +
+                            "Class '" + storableObjectCondition.getClass().getName() + "' is not instanse of LinkedIdsCondition");
+                }
+            }
             List list = new ArrayList(transferables.length);
             for (int j = 0; j < transferables.length; j++) {
                 list.add(new AnalysisType(transferables[j]));
@@ -464,13 +474,28 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
     public List loadEvaluationTypesButIds(StorableObjectCondition storableObjectCondition, List ids) throws DatabaseException, CommunicationException {
         try {
             Identifier_Transferable[] identifier_Transferables = new Identifier_Transferable[ids.size()];
+            EvaluationType_Transferable[] transferables;
             int i = 0;
             for (Iterator it = ids.iterator(); it.hasNext(); i++) {
                 Identifier id = (Identifier) it.next();
                 identifier_Transferables[i] = (Identifier_Transferable) id.getTransferable();
             }
-            EvaluationType_Transferable[] transferables = this.server
-                    .transmitEvaluationTypesButIds(identifier_Transferables, accessIdentifierTransferable);
+            if (storableObjectCondition instanceof LinkedIdsCondition) {
+                
+                transferables = this.server
+                .transmitEvaluationTypesButIdsCondition(identifier_Transferables,
+                                         accessIdentifierTransferable,
+                                         (LinkedIdsCondition_Transferable) storableObjectCondition.getTransferable());
+                
+            } else {
+                transferables = this.server
+                .transmitEvaluationTypesButIds(identifier_Transferables,
+                                         accessIdentifierTransferable);
+                if (storableObjectCondition != null && !(storableObjectCondition instanceof LinkedIdsCondition)) {
+                    Log.errorMessage("ClientMeasurementObjectLoader.loadEvaluationTypesButIds | " +
+                            "Class '" + storableObjectCondition.getClass().getName() + "' is not instanse of LinkedIdsCondition");
+                }
+            }
             List list = new ArrayList(transferables.length);
             for (int j = 0; j < transferables.length; j++) {
                 list.add(new EvaluationType(transferables[j]));
@@ -642,9 +667,15 @@ public final class ClientMeasurementObjectLoader implements MeasurementObjectLoa
             if (storableObjectCondition instanceof MeasurementSetupCondition) {
                 MeasurementSetupCondition measurementSetupCondition = (MeasurementSetupCondition)storableObjectCondition;
                 transferables = this.server
-                            .transmitMeasurementSetupsButIdsCondition(identifier_Transferables,
+                            .transmitMeasurementSetupsButIdsMeasurementSetupCondition(identifier_Transferables,
                                                              accessIdentifierTransferable,
                                                              (MeasurementSetupCondition_Transferable) measurementSetupCondition.getTransferable());               
+            } else if (storableObjectCondition instanceof LinkedIdsCondition){
+                LinkedIdsCondition linkedIdsCondition = (LinkedIdsCondition)storableObjectCondition;
+                transferables = this.server
+                            .transmitMeasurementSetupsButIdsLinkedCondition(identifier_Transferables,
+                                                             accessIdentifierTransferable,
+                                                             (LinkedIdsCondition_Transferable) linkedIdsCondition.getTransferable());
             } else {
                 transferables = this.server
                         .transmitMeasurementSetupsButIds(identifier_Transferables,
