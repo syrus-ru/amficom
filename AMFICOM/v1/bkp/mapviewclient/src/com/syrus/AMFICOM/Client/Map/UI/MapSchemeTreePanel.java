@@ -75,7 +75,7 @@ public final class MapSchemeTreePanel extends JPanel
 		}
 	}
 
-	public MapSchemeTreePanel(String title, ApplicationContext aContext)
+	public MapSchemeTreePanel(ApplicationContext aContext)
 	{
 		this();
 		setContext(aContext);
